@@ -3,6 +3,173 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.0.0-alpha.31](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.30...v4.0.0-alpha.31)
+
+_June 9, 2021_
+
+Big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
+
+- 💅 Allow to customize GridToolbarExport's CSV export (#1695) @michallukowski
+- 🐛 Allow to deselect rows with <kbd>CTRL</kbd> + click (#1813) @ZeeshanTamboli
+- ⚡️ Refactor scroll size detector (#1703) @dtassone
+- 📖 Add [documentation](https://material-ui.com/api/data-grid/) for interfaces and events (#1529) @m4theushw
+- 🐞 Bugfixes
+
+### @material-ui/x-grid@v4.0.0-alpha.31 / @material-ui/data-grid@v4.0.0-alpha.31
+
+#### Breaking changes
+
+- [DataGrid] Improve `headerClassName` type (#1778) @DanailH
+
+  `cellClassName` and `headerClassName` no longer accept array of strings.
+
+  ```diff
+  -cellClassName?: string | string[] | (params: GridCellParams) => string;
+  +cellClassName?: string | (params: GridCellParams) => string;
+  ```
+  ```diff
+  -headerClassName?: string | string[];
+  +headerClassName?: string | (params: GridColumnHeaderParams) => string;
+  ```
+
+#### Changes
+
+- [DataGrid] Add `valueParser` to parse values entered by the user (#1785) @m4theushw
+- [DataGrid] Allow to customize GridToolbarExport's CSV export (#1695) @michallukowski
+- [DataGrid] Allow to deselect rows with <kbd>CTRL</kbd> + click (#1813) @ZeeshanTamboli
+- [DataGrid] Improve general architecture to better isolate hooks (#1720) @dtassone
+- [DataGrid] Fix cell height after changing grid density (#1819) @DanailH
+- [DataGrid] Fix fluid columns width when available `viewportWidth` < 0 (#1816) @DanailH
+- [DataGrid] Fix force reflow on scroll start and end (#1829) @dtassone
+- [DataGrid] Refactor scroll size detector (#1703) @dtassone
+- [XGrid] Display the number of filtered rows in the footer (#1830) @m4theushw
+
+### Docs
+
+- [docs] Add docs for `disableDensitySelector` option (#1856) @DanailH
+- [docs] Automatically generate API docs (#1529) @m4theushw
+
+### Core
+
+- [core] Batch small changes (#1848) @oliviertassinari
+- [core] Add `yarn docs:api` @oliviertassinari
+- [test] Improve pagination tests (#1827) @m4theushw
+
+## [4.0.0-alpha.30](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.29...v4.0.0-alpha.30)
+
+_May 31, 2021_
+
+Big thanks to the 8 contributors who made this release possible. Here are some highlights ✨:
+
+- 💅 Add `getCellClassName` prop (#1687) @m4theushw
+- 🐛 Fix a regression in the controlled pagination (#1729) @ZeeshanTamboli
+- ⚡️ Remove `cellClassRules` from `GridColDef` (#1716) @m4theushw
+- 🇨🇿 Add csCZ locale (#1765) @Haaxor1689
+- 🐞 Bugfixes
+
+### @material-ui/x-grid@v4.0.0-alpha.30 / @material-ui/data-grid@v4.0.0-alpha.30
+
+#### Breaking changes
+
+- [DataGrid] Rename toolbar components for consistency (#1724) @DanailH
+
+  Prefix all the toolbar-related components with `GridToolbar`.
+
+  ```diff
+  -.MuiDataGridFilterToolbarButton-list
+  +.MuiDataGridToolbarFilterButton-list
+  ```
+  ```diff
+  -<GridColumnsToolbarButton />
+  +<GridToolbarColumnsButton />
+  ```
+  ```diff
+  -<GridFilterToolbarButton />
+  +<GridToolbarFilterButton />
+  ```
+  ```diff
+  -<GridDensitySelector />
+  +<GridToolbarDensitySelector />
+  ```
+
+- [DataGrid] Remove `cellClassRules` from `GridColDef` (#1716) @m4theushw
+
+  The `GridCellClassParams` type is not exported anymore. Replace it with `GridCellParams`.
+
+  ```diff
+  -import { GridCellClassParams} from '@material-ui/data-grid';
+  +import { GridCellParams } from '@material-ui/data-grid';
+
+  -cellClassName: (params: GridCellClassParams) =>
+  +cellClassName: (params: GridCellParams) =>
+  ```
+
+  The `cellClassRules` in `GridColDef` was removed because it's redundant. The same functionality can be obtained using `cellClassName` and the [`clsx`](https://www.npmjs.com/package/clsx) utility:
+
+  ```diff
+  +import clsx from 'clsx';
+
+   {
+     field: 'age',
+     width: 150,
+  -  cellClassRules: {
+  -    negative: params => params.value < 0,
+  -    positive: params => params.value > 0,
+  -  },
+  +  cellClassName: params => clsx({
+  +    negative: params.value < 0,
+  +    positive: params.value > 0,
+  +  }),
+   }
+  ```
+
+- [DataGrid] Fix `onPageChange` doesn't update the `page` when a pagination button is clicked (#1719) @ZeeshanTamboli
+
+  Fix naming of `pageChange` and `pageSizeChange` events variables. The correct event variable name should be prefixed with `GRID_` and converted to UPPER_CASE.
+
+  ```diff
+  -import { GRID_PAGESIZE_CHANGED, GRID_PAGE_CHANGED } from '@material-ui/data-grid';
+  +import { GRID_PAGESIZE_CHANGE, GRID_PAGE_CHANGE } from '@material-ui/data-grid';
+  ```
+
+- [XGrid] The `getEditCellValueParams` method was removed from the `apiRef` (#1767) @m4theushw
+
+  The `getEditCellValueParams` method was almost a straightforward alias of `getEditCellPropsParams`.
+
+  ```diff
+  -const { value } = apiRef.current.getEditCellValueParams(id, field);
+  +const { props: { value } } = apiRef.current.getEditCellPropsParams(id, field);
+  ```
+
+#### Changes
+
+- [DataGrid] Add `getCellClassName` prop (#1687) @m4theushw
+- [DataGrid] Add customizable `aria-label`, `aria-labelledby` field (#1764) @ZeeshanTamboli
+- [DataGrid] Add Czech (csCZ) locale and fix plural rules in Slovak (skSK) locale (#1765) @Haaxor1689
+- [DataGrid] Fix cell accessibility aria-colindex (#1669) @ZeeshanTamboli
+- [DataGrid] Fix changing rows per page size (#1729) @ZeeshanTamboli
+- [DataGrid] Fix date operators not working with date-time values (#1722) @m4theushw
+- [DataGrid] Fix `rowCount` prop updates (#1697) @dtassone
+- [DataGrid] Improve German (deDe) translation of "errorOverlayDefaultLabel" (#1718) @sebastianfrey
+- [DataGrid] Fix accessibility of the filter panel textboxes (#1727) @m4theushw
+- [XGrid] Fix `onFilterModelChange` not firing (#1706) @dtassone
+
+### Docs
+
+- [docs] Fix outdated description of `GridRowParams.getValue` (#1731) @visshaljagtap
+- [docs] Fix 404 link (#1752) @oliviertassinari
+- [docs] Improve Custom edit component demo (#1750) @oliviertassinari
+- [docs] Remove redundant customizable pagination section (#1774) @ZeeshanTamboli
+- [docs] Improve `GridApi` descriptions (#1767) @m4theushw
+
+### Core
+
+- [core] Batch updates of storybook (#1751) @oliviertassinari
+- [core] Help support different documents (#1754) @oliviertassinari
+- [core] Upgrade Material-UI core v5 to latest version (#1763) @ZeeshanTamboli
+- [test] Reduce flakiness (#1753) @oliviertassinari
+- [test] Remove skip on Edge (#1708) @m4theushw
+
 ## [4.0.0-alpha.29](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.28...v4.0.0-alpha.29)
 
 _May 19, 2021_

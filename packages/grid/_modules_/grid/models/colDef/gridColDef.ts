@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { GridCellValue } from '../gridCell';
 import { GridCellClassNamePropType } from '../gridCellClass';
+import { GridColumnHeaderClassNamePropType } from '../gridColumnHeaderClass';
 import { GridFilterOperator } from '../gridFilterOperator';
 import {
   GridCellParams,
@@ -81,9 +82,17 @@ export interface GridColDef {
   valueGetter?: (params: GridValueGetterParams) => GridCellValue;
   /**
    * Function that allows to apply a formatter before rendering its value.
-   * @param params
+   * @param {GridValueFormatterParams} params Object contaning parameters for the formatter.
+   * @returns {GridCellValue} The formatted value.
    */
   valueFormatter?: (params: GridValueFormatterParams) => GridCellValue;
+  /**
+   * Function that takes the user-entered value and converts it to a value used internally.
+   * @param {GridCellValue} value The user-entered value.
+   * @param {GridCellParams} params The params when called before saving the value.
+   * @returns {GridCellValue} The converted value to use internally.
+   */
+  valueParser?: (value: GridCellValue, params?: GridCellParams) => GridCellValue;
   /**
    * Class name that will be added in cells for that column.
    */
@@ -92,35 +101,38 @@ export interface GridColDef {
    * Allows to override the component rendered as cell for this column.
    * @param params
    */
-  renderCell?: (params: GridCellParams) => React.ReactElement;
+  renderCell?: (params: GridCellParams) => React.ReactNode;
   /**
    * Allows to override the component rendered in edit cell mode for this column.
    * @param params
    */
-  renderEditCell?: (params: GridCellParams) => React.ReactElement;
+  renderEditCell?: (params: GridCellParams) => React.ReactNode;
   /**
    * Class name that will be added in the column header cell.
    */
-  headerClassName?: string | string[];
+  headerClassName?: GridColumnHeaderClassNamePropType;
   /**
    * Allows to render a component in the column header cell.
    * @param params
    */
-  renderHeader?: (params: GridColumnHeaderParams) => React.ReactElement;
+  renderHeader?: (params: GridColumnHeaderParams) => React.ReactNode;
   /**
    * Header cell element alignment.
    */
   headerAlign?: GridAlignment;
   /**
    * Toggle the visibility of the sort icons.
+   * @default false
    */
   hideSortIcons?: boolean;
   /**
    * Allows to disable the click event in cells.
+   * @default false
    */
   disableClickEventBubbling?: boolean;
   /**
    * If `true`, the column menu is disabled for this column.
+   * @default false
    */
   disableColumnMenu?: boolean;
   /**

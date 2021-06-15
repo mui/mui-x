@@ -1,6 +1,5 @@
 ---
 title: Data Grid - Styling
-components: DataGrid, XGrid
 ---
 
 # Data Grid - Styling
@@ -11,7 +10,7 @@ components: DataGrid, XGrid
 
 The `GridColDef` type has properties to apply class names and custom CSS on the header.
 
-- `headerClassName`: to apply class names into the column header.
+- `headerClassName`: to apply class names into the column header. It can also be a function, which is called with a `GridColumnHeaderParams` object.
 - `headerAlign`: to align the content of the header. It must be 'left' | 'right' | 'center'.
 
 ```tsx
@@ -42,15 +41,6 @@ interface GridRowParams {
    */
   id: GridRowId;
   /**
-   * The HTMLElement row element.
-   */
-  element?: HTMLElement | null;
-  /**
-   * A function that let you get data from other columns.
-   * @param field
-   */
-  getValue: (field: string) => GridCellValue;
-  /**
    * The row model of the row that the current cell belongs to.
    */
   row: GridRowModel;
@@ -59,13 +49,15 @@ interface GridRowParams {
    */
   columns: any;
   /**
-   * The row index of the row that the current cell belongs to.
-   */
-  rowIndex: number;
-  /**
    * GridApiRef that let you manipulate the grid.
    */
   api: any;
+  /**
+   * Get the cell value of a row and field.
+   * @param id
+   * @param field
+   */
+  getValue: (id: GridRowId, field: string) => GridCellValue;
 }
 ```
 
@@ -120,3 +112,8 @@ Choose between one of the following values: 'left' | 'right' | 'center'.
 The following demo leverages the CSS customization API to match the Ant Design specification.
 
 {{"demo": "pages/components/data-grid/style/AntDesignGrid.js", "defaultCodeOpen": false}}
+
+## API
+
+- [DataGrid](/api/data-grid/data-grid/)
+- [XGrid](/api/data-grid/x-grid/)

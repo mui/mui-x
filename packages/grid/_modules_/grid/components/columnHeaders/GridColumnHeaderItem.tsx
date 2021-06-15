@@ -21,13 +21,14 @@ import {
 import { GridColDef, GRID_NUMBER_COLUMN_TYPE } from '../../models/colDef/index';
 import { GridOptions } from '../../models/gridOptions';
 import { GridSortDirection } from '../../models/gridSortModel';
-import { GridApiContext } from '../GridApiContext';
+import { useGridApiContext } from '../../hooks/root/useGridApiContext';
 import { GridColumnHeaderSortIcon } from './GridColumnHeaderSortIcon';
 import { GridColumnHeaderTitle } from './GridColumnHeaderTitle';
 import { GridColumnHeaderSeparator } from './GridColumnHeaderSeparator';
 import { ColumnHeaderMenuIcon } from './ColumnHeaderMenuIcon';
 import { ColumnHeaderFilterIcon } from './ColumnHeaderFilterIcon';
 import { GridColumnHeaderMenu } from '../menu/columnMenu/GridColumnHeaderMenu';
+import { isFunction } from '../../utils/utils';
 
 interface GridColumnHeaderItemProps {
   colIndex: number;
@@ -59,7 +60,7 @@ export const GridColumnHeaderItem = React.memo(
     hasFocus,
     tabIndex,
   }: GridColumnHeaderItemProps) => {
-    const apiRef = React.useContext(GridApiContext);
+    const apiRef = useGridApiContext();
     const headerCellRef = React.useRef<HTMLDivElement>(null);
     const columnMenuId: string = useId();
     const columnMenuButtonId: string = useId();
@@ -76,7 +77,7 @@ export const GridColumnHeaderItem = React.memo(
     // todo refactor to a prop on col isNumeric or ?? ie: coltype===price wont work
     const isColumnNumeric = column.type === GRID_NUMBER_COLUMN_TYPE;
 
-    let headerComponent: React.ReactElement | null = null;
+    let headerComponent: React.ReactNode = null;
     if (column.renderHeader && apiRef!.current) {
       headerComponent = column.renderHeader(apiRef!.current.getColumnHeaderParams(column.field));
     }
@@ -123,8 +124,17 @@ export const GridColumnHeaderItem = React.memo(
       [publish],
     );
 
+    const classNames = [classes?.columnHeader];
+
+    if (column.headerClassName) {
+      const headerClassName = isFunction(column.headerClassName)
+        ? column.headerClassName({ field: column.field, colDef: column, api: apiRef })
+        : column.headerClassName;
+
+      classNames.push(headerClassName);
+    }
+
     const cssClasses = clsx(
-      column.headerClassName,
       column.headerAlign === 'center' && 'MuiDataGrid-columnHeaderCenter',
       column.headerAlign === 'right' && 'MuiDataGrid-columnHeaderRight',
       {
@@ -134,7 +144,7 @@ export const GridColumnHeaderItem = React.memo(
         'MuiDataGrid-columnHeaderNumeric': isColumnNumeric,
         'MuiDataGrid-withBorder': showColumnRightBorder,
       },
-      classes?.columnHeader,
+      ...classNames,
     );
 
     const width = column.width!;

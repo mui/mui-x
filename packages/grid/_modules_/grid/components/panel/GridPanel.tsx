@@ -4,7 +4,7 @@ import { makeStyles } from '@material-ui/styles';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import Paper from '@material-ui/core/Paper';
 import Popper from '@material-ui/core/Popper';
-import { GridApiContext } from '../GridApiContext';
+import { useGridApiContext } from '../../hooks/root/useGridApiContext';
 import { isEscapeKey, isMuiV5, createTheme } from '../../utils';
 
 export interface GridPanelProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -34,7 +34,7 @@ export const GridPanel = React.forwardRef<HTMLDivElement, GridPanelProps>(functi
 ) {
   const { children, open, ...other } = props;
   const classes = useStyles();
-  const apiRef = React.useContext(GridApiContext);
+  const apiRef = useGridApiContext();
 
   const getPopperModifiers = (): any => {
     if (isMuiV5()) {
@@ -66,10 +66,7 @@ export const GridPanel = React.forwardRef<HTMLDivElement, GridPanelProps>(functi
     [apiRef],
   );
 
-  let anchorEl;
-  if (apiRef!.current && apiRef!.current.columnHeadersElementRef?.current) {
-    anchorEl = apiRef?.current.columnHeadersElementRef?.current;
-  }
+  const anchorEl = apiRef?.current.columnHeadersContainerElementRef?.current;
 
   if (!anchorEl) {
     return null;

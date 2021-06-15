@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GRID_RESIZE } from '../../constants/eventsConstants';
+import { GRID_DEBOUNCED_RESIZE } from '../../constants/eventsConstants';
 import { GridApiRef } from '../../models/api/gridApiRef';
 import {
   GridContainerProps,
@@ -19,10 +19,7 @@ import { optionsSelector } from '../utils/optionsSelector';
 import { useLogger } from '../utils/useLogger';
 import { useGridApiEventHandler } from './useGridApiEventHandler';
 
-export const useGridContainerProps = (
-  windowRef: React.RefObject<HTMLDivElement>,
-  apiRef: GridApiRef,
-) => {
+export const useGridContainerProps = (apiRef: GridApiRef) => {
   const logger = useLogger('useGridContainerProps');
   const [gridState, setGridState, forceUpdate] = useGridState(apiRef);
   const windowSizesRef = React.useRef<ElementSize>({ width: 0, height: 0 });
@@ -31,6 +28,7 @@ export const useGridContainerProps = (
   const columnsTotalWidth = useGridSelector(apiRef, gridColumnsTotalWidthSelector);
   const visibleRowsCount = useGridSelector(apiRef, visibleGridRowCountSelector);
   const paginationState = useGridSelector(apiRef, gridPaginationSelector);
+  const windowRef = apiRef.current.windowRef;
 
   const getVirtualRowCount = React.useCallback(() => {
     logger.debug('Calculating virtual row count.');
@@ -52,7 +50,7 @@ export const useGridContainerProps = (
     (rowsCount: number) => {
       logger.debug('Calculating scrollbar sizes.');
 
-      const hasScrollX = columnsTotalWidth > windowSizesRef.current.width;
+      let hasScrollX = columnsTotalWidth > windowSizesRef.current.width;
       const scrollBarSize = {
         y: 0,
         x: hasScrollX ? options.scrollbarSize! : 0,
@@ -71,6 +69,10 @@ export const useGridContainerProps = (
 
       scrollBarSize.y = hasScrollY ? options.scrollbarSize! : 0;
 
+      // We recalculate the scroll x to consider the size of the y scrollbar.
+      hasScrollX = columnsTotalWidth + scrollBarSize.y > windowSizesRef.current.width;
+      scrollBarSize.x = hasScrollX ? options.scrollbarSize! : 0;
+
       logger.debug(`Scrollbar size on axis x: ${scrollBarSize.x}, y: ${scrollBarSize.y}`);
 
       return { hasScrollX, hasScrollY, scrollBarSize };
@@ -87,7 +89,7 @@ export const useGridContainerProps = (
 
   const getViewport = React.useCallback(
     (rowsCount: number, scrollBarState: GridScrollBarState) => {
-      if (!windowRef.current) {
+      if (!windowRef?.current) {
         return null;
       }
 
@@ -266,5 +268,5 @@ export const useGridContainerProps = (
     refreshContainerSizes();
   }, [gridState.columns, gridState.options.hideFooter, refreshContainerSizes, visibleRowsCount]);
 
-  useGridApiEventHandler(apiRef, GRID_RESIZE, refreshContainerSizes);
+  useGridApiEventHandler(apiRef, GRID_DEBOUNCED_RESIZE, refreshContainerSizes);
 };

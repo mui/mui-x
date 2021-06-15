@@ -6,10 +6,8 @@ import { useLogger } from '../utils/useLogger';
 import {
   GRID_CELL_CLICK,
   GRID_COLUMN_HEADER_CLICK,
-  GRID_UNMOUNT,
   GRID_KEYDOWN,
   GRID_KEYUP,
-  GRID_RESIZE,
   GRID_ROW_CLICK,
   GRID_CELL_OVER,
   GRID_ROW_OVER,
@@ -34,16 +32,16 @@ import {
   GRID_CELL_KEYDOWN,
   GRID_CELL_BLUR,
 } from '../../constants/eventsConstants';
-import { useGridApiMethod } from './useGridApiMethod';
 import { useGridApiOptionHandler } from './useGridApiEventHandler';
-import { GridEventsApi } from '../../models/api/gridEventsApi';
 
-export function useEvents(gridRootRef: React.RefObject<HTMLDivElement>, apiRef: GridApiRef): void {
+export function useEvents(apiRef: GridApiRef): void {
   const logger = useLogger('useEvents');
   const options = useGridSelector(apiRef, optionsSelector);
 
   const getHandler = React.useCallback(
-    (name: string) => (...args: any[]) => apiRef.current.publishEvent(name, ...args),
+    (name: string) =>
+      (...args: any[]) =>
+        apiRef.current.publishEvent(name, ...args),
     [apiRef],
   );
 
@@ -56,16 +54,6 @@ export function useEvents(gridRootRef: React.RefObject<HTMLDivElement>, apiRef: 
     },
     [apiRef],
   );
-
-  const resize = React.useCallback(
-    () =>
-      apiRef.current.publishEvent(GRID_RESIZE, {
-        containerSize: apiRef.current.getState().containerSizes?.windowSizes,
-      }),
-    [apiRef],
-  );
-  const eventsApi: GridEventsApi = { resize };
-  useGridApiMethod(apiRef, eventsApi, 'GridEventsApi');
 
   useGridApiOptionHandler(apiRef, GRID_COLUMN_HEADER_CLICK, options.onColumnHeaderClick);
   useGridApiOptionHandler(
@@ -95,33 +83,29 @@ export function useEvents(gridRootRef: React.RefObject<HTMLDivElement>, apiRef: 
   useGridApiOptionHandler(apiRef, GRID_ROW_ENTER, options.onRowEnter);
   useGridApiOptionHandler(apiRef, GRID_ROW_LEAVE, options.onRowLeave);
 
-  useGridApiOptionHandler(apiRef, GRID_RESIZE, options.onResize);
-
   useGridApiOptionHandler(apiRef, GRID_COMPONENT_ERROR, options.onError);
   useGridApiOptionHandler(apiRef, GRID_STATE_CHANGE, options.onStateChange);
 
   React.useEffect(() => {
-    if (gridRootRef && gridRootRef.current && apiRef.current?.isInitialised) {
+    if (apiRef.current.rootElementRef?.current) {
       logger.debug('Binding events listeners');
       const keyDownHandler = getHandler(GRID_KEYDOWN);
       const keyUpHandler = getHandler(GRID_KEYUP);
-      const gridRootElem = gridRootRef.current;
+      const gridRootElem = apiRef.current.rootElementRef.current!;
 
       gridRootElem.addEventListener(GRID_FOCUS_OUT, onFocusOutHandler);
       gridRootElem.addEventListener(GRID_KEYDOWN, keyDownHandler);
       gridRootElem.addEventListener(GRID_KEYUP, keyUpHandler);
-      apiRef.current.isInitialised = true;
-      const api = apiRef.current;
 
       return () => {
-        logger.debug('Clearing all events listeners');
-        api.publishEvent(GRID_UNMOUNT);
+        logger.debug(
+          `Cleaning events listeners for ${[GRID_FOCUS_OUT, GRID_KEYDOWN, GRID_KEYUP].join(', ')}`,
+        );
         gridRootElem.removeEventListener(GRID_FOCUS_OUT, onFocusOutHandler);
         gridRootElem.removeEventListener(GRID_KEYDOWN, keyDownHandler);
         gridRootElem.removeEventListener(GRID_KEYUP, keyUpHandler);
-        api.removeAllListeners();
       };
     }
     return undefined;
-  }, [gridRootRef, apiRef.current?.isInitialised, getHandler, logger, onFocusOutHandler, apiRef]);
+  }, [getHandler, logger, onFocusOutHandler, apiRef]);
 }

@@ -1,11 +1,11 @@
-# XGrid API
+# DataGrid API
 
-<p class="description">The API documentation of the XGrid React component. Learn more about the props, slots and CSS customization points.</p>
+<p class="description">The API documentation of the DataGrid React component. Learn more about the props and the CSS customization points.</p>
 
 ## Import
 
 ```js
-import { XGrid } from '@material-ui/x-grid';
+import { DataGrid } from '@material-ui/data-grid';
 ```
 
 ## Props
@@ -15,32 +15,29 @@ import { XGrid } from '@material-ui/x-grid';
 |:-----|:-----|:--------|:------------|
 | <span class="prop-name required">columns<abbr title="required">*</abbr></span> | <span class="prop-type">GridColumns</span> |   | Set of columns of type 'GridColumns'. |
 | <span class="prop-name required">rows<abbr title="required">*</abbr></span> | <span class="prop-type">GridRowsProp</span> |  | Set of rows of type 'GridRowsProp'. |
-| <span class="prop-name">apiRef</span> | <span class="prop-type">GridApiRef</span> |   | The ref object that allows grid manipulation. Can be instantiated with 'useGridApiRef()'. |
 | <span class="prop-name">aria-label</span> | <span class="prop-type">string</span> |  | The label of the grid. |
 | <span class="prop-name">aria-labelledby</span> | <span class="prop-type">string</span> |  | The id of the element containing a label for the grid. |
 | <span class="prop-name">autoHeight</span> | <span class="prop-type">boolean</span> | false | If `true`, the grid height is dynamic and follow the number of rows in the grid. |
 | <span class="prop-name">autoPageSize</span> | <span class="prop-type">boolean</span> | false | If `true`, the pageSize is calculated according to the container size and the max number of rows to avoid rendering a vertical scroll bar. |
 | <span class="prop-name">checkboxSelection</span> | <span class="prop-type">boolean</span> | false | If `true`, the grid get a first column with a checkbox that allows to select rows. |
-| <span class="prop-name">classes</span> | <span class="prop-type">GridClasses</span> |   | Override or extend the styles applied to the component. See [CSS API](/api/x-grid/#css) below for more details. |
+| <span class="prop-name">classes</span> | <span class="prop-type">GridClasses</span> |   | Override or extend the styles applied to the component. See [CSS API](/api/data-grid/data-grid/#css) below for more details. |
 | <span class="prop-name">className</span> | <span class="prop-type">string</span> |   | CSS classname to add on the outer container. |
 | <span class="prop-name">columnBuffer</span> | <span class="prop-type">number</span> | 2 | Number of columns rendered outside the grid viewport. |
 | <span class="prop-name">columnTypes</span> | <span class="prop-type">GridColumnTypesRecord</span> |   | Extend native column types with your new column types. |
-| <span class="prop-name">components</span> | <span class="prop-type">GridSlotsComponent</span> |   | Overrideable components slots. |
+| <span class="prop-name">components</span> | <span class="prop-type">GridSlotsComponent</span> |   | Overrideable components. |
 | <span class="prop-name">componentsProps</span> | <span class="prop-type">GridSlotsComponentsProps</span> |   | Overrideable components props dynamically passed to the component at rendering. |
 | <span class="prop-name">density</span> | <span class="prop-type">Density</span> | standard | Sets the density of the grid. |
 | <span class="prop-name">disableColumnMenu</span> | <span class="prop-type">boolean</span> | false | If `true`, the column menu is disabled. |
 | <span class="prop-name">disableColumnSelector</span> | <span class="prop-type">boolean</span> | false | If `true`, the column selector is disabled. |
-| <span class="prop-name">disableColumnResize</span> | <span class="prop-type">boolean</span> | false | If `true`, resizing columns is disabled. |
+| <span class="prop-name">disableDensitySelector</span> | <span class="prop-type">boolean</span> | false | If `true`, the density selector is disabled. |
 | <span class="prop-name">disableExtendRowFullWidth</span> | <span class="prop-type">boolean</span> | false | If `true`, rows will not be extended to fill the full width of the grid container. |
-| <span class="prop-name">disableMultipleColumnsSorting</span> | <span class="prop-type">boolean</span> | false | If `true`, sorting with multiple columns is disabled. |
-| <span class="prop-name">disableMultipleSelection</span> | <span class="prop-type">boolean</span> | false | If `true`, multiple selection using the CTRL or CMD key is disabled. |
 | <span class="prop-name">disableSelectionOnClick</span> | <span class="prop-type">boolean</span> | false | If `true`, the selection on click on a row or cell is disabled. |
 | <span class="prop-name">error</span> | <span class="prop-type">any</span> |   | An error that will turn the grid into its error state and display the error component. |
-| <span class="prop-name">editRowsModel</span> | <span class="prop-type">GridEditRowsModel</span> | undefined | Set the edit rows model of the grid. |
+| <span class="prop-name">editRowsModel</span> | <span class="prop-type">GridEditRowsModel</span> | undefined  | Set the edit rows model of the grid. |
 | <span class="prop-name">filterModel</span> | <span class="prop-type">GridFilterModel</span> |   | Set the filter model of the grid. |
 | <span class="prop-name">getCellClassName</span> | <span class="prop-type">(params: GridCellParams) => string</span> |   | Function that applies CSS classes dynamically on cells. |
 | <span class="prop-name">getRowClassName</span> | <span class="prop-type">(params: GridRowParams) => string</span> |   | Function that applies CSS classes dynamically on rows. |
-| <span class="prop-name">getRowId</span> | <span class="prop-type">GridRowIdGetter</span> | (row)=> row.id | A function that allows the grid to retrieve the row id. |
+| <span class="prop-name">getRowId</span> | <span class="prop-type">GridRowIdGetter</span> | (row)=> row.id   | A function that allows the grid to retrieve the row id. |
 | <span class="prop-name">headerHeight</span> | <span class="prop-type">number</span> | 56 | Set the height in pixel of the column headers in the grid. |
 | <span class="prop-name">hideFooter</span> | <span class="prop-type">boolean</span> | false | If `true`, the footer component is hidden. |
 | <span class="prop-name">hideFooterPagination</span> | <span class="prop-type">boolean</span> | false | If `true`, the pagination component in the footer is hidden. |
@@ -49,7 +46,7 @@ import { XGrid } from '@material-ui/x-grid';
 | <span class="prop-name">icons</span> | <span class="prop-type">IconsOptions</span> |   | Set of icons used in the grid. |
 | <span class="prop-name">isCellEditable</span> | <span class="prop-type">(params: GridCellParams) => boolean</span> |   | Callback fired when a cell is rendered, returns true if the cell is editable. |
 | <span class="prop-name">isRowSelectable</span> | <span class="prop-type">(params: GridRowParams) => boolean</span> |   | Determines if a row can be selected. |
-| <span class="prop-name">loading</span> | <span class="prop-type">boolean</span> |  false | If `true`, a  loading overlay is displayed.. |
+| <span class="prop-name">loading</span> | <span class="prop-type">boolean</span> |  false | If `true`, a  loading overlay is displayed. |
 | <span class="prop-name">localeText</span> | <span class="prop-type">GridLocaleText</span> |   | Set of text labels used in the grid. You can find all the translation keys supported in [the source](https://github.com/mui-org/material-ui-x/blob/HEAD/packages/grid/_modules_/grid/constants/localeTextConstants.ts) in the GitHub repository. |
 | <span class="prop-name">logger</span> | <span class="prop-type">Logger</span> | null | Pass a custom logger in the components that implements the 'Logger' interface. |
 | <span class="prop-name">logLevel</span> | <span class="prop-type">string | false</span> | false | Allows to pass the logging level or false to turn off logging. |
@@ -86,18 +83,15 @@ import { XGrid } from '@material-ui/x-grid';
 | <span class="prop-name">onRowEnter</span> | <span class="prop-type">(param: GridRowParams, event: React.MouseEvent) => void</span> |   | Callback fired when a mouse enter comes from a row container element. |
 | <span class="prop-name">onRowLeave</span> | <span class="prop-type">(param: GridRowParams, event: React.MouseEvent) => void</span> |   | Callback fired when a mouse leave event comes from a row container element. |
 | <span class="prop-name">onRowSelected</span> | <span class="prop-type">(param: GridRowSelectedParams) => void</span> |   | Callback fired when one row is selected. |
-| <span class="prop-name">onRowsScrollEnd</span> | <span class="prop-type">(param: GridRowScrollEndParams) => void</span> |   | Callback fired when scrolling to the bottom of the grid viewport. |
 | <span class="prop-name">onSelectionModelChange</span> | <span class="prop-type">(param: GridSelectionModelChangeParams) => void</span> |   | Callback fired when the selection state of one or multiple rows changes. |
 | <span class="prop-name">onSortModelChange</span> | <span class="prop-type">(param: GridSortModelParams) => void</span> |   | Callback fired when the sort model changes before a column is sorted. |
 | <span class="prop-name">page</span> | <span class="prop-type">number</span> | 1   |  Set the current page. |
 | <span class="prop-name">pageSize</span> | <span class="prop-type">number</span> | 100 | Set the number of rows in one page. |
-| <span class="prop-name">pagination</span> | <span class="prop-type">boolean</span> | false | If `true`, pagination is enabled. |
 | <span class="prop-name">paginationMode</span> | <span class="prop-type">GridFeatureMode</span> | 'client' | Pagination can be processed on the server or client-side. Set it to 'client' if you would like to handle the pagination on the client-side. Set it to 'server' if you would like to handle the pagination on the server-side. |
 | <span class="prop-name">rowCount</span> | <span class="prop-type">number</span> |   |  Set the total number of rows, if it is different than the length of the value `rows` prop. |
 | <span class="prop-name">rowHeight</span> | <span class="prop-type">number</span> | 52 | Set the height in pixel of a row in the grid. |
 | <span class="prop-name">rowsPerPageOptions</span> | <span class="prop-type">number[]</span> | [25, 50, 100] | Select the pageSize dynamically using the component UI. |
 | <span class="prop-name">scrollbarSize</span> | <span class="prop-type">number</span> | 15 | Set the height/width of the grid inner scrollbar. |
-| <span class="prop-name">scrollEndThreshold</span> | <span class="prop-type">number</span> | 80 | Set the area at the bottom of the grid viewport where onRowsScrollEnd is called. |
 | <span class="prop-name">selectionModel</span> | <span class="prop-type">GridSelectionModel</span> |   | Set the selection model of the grid. |
 | <span class="prop-name">showCellRightBorder</span> | <span class="prop-type">boolean</span> | false | If `true`, the right border of the cells are displayed. |
 | <span class="prop-name">showColumnRightBorder</span> | <span class="prop-type">boolean</span> | false | If `true`, the right border of the column headers are displayed. |
@@ -189,4 +183,4 @@ If that's not sufficient, you can check the [implementation of the component sty
 
 ## Demos
 
-- [XGrid](/components/data-grid/#commercial-version)
+- [DataGrid](/components/data-grid/#mit-version)

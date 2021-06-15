@@ -1,25 +1,31 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import { GridApiContext } from './GridApiContext';
+import { useGridApiContext } from '../hooks/root/useGridApiContext';
 
 interface RowCountProps {
   rowCount: number;
+  visibleRowCount: number;
 }
 
 type GridRowCountProps = React.HTMLAttributes<HTMLDivElement> & RowCountProps;
 
 export const GridRowCount = React.forwardRef<HTMLDivElement, GridRowCountProps>(
   function GridRowCount(props, ref) {
-    const { className, rowCount, ...other } = props;
-    const apiRef = React.useContext(GridApiContext);
+    const { className, rowCount, visibleRowCount, ...other } = props;
+    const apiRef = useGridApiContext();
 
     if (rowCount === 0) {
       return null;
     }
 
+    const text =
+      visibleRowCount < rowCount
+        ? apiRef!.current.getLocaleText('footerTotalVisibleRows')(visibleRowCount, rowCount)
+        : rowCount.toLocaleString();
+
     return (
       <div ref={ref} className={clsx('MuiDataGrid-rowCount', className)} {...other}>
-        {`${apiRef!.current.getLocaleText('footerTotalRows')} ${rowCount.toLocaleString()}`}
+        {apiRef!.current.getLocaleText('footerTotalRows')} {text}
       </div>
     );
   },

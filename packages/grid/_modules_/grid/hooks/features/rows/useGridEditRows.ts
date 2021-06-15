@@ -44,7 +44,6 @@ export function useGridEditRows(apiRef: GridApiRef) {
   const logger = useLogger('useGridEditRows');
   const [, setGridState, forceUpdate] = useGridState(apiRef);
   const options = useGridSelector(apiRef, optionsSelector);
-  const lastEditedCell = React.useRef<GridCellParams | null>(null);
 
   const setCellMode = React.useCallback(
     (id, field, mode: GridCellMode) => {
@@ -59,10 +58,8 @@ export function useGridEditRows(apiRef: GridApiRef) {
         if (mode === 'edit') {
           newEditRowsState[id] = { ...newEditRowsState[id] } || {};
           newEditRowsState[id][field] = { value: apiRef.current.getCellValue(id, field) };
-          lastEditedCell.current = apiRef.current.getCellParams(id, field);
         } else {
           delete newEditRowsState[id][field];
-          lastEditedCell.current = null;
           if (!Object.keys(newEditRowsState[id]).length) {
             delete newEditRowsState[id];
           }
@@ -171,13 +168,15 @@ export function useGridEditRows(apiRef: GridApiRef) {
 
   const setCellValue = React.useCallback(
     (params: GridEditCellValueParams) => {
+      const column = apiRef.current.getColumn(params.field);
+      const parsedValue = column.valueParser
+        ? column.valueParser(params.value, apiRef.current.getCellParams(params.id, params.field))
+        : params.value;
       logger.debug(
-        `Setting cell id: ${params.id} field: ${
-          params.field
-        } to value: ${params.value?.toString()}`,
+        `Setting cell id: ${params.id} field: ${params.field} to value: ${parsedValue?.toString()}`,
       );
       const rowUpdate = { id: params.id };
-      rowUpdate[params.field] = params.value;
+      rowUpdate[params.field] = parsedValue;
       apiRef.current.updateRows([rowUpdate]);
       apiRef.current.publishEvent(GRID_CELL_VALUE_CHANGE, params);
     },

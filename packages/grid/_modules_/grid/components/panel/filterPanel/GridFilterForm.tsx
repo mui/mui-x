@@ -11,7 +11,7 @@ import { useGridSelector } from '../../../hooks/features/core/useGridSelector';
 import { GridColDef } from '../../../models/colDef/gridColDef';
 import { GridFilterItem, GridLinkOperator } from '../../../models/gridFilterItem';
 import { GridFilterOperator } from '../../../models/gridFilterOperator';
-import { GridApiContext } from '../../GridApiContext';
+import { useGridApiContext } from '../../../hooks/root/useGridApiContext';
 import { GridCloseIcon } from '../../icons/index';
 import { GridTranslationKeys } from '../../../models/api/gridLocaleTextApi';
 
@@ -67,7 +67,7 @@ export function GridFilterForm(props: GridFilterFormProps) {
     applyMultiFilterOperatorChanges,
   } = props;
   const classes = useStyles();
-  const apiRef = React.useContext(GridApiContext);
+  const apiRef = useGridApiContext();
   const filterableColumns = useGridSelector(apiRef, filterableGridColumnsSelector);
   const linkOperatorSelectId = useId();
   const linkOperatorSelectLabelId = useId();

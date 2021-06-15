@@ -9,10 +9,8 @@ import {
   GridEditRowProps,
 } from '../../models/index';
 import { GridCell, GridCellProps } from './GridCell';
-import { GridApiContext } from '../GridApiContext';
+import { useGridApiContext } from '../../hooks/root/useGridApiContext';
 import { isFunction } from '../../utils/index';
-import { gridDensityRowHeightSelector } from '../../hooks/features/density/densitySelector';
-import { useGridSelector } from '../../hooks/features/core/useGridSelector';
 import { GRID_CSS_CLASS_PREFIX } from '../../constants/cssClassesConstants';
 
 interface RowCellsProps {
@@ -23,6 +21,7 @@ interface RowCellsProps {
   id: GridRowId;
   hasScrollX: boolean;
   hasScrollY: boolean;
+  height: number;
   getCellClassName?: (params: GridCellParams) => string;
   lastColIdx: number;
   row: GridRowModel;
@@ -34,12 +33,13 @@ interface RowCellsProps {
   editRowState?: GridEditRowProps;
 }
 
-export const GridRowCells = React.memo((props: RowCellsProps) => {
+export const GridRowCells = React.memo(function GridRowCells(props: RowCellsProps) {
   const {
     columns,
     firstColIdx,
     hasScrollX,
     hasScrollY,
+    height,
     id,
     getCellClassName,
     lastColIdx,
@@ -52,9 +52,7 @@ export const GridRowCells = React.memo((props: RowCellsProps) => {
     cellClassName,
     ...other
   } = props;
-  const apiRef = React.useContext(GridApiContext);
-  const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
-
+  const apiRef = useGridApiContext();
   const cellsProps = columns.slice(firstColIdx, lastColIdx + 1).map((column, colIdx) => {
     const colIndex = firstColIdx + colIdx;
     const isLastColumn = colIndex === columns.length - 1;
@@ -78,7 +76,7 @@ export const GridRowCells = React.memo((props: RowCellsProps) => {
     }
 
     const editCellState = editRowState && editRowState[column.field];
-    let cellComponent: React.ReactElement | null = null;
+    let cellComponent: React.ReactNode = null;
 
     if (editCellState == null && column.renderCell) {
       cellComponent = column.renderCell(cellParams);
@@ -100,7 +98,7 @@ export const GridRowCells = React.memo((props: RowCellsProps) => {
       field: column.field,
       width: column.width!,
       rowId: id,
-      height: rowHeight,
+      height,
       showRightBorder,
       formattedValue: cellParams.formattedValue,
       align: column.align || 'left',
@@ -130,4 +128,3 @@ export const GridRowCells = React.memo((props: RowCellsProps) => {
     </React.Fragment>
   );
 });
-GridRowCells.displayName = 'GridRowCells';

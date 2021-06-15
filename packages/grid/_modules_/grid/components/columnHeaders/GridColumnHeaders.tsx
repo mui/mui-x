@@ -4,7 +4,7 @@ import { visibleGridColumnsSelector } from '../../hooks/features/columns/gridCol
 import { GridState } from '../../hooks/features/core/gridState';
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
 import { renderStateSelector } from '../../hooks/features/virtualization/renderingStateSelector';
-import { GridApiContext } from '../GridApiContext';
+import { useGridApiContext } from '../../hooks/root/useGridApiContext';
 import { GridEmptyCell } from '../cell/GridEmptyCell';
 import { GridScrollArea } from '../GridScrollArea';
 import { GridColumnHeadersItemCollection } from './GridColumnHeadersItemCollection';
@@ -19,7 +19,7 @@ export const GridColumnsHeader = React.forwardRef<HTMLDivElement, {}>(function G
   props,
   ref,
 ) {
-  const apiRef = React.useContext(GridApiContext);
+  const apiRef = useGridApiContext();
   const columns = useGridSelector(apiRef, visibleGridColumnsSelector);
   const containerSizes = useGridSelector(apiRef, gridContainerSizesSelector);
   const headerHeight = useGridSelector(apiRef, gridDensityHeaderHeightSelector);

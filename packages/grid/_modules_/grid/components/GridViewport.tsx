@@ -11,7 +11,7 @@ import { gridEditRowsStateSelector } from '../hooks/features/rows/gridEditRowsSe
 import { gridSelectionStateSelector } from '../hooks/features/selection/gridSelectionSelector';
 import { renderStateSelector } from '../hooks/features/virtualization/renderingStateSelector';
 import { optionsSelector } from '../hooks/utils/optionsSelector';
-import { GridApiContext } from './GridApiContext';
+import { useGridApiContext } from '../hooks/root/useGridApiContext';
 import { GridDataContainer } from './containers/GridDataContainer';
 import { GridEmptyCell } from './cell/GridEmptyCell';
 import { GridRenderingZone } from './GridRenderingZone';
@@ -28,8 +28,8 @@ import {
 type ViewportType = React.ForwardRefExoticComponent<React.RefAttributes<HTMLDivElement>>;
 
 export const GridViewport: ViewportType = React.forwardRef<HTMLDivElement, {}>(
-  (props, renderingZoneRef) => {
-    const apiRef = React.useContext(GridApiContext);
+  function GridViewport(props, renderingZoneRef) {
+    const apiRef = useGridApiContext();
 
     const options = useGridSelector(apiRef, optionsSelector);
     const containerSizes = useGridSelector(apiRef, gridContainerSizesSelector);
@@ -81,6 +81,7 @@ export const GridViewport: ViewportType = React.forwardRef<HTMLDivElement, {}>(
               columns={visibleColumns}
               row={row}
               id={id}
+              height={rowHeight}
               firstColIdx={renderState.renderContext!.firstColIdx!}
               lastColIdx={renderState.renderContext!.lastColIdx!}
               hasScrollX={scrollBarState.hasScrollX}
@@ -115,4 +116,3 @@ export const GridViewport: ViewportType = React.forwardRef<HTMLDivElement, {}>(
     );
   },
 );
-GridViewport.displayName = 'GridViewport';

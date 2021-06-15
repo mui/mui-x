@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { ErrorInfo } from 'react';
-import { Logger } from '../hooks/utils/useLogger';
 import { GridApiRef } from '../models/api';
+import { Logger } from '../models/logger';
 
 export interface ErrorBoundaryProps {
   logger: Logger;

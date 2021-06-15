@@ -27,6 +27,11 @@ const nlNLGrid: Partial<GridLocaleText> = {
   toolbarFiltersTooltipActive: (count) =>
     count > 1 ? `${count} actieve filters` : `${count} filter actief`,
 
+  // Export selector toolbar button text
+  // toolbarExport: 'Export',
+  // toolbarExportLabel: 'Export',
+  // toolbarExportCSV: 'Download as CSV',
+
   // Columns panel text
   columnsPanelTextFieldLabel: 'Zoek kolom',
   columnsPanelTextFieldPlaceholder: 'Kolomtitel',
@@ -79,6 +84,10 @@ const nlNLGrid: Partial<GridLocaleText> = {
 
   // Total rows footer text
   footerTotalRows: 'Totaal:',
+
+  // Total visible rows footer text
+  // footerTotalVisibleRows: (visibleCount, totalCount) =>
+  //   `${visibleCount.toLocaleString()} of ${totalCount.toLocaleString()}`,
 };
 
 export const nlNL: Localization = getGridLocalization(nlNLGrid, nlNLCore);

@@ -5,12 +5,7 @@ import { useLogger } from '../utils/useLogger';
 import { GRID_COMPONENT_ERROR, GRID_UNMOUNT } from '../../constants/eventsConstants';
 import { useGridApiMethod } from './useGridApiMethod';
 
-export function useApi(
-  gridRootRef: React.RefObject<HTMLDivElement>,
-  columnHeadersContainerRef: React.RefObject<HTMLDivElement>,
-  apiRef: GridApiRef,
-): boolean {
-  const [initialised, setInit] = React.useState(false);
+export function useApi(apiRef: GridApiRef): void {
   const logger = useLogger('useApi');
 
   const publishEvent = React.useCallback(
@@ -41,29 +36,21 @@ export function useApi(
 
   const showError = React.useCallback(
     (args) => {
-      publishEvent(GRID_COMPONENT_ERROR, args);
+      apiRef.current.publishEvent(GRID_COMPONENT_ERROR, args);
     },
-    [publishEvent],
+    [apiRef],
   );
 
   React.useEffect(() => {
     logger.debug('Initializing grid api.');
-    apiRef.current.isInitialised = true;
-    apiRef.current.rootElementRef = gridRootRef;
-    apiRef.current.columnHeadersElementRef = columnHeadersContainerRef;
-
-    setInit(true);
     const api = apiRef.current;
 
     return () => {
-      logger.debug('Unmounting Grid component');
+      logger.info('Unmounting Grid component. Clearing all events listeners.');
       api.emit(GRID_UNMOUNT);
-      logger.debug('Clearing all events listeners');
       api.removeAllListeners();
     };
-  }, [gridRootRef, logger, apiRef, columnHeadersContainerRef]);
+  }, [logger, apiRef]);
 
   useGridApiMethod(apiRef, { subscribeEvent, publishEvent, showError }, 'GridCoreApi');
-
-  return initialised;
 }

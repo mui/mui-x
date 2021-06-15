@@ -1,6 +1,5 @@
 ---
 title: Data Grid - Filtering
-components: DataGrid, XGrid
 ---
 
 # Data Grid - Filtering
@@ -138,7 +137,7 @@ Below is a very simple demo on how you could achieve server-side filtering.
 
 <!-- WIP -->
 
-## Multi-column filtering <span class="pro"></span>
+## Multi-column filtering [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-pro/)
 
 `XGrid` supports filtering by multiple columns.
 The default operator that will be applied between filters is an And.
@@ -159,9 +158,9 @@ const filterModel: GridFilterModel = {
 
 {{"demo": "pages/components/data-grid/filtering/MultiFilteringWithOrGrid.js", "bg": "inline", "disableAd": true}}
 
-## apiRef <span class="pro"></span>
+## apiRef [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-pro/)
 
-<!-- https://master--material-ui-x.netlify.app/components/data-grid/rows/#apiref -->
+{{"demo": "pages/components/data-grid/filtering/FilterApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
 
 ## 🚧 Quick filter
 
@@ -171,3 +170,8 @@ const filterModel: GridFilterModel = {
 
 In addition to the column specific filtering, a global quick filtering will also be available.
 The provided search text will match against all the cells.
+
+## API
+
+- [DataGrid](/api/data-grid/data-grid/)
+- [XGrid](/api/data-grid/x-grid/)

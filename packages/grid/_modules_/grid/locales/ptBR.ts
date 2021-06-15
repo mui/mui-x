@@ -27,6 +27,11 @@ const ptBRGrid: Partial<GridLocaleText> = {
   toolbarFiltersTooltipActive: (count) =>
     `${count} ${count !== 1 ? 'filtros' : 'filtro'} ${count !== 1 ? 'ativos' : 'ativo'}`,
 
+  // Export selector toolbar button text
+  toolbarExport: 'Exportar',
+  toolbarExportLabel: 'Exportar',
+  toolbarExportCSV: 'Baixar como CSV',
+
   // Columns panel text
   columnsPanelTextFieldLabel: 'Localizar coluna',
   columnsPanelTextFieldPlaceholder: 'Título da coluna',
@@ -79,6 +84,10 @@ const ptBRGrid: Partial<GridLocaleText> = {
 
   // Total rows footer text
   footerTotalRows: 'Total de linhas:',
+
+  // Total visible rows footer text
+  footerTotalVisibleRows: (visibleCount, totalCount) =>
+    `${visibleCount.toLocaleString()} de ${totalCount.toLocaleString()}`,
 
   // Checkbox selection text
   checkboxSelectionHeaderName: 'Seleção',

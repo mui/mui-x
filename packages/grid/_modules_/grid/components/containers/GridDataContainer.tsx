@@ -6,13 +6,13 @@ import {
   gridDataContainerSizesSelector,
   gridScrollBarSizeSelector,
 } from '../../hooks/root/gridContainerSizesSelector';
-import { GridApiContext } from '../GridApiContext';
+import { useGridApiContext } from '../../hooks/root/useGridApiContext';
 
 type GridDataContainerProps = React.HTMLAttributes<HTMLDivElement>;
 
 export function GridDataContainer(props: GridDataContainerProps) {
   const { className, ...other } = props;
-  const apiRef = React.useContext(GridApiContext);
+  const apiRef = useGridApiContext();
   const dataContainerSizes = useGridSelector(apiRef!, gridDataContainerSizesSelector);
   const scrollBar = useGridSelector(apiRef!, gridScrollBarSizeSelector);
 

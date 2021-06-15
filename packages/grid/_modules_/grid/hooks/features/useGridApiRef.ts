@@ -18,7 +18,7 @@ export function useGridApiRef(apiRefProp: GridApiRef | undefined): GridApiRef;
 
 export function useGridApiRef(...args): any {
   const apiRefProp = args[0];
-  const apiRef = React.useRef<GridApi>(args.length === 0 ? null : createGridApi());
+  const apiRef = React.useRef<GridApi>(createGridApi());
 
   React.useImperativeHandle(apiRefProp, () => apiRef.current, [apiRef]);
 

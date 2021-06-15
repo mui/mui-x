@@ -9,17 +9,40 @@ import {
  */
 export interface GridCoreApi extends GridEventEmitter {
   /**
-   * Property that comes `true` when the grid has its `EventEmitter` initialised.
-   */
-  isInitialised: boolean;
-  /**
    * The react ref of the grid root container div element.
+   * @ignore - do not document.
    */
   rootElementRef?: React.RefObject<HTMLDivElement>;
   /**
-   * The react ref of the grid column container div element.
+   * The react ref of the grid column container virtualized div element.
+   * @ignore - do not document.
+   */
+  columnHeadersContainerElementRef?: React.RefObject<HTMLDivElement>;
+  /**
+   * The react ref of the grid column headers container element.
+   * @ignore - do not document.
    */
   columnHeadersElementRef?: React.RefObject<HTMLDivElement>;
+  /**
+   * The react ref of the grid window container element.
+   * @ignore - do not document.
+   */
+  windowRef?: React.RefObject<HTMLDivElement>;
+  /**
+   * The react ref of the grid data rendering zone.
+   * @ignore - do not document.
+   */
+  renderingZoneRef?: React.RefObject<HTMLDivElement>;
+  /**
+   * The react ref of the grid header element.
+   * @ignore - do not document.
+   */
+  headerRef?: React.RefObject<HTMLDivElement>;
+  /**
+   * The react ref of the grid footer element.
+   * @ignore - do not document.
+   */
+  footerRef?: React.RefObject<HTMLDivElement>;
   /**
    * Registers a handler for an event.
    * @param {string} event The name of the event.

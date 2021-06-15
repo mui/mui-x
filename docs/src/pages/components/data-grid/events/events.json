@@ -1,0 +1,178 @@
+[
+  {
+    "name": "resize",
+    "description": "Fired when the grid is resized. Called with a GridResizeParams object."
+  },
+  {
+    "name": "debouncedResize",
+    "description": "Fired when the grid is resized with a debounced time of 60ms. Called with a GridResizeParams object."
+  },
+  { "name": "componentError", "description": "Fired when an exception is thrown in the grid." },
+  { "name": "unmount", "description": "Fired when the grid is unmounted." },
+  {
+    "name": "cellModeChange",
+    "description": "Fired when the mode of a cell changes. Called with a GridCellModeChangeParams object."
+  },
+  {
+    "name": "cellClick",
+    "description": "Fired when a cell is clicked. Called with a <a href=\"/api/data-grid/grid-cell-params/\">GridCellParams</a> object."
+  },
+  {
+    "name": "cellDoubleClick",
+    "description": "Fired when a cell is double-clicked. Called with a <a href=\"/api/data-grid/grid-cell-params/\">GridCellParams</a> object."
+  },
+  {
+    "name": "cellMouseDown",
+    "description": "Fired when a <code>mousedown</code> event happens in a cell. Called with a <a href=\"/api/data-grid/grid-cell-params/\">GridCellParams</a> object."
+  },
+  {
+    "name": "cellOver",
+    "description": "Fired when a <code>mouseover</code> event happens in a cell. Called with a <a href=\"/api/data-grid/grid-cell-params/\">GridCellParams</a> object."
+  },
+  {
+    "name": "cellOut",
+    "description": "Fired when a <code>mouseout</code> event happens in a cell. Called with a <a href=\"/api/data-grid/grid-cell-params/\">GridCellParams</a> object."
+  },
+  {
+    "name": "cellEnter",
+    "description": "Fired when a <code>mouseenter</code> event happens in a cell. Called with a <a href=\"/api/data-grid/grid-cell-params/\">GridCellParams</a> object."
+  },
+  {
+    "name": "cellLeave",
+    "description": "Fired when a <code>mouseleave</code> event happens in a cell. Called with a <a href=\"/api/data-grid/grid-cell-params/\">GridCellParams</a> object."
+  },
+  {
+    "name": "cellKeydown",
+    "description": "Fired when a <code>keydown</code> event happens in a cell. Called with a <a href=\"/api/data-grid/grid-cell-params/\">GridCellParams</a> object."
+  },
+  {
+    "name": "cellBlur",
+    "description": "Fired when a cell loses focus. Called with a <a href=\"/api/data-grid/grid-cell-params/\">GridCellParams</a> object."
+  },
+  {
+    "name": "cellFocus",
+    "description": "Fired when a cell gains focus. Called with a <a href=\"/api/data-grid/grid-cell-params/\">GridCellParams</a> object."
+  },
+  {
+    "name": "cellEditPropsChange",
+    "description": "Fired when the props of the edit input changes. Called with a GridEditCellPropsParams object."
+  },
+  {
+    "name": "cellEditPropsChangeCommitted",
+    "description": "Fired when the props of the edit input are committed. Called with a GridEditCellPropsParams object."
+  },
+  {
+    "name": "cellValueChange",
+    "description": "Fired when the value of a cell changes. Called with a GridEditCellValueParams object."
+  },
+  {
+    "name": "cellEditEnter",
+    "description": "Fired when the cell turns to edit mode. Called with a <a href=\"/api/data-grid/grid-cell-params/\">GridCellParams</a> object."
+  },
+  {
+    "name": "cellEditExit",
+    "description": "Fired when the cell turns back to view mode. Called with a <a href=\"/api/data-grid/grid-cell-params/\">GridCellParams</a> object."
+  },
+  {
+    "name": "rowClick",
+    "description": "Fired when a row is clicked. Called with a <a href=\"/api/data-grid/grid-row-params/\">GridRowParams</a> object."
+  },
+  {
+    "name": "rowDoubleClick",
+    "description": "Fired when a row is double-clicked. Called with a <a href=\"/api/data-grid/grid-row-params/\">GridRowParams</a> object."
+  },
+  {
+    "name": "rowOver",
+    "description": "Fired when a <code>mouseover</code> event happens in a row.  Called with a <a href=\"/api/data-grid/grid-row-params/\">GridRowParams</a> object."
+  },
+  {
+    "name": "rowOut",
+    "description": "Fired when a <code>mouseout</code> event happens in a row.  Called with a <a href=\"/api/data-grid/grid-row-params/\">GridRowParams</a> object."
+  },
+  {
+    "name": "rowEnter",
+    "description": "Fired when a <code>mouseenter</code> event happens in a row.  Called with a <a href=\"/api/data-grid/grid-row-params/\">GridRowParams</a> object."
+  },
+  {
+    "name": "rowLeave",
+    "description": "Fired when a <code>mouseleave</code> event happens in a row.  Called with a <a href=\"/api/data-grid/grid-row-params/\">GridRowParams</a> object."
+  },
+  {
+    "name": "editRowModelChange",
+    "description": "Fired when the row editing model changes. Called with a GridEditRowModelParams object."
+  },
+  {
+    "name": "rowSelected",
+    "description": "Fired when a row is selected or unselected. Called with a GridRowSelectedParams object."
+  },
+  {
+    "name": "columnHeaderKeydown",
+    "description": "Fired when a key is pressed in a column header. It&#39;s mapped do the <code>keydown</code> DOM event.\nCalled with a GridColumnHeaderParams object."
+  },
+  {
+    "name": "columnHeaderClick",
+    "description": "Fired when a column header is clicked. Called with a GridColumnHeaderParams object."
+  },
+  {
+    "name": "columnHeaderDoubleClick",
+    "description": "Fired when a column header is double-clicked. Called with a GridColumnHeaderParams object."
+  },
+  {
+    "name": "selectionChange",
+    "description": "Fired when the selection state of one or multiple rows changes.\nCalled with a GridSelectionModelChangeParams object."
+  },
+  {
+    "name": "pageChange",
+    "description": "Fired when the current page change. Called with a GridPageChangeParams object."
+  },
+  {
+    "name": "pageSizeChange",
+    "description": "Fired when the page size change. Called with a GridPageChangeParams object."
+  },
+  {
+    "name": "rowsScroll",
+    "description": "Fired during the scroll of the grid viewport. Called with a GridScrollParams object."
+  },
+  {
+    "name": "rowsScrollEnd",
+    "description": "Fired when scrolling to the bottom of the grid viewport. Called with a GridRowScrollEndParams object."
+  },
+  {
+    "name": "columnResize",
+    "description": "Fired during the resizing of a column. Called with a GridColumnResizeParams object."
+  },
+  {
+    "name": "columnResizeCommitted",
+    "description": "Fired when a column is resized. Called with a GridColumnResizeParams object."
+  },
+  {
+    "name": "columnResizeStart",
+    "description": "Fired when the user starts resizing a column. Called with an object <code>{ field: string }</code>."
+  },
+  {
+    "name": "columnResizeStop",
+    "description": "Fired when the user stops resizing a column. Called with an object <code>{ field: string }</code>."
+  },
+  { "name": "columnOrderChange", "description": "Fired when the user ends resizing a column." },
+  { "name": "rowsCleared", "description": "Fired when the grid is emptied." },
+  {
+    "name": "columnsUpdated",
+    "description": "Fired when the columns state is changed.\nCalled with an array of strings correspoding to the field names."
+  },
+  {
+    "name": "sortModelChange",
+    "description": "Fired when the sort model changes.\nCalled with a GridSortModelParams object."
+  },
+  {
+    "name": "filterModelChange",
+    "description": "Fired when the filter model changes.\nCalled with a GridFilterModelParams object."
+  },
+  {
+    "name": "stateChange",
+    "description": "Fired when the state of the grid is updated. Called with a GridStateChangeParams object."
+  },
+  {
+    "name": "columnVisibilityChange",
+    "description": "Fired when a column visibility changes. Called with a GridColumnVisibilityChangeParams object."
+  }
+]

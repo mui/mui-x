@@ -2,7 +2,7 @@ import * as React from 'react';
 import clsx from 'clsx';
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
 import { optionsSelector } from '../../hooks/utils/optionsSelector';
-import { GridApiContext } from '../GridApiContext';
+import { useGridApiContext } from '../../hooks/root/useGridApiContext';
 
 export interface GridColumnHeaderSeparatorProps extends React.HTMLAttributes<HTMLDivElement> {
   resizable: boolean;
@@ -14,7 +14,7 @@ export const GridColumnHeaderSeparator = React.memo(function GridColumnHeaderSep
   props: GridColumnHeaderSeparatorProps,
 ) {
   const { resizable, resizing, height, ...other } = props;
-  const apiRef = React.useContext(GridApiContext);
+  const apiRef = useGridApiContext();
   const { showColumnRightBorder } = useGridSelector(apiRef, optionsSelector);
   const ColumnResizeIcon = apiRef!.current.components!.ColumnResizeIcon!;
 

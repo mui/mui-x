@@ -1,6 +1,5 @@
 ---
 title: Data Grid - Accessibility
-components: DataGrid, XGrid
 ---
 
 # Data Grid - Accessibility
@@ -15,7 +14,7 @@ The most commonly encountered conformance guidelines for accessibility are:
 - [ADA](https://www.ada.gov/) - US Department of Justice
 - [Section 508](https://www.section508.gov/) - US federal agencies
 
-WCAG 2.0 has 3 levels of conformance; A, AA and AAA (in order of conformance).
+WCAG 2.0 has three levels of conformance; A, AA, and AAA (in order of conformance).
 As meeting WCAG 2.0 level AA guidelines also meets the ADA and Section 508 standards, it's likely the standard that most organizations will want to target.
 
 The [WAI-ARIA authoring practices](https://www.w3.org/TR/wai-aria-practices/#grid) provides valuable insight on how to make the grid highly accessible.
@@ -26,7 +25,7 @@ You can change the density of the rows and the column header.
 
 ### Density selector
 
-To enable the density selector you need to compose a toolbar containing the `GridToolbarDensitySelector` component, and apply it using the `Toolbar` property in the grid `components` prop.
+To enable the density selector, you need to compose a toolbar containing the `GridToolbarDensitySelector` component and apply it using the `Toolbar` property in the grid `components` prop.
 
 The user can change the density of the data grid by using the density selector from the toolbar.
 
@@ -36,13 +35,15 @@ To hide the density selector add the `disableDensitySelector` prop to the data g
 
 ### Density prop
 
-The vertical density of the data grid can be set using the `density` prop. The `density` prop applies the values determined by the `rowHeight` and `headerHeight` props, if supplied. The user can override this setting with the toolbar density selector, if provided.
+The vertical density of the data grid can be set using the `density` prop.
+The `density` prop applies the values determined by the `rowHeight` and `headerHeight` props if supplied.
+The user can override this setting with the toolbar density selector if provided.
 
 {{"demo": "pages/components/data-grid/accessibility/DensitySelectorSmallGrid.js", "bg": "inline"}}
 
 ## Keyboard navigation
 
-The grid responds to keyboard interactions from the user as well as emitting events when key presses happen on the grid cells.
+The grid responds to keyboard interactions from the user and emits events when key presses happen on the grid cells.
 
 ### Navigation
 
@@ -69,8 +70,9 @@ Use the arrow keys to move the focus.
 |                                        <kbd class="key">Shift</kbd> + <kbd class="key">Space</kbd> | Select the current row                            |
 | <kbd class="key">Shift</kbd> + <kbd class="key">Space</kbd> + <kbd class="key">Arrow Up/Down</kbd> | Select the current row and the row above or below |
 |                                             <kbd class="key">CTRL</kbd> + <kbd class="key">A</kbd> | Select all rows                                   |
-|                                             <kbd class="key">CTRL</kbd> + <kbd class="key">C</kbd> | Copy the currently selected row                   |
+|                                             <kbd class="key">CTRL</kbd> + <kbd class="key">C</kbd> | Copy the currently selected row(s)                |
 |                                                        <kbd class="key">CTRL</kbd> + Click on cell | Enable multi-selection                            |
+|                                              <kbd class="key">CTRL</kbd> + Click on a selected row | Deselect the row                                  |
 |                                                                       <kbd class="key">Enter</kbd> | Sort column when column header is focused         |
 |                                         <kbd class="key">CTRL</kbd> + <kbd class="key">Enter</kbd> | Open column menu when column header is focused    |
 
@@ -86,3 +88,8 @@ Use the arrow keys to move the focus.
 
 The above key assignments are for Windows and Linux.
 On macOS, replace <kbd class="key">CTRL</kbd> with <kbd class="key">⌘ Command</kbd>.
+
+## API
+
+- [DataGrid](/api/data-grid/data-grid/)
+- [XGrid](/api/data-grid/x-grid/)

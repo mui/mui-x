@@ -27,6 +27,11 @@ const itITGrid: Partial<GridLocaleText> = {
   toolbarFiltersTooltipActive: (count) =>
     count > 1 ? `${count} filtri attivi` : `${count} filtro attivo`,
 
+  // Export selector toolbar button text
+  // toolbarExport: 'Export',
+  // toolbarExportLabel: 'Export',
+  // toolbarExportCSV: 'Download as CSV',
+
   // Columns panel text
   columnsPanelTextFieldLabel: 'Cerca colonna',
   columnsPanelTextFieldPlaceholder: 'Titolo della colonna',
@@ -79,6 +84,10 @@ const itITGrid: Partial<GridLocaleText> = {
 
   // Total rows footer text
   footerTotalRows: 'Record totali :',
+
+  // Total visible rows footer text
+  footerTotalVisibleRows: (visibleCount, totalCount) =>
+    `${visibleCount.toLocaleString()} di ${totalCount.toLocaleString()}`,
 
   // Checkbox selection text
   checkboxSelectionHeaderName: 'Seleziona',

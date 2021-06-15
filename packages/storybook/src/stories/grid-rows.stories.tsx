@@ -966,3 +966,22 @@ export function ServerSideInfiniteLoading() {
     </div>
   );
 }
+
+export const ZeroHeightGrid = () => (
+  <div style={{ width: 300, height: 0 }}>
+    <XGrid {...baselineProps} />
+  </div>
+);
+
+export function SnapGridWidthEdgeScroll() {
+  const { data } = useDemoData({
+    dataSet: 'Commodity',
+    rowLength: 100,
+    maxColumns: 6,
+  });
+  return (
+    <div style={{ height: 400, width: 710 }}>
+      <XGrid {...data} />
+    </div>
+  );
+}

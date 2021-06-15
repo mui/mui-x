@@ -21,17 +21,14 @@ function RatingEditInputCell(props) {
   const { id, value, api, field } = props;
   const classes = useStyles();
 
-  const handleChange = React.useCallback(
-    (event) => {
-      const editProps = {
-        value: Number(event.target.value),
-      };
+  const handleChange = (event) => {
+    const editProps = {
+      value: Number(event.target.value),
+    };
 
-      api.commitCellChange({ id, field, props: editProps });
-      api.setCellMode(id, field, 'view');
-    },
-    [api, field, id],
-  );
+    api.commitCellChange({ id, field, props: editProps });
+    api.setCellMode(id, field, 'view');
+  };
 
   return (
     <div className={classes.root}>

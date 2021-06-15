@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridApiContext } from '../../GridApiContext';
+import { useGridApiContext } from '../../../hooks/root/useGridApiContext';
 import { GridMenu } from '../GridMenu';
 
 export interface GridColumnHeaderMenuProps {
@@ -21,7 +21,7 @@ export function GridColumnHeaderMenu({
   open,
   target,
 }: GridColumnHeaderMenuProps) {
-  const apiRef = React.useContext(GridApiContext);
+  const apiRef = useGridApiContext();
   const currentColumn = apiRef?.current.getColumn(field);
 
   const hideMenu = React.useCallback(

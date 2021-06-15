@@ -12,6 +12,68 @@ describe('<DataGrid /> - Selection', () => {
   // TODO v5: replace with createClientRender
   const render = createClientRenderStrictMode();
 
+  describe('no checkboxSelection prop - selection/deselection', () => {
+    const TestDataGridSelection = () => (
+      <div style={{ width: 300, height: 300 }}>
+        <DataGrid
+          rows={[
+            {
+              id: 0,
+              brand: 'Nike',
+            },
+            {
+              id: 1,
+              brand: 'Adidas',
+            },
+          ]}
+          columns={[{ field: 'brand', width: 100 }]}
+        />
+      </div>
+    );
+
+    it('should select one row at a time on click WITHOUT keypress', () => {
+      render(<TestDataGridSelection />);
+      const firstRow = getRow(0);
+      const secondRow = getRow(1);
+      fireEvent.click(getCell(0, 0));
+      expect(firstRow).to.have.class('Mui-selected');
+      fireEvent.click(getCell(1, 0));
+      expect(firstRow).not.to.have.class('Mui-selected');
+      expect(secondRow).to.have.class('Mui-selected');
+    });
+
+    ['metaKey', 'ctrlKey'].forEach((key) => {
+      it(`should select one row at a time on click WITH ${key} pressed`, () => {
+        render(<TestDataGridSelection />);
+        const firstRow = getRow(0);
+        const secondRow = getRow(1);
+        fireEvent.click(getCell(0, 0), { [key]: true });
+        expect(firstRow).to.have.class('Mui-selected');
+        fireEvent.click(getCell(1, 0), { [key]: true });
+        expect(firstRow).not.to.have.class('Mui-selected');
+        expect(secondRow).to.have.class('Mui-selected');
+      });
+
+      it(`should deselect the selected row on click WITH ${key} pressed`, () => {
+        render(<TestDataGridSelection />);
+        const firstRow = getRow(0);
+        fireEvent.click(getCell(0, 0));
+        expect(firstRow).to.have.class('Mui-selected');
+        fireEvent.click(getCell(0, 0), { [key]: true });
+        expect(firstRow).not.to.have.class('Mui-selected');
+      });
+    });
+
+    it('should not deselect the selected row on click WITHOUT keypress', () => {
+      render(<TestDataGridSelection />);
+      const firstRow = getRow(0);
+      fireEvent.click(getCell(0, 0));
+      expect(firstRow).to.have.class('Mui-selected');
+      fireEvent.click(getCell(0, 0));
+      expect(firstRow).to.have.class('Mui-selected');
+    });
+  });
+
   describe('prop: checkboxSelection', () => {
     it('should check and uncheck when double clicking the row', () => {
       render(
