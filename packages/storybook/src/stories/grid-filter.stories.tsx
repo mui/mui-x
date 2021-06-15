@@ -1,12 +1,7 @@
 import Button from '@material-ui/core/Button';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import { makeStyles } from '@material-ui/styles';
-import {
-  DataGrid,
-  GRID_FILTER_MODEL_CHANGE,
-  GridComponentProps,
-  isDeepEqual,
-} from '@material-ui/data-grid';
+import { DataGrid } from '@material-ui/data-grid';
 import Rating from '@material-ui/lab/Rating';
 import {
   GridColDef,
@@ -21,12 +16,10 @@ import {
   GridRowModel,
   useGridApiRef,
   XGrid,
-  getInitialGridFilterState,
 } from '@material-ui/x-grid';
 import { useDemoData } from '@material-ui/x-grid-data-generator';
 import { action } from '@storybook/addon-actions';
 import * as React from 'react';
-import { GridSelectionModel } from '../../../grid/_modules_/grid/models/gridSelectionModel';
 import { randomInt } from '../data/random-generator';
 import { useData } from '../hooks/useData';
 
@@ -748,205 +741,5 @@ export function MultiFilteringWithOrGrid() {
         Last filter change: {lastFilterChange.toISOString()} called = {called.current}
       </p>
     </div>
-  );
-}
-
-export function SimpleModelWithOnChangeControlFilter() {
-  const [simpleColumns] = React.useState([
-    {
-      field: 'name',
-    },
-  ]);
-  const [simpleRows] = React.useState([
-    {
-      id: '1',
-      name: 'Paris',
-    },
-    {
-      id: '2',
-      name: 'Nice',
-    },
-    {
-      id: '3',
-      name: 'London',
-    },
-  ]);
-
-  const [simpleFilterModel, setFilterModel] = React.useState<GridFilterModel>(
-    getInitialGridFilterState(),
-  );
-  const handleFilterChange = React.useCallback((params) => {
-    setFilterModel(params.filterModel);
-  }, []);
-  const [simpleSelectionModel, setSelectionModel] = React.useState<GridSelectionModel>([]);
-  const handleSelectionChange = React.useCallback((params) => {
-    // setFilterModel(params.model);
-  }, []);
-
-  const apiRef = useGridApiRef();
-
-  React.useEffect(() => {
-    return apiRef.current.subscribeEvent(GRID_FILTER_MODEL_CHANGE, (params) => {
-      console.log(`${GRID_FILTER_MODEL_CHANGE} triggered with `, params);
-    });
-  }, [apiRef]);
-
-  return (
-    <XGrid
-      rows={simpleRows}
-      columns={simpleColumns}
-      apiRef={apiRef}
-      filterModel={simpleFilterModel}
-      onFilterModelChange={handleFilterChange}
-      selectionModel={simpleSelectionModel}
-      onSelectionModelChange={handleSelectionChange}
-    />
-  );
-}
-export function SimpleModelControlFilter() {
-  const [simpleColumns] = React.useState([
-    {
-      field: 'name',
-    },
-  ]);
-  const [simpleRows] = React.useState([
-    {
-      id: '1',
-      name: 'Paris',
-    },
-    {
-      id: '2',
-      name: 'Nice',
-    },
-    {
-      id: '3',
-      name: 'London',
-    },
-  ]);
-
-  const [simpleFilterModel, setFilterModel] = React.useState<GridFilterModel>(
-    {
-      items: [{id:1, value:'lon', operatorValue:'contains', columnField: 'name'}],
-      linkOperator: GridLinkOperator.And,
-    }
-  );
-
-  return <XGrid rows={simpleRows} columns={simpleColumns} filterModel={simpleFilterModel} />;
-}
-export function SimpleOnChangeControlFilter() {
-  const [simpleColumns] = React.useState([
-    {
-      field: 'name',
-    },
-  ]);
-  const [simpleRows] = React.useState([
-    {
-      id: '1',
-      name: 'Paris',
-    },
-    {
-      id: '2',
-      name: 'Nice',
-    },
-    {
-      id: '3',
-      name: 'London',
-    },
-  ]);
-
-  // const [simpleFilterModel, setFilterModel] = React.useState<GridFilterModel>(getInitialGridFilterState());
-  const handleFilterChange = React.useCallback((params) => {
-    console.log('Filter model changed to', params);
-  }, []);
-
-  return (
-    <XGrid rows={simpleRows} columns={simpleColumns} onFilterModelChange={handleFilterChange} />
-  );
-}
-export function ControlSelection() {
-  const [storyState] = React.useState({
-    rows: [
-      {
-        id: 0,
-        brand: 'Nike',
-        isPublished: false,
-      },
-      {
-        id: 1,
-        brand: 'Adidas',
-        isPublished: true,
-      },
-      {
-        id: 2,
-        brand: 'Puma',
-        isPublished: true,
-      },
-    ],
-    columns: [{ field: 'brand' }, { field: 'isPublished', type: 'boolean' }],
-  });
-
-  const [selectionModel, setSelectionModel] = React.useState<any>([0]);
-  const handleSelectionChange = React.useCallback((newModel) => {
-    setSelectionModel(newModel);
-  }, []);
-
-  return (
-    <div style={{ width: 300, height: 300 }}>
-      <XGrid
-        columns={storyState.columns}
-        rows={storyState.rows}
-        selectionModel={selectionModel}
-        onSelectionModelChange={handleSelectionChange}
-      />
-    </div>
-  );
-}
-export function NoControlSelection() {
-  const [storyState] = React.useState({
-    rows: [
-      {
-        id: 0,
-        brand: 'Nike',
-        isPublished: false,
-      },
-      {
-        id: 1,
-        brand: 'Adidas',
-        isPublished: true,
-      },
-      {
-        id: 2,
-        brand: 'Puma',
-        isPublished: true,
-      },
-    ],
-    columns: [{ field: 'brand' }, { field: 'isPublished', type: 'boolean' }],
-  });
-
-  return (
-    <div style={{ width: 300, height: 300 }}>
-      <XGrid
-        columns={storyState.columns}
-        rows={storyState.rows}
-      />
-    </div>
-  );
-}
-export function LargeControlSelection() {
-  const { data } = useDemoData({ rowLength: 50000, dataSet:'Commodity',maxColumns:100});
-
-  const [selectionModel, setSelectionModel] = React.useState<any>([ ]);
-  const handleSelectionChange = React.useCallback((newModel) => {
-    setSelectionModel(newModel);
-  }, []);
-
-  return (
-      <XGrid
-        columns={data.columns}
-        rows={data.rows}
-        selectionModel={selectionModel}
-        onSelectionModelChange={handleSelectionChange}
-        checkboxSelection
-      />
   );
 }

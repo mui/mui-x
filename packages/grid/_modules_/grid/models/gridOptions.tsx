@@ -14,8 +14,6 @@ import { GridColumnHeaderParams } from './params/gridColumnHeaderParams';
 import { GridFilterModelParams } from './params/gridFilterModelParams';
 import { GridPageChangeParams } from './params/gridPageChangeParams';
 import { GridRowParams } from './params/gridRowParams';
-import { GridRowSelectedParams } from './params/gridRowSelectedParams';
-import { GridSelectionModelChangeParams } from './params/gridSelectionModelChangeParams';
 import { GridSortModelParams } from './params/gridSortModelParams';
 import { GridSelectionModel } from './gridSelectionModel';
 import { GridSortDirection, GridSortModel } from './gridSortModel';
@@ -393,11 +391,6 @@ export interface GridOptions {
    * @param event [[React.MouseEvent]].
    */
   onRowLeave?: (param: GridRowParams, event: React.MouseEvent) => void;
-  /**
-   * Callback fired when one row is selected.
-   * @param param With all properties from [[GridRowSelectedParams]].
-   */
-  onRowSelected?: (param: GridRowSelectedParams) => void;
   /**
    * Callback fired when the grid is resized.
    * @param param With all properties from [[GridResizeParams]].

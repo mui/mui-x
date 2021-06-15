@@ -56,7 +56,7 @@ export const useGridState = (
                 : oldState;
               shouldUpdate = !isDeepEqual(oldModel, controlState.propModel);
             }
-            if(shouldUpdate) {
+            if (shouldUpdate) {
               updatedStateIds.push(controlState.stateId);
             }
           }
@@ -74,10 +74,12 @@ export const useGridState = (
 
         updatedStateIds.forEach((stateId) => {
           if (controlStateMap[stateId].onChangeCallback) {
-            const model = controlStateMap[stateId].mapStateToModel != null
-              ? controlStateMap[stateId].mapStateToModel!(controlStateMap[stateId].stateSelector(newState))
-              : controlStateMap[stateId].stateSelector(newState);
-console.log('Calling onChange')
+            const model =
+              controlStateMap[stateId].mapStateToModel != null
+                ? controlStateMap[stateId].mapStateToModel!(
+                    controlStateMap[stateId].stateSelector(newState),
+                  )
+                : controlStateMap[stateId].stateSelector(newState);
             controlStateMap[stateId].onChangeCallback!(model);
           }
         });

@@ -1,13 +1,7 @@
 import { useDemoData } from '@material-ui/x-grid-data-generator';
 import * as React from 'react';
 import { action } from '@storybook/addon-actions';
-import {
-  XGrid,
-  GridOptionsProp,
-  useGridApiRef,
-  GridSelectionModelChangeParams,
-  GridRowId,
-} from '@material-ui/x-grid';
+import { XGrid, GridOptionsProp, useGridApiRef, GridRowId } from '@material-ui/x-grid';
 import { getData, GridData } from '../data/data-service';
 import { useData } from '../hooks/useData';
 
@@ -112,3 +106,87 @@ export const UnselectableRows = () => {
     />
   );
 };
+export function ControlSelection() {
+  const [storyState] = React.useState({
+    rows: [
+      {
+        id: 0,
+        brand: 'Nike',
+        isPublished: false,
+      },
+      {
+        id: 1,
+        brand: 'Adidas',
+        isPublished: true,
+      },
+      {
+        id: 2,
+        brand: 'Puma',
+        isPublished: true,
+      },
+    ],
+    columns: [{ field: 'brand' }, { field: 'isPublished', type: 'boolean' }],
+  });
+
+  const [selectionModel, setSelectionModel] = React.useState<any>([0]);
+  const handleSelectionChange = React.useCallback((newModel) => {
+    setSelectionModel(newModel);
+  }, []);
+
+  return (
+    <div style={{ width: 300, height: 300 }}>
+      <XGrid
+        columns={storyState.columns}
+        rows={storyState.rows}
+        selectionModel={selectionModel}
+        onSelectionModelChange={handleSelectionChange}
+      />
+    </div>
+  );
+}
+export function NoControlSelection() {
+  const [storyState] = React.useState({
+    rows: [
+      {
+        id: 0,
+        brand: 'Nike',
+        isPublished: false,
+      },
+      {
+        id: 1,
+        brand: 'Adidas',
+        isPublished: true,
+      },
+      {
+        id: 2,
+        brand: 'Puma',
+        isPublished: true,
+      },
+    ],
+    columns: [{ field: 'brand' }, { field: 'isPublished', type: 'boolean' }],
+  });
+
+  return (
+    <div style={{ width: 300, height: 300 }}>
+      <XGrid columns={storyState.columns} rows={storyState.rows} />
+    </div>
+  );
+}
+export function LargeControlSelection() {
+  const { data } = useDemoData({ rowLength: 50000, dataSet: 'Commodity', maxColumns: 100 });
+
+  const [selectionModel, setSelectionModel] = React.useState<any>([]);
+  const handleSelectionChange = React.useCallback((newModel) => {
+    setSelectionModel(newModel);
+  }, []);
+
+  return (
+    <XGrid
+      columns={data.columns}
+      rows={data.rows}
+      selectionModel={selectionModel}
+      onSelectionModelChange={handleSelectionChange}
+      checkboxSelection
+    />
+  );
+}

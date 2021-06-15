@@ -1,19 +1,13 @@
 import * as React from 'react';
-import {
-  GRID_ROW_CLICK,
-  GRID_ROW_SELECTED,
-  GRID_SELECTION_CHANGED,
-} from '../../../constants/eventsConstants';
+import { GRID_ROW_CLICK, GRID_SELECTION_CHANGED } from '../../../constants/eventsConstants';
 import { GridComponentProps } from '../../../GridComponentProps';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridSelectionApi } from '../../../models/api/gridSelectionApi';
 import { GridRowParams } from '../../../models/params/gridRowParams';
-import { GridRowSelectedParams } from '../../../models/params/gridRowSelectedParams';
-import { GridSelectionModelChangeParams } from '../../../models/params/gridSelectionModelChangeParams';
 import { GridRowId, GridRowModel } from '../../../models/gridRows';
 import { GridSelectionModel } from '../../../models/gridSelectionModel';
 import { isDeepEqual } from '../../../utils/utils';
-import { useGridApiEventHandler, useGridApiOptionHandler } from '../../root/useGridApiEventHandler';
+import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
 import { optionsSelector } from '../../utils/optionsSelector';
 import { useLogger } from '../../utils/useLogger';
@@ -35,8 +29,6 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
     disableSelectionOnClick,
     selectionModel,
     isRowSelectable,
-    onRowSelected,
-    onSelectionModelChange,
   } = options;
 
   const getSelectedRows = React.useCallback(
@@ -54,7 +46,7 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
 
   const selectRowModel = React.useCallback(
     (rowModelParams: RowModelParams) => {
-      const { id, row, allowMultipleOverride, isSelected, isMultipleKey } = rowModelParams;
+      const { id, allowMultipleOverride, isSelected, isMultipleKey } = rowModelParams;
 
       if (isRowSelectable && !isRowSelectable(apiRef.current.getRowParams(id))) {
         return;
@@ -166,8 +158,6 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
   );
 
   useGridApiEventHandler(apiRef, GRID_ROW_CLICK, handleRowClick);
-  useGridApiOptionHandler(apiRef, GRID_ROW_SELECTED, onRowSelected);
-  useGridApiOptionHandler(apiRef, GRID_SELECTION_CHANGED, onSelectionModelChange);
 
   // TODO handle Cell Click/range selection?
   const selectionApi: GridSelectionApi = {

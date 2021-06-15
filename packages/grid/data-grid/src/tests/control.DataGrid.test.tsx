@@ -2,7 +2,7 @@ import * as React from 'react';
 import {
   createClientRenderStrictMode,
   // @ts-ignore
-  fireEvent
+  fireEvent,
 } from 'test/utils';
 import { expect } from 'chai';
 import { XGrid, GridComponentProps } from '@material-ui/x-grid';
@@ -53,7 +53,6 @@ describe('<DataGrid /> - Control', () => {
   };
 
   describe('control Selection', () => {
-
     it('should update the selection state when neither the model nor the onChange are set', () => {
       render(<TestCase />);
       fireEvent.click(getCell(0, 0));
@@ -76,8 +75,6 @@ describe('<DataGrid /> - Control', () => {
 
       fireEvent.click(getCell(0, 0));
       expect(getRow(0)).to.have.class('Mui-selected');
-console.log(onModelChange.firstCall.args[0])
-console.log(onModelChange.lastCall.args[0])
       expect(onModelChange.callCount).to.equal(1);
       expect(onModelChange.firstCall.firstArg).to.deep.equal([0]);
     });

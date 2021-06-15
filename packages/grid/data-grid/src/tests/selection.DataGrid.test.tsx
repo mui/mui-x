@@ -238,14 +238,13 @@ describe('<DataGrid /> - Selection', () => {
         );
       }
       const { setProps } = render(<Demo selectionModel={[0]} />);
-      expect(onSelectionModelChange.callCount).to.equal(1);
-      expect(onSelectionModelChange.lastCall.args[0]).to.deep.equals([0]);
+      expect(onSelectionModelChange.callCount).to.equal(0);
+      const firstRow = getRow(0);
+      expect(firstRow).to.have.class('Mui-selected');
       setProps({ selectionModel: [0, 1] });
-      expect(onSelectionModelChange.callCount).to.equal(2);
-      expect(onSelectionModelChange.lastCall.args[0]).to.deep.equals([0, 1]);
-      setProps({ selectionModel: [0, 1] });
-      expect(onSelectionModelChange.callCount).to.equal(2);
-      expect(onSelectionModelChange.lastCall.args[0]).to.deep.equals([0, 1]);
+      expect(onSelectionModelChange.callCount).to.equal(0);
+      expect(getRow(0)).to.have.class('Mui-selected');
+      expect(getRow(1)).to.have.class('Mui-selected');
     });
 
     it('should filter out unselectable rows when the selectionModel prop changes', () => {
@@ -299,7 +298,6 @@ describe('<DataGrid /> - Selection', () => {
           },
         ],
         columns: [{ field: 'brand', width: 100 }],
-        selectionModel: [0],
         isRowSelectable: () => true,
       };
 
@@ -312,6 +310,7 @@ describe('<DataGrid /> - Selection', () => {
       }
 
       const { setProps } = render(<Demo {...data} />);
+      fireEvent.click(getRow(0));
       expect(getRow(0)).to.have.class('Mui-selected');
       expect(getRow(1)).not.to.have.class('Mui-selected');
 
