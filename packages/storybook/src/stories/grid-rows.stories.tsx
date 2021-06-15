@@ -429,7 +429,7 @@ function validateEmail(email) {
 
 const useEditCellStyles = makeStyles({
   root: {
-    '& .MuiDataGrid-cellEditable': {
+    '& .MuiDataGrid-cell--editable': {
       backgroundColor: 'rgba(184,250,158,0.19)',
       color: '#1a3e72',
     },

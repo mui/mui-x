@@ -157,7 +157,6 @@ Api of the `components` props of type `GridSlotsComponent`
 |  | <span class="prop-name">.MuiDataGrid-columnHeader--alignRight</span> | Styles applied to the aligned right header cell element.|
 |  | <span class="prop-name">.MuiDataGrid-columnHeaderTitle</span> | Styles applied to the header cell title element.|
 |  | <span class="prop-name">.MuiDataGrid-columnSeparator</span> | Styles applied to the header cell separator element.|
-|  | <span class="prop-name">.MuiDataGrid-withColumnMenu</span> | Styles applied to the header cell that has a column menu.|
 |  | <span class="prop-name">.MuiDataGrid-iconSeparator</span> | Styles applied to the header cell separator icon element.|
 |  | <span class="prop-name">.MuiDataGrid-dataContainer</span> | Styles applied to the data container element.|
 |  | <span class="prop-name">.MuiDataGrid-window</span> | Styles applied to the window element.|

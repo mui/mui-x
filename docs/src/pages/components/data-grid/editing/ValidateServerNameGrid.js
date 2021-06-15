@@ -11,7 +11,7 @@ const useStyles = makeStyles(
 
     return {
       root: {
-        '& .MuiDataGrid-cellEditable': {
+        '& .MuiDataGrid-cell--editable': {
           backgroundColor: isDark ? '#376331' : 'rgb(217 243 190)',
         },
         '& .Mui-error': {

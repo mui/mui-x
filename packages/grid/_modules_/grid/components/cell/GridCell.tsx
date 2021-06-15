@@ -67,7 +67,7 @@ export const GridCell = React.memo((props: GridCellProps) => {
 
   const cssClasses = clsx(className, `${GRID_CSS_CLASS_PREFIX}-cell--text${capitalize(align)}`, {
     [`${GRID_CSS_CLASS_PREFIX}-withBorder`]: showRightBorder,
-    [`${GRID_CSS_CLASS_PREFIX}-cellEditable`]: isEditable,
+    [`${GRID_CSS_CLASS_PREFIX}-cell--editable`]: isEditable,
   });
 
   const publishBlur = React.useCallback(
