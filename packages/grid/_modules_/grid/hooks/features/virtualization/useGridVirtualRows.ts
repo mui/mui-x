@@ -231,23 +231,22 @@ export const useGridVirtualRows = (apiRef: GridApiRef): void => {
           : params.rowIndex - paginationState.page * paginationState.pageSize;
 
         const currentRowPage = elementIndex / gridState.containerSizes!.viewportPageSize;
-        const viewportHeight = gridState.containerSizes!.renderingZoneScrollHeight;
-        const scrollPosition = currentRowPage * viewportHeight;
+        const height = gridState.containerSizes!.renderingZoneScrollHeight;
+        const scrollPosition = currentRowPage * height;
 
         // The amount of space taken by the first partially visible row
         const partialRowHeight = windowRef.current!.scrollTop % rowHeight;
 
         isRowIndexAbove = windowRef.current!.scrollTop > scrollPosition;
         isRowIndexBelow =
-          scrollPosition + rowHeight >
-          windowRef.current!.scrollTop + viewportHeight + partialRowHeight;
+          scrollPosition + rowHeight > windowRef.current!.scrollTop + height + partialRowHeight;
 
         if (isRowIndexAbove) {
           scrollCoordinates.top = scrollPosition; // We put it at the top of the page
           logger.debug(`Row is above, setting top to ${scrollCoordinates.top}`);
         } else if (isRowIndexBelow) {
           // We make sure the row is not half visible
-          scrollCoordinates.top = scrollPosition - viewportHeight + rowHeight;
+          scrollCoordinates.top = scrollPosition - height + rowHeight;
           logger.debug(`Row is below, setting top to ${scrollCoordinates.top}`);
         }
       }
