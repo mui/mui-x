@@ -2,7 +2,7 @@ import * as React from 'react';
 import clsx from 'clsx';
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
 import { gridDensityHeaderHeightSelector } from '../../hooks/features/density/densitySelector';
-import { GridApiContext } from '../GridApiContext';
+import { useGridApiContext } from '../../hooks/root/useGridApiContext';
 
 export type GridOverlayProps = React.HTMLAttributes<HTMLDivElement>;
 
@@ -11,7 +11,7 @@ export const GridOverlay = React.forwardRef<HTMLDivElement, GridOverlayProps>(fu
   ref,
 ) {
   const { className, style, ...other } = props;
-  const apiRef = React.useContext(GridApiContext);
+  const apiRef = useGridApiContext();
   const headerHeight = useGridSelector(apiRef, gridDensityHeaderHeightSelector);
 
   return (

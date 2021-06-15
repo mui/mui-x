@@ -3,12 +3,12 @@ import MenuItem from '@material-ui/core/MenuItem';
 import { useGridSelector } from '../../../hooks/features/core/useGridSelector';
 import { gridSortModelSelector } from '../../../hooks/features/sorting/gridSortingSelector';
 import { GridSortDirection } from '../../../models/gridSortModel';
-import { GridApiContext } from '../../GridApiContext';
+import { useGridApiContext } from '../../../hooks/root/useGridApiContext';
 import { GridFilterItemProps } from './GridFilterItemProps';
 
 export const SortGridMenuItems = (props: GridFilterItemProps) => {
   const { column, onClick } = props;
-  const apiRef = React.useContext(GridApiContext);
+  const apiRef = useGridApiContext();
   const sortModel = useGridSelector(apiRef, gridSortModelSelector);
 
   const sortDirection = React.useMemo(() => {

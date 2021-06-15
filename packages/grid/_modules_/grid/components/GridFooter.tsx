@@ -5,14 +5,14 @@ import { gridRowCountSelector } from '../hooks/features/rows/gridRowsSelector';
 import { selectedGridRowsCountSelector } from '../hooks/features/selection/gridSelectionSelector';
 import { visibleGridRowCountSelector } from '../hooks/features/filter/gridFilterSelector';
 import { optionsSelector } from '../hooks/utils/optionsSelector';
-import { GridApiContext } from './GridApiContext';
+import { useGridApiContext } from '../hooks/root/useGridApiContext';
 import { GridRowCount } from './GridRowCount';
 import { GridSelectedRowCount } from './GridSelectedRowCount';
 import { GridFooterContainer, GridFooterContainerProps } from './containers/GridFooterContainer';
 
 export const GridFooter = React.forwardRef<HTMLDivElement, GridFooterContainerProps>(
   function GridFooter(props, ref) {
-    const apiRef = React.useContext(GridApiContext);
+    const apiRef = useGridApiContext();
     const totalRowCount = useGridSelector(apiRef, gridRowCountSelector);
     const options = useGridSelector(apiRef, optionsSelector);
     const selectedRowCount = useGridSelector(apiRef, selectedGridRowsCountSelector);

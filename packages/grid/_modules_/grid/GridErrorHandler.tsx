@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { GridMainContainer } from './components/containers/GridMainContainer';
 import { ErrorBoundary } from './components/ErrorBoundary';
-import { GridApiContext } from './components/GridApiContext';
+import { useGridApiContext } from './hooks/root/useGridApiContext';
 import { GridRootPropsContext } from './context/GridRootPropsContext';
 import { useGridState } from './hooks/features/core/useGridState';
 import { useLogger } from './hooks/utils/useLogger';
@@ -9,7 +9,7 @@ import { useLogger } from './hooks/utils/useLogger';
 export function GridErrorHandler(props) {
   const { children } = props;
   const logger = useLogger('GridErrorHandler');
-  const apiRef = React.useContext(GridApiContext)!;
+  const apiRef = useGridApiContext();
   const propsContext = React.useContext(GridRootPropsContext)!;
   const [gridState] = useGridState(apiRef);
 

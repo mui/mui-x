@@ -44,7 +44,6 @@ export function useGridEditRows(apiRef: GridApiRef) {
   const logger = useLogger('useGridEditRows');
   const [, setGridState, forceUpdate] = useGridState(apiRef);
   const options = useGridSelector(apiRef, optionsSelector);
-  const lastEditedCell = React.useRef<GridCellParams | null>(null);
 
   const setCellMode = React.useCallback(
     (id, field, mode: GridCellMode) => {
@@ -59,10 +58,8 @@ export function useGridEditRows(apiRef: GridApiRef) {
         if (mode === 'edit') {
           newEditRowsState[id] = { ...newEditRowsState[id] } || {};
           newEditRowsState[id][field] = { value: apiRef.current.getCellValue(id, field) };
-          lastEditedCell.current = apiRef.current.getCellParams(id, field);
         } else {
           delete newEditRowsState[id][field];
-          lastEditedCell.current = null;
           if (!Object.keys(newEditRowsState[id]).length) {
             delete newEditRowsState[id];
           }
