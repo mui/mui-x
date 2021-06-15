@@ -107,15 +107,17 @@ export const useStyles = makeStyles(
           display: 'flex',
           alignItems: 'center',
         },
-        '& .MuiDataGrid-columnHeader:not(.MuiDataGrid-columnHeader--sorted) .MuiDataGrid-sortIcon': {
-          opacity: 0,
-          transition: theme.transitions.create(['opacity'], {
-            duration: theme.transitions.duration.shorter,
-          }),
-        },
-        '& .MuiDataGrid-columnHeader:not(.MuiDataGrid-columnHeader--sorted):hover .MuiDataGrid-sortIcon': {
-          opacity: 0.5,
-        },
+        '& .MuiDataGrid-columnHeader:not(.MuiDataGrid-columnHeader--sorted) .MuiDataGrid-sortIcon':
+          {
+            opacity: 0,
+            transition: theme.transitions.create(['opacity'], {
+              duration: theme.transitions.duration.shorter,
+            }),
+          },
+        '& .MuiDataGrid-columnHeader:not(.MuiDataGrid-columnHeader--sorted):hover .MuiDataGrid-sortIcon':
+          {
+            opacity: 0.5,
+          },
         '& .MuiDataGrid-columnHeaderTitleContainer': {
           display: 'flex',
           alignItems: 'center',
@@ -134,13 +136,15 @@ export const useStyles = makeStyles(
         '& .MuiDataGrid-columnHeader--alignCenter .MuiDataGrid-columnHeaderTitleContainer': {
           justifyContent: 'center',
         },
-        '& .MuiDataGrid-columnHeader--alignRight .MuiDataGrid-columnHeaderDraggableContainer, & .MuiDataGrid-columnHeader--alignRight .MuiDataGrid-columnHeaderTitleContainer': {
-          flexDirection: 'row-reverse',
-        },
-        '& .MuiDataGrid-columnHeader--alignCenter .MuiDataGrid-menuIcon, & .MuiDataGrid-columnHeader--alignRight .MuiDataGrid-menuIcon': {
-          marginRight: 'auto',
-          marginLeft: -6,
-        },
+        '& .MuiDataGrid-columnHeader--alignRight .MuiDataGrid-columnHeaderDraggableContainer, & .MuiDataGrid-columnHeader--alignRight .MuiDataGrid-columnHeaderTitleContainer':
+          {
+            flexDirection: 'row-reverse',
+          },
+        '& .MuiDataGrid-columnHeader--alignCenter .MuiDataGrid-menuIcon, & .MuiDataGrid-columnHeader--alignRight .MuiDataGrid-menuIcon':
+          {
+            marginRight: 'auto',
+            marginLeft: -6,
+          },
         '& .MuiDataGrid-columnHeaderTitle': {
           textOverflow: 'ellipsis',
           overflow: 'hidden',
@@ -292,21 +296,24 @@ export const useStyles = makeStyles(
         '& .MuiDataGrid-cell--textLeft': {
           textAlign: 'left',
         },
-        '& .MuiDataGrid-cell--textLeft.MuiDataGrid-cell--withRenderer, & .MuiDataGrid-cell--textLeft.MuiDataGrid-cell--editing': {
-          justifyContent: 'flex-start',
-        },
+        '& .MuiDataGrid-cell--textLeft.MuiDataGrid-cell--withRenderer, & .MuiDataGrid-cell--textLeft.MuiDataGrid-cell--editing':
+          {
+            justifyContent: 'flex-start',
+          },
         '& .MuiDataGrid-cell--textRight': {
           textAlign: 'right',
         },
-        '& .MuiDataGrid-cell--textRight.MuiDataGrid-cell--withRenderer, & .MuiDataGrid-cell--textRight.MuiDataGrid-cell--editing': {
-          justifyContent: 'flex-end',
-        },
+        '& .MuiDataGrid-cell--textRight.MuiDataGrid-cell--withRenderer, & .MuiDataGrid-cell--textRight.MuiDataGrid-cell--editing':
+          {
+            justifyContent: 'flex-end',
+          },
         '& .MuiDataGrid-cell--textCenter': {
           textAlign: 'center',
         },
-        '& .MuiDataGrid-cell--textCenter.MuiDataGrid-cell--withRenderer, & .MuiDataGrid-cell--textCenter.MuiDataGrid-cell--editing': {
-          justifyContent: 'center',
-        },
+        '& .MuiDataGrid-cell--textCenter.MuiDataGrid-cell--withRenderer, & .MuiDataGrid-cell--textCenter.MuiDataGrid-cell--editing':
+          {
+            justifyContent: 'center',
+          },
         '& .MuiDataGrid-rowCount, & .MuiDataGrid-selectedRowCount': {
           alignItems: 'center',
           display: 'flex',
