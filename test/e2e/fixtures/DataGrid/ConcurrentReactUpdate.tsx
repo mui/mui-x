@@ -7,8 +7,7 @@ export default function ConcurrentReactUpdate() {
   const [rows, setRows] = React.useState<GridRowModel[]>([]);
 
   React.useEffect(() => {
-    setTimeout(() => setRows([]), 0);
-    setTimeout(() => setRows([{ id: 1 }, { id: 2 }]), 1);
+    setTimeout(() => setRows([{ id: 1 }, { id: 2 }]), 0);
   }, []);
 
   return <DataGrid autoHeight columns={columns} rows={rows} />;
