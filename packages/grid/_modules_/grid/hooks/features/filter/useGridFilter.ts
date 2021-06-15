@@ -189,17 +189,8 @@ export const useGridFilter = (
         return newState;
       });
       applyFilters();
-      apiRef.current.publishEvent(GRID_FILTER_MODEL_CHANGE, getFilterModelParams());
     },
-    [
-      logger,
-      setGridState,
-      apiRef,
-      getFilterModelParams,
-      applyFilters,
-      options.disableMultipleColumnsFiltering,
-      filterableColumnsIds,
-    ],
+    [logger, setGridState, apiRef, applyFilters, options.disableMultipleColumnsFiltering, filterableColumnsIds],
   );
 
   const deleteFilter = React.useCallback(
@@ -219,9 +210,9 @@ export const useGridFilter = (
         upsertFilter({});
       }
       applyFilters();
-      apiRef.current.publishEvent(GRID_FILTER_MODEL_CHANGE, getFilterModelParams());
+      // apiRef.current.publishEvent(GRID_FILTER_MODEL_CHANGE, getFilterModelParams());
     },
-    [apiRef, applyFilters, getFilterModelParams, logger, setGridState, upsertFilter],
+    [applyFilters, logger, setGridState, upsertFilter],
   );
 
   const showFilterPanel = React.useCallback(
@@ -253,9 +244,9 @@ export const useGridFilter = (
         filter: { ...state.filter, linkOperator },
       }));
       applyFilters();
-      apiRef.current.publishEvent(GRID_FILTER_MODEL_CHANGE, getFilterModelParams());
+      // apiRef.current.publishEvent(GRID_FILTER_MODEL_CHANGE, getFilterModelParams());
     },
-    [apiRef, applyFilters, getFilterModelParams, logger, setGridState],
+    [applyFilters, logger, setGridState],
   );
 
   const clearFilterModel = React.useCallback(() => {
@@ -270,9 +261,9 @@ export const useGridFilter = (
       logger.debug('Setting filter model');
       applyFilterLinkOperator(model.linkOperator);
       model.items.forEach((item) => upsertFilter(item));
-      apiRef.current.publishEvent(GRID_FILTER_MODEL_CHANGE, getFilterModelParams());
+      // apiRef.current.publishEvent(GRID_FILTER_MODEL_CHANGE, getFilterModelParams());
     },
-    [apiRef, applyFilterLinkOperator, clearFilterModel, getFilterModelParams, logger, upsertFilter],
+    [applyFilterLinkOperator, clearFilterModel, logger, upsertFilter],
   );
 
   const getVisibleRowModels = React.useCallback(
@@ -297,8 +288,8 @@ export const useGridFilter = (
   );
 
   useGridApiEventHandler(apiRef, GRID_ROWS_SET, apiRef.current.applyFilters);
-  useGridApiEventHandler(apiRef, GRID_ROWS_UPDATE, apiRef.current.applyFilters);
-  useGridApiOptionHandler(apiRef, GRID_FILTER_MODEL_CHANGE, props.onFilterModelChange);
+  useGridApiEventHandler(apiRef, GRID_ROWS_UPDATED, apiRef.current.applyFilters);
+  // useGridApiOptionHandler(apiRef, GRID_FILTER_MODEL_CHANGE, props.onFilterModelChange);
 
   React.useEffect(() => {
     if (!props.filterModel) {
@@ -335,5 +326,18 @@ export const useGridFilter = (
     apiRef.current.applyFilters();
   }, [apiRef, logger]);
 
-  useGridApiEventHandler(apiRef, GRID_COLUMNS_CHANGE, onColUpdated);
+  React.useEffect(() => {
+    apiRef.current.registerControlState<GridFilterModel, GridFilterModelState>({
+      stateId: 'filter',
+      propModel: props.filterModel,
+      propOnChange: props.onFilterModelChange,
+      stateSelector: (state) => state.filter,
+      // TODO here we don't need the callback arg.
+      // Should we also call applyFilters?
+      onChangeCallback: (model) =>
+        apiRef.current.publishEvent(GRID_FILTER_MODEL_CHANGE, model),
+    });
+  }, [apiRef, getFilterModelParams, props.filterModel, props.onFilterModelChange]);
+
+  useGridApiEventHandler(apiRef, GRID_COLUMNS_UPDATED, onColUpdated);
 };

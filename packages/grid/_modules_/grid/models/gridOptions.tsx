@@ -354,7 +354,7 @@ export interface GridOptions {
    * Callback fired when the Filter model changes before the filters are applied.
    * @param param With all properties from [[GridFilterModelParams]].
    */
-  onFilterModelChange?: (params: GridFilterModelParams) => void;
+  onFilterModelChange?: (model: GridFilterModel) => void;
   /**
    * Callback fired when the current page has changed.
    * @param param With all properties from [[GridPageChangeParams]].
