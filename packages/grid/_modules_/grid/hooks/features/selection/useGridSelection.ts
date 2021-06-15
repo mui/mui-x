@@ -19,7 +19,10 @@ import { useLogger } from '../../utils/useLogger';
 import { useGridSelector } from '../core/useGridSelector';
 import { useGridState } from '../core/useGridState';
 import { gridRowsLookupSelector } from '../rows/gridRowsSelector';
-import { visibleSortedGridRowIdsSelector } from '../filter/gridFilterSelector';
+import {
+  visibleSortedGridRowIdsSelector,
+  visibleGridRowCountSelector,
+} from '../filter/gridFilterSelector';
 import { GridSelectionState } from './gridSelectionState';
 import { selectedGridRowsSelector, selectedGridRowsCountSelector } from './gridSelectionSelector';
 
@@ -30,6 +33,7 @@ export const useGridSelection = (apiRef: GridApiRef): void => {
   const rowsLookup = useGridSelector(apiRef, gridRowsLookupSelector);
   const totalSelectedRows = useGridSelector(apiRef, selectedGridRowsCountSelector);
   const visibleRowIds = useGridSelector(apiRef, visibleSortedGridRowIdsSelector);
+  const visibleRowCount = useGridSelector(apiRef, visibleGridRowCountSelector);
 
   const {
     checkboxSelection,
@@ -244,8 +248,8 @@ export const useGridSelection = (apiRef: GridApiRef): void => {
   }, [apiRef, setGridState, forceUpdate, isRowSelectable]);
 
   React.useEffect(() => {
-    if (totalSelectedRows > Object.keys(visibleRowIds).length) {
+    if (totalSelectedRows > visibleRowCount) {
       selectRows(visibleRowIds, true, true);
     }
-  }, [totalSelectedRows, visibleRowIds, selectRows]);
+  }, [totalSelectedRows, visibleRowIds, selectRows, visibleRowCount]);
 };
