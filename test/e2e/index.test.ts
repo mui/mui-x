@@ -105,7 +105,7 @@ describe('e2e', () => {
         await page.evaluate(() => document.activeElement?.getAttribute('data-testid')),
       ).to.equal('initial-focus');
     });
-    
+
     it('should display the rows', async () => {
       await renderFixture('DataGrid/ConcurrentReactUpdate');
       expect(
