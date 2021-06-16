@@ -175,7 +175,8 @@ export function useGridEditRows(apiRef: GridApiRef) {
       logger.debug(
         `Setting cell id: ${params.id} field: ${params.field} to value: ${parsedValue?.toString()}`,
       );
-      const rowUpdate = { id: params.id };
+      const row = apiRef.current.getRow(params.id);
+      const rowUpdate = { ...row };
       rowUpdate[params.field] = parsedValue;
       apiRef.current.updateRows([rowUpdate]);
       apiRef.current.publishEvent(GRID_CELL_VALUE_CHANGE, params);
