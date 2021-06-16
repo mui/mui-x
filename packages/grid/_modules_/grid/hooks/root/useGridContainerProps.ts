@@ -7,6 +7,7 @@ import {
   GridViewportSizeState,
 } from '../../models/gridContainerProps';
 import { ElementSize } from '../../models/elementSize';
+import { useEventCallback } from '../../utils/material-ui-utils';
 import { isDeepEqual } from '../../utils/utils';
 import { gridColumnsTotalWidthSelector } from '../features/columns/gridColumnsSelector';
 import { GridState } from '../features/core/gridState';
@@ -230,7 +231,7 @@ export const useGridContainerProps = (apiRef: GridApiRef) => {
     [forceUpdate, setGridState],
   );
 
-  const refreshContainerSizes = React.useCallback(() => {
+  const refreshContainerSizes = useEventCallback(() => {
     logger.debug('Refreshing container sizes');
     const rowsCount = getVirtualRowCount();
     const scrollBar = getScrollBar(rowsCount);
@@ -255,14 +256,7 @@ export const useGridContainerProps = (apiRef: GridApiRef) => {
       (state) => !isDeepEqual(state.containerSizes, containerState),
       (state) => ({ ...state, containerSizes: containerState }),
     );
-  }, [
-    getContainerProps,
-    getScrollBar,
-    getViewport,
-    getVirtualRowCount,
-    logger,
-    updateStateIfChanged,
-  ]);
+  });
 
   React.useEffect(() => {
     refreshContainerSizes();

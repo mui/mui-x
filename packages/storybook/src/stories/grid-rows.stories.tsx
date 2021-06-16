@@ -918,7 +918,7 @@ export function SwitchVirtualization() {
     </div>
   );
 }
-export function DeferRenderingSnap() {
+export function DeferRendering() {
   const [deferRows, setRows] = React.useState<any>([]);
   const [deferColumns] = React.useState([{ field: 'id', headerName: 'Id', width: 100 }]);
 
