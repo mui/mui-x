@@ -69,7 +69,6 @@ export const getCommodityColumns: () => any[] = () => [
     headerName: 'Trader Email',
     generateData: randomEmail,
     renderCell: renderEmail,
-    disableClickEventBubbling: true,
     width: 150,
   },
   {

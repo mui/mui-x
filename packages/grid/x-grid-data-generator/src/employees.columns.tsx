@@ -57,7 +57,6 @@ export const getEmployeeColumns: () => any[] = () => [
     headerName: 'Email',
     generateData: randomEmail,
     renderCell: renderEmail,
-    disableClickEventBubbling: true,
     width: 150,
   },
   {
