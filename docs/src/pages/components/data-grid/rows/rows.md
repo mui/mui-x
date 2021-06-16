@@ -42,8 +42,8 @@ To switch it to server-side, the `rowCount` needs to be set and the number of in
 In addition, you need to handle the `onFetchRows` callback to fetch the rows for the corresponding index.
 Finally, you need to use the `apiRef.current.insertRows()` to tell the DataGrid where to insert the newly fetched rows.
 
-Lastly, in order for the filtering and sorting to work you need to set their modes to `server`.
-You can find out more information about how to do that on the [server side filter page](/components/data-grid/filtering/#server-side-filter) and on the [server side sorting page](/components/data-grid/sorting/#server-side-sorting).
+**Note**: in order for the filtering and sorting to work you need to set their modes to `server`.
+You can find out more information about how to do that on the [server-side filter page](/components/data-grid/filtering/#server-side-filter) and on the [server-side sorting page](/components/data-grid/sorting/#server-side-sorting).
 
 {{"demo": "pages/components/data-grid/rows/ServerInfiniteLoadingGrid.js", "bg": "inline", "disableAd": true}}
 
