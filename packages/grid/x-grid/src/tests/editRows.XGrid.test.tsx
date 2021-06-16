@@ -111,6 +111,25 @@ describe('<XGrid /> - Edit Rows', () => {
     expect(cell.querySelector('input')).to.equal(null);
   });
 
+  it('should be able to prevent the exit transition', () => {
+    render(
+      <TestCase
+        onCellFocusOut={(params, event) => {
+          (event as any).defaultMuiPrevented = true;
+        }}
+      />,
+    );
+    const cell = getCell(1, 1);
+    cell.focus();
+    fireEvent.doubleClick(cell);
+    expect(cell).to.have.class('MuiDataGrid-cellEditing');
+
+    const otherCell = getCell(2, 1);
+    fireEvent.click(otherCell);
+    fireEvent.focus(otherCell);
+    expect(cell).to.have.class('MuiDataGrid-cellEditing');
+  });
+
   it('should allow to switch between cell mode using enter key', () => {
     render(<TestCase />);
     const cell = getCell(1, 0);
