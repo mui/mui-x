@@ -91,8 +91,8 @@ export default function StartEditButtonGrid() {
 
   // Prevent from committing on focus out
   const handleCellFocusOut = React.useCallback((params, event) => {
-    if (params.cellMode === 'edit') {
-      event?.stopPropagation();
+    if (params.cellMode === 'edit' && event) {
+      event.defaultMuiPrevented = true;
     }
   }, []);
 

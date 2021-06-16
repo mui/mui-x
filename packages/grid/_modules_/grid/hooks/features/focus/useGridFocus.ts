@@ -41,12 +41,13 @@ export const useGridFocus = (apiRef: GridApiRef): void => {
   );
 
   const setColumnHeaderFocus = React.useCallback(
-    (field: string) => {
+    (field: string, event?: React.SyntheticEvent) => {
       const { cell } = apiRef.current.getState().focus;
       if (cell) {
         apiRef.current.publishEvent(
           GRID_CELL_FOCUS_OUT,
           apiRef.current.getCellParams(cell.id, cell.field),
+          event,
         );
       }
 
@@ -74,11 +75,11 @@ export const useGridFocus = (apiRef: GridApiRef): void => {
   );
 
   const handleColumnHeaderFocus = React.useCallback(
-    ({ field }: GridCellParams, event?: React.SyntheticEvent) => {
-      if (event?.target !== event?.currentTarget) {
+    ({ field }: GridCellParams, event: React.FocusEvent) => {
+      if (event.target !== event.currentTarget) {
         return;
       }
-      apiRef.current.setColumnHeaderFocus(field);
+      apiRef.current.setColumnHeaderFocus(field, event);
     },
     [apiRef],
   );
@@ -106,7 +107,7 @@ export const useGridFocus = (apiRef: GridApiRef): void => {
   );
 
   const handleDocumentClick = React.useCallback(
-    (event) => {
+    (event: MouseEvent) => {
       const isInsideFocusedCell = insideFocusedCell.current;
       insideFocusedCell.current = false;
 
@@ -116,7 +117,7 @@ export const useGridFocus = (apiRef: GridApiRef): void => {
       }
 
       const cellElement = apiRef.current.getCellElement(cell.id, cell.field);
-      if (cellElement?.contains(event.target)) {
+      if (cellElement?.contains(event.target as HTMLElement)) {
         return;
       }
 
@@ -128,6 +129,7 @@ export const useGridFocus = (apiRef: GridApiRef): void => {
       apiRef.current.publishEvent(
         GRID_CELL_FOCUS_OUT,
         apiRef.current.getCellParams(cell.id, cell.field),
+        event,
       );
     },
     [apiRef, setGridState],

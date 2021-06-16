@@ -61,9 +61,15 @@ export function useGridEditRows(apiRef: GridApiRef) {
     apiRef.current.publishEvent(GRID_CELL_EDIT_EXIT, params);
   };
 
-  const handleCellFocusOut = useEventCallback((params: GridCellParams) => {
-    commitPropsAndExit(params);
-  });
+  const handleCellFocusOut = useEventCallback(
+    (params: GridCellParams, event?: MouseEvent | React.SyntheticEvent) => {
+      if (event && (event as any).defaultMuiPrevented) {
+        return;
+      }
+
+      commitPropsAndExit(params);
+    },
+  );
 
   const handleColumnHeaderDragStart = useEventCallback(() => {
     const { cell } = apiRef.current.getState().focus;
