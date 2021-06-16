@@ -47,14 +47,8 @@ export function useGridEditRows(apiRef: GridApiRef) {
   const [, setGridState, forceUpdate] = useGridState(apiRef);
   const options = useGridSelector(apiRef, optionsSelector);
 
-  const handleCellFocusOut = useEventCallback(() => {
-    const params = lastEditedCell.current;
-    if (!params) {
-      return;
-    }
-
-    const cellParams = apiRef.current.getCellParams(params.id, params.field);
-    if (cellParams.cellMode === 'view') {
+  const commitPropsAndExit = (params: GridCellParams) => {
+    if (params.cellMode === 'view') {
       return;
     }
 
@@ -65,6 +59,19 @@ export function useGridEditRows(apiRef: GridApiRef) {
     }
 
     apiRef.current.publishEvent(GRID_CELL_EDIT_EXIT, params);
+  };
+
+  const handleCellFocusOut = useEventCallback((params: GridCellParams) => {
+    commitPropsAndExit(params);
+  });
+
+  const handleColumnHeaderDragStart = useEventCallback(() => {
+    const { cell } = apiRef.current.getState().focus;
+    if (!cell) {
+      return;
+    }
+    const params = apiRef.current.getCellParams(cell.id, cell.field);
+    commitPropsAndExit(params);
   });
 
   const setCellMode = React.useCallback(
@@ -312,7 +319,7 @@ export function useGridEditRows(apiRef: GridApiRef) {
   useGridApiEventHandler(apiRef, GRID_CELL_EDIT_ENTER, handleEnterEdit);
   useGridApiEventHandler(apiRef, GRID_CELL_EDIT_EXIT, handleExitEdit);
   useGridApiEventHandler(apiRef, GRID_CELL_FOCUS_OUT, handleCellFocusOut);
-  useGridApiEventHandler(apiRef, GRID_COLUMN_HEADER_DRAG_START, handleCellFocusOut);
+  useGridApiEventHandler(apiRef, GRID_COLUMN_HEADER_DRAG_START, handleColumnHeaderDragStart);
 
   useGridApiEventHandler(apiRef, GRID_CELL_EDIT_PROPS_CHANGE, setEditCellProps);
   useGridApiEventHandler(apiRef, GRID_CELL_EDIT_PROPS_CHANGE_COMMITTED, commitCellChange);
