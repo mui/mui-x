@@ -82,13 +82,13 @@ describe('<DataGrid /> - Control', () => {
       const ControlCase = (props: Partial<GridComponentProps>) => {
         const { rows, columns, ...others } = props;
         const [selectionModel, setSelectionModel] = React.useState<any>([0]);
-        const handleSelectionChange = React.useCallback((newModel) => {
+        const handleSelectionChange = (newModel) => {
           if (newModel.length) {
             setSelectionModel([...newModel, 2]);
             return;
           }
           setSelectionModel(newModel);
-        }, []);
+        };
 
         return (
           <div style={{ width: 300, height: 300 }}>
