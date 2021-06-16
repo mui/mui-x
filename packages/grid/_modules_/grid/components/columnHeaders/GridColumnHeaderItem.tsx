@@ -45,20 +45,21 @@ interface GridColumnHeaderItemProps {
   tabIndex: 0 | -1;
 }
 
-export const GridColumnHeaderItem = ({
-  column,
-  columnMenuOpen,
-  colIndex,
-  headerHeight,
-  isDragging,
-  isResizing,
-  sortDirection,
-  sortIndex,
-  options,
-  filterItemsCounter,
-  hasFocus,
-  tabIndex,
-}: GridColumnHeaderItemProps) => {
+export function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
+  const {
+    column,
+    columnMenuOpen,
+    colIndex,
+    headerHeight,
+    isDragging,
+    isResizing,
+    sortDirection,
+    sortIndex,
+    options,
+    filterItemsCounter,
+    hasFocus,
+    tabIndex,
+  } = props;
   const apiRef = useGridApiContext();
   const headerCellRef = React.useRef<HTMLDivElement>(null);
   const columnMenuId: string = useId();
@@ -239,4 +240,4 @@ export const GridColumnHeaderItem = ({
       />
     </div>
   );
-};
+}

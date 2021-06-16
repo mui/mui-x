@@ -249,7 +249,7 @@ export const useGridSelection = (apiRef: GridApiRef): void => {
 
   React.useEffect(() => {
     if (totalSelectedRows > visibleRowCount) {
-      selectRows(visibleRowIds, true, true);
+      apiRef.current.selectRows(visibleRowIds, true, true);
     }
-  }, [totalSelectedRows, visibleRowIds, selectRows, visibleRowCount]);
+  }, [apiRef, totalSelectedRows, visibleRowIds, visibleRowCount]);
 };
