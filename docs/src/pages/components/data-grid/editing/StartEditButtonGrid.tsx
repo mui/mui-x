@@ -100,8 +100,8 @@ export default function StartEditButtonGrid() {
     [],
   );
 
-  // Prevent from committing on blur
-  const handleCellBlur = React.useCallback(
+  // Prevent from committing on focus out
+  const handleCellFocusOut = React.useCallback(
     (params, event?: React.SyntheticEvent) => {
       if (params.cellMode === 'edit') {
         event?.stopPropagation();
@@ -118,7 +118,7 @@ export default function StartEditButtonGrid() {
         apiRef={apiRef}
         onCellClick={handleCellClick}
         onCellDoubleClick={handleDoubleCellClick}
-        onCellBlur={handleCellBlur}
+        onCellFocusOut={handleCellFocusOut}
         onCellKeyDown={handleCellKeyDown}
         components={{
           Toolbar: EditToolbar,

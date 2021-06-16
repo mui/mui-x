@@ -241,6 +241,12 @@ export interface GridOptions {
    */
   onCellDoubleClick?: (params: GridCellParams, event: React.MouseEvent) => void;
   /**
+   * Callback fired when a cell loses focus.
+   * @param param With all properties from [[GridCellParams]].
+   * @param event [[React.MouseEvent]].
+   */
+  onCellFocusOut?: (params: GridCellParams, event: React.SyntheticEvent) => void;
+  /**
    * Callback fired when a keydown event comes from a cell element.
    * @param param With all properties from [[GridCellParams]].
    * @param event [[React.KeyboardEvent]].
