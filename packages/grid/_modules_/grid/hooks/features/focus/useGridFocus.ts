@@ -7,6 +7,7 @@ import {
   GRID_CELL_FOCUS_OUT,
   GRID_COLUMN_HEADER_BLUR,
   GRID_COLUMN_HEADER_FOCUS,
+  GRID_CELL_MODE_CHANGE,
 } from '../../../constants/eventsConstants';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridFocusApi } from '../../../models/api/gridFocusApi';
@@ -132,6 +133,19 @@ export const useGridFocus = (apiRef: GridApiRef): void => {
     [apiRef, setGridState],
   );
 
+  const handleCellModeChange = React.useCallback(
+    (params: GridCellParams) => {
+      if (params.cellMode === 'view') {
+        return;
+      }
+      const { cell } = apiRef.current.getState().focus;
+      if (cell?.id !== params.id || cell?.field !== params.field) {
+        apiRef.current.setCellFocus(params.id, params.field);
+      }
+    },
+    [apiRef],
+  );
+
   useGridApiMethod<GridFocusApi>(
     apiRef,
     {
@@ -154,5 +168,6 @@ export const useGridFocus = (apiRef: GridApiRef): void => {
   useGridApiEventHandler(apiRef, GRID_CELL_CLICK, updateFocus);
   useGridApiEventHandler(apiRef, GRID_CELL_DOUBLE_CLICK, updateFocus);
   useGridApiEventHandler(apiRef, GRID_CELL_MOUSE_UP, handleCellMouseUp);
+  useGridApiEventHandler(apiRef, GRID_CELL_MODE_CHANGE, handleCellModeChange);
   useGridApiEventHandler(apiRef, GRID_COLUMN_HEADER_FOCUS, handleColumnHeaderFocus);
 };
