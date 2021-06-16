@@ -413,7 +413,7 @@ describe('<XGrid /> - Edit Rows', () => {
     expect(cell).not.to.have.class('MuiDataGrid-cellEditing');
     fireEvent.doubleClick(cell);
     expect(cell).to.have.class('MuiDataGrid-cellEditing');
-    const checkbox = screen.getByRole('checkbox', { key: ' ' });
+    const checkbox = screen.getByRole('checkbox');
     fireEvent.click(checkbox);
     expect(cell).to.have.class('MuiDataGrid-cellEditing');
   });
