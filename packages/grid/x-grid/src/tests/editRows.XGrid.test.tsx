@@ -292,7 +292,7 @@ describe('<XGrid /> - Edit Rows', () => {
     expect(cell).to.have.text('1970');
   });
 
-  it('should work correctly when the cell editing was initiated programatically', () => {
+  it('should work correctly when the cell editing was initiated programmatically', () => {
     render(<TestCase />);
     apiRef.current.setCellMode(1, 'year', 'edit');
     expect(getActiveCell()).to.equal('1-1');
