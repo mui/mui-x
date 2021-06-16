@@ -89,7 +89,7 @@ export default function StartEditButtonGrid() {
     }
   }, []);
 
-  // Prevent from committing
+  // Prevent from committing on focus out
   const handleCellFocusOut = React.useCallback((params, event) => {
     if (params.cellMode === 'edit') {
       event?.stopPropagation();
