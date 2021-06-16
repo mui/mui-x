@@ -1,8 +1,7 @@
-import { useContext } from 'react';
 import * as React from 'react';
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
 import { optionsSelector } from '../../hooks/utils/optionsSelector';
-import { GridApiContext } from '../GridApiContext';
+import { useGridApiContext } from '../../hooks/root/useGridApiContext';
 import {
   GridToolbarContainer,
   GridToolbarContainerProps,
@@ -14,7 +13,7 @@ import { GridToolbarExport } from './GridToolbarExport';
 
 export const GridToolbar = React.forwardRef<HTMLDivElement, GridToolbarContainerProps>(
   function GridToolbar(props, ref) {
-    const apiRef = useContext(GridApiContext);
+    const apiRef = useGridApiContext();
     const options = useGridSelector(apiRef, optionsSelector);
 
     if (

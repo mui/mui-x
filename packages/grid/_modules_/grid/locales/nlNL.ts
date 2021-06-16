@@ -27,6 +27,11 @@ const nlNLGrid: Partial<GridLocaleText> = {
   toolbarFiltersTooltipActive: (count) =>
     count > 1 ? `${count} actieve filters` : `${count} filter actief`,
 
+  // Export selector toolbar button text
+  // toolbarExport: 'Export',
+  // toolbarExportLabel: 'Export',
+  // toolbarExportCSV: 'Download as CSV',
+
   // Columns panel text
   columnsPanelTextFieldLabel: 'Zoek kolom',
   columnsPanelTextFieldPlaceholder: 'Kolomtitel',

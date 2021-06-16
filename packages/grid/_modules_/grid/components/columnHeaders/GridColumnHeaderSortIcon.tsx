@@ -3,7 +3,7 @@ import Badge from '@material-ui/core/Badge';
 import IconButton from '@material-ui/core/IconButton';
 import { GridIconSlotsComponent } from '../../models/gridIconSlotsComponent';
 import { GridSortDirection } from '../../models/gridSortModel';
-import { GridApiContext } from '../GridApiContext';
+import { useGridApiContext } from '../../hooks/root/useGridApiContext';
 
 export interface GridColumnHeaderSortIconProps {
   direction: GridSortDirection;
@@ -24,7 +24,7 @@ export const GridColumnHeaderSortIcon = React.memo(function GridColumnHeaderSort
   props: GridColumnHeaderSortIconProps,
 ) {
   const { direction, index } = props;
-  const apiRef = React.useContext(GridApiContext);
+  const apiRef = useGridApiContext();
 
   const unsortedIcon = apiRef!.current.components.ColumnUnsortedIcon;
   if (direction == null && unsortedIcon === null) {

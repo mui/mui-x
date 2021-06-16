@@ -18,7 +18,7 @@ import {
 } from '../../constants/eventsConstants';
 import { GRID_CSS_CLASS_PREFIX } from '../../constants/cssClassesConstants';
 import { GridAlignment, GridCellMode, GridCellValue, GridRowId } from '../../models/index';
-import { GridApiContext } from '../GridApiContext';
+import { useGridApiContext } from '../../hooks/root/useGridApiContext';
 
 export interface GridCellProps {
   align: GridAlignment;
@@ -40,7 +40,7 @@ export interface GridCellProps {
   tabIndex: 0 | -1;
 }
 
-export const GridCell = React.memo((props: GridCellProps) => {
+export const GridCell = React.memo(function GridCell(props: GridCellProps) {
   const {
     align,
     className,
@@ -63,7 +63,7 @@ export const GridCell = React.memo((props: GridCellProps) => {
 
   const valueToRender = formattedValue == null ? value : formattedValue;
   const cellRef = React.useRef<HTMLDivElement>(null);
-  const apiRef = React.useContext(GridApiContext);
+  const apiRef = useGridApiContext();
 
   const cssClasses = clsx(className, `${GRID_CSS_CLASS_PREFIX}-cell${capitalize(align)}`, {
     [`${GRID_CSS_CLASS_PREFIX}-withBorder`]: showRightBorder,
@@ -178,5 +178,3 @@ export const GridCell = React.memo((props: GridCellProps) => {
     </div>
   );
 });
-
-GridCell.displayName = 'GridCell';

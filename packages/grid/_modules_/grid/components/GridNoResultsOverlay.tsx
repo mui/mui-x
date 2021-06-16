@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { GridApiContext } from './GridApiContext';
+import { useGridApiContext } from '../hooks/root/useGridApiContext';
 import { GridOverlay, GridOverlayProps } from './containers/GridOverlay';
 
 export const GridNoResultsOverlay = React.forwardRef<HTMLDivElement, GridOverlayProps>(
   function GridNoResultsOverlay(props, ref) {
-    const apiRef = React.useContext(GridApiContext);
+    const apiRef = useGridApiContext();
     const noResultsOverlayLabel = apiRef!.current.getLocaleText('noResultsOverlayLabel');
 
     return (

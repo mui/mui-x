@@ -184,6 +184,40 @@ describe('<DataGrid /> - Filter', () => {
         expect(getColumnValues()).to.deep.equal(expected);
       });
     });
+
+    describe('RegExp', () => {
+      ['contains', 'startsWith', 'endsWith'].forEach((operatorValue) => {
+        it('should escape RegExp characters if applied as filter values', () => {
+          const regExpToEscape = '[-[]{}()*+?.,\\^$|#s]';
+          render(<TestCase value={regExpToEscape} operatorValue={operatorValue} />);
+          expect(getColumnValues()).to.deep.equal([]);
+        });
+      });
+
+      it('should allow regex special as literals and return rows with the matched input', () => {
+        render(
+          <TestCase
+            rows={[
+              {
+                id: 0,
+                brand: 'Amazon',
+              },
+              {
+                id: 1,
+                brand: 'Amazon.com, Inc.',
+              },
+              {
+                id: 2,
+                brand: 'Amazon.com,',
+              },
+            ]}
+            value=".com,"
+            operatorValue="contains"
+          />,
+        );
+        expect(getColumnValues()).to.deep.equal(['Amazon.com, Inc.', 'Amazon.com,']);
+      });
+    });
   });
 
   describe('numeric operators', () => {

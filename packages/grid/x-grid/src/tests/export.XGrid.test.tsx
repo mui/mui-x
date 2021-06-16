@@ -15,7 +15,9 @@ describe('<XGrid /> - Export', () => {
 
   let apiRef: GridApiRef;
 
-  it('getDataAsCsv should return the correct string representation of the grid data', () => {
+  const columns = [{ field: 'id' }, { field: 'brand', headerName: 'Brand' }];
+
+  it('getDataAsCsv should work with basic strings', () => {
     const TestCaseCSVExport = () => {
       apiRef = useGridApiRef();
       return (
@@ -23,7 +25,7 @@ describe('<XGrid /> - Export', () => {
           <XGrid
             {...baselineProps}
             apiRef={apiRef}
-            columns={[{ field: 'brand', headerName: 'Brand' }]}
+            columns={columns}
             rows={[
               {
                 id: 0,
@@ -44,17 +46,21 @@ describe('<XGrid /> - Export', () => {
     };
 
     render(<TestCaseCSVExport />);
-    expect(apiRef.current.getDataAsCsv()).to.equal('Brand\r\nNike\r\nAdidas\r\nPuma');
+    expect(apiRef.current.getDataAsCsv()).to.equal(
+      ['id,Brand', '0,Nike', '1,Adidas', '2,Puma'].join('\r\n'),
+    );
     apiRef.current.updateRows([
       {
         id: 1,
         brand: 'Adidas,Reebok',
       },
     ]);
-    expect(apiRef.current.getDataAsCsv()).to.equal('Brand\r\nNike\r\n"Adidas,Reebok"\r\nPuma');
+    expect(apiRef.current.getDataAsCsv()).to.equal(
+      ['id,Brand', '0,Nike', '1,"Adidas,Reebok"', '2,Puma'].join('\r\n'),
+    );
   });
 
-  it('getDataAsCsv should return the correct string representation of the grid data if cell contains comma', () => {
+  it('getDataAsCsv should work with comma', () => {
     const TestCaseCSVExport = () => {
       apiRef = useGridApiRef();
       return (
@@ -62,7 +68,7 @@ describe('<XGrid /> - Export', () => {
           <XGrid
             {...baselineProps}
             apiRef={apiRef}
-            columns={[{ field: 'brand', headerName: 'Brand' }]}
+            columns={columns}
             rows={[
               {
                 id: 0,
@@ -79,10 +85,12 @@ describe('<XGrid /> - Export', () => {
     };
 
     render(<TestCaseCSVExport />);
-    expect(apiRef.current.getDataAsCsv()).to.equal('Brand\r\nNike\r\n"Adidas,Puma"');
+    expect(apiRef.current.getDataAsCsv()).to.equal(
+      ['id,Brand', '0,Nike', '1,"Adidas,Puma"'].join('\r\n'),
+    );
   });
 
-  it('getDataAsCsv should return the correct string representation of the grid data if cell contains comma and double quotes', () => {
+  it('getDataAsCsv should work with double quotes', () => {
     const TestCaseCSVExport = () => {
       apiRef = useGridApiRef();
       return (
@@ -90,11 +98,15 @@ describe('<XGrid /> - Export', () => {
           <XGrid
             {...baselineProps}
             apiRef={apiRef}
-            columns={[{ field: 'brand', headerName: 'Brand' }]}
+            columns={columns}
             rows={[
               {
                 id: 0,
-                brand: 'Nike,"Adidas",Puma',
+                brand: 'Nike',
+              },
+              {
+                id: 1,
+                brand: 'Samsung 24" (inches)',
               },
             ]}
           />
@@ -103,6 +115,40 @@ describe('<XGrid /> - Export', () => {
     };
 
     render(<TestCaseCSVExport />);
-    expect(apiRef.current.getDataAsCsv()).to.equal('Brand\r\n"Nike,""Adidas"",Puma"');
+    expect(apiRef.current.getDataAsCsv()).to.equal(
+      ['id,Brand', '0,Nike', '1,Samsung 24"" (inches)'].join('\r\n'),
+    );
+  });
+
+  it('getDataAsCsv should allow to change the delimiter', () => {
+    const TestCaseCSVExport = () => {
+      apiRef = useGridApiRef();
+      return (
+        <div style={{ width: 300, height: 300 }}>
+          <XGrid
+            {...baselineProps}
+            apiRef={apiRef}
+            columns={columns}
+            rows={[
+              {
+                id: 0,
+                brand: 'Nike',
+              },
+              {
+                id: 1,
+                brand: 'Adidas',
+              },
+            ]}
+          />
+        </div>
+      );
+    };
+
+    render(<TestCaseCSVExport />);
+    expect(
+      apiRef.current.getDataAsCsv({
+        delimiter: ';',
+      }),
+    ).to.equal(['id;Brand', '0;Nike', '1;Adidas'].join('\r\n'));
   });
 });
