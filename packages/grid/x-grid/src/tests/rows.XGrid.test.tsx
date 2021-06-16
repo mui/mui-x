@@ -14,7 +14,6 @@ import {
 import { useData } from 'packages/storybook/src/hooks/useData';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
-const isSafari = /AppleWebKit/.test(window.navigator.userAgent);
 
 describe('<XGrid /> - Rows', () => {
   let clock;
