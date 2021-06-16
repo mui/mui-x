@@ -47,7 +47,7 @@ export function useGridEditRows(apiRef: GridApiRef) {
   const [, setGridState, forceUpdate] = useGridState(apiRef);
   const options = useGridSelector(apiRef, optionsSelector);
 
-  const handleClickOutside = useEventCallback(() => {
+  const handleCellFocusOut = useEventCallback(() => {
     const params = lastEditedCell.current;
     if (!params) {
       return;
@@ -311,8 +311,8 @@ export function useGridEditRows(apiRef: GridApiRef) {
   useGridApiEventHandler(apiRef, GRID_CELL_DOUBLE_CLICK, handleDoubleClick);
   useGridApiEventHandler(apiRef, GRID_CELL_EDIT_ENTER, handleEnterEdit);
   useGridApiEventHandler(apiRef, GRID_CELL_EDIT_EXIT, handleExitEdit);
-  useGridApiEventHandler(apiRef, GRID_CELL_FOCUS_OUT, handleClickOutside);
-  useGridApiEventHandler(apiRef, GRID_COLUMN_HEADER_DRAG_START, handleClickOutside);
+  useGridApiEventHandler(apiRef, GRID_CELL_FOCUS_OUT, handleCellFocusOut);
+  useGridApiEventHandler(apiRef, GRID_COLUMN_HEADER_DRAG_START, handleCellFocusOut);
 
   useGridApiEventHandler(apiRef, GRID_CELL_EDIT_PROPS_CHANGE, setEditCellProps);
   useGridApiEventHandler(apiRef, GRID_CELL_EDIT_PROPS_CHANGE_COMMITTED, commitCellChange);
