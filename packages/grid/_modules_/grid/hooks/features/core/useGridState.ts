@@ -46,15 +46,20 @@ export const useGridState = (
                 ? controlState.mapStateToModel(newSubState)
                 : newSubState;
 
-              if (!isDeepEqual(controlState.propModel, newModel)) {
+              if (
+                (!controlState.mapStateToModel && controlState.propModel !== newModel) ||
+                (controlState.mapStateToModel && !isDeepEqual(controlState.propModel, newModel))
+              ) {
                 controlState.propOnChange(newModel);
                 shouldUpdate = controlState.propModel === undefined;
               }
-            } else if (!controlState.propOnChange && controlState.propModel !== undefined) {
+            } else if (controlState.propModel !== undefined) {
               const oldModel = controlState.mapStateToModel
                 ? controlState.mapStateToModel(oldState)
                 : oldState;
-              shouldUpdate = !isDeepEqual(oldModel, controlState.propModel);
+              shouldUpdate = controlState.mapStateToModel
+                ? !isDeepEqual(oldModel, controlState.propModel)
+                : oldModel !== controlState.propModel;
             }
             if (shouldUpdate) {
               updatedStateIds.push(controlState.stateId);

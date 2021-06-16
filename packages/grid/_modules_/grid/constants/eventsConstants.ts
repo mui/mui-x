@@ -236,12 +236,6 @@ export const GRID_ROW_LEAVE = 'rowLeave';
 export const GRID_ROW_EDIT_MODEL_CHANGE = 'editRowModelChange';
 
 /**
- * Fired when a row is selected or unselected. Called with a [[GridRowSelectedParams]] object.
- * @event
- */
-export const GRID_ROW_SELECTED = 'rowSelected';
-
-/**
  * Fired when a column header loses focus. Called with a [[GridColumnHeaderParams]] object.
  * @ignore - do not document.
  * @event

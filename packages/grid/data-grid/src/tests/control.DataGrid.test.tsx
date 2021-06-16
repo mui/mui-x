@@ -5,10 +5,9 @@ import {
   fireEvent,
 } from 'test/utils';
 import { expect } from 'chai';
-import { XGrid, GridComponentProps } from '@material-ui/x-grid';
+import { XGrid, GridComponentProps, GridSelectionModel } from '@material-ui/x-grid';
 import { getCell, getRow } from 'test/utils/helperFn';
 import { spy } from 'sinon';
-import { GridSelectionModel } from '../../../_modules_/grid/models/gridSelectionModel';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -63,10 +62,10 @@ describe('<DataGrid /> - Control', () => {
       const selectionModel: GridSelectionModel = [1];
       render(<TestCase selectionModel={selectionModel} />);
 
-      expect(getRow(0)).to.not.have.class('Mui-selected');
+      expect(getRow(0)).not.to.have.class('Mui-selected');
       expect(getRow(1)).to.have.class('Mui-selected');
       fireEvent.click(getCell(0, 0));
-      expect(getRow(0)).to.not.have.class('Mui-selected');
+      expect(getRow(0)).not.to.have.class('Mui-selected');
     });
 
     it('should update the selection state when the model is not set, but the onChange is set', () => {
@@ -109,7 +108,7 @@ describe('<DataGrid /> - Control', () => {
 
       expect(getRow(0)).to.have.class('Mui-selected');
       fireEvent.click(getCell(1, 0));
-      expect(getRow(0)).to.not.have.class('Mui-selected');
+      expect(getRow(0)).not.to.have.class('Mui-selected');
       expect(getRow(1)).to.have.class('Mui-selected');
       expect(getRow(2)).to.have.class('Mui-selected');
     });
