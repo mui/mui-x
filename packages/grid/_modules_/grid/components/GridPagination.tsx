@@ -97,6 +97,7 @@ export const GridPagination = React.forwardRef<
           : []
       }
       rowsPerPage={paginationState.pageSize}
+      {...apiRef!.current.getLocaleText('MuiTablePagination')}
       {...getPaginationChangeHandlers()}
       {...props}
     />

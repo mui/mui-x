@@ -1,7 +1,12 @@
+import { Localization as CoreLocalization } from '@material-ui/core/locale';
+
+// @ts-ignore
+type MuiComponentsLocalization = CoreLocalization['props'] | CoreLocalization['components'];
+
 /**
  * Set the types of the texts in the grid.
  */
-export interface GridLocaleText {
+export interface GridLocaleText extends Partial<MuiComponentsLocalization> {
   // Root
   noRowsLabel: string;
   noResultsOverlayLabel: string;
