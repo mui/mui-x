@@ -13,6 +13,8 @@ import {
   createClientRenderStrictMode,
   // @ts-expect-error need to migrate helpers to TypeScript
   fireEvent,
+  // @ts-expect-error need to migrate helpers to TypeScript
+  screen,
 } from 'test/utils';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
@@ -293,5 +295,28 @@ describe('<XGrid /> - Edit Rows', () => {
         year: 1961,
       },
     });
+  });
+
+  it('should support getRowId', () => {
+    render(
+      <TestCase
+        getRowId={(row) => row.code}
+        rows={baselineProps.rows.map((row) => ({ code: row.id, brand: row.brand }))}
+      />,
+    );
+    expect(screen.queryAllByRole('row')).to.have.length(4);
+    const cell = getCell(1, 0);
+    cell.focus();
+    fireEvent.doubleClick(cell);
+    const input = cell.querySelector('input')!;
+    expect(input.value).to.equal('Adidas');
+    fireEvent.change(input, { target: { value: 'n' } });
+    expect(cell.querySelector('input')!.value).to.equal('n');
+
+    fireEvent.keyDown(input, { key: 'Enter' });
+    expect(cell).to.have.class('MuiDataGrid-cellEditable');
+    expect(cell).not.to.have.class('MuiDataGrid-cellEditing');
+    expect(cell).to.have.text('n');
+    expect(screen.queryAllByRole('row')).to.have.length(4);
   });
 });
