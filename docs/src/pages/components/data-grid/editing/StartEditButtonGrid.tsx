@@ -8,6 +8,7 @@ import {
   useGridApiRef,
   XGrid,
   GridApiRef,
+  MuiEvent,
 } from '@material-ui/x-grid';
 import {
   randomCreatedDate,
@@ -102,9 +103,9 @@ export default function StartEditButtonGrid() {
 
   // Prevent from committing on focus out
   const handleCellFocusOut = React.useCallback(
-    (params, event?: MouseEvent | React.SyntheticEvent) => {
+    (params, event?: MuiEvent<MouseEvent>) => {
       if (params.cellMode === 'edit' && event) {
-        (event as any).defaultMuiPrevented = true;
+        event.defaultMuiPrevented = true;
       }
     },
     [],
