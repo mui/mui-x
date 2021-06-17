@@ -32,8 +32,8 @@ const useStyles = makeStyles(
 
 interface EditToolbarProps {
   apiRef: GridApiRef;
+  selectedCellParams?: any;
   setSelectedCellParams: (value: any) => void;
-  selectedCellParams: any;
 }
 
 function EditToolbar(props: EditToolbarProps) {

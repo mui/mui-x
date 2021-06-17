@@ -66,7 +66,7 @@ EditToolbar.propTypes = {
   apiRef: PropTypes.shape({
     current: PropTypes.object.isRequired,
   }).isRequired,
-  selectedCellParams: PropTypes.any.isRequired,
+  selectedCellParams: PropTypes.any,
   setSelectedCellParams: PropTypes.func.isRequired,
 };
 
