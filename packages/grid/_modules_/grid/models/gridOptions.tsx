@@ -229,9 +229,9 @@ export interface GridOptions {
   /**
    * Callback fired when the active element leaves a cell.
    * @param param With all properties from [[GridCellParams]].
-   * @param event [[React.MouseEvent]].
+   * @param event [[React.FocusEvent]].
    */
-  onCellBlur?: (params: GridCellParams, event: React.SyntheticEvent) => void;
+  onCellBlur?: (params: GridCellParams, event: React.FocusEvent) => void;
   /**
    * Callback fired when a click event comes from a cell element.
    * @param param With all properties from [[GridCellParams]].
