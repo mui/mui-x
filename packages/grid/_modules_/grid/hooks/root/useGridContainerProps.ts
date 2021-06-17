@@ -7,7 +7,6 @@ import {
   GridViewportSizeState,
 } from '../../models/gridContainerProps';
 import { ElementSize } from '../../models/elementSize';
-import { useEventCallback } from '../../utils/material-ui-utils';
 import { isDeepEqual } from '../../utils/utils';
 import { gridColumnsTotalWidthSelector } from '../features/columns/gridColumnsSelector';
 import { GridState } from '../features/core/gridState';
