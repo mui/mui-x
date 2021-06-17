@@ -44,7 +44,7 @@ Note that `createMuiTheme` accepts any number of arguments.
 If you are already using the [translations of the core components](/guides/localization/#locale-text), you can add `bgBG` as a new argument.
 The same import works with `XGrid` as it's an extension of `DataGrid`.
 
-**Note**: if you want to pass in language translations directly to the grid and not use the `createMuiTheme` in combination with the `ThemeProvider` you can directly load the language translations you need from the `DataGrid` or `XGrid` package.
+**Note**: if you want to pass in language translations directly to the grid and not use the `createMuiTheme` in combination with the `ThemeProvider` you can directly load the language translations from the `DataGrid` or `XGrid` package.
 
 ```jsx
 import { DataGrid, nlNL } from '@material-ui/data-grid';
