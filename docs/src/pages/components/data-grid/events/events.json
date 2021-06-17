@@ -102,10 +102,6 @@
     "description": "Fired when the row editing model changes. Called with a GridEditRowModelParams object."
   },
   {
-    "name": "rowSelected",
-    "description": "Fired when a row is selected or unselected. Called with a GridRowSelectedParams object."
-  },
-  {
     "name": "columnHeaderKeydown",
     "description": "Fired when a key is pressed in a column header. It&#39;s mapped do the <code>keydown</code> DOM event.\nCalled with a GridColumnHeaderParams object."
   },
