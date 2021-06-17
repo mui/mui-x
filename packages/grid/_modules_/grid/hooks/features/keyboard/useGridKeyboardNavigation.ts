@@ -130,7 +130,7 @@ export const useGridKeyboardNavigation = (apiRef: GridApiRef): void => {
 
       if (nextCellIndexes.rowIndex < 0) {
         const field = apiRef.current.getVisibleColumns()[nextCellIndexes.colIndex].field;
-        apiRef.current.setColumnHeaderFocus(field);
+        apiRef.current.setColumnHeaderFocus(field, event);
         return;
       }
 
@@ -205,7 +205,7 @@ export const useGridKeyboardNavigation = (apiRef: GridApiRef): void => {
       logger.debug(`Navigating to next column row ${nextColumnHeaderIndexes.colIndex}`);
       apiRef.current.scrollToIndexes(nextColumnHeaderIndexes);
       const field = apiRef.current.getVisibleColumns()[nextColumnHeaderIndexes.colIndex].field;
-      apiRef.current.setColumnHeaderFocus(field);
+      apiRef.current.setColumnHeaderFocus(field, event);
     },
     [apiRef, colCount, containerSizes, logger],
   );

@@ -82,6 +82,12 @@ export const GRID_CELL_DOUBLE_CLICK = 'cellDoubleClick';
 export const GRID_CELL_MOUSE_DOWN = 'cellMouseDown';
 
 /**
+ * Fired when a `mouseup` event happens in a cell. Called with a [[GridCellParams]] object.
+ * @event
+ */
+export const GRID_CELL_MOUSE_UP = 'cellMouseUp';
+
+/**
  * Fired when a `mouseover` event happens in a cell. Called with a [[GridCellParams]] object.
  * @event
  */
@@ -112,7 +118,7 @@ export const GRID_CELL_LEAVE = 'cellLeave';
 export const GRID_CELL_KEYDOWN = 'cellKeydown';
 
 /**
- * Fired when a cell loses focus. Called with a [[GridCellParams]] object.
+ * Fired when the `blur` event of a cell is triggered. Called with a [[GridCellParams]] object.
  * @event
  */
 export const GRID_CELL_BLUR = 'cellBlur';
@@ -122,6 +128,12 @@ export const GRID_CELL_BLUR = 'cellBlur';
  * @event
  */
 export const GRID_CELL_FOCUS = 'cellFocus';
+
+/**
+ * Fired when a cell loses focus. Called with a [[GridCellParams]] object.
+ * @event
+ */
+export const GRID_CELL_FOCUS_OUT = 'cellFocusOut';
 
 /**
  * Fired when the user starts dragging a cell. It's mapped to the `dragstart` DOM event.
