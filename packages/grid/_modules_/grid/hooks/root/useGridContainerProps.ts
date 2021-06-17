@@ -231,7 +231,7 @@ export const useGridContainerProps = (apiRef: GridApiRef) => {
     [forceUpdate, setGridState],
   );
 
-  const refreshContainerSizes = useEventCallback(() => {
+  const refreshContainerSizes = React.useCallback(() => {
     logger.debug('Refreshing container sizes');
     const rowsCount = getVirtualRowCount();
     const scrollBar = getScrollBar(rowsCount);
@@ -256,7 +256,14 @@ export const useGridContainerProps = (apiRef: GridApiRef) => {
       (state) => !isDeepEqual(state.containerSizes, containerState),
       (state) => ({ ...state, containerSizes: containerState }),
     );
-  });
+  }, [
+    getContainerProps,
+    getScrollBar,
+    getViewport,
+    getVirtualRowCount,
+    logger,
+    updateStateIfChanged,
+  ]);
 
   React.useEffect(() => {
     refreshContainerSizes();
