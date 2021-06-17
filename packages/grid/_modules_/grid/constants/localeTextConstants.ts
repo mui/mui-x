@@ -99,11 +99,6 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
   booleanCellTrueLabel: 'true',
   booleanCellFalseLabel: 'false',
 
-  // Core components keys
+  // Used core components translation keys
   MuiTablePagination: {},
-  MuiPagination: {},
-  MuiAlert: {},
-  MuiBreadcrumbs: {},
-  MuiRating: {},
-  MuiAutocomplete: {},
 };
