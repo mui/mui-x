@@ -24,7 +24,8 @@ export const GridHeaderCheckbox = React.forwardRef<HTMLInputElement, GridColumnH
     const totalRows = useGridSelector(apiRef, gridRowCountSelector);
 
     const isIndeterminate = totalSelectedRows > 0 && totalSelectedRows !== totalRows;
-    const isChecked = totalSelectedRows === totalRows || isIndeterminate;
+    // TODO core v5 remove || isIndeterminate, no longer has any effect
+    const isChecked = (totalSelectedRows > 0 && totalSelectedRows === totalRows) || isIndeterminate;
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
       const checked = event.target.checked;
