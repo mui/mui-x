@@ -33,28 +33,28 @@ import {
 } from '../virtualization/renderingState';
 
 export interface GridState {
+  rows: InternalGridRowsState;
+  editRows: GridEditRowsModel;
+  pagination: GridPaginationState;
+  options: GridOptions;
+  isScrolling: boolean;
   columns: GridInternalColumns;
-  columnMenu: GridColumnMenuState;
   columnReorder: GridColumnReorderState;
   columnResize: GridColumnResizeState;
-  containerSizes: GridContainerProps | null;
-  density: GridGridDensity;
-  editRows: GridEditRowsModel;
-  error?: any;
-  filter: GridFilterModelState;
-  focus: GridFocusState;
-  isScrolling: boolean;
-  options: GridOptions;
-  pagination: GridPaginationState;
-  preferencePanel: GridPreferencePanelState;
-  rows: InternalGridRowsState;
+  columnMenu: GridColumnMenuState;
   rendering: InternalRenderingState;
-  scrollBar: GridScrollBarState;
-  selection: GridSelectionState;
-  sorting: GridSortingState;
-  tabIndex: GridTabIndexState;
+  containerSizes: GridContainerProps | null;
   viewportSizes: GridViewportSizeState;
+  scrollBar: GridScrollBarState;
+  sorting: GridSortingState;
+  focus: GridFocusState;
+  tabIndex: GridTabIndexState;
+  selection: GridSelectionState;
+  filter: GridFilterModelState;
   visibleRows: VisibleGridRowsState;
+  preferencePanel: GridPreferencePanelState;
+  density: GridGridDensity;
+  error?: any;
 }
 
 export const getInitialGridState: () => GridState = () => ({

@@ -3,13 +3,11 @@ import {
   GridEventEmitter,
   GridSubscribeEventOptions,
 } from '../../utils/eventEmitter/GridEventEmitter';
-import { ControlStateItem } from '../controlStateItem';
 
 /**
  * The core API interface that is available in the grid `apiRef`.
  */
 export interface GridCoreApi extends GridEventEmitter {
-  controlStateRef: React.RefObject<Record<string, ControlStateItem<any, any>>>;
   /**
    * The react ref of the grid root container div element.
    * @ignore - do not document.
