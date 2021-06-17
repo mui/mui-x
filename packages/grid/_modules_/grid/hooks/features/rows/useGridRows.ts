@@ -187,9 +187,8 @@ export const useGridRows = (
       });
       if (updatedLookup) {
         internalRowsState.current.idRowsLookup = updatedLookup;
+        setGridState((state) => ({ ...state, rows: { ...internalRowsState.current } }));
       }
-
-      setGridState((state) => ({ ...state, rows: { ...internalRowsState.current } }));
 
       if (deletedRowIds.length > 0 || addedRows.length > 0) {
         deletedRowIds.forEach((id) => {
