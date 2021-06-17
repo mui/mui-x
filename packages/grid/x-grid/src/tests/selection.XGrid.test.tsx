@@ -1,7 +1,14 @@
 import * as React from 'react';
-import { createClientRenderStrictMode } from 'test/utils';
 import { expect } from 'chai';
 import { spy } from 'sinon';
+import { getColumnValues } from 'test/utils/helperFn';
+import {
+  // @ts-expect-error need to migrate helpers to TypeScript
+  screen,
+  createClientRenderStrictMode,
+  // @ts-expect-error need to migrate helpers to TypeScript
+  fireEvent,
+} from 'test/utils';
 import { GridApiRef, GridComponentProps, useGridApiRef, XGrid } from '@material-ui/x-grid';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
@@ -125,5 +132,31 @@ describe('<XGrid /> - Selection', () => {
       ],
     });
     expect(apiRef.current.getSelectedRows()).to.have.keys([0]);
+  });
+
+  it('should select only filtered rows after filter is applied', () => {
+    render(<Test checkboxSelection />);
+    const selectAll = screen.getByRole('checkbox', {
+      name: /select all rows checkbox/i,
+    });
+    apiRef.current.setFilterModel({
+      items: [
+        {
+          columnField: 'brand',
+          operatorValue: 'contains',
+          value: 'Puma',
+        },
+      ],
+    });
+    expect(getColumnValues(1)).to.deep.equal(['Puma']);
+    fireEvent.click(selectAll);
+    // TODO fix, should be only 2
+    expect(Array.from(apiRef.current.getSelectedRows().keys())).to.deep.equal([0, 1, 2]);
+    fireEvent.click(selectAll);
+    expect(Array.from(apiRef.current.getSelectedRows().keys())).to.deep.equal([]);
+    fireEvent.click(selectAll);
+    expect(Array.from(apiRef.current.getSelectedRows().keys())).to.deep.equal([2]);
+    fireEvent.click(selectAll);
+    expect(Array.from(apiRef.current.getSelectedRows().keys())).to.deep.equal([]);
   });
 });
