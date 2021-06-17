@@ -21,6 +21,7 @@ export const DemoLink = React.memo(function DemoLink(props: DemoLinkProps) {
 
   const handleClick = (event) => {
     event.preventDefault();
+    event.stopPropagation();
   };
 
   return (
