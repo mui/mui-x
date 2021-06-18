@@ -17,6 +17,7 @@ import { GridEventsApi } from './gridEventsApi';
 import { GridDensityApi } from './gridDensityApi';
 import { GridLocaleTextApi } from './gridLocaleTextApi';
 import { GridCsvExportApi } from './gridCsvExportApi';
+import { GridClipboardApi } from './gridClipboardApi';
 
 /**
  * The full grid API.
@@ -40,4 +41,5 @@ export interface GridApi
     GridFilterApi,
     GridColumnMenuApi,
     GridPreferencesPanelApi,
-    GridLocaleTextApi {}
+    GridLocaleTextApi,
+    GridClipboardApi {}

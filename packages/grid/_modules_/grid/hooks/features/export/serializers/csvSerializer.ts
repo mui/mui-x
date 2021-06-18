@@ -7,7 +7,7 @@ import {
 } from '../../../../models';
 import { GridExportCsvDelimiter } from '../../../../models/gridExport';
 
-const serialiseCellValue = (value: any, delimiterCharacter: GridExportCsvDelimiter) => {
+export const serialiseCellValue = (value: any, delimiterCharacter: GridExportCsvDelimiter) => {
   if (typeof value === 'string') {
     const formattedValue = value.replace(/"/g, '""');
     return formattedValue.includes(delimiterCharacter) ? `"${formattedValue}"` : formattedValue;

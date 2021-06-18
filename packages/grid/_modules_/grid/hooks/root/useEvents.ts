@@ -34,6 +34,7 @@ import {
   GRID_CELL_BLUR,
 } from '../../constants/eventsConstants';
 import { useGridApiOptionHandler } from './useGridApiEventHandler';
+import { useNativeEventListener } from './useNativeEventListener';
 
 export function useEvents(apiRef: GridApiRef): void {
   const logger = useLogger('useEvents');
@@ -87,6 +88,13 @@ export function useEvents(apiRef: GridApiRef): void {
 
   useGridApiOptionHandler(apiRef, GRID_COMPONENT_ERROR, options.onError);
   useGridApiOptionHandler(apiRef, GRID_STATE_CHANGE, options.onStateChange);
+
+  useNativeEventListener(
+    apiRef,
+    apiRef.current.rootElementRef!,
+    GRID_KEYDOWN,
+    getHandler(GRID_KEYDOWN),
+  );
 
   React.useEffect(() => {
     if (apiRef.current.rootElementRef?.current) {
