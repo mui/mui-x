@@ -61,8 +61,8 @@ export const useGridClipboard = (apiRef: GridApiRef): void => {
 
   const handleKeydown = React.useCallback(
     (event: KeyboardEvent) => {
-      const isCtrlPressed = event.ctrlKey || event.metaKey;
-      if (event.key.toLowerCase() !== 'c' || !isCtrlPressed) {
+      const isModifierKeyPressed = event.ctrlKey || event.metaKey || event.altKey;
+      if (event.key.toLowerCase() !== 'c' || !isModifierKeyPressed) {
         return;
       }
       apiRef.current.copySelectedRowsToClipboard(event.altKey);
