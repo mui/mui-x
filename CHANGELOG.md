@@ -11,43 +11,42 @@ Big thanks to the 10 contributors who made this release possible. Here are some 
 
 - ⚡️ Components that use portals, like `Select` and `Autocomplete`, can now be used in the cell editing (#1772) @m4theushw
 - 📃 Apply the `valueFormatter` to the CSV exporting (#1922) @DanailH
-- 💅 Rename CSS classes to follow the BEM convention (#1872) @DanailH
-- 🌎 Isolate translations from Material-UI and Material-UI X (#1913) @DanailH BC OK
-- 🚀 Improve performance when finding column indexes (#1903) @Janpot
+- 💅 Rename CSS classes to match the convention of the core components (#1872) @DanailH
+- 🌎 Isolate translations from Material-UI Core and Material-UI X (#1913) @DanailH
+- 🚀 Improve performance when finding column indexes and updating rows (#1903, #1923) @Janpot @N2D4
 - 🐞 Bugfixes
 
 ### @material-ui/x-grid@v4.0.0-alpha.32 / @material-ui/data-grid@v4.0.0-alpha.32
 
 #### Breaking changes
 
-- [DataGrid] The `onEditCellChangeCommitted` prop won't called with an event when committing changes by clicking outside the cell (#1910) @m4thushw
-
-- [DataGrid] Translation for Material-UI components are no longer included in the Material-UI X translation (#1913) @DanailH
+- [DataGrid] The `onEditCellChangeCommitted` prop won't be called with an event when committing changes by clicking outside the cell (#1910) @m4thushw
+- [DataGrid] Translation for Material-UI Core components are no longer included in the Material-UI X translation (#1913) @DanailH
 
   ```diff
-  import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
-  import { DataGrid, bgBG } from '@material-ui/data-grid';
+   import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+   import { DataGrid, bgBG } from '@material-ui/data-grid';
   +import { bgBG as coreBgBG } from '@material-ui/core/locale';
 
-  const theme = createMuiTheme(
-    {
-      // ...
-    },
-    bgBG,
+   const theme = createMuiTheme(
+     {
+       // ...
+     },
+     bgBG,
   + coreBgBG,
-  );
+   );
   ```
 
 - [DataGrid] The `disableClickEventBubbling` prop was removed (#1910) @m4thushw
 
-  The same outcome can be obtained calling `event.stopPropagation()`:
+  The same outcome can be obtained by using the React synthetic event, calling `event.stopPropagation()`:
 
   ```diff
   -<DataGrid disableClickEventBubbling />
   +<DataGrid onCellClick={(event) => event.stopPropagation()} />
   ```
 
-- [DataGrid] Renamed CSS classes according to new convention (#1872) @DanailH
+- [DataGrid] Rename CSS classes according to new convention (#1872) @DanailH
 
   The main grid components:
 
