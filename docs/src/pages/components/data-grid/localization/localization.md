@@ -42,7 +42,7 @@ const theme = createMuiTheme(
 
 Note that `createMuiTheme` accepts any number of arguments.
 If you are already using the [translations of the core components](/guides/localization/#locale-text), you can add `bgBG` as a new argument.
-The same import works with `XGrid` as it's an extension of `DataGrid`.
+The same import works for `XGrid` as it's an extension of `DataGrid`.
 
 **Note**: if you want to pass in language translations directly to the grid and not use the `createMuiTheme` in combination with the `ThemeProvider` you can directly load the language translations from the `DataGrid` or `XGrid` package.
 
