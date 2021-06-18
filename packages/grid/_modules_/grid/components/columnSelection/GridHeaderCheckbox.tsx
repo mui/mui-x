@@ -23,24 +23,13 @@ export const GridHeaderCheckbox = React.forwardRef<HTMLInputElement, GridColumnH
     const totalSelectedRows = useGridSelector(apiRef, selectedGridRowsCountSelector);
     const totalRows = useGridSelector(apiRef, gridRowCountSelector);
 
-    const [isIndeterminate, setIsIndeterminate] = React.useState(
-      totalSelectedRows > 0 && totalSelectedRows !== totalRows,
-    );
-    const [isChecked, setChecked] = React.useState(
-      totalSelectedRows === totalRows || isIndeterminate,
-    );
-
-    React.useEffect(() => {
-      const isNewIndeterminate = totalSelectedRows > 0 && totalSelectedRows !== totalRows;
-      const isNewChecked = (totalRows > 0 && totalSelectedRows === totalRows) || isIndeterminate;
-      setChecked(isNewChecked);
-      setIsIndeterminate(isNewIndeterminate);
-    }, [isIndeterminate, totalRows, totalSelectedRows]);
+    const isIndeterminate = totalSelectedRows > 0 && totalSelectedRows !== totalRows;
+    // TODO core v5 remove || isIndeterminate, no longer has any effect
+    const isChecked = (totalSelectedRows > 0 && totalSelectedRows === totalRows) || isIndeterminate;
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
       const checked = event.target.checked;
-      setChecked(checked);
-      apiRef!.current.selectRows(visibleRowIds, checked);
+      apiRef!.current.selectRows(visibleRowIds, checked, !event.target.indeterminate);
     };
 
     const tabIndex = tabIndexState !== null && tabIndexState.field === props.field ? 0 : -1;
