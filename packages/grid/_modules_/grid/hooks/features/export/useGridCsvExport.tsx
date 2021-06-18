@@ -9,7 +9,7 @@ import { GridCsvExportApi } from '../../../models/api/gridCsvExportApi';
 import { GridExportCsvOptions } from '../../../models/gridExport';
 import { useLogger } from '../../utils/useLogger';
 import { exportAs } from '../../../utils';
-import { buildCSV } from './seralizers/csvSeraliser';
+import { buildCSV } from './serializers/csvSerializer';
 
 export const useGridCsvExport = (apiRef: GridApiRef): void => {
   const logger = useLogger('useGridCsvExport');
