@@ -12,7 +12,7 @@ const useStyles = makeStyles(
       maxHeight: 400,
     },
   }),
-  { name: 'MuiDataGridPanelContent' },
+  { name: 'MuiGridPanelContent' },
 );
 
 export function GridPanelContent(

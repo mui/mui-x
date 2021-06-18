@@ -66,9 +66,9 @@ export const GridCell = React.memo(function GridCell(props: GridCellProps) {
   const cellRef = React.useRef<HTMLDivElement>(null);
   const apiRef = useGridApiContext();
 
-  const cssClasses = clsx(className, `${GRID_CSS_CLASS_PREFIX}-cell${capitalize(align)}`, {
+  const cssClasses = clsx(className, `${GRID_CSS_CLASS_PREFIX}-cell--text${capitalize(align)}`, {
     [`${GRID_CSS_CLASS_PREFIX}-withBorder`]: showRightBorder,
-    [`${GRID_CSS_CLASS_PREFIX}-cellEditable`]: isEditable,
+    [`${GRID_CSS_CLASS_PREFIX}-cell--editable`]: isEditable,
   });
 
   const publishBlur = React.useCallback(

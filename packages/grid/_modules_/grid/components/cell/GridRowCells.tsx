@@ -80,13 +80,13 @@ export const GridRowCells = React.memo(function GridRowCells(props: RowCellsProp
 
     if (editCellState == null && column.renderCell) {
       cellComponent = column.renderCell(cellParams);
-      classNames.push(`${GRID_CSS_CLASS_PREFIX}-cellWithRenderer`);
+      classNames.push(`${GRID_CSS_CLASS_PREFIX}-cell--withRenderer`);
     }
 
     if (editCellState != null && column.renderEditCell) {
       const params = { ...cellParams, ...editCellState };
       cellComponent = column.renderEditCell(params);
-      classNames.push(`${GRID_CSS_CLASS_PREFIX}-cellEditing`);
+      classNames.push(`${GRID_CSS_CLASS_PREFIX}-cell--editing`);
     }
 
     if (getCellClassName) {
