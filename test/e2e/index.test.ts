@@ -113,6 +113,7 @@ describe('e2e', () => {
           Array.from(document.querySelectorAll('[role="cell"]')).map((node) => node.textContent),
         ),
       ).to.deep.equal(['1', '2']);
+    });
 
     it('should work with a select as the edit cell', async () => {
       await renderFixture('DataGrid/SelectEditCell');
