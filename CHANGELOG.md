@@ -20,7 +20,7 @@ Big thanks to the 10 contributors who made this release possible. Here are some 
 
 #### Breaking changes
 
-- [DataGrid] The `onEditCellChangeCommitted` prop won't be called with an event when committing changes by clicking outside the cell (#1910) @m4thushw
+- [DataGrid] The `onEditCellChangeCommitted` prop won't be called with an event when committing changes by clicking outside the cell (#1910) @m4theushw
 - [DataGrid] Translation for Material-UI Core components are no longer included in the Material-UI X translation (#1913) @DanailH
 
   ```diff
@@ -37,7 +37,7 @@ Big thanks to the 10 contributors who made this release possible. Here are some 
    );
   ```
 
-- [DataGrid] The `disableClickEventBubbling` prop was removed (#1910) @m4thushw
+- [DataGrid] The `disableClickEventBubbling` prop was removed (#1910) @m4theushw
 
   The same outcome can be obtained by using the React synthetic event, calling `event.stopPropagation()`:
 
