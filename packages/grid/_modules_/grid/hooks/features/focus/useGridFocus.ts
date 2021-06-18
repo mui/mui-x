@@ -60,6 +60,8 @@ export const useGridFocus = (apiRef: GridApiRef): void => {
           focus: { columnHeader: { field }, cell: null },
         };
       });
+      apiRef.current.publishEvent('cellFocusChange');
+
       forceUpdate();
     },
     [apiRef, forceUpdate, logger, setGridState],
