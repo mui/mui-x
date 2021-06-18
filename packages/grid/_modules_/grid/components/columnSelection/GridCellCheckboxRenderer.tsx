@@ -5,12 +5,12 @@ import { GridCellParams } from '../../models/params/gridCellParams';
 import { isNavigationKey, isSpaceKey } from '../../utils/keyboardUtils';
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
 import { optionsSelector } from '../../hooks/utils/optionsSelector';
-import { GridApiContext } from '../GridApiContext';
+import { useGridApiContext } from '../../hooks/root/useGridApiContext';
 
 export const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridCellParams>(
   function GridCellCheckboxRenderer(props, ref) {
     const { field, id, value, tabIndex, hasFocus } = props;
-    const apiRef = React.useContext(GridApiContext);
+    const apiRef = useGridApiContext();
     const options = useGridSelector(apiRef, optionsSelector);
     const checkboxElement = React.useRef<HTMLInputElement | null>(null);
 
@@ -19,6 +19,10 @@ export const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, Gri
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
       apiRef!.current.selectRow(id, event.target.checked, true);
+    };
+
+    const handleClick = (event: React.MouseEvent<HTMLInputElement>) => {
+      event.stopPropagation();
     };
 
     React.useLayoutEffect(() => {
@@ -57,6 +61,7 @@ export const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, Gri
         tabIndex={tabIndex}
         checked={!!value}
         onChange={handleChange}
+        onClick={handleClick}
         className="MuiDataGrid-checkboxInput"
         color="primary"
         inputProps={{ 'aria-label': 'Select Row checkbox' }}

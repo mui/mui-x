@@ -24,6 +24,7 @@ import {
   GRID_COLUMN_HEADER_OUT,
   GRID_COLUMN_ORDER_CHANGE,
   GRID_CELL_KEY_DOWN,
+  GRID_CELL_FOCUS_OUT,
   GRID_CELL_BLUR,
 } from '../../constants/eventsConstants';
 import { useGridApiOptionHandler } from './useGridApiEventHandler';
@@ -51,6 +52,7 @@ export function useEvents(apiRef: GridApiRef): void {
   useGridApiOptionHandler(apiRef, GRID_CELL_LEAVE, options.onCellLeave);
   useGridApiOptionHandler(apiRef, GRID_CELL_KEY_DOWN, options.onCellKeyDown);
   useGridApiOptionHandler(apiRef, GRID_CELL_BLUR, options.onCellBlur);
+  useGridApiOptionHandler(apiRef, GRID_CELL_FOCUS_OUT, options.onCellFocusOut);
 
   useGridApiOptionHandler(apiRef, GRID_ROW_DOUBLE_CLICK, options.onRowDoubleClick);
   useGridApiOptionHandler(apiRef, GRID_ROW_CLICK, options.onRowClick);

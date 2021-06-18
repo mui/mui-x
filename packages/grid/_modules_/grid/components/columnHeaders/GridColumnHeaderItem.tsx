@@ -21,7 +21,7 @@ import {
 import { GridColDef, GRID_NUMBER_COLUMN_TYPE } from '../../models/colDef/index';
 import { GridOptions } from '../../models/gridOptions';
 import { GridSortDirection } from '../../models/gridSortModel';
-import { GridApiContext } from '../GridApiContext';
+import { useGridApiContext } from '../../hooks/root/useGridApiContext';
 import { GridColumnHeaderSortIcon } from './GridColumnHeaderSortIcon';
 import { GridColumnHeaderTitle } from './GridColumnHeaderTitle';
 import { GridColumnHeaderSeparator } from './GridColumnHeaderSeparator';
@@ -60,7 +60,7 @@ export const GridColumnHeaderItem = React.memo(
     hasFocus,
     tabIndex,
   }: GridColumnHeaderItemProps) => {
-    const apiRef = React.useContext(GridApiContext);
+    const apiRef = useGridApiContext();
     const headerCellRef = React.useRef<HTMLDivElement>(null);
     const columnMenuId: string = useId();
     const columnMenuButtonId: string = useId();

@@ -4,7 +4,8 @@ import { ElementSize } from '../models';
 type WithChildren = { children?: React.ReactNode };
 
 export const GridRenderingZone = React.forwardRef<HTMLDivElement, ElementSize & WithChildren>(
-  ({ height, width, children }, ref) => {
+  function GridRenderingZone(props, ref) {
+    const { height, width, children } = props;
     return (
       <div
         ref={ref}
@@ -19,4 +20,3 @@ export const GridRenderingZone = React.forwardRef<HTMLDivElement, ElementSize & 
     );
   },
 );
-GridRenderingZone.displayName = 'GridRenderingZone';

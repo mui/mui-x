@@ -26,6 +26,10 @@
     "description": "Fired when a <code>mousedown</code> event happens in a cell. Called with a <a href=\"/api/data-grid/grid-cell-params/\">GridCellParams</a> object."
   },
   {
+    "name": "cellMouseUp",
+    "description": "Fired when a <code>mouseup</code> event happens in a cell. Called with a <a href=\"/api/data-grid/grid-cell-params/\">GridCellParams</a> object."
+  },
+  {
     "name": "cellOver",
     "description": "Fired when a <code>mouseover</code> event happens in a cell. Called with a <a href=\"/api/data-grid/grid-cell-params/\">GridCellParams</a> object."
   },
@@ -47,11 +51,15 @@
   },
   {
     "name": "cellBlur",
-    "description": "Fired when a cell loses focus. Called with a <a href=\"/api/data-grid/grid-cell-params/\">GridCellParams</a> object."
+    "description": "Fired when the <code>blur</code> event of a cell is triggered. Called with a <a href=\"/api/data-grid/grid-cell-params/\">GridCellParams</a> object."
   },
   {
     "name": "cellFocus",
     "description": "Fired when a cell gains focus. Called with a <a href=\"/api/data-grid/grid-cell-params/\">GridCellParams</a> object."
+  },
+  {
+    "name": "cellFocusOut",
+    "description": "Fired when a cell loses focus. Called with a <a href=\"/api/data-grid/grid-cell-params/\">GridCellParams</a> object."
   },
   {
     "name": "cellEditPropsChange",
