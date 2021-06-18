@@ -57,9 +57,10 @@ describe('<XGrid /> - Clipboard', () => {
       if (!isJSDOM) {
         // Needs permission to read the clipboard
         this.skip();
-        return;
       }
+    });
 
+    beforeEach(function beforeEachHook() {
       writeText = stub().resolves();
 
       Object.defineProperty(navigator, 'clipboard', {
@@ -68,7 +69,7 @@ describe('<XGrid /> - Clipboard', () => {
       });
     });
 
-    after(function afterHook() {
+    afterEach(function afterEachHook() {
       Object.defineProperty(navigator, 'clipboard', { value: undefined });
     });
 
