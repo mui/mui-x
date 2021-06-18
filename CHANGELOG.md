@@ -113,6 +113,7 @@ Big thanks to the 10 contributors who made this release possible. Here are some 
 
 - [core] Batch small changes (#1901) @oliviertassinari
 - [core] Remove dead logic (#1900) @oliviertassinari
+- [test] Fix tests (#1928) @m4theushw
 
 ## [4.0.0-alpha.31](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.30...v4.0.0-alpha.31)
 
