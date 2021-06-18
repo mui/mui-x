@@ -3,6 +3,118 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.0.0-alpha.32](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.31...v4.0.0-alpha.32)
+
+_June 18, 2021_
+
+Big thanks to the 10 contributors who made this release possible. Here are some highlights ✨:
+
+- ⚡️ Components that use portals, like `Select` and `Autocomplete`, can now be used in the cell editing (#1772) @m4theushw
+- 📃 Apply the `valueFormatter` to the CSV exporting (#1922) @DanailH
+- 💅 Rename CSS classes to match the convention of the core components (#1872) @DanailH
+- 🌎 Isolate translations from Material-UI Core and Material-UI X (#1913) @DanailH
+- 🚀 Improve performance when finding column indexes and updating rows (#1903, #1923) @Janpot @N2D4
+- 🐞 Bugfixes
+
+### @material-ui/x-grid@v4.0.0-alpha.32 / @material-ui/data-grid@v4.0.0-alpha.32
+
+#### Breaking changes
+
+- [DataGrid] The `onEditCellChangeCommitted` prop won't be called with an event when committing changes by clicking outside the cell (#1910) @m4thushw
+- [DataGrid] Translation for Material-UI Core components are no longer included in the Material-UI X translation (#1913) @DanailH
+
+  ```diff
+   import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+   import { DataGrid, bgBG } from '@material-ui/data-grid';
+  +import { bgBG as coreBgBG } from '@material-ui/core/locale';
+
+   const theme = createMuiTheme(
+     {
+       // ...
+     },
+     bgBG,
+  +  coreBgBG,
+   );
+  ```
+
+- [DataGrid] The `disableClickEventBubbling` prop was removed (#1910) @m4thushw
+
+  The same outcome can be obtained by using the React synthetic event, calling `event.stopPropagation()`:
+
+  ```diff
+  -<DataGrid disableClickEventBubbling />
+  +<DataGrid onCellClick={(event) => event.stopPropagation()} />
+  ```
+
+- [DataGrid] Rename CSS classes according to new convention (#1872) @DanailH
+
+  The main grid components:
+
+  - `.data-container` was removed
+  - `.MuiDataGrid-columnHeaderSortable` was renamed to `.MuiDataGrid-columnHeader--sortable`
+  - `.MuiDataGrid-columnHeaderCenter` was renamed to `.MuiDataGrid-columnHeader--alignCenter`
+  - `.MuiDataGrid-columnHeaderRight` was renamed to `.MuiDataGrid-columnHeader--alignRight`
+  - `.MuiDataGrid-columnHeader-draggable` was renamed to `.MuiDataGrid-columnHeaderDraggableContainer`
+  - `.MuiDataGrid-columnHeaderSortable` was renamed to `.MuiDataGrid-columnHeader--sortable`
+  - `.MuiDataGrid-columnHeaderMoving` was renamed to `.MuiDataGrid-columnHeader--moving`
+  - `.MuiDataGrid-columnHeaderSorted` was renamed to `.MuiDataGrid-columnHeader--sorted`
+  - `.MuiDataGrid-columnHeaderNumeric` was renamed to `.MuiDataGrid-columnHeader--numeric`
+  - `.MuiDataGrid-columnHeader-dropZone` was renamed to `.MuiDataGrid-columnHeaderDropZone`
+  - `.MuiDataGrid-columnSeparatorResizable` was renamed to `.MuiDataGrid-columnSeparator--resizable`
+  - `.MuiDataGrid-cellWithRenderer` was renamed to `.MuiDataGrid-cell--withRenderer`
+  - `.MuiDataGrid-cellLeft` was renamed to `.MuiDataGrid-cell--textLeft`
+  - `.MuiDataGrid-cellRight` was renamed to `.MuiDataGrid-cell--textRight`
+  - `.MuiDataGrid-cellCenter` was renamed to `.MuiDataGrid-cell--textCenter`
+  - `.MuiDataGrid-cellEditing` was renamed to `.MuiDataGrid-cell--editing`
+  - `.MuiDataGrid-cellEditable` was renamed to `.MuiDataGrid-cell--editable`
+  - `.MuiDataGrid-editCellBoolean` was renamed to `.MuiDataGrid-editBooleanCell`
+  - `.MuiDataGrid-editCellInputBase` was renamed to `.MuiDataGrid-editInputCell`
+  - `.MuiDataGrid-scrollArea-left` was renamed to `.MuiDataGrid-scrollArea--left`
+  - `.MuiDataGrid-scrollArea-right` was renamed to `.MuiDataGrid-scrollArea--right`
+
+  The standalone components:
+
+  - `.MuiDataGridMenu-*` was renamed to `.MuiGridMenu-*`
+  - `.MuiDataGridPanel-*` was renamed to `.MuiGridPanel-*`
+  - `.MuiDataGridPanelContent-*` was renamed to `.MuiGridPanelContent-*`
+  - `.MuiDataGridPanelFooter-*` was renamed to `.MuiGridPanelFooter-*`
+  - `.MuiDataGridPanelWrapper-*` was renamed to `.MuiGridPanelWrapper-*`
+  - `.MuiDataGridFilterForm-*` was renamed to `.MuiGridFilterForm-*`
+  - `.MuiDataGridToolbarFilterButton-*` was renamed to `.MuiGridToolbarFilterButton-*`
+  - `.MuiDataGrid-footer` was renamed to `.MuiDataGrid-footerContainer`
+  - `.MuiDataGrid-toolbar` was renamed to `.MuiDataGrid-toolbarContainer`
+
+#### Changes
+
+- [DataGrid] Add `aria-label` to `GridToolbarExport` (#1869) @rbrishabh
+- [DataGrid] Add support for edit components that use portal (#1772) @m4theushw
+- [DataGrid] Add `useGridApiContext` hook to access the `GridApiContext` (#1877) @m4theushw
+- [DataGrid] Allow to set the delimiter in `GridExportCsvOptions` (#1859) @michallukowski
+- [DataGrid] Escape regular expression characters in filters (#1899) @ZeeshanTamboli
+- [DataGrid] Fix support for `getRowId` on cell editing (#1917) @m4theushw
+- [DataGrid] Fix typo in French (frFR) locale (#1874) @julien-guillon
+- [DataGrid] Improve Brazilian Portuguese (ptBR) locale (#1861) @aline-matos
+- [DataGrid] Improve type of the blur event (#1918) @oliviertassinari
+- [DataGrid] Improve updateRows performance (#1923) @N2D4
+- [DataGrid] Include Material-UI core component localizations in `localeText` (#1913) @DanailH
+- [DataGrid] Make the CSV export respect the `valueFormatter` (#1922) @DanailH
+- [DataGrid] Remove `disableClickEventBubbling` (#1910) @m4theushw
+- [DataGrid] Rename CSS classes according to new convention (#1872) @DanailH
+- [DataGrid] Use binary search to find column indexes in virtualization (#1903) @Janpot
+
+### Docs
+
+- [docs] Fix 404 links (#1880) @oliviertassinari
+- [docs] Fix prop-type warning (#1916) @oliviertassinari
+- [docs] Make cells editable in demos (#1817) @m4theushw
+- [docs] Polish `disableDensitySelector` description (#1884) @oliviertassinari
+
+### Core
+
+- [core] Batch small changes (#1901) @oliviertassinari
+- [core] Remove dead logic (#1900) @oliviertassinari
+- [test] Fix tests (#1928) @m4theushw
+
 ## [4.0.0-alpha.31](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.30...v4.0.0-alpha.31)
 
 _June 9, 2021_
@@ -27,6 +139,7 @@ Big thanks to the 6 contributors who made this release possible. Here are some h
   -cellClassName?: string | string[] | (params: GridCellParams) => string;
   +cellClassName?: string | (params: GridCellParams) => string;
   ```
+
   ```diff
   -headerClassName?: string | string[];
   +headerClassName?: string | (params: GridColumnHeaderParams) => string;
@@ -79,14 +192,17 @@ Big thanks to the 8 contributors who made this release possible. Here are some h
   -.MuiDataGridFilterToolbarButton-list
   +.MuiDataGridToolbarFilterButton-list
   ```
+
   ```diff
   -<GridColumnsToolbarButton />
   +<GridToolbarColumnsButton />
   ```
+
   ```diff
   -<GridFilterToolbarButton />
   +<GridToolbarFilterButton />
   ```
+
   ```diff
   -<GridDensitySelector />
   +<GridToolbarDensitySelector />
