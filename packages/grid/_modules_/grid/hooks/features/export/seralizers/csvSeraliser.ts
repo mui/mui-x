@@ -31,14 +31,13 @@ export function serialiseRow(
 export function buildCSV(
   columns: GridColumns,
   rows: Map<GridRowId, GridRowModel>,
-  selectedRows: Record<string, GridRowId>,
+  selectedRows: GridRowId[],
   getCellValue: (id: GridRowId, field: string) => GridCellValue,
 ): string {
   let rowIds = [...rows.keys()];
-  const selectedRowIds = Object.keys(selectedRows);
 
-  if (selectedRowIds.length) {
-    rowIds = rowIds.filter((id) => selectedRowIds.includes(`${id}`));
+  if (selectedRows.length) {
+    rowIds = rowIds.filter((id) => selectedRows.includes(id));
   }
 
   const CSVHead = `${columns

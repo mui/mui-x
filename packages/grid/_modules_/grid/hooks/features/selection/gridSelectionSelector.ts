@@ -11,7 +11,7 @@ export const selectedGridRowsCountSelector: OutputSelector<
   (res: GridSelectionState) => number
 > = createSelector<GridState, GridSelectionState, number>(
   gridSelectionStateSelector,
-  (selection) => Object.keys(selection).length,
+  (selection) => selection.length,
 );
 
 export const selectedGridRowsSelector = createSelector<
@@ -23,5 +23,17 @@ export const selectedGridRowsSelector = createSelector<
   gridSelectionStateSelector,
   gridRowsLookupSelector,
   (selectedRows, rowsLookup) =>
-    new Map(Object.values(selectedRows).map((id) => [id, rowsLookup[id]])),
+    new Map(selectedRows.map((id) => [id, rowsLookup[id]])),
+);
+
+export const selectedIdsLookupSelector: OutputSelector<
+  GridState,
+  Record<string, GridRowId>,
+  (res: GridSelectionState) =>  Record<string, GridRowId>
+  > = createSelector<GridState, GridSelectionState, Record<string, GridRowId>>(
+  gridSelectionStateSelector,
+  (selection) => selection.reduce((lookup, rowId )=> {
+    lookup[rowId] = true;
+    return lookup;
+  }, {})
 );

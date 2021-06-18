@@ -28,7 +28,7 @@ export function useControlState(apiRef: GridApiRef) {
         const controlState = controlStateMap[stateId];
         const oldState = controlState.stateSelector(apiRef.current.state);
         const newSubState = controlState.stateSelector(newState);
-        const hasSubStateChanged = !isDeepEqual(oldState, newSubState);
+        const hasSubStateChanged =  oldState !== newSubState;
 
         if (updatedStateIds.length >= 1 && hasSubStateChanged) {
           // Each hook modify its own state and it should not leak
@@ -41,23 +41,14 @@ export function useControlState(apiRef: GridApiRef) {
 
         if (hasSubStateChanged) {
           if (controlState.propOnChange) {
-            const newModel = controlState.mapStateToModel
-              ? controlState.mapStateToModel(newSubState)
-              : newSubState;
-            if (
-              (!controlState.mapStateToModel && controlState.propModel !== newModel) ||
-              (controlState.mapStateToModel && !isDeepEqual(controlState.propModel, newModel))
-            ) {
+            const newModel = newSubState;
+            if (controlState.propModel !== newModel) {
               controlState.propOnChange(newModel);
-              shouldUpdate = controlState.propModel === undefined;
             }
+            shouldUpdate = controlState.propModel === undefined || controlState.propModel === newModel;
           } else if (controlState.propModel !== undefined) {
-            const oldModel = controlState.mapStateToModel
-              ? controlState.mapStateToModel(oldState)
-              : oldState;
-            shouldUpdate = controlState.mapStateToModel
-              ? !isDeepEqual(oldModel, controlState.propModel)
-              : oldModel !== controlState.propModel;
+            const oldModel = oldState;
+            shouldUpdate = oldModel !== controlState.propModel;
           }
           if (shouldUpdate) {
             updatedStateIds.push(controlState.stateId);
@@ -70,12 +61,7 @@ export function useControlState(apiRef: GridApiRef) {
         postUpdate: () => {
           updatedStateIds.forEach((stateId) => {
             if (controlStateMap[stateId].onChangeCallback) {
-              const model =
-                controlStateMap[stateId].mapStateToModel != null
-                  ? controlStateMap[stateId].mapStateToModel!(
-                      controlStateMap[stateId].stateSelector(newState),
-                    )
-                  : controlStateMap[stateId].stateSelector(newState);
+              const model = controlStateMap[stateId].stateSelector(newState);
               controlStateMap[stateId].onChangeCallback!(model);
             }
           });

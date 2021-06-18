@@ -4,7 +4,7 @@ import { useGridApiMethod } from '../../root/useGridApiMethod';
 import { useGridSelector } from '../core/useGridSelector';
 import { visibleGridColumnsSelector } from '../columns';
 import { visibleSortedGridRowsSelector } from '../filter';
-import { gridSelectionStateSelector } from '../selection';
+import { gridSelectionStateSelector, selectedGridRowsSelector } from '../selection';
 import { GridCsvExportApi } from '../../../models/api/gridCsvExportApi';
 import { GridExportCsvOptions } from '../../../models/gridExport';
 import { useLogger } from '../../utils/useLogger';
