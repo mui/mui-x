@@ -1,6 +1,6 @@
 import { Localization as CoreLocalization } from '@material-ui/core/locale';
 
-// @ts-ignore
+// @ts-expect-error We have different structure in v5
 type MuiComponentsLocalization = CoreLocalization['props'] | CoreLocalization['components'];
 
 /**
