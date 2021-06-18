@@ -33,7 +33,12 @@ export function GridRow(props: GridRowProps) {
   const publish = React.useCallback(
     (eventName: string) => (event: React.MouseEvent) => {
       // Ignore portal
-      if (!event.currentTarget.contains(event.target as HTMLElement)) {
+      // The target is not an element when triggered by a Select inside the cell
+      // See https://github.com/mui-org/material-ui/issues/10534
+      if (
+        (event.target as any).nodeType === 1 &&
+        !event.currentTarget.contains(event.target as Element)
+      ) {
         return;
       }
 

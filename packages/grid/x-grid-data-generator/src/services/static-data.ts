@@ -49,7 +49,7 @@ export const CURRENCY_OPTIONS = [
   'GBP',
   'JPY',
   'EUR',
-  'BRZ',
+  'BRL',
   'MXN',
   'AUD',
   'CAD',

@@ -113,6 +113,17 @@ describe('e2e', () => {
           Array.from(document.querySelectorAll('[role="cell"]')).map((node) => node.textContent),
         ),
       ).to.deep.equal(['1', '2']);
+
+    it('should work with a select as the edit cell', async () => {
+      await renderFixture('DataGrid/SelectEditCell');
+      await page.dblclick('"Nike"');
+      await page.click('"Gucci"');
+      expect(
+        await page.evaluate(() => {
+          const selector = '[role="cell"][data-rowindex="0"][data-colindex="0"]';
+          return document.querySelector(selector)!.textContent!;
+        }),
+      ).to.equal('Gucci');
     });
   });
 });

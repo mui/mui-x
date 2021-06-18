@@ -22,6 +22,7 @@ export function GridEditBooleanCell(
     isEditable,
     className,
     getValue,
+    hasFocus,
     ...other
   } = props;
 
