@@ -33,7 +33,7 @@ Big thanks to the 10 contributors who made this release possible. Here are some 
        // ...
      },
      bgBG,
-  + coreBgBG,
+  +  coreBgBG,
    );
   ```
 
