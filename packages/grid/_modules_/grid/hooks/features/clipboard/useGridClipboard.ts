@@ -17,10 +17,10 @@ export const useGridClipboard = (apiRef: GridApiRef): void => {
       const textarea = document.createElement('textarea');
       textarea.style.opacity = '0px';
       textarea.value = data;
-      apiRef.current.rootElementRef?.current?.appendChild(textarea);
+      apiRef.current.rootElementRef!.current!.appendChild(textarea);
       textarea.select();
       document.execCommand('copy');
-      apiRef.current.rootElementRef?.current?.removeChild(textarea);
+      apiRef.current.rootElementRef!.current!.removeChild(textarea);
     },
     [apiRef],
   );
@@ -65,7 +65,7 @@ export const useGridClipboard = (apiRef: GridApiRef): void => {
       if (event.key.toLowerCase() !== 'c' || !isCtrlPressed) {
         return;
       }
-      apiRef.current.copySelectedRowsToClipboard(event.shiftKey);
+      apiRef.current.copySelectedRowsToClipboard(event.altKey);
     },
     [apiRef],
   );
