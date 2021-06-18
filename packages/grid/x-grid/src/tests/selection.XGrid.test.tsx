@@ -13,6 +13,10 @@ import { GridApiRef, GridComponentProps, useGridApiRef, XGrid } from '@material-
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
+function getSelectedRows(apiRef) {
+  return Array.from(apiRef.current.getSelectedRows().keys());
+}
+
 describe('<XGrid /> - Selection', () => {
   // TODO v5: replace with createClientRender
   const render = createClientRenderStrictMode();
@@ -122,7 +126,7 @@ describe('<XGrid /> - Selection', () => {
 
   it('should clean the selected ids when the rows prop changes', () => {
     const { setProps } = render(<Test selectionModel={[0, 1, 2]} checkboxSelection />);
-    expect(apiRef.current.getSelectedRows()).to.have.keys([0, 1, 2]);
+    expect(getSelectedRows(apiRef)).to.deep.equal([0, 1, 2]);
     setProps({
       rows: [
         {
@@ -131,7 +135,7 @@ describe('<XGrid /> - Selection', () => {
         },
       ],
     });
-    expect(apiRef.current.getSelectedRows()).to.have.keys([0]);
+    expect(getSelectedRows(apiRef)).to.deep.equal([0]);
   });
 
   it('should select only filtered rows after filter is applied', () => {
@@ -151,12 +155,12 @@ describe('<XGrid /> - Selection', () => {
     expect(getColumnValues(1)).to.deep.equal(['Puma']);
     fireEvent.click(selectAll);
     // TODO fix, should be only 2
-    expect(Array.from(apiRef.current.getSelectedRows().keys())).to.deep.equal([0, 1, 2]);
+    expect(getSelectedRows(apiRef)).to.deep.equal([0, 1, 2]);
     fireEvent.click(selectAll);
-    expect(Array.from(apiRef.current.getSelectedRows().keys())).to.deep.equal([]);
+    expect(getSelectedRows(apiRef)).to.deep.equal([]);
     fireEvent.click(selectAll);
-    expect(Array.from(apiRef.current.getSelectedRows().keys())).to.deep.equal([2]);
+    expect(getSelectedRows(apiRef)).to.deep.equal([2]);
     fireEvent.click(selectAll);
-    expect(Array.from(apiRef.current.getSelectedRows().keys())).to.deep.equal([]);
+    expect(getSelectedRows(apiRef)).to.deep.equal([]);
   });
 });
