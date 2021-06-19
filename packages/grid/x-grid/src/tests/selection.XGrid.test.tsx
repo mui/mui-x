@@ -138,7 +138,7 @@ describe('<XGrid /> - Selection', () => {
     expect(getSelectedRows(apiRef)).to.deep.equal([0]);
   });
 
-  it.only('should select only filtered rows after filter is applied', () => {
+  it('should select only filtered rows after filter is applied', () => {
     render(<Test checkboxSelection />);
     const selectAll = screen.getByRole('checkbox', {
       name: /select all rows checkbox/i,
