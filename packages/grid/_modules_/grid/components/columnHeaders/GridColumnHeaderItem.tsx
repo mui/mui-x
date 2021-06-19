@@ -45,7 +45,9 @@ interface GridColumnHeaderItemProps {
   tabIndex: 0 | -1;
 }
 
-export function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
+export const GridColumnHeaderItem = React.memo(function GridColumnHeaderItem(
+  props: GridColumnHeaderItemProps,
+) {
   const {
     column,
     columnMenuOpen,
@@ -240,4 +242,4 @@ export function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
       />
     </div>
   );
-}
+});

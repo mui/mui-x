@@ -1,6 +1,5 @@
 import * as React from 'react';
-// @ts-expect-error need to migrate helpers to TypeScript
-import { createClientRenderStrictMode, screen, fireEvent } from 'test/utils';
+import { createClientRenderStrictMode } from 'test/utils';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { GridApiRef, GridComponentProps, useGridApiRef, XGrid } from '@material-ui/x-grid';
@@ -126,61 +125,5 @@ describe('<XGrid /> - Selection', () => {
       ],
     });
     expect(apiRef.current.getSelectedRows()).to.have.keys([0]);
-  });
-
-  it('should select only filtered rows after filter is applied', () => {
-    render(
-      <Test
-        checkboxSelection
-        filterModel={{
-          items: [
-            {
-              columnField: 'brand',
-              operatorValue: 'contains',
-              value: 'a',
-            },
-          ],
-        }}
-      />,
-    );
-    const selectAll = screen.getByRole('checkbox', {
-      name: /select all rows checkbox/i,
-    });
-    fireEvent.click(selectAll);
-    expect(apiRef.current.getSelectedRows()).to.have.keys([1, 2]);
-  });
-
-  it('should deselect other rows and select only filtered rows after multiple filters are applied', () => {
-    const { setProps } = render(
-      <Test
-        checkboxSelection
-        filterModel={{
-          items: [
-            {
-              columnField: 'brand',
-              operatorValue: 'contains',
-              value: 'a',
-            },
-          ],
-        }}
-        columns={[{ field: 'brand' }, { field: 'id' }]}
-      />,
-    );
-    const selectAll = screen.getByRole('checkbox', {
-      name: /select all rows checkbox/i,
-    });
-    fireEvent.click(selectAll);
-    setProps({
-      filterModel: {
-        items: [
-          {
-            columnField: 'id',
-            operatorValue: 'equals',
-            value: '2',
-          },
-        ],
-      },
-    });
-    expect(apiRef.current.getSelectedRows()).to.have.keys([2]);
   });
 });
