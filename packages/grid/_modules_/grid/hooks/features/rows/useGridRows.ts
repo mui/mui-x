@@ -162,6 +162,7 @@ export const useGridRows = (
       const addedRows: GridRowModel[] = [];
       const deletedRowIds: GridRowId[] = [];
 
+      let updatedLookup: null | {} = null;
       Object.entries<GridRowModel>(uniqUpdates).forEach(([id, partialRow]) => {
         // eslint-disable-next-line no-underscore-dangle
         if (partialRow._action === 'delete') {
@@ -174,16 +175,20 @@ export const useGridRows = (
           addedRows.push(partialRow);
           return;
         }
-        const lookup = { ...internalRowsState.current.idRowsLookup };
 
-        lookup[id] = {
+        if (!updatedLookup) {
+          updatedLookup = { ...internalRowsState.current.idRowsLookup };
+        }
+
+        updatedLookup[id] = {
           ...oldRow,
           ...partialRow,
         };
-        internalRowsState.current.idRowsLookup = lookup;
       });
-
-      setGridState((state) => ({ ...state, rows: { ...internalRowsState.current } }));
+      if (updatedLookup) {
+        internalRowsState.current.idRowsLookup = updatedLookup;
+        setGridState((state) => ({ ...state, rows: { ...internalRowsState.current } }));
+      }
 
       if (deletedRowIds.length > 0 || addedRows.length > 0) {
         deletedRowIds.forEach((id) => {

@@ -28,7 +28,7 @@ export const useGridKeyboard = (apiRef: GridApiRef): void => {
   const expandSelection = React.useCallback(
     (params: GridCellParams, event: React.KeyboardEvent) => {
       const rowEl = findParentElementFromClassName(
-        event.target as HTMLElement as HTMLDivElement,
+        event.target as HTMLDivElement,
         GRID_ROW_CSS_CLASS,
       )! as HTMLElement;
 
@@ -81,31 +81,36 @@ export const useGridKeyboard = (apiRef: GridApiRef): void => {
 
   const handleCellKeyDown = React.useCallback(
     (params: GridCellParams, event: React.KeyboardEvent) => {
-      if (!isGridCellRoot(event.target as HTMLElement)) {
+      // The target is not an element when triggered by a Select inside the cell
+      // See https://github.com/mui-org/material-ui/issues/10534
+      if ((event.target as any).nodeType === 1 && !isGridCellRoot(event.target as Element)) {
         return;
       }
       if (event.isPropagationStopped()) {
         return;
       }
-      const isEditMode = params.cellMode === 'edit';
+
+      // Get the most recent params because the cell mode may have changed by another listener
+      const cellParams = apiRef.current.getCellParams(params.id, params.field);
+      const isEditMode = cellParams.cellMode === 'edit';
       if (isEditMode) {
         return;
       }
 
       if (isSpaceKey(event.key) && event.shiftKey) {
         event.preventDefault();
-        apiRef.current.selectRow(params.id);
+        apiRef.current.selectRow(cellParams.id);
         return;
       }
 
       if (isNavigationKey(event.key) && !event.shiftKey) {
-        apiRef.current.publishEvent(GRID_CELL_NAVIGATION_KEYDOWN, params, event);
+        apiRef.current.publishEvent(GRID_CELL_NAVIGATION_KEYDOWN, cellParams, event);
         return;
       }
 
       if (isNavigationKey(event.key) && event.shiftKey) {
         event.preventDefault();
-        expandSelection(params, event);
+        expandSelection(cellParams, event);
         return;
       }
 

@@ -3,13 +3,24 @@ import { DataGrid, GridColDef, GridValueGetterParams } from '@material-ui/data-g
 
 const columns: GridColDef[] = [
   { field: 'id', headerName: 'ID', width: 90 },
-  { field: 'firstName', headerName: 'First name', width: 150 },
-  { field: 'lastName', headerName: 'Last name', width: 150 },
+  {
+    field: 'firstName',
+    headerName: 'First name',
+    width: 150,
+    editable: true,
+  },
+  {
+    field: 'lastName',
+    headerName: 'Last name',
+    width: 150,
+    editable: true,
+  },
   {
     field: 'age',
     headerName: 'Age',
     type: 'number',
     width: 110,
+    editable: true,
   },
   {
     field: 'fullName',
@@ -39,7 +50,13 @@ const rows = [
 export default function DataGridDemo() {
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <DataGrid rows={rows} columns={columns} pageSize={5} checkboxSelection />
+      <DataGrid
+        rows={rows}
+        columns={columns}
+        pageSize={5}
+        checkboxSelection
+        disableSelectionOnClick
+      />
     </div>
   );
 }

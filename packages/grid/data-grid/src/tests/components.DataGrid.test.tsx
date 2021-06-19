@@ -35,7 +35,7 @@ describe('<DataGrid /> - Components', () => {
           <DataGrid {...baselineProps} hideFooter />
         </div>,
       );
-      expect(document.querySelectorAll('.MuiDataGrid-footer').length).to.equal(0);
+      expect(document.querySelectorAll('.MuiDataGrid-footerContainer').length).to.equal(0);
     });
 
     it('should hide custom footer if prop hideFooter is set', () => {

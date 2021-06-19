@@ -76,7 +76,7 @@ function datePast(years?: number, refDate?: string) {
 
 export const random = (min: number, max: number): number => chance.random() * (max - min) + min;
 export const randomInt = (min: number, max: number): number => Number(random(min, max).toFixed());
-export const randomPrice = (min = 0, max = 100000): number => random(min, max);
+export const randomPrice = (min = 0, max = 100000): number => Number(random(min, max).toFixed(2));
 export const randomRate = (): number => random(0, 1);
 export const randomDate = (start, end) =>
   new Date(start.getTime() + chance.random() * (end.getTime() - start.getTime()));
@@ -96,7 +96,7 @@ export const randomPhoneNumber = () => chance.phone();
 export const randomUnitPrice = () => randomPrice(1, 100);
 export const randomUnitPriceCurrency = () => randomArrayItem(CURRENCY_OPTIONS);
 export const randomQuantity = () => randomInt(1000, 100000);
-export const randomFeeRate = () => random(0.1, 0.4);
+export const randomFeeRate = () => Number(random(0.1, 0.4).toFixed(3));
 export const randomIncoterm = () => randomArrayItem(INCOTERM_OPTIONS);
 export const randomStatusOptions = () => randomArrayItem(STATUS_OPTIONS);
 export const randomPnL = () => random(-100000000, 100000000);
@@ -113,14 +113,10 @@ export const randomContractType = () => randomArrayItem(CONTRACT_TYPE_OPTIONS);
 export const randomRateType = () => randomArrayItem(RATE_TYPE_OPTIONS);
 export const randomCreatedDate = () => datePast();
 export const randomUpdatedDate = () => dateRecent();
-export const randomAvatar = () => ({ name: chance.name(), color: randomColor() });
 export const randomJobTitle = () => chance.profession();
 export const randomRating = () => Math.round(random(0, 5) * 10) / 10;
+export const randomName = () => chance.name();
 
-export const generateName = (data) => data.avatar.name;
 export const generateFilledQuantity = (data) =>
   Number((data.quantity * randomRate()).toFixed()) / data.quantity;
 export const generateIsFilled = (data) => data.quantity === data.filledQuantity;
-export const generateSubTotal = (data) => data.unitPrice * data.quantity;
-export const generateFeeAmount = (data) => Number(data.feeRate) * data.subTotal;
-export const generateTotalPrice = (data) => data.feeRate + data.subTotal;

@@ -25,7 +25,7 @@ const useStyles = makeStyles(
       display: 'flex',
     },
   }),
-  { name: 'MuiDataGridPanel', defaultTheme },
+  { name: 'MuiGridPanel', defaultTheme },
 );
 
 export const GridPanel = React.forwardRef<HTMLDivElement, GridPanelProps>(function GridPanel(

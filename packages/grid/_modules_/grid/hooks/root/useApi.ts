@@ -10,7 +10,7 @@ export function useApi(apiRef: GridApiRef): void {
 
   const publishEvent = React.useCallback(
     (name: string, params: any, event?: React.SyntheticEvent) => {
-      if (!event || !event.isPropagationStopped()) {
+      if (!event || !event.isPropagationStopped || !event.isPropagationStopped()) {
         apiRef.current.emit(name, params, event);
       }
     },

@@ -271,7 +271,7 @@ describe('<DataGrid /> - Pagination', () => {
         const height = 780;
         render(<TestCaseAutoPageSize nbRows={nbRows} height={height} />);
 
-        const footerHeight = document.querySelector('.MuiDataGrid-footer')!.clientHeight;
+        const footerHeight = document.querySelector('.MuiDataGrid-footerContainer')!.clientHeight;
         const expectedViewportRowsLength = Math.floor(
           (height - DEFAULT_GRID_OPTIONS.headerHeight - footerHeight) /
             DEFAULT_GRID_OPTIONS.rowHeight,
