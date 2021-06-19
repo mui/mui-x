@@ -920,9 +920,7 @@ export function DeferRendering() {
   const [deferColumns] = React.useState([{ field: 'id', headerName: 'Id', width: 100 }]);
 
   React.useEffect(() => {
-    setTimeout(() => setRows(() => []), 0);
-    setTimeout(() => setRows(() => []), 0);
-    setTimeout(() => setRows(() => [{ id: '1' }, { id: '2' }]), 1);
+    setTimeout(() => setRows(() => [{ id: '1' }, { id: '2' }]), 0);
   }, []);
 
   return <XGrid autoHeight columns={deferColumns} rows={deferRows} />;
