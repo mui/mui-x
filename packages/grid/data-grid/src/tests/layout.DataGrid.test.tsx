@@ -454,7 +454,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
       render(<TestCase />);
       const gridWindow = document.querySelector('.MuiDataGrid-window');
       // It should not have a horizontal scrollbar
-      expect(gridWindow.scrollWidth - gridWindow.clientWidth).to.equal(0);
+      expect(gridWindow!.scrollWidth - gridWindow!.clientWidth).to.equal(0);
     });
   });
 
