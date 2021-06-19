@@ -444,9 +444,9 @@ describe('<DataGrid /> - Layout & Warnings', () => {
     // A function test counterpart of ScrollbarOverflowVerticalSnap.
     it('should not have a horizontal scrollbar if not needed', () => {
       const TestCase = () => {
-        const data = useData(100, 2);
+        const data = useData(100, 1);
         return (
-          <div style={{ width: 300, height: 300 }}>
+          <div style={{ width: 500, height: 300 }}>
             <DataGrid {...data} />
           </div>
         );
