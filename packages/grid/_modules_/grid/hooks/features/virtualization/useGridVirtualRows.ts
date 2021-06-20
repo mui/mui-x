@@ -225,7 +225,7 @@ export const useGridVirtualRows = (apiRef: GridApiRef): void => {
       let isRowIndexAbove = false;
       let isRowIndexBelow = false;
 
-      if (params.rowIndex || params.rowIndex === 0) {
+      if (params.rowIndex != null) {
         const elementIndex = !options.pagination
           ? params.rowIndex
           : params.rowIndex - paginationState.page * paginationState.pageSize;
