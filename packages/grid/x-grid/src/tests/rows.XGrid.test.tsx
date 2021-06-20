@@ -438,5 +438,25 @@ describe('<XGrid /> - Rows', () => {
         expect(virtualRowsCount).to.equal(7);
       });
     });
+
+    describe('scrollToIndexes', () => {
+      it('should scroll correctly when the given index is partially visible at the bottom', () => {
+        const headerHeight = 40;
+        const rowHeight = 50;
+        const border = 1;
+        render(
+          <TestCaseVirtualization
+            hideFooter
+            headerHeight={headerHeight}
+            height={headerHeight + 4 * rowHeight + 10 + border * 2}
+            nbCols={2}
+            rowHeight={rowHeight}
+          />,
+        );
+        const gridWindow = document.querySelector('.MuiDataGrid-window')!;
+        apiRef.current.scrollToIndexes({ rowIndex: 4, colIndex: 0 });
+        expect(gridWindow.scrollTop).to.equal(rowHeight);
+      });
+    });
   });
 });
