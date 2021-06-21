@@ -1,9 +1,5 @@
 import * as React from 'react';
-import {
-  GRID_DEBOUNCED_RESIZE,
-  GRID_SCROLL,
-  GRID_ROWS_SCROLL,
-} from '../../../constants/eventsConstants';
+import { GRID_SCROLL, GRID_ROWS_SCROLL } from '../../../constants/eventsConstants';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridVirtualizationApi } from '../../../models/api/gridVirtualizationApi';
 import { GridCellIndexCoordinates } from '../../../models/gridCell';
@@ -21,7 +17,6 @@ import { useGridState } from '../core/useGridState';
 import { GridPaginationState } from '../pagination/gridPaginationState';
 import { gridPaginationSelector } from '../pagination/gridPaginationSelector';
 import { gridRowCountSelector } from '../rows/gridRowsSelector';
-import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
 import { useNativeEventListener } from '../../root/useNativeEventListener';
 import { useLogger } from '../../utils/useLogger';
@@ -420,5 +415,4 @@ export const useGridVirtualRows = (apiRef: GridApiRef): void => {
     GRID_SCROLL,
     preventViewportScroll,
   );
-  useGridApiEventHandler(apiRef, GRID_DEBOUNCED_RESIZE, updateViewport);
 };

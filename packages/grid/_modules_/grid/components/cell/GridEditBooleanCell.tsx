@@ -44,7 +44,7 @@ export function GridEditBooleanCell(
   }, [value]);
 
   return (
-    <label htmlFor={id} className={clsx('MuiDataGrid-editCellBoolean', className)} {...other}>
+    <label htmlFor={id} className={clsx('MuiDataGrid-editBooleanCell', className)} {...other}>
       <Checkbox
         autoFocus
         id={id}

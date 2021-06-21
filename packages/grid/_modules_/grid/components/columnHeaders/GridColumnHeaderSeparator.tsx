@@ -27,7 +27,7 @@ export const GridColumnHeaderSeparator = React.memo(function GridColumnHeaderSep
     // eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions
     <div
       className={clsx('MuiDataGrid-columnSeparator', {
-        'MuiDataGrid-columnSeparatorResizable': resizable,
+        'MuiDataGrid-columnSeparator--resizable': resizable,
         'Mui-resizing': resizing,
       })}
       style={{ minHeight: height, opacity: showColumnRightBorder ? 0 : 1 }}

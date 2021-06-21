@@ -77,3 +77,19 @@ export const InfiniteLoading = () => {
     </div>
   );
 };
+
+// The visual counterpart of
+// "it('should not have a horizontal scrollbar if not needed', () => {""
+export function ScrollbarOverflowVerticalSnap() {
+  const { data } = useDemoData({
+    dataSet: 'Commodity',
+    rowLength: 100,
+    maxColumns: 2,
+  });
+
+  return (
+    <div className="grid-container">
+      <XGrid pagination {...data} />
+    </div>
+  );
+}

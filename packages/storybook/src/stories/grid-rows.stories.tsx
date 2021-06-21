@@ -429,11 +429,11 @@ function validateEmail(email) {
 
 const useEditCellStyles = makeStyles({
   root: {
-    '& .MuiDataGrid-cellEditable': {
+    '& .MuiDataGrid-cell--editable': {
       backgroundColor: 'rgba(184,250,158,0.19)',
       color: '#1a3e72',
     },
-    '& .MuiDataGrid-cellEditing': {
+    '& .MuiDataGrid-cell--editing': {
       backgroundColor: 'rgb(255,215,115, 0.19)',
       color: '#1a3e72',
     },
@@ -914,6 +914,20 @@ export function SwitchVirtualization() {
       </div>
     </div>
   );
+}
+export function DeferRendering() {
+  const [deferRows, setRows] = React.useState<any>([]);
+  const [deferColumns] = React.useState([{ field: 'id', headerName: 'Id', width: 100 }]);
+
+  React.useEffect(() => {
+    const timer = setTimeout(() => setRows(() => [{ id: '1' }, { id: '2' }]), 0);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, []);
+
+  return <XGrid autoHeight columns={deferColumns} rows={deferRows} />;
 }
 
 export const ZeroHeightGrid = () => (

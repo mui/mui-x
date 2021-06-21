@@ -5,7 +5,7 @@ interface GridStickyContainerProps extends ElementSize {
   children: React.ReactNode;
 }
 
-export const GridStickyContainer = (props: GridStickyContainerProps) => {
+export function GridStickyContainer(props: GridStickyContainerProps) {
   const { height, width, children } = props;
   return (
     <div
@@ -19,4 +19,4 @@ export const GridStickyContainer = (props: GridStickyContainerProps) => {
       {children}
     </div>
   );
-};
+}

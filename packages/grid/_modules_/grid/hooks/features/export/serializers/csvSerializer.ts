@@ -1,5 +1,5 @@
 import {
-  GridCellValue,
+  GridCellParams,
   gridCheckboxSelectionColDef,
   GridColumns,
   GridRowId,
@@ -19,14 +19,16 @@ const serialiseCellValue = (value: any, delimiterCharacter: GridExportCsvDelimit
 export function serialiseRow(
   id: GridRowId,
   columns: GridColumns,
-  getCellValue: (id: GridRowId, field: string) => GridCellValue,
+  getCellParams: (id: GridRowId, field: string) => GridCellParams,
   delimiterCharacter: GridExportCsvDelimiter,
 ): Array<string> {
   const mappedRow: string[] = [];
   columns.forEach(
     (column) =>
       column.field !== gridCheckboxSelectionColDef.field &&
-      mappedRow.push(serialiseCellValue(getCellValue(id, column.field), delimiterCharacter)),
+      mappedRow.push(
+        serialiseCellValue(getCellParams(id, column.field).formattedValue, delimiterCharacter),
+      ),
   );
   return mappedRow;
 }
@@ -35,12 +37,12 @@ interface BuildCSVOptions {
   columns: GridColumns;
   rows: Map<GridRowId, GridRowModel>;
   selectedRows: Record<string, GridRowId>;
-  getCellValue: (id: GridRowId, field: string) => GridCellValue;
+  getCellParams: (id: GridRowId, field: string) => GridCellParams;
   delimiterCharacter: GridExportCsvDelimiter;
 }
 
 export function buildCSV(options: BuildCSVOptions): string {
-  const { columns, rows, selectedRows, getCellValue, delimiterCharacter } = options;
+  const { columns, rows, selectedRows, getCellParams, delimiterCharacter } = options;
   let rowIds = [...rows.keys()];
   const selectedRowIds = Object.keys(selectedRows);
 
@@ -55,7 +57,7 @@ export function buildCSV(options: BuildCSVOptions): string {
   const CSVBody = rowIds
     .reduce<string>(
       (acc, id) =>
-        `${acc}${serialiseRow(id, columns, getCellValue, delimiterCharacter).join(
+        `${acc}${serialiseRow(id, columns, getCellParams, delimiterCharacter).join(
           delimiterCharacter,
         )}\r\n`,
       '',
