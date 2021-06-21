@@ -1,8 +1,8 @@
 import * as React from 'react';
 import {
-  GRID_ROWS_CLEARED,
+  GRID_ROWS_CLEAR,
   GRID_ROWS_SET,
-  GRID_ROWS_UPDATED,
+  GRID_ROWS_UPDATE,
 } from '../../../constants/eventsConstants';
 import { GridComponentProps } from '../../../GridComponentProps';
 import { GridApiRef } from '../../../models/api/gridApiRef';
@@ -119,7 +119,7 @@ export const useGridRows = (
       logger.debug(`updating all rows, new length ${allNewRows.length}`);
 
       if (internalRowsState.current.allRows.length > 0) {
-        apiRef.current.publishEvent(GRID_ROWS_CLEARED);
+        apiRef.current.publishEvent(GRID_ROWS_CLEAR);
       }
 
       const allRows: GridRowId[] = [];
@@ -200,7 +200,7 @@ export const useGridRows = (
         ];
         setRows(newRows);
       }
-      forceUpdate(() => apiRef.current.publishEvent(GRID_ROWS_UPDATED));
+      forceUpdate(() => apiRef.current.publishEvent(GRID_ROWS_UPDATE));
     },
     [apiRef, forceUpdate, getRow, getRowId, setGridState, setRows],
   );

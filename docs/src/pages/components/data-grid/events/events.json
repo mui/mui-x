@@ -46,7 +46,7 @@
     "description": "Fired when a <code>mouseleave</code> event happens in a cell. Called with a <a href=\"/api/data-grid/grid-cell-params/\">GridCellParams</a> object."
   },
   {
-    "name": "cellKeydown",
+    "name": "cellKeyDown",
     "description": "Fired when a <code>keydown</code> event happens in a cell. Called with a <a href=\"/api/data-grid/grid-cell-params/\">GridCellParams</a> object."
   },
   {
@@ -114,7 +114,7 @@
     "description": "Fired when a row is selected or unselected. Called with a GridRowSelectedParams object."
   },
   {
-    "name": "columnHeaderKeydown",
+    "name": "columnHeaderKeyDown",
     "description": "Fired when a key is pressed in a column header. It&#39;s mapped do the <code>keydown</code> DOM event.\nCalled with a GridColumnHeaderParams object."
   },
   {
@@ -150,7 +150,7 @@
     "description": "Fired during the resizing of a column. Called with a GridColumnResizeParams object."
   },
   {
-    "name": "columnResizeCommitted",
+    "name": "columnWidthChange",
     "description": "Fired when a column is resized. Called with a GridColumnResizeParams object."
   },
   {
@@ -162,9 +162,9 @@
     "description": "Fired when the user stops resizing a column. Called with an object <code>{ field: string }</code>."
   },
   { "name": "columnOrderChange", "description": "Fired when the user ends resizing a column." },
-  { "name": "rowsCleared", "description": "Fired when the grid is emptied." },
+  { "name": "rowsClear", "description": "Fired when the grid is emptied." },
   {
-    "name": "columnsUpdated",
+    "name": "columnsChange",
     "description": "Fired when the columns state is changed.\nCalled with an array of strings correspoding to the field names."
   },
   {

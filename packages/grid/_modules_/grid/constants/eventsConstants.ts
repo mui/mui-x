@@ -12,30 +12,9 @@ export const GRID_RESIZE = 'resize';
 export const GRID_DEBOUNCED_RESIZE = 'debouncedResize';
 
 /**
- * Fired when a `focusout` event happens in the grid.
- * @ignore - do not document.
- * @event
- */
-export const GRID_FOCUS_OUT = 'focusout';
-
-/**
- * Fired when a `keydown` event happens in the grid.
- * @ignore - do not document.
- * @event
- */
-export const GRID_KEYDOWN = 'keydown';
-
-/**
- * Fired when a `keyup` event happens in the grid.
- * @ignore - do not document.
- * @event
- */
-export const GRID_KEYUP = 'keyup';
-
-/**
  * @ignore - do not document.
  */
-export const GRID_NATIVE_SCROLL = 'scroll';
+export const GRID_SCROLL = 'scroll';
 
 // GRID events
 
@@ -50,12 +29,6 @@ export const GRID_COMPONENT_ERROR = 'componentError';
  * @event
  */
 export const GRID_UNMOUNT = 'unmount';
-
-/**
- * @ignore - do not document.
- * TODO remove
- */
-export const GRID_ELEMENT_FOCUS_OUT = 'gridFocusOut';
 
 /**
  * Fired when the mode of a cell changes. Called with a [[GridCellModeChangeParams]] object.
@@ -115,7 +88,7 @@ export const GRID_CELL_LEAVE = 'cellLeave';
  * Fired when a `keydown` event happens in a cell. Called with a [[GridCellParams]] object.
  * @event
  */
-export const GRID_CELL_KEYDOWN = 'cellKeydown';
+export const GRID_CELL_KEY_DOWN = 'cellKeyDown';
 
 /**
  * Fired when the `blur` event of a cell is triggered. Called with a [[GridCellParams]] object.
@@ -203,7 +176,7 @@ export const GRID_CELL_EDIT_EXIT = 'cellEditExit';
  * @ignore - do not document.
  * @event
  */
-export const GRID_CELL_NAVIGATION_KEYDOWN = 'cellNavigationKeyDown';
+export const GRID_CELL_NAVIGATION_KEY_DOWN = 'cellNavigationKeyDown';
 
 /**
  * Fired when a row is clicked. Called with a [[GridRowParams]] object.
@@ -273,14 +246,14 @@ export const GRID_COLUMN_HEADER_FOCUS = 'columnHeaderFocus';
  * @ignore - do not document.
  * @event
  */
-export const GRID_COLUMN_HEADER_NAVIGATION_KEYDOWN = 'columnHeaderNavigationKeydown';
+export const GRID_COLUMN_HEADER_NAVIGATION_KEY_DOWN = 'columnHeaderNavigationKeyDown';
 
 /**
  * Fired when a key is pressed in a column header. It's mapped do the `keydown` DOM event.
  * Called with a [[GridColumnHeaderParams]] object.
  * @event
  */
-export const GRID_COLUMN_HEADER_KEYDOWN = 'columnHeaderKeydown';
+export const GRID_COLUMN_HEADER_KEY_DOWN = 'columnHeaderKeyDown';
 
 /**
  * Fired when a column header is clicked. Called with a [[GridColumnHeaderParams]] object.
@@ -360,7 +333,7 @@ export const GRID_COLUMN_HEADER_DRAG_END = 'columnHeaderDragEnd';
  * Called with a [[GridSelectionModelChangeParams]] object.
  * @event
  */
-export const GRID_SELECTION_CHANGED = 'selectionChange';
+export const GRID_SELECTION_CHANGE = 'selectionChange';
 
 /**
  * Fired when the current page change. Called with a [[GridPageChangeParams]] object.
@@ -372,7 +345,7 @@ export const GRID_PAGE_CHANGE = 'pageChange';
  * Fired when the page size change. Called with a [[GridPageChangeParams]] object.
  * @event
  */
-export const GRID_PAGESIZE_CHANGE = 'pageSizeChange';
+export const GRID_PAGE_SIZE_CHANGE = 'pageSizeChange';
 
 /**
  * Fired during the scroll of the grid viewport. Called with a [[GridScrollParams]] object.
@@ -404,7 +377,7 @@ export const GRID_COLUMN_RESIZE = 'columnResize';
  * Fired when a column is resized. Called with a [[GridColumnResizeParams]] object.
  * @event
  */
-export const GRID_COLUMN_RESIZE_COMMITTED = 'columnResizeCommitted';
+export const GRID_COLUMN_WIDTH_CHANGE = 'columnWidthChange';
 
 /**
  * Fired when the user starts resizing a column. Called with an object `{ field: string }`.
@@ -429,7 +402,7 @@ export const GRID_COLUMN_ORDER_CHANGE = 'columnOrderChange';
  * @ignore - do not document.
  * @event
  */
-export const GRID_ROWS_UPDATED = 'rowsUpdated';
+export const GRID_ROWS_UPDATE = 'rowsUpdate';
 
 /**
  * Fired when the rows are updated.
@@ -442,14 +415,14 @@ export const GRID_ROWS_SET = 'rowsSet';
  * Fired when the grid is emptied.
  * @event
  */
-export const GRID_ROWS_CLEARED = 'rowsCleared';
+export const GRID_ROWS_CLEAR = 'rowsClear';
 
 /**
  * Fired when the columns state is changed.
  * Called with an array of strings correspoding to the field names.
  * @event
  */
-export const GRID_COLUMNS_UPDATED = 'columnsUpdated';
+export const GRID_COLUMNS_CHANGE = 'columnsChange';
 
 /**
  * Fired when the sort model changes.

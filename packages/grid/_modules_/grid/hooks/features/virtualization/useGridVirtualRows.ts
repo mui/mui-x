@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GRID_NATIVE_SCROLL, GRID_ROWS_SCROLL } from '../../../constants/eventsConstants';
+import { GRID_SCROLL, GRID_ROWS_SCROLL } from '../../../constants/eventsConstants';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridVirtualizationApi } from '../../../models/api/gridVirtualizationApi';
 import { GridCellIndexCoordinates } from '../../../models/gridCell';
@@ -402,17 +402,17 @@ export const useGridVirtualRows = (apiRef: GridApiRef): void => {
     [logger],
   );
 
-  useNativeEventListener(apiRef, windowRef, GRID_NATIVE_SCROLL, handleScroll, { passive: true });
+  useNativeEventListener(apiRef, windowRef, GRID_SCROLL, handleScroll, { passive: true });
   useNativeEventListener(
     apiRef,
     () => apiRef.current?.renderingZoneRef?.current?.parentElement,
-    GRID_NATIVE_SCROLL,
+    GRID_SCROLL,
     preventViewportScroll,
   );
   useNativeEventListener(
     apiRef,
     () => apiRef.current?.columnHeadersContainerElementRef?.current?.parentElement,
-    GRID_NATIVE_SCROLL,
+    GRID_SCROLL,
     preventViewportScroll,
   );
 };
