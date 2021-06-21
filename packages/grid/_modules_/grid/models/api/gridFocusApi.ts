@@ -10,6 +10,7 @@ export interface GridFocusApi {
   /**
    * Sets the focus to the column header at the given `field`.
    * @param {string} field The column field.
+   * @param {string} event The event that triggers the action.
    */
-  setColumnHeaderFocus: (field: string) => void;
+  setColumnHeaderFocus: (field: string, event?: React.SyntheticEvent) => void;
 }

@@ -6,6 +6,7 @@ export default function XGridDemo() {
   const { data } = useDemoData({
     dataSet: 'Commodity',
     rowLength: 100000,
+    editable: true,
   });
 
   return (
@@ -15,6 +16,7 @@ export default function XGridDemo() {
         loading={data.rows.length === 0}
         rowHeight={38}
         checkboxSelection
+        disableSelectionOnClick
       />
     </div>
   );

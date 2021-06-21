@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridApiContext } from '../../components/GridApiContext';
+import { useGridApiContext } from '../root/useGridApiContext';
 import { GridSlotComponentProps } from '../../models/params/gridSlotComponentProps';
 import { optionsSelector } from '../utils/optionsSelector';
 import { visibleGridColumnsSelector } from './columns/gridColumnsSelector';
@@ -8,7 +8,7 @@ import { useGridState } from './core/useGridState';
 import { unorderedGridRowModelsSelector } from './rows/gridRowsSelector';
 
 export const useGridSlotComponentProps = () => {
-  const apiRef = React.useContext(GridApiContext);
+  const apiRef = useGridApiContext();
   const options = useGridSelector(apiRef, optionsSelector);
   const rows = useGridSelector(apiRef, unorderedGridRowModelsSelector);
   const columns = useGridSelector(apiRef, visibleGridColumnsSelector);

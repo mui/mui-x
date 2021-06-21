@@ -27,6 +27,11 @@ const deDEGrid: Partial<GridLocaleText> = {
   toolbarFiltersTooltipActive: (count) =>
     count !== 1 ? `${count} aktive Filter` : `${count} aktiver Filter`,
 
+  // Export selector toolbar button text
+  // toolbarExport: 'Export',
+  // toolbarExportLabel: 'Export',
+  // toolbarExportCSV: 'Download as CSV',
+
   // Columns panel text
   columnsPanelTextFieldLabel: 'Finde Spalte',
   columnsPanelTextFieldPlaceholder: 'Spaltenüberschrift',

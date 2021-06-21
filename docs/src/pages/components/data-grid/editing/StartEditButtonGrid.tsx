@@ -8,6 +8,7 @@ import {
   useGridApiRef,
   XGrid,
   GridApiRef,
+  MuiEvent,
 } from '@material-ui/x-grid';
 import {
   randomCreatedDate,
@@ -31,8 +32,8 @@ const useStyles = makeStyles(
 
 interface EditToolbarProps {
   apiRef: GridApiRef;
+  selectedCellParams?: any;
   setSelectedCellParams: (value: any) => void;
-  selectedCellParams: any;
 }
 
 function EditToolbar(props: EditToolbarProps) {
@@ -100,11 +101,11 @@ export default function StartEditButtonGrid() {
     [],
   );
 
-  // Prevent from committing on blur
-  const handleCellBlur = React.useCallback(
-    (params, event?: React.SyntheticEvent) => {
-      if (params.cellMode === 'edit') {
-        event?.stopPropagation();
+  // Prevent from committing on focus out
+  const handleCellFocusOut = React.useCallback(
+    (params, event?: MuiEvent<MouseEvent>) => {
+      if (params.cellMode === 'edit' && event) {
+        event.defaultMuiPrevented = true;
       }
     },
     [],
@@ -118,7 +119,7 @@ export default function StartEditButtonGrid() {
         apiRef={apiRef}
         onCellClick={handleCellClick}
         onCellDoubleClick={handleDoubleCellClick}
-        onCellBlur={handleCellBlur}
+        onCellFocusOut={handleCellFocusOut}
         onCellKeyDown={handleCellKeyDown}
         components={{
           Toolbar: EditToolbar,

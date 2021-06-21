@@ -19,7 +19,7 @@ const useStyles = makeStyles(
 
     return {
       root: {
-        '& .MuiDataGrid-cellEditing': {
+        '& .MuiDataGrid-cell--editing': {
           backgroundColor: 'rgb(255,215,115, 0.19)',
           color: '#1a3e72',
         },

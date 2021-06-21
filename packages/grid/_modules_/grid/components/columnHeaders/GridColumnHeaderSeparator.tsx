@@ -2,7 +2,7 @@ import * as React from 'react';
 import clsx from 'clsx';
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
 import { optionsSelector } from '../../hooks/utils/optionsSelector';
-import { GridApiContext } from '../GridApiContext';
+import { useGridApiContext } from '../../hooks/root/useGridApiContext';
 
 export interface GridColumnHeaderSeparatorProps extends React.HTMLAttributes<HTMLDivElement> {
   resizable: boolean;
@@ -14,7 +14,7 @@ export const GridColumnHeaderSeparator = React.memo(function GridColumnHeaderSep
   props: GridColumnHeaderSeparatorProps,
 ) {
   const { resizable, resizing, height, ...other } = props;
-  const apiRef = React.useContext(GridApiContext);
+  const apiRef = useGridApiContext();
   const { showColumnRightBorder } = useGridSelector(apiRef, optionsSelector);
   const ColumnResizeIcon = apiRef!.current.components!.ColumnResizeIcon!;
 
@@ -27,7 +27,7 @@ export const GridColumnHeaderSeparator = React.memo(function GridColumnHeaderSep
     // eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions
     <div
       className={clsx('MuiDataGrid-columnSeparator', {
-        'MuiDataGrid-columnSeparatorResizable': resizable,
+        'MuiDataGrid-columnSeparator--resizable': resizable,
         'Mui-resizing': resizing,
       })}
       style={{ minHeight: height, opacity: showColumnRightBorder ? 0 : 1 }}

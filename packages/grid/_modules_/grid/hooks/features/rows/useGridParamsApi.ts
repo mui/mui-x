@@ -98,8 +98,8 @@ export function useGridParamsApi(apiRef: GridApiRef) {
     (id: GridRowId, field: string) => {
       const colDef = apiRef.current.getColumn(field);
 
-      if (!warnedOnce && process.env.NODE_ENV !== 'production') {
-        if (!colDef) {
+      if (process.env.NODE_ENV !== 'production') {
+        if (!colDef && !warnedOnce) {
           warnMissingColumn(field);
         }
       }

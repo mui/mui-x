@@ -9,7 +9,7 @@ import { GridCsvExportApi } from '../../../models/api/gridCsvExportApi';
 import { GridExportCsvOptions } from '../../../models/gridExport';
 import { useLogger } from '../../utils/useLogger';
 import { exportAs } from '../../../utils';
-import { buildCSV } from './seralizers/csvSeraliser';
+import { buildCSV } from './serializers/csvSerializer';
 
 export const useGridCsvExport = (apiRef: GridApiRef): void => {
   const logger = useLogger('useGridCsvExport');
@@ -18,12 +18,16 @@ export const useGridCsvExport = (apiRef: GridApiRef): void => {
   const selection = useGridSelector(apiRef, gridSelectionStateSelector);
 
   const getDataAsCsv = React.useCallback(
-    // TODO remove once we use the options
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     (options?: GridExportCsvOptions): string => {
       logger.debug(`Get data as CSV`);
 
-      return buildCSV(visibleColumns, visibleSortedRows, selection, apiRef.current.getCellValue);
+      return buildCSV({
+        columns: visibleColumns,
+        rows: visibleSortedRows,
+        selectedRows: selection,
+        getCellParams: apiRef.current.getCellParams,
+        delimiterCharacter: options?.delimiter || ',',
+      });
     },
     [logger, visibleColumns, visibleSortedRows, selection, apiRef],
   );

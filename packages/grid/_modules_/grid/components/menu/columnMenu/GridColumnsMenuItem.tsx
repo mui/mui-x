@@ -3,12 +3,12 @@ import MenuItem from '@material-ui/core/MenuItem';
 import { useGridSelector } from '../../../hooks/features/core/useGridSelector';
 import { GridPreferencePanelsValue } from '../../../hooks/features/preferencesPanel/gridPreferencePanelsValue';
 import { optionsSelector } from '../../../hooks/utils/optionsSelector';
-import { GridApiContext } from '../../GridApiContext';
+import { useGridApiContext } from '../../../hooks/root/useGridApiContext';
 import { GridFilterItemProps } from './GridFilterItemProps';
 
 export const GridColumnsMenuItem = (props: GridFilterItemProps) => {
   const { onClick } = props;
-  const apiRef = React.useContext(GridApiContext);
+  const apiRef = useGridApiContext();
   const options = useGridSelector(apiRef, optionsSelector);
 
   const showColumns = React.useCallback(

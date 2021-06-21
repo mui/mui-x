@@ -8,7 +8,7 @@ import {
 import { useGridApiEventHandler } from '../hooks/root/useGridApiEventHandler';
 import { GridApiRef } from '../models/api/gridApiRef';
 import { GridScrollParams } from '../models/params/gridScrollParams';
-import { GridApiContext } from './GridApiContext';
+import { useGridApiContext } from '../hooks/root/useGridApiContext';
 
 const CLIFF = 1;
 const SLOP = 1.5;
@@ -20,7 +20,7 @@ interface ScrollAreaProps {
 export const GridScrollArea = React.memo(function GridScrollArea(props: ScrollAreaProps) {
   const { scrollDirection } = props;
   const rootRef = React.useRef<HTMLDivElement>(null);
-  const api = React.useContext(GridApiContext);
+  const api = useGridApiContext();
   const timeout = React.useRef<any>();
   const [dragging, setDragging] = React.useState<boolean>(false);
   const scrollPosition = React.useRef<GridScrollParams>({
@@ -75,7 +75,7 @@ export const GridScrollArea = React.memo(function GridScrollArea(props: ScrollAr
   return dragging ? (
     <div
       ref={rootRef}
-      className={clsx('MuiDataGrid-scrollArea', `MuiDataGrid-scrollArea-${scrollDirection}`)}
+      className={clsx('MuiDataGrid-scrollArea', `MuiDataGrid-scrollArea--${scrollDirection}`)}
       onDragOver={handleDragOver}
     />
   ) : null;

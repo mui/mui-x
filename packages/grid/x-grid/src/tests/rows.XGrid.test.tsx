@@ -95,13 +95,13 @@ describe('<XGrid /> - Rows', () => {
       apiRef!.current.setCellMode('c2', 'first', 'edit');
       const cell = getCell(1, 1);
 
-      expect(cell).to.have.class('MuiDataGrid-cellEditable');
-      expect(cell).to.have.class('MuiDataGrid-cellEditing');
+      expect(cell).to.have.class('MuiDataGrid-cell--editable');
+      expect(cell).to.have.class('MuiDataGrid-cell--editing');
       expect(cell.querySelector('input')!.value).to.equal('Jack');
       apiRef!.current.setCellMode('c2', 'first', 'view');
 
-      expect(cell).to.have.class('MuiDataGrid-cellEditable');
-      expect(cell).not.to.have.class('MuiDataGrid-cellEditing');
+      expect(cell).to.have.class('MuiDataGrid-cell--editable');
+      expect(cell).not.to.have.class('MuiDataGrid-cell--editing');
       expect(cell.querySelector('input')).to.equal(null);
     });
 

@@ -27,10 +27,12 @@ export const getGridLocalization = (
       components: {
         MuiDataGrid: {
           defaultProps: {
-            localeText: gridTranslations,
+            localeText: {
+              ...gridTranslations,
+              MuiTablePagination: coreTranslations?.components?.MuiTablePagination,
+            },
           },
         },
-        ...coreTranslations?.components,
       },
     };
   }
@@ -38,9 +40,11 @@ export const getGridLocalization = (
   return {
     props: {
       MuiDataGrid: {
-        localeText: gridTranslations,
+        localeText: {
+          ...gridTranslations,
+          MuiTablePagination: coreTranslations?.props?.MuiTablePagination,
+        },
       },
-      ...coreTranslations?.props,
     },
   };
 };

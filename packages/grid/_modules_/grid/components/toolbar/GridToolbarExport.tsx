@@ -5,7 +5,7 @@ import MenuList from '@material-ui/core/MenuList';
 import Button, { ButtonProps } from '@material-ui/core/Button';
 import MenuItem from '@material-ui/core/MenuItem';
 import { isHideMenuKey, isTabKey } from '../../utils/keyboardUtils';
-import { GridApiContext } from '../GridApiContext';
+import { useGridApiContext } from '../../hooks/root/useGridApiContext';
 import { GridMenu } from '../menu/GridMenu';
 import { GridExportCsvOptions } from '../../models/gridExport';
 
@@ -27,7 +27,7 @@ export interface GridToolbarExportProps extends ButtonProps {
 export const GridToolbarExport = React.forwardRef<HTMLButtonElement, GridToolbarExportProps>(
   function GridToolbarExport(props, ref) {
     const { csvOptions, ...other } = props;
-    const apiRef = React.useContext(GridApiContext);
+    const apiRef = useGridApiContext();
     const buttonId = useId();
     const menuId = useId();
     const [anchorEl, setAnchorEl] = React.useState(null);
@@ -68,6 +68,7 @@ export const GridToolbarExport = React.forwardRef<HTMLButtonElement, GridToolbar
           startIcon={<ExportIcon />}
           onClick={handleMenuOpen}
           aria-expanded={anchorEl ? 'true' : undefined}
+          aria-label={apiRef!.current.getLocaleText('toolbarExportLabel')}
           aria-haspopup="menu"
           aria-labelledby={menuId}
           id={buttonId}
