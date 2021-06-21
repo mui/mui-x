@@ -118,6 +118,7 @@ export const useGridFilter = (
         return {
           ...state,
           visibleRows: {
+            ...state.visibleRows,
             visibleRowsLookup,
             visibleRows: Object.entries(visibleRowsLookup)
               .filter(([, isVisible]) => isVisible)

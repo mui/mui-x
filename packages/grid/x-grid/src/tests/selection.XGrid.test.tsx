@@ -154,8 +154,7 @@ describe('<XGrid /> - Selection', () => {
     });
     expect(getColumnValues(1)).to.deep.equal(['Puma']);
     fireEvent.click(selectAll);
-    // TODO fix, should be only 2
-    expect(getSelectedRows(apiRef)).to.deep.equal([0, 1, 2]);
+    expect(getSelectedRows(apiRef)).to.deep.equal([2]);
     fireEvent.click(selectAll);
     expect(getSelectedRows(apiRef)).to.deep.equal([]);
     fireEvent.click(selectAll);
