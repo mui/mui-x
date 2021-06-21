@@ -158,4 +158,64 @@ describe('<XGrid /> - Reorder', () => {
     fireEvent(dragCol, dragEndEvent);
     expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
   });
+
+  it('should keep the order of the columns when dragStart is fired and disableColumnReorder=true', () => {
+    let apiRef: GridApiRef;
+    const rows = [{ id: 0, brand: 'Nike' }];
+    const columns = [{ field: 'brand' }, { field: 'desc' }, { field: 'type' }];
+
+    const Test = () => {
+      apiRef = useGridApiRef();
+
+      return (
+        <div style={{ width: 300, height: 300 }}>
+          <XGrid
+            apiRef={apiRef}
+            rows={rows}
+            columns={columns}
+            onPageChange={() => {}}
+            disableColumnReorder
+          />
+        </div>
+      );
+    };
+
+    render(<Test />);
+    expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
+    const columnHeader = getColumnHeaderCell(0);
+    const columnHeaderDraggableContainer = columnHeader.firstChild as HTMLElement;
+    fireEvent.dragStart(columnHeaderDraggableContainer.firstChild);
+    const draggingClassName = 'MuiDataGrid-columnHeader--dragging';
+    expect(columnHeaderDraggableContainer.classList.contains(draggingClassName)).to.equal(false);
+  });
+
+  it('should keep the order of the columns when dragEnd is fired and disableColumnReorder=true', () => {
+    let apiRef: GridApiRef;
+    const rows = [{ id: 0, brand: 'Nike' }];
+    const columns = [{ field: 'brand' }, { field: 'desc' }, { field: 'type' }];
+
+    const Test = () => {
+      apiRef = useGridApiRef();
+
+      return (
+        <div style={{ width: 300, height: 300 }}>
+          <XGrid
+            apiRef={apiRef}
+            rows={rows}
+            columns={columns}
+            onPageChange={() => {}}
+            disableColumnReorder
+          />
+        </div>
+      );
+    };
+
+    render(<Test />);
+    expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
+    const dragCol = getColumnHeaderCell(2).firstChild;
+    const dragEndEvent = createEvent.dragEnd(dragCol);
+    Object.defineProperty(dragEndEvent, 'dataTransfer', { value: { dropEffect: 'none' } });
+    fireEvent(dragCol, dragEndEvent);
+    expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
+  });
 });
