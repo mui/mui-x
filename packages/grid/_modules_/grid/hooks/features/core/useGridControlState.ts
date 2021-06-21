@@ -5,7 +5,7 @@ import { ControlStateItem } from '../../../models/controlStateItem';
 import { isDeepEqual } from '../../../utils/utils';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
 
-export function useControlState(apiRef: GridApiRef) {
+export function useGridControlState(apiRef: GridApiRef) {
   const controlStateMapRef = React.useRef<Record<string, ControlStateItem<any, any>>>({});
 
   const registerControlState = React.useCallback((controlStateItem: ControlStateItem<any, any>) => {

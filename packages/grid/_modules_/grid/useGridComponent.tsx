@@ -3,7 +3,7 @@ import { useGridColumnMenu } from './hooks/features/columnMenu/useGridColumnMenu
 import { useGridColumnReorder } from './hooks/features/columnReorder/useGridColumnReorder';
 import { useGridColumnResize } from './hooks/features/columnResize/useGridColumnResize';
 import { useGridColumns } from './hooks/features/columns/useGridColumns';
-import { useControlState } from './hooks/features/core/useControlState';
+import { useGridControlState } from './hooks/features/core/useGridControlState';
 import { useGridDensity } from './hooks/features/density/useGridDensity';
 import { useGridCsvExport } from './hooks/features/export/useGridCsvExport';
 import { useGridFilter } from './hooks/features/filter/useGridFilter';
@@ -38,7 +38,7 @@ export const useGridComponent = (apiRef: GridApiRef, props: GridComponentProps) 
   useLoggerFactory(apiRef, props);
   useApi(apiRef);
   useErrorHandler(apiRef, props);
-  useControlState(apiRef);
+  useGridControlState(apiRef);
   useGridScrollbarSizeDetector(apiRef, props);
   useOptionsProp(apiRef, props);
   useEvents(apiRef);
