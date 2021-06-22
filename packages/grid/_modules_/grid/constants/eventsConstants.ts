@@ -412,7 +412,10 @@ export const GRID_ROWS_UPDATE = 'rowsUpdate';
 export const GRID_ROWS_SET = 'rowsSet';
 
 /**
- * Fired when the grid is emptied.
+ * Implementation detail.
+ * Fired to reset the sortedRow when the set of rows changes.
+ * It's important as the rendered rows are coming from the sortedRow
+ * @ignore - do not document.
  * @event
  */
 export const GRID_ROWS_CLEAR = 'rowsClear';
