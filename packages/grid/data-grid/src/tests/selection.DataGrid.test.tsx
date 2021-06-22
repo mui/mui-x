@@ -278,7 +278,7 @@ describe('<DataGrid /> - Selection', () => {
       expect(getRow(1)).to.have.class('Mui-selected');
 
       setProps({ selectionModel: [0] });
-      expect(getRow(0)).not.to.have.class('Mui-selected');
+      expect(getRow(0)).to.have.class('Mui-selected');
       expect(getRow(1)).not.to.have.class('Mui-selected');
     });
   });

@@ -179,7 +179,7 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
   }, [apiRef, props.onSelectionModelChange, props.selectionModel]);
 
   React.useEffect(() => {
-    //Rows changed
+    // Rows changed
     setGridState((state) => {
       const newSelectionState = [...state.selection];
       const selectionLookup = selectedIdsLookupSelector(state);
@@ -201,6 +201,9 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
 
   React.useEffect(() => {
     // prop selectionModel changed
+    if (props.selectionModel === undefined) {
+      return;
+    }
     const currentModel = apiRef.current.getState().selection;
     if (currentModel !== props.selectionModel) {
       setGridState((state) => ({ ...state, selection: props.selectionModel || [] }));
