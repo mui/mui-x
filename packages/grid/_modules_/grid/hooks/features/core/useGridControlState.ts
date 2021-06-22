@@ -2,7 +2,6 @@ import React from 'react';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridControlStateApi } from '../../../models/api/gridControlStateApi';
 import { ControlStateItem } from '../../../models/controlStateItem';
-import { isDeepEqual } from '../../../utils/utils';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
 
 export function useGridControlState(apiRef: GridApiRef) {
@@ -28,7 +27,7 @@ export function useGridControlState(apiRef: GridApiRef) {
         const controlState = controlStateMap[stateId];
         const oldState = controlState.stateSelector(apiRef.current.state);
         const newSubState = controlState.stateSelector(newState);
-        const hasSubStateChanged =  oldState !== newSubState;
+        const hasSubStateChanged = oldState !== newSubState;
 
         if (updatedStateIds.length >= 1 && hasSubStateChanged) {
           // Each hook modify its own state and it should not leak
@@ -45,7 +44,8 @@ export function useGridControlState(apiRef: GridApiRef) {
             if (controlState.propModel !== newModel) {
               controlState.propOnChange(newModel);
             }
-            shouldUpdate = controlState.propModel === undefined || controlState.propModel === newModel;
+            shouldUpdate =
+              controlState.propModel === undefined || controlState.propModel === newModel;
           } else if (controlState.propModel !== undefined) {
             const oldModel = oldState;
             shouldUpdate = oldModel !== controlState.propModel;

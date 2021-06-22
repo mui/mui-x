@@ -172,7 +172,7 @@ export function NoControlSelection() {
   );
 }
 export function LargeControlSelection() {
-  const { data } = useDemoData({ rowLength: 50000, dataSet: 'Commodity', maxColumns: 100 });
+  const { data } = useDemoData({ rowLength: 500000, dataSet: 'Commodity', maxColumns: 100 });
 
   const [selectionModel, setSelectionModel] = React.useState<any>([]);
   const handleSelectionChange = React.useCallback((newModel) => {
