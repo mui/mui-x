@@ -66,7 +66,7 @@ EditToolbar.propTypes = {
   apiRef: PropTypes.shape({
     current: PropTypes.object.isRequired,
   }).isRequired,
-  selectedCellParams: PropTypes.any.isRequired,
+  selectedCellParams: PropTypes.any,
   setSelectedCellParams: PropTypes.func.isRequired,
 };
 
@@ -89,10 +89,10 @@ export default function StartEditButtonGrid() {
     }
   }, []);
 
-  // Prevent from committing on blur
-  const handleCellBlur = React.useCallback((params, event) => {
-    if (params.cellMode === 'edit') {
-      event?.stopPropagation();
+  // Prevent from committing on focus out
+  const handleCellFocusOut = React.useCallback((params, event) => {
+    if (params.cellMode === 'edit' && event) {
+      event.defaultMuiPrevented = true;
     }
   }, []);
 
@@ -104,7 +104,7 @@ export default function StartEditButtonGrid() {
         apiRef={apiRef}
         onCellClick={handleCellClick}
         onCellDoubleClick={handleDoubleCellClick}
-        onCellBlur={handleCellBlur}
+        onCellFocusOut={handleCellFocusOut}
         onCellKeyDown={handleCellKeyDown}
         components={{
           Toolbar: EditToolbar,

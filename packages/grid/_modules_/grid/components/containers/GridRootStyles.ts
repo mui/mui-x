@@ -50,7 +50,7 @@ export const useStyles = makeStyles(
             theme.palette.action.disabledOpacity,
           ),
         },
-        '& .MuiDataGrid-toolbar': {
+        '& .MuiDataGrid-toolbarContainer': {
           display: 'flex',
           alignItems: 'center',
           padding: '4px 4px 0',
@@ -72,10 +72,10 @@ export const useStyles = makeStyles(
           width: 20,
           bottom: 0,
         },
-        '& .MuiDataGrid-scrollArea-left': {
+        '& .MuiDataGrid-scrollArea--left': {
           left: 0,
         },
-        '& .MuiDataGrid-scrollArea-right': {
+        '& .MuiDataGrid-scrollArea--right': {
           right: 0,
         },
         '& .MuiDataGrid-columnHeaderWrapper': {
@@ -107,13 +107,14 @@ export const useStyles = makeStyles(
           display: 'flex',
           alignItems: 'center',
         },
-        '& .MuiDataGrid-columnHeader:not(.MuiDataGrid-columnHeaderSorted) .MuiDataGrid-sortIcon': {
-          opacity: 0,
-          transition: theme.transitions.create(['opacity'], {
-            duration: theme.transitions.duration.shorter,
-          }),
-        },
-        '& .MuiDataGrid-columnHeader:not(.MuiDataGrid-columnHeaderSorted):hover .MuiDataGrid-sortIcon':
+        '& .MuiDataGrid-columnHeader:not(.MuiDataGrid-columnHeader--sorted) .MuiDataGrid-sortIcon':
+          {
+            opacity: 0,
+            transition: theme.transitions.create(['opacity'], {
+              duration: theme.transitions.duration.shorter,
+            }),
+          },
+        '& .MuiDataGrid-columnHeader:not(.MuiDataGrid-columnHeader--sorted):hover .MuiDataGrid-sortIcon':
           {
             opacity: 0.5,
           },
@@ -129,17 +130,17 @@ export const useStyles = makeStyles(
         '& .MuiDataGrid-sortIcon, & .MuiDataGrid-filterIcon': {
           fontSize: 'inherit',
         },
-        '& .MuiDataGrid-columnHeaderSortable': {
+        '& .MuiDataGrid-columnHeader--sortable': {
           cursor: 'pointer',
         },
-        '& .MuiDataGrid-columnHeaderCenter .MuiDataGrid-columnHeaderTitleContainer': {
+        '& .MuiDataGrid-columnHeader--alignCenter .MuiDataGrid-columnHeaderTitleContainer': {
           justifyContent: 'center',
         },
-        '& .MuiDataGrid-columnHeaderRight .MuiDataGrid-columnHeader-draggable, & .MuiDataGrid-columnHeaderRight .MuiDataGrid-columnHeaderTitleContainer':
+        '& .MuiDataGrid-columnHeader--alignRight .MuiDataGrid-columnHeaderDraggableContainer, & .MuiDataGrid-columnHeader--alignRight .MuiDataGrid-columnHeaderTitleContainer':
           {
             flexDirection: 'row-reverse',
           },
-        '& .MuiDataGrid-columnHeaderCenter .MuiDataGrid-menuIcon, & .MuiDataGrid-columnHeaderRight .MuiDataGrid-menuIcon':
+        '& .MuiDataGrid-columnHeader--alignCenter .MuiDataGrid-menuIcon, & .MuiDataGrid-columnHeader--alignRight .MuiDataGrid-menuIcon':
           {
             marginRight: 'auto',
             marginLeft: -6,
@@ -150,7 +151,7 @@ export const useStyles = makeStyles(
           whiteSpace: 'nowrap',
           fontWeight: theme.typography.fontWeightMedium,
         },
-        '& .MuiDataGrid-columnHeaderMoving': {
+        '& .MuiDataGrid-columnHeader--moving': {
           backgroundColor: theme.palette.action.hover,
         },
         '& .MuiDataGrid-columnSeparator': {
@@ -162,7 +163,7 @@ export const useStyles = makeStyles(
           justifyContent: 'center',
           color: borderColor,
         },
-        '& .MuiDataGrid-columnSeparatorResizable': {
+        '& .MuiDataGrid-columnSeparator--resizable': {
           cursor: 'col-resize',
           touchAction: 'none',
           '&:hover': {
@@ -250,7 +251,7 @@ export const useStyles = makeStyles(
           whiteSpace: 'nowrap',
           borderBottom: `1px solid ${borderColor}`,
         },
-        '& .MuiDataGrid-cell.MuiDataGrid-cellEditing': {
+        '& .MuiDataGrid-cell.MuiDataGrid-cell--editing': {
           padding: 1,
           display: 'flex',
           boxShadow: theme.shadows[2],
@@ -260,7 +261,7 @@ export const useStyles = makeStyles(
             outlineOffset: '-1px',
           },
         },
-        '& .MuiDataGrid-editCellInputBase': {
+        '& .MuiDataGrid-editInputCell': {
           ...theme.typography.body2,
           padding: '1px 0',
           '& input': {
@@ -268,7 +269,7 @@ export const useStyles = makeStyles(
             height: '100%',
           },
         },
-        '& .MuiDataGrid-editCellBoolean': {
+        '& .MuiDataGrid-editBooleanCell': {
           display: 'flex',
           height: '100%',
           width: '100%',
@@ -285,31 +286,31 @@ export const useStyles = makeStyles(
         '& .MuiDataGrid-columnHeaderWrapper .MuiDataGrid-cell': {
           borderBottom: 'none',
         },
-        '& .MuiDataGrid-cellWithRenderer': {
+        '& .MuiDataGrid-cell--withRenderer': {
           display: 'flex',
           alignItems: 'center',
         },
         '& .MuiDataGrid-withBorder': {
           borderRight: `1px solid ${borderColor}`,
         },
-        '& .MuiDataGrid-cellLeft': {
+        '& .MuiDataGrid-cell--textLeft': {
           textAlign: 'left',
         },
-        '& .MuiDataGrid-cellLeft.MuiDataGrid-cellWithRenderer, & .MuiDataGrid-cellLeft.MuiDataGrid-cellEditing':
+        '& .MuiDataGrid-cell--textLeft.MuiDataGrid-cell--withRenderer, & .MuiDataGrid-cell--textLeft.MuiDataGrid-cell--editing':
           {
             justifyContent: 'flex-start',
           },
-        '& .MuiDataGrid-cellRight': {
+        '& .MuiDataGrid-cell--textRight': {
           textAlign: 'right',
         },
-        '& .MuiDataGrid-cellRight.MuiDataGrid-cellWithRenderer, & .MuiDataGrid-cellRight.MuiDataGrid-cellEditing':
+        '& .MuiDataGrid-cell--textRight.MuiDataGrid-cell--withRenderer, & .MuiDataGrid-cell--textRight.MuiDataGrid-cell--editing':
           {
             justifyContent: 'flex-end',
           },
-        '& .MuiDataGrid-cellCenter': {
+        '& .MuiDataGrid-cell--textCenter': {
           textAlign: 'center',
         },
-        '& .MuiDataGrid-cellCenter.MuiDataGrid-cellWithRenderer, & .MuiDataGrid-cellCenter.MuiDataGrid-cellEditing':
+        '& .MuiDataGrid-cell--textCenter.MuiDataGrid-cell--withRenderer, & .MuiDataGrid-cell--textCenter.MuiDataGrid-cell--editing':
           {
             justifyContent: 'center',
           },
@@ -318,7 +319,7 @@ export const useStyles = makeStyles(
           display: 'flex',
           margin: theme.spacing(0, 2),
         },
-        '& .MuiDataGrid-footer': {
+        '& .MuiDataGrid-footerContainer': {
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
@@ -334,14 +335,14 @@ export const useStyles = makeStyles(
             },
           },
         },
-        '& .MuiDataGrid-columnHeader-dropZone .MuiDataGrid-columnHeader-draggable': {
+        '& .MuiDataGrid-columnHeaderDropZone .MuiDataGrid-columnHeaderDraggableContainer': {
           cursor: 'move',
         },
-        '& .MuiDataGrid-columnHeader-draggable': {
+        '& .MuiDataGrid-columnHeaderDraggableContainer': {
           display: 'flex',
           width: '100%',
         },
-        '& .MuiDataGrid-columnHeader-dragging': {
+        '& .MuiDataGrid-columnHeader--dragging': {
           background: theme.palette.background.paper,
           padding: '0 12px',
           borderRadius: theme.shape.borderRadius,

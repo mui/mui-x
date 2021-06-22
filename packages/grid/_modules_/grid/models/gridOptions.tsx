@@ -32,6 +32,10 @@ import { GridColumnVisibilityChangeParams } from './params/gridColumnVisibilityC
 import { GridFetchRowsParams } from './params/gridFetchRowsParams';
 import { GridClasses } from './gridClasses';
 
+export type MuiEvent<E> = (E | React.SyntheticEvent) & {
+  defaultMuiPrevented?: boolean;
+};
+
 // TODO add multiSortKey
 /**
  * Grid options react prop, containing all the setting for the grid.
@@ -226,9 +230,9 @@ export interface GridOptions {
   /**
    * Callback fired when the active element leaves a cell.
    * @param param With all properties from [[GridCellParams]].
-   * @param event [[React.MouseEvent]].
+   * @param event [[React.FocusEvent]].
    */
-  onCellBlur?: (params: GridCellParams, event: React.SyntheticEvent) => void;
+  onCellBlur?: (params: GridCellParams, event: React.FocusEvent) => void;
   /**
    * Callback fired when a click event comes from a cell element.
    * @param param With all properties from [[GridCellParams]].
@@ -241,6 +245,12 @@ export interface GridOptions {
    * @param event [[React.MouseEvent]].
    */
   onCellDoubleClick?: (params: GridCellParams, event: React.MouseEvent) => void;
+  /**
+   * Callback fired when a cell loses focus.
+   * @param param With all properties from [[GridCellParams]].
+   * @param event [[Event]].
+   */
+  onCellFocusOut?: (params: GridCellParams, event?: MuiEvent<MouseEvent>) => void;
   /**
    * Callback fired when a keydown event comes from a cell element.
    * @param param With all properties from [[GridCellParams]].

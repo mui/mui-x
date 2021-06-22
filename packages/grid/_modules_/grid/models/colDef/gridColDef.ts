@@ -126,11 +126,6 @@ export interface GridColDef {
    */
   hideSortIcons?: boolean;
   /**
-   * Allows to disable the click event in cells.
-   * @default false
-   */
-  disableClickEventBubbling?: boolean;
-  /**
    * If `true`, the column menu is disabled for this column.
    * @default false
    */

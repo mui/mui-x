@@ -1,9 +1,9 @@
 import * as React from 'react';
 import {
-  GRID_COLUMNS_UPDATED,
+  GRID_COLUMNS_CHANGE,
   GRID_FILTER_MODEL_CHANGE,
   GRID_ROWS_SET,
-  GRID_ROWS_UPDATED,
+  GRID_ROWS_UPDATE,
 } from '../../../constants/eventsConstants';
 import { GridComponentProps } from '../../../GridComponentProps';
 import { GridApiRef } from '../../../models/api/gridApiRef';
@@ -122,6 +122,7 @@ export const useGridFilter = (
         return {
           ...state,
           visibleRows: {
+            ...state.visibleRows,
             visibleRowsLookup,
             visibleRows: Object.entries(visibleRowsLookup)
               .filter(([, isVisible]) => isVisible)
@@ -297,7 +298,7 @@ export const useGridFilter = (
   );
 
   useGridApiEventHandler(apiRef, GRID_ROWS_SET, apiRef.current.applyFilters);
-  useGridApiEventHandler(apiRef, GRID_ROWS_UPDATED, apiRef.current.applyFilters);
+  useGridApiEventHandler(apiRef, GRID_ROWS_UPDATE, apiRef.current.applyFilters);
   useGridApiOptionHandler(apiRef, GRID_FILTER_MODEL_CHANGE, props.onFilterModelChange);
 
   React.useEffect(() => {
@@ -335,5 +336,5 @@ export const useGridFilter = (
     apiRef.current.applyFilters();
   }, [apiRef, logger]);
 
-  useGridApiEventHandler(apiRef, GRID_COLUMNS_UPDATED, onColUpdated);
+  useGridApiEventHandler(apiRef, GRID_COLUMNS_CHANGE, onColUpdated);
 };

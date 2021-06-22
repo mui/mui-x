@@ -1,7 +1,6 @@
 import * as React from 'react';
 import {
-  GRID_DEBOUNCED_RESIZE,
-  GRID_NATIVE_SCROLL,
+  GRID_SCROLL,
   GRID_ROWS_SCROLL,
   GRID_VIRTUAL_PAGE_CHANGE,
 } from '../../../constants/eventsConstants';
@@ -22,7 +21,6 @@ import { useGridState } from '../core/useGridState';
 import { GridPaginationState } from '../pagination/gridPaginationState';
 import { gridPaginationSelector } from '../pagination/gridPaginationSelector';
 import { gridRowCountSelector } from '../rows/gridRowsSelector';
-import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
 import { useNativeEventListener } from '../../root/useNativeEventListener';
 import { useLogger } from '../../utils/useLogger';
@@ -414,18 +412,17 @@ export const useGridVirtualRows = (apiRef: GridApiRef): void => {
     [logger],
   );
 
-  useNativeEventListener(apiRef, windowRef, GRID_NATIVE_SCROLL, handleScroll, { passive: true });
+  useNativeEventListener(apiRef, windowRef, GRID_SCROLL, handleScroll, { passive: true });
   useNativeEventListener(
     apiRef,
     () => apiRef.current?.renderingZoneRef?.current?.parentElement,
-    GRID_NATIVE_SCROLL,
+    GRID_SCROLL,
     preventViewportScroll,
   );
   useNativeEventListener(
     apiRef,
     () => apiRef.current?.columnHeadersContainerElementRef?.current?.parentElement,
-    GRID_NATIVE_SCROLL,
+    GRID_SCROLL,
     preventViewportScroll,
   );
-  useGridApiEventHandler(apiRef, GRID_DEBOUNCED_RESIZE, updateViewport);
 };

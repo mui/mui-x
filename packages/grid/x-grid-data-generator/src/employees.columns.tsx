@@ -1,6 +1,4 @@
 import {
-  generateName,
-  randomAvatar,
   randomCity,
   randomCompanyName,
   randomCountry,
@@ -14,8 +12,18 @@ import {
   randomUrl,
   randomUserName,
   randomBoolean,
+  randomName,
+  randomColor,
 } from './services';
-import { renderAvatar, renderCountry, renderEmail, renderLink, renderRating } from './renderer';
+import {
+  renderAvatar,
+  renderCountry,
+  renderEmail,
+  renderLink,
+  renderRating,
+  renderEditRating,
+  renderEditCountry,
+} from './renderer';
 
 export const getEmployeeColumns: () => any[] = () => [
   {
@@ -27,15 +35,16 @@ export const getEmployeeColumns: () => any[] = () => [
     field: 'avatar',
     headerName: 'Avatar',
     sortable: false,
-    generateData: randomAvatar,
+    generateData: randomColor,
     renderCell: renderAvatar,
     filterable: false,
   },
   {
     field: 'name',
     headerName: 'Name',
-    generateData: generateName,
+    generateData: randomName,
     width: 120,
+    editable: true,
   },
   {
     field: 'website',
@@ -43,58 +52,68 @@ export const getEmployeeColumns: () => any[] = () => [
     generateData: randomUrl,
     renderCell: renderLink,
     width: 160,
+    editable: true,
   },
   {
     field: 'rating',
     headerName: 'Rating',
     generateData: randomRating,
     renderCell: renderRating,
+    renderEditCell: renderEditRating,
     width: 180,
     type: 'number',
+    editable: true,
   },
   {
     field: 'email',
     headerName: 'Email',
     generateData: randomEmail,
     renderCell: renderEmail,
-    disableClickEventBubbling: true,
     width: 150,
+    editable: true,
   },
   {
     field: 'phone',
     headerName: 'Phone',
     generateData: randomPhoneNumber,
     width: 150,
+    editable: true,
   },
   {
     field: 'username',
     headerName: 'Username',
     generateData: randomUserName,
     width: 150,
+    editable: true,
   },
   {
     field: 'city',
     headerName: 'City',
     generateData: randomCity,
+    editable: true,
   },
   {
     field: 'country',
     headerName: 'Country',
     generateData: randomCountry,
     renderCell: renderCountry,
+    renderEditCell: renderEditCountry,
     width: 150,
+    editable: true,
   },
   {
     field: 'company',
     headerName: 'Company',
     generateData: randomCompanyName,
     width: 180,
+    editable: true,
   },
   {
     field: 'position',
     headerName: 'Position',
     generateData: randomJobTitle,
     width: 180,
+    editable: true,
   },
   {
     field: 'lastUpdated',
@@ -102,6 +121,7 @@ export const getEmployeeColumns: () => any[] = () => [
     generateData: randomUpdatedDate,
     type: 'dateTime',
     width: 180,
+    editable: true,
   },
   {
     field: 'dateCreated',
@@ -109,6 +129,7 @@ export const getEmployeeColumns: () => any[] = () => [
     generateData: randomCreatedDate,
     type: 'date',
     width: 150,
+    editable: true,
   },
   {
     field: 'isAdmin',
@@ -116,5 +137,6 @@ export const getEmployeeColumns: () => any[] = () => [
     generateData: randomBoolean,
     type: 'boolean',
     width: 150,
+    editable: true,
   },
 ];

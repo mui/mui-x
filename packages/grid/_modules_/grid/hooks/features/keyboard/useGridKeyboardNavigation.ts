@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {
-  GRID_CELL_NAVIGATION_KEYDOWN,
-  GRID_COLUMN_HEADER_NAVIGATION_KEYDOWN,
+  GRID_CELL_NAVIGATION_KEY_DOWN,
+  GRID_COLUMN_HEADER_NAVIGATION_KEY_DOWN,
 } from '../../../constants/eventsConstants';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import {
@@ -130,7 +130,7 @@ export const useGridKeyboardNavigation = (apiRef: GridApiRef): void => {
 
       if (nextCellIndexes.rowIndex < 0) {
         const field = apiRef.current.getVisibleColumns()[nextCellIndexes.colIndex].field;
-        apiRef.current.setColumnHeaderFocus(field);
+        apiRef.current.setColumnHeaderFocus(field, event);
         return;
       }
 
@@ -205,11 +205,11 @@ export const useGridKeyboardNavigation = (apiRef: GridApiRef): void => {
       logger.debug(`Navigating to next column row ${nextColumnHeaderIndexes.colIndex}`);
       apiRef.current.scrollToIndexes(nextColumnHeaderIndexes);
       const field = apiRef.current.getVisibleColumns()[nextColumnHeaderIndexes.colIndex].field;
-      apiRef.current.setColumnHeaderFocus(field);
+      apiRef.current.setColumnHeaderFocus(field, event);
     },
     [apiRef, colCount, containerSizes, logger],
   );
 
-  useGridApiEventHandler(apiRef, GRID_CELL_NAVIGATION_KEYDOWN, navigateCells);
-  useGridApiEventHandler(apiRef, GRID_COLUMN_HEADER_NAVIGATION_KEYDOWN, navigateColumnHeaders);
+  useGridApiEventHandler(apiRef, GRID_CELL_NAVIGATION_KEY_DOWN, navigateCells);
+  useGridApiEventHandler(apiRef, GRID_COLUMN_HEADER_NAVIGATION_KEY_DOWN, navigateColumnHeaders);
 };

@@ -42,7 +42,35 @@ const theme = createMuiTheme(
 
 Note that `createMuiTheme` accepts any number of arguments.
 If you are already using the [translations of the core components](/guides/localization/#locale-text), you can add `bgBG` as a new argument.
-The same import works with `XGrid` as it's an extension of `DataGrid`.
+The same import works for `XGrid` as it's an extension of `DataGrid`.
+
+```jsx
+import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+import { DataGrid, bgBG } from '@material-ui/data-grid';
+import { bgBG as coreBgBG } from '@material-ui/core/locale';
+
+const theme = createMuiTheme(
+  {
+    palette: {
+      primary: { main: '#1976d2' },
+    },
+  },
+  bgBG,
+  coreBgBG,
+);
+
+<ThemeProvider theme={theme}>
+  <DataGrid />
+</ThemeProvider>;
+```
+
+If you want to pass language translations directly to the grid without using `createMuiTheme` and `ThemeProvider`, you can directly load the language translations from the `@material-ui/data-grid` or `@material-ui/x-grid` package.
+
+```jsx
+import { DataGrid, nlNL } from '@material-ui/data-grid';
+
+<DataGrid localeText={nlNL.props.MuiDataGrid.localeText} />;
+```
 
 ### Supported locales
 

@@ -10,7 +10,7 @@ const useStyles = makeStyles(
       justifyContent: 'space-between',
     },
   }),
-  { name: 'MuiDataGridPanelFooter' },
+  { name: 'MuiGridPanelFooter' },
 );
 
 export function GridPanelFooter(

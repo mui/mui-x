@@ -23,6 +23,7 @@ export interface DemoDataOptions {
   dataSet: DataSet;
   rowLength: number;
   maxColumns?: number;
+  editable?: boolean;
 }
 
 // Generate fake data from a seed.
@@ -100,7 +101,10 @@ export const useDemoData = (options: DemoDataOptions): DemoDataReturnType => {
 
     (async () => {
       setLoading(true);
-      let columns = options.dataSet === 'Commodity' ? getCommodityColumns() : getEmployeeColumns();
+      let columns =
+        options.dataSet === 'Commodity'
+          ? getCommodityColumns(options.editable)
+          : getEmployeeColumns();
 
       if (options.maxColumns) {
         columns = columns.slice(0, options.maxColumns);
@@ -132,7 +136,7 @@ export const useDemoData = (options: DemoDataOptions): DemoDataReturnType => {
     return () => {
       active = false;
     };
-  }, [rowLength, options.dataSet, index, options.maxColumns]);
+  }, [rowLength, options.dataSet, index, options.maxColumns, options.editable]);
 
   return {
     data,

@@ -1,8 +1,8 @@
 import * as React from 'react';
 import {
-  GRID_ROWS_CLEARED,
+  GRID_ROWS_CLEAR,
   GRID_ROWS_SET,
-  GRID_ROWS_UPDATED,
+  GRID_ROWS_UPDATE,
 } from '../../../constants/eventsConstants';
 import { GridComponentProps } from '../../../GridComponentProps';
 import { GridApiRef } from '../../../models/api/gridApiRef';
@@ -162,7 +162,7 @@ export const useGridRows = (
       logger.debug(`updating all rows, new length ${allNewRows.length}`);
 
       if (internalRowsState.current.allRows.length > 0) {
-        apiRef.current.publishEvent(GRID_ROWS_CLEARED);
+        apiRef.current.publishEvent(GRID_ROWS_CLEAR);
       }
 
       const allRows: GridRowId[] = [];
@@ -205,6 +205,7 @@ export const useGridRows = (
       const addedRows: GridRowModel[] = [];
       const deletedRowIds: GridRowId[] = [];
 
+      let updatedLookup: null | {} = null;
       Object.entries<GridRowModel>(uniqUpdates).forEach(([id, partialRow]) => {
         // eslint-disable-next-line no-underscore-dangle
         if (partialRow._action === 'delete') {
@@ -217,16 +218,20 @@ export const useGridRows = (
           addedRows.push(partialRow);
           return;
         }
-        const lookup = { ...internalRowsState.current.idRowsLookup };
 
-        lookup[id] = {
+        if (!updatedLookup) {
+          updatedLookup = { ...internalRowsState.current.idRowsLookup };
+        }
+
+        updatedLookup[id] = {
           ...oldRow,
           ...partialRow,
         };
-        internalRowsState.current.idRowsLookup = lookup;
       });
-
-      setGridState((state) => ({ ...state, rows: { ...internalRowsState.current } }));
+      if (updatedLookup) {
+        internalRowsState.current.idRowsLookup = updatedLookup;
+        setGridState((state) => ({ ...state, rows: { ...internalRowsState.current } }));
+      }
 
       if (deletedRowIds.length > 0 || addedRows.length > 0) {
         deletedRowIds.forEach((id) => {
@@ -238,7 +243,7 @@ export const useGridRows = (
         ];
         setRows(newRows);
       }
-      forceUpdate(() => apiRef.current.publishEvent(GRID_ROWS_UPDATED));
+      forceUpdate(() => apiRef.current.publishEvent(GRID_ROWS_UPDATE));
     },
     [apiRef, forceUpdate, getRow, getRowId, setGridState, setRows],
   );

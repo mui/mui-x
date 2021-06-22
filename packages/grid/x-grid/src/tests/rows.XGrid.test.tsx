@@ -100,13 +100,13 @@ describe('<XGrid /> - Rows', () => {
       apiRef!.current.setCellMode('c2', 'first', 'edit');
       const cell = getCell(1, 1);
 
-      expect(cell).to.have.class('MuiDataGrid-cellEditable');
-      expect(cell).to.have.class('MuiDataGrid-cellEditing');
+      expect(cell).to.have.class('MuiDataGrid-cell--editable');
+      expect(cell).to.have.class('MuiDataGrid-cell--editing');
       expect(cell.querySelector('input')!.value).to.equal('Jack');
       apiRef!.current.setCellMode('c2', 'first', 'view');
 
-      expect(cell).to.have.class('MuiDataGrid-cellEditable');
-      expect(cell).not.to.have.class('MuiDataGrid-cellEditing');
+      expect(cell).to.have.class('MuiDataGrid-cell--editable');
+      expect(cell).not.to.have.class('MuiDataGrid-cell--editing');
       expect(cell.querySelector('input')).to.equal(null);
     });
 
@@ -167,6 +167,7 @@ describe('<XGrid /> - Rows', () => {
 
     it('should allow to reset rows with setRows and render after 100ms', () => {
       render(<TestCase />);
+      expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
       const newRows = [
         {
           id: 3,
@@ -179,6 +180,14 @@ describe('<XGrid /> - Rows', () => {
       expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
       clock.tick(50);
       expect(getColumnValues()).to.deep.equal(['Asics']);
+
+      apiRef.current.setRows(baselineProps.rows);
+      // Force an update before the 100ms
+      apiRef.current.forceUpdate(() => apiRef.current.state);
+      // Tradeoff, the value is YOLO
+      expect(getColumnValues()).to.deep.equal(['Nike']);
+      clock.tick(100);
+      expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
     });
 
     it('should allow to update row data', () => {

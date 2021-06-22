@@ -32,7 +32,7 @@ const useStyles = makeStyles(
       },
     },
   }),
-  { name: 'MuiDataGridMenu', defaultTheme },
+  { name: 'MuiGridMenu', defaultTheme },
 );
 
 export interface GridMenuProps extends Omit<PopperProps, 'onKeyDown'> {

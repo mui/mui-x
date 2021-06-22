@@ -27,7 +27,7 @@ const useStyles = makeStyles(
       padding: theme.spacing(0, 1),
     },
   }),
-  { name: 'MuiDataGridToolbarFilterButton', defaultTheme },
+  { name: 'MuiGridToolbarFilterButton', defaultTheme },
 );
 
 export const GridToolbarFilterButton = React.forwardRef<HTMLButtonElement, ButtonProps>(

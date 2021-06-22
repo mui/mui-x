@@ -207,23 +207,6 @@ describe('<XGrid /> - Events Params', () => {
       expect(eventStack).to.deep.equal(['cellClick', 'rowClick']);
     });
 
-    it('should not bubble to the row if the column has disableEventBubbling', () => {
-      render(
-        <TestEvents
-          onCellClick={push('cellClick')}
-          onRowClick={push('rowClick')}
-          columns={baselineProps.columns.map((col) => ({
-            ...col,
-            disableClickEventBubbling: true,
-          }))}
-        />,
-      );
-
-      const cell11 = getCell(1, 1);
-      fireEvent.click(cell11);
-      expect(eventStack).to.deep.equal(['cellClick']);
-    });
-
     it('should allow to stop propagation', () => {
       const stopClick = (params, event) => {
         event.stopPropagation();

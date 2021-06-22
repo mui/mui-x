@@ -14,7 +14,7 @@ const useStyles = makeStyles(
       },
     },
   }),
-  { name: 'MuiDataGridPanelWrapper' },
+  { name: 'MuiGridPanelWrapper' },
 );
 
 const isEnabled = () => true;
