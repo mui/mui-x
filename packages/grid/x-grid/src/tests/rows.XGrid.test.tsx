@@ -499,6 +499,7 @@ describe('<XGrid /> - Rows', () => {
         <TestCaseInfiniteLoading
           sortingMode="server"
           filterMode="server"
+          infniteLoadingMode="server"
           nbRows={20}
           rowCount={50}
           onFetchRows={handleFetchRows}
@@ -518,6 +519,7 @@ describe('<XGrid /> - Rows', () => {
         <TestCaseInfiniteLoading
           sortingMode="server"
           filterMode="server"
+          infniteLoadingMode="server"
           nbRows={20}
           rowCount={50}
           onFetchRows={handleFetchRows}
@@ -533,6 +535,7 @@ describe('<XGrid /> - Rows', () => {
         <TestCaseInfiniteLoading
           sortingMode="server"
           filterMode="server"
+          infniteLoadingMode="server"
           nbRows={20}
           rowCount={50}
         />,
@@ -552,6 +555,7 @@ describe('<XGrid /> - Rows', () => {
         <TestCaseInfiniteLoading
           sortingMode="server"
           filterMode="server"
+          infniteLoadingMode="server"
           nbRows={5}
           nbCols={2}
           rowCount={10}
