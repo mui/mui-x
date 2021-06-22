@@ -44,6 +44,7 @@ import { DataGrid } from '@material-ui/data-grid';
 | <span class="prop-name">hideFooterRowCount</span> | <span class="prop-type">boolean</span> | false | If `true`, the row count in the footer is hidden. |
 | <span class="prop-name">hideFooterSelectedRowCount</span> | <span class="prop-type">boolean</span> | false | If `true`, the selected row count in the footer is hidden. |
 | <span class="prop-name">icons</span> | <span class="prop-type">IconsOptions</span> |   | Set of icons used in the grid. |
+| <span class="prop-name">infniteLoadingMode</span> | <span class="prop-type">GridFeatureMode</span> | 'client' | Infnite loading can be processed on the server or client-side. Set it to 'client' if you would like to handle the infnite loading on the client-side. Set it to 'server' if you would like to handle the infnite loading on the server-side. |
 | <span class="prop-name">isCellEditable</span> | <span class="prop-type">(params: GridCellParams) => boolean</span> |   | Callback fired when a cell is rendered, returns true if the cell is editable. |
 | <span class="prop-name">isRowSelectable</span> | <span class="prop-type">(params: GridRowParams) => boolean</span> |   | Determines if a row can be selected. |
 | <span class="prop-name">loading</span> | <span class="prop-type">boolean</span> |  false | If `true`, a  loading overlay is displayed. |

@@ -35,10 +35,11 @@ In addition, the area in which the callback provided to the `onRowsScrollEnd` is
 
 {{"demo": "pages/components/data-grid/rows/InfiniteLoadingGrid.js", "bg": "inline", "disableAd": true}}
 
-### Server-side infinite loading [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-pro/)
+### Unstable Server-side infinite loading [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-pro/)
 
 By default, infinite loading works on the client-side.
-To switch it to server-side, the `rowCount` needs to be set and the number of initially loaded rows needs to be less than the `rowCount` value.
+To switch it to server-side, set `infniteLoadingMode="server"`.
+Then the `rowCount` needs to be set and the number of initially loaded rows needs to be less than the `rowCount` value.
 In addition, you need to handle the `onFetchRows` callback to fetch the rows for the corresponding index.
 Finally, you need to use the `apiRef.current.insertRows()` to tell the DataGrid where to insert the newly fetched rows.
 

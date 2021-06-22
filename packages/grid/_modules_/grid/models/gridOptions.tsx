@@ -182,6 +182,12 @@ export interface GridOptions {
    */
   hideFooterSelectedRowCount?: boolean;
   /**
+   * Infnite loading can be processed on the server or client-side.
+   * Set it to 'client' if you would like to handle the infnite loading on the client-side.
+   * Set it to 'server' if you would like to handle the infnite loading on the server-side.
+   */
+  infniteLoadingMode?: GridFeatureMode;
+  /**
    * Callback fired when a cell is rendered, returns true if the cell is editable.
    */
   isCellEditable?: (params: GridCellParams) => boolean;
@@ -514,6 +520,7 @@ export const DEFAULT_GRID_OPTIONS: GridOptions = {
   density: GridDensityTypes.Standard,
   filterMode: GridFeatureModeConstant.client,
   headerHeight: 56,
+  infniteLoadingMode: GridFeatureModeConstant.client,
   localeText: GRID_DEFAULT_LOCALE_TEXT,
   pageSize: 100,
   paginationMode: GridFeatureModeConstant.client,

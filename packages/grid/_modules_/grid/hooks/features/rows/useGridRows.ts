@@ -7,6 +7,7 @@ import {
 import { GridComponentProps } from '../../../GridComponentProps';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridRowApi } from '../../../models/api/gridRowApi';
+import { GridFeatureMode, GridFeatureModeConstant } from '../../../models/gridFeatureMode';
 import {
   checkGridRowIdIsValid,
   GridRowModel,
@@ -18,7 +19,9 @@ import {
   GridInsertRowParams,
 } from '../../../models/gridRows';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
+import { optionsSelector } from '../../utils/optionsSelector';
 import { useLogger } from '../../utils/useLogger';
+import { useGridSelector } from '../core/useGridSelector';
 import { useGridState } from '../core/useGridState';
 import { getInitialGridRowState, InternalGridRowsState } from './gridRowsState';
 
@@ -36,12 +39,13 @@ export function convertGridRowsPropToState(
   rows: GridRowsProp,
   totalRowCount?: number,
   rowIdGetter?: GridRowIdGetter,
-  pagination?: boolean,
+  infniteLoadingMode?: GridFeatureMode,
 ): InternalGridRowsState {
   const numberOfRows = totalRowCount && totalRowCount > rows.length ? totalRowCount : rows.length;
-  const initialRowState = pagination
-    ? getInitialGridRowState()
-    : getInitialGridRowState(numberOfRows);
+  const initialRowState =
+    infniteLoadingMode === GridFeatureModeConstant.server
+      ? getInitialGridRowState(numberOfRows)
+      : getInitialGridRowState();
   const state: InternalGridRowsState = {
     ...initialRowState,
     totalRowCount: numberOfRows,
@@ -61,6 +65,7 @@ export const useGridRows = (
   { rows, getRowId }: Pick<GridComponentProps, 'rows' | 'getRowId'>,
 ): void => {
   const logger = useLogger('useGridRows');
+  const { infniteLoadingMode } = useGridSelector(apiRef, optionsSelector);
   const [gridState, setGridState, updateComponent] = useGridState(apiRef);
   const updateTimeout = React.useRef<any>();
 
@@ -92,10 +97,11 @@ export const useGridRows = (
         rows,
         state.options.rowCount,
         getRowId,
+        infniteLoadingMode,
       );
       return { ...state, rows: internalRowsState.current };
     });
-  }, [getRowId, rows, setGridState]);
+  }, [getRowId, rows, setGridState, infniteLoadingMode]);
 
   const getRowIndexFromId = React.useCallback(
     (id: GridRowId): number => {
@@ -124,7 +130,12 @@ export const useGridRows = (
     ({ startIndex, pageSize, newRows, rowCount }: GridInsertRowParams) => {
       logger.debug(`Insert rows from index:${startIndex}`);
 
-      const newRowsToState = convertGridRowsPropToState(newRows, newRows.length, getRowId);
+      const newRowsToState = convertGridRowsPropToState(
+        newRows,
+        newRows.length,
+        getRowId,
+        infniteLoadingMode,
+      );
 
       setGridState((state) => {
         // rowCount can be 0
@@ -154,7 +165,7 @@ export const useGridRows = (
       apiRef.current.updateViewport();
       apiRef.current.applySorting();
     },
-    [logger, apiRef, getRowId, setGridState, forceUpdate],
+    [logger, apiRef, getRowId, setGridState, forceUpdate, infniteLoadingMode],
   );
 
   const setRows = React.useCallback(

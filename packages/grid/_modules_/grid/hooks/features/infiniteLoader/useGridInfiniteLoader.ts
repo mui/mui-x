@@ -24,6 +24,7 @@ import { gridSortModelSelector } from '../sorting/gridSortingSelector';
 import { filterGridStateSelector } from '../filter/gridFilterSelector';
 import { GridFetchRowsParams } from '../../../models/params/gridFetchRowsParams';
 import { GridRowId } from '../../../models/gridRows';
+import { GridFeatureModeConstant } from '../../../models/gridFeatureMode';
 
 export const useGridInfiniteLoader = (apiRef: GridApiRef): void => {
   const logger = useLogger('useGridInfiniteLoader');
@@ -38,7 +39,7 @@ export const useGridInfiniteLoader = (apiRef: GridApiRef): void => {
 
   const handleGridScroll = React.useCallback(() => {
     logger.debug('Checking if scroll position reached bottom');
-    if (!containerSizes) {
+    if (!containerSizes || options.infniteLoadingMode !== GridFeatureModeConstant.client) {
       return;
     }
 
@@ -69,7 +70,7 @@ export const useGridInfiniteLoader = (apiRef: GridApiRef): void => {
   const handleGridVirtualPageChange = React.useCallback(
     (params: GridVirtualPageChangeParams) => {
       logger.debug('Virtual page changed');
-      if (!containerSizes) {
+      if (!containerSizes || options.infniteLoadingMode !== GridFeatureModeConstant.server) {
         return;
       }
 
@@ -105,13 +106,13 @@ export const useGridInfiniteLoader = (apiRef: GridApiRef): void => {
       };
       apiRef.current.publishEvent(GRID_FETCH_ROWS, fetchRowsParams);
     },
-    [logger, allRows, sortModel, containerSizes, filterState, apiRef],
+    [logger, options, allRows, sortModel, containerSizes, filterState, apiRef],
   );
 
   const handleGridSortModelChange = React.useCallback(
     (params: GridSortModelParams) => {
       logger.debug('Sort model changed');
-      if (!containerSizes) {
+      if (!containerSizes || options.infniteLoadingMode !== GridFeatureModeConstant.server) {
         return;
       }
 
@@ -125,13 +126,13 @@ export const useGridInfiniteLoader = (apiRef: GridApiRef): void => {
       };
       apiRef.current.publishEvent(GRID_FETCH_ROWS, fetchRowsParams);
     },
-    [logger, renderState, containerSizes, filterState, apiRef],
+    [logger, options, renderState, containerSizes, filterState, apiRef],
   );
 
   const handleGridFilterModelChange = React.useCallback(
     (params: GridFilterModelParams) => {
       logger.debug('Filter model changed');
-      if (!containerSizes) {
+      if (!containerSizes || options.infniteLoadingMode !== GridFeatureModeConstant.server) {
         return;
       }
 
@@ -145,7 +146,7 @@ export const useGridInfiniteLoader = (apiRef: GridApiRef): void => {
       };
       apiRef.current.publishEvent(GRID_FETCH_ROWS, fetchRowsParams);
     },
-    [logger, containerSizes, sortModel, renderState, apiRef],
+    [logger, options, containerSizes, sortModel, renderState, apiRef],
   );
 
   useGridApiEventHandler(apiRef, GRID_ROWS_SCROLL, handleGridScroll);

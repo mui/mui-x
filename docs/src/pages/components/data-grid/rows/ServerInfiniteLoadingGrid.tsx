@@ -49,6 +49,7 @@ export default function InfiniteLoadingGrid() {
         rowCount={50}
         sortingMode="server"
         filterMode="server"
+        infniteLoadingMode="server"
         onFetchRows={handleFetchRows}
       />
     </div>
