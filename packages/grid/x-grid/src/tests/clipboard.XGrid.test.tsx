@@ -77,7 +77,7 @@ describe('<XGrid /> - Clipboard', () => {
       render(<Test />);
       apiRef.current.selectRows([0, 1]);
       apiRef.current.copySelectedRowsToClipboard();
-      expect(writeText.firstCall.args[0]).to.equal(['0\tNike', '1\tAdidas', ''].join('\r\n'));
+      expect(writeText.firstCall.args[0]).to.equal(['0\tNike', '1\tAdidas'].join('\r\n'));
     });
 
     it('should include the headers when includeHeaders=true', () => {
@@ -85,7 +85,7 @@ describe('<XGrid /> - Clipboard', () => {
       apiRef.current.selectRows([0, 1]);
       apiRef.current.copySelectedRowsToClipboard(true);
       expect(writeText.firstCall.args[0]).to.equal(
-        ['id\tBrand', '0\tNike', '1\tAdidas', ''].join('\r\n'),
+        ['id\tBrand', '0\tNike', '1\tAdidas'].join('\r\n'),
       );
     });
 
@@ -96,7 +96,7 @@ describe('<XGrid /> - Clipboard', () => {
         const cell = getCell(0, 0);
         cell.focus();
         fireEvent.keyDown(cell, { key: 'c', [key]: true });
-        expect(writeText.firstCall.args[0]).to.equal(['0\tNike', '1\tAdidas', ''].join('\r\n'));
+        expect(writeText.firstCall.args[0]).to.equal(['0\tNike', '1\tAdidas'].join('\r\n'));
       });
     });
   });

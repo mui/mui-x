@@ -1,8 +1,9 @@
 import * as React from 'react';
+import { ownerDocument } from '@material-ui/core/utils';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
 import { GRID_KEYDOWN } from '../../../constants/eventsConstants';
-import { serialiseRow, serialiseCellValue } from '../export/serializers/csvSerializer';
+import { buildCSV } from '../export/serializers/csvSerializer';
 import { useGridSelector } from '../core/useGridSelector';
 import { visibleGridColumnsSelector } from '../columns/gridColumnsSelector';
 import { gridCheckboxSelectionColDef } from '../../../models/colDef';
@@ -14,13 +15,26 @@ export const useGridClipboard = (apiRef: GridApiRef): void => {
 
   const writeToClipboardPolyfill = React.useCallback(
     (data: string) => {
-      const textarea = document.createElement('textarea');
-      textarea.style.opacity = '0px';
-      textarea.value = data;
-      apiRef.current.rootElementRef!.current!.appendChild(textarea);
-      textarea.select();
-      document.execCommand('copy');
-      apiRef.current.rootElementRef!.current!.removeChild(textarea);
+      const doc = ownerDocument(apiRef.current.rootElementRef!.current!);
+      const span = doc.createElement('span');
+      span.style.whiteSpace = 'pre';
+      span.style.userSelect = 'all';
+      span.style.opacity = '0px';
+      span.textContent = data;
+
+      apiRef.current.rootElementRef!.current!.appendChild(span);
+
+      const range = doc.createRange();
+      range.selectNode(span);
+      const selection = window.getSelection();
+      selection!.removeAllRanges();
+      selection!.addRange(range);
+
+      try {
+        doc.execCommand('copy');
+      } finally {
+        apiRef.current.rootElementRef!.current!.removeChild(span);
+      }
     },
     [apiRef],
   );
@@ -36,17 +50,13 @@ export const useGridClipboard = (apiRef: GridApiRef): void => {
         return;
       }
 
-      const headers = `${filteredColumns
-        .map((column) => serialiseCellValue(column.headerName || column.field, '\t'))
-        .join('\t')}\r\n`;
-
-      const data = [...selectedRows.keys()].reduce<string>(
-        (acc, id) =>
-          `${acc}${serialiseRow(id, filteredColumns, apiRef.current.getCellParams, '\t').join(
-            '\t',
-          )}\r\n`,
-        includeHeaders ? headers : '',
-      );
+      const data = buildCSV({
+        columns: visibleColumns,
+        rows: selectedRows,
+        includeHeaders,
+        getCellParams: apiRef.current.getCellParams,
+        delimiterCharacter: '\t',
+      });
 
       if (navigator.clipboard) {
         navigator.clipboard.writeText(data).catch(() => {
@@ -65,6 +75,14 @@ export const useGridClipboard = (apiRef: GridApiRef): void => {
       if (event.key.toLowerCase() !== 'c' || !isModifierKeyPressed) {
         return;
       }
+
+      const selection = window.getSelection();
+      const anchorNode = selection?.anchorNode;
+      if (anchorNode && apiRef.current.windowRef?.current?.contains(anchorNode)) {
+        // Do nothing if there's a native selection
+        return;
+      }
+
       apiRef.current.copySelectedRowsToClipboard(event.altKey);
     },
     [apiRef],
