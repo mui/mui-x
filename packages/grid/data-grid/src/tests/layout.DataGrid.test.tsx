@@ -8,6 +8,7 @@ import {
 import { useFakeTimers, stub } from 'sinon';
 import { expect } from 'chai';
 import { DataGrid, GridValueGetterParams, GridToolbar } from '@material-ui/data-grid';
+import { useData } from 'packages/storybook/src/hooks/useData';
 import { getColumnValues, raf } from 'test/utils/helperFn';
 
 describe('<DataGrid /> - Layout & Warnings', () => {
@@ -438,6 +439,22 @@ describe('<DataGrid /> - Layout & Warnings', () => {
       expect(document.querySelector('.MuiDataGrid-main')!.clientHeight).to.equal(
         40 + 30 * baselineProps.rows.length,
       );
+    });
+
+    // A function test counterpart of ScrollbarOverflowVerticalSnap.
+    it('should not have a horizontal scrollbar if not needed', () => {
+      const TestCase = () => {
+        const data = useData(100, 1);
+        return (
+          <div style={{ width: 500, height: 300 }}>
+            <DataGrid {...data} />
+          </div>
+        );
+      };
+      render(<TestCase />);
+      const gridWindow = document.querySelector('.MuiDataGrid-window');
+      // It should not have a horizontal scrollbar
+      expect(gridWindow!.scrollWidth - gridWindow!.clientWidth).to.equal(0);
     });
   });
 

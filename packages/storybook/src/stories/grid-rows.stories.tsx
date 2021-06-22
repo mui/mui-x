@@ -915,6 +915,20 @@ export function SwitchVirtualization() {
     </div>
   );
 }
+export function DeferRendering() {
+  const [deferRows, setRows] = React.useState<any>([]);
+  const [deferColumns] = React.useState([{ field: 'id', headerName: 'Id', width: 100 }]);
+
+  React.useEffect(() => {
+    const timer = setTimeout(() => setRows(() => [{ id: '1' }, { id: '2' }]), 0);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, []);
+
+  return <XGrid autoHeight columns={deferColumns} rows={deferRows} />;
+}
 
 export const ZeroHeightGrid = () => (
   <div style={{ width: 300, height: 0 }}>

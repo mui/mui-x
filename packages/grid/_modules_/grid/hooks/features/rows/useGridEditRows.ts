@@ -7,9 +7,9 @@ import {
   GRID_CELL_DOUBLE_CLICK,
   GRID_CELL_EDIT_ENTER,
   GRID_CELL_EDIT_EXIT,
-  GRID_CELL_NAVIGATION_KEYDOWN,
+  GRID_CELL_NAVIGATION_KEY_DOWN,
   GRID_CELL_MOUSE_DOWN,
-  GRID_CELL_KEYDOWN,
+  GRID_CELL_KEY_DOWN,
   GRID_CELL_VALUE_CHANGE,
   GRID_COLUMN_HEADER_DRAG_START,
   GRID_CELL_FOCUS_OUT,
@@ -243,7 +243,7 @@ export function useGridEditRows(apiRef: GridApiRef) {
       }
 
       if (isCellEditCommitKeys(event.key)) {
-        apiRef.current.publishEvent(GRID_CELL_NAVIGATION_KEYDOWN, params, event);
+        apiRef.current.publishEvent(GRID_CELL_NAVIGATION_KEY_DOWN, params, event);
         return;
       }
       if (isEscapeKey(event.key) || isDeleteKeys(event.key)) {
@@ -321,7 +321,7 @@ export function useGridEditRows(apiRef: GridApiRef) {
     [apiRef],
   );
 
-  useGridApiEventHandler(apiRef, GRID_CELL_KEYDOWN, handleCellKeyDown);
+  useGridApiEventHandler(apiRef, GRID_CELL_KEY_DOWN, handleCellKeyDown);
   useGridApiEventHandler(apiRef, GRID_CELL_MOUSE_DOWN, preventTextSelection);
   useGridApiEventHandler(apiRef, GRID_CELL_DOUBLE_CLICK, handleDoubleClick);
   useGridApiEventHandler(apiRef, GRID_CELL_EDIT_ENTER, handleEnterEdit);

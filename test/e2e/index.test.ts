@@ -106,6 +106,15 @@ describe('e2e', () => {
       ).to.equal('initial-focus');
     });
 
+    it('should display the rows', async () => {
+      await renderFixture('DataGrid/ConcurrentReactUpdate');
+      expect(
+        await page.evaluate(() =>
+          Array.from(document.querySelectorAll('[role="cell"]')).map((node) => node.textContent),
+        ),
+      ).to.deep.equal(['1', '2']);
+    });
+
     it('should work with a select as the edit cell', async () => {
       await renderFixture('DataGrid/SelectEditCell');
       await page.dblclick('"Nike"');
