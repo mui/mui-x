@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GRID_ROW_CLICK, GRID_SELECTION_CHANGED } from '../../../constants/eventsConstants';
+import { GRID_ROW_CLICK, GRID_SELECTION_CHANGE } from '../../../constants/eventsConstants';
 import { GridComponentProps } from '../../../GridComponentProps';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridSelectionApi } from '../../../models/api/gridSelectionApi';
@@ -173,7 +173,7 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
       propOnChange: props.onSelectionModelChange,
       stateSelector: gridSelectionStateSelector,
       onChangeCallback: (model: GridSelectionModel) => {
-        apiRef.current.publishEvent(GRID_SELECTION_CHANGED, model);
+        apiRef.current.publishEvent(GRID_SELECTION_CHANGE, model);
       },
     });
   }, [apiRef, props.onSelectionModelChange, props.selectionModel]);
