@@ -27,10 +27,8 @@ const baselineProps = {
 
 export default function ColumnReorder() {
   return (
-    <React.Fragment>
-      <div style={{ width: 300, height: 300 }}>
-        <XGrid {...baselineProps} />
-      </div>
-    </React.Fragment>
+    <div style={{ width: 300, height: 300 }}>
+      <XGrid {...baselineProps} />
+    </div>
   );
 }
