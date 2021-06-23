@@ -372,7 +372,7 @@ describe('<XGrid /> - Edit Rows', () => {
     expect(input.value).to.equal('1961');
 
     fireEvent.change(input, { target: { value: '62' } });
-    expect(cell.querySelector('input')!.value).to.equal('62');
+    expect(cell.querySelector('input')!.value).to.equal('1962');
 
     fireEvent.keyDown(input, { key: 'Enter' });
     expect(cell).not.to.have.class('MuiDataGrid-cell--editing');
