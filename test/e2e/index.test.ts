@@ -137,6 +137,7 @@ describe('e2e', () => {
       const year = await page.$('[role="columnheader"][aria-colindex="2"] > [draggable]');
       const yearBoundingBox = await year?.boundingBox();
       if (brandBoundingBox && yearBoundingBox) {
+        // Based on https://stackoverflow.com/a/64746679/2801714
         await page.mouse.move(
           brandBoundingBox.x + brandBoundingBox.width / 2,
           brandBoundingBox.y + brandBoundingBox.height / 2,
@@ -165,6 +166,7 @@ describe('e2e', () => {
       const cell = await page.$('[role="cell"][data-rowindex="0"][data-colindex="1"]');
       const cellBoundingBox = await cell?.boundingBox();
       if (brandBoundingBox && cellBoundingBox) {
+        // Based on https://stackoverflow.com/a/64746679/2801714
         await page.mouse.move(
           brandBoundingBox.x + brandBoundingBox.width / 2,
           brandBoundingBox.y + brandBoundingBox.height / 2,
