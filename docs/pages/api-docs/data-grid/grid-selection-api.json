@@ -2,17 +2,25 @@
   "name": "GridSelectionApi",
   "description": "The selection API interface that is available in the grid apiRef.",
   "properties": [
-    { "name": "getSelectedRows", "description": "", "type": "() => Map<GridRowId, GridRowData>" },
+    {
+      "name": "getSelectedRows",
+      "description": "Returns an array of the selected rows.",
+      "type": "() => Map<GridRowId, GridRowData>"
+    },
     {
       "name": "selectRow",
-      "description": "",
+      "description": "Change the selection state of a row.",
       "type": "(id: GridRowId, isSelected?: boolean, allowMultiple?: boolean) => void"
     },
     {
       "name": "selectRows",
-      "description": "",
+      "description": "Change the selection state of multiple rows.",
       "type": "(ids: GridRowId[], isSelected?: boolean, deselectOtherRows?: boolean) => void"
     },
-    { "name": "setSelectionModel", "description": "", "type": "(rowIds: GridRowId[]) => void" }
+    {
+      "name": "setSelectionModel",
+      "description": "Updates the selected rows to be those passed to the <code>rowIds</code> argument.\nAny row already selected will be unselected.",
+      "type": "(rowIds: GridRowId[]) => void"
+    }
   ]
 }
