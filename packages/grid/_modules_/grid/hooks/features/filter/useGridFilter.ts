@@ -333,7 +333,7 @@ export const useGridFilter = (
   }, [apiRef, logger]);
 
   React.useEffect(() => {
-    apiRef.current.registerControlState<GridFilterModel, GridFilterModelState>({
+    apiRef.current.updateControlState<GridFilterModel>({
       stateId: 'filter',
       propModel: props.filterModel,
       propOnChange: props.onFilterModelChange,

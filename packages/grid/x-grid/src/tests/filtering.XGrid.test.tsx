@@ -360,7 +360,7 @@ describe('<XGrid /> - Filter', () => {
         const [rows, setRows] = React.useState<GridRowModel[]>([]);
         const [filterValue, setFilterValue] = React.useState();
 
-        const onFilterChange = React.useCallback((newFilterModel: GridFilterModel) => {
+        const handleFilterChange = React.useCallback((newFilterModel: GridFilterModel) => {
           setFilterValue(newFilterModel.items[0].value);
         }, []);
 
