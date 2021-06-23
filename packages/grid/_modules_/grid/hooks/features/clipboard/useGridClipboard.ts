@@ -76,13 +76,8 @@ export const useGridClipboard = (apiRef: GridApiRef): void => {
         return;
       }
 
-      const selection = window.getSelection();
-      if (
-        selection?.anchorNode &&
-        apiRef.current.windowRef?.current?.contains(selection.anchorNode) &&
-        selection.toString() !== ''
-      ) {
-        // Do nothing if there's a native selection
+      // Do nothing if there's a native selection
+      if (window.getSelection()?.toString() !== '') {
         return;
       }
 
