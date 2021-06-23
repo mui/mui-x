@@ -99,7 +99,9 @@ function generateProperties(api: Api, apisToGenerate) {
 
   api.properties.forEach((propertyReflection) => {
     let name = propertyReflection.name;
-    const comment = propertyReflection.comment;
+    const type = propertyReflection!.type as any;
+    const signatures = type.declaration?.signatures;
+    const comment = signatures?.length ? signatures[0].comment : propertyReflection.comment;
     const description = linkify(comment?.shortText || '', apisToGenerate, 'markdown');
 
     if (propertyReflection.flags.isOptional) {
@@ -114,14 +116,12 @@ function generateProperties(api: Api, apisToGenerate) {
       defaultValue = `<span class="prop-default">${escapeCell(defaultTag.text)}</span>`;
     }
 
-    const type = `<span class="prop-type">${escapeCell(
-      generateType(propertyReflection.type),
-    )}</span>`;
+    const typeFormatted = `<span class="prop-type">${escapeCell(generateType(type))}</span>`;
 
     if (hasDefaultValue) {
-      text += `| ${name} | ${type} | ${defaultValue} | ${escapeCell(description)} |\n`;
+      text += `| ${name} | ${typeFormatted} | ${defaultValue} | ${escapeCell(description)} |\n`;
     } else {
-      text += `| ${name} | ${type} | ${escapeCell(description)} |\n`;
+      text += `| ${name} | ${typeFormatted} | ${escapeCell(description)} |\n`;
     }
   });
 
@@ -239,12 +239,14 @@ function run(argv: { outputDirectory?: string }) {
         name: reflection.name,
         description: linkify(reflection.comment?.shortText, apisToGenerate, 'html'),
         properties: api.properties.map((propertyReflection) => {
-          const comment = propertyReflection.comment;
+          const type = propertyReflection!.type as any;
+          const signatures = type.declaration!.signatures;
+          const comment = signatures.length ? signatures[0].comment : null;
           const description = linkify(comment?.shortText || '', apisToGenerate, 'html');
           const response: any = {
             name: propertyReflection.name,
             description: renderMarkdownInline(description),
-            type: generateType(propertyReflection.type),
+            type: generateType(type),
           };
           return response;
         }),
