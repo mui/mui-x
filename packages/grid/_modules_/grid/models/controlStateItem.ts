@@ -1,10 +1,9 @@
 import { GridState } from '../hooks/features/core/gridState';
 
-export interface ControlStateItem<TModel, TState> {
+export interface ControlStateItem<TModel> {
   stateId: string;
   propModel?: any;
-  stateSelector: (state: GridState) => TState;
+  stateSelector: (state: GridState) => TModel;
   propOnChange?: (model: TModel) => void;
   onChangeCallback?: (model: TModel) => void;
-  mapStateToModel?: (state: TState) => TModel | undefined;
 }

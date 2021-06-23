@@ -5,9 +5,9 @@ import { ControlStateItem } from '../../../models/controlStateItem';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
 
 export function useGridControlState(apiRef: GridApiRef) {
-  const controlStateMapRef = React.useRef<Record<string, ControlStateItem<any, any>>>({});
+  const controlStateMapRef = React.useRef<Record<string, ControlStateItem<any>>>({});
 
-  const registerControlState = React.useCallback((controlStateItem: ControlStateItem<any, any>) => {
+  const registerControlState = React.useCallback((controlStateItem: ControlStateItem<any>) => {
     const { stateId, stateSelector, ...others } = controlStateItem;
 
     controlStateMapRef.current[stateId] = {

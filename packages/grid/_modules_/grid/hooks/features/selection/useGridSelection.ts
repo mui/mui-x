@@ -167,7 +167,7 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
   useGridApiMethod(apiRef, selectionApi, 'GridSelectionApi');
 
   React.useEffect(() => {
-    apiRef.current.registerControlState<GridSelectionModel, GridSelectionState>({
+    apiRef.current.registerControlState<GridSelectionModel>({
       stateId: 'selectionModel',
       propModel: props.selectionModel,
       propOnChange: props.onSelectionModelChange,
