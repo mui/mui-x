@@ -13,7 +13,6 @@ import { useLogger } from '../../utils/useLogger';
 import { useGridSelector } from '../core/useGridSelector';
 import { useGridState } from '../core/useGridState';
 import { gridRowsLookupSelector } from '../rows/gridRowsSelector';
-import { GridSelectionState } from './gridSelectionState';
 import {
   gridSelectionStateSelector,
   selectedGridRowsSelector,
