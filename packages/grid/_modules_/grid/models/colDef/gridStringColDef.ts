@@ -4,6 +4,7 @@ import { GridColTypeDef } from './gridColDef';
 import { getGridStringOperators } from './gridStringOperators';
 
 export const GRID_STRING_COL_DEF: GridColTypeDef = {
+  minWidth: 100,
   width: 100,
   hide: false,
   sortable: true,
