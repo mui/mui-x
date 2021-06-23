@@ -33,7 +33,6 @@ import {
   visibleGridColumnsSelector,
 } from './gridColumnsSelector';
 import { useGridApiOptionHandler } from '../../root/useGridApiEventHandler';
-import { GRID_STRING_COL_DEF } from '../../../models/colDef/gridStringColDef';
 
 function updateColumnsWidth(columns: GridColumns, viewportWidth: number) {
   const numberOfFluidColumns = columns.filter((column) => !!column.flex && !column.hide).length;
@@ -52,16 +51,12 @@ function updateColumnsWidth(columns: GridColumns, viewportWidth: number) {
   }
 
   let newColumns = columns;
-  if (numberOfFluidColumns) {
+  if (viewportWidth > 0 && numberOfFluidColumns) {
     const flexMultiplier = viewportWidth / flexDivider;
     newColumns = columns.map((column) => {
-      if (!column.flex) {
-        return column;
-      }
       return {
         ...column,
-        width:
-          viewportWidth > 0 ? Math.floor(flexMultiplier * column.flex!) : GRID_STRING_COL_DEF.width,
+        width: column.flex! ? Math.floor(flexMultiplier * column.flex!) : column.width,
       };
     });
   }
