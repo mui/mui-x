@@ -32,6 +32,7 @@ export interface GridCellProps {
   height: number;
   isEditable?: boolean;
   isSelected?: boolean;
+  minWidth: number;
   rowIndex: number;
   showRightBorder?: boolean;
   value?: GridCellValue;
@@ -54,6 +55,7 @@ export const GridCell = React.memo(function GridCell(props: GridCellProps) {
     height,
     isEditable,
     isSelected,
+    minWidth,
     rowIndex,
     rowId,
     showRightBorder,
@@ -137,7 +139,7 @@ export const GridCell = React.memo(function GridCell(props: GridCellProps) {
   );
 
   const style = {
-    minWidth: width,
+    minWidth,
     maxWidth: width,
     lineHeight: `${height - 1}px`,
     minHeight: height,

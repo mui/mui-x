@@ -34,6 +34,11 @@ export interface GridColDef {
    */
   description?: string;
   /**
+   * Set the minimum width of the column.
+   * @default 0
+   */
+  minWidth?: number;
+  /**
    * Set the width of the column.
    * @default 100
    */

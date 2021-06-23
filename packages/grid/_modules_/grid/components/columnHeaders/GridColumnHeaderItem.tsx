@@ -197,7 +197,7 @@ export function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
       data-field={column.field}
       style={{
         width,
-        minWidth: width,
+        minWidth: column.minWidth,
         maxWidth: width,
       }}
       role="columnheader"
