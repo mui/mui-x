@@ -185,7 +185,7 @@ describe('<XGrid /> - Reorder', () => {
     const columnHeader = getColumnHeaderCell(0);
     const columnHeaderDraggableContainer = columnHeader.firstChild as HTMLElement;
     fireEvent.dragStart(columnHeaderDraggableContainer.firstChild);
-    const draggingClassName = 'MuiDataGrid-columnHeader--dragging';
+    const draggingClassName = GRID_COLUMN_HEADER_DRAGGING_CSS_CLASS;
     expect(columnHeaderDraggableContainer.classList.contains(draggingClassName)).to.equal(false);
   });
 
