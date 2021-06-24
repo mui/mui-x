@@ -21,14 +21,11 @@ export function GridEditSelectCell(props: GridCellParams & SelectProps) {
     ...other
   } = props;
 
-  const [valueState, setValueState] = React.useState(value);
-
   const handleChange = React.useCallback(
     (event) => {
       const newValue = event.target.value;
       const editProps = { value: newValue };
 
-      setValueState(newValue);
       api.publishEvent(
         GRID_CELL_EDIT_PROPS_CHANGE_COMMITTED,
         { id, field, props: editProps },
@@ -48,13 +45,9 @@ export function GridEditSelectCell(props: GridCellParams & SelectProps) {
     [api, field, id],
   );
 
-  React.useEffect(() => {
-    setValueState(value);
-  }, [value]);
-
   return (
     <Select
-      value={valueState}
+      value={value}
       onChange={handleChange}
       MenuProps={{
         onClose: handleClose,

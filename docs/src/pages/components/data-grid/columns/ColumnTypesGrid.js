@@ -31,7 +31,7 @@ const rows = [
     dateCreated: randomCreatedDate(),
     lastLogin: randomUpdatedDate(),
     isAdmin: false,
-    country: 'Brasil',
+    country: 'Brazil',
   },
 ];
 
