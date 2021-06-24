@@ -97,7 +97,7 @@ export const GridRowCells = React.memo(function GridRowCells(props: RowCellsProp
       value: cellParams.value,
       field: column.field,
       width: column.width!,
-      minWidth: column.minWidth!,
+      minWidth: column.minWidth,
       rowId: id,
       height,
       showRightBorder,

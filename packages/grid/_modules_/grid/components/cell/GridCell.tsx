@@ -32,7 +32,7 @@ export interface GridCellProps {
   height: number;
   isEditable?: boolean;
   isSelected?: boolean;
-  minWidth: number;
+  minWidth?: number;
   rowIndex: number;
   showRightBorder?: boolean;
   value?: GridCellValue;
