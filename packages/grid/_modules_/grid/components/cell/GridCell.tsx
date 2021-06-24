@@ -139,7 +139,7 @@ export const GridCell = React.memo(function GridCell(props: GridCellProps) {
   );
 
   const style = {
-    minWidth,
+    minWidth: minWidth || width,
     maxWidth: width,
     lineHeight: `${height - 1}px`,
     minHeight: height,
