@@ -55,7 +55,7 @@ export default function ColumnTypesGrid() {
               'France',
               'United Kingdom',
               'Spain',
-              'Brasil',
+              'Brazil',
             ],
           },
         ]}
