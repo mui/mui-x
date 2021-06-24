@@ -240,7 +240,9 @@ export function useGridEditRows(apiRef: GridApiRef) {
       if (!params.isEditable || event.isPropagationStopped()) {
         return;
       }
+
       setCellMode(params.id, params.field, 'edit');
+
       if (isKeyboardEvent(event) && isPrintableKey(event.key)) {
         const propsParams = apiRef.current.getEditCellPropsParams(params.id, params.field);
         propsParams.props.value = '';
