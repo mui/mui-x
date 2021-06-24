@@ -17,19 +17,30 @@ describe('<DataGrid /> - Filter', () => {
         id: 0,
         brand: 'Nike',
         isPublished: false,
+        country: 'United States',
       },
       {
         id: 1,
         brand: 'Adidas',
         isPublished: true,
+        country: 'Germany',
       },
       {
         id: 2,
         brand: 'Puma',
         isPublished: true,
+        country: 'Germany',
       },
     ],
-    columns: [{ field: 'brand' }, { field: 'isPublished', type: 'boolean' }],
+    columns: [
+      { field: 'brand' },
+      { field: 'isPublished', type: 'boolean' },
+      {
+        field: 'country',
+        type: 'select',
+        valueOptions: ['United States', 'Germany', 'France'],
+      },
+    ],
   };
 
   const TestCase = (props: {
@@ -548,6 +559,52 @@ describe('<DataGrid /> - Filter', () => {
       setProps({
         field: 'isPublished',
         operatorValue: 'is',
+        value: '',
+      });
+      expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
+    });
+  });
+
+  describe('select operators', () => {
+    it('should allow operator is', () => {
+      const { setProps } = render(<TestCase value="a" operatorValue="contains" />);
+      setProps({
+        field: 'country',
+        operatorValue: 'is',
+        value: 'United States',
+      });
+      expect(getColumnValues()).to.deep.equal(['Nike']);
+      setProps({
+        field: 'country',
+        operatorValue: 'is',
+        value: 'Germany',
+      });
+      expect(getColumnValues()).to.deep.equal(['Adidas', 'Puma']);
+      setProps({
+        field: 'country',
+        operatorValue: 'is',
+        value: '',
+      });
+      expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
+    });
+
+    it('should allow operator not', () => {
+      const { setProps } = render(<TestCase value="a" operatorValue="contains" />);
+      setProps({
+        field: 'country',
+        operatorValue: 'not',
+        value: 'United States',
+      });
+      expect(getColumnValues()).to.deep.equal(['Adidas', 'Puma']);
+      setProps({
+        field: 'country',
+        operatorValue: 'not',
+        value: 'Germany',
+      });
+      expect(getColumnValues()).to.deep.equal(['Nike']);
+      setProps({
+        field: 'country',
+        operatorValue: 'not',
         value: '',
       });
       expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);

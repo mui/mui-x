@@ -316,3 +316,27 @@ export const ValueGetterAndFormatter = () => {
     </div>
   );
 };
+
+export const SelectColumnType = () => {
+  const [data] = React.useState({
+    rows: [
+      { id: 0, country: 'Bulgaria' },
+      { id: 1, country: 'Netherlands' },
+    ],
+    columns: [
+      {
+        field: 'country',
+        type: 'select',
+        valueOptions: ['Bulgaria', 'Netherlands', 'France', 'Italy'],
+        editable: true,
+        width: 200,
+      },
+    ],
+  });
+
+  return (
+    <div className="grid-container">
+      <XGrid rows={data.rows} columns={data.columns} />
+    </div>
+  );
+};

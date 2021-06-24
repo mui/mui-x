@@ -4,5 +4,5 @@ export const GRID_DATE_COLUMN_TYPE = 'date';
 export const GRID_DATETIME_COLUMN_TYPE = 'dateTime';
 export const GRID_BOOLEAN_COLUMN_TYPE = 'boolean';
 
-export type GridNativeColTypes = 'string' | 'number' | 'date' | 'dateTime' | 'boolean';
+export type GridNativeColTypes = 'string' | 'number' | 'date' | 'dateTime' | 'boolean' | 'select';
 export type GridColType = GridNativeColTypes | string;
