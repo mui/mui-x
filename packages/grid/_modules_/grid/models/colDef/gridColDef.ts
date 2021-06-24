@@ -74,7 +74,7 @@ export interface GridColDef {
   /**
    * Used in combination with `type='select'`. Array with possible cell values.
    */
-  valueOptions?: Array<string>;
+  valueOptions?: string[];
   /**
    * Allows to align the column values in cells.
    */
