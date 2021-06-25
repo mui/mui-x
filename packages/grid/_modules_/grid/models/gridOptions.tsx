@@ -340,7 +340,7 @@ export interface GridOptions {
    * Callback fired when a column is resized.
    * @param param With all properties from [[GridColumnResizeParams]].
    */
-  onColumnResizeCommitted?: (param: GridColumnResizeParams) => void;
+  onColumnWidthChange?: (param: GridColumnResizeParams) => void;
   /**
    * Callback fired when a column visibility changes.
    * @param param With all properties from [[GridColumnVisibilityChangeParams]].
