@@ -207,6 +207,9 @@ export const useGridSelection = (apiRef: GridApiRef): void => {
         }
       });
       if (hasChanged) {
+        apiRef.current.publishEvent(GRID_SELECTION_CHANGE, {
+          selectionModel: Object.values(newSelectionState),
+        });
         return { ...state, selection: newSelectionState };
       }
       return state;
@@ -233,6 +236,9 @@ export const useGridSelection = (apiRef: GridApiRef): void => {
         }
       });
       if (hasChanged) {
+        apiRef.current.publishEvent(GRID_SELECTION_CHANGE, {
+          selectionModel: Object.values(newSelectionState),
+        });
         return { ...state, selection: newSelectionState };
       }
       return state;

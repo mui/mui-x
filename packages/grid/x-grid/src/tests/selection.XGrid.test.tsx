@@ -138,6 +138,22 @@ describe('<XGrid /> - Selection', () => {
     expect(getSelectedRows(apiRef)).to.deep.equal([0]);
   });
 
+  it('should call onSelectionModelChange when selection state changes', () => {
+    const onSelectionModelChange = spy();
+    const { setProps } = render(
+      <Test selectionModel={[0]} onSelectionModelChange={onSelectionModelChange} />,
+    );
+    setProps({
+      rows: [
+        {
+          id: 1,
+          brand: 'Nike',
+        },
+      ],
+    });
+    expect(onSelectionModelChange.callCount).to.equal(2);
+  });
+
   it('should select only filtered rows after filter is applied', () => {
     render(<Test checkboxSelection />);
     const selectAll = screen.getByRole('checkbox', {
