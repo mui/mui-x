@@ -16,7 +16,7 @@ const renderSelectOptions = ({ valueOptions }: GridColDef) =>
       <option key={option.value} value={option.value}>
         {option.label}
       </option>
-    )
+    ),
   );
 
 export const SUBMIT_FILTER_STROKE_TIME = 500;
