@@ -4,6 +4,17 @@ import MenuItem from '@material-ui/core/MenuItem';
 import { GridCellParams } from '../../models/params/gridCellParams';
 import { GRID_CELL_EDIT_PROPS_CHANGE_COMMITTED } from '../../constants/eventsConstants';
 
+const renderSelectOptions = (option) =>
+  typeof option === 'string' ? (
+    <MenuItem key={option} value={option}>
+      {option}
+    </MenuItem>
+  ) : (
+    <MenuItem key={option.value} value={option.value}>
+      {option.label}
+    </MenuItem>
+  );
+
 export function GridEditSelectCell(props: GridCellParams & SelectProps) {
   const {
     id,
@@ -21,29 +32,23 @@ export function GridEditSelectCell(props: GridCellParams & SelectProps) {
     ...other
   } = props;
 
-  const handleChange = React.useCallback(
-    (event) => {
-      const newValue = event.target.value;
-      const editProps = { value: newValue };
+  const handleChange = (event) => {
+    const newValue = event.target.value;
+    const editProps = { value: newValue };
 
-      api.publishEvent(
-        GRID_CELL_EDIT_PROPS_CHANGE_COMMITTED,
-        { id, field, props: editProps },
-        event,
-      );
+    api.publishEvent(
+      GRID_CELL_EDIT_PROPS_CHANGE_COMMITTED,
+      { id, field, props: editProps },
+      event,
+    );
+    api.setCellMode(id, field, 'view');
+  };
+
+  const handleClose = (event, reason) => {
+    if (reason === 'backdropClick') {
       api.setCellMode(id, field, 'view');
-    },
-    [api, field, id],
-  );
-
-  const handleClose = React.useCallback(
-    (event, reason) => {
-      if (reason === 'backdropClick') {
-        api.setCellMode(id, field, 'view');
-      }
-    },
-    [api, field, id],
-  );
+    }
+  };
 
   return (
     <Select
@@ -57,13 +62,7 @@ export function GridEditSelectCell(props: GridCellParams & SelectProps) {
       open
       {...other}
     >
-      {colDef.valueOptions.map((option) => {
-        return (
-          <MenuItem key={option} value={option}>
-            {option}
-          </MenuItem>
-        );
-      })}
+      {colDef.valueOptions.map(renderSelectOptions)}
     </Select>
   );
 }

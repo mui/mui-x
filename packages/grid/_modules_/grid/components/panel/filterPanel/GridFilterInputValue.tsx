@@ -7,11 +7,17 @@ import { GridFilterInputValueProps } from './GridFilterInputValueProps';
 import { GridColDef } from '../../../models/colDef/gridColDef';
 
 const renderSelectOptions = ({ valueOptions }: GridColDef) =>
-  valueOptions!.map((option) => (
-    <option key={option} value={option}>
-      {option}
-    </option>
-  ));
+  valueOptions!.map((option) =>
+    typeof option === 'string' ? (
+      <option key={option} value={option}>
+        {option}
+      </option>
+    ) : (
+      <option key={option.value} value={option.value}>
+        {option.label}
+      </option>
+    )
+  );
 
 export const SUBMIT_FILTER_STROKE_TIME = 500;
 

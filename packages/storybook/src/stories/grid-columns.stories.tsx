@@ -318,16 +318,39 @@ export const ValueGetterAndFormatter = () => {
 };
 
 export const SelectColumnType = () => {
+  const countries = [
+    {
+      value: 'bg',
+      label: 'Bulgaria',
+    },
+    {
+      value: 'nl',
+      label: 'Netherlands',
+    },
+    {
+      value: 'fr',
+      label: 'France',
+    },
+    {
+      value: 'it',
+      label: 'Italy',
+    },
+  ];
+
   const [data] = React.useState({
     rows: [
-      { id: 0, country: 'Bulgaria' },
-      { id: 1, country: 'Netherlands' },
+      { id: 0, country: 'bg' },
+      { id: 1, country: 'nl' },
     ],
     columns: [
       {
         field: 'country',
         type: 'select',
-        valueOptions: ['Bulgaria', 'Netherlands', 'France', 'Italy'],
+        valueOptions: countries,
+        valueFormatter: (params) => {
+          const result = countries.filter((country) => country.value === params.value)[0];
+          return result.label;
+        },
         editable: true,
         width: 200,
       },

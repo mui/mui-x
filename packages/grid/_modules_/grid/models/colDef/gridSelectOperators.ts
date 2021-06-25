@@ -11,11 +11,7 @@ export const getGridSelectOperators: () => GridFilterOperator[] = () => [
       }
 
       return ({ value }): boolean => {
-        return (
-          filterItem.value?.localeCompare((value && value.toString()) || '', undefined, {
-            sensitivity: 'base',
-          }) === 0
-        );
+        return filterItem.value === value;
       };
     },
     InputComponent: GridFilterInputValue,
@@ -29,11 +25,7 @@ export const getGridSelectOperators: () => GridFilterOperator[] = () => [
       }
 
       return ({ value }): boolean => {
-        return (
-          filterItem.value?.localeCompare((value && value.toString()) || '', undefined, {
-            sensitivity: 'base',
-          }) !== 0
-        );
+        return filterItem.value !== value;
       };
     },
     InputComponent: GridFilterInputValue,
