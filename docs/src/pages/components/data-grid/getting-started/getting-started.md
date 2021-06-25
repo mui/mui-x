@@ -112,7 +112,7 @@ See [Pricing](https://material-ui.com/store/items/material-ui-pro/) for details 
 
 ### Try XGrid for free
 
-You are free to try out `XGrid` as long as it's not used for a project intended for production.
+You are free to install and try `XGrid` as long as it is not used for development of a feature intended for production.
 Please take the component for a test run, no need to contact us.
 
 ### Invalid license
