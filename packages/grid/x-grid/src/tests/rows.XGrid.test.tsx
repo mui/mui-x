@@ -476,10 +476,11 @@ describe('<XGrid /> - Rows', () => {
         const width = 300;
         const border = 1;
         const columnWidth = 120;
-        const rows = [{ id: 0, first: 'Mike', age: 11 }];
+        const rows = [{ id: 0, firstName: 'John', lastName: 'Doe', age: 11 }];
         const columns = [
           { field: 'id', width: columnWidth },
-          { field: 'first', width: columnWidth },
+          { field: 'firstName', width: columnWidth },
+          { field: 'lastName', width: columnWidth },
           { field: 'age', width: columnWidth },
         ];
         render(<TestCaseVirtualization width={width + border * 2} rows={rows} columns={columns} />);
