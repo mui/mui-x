@@ -452,19 +452,44 @@ describe('<XGrid /> - Rows', () => {
       it('should scroll correctly when the given index is partially visible at the bottom', () => {
         const headerHeight = 40;
         const rowHeight = 50;
+        const offset = 10;
         const border = 1;
         render(
           <TestCaseVirtualization
             hideFooter
             headerHeight={headerHeight}
-            height={headerHeight + 4 * rowHeight + 10 + border * 2}
+            height={headerHeight + 4 * rowHeight + offset + border * 2}
             nbCols={2}
             rowHeight={rowHeight}
           />,
         );
         const gridWindow = document.querySelector('.MuiDataGrid-window')!;
         apiRef.current.scrollToIndexes({ rowIndex: 4, colIndex: 0 });
-        expect(gridWindow.scrollTop).to.equal(rowHeight);
+        expect(gridWindow.scrollTop).to.equal(rowHeight - offset);
+      });
+
+      it('should scroll correctly when the given index is partially visible at the top', () => {
+        const headerHeight = 40;
+        const rowHeight = 50;
+        const offset = 10;
+        const border = 1;
+        render(
+          <TestCaseVirtualization
+            hideFooter
+            headerHeight={headerHeight}
+            height={headerHeight + 4 * rowHeight + border + border * 2}
+            nbCols={2}
+            rowHeight={rowHeight}
+          />,
+        );
+        const gridWindow = document.querySelector('.MuiDataGrid-window')!;
+        gridWindow.scrollTop = offset;
+        apiRef.current.scrollToIndexes({ rowIndex: 2, colIndex: 0 });
+        expect(gridWindow.scrollTop).to.equal(offset);
+        apiRef.current.scrollToIndexes({ rowIndex: 1, colIndex: 0 });
+        expect(gridWindow.scrollTop).to.equal(offset);
+        apiRef.current.scrollToIndexes({ rowIndex: 0, colIndex: 0 });
+        expect(gridWindow.scrollTop).to.equal(0);
       });
     });
   });
