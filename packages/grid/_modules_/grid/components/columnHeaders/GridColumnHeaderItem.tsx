@@ -147,8 +147,6 @@ export function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
     ...classNames,
   );
 
-  const width = column.width!;
-
   let ariaSort: any;
   if (sortDirection != null) {
     ariaSort = {
@@ -189,6 +187,9 @@ export function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
     }
   });
 
+  const width = column.width!;
+  const minWidth = column.minWidth;
+
   return (
     <div
       ref={headerCellRef}
@@ -197,7 +198,7 @@ export function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
       data-field={column.field}
       style={{
         width,
-        minWidth: column.minWidth || width,
+        minWidth: minWidth !== undefined ? minWidth : width,
         maxWidth: width,
       }}
       role="columnheader"
