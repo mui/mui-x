@@ -232,7 +232,7 @@ export const useGridVirtualRows = (apiRef: GridApiRef): void => {
         }
       }
 
-      const needScroll = !isColVisible || scrollCoordinates.top !== windowRef.current!.clientHeight;
+      const needScroll = !isColVisible || typeof scrollCoordinates.top !== undefined;
       if (needScroll) {
         apiRef.current.scroll(scrollCoordinates);
       }
