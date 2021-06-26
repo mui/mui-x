@@ -217,6 +217,7 @@ export const useGridVirtualRows = (apiRef: GridApiRef): void => {
         }
       }
 
+      // Logic copied from https://www.w3.org/TR/wai-aria-practices/examples/listbox/js/listbox.js
       if (params.rowIndex != null) {
         const elementIndex = !options.pagination
           ? params.rowIndex
