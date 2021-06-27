@@ -3228,7 +3228,7 @@
     prop-types "^15.7.2"
     react-is "^17.0.0"
 
-"@material-ui/utils@5.0.0-alpha.35", "@material-ui/utils@^5.0.0-alpha.14":
+"@material-ui/utils@5.0.0-alpha.35":
   version "5.0.0-alpha.35"
   resolved "https://registry.yarnpkg.com/@material-ui/utils/-/utils-5.0.0-alpha.35.tgz#89078592c42bca5db712e82e12d56cd4be737c01"
   integrity sha512-Msu+zIXd7Y2JrTU9JIf0xjjjAMdWEIdlj2Tmj9bSYFF6bgStrQ1WXXZxxFz5GmdzT7FcLi5U3PqBynSNX/QDGA==
@@ -3247,6 +3247,17 @@
     "@babel/runtime" "^7.4.4"
     prop-types "^15.7.2"
     react-is "^16.8.0 || ^17.0.0"
+
+"@material-ui/utils@^5.0.0-alpha.14":
+  version "5.0.0-alpha.36"
+  resolved "https://registry.yarnpkg.com/@material-ui/utils/-/utils-5.0.0-alpha.36.tgz#ce8109f863bea3e66f20c22832c8fa678182f160"
+  integrity sha512-HnDeA1C4u4DwPGXJrCaqhgOGV2lezrmodTUkKB7gd5l2Cjd1V/RmsOEB37e/k15oPA8PwDeWlQzhsppMcr1jlw==
+  dependencies:
+    "@babel/runtime" "^7.4.4"
+    "@types/prop-types" "^15.7.3"
+    "@types/react-is" "^16.7.1 || ^17.0.0"
+    prop-types "^15.7.2"
+    react-is "^17.0.0"
 
 "@mdx-js/loader@^1.6.22":
   version "1.6.22"
