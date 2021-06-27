@@ -79,7 +79,7 @@ describe('<XGrid /> - Filter', () => {
     );
   };
 
-  const model = {
+  const filterModel = {
     items: [
       {
         columnField: 'brand',
@@ -90,13 +90,13 @@ describe('<XGrid /> - Filter', () => {
   };
 
   it('should apply the filterModel prop correctly', () => {
-    render(<TestCase filterModel={model} />);
+    render(<TestCase filterModel={filterModel} />);
 
     expect(getColumnValues()).to.deep.equal(['Adidas', 'Puma']);
   });
 
   it('should apply the filterModel prop correctly on GridApiRef setRows', () => {
-    render(<TestCase filterModel={model} />);
+    render(<TestCase filterModel={filterModel} />);
 
     const newRows = [
       {
@@ -118,7 +118,7 @@ describe('<XGrid /> - Filter', () => {
   });
 
   it('should apply the filterModel prop correctly on GridApiRef update row data', () => {
-    render(<TestCase filterModel={model} />);
+    render(<TestCase filterModel={filterModel} />);
     apiRef.current.updateRows([{ id: 1, brand: 'Fila' }]);
     apiRef.current.updateRows([{ id: 0, brand: 'Patagonia' }]);
     clock.tick(100);
@@ -126,7 +126,7 @@ describe('<XGrid /> - Filter', () => {
   });
 
   it('should allow apiRef to setFilterModel', () => {
-    render(<TestCase filterModel={model} />);
+    render(<TestCase filterModel={filterModel} />);
     apiRef.current.setFilterModel({
       items: [
         {
@@ -159,7 +159,7 @@ describe('<XGrid /> - Filter', () => {
   });
 
   it('should allow multiple filter via apiRef', () => {
-    render(<TestCase filterModel={model} />);
+    render(<TestCase filterModel={filterModel} />);
     const newModel = {
       items: [
         {
@@ -275,7 +275,7 @@ describe('<XGrid /> - Filter', () => {
 
     render(
       <TestCase
-        filterModel={model}
+        filterModel={filterModel}
         onFilterModelChange={onFilterChange}
         state={{
           preferencePanel: {
@@ -422,7 +422,7 @@ describe('<XGrid /> - Filter', () => {
   it('should display the number of results in the footer', () => {
     const { setProps } = render(<TestCase />);
     expect(screen.getByText('Total Rows: 3')).not.to.equal(null);
-    setProps({ filterModel: model });
+    setProps({ filterModel });
     expect(screen.getByText('Total Rows: 2 of 3')).not.to.equal(null);
   });
 });
