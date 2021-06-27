@@ -267,16 +267,16 @@ describe('<XGrid /> - Filter', () => {
     expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
   });
 
-  it('should show the latest visibleRows onFilterChange', () => {
+  it('should show the latest visible rows', () => {
     let visibleRows: Map<GridRowId, GridRowModel> = new Map();
-    const onFilterChange = (params: GridFilterModelParams) => {
+    const handleFilterChange = (params: GridFilterModelParams) => {
       visibleRows = params.visibleRows;
     };
 
     render(
       <TestCase
         filterModel={filterModel}
-        onFilterModelChange={onFilterChange}
+        onFilterModelChange={handleFilterChange}
         state={{
           preferencePanel: {
             open: true,
@@ -370,7 +370,7 @@ describe('<XGrid /> - Filter', () => {
         const [rows, setRows] = React.useState<GridRowModel[]>([]);
         const [filterValue, setFilterValue] = React.useState();
 
-        const onFilterChange = React.useCallback((params) => {
+        const handleFilterChange = React.useCallback((params) => {
           setFilterValue(params.filterModel.items[0].value);
         }, []);
 
@@ -398,7 +398,7 @@ describe('<XGrid /> - Filter', () => {
               rows={rows}
               columns={columns}
               filterMode="server"
-              onFilterModelChange={onFilterChange}
+              onFilterModelChange={handleFilterChange}
               state={{
                 preferencePanel: {
                   open: true,
