@@ -449,26 +449,33 @@ describe('<XGrid /> - Rows', () => {
     });
 
     describe('scrollToIndexes', () => {
-      it('should scroll correctly to the previous index', () => {
-        render(<TestCaseVirtualization hideFooter headerHeight={50} nbCols={2} rowHeight={50} />);
-        const gridWindow = document.querySelector('.MuiDataGrid-window')!;
-        const renderingZone = document.querySelector('.MuiDataGrid-renderingZone')! as HTMLElement;
-        // Ensure that there's no offset row
-        expect(renderingZone.style.transform).to.equal('translate3d(0px, 0px, 0px)');
-        // Scroll to the rowIndex=5, which is the 2nd row in page 1
-        gridWindow.scrollTop = 202;
-        gridWindow.dispatchEvent(new Event('scroll'));
-        // Round the value to prevent inconsistencies across different browsers
-        const offset = Math.round(
-          Number(renderingZone.style.transform.match(/\dpx, ([-\d.]+)px, \dpx/)![1]),
+      it('should scroll correctly to the previous row of the first visible row', () => {
+        const headerHeight = 50;
+        const rowHeight = 50;
+        const border = 1;
+        const rowsToFullyDisplay = 4;
+        const viewportHeight = (rowsToFullyDisplay + 0.5) * rowHeight;
+
+        // The height where virtualization changes from one page to another
+        const renderingZoneHeight = rowsToFullyDisplay * 2 * rowHeight - viewportHeight;
+
+        render(
+          <TestCaseVirtualization
+            hideFooter
+            height={viewportHeight + headerHeight + border * 2}
+            headerHeight={headerHeight}
+            nbCols={2}
+            rowHeight={rowHeight}
+          />,
         );
-        // Ensure that there's one offset row
-        expect(offset).to.equal(-50);
+        const gridWindow = document.querySelector('.MuiDataGrid-window')!;
+        // Scroll to the rowIndex=5, which is the 2nd row in page 1
+        gridWindow.scrollTop = renderingZoneHeight + rowHeight;
+        gridWindow.dispatchEvent(new Event('scroll'));
         // Scroll to rowIndex=4, which is the 1st row in page 1
         apiRef.current.scrollToIndexes({ rowIndex: 4, colIndex: 0 });
         gridWindow.dispatchEvent(new Event('scroll'));
-        // Ensure that there's no offset row
-        expect(renderingZone.style.transform).to.equal('translate3d(0px, 0px, 0px)');
+        expect(gridWindow.scrollTop).to.equal(renderingZoneHeight);
       });
 
       it('should scroll correctly when the given index is partially visible at the bottom', () => {
