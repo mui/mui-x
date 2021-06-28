@@ -364,6 +364,10 @@ describe('<DataGrid /> - Pagination', () => {
 
         // rows = document.querySelectorAll('.MuiDataGrid-viewport [role="row"]');
         // expect(rows.length).to.equal(expectedViewportRowsLengthAfter);
+
+        console.log(onPageSizeChange.getCalls().map(el => el.args[0]))
+        console.log(expectedViewportRowsLengthAfter)
+
         expect(onPageSizeChange.lastCall.args[0].pageSize).to.equal(
           expectedViewportRowsLengthAfter,
         );
