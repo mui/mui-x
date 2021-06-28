@@ -151,6 +151,7 @@ describe('<XGrid /> - Selection', () => {
         },
       ],
     });
+    // TODO should only fire once
     expect(handleSelectionModelChange.callCount).to.equal(2);
   });
 
