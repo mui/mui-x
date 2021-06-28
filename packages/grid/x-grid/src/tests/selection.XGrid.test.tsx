@@ -143,6 +143,8 @@ describe('<XGrid /> - Selection', () => {
     const { setProps } = render(
       <Test selectionModel={[0]} onSelectionModelChange={handleSelectionModelChange} />,
     );
+    expect(getSelectedRows(apiRef)).to.deep.equal([0]);
+    expect(handleSelectionModelChange.getCall(0).args[0]).to.deep.equal({ selectionModel: [0] });
     setProps({
       rows: [
         {
@@ -153,6 +155,8 @@ describe('<XGrid /> - Selection', () => {
     });
     // TODO should only fire once
     expect(handleSelectionModelChange.callCount).to.equal(2);
+    expect(getSelectedRows(apiRef)).to.deep.equal([]);
+    expect(handleSelectionModelChange.getCall(1).args[0]).to.deep.equal({ selectionModel: [] });
   });
 
   it('should select only filtered rows after filter is applied', () => {
