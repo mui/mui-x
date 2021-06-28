@@ -1,8 +1,10 @@
 import * as React from 'react';
-import { createClientRenderStrictMode } from 'test/utils';
+import {
+  createClientRenderStrictMode,
+} from 'test/utils';
 import { expect } from 'chai';
 import { DataGrid } from '@material-ui/data-grid';
-import { getColumnHeaderCell } from 'test/utils/helperFn';
+import {getColumnHeaderCell} from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -16,14 +18,17 @@ describe('<DataGrid /> - Column Headers', () => {
       {
         id: 0,
         brand: 'Nike',
+        foundationYear: 1964,
       },
       {
         id: 1,
         brand: 'Adidas',
+        foundationYear: 1949,
       },
       {
         id: 2,
         brand: 'Puma',
+        foundationYear: 1948,
       },
     ],
   };

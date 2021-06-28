@@ -295,6 +295,10 @@ export const useGridColumnResize = (apiRef: GridApiRef) => {
       setGridState((oldState) => ({
         ...oldState,
         columnResize: { ...oldState.columnResize, resizingColumnField: field },
+        columnMenu: oldState.columnMenu.open ? {
+          ...oldState,
+          open: false,
+        } : oldState.columnMenu,
       }));
       forceUpdate();
     },
