@@ -328,15 +328,15 @@ describe('<DataGrid /> - Pagination', () => {
           const data = useData(props.nbRows, 10);
 
           return (
-              <div style={{ width: 300, height: props.height }}>
-                <DataGrid
-                    columns={data.columns}
-                    rows={data.rows}
-                    autoPageSize
-                    pagination
-                    onPageSizeChange={onPageSizeChange}
-                />
-              </div>
+            <div style={{ width: 300, height: props.height }}>
+              <DataGrid
+                columns={data.columns}
+                rows={data.rows}
+                autoPageSize
+                pagination
+                onPageSizeChange={onPageSizeChange}
+              />
+            </div>
           );
         };
         const nbRows = 27;
@@ -347,11 +347,11 @@ describe('<DataGrid /> - Pagination', () => {
 
         const footerHeight = document.querySelector('.MuiDataGrid-footerContainer')!.clientHeight;
         const expectedViewportRowsLengthBefore = Math.floor(
-            (heightBefore - DEFAULT_GRID_OPTIONS.headerHeight - footerHeight) /
+          (heightBefore - DEFAULT_GRID_OPTIONS.headerHeight - footerHeight) /
             DEFAULT_GRID_OPTIONS.rowHeight,
         );
         const expectedViewportRowsLengthAfter = Math.floor(
-            (heightAfter - DEFAULT_GRID_OPTIONS.headerHeight - footerHeight) /
+          (heightAfter - DEFAULT_GRID_OPTIONS.headerHeight - footerHeight) /
             DEFAULT_GRID_OPTIONS.rowHeight,
         );
 
@@ -364,7 +364,9 @@ describe('<DataGrid /> - Pagination', () => {
 
         rows = document.querySelectorAll('.MuiDataGrid-viewport [role="row"]');
         expect(rows.length).to.equal(expectedViewportRowsLengthAfter);
-        expect(onPageSizeChange.lastCall.args[0].pageSize).to.equal(expectedViewportRowsLengthAfter);
+        expect(onPageSizeChange.lastCall.args[0].pageSize).to.equal(
+          expectedViewportRowsLengthAfter,
+        );
       });
     });
   });
