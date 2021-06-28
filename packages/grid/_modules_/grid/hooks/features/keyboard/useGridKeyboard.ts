@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { GRID_ROW_CSS_CLASS } from '../../../constants/cssClassesConstants';
 import {
-  GRID_CELL_KEYDOWN,
-  GRID_CELL_NAVIGATION_KEYDOWN,
-  GRID_COLUMN_HEADER_KEYDOWN,
-  GRID_COLUMN_HEADER_NAVIGATION_KEYDOWN,
+  GRID_CELL_KEY_DOWN,
+  GRID_CELL_NAVIGATION_KEY_DOWN,
+  GRID_COLUMN_HEADER_KEY_DOWN,
+  GRID_COLUMN_HEADER_NAVIGATION_KEY_DOWN,
 } from '../../../constants/eventsConstants';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridCellParams } from '../../../models/params/gridCellParams';
@@ -28,7 +28,7 @@ export const useGridKeyboard = (apiRef: GridApiRef): void => {
   const expandSelection = React.useCallback(
     (params: GridCellParams, event: React.KeyboardEvent) => {
       const rowEl = findParentElementFromClassName(
-        event.target as HTMLElement as HTMLDivElement,
+        event.target as HTMLDivElement,
         GRID_ROW_CSS_CLASS,
       )! as HTMLElement;
 
@@ -47,7 +47,7 @@ export const useGridKeyboard = (apiRef: GridApiRef): void => {
         selectionFromRowIndex = selectedRowsIndex[diffWithCurrentIndex.indexOf(minIndex)];
       }
 
-      apiRef.current.publishEvent(GRID_CELL_NAVIGATION_KEYDOWN, params, event);
+      apiRef.current.publishEvent(GRID_CELL_NAVIGATION_KEY_DOWN, params, event);
 
       const focusCell = apiRef.current.getState().focus.cell!;
       const rowIndex = apiRef.current.getRowIndex(focusCell.id);
@@ -81,31 +81,36 @@ export const useGridKeyboard = (apiRef: GridApiRef): void => {
 
   const handleCellKeyDown = React.useCallback(
     (params: GridCellParams, event: React.KeyboardEvent) => {
-      if (!isGridCellRoot(event.target as HTMLElement)) {
+      // The target is not an element when triggered by a Select inside the cell
+      // See https://github.com/mui-org/material-ui/issues/10534
+      if ((event.target as any).nodeType === 1 && !isGridCellRoot(event.target as Element)) {
         return;
       }
       if (event.isPropagationStopped()) {
         return;
       }
-      const isEditMode = params.cellMode === 'edit';
+
+      // Get the most recent params because the cell mode may have changed by another listener
+      const cellParams = apiRef.current.getCellParams(params.id, params.field);
+      const isEditMode = cellParams.cellMode === 'edit';
       if (isEditMode) {
         return;
       }
 
       if (isSpaceKey(event.key) && event.shiftKey) {
         event.preventDefault();
-        apiRef.current.selectRow(params.id);
+        apiRef.current.selectRow(cellParams.id);
         return;
       }
 
       if (isNavigationKey(event.key) && !event.shiftKey) {
-        apiRef.current.publishEvent(GRID_CELL_NAVIGATION_KEYDOWN, params, event);
+        apiRef.current.publishEvent(GRID_CELL_NAVIGATION_KEY_DOWN, cellParams, event);
         return;
       }
 
       if (isNavigationKey(event.key) && event.shiftKey) {
         event.preventDefault();
-        expandSelection(params, event);
+        expandSelection(cellParams, event);
         return;
       }
 
@@ -135,7 +140,7 @@ export const useGridKeyboard = (apiRef: GridApiRef): void => {
       }
 
       if (isNavigationKey(event.key) && !isSpaceKey(event.key) && !event.shiftKey) {
-        apiRef.current.publishEvent(GRID_COLUMN_HEADER_NAVIGATION_KEYDOWN, params, event);
+        apiRef.current.publishEvent(GRID_COLUMN_HEADER_NAVIGATION_KEY_DOWN, params, event);
         return;
       }
 
@@ -146,6 +151,6 @@ export const useGridKeyboard = (apiRef: GridApiRef): void => {
     [apiRef],
   );
 
-  useGridApiEventHandler(apiRef, GRID_CELL_KEYDOWN, handleCellKeyDown);
-  useGridApiEventHandler(apiRef, GRID_COLUMN_HEADER_KEYDOWN, handleColumnHeaderKeyDown);
+  useGridApiEventHandler(apiRef, GRID_CELL_KEY_DOWN, handleCellKeyDown);
+  useGridApiEventHandler(apiRef, GRID_COLUMN_HEADER_KEY_DOWN, handleColumnHeaderKeyDown);
 };

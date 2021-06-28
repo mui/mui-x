@@ -1,9 +1,5 @@
 import * as React from 'react';
-import {
-  GRID_DEBOUNCED_RESIZE,
-  GRID_NATIVE_SCROLL,
-  GRID_ROWS_SCROLL,
-} from '../../../constants/eventsConstants';
+import { GRID_SCROLL, GRID_ROWS_SCROLL } from '../../../constants/eventsConstants';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridVirtualizationApi } from '../../../models/api/gridVirtualizationApi';
 import { GridCellIndexCoordinates } from '../../../models/gridCell';
@@ -21,7 +17,6 @@ import { useGridState } from '../core/useGridState';
 import { GridPaginationState } from '../pagination/gridPaginationState';
 import { gridPaginationSelector } from '../pagination/gridPaginationSelector';
 import { gridRowCountSelector } from '../rows/gridRowsSelector';
-import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
 import { useNativeEventListener } from '../../root/useNativeEventListener';
 import { useLogger } from '../../utils/useLogger';
@@ -234,12 +229,8 @@ export const useGridVirtualRows = (apiRef: GridApiRef): void => {
         const height = gridState.containerSizes!.renderingZoneScrollHeight;
         const scrollPosition = currentRowPage * height;
 
-        // The amount of space taken by the first partially visible row
-        const partialRowHeight = windowRef.current!.scrollTop % rowHeight;
-
         isRowIndexAbove = windowRef.current!.scrollTop > scrollPosition;
-        isRowIndexBelow =
-          scrollPosition + rowHeight > windowRef.current!.scrollTop + height + partialRowHeight;
+        isRowIndexBelow = windowRef.current!.scrollTop + height < scrollPosition + rowHeight;
 
         if (isRowIndexAbove) {
           scrollCoordinates.top = scrollPosition; // We put it at the top of the page
@@ -411,18 +402,17 @@ export const useGridVirtualRows = (apiRef: GridApiRef): void => {
     [logger],
   );
 
-  useNativeEventListener(apiRef, windowRef, GRID_NATIVE_SCROLL, handleScroll, { passive: true });
+  useNativeEventListener(apiRef, windowRef, GRID_SCROLL, handleScroll, { passive: true });
   useNativeEventListener(
     apiRef,
     () => apiRef.current?.renderingZoneRef?.current?.parentElement,
-    GRID_NATIVE_SCROLL,
+    GRID_SCROLL,
     preventViewportScroll,
   );
   useNativeEventListener(
     apiRef,
     () => apiRef.current?.columnHeadersContainerElementRef?.current?.parentElement,
-    GRID_NATIVE_SCROLL,
+    GRID_SCROLL,
     preventViewportScroll,
   );
-  useGridApiEventHandler(apiRef, GRID_DEBOUNCED_RESIZE, updateViewport);
 };

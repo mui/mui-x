@@ -7,9 +7,10 @@ import {
   GRID_CELL_DOUBLE_CLICK,
   GRID_CELL_ENTER,
   GRID_CELL_FOCUS,
-  GRID_CELL_KEYDOWN,
+  GRID_CELL_KEY_DOWN,
   GRID_CELL_LEAVE,
   GRID_CELL_MOUSE_DOWN,
+  GRID_CELL_MOUSE_UP,
   GRID_CELL_OUT,
   GRID_CELL_OVER,
   GRID_CELL_DRAG_START,
@@ -18,7 +19,7 @@ import {
 } from '../../constants/eventsConstants';
 import { GRID_CSS_CLASS_PREFIX } from '../../constants/cssClassesConstants';
 import { GridAlignment, GridCellMode, GridCellValue, GridRowId } from '../../models/index';
-import { GridApiContext } from '../GridApiContext';
+import { useGridApiContext } from '../../hooks/root/useGridApiContext';
 
 export interface GridCellProps {
   align: GridAlignment;
@@ -40,7 +41,7 @@ export interface GridCellProps {
   tabIndex: 0 | -1;
 }
 
-export const GridCell = React.memo((props: GridCellProps) => {
+export const GridCell = React.memo(function GridCell(props: GridCellProps) {
   const {
     align,
     className,
@@ -63,11 +64,11 @@ export const GridCell = React.memo((props: GridCellProps) => {
 
   const valueToRender = formattedValue == null ? value : formattedValue;
   const cellRef = React.useRef<HTMLDivElement>(null);
-  const apiRef = React.useContext(GridApiContext);
+  const apiRef = useGridApiContext();
 
-  const cssClasses = clsx(className, `${GRID_CSS_CLASS_PREFIX}-cell${capitalize(align)}`, {
+  const cssClasses = clsx(className, `${GRID_CSS_CLASS_PREFIX}-cell--text${capitalize(align)}`, {
     [`${GRID_CSS_CLASS_PREFIX}-withBorder`]: showRightBorder,
-    [`${GRID_CSS_CLASS_PREFIX}-cellEditable`]: isEditable,
+    [`${GRID_CSS_CLASS_PREFIX}-cell--editable`]: isEditable,
   });
 
   const publishBlur = React.useCallback(
@@ -86,13 +87,10 @@ export const GridCell = React.memo((props: GridCellProps) => {
     [apiRef, field, rowId],
   );
 
-  const publishClick = React.useCallback(
+  const publishMouseUp = React.useCallback(
     (eventName: string) => (event: React.MouseEvent) => {
       const params = apiRef!.current.getCellParams(rowId, field || '');
       apiRef!.current.publishEvent(eventName, params, event);
-      if (params?.colDef.disableClickEventBubbling) {
-        event.stopPropagation();
-      }
     },
     [apiRef, field, rowId],
   );
@@ -100,7 +98,12 @@ export const GridCell = React.memo((props: GridCellProps) => {
   const publish = React.useCallback(
     (eventName: string) => (event: React.SyntheticEvent) => {
       // Ignore portal
-      if (!event.currentTarget.contains(event.target as HTMLElement)) {
+      // The target is not an element when triggered by a Select inside the cell
+      // See https://github.com/mui-org/material-ui/issues/10534
+      if (
+        (event.target as any).nodeType === 1 &&
+        !event.currentTarget.contains(event.target as Element)
+      ) {
         return;
       }
 
@@ -115,21 +118,22 @@ export const GridCell = React.memo((props: GridCellProps) => {
 
   const eventsHandlers = React.useMemo(
     () => ({
-      onClick: publishClick(GRID_CELL_CLICK),
+      onClick: publish(GRID_CELL_CLICK),
       onDoubleClick: publish(GRID_CELL_DOUBLE_CLICK),
       onMouseDown: publish(GRID_CELL_MOUSE_DOWN),
+      onMouseUp: publishMouseUp(GRID_CELL_MOUSE_UP),
       onMouseOver: publish(GRID_CELL_OVER),
       onMouseOut: publish(GRID_CELL_OUT),
       onMouseEnter: publish(GRID_CELL_ENTER),
       onMouseLeave: publish(GRID_CELL_LEAVE),
-      onKeyDown: publish(GRID_CELL_KEYDOWN),
+      onKeyDown: publish(GRID_CELL_KEY_DOWN),
       onBlur: publishBlur(GRID_CELL_BLUR),
       onFocus: publish(GRID_CELL_FOCUS),
       onDragStart: publish(GRID_CELL_DRAG_START),
       onDragEnter: publish(GRID_CELL_DRAG_ENTER),
       onDragOver: publish(GRID_CELL_DRAG_OVER),
     }),
-    [publish, publishBlur, publishClick],
+    [publish, publishBlur, publishMouseUp],
   );
 
   const style = {
@@ -178,5 +182,3 @@ export const GridCell = React.memo((props: GridCellProps) => {
     </div>
   );
 });
-
-GridCell.displayName = 'GridCell';

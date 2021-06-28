@@ -226,7 +226,7 @@ export function ServerFilterViaProps() {
   });
   const [loading, setLoading] = React.useState(false);
 
-  const applyFilter = React.useCallback(() => {
+  const applyFilters = React.useCallback(() => {
     if (!filterModel.items.length) {
       setRows(demoServer.data.rows);
     } else {
@@ -261,8 +261,8 @@ export function ServerFilterViaProps() {
   );
 
   React.useEffect(() => {
-    applyFilter();
-  }, [applyFilter, demoServer.data.rows]);
+    applyFilters();
+  }, [applyFilters, demoServer.data.rows]);
 
   return (
     <div className="grid-container">

@@ -272,6 +272,7 @@ export default function FullFeaturedDemo() {
     dataSet: type,
     rowLength: size,
     maxColumns: 20,
+    editable: true,
   });
 
   const [pagination, setPagination] = React.useState<GridPaginationSettings>({
@@ -290,7 +291,7 @@ export default function FullFeaturedDemo() {
     }
 
     if (type !== settings.type) {
-      setType(settings.type.toLowerCase());
+      setType(settings.type);
     }
 
     if (getActiveTheme() !== settings.theme) {
@@ -342,6 +343,7 @@ export default function FullFeaturedDemo() {
         }}
         loading={loading}
         checkboxSelection
+        disableSelectionOnClick
         {...pagination}
       />
     </div>

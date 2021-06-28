@@ -8,7 +8,7 @@ import { makeStyles } from '@material-ui/styles';
 import { allGridColumnsSelector } from '../../hooks/features/columns/gridColumnsSelector';
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
 import { optionsSelector } from '../../hooks/utils/optionsSelector';
-import { GridApiContext } from '../GridApiContext';
+import { useGridApiContext } from '../../hooks/root/useGridApiContext';
 import { GridDragIcon } from '../icons/index';
 import { GridPanelContent } from './GridPanelContent';
 import { GridPanelFooter } from './GridPanelFooter';
@@ -37,7 +37,7 @@ const useStyles = makeStyles(
 
 export function GridColumnsPanel() {
   const classes = useStyles();
-  const apiRef = React.useContext(GridApiContext);
+  const apiRef = useGridApiContext();
   const searchInputRef = React.useRef<HTMLInputElement>(null);
   const columns = useGridSelector(apiRef, allGridColumnsSelector);
   const { disableColumnReorder } = useGridSelector(apiRef, optionsSelector);

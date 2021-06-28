@@ -5,7 +5,7 @@ import { makeStyles } from '@material-ui/styles';
 import { useGridSelector } from '../hooks/features/core/useGridSelector';
 import { gridPaginationSelector } from '../hooks/features/pagination/gridPaginationSelector';
 import { optionsSelector } from '../hooks/utils/optionsSelector';
-import { GridApiContext } from './GridApiContext';
+import { useGridApiContext } from '../hooks/root/useGridApiContext';
 import { isMuiV5, createTheme } from '../utils';
 
 const defaultTheme = createTheme();
@@ -42,7 +42,7 @@ export const GridPagination = React.forwardRef<
   React.HTMLAttributes<HTMLDivElement>
 >(function GridPagination(props, ref) {
   const classes = useStyles();
-  const apiRef = React.useContext(GridApiContext);
+  const apiRef = useGridApiContext();
   const paginationState = useGridSelector(apiRef, gridPaginationSelector);
   const lastPage = React.useMemo(
     () => Math.floor(paginationState.rowCount / (paginationState.pageSize || 1)),
@@ -97,6 +97,7 @@ export const GridPagination = React.forwardRef<
           : []
       }
       rowsPerPage={paginationState.pageSize}
+      {...apiRef!.current.getLocaleText('MuiTablePagination')}
       {...getPaginationChangeHandlers()}
       {...props}
     />

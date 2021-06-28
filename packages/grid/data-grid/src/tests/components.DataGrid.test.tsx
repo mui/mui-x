@@ -1,7 +1,10 @@
 import * as React from 'react';
-import { createClientRenderStrictMode } from 'test/utils';
+import {
+  createClientRenderStrictMode, // @ts-expect-error need to migrate helpers to TypeScript
+  ErrorBoundary,
+} from 'test/utils';
 import { expect } from 'chai';
-import { DataGrid } from '@material-ui/data-grid';
+import { DataGrid, GridOverlay } from '@material-ui/data-grid';
 
 describe('<DataGrid /> - Components', () => {
   // TODO v5: replace with createClientRender
@@ -32,7 +35,7 @@ describe('<DataGrid /> - Components', () => {
           <DataGrid {...baselineProps} hideFooter />
         </div>,
       );
-      expect(document.querySelectorAll('.MuiDataGrid-footer').length).to.equal(0);
+      expect(document.querySelectorAll('.MuiDataGrid-footerContainer').length).to.equal(0);
     });
 
     it('should hide custom footer if prop hideFooter is set', () => {
@@ -44,5 +47,26 @@ describe('<DataGrid /> - Components', () => {
       );
       expect(document.querySelectorAll('.customFooter').length).to.equal(0);
     });
+  });
+
+  it('should throw if a component is used without providing the context', function test() {
+    // TODO is this fixed?
+    if (!/jsdom/.test(window.navigator.userAgent)) {
+      // can't catch render errors in the browser for unknown reason
+      // tried try-catch + error boundary + window onError preventDefault
+      this.skip();
+    }
+
+    expect(() => {
+      render(
+        <ErrorBoundary>
+          <GridOverlay />
+        </ErrorBoundary>,
+      );
+      // @ts-expect-error need to migrate helpers to TypeScript
+    }).toErrorDev([
+      'Material-UI X: Could not find the data grid context.',
+      'The above error occurred in the <ForwardRef(GridOverlay)> component',
+    ]);
   });
 });

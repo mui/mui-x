@@ -8,7 +8,7 @@ import {
   GRID_COLUMN_RESIZE_START,
   GRID_COLUMN_RESIZE_STOP,
   GRID_COLUMN_RESIZE,
-  GRID_COLUMN_RESIZE_COMMITTED,
+  GRID_COLUMN_WIDTH_CHANGE,
 } from '../../../constants/eventsConstants';
 import {
   GRID_COLUMN_HEADER_CSS_CLASS,
@@ -105,7 +105,7 @@ export const useGridColumnResize = (apiRef: GridApiRef) => {
     clearTimeout(stopResizeEventTimeout.current);
     stopResizeEventTimeout.current = setTimeout(() => {
       apiRef.current.publishEvent(GRID_COLUMN_RESIZE_STOP);
-      apiRef.current.publishEvent(GRID_COLUMN_RESIZE_COMMITTED, {
+      apiRef.current.publishEvent(GRID_COLUMN_WIDTH_CHANGE, {
         element: colElementRef.current,
         colDef: colDefRef.current,
         api: apiRef,
@@ -332,5 +332,5 @@ export const useGridColumnResize = (apiRef: GridApiRef) => {
   useGridApiEventHandler(apiRef, GRID_COLUMN_RESIZE_STOP, handleResizeStop);
 
   useGridApiOptionHandler(apiRef, GRID_COLUMN_RESIZE, options.onColumnResize);
-  useGridApiOptionHandler(apiRef, GRID_COLUMN_RESIZE_COMMITTED, options.onColumnResizeCommitted);
+  useGridApiOptionHandler(apiRef, GRID_COLUMN_WIDTH_CHANGE, options.onColumnResizeCommitted);
 };

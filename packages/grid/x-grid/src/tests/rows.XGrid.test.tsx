@@ -95,13 +95,13 @@ describe('<XGrid /> - Rows', () => {
       apiRef!.current.setCellMode('c2', 'first', 'edit');
       const cell = getCell(1, 1);
 
-      expect(cell).to.have.class('MuiDataGrid-cellEditable');
-      expect(cell).to.have.class('MuiDataGrid-cellEditing');
+      expect(cell).to.have.class('MuiDataGrid-cell--editable');
+      expect(cell).to.have.class('MuiDataGrid-cell--editing');
       expect(cell.querySelector('input')!.value).to.equal('Jack');
       apiRef!.current.setCellMode('c2', 'first', 'view');
 
-      expect(cell).to.have.class('MuiDataGrid-cellEditable');
-      expect(cell).not.to.have.class('MuiDataGrid-cellEditing');
+      expect(cell).to.have.class('MuiDataGrid-cell--editable');
+      expect(cell).not.to.have.class('MuiDataGrid-cell--editing');
       expect(cell.querySelector('input')).to.equal(null);
     });
 
@@ -162,6 +162,7 @@ describe('<XGrid /> - Rows', () => {
 
     it('should allow to reset rows with setRows and render after 100ms', () => {
       render(<TestCase />);
+      expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
       const newRows = [
         {
           id: 3,
@@ -174,6 +175,14 @@ describe('<XGrid /> - Rows', () => {
       expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
       clock.tick(50);
       expect(getColumnValues()).to.deep.equal(['Asics']);
+
+      apiRef.current.setRows(baselineProps.rows);
+      // Force an update before the 100ms
+      apiRef.current.forceUpdate(() => apiRef.current.state);
+      // Tradeoff, the value is YOLO
+      expect(getColumnValues()).to.deep.equal(['Nike']);
+      clock.tick(100);
+      expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
     });
 
     it('should allow to update row data', () => {
@@ -463,26 +472,21 @@ describe('<XGrid /> - Rows', () => {
       });
 
       it('should scroll correctly when the given index is partially visible at the bottom', () => {
-        render(<TestCaseVirtualization hideFooter headerHeight={50} nbCols={2} rowHeight={50} />);
+        const headerHeight = 40;
+        const rowHeight = 50;
+        const border = 1;
+        render(
+          <TestCaseVirtualization
+            hideFooter
+            headerHeight={headerHeight}
+            height={headerHeight + 4 * rowHeight + 10 + border * 2}
+            nbCols={2}
+            rowHeight={rowHeight}
+          />,
+        );
         const gridWindow = document.querySelector('.MuiDataGrid-window')!;
-        const renderingZone = document.querySelector('.MuiDataGrid-renderingZone')! as HTMLElement;
-        // Ensure that there's no offset row
-        expect(renderingZone.style.transform).to.equal('translate3d(0px, 0px, 0px)');
-        // Scroll enough so rowIndex=7 becomes 50% visible at the bottom of the viewport
-        gridWindow.scrollTop = 125;
-        gridWindow.dispatchEvent(new Event('scroll'));
-        // Round the value to prevent inconsistencies accross different browsers
-        const offset = Math.round(
-          Number(renderingZone.style.transform.match(/\dpx, ([-\d.]+)px, \dpx/)![1]),
-        );
-        // Ensure that there're 2 fully hidden rows and 1 row 50% hidden (50+50+25)
-        expect(offset).to.equal(-125);
-        apiRef.current.scrollToIndexes({ rowIndex: 7, colIndex: 0 });
-        gridWindow.dispatchEvent(new Event('scroll'));
-        const offset2 = Math.round(
-          Number(renderingZone.style.transform.match(/\dpx, ([-\d.]+)px, \dpx/)![1]),
-        );
-        expect(offset2).to.equal(-12);
+        apiRef.current.scrollToIndexes({ rowIndex: 4, colIndex: 0 });
+        expect(gridWindow.scrollTop).to.equal(rowHeight);
       });
     });
   });

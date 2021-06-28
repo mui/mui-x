@@ -58,7 +58,7 @@ const frFRGrid: Partial<GridLocaleText> = {
   filterOperatorNot: "n'est pas",
   filterOperatorOnOrAfter: 'égal ou postérieur',
   filterOperatorAfter: 'postérieur',
-  filterOperatorOnOrBefore: 'égal ou postérieur',
+  filterOperatorOnOrBefore: 'égal ou antérieur',
   filterOperatorBefore: 'antérieur',
 
   // Column menu text

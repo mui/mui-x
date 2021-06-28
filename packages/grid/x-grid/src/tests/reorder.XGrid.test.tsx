@@ -15,7 +15,12 @@ import {
   getCell,
   raf,
 } from 'test/utils/helperFn';
-import { GridApiRef, useGridApiRef, XGrid } from '@material-ui/x-grid';
+import {
+  GridApiRef,
+  useGridApiRef,
+  XGrid,
+  GRID_COLUMN_HEADER_DRAGGING_CSS_CLASS,
+} from '@material-ui/x-grid';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -153,6 +158,67 @@ describe('<XGrid /> - Reorder', () => {
     fireEvent(targetCell, dragOverEvent);
     expect(getColumnHeadersTextContent()).to.deep.equal(['desc', 'type', 'brand']);
 
+    const dragEndEvent = createEvent.dragEnd(dragCol);
+    Object.defineProperty(dragEndEvent, 'dataTransfer', { value: { dropEffect: 'none' } });
+    fireEvent(dragCol, dragEndEvent);
+    expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
+  });
+
+  it('should keep the order of the columns when dragStart is fired and disableColumnReorder=true', () => {
+    let apiRef: GridApiRef;
+    const rows = [{ id: 0, brand: 'Nike' }];
+    const columns = [{ field: 'brand' }, { field: 'desc' }, { field: 'type' }];
+
+    const Test = () => {
+      apiRef = useGridApiRef();
+
+      return (
+        <div style={{ width: 300, height: 300 }}>
+          <XGrid
+            apiRef={apiRef}
+            rows={rows}
+            columns={columns}
+            onPageChange={() => {}}
+            disableColumnReorder
+          />
+        </div>
+      );
+    };
+
+    render(<Test />);
+    expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
+    const columnHeader = getColumnHeaderCell(0);
+    const columnHeaderDraggableContainer = columnHeader.firstChild as HTMLElement;
+    fireEvent.dragStart(columnHeaderDraggableContainer.firstChild);
+    expect(
+      columnHeaderDraggableContainer.classList.contains(GRID_COLUMN_HEADER_DRAGGING_CSS_CLASS),
+    ).to.equal(false);
+  });
+
+  it('should keep the order of the columns when dragEnd is fired and disableColumnReorder=true', () => {
+    let apiRef: GridApiRef;
+    const rows = [{ id: 0, brand: 'Nike' }];
+    const columns = [{ field: 'brand' }, { field: 'desc' }, { field: 'type' }];
+
+    const Test = () => {
+      apiRef = useGridApiRef();
+
+      return (
+        <div style={{ width: 300, height: 300 }}>
+          <XGrid
+            apiRef={apiRef}
+            rows={rows}
+            columns={columns}
+            onPageChange={() => {}}
+            disableColumnReorder
+          />
+        </div>
+      );
+    };
+
+    render(<Test />);
+    expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
+    const dragCol = getColumnHeaderCell(2).firstChild;
     const dragEndEvent = createEvent.dragEnd(dragCol);
     Object.defineProperty(dragEndEvent, 'dataTransfer', { value: { dropEffect: 'none' } });
     fireEvent(dragCol, dragEndEvent);

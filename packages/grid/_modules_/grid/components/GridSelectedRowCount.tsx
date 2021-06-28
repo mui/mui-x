@@ -1,6 +1,6 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import { GridApiContext } from './GridApiContext';
+import { useGridApiContext } from '../hooks/root/useGridApiContext';
 
 interface SelectedRowCountProps {
   selectedRowCount: number;
@@ -11,7 +11,7 @@ type GridSelectedRowCountProps = React.HTMLAttributes<HTMLDivElement> & Selected
 export const GridSelectedRowCount = React.forwardRef<HTMLDivElement, GridSelectedRowCountProps>(
   function GridSelectedRowCount(props, ref) {
     const { className, selectedRowCount, ...other } = props;
-    const apiRef = React.useContext(GridApiContext);
+    const apiRef = useGridApiContext();
     const rowSelectedText = apiRef!.current.getLocaleText('footerRowSelected')(selectedRowCount);
 
     return (

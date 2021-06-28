@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GRID_PAGE_CHANGE, GRID_PAGESIZE_CHANGE } from '../../../constants/eventsConstants';
+import { GRID_PAGE_CHANGE, GRID_PAGE_SIZE_CHANGE } from '../../../constants/eventsConstants';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridPaginationApi } from '../../../models/api/gridPaginationApi';
 import { GridPageChangeParams } from '../../../models/params/gridPageChangeParams';
@@ -79,7 +79,7 @@ export const useGridPagination = (apiRef: GridApiRef): void => {
       const params = apiRef.current.getState<GridPaginationState>(
         'pagination',
       ) as GridPageChangeParams;
-      apiRef.current.publishEvent(GRID_PAGESIZE_CHANGE, {
+      apiRef.current.publishEvent(GRID_PAGE_SIZE_CHANGE, {
         // TODO remove params
         ...params,
         pageSize,
@@ -89,7 +89,7 @@ export const useGridPagination = (apiRef: GridApiRef): void => {
   );
 
   useGridApiOptionHandler(apiRef, GRID_PAGE_CHANGE, options.onPageChange);
-  useGridApiOptionHandler(apiRef, GRID_PAGESIZE_CHANGE, options.onPageSizeChange);
+  useGridApiOptionHandler(apiRef, GRID_PAGE_SIZE_CHANGE, options.onPageSizeChange);
 
   React.useEffect(() => {
     setGridState((state) => ({

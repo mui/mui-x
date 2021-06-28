@@ -16,7 +16,7 @@ const useStyles = makeStyles(
       getThemePaletteMode(theme.palette) === 'dark' ? '#376331' : 'rgb(217 243 190)';
     return {
       root: {
-        '& .MuiDataGrid-cellEditable': {
+        '& .MuiDataGrid-cell--editable': {
           backgroundColor,
         },
       },
