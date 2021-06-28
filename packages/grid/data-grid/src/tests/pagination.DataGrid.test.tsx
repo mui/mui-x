@@ -13,7 +13,7 @@ import {
   DEFAULT_GRID_OPTIONS,
   GridRowsProp,
 } from '@material-ui/data-grid';
-import { getColumnValues, raf } from 'test/utils/helperFn';
+import {getColumnValues, raf, sleep} from 'test/utils/helperFn';
 import { spy } from 'sinon';
 import { useData } from 'packages/storybook/src/hooks/useData';
 
@@ -321,7 +321,7 @@ describe('<DataGrid /> - Pagination', () => {
         expect(getColumnValues(0)).to.deep.equal(['7', '8']);
       });
 
-      it('should update the amount of rows rendered and call onPageSizeChange when changing the table height', async () => {
+      it.only('should update the amount of rows rendered and call onPageSizeChange when changing the table height', async () => {
         const onPageSizeChange = spy();
 
         const TestCaseAutoPageSize = (props: { nbRows: number; height?: number }) => {
@@ -355,18 +355,16 @@ describe('<DataGrid /> - Pagination', () => {
             DEFAULT_GRID_OPTIONS.rowHeight,
         );
 
-        const rows = document.querySelectorAll('.MuiDataGrid-viewport [role="row"]');
+        let rows = document.querySelectorAll('.MuiDataGrid-viewport [role="row"]');
         expect(rows.length).to.equal(expectedViewportRowsLengthBefore);
 
         setProps({ height: heightAfter });
 
         await raf();
+        await sleep(1000)
 
-        // rows = document.querySelectorAll('.MuiDataGrid-viewport [role="row"]');
-        // expect(rows.length).to.equal(expectedViewportRowsLengthAfter);
-
-        console.log(onPageSizeChange.getCalls().map(el => el.args[0]))
-        console.log(expectedViewportRowsLengthAfter)
+        rows = document.querySelectorAll('.MuiDataGrid-viewport [role="row"]');
+        expect(rows.length).to.equal(expectedViewportRowsLengthAfter);
 
         expect(onPageSizeChange.lastCall.args[0].pageSize).to.equal(
           expectedViewportRowsLengthAfter,
