@@ -68,59 +68,59 @@ describe('<XGrid /> - Selection', () => {
 
   describe('selectRow', () => {
     it('should call onSelectionModelChange with the ids selected', () => {
-      const onSelectionModelChange = spy();
-      render(<Test onSelectionModelChange={onSelectionModelChange} />);
+      const handleSelectionModelChange = spy();
+      render(<Test onSelectionModelChange={handleSelectionModelChange} />);
       apiRef!.current.selectRow(1);
-      expect(onSelectionModelChange.lastCall.args[0].selectionModel).to.deep.equal([1]);
+      expect(handleSelectionModelChange.lastCall.args[0].selectionModel).to.deep.equal([1]);
       apiRef!.current.selectRow(2);
-      expect(onSelectionModelChange.lastCall.args[0].selectionModel).to.deep.equal([2]);
+      expect(handleSelectionModelChange.lastCall.args[0].selectionModel).to.deep.equal([2]);
       // Keep old selection
       apiRef!.current.selectRow(3, true, true);
-      expect(onSelectionModelChange.lastCall.args[0].selectionModel).to.deep.equal([2, 3]);
+      expect(handleSelectionModelChange.lastCall.args[0].selectionModel).to.deep.equal([2, 3]);
       apiRef!.current.selectRow(3, false, true);
-      expect(onSelectionModelChange.lastCall.args[0].selectionModel).to.deep.equal([2]);
+      expect(handleSelectionModelChange.lastCall.args[0].selectionModel).to.deep.equal([2]);
     });
 
     it('should not call onSelectionModelChange if the row is unselectable', () => {
-      const onSelectionModelChange = spy();
+      const handleSelectionModelChange = spy();
       render(
         <Test
           isRowSelectable={(params) => params.id > 0}
-          onSelectionModelChange={onSelectionModelChange}
+          onSelectionModelChange={handleSelectionModelChange}
         />,
       );
       apiRef!.current.selectRow(0);
-      expect(onSelectionModelChange.callCount).to.equal(0);
+      expect(handleSelectionModelChange.callCount).to.equal(0);
       apiRef!.current.selectRow(1);
-      expect(onSelectionModelChange.callCount).to.equal(1);
+      expect(handleSelectionModelChange.callCount).to.equal(1);
     });
   });
 
   describe('selectRows', () => {
     it('should call onSelectionModelChange with the ids selected', () => {
-      const onSelectionModelChange = spy();
-      render(<Test onSelectionModelChange={onSelectionModelChange} />);
+      const handleSelectionModelChange = spy();
+      render(<Test onSelectionModelChange={handleSelectionModelChange} />);
       apiRef!.current.selectRows([1, 2]);
-      expect(onSelectionModelChange.lastCall.args[0].selectionModel).to.deep.equal([1, 2]);
+      expect(handleSelectionModelChange.lastCall.args[0].selectionModel).to.deep.equal([1, 2]);
       apiRef!.current.selectRows([3]);
-      expect(onSelectionModelChange.lastCall.args[0].selectionModel).to.deep.equal([1, 2, 3]);
+      expect(handleSelectionModelChange.lastCall.args[0].selectionModel).to.deep.equal([1, 2, 3]);
       apiRef!.current.selectRows([1, 2], false);
-      expect(onSelectionModelChange.lastCall.args[0].selectionModel).to.deep.equal([3]);
+      expect(handleSelectionModelChange.lastCall.args[0].selectionModel).to.deep.equal([3]);
       // Deselect others
       apiRef!.current.selectRows([4, 5], true, true);
-      expect(onSelectionModelChange.lastCall.args[0].selectionModel).to.deep.equal([4, 5]);
+      expect(handleSelectionModelChange.lastCall.args[0].selectionModel).to.deep.equal([4, 5]);
     });
 
     it('should filter out unselectable rows before calling onSelectionModelChange', () => {
-      const onSelectionModelChange = spy();
+      const handleSelectionModelChange = spy();
       render(
         <Test
           isRowSelectable={(params) => params.id > 0}
-          onSelectionModelChange={onSelectionModelChange}
+          onSelectionModelChange={handleSelectionModelChange}
         />,
       );
       apiRef!.current.selectRows([0, 1, 2]);
-      expect(onSelectionModelChange.lastCall.args[0].selectionModel).to.deep.equal([1, 2]);
+      expect(handleSelectionModelChange.lastCall.args[0].selectionModel).to.deep.equal([1, 2]);
     });
   });
 
@@ -139,9 +139,9 @@ describe('<XGrid /> - Selection', () => {
   });
 
   it('should call onSelectionModelChange when selection state changes', () => {
-    const onSelectionModelChange = spy();
+    const handleSelectionModelChange = spy();
     const { setProps } = render(
-      <Test selectionModel={[0]} onSelectionModelChange={onSelectionModelChange} />,
+      <Test selectionModel={[0]} onSelectionModelChange={handleSelectionModelChange} />,
     );
     setProps({
       rows: [
@@ -151,7 +151,7 @@ describe('<XGrid /> - Selection', () => {
         },
       ],
     });
-    expect(onSelectionModelChange.callCount).to.equal(2);
+    expect(handleSelectionModelChange.callCount).to.equal(2);
   });
 
   it('should select only filtered rows after filter is applied', () => {
