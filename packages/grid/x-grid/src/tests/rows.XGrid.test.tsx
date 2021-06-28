@@ -292,10 +292,10 @@ describe('<XGrid /> - Rows', () => {
     it('Rows should not be virtualized when the number of rows fit in the viewport', () => {
       const headerHeight = 50;
       const rowHeight = 50;
-      const maxRowsNotVirtualised = (300 - headerHeight) / rowHeight;
+      const maxRowsNotVirtualized = (300 - headerHeight) / rowHeight;
       render(
         <TestCaseVirtualization
-          nbRows={maxRowsNotVirtualised}
+          nbRows={maxRowsNotVirtualized}
           hideFooter
           headerHeight={headerHeight}
           rowHeight={rowHeight}
@@ -309,10 +309,10 @@ describe('<XGrid /> - Rows', () => {
     it('Rows should be virtualized when at least 2 rows are outside the viewport', () => {
       const headerHeight = 50;
       const rowHeight = 50;
-      const maxRowsNotVirtualised = (300 - headerHeight) / rowHeight;
+      const maxRowsNotVirtualized = (300 - headerHeight) / rowHeight;
       render(
         <TestCaseVirtualization
-          nbRows={maxRowsNotVirtualised + 1}
+          nbRows={maxRowsNotVirtualized + 1}
           hideFooter
           headerHeight={headerHeight}
           rowHeight={rowHeight}
@@ -324,7 +324,7 @@ describe('<XGrid /> - Rows', () => {
 
       render(
         <TestCaseVirtualization
-          nbRows={maxRowsNotVirtualised + 2}
+          nbRows={maxRowsNotVirtualized + 2}
           hideFooter
           headerHeight={headerHeight}
           rowHeight={rowHeight}
