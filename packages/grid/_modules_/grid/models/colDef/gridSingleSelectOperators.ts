@@ -9,9 +9,10 @@ export const getGridSingleSelectOperators: () => GridFilterOperator[] = () => [
       if (!filterItem.columnField || !filterItem.value || !filterItem.operatorValue) {
         return null;
       }
-
       return ({ value }): boolean => {
-        return filterItem.value === value;
+        return typeof value === 'string'
+          ? filterItem.value === value
+          : filterItem.value === (value as { value: any; label: string }).value;
       };
     },
     InputComponent: GridFilterInputValue,
@@ -25,7 +26,9 @@ export const getGridSingleSelectOperators: () => GridFilterOperator[] = () => [
       }
 
       return ({ value }): boolean => {
-        return filterItem.value !== value;
+        return typeof value === 'string'
+          ? filterItem.value !== value
+          : filterItem.value !== (value as { value: any; label: string }).value;
       };
     },
     InputComponent: GridFilterInputValue,

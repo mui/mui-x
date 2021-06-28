@@ -24,6 +24,7 @@ import {
   renderEditRating,
   renderEditCountry,
 } from './renderer';
+import { COUNTRY_ISO_OPTIONS } from './services/static-data';
 
 export const getEmployeeColumns: () => any[] = () => [
   {
@@ -98,6 +99,8 @@ export const getEmployeeColumns: () => any[] = () => [
     generateData: randomCountry,
     renderCell: renderCountry,
     renderEditCell: renderEditCountry,
+    type: 'singleSelect',
+    valueOptions: COUNTRY_ISO_OPTIONS,
     width: 150,
     editable: true,
   },
