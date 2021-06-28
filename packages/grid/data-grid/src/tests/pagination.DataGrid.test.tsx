@@ -13,7 +13,7 @@ import {
   DEFAULT_GRID_OPTIONS,
   GridRowsProp,
 } from '@material-ui/data-grid';
-import { getColumnValues } from 'test/utils/helperFn';
+import { getColumnValues, raf } from 'test/utils/helperFn';
 import { spy } from 'sinon';
 import { useData } from 'packages/storybook/src/hooks/useData';
 
@@ -320,6 +320,52 @@ describe('<DataGrid /> - Pagination', () => {
         );
         expect(getColumnValues(0)).to.deep.equal(['7', '8']);
       });
+    });
+
+    it('should update the amount of rows rendered and call onPageSizeChange when changing the table height', async () => {
+      const onPageSizeChange = spy();
+
+      const TestCaseAutoPageSize = (props: { nbRows: number; height?: number }) => {
+        const data = useData(props.nbRows, 10);
+
+        return (
+          <div style={{ width: 300, height: props.height }}>
+            <DataGrid
+              columns={data.columns}
+              rows={data.rows}
+              autoPageSize
+              pagination
+              onPageSizeChange={onPageSizeChange}
+            />
+          </div>
+        );
+      };
+      const nbRows = 27;
+      const heightBefore = 780;
+      const heightAfter = 360;
+
+      const { setProps } = render(<TestCaseAutoPageSize nbRows={nbRows} height={heightBefore} />);
+
+      const footerHeight = document.querySelector('.MuiDataGrid-footerContainer')!.clientHeight;
+      const expectedViewportRowsLengthBefore = Math.floor(
+        (heightBefore - DEFAULT_GRID_OPTIONS.headerHeight - footerHeight) /
+          DEFAULT_GRID_OPTIONS.rowHeight,
+      );
+      const expectedViewportRowsLengthAfter = Math.floor(
+        (heightAfter - DEFAULT_GRID_OPTIONS.headerHeight - footerHeight) /
+          DEFAULT_GRID_OPTIONS.rowHeight,
+      );
+
+      let rows = document.querySelectorAll('.MuiDataGrid-viewport [role="row"]');
+      expect(rows.length).to.equal(expectedViewportRowsLengthBefore);
+
+      setProps({ height: heightAfter });
+
+      await raf();
+
+      rows = document.querySelectorAll('.MuiDataGrid-viewport [role="row"]');
+      expect(rows.length).to.equal(expectedViewportRowsLengthAfter);
+      expect(onPageSizeChange.lastCall.args[0].pageSize).to.equal(expectedViewportRowsLengthAfter);
     });
   });
 });
