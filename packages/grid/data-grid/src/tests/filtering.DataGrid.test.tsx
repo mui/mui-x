@@ -37,7 +37,7 @@ describe('<DataGrid /> - Filter', () => {
       { field: 'isPublished', type: 'boolean' },
       {
         field: 'country',
-        type: 'select',
+        type: 'singleSelect',
         valueOptions: ['United States', 'Germany', 'France'],
       },
     ],

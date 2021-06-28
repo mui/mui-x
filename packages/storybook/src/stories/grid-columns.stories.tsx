@@ -345,7 +345,7 @@ export const SelectColumnType = () => {
     columns: [
       {
         field: 'country',
-        type: 'select',
+        type: 'singleSelect',
         valueOptions: countries,
         valueFormatter: (params) => {
           const result = countries.filter((country) => country.value === params.value)[0];

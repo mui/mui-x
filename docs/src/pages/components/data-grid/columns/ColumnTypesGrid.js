@@ -47,7 +47,7 @@ export default function ColumnTypesGrid() {
           { field: 'isAdmin', type: 'boolean', width: 120 },
           {
             field: 'country',
-            type: 'select',
+            type: 'singleSelect',
             width: 150,
             valueOptions: [
               'Bulgaria',

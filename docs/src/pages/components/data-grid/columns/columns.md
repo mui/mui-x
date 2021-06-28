@@ -237,10 +237,10 @@ The following are the native column types:
 - `'date'`
 - `'dateTime'`
 - `'boolean'`
-- `'select'`
+- `'singleSelect'`
 
 To apply a column type, you need to define the type property in your column definition.
-If the column is `type: 'select'` you also need to set the `valueOptions` property in that column definition.
+If the column is `type: 'singleSelect'` you also need to set the `valueOptions` property in that column definition.
 
 {{"demo": "pages/components/data-grid/columns/ColumnTypesGrid.js", "bg": "inline"}}
 

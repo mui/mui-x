@@ -72,7 +72,7 @@ export interface GridColDef {
    */
   type?: GridColType;
   /**
-   * To be used in combination with `type: 'select'`. This is an array of the possible cell values and labels.
+   * To be used in combination with `type: 'singleSelect'`. This is an array of the possible cell values and labels.
    */
   valueOptions?: Array<string | { value: any; label: string }>;
   /**

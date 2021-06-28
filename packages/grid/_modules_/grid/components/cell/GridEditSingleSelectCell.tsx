@@ -4,7 +4,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import { GridCellParams } from '../../models/params/gridCellParams';
 import { GRID_CELL_EDIT_PROPS_CHANGE_COMMITTED } from '../../constants/eventsConstants';
 
-const renderSelectOptions = (option) =>
+const renderSingleSelectOptions = (option) =>
   typeof option === 'string' ? (
     <MenuItem key={option} value={option}>
       {option}
@@ -15,7 +15,7 @@ const renderSelectOptions = (option) =>
     </MenuItem>
   );
 
-export function GridEditSelectCell(props: GridCellParams & SelectProps) {
+export function GridEditSingleSelectCell(props: GridCellParams & SelectProps) {
   const {
     id,
     value,
@@ -58,8 +58,8 @@ export function GridEditSelectCell(props: GridCellParams & SelectProps) {
       open
       {...other}
     >
-      {colDef.valueOptions.map(renderSelectOptions)}
+      {colDef.valueOptions.map(renderSingleSelectOptions)}
     </Select>
   );
 }
-export const renderEditSelectCell = (params) => <GridEditSelectCell {...params} />;
+export const renderEditSingleSelectCell = (params) => <GridEditSingleSelectCell {...params} />;

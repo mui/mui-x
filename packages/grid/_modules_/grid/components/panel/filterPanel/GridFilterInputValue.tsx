@@ -22,7 +22,7 @@ const renderSelectOptions = ({ valueOptions }: GridColDef) =>
 export const SUBMIT_FILTER_STROKE_TIME = 500;
 
 export interface GridTypeFilterInputValueProps extends GridFilterInputValueProps {
-  type?: 'text' | 'number' | 'date' | 'datetime-local' | 'select';
+  type?: 'text' | 'number' | 'date' | 'datetime-local' | 'singleSelect';
 }
 
 export function GridFilterInputValue(props: GridTypeFilterInputValueProps & TextFieldProps) {
@@ -32,7 +32,7 @@ export function GridFilterInputValue(props: GridTypeFilterInputValueProps & Text
   const [applying, setIsApplying] = React.useState(false);
   const id = useId();
   const selectProps: TextFieldProps =
-    type === 'select'
+    type === 'singleSelect'
       ? {
           select: true,
           SelectProps: {

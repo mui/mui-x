@@ -2,7 +2,7 @@ import { GridFilterInputValue } from '../../components/panel/filterPanel/GridFil
 import { GridFilterItem } from '../gridFilterItem';
 import { GridFilterOperator } from '../gridFilterOperator';
 
-export const getGridSelectOperators: () => GridFilterOperator[] = () => [
+export const getGridSingleSelectOperators: () => GridFilterOperator[] = () => [
   {
     value: 'is',
     getApplyFilterFn: (filterItem: GridFilterItem) => {
@@ -15,7 +15,7 @@ export const getGridSelectOperators: () => GridFilterOperator[] = () => [
       };
     },
     InputComponent: GridFilterInputValue,
-    InputComponentProps: { type: 'select' },
+    InputComponentProps: { type: 'singleSelect' },
   },
   {
     value: 'not',
@@ -29,6 +29,6 @@ export const getGridSelectOperators: () => GridFilterOperator[] = () => [
       };
     },
     InputComponent: GridFilterInputValue,
-    InputComponentProps: { type: 'select' },
+    InputComponentProps: { type: 'singleSelect' },
   },
 ];
