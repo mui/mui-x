@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
 import { optionsSelector } from '../../hooks/utils/optionsSelector';
 import { useGridApiContext } from '../../hooks/root/useGridApiContext';
-import { GRID_COLUMN_HEADER_SEPARATOR_RESIZABLE_CSS_CLASS } from "../../constants";
+import { GRID_COLUMN_HEADER_SEPARATOR_RESIZABLE_CSS_CLASS } from '../../constants';
 
 export interface GridColumnHeaderSeparatorProps extends React.HTMLAttributes<HTMLDivElement> {
   resizable: boolean;

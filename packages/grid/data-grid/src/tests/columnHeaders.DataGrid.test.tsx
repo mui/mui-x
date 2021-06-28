@@ -1,10 +1,8 @@
 import * as React from 'react';
-import {
-  createClientRenderStrictMode,
-} from 'test/utils';
+import { createClientRenderStrictMode } from 'test/utils';
 import { expect } from 'chai';
 import { DataGrid } from '@material-ui/data-grid';
-import {getColumnHeaderCell} from 'test/utils/helperFn';
+import { getColumnHeaderCell } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
