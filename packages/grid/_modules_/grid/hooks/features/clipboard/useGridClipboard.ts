@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { ownerDocument } from '@material-ui/core/utils';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
 import { GRID_KEYDOWN } from '../../../constants/eventsConstants';
@@ -10,34 +9,30 @@ import { gridCheckboxSelectionColDef } from '../../../models/colDef';
 import { GridClipboardApi } from '../../../models/api';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
 
+function writeToClipboardPolyfill(data: string) {
+  const span = document.createElement('span');
+  span.style.whiteSpace = 'pre';
+  span.style.userSelect = 'all';
+  span.style.opacity = '0px';
+  span.textContent = data;
+
+  document.body.appendChild(span);
+
+  const range = document.createRange();
+  range.selectNode(span);
+  const selection = window.getSelection();
+  selection!.removeAllRanges();
+  selection!.addRange(range);
+
+  try {
+    document.execCommand('copy');
+  } finally {
+    document.body.removeChild(span);
+  }
+}
+
 export const useGridClipboard = (apiRef: GridApiRef): void => {
   const visibleColumns = useGridSelector(apiRef, visibleGridColumnsSelector);
-
-  const writeToClipboardPolyfill = React.useCallback(
-    (data: string) => {
-      const doc = ownerDocument(apiRef.current.rootElementRef!.current!);
-      const span = doc.createElement('span');
-      span.style.whiteSpace = 'pre';
-      span.style.userSelect = 'all';
-      span.style.opacity = '0px';
-      span.textContent = data;
-
-      apiRef.current.rootElementRef!.current!.appendChild(span);
-
-      const range = doc.createRange();
-      range.selectNode(span);
-      const selection = window.getSelection();
-      selection!.removeAllRanges();
-      selection!.addRange(range);
-
-      try {
-        doc.execCommand('copy');
-      } finally {
-        apiRef.current.rootElementRef!.current!.removeChild(span);
-      }
-    },
-    [apiRef],
-  );
 
   const copySelectedRowsToClipboard = React.useCallback(
     (includeHeaders = false) => {
@@ -66,7 +61,7 @@ export const useGridClipboard = (apiRef: GridApiRef): void => {
         writeToClipboardPolyfill(data);
       }
     },
-    [apiRef, visibleColumns, writeToClipboardPolyfill],
+    [apiRef, visibleColumns],
   );
 
   const handleKeydown = React.useCallback(
