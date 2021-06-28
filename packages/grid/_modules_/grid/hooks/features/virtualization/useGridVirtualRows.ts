@@ -220,7 +220,7 @@ export const useGridVirtualRows = (apiRef: GridApiRef): void => {
       let isRowIndexAbove = false;
       let isRowIndexBelow = false;
 
-      if (params.rowIndex || params.rowIndex === 0) {
+      if (params.rowIndex != null) {
         const elementIndex = !options.pagination
           ? params.rowIndex
           : params.rowIndex - paginationState.page * paginationState.pageSize;
@@ -230,7 +230,8 @@ export const useGridVirtualRows = (apiRef: GridApiRef): void => {
         const viewportHeight = gridState.viewportSizes.height;
 
         isRowIndexAbove = windowRef.current!.scrollTop > scrollPosition;
-        isRowIndexBelow = windowRef.current!.scrollTop + viewportHeight < scrollPosition;
+        isRowIndexBelow =
+          windowRef.current!.scrollTop + viewportHeight < scrollPosition + rowHeight;
 
         if (isRowIndexAbove) {
           scrollCoordinates.top = scrollPosition; // We put it at the top of the page
