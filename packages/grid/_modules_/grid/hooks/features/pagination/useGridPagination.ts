@@ -103,7 +103,7 @@ export const useGridPagination = (apiRef: GridApiRef): void => {
       pageSize = options.pageSize || prevPageSize;
     }
 
-    if (options.autoPageSize && autoPageSize !== prevPageSize) {
+    if (options.autoPageSize && autoPageSize !== prevPageSize && autoPageSize !== undefined) {
       apiRef.current.publishEvent(GRID_PAGE_SIZE_CHANGE, { pageSize: autoPageSize });
     }
 
