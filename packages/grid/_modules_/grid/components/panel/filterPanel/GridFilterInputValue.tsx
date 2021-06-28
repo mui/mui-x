@@ -6,8 +6,8 @@ import { GridLoadIcon } from '../../icons/index';
 import { GridFilterInputValueProps } from './GridFilterInputValueProps';
 import { GridColDef } from '../../../models/colDef/gridColDef';
 
-const renderSelectOptions = ({ valueOptions }: GridColDef) =>
-  valueOptions!.map((option) =>
+const renderSingleSelectOptions = ({ valueOptions }: GridColDef) =>
+  ['', ...valueOptions!].map((option) =>
     typeof option === 'string' ? (
       <option key={option} value={option}>
         {option}
@@ -31,14 +31,14 @@ export function GridFilterInputValue(props: GridTypeFilterInputValueProps & Text
   const [filterValueState, setFilterValueState] = React.useState(item.value || '');
   const [applying, setIsApplying] = React.useState(false);
   const id = useId();
-  const selectProps: TextFieldProps =
+  const singleSelectProps: TextFieldProps =
     type === 'singleSelect'
       ? {
           select: true,
           SelectProps: {
             native: true,
           },
-          children: renderSelectOptions(apiRef.current.getColumn(item.columnField)),
+          children: renderSingleSelectOptions(apiRef.current.getColumn(item.columnField)),
         }
       : {};
 
@@ -81,7 +81,7 @@ export function GridFilterInputValue(props: GridTypeFilterInputValueProps & Text
       InputLabelProps={{
         shrink: true,
       }}
-      {...selectProps}
+      {...singleSelectProps}
       {...others}
     />
   );

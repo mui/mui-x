@@ -317,7 +317,7 @@ export const ValueGetterAndFormatter = () => {
   );
 };
 
-export const SelectColumnType = () => {
+export const SingleSelectColumnType = () => {
   const countries = [
     {
       value: 'bg',
