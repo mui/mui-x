@@ -471,7 +471,7 @@ describe('<XGrid /> - Edit Rows', () => {
     expect(onEditCellChange.args[0][0]).to.deep.equal({
       id: 1,
       field: 'year',
-      props: { value: 1970 },
+      props: { value: '1970' },
     });
   });
 
