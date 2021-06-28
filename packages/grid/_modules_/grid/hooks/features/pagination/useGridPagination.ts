@@ -92,6 +92,21 @@ export const useGridPagination = (apiRef: GridApiRef): void => {
   useGridApiOptionHandler(apiRef, GRID_PAGE_SIZE_CHANGE, options.onPageSizeChange);
 
   React.useEffect(() => {
+    const autoPageSize = containerSizes?.viewportPageSize;
+    const prevPageSize = apiRef.current.getState().pagination.pageSize;
+
+    let pageSize: number;
+
+    if (options.autoPageSize) {
+      pageSize = autoPageSize || prevPageSize;
+    } else {
+      pageSize = options.pageSize || prevPageSize;
+    }
+
+    if (options.autoPageSize && autoPageSize !== prevPageSize) {
+      apiRef.current.publishEvent(GRID_PAGE_SIZE_CHANGE, { pageSize: autoPageSize });
+    }
+
     setGridState((state) => ({
       ...state,
       pagination: applyConstraints(
@@ -102,9 +117,7 @@ export const useGridPagination = (apiRef: GridApiRef): void => {
               ? options.paginationMode
               : state.pagination.paginationMode,
           rowCount: options.rowCount !== undefined ? options.rowCount : visibleRowCount,
-          pageSize:
-            (options.autoPageSize ? containerSizes?.viewportPageSize : options.pageSize) ||
-            state.pagination.pageSize,
+          pageSize,
         },
         options.page,
       ),
@@ -120,6 +133,7 @@ export const useGridPagination = (apiRef: GridApiRef): void => {
     containerSizes?.viewportPageSize,
     options.pageSize,
     options.page,
+    apiRef,
   ]);
 
   const paginationApi: GridPaginationApi = {
