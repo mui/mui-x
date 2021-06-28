@@ -49,7 +49,6 @@ export default function ColumnTypesGrid() {
             field: 'country',
             type: 'singleSelect',
             width: 150,
-            editable: true,
             valueOptions: [
               'Bulgaria',
               'Netherlands',
