@@ -143,6 +143,8 @@ export function useGridEditRows(apiRef: GridApiRef) {
         return;
       }
 
+      apiRef.current.publishEvent(GRID_CELL_EDIT_PROPS_CHANGE, params, event);
+
       const { id, field, props } = params;
       logger.debug(`Setting cell props on id: ${id} field: ${field}`);
       setGridState((state) => {
@@ -311,8 +313,6 @@ export function useGridEditRows(apiRef: GridApiRef) {
   useGridApiEventHandler(apiRef, GRID_CELL_EDIT_EXIT, handleExitEdit);
   useGridApiEventHandler(apiRef, GRID_CELL_FOCUS_OUT, handleCellFocusOut);
   useGridApiEventHandler(apiRef, GRID_COLUMN_HEADER_DRAG_START, handleColumnHeaderDragStart);
-
-  useGridApiEventHandler(apiRef, GRID_CELL_EDIT_PROPS_CHANGE, setEditCellProps);
   useGridApiEventHandler(apiRef, GRID_CELL_EDIT_PROPS_CHANGE_COMMITTED, commitCellChange);
 
   useGridApiOptionHandler(
