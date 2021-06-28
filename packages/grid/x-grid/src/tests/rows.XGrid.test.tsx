@@ -487,7 +487,7 @@ describe('<XGrid /> - Rows', () => {
         const gridWindow = document.querySelector('.MuiDataGrid-window')!;
         expect(gridWindow.scrollLeft).to.equal(0);
         apiRef.current.scrollToIndexes({ rowIndex: 0, colIndex: 2 });
-        expect(gridWindow.scrollLeft).to.equal(60);
+        expect(gridWindow.scrollLeft).to.equal(columnWidth * 3 - width);
       });
     });
   });
