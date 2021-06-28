@@ -321,7 +321,7 @@ describe('<DataGrid /> - Pagination', () => {
         expect(getColumnValues(0)).to.deep.equal(['7', '8']);
       });
 
-      it.only('should update the amount of rows rendered and call onPageSizeChange when changing the table height', async () => {
+      it('should update the amount of rows rendered and call onPageSizeChange when changing the table height', async () => {
         const onPageSizeChange = spy();
 
         const TestCaseAutoPageSize = (props: { nbRows: number; height?: number }) => {
