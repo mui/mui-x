@@ -78,9 +78,17 @@ export function useGridParamsApi(apiRef: GridApiRef) {
     (id: GridRowId, field: string) => {
       const colDef = apiRef.current.getColumn(field);
       const value = apiRef.current.getCellValue(id, field);
-      const baseParams = getBaseCellParams(id, field);
+      const row = apiRef.current.getRow(id);
       const params: GridCellParams = {
-        ...baseParams,
+        id,
+        field,
+        row,
+        colDef,
+        cellMode: apiRef.current.getCellMode(id, field),
+        getValue: apiRef.current.getCellValue,
+        api: apiRef.current,
+        hasFocus: cellFocus !== null && cellFocus.field === field && cellFocus.id === id,
+        tabIndex: cellTabIndex && cellTabIndex.field === field && cellTabIndex.id === id ? 0 : -1,
         value,
         formattedValue: value,
       };
@@ -91,7 +99,7 @@ export function useGridParamsApi(apiRef: GridApiRef) {
 
       return params;
     },
-    [apiRef, getBaseCellParams],
+    [apiRef, cellFocus, cellTabIndex],
   );
 
   const getCellValue = React.useCallback(

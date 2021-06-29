@@ -16,6 +16,11 @@ export const GRID_DEBOUNCED_RESIZE = 'debouncedResize';
  */
 export const GRID_SCROLL = 'scroll';
 
+/**
+ * @ignore - do not document.
+ */
+export const GRID_KEYDOWN = 'keydown';
+
 // GRID events
 
 /**
