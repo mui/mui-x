@@ -8,7 +8,6 @@ import {
   GRID_COLUMN_HEADER_BLUR,
   GRID_COLUMN_HEADER_FOCUS,
   GRID_CELL_MODE_CHANGE,
-  GRID_CELL_FOCUS_CHANGE,
 } from '../../../constants/eventsConstants';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridFocusApi } from '../../../models/api/gridFocusApi';
@@ -34,7 +33,6 @@ export const useGridFocus = (apiRef: GridApiRef): void => {
           focus: { cell: { id, field }, columnHeader: null },
         };
       });
-      apiRef.current.publishEvent(GRID_CELL_FOCUS_CHANGE);
       forceUpdate();
     },
     [apiRef, forceUpdate, logger, setGridState],
@@ -60,7 +58,6 @@ export const useGridFocus = (apiRef: GridApiRef): void => {
           focus: { columnHeader: { field }, cell: null },
         };
       });
-      apiRef.current.publishEvent(GRID_CELL_FOCUS_CHANGE);
 
       forceUpdate();
     },
