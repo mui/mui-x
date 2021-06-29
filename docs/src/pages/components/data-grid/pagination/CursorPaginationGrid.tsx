@@ -20,7 +20,7 @@ interface ServerBasedGridResponse {
   nextCursor: string;
 }
 
-const PAGE_SIZE = 5
+const PAGE_SIZE = 5;
 
 function loadServerRows(
   cursor: string | null | undefined,
