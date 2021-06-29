@@ -60,6 +60,8 @@ export const ukUAGrid: Partial<GridLocaleText> = {
   filterOperatorOnOrAfter: 'більше або дорівнює',
   filterOperatorBefore: 'менше ніж',
   filterOperatorOnOrBefore: 'менше або дорівнює',
+  // filterOperatorIsEmpty: 'is empty',
+  // filterOperatorIsNotEmpty: 'is not empty',
 
   // Filter values text
   filterValueAny: 'будь-який',

@@ -54,6 +54,8 @@ const bgBGGrid: Partial<GridLocaleText> = {
   filterOperatorOnOrBefore: 'е на или преди',
   filterPanelInputLabel: 'Стойност',
   filterPanelInputPlaceholder: 'Стойност на филтъра',
+  // filterOperatorIsEmpty: 'is empty',
+  // filterOperatorIsNotEmpty: 'is not empty',
 
   // Column menu text
   columnMenuLabel: 'Меню',
