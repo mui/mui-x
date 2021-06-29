@@ -7,6 +7,7 @@ import {
   GRID_CELL_EDIT_PROPS_CHANGE_COMMITTED,
   GRID_CELL_EDIT_EXIT,
 } from '../../constants/eventsConstants';
+import { isEscapeKey } from '../../utils/keyboardUtils';
 
 const renderSingleSelectOptions = (option) =>
   typeof option === 'string' ? (
@@ -52,8 +53,8 @@ export function GridEditSingleSelectCell(props: GridCellParams & SelectProps) {
   };
 
   const handleClose = (event, reason) => {
-    if (reason === 'backdropClick') {
-      api.publishEvent(GRID_CELL_EDIT_EXIT, { id, field }, event);
+    if (reason === 'backdropClick' || isEscapeKey(event.key)) {
+      api.publishEvent(GRID_CELL_EDIT_EXIT, { id, field });
     }
   };
 
