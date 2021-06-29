@@ -4,13 +4,13 @@ import { makeStyles } from '@material-ui/styles';
 import { StandardProps } from '@material-ui/core';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import Paper from '@material-ui/core/Paper';
-import Popper from '@material-ui/core/Popper';
+import Popper, { PopperProps } from '@material-ui/core/Popper';
 import { useGridApiContext } from '../../hooks/root/useGridApiContext';
 import { isEscapeKey, isMuiV5, createTheme } from '../../utils';
 
 export type GridPanelClassKey = 'root' | 'theme';
 
-export interface GridPanelProps extends StandardProps<React.HTMLAttributes<HTMLDivElement>, GridPanelClassKey> {
+export interface GridPanelProps extends StandardProps<Omit<PopperProps, 'children'>, GridPanelClassKey> {
   children?: React.ReactNode;
   open: boolean;
 }
