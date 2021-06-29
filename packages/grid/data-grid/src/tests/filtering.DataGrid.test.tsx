@@ -1,5 +1,8 @@
 import * as React from 'react';
-import { createClientRenderStrictMode } from 'test/utils';
+import {
+  createClientRenderStrictMode, // @ts-expect-error need to migrate helpers to TypeScript
+  screen,
+} from 'test/utils';
 import { expect } from 'chai';
 import { DataGrid, GridToolbar } from '@material-ui/data-grid';
 import { getColumnValues } from 'test/utils/helperFn';
@@ -150,6 +153,64 @@ describe('<DataGrid /> - Filter', () => {
         operatorValue: 'equals',
         value: 'nike',
       });
+      expect(getColumnValues()).to.deep.equal(['Nike']);
+    });
+
+    it('should allow operator isEmpty', () => {
+      const rows = [
+        {
+          id: 0,
+          brand: 'Nike',
+          country: 'United States',
+        },
+        {
+          id: 1,
+          brand: 'Adidas',
+          country: null,
+        },
+        {
+          id: 2,
+          brand: 'Puma',
+          country: '',
+        },
+      ];
+      render(
+        <TestCase
+          operatorValue="isEmpty"
+          field="country"
+          columns={[{ field: 'brand' }, { field: 'country' }]}
+          rows={rows}
+        />,
+      );
+      expect(getColumnValues()).to.deep.equal(['Adidas', 'Puma']);
+    });
+
+    it('should allow operator isNotEmpty', () => {
+      const rows = [
+        {
+          id: 0,
+          brand: 'Nike',
+          country: 'United States',
+        },
+        {
+          id: 1,
+          brand: 'Adidas',
+          country: null,
+        },
+        {
+          id: 2,
+          brand: 'Puma',
+          country: '',
+        },
+      ];
+      render(
+        <TestCase
+          operatorValue="isNotEmpty"
+          field="country"
+          columns={[{ field: 'brand' }, { field: 'country' }]}
+          rows={rows}
+        />,
+      );
       expect(getColumnValues()).to.deep.equal(['Nike']);
     });
 
@@ -635,5 +696,34 @@ describe('<DataGrid /> - Filter', () => {
       />,
     );
     expect(getColumnValues()).to.deep.equal(['0.5']);
+  });
+
+  it('should include value-less operators when displaying the number of active filters', () => {
+    const rows = [
+      {
+        id: 0,
+        brand: 'Nike',
+        country: 'United States',
+      },
+      {
+        id: 1,
+        brand: 'Adidas',
+        country: null,
+      },
+      {
+        id: 2,
+        brand: 'Puma',
+        country: '',
+      },
+    ];
+    render(
+      <TestCase
+        operatorValue="isNotEmpty"
+        field="country"
+        columns={[{ field: 'brand' }, { field: 'country' }]}
+        rows={rows}
+      />,
+    );
+    expect(screen.queryByTitle('1 active filter')).not.to.equal(null);
   });
 });
