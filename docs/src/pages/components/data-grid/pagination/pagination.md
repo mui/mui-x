@@ -45,7 +45,7 @@ Finally, you need to handle the `onPageChange` callback to load the rows for the
 
 ## Cursor-based pagination
 
-You can adapt the pagination to use cursor-based pagination on your server.
+You can adapt the pagination for your cursor-based pagination.
 To do so, you just have to keep track of the next cursor associated with each page you fetched.
 
 {{"demo": "pages/components/data-grid/pagination/CursorPaginationGrid.js", "bg": "inline"}}
