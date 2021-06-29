@@ -87,7 +87,6 @@ export const getCommodityColumns: (editable?: boolean) => any[] = (editable = fa
       width: 140,
       generateData: randomQuantity,
       editable: true,
-
       valueParser: (value: string) => Number(value),
     },
     {
@@ -124,7 +123,6 @@ export const getCommodityColumns: (editable?: boolean) => any[] = (editable = fa
       generateData: randomUnitPrice,
       type: 'number',
       editable: true,
-
       valueParser: (value: string) => Number(value),
     },
     {
