@@ -255,7 +255,7 @@ export default function FullFeaturedDemo() {
   const { loading, data, setRowLength, loadNewData } = useDemoData({
     dataSet: type,
     rowLength: size,
-    maxColumns: 50,
+    maxColumns: 20,
     editable: true,
   });
 
