@@ -59,8 +59,6 @@ export default function CursorPaginationGrid() {
     (async () => {
       const nextCursor = pagesNextCursor.current[page - 1];
 
-      console.log(page);
-
       if (!nextCursor && page > 0) {
         return;
       }
