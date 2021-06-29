@@ -234,6 +234,13 @@ export const getCommodityColumns: (editable?: boolean) => any[] = (editable = fa
       headerName: 'Counterparty Country',
       generateData: randomCountry,
       renderCell: renderCountry,
+      valueParser: (value) => {
+        if (typeof value === 'string') {
+          return COUNTRY_ISO_OPTIONS.filter((country) => country.value === value)[0];
+        }
+
+        return value;
+      },
       type: 'singleSelect',
       valueOptions: COUNTRY_ISO_OPTIONS,
       editable: true,
