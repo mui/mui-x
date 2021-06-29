@@ -51,8 +51,6 @@ export default function ServerPaginationGrid() {
   React.useEffect(() => {
     let active = true;
 
-    console.log(page, pagesNextCursor);
-
     (async () => {
       const nextCursor = pagesNextCursor.current[page - 1];
 
@@ -62,14 +60,13 @@ export default function ServerPaginationGrid() {
 
       setLoading(true);
       const response = await loadServerRows(nextCursor, data);
+      pagesNextCursor.current[page] = response.nextCursor;
 
       if (!active) {
         return;
       }
 
       setRows(response.rows);
-
-      pagesNextCursor.current[page] = response.nextCursor;
       setLoading(false);
     })();
 

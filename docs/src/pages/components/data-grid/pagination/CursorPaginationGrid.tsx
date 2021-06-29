@@ -21,7 +21,7 @@ interface CursorBasedGridResponse {
 }
 
 function loadServerRows(
-  cursor: string | undefined,
+  cursor: string | null | undefined,
   data: CursorBasedGridData,
 ): Promise<CursorBasedGridResponse> {
   return new Promise<CursorBasedGridResponse>((resolve) => {
