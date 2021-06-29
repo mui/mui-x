@@ -56,10 +56,10 @@ describe('<XGrid /> - Column Headers', () => {
 
       expect(document.querySelectorAll('.MuiGridMenu-root')).to.have.length(1);
 
-      const separator = getColumnHeaderCell(0).querySelector('.MuiDataGrid-iconSeparator')
+      const separator = getColumnHeaderCell(0).querySelector('.MuiDataGrid-iconSeparator');
       fireEvent.mouseDown(separator);
       await raf();
-      fireEvent.mouseUp(separator)
+      fireEvent.mouseUp(separator);
 
       expect(document.querySelectorAll('.MuiGridMenu-root')).to.have.length(0);
     });
