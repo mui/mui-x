@@ -17,8 +17,9 @@ import { useGridApiMethod } from '../../root/useGridApiMethod';
 import { useGridState } from '../core/useGridState';
 import { useLogger } from '../../utils/useLogger';
 import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
+import {GridComponentProps} from "../../../GridComponentProps";
 
-export const useGridFocus = (apiRef: GridApiRef): void => {
+export const useGridFocus = (apiRef: GridApiRef, props: Pick<GridComponentProps, 'rows'>): void => {
   const logger = useLogger('useGridFocus');
   const [, setGridState, forceUpdate] = useGridState(apiRef);
   const insideFocusedCell = React.useRef(false);
@@ -156,6 +157,21 @@ export const useGridFocus = (apiRef: GridApiRef): void => {
     },
     'GridFocusApi',
   );
+
+  React.useEffect(() => {
+      const { cell } = apiRef.current.getState().focus;
+
+      if (cell) {
+          const updatedRow = apiRef.current.getRow(cell.id)
+
+          if (!updatedRow) {
+              setGridState((previousState) => ({
+                  ...previousState,
+                  focus: { cell: null, columnHeader: null },
+              }));
+          }
+      }
+  }, [apiRef, setGridState, props.rows])
 
   React.useEffect(() => {
     const doc = ownerDocument(apiRef.current.rootElementRef!.current as HTMLElement);
