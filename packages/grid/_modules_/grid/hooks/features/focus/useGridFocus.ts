@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { ownerDocument } from '@material-ui/core/utils';
 import {
-  GRID_CELL_CLICK,
-  GRID_CELL_DOUBLE_CLICK,
-  GRID_CELL_MOUSE_UP,
-  GRID_CELL_FOCUS_OUT,
-  GRID_COLUMN_HEADER_BLUR,
-  GRID_COLUMN_HEADER_FOCUS,
-  GRID_CELL_MODE_CHANGE,
+    GRID_CELL_CLICK,
+    GRID_CELL_DOUBLE_CLICK,
+    GRID_CELL_MOUSE_UP,
+    GRID_CELL_FOCUS_OUT,
+    GRID_COLUMN_HEADER_BLUR,
+    GRID_COLUMN_HEADER_FOCUS,
+    GRID_CELL_MODE_CHANGE, GRID_CELL_FOCUS_CHANGE,
 } from '../../../constants/eventsConstants';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridFocusApi } from '../../../models/api/gridFocusApi';
@@ -33,8 +33,7 @@ export const useGridFocus = (apiRef: GridApiRef): void => {
           focus: { cell: { id, field }, columnHeader: null },
         };
       });
-      // TODO replace with constant
-      apiRef.current.publishEvent('cellFocusChange');
+      apiRef.current.publishEvent(GRID_CELL_FOCUS_CHANGE);
       forceUpdate();
     },
     [apiRef, forceUpdate, logger, setGridState],
@@ -60,7 +59,7 @@ export const useGridFocus = (apiRef: GridApiRef): void => {
           focus: { columnHeader: { field }, cell: null },
         };
       });
-      apiRef.current.publishEvent('cellFocusChange');
+      apiRef.current.publishEvent(GRID_CELL_FOCUS_CHANGE);
 
       forceUpdate();
     },

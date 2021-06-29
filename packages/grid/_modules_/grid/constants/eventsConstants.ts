@@ -109,6 +109,12 @@ export const GRID_CELL_FOCUS = 'cellFocus';
 export const GRID_CELL_FOCUS_OUT = 'cellFocusOut';
 
 /**
+ * Fired when the focus goes from a cell to another.
+ * @event
+ */
+export const GRID_CELL_FOCUS_CHANGE = 'cellFocusChange';
+
+/**
  * Fired when the user starts dragging a cell. It's mapped to the `dragstart` DOM event.
  * Called with a [[GridCellParams]] object.
  * @ignore - do not document.
