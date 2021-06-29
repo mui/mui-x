@@ -2,7 +2,11 @@ import * as React from 'react';
 import Select, { SelectProps } from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import { GridCellParams } from '../../models/params/gridCellParams';
-import { GRID_CELL_EDIT_PROPS_CHANGE_COMMITTED } from '../../constants/eventsConstants';
+import {
+  GRID_CELL_EDIT_PROPS_CHANGE,
+  GRID_CELL_EDIT_PROPS_CHANGE_COMMITTED,
+  GRID_CELL_EDIT_EXIT,
+} from '../../constants/eventsConstants';
 
 const renderSingleSelectOptions = (option) =>
   typeof option === 'string' ? (
@@ -33,16 +37,23 @@ export function GridEditSingleSelectCell(props: GridCellParams & SelectProps) {
   } = props;
 
   const handleChange = (event) => {
-    const newValue = event.target.value;
-    const editProps = { value: newValue };
+    const editProps = { value: event.target.value };
 
-    api.publishEvent(GRID_CELL_EDIT_PROPS_CHANGE_COMMITTED, { id, field, props: editProps }, event);
-    api.setCellMode(id, field, 'view');
+    if (event.key) {
+      api.publishEvent(GRID_CELL_EDIT_PROPS_CHANGE, { id, field, props: editProps }, event);
+    } else {
+      api.publishEvent(
+        GRID_CELL_EDIT_PROPS_CHANGE_COMMITTED,
+        { id, field, props: editProps },
+        event,
+      );
+      api.publishEvent(GRID_CELL_EDIT_EXIT, { id, field }, event);
+    }
   };
 
   const handleClose = (event, reason) => {
     if (reason === 'backdropClick') {
-      api.setCellMode(id, field, 'view');
+      api.publishEvent(GRID_CELL_EDIT_EXIT, { id, field }, event);
     }
   };
 
