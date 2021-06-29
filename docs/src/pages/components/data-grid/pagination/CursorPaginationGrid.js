@@ -2,11 +2,13 @@ import * as React from 'react';
 import { DataGrid } from '@material-ui/data-grid';
 import { useDemoData } from '@material-ui/x-grid-data-generator';
 
+const PAGE_SIZE = 5;
+
 function loadServerRows(cursor, data) {
   return new Promise((resolve) => {
     setTimeout(() => {
       const start = cursor ? data.cursors.indexOf(cursor) + 1 : 0;
-      const end = start + 5;
+      const end = start + PAGE_SIZE;
       const rows = data.rows.slice(start, end);
 
       resolve({ rows, nextCursor: data.cursors[end] });
@@ -46,7 +48,7 @@ export default function CursorPaginationGrid() {
 
   const handlePageChange = (params) => {
     // We have the cursor, we can allow the page transition.
-    if (pagesNextCursor.current[params.page - 1]) {
+    if (params.page === 0 || pagesNextCursor.current[params.page - 1]) {
       setPage(params.page);
     }
   };
@@ -56,6 +58,8 @@ export default function CursorPaginationGrid() {
 
     (async () => {
       const nextCursor = pagesNextCursor.current[page - 1];
+
+      console.log(page);
 
       if (!nextCursor && page > 0) {
         return;
