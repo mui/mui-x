@@ -6,7 +6,7 @@ import {
 } from 'test/utils';
 import { expect } from 'chai';
 import { XGrid } from '@material-ui/x-grid';
-import { getColumnHeaderCell, raf } from 'test/utils/helperFn';
+import {getColumnHeaderCell, raf, sleep} from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -37,7 +37,7 @@ describe('<XGrid /> - Column Headers', () => {
   };
 
   describe('GridColumnHeaderMenu', () => {
-    it('should close menu when resizing a column', async () => {
+    it.only('should close menu when resizing a column', async () => {
       render(
         <div style={{ width: 300, height: 500 }}>
           <XGrid
@@ -52,16 +52,18 @@ describe('<XGrid /> - Column Headers', () => {
 
       expect(document.querySelectorAll('.MuiGridMenu-root')).to.have.length(0);
 
-      fireEvent.click(getColumnHeaderCell(0).querySelector('.MuiDataGrid-menuIconButton'));
+      const menuIcon = getColumnHeaderCell(0).querySelector('.MuiDataGrid-menuIcon')
 
-      expect(document.querySelectorAll('.MuiGridMenu-root')).to.have.length(1);
+      fireEvent.click(menuIcon!.querySelector('.MuiDataGrid-menuIconButton'));
+
+      expect(menuIcon).to.have.class('MuiDataGrid-menuOpen');
 
       const separator = getColumnHeaderCell(0).querySelector('.MuiDataGrid-iconSeparator');
       fireEvent.mouseDown(separator);
       await raf();
       fireEvent.mouseUp(separator);
 
-      expect(document.querySelectorAll('.MuiGridMenu-root')).to.have.length(0);
+      expect(menuIcon).not.to.have.class('MuiDataGrid-menuOpen');
     });
   });
 });
