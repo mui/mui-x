@@ -6,7 +6,7 @@ import {
 } from 'test/utils';
 import { expect } from 'chai';
 import { XGrid } from '@material-ui/x-grid';
-import {getColumnHeaderCell, raf, sleep} from 'test/utils/helperFn';
+import { getColumnHeaderCell, raf, sleep } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -52,7 +52,7 @@ describe('<XGrid /> - Column Headers', () => {
 
       expect(document.querySelectorAll('.MuiGridMenu-root')).to.have.length(0);
 
-      const menuIcon = getColumnHeaderCell(0).querySelector('.MuiDataGrid-menuIcon')
+      const menuIcon = getColumnHeaderCell(0).querySelector('.MuiDataGrid-menuIcon');
 
       fireEvent.click(menuIcon!.querySelector('.MuiDataGrid-menuIconButton'));
 
