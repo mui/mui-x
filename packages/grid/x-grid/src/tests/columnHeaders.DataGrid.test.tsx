@@ -38,7 +38,6 @@ describe('<XGrid /> - Column Headers', () => {
 
   describe('GridColumnHeaderMenu', () => {
     it('should close menu when resizing a column', async () => {
-      expect(true).to.equal(true)
       render(
         <div style={{ width: 300, height: 500 }}>
           <XGrid
