@@ -15,7 +15,7 @@ const renderSingleSelectOptions = (option) =>
       {option}
     </MenuItem>
   ) : (
-    <MenuItem key={option.value} value={option.value}>
+    <MenuItem key={option.value} value={option}>
       {option.label}
     </MenuItem>
   );

@@ -39,15 +39,15 @@ import {
   renderEditProgress,
   renderEditStatus,
   renderEditIncoterm,
-  renderEditTaxCode,
-  renderEditContractType,
-  renderEditRateType,
 } from './renderer';
 import {
+  CONTRACT_TYPE_OPTIONS,
   COUNTRY_ISO_OPTIONS,
   CURRENCY_OPTIONS,
   INCOTERM_OPTIONS,
+  RATE_TYPE_OPTIONS,
   STATUS_OPTIONS,
+  TAXCODE_OPTIONS,
 } from './services/static-data';
 
 export const getCommodityColumns: (editable?: boolean) => any[] = (editable = false) =>
@@ -236,6 +236,7 @@ export const getCommodityColumns: (editable?: boolean) => any[] = (editable = fa
       renderCell: renderCountry,
       type: 'singleSelect',
       valueOptions: COUNTRY_ISO_OPTIONS,
+      editable: true,
       width: 120,
     },
     {
@@ -243,6 +244,8 @@ export const getCommodityColumns: (editable?: boolean) => any[] = (editable = fa
       headerName: 'Counterparty Currency',
       generateData: randomCurrency,
       renderEditCell: renderEditCurrency,
+      type: 'singleSelect',
+      valueOptions: CURRENCY_OPTIONS,
       editable: true,
     },
     {
@@ -263,21 +266,24 @@ export const getCommodityColumns: (editable?: boolean) => any[] = (editable = fa
       field: 'taxCode',
       headerName: 'Tax Code',
       generateData: randomTaxCode,
-      renderEditCell: renderEditTaxCode,
+      type: 'singleSelect',
+      valueOptions: TAXCODE_OPTIONS,
       editable: true,
     },
     {
       field: 'contractType',
       headerName: 'Contract Type',
       generateData: randomContractType,
-      renderEditCell: renderEditContractType,
+      type: 'singleSelect',
+      valueOptions: CONTRACT_TYPE_OPTIONS,
       editable: true,
     },
     {
       field: 'rateType',
       headerName: 'Rate Type',
       generateData: randomRateType,
-      renderEditCell: renderEditRateType,
+      type: 'singleSelect',
+      valueOptions: RATE_TYPE_OPTIONS,
       editable: true,
     },
     {
