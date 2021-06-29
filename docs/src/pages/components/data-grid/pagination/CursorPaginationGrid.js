@@ -31,7 +31,7 @@ const useCursorBasedDemoData = (options) => {
   };
 };
 
-export default function ServerPaginationGrid() {
+export default function CursorPaginationGrid() {
   const { data } = useCursorBasedDemoData({
     dataSet: 'Commodity',
     rowLength: 100,
@@ -45,7 +45,10 @@ export default function ServerPaginationGrid() {
   const [loading, setLoading] = React.useState(false);
 
   const handlePageChange = (params) => {
-    setPage(params.page);
+    // We have the cursor, we can allow the page transition.
+    if (pagesNextCursor.current[params.page - 1]) {
+      setPage(params.page);
+    }
   };
 
   React.useEffect(() => {
