@@ -16,17 +16,14 @@ describe('<DataGrid /> - Column Headers', () => {
       {
         id: 0,
         brand: 'Nike',
-        foundationYear: 1964,
       },
       {
         id: 1,
         brand: 'Adidas',
-        foundationYear: 1949,
       },
       {
         id: 2,
         brand: 'Puma',
-        foundationYear: 1948,
       },
     ],
   };

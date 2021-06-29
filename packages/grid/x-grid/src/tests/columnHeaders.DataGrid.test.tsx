@@ -38,6 +38,7 @@ describe('<XGrid /> - Column Headers', () => {
 
   describe('GridColumnHeaderMenu', () => {
     it('should close menu when resizing a column', async () => {
+      expect(true).to.equal(true)
       render(
         <div style={{ width: 300, height: 500 }}>
           <XGrid
@@ -56,9 +57,10 @@ describe('<XGrid /> - Column Headers', () => {
 
       expect(document.querySelectorAll('.MuiGridMenu-root')).to.have.length(1);
 
-      fireEvent.mouseDown(getColumnHeaderCell(0).querySelector('.MuiDataGrid-iconSeparator'));
-
+      const separator = getColumnHeaderCell(0).querySelector('.MuiDataGrid-iconSeparator')
+      fireEvent.mouseDown(separator);
       await raf();
+      fireEvent.mouseUp(separator)
 
       expect(document.querySelectorAll('.MuiGridMenu-root')).to.have.length(0);
     });
