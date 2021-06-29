@@ -1,13 +1,16 @@
 import * as React from 'react';
 import { Theme } from '@material-ui/core/styles';
 import { makeStyles } from '@material-ui/styles';
+import { StandardProps } from '@material-ui/core';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import Paper from '@material-ui/core/Paper';
 import Popper from '@material-ui/core/Popper';
 import { useGridApiContext } from '../../hooks/root/useGridApiContext';
 import { isEscapeKey, isMuiV5, createTheme } from '../../utils';
 
-export interface GridPanelProps extends React.HTMLAttributes<HTMLDivElement> {
+export type GridPanelClassKey = 'root' | 'theme';
+
+export interface GridPanelProps extends StandardProps<React.HTMLAttributes<HTMLDivElement>, GridPanelClassKey> {
   children?: React.ReactNode;
   open: boolean;
 }
@@ -33,7 +36,7 @@ export const GridPanel = React.forwardRef<HTMLDivElement, GridPanelProps>(functi
   ref,
 ) {
   const { children, open, ...other } = props;
-  const classes = useStyles();
+  const classes = useStyles(other);
   const apiRef = useGridApiContext();
 
   const getPopperModifiers = (): any => {
