@@ -35,7 +35,7 @@ export const useGridFocus = (apiRef: GridApiRef): void => {
       });
       forceUpdate();
     },
-    [apiRef, forceUpdate, logger, setGridState],
+    [forceUpdate, logger, setGridState],
   );
 
   const setColumnHeaderFocus = React.useCallback(
