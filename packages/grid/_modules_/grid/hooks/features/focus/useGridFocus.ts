@@ -1,13 +1,14 @@
 import * as React from 'react';
 import { ownerDocument } from '@material-ui/core/utils';
 import {
-    GRID_CELL_CLICK,
-    GRID_CELL_DOUBLE_CLICK,
-    GRID_CELL_MOUSE_UP,
-    GRID_CELL_FOCUS_OUT,
-    GRID_COLUMN_HEADER_BLUR,
-    GRID_COLUMN_HEADER_FOCUS,
-    GRID_CELL_MODE_CHANGE, GRID_CELL_FOCUS_CHANGE,
+  GRID_CELL_CLICK,
+  GRID_CELL_DOUBLE_CLICK,
+  GRID_CELL_MOUSE_UP,
+  GRID_CELL_FOCUS_OUT,
+  GRID_COLUMN_HEADER_BLUR,
+  GRID_COLUMN_HEADER_FOCUS,
+  GRID_CELL_MODE_CHANGE,
+  GRID_CELL_FOCUS_CHANGE,
 } from '../../../constants/eventsConstants';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridFocusApi } from '../../../models/api/gridFocusApi';
