@@ -6,7 +6,7 @@ import {
 } from 'test/utils';
 import { expect } from 'chai';
 import { XGrid } from '@material-ui/x-grid';
-import { getColumnHeaderCell, raf, sleep } from 'test/utils/helperFn';
+import { getColumnHeaderCell, raf } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -37,7 +37,7 @@ describe('<XGrid /> - Column Headers', () => {
   };
 
   describe('GridColumnHeaderMenu', () => {
-    it.only('should close menu when resizing a column', async () => {
+    it('should close menu when resizing a column', async () => {
       render(
         <div style={{ width: 300, height: 500 }}>
           <XGrid
