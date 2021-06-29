@@ -144,6 +144,7 @@ describe('<XGrid /> - Selection', () => {
       <Test selectionModel={[0]} onSelectionModelChange={handleSelectionModelChange} />,
     );
     expect(getSelectedRows(apiRef)).to.deep.equal([0]);
+    // TODO should not fire
     expect(handleSelectionModelChange.getCall(0).args[0]).to.deep.equal({ selectionModel: [0] });
     setProps({
       rows: [
