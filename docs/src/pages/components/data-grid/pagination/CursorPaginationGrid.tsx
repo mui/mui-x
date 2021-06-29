@@ -15,7 +15,7 @@ interface CursorBasedGridData extends GridData {
   cursors: string[];
 }
 
-interface CursorBasedGridResponse {
+interface ServerBasedGridResponse {
   rows: DataRowModel[];
   nextCursor: string;
 }
@@ -23,8 +23,8 @@ interface CursorBasedGridResponse {
 function loadServerRows(
   cursor: string | null | undefined,
   data: CursorBasedGridData,
-): Promise<CursorBasedGridResponse> {
-  return new Promise<CursorBasedGridResponse>((resolve) => {
+): Promise<ServerBasedGridResponse> {
+  return new Promise<ServerBasedGridResponse>((resolve) => {
     setTimeout(() => {
       const start = cursor ? data.cursors.indexOf(cursor) + 1 : 0;
       const end = start + 5;
@@ -52,7 +52,7 @@ const useCursorBasedDemoData = (options: DemoDataOptions) => {
   };
 };
 
-export default function ServerPaginationGrid() {
+export default function CursorPaginationGrid() {
   const { data } = useCursorBasedDemoData({
     dataSet: 'Commodity',
     rowLength: 100,
@@ -66,7 +66,10 @@ export default function ServerPaginationGrid() {
   const [loading, setLoading] = React.useState<boolean>(false);
 
   const handlePageChange = (params: GridPageChangeParams) => {
-    setPage(params.page);
+    // We have the cursor, we can allow the page transition.
+    if (pagesNextCursor.current[params.page - 1]) {
+      setPage(params.page);
+    }
   };
 
   React.useEffect(() => {
