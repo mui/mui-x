@@ -6,7 +6,7 @@ import {
 } from 'test/utils';
 import { expect } from 'chai';
 import { XGrid } from '@material-ui/x-grid';
-import { getColumnHeaderCell /* , raf */ } from 'test/utils/helperFn';
+import { getColumnHeaderCell } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -53,14 +53,10 @@ describe('<XGrid /> - Column Headers', () => {
       const menuIconButton = getColumnHeaderCell(0).querySelector('button[aria-label="Menu"]');
 
       fireEvent.click(menuIconButton);
-
       expect(menuIconButton!.getAttribute('aria-expanded')).to.equal('true');
 
       const separator = getColumnHeaderCell(0).querySelector('.MuiDataGrid-iconSeparator');
       fireEvent.mouseDown(separator);
-      // await raf();
-      // fireEvent.mouseUp(separator);
-
       expect(menuIconButton!.getAttribute('aria-expanded')).to.equal(null);
     });
   });
