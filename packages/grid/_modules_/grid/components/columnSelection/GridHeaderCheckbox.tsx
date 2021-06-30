@@ -4,6 +4,7 @@ import {
   GRID_SELECTION_CHANGE,
 } from '../../constants/eventsConstants';
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
+import { gridPaginatedVisibleSortedGridRowIdsSelector } from '../../hooks/features/pagination/gridPaginationSelector';
 import { visibleSortedGridRowIdsSelector } from '../../hooks/features/filter/gridFilterSelector';
 import { gridTabIndexColumnHeaderSelector } from '../../hooks/features/focus/gridFocusStateSelector';
 import { gridRowCountSelector } from '../../hooks/features/rows/gridRowsSelector';
@@ -11,13 +12,19 @@ import { selectedGridRowsCountSelector } from '../../hooks/features/selection/gr
 import { GridColumnHeaderParams } from '../../models/params/gridColumnHeaderParams';
 import { isNavigationKey, isSpaceKey } from '../../utils/keyboardUtils';
 import { useGridApiContext } from '../../hooks/root/useGridApiContext';
+import { optionsSelector } from '../../hooks/utils/optionsSelector';
 
 export const GridHeaderCheckbox = React.forwardRef<HTMLInputElement, GridColumnHeaderParams>(
   function GridHeaderCheckbox(props, ref) {
     const [, forceUpdate] = React.useState(false);
     const apiRef = useGridApiContext();
+    const { checkboxSelectionVisibleOnly } = useGridSelector(apiRef, optionsSelector);
     const visibleRowIds = useGridSelector(apiRef, visibleSortedGridRowIdsSelector);
     const tabIndexState = useGridSelector(apiRef, gridTabIndexColumnHeaderSelector);
+    const paginatedVisibleRowIds = useGridSelector(
+      apiRef,
+      gridPaginatedVisibleSortedGridRowIdsSelector,
+    );
 
     const totalSelectedRows = useGridSelector(apiRef, selectedGridRowsCountSelector);
     const totalRows = useGridSelector(apiRef, gridRowCountSelector);
@@ -28,7 +35,10 @@ export const GridHeaderCheckbox = React.forwardRef<HTMLInputElement, GridColumnH
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
       const checked = event.target.checked;
-      apiRef!.current.selectRows(visibleRowIds, checked, !event.target.indeterminate);
+      const rowsToBeSelected = checkboxSelectionVisibleOnly
+        ? paginatedVisibleRowIds
+        : visibleRowIds;
+      apiRef!.current.selectRows(rowsToBeSelected, checked, !event.target.indeterminate);
     };
 
     const tabIndex = tabIndexState !== null && tabIndexState.field === props.field ? 0 : -1;

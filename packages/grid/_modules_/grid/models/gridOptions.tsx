@@ -56,6 +56,11 @@ export interface GridOptions {
    */
   checkboxSelection?: boolean;
   /**
+   * To be used in combination with `checkboxSelection`. If `true`, `Select All` selects only the rows on the current page.
+   * @default false
+   */
+  checkboxSelectionVisibleOnly?: boolean;
+  /**
    * Number of columns rendered outside the grid viewport.
    * @default 2
    */
