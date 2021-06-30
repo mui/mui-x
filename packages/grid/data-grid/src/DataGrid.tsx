@@ -12,6 +12,7 @@ const FORCED_PROPS: Partial<GridComponentProps> = {
   pagination: true,
   apiRef: undefined,
   onRowsScrollEnd: undefined,
+  checkboxSelectionVisibleOnly: false,
 };
 
 export type DataGridProps = Omit<
@@ -27,6 +28,7 @@ export type DataGridProps = Omit<
   | 'pagination'
   | 'onRowsScrollEnd'
   | 'scrollEndThreshold'
+  | 'checkboxSelectionVisibleOnly'
 > & {
   disableColumnResize?: true;
   disableColumnReorder?: true;
@@ -36,6 +38,7 @@ export type DataGridProps = Omit<
   pagination?: true;
   apiRef?: undefined;
   onRowsScrollEnd?: undefined;
+  checkboxSelectionVisibleOnly?: false;
 };
 
 const MAX_PAGE_SIZE = 100;
@@ -204,6 +207,19 @@ DataGrid.propTypes = {
         [
           `Material-UI: \`<DataGrid scrollEndThreshold={${props.scrollEndThreshold}} />\` is not a valid prop.`,
           'scrollEndThreshold is not available in the MIT version.',
+          '',
+          'You need to upgrade to the XGrid component to unlock this feature.',
+        ].join('\n'),
+      );
+    }
+    return null;
+  }),
+  checkboxSelectionVisibleOnly: chainPropTypes(PropTypes.bool, (props: any) => {
+    if (props.checkboxSelectionVisibleOnly === true) {
+      return new Error(
+        [
+          `Material-UI: \`<DataGrid checkboxSelectionVisibleOnly={true} />\` is not a valid prop.`,
+          'Selecting all columns only on the current page is not available in the MIT version.',
           '',
           'You need to upgrade to the XGrid component to unlock this feature.',
         ].join('\n'),
