@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { getColumnValues } from 'test/utils/helperFn';
+import { getCell, getColumnValues, getRow } from 'test/utils/helperFn';
 import {
   // @ts-expect-error need to migrate helpers to TypeScript
   screen,
@@ -9,7 +9,13 @@ import {
   // @ts-expect-error need to migrate helpers to TypeScript
   fireEvent,
 } from 'test/utils';
-import { GridApiRef, GridComponentProps, useGridApiRef, XGrid } from '@material-ui/x-grid';
+import {
+  GridApiRef,
+  GridComponentProps,
+  GridSelectionModel,
+  useGridApiRef,
+  XGrid,
+} from '@material-ui/x-grid';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -179,5 +185,68 @@ describe('<XGrid /> - Selection', () => {
     expect(getSelectedRows(apiRef)).to.deep.equal([2]);
     fireEvent.click(selectAll);
     expect(getSelectedRows(apiRef)).to.deep.equal([]);
+  });
+
+  describe('control Selection', () => {
+    it('should update the selection state when neither the model nor the onChange are set', () => {
+      render(<Test />);
+      fireEvent.click(getCell(0, 0));
+      expect(getRow(0)).to.have.class('Mui-selected');
+    });
+
+    it('should not update the selection model when the selectionModelProp is set', () => {
+      const selectionModel: GridSelectionModel = [1];
+      render(<Test selectionModel={selectionModel} />);
+
+      expect(getRow(0)).not.to.have.class('Mui-selected');
+      expect(getRow(1)).to.have.class('Mui-selected');
+      fireEvent.click(getCell(0, 0));
+      expect(getRow(0)).not.to.have.class('Mui-selected');
+    });
+
+    it('should update the selection state when the model is not set, but the onChange is set', () => {
+      const onModelChange = spy();
+      render(<Test onSelectionModelChange={onModelChange} />);
+
+      fireEvent.click(getCell(0, 0));
+      expect(getRow(0)).to.have.class('Mui-selected');
+      expect(onModelChange.callCount).to.equal(1);
+      expect(onModelChange.firstCall.firstArg).to.deep.equal([0]);
+    });
+
+    it('should control selection state when the model and the onChange are set', () => {
+      const ControlCase = (props: Partial<GridComponentProps>) => {
+        const { rows, columns, ...others } = props;
+        const [selectionModel, setSelectionModel] = React.useState<any>([0]);
+        const handleSelectionChange = (newModel) => {
+          if (newModel.length) {
+            setSelectionModel([...newModel, 2]);
+            return;
+          }
+          setSelectionModel(newModel);
+        };
+
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <XGrid
+              autoHeight={isJSDOM}
+              columns={columns || baselineProps.columns}
+              rows={rows || baselineProps.rows}
+              selectionModel={selectionModel}
+              onSelectionModelChange={handleSelectionChange}
+              {...others}
+            />
+          </div>
+        );
+      };
+
+      render(<ControlCase />);
+
+      expect(getRow(0)).to.have.class('Mui-selected');
+      fireEvent.click(getCell(1, 0));
+      expect(getRow(0)).not.to.have.class('Mui-selected');
+      expect(getRow(1)).to.have.class('Mui-selected');
+      expect(getRow(2)).to.have.class('Mui-selected');
+    });
   });
 });
