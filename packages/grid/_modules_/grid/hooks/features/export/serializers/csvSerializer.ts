@@ -39,20 +39,27 @@ interface BuildCSVOptions {
   selectedRowIds: GridRowId[];
   getCellParams: (id: GridRowId, field: string) => GridCellParams;
   delimiterCharacter: GridExportCsvDelimiter;
+  includeHeaders?: boolean;
 }
 
 export function buildCSV(options: BuildCSVOptions): string {
-  const { columns, rows, selectedRowIds, getCellParams, delimiterCharacter } = options;
+  const {
+    columns,
+    rows,
+    selectedRowIds,
+    getCellParams,
+    delimiterCharacter,
+    includeHeaders = true,
+  } = options;
   let rowIds = [...rows.keys()];
 
-  if (selectedRowIds.length) {
-    rowIds = rowIds.filter((id) => selectedRowIds.includes(`${id}`));
+  if (selectedRows) {
+    const selectedRowIds = Object.keys(selectedRows);
+    if (selectedRowIds.length) {
+      rowIds = rowIds.filter((id) => selectedRowIds.includes(`${id}`));
+    }
   }
 
-  const CSVHead = `${columns
-    .filter((column) => column.field !== gridCheckboxSelectionColDef.field)
-    .map((column) => serialiseCellValue(column.headerName || column.field, delimiterCharacter))
-    .join(delimiterCharacter)}\r\n`;
   const CSVBody = rowIds
     .reduce<string>(
       (acc, id) =>
@@ -62,7 +69,15 @@ export function buildCSV(options: BuildCSVOptions): string {
       '',
     )
     .trim();
-  const csv = `${CSVHead}${CSVBody}`.trim();
 
-  return csv;
+  if (!includeHeaders) {
+    return CSVBody;
+  }
+
+  const CSVHead = `${columns
+    .filter((column) => column.field !== gridCheckboxSelectionColDef.field)
+    .map((column) => serialiseCellValue(column.headerName || column.field, delimiterCharacter))
+    .join(delimiterCharacter)}\r\n`;
+
+  return `${CSVHead}${CSVBody}`.trim();
 }

@@ -3,6 +3,7 @@ import { GridColumnMenuApi } from './gridColumnMenuApi';
 import { GridComponentsApi } from './gridComponentsApi';
 import { GridControlStateApi } from './gridControlStateApi';
 import { GridCoreApi } from './gridCoreApi';
+import { GridClipboardApi } from './gridClipboardApi';
 import { GridCsvExportApi } from './gridCsvExportApi';
 import { GridDensityApi } from './gridDensityApi';
 import { GridEditRowApi } from './gridEditRowApi';
@@ -42,4 +43,5 @@ export interface GridApi
     GridColumnMenuApi,
     GridPreferencesPanelApi,
     GridLocaleTextApi,
-    GridControlStateApi {}
+    GridControlStateApi,
+    GridClipboardApi {}

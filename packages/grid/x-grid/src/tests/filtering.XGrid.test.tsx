@@ -79,7 +79,7 @@ describe('<XGrid /> - Filter', () => {
     );
   };
 
-  const model = {
+  const filterModel = {
     items: [
       {
         columnField: 'brand',
@@ -90,13 +90,13 @@ describe('<XGrid /> - Filter', () => {
   };
 
   it('should apply the filterModel prop correctly', () => {
-    render(<TestCase filterModel={model} />);
+    render(<TestCase filterModel={filterModel} />);
 
     expect(getColumnValues()).to.deep.equal(['Adidas', 'Puma']);
   });
 
   it('should apply the filterModel prop correctly on GridApiRef setRows', () => {
-    render(<TestCase filterModel={model} />);
+    render(<TestCase filterModel={filterModel} />);
 
     const newRows = [
       {
@@ -118,7 +118,7 @@ describe('<XGrid /> - Filter', () => {
   });
 
   it('should apply the filterModel prop correctly on GridApiRef update row data', () => {
-    render(<TestCase filterModel={model} />);
+    render(<TestCase filterModel={filterModel} />);
     apiRef.current.updateRows([{ id: 1, brand: 'Fila' }]);
     apiRef.current.updateRows([{ id: 0, brand: 'Patagonia' }]);
     clock.tick(100);
@@ -126,7 +126,7 @@ describe('<XGrid /> - Filter', () => {
   });
 
   it('should allow apiRef to setFilterModel', () => {
-    render(<TestCase filterModel={model} />);
+    render(<TestCase filterModel={filterModel} />);
     apiRef.current.setFilterModel({
       items: [
         {
@@ -159,7 +159,7 @@ describe('<XGrid /> - Filter', () => {
   });
 
   it('should allow multiple filter via apiRef', () => {
-    render(<TestCase filterModel={model} />);
+    render(<TestCase filterModel={filterModel} />);
     const newModel = {
       items: [
         {
@@ -267,16 +267,16 @@ describe('<XGrid /> - Filter', () => {
     expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
   });
 
-  it('should show the latest visibleRows onFilterChange', () => {
+  it('should show the latest visible rows', () => {
     let visibleRows: Map<GridRowId, GridRowModel> = new Map();
-    const onFilterChange = (params: GridFilterModelParams) => {
+    const handleFilterChange = (params: GridFilterModelParams) => {
       visibleRows = params.visibleRows;
     };
 
     render(
       <TestCase
-        filterModel={model}
-        onFilterModelChange={onFilterChange}
+        filterModel={filterModel}
+        onFilterModelChange={handleFilterChange}
         state={{
           preferencePanel: {
             open: true,
@@ -370,7 +370,7 @@ describe('<XGrid /> - Filter', () => {
         const [rows, setRows] = React.useState<GridRowModel[]>([]);
         const [filterValue, setFilterValue] = React.useState();
 
-        const onFilterChange = React.useCallback((params) => {
+        const handleFilterChange = React.useCallback((params) => {
           setFilterValue(params.filterModel.items[0].value);
         }, []);
 
@@ -398,7 +398,7 @@ describe('<XGrid /> - Filter', () => {
               rows={rows}
               columns={columns}
               filterMode="server"
-              onFilterModelChange={onFilterChange}
+              onFilterModelChange={handleFilterChange}
               state={{
                 preferencePanel: {
                   open: true,
@@ -422,7 +422,7 @@ describe('<XGrid /> - Filter', () => {
   it('should display the number of results in the footer', () => {
     const { setProps } = render(<TestCase />);
     expect(screen.getByText('Total Rows: 3')).not.to.equal(null);
-    setProps({ filterModel: model });
+    setProps({ filterModel });
     expect(screen.getByText('Total Rows: 2 of 3')).not.to.equal(null);
   });
 });
