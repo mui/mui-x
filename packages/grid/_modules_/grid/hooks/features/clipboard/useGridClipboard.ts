@@ -48,7 +48,7 @@ export const useGridClipboard = (apiRef: GridApiRef): void => {
       const data = buildCSV({
         columns: visibleColumns,
         rows: selectedRows,
-        selectedRowIds: [...selectedRows.keys()],
+        selectedRowIds: [],
         includeHeaders,
         getCellParams: apiRef.current.getCellParams,
         delimiterCharacter: '\t',
