@@ -53,11 +53,8 @@ export function buildCSV(options: BuildCSVOptions): string {
   } = options;
   let rowIds = [...rows.keys()];
 
-  if (selectedRows) {
-    const selectedRowIds = Object.keys(selectedRows);
-    if (selectedRowIds.length) {
-      rowIds = rowIds.filter((id) => selectedRowIds.includes(`${id}`));
-    }
+  if (selectedRowIds.length) {
+    rowIds = rowIds.filter((id) => selectedRowIds.includes(`${id}`));
   }
 
   const CSVBody = rowIds
