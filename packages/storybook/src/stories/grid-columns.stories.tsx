@@ -337,7 +337,7 @@ export const SingleSelectColumnType = () => {
     },
   ];
 
-  const [data] = React.useState({
+  const data = {
     rows: [
       { id: 0, country: 'bg' },
       { id: 1, country: 'nl' },
@@ -355,7 +355,7 @@ export const SingleSelectColumnType = () => {
         width: 200,
       },
     ],
-  });
+  };
 
   return (
     <div className="grid-container">
