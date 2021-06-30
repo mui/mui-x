@@ -297,7 +297,7 @@ export const useGridColumnResize = (apiRef: GridApiRef) => {
         columnResize: { ...oldState.columnResize, resizingColumnField: field },
         columnMenu: oldState.columnMenu.open
           ? {
-              ...oldState,
+              ...oldState.columnMenu,
               open: false,
             }
           : oldState.columnMenu,
