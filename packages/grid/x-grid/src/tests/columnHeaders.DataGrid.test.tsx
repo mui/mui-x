@@ -37,7 +37,7 @@ describe('<XGrid /> - Column Headers', () => {
   };
 
   describe('GridColumnHeaderMenu', () => {
-    it.only('should close menu when resizing a column', async () => {
+    it('should close menu when resizing a column', async () => {
       render(
         <div style={{ width: 300, height: 500 }}>
           <XGrid
@@ -52,8 +52,7 @@ describe('<XGrid /> - Column Headers', () => {
 
       expect(document.querySelectorAll('.MuiGridMenu-root')).to.have.length(0);
 
-      const menuIconButton = getColumnHeaderCell(0)
-        .querySelector('button[aria-label="Menu"]');
+      const menuIconButton = getColumnHeaderCell(0).querySelector('button[aria-label="Menu"]');
 
       fireEvent.click(menuIconButton);
 
