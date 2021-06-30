@@ -37,7 +37,7 @@ describe('<XGrid /> - Column Headers', () => {
   };
 
   describe('GridColumnHeaderMenu', () => {
-    it('should close menu when resizing a column', async () => {
+    it.only('should close menu when resizing a column', async () => {
       render(
         <div style={{ width: 300, height: 500 }}>
           <XGrid
@@ -52,18 +52,19 @@ describe('<XGrid /> - Column Headers', () => {
 
       expect(document.querySelectorAll('.MuiGridMenu-root')).to.have.length(0);
 
-      const menuIcon = getColumnHeaderCell(0).querySelector('.MuiDataGrid-menuIcon');
+      const menuIconButton = getColumnHeaderCell(0)
+        .querySelector('button[aria-label="Menu"]');
 
-      fireEvent.click(menuIcon!.querySelector('.MuiDataGrid-menuIconButton'));
+      fireEvent.click(menuIconButton);
 
-      expect(menuIcon).to.have.class('MuiDataGrid-menuOpen');
+      expect(menuIconButton!.getAttribute('aria-expanded')).to.equal('true');
 
       const separator = getColumnHeaderCell(0).querySelector('.MuiDataGrid-iconSeparator');
       fireEvent.mouseDown(separator);
       await raf();
       fireEvent.mouseUp(separator);
 
-      expect(menuIcon).not.to.have.class('MuiDataGrid-menuOpen');
+      expect(menuIconButton!.getAttribute('aria-expanded')).to.equal(null);
     });
   });
 });
