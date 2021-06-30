@@ -332,12 +332,12 @@ export interface GridOptions {
    */
   onColumnOrderChange?: (param: GridColumnOrderChangeParams) => void;
   /**
-   * Callback fired when a column is resizing.
+   * Callback fired while a column is being resized.
    * @param param With all properties from [[GridColumnResizeParams]].
    */
   onColumnResize?: (param: GridColumnResizeParams) => void;
   /**
-   * Callback fired when a column is resized.
+   * Callback fired when the width of a column is changed.
    * @param param With all properties from [[GridColumnResizeParams]].
    */
   onColumnWidthChange?: (param: GridColumnResizeParams) => void;
