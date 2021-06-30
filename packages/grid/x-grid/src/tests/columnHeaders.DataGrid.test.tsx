@@ -36,8 +36,8 @@ describe('<XGrid /> - Column Headers', () => {
     ],
   };
 
-  describe('GridColumnHeaderMenu', () => {
-    it('should close menu when resizing a column', async () => {
+  describe.only('GridColumnHeaderMenu', () => {
+    it('should close the menu of a column when resizing this column', async () => {
       render(
         <div style={{ width: 300, height: 500 }}>
           <XGrid
@@ -50,14 +50,42 @@ describe('<XGrid /> - Column Headers', () => {
         </div>,
       );
 
-      const menuIconButton = getColumnHeaderCell(0).querySelector('button[aria-label="Menu"]');
+      const columnCell = getColumnHeaderCell(0)
+
+      const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]');
 
       fireEvent.click(menuIconButton);
       expect(menuIconButton!.getAttribute('aria-expanded')).to.equal('true');
 
-      const separator = getColumnHeaderCell(0).querySelector('.MuiDataGrid-iconSeparator');
+      const separator = columnCell.querySelector('.MuiDataGrid-iconSeparator');
       fireEvent.mouseDown(separator);
       expect(menuIconButton!.getAttribute('aria-expanded')).to.equal(null);
     });
   });
+
+  it('should close the menu of a column when resizing another column', async () => {
+      render(
+        <div style={{ width: 300, height: 500 }}>
+          <XGrid
+            {...baselineProps}
+            columns={[
+              { field: 'brand', resizable: true },
+              { field: 'foundationYear', resizable: true },
+            ]}
+          />
+        </div>,
+      );
+
+    const columnWithMenuCell = getColumnHeaderCell(0)
+    const columnToResizeCell = getColumnHeaderCell(1)
+
+    const menuIconButton = columnWithMenuCell.querySelector('button[aria-label="Menu"]');
+
+      fireEvent.click(menuIconButton);
+      expect(menuIconButton!.getAttribute('aria-expanded')).to.equal('true');
+
+      const separator = columnToResizeCell.querySelector('.MuiDataGrid-iconSeparator');
+      fireEvent.mouseDown(separator);
+      expect(menuIconButton!.getAttribute('aria-expanded')).to.equal(null);
+    });
 });
