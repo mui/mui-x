@@ -34,19 +34,16 @@ describe('<XGrid /> - Rows', () => {
         autoHeight: isJSDOM,
         rows: [
           {
-            id: 0,
             clientId: 'c1',
             first: 'Mike',
             age: 11,
           },
           {
-            id: 1,
             clientId: 'c2',
             first: 'Jack',
             age: 11,
           },
           {
-            id: 2,
             clientId: 'c3',
             first: 'Mike',
             age: 20,
