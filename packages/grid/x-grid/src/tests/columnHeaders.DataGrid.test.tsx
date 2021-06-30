@@ -37,7 +37,7 @@ describe('<XGrid /> - Column Headers', () => {
   };
 
   describe('GridColumnHeaderMenu', () => {
-    it('should close the menu of a column when resizing this column', async () => {
+    it('should close the menu of a column when resizing this column', () => {
       render(
         <div style={{ width: 300, height: 500 }}>
           <XGrid
@@ -62,7 +62,7 @@ describe('<XGrid /> - Column Headers', () => {
       expect(menuIconButton!.getAttribute('aria-expanded')).to.equal(null);
     });
 
-    it('should close the menu of a column when resizing another column', async () => {
+    it('should close the menu of a column when resizing another column', () => {
       render(
         <div style={{ width: 300, height: 500 }}>
           <XGrid
