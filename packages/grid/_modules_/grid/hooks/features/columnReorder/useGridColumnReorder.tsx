@@ -17,6 +17,7 @@ import { CursorCoordinates } from '../../../models/cursorCoordinates';
 import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
 import { useGridSelector } from '../core/useGridSelector';
 import { useGridState } from '../core/useGridState';
+import { optionsSelector } from '../../utils/optionsSelector';
 import { gridColumnReorderDragColSelector } from './columnReorderSelector';
 
 const CURSOR_MOVE_DIRECTION_LEFT = 'left';
@@ -42,6 +43,7 @@ export const useGridColumnReorder = (apiRef: GridApiRef): void => {
 
   const [, setGridState, forceUpdate] = useGridState(apiRef);
   const dragCol = useGridSelector(apiRef, gridColumnReorderDragColSelector);
+  const options = useGridSelector(apiRef, optionsSelector);
   const dragColNode = React.useRef<HTMLElement | null>(null);
   const cursorPosition = React.useRef<CursorCoordinates>({
     x: 0,
@@ -58,6 +60,10 @@ export const useGridColumnReorder = (apiRef: GridApiRef): void => {
 
   const handleColumnHeaderDragStart = React.useCallback(
     (params: GridColumnHeaderParams, event: React.MouseEvent<HTMLElement>) => {
+      if (options.disableColumnReorder) {
+        return;
+      }
+
       logger.debug(`Start dragging col ${params.field}`);
 
       dragColNode.current = event.currentTarget;
@@ -75,7 +81,7 @@ export const useGridColumnReorder = (apiRef: GridApiRef): void => {
 
       originColumnIndex.current = apiRef.current.getColumnIndex(params.field, false);
     },
-    [forceUpdate, logger, setGridState, apiRef],
+    [options.disableColumnReorder, logger, setGridState, forceUpdate, apiRef],
   );
 
   const handleDragEnter = React.useCallback(
@@ -87,6 +93,10 @@ export const useGridColumnReorder = (apiRef: GridApiRef): void => {
 
   const handleDragOver = React.useCallback(
     (params: GridColumnHeaderParams | GridCellParams, event: React.DragEvent) => {
+      if (!dragCol) {
+        return;
+      }
+
       logger.debug(`Dragging over col ${params.field}`);
       event.preventDefault();
 
@@ -118,6 +128,10 @@ export const useGridColumnReorder = (apiRef: GridApiRef): void => {
 
   const handleDragEnd = React.useCallback(
     (params: GridColumnHeaderParams | GridCellParams, event: React.DragEvent): void => {
+      if (options.disableColumnReorder) {
+        return;
+      }
+
       logger.debug('End dragging col');
       event.preventDefault();
 
@@ -136,7 +150,7 @@ export const useGridColumnReorder = (apiRef: GridApiRef): void => {
       }));
       forceUpdate();
     },
-    [logger, setGridState, forceUpdate, apiRef],
+    [options.disableColumnReorder, logger, setGridState, forceUpdate, apiRef],
   );
 
   useGridApiEventHandler(apiRef, GRID_COLUMN_HEADER_DRAG_START, handleColumnHeaderDragStart);

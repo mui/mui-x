@@ -12,7 +12,7 @@ export const getGridNumericColumnOperators: () => GridFilterOperator[] = () => [
       }
 
       return ({ value }): boolean => {
-        return Number(value) === Number(filterItem.value);
+        return Number(value) === filterItem.value;
       };
     },
     InputComponent: GridFilterInputValue,
@@ -27,7 +27,7 @@ export const getGridNumericColumnOperators: () => GridFilterOperator[] = () => [
       }
 
       return ({ value }): boolean => {
-        return Number(value) !== Number(filterItem.value);
+        return Number(value) !== filterItem.value;
       };
     },
     InputComponent: GridFilterInputValue,
@@ -42,7 +42,7 @@ export const getGridNumericColumnOperators: () => GridFilterOperator[] = () => [
       }
 
       return ({ value }): boolean => {
-        return Number(value) > Number(filterItem.value);
+        return Number(value) > filterItem.value;
       };
     },
     InputComponent: GridFilterInputValue,
@@ -57,7 +57,7 @@ export const getGridNumericColumnOperators: () => GridFilterOperator[] = () => [
       }
 
       return ({ value }): boolean => {
-        return Number(value) >= Number(filterItem.value);
+        return Number(value) >= filterItem.value;
       };
     },
     InputComponent: GridFilterInputValue,
@@ -72,7 +72,7 @@ export const getGridNumericColumnOperators: () => GridFilterOperator[] = () => [
       }
 
       return ({ value }): boolean => {
-        return Number(value) < Number(filterItem.value);
+        return Number(value) < filterItem.value;
       };
     },
     InputComponent: GridFilterInputValue,
@@ -87,7 +87,7 @@ export const getGridNumericColumnOperators: () => GridFilterOperator[] = () => [
       }
 
       return ({ value }): boolean => {
-        return Number(value) <= Number(filterItem.value);
+        return Number(value) <= filterItem.value;
       };
     },
     InputComponent: GridFilterInputValue,

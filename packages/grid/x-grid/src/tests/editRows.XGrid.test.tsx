@@ -534,4 +534,32 @@ describe('<XGrid /> - Edit Rows', () => {
     expect(cell).not.to.have.class('MuiDataGrid-cell--editing');
     expect(cell).to.have.text('Italy');
   });
+
+  it('should keep the right type', () => {
+    const Test = (props: Partial<GridComponentProps>) => {
+      apiRef = useGridApiRef();
+      return (
+        <div style={{ width: 300, height: 300 }}>
+          <XGrid
+            {...baselineProps}
+            apiRef={apiRef}
+            columns={[{ field: 'year', type: 'number', editable: true }]}
+            {...props}
+          />
+        </div>
+      );
+    };
+    render(<Test />);
+    expect(screen.queryAllByRole('row')).to.have.length(4);
+    const cell = getCell(0, 0);
+    cell.focus();
+    fireEvent.doubleClick(cell);
+    const input = cell.querySelector('input')!;
+    expect(input.value).to.equal('1941');
+    fireEvent.change(input, { target: { value: '1942' } });
+
+    fireEvent.keyDown(input, { key: 'Enter' });
+    expect(cell).to.have.text('1,942');
+    expect(apiRef.current.getRow(baselineProps.rows[0].id).year).to.equal(1942);
+  });
 });
