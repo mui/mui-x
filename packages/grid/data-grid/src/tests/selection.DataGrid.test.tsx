@@ -134,35 +134,6 @@ describe('<DataGrid /> - Selection', () => {
       expect(getRow(1)).to.have.class('Mui-selected');
     });
 
-    it('should only select visible rows on the current page', () => {
-      render(
-        <div style={{ width: 300, height: 300 }}>
-          <DataGrid
-            rows={[
-              {
-                id: 0,
-                brand: 'Nike',
-              },
-              {
-                id: 1,
-                brand: 'Puma',
-              },
-            ]}
-            columns={[{ field: 'brand', width: 100 }]}
-            checkboxSelection
-            checkboxSelectionVisibleOnly
-            pagination
-            pageSize={1}
-          />
-        </div>,
-      );
-      const selectAllCheckbox = document.querySelector('input[type="checkbox"]');
-      fireEvent.click(selectAllCheckbox);
-      expect(getRow(0)).to.have.class('Mui-selected');
-      fireEvent.click(screen.getByRole('button', { name: /next page/i }));
-      expect(getRow(1)).not.to.have.class('Mui-selected');
-    });
-
     it('with no rows, the checkbox should not be checked', () => {
       render(
         <div style={{ width: 300, height: 300 }}>
