@@ -50,8 +50,6 @@ describe('<XGrid /> - Column Headers', () => {
         </div>,
       );
 
-      expect(document.querySelectorAll('.MuiGridMenu-root')).to.have.length(0);
-
       const menuIconButton = getColumnHeaderCell(0).querySelector('button[aria-label="Menu"]');
 
       fireEvent.click(menuIconButton);
