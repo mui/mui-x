@@ -1,8 +1,12 @@
 import * as React from 'react';
-import { createClientRenderStrictMode, fireEvent } from 'test/utils';
+import {
+  createClientRenderStrictMode,
+  // @ts-expect-error need to migrate helpers to TypeScript
+  fireEvent,
+} from 'test/utils';
 import { useFakeTimers } from 'sinon';
 import { expect } from 'chai';
-import { getCell, getColumnValues, raf } from 'test/utils/helperFn';
+import { getCell, getColumnValues } from 'test/utils/helperFn';
 import {
   GridApiRef,
   GridComponentProps,
