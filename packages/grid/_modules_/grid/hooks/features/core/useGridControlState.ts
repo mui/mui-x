@@ -7,7 +7,7 @@ import { useGridApiMethod } from '../../root/useGridApiMethod';
 export function useGridControlState(apiRef: GridApiRef) {
   const controlStateMapRef = React.useRef<Record<string, ControlStateItem<any>>>({});
 
-  const registerControlState = React.useCallback((controlStateItem: ControlStateItem<any>) => {
+  const updateControlState = React.useCallback((controlStateItem: ControlStateItem<any>) => {
     const { stateId, stateSelector, ...others } = controlStateItem;
 
     controlStateMapRef.current[stateId] = {
@@ -47,8 +47,7 @@ export function useGridControlState(apiRef: GridApiRef) {
             shouldUpdate =
               controlState.propModel === undefined || controlState.propModel === newModel;
           } else if (controlState.propModel !== undefined) {
-            const oldModel = oldState;
-            shouldUpdate = oldModel !== controlState.propModel;
+            shouldUpdate = oldState !== controlState.propModel;
           }
           if (shouldUpdate) {
             updatedStateIds.push(controlState.stateId);
@@ -72,7 +71,7 @@ export function useGridControlState(apiRef: GridApiRef) {
   );
 
   const controlStateApi: GridControlStateApi = {
-    registerControlState,
+    updateControlState,
     applyControlStateConstraint,
   };
   useGridApiMethod(apiRef, controlStateApi, 'controlStateApi');

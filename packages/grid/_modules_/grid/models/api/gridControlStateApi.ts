@@ -6,13 +6,13 @@ import { ControlStateItem } from '../controlStateItem';
  */
 export interface GridControlStateApi {
   /**
-   * Register a control state that binds the model, the onChange prop, and the grid state together.
-   * @param [ControlStateItem<TModel, TState>]
+   * Updates a control state that binds the model, the onChange prop, and the grid state together.
+   * @param {ControlStateItem<TModel>} controlState The [[ControlStateItem]] to be registered.
    */
-  registerControlState: <TModel>(controlState: ControlStateItem<TModel>) => void;
+  updateControlState: <TModel>(controlState: ControlStateItem<TModel>) => void;
   /**
    * Allows the internal grid state to apply the registered control state constraint.
-   * @param state [GridState] is the new modified state that would be next if the state is not controlled.
+   * @param {GridState} state The new modified state that would be the next if the state is not controlled.
    * @returns {shouldUpdate: boolean, postUpdate: () => void}, shouldUpdate let the state know if it should update, and postUpdate is a callback function triggered if the state has updated.
    */
   applyControlStateConstraint: (state: GridState) => {

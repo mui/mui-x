@@ -408,7 +408,7 @@ export interface GridOptions {
   onResize?: (param: GridResizeParams) => void;
   /**
    * Callback fired when the selection state of one or multiple rows changes.
-   * @param selectionModel with all the row ids [[GridRowId]][].
+   * @param selectionModel With all the row ids [[GridRowId]][].
    */
   onSelectionModelChange?: (selectionModel: GridRowId[]) => void;
   /**
