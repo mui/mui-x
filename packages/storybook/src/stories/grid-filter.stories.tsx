@@ -225,12 +225,16 @@ export function CommodityWithEmptyCells() {
     maxColumns: 6,
   });
 
-  const rows = data.rows.map((row) => {
-    return Object.entries(row).reduce((acc, [key, value]) => {
-      acc[key] = key === 'id' ? value : randomArrayItem([value, null, '']);
-      return acc;
-    }, {});
-  });
+  const rows = React.useMemo(
+    () =>
+      data.rows.map((row) => {
+        return Object.entries(row).reduce((acc, [key, value]) => {
+          acc[key] = key === 'id' ? value : randomArrayItem([value, null, '']);
+          return acc;
+        }, {});
+      }),
+    [data.rows],
+  );
 
   return (
     <div style={{ height: 400, width: '100%' }}>
