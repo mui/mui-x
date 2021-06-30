@@ -333,6 +333,12 @@ export const useGridColumnResize = (apiRef: GridApiRef) => {
     };
   }, [apiRef, handleTouchStart, stopListening]);
 
+  React.useEffect(() => {
+    return () => {
+      stopListening();
+    };
+  }, [stopListening]);
+
   useGridApiEventHandler(apiRef, GRID_COLUMN_SEPARATOR_MOUSE_DOWN, handleColumnResizeMouseDown);
   useGridApiEventHandler(apiRef, GRID_COLUMN_RESIZE_START, handleResizeStart);
   useGridApiEventHandler(apiRef, GRID_COLUMN_RESIZE_STOP, handleResizeStop);
