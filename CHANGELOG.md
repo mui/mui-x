@@ -72,7 +72,6 @@ Big thanks to the 6 contributors who made this release possible. Here are some h
 - [core] Upgrade actions-cool/issues-helper (#1962) @oliviertassinari
 - [core] virtualised => virtualized (#1988) @flaviendelangle
 - [test] Test vertical scrollbar (#1932) @oliviertassinari
-- [core] Remove blank lines @oliviertassinari
 
 
 ## [4.0.0-alpha.32](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.31...v4.0.0-alpha.32)
