@@ -46,7 +46,7 @@ Big thanks to the 6 contributors who made this release possible. Here are some h
 
 - [DataGrid] Make GRID_ROWS_CLEAR private (#1925) @oliviertassinari
 
-  The `GRID_ROWS_CLEAR` event was always triggered alongside `GRID_ROWS_SET`. You can listen to the latter event only.
+  The `rowsCleared` event was always triggered alongside `rowsSet`. You can listen to the latter event only.
 
 - [DataGrid] Fix events naming (#1862) @m4theushw
 
