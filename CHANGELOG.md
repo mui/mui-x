@@ -9,7 +9,7 @@ _July 1, 2021_
 
 Big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
 
-- 💅 Allow to copy the selected rows to the clipboard (#1929) @m4theushw
+- 💅 Allow to copy the selected rows to the clipboard with <kbd>CTRL</kbd> + <kbd>c</kbd> (#1929) @m4theushw
 - 🚀 `Select all` checkbox click should select only filtered rows after filter (#1879) @ZeeshanTamboli
 - ⚡️ Add single select column type (#1956) @DanailH@
 - 🐞 Bugfixes
