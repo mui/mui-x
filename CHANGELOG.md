@@ -20,10 +20,9 @@ Big thanks to the 6 contributors who made this release possible. Here are some h
 
 - [DataGrid] Rename `onColumnResizeCommitted` to `onColumnWidthChange` (#1967) @m4theushw
 
-```diff
+  ```diff
   -<DataGrid onColumnResizeCommitted={...} />
   +<DataGrid onColumnWidthChange={...} />
-```
 
 - [DataGrid] Make GRID_ROWS_CLEAR private (#1925) @oliviertassinari
 
