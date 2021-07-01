@@ -5,6 +5,8 @@ import {
   fireEvent,
   // @ts-expect-error need to migrate helpers to TypeScript
   screen,
+  // @ts-expect-error need to migrate helpers to TypeScript
+  waitFor,
 } from 'test/utils';
 import { expect } from 'chai';
 import {
@@ -13,7 +15,7 @@ import {
   DEFAULT_GRID_OPTIONS,
   GridRowsProp,
 } from '@material-ui/data-grid';
-import { getColumnValues, raf, sleep } from 'test/utils/helperFn';
+import { getCell, getColumnValues } from 'test/utils/helperFn';
 import { spy } from 'sinon';
 import { useData } from 'packages/storybook/src/hooks/useData';
 
@@ -360,8 +362,7 @@ describe('<DataGrid /> - Pagination', () => {
 
         setProps({ height: heightAfter });
 
-        await raf();
-        await sleep(1000);
+        await waitFor(() => getCell(expectedViewportRowsLengthAfter, 0));
 
         rows = document.querySelectorAll('.MuiDataGrid-viewport [role="row"]');
         expect(rows.length).to.equal(expectedViewportRowsLengthAfter);
