@@ -45,7 +45,6 @@ Big thanks to the 6 contributors who made this release possible. Here are some h
   - `keydown`
   - `keyup`
 
-
 #### Changes
 
 - [DataGrid] Add fallback for pagination translations (#2006) @m4theushw
