@@ -17,7 +17,7 @@ describe('<XGrid /> - Export', () => {
 
   const columns: GridColumns = [{ field: 'id' }, { field: 'brand', headerName: 'Brand' }];
 
-  describe.only('getDataAsCsv', () => {
+  describe('getDataAsCsv', () => {
     it('should work with basic strings', () => {
       const TestCaseCSVExport = () => {
         apiRef = useGridApiRef();
