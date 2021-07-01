@@ -28,7 +28,7 @@ Big thanks to the 6 contributors who made this release possible. Here are some h
       rows={[
         { id: 0, country: 'France' },
         { id: 1, country: 'Netherlands' },
-        { id: 1, country: 'Brazil' },
+        { id: 2, country: 'Brazil' },
       ]}
     />
   ```
