@@ -18,7 +18,7 @@ Big thanks to the 6 contributors who made this release possible. Here are some h
 
 #### Breaking changes
 
-- [DataGrid] Rename onColumnResizeCommitted to onColumnWidthChange (#1967) @m4theushw
+- [DataGrid] Rename `onColumnResizeCommitted` to `onColumnWidthChange` (#1967) @m4theushw
 
 ```diff
   -<DataGrid onColumnResizeCommitted={...} />
