@@ -295,12 +295,6 @@ export const useGridColumnResize = (apiRef: GridApiRef) => {
       setGridState((oldState) => ({
         ...oldState,
         columnResize: { ...oldState.columnResize, resizingColumnField: field },
-        columnMenu: oldState.columnMenu.open
-          ? {
-              ...oldState.columnMenu,
-              open: false,
-            }
-          : oldState.columnMenu,
       }));
       forceUpdate();
     },
@@ -334,6 +328,7 @@ export const useGridColumnResize = (apiRef: GridApiRef) => {
   }, [apiRef, handleTouchStart, stopListening]);
 
   React.useEffect(() => {
+    // TODO properly handle listener cleanup on grid unmount
     return () => {
       stopListening();
     };
