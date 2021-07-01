@@ -11,7 +11,7 @@ Big thanks to the 6 contributors who made this release possible. Here are some h
 
 - 💅 Allow to copy the selected rows to the clipboard with <kbd>CTRL</kbd> + <kbd>c</kbd> (#1929) @m4theushw
 - 🚀 `Select all` checkbox click should select only filtered rows after filter (#1879) @ZeeshanTamboli
-- ⚡️ Add single select column type (#1956) @DanailH@
+- ⚡️ Add a new `singleSelect` column type (#1956) @DanailH 
 - 🐞 Bugfixes
 
 ### @material-ui/x-grid@v4.0.0-alpha.32 / @material-ui/data-grid@v4.0.0-alpha.32
