@@ -69,8 +69,8 @@ import { XGrid } from '@material-ui/x-grid';
 | <span class="prop-name">onColumnHeaderEnter</span> | <span class="prop-type">(param: GridColumnHeaderParams, event: React.MouseEvent) => void</span> |   | Callback fired when a mouse enter event comes from a column header element. |
 | <span class="prop-name">onColumnHeaderLeave</span> | <span class="prop-type">(param: GridColumnHeaderParams, event: React.MouseEvent) => void</span> |   | Callback fired when a mouse leave event comes from a column header element. |
 | <span class="prop-name">onColumnOrderChange</span> | <span class="prop-type">(param: GridColumnOrderChangeParams, event: React.MouseEvent) => void</span> |   | Callback fired when a column is reordered. |
-| <span class="prop-name">onColumnResize</span> | <span class="prop-type">(param: GridColumnResizeParams) => void</span> |   | Callback fired when a column is resizing. |
-| <span class="prop-name">onColumnResizeCommitted</span> | <span class="prop-type">(param: GridColumnResizeParams) => void</span> |   | Callback fired when a column is resized. |
+| <span class="prop-name">onColumnResize</span> | <span class="prop-type">(param: GridColumnResizeParams) => void</span> |   | Callback fired while a column is being resized. |
+| <span class="prop-name">onColumnWidthChange</span> | <span class="prop-type">(param: GridColumnResizeParams) => void</span> |   | Callback fired when the width of a column is changed. |
 | <span class="prop-name">onColumnVisibilityChange</span> | <span class="prop-type">(param: GridColumnVisibilityChangeParams) => void</span> |   | Callback fired when a column visibility changes. |
 | <span class="prop-name">onError</span> | <span class="prop-type">(args: any) => void</span> |   | Callback fired when an exception is thrown in the grid, or when the `showError` API method is called. |
 | <span class="prop-name">onEditCellChange</span> | <span class="prop-type">(params: GridEditCellParams) => void</span> |   |  Callback fired when the edit cell value changed. |
