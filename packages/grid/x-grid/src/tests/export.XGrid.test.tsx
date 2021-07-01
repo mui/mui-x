@@ -17,7 +17,7 @@ describe('<XGrid /> - Export', () => {
 
   const columns: GridColumns = [{ field: 'id' }, { field: 'brand', headerName: 'Brand' }];
 
-  describe('getDataAsCsv', () => {
+  describe.only('getDataAsCsv', () => {
     it('should work with basic strings', () => {
       const TestCaseCSVExport = () => {
         apiRef = useGridApiRef();
@@ -250,6 +250,41 @@ describe('<XGrid /> - Export', () => {
       ).to.equal(['id,Brand', '0,Nike', '1,Adidas'].join('\r\n'));
     });
 
+    it('should not export columns with column.disableExport = true', () => {
+      const TestCaseCSVExport = () => {
+        apiRef = useGridApiRef();
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <XGrid
+              {...baselineProps}
+              apiRef={apiRef}
+              columns={[
+                { field: 'id' },
+                { field: 'brand', headerName: 'Brand', disableExport: true },
+              ]}
+              rows={[
+                {
+                  id: 0,
+                  brand: 'Nike',
+                },
+                {
+                  id: 1,
+                  brand: 'Adidas',
+                },
+              ]}
+            />
+          </div>
+        );
+      };
+
+      render(<TestCaseCSVExport />);
+      expect(
+        apiRef.current.getDataAsCsv({
+          columnKeys: ['brand'],
+        }),
+      ).to.equal(['Brand', 'Nike', 'Adidas'].join('\r\n'));
+    });
+
     it('should only export columns in params.columnKeys if defined', () => {
       const TestCaseCSVExport = () => {
         apiRef = useGridApiRef();
@@ -280,6 +315,41 @@ describe('<XGrid /> - Export', () => {
           columnKeys: ['brand'],
         }),
       ).to.equal(['Brand', 'Nike', 'Adidas'].join('\r\n'));
+    });
+
+    it('should export column defined in params.columnKeys even if column.hide=true or column.disableExport=true', () => {
+      const TestCaseCSVExport = () => {
+        apiRef = useGridApiRef();
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <XGrid
+              {...baselineProps}
+              apiRef={apiRef}
+              columns={[
+                { field: 'id', disableExport: true },
+                { field: 'brand', headerName: 'Brand', hide: true },
+              ]}
+              rows={[
+                {
+                  id: 0,
+                  brand: 'Nike',
+                },
+                {
+                  id: 1,
+                  brand: 'Adidas',
+                },
+              ]}
+            />
+          </div>
+        );
+      };
+
+      render(<TestCaseCSVExport />);
+      expect(
+        apiRef.current.getDataAsCsv({
+          columnKeys: ['id', 'brand'],
+        }),
+      ).to.equal(['id,Brand', '0,Nike', '1,Adidas'].join('\r\n'));
     });
   });
 });

@@ -139,6 +139,11 @@ export interface GridColDef {
    * Allows setting the filter operators for this column.
    */
   filterOperators?: GridFilterOperator[];
+  /**
+   * If `true`, the column will not be included in exports
+   * @default true
+   */
+  disableExport?: boolean;
 }
 
 export interface GridColumnProp extends Omit<GridColDef, 'filterOperators'> {

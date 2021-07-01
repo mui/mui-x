@@ -29,10 +29,10 @@ export const useGridCsvExport = (apiRef: GridApiRef): void => {
         exportedColumns = options.columnKeys
           .map((field) => columns.find((column) => column.field === field))
           .filter((column): column is GridColDef => !!column);
-      } else if (options?.allColumns) {
-        exportedColumns = columns;
       } else {
-        exportedColumns = visibleColumns;
+        const validColumns = options?.allColumns ? columns : visibleColumns;
+
+        exportedColumns = validColumns.filter((column) => !column.disableExport);
       }
 
       return buildCSV({
