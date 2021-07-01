@@ -523,7 +523,7 @@ describe('<XGrid /> - Rows', () => {
       });
     });
 
-    it('should reset focus when removing the row containing the focus cell', async () => {
+    it('should reset focus when removing the row containing the focus cell', () => {
       const { setProps } = render(<TestCase rows={baselineProps.rows} />);
 
       fireEvent.click(getCell(0, 0));
@@ -531,7 +531,7 @@ describe('<XGrid /> - Rows', () => {
       expect(apiRef.current.getState().focus.cell).to.equal(null);
     });
 
-    it('should not reset focus when removing a row not containing the focus cell', async () => {
+    it('should not reset focus when removing a row not containing the focus cell', () => {
       const { setProps } = render(<TestCase rows={baselineProps.rows} />);
 
       fireEvent.click(getCell(1, 0));
