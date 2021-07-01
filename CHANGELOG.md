@@ -50,7 +50,7 @@ Big thanks to the 6 contributors who made this release possible. Here are some h
 - [DataGrid] Add fallback for pagination translations (#2006) @m4theushw
 - [DataGrid] Add single select column type (#1956) @DanailH
 - [DataGrid] Allow to copy the selected rows to the clipboard (#1929) @m4theushw
-- [DataGrid] Better fix the scrollToIndexes logic (#1969) @oliviertassinari
+- [DataGrid] Improve the logic of `scrollToIndexes` (#1969) @oliviertassinari
 - [DataGrid] Fix deferred rendering race condition (#1807) @dtassone
 - [DataGrid] Fix double-click issue (#1919) @oliviertassinari
 - [DataGrid] Fix number edit cell output (#1959) @oliviertassinari
