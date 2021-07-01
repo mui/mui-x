@@ -69,7 +69,7 @@ Big thanks to the 6 contributors who made this release possible. Here are some h
 
 - [core] Polish filtering internals (#1760) @ZeeshanTamboli
 - [core] Upgrade actions-cool/issues-helper (#1962) @oliviertassinari
-- [core] virtualised => virtualized (#1988) @flaviendelangle
+- [core] Name variables according to enUS instead of enGB (#1988) @flaviendelangle
 - [test] Test vertical scrollbar (#1932) @oliviertassinari
 
 
