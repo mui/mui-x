@@ -113,9 +113,15 @@ export const useGridSelection = (apiRef: GridApiRef): void => {
 
   const selectRow = React.useCallback(
     (id: GridRowId, isSelected = true, allowMultiple = false) => {
+      const row = apiRef.current.getRow(id)
+
+      if (!row) {
+        throw new Error(`No row with id #${id} found`)
+      }
+
       selectRowModel({
         id,
-        row: apiRef.current.getRow(id),
+        row,
         allowMultipleOverride: allowMultiple,
         isSelected,
       });
