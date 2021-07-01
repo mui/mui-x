@@ -2,11 +2,6 @@ import * as React from 'react';
 import Select, { SelectProps } from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import { GridCellParams } from '../../models/params/gridCellParams';
-import {
-  GRID_CELL_EDIT_PROPS_CHANGE,
-  GRID_CELL_EDIT_PROPS_CHANGE_COMMITTED,
-  GRID_CELL_EDIT_EXIT,
-} from '../../constants/eventsConstants';
 import { isEscapeKey } from '../../utils/keyboardUtils';
 
 const renderSingleSelectOptions = (option) =>
@@ -41,20 +36,16 @@ export function GridEditSingleSelectCell(props: GridCellParams & SelectProps) {
     const editProps = { value: event.target.value };
 
     if (event.key) {
-      api.publishEvent(GRID_CELL_EDIT_PROPS_CHANGE, { id, field, props: editProps }, event);
+      api.setEditCellProps({ id, field, props: editProps }, event);
     } else {
-      api.publishEvent(
-        GRID_CELL_EDIT_PROPS_CHANGE_COMMITTED,
-        { id, field, props: editProps },
-        event,
-      );
-      api.publishEvent(GRID_CELL_EDIT_EXIT, { id, field }, event);
+      api.commitCellChange({ id, field, props: editProps }, event);
+      api.setCellMode(id, field, 'view');
     }
   };
 
   const handleClose = (event, reason) => {
     if (reason === 'backdropClick' || isEscapeKey(event.key)) {
-      api.publishEvent(GRID_CELL_EDIT_EXIT, { id, field });
+      api.setCellMode(id, field, 'view');
     }
   };
 
