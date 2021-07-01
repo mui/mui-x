@@ -54,7 +54,7 @@ Big thanks to the 6 contributors who made this release possible. Here are some h
 - [DataGrid] Fix deferred rendering race condition (#1807) @dtassone
 - [DataGrid] Fix double-click issue (#1919) @oliviertassinari
 - [DataGrid] Fix number edit cell output (#1959) @oliviertassinari
-- [DataGrid] Fix scrollToIndexes offscreen row (#1949) @oliviertassinari
+- [DataGrid] Fix offscreen row when calling `scrollToIndexes` (#1949) @oliviertassinari
 - [DataGrid] Ignore drag events when disableColumnReorder is true (#1952) @m4theushw
 - [DataGrid] `Select all` checkbox click should select only filtered rows after filter (#1879) @ZeeshanTamboli
 - [XGrid] Add option to select only visible rows on the current page (#1998) @DanailH
