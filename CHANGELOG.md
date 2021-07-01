@@ -10,8 +10,29 @@ _July 1, 2021_
 Big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
 
 - 💅 Allow to copy the selected rows to the clipboard with <kbd>CTRL</kbd> + <kbd>c</kbd> (#1929) @m4theushw
-- 🐞 `Select all` checkbox click should select only filtered rows (#1879) @ZeeshanTamboli
-- ⚡️ Add a new `singleSelect` column type (#1956) @DanailH 
+- 🐛 `Select all` checkbox click should select only filtered rows (#1879) @ZeeshanTamboli
+- ⚡️ Add a new `singleSelect` column type (#1956) @DanailH
+
+  Using the column `type: 'singleSelect'` defaults to `Select` component when the cell is in `edit` mode. You can find the documentation [following this link](https://material-ui.com/components/data-grid/columns/#column-types).
+
+  ```tsx
+    <DataGrid
+      columns={[
+        {
+          field: 'country',
+          type: 'singleSelect',
+          valueOptions: ['France', 'Netherlands', 'Brazil'],
+          editable: true,
+        }
+      ]}
+      rows={[
+        { id: 0, country: 'France' },
+        { id: 1, country: 'Netherlands' },
+        { id: 1, country: 'Brazil' },
+      ]}
+    />
+  ```
+
 - 🐞 Bugfixes
 
 ### @material-ui/x-grid@v4.0.0-alpha.32 / @material-ui/data-grid@v4.0.0-alpha.32
