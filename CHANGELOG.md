@@ -55,7 +55,6 @@ Big thanks to the 6 contributors who made this release possible. Here are some h
   - `columnHeaderNavigationKeydown` to `columnHeaderNavigationKeyDown`
   - `columnResizeCommitted` to `columnWidthChange`
   - `rowsUpdated` to `rowsUpdate`
-  - `rowsCleared` to `rowsClear`
   - `columnsUpdated` to `columnsChange`
 
   The following `XGrid` DOM events were removed:
