@@ -64,7 +64,6 @@ Big thanks to the 6 contributors who made this release possible. Here are some h
 - [docs] Align docs with EULA (source of truth) (#1963) @oliviertassinari
 - [docs] Fix changing Dataset not working (#1965) @m4theushw
 - [docs] Fix description of union types (#2003) @m4theushw
-- [CHANGELOG] Fix typo @oliviertassinari
 
 ### Core
 
