@@ -71,7 +71,6 @@ Big thanks to the 6 contributors who made this release possible. Here are some h
 - [core] Name variables according to enUS instead of enGB (#1988) @flaviendelangle
 - [test] Test vertical scrollbar (#1932) @oliviertassinari
 
-
 ## [4.0.0-alpha.32](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.31...v4.0.0-alpha.32)
 
 _June 18, 2021_
