@@ -9,32 +9,32 @@ _July 1, 2021_
 
 Big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
 
-- 🐞 Bugfixes
-- 💅 Allow to copy the selected rows to the clipboard with <kbd>CTRL</kbd> + <kbd>c</kbd> (#1929) @m4theushw
-- 🐛 `Select all` checkbox click should select only filtered rows (#1879) @ZeeshanTamboli
-- ⚡️ Add a new `singleSelect` column type (#1956) @DanailH
+- 🐞 As a focus of Q2, we have kept fixing bugs
+- 💅 End users are now allowed to copy the selected rows to the clipboard with <kbd>CTRL</kbd> + <kbd>c</kbd> (#1929) @m4theushw
+- 🐛 We have fixed the `Select all` checkbox. When triggered, it should only select the filtered rows (#1879) @ZeeshanTamboli
+- ⚡️ We have added a new `singleSelect` column type (#1956) @DanailH
 
   Using the column `type: 'singleSelect'` defaults to `Select` component when the cell is in `edit` mode. You can find the documentation [following this link](https://material-ui.com/components/data-grid/columns/#column-types).
 
-  ```
-    <DataGrid
-      columns={[
-        {
-          field: 'country',
-          type: 'singleSelect',
-          valueOptions: ['France', 'Netherlands', 'Brazil'],
-          editable: true,
-        }
-      ]}
-      rows={[
-        { id: 0, country: 'France' },
-        { id: 1, country: 'Netherlands' },
-        { id: 2, country: 'Brazil' },
-      ]}
-    />
+  ```jsx
+  <DataGrid
+    columns={[
+      {
+        field: 'country',
+        type: 'singleSelect',
+        valueOptions: ['France', 'Netherlands', 'Brazil'],
+        editable: true,
+      }
+    ]}
+    rows={[
+      { id: 0, country: 'France' },
+      { id: 1, country: 'Netherlands' },
+      { id: 2, country: 'Brazil' },
+    ]}
+  />
   ```
 
-### @material-ui/x-grid@v4.0.0-alpha.32 / @material-ui/data-grid@v4.0.0-alpha.32
+### @material-ui/x-grid@v4.0.0-alpha.33 / @material-ui/data-grid@v4.0.0-alpha.33
 
 #### Breaking changes
 
@@ -43,6 +43,7 @@ Big thanks to the 6 contributors who made this release possible. Here are some h
   ```diff
   -<DataGrid onColumnResizeCommitted={...} />
   +<DataGrid onColumnWidthChange={...} />
+  ```
 
 - [DataGrid] Make GRID_ROWS_CLEAR private (#1925) @oliviertassinari
 
