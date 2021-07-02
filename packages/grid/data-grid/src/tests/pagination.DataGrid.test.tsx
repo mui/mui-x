@@ -13,7 +13,7 @@ import {
   DEFAULT_GRID_OPTIONS,
   GridRowsProp,
 } from '@material-ui/data-grid';
-import {getColumnValues} from 'test/utils/helperFn';
+import { getColumnValues } from 'test/utils/helperFn';
 import { spy } from 'sinon';
 import { useData } from 'packages/storybook/src/hooks/useData';
 
@@ -341,7 +341,9 @@ describe('<DataGrid /> - Pagination', () => {
 
         render(<TestCase />);
 
-        expect(document.querySelector('.MuiTablePagination-input [role="button"]')).to.have.text('12')
+        expect(document.querySelector('.MuiTablePagination-input [role="button"]')).to.have.text(
+          '12',
+        );
       });
     });
   });
