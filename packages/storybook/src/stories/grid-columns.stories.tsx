@@ -316,3 +316,50 @@ export const ValueGetterAndFormatter = () => {
     </div>
   );
 };
+
+export const SingleSelectColumnType = () => {
+  const countries = [
+    {
+      value: 'bg',
+      label: 'Bulgaria',
+    },
+    {
+      value: 'nl',
+      label: 'Netherlands',
+    },
+    {
+      value: 'fr',
+      label: 'France',
+    },
+    {
+      value: 'it',
+      label: 'Italy',
+    },
+  ];
+
+  const data = {
+    rows: [
+      { id: 0, country: 'bg' },
+      { id: 1, country: 'nl' },
+    ],
+    columns: [
+      {
+        field: 'country',
+        type: 'singleSelect',
+        valueOptions: countries,
+        valueFormatter: (params) => {
+          const result = countries.filter((country) => country.value === params.value)[0];
+          return result.label;
+        },
+        editable: true,
+        width: 200,
+      },
+    ],
+  };
+
+  return (
+    <div className="grid-container">
+      <XGrid rows={data.rows} columns={data.columns} />
+    </div>
+  );
+};

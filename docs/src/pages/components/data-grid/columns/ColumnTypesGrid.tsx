@@ -13,6 +13,7 @@ const rows = [
     dateCreated: randomCreatedDate(),
     lastLogin: randomUpdatedDate(),
     isAdmin: true,
+    country: 'Spain',
   },
   {
     id: 2,
@@ -21,6 +22,7 @@ const rows = [
     dateCreated: randomCreatedDate(),
     lastLogin: randomUpdatedDate(),
     isAdmin: true,
+    country: 'France',
   },
   {
     id: 3,
@@ -29,6 +31,7 @@ const rows = [
     dateCreated: randomCreatedDate(),
     lastLogin: randomUpdatedDate(),
     isAdmin: false,
+    country: 'Brazil',
   },
 ];
 
@@ -42,6 +45,19 @@ export default function ColumnTypesGrid() {
           { field: 'dateCreated', type: 'date', width: 130 },
           { field: 'lastLogin', type: 'dateTime', width: 180 },
           { field: 'isAdmin', type: 'boolean', width: 120 },
+          {
+            field: 'country',
+            type: 'singleSelect',
+            width: 150,
+            valueOptions: [
+              'Bulgaria',
+              'Netherlands',
+              'France',
+              'United Kingdom',
+              'Spain',
+              'Brazil',
+            ],
+          },
         ]}
         rows={rows}
       />

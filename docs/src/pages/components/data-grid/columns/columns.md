@@ -84,7 +84,10 @@ Alternatively, to disable all columns resize, set the prop `disableColumnResize=
 
 {{"demo": "pages/components/data-grid/columns/ColumnSizingGrid.js", "disableAd": true, "bg": "inline"}}
 
-To capture changes of a column width during resizing use `onColumnResize` or `onColumnResizeCommitted`.
+To capture changes in the width of a column there are two callbacks that are called:
+
+- `onColumnResize`: Called while a column is being resized.
+- `onColumnWidthChange`: Called after the width of a column is changed, but not during resizing.
 
 ### Value getter
 
@@ -237,8 +240,10 @@ The following are the native column types:
 - `'date'`
 - `'dateTime'`
 - `'boolean'`
+- `'singleSelect'`
 
 To apply a column type, you need to define the type property in your column definition.
+If the column is `type: 'singleSelect'` you also need to set the `valueOptions` property in that column definition.
 
 {{"demo": "pages/components/data-grid/columns/ColumnTypesGrid.js", "bg": "inline"}}
 

@@ -12,8 +12,5 @@ export * from './renderEditCurrency';
 export * from './renderEditProgress';
 export * from './renderEditStatus';
 export * from './renderEditIncoterm';
-export * from './renderEditTaxCode';
-export * from './renderEditContractType';
-export * from './renderEditRateType';
 export * from './renderEditRating';
 export * from './renderEditCountry';

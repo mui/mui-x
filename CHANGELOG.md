@@ -3,6 +3,94 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.0.0-alpha.33](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.32...v4.0.0-alpha.33)
+
+_July 1, 2021_
+
+Big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
+
+- 🐞 As a focus of Q2, we have kept fixing bugs
+- 💅 End users are now allowed to copy the selected rows to the clipboard with <kbd>CTRL</kbd> + <kbd>c</kbd> (#1929) @m4theushw
+- 🐛 We have fixed the `Select all` checkbox. When triggered, it should only select the filtered rows (#1879) @ZeeshanTamboli
+- ⚡️ We have added a new `singleSelect` column type (#1956) @DanailH
+
+  Using the column `type: 'singleSelect'` defaults to `Select` component when the cell is in `edit` mode. You can find the documentation [following this link](https://material-ui.com/components/data-grid/columns/#column-types).
+
+  ```jsx
+  <DataGrid
+    columns={[
+      {
+        field: 'country',
+        type: 'singleSelect',
+        valueOptions: ['France', 'Netherlands', 'Brazil'],
+        editable: true,
+      }
+    ]}
+    rows={[
+      { id: 0, country: 'France' },
+      { id: 1, country: 'Netherlands' },
+      { id: 2, country: 'Brazil' },
+    ]}
+  />
+  ```
+
+### @material-ui/x-grid@v4.0.0-alpha.33 / @material-ui/data-grid@v4.0.0-alpha.33
+
+#### Breaking changes
+
+- [DataGrid] Rename `onColumnResizeCommitted` to `onColumnWidthChange` (#1967) @m4theushw
+
+  ```diff
+  -<DataGrid onColumnResizeCommitted={...} />
+  +<DataGrid onColumnWidthChange={...} />
+  ```
+
+- [DataGrid] Make GRID_ROWS_CLEAR private (#1925) @oliviertassinari
+
+  The `rowsCleared` event was always triggered alongside `rowsSet`. You can listen to the latter event only.
+
+- [DataGrid] Fix events naming (#1862) @m4theushw
+
+  The following `XGrid` events were renamed:
+
+  - `columnHeaderNavigationKeydown` to `columnHeaderNavigationKeyDown`
+  - `columnResizeCommitted` to `columnWidthChange`
+  - `rowsUpdated` to `rowsUpdate`
+  - `columnsUpdated` to `columnsChange`
+
+  The following `XGrid` DOM events were removed:
+
+  - `focusout`
+  - `keydown`
+  - `keyup`
+
+#### Changes
+
+- [DataGrid] Add fallback for pagination translations (#2006) @m4theushw
+- [DataGrid] Add single select column type (#1956) @DanailH
+- [DataGrid] Allow to copy the selected rows to the clipboard (#1929) @m4theushw
+- [DataGrid] Improve the logic of `scrollToIndexes` (#1969) @oliviertassinari
+- [DataGrid] Fix deferred rendering race condition (#1807) @dtassone
+- [DataGrid] Fix double-click issue (#1919) @oliviertassinari
+- [DataGrid] Fix number edit cell output (#1959) @oliviertassinari
+- [DataGrid] Fix offscreen row when calling `scrollToIndexes` (#1949) @oliviertassinari
+- [DataGrid] Ignore drag events when disableColumnReorder is true (#1952) @m4theushw
+- [DataGrid] `Select all` checkbox click should select only filtered rows (#1879) @ZeeshanTamboli
+- [XGrid] Add option to select only visible rows on the current page (#1998) @DanailH
+
+### Docs
+
+- [docs] Align docs with EULA (source of truth) (#1963) @oliviertassinari
+- [docs] Fix changing Dataset not working (#1965) @m4theushw
+- [docs] Fix description of union types (#2003) @m4theushw
+
+### Core
+
+- [core] Polish filtering internals (#1760) @ZeeshanTamboli
+- [core] Upgrade actions-cool/issues-helper (#1962) @oliviertassinari
+- [core] Name variables according to enUS instead of enGB (#1988) @flaviendelangle
+- [test] Test vertical scrollbar (#1932) @oliviertassinari
+
 ## [4.0.0-alpha.32](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.31...v4.0.0-alpha.32)
 
 _June 18, 2021_

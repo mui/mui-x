@@ -277,13 +277,18 @@ describe('<XGrid /> - Rows', () => {
 
     let apiRef: GridApiRef;
     const TestCaseVirtualization = (
-      props: Partial<XGridProps> & { nbRows?: number; nbCols?: number; height?: number },
+      props: Partial<XGridProps> & {
+        nbRows?: number;
+        nbCols?: number;
+        width?: number;
+        height?: number;
+      },
     ) => {
       apiRef = useGridApiRef();
       const data = useData(props.nbRows || 100, props.nbCols || 10);
 
       return (
-        <div style={{ width: 300, height: props.height || 300 }}>
+        <div style={{ width: props.width || 300, height: props.height || 300 }}>
           <XGrid apiRef={apiRef} columns={data.columns} rows={data.rows} {...props} />
         </div>
       );
@@ -449,7 +454,7 @@ describe('<XGrid /> - Rows', () => {
     });
 
     describe('scrollToIndexes', () => {
-      it('should scroll correctly when the given index is partially visible at the bottom', () => {
+      it('should scroll correctly when the given rowIndex is partially visible at the bottom', () => {
         const headerHeight = 40;
         const rowHeight = 50;
         const offset = 10;
@@ -490,6 +495,24 @@ describe('<XGrid /> - Rows', () => {
         expect(gridWindow.scrollTop).to.equal(offset);
         apiRef.current.scrollToIndexes({ rowIndex: 0, colIndex: 0 });
         expect(gridWindow.scrollTop).to.equal(0);
+      });
+
+      it('should scroll correctly when the given colIndex is partially visible at the right', () => {
+        const width = 300;
+        const border = 1;
+        const columnWidth = 120;
+        const rows = [{ id: 0, firstName: 'John', lastName: 'Doe', age: 11 }];
+        const columns = [
+          { field: 'id', width: columnWidth },
+          { field: 'firstName', width: columnWidth },
+          { field: 'lastName', width: columnWidth },
+          { field: 'age', width: columnWidth },
+        ];
+        render(<TestCaseVirtualization width={width + border * 2} rows={rows} columns={columns} />);
+        const gridWindow = document.querySelector('.MuiDataGrid-window')!;
+        expect(gridWindow.scrollLeft).to.equal(0);
+        apiRef.current.scrollToIndexes({ rowIndex: 0, colIndex: 2 });
+        expect(gridWindow.scrollLeft).to.equal(columnWidth * 3 - width);
       });
     });
   });
