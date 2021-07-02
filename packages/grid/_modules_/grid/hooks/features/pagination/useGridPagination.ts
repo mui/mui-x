@@ -95,16 +95,21 @@ export const useGridPagination = (apiRef: GridApiRef): void => {
     const autoPageSize = containerSizes?.viewportPageSize;
     const prevPageSize = apiRef.current.getState().pagination.pageSize;
 
-    let pageSize: number;
+    let pageSize = prevPageSize;
 
     if (options.autoPageSize) {
-      pageSize = autoPageSize || prevPageSize;
-    } else {
-      pageSize = options.pageSize || prevPageSize;
+      if (autoPageSize) {
+        pageSize = autoPageSize;
+      }
+    } else if (options.pageSize) {
+      pageSize = options.pageSize;
     }
 
     if (options.autoPageSize && autoPageSize !== prevPageSize && autoPageSize !== undefined) {
-      apiRef.current.publishEvent(GRID_PAGE_SIZE_CHANGE, { pageSize: autoPageSize });
+      const params = apiRef.current.getState<GridPaginationState>(
+        'pagination',
+      ) as GridPageChangeParams;
+      apiRef.current.publishEvent(GRID_PAGE_SIZE_CHANGE, { ...params, pageSize: autoPageSize });
     }
 
     setGridState((state) => ({

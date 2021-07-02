@@ -15,7 +15,7 @@ import {
   DEFAULT_GRID_OPTIONS,
   GridRowsProp,
 } from '@material-ui/data-grid';
-import { getCell, getColumnValues } from 'test/utils/helperFn';
+import { getColumnValues } from 'test/utils/helperFn';
 import { spy } from 'sinon';
 import { useData } from 'packages/storybook/src/hooks/useData';
 
@@ -341,6 +341,7 @@ describe('<DataGrid /> - Pagination', () => {
             </div>
           );
         };
+
         const nbRows = 27;
         const heightBefore = 780;
         const heightAfter = 360;
@@ -362,7 +363,11 @@ describe('<DataGrid /> - Pagination', () => {
 
         setProps({ height: heightAfter });
 
-        await waitFor(() => getCell(expectedViewportRowsLengthAfter, 0));
+        await waitFor(() =>
+          expect(document.querySelector('.MuiTablePagination-caption')!.innerHTML).to.equal(
+            `1-${expectedViewportRowsLengthAfter} of ${nbRows}`,
+          ),
+        );
 
         rows = document.querySelectorAll('.MuiDataGrid-viewport [role="row"]');
         expect(rows.length).to.equal(expectedViewportRowsLengthAfter);

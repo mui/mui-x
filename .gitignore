@@ -2,7 +2,6 @@
 # However, in order to prevent issues, editor files are ignored here.
 .idea
 .vscode
-.env
 
 __diff_output__
 .DS_STORE
