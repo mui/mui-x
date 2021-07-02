@@ -16,6 +16,11 @@ export const GRID_DEBOUNCED_RESIZE = 'debouncedResize';
  */
 export const GRID_SCROLL = 'scroll';
 
+/**
+ * @ignore - do not document.
+ */
+export const GRID_KEYDOWN = 'keydown';
+
 // GRID events
 
 /**
@@ -374,7 +379,7 @@ export const GRID_COLUMN_SEPARATOR_MOUSE_DOWN = 'columnSeparatorMouseDown';
 export const GRID_COLUMN_RESIZE = 'columnResize';
 
 /**
- * Fired when a column is resized. Called with a [[GridColumnResizeParams]] object.
+ * Fired when the width of a column is changed. Called with a [[GridColumnResizeParams]] object.
  * @event
  */
 export const GRID_COLUMN_WIDTH_CHANGE = 'columnWidthChange';

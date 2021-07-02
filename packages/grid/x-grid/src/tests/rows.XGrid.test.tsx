@@ -277,13 +277,18 @@ describe('<XGrid /> - Rows', () => {
 
     let apiRef: GridApiRef;
     const TestCaseVirtualization = (
-      props: Partial<XGridProps> & { nbRows?: number; nbCols?: number; height?: number },
+      props: Partial<XGridProps> & {
+        nbRows?: number;
+        nbCols?: number;
+        width?: number;
+        height?: number;
+      },
     ) => {
       apiRef = useGridApiRef();
       const data = useData(props.nbRows || 100, props.nbCols || 10);
 
       return (
-        <div style={{ width: 300, height: props.height || 300 }}>
+        <div style={{ width: props.width || 300, height: props.height || 300 }}>
           <XGrid apiRef={apiRef} columns={data.columns} rows={data.rows} {...props} />
         </div>
       );
@@ -292,10 +297,10 @@ describe('<XGrid /> - Rows', () => {
     it('Rows should not be virtualized when the number of rows fit in the viewport', () => {
       const headerHeight = 50;
       const rowHeight = 50;
-      const maxRowsNotVirtualised = (300 - headerHeight) / rowHeight;
+      const maxRowsNotVirtualized = (300 - headerHeight) / rowHeight;
       render(
         <TestCaseVirtualization
-          nbRows={maxRowsNotVirtualised}
+          nbRows={maxRowsNotVirtualized}
           hideFooter
           headerHeight={headerHeight}
           rowHeight={rowHeight}
@@ -309,10 +314,10 @@ describe('<XGrid /> - Rows', () => {
     it('Rows should be virtualized when at least 2 rows are outside the viewport', () => {
       const headerHeight = 50;
       const rowHeight = 50;
-      const maxRowsNotVirtualised = (300 - headerHeight) / rowHeight;
+      const maxRowsNotVirtualized = (300 - headerHeight) / rowHeight;
       render(
         <TestCaseVirtualization
-          nbRows={maxRowsNotVirtualised + 1}
+          nbRows={maxRowsNotVirtualized + 1}
           hideFooter
           headerHeight={headerHeight}
           rowHeight={rowHeight}
@@ -324,7 +329,7 @@ describe('<XGrid /> - Rows', () => {
 
       render(
         <TestCaseVirtualization
-          nbRows={maxRowsNotVirtualised + 2}
+          nbRows={maxRowsNotVirtualized + 2}
           hideFooter
           headerHeight={headerHeight}
           rowHeight={rowHeight}
@@ -449,22 +454,65 @@ describe('<XGrid /> - Rows', () => {
     });
 
     describe('scrollToIndexes', () => {
-      it('should scroll correctly when the given index is partially visible at the bottom', () => {
+      it('should scroll correctly when the given rowIndex is partially visible at the bottom', () => {
         const headerHeight = 40;
         const rowHeight = 50;
+        const offset = 10;
         const border = 1;
         render(
           <TestCaseVirtualization
             hideFooter
             headerHeight={headerHeight}
-            height={headerHeight + 4 * rowHeight + 10 + border * 2}
+            height={headerHeight + 4 * rowHeight + offset + border * 2}
             nbCols={2}
             rowHeight={rowHeight}
           />,
         );
         const gridWindow = document.querySelector('.MuiDataGrid-window')!;
         apiRef.current.scrollToIndexes({ rowIndex: 4, colIndex: 0 });
-        expect(gridWindow.scrollTop).to.equal(rowHeight);
+        expect(gridWindow.scrollTop).to.equal(rowHeight - offset);
+      });
+
+      it('should scroll correctly when the given index is partially visible at the top', () => {
+        const headerHeight = 40;
+        const rowHeight = 50;
+        const offset = 10;
+        const border = 1;
+        render(
+          <TestCaseVirtualization
+            hideFooter
+            headerHeight={headerHeight}
+            height={headerHeight + 4 * rowHeight + border + border * 2}
+            nbCols={2}
+            rowHeight={rowHeight}
+          />,
+        );
+        const gridWindow = document.querySelector('.MuiDataGrid-window')!;
+        gridWindow.scrollTop = offset;
+        apiRef.current.scrollToIndexes({ rowIndex: 2, colIndex: 0 });
+        expect(gridWindow.scrollTop).to.equal(offset);
+        apiRef.current.scrollToIndexes({ rowIndex: 1, colIndex: 0 });
+        expect(gridWindow.scrollTop).to.equal(offset);
+        apiRef.current.scrollToIndexes({ rowIndex: 0, colIndex: 0 });
+        expect(gridWindow.scrollTop).to.equal(0);
+      });
+
+      it('should scroll correctly when the given colIndex is partially visible at the right', () => {
+        const width = 300;
+        const border = 1;
+        const columnWidth = 120;
+        const rows = [{ id: 0, firstName: 'John', lastName: 'Doe', age: 11 }];
+        const columns = [
+          { field: 'id', width: columnWidth },
+          { field: 'firstName', width: columnWidth },
+          { field: 'lastName', width: columnWidth },
+          { field: 'age', width: columnWidth },
+        ];
+        render(<TestCaseVirtualization width={width + border * 2} rows={rows} columns={columns} />);
+        const gridWindow = document.querySelector('.MuiDataGrid-window')!;
+        expect(gridWindow.scrollLeft).to.equal(0);
+        apiRef.current.scrollToIndexes({ rowIndex: 0, colIndex: 2 });
+        expect(gridWindow.scrollLeft).to.equal(columnWidth * 3 - width);
       });
     });
   });

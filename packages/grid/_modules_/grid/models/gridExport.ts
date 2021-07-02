@@ -1,7 +1,7 @@
 /**
  * Available CSV delimiter characters used to separate fields.
  */
-export type GridExportCsvDelimiter = ',' | ';';
+export type GridExportCsvDelimiter = string;
 
 /**
  * The options to apply on the CSV export.

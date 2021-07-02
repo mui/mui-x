@@ -273,7 +273,8 @@ export function useGridEditRows(apiRef: GridApiRef) {
 
       const isEditMode = params.cellMode === 'edit';
 
-      if (!isEditMode && isCellEnterEditModeKeys(event.key)) {
+      const isModifierKeyPressed = event.ctrlKey || event.metaKey || event.altKey;
+      if (!isEditMode && isCellEnterEditModeKeys(event.key) && !isModifierKeyPressed) {
         apiRef.current.publishEvent(GRID_CELL_EDIT_ENTER, params, event);
       }
       if (!isEditMode && isDeleteKeys(event.key)) {
