@@ -13,7 +13,7 @@ import {
   DEFAULT_GRID_OPTIONS,
   GridRowsProp,
 } from '@material-ui/data-grid';
-import { getColumnValues } from 'test/utils/helperFn';
+import {getColumnValues} from 'test/utils/helperFn';
 import { spy } from 'sinon';
 import { useData } from 'packages/storybook/src/hooks/useData';
 
@@ -319,6 +319,29 @@ describe('<DataGrid /> - Pagination', () => {
           </div>,
         );
         expect(getColumnValues(0)).to.deep.equal(['7', '8']);
+      });
+
+      it('should add the pageSize to the rowsPerPageOptions if it is not in it', async () => {
+        const TestCase: React.FC = () => {
+          const data = useData(100, 10);
+
+          return (
+            <div style={{ height: 300, width: 400 }}>
+              <DataGrid
+                autoHeight={isJSDOM}
+                columns={data.columns}
+                rows={data.rows}
+                pagination
+                pageSize={12}
+                rowsPerPageOptions={[25, 50, 100]}
+              />
+            </div>
+          );
+        };
+
+        render(<TestCase />);
+
+        expect(document.querySelector('.MuiTablePagination-input [role="button"]')).to.have.text('12')
       });
     });
   });
