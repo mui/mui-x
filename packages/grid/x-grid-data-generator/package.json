@@ -23,7 +23,6 @@
   },
   "dependencies": {
     "@material-ui/icons": "^4.9.1",
-    "@material-ui/lab": "^4.0.0-alpha.54",
     "@types/chance": "^1.1.0",
     "chance": "^1.1.6",
     "clsx": "^1.0.4",
@@ -35,6 +34,7 @@
   },
   "peerDependencies": {
     "@material-ui/core": "^4.9.12 || ^5.0.0-alpha.34",
+    "@material-ui/lab": "^4.0.0-alpha.56 || ^5.0.0-alpha.39",
     "react": "^17.0.0"
   },
   "setupFiles": [
