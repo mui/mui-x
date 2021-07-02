@@ -234,7 +234,7 @@ export const getCommodityColumns: (editable?: boolean) => any[] = (editable = fa
       renderCell: renderCountry,
       valueParser: (value) => {
         if (typeof value === 'string') {
-          return COUNTRY_ISO_OPTIONS.filter((country) => country.value === value)[0];
+          return COUNTRY_ISO_OPTIONS.find((country) => country.value === value);
         }
 
         return value;
