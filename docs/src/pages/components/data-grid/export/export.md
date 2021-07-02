@@ -14,6 +14,16 @@ To enable the CSV export you need to compose a toolbar containing the `GridToolb
 
 {{"demo": "pages/components/data-grid/export/ExportSelectorGrid.js", "bg": "inline"}}
 
+### Only export some columns
+
+By default, the CSV will only contain the visible columns of the table.
+
+To export all columns, including the hidden one, you can use the `allColumns` option in the `csvOptions` property of `GridToolbarExport`
+
+To exclude additional columns, you can use the `disableExport` property available in `GridColDef`
+
+To define the exact columns you want to export, you can use the `columnKeys` option in the `csvOptions` property of `GridToolbarExport`
+
 ## 🚧 Print
 
 > ⚠️ This feature isn't implemented yet. It's coming.
