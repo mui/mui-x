@@ -190,8 +190,12 @@ LicenseInfo.setLicenseKey(
 
 The grid checks the key without making any network requests.
 
+#### What's the expiration policy?
+
+The licenses are perpetual, the license key will work forever.
+However, access to updates is not.
 If you install a new version of the component for which the license key has expired, you will trigger a [watermark and console message](#invalid-license).
-For instance, if you have a one-year license and you install a version that is two years in the future.
+For instance, if you have a one-year license (default), you are not licensed to install a version that is two years in the future.
 
 ## Support
 
