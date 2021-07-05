@@ -280,6 +280,7 @@ export function useGridColumns(apiRef: GridApiRef, { columns }: { columns: GridC
         logger,
         apiRef.current.getLocaleText,
       );
+
       updateColumns(hydratedColumns, true);
     } else {
       updateState(getInitialGridColumnsState());
