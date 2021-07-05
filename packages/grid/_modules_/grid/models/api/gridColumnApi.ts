@@ -47,8 +47,9 @@ export interface GridColumnApi {
   /**
    * Updates the definition of multiple columns at the same time.
    * @param {GridColDef[]} cols The new column [[GridColDef]] objects.
+   * @param {boolean} allColumnsProvided Determines if the `cols` argument contains all the columns or just the updated ones
    */
-  updateColumns: (cols: GridColDef[]) => void;
+  updateColumns: (cols: GridColDef[], allColumnsProvided?: boolean) => void;
   /**
    * Changes the visibility of the column referred by `field`.
    * @param {string} field The column to change visibility.
