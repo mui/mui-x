@@ -2,7 +2,8 @@ import * as React from 'react';
 import {
   GridRowsProp,
   DataGrid,
-  GridPageChangeParams, GridRowId,
+  GridPageChangeParams,
+  GridRowId,
 } from '@material-ui/data-grid';
 import {
   useDemoData,
@@ -23,7 +24,7 @@ function loadServerRows(
 ): Promise<ServerBasedGridResponse> {
   return new Promise<ServerBasedGridResponse>((resolve) => {
     setTimeout(() => {
-      const start = cursor ? data.rows.findIndex(row => row.id === cursor) : 0;
+      const start = cursor ? data.rows.findIndex((row) => row.id === cursor) : 0;
       const end = start + PAGE_SIZE;
       const rows = data.rows.slice(start, end);
 
