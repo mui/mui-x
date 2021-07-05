@@ -147,7 +147,7 @@
   },
   {
     "name": "columnWidthChange",
-    "description": "Fired when a column is resized. Called with a GridColumnResizeParams object."
+    "description": "Fired when the width of a column is changed. Called with a GridColumnResizeParams object."
   },
   {
     "name": "columnResizeStart",

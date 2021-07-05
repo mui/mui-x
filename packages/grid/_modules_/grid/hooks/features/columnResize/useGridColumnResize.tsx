@@ -332,5 +332,5 @@ export const useGridColumnResize = (apiRef: GridApiRef) => {
   useGridApiEventHandler(apiRef, GRID_COLUMN_RESIZE_STOP, handleResizeStop);
 
   useGridApiOptionHandler(apiRef, GRID_COLUMN_RESIZE, options.onColumnResize);
-  useGridApiOptionHandler(apiRef, GRID_COLUMN_WIDTH_CHANGE, options.onColumnResizeCommitted);
+  useGridApiOptionHandler(apiRef, GRID_COLUMN_WIDTH_CHANGE, options.onColumnWidthChange);
 };

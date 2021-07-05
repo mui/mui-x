@@ -106,6 +106,34 @@ describe('<DataGrid /> - Selection', () => {
       expect(checkbox).to.have.property('checked', false);
     });
 
+    it('should select all visible rows regardless of pagination', () => {
+      render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid
+            rows={[
+              {
+                id: 0,
+                brand: 'Nike',
+              },
+              {
+                id: 1,
+                brand: 'Puma',
+              },
+            ]}
+            columns={[{ field: 'brand', width: 100 }]}
+            checkboxSelection
+            pagination
+            pageSize={1}
+          />
+        </div>,
+      );
+      const selectAllCheckbox = document.querySelector('input[type="checkbox"]');
+      fireEvent.click(selectAllCheckbox);
+      expect(getRow(0)).to.have.class('Mui-selected');
+      fireEvent.click(screen.getByRole('button', { name: /next page/i }));
+      expect(getRow(1)).to.have.class('Mui-selected');
+    });
+
     it('with no rows, the checkbox should not be checked', () => {
       render(
         <div style={{ width: 300, height: 300 }}>

@@ -12,32 +12,35 @@ const FORCED_PROPS: Partial<GridComponentProps> = {
   pagination: true,
   apiRef: undefined,
   onRowsScrollEnd: undefined,
+  checkboxSelectionVisibleOnly: false,
 };
 
 export type DataGridProps = Omit<
   GridComponentProps,
+  | 'apiRef'
+  | 'checkboxSelectionVisibleOnly'
   | 'disableColumnResize'
   | 'disableColumnReorder'
   | 'disableMultipleColumnsFiltering'
   | 'disableMultipleColumnsSorting'
   | 'disableMultipleSelection'
   | 'licenseStatus'
-  | 'apiRef'
   | 'options'
-  | 'pagination'
   | 'onRowsScrollEnd'
+  | 'pagination'
   | 'scrollEndThreshold'
   | 'selectionModel'
 > & {
+  apiRef?: undefined;
+  checkboxSelectionVisibleOnly?: false;
   disableColumnResize?: true;
   disableColumnReorder?: true;
   disableMultipleColumnsFiltering?: true;
   disableMultipleColumnsSorting?: true;
   disableMultipleSelection?: true;
-  pagination?: true;
-  apiRef?: undefined;
   onRowsScrollEnd?: undefined;
   selectionModel?: GridRowId | GridRowId[];
+  pagination?: true;
 };
 
 const MAX_PAGE_SIZE = 100;
@@ -81,6 +84,19 @@ DataGrid.propTypes = {
         [
           `Material-UI: \`apiRef\` is not a valid prop.`,
           'GridApiRef is not available in the MIT version.',
+          '',
+          'You need to upgrade to the XGrid component to unlock this feature.',
+        ].join('\n'),
+      );
+    }
+    return null;
+  }),
+  checkboxSelectionVisibleOnly: chainPropTypes(PropTypes.bool, (props: any) => {
+    if (props.checkboxSelectionVisibleOnly === true) {
+      return new Error(
+        [
+          `Material-UI: \`<DataGrid checkboxSelectionVisibleOnly={true} />\` is not a valid prop.`,
+          'Selecting all columns only on the current page is not available in the MIT version.',
           '',
           'You need to upgrade to the XGrid component to unlock this feature.',
         ].join('\n'),
@@ -166,6 +182,19 @@ DataGrid.propTypes = {
     }
     return null;
   }),
+  onRowsScrollEnd: chainPropTypes(PropTypes.any, (props: any) => {
+    if (props.onRowsScrollEnd != null) {
+      return new Error(
+        [
+          `Material-UI: \`onRowsScrollEnd\` is not a valid prop.`,
+          'onRowsScrollEnd is not available in the MIT version.',
+          '',
+          'You need to upgrade to the XGrid component to unlock this feature.',
+        ].join('\n'),
+      );
+    }
+    return null;
+  }),
   pageSize: chainPropTypes(PropTypes.number, (props: any) => {
     if (props.pageSize && props.pageSize > MAX_PAGE_SIZE) {
       return new Error(
@@ -192,19 +221,6 @@ DataGrid.propTypes = {
     }
     return null;
   },
-  onRowsScrollEnd: chainPropTypes(PropTypes.any, (props: any) => {
-    if (props.onRowsScrollEnd != null) {
-      return new Error(
-        [
-          `Material-UI: \`onRowsScrollEnd\` is not a valid prop.`,
-          'onRowsScrollEnd is not available in the MIT version.',
-          '',
-          'You need to upgrade to the XGrid component to unlock this feature.',
-        ].join('\n'),
-      );
-    }
-    return null;
-  }),
   rows: PropTypes.array.isRequired,
   scrollEndThreshold: chainPropTypes(PropTypes.number, (props: any) => {
     if (props.scrollEndThreshold) {
