@@ -25,8 +25,8 @@ export const useGridCsvExport = (apiRef: GridApiRef): void => {
 
       let exportedColumns: GridColDef[];
 
-      if (options?.columnKeys) {
-        exportedColumns = options.columnKeys
+      if (options?.fields) {
+        exportedColumns = options.fields
           .map((field) => columns.find((column) => column.field === field))
           .filter((column): column is GridColDef => !!column);
       } else {

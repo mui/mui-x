@@ -22,7 +22,7 @@ To export all columns, including the hidden one, you can use the `allColumns` op
 
 To exclude additional columns, you can use the `disableExport` property available in `GridColDef`
 
-To define the exact columns you want to export, you can use the `columnKeys` option in the `csvOptions` property of `GridToolbarExport`
+To define the exact columns you want to export, you can use the `fields` option in the `csvOptions` property of `GridToolbarExport`
 
 ## 🚧 Print
 

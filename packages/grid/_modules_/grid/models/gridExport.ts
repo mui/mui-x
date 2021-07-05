@@ -27,7 +27,7 @@ export interface GridExportCsvOptions {
    * The columns exported in the CSV
    * This should only be used if you want to restrict the columns exports
    */
-  columnKeys?: string[];
+  fields?: string[];
   /**
    * If `true`, the hidden columns will also be exported
    * @default false

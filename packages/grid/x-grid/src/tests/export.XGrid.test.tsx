@@ -280,12 +280,12 @@ describe('<XGrid /> - Export', () => {
       render(<TestCaseCSVExport />);
       expect(
         apiRef.current.getDataAsCsv({
-          columnKeys: ['brand'],
+          fields: ['brand'],
         }),
       ).to.equal(['Brand', 'Nike', 'Adidas'].join('\r\n'));
     });
 
-    it('should only export columns in params.columnKeys if defined', () => {
+    it('should only export columns in params.fields if defined', () => {
       const TestCaseCSVExport = () => {
         apiRef = useGridApiRef();
         return (
@@ -312,12 +312,12 @@ describe('<XGrid /> - Export', () => {
       render(<TestCaseCSVExport />);
       expect(
         apiRef.current.getDataAsCsv({
-          columnKeys: ['brand'],
+            fields: ['brand'],
         }),
       ).to.equal(['Brand', 'Nike', 'Adidas'].join('\r\n'));
     });
 
-    it('should export column defined in params.columnKeys even if column.hide=true or column.disableExport=true', () => {
+    it('should export column defined in params.fields even if column.hide=true or column.disableExport=true', () => {
       const TestCaseCSVExport = () => {
         apiRef = useGridApiRef();
         return (
@@ -347,7 +347,7 @@ describe('<XGrid /> - Export', () => {
       render(<TestCaseCSVExport />);
       expect(
         apiRef.current.getDataAsCsv({
-          columnKeys: ['id', 'brand'],
+            fields: ['id', 'brand'],
         }),
       ).to.equal(['id,Brand', '0,Nike', '1,Adidas'].join('\r\n'));
     });
