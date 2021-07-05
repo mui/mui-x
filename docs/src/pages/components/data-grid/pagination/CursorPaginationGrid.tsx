@@ -2,66 +2,44 @@ import * as React from 'react';
 import {
   GridRowsProp,
   DataGrid,
-  GridPageChangeParams,
+  GridPageChangeParams, GridRowId,
 } from '@material-ui/data-grid';
 import {
   useDemoData,
   GridData,
-  DemoDataOptions,
   DataRowModel,
 } from '@material-ui/x-grid-data-generator';
 
-interface CursorBasedGridData extends GridData {
-  cursors: string[];
-}
-
 interface ServerBasedGridResponse {
   rows: DataRowModel[];
-  nextCursor: string;
+  nextCursor: GridRowId | null | undefined;
 }
 
 const PAGE_SIZE = 5;
 
 function loadServerRows(
-  cursor: string | null | undefined,
-  data: CursorBasedGridData,
+  cursor: GridRowId | null | undefined,
+  data: GridData,
 ): Promise<ServerBasedGridResponse> {
   return new Promise<ServerBasedGridResponse>((resolve) => {
     setTimeout(() => {
-      const start = cursor ? data.cursors.indexOf(cursor) : 0;
+      const start = cursor ? data.rows.findIndex(row => row.id === cursor) : 0;
       const end = start + PAGE_SIZE;
       const rows = data.rows.slice(start, end);
 
-      resolve({ rows, nextCursor: data.cursors[end] });
+      resolve({ rows, nextCursor: data.rows[end]?.id });
     }, Math.random() * 500 + 100); // simulate network latency
   });
 }
 
-const useCursorBasedDemoData = (options: DemoDataOptions) => {
-  const response = useDemoData(options);
-
-  const data = React.useMemo(
-    () => ({
-      ...response.data,
-      cursors: response.data.rows.map(() => Math.random().toString()),
-    }),
-    [response.data],
-  );
-
-  return {
-    ...response,
-    data,
-  };
-};
-
 export default function CursorPaginationGrid() {
-  const { data } = useCursorBasedDemoData({
+  const { data } = useDemoData({
     dataSet: 'Commodity',
     rowLength: 100,
     maxColumns: 6,
   });
 
-  const pagesNextCursor = React.useRef<{ [page: number]: string }>({});
+  const pagesNextCursor = React.useRef<{ [page: number]: GridRowId }>({});
 
   const [rows, setRows] = React.useState<GridRowsProp>([]);
   const [page, setPage] = React.useState(0);
@@ -86,7 +64,10 @@ export default function CursorPaginationGrid() {
 
       setLoading(true);
       const response = await loadServerRows(nextCursor, data);
-      pagesNextCursor.current[page] = response.nextCursor;
+
+      if (response.nextCursor) {
+        pagesNextCursor.current[page] = response.nextCursor;
+      }
 
       if (!active) {
         return;

@@ -7,34 +7,17 @@ const PAGE_SIZE = 5;
 function loadServerRows(cursor, data) {
   return new Promise((resolve) => {
     setTimeout(() => {
-      const start = cursor ? data.cursors.indexOf(cursor) : 0;
+      const start = cursor ? data.rows.findIndex((row) => row.id === cursor) : 0;
       const end = start + PAGE_SIZE;
       const rows = data.rows.slice(start, end);
 
-      resolve({ rows, nextCursor: data.cursors[end] });
+      resolve({ rows, nextCursor: data.rows[end]?.id });
     }, Math.random() * 500 + 100); // simulate network latency
   });
 }
 
-const useCursorBasedDemoData = (options) => {
-  const response = useDemoData(options);
-
-  const data = React.useMemo(
-    () => ({
-      ...response.data,
-      cursors: response.data.rows.map(() => Math.random().toString()),
-    }),
-    [response.data],
-  );
-
-  return {
-    ...response,
-    data,
-  };
-};
-
 export default function CursorPaginationGrid() {
-  const { data } = useCursorBasedDemoData({
+  const { data } = useDemoData({
     dataSet: 'Commodity',
     rowLength: 100,
     maxColumns: 6,
@@ -65,7 +48,10 @@ export default function CursorPaginationGrid() {
 
       setLoading(true);
       const response = await loadServerRows(nextCursor, data);
-      pagesNextCursor.current[page] = response.nextCursor;
+
+      if (response.nextCursor) {
+        pagesNextCursor.current[page] = response.nextCursor;
+      }
 
       if (!active) {
         return;
