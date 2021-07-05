@@ -35,7 +35,7 @@ import {
 import { useGridApiOptionHandler } from '../../root/useGridApiEventHandler';
 import { GRID_STRING_COL_DEF } from '../../../models/colDef/gridStringColDef';
 
-function updateColumnsWidth(columns: GridColumns, viewportWidth: number) {
+function updateColumnsWidth(columns: GridColumns, viewportWidth: number): GridColumns {
   const numberOfFluidColumns = columns.filter((column) => !!column.flex && !column.hide).length;
   let flexDivider = 0;
 
@@ -99,8 +99,11 @@ function toLookup(logger: Logger, allColumns: GridColumns) {
 const upsertColumnsState = (
   state: GridInternalColumns,
   columnUpdates: GridColDef[],
-): GridInternalColumns => {
-  const newState = { all: [...state.all], lookup: { ...state.lookup } };
+  allColumnsProvided: boolean,
+) => {
+  const newState: GridInternalColumns = allColumnsProvided
+    ? { all: [], lookup: {} }
+    : { all: [...state.all], lookup: { ...state.lookup } };
 
   columnUpdates.forEach((newColumn) => {
     if (newState.lookup[newColumn.field] == null) {
@@ -111,6 +114,7 @@ const upsertColumnsState = (
       newState.lookup[newColumn.field] = { ...newState.lookup[newColumn.field], ...newColumn };
     }
   });
+
   return newState;
 };
 
@@ -125,6 +129,7 @@ export function useGridColumns(apiRef: GridApiRef, { columns }: { columns: GridC
   const updateState = React.useCallback(
     (newState: GridInternalColumns, emit = true) => {
       logger.debug('Updating columns state.');
+
       setGridState((oldState) => ({ ...oldState, columns: newState }));
       forceUpdate();
 
@@ -161,12 +166,25 @@ export function useGridColumns(apiRef: GridApiRef, { columns }: { columns: GridC
   );
 
   const updateColumns = React.useCallback(
-    (cols: GridColDef[]) => {
+    (cols: GridColDef[], allColumnsProvided: boolean = false) => {
       logger.debug('updating GridColumns with new state');
-      const newState = upsertColumnsState(gridState.columns, cols);
-      updateState(newState, false);
+
+      // Avoid dependency on gridState to avoid infinite loop
+      const refGridState = apiRef.current.getState();
+
+      const newState = upsertColumnsState(refGridState.columns, cols, allColumnsProvided);
+      const newColumns: GridColumns = newState.all.map((field) => newState.lookup[field]);
+
+      const updatedCols = updateColumnsWidth(newColumns, refGridState.viewportSizes.width);
+
+      const finalState: GridInternalColumns = {
+        all: updatedCols.map((col) => col.field),
+        lookup: toLookup(logger, updatedCols),
+      };
+
+      updateState(finalState, allColumnsProvided);
     },
-    [logger, gridState.columns, updateState],
+    [apiRef, logger, updateState],
   );
 
   const updateColumn = React.useCallback(
@@ -262,20 +280,19 @@ export function useGridColumns(apiRef: GridApiRef, { columns }: { columns: GridC
         logger,
         apiRef.current.getLocaleText,
       );
-
-      const updatedCols = updateColumnsWidth(
-        hydratedColumns,
-        apiRef.current.getState().viewportSizes.width,
-      );
-
-      updateState({
-        all: updatedCols.map((col) => col.field),
-        lookup: toLookup(logger, updatedCols),
-      });
+      updateColumns(hydratedColumns, true);
     } else {
       updateState(getInitialGridColumnsState());
     }
-  }, [logger, apiRef, columns, options.columnTypes, options.checkboxSelection, updateState]);
+  }, [
+    logger,
+    apiRef,
+    columns,
+    options.columnTypes,
+    options.checkboxSelection,
+    updateState,
+    updateColumns,
+  ]);
 
   React.useEffect(() => {
     logger.debug(
@@ -284,8 +301,7 @@ export function useGridColumns(apiRef: GridApiRef, { columns }: { columns: GridC
     // Avoid dependency on gridState as I only want to update cols when viewport size changed.
     const currentColumns = allGridColumnsSelector(apiRef.current.getState());
 
-    const updatedCols = updateColumnsWidth(currentColumns, gridState.viewportSizes.width);
-    apiRef.current.updateColumns(updatedCols);
+    apiRef.current.updateColumns(currentColumns);
   }, [apiRef, gridState.viewportSizes.width, logger]);
 
   // Grid Option Handlers
