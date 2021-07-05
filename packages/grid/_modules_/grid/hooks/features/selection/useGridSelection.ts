@@ -116,7 +116,7 @@ export const useGridSelection = (apiRef: GridApiRef): void => {
       const row = apiRef.current.getRow(id);
 
       if (!row) {
-        throw new Error(`No row with id #${id} found`);
+        return;
       }
 
       selectRowModel({
