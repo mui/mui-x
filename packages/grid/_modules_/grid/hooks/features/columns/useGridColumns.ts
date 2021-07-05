@@ -97,13 +97,13 @@ function toLookup(logger: Logger, allColumns: GridColumns) {
 }
 
 const upsertColumnsState = (
-  state: GridInternalColumns,
   columnUpdates: GridColDef[],
-  allColumnsProvided: boolean,
+  prevColumnsState?: GridInternalColumns,
 ) => {
-  const newState: GridInternalColumns = allColumnsProvided
-    ? { all: [], lookup: {} }
-    : { all: [...state.all], lookup: { ...state.lookup } };
+  const newState: GridInternalColumns = {
+    all: [...(prevColumnsState?.all ?? [])],
+    lookup: { ...(prevColumnsState?.lookup ?? {}) },
+  };
 
   columnUpdates.forEach((newColumn) => {
     if (newState.lookup[newColumn.field] == null) {
@@ -165,16 +165,13 @@ export function useGridColumns(apiRef: GridApiRef, { columns }: { columns: GridC
     [columnsMeta.positions, getColumnIndex],
   );
 
-  const updateColumns = React.useCallback(
-    (cols: GridColDef[], allColumnsProvided: boolean = false) => {
+  const setColumnsWithNewState = React.useCallback(
+    (newState: GridInternalColumns, emit?: boolean) => {
       logger.debug('updating GridColumns with new state');
 
       // Avoid dependency on gridState to avoid infinite loop
       const refGridState = apiRef.current.getState();
-
-      const newState = upsertColumnsState(refGridState.columns, cols, allColumnsProvided);
       const newColumns: GridColumns = newState.all.map((field) => newState.lookup[field]);
-
       const updatedCols = updateColumnsWidth(newColumns, refGridState.viewportSizes.width);
 
       const finalState: GridInternalColumns = {
@@ -182,9 +179,18 @@ export function useGridColumns(apiRef: GridApiRef, { columns }: { columns: GridC
         lookup: toLookup(logger, updatedCols),
       };
 
-      updateState(finalState, allColumnsProvided);
+      updateState(finalState, emit);
     },
     [apiRef, logger, updateState],
+  );
+
+  const updateColumns = React.useCallback(
+    (cols: GridColDef[]) => {
+      // Avoid dependency on gridState to avoid infinite loop
+      const newState = upsertColumnsState(cols, apiRef.current.getState().columns);
+      setColumnsWithNewState(newState, false);
+    },
+    [apiRef, setColumnsWithNewState],
   );
 
   const updateColumn = React.useCallback(
@@ -281,7 +287,8 @@ export function useGridColumns(apiRef: GridApiRef, { columns }: { columns: GridC
         apiRef.current.getLocaleText,
       );
 
-      updateColumns(hydratedColumns, true);
+      const newState = upsertColumnsState(hydratedColumns);
+      setColumnsWithNewState(newState);
     } else {
       updateState(getInitialGridColumnsState());
     }
@@ -292,7 +299,7 @@ export function useGridColumns(apiRef: GridApiRef, { columns }: { columns: GridC
     options.columnTypes,
     options.checkboxSelection,
     updateState,
-    updateColumns,
+    setColumnsWithNewState,
   ]);
 
   React.useEffect(() => {
