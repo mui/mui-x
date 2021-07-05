@@ -3233,7 +3233,7 @@
     npmlog "^4.1.2"
     write-file-atomic "^3.0.3"
 
-"@material-ui/core@^4.9.12":
+"@material-ui/core@4.11.4":
   version "4.11.4"
   resolved "https://registry.yarnpkg.com/@material-ui/core/-/core-4.11.4.tgz#4fb9fe5dec5dcf780b687e3a40cff78b2b9640a4"
   integrity sha512-oqb+lJ2Dl9HXI9orc6/aN8ZIAMkeThufA5iZELf2LQeBn2NtjVilF5D2w7e9RpntAzDb4jK5DsVhkfOvFY/8fg==
@@ -3251,7 +3251,7 @@
     react-is "^16.8.0 || ^17.0.0"
     react-transition-group "^4.4.0"
 
-"@material-ui/docs@^4.0.0-beta.3":
+"@material-ui/docs@4.0.0-beta.3":
   version "4.0.0-beta.3"
   resolved "https://registry.yarnpkg.com/@material-ui/docs/-/docs-4.0.0-beta.3.tgz#8c37863a58b175e03d565a8c8a9ea25c64ba30f8"
   integrity sha512-RLgfN41V+gnstWYrBsFfluH4qX8We9coMOhAe/vlJLsZ5pQxP2HEJFE/FGa2ImszezwCsG7DuCZigHRXoHTy9w==
@@ -3260,14 +3260,14 @@
     "@material-ui/utils" "^4.9.6"
     nprogress "^0.2.0"
 
-"@material-ui/icons@^4.9.1":
+"@material-ui/icons@4.11.2":
   version "4.11.2"
   resolved "https://registry.yarnpkg.com/@material-ui/icons/-/icons-4.11.2.tgz#b3a7353266519cd743b6461ae9fdfcb1b25eb4c5"
   integrity sha512-fQNsKX2TxBmqIGJCSi3tGTO/gZ+eJgWmMJkgDiOfyNaunNaxcklJQFaFogYcFl0qFuaEz1qaXYXboa/bUXVSOQ==
   dependencies:
     "@babel/runtime" "^7.4.4"
 
-"@material-ui/lab@^4.0.0-alpha.54", "@material-ui/lab@^4.0.0-alpha.56":
+"@material-ui/lab@4.0.0-alpha.58":
   version "4.0.0-alpha.58"
   resolved "https://registry.yarnpkg.com/@material-ui/lab/-/lab-4.0.0-alpha.58.tgz#c7ebb66f49863c5acbb20817163737caa299fafc"
   integrity sha512-GKHlJqLxUeHH3L3dGQ48ZavYrqGOTXkFkiEiuYMAnAvXAZP4rhMIqeHOPXSUQan4Bd8QnafDcpovOSLnadDmKw==
