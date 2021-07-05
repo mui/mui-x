@@ -4,7 +4,7 @@ import { getThemeProps } from '@material-ui/styles';
 import { StyledComponentProps, useTheme } from '@material-ui/core/styles';
 
 /**
- * TODO import for the core v5 directly
+ * TODO import from the v5 directly
  *
  * Remove properties `K` from `T`.
  * Distributive for union types.
@@ -14,7 +14,7 @@ import { StyledComponentProps, useTheme } from '@material-ui/core/styles';
 export type DistributiveOmit<T, K extends keyof any> = T extends any ? Omit<T, K> : never;
 
 /**
- * TODO import for the core v5 directly
+ * TODO import from the core v5 directly
  *
  * @private ONLY USE FROM WITHIN mui-org/material-ui
  *
