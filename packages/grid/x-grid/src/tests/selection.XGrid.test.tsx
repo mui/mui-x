@@ -186,7 +186,7 @@ describe('<XGrid /> - Selection', () => {
     fireEvent.click(selectAll);
     expect(getSelectedRows(apiRef)).to.deep.equal([]);
   });
-  
+
   it('should only select visible rows on the current page', () => {
     render(
       <div style={{ width: 300, height: 300 }}>
