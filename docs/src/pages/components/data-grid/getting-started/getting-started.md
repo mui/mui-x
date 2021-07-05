@@ -190,6 +190,9 @@ LicenseInfo.setLicenseKey(
 
 The grid checks the key without making any network requests.
 
+If you install a new version of the component for which the license key has expired, you will trigger a [watermark and console message](#invalid-license).
+For instance, if you have a one-year license and you install a version that is two years in the future.
+
 ## Support
 
 For crowdsourced technical questions from expert Material-UI devs in our community. Also frequented by the Material-UI core team.
