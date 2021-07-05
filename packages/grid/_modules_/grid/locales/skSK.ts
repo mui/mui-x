@@ -67,6 +67,8 @@ export const skSKGrid: Partial<GridLocaleText> = {
   filterOperatorOnOrAfter: 'je na alebo po',
   filterOperatorBefore: 'je pred',
   filterOperatorOnOrBefore: 'je na alebo skôr',
+  // filterOperatorIsEmpty: 'is empty',
+  // filterOperatorIsNotEmpty: 'is not empty',
 
   // Filter values text
   filterValueAny: 'akýkoľvek',

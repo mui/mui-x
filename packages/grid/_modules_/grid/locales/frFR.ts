@@ -60,6 +60,8 @@ const frFRGrid: Partial<GridLocaleText> = {
   filterOperatorAfter: 'postérieur',
   filterOperatorOnOrBefore: 'égal ou antérieur',
   filterOperatorBefore: 'antérieur',
+  // filterOperatorIsEmpty: 'is empty',
+  // filterOperatorIsNotEmpty: 'is not empty',
 
   // Column menu text
   columnMenuLabel: 'Menu',

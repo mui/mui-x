@@ -218,7 +218,7 @@ export function GridFilterForm(props: GridFilterFormProps) {
         </Select>
       </FormControl>
       <FormControl variant="standard" className={classes.filterValueInput}>
-        {currentColumn && currentOperator && (
+        {currentOperator?.InputComponent && (
           <currentOperator.InputComponent
             apiRef={apiRef}
             item={item}

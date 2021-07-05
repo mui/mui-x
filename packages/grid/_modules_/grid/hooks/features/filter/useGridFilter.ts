@@ -60,7 +60,7 @@ export const useGridFilter = (
 
   const applyFilter = React.useCallback(
     (filterItem: GridFilterItem, linkOperator: GridLinkOperator = GridLinkOperator.And) => {
-      if (!filterItem.columnField || !filterItem.operatorValue || !filterItem.value) {
+      if (!filterItem.columnField || !filterItem.operatorValue) {
         return;
       }
 
@@ -93,6 +93,9 @@ export const useGridFilter = (
       }
 
       const applyFilterOnRow = filterOperator.getApplyFilterFn(newFilterItem, column)!;
+      if (typeof applyFilterOnRow !== 'function') {
+        return;
+      }
 
       setGridState((state) => {
         const visibleRowsLookup = { ...state.visibleRows.visibleRowsLookup };
