@@ -30,6 +30,7 @@ import { GridResizeParams } from './params/gridResizeParams';
 import { GridColumnResizeParams } from './params/gridColumnResizeParams';
 import { GridColumnVisibilityChangeParams } from './params/gridColumnVisibilityChangeParams';
 import { GridClasses } from './gridClasses';
+import { GridVirtualPageChangeParams } from './params/gridVirtualPageChangeParams';
 
 export type MuiEvent<E> = (E | React.SyntheticEvent) & {
   defaultMuiPrevented?: boolean;
@@ -431,6 +432,10 @@ export interface GridOptions {
    * Callback fired when the state of the grid is updated.
    */
   onStateChange?: (params: any) => void;
+  /**
+   * Callback fired when the virtual page changes.
+   */
+  onVirtualPageChange?: (params: GridVirtualPageChangeParams) => void;
   /**
    * Set the current page.
    * @default 1

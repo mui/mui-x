@@ -181,5 +181,9 @@
   {
     "name": "columnVisibilityChange",
     "description": "Fired when a column visibility changes. Called with a GridColumnVisibilityChangeParams object."
+  },
+  {
+    "name": "virtualPageChange",
+    "description": "Fired when a the virtual page changes. Called with a GridVirtualPageChangeParams object."
   }
 ]

@@ -20,6 +20,7 @@ import {
 } from '@material-ui/x-grid';
 import { getCell, getColumnHeaderCell, getRow } from 'test/utils/helperFn';
 import { spy } from 'sinon';
+import { useData } from 'packages/storybook/src/hooks/useData';
 
 describe('<XGrid /> - Events Params', () => {
   // TODO v5: replace with createClientRender
@@ -68,6 +69,16 @@ describe('<XGrid /> - Events Params', () => {
     return (
       <div style={{ width: 300, height: 300 }}>
         <XGrid apiRef={apiRef} {...baselineProps} {...props} />
+      </div>
+    );
+  };
+
+  const TestVirtualization = (props: Partial<XGridProps>) => {
+    apiRef = useGridApiRef();
+    const data = useData(50, 10);
+    return (
+      <div style={{ width: 300, height: 300 }}>
+        <XGrid rows={data.rows} columns={data.columns} apiRef={apiRef} {...props} />
       </div>
     );
   };
@@ -283,5 +294,24 @@ describe('<XGrid /> - Events Params', () => {
     gridWindow.scrollTop = 12345;
     gridWindow.dispatchEvent(new Event('scroll'));
     expect(handleOnRowsScrollEnd.callCount).to.equal(1);
+  });
+
+  it('call onVirtualPageChange when the virtual page changes', () => {
+    const handleOnVirtualPageChange = spy();
+    const { container } = render(
+      <div style={{ width: 300, height: 300 }}>
+        <TestVirtualization onVirtualPageChange={handleOnVirtualPageChange} />
+      </div>,
+    );
+    const gridWindow = container.querySelector('.MuiDataGrid-window');
+    // arbitrary number to make sure that the bottom of the grid window is reached.
+    gridWindow.scrollTop = 12345;
+    gridWindow.dispatchEvent(new Event('scroll'));
+
+    expect(handleOnVirtualPageChange.callCount).to.equal(1);
+    expect(handleOnVirtualPageChange.lastCall.args[0].currentPage).to.equal(15);
+    expect(handleOnVirtualPageChange.lastCall.args[0].nextPage).to.equal(16);
+    expect(handleOnVirtualPageChange.lastCall.args[0].firstRowIndex).to.equal(45);
+    expect(handleOnVirtualPageChange.lastCall.args[0].pageSize).to.equal(3);
   });
 });

@@ -1,5 +1,9 @@
 import * as React from 'react';
-import { GRID_SCROLL, GRID_ROWS_SCROLL } from '../../../constants/eventsConstants';
+import {
+  GRID_SCROLL,
+  GRID_ROWS_SCROLL,
+  GRID_VIRTUAL_PAGE_CHANGE,
+} from '../../../constants/eventsConstants';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridVirtualizationApi } from '../../../models/api/gridVirtualizationApi';
 import { GridCellIndexCoordinates } from '../../../models/gridCell';
@@ -25,6 +29,7 @@ import { InternalRenderingState } from './renderingState';
 import { useGridVirtualColumns } from './useGridVirtualColumns';
 import { gridDensityRowHeightSelector } from '../density/densitySelector';
 import { scrollStateSelector } from './renderingStateSelector';
+import { useGridApiOptionHandler } from '../../root/useGridApiEventHandler';
 
 export const useGridVirtualRows = (apiRef: GridApiRef): void => {
   const logger = useLogger('useGridVirtualRows');
@@ -148,6 +153,14 @@ export const useGridVirtualRows = (apiRef: GridApiRef): void => {
         setRenderingState({ virtualPage: nextPage });
         logger.debug(`Changing page from ${page} to ${nextPage}`);
         requireRerender = true;
+
+        apiRef.current.publishEvent(GRID_VIRTUAL_PAGE_CHANGE, {
+          currentPage: nextPage,
+          nextPage: nextPage + 1 < containerProps.lastPage ? nextPage + 1 : containerProps.lastPage,
+          firstRowIndex: nextPage * containerProps.viewportPageSize,
+          pageSize: containerProps.viewportPageSize,
+          api: apiRef,
+        });
       } else {
         if (!containerProps.isVirtualized && page > 0) {
           logger.debug(`Virtualization disabled, setting virtualPage to 0`);
@@ -405,4 +418,5 @@ export const useGridVirtualRows = (apiRef: GridApiRef): void => {
     GRID_SCROLL,
     preventViewportScroll,
   );
+  useGridApiOptionHandler(apiRef, GRID_VIRTUAL_PAGE_CHANGE, options.onVirtualPageChange);
 };

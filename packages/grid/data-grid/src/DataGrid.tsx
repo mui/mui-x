@@ -27,6 +27,7 @@ export type DataGridProps = Omit<
   | 'licenseStatus'
   | 'options'
   | 'onRowsScrollEnd'
+  | 'onVirtualPageChange'
   | 'pagination'
   | 'scrollEndThreshold'
 > & {
@@ -38,6 +39,7 @@ export type DataGridProps = Omit<
   disableMultipleColumnsSorting?: true;
   disableMultipleSelection?: true;
   onRowsScrollEnd?: undefined;
+  onVirtualPageChange?: undefined;
   pagination?: true;
 };
 
@@ -180,6 +182,19 @@ DataGrid.propTypes = {
         [
           `Material-UI: \`onRowsScrollEnd\` is not a valid prop.`,
           'onRowsScrollEnd is not available in the MIT version.',
+          '',
+          'You need to upgrade to the XGrid component to unlock this feature.',
+        ].join('\n'),
+      );
+    }
+    return null;
+  }),
+  onVirtualPageChange: chainPropTypes(PropTypes.any, (props: any) => {
+    if (props.onVirtualPageChange != null) {
+      return new Error(
+        [
+          `Material-UI: \`onVirtualPageChange\` is not a valid prop.`,
+          'onVirtualPageChange is not available in the MIT version.',
           '',
           'You need to upgrade to the XGrid component to unlock this feature.',
         ].join('\n'),
