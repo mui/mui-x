@@ -312,7 +312,7 @@ describe('<XGrid /> - Export', () => {
       render(<TestCaseCSVExport />);
       expect(
         apiRef.current.getDataAsCsv({
-            fields: ['brand'],
+          fields: ['brand'],
         }),
       ).to.equal(['Brand', 'Nike', 'Adidas'].join('\r\n'));
     });
@@ -347,7 +347,7 @@ describe('<XGrid /> - Export', () => {
       render(<TestCaseCSVExport />);
       expect(
         apiRef.current.getDataAsCsv({
-            fields: ['id', 'brand'],
+          fields: ['id', 'brand'],
         }),
       ).to.equal(['id,Brand', '0,Nike', '1,Adidas'].join('\r\n'));
     });
