@@ -2,10 +2,19 @@ import * as React from 'react';
 import { useEventCallback as muiUseEventCallback } from '@material-ui/core/utils';
 import { getThemeProps } from '@material-ui/styles';
 import { StyledComponentProps, useTheme } from '@material-ui/core/styles';
-import { DistributiveOmit } from '@material-ui/types';
 
 /**
- * TODO import for the core directly
+ * TODO import for the core v5 directly
+ *
+ * Remove properties `K` from `T`.
+ * Distributive for union types.
+ *
+ * @internal
+ */
+export type DistributiveOmit<T, K extends keyof any> = T extends any ? Omit<T, K> : never;
+
+/**
+ * TODO import for the core v5 directly
  *
  * @private ONLY USE FROM WITHIN mui-org/material-ui
  *
