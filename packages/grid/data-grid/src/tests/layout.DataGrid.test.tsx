@@ -433,8 +433,6 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         expect(firstColumn).toHaveInlineStyle({
           width: '148px', // because of the 2px border
         });
-
-        expect(true).to.equal(true);
       });
 
       it('should be rerender invariant', () => {
