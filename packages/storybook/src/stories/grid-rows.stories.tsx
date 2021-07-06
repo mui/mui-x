@@ -558,12 +558,31 @@ export function EditRowsBasic() {
         <XGrid
           {...baselineEditProps}
           apiRef={apiRef}
+          editMode="row"
+          disableSelectionOnClick
+          // onEditRowsModelChange={action('onEditRowsModelChange')}
+        />
+      </div>
+    </React.Fragment>
+  );
+}
+export function EditCellsBasic() {
+  const apiRef = useGridApiRef();
+
+  return (
+    <React.Fragment>
+      <div className="grid-container">
+        <XGrid
+          {...baselineEditProps}
+          apiRef={apiRef}
+          editMode="cell"
           onEditRowsModelChange={action('onEditRowsModelChange')}
         />
       </div>
     </React.Fragment>
   );
 }
+
 const singleData = { rows: [...baselineEditProps.rows], columns: [...baselineEditProps.columns] };
 singleData.rows.length = 1;
 singleData.columns.length = 1;

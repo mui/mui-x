@@ -12,6 +12,7 @@ import { GridCell, GridCellProps } from './GridCell';
 import { useGridApiContext } from '../../hooks/root/useGridApiContext';
 import { isFunction } from '../../utils/utils';
 import { GRID_CSS_CLASS_PREFIX } from '../../constants/cssClassesConstants';
+import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
 interface RowCellsProps {
   cellClassName?: string;
@@ -53,6 +54,8 @@ export const GridRowCells = React.memo(function GridRowCells(props: RowCellsProp
     ...other
   } = props;
   const apiRef = useGridApiContext();
+  const rootProps = useGridRootProps();
+
   const cellsProps = columns.slice(firstColIdx, lastColIdx + 1).map((column, colIdx) => {
     const colIndex = firstColIdx + colIdx;
     const isLastColumn = colIndex === columns.length - 1;
@@ -84,7 +87,7 @@ export const GridRowCells = React.memo(function GridRowCells(props: RowCellsProp
     }
 
     if (editCellState != null && column.renderEditCell) {
-      const params = { ...cellParams, ...editCellState };
+      const params = { editMode: rootProps.editMode, ...cellParams, ...editCellState };
       cellComponent = column.renderEditCell(params);
       classNames.push(`${GRID_CSS_CLASS_PREFIX}-cell--editing`);
     }

@@ -13,7 +13,7 @@ import {
 } from '@material-ui/x-grid-data-generator';
 import Alert from '@material-ui/lab/Alert';
 
-export default function EditRowsModelControlGrid() {
+export default function RowEditControlGrid() {
   const [editRowsModel, setEditRowsModel] = React.useState({});
 
   const handleEditRowsModelChange = React.useCallback((model: GridEditRowsModel) => {
@@ -22,17 +22,18 @@ export default function EditRowsModelControlGrid() {
 
   return (
     <div style={{ width: '100%' }}>
-      <Alert severity="info" style={{ marginBottom: 8 }}>
-        <code>editRowsModel: {JSON.stringify(editRowsModel)}</code>
-      </Alert>
       <div style={{ height: 400, width: '100%' }}>
         <DataGrid
           rows={rows}
           columns={columns}
           editRowsModel={editRowsModel}
+          editMode="row"
           onEditRowsModelChange={handleEditRowsModelChange}
         />
       </div>
+      <Alert severity="info" style={{ marginTop: 8 }}>
+        <code>editRowsModel: {JSON.stringify(editRowsModel)}</code>
+      </Alert>
     </div>
   );
 }

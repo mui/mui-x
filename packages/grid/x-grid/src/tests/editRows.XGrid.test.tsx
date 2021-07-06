@@ -9,8 +9,8 @@ import {
 import Portal from '@material-ui/unstyled/Portal';
 import { expect } from 'chai';
 import * as React from 'react';
-import { getActiveCell, getCell, getColumnHeaderCell } from 'test/utils/helperFn';
-import { stub, spy } from 'sinon';
+import { getActiveCell, getCell, getRow, getColumnHeaderCell } from 'test/utils/helperFn';
+import { stub, spy, useFakeTimers } from 'sinon';
 import {
   createClientRenderStrictMode,
   // @ts-expect-error need to migrate helpers to TypeScript
@@ -22,12 +22,12 @@ import {
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<XGrid /> - Edit Rows', () => {
+  let clock;
   let baselineProps;
 
-  // TODO v5: replace with createClientRender
-  const render = createClientRenderStrictMode();
-
   beforeEach(() => {
+    clock = useFakeTimers();
+
     baselineProps = {
       autoHeight: isJSDOM,
       rows: [
@@ -53,6 +53,13 @@ describe('<XGrid /> - Edit Rows', () => {
       ],
     };
   });
+
+  afterEach(() => {
+    clock.restore();
+  });
+
+  // TODO v5: replace with createClientRender
+  const render = createClientRenderStrictMode();
 
   let apiRef: GridApiRef;
 
@@ -302,6 +309,7 @@ describe('<XGrid /> - Edit Rows', () => {
     fireEvent.mouseUp(otherCell);
     fireEvent.click(otherCell);
     fireEvent.focus(otherCell);
+    clock.tick(0);
     expect(cell).not.to.have.class('MuiDataGrid-cell--editing');
     expect(cell).to.have.text('1970');
     expect(getActiveCell()).to.equal('2-1');
@@ -358,6 +366,7 @@ describe('<XGrid /> - Edit Rows', () => {
     fireEvent.mouseUp(otherCell);
     fireEvent.click(otherCell);
     fireEvent.focus(otherCell);
+    clock.tick(0);
     expect(cell).not.to.have.class('MuiDataGrid-cell--editing');
     expect(cell).to.have.text('1970');
     expect(getActiveCell()).to.equal('2-1');
@@ -914,6 +923,96 @@ describe('<XGrid /> - Edit Rows', () => {
       expect(onEditRowsModelChange.lastCall.firstArg).to.deep.equal({});
       setProps({ editRowsModel: {} });
       expect(cell).to.have.text('1971');
+    });
+  });
+
+  describe('row editing', () => {
+    it('should allow to start editing with double-click', () => {
+      render(<TestCase editMode="row" />);
+      expect(getRow(1)).not.to.have.class('MuiDataGrid-row--editing');
+      fireEvent.doubleClick(getCell(1, 0));
+      expect(getRow(1)).to.have.class('MuiDataGrid-row--editing');
+    });
+
+    it('should allow to start editing with Enter', () => {
+      render(<TestCase editMode="row" />);
+      expect(getRow(1)).not.to.have.class('MuiDataGrid-row--editing');
+      const cell = getCell(1, 0);
+      cell.focus();
+      fireEvent.keyDown(cell, { key: 'Enter' });
+      expect(getRow(1)).to.have.class('MuiDataGrid-row--editing');
+    });
+
+    it('should apply the correct CSS classes to the row and cells', () => {
+      render(
+        <TestCase
+          editMode="row"
+          editRowsModel={{ 1: { brand: { value: 'Adidas' }, year: { value: 1961 } } }}
+        />,
+      );
+      expect(getRow(1)).to.have.class('MuiDataGrid-row--editing');
+      expect(getRow(1)).to.have.class('MuiDataGrid-row--editable');
+      expect(getCell(1, 0)).to.have.class('MuiDataGrid-cell--editing');
+      expect(getCell(1, 0)).to.have.class('MuiDataGrid-cell--editable');
+      expect(getCell(1, 1)).to.have.class('MuiDataGrid-cell--editing');
+      expect(getCell(1, 1)).to.have.class('MuiDataGrid-cell--editable');
+    });
+
+    it('should allow to rollback changes with Escape', () => {
+      render(<TestCase editMode="row" />);
+      const cell = getCell(1, 0);
+      fireEvent.doubleClick(cell);
+      const input = cell.querySelector('input');
+      fireEvent.change(input, { target: { value: 'n' } });
+      expect(input!.value).to.equal('n');
+      fireEvent.keyDown(input, { key: 'Escape' });
+      expect(cell).to.have.text('Adidas');
+    });
+
+    it('should allow to commit changes with Enter', () => {
+      render(<TestCase editMode="row" />);
+      const cell = getCell(1, 0);
+      fireEvent.doubleClick(cell);
+      const input = cell.querySelector('input');
+      fireEvent.change(input, { target: { value: 'ADIDAS' } });
+      expect(input!.value).to.equal('ADIDAS');
+      fireEvent.keyDown(input, { key: 'Enter' });
+      expect(cell).to.have.text('ADIDAS');
+    });
+
+    it('should move the focus to the right cell after commiting changes with Enter', () => {
+      render(<TestCase editMode="row" />);
+      const cell = getCell(1, 0);
+      fireEvent.doubleClick(cell);
+      const input = cell.querySelector('input');
+      fireEvent.change(input, { target: { value: 'ADIDAS' } });
+      expect(input!.value).to.equal('ADIDAS');
+      fireEvent.keyDown(input, { key: 'Enter' });
+      // @ts-expect-error need to migrate helpers to TypeScript
+      expect(getCell(2, 0)).toHaveFocus();
+    });
+
+    it('should allow to commit changes clicking outside the row', () => {
+      render(<TestCase editMode="row" />);
+      const cell = getCell(1, 0);
+      fireEvent.doubleClick(cell);
+      const input = cell.querySelector('input');
+      fireEvent.change(input, { target: { value: 'ADIDAS' } });
+      expect(input!.value).to.equal('ADIDAS');
+      fireEvent.mouseUp(getCell(2, 0));
+      fireEvent.click(getCell(2, 0));
+      clock.tick(0);
+      clock.tick(1);
+      expect(cell).not.to.have.class('MuiDataGrid-cell--editing');
+      expect(cell).to.have.text('ADIDAS');
+    });
+
+    it('should move the focus to the input of the clicked cell', () => {
+      render(<TestCase editMode="row" />);
+      const cell = getCell(1, 0);
+      fireEvent.doubleClick(cell);
+      // @ts-expect-error need to migrate helpers to TypeScript
+      expect(getCell(1, 0).querySelector('input')).toHaveFocus();
     });
   });
 });

@@ -22,6 +22,7 @@ import { GridColumnOrderChangeParams } from './params/gridColumnOrderChangeParam
 import { GridResizeParams } from './params/gridResizeParams';
 import { GridColumnResizeParams } from './params/gridColumnResizeParams';
 import { GridColumnVisibilityChangeParams } from './params/gridColumnVisibilityChangeParams';
+import { GridRowId } from './gridRows';
 import { GridClasses } from './gridClasses';
 
 export type MuiEvent<E> = E & {
@@ -125,6 +126,11 @@ export interface GridOptions {
    * @default false
    */
   disableSelectionOnClick?: boolean;
+  /**
+   * Controls whether to use the cell or row editing.
+   * @default "cell"
+   */
+  editMode?: 'row' | 'cell';
   /**
    * Set the edit rows model of the grid.
    */
@@ -234,15 +240,33 @@ export interface GridOptions {
   /**
    * Callback fired when the cell turns to edit mode.
    * @param {GridCellParams} params With all properties from [[GridCellParams]].
-   * @param {React.SyntheticEvent} event The event that caused this prop to be called.
+   * @param {MuiEvent<React.SyntheticEvent>} event The event that caused this prop to be called.
    */
-  onCellEditStart?: (params: GridCellParams, event?: React.SyntheticEvent) => void;
+  onCellEditStart?: (params: GridCellParams, event: MuiEvent<React.SyntheticEvent>) => void;
   /**
    * Callback fired when the cell turns to view mode.
    * @param {GridCellParams} params With all properties from [[GridCellParams]].
-   * @param {React.SyntheticEvent} event The event that caused this prop to be called.
+   * @param {MuiEvent<React.SyntheticEvent>} event The event that caused this prop to be called.
    */
-  onCellEditStop?: (params: GridCellParams, event?: React.SyntheticEvent) => void;
+  onCellEditStop?: (params: GridCellParams, event: MuiEvent<React.SyntheticEvent>) => void;
+  /**
+   * Callback fired when the row changes are committed.
+   * @param {GridRowId} id The row id.
+   * @param {MuiEvent<React.SyntheticEvent>} event The event that caused this prop to be called.
+   */
+  onRowEditCommit?: (id: GridRowId, event: MuiEvent<React.SyntheticEvent>) => void;
+  /**
+   * Callback fired when the row turns to edit mode.
+   * @param {GridRowParams} params With all properties from [[GridRowParams]].
+   * @param {MuiEvent<React.SyntheticEvent>} event The event that caused this prop to be called.
+   */
+  onRowEditStart?: (params: GridRowParams, event: MuiEvent<React.SyntheticEvent>) => void;
+  /**
+   * Callback fired when the row turns to view mode.
+   * @param {GridRowParams} params With all properties from [[GridRowParams]].
+   * @param {MuiEvent<React.SyntheticEvent>} event The event that caused this prop to be called.
+   */
+  onRowEditStop?: (params: GridRowParams, event: MuiEvent<React.SyntheticEvent>) => void;
   /**
    * Callback fired when an exception is thrown in the grid, or when the `showError` API method is called.
    * @param args
@@ -645,6 +669,7 @@ export const DEFAULT_GRID_PROPS_FROM_OPTIONS = {
   sortingOrder: ['asc' as const, 'desc' as const, null],
   logger: console,
   logLevel: process.env.NODE_ENV === 'production' ? 'error' : 'warn',
+  editMode: 'cell' as const,
 };
 
 /**

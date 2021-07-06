@@ -4,6 +4,7 @@ import {
   GRID_CELL_DOUBLE_CLICK,
   GRID_CELL_MOUSE_UP,
   GRID_CELL_FOCUS_OUT,
+  GRID_CELL_FOCUS_IN,
   GRID_CELL_KEY_DOWN,
   GRID_COLUMN_HEADER_BLUR,
   GRID_COLUMN_HEADER_FOCUS,
@@ -27,6 +28,10 @@ export const useGridFocus = (apiRef: GridApiRef, props: Pick<GridComponentProps,
 
   const setCellFocus = React.useCallback(
     (id: GridRowId, field: string) => {
+      // The row might have been deleted
+      if (!apiRef.current.getRow(id)) {
+        return;
+      }
       setGridState((state) => {
         logger.debug(`Focusing on cell with id=${id} and field=${field}`);
         return {
@@ -36,8 +41,9 @@ export const useGridFocus = (apiRef: GridApiRef, props: Pick<GridComponentProps,
         };
       });
       forceUpdate();
+      apiRef.current.publishEvent(GRID_CELL_FOCUS_IN, apiRef.current.getCellParams(id, field));
     },
-    [forceUpdate, logger, setGridState],
+    [apiRef, forceUpdate, logger, setGridState],
   );
 
   const setColumnHeaderFocus = React.useCallback(
@@ -126,6 +132,11 @@ export const useGridFocus = (apiRef: GridApiRef, props: Pick<GridComponentProps,
 
       const cellElement = apiRef.current.getCellElement(focusedCell.id, focusedCell.field);
       if (cellElement?.contains(event.target as HTMLElement)) {
+        return;
+      }
+
+      // The row might have been deleted during the click
+      if (!apiRef.current.getRow(focusedCell.id)) {
         return;
       }
 

@@ -12,13 +12,19 @@ import {
   GRID_COLUMN_HEADER_DRAG_START,
   GRID_CELL_FOCUS_OUT,
   GRID_EDIT_ROWS_MODEL_CHANGE,
+  GRID_CELL_FOCUS_IN,
+  GRID_ROW_EDIT_STOP,
+  GRID_ROW_EDIT_COMMIT,
+  GRID_ROW_EDIT_START,
 } from '../../../constants/eventsConstants';
 import { GridComponentProps } from '../../../GridComponentProps';
 import { GridApiRef } from '../../../models/api/gridApiRef';
+import { GridRowId } from '../../../models/gridRows';
 import { GridEditRowApi } from '../../../models/api/gridEditRowApi';
 import { GridCellMode } from '../../../models/gridCell';
 import { GridEditRowsModel } from '../../../models/gridEditRowModel';
 import { GridCellParams } from '../../../models/params/gridCellParams';
+import { GridRowParams } from '../../../models/params/gridRowParams';
 import {
   GridEditCellPropsParams,
   GridEditCellValueParams,
@@ -36,6 +42,7 @@ import {
 import { useGridApiEventHandler, useGridApiOptionHandler } from '../../root/useGridApiEventHandler';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
 import { optionsSelector } from '../../utils/optionsSelector';
+import { allGridColumnsSelector } from '../columns/gridColumnsSelector';
 import { useEventCallback } from '../../../utils/material-ui-utils';
 import { useLogger } from '../../utils/useLogger';
 import { useGridSelector } from '../core/useGridSelector';
@@ -43,19 +50,37 @@ import { useGridState } from '../core/useGridState';
 
 export function useGridEditRows(
   apiRef: GridApiRef,
-  props: Pick<GridComponentProps, 'editRowsModel' | 'onEditRowsModelChange'>,
+  props: Pick<GridComponentProps, 'editRowsModel' | 'onEditRowsModelChange' | 'editMode'>,
 ) {
   const logger = useLogger('useGridEditRows');
   const [, setGridState, forceUpdate] = useGridState(apiRef);
   const options = useGridSelector(apiRef, optionsSelector);
+  const columns = useGridSelector(apiRef, allGridColumnsSelector);
+  const focusTimeout = React.useRef<any>(null);
+  const nextFocusedCell = React.useRef<GridCellParams | null>(null);
 
   const commitPropsAndExit = (params: GridCellParams, event: MouseEvent | React.SyntheticEvent) => {
     if (params.cellMode === 'view') {
       return;
     }
-    apiRef.current.commitCellChange(params, event);
-    apiRef.current.publishEvent(GRID_CELL_EDIT_STOP, params, event);
+    if (props.editMode === 'row') {
+      nextFocusedCell.current = null;
+      focusTimeout.current = setTimeout(() => {
+        if (nextFocusedCell.current?.id !== params.id) {
+          apiRef.current.commitRowChange(params.id);
+          const rowParams = apiRef.current.getRowParams(params.id);
+          apiRef.current.publishEvent(GRID_ROW_EDIT_STOP, rowParams, event);
+        }
+      });
+    } else {
+      apiRef.current.commitCellChange(params);
+      apiRef.current.publishEvent(GRID_CELL_EDIT_STOP, params, event);
+    }
   };
+
+  const handleCellFocusIn = React.useCallback((params) => {
+    nextFocusedCell.current = params;
+  }, []);
 
   const handleCellFocusOut = useEventCallback(
     (params: GridCellParams, event: MouseEvent | React.SyntheticEvent) => {
@@ -102,6 +127,38 @@ export function useGridEditRows(
       });
     },
     [apiRef, forceUpdate, logger, setGridState],
+  );
+
+  const setRowMode = React.useCallback(
+    (id, mode) => {
+      setGridState((state) => {
+        const newEditRowsState: GridEditRowsModel = { ...state.editRows };
+        if (mode === 'edit') {
+          newEditRowsState[id] = {};
+          columns.forEach((column) => {
+            const cellParams = apiRef.current.getCellParams(id, column.field);
+            if (cellParams.isEditable) {
+              newEditRowsState[id][column.field] = { value: cellParams.value };
+            }
+          });
+        } else {
+          delete newEditRowsState[id];
+        }
+        return { ...state, editRows: newEditRowsState };
+      });
+      forceUpdate();
+    },
+    [apiRef, columns, forceUpdate, setGridState],
+  );
+
+  const getRowMode = React.useCallback(
+    (id) => {
+      if (props.editMode === 'cell') {
+        return 'view';
+      }
+      return apiRef.current.getState().editRows[id] ? 'edit' : 'view';
+    },
+    [apiRef, props.editMode],
   );
 
   const getCellMode = React.useCallback(
@@ -198,6 +255,10 @@ export function useGridEditRows(
 
   const handleCellEditCommit = React.useCallback(
     (params: GridCommitCellChangeParams) => {
+      if (props.editMode === 'row') {
+        throw new Error(`You can't commit changes when the edit mode is 'row'`);
+      }
+
       const { id, field } = params;
       const model = apiRef.current.getEditRowsModel();
       const { value } = model[id][field];
@@ -206,10 +267,33 @@ export function useGridEditRows(
       const rowUpdate = { ...row, [field]: value };
       apiRef.current.updateRows([rowUpdate]);
     },
-    [apiRef, logger],
+    [apiRef, logger, props.editMode],
   );
 
-  const handleCellEditEnter = React.useCallback(
+  const commitRowChange = React.useCallback(
+    (id: GridRowId, event?: React.SyntheticEvent): boolean => {
+      if (props.editMode === 'cell') {
+        throw new Error(`You can't commit changes when the edit mode is 'cell'`);
+      }
+
+      const model = apiRef.current.getEditRowsModel();
+      const row = model[id];
+      if (!row) {
+        throw new Error(`Row at id: ${id} is not being editted`);
+      }
+
+      const hasFieldWithError = Object.keys(row).some((field) => !!row[field].error);
+      if (!hasFieldWithError) {
+        apiRef.current.publishEvent(GRID_ROW_EDIT_COMMIT, id, event);
+        return true;
+      }
+
+      return false;
+    },
+    [apiRef, props.editMode],
+  );
+
+  const handleCellEditStart = React.useCallback(
     (params: GridCellParams, event: React.MouseEvent | React.KeyboardEvent) => {
       if (!params.isEditable) {
         return;
@@ -226,6 +310,42 @@ export function useGridEditRows(
       }
     },
     [setEditCellProps, setCellMode],
+  );
+
+  const handleRowEditStart = React.useCallback(
+    (params: GridRowParams) => {
+      apiRef.current.setRowMode(params.id, 'edit');
+    },
+    [apiRef],
+  );
+
+  const handleRowEditStop = React.useCallback(
+    (params: GridRowParams, event) => {
+      apiRef.current.setRowMode(params.id, 'view');
+
+      if (event.key === 'Enter') {
+        apiRef.current.publishEvent(GRID_CELL_NAVIGATION_KEY_DOWN, params, event);
+      }
+    },
+    [apiRef],
+  );
+
+  const handleRowEditCommit = React.useCallback(
+    (id: GridRowId) => {
+      const model = apiRef.current.getEditRowsModel();
+      const editRow = model[id];
+      if (!editRow) {
+        throw new Error(`Row at id: ${id} is not being editted`);
+      }
+
+      const row = apiRef.current.getRow(id);
+      const rowUpdate = { ...row };
+      Object.keys(editRow).forEach((field) => {
+        rowUpdate[field] = editRow[field].value;
+      });
+      apiRef.current.updateRows([rowUpdate]);
+    },
+    [apiRef],
   );
 
   const preventTextSelection = React.useCallback(
@@ -248,7 +368,23 @@ export function useGridEditRows(
 
       const isEditMode = cellMode === 'edit';
 
+      if (props.editMode === 'row') {
+        const rowParams = apiRef.current.getRowParams(params.id);
+        if (isEditMode) {
+          if (event.key === 'Enter') {
+            apiRef.current.commitRowChange(params.id);
+            apiRef.current.publishEvent(GRID_ROW_EDIT_STOP, rowParams, event);
+          } else if (event.key === 'Escape') {
+            apiRef.current.publishEvent(GRID_ROW_EDIT_STOP, rowParams, event);
+          }
+        } else if (event.key === 'Enter') {
+          apiRef.current.publishEvent(GRID_ROW_EDIT_START, rowParams, event);
+        }
+        return;
+      }
+
       const isModifierKeyPressed = event.ctrlKey || event.metaKey || event.altKey;
+
       if (!isEditMode && isCellEnterEditModeKeys(event.key) && !isModifierKeyPressed) {
         apiRef.current.publishEvent(GRID_CELL_EDIT_START, params, event);
       }
@@ -267,10 +403,10 @@ export function useGridEditRows(
         apiRef.current.publishEvent(GRID_CELL_EDIT_STOP, params, event);
       }
     },
-    [apiRef],
+    [apiRef, props.editMode],
   );
 
-  const handleCellEditExit = React.useCallback(
+  const handleCellEditStop = React.useCallback(
     (params: GridCellParams, event?: React.SyntheticEvent) => {
       setCellMode(params.id, params.field, 'view');
 
@@ -291,37 +427,59 @@ export function useGridEditRows(
   );
 
   const handleCellDoubleClick = React.useCallback(
-    (params: GridCellParams, event: React.SyntheticEvent) => {
+    (params: GridCellParams, event: React.MouseEvent) => {
       if (!params.isEditable) {
         return;
       }
-      apiRef.current.publishEvent(GRID_CELL_EDIT_START, params, event);
+      if (props.editMode === 'row') {
+        const rowParams = apiRef.current.getRowParams(params.id);
+        apiRef.current.publishEvent(GRID_ROW_EDIT_START, rowParams, event);
+      } else {
+        apiRef.current.publishEvent(GRID_CELL_EDIT_START, params, event);
+      }
     },
-    [apiRef],
+    [apiRef, props.editMode],
   );
 
+  // General events
   useGridApiEventHandler(apiRef, GRID_CELL_KEY_DOWN, handleCellKeyDown);
   useGridApiEventHandler(apiRef, GRID_CELL_MOUSE_DOWN, preventTextSelection);
   useGridApiEventHandler(apiRef, GRID_CELL_DOUBLE_CLICK, handleCellDoubleClick);
   useGridApiEventHandler(apiRef, GRID_CELL_FOCUS_OUT, handleCellFocusOut);
+  useGridApiEventHandler(apiRef, GRID_CELL_FOCUS_IN, handleCellFocusIn);
   useGridApiEventHandler(apiRef, GRID_COLUMN_HEADER_DRAG_START, handleColumnHeaderDragStart);
-  useGridApiEventHandler(apiRef, GRID_CELL_EDIT_START, handleCellEditEnter);
-  useGridApiEventHandler(apiRef, GRID_CELL_EDIT_STOP, handleCellEditExit);
-  useGridApiEventHandler(apiRef, GRID_CELL_EDIT_COMMIT, handleCellEditCommit);
+
+  // Events shared between cell and row editing
   useGridApiEventHandler(apiRef, GRID_EDIT_CELL_PROPS_CHANGE, handleEditCellPropsChange);
 
-  useGridApiOptionHandler(apiRef, GRID_CELL_EDIT_COMMIT, options.onCellEditCommit);
+  // Events exclusive to cell editing
+  useGridApiEventHandler(apiRef, GRID_CELL_EDIT_START, handleCellEditStart);
+  useGridApiEventHandler(apiRef, GRID_CELL_EDIT_STOP, handleCellEditStop);
+  useGridApiEventHandler(apiRef, GRID_CELL_EDIT_COMMIT, handleCellEditCommit);
+
+  // Events exclusive to row editing
+  useGridApiEventHandler(apiRef, GRID_ROW_EDIT_START, handleRowEditStart);
+  useGridApiEventHandler(apiRef, GRID_ROW_EDIT_STOP, handleRowEditStop);
+  useGridApiEventHandler(apiRef, GRID_ROW_EDIT_COMMIT, handleRowEditCommit);
+
   useGridApiOptionHandler(apiRef, GRID_EDIT_CELL_PROPS_CHANGE, options.onEditCellPropsChange);
+  useGridApiOptionHandler(apiRef, GRID_CELL_EDIT_COMMIT, options.onCellEditCommit);
   useGridApiOptionHandler(apiRef, GRID_CELL_EDIT_START, options.onCellEditStart);
   useGridApiOptionHandler(apiRef, GRID_CELL_EDIT_STOP, options.onCellEditStop);
+  useGridApiOptionHandler(apiRef, GRID_ROW_EDIT_COMMIT, options.onRowEditCommit);
+  useGridApiOptionHandler(apiRef, GRID_ROW_EDIT_START, options.onRowEditStart);
+  useGridApiOptionHandler(apiRef, GRID_ROW_EDIT_STOP, options.onRowEditStop);
 
   useGridApiMethod<GridEditRowApi>(
     apiRef,
     {
       setCellMode,
       getCellMode,
+      setRowMode,
+      getRowMode,
       isCellEditable,
       commitCellChange,
+      commitRowChange,
       setEditRowsModel,
       getEditRowsModel,
       setEditCellValue,

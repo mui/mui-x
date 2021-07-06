@@ -6,8 +6,12 @@ import { unstable_useId as useId } from '@material-ui/core/utils';
 import { useEnhancedEffect } from '../../utils/material-ui-utils';
 import { GridCellParams } from '../../models/params/gridCellParams';
 
+interface GridEditBooleanCellProps extends GridCellParams {
+  editMode?: 'row' | 'cell';
+}
+
 export function GridEditBooleanCell(
-  props: GridCellParams &
+  props: GridEditBooleanCellProps &
     React.DetailedHTMLProps<React.LabelHTMLAttributes<HTMLLabelElement>, HTMLLabelElement>,
 ) {
   const {
@@ -24,6 +28,7 @@ export function GridEditBooleanCell(
     className,
     getValue,
     hasFocus,
+    editMode,
     ...other
   } = props;
 

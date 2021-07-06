@@ -259,6 +259,7 @@ function run(argv: { outputDirectory?: string }) {
     'GridCsvExportApi',
     'GridExportCsvOptions',
     'GridVirtualizationApi',
+    'GridEditRowApi',
   ];
 
   apisToGenerate.forEach((apiName) => {

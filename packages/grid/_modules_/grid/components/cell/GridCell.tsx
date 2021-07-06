@@ -107,6 +107,11 @@ export const GridCell = React.memo(function GridCell(props: GridCellProps) {
         return;
       }
 
+      // The row might have been deleted during the click
+      if (!apiRef.current.getRow(rowId)) {
+        return;
+      }
+
       apiRef!.current.publishEvent(
         eventName,
         apiRef!.current.getCellParams(rowId!, field || ''),
@@ -175,7 +180,7 @@ export const GridCell = React.memo(function GridCell(props: GridCellProps) {
       data-mode={cellMode}
       aria-colindex={colIndex + 1}
       style={style}
-      tabIndex={tabIndex}
+      tabIndex={cellMode === 'view' || !isEditable ? tabIndex : -1}
       {...eventsHandlers}
     >
       {children != null ? children : valueToRender?.toString()}

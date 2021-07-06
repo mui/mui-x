@@ -16,7 +16,11 @@ const renderSingleSelectOptions = (option) =>
     </MenuItem>
   );
 
-export function GridEditSingleSelectCell(props: GridCellParams & SelectProps) {
+interface GridEditSingleSelectCellProps extends GridCellParams {
+  editMode?: 'row' | 'cell';
+}
+
+export function GridEditSingleSelectCell(props: GridEditSingleSelectCellProps & SelectProps) {
   const {
     id,
     value,
@@ -31,23 +35,34 @@ export function GridEditSingleSelectCell(props: GridCellParams & SelectProps) {
     className,
     getValue,
     hasFocus,
+    editMode,
     ...other
   } = props;
 
   const ref = React.useRef<any>();
+  const [open, setOpen] = React.useState(editMode === 'cell');
 
   const handleChange = (event) => {
+    setOpen(false);
     api.setEditCellValue({ id, field, value: event.target.value }, event);
-    if (!event.key) {
+    if (!event.key && editMode === 'cell') {
       api.commitCellChange({ id, field }, event);
       api.setCellMode(id, field, 'view');
     }
   };
 
   const handleClose = (event, reason) => {
+    if (editMode === 'row') {
+      setOpen(false);
+      return;
+    }
     if (reason === 'backdropClick' || isEscapeKey(event.key)) {
       api.setCellMode(id, field, 'view');
     }
+  };
+
+  const handleOpen = () => {
+    setOpen(true);
   };
 
   useEnhancedEffect(() => {
@@ -63,11 +78,12 @@ export function GridEditSingleSelectCell(props: GridCellParams & SelectProps) {
       ref={ref}
       value={value}
       onChange={handleChange}
+      open={open}
+      onOpen={handleOpen}
       MenuProps={{
         onClose: handleClose,
       }}
       fullWidth
-      open
       {...other}
     >
       {colDef.valueOptions?.map(renderSingleSelectOptions)}

@@ -6,28 +6,11 @@ import {
   randomTraderName,
   randomUpdatedDate,
 } from '@material-ui/x-grid-data-generator';
-import Alert from '@material-ui/lab/Alert';
 
-export default function EditRowsModelControlGrid() {
-  const [editRowsModel, setEditRowsModel] = React.useState({});
-
-  const handleEditRowsModelChange = React.useCallback((model) => {
-    setEditRowsModel(model);
-  }, []);
-
+export default function BasicRowEditingGrid() {
   return (
-    <div style={{ width: '100%' }}>
-      <Alert severity="info" style={{ marginBottom: 8 }}>
-        <code>editRowsModel: {JSON.stringify(editRowsModel)}</code>
-      </Alert>
-      <div style={{ height: 400, width: '100%' }}>
-        <DataGrid
-          rows={rows}
-          columns={columns}
-          editRowsModel={editRowsModel}
-          onEditRowsModelChange={handleEditRowsModelChange}
-        />
-      </div>
+    <div style={{ height: 300, width: '100%' }}>
+      <DataGrid editMode="row" rows={rows} columns={columns} />
     </div>
   );
 }

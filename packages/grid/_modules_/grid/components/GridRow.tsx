@@ -8,6 +8,7 @@ import {
   GRID_ROW_OUT,
   GRID_ROW_OVER,
 } from '../constants/eventsConstants';
+import { GRID_CSS_CLASS_PREFIX } from '../constants/cssClassesConstants';
 import { GridRowId } from '../models';
 import { isFunction } from '../utils/utils';
 import { gridDensityRowHeightSelector } from '../hooks/features/density';
@@ -28,7 +29,7 @@ export function GridRow(props: GridRowProps) {
   const ariaRowIndex = rowIndex + 2; // 1 for the header row and 1 as it's 1 based
   const apiRef = useGridApiContext();
   const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
-  const { classes, getRowClassName } = useGridSelector(apiRef, optionsSelector);
+  const { classes, getRowClassName, editMode } = useGridSelector(apiRef, optionsSelector);
 
   const publish = React.useCallback(
     (eventName: string) => (event: React.MouseEvent) => {
@@ -39,6 +40,11 @@ export function GridRow(props: GridRowProps) {
         (event.target as any).nodeType === 1 &&
         !event.currentTarget.contains(event.target as Element)
       ) {
+        return;
+      }
+
+      // The row might have been deleted
+      if (!apiRef.current.getRow(id)) {
         return;
       }
 
@@ -68,6 +74,8 @@ export function GridRow(props: GridRowProps) {
     isFunction(getRowClassName) && getRowClassName(apiRef!.current.getRowParams(id));
   const cssClasses = clsx(className, rowClassName, classes?.row, {
     'Mui-selected': selected,
+    [`${GRID_CSS_CLASS_PREFIX}-row--editing`]: apiRef.current.getRowMode(id) === 'edit',
+    [`${GRID_CSS_CLASS_PREFIX}-row--editable`]: editMode === 'row',
   });
 
   return (
