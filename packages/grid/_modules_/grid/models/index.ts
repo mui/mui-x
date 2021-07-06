@@ -11,6 +11,7 @@ export * from './gridRootContainerRef';
 export * from './gridRenderContextProps';
 export * from './gridRows';
 export * from './gridSortModel';
+export * from './gridSelectionModel';
 export * from './params';
 export * from './gridCellClass';
 export * from './gridCell';

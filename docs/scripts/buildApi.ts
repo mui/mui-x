@@ -13,11 +13,11 @@ type Api = {
 };
 
 // Based on https://github.com/TypeStrong/typedoc-default-themes/blob/master/src/default/partials/type.hbs
-function generateType(type) {
+function generateType(type, needsParenthesis = false) {
   if (type.type === 'union') {
-    let text = type.needsParens ? '(' : '';
-    text += type.types.map((childType) => generateType(childType)).join(' | ');
-    return type.needsParens ? `${text})` : text;
+    let text = needsParenthesis ? '(' : '';
+    text += type.types.map((childType) => generateType(childType, true)).join(' | ');
+    return needsParenthesis ? `${text})` : text;
   }
   if (type.type === 'intrinsic') {
     return type.name;
@@ -26,12 +26,12 @@ function generateType(type) {
     return `${type.value}`;
   }
   if (type.type === 'array') {
-    return `${generateType(type.elementType)}[]`;
+    return `${generateType(type.elementType, true)}[]`;
   }
   if (type.type === 'reflection') {
     if (type.declaration.signatures && type.declaration.signatures.length === 1) {
       const signature = type.declaration.signatures[0];
-      let text = type.needsParens ? '(' : '';
+      let text = needsParenthesis ? '(' : '';
       text += '(';
       text += signature.parameters
         .map((param) => {
@@ -45,7 +45,19 @@ function generateType(type) {
       if (signature.type) {
         text += ` => ${generateType(signature.type)}`;
       }
-      return type.needsParens ? `${text})` : text;
+      return needsParenthesis ? `${text})` : text;
+    }
+    if (type.declaration.children) {
+      let text = '{ ';
+      text += type.declaration.children
+        .map((child) => {
+          let memberText = child.name;
+          if (child.flags.isOptional) memberText += '?';
+          return `${memberText}: ${child.type ? generateType(child.type) : 'any'}`;
+        })
+        .join('; ');
+      text += ' }';
+      return text;
     }
   }
   if (type.type === 'reference') {

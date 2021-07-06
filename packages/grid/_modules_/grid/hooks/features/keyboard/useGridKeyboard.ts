@@ -10,20 +10,15 @@ import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridCellParams } from '../../../models/params/gridCellParams';
 import {
   findParentElementFromClassName,
-  getIdFromRowElem,
-  getRowEl,
   isGridCellRoot,
   isGridHeaderCellRoot,
 } from '../../../utils/domUtils';
 import { isEnterKey, isNavigationKey, isSpaceKey } from '../../../utils/keyboardUtils';
-import { useGridSelector } from '../core/useGridSelector';
 import { useLogger } from '../../utils/useLogger';
 import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
-import { gridSelectionStateSelector } from '../selection/gridSelectionSelector';
 
 export const useGridKeyboard = (apiRef: GridApiRef): void => {
   const logger = useLogger('useGridKeyboard');
-  const selectionState = useGridSelector(apiRef, gridSelectionStateSelector);
 
   const expandSelection = React.useCallback(
     (params: GridCellParams, event: React.KeyboardEvent) => {
@@ -63,22 +58,6 @@ export const useGridKeyboard = (apiRef: GridApiRef): void => {
     [logger, apiRef],
   );
 
-  const handleCopy = React.useCallback(
-    (target: HTMLElement) => {
-      const rowEl = getRowEl(target)!;
-      const rowId = getIdFromRowElem(rowEl);
-      const isRowSelected = selectionState[rowId];
-
-      if (isRowSelected) {
-        window?.getSelection()?.selectAllChildren(rowEl);
-      } else {
-        window?.getSelection()?.selectAllChildren(target);
-      }
-      document.execCommand('copy');
-    },
-    [selectionState],
-  );
-
   const handleCellKeyDown = React.useCallback(
     (params: GridCellParams, event: React.KeyboardEvent) => {
       // The target is not an element when triggered by a Select inside the cell
@@ -115,7 +94,6 @@ export const useGridKeyboard = (apiRef: GridApiRef): void => {
       }
 
       if (event.key.toLowerCase() === 'c' && (event.ctrlKey || event.metaKey)) {
-        handleCopy(event.target as HTMLElement);
         return;
       }
 
@@ -124,7 +102,7 @@ export const useGridKeyboard = (apiRef: GridApiRef): void => {
         apiRef.current.selectRows(apiRef.current.getAllRowIds(), true);
       }
     },
-    [apiRef, expandSelection, handleCopy],
+    [apiRef, expandSelection],
   );
 
   const handleColumnHeaderKeyDown = React.useCallback(

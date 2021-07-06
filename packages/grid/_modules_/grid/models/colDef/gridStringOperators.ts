@@ -10,7 +10,7 @@ export const getGridStringOperators: () => GridFilterOperator[] = () => [
   {
     value: 'contains',
     getApplyFilterFn: (filterItem: GridFilterItem) => {
-      if (!filterItem.columnField || !filterItem.value || !filterItem.operatorValue) {
+      if (!filterItem.value) {
         return null;
       }
 
@@ -24,7 +24,7 @@ export const getGridStringOperators: () => GridFilterOperator[] = () => [
   {
     value: 'equals',
     getApplyFilterFn: (filterItem: GridFilterItem) => {
-      if (!filterItem.columnField || !filterItem.value || !filterItem.operatorValue) {
+      if (!filterItem.value) {
         return null;
       }
       return ({ value }): boolean => {
@@ -40,7 +40,7 @@ export const getGridStringOperators: () => GridFilterOperator[] = () => [
   {
     value: 'startsWith',
     getApplyFilterFn: (filterItem: GridFilterItem) => {
-      if (!filterItem.columnField || !filterItem.value || !filterItem.operatorValue) {
+      if (!filterItem.value) {
         return null;
       }
 
@@ -54,7 +54,7 @@ export const getGridStringOperators: () => GridFilterOperator[] = () => [
   {
     value: 'endsWith',
     getApplyFilterFn: (filterItem: GridFilterItem) => {
-      if (!filterItem.columnField || !filterItem.value || !filterItem.operatorValue) {
+      if (!filterItem.value) {
         return null;
       }
 
@@ -64,5 +64,21 @@ export const getGridStringOperators: () => GridFilterOperator[] = () => [
       };
     },
     InputComponent: GridFilterInputValue,
+  },
+  {
+    value: 'isEmpty',
+    getApplyFilterFn: () => {
+      return ({ value }): boolean => {
+        return value === '' || value == null;
+      };
+    },
+  },
+  {
+    value: 'isNotEmpty',
+    getApplyFilterFn: () => {
+      return ({ value }): boolean => {
+        return value !== '' && value != null;
+      };
+    },
   },
 ];

@@ -79,7 +79,7 @@ export const getInitialGridState: () => GridState = () => ({
   sorting: getInitialGridSortingState(),
   focus: { cell: null, columnHeader: null },
   tabIndex: { cell: null, columnHeader: null },
-  selection: {},
+  selection: [],
   filter: getInitialGridFilterState(),
   columnMenu: { open: false },
   preferencePanel: { open: false },
