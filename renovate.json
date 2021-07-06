@@ -77,6 +77,10 @@
       "patch": {
         "enabled": false
       }
+    },
+    {
+      "groupName": "storybook",
+      "matchPackagePatterns": "@storybook/*"
     }
   ],
   "postUpgradeTasks": {
