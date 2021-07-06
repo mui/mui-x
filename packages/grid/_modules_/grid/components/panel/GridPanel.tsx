@@ -1,4 +1,5 @@
 import * as React from 'react';
+import clsx from 'clsx';
 import { Theme } from '@material-ui/core/styles';
 import { makeStyles } from '@material-ui/styles';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
@@ -44,7 +45,7 @@ export const GridPanel = React.forwardRef<HTMLDivElement, GridPanelProps>(functi
   props,
   ref,
 ) {
-  const { children, open, ...other } = props;
+  const { children, className, open, ...other } = props;
   const classes = useStyles(other);
   const apiRef = useGridApiContext();
 
@@ -88,7 +89,7 @@ export const GridPanel = React.forwardRef<HTMLDivElement, GridPanelProps>(functi
     <Popper
       ref={ref}
       placement="bottom-start"
-      className={classes.root}
+      className={clsx(className, classes.root)}
       open={open}
       anchorEl={anchorEl}
       modifiers={getPopperModifiers()}
@@ -102,3 +103,6 @@ export const GridPanel = React.forwardRef<HTMLDivElement, GridPanelProps>(functi
     </Popper>
   );
 }) as (props: GridPanelProps) => JSX.Element;
+
+// @ts-ignore TODO migrate to v5 gridPanelClasses pattern, this is only for tests
+GridPanel.useStyles = useStyles;
