@@ -144,7 +144,7 @@ export interface GridColDef {
    */
   filterOperators?: GridFilterOperator[];
   /**
-   * If `true`, the column will not be included in exports
+   * If `true`, this column will not be included in exports
    * @default false
    */
   disableExport?: boolean;

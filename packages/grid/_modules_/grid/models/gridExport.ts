@@ -24,12 +24,12 @@ export interface GridExportCsvOptions {
    */
   utf8WithBom?: boolean;
   /**
-   * The columns exported in the CSV
-   * This should only be used if you want to restrict the columns exports
+   * The columns exported in the CSV.
+   * This should only be used if you want to restrict the columns exports.
    */
   fields?: string[];
   /**
-   * If `true`, the hidden columns will also be exported
+   * If `true`, the hidden columns will also be exported.
    * @default false
    */
   allColumns?: boolean;
