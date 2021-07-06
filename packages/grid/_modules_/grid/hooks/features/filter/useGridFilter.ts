@@ -13,7 +13,7 @@ import { GridFilterItem, GridLinkOperator } from '../../../models/gridFilterItem
 import { GridFilterModelParams } from '../../../models/params/gridFilterModelParams';
 import { GridRowId, GridRowModel } from '../../../models/gridRows';
 import { isDeepEqual } from '../../../utils/utils';
-import { useGridApiEventHandler, useGridApiOptionHandler } from '../../root/useGridApiEventHandler';
+import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
 import { optionsSelector } from '../../utils/optionsSelector';
 import { useLogger } from '../../utils/useLogger';
@@ -190,7 +190,14 @@ export const useGridFilter = (
       });
       applyFilters();
     },
-    [logger, setGridState, apiRef, applyFilters, options.disableMultipleColumnsFiltering, filterableColumnsIds],
+    [
+      logger,
+      setGridState,
+      apiRef,
+      applyFilters,
+      options.disableMultipleColumnsFiltering,
+      filterableColumnsIds,
+    ],
   );
 
   const deleteFilter = React.useCallback(
@@ -288,8 +295,7 @@ export const useGridFilter = (
   );
 
   useGridApiEventHandler(apiRef, GRID_ROWS_SET, apiRef.current.applyFilters);
-  useGridApiEventHandler(apiRef, GRID_ROWS_UPDATED, apiRef.current.applyFilters);
-  // useGridApiOptionHandler(apiRef, GRID_FILTER_MODEL_CHANGE, props.onFilterModelChange);
+  useGridApiEventHandler(apiRef, GRID_ROWS_UPDATE, apiRef.current.applyFilters);
 
   React.useEffect(() => {
     if (!props.filterModel) {
@@ -334,10 +340,9 @@ export const useGridFilter = (
       stateSelector: (state) => state.filter,
       // TODO here we don't need the callback arg.
       // Should we also call applyFilters?
-      onChangeCallback: (model) =>
-        apiRef.current.publishEvent(GRID_FILTER_MODEL_CHANGE, model),
+      onChangeCallback: (model) => apiRef.current.publishEvent(GRID_FILTER_MODEL_CHANGE, model),
     });
   }, [apiRef, getFilterModelParams, props.filterModel, props.onFilterModelChange]);
 
-  useGridApiEventHandler(apiRef, GRID_COLUMNS_UPDATED, onColUpdated);
+  useGridApiEventHandler(apiRef, GRID_COLUMNS_CHANGE, onColUpdated);
 };

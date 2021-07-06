@@ -8,8 +8,6 @@ import {
   GridLinkOperator,
   GridPreferencePanelsValue,
   GridRowModel,
-  GridFilterModelParams,
-  GridRowId,
   useGridApiRef,
   XGrid,
   SUBMIT_FILTER_STROKE_TIME,
@@ -198,7 +196,7 @@ describe('<XGrid /> - Filter', () => {
     expect(getColumnValues()).to.deep.equal(['Adidas', 'Puma']);
   });
 
-  it('should trigger onFilterModelChange when the link operator changes', () => {
+  it('should trigger onFilterModelChange when the link operator changes but not change the state', () => {
     const onFilterModelChange = spy();
     const newModel: GridFilterModel = {
       items: [
@@ -224,14 +222,14 @@ describe('<XGrid /> - Filter', () => {
       />,
     );
     // TODO should equal 0, the state doesn't change
-    expect(onFilterModelChange.callCount).to.equal(4);
+    expect(onFilterModelChange.callCount).to.equal(0);
     expect(getColumnValues()).to.deep.equal([]);
     onFilterModelChange.callCount = 0;
 
     const select = screen.queryAllByRole('combobox', { name: /Operators/i })[1];
     fireEvent.change(select, { target: { value: 'or' } });
     expect(onFilterModelChange.callCount).to.equal(1);
-    expect(getColumnValues()).to.deep.equal(['Adidas', 'Puma']);
+    expect(getColumnValues()).to.deep.equal([]);
   });
 
   it('should only select visible rows', () => {
@@ -267,16 +265,9 @@ describe('<XGrid /> - Filter', () => {
     expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
   });
 
-  it('should show the latest visible rows', () => {
-    let visibleRows: Map<GridRowId, GridRowModel> = new Map();
-    const handleFilterChange = (params: GridFilterModelParams) => {
-      visibleRows = params.visibleRows;
-    };
-
+  it('should show the latest visibleRows onFilterChange', () => {
     render(
       <TestCase
-        filterModel={filterModel}
-        onFilterModelChange={handleFilterChange}
         state={{
           preferencePanel: {
             open: true,
@@ -286,12 +277,11 @@ describe('<XGrid /> - Filter', () => {
       />,
     );
 
-    expect(getColumnValues()).to.deep.equal(['Adidas', 'Puma']);
     const input = screen.getByPlaceholderText('Filter value');
     fireEvent.change(input, { target: { value: 'ad' } });
     clock.tick(SUBMIT_FILTER_STROKE_TIME);
-    expect(visibleRows.size).to.equal(1);
-    expect(visibleRows.get(1)).to.deep.equal({ id: 1, brand: 'Adidas' });
+    expect(getColumnValues()).to.deep.equal(['Adidas']);
+
     expect(apiRef.current.getVisibleRowModels().size).to.equal(1);
     expect(apiRef.current.getVisibleRowModels().get(1)).to.deep.equal({ id: 1, brand: 'Adidas' });
   });
@@ -370,8 +360,8 @@ describe('<XGrid /> - Filter', () => {
         const [rows, setRows] = React.useState<GridRowModel[]>([]);
         const [filterValue, setFilterValue] = React.useState();
 
-        const handleFilterChange = React.useCallback((params) => {
-          setFilterValue(params.filterModel.items[0].value);
+        const onFilterChange = React.useCallback((newFilterModel: GridFilterModel) => {
+          setFilterValue(newFilterModel.items[0].value);
         }, []);
 
         React.useEffect(() => {
