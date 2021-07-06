@@ -17,9 +17,9 @@
     "typescript:transpile:dev": "node scripts/formattedTSDemos --watch"
   },
   "dependencies": {
-    "@babel/core": "^7.10.2",
-    "@babel/plugin-transform-object-assign": "^7.10.1",
-    "@babel/runtime-corejs2": "^7.10.2",
+    "@babel/core": "7.12.9",
+    "@babel/plugin-transform-object-assign": "7.10.4",
+    "@babel/runtime-corejs2": "7.11.1",
     "@material-ui/core": "^4.9.12",
     "@material-ui/docs": "^4.0.0-beta.3",
     "@material-ui/icons": "^4.9.1",
@@ -76,8 +76,8 @@
     "webpack-bundle-analyzer": "^4.1.0"
   },
   "devDependencies": {
-    "@babel/plugin-transform-react-constant-elements": "^7.8.3",
-    "@babel/preset-typescript": "^7.7.4",
+    "@babel/plugin-transform-react-constant-elements": "7.10.4",
+    "@babel/preset-typescript": "7.10.4",
     "cpy-cli": "^3.0.0",
     "cross-fetch": "^3.0.5",
     "gm": "^1.23.0",

@@ -24,7 +24,7 @@
     "styled-components": "^5.1.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.9.0",
+    "@babel/core": "7.12.9",
     "@storybook/addon-a11y": "^6.2.2",
     "@storybook/addon-actions": "^6.2.2",
     "@storybook/addon-console": "^1.2.2",
@@ -34,7 +34,7 @@
     "@storybook/addon-viewport": "^6.2.2",
     "@storybook/react": "^6.2.2",
     "@storybook/theming": "^6.2.2",
-    "babel-loader": "^8.1.0",
+    "babel-loader": "8.2.2",
     "core-js": "^3.6.5",
     "react-docgen-typescript-loader": "^3.7.2",
     "source-map-loader": "^1.0.2",
