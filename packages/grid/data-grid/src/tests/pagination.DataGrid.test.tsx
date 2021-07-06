@@ -322,7 +322,7 @@ describe('<DataGrid /> - Pagination', () => {
       });
 
       it.only('should display a warning if the pageSize is not in the rowsPerPageOptions', () => {
-        const pageSize = 12
+        const pageSize = 12;
 
         const TestCase: React.FC = () => {
           const data = useData(100, 10);
@@ -342,11 +342,11 @@ describe('<DataGrid /> - Pagination', () => {
         };
 
         expect(() => {
-          render(
-              <TestCase />
-          );
+          render(<TestCase />);
           // @ts-expect-error need to migrate helpers to TypeScript
-        }).toWarnDev([`The current pageSize (${pageSize}) is not preset in the rowsPerPageOptions.\nAdd it to show the pagination select.`]);
+        }).toWarnDev([
+          `The current pageSize (${pageSize}) is not preset in the rowsPerPageOptions.\nAdd it to show the pagination select.`,
+        ]);
       });
     });
   });
