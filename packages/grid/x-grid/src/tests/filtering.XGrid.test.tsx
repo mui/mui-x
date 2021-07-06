@@ -10,7 +10,7 @@ import {
   GridRowModel,
   useGridApiRef,
   XGrid,
-  SUBMIT_FILTER_STROKE_TIME,
+  SUBMIT_FILTER_STROKE_TIME, GridSelectionModel,
 } from '@material-ui/x-grid';
 import {
   // @ts-expect-error need to migrate helpers to TypeScript
@@ -21,7 +21,7 @@ import {
   // @ts-expect-error need to migrate helpers to TypeScript
   waitFor,
 } from 'test/utils';
-import { getColumnHeaderCell, getColumnValues } from 'test/utils/helperFn';
+import { getCell, getColumnHeaderCell, getColumnValues, getRow } from 'test/utils/helperFn';
 import { useData } from 'packages/storybook/src/hooks/useData';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);

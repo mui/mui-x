@@ -217,7 +217,6 @@ export const useGridFilter = (
         upsertFilter({});
       }
       applyFilters();
-      // apiRef.current.publishEvent(GRID_FILTER_MODEL_CHANGE, getFilterModelParams());
     },
     [applyFilters, logger, setGridState, upsertFilter],
   );
@@ -251,7 +250,6 @@ export const useGridFilter = (
         filter: { ...state.filter, linkOperator },
       }));
       applyFilters();
-      // apiRef.current.publishEvent(GRID_FILTER_MODEL_CHANGE, getFilterModelParams());
     },
     [applyFilters, logger, setGridState],
   );
@@ -268,7 +266,6 @@ export const useGridFilter = (
       logger.debug('Setting filter model');
       applyFilterLinkOperator(model.linkOperator);
       model.items.forEach((item) => upsertFilter(item));
-      // apiRef.current.publishEvent(GRID_FILTER_MODEL_CHANGE, getFilterModelParams());
     },
     [applyFilterLinkOperator, clearFilterModel, logger, upsertFilter],
   );
@@ -338,8 +335,6 @@ export const useGridFilter = (
       propModel: props.filterModel,
       propOnChange: props.onFilterModelChange,
       stateSelector: (state) => state.filter,
-      // TODO here we don't need the callback arg.
-      // Should we also call applyFilters?
       onChangeCallback: (model) => apiRef.current.publishEvent(GRID_FILTER_MODEL_CHANGE, model),
     });
   }, [apiRef, getFilterModelParams, props.filterModel, props.onFilterModelChange]);
