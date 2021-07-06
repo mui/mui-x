@@ -60,6 +60,8 @@ const ptBRGrid: Partial<GridLocaleText> = {
   filterOperatorBefore: 'antes de',
   filterOperatorOnOrBefore: 'em ou antes de',
   filterOperatorAfter: 'após',
+  filterOperatorIsEmpty: 'está vazio',
+  filterOperatorIsNotEmpty: 'não está vazio',
 
   // Column menu text
   columnMenuLabel: 'Menu',

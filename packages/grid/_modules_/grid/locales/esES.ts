@@ -60,6 +60,8 @@ const esESGrid: Partial<GridLocaleText> = {
   filterOperatorOnOrAfter: 'es en o posterior',
   filterOperatorBefore: 'es anterior',
   filterOperatorOnOrBefore: 'es en o anterior',
+  filterOperatorIsEmpty: 'está vacío',
+  filterOperatorIsNotEmpty: 'no esta vacío',
 
   // Column menu text
   columnMenuLabel: 'Menú',

@@ -60,6 +60,8 @@ const nlNLGrid: Partial<GridLocaleText> = {
   filterOperatorAfter: 'is voor',
   filterOperatorOnOrBefore: 'is gelijk of er na',
   filterOperatorBefore: 'is na',
+  // filterOperatorIsEmpty: 'is empty',
+  // filterOperatorIsNotEmpty: 'is not empty',
 
   // Column menu text
   columnMenuLabel: 'Menu',

@@ -60,6 +60,8 @@ const deDEGrid: Partial<GridLocaleText> = {
   filterOperatorBefore: 'ist vor',
   filterOperatorOnOrBefore: 'ist an oder vor',
   filterOperatorAfter: 'ist nach',
+  // filterOperatorIsEmpty: 'is empty',
+  // filterOperatorIsNotEmpty: 'is not empty',
 
   // Column menu text
   columnMenuLabel: 'Menü',

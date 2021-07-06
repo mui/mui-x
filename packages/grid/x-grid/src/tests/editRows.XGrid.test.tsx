@@ -511,8 +511,8 @@ describe('<XGrid /> - Edit Rows', () => {
               type: 'singleSelect',
               valueOptions: countries,
               valueFormatter: (params) => {
-                const result = countries.filter((country) => country.value === params.value)[0];
-                return result.label;
+                const result = countries.find((country) => country.value === params.value);
+                return result!.label;
               },
               editable: true,
             },

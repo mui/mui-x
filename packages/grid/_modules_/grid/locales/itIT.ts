@@ -60,6 +60,8 @@ const itITGrid: Partial<GridLocaleText> = {
   filterOperatorAfter: 'dopo il',
   filterOperatorOnOrBefore: 'fino al',
   filterOperatorBefore: 'prima del',
+  filterOperatorIsEmpty: 'è vuoto',
+  filterOperatorIsNotEmpty: 'non è vuoto',
 
   // Column menu text
   columnMenuLabel: 'Menu',

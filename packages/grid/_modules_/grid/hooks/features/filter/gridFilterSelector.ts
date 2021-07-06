@@ -1,9 +1,11 @@
 import { createSelector } from 'reselect';
 import { GridFilterItem } from '../../../models/gridFilterItem';
 import { GridRowId, GridRowModel } from '../../../models/gridRows';
+import { GridColumnLookup } from '../../../models/colDef/gridColDef';
 import { GridState } from '../core/gridState';
 import { gridRowCountSelector } from '../rows/gridRowsSelector';
 import { sortedGridRowsSelector } from '../sorting/gridSortingSelector';
+import { gridColumnLookupSelector } from '../columns/gridColumnsSelector';
 import { GridFilterModelState } from './gridFilterModelState';
 import { VisibleGridRowsState } from './visibleGridRowsState';
 
@@ -58,11 +60,25 @@ export const filterGridStateSelector: (state: GridState) => GridFilterModelState
 export const activeGridFilterItemsSelector = createSelector<
   GridState,
   GridFilterModelState,
+  GridColumnLookup,
   GridFilterItem[]
->(
-  filterGridStateSelector,
-  (filterModel) =>
-    filterModel.items?.filter((item) => item.value != null && item.value?.toString() !== ''), // allows to count false or 0
+>(filterGridStateSelector, gridColumnLookupSelector, (filterModel, columnLookup) =>
+  filterModel.items?.filter((item) => {
+    if (!item.columnField) {
+      return false;
+    }
+    const column = columnLookup[item.columnField];
+    if (!column?.filterOperators || column?.filterOperators?.length === 0) {
+      return false;
+    }
+    const filterOperator = column.filterOperators.find(
+      (operator) => operator.value === item.operatorValue,
+    );
+    if (!filterOperator) {
+      return false;
+    }
+    return !filterOperator.InputComponent || (item.value != null && item.value?.toString() !== '');
+  }),
 );
 
 export const filterGridItemsCounterSelector = createSelector<GridState, GridFilterItem[], number>(
