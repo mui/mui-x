@@ -144,8 +144,8 @@ export function useGridColumns(apiRef: GridApiRef, { columns }: { columns: GridC
   const getVisibleColumns = React.useCallback(() => visibleColumns, [visibleColumns]);
   const getColumnsMeta: () => GridColumnsMeta = React.useCallback(() => columnsMeta, [columnsMeta]);
 
-  const getColumnIndex: (field: string, useVisibleColumns?: boolean) => number = React.useCallback(
-    (field, useVisibleColumns = true) =>
+  const getColumnIndex = React.useCallback(
+    (field: string, useVisibleColumns: boolean = true): number =>
       useVisibleColumns
         ? visibleColumns.findIndex((col) => col.field === field)
         : allColumns.findIndex((col) => col.field === field),
