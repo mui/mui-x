@@ -20,6 +20,7 @@ import {
   GridEditCellPropsParams,
   GridEditRowModelParams,
   GRID_CELL_EDIT_ENTER,
+  MuiEvent,
 } from '@material-ui/x-grid';
 import { useDemoData } from '@material-ui/x-grid-data-generator';
 import { action } from '@storybook/addon-actions';
@@ -735,8 +736,7 @@ export function EditCellUsingExternalButtonGrid() {
     }
     const { id, field, cellMode } = selectedCellParams;
     if (cellMode === 'edit') {
-      const editedCellProps = apiRef.current.getEditCellPropsParams(id, field);
-      apiRef.current.commitCellChange(editedCellProps);
+      apiRef.current.commitCellChange({ id, field });
       apiRef.current.setCellMode(id, field, 'view');
       setButtonLabel('Edit');
     } else {
@@ -766,18 +766,15 @@ export function EditCellUsingExternalButtonGrid() {
 
   // Prevent from rolling back on escape
   const handleCellKeyDown = React.useCallback((params, event: React.KeyboardEvent) => {
-    if (
-      params.cellMode === 'edit' &&
-      (event.key === 'Escape' || event.key === 'Delete' || event.key === 'Enter')
-    ) {
+    if (['Escape', 'Delete', 'Backspace', 'Enter'].includes(event.key)) {
       event.stopPropagation();
     }
   }, []);
 
-  // Prevent from committing on blur
-  const handleCellBlur = React.useCallback((params, event?: React.SyntheticEvent) => {
-    if (params.cellMode === 'edit') {
-      event?.stopPropagation();
+  // Prevent from committing on focus out
+  const handleCellFocusOut = React.useCallback((params, event?: MuiEvent<MouseEvent>) => {
+    if (params.cellMode === 'edit' && event) {
+      event.defaultMuiPrevented = true;
     }
   }, []);
 
@@ -793,7 +790,7 @@ export function EditCellUsingExternalButtonGrid() {
           apiRef={apiRef}
           onCellClick={handleCellClick}
           onCellDoubleClick={handleDoubleCellClick}
-          onCellBlur={handleCellBlur}
+          onCellFocusOut={handleCellFocusOut}
           onCellKeyDown={handleCellKeyDown}
         />
       </div>

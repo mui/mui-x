@@ -222,7 +222,7 @@ describe('<XGrid /> - Events Params', () => {
       const stopClick = (params, event) => {
         event.stopPropagation();
       };
-      render(<TestEvents onCellClick={stopClick} onRowSelected={push('rowSelected')} />);
+      render(<TestEvents onCellClick={stopClick} onSelectionModelChange={push('rowSelected')} />);
 
       const cell11 = getCell(1, 1);
       fireEvent.click(cell11);
@@ -230,18 +230,21 @@ describe('<XGrid /> - Events Params', () => {
     });
 
     it('should select a row by default', () => {
-      render(<TestEvents onRowSelected={push('rowSelected')} />);
+      const handleSelection = spy();
+      render(<TestEvents onSelectionModelChange={handleSelection} />);
 
       const cell11 = getCell(1, 1);
       fireEvent.click(cell11);
-      expect(eventStack).to.deep.equal(['rowSelected']);
+      expect(handleSelection.callCount).to.equal(1);
+      expect(handleSelection.lastCall.firstArg).to.deep.equal([2]);
     });
 
     it('should not select a row if options.disableSelectionOnClick', () => {
-      render(<TestEvents onRowSelected={push('rowSelected')} disableSelectionOnClick />);
+      const handleSelection = spy();
+      render(<TestEvents onSelectionModelChange={handleSelection} disableSelectionOnClick />);
       const cell11 = getCell(1, 1);
       fireEvent.click(cell11);
-      expect(eventStack).to.deep.equal([]);
+      expect(handleSelection.callCount).to.equal(0);
     });
   });
   it('publishing GRID_ROWS_SCROLL should call onRowsScrollEnd callback', () => {

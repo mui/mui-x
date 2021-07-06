@@ -43,6 +43,13 @@ Finally, you need to handle the `onPageChange` callback to load the rows for the
 
 {{"demo": "pages/components/data-grid/pagination/ServerPaginationGrid.js", "bg": "inline"}}
 
+## Cursor-based pagination
+
+You can adapt the pagination for your cursor-based pagination.
+To do so, you just have to keep track of the next cursor associated with each page you fetched.
+
+{{"demo": "pages/components/data-grid/pagination/CursorPaginationGrid.js", "bg": "inline"}}
+
 ## Customization
 
 You can customize the rendering of the pagination in the footer following [the component section](/components/data-grid/components/#pagination) of the documentation.

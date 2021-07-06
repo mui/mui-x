@@ -23,7 +23,6 @@ export function AllEvents() {
     onCellOver: (params) => action('onCellOver')(params),
     onRowOver: (params) => action('onRowOver')(params),
     onColumnHeaderClick: (params) => action('onColumnHeaderClick')(params),
-    onRowSelected: (params) => action('onRowSelected')(params),
     onSelectionModelChange: (params) => action('onSelectionChange', { depth: 1 })(params),
     onPageChange: (params) => action('onPageChange')(params),
     onPageSizeChange: (params) => action('onPageSizeChange')(params),

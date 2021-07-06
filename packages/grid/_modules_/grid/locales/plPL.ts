@@ -59,6 +59,8 @@ export const plPLGrid: Partial<GridLocaleText> = {
   filterOperatorOnOrAfter: 'większe lub równe',
   filterOperatorBefore: 'mniejsze niż',
   filterOperatorOnOrBefore: 'mniejsze lub równe',
+  // filterOperatorIsEmpty: 'is empty',
+  // filterOperatorIsNotEmpty: 'is not empty',
 
   // Column menu text
   columnMenuLabel: 'Menu',

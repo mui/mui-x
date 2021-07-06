@@ -12,11 +12,10 @@ export function useGridApiMethod<T extends Partial<GridApi>>(
   const apiMethodsRef = React.useRef(apiMethods);
   const [apiMethodsNames] = React.useState(Object.keys(apiMethods));
 
-  React.useEffect(() => {
-    apiMethodsRef.current = apiMethods;
-  }, [apiMethods]);
-
-  React.useEffect(() => {
+  const installMethods = React.useCallback(() => {
+    if (!apiRef.current) {
+      return;
+    }
     apiMethodsNames.forEach((methodName) => {
       if (!apiRef.current.hasOwnProperty(methodName)) {
         logger.debug(`Adding ${apiName}.${methodName} to apiRef`);
@@ -24,4 +23,14 @@ export function useGridApiMethod<T extends Partial<GridApi>>(
       }
     });
   }, [apiMethodsNames, apiName, apiRef, logger]);
+
+  React.useEffect(() => {
+    apiMethodsRef.current = apiMethods;
+  }, [apiMethods]);
+
+  React.useEffect(() => {
+    installMethods();
+  }, [installMethods]);
+
+  installMethods();
 }

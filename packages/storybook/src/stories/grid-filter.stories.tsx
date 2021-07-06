@@ -17,7 +17,7 @@ import {
   useGridApiRef,
   XGrid,
 } from '@material-ui/x-grid';
-import { useDemoData } from '@material-ui/x-grid-data-generator';
+import { useDemoData, randomArrayItem } from '@material-ui/x-grid-data-generator';
 import { action } from '@storybook/addon-actions';
 import * as React from 'react';
 import { randomInt } from '../data/random-generator';
@@ -215,6 +215,38 @@ export function CommodityNoToolbar() {
         />
       </div>
     </React.Fragment>
+  );
+}
+
+export function CommodityWithEmptyCells() {
+  const { data } = useDemoData({
+    dataSet: 'Commodity',
+    rowLength: 100,
+    maxColumns: 6,
+  });
+
+  const rows = React.useMemo(
+    () =>
+      data.rows.map((row) => {
+        return Object.entries(row).reduce((acc, [key, value]) => {
+          acc[key] = key === 'id' ? value : randomArrayItem([value, null, '']);
+          return acc;
+        }, {});
+      }),
+    [data.rows],
+  );
+
+  return (
+    <div style={{ height: 400, width: '100%' }}>
+      <XGrid
+        {...data}
+        rows={rows}
+        filterModel={{
+          items: [{ columnField: 'commodity', operatorValue: 'isEmpty' }],
+          linkOperator: GridLinkOperator.Or,
+        }}
+      />
+    </div>
   );
 }
 

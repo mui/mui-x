@@ -19,4 +19,5 @@ export * from './gridFocusApi';
 export * from './gridFilterApi';
 export * from './gridColumnMenuApi';
 export * from './gridPreferencesPanelApi';
+export * from './gridControlStateApi';
 export * from './gridClipboardApi';

@@ -59,6 +59,8 @@ const elGRGrid: Partial<GridLocaleText> = {
   filterOperatorOnOrAfter: 'είναι ίσο ή μετά',
   filterOperatorBefore: 'είναι πριν',
   filterOperatorOnOrBefore: 'είναι ίσο ή πριν',
+  // filterOperatorIsEmpty: 'is empty',
+  // filterOperatorIsNotEmpty: 'is not empty',
 
   // Column menu text
   columnMenuLabel: 'Μενού',
