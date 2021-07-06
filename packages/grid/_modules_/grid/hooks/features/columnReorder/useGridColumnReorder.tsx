@@ -122,7 +122,7 @@ export const useGridColumnReorder = (apiRef: GridApiRef): void => {
         const hasMovedRight =
           cursorMoveDirectionX === CURSOR_MOVE_DIRECTION_RIGHT && dragColIndex < targetColIndex;
 
-        if (canBeReordered && (hasMovedLeft || hasMovedRight)) {
+          if (canBeReordered && (hasMovedLeft || hasMovedRight)) {
           apiRef.current.setColumnIndex(dragColField, targetColIndex);
         }
 
