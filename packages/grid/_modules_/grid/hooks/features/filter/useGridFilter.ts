@@ -203,22 +203,18 @@ export const useGridFilter = (
   const deleteFilter = React.useCallback(
     (item: GridFilterItem) => {
       logger.debug(`Deleting filter on column ${item.columnField} with value ${item.value}`);
-      let hasNoItem = false;
       setGridState((state) => {
         const items = [...state.filter.items.filter((filterItem) => filterItem.id !== item.id)];
-        hasNoItem = items.length === 0;
         const newState = {
           ...state,
           filter: { ...state.filter, items },
         };
         return newState;
       });
-      if (hasNoItem) {
-        upsertFilter({});
-      }
+
       applyFilters();
     },
-    [applyFilters, logger, setGridState, upsertFilter],
+    [applyFilters, logger, setGridState],
   );
 
   const showFilterPanel = React.useCallback(
@@ -291,22 +287,6 @@ export const useGridFilter = (
     'FilterApi',
   );
 
-  useGridApiEventHandler(apiRef, GRID_ROWS_SET, apiRef.current.applyFilters);
-  useGridApiEventHandler(apiRef, GRID_ROWS_UPDATE, apiRef.current.applyFilters);
-
-  React.useEffect(() => {
-    if (!props.filterModel) {
-      return;
-    }
-    const filterModel = props.filterModel;
-    const oldFilterModel = apiRef.current.state.filter;
-    if (filterModel && !isDeepEqual(filterModel, oldFilterModel)) {
-      logger.debug('filterModel prop changed, applying filters');
-      // we use apiRef to avoid watching setFilterModel as it will trigger an update on every state change
-      apiRef.current.setFilterModel(filterModel);
-    }
-  }, [apiRef, logger, props.filterModel]);
-
   React.useEffect(() => {
     if (apiRef.current) {
       logger.debug('Rows prop changed, applying filters');
@@ -335,9 +315,23 @@ export const useGridFilter = (
       propModel: props.filterModel,
       propOnChange: props.onFilterModelChange,
       stateSelector: (state) => state.filter,
-      onChangeCallback: (model) => apiRef.current.publishEvent(GRID_FILTER_MODEL_CHANGE, model),
+      onChangeCallback: (model) => {
+        apiRef.current.publishEvent(GRID_FILTER_MODEL_CHANGE, model);
+        apiRef.current.setFilterModel(model);
+      },
     });
-  }, [apiRef, getFilterModelParams, props.filterModel, props.onFilterModelChange]);
+  }, [apiRef, props.filterModel, props.onFilterModelChange]);
 
+  React.useEffect(() => {
+    const filterModel = props.filterModel;
+    const oldFilterModel = apiRef.current.state.filter;
+    if (filterModel && !isDeepEqual(filterModel, oldFilterModel)) {
+      logger.debug('filterModel prop changed, applying filters');
+      setGridState((state) => ({ ...state, filter: props.filterModel || getInitialGridFilterState() }));
+    }
+  }, [apiRef, logger, props.filterModel, setGridState]);
+
+  useGridApiEventHandler(apiRef, GRID_ROWS_SET, apiRef.current.applyFilters);
+  useGridApiEventHandler(apiRef, GRID_ROWS_UPDATE, apiRef.current.applyFilters);
   useGridApiEventHandler(apiRef, GRID_COLUMNS_CHANGE, onColUpdated);
 };

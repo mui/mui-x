@@ -800,8 +800,8 @@ export function SimpleModelWithOnChangeControlFilter() {
   const [simpleFilterModel, setFilterModel] = React.useState<GridFilterModel>(
     getInitialGridFilterState(),
   );
-  const handleFilterChange = React.useCallback((params) => {
-    setFilterModel(params.filterModel);
+  const handleFilterChange = React.useCallback((model) => {
+    setFilterModel(model);
   }, []);
 
   return (

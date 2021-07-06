@@ -1,28 +1,29 @@
-import * as React from 'react';
-import { expect } from 'chai';
-import { spy, useFakeTimers } from 'sinon';
 import {
+  getInitialGridFilterState,
   GridApiRef,
-  GridFilterModel,
   GridComponentProps,
+  GridFilterModel,
   GridLinkOperator,
   GridPreferencePanelsValue,
   GridRowModel,
+  SUBMIT_FILTER_STROKE_TIME,
   useGridApiRef,
   XGrid,
-  SUBMIT_FILTER_STROKE_TIME, GridSelectionModel,
 } from '@material-ui/x-grid';
+import { expect } from 'chai';
+import { useData } from 'packages/storybook/src/hooks/useData';
+import * as React from 'react';
+import { spy, useFakeTimers } from 'sinon';
 import {
-  // @ts-expect-error need to migrate helpers to TypeScript
-  screen,
   createClientRenderStrictMode,
   // @ts-expect-error need to migrate helpers to TypeScript
   fireEvent,
   // @ts-expect-error need to migrate helpers to TypeScript
-  waitFor,
+  screen,
+  // @ts-expect-error need to migrate helpers to TypeScript
+  waitFor
 } from 'test/utils';
-import { getCell, getColumnHeaderCell, getColumnValues, getRow } from 'test/utils/helperFn';
-import { useData } from 'packages/storybook/src/hooks/useData';
+import { getColumnHeaderCell, getColumnValues } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -42,26 +43,26 @@ describe('<XGrid /> - Filter', () => {
 
   let apiRef: GridApiRef;
 
-  const TestCase = (props: Partial<GridComponentProps>) => {
-    const baselineProps = {
-      autoHeight: isJSDOM,
-      rows: [
-        {
-          id: 0,
-          brand: 'Nike',
-        },
-        {
-          id: 1,
-          brand: 'Adidas',
-        },
-        {
-          id: 2,
-          brand: 'Puma',
-        },
-      ],
-      columns: [{ field: 'brand' }],
-    };
+  const baselineProps = {
+    autoHeight: isJSDOM,
+    rows: [
+      {
+        id: 0,
+        brand: 'Nike',
+      },
+      {
+        id: 1,
+        brand: 'Adidas',
+      },
+      {
+        id: 2,
+        brand: 'Puma',
+      },
+    ],
+    columns: [{ field: 'brand' }],
+  };
 
+  const TestCase = (props: Partial<GridComponentProps>) => {
     const { rows, ...other } = props;
     apiRef = useGridApiRef();
     return (
@@ -221,7 +222,6 @@ describe('<XGrid /> - Filter', () => {
         }}
       />,
     );
-    // TODO should equal 0, the state doesn't change
     expect(onFilterModelChange.callCount).to.equal(0);
     expect(getColumnValues()).to.deep.equal([]);
     onFilterModelChange.callCount = 0;
@@ -414,5 +414,96 @@ describe('<XGrid /> - Filter', () => {
     expect(screen.getByText('Total Rows: 3')).not.to.equal(null);
     setProps({ filterModel });
     expect(screen.getByText('Total Rows: 2 of 3')).not.to.equal(null);
+  });
+
+  describe('control Filter', () => {
+    it('should update the filter state when neither the model nor the onChange are set', () => {
+      render(<TestCase  state={{
+        preferencePanel: {
+          open: true,
+          openedPanelValue: GridPreferencePanelsValue.filters,
+        },
+      }} />);
+      const addButton = screen.getByRole('button', { name: /Add Filter/i });
+      clock.tick(100);
+      fireEvent.click(addButton);
+      const filterForms = document.querySelectorAll(`.MuiGridFilterForm-root`);
+      expect(filterForms).to.have.length(2);
+    });
+
+    it('should not update the filter model when the filterModelProp is set', () => {
+      const testFilterModel: GridFilterModel = {items: [], linkOperator: GridLinkOperator.Or};
+      render(<TestCase filterModel={testFilterModel} state={{
+        preferencePanel: {
+          open: true,
+          openedPanelValue: GridPreferencePanelsValue.filters,
+        },
+      }} />);
+      const addButton = screen.getByRole('button', { name: /Add Filter/i });
+      clock.tick(100);
+      fireEvent.click(addButton);
+      const filterForms = document.querySelectorAll(`.MuiGridFilterForm-root`);
+      expect(filterForms).to.have.length(0);
+    });
+
+    it('should update the filter state when the model is not set, but the onChange is set', () => {
+      const onModelChange = spy();
+      const {setProps} = render(<TestCase onFilterModelChange={onModelChange}/>);
+      expect(onModelChange.callCount).to.equal(0);
+      setProps({
+        state: {
+          preferencePanel: {
+            open: true,
+            openedPanelValue: GridPreferencePanelsValue.filters,
+          },
+        }
+      });
+      expect(onModelChange.callCount).to.equal(1);
+      const addButton = screen.getByRole('button', {name: /Add Filter/i});
+      clock.tick(100);
+      fireEvent.click(addButton);
+      const filterForms = document.querySelectorAll(`.MuiGridFilterForm-root`);
+      expect(filterForms).to.have.length(2);
+      expect(onModelChange.callCount).to.equal(2);
+      expect(onModelChange.lastCall.firstArg.items.length).to.deep.equal(2);
+      expect(onModelChange.lastCall.firstArg.linkOperator).to.deep.equal(GridLinkOperator.And);
+    });
+
+    it('should control filter state when the model and the onChange are set', () => {
+      const ControlCase = (props: Partial<GridComponentProps>) => {
+        const {rows, columns, ...others} = props;
+        const [caseFilterModel, setFilterModel] = React.useState<any>(getInitialGridFilterState());
+        const handleFilterChange = (newModel) => {
+          setFilterModel(newModel);
+        };
+
+        return (
+          <div style={{width: 300, height: 300}}>
+            <XGrid
+              autoHeight={isJSDOM}
+              columns={columns || baselineProps.columns}
+              rows={rows || baselineProps.rows}
+              filterModel={caseFilterModel}
+              onFilterModelChange={handleFilterChange}
+              state={{
+                preferencePanel: {
+                  open: true,
+                  openedPanelValue: GridPreferencePanelsValue.filters,
+                }
+              }}
+              {...others}
+            />
+          </div>
+        );
+      };
+
+      render(<ControlCase  />);
+      const addButton = screen.getByRole('button', { name: /Add Filter/i });
+      clock.tick(100);
+      fireEvent.click(addButton);
+
+      const filterForms = document.querySelectorAll(`.MuiGridFilterForm-root`);
+      expect(filterForms).to.have.length(2);
+    });
   });
 });
