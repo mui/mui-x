@@ -15,7 +15,7 @@ import {
   DEFAULT_GRID_OPTIONS,
   GridRowsProp,
 } from '@material-ui/data-grid';
-import { getColumnValues } from 'test/utils/helperFn';
+import { getColumnValues, getRows } from 'test/utils/helperFn';
 import { spy } from 'sinon';
 import { useData } from 'packages/storybook/src/hooks/useData';
 
@@ -279,20 +279,20 @@ describe('<DataGrid /> - Pagination', () => {
             DEFAULT_GRID_OPTIONS.rowHeight,
         );
 
-        let rows = document.querySelectorAll('.MuiDataGrid-viewport [role="row"]');
+        let rows = getRows();
         expect(rows.length).to.equal(expectedViewportRowsLength);
 
         fireEvent.click(screen.getByRole('button', { name: /next page/i }));
-        rows = document.querySelectorAll('.MuiDataGrid-viewport [role="row"]');
+        rows = getRows();
         expect(rows.length).to.equal(expectedViewportRowsLength);
 
         fireEvent.click(screen.getByRole('button', { name: /previous page/i }));
-        rows = document.querySelectorAll('.MuiDataGrid-viewport [role="row"]');
+        rows = getRows();
         expect(rows.length).to.equal(expectedViewportRowsLength);
 
         fireEvent.click(screen.getByRole('button', { name: /next page/i }));
         fireEvent.click(screen.getByRole('button', { name: /next page/i }));
-        rows = document.querySelectorAll('.MuiDataGrid-viewport [role="row"]');
+        rows = getRows();
         expect(rows.length).to.equal(nbRows % expectedViewportRowsLength);
 
         // make sure there is no more pages.
