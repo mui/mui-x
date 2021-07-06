@@ -1,8 +1,8 @@
 import { GridCellMode } from '../gridCell';
-import { GridEditCellProps, GridEditRowsModel } from '../gridEditRowModel';
+import { GridEditRowsModel } from '../gridEditRowModel';
 import { GridRowId } from '../gridRows';
 import { GridCellParams } from '../params/gridCellParams';
-import { GridEditCellValueParams, GridEditCellPropsParams } from '../params/gridEditCellParams';
+import { GridEditCellPropsParams, GridCommitCellChangeParams } from '../params/gridEditCellParams';
 
 /**
  * The editing API interface that is available in the grid `apiRef`.
@@ -44,13 +44,6 @@ export interface GridEditRowApi {
    */
   setEditCellProps: (params: GridEditCellPropsParams) => void;
   /**
-   * Gets the input props for the edit cell of a given `rowId` and `field`.
-   * @param {GridRowId} rowId The id of the row.
-   * @param {string} field The column field.
-   * @returns {GridEditCellProps} The props for the edit cell.
-   */
-  getEditCellProps: (rowId: GridRowId, field: string) => GridEditCellProps;
-  /**
    * Gets the params to be passed when calling `setEditCellProps`.
    * @param {GridRowId} rowId The id of the row.
    * @param {string} field The column field.
@@ -58,14 +51,8 @@ export interface GridEditRowApi {
    */
   getEditCellPropsParams: (rowId: GridRowId, field: string) => GridEditCellPropsParams;
   /**
-   * Commits a cell change. Used to update the value when editing a cell.
-   * @param {GridEditCellPropsParams} params The new params.
+   * Updates the field at the given id with the value stored in the edit row model.
+   * @param {GridCommitCellChangeParams} params The id and field to commit to.
    */
-  commitCellChange: (params: GridEditCellPropsParams) => void;
-  /**
-   * Sets the cell value.
-   * @param {GridEditCellValueParams} params An object with the row id, the field and the new value.
-   * @ignore - do not document.
-   */
-  setCellValue: (params: GridEditCellValueParams) => void;
+  commitCellChange: (params: GridCommitCellChangeParams) => void;
 }

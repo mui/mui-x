@@ -9,7 +9,7 @@ import Portal from '@material-ui/unstyled/Portal';
 import { expect } from 'chai';
 import * as React from 'react';
 import { getActiveCell, getCell, getColumnHeaderCell } from 'test/utils/helperFn';
-import { stub } from 'sinon';
+import { spy, stub } from 'sinon';
 import {
   createClientRenderStrictMode,
   // @ts-expect-error need to migrate helpers to TypeScript
@@ -372,7 +372,7 @@ describe('<XGrid /> - Edit Rows', () => {
     expect(input.value).to.equal('1961');
 
     fireEvent.change(input, { target: { value: '62' } });
-    expect(cell.querySelector('input')!.value).to.equal('62');
+    expect(cell.querySelector('input')!.value).to.equal('1962');
 
     fireEvent.keyDown(input, { key: 'Enter' });
     expect(cell).not.to.have.class('MuiDataGrid-cell--editing');
@@ -458,6 +458,21 @@ describe('<XGrid /> - Edit Rows', () => {
     expect(cell).not.to.have.class('MuiDataGrid-cell--editing');
     expect(cell).to.have.text('n');
     expect(screen.queryAllByRole('row')).to.have.length(4);
+  });
+
+  it('should call onEditCellChange when the value in the edit cell is changed', () => {
+    const onEditCellChange = spy();
+    render(<TestCase onEditCellChange={onEditCellChange} />);
+    const cell = getCell(1, 1);
+    cell.focus();
+    fireEvent.doubleClick(cell);
+    const input = cell.querySelector('input')!;
+    fireEvent.change(input, { target: { value: '1970' } });
+    expect(onEditCellChange.args[0][0]).to.deep.equal({
+      id: 1,
+      field: 'year',
+      props: { value: '1970' },
+    });
   });
 
   it('should change cell value correctly when column type is singleSelect and valueOptions is array of strings', () => {
