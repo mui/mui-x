@@ -24,7 +24,7 @@ export const useGridCsvExport = (apiRef: GridApiRef): void => {
       return buildCSV({
         columns: visibleColumns,
         rows: visibleSortedRows,
-        selectedRows: selection,
+        selectedRowIds: selection,
         getCellParams: apiRef.current.getCellParams,
         delimiterCharacter: options?.delimiter || ',',
       });

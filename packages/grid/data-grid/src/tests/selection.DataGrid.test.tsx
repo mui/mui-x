@@ -195,7 +195,7 @@ describe('<DataGrid /> - Selection', () => {
               },
             ]}
             columns={[{ field: 'brand', width: 100 }]}
-            selectionModel={[1]}
+            selectionModel={1}
           />
         </div>,
       );
@@ -234,7 +234,7 @@ describe('<DataGrid /> - Selection', () => {
       const row0 = getRow(0);
       expect(row0).to.have.class('Mui-selected');
 
-      setProps({ selectionModel: [1] });
+      setProps({ selectionModel: 1 });
       // TODO fix this assertion. The model is forced from the outside, hence shouldn't change.
       // https://github.com/mui-org/material-ui-x/issues/190
       expect(row0).not.to.have.class('Mui-selected');
@@ -265,15 +265,13 @@ describe('<DataGrid /> - Selection', () => {
           </div>
         );
       }
-      const { setProps } = render(<Demo selectionModel={[0]} />);
-      expect(onSelectionModelChange.callCount).to.equal(1);
-      expect(onSelectionModelChange.lastCall.args[0].selectionModel).to.deep.equals([0]);
-      setProps({ selectionModel: [0, 1] });
-      expect(onSelectionModelChange.callCount).to.equal(2);
-      expect(onSelectionModelChange.lastCall.args[0].selectionModel).to.deep.equals([0, 1]);
-      setProps({ selectionModel: [0, 1] });
-      expect(onSelectionModelChange.callCount).to.equal(2);
-      expect(onSelectionModelChange.lastCall.args[0].selectionModel).to.deep.equals([0, 1]);
+      const { setProps } = render(<Demo selectionModel={0} />);
+      expect(onSelectionModelChange.callCount).to.equal(0);
+      const firstRow = getRow(0);
+      expect(firstRow).to.have.class('Mui-selected');
+      setProps({ selectionModel: 0 });
+      expect(onSelectionModelChange.callCount).to.equal(0);
+      expect(getRow(0)).to.have.class('Mui-selected');
     });
 
     it('should filter out unselectable rows when the selectionModel prop changes', () => {
@@ -290,7 +288,7 @@ describe('<DataGrid /> - Selection', () => {
           },
         ],
         columns: [{ field: 'brand', width: 100 }],
-        selectionModel: [1],
+        selectionModel: 1,
         isRowSelectable: (params) => params.id > 0,
       };
 
@@ -306,8 +304,8 @@ describe('<DataGrid /> - Selection', () => {
       expect(getRow(0)).not.to.have.class('Mui-selected');
       expect(getRow(1)).to.have.class('Mui-selected');
 
-      setProps({ selectionModel: [0] });
-      expect(getRow(0)).not.to.have.class('Mui-selected');
+      setProps({ selectionModel: 0 });
+      expect(getRow(0)).to.have.class('Mui-selected');
       expect(getRow(1)).not.to.have.class('Mui-selected');
     });
   });
@@ -327,7 +325,6 @@ describe('<DataGrid /> - Selection', () => {
           },
         ],
         columns: [{ field: 'brand', width: 100 }],
-        selectionModel: [0],
         isRowSelectable: () => true,
       };
 
@@ -340,6 +337,7 @@ describe('<DataGrid /> - Selection', () => {
       }
 
       const { setProps } = render(<Demo {...data} />);
+      fireEvent.click(getRow(0));
       expect(getRow(0)).to.have.class('Mui-selected');
       expect(getRow(1)).not.to.have.class('Mui-selected');
 
