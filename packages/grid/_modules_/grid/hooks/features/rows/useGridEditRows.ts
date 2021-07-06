@@ -206,7 +206,11 @@ export function useGridEditRows(apiRef: GridApiRef) {
         throw new Error(`Cell at id: ${id} and field: ${field} is not in edit mode`);
       }
 
-      const { value } = model[id][field];
+      const { value, error } = model[id][field];
+      if (error) {
+        return;
+      }
+
       logger.debug(`Setting cell id: ${id} field: ${field} to value: ${value?.toString()}`);
       const row = apiRef.current.getRow(id);
       const rowUpdate = { ...row, [field]: value };
