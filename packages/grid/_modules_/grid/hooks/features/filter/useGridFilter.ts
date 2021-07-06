@@ -282,7 +282,7 @@ export const useGridFilter = (
       model.items.forEach((item) => upsertFilter(item));
       apiRef.current.publishEvent(GRID_FILTER_MODEL_CHANGE, getFilterModelParams());
     },
-    [apiRef, applyFilterLinkOperator, clearFilterModel, getFilterModelParams, logger, upsertFilter],
+    [apiRef, setFilterLinkOperation, clearFilterModel, getFilterModelParams, logger, upsertFilter],
   );
 
   const getVisibleRowModels = React.useCallback(
