@@ -6,41 +6,41 @@ import { gridPreferencePanelStateSelector } from '../../hooks/features/preferenc
 import { GridPreferencePanelsValue } from '../../hooks/features/preferencesPanel/gridPreferencePanelsValue';
 import { useGridApiContext } from '../../hooks/root/useGridApiContext';
 
-export interface GridToolbarColumnsButtonProps extends Omit<ButtonProps, 'onClick'> {}
+export const GridToolbarColumnsButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  function GridToolbarColumnsButton(props, ref) {
+    const { onClick, ...other } = props;
+    const apiRef = useGridApiContext();
+    const options = useGridSelector(apiRef, optionsSelector);
+    const ColumnSelectorIcon = apiRef!.current.components.ColumnSelectorIcon!;
+    const { open, openedPanelValue } = useGridSelector(apiRef, gridPreferencePanelStateSelector);
 
-export const GridToolbarColumnsButton = React.forwardRef<
-  HTMLButtonElement,
-  GridToolbarColumnsButtonProps
->(function GridToolbarColumnsButton(props, ref) {
-  const apiRef = useGridApiContext();
-  const options = useGridSelector(apiRef, optionsSelector);
-  const ColumnSelectorIcon = apiRef!.current.components.ColumnSelectorIcon!;
-  const { open, openedPanelValue } = useGridSelector(apiRef, gridPreferencePanelStateSelector);
+    const showColumns = (event) => {
+      if (open && openedPanelValue === GridPreferencePanelsValue.columns) {
+        apiRef!.current.hidePreferences();
+      } else {
+        apiRef!.current.showPreferences(GridPreferencePanelsValue.columns);
+      }
 
-  const showColumns = React.useCallback(() => {
-    if (open && openedPanelValue === GridPreferencePanelsValue.columns) {
-      apiRef!.current.hidePreferences();
-    } else {
-      apiRef!.current.showPreferences(GridPreferencePanelsValue.columns);
+      onClick?.(event);
+    };
+
+    // Disable the button if the corresponding is disabled
+    if (options.disableColumnSelector) {
+      return null;
     }
-  }, [apiRef, open, openedPanelValue]);
 
-  // Disable the button if the corresponding is disabled
-  if (options.disableColumnSelector) {
-    return null;
-  }
-
-  return (
-    <Button
-      ref={ref}
-      size="small"
-      color="primary"
-      aria-label={apiRef!.current.getLocaleText('toolbarColumnsLabel')}
-      startIcon={<ColumnSelectorIcon />}
-      onClick={showColumns}
-      {...props}
-    >
-      {apiRef!.current.getLocaleText('toolbarColumns')}
-    </Button>
-  );
-});
+    return (
+      <Button
+        ref={ref}
+        size="small"
+        color="primary"
+        aria-label={apiRef!.current.getLocaleText('toolbarColumnsLabel')}
+        startIcon={<ColumnSelectorIcon />}
+        {...other}
+        onClick={showColumns}
+      >
+        {apiRef!.current.getLocaleText('toolbarColumns')}
+      </Button>
+    );
+  },
+);

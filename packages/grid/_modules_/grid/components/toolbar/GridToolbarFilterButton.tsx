@@ -31,6 +31,9 @@ const useStyles = makeStyles(
 );
 
 export interface GridToolbarFilterButtonProps extends Omit<TooltipProps, 'title' | 'children'> {
+  /**
+   * The props used for each slot inside.
+   */
   componentProps?: {
     button?: ButtonProps;
   };
@@ -40,7 +43,7 @@ export const GridToolbarFilterButton = React.forwardRef<
   HTMLButtonElement,
   GridToolbarFilterButtonProps
 >(function GridToolbarFilterButton(props, ref) {
-  const { componentProps, ...rest } = props;
+  const { componentProps = {}, ...other } = props;
   const classes = useStyles();
   const apiRef = useGridApiContext();
   const options = useGridSelector(apiRef, optionsSelector);
@@ -101,7 +104,7 @@ export const GridToolbarFilterButton = React.forwardRef<
 
   const OpenFilterButtonIcon = apiRef!.current.components!.OpenFilterButtonIcon!;
   return (
-    <Tooltip title={tooltipContentNode} enterDelay={1000} {...rest}>
+    <Tooltip title={tooltipContentNode} enterDelay={1000} {...other}>
       <Button
         ref={ref}
         size="small"
@@ -113,7 +116,7 @@ export const GridToolbarFilterButton = React.forwardRef<
           </Badge>
         }
         onClick={toggleFilter}
-        {...componentProps?.button}
+        {...componentProps.button}
       >
         {apiRef!.current.getLocaleText('toolbarFilters')}
       </Button>

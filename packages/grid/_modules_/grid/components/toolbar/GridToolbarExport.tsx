@@ -20,13 +20,13 @@ type GridExportOption = GridExportFormatOption & {
   label: React.ReactNode;
 };
 
-export interface GridToolbarExportProps extends Omit<ButtonProps, 'onClick'> {
+export interface GridToolbarExportProps extends ButtonProps {
   csvOptions?: GridExportCsvOptions;
 }
 
 export const GridToolbarExport = React.forwardRef<HTMLButtonElement, GridToolbarExportProps>(
   function GridToolbarExport(props, ref) {
-    const { csvOptions, ...other } = props;
+    const { csvOptions, onClick, ...other } = props;
     const apiRef = useGridApiContext();
     const buttonId = useId();
     const menuId = useId();
@@ -40,7 +40,10 @@ export const GridToolbarExport = React.forwardRef<HTMLButtonElement, GridToolbar
       formatOptions: csvOptions,
     });
 
-    const handleMenuOpen = (event) => setAnchorEl(event.currentTarget);
+    const handleMenuOpen = (event) => {
+      setAnchorEl(event.currentTarget);
+      onClick?.(event);
+    };
     const handleMenuClose = () => setAnchorEl(null);
     const handleExport = (option: GridExportOption) => () => {
       if (option.format === 'csv') {
@@ -71,8 +74,8 @@ export const GridToolbarExport = React.forwardRef<HTMLButtonElement, GridToolbar
           aria-haspopup="menu"
           aria-labelledby={menuId}
           id={buttonId}
-          onClick={handleMenuOpen}
           {...other}
+          onClick={handleMenuOpen}
         >
           {apiRef!.current.getLocaleText('toolbarExport')}
         </Button>
