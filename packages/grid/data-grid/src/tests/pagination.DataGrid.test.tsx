@@ -321,7 +321,9 @@ describe('<DataGrid /> - Pagination', () => {
         expect(getColumnValues(0)).to.deep.equal(['7', '8']);
       });
 
-      it('should add the pageSize to the rowsPerPageOptions if it is not in it', async () => {
+      it.only('should display a warning if the pageSize is not in the rowsPerPageOptions', () => {
+        const pageSize = 12
+
         const TestCase: React.FC = () => {
           const data = useData(100, 10);
 
@@ -332,18 +334,19 @@ describe('<DataGrid /> - Pagination', () => {
                 columns={data.columns}
                 rows={data.rows}
                 pagination
-                pageSize={12}
+                pageSize={pageSize}
                 rowsPerPageOptions={[25, 50, 100]}
               />
             </div>
           );
         };
 
-        render(<TestCase />);
-
-        expect(document.querySelector('.MuiTablePagination-input [role="button"]')).to.have.text(
-          '12',
-        );
+        expect(() => {
+          render(
+              <TestCase />
+          );
+          // @ts-expect-error need to migrate helpers to TypeScript
+        }).toWarnDev([`The current pageSize (${pageSize}) is not preset in the rowsPerPageOptions.\nAdd it to show the pagination select.`]);
       });
     });
   });
