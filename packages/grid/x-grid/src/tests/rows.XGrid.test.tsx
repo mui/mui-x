@@ -1,5 +1,9 @@
 import * as React from 'react';
-import { createClientRenderStrictMode } from 'test/utils';
+import {
+  createClientRenderStrictMode,
+  // @ts-expect-error need to migrate helpers to TypeScript
+  fireEvent,
+} from 'test/utils';
 import { useFakeTimers } from 'sinon';
 import { expect } from 'chai';
 import { getCell, getColumnValues } from 'test/utils/helperFn';
@@ -277,13 +281,18 @@ describe('<XGrid /> - Rows', () => {
 
     let apiRef: GridApiRef;
     const TestCaseVirtualization = (
-      props: Partial<XGridProps> & { nbRows?: number; nbCols?: number; height?: number },
+      props: Partial<XGridProps> & {
+        nbRows?: number;
+        nbCols?: number;
+        width?: number;
+        height?: number;
+      },
     ) => {
       apiRef = useGridApiRef();
       const data = useData(props.nbRows || 100, props.nbCols || 10);
 
       return (
-        <div style={{ width: 300, height: props.height || 300 }}>
+        <div style={{ width: props.width || 300, height: props.height || 300 }}>
           <XGrid apiRef={apiRef} columns={data.columns} rows={data.rows} {...props} />
         </div>
       );
@@ -449,7 +458,7 @@ describe('<XGrid /> - Rows', () => {
     });
 
     describe('scrollToIndexes', () => {
-      it('should scroll correctly when the given index is partially visible at the bottom', () => {
+      it('should scroll correctly when the given rowIndex is partially visible at the bottom', () => {
         const headerHeight = 40;
         const rowHeight = 50;
         const offset = 10;
@@ -490,6 +499,94 @@ describe('<XGrid /> - Rows', () => {
         expect(gridWindow.scrollTop).to.equal(offset);
         apiRef.current.scrollToIndexes({ rowIndex: 0, colIndex: 0 });
         expect(gridWindow.scrollTop).to.equal(0);
+      });
+
+      it('should scroll correctly when the given colIndex is partially visible at the right', () => {
+        const width = 300;
+        const border = 1;
+        const columnWidth = 120;
+        const rows = [{ id: 0, firstName: 'John', lastName: 'Doe', age: 11 }];
+        const columns = [
+          { field: 'id', width: columnWidth },
+          { field: 'firstName', width: columnWidth },
+          { field: 'lastName', width: columnWidth },
+          { field: 'age', width: columnWidth },
+        ];
+        render(<TestCaseVirtualization width={width + border * 2} rows={rows} columns={columns} />);
+        const gridWindow = document.querySelector('.MuiDataGrid-window')!;
+        expect(gridWindow.scrollLeft).to.equal(0);
+        apiRef.current.scrollToIndexes({ rowIndex: 0, colIndex: 2 });
+        expect(gridWindow.scrollLeft).to.equal(columnWidth * 3 - width);
+      });
+    });
+  });
+
+  describe('Cell focus', () => {
+    let apiRef: GridApiRef;
+
+    const TestCase: React.FC<Pick<XGridProps, 'rows'>> = ({ rows }) => {
+      apiRef = useGridApiRef();
+
+      return (
+        <div style={{ width: 300, height: 300 }}>
+          <XGrid apiRef={apiRef} {...baselineProps} rows={rows} />
+        </div>
+      );
+    };
+
+    beforeEach(() => {
+      baselineProps = {
+        autoHeight: isJSDOM,
+        rows: [
+          {
+            id: 1,
+            clientId: 'c1',
+            first: 'Mike',
+            age: 11,
+          },
+          {
+            id: 2,
+            clientId: 'c2',
+            first: 'Jack',
+            age: 11,
+          },
+          {
+            id: 3,
+            clientId: 'c3',
+            first: 'Mike',
+            age: 20,
+          },
+        ],
+        columns: [{ field: 'clientId' }, { field: 'first' }, { field: 'age' }],
+      };
+    });
+
+    it('should focus the clicked cell in the state', () => {
+      render(<TestCase rows={baselineProps.rows} />);
+
+      fireEvent.click(getCell(0, 0));
+      expect(apiRef.current.getState().focus.cell).to.deep.equal({
+        id: baselineProps.rows[0].id,
+        field: baselineProps.columns[0].field,
+      });
+    });
+
+    it('should reset focus when removing the row containing the focus cell', () => {
+      const { setProps } = render(<TestCase rows={baselineProps.rows} />);
+
+      fireEvent.click(getCell(0, 0));
+      setProps({ rows: baselineProps.rows.slice(1) });
+      expect(apiRef.current.getState().focus.cell).to.equal(null);
+    });
+
+    it('should not reset focus when removing a row not containing the focus cell', () => {
+      const { setProps } = render(<TestCase rows={baselineProps.rows} />);
+
+      fireEvent.click(getCell(1, 0));
+      setProps({ rows: baselineProps.rows.slice(1) });
+      expect(apiRef.current.getState().focus.cell).to.deep.equal({
+        id: baselineProps.rows[1].id,
+        field: baselineProps.columns[0].field,
       });
     });
   });

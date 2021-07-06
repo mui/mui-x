@@ -21,6 +21,7 @@ import { XGrid } from '@material-ui/x-grid';
 | <span class="prop-name">autoHeight</span> | <span class="prop-type">boolean</span> | false | If `true`, the grid height is dynamic and follow the number of rows in the grid. |
 | <span class="prop-name">autoPageSize</span> | <span class="prop-type">boolean</span> | false | If `true`, the pageSize is calculated according to the container size and the max number of rows to avoid rendering a vertical scroll bar. |
 | <span class="prop-name">checkboxSelection</span> | <span class="prop-type">boolean</span> | false | If `true`, the grid get a first column with a checkbox that allows to select rows. |
+| <span class="prop-name">checkboxSelectionVisibleOnly</span> | <span class="prop-type">boolean</span> | false | If `true`, the "Select All" header checkbox selects only the rows on the current page. To be used in combination with `checkboxSelection`. |
 | <span class="prop-name">classes</span> | <span class="prop-type">GridClasses</span> |   | Override or extend the styles applied to the component. See [CSS API](/api/data-grid/x-grid/#css) below for more details. |
 | <span class="prop-name">className</span> | <span class="prop-type">string</span> |   | CSS classname to add on the outer container. |
 | <span class="prop-name">columnBuffer</span> | <span class="prop-type">number</span> | 2 | Number of columns rendered outside the grid viewport. |
@@ -69,8 +70,8 @@ import { XGrid } from '@material-ui/x-grid';
 | <span class="prop-name">onColumnHeaderEnter</span> | <span class="prop-type">(param: GridColumnHeaderParams, event: React.MouseEvent) => void</span> |   | Callback fired when a mouse enter event comes from a column header element. |
 | <span class="prop-name">onColumnHeaderLeave</span> | <span class="prop-type">(param: GridColumnHeaderParams, event: React.MouseEvent) => void</span> |   | Callback fired when a mouse leave event comes from a column header element. |
 | <span class="prop-name">onColumnOrderChange</span> | <span class="prop-type">(param: GridColumnOrderChangeParams, event: React.MouseEvent) => void</span> |   | Callback fired when a column is reordered. |
-| <span class="prop-name">onColumnResize</span> | <span class="prop-type">(param: GridColumnResizeParams) => void</span> |   | Callback fired when a column is resizing. |
-| <span class="prop-name">onColumnResizeCommitted</span> | <span class="prop-type">(param: GridColumnResizeParams) => void</span> |   | Callback fired when a column is resized. |
+| <span class="prop-name">onColumnResize</span> | <span class="prop-type">(param: GridColumnResizeParams) => void</span> |   | Callback fired while a column is being resized. |
+| <span class="prop-name">onColumnWidthChange</span> | <span class="prop-type">(param: GridColumnResizeParams) => void</span> |   | Callback fired when the width of a column is changed. |
 | <span class="prop-name">onColumnVisibilityChange</span> | <span class="prop-type">(param: GridColumnVisibilityChangeParams) => void</span> |   | Callback fired when a column visibility changes. |
 | <span class="prop-name">onError</span> | <span class="prop-type">(args: any) => void</span> |   | Callback fired when an exception is thrown in the grid, or when the `showError` API method is called. |
 | <span class="prop-name">onEditCellChange</span> | <span class="prop-type">(params: GridEditCellParams) => void</span> |   |  Callback fired when the edit cell value changed. |
