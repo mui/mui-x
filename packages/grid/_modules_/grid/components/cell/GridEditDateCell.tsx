@@ -1,6 +1,5 @@
 import * as React from 'react';
 import InputBase, { InputBaseProps } from '@material-ui/core/InputBase';
-import { GRID_CELL_EDIT_PROPS_CHANGE } from '../../constants/eventsConstants';
 import { GridCellParams } from '../../models/params/gridCellParams';
 
 export function GridEditDateCell(props: GridCellParams & InputBaseProps) {
@@ -32,7 +31,6 @@ export function GridEditDateCell(props: GridCellParams & InputBaseProps) {
         return;
       }
 
-      // TODO move to value parser
       const [date, time] = newValue.split('T');
       const [year, month, day] = date.split('-');
       const dateObj = new Date();
@@ -53,6 +51,10 @@ export function GridEditDateCell(props: GridCellParams & InputBaseProps) {
   );
 
   const isDateTime = colDef.type === 'dateTime';
+
+  React.useEffect(() => {
+    setValueState(value);
+  }, [value]);
 
   let valueToDisplay = valueState || '';
   if (valueState instanceof Date) {

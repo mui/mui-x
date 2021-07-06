@@ -30,6 +30,10 @@ export function GridEditInputCell(props: GridCellParams & InputBaseProps) {
     [api, field, id],
   );
 
+  React.useEffect(() => {
+    setValueState(value);
+  }, [value]);
+
   return (
     <InputBase
       autoFocus
