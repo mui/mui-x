@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { ElementSize, GridColDef, XGrid } from '@material-ui/x-grid';
+import { useDemoData } from '@material-ui/x-grid-data-generator';
 import '../style/grid-stories.css';
 import { useData } from '../hooks/useData';
-import { useDemoData } from '@material-ui/x-grid-data-generator';
 
 export default {
   title: 'X-Grid Tests/Reorder',
