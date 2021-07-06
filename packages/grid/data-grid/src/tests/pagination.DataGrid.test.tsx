@@ -321,7 +321,7 @@ describe('<DataGrid /> - Pagination', () => {
         expect(getColumnValues(0)).to.deep.equal(['7', '8']);
       });
 
-      it.only('should display a warning if the pageSize is not in the rowsPerPageOptions', () => {
+      it('should display a warning if the pageSize is not in the rowsPerPageOptions', () => {
         const pageSize = 12;
 
         const TestCase: React.FC = () => {
