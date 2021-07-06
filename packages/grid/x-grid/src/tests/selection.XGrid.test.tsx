@@ -44,6 +44,18 @@ describe('<XGrid /> - Selection', () => {
         id: 2,
         brand: 'Puma',
       },
+      {
+        id: 3,
+        brand: 'Under Armour',
+      },
+      {
+        id: 4,
+        brand: 'Asics',
+      },
+      {
+        id: 5,
+        brand: 'Reebok',
+      },
     ],
     columns: [{ field: 'brand' }],
   };

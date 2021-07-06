@@ -110,7 +110,7 @@ export const useGridRows = (
     [apiRef],
   );
   const getRow = React.useCallback(
-    (id: GridRowId): GridRowModel => apiRef.current.state.rows.idRowsLookup[id],
+    (id: GridRowId): GridRowModel | null => apiRef.current.state.rows.idRowsLookup[id] ?? null,
     [apiRef],
   );
 

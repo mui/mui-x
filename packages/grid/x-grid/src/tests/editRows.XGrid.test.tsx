@@ -560,6 +560,6 @@ describe('<XGrid /> - Edit Rows', () => {
 
     fireEvent.keyDown(input, { key: 'Enter' });
     expect(cell).to.have.text('1,942');
-    expect(apiRef.current.getRow(baselineProps.rows[0].id).year).to.equal(1942);
+    expect(apiRef.current.getRow(baselineProps.rows[0].id)!.year).to.equal(1942);
   });
 });
