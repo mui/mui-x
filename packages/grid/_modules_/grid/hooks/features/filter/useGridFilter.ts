@@ -246,24 +246,24 @@ export const useGridFilter = (
   }, [apiRef, logger]);
 
   const setFilterLinkOperation = React.useCallback(
-      (linkOperator: GridLinkOperator = GridLinkOperator.And, emit: boolean = true) => {
-          logger.debug('Applying filter link operator');
-          setGridState((state) => ({
-              ...state,
-              filter: { ...state.filter, linkOperator },
-          }));
-          applyFilters();
+    (linkOperator: GridLinkOperator = GridLinkOperator.And, emit: boolean = true) => {
+      logger.debug('Applying filter link operator');
+      setGridState((state) => ({
+        ...state,
+        filter: { ...state.filter, linkOperator },
+      }));
+      applyFilters();
 
-          if (emit) {
-              apiRef.current.publishEvent(GRID_FILTER_MODEL_CHANGE, getFilterModelParams());
-          }
-      },
-      [apiRef, applyFilters, getFilterModelParams, logger, setGridState],
+      if (emit) {
+        apiRef.current.publishEvent(GRID_FILTER_MODEL_CHANGE, getFilterModelParams());
+      }
+    },
+    [apiRef, applyFilters, getFilterModelParams, logger, setGridState],
   );
 
   const applyFilterLinkOperator = React.useCallback(
     (linkOperator: GridLinkOperator) => {
-      setFilterLinkOperation(linkOperator)
+      setFilterLinkOperation(linkOperator);
     },
     [setFilterLinkOperation],
   );
@@ -278,7 +278,7 @@ export const useGridFilter = (
     (model: GridFilterModel) => {
       clearFilterModel();
       logger.debug('Setting filter model');
-        setFilterLinkOperation(model.linkOperator, false);
+      setFilterLinkOperation(model.linkOperator, false);
       model.items.forEach((item) => upsertFilter(item));
       apiRef.current.publishEvent(GRID_FILTER_MODEL_CHANGE, getFilterModelParams());
     },

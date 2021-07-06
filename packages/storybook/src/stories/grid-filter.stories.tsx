@@ -279,7 +279,10 @@ export function ServerFilterViaProps() {
 
   const onFilterChange = React.useCallback(
     (params: GridFilterModelParams) => {
-      console.log('Filter model in Story onFilterChange', JSON.stringify(params.filterModel, null, 2))
+      console.log(
+        'Filter model in Story onFilterChange',
+        JSON.stringify(params.filterModel, null, 2),
+      );
       const hasChanged = params.filterModel.items[0].value !== filterModel.items[0].value;
       setLoading(hasChanged);
       if (!hasChanged) {
@@ -297,7 +300,7 @@ export function ServerFilterViaProps() {
     applyFilters();
   }, [applyFilters, demoServer.data.rows]);
 
-  console.log('Filter model in Story render', JSON.stringify(filterModel, null, 2))
+  console.log('Filter model in Story render', JSON.stringify(filterModel, null, 2));
 
   return (
     <div className="grid-container">
