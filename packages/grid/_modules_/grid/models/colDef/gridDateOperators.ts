@@ -11,7 +11,7 @@ function buildApplyFilterFn(
   showTime?: boolean,
   keepHours?: boolean,
 ) {
-  if (!filterItem.columnField || !filterItem.value || !filterItem.operatorValue) {
+  if (!filterItem.value) {
     return null;
   }
 

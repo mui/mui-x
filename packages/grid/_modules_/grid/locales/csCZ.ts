@@ -67,6 +67,8 @@ const csCZKGrid: Partial<GridLocaleText> = {
   filterOperatorOnOrAfter: 'je na nebo po',
   filterOperatorBefore: 'je před',
   filterOperatorOnOrBefore: 'je na nebo dříve',
+  // filterOperatorIsEmpty: 'is empty',
+  // filterOperatorIsNotEmpty: 'is not empty',
 
   // Filter values text
   filterValueAny: 'jakýkoliv',

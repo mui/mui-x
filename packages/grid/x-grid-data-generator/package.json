@@ -22,8 +22,6 @@
     "build": "cd ../ && rollup --config rollup.x-grid-data-generator.config.js"
   },
   "dependencies": {
-    "@material-ui/icons": "^4.9.1",
-    "@material-ui/lab": "^4.0.0-alpha.54",
     "@types/chance": "^1.1.0",
     "chance": "^1.1.6",
     "clsx": "^1.0.4",
@@ -34,7 +32,9 @@
     "yargs": "^17.0.1"
   },
   "peerDependencies": {
-    "@material-ui/core": "^4.9.12 || ^5.0.0-alpha.34",
+    "@material-ui/core": "^4.11.2 || ^5.0.0-beta.0",
+    "@material-ui/lab": "^4.0.0-alpha.58 || ^5.0.0-alpha.39",
+    "@material-ui/icons": "^4.11.2 || ^5.0.0-beta.0",
     "react": "^17.0.0"
   },
   "setupFiles": [
