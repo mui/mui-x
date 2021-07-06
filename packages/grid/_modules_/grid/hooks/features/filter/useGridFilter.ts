@@ -246,14 +246,17 @@ export const useGridFilter = (
   }, [apiRef, logger]);
 
   const applyFilterLinkOperator = React.useCallback(
-    (linkOperator: GridLinkOperator = GridLinkOperator.And) => {
+    (linkOperator: GridLinkOperator = GridLinkOperator.And, emit = true) => {
       logger.debug('Applying filter link operator');
       setGridState((state) => ({
         ...state,
         filter: { ...state.filter, linkOperator },
       }));
       applyFilters();
-      apiRef.current.publishEvent(GRID_FILTER_MODEL_CHANGE, getFilterModelParams());
+
+      if (emit) {
+          apiRef.current.publishEvent(GRID_FILTER_MODEL_CHANGE, getFilterModelParams());
+      }
     },
     [apiRef, applyFilters, getFilterModelParams, logger, setGridState],
   );
@@ -268,7 +271,7 @@ export const useGridFilter = (
     (model: GridFilterModel) => {
       clearFilterModel();
       logger.debug('Setting filter model');
-      applyFilterLinkOperator(model.linkOperator);
+      applyFilterLinkOperator(model.linkOperator, false);
       model.items.forEach((item) => upsertFilter(item));
       apiRef.current.publishEvent(GRID_FILTER_MODEL_CHANGE, getFilterModelParams());
     },

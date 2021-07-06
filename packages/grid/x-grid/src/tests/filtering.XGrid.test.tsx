@@ -224,7 +224,7 @@ describe('<XGrid /> - Filter', () => {
       />,
     );
     // TODO should equal 0, the state doesn't change
-    expect(onFilterModelChange.callCount).to.equal(4);
+    expect(onFilterModelChange.callCount).to.equal(3);
     expect(getColumnValues()).to.deep.equal([]);
     onFilterModelChange.callCount = 0;
 
