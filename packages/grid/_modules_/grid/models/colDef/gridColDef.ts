@@ -59,7 +59,7 @@ export interface GridColDef {
   resizable?: boolean;
   /**
    * If `true`, the cells of the column are editable.
-   * @default true
+   * @default false
    */
   editable?: boolean;
   /**
@@ -71,6 +71,10 @@ export interface GridColDef {
    * @default 'string'
    */
   type?: GridColType;
+  /**
+   * To be used in combination with `type: 'singleSelect'`. This is an array of the possible cell values and labels.
+   */
+  valueOptions?: Array<string | { value: any; label: string }>;
   /**
    * Allows to align the column values in cells.
    */

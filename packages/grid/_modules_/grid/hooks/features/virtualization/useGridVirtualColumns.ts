@@ -80,16 +80,22 @@ export const useGridVirtualColumns = (
       if (!containerPropsRef.current) {
         return false;
       }
-      const windowWidth = containerPropsRef.current.windowSizes.width;
-      const firstCol = getColumnFromScroll(lastScrollLeftRef.current);
-      const lastCol = getColumnFromScroll(lastScrollLeftRef.current + windowWidth);
+      const firstCol = getColumnFromScroll(lastScrollLeftRef.current); // First fully visible column
+      const firstColIndex = visibleColumns.findIndex((col) => col.field === firstCol?.field);
 
-      const firstColIndex = visibleColumns.findIndex((col) => col.field === firstCol?.field) + 1;
-      const lastColIndex = visibleColumns.findIndex((col) => col.field === lastCol?.field) - 1; // We ensure the last col is completely visible
+      const { positions } = columnsMeta;
+      const windowWidth = containerPropsRef.current.windowSizes.width;
+      const spaceBeforeFirstCol = positions[firstColIndex] - lastScrollLeftRef.current;
+      const availableWidth = windowWidth - spaceBeforeFirstCol;
+      let lastColIndex = firstColIndex;
+      while (lastColIndex < positions.length - 1 && positions[lastColIndex + 1] < availableWidth) {
+        lastColIndex += 1;
+      }
+      lastColIndex -= 1; // Last fully visible column
 
       return colIndex >= firstColIndex && colIndex <= lastColIndex;
     },
-    [getColumnFromScroll, visibleColumns],
+    [columnsMeta, getColumnFromScroll, visibleColumns],
   );
 
   const updateRenderedCols: UpdateRenderedColsFnType = React.useCallback(

@@ -460,6 +460,81 @@ describe('<XGrid /> - Edit Rows', () => {
     expect(screen.queryAllByRole('row')).to.have.length(4);
   });
 
+  it('should change cell value correctly when column type is singleSelect and valueOptions is array of strings', () => {
+    render(
+      <div style={{ width: 300, height: 300 }}>
+        <XGrid
+          columns={[
+            {
+              field: 'brand',
+              type: 'singleSelect',
+              valueOptions: ['Nike', 'Adidas'],
+              editable: true,
+            },
+          ]}
+          rows={[
+            {
+              id: 0,
+              brand: 'Nike',
+            },
+          ]}
+        />
+      </div>,
+    );
+
+    const cell = getCell(0, 0);
+    fireEvent.doubleClick(cell);
+    fireEvent.click(screen.queryAllByRole('option')[1]);
+
+    expect(cell).not.to.have.class('MuiDataGrid-cell--editing');
+    expect(cell).to.have.text('Adidas');
+  });
+
+  it('should change cell value correctly when column type is singleSelect and valueOptions is array of objects', () => {
+    const countries = [
+      {
+        value: 'fr',
+        label: 'France',
+      },
+      {
+        value: 'it',
+        label: 'Italy',
+      },
+    ];
+
+    render(
+      <div style={{ width: 300, height: 300 }}>
+        <XGrid
+          columns={[
+            {
+              field: 'country',
+              type: 'singleSelect',
+              valueOptions: countries,
+              valueFormatter: (params) => {
+                const result = countries.find((country) => country.value === params.value);
+                return result!.label;
+              },
+              editable: true,
+            },
+          ]}
+          rows={[
+            {
+              id: 0,
+              country: 'fr',
+            },
+          ]}
+        />
+      </div>,
+    );
+
+    const cell = getCell(0, 0);
+    fireEvent.doubleClick(cell);
+    fireEvent.click(screen.queryAllByRole('option')[1]);
+
+    expect(cell).not.to.have.class('MuiDataGrid-cell--editing');
+    expect(cell).to.have.text('Italy');
+  });
+
   it('should keep the right type', () => {
     const Test = (props: Partial<GridComponentProps>) => {
       apiRef = useGridApiRef();

@@ -21,6 +21,7 @@ import { useGridSelection } from './hooks/features/selection/useGridSelection';
 import { useGridSorting } from './hooks/features/sorting/useGridSorting';
 import { useGridComponents } from './hooks/features/useGridComponents';
 import { useGridVirtualRows } from './hooks/features/virtualization/useGridVirtualRows';
+import { useGridClipboard } from './hooks/features/clipboard/useGridClipboard';
 import { useApi } from './hooks/root/useApi';
 import { useEvents } from './hooks/root/useEvents';
 import { useGridContainerProps } from './hooks/root/useGridContainerProps';
@@ -47,7 +48,7 @@ export const useGridComponent = (apiRef: GridApiRef, props: GridComponentProps) 
   useGridParamsApi(apiRef);
   useGridRows(apiRef, props);
   useGridEditRows(apiRef);
-  useGridFocus(apiRef);
+  useGridFocus(apiRef, props);
   useGridKeyboard(apiRef);
   useGridKeyboardNavigation(apiRef);
   useGridSelection(apiRef);
@@ -63,6 +64,7 @@ export const useGridComponent = (apiRef: GridApiRef, props: GridComponentProps) 
   useGridPagination(apiRef);
   useGridCsvExport(apiRef);
   useGridInfiniteLoader(apiRef);
+  useGridClipboard(apiRef);
   useGridComponents(apiRef, props);
   useStateProp(apiRef, props);
   useRenderInfoLog(apiRef);

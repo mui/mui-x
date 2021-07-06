@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { GridApiRef } from '../../models/api/gridApiRef';
 import { useGridSelector } from '../features/core/useGridSelector';
 import { optionsSelector } from '../utils/optionsSelector';
@@ -26,8 +27,10 @@ import {
   GRID_CELL_KEY_DOWN,
   GRID_CELL_FOCUS_OUT,
   GRID_CELL_BLUR,
+  GRID_KEYDOWN,
 } from '../../constants/eventsConstants';
 import { useGridApiOptionHandler } from './useGridApiEventHandler';
+import { useNativeEventListener } from './useNativeEventListener';
 
 export function useEvents(apiRef: GridApiRef): void {
   const options = useGridSelector(apiRef, optionsSelector);
@@ -63,4 +66,18 @@ export function useEvents(apiRef: GridApiRef): void {
 
   useGridApiOptionHandler(apiRef, GRID_COMPONENT_ERROR, options.onError);
   useGridApiOptionHandler(apiRef, GRID_STATE_CHANGE, options.onStateChange);
+
+  const getHandler = React.useCallback(
+    (name: string) =>
+      (...args: any[]) =>
+        apiRef.current.publishEvent(name, ...args),
+    [apiRef],
+  );
+
+  useNativeEventListener(
+    apiRef,
+    apiRef.current.rootElementRef!,
+    GRID_KEYDOWN,
+    getHandler(GRID_KEYDOWN),
+  );
 }
