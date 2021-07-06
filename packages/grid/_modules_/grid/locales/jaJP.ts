@@ -59,6 +59,8 @@ const jaJPGrid: Partial<GridLocaleText> = {
   filterOperatorOnOrAfter: '...以降',
   filterOperatorBefore: '...より前',
   filterOperatorOnOrBefore: '...以前',
+  // filterOperatorIsEmpty: 'is empty',
+  // filterOperatorIsNotEmpty: 'is not empty',
 
   // Column menu text
   columnMenuLabel: 'メニュー',

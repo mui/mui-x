@@ -59,6 +59,8 @@ const trTRGrid: Partial<GridLocaleText> = {
   filterOperatorOnOrAfter: 'büyük eşit',
   filterOperatorBefore: 'küçük',
   filterOperatorOnOrBefore: 'küçük eşit',
+  // filterOperatorIsEmpty: 'is empty',
+  // filterOperatorIsNotEmpty: 'is not empty',
 
   // Column menu text
   columnMenuLabel: 'Menü',
