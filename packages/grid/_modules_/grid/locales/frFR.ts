@@ -61,7 +61,7 @@ const frFRGrid: Partial<GridLocaleText> = {
   filterOperatorOnOrBefore: 'égal ou antérieur',
   filterOperatorBefore: 'antérieur',
   filterOperatorIsEmpty: 'est vide',
-  filterOperatorIsNotEmpty: 'n\'est pas vide',
+  filterOperatorIsNotEmpty: "n'est pas vide",
 
   // Column menu text
   columnMenuLabel: 'Menu',
