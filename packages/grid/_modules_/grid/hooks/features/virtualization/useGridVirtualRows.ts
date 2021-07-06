@@ -2,7 +2,7 @@ import * as React from 'react';
 import {
   GRID_SCROLL,
   GRID_ROWS_SCROLL,
-  GRID_VIRTUAL_PAGE_CHANGE,
+  GRID_VIEWPORT_ROW_CHANGE,
 } from '../../../constants/eventsConstants';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridVirtualizationApi } from '../../../models/api/gridVirtualizationApi';
@@ -149,18 +149,21 @@ export const useGridVirtualRows = (apiRef: GridApiRef): void => {
         top: containerProps.isVirtualized ? rzScrollTop : scrollTop,
       };
 
+      if (page !== nextPage) {
+        const newPage = page < nextPage ? nextPage + 1 : nextPage;
+        const nextPageFirstRowIndex = newPage * containerProps.viewportPageSize;
+        const nextPageLastRowIndex = nextPageFirstRowIndex + containerProps.viewportPageSize;
+        apiRef.current.publishEvent(GRID_VIEWPORT_ROW_CHANGE, {
+          firstRowIndex: nextPageFirstRowIndex,
+          lastRowIndex: nextPageLastRowIndex > totalRowCount ? totalRowCount : nextPageLastRowIndex,
+          api: apiRef,
+        });
+      }
+
       if (containerProps.isVirtualized && page !== nextPage) {
         setRenderingState({ virtualPage: nextPage });
         logger.debug(`Changing page from ${page} to ${nextPage}`);
         requireRerender = true;
-
-        apiRef.current.publishEvent(GRID_VIRTUAL_PAGE_CHANGE, {
-          currentPage: nextPage,
-          nextPage: nextPage + 1 < containerProps.lastPage ? nextPage + 1 : containerProps.lastPage,
-          firstRowIndex: nextPage * containerProps.viewportPageSize,
-          pageSize: containerProps.viewportPageSize,
-          api: apiRef,
-        });
       } else {
         if (!containerProps.isVirtualized && page > 0) {
           logger.debug(`Virtualization disabled, setting virtualPage to 0`);
@@ -193,6 +196,7 @@ export const useGridVirtualRows = (apiRef: GridApiRef): void => {
       scrollTo,
       setRenderingState,
       updateRenderedCols,
+      totalRowCount,
       windowRef,
     ],
   );
@@ -418,5 +422,5 @@ export const useGridVirtualRows = (apiRef: GridApiRef): void => {
     GRID_SCROLL,
     preventViewportScroll,
   );
-  useGridApiOptionHandler(apiRef, GRID_VIRTUAL_PAGE_CHANGE, options.onVirtualPageChange);
+  useGridApiOptionHandler(apiRef, GRID_VIEWPORT_ROW_CHANGE, options.onViewportRowChange);
 };

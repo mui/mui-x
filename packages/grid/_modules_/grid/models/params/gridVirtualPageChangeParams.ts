@@ -1,23 +1,15 @@
 /**
  * Object passed as parameter of the virtual page change event.
  */
-export interface GridVirtualPageChangeParams {
+export interface GridViewportRowChange {
   /**
-   * The index of the current page.
-   */
-  currentPage: number;
-  /**
-   * The index of the next page.
-   */
-  nextPage: number;
-  /**
-   * The index of the first row in the current page.
+   * The index of the first row in the viewport.
    */
   firstRowIndex: number;
   /**
-   * The size of the virtual page.
+   * The index of the last row in the viewport.
    */
-  pageSize: number;
+  lastRowIndex: number;
   /**
    * Api that let you manipulate the grid.
    */

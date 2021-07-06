@@ -296,22 +296,20 @@ describe('<XGrid /> - Events Params', () => {
     expect(handleOnRowsScrollEnd.callCount).to.equal(1);
   });
 
-  it('call onVirtualPageChange when the virtual page changes', () => {
+  it('call onViewportRowChange when the viewport rows change', () => {
     const handleOnVirtualPageChange = spy();
     const { container } = render(
       <div style={{ width: 300, height: 300 }}>
-        <TestVirtualization onVirtualPageChange={handleOnVirtualPageChange} />
+        <TestVirtualization rowHeight={40} onViewportRowChange={handleOnVirtualPageChange} />
       </div>,
     );
     const gridWindow = container.querySelector('.MuiDataGrid-window');
-    // arbitrary number to make sure that the bottom of the grid window is reached.
-    gridWindow.scrollTop = 12345;
+    // scroll 10 rows.
+    gridWindow.scrollTop = 40 * 10;
     gridWindow.dispatchEvent(new Event('scroll'));
 
     expect(handleOnVirtualPageChange.callCount).to.equal(1);
-    expect(handleOnVirtualPageChange.lastCall.args[0].currentPage).to.equal(15);
-    expect(handleOnVirtualPageChange.lastCall.args[0].nextPage).to.equal(16);
-    expect(handleOnVirtualPageChange.lastCall.args[0].firstRowIndex).to.equal(45);
-    expect(handleOnVirtualPageChange.lastCall.args[0].pageSize).to.equal(3);
+    expect(handleOnVirtualPageChange.lastCall.args[0].firstRowIndex).to.equal(16);
+    expect(handleOnVirtualPageChange.lastCall.args[0].lastRowIndex).to.equal(20);
   });
 });

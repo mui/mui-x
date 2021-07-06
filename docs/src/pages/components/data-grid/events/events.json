@@ -183,7 +183,7 @@
     "description": "Fired when a column visibility changes. Called with a GridColumnVisibilityChangeParams object."
   },
   {
-    "name": "virtualPageChange",
-    "description": "Fired when a the virtual page changes. Called with a GridVirtualPageChangeParams object."
+    "name": "viewportRowchange",
+    "description": "Fired when a the viewport rows change. Called with a GridViewportRowChange object."
   }
 ]

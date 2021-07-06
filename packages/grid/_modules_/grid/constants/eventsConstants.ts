@@ -459,7 +459,7 @@ export const GRID_STATE_CHANGE = 'stateChange';
 export const GRID_COLUMN_VISIBILITY_CHANGE = 'columnVisibilityChange';
 
 /**
- * Fired when a the virtual page changes. Called with a [[GridVirtualPageChangeParams]] object.
+ * Fired when a the viewport rows change. Called with a [[GridViewportRowChange]] object.
  * @event
  */
-export const GRID_VIRTUAL_PAGE_CHANGE = 'virtualPageChange';
+export const GRID_VIEWPORT_ROW_CHANGE = 'viewportRowchange';
