@@ -24,21 +24,23 @@ import {
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
-function createDragOverEvent (target: ChildNode) {
+function createDragOverEvent(target: ChildNode) {
   const dragOverEvent = createEvent.dragOver(target);
   // Safari 13 doesn't have DragEvent.
   // RTL fallbacks to Event which doesn't allow to set these fields during initialization.
   Object.defineProperty(dragOverEvent, 'clientX', { value: 1 });
   Object.defineProperty(dragOverEvent, 'clientY', { value: 1 });
 
-  return dragOverEvent
+  return dragOverEvent;
 }
 
-function createDragEndEvent (target: ChildNode, isOutsideTheGrid: boolean = false) {
+function createDragEndEvent(target: ChildNode, isOutsideTheGrid: boolean = false) {
   const dragEndEvent = createEvent.dragEnd(target);
-  Object.defineProperty(dragEndEvent, 'dataTransfer', { value: { dropEffect: isOutsideTheGrid ? 'none' : 'copy' } });
+  Object.defineProperty(dragEndEvent, 'dataTransfer', {
+    value: { dropEffect: isOutsideTheGrid ? 'none' : 'copy' },
+  });
 
-  return dragEndEvent
+  return dragEndEvent;
 }
 
 describe('<XGrid /> - Reorder', () => {
@@ -162,7 +164,7 @@ describe('<XGrid /> - Reorder', () => {
 
     fireEvent.dragStart(dragCol);
     fireEvent.dragEnter(targetCell);
-    const dragOverEvent = createDragOverEvent(targetCell)
+    const dragOverEvent = createDragOverEvent(targetCell);
     fireEvent(targetCell, dragOverEvent);
     expect(getColumnHeadersTextContent()).to.deep.equal(['desc', 'type', 'brand']);
 
@@ -235,15 +237,19 @@ describe('<XGrid /> - Reorder', () => {
     it('should not allow to start dragging a column with disableReorder=true', () => {
       let apiRef: GridApiRef;
       const rows = [{ id: 0, brand: 'Nike' }];
-      const columns = [{ field: 'brand' }, { field: 'desc', disableReorder: true }, { field: 'type' }];
+      const columns = [
+        { field: 'brand' },
+        { field: 'desc', disableReorder: true },
+        { field: 'type' },
+      ];
 
       const Test = () => {
         apiRef = useGridApiRef();
 
         return (
-            <div style={{ width: 300, height: 300 }}>
-              <XGrid apiRef={apiRef} rows={rows} columns={columns} onPageChange={() => {}} />
-            </div>
+          <div style={{ width: 300, height: 300 }}>
+            <XGrid apiRef={apiRef} rows={rows} columns={columns} onPageChange={() => {}} />
+          </div>
         );
       };
 
@@ -254,27 +260,31 @@ describe('<XGrid /> - Reorder', () => {
 
       fireEvent.dragStart(dragCol);
       fireEvent.dragEnter(targetCol);
-      const dragOverEvent = createDragOverEvent(targetCol)
+      const dragOverEvent = createDragOverEvent(targetCol);
       fireEvent(targetCol, dragOverEvent);
       expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
 
-      const dragEndEvent = createDragEndEvent(dragCol)
+      const dragEndEvent = createDragEndEvent(dragCol);
       fireEvent(dragCol, dragEndEvent);
       expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
-    })
+    });
 
     it('should not allow to drag left of first visible column if it has disableReorder=true', () => {
       let apiRef: GridApiRef;
       const rows = [{ id: 0, brand: 'Nike' }];
-      const columns = [{ field: 'brand', disableReorder: true }, { field: 'desc' }, { field: 'type' }];
+      const columns = [
+        { field: 'brand', disableReorder: true },
+        { field: 'desc' },
+        { field: 'type' },
+      ];
 
       const Test = () => {
         apiRef = useGridApiRef();
 
         return (
-            <div style={{ width: 300, height: 300 }}>
-              <XGrid apiRef={apiRef} rows={rows} columns={columns} onPageChange={() => {}} />
-            </div>
+          <div style={{ width: 300, height: 300 }}>
+            <XGrid apiRef={apiRef} rows={rows} columns={columns} onPageChange={() => {}} />
+          </div>
         );
       };
 
@@ -285,27 +295,31 @@ describe('<XGrid /> - Reorder', () => {
 
       fireEvent.dragStart(dragCol);
       fireEvent.dragEnter(targetCol);
-      const dragOverEvent = createDragOverEvent(targetCol)
+      const dragOverEvent = createDragOverEvent(targetCol);
       fireEvent(targetCol, dragOverEvent);
       expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
 
-      const dragEndEvent = createDragEndEvent(dragCol)
+      const dragEndEvent = createDragEndEvent(dragCol);
       fireEvent(dragCol, dragEndEvent);
       expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
-    })
+    });
 
     it('should not allow to drag right of last visible column if it has disableReorder=true', () => {
       let apiRef: GridApiRef;
       const rows = [{ id: 0, brand: 'Nike' }];
-      const columns = [{ field: 'brand' }, { field: 'desc' }, { field: 'type', disableReorder: true }];
+      const columns = [
+        { field: 'brand' },
+        { field: 'desc' },
+        { field: 'type', disableReorder: true },
+      ];
 
       const Test = () => {
         apiRef = useGridApiRef();
 
         return (
-            <div style={{ width: 300, height: 300 }}>
-              <XGrid apiRef={apiRef} rows={rows} columns={columns} onPageChange={() => {}} />
-            </div>
+          <div style={{ width: 300, height: 300 }}>
+            <XGrid apiRef={apiRef} rows={rows} columns={columns} onPageChange={() => {}} />
+          </div>
         );
       };
 
@@ -316,27 +330,31 @@ describe('<XGrid /> - Reorder', () => {
 
       fireEvent.dragStart(dragCol);
       fireEvent.dragEnter(targetCol);
-      const dragOverEvent = createDragOverEvent(targetCol)
+      const dragOverEvent = createDragOverEvent(targetCol);
       fireEvent(targetCol, dragOverEvent);
       expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
 
-      const dragEndEvent = createDragEndEvent(dragCol)
+      const dragEndEvent = createDragEndEvent(dragCol);
       fireEvent(dragCol, dragEndEvent);
       expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
-    })
+    });
 
     it('should allow to drag right of a column with disableReorder=true if it is not the last visible one', () => {
       let apiRef: GridApiRef;
       const rows = [{ id: 0, brand: 'Nike' }];
-      const columns = [{ field: 'brand' }, { field: 'desc', disableReorder: true }, { field: 'type' }];
+      const columns = [
+        { field: 'brand' },
+        { field: 'desc', disableReorder: true },
+        { field: 'type' },
+      ];
 
       const Test = () => {
         apiRef = useGridApiRef();
 
         return (
-            <div style={{ width: 300, height: 300 }}>
-              <XGrid apiRef={apiRef} rows={rows} columns={columns} onPageChange={() => {}} />
-            </div>
+          <div style={{ width: 300, height: 300 }}>
+            <XGrid apiRef={apiRef} rows={rows} columns={columns} onPageChange={() => {}} />
+          </div>
         );
       };
 
@@ -347,13 +365,13 @@ describe('<XGrid /> - Reorder', () => {
 
       fireEvent.dragStart(dragCol);
       fireEvent.dragEnter(targetCol);
-      const dragOverEvent2 = createDragOverEvent(targetCol)
+      const dragOverEvent2 = createDragOverEvent(targetCol);
       fireEvent(targetCol, dragOverEvent2);
       expect(getColumnHeadersTextContent()).to.deep.equal(['desc', 'type', 'brand']);
 
-      const dragEndEvent = createDragEndEvent(dragCol)
+      const dragEndEvent = createDragEndEvent(dragCol);
       fireEvent(dragCol, dragEndEvent);
       expect(getColumnHeadersTextContent()).to.deep.equal(['desc', 'type', 'brand']);
-    })
-  })
+    });
+  });
 });
