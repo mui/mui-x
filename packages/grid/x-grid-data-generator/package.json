@@ -28,8 +28,8 @@
     "lru-cache": "^6.0.0"
   },
   "devDependencies": {
-    "esm": "^3.2.25",
-    "yargs": "^17.0.1"
+    "esm": "3.2.25",
+    "yargs": "17.0.1"
   },
   "peerDependencies": {
     "@material-ui/core": "^4.11.2 || ^5.0.0-beta.0",
