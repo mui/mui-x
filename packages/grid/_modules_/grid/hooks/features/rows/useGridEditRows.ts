@@ -130,19 +130,15 @@ export function useGridEditRows(apiRef: GridApiRef) {
     [options.isCellEditable],
   );
 
-  const setEditCellProps = React.useCallback(
+  const changeCellEditProps = React.useCallback(
     (params: GridEditCellPropsParams, event?: React.SyntheticEvent) => {
       apiRef.current.publishEvent(GRID_CELL_EDIT_PROPS_CHANGE, params, event);
     },
     [apiRef],
   );
 
-  const handleCellEditCellProps = React.useCallback(
-    (params: GridEditCellPropsParams, event?: React.SyntheticEvent) => {
-      if (event?.isPropagationStopped()) {
-        return;
-      }
-
+  const setEditCellProps = React.useCallback(
+    (params: GridEditCellPropsParams) => {
       const { id, field, props } = params;
       logger.debug(`Setting cell props on id: ${id} field: ${field}`);
       setGridState((state) => {
@@ -164,6 +160,16 @@ export function useGridEditRows(apiRef: GridApiRef) {
       apiRef.current.publishEvent(GRID_ROW_EDIT_MODEL_CHANGE, editRowParams);
     },
     [apiRef, forceUpdate, logger, setGridState],
+  );
+
+  const handleCellEditCellProps = React.useCallback(
+    (params: GridEditCellPropsParams, event?: React.SyntheticEvent) => {
+      if (event?.isPropagationStopped()) {
+        return;
+      }
+      apiRef.current.setEditCellProps(params);
+    },
+    [apiRef],
   );
 
   const setEditRowsModel = React.useCallback(
@@ -350,6 +356,7 @@ export function useGridEditRows(apiRef: GridApiRef) {
       getEditCellPropsParams,
       setEditRowsModel,
       getEditRowsModel,
+      changeCellEditProps,
     },
     'EditRowApi',
   );

@@ -33,7 +33,7 @@ export function GridEditBooleanCell(
       const newValue = event.target.checked;
       const editProps = { value: newValue };
       setValueState(newValue);
-      api.setEditCellProps({ id: idProp, field, props: editProps });
+      api.changeCellEditProps({ id: idProp, field, props: editProps }, event);
     },
     [api, field, idProp],
   );
