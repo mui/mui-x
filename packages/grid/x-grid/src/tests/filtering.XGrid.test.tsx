@@ -21,7 +21,7 @@ import {
   // @ts-expect-error need to migrate helpers to TypeScript
   screen,
   // @ts-expect-error need to migrate helpers to TypeScript
-  waitFor
+  waitFor,
 } from 'test/utils';
 import { getColumnHeaderCell, getColumnValues } from 'test/utils/helperFn';
 
@@ -125,7 +125,7 @@ describe('<XGrid /> - Filter', () => {
   });
 
   it('should allow apiRef to setFilterModel', () => {
-    render(<TestCase filterModel={filterModel} />);
+    render(<TestCase />);
     apiRef.current.setFilterModel({
       items: [
         {
@@ -158,7 +158,7 @@ describe('<XGrid /> - Filter', () => {
   });
 
   it('should allow multiple filter via apiRef', () => {
-    render(<TestCase filterModel={filterModel} />);
+    render(<TestCase />);
     const newModel = {
       items: [
         {
@@ -265,7 +265,7 @@ describe('<XGrid /> - Filter', () => {
     expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
   });
 
-  it('should show the latest visibleRows onFilterChange', () => {
+  it('should show the latest visibleRows', () => {
     render(
       <TestCase
         state={{
@@ -418,12 +418,16 @@ describe('<XGrid /> - Filter', () => {
 
   describe('control Filter', () => {
     it('should update the filter state when neither the model nor the onChange are set', () => {
-      render(<TestCase  state={{
-        preferencePanel: {
-          open: true,
-          openedPanelValue: GridPreferencePanelsValue.filters,
-        },
-      }} />);
+      render(
+        <TestCase
+          state={{
+            preferencePanel: {
+              open: true,
+              openedPanelValue: GridPreferencePanelsValue.filters,
+            },
+          }}
+        />,
+      );
       const addButton = screen.getByRole('button', { name: /Add Filter/i });
       clock.tick(100);
       fireEvent.click(addButton);
@@ -432,13 +436,18 @@ describe('<XGrid /> - Filter', () => {
     });
 
     it('should not update the filter model when the filterModelProp is set', () => {
-      const testFilterModel: GridFilterModel = {items: [], linkOperator: GridLinkOperator.Or};
-      render(<TestCase filterModel={testFilterModel} state={{
-        preferencePanel: {
-          open: true,
-          openedPanelValue: GridPreferencePanelsValue.filters,
-        },
-      }} />);
+      const testFilterModel: GridFilterModel = { items: [], linkOperator: GridLinkOperator.Or };
+      render(
+        <TestCase
+          filterModel={testFilterModel}
+          state={{
+            preferencePanel: {
+              open: true,
+              openedPanelValue: GridPreferencePanelsValue.filters,
+            },
+          }}
+        />,
+      );
       const addButton = screen.getByRole('button', { name: /Add Filter/i });
       clock.tick(100);
       fireEvent.click(addButton);
@@ -448,7 +457,7 @@ describe('<XGrid /> - Filter', () => {
 
     it('should update the filter state when the model is not set, but the onChange is set', () => {
       const onModelChange = spy();
-      const {setProps} = render(<TestCase onFilterModelChange={onModelChange}/>);
+      const { setProps } = render(<TestCase onFilterModelChange={onModelChange} />);
       expect(onModelChange.callCount).to.equal(0);
       setProps({
         state: {
@@ -456,10 +465,10 @@ describe('<XGrid /> - Filter', () => {
             open: true,
             openedPanelValue: GridPreferencePanelsValue.filters,
           },
-        }
+        },
       });
       expect(onModelChange.callCount).to.equal(1);
-      const addButton = screen.getByRole('button', {name: /Add Filter/i});
+      const addButton = screen.getByRole('button', { name: /Add Filter/i });
       clock.tick(100);
       fireEvent.click(addButton);
       const filterForms = document.querySelectorAll(`.MuiGridFilterForm-root`);
@@ -471,14 +480,14 @@ describe('<XGrid /> - Filter', () => {
 
     it('should control filter state when the model and the onChange are set', () => {
       const ControlCase = (props: Partial<GridComponentProps>) => {
-        const {rows, columns, ...others} = props;
+        const { rows, columns, ...others } = props;
         const [caseFilterModel, setFilterModel] = React.useState<any>(getInitialGridFilterState());
         const handleFilterChange = (newModel) => {
           setFilterModel(newModel);
         };
 
         return (
-          <div style={{width: 300, height: 300}}>
+          <div style={{ width: 300, height: 300 }}>
             <XGrid
               autoHeight={isJSDOM}
               columns={columns || baselineProps.columns}
@@ -489,7 +498,7 @@ describe('<XGrid /> - Filter', () => {
                 preferencePanel: {
                   open: true,
                   openedPanelValue: GridPreferencePanelsValue.filters,
-                }
+                },
               }}
               {...others}
             />
@@ -497,7 +506,7 @@ describe('<XGrid /> - Filter', () => {
         );
       };
 
-      render(<ControlCase  />);
+      render(<ControlCase />);
       const addButton = screen.getByRole('button', { name: /Add Filter/i });
       clock.tick(100);
       fireEvent.click(addButton);

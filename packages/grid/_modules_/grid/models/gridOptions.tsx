@@ -351,7 +351,7 @@ export interface GridOptions {
   onColumnVisibilityChange?: (param: GridColumnVisibilityChangeParams) => void;
   /**
    * Callback fired when the Filter model changes before the filters are applied.
-   * @param param With all properties from [[GridFilterModelParams]].
+   * @param model With all properties from [[GridFilterModel]].
    */
   onFilterModelChange?: (model: GridFilterModel) => void;
   /**

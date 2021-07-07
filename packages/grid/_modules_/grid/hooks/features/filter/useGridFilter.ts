@@ -10,7 +10,6 @@ import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridFilterApi } from '../../../models/api/gridFilterApi';
 import { GridFeatureModeConstant } from '../../../models/gridFeatureMode';
 import { GridFilterItem, GridLinkOperator } from '../../../models/gridFilterItem';
-import { GridFilterModelParams } from '../../../models/params/gridFilterModelParams';
 import { GridRowId, GridRowModel } from '../../../models/gridRows';
 import { isDeepEqual } from '../../../utils/utils';
 import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
@@ -38,17 +37,6 @@ export const useGridFilter = (
   const [gridState, setGridState, forceUpdate] = useGridState(apiRef);
   const filterableColumnsIds = useGridSelector(apiRef, filterableGridColumnsIdsSelector);
   const options = useGridSelector(apiRef, optionsSelector);
-
-  const getFilterModelParams = React.useCallback(
-    (): GridFilterModelParams => ({
-      filterModel: apiRef.current.getState<GridFilterModelState>('filter'),
-      api: apiRef.current,
-      columns: apiRef.current.getAllColumns(),
-      rows: apiRef.current.getRowModels(),
-      visibleRows: apiRef.current.getVisibleRowModels(),
-    }),
-    [apiRef],
-  );
 
   const clearFilteredRows = React.useCallback(() => {
     logger.debug('clearing filtered rows');
@@ -317,7 +305,6 @@ export const useGridFilter = (
       stateSelector: (state) => state.filter,
       onChangeCallback: (model) => {
         apiRef.current.publishEvent(GRID_FILTER_MODEL_CHANGE, model);
-        apiRef.current.setFilterModel(model);
       },
     });
   }, [apiRef, props.filterModel, props.onFilterModelChange]);
@@ -327,7 +314,11 @@ export const useGridFilter = (
     const oldFilterModel = apiRef.current.state.filter;
     if (filterModel && !isDeepEqual(filterModel, oldFilterModel)) {
       logger.debug('filterModel prop changed, applying filters');
-      setGridState((state) => ({ ...state, filter: props.filterModel || getInitialGridFilterState() }));
+      setGridState((state) => ({
+        ...state,
+        filter: props.filterModel || getInitialGridFilterState(),
+      }));
+      apiRef.current.applyFilters();
     }
   }, [apiRef, logger, props.filterModel, setGridState]);
 

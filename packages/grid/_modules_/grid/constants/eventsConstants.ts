@@ -435,7 +435,7 @@ export const GRID_SORT_MODEL_CHANGE = 'sortModelChange';
 
 /**
  * Fired when the filter model changes.
- * Called with a [[GridFilterModelParams]] object.
+ * Called with a [[GridFilterModel]] object.
  * @event
  */
 export const GRID_FILTER_MODEL_CHANGE = 'filterModelChange';
