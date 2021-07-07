@@ -29,6 +29,11 @@
     "typescript": "tsc -p tsconfig.json",
     "build": "cd ../ && rollup --config rollup.data-grid.config.js"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mui-org/material-ui-x.git",
+    "directory": "packages/grid/data-grid"
+  },
   "dependencies": {
     "@material-ui/utils": "^5.0.0-alpha.14",
     "clsx": "^1.0.4",
