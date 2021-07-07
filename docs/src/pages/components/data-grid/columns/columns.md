@@ -286,7 +286,13 @@ To disable the column selector, set the prop `disableColumnSelector={true}`.
 
 By default, `XGrid` allows all column reordering by dragging the header cells and moving them left or right.
 
-To disable column reordering, set the prop `disableColumnReorder={true}`.
+{{"demo": "pages/components/data-grid/columns/ColumnOrderingGrid.js", "disableAd": true, "bg": "inline"}}
+
+To disable reordering on all columns, set the prop `disableColumnReorder={true}`.
+
+To disable reordering on some columns, set the `disableReorder` property of the column definition `GridColDef` object to `true`.
+
+{{"demo": "pages/components/data-grid/columns/ColumnOrderingDisabledGrid.js", "disableAd": true, "bg": "inline"}}
 
 In addition, column reordering emits the following events that can be imported:
 
@@ -294,8 +300,6 @@ In addition, column reordering emits the following events that can be imported:
 - `columnHeaderDragEnter`: emitted when the cursor enters another header cell while dragging.
 - `columnHeaderDragOver`: emitted when dragging a header cell over another header cell.
 - `columnHeaderDragEnd`: emitted when dragging of a header cell stops.
-
-{{"demo": "pages/components/data-grid/columns/ColumnOrderingGrid.js", "disableAd": true, "bg": "inline"}}
 
 ## 🚧 Column groups
 
