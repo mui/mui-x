@@ -9,7 +9,7 @@ import { useFakeTimers, stub } from 'sinon';
 import { expect } from 'chai';
 import { DataGrid, GridValueGetterParams, GridToolbar } from '@material-ui/data-grid';
 import { useData } from 'packages/storybook/src/hooks/useData';
-import { getColumnValues, raf } from 'test/utils/helperFn';
+import {getColumnHeaderCell, getColumnValues, raf} from 'test/utils/helperFn';
 
 describe('<DataGrid /> - Layout & Warnings', () => {
   // TODO v5: replace with createClientRender
@@ -340,11 +340,9 @@ describe('<DataGrid /> - Layout & Warnings', () => {
           </div>,
         );
 
-        const firstColumn = document.querySelector('[role="columnheader"][aria-colindex="1"]');
-        const secondColumn: HTMLElement | null = document.querySelector(
-          '[role="columnheader"][aria-colindex="2"]',
-        );
-        const secondColumnWidthVal = secondColumn!.style.width.split('px')[0];
+        const firstColumn = getColumnHeaderCell(0)
+        const secondColumn = getColumnHeaderCell(1);
+        const secondColumnWidthVal = secondColumn.style.width.split('px')[0];
         // @ts-expect-error need to migrate helpers to TypeScript
         expect(firstColumn).toHaveInlineStyle({
           width: `${2 * parseInt(secondColumnWidthVal, 10)}px`,
@@ -368,7 +366,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
           </div>,
         );
 
-        const firstColumn = document.querySelector('[role="columnheader"][aria-colindex="1"]');
+        const firstColumn =getColumnHeaderCell(0);
         // @ts-expect-error need to migrate helpers to TypeScript
         expect(firstColumn).toHaveInlineStyle({
           width: '198px', // because of the 2px border
@@ -388,7 +386,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         const { setProps } = render(<Test />);
         setProps();
 
-        const firstColumn = document.querySelector('[role="columnheader"][aria-colindex="1"]');
+        const firstColumn =getColumnHeaderCell(0);
         // @ts-expect-error need to migrate helpers to TypeScript
         expect(firstColumn).toHaveInlineStyle({
           width: '198px', // because of the 2px border
