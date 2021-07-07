@@ -8,8 +8,6 @@ import {
   createClientRenderStrictMode,
   // @ts-expect-error need to migrate helpers to TypeScript
   fireEvent,
-  // @ts-expect-error need to migrate helpers to TypeScript
-  waitFor,
 } from 'test/utils';
 import {
   GridApiRef,
@@ -180,7 +178,7 @@ describe('<XGrid /> - Selection', () => {
     const handleSelectionModelChange = spy();
     const DemoTest = (props: Partial<GridComponentProps>) => {
       apiRef = useGridApiRef();
-      const [selectionModelState, ] = React.useState(props.selectionModel);
+      const [selectionModelState] = React.useState(props.selectionModel);
 
       return (
         <div style={{ width: 300, height: 300 }}>
