@@ -1,8 +1,5 @@
 import * as React from 'react';
-import {
-  GridRowsProp,
-  DataGrid,
-} from '@material-ui/data-grid';
+import { GridRowsProp, DataGrid } from '@material-ui/data-grid';
 import { useDemoData, GridData } from '@material-ui/x-grid-data-generator';
 
 function loadServerRows(page: number, data: GridData): Promise<any> {

@@ -1,9 +1,5 @@
 import * as React from 'react';
-import {
-  GridRowsProp,
-  DataGrid,
-  GridRowId,
-} from '@material-ui/data-grid';
+import { GridRowsProp, DataGrid, GridRowId } from '@material-ui/data-grid';
 import {
   useDemoData,
   GridData,
