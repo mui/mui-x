@@ -1,6 +1,5 @@
 import * as React from 'react';
 import InputBase, { InputBaseProps } from '@material-ui/core/InputBase';
-import { GRID_CELL_EDIT_PROPS_CHANGE } from '../../constants/eventsConstants';
 import { GridCellParams } from '../../models/params/gridCellParams';
 import {
   parseDate,
@@ -44,7 +43,7 @@ export function GridEditInputCell(props: GridCellParams & InputBaseProps) {
       }
 
       setValueState(newValue);
-      api.publishEvent(GRID_CELL_EDIT_PROPS_CHANGE, { id, field, props: editProps }, event);
+      api.setEditCellProps({ id, field, props: editProps });
     },
     [api, field, id, isDateColumn, isDateTimeColumn],
   );

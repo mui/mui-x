@@ -40,10 +40,16 @@ export function useGridParamsApi(apiRef: GridApiRef) {
 
   const getRowParams = React.useCallback(
     (id: GridRowId) => {
+      const row = apiRef.current.getRow(id);
+
+      if (!row) {
+        throw new Error(`No row with id #${id} found`);
+      }
+
       const params: GridRowParams = {
         id,
         columns: apiRef.current.getAllColumns(),
-        row: apiRef.current.getRow(id),
+        row,
         api: apiRef.current,
         getValue: apiRef.current.getCellValue,
       };
@@ -55,6 +61,10 @@ export function useGridParamsApi(apiRef: GridApiRef) {
   const getBaseCellParams = React.useCallback(
     (id: GridRowId, field: string) => {
       const row = apiRef.current.getRow(id);
+
+      if (!row) {
+        throw new Error(`No row with id #${id} found`);
+      }
 
       const params: GridValueGetterParams = {
         id,
@@ -78,9 +88,22 @@ export function useGridParamsApi(apiRef: GridApiRef) {
     (id: GridRowId, field: string) => {
       const colDef = apiRef.current.getColumn(field);
       const value = apiRef.current.getCellValue(id, field);
-      const baseParams = getBaseCellParams(id, field);
+      const row = apiRef.current.getRow(id);
+
+      if (!row) {
+        throw new Error(`No row with id #${id} found`);
+      }
+
       const params: GridCellParams = {
-        ...baseParams,
+        id,
+        field,
+        row,
+        colDef,
+        cellMode: apiRef.current.getCellMode(id, field),
+        getValue: apiRef.current.getCellValue,
+        api: apiRef.current,
+        hasFocus: cellFocus !== null && cellFocus.field === field && cellFocus.id === id,
+        tabIndex: cellTabIndex && cellTabIndex.field === field && cellTabIndex.id === id ? 0 : -1,
         value,
         formattedValue: value,
       };
@@ -91,7 +114,7 @@ export function useGridParamsApi(apiRef: GridApiRef) {
 
       return params;
     },
-    [apiRef, getBaseCellParams],
+    [apiRef, cellFocus, cellTabIndex],
   );
 
   const getCellValue = React.useCallback(
@@ -106,6 +129,11 @@ export function useGridParamsApi(apiRef: GridApiRef) {
 
       if (!colDef || !colDef.valueGetter) {
         const rowModel = apiRef.current.getRow(id);
+
+        if (!rowModel) {
+          throw new Error(`No row with id #${id} found`);
+        }
+
         return rowModel[field];
       }
 

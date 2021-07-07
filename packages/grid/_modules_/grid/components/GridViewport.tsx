@@ -8,7 +8,7 @@ import {
   gridTabIndexCellSelector,
 } from '../hooks/features/focus/gridFocusStateSelector';
 import { gridEditRowsStateSelector } from '../hooks/features/rows/gridEditRowsSelector';
-import { gridSelectionStateSelector } from '../hooks/features/selection/gridSelectionSelector';
+import { selectedIdsLookupSelector } from '../hooks/features/selection/gridSelectionSelector';
 import { renderStateSelector } from '../hooks/features/virtualization/renderingStateSelector';
 import { optionsSelector } from '../hooks/utils/optionsSelector';
 import { useGridApiContext } from '../hooks/root/useGridApiContext';
@@ -38,7 +38,7 @@ export const GridViewport: ViewportType = React.forwardRef<HTMLDivElement, {}>(
     const renderState = useGridSelector(apiRef, renderStateSelector);
     const cellFocus = useGridSelector(apiRef, gridFocusCellSelector);
     const cellTabIndex = useGridSelector(apiRef, gridTabIndexCellSelector);
-    const selectionState = useGridSelector(apiRef, gridSelectionStateSelector);
+    const selectionLookup = useGridSelector(apiRef, selectedIdsLookupSelector);
     const rows = useGridSelector(apiRef, visibleSortedGridRowsAsArraySelector);
     const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
     const editRowsState = useGridSelector(apiRef, gridEditRowsStateSelector);
@@ -59,7 +59,7 @@ export const GridViewport: ViewportType = React.forwardRef<HTMLDivElement, {}>(
           }
           key={id}
           id={id}
-          selected={selectionState[id] !== undefined}
+          selected={selectionLookup[id] !== undefined}
           rowIndex={renderState.renderContext!.firstRowIdx! + idx}
         >
           <GridEmptyCell width={renderState.renderContext!.leftEmptyWidth} height={rowHeight} />
@@ -77,7 +77,7 @@ export const GridViewport: ViewportType = React.forwardRef<HTMLDivElement, {}>(
             rowIndex={renderState.renderContext!.firstRowIdx! + idx}
             cellFocus={cellFocus}
             cellTabIndex={cellTabIndex}
-            isSelected={selectionState[id] !== undefined}
+            isSelected={selectionLookup[id] !== undefined}
             editRowState={editRowsState[id]}
             cellClassName={options.classes?.cell}
             getCellClassName={options.getCellClassName}

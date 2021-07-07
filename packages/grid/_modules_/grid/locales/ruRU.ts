@@ -69,6 +69,8 @@ export const ruRUGrid: Partial<GridLocaleText> = {
   filterOperatorOnOrAfter: 'больше или равно',
   filterOperatorBefore: 'меньше чем',
   filterOperatorOnOrBefore: 'меньше или равно',
+  // filterOperatorIsEmpty: 'is empty',
+  // filterOperatorIsNotEmpty: 'is not empty',
 
   // Filter values text
   filterValueAny: 'любой',

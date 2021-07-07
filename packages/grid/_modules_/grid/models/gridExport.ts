@@ -1,7 +1,7 @@
 /**
  * Available CSV delimiter characters used to separate fields.
  */
-export type GridExportCsvDelimiter = ',' | ';';
+export type GridExportCsvDelimiter = string;
 
 /**
  * The options to apply on the CSV export.
@@ -23,6 +23,16 @@ export interface GridExportCsvOptions {
    * @default false
    */
   utf8WithBom?: boolean;
+  /**
+   * The columns exported in the CSV.
+   * This should only be used if you want to restrict the columns exports.
+   */
+  fields?: string[];
+  /**
+   * If `true`, the hidden columns will also be exported.
+   * @default false
+   */
+  allColumns?: boolean;
 }
 
 /**

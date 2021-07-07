@@ -87,8 +87,15 @@ function EditProgress(props: GridCellParams) {
     setValueState(Number(value));
   }, [value]);
 
+  const handleRef = (element) => {
+    if (element) {
+      element.querySelector('[role="slider"]').focus();
+    }
+  };
+
   return (
     <Slider
+      ref={handleRef}
       classes={{
         ...classes,
         track: clsx(classes.track, {

@@ -4,11 +4,25 @@ import TextField, { TextFieldProps } from '@material-ui/core/TextField';
 import { unstable_useId as useId } from '@material-ui/core/utils';
 import { GridLoadIcon } from '../../icons/index';
 import { GridFilterInputValueProps } from './GridFilterInputValueProps';
+import { GridColDef } from '../../../models/colDef/gridColDef';
+
+const renderSingleSelectOptions = ({ valueOptions }: GridColDef) =>
+  ['', ...valueOptions!].map((option) =>
+    typeof option === 'string' ? (
+      <option key={option} value={option}>
+        {option}
+      </option>
+    ) : (
+      <option key={option.value} value={option.value}>
+        {option.label}
+      </option>
+    ),
+  );
 
 export const SUBMIT_FILTER_STROKE_TIME = 500;
 
 export interface GridTypeFilterInputValueProps extends GridFilterInputValueProps {
-  type?: 'text' | 'number' | 'date' | 'datetime-local';
+  type?: 'text' | 'number' | 'date' | 'datetime-local' | 'singleSelect';
 }
 
 export function GridFilterInputValue(props: GridTypeFilterInputValueProps & TextFieldProps) {
@@ -17,6 +31,16 @@ export function GridFilterInputValue(props: GridTypeFilterInputValueProps & Text
   const [filterValueState, setFilterValueState] = React.useState(item.value || '');
   const [applying, setIsApplying] = React.useState(false);
   const id = useId();
+  const singleSelectProps: TextFieldProps =
+    type === 'singleSelect'
+      ? {
+          select: true,
+          SelectProps: {
+            native: true,
+          },
+          children: renderSingleSelectOptions(apiRef.current.getColumn(item.columnField)),
+        }
+      : {};
 
   const onFilterChange = React.useCallback(
     (event) => {
@@ -57,6 +81,7 @@ export function GridFilterInputValue(props: GridTypeFilterInputValueProps & Text
       InputLabelProps={{
         shrink: true,
       }}
+      {...singleSelectProps}
       {...others}
     />
   );

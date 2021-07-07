@@ -29,7 +29,8 @@ export const getGridLocalization = (
           defaultProps: {
             localeText: {
               ...gridTranslations,
-              MuiTablePagination: coreTranslations?.components?.MuiTablePagination,
+              MuiTablePagination:
+                coreTranslations?.components?.MuiTablePagination.defaultProps || {},
             },
           },
         },
@@ -42,7 +43,7 @@ export const getGridLocalization = (
       MuiDataGrid: {
         localeText: {
           ...gridTranslations,
-          MuiTablePagination: coreTranslations?.props?.MuiTablePagination,
+          MuiTablePagination: coreTranslations?.props?.MuiTablePagination || {},
         },
       },
     },

@@ -271,7 +271,7 @@ export default function FullFeaturedDemo() {
   const { loading, data, setRowLength, loadNewData } = useDemoData({
     dataSet: type,
     rowLength: size,
-    maxColumns: 20,
+    maxColumns: 40,
     editable: true,
   });
 
@@ -291,7 +291,7 @@ export default function FullFeaturedDemo() {
     }
 
     if (type !== settings.type) {
-      setType(settings.type.toLowerCase());
+      setType(settings.type);
     }
 
     if (getActiveTheme() !== settings.theme) {

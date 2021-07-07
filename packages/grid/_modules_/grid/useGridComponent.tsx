@@ -3,6 +3,7 @@ import { useGridColumnMenu } from './hooks/features/columnMenu/useGridColumnMenu
 import { useGridColumnReorder } from './hooks/features/columnReorder/useGridColumnReorder';
 import { useGridColumnResize } from './hooks/features/columnResize/useGridColumnResize';
 import { useGridColumns } from './hooks/features/columns/useGridColumns';
+import { useGridControlState } from './hooks/features/core/useGridControlState';
 import { useGridDensity } from './hooks/features/density/useGridDensity';
 import { useGridCsvExport } from './hooks/features/export/useGridCsvExport';
 import { useGridFilter } from './hooks/features/filter/useGridFilter';
@@ -21,6 +22,7 @@ import { useGridSelection } from './hooks/features/selection/useGridSelection';
 import { useGridSorting } from './hooks/features/sorting/useGridSorting';
 import { useGridComponents } from './hooks/features/useGridComponents';
 import { useGridVirtualRows } from './hooks/features/virtualization/useGridVirtualRows';
+import { useGridClipboard } from './hooks/features/clipboard/useGridClipboard';
 import { useApi } from './hooks/root/useApi';
 import { useEvents } from './hooks/root/useEvents';
 import { useGridContainerProps } from './hooks/root/useGridContainerProps';
@@ -37,6 +39,7 @@ export const useGridComponent = (apiRef: GridApiRef, props: GridComponentProps) 
   useLoggerFactory(apiRef, props);
   useApi(apiRef);
   useErrorHandler(apiRef, props);
+  useGridControlState(apiRef);
   useGridScrollbarSizeDetector(apiRef, props);
   useOptionsProp(apiRef, props);
   useEvents(apiRef);
@@ -47,10 +50,10 @@ export const useGridComponent = (apiRef: GridApiRef, props: GridComponentProps) 
   useGridParamsApi(apiRef);
   useGridRows(apiRef, props);
   useGridEditRows(apiRef);
-  useGridFocus(apiRef);
+  useGridFocus(apiRef, props);
   useGridKeyboard(apiRef);
   useGridKeyboardNavigation(apiRef);
-  useGridSelection(apiRef);
+  useGridSelection(apiRef, props);
   useGridSorting(apiRef, props);
   useGridColumnMenu(apiRef);
   useGridPreferencesPanel(apiRef);
@@ -63,6 +66,7 @@ export const useGridComponent = (apiRef: GridApiRef, props: GridComponentProps) 
   useGridPagination(apiRef);
   useGridCsvExport(apiRef);
   useGridInfiniteLoader(apiRef);
+  useGridClipboard(apiRef);
   useGridComponents(apiRef, props);
   useStateProp(apiRef, props);
   useRenderInfoLog(apiRef);

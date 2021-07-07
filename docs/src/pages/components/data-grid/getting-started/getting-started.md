@@ -112,7 +112,7 @@ See [Pricing](https://material-ui.com/store/items/material-ui-pro/) for details 
 
 ### Try XGrid for free
 
-You are free to try out `XGrid` as long as it's not used for a project intended for production.
+You are free to install and try `XGrid` as long as it is not used for development of a feature intended for production.
 Please take the component for a test run, no need to contact us.
 
 ### Invalid license
@@ -189,6 +189,13 @@ LicenseInfo.setLicenseKey(
 ```
 
 The grid checks the key without making any network requests.
+
+#### What's the expiration policy?
+
+The licenses are perpetual, the license key will work forever.
+However, access to updates is not.
+If you install a new version of the component for which the license key has expired, you will trigger a [watermark and console message](#invalid-license).
+For instance, if you have a one-year license (default), you are not licensed to install a version that is two years in the future.
 
 ## Support
 
