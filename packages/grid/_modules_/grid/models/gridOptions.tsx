@@ -14,7 +14,6 @@ import { GridColumnHeaderParams } from './params/gridColumnHeaderParams';
 import { GridFilterModelParams } from './params/gridFilterModelParams';
 import { GridPageChangeParams } from './params/gridPageChangeParams';
 import { GridRowParams } from './params/gridRowParams';
-import { GridSortModelParams } from './params/gridSortModelParams';
 import { GridSelectionModel } from './gridSelectionModel';
 import { GridSortDirection, GridSortModel } from './gridSortModel';
 import {
@@ -418,9 +417,9 @@ export interface GridOptions {
   onSelectionModelChange?: (selectionModel: GridRowId[]) => void;
   /**
    * Callback fired when the sort model changes before a column is sorted.
-   * @param param With all properties from [[GridSortModelParams]].
+   * @param param With all properties from [[GridSortModel]].
    */
-  onSortModelChange?: (params: GridSortModelParams) => void;
+  onSortModelChange?: (model: GridSortModel) => void;
   /**
    * Callback fired when the state of the grid is updated.
    */
