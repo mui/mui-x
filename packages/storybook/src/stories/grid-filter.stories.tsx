@@ -749,7 +749,7 @@ export function ObjectValueGetter() {
 export function MultiFilteringWithOrGrid() {
   const called = React.useRef(0);
   const [lastFilterChange, setLastFilterChange] = React.useState(new Date());
-  const [filterModelState] = React.useState({
+  const [filterModelState, setFilterModelState] = React.useState({
     items: [
       { columnField: 'commodity', operatorValue: 'contains', value: 'rice' },
       { columnField: 'commodity', operatorValue: 'startsWith', value: 'soy' },
@@ -762,9 +762,10 @@ export function MultiFilteringWithOrGrid() {
     maxColumns: 6,
   });
 
-  const handleFilterChange = React.useCallback(() => {
+  const handleFilterChange = React.useCallback((model) => {
     called.current += 1;
     setLastFilterChange(new Date());
+    setFilterModelState(model)
   }, []);
   return (
     <div style={{ height: 400, width: '100%' }}>
