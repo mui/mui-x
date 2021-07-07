@@ -50,7 +50,7 @@ export function findGridCellElementsFromCol(col: HTMLElement): NodeListOf<Elemen
   return cells;
 }
 
-function escapeOperandAttributeSelector(operand) {
+function escapeOperandAttributeSelector(operand: string): string {
   return operand.replace(/["\\]/g, '\\$&');
 }
 
@@ -62,7 +62,7 @@ export function getGridColumnHeaderElement(root: Element, field: string) {
 
 export function getGridRowElement(root: Element, id: GridRowId) {
   return root.querySelector(
-    `:scope .${GRID_ROW_CSS_CLASS}[data-id="${escapeOperandAttributeSelector(id)}"]`,
+    `:scope .${GRID_ROW_CSS_CLASS}[data-id="${escapeOperandAttributeSelector(String(id))}"]`,
   ) as HTMLDivElement;
 }
 
