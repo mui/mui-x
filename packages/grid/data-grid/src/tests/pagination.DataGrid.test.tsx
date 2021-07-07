@@ -345,7 +345,7 @@ describe('<DataGrid /> - Pagination', () => {
           render(<TestCase />);
           // @ts-expect-error need to migrate helpers to TypeScript
         }).toWarnDev([
-          `The current pageSize (${pageSize}) is not preset in the rowsPerPageOptions.\nAdd it to show the pagination select.`,
+          `Material-UI: The current pageSize (${pageSize}) is not preset in the rowsPerPageOptions.\nAdd it to show the pagination select.`,
         ]);
       });
     });
