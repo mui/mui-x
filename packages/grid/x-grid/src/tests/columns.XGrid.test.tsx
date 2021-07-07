@@ -7,8 +7,6 @@ import {
   screen,
   // @ts-expect-error need to migrate helpers to TypeScript
   waitFor,
-  // @ts-expect-error need to migrate helpers to TypeScript
-  createEvent,
 } from 'test/utils';
 import { expect } from 'chai';
 import { useFakeTimers, spy } from 'sinon';
@@ -113,28 +111,25 @@ describe('<XGrid /> - Columns', () => {
       expect(getCell(1, 0).style.width).to.equal('110px');
     });
 
-    it('should allow to resize columns with the touch', () => {
+    it('should allow to resize columns with the touch', function test() {
+      // Only run in supported browsers
+      if (typeof Touch === 'undefined') {
+        this.skip();
+      }
       render(<Test columns={columns} />);
       const separator = document.querySelector(
         `.${GRID_COLUMN_HEADER_SEPARATOR_RESIZABLE_CSS_CLASS}`,
       )!;
       const now = Date.now();
-      const touchStartEvent = createEvent.touchStart(separator);
-      // Safari lacks support for constructing a TouchEvent with changedTouches
-      Object.defineProperty(touchStartEvent, 'changedTouches', {
-        value: [{ identifier: now, target: separator, clientX: 100 }],
+      fireEvent.touchStart(separator, {
+        changedTouches: [new Touch({ identifier: now, target: separator, clientX: 100 })],
       });
-      fireEvent(separator, touchStartEvent);
-      const touchMoveEvent = createEvent.touchMove(separator);
-      Object.defineProperty(touchMoveEvent, 'changedTouches', {
-        value: [{ identifier: now, target: separator, clientX: 110 }],
+      fireEvent.touchMove(separator, {
+        changedTouches: [new Touch({ identifier: now, target: separator, clientX: 110 })],
       });
-      fireEvent(separator, touchMoveEvent);
-      const touchEndEvent = createEvent.touchEnd(separator);
-      Object.defineProperty(touchEndEvent, 'changedTouches', {
-        value: [{ identifier: now, target: separator, clientX: 110 }],
+      fireEvent.touchEnd(separator, {
+        changedTouches: [new Touch({ identifier: now, target: separator, clientX: 110 })],
       });
-      fireEvent(separator, touchEndEvent);
       expect(getColumnHeaderCell(0).style.width).to.equal('110px');
       expect(getCell(1, 0).style.width).to.equal('110px');
     });

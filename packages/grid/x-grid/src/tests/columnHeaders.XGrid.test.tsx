@@ -93,8 +93,6 @@ describe('<XGrid /> - Column Headers', () => {
         `.${GRID_COLUMN_HEADER_SEPARATOR_RESIZABLE_CSS_CLASS}`,
       );
       fireEvent.mouseDown(separator);
-      // TODO remove mouseUp once useGridColumnReorder will handle cleanup properly
-      fireEvent.mouseUp(separator);
       await waitFor(() => expect(screen.queryByRole('menu')).to.equal(null));
     });
   });
