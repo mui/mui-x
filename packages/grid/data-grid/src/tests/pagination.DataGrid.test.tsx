@@ -324,7 +324,7 @@ describe('<DataGrid /> - Pagination', () => {
       it('should display a warning if the pageSize is not in the rowsPerPageOptions', () => {
         const pageSize = 12;
 
-        const TestCase: React.FunctionComponent = () => {
+        const TestCase = () => {
           const data = useData(100, 10);
 
           return (
