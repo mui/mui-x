@@ -6,7 +6,6 @@ import {
   GridApiRef,
   useGridApiRef,
   XGrid,
-  GridPageChangeParams,
   GridRowsProp,
 } from '@material-ui/x-grid';
 import Button from '@material-ui/core/Button';
@@ -386,8 +385,8 @@ export function ServerPaginationDocsDemo() {
   const [rows, setRows] = React.useState<GridRowsProp>([]);
   const [loading, setLoading] = React.useState<boolean>(false);
 
-  const handlePageChange = (params: GridPageChangeParams) => {
-    setPage(params.page);
+  const handlePageChange = (page: number) => {
+    setPage(page);
   };
 
   React.useEffect(() => {

@@ -2,7 +2,6 @@ import * as React from 'react';
 import { GRID_PAGE_CHANGE, GRID_PAGE_SIZE_CHANGE } from '../../../constants/eventsConstants';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridPaginationApi } from '../../../models/api/gridPaginationApi';
-import { GridPageChangeParams } from '../../../models/params/gridPageChangeParams';
 import { useGridApiOptionHandler } from '../../root/useGridApiEventHandler';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
 import { optionsSelector } from '../../utils/optionsSelector';
@@ -12,6 +11,7 @@ import { useLogger } from '../../utils/useLogger';
 import { useGridSelector } from '../core/useGridSelector';
 import { visibleGridRowCountSelector } from '../filter/gridFilterSelector';
 import { GridPaginationState } from './gridPaginationState';
+import {GridComponentProps} from "../../../GridComponentProps";
 
 function applyConstraints(state: GridPaginationState, pageProp?: number): GridPaginationState {
   const pageCount =
@@ -24,7 +24,7 @@ function applyConstraints(state: GridPaginationState, pageProp?: number): GridPa
   };
 }
 
-export const useGridPagination = (apiRef: GridApiRef): void => {
+export const useGridPagination = (apiRef: GridApiRef, props: Pick<GridComponentProps, 'page' | 'pageSize' | 'onPageChange' | 'onPageSizeChange'>): void => {
   const logger = useLogger('useGridPagination');
 
   const [, setGridState, forceUpdate] = useGridState(apiRef);
@@ -47,15 +47,6 @@ export const useGridPagination = (apiRef: GridApiRef): void => {
         ),
       }));
       forceUpdate();
-
-      const params = apiRef.current.getState<GridPaginationState>(
-        'pagination',
-      ) as GridPageChangeParams;
-      apiRef.current.publishEvent(GRID_PAGE_CHANGE, {
-        // TODO remove params
-        ...params,
-        page,
-      });
     },
     [apiRef, setGridState, forceUpdate, logger, options.page],
   );
@@ -75,15 +66,6 @@ export const useGridPagination = (apiRef: GridApiRef): void => {
         ),
       }));
       forceUpdate();
-
-      const params = apiRef.current.getState<GridPaginationState>(
-        'pagination',
-      ) as GridPageChangeParams;
-      apiRef.current.publishEvent(GRID_PAGE_SIZE_CHANGE, {
-        // TODO remove params
-        ...params,
-        pageSize,
-      });
     },
     [apiRef, setGridState, forceUpdate, logger, options.page],
   );
@@ -91,36 +73,60 @@ export const useGridPagination = (apiRef: GridApiRef): void => {
   useGridApiOptionHandler(apiRef, GRID_PAGE_CHANGE, options.onPageChange);
   useGridApiOptionHandler(apiRef, GRID_PAGE_SIZE_CHANGE, options.onPageSizeChange);
 
-  React.useEffect(() => {
-    setGridState((state) => ({
-      ...state,
-      pagination: applyConstraints(
-        {
-          ...state.pagination,
-          paginationMode:
-            options.paginationMode != null
-              ? options.paginationMode
-              : state.pagination.paginationMode,
-          rowCount: options.rowCount !== undefined ? options.rowCount : visibleRowCount,
-          pageSize:
-            (options.autoPageSize ? containerSizes?.viewportPageSize : options.pageSize) ||
-            state.pagination.pageSize,
-        },
-        options.page,
-      ),
-    }));
-    forceUpdate();
-  }, [
-    setGridState,
-    forceUpdate,
-    options.paginationMode,
-    visibleRowCount,
-    options.rowCount,
-    options.autoPageSize,
-    containerSizes?.viewportPageSize,
-    options.pageSize,
-    options.page,
-  ]);
+  // React.useEffect(() => {
+  //   setGridState((state) => ({
+  //     ...state,
+  //     pagination: applyConstraints(
+  //       {
+  //         ...state.pagination,
+  //         paginationMode:
+  //           options.paginationMode != null
+  //             ? options.paginationMode
+  //             : state.pagination.paginationMode,
+  //         rowCount: options.rowCount !== undefined ? options.rowCount : visibleRowCount,
+  //         pageSize:
+  //           (options.autoPageSize ? containerSizes?.viewportPageSize : options.pageSize) ||
+  //           state.pagination.pageSize,
+  //       },
+  //       options.page,
+  //     ),
+  //   }));
+  //   forceUpdate();
+  // }, [
+  //   setGridState,
+  //   forceUpdate,
+  //   options.paginationMode,
+  //   visibleRowCount,
+  //   options.rowCount,
+  //   options.autoPageSize,
+  //   containerSizes?.viewportPageSize,
+  //   options.pageSize,
+  //   options.page,
+  // ]);
+
+    React.useEffect(() => {
+        apiRef.current.updateControlState<number>({
+            stateId: 'page',
+            propModel: props.page,
+            propOnChange: props.onPageChange,
+            stateSelector: (state) => state.pagination.page,
+            onChangeCallback: (model) => {
+                apiRef.current.publishEvent(GRID_PAGE_CHANGE, model);
+            },
+        });
+    }, [apiRef, props.page, props.onPageChange]);
+
+    React.useEffect(() => {
+        apiRef.current.updateControlState<number>({
+            stateId: 'pageSize',
+            propModel: props.pageSize,
+            propOnChange: props.onPageSizeChange,
+            stateSelector: (state) => state.pagination.pageSize,
+            onChangeCallback: (model) => {
+                apiRef.current.publishEvent(GRID_PAGE_SIZE_CHANGE, model);
+            },
+        });
+    }, [apiRef, props.pageSize, props.onPageSizeChange]);
 
   const paginationApi: GridPaginationApi = {
     setPageSize,

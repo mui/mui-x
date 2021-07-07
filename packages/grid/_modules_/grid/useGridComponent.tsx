@@ -63,7 +63,7 @@ export const useGridComponent = (apiRef: GridApiRef, props: GridComponentProps) 
   useGridVirtualRows(apiRef);
   useGridColumnReorder(apiRef);
   useGridColumnResize(apiRef);
-  useGridPagination(apiRef);
+  useGridPagination(apiRef, props);
   useGridCsvExport(apiRef);
   useGridInfiniteLoader(apiRef);
   useGridClipboard(apiRef);

@@ -12,7 +12,6 @@ import { Logger } from './logger';
 import { GridCellParams } from './params/gridCellParams';
 import { GridColumnHeaderParams } from './params/gridColumnHeaderParams';
 import { GridFilterModelParams } from './params/gridFilterModelParams';
-import { GridPageChangeParams } from './params/gridPageChangeParams';
 import { GridRowParams } from './params/gridRowParams';
 import { GridSortModelParams } from './params/gridSortModelParams';
 import { GridSelectionModel } from './gridSelectionModel';
@@ -357,14 +356,14 @@ export interface GridOptions {
   onFilterModelChange?: (params: GridFilterModelParams) => void;
   /**
    * Callback fired when the current page has changed.
-   * @param param With all properties from [[GridPageChangeParams]].
+   * @param page Index of the page displayed on the Grid.
    */
-  onPageChange?: (param: GridPageChangeParams) => void;
+  onPageChange?: (page: number) => void;
   /**
    * Callback fired when the page size has changed.
-   * @param param With all properties from [[GridPageChangeParams]].
+   * @param pageSize Size of the page displayed on the Grid.
    */
-  onPageSizeChange?: (param: GridPageChangeParams) => void;
+  onPageSizeChange?: (pageSize: number) => void;
   /**
    * Callback fired when a click event comes from a row container element.
    * @param param With all properties from [[GridRowParams]].

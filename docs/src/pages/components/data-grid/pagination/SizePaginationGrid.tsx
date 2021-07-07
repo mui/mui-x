@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataGrid, GridPageChangeParams } from '@material-ui/data-grid';
+import { DataGrid } from '@material-ui/data-grid';
 import { useDemoData } from '@material-ui/x-grid-data-generator';
 
 export default function SizePaginationGrid() {
@@ -11,8 +11,8 @@ export default function SizePaginationGrid() {
     maxColumns: 6,
   });
 
-  const handlePageSizeChange = (params: GridPageChangeParams) => {
-    setPageSize(params.pageSize);
+  const handlePageSizeChange = (pageSize: number) => {
+    setPageSize(pageSize);
   };
 
   return (
