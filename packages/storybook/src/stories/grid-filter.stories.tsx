@@ -765,7 +765,7 @@ export function MultiFilteringWithOrGrid() {
   const handleFilterChange = React.useCallback((model) => {
     called.current += 1;
     setLastFilterChange(new Date());
-    setFilterModelState(model)
+    setFilterModelState(model);
   }, []);
   return (
     <div style={{ height: 400, width: '100%' }}>
