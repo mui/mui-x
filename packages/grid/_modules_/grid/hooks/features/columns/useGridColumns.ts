@@ -67,22 +67,22 @@ function updateColumnsWidth(columns: GridColumns, viewportWidth: number) {
             : GRID_STRING_COL_DEF.width,
       };
     });
-  }
 
-  const totalVisibleWidth = newColumns.reduce(
-    (totalW, curCol) => totalW + (curCol.hide ? 0 : curCol.width!),
-    0,
-  );
-  if (totalVisibleWidth < viewportWidth) {
-    let gap = viewportWidth - totalVisibleWidth;
-    let i = 0;
-    while (i < newColumns.length && gap > 0) {
-      const column = newColumns[i];
-      if (column.flex && !column.hide) {
-        column.width! += 1;
-        gap -= 1;
+    const totalVisibleWidth = newColumns.reduce(
+      (totalW, curCol) => totalW + (curCol.hide ? 0 : curCol.width!),
+      0,
+    );
+    if (totalVisibleWidth < viewportWidth) {
+      let gap = viewportWidth - totalVisibleWidth;
+      let i = 0;
+      while (i < newColumns.length && gap > 0) {
+        const column = newColumns[i];
+        if (column.flex && !column.hide) {
+          column.width! += 1;
+          gap -= 1;
+        }
+        i += 1;
       }
-      i += 1;
     }
   }
 
