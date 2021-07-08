@@ -68,7 +68,7 @@ export const useGridVirtualRows = (apiRef: GridApiRef): void => {
       if (
         options.pagination &&
         paginationState.pageSize != null &&
-        paginationState.paginationMode === 'client'
+        options.paginationMode === 'client'
       ) {
         minRowIdx = paginationState.pageSize * paginationState.page;
       }
@@ -87,7 +87,7 @@ export const useGridVirtualRows = (apiRef: GridApiRef): void => {
       apiRef,
       options.pagination,
       paginationState.pageSize,
-      paginationState.paginationMode,
+        options.paginationMode,
       paginationState.page,
     ],
   );

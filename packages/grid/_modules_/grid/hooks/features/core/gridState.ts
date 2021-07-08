@@ -57,14 +57,13 @@ export interface GridState {
   error?: any;
 }
 
-export const getInitialGridState: () => GridState = () => ({
+export const getInitialGridState = (): GridState => ({
   rows: getInitialGridRowState(),
   editRows: {},
   pagination: {
     page: 0,
     pageCount: 0,
     pageSize: 0,
-    paginationMode: 'client',
     rowCount: 0,
   },
   options: DEFAULT_GRID_OPTIONS,

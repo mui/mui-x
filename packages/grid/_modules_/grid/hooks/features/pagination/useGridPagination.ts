@@ -100,10 +100,6 @@ export const useGridPagination = (
       pagination: applyConstraints(
         {
           ...state.pagination,
-          paginationMode:
-            options.paginationMode != null
-              ? options.paginationMode
-              : state.pagination.paginationMode,
           rowCount: options.rowCount !== undefined ? options.rowCount : visibleRowCount,
           page: options.page !== undefined ? options.page : state.pagination.page,
           pageSize:
@@ -116,13 +112,12 @@ export const useGridPagination = (
   }, [
     setGridState,
     forceUpdate,
-    options.paginationMode,
     visibleRowCount,
     options.rowCount,
     options.autoPageSize,
-    containerSizes?.viewportPageSize,
     options.pageSize,
     options.page,
+    containerSizes?.viewportPageSize,
   ]);
 
   const paginationApi: GridPaginationApi = {
