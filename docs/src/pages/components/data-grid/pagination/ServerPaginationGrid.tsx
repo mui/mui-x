@@ -20,10 +20,6 @@ export default function ServerPaginationGrid() {
   const [rows, setRows] = React.useState<GridRowsProp>([]);
   const [loading, setLoading] = React.useState<boolean>(false);
 
-  const handlePageChange = (page: number) => {
-    setPage(page);
-  };
-
   React.useEffect(() => {
     let active = true;
 
@@ -53,7 +49,7 @@ export default function ServerPaginationGrid() {
         pageSize={5}
         rowCount={100}
         paginationMode="server"
-        onPageChange={handlePageChange}
+        onPageChange={(newPage) =>  setPage(newPage)}
         loading={loading}
       />
     </div>

@@ -41,10 +41,10 @@ export default function CursorPaginationGrid() {
   const [page, setPage] = React.useState(0);
   const [loading, setLoading] = React.useState<boolean>(false);
 
-  const handlePageChange = (page: number) => {
+  const handlePageChange = (newPage: number) => {
     // We have the cursor, we can allow the page transition.
-    if (page === 0 || pagesNextCursor.current[page - 1]) {
-      setPage(page);
+    if (newPage === 0 || pagesNextCursor.current[newPage - 1]) {
+      setPage(newPage);
     }
   };
 
