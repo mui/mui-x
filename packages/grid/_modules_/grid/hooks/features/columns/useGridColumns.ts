@@ -38,12 +38,13 @@ import { GRID_STRING_COL_DEF } from '../../../models/colDef/gridStringColDef';
 function updateColumnsWidth(columns: GridColumns, viewportWidth: number) {
   const numberOfFluidColumns = columns.filter((column) => !!column.flex && !column.hide).length;
   let flexDivider = 0;
+  let flexViewportWidth = viewportWidth
 
-  if (numberOfFluidColumns && viewportWidth) {
+  if (numberOfFluidColumns && flexViewportWidth) {
     columns.forEach((column) => {
       if (!column.hide) {
         if (!column.flex) {
-          viewportWidth -= column.width!;
+          flexViewportWidth -= column.width!;
         } else {
           flexDivider += column.flex;
         }
@@ -53,7 +54,7 @@ function updateColumnsWidth(columns: GridColumns, viewportWidth: number) {
 
   let newColumns = columns;
   if (numberOfFluidColumns) {
-    const flexMultiplier = viewportWidth / flexDivider;
+    const flexMultiplier = flexViewportWidth / flexDivider;
     newColumns = columns.map((column) => {
       if (!column.flex) {
         return column;
@@ -61,10 +62,25 @@ function updateColumnsWidth(columns: GridColumns, viewportWidth: number) {
       return {
         ...column,
         width:
-          viewportWidth > 0 ? Math.floor(flexMultiplier * column.flex!) : GRID_STRING_COL_DEF.width,
+            flexViewportWidth > 0 ? Math.floor(flexMultiplier * column.flex!) : GRID_STRING_COL_DEF.width,
       };
     });
   }
+
+  const totalWidth = newColumns.reduce((totalW, curCol) => totalW + (curCol.hide ? 0 : curCol.width!), 0);
+  if (totalWidth < viewportWidth) {
+    let gap = viewportWidth - totalWidth
+    let i=0;
+    while (i <newColumns.length && gap > 0) {
+      const column = newColumns[i]
+      if (column.flex && !column.hide) {
+        column.width! += 1
+        gap -= 1
+      }
+      i+=1
+    }
+  }
+
   return newColumns;
 }
 
