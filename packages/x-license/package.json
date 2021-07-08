@@ -10,6 +10,11 @@
     "typescript": "tsc -p tsconfig.json",
     "build": "rollup -c"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mui-org/material-ui-x.git",
+    "directory": "packages/x-license"
+  },
   "files": [
     "dist/*"
   ],

@@ -29,6 +29,11 @@
     "typescript": "tsc -p tsconfig.json",
     "build": "cd ../ && rollup --config rollup.x-grid.config.js"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mui-org/material-ui-x.git",
+    "directory": "packages/grid/x-grid"
+  },
   "dependencies": {
     "@material-ui/utils": "^5.0.0-alpha.14",
     "@material-ui/x-license": "4.0.0-alpha.33",
