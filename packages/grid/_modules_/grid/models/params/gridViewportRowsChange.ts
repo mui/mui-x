@@ -1,7 +1,7 @@
 /**
- * Object passed as parameter of the virtual page change event.
+ * Object passed as parameter of the virtual rows change event.
  */
-export interface GridViewportRowChange {
+export interface GridViewportRowsChange {
   /**
    * The index of the first row in the viewport.
    */

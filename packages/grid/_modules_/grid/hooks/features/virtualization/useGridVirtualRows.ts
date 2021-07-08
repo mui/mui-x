@@ -2,7 +2,7 @@ import * as React from 'react';
 import {
   GRID_SCROLL,
   GRID_ROWS_SCROLL,
-  GRID_VIEWPORT_ROW_CHANGE,
+  GRID_VIEWPORT_ROWS_CHANGE,
 } from '../../../constants/eventsConstants';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridVirtualizationApi } from '../../../models/api/gridVirtualizationApi';
@@ -153,7 +153,7 @@ export const useGridVirtualRows = (apiRef: GridApiRef): void => {
         const newPage = page < nextPage ? nextPage + 1 : nextPage;
         const nextPageFirstRowIndex = newPage * containerProps.viewportPageSize;
         const nextPageLastRowIndex = nextPageFirstRowIndex + containerProps.viewportPageSize;
-        apiRef.current.publishEvent(GRID_VIEWPORT_ROW_CHANGE, {
+        apiRef.current.publishEvent(GRID_VIEWPORT_ROWS_CHANGE, {
           firstRowIndex: nextPageFirstRowIndex,
           lastRowIndex: nextPageLastRowIndex > totalRowCount ? totalRowCount : nextPageLastRowIndex,
           api: apiRef,
@@ -422,5 +422,5 @@ export const useGridVirtualRows = (apiRef: GridApiRef): void => {
     GRID_SCROLL,
     preventViewportScroll,
   );
-  useGridApiOptionHandler(apiRef, GRID_VIEWPORT_ROW_CHANGE, options.onViewportRowChange);
+  useGridApiOptionHandler(apiRef, GRID_VIEWPORT_ROWS_CHANGE, options.onViewportRowsChange);
 };

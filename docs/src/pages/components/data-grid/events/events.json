@@ -179,7 +179,7 @@
     "description": "Fired when a column visibility changes. Called with a GridColumnVisibilityChangeParams object."
   },
   {
-    "name": "viewportRowchange",
-    "description": "Fired when a the viewport rows change. Called with a GridViewportRowChange object."
+    "name": "viewportRowsChange",
+    "description": "Fired when a the viewport rows change. Called with a GridViewportRowsChange object."
   }
 ]
