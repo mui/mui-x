@@ -87,7 +87,7 @@ export const useGridVirtualRows = (apiRef: GridApiRef): void => {
       apiRef,
       options.pagination,
       paginationState.pageSize,
-        options.paginationMode,
+      options.paginationMode,
       paginationState.page,
     ],
   );

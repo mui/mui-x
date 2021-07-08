@@ -40,12 +40,10 @@ export const useGridPagination = (
 
       setGridState((state) => ({
         ...state,
-        pagination: applyConstraints(
-          {
-            ...state.pagination,
-            page,
-          },
-        ),
+        pagination: applyConstraints({
+          ...state.pagination,
+          page,
+        }),
       }));
       forceUpdate();
     },
@@ -58,12 +56,10 @@ export const useGridPagination = (
 
       setGridState((state) => ({
         ...state,
-        pagination: applyConstraints(
-          {
-            ...state.pagination,
-            pageSize,
-          },
-        ),
+        pagination: applyConstraints({
+          ...state.pagination,
+          pageSize,
+        }),
       }));
       forceUpdate();
     },
@@ -96,21 +92,24 @@ export const useGridPagination = (
 
   React.useEffect(() => {
     if (options.page === undefined) {
-      return
+      return;
     }
 
-    setGridState(oldState => ({
+    setGridState((oldState) => ({
       ...oldState,
       pagination: {
         ...oldState.pagination,
-        page: options.page!
-      }
-    }))
-  }, [setGridState, options.page])
+        page: options.page!,
+      },
+    }));
+  }, [setGridState, options.page]);
 
   React.useEffect(() => {
-    if (options.pageSize === undefined && (!options.autoPageSize || !containerSizes?.viewportPageSize)) {
-      return
+    if (
+      options.pageSize === undefined &&
+      (!options.autoPageSize || !containerSizes?.viewportPageSize)
+    ) {
+      return;
     }
 
     setGridState((oldState) => ({
@@ -120,17 +119,15 @@ export const useGridPagination = (
         pageSize: options.autoPageSize ? containerSizes?.viewportPageSize! : options.pageSize!,
       },
     }));
-  }, [setGridState, options.pageSize, containerSizes?.viewportPageSize, options.autoPageSize])
+  }, [setGridState, options.pageSize, containerSizes?.viewportPageSize, options.autoPageSize]);
 
   React.useEffect(() => {
     setGridState((state) => ({
       ...state,
-      pagination: applyConstraints(
-        {
-          ...state.pagination,
-          rowCount: options.rowCount !== undefined ? options.rowCount : visibleRowCount,
-        },
-      ),
+      pagination: applyConstraints({
+        ...state.pagination,
+        rowCount: options.rowCount !== undefined ? options.rowCount : visibleRowCount,
+      }),
     }));
     forceUpdate();
   }, [

@@ -188,15 +188,15 @@ function loadServerRows(params: { page: number; pageSize: number }): Promise<Gri
 
 export function ServerPaginationWithEventHandler() {
   const data = useData(100, 10);
-  const [page, setPage] = React.useState(0)
-  const [pageSize, setPageSize] = React.useState(50)
+  const [page, setPage] = React.useState(0);
+  const [pageSize, setPageSize] = React.useState(50);
   const [rows, setRows] = React.useState<GridRowsProp>([]);
   const [loading, setLoading] = React.useState<boolean>(false);
 
   const onPageChange = React.useCallback(
     (newPage) => {
       action('onPageChange')(newPage);
-      setPage(newPage)
+      setPage(newPage);
     },
     [setPage],
   );
@@ -204,7 +204,7 @@ export function ServerPaginationWithEventHandler() {
   const onPageSizeChange = React.useCallback(
     (newPageSize) => {
       action('onPageSizeChange')(newPageSize);
-      setPageSize(newPageSize)
+      setPageSize(newPageSize);
     },
     [setPageSize],
   );

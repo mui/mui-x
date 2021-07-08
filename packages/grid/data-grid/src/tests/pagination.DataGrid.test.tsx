@@ -19,7 +19,7 @@ import { useData } from 'packages/storybook/src/hooks/useData';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
-describe.only('<DataGrid /> - Pagination', () => {
+describe('<DataGrid /> - Pagination', () => {
   // TODO v5: replace with createClientRender
   const render = createClientRenderStrictMode();
 
@@ -222,6 +222,7 @@ describe.only('<DataGrid /> - Pagination', () => {
     it('should show filtered data if the user applies filter on an intermediate page and the resulted filter data is less than the rows per page', () => {
       const TestCasePaginationFilteredData = () => {
         const data = useData(200, 2);
+        const [page, setPage] = React.useState(1);
 
         return (
           <div style={{ width: 300, height: 300 }}>
@@ -230,7 +231,8 @@ describe.only('<DataGrid /> - Pagination', () => {
               columns={data.columns}
               rows={data.rows}
               pagination
-              page={1}
+              page={page}
+              onPageChange={(newPage) => setPage(newPage)}
               pageSize={25}
               filterModel={{
                 items: [
@@ -282,7 +284,9 @@ describe.only('<DataGrid /> - Pagination', () => {
 
         fireEvent.click(screen.getByRole('button', { name: /next page/i }));
         rows = document.querySelectorAll('.MuiDataGrid-viewport [role="row"]');
-        expect(rows.length).to.equal(Math.min(expectedFullPageRowsLength, nbRows - expectedFullPageRowsLength));
+        expect(rows.length).to.equal(
+          Math.min(expectedFullPageRowsLength, nbRows - expectedFullPageRowsLength),
+        );
 
         fireEvent.click(screen.getByRole('button', { name: /previous page/i }));
         rows = document.querySelectorAll('.MuiDataGrid-viewport [role="row"]');
@@ -292,7 +296,9 @@ describe.only('<DataGrid /> - Pagination', () => {
         fireEvent.click(screen.getByRole('button', { name: /next page/i }));
         rows = document.querySelectorAll('.MuiDataGrid-viewport [role="row"]');
 
-        expect(rows.length).to.equal(Math.min(expectedFullPageRowsLength, nbRows - 2 * expectedFullPageRowsLength));
+        expect(rows.length).to.equal(
+          Math.min(expectedFullPageRowsLength, nbRows - 2 * expectedFullPageRowsLength),
+        );
 
         // // make sure there is no more pages.
         // const nextPageBtn = document.querySelector('.MuiTablePagination-actions button:last-child');
