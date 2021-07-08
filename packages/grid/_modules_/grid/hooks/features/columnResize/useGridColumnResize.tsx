@@ -67,6 +67,10 @@ function trackFinger(event, currentTouchId): CursorCoordinates | boolean {
   };
 }
 
+function getColumnMinWidth(column: GridColDef | undefined): number {
+  return column?.minWidth ?? MIN_COL_WIDTH;
+}
+
 // TODO improve experience for last column
 export const useGridColumnResize = (apiRef: GridApiRef) => {
   const logger = useLogger('useGridColumnResize');
@@ -129,7 +133,7 @@ export const useGridColumnResize = (apiRef: GridApiRef) => {
       initialOffset.current +
       nativeEvent.clientX -
       colElementRef.current!.getBoundingClientRect().left;
-    newWidth = Math.max(MIN_COL_WIDTH, newWidth);
+    newWidth = Math.max(getColumnMinWidth(colDefRef.current), newWidth);
 
     updateWidth(newWidth);
     apiRef.current.publishEvent(GRID_COLUMN_RESIZE, {
@@ -224,7 +228,7 @@ export const useGridColumnResize = (apiRef: GridApiRef) => {
       initialOffset.current! +
       (finger as CursorCoordinates).x -
       colElementRef.current!.getBoundingClientRect().left;
-    newWidth = Math.max(MIN_COL_WIDTH, newWidth);
+    newWidth = Math.max(getColumnMinWidth(colDefRef.current), newWidth);
 
     updateWidth(newWidth);
     apiRef.current.publishEvent(GRID_COLUMN_RESIZE, {

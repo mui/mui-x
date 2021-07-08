@@ -319,7 +319,6 @@ describe('<DataGrid /> - Layout & Warnings', () => {
           {
             id: 1,
             username: 'John Doe',
-            age: 30,
           },
         ];
 
@@ -346,6 +345,39 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         // @ts-expect-error need to migrate helpers to TypeScript
         expect(firstColumn).toHaveInlineStyle({
           width: `${2 * parseInt(secondColumnWidthVal, 10)}px`,
+        });
+      });
+
+      it('should respect minWidth when a column is fluid', () => {
+        const rows = [
+          {
+            id: 1,
+            username: 'John Doe',
+          },
+        ];
+
+        const columns = [
+          {
+            field: 'id',
+            flex: 1,
+            minWidth: 150,
+          },
+          {
+            field: 'name',
+            flex: 0.5,
+          },
+        ];
+
+        render(
+          <div style={{ width: 200, height: 300 }}>
+            <DataGrid columns={columns} rows={rows} />
+          </div>,
+        );
+
+        const firstColumn = getColumnHeaderCell(0);
+        // @ts-expect-error need to migrate helpers to TypeScript
+        expect(firstColumn).toHaveInlineStyle({
+          width: `150px`,
         });
       });
 
@@ -398,7 +430,6 @@ describe('<DataGrid /> - Layout & Warnings', () => {
           {
             id: 1,
             username: 'John Doe',
-            age: 30,
           },
         ];
 

@@ -60,6 +60,8 @@ It works by dividing the remaining space in the grid among all flex columns in p
 For example, consider a grid with a total width of 500px that has three columns: the first with `width: 200`; the second with `flex: 1`; and third with `flex: 0.5`.
 The first column will be 200px wide, leaving 300px remaining. The column with `flex: 1` is twice the size of `flex: 0.5`, which means that final sizes will be: 200px, 200px, 100px.
 
+To set a minimum width for a `flex` column set the `minWidth` property in `GridColDef`.
+
 **Note**
 
 - `flex` doesn't work together with `width`. If you set both `flex` and `width` in `GridColDef`, `flex` will override `width`.
@@ -81,6 +83,8 @@ By default, `XGrid` allows all columns to be resized by dragging the right porti
 
 To prevent the resizing of a column, set `resizable: false` in the `GridColDef`.
 Alternatively, to disable all columns resize, set the prop `disableColumnResize={true}`.
+
+To restrict resizing a column under a certain width set the `minWidth` property in `GridColDef`.
 
 {{"demo": "pages/components/data-grid/columns/ColumnSizingGrid.js", "disableAd": true, "bg": "inline"}}
 

@@ -58,10 +58,24 @@ function updateColumnsWidth(columns: GridColumns, viewportWidth: number) {
       if (!column.flex) {
         return column;
       }
+
+      const minColumnWidth = column.minWidth! ?? GRID_STRING_COL_DEF.width;
+      const flexColumnWidth = Math.floor(flexMultiplier * column.flex!);
+      let newWidth = 0;
+
+      if (viewportWidth > 0) {
+        if (column.minWidth && column.minWidth > flexColumnWidth) {
+          newWidth = column.minWidth;
+        } else {
+          newWidth = flexColumnWidth;
+        }
+      } else {
+        newWidth = minColumnWidth;
+      }
+
       return {
         ...column,
-        width:
-          viewportWidth > 0 ? Math.floor(flexMultiplier * column.flex!) : GRID_STRING_COL_DEF.width,
+        width: newWidth,
       };
     });
   }
