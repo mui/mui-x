@@ -90,7 +90,7 @@ This object has to be added to the `filterOperators` attribute of the `GridColDe
 The most important part of an operator is the `getApplyFilterFn` function.
 It's called with the `GridFilterItem` object and the `GridColDef` object.
 This function must return another function that is called on every value of the column.
-The returned function determines if the cell value satifies the condition of the operator.
+The returned function determines if the cell value satisfies the condition of the operator.
 
 ```ts
 {

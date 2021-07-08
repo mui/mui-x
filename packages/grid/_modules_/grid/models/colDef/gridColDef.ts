@@ -86,7 +86,7 @@ export interface GridColDef {
   valueGetter?: (params: GridValueGetterParams) => GridCellValue;
   /**
    * Function that allows to apply a formatter before rendering its value.
-   * @param {GridValueFormatterParams} params Object contaning parameters for the formatter.
+   * @param {GridValueFormatterParams} params Object containing parameters for the formatter.
    * @returns {GridCellValue} The formatted value.
    */
   valueFormatter?: (params: GridValueFormatterParams) => GridCellValue;

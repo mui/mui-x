@@ -6,7 +6,7 @@ function CustomErrorOverlay(props) {
   return (
     <GridOverlay className="custom-error-overlay">
       <div>
-        <h1>Oops! An error occured!</h1>
+        <h1>Oops! An error occurred!</h1>
         <p>{typeof props.error === 'string' ? props.error : props.error.message}</p>
       </div>
     </GridOverlay>
