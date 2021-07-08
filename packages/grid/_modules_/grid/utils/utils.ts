@@ -1,44 +1,9 @@
 import * as styles from '@material-ui/core/styles';
 import { GRID_CSS_CLASS_PREFIX } from '../constants/cssClassesConstants';
 import isDeepEqual from '../lib/lodash/isDeepEqual';
-import { GridCellValue } from '../models/gridCell';
 import { generateUtilityClass } from './material-ui-utils';
 
 export { isDeepEqual };
-
-export function isDate(value: any): value is Date {
-  return value instanceof Date;
-}
-export function isDateValid(value: Date): boolean {
-  return !Number.isNaN(value.getTime());
-}
-
-export function parseDate(value: string): Date {
-  const [year, month, day] = value.split('-');
-  return new Date(Number(year), Number(month) - 1, Number(day));
-}
-
-export function parseDateTime(value: string): Date {
-  const [date, time] = value.split('T');
-  const [year, month, day] = date.split('-');
-  const [hours, minutes] = time.split(':');
-  return new Date(Number(year), Number(month) - 1, Number(day), Number(hours), Number(minutes));
-}
-
-export function formatDateToLocalInputDate({
-  value,
-  withTime,
-}: {
-  value: GridCellValue;
-  withTime: boolean;
-}) {
-  if (isDate(value) && isDateValid(value)) {
-    const offset = value.getTimezoneOffset();
-    const localDate = new Date(value.getTime() - offset * 60 * 1000);
-    return localDate.toISOString().substr(0, withTime ? 16 : 10);
-  }
-  return value;
-}
 
 export function isNumber(value: any): value is number {
   return typeof value === 'number';
@@ -85,20 +50,6 @@ export function localStorageAvailable() {
     return true;
   } catch (err) {
     return false;
-  }
-}
-
-export function mapColDefTypeToInputType(type: string) {
-  switch (type) {
-    case 'string':
-      return 'text';
-    case 'number':
-    case 'date':
-      return type;
-    case 'dateTime':
-      return 'datetime-local';
-    default:
-      return 'text';
   }
 }
 

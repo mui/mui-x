@@ -2,7 +2,7 @@ import * as React from 'react';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
 import { useGridSelector } from '../core/useGridSelector';
-import { visibleGridColumnsSelector } from '../columns';
+import { allGridColumnsSelector, visibleGridColumnsSelector } from '../columns';
 import { visibleSortedGridRowsSelector } from '../filter';
 import { gridSelectionStateSelector } from '../selection';
 import { GridCsvExportApi } from '../../../models/api/gridCsvExportApi';
@@ -10,10 +10,12 @@ import { GridExportCsvOptions } from '../../../models/gridExport';
 import { useLogger } from '../../utils/useLogger';
 import { exportAs } from '../../../utils';
 import { buildCSV } from './serializers/csvSerializer';
+import { GridColDef } from '../../../models';
 
 export const useGridCsvExport = (apiRef: GridApiRef): void => {
   const logger = useLogger('useGridCsvExport');
   const visibleColumns = useGridSelector(apiRef, visibleGridColumnsSelector);
+  const columns = useGridSelector(apiRef, allGridColumnsSelector);
   const visibleSortedRows = useGridSelector(apiRef, visibleSortedGridRowsSelector);
   const selection = useGridSelector(apiRef, gridSelectionStateSelector);
 
@@ -21,15 +23,27 @@ export const useGridCsvExport = (apiRef: GridApiRef): void => {
     (options?: GridExportCsvOptions): string => {
       logger.debug(`Get data as CSV`);
 
+      let exportedColumns: GridColDef[];
+
+      if (options?.fields) {
+        exportedColumns = options.fields
+          .map((field) => columns.find((column) => column.field === field))
+          .filter((column): column is GridColDef => !!column);
+      } else {
+        const validColumns = options?.allColumns ? columns : visibleColumns;
+
+        exportedColumns = validColumns.filter((column) => !column.disableExport);
+      }
+
       return buildCSV({
-        columns: visibleColumns,
+        columns: exportedColumns,
         rows: visibleSortedRows,
         selectedRowIds: selection,
         getCellParams: apiRef.current.getCellParams,
         delimiterCharacter: options?.delimiter || ',',
       });
     },
-    [logger, visibleColumns, visibleSortedRows, selection, apiRef],
+    [logger, visibleColumns, columns, visibleSortedRows, selection, apiRef],
   );
 
   const exportDataAsCsv = React.useCallback(

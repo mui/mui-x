@@ -114,7 +114,7 @@ export const randomRateType = () => randomArrayItem(RATE_TYPE_OPTIONS);
 export const randomCreatedDate = () => datePast();
 export const randomUpdatedDate = () => dateRecent();
 export const randomJobTitle = () => chance.profession();
-export const randomRating = () => Math.round(random(0, 5) * 10) / 10;
+export const randomRating = () => randomInt(1, 5);
 export const randomName = () => chance.name();
 
 export const generateFilledQuantity = (data) =>

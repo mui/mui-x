@@ -188,7 +188,6 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
     setGridState((state) => {
       const newSelectionState = [...state.selection];
       const selectionLookup = selectedIdsLookupSelector(state);
-
       let hasChanged = false;
       newSelectionState.forEach((id: GridRowId) => {
         if (!rowsLookup[id]) {

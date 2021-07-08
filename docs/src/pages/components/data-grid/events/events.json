@@ -160,7 +160,7 @@
   { "name": "columnOrderChange", "description": "Fired when the user ends resizing a column." },
   {
     "name": "columnsChange",
-    "description": "Fired when the columns state is changed.\nCalled with an array of strings correspoding to the field names."
+    "description": "Fired when the columns state is changed.\nCalled with an array of strings corresponding to the field names."
   },
   {
     "name": "sortModelChange",

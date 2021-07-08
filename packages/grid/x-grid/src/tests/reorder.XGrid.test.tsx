@@ -98,7 +98,7 @@ describe('<XGrid /> - Reorder', () => {
 
       return (
         <div style={{ width: 300, height: 300 }}>
-          <XGrid apiRef={apiRef} rows={rows} columns={columns} onPageChange={() => {}} />
+          <XGrid apiRef={apiRef} rows={rows} columns={columns} />
         </div>
       );
     };
@@ -121,7 +121,7 @@ describe('<XGrid /> - Reorder', () => {
 
       return (
         <div style={{ width: 300, height: 300 }}>
-          <XGrid apiRef={apiRef} rows={rows} columns={columns} onPageChange={() => {}} />
+          <XGrid apiRef={apiRef} rows={rows} columns={columns} />
         </div>
       );
     };
@@ -152,7 +152,7 @@ describe('<XGrid /> - Reorder', () => {
 
       return (
         <div style={{ width: 300, height: 300 }}>
-          <XGrid apiRef={apiRef} rows={rows} columns={columns} onPageChange={() => {}} />
+          <XGrid apiRef={apiRef} rows={rows} columns={columns} />
         </div>
       );
     };
@@ -183,13 +183,7 @@ describe('<XGrid /> - Reorder', () => {
 
       return (
         <div style={{ width: 300, height: 300 }}>
-          <XGrid
-            apiRef={apiRef}
-            rows={rows}
-            columns={columns}
-            onPageChange={() => {}}
-            disableColumnReorder
-          />
+          <XGrid apiRef={apiRef} rows={rows} columns={columns} disableColumnReorder />
         </div>
       );
     };
@@ -214,13 +208,7 @@ describe('<XGrid /> - Reorder', () => {
 
       return (
         <div style={{ width: 300, height: 300 }}>
-          <XGrid
-            apiRef={apiRef}
-            rows={rows}
-            columns={columns}
-            onPageChange={() => {}}
-            disableColumnReorder
-          />
+          <XGrid apiRef={apiRef} rows={rows} columns={columns} disableColumnReorder />
         </div>
       );
     };

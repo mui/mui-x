@@ -20,8 +20,7 @@
     "@material-ui/x-license": "4.0.0-alpha.33",
     "react": "^17.0.2",
     "react-is": "^17.0.2",
-    "rxjs": "^7.0.0",
-    "styled-components": "^5.1.0"
+    "rxjs": "^7.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.9.0",

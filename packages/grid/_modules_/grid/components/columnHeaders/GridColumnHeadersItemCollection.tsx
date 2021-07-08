@@ -55,6 +55,7 @@ export function GridColumnHeadersItemCollection(props: GridColumnHeadersItemColl
         : -1;
     const hasFocus = columnHeaderFocus !== null && columnHeaderFocus.field === col.field;
     const open = columnMenuState.open && columnMenuState.field === col.field;
+
     return (
       <GridColumnHeaderItem
         key={col.field}

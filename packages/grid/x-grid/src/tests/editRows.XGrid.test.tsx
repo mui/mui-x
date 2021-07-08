@@ -9,7 +9,7 @@ import Portal from '@material-ui/unstyled/Portal';
 import { expect } from 'chai';
 import * as React from 'react';
 import { getActiveCell, getCell, getColumnHeaderCell } from 'test/utils/helperFn';
-import { stub } from 'sinon';
+import { stub, spy } from 'sinon';
 import {
   createClientRenderStrictMode,
   // @ts-expect-error need to migrate helpers to TypeScript
@@ -372,7 +372,7 @@ describe('<XGrid /> - Edit Rows', () => {
     expect(input.value).to.equal('1961');
 
     fireEvent.change(input, { target: { value: '62' } });
-    expect(cell.querySelector('input')!.value).to.equal('62');
+    expect(cell.querySelector('input')!.value).to.equal('1962');
 
     fireEvent.keyDown(input, { key: 'Enter' });
     expect(cell).not.to.have.class('MuiDataGrid-cell--editing');
@@ -458,6 +458,21 @@ describe('<XGrid /> - Edit Rows', () => {
     expect(cell).not.to.have.class('MuiDataGrid-cell--editing');
     expect(cell).to.have.text('n');
     expect(screen.queryAllByRole('row')).to.have.length(4);
+  });
+
+  it('should call onEditCellChange when the value in the edit cell is changed', () => {
+    const onEditCellChange = spy();
+    render(<TestCase onEditCellChange={onEditCellChange} />);
+    const cell = getCell(1, 1);
+    cell.focus();
+    fireEvent.doubleClick(cell);
+    const input = cell.querySelector('input')!;
+    fireEvent.change(input, { target: { value: '1970' } });
+    expect(onEditCellChange.args[0][0]).to.deep.equal({
+      id: 1,
+      field: 'year',
+      props: { value: '1970' },
+    });
   });
 
   it('should change cell value correctly when column type is singleSelect and valueOptions is array of strings', () => {
@@ -561,5 +576,81 @@ describe('<XGrid /> - Edit Rows', () => {
     fireEvent.keyDown(input, { key: 'Enter' });
     expect(cell).to.have.text('1,942');
     expect(apiRef.current.getRow(baselineProps.rows[0].id)!.year).to.equal(1942);
+  });
+
+  describe('column type: date', () => {
+    it('should call onEditCellChange with the value entered as a Date', () => {
+      const onEditCellChange = spy();
+      render(
+        <TestCase
+          rows={[{ id: 0, date: new Date(2021, 6, 5) }]}
+          columns={[{ field: 'date', type: 'date', editable: true }]}
+          onEditCellChange={onEditCellChange}
+        />,
+      );
+      const cell = getCell(0, 0);
+      cell.focus();
+      fireEvent.doubleClick(cell);
+      const input = cell.querySelector('input')!;
+      fireEvent.change(input, { target: { value: '2022-05-07' } });
+      expect(onEditCellChange.args[0][0].props.value.toISOString()).to.equal(
+        new Date(2022, 4, 7).toISOString(),
+      );
+    });
+
+    it('should call onEditCellChange with null when entered an empty value', () => {
+      const onEditCellChange = spy();
+      render(
+        <TestCase
+          rows={[{ id: 0, date: new Date(2021, 6, 5) }]}
+          columns={[{ field: 'date', type: 'date', editable: true }]}
+          onEditCellChange={onEditCellChange}
+        />,
+      );
+      const cell = getCell(0, 0);
+      cell.focus();
+      fireEvent.doubleClick(cell);
+      const input = cell.querySelector('input')!;
+      fireEvent.change(input, { target: { value: '' } });
+      expect(onEditCellChange.args[0][0].props.value).to.equal(null);
+    });
+  });
+
+  describe('column type: dateTime', () => {
+    it('should call onEditCellChange with the value entered as a Date', () => {
+      const onEditCellChange = spy();
+      render(
+        <TestCase
+          rows={[{ id: 0, date: new Date(2021, 6, 5, 14, 30) }]}
+          columns={[{ field: 'date', type: 'dateTime', editable: true }]}
+          onEditCellChange={onEditCellChange}
+        />,
+      );
+      const cell = getCell(0, 0);
+      cell.focus();
+      fireEvent.doubleClick(cell);
+      const input = cell.querySelector('input')!;
+      fireEvent.change(input, { target: { value: '2022-05-07T15:30:00' } });
+      expect(onEditCellChange.args[0][0].props.value.toISOString()).to.equal(
+        new Date(2022, 4, 7, 15, 30).toISOString(),
+      );
+    });
+
+    it('should call onEditCellChange with null when entered an empty value', () => {
+      const onEditCellChange = spy();
+      render(
+        <TestCase
+          rows={[{ id: 0, date: new Date(2021, 6, 5, 14, 30) }]}
+          columns={[{ field: 'date', type: 'dateTime', editable: true }]}
+          onEditCellChange={onEditCellChange}
+        />,
+      );
+      const cell = getCell(0, 0);
+      cell.focus();
+      fireEvent.doubleClick(cell);
+      const input = cell.querySelector('input')!;
+      fireEvent.change(input, { target: { value: '' } });
+      expect(onEditCellChange.args[0][0].props.value).to.equal(null);
+    });
   });
 });
