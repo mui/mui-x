@@ -162,7 +162,7 @@ export function useGridEditRows(apiRef: GridApiRef) {
     [apiRef, forceUpdate, logger, setGridState],
   );
 
-  const handleCellEditCellProps = React.useCallback(
+  const handleCellEditPropsChange = React.useCallback(
     (params: GridEditCellPropsParams, event?: React.SyntheticEvent) => {
       if (event?.isPropagationStopped()) {
         return;
@@ -327,7 +327,7 @@ export function useGridEditRows(apiRef: GridApiRef) {
   useGridApiEventHandler(apiRef, GRID_CELL_EDIT_ENTER, handleEnterEdit);
   useGridApiEventHandler(apiRef, GRID_CELL_EDIT_EXIT, handleExitEdit);
   useGridApiEventHandler(apiRef, GRID_CELL_FOCUS_OUT, handleCellFocusOut);
-  useGridApiEventHandler(apiRef, GRID_CELL_EDIT_PROPS_CHANGE, handleCellEditCellProps);
+  useGridApiEventHandler(apiRef, GRID_CELL_EDIT_PROPS_CHANGE, handleCellEditPropsChange);
   useGridApiEventHandler(apiRef, GRID_COLUMN_HEADER_DRAG_START, handleColumnHeaderDragStart);
   useGridApiEventHandler(
     apiRef,
