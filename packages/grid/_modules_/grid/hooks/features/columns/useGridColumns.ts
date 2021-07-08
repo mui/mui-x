@@ -165,7 +165,7 @@ export function useGridColumns(apiRef: GridApiRef, { columns }: { columns: GridC
     [columnsMeta.positions, getColumnIndex],
   );
 
-  const setColumnsWithNewState = React.useCallback(
+  const setColumnsState = React.useCallback(
     (newState: GridInternalColumns, emit?: boolean) => {
       logger.debug('updating GridColumns with new state');
 
@@ -188,9 +188,9 @@ export function useGridColumns(apiRef: GridApiRef, { columns }: { columns: GridC
     (cols: GridColDef[]) => {
       // Avoid dependency on gridState to avoid infinite loop
       const newState = upsertColumnsState(cols, apiRef.current.getState().columns);
-      setColumnsWithNewState(newState, false);
+      setColumnsState(newState, false);
     },
-    [apiRef, setColumnsWithNewState],
+    [apiRef, setColumnsState],
   );
 
   const updateColumn = React.useCallback(
@@ -288,7 +288,7 @@ export function useGridColumns(apiRef: GridApiRef, { columns }: { columns: GridC
       );
 
       const newState = upsertColumnsState(hydratedColumns);
-      setColumnsWithNewState(newState);
+      setColumnsState(newState);
     } else {
       updateState(getInitialGridColumnsState());
     }
@@ -299,7 +299,7 @@ export function useGridColumns(apiRef: GridApiRef, { columns }: { columns: GridC
     options.columnTypes,
     options.checkboxSelection,
     updateState,
-    setColumnsWithNewState,
+    setColumnsState,
   ]);
 
   React.useEffect(() => {
