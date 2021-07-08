@@ -14,9 +14,7 @@ export default function ControlledPaginationGrid() {
     <div style={{ height: 400, width: '100%' }}>
       <DataGrid
         page={page}
-        onPageChange={(newPage) => {
-          setPage(newPage);
-        }}
+        onPageChange={(newPage) => setPage(newPage)}
         pageSize={5}
         pagination
         {...data}

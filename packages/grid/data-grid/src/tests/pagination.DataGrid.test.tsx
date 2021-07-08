@@ -291,7 +291,8 @@ describe('<DataGrid /> - Pagination', () => {
         fireEvent.click(screen.getByRole('button', { name: /next page/i }));
         fireEvent.click(screen.getByRole('button', { name: /next page/i }));
         rows = document.querySelectorAll('.MuiDataGrid-viewport [role="row"]');
-        expect(rows.length).to.equal(nbRows % Math.min(expectedFullPageRowsLength, nbRows - 2 * expectedFullPageRowsLength));
+
+        expect(rows.length).to.equal(Math.min(expectedFullPageRowsLength, nbRows - 2 * expectedFullPageRowsLength));
 
         // // make sure there is no more pages.
         // const nextPageBtn = document.querySelector('.MuiTablePagination-actions button:last-child');

@@ -2,7 +2,6 @@ import * as React from 'react';
 import { GRID_PAGE_CHANGE, GRID_PAGE_SIZE_CHANGE } from '../../../constants/eventsConstants';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridPaginationApi } from '../../../models/api/gridPaginationApi';
-import { useGridApiOptionHandler } from '../../root/useGridApiEventHandler';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
 import { optionsSelector } from '../../utils/optionsSelector';
 import { useGridState } from '../core/useGridState';
@@ -13,14 +12,14 @@ import { visibleGridRowCountSelector } from '../filter/gridFilterSelector';
 import { GridPaginationState } from './gridPaginationState';
 import { GridComponentProps } from '../../../GridComponentProps';
 
-function applyConstraints(state: GridPaginationState, pageProp?: number): GridPaginationState {
+function applyConstraints(state: GridPaginationState): GridPaginationState {
   const pageCount =
     state.pageSize && state.rowCount > 0 ? Math.ceil(state.rowCount / state.pageSize!) : 1;
 
   return {
     ...state,
     pageCount,
-    page: Math.min(pageCount - 1, pageProp !== undefined ? pageProp : state.page),
+    page: Math.min(pageCount - 1, state.page),
   };
 }
 
@@ -46,12 +45,11 @@ export const useGridPagination = (
             ...state.pagination,
             page,
           },
-          options.page,
         ),
       }));
       forceUpdate();
     },
-    [apiRef, setGridState, forceUpdate, logger, options.page],
+    [setGridState, forceUpdate, logger],
   );
 
   const setPageSize = React.useCallback(
@@ -65,16 +63,12 @@ export const useGridPagination = (
             ...state.pagination,
             pageSize,
           },
-          options.page,
         ),
       }));
       forceUpdate();
     },
-    [apiRef, setGridState, forceUpdate, logger, options.page],
+    [setGridState, forceUpdate, logger],
   );
-
-  useGridApiOptionHandler(apiRef, GRID_PAGE_CHANGE, options.onPageChange);
-  useGridApiOptionHandler(apiRef, GRID_PAGE_SIZE_CHANGE, options.onPageSizeChange);
 
   React.useEffect(() => {
     apiRef.current.updateControlState<number>({
@@ -111,11 +105,11 @@ export const useGridPagination = (
               ? options.paginationMode
               : state.pagination.paginationMode,
           rowCount: options.rowCount !== undefined ? options.rowCount : visibleRowCount,
+          page: options.page !== undefined ? options.page : state.pagination.page,
           pageSize:
             (options.autoPageSize ? containerSizes?.viewportPageSize : options.pageSize) ||
             state.pagination.pageSize,
         },
-        options.page,
       ),
     }));
     forceUpdate();
