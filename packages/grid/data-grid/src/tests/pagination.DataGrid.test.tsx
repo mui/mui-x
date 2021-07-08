@@ -19,7 +19,7 @@ import { useData } from 'packages/storybook/src/hooks/useData';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
-describe('<DataGrid /> - Pagination', () => {
+describe.only('<DataGrid /> - Pagination', () => {
   // TODO v5: replace with createClientRender
   const render = createClientRenderStrictMode();
 
@@ -95,9 +95,9 @@ describe('<DataGrid /> - Pagination', () => {
       );
 
       fireEvent.click(screen.getByRole('button', { name: /next page/i }));
-      expect(onPageChange.lastCall.args[0].page).to.equal(2);
+      expect(onPageChange.lastCall.args[0]).to.equal(2);
       fireEvent.click(screen.getByRole('button', { name: /previous page/i }));
-      expect(onPageChange.lastCall.args[0].page).to.equal(0);
+      expect(onPageChange.lastCall.args[0]).to.equal(0);
     });
 
     it('should trigger onPageChange when clicking on next page in Server mode', () => {
@@ -257,7 +257,7 @@ describe('<DataGrid /> - Pagination', () => {
         }
       });
 
-      it.only('should always render the same amount of rows and fit the viewport', () => {
+      it('should always render the same amount of rows and fit the viewport', () => {
         const TestCaseAutoPageSize = (props: { nbRows: number; height?: number }) => {
           const data = useData(props.nbRows, 10);
 

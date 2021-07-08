@@ -63,7 +63,7 @@ export const getInitialGridState = (): GridState => ({
   pagination: {
     page: 0,
     pageCount: 0,
-    pageSize: 0,
+    pageSize: 100,
     rowCount: 0,
   },
   options: DEFAULT_GRID_OPTIONS,

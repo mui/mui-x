@@ -508,7 +508,6 @@ export const DEFAULT_GRID_OPTIONS: GridOptions = {
   filterMode: GridFeatureModeConstant.client,
   headerHeight: 56,
   localeText: GRID_DEFAULT_LOCALE_TEXT,
-  pageSize: 100,
   paginationMode: GridFeatureModeConstant.client,
   rowHeight: 52,
   rowsPerPageOptions: [25, 50, 100],
