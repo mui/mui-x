@@ -4,7 +4,7 @@
   "properties": [
     {
       "name": "applyFilter",
-      "description": "Applies a GridFilterItem on alls rows. If no <code>linkOperator</code> is given, the &quot;and&quot; operator is used.",
+      "description": "Applies a GridFilterItem on all rows. If no <code>linkOperator</code> is given, the &quot;and&quot; operator is used.",
       "type": "(item: GridFilterItem, linkOperator?: GridLinkOperator) => void"
     },
     {
