@@ -184,8 +184,16 @@ function writePrettifiedFile(filename: string, data: string, prettierConfigPath:
   });
 }
 
+function shouldInlineInheritedProperties (reflection: TypeDoc.DeclarationReflection) {
+  const inheritDocTag = reflection.comment?.tags.find(tag => tag.tagName === 'inheritdoc')
+
+  return !inheritDocTag || inheritDocTag.paramName !== 'false'
+}
+
 function findProperties(reflection: TypeDoc.DeclarationReflection) {
-  return reflection.children!.filter((child) => child.kindOf(TypeDoc.ReflectionKind.Property));
+  const inlineAll = shouldInlineInheritedProperties(reflection)
+
+  return reflection.children!.filter((child) => child.kindOf(TypeDoc.ReflectionKind.Property) && inlineAll || !child.inheritedFrom);
 }
 
 function extractEvents(project: TypeDoc.ProjectReflection, apisToGenerate) {
@@ -230,6 +238,8 @@ function run(argv: { outputDirectory?: string }) {
     'GridRowParams',
     'GridSelectionApi',
     'GridFilterApi',
+    'GridToolbarExportProps',
+    'GridExportCsvOptions'
   ];
 
   apisToGenerate.forEach((apiName) => {
@@ -243,6 +253,7 @@ function run(argv: { outputDirectory?: string }) {
       description: reflection.comment?.shortText,
       properties: findProperties(reflection),
     };
+
     const slug = kebabCase(reflection!.name);
     const markdown = generateMarkdown(api, apisToGenerate);
 
