@@ -11,8 +11,8 @@ export default function SizePaginationGrid() {
     maxColumns: 6,
   });
 
-  const handlePageSizeChange = (params) => {
-    setPageSize(params.pageSize);
+  const handlePageSizeChange = (pageSize) => {
+    setPageSize(pageSize);
   };
 
   return (
