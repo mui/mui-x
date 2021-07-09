@@ -98,8 +98,9 @@ describe('<DataGrid /> - Pagination', () => {
       render(<BaselineTestCase onPageChange={onPageChange} pageSize={1} paginationMode="server" />);
       fireEvent.click(screen.getByRole('button', { name: /next page/i }));
       expect(onPageChange.callCount).to.equal(1);
+      expect(onPageChange.lastCall.args[0]).to.equal(1);
       fireEvent.click(screen.getByRole('button', { name: /previous page/i }));
-      expect(onPageChange.callCount).to.equal(2);
+      expect(onPageChange.lastCall.args[0]).to.equal(0);
     });
 
     it('should not change the page state when clicking on next button and a page prop is provided', () => {
@@ -180,6 +181,7 @@ describe('<DataGrid /> - Pagination', () => {
 
       fireEvent.click(screen.queryAllByRole('option')[1]);
       expect(onPageSizeChange.callCount).to.equal(1);
+      expect(onPageSizeChange.lastCall.args[0]).to.equal(2);
     });
 
     it('should not change the pageSize state when clicking on a page size option when pageSize prop is provided', () => {
