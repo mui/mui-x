@@ -83,7 +83,7 @@ export const useGridVirtualColumns = (
       const firstCol = getColumnFromScroll(lastScrollLeftRef.current); // First fully visible column
       const firstColIndex = visibleColumns.findIndex((col) => col.field === firstCol?.field);
 
-      const { positions } = columnsMeta;
+      const { positions, totalWidth } = columnsMeta;
       const windowWidth = containerPropsRef.current.windowSizes.width;
       const spaceBeforeFirstCol = positions[firstColIndex] - lastScrollLeftRef.current;
       const availableWidth = windowWidth - spaceBeforeFirstCol;
@@ -91,7 +91,13 @@ export const useGridVirtualColumns = (
       while (lastColIndex < positions.length - 1 && positions[lastColIndex + 1] < availableWidth) {
         lastColIndex += 1;
       }
-      lastColIndex -= 1; // Last fully visible column
+
+      if (
+        lastColIndex < positions.length - 1 ||
+        (positions[positions.length - 1] && totalWidth > availableWidth)
+      ) {
+        lastColIndex -= 1; // Last fully visible column
+      }
 
       return colIndex >= firstColIndex && colIndex <= lastColIndex;
     },
