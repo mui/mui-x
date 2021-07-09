@@ -156,7 +156,7 @@ export const useStyles = makeStyles(
         },
         '& .MuiDataGrid-columnSeparator': {
           position: 'absolute',
-          right: -12,
+          right: 0,
           zIndex: 100,
           display: 'flex',
           flexDirection: 'column',
@@ -183,7 +183,7 @@ export const useStyles = makeStyles(
         '& .MuiDataGrid-menuIcon': {
           visibility: 'hidden',
           fontSize: 20,
-          marginRight: -6,
+          marginRight: 6,
           display: 'flex',
           alignItems: 'center',
         },

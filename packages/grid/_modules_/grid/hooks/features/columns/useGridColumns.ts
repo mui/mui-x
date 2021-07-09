@@ -60,8 +60,7 @@ function updateColumnsWidth(columns: GridColumns, viewportWidth: number) {
       }
       return {
         ...column,
-        width:
-          viewportWidth > 0 ? Math.floor(flexMultiplier * column.flex!) : GRID_STRING_COL_DEF.width,
+        width: viewportWidth > 0 ? flexMultiplier * column.flex! : GRID_STRING_COL_DEF.width,
       };
     });
   }
