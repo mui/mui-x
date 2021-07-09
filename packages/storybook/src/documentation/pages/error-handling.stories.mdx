@@ -42,7 +42,7 @@ const [error, setError] = React.useState();
 
 React.useEffect(()=> {
   service.loadBadRows().catch((error)=> {
-    setError({ message: `An error occured! Details: ${error.message}` });
+    setError({ message: `An error occurred! Details: ${error.message}` });
   }
 }, [setError]);
 

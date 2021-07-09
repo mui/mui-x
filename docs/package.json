@@ -40,7 +40,7 @@
     "clean-css": "^5.0.1",
     "clipboard-copy": "^3.0.0",
     "clsx": "^1.0.4",
-    "core-js": "2.6.12",
+    "core-js": "^2.6.12",
     "cross-env": "^7.0.0",
     "docsearch.js": "^2.6.3",
     "doctrine": "^3.0.0",

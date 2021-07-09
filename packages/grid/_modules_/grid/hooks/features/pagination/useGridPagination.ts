@@ -9,7 +9,7 @@ import { useLogger } from '../../utils/useLogger';
 import { useGridSelector } from '../core/useGridSelector';
 import { visibleGridRowCountSelector } from '../filter/gridFilterSelector';
 import { GridPaginationState } from './gridPaginationState';
-import { GridComponentProps } from '../../../GridComponentProps';
+import { optionsSelector } from '../../utils/optionsSelector';
 
 function applyConstraints(state: GridPaginationState): GridPaginationState {
   const pageCount =
@@ -22,18 +22,13 @@ function applyConstraints(state: GridPaginationState): GridPaginationState {
   };
 }
 
-export const useGridPagination = (
-  apiRef: GridApiRef,
-  props: Pick<
-    GridComponentProps,
-    'autoPageSize' | 'rowCount' | 'page' | 'pageSize' | 'onPageChange' | 'onPageSizeChange'
-  >,
-): void => {
+export const useGridPagination = (apiRef: GridApiRef): void => {
   const logger = useLogger('useGridPagination');
 
   const [, setGridState, forceUpdate] = useGridState(apiRef);
   const visibleRowCount = useGridSelector(apiRef, visibleGridRowCountSelector);
   const containerSizes = useGridSelector(apiRef, gridContainerSizesSelector);
+  const options = useGridSelector(apiRef, optionsSelector);
 
   const setPage = React.useCallback(
     (page: number) => {
@@ -70,66 +65,77 @@ export const useGridPagination = (
   React.useEffect(() => {
     apiRef.current.updateControlState<number>({
       stateId: 'page',
-      propModel: props.page,
-      propOnChange: props.onPageChange,
+      propModel: options.page,
+      propOnChange: options.onPageChange,
       stateSelector: (state) => state.pagination.page,
       onChangeCallback: (model) => {
         apiRef.current.publishEvent(GRID_PAGE_CHANGE, model);
       },
     });
-  }, [apiRef, props.page, props.onPageChange]);
+  }, [apiRef, options.page, options.onPageChange]);
 
   React.useEffect(() => {
     apiRef.current.updateControlState<number>({
       stateId: 'pageSize',
-      propModel: props.pageSize,
-      propOnChange: props.onPageSizeChange,
+      propModel: options.pageSize,
+      propOnChange: options.onPageSizeChange,
       stateSelector: (state) => state.pagination.pageSize,
       onChangeCallback: (model) => {
         apiRef.current.publishEvent(GRID_PAGE_SIZE_CHANGE, model);
       },
     });
-  }, [apiRef, props.pageSize, props.onPageSizeChange]);
+  }, [apiRef, options.pageSize, options.onPageSizeChange]);
 
   React.useEffect(() => {
-    if (props.page === undefined) {
-      return;
-    }
-
-    setGridState((oldState) => ({
-      ...oldState,
-      pagination: {
-        ...oldState.pagination,
-        page: props.page!,
-      },
-    }));
-  }, [setGridState, props.page]);
-
-  React.useEffect(() => {
-    if (
-      props.pageSize === undefined &&
-      (!props.autoPageSize || !containerSizes?.viewportPageSize)
-    ) {
-      return;
-    }
-
-    setGridState((oldState) => {
-      return {
+    if (options.page !== undefined) {
+      setGridState((oldState) => ({
         ...oldState,
         pagination: {
           ...oldState.pagination,
-          pageSize: props.pageSize ?? containerSizes?.viewportPageSize!,
+          page: options.page!,
         },
-      };
-    });
-  }, [setGridState, props.pageSize, containerSizes?.viewportPageSize, props.autoPageSize]);
+      }));
+    }
+  }, [setGridState, options.page]);
 
   React.useEffect(() => {
-    setGridState((state) => ({
-      ...state,
+    if (options.pageSize !== undefined) {
+      setGridState((oldState) => ({
+        ...oldState,
+        pagination: {
+          ...oldState.pagination,
+          pageSize: options.pageSize!,
+        },
+      }));
+      forceUpdate();
+    }
+
+    if (options.autoPageSize && containerSizes?.viewportPageSize) {
+      setGridState((oldState) => {
+        return {
+          ...oldState,
+          pagination: {
+            ...oldState.pagination,
+            pageSize: containerSizes?.viewportPageSize,
+          },
+        };
+      });
+      forceUpdate();
+    }
+  }, [
+    forceUpdate,
+    setGridState,
+    options.pageSize,
+    containerSizes?.viewportPageSize,
+    options.autoPageSize,
+  ]);
+
+  React.useEffect(() => {
+    setGridState((oldState) => ({
+      ...oldState,
       pagination: applyConstraints({
-        ...state.pagination,
-        rowCount: props.rowCount !== undefined ? props.rowCount : visibleRowCount,
+        ...oldState.pagination,
+        rowCount: options.rowCount !== undefined ? options.rowCount : visibleRowCount,
       }),
     }));
     forceUpdate();
@@ -137,10 +143,13 @@ export const useGridPagination = (
     setGridState,
     forceUpdate,
     visibleRowCount,
-    props.rowCount,
-    props.autoPageSize,
-    props.pageSize,
-    props.page,
+    options.rowCount,
+    // If options.pageSize, options.page, options.autoPageSize or containerSizes?.viewportPageSize changed, we updated the state in the effects above
+    // But we did not apply the constraints to avoid updating both page and pageSize in the same state update
+    // Therefore we need to apply the constraints now
+    options.pageSize,
+    options.page,
+    options.autoPageSize,
     containerSizes?.viewportPageSize,
   ]);
 

@@ -25,6 +25,7 @@ import { useGridApiEventHandler, useGridApiOptionHandler } from '../../root/useG
 import { optionsSelector } from '../../utils/optionsSelector';
 import { useGridSelector } from '../core/useGridSelector';
 import { useGridState } from '../core/useGridState';
+import { useNativeEventListener } from '../../root/useNativeEventListener';
 
 const MIN_COL_WIDTH = 50;
 let cachedSupportsTouchActionNone = false;
@@ -36,6 +37,10 @@ let cachedSupportsTouchActionNone = false;
 // Over 80% of the iOS phones are compatible
 // in August 2020.
 function doesSupportTouchActionNone(): boolean {
+  // The document is not defined in the server-side
+  if (typeof document === 'undefined') {
+    return cachedSupportsTouchActionNone;
+  }
   if (!cachedSupportsTouchActionNone) {
     const element = document.createElement('div');
     element.style.touchAction = 'none';
@@ -310,22 +315,19 @@ export const useGridColumnResize = (apiRef: GridApiRef) => {
   }, [setGridState, forceUpdate]);
 
   React.useEffect(() => {
-    const columnHeadersElement = apiRef.current!.columnHeadersElementRef?.current;
-    if (!columnHeadersElement) {
-      return () => {};
-    }
-
-    columnHeadersElement.addEventListener('touchstart', handleTouchStart, {
-      passive: doesSupportTouchActionNone(),
-    });
-
     return () => {
-      columnHeadersElement.removeEventListener('touchstart', handleTouchStart);
-
       clearTimeout(stopResizeEventTimeout.current);
       stopListening();
     };
   }, [apiRef, handleTouchStart, stopListening]);
+
+  useNativeEventListener(
+    apiRef,
+    () => apiRef.current?.columnHeadersElementRef?.current,
+    'touchstart',
+    handleTouchStart,
+    { passive: doesSupportTouchActionNone() },
+  );
 
   useGridApiEventHandler(apiRef, GRID_COLUMN_SEPARATOR_MOUSE_DOWN, handleColumnResizeMouseDown);
   useGridApiEventHandler(apiRef, GRID_COLUMN_RESIZE_START, handleResizeStart);

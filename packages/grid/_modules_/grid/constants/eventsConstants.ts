@@ -421,7 +421,7 @@ export const GRID_ROWS_CLEAR = 'rowsClear';
 
 /**
  * Fired when the columns state is changed.
- * Called with an array of strings correspoding to the field names.
+ * Called with an array of strings corresponding to the field names.
  * @event
  */
 export const GRID_COLUMNS_CHANGE = 'columnsChange';
