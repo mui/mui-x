@@ -22,7 +22,6 @@ export function getThemePaletteMode(palette: any): string {
 }
 
 export function isMuiV5(): boolean {
-  // Changed from `alpha` to 'fade' because mui/core@4.12.0 adds 'alpha' in v4
   return !('fade' in styles);
 }
 
