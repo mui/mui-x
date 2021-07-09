@@ -26,14 +26,15 @@ export function isMuiV5(): boolean {
 }
 
 export function muiStyleAlpha(color: string, value: number): string {
-  if (isMuiV5()) {
+  if (isMuiV5() || !(styles as any)?.fade) {
     return (styles as any)?.alpha(color, value);
   }
+
   return (styles as any)?.fade(color, value);
 }
 
 export function createTheme(): styles.Theme {
-  if (isMuiV5()) {
+  if (isMuiV5() || !(styles as any)?.createMuiTheme) {
     return (styles as any)?.createTheme();
   }
   return (styles as any)?.createMuiTheme();
