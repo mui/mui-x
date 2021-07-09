@@ -15,7 +15,7 @@ import {
   DEFAULT_GRID_OPTIONS,
   GridRowsProp,
 } from '@material-ui/data-grid';
-import { getColumnValues, getRows, sleep } from 'test/utils/helperFn';
+import { getColumnValues, getRows } from 'test/utils/helperFn';
 import { spy } from 'sinon';
 import { useData } from 'packages/storybook/src/hooks/useData';
 
@@ -163,7 +163,7 @@ describe('<DataGrid /> - Pagination', () => {
       expect(getColumnValues()).to.deep.equal(['Element 2', 'Element 3']);
     });
 
-    it('should call onPageSizeChange with the correct page when clicking on a page size option when pageSize is controlled', async () => {
+    it('should call onPageSizeChange with the correct page when clicking on a page size option when pageSize is controlled', () => {
       const onPageSizeChange = spy();
 
       render(
@@ -182,7 +182,7 @@ describe('<DataGrid /> - Pagination', () => {
       expect(onPageSizeChange.callCount).to.equal(1);
     });
 
-    it('should not change the pageSize state when clicking on a page size option when pageSize prop is provided', async () => {
+    it('should not change the pageSize state when clicking on a page size option when pageSize prop is provided', () => {
       render(<BaselineTestCase pageSize={1} page={0} rowsPerPageOptions={[1, 2, 3]} />);
 
       fireEvent.mouseDown(document.querySelector('.MuiSelect-selectMenu'));
