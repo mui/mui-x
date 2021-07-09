@@ -302,12 +302,12 @@ describe('<DataGrid /> - Pagination', () => {
           Math.min(expectedFullPageRowsLength, nbRows - 2 * expectedFullPageRowsLength),
         );
 
-        // // make sure there is no more pages.
-        // const nextPageBtn = document.querySelector('.MuiTablePagination-actions button:last-child');
-        // expect(nextPageBtn!.getAttribute('disabled')).to.not.equal(
-        //   null,
-        //   'next page should be disabled.',
-        // );
+        // make sure there is no more pages.
+        const nextPageBtn = document.querySelector('.MuiTablePagination-actions button:last-child');
+        expect(nextPageBtn!.getAttribute('disabled')).to.not.equal(
+          null,
+          'next page should be disabled.',
+        );
       });
 
       it('should be compatible with controlled page', () => {
