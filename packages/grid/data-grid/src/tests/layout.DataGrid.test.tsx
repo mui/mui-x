@@ -377,7 +377,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         const firstColumn = getColumnHeaderCell(0);
         // @ts-expect-error need to migrate helpers to TypeScript
         expect(firstColumn).toHaveInlineStyle({
-          width: `150px`,
+          width: '150px',
         });
       });
 
