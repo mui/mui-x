@@ -21,33 +21,26 @@ import { useData } from 'packages/storybook/src/hooks/useData';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
-describe.only('<DataGrid /> - Pagination', () => {
+const getData = (rowCount: number) =>
+  Array.from({ length: rowCount }).map((_, i) => ({ id: i, name: `Element ${i}` }));
+
+describe('<DataGrid /> - Pagination', () => {
   // TODO v5: replace with createClientRender
   const render = createClientRenderStrictMode();
 
-  const BaselineTestCase = (props: Omit<DataGridProps, 'rows' | 'columns'>) => (
-    <div style={{ width: 300, height: 300 }}>
-      <DataGrid
-        rows={[
-          {
-            id: 0,
-            brand: 'Element 0',
-          },
-          {
-            id: 1,
-            brand: 'Element 1',
-          },
-          {
-            id: 2,
-            brand: 'Element 2',
-          },
-        ]}
-        columns={[{ field: 'brand' }]}
-        pagination
-        {...props}
-      />
-    </div>
-  );
+  const basicData = getData(20);
+
+  const BaselineTestCase = (
+    props: Omit<DataGridProps, 'rows' | 'columns'> & { height?: number },
+  ) => {
+    const { height = 300, ...other } = props;
+
+    return (
+      <div style={{ width: 300, height }}>
+        <DataGrid rows={basicData} columns={[{ field: 'name' }]} pagination {...other} />
+      </div>
+    );
+  };
 
   describe('prop: page and onPageChange', () => {
     it('should display the rows of page given in props', () => {
@@ -64,6 +57,17 @@ describe.only('<DataGrid /> - Pagination', () => {
       expect(onPageChange.callCount).to.equal(0);
       setProps({ page: 2 });
       expect(onPageChange.callCount).to.equal(0);
+    });
+
+    it('should allow to update the pageSize from the outside', () => {
+      const onPageSizeChange = spy();
+
+      const { setProps } = render(
+        <BaselineTestCase onPageSizeChange={onPageSizeChange} pageSize={1} page={0} />,
+      );
+      expect(getColumnValues()).to.deep.equal(['Element 0']);
+      setProps({ page: 1 });
+      expect(getColumnValues()).to.deep.equal(['Element 1']);
     });
 
     it('should call onPageChange when clicking on next / previous button', () => {
@@ -140,6 +144,28 @@ describe.only('<DataGrid /> - Pagination', () => {
       setProps({ pageSize: 2 });
       expect(onPageSizeChange.callCount).to.equal(0);
     });
+
+    it('should allow to update the pageSize from the outside', () => {
+      const onPageSizeChange = spy();
+
+      const { setProps } = render(
+        <BaselineTestCase onPageSizeChange={onPageSizeChange} pageSize={1} page={0} />,
+      );
+      expect(getColumnValues()).to.deep.equal(['Element 0']);
+      setProps({ pageSize: 2 });
+      expect(getColumnValues()).to.deep.equal(['Element 0', 'Element 1']);
+    });
+
+    it('should allow to update both the page and pageSize from the outside at once', () => {
+      const onPageSizeChange = spy();
+
+      const { setProps } = render(
+        <BaselineTestCase onPageSizeChange={onPageSizeChange} pageSize={1} page={0} />,
+      );
+      expect(getColumnValues()).to.deep.equal(['Element 0']);
+      setProps({ page: 1, pageSize: 2 });
+      expect(getColumnValues()).to.deep.equal(['Element 2', 'Element 3']);
+    });
   });
 
   describe('prop: autoPageSize', () => {
@@ -163,6 +189,16 @@ describe.only('<DataGrid /> - Pagination', () => {
         </div>
       );
     };
+
+    it('should give priority to the controlled pageSize', () => {
+      render(<BaselineTestCase autoPageSize pageSize={1} />);
+      expect(getColumnValues(0)).to.deep.equal(['Element 0']);
+    });
+
+    it('should be compatible with controlled page', () => {
+      render(<BaselineTestCase autoPageSize page={2} />);
+      expect(getColumnValues(0)).to.deep.equal(['Element 6', 'Element 7', 'Element 8']);
+    });
 
     it('should always render the same amount of rows and fit the viewport', () => {
       const nbRows = 27;
@@ -202,26 +238,6 @@ describe.only('<DataGrid /> - Pagination', () => {
         null,
         'next page should be disabled.',
       );
-    });
-
-    it('should be compatible with controlled page', () => {
-      const rows = [
-        { id: 1, x: 1 },
-        { id: 2, x: 2 },
-        { id: 3, x: 3 },
-        { id: 4, x: 4 },
-        { id: 5, x: 5 },
-        { id: 6, x: 6 },
-        { id: 7, x: 7 },
-        { id: 8, x: 8 },
-      ];
-      const columns = [{ field: 'x', type: 'number' }];
-      render(
-        <div style={{ height: 300, width: 400 }}>
-          <DataGrid pagination autoPageSize rows={rows} columns={columns} page={2} />
-        </div>,
-      );
-      expect(getColumnValues(0)).to.deep.equal(['7', '8']);
     });
 
     it('should update the amount of rows rendered and call onPageSizeChange when changing the table height', async () => {

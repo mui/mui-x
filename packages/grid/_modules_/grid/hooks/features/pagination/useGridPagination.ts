@@ -108,9 +108,7 @@ export const useGridPagination = (apiRef: GridApiRef): void => {
         },
       }));
       forceUpdate();
-    }
-
-    if (options.autoPageSize && containerSizes?.viewportPageSize) {
+    } else if (options.autoPageSize && containerSizes?.viewportPageSize) {
       setGridState((oldState) => {
         return {
           ...oldState,
