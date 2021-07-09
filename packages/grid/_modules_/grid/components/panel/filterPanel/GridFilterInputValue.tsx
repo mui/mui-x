@@ -8,13 +8,13 @@ import { GridColDef } from '../../../models/colDef/gridColDef';
 
 const renderSingleSelectOptions = ({ valueOptions }: GridColDef) =>
   ['', ...valueOptions!].map((option) =>
-    typeof option === 'string' ? (
-      <option key={option} value={option}>
-        {option}
-      </option>
-    ) : (
+    typeof option === 'object' ? (
       <option key={option.value} value={option.value}>
         {option.label}
+      </option>
+    ) : (
+      <option key={option} value={option}>
+        {option}
       </option>
     ),
   );
@@ -44,8 +44,15 @@ export function GridFilterInputValue(props: GridTypeFilterInputValueProps & Text
 
   const onFilterChange = React.useCallback(
     (event) => {
+      let value = event.target.value;
+      if (type === 'singleSelect') {
+        const column = apiRef.current.getColumn(item.columnField);
+        value = column.valueOptions
+          .map((option) => (typeof option === 'object' ? option.value : option))
+          .find((optionValue) => String(optionValue) === value);
+      }
+
       clearTimeout(filterTimeout.current);
-      const value = event.target.value;
       setFilterValueState(value);
       setIsApplying(true);
       filterTimeout.current = setTimeout(() => {
@@ -53,7 +60,7 @@ export function GridFilterInputValue(props: GridTypeFilterInputValueProps & Text
         setIsApplying(false);
       }, SUBMIT_FILTER_STROKE_TIME);
     },
-    [applyValue, item],
+    [apiRef, applyValue, item, type],
   );
 
   React.useEffect(() => {
