@@ -164,6 +164,20 @@ describe('<DataGrid /> - Pagination', () => {
       expect(getColumnValues()).to.deep.equal(['Element 2', 'Element 3']);
     });
 
+    it('should call onPageChange when clicking on a page size option', () => {
+      const onPageSizeChange = spy();
+
+      render(<BaselineTestCase onPageSizeChange={onPageSizeChange} />);
+      fireEvent.mouseDown(document.querySelector('.MuiSelect-selectMenu'));
+      expect(screen.queryAllByRole('option').length).to.equal(3);
+
+      fireEvent.click(screen.queryAllByRole('option')[1]);
+      expect(onPageSizeChange.callCount).to.equal(1);
+      expect(onPageSizeChange.lastCall.args[0]).to.equal(
+        DEFAULT_GRID_OPTIONS.rowsPerPageOptions![1],
+      );
+    });
+
     it('should call onPageSizeChange with the correct page when clicking on a page size option when pageSize is controlled', () => {
       const onPageSizeChange = spy();
 
