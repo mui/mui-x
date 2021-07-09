@@ -15,7 +15,7 @@ import {
   DEFAULT_GRID_OPTIONS,
   GridRowsProp,
 } from '@material-ui/data-grid';
-import { getColumnValues, getRows } from 'test/utils/helperFn';
+import { getColumnValues, getRows, sleep } from 'test/utils/helperFn';
 import { spy } from 'sinon';
 import { useData } from 'packages/storybook/src/hooks/useData';
 
@@ -81,7 +81,7 @@ describe('<DataGrid /> - Pagination', () => {
       expect(onPageChange.callCount).to.equal(2);
     });
 
-    it('should call onPageChange with correct page when clicking on next / previous button when page is controlled', () => {
+    it('should call onPageChange with the correct page when clicking on next / previous button when page is controlled', () => {
       const onPageChange = spy();
 
       render(<BaselineTestCase page={1} onPageChange={onPageChange} pageSize={1} />);
@@ -102,7 +102,7 @@ describe('<DataGrid /> - Pagination', () => {
       expect(onPageChange.callCount).to.equal(2);
     });
 
-    it('should not change the page when clicking on next button and a page prop is provided', () => {
+    it('should not change the page state when clicking on next button and a page prop is provided', () => {
       render(<BaselineTestCase page={0} pageSize={1} />);
       expect(getColumnValues()).to.deep.equal(['Element 0']);
       fireEvent.click(screen.getByRole('button', { name: /next page/i }));
@@ -157,14 +157,62 @@ describe('<DataGrid /> - Pagination', () => {
     });
 
     it('should allow to update both the page and pageSize from the outside at once', () => {
-      const onPageSizeChange = spy();
-
-      const { setProps } = render(
-        <BaselineTestCase onPageSizeChange={onPageSizeChange} pageSize={1} page={0} />,
-      );
+      const { setProps } = render(<BaselineTestCase pageSize={1} page={0} />);
       expect(getColumnValues()).to.deep.equal(['Element 0']);
       setProps({ page: 1, pageSize: 2 });
       expect(getColumnValues()).to.deep.equal(['Element 2', 'Element 3']);
+    });
+
+    it('should call onPageSizeChange with the correct page when clicking on a page size option when pageSize is controlled', async () => {
+      const onPageSizeChange = spy();
+
+      render(
+        <BaselineTestCase
+          onPageSizeChange={onPageSizeChange}
+          pageSize={1}
+          page={0}
+          rowsPerPageOptions={[1, 2, 3]}
+        />,
+      );
+
+      fireEvent.mouseDown(document.querySelector('.MuiSelect-selectMenu'));
+      expect(screen.queryAllByRole('option').length).to.equal(3);
+
+      fireEvent.click(screen.queryAllByRole('option')[1]);
+      expect(onPageSizeChange.callCount).to.equal(1);
+    });
+
+    it('should not change the pageSize state when clicking on a page size option when pageSize prop is provided', async () => {
+      render(<BaselineTestCase pageSize={1} page={0} rowsPerPageOptions={[1, 2, 3]} />);
+
+      fireEvent.mouseDown(document.querySelector('.MuiSelect-selectMenu'));
+      expect(screen.queryAllByRole('option').length).to.equal(3);
+
+      fireEvent.click(screen.queryAllByRole('option')[1]);
+      expect(getColumnValues()).to.deep.equal(['Element 0']);
+    });
+
+    it('should control pageSize state when the prop and the onChange are set', () => {
+      const ControlCase = () => {
+        const [pageSize, setPageSize] = React.useState(1);
+
+        return (
+          <BaselineTestCase
+            pageSize={pageSize}
+            onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+            page={0}
+            rowsPerPageOptions={[1, 2, 3]}
+          />
+        );
+      };
+
+      render(<ControlCase />);
+
+      fireEvent.mouseDown(document.querySelector('.MuiSelect-selectMenu'));
+      expect(screen.queryAllByRole('option').length).to.equal(3);
+
+      fireEvent.click(screen.queryAllByRole('option')[1]);
+      expect(getColumnValues()).to.deep.equal(['Element 0', 'Element 1']);
     });
   });
 
