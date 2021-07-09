@@ -15,7 +15,7 @@ export default function ColumnSizingGrid() {
       <XGrid
         columns={[
           { field: 'id' },
-          { field: 'username' },
+          { field: 'username', minWidth: 150 },
           { field: 'age', resizable: false },
         ]}
         rows={rows}
