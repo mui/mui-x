@@ -43,7 +43,7 @@ export interface GridColDef {
    */
   flex?: number;
   /**
-   * If set, it sets the minimum width a column can have. Commonly used in fluid columns.
+   * Sets the minimum width a column can have. It's commonly used in fluid columns.
    */
   minWidth?: number;
   /**
