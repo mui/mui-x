@@ -134,7 +134,7 @@ describe('<DataGrid /> - Pagination', () => {
       expect(getColumnValues()).to.deep.equal(['Element 0', 'Element 1']);
     });
 
-    it('should not trigger onPageSizeChange on initialisation or on pageSize prop change', () => {
+    it('should not call onPageSizeChange on initialisation or on pageSize prop change', () => {
       const onPageSizeChange = spy();
 
       const { setProps } = render(
