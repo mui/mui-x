@@ -58,7 +58,26 @@ describe('<XGrid /> - Layout', () => {
         </div>,
       );
 
-      expect(document.querySelector(`.${className}`)).to.equal(container.firstChild.firstChild);
+      expect(container.firstChild.firstChild).to.have.class(className);
+      expect(container.firstChild.firstChild).to.have.class('MuiDataGrid-root');
+    });
+
+    it('applies the style to the root component', () => {
+      render(
+        <div style={{ width: 300, height: 300 }}>
+          <XGrid
+            {...baselineProps}
+            style={{
+              border: 0,
+            }}
+          />
+        </div>,
+      );
+
+      // @ts-expect-error need to migrate helpers to TypeScript
+      expect(document.querySelector('.MuiDataGrid-root')).toHaveInlineStyle({
+        border: '0px',
+      });
     });
   });
 });
