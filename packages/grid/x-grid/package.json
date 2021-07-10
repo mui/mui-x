@@ -10,6 +10,10 @@
     "dist/*"
   ],
   "license": "See LICENSE file",
+  "bugs": {
+    "url": "https://github.com/mui-org/material-ui-x/issues"
+  },
+  "homepage": "https://material-ui.com/components/data-grid/",
   "sideEffects": false,
   "publishConfig": {
     "access": "public"
