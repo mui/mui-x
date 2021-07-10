@@ -68,7 +68,7 @@ describe('<XGrid /> - Layout', () => {
           <XGrid
             {...baselineProps}
             style={{
-              border: 0,
+              mixBlendMode: 'darken',
             }}
           />
         </div>,
@@ -76,7 +76,7 @@ describe('<XGrid /> - Layout', () => {
 
       // @ts-expect-error need to migrate helpers to TypeScript
       expect(document.querySelector('.MuiDataGrid-root')).toHaveInlineStyle({
-        border: '0px',
+        mixBlendMode: 'darken',
       });
     });
   });
