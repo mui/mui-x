@@ -46,7 +46,7 @@ export function findGridCellElementsFromCol(col: HTMLElement): NodeListOf<Elemen
   if (!root) {
     throw new Error('Material-UI: The root element is not found.');
   }
-  const cells = root.querySelectorAll(`:scope .${GRID_CELL_CSS_CLASS}[data-field="${field}"]`);
+  const cells = root.querySelectorAll(`.${GRID_CELL_CSS_CLASS}[data-field="${field}"]`);
   return cells;
 }
 
@@ -62,7 +62,7 @@ export function getGridColumnHeaderElement(root: Element, field: string) {
 
 export function getGridRowElement(root: Element, id: GridRowId) {
   return root.querySelector(
-    `:scope .${GRID_ROW_CSS_CLASS}[data-id="${escapeOperandAttributeSelector(String(id))}"]`,
+    `.${GRID_ROW_CSS_CLASS}[data-id="${escapeOperandAttributeSelector(String(id))}"]`,
   ) as HTMLDivElement;
 }
 
