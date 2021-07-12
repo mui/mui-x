@@ -378,7 +378,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         });
       });
 
-      it('should resize flex: 1 column when setting hide: false on a column to avoid exceeding grid width', async () => {
+      it('should resize flex: 1 column when setting hide: false on a column to avoid exceeding grid width', () => {
         const TestCase = (props: DataGridProps) => (
           <div style={{ width: 300, height: 500 }}>
             <DataGrid {...props} />
