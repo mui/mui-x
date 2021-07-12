@@ -125,7 +125,6 @@ export const useStyles = makeStyles(
           flex: 1,
           whiteSpace: 'nowrap',
           overflow: 'hidden',
-          padding: '0 6px',
         },
         '& .MuiDataGrid-sortIcon, & .MuiDataGrid-filterIcon': {
           fontSize: 'inherit',
