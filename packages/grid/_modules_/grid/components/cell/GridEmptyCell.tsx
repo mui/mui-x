@@ -22,7 +22,6 @@ export const GridEmptyCell = React.memo(function GridEmptyCell({
         lineHeight: `${height - 1}px`,
         minHeight: height,
         maxHeight: height,
-        padding: 0,
       }}
       className={GRID_CELL_CSS_CLASS}
     />
