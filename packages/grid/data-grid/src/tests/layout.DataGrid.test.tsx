@@ -7,12 +7,7 @@ import {
 } from 'test/utils';
 import { useFakeTimers, stub } from 'sinon';
 import { expect } from 'chai';
-import {
-  DataGrid,
-  GridValueGetterParams,
-  GridToolbar,
-  DataGridProps,
-} from '@material-ui/data-grid';
+import { DataGrid, GridValueGetterParams, GridToolbar } from '@material-ui/data-grid';
 import { useData } from 'packages/storybook/src/hooks/useData';
 import { getColumnHeaderCell, getColumnValues, raf } from 'test/utils/helperFn';
 
