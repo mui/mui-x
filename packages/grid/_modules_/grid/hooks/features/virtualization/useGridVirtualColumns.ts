@@ -82,26 +82,35 @@ export const useGridVirtualColumns = (
       }
 
       const firstCol = getColumnFromScroll(lastScrollLeftRef.current); // First fully visible column
-      const firstColIndex = visibleColumns.findIndex((col) => col.field === firstCol?.field);
+      const firstVisibleColIndex = visibleColumns.findIndex((col) => col.field === firstCol?.field);
 
-      if (colIndex < firstColIndex) {
+      if (colIndex < firstVisibleColIndex) {
         return false;
       }
 
       const { positions, totalWidth } = columnsMeta;
       const windowWidth = containerPropsRef.current.windowSizes.width;
-      const spaceBeforeFirstCol = positions[firstColIndex] - lastScrollLeftRef.current;
+      const spaceBeforeFirstCol = positions[firstVisibleColIndex] - lastScrollLeftRef.current;
       const availableWidth = windowWidth - spaceBeforeFirstCol;
 
-      const firstOverflowingColIndex = visibleColumns.findIndex((_, index) => {
-        if (index < positions.length - 1) {
-          return positions[index + 1] > availableWidth;
+      const isColumnRightSideVisible = (index: number) => {
+        if (index >= positions.length) {
+          return false;
         }
 
-        return totalWidth > availableWidth;
-      });
+        if (index === positions.length - 1) {
+          return availableWidth >= totalWidth;
+        }
 
-      return firstOverflowingColIndex === -1 || firstOverflowingColIndex > colIndex;
+        return availableWidth >= positions[index + 1];
+      };
+
+      let lastVisibleColIndex = firstVisibleColIndex;
+      while (isColumnRightSideVisible(lastVisibleColIndex + 1)) {
+        lastVisibleColIndex += 1;
+      }
+
+      return colIndex <= lastVisibleColIndex;
     },
     [columnsMeta, getColumnFromScroll, visibleColumns],
   );
