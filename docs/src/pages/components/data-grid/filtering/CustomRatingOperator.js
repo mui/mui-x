@@ -71,6 +71,9 @@ const ratingOnlyOperators = [
 export default function CustomRatingOperator() {
   const { data } = useDemoData({ dataSet: 'Employee', rowLength: 100 });
   const columns = [...data.columns];
+  const [filterModel, setFilterModel] = React.useState({
+    items: [{ columnField: 'rating', value: '3.5', operatorValue: 'from' }],
+  });
 
   if (columns.length > 0) {
     const ratingColumn = columns.find((col) => col.field === 'rating');
@@ -88,9 +91,8 @@ export default function CustomRatingOperator() {
       <DataGrid
         rows={data.rows}
         columns={columns}
-        filterModel={{
-          items: [{ columnField: 'rating', value: '3.5', operatorValue: 'from' }],
-        }}
+        filterModel={filterModel}
+        onFilterModelChange={(model) => setFilterModel(model)}
       />
     </div>
   );

@@ -4,7 +4,7 @@ import { Rating } from '@material-ui/lab';
 import {
   DataGrid,
   GridFilterInputValueProps,
-  getGridNumericColumnOperators,
+  getGridNumericColumnOperators, GridFilterModel,
 } from '@material-ui/data-grid';
 import { useDemoData } from '@material-ui/x-grid-data-generator';
 
@@ -39,13 +39,13 @@ function RatingInputValue(props: GridFilterInputValueProps) {
   );
 }
 
-const filterModel = {
-  items: [{ columnField: 'rating', value: '3.5', operatorValue: '>=' }],
-};
-
 export default function ExtendNumericOperator() {
   const { data } = useDemoData({ dataSet: 'Employee', rowLength: 100 });
   const columns = [...data.columns];
+
+  const [filterModel, setFilterModel] = React.useState<GridFilterModel>({
+    items: [{ columnField: 'rating', value: '3.5', operatorValue: '>=' }],
+  });
 
   if (columns.length > 0) {
     const ratingColumn = columns.find((column) => column.field === 'rating')!;
@@ -64,7 +64,7 @@ export default function ExtendNumericOperator() {
   }
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <DataGrid rows={data.rows} columns={columns} filterModel={filterModel} />
+      <DataGrid rows={data.rows} columns={columns} filterModel={filterModel} onFilterModelChange={(model)=> setFilterModel(model)} />
     </div>
   );
 }

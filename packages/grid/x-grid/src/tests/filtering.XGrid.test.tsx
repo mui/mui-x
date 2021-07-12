@@ -402,7 +402,6 @@ describe('<XGrid /> - Filter', () => {
 
       render(<AddServerFilterGrid />);
       const addButton = screen.getByRole('button', { name: /Add Filter/i });
-      clock.tick(100);
       fireEvent.click(addButton);
       const filterForms = document.querySelectorAll(`.MuiGridFilterForm-root`);
       expect(filterForms).to.have.length(2);
@@ -429,13 +428,12 @@ describe('<XGrid /> - Filter', () => {
         />,
       );
       const addButton = screen.getByRole('button', { name: /Add Filter/i });
-      clock.tick(100);
       fireEvent.click(addButton);
       const filterForms = document.querySelectorAll(`.MuiGridFilterForm-root`);
       expect(filterForms).to.have.length(2);
     });
 
-    it('should not update the filter model when the filterModelProp is set', () => {
+    it('should not update the filter state when the filterModelProp is set', () => {
       const testFilterModel: GridFilterModel = { items: [], linkOperator: GridLinkOperator.Or };
       render(
         <TestCase
@@ -449,7 +447,6 @@ describe('<XGrid /> - Filter', () => {
         />,
       );
       const addButton = screen.getByRole('button', { name: /Add Filter/i });
-      clock.tick(100);
       fireEvent.click(addButton);
       const filterForms = document.querySelectorAll(`.MuiGridFilterForm-root`);
       expect(filterForms).to.have.length(0);
@@ -469,7 +466,6 @@ describe('<XGrid /> - Filter', () => {
       });
       expect(onModelChange.callCount).to.equal(1);
       const addButton = screen.getByRole('button', { name: /Add Filter/i });
-      clock.tick(100);
       fireEvent.click(addButton);
       const filterForms = document.querySelectorAll(`.MuiGridFilterForm-root`);
       expect(filterForms).to.have.length(2);
@@ -508,7 +504,6 @@ describe('<XGrid /> - Filter', () => {
 
       render(<ControlCase />);
       const addButton = screen.getByRole('button', { name: /Add Filter/i });
-      clock.tick(100);
       fireEvent.click(addButton);
 
       const filterForms = document.querySelectorAll(`.MuiGridFilterForm-root`);
