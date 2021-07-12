@@ -182,9 +182,9 @@ export const useStyles = makeStyles(
         '& .MuiDataGrid-menuIcon': {
           visibility: 'hidden',
           fontSize: 20,
-          marginRight: 6,
           display: 'flex',
           alignItems: 'center',
+          zIndex: 10,
         },
         '& .MuiDataGrid-columnHeader:hover .MuiDataGrid-menuIcon, .MuiDataGrid-menuOpen': {
           visibility: 'visible',
