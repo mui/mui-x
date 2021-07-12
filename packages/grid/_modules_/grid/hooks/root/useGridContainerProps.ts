@@ -14,7 +14,10 @@ import { useGridSelector } from '../features/core/useGridSelector';
 import { useGridState } from '../features/core/useGridState';
 import { gridDensityRowHeightSelector } from '../features/density/densitySelector';
 import { visibleGridRowCountSelector } from '../features/filter/gridFilterSelector';
-import { gridPaginationSelector } from '../features/pagination/gridPaginationSelector';
+import {
+  gridPageSizeSelector,
+  gridPageSelector,
+} from '../features/pagination/gridPaginationSelector';
 import { optionsSelector } from '../utils/optionsSelector';
 import { useLogger } from '../utils/useLogger';
 import { useGridApiEventHandler } from './useGridApiEventHandler';
@@ -27,14 +30,15 @@ export const useGridContainerProps = (apiRef: GridApiRef) => {
   const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
   const columnsTotalWidth = useGridSelector(apiRef, gridColumnsTotalWidthSelector);
   const visibleRowsCount = useGridSelector(apiRef, visibleGridRowCountSelector);
-  const paginationState = useGridSelector(apiRef, gridPaginationSelector);
+  const pageState = useGridSelector(apiRef, gridPageSelector);
+  const pageSizeState = useGridSelector(apiRef, gridPageSizeSelector);
   const windowRef = apiRef.current.windowRef;
 
   const getVirtualRowCount = React.useCallback(() => {
     logger.debug('Calculating virtual row count.');
     if (options.pagination && (!options.autoPageSize || options.pageSize)) {
-      const rowsLeft = visibleRowsCount - paginationState.page * paginationState.pageSize;
-      return rowsLeft > paginationState.pageSize ? paginationState.pageSize : rowsLeft;
+      const rowsLeft = visibleRowsCount - pageState.currentPage * pageSizeState;
+      return rowsLeft > pageSizeState ? pageSizeState : rowsLeft;
     }
     return visibleRowsCount;
   }, [
@@ -42,8 +46,8 @@ export const useGridContainerProps = (apiRef: GridApiRef) => {
     options.autoPageSize,
     options.pagination,
     options.pageSize,
-    paginationState.page,
-    paginationState.pageSize,
+    pageState.currentPage,
+    pageSizeState,
     visibleRowsCount,
   ]);
 

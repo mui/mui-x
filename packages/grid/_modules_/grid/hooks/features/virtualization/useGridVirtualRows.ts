@@ -14,8 +14,7 @@ import {
 } from '../columns/gridColumnsSelector';
 import { useGridSelector } from '../core/useGridSelector';
 import { useGridState } from '../core/useGridState';
-import { GridPaginationState } from '../pagination/gridPaginationState';
-import { gridPaginationSelector } from '../pagination/gridPaginationSelector';
+import { gridPageSelector, gridPageSizeSelector } from '../pagination/gridPaginationSelector';
 import { gridRowCountSelector } from '../rows/gridRowsSelector';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
 import { useNativeEventListener } from '../../root/useNativeEventListener';
@@ -35,8 +34,9 @@ export const useGridVirtualRows = (apiRef: GridApiRef): void => {
   const [gridState, setGridState, forceUpdate] = useGridState(apiRef);
   const options = useGridSelector(apiRef, optionsSelector);
   const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
-  const paginationState = useGridSelector<GridPaginationState>(apiRef, gridPaginationSelector);
-  const totalRowCount = useGridSelector<number>(apiRef, gridRowCountSelector);
+  const pageState = useGridSelector(apiRef, gridPageSelector);
+  const pageSizeState = useGridSelector(apiRef, gridPageSizeSelector);
+  const totalRowCount = useGridSelector(apiRef, gridRowCountSelector);
   const visibleColumns = useGridSelector(apiRef, visibleGridColumnsSelector);
   const columnsMeta = useGridSelector(apiRef, gridColumnsMetaSelector);
 
@@ -65,12 +65,8 @@ export const useGridVirtualRows = (apiRef: GridApiRef): void => {
         return null;
       }
       let minRowIdx = 0;
-      if (
-        options.pagination &&
-        paginationState.pageSize != null &&
-        options.paginationMode === 'client'
-      ) {
-        minRowIdx = paginationState.pageSize * paginationState.page;
+      if (options.pagination && pageSizeState != null && options.paginationMode === 'client') {
+        minRowIdx = pageSizeState * pageState.currentPage;
       }
 
       const firstRowIdx = page * apiRef.current.state.containerSizes.viewportPageSize + minRowIdx;
@@ -83,13 +79,7 @@ export const useGridVirtualRows = (apiRef: GridApiRef): void => {
       const rowProps: GridRenderRowProps = { page, firstRowIdx, lastRowIdx };
       return rowProps;
     },
-    [
-      apiRef,
-      options.pagination,
-      paginationState.pageSize,
-      options.paginationMode,
-      paginationState.page,
-    ],
+    [apiRef, options.pagination, pageSizeState, options.paginationMode, pageState.currentPage],
   );
 
   const getRenderingState = React.useCallback((): Partial<GridRenderContextProps> | null => {
@@ -100,11 +90,11 @@ export const useGridVirtualRows = (apiRef: GridApiRef): void => {
     const newRenderCtx: Partial<GridRenderContextProps> = {
       ...renderedColRef.current,
       ...getRenderRowProps(apiRef.current.state.rendering.virtualPage),
-      paginationCurrentPage: paginationState.page,
-      pageSize: paginationState.pageSize,
+      paginationCurrentPage: pageState.currentPage,
+      pageSize: pageSizeState,
     };
     return newRenderCtx;
-  }, [renderedColRef, getRenderRowProps, apiRef, paginationState.page, paginationState.pageSize]);
+  }, [renderedColRef, getRenderRowProps, apiRef, pageState.currentPage, pageSizeState]);
 
   const reRender = React.useCallback(() => {
     const renderingState = getRenderingState();
@@ -167,7 +157,7 @@ export const useGridVirtualRows = (apiRef: GridApiRef): void => {
 
       const pageChanged =
         lastState.rendering.renderContext &&
-        lastState.rendering.renderContext.paginationCurrentPage !== paginationState.page;
+        lastState.rendering.renderContext.paginationCurrentPage !== pageState.currentPage;
       if (forceReRender || requireRerender || pageChanged) {
         reRender();
       }
@@ -175,7 +165,7 @@ export const useGridVirtualRows = (apiRef: GridApiRef): void => {
     [
       apiRef,
       logger,
-      paginationState.page,
+      pageState.currentPage,
       reRender,
       scrollTo,
       setRenderingState,
@@ -221,7 +211,7 @@ export const useGridVirtualRows = (apiRef: GridApiRef): void => {
       if (params.rowIndex != null) {
         const elementIndex = !options.pagination
           ? params.rowIndex
-          : params.rowIndex - paginationState.page * paginationState.pageSize;
+          : params.rowIndex - pageState.currentPage * pageSizeState;
 
         const scrollBottom = windowRef.current!.clientHeight + windowRef.current!.scrollTop;
         const elementBottom = rowHeight * elementIndex + rowHeight;
@@ -245,8 +235,8 @@ export const useGridVirtualRows = (apiRef: GridApiRef): void => {
       logger,
       apiRef,
       options.pagination,
-      paginationState.page,
-      paginationState.pageSize,
+      pageState.currentPage,
+      pageSizeState,
       gridState,
       windowRef,
       columnsMeta.positions,
@@ -334,16 +324,16 @@ export const useGridVirtualRows = (apiRef: GridApiRef): void => {
 
   React.useEffect(() => {
     if (
-      gridState.rendering.renderContext?.paginationCurrentPage !== gridState.pagination.page &&
+      gridState.rendering.renderContext?.paginationCurrentPage !== pageState.currentPage &&
       apiRef.current.updateViewport
     ) {
-      logger.debug(`State pagination.page changed to ${gridState.pagination.page}. `);
+      logger.debug(`State page.currentPage changed to ${pageState.currentPage}. `);
       apiRef.current.updateViewport(true);
       resetScroll();
     }
   }, [
     apiRef,
-    gridState.pagination.page,
+    pageState.currentPage,
     gridState.rendering.renderContext?.paginationCurrentPage,
     logger,
     resetScroll,

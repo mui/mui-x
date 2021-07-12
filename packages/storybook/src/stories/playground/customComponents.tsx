@@ -50,9 +50,9 @@ export function PaginationComponent(props: { color?: 'primary' }) {
   return (
     <Pagination
       className="my-custom-pagination"
-      page={state.pagination.page}
+      page={state.page.currentPage}
       color={props.color}
-      count={state.pagination.pageCount}
+      count={state.page.pageCount}
       onChange={(event, value) => apiRef.current.setPage(value)}
     />
   );
@@ -68,8 +68,8 @@ export function CustomFooter(props) {
       </span>
       <Pagination
         className="my-custom-pagination"
-        page={state.pagination.page}
-        count={state.pagination.pageCount}
+        page={state.page.currentPage}
+        count={state.page.pageCount}
         onChange={(event, value) => apiRef.current.setPage(value)}
       />
     </GridFooterContainer>
@@ -79,9 +79,7 @@ export function CustomFooter(props) {
 export function FooterComponent2() {
   const { state } = useGridSlotComponentProps();
 
-  return (
-    <div className="footer my-custom-footer"> I counted {state.pagination.rowCount} row(s) </div>
-  );
+  return <div className="footer my-custom-footer"> I counted {state.page.rowCount} row(s) </div>;
 }
 
 export function CustomHeader(props) {

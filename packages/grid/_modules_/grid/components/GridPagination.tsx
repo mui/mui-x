@@ -3,7 +3,10 @@ import TablePagination from '@material-ui/core/TablePagination';
 import { Theme } from '@material-ui/core/styles';
 import { makeStyles } from '@material-ui/styles';
 import { useGridSelector } from '../hooks/features/core/useGridSelector';
-import { gridPaginationSelector } from '../hooks/features/pagination/gridPaginationSelector';
+import {
+  gridPageSizeSelector,
+  gridPageSelector,
+} from '../hooks/features/pagination/gridPaginationSelector';
 import { optionsSelector } from '../hooks/utils/optionsSelector';
 import { useGridApiContext } from '../hooks/root/useGridApiContext';
 import { isMuiV5, createTheme } from '../utils';
@@ -43,10 +46,12 @@ export const GridPagination = React.forwardRef<
 >(function GridPagination(props, ref) {
   const classes = useStyles();
   const apiRef = useGridApiContext();
-  const paginationState = useGridSelector(apiRef, gridPaginationSelector);
+  const pageState = useGridSelector(apiRef, gridPageSelector);
+  const pageSizeState = useGridSelector(apiRef, gridPageSizeSelector);
+
   const lastPage = React.useMemo(
-    () => Math.floor(paginationState.rowCount / (paginationState.pageSize || 1)),
-    [paginationState.rowCount, paginationState.pageSize],
+    () => Math.floor(pageState.rowCount / (pageSizeState || 1)),
+    [pageState.rowCount, pageSizeState],
   );
   const options = useGridSelector(apiRef, optionsSelector);
 
@@ -88,15 +93,14 @@ export const GridPagination = React.forwardRef<
         input: classes.input,
       }}
       component="div"
-      count={paginationState.rowCount}
-      page={paginationState.page <= lastPage ? paginationState.page : lastPage}
+      count={pageState.rowCount}
+      page={pageState.currentPage <= lastPage ? pageState.currentPage : lastPage}
       rowsPerPageOptions={
-        options.rowsPerPageOptions &&
-        options.rowsPerPageOptions.indexOf(paginationState.pageSize) > -1
+        options.rowsPerPageOptions && options.rowsPerPageOptions.indexOf(pageSizeState) > -1
           ? options.rowsPerPageOptions
           : []
       }
-      rowsPerPage={paginationState.pageSize}
+      rowsPerPage={pageSizeState}
       {...apiRef!.current.getLocaleText('MuiTablePagination')}
       {...getPaginationChangeHandlers()}
       {...props}

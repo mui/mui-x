@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useGridSelector } from '../hooks/features/core/useGridSelector';
-import { gridPaginationSelector } from '../hooks/features/pagination/gridPaginationSelector';
+import { gridPageSizeSelector } from '../hooks/features/pagination/gridPaginationSelector';
 import { gridRowCountSelector } from '../hooks/features/rows/gridRowsSelector';
 import { selectedGridRowsCountSelector } from '../hooks/features/selection/gridSelectionSelector';
 import { visibleGridRowCountSelector } from '../hooks/features/filter/gridFilterSelector';
@@ -16,7 +16,7 @@ export const GridFooter = React.forwardRef<HTMLDivElement, GridFooterContainerPr
     const totalRowCount = useGridSelector(apiRef, gridRowCountSelector);
     const options = useGridSelector(apiRef, optionsSelector);
     const selectedRowCount = useGridSelector(apiRef, selectedGridRowsCountSelector);
-    const pagination = useGridSelector(apiRef, gridPaginationSelector);
+    const pageSize = useGridSelector(apiRef, gridPageSizeSelector);
     const visibleRowCount = useGridSelector(apiRef, visibleGridRowCountSelector);
 
     const SelectedRowCountElement =
@@ -33,7 +33,7 @@ export const GridFooter = React.forwardRef<HTMLDivElement, GridFooterContainerPr
 
     const PaginationComponent =
       !!options.pagination &&
-      pagination.pageSize != null &&
+      pageSize != null &&
       !options.hideFooterPagination &&
       apiRef?.current.components.Pagination;
 

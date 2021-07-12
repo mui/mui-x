@@ -1,19 +1,27 @@
 import { createSelector } from 'reselect';
-import { GridPaginationState } from './gridPaginationState';
 import { GridState } from '../core/gridState';
 import { GridRowId } from '../../../models/gridRows';
 import { visibleSortedGridRowIdsSelector } from '../filter/gridFilterSelector';
+import { GridPageState, GridPageSizeState } from './gridPaginationState';
 
-export const gridPaginationSelector = (state: any): GridPaginationState => state.pagination;
+export const gridPageSelector = (state: any): GridPageState => state.page;
+
+export const gridPageSizeSelector = (state: any): GridPageSizeState => state.pageSize;
 
 export const gridPaginatedVisibleSortedGridRowIdsSelector = createSelector<
   GridState,
-  GridPaginationState,
+  GridPageState,
+  GridPageSizeState,
   GridRowId[],
   GridRowId[]
->(gridPaginationSelector, visibleSortedGridRowIdsSelector, (paginationState, visibleSortedRows) => {
-  const firstSelectedRowIndex = paginationState.page * paginationState.pageSize;
-  const lastSelectedRowIndex = firstSelectedRowIndex + paginationState.pageSize;
+>(
+  gridPageSelector,
+  gridPageSizeSelector,
+  visibleSortedGridRowIdsSelector,
+  (pageState, pageSize, visibleSortedRows) => {
+    const firstSelectedRowIndex = pageState.currentPage * pageSize;
+    const lastSelectedRowIndex = firstSelectedRowIndex + pageSize;
 
-  return visibleSortedRows.slice(firstSelectedRowIndex, lastSelectedRowIndex);
-});
+    return visibleSortedRows.slice(firstSelectedRowIndex, lastSelectedRowIndex);
+  },
+);

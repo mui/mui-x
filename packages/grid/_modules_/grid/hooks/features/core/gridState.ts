@@ -22,7 +22,6 @@ import {
   VisibleGridRowsState,
 } from '../filter/visibleGridRowsState';
 import { GridFocusState, GridTabIndexState } from '../focus/gridFocusState';
-import { GridPaginationState } from '../pagination/gridPaginationState';
 import { GridPreferencePanelState } from '../preferencesPanel/gridPreferencePanelState';
 import { getInitialGridRowState, InternalGridRowsState } from '../rows/gridRowsState';
 import { GridSelectionState } from '../selection/gridSelectionState';
@@ -31,11 +30,13 @@ import {
   getInitialGridRenderingState,
   InternalRenderingState,
 } from '../virtualization/renderingState';
+import { GridPageState, GridPageSizeState } from '../pagination/gridPaginationState';
 
 export interface GridState {
   rows: InternalGridRowsState;
   editRows: GridEditRowsModel;
-  pagination: GridPaginationState;
+  page: GridPageState;
+  pageSize: GridPageSizeState;
   options: GridOptions;
   isScrolling: boolean;
   columns: GridInternalColumns;
@@ -60,12 +61,12 @@ export interface GridState {
 export const getInitialGridState = (): GridState => ({
   rows: getInitialGridRowState(),
   editRows: {},
-  pagination: {
-    page: 0,
+  page: {
+    currentPage: 0,
     pageCount: 0,
-    pageSize: 100,
     rowCount: 0,
   },
+  pageSize: 100,
   options: DEFAULT_GRID_OPTIONS,
   isScrolling: false,
   columns: getInitialGridColumnsState(),
