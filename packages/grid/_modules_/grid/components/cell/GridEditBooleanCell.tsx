@@ -31,11 +31,10 @@ export function GridEditBooleanCell(
   const handleChange = React.useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const newValue = event.target.checked;
-      const editProps = { value: newValue };
       setValueState(newValue);
-      api.changeCellEditProps({ id: idProp, field, props: editProps }, event);
+      api.setEditCellValue({ id, field, value: newValue }, event);
     },
-    [api, field, idProp],
+    [api, field, id],
   );
 
   React.useEffect(() => {

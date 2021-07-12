@@ -130,9 +130,10 @@ export function useGridEditRows(apiRef: GridApiRef) {
     [options.isCellEditable],
   );
 
-  const changeCellEditProps = React.useCallback(
-    (params: GridEditCellPropsParams, event?: React.SyntheticEvent) => {
-      apiRef.current.publishEvent(GRID_CELL_EDIT_PROPS_CHANGE, params, event);
+  const setEditCellValue = React.useCallback(
+    (params: GridEditCellValueParams, event?: React.SyntheticEvent) => {
+      const newParams = { id: params.id, field: params.field, props: { value: params.value } };
+      apiRef.current.publishEvent(GRID_CELL_EDIT_PROPS_CHANGE, newParams, event);
     },
     [apiRef],
   );
@@ -340,7 +341,9 @@ export function useGridEditRows(apiRef: GridApiRef) {
     GRID_CELL_EDIT_PROPS_CHANGE_COMMITTED,
     options.onEditCellChangeCommitted,
   );
+  // TODO rename to onEditCellPropsChange
   useGridApiOptionHandler(apiRef, GRID_CELL_EDIT_PROPS_CHANGE, options.onEditCellChange);
+  // TODO remove because onEditCellChange does the same
   useGridApiOptionHandler(apiRef, GRID_CELL_VALUE_CHANGE, options.onCellValueChange);
   useGridApiOptionHandler(apiRef, GRID_CELL_MODE_CHANGE, options.onCellModeChange);
   useGridApiOptionHandler(apiRef, GRID_ROW_EDIT_MODEL_CHANGE, options.onEditRowModelChange);
@@ -352,11 +355,11 @@ export function useGridEditRows(apiRef: GridApiRef) {
       getCellMode,
       isCellEditable,
       commitCellChange,
-      setEditCellProps,
+      setEditCellProps, // TODO don't expose, update the editRowsModel prop directly
       getEditCellPropsParams,
       setEditRowsModel,
       getEditRowsModel,
-      changeCellEditProps,
+      setEditCellValue,
     },
     'EditRowApi',
   );

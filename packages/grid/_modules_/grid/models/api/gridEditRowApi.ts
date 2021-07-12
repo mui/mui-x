@@ -2,7 +2,11 @@ import { GridCellMode } from '../gridCell';
 import { GridEditRowsModel } from '../gridEditRowModel';
 import { GridRowId } from '../gridRows';
 import { GridCellParams } from '../params/gridCellParams';
-import { GridEditCellPropsParams, GridCommitCellChangeParams } from '../params/gridEditCellParams';
+import {
+  GridEditCellPropsParams,
+  GridCommitCellChangeParams,
+  GridEditCellValueParams,
+} from '../params/gridEditCellParams';
 
 /**
  * The editing API interface that is available in the grid `apiRef`.
@@ -44,13 +48,13 @@ export interface GridEditRowApi {
    */
   setEditCellProps: (params: GridEditCellPropsParams) => void;
   /**
-   * Sets the input props of the edit cell and call `onEditCellChange` after the change.
-   * @param {GridEditCellPropsParams} params The params to set.
+   * Sets the value of the edit cell.
+   * @param {GridEditCellValueParams} params Contains the id, field and value to set.
    * @param {React.SyntheticEvent} event The event to pass forward.
    */
-  changeCellEditProps: (params: GridEditCellPropsParams, event: React.SyntheticEvent) => void;
+  setEditCellValue: (params: GridEditCellValueParams, event?: React.SyntheticEvent) => void;
   /**
-   * Gets the params to be passed when calling `setEditCellProps` or `changeCellEditProps`.
+   * Gets the params to be passed when calling `setEditCellProps`.
    * @param {GridRowId} rowId The id of the row.
    * @param {string} field The column field.
    * @returns {GridEditCellPropsParams} The params.
