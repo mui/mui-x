@@ -1,7 +1,38 @@
 import * as React from 'react';
 import { useEventCallback as muiUseEventCallback } from '@material-ui/core/utils';
 import { getThemeProps } from '@material-ui/styles';
-import { useTheme } from '@material-ui/core/styles';
+import { StyledComponentProps, useTheme } from '@material-ui/core/styles';
+
+/**
+ * TODO import from the v5 directly
+ *
+ * Remove properties `K` from `T`.
+ * Distributive for union types.
+ *
+ * @internal
+ */
+export type DistributiveOmit<T, K extends keyof any> = T extends any ? Omit<T, K> : never;
+
+/**
+ * TODO import from the core v5 directly
+ *
+ * @private ONLY USE FROM WITHIN mui-org/material-ui
+ *
+ * Internal helper type for conform (describeConformance) components
+ * However, we don't declare classes on this type.
+ * It is recommended to declare them manually with an interface so that each class can have a separate JSDOC.
+ */
+export type InternalStandardProps<C, Removals extends keyof C = never> = DistributiveOmit<
+  C,
+  'classes' | Removals
+> &
+  // each component declares it's classes in a separate interface for proper JSDOC
+  StyledComponentProps<never> & {
+    ref?: C extends { ref?: infer RefType } ? RefType : React.Ref<unknown>;
+    // TODO: Remove implicit props. Up to each component.
+    className?: string;
+    style?: React.CSSProperties;
+  };
 
 export function useEventCallback<T extends (...args: any[]) => any>(func: T): T {
   // @ts-expect-error TODO remove wrapper once upgraded to v5
