@@ -16,6 +16,7 @@ import { GridMenu } from '../menu/GridMenu';
 
 export const GridToolbarDensitySelector = React.forwardRef<HTMLButtonElement, ButtonProps>(
   function GridToolbarDensitySelector(props, ref) {
+    const { onClick, ...other } = props;
     const apiRef = useGridApiContext();
     const options = useGridSelector(apiRef, optionsSelector);
     const densityValue = useGridSelector(apiRef, gridDensityValueSelector);
@@ -56,7 +57,10 @@ export const GridToolbarDensitySelector = React.forwardRef<HTMLButtonElement, Bu
       }
     }, [densityValue, DensityCompactIcon, DensityComfortableIcon, DensityStandardIcon]);
 
-    const handleDensitySelectorOpen = (event) => setAnchorEl(event.currentTarget);
+    const handleDensitySelectorOpen = (event) => {
+      setAnchorEl(event.currentTarget);
+      onClick?.(event);
+    };
     const handleDensitySelectorClose = () => setAnchorEl(null);
     const handleDensityUpdate = (newDensity: GridDensity) => {
       apiRef!.current.setDensity(newDensity);
@@ -95,13 +99,13 @@ export const GridToolbarDensitySelector = React.forwardRef<HTMLButtonElement, Bu
           color="primary"
           size="small"
           startIcon={getSelectedDensityIcon()}
-          onClick={handleDensitySelectorOpen}
           aria-label={apiRef!.current.getLocaleText('toolbarDensityLabel')}
           aria-expanded={anchorEl ? 'true' : undefined}
           aria-haspopup="menu"
           aria-labelledby={densityMenuId}
           id={densityButtonId}
-          {...props}
+          {...other}
+          onClick={handleDensitySelectorOpen}
         >
           {apiRef!.current.getLocaleText('toolbarDensity')}
         </Button>

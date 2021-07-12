@@ -76,4 +76,8 @@ export interface GridComponentProps extends GridOptionsProp {
    * Set the whole state of the grid.
    */
   state?: Partial<GridState>;
+  /**
+   * @ignore
+   */
+  style?: React.CSSProperties;
 }

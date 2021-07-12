@@ -7,7 +7,12 @@ import {
 } from 'test/utils';
 import { useFakeTimers, stub } from 'sinon';
 import { expect } from 'chai';
-import { DataGrid, GridValueGetterParams, GridToolbar } from '@material-ui/data-grid';
+import {
+  DataGrid,
+  GridValueGetterParams,
+  GridToolbar,
+  DataGridProps,
+} from '@material-ui/data-grid';
 import { useData } from 'packages/storybook/src/hooks/useData';
 import { getColumnHeaderCell, getColumnValues, raf } from 'test/utils/helperFn';
 
@@ -370,6 +375,61 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         // @ts-expect-error need to migrate helpers to TypeScript
         expect(firstColumn).toHaveInlineStyle({
           width: '198px', // because of the 2px border
+        });
+      });
+
+      it('should resize flex: 1 column when setting hide: false on a column to avoid exceeding grid width', async () => {
+        const TestCase: React.FC<DataGridProps> = (props) => (
+          <div style={{ width: 300, height: 500 }}>
+            <DataGrid {...props} />
+          </div>
+        );
+
+        const { setProps } = render(
+          <TestCase
+            rows={[
+              {
+                id: 1,
+                first: 'Mike',
+                age: 11,
+              },
+              {
+                id: 2,
+                first: 'Jack',
+                age: 11,
+              },
+              {
+                id: 3,
+                first: 'Mike',
+                age: 20,
+              },
+            ]}
+            columns={[
+              { field: 'id', flex: 1 },
+              { field: 'first', width: 100 },
+              { field: 'age', width: 50, hide: true },
+            ]}
+          />,
+        );
+
+        let firstColumn = document.querySelector('[role="columnheader"][aria-colindex="1"]');
+        // @ts-expect-error need to migrate helpers to TypeScript
+        expect(firstColumn).toHaveInlineStyle({
+          width: '198px', // because of the 2px border
+        });
+
+        setProps({
+          columns: [
+            { field: 'clientId', flex: 1 },
+            { field: 'first', width: 100 },
+            { field: 'age', width: 50 },
+          ],
+        });
+
+        firstColumn = document.querySelector('[role="columnheader"][aria-colindex="1"]');
+        // @ts-expect-error need to migrate helpers to TypeScript
+        expect(firstColumn).toHaveInlineStyle({
+          width: '148px', // because of the 2px border
         });
       });
 
