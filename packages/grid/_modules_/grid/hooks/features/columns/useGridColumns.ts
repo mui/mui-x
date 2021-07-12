@@ -38,13 +38,12 @@ import { GRID_STRING_COL_DEF } from '../../../models/colDef/gridStringColDef';
 function updateColumnsWidth(columns: GridColumns, viewportWidth: number): GridColumns {
   const numberOfFluidColumns = columns.filter((column) => !!column.flex && !column.hide).length;
   let flexDivider = 0;
-  let flexViewportWidth = viewportWidth;
 
-  if (numberOfFluidColumns && flexViewportWidth) {
+  if (numberOfFluidColumns && viewportWidth) {
     columns.forEach((column) => {
       if (!column.hide) {
         if (!column.flex) {
-          flexViewportWidth -= column.width!;
+          viewportWidth -= column.width!;
         } else {
           flexDivider += column.flex;
         }
@@ -54,7 +53,7 @@ function updateColumnsWidth(columns: GridColumns, viewportWidth: number): GridCo
 
   let newColumns = columns;
   if (numberOfFluidColumns) {
-    const flexMultiplier = flexViewportWidth / flexDivider;
+    const flexMultiplier = viewportWidth / flexDivider;
     newColumns = columns.map((column) => {
       if (!column.flex) {
         return column;
@@ -62,30 +61,10 @@ function updateColumnsWidth(columns: GridColumns, viewportWidth: number): GridCo
       return {
         ...column,
         width:
-          flexViewportWidth > 0
-            ? Math.floor(flexMultiplier * column.flex!)
-            : GRID_STRING_COL_DEF.width,
+          viewportWidth > 0 ? Math.floor(flexMultiplier * column.flex!) : GRID_STRING_COL_DEF.width,
       };
     });
-
-    const totalVisibleWidth = newColumns.reduce(
-      (totalW, curCol) => totalW + (curCol.hide ? 0 : curCol.width!),
-      0,
-    );
-    if (totalVisibleWidth < viewportWidth) {
-      let gap = viewportWidth - totalVisibleWidth;
-      let i = 0;
-      while (i < newColumns.length && gap > 0) {
-        const column = newColumns[i];
-        if (column.flex && !column.hide) {
-          column.width! += 1;
-          gap -= 1;
-        }
-        i += 1;
-      }
-    }
   }
-
   return newColumns;
 }
 
