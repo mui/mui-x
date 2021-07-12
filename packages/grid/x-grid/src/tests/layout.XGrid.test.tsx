@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { createClientRenderStrictMode } from 'test/utils';
 import { expect } from 'chai';
-import {GridApiRef, useGridApiRef, XGrid} from '@material-ui/x-grid';
+import { GridApiRef, useGridApiRef, XGrid } from '@material-ui/x-grid';
 
 describe('<XGrid /> - Layout', () => {
   // TODO v5: replace with createClientRender
@@ -83,43 +83,43 @@ describe('<XGrid /> - Layout', () => {
 
   describe('columns width', () => {
     it('should resize flex: 1 column when changing column visibility to avoid exceeding grid width', () => {
-      let apiRef: GridApiRef
+      let apiRef: GridApiRef;
 
       const TestCase = (props) => {
         apiRef = useGridApiRef();
 
         return (
-            <div style={{ width: 300, height: 500 }}>
-              <XGrid {...props} apiRef={apiRef} />
-            </div>
+          <div style={{ width: 300, height: 500 }}>
+            <XGrid {...props} apiRef={apiRef} />
+          </div>
         );
       };
 
       render(
-          <TestCase
-              rows={[
-                {
-                  id: 1,
-                  first: 'Mike',
-                  age: 11,
-                },
-                {
-                  id: 2,
-                  first: 'Jack',
-                  age: 11,
-                },
-                {
-                  id: 3,
-                  first: 'Mike',
-                  age: 20,
-                },
-              ]}
-              columns={[
-                { field: 'id', flex: 1 },
-                { field: 'first', width: 100 },
-                { field: 'age', width: 50, hide: true },
-              ]}
-          />,
+        <TestCase
+          rows={[
+            {
+              id: 1,
+              first: 'Mike',
+              age: 11,
+            },
+            {
+              id: 2,
+              first: 'Jack',
+              age: 11,
+            },
+            {
+              id: 3,
+              first: 'Mike',
+              age: 20,
+            },
+          ]}
+          columns={[
+            { field: 'id', flex: 1 },
+            { field: 'first', width: 100 },
+            { field: 'age', width: 50, hide: true },
+          ]}
+        />,
       );
 
       let firstColumn = document.querySelector('[role="columnheader"][aria-colindex="1"]');
@@ -135,5 +135,5 @@ describe('<XGrid /> - Layout', () => {
         width: '148px', // because of the 2px border
       });
     });
-  })
+  });
 });
