@@ -32,7 +32,7 @@ export const useGridPageSize = (
   );
 
   React.useEffect(() => {
-    apiRef.current.updateControlState<number>({
+    apiRef.current.updateControlState({
       stateId: 'pageSize',
       propModel: props.pageSize,
       propOnChange: props.onPageSizeChange,
@@ -55,11 +55,11 @@ export const useGridPageSize = (
       pageSize = autoPageSize ?? 0;
     }
 
-    if (props.autoPageSize && autoPageSize !== prevPageSize && autoPageSize !== undefined) {
-      apiRef.current.publishEvent(GRID_PAGE_SIZE_CHANGE, autoPageSize);
-    }
-
     if (pageSize !== prevPageSize) {
+      if (props.autoPageSize) {
+        apiRef.current.publishEvent(GRID_PAGE_SIZE_CHANGE, autoPageSize);
+      }
+
       setGridState((oldState) => ({
         ...oldState,
         pageSize,

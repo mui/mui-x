@@ -10,9 +10,11 @@ import { GridPageSizeState } from './gridPaginationState';
 import { visibleGridRowCountSelector } from '../filter';
 
 const getPageCount = (rowCount: number, pageSize: GridPageSizeState): number => {
-  const pageCount = pageSize && rowCount > 0 ? Math.ceil(rowCount / pageSize) : 0;
+  if (pageSize > 0 && rowCount > 0) {
+    return Math.ceil(rowCount / pageSize);
+  }
 
-  return pageCount;
+  return 0;
 };
 
 export const useGridPage = (
@@ -40,7 +42,7 @@ export const useGridPage = (
   );
 
   React.useEffect(() => {
-    apiRef.current.updateControlState<number>({
+    apiRef.current.updateControlState({
       stateId: 'page',
       propModel: props.page,
       propOnChange: props.onPageChange,
@@ -85,12 +87,13 @@ export const useGridPage = (
     (pageSize: GridPageSizeState) => {
       setGridState((oldState) => {
         const pageCount = getPageCount(oldState.page.rowCount, pageSize);
+
         return {
           ...oldState,
           page: {
             ...oldState.page,
             pageCount,
-            currentPage: Math.min(pageCount - 1, oldState.page.currentPage),
+            currentPage: Math.min(oldState.page.currentPage, pageCount - 1),
           },
         };
       });
