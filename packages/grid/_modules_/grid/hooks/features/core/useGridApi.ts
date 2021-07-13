@@ -8,6 +8,8 @@ import { useGridApiMethod } from '../../root/useGridApiMethod';
 import { useLogger } from '../../utils/useLogger';
 import { getInitialGridState, GridState } from './gridState';
 
+import { GridStateGetter } from '../../../models/api/gridStateApi';
+
 export const useGridApi = (apiRef: GridApiRef): GridApi => {
   const logger = useLogger('useGridApi');
   const [, forceUpdate] = React.useState<GridState>();
@@ -18,9 +20,9 @@ export const useGridApi = (apiRef: GridApiRef): GridApi => {
     apiRef.current.forceUpdate = forceUpdate;
   }
 
-  const getState = React.useCallback(
-    <Key extends keyof GridState | undefined = undefined>(stateId?: Key): Key extends keyof GridState ? GridState[Key] : GridState =>
-      (stateId ? apiRef.current.state[stateId as keyof GridState] : apiRef.current.state),
+  const getState = React.useCallback<GridStateGetter>(
+    (stateId) =>
+      stateId ? apiRef.current.state[stateId as keyof GridState] : apiRef.current.state,
     [apiRef],
   );
 

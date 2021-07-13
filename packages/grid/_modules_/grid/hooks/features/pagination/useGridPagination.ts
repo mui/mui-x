@@ -48,9 +48,7 @@ export const useGridPagination = (apiRef: GridApiRef): void => {
       }));
       forceUpdate();
 
-      const params = apiRef.current.getState<GridPaginationState>(
-        'pagination',
-      ) as GridPageChangeParams;
+      const params = apiRef.current.getState('pagination') as GridPageChangeParams;
       apiRef.current.publishEvent(GRID_PAGE_CHANGE, {
         // TODO remove params
         ...params,
@@ -76,9 +74,7 @@ export const useGridPagination = (apiRef: GridApiRef): void => {
       }));
       forceUpdate();
 
-      const params = apiRef.current.getState<GridPaginationState>(
-        'pagination',
-      ) as GridPageChangeParams;
+      const params = apiRef.current.getState('pagination') as GridPageChangeParams;
       apiRef.current.publishEvent(GRID_PAGE_SIZE_CHANGE, {
         // TODO remove params
         ...params,
@@ -106,9 +102,7 @@ export const useGridPagination = (apiRef: GridApiRef): void => {
     }
 
     if (options.autoPageSize && autoPageSize !== prevPageSize && autoPageSize !== undefined) {
-      const params = apiRef.current.getState<GridPaginationState>(
-        'pagination',
-      ) as GridPageChangeParams;
+      const params = apiRef.current.getState('pagination') as GridPageChangeParams;
       apiRef.current.publishEvent(GRID_PAGE_SIZE_CHANGE, { ...params, pageSize: autoPageSize });
     }
 
