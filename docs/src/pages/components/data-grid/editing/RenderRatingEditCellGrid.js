@@ -22,8 +22,7 @@ function RatingEditInputCell(props) {
   const classes = useStyles();
 
   const handleChange = (event) => {
-    const editProps = { value: Number(event.target.value) };
-    api.setEditCellProps({ id, field, props: editProps });
+    api.setEditCellValue({ id, field, value: Number(event.target.value) }, event);
     // Check if the event is not from the keyboard
     // https://github.com/facebook/react/issues/7407
     if (event.nativeEvent.clientX !== 0 && event.nativeEvent.clientY !== 0) {

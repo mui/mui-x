@@ -33,8 +33,7 @@ export function GridEditSingleSelectCell(props: GridCellParams & SelectProps) {
   } = props;
 
   const handleChange = (event) => {
-    const editProps = { value: event.target.value };
-    api.setEditCellProps({ id, field, props: editProps }, event);
+    api.setEditCellValue({ id, field, value: event.target.value }, event);
     if (!event.key) {
       api.commitCellChange({ id, field }, event);
       api.setCellMode(id, field, 'view');
