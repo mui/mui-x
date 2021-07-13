@@ -41,7 +41,7 @@ export const useGridFilter = (
 
   const getFilterModelParams = React.useCallback(
     (): GridFilterModelParams => ({
-      filterModel: apiRef.current.getState<GridFilterModelState>('filter'),
+      filterModel: apiRef.current.getState('filter'),
       api: apiRef.current,
       columns: apiRef.current.getAllColumns(),
       rows: apiRef.current.getRowModels(),
@@ -323,7 +323,7 @@ export const useGridFilter = (
 
   const onColUpdated = React.useCallback(() => {
     logger.debug('onColUpdated - GridColumns changed, applying filters');
-    const filterState = apiRef.current.getState<GridFilterModelState>('filter');
+    const filterState = apiRef.current.getState('filter');
     const columnsIds = filterableGridColumnsIdsSelector(apiRef.current.state);
     logger.debug('GridColumns changed, applying filters');
 

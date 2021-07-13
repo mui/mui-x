@@ -19,8 +19,8 @@ export const useGridApi = (apiRef: GridApiRef): GridApi => {
   }
 
   const getState = React.useCallback(
-    <State>(stateId?: string) =>
-      (stateId ? apiRef.current.state[stateId] : apiRef.current.state) as State,
+    <Key extends keyof GridState | undefined = undefined>(stateId?: Key): Key extends keyof GridState ? GridState[Key] : GridState =>
+      (stateId ? apiRef.current.state[stateId as keyof GridState] : apiRef.current.state),
     [apiRef],
   );
 
