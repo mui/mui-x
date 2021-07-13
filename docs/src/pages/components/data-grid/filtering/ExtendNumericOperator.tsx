@@ -4,7 +4,8 @@ import { Rating } from '@material-ui/lab';
 import {
   DataGrid,
   GridFilterInputValueProps,
-  getGridNumericColumnOperators, GridFilterModel,
+  getGridNumericColumnOperators,
+  GridFilterModel,
 } from '@material-ui/data-grid';
 import { useDemoData } from '@material-ui/x-grid-data-generator';
 
@@ -64,7 +65,12 @@ export default function ExtendNumericOperator() {
   }
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <DataGrid rows={data.rows} columns={columns} filterModel={filterModel} onFilterModelChange={(model)=> setFilterModel(model)} />
+      <DataGrid
+        rows={data.rows}
+        columns={columns}
+        filterModel={filterModel}
+        onFilterModelChange={(model) => setFilterModel(model)}
+      />
     </div>
   );
 }

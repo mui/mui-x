@@ -199,7 +199,6 @@ export const useGridFilter = (
         };
         return newState;
       });
-
       applyFilters();
     },
     [applyFilters, logger, setGridState],

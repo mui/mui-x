@@ -75,6 +75,18 @@ describe('<DataGrid /> - Filter', () => {
     );
   };
 
+  it('should throw for more than one filter item', () => {
+    expect(() => {
+      render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid rows={[]} columns={[]} filterModel={{ items: [{}, {}] }} />
+        </div>,
+      );
+    })
+      // @ts-expect-error need to migrate helpers to TypeScript
+      .toErrorDev('`model.items` has more than 1 item');
+  });
+
   it('should apply the filterModel prop correctly', () => {
     render(<TestCase value="a" operatorValue="contains" />);
     expect(getColumnValues()).to.deep.equal(['Adidas', 'Puma']);

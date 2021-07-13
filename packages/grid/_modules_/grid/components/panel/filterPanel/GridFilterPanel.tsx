@@ -46,11 +46,9 @@ export function GridFilterPanel() {
     [apiRef],
   );
 
-  React.useEffect(() => {
-    if (gridState.filter.items.length === 0) {
-      addNewFilter();
-    }
-  }, [addNewFilter, gridState.filter.items.length]);
+  if (gridState.filter.items.length === 0) {
+    addNewFilter();
+  }
 
   return (
     <GridPanelWrapper>

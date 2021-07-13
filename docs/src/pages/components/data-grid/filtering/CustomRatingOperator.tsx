@@ -4,7 +4,8 @@ import { Rating } from '@material-ui/lab';
 import {
   GridFilterInputValueProps,
   DataGrid,
-  GridFilterItem, GridFilterModel,
+  GridFilterItem,
+  GridFilterModel,
 } from '@material-ui/data-grid';
 import { useDemoData } from '@material-ui/x-grid-data-generator';
 
@@ -84,7 +85,7 @@ export default function CustomRatingOperator() {
         rows={data.rows}
         columns={columns}
         filterModel={filterModel}
-        onFilterModelChange={(model)=> setFilterModel(model)}
+        onFilterModelChange={(model) => setFilterModel(model)}
       />
     </div>
   );
