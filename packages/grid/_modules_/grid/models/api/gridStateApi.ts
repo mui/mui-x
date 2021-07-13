@@ -12,7 +12,7 @@ export interface GridStateApi {
    * @returns {any} The whole state or part of it.
    */
   getState: <StateId extends keyof GridState | undefined = undefined>(
-      stateId?: StateId,
+    stateId?: StateId,
   ) => StateId extends keyof GridState ? GridState[StateId] : GridState;
   /**
    * Sets the whole state of the grid.
