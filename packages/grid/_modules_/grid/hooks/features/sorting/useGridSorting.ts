@@ -15,7 +15,7 @@ import { GridColDef } from '../../../models/colDef/gridColDef';
 import { GridFeatureModeConstant } from '../../../models/gridFeatureMode';
 import { GridColumnHeaderParams } from '../../../models/params/gridColumnHeaderParams';
 import { GridSortModelParams } from '../../../models/params/gridSortModelParams';
-import { GridRowId, GridRowModel, GridRowsProp } from '../../../models/gridRows';
+import { GridRowId, GridRowModel } from '../../../models/gridRows';
 import {
   GridFieldComparatorList,
   GridSortItem,
@@ -35,8 +35,12 @@ import { useGridSelector } from '../core/useGridSelector';
 import { useGridState } from '../core/useGridState';
 import { gridRowCountSelector } from '../rows/gridRowsSelector';
 import { sortedGridRowIdsSelector, sortedGridRowsSelector } from './gridSortingSelector';
+import { GridComponentProps } from '../../../GridComponentProps';
 
-export const useGridSorting = (apiRef: GridApiRef, { rows }: { rows: GridRowsProp }) => {
+export const useGridSorting = (
+  apiRef: GridApiRef,
+  props: Pick<GridComponentProps, 'rows' | 'onSortModelChange'>,
+) => {
   const logger = useLogger('useGridSorting');
 
   const [gridState, setGridState, forceUpdate] = useGridState(apiRef);
@@ -300,7 +304,7 @@ export const useGridSorting = (apiRef: GridApiRef, { rows }: { rows: GridRowsPro
   useGridApiEventHandler(apiRef, GRID_ROWS_UPDATE, apiRef.current.applySorting);
   useGridApiEventHandler(apiRef, GRID_COLUMNS_CHANGE, onColUpdated);
 
-  useGridApiOptionHandler(apiRef, GRID_SORT_MODEL_CHANGE, options.onSortModelChange);
+  useGridApiOptionHandler(apiRef, GRID_SORT_MODEL_CHANGE, props.onSortModelChange);
 
   const sortApi: GridSortApi = {
     getSortModel,
@@ -315,7 +319,7 @@ export const useGridSorting = (apiRef: GridApiRef, { rows }: { rows: GridRowsPro
   React.useEffect(() => {
     // When the rows prop change, we re apply the sorting.
     apiRef.current.applySorting();
-  }, [apiRef, rows]);
+  }, [apiRef, props.rows]);
 
   React.useEffect(() => {
     if (rowCount > 0) {

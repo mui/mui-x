@@ -42,8 +42,19 @@ import { useEventCallback } from '../../../utils/material-ui-utils';
 import { useLogger } from '../../utils/useLogger';
 import { useGridSelector } from '../core/useGridSelector';
 import { useGridState } from '../core/useGridState';
+import { GridComponentProps } from '../../../GridComponentProps';
 
-export function useGridEditRows(apiRef: GridApiRef) {
+export function useGridEditRows(
+  apiRef: GridApiRef,
+  props: Pick<
+    GridComponentProps,
+    | 'onEditCellChangeCommitted'
+    | 'onEditCellChange'
+    | 'onCellValueChange'
+    | 'onCellModeChange'
+    | 'onEditRowModelChange'
+  >,
+) {
   const logger = useLogger('useGridEditRows');
   const [, setGridState, forceUpdate] = useGridState(apiRef);
   const options = useGridSelector(apiRef, optionsSelector);
@@ -145,17 +156,17 @@ export function useGridEditRows(apiRef: GridApiRef) {
 
       apiRef.current.publishEvent(GRID_CELL_EDIT_PROPS_CHANGE, params, event);
 
-      const { id, field, props } = params;
+      const { id, field, props: editProps } = params;
       logger.debug(`Setting cell props on id: ${id} field: ${field}`);
       setGridState((state) => {
         const column = apiRef.current.getColumn(field);
         const parsedValue = column.valueParser
-          ? column.valueParser(props.value, apiRef.current.getCellParams(id, field))
-          : props.value;
+          ? column.valueParser(editProps.value, apiRef.current.getCellParams(id, field))
+          : editProps.value;
 
         const editRowsModel: GridEditRowsModel = { ...state.editRows };
         editRowsModel[id] = { ...state.editRows[id] };
-        editRowsModel[id][field] = { ...props, value: parsedValue };
+        editRowsModel[id][field] = { ...editProps, value: parsedValue };
         return { ...state, editRows: editRowsModel };
       });
       forceUpdate();
@@ -319,12 +330,12 @@ export function useGridEditRows(apiRef: GridApiRef) {
   useGridApiOptionHandler(
     apiRef,
     GRID_CELL_EDIT_PROPS_CHANGE_COMMITTED,
-    options.onEditCellChangeCommitted,
+    props.onEditCellChangeCommitted,
   );
-  useGridApiOptionHandler(apiRef, GRID_CELL_EDIT_PROPS_CHANGE, options.onEditCellChange);
-  useGridApiOptionHandler(apiRef, GRID_CELL_VALUE_CHANGE, options.onCellValueChange);
-  useGridApiOptionHandler(apiRef, GRID_CELL_MODE_CHANGE, options.onCellModeChange);
-  useGridApiOptionHandler(apiRef, GRID_ROW_EDIT_MODEL_CHANGE, options.onEditRowModelChange);
+  useGridApiOptionHandler(apiRef, GRID_CELL_EDIT_PROPS_CHANGE, props.onEditCellChange);
+  useGridApiOptionHandler(apiRef, GRID_CELL_VALUE_CHANGE, props.onCellValueChange);
+  useGridApiOptionHandler(apiRef, GRID_CELL_MODE_CHANGE, props.onCellModeChange);
+  useGridApiOptionHandler(apiRef, GRID_ROW_EDIT_MODEL_CHANGE, props.onEditRowModelChange);
 
   useGridApiMethod<GridEditRowApi>(
     apiRef,
