@@ -1,7 +1,7 @@
 import Button from '@material-ui/core/Button';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import { makeStyles } from '@material-ui/styles';
-import { DataGrid } from '@material-ui/data-grid';
+import { DataGrid, GridApiRef, GridComponentProps } from '@material-ui/data-grid';
 import Rating from '@material-ui/lab/Rating';
 import {
   GridColDef,

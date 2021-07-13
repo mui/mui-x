@@ -46,10 +46,6 @@ export function GridFilterPanel() {
     [apiRef],
   );
 
-  if (gridState.filter.items.length === 0) {
-    addNewFilter();
-  }
-
   return (
     <GridPanelWrapper>
       <GridPanelContent>

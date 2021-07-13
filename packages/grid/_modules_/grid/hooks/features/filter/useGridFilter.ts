@@ -19,15 +19,16 @@ import { useLogger } from '../../utils/useLogger';
 import { filterableGridColumnsIdsSelector } from '../columns/gridColumnsSelector';
 import { useGridSelector } from '../core/useGridSelector';
 import { useGridState } from '../core/useGridState';
+import { gridPreferencePanelStateSelector } from '../preferencesPanel/gridPreferencePanelSelector';
 import { GridPreferencePanelsValue } from '../preferencesPanel/gridPreferencePanelsValue';
 import { sortedGridRowsSelector } from '../sorting/gridSortingSelector';
 import {
+  getInitialGridFilterState,
   GridFilterModel,
   GridFilterModelState,
-  getInitialGridFilterState,
 } from './gridFilterModelState';
-import { getInitialVisibleGridRowsState } from './visibleGridRowsState';
 import { visibleSortedGridRowsSelector } from './gridFilterSelector';
+import { getInitialVisibleGridRowsState } from './visibleGridRowsState';
 
 export const useGridFilter = (
   apiRef: GridApiRef,
@@ -36,6 +37,7 @@ export const useGridFilter = (
   const logger = useLogger('useGridFilter');
   const [gridState, setGridState, forceUpdate] = useGridState(apiRef);
   const filterableColumnsIds = useGridSelector(apiRef, filterableGridColumnsIdsSelector);
+  const preferencePanelState = useGridSelector(apiRef, gridPreferencePanelStateSelector);
   const options = useGridSelector(apiRef, optionsSelector);
 
   const clearFilteredRows = React.useCallback(() => {
@@ -199,6 +201,7 @@ export const useGridFilter = (
         };
         return newState;
       });
+
       applyFilters();
     },
     [applyFilters, logger, setGridState],
