@@ -22,11 +22,7 @@ import { useGridSelector } from '../core/useGridSelector';
 import { useGridState } from '../core/useGridState';
 import { GridPreferencePanelsValue } from '../preferencesPanel/gridPreferencePanelsValue';
 import { sortedGridRowsSelector } from '../sorting/gridSortingSelector';
-import {
-  GridFilterModel,
-  GridFilterModelState,
-  getInitialGridFilterState,
-} from './gridFilterModelState';
+import { GridFilterModel, getInitialGridFilterState } from './gridFilterModelState';
 import { getInitialVisibleGridRowsState } from './visibleGridRowsState';
 import { visibleSortedGridRowsSelector } from './gridFilterSelector';
 
