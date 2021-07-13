@@ -4,8 +4,8 @@ import * as React from 'react';
 
 const filterModel: GridFilterModel = {
   items: [
-    { columnField: 'commodity', operatorValue: 'contains', value: 'rice' },
-    { columnField: 'commodity', operatorValue: 'startsWith', value: 'soy' },
+    { id: 1, columnField: 'commodity', operatorValue: 'contains', value: 'rice' },
+    { id: 2, columnField: 'commodity', operatorValue: 'startsWith', value: 'soy' },
   ],
   linkOperator: GridLinkOperator.Or,
 };

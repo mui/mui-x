@@ -142,11 +142,13 @@ describe('<XGrid /> - Filter', () => {
     const newModel = {
       items: [
         {
+          id: 1,
           columnField: 'brand',
           value: 'a',
           operatorValue: 'contains',
         },
         {
+          id: 2,
           columnField: 'brand',
           value: 'm',
           operatorValue: 'contains',
@@ -162,11 +164,13 @@ describe('<XGrid /> - Filter', () => {
     const newModel = {
       items: [
         {
+          id: 1,
           columnField: 'brand',
           value: 'a',
           operatorValue: 'startsWith',
         },
         {
+          id: 2,
           columnField: 'brand',
           value: 's',
           operatorValue: 'endsWith',
@@ -181,11 +185,13 @@ describe('<XGrid /> - Filter', () => {
     const newModel: GridFilterModel = {
       items: [
         {
+          id: 1,
           columnField: 'brand',
           value: 'a',
           operatorValue: 'startsWith',
         },
         {
+          id: 2,
           columnField: 'brand',
           value: 'a',
           operatorValue: 'endsWith',
@@ -202,11 +208,13 @@ describe('<XGrid /> - Filter', () => {
     const newModel: GridFilterModel = {
       items: [
         {
+          id: 1,
           columnField: 'brand',
           value: 'a',
           operatorValue: 'startsWith',
         },
         {
+          id: 2,
           columnField: 'brand',
           value: 'a',
           operatorValue: 'endsWith',

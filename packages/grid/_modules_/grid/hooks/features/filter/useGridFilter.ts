@@ -37,7 +37,6 @@ export const useGridFilter = (
   const logger = useLogger('useGridFilter');
   const [gridState, setGridState, forceUpdate] = useGridState(apiRef);
   const filterableColumnsIds = useGridSelector(apiRef, filterableGridColumnsIdsSelector);
-  const preferencePanelState = useGridSelector(apiRef, gridPreferencePanelStateSelector);
   const options = useGridSelector(apiRef, optionsSelector);
 
   const clearFilteredRows = React.useCallback(() => {
@@ -201,7 +200,9 @@ export const useGridFilter = (
         };
         return newState;
       });
-
+      if (apiRef.current.state.filter.items.length === 0) {
+        apiRef.current.upsertFilter({});
+      }
       applyFilters();
     },
     [applyFilters, logger, setGridState],
@@ -313,6 +314,14 @@ export const useGridFilter = (
 
   React.useEffect(() => {
     const filterModel = props.filterModel;
+    if (filterModel && filterModel.items.length > 1) {
+      const hasItemsWithoutIds = filterModel.items.find((item) => item.id == null);
+      if (hasItemsWithoutIds) {
+        throw new Error(
+          "The 'id' field is required on filterModel.items when you use multiple filters.",
+        );
+      }
+    }
     const oldFilterModel = apiRef.current.state.filter;
     if (filterModel && !isDeepEqual(filterModel, oldFilterModel)) {
       logger.debug('filterModel prop changed, applying filters');

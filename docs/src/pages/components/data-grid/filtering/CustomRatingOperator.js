@@ -40,7 +40,7 @@ RatingInputValue.propTypes = {
   applyValue: PropTypes.func.isRequired,
   item: PropTypes.shape({
     columnField: PropTypes.string,
-    id: PropTypes.number,
+    id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     operatorValue: PropTypes.string,
     value: PropTypes.any,
   }).isRequired,

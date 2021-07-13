@@ -79,7 +79,7 @@ describe('<DataGrid /> - Filter', () => {
     expect(() => {
       render(
         <div style={{ width: 300, height: 300 }}>
-          <DataGrid rows={[]} columns={[]} filterModel={{ items: [{}, {}] }} />
+          <DataGrid rows={[]} columns={[]} filterModel={{ items: [{ id: 0 }, { id: 1 }] }} />
         </div>,
       );
     })
