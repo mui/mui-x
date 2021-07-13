@@ -63,6 +63,8 @@ export interface GridLocaleText extends Partial<MuiComponentsLocalization> {
   filterOperatorOnOrAfter: string;
   filterOperatorBefore: string;
   filterOperatorOnOrBefore: string;
+  filterOperatorIsEmpty: string;
+  filterOperatorIsNotEmpty: string;
 
   // Filter values text
   filterValueAny: string;
