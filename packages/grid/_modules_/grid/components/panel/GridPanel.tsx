@@ -2,6 +2,7 @@ import * as React from 'react';
 import clsx from 'clsx';
 import { Theme } from '@material-ui/core/styles';
 import { makeStyles } from '@material-ui/styles';
+import { generateUtilityClasses } from '@material-ui/unstyled';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import Paper from '@material-ui/core/Paper';
 import Popper, { PopperProps } from '@material-ui/core/Popper';
@@ -40,6 +41,8 @@ const useStyles = makeStyles(
   }),
   { name: 'MuiGridPanel', defaultTheme },
 );
+
+export const gridPanelClasses = generateUtilityClasses('MuiGridPanel', ['root', 'paper']);
 
 export const GridPanel = React.forwardRef<HTMLDivElement, GridPanelProps>(function GridPanel(
   props,
@@ -103,6 +106,3 @@ export const GridPanel = React.forwardRef<HTMLDivElement, GridPanelProps>(functi
     </Popper>
   );
 }) as (props: GridPanelProps) => JSX.Element;
-
-// @ts-ignore TODO migrate to v5 gridPanelClasses pattern, this is only for tests
-GridPanel.useStyles = useStyles;
