@@ -68,7 +68,6 @@
     "@testing-library/react": "^12.0.0",
     "@types/chai": "^4.2.3",
     "@types/chai-dom": "^0.0.10",
-    "@types/cheerio": "^0.22.30",
     "@types/enzyme": "^3.10.5",
     "@types/mocha": "^8.0.3",
     "@types/node": "^16.0.0",
