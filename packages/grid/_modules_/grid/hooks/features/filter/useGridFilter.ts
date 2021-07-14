@@ -19,7 +19,6 @@ import { useLogger } from '../../utils/useLogger';
 import { filterableGridColumnsIdsSelector } from '../columns/gridColumnsSelector';
 import { useGridSelector } from '../core/useGridSelector';
 import { useGridState } from '../core/useGridState';
-import { gridPreferencePanelStateSelector } from '../preferencesPanel/gridPreferencePanelSelector';
 import { GridPreferencePanelsValue } from '../preferencesPanel/gridPreferencePanelsValue';
 import { sortedGridRowsSelector } from '../sorting/gridSortingSelector';
 import {
@@ -205,7 +204,7 @@ export const useGridFilter = (
       }
       applyFilters();
     },
-    [applyFilters, logger, setGridState],
+    [apiRef, applyFilters, logger, setGridState],
   );
 
   const showFilterPanel = React.useCallback(
