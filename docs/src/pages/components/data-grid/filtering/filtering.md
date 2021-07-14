@@ -162,14 +162,16 @@ const filterModel: GridFilterModel = {
 
 {{"demo": "pages/components/data-grid/filtering/FilterApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
 
-## 🚧 Quick filter
+## Quick filter
 
-> ⚠️ This feature isn't implemented yet. It's coming.
+The grid does not currently include this feature.
+However, it could be easily implemented as in the demo below.
+
+{{"demo": "pages/components/data-grid/filtering/QuickFilteringGrid.js", "bg": "inline", "defaultCodeOpen": false}}
+
+> ⚠️ This feature isn't natively implemented in the grid package. It's coming.
 >
 > 👍 Upvote [issue #202](https://github.com/mui-org/material-ui-x/issues/202) if you want to see it land faster.
-
-In addition to the column specific filtering, a global quick filtering will also be available.
-The provided search text will match against all the cells.
 
 ## API
 
