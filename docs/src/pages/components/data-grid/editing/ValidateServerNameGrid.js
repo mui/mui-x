@@ -41,7 +41,7 @@ export default function ValidateServerNameGrid() {
 
   const keyStrokeTimeoutRef = React.useRef();
 
-  const handleEditCellChange = React.useCallback(
+  const handleCellEditPropsChange = React.useCallback(
     async ({ id, field, props }, event) => {
       if (field === 'name') {
         clearTimeout(promiseTimeout);
@@ -84,7 +84,7 @@ export default function ValidateServerNameGrid() {
         apiRef={apiRef}
         rows={rows}
         columns={columns}
-        onEditCellChange={handleEditCellChange}
+        onEditCellPropsChange={handleCellEditPropsChange}
         isCellEditable={(params) => params.row.id === 5}
       />
     </div>

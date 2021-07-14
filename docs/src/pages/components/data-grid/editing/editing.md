@@ -58,9 +58,9 @@ The editable cells have a green background for better visibility.
 ### Controlled editing
 
 The `editRowsModel` prop lets you control the editing state.
-You can handle the `onEditRowModelChange` callback to control the `GridEditRowsModel` state.
+You can handle the `onEditRowsModelChange` callback to control the `GridEditRowsModel` state.
 
-{{"demo": "pages/components/data-grid/editing/EditRowModelControlGrid.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"demo": "pages/components/data-grid/editing/EditRowsModelControlGrid.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ### Column with valueGetter
 
@@ -71,10 +71,9 @@ This is especially interesting when using the `valueGetter` on the column defini
 
 ### Client-side validation
 
-Follow the following steps to validate the value in the cells:
-
-- Set the event handler `onEditCellChange`. It's invoked when a change is triggered by the edit input component.
-- Set the event handler `onEditCellChangeCommitted` to validate or persist the new value. This handler is invoked when an end-user requests a change to be committed and before the cell reverts to view mode.
+To validate the value in the cells, use `onEditCellPropsChange` to set the `error` attribute of the respective field when the value is invalid.
+Once this attribute is true, the value will never be commited.
+This prop is invoked when a change is triggered by the edit cell component.
 
 Alternatively, you can use the `GridEditRowsModel` state mentioned in the [Control editing](#control-editing) section.
 
@@ -90,9 +89,9 @@ You can reproduce the same behavior using the apiRef.
 
 Server-side validation works like client-side [validation](#validation).
 
-- Use the `GridEditRowsModel` mentioned in the [Control editing](#control-editing) section.
-- Or set the event handler `onEditCellChange` for `keydown` validation
-- Set the event handler `onEditCellChangeCommitted` to validate and update the server when the change is committed.
+- Use `onEditCellPropsChange` to set the `error` attribute to true of the respective field which will be validated.
+- Validate the value in the server.
+- Once the server responds, set the `error` attribute to false if it is valid. This allows to commit it.
 
 **Note:** To prevent the default client-side behavior, use `event.stopPropagation()`.
 

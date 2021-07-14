@@ -43,7 +43,7 @@ export default function ValidateCellApiRefGrid() {
   const apiRef = useGridApiRef();
   const classes = useStyles();
 
-  const handleEditCellChange = React.useCallback(
+  const handleEditCellPropsChange = React.useCallback(
     (
       { id, field, props }: GridEditCellPropsParams,
       event?: React.SyntheticEvent,
@@ -70,7 +70,7 @@ export default function ValidateCellApiRefGrid() {
         className={classes.root}
         rows={rows}
         columns={columns}
-        onEditCellChange={handleEditCellChange}
+        onEditCellPropsChange={handleEditCellPropsChange}
       />
     </div>
   );

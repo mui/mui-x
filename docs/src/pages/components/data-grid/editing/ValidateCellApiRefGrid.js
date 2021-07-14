@@ -61,7 +61,7 @@ export default function ValidateCellApiRefGrid() {
         className={classes.root}
         rows={rows}
         columns={columns}
-        onEditCellChange={handleEditCellChange}
+        onEditCellPropsChange={handleEditCellChange}
       />
     </div>
   );

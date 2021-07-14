@@ -21,7 +21,6 @@ import {
   GridCellModeChangeParams,
   GridEditCellPropsParams,
   GridEditCellValueParams,
-  GridEditRowModelParams,
 } from './params/gridEditCellParams';
 import { GridRowScrollEndParams } from './params/gridRowScrollEndParams';
 import { GridColumnOrderChangeParams } from './params/gridColumnOrderChangeParams';
@@ -142,6 +141,11 @@ export interface GridOptions {
    */
   editRowsModel?: GridEditRowsModel;
   /**
+   * Callback fired when the EditRowModel changes.
+   * @param {GridEditRowsModel} editRowsModel With all properties from [[GridEditRowsModel]].
+   */
+  onEditRowsModelChange?: (editRowsModel: GridEditRowsModel) => void;
+  /**
    * Filtering can be processed on the server or client-side.
    * Set it to 'client' if you would like to handle filtering on the client-side.
    * Set it to 'server' if you would like to handle filtering on the server-side.
@@ -207,25 +211,18 @@ export interface GridOptions {
    * @default debug
    */
   logLevel?: string | false;
-
   /**
-   * Callback fired when the edit cell value changed.
-   * @param handler
+   * Callback fired when the edit cell value changes.
+   * @param {GridEditCellPropsParams} params With all properties from [[GridEditCellPropsParams]].
+   * @param {React.SyntheticEvent} event The event that caused this prop to be called.
    */
-  onEditCellChange?: (params: GridEditCellPropsParams, event?: React.SyntheticEvent) => void;
+  onEditCellPropsChange?: (params: GridEditCellPropsParams, event?: React.SyntheticEvent) => void;
   /**
-   * Callback fired when the cell changes are committed.
-   * @param handler
+   * Callback fired when the cell changes are going to be committed.
+   * @param {GridEditCellPropsParams} params With all properties from [[GridEditCellPropsParams]].
+   * @param {React.SyntheticEvent} event The event that caused this prop to be called.
    */
-  onEditCellChangeCommitted?: (
-    params: GridEditCellPropsParams,
-    event?: React.SyntheticEvent,
-  ) => void;
-  /**
-   * Callback fired when the EditRowModel changed.
-   * @param handler
-   */
-  onEditRowModelChange?: (params: GridEditRowModelParams) => void;
+  onCellEditCommit?: (params: GridEditCellPropsParams, event?: React.SyntheticEvent) => void;
   /**
    * Callback fired when an exception is thrown in the grid, or when the `showError` API method is called.
    */

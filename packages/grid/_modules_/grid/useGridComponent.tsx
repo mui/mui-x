@@ -49,7 +49,7 @@ export const useGridComponent = (apiRef: GridApiRef, props: GridComponentProps) 
   useGridColumns(apiRef, props);
   useGridParamsApi(apiRef);
   useGridRows(apiRef, props);
-  useGridEditRows(apiRef);
+  useGridEditRows(apiRef, props);
   useGridFocus(apiRef, props);
   useGridKeyboard(apiRef);
   useGridKeyboardNavigation(apiRef);

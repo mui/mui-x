@@ -18,7 +18,6 @@ import {
   XGrid,
   GRID_CELL_EDIT_EXIT,
   GridEditCellPropsParams,
-  GridEditRowModelParams,
   GRID_CELL_EDIT_ENTER,
   MuiEvent,
 } from '@material-ui/x-grid';
@@ -471,7 +470,7 @@ export function EditRowsControl() {
 
   const isCellEditable = React.useCallback((params: GridCellParams) => params.row.id !== 0, []);
 
-  const onEditCellChange = React.useCallback(
+  const onEditCellPropsChange = React.useCallback(
     ({ id, field, props }: GridEditCellPropsParams) => {
       if (field === 'email') {
         const isValid = validateEmail(props.value);
@@ -493,7 +492,7 @@ export function EditRowsControl() {
     [editRowsModel],
   );
 
-  const onEditCellChangeCommitted = React.useCallback(
+  const onCellEditCommit = React.useCallback(
     (params: GridEditCellPropsParams, event?: React.SyntheticEvent) => {
       const { id, field, props } = params;
       event!.persist();
@@ -536,8 +535,8 @@ export function EditRowsControl() {
           apiRef={apiRef}
           onCellClick={onCellClick}
           isCellEditable={isCellEditable}
-          onEditCellChange={onEditCellChange}
-          onEditCellChangeCommitted={onEditCellChangeCommitted}
+          onEditCellPropsChange={onEditCellPropsChange}
+          onCellEditCommit={onCellEditCommit}
           editRowsModel={editRowsModel}
           editMode="server"
         />
@@ -554,7 +553,7 @@ export function EditRowsBasic() {
         <XGrid
           {...baselineEditProps}
           apiRef={apiRef}
-          onEditRowModelChange={action('onEditRowsModelChange')}
+          onEditRowsModelChange={action('onEditRowsModelChange')}
         />
       </div>
     </React.Fragment>
@@ -568,7 +567,7 @@ singleData.columns[0].width = 200;
 export function SingleCellBasic() {
   return (
     <div className="grid-container">
-      <XGrid {...singleData} onEditRowModelChange={action('onEditRowsModelChange')} />
+      <XGrid {...singleData} onEditRowsModelChange={action('onEditRowsModelChange')} />
     </div>
   );
 }
@@ -618,7 +617,7 @@ export function ValidateEditValueWithApiRefGrid() {
   const apiRef = useGridApiRef();
   const classes = useEditCellStyles();
 
-  const onEditCellChange = React.useCallback(
+  const onEditCellPropsChange = React.useCallback(
     ({ id, field, props }: GridEditCellPropsParams, event?: React.SyntheticEvent) => {
       if (field === 'email') {
         const isValid = validateEmail(props.value);
@@ -636,7 +635,7 @@ export function ValidateEditValueWithApiRefGrid() {
         className={classes.root}
         {...baselineEditProps}
         apiRef={apiRef}
-        onEditCellChange={onEditCellChange}
+        onEditCellPropsChange={onEditCellPropsChange}
       />
     </div>
   );
@@ -647,7 +646,7 @@ export function ValidateEditValueWithEditCellModelPropGrid() {
   const classes = useEditCellStyles();
   const [editRowsModel, setEditRowsModel] = React.useState<GridEditRowsModel>({});
 
-  const onEditCellChange = React.useCallback(
+  const onEditCellPropsChange = React.useCallback(
     ({ id, field, props }: GridEditCellPropsParams) => {
       if (field === 'email') {
         const isValid = validateEmail(props.value);
@@ -669,7 +668,7 @@ export function ValidateEditValueWithEditCellModelPropGrid() {
         {...baselineEditProps}
         apiRef={apiRef}
         editRowsModel={editRowsModel}
-        onEditCellChange={onEditCellChange}
+        onEditCellPropsChange={onEditCellPropsChange}
       />
     </div>
   );
@@ -691,7 +690,7 @@ export function ValidateEditValueServerSide() {
   const classes = useEditCellStyles();
   const keyStrokeTimeoutRef = React.useRef<any>();
 
-  const handleEditCellChange = React.useCallback(
+  const handleCellEditPropChange = React.useCallback(
     async ({ id, field, props }: GridEditCellPropsParams, event) => {
       if (field === 'username') {
         // TODO refactor this block
@@ -716,7 +715,7 @@ export function ValidateEditValueServerSide() {
         className={classes.root}
         {...baselineEditProps}
         apiRef={apiRef}
-        onEditCellChange={handleEditCellChange}
+        onEditCellPropsChange={handleCellEditPropChange}
       />
     </div>
   );
@@ -801,8 +800,8 @@ export function EditCellUsingExternalButtonGrid() {
 export function EditCellWithModelGrid() {
   const [editRowsModel, setEditRowsModel] = React.useState({});
 
-  const handleEditRowModelChange = React.useCallback((params: GridEditRowModelParams) => {
-    setEditRowsModel(params.model);
+  const handleEditRowsModelChange = React.useCallback((model: GridEditRowsModel) => {
+    setEditRowsModel(model);
   }, []);
 
   return (
@@ -810,7 +809,7 @@ export function EditCellWithModelGrid() {
       <XGrid
         {...baselineEditProps}
         editRowsModel={editRowsModel}
-        onEditRowModelChange={handleEditRowModelChange}
+        onEditRowsModelChange={handleEditRowsModelChange}
         autoHeight
       />
       <code>{JSON.stringify(editRowsModel)}</code>

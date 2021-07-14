@@ -11,7 +11,7 @@ function getFullName(params) {
 export default function ValueGetterGrid() {
   const [rows, setRows] = React.useState(defaultRows);
 
-  const handleEditCellChangeCommitted = React.useCallback(
+  const handleCellEditCommit = React.useCallback(
     ({ id, field, props }) => {
       if (field === 'fullName') {
         const data = props; // Fix eslint value is missing in prop-types for JS files
@@ -33,7 +33,7 @@ export default function ValueGetterGrid() {
       <DataGrid
         rows={rows}
         columns={columns}
-        onEditCellChangeCommitted={handleEditCellChangeCommitted}
+        onCellEditCommit={handleCellEditCommit}
       />
     </div>
   );
