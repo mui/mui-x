@@ -4,8 +4,6 @@ import { createClientRender } from '@material-ui/monorepo/test/utils';
 
 export * from '@material-ui/monorepo/test/utils';
 
-export { default as getClasses } from './getClasses';
-
 export const createClientRenderStrictMode = () => {
   const render = createClientRender();
   const strictTheme = unstable_createMuiStrictModeTheme();
