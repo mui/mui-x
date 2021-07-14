@@ -18,6 +18,7 @@
     "noImplicitAny": false,
     "types": ["node", "requestidlecallback"],
     "baseUrl": "./",
+    "skipLibCheck": true,
     "paths": {
       "@material-ui/data-grid": ["./packages/grid/data-grid/src"],
       "@material-ui/data-grid/*": ["./packages/grid/data-grid/src/*"],
