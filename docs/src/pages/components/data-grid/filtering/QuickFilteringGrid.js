@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import * as React from 'react';
 import { IconButton, TextField } from '@material-ui/core';
 import {
@@ -43,12 +42,6 @@ const QuickSearchToolbar = (props) => {
       />
     </GridToolbarContainer>
   );
-};
-
-QuickSearchToolbar.propTypes = {
-  clearSearch: PropTypes.func.isRequired,
-  onChange: PropTypes.func.isRequired,
-  value: PropTypes.string.isRequired,
 };
 
 export default function QuickFilteringGrid() {
