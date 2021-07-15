@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { IconButton, TextField } from '@material-ui/core';
+import IconButton from '@material-ui/core/IconButton';
+import TextField from '@material-ui/core/TextField';
 import {
   DataGrid,
   GridToolbarColumnsButton,
@@ -11,7 +12,7 @@ import { useDemoData } from '@material-ui/x-grid-data-generator';
 import ClearIcon from '@material-ui/icons/Clear';
 import SearchIcon from '@material-ui/icons/Search';
 
-const QuickSearchToolbar = (props) => {
+function QuickSearchToolbar(props) {
   return (
     <GridToolbarContainer
       style={{
@@ -24,13 +25,16 @@ const QuickSearchToolbar = (props) => {
         <GridToolbarDensitySelector />
       </div>
       <TextField
+        variant="standard"
         value={props.value}
         onChange={props.onChange}
-        placeholder="Search..."
+        placeholder="Search…"
         InputProps={{
           startAdornment: <SearchIcon fontSize="small" />,
           endAdornment: (
             <IconButton
+              title="Clear"
+              aria-label="Clear"
               size="small"
               style={{ visibility: props.value ? 'visible' : 'hidden' }}
               onClick={props.clearSearch}
@@ -42,7 +46,7 @@ const QuickSearchToolbar = (props) => {
       />
     </GridToolbarContainer>
   );
-};
+}
 
 export default function QuickFilteringGrid() {
   const { data } = useDemoData({
@@ -57,9 +61,9 @@ export default function QuickFilteringGrid() {
   const requestSearch = (searchValue) => {
     setSearchText(searchValue);
     const searchRegex = new RegExp(`.*${searchValue}.*`, 'ig');
-    const filteredRows = data.rows.filter((o) => {
-      return Object.keys(o).some((k) => {
-        return searchRegex.test(o[k].toString());
+    const filteredRows = data.rows.filter((row) => {
+      return Object.keys(row).some((k) => {
+        return searchRegex.test(row[k].toString());
       });
     });
     setRows(filteredRows);
