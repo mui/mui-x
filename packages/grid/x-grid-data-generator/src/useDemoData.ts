@@ -84,7 +84,7 @@ export const useDemoData = (options: DemoDataOptions): DemoDataReturnType => {
   const [index, setIndex] = React.useState(0);
   const [loading, setLoading] = React.useState(true);
 
-  const getColumns = React.useCallback(()=> {
+  const getColumns = React.useCallback(() => {
     let columns =
       options.dataSet === 'Commodity'
         ? getCommodityColumns(options.editable)
