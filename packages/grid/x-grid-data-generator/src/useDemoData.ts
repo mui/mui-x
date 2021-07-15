@@ -80,10 +80,23 @@ function deepFreeze(object) {
 }
 
 export const useDemoData = (options: DemoDataOptions): DemoDataReturnType => {
-  const [data, setData] = React.useState<GridData>({ columns: [], rows: [] });
   const [rowLength, setRowLength] = React.useState(options.rowLength);
   const [index, setIndex] = React.useState(0);
   const [loading, setLoading] = React.useState(true);
+
+  const getColumns = React.useCallback(()=> {
+    let columns =
+      options.dataSet === 'Commodity'
+        ? getCommodityColumns(options.editable)
+        : getEmployeeColumns();
+
+    if (options.maxColumns) {
+      columns = columns.slice(0, options.maxColumns);
+    }
+    return columns;
+  }, [options.dataSet, options.editable, options.maxColumns]);
+
+  const [data, setData] = React.useState<GridData>({ columns: getColumns(), rows: [] });
 
   React.useEffect(() => {
     const cacheKey = `${options.dataSet}-${rowLength}-${index}-${options.maxColumns}`;
@@ -101,17 +114,9 @@ export const useDemoData = (options: DemoDataOptions): DemoDataReturnType => {
 
     (async () => {
       setLoading(true);
-      let columns =
-        options.dataSet === 'Commodity'
-          ? getCommodityColumns(options.editable)
-          : getEmployeeColumns();
-
-      if (options.maxColumns) {
-        columns = columns.slice(0, options.maxColumns);
-      }
 
       let newData;
-
+      const columns = getColumns();
       if (rowLength > 1000) {
         newData = await getRealData(1000, columns);
         newData = await extrapolateSeed(rowLength, columns, newData);
@@ -136,7 +141,7 @@ export const useDemoData = (options: DemoDataOptions): DemoDataReturnType => {
     return () => {
       active = false;
     };
-  }, [rowLength, options.dataSet, index, options.maxColumns, options.editable]);
+  }, [rowLength, data.columns, options.dataSet, options.maxColumns, index, getColumns]);
 
   return {
     data,
