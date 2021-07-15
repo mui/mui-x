@@ -64,7 +64,7 @@ You can handle the `onEditRowsModelChange` callback to control the `GridEditRows
 
 ### Column with valueGetter
 
-You can control the committed value when the edit move stops with the `onEditCellChangeCommitted` prop.
+You can control the committed value when the edit move stops with the `onCellEditCommit` prop.
 This is especially interesting when using the `valueGetter` on the column definition.
 
 {{"demo": "pages/components/data-grid/editing/ValueGetterGrid.js", "bg": "inline"}}
@@ -121,8 +121,8 @@ The following events can be imported and used to customize the edition:
 
 - `cellEditEnter`: emitted when the cell turns to edit mode.
 - `cellEditExit`: emitted when the cell turns back to view mode.
-- `cellEditPropsChange`: emitted when the edit input change.
-- `cellEditPropsChangeCommitted`: emitted when the edit input change is submitted.
+- `cellEditCommit`: emitted when the new value is commited.
+- `editCellPropsChange`: emitted when the props passed to the edit cell component are changed.
 
 Catching events can be used to add a callback after an event while ignoring its triggers.
 
