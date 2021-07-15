@@ -164,7 +164,7 @@ const filterModel: GridFilterModel = {
 
 ## Quick filter
 
-The grid does not currently gnatively include this feature.
+The grid does not natively include quick filtering.
 However, it could be easily implemented as in the demo below.
 
 {{"demo": "pages/components/data-grid/filtering/QuickFilteringGrid.js", "bg": "inline", "defaultCodeOpen": false}}
