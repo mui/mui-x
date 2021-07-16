@@ -6,7 +6,7 @@ import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import Paper from '@material-ui/core/Paper';
 import Popper, { PopperProps } from '@material-ui/core/Popper';
 import { useGridApiContext } from '../../hooks/root/useGridApiContext';
-import { isEscapeKey, isMuiV5, createTheme } from '../../utils';
+import { isEscapeKey, getMuiVersion, createTheme } from '../../utils';
 import {
   InternalStandardProps as StandardProps,
   generateUtilityClasses,
@@ -55,7 +55,7 @@ export const GridPanel = React.forwardRef<HTMLDivElement, GridPanelProps>(functi
   const apiRef = useGridApiContext();
 
   const getPopperModifiers = (): any => {
-    if (isMuiV5()) {
+    if (getMuiVersion() === 'v5') {
       return [
         {
           name: 'flip',
