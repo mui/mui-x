@@ -11,24 +11,29 @@ import {
 import { useDemoData } from '@material-ui/x-grid-data-generator';
 import ClearIcon from '@material-ui/icons/Clear';
 import SearchIcon from '@material-ui/icons/Search';
-import { Theme } from '@material-ui/core/styles';
-import { makeStyles } from '@material-ui/styles';
+import { createMuiTheme, Theme } from '@material-ui/core/styles';
+import { createStyles, makeStyles } from '@material-ui/styles';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  toolbar: {
-    '&&': {
-      padding: theme.spacing(1, 1, 0),
-    },
-  },
-  search: {
-    boxSizing: 'unset',
-  },
-  searchInputUnderline: {
-    '&:before': {
-      borderBottom: `1px solid ${theme.palette.divider}`,
-    },
-  },
-}));
+const defaultTheme = createMuiTheme();
+const useStyles = makeStyles(
+  (theme: Theme) =>
+    createStyles({
+      toolbar: {
+        '&&': {
+          padding: theme.spacing(1, 1, 0),
+        },
+      },
+      search: {
+        boxSizing: 'unset',
+      },
+      searchInputUnderline: {
+        '&:before': {
+          borderBottom: `1px solid ${theme.palette.divider}`,
+        },
+      },
+    }),
+  { defaultTheme },
+);
 
 function QuickSearchToolbar(props) {
   const classes = useStyles();
