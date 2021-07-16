@@ -12,9 +12,30 @@ import { useDemoData } from '@material-ui/x-grid-data-generator';
 import ClearIcon from '@material-ui/icons/Clear';
 import SearchIcon from '@material-ui/icons/Search';
 
+import { makeStyles } from '@material-ui/styles';
+
+const useStyles = makeStyles((theme) => ({
+  toolbar: {
+    '&&': {
+      padding: theme.spacing(1, 1, 0),
+    },
+  },
+  search: {
+    boxSizing: 'unset',
+  },
+  searchInputUnderline: {
+    '&:before': {
+      borderBottom: `1px solid ${theme.palette.divider}`,
+    },
+  },
+}));
+
 function QuickSearchToolbar(props) {
+  const classes = useStyles();
+
   return (
     <GridToolbarContainer
+      className={classes.toolbar}
       style={{
         justifyContent: 'space-between',
       }}
@@ -28,9 +49,11 @@ function QuickSearchToolbar(props) {
         variant="standard"
         value={props.value}
         onChange={props.onChange}
+        className={classes.search}
         placeholder="Search…"
         InputProps={{
           startAdornment: <SearchIcon fontSize="small" />,
+          classes: { underline: classes.searchInputUnderline },
           endAdornment: (
             <IconButton
               title="Clear"
