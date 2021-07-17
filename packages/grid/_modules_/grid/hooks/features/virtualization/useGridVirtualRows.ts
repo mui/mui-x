@@ -26,6 +26,22 @@ import { useGridVirtualColumns } from './useGridVirtualColumns';
 import { gridDensityRowHeightSelector } from '../density/densitySelector';
 import { scrollStateSelector } from './renderingStateSelector';
 
+// Logic copied from https://www.w3.org/TR/wai-aria-practices/examples/listbox/js/listbox.js
+// Similar to https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollIntoView
+function scrollIntoView(dimensions) {
+  const { clientHeight, scrollTop, offsetHeight, offsetTop } = dimensions;
+
+  const scrollBottom = clientHeight + scrollTop;
+  const elementBottom = offsetTop + offsetHeight;
+  if (elementBottom > scrollBottom) {
+    return elementBottom - clientHeight;
+  }
+  if (offsetTop < scrollTop) {
+    return offsetTop;
+  }
+  return undefined;
+}
+
 export const useGridVirtualRows = (apiRef: GridApiRef): void => {
   const logger = useLogger('useGridVirtualRows');
   const colRef = apiRef.current.columnHeadersElementRef!;
@@ -193,51 +209,38 @@ export const useGridVirtualRows = (apiRef: GridApiRef): void => {
       logger.debug(`Scrolling to cell at row ${params.rowIndex}, col: ${params.colIndex} `);
 
       const scrollCoordinates: any = {};
-      const isColVisible = apiRef.current.isColumnVisibleInWindow(params.colIndex);
-      logger.debug(`Column ${params.colIndex} is ${isColVisible ? 'already' : 'not'} visible.`);
-      if (!isColVisible) {
-        const isLastCol = params.colIndex + 1 === columnsMeta.positions.length;
 
-        if (isLastCol) {
-          const lastColWidth = visibleColumns[params.colIndex].width!;
-          scrollCoordinates.left =
-            columnsMeta.positions[params.colIndex] +
-            lastColWidth -
-            gridState.containerSizes!.windowSizes.width;
-        } else {
-          scrollCoordinates.left =
-            columnsMeta.positions[params.colIndex + 1] -
-            gridState.containerSizes!.windowSizes.width +
-            gridState.scrollBar!.scrollBarSize.y;
-          logger.debug(`Scrolling to the right, scrollLeft: ${scrollCoordinates.left}`);
-        }
-        if (gridState.rendering.renderingZoneScroll.left > scrollCoordinates.left) {
-          scrollCoordinates.left = columnsMeta.positions[params.colIndex];
-          logger.debug(`Scrolling to the left, scrollLeft: ${scrollCoordinates.left}`);
-        }
+      if (params.colIndex != null) {
+        scrollCoordinates.left = scrollIntoView({
+          clientHeight: windowRef.current!.clientWidth,
+          scrollTop: windowRef.current!.scrollLeft,
+          offsetHeight: visibleColumns[params.colIndex].width,
+          offsetTop: columnsMeta.positions[params.colIndex],
+        });
       }
 
-      // Logic copied from https://www.w3.org/TR/wai-aria-practices/examples/listbox/js/listbox.js
       if (params.rowIndex != null) {
         const elementIndex = !options.pagination
           ? params.rowIndex
           : params.rowIndex - paginationState.page * paginationState.pageSize;
 
-        const scrollBottom = windowRef.current!.clientHeight + windowRef.current!.scrollTop;
-        const elementBottom = rowHeight * elementIndex + rowHeight;
-        if (elementBottom > scrollBottom) {
-          scrollCoordinates.top = elementBottom - windowRef.current!.clientHeight;
-        } else if (rowHeight * elementIndex < windowRef.current!.scrollTop) {
-          scrollCoordinates.top = rowHeight * elementIndex;
-        }
+        scrollCoordinates.top = scrollIntoView({
+          clientHeight: windowRef.current!.clientHeight,
+          scrollTop: windowRef.current!.scrollTop,
+          offsetHeight: rowHeight,
+          offsetTop: rowHeight * elementIndex,
+        });
       }
 
-      const needScroll = !isColVisible || typeof scrollCoordinates.top !== undefined;
-      if (needScroll) {
+      if (
+        typeof scrollCoordinates.left !== undefined ||
+        typeof scrollCoordinates.top !== undefined
+      ) {
         apiRef.current.scroll(scrollCoordinates);
+        return true;
       }
 
-      return needScroll;
+      return false;
     },
     [
       totalRowCount,
@@ -247,7 +250,6 @@ export const useGridVirtualRows = (apiRef: GridApiRef): void => {
       options.pagination,
       paginationState.page,
       paginationState.pageSize,
-      gridState,
       windowRef,
       columnsMeta.positions,
       rowHeight,
