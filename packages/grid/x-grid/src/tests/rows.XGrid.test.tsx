@@ -504,7 +504,7 @@ describe('<XGrid /> - Rows', () => {
         );
         const gridWindow = document.querySelector('.MuiDataGrid-window')!;
         gridWindow.scrollTop = offset;
-        gridWindow.dispatchEvent(new Event('scroll')); // Similate browser behavior
+        gridWindow.dispatchEvent(new Event('scroll')); // Simulate browser behavior
         apiRef.current.scrollToIndexes({ rowIndex: 2, colIndex: 0 });
         expect(gridWindow.scrollTop).to.equal(offset);
         apiRef.current.scrollToIndexes({ rowIndex: 1, colIndex: 0 });
@@ -546,7 +546,7 @@ describe('<XGrid /> - Rows', () => {
         const gridWindow = document.querySelector('.MuiDataGrid-window')!;
         expect(gridWindow.scrollLeft).to.equal(0);
         apiRef.current.scrollToIndexes({ rowIndex: 0, colIndex: 2 });
-        gridWindow.dispatchEvent(new Event('scroll')); // Similate browser behavior
+        gridWindow.dispatchEvent(new Event('scroll')); // Simulate browser behavior
         expect(gridWindow.scrollLeft).to.equal(columnWidth * 3 - width);
         apiRef.current.scrollToIndexes({ rowIndex: 0, colIndex: 1 });
         expect(gridWindow.scrollLeft).to.equal(columnWidth * 3 - width);
