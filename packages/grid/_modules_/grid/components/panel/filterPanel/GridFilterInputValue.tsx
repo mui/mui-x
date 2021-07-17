@@ -45,6 +45,7 @@ export function GridFilterInputValue(props: GridTypeFilterInputValueProps & Text
   const onFilterChange = React.useCallback(
     (event) => {
       let value = event.target.value;
+      // NativeSelect casts the value to a string. 
       if (type === 'singleSelect') {
         const column = apiRef.current.getColumn(item.columnField);
         value = column.valueOptions
