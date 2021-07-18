@@ -53,8 +53,11 @@ import { DataGrid } from '@material-ui/data-grid';
 | <span class="prop-name">logger</span> | <span class="prop-type">Logger</span> | null | Pass a custom logger in the components that implements the 'Logger' interface. |
 | <span class="prop-name">logLevel</span> | <span class="prop-type">string or boolean false</span> | false | Allows to pass the logging level or false to turn off logging. |
 | <span class="prop-name">nonce</span> | <span class="prop-type">string</span> |   | Nonce of the inline styles for [Content Security Policy](https://www.w3.org/TR/2016/REC-CSP2-20161215/#script-src-the-nonce-attribute). |
+| <span class="prop-name">onCellBlur</span> | <span class="prop-type">(params: GridCellParams, event: React.FocusEvent) => void</span> |   | Callback fired when the active element leaves a cell. |
 | <span class="prop-name">onCellClick</span> | <span class="prop-type">(params: GridCellParams, event: React.MouseEvent) => void</span> |   | Callback fired when a click event comes from a cell element. |
 | <span class="prop-name">onCellDoubleClick</span> | <span class="prop-type">(params: GridCellParams, event: React.MouseEvent) => void</span> |   | Callback fired when a double click event comes from a cell element. |
+| <span class="prop-name">onCellFocusOut</span> | <span class="prop-type">(params: GridCellParams, event?: MuiEvent<MouseEvent>) => void</span> |   | Callback fired when a cell loses focus. |
+| <span class="prop-name">onCellKeyDown</span> | <span class="prop-type">(params: GridCellParams, event: React.KeyboardEvent) => void</span> |   |  Callback fired when a keydown event comes from a cell element. |
 | <span class="prop-name">onCellOver</span> | <span class="prop-type">(params: GridCellParams, event: React.MouseEvent) => void</span> |   | Callback fired when a mouse over event comes from a cell element. |
 | <span class="prop-name">onCellOut</span> | <span class="prop-type">(params: GridCellParams, event: React.MouseEvent) => void</span> |   | Callback fired when a mouse out comes from a cell element. |
 | <span class="prop-name">onCellEnter</span> | <span class="prop-type">(params: GridCellParams, event: React.MouseEvent) => void</span> |   | Callback fired when a mouse enter event comes from a cell element. |
