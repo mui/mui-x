@@ -22,7 +22,7 @@
     "description": "Fired when a cell is double-clicked. Called with a <a href=\"/api/data-grid/grid-cell-params/\">GridCellParams</a> object."
   },
   {
-    "name": "cellRightClick",
+    "name": "cellContextMenu",
     "description": "Fired when a cell is right-clicked. Called with a <a href=\"/api/data-grid/grid-cell-params/\">GridCellParams</a> object."
   },
   {
@@ -94,7 +94,7 @@
     "description": "Fired when a row is double-clicked. Called with a <a href=\"/api/data-grid/grid-row-params/\">GridRowParams</a> object."
   },
   {
-    "name": "rowRigthClick",
+    "name": "rowContextMenu",
     "description": "Fired when a row is right-clicked. Called with a <a href=\"/api/data-grid/grid-row-params/\">GridRowParams</a> object."
   },
   {
