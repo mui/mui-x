@@ -2,7 +2,11 @@ import { GridCellMode } from '../gridCell';
 import { GridEditRowsModel } from '../gridEditRowModel';
 import { GridRowId } from '../gridRows';
 import { GridCellParams } from '../params/gridCellParams';
-import { GridEditCellPropsParams, GridCommitCellChangeParams } from '../params/gridEditCellParams';
+import {
+  GridEditCellPropsParams,
+  GridCommitCellChangeParams,
+  GridEditCellValueParams,
+} from '../params/gridEditCellParams';
 
 /**
  * The editing API interface that is available in the grid `apiRef`.
@@ -44,6 +48,12 @@ export interface GridEditRowApi {
    */
   setEditCellProps: (params: GridEditCellPropsParams) => void;
   /**
+   * Sets the value of the edit cell.
+   * @param {GridEditCellValueParams} params Contains the id, field and value to set.
+   * @param {React.SyntheticEvent} event The event to pass forward.
+   */
+  setEditCellValue: (params: GridEditCellValueParams, event?: React.SyntheticEvent) => void;
+  /**
    * Gets the params to be passed when calling `setEditCellProps`.
    * @param {GridRowId} rowId The id of the row.
    * @param {string} field The column field.
@@ -53,6 +63,8 @@ export interface GridEditRowApi {
   /**
    * Updates the field at the given id with the value stored in the edit row model.
    * @param {GridCommitCellChangeParams} params The id and field to commit to.
+   * @param {React.SyntheticEvent} event The event to pass forward.
+   * @returns {boolean} A boolean indicating if there is an error.
    */
-  commitCellChange: (params: GridCommitCellChangeParams) => void;
+  commitCellChange: (params: GridCommitCellChangeParams, event?: React.SyntheticEvent) => boolean;
 }

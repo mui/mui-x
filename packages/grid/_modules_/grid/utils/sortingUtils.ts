@@ -23,6 +23,8 @@ export const gridNillComparer = (v1: GridCellValue, v2: GridCellValue): number |
   return null;
 };
 
+const collator = new Intl.Collator();
+
 export const gridStringNumberComparer: GridComparatorFn = (
   value1: GridCellValue,
   value2: GridCellValue,
@@ -33,7 +35,7 @@ export const gridStringNumberComparer: GridComparatorFn = (
   }
 
   if (typeof value1 === 'string') {
-    return value1.localeCompare(value2!.toString());
+    return collator.compare(value1!.toString(), value2!.toString());
   }
   return (value1 as any) - (value2 as any);
 };

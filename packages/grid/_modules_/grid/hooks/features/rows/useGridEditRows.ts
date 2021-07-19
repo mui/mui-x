@@ -52,13 +52,7 @@ export function useGridEditRows(apiRef: GridApiRef) {
     if (params.cellMode === 'view') {
       return;
     }
-
-    const cellCommitParams = apiRef.current.getEditCellPropsParams(params.id, params.field);
-    if (!cellCommitParams.props.error) {
-      // We commit the change when there is no error
-      apiRef.current.publishEvent(GRID_CELL_EDIT_PROPS_CHANGE_COMMITTED, cellCommitParams);
-    }
-
+    apiRef.current.commitCellChange(params);
     apiRef.current.publishEvent(GRID_CELL_EDIT_EXIT, params);
   };
 
@@ -67,7 +61,6 @@ export function useGridEditRows(apiRef: GridApiRef) {
       if (event && (event as any).defaultMuiPrevented) {
         return;
       }
-
       commitPropsAndExit(params);
     },
   );
@@ -137,14 +130,16 @@ export function useGridEditRows(apiRef: GridApiRef) {
     [options.isCellEditable],
   );
 
+  const setEditCellValue = React.useCallback(
+    (params: GridEditCellValueParams, event?: React.SyntheticEvent) => {
+      const newParams = { id: params.id, field: params.field, props: { value: params.value } };
+      apiRef.current.publishEvent(GRID_CELL_EDIT_PROPS_CHANGE, newParams, event);
+    },
+    [apiRef],
+  );
+
   const setEditCellProps = React.useCallback(
-    (params: GridEditCellPropsParams, event?: React.SyntheticEvent) => {
-      if (event?.isPropagationStopped()) {
-        return;
-      }
-
-      apiRef.current.publishEvent(GRID_CELL_EDIT_PROPS_CHANGE, params, event);
-
+    (params: GridEditCellPropsParams) => {
       const { id, field, props } = params;
       logger.debug(`Setting cell props on id: ${id} field: ${field}`);
       setGridState((state) => {
@@ -166,6 +161,16 @@ export function useGridEditRows(apiRef: GridApiRef) {
       apiRef.current.publishEvent(GRID_ROW_EDIT_MODEL_CHANGE, editRowParams);
     },
     [apiRef, forceUpdate, logger, setGridState],
+  );
+
+  const handleCellEditPropsChange = React.useCallback(
+    (params: GridEditCellPropsParams, event?: React.SyntheticEvent) => {
+      if (event?.isPropagationStopped()) {
+        return;
+      }
+      apiRef.current.setEditCellProps(params);
+    },
+    [apiRef],
   );
 
   const setEditRowsModel = React.useCallback(
@@ -195,6 +200,24 @@ export function useGridEditRows(apiRef: GridApiRef) {
   );
 
   const commitCellChange = React.useCallback(
+    (params: GridCommitCellChangeParams, event?: React.SyntheticEvent): boolean => {
+      const { id, field } = params;
+      const model = apiRef.current.getEditRowsModel();
+      if (!model[id] || !model[id][field]) {
+        throw new Error(`Cell at id: ${id} and field: ${field} is not in edit mode`);
+      }
+
+      const { error } = model[id][field];
+      if (!error) {
+        apiRef.current.publishEvent(GRID_CELL_EDIT_PROPS_CHANGE_COMMITTED, params, event);
+        return true;
+      }
+      return false;
+    },
+    [apiRef],
+  );
+
+  const handleCellEditPropsChangeCommited = React.useCallback(
     (params: GridCommitCellChangeParams, event?: React.SyntheticEvent) => {
       if (event?.isPropagationStopped()) {
         return;
@@ -202,10 +225,6 @@ export function useGridEditRows(apiRef: GridApiRef) {
 
       const { id, field } = params;
       const model = apiRef.current.getEditRowsModel();
-      if (!model[id] || !model[id][field]) {
-        throw new Error(`Cell at id: ${id} and field: ${field} is not in edit mode`);
-      }
-
       const { value } = model[id][field];
       logger.debug(`Setting cell id: ${id} field: ${field} to value: ${value?.toString()}`);
       const row = apiRef.current.getRow(id);
@@ -278,20 +297,16 @@ export function useGridEditRows(apiRef: GridApiRef) {
         apiRef.current.publishEvent(GRID_CELL_EDIT_ENTER, params, event);
       }
       if (!isEditMode && isDeleteKeys(event.key)) {
-        const commitParams: GridEditCellPropsParams = apiRef.current.getEditCellPropsParams(
-          params.id,
-          params.field,
-        );
+        const commitParams = apiRef.current.getEditCellPropsParams(params.id, params.field);
         commitParams.props.value = '';
-        apiRef.current.publishEvent(GRID_CELL_EDIT_PROPS_CHANGE_COMMITTED, commitParams, event);
+        apiRef.current.commitCellChange(commitParams, event);
         apiRef.current.publishEvent(GRID_CELL_EDIT_EXIT, params, event);
       }
       if (isEditMode && isCellEditCommitKeys(event.key)) {
-        const cellCommitParams = apiRef.current.getEditCellPropsParams(params.id, params.field);
-        if (cellCommitParams.props.error) {
+        const commitParams = apiRef.current.getEditCellPropsParams(params.id, params.field);
+        if (!apiRef.current.commitCellChange(commitParams, event)) {
           return;
         }
-        apiRef.current.publishEvent(GRID_CELL_EDIT_PROPS_CHANGE_COMMITTED, cellCommitParams, event);
       }
       if (isEditMode && !event.isPropagationStopped() && isCellExitEditModeKeys(event.key)) {
         apiRef.current.publishEvent(GRID_CELL_EDIT_EXIT, params, event);
@@ -313,15 +328,22 @@ export function useGridEditRows(apiRef: GridApiRef) {
   useGridApiEventHandler(apiRef, GRID_CELL_EDIT_ENTER, handleEnterEdit);
   useGridApiEventHandler(apiRef, GRID_CELL_EDIT_EXIT, handleExitEdit);
   useGridApiEventHandler(apiRef, GRID_CELL_FOCUS_OUT, handleCellFocusOut);
+  useGridApiEventHandler(apiRef, GRID_CELL_EDIT_PROPS_CHANGE, handleCellEditPropsChange);
   useGridApiEventHandler(apiRef, GRID_COLUMN_HEADER_DRAG_START, handleColumnHeaderDragStart);
-  useGridApiEventHandler(apiRef, GRID_CELL_EDIT_PROPS_CHANGE_COMMITTED, commitCellChange);
+  useGridApiEventHandler(
+    apiRef,
+    GRID_CELL_EDIT_PROPS_CHANGE_COMMITTED,
+    handleCellEditPropsChangeCommited,
+  );
 
   useGridApiOptionHandler(
     apiRef,
     GRID_CELL_EDIT_PROPS_CHANGE_COMMITTED,
     options.onEditCellChangeCommitted,
   );
+  // TODO rename to onEditCellPropsChange
   useGridApiOptionHandler(apiRef, GRID_CELL_EDIT_PROPS_CHANGE, options.onEditCellChange);
+  // TODO remove because onEditCellChange does the same
   useGridApiOptionHandler(apiRef, GRID_CELL_VALUE_CHANGE, options.onCellValueChange);
   useGridApiOptionHandler(apiRef, GRID_CELL_MODE_CHANGE, options.onCellModeChange);
   useGridApiOptionHandler(apiRef, GRID_ROW_EDIT_MODEL_CHANGE, options.onEditRowModelChange);
@@ -333,10 +355,11 @@ export function useGridEditRows(apiRef: GridApiRef) {
       getCellMode,
       isCellEditable,
       commitCellChange,
-      setEditCellProps,
+      setEditCellProps, // TODO don't expose, update the editRowsModel prop directly
       getEditCellPropsParams,
       setEditRowsModel,
       getEditRowsModel,
+      setEditCellValue,
     },
     'EditRowApi',
   );

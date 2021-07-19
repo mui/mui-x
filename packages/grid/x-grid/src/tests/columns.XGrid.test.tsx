@@ -149,7 +149,7 @@ describe('<XGrid /> - Columns', () => {
       expect(onColumnResize.args[1][0].width).to.equal(120);
     });
 
-    it('should call onColumnWidthChange after resizing', async () => {
+    it('should call onColumnWidthChange after resizing', () => {
       const onColumnWidthChange = spy();
       render(<Test onColumnWidthChange={onColumnWidthChange} columns={columns} />);
       const separator = document.querySelector(

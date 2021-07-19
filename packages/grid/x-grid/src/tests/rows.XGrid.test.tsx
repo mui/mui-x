@@ -57,6 +57,17 @@ describe('<XGrid /> - Rows', () => {
       clock.restore();
     });
 
+    it('should not crash with weird id', () => {
+      const columns = [{ field: 'id' }];
+      const rows = [{ id: "'1" }, { id: '"2' }];
+
+      render(
+        <div style={{ height: 300, width: 300 }}>
+          <XGrid rows={rows} columns={columns} checkboxSelection />
+        </div>,
+      );
+    });
+
     describe('updateRows', () => {
       it('should apply getRowId before updating rows', () => {
         const getRowId = (row) => `${row.clientId}`;
