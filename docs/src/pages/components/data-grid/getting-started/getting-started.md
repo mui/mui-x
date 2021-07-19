@@ -135,11 +135,11 @@ The enterprise components come in two plans: Pro and Premium.
 | [Column reorder](/components/data-grid/columns/#column-reorder)                           |    ❌     |              ✅               |                  ✅                   |
 | [Column pinning](/components/data-grid/columns/#column-pinning)                           |    ❌     |              🚧               |                  🚧                   |
 | [Column spanning](/components/data-grid/columns/#column-spanning)                         |    🚧     |              🚧               |                  🚧                   |
-| **Row**                                                                                  |           |                               |                                       |
-| [Row sorting](/components/data-grid/rows/#row-sorting)                                   |    ✅     |              ✅               |                  ✅                   |
-| [Row height](/components/data-grid/rows/#row-height)                                     |    ✅     |              ✅               |                  ✅                   |
-| [Row spanning](/components/data-grid/rows/#row-spanning)                                 |    🚧     |              🚧               |                  🚧                   |
-| [Row reordering](/components/data-grid/rows/#row-reorder)                                   |    ❌     |              🚧               |                  🚧                   |
+| **Row**                                                                                   |           |                               |                                       |
+| [Row sorting](/components/data-grid/rows/#row-sorting)                                    |    ✅     |              ✅               |                  ✅                   |
+| [Row height](/components/data-grid/rows/#row-height)                                      |    ✅     |              ✅               |                  ✅                   |
+| [Row spanning](/components/data-grid/rows/#row-spanning)                                  |    🚧     |              🚧               |                  🚧                   |
+| [Row reordering](/components/data-grid/rows/#row-reorder)                                 |    ❌     |              🚧               |                  🚧                   |
 | **Selection**                                                                             |           |                               |                                       |
 | [Row selection](/components/data-grid/selection/#single-row-selection)                    |    ✅     |              ✅               |                  ✅                   |
 | [Multi-row selection](/components/data-grid/selection/#multiple-row-selection)            |    ❌     |              ✅               |                  ✅                   |
