@@ -9,7 +9,7 @@ import { expect } from 'chai';
 import { XGrid, useGridApiRef } from '@material-ui/x-grid';
 import { useData } from 'packages/storybook/src/hooks/useData';
 
-describe.only('<XGrid /> - Pagination', () => {
+describe('<XGrid /> - Pagination', () => {
   // TODO v5: replace with createClientRender
   const render = createClientRenderStrictMode();
 

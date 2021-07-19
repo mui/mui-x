@@ -13,6 +13,7 @@ import {
   DataGrid,
   DataGridProps,
   DEFAULT_GRID_OPTIONS,
+  GridLinkOperator,
   GridRowsProp,
 } from '@material-ui/data-grid';
 import { getColumnValues, getRows } from 'test/utils/helperFn';
@@ -125,6 +126,33 @@ describe('<DataGrid /> - Pagination', () => {
 
       fireEvent.click(screen.getByRole('button', { name: /previous page/i }));
       expect(getColumnValues()).to.deep.equal(['0']);
+    });
+
+    it('should go to last page when page is controlled and the current page is greater than the last page', () => {
+      const TestCasePaginationFilteredData = () => {
+        const [page, setPage] = React.useState(1);
+
+        return (
+          <BaselineTestCase
+            pagination
+            page={page}
+            onPageChange={(newPage) => setPage(newPage)}
+            pageSize={5}
+            filterModel={{
+              linkOperator: GridLinkOperator.And,
+              items: [
+                {
+                  columnField: 'id',
+                  operatorValue: '<=',
+                  value: '3',
+                },
+              ],
+            }}
+          />
+        );
+      };
+      render(<TestCasePaginationFilteredData />);
+      expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3']);
     });
   });
 
@@ -405,38 +433,6 @@ describe('<DataGrid /> - Pagination', () => {
       expect(getColumnValues()).to.deep.equal(['0']);
       fireEvent.click(screen.getByRole('button', { name: /next page/i }));
       expect(getColumnValues()).to.deep.equal(['1']);
-    });
-
-    it('should show filtered data if the user applies filter on an intermediate page and the resulted filter data is less than the rows per page', () => {
-      const TestCasePaginationFilteredData = () => {
-        const data = useData(200, 2);
-        const [page, setPage] = React.useState(1);
-
-        return (
-          <div style={{ width: 300, height: 300 }}>
-            <DataGrid
-              autoHeight={isJSDOM}
-              columns={data.columns}
-              rows={data.rows}
-              pagination
-              page={page}
-              onPageChange={(newPage) => setPage(newPage)}
-              pageSize={25}
-              filterModel={{
-                items: [
-                  {
-                    columnField: 'currencyPair',
-                    value: 'BTCUSD',
-                    operatorValue: 'equals',
-                  },
-                ],
-              }}
-            />
-          </div>
-        );
-      };
-      render(<TestCasePaginationFilteredData />);
-      expect(getColumnValues(1)).to.deep.equal(['BTCUSD', 'BTCUSD', 'BTCUSD', 'BTCUSD']);
     });
   });
 });

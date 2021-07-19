@@ -6,7 +6,7 @@ import { GRID_PAGE_CHANGE, GRID_PAGE_SIZE_CHANGE } from '../../../constants';
 import { GridComponentProps } from '../../../GridComponentProps';
 import { useGridApiEventHandler, useGridApiMethod } from '../../root';
 import { GridPageApi } from '../../../models/api/gridPageApi';
-import { GridPageSizeState } from './gridPaginationState';
+import { GridPageSizeState, GridPageState } from './gridPaginationState';
 import { visibleGridRowCountSelector } from '../filter';
 
 const getPageCount = (rowCount: number, pageSize: GridPageSizeState): number => {
@@ -15,6 +15,17 @@ const getPageCount = (rowCount: number, pageSize: GridPageSizeState): number => 
   }
 
   return 0;
+};
+
+const clampPage = (pageState: GridPageState): GridPageState => {
+  if (!pageState.pageCount) {
+    return pageState;
+  }
+
+  return {
+    ...pageState,
+    currentPage: Math.max(Math.min(pageState.currentPage, pageState.pageCount - 1), 0),
+  };
 };
 
 export const useGridPage = (
@@ -31,10 +42,10 @@ export const useGridPage = (
 
       setGridState((oldState) => ({
         ...oldState,
-        page: {
+        page: clampPage({
           ...oldState.page,
-          currentPage: Math.min(page, oldState.page.pageCount - 1),
-        },
+          currentPage: page,
+        }),
       }));
       forceUpdate();
     },
@@ -58,26 +69,16 @@ export const useGridPage = (
       const rowCount = props.rowCount !== undefined ? props.rowCount : visibleRowCount;
       const pageCount = getPageCount(rowCount, oldState.pageSize);
 
-      let currentPage: number;
-
-      if (props.page != null) {
-        if (pageCount) {
-          currentPage = Math.min(props.page, pageCount - 1);
-        } else {
-          currentPage = props.page;
-        }
-      } else {
-        currentPage = oldState.page.currentPage;
-      }
+      const currentPage = props.page == null ? oldState.page.currentPage : props.page;
 
       return {
         ...oldState,
-        page: {
+        page: clampPage({
           ...oldState.page,
           currentPage,
           rowCount,
           pageCount,
-        },
+        }),
       };
     });
     forceUpdate();
@@ -90,11 +91,11 @@ export const useGridPage = (
 
         return {
           ...oldState,
-          page: {
+          page: clampPage({
             ...oldState.page,
             pageCount,
-            currentPage: Math.min(oldState.page.currentPage, pageCount - 1),
-          },
+            currentPage: oldState.page.currentPage,
+          }),
         };
       });
 
