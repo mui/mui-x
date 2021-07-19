@@ -314,7 +314,7 @@ describe('<XGrid /> - Reorder', () => {
       render(<Test />);
       expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
       const dragCol = getColumnHeaderCell(1).firstChild!;
-      const targetCol = getColumnHeaderCell(0).firstChild!;
+      const targetCol = getColumnHeaderCell(2).firstChild!;
 
       fireEvent.dragStart(dragCol);
       fireEvent.dragEnter(targetCol);
@@ -328,7 +328,6 @@ describe('<XGrid /> - Reorder', () => {
     });
 
     it('should allow to drag right of a column with disableReorder=true if it is not the last visible one', () => {
-      let apiRef: GridApiRef;
       const rows = [{ id: 0, brand: 'Nike' }];
       const columns = [
         { field: 'brand' },
@@ -337,11 +336,9 @@ describe('<XGrid /> - Reorder', () => {
       ];
 
       const Test = () => {
-        apiRef = useGridApiRef();
-
         return (
           <div style={{ width: 300, height: 300 }}>
-            <XGrid apiRef={apiRef} rows={rows} columns={columns} />
+            <XGrid rows={rows} columns={columns} />
           </div>
         );
       };

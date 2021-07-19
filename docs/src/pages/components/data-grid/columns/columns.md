@@ -290,7 +290,7 @@ By default, `XGrid` allows all column reordering by dragging the header cells an
 
 To disable reordering on all columns, set the prop `disableColumnReorder={true}`.
 
-To disable reordering on some columns, set the `disableReorder` property of the column definition `GridColDef` object to `true`.
+To disable reordering in a specific column, set the `disableReorder` property to true in the `GridColDef` of the respective column.
 
 {{"demo": "pages/components/data-grid/columns/ColumnOrderingDisabledGrid.js", "disableAd": true, "bg": "inline"}}
 
