@@ -5,7 +5,7 @@
     "start": "yarn docs:dev",
     "docs:dev": "yarn workspace docs dev",
     "docs:api": "yarn docs:api:build",
-    "docs:api:build": "cross-env BABEL_ENV=development babel-node --config-file ./docs/babel.config.js -i '/node_modules/(?!@material-ui)/' -x .ts,.tsx,.js ./docs/scripts/buildApi.ts ./docs/pages/api-docs/data-grid",
+    "docs:api:build": "cross-env BABEL_ENV=development babel-node -x .ts,.tsx,.js ./docs/scripts/buildApi.ts ./docs/pages/api-docs/data-grid",
     "docs:build": "yarn workspace docs build",
     "docs:export": "yarn workspace docs export",
     "docs:typescript:formatted": "yarn workspace docs typescript:transpile",
