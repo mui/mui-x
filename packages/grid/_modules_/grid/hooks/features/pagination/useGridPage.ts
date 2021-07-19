@@ -33,7 +33,7 @@ export const useGridPage = (
         ...oldState,
         page: {
           ...oldState.page,
-          currentPage: page,
+          currentPage: Math.min(page, oldState.page.pageCount - 1),
         },
       }));
       forceUpdate();
