@@ -222,7 +222,7 @@ describe('<XGrid /> - Reorder', () => {
   });
 
   describe('column disableReorder', () => {
-    it('should not allow to start dragging a column with disableReorder=true', () => {
+    it.only('should not allow to start dragging a column with disableReorder=true', () => {
       let apiRef: GridApiRef;
       const rows = [{ id: 0, brand: 'Nike' }];
       const columns = [
@@ -243,10 +243,13 @@ describe('<XGrid /> - Reorder', () => {
 
       render(<Test />);
       expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
-      const dragCol = getColumnHeaderCell(1).firstChild!;
+      const dragCol = getColumnHeaderCell(1).firstChild! as HTMLElement;
       const targetCol = getColumnHeaderCell(0).firstChild!;
 
       fireEvent.dragStart(dragCol);
+
+      expect(dragCol.classList.contains(GRID_COLUMN_HEADER_DRAGGING_CSS_CLASS)).to.equal(false);
+
       fireEvent.dragEnter(targetCol);
       const dragOverEvent = createDragOverEvent(targetCol);
       fireEvent(targetCol, dragOverEvent);
