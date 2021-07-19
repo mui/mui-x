@@ -10,6 +10,7 @@ export const gridCheckboxSelectionColDef: GridColDef = {
   field: '__check__',
   type: 'checkboxSelection',
   width: 48,
+  minWidth: 48,
   resizable: false,
   sortable: false,
   filterable: false,
