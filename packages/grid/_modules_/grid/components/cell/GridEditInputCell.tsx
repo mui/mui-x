@@ -23,9 +23,8 @@ export function GridEditInputCell(props: GridCellParams & InputBaseProps) {
   const handleChange = React.useCallback(
     (event) => {
       const newValue = event.target.value;
-      const editProps = { value: newValue };
       setValueState(newValue);
-      api.setEditCellProps({ id, field, props: editProps });
+      api.setEditCellValue({ id, field, value: newValue }, event);
     },
     [api, field, id],
   );

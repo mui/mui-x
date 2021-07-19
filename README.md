@@ -26,8 +26,8 @@ We provide three options:
 
 ## Components
 
-- [DataGrid](https://material-ui.com/components/data-grid/), publised under `@material-ui/data-grid`, MIT licensed.
-- [XGrid](https://material-ui.com/components/data-grid/#commercial-version), publised under `@material-ui/x-grid`, commercially licensed.
+- [DataGrid](https://material-ui.com/components/data-grid/), published under `@material-ui/data-grid`, MIT licensed.
+- [XGrid](https://material-ui.com/components/data-grid/#commercial-version), published under `@material-ui/x-grid`, commercially licensed.
 
 ## Questions
 
