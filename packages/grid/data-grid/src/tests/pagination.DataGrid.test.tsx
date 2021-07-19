@@ -385,8 +385,8 @@ describe('<DataGrid /> - Pagination', () => {
 
     it('should support server side pagination', () => {
       const ServerPaginationGrid = () => {
-        const [page, setPage] = React.useState(0);
         const [rows, setRows] = React.useState<GridRowsProp>([]);
+        const [page, setPage] = React.useState(0);
 
         const handlePageChange = (newPage) => {
           setPage(newPage);
