@@ -9,7 +9,7 @@ import {
 } from '../hooks/features/pagination/gridPaginationSelector';
 import { optionsSelector } from '../hooks/utils/optionsSelector';
 import { useGridApiContext } from '../hooks/root/useGridApiContext';
-import { isMuiV5, createTheme } from '../utils';
+import { getMuiVersion, createTheme } from '../utils';
 
 const defaultTheme = createTheme();
 // Used to hide the Rows per page selector on small devices
@@ -71,7 +71,7 @@ export const GridPagination = React.forwardRef<
   );
 
   const getPaginationChangeHandlers = () => {
-    if (isMuiV5()) {
+    if (getMuiVersion() !== 'v4') {
       return {
         onPageChange: handlePageChange,
         onRowsPerPageChange: handlePageSizeChange,
@@ -89,7 +89,9 @@ export const GridPagination = React.forwardRef<
     <TablePagination
       ref={ref}
       classes={{
-        ...(isMuiV5() ? { selectLabel: classes.selectLabel } : { caption: classes.caption }),
+        ...(getMuiVersion() === 'v5'
+          ? { selectLabel: classes.selectLabel }
+          : { caption: classes.caption }),
         input: classes.input,
       }}
       component="div"

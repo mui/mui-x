@@ -10,6 +10,11 @@
     "export": "mv dist ../../docs/export/storybook",
     "typescript": "tsc -p tsconfig.json"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mui-org/material-ui-x.git",
+    "directory": "packages/storybook"
+  },
   "dependencies": {
     "@material-ui/core": "^4.9.12",
     "@material-ui/data-grid": "4.0.0-alpha.33",
