@@ -158,10 +158,6 @@ const filterModel: GridFilterModel = {
 
 {{"demo": "pages/components/data-grid/filtering/MultiFilteringWithOrGrid.js", "bg": "inline", "disableAd": true}}
 
-## apiRef [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-pro/)
-
-{{"demo": "pages/components/data-grid/filtering/FilterApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
-
 ## Quick filter
 
 The grid does not natively include quick filtering.
@@ -172,6 +168,10 @@ However, it can be implemented as in the demo below.
 > ⚠️ This feature isn't natively implemented in the grid package. It's coming.
 >
 > 👍 Upvote [issue #202](https://github.com/mui-org/material-ui-x/issues/202) if you want to see it land faster.
+
+## apiRef [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-pro/)
+
+{{"demo": "pages/components/data-grid/filtering/FilterApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
 
 ## API
 

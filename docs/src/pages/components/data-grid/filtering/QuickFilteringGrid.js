@@ -3,6 +3,7 @@ import IconButton from '@material-ui/core/IconButton';
 import TextField from '@material-ui/core/TextField';
 import {
   DataGrid,
+  escapeRegExp,
   GridToolbarColumnsButton,
   GridToolbarContainer,
   GridToolbarDensitySelector,
@@ -17,13 +18,9 @@ import { makeStyles } from '@material-ui/styles';
 const defaultTheme = createMuiTheme();
 const useStyles = makeStyles(
   (theme) => ({
-    toolbar: {
-      '&&': {
-        padding: theme.spacing(1, 1, 0),
-      },
-    },
-    search: {
-      boxSizing: 'unset',
+    root: {
+      padding: theme.spacing(1, 1, 0),
+      justifyContent: 'space-between',
     },
     searchInputUnderline: {
       '&:before': {
@@ -38,12 +35,7 @@ function QuickSearchToolbar(props) {
   const classes = useStyles();
 
   return (
-    <GridToolbarContainer
-      className={classes.toolbar}
-      style={{
-        justifyContent: 'space-between',
-      }}
-    >
+    <GridToolbarContainer className={classes.root}>
       <div>
         <GridToolbarColumnsButton />
         <GridToolbarFilterButton />
@@ -53,7 +45,6 @@ function QuickSearchToolbar(props) {
         variant="standard"
         value={props.value}
         onChange={props.onChange}
-        className={classes.search}
         placeholder="Search…"
         InputProps={{
           startAdornment: <SearchIcon fontSize="small" />,
@@ -87,10 +78,10 @@ export default function QuickFilteringGrid() {
 
   const requestSearch = (searchValue) => {
     setSearchText(searchValue);
-    const searchRegex = new RegExp(`.*${searchValue}.*`, 'ig');
+    const searchRegex = new RegExp(escapeRegExp(searchValue), 'i');
     const filteredRows = data.rows.filter((row) => {
-      return Object.keys(row).some((k) => {
-        return searchRegex.test(row[k].toString());
+      return Object.keys(row).some((field) => {
+        return searchRegex.test(row[field].toString());
       });
     });
     setRows(filteredRows);
