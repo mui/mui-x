@@ -18,11 +18,7 @@ export const useGridApi = (apiRef: GridApiRef): GridApi => {
     apiRef.current.forceUpdate = forceUpdate;
   }
 
-  const getState = React.useCallback<GridApi['getState']>(
-    (stateId) =>
-      stateId ? apiRef.current.state[stateId as keyof GridState] : apiRef.current.state,
-    [apiRef],
-  );
+  const getState = React.useCallback(() => apiRef.current.state, [apiRef]);
 
   const setState = React.useCallback(
     (stateOrFunc: GridState | ((oldState: GridState) => GridState)) => {

@@ -11,9 +11,7 @@ export interface GridStateApi {
    * @param {string} stateId The part of the state to be returned.
    * @returns {any} The whole state or part of it.
    */
-  getState: <StateId extends keyof GridState | undefined = undefined>(
-    stateId?: StateId,
-  ) => StateId extends keyof GridState ? GridState[StateId] : GridState;
+  getState: () => GridState;
   /**
    * Sets the whole state of the grid.
    * @param {function} state The new state or a function to return the new state.
