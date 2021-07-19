@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataGrid, GridSortDirection, GridSortModel } from '@material-ui/data-grid';
+import { DataGrid, GridSortModel } from '@material-ui/data-grid';
 import { useDemoData } from '@material-ui/x-grid-data-generator';
 
 export default function BasicSortingGrid() {
@@ -12,7 +12,7 @@ export default function BasicSortingGrid() {
   const [sortModel, setSortModel] = React.useState<GridSortModel>([
     {
       field: 'commodity',
-      sort: 'asc' as GridSortDirection,
+      sort: 'asc',
     },
   ]);
 

@@ -438,7 +438,7 @@ function sortServerRows(
         return;
       }
       const sortedCol = sortModel[0];
-      const comparator = columns[0].sortComparator!;
+      const comparator = columns.find((col) => col.field === sortedCol.field)!.sortComparator!;
       const clonedRows = [...rows];
       let sortedRows = clonedRows.sort((a, b) =>
         comparator(a[sortedCol.field], b[sortedCol.field], a, b),
@@ -454,7 +454,9 @@ function sortServerRows(
 }
 
 export const ServerSideSorting = () => {
+  const apiRef = useGridApiRef();
   const [rows, setRows] = React.useState<GridRowsProp>(getRows());
+  const [sortModel, setSortModel] = React.useState<GridSortModel>([{ field: 'age', sort: 'desc' }]);
   const [columns] = React.useState<GridColDef[]>(getColumns());
   const [loading, setLoading] = React.useState<boolean>(false);
 
@@ -463,19 +465,18 @@ export const ServerSideSorting = () => {
       setLoading(true);
       action('onSortModelChange')(model);
 
-      const newRows = await sortServerRows(rows, model, columns);
+      setSortModel(model);
+      const newRows = await sortServerRows(rows, model, apiRef.current.getVisibleColumns());
       setRows(newRows);
       setLoading(false);
     },
-    [columns, rows],
+    [apiRef, rows],
   );
-
-  // We use `useMemo` here, to keep the same ref and not trigger another sort on the next rendering
-  const sortModel: GridSortModel = React.useMemo(() => [{ field: 'age', sort: 'desc' }], []);
 
   return (
     <div className="grid-container">
       <XGrid
+        apiRef={apiRef}
         rows={rows}
         columns={columns}
         onSortModelChange={onSortModelChange}
