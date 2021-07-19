@@ -50,6 +50,14 @@ To change the width of a column, use the `width` property available in `GridColD
 
 {{"demo": "pages/components/data-grid/columns/ColumnWidthGrid.js", "bg": "inline"}}
 
+### Minimum width
+
+By default, the columns have a minimum width of 50 pixels.
+This is an arbitrary, easy to remember value.
+To change the minimum width of a column, use the `minWidth` property available in `GridColDef`.
+
+{{"demo": "pages/components/data-grid/columns/ColumnMinWidthGrid.js", "bg": "inline"}}
+
 ### Fluid width
 
 Column fluidity or responsiveness can be by achieved by setting the `flex` property in `GridColDef`.

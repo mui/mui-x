@@ -147,7 +147,7 @@ export function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
     ...classNames,
   );
 
-  const width = column.minWidth ? Math.max(column.minWidth, column.width!) : column.width!;
+  const width = column.width!;
 
   let ariaSort: any;
   if (sortDirection != null) {

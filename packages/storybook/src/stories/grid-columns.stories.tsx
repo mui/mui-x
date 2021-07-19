@@ -363,3 +363,37 @@ export const SingleSelectColumnType = () => {
     </div>
   );
 };
+
+export const ColumnFluidWidthGrid = () => {
+  const rows = [
+    {
+      id: 1,
+      username: '@MaterialUI',
+      age: 20,
+    },
+  ];
+
+  return (
+    <div className="grid-container">
+      <XGrid
+        columns={[
+          {
+            field: 'id',
+            flex: 1,
+            resizable: true,
+          },
+          {
+            field: 'username',
+            minWidth: 200,
+            resizable: true,
+          },
+          {
+            field: 'age',
+            resizable: true,
+          },
+        ]}
+        rows={rows}
+      />
+    </div>
+  );
+};

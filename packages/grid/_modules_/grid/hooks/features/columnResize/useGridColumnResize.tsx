@@ -26,7 +26,6 @@ import { optionsSelector } from '../../utils/optionsSelector';
 import { useGridSelector } from '../core/useGridSelector';
 import { useGridState } from '../core/useGridState';
 
-const MIN_COL_WIDTH = 50;
 let cachedSupportsTouchActionNone = false;
 
 // TODO: remove support for Safari < 13.
@@ -65,10 +64,6 @@ function trackFinger(event, currentTouchId): CursorCoordinates | boolean {
     x: event.clientX,
     y: event.clientY,
   };
-}
-
-function getColumnMinWidth(column: GridColDef | undefined): number {
-  return column?.minWidth ?? MIN_COL_WIDTH;
 }
 
 // TODO improve experience for last column
@@ -133,7 +128,7 @@ export const useGridColumnResize = (apiRef: GridApiRef) => {
       initialOffset.current +
       nativeEvent.clientX -
       colElementRef.current!.getBoundingClientRect().left;
-    newWidth = Math.max(getColumnMinWidth(colDefRef.current), newWidth);
+    newWidth = Math.max(colDefRef.current?.minWidth!, newWidth);
 
     updateWidth(newWidth);
     apiRef.current.publishEvent(GRID_COLUMN_RESIZE, {
@@ -228,7 +223,7 @@ export const useGridColumnResize = (apiRef: GridApiRef) => {
       initialOffset.current! +
       (finger as CursorCoordinates).x -
       colElementRef.current!.getBoundingClientRect().left;
-    newWidth = Math.max(getColumnMinWidth(colDefRef.current), newWidth);
+    newWidth = Math.max(colDefRef.current?.minWidth!, newWidth);
 
     updateWidth(newWidth);
     apiRef.current.publishEvent(GRID_COLUMN_RESIZE, {

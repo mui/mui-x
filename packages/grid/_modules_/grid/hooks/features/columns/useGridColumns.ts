@@ -43,7 +43,7 @@ function updateColumnsWidth(columns: GridColumns, viewportWidth: number) {
     columns.forEach((column) => {
       if (!column.hide) {
         if (!column.flex) {
-          viewportWidth -= column.width!;
+          viewportWidth -= Math.max(column.minWidth!, column.width!);
         } else {
           flexDivider += column.flex;
         }
@@ -56,21 +56,17 @@ function updateColumnsWidth(columns: GridColumns, viewportWidth: number) {
     const flexMultiplier = viewportWidth / flexDivider;
     newColumns = columns.map((column) => {
       if (!column.flex) {
-        return column;
+        return {
+          ...column,
+          width: Math.max(column.minWidth!, column.width!),
+        };
       }
 
-      const minColumnWidth = column.minWidth! ?? GRID_STRING_COL_DEF.width;
-      const flexColumnWidth = Math.floor(flexMultiplier * column.flex!);
-      let newWidth = 0;
-
+      let newWidth = column.minWidth! ?? GRID_STRING_COL_DEF.width;
       if (viewportWidth > 0) {
-        if (column.minWidth && column.minWidth > flexColumnWidth) {
-          newWidth = column.minWidth;
-        } else {
-          newWidth = flexColumnWidth;
-        }
-      } else {
-        newWidth = minColumnWidth;
+        const flexColumnWidth = Math.floor(flexMultiplier * column.flex!);
+        newWidth =
+          column.minWidth && column.minWidth > flexColumnWidth ? column.minWidth : flexColumnWidth;
       }
 
       return {
@@ -78,7 +74,15 @@ function updateColumnsWidth(columns: GridColumns, viewportWidth: number) {
         width: newWidth,
       };
     });
+  } else {
+    newColumns = columns.map((column) => {
+      return {
+        ...column,
+        width: Math.max(column.minWidth!, column.width!),
+      };
+    });
   }
+
   return newColumns;
 }
 
