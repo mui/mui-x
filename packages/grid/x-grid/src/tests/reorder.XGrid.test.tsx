@@ -222,7 +222,7 @@ describe('<XGrid /> - Reorder', () => {
   });
 
   describe('column disableReorder', () => {
-    it.only('should not allow to start dragging a column with disableReorder=true', () => {
+    it('should not allow to start dragging a column with disableReorder=true', () => {
       let apiRef: GridApiRef;
       const rows = [{ id: 0, brand: 'Nike' }];
       const columns = [
