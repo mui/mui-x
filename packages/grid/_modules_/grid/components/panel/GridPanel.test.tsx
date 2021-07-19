@@ -2,21 +2,19 @@ import * as React from 'react';
 import {
   createClientRenderStrictMode,
   // @ts-expect-error JS
-  createMount,
-  // @ts-expect-error JS
-  getClasses,
-  // @ts-expect-error JS
   describeConformance,
 } from 'test/utils';
-import { GridPanel, useGridApiRef, GridApiContext } from '@material-ui/data-grid';
+import {
+  GridPanel,
+  gridPanelClasses as classes,
+  useGridApiRef,
+  GridApiContext,
+} from '@material-ui/data-grid';
 import { Popper } from '@material-ui/core';
 
 describe('<GridPanel />', () => {
-  const mount = createMount();
   // TODO v5: replace with createClientRender
   const render = createClientRenderStrictMode();
-
-  let classes;
 
   function Wrapper(props) {
     const apiRef = useGridApiRef();
@@ -28,16 +26,12 @@ describe('<GridPanel />', () => {
     return <GridApiContext.Provider value={apiRef} {...props} />;
   }
 
-  before(() => {
-    classes = getClasses(<GridPanel open={false} />);
-  });
-
   describeConformance(<GridPanel disablePortal open />, () => ({
     classes,
     inheritComponent: Popper,
     render: (node) => render(<Wrapper>{node}</Wrapper>),
-    mount: (node) => {
-      const wrapper = mount(
+    wrapMount: (baseMount) => (node) => {
+      const wrapper = baseMount(
         <Wrapper>
           <span>{node}</span>
         </Wrapper>,

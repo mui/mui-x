@@ -6,8 +6,11 @@ import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import Paper from '@material-ui/core/Paper';
 import Popper, { PopperProps } from '@material-ui/core/Popper';
 import { useGridApiContext } from '../../hooks/root/useGridApiContext';
-import { isEscapeKey, isMuiV5, createTheme } from '../../utils';
-import { InternalStandardProps as StandardProps } from '../../utils/material-ui-utils';
+import { isEscapeKey, getMuiVersion, createTheme } from '../../utils';
+import {
+  InternalStandardProps as StandardProps,
+  generateUtilityClasses,
+} from '../../utils/material-ui-utils';
 
 export interface GridPanelClasses {
   /** Styles applied to the root element. */
@@ -41,6 +44,8 @@ const useStyles = makeStyles(
   { name: 'MuiGridPanel', defaultTheme },
 );
 
+export const gridPanelClasses = generateUtilityClasses('MuiGridPanel', ['root', 'paper']);
+
 export const GridPanel = React.forwardRef<HTMLDivElement, GridPanelProps>(function GridPanel(
   props,
   ref,
@@ -50,7 +55,7 @@ export const GridPanel = React.forwardRef<HTMLDivElement, GridPanelProps>(functi
   const apiRef = useGridApiContext();
 
   const getPopperModifiers = (): any => {
-    if (isMuiV5()) {
+    if (getMuiVersion() === 'v5') {
       return [
         {
           name: 'flip',
@@ -103,6 +108,3 @@ export const GridPanel = React.forwardRef<HTMLDivElement, GridPanelProps>(functi
     </Popper>
   );
 }) as (props: GridPanelProps) => JSX.Element;
-
-// @ts-ignore TODO migrate to v5 gridPanelClasses pattern, this is only for tests
-GridPanel.useStyles = useStyles;

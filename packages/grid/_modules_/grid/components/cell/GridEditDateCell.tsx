@@ -26,8 +26,7 @@ export function GridEditDateCell(props: GridCellParams & InputBaseProps) {
       setValueState(newValue);
 
       if (newValue === '') {
-        const editProps = { value: null };
-        api.setEditCellProps({ id, field, props: editProps }, event);
+        api.setEditCellValue({ id, field, value: null }, event);
         return;
       }
 
@@ -44,8 +43,7 @@ export function GridEditDateCell(props: GridCellParams & InputBaseProps) {
         dateObj.setHours(Number(hours), Number(minutes), 0, 0);
       }
 
-      const editProps = { value: dateObj };
-      api.setEditCellProps({ id, field, props: editProps }, event);
+      api.setEditCellValue({ id, field, value: dateObj }, event);
     },
     [api, field, id],
   );
