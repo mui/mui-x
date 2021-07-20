@@ -218,7 +218,7 @@ export interface GridOptions {
    */
   onEditCellPropsChange?: (params: GridEditCellPropsParams, event?: React.SyntheticEvent) => void;
   /**
-   * Callback fired when the cell changes are going to be committed.
+   * Callback fired when the cell changes are committed.
    * @param {GridEditCellPropsParams} params With all properties from [[GridEditCellPropsParams]].
    * @param {React.SyntheticEvent} event The event that caused this prop to be called.
    */
