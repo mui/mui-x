@@ -1,6 +1,6 @@
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { GridOptions } from '../models/gridOptions';
-import { isMuiV5 } from './utils';
+import { getMuiVersion } from './utils';
 
 export interface LocalizationV4 {
   props: {
@@ -22,7 +22,7 @@ export const getGridLocalization = (
   gridTranslations: Partial<GridLocaleText>,
   coreTranslations?,
 ): Localization => {
-  if (isMuiV5()) {
+  if (getMuiVersion() === 'v5') {
     return {
       components: {
         MuiDataGrid: {

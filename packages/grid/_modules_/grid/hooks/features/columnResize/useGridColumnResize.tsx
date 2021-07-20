@@ -22,10 +22,9 @@ import {
 } from '../../../utils/domUtils';
 import { GridApiRef, CursorCoordinates, GridColumnHeaderParams } from '../../../models';
 import { useGridApiEventHandler, useGridApiOptionHandler } from '../../root/useGridApiEventHandler';
-import { optionsSelector } from '../../utils/optionsSelector';
-import { useGridSelector } from '../core/useGridSelector';
 import { useGridState } from '../core/useGridState';
 import { useNativeEventListener } from '../../root/useNativeEventListener';
+import { GridComponentProps } from '../../../GridComponentProps';
 
 const MIN_COL_WIDTH = 50;
 let cachedSupportsTouchActionNone = false;
@@ -73,7 +72,10 @@ function trackFinger(event, currentTouchId): CursorCoordinates | boolean {
 }
 
 // TODO improve experience for last column
-export const useGridColumnResize = (apiRef: GridApiRef) => {
+export const useGridColumnResize = (
+  apiRef: GridApiRef,
+  props: Pick<GridComponentProps, 'onColumnResize' | 'onColumnWidthChange'>,
+) => {
   const logger = useLogger('useGridColumnResize');
   const [, setGridState, forceUpdate] = useGridState(apiRef);
   const colDefRef = React.useRef<GridColDef>();
@@ -82,7 +84,6 @@ export const useGridColumnResize = (apiRef: GridApiRef) => {
   const initialOffset = React.useRef<number>();
   const stopResizeEventTimeout = React.useRef<any>();
   const touchId = React.useRef<number>();
-  const options = useGridSelector(apiRef, optionsSelector);
 
   const updateWidth = (newWidth: number) => {
     logger.debug(`Updating width to ${newWidth} for col ${colDefRef.current!.field}`);
@@ -333,6 +334,6 @@ export const useGridColumnResize = (apiRef: GridApiRef) => {
   useGridApiEventHandler(apiRef, GRID_COLUMN_RESIZE_START, handleResizeStart);
   useGridApiEventHandler(apiRef, GRID_COLUMN_RESIZE_STOP, handleResizeStop);
 
-  useGridApiOptionHandler(apiRef, GRID_COLUMN_RESIZE, options.onColumnResize);
-  useGridApiOptionHandler(apiRef, GRID_COLUMN_WIDTH_CHANGE, options.onColumnWidthChange);
+  useGridApiOptionHandler(apiRef, GRID_COLUMN_RESIZE, props.onColumnResize);
+  useGridApiOptionHandler(apiRef, GRID_COLUMN_WIDTH_CHANGE, props.onColumnWidthChange);
 };
