@@ -132,12 +132,6 @@ export interface GridOptions {
    */
   disableSelectionOnClick?: boolean;
   /**
-   * Edit cell or rows can be processed on the server or client-side.
-   * Set it to 'client' if you would like to handle editing on the client-side.
-   * Set it to 'server' if you would like to handle editing on the server-side.
-   */
-  editMode?: GridFeatureMode;
-  /**
    * Set the edit rows model of the grid.
    */
   editRowsModel?: GridEditRowsModel;
