@@ -11,7 +11,6 @@ import { GridRowId } from './gridRows';
 import { Logger } from './logger';
 import { GridCellParams } from './params/gridCellParams';
 import { GridColumnHeaderParams } from './params/gridColumnHeaderParams';
-import { GridFilterModelParams } from './params/gridFilterModelParams';
 import { GridRowParams } from './params/gridRowParams';
 import { GridSortModelParams } from './params/gridSortModelParams';
 import { GridSelectionModel } from './gridSelectionModel';
@@ -351,9 +350,9 @@ export interface GridOptions {
   onColumnVisibilityChange?: (param: GridColumnVisibilityChangeParams) => void;
   /**
    * Callback fired when the Filter model changes before the filters are applied.
-   * @param param With all properties from [[GridFilterModelParams]].
+   * @param model With all properties from [[GridFilterModel]].
    */
-  onFilterModelChange?: (params: GridFilterModelParams) => void;
+  onFilterModelChange?: (model: GridFilterModel) => void;
   /**
    * Callback fired when the current page has changed.
    * @param page Index of the page displayed on the Grid.
