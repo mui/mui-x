@@ -32,7 +32,13 @@ const useStyles = makeStyles(
   { defaultTheme },
 );
 
-function QuickSearchToolbar(props) {
+interface QuickSearchToolbarProps {
+  clearSearch: () => void;
+  onChange: () => void;
+  value: string;
+}
+
+function QuickSearchToolbar(props: QuickSearchToolbarProps) {
   const classes = useStyles();
 
   return (
