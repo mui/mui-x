@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GRID_SCROLL, GRID_ROWS_SCROLL } from '../../../constants/eventsConstants';
+import { GRID_ROWS_SCROLL } from '../../../constants/eventsConstants';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridVirtualizationApi } from '../../../models/api/gridVirtualizationApi';
 import { GridCellIndexCoordinates } from '../../../models/gridCell';
@@ -380,30 +380,22 @@ export const useGridVirtualRows = (apiRef: GridApiRef): void => {
     };
   }, []);
 
-  const preventViewportScroll = React.useCallback(
-    (event: any) => {
-      logger.debug('Using keyboard to navigate cells, converting scroll events ');
+  const preventScroll = React.useCallback((event: any) => {
+    event.target.scrollLeft = 0;
+    event.target.scrollTop = 0;
+  }, []);
 
-      event.target.scrollLeft = 0;
-      event.target.scrollTop = 0;
-      event.preventDefault();
-      event.stopPropagation();
-      return false;
-    },
-    [logger],
-  );
-
-  useNativeEventListener(apiRef, windowRef, GRID_SCROLL, handleScroll, { passive: true });
+  useNativeEventListener(apiRef, windowRef, 'scroll', handleScroll, { passive: true });
   useNativeEventListener(
     apiRef,
     () => apiRef.current?.renderingZoneRef?.current?.parentElement,
-    GRID_SCROLL,
-    preventViewportScroll,
+    'scroll',
+    preventScroll,
   );
   useNativeEventListener(
     apiRef,
-    () => apiRef.current?.columnHeadersContainerElementRef?.current?.parentElement,
-    GRID_SCROLL,
-    preventViewportScroll,
+    () => apiRef.current?.columnHeadersContainerElementRef?.current,
+    'scroll',
+    preventScroll,
   );
 };
