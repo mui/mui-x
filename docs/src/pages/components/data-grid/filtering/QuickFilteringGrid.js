@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import IconButton from '@material-ui/core/IconButton';
 import TextField from '@material-ui/core/TextField';
 import {
@@ -65,6 +66,12 @@ function QuickSearchToolbar(props) {
     </GridToolbarContainer>
   );
 }
+
+QuickSearchToolbar.propTypes = {
+  clearSearch: PropTypes.func.isRequired,
+  onChange: PropTypes.func.isRequired,
+  value: PropTypes.string.isRequired,
+};
 
 export default function QuickFilteringGrid() {
   const { data } = useDemoData({
