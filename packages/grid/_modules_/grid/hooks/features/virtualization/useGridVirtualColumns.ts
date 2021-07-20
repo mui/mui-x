@@ -75,29 +75,6 @@ export const useGridVirtualColumns = (
     [getColumnIdxFromScroll, visibleColumns],
   );
 
-  const isColumnVisibleInWindow = React.useCallback(
-    (colIndex: number): boolean => {
-      if (!containerPropsRef.current) {
-        return false;
-      }
-      const firstCol = getColumnFromScroll(lastScrollLeftRef.current); // First fully visible column
-      const firstColIndex = visibleColumns.findIndex((col) => col.field === firstCol?.field);
-
-      const { positions } = columnsMeta;
-      const windowWidth = containerPropsRef.current.windowSizes.width;
-      const spaceBeforeFirstCol = positions[firstColIndex] - lastScrollLeftRef.current;
-      const availableWidth = windowWidth - spaceBeforeFirstCol;
-      let lastColIndex = firstColIndex;
-      while (lastColIndex < positions.length - 1 && positions[lastColIndex + 1] < availableWidth) {
-        lastColIndex += 1;
-      }
-      lastColIndex -= 1; // Last fully visible column
-
-      return colIndex >= firstColIndex && colIndex <= lastColIndex;
-    },
-    [columnsMeta, getColumnFromScroll, visibleColumns],
-  );
-
   const updateRenderedCols: UpdateRenderedColsFnType = React.useCallback(
     (containerProps: GridContainerProps | null, scrollLeft: number) => {
       if (!containerProps) {
@@ -171,9 +148,7 @@ export const useGridVirtualColumns = (
       apiRef,
     ],
   );
-  const virtualApi: Partial<GridVirtualizationApi> = {
-    isColumnVisibleInWindow,
-  };
+  const virtualApi: Partial<GridVirtualizationApi> = {};
   useGridApiMethod(apiRef, virtualApi, 'ColumnVirtualizationApi');
 
   const resetRenderedColState = React.useCallback(() => {
