@@ -470,27 +470,16 @@ export function EditRowsControl() {
 
   const isCellEditable = React.useCallback((params: GridCellParams) => params.row.id !== 0, []);
 
-  const onEditCellPropsChange = React.useCallback(
-    ({ id, field, props }: GridEditCellPropsParams) => {
-      if (field === 'email') {
-        const isValid = validateEmail(props.value);
-        const newState = {};
-        newState[id] = {
-          ...editRowsModel[id],
-          email: { ...props, error: !isValid },
-        };
-        setEditRowsModel((state) => ({ ...state, ...newState }));
-        return;
+  const onEditRowsModelChange = React.useCallback((newModel: GridEditRowsModel) => {
+    const updatedModel = { ...newModel };
+    Object.keys(updatedModel).forEach((id) => {
+      if (updatedModel[id].email) {
+        const isValid = validateEmail(updatedModel[id].email.value);
+        updatedModel[id].email = { ...updatedModel[id].email, error: !isValid };
       }
-      const newState = {};
-      newState[id] = {
-        ...editRowsModel[id],
-      };
-      newState[id][field] = props;
-      setEditRowsModel((state) => ({ ...state, ...newState }));
-    },
-    [editRowsModel],
-  );
+    });
+    setEditRowsModel(updatedModel);
+  }, []);
 
   const onCellEditCommit = React.useCallback(
     (params: GridEditCellPropsParams, event?: React.SyntheticEvent) => {
@@ -535,7 +524,7 @@ export function EditRowsControl() {
           apiRef={apiRef}
           onCellClick={onCellClick}
           isCellEditable={isCellEditable}
-          onEditCellPropsChange={onEditCellPropsChange}
+          onEditRowsModelChange={onEditRowsModelChange}
           onCellEditCommit={onCellEditCommit}
           editRowsModel={editRowsModel}
           editMode="server"
@@ -646,20 +635,16 @@ export function ValidateEditValueWithEditCellModelPropGrid() {
   const classes = useEditCellStyles();
   const [editRowsModel, setEditRowsModel] = React.useState<GridEditRowsModel>({});
 
-  const onEditCellPropsChange = React.useCallback(
-    ({ id, field, props }: GridEditCellPropsParams) => {
-      if (field === 'email') {
-        const isValid = validateEmail(props.value);
-        const newState = {};
-        newState[id] = {
-          ...editRowsModel[id],
-          email: { ...props, error: !isValid },
-        };
-        setEditRowsModel((state) => ({ ...state, ...newState }));
+  const onEditRowsModelChange = React.useCallback((newModel: GridEditRowsModel) => {
+    const updatedModel = { ...newModel };
+    Object.keys(updatedModel).forEach((id) => {
+      if (updatedModel[id].email) {
+        const isValid = validateEmail(updatedModel[id].email.value);
+        updatedModel[id].email = { ...updatedModel[id].email, error: !isValid };
       }
-    },
-    [editRowsModel],
-  );
+    });
+    setEditRowsModel(updatedModel);
+  }, []);
 
   return (
     <div style={{ height: 400, width: '100%' }}>
@@ -668,7 +653,7 @@ export function ValidateEditValueWithEditCellModelPropGrid() {
         {...baselineEditProps}
         apiRef={apiRef}
         editRowsModel={editRowsModel}
-        onEditCellPropsChange={onEditCellPropsChange}
+        onEditRowsModelChange={onEditRowsModelChange}
       />
     </div>
   );

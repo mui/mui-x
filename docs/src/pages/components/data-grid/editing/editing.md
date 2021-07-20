@@ -9,7 +9,7 @@ title: Data Grid - Editing
 ## Cell editing
 
 Cell editing allows editing the value of one cell at a time.
-Set the `editable` property of the column definition `GridColDef` object to `true` to allow editing cells of this column.
+Set the `editable` property in the `GridColDef` object to `true` to allow editing cells of this column.
 
 ```tsx
 <DataGrid columns={[{ field: 'name', editable: true }]} />
@@ -71,19 +71,13 @@ This is especially interesting when using the `valueGetter` on the column defini
 
 ### Client-side validation
 
-To validate the value in the cells, use `onEditCellPropsChange` to set the `error` attribute of the respective field when the value is invalid.
-Once this attribute is true, the value will never be commited.
+To validate the value in the cells, use `onEditRowsModelChange` to set the `error` attribute of the respective field when the value is invalid.
+If this attribute is true, the value will never be commited.
 This prop is invoked when a change is triggered by the edit cell component.
 
 Alternatively, you can use the `GridEditRowsModel` state mentioned in the [Control editing](#control-editing) section.
 
 {{"demo": "pages/components/data-grid/editing/ValidateRowModelControlGrid.js", "bg": "inline"}}
-
-#### Using apiRef [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-pro/)
-
-You can reproduce the same behavior using the apiRef.
-
-{{"demo": "pages/components/data-grid/editing/ValidateCellApiRefGrid.js", "bg": "inline", "disableAd": true}}
 
 ### Server-side validation
 
@@ -102,7 +96,7 @@ It's using `XGrid` but the same approach can be used with `DataGrid`.
 
 ### Custom edit component
 
-To customize the edit component of a column, set the `renderEditCell` function available in the column definition `GridColDef`.
+To customize the edit component of a column, use the `renderEditCell` attribute available in the `GridColDef`.
 
 The demo lets you edit the ratings by double-clicking the cell.
 

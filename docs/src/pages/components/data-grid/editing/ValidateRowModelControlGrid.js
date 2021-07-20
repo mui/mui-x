@@ -41,22 +41,16 @@ export default function ValidateRowModelControlGrid() {
   const [editRowsModel, setEditRowsModel] = React.useState({});
   const classes = useStyles();
 
-  const handleCellEditPropsChange = React.useCallback(
-    ({ id, field, props }) => {
-      if (field === 'email') {
-        const data = props; // Fix eslint value is missing in prop-types for JS files
-        const isValid = validateEmail(data.value);
-        const newState = {};
-        newState[id] = {
-          ...editRowsModel[id],
-          email: { ...props, error: !isValid },
-        };
-
-        setEditRowsModel((state) => ({ ...state, ...newState }));
+  const handleEditRowsModelChange = React.useCallback((newModel) => {
+    const updatedModel = { ...newModel };
+    Object.keys(updatedModel).forEach((id) => {
+      if (updatedModel[id].email) {
+        const isValid = validateEmail(updatedModel[id].email.value);
+        updatedModel[id].email = { ...updatedModel[id].email, error: !isValid };
       }
-    },
-    [editRowsModel],
-  );
+    });
+    setEditRowsModel(updatedModel);
+  }, []);
 
   return (
     <div style={{ height: 400, width: '100%' }}>
@@ -65,7 +59,7 @@ export default function ValidateRowModelControlGrid() {
         rows={rows}
         columns={columns}
         editRowsModel={editRowsModel}
-        onEditCellPropsChange={handleCellEditPropsChange}
+        onEditRowsModelChange={handleEditRowsModelChange}
       />
     </div>
   );
