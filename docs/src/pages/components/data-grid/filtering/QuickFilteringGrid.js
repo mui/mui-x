@@ -5,8 +5,6 @@ import TextField from '@material-ui/core/TextField';
 import {
   DataGrid,
   escapeRegExp,
-  GridToolbarColumnsButton,
-  GridToolbarContainer,
   GridToolbarDensitySelector,
   GridToolbarFilterButton,
 } from '@material-ui/data-grid';
@@ -20,11 +18,21 @@ const defaultTheme = createMuiTheme();
 const useStyles = makeStyles(
   (theme) => ({
     root: {
-      padding: theme.spacing(1, 1, 0),
+      padding: theme.spacing(0.5, 0.5, 0),
       justifyContent: 'space-between',
+      display: 'flex',
+      alignItems: 'flex-start',
+      flexWrap: 'wrap',
     },
-    searchInputUnderline: {
-      '&:before': {
+    textField: {
+      [theme.breakpoints.down('xs')]: {
+        width: '100%',
+      },
+      margin: theme.spacing(1, 0.5, 1.5),
+      '& .MuiSvgIcon-root': {
+        marginRight: theme.spacing(0.5),
+      },
+      '& .MuiInput-underline:before': {
         borderBottom: `1px solid ${theme.palette.divider}`,
       },
     },
@@ -36,9 +44,8 @@ function QuickSearchToolbar(props) {
   const classes = useStyles();
 
   return (
-    <GridToolbarContainer className={classes.root}>
+    <div className={classes.root}>
       <div>
-        <GridToolbarColumnsButton />
         <GridToolbarFilterButton />
         <GridToolbarDensitySelector />
       </div>
@@ -47,9 +54,9 @@ function QuickSearchToolbar(props) {
         value={props.value}
         onChange={props.onChange}
         placeholder="Search…"
+        className={classes.textField}
         InputProps={{
           startAdornment: <SearchIcon fontSize="small" />,
-          classes: { underline: classes.searchInputUnderline },
           endAdornment: (
             <IconButton
               title="Clear"
@@ -63,7 +70,7 @@ function QuickSearchToolbar(props) {
           ),
         }}
       />
-    </GridToolbarContainer>
+    </div>
   );
 }
 
