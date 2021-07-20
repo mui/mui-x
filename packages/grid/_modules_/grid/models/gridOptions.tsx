@@ -11,10 +11,8 @@ import { GridRowId } from './gridRows';
 import { Logger } from './logger';
 import { GridCellParams } from './params/gridCellParams';
 import { GridColumnHeaderParams } from './params/gridColumnHeaderParams';
-import { GridFilterModelParams } from './params/gridFilterModelParams';
 import { GridPageChangeParams } from './params/gridPageChangeParams';
 import { GridRowParams } from './params/gridRowParams';
-import { GridSortModelParams } from './params/gridSortModelParams';
 import { GridSelectionModel } from './gridSelectionModel';
 import { GridSortDirection, GridSortModel } from './gridSortModel';
 import {
@@ -352,9 +350,9 @@ export interface GridOptions {
   onColumnVisibilityChange?: (param: GridColumnVisibilityChangeParams) => void;
   /**
    * Callback fired when the Filter model changes before the filters are applied.
-   * @param param With all properties from [[GridFilterModelParams]].
+   * @param model With all properties from [[GridFilterModel]].
    */
-  onFilterModelChange?: (params: GridFilterModelParams) => void;
+  onFilterModelChange?: (model: GridFilterModel) => void;
   /**
    * Callback fired when the current page has changed.
    * @param param With all properties from [[GridPageChangeParams]].
@@ -418,9 +416,9 @@ export interface GridOptions {
   onSelectionModelChange?: (selectionModel: GridRowId[]) => void;
   /**
    * Callback fired when the sort model changes before a column is sorted.
-   * @param param With all properties from [[GridSortModelParams]].
+   * @param param With all properties from [[GridSortModel]].
    */
-  onSortModelChange?: (params: GridSortModelParams) => void;
+  onSortModelChange?: (model: GridSortModel) => void;
   /**
    * Callback fired when the state of the grid is updated.
    */

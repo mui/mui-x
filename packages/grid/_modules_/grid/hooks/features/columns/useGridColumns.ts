@@ -34,6 +34,7 @@ import {
 } from './gridColumnsSelector';
 import { useGridApiOptionHandler } from '../../root/useGridApiEventHandler';
 import { GRID_STRING_COL_DEF } from '../../../models/colDef/gridStringColDef';
+import { GridComponentProps } from '../../../GridComponentProps';
 
 function updateColumnsWidth(columns: GridColumns, viewportWidth: number): GridColumns {
   const numberOfFluidColumns = columns.filter((column) => !!column.flex && !column.hide).length;
@@ -43,7 +44,7 @@ function updateColumnsWidth(columns: GridColumns, viewportWidth: number): GridCo
     columns.forEach((column) => {
       if (!column.hide) {
         if (!column.flex) {
-          viewportWidth -= column.width!;
+          viewportWidth -= Math.max(column.minWidth!, column.width!);
         } else {
           flexDivider += column.flex;
         }
@@ -56,15 +57,33 @@ function updateColumnsWidth(columns: GridColumns, viewportWidth: number): GridCo
     const flexMultiplier = viewportWidth / flexDivider;
     newColumns = columns.map((column) => {
       if (!column.flex) {
-        return column;
+        return {
+          ...column,
+          width: Math.max(column.minWidth!, column.width!),
+        };
       }
+
+      let newWidth = column.minWidth! ?? GRID_STRING_COL_DEF.width;
+      if (viewportWidth > 0) {
+        const flexColumnWidth = Math.floor(flexMultiplier * column.flex!);
+        newWidth =
+          column.minWidth && column.minWidth > flexColumnWidth ? column.minWidth : flexColumnWidth;
+      }
+
       return {
         ...column,
-        width:
-          viewportWidth > 0 ? Math.floor(flexMultiplier * column.flex!) : GRID_STRING_COL_DEF.width,
+        width: newWidth,
+      };
+    });
+  } else {
+    newColumns = columns.map((column) => {
+      return {
+        ...column,
+        width: Math.max(column.minWidth!, column.width!),
       };
     });
   }
+
   return newColumns;
 }
 
@@ -118,7 +137,10 @@ const upsertColumnsState = (
   return newState;
 };
 
-export function useGridColumns(apiRef: GridApiRef, { columns }: { columns: GridColumns }): void {
+export function useGridColumns(
+  apiRef: GridApiRef,
+  props: Pick<GridComponentProps, 'columns' | 'onColumnVisibilityChange'>,
+): void {
   const logger = useLogger('useGridColumns');
   const [gridState, setGridState, forceUpdate] = useGridState(apiRef);
   const columnsMeta = useGridSelector(apiRef, gridColumnsMetaSelector);
@@ -276,11 +298,11 @@ export function useGridColumns(apiRef: GridApiRef, { columns }: { columns: GridC
   useGridApiMethod(apiRef, colApi, 'ColApi');
 
   React.useEffect(() => {
-    logger.info(`GridColumns have changed, new length ${columns.length}`);
+    logger.info(`GridColumns have changed, new length ${props.columns.length}`);
 
-    if (columns.length > 0) {
+    if (props.columns.length > 0) {
       const hydratedColumns = hydrateColumns(
-        columns,
+        props.columns,
         options.columnTypes,
         !!options.checkboxSelection,
         logger,
@@ -295,7 +317,7 @@ export function useGridColumns(apiRef: GridApiRef, { columns }: { columns: GridC
   }, [
     logger,
     apiRef,
-    columns,
+    props.columns,
     options.columnTypes,
     options.checkboxSelection,
     updateState,
@@ -313,5 +335,5 @@ export function useGridColumns(apiRef: GridApiRef, { columns }: { columns: GridC
   }, [apiRef, gridState.viewportSizes.width, logger]);
 
   // Grid Option Handlers
-  useGridApiOptionHandler(apiRef, GRID_COLUMN_VISIBILITY_CHANGE, options.onColumnVisibilityChange);
+  useGridApiOptionHandler(apiRef, GRID_COLUMN_VISIBILITY_CHANGE, props.onColumnVisibilityChange);
 }

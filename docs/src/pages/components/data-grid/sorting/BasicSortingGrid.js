@@ -9,16 +9,19 @@ export default function BasicSortingGrid() {
     maxColumns: 6,
   });
 
+  const [sortModel, setSortModel] = React.useState([
+    {
+      field: 'commodity',
+      sort: 'asc',
+    },
+  ]);
+
   return (
     <div style={{ height: 400, width: '100%' }}>
       <DataGrid
         {...data}
-        sortModel={[
-          {
-            field: 'commodity',
-            sort: 'asc',
-          },
-        ]}
+        sortModel={sortModel}
+        onSortModelChange={(model) => setSortModel(model)}
       />
     </div>
   );
