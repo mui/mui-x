@@ -9,13 +9,13 @@ import {
   GridFilterInputValueProps,
   GridFilterItem,
   GridFilterModel,
-  GridFilterModelParams,
   getGridNumericColumnOperators,
   GridLinkOperator,
   GridPreferencePanelsValue,
   GridRowModel,
   useGridApiRef,
   XGrid,
+  getInitialGridFilterState,
 } from '@material-ui/x-grid';
 import { useDemoData, randomArrayItem } from '@material-ui/x-grid-data-generator';
 import { action } from '@storybook/addon-actions';
@@ -278,15 +278,15 @@ export function ServerFilterViaProps() {
   // columnTypes={{string: {filterOperators: ['contains']}}}
 
   const onFilterChange = React.useCallback(
-    (params: GridFilterModelParams) => {
-      const hasChanged = params.filterModel.items[0].value !== filterModel.items[0].value;
+    (newFilterModel: GridFilterModel) => {
+      const hasChanged = newFilterModel.items[0].value !== filterModel.items[0].value;
       setLoading(hasChanged);
       if (!hasChanged) {
         return;
       }
       setTimeout(() => {
-        action('onFilterChange')(params);
-        setFilterModel({ items: [params.filterModel.items[0]] });
+        action('onFilterChange')(newFilterModel);
+        setFilterModel({ items: [newFilterModel.items[0]] });
       }, 1500);
     },
     [filterModel.items],
@@ -350,8 +350,8 @@ export function SimpleServerFilter() {
   }, []);
 
   const onFilterChange = React.useCallback(
-    async (params: GridFilterModelParams) => {
-      await fetchRows(params.filterModel.items[0].value);
+    async (newFilterModel: GridFilterModel) => {
+      await fetchRows(newFilterModel.items[0].value);
     },
     [fetchRows],
   );
@@ -749,10 +749,10 @@ export function ObjectValueGetter() {
 export function MultiFilteringWithOrGrid() {
   const called = React.useRef(0);
   const [lastFilterChange, setLastFilterChange] = React.useState(new Date());
-  const [filterModelState] = React.useState({
+  const [filterModelState, setFilterModelState] = React.useState({
     items: [
-      { columnField: 'commodity', operatorValue: 'contains', value: 'rice' },
-      { columnField: 'commodity', operatorValue: 'startsWith', value: 'soy' },
+      { id: 1, columnField: 'commodity', operatorValue: 'contains', value: 'rice' },
+      { id: 2, columnField: 'commodity', operatorValue: 'startsWith', value: 'soy' },
     ],
     linkOperator: GridLinkOperator.Or,
   });
@@ -762,9 +762,10 @@ export function MultiFilteringWithOrGrid() {
     maxColumns: 6,
   });
 
-  const handleFilterChange = React.useCallback(() => {
+  const handleFilterChange = React.useCallback((model) => {
     called.current += 1;
     setLastFilterChange(new Date());
+    setFilterModelState(model);
   }, []);
   return (
     <div style={{ height: 400, width: '100%' }}>
@@ -773,5 +774,101 @@ export function MultiFilteringWithOrGrid() {
         Last filter change: {lastFilterChange.toISOString()} called = {called.current}
       </p>
     </div>
+  );
+}
+
+export function SimpleModelWithOnChangeControlFilter() {
+  const [simpleColumns] = React.useState([
+    {
+      field: 'name',
+    },
+  ]);
+  const [simpleRows] = React.useState([
+    {
+      id: '1',
+      name: 'Paris',
+    },
+    {
+      id: '2',
+      name: 'Nice',
+    },
+    {
+      id: '3',
+      name: 'London',
+    },
+  ]);
+
+  const [simpleFilterModel, setFilterModel] = React.useState<GridFilterModel>(
+    getInitialGridFilterState(),
+  );
+  const handleFilterChange = React.useCallback((model) => {
+    setFilterModel(model);
+  }, []);
+
+  return (
+    <XGrid
+      rows={simpleRows}
+      columns={simpleColumns}
+      filterModel={simpleFilterModel}
+      onFilterModelChange={handleFilterChange}
+    />
+  );
+}
+export function SimpleModelControlFilter() {
+  const [simpleColumns] = React.useState([
+    {
+      field: 'name',
+    },
+  ]);
+  const [simpleRows] = React.useState([
+    {
+      id: '1',
+      name: 'Paris',
+    },
+    {
+      id: '2',
+      name: 'Nice',
+    },
+    {
+      id: '3',
+      name: 'London',
+    },
+  ]);
+
+  const [simpleFilterModel] = React.useState<GridFilterModel>({
+    items: [{ id: 1, value: 'lon', operatorValue: 'contains', columnField: 'name' }],
+    linkOperator: GridLinkOperator.And,
+  });
+
+  return <XGrid rows={simpleRows} columns={simpleColumns} filterModel={simpleFilterModel} />;
+}
+export function SimpleOnChangeControlFilter() {
+  const [simpleColumns] = React.useState([
+    {
+      field: 'name',
+    },
+  ]);
+  const [simpleRows] = React.useState([
+    {
+      id: '1',
+      name: 'Paris',
+    },
+    {
+      id: '2',
+      name: 'Nice',
+    },
+    {
+      id: '3',
+      name: 'London',
+    },
+  ]);
+
+  const handleFilterChange = React.useCallback((model) => {
+    // eslint-disable-next-line no-console
+    console.log('Filter model changed to', model);
+  }, []);
+
+  return (
+    <XGrid rows={simpleRows} columns={simpleColumns} onFilterModelChange={handleFilterChange} />
   );
 }
