@@ -469,7 +469,7 @@ export interface GridOptions {
   /**
    * Set the selection model of the grid.
    */
-  selectionModel?: GridSelectionModel;
+  selectionModel?: GridSelectionModel | GridRowId;
   /**
    * If `true`, the right border of the cells are displayed.
    * @default false
