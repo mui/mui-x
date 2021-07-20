@@ -23,20 +23,7 @@ import { optionsSelector } from '../utils/optionsSelector';
 import { useLogger } from '../utils/useLogger';
 import { useGridApiEventHandler } from './useGridApiEventHandler';
 import { GridComponentProps } from '../../GridComponentProps';
-
-function getBrowserScrollbarSize(doc: Document, element: HTMLElement): number {
-  const scrollDiv = doc.createElement('div');
-  scrollDiv.style.width = '99px';
-  scrollDiv.style.height = '99px';
-  scrollDiv.style.position = 'absolute';
-  scrollDiv.style.overflow = 'scroll';
-  scrollDiv.className = 'scrollDiv';
-  element.appendChild(scrollDiv);
-  const scrollbarSize = scrollDiv.offsetWidth - scrollDiv.clientWidth;
-  element.removeChild(scrollDiv);
-
-  return scrollbarSize;
-}
+import { getBrowserScrollbarSize } from '../../utils';
 
 export const useGridContainerProps = (
   apiRef: GridApiRef,
