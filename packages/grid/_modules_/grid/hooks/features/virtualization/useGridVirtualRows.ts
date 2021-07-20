@@ -32,7 +32,7 @@ function scrollIntoView(dimensions) {
   const { clientHeight, scrollTop, offsetHeight, offsetTop } = dimensions;
 
   const elementBottom = offsetTop + offsetHeight;
-  if (elementBottom > clientHeight + scrollTop) {
+  if (elementBottom - clientHeight > scrollTop) {
     return elementBottom - clientHeight;
   }
   if (offsetTop < scrollTop) {
