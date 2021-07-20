@@ -156,7 +156,7 @@ export const useGridColumnReorder = (apiRef: GridApiRef): void => {
       }));
       forceUpdate();
     },
-    [options.disableColumnReorder, logger, setGridState, forceUpdate, apiRef],
+    [options.disableColumnReorder, logger, setGridState, forceUpdate, apiRef, dragColField],
   );
 
   useGridApiEventHandler(apiRef, GRID_COLUMN_HEADER_DRAG_START, handleColumnHeaderDragStart);
