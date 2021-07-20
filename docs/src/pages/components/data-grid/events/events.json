@@ -164,7 +164,7 @@
   },
   {
     "name": "filterModelChange",
-    "description": "Fired when the filter model changes.\nCalled with a GridFilterModelParams object."
+    "description": "Fired when the filter model changes.\nCalled with a GridFilterModel object."
   },
   {
     "name": "stateChange",

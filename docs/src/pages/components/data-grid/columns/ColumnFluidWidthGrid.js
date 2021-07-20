@@ -17,6 +17,7 @@ export default function ColumnFluidWidthGrid() {
           {
             field: 'id',
             flex: 1,
+            minWidth: 150,
           },
           {
             field: 'username',
@@ -25,6 +26,7 @@ export default function ColumnFluidWidthGrid() {
           {
             field: 'age',
             flex: 0.3,
+            minWidth: 50,
           },
         ]}
         rows={rows}

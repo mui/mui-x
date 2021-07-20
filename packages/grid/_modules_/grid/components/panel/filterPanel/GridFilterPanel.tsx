@@ -57,7 +57,7 @@ export function GridFilterPanel() {
       <GridPanelContent>
         {gridState.filter.items.map((item, index) => (
           <GridFilterForm
-            key={item.id}
+            key={item.id == null ? index : item.id}
             item={item}
             applyFilterChanges={applyFilter}
             deleteFilter={deleteFilter}

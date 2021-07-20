@@ -1,8 +1,13 @@
 import * as React from 'react';
-import { GridApiRef, GridSortModel, useGridApiRef } from '@material-ui/data-grid';
+import {
+  GridApiRef,
+  GridComponentProps,
+  GridSortModel,
+  useGridApiRef,
+} from '@material-ui/data-grid';
 import { XGrid } from '@material-ui/x-grid';
 import { expect } from 'chai';
-import { useFakeTimers } from 'sinon';
+import { spy, useFakeTimers } from 'sinon';
 import { getColumnValues, getCell, getColumnHeaderCell } from 'test/utils/helperFn';
 import {
   createClientRenderStrictMode,
@@ -54,21 +59,16 @@ describe('<XGrid /> - Sorting', () => {
 
   let apiRef: GridApiRef;
 
-  const TestCase = (props: {
-    rows?: any[];
-    sortModel: GridSortModel;
-    disableMultipleColumnsSorting?: boolean;
-  }) => {
-    const { sortModel, rows, disableMultipleColumnsSorting } = props;
+  const TestCase = (props: Partial<GridComponentProps>) => {
+    const { rows, ...other } = props;
     apiRef = useGridApiRef();
     return (
       <div style={{ width: 300, height: 300 }}>
         <XGrid
           apiRef={apiRef}
           {...baselineProps}
-          rows={rows || baselineProps.rows}
-          sortModel={sortModel}
-          disableMultipleColumnsSorting={disableMultipleColumnsSorting}
+          rows={props.rows || baselineProps.rows}
+          {...other}
         />
       </div>
     );
@@ -115,7 +115,8 @@ describe('<XGrid /> - Sorting', () => {
   });
 
   it('should allow apiRef to setSortModel', () => {
-    renderBrandSortedAsc();
+    render(<TestCase />);
+
     apiRef.current.setSortModel([{ field: 'brand', sort: 'desc' }]);
     expect(getColumnValues()).to.deep.equal(['Puma', 'Nike', 'Adidas']);
   });
@@ -130,8 +131,8 @@ describe('<XGrid /> - Sorting', () => {
   });
 
   it('should allow to set multiple Sort items via apiRef', () => {
-    renderBrandSortedAsc();
-    expect(getColumnValues()).to.deep.equal(['Adidas', 'Nike', 'Puma']);
+    render(<TestCase />);
+
     const sortModel: GridSortModel = [
       { field: 'year', sort: 'desc' },
       { field: 'brand', sort: 'asc' },
@@ -144,7 +145,8 @@ describe('<XGrid /> - Sorting', () => {
   describe('multi-sorting', () => {
     ['shiftKey', 'metaKey', 'ctrlKey'].forEach((key) => {
       it(`should do a multi-sorting when clicking the header cell while ${key} is pressed`, () => {
-        render(<TestCase sortModel={[{ field: 'year', sort: 'desc' }]} />);
+        render(<TestCase />);
+        apiRef.current.setSortModel([{ field: 'year', sort: 'desc' }]);
         expect(getColumnValues()).to.deep.equal(['Puma', 'Nike', 'Adidas']);
         fireEvent.click(getColumnHeaderCell(0), { [key]: true });
         expect(getColumnValues()).to.deep.equal(['Puma', 'Adidas', 'Nike']);
@@ -153,7 +155,8 @@ describe('<XGrid /> - Sorting', () => {
 
     ['metaKey', 'ctrlKey'].forEach((key) => {
       it(`should do nothing when pressing Enter while ${key} is pressed`, () => {
-        render(<TestCase sortModel={[{ field: 'year', sort: 'desc' }]} />);
+        render(<TestCase />);
+        apiRef.current.setSortModel([{ field: 'year', sort: 'desc' }]);
         expect(getColumnValues()).to.deep.equal(['Puma', 'Nike', 'Adidas']);
         getColumnHeaderCell(1).focus();
         fireEvent.keyDown(getColumnHeaderCell(1), { key: 'Enter', [key]: true });
@@ -162,7 +165,8 @@ describe('<XGrid /> - Sorting', () => {
     });
 
     it('should do a multi-sorting pressing Enter while shiftKey is pressed', () => {
-      render(<TestCase sortModel={[{ field: 'year', sort: 'desc' }]} />);
+      render(<TestCase />);
+      apiRef.current.setSortModel([{ field: 'year', sort: 'desc' }]);
       expect(getColumnValues()).to.deep.equal(['Puma', 'Nike', 'Adidas']);
       getColumnHeaderCell(0).focus();
       fireEvent.keyDown(getColumnHeaderCell(0), { key: 'Enter', shiftKey: true });
@@ -170,16 +174,16 @@ describe('<XGrid /> - Sorting', () => {
     });
 
     it(`should not do a multi-sorting if no multiple key is pressed`, () => {
-      render(<TestCase sortModel={[{ field: 'year', sort: 'desc' }]} />);
+      render(<TestCase />);
+      apiRef.current.setSortModel([{ field: 'year', sort: 'desc' }]);
       expect(getColumnValues()).to.deep.equal(['Puma', 'Nike', 'Adidas']);
       fireEvent.click(getColumnHeaderCell(0));
       expect(getColumnValues()).to.deep.equal(['Adidas', 'Nike', 'Puma']);
     });
 
     it('should not do a multi-sorting if disableMultipleColumnsSorting is true', () => {
-      render(
-        <TestCase sortModel={[{ field: 'year', sort: 'desc' }]} disableMultipleColumnsSorting />,
-      );
+      render(<TestCase disableMultipleColumnsSorting />);
+      apiRef.current.setSortModel([{ field: 'year', sort: 'desc' }]);
       expect(getColumnValues()).to.deep.equal(['Puma', 'Nike', 'Adidas']);
       fireEvent.click(getColumnHeaderCell(0), { shiftKey: true });
       expect(getColumnValues()).to.deep.equal(['Adidas', 'Nike', 'Puma']);
@@ -263,5 +267,61 @@ describe('<XGrid /> - Sorting', () => {
     expect(renderCellCount).to.equal(2);
     setProps({ extra: true });
     expect(renderCellCount).to.equal(2);
+  });
+
+  describe('control Sorting', () => {
+    it('should update the sorting state when neither the model nor the onChange are set', () => {
+      render(<TestCase />);
+      expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
+      fireEvent.click(getColumnHeaderCell(0));
+      expect(getColumnValues()).to.deep.equal(['Adidas', 'Nike', 'Puma']);
+    });
+
+    it('should not update the sort model when the sortModelProp is set', () => {
+      const testSortModel: GridSortModel = [{ field: 'brand', sort: 'desc' }];
+      render(<TestCase sortModel={testSortModel} />);
+      expect(getColumnValues()).to.deep.equal(['Puma', 'Nike', 'Adidas']);
+      fireEvent.click(getColumnHeaderCell(0));
+      expect(getColumnValues()).to.deep.equal(['Puma', 'Nike', 'Adidas']);
+    });
+
+    it('should update the sort state when the model is not set, but the onChange is set', () => {
+      const onModelChange = spy();
+      render(<TestCase onSortModelChange={onModelChange} />);
+      expect(onModelChange.callCount).to.equal(0);
+      fireEvent.click(getColumnHeaderCell(0));
+      expect(onModelChange.callCount).to.equal(1);
+      expect(onModelChange.lastCall.firstArg).to.deep.equal([{ field: 'brand', sort: 'asc' }]);
+    });
+
+    it('should control sort state when the model and the onChange are set', () => {
+      let expectedModel: GridSortModel = [];
+      const ControlCase = (props: Partial<GridComponentProps>) => {
+        const { rows, columns, ...others } = props;
+        const [caseSortModel, setSortModel] = React.useState<GridSortModel>([]);
+        const handleSortChange = (newModel) => {
+          setSortModel(newModel);
+          expectedModel = newModel;
+        };
+
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <XGrid
+              autoHeight={isJSDOM}
+              columns={columns || baselineProps.columns}
+              rows={rows || baselineProps.rows}
+              sortModel={caseSortModel}
+              onSortModelChange={handleSortChange}
+              {...others}
+            />
+          </div>
+        );
+      };
+
+      render(<ControlCase />);
+      fireEvent.click(getColumnHeaderCell(0));
+      expect(getColumnValues()).to.deep.equal(['Adidas', 'Nike', 'Puma']);
+      expect(expectedModel).to.deep.equal([{ field: 'brand', sort: 'asc' }]);
+    });
   });
 });

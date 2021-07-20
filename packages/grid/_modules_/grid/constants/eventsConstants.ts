@@ -14,11 +14,6 @@ export const GRID_DEBOUNCED_RESIZE = 'debouncedResize';
 /**
  * @ignore - do not document.
  */
-export const GRID_SCROLL = 'scroll';
-
-/**
- * @ignore - do not document.
- */
 export const GRID_KEYDOWN = 'keydown';
 
 // GRID events
@@ -429,7 +424,7 @@ export const GRID_SORT_MODEL_CHANGE = 'sortModelChange';
 
 /**
  * Fired when the filter model changes.
- * Called with a [[GridFilterModelParams]] object.
+ * Called with a [[GridFilterModel]] object.
  * @event
  */
 export const GRID_FILTER_MODEL_CHANGE = 'filterModelChange';

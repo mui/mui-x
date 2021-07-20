@@ -42,7 +42,7 @@ export const useGridComponent = (apiRef: GridApiRef, props: GridComponentProps) 
   useGridControlState(apiRef);
   useGridScrollbarSizeDetector(apiRef, props);
   useOptionsProp(apiRef, props);
-  useEvents(apiRef);
+  useEvents(apiRef, props);
   useLocaleText(apiRef);
   useResizeContainer(apiRef, props);
   useGridFreezeRows(apiRef, props);
@@ -62,10 +62,10 @@ export const useGridComponent = (apiRef: GridApiRef, props: GridComponentProps) 
   useGridDensity(apiRef);
   useGridVirtualRows(apiRef);
   useGridColumnReorder(apiRef);
-  useGridColumnResize(apiRef);
+  useGridColumnResize(apiRef, props);
   useGridPagination(apiRef);
   useGridCsvExport(apiRef);
-  useGridInfiniteLoader(apiRef);
+  useGridInfiniteLoader(apiRef, props);
   useGridClipboard(apiRef);
   useGridComponents(apiRef, props);
   useStateProp(apiRef, props);

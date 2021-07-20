@@ -1,10 +1,5 @@
 import * as React from 'react';
-import {
-  GridRowsProp,
-  DataGrid,
-  GridSortModel,
-  GridSortModelParams,
-} from '@material-ui/data-grid';
+import { GridRowsProp, DataGrid, GridSortModel } from '@material-ui/data-grid';
 import { useDemoData, GridData } from '@material-ui/x-grid-data-generator';
 
 function loadServerRows(sortModel: GridSortModel, data: GridData): Promise<any> {
@@ -42,10 +37,8 @@ export default function ServerSortingGrid() {
   const [rows, setRows] = React.useState<GridRowsProp>([]);
   const [loading, setLoading] = React.useState<boolean>(false);
 
-  const handleSortModelChange = (params: GridSortModelParams) => {
-    if (params.sortModel !== sortModel) {
-      setSortModel(params.sortModel);
-    }
+  const handleSortModelChange = (newModel: GridSortModel) => {
+    setSortModel(newModel);
   };
 
   React.useEffect(() => {

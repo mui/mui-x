@@ -134,17 +134,17 @@ export function useGridEditRows(
 
   const setEditCellProps = React.useCallback(
     (params: GridEditCellPropsParams) => {
-      const { id, field, props: propsProp } = params;
+      const { id, field, props: editProps } = params;
       logger.debug(`Setting cell props on id: ${id} field: ${field}`);
       setGridState((state) => {
         const column = apiRef.current.getColumn(field);
         const parsedValue = column.valueParser
-          ? column.valueParser(propsProp.value, apiRef.current.getCellParams(id, field))
-          : propsProp.value;
+          ? column.valueParser(editProps.value, apiRef.current.getCellParams(id, field))
+          : editProps.value;
 
         const editRowsModel: GridEditRowsModel = { ...state.editRows };
         editRowsModel[id] = { ...state.editRows[id] };
-        editRowsModel[id][field] = { ...propsProp, value: parsedValue };
+        editRowsModel[id][field] = { ...editProps, value: parsedValue };
         return { ...state, editRows: editRowsModel };
       });
       forceUpdate();
