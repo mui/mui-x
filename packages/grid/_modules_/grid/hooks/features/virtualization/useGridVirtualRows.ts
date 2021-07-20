@@ -31,9 +31,8 @@ import { scrollStateSelector } from './renderingStateSelector';
 function scrollIntoView(dimensions) {
   const { clientHeight, scrollTop, offsetHeight, offsetTop } = dimensions;
 
-  const scrollBottom = clientHeight + scrollTop;
   const elementBottom = offsetTop + offsetHeight;
-  if (elementBottom > scrollBottom) {
+  if (elementBottom > clientHeight + scrollTop) {
     return elementBottom - clientHeight;
   }
   if (offsetTop < scrollTop) {
