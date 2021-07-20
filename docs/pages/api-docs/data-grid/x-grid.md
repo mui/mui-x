@@ -58,7 +58,7 @@ import { XGrid } from '@material-ui/x-grid';
 | <span class="prop-name">loading</span> | <span class="prop-type">boolean</span> |  false | If `true`, a  loading overlay is displayed.. |
 | <span class="prop-name">localeText</span> | <span class="prop-type">GridLocaleText</span> |   | Set of text labels used in the grid. You can find all the translation keys supported in [the source](https://github.com/mui-org/material-ui-x/blob/HEAD/packages/grid/_modules_/grid/constants/localeTextConstants.ts) in the GitHub repository. |
 | <span class="prop-name">logger</span> | <span class="prop-type">Logger</span> | null | Pass a custom logger in the components that implements the 'Logger' interface. |
-| <span class="prop-name">logLevel</span> | <span class="prop-type">string or boolean false</span> | false | Allows to pass the logging level or false to turn off logging. |
+| <span class="prop-name">logLevel</span> | <span class="prop-type">string \| false</span> | false | Allows to pass the logging level or false to turn off logging. |
 | <span class="prop-name">nonce</span> | <span class="prop-type">string</span> |   | Nonce of the inline styles for [Content Security Policy](https://www.w3.org/TR/2016/REC-CSP2-20161215/#script-src-the-nonce-attribute). |
 | <span class="prop-name">onCellBlur</span> | <span class="prop-type">(params: GridCellParams, event: React.FocusEvent) => void</span> |   | Callback fired when the active element leaves a cell. |
 | <span class="prop-name">onCellClick</span> | <span class="prop-type">(params: GridCellParams, event: React.MouseEvent) => void</span> |   | Callback fired when a click event comes from a cell element. |
