@@ -83,7 +83,7 @@ import { DataGrid } from '@material-ui/data-grid';
 | <span class="prop-name">onRowEnter</span> | <span class="prop-type">(param: GridRowParams, event: React.MouseEvent) => void</span> |   | Callback fired when a mouse enter comes from a row container element. |
 | <span class="prop-name">onRowLeave</span> | <span class="prop-type">(param: GridRowParams, event: React.MouseEvent) => void</span> |   | Callback fired when a mouse leave event comes from a row container element. |
 | <span class="prop-name">onSelectionModelChange</span> | <span class="prop-type">(param: GridSelectionModelChangeParams) => void</span> |   | Callback fired when the selection state of one or multiple rows changes. |
-| <span class="prop-name">onSortModelChange</span> | <span class="prop-type">(param: GridSortModelParams) => void</span> |   | Callback fired when the sort model changes before a column is sorted. |
+| <span class="prop-name">onSortModelChange</span> | <span class="prop-type">(model: GridSortModel) => void</span> |   | Callback fired when the sort model changes before a column is sorted. |
 | <span class="prop-name">page</span> | <span class="prop-type">number</span> | 1   |  Set the current page. |
 | <span class="prop-name">pageSize</span> | <span class="prop-type">number</span> | 100 | Set the number of rows in one page. |
 | <span class="prop-name">paginationMode</span> | <span class="prop-type">GridFeatureMode</span> | 'client' | Pagination can be processed on the server or client-side. Set it to 'client' if you would like to handle the pagination on the client-side. Set it to 'server' if you would like to handle the pagination on the server-side. |
