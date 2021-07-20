@@ -32,8 +32,8 @@ export default function ServerFilterGrid() {
   const [filterValue, setFilterValue] = React.useState();
   const [loading, setLoading] = React.useState(false);
 
-  const onFilterChange = React.useCallback((params) => {
-    setFilterValue(params.filterModel.items[0].value);
+  const onFilterChange = React.useCallback((filterModel) => {
+    setFilterValue(filterModel.items[0].value);
   }, []);
 
   React.useEffect(() => {
