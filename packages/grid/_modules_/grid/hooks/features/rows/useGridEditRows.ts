@@ -30,7 +30,6 @@ import {
   isCellEnterEditModeKeys,
   isCellExitEditModeKeys,
   isDeleteKeys,
-  isEscapeKey,
   isKeyboardEvent,
 } from '../../../utils/keyboardUtils';
 import { useGridApiEventHandler, useGridApiOptionHandler } from '../../root/useGridApiEventHandler';
@@ -288,7 +287,7 @@ export function useGridEditRows(
         apiRef.current.publishEvent(GRID_CELL_NAVIGATION_KEY_DOWN, params, event);
         return;
       }
-      if (isEscapeKey(event.key) || isDeleteKeys(event.key)) {
+      if (event.key === 'Escape' || isDeleteKeys(event.key)) {
         apiRef.current.setCellFocus(params.id, params.field);
       }
     },
