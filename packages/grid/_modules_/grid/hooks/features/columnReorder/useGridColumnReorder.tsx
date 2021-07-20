@@ -134,7 +134,7 @@ export const useGridColumnReorder = (apiRef: GridApiRef): void => {
 
   const handleDragEnd = React.useCallback(
     (params: GridColumnHeaderParams | GridCellParams, event: React.DragEvent): void => {
-      if (options.disableColumnReorder) {
+      if (options.disableColumnReorder || !dragColField) {
         return;
       }
 
