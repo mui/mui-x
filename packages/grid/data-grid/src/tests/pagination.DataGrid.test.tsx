@@ -35,7 +35,7 @@ describe('<DataGrid /> - Pagination', () => {
 
     return (
       <div style={{ width: 300, height }}>
-        <DataGrid {...basicData} pagination {...other} />
+        <DataGrid {...basicData} autoHeight={isJSDOM} pagination {...other} />
       </div>
     );
   };
@@ -128,7 +128,7 @@ describe('<DataGrid /> - Pagination', () => {
       expect(getColumnValues()).to.deep.equal(['0']);
     });
 
-    it('should go to last page when page is controlled and the current page is greater than the last page', () => {
+    it('should go to last page when page is controlled and the current page is greater than the last page', async () => {
       const TestCasePaginationFilteredData = () => {
         const [page, setPage] = React.useState(1);
 
@@ -152,6 +152,7 @@ describe('<DataGrid /> - Pagination', () => {
         );
       };
       render(<TestCasePaginationFilteredData />);
+
       expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3']);
     });
   });

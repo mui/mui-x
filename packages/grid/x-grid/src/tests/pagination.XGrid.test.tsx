@@ -9,6 +9,8 @@ import { expect } from 'chai';
 import { XGrid, useGridApiRef } from '@material-ui/x-grid';
 import { useData } from 'packages/storybook/src/hooks/useData';
 
+const isJSDOM = /jsdom/.test(window.navigator.userAgent);
+
 describe('<XGrid /> - Pagination', () => {
   // TODO v5: replace with createClientRender
   const render = createClientRenderStrictMode();
@@ -65,19 +67,27 @@ describe('<XGrid /> - Pagination', () => {
     it('should apply value', () => {
       let apiRef;
       const GridTest = () => {
+        const [pageSize, setPageSize] = React.useState(5);
         const basicData = useData(20, 2);
         apiRef = useGridApiRef();
 
         return (
           <div style={{ width: 300, height: 300 }}>
-            <XGrid {...basicData} apiRef={apiRef} pagination />
+            <XGrid
+              {...basicData}
+              apiRef={apiRef}
+              autoHeight={isJSDOM}
+              pageSize={pageSize}
+              onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+              pagination
+            />
           </div>
         );
       };
 
       render(<GridTest />);
 
-      expect(getColumnValues()).to.deep.equal(['0', '1', '2', '3', '4', '5']);
+      expect(getColumnValues()).to.deep.equal(['0', '1', '2', '3', '4']);
       act(() => {
         apiRef.current.setPageSize(2);
       });
