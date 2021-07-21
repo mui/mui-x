@@ -19,97 +19,100 @@ Big thanks to the 11 contributors who made this release possible. Here are some 
 ### @material-ui/x-grid@v4.0.0-alpha.34 / @material-ui/data-grid@v4.0.0-alpha.34
 
 #### Breaking changes
+
 - [DataGrid] Fix scrollToIndexes behavior (#2162) @oliviertassinari
 
-```diff
--apiRef.current.isColumnVisibleInWindow()
-```
+  Remove public `apiRef.current.isColumnVisibleInWindow()` as it servers private use cases.
+
+  ```diff
+  -apiRef.current.isColumnVisibleInWindow()
+  ```
 
 - [DataGrid] Remove stateId argument from GridApi getState method (#2141) @flaviendelangle
 
-```diff
--const filterState = apiRef.current.getState('filter');
-+const filterState = apiRef.current.getState().filter;
-```
+  ```diff
+  -const filterState = apiRef.current.getState('filter');
+  +const filterState = apiRef.current.getState().filter;
+  ```
 
 - [DataGrid] Improve controllable sorting (#2095) @dtassone
-  
-```diff
-// Props
-- onSortModelChange?: (params: GridSortModelParams) => void;
-+ onSortModelChange?: (model: GridSortModel) => void;
 
-// Usage
-- <DataGrid onSortModelChange = {(params: GridSortModelParams)=>  setSortModel(params.model)} />
-+ <DataGrid onSortModelChange = {(model: GridSortModel)=> setSortModel(model) } />
-```
+  ```diff
+   // Props
+  -onSortModelChange?: (params: GridSortModelParams) => void;
+  +onSortModelChange?: (model: GridSortModel) => void;
+
+   // Usage
+  -<DataGrid onSortModelChange = {(params: GridSortModelParams)=>  setSortModel(params.model)} />
+  +<DataGrid onSortModelChange = {(model: GridSortModel)=> setSortModel(model) } />
+  ```
 
 - [DataGrid] Improve controllable filter (#1909) @dtassone
-  
-```diff
-// Props
-- onFilterModelChange?: (params: GridFilterModelParams) => void;
-+ onFilterModelChange?: (model: GridFilterModel) => void;
 
-// Usage
-- <DataGrid onFilterModelChange = {(params: GridFilterModelParams)=>  setFilterModel(params.model)} />
-+ <DataGrid onFilterModelChange = {(model: GridFilterModel)=> setFilterModel(model) } />
-```
+  ```diff
+   // Props
+  -onFilterModelChange?: (params: GridFilterModelParams) => void;
+  +onFilterModelChange?: (model: GridFilterModel) => void;
+
+   // Usage
+  -<DataGrid onFilterModelChange = {(params: GridFilterModelParams)=>  setFilterModel(params.model)} />
+  +<DataGrid onFilterModelChange = {(model: GridFilterModel)=> setFilterModel(model) } />
+  ```
 
 - [DataGrid] Improve the editing API (#1955) @m4theushw
-  
-  - [DataGrid] The `props` key in the first argument of `commitCellChange` was removed to promote the use of the value already stored in the state. To update the value in the state, call `setEditCellProps` before.
-  
-```diff
--apiRef.current.commitCellChange({ id: 1, field: 'name', props: { value: 'Ana' } });
-+apiRef.current.setEditCellProps({ id: 1, field: 'name', props: { value: 'Ana' } });
-+apiRef.current.commitCellChange({ id: 1, field: 'name' });
-```
-  
-  - [DataGrid] Calling `commitCellChange` in a cell in view mode will throw an error. Make sure to first enter the edit mode.
-  
-```diff
-+apiRef.current.setCellMode(1, 'name', 'edit');
- apiRef.current.commitCellChange({ id: 1, field: 'name' });
-```
-  
-  - [DataGrid] The `setCellValue` was removed from the API. Use `commitCellChange` or `updateRows` in place.
-  
-```diff
--apiRef.current.setCellValue({ id: 1, field: 'name', value: 'Ana' });
-+apiRef.current.updateRows([{ id: 1, name: 'Ana' }]);
-```
-  
-  or
-  
-```diff
--apiRef.current.setCellValue({ id: 1, field: 'name', value: 'Ana' });
-+apiRef.current.setCellMode(1, 'name', 'edit');
-+apiRef.current.setEditCellProps({ id: 1, field: 'name', props: { value: 'Ana' } });
-+apiRef.current.commitCellChange({ id: 1, field: 'name' });
-```
-  
+
+  -  The `props` key in the first argument of `commitCellChange` was removed to promote the use of the value already stored in the state. To update the value in the state, call `setEditCellProps` before.
+
+    ```diff
+    -apiRef.current.commitCellChange({ id: 1, field: 'name', props: { value: 'Ana' } });
+    +apiRef.current.setEditCellProps({ id: 1, field: 'name', props: { value: 'Ana' } });
+    +apiRef.current.commitCellChange({ id: 1, field: 'name' });
+    ```
+
+  - Calling `commitCellChange` in a cell in view mode will throw an error. Make sure to first enter the edit mode.
+
+    ```diff
+    +apiRef.current.setCellMode(1, 'name', 'edit');
+    apiRef.current.commitCellChange({ id: 1, field: 'name' });
+    ```
+
+  - The `setCellValue` was removed from the API. Use `commitCellChange` or `updateRows` in place.
+
+    ```diff
+    -apiRef.current.setCellValue({ id: 1, field: 'name', value: 'Ana' });
+    +apiRef.current.updateRows([{ id: 1, name: 'Ana' }]);
+    ```
+
+    or
+
+    ```diff
+    -apiRef.current.setCellValue({ id: 1, field: 'name', value: 'Ana' });
+    +apiRef.current.setCellMode(1, 'name', 'edit');
+    +apiRef.current.setEditCellProps({ id: 1, field: 'name', props: { value: 'Ana' } });
+    +apiRef.current.commitCellChange({ id: 1, field: 'name' });
+    ```
+
   - [DataGrid] The `getEditCellProps` was removed because `getEditCellPropsParams` offers the same functionality.
-  
-```diff
--const props = apiRef.current.getEditCellProps(1, 'name');
-+const { props } = apiRef.current.getEditCellPropsParams(1, 'name');
-```
-  
-  **Note**: This method will now throw an error if the cell is in view mode.
-  
+
+    ```diff
+    -const props = apiRef.current.getEditCellProps(1, 'name');
+    +const { props } = apiRef.current.getEditCellPropsParams(1, 'name');
+    ```
+
+    **Note**: This method will now throw an error if the cell is in view mode.
+
 - [DataGrid] Implement useControlState hook, and add control state on selectionModel (#1823) @dtassone
 
-```diff
-// Props
-- props.onRowSelected
-- onSelectionModelChange?: (params: GridSelectionModelChangeParams) => void;
-+ onSelectionModelChange?: (model: GridSelectionModel) => void;
+  ```diff
+   // Props
+  -props.onRowSelected
+  -onSelectionModelChange?: (params: GridSelectionModelChangeParams) => void;
+  +onSelectionModelChange?: (model: GridSelectionModel) => void;
 
-// Usage
-- <DataGrid onSelectionModelChange = {(params: GridSelectionModelChangeParams)=>  setSelectionModel(params.model)} />
-+ <DataGrid onSelectionModelChange = {(model: GridSelectionModel)=> setSelectionModel(model) } />
-```
+   // Usage
+  -<DataGrid onSelectionModelChange = {(params: GridSelectionModelChangeParams)=>  setSelectionModel(params.model)} />
+  +<DataGrid onSelectionModelChange = {(model: GridSelectionModel)=> setSelectionModel(model) } />
+  ```
 
 #### Changes
 
