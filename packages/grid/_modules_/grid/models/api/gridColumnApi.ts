@@ -43,12 +43,12 @@ export interface GridColumnApi {
    * Updates the definition of a column.
    * @param {GridColDef} col The new [[GridColDef]] object.
    */
-  updateColumn: (col: GridColDef) => void;
+  updateColumn: (col: GridColDef, shouldApplyFlex?: boolean) => void;
   /**
    * Updates the definition of multiple columns at the same time.
    * @param {GridColDef[]} cols The new column [[GridColDef]] objects.
    */
-  updateColumns: (cols: GridColDef[]) => void;
+  updateColumns: (cols: GridColDef[], shouldApplyFlex?: boolean) => void;
   /**
    * Changes the visibility of the column referred by `field`.
    * @param {string} field The column to change visibility.
