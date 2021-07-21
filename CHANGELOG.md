@@ -101,7 +101,7 @@ Big thanks to the 11 contributors who made this release possible. Here are some 
     +apiRef.current.commitCellChange({ id: 1, field: 'name' });
     ```
 
-  - [DataGrid] The `getEditCellProps` was removed because `getEditCellPropsParams` offers the same functionality.
+  - The `getEditCellProps` was removed because `getEditCellPropsParams` offers the same functionality.
 
     ```diff
     -const props = apiRef.current.getEditCellProps(1, 'name');
