@@ -30,13 +30,12 @@ import {
   getInitialGridRenderingState,
   InternalRenderingState,
 } from '../virtualization/renderingState';
-import { GridPageState, GridPageSizeState } from '../pagination/gridPaginationState';
+import { GridPaginationState } from '../pagination/gridPaginationState';
 
 export interface GridState {
   rows: InternalGridRowsState;
   editRows: GridEditRowsModel;
-  page: GridPageState;
-  pageSize: GridPageSizeState;
+  pagination: GridPaginationState;
   options: GridOptions;
   isScrolling: boolean;
   columns: GridInternalColumns;
@@ -61,12 +60,12 @@ export interface GridState {
 export const getInitialGridState = (): GridState => ({
   rows: getInitialGridRowState(),
   editRows: {},
-  page: {
+  pagination: {
     currentPage: 0,
     pageCount: 0,
     rowCount: 0,
+    pageSize: 100,
   },
-  pageSize: 100,
   options: DEFAULT_GRID_OPTIONS,
   isScrolling: false,
   columns: getInitialGridColumnsState(),

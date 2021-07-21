@@ -1,6 +1,5 @@
-export type GridPageSizeState = number;
-
-export interface GridPageState {
+export interface GridPaginationState {
+  pageSize: number;
   currentPage: number;
   pageCount: number;
   rowCount: number;
