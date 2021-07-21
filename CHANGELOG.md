@@ -49,19 +49,20 @@ Big thanks to the 11 contributors who made this release possible. Here are some 
 
 - [DataGrid] Improve controllable filter (#1909) @dtassone
 
+  Update the prop arguments:
   ```diff
-   // Props
   -onFilterModelChange?: (params: GridFilterModelParams) => void;
   +onFilterModelChange?: (model: GridFilterModel) => void;
-
-   // Usage
+  Update the model with the first argument directly:
+  ```diff
   -<DataGrid onFilterModelChange = {(params: GridFilterModelParams)=>  setFilterModel(params.model)} />
   +<DataGrid onFilterModelChange = {(model: GridFilterModel)=> setFilterModel(model) } />
   ```
 
 - [DataGrid] Improve the editing API (#1955) @m4theushw
 
-  -  The `props` key in the first argument of `commitCellChange` was removed to promote the use of the value already stored in the state. To update the value in the state, call `setEditCellProps` before.
+  - The `props` key in the first argument of `commitCellChange` was removed to promote the use of the value already stored in the state. 
+    To update the value in the state, call `setEditCellProps` before.
 
     ```diff
     -apiRef.current.commitCellChange({ id: 1, field: 'name', props: { value: 'Ana' } });
@@ -120,11 +121,11 @@ Big thanks to the 11 contributors who made this release possible. Here are some 
 - [DataGrid] Add \"is empty\" and \"is not empty\" operators (#1997) @m4theushw
 - [DataGrid] Add `minWidth` to `GridColDef` (#2101) @DanailH
 - [DataGrid] Add missing localeText types (#2118) @oliviertassinari
-- [DataGrid] Add missing translations to frFR locale (#2082) @flaviendelangle
+- [DataGrid] Add missing translations to French (frFR) locale (#2082) @flaviendelangle
 - [DataGrid] Add quick filter demo (#2149) @dtassone
 - [DataGrid] Allow passing styles and Popper props to GridPanel (#1994) @sebastianfrey
 - [DataGrid] Allow to customize the columns exported as CSV (#2008) @flaviendelangle
-- [DataGrid] Emit `GRID_PAGE_SIZE_CHANGE` when autoPageSize is set and the grid size changes (#1986) @flaviendelangle
+- [DataGrid] Emit `pageSizeChange` when autoPageSize is set and the grid size changes (#1986) @flaviendelangle
 - [DataGrid] Fix crash when id has a single-quote (#2033) @rbrishabh
 - [DataGrid] Fix localeText type (#2117) @oliviertassinari
 - [DataGrid] Fix manual entry in date fields (#2051) @m4theushw
@@ -137,7 +138,7 @@ Big thanks to the 11 contributors who made this release possible. Here are some 
 - [DataGrid] Remove unused `editMode` prop (#2173) @ZeeshanTamboli
 - [DataGrid] Support style prop (#2116) @oliviertassinari
 - [DataGrid] Use Intl.Collator for string comparison (#2155) @m4theushw
-- [DataGrid] apiRef.current.getRow can return null (#2010) @flaviendelangle
+- [DataGrid] Update apiRef.current.getRow to signal that it can return a null value (#2010) @flaviendelangle
 - [XGrid] Add ability to disable reorder on some columns (#2085) @flaviendelangle
 - [XGrid] Close column header menu when resizing column (#1989) @flaviendelangle
 - [XGrid] Fix column resize on touch devices (#2089) @m4theushw
