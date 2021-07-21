@@ -248,7 +248,8 @@ describe('<XGrid /> - Reorder', () => {
 
       fireEvent.dragStart(dragCol);
 
-      expect(dragCol.classList.contains(GRID_COLUMN_HEADER_DRAGGING_CSS_CLASS)).to.equal(false);
+      expect(dragCol).to.have.attribute('draggable', 'false');
+      expect(dragCol).not.to.have.class(GRID_COLUMN_HEADER_DRAGGING_CSS_CLASS);
 
       fireEvent.dragEnter(targetCol);
       const dragOverEvent = createDragOverEvent(targetCol);
