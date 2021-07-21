@@ -1,11 +1,13 @@
-
 import { DataGridProps, MAX_PAGE_SIZE } from '@material-ui/data-grid/DataGridProps';
 import { DATAGRID_PROPTYPES } from '@material-ui/data-grid/DataGridPropTypes';
 import * as React from 'react';
 import {
-  DEFAULT_GRID_OPTIONS, GridBody, GridErrorHandler,
+  DEFAULT_GRID_OPTIONS,
+  GridBody,
+  GridErrorHandler,
   GridFooterPlaceholder,
-  GridHeaderPlaceholder, GridRoot,
+  GridHeaderPlaceholder,
+  GridRoot,
   useGridApiRef,
   useThemeProps,
 } from '../../_modules_/grid';
@@ -33,10 +35,10 @@ const DataGridRaw = React.forwardRef<HTMLDivElement, DataGridProps>(function Dat
 
   const apiRef = useGridApiRef();
 
-  useDataGridComponent(apiRef, {...other, selectionModel, pageSize});
+  useDataGridComponent(apiRef, { ...other, selectionModel, pageSize });
 
   return (
-    <GridContextProvider apiRef={apiRef} props={{...other, selectionModel, pageSize}}>
+    <GridContextProvider apiRef={apiRef} props={{ ...other, selectionModel, pageSize }}>
       <GridRoot ref={ref}>
         <GridErrorHandler>
           <GridHeaderPlaceholder />
@@ -63,4 +65,4 @@ DataGridRaw.defaultProps = {
 export const DataGrid = React.memo(DataGridRaw);
 
 // @ts-ignore
-DataGrid.propTypes=DATAGRID_PROPTYPES;
+DataGrid.propTypes = DATAGRID_PROPTYPES;

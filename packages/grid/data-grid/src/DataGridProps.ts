@@ -17,5 +17,4 @@ export interface DataGridProps extends GridBaseComponentProps {
   onRowsScrollEnd: undefined;
   checkboxSelectionVisibleOnly: false;
   selectionModel?: GridRowId | GridRowId[];
-
 }
