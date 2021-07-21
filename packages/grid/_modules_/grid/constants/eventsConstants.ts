@@ -14,11 +14,6 @@ export const GRID_DEBOUNCED_RESIZE = 'debouncedResize';
 /**
  * @ignore - do not document.
  */
-export const GRID_SCROLL = 'scroll';
-
-/**
- * @ignore - do not document.
- */
 export const GRID_KEYDOWN = 'keydown';
 
 // GRID events
@@ -421,7 +416,7 @@ export const GRID_ROWS_CLEAR = 'rowsClear';
 
 /**
  * Fired when the columns state is changed.
- * Called with an array of strings correspoding to the field names.
+ * Called with an array of strings corresponding to the field names.
  * @event
  */
 export const GRID_COLUMNS_CHANGE = 'columnsChange';
@@ -435,7 +430,7 @@ export const GRID_SORT_MODEL_CHANGE = 'sortModelChange';
 
 /**
  * Fired when the filter model changes.
- * Called with a [[GridFilterModelParams]] object.
+ * Called with a [[GridFilterModel]] object.
  * @event
  */
 export const GRID_FILTER_MODEL_CHANGE = 'filterModelChange';

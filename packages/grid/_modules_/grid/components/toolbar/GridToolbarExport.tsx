@@ -29,7 +29,7 @@ export interface GridToolbarExportProps extends ButtonProps {
 
 export const GridToolbarExport = React.forwardRef<HTMLButtonElement, GridToolbarExportProps>(
   function GridToolbarExport(props, ref) {
-    const { csvOptions, ...other } = props;
+    const { csvOptions, onClick, ...other } = props;
     const apiRef = useGridApiContext();
     const buttonId = useId();
     const menuId = useId();
@@ -43,7 +43,10 @@ export const GridToolbarExport = React.forwardRef<HTMLButtonElement, GridToolbar
       formatOptions: csvOptions,
     });
 
-    const handleMenuOpen = (event) => setAnchorEl(event.currentTarget);
+    const handleMenuOpen = (event) => {
+      setAnchorEl(event.currentTarget);
+      onClick?.(event);
+    };
     const handleMenuClose = () => setAnchorEl(null);
     const handleExport = (option: GridExportOption) => () => {
       if (option.format === 'csv') {
@@ -69,13 +72,13 @@ export const GridToolbarExport = React.forwardRef<HTMLButtonElement, GridToolbar
           color="primary"
           size="small"
           startIcon={<ExportIcon />}
-          onClick={handleMenuOpen}
           aria-expanded={anchorEl ? 'true' : undefined}
           aria-label={apiRef!.current.getLocaleText('toolbarExportLabel')}
           aria-haspopup="menu"
           aria-labelledby={menuId}
           id={buttonId}
           {...other}
+          onClick={handleMenuOpen}
         >
           {apiRef!.current.getLocaleText('toolbarExport')}
         </Button>

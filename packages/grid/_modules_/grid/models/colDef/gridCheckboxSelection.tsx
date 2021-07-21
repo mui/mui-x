@@ -9,11 +9,12 @@ export const gridCheckboxSelectionColDef: GridColDef = {
   ...GRID_BOOLEAN_COL_DEF,
   field: '__check__',
   type: 'checkboxSelection',
-  width: 48,
+  width: 50,
   resizable: false,
   sortable: false,
   filterable: false,
   disableColumnMenu: true,
+  disableReorder: true,
   valueGetter: (params) => {
     const selectionLookup = selectedIdsLookupSelector(params.api.getState());
     return selectionLookup[params.id] !== undefined;

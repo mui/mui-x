@@ -25,7 +25,7 @@ subscribeEvent: (
 ) => () => void;
 ```
 
-The following demo shows how to subcribe to the `columnResize` event. Try it by resizing the columns.
+The following demo shows how to subscribe to the `columnResize` event. Try it by resizing the columns.
 
 {{"demo": "pages/components/data-grid/events/SubscribeToEvents.js", "bg": "inline", "defaultCodeOpen": false}}
 

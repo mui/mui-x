@@ -86,6 +86,10 @@ export function getCell(rowIndex: number, colIndex: number): HTMLElement {
   return cell as HTMLElement;
 }
 
+export function getRows() {
+  return document.querySelectorAll(`[role="row"][data-rowindex]`);
+}
+
 export function getRow(rowIndex: number): HTMLElement {
   const row = document.querySelector(`[role="row"][data-rowindex="${rowIndex}"]`);
   if (row == null) {

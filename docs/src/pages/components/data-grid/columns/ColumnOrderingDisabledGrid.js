@@ -9,14 +9,14 @@ const rows = [
   },
 ];
 
-export default function ColumnSizingGrid() {
+export default function ColumnOrderingDisabledGrid() {
   return (
     <div style={{ height: 250, width: '100%' }}>
       <XGrid
         columns={[
           { field: 'id' },
-          { field: 'username', minWidth: 150 },
-          { field: 'age', resizable: false },
+          { field: 'username' },
+          { field: 'age', disableReorder: true },
         ]}
         rows={rows}
       />

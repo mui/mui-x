@@ -27,12 +27,9 @@ export const getGridStringOperators: () => GridFilterOperator[] = () => [
       if (!filterItem.value) {
         return null;
       }
+      const collator = new Intl.Collator(undefined, { sensitivity: 'base', usage: 'search' });
       return ({ value }): boolean => {
-        return (
-          filterItem.value?.localeCompare((value && value.toString()) || '', undefined, {
-            sensitivity: 'base',
-          }) === 0
-        );
+        return collator.compare(filterItem.value, (value && value.toString()) || '') === 0;
       };
     },
     InputComponent: GridFilterInputValue,

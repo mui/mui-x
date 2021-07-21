@@ -1,7 +1,5 @@
 import * as React from 'react';
 import { GridApiRef } from '../../models/api/gridApiRef';
-import { useGridSelector } from '../features/core/useGridSelector';
-import { optionsSelector } from '../utils/optionsSelector';
 import {
   GRID_CELL_CLICK,
   GRID_COLUMN_HEADER_CLICK,
@@ -31,41 +29,65 @@ import {
 } from '../../constants/eventsConstants';
 import { useGridApiOptionHandler } from './useGridApiEventHandler';
 import { useNativeEventListener } from './useNativeEventListener';
+import { GridComponentProps } from '../../GridComponentProps';
 
-export function useEvents(apiRef: GridApiRef): void {
-  const options = useGridSelector(apiRef, optionsSelector);
+export function useEvents(
+  apiRef: GridApiRef,
+  props: Pick<
+    GridComponentProps,
+    | 'onColumnHeaderClick'
+    | 'onColumnHeaderDoubleClick'
+    | 'onColumnHeaderOver'
+    | 'onColumnHeaderOut'
+    | 'onColumnHeaderEnter'
+    | 'onColumnHeaderLeave'
+    | 'onColumnOrderChange'
+    | 'onCellClick'
+    | 'onCellDoubleClick'
+    | 'onCellOver'
+    | 'onCellOut'
+    | 'onCellEnter'
+    | 'onCellLeave'
+    | 'onCellKeyDown'
+    | 'onCellBlur'
+    | 'onCellFocusOut'
+    | 'onRowDoubleClick'
+    | 'onRowClick'
+    | 'onRowOver'
+    | 'onRowOut'
+    | 'onRowEnter'
+    | 'onRowLeave'
+    | 'onError'
+    | 'onStateChange'
+  >,
+): void {
+  useGridApiOptionHandler(apiRef, GRID_COLUMN_HEADER_CLICK, props.onColumnHeaderClick);
+  useGridApiOptionHandler(apiRef, GRID_COLUMN_HEADER_DOUBLE_CLICK, props.onColumnHeaderDoubleClick);
+  useGridApiOptionHandler(apiRef, GRID_COLUMN_HEADER_OVER, props.onColumnHeaderOver);
+  useGridApiOptionHandler(apiRef, GRID_COLUMN_HEADER_OUT, props.onColumnHeaderOut);
+  useGridApiOptionHandler(apiRef, GRID_COLUMN_HEADER_ENTER, props.onColumnHeaderEnter);
+  useGridApiOptionHandler(apiRef, GRID_COLUMN_HEADER_LEAVE, props.onColumnHeaderLeave);
+  useGridApiOptionHandler(apiRef, GRID_COLUMN_ORDER_CHANGE, props.onColumnOrderChange);
 
-  useGridApiOptionHandler(apiRef, GRID_COLUMN_HEADER_CLICK, options.onColumnHeaderClick);
-  useGridApiOptionHandler(
-    apiRef,
-    GRID_COLUMN_HEADER_DOUBLE_CLICK,
-    options.onColumnHeaderDoubleClick,
-  );
-  useGridApiOptionHandler(apiRef, GRID_COLUMN_HEADER_OVER, options.onColumnHeaderOver);
-  useGridApiOptionHandler(apiRef, GRID_COLUMN_HEADER_OUT, options.onColumnHeaderOut);
-  useGridApiOptionHandler(apiRef, GRID_COLUMN_HEADER_ENTER, options.onColumnHeaderEnter);
-  useGridApiOptionHandler(apiRef, GRID_COLUMN_HEADER_LEAVE, options.onColumnHeaderLeave);
-  useGridApiOptionHandler(apiRef, GRID_COLUMN_ORDER_CHANGE, options.onColumnOrderChange);
+  useGridApiOptionHandler(apiRef, GRID_CELL_CLICK, props.onCellClick);
+  useGridApiOptionHandler(apiRef, GRID_CELL_DOUBLE_CLICK, props.onCellDoubleClick);
+  useGridApiOptionHandler(apiRef, GRID_CELL_OVER, props.onCellOver);
+  useGridApiOptionHandler(apiRef, GRID_CELL_OUT, props.onCellOut);
+  useGridApiOptionHandler(apiRef, GRID_CELL_ENTER, props.onCellEnter);
+  useGridApiOptionHandler(apiRef, GRID_CELL_LEAVE, props.onCellLeave);
+  useGridApiOptionHandler(apiRef, GRID_CELL_KEY_DOWN, props.onCellKeyDown);
+  useGridApiOptionHandler(apiRef, GRID_CELL_BLUR, props.onCellBlur);
+  useGridApiOptionHandler(apiRef, GRID_CELL_FOCUS_OUT, props.onCellFocusOut);
 
-  useGridApiOptionHandler(apiRef, GRID_CELL_CLICK, options.onCellClick);
-  useGridApiOptionHandler(apiRef, GRID_CELL_DOUBLE_CLICK, options.onCellDoubleClick);
-  useGridApiOptionHandler(apiRef, GRID_CELL_OVER, options.onCellOver);
-  useGridApiOptionHandler(apiRef, GRID_CELL_OUT, options.onCellOut);
-  useGridApiOptionHandler(apiRef, GRID_CELL_ENTER, options.onCellEnter);
-  useGridApiOptionHandler(apiRef, GRID_CELL_LEAVE, options.onCellLeave);
-  useGridApiOptionHandler(apiRef, GRID_CELL_KEY_DOWN, options.onCellKeyDown);
-  useGridApiOptionHandler(apiRef, GRID_CELL_BLUR, options.onCellBlur);
-  useGridApiOptionHandler(apiRef, GRID_CELL_FOCUS_OUT, options.onCellFocusOut);
+  useGridApiOptionHandler(apiRef, GRID_ROW_DOUBLE_CLICK, props.onRowDoubleClick);
+  useGridApiOptionHandler(apiRef, GRID_ROW_CLICK, props.onRowClick);
+  useGridApiOptionHandler(apiRef, GRID_ROW_OVER, props.onRowOver);
+  useGridApiOptionHandler(apiRef, GRID_ROW_OUT, props.onRowOut);
+  useGridApiOptionHandler(apiRef, GRID_ROW_ENTER, props.onRowEnter);
+  useGridApiOptionHandler(apiRef, GRID_ROW_LEAVE, props.onRowLeave);
 
-  useGridApiOptionHandler(apiRef, GRID_ROW_DOUBLE_CLICK, options.onRowDoubleClick);
-  useGridApiOptionHandler(apiRef, GRID_ROW_CLICK, options.onRowClick);
-  useGridApiOptionHandler(apiRef, GRID_ROW_OVER, options.onRowOver);
-  useGridApiOptionHandler(apiRef, GRID_ROW_OUT, options.onRowOut);
-  useGridApiOptionHandler(apiRef, GRID_ROW_ENTER, options.onRowEnter);
-  useGridApiOptionHandler(apiRef, GRID_ROW_LEAVE, options.onRowLeave);
-
-  useGridApiOptionHandler(apiRef, GRID_COMPONENT_ERROR, options.onError);
-  useGridApiOptionHandler(apiRef, GRID_STATE_CHANGE, options.onStateChange);
+  useGridApiOptionHandler(apiRef, GRID_COMPONENT_ERROR, props.onError);
+  useGridApiOptionHandler(apiRef, GRID_STATE_CHANGE, props.onStateChange);
 
   const getHandler = React.useCallback(
     (name: string) =>
