@@ -17,7 +17,7 @@ const getPageCount = (rowCount: number, pageSize: number): number => {
   return 0;
 };
 
-const clampPage = (paginationState: GridPaginationState): GridPaginationState => {
+const applyValidPage = (paginationState: GridPaginationState): GridPaginationState => {
   if (!paginationState.pageCount) {
     return paginationState;
   }
@@ -42,7 +42,7 @@ export const useGridPage = (
 
       setGridState((oldState) => ({
         ...oldState,
-        page: clampPage({
+        page: applyValidPage({
           ...oldState.pagination,
           currentPage: page,
         }),
@@ -73,7 +73,7 @@ export const useGridPage = (
 
       return {
         ...oldState,
-        page: clampPage({
+        page: applyValidPage({
           ...oldState.pagination,
           currentPage,
           rowCount,
@@ -91,7 +91,7 @@ export const useGridPage = (
 
         return {
           ...oldState,
-          page: clampPage({
+          page: applyValidPage({
             ...oldState.pagination,
             pageCount,
             currentPage: oldState.pagination.currentPage,
