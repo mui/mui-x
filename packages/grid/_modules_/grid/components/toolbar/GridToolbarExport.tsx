@@ -20,9 +20,6 @@ type GridExportOption = GridExportFormatOption & {
   label: React.ReactNode;
 };
 
-/**
- * @inheritDoc false
- */
 export interface GridToolbarExportProps extends ButtonProps {
   csvOptions?: GridExportCsvOptions;
 }

@@ -184,18 +184,8 @@ function writePrettifiedFile(filename: string, data: string, prettierConfigPath:
   });
 }
 
-function shouldInlineInheritedProperties(reflection: TypeDoc.DeclarationReflection) {
-  const inheritDocTag = reflection.comment?.tags.find((tag) => tag.tagName === 'inheritdoc');
-
-  return !inheritDocTag || inheritDocTag.paramName !== 'false';
-}
-
 function findProperties(reflection: TypeDoc.DeclarationReflection) {
-  const inlineAll = shouldInlineInheritedProperties(reflection);
-
-  return reflection.children!.filter(
-    (child) => (child.kindOf(TypeDoc.ReflectionKind.Property) && inlineAll) || !child.inheritedFrom,
-  );
+  return reflection.children!.filter((child) => child.kindOf(TypeDoc.ReflectionKind.Property));
 }
 
 function extractEvents(project: TypeDoc.ProjectReflection, apisToGenerate) {
@@ -240,7 +230,6 @@ function run(argv: { outputDirectory?: string }) {
     'GridRowParams',
     'GridSelectionApi',
     'GridFilterApi',
-    'GridToolbarExportProps',
     'GridExportCsvOptions',
   ];
 
