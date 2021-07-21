@@ -38,12 +38,14 @@ Big thanks to the 11 contributors who made this release possible. Here are some 
 - [DataGrid] Improve controllable sorting (#2095) @dtassone
 
   Update the prop arguments:
+
   ```diff
   -onSortModelChange?: (params: GridSortModelParams) => void;
   +onSortModelChange?: (model: GridSortModel) => void;
   ```
 
   Update the model with the first argument directly:
+
   ```diff
   -<DataGrid onSortModelChange = {(params: GridSortModelParams)=>  setSortModel(params.model)} />
   +<DataGrid onSortModelChange = {(model: GridSortModel)=> setSortModel(model) } />
@@ -52,12 +54,14 @@ Big thanks to the 11 contributors who made this release possible. Here are some 
 - [DataGrid] Improve controllable filter (#1909) @dtassone
 
   Update the prop arguments:
+
   ```diff
   -onFilterModelChange?: (params: GridFilterModelParams) => void;
   +onFilterModelChange?: (model: GridFilterModel) => void;
   ```
-  
+
   Update the model with the first argument directly:
+
   ```diff
   -<DataGrid onFilterModelChange = {(params: GridFilterModelParams)=>  setFilterModel(params.model)} />
   +<DataGrid onFilterModelChange = {(model: GridFilterModel)=> setFilterModel(model) } />
@@ -65,7 +69,7 @@ Big thanks to the 11 contributors who made this release possible. Here are some 
 
 - [DataGrid] Improve the editing API (#1955) @m4theushw
 
-  - The `props` key in the first argument of `commitCellChange` was removed to promote the use of the value already stored in the state. 
+  - The `props` key in the first argument of `commitCellChange` was removed to promote the use of the value already stored in the state.
     To update the value in the state, call `setEditCellProps` before.
 
     ```diff
@@ -107,15 +111,17 @@ Big thanks to the 11 contributors who made this release possible. Here are some 
     **Note**: This method will now throw an error if the cell is in view mode.
 
 - [DataGrid] Implement useControlState hook, and add control state on selectionModel (#1823) @dtassone
-  
+
   Update the prop arguments:
+
   ```diff
   -props.onRowSelected
   -onSelectionModelChange?: (params: GridSelectionModelChangeParams) => void;
   +onSelectionModelChange?: (model: GridSelectionModel) => void;
   ```
-  
+
   Update the model with the first argument directly:
+
   ```diff
   -<DataGrid onSelectionModelChange = {(params: GridSelectionModelChangeParams)=>  setSelectionModel(params.model)} />
   +<DataGrid onSelectionModelChange = {(model: GridSelectionModel)=> setSelectionModel(model) } />
@@ -206,7 +212,7 @@ Big thanks to the 6 contributors who made this release possible. Here are some h
         type: 'singleSelect',
         valueOptions: ['France', 'Netherlands', 'Brazil'],
         editable: true,
-      }
+      },
     ]}
     rows={[
       { id: 0, country: 'France' },
