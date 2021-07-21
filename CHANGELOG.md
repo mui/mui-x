@@ -3,6 +3,177 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.0.0-alpha.34](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.33...v4.0.0-alpha.34)
+
+_July 21, 2021_
+
+Big thanks to the 11 contributors who made this release possible. Here are some highlights ✨:
+
+- 🐞 Add \"is empty\" and \"is not empty\" operators (#1997) @m4theushw
+- 💅 Improve the editing API (#1955) @m4theushw
+- 🐛 We have fixed the `scrollToIndexes` behavior (#2162) @oliviertassinari
+- ⚡️ Add control state for selection model, filter model, and sort model @dtassone
+- 💡 Add quick filter demo in the docs @dtassone
+
+### @material-ui/x-grid@v4.0.0-alpha.34 / @material-ui/data-grid@v4.0.0-alpha.34
+
+#### Breaking changes
+- [DataGrid] Fix scrollToIndexes behavior (#2162) @oliviertassinari
+
+```diff
+-apiRef.current.isColumnVisibleInWindow()
+```
+
+- [DataGrid] Remove stateId argument from GridApi getState method (#2141) @flaviendelangle
+
+```diff
+-const filterState = apiRef.current.getState('filter');
++const filterState = apiRef.current.getState().filter;
+```
+
+- [DataGrid] Improve controllable sorting (#2095) @dtassone
+  
+```diff
+// Props
+- onSortModelChange?: (params: GridSortModelParams) => void;
++ onSortModelChange?: (model: GridSortModel) => void;
+
+// Usage
+- <DataGrid onSortModelChange = {(params: GridSortModelParams)=>  setSortModel(params.model)} />
++ <DataGrid onSortModelChange = {(model: GridSortModel)=> setSortModel(model) } />
+```
+
+- [DataGrid] Improve controllable filter (#1909) @dtassone
+  
+```diff
+// Props
+- onFilterModelChange?: (params: GridFilterModelParams) => void;
++ onFilterModelChange?: (model: GridFilterModel) => void;
+
+// Usage
+- <DataGrid onFilterModelChange = {(params: GridFilterModelParams)=>  setFilterModel(params.model)} />
++ <DataGrid onFilterModelChange = {(model: GridFilterModel)=> setFilterModel(model) } />
+```
+
+- [DataGrid] Improve the editing API (#1955) @m4theushw
+  
+  - [DataGrid] The `props` key in the first argument of `commitCellChange` was removed to promote the use of the value already stored in the state. To update the value in the state, call `setEditCellProps` before.
+  
+  ```diff
+  -apiRef.current.commitCellChange({ id: 1, field: 'name', props: { value: 'Ana' } });
+  +apiRef.current.setEditCellProps({ id: 1, field: 'name', props: { value: 'Ana' } });
+  +apiRef.current.commitCellChange({ id: 1, field: 'name' });
+  ```
+  
+  - [DataGrid] Calling `commitCellChange` in a cell in view mode will throw an error. Make sure to first enter the edit mode.
+  
+  ```diff
+  +apiRef.current.setCellMode(1, 'name', 'edit');
+   apiRef.current.commitCellChange({ id: 1, field: 'name' });
+  ```
+  
+  - [DataGrid] The `setCellValue` was removed from the API. Use `commitCellChange` or `updateRows` in place.
+  
+  ```diff
+  -apiRef.current.setCellValue({ id: 1, field: 'name', value: 'Ana' });
+  +apiRef.current.updateRows([{ id: 1, name: 'Ana' }]);
+  ```
+  
+  or
+  
+  ```diff
+  -apiRef.current.setCellValue({ id: 1, field: 'name', value: 'Ana' });
+  +apiRef.current.setCellMode(1, 'name', 'edit');
+  +apiRef.current.setEditCellProps({ id: 1, field: 'name', props: { value: 'Ana' } });
+  +apiRef.current.commitCellChange({ id: 1, field: 'name' });
+  ```
+  
+  - [DataGrid] The `getEditCellProps` was removed because `getEditCellPropsParams` offers the same functionality.
+  
+  ```diff
+  -const props = apiRef.current.getEditCellProps(1, 'name');
+  +const { props } = apiRef.current.getEditCellPropsParams(1, 'name');
+  ```
+  
+  **Note**: This method will now throw an error if the cell is in view mode.
+  
+- [DataGrid] Implement useControlState hook, and add control state on selectionModel (#1823) @dtassone
+
+```diff
+// Props
+- props.onRowSelected
+- onSelectionModelChange?: (params: GridSelectionModelChangeParams) => void;
++ onSelectionModelChange?: (model: GridSelectionModel) => void;
+
+// Usage
+- <DataGrid onSelectionModelChange = {(params: GridSelectionModelChangeParams)=>  setSelectionModel(params.model)} />
++ <DataGrid onSelectionModelChange = {(model: GridSelectionModel)=> setSelectionModel(model) } />
+```
+
+#### Changes
+
+- [DataGrid] Use find instead of filter (#2015) @DanailH
+- [DataGrid] Add \"is empty\" and \"is not empty\" operators (#1997) @m4theushw
+- [DataGrid] Add `minWidth` to `GridColDef` (#2101) @DanailH
+- [DataGrid] Add missing localeText types (#2118) @oliviertassinari
+- [DataGrid] Add missing translations to frFR locale (#2082) @flaviendelangle
+- [DataGrid] Add quick filter demo (#2149) @dtassone
+- [DataGrid] Allow passing styles and Popper props to GridPanel (#1994) @sebastianfrey
+- [DataGrid] Allow to customize the columns exported as CSV (#2008) @flaviendelangle
+- [DataGrid] Emit `GRID_PAGE_SIZE_CHANGE` when autoPageSize is set and the grid size changes (#1986) @flaviendelangle
+- [DataGrid] Fix crash when id has a single-quote (#2033) @rbrishabh
+- [DataGrid] Fix localeText type (#2117) @oliviertassinari
+- [DataGrid] Fix manual entry in date fields (#2051) @m4theushw
+- [DataGrid] Fix scrollToIndexes offscreen column (#1964) @m4theushw
+- [DataGrid] Fix support for `@material-ui/core@4.12` (#2108) @DanailH
+- [DataGrid] Improve GridToolbarXXX props flexibility (#2157) @tifosiblack
+- [DataGrid] Make GridToolbarXXX props overridable (#2084) @tifosiblack
+- [DataGrid] Remove 'hide: true' from a column should correctly resize the others column (#2034) @flaviendelangle
+- [DataGrid] Remove focus on cell when its row is removed from the data (#1995) @flaviendelangle
+- [DataGrid] Remove unused `editMode` prop (#2173) @ZeeshanTamboli
+- [DataGrid] Support style prop (#2116) @oliviertassinari
+- [DataGrid] Use Intl.Collator for string comparison (#2155) @m4theushw
+- [DataGrid] apiRef.current.getRow can return null (#2010) @flaviendelangle
+- [XGrid] Add ability to disable reorder on some columns (#2085) @flaviendelangle
+- [XGrid] Close column header menu when resizing column (#1989) @flaviendelangle
+- [XGrid] Fix column resize on touch devices (#2089) @m4theushw
+- [XGrid] Only show column sorting in the grid toolbar when experimental features enabled (#2091) @flaviendelangle
+- [XGrid] Prevent headers from scrolling during reordering (#2154) @m4theushw
+
+#### Docs
+
+- [docs] Add new cursor-based pagination paragraph (#1991) @flaviendelangle
+- [docs] Better explain what happens in the future (#2036) @oliviertassinari
+- [docs] Fix broken env (#2160) @oliviertassinari
+- [docs] Fix small typos in the documentation (#2169) @BrandonOldenhof
+- [docs] Fix typo in README (#2150) @studyhog
+
+#### Core
+
+- [core] Add @material-ui/lab and @material-ui/icons as peer dependencies (#2012) @m4theushw
+- [core] Add additional test case for `onSelectionModelChange` (#1966) @DanailH
+- [core] Add support bot (#2097) @oliviertassinari
+- [core] Configure Renovate and remove Dependabot (#2075) @flaviendelangle
+- [core] Copy getClasses from the core (removed in v5) (#2140) @flaviendelangle
+- [core] Correctly test column visibility switch impact on column width (#2130) @flaviendelangle
+- [core] Fix missing git source in packages (#2092) @msftenhanceprovenance
+- [core] Fix typo errors (#2100) @flaviendelangle
+- [core] No need to pin dependencies (#2094) @oliviertassinari
+- [core] Remove dead code (#2088) @oliviertassinari
+- [core] Remove implicit :scope (#2115) @oliviertassinari
+- [core] Remove styled-components (#2060) @m4theushw
+- [core] Remove unused event 'cellFocusChange' (#1996) @flaviendelangle
+- [core] Renovate : Group storybook updates (#2086) @flaviendelangle
+- [core] Replace fade with muiStyleAlpha (#2171) @m4theushw
+- [core] Support `docs:api` script in Windows OS (#2166) @ZeeshanTamboli
+- [core] Upgrade dependencies (#2114) @oliviertassinari
+- [core] Use getColumnHeaderCell in tests (#2093) @flaviendelangle
+- [core] Use props instead of options for event handler (#2139) @flaviendelangle
+- [test] Allow tests to run for up to 5 instead of 4 minutes (#2152) @oliviertassinari
+- [test] Increase Browserstack worker timeout from 2.5 to 4 minutes (#2040) @flaviendelangle
+- [test] Remove orphan async @oliviertassinari
+- [test] Test the validation before saving a value (#2087) @m4theushw
+
 ## [4.0.0-alpha.33](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.32...v4.0.0-alpha.33)
 
 _July 1, 2021_
