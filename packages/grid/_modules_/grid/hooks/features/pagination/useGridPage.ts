@@ -42,7 +42,7 @@ export const useGridPage = (
 
       setGridState((oldState) => ({
         ...oldState,
-        page: applyValidPage({
+        pagination: applyValidPage({
           ...oldState.pagination,
           currentPage: page,
         }),
@@ -73,7 +73,7 @@ export const useGridPage = (
 
       return {
         ...oldState,
-        page: applyValidPage({
+        pagination: applyValidPage({
           ...oldState.pagination,
           currentPage,
           rowCount,
@@ -91,7 +91,7 @@ export const useGridPage = (
 
         return {
           ...oldState,
-          page: applyValidPage({
+          pagination: applyValidPage({
             ...oldState.pagination,
             pageCount,
             currentPage: oldState.pagination.currentPage,

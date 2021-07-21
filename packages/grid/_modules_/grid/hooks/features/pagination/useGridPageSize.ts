@@ -22,9 +22,12 @@ export const useGridPageSize = (
     (pageSize: number) => {
       logger.debug(`Setting page size to ${pageSize}`);
 
-      setGridState((state) => ({
-        ...state,
-        pageSize,
+      setGridState((oldState) => ({
+        ...oldState,
+        pagination: {
+          ...oldState.pagination,
+          pageSize,
+        },
       }));
       forceUpdate();
     },
@@ -62,7 +65,10 @@ export const useGridPageSize = (
 
       setGridState((oldState) => ({
         ...oldState,
-        pageSize,
+        pagination: {
+          ...oldState.pagination,
+          pageSize,
+        },
       }));
       forceUpdate();
     }
