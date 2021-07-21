@@ -53,6 +53,8 @@ Big thanks to the 11 contributors who made this release possible. Here are some 
   ```diff
   -onFilterModelChange?: (params: GridFilterModelParams) => void;
   +onFilterModelChange?: (model: GridFilterModel) => void;
+  ```
+  
   Update the model with the first argument directly:
   ```diff
   -<DataGrid onFilterModelChange = {(params: GridFilterModelParams)=>  setFilterModel(params.model)} />
@@ -103,14 +105,16 @@ Big thanks to the 11 contributors who made this release possible. Here are some 
     **Note**: This method will now throw an error if the cell is in view mode.
 
 - [DataGrid] Implement useControlState hook, and add control state on selectionModel (#1823) @dtassone
-
+  
+  Update the prop arguments:
   ```diff
-   // Props
   -props.onRowSelected
   -onSelectionModelChange?: (params: GridSelectionModelChangeParams) => void;
   +onSelectionModelChange?: (model: GridSelectionModel) => void;
-
-   // Usage
+  ```
+  
+  Update the model with the first argument directly:
+  ```diff
   -<DataGrid onSelectionModelChange = {(params: GridSelectionModelChangeParams)=>  setSelectionModel(params.model)} />
   +<DataGrid onSelectionModelChange = {(model: GridSelectionModel)=> setSelectionModel(model) } />
   ```
