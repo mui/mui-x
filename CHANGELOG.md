@@ -59,41 +59,41 @@ Big thanks to the 11 contributors who made this release possible. Here are some 
   
   - [DataGrid] The `props` key in the first argument of `commitCellChange` was removed to promote the use of the value already stored in the state. To update the value in the state, call `setEditCellProps` before.
   
-  ```diff
-  -apiRef.current.commitCellChange({ id: 1, field: 'name', props: { value: 'Ana' } });
-  +apiRef.current.setEditCellProps({ id: 1, field: 'name', props: { value: 'Ana' } });
-  +apiRef.current.commitCellChange({ id: 1, field: 'name' });
-  ```
+```diff
+-apiRef.current.commitCellChange({ id: 1, field: 'name', props: { value: 'Ana' } });
++apiRef.current.setEditCellProps({ id: 1, field: 'name', props: { value: 'Ana' } });
++apiRef.current.commitCellChange({ id: 1, field: 'name' });
+```
   
   - [DataGrid] Calling `commitCellChange` in a cell in view mode will throw an error. Make sure to first enter the edit mode.
   
-  ```diff
-  +apiRef.current.setCellMode(1, 'name', 'edit');
-   apiRef.current.commitCellChange({ id: 1, field: 'name' });
-  ```
+```diff
++apiRef.current.setCellMode(1, 'name', 'edit');
+ apiRef.current.commitCellChange({ id: 1, field: 'name' });
+```
   
   - [DataGrid] The `setCellValue` was removed from the API. Use `commitCellChange` or `updateRows` in place.
   
-  ```diff
-  -apiRef.current.setCellValue({ id: 1, field: 'name', value: 'Ana' });
-  +apiRef.current.updateRows([{ id: 1, name: 'Ana' }]);
-  ```
+```diff
+-apiRef.current.setCellValue({ id: 1, field: 'name', value: 'Ana' });
++apiRef.current.updateRows([{ id: 1, name: 'Ana' }]);
+```
   
   or
   
-  ```diff
-  -apiRef.current.setCellValue({ id: 1, field: 'name', value: 'Ana' });
-  +apiRef.current.setCellMode(1, 'name', 'edit');
-  +apiRef.current.setEditCellProps({ id: 1, field: 'name', props: { value: 'Ana' } });
-  +apiRef.current.commitCellChange({ id: 1, field: 'name' });
-  ```
+```diff
+-apiRef.current.setCellValue({ id: 1, field: 'name', value: 'Ana' });
++apiRef.current.setCellMode(1, 'name', 'edit');
++apiRef.current.setEditCellProps({ id: 1, field: 'name', props: { value: 'Ana' } });
++apiRef.current.commitCellChange({ id: 1, field: 'name' });
+```
   
   - [DataGrid] The `getEditCellProps` was removed because `getEditCellPropsParams` offers the same functionality.
   
-  ```diff
-  -const props = apiRef.current.getEditCellProps(1, 'name');
-  +const { props } = apiRef.current.getEditCellPropsParams(1, 'name');
-  ```
+```diff
+-const props = apiRef.current.getEditCellProps(1, 'name');
++const { props } = apiRef.current.getEditCellPropsParams(1, 'name');
+```
   
   **Note**: This method will now throw an error if the cell is in view mode.
   
