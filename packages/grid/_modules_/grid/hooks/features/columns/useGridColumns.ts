@@ -35,7 +35,11 @@ import { useGridApiOptionHandler } from '../../root/useGridApiEventHandler';
 import { GRID_STRING_COL_DEF } from '../../../models/colDef/gridStringColDef';
 import { GridComponentProps } from '../../../GridComponentProps';
 
-function updateColumnsWidth(columns: GridColumns, viewportWidth: number, shouldApplyFlex: boolean): GridColumns {
+function updateColumnsWidth(
+  columns: GridColumns,
+  viewportWidth: number,
+  shouldApplyFlex: boolean,
+): GridColumns {
   const numberOfFluidColumns = columns.filter((column) => !!column.flex && !column.hide).length;
   let flexDivider = 0;
 
@@ -138,7 +142,10 @@ const upsertColumnsState = (
 
 export function useGridColumns(
   apiRef: GridApiRef,
-  props: Pick<GridComponentProps, 'columns' | 'onColumnVisibilityChange' | 'columnTypes' | 'checkboxSelection'>,
+  props: Pick<
+    GridComponentProps,
+    'columns' | 'onColumnVisibilityChange' | 'columnTypes' | 'checkboxSelection'
+  >,
 ): void {
   const logger = useLogger('useGridColumns');
   const [gridState, setGridState, forceUpdate] = useGridState(apiRef);
@@ -192,7 +199,11 @@ export function useGridColumns(
       // Avoid dependency on gridState to avoid infinite loop
       const refGridState = apiRef.current.getState();
       const newColumns: GridColumns = newState.all.map((field) => newState.lookup[field]);
-      const updatedCols = updateColumnsWidth(newColumns, refGridState.viewportSizes.width, applyFlex);
+      const updatedCols = updateColumnsWidth(
+        newColumns,
+        refGridState.viewportSizes.width,
+        applyFlex,
+      );
 
       const finalState: GridInternalColumns = {
         all: updatedCols.map((col) => col.field),
@@ -300,11 +311,11 @@ export function useGridColumns(
 
     if (props.columns.length > 0) {
       const hydratedColumns = hydrateColumns(
-          props.columns,
-          props.columnTypes!,
-          !!props.checkboxSelection,
-          logger,
-          apiRef.current.getLocaleText,
+        props.columns,
+        props.columnTypes!,
+        !!props.checkboxSelection,
+        logger,
+        apiRef.current.getLocaleText,
       );
 
       const newState = upsertColumnsState(hydratedColumns);
@@ -320,37 +331,37 @@ export function useGridColumns(
     props.columns,
     props.columnTypes,
     props.checkboxSelection,
-  ])
+  ]);
 
   const updateColumnsTotalWidth = React.useCallback(() => {
     logger.debug(
-        `GridColumns gridState.viewportSizes.width, changed ${gridState.viewportSizes.width}`,
+      `GridColumns gridState.viewportSizes.width, changed ${gridState.viewportSizes.width}`,
     );
     // Avoid dependency on gridState as I only want to update cols when viewport size changed.
     const currentColumns = allGridColumnsSelector(apiRef.current.getState());
     apiRef.current.updateColumns(currentColumns, false);
-  }, [apiRef, logger, gridState.viewportSizes.width])
+  }, [apiRef, logger, gridState.viewportSizes.width]);
 
-  const hasInitializedColumns = React.useRef(false)
+  const hasInitializedColumns = React.useRef(false);
 
   React.useEffect(() => {
     if (hasInitializedColumns.current) {
-      setColumnsFromProps()
+      setColumnsFromProps();
     }
   }, [setColumnsFromProps]);
 
   React.useEffect(() => {
     if (hasInitializedColumns.current) {
-      updateColumnsTotalWidth()
+      updateColumnsTotalWidth();
     }
   }, [updateColumnsTotalWidth]);
 
   React.useEffect(() => {
     if (!hasInitializedColumns.current) {
-     setColumnsFromProps()
+      setColumnsFromProps();
 
       if (gridState.viewportSizes.width) {
-        hasInitializedColumns.current = true
+        hasInitializedColumns.current = true;
       }
     }
   }, [setColumnsFromProps, gridState.viewportSizes.width]);

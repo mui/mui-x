@@ -17,10 +17,6 @@ export const ResizeSmallDataset = () => {
   const [size, setSize] = React.useState<ElementSize>({ width: 800, height: 600 });
   const data = useData(5, 4);
 
-  if (data.columns.length) {
-      data.columns[0].flex = 1
-  }
-
   return (
     <React.Fragment>
       <div>
