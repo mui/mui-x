@@ -1,6 +1,6 @@
 import { Story } from '@storybook/react';
 import * as React from 'react';
-import { XGrid, GridOptionsProp, GridComponentProps } from '@material-ui/x-grid';
+import { XGrid, GridOptionsProp, GridBaseComponentProps } from '@material-ui/x-grid';
 import { useData } from '../hooks/useData';
 
 export default {
@@ -64,7 +64,7 @@ const DemoDynamicContainerTemplate: Story<
     width: number | string;
     nbRows: number;
     nbCols: number;
-  } & GridComponentProps
+  } & GridBaseComponentProps
 > = ({ nbRows, nbCols, height, width, rows, columns, ...args }) => {
   const data = useData(nbRows, nbCols);
   return (

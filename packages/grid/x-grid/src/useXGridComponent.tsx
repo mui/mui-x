@@ -1,3 +1,4 @@
+import { useLicenseVerifier } from '@material-ui/x-license';
 import { GridBaseComponentProps } from '../../_modules_/grid/GridBaseComponentProps';
 import { useGridClipboard } from '../../_modules_/grid/hooks/features/clipboard/useGridClipboard';
 import { useGridColumnMenu } from '../../_modules_/grid/hooks/features/columnMenu/useGridColumnMenu';
@@ -35,8 +36,9 @@ import { useResizeContainer } from '../../_modules_/grid/hooks/utils/useResizeCo
 import { useStateProp } from '../../_modules_/grid/hooks/utils/useStateProp';
 import { GridApiRef } from '../../_modules_/grid/models/api/gridApiRef';
 
-export const useDataGridComponent = (apiRef: GridApiRef, props: GridBaseComponentProps) => {
+export const useXGridComponent = (apiRef: GridApiRef, props: GridBaseComponentProps) => {
   useLoggerFactory(apiRef, props);
+  useLicenseVerifier();
   useApi(apiRef);
   useErrorHandler(apiRef, props);
   useGridControlState(apiRef);

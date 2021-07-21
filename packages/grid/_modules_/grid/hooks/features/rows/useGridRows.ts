@@ -4,7 +4,7 @@ import {
   GRID_ROWS_SET,
   GRID_ROWS_UPDATE,
 } from '../../../constants/eventsConstants';
-import { GridComponentProps } from '../../../GridComponentProps';
+import { GridBaseComponentProps } from '../../../GridBaseComponentProps';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridRowApi } from '../../../models/api/gridRowApi';
 import {
@@ -52,7 +52,7 @@ export function convertGridRowsPropToState(
 
 export const useGridRows = (
   apiRef: GridApiRef,
-  { rows, getRowId }: Pick<GridComponentProps, 'rows' | 'getRowId'>,
+  { rows, getRowId }: Pick<GridBaseComponentProps, 'rows' | 'getRowId'>,
 ): void => {
   const logger = useLogger('useGridRows');
   const [gridState, setGridState, updateComponent] = useGridState(apiRef);

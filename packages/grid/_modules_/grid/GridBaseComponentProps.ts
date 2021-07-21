@@ -15,7 +15,7 @@ export type GridOptionsProp = Partial<GridOptions>;
 /**
  * The grid component react props interface.
  */
-export interface GridComponentProps extends GridOptionsProp {
+export interface GridBaseComponentProps extends GridOptionsProp {
   /**
    * The ref object that allows grid manipulation. Can be instantiated with [[useGridApiRef()]].
    */

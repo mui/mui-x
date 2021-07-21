@@ -5,7 +5,7 @@ import {
   GRID_ROWS_SET,
   GRID_ROWS_UPDATE,
 } from '../../../constants/eventsConstants';
-import { GridComponentProps } from '../../../GridComponentProps';
+import { GridBaseComponentProps } from '../../../GridBaseComponentProps';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridFilterApi } from '../../../models/api/gridFilterApi';
 import { GridFeatureModeConstant } from '../../../models/gridFeatureMode';
@@ -31,7 +31,7 @@ import { getInitialVisibleGridRowsState } from './visibleGridRowsState';
 
 export const useGridFilter = (
   apiRef: GridApiRef,
-  props: Pick<GridComponentProps, 'rows' | 'filterModel' | 'onFilterModelChange'>,
+  props: Pick<GridBaseComponentProps, 'rows' | 'filterModel' | 'onFilterModelChange'>,
 ): void => {
   const logger = useLogger('useGridFilter');
   const [gridState, setGridState, forceUpdate] = useGridState(apiRef);

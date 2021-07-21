@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {
   GridApiRef,
-  GridComponentProps,
+  GridBaseComponentProps,
   GridSortModel,
   useGridApiRef,
 } from '@material-ui/data-grid';
@@ -59,7 +59,7 @@ describe('<XGrid /> - Sorting', () => {
 
   let apiRef: GridApiRef;
 
-  const TestCase = (props: Partial<GridComponentProps>) => {
+  const TestCase = (props: Partial<GridBaseComponentProps>) => {
     const { rows, ...other } = props;
     apiRef = useGridApiRef();
     return (
@@ -296,7 +296,7 @@ describe('<XGrid /> - Sorting', () => {
 
     it('should control sort state when the model and the onChange are set', () => {
       let expectedModel: GridSortModel = [];
-      const ControlCase = (props: Partial<GridComponentProps>) => {
+      const ControlCase = (props: Partial<GridBaseComponentProps>) => {
         const { rows, columns, ...others } = props;
         const [caseSortModel, setSortModel] = React.useState<GridSortModel>([]);
         const handleSortChange = (newModel) => {

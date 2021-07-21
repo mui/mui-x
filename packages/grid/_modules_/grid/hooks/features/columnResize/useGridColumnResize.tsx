@@ -24,7 +24,7 @@ import { GridApiRef, CursorCoordinates, GridColumnHeaderParams } from '../../../
 import { useGridApiEventHandler, useGridApiOptionHandler } from '../../root/useGridApiEventHandler';
 import { useGridState } from '../core/useGridState';
 import { useNativeEventListener } from '../../root/useNativeEventListener';
-import { GridComponentProps } from '../../../GridComponentProps';
+import { GridBaseComponentProps } from '../../../GridBaseComponentProps';
 
 let cachedSupportsTouchActionNone = false;
 
@@ -73,7 +73,7 @@ function trackFinger(event, currentTouchId): CursorCoordinates | boolean {
 // TODO improve experience for last column
 export const useGridColumnResize = (
   apiRef: GridApiRef,
-  props: Pick<GridComponentProps, 'onColumnResize' | 'onColumnWidthChange'>,
+  props: Pick<GridBaseComponentProps, 'onColumnResize' | 'onColumnWidthChange'>,
 ) => {
   const logger = useLogger('useGridColumnResize');
   const [, setGridState, forceUpdate] = useGridState(apiRef);

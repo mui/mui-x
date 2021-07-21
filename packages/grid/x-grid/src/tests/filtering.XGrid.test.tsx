@@ -1,7 +1,7 @@
 import {
   getInitialGridFilterState,
   GridApiRef,
-  GridComponentProps,
+  GridBaseComponentProps,
   GridFilterModel,
   GridLinkOperator,
   GridPreferencePanelsValue,
@@ -62,7 +62,7 @@ describe('<XGrid /> - Filter', () => {
     columns: [{ field: 'brand' }],
   };
 
-  const TestCase = (props: Partial<GridComponentProps>) => {
+  const TestCase = (props: Partial<GridBaseComponentProps>) => {
     const { rows, ...other } = props;
     apiRef = useGridApiRef();
     return (
@@ -483,7 +483,7 @@ describe('<XGrid /> - Filter', () => {
     });
 
     it('should control filter state when the model and the onChange are set', () => {
-      const ControlCase = (props: Partial<GridComponentProps>) => {
+      const ControlCase = (props: Partial<GridBaseComponentProps>) => {
         const { rows, columns, ...others } = props;
         const [caseFilterModel, setFilterModel] = React.useState<any>(getInitialGridFilterState());
         const handleFilterChange = (newModel) => {

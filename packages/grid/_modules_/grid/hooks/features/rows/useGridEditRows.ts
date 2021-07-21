@@ -42,12 +42,12 @@ import { useEventCallback } from '../../../utils/material-ui-utils';
 import { useLogger } from '../../utils/useLogger';
 import { useGridSelector } from '../core/useGridSelector';
 import { useGridState } from '../core/useGridState';
-import { GridComponentProps } from '../../../GridComponentProps';
+import { GridBaseComponentProps } from '../../../GridBaseComponentProps';
 
 export function useGridEditRows(
   apiRef: GridApiRef,
   props: Pick<
-    GridComponentProps,
+    GridBaseComponentProps,
     | 'onEditCellChangeCommitted'
     | 'onEditCellChange'
     | 'onCellValueChange'

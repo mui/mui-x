@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { GridComponentProps } from '../GridComponentProps';
+import { GridBaseComponentProps } from '../GridBaseComponentProps';
 
-const GridRootPropsContext = React.createContext<GridComponentProps | undefined>(undefined);
+const GridRootPropsContext = React.createContext<GridBaseComponentProps | undefined>(undefined);
 
 if (process.env.NODE_ENV !== 'production') {
   GridRootPropsContext.displayName = 'GridRootPropsContext';

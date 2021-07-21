@@ -8,7 +8,7 @@ import {
   GRID_ROWS_UPDATE,
   GRID_SORT_MODEL_CHANGE,
 } from '../../../constants/eventsConstants';
-import { GridComponentProps } from '../../../GridComponentProps';
+import { GridBaseComponentProps } from '../../../GridBaseComponentProps';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridSortApi } from '../../../models/api/gridSortApi';
 import { GridCellValue } from '../../../models/gridCell';
@@ -38,7 +38,7 @@ import { sortedGridRowIdsSelector, sortedGridRowsSelector } from './gridSortingS
 
 export const useGridSorting = (
   apiRef: GridApiRef,
-  props: Pick<GridComponentProps, 'rows' | 'sortModel' | 'onSortModelChange'>,
+  props: Pick<GridBaseComponentProps, 'rows' | 'sortModel' | 'onSortModelChange'>,
 ) => {
   const logger = useLogger('useGridSorting');
 

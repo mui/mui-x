@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { GRID_DEFAULT_LOCALE_TEXT } from '../../constants/localeTextConstants';
 import { mergeGridOptions } from '../../utils/mergeUtils';
-import { GridComponentProps, GridOptionsProp } from '../../GridComponentProps';
+import { GridBaseComponentProps, GridOptionsProp } from '../../GridBaseComponentProps';
 import { GridApiRef } from '../../models/api/gridApiRef';
 import { DEFAULT_GRID_OPTIONS, GridOptions } from '../../models/gridOptions';
 import { composeClasses } from '../../utils/material-ui-utils';
@@ -27,7 +27,7 @@ export function optionsReducer(
       throw new Error(`Material-UI: Action ${action.type} not found.`);
   }
 }
-export function useOptionsProp(apiRef: GridApiRef, props: GridComponentProps): GridOptions {
+export function useOptionsProp(apiRef: GridApiRef, props: GridBaseComponentProps): GridOptions {
   const logger = useLogger('useOptionsProp');
 
   const options: GridOptionsProp = React.useMemo(

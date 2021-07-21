@@ -3,16 +3,14 @@ import { DataGridProps, MAX_PAGE_SIZE } from '@material-ui/data-grid/DataGridPro
 import { DATAGRID_PROPTYPES } from '@material-ui/data-grid/DataGridPropTypes';
 import * as React from 'react';
 import {
-  DEFAULT_GRID_OPTIONS,
+  DEFAULT_GRID_OPTIONS, GridBody, GridErrorHandler,
   GridFooterPlaceholder,
   GridHeaderPlaceholder, GridRoot,
   useGridApiRef,
   useThemeProps,
 } from '../../_modules_/grid';
 import { GridContextProvider } from '../../_modules_/grid/context/GridContextProvider';
-import { GridBody } from '../../_modules_/grid/GridBody';
 import { useDataGridComponent } from './useDataGridComponent';
-import { GridErrorHandler } from '../../_modules_/grid/GridErrorHandler';
 
 const DataGridRaw = React.forwardRef<HTMLDivElement, DataGridProps>(function DataGrid(
   inProps,
@@ -27,6 +25,7 @@ const DataGridRaw = React.forwardRef<HTMLDivElement, DataGridProps>(function Dat
     pageSize = MAX_PAGE_SIZE;
   }
 
+  //todo move that to useSorting
   const selectionModel =
     dataGridSelectionModel !== undefined && !Array.isArray(dataGridSelectionModel)
       ? [dataGridSelectionModel]

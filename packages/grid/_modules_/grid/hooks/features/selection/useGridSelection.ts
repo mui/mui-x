@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { GRID_ROW_CLICK, GRID_SELECTION_CHANGE } from '../../../constants/eventsConstants';
-import { GridComponentProps } from '../../../GridComponentProps';
+import { GridBaseComponentProps } from '../../../GridBaseComponentProps';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridSelectionApi } from '../../../models/api/gridSelectionApi';
 import { GridRowParams } from '../../../models/params/gridRowParams';
@@ -19,7 +19,7 @@ import {
   selectedIdsLookupSelector,
 } from './gridSelectionSelector';
 
-export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps): void => {
+export const useGridSelection = (apiRef: GridApiRef, props: GridBaseComponentProps): void => {
   const logger = useLogger('useGridSelection');
   const [, setGridState, forceUpdate] = useGridState(apiRef);
   const options = useGridSelector(apiRef, optionsSelector);

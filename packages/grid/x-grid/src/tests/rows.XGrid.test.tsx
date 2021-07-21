@@ -9,7 +9,7 @@ import { expect } from 'chai';
 import { getCell, getColumnValues } from 'test/utils/helperFn';
 import {
   GridApiRef,
-  GridComponentProps,
+  GridBaseComponentProps,
   GridRowData,
   useGridApiRef,
   XGrid,
@@ -166,7 +166,7 @@ describe('<XGrid /> - Rows', () => {
 
     let apiRef: GridApiRef;
 
-    const TestCase = (props: Partial<GridComponentProps>) => {
+    const TestCase = (props: Partial<GridBaseComponentProps>) => {
       apiRef = useGridApiRef();
       return (
         <div style={{ width: 300, height: 300 }}>
