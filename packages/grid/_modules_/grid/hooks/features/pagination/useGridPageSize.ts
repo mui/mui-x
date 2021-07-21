@@ -36,7 +36,7 @@ export const useGridPageSize = (
       stateId: 'pageSize',
       propModel: props.pageSize,
       propOnChange: props.onPageSizeChange,
-      stateSelector: (state) => state.pageSize,
+      stateSelector: (state) => state.pagination.pageSize,
       onChangeCallback: (model) => {
         apiRef.current.publishEvent(GRID_PAGE_SIZE_CHANGE, model);
       },
@@ -45,7 +45,7 @@ export const useGridPageSize = (
 
   React.useEffect(() => {
     const autoPageSize = containerSizes?.viewportPageSize;
-    const prevPageSize = apiRef.current.getState().pageSize;
+    const prevPageSize = apiRef.current.getState().pagination.pageSize;
 
     let pageSize = prevPageSize;
 

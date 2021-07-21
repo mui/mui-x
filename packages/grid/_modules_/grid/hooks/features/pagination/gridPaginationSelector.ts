@@ -4,7 +4,7 @@ import { GridRowId } from '../../../models/gridRows';
 import { visibleSortedGridRowIdsSelector } from '../filter/gridFilterSelector';
 import { GridPaginationState } from './gridPaginationState';
 
-export const gridPaginationSelector = (state: any): GridPaginationState => state.page;
+export const gridPaginationSelector = (state: any): GridPaginationState => state.pagination;
 
 export const gridPaginatedVisibleSortedGridRowIdsSelector = createSelector<
   GridState,

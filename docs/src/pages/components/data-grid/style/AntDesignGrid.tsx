@@ -113,8 +113,8 @@ function CustomPagination() {
       color="primary"
       variant="outlined"
       shape="rounded"
-      page={state.page.currentPage}
-      count={state.page.pageCount}
+      page={state.pagination.currentPage}
+      count={state.pagination.pageCount}
       // @ts-expect-error
       renderItem={(props2) => <PaginationItem {...props2} disableRipple />}
       onChange={(event, value) => apiRef.current.setPage(value)}

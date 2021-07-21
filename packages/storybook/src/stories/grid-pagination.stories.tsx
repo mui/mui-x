@@ -129,8 +129,8 @@ export function PaginationApiTests() {
             Pagination: ({ state }) => (
               <Pagination
                 className="my-custom-pagination"
-                page={state.page.currentPage + 1}
-                count={state.page.pageCount}
+                page={state.pagination.currentPage + 1}
+                count={state.pagination.pageCount}
                 onChange={(e, value) => apiRef.current.setPage(value - 1)}
               />
             ),

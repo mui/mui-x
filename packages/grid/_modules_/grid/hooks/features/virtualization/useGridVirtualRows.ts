@@ -340,16 +340,16 @@ export const useGridVirtualRows = (apiRef: GridApiRef): void => {
 
   React.useEffect(() => {
     if (
-      gridState.rendering.renderContext?.paginationCurrentPage !== pageState.currentPage &&
+      gridState.rendering.renderContext?.paginationCurrentPage !== paginationState.currentPage &&
       apiRef.current.updateViewport
     ) {
-      logger.debug(`State page.currentPage changed to ${pageState.currentPage}. `);
+      logger.debug(`State paginationState.currentPage changed to ${paginationState.currentPage}. `);
       apiRef.current.updateViewport(true);
       resetScroll();
     }
   }, [
     apiRef,
-    pageState.currentPage,
+    paginationState.currentPage,
     gridState.rendering.renderContext?.paginationCurrentPage,
     logger,
     resetScroll,
