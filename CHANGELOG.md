@@ -37,12 +37,14 @@ Big thanks to the 11 contributors who made this release possible. Here are some 
 
 - [DataGrid] Improve controllable sorting (#2095) @dtassone
 
+  Update the prop arguments:
   ```diff
-   // Props
   -onSortModelChange?: (params: GridSortModelParams) => void;
   +onSortModelChange?: (model: GridSortModel) => void;
+  ```
 
-   // Usage
+  Update the model with the first argument directly:
+  ```diff
   -<DataGrid onSortModelChange = {(params: GridSortModelParams)=>  setSortModel(params.model)} />
   +<DataGrid onSortModelChange = {(model: GridSortModel)=> setSortModel(model) } />
   ```
