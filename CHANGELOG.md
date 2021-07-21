@@ -9,9 +9,10 @@ _July 21, 2021_
 
 Big thanks to the 11 contributors who made this release possible. Here are some highlights ✨:
 
+- 🚀 Fix @material-ui/core v4.12.1 support (#2140) @flaviendelangle
 - 🐞 Add \"is empty\" and \"is not empty\" operators (#1997) @m4theushw
 - 💅 Improve the editing API (#1955) @m4theushw
-- 🐛 We have fixed the `scrollToIndexes` behavior (#2162) @oliviertassinari
+- 🐛 We have improved the scroll keyboard (#2162) @oliviertassinari
 - ⚡️ Add control state for selection model, filter model, and sort model @dtassone
 - 💡 Add quick filter demo in the docs @dtassone
 
