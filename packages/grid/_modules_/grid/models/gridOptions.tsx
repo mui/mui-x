@@ -12,7 +12,6 @@ import { Logger } from './logger';
 import { GridCellParams } from './params/gridCellParams';
 import { GridColumnHeaderParams } from './params/gridColumnHeaderParams';
 import { GridRowParams } from './params/gridRowParams';
-import { GridSortModelParams } from './params/gridSortModelParams';
 import { GridSelectionModel } from './gridSelectionModel';
 import { GridSortDirection, GridSortModel } from './gridSortModel';
 import {
@@ -129,12 +128,6 @@ export interface GridOptions {
    * @default false
    */
   disableSelectionOnClick?: boolean;
-  /**
-   * Edit cell or rows can be processed on the server or client-side.
-   * Set it to 'client' if you would like to handle editing on the client-side.
-   * Set it to 'server' if you would like to handle editing on the server-side.
-   */
-  editMode?: GridFeatureMode;
   /**
    * Set the edit rows model of the grid.
    */
@@ -416,9 +409,9 @@ export interface GridOptions {
   onSelectionModelChange?: (selectionModel: GridRowId[]) => void;
   /**
    * Callback fired when the sort model changes before a column is sorted.
-   * @param param With all properties from [[GridSortModelParams]].
+   * @param param With all properties from [[GridSortModel]].
    */
-  onSortModelChange?: (params: GridSortModelParams) => void;
+  onSortModelChange?: (model: GridSortModel) => void;
   /**
    * Callback fired when the state of the grid is updated.
    */

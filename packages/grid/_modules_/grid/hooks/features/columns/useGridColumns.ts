@@ -44,7 +44,7 @@ function updateColumnsWidth(columns: GridColumns, viewportWidth: number): GridCo
     columns.forEach((column) => {
       if (!column.hide) {
         if (!column.flex) {
-          viewportWidth -= column.width!;
+          viewportWidth -= Math.max(column.minWidth!, column.width!);
         } else {
           flexDivider += column.flex;
         }
@@ -57,15 +57,33 @@ function updateColumnsWidth(columns: GridColumns, viewportWidth: number): GridCo
     const flexMultiplier = viewportWidth / flexDivider;
     newColumns = columns.map((column) => {
       if (!column.flex) {
-        return column;
+        return {
+          ...column,
+          width: Math.max(column.minWidth!, column.width!),
+        };
       }
+
+      let newWidth = column.minWidth! ?? GRID_STRING_COL_DEF.width;
+      if (viewportWidth > 0) {
+        const flexColumnWidth = Math.floor(flexMultiplier * column.flex!);
+        newWidth =
+          column.minWidth && column.minWidth > flexColumnWidth ? column.minWidth : flexColumnWidth;
+      }
+
       return {
         ...column,
-        width:
-          viewportWidth > 0 ? Math.floor(flexMultiplier * column.flex!) : GRID_STRING_COL_DEF.width,
+        width: newWidth,
+      };
+    });
+  } else {
+    newColumns = columns.map((column) => {
+      return {
+        ...column,
+        width: Math.max(column.minWidth!, column.width!),
       };
     });
   }
+
   return newColumns;
 }
 

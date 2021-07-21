@@ -21,12 +21,6 @@ export interface GridVirtualizationApi {
    */
   scrollToIndexes: (params: Optional<GridCellIndexCoordinates, 'rowIndex'>) => boolean;
   /**
-   * Checks if a column at the index given by `colIndex` is currently visible in the viewport.
-   * @param {number} colIndex To column index to check.
-   * @returns {boolean} Returns `true` when the column is visible and `false` when it is not.
-   */
-  isColumnVisibleInWindow: (colIndex: number) => boolean;
-  /**
    * Get the current containerProps.
    * @ignore - do not document.
    */

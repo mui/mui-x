@@ -26,7 +26,6 @@ import { useGridState } from '../core/useGridState';
 import { useNativeEventListener } from '../../root/useNativeEventListener';
 import { GridComponentProps } from '../../../GridComponentProps';
 
-const MIN_COL_WIDTH = 50;
 let cachedSupportsTouchActionNone = false;
 
 // TODO: remove support for Safari < 13.
@@ -135,7 +134,7 @@ export const useGridColumnResize = (
       initialOffset.current +
       nativeEvent.clientX -
       colElementRef.current!.getBoundingClientRect().left;
-    newWidth = Math.max(MIN_COL_WIDTH, newWidth);
+    newWidth = Math.max(colDefRef.current?.minWidth!, newWidth);
 
     updateWidth(newWidth);
     apiRef.current.publishEvent(GRID_COLUMN_RESIZE, {
@@ -230,7 +229,7 @@ export const useGridColumnResize = (
       initialOffset.current! +
       (finger as CursorCoordinates).x -
       colElementRef.current!.getBoundingClientRect().left;
-    newWidth = Math.max(MIN_COL_WIDTH, newWidth);
+    newWidth = Math.max(colDefRef.current?.minWidth!, newWidth);
 
     updateWidth(newWidth);
     apiRef.current.publishEvent(GRID_COLUMN_RESIZE, {

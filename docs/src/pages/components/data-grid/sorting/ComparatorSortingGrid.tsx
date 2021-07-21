@@ -5,6 +5,7 @@ import {
   DataGrid,
   GridSortDirection,
   GridValueGetterParams,
+  GridSortModel,
 } from '@material-ui/data-grid';
 import {
   randomCreatedDate,
@@ -74,17 +75,21 @@ const rows: GridRowsProp = [
   },
 ];
 
-const sortModel = [
-  {
-    field: 'username',
-    sort: 'asc' as GridSortDirection,
-  },
-];
-
 export default function ComparatorSortingGrid() {
+  const [sortModel, setSortModel] = React.useState<GridSortModel>([
+    {
+      field: 'username',
+      sort: 'asc' as GridSortDirection,
+    },
+  ]);
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <DataGrid sortModel={sortModel} rows={rows} columns={columns} />
+      <DataGrid
+        sortModel={sortModel}
+        rows={rows}
+        columns={columns}
+        onSortModelChange={(model) => setSortModel(model)}
+      />
     </div>
   );
 }

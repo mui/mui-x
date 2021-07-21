@@ -539,7 +539,6 @@ export function EditRowsControl() {
           onEditCellChange={onEditCellChange}
           onEditCellChangeCommitted={onEditCellChangeCommitted}
           editRowsModel={editRowsModel}
-          editMode="server"
         />
       </div>
     </React.Fragment>
