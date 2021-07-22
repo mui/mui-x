@@ -339,7 +339,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         ];
 
         render(
-          <div style={{ width: 200, height: 300 }}>
+          <div style={{ width: 600, height: 300 }}>
             <DataGrid columns={columns} rows={rows} />
           </div>,
         );
@@ -504,8 +504,10 @@ describe('<DataGrid /> - Layout & Warnings', () => {
           },
         ];
 
+        const totalWidth = 700
+
         render(
-          <div style={{ width: 200, height: 300 }}>
+          <div style={{ width: totalWidth, height: 300 }}>
             <DataGrid columns={columns} rows={rows} checkboxSelection />
           </div>,
         );
@@ -515,7 +517,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
             (width, item) => width + item.clientWidth,
             0,
           ),
-        ).to.equal(200 - 2);
+        ).to.equal(totalWidth - 2);
       });
     });
 

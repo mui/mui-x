@@ -167,6 +167,10 @@ export interface GridColumnProp extends Omit<GridColDef, 'filterOperators'> {
 export type GridColumns = GridColDef[];
 export type GridColTypeDef = Omit<GridColDef, 'field'> & { extendType?: GridNativeColTypes };
 
+export interface GridStateColDef extends GridColDef {
+  computedWidth: number;
+}
+
 /**
  * Meta Info about columns.
  */
@@ -175,14 +179,14 @@ export interface GridColumnsMeta {
   positions: number[];
 }
 
-export type GridColumnLookup = { [field: string]: GridColDef };
+export type GridColumnLookup = { [field: string]: GridStateColDef };
 
-export interface GridInternalColumns {
+export interface GridColumnsState {
   all: string[];
   lookup: GridColumnLookup;
 }
 
-export const getInitialGridColumnsState = (): GridInternalColumns => ({
+export const getInitialGridColumnsState = (): GridColumnsState => ({
   all: [],
   lookup: {},
 });

@@ -165,7 +165,7 @@ describe('<XGrid /> - Columns', () => {
       expect(onColumnWidthChange.args[0][0].width).to.equal(120);
     });
 
-    it('should not reapply the flex width after resizing a column with api', () => {
+    it('should resize the flex width after resizing a column with api', () => {
       const twoColumns = [
         { field: 'id', width: 100, flex: 1 },
         { field: 'brand', width: 100 },
@@ -178,11 +178,28 @@ describe('<XGrid /> - Columns', () => {
 
       apiRef!.current.setColumnWidth('brand', 150);
 
-      expect(getColumnHeaderCell(0).style.width).to.equal('198px');
+      expect(getColumnHeaderCell(0).style.width).to.equal('148px');
       expect(getColumnHeaderCell(1).style.width).to.equal('150px');
     });
 
-    it('should not reapply the flex width after resizing a column with the separator', () => {
+    it('should not resize the flex width under its base width after resizing a column with api', () => {
+      const twoColumns = [
+        { field: 'id', width: 175, flex: 1 },
+        { field: 'brand', width: 100 },
+      ];
+
+      render(<Test columns={twoColumns} />);
+
+      expect(getColumnHeaderCell(0).style.width).to.equal('198px');
+      expect(getColumnHeaderCell(1).style.width).to.equal('100px');
+
+      apiRef!.current.setColumnWidth('brand', 150);
+
+      expect(getColumnHeaderCell(0).style.width).to.equal('175px');
+      expect(getColumnHeaderCell(1).style.width).to.equal('150px');
+    });
+
+    it('should resize the flex width after resizing a column with the separator', () => {
       const twoColumns = [
         { field: 'id', width: 100, flex: 1 },
         { field: 'brand', width: 100 },
@@ -201,7 +218,30 @@ describe('<XGrid /> - Columns', () => {
       fireEvent.mouseMove(separator, { clientX: 150, buttons: 1 });
       fireEvent.mouseUp(separator);
 
+      expect(getColumnHeaderCell(0).style.width).to.equal('148px');
+      expect(getColumnHeaderCell(1).style.width).to.equal('150px');
+    });
+
+    it('should not resize the flex width under its base width after resizing a column with the separator', () => {
+      const twoColumns = [
+        { field: 'id', width: 175, flex: 1 },
+        { field: 'brand', width: 100 },
+      ];
+
+      render(<Test columns={twoColumns} />);
+
       expect(getColumnHeaderCell(0).style.width).to.equal('198px');
+      expect(getColumnHeaderCell(1).style.width).to.equal('100px');
+
+      const separator = getColumnHeaderCell(1).querySelector(
+        `.${GRID_COLUMN_HEADER_SEPARATOR_RESIZABLE_CSS_CLASS}`,
+      );
+
+      fireEvent.mouseDown(separator, { clientX: 100 });
+      fireEvent.mouseMove(separator, { clientX: 150, buttons: 1 });
+      fireEvent.mouseUp(separator);
+
+      expect(getColumnHeaderCell(0).style.width).to.equal('175px');
       expect(getColumnHeaderCell(1).style.width).to.equal('150px');
     });
   });

@@ -1,4 +1,4 @@
-import { GridColDef, GridColumns, GridColumnsMeta } from '../colDef/gridColDef';
+import { GridColDef, GridColumnsMeta, GridStateColDef } from '../colDef/gridColDef';
 
 /**
  * The column API interface that is available in the grid [[apiRef]].
@@ -9,17 +9,17 @@ export interface GridColumnApi {
    * @param {string} field The column field.
    * @returns {{GridColDef}} The [[GridColDef]].
    */
-  getColumn: (field: string) => GridColDef;
+  getColumn: (field: string) => GridStateColDef;
   /**
    * Returns an array of [[GridColDef]] containing all the column definitions.
    * @returns {GridColumns[]} An array of [[GridColDef]].
    */
-  getAllColumns: () => GridColumns;
+  getAllColumns: () => GridStateColDef[];
   /**
    * Returns the currently visible columns.
    * @returns {GridColDef[]} An array of [[GridColDef]].
    */
-  getVisibleColumns: () => GridColumns;
+  getVisibleColumns: () => GridStateColDef[];
   /**
    * Returns the [[GridColumnsMeta]] for each column.
    * @returns {GridColumnsMeta[]} All [[GridColumnsMeta]] objects.
@@ -43,12 +43,12 @@ export interface GridColumnApi {
    * Updates the definition of a column.
    * @param {GridColDef} col The new [[GridColDef]] object.
    */
-  updateColumn: (col: GridColDef, shouldApplyFlex?: boolean) => void;
+  updateColumn: (col: GridColDef) => void;
   /**
    * Updates the definition of multiple columns at the same time.
    * @param {GridColDef[]} cols The new column [[GridColDef]] objects.
    */
-  updateColumns: (cols: GridColDef[], shouldApplyFlex?: boolean) => void;
+  updateColumns: (cols: GridColDef[]) => void;
   /**
    * Changes the visibility of the column referred by `field`.
    * @param {string} field The column to change visibility.
