@@ -107,8 +107,10 @@ describe('<XGrid /> - Columns', () => {
       fireEvent.mouseDown(separator, { clientX: 100 });
       fireEvent.mouseMove(separator, { clientX: 110, buttons: 1 });
       fireEvent.mouseUp(separator);
-      expect(getColumnHeaderCell(0).style.width).to.equal('110px');
-      expect(getCell(1, 0).style.width).to.equal('110px');
+      // @ts-expect-error need to migrate helpers to TypeScript
+      expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '110px' });
+      // @ts-expect-error need to migrate helpers to TypeScript
+      expect(getCell(1, 0)).toHaveInlineStyle({ width: '110px' });
     });
 
     it('should allow to resize columns with the touch', function test() {
@@ -130,8 +132,10 @@ describe('<XGrid /> - Columns', () => {
       fireEvent.touchEnd(separator, {
         changedTouches: [new Touch({ identifier: now, target: separator, clientX: 110 })],
       });
-      expect(getColumnHeaderCell(0).style.width).to.equal('110px');
-      expect(getCell(1, 0).style.width).to.equal('110px');
+      // @ts-expect-error need to migrate helpers to TypeScript
+      expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '110px' });
+      // @ts-expect-error need to migrate helpers to TypeScript
+      expect(getCell(1, 0)).toHaveInlineStyle({ width: '110px' });
     });
 
     it('should call onColumnResize during resizing', () => {
@@ -181,13 +185,17 @@ describe('<XGrid /> - Columns', () => {
 
         render(<Test columns={twoColumns} />);
 
-        expect(getColumnHeaderCell(0).style.width).to.equal('198px');
-        expect(getColumnHeaderCell(1).style.width).to.equal('100px');
+        // @ts-expect-error need to migrate helpers to TypeScript
+        expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '198px' });
+        // @ts-expect-error need to migrate helpers to TypeScript
+        expect(getColumnHeaderCell(1)).toHaveInlineStyle({ width: '100px' });
 
         apiRef!.current.setColumnWidth('brand', 150);
 
-        expect(getColumnHeaderCell(0).style.width).to.equal('148px');
-        expect(getColumnHeaderCell(1).style.width).to.equal('150px');
+        // @ts-expect-error need to migrate helpers to TypeScript
+        expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '148px' });
+        // @ts-expect-error need to migrate helpers to TypeScript
+        expect(getColumnHeaderCell(1)).toHaveInlineStyle({ width: '150px' });
       });
 
       it('should not resize the flex width under its base width after resizing a column with api', () => {
@@ -198,13 +206,17 @@ describe('<XGrid /> - Columns', () => {
 
         render(<Test columns={twoColumns} />);
 
-        expect(getColumnHeaderCell(0).style.width).to.equal('198px');
-        expect(getColumnHeaderCell(1).style.width).to.equal('100px');
+        // @ts-expect-error need to migrate helpers to TypeScript
+        expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '198px' });
+        // @ts-expect-error need to migrate helpers to TypeScript
+        expect(getColumnHeaderCell(1)).toHaveInlineStyle({ width: '100px' });
 
         apiRef!.current.setColumnWidth('brand', 150);
 
-        expect(getColumnHeaderCell(0).style.width).to.equal('175px');
-        expect(getColumnHeaderCell(1).style.width).to.equal('150px');
+        // @ts-expect-error need to migrate helpers to TypeScript
+        expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '175px' });
+        // @ts-expect-error need to migrate helpers to TypeScript
+        expect(getColumnHeaderCell(1)).toHaveInlineStyle({ width: '150px' });
       });
 
       it('should resize the flex width after resizing a column with the separator', () => {
@@ -215,8 +227,10 @@ describe('<XGrid /> - Columns', () => {
 
         render(<Test columns={twoColumns} />);
 
-        expect(getColumnHeaderCell(0).style.width).to.equal('198px');
-        expect(getColumnHeaderCell(1).style.width).to.equal('100px');
+        // @ts-expect-error need to migrate helpers to TypeScript
+        expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '198px' });
+        // @ts-expect-error need to migrate helpers to TypeScript
+        expect(getColumnHeaderCell(1)).toHaveInlineStyle({ width: '100px' });
 
         const separator = getColumnHeaderCell(1).querySelector(
           `.${GRID_COLUMN_HEADER_SEPARATOR_RESIZABLE_CSS_CLASS}`,
@@ -226,8 +240,10 @@ describe('<XGrid /> - Columns', () => {
         fireEvent.mouseMove(separator, { clientX: 150, buttons: 1 });
         fireEvent.mouseUp(separator);
 
-        expect(getColumnHeaderCell(0).style.width).to.equal('148px');
-        expect(getColumnHeaderCell(1).style.width).to.equal('150px');
+        // @ts-expect-error need to migrate helpers to TypeScript
+        expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '148px' });
+        // @ts-expect-error need to migrate helpers to TypeScript
+        expect(getColumnHeaderCell(1)).toHaveInlineStyle({ width: '150px' });
       });
 
       it('should not resize the flex width under its base width after resizing a column with the separator', () => {
@@ -238,8 +254,10 @@ describe('<XGrid /> - Columns', () => {
 
         render(<Test columns={twoColumns} />);
 
-        expect(getColumnHeaderCell(0).style.width).to.equal('198px');
-        expect(getColumnHeaderCell(1).style.width).to.equal('100px');
+        // @ts-expect-error need to migrate helpers to TypeScript
+        expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '198px' });
+        // @ts-expect-error need to migrate helpers to TypeScript
+        expect(getColumnHeaderCell(1)).toHaveInlineStyle({ width: '100px' });
 
         const separator = getColumnHeaderCell(1).querySelector(
           `.${GRID_COLUMN_HEADER_SEPARATOR_RESIZABLE_CSS_CLASS}`,
@@ -249,8 +267,10 @@ describe('<XGrid /> - Columns', () => {
         fireEvent.mouseMove(separator, { clientX: 150, buttons: 1 });
         fireEvent.mouseUp(separator);
 
-        expect(getColumnHeaderCell(0).style.width).to.equal('175px');
-        expect(getColumnHeaderCell(1).style.width).to.equal('150px');
+        // @ts-expect-error need to migrate helpers to TypeScript
+        expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '175px' });
+        // @ts-expect-error need to migrate helpers to TypeScript
+        expect(getColumnHeaderCell(1)).toHaveInlineStyle({ width: '150px' });
       });
     });
   });
