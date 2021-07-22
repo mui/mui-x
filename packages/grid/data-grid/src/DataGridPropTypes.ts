@@ -1,6 +1,6 @@
-import { MAX_PAGE_SIZE } from '@material-ui/data-grid/DataGridProps';
 import PropTypes from 'prop-types';
 import { chainPropTypes } from '@material-ui/utils';
+import { MAX_PAGE_SIZE } from './DataGridProps';
 
 // @ts-ignore
 export const DATAGRID_PROPTYPES = {

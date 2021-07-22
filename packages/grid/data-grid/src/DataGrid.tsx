@@ -1,5 +1,3 @@
-import { DataGridProps, MAX_PAGE_SIZE } from '@material-ui/data-grid/DataGridProps';
-import { DATAGRID_PROPTYPES } from '@material-ui/data-grid/DataGridPropTypes';
 import * as React from 'react';
 import {
   DEFAULT_GRID_OPTIONS,
@@ -13,6 +11,7 @@ import {
 } from '../../_modules_/grid';
 import { GridContextProvider } from '../../_modules_/grid/context/GridContextProvider';
 import { useDataGridComponent } from './useDataGridComponent';
+import { DataGridProps, MAX_PAGE_SIZE } from './DataGridProps';
 
 const DataGridRaw = React.forwardRef<HTMLDivElement, DataGridProps>(function DataGrid(
   inProps,

@@ -1,19 +1,20 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { LicenseInfo } from '@material-ui/x-license';
+import { ponyfillGlobal } from '@material-ui/utils';
 import {
   DEFAULT_GRID_OPTIONS,
+  GridBaseComponentProps,
   GridBody,
   GridErrorHandler,
   GridFooterPlaceholder,
   GridHeaderPlaceholder,
   GridRoot,
   useGridApiRef,
-} from '@material-ui/data-grid';
-import { useXGridComponent } from '@material-ui/x-grid/useXGridComponent';
-import { LicenseInfo } from '@material-ui/x-license';
-import { ponyfillGlobal } from '@material-ui/utils';
-import { GridBaseComponentProps, useThemeProps } from '../../_modules_/grid';
+  useThemeProps,
+} from '../../_modules_/grid';
 import { GridContextProvider } from '../../_modules_/grid/context/GridContextProvider';
+import { useXGridComponent } from './useXGridComponent';
 
 // This is the package release date. Each package version should update this const
 // automatically when a new version is published on npm.
