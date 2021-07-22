@@ -250,7 +250,7 @@ export function Page1Prop() {
     </div>
   );
 }
-export function Page2Prop() {
+export function Page2PropSnap() {
   const data = useData(2000, 200);
 
   return (
