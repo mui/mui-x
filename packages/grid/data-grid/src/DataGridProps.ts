@@ -19,7 +19,6 @@ export type DataGridProps = Omit<
   | 'onRowsScrollEnd'
   | 'pagination'
   | 'scrollEndThreshold'
-  | 'selectionModel'
 > & {
   apiRef?: undefined;
   checkboxSelectionVisibleOnly?: false;
