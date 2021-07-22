@@ -165,84 +165,93 @@ describe('<XGrid /> - Columns', () => {
       expect(onColumnWidthChange.args[0][0].width).to.equal(120);
     });
 
-    it('should resize the flex width after resizing a column with api', () => {
-      const twoColumns = [
-        { field: 'id', width: 100, flex: 1 },
-        { field: 'brand', width: 100 },
-      ];
+    describe('flex resizing', () => {
+      before(function beforeHook() {
+        if (isJSDOM) {
+          // Need layouting
+          this.skip();
+        }
+      });
 
-      render(<Test columns={twoColumns} />);
+      it('should resize the flex width after resizing a column with api', () => {
+        const twoColumns = [
+          { field: 'id', width: 100, flex: 1 },
+          { field: 'brand', width: 100 },
+        ];
 
-      expect(getColumnHeaderCell(0).style.width).to.equal('198px');
-      expect(getColumnHeaderCell(1).style.width).to.equal('100px');
+        render(<Test columns={twoColumns} />);
 
-      apiRef!.current.setColumnWidth('brand', 150);
+        expect(getColumnHeaderCell(0).style.width).to.equal('198px');
+        expect(getColumnHeaderCell(1).style.width).to.equal('100px');
 
-      expect(getColumnHeaderCell(0).style.width).to.equal('148px');
-      expect(getColumnHeaderCell(1).style.width).to.equal('150px');
-    });
+        apiRef!.current.setColumnWidth('brand', 150);
 
-    it('should not resize the flex width under its base width after resizing a column with api', () => {
-      const twoColumns = [
-        { field: 'id', width: 175, flex: 1 },
-        { field: 'brand', width: 100 },
-      ];
+        expect(getColumnHeaderCell(0).style.width).to.equal('148px');
+        expect(getColumnHeaderCell(1).style.width).to.equal('150px');
+      });
 
-      render(<Test columns={twoColumns} />);
+      it('should not resize the flex width under its base width after resizing a column with api', () => {
+        const twoColumns = [
+          { field: 'id', width: 175, flex: 1 },
+          { field: 'brand', width: 100 },
+        ];
 
-      expect(getColumnHeaderCell(0).style.width).to.equal('198px');
-      expect(getColumnHeaderCell(1).style.width).to.equal('100px');
+        render(<Test columns={twoColumns} />);
 
-      apiRef!.current.setColumnWidth('brand', 150);
+        expect(getColumnHeaderCell(0).style.width).to.equal('198px');
+        expect(getColumnHeaderCell(1).style.width).to.equal('100px');
 
-      expect(getColumnHeaderCell(0).style.width).to.equal('175px');
-      expect(getColumnHeaderCell(1).style.width).to.equal('150px');
-    });
+        apiRef!.current.setColumnWidth('brand', 150);
 
-    it('should resize the flex width after resizing a column with the separator', () => {
-      const twoColumns = [
-        { field: 'id', width: 100, flex: 1 },
-        { field: 'brand', width: 100 },
-      ];
+        expect(getColumnHeaderCell(0).style.width).to.equal('175px');
+        expect(getColumnHeaderCell(1).style.width).to.equal('150px');
+      });
 
-      render(<Test columns={twoColumns} />);
+      it('should resize the flex width after resizing a column with the separator', () => {
+        const twoColumns = [
+          { field: 'id', width: 100, flex: 1 },
+          { field: 'brand', width: 100 },
+        ];
 
-      expect(getColumnHeaderCell(0).style.width).to.equal('198px');
-      expect(getColumnHeaderCell(1).style.width).to.equal('100px');
+        render(<Test columns={twoColumns} />);
 
-      const separator = getColumnHeaderCell(1).querySelector(
-        `.${GRID_COLUMN_HEADER_SEPARATOR_RESIZABLE_CSS_CLASS}`,
-      );
+        expect(getColumnHeaderCell(0).style.width).to.equal('198px');
+        expect(getColumnHeaderCell(1).style.width).to.equal('100px');
 
-      fireEvent.mouseDown(separator, { clientX: 100 });
-      fireEvent.mouseMove(separator, { clientX: 150, buttons: 1 });
-      fireEvent.mouseUp(separator);
+        const separator = getColumnHeaderCell(1).querySelector(
+          `.${GRID_COLUMN_HEADER_SEPARATOR_RESIZABLE_CSS_CLASS}`,
+        );
 
-      expect(getColumnHeaderCell(0).style.width).to.equal('148px');
-      expect(getColumnHeaderCell(1).style.width).to.equal('150px');
-    });
+        fireEvent.mouseDown(separator, { clientX: 100 });
+        fireEvent.mouseMove(separator, { clientX: 150, buttons: 1 });
+        fireEvent.mouseUp(separator);
 
-    it('should not resize the flex width under its base width after resizing a column with the separator', () => {
-      const twoColumns = [
-        { field: 'id', width: 175, flex: 1 },
-        { field: 'brand', width: 100 },
-      ];
+        expect(getColumnHeaderCell(0).style.width).to.equal('148px');
+        expect(getColumnHeaderCell(1).style.width).to.equal('150px');
+      });
 
-      render(<Test columns={twoColumns} />);
+      it('should not resize the flex width under its base width after resizing a column with the separator', () => {
+        const twoColumns = [
+          { field: 'id', width: 175, flex: 1 },
+          { field: 'brand', width: 100 },
+        ];
 
-      expect(getColumnHeaderCell(0).style.width).to.equal('198px');
-      expect(getColumnHeaderCell(1).style.width).to.equal('100px');
+        render(<Test columns={twoColumns} />);
 
-      const separator = getColumnHeaderCell(1).querySelector(
-        `.${GRID_COLUMN_HEADER_SEPARATOR_RESIZABLE_CSS_CLASS}`,
-      );
+        expect(getColumnHeaderCell(0).style.width).to.equal('198px');
+        expect(getColumnHeaderCell(1).style.width).to.equal('100px');
 
-      fireEvent.mouseDown(separator, { clientX: 100 });
-      fireEvent.mouseMove(separator, { clientX: 150, buttons: 1 });
-      fireEvent.mouseUp(separator);
+        const separator = getColumnHeaderCell(1).querySelector(
+          `.${GRID_COLUMN_HEADER_SEPARATOR_RESIZABLE_CSS_CLASS}`,
+        );
 
-      expect(getColumnHeaderCell(0).style.width).to.equal('175px');
-      expect(getColumnHeaderCell(1).style.width).to.equal('150px');
+        fireEvent.mouseDown(separator, { clientX: 100 });
+        fireEvent.mouseMove(separator, { clientX: 150, buttons: 1 });
+        fireEvent.mouseUp(separator);
+
+        expect(getColumnHeaderCell(0).style.width).to.equal('175px');
+        expect(getColumnHeaderCell(1).style.width).to.equal('150px');
+      });
     });
   });
 });
