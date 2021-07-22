@@ -1,3 +1,6 @@
+import type { GridApi } from '../api';
+import type { GridColDef } from '../colDef';
+
 /**
  * Object passed as parameter in the column [[GridColDef]] header renderer.
  */
@@ -9,9 +12,9 @@ export interface GridColumnHeaderParams {
   /**
    * The column of the current header component.
    */
-  colDef: import('../colDef/gridColDef').GridColDef;
+  colDef: GridColDef;
   /**
    * API ref that let you manipulate the grid.
    */
-  api: import('../api/gridApi').GridApi;
+  api: GridApi;
 }
