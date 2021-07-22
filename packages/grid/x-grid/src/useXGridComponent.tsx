@@ -1,4 +1,3 @@
-import { useLicenseVerifier } from '@material-ui/x-license';
 import { GridBaseComponentProps } from '../../_modules_/grid/GridBaseComponentProps';
 import { useGridClipboard } from '../../_modules_/grid/hooks/features/clipboard/useGridClipboard';
 import { useGridColumnMenu } from '../../_modules_/grid/hooks/features/columnMenu/useGridColumnMenu';
@@ -23,6 +22,7 @@ import { useGridRows } from '../../_modules_/grid/hooks/features/rows/useGridRow
 import { useGridSelection } from '../../_modules_/grid/hooks/features/selection/useGridSelection';
 import { useGridSorting } from '../../_modules_/grid/hooks/features/sorting/useGridSorting';
 import { useGridComponents } from '../../_modules_/grid/hooks/features/useGridComponents';
+import { useLicenseState } from '../../_modules_/grid/hooks/features/useLicenseState';
 import { useGridVirtualRows } from '../../_modules_/grid/hooks/features/virtualization/useGridVirtualRows';
 import { useApi } from '../../_modules_/grid/hooks/root/useApi';
 import { useEvents } from '../../_modules_/grid/hooks/root/useEvents';
@@ -38,7 +38,7 @@ import { GridApiRef } from '../../_modules_/grid/models/api/gridApiRef';
 
 export const useXGridComponent = (apiRef: GridApiRef, props: GridBaseComponentProps) => {
   useLoggerFactory(apiRef, props);
-  useLicenseVerifier();
+  useLicenseState(apiRef);
   useApi(apiRef);
   useErrorHandler(apiRef, props);
   useGridControlState(apiRef);

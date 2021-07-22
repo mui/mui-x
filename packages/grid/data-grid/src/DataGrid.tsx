@@ -19,26 +19,20 @@ const DataGridRaw = React.forwardRef<HTMLDivElement, DataGridProps>(function Dat
   ref,
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiDataGrid' });
-  const { pageSize: pageSizeProp, selectionModel: dataGridSelectionModel, ...other } = props;
+  const { pageSize: pageSizeProp, ...other } = props;
 
   let pageSize = pageSizeProp;
   if (pageSize && pageSize > MAX_PAGE_SIZE) {
-    // TODO throw error?
+    // TODO throw error to avoid creating a new prop ref as below.
     pageSize = MAX_PAGE_SIZE;
   }
 
-  //todo move that to useSorting
-  const selectionModel =
-    dataGridSelectionModel !== undefined && !Array.isArray(dataGridSelectionModel)
-      ? [dataGridSelectionModel]
-      : dataGridSelectionModel;
-
   const apiRef = useGridApiRef();
 
-  useDataGridComponent(apiRef, { ...other, selectionModel, pageSize });
+  useDataGridComponent(apiRef, { ...other, pageSize });
 
   return (
-    <GridContextProvider apiRef={apiRef} props={{ ...other, selectionModel, pageSize }}>
+    <GridContextProvider apiRef={apiRef} props={{ ...other, pageSize }}>
       <GridRoot ref={ref}>
         <GridErrorHandler>
           <GridHeaderPlaceholder />

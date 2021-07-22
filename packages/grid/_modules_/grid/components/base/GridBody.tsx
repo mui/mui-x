@@ -34,7 +34,7 @@ export function GridBody() {
   return (
     <GridMainContainer>
       <GridOverlays />
-      <Watermark licenseStatus={rootProps.licenseStatus} />
+      <Watermark />
       <GridColumnsContainer ref={columnsContainerRef}>
         <GridColumnsHeader ref={columnsHeaderRef} />
       </GridColumnsContainer>
