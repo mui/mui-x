@@ -41,18 +41,18 @@ export function getGridStateColDefList(
   const flexMultiplier = flexDivider > 0 ? viewportWidth / flexDivider : 0;
 
   return columns.map((column) => {
-    const width = column.width ?? 0
+    const width = column.width ?? 0;
 
-    let computedWidth: number
+    let computedWidth: number;
 
     if (column.flex && viewportWidth > 0) {
       const flexColumnWidth = Math.floor(flexMultiplier * column.flex);
-      computedWidth = Math.max(width, flexColumnWidth)
+      computedWidth = Math.max(width, flexColumnWidth);
     } else {
-      computedWidth = width
+      computedWidth = width;
     }
 
-    computedWidth = Math.max(computedWidth, column.minWidth ?? GRID_STRING_COL_DEF.minWidth!)
+    computedWidth = Math.max(computedWidth, column.minWidth ?? GRID_STRING_COL_DEF.minWidth!);
 
     return {
       ...column,

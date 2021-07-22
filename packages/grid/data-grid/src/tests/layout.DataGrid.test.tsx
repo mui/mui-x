@@ -504,7 +504,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
           },
         ];
 
-        const totalWidth = 700
+        const totalWidth = 700;
 
         render(
           <div style={{ width: totalWidth, height: 300 }}>
