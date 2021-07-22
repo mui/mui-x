@@ -95,7 +95,7 @@ import { XGrid } from '@material-ui/x-grid';
 | <span class="prop-name">onRowEnter</span> | <span class="prop-type">(param: GridRowParams, event: React.MouseEvent) => void</span> |   | Callback fired when a mouse enter comes from a row container element. |
 | <span class="prop-name">onRowLeave</span> | <span class="prop-type">(param: GridRowParams, event: React.MouseEvent) => void</span> |   | Callback fired when a mouse leave event comes from a row container element. |
 | <span class="prop-name">onRowsScrollEnd</span> | <span class="prop-type">(param: GridRowScrollEndParams) => void</span> |   | Callback fired when scrolling to the bottom of the grid viewport. |
-| <span class="prop-name">onSelectionModelChange</span> | <span class="prop-type">(param: GridSelectionModelChangeParams) => void</span> |   | Callback fired when the selection state of one or multiple rows changes. |
+| <span class="prop-name">onSelectionModelChange</span> | <span class="prop-type">(model: GridSelectionModel) => void</span> |   | Callback fired when the selection state of one or multiple rows changes. |
 | <span class="prop-name">onSortModelChange</span> | <span class="prop-type">(model: GridSortModel) => void</span> |   | Callback fired when the sort model changes before a column is sorted. |
 | <span class="prop-name">page</span> | <span class="prop-type">number</span> | 1   |  Set the current page. |
 | <span class="prop-name">pageSize</span> | <span class="prop-type">number</span> | 100 | Set the number of rows in one page. |
