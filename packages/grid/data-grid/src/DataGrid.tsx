@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { DATAGRID_PROPTYPES } from './DataGridPropTypes';
 import {
   DEFAULT_GRID_OPTIONS,
   GridBody,
