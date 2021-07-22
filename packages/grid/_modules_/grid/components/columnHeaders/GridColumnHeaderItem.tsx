@@ -208,7 +208,7 @@ export function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
     >
       <div
         className="MuiDataGrid-columnHeaderDraggableContainer"
-        draggable={!disableColumnReorder}
+        draggable={!disableColumnReorder && !column.disableReorder}
         {...draggableEventHandlers}
       >
         <div className="MuiDataGrid-columnHeaderTitleContainer">

@@ -149,6 +149,11 @@ export interface GridColDef {
    */
   filterOperators?: GridFilterOperator[];
   /**
+   * If `true`, this column cannot be reordered.
+   * @default false
+   */
+  disableReorder?: boolean;
+  /**
    * If `true`, this column will not be included in exports.
    * @default false
    */
