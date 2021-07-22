@@ -8,7 +8,6 @@ import {
   GridHeaderPlaceholder,
   GridRoot,
   useGridApiRef,
-  useThemeProps,
 } from '../../_modules_/grid';
 import { GridContextProvider } from '../../_modules_/grid/context/GridContextProvider';
 import { useDataGridComponent } from './useDataGridComponent';
@@ -18,21 +17,16 @@ const DataGridRaw = React.forwardRef<HTMLDivElement, DataGridProps>(function Dat
   inProps,
   ref,
 ) {
-  const props = useThemeProps({ props: inProps, name: 'MuiDataGrid' });
-  const { pageSize: pageSizeProp, ...other } = props;
-
-  let pageSize = pageSizeProp;
-  if (pageSize && pageSize > MAX_PAGE_SIZE) {
-    // TODO throw error to avoid creating a new prop ref as below.
-    pageSize = MAX_PAGE_SIZE;
+  if (inProps.pageSize! > MAX_PAGE_SIZE) {
+    throw new Error(`'props.pageSize' cannot exceed 100 in DataGrid.`);
   }
 
   const apiRef = useGridApiRef();
 
-  useDataGridComponent(apiRef, { ...other, pageSize });
+  useDataGridComponent(apiRef, inProps);
 
   return (
-    <GridContextProvider apiRef={apiRef} props={{ ...other, pageSize }}>
+    <GridContextProvider apiRef={apiRef} props={inProps}>
       <GridRoot ref={ref}>
         <GridErrorHandler>
           <GridHeaderPlaceholder />

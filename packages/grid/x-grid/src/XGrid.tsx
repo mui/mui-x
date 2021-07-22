@@ -11,7 +11,6 @@ import {
   GridHeaderPlaceholder,
   GridRoot,
   useGridApiRef,
-  useThemeProps,
 } from '../../_modules_/grid';
 import { GridContextProvider } from '../../_modules_/grid/context/GridContextProvider';
 import { useXGridComponent } from './useXGridComponent';
@@ -31,13 +30,12 @@ LicenseInfo.setReleaseInfo(RELEASE_INFO);
 export type XGridProps = GridBaseComponentProps;
 
 const XGridRaw = React.forwardRef<HTMLDivElement, XGridProps>(function XGrid(inProps, ref) {
-  const props = useThemeProps({ props: inProps, name: 'MuiDataGrid' });
-  const apiRef = useGridApiRef(props.apiRef);
+  const apiRef = useGridApiRef(inProps.apiRef);
 
-  useXGridComponent(apiRef, props);
+  useXGridComponent(apiRef, inProps);
 
   return (
-    <GridContextProvider apiRef={apiRef} props={props}>
+    <GridContextProvider apiRef={apiRef} props={inProps}>
       <GridRoot ref={ref}>
         <GridErrorHandler>
           <GridHeaderPlaceholder />

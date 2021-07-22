@@ -208,12 +208,9 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridBaseComponentPro
     if (props.selectionModel === undefined) {
       return;
     }
-    const selectionModel = !Array.isArray(props.selectionModel)
-      ? [props.selectionModel]
-      : props.selectionModel;
     const currentModel = apiRef.current.getState().selection;
-    if (currentModel !== selectionModel) {
-      setGridState((state) => ({ ...state, selection: selectionModel || [] }));
+    if (currentModel !== props.selectionModel) {
+      setGridState((state) => ({ ...state, selection: props.selectionModel || [] }));
     }
   }, [apiRef, props.selectionModel, setGridState]);
 
