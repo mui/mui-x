@@ -160,10 +160,6 @@ export interface GridColDef {
   disableExport?: boolean;
 }
 
-export interface GridColumnProp extends Omit<GridColDef, 'filterOperators'> {
-  filterOperators?: GridFilterOperator[] | string;
-}
-
 export type GridColumns = GridColDef[];
 export type GridColTypeDef = Omit<GridColDef, 'field'> & { extendType?: GridNativeColTypes };
 

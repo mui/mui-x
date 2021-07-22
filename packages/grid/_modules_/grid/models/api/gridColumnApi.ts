@@ -7,17 +7,17 @@ export interface GridColumnApi {
   /**
    * Returns the [[GridColDef]] for the given `field`.
    * @param {string} field The column field.
-   * @returns {{GridColDef}} The [[GridColDef]].
+   * @returns {{GridStateColDef}} The [[GridStateColDef]].
    */
   getColumn: (field: string) => GridStateColDef;
   /**
    * Returns an array of [[GridColDef]] containing all the column definitions.
-   * @returns {GridColumns[]} An array of [[GridColDef]].
+   * @returns {GridStateColDef[]} An array of [[GridStateColDef]].
    */
   getAllColumns: () => GridStateColDef[];
   /**
    * Returns the currently visible columns.
-   * @returns {GridColDef[]} An array of [[GridColDef]].
+   * @returns {GridStateColDef[]} An array of [[GridStateColDef]].
    */
   getVisibleColumns: () => GridStateColDef[];
   /**

@@ -9,11 +9,8 @@ import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridColumnApi } from '../../../models/api/gridColumnApi';
 import {
   GridColDef,
-  GridColumns,
-  GridColumnsMeta,
   getInitialGridColumnsState,
   GridColumnsState,
-  GridStateColDef,
 } from '../../../models/colDef/gridColDef';
 import { GridColumnOrderChangeParams } from '../../../models/params/gridColumnOrderChangeParams';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
