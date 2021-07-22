@@ -730,7 +730,7 @@ describe('<DataGrid /> - Filter', () => {
         );
         expect(getColumnValues()).to.deep.equal(['Hair Dryer', 'Dishwasher', 'Microwave']);
         fireEvent.change(screen.getByLabelText('Value'), { target: { value: '220' } });
-        clock.tick(600);
+        clock.tick(600); // Wait for the debounce
         expect(getColumnValues()).to.deep.equal(['Hair Dryer', 'Microwave']);
       });
     });
