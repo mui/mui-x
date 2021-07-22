@@ -9,11 +9,11 @@ export interface GridColumnResizeParams {
   /**
    * The column of the current header component.
    */
-  colDef: any;
+  colDef: import('../colDef/gridColDef').GridColDef;
   /**
    * API ref that let you manipulate the grid.
    */
-  api: any;
+  api: import('../api/gridApiRef').GridApiRef;
   /**
    * The width of the column.
    */

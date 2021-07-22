@@ -13,7 +13,7 @@ export interface GridColumnOrderChangeParams {
   /**
    * The column of the current header component.
    */
-  colDef: any;
+  colDef: import('../colDef/gridColDef').GridColDef;
   /**
    * The target column index.
    */
@@ -25,5 +25,5 @@ export interface GridColumnOrderChangeParams {
   /**
    * API ref that let you manipulate the grid.
    */
-  api: any;
+  api: import('../api/gridApi').GridApi;
 }

@@ -15,5 +15,5 @@ export interface GridSortModelParams {
   /**
    * Api that let you manipulate the grid.
    */
-  api: any;
+  api: import('../api/gridApi').GridApi;
 }

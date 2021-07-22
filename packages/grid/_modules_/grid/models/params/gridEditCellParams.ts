@@ -17,13 +17,13 @@ export interface GridEditCellValueParams {
 export interface GridCellModeChangeParams {
   id: GridRowId;
   field: string;
-  api: any;
+  api: import('../api/gridApi').GridApi;
   mode: GridCellMode;
 }
 
 export interface GridEditRowModelParams {
   model: GridEditRowsModel;
-  api: any;
+  api: import('../api/gridApi').GridApi;
 }
 
 export interface GridCommitCellChangeParams {

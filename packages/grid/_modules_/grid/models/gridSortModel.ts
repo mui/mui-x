@@ -9,7 +9,7 @@ export interface GridSortCellParams {
   id: GridRowId;
   field: string;
   value: GridCellValue;
-  api: any;
+  api: import('../models/api/gridApi').GridApi;
 }
 
 /**

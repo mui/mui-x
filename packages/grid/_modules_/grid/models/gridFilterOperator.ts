@@ -8,7 +8,7 @@ export interface GridFilterOperator {
   value: string;
   getApplyFilterFn: (
     filterItem: GridFilterItem,
-    column: any,
+    column: import('./colDef/gridColDef').GridColDef,
   ) => null | ((params: GridCellParams) => boolean);
   InputComponent?: React.JSXElementConstructor<GridFilterInputValueProps>;
   InputComponentProps?: Record<string, any>;

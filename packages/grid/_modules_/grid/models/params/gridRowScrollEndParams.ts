@@ -19,5 +19,5 @@ export interface GridRowScrollEndParams {
   /**
    * API ref that let you manipulate the grid.
    */
-  api: any;
+  api: import('../api/gridApiRef').GridApiRef;
 }

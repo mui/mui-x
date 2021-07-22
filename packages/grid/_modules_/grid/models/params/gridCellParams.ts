@@ -28,11 +28,11 @@ export interface GridCellParams {
   /**
    * The column of the row that the current cell belongs to.
    */
-  colDef: any;
+  colDef: import('../colDef/gridColDef').GridColDef;
   /**
    * GridApi that let you manipulate the grid.
    */
-  api: any;
+  api: import('../api/gridApi').GridApi;
   /**
    * If true, the cell is editable.
    */
