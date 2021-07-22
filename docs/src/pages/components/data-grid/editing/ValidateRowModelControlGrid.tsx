@@ -6,7 +6,6 @@ import {
   DataGrid,
   getThemePaletteMode,
   GridColumns,
-  GridEditCellPropsParams,
   GridEditRowsModel,
   GridRowsProp,
 } from '@material-ui/data-grid';
@@ -48,20 +47,18 @@ export default function ValidateRowModelControlGrid() {
   const [editRowsModel, setEditRowsModel] = React.useState<GridEditRowsModel>({});
   const classes = useStyles();
 
-  const handleEditCellChange = React.useCallback(
-    ({ id, field, props }: GridEditCellPropsParams) => {
-      if (field === 'email') {
-        const data = props; // Fix eslint value is missing in prop-types for JS files
-        const isValid = validateEmail(data.value);
-        const newState = {};
-        newState[id] = {
-          ...editRowsModel[id],
-          email: { ...props, error: !isValid },
-        };
-        setEditRowsModel((state) => ({ ...state, ...newState }));
-      }
+  const handleEditRowsModelChange = React.useCallback(
+    (newModel: GridEditRowsModel) => {
+      const updatedModel = { ...newModel };
+      Object.keys(updatedModel).forEach((id) => {
+        if (updatedModel[id].email) {
+          const isValid = validateEmail(updatedModel[id].email.value);
+          updatedModel[id].email = { ...updatedModel[id].email, error: !isValid };
+        }
+      });
+      setEditRowsModel(updatedModel);
     },
-    [editRowsModel],
+    [],
   );
 
   return (
@@ -71,7 +68,7 @@ export default function ValidateRowModelControlGrid() {
         rows={rows}
         columns={columns}
         editRowsModel={editRowsModel}
-        onEditCellChange={handleEditCellChange}
+        onEditRowsModelChange={handleEditRowsModelChange}
       />
     </div>
   );

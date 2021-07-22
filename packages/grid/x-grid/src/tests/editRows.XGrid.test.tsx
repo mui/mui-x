@@ -460,15 +460,15 @@ describe('<XGrid /> - Edit Rows', () => {
     expect(screen.queryAllByRole('row')).to.have.length(4);
   });
 
-  it('should call onEditCellChange when the value in the edit cell is changed', () => {
-    const onEditCellChange = spy();
-    render(<TestCase onEditCellChange={onEditCellChange} />);
+  it('should call onEditCellPropsChange when the value in the edit cell is changed', () => {
+    const onEditCellPropsChange = spy();
+    render(<TestCase onEditCellPropsChange={onEditCellPropsChange} />);
     const cell = getCell(1, 1);
     cell.focus();
     fireEvent.doubleClick(cell);
     const input = cell.querySelector('input')!;
     fireEvent.change(input, { target: { value: '1970' } });
-    expect(onEditCellChange.args[0][0]).to.deep.equal({
+    expect(onEditCellPropsChange.args[0][0]).to.deep.equal({
       id: 1,
       field: 'year',
       props: { value: '1970' },
@@ -579,13 +579,13 @@ describe('<XGrid /> - Edit Rows', () => {
   });
 
   describe('column type: date', () => {
-    it('should call onEditCellChange with the value entered as a Date', () => {
-      const onEditCellChange = spy();
+    it('should call onEditCellPropsChange with the value entered as a Date', () => {
+      const onEditCellPropsChange = spy();
       render(
         <TestCase
           rows={[{ id: 0, date: new Date(2021, 6, 5) }]}
           columns={[{ field: 'date', type: 'date', editable: true }]}
-          onEditCellChange={onEditCellChange}
+          onEditCellPropsChange={onEditCellPropsChange}
         />,
       );
       const cell = getCell(0, 0);
@@ -593,18 +593,18 @@ describe('<XGrid /> - Edit Rows', () => {
       fireEvent.doubleClick(cell);
       const input = cell.querySelector('input')!;
       fireEvent.change(input, { target: { value: '2022-05-07' } });
-      expect(onEditCellChange.args[0][0].props.value.toISOString()).to.equal(
+      expect(onEditCellPropsChange.args[0][0].props.value.toISOString()).to.equal(
         new Date(2022, 4, 7).toISOString(),
       );
     });
 
-    it('should call onEditCellChange with null when entered an empty value', () => {
-      const onEditCellChange = spy();
+    it('should call onEditCellPropsChange with null when entered an empty value', () => {
+      const onEditCellPropsChange = spy();
       render(
         <TestCase
           rows={[{ id: 0, date: new Date(2021, 6, 5) }]}
           columns={[{ field: 'date', type: 'date', editable: true }]}
-          onEditCellChange={onEditCellChange}
+          onEditCellPropsChange={onEditCellPropsChange}
         />,
       );
       const cell = getCell(0, 0);
@@ -612,18 +612,18 @@ describe('<XGrid /> - Edit Rows', () => {
       fireEvent.doubleClick(cell);
       const input = cell.querySelector('input')!;
       fireEvent.change(input, { target: { value: '' } });
-      expect(onEditCellChange.args[0][0].props.value).to.equal(null);
+      expect(onEditCellPropsChange.args[0][0].props.value).to.equal(null);
     });
   });
 
   describe('column type: dateTime', () => {
-    it('should call onEditCellChange with the value entered as a Date', () => {
-      const onEditCellChange = spy();
+    it('should call onEditCellPropsChange with the value entered as a Date', () => {
+      const onEditCellPropsChange = spy();
       render(
         <TestCase
           rows={[{ id: 0, date: new Date(2021, 6, 5, 14, 30) }]}
           columns={[{ field: 'date', type: 'dateTime', editable: true }]}
-          onEditCellChange={onEditCellChange}
+          onEditCellPropsChange={onEditCellPropsChange}
         />,
       );
       const cell = getCell(0, 0);
@@ -631,18 +631,18 @@ describe('<XGrid /> - Edit Rows', () => {
       fireEvent.doubleClick(cell);
       const input = cell.querySelector('input')!;
       fireEvent.change(input, { target: { value: '2022-05-07T15:30:00' } });
-      expect(onEditCellChange.args[0][0].props.value.toISOString()).to.equal(
+      expect(onEditCellPropsChange.args[0][0].props.value.toISOString()).to.equal(
         new Date(2022, 4, 7, 15, 30).toISOString(),
       );
     });
 
-    it('should call onEditCellChange with null when entered an empty value', () => {
-      const onEditCellChange = spy();
+    it('should call onEditCellPropsChange with null when entered an empty value', () => {
+      const onEditCellPropsChange = spy();
       render(
         <TestCase
           rows={[{ id: 0, date: new Date(2021, 6, 5, 14, 30) }]}
           columns={[{ field: 'date', type: 'dateTime', editable: true }]}
-          onEditCellChange={onEditCellChange}
+          onEditCellPropsChange={onEditCellPropsChange}
         />,
       );
       const cell = getCell(0, 0);
@@ -650,54 +650,120 @@ describe('<XGrid /> - Edit Rows', () => {
       fireEvent.doubleClick(cell);
       const input = cell.querySelector('input')!;
       fireEvent.change(input, { target: { value: '' } });
-      expect(onEditCellChange.args[0][0].props.value).to.equal(null);
+      expect(onEditCellPropsChange.args[0][0].props.value).to.equal(null);
     });
   });
 
   describe('validation', () => {
     it('should not allow to save an invalid value with Enter', () => {
-      const { setProps } = render(<TestCase editRowsModel={{}} />);
+      render(<TestCase />);
       const cell = getCell(1, 0);
       cell.focus();
       fireEvent.doubleClick(cell);
       const input = cell.querySelector('input')!;
       expect(input).not.to.have.attribute('aria-invalid');
       fireEvent.change(input, { target: { value: 'n' } });
-      setProps({ editRowsModel: { 1: { brand: { error: true, value: 'n' } } } });
+      apiRef.current.setEditRowsModel({ 1: { brand: { error: true, value: 'n' } } });
       fireEvent.keyDown(input, { key: 'Enter' });
       expect(input).to.have.attribute('aria-invalid', 'true');
       expect(cell).to.have.class('MuiDataGrid-cell--editing');
     });
 
     it('should not allow to save an invalid value with commitCellChange', () => {
-      const { setProps } = render(<TestCase editRowsModel={{}} />);
+      render(<TestCase />);
       const cell = getCell(1, 0);
       cell.focus();
       fireEvent.doubleClick(cell);
       const input = cell.querySelector('input')!;
       expect(input).not.to.have.attribute('aria-invalid');
       fireEvent.change(input, { target: { value: 'n' } });
-      setProps({ editRowsModel: { 1: { brand: { error: true, value: 'n' } } } });
+      apiRef.current.setEditRowsModel({ 1: { brand: { error: true, value: 'n' } } });
       apiRef.current.commitCellChange({ id: 1, field: 'brand' });
       apiRef.current.setCellMode(1, 'brand', 'view');
       expect(cell).to.have.text('Adidas');
     });
 
-    it('should not call onEditCellChangeCommitted for invalid values', () => {
-      const onEditCellChangeCommitted = spy();
-      const { setProps } = render(
-        <TestCase onEditCellChangeCommitted={onEditCellChangeCommitted} editRowsModel={{}} />,
-      );
+    it('should not call onCellEditCommit for invalid values', () => {
+      const onCellEditCommit = spy();
+      render(<TestCase onCellEditCommit={onCellEditCommit} />);
       const cell = getCell(1, 0);
       cell.focus();
       fireEvent.doubleClick(cell);
       const input = cell.querySelector('input')!;
       expect(input).not.to.have.attribute('aria-invalid');
       fireEvent.change(input, { target: { value: 'n' } });
-      setProps({ editRowsModel: { 1: { brand: { error: true, value: 'n' } } } });
+      apiRef.current.setEditRowsModel({ 1: { brand: { error: true, value: 'n' } } });
       apiRef.current.commitCellChange({ id: 1, field: 'brand' });
       apiRef.current.setCellMode(1, 'brand', 'view');
-      expect(onEditCellChangeCommitted.callCount).to.equal(0);
+      expect(onCellEditCommit.callCount).to.equal(0);
+    });
+  });
+
+  describe('control Editing', () => {
+    it('should update the state when neither the model nor the onChange are set', () => {
+      render(<TestCase />);
+      const cell = getCell(1, 1);
+      cell.focus();
+      fireEvent.doubleClick(cell);
+      const input = cell.querySelector('input')!;
+      expect(input.value).to.equal('1961');
+      fireEvent.change(input, { target: { value: '1970' } });
+      expect(input.value).to.equal('1970');
+      fireEvent.keyDown(input, { key: 'Enter' });
+      expect(cell).to.have.text('1970');
+    });
+
+    it('should not update the state when the editRowsModel prop is set', () => {
+      render(<TestCase editRowsModel={{ 1: { year: { value: 1961 } } }} />);
+      const cell = getCell(1, 1);
+      const input = cell.querySelector('input')!;
+      expect(input.value).to.equal('1961');
+      fireEvent.change(input, { target: { value: '1970' } });
+      fireEvent.keyDown(input, { key: 'Enter' });
+      expect(cell.querySelector('input')).not.to.equal(null);
+    });
+
+    it('should update the state when the model is not set, but the onChange is set', () => {
+      const onEditRowsModelChange = spy();
+      render(<TestCase onEditRowsModelChange={onEditRowsModelChange} />);
+      const cell = getCell(1, 1);
+      cell.focus();
+      fireEvent.doubleClick(cell);
+      expect(onEditRowsModelChange.callCount).to.equal(1);
+      expect(onEditRowsModelChange.lastCall.firstArg).to.deep.equal({
+        1: { year: { value: 1961 } },
+      });
+      const input = cell.querySelector('input')!;
+      fireEvent.change(input, { target: { value: 1970 } });
+      expect(onEditRowsModelChange.lastCall.firstArg).to.deep.equal({
+        1: { year: { value: '1970' } },
+      });
+      fireEvent.keyDown(input, { key: 'Enter' });
+      expect(cell).to.have.text('1970');
+      expect(onEditRowsModelChange.lastCall.firstArg).to.deep.equal({});
+      expect(onEditRowsModelChange.callCount).to.equal(3);
+      expect(cell.querySelector('input')).to.equal(null);
+    });
+
+    it('should control the state when the model and the onChange are set', () => {
+      const onEditRowsModelChange = spy();
+      const { setProps } = render(
+        <TestCase
+          editRowsModel={{ 1: { year: { value: 1961 } } }}
+          onEditRowsModelChange={onEditRowsModelChange}
+        />,
+      );
+      const cell = getCell(1, 1);
+      const input = cell.querySelector('input')!;
+      fireEvent.change(input, { target: { value: 1970 } });
+      expect(onEditRowsModelChange.lastCall.firstArg).to.deep.equal({
+        1: { year: { value: '1970' } },
+      });
+      setProps({ editRowsModel: { 1: { year: { value: 1971 } } } });
+      fireEvent.keyDown(input, { key: 'Enter' });
+      expect(onEditRowsModelChange.lastCall.firstArg).to.deep.equal({});
+      setProps({ editRowsModel: {} });
+      expect(cell).to.have.text('1971');
     });
   });
 });

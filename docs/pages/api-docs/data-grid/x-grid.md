@@ -74,8 +74,8 @@ import { XGrid } from '@material-ui/x-grid';
 | <span class="prop-name">onColumnWidthChange</span> | <span class="prop-type">(param: GridColumnResizeParams) => void</span> |   | Callback fired when the width of a column is changed. |
 | <span class="prop-name">onColumnVisibilityChange</span> | <span class="prop-type">(param: GridColumnVisibilityChangeParams) => void</span> |   | Callback fired when a column visibility changes. |
 | <span class="prop-name">onError</span> | <span class="prop-type">(args: any) => void</span> |   | Callback fired when an exception is thrown in the grid, or when the `showError` API method is called. |
-| <span class="prop-name">onEditCellChange</span> | <span class="prop-type">(params: GridEditCellParams) => void</span> |   |  Callback fired when the edit cell value changed. |
-| <span class="prop-name">onEditCellChangeCommitted</span> | <span class="prop-type">(params: GridEditCellParams) => void</span> |   | Callback fired when the cell changes are committed. |
+| <span class="prop-name">onEditCellPropsChange</span> | <span class="prop-type">(params: GridEditCellPropsParams, event: React.SyntheticEvent) => void</span> |   |  Callback fired when the edit cell value changes. |
+| <span class="prop-name">onCellEditCommit</span> | <span class="prop-type">(params: GridEditCellPropsParams, event: React.SyntheticEvent) => void</span> |   | Callback fired when the cell changes are going to be committed. |
 | <span class="prop-name">onEditRowModelChange</span> | <span class="prop-type">(params: GridEditRowModelParams) => void</span> |   |  Callback fired when the EditRowModel changed. |
 | <span class="prop-name">onFilterModelChange</span> | <span class="prop-type">(model: GridFilterModel) => void</span> |   | Callback fired when the Filter model changes before the filters are applied. |
 | <span class="prop-name">onPageChange</span> | <span class="prop-type">(param: GridPageChangeParams) => void</span> |   | Callback fired when the current page has changed. |
