@@ -33,8 +33,9 @@ const useStyles = makeStyles(
 export interface GridToolbarFilterButtonProps extends Omit<TooltipProps, 'title' | 'children'> {
   /**
    * The props used for each slot inside.
+   * @default {}
    */
-  componentProps?: {
+  componentsProps?: {
     button?: ButtonProps;
   };
 }
@@ -43,7 +44,8 @@ export const GridToolbarFilterButton = React.forwardRef<
   HTMLButtonElement,
   GridToolbarFilterButtonProps
 >(function GridToolbarFilterButton(props, ref) {
-  const { componentProps = {}, ...other } = props;
+  const { componentsProps = {}, ...other } = props;
+  const buttonProps = componentsProps.button || {};
   const classes = useStyles();
   const apiRef = useGridApiContext();
   const options = useGridSelector(apiRef, optionsSelector);
@@ -88,14 +90,15 @@ export const GridToolbarFilterButton = React.forwardRef<
     );
   }, [apiRef, preferencePanel.open, counter, activeFilters, lookup, classes]);
 
-  const toggleFilter = React.useCallback(() => {
+  const toggleFilter = (event) => {
     const { open, openedPanelValue } = preferencePanel;
     if (open && openedPanelValue === GridPreferencePanelsValue.filters) {
       apiRef!.current.hideFilterPanel();
     } else {
       apiRef!.current.showFilterPanel();
     }
-  }, [apiRef, preferencePanel]);
+    buttonProps.onClick?.(event);
+  };
 
   // Disable the button if the corresponding is disabled
   if (options.disableColumnFilter) {
@@ -115,8 +118,8 @@ export const GridToolbarFilterButton = React.forwardRef<
             <OpenFilterButtonIcon />
           </Badge>
         }
+        {...buttonProps}
         onClick={toggleFilter}
-        {...componentProps.button}
       >
         {apiRef!.current.getLocaleText('toolbarFilters')}
       </Button>

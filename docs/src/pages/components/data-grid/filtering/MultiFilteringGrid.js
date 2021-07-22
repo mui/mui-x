@@ -9,16 +9,19 @@ export default function MultiFilteringGrid() {
     maxColumns: 6,
   });
 
+  const [filterModel, setFilterModel] = React.useState({
+    items: [
+      { id: 1, columnField: 'commodity', operatorValue: 'contains', value: 'rice' },
+      { id: 2, columnField: 'quantity', operatorValue: '>=', value: '20000' },
+    ],
+  });
+
   return (
     <div style={{ height: 400, width: '100%' }}>
       <XGrid
         {...data}
-        filterModel={{
-          items: [
-            { columnField: 'commodity', operatorValue: 'contains', value: 'rice' },
-            { columnField: 'quantity', operatorValue: '>=', value: '20000' },
-          ],
-        }}
+        filterModel={filterModel}
+        onFilterModelChange={(model) => setFilterModel(model)}
       />
     </div>
   );

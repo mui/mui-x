@@ -39,10 +39,8 @@ export default function ServerSortingGrid() {
   const [rows, setRows] = React.useState([]);
   const [loading, setLoading] = React.useState(false);
 
-  const handleSortModelChange = (params) => {
-    if (params.sortModel !== sortModel) {
-      setSortModel(params.sortModel);
-    }
+  const handleSortModelChange = (newModel) => {
+    setSortModel(newModel);
   };
 
   React.useEffect(() => {

@@ -324,7 +324,6 @@ describe('<DataGrid /> - Layout & Warnings', () => {
           {
             id: 1,
             username: 'John Doe',
-            age: 30,
           },
         ];
 
@@ -354,6 +353,39 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         });
       });
 
+      it('should respect minWidth when a column is fluid', () => {
+        const rows = [
+          {
+            id: 1,
+            username: 'John Doe',
+          },
+        ];
+
+        const columns = [
+          {
+            field: 'id',
+            flex: 1,
+            minWidth: 150,
+          },
+          {
+            field: 'name',
+            flex: 0.5,
+          },
+        ];
+
+        render(
+          <div style={{ width: 200, height: 300 }}>
+            <DataGrid columns={columns} rows={rows} />
+          </div>,
+        );
+
+        const firstColumn = getColumnHeaderCell(0);
+        // @ts-expect-error need to migrate helpers to TypeScript
+        expect(firstColumn).toHaveInlineStyle({
+          width: '150px',
+        });
+      });
+
       it('should handle hidden columns', () => {
         const rows = [{ id: 1, firstName: 'Jon' }];
         const columns = [
@@ -378,8 +410,8 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         });
       });
 
-      it('should resize flex: 1 column when setting hide: false on a column to avoid exceeding grid width', async () => {
-        const TestCase: React.FC<DataGridProps> = (props) => (
+      it('should resize flex: 1 column when setting hide: false on a column to avoid exceeding grid width', () => {
+        const TestCase = (props: DataGridProps) => (
           <div style={{ width: 300, height: 500 }}>
             <DataGrid {...props} />
           </div>
@@ -458,7 +490,6 @@ describe('<DataGrid /> - Layout & Warnings', () => {
           {
             id: 1,
             username: 'John Doe',
-            age: 30,
           },
         ];
 

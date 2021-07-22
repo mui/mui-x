@@ -9,20 +9,23 @@ export default function MultiSortingGrid() {
     maxColumns: 6,
   });
 
+  const [sortModel, setSortModel] = React.useState([
+    {
+      field: 'commodity',
+      sort: 'asc',
+    },
+    {
+      field: 'desk',
+      sort: 'desc',
+    },
+  ]);
+
   return (
     <div style={{ height: 400, width: '100%' }}>
       <XGrid
         {...data}
-        sortModel={[
-          {
-            field: 'commodity',
-            sort: 'asc',
-          },
-          {
-            field: 'desk',
-            sort: 'desc',
-          },
-        ]}
+        sortModel={sortModel}
+        onSortModelChange={(model) => setSortModel(model)}
       />
     </div>
   );

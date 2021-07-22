@@ -43,6 +43,11 @@ export interface GridColDef {
    */
   flex?: number;
   /**
+   * Sets the minimum width of a column.
+   * @default 50
+   */
+  minWidth?: number;
+  /**
    * If `true`, hide the column.
    * @default false
    */
@@ -143,6 +148,11 @@ export interface GridColDef {
    * Allows setting the filter operators for this column.
    */
   filterOperators?: GridFilterOperator[];
+  /**
+   * If `true`, this column cannot be reordered.
+   * @default false
+   */
+  disableReorder?: boolean;
   /**
    * If `true`, this column will not be included in exports.
    * @default false

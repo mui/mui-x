@@ -1,10 +1,7 @@
 import { GridFilterInputValue } from '../../components/panel/filterPanel/GridFilterInputValue';
+import { escapeRegExp } from '../../utils/utils';
 import { GridFilterItem } from '../gridFilterItem';
 import { GridFilterOperator } from '../gridFilterOperator';
-
-function escapeRegExp(value: string): string {
-  return value.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
-}
 
 export const getGridStringOperators: () => GridFilterOperator[] = () => [
   {
