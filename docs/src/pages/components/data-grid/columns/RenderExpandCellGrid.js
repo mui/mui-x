@@ -120,7 +120,161 @@ renderCellExpand.propTypes = {
   /**
    * The column of the row that the current cell belongs to.
    */
-  colDef: PropTypes.any.isRequired,
+  colDef: PropTypes.shape({
+    /**
+     * Allows to align the column values in cells.
+     */
+    align: PropTypes.oneOf(['center', 'left', 'right']),
+    /**
+     * Class name that will be added in cells for that column.
+     */
+    cellClassName: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
+    /**
+     * The description of the column rendered as tooltip if the column header name is not fully displayed.
+     */
+    description: PropTypes.string,
+    /**
+     * If `true`, the column menu is disabled for this column.
+     * @default false
+     */
+    disableColumnMenu: PropTypes.bool,
+    /**
+     * If `true`, this column will not be included in exports.
+     * @default false
+     */
+    disableExport: PropTypes.bool,
+    /**
+     * If `true`, this column cannot be reordered.
+     * @default false
+     */
+    disableReorder: PropTypes.bool,
+    /**
+     * If `true`, the cells of the column are editable.
+     * @default false
+     */
+    editable: PropTypes.bool,
+    /**
+     * The column identifier. It's used to map with [[GridRowData]] values.
+     */
+    field: PropTypes.string.isRequired,
+    /**
+     * If `true`, the column is filterable.
+     * @default true
+     */
+    filterable: PropTypes.bool,
+    /**
+     * Allows setting the filter operators for this column.
+     */
+    filterOperators: PropTypes.arrayOf(
+      PropTypes.shape({
+        getApplyFilterFn: PropTypes.func.isRequired,
+        InputComponent: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
+        InputComponentProps: PropTypes.object,
+        label: PropTypes.string,
+        value: PropTypes.string.isRequired,
+      }),
+    ),
+    /**
+     * If set, it indicates that a column has fluid width. Range [0, ∞).
+     */
+    flex: PropTypes.number,
+    /**
+     * Header cell element alignment.
+     */
+    headerAlign: PropTypes.oneOf(['center', 'left', 'right']),
+    /**
+     * Class name that will be added in the column header cell.
+     */
+    headerClassName: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
+    /**
+     * The title of the column rendered in the column header cell.
+     */
+    headerName: PropTypes.string,
+    /**
+     * If `true`, hide the column.
+     * @default false
+     */
+    hide: PropTypes.bool,
+    /**
+     * Toggle the visibility of the sort icons.
+     * @default false
+     */
+    hideSortIcons: PropTypes.bool,
+    /**
+     * Sets the minimum width of a column.
+     * @default 50
+     */
+    minWidth: PropTypes.number,
+    /**
+     * Allows to override the component rendered as cell for this column.
+     * @param params
+     */
+    renderCell: PropTypes.func,
+    /**
+     * Allows to override the component rendered in edit cell mode for this column.
+     * @param params
+     */
+    renderEditCell: PropTypes.func,
+    /**
+     * Allows to render a component in the column header cell.
+     * @param params
+     */
+    renderHeader: PropTypes.func,
+    /**
+     * If `true`, the column is resizable.
+     * @default true
+     */
+    resizable: PropTypes.bool,
+    /**
+     * If `true`, the column is sortable.
+     * @default true
+     */
+    sortable: PropTypes.bool,
+    /**
+     * A comparator function used to sort rows.
+     */
+    sortComparator: PropTypes.func,
+    /**
+     * Type allows to merge this object with a default definition [[GridColDef]].
+     * @default 'string'
+     */
+    type: PropTypes.string,
+    /**
+     * Function that allows to apply a formatter before rendering its value.
+     * @param {GridValueFormatterParams} params Object containing parameters for the formatter.
+     * @returns {GridCellValue} The formatted value.
+     */
+    valueFormatter: PropTypes.func,
+    /**
+     * Function that allows to get a specific data instead of field to render in the cell.
+     * @param params
+     */
+    valueGetter: PropTypes.func,
+    /**
+     * To be used in combination with `type: 'singleSelect'`. This is an array of the possible cell values and labels.
+     */
+    valueOptions: PropTypes.arrayOf(
+      PropTypes.oneOfType([
+        PropTypes.shape({
+          label: PropTypes.string.isRequired,
+          value: PropTypes.any.isRequired,
+        }),
+        PropTypes.string,
+      ]),
+    ),
+    /**
+     * Function that takes the user-entered value and converts it to a value used internally.
+     * @param {GridCellValue} value The user-entered value.
+     * @param {GridCellParams} params The params when called before saving the value.
+     * @returns {GridCellValue} The converted value to use internally.
+     */
+    valueParser: PropTypes.func,
+    /**
+     * Set the width of the column.
+     * @default 100
+     */
+    width: PropTypes.number,
+  }).isRequired,
   /**
    * The cell value, but if the column has valueGetter, use getValue.
    */
