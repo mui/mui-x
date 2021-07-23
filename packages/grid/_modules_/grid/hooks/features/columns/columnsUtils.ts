@@ -58,8 +58,10 @@ export function getStateColumns(
       const column = stateColumns[i];
 
       if (!column.hide && column.flex && column.flex > 0) {
-        const flexColumnWidth = Math.floor(widthPerFlexUnit * column.flex);
-        stateColumns[i].computedWidth = Math.max(flexColumnWidth, column.computedWidth);
+        stateColumns[i].computedWidth = Math.max(
+          widthPerFlexUnit * column.flex,
+          column.computedWidth,
+        );
       }
     }
   }
