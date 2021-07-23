@@ -26,7 +26,7 @@ import { useGridApiOptionHandler } from '../../root/useGridApiEventHandler';
 import { GridComponentProps } from '../../../GridComponentProps';
 import {
   hydrateColumns,
-  getGridStateColDefList,
+  getStateColumns,
   toLookup,
   upsertColumnsState,
   RawGridColumnsState,
@@ -100,7 +100,7 @@ export function useGridColumns(
       // Avoid dependency on gridState to avoid infinite loop
       const refGridState = apiRef.current.getState();
       const newColumns = newState.all.map((field) => newState.lookup[field]);
-      const updatedCols = getGridStateColDefList(newColumns, refGridState.viewportSizes.width);
+      const updatedCols = getStateColumns(newColumns, refGridState.viewportSizes.width);
 
       const finalState: GridColumnsState = {
         all: updatedCols.map((col) => col.field),

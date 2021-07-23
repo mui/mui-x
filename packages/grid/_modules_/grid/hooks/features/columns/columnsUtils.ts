@@ -19,7 +19,7 @@ export type RawGridColumnsState = Omit<GridColumnsState, 'lookup'> & {
   lookup: { [field: string]: GridColDef | GridStateColDef };
 };
 
-export function getGridStateColDefList(
+export function getStateColumns(
   columns: (GridColDef | GridStateColDef)[],
   viewportWidth: number,
 ): GridStateColDef[] {
@@ -41,18 +41,17 @@ export function getGridStateColDefList(
   const flexMultiplier = flexDivider > 0 ? viewportWidth / flexDivider : 0;
 
   return columns.map((column) => {
-    const width = column.width ?? 0;
-
     let computedWidth: number;
+    const width = column.width ?? GRID_STRING_COL_DEF.width!;
+    const minWidth = column.minWidth ?? GRID_STRING_COL_DEF.minWidth!;
 
     if (column.flex && viewportWidth > 0) {
       const flexColumnWidth = Math.floor(flexMultiplier * column.flex);
-      computedWidth = Math.max(width, flexColumnWidth);
-    } else {
-      computedWidth = width;
-    }
 
-    computedWidth = Math.max(computedWidth, column.minWidth ?? GRID_STRING_COL_DEF.minWidth!);
+      computedWidth = Math.max(flexColumnWidth, minWidth);
+    } else {
+      computedWidth = Math.max(width, minWidth);
+    }
 
     return {
       ...column,
