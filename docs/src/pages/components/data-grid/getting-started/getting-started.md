@@ -40,7 +40,7 @@ import { DataGrid } from '@material-ui/data-grid';
 ### Define rows
 
 Rows are key-value pair objects, mapping column names as keys with their values.
-You should also provide an id on each row to allow delta updates and better performance.
+You should also provide an `id` property on each row to allow delta updates and better performance.
 
 Here is an example
 
@@ -135,11 +135,11 @@ The enterprise components come in two plans: Pro and Premium.
 | [Column reorder](/components/data-grid/columns/#column-reorder)                           |    ❌     |              ✅               |                  ✅                   |
 | [Column pinning](/components/data-grid/columns/#column-pinning)                           |    ❌     |              🚧               |                  🚧                   |
 | [Column spanning](/components/data-grid/columns/#column-spanning)                         |    🚧     |              🚧               |                  🚧                   |
-| **Rows**                                                                                  |           |                               |                                       |
-| [Rows sorting](/components/data-grid/rows/#row-sorting)                                   |    ✅     |              ✅               |                  ✅                   |
-| [Rows height](/components/data-grid/rows/#row-height)                                     |    ✅     |              ✅               |                  ✅                   |
-| [Rows spanning](/components/data-grid/rows/#row-spanning)                                 |    🚧     |              🚧               |                  🚧                   |
-| [Rows reorder](/components/data-grid/rows/#row-reorder)                                   |    ❌     |              🚧               |                  🚧                   |
+| **Row**                                                                                   |           |                               |                                       |
+| [Row sorting](/components/data-grid/rows/#row-sorting)                                    |    ✅     |              ✅               |                  ✅                   |
+| [Row height](/components/data-grid/rows/#row-height)                                      |    ✅     |              ✅               |                  ✅                   |
+| [Row spanning](/components/data-grid/rows/#row-spanning)                                  |    🚧     |              🚧               |                  🚧                   |
+| [Row reordering](/components/data-grid/rows/#row-reorder)                                 |    ❌     |              🚧               |                  🚧                   |
 | **Selection**                                                                             |           |                               |                                       |
 | [Row selection](/components/data-grid/selection/#single-row-selection)                    |    ✅     |              ✅               |                  ✅                   |
 | [Multi-row selection](/components/data-grid/selection/#multiple-row-selection)            |    ❌     |              ✅               |                  ✅                   |
@@ -152,7 +152,7 @@ The enterprise components come in two plans: Pro and Premium.
 | [Pagination](/components/data-grid/pagination/)                                           |    ✅     |              ✅               |                  ✅                   |
 | [Pagination > 100 rows per page](/components/data-grid/pagination/#paginate-gt-100-rows)  |    ❌     |              ✅               |                  ✅                   |
 | **Editing**                                                                               |           |                               |                                       |
-| [Row edition](/components/data-grid/editing/#row-editing)                                 |    🚧     |              🚧               |                  🚧                   |
+| [Row editing](/components/data-grid/editing/#row-editing)                                 |    🚧     |              🚧               |                  🚧                   |
 | [Cell editing](/components/data-grid/editing/#cell-editing)                               |    ✅     |              ✅               |                  ✅                   |
 | **Import & export**                                                                       |           |                               |                                       |
 | [CSV export](/components/data-grid/export/#csv-export)                                    |    ✅     |              ✅               |                  ✅                   |

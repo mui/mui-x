@@ -92,7 +92,7 @@ export const useStyles = makeStyles(
         '& .MuiDataGrid-columnHeader:focus-within, & .MuiDataGrid-cell:focus-within': {
           outline: `solid ${muiStyleAlpha(theme.palette.primary.main, 0.5)} 1px`,
           outlineWidth: 1,
-          outlineOffset: -2,
+          outlineOffset: -1,
         },
         '& .MuiDataGrid-columnHeader:focus, & .MuiDataGrid-cell:focus': {
           outline: `solid ${theme.palette.primary.main} 1px`,

@@ -504,6 +504,7 @@ describe('<XGrid /> - Rows', () => {
         );
         const gridWindow = document.querySelector('.MuiDataGrid-window')!;
         gridWindow.scrollTop = offset;
+        gridWindow.dispatchEvent(new Event('scroll')); // Simulate browser behavior
         apiRef.current.scrollToIndexes({ rowIndex: 2, colIndex: 0 });
         expect(gridWindow.scrollTop).to.equal(offset);
         apiRef.current.scrollToIndexes({ rowIndex: 1, colIndex: 0 });
@@ -527,6 +528,27 @@ describe('<XGrid /> - Rows', () => {
         const gridWindow = document.querySelector('.MuiDataGrid-window')!;
         expect(gridWindow.scrollLeft).to.equal(0);
         apiRef.current.scrollToIndexes({ rowIndex: 0, colIndex: 2 });
+        expect(gridWindow.scrollLeft).to.equal(columnWidth * 3 - width);
+      });
+
+      it('should not scroll when going back', () => {
+        const width = 300;
+        const border = 1;
+        const columnWidth = 120;
+        const rows = [{ id: 0, firstName: 'John', lastName: 'Doe', age: 11 }];
+        const columns = [
+          { field: 'id', width: columnWidth },
+          { field: 'firstName', width: columnWidth },
+          { field: 'lastName', width: columnWidth },
+          { field: 'age', width: columnWidth },
+        ];
+        render(<TestCaseVirtualization width={width + border * 2} rows={rows} columns={columns} />);
+        const gridWindow = document.querySelector('.MuiDataGrid-window')!;
+        expect(gridWindow.scrollLeft).to.equal(0);
+        apiRef.current.scrollToIndexes({ rowIndex: 0, colIndex: 2 });
+        gridWindow.dispatchEvent(new Event('scroll')); // Simulate browser behavior
+        expect(gridWindow.scrollLeft).to.equal(columnWidth * 3 - width);
+        apiRef.current.scrollToIndexes({ rowIndex: 0, colIndex: 1 });
         expect(gridWindow.scrollLeft).to.equal(columnWidth * 3 - width);
       });
     });

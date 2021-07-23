@@ -9,7 +9,7 @@ title: Data Grid - Editing
 ## Cell editing
 
 Cell editing allows editing the value of one cell at a time.
-Set the `editable` property of the column definition `GridColDef` object to `true` to allow editing cells of this column.
+Set the `editable` property in the `GridColDef` object to `true` to allow editing cells of this column.
 
 ```tsx
 <DataGrid columns={[{ field: 'name', editable: true }]} />
@@ -58,41 +58,34 @@ The editable cells have a green background for better visibility.
 ### Controlled editing
 
 The `editRowsModel` prop lets you control the editing state.
-You can handle the `onEditRowModelChange` callback to control the `GridEditRowsModel` state.
+You can handle the `onEditRowsModelChange` callback to control the `GridEditRowsModel` state.
 
-{{"demo": "pages/components/data-grid/editing/EditRowModelControlGrid.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"demo": "pages/components/data-grid/editing/EditRowsModelControlGrid.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ### Column with valueGetter
 
-You can control the committed value when the edit move stops with the `onEditCellChangeCommitted` prop.
+You can control the committed value when the edit move stops with the `onCellEditCommit` prop.
 This is especially interesting when using the `valueGetter` on the column definition.
 
 {{"demo": "pages/components/data-grid/editing/ValueGetterGrid.js", "bg": "inline"}}
 
 ### Client-side validation
 
-Follow the following steps to validate the value in the cells:
-
-- Set the event handler `onEditCellChange`. It's invoked when a change is triggered by the edit input component.
-- Set the event handler `onEditCellChangeCommitted` to validate or persist the new value. This handler is invoked when an end-user requests a change to be committed and before the cell reverts to view mode.
+To validate the value in the cells, use `onEditRowsModelChange` to set the `error` attribute of the respective field when the value is invalid.
+If this attribute is true, the value will never be commited.
+This prop is invoked when a change is triggered by the edit cell component.
 
 Alternatively, you can use the `GridEditRowsModel` state mentioned in the [Control editing](#control-editing) section.
 
 {{"demo": "pages/components/data-grid/editing/ValidateRowModelControlGrid.js", "bg": "inline"}}
 
-#### Using apiRef [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-pro/)
-
-You can reproduce the same behavior using the apiRef.
-
-{{"demo": "pages/components/data-grid/editing/ValidateCellApiRefGrid.js", "bg": "inline", "disableAd": true}}
-
 ### Server-side validation
 
 Server-side validation works like client-side [validation](#validation).
 
-- Use the `GridEditRowsModel` mentioned in the [Control editing](#control-editing) section.
-- Or set the event handler `onEditCellChange` for `keydown` validation
-- Set the event handler `onEditCellChangeCommitted` to validate and update the server when the change is committed.
+- Use `onEditCellPropsChange` to set the `error` attribute to true of the respective field which will be validated.
+- Validate the value in the server.
+- Once the server responds, set the `error` attribute to false if it is valid. This allows to commit it.
 
 **Note:** To prevent the default client-side behavior, use `event.stopPropagation()`.
 
@@ -103,7 +96,7 @@ It's using `XGrid` but the same approach can be used with `DataGrid`.
 
 ### Custom edit component
 
-To customize the edit component of a column, set the `renderEditCell` function available in the column definition `GridColDef`.
+To customize the edit component of a column, use the `renderEditCell` attribute available in the `GridColDef`.
 
 The demo lets you edit the ratings by double-clicking the cell.
 
@@ -122,8 +115,8 @@ The following events can be imported and used to customize the edition:
 
 - `cellEditEnter`: emitted when the cell turns to edit mode.
 - `cellEditExit`: emitted when the cell turns back to view mode.
-- `cellEditPropsChange`: emitted when the edit input change.
-- `cellEditPropsChangeCommitted`: emitted when the edit input change is submitted.
+- `cellEditCommit`: emitted when the new value is commited.
+- `editCellPropsChange`: emitted when the props passed to the edit cell component are changed.
 
 Catching events can be used to add a callback after an event while ignoring its triggers.
 

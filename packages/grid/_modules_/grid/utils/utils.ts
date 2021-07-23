@@ -69,3 +69,7 @@ export type Optional<T, K extends keyof T> = Pick<Partial<T>, K> & Omit<T, K>;
 export function getDataGridUtilityClass(slot) {
   return generateUtilityClass(GRID_CSS_CLASS_PREFIX, slot);
 }
+
+export function escapeRegExp(value: string): string {
+  return value.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
+}
