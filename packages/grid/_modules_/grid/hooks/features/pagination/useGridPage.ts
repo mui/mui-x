@@ -44,7 +44,7 @@ export const useGridPage = (
         ...oldState,
         pagination: applyValidPage({
           ...oldState.pagination,
-          page: page,
+          page,
         }),
       }));
       forceUpdate();
