@@ -59,10 +59,7 @@ export function getStateColumns(
 
       if (!column.hide && column.flex && column.flex > 0) {
         const flexColumnWidth = Math.floor(widthPerFlexUnit * column.flex);
-        (stateColumns[i] as GridStateColDef).computedWidth = Math.max(
-          flexColumnWidth,
-          column.computedWidth,
-        );
+        stateColumns[i].computedWidth = Math.max(flexColumnWidth, column.computedWidth);
       }
     }
   }
