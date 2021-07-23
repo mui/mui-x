@@ -23,41 +23,51 @@ export function getStateColumns(
   columns: (GridColDef | GridStateColDef)[],
   viewportWidth: number,
 ): GridStateColDef[] {
-  const numberOfFluidColumns = columns.filter((column) => !!column.flex && !column.hide).length;
-  let flexDivider = 0;
+  let totalFlexUnits = 0;
+  let widthToAllocateInFlex = viewportWidth;
 
-  if (numberOfFluidColumns && viewportWidth) {
-    columns.forEach((column) => {
-      if (!column.hide) {
-        if (!column.flex) {
-          viewportWidth -= Math.max(column.minWidth!, column.width!);
-        } else {
-          flexDivider += column.flex;
-        }
+  const stateColumns: GridStateColDef[] = [];
+
+  // Compute the width of non-flex columns and how much width must be allocated between the flex columns
+  for (let i = 0; i < columns.length; i += 1) {
+    const column = { ...columns[i] } as GridStateColDef;
+
+    if (!column.hide) {
+      const minWidth = column.minWidth ?? GRID_STRING_COL_DEF.minWidth!;
+
+      if (column.flex && column.flex > 0) {
+        totalFlexUnits += column.flex;
+        column.computedWidth = minWidth;
+      } else {
+        const computedWidth = Math.max(column.width ?? GRID_STRING_COL_DEF.width!, minWidth);
+        column.computedWidth = computedWidth;
+        widthToAllocateInFlex -= computedWidth;
       }
-    });
-  }
-
-  const flexMultiplier = flexDivider > 0 ? viewportWidth / flexDivider : 0;
-
-  return columns.map((column) => {
-    let computedWidth: number;
-    const width = column.width ?? GRID_STRING_COL_DEF.width!;
-    const minWidth = column.minWidth ?? GRID_STRING_COL_DEF.minWidth!;
-
-    if (column.flex && viewportWidth > 0) {
-      const flexColumnWidth = Math.floor(flexMultiplier * column.flex);
-
-      computedWidth = Math.max(flexColumnWidth, minWidth);
     } else {
-      computedWidth = Math.max(width, minWidth);
+      column.computedWidth = 0;
     }
 
-    return {
-      ...column,
-      computedWidth,
-    };
-  });
+    stateColumns.push(column);
+  }
+
+  // Compute the width of flex columns
+  if (totalFlexUnits && widthToAllocateInFlex > 0) {
+    const widthPerFlexUnit = totalFlexUnits > 0 ? widthToAllocateInFlex / totalFlexUnits : 0;
+
+    for (let i = 0; i < stateColumns.length; i += 1) {
+      const column = stateColumns[i];
+
+      if (!column.hide && column.flex && column.flex > 0) {
+        const flexColumnWidth = Math.floor(widthPerFlexUnit * column.flex);
+        (stateColumns[i] as GridStateColDef).computedWidth = Math.max(
+          flexColumnWidth,
+          column.computedWidth,
+        );
+      }
+    }
+  }
+
+  return stateColumns;
 }
 
 export function hydrateColumns(
