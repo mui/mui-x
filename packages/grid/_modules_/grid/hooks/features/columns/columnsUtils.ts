@@ -32,7 +32,9 @@ export function getStateColumns(
   for (let i = 0; i < columns.length; i += 1) {
     const column = { ...columns[i] } as GridStateColDef;
 
-    if (!column.hide) {
+    if (column.hide) {
+      column.computedWidth = 0;
+    } else {
       const minWidth = column.minWidth ?? GRID_STRING_COL_DEF.minWidth!;
 
       if (column.flex && column.flex > 0) {
@@ -43,8 +45,6 @@ export function getStateColumns(
         column.computedWidth = computedWidth;
         widthToAllocateInFlex -= computedWidth;
       }
-    } else {
-      column.computedWidth = 0;
     }
 
     stateColumns.push(column);
