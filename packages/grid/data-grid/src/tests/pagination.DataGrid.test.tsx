@@ -205,12 +205,12 @@ describe('<DataGrid /> - Pagination', () => {
     });
 
     it('should apply the new pageSize when clicking on a page size option and onPageSizeChanged is not defined and pageSize is not controlled', () => {
-      render(<BaselineTestCase />);
+      render(<BaselineTestCase rowsPerPageOptions={[1, 2, 3, 100]} />);
       fireEvent.mouseDown(document.querySelector('.MuiSelect-selectMenu'));
-      expect(screen.queryAllByRole('option').length).to.equal(3);
+      expect(screen.queryAllByRole('option').length).to.equal(4);
 
       fireEvent.click(screen.queryAllByRole('option')[1]);
-      expect(getColumnValues()).to.deep.equal(['0', '1', '2', '3', '4', '5']);
+      expect(getColumnValues()).to.deep.equal(['0', '1']);
     });
 
     it('should call onPageChange and apply the new pageSize when clicking on a page size option and pageSize is not controlled', () => {
