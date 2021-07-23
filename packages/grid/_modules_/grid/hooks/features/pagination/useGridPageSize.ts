@@ -40,8 +40,8 @@ export const useGridPageSize = (
       propModel: props.pageSize,
       propOnChange: props.onPageSizeChange,
       stateSelector: (state) => state.pagination.pageSize,
-      onChangeCallback: (model) => {
-        apiRef.current.publishEvent(GRID_PAGE_SIZE_CHANGE, model);
+      onChangeCallback: (pageSize) => {
+        apiRef.current.publishEvent(GRID_PAGE_SIZE_CHANGE, pageSize);
       },
     });
   }, [apiRef, props.pageSize, props.onPageSizeChange]);
