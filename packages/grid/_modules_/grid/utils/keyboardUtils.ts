@@ -1,8 +1,8 @@
 import * as React from 'react';
 
-export const isEscapeKey = (key: string): boolean => key === 'Escape';
-export const isEnterKey = (key: string): boolean => key === 'Enter';
-export const isTabKey = (key: string): boolean => key === 'Tab';
+export const isEscapeKey = (key: string): boolean => key === 'Escape'; // TODO remove
+export const isEnterKey = (key: string): boolean => key === 'Enter'; // TODO remove
+export const isTabKey = (key: string): boolean => key === 'Tab'; // TODO remove
 
 export const isSpaceKey = (key: string): boolean => key === ' ';
 

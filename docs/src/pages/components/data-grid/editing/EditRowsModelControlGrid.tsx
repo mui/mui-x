@@ -3,7 +3,7 @@ import * as React from 'react';
 import {
   DataGrid,
   GridColumns,
-  GridEditRowModelParams,
+  GridEditRowsModel,
   GridRowsProp,
 } from '@material-ui/data-grid';
 import {
@@ -11,26 +11,26 @@ import {
   randomTraderName,
   randomUpdatedDate,
 } from '@material-ui/x-grid-data-generator';
+import Alert from '@material-ui/lab/Alert';
 
-export default function EditRowModelControlGrid() {
+export default function EditRowsModelControlGrid() {
   const [editRowsModel, setEditRowsModel] = React.useState({});
 
-  const handleEditRowModelChange = React.useCallback(
-    (params: GridEditRowModelParams) => {
-      setEditRowsModel(params.model);
-    },
-    [],
-  );
+  const handleEditRowsModelChange = React.useCallback((model: GridEditRowsModel) => {
+    setEditRowsModel(model);
+  }, []);
 
   return (
     <div style={{ width: '100%' }}>
-      <code>editRowsModel: {JSON.stringify(editRowsModel)}</code>
+      <Alert severity="info" style={{ marginBottom: 8 }}>
+        <code>editRowsModel: {JSON.stringify(editRowsModel)}</code>
+      </Alert>
       <div style={{ height: 400, width: '100%' }}>
         <DataGrid
           rows={rows}
           columns={columns}
           editRowsModel={editRowsModel}
-          onEditRowModelChange={handleEditRowModelChange}
+          onEditRowsModelChange={handleEditRowsModelChange}
         />
       </div>
     </div>
