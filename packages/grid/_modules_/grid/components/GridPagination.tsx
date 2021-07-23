@@ -92,7 +92,7 @@ export const GridPagination = React.forwardRef<
       }}
       component="div"
       count={paginationState.rowCount}
-      page={paginationState.currentPage <= lastPage ? paginationState.currentPage : lastPage}
+      page={paginationState.page <= lastPage ? paginationState.page : lastPage}
       rowsPerPageOptions={
         options.rowsPerPageOptions &&
         options.rowsPerPageOptions.indexOf(paginationState.pageSize) > -1

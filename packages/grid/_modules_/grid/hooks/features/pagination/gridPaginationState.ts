@@ -1,6 +1,6 @@
 export interface GridPaginationState {
   pageSize: number;
-  currentPage: number;
+  page: number;
   pageCount: number;
   rowCount: number;
 }

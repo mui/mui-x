@@ -50,7 +50,7 @@ export function PaginationComponent(props: { color?: 'primary' }) {
   return (
     <Pagination
       className="my-custom-pagination"
-      page={state.pagination.currentPage}
+      page={state.pagination.page}
       color={props.color}
       count={state.pagination.pageCount}
       onChange={(event, value) => apiRef.current.setPage(value)}
@@ -68,7 +68,7 @@ export function CustomFooter(props) {
       </span>
       <Pagination
         className="my-custom-pagination"
-        page={state.pagination.currentPage}
+        page={state.pagination.page}
         count={state.pagination.pageCount}
         onChange={(event, value) => apiRef.current.setPage(value)}
       />

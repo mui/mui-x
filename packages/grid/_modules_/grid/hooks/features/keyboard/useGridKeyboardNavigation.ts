@@ -92,7 +92,7 @@ export const useGridKeyboardNavigation = (apiRef: GridApiRef): void => {
       let rowCount = totalRowCount;
 
       if (options.pagination && totalRowCount > paginationState.pageSize) {
-        rowCount = paginationState.pageSize * (paginationState.currentPage + 1);
+        rowCount = paginationState.pageSize * (paginationState.page + 1);
       }
 
       let nextCellIndexes: GridCellIndexCoordinates;
@@ -153,7 +153,7 @@ export const useGridKeyboardNavigation = (apiRef: GridApiRef): void => {
       totalRowCount,
       options.pagination,
       paginationState.pageSize,
-      paginationState.currentPage,
+      paginationState.page,
       colCount,
       logger,
       apiRef,

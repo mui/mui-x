@@ -61,7 +61,7 @@ export const getInitialGridState = (): GridState => ({
   rows: getInitialGridRowState(),
   editRows: {},
   pagination: {
-    currentPage: 0,
+    page: 0,
     pageCount: 0,
     rowCount: 0,
     pageSize: 100,

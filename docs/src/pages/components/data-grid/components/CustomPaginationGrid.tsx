@@ -19,7 +19,7 @@ function CustomPagination() {
       className={classes.root}
       color="primary"
       count={state.pagination.pageCount}
-      page={state.pagination.currentPage + 1}
+      page={state.pagination.page + 1}
       onChange={(event, value) => apiRef.current.setPage(value - 1)}
     />
   );

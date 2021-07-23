@@ -24,7 +24,7 @@ const applyValidPage = (paginationState: GridPaginationState): GridPaginationSta
 
   return {
     ...paginationState,
-    currentPage: Math.max(Math.min(paginationState.currentPage, paginationState.pageCount - 1), 0),
+    page: Math.max(Math.min(paginationState.page, paginationState.pageCount - 1), 0),
   };
 };
 
@@ -44,7 +44,7 @@ export const useGridPage = (
         ...oldState,
         pagination: applyValidPage({
           ...oldState.pagination,
-          currentPage: page,
+          page: page,
         }),
       }));
       forceUpdate();
@@ -57,7 +57,7 @@ export const useGridPage = (
       stateId: 'page',
       propModel: props.page,
       propOnChange: props.onPageChange,
-      stateSelector: (state) => state.pagination.currentPage,
+      stateSelector: (state) => state.pagination.page,
       onChangeCallback: (model) => {
         apiRef.current.publishEvent(GRID_PAGE_CHANGE, model);
       },
@@ -69,13 +69,13 @@ export const useGridPage = (
       const rowCount = props.rowCount !== undefined ? props.rowCount : visibleRowCount;
       const pageCount = getPageCount(rowCount, oldState.pagination.pageSize);
 
-      const currentPage = props.page == null ? oldState.pagination.currentPage : props.page;
+      const page = props.page == null ? oldState.pagination.page : props.page;
 
       return {
         ...oldState,
         pagination: applyValidPage({
           ...oldState.pagination,
-          currentPage,
+          page,
           rowCount,
           pageCount,
         }),
@@ -94,7 +94,7 @@ export const useGridPage = (
           pagination: applyValidPage({
             ...oldState.pagination,
             pageCount,
-            currentPage: oldState.pagination.currentPage,
+            page: oldState.pagination.page,
           }),
         };
       });

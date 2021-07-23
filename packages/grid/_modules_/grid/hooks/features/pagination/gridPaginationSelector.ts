@@ -12,7 +12,7 @@ export const gridPaginatedVisibleSortedGridRowIdsSelector = createSelector<
   GridRowId[],
   GridRowId[]
 >(gridPaginationSelector, visibleSortedGridRowIdsSelector, (pagination, visibleSortedRows) => {
-  const firstSelectedRowIndex = pagination.currentPage * pagination.pageSize;
+  const firstSelectedRowIndex = pagination.page * pagination.pageSize;
   const lastSelectedRowIndex = firstSelectedRowIndex + pagination.pageSize;
 
   return visibleSortedRows.slice(firstSelectedRowIndex, lastSelectedRowIndex);
