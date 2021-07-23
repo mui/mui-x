@@ -330,13 +330,13 @@ export const GRID_COLUMN_HEADER_DRAG_END = 'columnHeaderDragEnd';
 export const GRID_SELECTION_CHANGE = 'selectionChange';
 
 /**
- * Fired when the current page change.
+ * Fired when the current page changes.
  * @event
  */
 export const GRID_PAGE_CHANGE = 'pageChange';
 
 /**
- * Fired when the page size change.
+ * Fired when the page size changes.
  * @event
  */
 export const GRID_PAGE_SIZE_CHANGE = 'pageSizeChange';
