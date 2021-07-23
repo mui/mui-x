@@ -230,6 +230,7 @@ function run(argv: { outputDirectory?: string }) {
     'GridRowParams',
     'GridSelectionApi',
     'GridFilterApi',
+    'GridExportCsvOptions',
   ];
 
   apisToGenerate.forEach((apiName) => {
@@ -243,6 +244,7 @@ function run(argv: { outputDirectory?: string }) {
       description: reflection.comment?.shortText,
       properties: findProperties(reflection),
     };
+
     const slug = kebabCase(reflection!.name);
     const markdown = generateMarkdown(api, apisToGenerate);
 

@@ -19,13 +19,13 @@ To enable the CSV export you need to compose a toolbar containing the `GridToolb
 By default, the CSV will only contain the visible columns of the grid.
 To include or hide other columns, there are two ways:
 
-1. Define the exact columns to be exported with the `fields` attribute in the `csvOptions` prop of [`GridToolbarExport`](/components/data-grid/components/#toolbar).
+1. Define the exact columns to be exported with the `fields` attribute in the [`csvOptions`](/api/data-grid/grid-export-csv-options/) prop of [`GridToolbarExport`](/components/data-grid/components/#toolbar).
 
 ```jsx
 <GridToolbarExport csvOptions={{ fields: ['id', 'name'] }} />
 ```
 
-Set `allColumns` in `csvOptions` to true to include hidden columns, instead of only the visible ones.
+Set `allColumns` in [`csvOptions`](/api/data-grid/grid-export-csv-options/) to true to include hidden columns, instead of only the visible ones.
 
 ```jsx
 <GridToolbarExport csvOptions={{ allColumns: true }} />
