@@ -125,7 +125,7 @@
     "name": "selectionChange",
     "description": "Fired when the selection state of one or multiple rows changes.\nCalled with a GridSelectionModelChangeParams object."
   },
-  { "name": "pageChange", "description": "Fired when the current page changes." },
+  { "name": "pageChange", "description": "Fired when the page changes." },
   { "name": "pageSizeChange", "description": "Fired when the page size changes." },
   {
     "name": "rowsScroll",

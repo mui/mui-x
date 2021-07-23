@@ -58,8 +58,8 @@ export const useGridPage = (
       propModel: props.page,
       propOnChange: props.onPageChange,
       stateSelector: (state) => state.pagination.page,
-      onChangeCallback: (model) => {
-        apiRef.current.publishEvent(GRID_PAGE_CHANGE, model);
+      onChangeCallback: (page) => {
+        apiRef.current.publishEvent(GRID_PAGE_CHANGE, page);
       },
     });
   }, [apiRef, props.page, props.onPageChange]);
