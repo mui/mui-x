@@ -1,7 +1,7 @@
 import {
   GRID_CELL_KEY_DOWN,
   GridApiRef,
-  GridBaseComponentProps,
+  GridComponentProps,
   useGridApiRef,
   XGrid,
 } from '@material-ui/x-grid';
@@ -54,7 +54,7 @@ describe('<XGrid /> - Edit Rows', () => {
 
   let apiRef: GridApiRef;
 
-  const TestCase = (props: Partial<GridBaseComponentProps>) => {
+  const TestCase = (props: Partial<GridComponentProps>) => {
     apiRef = useGridApiRef();
     return (
       <div style={{ width: 300, height: 300 }}>
@@ -551,7 +551,7 @@ describe('<XGrid /> - Edit Rows', () => {
   });
 
   it('should keep the right type', () => {
-    const Test = (props: Partial<GridBaseComponentProps>) => {
+    const Test = (props: Partial<GridComponentProps>) => {
       apiRef = useGridApiRef();
       return (
         <div style={{ width: 300, height: 300 }}>

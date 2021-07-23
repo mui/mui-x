@@ -7,11 +7,11 @@ import { gridContainerSizesSelector } from '../../root/gridContainerSizesSelecto
 import { useGridApiEventHandler, useGridApiOptionHandler } from '../../root/useGridApiEventHandler';
 import { GridRowScrollEndParams } from '../../../models/params/gridRowScrollEndParams';
 import { visibleGridColumnsSelector } from '../columns/gridColumnsSelector';
-import { GridBaseComponentProps } from '../../../GridBaseComponentProps';
+import { GridComponentProps } from '../../../GridComponentProps';
 
 export const useGridInfiniteLoader = (
   apiRef: GridApiRef,
-  props: Pick<GridBaseComponentProps, 'onRowsScrollEnd'>,
+  props: Pick<GridComponentProps, 'onRowsScrollEnd'>,
 ): void => {
   const options = useGridSelector(apiRef, optionsSelector);
   const containerSizes = useGridSelector(apiRef, gridContainerSizesSelector);

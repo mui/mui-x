@@ -5,13 +5,13 @@ import { ElementSize, GridEventsApi } from '../../models';
 import { useGridApiEventHandler, useGridApiOptionHandler } from '../root/useGridApiEventHandler';
 import { useGridApiMethod } from '../root/useGridApiMethod';
 import { useLogger } from './useLogger';
-import { GridBaseComponentProps } from '../../GridBaseComponentProps';
+import { GridComponentProps } from '../../GridComponentProps';
 
 const isTestEnvironment = process.env.NODE_ENV === 'test';
 
 export function useResizeContainer(
   apiRef,
-  props: Pick<GridBaseComponentProps, 'autoHeight' | 'rows' | 'onResize'>,
+  props: Pick<GridComponentProps, 'autoHeight' | 'rows' | 'onResize'>,
 ) {
   const gridLogger = useLogger('useResizeContainer');
   const warningShown = React.useRef(false);

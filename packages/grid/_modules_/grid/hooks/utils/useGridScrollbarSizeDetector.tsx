@@ -1,7 +1,7 @@
 // TODO replace with { unstable_getScrollbarSize } from '@material-ui/utils'
 import { ownerDocument } from '@material-ui/core/utils';
 import * as React from 'react';
-import { GridBaseComponentProps } from '../../GridBaseComponentProps';
+import { GridComponentProps } from '../../GridComponentProps';
 import { GridApiRef } from '../../models/api/gridApiRef';
 import { useEnhancedEffect } from '../../utils/material-ui-utils';
 import { allGridColumnsSelector } from '../features/columns/gridColumnsSelector';
@@ -25,7 +25,7 @@ export function getScrollbarSize(doc: Document, element: HTMLElement): number {
 
 export function useGridScrollbarSizeDetector(
   apiRef: GridApiRef,
-  { scrollbarSize }: Pick<GridBaseComponentProps, 'scrollbarSize'>,
+  { scrollbarSize }: Pick<GridComponentProps, 'scrollbarSize'>,
 ) {
   const logger = useLogger('useGridScrollbarSizeDetector');
   const [detectedScrollBarSize, setDetectedScrollBarSize] = React.useState<number>(0);

@@ -12,7 +12,7 @@ import { expect } from 'chai';
 import { useFakeTimers, spy } from 'sinon';
 import {
   GridApiRef,
-  GridBaseComponentProps,
+  GridComponentProps,
   useGridApiRef,
   XGrid,
   GRID_COLUMN_HEADER_SEPARATOR_RESIZABLE_CSS_CLASS,
@@ -46,7 +46,7 @@ describe('<XGrid /> - Columns', () => {
     columns: [{ field: 'brand' }],
   };
 
-  const Test = (props: Partial<GridBaseComponentProps>) => {
+  const Test = (props: Partial<GridComponentProps>) => {
     apiRef = useGridApiRef();
     return (
       <div style={{ width: 300, height: 300 }}>

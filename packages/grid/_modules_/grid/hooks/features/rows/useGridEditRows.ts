@@ -39,7 +39,6 @@ import { useEventCallback } from '../../../utils/material-ui-utils';
 import { useLogger } from '../../utils/useLogger';
 import { useGridSelector } from '../core/useGridSelector';
 import { useGridState } from '../core/useGridState';
-import { GridBaseComponentProps } from '../../../GridBaseComponentProps';
 
 export function useGridEditRows(
   apiRef: GridApiRef,

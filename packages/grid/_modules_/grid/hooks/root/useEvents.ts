@@ -29,12 +29,12 @@ import {
 } from '../../constants/eventsConstants';
 import { useGridApiOptionHandler } from './useGridApiEventHandler';
 import { useNativeEventListener } from './useNativeEventListener';
-import { GridBaseComponentProps } from '../../GridBaseComponentProps';
+import { GridComponentProps } from '../../GridComponentProps';
 
 export function useEvents(
   apiRef: GridApiRef,
   props: Pick<
-    GridBaseComponentProps,
+    GridComponentProps,
     | 'onColumnHeaderClick'
     | 'onColumnHeaderDoubleClick'
     | 'onColumnHeaderOver'

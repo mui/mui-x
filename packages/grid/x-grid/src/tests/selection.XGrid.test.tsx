@@ -11,7 +11,7 @@ import {
 } from 'test/utils';
 import {
   GridApiRef,
-  GridBaseComponentProps,
+  GridComponentProps,
   GridSelectionModel,
   useGridApiRef,
   XGrid,
@@ -60,7 +60,7 @@ describe('<XGrid /> - Selection', () => {
     columns: [{ field: 'brand' }],
   };
 
-  const Test = (props: Partial<GridBaseComponentProps>) => {
+  const Test = (props: Partial<GridComponentProps>) => {
     apiRef = useGridApiRef();
     return (
       <div style={{ width: 300, height: 300 }}>
@@ -144,7 +144,7 @@ describe('<XGrid /> - Selection', () => {
   });
 
   it('should clean the selected ids when the rows prop changes', () => {
-    const DemoTest = (props: Partial<GridBaseComponentProps>) => {
+    const DemoTest = (props: Partial<GridComponentProps>) => {
       apiRef = useGridApiRef();
       const [selectionModelState, setSelectionModelState] = React.useState(props.selectionModel);
       const handleSelectionChange = (model) => setSelectionModelState(model);
@@ -176,7 +176,7 @@ describe('<XGrid /> - Selection', () => {
 
   it('should call onSelectionModelChange when selection state changes', () => {
     const handleSelectionModelChange = spy();
-    const DemoTest = (props: Partial<GridBaseComponentProps>) => {
+    const DemoTest = (props: Partial<GridComponentProps>) => {
       apiRef = useGridApiRef();
       const [selectionModelState] = React.useState(props.selectionModel);
 
@@ -289,7 +289,7 @@ describe('<XGrid /> - Selection', () => {
     });
 
     it('should control selection state when the model and the onChange are set', () => {
-      const ControlCase = (props: Partial<GridBaseComponentProps>) => {
+      const ControlCase = (props: Partial<GridComponentProps>) => {
         const { rows, columns, ...others } = props;
         const [selectionModel, setSelectionModel] = React.useState<any>([0]);
         const handleSelectionChange = (newModel) => {

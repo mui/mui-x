@@ -1,4 +1,4 @@
-import { GridBaseComponentProps } from '../../_modules_/grid/GridBaseComponentProps';
+import { GridComponentProps } from '../../_modules_/grid/GridComponentProps';
 import { useGridClipboard } from '../../_modules_/grid/hooks/features/clipboard/useGridClipboard';
 import { useGridColumnMenu } from '../../_modules_/grid/hooks/features/columnMenu/useGridColumnMenu';
 import { useGridColumnReorder } from '../../_modules_/grid/hooks/features/columnReorder/useGridColumnReorder';
@@ -35,7 +35,7 @@ import { useResizeContainer } from '../../_modules_/grid/hooks/utils/useResizeCo
 import { useStateProp } from '../../_modules_/grid/hooks/utils/useStateProp';
 import { GridApiRef } from '../../_modules_/grid/models/api/gridApiRef';
 
-export const useDataGridComponent = (apiRef: GridApiRef, props: GridBaseComponentProps) => {
+export const useDataGridComponent = (apiRef: GridApiRef, props: GridComponentProps) => {
   useLoggerFactory(apiRef, props);
   useApi(apiRef);
   useErrorHandler(apiRef, props);

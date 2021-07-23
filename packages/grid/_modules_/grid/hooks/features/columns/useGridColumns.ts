@@ -34,7 +34,7 @@ import {
 } from './gridColumnsSelector';
 import { useGridApiOptionHandler } from '../../root/useGridApiEventHandler';
 import { GRID_STRING_COL_DEF } from '../../../models/colDef/gridStringColDef';
-import { GridBaseComponentProps } from '../../../GridBaseComponentProps';
+import { GridComponentProps } from '../../../GridComponentProps';
 
 function updateColumnsWidth(columns: GridColumns, viewportWidth: number): GridColumns {
   const numberOfFluidColumns = columns.filter((column) => !!column.flex && !column.hide).length;
@@ -139,7 +139,7 @@ const upsertColumnsState = (
 
 export function useGridColumns(
   apiRef: GridApiRef,
-  props: Pick<GridBaseComponentProps, 'columns' | 'onColumnVisibilityChange'>,
+  props: Pick<GridComponentProps, 'columns' | 'onColumnVisibilityChange'>,
 ): void {
   const logger = useLogger('useGridColumns');
   const [gridState, setGridState, forceUpdate] = useGridState(apiRef);

@@ -4,7 +4,7 @@ import { LicenseInfo } from '@material-ui/x-license';
 import { ponyfillGlobal } from '@material-ui/utils';
 import {
   DEFAULT_GRID_OPTIONS,
-  GridBaseComponentProps,
+  GridComponentProps,
   GridBody,
   GridErrorHandler,
   GridFooterPlaceholder,
@@ -27,7 +27,7 @@ if (process.env.NODE_ENV !== 'production' && RELEASE_INFO === '__RELEASE' + '_IN
 
 LicenseInfo.setReleaseInfo(RELEASE_INFO);
 
-export type XGridProps = GridBaseComponentProps;
+export type XGridProps = GridComponentProps;
 
 const XGridRaw = React.forwardRef<HTMLDivElement, XGridProps>(function XGrid(inProps, ref) {
   const apiRef = useGridApiRef(inProps.apiRef);

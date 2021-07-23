@@ -17,12 +17,9 @@ import { useGridApiMethod } from '../../root/useGridApiMethod';
 import { useGridState } from '../core/useGridState';
 import { useLogger } from '../../utils/useLogger';
 import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
-import { GridBaseComponentProps } from '../../../GridBaseComponentProps';
+import { GridComponentProps } from '../../../GridComponentProps';
 
-export const useGridFocus = (
-  apiRef: GridApiRef,
-  props: Pick<GridBaseComponentProps, 'rows'>,
-): void => {
+export const useGridFocus = (apiRef: GridApiRef, props: Pick<GridComponentProps, 'rows'>): void => {
   const logger = useLogger('useGridFocus');
   const [, setGridState, forceUpdate] = useGridState(apiRef);
   const insideFocusedCell = React.useRef(false);
