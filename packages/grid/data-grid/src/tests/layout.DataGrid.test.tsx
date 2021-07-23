@@ -339,20 +339,17 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         ];
 
         render(
-          <div style={{ width: 600, height: 300 }}>
+          <div style={{ width: 602, height: 300 }}>
             <DataGrid columns={columns} rows={rows} />
           </div>,
         );
 
         const firstColumn = getColumnHeaderCell(0);
         const secondColumn = getColumnHeaderCell(1);
+        const secondColumnWidthVal = secondColumn.style.width.split('px')[0];
         // @ts-expect-error need to migrate helpers to TypeScript
         expect(firstColumn).toHaveInlineStyle({
-          width: `398.667px`,
-        });
-        // @ts-expect-error need to migrate helpers to TypeScript
-        expect(secondColumn).toHaveInlineStyle({
-          width: `199.333px`,
+          width: `${2 * Number(secondColumnWidthVal)}px`,
         });
       });
 
