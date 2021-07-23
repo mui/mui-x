@@ -346,10 +346,13 @@ describe('<DataGrid /> - Layout & Warnings', () => {
 
         const firstColumn = getColumnHeaderCell(0);
         const secondColumn = getColumnHeaderCell(1);
-        const secondColumnWidthVal = secondColumn.style.width.split('px')[0];
         // @ts-expect-error need to migrate helpers to TypeScript
         expect(firstColumn).toHaveInlineStyle({
-          width: `${2 * parseInt(secondColumnWidthVal, 10)}px`,
+          width: `398.667px`,
+        });
+        // @ts-expect-error need to migrate helpers to TypeScript
+        expect(secondColumn).toHaveInlineStyle({
+          width: `199.333px`,
         });
       });
 
