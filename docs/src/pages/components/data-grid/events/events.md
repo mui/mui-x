@@ -37,7 +37,7 @@ Set it to `true` to block the default handling of an event and implement your ow
 
 ```tsx
 <DataGrid
-  onCellClick={(params: GridCellParams, event: MuiEvent) => {
+  onCellClick={(params: GridCellParams, event: MuiEvent<React.MouseEvent>) => {
     event.defaultMuiPrevented = true;
   }}
 />
