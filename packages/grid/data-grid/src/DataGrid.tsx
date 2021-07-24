@@ -261,9 +261,9 @@ DataGrid.propTypes = {
             `Material-UI: \`<DataGrid selectionModel={${JSON.stringify(
               props.selectionModel,
             )}} />\` is not a valid prop.`,
-            'selectionModel can only be of 1 item in DataGrid having no checkbox selection.',
+            'selectionModel can only contain 1 item in DataGrid without checkbox selection.',
             '',
-            'You need to upgrade to the XGrid component to unlock multiple non-checkbox selection.',
+            'You need to upgrade to the XGrid component to unlock multiple selection.',
           ].join('\n'),
         );
       }
