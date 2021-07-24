@@ -362,7 +362,7 @@ describe('<DataGrid /> - Selection', () => {
       columns: [{ field: 'brand', width: 100 }],
       selectionModel: [0, 1],
     };
-    function Demo(props) {
+    function TestDataGrid(props) {
       return (
         <div style={{ width: 300, height: 300 }}>
           <DataGrid {...data} {...props} />
@@ -372,7 +372,7 @@ describe('<DataGrid /> - Selection', () => {
 
     it('should throw console error when selectionModel contains more than 1 item without checkbox selection', () => {
       expect(() => {
-        render(<Demo />);
+        render(<TestDataGrid />);
       })
         // @ts-expect-error need to migrate helpers to TypeScript
         .toErrorDev(
@@ -382,7 +382,7 @@ describe('<DataGrid /> - Selection', () => {
 
     it('should not throw console error when selectionModel contains more than 1 item with checkbox selection', () => {
       expect(() => {
-        render(<Demo checkboxSelection />);
+        render(<TestDataGrid checkboxSelection />);
       })
         .not // @ts-expect-error need to migrate helpers to TypeScript
         .toErrorDev();
