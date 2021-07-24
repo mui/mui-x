@@ -370,7 +370,7 @@ describe('<DataGrid /> - Selection', () => {
       );
     }
 
-    it('should throw console error when selectionModel contains more than 1 item on DataGrid without checkbox selection', () => {
+    it('should throw console error when selectionModel contains more than 1 item in DataGrid without checkbox selection', () => {
       expect(() => {
         render(<TestDataGrid />);
       })
@@ -380,7 +380,7 @@ describe('<DataGrid /> - Selection', () => {
         );
     });
 
-    it('should not throw console error when selectionModel contains more than 1 item on DataGrid with checkbox selection', () => {
+    it('should not throw console error when selectionModel contains more than 1 item in DataGrid with checkbox selection', () => {
       expect(() => {
         render(<TestDataGrid checkboxSelection />);
       })
