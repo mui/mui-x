@@ -210,7 +210,7 @@ export interface GridOptions {
    */
   onEditCellPropsChange?: (
     params: GridEditCellPropsParams,
-    event?: MuiEvent<React.SyntheticEvent>,
+    event: MuiEvent<React.SyntheticEvent>,
   ) => void;
   /**
    * Callback fired when the cell changes are committed.
@@ -219,7 +219,7 @@ export interface GridOptions {
    */
   onCellEditCommit?: (
     params: GridEditCellPropsParams,
-    event?: MuiEvent<React.SyntheticEvent>,
+    event: MuiEvent<React.SyntheticEvent>,
   ) => void;
   /**
    * Callback fired when an exception is thrown in the grid, or when the `showError` API method is called.
@@ -228,25 +228,25 @@ export interface GridOptions {
   /**
    * Callback fired when the active element leaves a cell.
    * @param param With all properties from [[GridCellParams]].
-   * @param event [[MuiEvent]].
+   * @param event [[MuiEvent<React.SyntheticEvent>]].
    */
   onCellBlur?: (params: GridCellParams, event: MuiEvent<React.SyntheticEvent>) => void;
   /**
    * Callback fired when a click event comes from a cell element.
    * @param param With all properties from [[GridCellParams]].
-   * @param event [[MuiEvent]].
+   * @param event [[MuiEvent<React.MouseEvent>]].
    */
   onCellClick?: (params: GridCellParams, event: MuiEvent<React.MouseEvent>) => void;
   /**
    * Callback fired when a double click event comes from a cell element.
    * @param param With all properties from [[CellParams]].
-   * @param event [[MuiEvent]].
+   * @param event [[MuiEvent<React.MouseEvent>]].
    */
   onCellDoubleClick?: (params: GridCellParams, event: MuiEvent<React.MouseEvent>) => void;
   /**
    * Callback fired when a cell loses focus.
    * @param param With all properties from [[GridCellParams]].
-   * @param event [[MuiEvent]].
+   * @param event [[MuiEvent<React.SyntheticEvent | DocumentEventMap['click']>]].
    */
   onCellFocusOut?: (
     params: GridCellParams,
@@ -255,47 +255,49 @@ export interface GridOptions {
   /**
    * Callback fired when a keydown event comes from a cell element.
    * @param param With all properties from [[GridCellParams]].
-   * @param event [[MuiEvent]].
+   * @param event [[MuiEvent<React.KeyboardEvent>]].
    */
   onCellKeyDown?: (params: GridCellParams, event: MuiEvent<React.KeyboardEvent>) => void;
   /**
    * Callback fired when a mouseover event comes from a cell element.
    * @param param With all properties from [[GridCellParams]].
-   * @param event [[MuiEvent]].
+   * @param event [[MuiEvent<React.MouseEvent>]].
    */
   onCellOver?: (params: GridCellParams, event: MuiEvent<React.MouseEvent>) => void;
   /**
    * Callback fired when a mouseout event comes from a cell element.
    * @param param With all properties from [[GridCellParams]].
-   * @param event [[MuiEvent]].
+   * @param event [[MuiEvent<React.MouseEvent>]].
    */
   onCellOut?: (params: GridCellParams, event: MuiEvent<React.MouseEvent>) => void;
   /**
    * Callback fired when a mouse enter event comes from a cell element.
    * @param param With all properties from [[GridCellParams]].
-   * @param event [[MuiEvent]].
+   * @param event [[MuiEvent<React.MouseEvent>]].
    */
   onCellEnter?: (params: GridCellParams, event: MuiEvent<React.MouseEvent>) => void;
   /**
    * Callback fired when a mouse leave event comes from a cell element.
    * @param param With all properties from [[GridCellParams]].
-   * @param event [[MuiEvent]].
+   * @param event [[MuiEvent<React.MouseEvent>]].
    */
   onCellLeave?: (params: GridCellParams, event: MuiEvent<React.MouseEvent>) => void;
   /**
    * Callback fired when the cell mode changed.
    * @param handler
+   * @param event [[MuiEvent<{}>]].
    */
   onCellModeChange?: (params: GridCellModeChangeParams, event: MuiEvent<{}>) => void;
   /**
    * Callback fired when the cell value changed.
    * @param handler
+   * @param event [[MuiEvent<{}>]].
    */
   onCellValueChange?: (params: GridEditCellValueParams, event: MuiEvent<{}>) => void;
   /**
    * Callback fired when a click event comes from a column header element.
    * @param param With all properties from [[GridColumnHeaderParams]].
-   * @param event [[MuiEvent]].
+   * @param event [[MuiEvent<React.SyntheticEvent>]].
    */
   onColumnHeaderClick?: (
     param: GridColumnHeaderParams,
@@ -304,7 +306,7 @@ export interface GridOptions {
   /**
    * Callback fired when a double click event comes from a column header element.
    * @param param With all properties from [[GridColumnHeaderParams]].
-   * @param event [[MuiEvent]].
+   * @param event [[MuiEvent<React.SyntheticEvent>]].
    */
   onColumnHeaderDoubleClick?: (
     param: GridColumnHeaderParams,
@@ -313,7 +315,7 @@ export interface GridOptions {
   /**
    * Callback fired when a mouseover event comes from a column header element.
    * @param param With all properties from [[GridColumnHeaderParams]].
-   * @param event [[MuiEvent]].
+   * @param event [[MuiEvent<React.SyntheticEvent>]].
    */
   onColumnHeaderOver?: (
     param: GridColumnHeaderParams,
@@ -322,7 +324,7 @@ export interface GridOptions {
   /**
    * Callback fired when a mouseout event comes from a column header element.
    * @param param With all properties from [[GridColumnHeaderParams]].
-   * @param event [[MuiEvent]].
+   * @param event [[MuiEvent<React.SyntheticEvent>]].
    */
   onColumnHeaderOut?: (
     param: GridColumnHeaderParams,
@@ -331,7 +333,7 @@ export interface GridOptions {
   /**
    * Callback fired when a mouse enter event comes from a column header element.
    * @param param With all properties from [[GridColumnHeaderParams]].
-   * @param event [[MuiEvent]].
+   * @param event [[MuiEvent<React.SyntheticEvent>]].
    */
   onColumnHeaderEnter?: (
     param: GridColumnHeaderParams,
@@ -340,7 +342,7 @@ export interface GridOptions {
   /**
    * Callback fired when a mouse leave event comes from a column header element.
    * @param param With all properties from [[GridColumnHeaderParams]].
-   * @param event [[MuiEvent]].
+   * @param event [[MuiEvent<React.SyntheticEvent>]].
    */
   onColumnHeaderLeave?: (
     param: GridColumnHeaderParams,
@@ -349,21 +351,25 @@ export interface GridOptions {
   /**
    * Callback fired when a column is reordered.
    * @param param With all properties from [[GridColumnHeaderParams]].
+   * @param event [[MuiEvent<{}>]].
    */
   onColumnOrderChange?: (param: GridColumnOrderChangeParams, event: MuiEvent<{}>) => void;
   /**
    * Callback fired while a column is being resized.
    * @param param With all properties from [[GridColumnResizeParams]].
+   * @param event [[MuiEvent<{}>]].
    */
   onColumnResize?: (param: GridColumnResizeParams, event: MuiEvent<{}>) => void;
   /**
    * Callback fired when the width of a column is changed.
    * @param param With all properties from [[GridColumnResizeParams]].
+   * @param event [[MuiEvent<{}>]].
    */
   onColumnWidthChange?: (param: GridColumnResizeParams, event: MuiEvent<{}>) => void;
   /**
    * Callback fired when a column visibility changes.
    * @param param With all properties from [[GridColumnVisibilityChangeParams]].
+   * @param event [[MuiEvent<{}>]].
    */
   onColumnVisibilityChange?: (param: GridColumnVisibilityChangeParams, event: MuiEvent<{}>) => void;
   /**
@@ -374,57 +380,61 @@ export interface GridOptions {
   /**
    * Callback fired when the current page has changed.
    * @param param With all properties from [[GridPageChangeParams]].
+   * @param event [[MuiEvent<{}>]].
    */
   onPageChange?: (param: GridPageChangeParams, event: MuiEvent<{}>) => void;
   /**
    * Callback fired when the page size has changed.
    * @param param With all properties from [[GridPageChangeParams]].
+   * @param event [{}>]].
    */
   onPageSizeChange?: (param: GridPageChangeParams, event: MuiEvent<{}>) => void;
   /**
    * Callback fired when a click event comes from a row container element.
    * @param param With all properties from [[GridRowParams]].
-   * @param event [[MuiEvent]].
+   * @param event [[MuiEvent<React.SyntheticEvent>]].
    */
   onRowClick?: (param: GridRowParams, event: MuiEvent<React.SyntheticEvent>) => void;
   /**
    * Callback fired when scrolling to the bottom of the grid viewport.
+   * @param event [[MuiEvent<{}>]].
    * @param param
    */
   onRowsScrollEnd?: (params: GridRowScrollEndParams, event: MuiEvent<{}>) => void;
   /**
    * Callback fired when a double click event comes from a row container element.
    * @param param With all properties from [[RowParams]].
-   * @param event [[MuiEvent]].
+   * @param event [[MuiEvent<React.SyntheticEvent>]].
    */
   onRowDoubleClick?: (param: GridRowParams, event: MuiEvent<React.SyntheticEvent>) => void;
   /**
    * Callback fired when a mouseover event comes from a row container element.
    * @param param With all properties from [[GridRowParams]].
-   * @param event [[MuiEvent]].
+   * @param event [[MuiEvent<React.SyntheticEvent>]].
    */
   onRowOver?: (param: GridRowParams, event: MuiEvent<React.SyntheticEvent>) => void;
   /**
    * Callback fired when a mouseout event comes from a row container element.
    * @param param With all properties from [[GridRowParams]].
-   * @param event [[MuiEvent]].
+   * @param event [[MuiEvent<React.SyntheticEvent>]].
    */
   onRowOut?: (param: GridRowParams, event: MuiEvent<React.SyntheticEvent>) => void;
   /**
    * Callback fired when a mouse enter event comes from a row container element.
    * @param param With all properties from [[GridRowParams]].
-   * @param event [[MuiEvent]].
+   * @param event [[MuiEvent<React.SyntheticEvent>]].
    */
   onRowEnter?: (param: GridRowParams, event: MuiEvent<React.SyntheticEvent>) => void;
   /**
    * Callback fired when a mouse leave event comes from a row container element.
    * @param param With all properties from [[GridRowParams]].
-   * @param event [[MuiEvent]].
+   * @param event [[MuiEvent<React.SyntheticEvent>]].
    */
   onRowLeave?: (param: GridRowParams, event: MuiEvent<React.SyntheticEvent>) => void;
   /**
    * Callback fired when the grid is resized.
    * @param param With all properties from [[GridResizeParams]].
+   * @param event [[MuiEvent<{}>]].
    */
   onResize?: (param: GridResizeParams, event: MuiEvent<{}>) => void;
   /**
