@@ -252,7 +252,7 @@ DataGrid.propTypes = {
     PropTypes.oneOfType([PropTypes.number, PropTypes.string, PropTypes.array]),
     (props: any) => {
       if (
-        props.checkboxSelection === false &&
+        !props.checkboxSelection &&
         Array.isArray(props.selectionModel) &&
         props.selectionModel.length > 1
       ) {
