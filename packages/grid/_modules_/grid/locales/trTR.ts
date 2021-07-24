@@ -8,8 +8,8 @@ const trTRGrid: Partial<GridLocaleText> = {
   errorOverlayDefaultLabel: 'Bir hata oluştu.',
 
   // Density selector toolbar button text
-  toolbarDensity: 'Sıkılık',
-  toolbarDensityLabel: 'Sıkılık',
+  toolbarDensity: 'Yoğunluk',
+  toolbarDensityLabel: 'Yoğunluk',
   toolbarDensityCompact: 'Sıkı',
   toolbarDensityStandard: 'Standart',
   toolbarDensityComfortable: 'Rahat',
@@ -21,10 +21,10 @@ const trTRGrid: Partial<GridLocaleText> = {
   // Filters toolbar button text
   toolbarFilters: 'Filtreler',
   toolbarFiltersLabel: 'Filtreleri göster',
-  toolbarFiltersTooltipHide: 'Filtreleri Gizle',
+  toolbarFiltersTooltipHide: 'Filtreleri gizle',
   toolbarFiltersTooltipShow: 'Filtreleri göster',
   toolbarFiltersTooltipActive: (count) =>
-    count > 1 ? `${count} aktif filtre` : `${count} aktif filtre`,
+    `${count} aktif filtre`,
 
   // Export selector toolbar button text
   toolbarExport: 'Dışa aktar',
@@ -59,8 +59,8 @@ const trTRGrid: Partial<GridLocaleText> = {
   filterOperatorOnOrAfter: 'büyük eşit',
   filterOperatorBefore: 'küçük',
   filterOperatorOnOrBefore: 'küçük eşit',
-  // filterOperatorIsEmpty: 'is empty',
-  // filterOperatorIsNotEmpty: 'is not empty',
+  filterOperatorIsEmpty: 'boş',
+  filterOperatorIsNotEmpty: 'dolu',
 
   // Column menu text
   columnMenuLabel: 'Menü',
@@ -73,22 +73,20 @@ const trTRGrid: Partial<GridLocaleText> = {
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>
-    count > 1 ? `${count} filtre aktif` : `${count} filtre aktif`,
+     `${count} filtre aktif`,
   columnHeaderFiltersLabel: 'Filtreleri göster',
   columnHeaderSortIconLabel: 'Sırala',
 
   // Rows selected footer text
   footerRowSelected: (count) =>
-    count > 1
-      ? `${count.toLocaleString()} satır seçildi`
-      : `${count.toLocaleString()} satır seçildi`,
+        `${count.toLocaleString()} satır seçildi`,
 
   // Total rows footer text
   footerTotalRows: 'Toplam Satır:',
 
   // Total visible rows footer text
-  // footerTotalVisibleRows: (visibleCount, totalCount) =>
-  //   `${visibleCount.toLocaleString()} of ${totalCount.toLocaleString()}`,
+  footerTotalVisibleRows: (visibleCount, totalCount) =>
+    `${visibleCount.toLocaleString()} / ${totalCount.toLocaleString()}`,
 };
 
 export const trTR: Localization = getGridLocalization(trTRGrid, trTRCore);
