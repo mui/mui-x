@@ -70,11 +70,11 @@ describe('<XGrid /> - Selection', () => {
   };
 
   describe('getSelectedRows', () => {
-    it('should not change before onSelectionModelChange', () => {
+    it('should handle the event internally before triggering onSelectionModelChange', () => {
       render(
         <Test
           onSelectionModelChange={(model) => {
-            expect(apiRef!.current.getSelectedRows().size).to.equal(0);
+            expect(apiRef!.current.getSelectedRows().size).to.equal(1);
             expect(model).to.deep.equal([1]);
           }}
         />,

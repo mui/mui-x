@@ -308,9 +308,8 @@ export const useGridFilter = (
   }, [apiRef, props.filterModel, props.onFilterModelChange]);
 
   React.useEffect(() => {
-    const filterModel = props.filterModel;
-    if (filterModel && filterModel.items.length > 1) {
-      const hasItemsWithoutIds = filterModel.items.find((item) => item.id == null);
+    if (props.filterModel !== undefined && props.filterModel.items.length > 1) {
+      const hasItemsWithoutIds = props.filterModel.items.find((item) => item.id == null);
       if (hasItemsWithoutIds) {
         throw new Error(
           "The 'id' field is required on filterModel.items when you use multiple filters.",
@@ -318,7 +317,7 @@ export const useGridFilter = (
       }
     }
     const oldFilterModel = apiRef.current.state.filter;
-    if (filterModel && !isDeepEqual(filterModel, oldFilterModel)) {
+    if (props.filterModel !== undefined && props.filterModel !== oldFilterModel) {
       logger.debug('filterModel prop changed, applying filters');
       setGridState((state) => ({
         ...state,
