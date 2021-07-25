@@ -23,8 +23,7 @@ const trTRGrid: Partial<GridLocaleText> = {
   toolbarFiltersLabel: 'Filtreleri göster',
   toolbarFiltersTooltipHide: 'Filtreleri gizle',
   toolbarFiltersTooltipShow: 'Filtreleri göster',
-  toolbarFiltersTooltipActive: (count) =>
-    `${count} aktif filtre`,
+  toolbarFiltersTooltipActive: (count) => `${count} aktif filtre`,
 
   // Export selector toolbar button text
   toolbarExport: 'Dışa aktar',
@@ -72,14 +71,12 @@ const trTRGrid: Partial<GridLocaleText> = {
   columnMenuSortDesc: 'Sırala - Azalan',
 
   // Column header text
-  columnHeaderFiltersTooltipActive: (count) =>
-     `${count} filtre aktif`,
+  columnHeaderFiltersTooltipActive: (count) => `${count} filtre aktif`,
   columnHeaderFiltersLabel: 'Filtreleri göster',
   columnHeaderSortIconLabel: 'Sırala',
 
   // Rows selected footer text
-  footerRowSelected: (count) =>
-        `${count.toLocaleString()} satır seçildi`,
+  footerRowSelected: (count) => `${count.toLocaleString()} satır seçildi`,
 
   // Total rows footer text
   footerTotalRows: 'Toplam Satır:',
