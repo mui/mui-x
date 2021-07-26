@@ -10,10 +10,6 @@
   { "name": "componentError", "description": "Fired when an exception is thrown in the grid." },
   { "name": "unmount", "description": "Fired when the grid is unmounted." },
   {
-    "name": "cellModeChange",
-    "description": "Fired when the mode of a cell changes. Called with a GridCellModeChangeParams object."
-  },
-  {
     "name": "cellClick",
     "description": "Fired when a cell is clicked. Called with a <a href=\"/api/data-grid/grid-cell-params/\">GridCellParams</a> object."
   },

@@ -32,6 +32,7 @@ export const GRID_UNMOUNT = 'unmount';
 
 /**
  * Fired when the mode of a cell changes. Called with a [[GridCellModeChangeParams]] object.
+ * @ignore - do not document.
  * @event
  */
 export const GRID_CELL_MODE_CHANGE = 'cellModeChange';

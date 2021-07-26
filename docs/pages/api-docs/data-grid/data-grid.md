@@ -75,6 +75,8 @@ import { DataGrid } from '@material-ui/data-grid';
 | <span class="prop-name">onError</span> | <span class="prop-type">(args: any) => void</span> |   | Callback fired when an exception is thrown in the grid, or when the `showError` API method is called. |
 | <span class="prop-name">onEditCellPropsChange</span> | <span class="prop-type">(params: GridEditCellPropsParams, event: React.SyntheticEvent) => void</span> |   |  Callback fired when the edit cell value changes. |
 | <span class="prop-name">onCellEditCommit</span> | <span class="prop-type">(params: GridEditCellPropsParams, event: React.SyntheticEvent) => void</span> |   | Callback fired when the cell changes are going to be committed. |
+| <span class="prop-name">onCellEditEnter</span> | <span class="prop-type">(params: GridCellParams, event: React.SyntheticEvent) => void</span> |   | Callback fired when the cell turns to edit mode. |
+| <span class="prop-name">onCellEditExit</span> | <span class="prop-type">(params: GridCellParams, event: React.SyntheticEvent) => void</span> |   | Callback fired when the cell turns to view mode. |
 | <span class="prop-name">onEditRowModelChange</span> | <span class="prop-type">(params: GridEditRowModelParams) => void</span> |   |  Callback fired when the EditRowModel changed. |
 | <span class="prop-name">onFilterModelChange</span> | <span class="prop-type">(model: GridFilterModel) => void</span> |   | Callback fired when the Filter model changes before the filters are applied. |
 | <span class="prop-name">onPageChange</span> | <span class="prop-type">(param: GridPageChangeParams) => void</span> |   | Callback fired when the current page has changed. |

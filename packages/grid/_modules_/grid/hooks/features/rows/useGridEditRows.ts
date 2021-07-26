@@ -275,7 +275,10 @@ export function useGridEditRows(
 
   const handleCellEditExit = React.useCallback(
     (params: GridCellParams, event?: React.SyntheticEvent) => {
-      // TODO check if its propagation was stopped
+      if (event?.isPropagationStopped()) {
+        return;
+      }
+
       setCellMode(params.id, params.field, 'view');
 
       // When dispatched by the document, the event is not passed
@@ -314,6 +317,8 @@ export function useGridEditRows(
 
   useGridApiOptionHandler(apiRef, GRID_CELL_EDIT_COMMIT, options.onCellEditCommit);
   useGridApiOptionHandler(apiRef, GRID_EDIT_CELL_PROPS_CHANGE, options.onEditCellPropsChange);
+  useGridApiOptionHandler(apiRef, GRID_CELL_EDIT_ENTER, options.onCellEditEnter);
+  useGridApiOptionHandler(apiRef, GRID_CELL_EDIT_EXIT, options.onCellEditExit);
 
   useGridApiMethod<GridEditRowApi>(
     apiRef,
