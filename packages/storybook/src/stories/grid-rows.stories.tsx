@@ -609,7 +609,17 @@ export function ValidateEditValueWithApiRefGrid() {
     ({ id, field, props }: GridEditCellPropsParams, event?: React.SyntheticEvent) => {
       if (field === 'email') {
         const isValid = validateEmail(props.value);
-        apiRef.current.setEditCellProps({ id, field, props: { ...props, error: !isValid } });
+        const oldModel = apiRef.current.getEditRowsModel();
+        apiRef.current.setEditRowsModel({
+          ...oldModel,
+          [id]: {
+            ...oldModel[id],
+            [field]: {
+              ...oldModel[id][field],
+              error: !isValid,
+            },
+          },
+        });
         // Prevent the native behavior.
         event?.stopPropagation();
       }
@@ -681,10 +691,31 @@ export function ValidateEditValueServerSide() {
         clearTimeout(promiseTimeout);
         clearTimeout(keyStrokeTimeoutRef.current);
 
-        apiRef.current.setEditCellProps({ id, field, props: { ...props, error: true } });
+        let oldModel = apiRef.current.getEditRowsModel();
+        apiRef.current.setEditRowsModel({
+          ...oldModel,
+          [id]: {
+            ...oldModel[id],
+            [field]: {
+              ...oldModel[id][field],
+              error: true,
+            },
+          },
+        });
+
         keyStrokeTimeoutRef.current = setTimeout(async () => {
           const isValid = await validateUsername(props.value!.toString());
-          apiRef.current.setEditCellProps({ id, field, props: { ...props, error: !isValid } });
+          oldModel = apiRef.current.getEditRowsModel();
+          apiRef.current.setEditRowsModel({
+            ...oldModel,
+            [id]: {
+              ...oldModel[id],
+              [field]: {
+                ...oldModel[id][field],
+                error: !isValid,
+              },
+            },
+          });
         }, 200);
 
         event.stopPropagation();

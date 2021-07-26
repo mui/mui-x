@@ -157,9 +157,9 @@ export function useGridEditRows(
       if (event?.isPropagationStopped()) {
         return;
       }
-      apiRef.current.setEditCellProps(params);
+      setEditCellProps(params);
     },
-    [apiRef],
+    [setEditCellProps],
   );
 
   const setEditRowsModel = React.useCallback(
@@ -221,14 +221,14 @@ export function useGridEditRows(
       setCellMode(params.id, params.field, 'edit');
 
       if (isKeyboardEvent(event) && isPrintableKey(event.key)) {
-        apiRef.current.setEditCellProps({
+        setEditCellProps({
           id: params.id,
           field: params.field,
           props: { value: '' },
         });
       }
     },
-    [apiRef, setCellMode],
+    [setEditCellProps, setCellMode],
   );
 
   const preventTextSelection = React.useCallback(
@@ -327,7 +327,6 @@ export function useGridEditRows(
       getCellMode,
       isCellEditable,
       commitCellChange,
-      setEditCellProps, // TODO don't expose, update the editRowsModel prop directly
       setEditRowsModel,
       getEditRowsModel,
       setEditCellValue,
