@@ -12,6 +12,7 @@ export function GridDataContainer(props: GridDataContainerProps) {
   const dataContainerSizes = useGridSelector(apiRef!, gridDataContainerSizesSelector);
 
   const style: any = {
+    // TODO remove min
     minWidth: dataContainerSizes?.width,
     minHeight: dataContainerSizes?.height,
   };
