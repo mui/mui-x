@@ -139,8 +139,8 @@ export interface GridOptions {
   onEditRowsModelChange?: (editRowsModel: GridEditRowsModel) => void;
   /**
    * Filtering can be processed on the server or client-side.
-   * Set it to 'client' if you would like to handle filtering on the client-side.
    * Set it to 'server' if you would like to handle filtering on the server-side.
+   * @default "client"
    */
   filterMode?: GridFeatureMode;
   /**
