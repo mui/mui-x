@@ -4,9 +4,9 @@ import { Theme } from '@material-ui/core/styles';
 import { makeStyles } from '@material-ui/styles';
 import { useGridSelector } from '../hooks/features/core/useGridSelector';
 import { gridPaginationSelector } from '../hooks/features/pagination/gridPaginationSelector';
-import { optionsSelector } from '../hooks/utils/optionsSelector';
 import { useGridApiContext } from '../hooks/root/useGridApiContext';
 import { getMuiVersion, createTheme } from '../utils';
+import {GridRootPropsContext} from "../context/GridRootPropsContext";
 
 const defaultTheme = createTheme();
 // Used to hide the Rows per page selector on small devices
@@ -43,13 +43,12 @@ export const GridPagination = React.forwardRef<
 >(function GridPagination(props, ref) {
   const classes = useStyles();
   const apiRef = useGridApiContext();
-  const paginationState = useGridSelector(apiRef, gridPaginationSelector);
+    const rootProps = React.useContext(GridRootPropsContext)!;
+    const paginationState = useGridSelector(apiRef, gridPaginationSelector);
   const lastPage = React.useMemo(
     () => Math.floor(paginationState.rowCount / (paginationState.pageSize || 1)),
     [paginationState.rowCount, paginationState.pageSize],
   );
-  const options = useGridSelector(apiRef, optionsSelector);
-
   const handlePageSizeChange = React.useCallback(
     (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
       const newPageSize = Number(event.target.value);
@@ -93,9 +92,9 @@ export const GridPagination = React.forwardRef<
       count={paginationState.rowCount}
       page={paginationState.page <= lastPage ? paginationState.page : lastPage}
       rowsPerPageOptions={
-        options.rowsPerPageOptions &&
-        options.rowsPerPageOptions.indexOf(paginationState.pageSize) > -1
-          ? options.rowsPerPageOptions
+          rootProps.rowsPerPageOptions &&
+          rootProps.rowsPerPageOptions.indexOf(paginationState.pageSize) > -1
+          ? rootProps.rowsPerPageOptions
           : []
       }
       rowsPerPage={paginationState.pageSize}

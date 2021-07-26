@@ -10,15 +10,15 @@ import { GridDensity, GridDensityTypes } from '../../models/gridDensity';
 import { isHideMenuKey, isTabKey } from '../../utils/keyboardUtils';
 import { useGridApiContext } from '../../hooks/root/useGridApiContext';
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
-import { optionsSelector } from '../../hooks/utils/optionsSelector';
 import { GridDensityOption } from '../../models/api/gridDensityApi';
 import { GridMenu } from '../menu/GridMenu';
+import {GridRootPropsContext} from "../../context/GridRootPropsContext";
 
 export const GridToolbarDensitySelector = React.forwardRef<HTMLButtonElement, ButtonProps>(
   function GridToolbarDensitySelector(props, ref) {
     const { onClick, ...other } = props;
     const apiRef = useGridApiContext();
-    const options = useGridSelector(apiRef, optionsSelector);
+      const rootProps = React.useContext(GridRootPropsContext)!;
     const densityValue = useGridSelector(apiRef, gridDensityValueSelector);
     const densityButtonId = useId();
     const densityMenuId = useId();
@@ -77,7 +77,7 @@ export const GridToolbarDensitySelector = React.forwardRef<HTMLButtonElement, Bu
     };
 
     // Disable the button if the corresponding is disabled
-    if (options.disableDensitySelector) {
+    if (rootProps.disableDensitySelector) {
       return null;
     }
 

@@ -3,15 +3,14 @@ import { useForkRef } from '@material-ui/core/utils';
 import { GRID_CELL_NAVIGATION_KEY_DOWN } from '../../constants/eventsConstants';
 import { GridCellParams } from '../../models/params/gridCellParams';
 import { isNavigationKey, isSpaceKey } from '../../utils/keyboardUtils';
-import { useGridSelector } from '../../hooks/features/core/useGridSelector';
-import { optionsSelector } from '../../hooks/utils/optionsSelector';
 import { useGridApiContext } from '../../hooks/root/useGridApiContext';
+import {GridRootPropsContext} from "../../context/GridRootPropsContext";
 
 export const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridCellParams>(
   function GridCellCheckboxRenderer(props, ref) {
     const { field, id, value, tabIndex, hasFocus } = props;
     const apiRef = useGridApiContext();
-    const options = useGridSelector(apiRef, optionsSelector);
+      const rootProps = React.useContext(GridRootPropsContext)!;
     const checkboxElement = React.useRef<HTMLInputElement | null>(null);
 
     const handleRef = useForkRef(checkboxElement, ref);
@@ -53,7 +52,7 @@ export const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, Gri
     const CheckboxComponent = apiRef?.current.components.Checkbox!;
 
     const isSelectable =
-      !options.isRowSelectable || options.isRowSelectable(apiRef!.current.getRowParams(id));
+      !rootProps.isRowSelectable || rootProps.isRowSelectable(apiRef!.current.getRowParams(id));
 
     return (
       <CheckboxComponent

@@ -1,12 +1,11 @@
 import * as React from 'react';
-import { useGridSelector } from '../../hooks/features/core/useGridSelector';
-import { optionsSelector } from '../../hooks/utils/optionsSelector';
 import { useGridApiContext } from '../../hooks/root/useGridApiContext';
+import {GridRootPropsContext} from "../../context/GridRootPropsContext";
 
 export const GridColumnUnsortedIcon = React.memo(function GridColumnHeaderSortIcon(props) {
   const apiRef = useGridApiContext();
-  const options = useGridSelector(apiRef, optionsSelector);
-  const [nextSortDirection] = options.sortingOrder;
+  const rootProps = React.useContext(GridRootPropsContext)!;
+  const [nextSortDirection] = rootProps.sortingOrder!;
 
   const Icon =
     nextSortDirection === 'asc'

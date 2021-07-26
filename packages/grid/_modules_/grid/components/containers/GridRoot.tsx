@@ -33,12 +33,12 @@ export const GridRoot = React.forwardRef<HTMLDivElement, GridRootProps>(function
       <div
         ref={handleRef}
         className={clsx(classes.root, options.classes?.root, rootProps.className, classNameProp, {
-          'MuiDataGrid-autoHeight': gridState.options.autoHeight,
+          'MuiDataGrid-autoHeight': rootProps.autoHeight,
         })}
         role="grid"
         aria-colcount={visibleColumnsLength}
         aria-rowcount={gridState.rows.totalRowCount}
-        aria-multiselectable={!gridState.options.disableMultipleSelection}
+        aria-multiselectable={!rootProps.disableMultipleSelection}
         aria-label={rootProps['aria-label']}
         aria-labelledby={rootProps['aria-labelledby']}
         style={rootProps.style}

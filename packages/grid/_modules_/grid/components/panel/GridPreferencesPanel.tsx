@@ -3,8 +3,8 @@ import { allGridColumnsSelector } from '../../hooks/features/columns/gridColumns
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
 import { gridPreferencePanelStateSelector } from '../../hooks/features/preferencesPanel/gridPreferencePanelSelector';
 import { GridPreferencePanelsValue } from '../../hooks/features/preferencesPanel/gridPreferencePanelsValue';
-import { optionsSelector } from '../../hooks/utils/optionsSelector';
 import { useGridApiContext } from '../../hooks/root/useGridApiContext';
+import {GridRootPropsContext} from "../../context/GridRootPropsContext";
 
 export const GridPreferencesPanel = React.forwardRef<
   HTMLDivElement,
@@ -12,7 +12,7 @@ export const GridPreferencesPanel = React.forwardRef<
 >(function GridPreferencesPanel(props, ref) {
   const apiRef = useGridApiContext();
   const columns = useGridSelector(apiRef, allGridColumnsSelector);
-  const options = useGridSelector(apiRef, optionsSelector);
+  const rootProps = React.useContext(GridRootPropsContext)!;
   const preferencePanelState = useGridSelector(apiRef, gridPreferencePanelStateSelector);
 
   const isColumnsTabOpen =
@@ -29,10 +29,10 @@ export const GridPreferencesPanel = React.forwardRef<
       {...apiRef?.current.componentsProps?.panel}
       {...props}
     >
-      {!options.disableColumnSelector && isColumnsTabOpen && (
+      {!rootProps.disableColumnSelector && isColumnsTabOpen && (
         <ColumnSelectorComponent {...apiRef?.current.componentsProps?.columnsPanel} />
       )}
-      {!options.disableColumnFilter && isFiltersTabOpen && (
+      {!rootProps.disableColumnFilter && isFiltersTabOpen && (
         <FilterPanelComponent {...apiRef?.current.componentsProps?.filterPanel} />
       )}
     </Panel>
