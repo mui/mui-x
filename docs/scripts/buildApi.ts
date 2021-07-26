@@ -36,26 +36,26 @@ function generateType(type, needsParenthesis = false) {
 
       // Handle function generic parameters
       if (signature.typeParameters?.length) {
-        text += '<'
-        text += signature.typeParameters.map(generic => {
-          let genericLine = generic.name
+        text += '<';
+        text += signature.typeParameters.map((generic) => {
+          let genericLine = generic.name;
 
           if (generic.type) {
-            genericLine += ` extends ${generateType(generic.type)}`
+            genericLine += ` extends ${generateType(generic.type)}`;
           }
 
           if (generic.default) {
-            genericLine += ` = ${generateType(generic.default)}`
+            genericLine += ` = ${generateType(generic.default)}`;
           }
 
-          return genericLine
-        })
-        text += '>'
+          return genericLine;
+        });
+        text += '>';
       }
 
       text += '(';
-      text += signature.parameters!
-        .map((param) => {
+      text += signature
+        .parameters!.map((param) => {
           let paramText = param.flags.isRest ? `...${param.name}` : param.name;
           if (param.flags.isOptional) paramText += '?';
           if (param.defaultValue) paramText += '?';
@@ -94,7 +94,7 @@ function generateType(type, needsParenthesis = false) {
     return `${generateType(type.objectType)}[${generateType(type.indexType)}]`;
   }
   if (type.type === 'typeOperator') {
-    return `${type.operator} ${generateType(type.target)}`
+    return `${type.operator} ${generateType(type.target)}`;
   }
 
   return '';
