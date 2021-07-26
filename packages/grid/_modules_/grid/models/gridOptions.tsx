@@ -15,11 +15,7 @@ import { GridPageChangeParams } from './params/gridPageChangeParams';
 import { GridRowParams } from './params/gridRowParams';
 import { GridSelectionModel } from './gridSelectionModel';
 import { GridSortDirection, GridSortModel } from './gridSortModel';
-import {
-  GridCellModeChangeParams,
-  GridEditCellPropsParams,
-  GridEditCellValueParams,
-} from './params/gridEditCellParams';
+import { GridEditCellPropsParams, GridEditCellValueParams } from './params/gridEditCellParams';
 import { GridRowScrollEndParams } from './params/gridRowScrollEndParams';
 import { GridColumnOrderChangeParams } from './params/gridColumnOrderChangeParams';
 import { GridResizeParams } from './params/gridResizeParams';
@@ -273,11 +269,6 @@ export interface GridOptions {
    * @param event [[React.MouseEvent]].
    */
   onCellLeave?: (params: GridCellParams, event: React.MouseEvent) => void;
-  /**
-   * Callback fired when the cell mode changed.
-   * @param handler
-   */
-  onCellModeChange?: (params: GridCellModeChangeParams) => void;
   /**
    * Callback fired when the cell value changed.
    * @param handler

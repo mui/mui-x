@@ -62,7 +62,6 @@ import { DataGrid } from '@material-ui/data-grid';
 | <span class="prop-name">onCellOut</span> | <span class="prop-type">(params: GridCellParams, event: React.MouseEvent) => void</span> |   | Callback fired when a mouse out comes from a cell element. |
 | <span class="prop-name">onCellEnter</span> | <span class="prop-type">(params: GridCellParams, event: React.MouseEvent) => void</span> |   | Callback fired when a mouse enter event comes from a cell element. |
 | <span class="prop-name">onCellLeave</span> | <span class="prop-type">(params: GridCellParams, event: React.MouseEvent) => void</span> |   | Callback fired when a mouse leave event comes from a cell element. |
-| <span class="prop-name">onCellModeChange</span> | <span class="prop-type">(params: GridCellModeChangeParams) => void |   | Callback fired when the cell mode changed. |
 | <span class="prop-name">onColumnHeaderClick</span> | <span class="prop-type">(param: GridColumnHeaderParams, event: React.MouseEvent) => void</span> |   | Callback fired when a click event comes from a column header element. |
 | <span class="prop-name">onColumnHeaderDoubleClick</span> | <span class="prop-type">(param: GridColumnHeaderParams, event: React.MouseEvent) => void</span> |   | Callback fired when a double click event comes from a column header element. |
 | <span class="prop-name">onColumnHeaderOver</span> | <span class="prop-type">(param: GridColumnHeaderParams, event: React.MouseEvent) => void</span> |   | Callback fired when a mouseover event comes from a column header element. |

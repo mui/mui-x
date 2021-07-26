@@ -313,10 +313,7 @@ export function useGridEditRows(
   useGridApiEventHandler(apiRef, GRID_EDIT_CELL_PROPS_CHANGE, handleEditCellPropsChange);
 
   useGridApiOptionHandler(apiRef, GRID_CELL_EDIT_COMMIT, options.onCellEditCommit);
-  // TODO remove, use onEditRowsModelChange directly
   useGridApiOptionHandler(apiRef, GRID_EDIT_CELL_PROPS_CHANGE, options.onEditCellPropsChange);
-  // TODO remove because GRID_CELL_EDIT_ENTER and GRID_CELL_EDIT_EXIT can be used
-  useGridApiOptionHandler(apiRef, GRID_CELL_MODE_CHANGE, options.onCellModeChange);
 
   useGridApiMethod<GridEditRowApi>(
     apiRef,

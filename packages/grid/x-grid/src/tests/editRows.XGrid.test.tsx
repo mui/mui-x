@@ -330,7 +330,8 @@ describe('<XGrid /> - Edit Rows', () => {
     expect(getActiveCell()).to.equal('2-1');
   });
 
-  it('should the focus to the new field', () => {
+  // TODO add one test for each column type because what really sets the focus is the autoFocus prop
+  it('should move the focus to the new field', () => {
     const handleCellBlur = (params, event) => {
       if (params.cellMode === 'edit') {
         event?.stopPropagation();
