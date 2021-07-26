@@ -677,7 +677,6 @@ describe('<XGrid /> - Edit Rows', () => {
         field: 'isAdmin',
         props: { value: true },
       });
-      fireEvent.click(input);
     });
   });
 
