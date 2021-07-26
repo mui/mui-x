@@ -64,4 +64,3 @@ export interface GridSlotsComponent extends GridIconSlotsComponent {
    */
   Panel?: React.JSXElementConstructor<any>;
 }
-

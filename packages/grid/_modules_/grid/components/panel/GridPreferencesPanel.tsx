@@ -4,7 +4,7 @@ import { useGridSelector } from '../../hooks/features/core/useGridSelector';
 import { gridPreferencePanelStateSelector } from '../../hooks/features/preferencesPanel/gridPreferencePanelSelector';
 import { GridPreferencePanelsValue } from '../../hooks/features/preferencesPanel/gridPreferencePanelsValue';
 import { useGridApiContext } from '../../hooks/root/useGridApiContext';
-import {GridRootPropsContext} from "../../context/GridRootPropsContext";
+import { GridRootPropsContext } from '../../context/GridRootPropsContext';
 
 export const GridPreferencesPanel = React.forwardRef<
   HTMLDivElement,

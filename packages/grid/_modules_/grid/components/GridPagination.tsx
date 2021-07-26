@@ -6,7 +6,7 @@ import { useGridSelector } from '../hooks/features/core/useGridSelector';
 import { gridPaginationSelector } from '../hooks/features/pagination/gridPaginationSelector';
 import { useGridApiContext } from '../hooks/root/useGridApiContext';
 import { getMuiVersion, createTheme } from '../utils';
-import {GridRootPropsContext} from "../context/GridRootPropsContext";
+import { GridRootPropsContext } from '../context/GridRootPropsContext';
 
 const defaultTheme = createTheme();
 // Used to hide the Rows per page selector on small devices
@@ -43,8 +43,8 @@ export const GridPagination = React.forwardRef<
 >(function GridPagination(props, ref) {
   const classes = useStyles();
   const apiRef = useGridApiContext();
-    const rootProps = React.useContext(GridRootPropsContext)!;
-    const paginationState = useGridSelector(apiRef, gridPaginationSelector);
+  const rootProps = React.useContext(GridRootPropsContext)!;
+  const paginationState = useGridSelector(apiRef, gridPaginationSelector);
   const lastPage = React.useMemo(
     () => Math.floor(paginationState.rowCount / (paginationState.pageSize || 1)),
     [paginationState.rowCount, paginationState.pageSize],
@@ -92,8 +92,8 @@ export const GridPagination = React.forwardRef<
       count={paginationState.rowCount}
       page={paginationState.page <= lastPage ? paginationState.page : lastPage}
       rowsPerPageOptions={
-          rootProps.rowsPerPageOptions &&
-          rootProps.rowsPerPageOptions.indexOf(paginationState.pageSize) > -1
+        rootProps.rowsPerPageOptions &&
+        rootProps.rowsPerPageOptions.indexOf(paginationState.pageSize) > -1
           ? rootProps.rowsPerPageOptions
           : []
       }

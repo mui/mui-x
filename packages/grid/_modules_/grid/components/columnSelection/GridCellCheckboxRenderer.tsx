@@ -4,13 +4,13 @@ import { GRID_CELL_NAVIGATION_KEY_DOWN } from '../../constants/eventsConstants';
 import { GridCellParams } from '../../models/params/gridCellParams';
 import { isNavigationKey, isSpaceKey } from '../../utils/keyboardUtils';
 import { useGridApiContext } from '../../hooks/root/useGridApiContext';
-import {GridRootPropsContext} from "../../context/GridRootPropsContext";
+import { GridRootPropsContext } from '../../context/GridRootPropsContext';
 
 export const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridCellParams>(
   function GridCellCheckboxRenderer(props, ref) {
     const { field, id, value, tabIndex, hasFocus } = props;
     const apiRef = useGridApiContext();
-      const rootProps = React.useContext(GridRootPropsContext)!;
+    const rootProps = React.useContext(GridRootPropsContext)!;
     const checkboxElement = React.useRef<HTMLInputElement | null>(null);
 
     const handleRef = useForkRef(checkboxElement, ref);

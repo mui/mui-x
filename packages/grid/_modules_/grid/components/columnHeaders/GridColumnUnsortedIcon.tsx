@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useGridApiContext } from '../../hooks/root/useGridApiContext';
-import {GridRootPropsContext} from "../../context/GridRootPropsContext";
+import { GridRootPropsContext } from '../../context/GridRootPropsContext';
 
 export const GridColumnUnsortedIcon = React.memo(function GridColumnHeaderSortIcon(props) {
   const apiRef = useGridApiContext();

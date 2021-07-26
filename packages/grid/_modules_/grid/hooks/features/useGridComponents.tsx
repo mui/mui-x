@@ -1,10 +1,10 @@
 import * as React from 'react';
-import MUICheckbox from "@material-ui/core/Checkbox";
+import MUICheckbox from '@material-ui/core/Checkbox';
 import { GridApiRef } from '../../models/api/gridApiRef';
 import { GridApiRefComponentsProperty } from '../../models/api/gridComponentsApi';
 import { GridSlotsComponent } from '../../models/gridSlotsComponent';
 import { GridSlotsComponentsProps } from '../../models/gridSlotsComponentsProps';
-import {GridIconSlotsComponent} from "../../models";
+import { GridIconSlotsComponent } from '../../models';
 import {
   GridArrowDownwardIcon,
   GridArrowUpwardIcon,
@@ -17,18 +17,22 @@ import {
   GridFilterListIcon,
   GridFilterPanel,
   GridFooter,
-  GridHeader, GridLoadingOverlay, GridNoRowsOverlay, GridPagination, GridPanel,
+  GridHeader,
+  GridLoadingOverlay,
+  GridNoRowsOverlay,
+  GridPagination,
+  GridPanel,
   GridPreferencesPanel,
   GridSaveAltIcon,
   GridSeparatorIcon,
   GridTableRowsIcon,
   GridTripleDotsVerticalIcon,
   GridViewHeadlineIcon,
-  GridViewStreamIcon
-} from "../../components";
-import {GridColumnUnsortedIcon} from "../../components/columnHeaders/GridColumnUnsortedIcon";
-import {ErrorOverlay} from "../../components/ErrorOverlay";
-import {GridNoResultsOverlay} from "../../components/GridNoResultsOverlay";
+  GridViewStreamIcon,
+} from '../../components';
+import { GridColumnUnsortedIcon } from '../../components/columnHeaders/GridColumnUnsortedIcon';
+import { ErrorOverlay } from '../../components/ErrorOverlay';
+import { GridNoResultsOverlay } from '../../components/GridNoResultsOverlay';
 
 const DEFAULT_GRID_SLOTS_ICONS: GridIconSlotsComponent = {
   BooleanCellTrueIcon: GridCheckIcon,
@@ -63,7 +67,6 @@ const DEFAULT_GRID_SLOTS_COMPONENTS: GridApiRefComponentsProperty = {
   Pagination: GridPagination,
   Panel: GridPanel,
 };
-
 
 export const useGridComponents = (
   apiRef: GridApiRef,

@@ -12,13 +12,13 @@ import { useGridApiContext } from '../../hooks/root/useGridApiContext';
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
 import { GridDensityOption } from '../../models/api/gridDensityApi';
 import { GridMenu } from '../menu/GridMenu';
-import {GridRootPropsContext} from "../../context/GridRootPropsContext";
+import { GridRootPropsContext } from '../../context/GridRootPropsContext';
 
 export const GridToolbarDensitySelector = React.forwardRef<HTMLButtonElement, ButtonProps>(
   function GridToolbarDensitySelector(props, ref) {
     const { onClick, ...other } = props;
     const apiRef = useGridApiContext();
-      const rootProps = React.useContext(GridRootPropsContext)!;
+    const rootProps = React.useContext(GridRootPropsContext)!;
     const densityValue = useGridSelector(apiRef, gridDensityValueSelector);
     const densityButtonId = useId();
     const densityMenuId = useId();

@@ -23,14 +23,14 @@ import {
   gridViewportSizesSelector,
   gridScrollBarSizeSelector,
 } from '../hooks/root/gridContainerSizesSelector';
-import {GridRootPropsContext} from "../context/GridRootPropsContext";
+import { GridRootPropsContext } from '../context/GridRootPropsContext';
 
 type ViewportType = React.ForwardRefExoticComponent<React.RefAttributes<HTMLDivElement>>;
 
 export const GridViewport: ViewportType = React.forwardRef<HTMLDivElement, {}>(
   function GridViewport(props, renderingZoneRef) {
     const apiRef = useGridApiContext();
-      const rootProps = React.useContext(GridRootPropsContext)!;
+    const rootProps = React.useContext(GridRootPropsContext)!;
     const options = useGridSelector(apiRef, optionsSelector);
     const containerSizes = useGridSelector(apiRef, gridContainerSizesSelector);
     const viewportSizes = useGridSelector(apiRef, gridViewportSizesSelector);
