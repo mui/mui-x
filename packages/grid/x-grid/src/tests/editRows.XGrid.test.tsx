@@ -656,6 +656,19 @@ describe('<XGrid /> - Edit Rows', () => {
     });
   });
 
+  it('should call onCellEditCommit with the correct params', () => {
+    const onCellEditCommit = spy();
+    render(<TestCase onCellEditCommit={onCellEditCommit} />);
+    const cell = getCell(1, 0);
+    cell.focus();
+    fireEvent.doubleClick(cell);
+    const input = cell.querySelector('input')!;
+    fireEvent.change(input, { target: { value: 'n' } });
+    fireEvent.keyDown(input, { key: 'Enter' });
+    expect(onCellEditCommit.callCount).to.equal(1);
+    expect(onCellEditCommit.lastCall.args[0]).to.deep.equal({ id: 1, field: 'brand', value: 'n' });
+  });
+
   describe('validation', () => {
     it('should not allow to save an invalid value with Enter', () => {
       render(<TestCase />);
