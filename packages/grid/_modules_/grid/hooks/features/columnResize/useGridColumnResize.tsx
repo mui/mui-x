@@ -87,7 +87,9 @@ export const useGridColumnResize = (
   const updateWidth = (newWidth: number) => {
     logger.debug(`Updating width to ${newWidth} for col ${colDefRef.current!.field}`);
 
+    colDefRef.current!.computedWidth = newWidth;
     colDefRef.current!.width = newWidth;
+    colDefRef.current!.flex = undefined;
 
     colElementRef.current!.style.width = `${newWidth}px`;
     colElementRef.current!.style.minWidth = `${newWidth}px`;
@@ -134,6 +136,7 @@ export const useGridColumnResize = (
       initialOffset.current +
       nativeEvent.clientX -
       colElementRef.current!.getBoundingClientRect().left;
+
     newWidth = Math.max(colDefRef.current?.minWidth!, newWidth);
 
     updateWidth(newWidth);
@@ -183,7 +186,7 @@ export const useGridColumnResize = (
       doc.body.style.cursor = 'col-resize';
 
       initialOffset.current =
-        (colDefRef.current!.width as number) -
+        colDefRef.current!.computedWidth -
         (event.clientX - colElementRef.current!.getBoundingClientRect().left);
 
       doc.addEventListener('mousemove', handleResizeMouseMove);
