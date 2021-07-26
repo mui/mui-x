@@ -140,15 +140,22 @@ describe('<DataGrid /> - Pagination', () => {
       expect(getColumnValues()).to.deep.equal(['0']);
     });
 
-    it('should go to last page when page is controlled and the current page is greater than the last page', async () => {
+    it('should go to last page when page is controlled and the current page is greater than the last page', () => {
+      const onPageChange = spy();
+
       const TestCasePaginationFilteredData = () => {
         const [page, setPage] = React.useState(1);
+
+        const handlePageChange = (newPage: number) => {
+          onPageChange(newPage);
+          setPage(newPage);
+        };
 
         return (
           <BaselineTestCase
             pagination
             page={page}
-            onPageChange={(newPage) => setPage(newPage)}
+            onPageChange={handlePageChange}
             pageSize={5}
             filterModel={{
               linkOperator: GridLinkOperator.And,
@@ -166,6 +173,8 @@ describe('<DataGrid /> - Pagination', () => {
       render(<TestCasePaginationFilteredData />);
 
       expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3']);
+      expect(onPageChange.lastCall.args[0]).to.equal(0);
+      expect(onPageChange.callCount).to.equal(1);
     });
   });
 
@@ -206,7 +215,7 @@ describe('<DataGrid /> - Pagination', () => {
 
     it('should apply the new pageSize when clicking on a page size option and onPageSizeChanged is not defined and pageSize is not controlled', () => {
       render(<BaselineTestCase rowsPerPageOptions={[1, 2, 3, 100]} />);
-      fireEvent.mouseDown(document.querySelector('.MuiSelect-selectMenu'));
+      fireEvent.mouseDown(screen.queryByLabelText('Rows per page:'));
       expect(screen.queryAllByRole('option').length).to.equal(4);
 
       fireEvent.click(screen.queryAllByRole('option')[1]);
@@ -222,7 +231,7 @@ describe('<DataGrid /> - Pagination', () => {
           rowsPerPageOptions={[1, 2, 3, 100]}
         />,
       );
-      fireEvent.mouseDown(document.querySelector('.MuiSelect-selectMenu'));
+      fireEvent.mouseDown(screen.queryByLabelText('Rows per page:'));
       expect(screen.queryAllByRole('option').length).to.equal(4);
 
       fireEvent.click(screen.queryAllByRole('option')[1]);
@@ -243,7 +252,7 @@ describe('<DataGrid /> - Pagination', () => {
         />,
       );
 
-      fireEvent.mouseDown(document.querySelector('.MuiSelect-selectMenu'));
+      fireEvent.mouseDown(screen.queryByLabelText('Rows per page:'));
       expect(screen.queryAllByRole('option').length).to.equal(3);
 
       fireEvent.click(screen.queryAllByRole('option')[1]);
@@ -254,7 +263,7 @@ describe('<DataGrid /> - Pagination', () => {
     it('should not change the pageSize state when clicking on a page size option when pageSize prop is provided', () => {
       render(<BaselineTestCase pageSize={1} page={0} rowsPerPageOptions={[1, 2, 3]} />);
 
-      fireEvent.mouseDown(document.querySelector('.MuiSelect-selectMenu'));
+      fireEvent.mouseDown(screen.queryByLabelText('Rows per page:'));
       expect(screen.queryAllByRole('option').length).to.equal(3);
 
       fireEvent.click(screen.queryAllByRole('option')[1]);
@@ -277,7 +286,7 @@ describe('<DataGrid /> - Pagination', () => {
 
       render(<ControlCase />);
 
-      fireEvent.mouseDown(document.querySelector('.MuiSelect-selectMenu'));
+      fireEvent.mouseDown(screen.queryByLabelText('Rows per page:'));
       expect(screen.queryAllByRole('option').length).to.equal(3);
 
       fireEvent.click(screen.queryAllByRole('option')[1]);
