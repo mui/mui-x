@@ -325,7 +325,7 @@ export function useGridEditRows(
     {
       setCellMode,
       getCellMode,
-      isCellEditable, // TODO don't expose, user already controls which cells are editable
+      isCellEditable,
       commitCellChange,
       setEditCellProps, // TODO don't expose, update the editRowsModel prop directly
       setEditRowsModel,
