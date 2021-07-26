@@ -28,9 +28,9 @@ const frFRGrid: Partial<GridLocaleText> = {
     count > 1 ? `${count} filtres actifs` : `${count} filtre actif`,
 
   // Export selector toolbar button text
-  // toolbarExport: 'Export',
-  // toolbarExportLabel: 'Export',
-  // toolbarExportCSV: 'Download as CSV',
+  toolbarExport: 'Exporter',
+  toolbarExportLabel: 'Exporter',
+  toolbarExportCSV: 'Télécharger en CSV',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'Chercher colonne',
@@ -60,8 +60,8 @@ const frFRGrid: Partial<GridLocaleText> = {
   filterOperatorAfter: 'postérieur',
   filterOperatorOnOrBefore: 'égal ou antérieur',
   filterOperatorBefore: 'antérieur',
-  // filterOperatorIsEmpty: 'is empty',
-  // filterOperatorIsNotEmpty: 'is not empty',
+  filterOperatorIsEmpty: 'est vide',
+  filterOperatorIsNotEmpty: "n'est pas vide",
 
   // Column menu text
   columnMenuLabel: 'Menu',

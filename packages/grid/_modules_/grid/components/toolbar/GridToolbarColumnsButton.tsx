@@ -8,18 +8,21 @@ import { useGridApiContext } from '../../hooks/root/useGridApiContext';
 
 export const GridToolbarColumnsButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
   function GridToolbarColumnsButton(props, ref) {
+    const { onClick, ...other } = props;
     const apiRef = useGridApiContext();
     const options = useGridSelector(apiRef, optionsSelector);
     const ColumnSelectorIcon = apiRef!.current.components.ColumnSelectorIcon!;
     const { open, openedPanelValue } = useGridSelector(apiRef, gridPreferencePanelStateSelector);
 
-    const showColumns = React.useCallback(() => {
+    const showColumns = (event) => {
       if (open && openedPanelValue === GridPreferencePanelsValue.columns) {
         apiRef!.current.hidePreferences();
       } else {
         apiRef!.current.showPreferences(GridPreferencePanelsValue.columns);
       }
-    }, [apiRef, open, openedPanelValue]);
+
+      onClick?.(event);
+    };
 
     // Disable the button if the corresponding is disabled
     if (options.disableColumnSelector) {
@@ -29,12 +32,12 @@ export const GridToolbarColumnsButton = React.forwardRef<HTMLButtonElement, Butt
     return (
       <Button
         ref={ref}
-        onClick={showColumns}
         size="small"
         color="primary"
         aria-label={apiRef!.current.getLocaleText('toolbarColumnsLabel')}
         startIcon={<ColumnSelectorIcon />}
-        {...props}
+        {...other}
+        onClick={showColumns}
       >
         {apiRef!.current.getLocaleText('toolbarColumns')}
       </Button>

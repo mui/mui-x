@@ -14,11 +14,6 @@ export const GRID_DEBOUNCED_RESIZE = 'debouncedResize';
 /**
  * @ignore - do not document.
  */
-export const GRID_SCROLL = 'scroll';
-
-/**
- * @ignore - do not document.
- */
 export const GRID_KEYDOWN = 'keydown';
 
 // GRID events
@@ -146,22 +141,16 @@ export const GRID_CELL_DRAG_OVER = 'cellDragOver';
 export const GRID_CELL_DRAG_END = 'cellDragEnd';
 
 /**
- * Fired when the props of the edit input changes. Called with a [[GridEditCellPropsParams]] object.
+ * Fired when the props of the edit cell changes. Called with a [[GridEditCellPropsParams]] object.
  * @event
  */
-export const GRID_CELL_EDIT_PROPS_CHANGE = 'cellEditPropsChange';
+export const GRID_EDIT_CELL_PROPS_CHANGE = 'editCellPropsChange';
 
 /**
  * Fired when the props of the edit input are committed. Called with a [[GridEditCellPropsParams]] object.
  * @event
  */
-export const GRID_CELL_EDIT_PROPS_CHANGE_COMMITTED = 'cellEditPropsChangeCommitted';
-
-/**
- * Fired when the value of a cell changes. Called with a [[GridEditCellValueParams]] object.
- * @event
- */
-export const GRID_CELL_VALUE_CHANGE = 'cellValueChange';
+export const GRID_CELL_EDIT_COMMIT = 'cellEditCommit';
 
 /**
  * Fired when the cell turns to edit mode. Called with a [[GridCellParams]] object.
@@ -223,7 +212,7 @@ export const GRID_ROW_LEAVE = 'rowLeave';
  * Fired when the row editing model changes. Called with a [[GridEditRowModelParams]] object.
  * @event
  */
-export const GRID_ROW_EDIT_MODEL_CHANGE = 'editRowModelChange';
+export const GRID_EDIT_ROWS_MODEL_CHANGE = 'editRowsModelChange';
 
 /**
  * Fired when a column header loses focus. Called with a [[GridColumnHeaderParams]] object.
@@ -421,7 +410,7 @@ export const GRID_ROWS_CLEAR = 'rowsClear';
 
 /**
  * Fired when the columns state is changed.
- * Called with an array of strings correspoding to the field names.
+ * Called with an array of strings corresponding to the field names.
  * @event
  */
 export const GRID_COLUMNS_CHANGE = 'columnsChange';
@@ -435,7 +424,7 @@ export const GRID_SORT_MODEL_CHANGE = 'sortModelChange';
 
 /**
  * Fired when the filter model changes.
- * Called with a [[GridFilterModelParams]] object.
+ * Called with a [[GridFilterModel]] object.
  * @event
  */
 export const GRID_FILTER_MODEL_CHANGE = 'filterModelChange';

@@ -1,6 +1,6 @@
 {
   "name": "@material-ui/data-grid",
-  "version": "4.0.0-alpha.33",
+  "version": "4.0.0-alpha.34",
   "description": "The community edition of the data grid component (Material-UI X).",
   "author": "Material-UI Team",
   "main": "dist/index-cjs.js",
@@ -10,6 +10,10 @@
     "dist/*"
   ],
   "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mui-org/material-ui-x/issues"
+  },
+  "homepage": "https://material-ui.com/components/data-grid/",
   "sideEffects": false,
   "publishConfig": {
     "access": "public"
@@ -28,6 +32,11 @@
   "scripts": {
     "typescript": "tsc -p tsconfig.json",
     "build": "cd ../ && rollup --config rollup.data-grid.config.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mui-org/material-ui-x.git",
+    "directory": "packages/grid/data-grid"
   },
   "dependencies": {
     "@material-ui/utils": "^5.0.0-alpha.14",

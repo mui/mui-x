@@ -24,6 +24,25 @@ import {
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
+function createDragOverEvent(target: ChildNode) {
+  const dragOverEvent = createEvent.dragOver(target);
+  // Safari 13 doesn't have DragEvent.
+  // RTL fallbacks to Event which doesn't allow to set these fields during initialization.
+  Object.defineProperty(dragOverEvent, 'clientX', { value: 1 });
+  Object.defineProperty(dragOverEvent, 'clientY', { value: 1 });
+
+  return dragOverEvent;
+}
+
+function createDragEndEvent(target: ChildNode, isOutsideTheGrid: boolean = false) {
+  const dragEndEvent = createEvent.dragEnd(target);
+  Object.defineProperty(dragEndEvent, 'dataTransfer', {
+    value: { dropEffect: isOutsideTheGrid ? 'none' : 'copy' },
+  });
+
+  return dragEndEvent;
+}
+
 describe('<XGrid /> - Reorder', () => {
   // TODO v5: replace with createClientRender
   const render = createClientRenderStrictMode();
@@ -79,7 +98,7 @@ describe('<XGrid /> - Reorder', () => {
 
       return (
         <div style={{ width: 300, height: 300 }}>
-          <XGrid apiRef={apiRef} rows={rows} columns={columns} onPageChange={() => {}} />
+          <XGrid apiRef={apiRef} rows={rows} columns={columns} />
         </div>
       );
     };
@@ -102,28 +121,23 @@ describe('<XGrid /> - Reorder', () => {
 
       return (
         <div style={{ width: 300, height: 300 }}>
-          <XGrid apiRef={apiRef} rows={rows} columns={columns} onPageChange={() => {}} />
+          <XGrid apiRef={apiRef} rows={rows} columns={columns} />
         </div>
       );
     };
 
     render(<Test />);
     expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
-    const dragCol = getColumnHeaderCell(0).firstChild;
+    const dragCol = getColumnHeaderCell(0).firstChild!;
+    const targetCell = getCell(0, 2)!;
 
-    const targetCell = getCell(0, 2);
     fireEvent.dragStart(dragCol);
     fireEvent.dragEnter(targetCell);
-    const dragOverEvent = createEvent.dragOver(targetCell);
-    // Safari 13 doesn't have DragEvent.
-    // RTL fallbacks to Event which doesn't allow to set these fields during initialization.
-    Object.defineProperty(dragOverEvent, 'clientX', { value: 1 });
-    Object.defineProperty(dragOverEvent, 'clientY', { value: 1 });
+    const dragOverEvent = createDragOverEvent(targetCell);
     fireEvent(targetCell, dragOverEvent);
     expect(getColumnHeadersTextContent()).to.deep.equal(['desc', 'type', 'brand']);
 
-    const dragEndEvent = createEvent.dragEnd(dragCol);
-    Object.defineProperty(dragEndEvent, 'dataTransfer', { value: { dropEffect: 'copy' } });
+    const dragEndEvent = createDragEndEvent(dragCol);
     fireEvent(dragCol, dragEndEvent);
     expect(getColumnHeadersTextContent()).to.deep.equal(['desc', 'type', 'brand']);
   });
@@ -138,28 +152,23 @@ describe('<XGrid /> - Reorder', () => {
 
       return (
         <div style={{ width: 300, height: 300 }}>
-          <XGrid apiRef={apiRef} rows={rows} columns={columns} onPageChange={() => {}} />
+          <XGrid apiRef={apiRef} rows={rows} columns={columns} />
         </div>
       );
     };
 
     render(<Test />);
     expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
-    const dragCol = getColumnHeaderCell(0).firstChild;
+    const dragCol = getColumnHeaderCell(0).firstChild!;
+    const targetCell = getCell(0, 2);
 
     fireEvent.dragStart(dragCol);
-    const targetCell = getCell(0, 2);
     fireEvent.dragEnter(targetCell);
-    const dragOverEvent = createEvent.dragOver(targetCell);
-    // Safari 13 doesn't have DragEvent.
-    // RTL fallbacks to Event which doesn't allow to set these fields during initialization.
-    Object.defineProperty(dragOverEvent, 'clientX', { value: 1 });
-    Object.defineProperty(dragOverEvent, 'clientY', { value: 1 });
+    const dragOverEvent = createDragOverEvent(targetCell);
     fireEvent(targetCell, dragOverEvent);
     expect(getColumnHeadersTextContent()).to.deep.equal(['desc', 'type', 'brand']);
 
-    const dragEndEvent = createEvent.dragEnd(dragCol);
-    Object.defineProperty(dragEndEvent, 'dataTransfer', { value: { dropEffect: 'none' } });
+    const dragEndEvent = createDragEndEvent(dragCol, true);
     fireEvent(dragCol, dragEndEvent);
     expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
   });
@@ -174,13 +183,7 @@ describe('<XGrid /> - Reorder', () => {
 
       return (
         <div style={{ width: 300, height: 300 }}>
-          <XGrid
-            apiRef={apiRef}
-            rows={rows}
-            columns={columns}
-            onPageChange={() => {}}
-            disableColumnReorder
-          />
+          <XGrid apiRef={apiRef} rows={rows} columns={columns} disableColumnReorder />
         </div>
       );
     };
@@ -205,23 +208,159 @@ describe('<XGrid /> - Reorder', () => {
 
       return (
         <div style={{ width: 300, height: 300 }}>
-          <XGrid
-            apiRef={apiRef}
-            rows={rows}
-            columns={columns}
-            onPageChange={() => {}}
-            disableColumnReorder
-          />
+          <XGrid apiRef={apiRef} rows={rows} columns={columns} disableColumnReorder />
         </div>
       );
     };
 
     render(<Test />);
     expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
-    const dragCol = getColumnHeaderCell(2).firstChild;
-    const dragEndEvent = createEvent.dragEnd(dragCol);
-    Object.defineProperty(dragEndEvent, 'dataTransfer', { value: { dropEffect: 'none' } });
+    const dragCol = getColumnHeaderCell(2).firstChild!;
+    const dragEndEvent = createDragEndEvent(dragCol, true);
     fireEvent(dragCol, dragEndEvent);
     expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
+  });
+
+  describe('column disableReorder', () => {
+    it('should not allow to start dragging a column with disableReorder=true', () => {
+      let apiRef: GridApiRef;
+      const rows = [{ id: 0, brand: 'Nike' }];
+      const columns = [
+        { field: 'brand' },
+        { field: 'desc', disableReorder: true },
+        { field: 'type' },
+      ];
+
+      const Test = () => {
+        apiRef = useGridApiRef();
+
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <XGrid apiRef={apiRef} rows={rows} columns={columns} />
+          </div>
+        );
+      };
+
+      render(<Test />);
+      expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
+      const dragCol = getColumnHeaderCell(1).firstChild! as HTMLElement;
+      const targetCol = getColumnHeaderCell(0).firstChild!;
+
+      fireEvent.dragStart(dragCol);
+
+      expect(dragCol).to.have.attribute('draggable', 'false');
+      expect(dragCol).not.to.have.class(GRID_COLUMN_HEADER_DRAGGING_CSS_CLASS);
+
+      fireEvent.dragEnter(targetCol);
+      const dragOverEvent = createDragOverEvent(targetCol);
+      fireEvent(targetCol, dragOverEvent);
+      expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
+
+      const dragEndEvent = createDragEndEvent(dragCol);
+      fireEvent(dragCol, dragEndEvent);
+      expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
+    });
+
+    it('should not allow to drag left of first visible column if it has disableReorder=true', () => {
+      let apiRef: GridApiRef;
+      const rows = [{ id: 0, brand: 'Nike' }];
+      const columns = [
+        { field: 'brand', disableReorder: true },
+        { field: 'desc' },
+        { field: 'type' },
+      ];
+
+      const Test = () => {
+        apiRef = useGridApiRef();
+
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <XGrid apiRef={apiRef} rows={rows} columns={columns} />
+          </div>
+        );
+      };
+
+      render(<Test />);
+      expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
+      const dragCol = getColumnHeaderCell(1).firstChild!;
+      const targetCol = getColumnHeaderCell(0).firstChild!;
+
+      fireEvent.dragStart(dragCol);
+      fireEvent.dragEnter(targetCol);
+      const dragOverEvent = createDragOverEvent(targetCol);
+      fireEvent(targetCol, dragOverEvent);
+      expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
+
+      const dragEndEvent = createDragEndEvent(dragCol);
+      fireEvent(dragCol, dragEndEvent);
+      expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
+    });
+
+    it('should not allow to drag right of last visible column if it has disableReorder=true', () => {
+      let apiRef: GridApiRef;
+      const rows = [{ id: 0, brand: 'Nike' }];
+      const columns = [
+        { field: 'brand' },
+        { field: 'desc' },
+        { field: 'type', disableReorder: true },
+      ];
+
+      const Test = () => {
+        apiRef = useGridApiRef();
+
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <XGrid apiRef={apiRef} rows={rows} columns={columns} />
+          </div>
+        );
+      };
+
+      render(<Test />);
+      expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
+      const dragCol = getColumnHeaderCell(1).firstChild!;
+      const targetCol = getColumnHeaderCell(2).firstChild!;
+
+      fireEvent.dragStart(dragCol);
+      fireEvent.dragEnter(targetCol);
+      const dragOverEvent = createDragOverEvent(targetCol);
+      fireEvent(targetCol, dragOverEvent);
+      expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
+
+      const dragEndEvent = createDragEndEvent(dragCol);
+      fireEvent(dragCol, dragEndEvent);
+      expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
+    });
+
+    it('should allow to drag right of a column with disableReorder=true if it is not the last visible one', () => {
+      const rows = [{ id: 0, brand: 'Nike' }];
+      const columns = [
+        { field: 'brand' },
+        { field: 'desc', disableReorder: true },
+        { field: 'type' },
+      ];
+
+      const Test = () => {
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <XGrid rows={rows} columns={columns} />
+          </div>
+        );
+      };
+
+      render(<Test />);
+      expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
+      const dragCol = getColumnHeaderCell(0).firstChild!;
+      const targetCol = getColumnHeaderCell(2).firstChild!;
+
+      fireEvent.dragStart(dragCol);
+      fireEvent.dragEnter(targetCol);
+      const dragOverEvent2 = createDragOverEvent(targetCol);
+      fireEvent(targetCol, dragOverEvent2);
+      expect(getColumnHeadersTextContent()).to.deep.equal(['desc', 'type', 'brand']);
+
+      const dragEndEvent = createDragEndEvent(dragCol);
+      fireEvent(dragCol, dragEndEvent);
+      expect(getColumnHeadersTextContent()).to.deep.equal(['desc', 'type', 'brand']);
+    });
   });
 });

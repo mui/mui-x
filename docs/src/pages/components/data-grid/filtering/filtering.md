@@ -90,7 +90,7 @@ This object has to be added to the `filterOperators` attribute of the `GridColDe
 The most important part of an operator is the `getApplyFilterFn` function.
 It's called with the `GridFilterItem` object and the `GridColDef` object.
 This function must return another function that is called on every value of the column.
-The returned function determines if the cell value satifies the condition of the operator.
+The returned function determines if the cell value satisfies the condition of the operator.
 
 ```ts
 {
@@ -158,18 +158,20 @@ const filterModel: GridFilterModel = {
 
 {{"demo": "pages/components/data-grid/filtering/MultiFilteringWithOrGrid.js", "bg": "inline", "disableAd": true}}
 
-## apiRef [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-pro/)
+## Quick filter
 
-{{"demo": "pages/components/data-grid/filtering/FilterApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
+The grid does not natively include quick filtering.
+However, it can be implemented as in the demo below.
 
-## 🚧 Quick filter
+{{"demo": "pages/components/data-grid/filtering/QuickFilteringGrid.js", "bg": "inline", "defaultCodeOpen": false}}
 
-> ⚠️ This feature isn't implemented yet. It's coming.
+> ⚠️ This feature isn't natively implemented in the grid package. It's coming.
 >
 > 👍 Upvote [issue #202](https://github.com/mui-org/material-ui-x/issues/202) if you want to see it land faster.
 
-In addition to the column specific filtering, a global quick filtering will also be available.
-The provided search text will match against all the cells.
+## apiRef [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-pro/)
+
+{{"demo": "pages/components/data-grid/filtering/FilterApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
 
 ## API
 

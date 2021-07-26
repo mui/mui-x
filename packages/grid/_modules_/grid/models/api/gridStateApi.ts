@@ -7,11 +7,11 @@ export interface GridStateApi {
    */
   state: GridState;
   /**
-   * Returns the whole state of the grid. If `stateId` is present, only the referred part is returned.
+   * Returns the state of the grid.
    * @param {string} stateId The part of the state to be returned.
-   * @returns {any} The whole state or part of it.
+   * @returns {any} The state of the grid.
    */
-  getState: <T = GridState>(stateId?: string) => T;
+  getState: () => GridState;
   /**
    * Sets the whole state of the grid.
    * @param {function} state The new state or a function to return the new state.

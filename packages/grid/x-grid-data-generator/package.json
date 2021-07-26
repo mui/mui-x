@@ -1,6 +1,6 @@
 {
   "name": "@material-ui/x-grid-data-generator",
-  "version": "4.0.0-alpha.33",
+  "version": "4.0.0-alpha.34",
   "description": "Generate fake data for demo purposes only.",
   "author": "Material-UI Team",
   "main": "dist/cjs/index.js",
@@ -10,6 +10,10 @@
     "dist/*"
   ],
   "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mui-org/material-ui-x/issues"
+  },
+  "homepage": "https://material-ui.com/components/data-grid/",
   "sideEffects": false,
   "publishConfig": {
     "access": "public"
@@ -20,6 +24,11 @@
   "scripts": {
     "typescript": "tsc -p tsconfig.json",
     "build": "cd ../ && rollup --config rollup.x-grid-data-generator.config.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mui-org/material-ui-x.git",
+    "directory": "packages/grid/x-grid-data-generator"
   },
   "dependencies": {
     "@types/chance": "^1.1.0",
@@ -33,8 +42,8 @@
   },
   "peerDependencies": {
     "@material-ui/core": "^4.11.2 || ^5.0.0-beta.0",
-    "@material-ui/lab": "^4.0.0-alpha.58 || ^5.0.0-alpha.39",
     "@material-ui/icons": "^4.11.2 || ^5.0.0-beta.0",
+    "@material-ui/lab": "^4.0.0-alpha.58 || ^5.0.0-alpha.39",
     "react": "^17.0.0"
   },
   "setupFiles": [

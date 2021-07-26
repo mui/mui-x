@@ -34,8 +34,9 @@ import {
 } from './gridColumnsSelector';
 import { useGridApiOptionHandler } from '../../root/useGridApiEventHandler';
 import { GRID_STRING_COL_DEF } from '../../../models/colDef/gridStringColDef';
+import { GridComponentProps } from '../../../GridComponentProps';
 
-function updateColumnsWidth(columns: GridColumns, viewportWidth: number) {
+function updateColumnsWidth(columns: GridColumns, viewportWidth: number): GridColumns {
   const numberOfFluidColumns = columns.filter((column) => !!column.flex && !column.hide).length;
   let flexDivider = 0;
 
@@ -43,7 +44,7 @@ function updateColumnsWidth(columns: GridColumns, viewportWidth: number) {
     columns.forEach((column) => {
       if (!column.hide) {
         if (!column.flex) {
-          viewportWidth -= column.width!;
+          viewportWidth -= Math.max(column.minWidth!, column.width!);
         } else {
           flexDivider += column.flex;
         }
@@ -56,15 +57,33 @@ function updateColumnsWidth(columns: GridColumns, viewportWidth: number) {
     const flexMultiplier = viewportWidth / flexDivider;
     newColumns = columns.map((column) => {
       if (!column.flex) {
-        return column;
+        return {
+          ...column,
+          width: Math.max(column.minWidth!, column.width!),
+        };
       }
+
+      let newWidth = column.minWidth! ?? GRID_STRING_COL_DEF.width;
+      if (viewportWidth > 0) {
+        const flexColumnWidth = Math.floor(flexMultiplier * column.flex!);
+        newWidth =
+          column.minWidth && column.minWidth > flexColumnWidth ? column.minWidth : flexColumnWidth;
+      }
+
       return {
         ...column,
-        width:
-          viewportWidth > 0 ? Math.floor(flexMultiplier * column.flex!) : GRID_STRING_COL_DEF.width,
+        width: newWidth,
+      };
+    });
+  } else {
+    newColumns = columns.map((column) => {
+      return {
+        ...column,
+        width: Math.max(column.minWidth!, column.width!),
       };
     });
   }
+
   return newColumns;
 }
 
@@ -97,10 +116,13 @@ function toLookup(logger: Logger, allColumns: GridColumns) {
 }
 
 const upsertColumnsState = (
-  state: GridInternalColumns,
   columnUpdates: GridColDef[],
-): GridInternalColumns => {
-  const newState = { all: [...state.all], lookup: { ...state.lookup } };
+  prevColumnsState?: GridInternalColumns,
+) => {
+  const newState: GridInternalColumns = {
+    all: [...(prevColumnsState?.all ?? [])],
+    lookup: { ...(prevColumnsState?.lookup ?? {}) },
+  };
 
   columnUpdates.forEach((newColumn) => {
     if (newState.lookup[newColumn.field] == null) {
@@ -111,10 +133,14 @@ const upsertColumnsState = (
       newState.lookup[newColumn.field] = { ...newState.lookup[newColumn.field], ...newColumn };
     }
   });
+
   return newState;
 };
 
-export function useGridColumns(apiRef: GridApiRef, { columns }: { columns: GridColumns }): void {
+export function useGridColumns(
+  apiRef: GridApiRef,
+  props: Pick<GridComponentProps, 'columns' | 'onColumnVisibilityChange'>,
+): void {
   const logger = useLogger('useGridColumns');
   const [gridState, setGridState, forceUpdate] = useGridState(apiRef);
   const columnsMeta = useGridSelector(apiRef, gridColumnsMetaSelector);
@@ -125,6 +151,7 @@ export function useGridColumns(apiRef: GridApiRef, { columns }: { columns: GridC
   const updateState = React.useCallback(
     (newState: GridInternalColumns, emit = true) => {
       logger.debug('Updating columns state.');
+
       setGridState((oldState) => ({ ...oldState, columns: newState }));
       forceUpdate();
 
@@ -144,8 +171,8 @@ export function useGridColumns(apiRef: GridApiRef, { columns }: { columns: GridC
   const getVisibleColumns = React.useCallback(() => visibleColumns, [visibleColumns]);
   const getColumnsMeta: () => GridColumnsMeta = React.useCallback(() => columnsMeta, [columnsMeta]);
 
-  const getColumnIndex: (field: string, useVisibleColumns?: boolean) => number = React.useCallback(
-    (field, useVisibleColumns = true) =>
+  const getColumnIndex = React.useCallback(
+    (field: string, useVisibleColumns: boolean = true): number =>
       useVisibleColumns
         ? visibleColumns.findIndex((col) => col.field === field)
         : allColumns.findIndex((col) => col.field === field),
@@ -160,13 +187,32 @@ export function useGridColumns(apiRef: GridApiRef, { columns }: { columns: GridC
     [columnsMeta.positions, getColumnIndex],
   );
 
+  const setColumnsState = React.useCallback(
+    (newState: GridInternalColumns, emit?: boolean) => {
+      logger.debug('updating GridColumns with new state');
+
+      // Avoid dependency on gridState to avoid infinite loop
+      const refGridState = apiRef.current.getState();
+      const newColumns: GridColumns = newState.all.map((field) => newState.lookup[field]);
+      const updatedCols = updateColumnsWidth(newColumns, refGridState.viewportSizes.width);
+
+      const finalState: GridInternalColumns = {
+        all: updatedCols.map((col) => col.field),
+        lookup: toLookup(logger, updatedCols),
+      };
+
+      updateState(finalState, emit);
+    },
+    [apiRef, logger, updateState],
+  );
+
   const updateColumns = React.useCallback(
     (cols: GridColDef[]) => {
-      logger.debug('updating GridColumns with new state');
-      const newState = upsertColumnsState(gridState.columns, cols);
-      updateState(newState, false);
+      // Avoid dependency on gridState to avoid infinite loop
+      const newState = upsertColumnsState(cols, apiRef.current.getState().columns);
+      setColumnsState(newState, false);
     },
-    [logger, gridState.columns, updateState],
+    [apiRef, setColumnsState],
   );
 
   const updateColumn = React.useCallback(
@@ -252,30 +298,31 @@ export function useGridColumns(apiRef: GridApiRef, { columns }: { columns: GridC
   useGridApiMethod(apiRef, colApi, 'ColApi');
 
   React.useEffect(() => {
-    logger.info(`GridColumns have changed, new length ${columns.length}`);
+    logger.info(`GridColumns have changed, new length ${props.columns.length}`);
 
-    if (columns.length > 0) {
+    if (props.columns.length > 0) {
       const hydratedColumns = hydrateColumns(
-        columns,
+        props.columns,
         options.columnTypes,
         !!options.checkboxSelection,
         logger,
         apiRef.current.getLocaleText,
       );
 
-      const updatedCols = updateColumnsWidth(
-        hydratedColumns,
-        apiRef.current.getState().viewportSizes.width,
-      );
-
-      updateState({
-        all: updatedCols.map((col) => col.field),
-        lookup: toLookup(logger, updatedCols),
-      });
+      const newState = upsertColumnsState(hydratedColumns);
+      setColumnsState(newState);
     } else {
       updateState(getInitialGridColumnsState());
     }
-  }, [logger, apiRef, columns, options.columnTypes, options.checkboxSelection, updateState]);
+  }, [
+    logger,
+    apiRef,
+    props.columns,
+    options.columnTypes,
+    options.checkboxSelection,
+    updateState,
+    setColumnsState,
+  ]);
 
   React.useEffect(() => {
     logger.debug(
@@ -284,10 +331,9 @@ export function useGridColumns(apiRef: GridApiRef, { columns }: { columns: GridC
     // Avoid dependency on gridState as I only want to update cols when viewport size changed.
     const currentColumns = allGridColumnsSelector(apiRef.current.getState());
 
-    const updatedCols = updateColumnsWidth(currentColumns, gridState.viewportSizes.width);
-    apiRef.current.updateColumns(updatedCols);
+    apiRef.current.updateColumns(currentColumns);
   }, [apiRef, gridState.viewportSizes.width, logger]);
 
   // Grid Option Handlers
-  useGridApiOptionHandler(apiRef, GRID_COLUMN_VISIBILITY_CHANGE, options.onColumnVisibilityChange);
+  useGridApiOptionHandler(apiRef, GRID_COLUMN_VISIBILITY_CHANGE, props.onColumnVisibilityChange);
 }

@@ -11,17 +11,14 @@ import { GridRowId } from './gridRows';
 import { Logger } from './logger';
 import { GridCellParams } from './params/gridCellParams';
 import { GridColumnHeaderParams } from './params/gridColumnHeaderParams';
-import { GridFilterModelParams } from './params/gridFilterModelParams';
 import { GridPageChangeParams } from './params/gridPageChangeParams';
 import { GridRowParams } from './params/gridRowParams';
-import { GridSortModelParams } from './params/gridSortModelParams';
 import { GridSelectionModel } from './gridSelectionModel';
 import { GridSortDirection, GridSortModel } from './gridSortModel';
 import {
   GridCellModeChangeParams,
   GridEditCellPropsParams,
   GridEditCellValueParams,
-  GridEditRowModelParams,
 } from './params/gridEditCellParams';
 import { GridRowScrollEndParams } from './params/gridRowScrollEndParams';
 import { GridColumnOrderChangeParams } from './params/gridColumnOrderChangeParams';
@@ -133,19 +130,18 @@ export interface GridOptions {
    */
   disableSelectionOnClick?: boolean;
   /**
-   * Edit cell or rows can be processed on the server or client-side.
-   * Set it to 'client' if you would like to handle editing on the client-side.
-   * Set it to 'server' if you would like to handle editing on the server-side.
-   */
-  editMode?: GridFeatureMode;
-  /**
    * Set the edit rows model of the grid.
    */
   editRowsModel?: GridEditRowsModel;
   /**
+   * Callback fired when the EditRowModel changes.
+   * @param {GridEditRowsModel} editRowsModel With all properties from [[GridEditRowsModel]].
+   */
+  onEditRowsModelChange?: (editRowsModel: GridEditRowsModel) => void;
+  /**
    * Filtering can be processed on the server or client-side.
-   * Set it to 'client' if you would like to handle filtering on the client-side.
    * Set it to 'server' if you would like to handle filtering on the server-side.
+   * @default "client"
    */
   filterMode?: GridFeatureMode;
   /**
@@ -208,25 +204,18 @@ export interface GridOptions {
    * @default debug
    */
   logLevel?: string | false;
-
   /**
-   * Callback fired when the edit cell value changed.
-   * @param handler
+   * Callback fired when the edit cell value changes.
+   * @param {GridEditCellPropsParams} params With all properties from [[GridEditCellPropsParams]].
+   * @param {React.SyntheticEvent} event The event that caused this prop to be called.
    */
-  onEditCellChange?: (params: GridEditCellPropsParams, event?: React.SyntheticEvent) => void;
+  onEditCellPropsChange?: (params: GridEditCellPropsParams, event?: React.SyntheticEvent) => void;
   /**
    * Callback fired when the cell changes are committed.
-   * @param handler
+   * @param {GridEditCellPropsParams} params With all properties from [[GridEditCellPropsParams]].
+   * @param {React.SyntheticEvent} event The event that caused this prop to be called.
    */
-  onEditCellChangeCommitted?: (
-    params: GridEditCellPropsParams,
-    event?: React.SyntheticEvent,
-  ) => void;
-  /**
-   * Callback fired when the EditRowModel changed.
-   * @param handler
-   */
-  onEditRowModelChange?: (params: GridEditRowModelParams) => void;
+  onCellEditCommit?: (params: GridEditCellPropsParams, event?: React.SyntheticEvent) => void;
   /**
    * Callback fired when an exception is thrown in the grid, or when the `showError` API method is called.
    */
@@ -353,9 +342,9 @@ export interface GridOptions {
   onColumnVisibilityChange?: (param: GridColumnVisibilityChangeParams) => void;
   /**
    * Callback fired when the Filter model changes before the filters are applied.
-   * @param param With all properties from [[GridFilterModelParams]].
+   * @param model With all properties from [[GridFilterModel]].
    */
-  onFilterModelChange?: (params: GridFilterModelParams) => void;
+  onFilterModelChange?: (model: GridFilterModel) => void;
   /**
    * Callback fired when the current page has changed.
    * @param param With all properties from [[GridPageChangeParams]].
@@ -419,9 +408,9 @@ export interface GridOptions {
   onSelectionModelChange?: (selectionModel: GridRowId[]) => void;
   /**
    * Callback fired when the sort model changes before a column is sorted.
-   * @param param With all properties from [[GridSortModelParams]].
+   * @param param With all properties from [[GridSortModel]].
    */
-  onSortModelChange?: (params: GridSortModelParams) => void;
+  onSortModelChange?: (model: GridSortModel) => void;
   /**
    * Callback fired when the state of the grid is updated.
    */

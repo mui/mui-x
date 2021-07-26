@@ -130,7 +130,7 @@ export const useGridContainerProps = (apiRef: GridApiRef) => {
 
       const requiredSize = rowsCount * rowHeight;
       const diff = requiredSize - windowSizesRef.current.height;
-      // we activate virtualisation when we have more than 2 rows outside the viewport
+      // we activate virtualization when we have more than 2 rows outside the viewport
       const isVirtualized = diff > rowHeight * 2;
 
       if (options.autoPageSize || options.autoHeight || !isVirtualized) {

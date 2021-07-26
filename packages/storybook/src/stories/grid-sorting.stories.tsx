@@ -5,9 +5,9 @@ import {
   GridColDef,
   XGrid,
   GridRowsProp,
-  GridSortModelParams,
   GridSortModel,
   useGridApiRef,
+  getInitialGridSortingState,
 } from '@material-ui/x-grid';
 import { action } from '@storybook/addon-actions';
 
@@ -426,21 +426,25 @@ export const SortedEventsOptions = () => {
   );
 };
 
-function sortServerRows(rows: Readonly<any[]>, params: GridSortModelParams): Promise<any[]> {
+function sortServerRows(
+  rows: Readonly<any[]>,
+  sortModel: GridSortModel,
+  columns: GridColDef[],
+): Promise<any[]> {
   return new Promise<any[]>((resolve) => {
     setTimeout(() => {
-      if (params.sortModel.length === 0) {
+      if (sortModel.length === 0) {
         resolve(getRows());
         return;
       }
-      const sortedCol = params.sortModel[0];
-      const comparator = params.columns[0].sortComparator!;
+      const sortedCol = sortModel[0];
+      const comparator = columns.find((col) => col.field === sortedCol.field)!.sortComparator!;
       const clonedRows = [...rows];
       let sortedRows = clonedRows.sort((a, b) =>
         comparator(a[sortedCol.field], b[sortedCol.field], a, b),
       );
 
-      if (params.sortModel[0].sort === 'desc') {
+      if (sortModel[0].sort === 'desc') {
         sortedRows = sortedRows.reverse();
       }
 
@@ -450,28 +454,29 @@ function sortServerRows(rows: Readonly<any[]>, params: GridSortModelParams): Pro
 }
 
 export const ServerSideSorting = () => {
+  const apiRef = useGridApiRef();
   const [rows, setRows] = React.useState<GridRowsProp>(getRows());
+  const [sortModel, setSortModel] = React.useState<GridSortModel>([{ field: 'age', sort: 'desc' }]);
   const [columns] = React.useState<GridColDef[]>(getColumns());
   const [loading, setLoading] = React.useState<boolean>(false);
 
   const onSortModelChange = React.useCallback(
-    async (params: GridSortModelParams) => {
+    async (model: GridSortModel) => {
       setLoading(true);
-      action('onSortModelChange')(params);
+      action('onSortModelChange')(model);
 
-      const newRows = await sortServerRows(rows, params);
+      setSortModel(model);
+      const newRows = await sortServerRows(rows, model, apiRef.current.getVisibleColumns());
       setRows(newRows);
       setLoading(false);
     },
-    [rows],
+    [apiRef, rows],
   );
-
-  // We use `useMemo` here, to keep the same ref and not trigger another sort on the next rendering
-  const sortModel: GridSortModel = React.useMemo(() => [{ field: 'age', sort: 'desc' }], []);
 
   return (
     <div className="grid-container">
       <XGrid
+        apiRef={apiRef}
         rows={rows}
         columns={columns}
         onSortModelChange={onSortModelChange}
@@ -527,3 +532,97 @@ export const OriginalOrder = () => {
     </div>
   );
 };
+
+export function SimpleModelWithOnChangeControlSort() {
+  const [simpleColumns] = React.useState([
+    {
+      field: 'id',
+    },
+    { field: 'name' },
+  ]);
+  const [simpleRows] = React.useState([
+    {
+      id: '1',
+      name: 'Paris',
+    },
+    {
+      id: '2',
+      name: 'Nice',
+    },
+    {
+      id: '3',
+      name: 'London',
+    },
+  ]);
+
+  const [simpleSortModel, setSortModel] = React.useState<GridSortModel>(
+    getInitialGridSortingState().sortModel,
+  );
+  const handleSortChange = React.useCallback((model) => {
+    setSortModel(model);
+  }, []);
+
+  return (
+    <XGrid
+      rows={simpleRows}
+      columns={simpleColumns}
+      sortModel={simpleSortModel}
+      onSortModelChange={handleSortChange}
+    />
+  );
+}
+export function SimpleModelControlSort() {
+  const [simpleColumns] = React.useState([
+    {
+      field: 'id',
+    },
+    { field: 'name' },
+  ]);
+  const [simpleRows] = React.useState([
+    {
+      id: '1',
+      name: 'Paris',
+    },
+    {
+      id: '2',
+      name: 'Nice',
+    },
+    {
+      id: '3',
+      name: 'London',
+    },
+  ]);
+
+  const [simpleSortModel] = React.useState<GridSortModel>([{ field: 'name', sort: 'desc' }]);
+
+  return <XGrid rows={simpleRows} columns={simpleColumns} sortModel={simpleSortModel} />;
+}
+export function SimpleOnChangeControlSort() {
+  const [simpleColumns] = React.useState([
+    {
+      field: 'id',
+    },
+    { field: 'name' },
+  ]);
+  const [simpleRows] = React.useState([
+    {
+      id: '1',
+      name: 'Paris',
+    },
+    {
+      id: '2',
+      name: 'Nice',
+    },
+    {
+      id: '3',
+      name: 'London',
+    },
+  ]);
+
+  const handleSortChange = React.useCallback((model) => {
+    // eslint-disable-next-line no-console
+    console.log('Sort model changed to', model);
+  }, []);
+
+  return <XGrid rows={simpleRows} columns={simpleColumns} onSortModelChange={handleSortChange} />;
+}

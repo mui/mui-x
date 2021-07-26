@@ -177,7 +177,7 @@ export const useGridKeyboardNavigation = (apiRef: GridApiRef): void => {
 
         nextColumnHeaderIndexes = { colIndex: colIdx };
       } else if (isPageKeys(key)) {
-        // Handle only Page Down key, Page Up should keep the current possition
+        // Handle only Page Down key, Page Up should keep the current position
         if (key.indexOf('Down') > -1) {
           const field = apiRef.current.getVisibleColumns()[colIndex].field;
           const id = apiRef.current.getRowIdFromRowIndex(containerSizes!.viewportPageSize - 1);

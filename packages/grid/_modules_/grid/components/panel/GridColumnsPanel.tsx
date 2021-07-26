@@ -14,6 +14,7 @@ import { GridPanelContent } from './GridPanelContent';
 import { GridPanelFooter } from './GridPanelFooter';
 import { GridPanelHeader } from './GridPanelHeader';
 import { GridPanelWrapper } from './GridPanelWrapper';
+import { GRID_EXPERIMENTAL_ENABLED } from '../../constants';
 
 const useStyles = makeStyles(
   {
@@ -117,7 +118,7 @@ export function GridColumnsPanel() {
                 }
                 label={column.headerName || column.field}
               />
-              {!disableColumnReorder && (
+              {!disableColumnReorder && GRID_EXPERIMENTAL_ENABLED && (
                 <IconButton
                   draggable
                   className={classes.dragIcon}

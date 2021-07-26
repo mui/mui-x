@@ -150,7 +150,7 @@ DataGrid.propTypes = {
       return new Error(
         [
           `Material-UI: \`<DataGrid disableMultipleColumnsFiltering={false} />\` is not a valid prop.`,
-          'Only single column sorting is available in the MIT version.',
+          'Only single column filtering is available in the MIT version.',
           '',
           'You need to upgrade to the XGrid component to unlock this feature.',
         ].join('\n'),
@@ -177,6 +177,19 @@ DataGrid.propTypes = {
         [
           `Material-UI: \`<DataGrid disableMultipleSelection={false} />\` is not a valid prop.`,
           'Only single column selection is available in the MIT version.',
+          '',
+          'You need to upgrade to the XGrid component to unlock this feature.',
+        ].join('\n'),
+      );
+    }
+    return null;
+  }),
+  filterModel: chainPropTypes(PropTypes.any, (props: any) => {
+    if (props.filterModel != null && props.filterModel.items.length > 1) {
+      return new Error(
+        [
+          `Material-UI: \`<DataGrid filterModel={model} />\` is not a valid prop. \`model.items\` has more than 1 item.`,
+          'Only single filter is available in the MIT version.',
           '',
           'You need to upgrade to the XGrid component to unlock this feature.',
         ].join('\n'),

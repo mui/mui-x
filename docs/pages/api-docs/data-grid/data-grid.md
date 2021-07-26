@@ -27,6 +27,7 @@ import { DataGrid } from '@material-ui/data-grid';
 | <span class="prop-name">components</span> | <span class="prop-type">GridSlotsComponent</span> |   | Overrideable components. |
 | <span class="prop-name">componentsProps</span> | <span class="prop-type">GridSlotsComponentsProps</span> |   | Overrideable components props dynamically passed to the component at rendering. |
 | <span class="prop-name">density</span> | <span class="prop-type">Density</span> | standard | Sets the density of the grid. |
+| <span class="prop-name">disableColumnFilter</span> | <span class="prop-type">boolean</span> | false | If `true`, column filters are disabled. |
 | <span class="prop-name">disableColumnMenu</span> | <span class="prop-type">boolean</span> | false | If `true`, the column menu is disabled. |
 | <span class="prop-name">disableColumnSelector</span> | <span class="prop-type">boolean</span> | false | If `true`, the column selector is disabled. |
 | <span class="prop-name">disableDensitySelector</span> | <span class="prop-type">boolean</span> | false | If `true`, the density selector is disabled. |
@@ -34,6 +35,7 @@ import { DataGrid } from '@material-ui/data-grid';
 | <span class="prop-name">disableSelectionOnClick</span> | <span class="prop-type">boolean</span> | false | If `true`, the selection on click on a row or cell is disabled. |
 | <span class="prop-name">error</span> | <span class="prop-type">any</span> |   | An error that will turn the grid into its error state and display the error component. |
 | <span class="prop-name">editRowsModel</span> | <span class="prop-type">GridEditRowsModel</span> | undefined  | Set the edit rows model of the grid. |
+| <span class="prop-name">filterMode</span> | <span class="prop-type">GridFeatureMode</span> | 'client' | Filtering can be processed on the server or client-side. Set it to `server` if you would like to handle filtering on the server-side. |
 | <span class="prop-name">filterModel</span> | <span class="prop-type">GridFilterModel</span> |   | Set the filter model of the grid. |
 | <span class="prop-name">getCellClassName</span> | <span class="prop-type">(params: GridCellParams) => string</span> |   | Function that applies CSS classes dynamically on cells. |
 | <span class="prop-name">getRowClassName</span> | <span class="prop-type">(params: GridRowParams) => string</span> |   | Function that applies CSS classes dynamically on rows. |
@@ -44,15 +46,18 @@ import { DataGrid } from '@material-ui/data-grid';
 | <span class="prop-name">hideFooterRowCount</span> | <span class="prop-type">boolean</span> | false | If `true`, the row count in the footer is hidden. |
 | <span class="prop-name">hideFooterSelectedRowCount</span> | <span class="prop-type">boolean</span> | false | If `true`, the selected row count in the footer is hidden. |
 | <span class="prop-name">icons</span> | <span class="prop-type">IconsOptions</span> |   | Set of icons used in the grid. |
-| <span class="prop-name">isCellEditable</span> | <span class="prop-type">(params: GridCellParams) => boolean</span> |   | Callback fired when a cell is rendered, returns true if the cell is editable. |
+| <span class="prop-name">isCellEditable</span> | <span class="prop-type">(params: GridCellParams) => boolean</span> |   | Callback fired when a cell is rendered, returns `true` if the cell is editable. |
 | <span class="prop-name">isRowSelectable</span> | <span class="prop-type">(params: GridRowParams) => boolean</span> |   | Determines if a row can be selected. |
 | <span class="prop-name">loading</span> | <span class="prop-type">boolean</span> |  false | If `true`, a  loading overlay is displayed. |
 | <span class="prop-name">localeText</span> | <span class="prop-type">GridLocaleText</span> |   | Set of text labels used in the grid. You can find all the translation keys supported in [the source](https://github.com/mui-org/material-ui-x/blob/HEAD/packages/grid/_modules_/grid/constants/localeTextConstants.ts) in the GitHub repository. |
 | <span class="prop-name">logger</span> | <span class="prop-type">Logger</span> | null | Pass a custom logger in the components that implements the 'Logger' interface. |
-| <span class="prop-name">logLevel</span> | <span class="prop-type">string | false</span> | false | Allows to pass the logging level or false to turn off logging. |
+| <span class="prop-name">logLevel</span> | <span class="prop-type">string \| false</span> | false | Allows to pass the logging level or false to turn off logging. |
 | <span class="prop-name">nonce</span> | <span class="prop-type">string</span> |   | Nonce of the inline styles for [Content Security Policy](https://www.w3.org/TR/2016/REC-CSP2-20161215/#script-src-the-nonce-attribute). |
+| <span class="prop-name">onCellBlur</span> | <span class="prop-type">(params: GridCellParams, event: React.FocusEvent) => void</span> |   | Callback fired when the active element leaves a cell. |
 | <span class="prop-name">onCellClick</span> | <span class="prop-type">(params: GridCellParams, event: React.MouseEvent) => void</span> |   | Callback fired when a click event comes from a cell element. |
 | <span class="prop-name">onCellDoubleClick</span> | <span class="prop-type">(params: GridCellParams, event: React.MouseEvent) => void</span> |   | Callback fired when a double click event comes from a cell element. |
+| <span class="prop-name">onCellFocusOut</span> | <span class="prop-type">(params: GridCellParams, event?: MuiEvent<MouseEvent>) => void</span> |   | Callback fired when a cell loses focus. |
+| <span class="prop-name">onCellKeyDown</span> | <span class="prop-type">(params: GridCellParams, event: React.KeyboardEvent) => void</span> |   |  Callback fired when a keydown event comes from a cell element. |
 | <span class="prop-name">onCellOver</span> | <span class="prop-type">(params: GridCellParams, event: React.MouseEvent) => void</span> |   | Callback fired when a mouse over event comes from a cell element. |
 | <span class="prop-name">onCellOut</span> | <span class="prop-type">(params: GridCellParams, event: React.MouseEvent) => void</span> |   | Callback fired when a mouse out comes from a cell element. |
 | <span class="prop-name">onCellEnter</span> | <span class="prop-type">(params: GridCellParams, event: React.MouseEvent) => void</span> |   | Callback fired when a mouse enter event comes from a cell element. |
@@ -69,10 +74,10 @@ import { DataGrid } from '@material-ui/data-grid';
 | <span class="prop-name">onColumnWidthChange</span> | <span class="prop-type">(param: GridColumnResizeParams) => void</span> |   | Callback fired when the width of a column is changed. |
 | <span class="prop-name">onColumnVisibilityChange</span> | <span class="prop-type">(param: GridColumnVisibilityChangeParams) => void</span> |   | Callback fired when a column visibility changes. |
 | <span class="prop-name">onError</span> | <span class="prop-type">(args: any) => void</span> |   | Callback fired when an exception is thrown in the grid, or when the `showError` API method is called. |
-| <span class="prop-name">onEditCellChange</span> | <span class="prop-type">(params: GridEditCellParams) => void</span> |   |  Callback fired when the edit cell value changed. |
-| <span class="prop-name">onEditCellChangeCommitted</span> | <span class="prop-type">(params: GridEditCellParams) => void</span> |   | Callback fired when the cell changes are committed. |
+| <span class="prop-name">onEditCellPropsChange</span> | <span class="prop-type">(params: GridEditCellPropsParams, event: React.SyntheticEvent) => void</span> |   |  Callback fired when the edit cell value changes. |
+| <span class="prop-name">onCellEditCommit</span> | <span class="prop-type">(params: GridEditCellPropsParams, event: React.SyntheticEvent) => void</span> |   | Callback fired when the cell changes are going to be committed. |
 | <span class="prop-name">onEditRowModelChange</span> | <span class="prop-type">(params: GridEditRowModelParams) => void</span> |   |  Callback fired when the EditRowModel changed. |
-| <span class="prop-name">onFilterModelChange</span> | <span class="prop-type">(params: GridFilterModelParams) => void</span> |   | Callback fired when the Filter model changes before the filters are applied. |
+| <span class="prop-name">onFilterModelChange</span> | <span class="prop-type">(model: GridFilterModel) => void</span> |   | Callback fired when the Filter model changes before the filters are applied. |
 | <span class="prop-name">onPageChange</span> | <span class="prop-type">(param: GridPageChangeParams) => void</span> |   | Callback fired when the current page has changed. |
 | <span class="prop-name">onPageSizeChange</span> | <span class="prop-type">(param: GridPageChangeParams) => void</span> |   | Callback fired when the page size has changed. |
 | <span class="prop-name">onResize</span> | <span class="prop-type">(param: GridResizeParams) => void</span> |   | Callback fired when the grid is being resized. |
@@ -82,8 +87,8 @@ import { DataGrid } from '@material-ui/data-grid';
 | <span class="prop-name">onRowOut</span> | <span class="prop-type">(param: GridRowParams, event: React.MouseEvent) => void</span> |   | Callback fired when a mouse out comes from a row container element. |
 | <span class="prop-name">onRowEnter</span> | <span class="prop-type">(param: GridRowParams, event: React.MouseEvent) => void</span> |   | Callback fired when a mouse enter comes from a row container element. |
 | <span class="prop-name">onRowLeave</span> | <span class="prop-type">(param: GridRowParams, event: React.MouseEvent) => void</span> |   | Callback fired when a mouse leave event comes from a row container element. |
-| <span class="prop-name">onSelectionModelChange</span> | <span class="prop-type">(param: GridSelectionModelChangeParams) => void</span> |   | Callback fired when the selection state of one or multiple rows changes. |
-| <span class="prop-name">onSortModelChange</span> | <span class="prop-type">(param: GridSortModelParams) => void</span> |   | Callback fired when the sort model changes before a column is sorted. |
+| <span class="prop-name">onSelectionModelChange</span> | <span class="prop-type">(model: GridSelectionModel) => void</span> |   | Callback fired when the selection state of one or multiple rows changes. |
+| <span class="prop-name">onSortModelChange</span> | <span class="prop-type">(model: GridSortModel) => void</span> |   | Callback fired when the sort model changes before a column is sorted. |
 | <span class="prop-name">page</span> | <span class="prop-type">number</span> | 1   |  Set the current page. |
 | <span class="prop-name">pageSize</span> | <span class="prop-type">number</span> | 100 | Set the number of rows in one page. |
 | <span class="prop-name">paginationMode</span> | <span class="prop-type">GridFeatureMode</span> | 'client' | Pagination can be processed on the server or client-side. Set it to 'client' if you would like to handle the pagination on the client-side. Set it to 'server' if you would like to handle the pagination on the server-side. |
