@@ -30,10 +30,31 @@ function generateType(type, needsParenthesis = false) {
   }
   if (type.type === 'reflection') {
     if (type.declaration.signatures && type.declaration.signatures.length === 1) {
-      const signature = type.declaration.signatures[0];
+      const signature: TypeDoc.SignatureReflection = type.declaration.signatures[0];
+
       let text = needsParenthesis ? '(' : '';
+
+      // Handle function generic parameters
+      if (signature.typeParameters?.length) {
+        text += '<'
+        text += signature.typeParameters.map(generic => {
+          let genericLine = generic.name
+
+          if (generic.type) {
+            genericLine += ` extends ${generateType(generic.type)}`
+          }
+
+          if (generic.default) {
+            genericLine += ` = ${generateType(generic.default)}`
+          }
+
+          return genericLine
+        })
+        text += '>'
+      }
+
       text += '(';
-      text += signature.parameters
+      text += signature.parameters!
         .map((param) => {
           let paramText = param.flags.isRest ? `...${param.name}` : param.name;
           if (param.flags.isOptional) paramText += '?';
@@ -72,6 +93,10 @@ function generateType(type, needsParenthesis = false) {
   if (type.type === 'indexedAccess') {
     return `${generateType(type.objectType)}[${generateType(type.indexType)}]`;
   }
+  if (type.type === 'typeOperator') {
+    return `${type.operator} ${generateType(type.target)}`
+  }
+
   return '';
 }
 
