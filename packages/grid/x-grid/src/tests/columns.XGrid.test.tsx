@@ -321,7 +321,7 @@ describe('<XGrid /> - Columns', () => {
         expect(getColumnHeaderCell(1)).toHaveInlineStyle({ width: '150px' });
       });
 
-      it.only('should be able to resize a column with flex twice (separator resize)', () => {
+      it('should be able to resize a column with flex twice (separator resize)', () => {
         const twoColumns = [
           { field: 'id', flex: 1 },
           { field: 'brand', width: 100 },
