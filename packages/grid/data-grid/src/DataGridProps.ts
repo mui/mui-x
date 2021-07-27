@@ -19,14 +19,4 @@ export type DataGridProps = Omit<
   | 'onRowsScrollEnd'
   | 'pagination'
   | 'scrollEndThreshold'
-> & {
-  apiRef?: undefined;
-  checkboxSelectionVisibleOnly?: false;
-  disableColumnResize?: true;
-  disableColumnReorder?: true;
-  disableMultipleColumnsFiltering?: true;
-  disableMultipleColumnsSorting?: true;
-  disableMultipleSelection?: true;
-  onRowsScrollEnd?: undefined;
-  pagination?: true;
-};
+>;

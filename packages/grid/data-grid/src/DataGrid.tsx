@@ -3,6 +3,7 @@ import { DATAGRID_PROPTYPES } from './DataGridPropTypes';
 import {
   DEFAULT_GRID_OPTIONS,
   GridBody,
+  GridComponentProps,
   GridErrorHandler,
   GridFooterPlaceholder,
   GridHeaderPlaceholder,
@@ -21,12 +22,23 @@ const DataGridRaw = React.forwardRef<HTMLDivElement, DataGridProps>(function Dat
     throw new Error(`'props.pageSize' cannot exceed 100 in DataGrid.`);
   }
 
+  const props: GridComponentProps = {
+    ...inProps,
+    disableColumnResize: true,
+    disableColumnReorder: true,
+    disableMultipleColumnsFiltering: true,
+    disableMultipleColumnsSorting: true,
+    disableMultipleSelection: true,
+    pagination: true,
+    checkboxSelectionVisibleOnly: false,
+  };
+
   const apiRef = useGridApiRef();
 
-  useDataGridComponent(apiRef, inProps);
+  useDataGridComponent(apiRef, props);
 
   return (
-    <GridContextProvider apiRef={apiRef} props={inProps}>
+    <GridContextProvider apiRef={apiRef} props={props}>
       <GridRoot ref={ref}>
         <GridErrorHandler>
           <GridHeaderPlaceholder />
@@ -37,18 +49,10 @@ const DataGridRaw = React.forwardRef<HTMLDivElement, DataGridProps>(function Dat
     </GridContextProvider>
   );
 });
-DataGridRaw.defaultProps = {
-  ...DEFAULT_GRID_OPTIONS,
-  apiRef: undefined,
-  disableColumnResize: true,
-  disableColumnReorder: true,
-  disableMultipleColumnsFiltering: true,
-  disableMultipleColumnsSorting: true,
-  disableMultipleSelection: true,
-  pagination: true,
-  onRowsScrollEnd: undefined,
-  checkboxSelectionVisibleOnly: false,
-};
+
+export const DATA_GRID_DEFAULT_PROPS = DEFAULT_GRID_OPTIONS;
+
+DataGridRaw.defaultProps = DATA_GRID_DEFAULT_PROPS;
 
 export const DataGrid = React.memo(DataGridRaw);
 

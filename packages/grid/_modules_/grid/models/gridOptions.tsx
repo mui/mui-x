@@ -489,7 +489,7 @@ export interface GridOptions {
 /**
  * The default [[GridOptions]] object that will be used to merge with the 'options' passed in the react component prop.
  */
-export const DEFAULT_GRID_OPTIONS: GridOptions = {
+export const DEFAULT_GRID_OPTIONS = {
   columnBuffer: 2,
   columnTypes: getGridDefaultColumnTypes(),
   density: GridDensityTypes.Standard,
@@ -501,7 +501,7 @@ export const DEFAULT_GRID_OPTIONS: GridOptions = {
   rowsPerPageOptions: [25, 50, 100],
   scrollEndThreshold: 80,
   sortingMode: GridFeatureModeConstant.client,
-  sortingOrder: ['asc', 'desc', null],
+  sortingOrder: ['asc' as const, 'desc' as const, null],
   logger: console,
   logLevel: process.env.NODE_ENV === 'production' ? 'error' : 'warn',
 };

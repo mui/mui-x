@@ -6,8 +6,9 @@ function EnterpriseTest() {
   return (
     <div>
       <DataGrid rows={[]} columns={[]} />
+      {/* @ts-expect-error Object literal may only specify known properties, but 'pagination' does not exist in type  */}
       <DataGrid rows={[]} columns={[]} pagination />
-      {/* @ts-expect-error Type 'false' is not assignable to type 'true | undefined' */}
+      {/* @ts-expect-error Object literal may only specify known properties, but 'pagination' does not exist in type  */}
       <DataGrid pagination={false} />
       {/* @ts-expect-error Type 'GridApiRef' is not assignable to type 'undefined' */}
       <DataGrid apiRef={apiRef} />

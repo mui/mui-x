@@ -46,7 +46,10 @@ const XGridRaw = React.forwardRef<HTMLDivElement, XGridProps>(function XGrid(inP
     </GridContextProvider>
   );
 });
-XGridRaw.defaultProps = DEFAULT_GRID_OPTIONS;
+
+export const X_GRID_DEFAULT_PROPS = DEFAULT_GRID_OPTIONS;
+
+XGridRaw.defaultProps = X_GRID_DEFAULT_PROPS;
 
 export const XGrid = React.memo(XGridRaw);
 

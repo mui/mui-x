@@ -12,7 +12,7 @@ import { expect } from 'chai';
 import {
   DataGrid,
   DataGridProps,
-  DEFAULT_GRID_OPTIONS,
+  DATA_GRID_DEFAULT_PROPS,
   GridLinkOperator,
   GridRowsProp,
 } from '@material-ui/data-grid';
@@ -35,7 +35,7 @@ describe('<DataGrid /> - Pagination', () => {
 
     return (
       <div style={{ width: 300, height }}>
-        <DataGrid {...basicData} autoHeight={isJSDOM} pagination {...other} />
+        <DataGrid {...basicData} autoHeight={isJSDOM} {...other} />
       </div>
     );
   };
@@ -153,7 +153,6 @@ describe('<DataGrid /> - Pagination', () => {
 
         return (
           <BaselineTestCase
-            pagination
             page={page}
             onPageChange={handlePageChange}
             pageSize={5}
@@ -311,7 +310,7 @@ describe('<DataGrid /> - Pagination', () => {
 
       return (
         <div style={{ width: 300, height: props.height }}>
-          <DataGrid columns={data.columns} rows={data.rows} autoPageSize pagination {...other} />
+          <DataGrid columns={data.columns} rows={data.rows} autoPageSize {...other} />
         </div>
       );
     };
@@ -333,8 +332,8 @@ describe('<DataGrid /> - Pagination', () => {
 
       const footerHeight = document.querySelector('.MuiDataGrid-footerContainer')!.clientHeight;
       const expectedFullPageRowsLength = Math.floor(
-        (height - DEFAULT_GRID_OPTIONS.headerHeight - footerHeight) /
-          DEFAULT_GRID_OPTIONS.rowHeight,
+        (height - DATA_GRID_DEFAULT_PROPS.headerHeight - footerHeight) /
+          DATA_GRID_DEFAULT_PROPS.rowHeight,
       );
 
       let rows = getRows();
@@ -384,12 +383,12 @@ describe('<DataGrid /> - Pagination', () => {
 
       const footerHeight = document.querySelector('.MuiDataGrid-footerContainer')!.clientHeight;
       const expectedViewportRowsLengthBefore = Math.floor(
-        (heightBefore - DEFAULT_GRID_OPTIONS.headerHeight - footerHeight) /
-          DEFAULT_GRID_OPTIONS.rowHeight,
+        (heightBefore - DATA_GRID_DEFAULT_PROPS.headerHeight - footerHeight) /
+          DATA_GRID_DEFAULT_PROPS.rowHeight,
       );
       const expectedViewportRowsLengthAfter = Math.floor(
-        (heightAfter - DEFAULT_GRID_OPTIONS.headerHeight - footerHeight) /
-          DEFAULT_GRID_OPTIONS.rowHeight,
+        (heightAfter - DATA_GRID_DEFAULT_PROPS.headerHeight - footerHeight) /
+          DATA_GRID_DEFAULT_PROPS.rowHeight,
       );
 
       let rows = document.querySelectorAll('.MuiDataGrid-viewport [role="row"]');
@@ -453,7 +452,6 @@ describe('<DataGrid /> - Pagination', () => {
           <DataGrid
             columns={[{ field: 'id' }]}
             rows={rows}
-            pagination
             pageSize={1}
             rowCount={3}
             paginationMode="server"

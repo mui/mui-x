@@ -122,6 +122,7 @@ describe('<DataGrid /> - Selection', () => {
             ]}
             columns={[{ field: 'brand', width: 100 }]}
             checkboxSelection
+            // @ts-ignore
             pagination
             pageSize={1}
           />
