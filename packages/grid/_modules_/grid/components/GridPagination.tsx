@@ -39,8 +39,6 @@ const useStyles = makeStyles(
   { defaultTheme },
 );
 
-let warnedOnceMissingPageSizeInRowsPerPageOptions = false;
-
 export const GridPagination = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
@@ -86,8 +84,10 @@ export const GridPagination = React.forwardRef<
   };
 
   if (process.env.NODE_ENV !== 'production') {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const warnedOnceMissingPageSizeInRowsPerPageOptions = React.useRef(false);
     if (
-      !warnedOnceMissingPageSizeInRowsPerPageOptions &&
+      !warnedOnceMissingPageSizeInRowsPerPageOptions.current &&
       !rootProps.rowsPerPageOptions!.includes(rootProps.pageSize ?? DEFAULT_PAGE_SIZE)
     ) {
       console.warn(
@@ -98,7 +98,7 @@ export const GridPagination = React.forwardRef<
           `Add it to show the pagination select.`,
         ].join('\n'),
       );
-      warnedOnceMissingPageSizeInRowsPerPageOptions = true;
+      warnedOnceMissingPageSizeInRowsPerPageOptions.current = true;
     }
   }
 
