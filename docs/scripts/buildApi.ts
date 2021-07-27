@@ -39,15 +39,8 @@ function generateType(type, needsParenthesis = false) {
         text += '<';
         text += signature.typeParameters.map((generic) => {
           let genericLine = generic.name;
-
-          if (generic.type) {
-            genericLine += ` extends ${generateType(generic.type)}`;
-          }
-
-          if (generic.default) {
-            genericLine += ` = ${generateType(generic.default)}`;
-          }
-
+          if (generic.type) genericLine += ` extends ${generateType(generic.type)}`;
+          if (generic.default) genericLine += ` = ${generateType(generic.default)}`;
           return genericLine;
         });
         text += '>';
