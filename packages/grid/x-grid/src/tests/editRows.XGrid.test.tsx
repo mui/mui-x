@@ -63,15 +63,39 @@ describe('<XGrid /> - Edit Rows', () => {
     );
   };
 
-  it('isCellEditable should add the class MuiDataGrid-cell--editable to editable cells but not prevent a cell from switching mode', () => {
-    render(<TestCase isCellEditable={(params) => params.value === 'Adidas'} />);
-    const cellNike = getCell(0, 0);
-    expect(cellNike).not.to.have.class('MuiDataGrid-cell--editable');
-    const cellAdidas = getCell(1, 0);
-    expect(cellAdidas).to.have.class('MuiDataGrid-cell--editable');
+  describe('isCellEditable', () => {
+    it('should add the class MuiDataGrid-cell--editable to editable cells but not prevent a cell from switching mode', () => {
+      render(<TestCase isCellEditable={(params) => params.value === 'Adidas'} />);
+      const cellNike = getCell(0, 0);
+      expect(cellNike).not.to.have.class('MuiDataGrid-cell--editable');
+      const cellAdidas = getCell(1, 0);
+      expect(cellAdidas).to.have.class('MuiDataGrid-cell--editable');
 
-    apiRef!.current.setCellMode(0, 'brand', 'edit');
-    expect(cellNike).to.have.class('MuiDataGrid-cell--editing');
+      apiRef!.current.setCellMode(0, 'brand', 'edit');
+      expect(cellNike).to.have.class('MuiDataGrid-cell--editing');
+    });
+
+    it('should not allow to edit a cell with double-click', () => {
+      render(<TestCase isCellEditable={(params) => params.value === 'Adidas'} />);
+      const cellNike = getCell(0, 0);
+      const cellAdidas = getCell(1, 0);
+      fireEvent.doubleClick(cellNike);
+      expect(cellNike).not.to.have.class('MuiDataGrid-cell--editing');
+      fireEvent.doubleClick(cellAdidas);
+      expect(cellAdidas).to.have.class('MuiDataGrid-cell--editing');
+    });
+
+    it('should not allow to edit a cell with Enter', () => {
+      render(<TestCase isCellEditable={(params) => params.value === 'Adidas'} />);
+      const cellNike = getCell(0, 0);
+      const cellAdidas = getCell(1, 0);
+      cellNike.focus();
+      fireEvent.keyDown(cellNike, { key: 'Enter' });
+      expect(cellNike).not.to.have.class('MuiDataGrid-cell--editing');
+      cellAdidas.focus();
+      fireEvent.keyDown(cellAdidas, { key: 'Enter' });
+      expect(cellAdidas).to.have.class('MuiDataGrid-cell--editing');
+    });
   });
 
   it('should allow to switch between cell mode', () => {

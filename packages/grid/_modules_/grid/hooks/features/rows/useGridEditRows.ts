@@ -214,7 +214,7 @@ export function useGridEditRows(
 
   const handleCellEditEnter = React.useCallback(
     (params: GridCellParams, event: React.MouseEvent | React.KeyboardEvent) => {
-      if (!params.isEditable || event.isPropagationStopped()) {
+      if (event.isPropagationStopped()) {
         return;
       }
 
@@ -298,9 +298,11 @@ export function useGridEditRows(
   );
 
   const handleCellDoubleClick = React.useCallback(
-    (...args) => {
-      // TODO don't publish if cell is not editable
-      apiRef.current.publishEvent(GRID_CELL_EDIT_ENTER, ...args);
+    (params: GridCellParams, event: React.SyntheticEvent) => {
+      if (!params.isEditable) {
+        return;
+      }
+      apiRef.current.publishEvent(GRID_CELL_EDIT_ENTER, params, event);
     },
     [apiRef],
   );
