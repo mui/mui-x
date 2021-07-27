@@ -177,11 +177,11 @@ export const DATAGRID_PROPTYPES = {
   selectionModel: chainPropTypes(
     PropTypes.oneOfType([PropTypes.number, PropTypes.string, PropTypes.array]),
     (props: any) => {
-        if (
-            !props.checkboxSelection &&
-            Array.isArray(props.selectionModel) &&
-            props.selectionModel.length > 1
-        ) {
+      if (
+        !props.checkboxSelection &&
+        Array.isArray(props.selectionModel) &&
+        props.selectionModel.length > 1
+      ) {
         return new Error(
           [
             `Material-UI: \`<DataGrid selectionModel={${JSON.stringify(
