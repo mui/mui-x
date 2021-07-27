@@ -13,7 +13,8 @@ import { useGridInfiniteLoader } from '../../_modules_/grid/hooks/features/infin
 import { useGridKeyboard } from '../../_modules_/grid/hooks/features/keyboard/useGridKeyboard';
 import { useGridKeyboardNavigation } from '../../_modules_/grid/hooks/features/keyboard/useGridKeyboardNavigation';
 import { useLocaleText } from '../../_modules_/grid/hooks/features/localeText/useLocaleText';
-import { useGridPagination } from '../../_modules_/grid/hooks/features/pagination/useGridPagination';
+import { useGridPage } from '../../_modules_/grid/hooks/features/pagination/useGridPage';
+import { useGridPageSize } from '../../_modules_/grid/hooks/features/pagination/useGridPageSize';
 import { useGridPreferencesPanel } from '../../_modules_/grid/hooks/features/preferencesPanel/useGridPreferencesPanel';
 import { useGridEditRows } from '../../_modules_/grid/hooks/features/rows/useGridEditRows';
 import { useGridFreezeRows } from '../../_modules_/grid/hooks/features/rows/useGridFreezeRows';
@@ -65,7 +66,8 @@ export const useXGridComponent = (apiRef: GridApiRef, props: GridComponentProps)
   useGridVirtualRows(apiRef);
   useGridColumnReorder(apiRef);
   useGridColumnResize(apiRef, props);
-  useGridPagination(apiRef);
+  useGridPageSize(apiRef, props);
+  useGridPage(apiRef, props);
   useGridCsvExport(apiRef);
   useGridInfiniteLoader(apiRef, props);
   useGridClipboard(apiRef);

@@ -23,7 +23,6 @@ import {
   VisibleGridRowsState,
 } from '../filter/visibleGridRowsState';
 import { GridFocusState, GridTabIndexState } from '../focus/gridFocusState';
-import { GridPaginationState } from '../pagination/gridPaginationState';
 import { GridPreferencePanelState } from '../preferencesPanel/gridPreferencePanelState';
 import { getInitialGridRowState, InternalGridRowsState } from '../rows/gridRowsState';
 import { GridSelectionState } from '../selection/gridSelectionState';
@@ -32,6 +31,7 @@ import {
   getInitialGridRenderingState,
   InternalRenderingState,
 } from '../virtualization/renderingState';
+import { GridPaginationState } from '../pagination/gridPaginationState';
 
 export interface GridState {
   rows: InternalGridRowsState;
@@ -60,16 +60,15 @@ export interface GridState {
   licenseStatus: LicenseStatus;
 }
 
-export const getInitialGridState: () => GridState = () => ({
+export const getInitialGridState = (): GridState => ({
   rows: getInitialGridRowState(),
   licenseStatus: LicenseStatus.NotFound,
   editRows: {},
   pagination: {
     page: 0,
     pageCount: 0,
-    pageSize: 0,
-    paginationMode: 'client',
     rowCount: 0,
+    pageSize: 100,
   },
   options: DEFAULT_GRID_OPTIONS,
   isScrolling: false,
