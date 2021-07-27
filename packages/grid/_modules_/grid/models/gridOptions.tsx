@@ -18,6 +18,7 @@ import {
   GridCellModeChangeParams,
   GridEditCellPropsParams,
   GridEditCellValueParams,
+  GridCellEditCommitParams,
 } from './params/gridEditCellParams';
 import { GridRowScrollEndParams } from './params/gridRowScrollEndParams';
 import { GridColumnOrderChangeParams } from './params/gridColumnOrderChangeParams';
@@ -210,10 +211,10 @@ export interface GridOptions {
   onEditCellPropsChange?: (params: GridEditCellPropsParams, event?: React.SyntheticEvent) => void;
   /**
    * Callback fired when the cell changes are committed.
-   * @param {GridEditCellPropsParams} params With all properties from [[GridEditCellPropsParams]].
+   * @param {GridCellEditCommitParams} params With all properties from [[GridCellEditCommitParams]].
    * @param {React.SyntheticEvent} event The event that caused this prop to be called.
    */
-  onCellEditCommit?: (params: GridEditCellPropsParams, event?: React.SyntheticEvent) => void;
+  onCellEditCommit?: (params: GridCellEditCommitParams, event?: React.SyntheticEvent) => void;
   /**
    * Callback fired when an exception is thrown in the grid, or when the `showError` API method is called.
    */

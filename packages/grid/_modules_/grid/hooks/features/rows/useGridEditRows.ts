@@ -22,6 +22,7 @@ import { GridCellParams } from '../../../models/params/gridCellParams';
 import {
   GridEditCellPropsParams,
   GridEditCellValueParams,
+  GridCellEditCommitParams,
   GridCommitCellChangeParams,
 } from '../../../models/params/gridEditCellParams';
 import {
@@ -126,7 +127,11 @@ export function useGridEditRows(
 
   const setEditCellValue = React.useCallback(
     (params: GridEditCellValueParams, event?: React.SyntheticEvent) => {
-      const newParams = { id: params.id, field: params.field, props: { value: params.value } };
+      const newParams: GridEditCellPropsParams = {
+        id: params.id,
+        field: params.field,
+        props: { value: params.value },
+      };
       apiRef.current.publishEvent(GRID_EDIT_CELL_PROPS_CHANGE, newParams, event);
     },
     [apiRef],
@@ -185,9 +190,10 @@ export function useGridEditRows(
         throw new Error(`Cell at id: ${id} and field: ${field} is not in edit mode`);
       }
 
-      const { error } = model[id][field];
+      const { error, value } = model[id][field];
       if (!error) {
-        apiRef.current.publishEvent(GRID_CELL_EDIT_COMMIT, params, event);
+        const commitParams: GridCellEditCommitParams = { ...params, value };
+        apiRef.current.publishEvent(GRID_CELL_EDIT_COMMIT, commitParams, event);
         return true;
       }
       return false;
