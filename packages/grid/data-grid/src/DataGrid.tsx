@@ -14,6 +14,20 @@ import { GridContextProvider } from '../../_modules_/grid/context/GridContextPro
 import { useDataGridComponent } from './useDataGridComponent';
 import { DataGridProps, MAX_PAGE_SIZE } from './DataGridProps';
 
+const DATA_GRID_FORCED_PROPS = {
+  apiRef: undefined,
+  disableColumnResize: true,
+  disableColumnReorder: true,
+  disableMultipleColumnsFiltering: true,
+  disableMultipleColumnsSorting: true,
+  disableMultipleSelection: true,
+  pagination: true,
+  onRowsScrollEnd: undefined,
+  checkboxSelectionVisibleOnly: false,
+};
+
+export const DATA_GRID_DEFAULT_PROPS = DEFAULT_GRID_OPTIONS;
+
 const DataGridRaw = React.forwardRef<HTMLDivElement, DataGridProps>(function DataGrid(
   inProps,
   ref,
@@ -22,16 +36,13 @@ const DataGridRaw = React.forwardRef<HTMLDivElement, DataGridProps>(function Dat
     throw new Error(`'props.pageSize' cannot exceed 100 in DataGrid.`);
   }
 
-  const props: GridComponentProps = {
-    ...inProps,
-    disableColumnResize: true,
-    disableColumnReorder: true,
-    disableMultipleColumnsFiltering: true,
-    disableMultipleColumnsSorting: true,
-    disableMultipleSelection: true,
-    pagination: true,
-    checkboxSelectionVisibleOnly: false,
-  };
+  const props = React.useMemo<GridComponentProps>(
+    () => ({
+      ...inProps,
+      ...DATA_GRID_FORCED_PROPS,
+    }),
+    [inProps],
+  );
 
   const apiRef = useGridApiRef();
 
@@ -49,8 +60,6 @@ const DataGridRaw = React.forwardRef<HTMLDivElement, DataGridProps>(function Dat
     </GridContextProvider>
   );
 });
-
-export const DATA_GRID_DEFAULT_PROPS = DEFAULT_GRID_OPTIONS;
 
 DataGridRaw.defaultProps = DATA_GRID_DEFAULT_PROPS;
 
