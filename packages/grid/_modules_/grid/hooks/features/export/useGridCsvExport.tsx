@@ -38,7 +38,7 @@ export const useGridCsvExport = (apiRef: GridApiRef): void => {
       return buildCSV({
         columns: exportedColumns,
         rows: visibleSortedRows,
-        selectedRowIds: selection,
+        selectedRowIds: Array.isArray(selection) ? selection : [selection],
         getCellParams: apiRef.current.getCellParams,
         delimiterCharacter: options?.delimiter || ',',
       });
