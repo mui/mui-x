@@ -247,6 +247,7 @@ describe('<XGrid /> - Events Params', () => {
       expect(handleSelection.callCount).to.equal(0);
     });
   });
+  // TODO:
   it('publishing GRID_ROWS_SCROLL should call onRowsScrollEnd callback', () => {
     const handleOnRowsScrollEnd = spy();
 
@@ -303,16 +304,23 @@ describe('<XGrid /> - Events Params', () => {
     const handleOnViewportRowsChange = spy();
     const { container } = render(
       <div style={{ width: 300, height: 300 }}>
-        <TestVirtualization onViewportRowsChange={handleOnViewportRowsChange} />
+        <TestVirtualization rowHeight={40} onViewportRowsChange={handleOnViewportRowsChange} />
       </div>,
     );
     const gridWindow = container.querySelector('.MuiDataGrid-window');
-    // scroll 10 rows.
-    gridWindow.scrollTop = 12345;
+    const pageSize = apiRef.current.getState().containerSizes.viewportPageSize;
+    // scroll 1 rows.
+    gridWindow.scrollTop = 40;
     gridWindow.dispatchEvent(new Event('scroll'));
-
     expect(handleOnViewportRowsChange.callCount).to.equal(1);
-    expect(handleOnViewportRowsChange.lastCall.args[0].firstRowIndex).to.equal(48);
-    expect(handleOnViewportRowsChange.lastCall.args[0].lastRowIndex).to.equal(50);
+    expect(handleOnViewportRowsChange.lastCall.args[0].firstRowIndex).to.equal(1);
+    expect(handleOnViewportRowsChange.lastCall.args[0].lastRowIndex).to.equal(pageSize + 1);
+
+    // scroll 2 rows.
+    gridWindow.scrollTop = 80;
+    gridWindow.dispatchEvent(new Event('scroll'));
+    expect(handleOnViewportRowsChange.callCount).to.equal(2);
+    expect(handleOnViewportRowsChange.lastCall.args[0].firstRowIndex).to.equal(2);
+    expect(handleOnViewportRowsChange.lastCall.args[0].lastRowIndex).to.equal(pageSize + 2);
   });
 });
