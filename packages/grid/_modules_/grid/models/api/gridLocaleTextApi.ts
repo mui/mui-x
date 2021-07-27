@@ -1,12 +1,9 @@
-import { Localization as CoreLocalization } from '@material-ui/core/locale';
-
-// @ts-expect-error We have different structure in v5
-type MuiComponentsLocalization = CoreLocalization['props'] | CoreLocalization['components'];
+import { ComponentsPropsList } from '@material-ui/core/styles';
 
 /**
  * Set the types of the texts in the grid.
  */
-export interface GridLocaleText extends Partial<MuiComponentsLocalization> {
+export interface GridLocaleText {
   // Root
   noRowsLabel: string;
   noResultsOverlayLabel: string;
@@ -63,6 +60,8 @@ export interface GridLocaleText extends Partial<MuiComponentsLocalization> {
   filterOperatorOnOrAfter: string;
   filterOperatorBefore: string;
   filterOperatorOnOrBefore: string;
+  filterOperatorIsEmpty: string;
+  filterOperatorIsNotEmpty: string;
 
   // Filter values text
   filterValueAny: string;
@@ -98,6 +97,12 @@ export interface GridLocaleText extends Partial<MuiComponentsLocalization> {
   // Boolean cell text
   booleanCellTrueLabel: string;
   booleanCellFalseLabel: string;
+
+  // Used core components translation keys
+  MuiTablePagination: Omit<
+    ComponentsPropsList['MuiTablePagination'],
+    'page' | 'count' | 'onChangePage' | 'rowsPerPage' | 'onPageChange'
+  >;
 }
 
 export type GridTranslationKeys = keyof GridLocaleText;

@@ -21,16 +21,30 @@ function RatingEditInputCell(props: GridCellParams) {
   const classes = useStyles();
 
   const handleChange = (event) => {
-    const editProps = {
-      value: Number(event.target.value),
-    };
-    api.commitCellChange({ id, field, props: editProps });
-    api.setCellMode(id, field, 'view');
+    api.setEditCellValue({ id, field, value: Number(event.target.value) }, event);
+    // Check if the event is not from the keyboard
+    // https://github.com/facebook/react/issues/7407
+    if (event.nativeEvent.clientX !== 0 && event.nativeEvent.clientY !== 0) {
+      api.commitCellChange({ id, field });
+      api.setCellMode(id, field, 'view');
+    }
+  };
+
+  const handleRef = (element) => {
+    if (element) {
+      element.querySelector(`input[value="${value}"]`).focus();
+    }
   };
 
   return (
     <div className={classes.root}>
-      <Rating value={Number(value)} onChange={handleChange} />
+      <Rating
+        ref={handleRef}
+        name="rating"
+        precision={1}
+        value={Number(value)}
+        onChange={handleChange}
+      />
     </div>
   );
 }

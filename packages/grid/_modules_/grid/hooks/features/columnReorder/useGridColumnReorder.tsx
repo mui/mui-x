@@ -42,7 +42,7 @@ export const useGridColumnReorder = (apiRef: GridApiRef): void => {
   const logger = useLogger('useGridColumnReorder');
 
   const [, setGridState, forceUpdate] = useGridState(apiRef);
-  const dragCol = useGridSelector(apiRef, gridColumnReorderDragColSelector);
+  const dragColField = useGridSelector(apiRef, gridColumnReorderDragColSelector);
   const options = useGridSelector(apiRef, optionsSelector);
   const dragColNode = React.useRef<HTMLElement | null>(null);
   const cursorPosition = React.useRef<CursorCoordinates>({
@@ -60,7 +60,7 @@ export const useGridColumnReorder = (apiRef: GridApiRef): void => {
 
   const handleColumnHeaderDragStart = React.useCallback(
     (params: GridColumnHeaderParams, event: React.MouseEvent<HTMLElement>) => {
-      if (options.disableColumnReorder) {
+      if (options.disableColumnReorder || params.colDef.disableReorder) {
         return;
       }
 
@@ -93,7 +93,7 @@ export const useGridColumnReorder = (apiRef: GridApiRef): void => {
 
   const handleDragOver = React.useCallback(
     (params: GridColumnHeaderParams | GridCellParams, event: React.DragEvent) => {
-      if (!dragCol) {
+      if (!dragColField) {
         return;
       }
 
@@ -103,32 +103,38 @@ export const useGridColumnReorder = (apiRef: GridApiRef): void => {
       const coordinates = { x: event.clientX, y: event.clientY };
 
       if (
-        params.field !== dragCol &&
+        params.field !== dragColField &&
         hasCursorPositionChanged(cursorPosition.current, coordinates)
       ) {
         const targetColIndex = apiRef.current.getColumnIndex(params.field, false);
-        const dragColIndex = apiRef.current.getColumnIndex(dragCol, false);
+        const targetColVisibleIndex = apiRef.current.getColumnIndex(params.field, true);
+        const targetCol = apiRef.current.getColumn(params.field);
+        const dragColIndex = apiRef.current.getColumnIndex(dragColField, false);
+        const visibleColumnAmount = apiRef.current.getVisibleColumns().length;
 
-        if (
-          (getCursorMoveDirectionX(cursorPosition.current, coordinates) ===
-            CURSOR_MOVE_DIRECTION_RIGHT &&
-            dragColIndex < targetColIndex) ||
-          (getCursorMoveDirectionX(cursorPosition.current, coordinates) ===
-            CURSOR_MOVE_DIRECTION_LEFT &&
-            targetColIndex < dragColIndex)
-        ) {
-          apiRef.current.setColumnIndex(dragCol, targetColIndex);
+        const canBeReordered =
+          !targetCol.disableReorder ||
+          (targetColVisibleIndex > 0 && targetColVisibleIndex < visibleColumnAmount - 1);
+
+        const cursorMoveDirectionX = getCursorMoveDirectionX(cursorPosition.current, coordinates);
+        const hasMovedLeft =
+          cursorMoveDirectionX === CURSOR_MOVE_DIRECTION_LEFT && targetColIndex < dragColIndex;
+        const hasMovedRight =
+          cursorMoveDirectionX === CURSOR_MOVE_DIRECTION_RIGHT && dragColIndex < targetColIndex;
+
+        if (canBeReordered && (hasMovedLeft || hasMovedRight)) {
+          apiRef.current.setColumnIndex(dragColField, targetColIndex);
         }
 
         cursorPosition.current = coordinates;
       }
     },
-    [apiRef, dragCol, logger],
+    [apiRef, dragColField, logger],
   );
 
   const handleDragEnd = React.useCallback(
     (params: GridColumnHeaderParams | GridCellParams, event: React.DragEvent): void => {
-      if (options.disableColumnReorder) {
+      if (options.disableColumnReorder || !dragColField) {
         return;
       }
 
@@ -150,7 +156,7 @@ export const useGridColumnReorder = (apiRef: GridApiRef): void => {
       }));
       forceUpdate();
     },
-    [options.disableColumnReorder, logger, setGridState, forceUpdate, apiRef],
+    [options.disableColumnReorder, logger, setGridState, forceUpdate, apiRef, dragColField],
   );
 
   useGridApiEventHandler(apiRef, GRID_COLUMN_HEADER_DRAG_START, handleColumnHeaderDragStart);

@@ -44,11 +44,19 @@ You can configure the headers with:
 
 ### Width
 
-By default, the columns have a width of 100 pixels.
-This is an arbitrary, easy to remember value.
+By default, the columns have a width of 100px.
+This is an arbitrary, easy-to-remember value.
 To change the width of a column, use the `width` property available in `GridColDef`.
 
 {{"demo": "pages/components/data-grid/columns/ColumnWidthGrid.js", "bg": "inline"}}
+
+### Minimum width
+
+By default, the columns have a minimum width of 50px.
+This is an arbitrary, easy-to-remember value.
+To change the minimum width of a column, use the `minWidth` property available in `GridColDef`.
+
+{{"demo": "pages/components/data-grid/columns/ColumnMinWidthGrid.js", "bg": "inline"}}
 
 ### Fluid width
 
@@ -59,6 +67,8 @@ It works by dividing the remaining space in the grid among all flex columns in p
 
 For example, consider a grid with a total width of 500px that has three columns: the first with `width: 200`; the second with `flex: 1`; and third with `flex: 0.5`.
 The first column will be 200px wide, leaving 300px remaining. The column with `flex: 1` is twice the size of `flex: 0.5`, which means that final sizes will be: 200px, 200px, 100px.
+
+To set a minimum width for a `flex` column set the `minWidth` property in `GridColDef`.
 
 **Note**
 
@@ -81,6 +91,8 @@ By default, `XGrid` allows all columns to be resized by dragging the right porti
 
 To prevent the resizing of a column, set `resizable: false` in the `GridColDef`.
 Alternatively, to disable all columns resize, set the prop `disableColumnResize={true}`.
+
+To restrict resizing a column under a certain width set the `minWidth` property in `GridColDef`.
 
 {{"demo": "pages/components/data-grid/columns/ColumnSizingGrid.js", "disableAd": true, "bg": "inline"}}
 
@@ -181,6 +193,8 @@ const columns: GridColDef[] = [
 ```
 
 {{"demo": "pages/components/data-grid/columns/RenderCellGrid.js", "bg": "inline"}}
+
+**Note**: It is recommended to also set a `valueFormatter` providing a representation for the value to be used when [exporting](/components/data-grid/export/#export-custom-rendered-cells) the data.
 
 #### Render edit cell
 
@@ -286,7 +300,13 @@ To disable the column selector, set the prop `disableColumnSelector={true}`.
 
 By default, `XGrid` allows all column reordering by dragging the header cells and moving them left or right.
 
-To disable column reordering, set the prop `disableColumnReorder={true}`.
+{{"demo": "pages/components/data-grid/columns/ColumnOrderingGrid.js", "disableAd": true, "bg": "inline"}}
+
+To disable reordering on all columns, set the prop `disableColumnReorder={true}`.
+
+To disable reordering in a specific column, set the `disableReorder` property to true in the `GridColDef` of the respective column.
+
+{{"demo": "pages/components/data-grid/columns/ColumnOrderingDisabledGrid.js", "disableAd": true, "bg": "inline"}}
 
 In addition, column reordering emits the following events that can be imported:
 
@@ -294,8 +314,6 @@ In addition, column reordering emits the following events that can be imported:
 - `columnHeaderDragEnter`: emitted when the cursor enters another header cell while dragging.
 - `columnHeaderDragOver`: emitted when dragging a header cell over another header cell.
 - `columnHeaderDragEnd`: emitted when dragging of a header cell stops.
-
-{{"demo": "pages/components/data-grid/columns/ColumnOrderingGrid.js", "disableAd": true, "bg": "inline"}}
 
 ## 🚧 Column groups
 

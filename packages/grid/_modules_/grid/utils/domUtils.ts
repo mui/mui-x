@@ -46,16 +46,24 @@ export function findGridCellElementsFromCol(col: HTMLElement): NodeListOf<Elemen
   if (!root) {
     throw new Error('Material-UI: The root element is not found.');
   }
-  const cells = root.querySelectorAll(`:scope .${GRID_CELL_CSS_CLASS}[data-field="${field}"]`);
+  const cells = root.querySelectorAll(`.${GRID_CELL_CSS_CLASS}[data-field="${field}"]`);
   return cells;
 }
 
+function escapeOperandAttributeSelector(operand: string): string {
+  return operand.replace(/["\\]/g, '\\$&');
+}
+
 export function getGridColumnHeaderElement(root: Element, field: string) {
-  return root.querySelector(`[role='columnheader'][data-field='${field}']`) as HTMLDivElement;
+  return root.querySelector(
+    `[role="columnheader"][data-field="${escapeOperandAttributeSelector(field)}"]`,
+  ) as HTMLDivElement;
 }
 
 export function getGridRowElement(root: Element, id: GridRowId) {
-  return root.querySelector(`:scope .${GRID_ROW_CSS_CLASS}[data-id='${id}']`) as HTMLDivElement;
+  return root.querySelector(
+    `.${GRID_ROW_CSS_CLASS}[data-id="${escapeOperandAttributeSelector(String(id))}"]`,
+  ) as HTMLDivElement;
 }
 
 export function getGridCellElement(root: Element, { id, field }: { id: GridRowId; field: string }) {
@@ -63,5 +71,7 @@ export function getGridCellElement(root: Element, { id, field }: { id: GridRowId
   if (!row) {
     return null;
   }
-  return row.querySelector(`.${GRID_CELL_CSS_CLASS}[data-field='${field}']`) as HTMLDivElement;
+  return row.querySelector(
+    `.${GRID_CELL_CSS_CLASS}[data-field="${escapeOperandAttributeSelector(field)}"]`,
+  ) as HTMLDivElement;
 }

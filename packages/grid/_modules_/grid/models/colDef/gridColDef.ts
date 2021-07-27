@@ -43,6 +43,11 @@ export interface GridColDef {
    */
   flex?: number;
   /**
+   * Sets the minimum width of a column.
+   * @default 50
+   */
+  minWidth?: number;
+  /**
    * If `true`, hide the column.
    * @default false
    */
@@ -74,7 +79,7 @@ export interface GridColDef {
   /**
    * To be used in combination with `type: 'singleSelect'`. This is an array of the possible cell values and labels.
    */
-  valueOptions?: Array<string | { value: any; label: string }>;
+  valueOptions?: Array<string | number | { value: any; label: string }>;
   /**
    * Allows to align the column values in cells.
    */
@@ -86,7 +91,7 @@ export interface GridColDef {
   valueGetter?: (params: GridValueGetterParams) => GridCellValue;
   /**
    * Function that allows to apply a formatter before rendering its value.
-   * @param {GridValueFormatterParams} params Object contaning parameters for the formatter.
+   * @param {GridValueFormatterParams} params Object containing parameters for the formatter.
    * @returns {GridCellValue} The formatted value.
    */
   valueFormatter?: (params: GridValueFormatterParams) => GridCellValue;
@@ -143,6 +148,16 @@ export interface GridColDef {
    * Allows setting the filter operators for this column.
    */
   filterOperators?: GridFilterOperator[];
+  /**
+   * If `true`, this column cannot be reordered.
+   * @default false
+   */
+  disableReorder?: boolean;
+  /**
+   * If `true`, this column will not be included in exports.
+   * @default false
+   */
+  disableExport?: boolean;
 }
 
 export interface GridColumnProp extends Omit<GridColDef, 'filterOperators'> {

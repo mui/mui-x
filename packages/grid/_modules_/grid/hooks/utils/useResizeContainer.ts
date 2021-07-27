@@ -1,21 +1,19 @@
 import * as React from 'react';
 import { debounce } from '@material-ui/core/utils';
 import { GRID_DEBOUNCED_RESIZE, GRID_RESIZE } from '../../constants/eventsConstants';
-import { ElementSize, GridEventsApi, GridRowsProp } from '../../models';
+import { ElementSize, GridEventsApi } from '../../models';
 import { useGridApiEventHandler, useGridApiOptionHandler } from '../root/useGridApiEventHandler';
 import { useGridApiMethod } from '../root/useGridApiMethod';
 import { useLogger } from './useLogger';
-import { useGridSelector } from '../features/core/useGridSelector';
-import { optionsSelector } from './optionsSelector';
+import { GridComponentProps } from '../../GridComponentProps';
 
 const isTestEnvironment = process.env.NODE_ENV === 'test';
 
 export function useResizeContainer(
   apiRef,
-  { autoHeight, rows }: { autoHeight?: boolean; rows: GridRowsProp },
+  props: Pick<GridComponentProps, 'autoHeight' | 'rows' | 'onResize'>,
 ) {
   const gridLogger = useLogger('useResizeContainer');
-  const options = useGridSelector(apiRef, optionsSelector);
   const warningShown = React.useRef(false);
 
   const resizeFn = React.useCallback(() => {
@@ -36,7 +34,7 @@ export function useResizeContainer(
       // jsdom has no layout capabilities
       const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
-      if (size.height === 0 && !warningShown.current && !autoHeight && !isJSDOM) {
+      if (size.height === 0 && !warningShown.current && !props.autoHeight && !isJSDOM) {
         gridLogger.warn(
           [
             'The parent of the grid has an empty height.',
@@ -71,7 +69,7 @@ export function useResizeContainer(
 
       debounceResize();
     },
-    [autoHeight, debounceResize, gridLogger, resizeFn],
+    [props.autoHeight, debounceResize, gridLogger, resizeFn],
   );
 
   React.useEffect(() => {
@@ -84,8 +82,8 @@ export function useResizeContainer(
   React.useEffect(() => {
     gridLogger.info('canceling resize...');
     debounceResize.clear();
-  }, [rows, debounceResize, gridLogger]);
+  }, [props.rows, debounceResize, gridLogger]);
 
   useGridApiEventHandler(apiRef, GRID_RESIZE, handleResize);
-  useGridApiOptionHandler(apiRef, GRID_DEBOUNCED_RESIZE, options.onResize);
+  useGridApiOptionHandler(apiRef, GRID_DEBOUNCED_RESIZE, props.onResize);
 }

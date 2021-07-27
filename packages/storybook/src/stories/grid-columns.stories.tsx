@@ -337,10 +337,18 @@ export const SingleSelectColumnType = () => {
     },
   ];
 
+  const fruits = [
+    { value: 1, label: 'Apple' },
+    { value: 2, label: 'Orange' },
+    { value: 3, label: 'Banana' },
+  ];
+
+  const ratings = [1, 2, 3, 4, 5];
+
   const data = {
     rows: [
-      { id: 0, country: 'bg' },
-      { id: 1, country: 'nl' },
+      { id: 0, country: 'bg', fruit: 1, rating: 5 },
+      { id: 1, country: 'nl', fruit: 2, rating: 4 },
     ],
     columns: [
       {
@@ -351,6 +359,24 @@ export const SingleSelectColumnType = () => {
           const result = countries.find((country) => country.value === params.value);
           return result!.label;
         },
+        editable: true,
+        width: 200,
+      },
+      {
+        field: 'fruit',
+        type: 'singleSelect',
+        valueOptions: fruits,
+        valueFormatter: (params) => {
+          const result = fruits.find((fruit) => fruit.value === params.value);
+          return result!.label;
+        },
+        editable: true,
+        width: 200,
+      },
+      {
+        field: 'rating',
+        type: 'singleSelect',
+        valueOptions: ratings,
         editable: true,
         width: 200,
       },

@@ -9,7 +9,7 @@ import Portal from '@material-ui/unstyled/Portal';
 import { expect } from 'chai';
 import * as React from 'react';
 import { getActiveCell, getCell, getColumnHeaderCell } from 'test/utils/helperFn';
-import { stub } from 'sinon';
+import { stub, spy } from 'sinon';
 import {
   createClientRenderStrictMode,
   // @ts-expect-error need to migrate helpers to TypeScript
@@ -372,7 +372,7 @@ describe('<XGrid /> - Edit Rows', () => {
     expect(input.value).to.equal('1961');
 
     fireEvent.change(input, { target: { value: '62' } });
-    expect(cell.querySelector('input')!.value).to.equal('62');
+    expect(cell.querySelector('input')!.value).to.equal('1962');
 
     fireEvent.keyDown(input, { key: 'Enter' });
     expect(cell).not.to.have.class('MuiDataGrid-cell--editing');
@@ -460,82 +460,100 @@ describe('<XGrid /> - Edit Rows', () => {
     expect(screen.queryAllByRole('row')).to.have.length(4);
   });
 
-  it('should change cell value correctly when column type is singleSelect and valueOptions is array of strings', () => {
-    render(
-      <div style={{ width: 300, height: 300 }}>
-        <XGrid
-          columns={[
-            {
-              field: 'brand',
-              type: 'singleSelect',
-              valueOptions: ['Nike', 'Adidas'],
-              editable: true,
-            },
-          ]}
-          rows={[
-            {
-              id: 0,
-              brand: 'Nike',
-            },
-          ]}
-        />
-      </div>,
-    );
-
-    const cell = getCell(0, 0);
+  it('should call onEditCellPropsChange when the value in the edit cell is changed', () => {
+    const onEditCellPropsChange = spy();
+    render(<TestCase onEditCellPropsChange={onEditCellPropsChange} />);
+    const cell = getCell(1, 1);
+    cell.focus();
     fireEvent.doubleClick(cell);
-    fireEvent.click(screen.queryAllByRole('option')[1]);
-
-    expect(cell).not.to.have.class('MuiDataGrid-cell--editing');
-    expect(cell).to.have.text('Adidas');
+    const input = cell.querySelector('input')!;
+    fireEvent.change(input, { target: { value: '1970' } });
+    expect(onEditCellPropsChange.args[0][0]).to.deep.equal({
+      id: 1,
+      field: 'year',
+      props: { value: '1970' },
+    });
   });
 
-  it('should change cell value correctly when column type is singleSelect and valueOptions is array of objects', () => {
-    const countries = [
-      {
-        value: 'fr',
-        label: 'France',
-      },
-      {
-        value: 'it',
-        label: 'Italy',
-      },
-    ];
-
-    render(
-      <div style={{ width: 300, height: 300 }}>
-        <XGrid
-          columns={[
-            {
-              field: 'country',
-              type: 'singleSelect',
-              valueOptions: countries,
-              valueFormatter: (params) => {
-                const result = countries.find((country) => country.value === params.value);
-                return result!.label;
+  describe('column type: singleSelect', () => {
+    it('should change cell value correctly when the valueOptions is array of strings', () => {
+      render(
+        <div style={{ width: 300, height: 300 }}>
+          <XGrid
+            columns={[
+              {
+                field: 'brand',
+                type: 'singleSelect',
+                valueOptions: ['Nike', 'Adidas'],
+                editable: true,
               },
-              editable: true,
-            },
-          ]}
-          rows={[
-            {
-              id: 0,
-              country: 'fr',
-            },
-          ]}
-        />
-      </div>,
-    );
+            ]}
+            rows={[
+              {
+                id: 0,
+                brand: 'Nike',
+              },
+            ]}
+          />
+        </div>,
+      );
 
-    const cell = getCell(0, 0);
-    fireEvent.doubleClick(cell);
-    fireEvent.click(screen.queryAllByRole('option')[1]);
+      const cell = getCell(0, 0);
+      fireEvent.doubleClick(cell);
+      fireEvent.click(screen.queryAllByRole('option')[1]);
 
-    expect(cell).not.to.have.class('MuiDataGrid-cell--editing');
-    expect(cell).to.have.text('Italy');
+      expect(cell).not.to.have.class('MuiDataGrid-cell--editing');
+      expect(cell).to.have.text('Adidas');
+    });
+
+    it('should change cell value correctly when the valueOptions is array of objects', () => {
+      const countries = [
+        {
+          value: 'fr',
+          label: 'France',
+        },
+        {
+          value: 'it',
+          label: 'Italy',
+        },
+      ];
+
+      render(
+        <div style={{ width: 300, height: 300 }}>
+          <XGrid
+            columns={[
+              {
+                field: 'country',
+                type: 'singleSelect',
+                valueOptions: countries,
+                valueFormatter: (params) => {
+                  const result = countries.find((country) => country.value === params.value);
+                  return result!.label;
+                },
+                editable: true,
+              },
+            ]}
+            rows={[
+              {
+                id: 0,
+                country: 'fr',
+              },
+            ]}
+          />
+        </div>,
+      );
+
+      const cell = getCell(0, 0);
+      fireEvent.doubleClick(cell);
+      fireEvent.click(screen.queryAllByRole('option')[1]);
+
+      expect(cell).not.to.have.class('MuiDataGrid-cell--editing');
+      expect(cell).to.have.text('Italy');
+    });
   });
 
   it('should keep the right type', () => {
+    // TODO create a separate group for the "number" column type tests
     const Test = (props: Partial<GridComponentProps>) => {
       apiRef = useGridApiRef();
       return (
@@ -560,6 +578,218 @@ describe('<XGrid /> - Edit Rows', () => {
 
     fireEvent.keyDown(input, { key: 'Enter' });
     expect(cell).to.have.text('1,942');
-    expect(apiRef.current.getRow(baselineProps.rows[0].id).year).to.equal(1942);
+    expect(apiRef.current.getRow(baselineProps.rows[0].id)!.year).to.equal(1942);
+  });
+
+  describe('column type: date', () => {
+    it('should call onEditCellPropsChange with the value entered as a Date', () => {
+      const onEditCellPropsChange = spy();
+      render(
+        <TestCase
+          rows={[{ id: 0, date: new Date(2021, 6, 5) }]}
+          columns={[{ field: 'date', type: 'date', editable: true }]}
+          onEditCellPropsChange={onEditCellPropsChange}
+        />,
+      );
+      const cell = getCell(0, 0);
+      cell.focus();
+      fireEvent.doubleClick(cell);
+      const input = cell.querySelector('input')!;
+      fireEvent.change(input, { target: { value: '2022-05-07' } });
+      expect(onEditCellPropsChange.args[0][0].props.value.toISOString()).to.equal(
+        new Date(2022, 4, 7).toISOString(),
+      );
+    });
+
+    it('should call onEditCellPropsChange with null when entered an empty value', () => {
+      const onEditCellPropsChange = spy();
+      render(
+        <TestCase
+          rows={[{ id: 0, date: new Date(2021, 6, 5) }]}
+          columns={[{ field: 'date', type: 'date', editable: true }]}
+          onEditCellPropsChange={onEditCellPropsChange}
+        />,
+      );
+      const cell = getCell(0, 0);
+      cell.focus();
+      fireEvent.doubleClick(cell);
+      const input = cell.querySelector('input')!;
+      fireEvent.change(input, { target: { value: '' } });
+      expect(onEditCellPropsChange.args[0][0].props.value).to.equal(null);
+    });
+  });
+
+  describe('column type: dateTime', () => {
+    it('should call onEditCellPropsChange with the value entered as a Date', () => {
+      const onEditCellPropsChange = spy();
+      render(
+        <TestCase
+          rows={[{ id: 0, date: new Date(2021, 6, 5, 14, 30) }]}
+          columns={[{ field: 'date', type: 'dateTime', editable: true }]}
+          onEditCellPropsChange={onEditCellPropsChange}
+        />,
+      );
+      const cell = getCell(0, 0);
+      cell.focus();
+      fireEvent.doubleClick(cell);
+      const input = cell.querySelector('input')!;
+      fireEvent.change(input, { target: { value: '2022-05-07T15:30:00' } });
+      expect(onEditCellPropsChange.args[0][0].props.value.toISOString()).to.equal(
+        new Date(2022, 4, 7, 15, 30).toISOString(),
+      );
+    });
+
+    it('should call onEditCellPropsChange with null when entered an empty value', () => {
+      const onEditCellPropsChange = spy();
+      render(
+        <TestCase
+          rows={[{ id: 0, date: new Date(2021, 6, 5, 14, 30) }]}
+          columns={[{ field: 'date', type: 'dateTime', editable: true }]}
+          onEditCellPropsChange={onEditCellPropsChange}
+        />,
+      );
+      const cell = getCell(0, 0);
+      cell.focus();
+      fireEvent.doubleClick(cell);
+      const input = cell.querySelector('input')!;
+      fireEvent.change(input, { target: { value: '' } });
+      expect(onEditCellPropsChange.args[0][0].props.value).to.equal(null);
+    });
+  });
+
+  describe('column type: boolean', () => {
+    it('should call onEditCellPropsChange with the correct params', () => {
+      const onEditCellPropsChange = spy();
+      render(
+        <TestCase
+          rows={[{ id: 0, isAdmin: false }]}
+          columns={[{ field: 'isAdmin', type: 'boolean', editable: true }]}
+          onEditCellPropsChange={onEditCellPropsChange}
+        />,
+      );
+      const cell = getCell(0, 0);
+      cell.focus();
+      fireEvent.doubleClick(cell);
+      const input = cell.querySelector('input')!;
+      fireEvent.click(input);
+      expect(onEditCellPropsChange.args[0][0]).to.deep.equal({
+        id: 0,
+        field: 'isAdmin',
+        props: { value: true },
+      });
+    });
+  });
+
+  describe('validation', () => {
+    it('should not allow to save an invalid value with Enter', () => {
+      render(<TestCase />);
+      const cell = getCell(1, 0);
+      cell.focus();
+      fireEvent.doubleClick(cell);
+      const input = cell.querySelector('input')!;
+      expect(input).not.to.have.attribute('aria-invalid');
+      fireEvent.change(input, { target: { value: 'n' } });
+      apiRef.current.setEditRowsModel({ 1: { brand: { error: true, value: 'n' } } });
+      fireEvent.keyDown(input, { key: 'Enter' });
+      expect(input).to.have.attribute('aria-invalid', 'true');
+      expect(cell).to.have.class('MuiDataGrid-cell--editing');
+    });
+
+    it('should not allow to save an invalid value with commitCellChange', () => {
+      render(<TestCase />);
+      const cell = getCell(1, 0);
+      cell.focus();
+      fireEvent.doubleClick(cell);
+      const input = cell.querySelector('input')!;
+      expect(input).not.to.have.attribute('aria-invalid');
+      fireEvent.change(input, { target: { value: 'n' } });
+      apiRef.current.setEditRowsModel({ 1: { brand: { error: true, value: 'n' } } });
+      apiRef.current.commitCellChange({ id: 1, field: 'brand' });
+      apiRef.current.setCellMode(1, 'brand', 'view');
+      expect(cell).to.have.text('Adidas');
+    });
+
+    it('should not call onCellEditCommit for invalid values', () => {
+      const onCellEditCommit = spy();
+      render(<TestCase onCellEditCommit={onCellEditCommit} />);
+      const cell = getCell(1, 0);
+      cell.focus();
+      fireEvent.doubleClick(cell);
+      const input = cell.querySelector('input')!;
+      expect(input).not.to.have.attribute('aria-invalid');
+      fireEvent.change(input, { target: { value: 'n' } });
+      apiRef.current.setEditRowsModel({ 1: { brand: { error: true, value: 'n' } } });
+      apiRef.current.commitCellChange({ id: 1, field: 'brand' });
+      apiRef.current.setCellMode(1, 'brand', 'view');
+      expect(onCellEditCommit.callCount).to.equal(0);
+    });
+  });
+
+  describe('control Editing', () => {
+    it('should update the state when neither the model nor the onChange are set', () => {
+      render(<TestCase />);
+      const cell = getCell(1, 1);
+      cell.focus();
+      fireEvent.doubleClick(cell);
+      const input = cell.querySelector('input')!;
+      expect(input.value).to.equal('1961');
+      fireEvent.change(input, { target: { value: '1970' } });
+      expect(input.value).to.equal('1970');
+      fireEvent.keyDown(input, { key: 'Enter' });
+      expect(cell).to.have.text('1970');
+    });
+
+    it('should not update the state when the editRowsModel prop is set', () => {
+      render(<TestCase editRowsModel={{ 1: { year: { value: 1961 } } }} />);
+      const cell = getCell(1, 1);
+      const input = cell.querySelector('input')!;
+      expect(input.value).to.equal('1961');
+      fireEvent.change(input, { target: { value: '1970' } });
+      fireEvent.keyDown(input, { key: 'Enter' });
+      expect(cell.querySelector('input')).not.to.equal(null);
+    });
+
+    it('should update the state when the model is not set, but the onChange is set', () => {
+      const onEditRowsModelChange = spy();
+      render(<TestCase onEditRowsModelChange={onEditRowsModelChange} />);
+      const cell = getCell(1, 1);
+      cell.focus();
+      fireEvent.doubleClick(cell);
+      expect(onEditRowsModelChange.callCount).to.equal(1);
+      expect(onEditRowsModelChange.lastCall.firstArg).to.deep.equal({
+        1: { year: { value: 1961 } },
+      });
+      const input = cell.querySelector('input')!;
+      fireEvent.change(input, { target: { value: 1970 } });
+      expect(onEditRowsModelChange.lastCall.firstArg).to.deep.equal({
+        1: { year: { value: '1970' } },
+      });
+      fireEvent.keyDown(input, { key: 'Enter' });
+      expect(cell).to.have.text('1970');
+      expect(onEditRowsModelChange.lastCall.firstArg).to.deep.equal({});
+      expect(onEditRowsModelChange.callCount).to.equal(3);
+      expect(cell.querySelector('input')).to.equal(null);
+    });
+
+    it('should control the state when the model and the onChange are set', () => {
+      const onEditRowsModelChange = spy();
+      const { setProps } = render(
+        <TestCase
+          editRowsModel={{ 1: { year: { value: 1961 } } }}
+          onEditRowsModelChange={onEditRowsModelChange}
+        />,
+      );
+      const cell = getCell(1, 1);
+      const input = cell.querySelector('input')!;
+      fireEvent.change(input, { target: { value: 1970 } });
+      expect(onEditRowsModelChange.lastCall.firstArg).to.deep.equal({
+        1: { year: { value: '1970' } },
+      });
+      setProps({ editRowsModel: { 1: { year: { value: 1971 } } } });
+      fireEvent.keyDown(input, { key: 'Enter' });
+      expect(onEditRowsModelChange.lastCall.firstArg).to.deep.equal({});
+      setProps({ editRowsModel: {} });
+      expect(cell).to.have.text('1971');
+    });
   });
 });

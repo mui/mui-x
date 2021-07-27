@@ -87,6 +87,7 @@ export const useGridRows = (
         state.options.rowCount,
         getRowId,
       );
+
       return { ...state, rows: internalRowsState.current };
     });
   }, [getRowId, rows, setGridState]);
@@ -110,7 +111,7 @@ export const useGridRows = (
     [apiRef],
   );
   const getRow = React.useCallback(
-    (id: GridRowId): GridRowModel => apiRef.current.state.rows.idRowsLookup[id],
+    (id: GridRowId): GridRowModel | null => apiRef.current.state.rows.idRowsLookup[id] ?? null,
     [apiRef],
   );
 

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GRID_SCROLL, GRID_ROWS_SCROLL } from '../../../constants/eventsConstants';
+import { GRID_ROWS_SCROLL } from '../../../constants/eventsConstants';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridVirtualizationApi } from '../../../models/api/gridVirtualizationApi';
 import { GridCellIndexCoordinates } from '../../../models/gridCell';
@@ -14,7 +14,6 @@ import {
 } from '../columns/gridColumnsSelector';
 import { useGridSelector } from '../core/useGridSelector';
 import { useGridState } from '../core/useGridState';
-import { GridPaginationState } from '../pagination/gridPaginationState';
 import { gridPaginationSelector } from '../pagination/gridPaginationSelector';
 import { gridRowCountSelector } from '../rows/gridRowsSelector';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
@@ -26,6 +25,21 @@ import { useGridVirtualColumns } from './useGridVirtualColumns';
 import { gridDensityRowHeightSelector } from '../density/densitySelector';
 import { scrollStateSelector } from './renderingStateSelector';
 
+// Logic copied from https://www.w3.org/TR/wai-aria-practices/examples/listbox/js/listbox.js
+// Similar to https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollIntoView
+function scrollIntoView(dimensions) {
+  const { clientHeight, scrollTop, offsetHeight, offsetTop } = dimensions;
+
+  const elementBottom = offsetTop + offsetHeight;
+  if (elementBottom - clientHeight > scrollTop) {
+    return elementBottom - clientHeight;
+  }
+  if (offsetTop < scrollTop) {
+    return offsetTop;
+  }
+  return undefined;
+}
+
 export const useGridVirtualRows = (apiRef: GridApiRef): void => {
   const logger = useLogger('useGridVirtualRows');
   const colRef = apiRef.current.columnHeadersElementRef!;
@@ -35,8 +49,8 @@ export const useGridVirtualRows = (apiRef: GridApiRef): void => {
   const [gridState, setGridState, forceUpdate] = useGridState(apiRef);
   const options = useGridSelector(apiRef, optionsSelector);
   const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
-  const paginationState = useGridSelector<GridPaginationState>(apiRef, gridPaginationSelector);
-  const totalRowCount = useGridSelector<number>(apiRef, gridRowCountSelector);
+  const paginationState = useGridSelector(apiRef, gridPaginationSelector);
+  const totalRowCount = useGridSelector(apiRef, gridRowCountSelector);
   const visibleColumns = useGridSelector(apiRef, visibleGridColumnsSelector);
   const columnsMeta = useGridSelector(apiRef, gridColumnsMetaSelector);
 
@@ -68,7 +82,7 @@ export const useGridVirtualRows = (apiRef: GridApiRef): void => {
       if (
         options.pagination &&
         paginationState.pageSize != null &&
-        paginationState.paginationMode === 'client'
+        options.paginationMode === 'client'
       ) {
         minRowIdx = paginationState.pageSize * paginationState.page;
       }
@@ -87,7 +101,7 @@ export const useGridVirtualRows = (apiRef: GridApiRef): void => {
       apiRef,
       options.pagination,
       paginationState.pageSize,
-      paginationState.paginationMode,
+      options.paginationMode,
       paginationState.page,
     ],
   );
@@ -193,51 +207,38 @@ export const useGridVirtualRows = (apiRef: GridApiRef): void => {
       logger.debug(`Scrolling to cell at row ${params.rowIndex}, col: ${params.colIndex} `);
 
       const scrollCoordinates: any = {};
-      const isColVisible = apiRef.current.isColumnVisibleInWindow(params.colIndex);
-      logger.debug(`Column ${params.colIndex} is ${isColVisible ? 'already' : 'not'} visible.`);
-      if (!isColVisible) {
-        const isLastCol = params.colIndex + 1 === columnsMeta.positions.length;
 
-        if (isLastCol) {
-          const lastColWidth = visibleColumns[params.colIndex].width!;
-          scrollCoordinates.left =
-            columnsMeta.positions[params.colIndex] +
-            lastColWidth -
-            gridState.containerSizes!.windowSizes.width;
-        } else {
-          scrollCoordinates.left =
-            columnsMeta.positions[params.colIndex + 1] -
-            gridState.containerSizes!.windowSizes.width +
-            gridState.scrollBar!.scrollBarSize.y;
-          logger.debug(`Scrolling to the right, scrollLeft: ${scrollCoordinates.left}`);
-        }
-        if (gridState.rendering.renderingZoneScroll.left > scrollCoordinates.left) {
-          scrollCoordinates.left = columnsMeta.positions[params.colIndex];
-          logger.debug(`Scrolling to the left, scrollLeft: ${scrollCoordinates.left}`);
-        }
+      if (params.colIndex != null) {
+        scrollCoordinates.left = scrollIntoView({
+          clientHeight: windowRef.current!.clientWidth,
+          scrollTop: windowRef.current!.scrollLeft,
+          offsetHeight: visibleColumns[params.colIndex].width,
+          offsetTop: columnsMeta.positions[params.colIndex],
+        });
       }
 
-      // Logic copied from https://www.w3.org/TR/wai-aria-practices/examples/listbox/js/listbox.js
       if (params.rowIndex != null) {
         const elementIndex = !options.pagination
           ? params.rowIndex
           : params.rowIndex - paginationState.page * paginationState.pageSize;
 
-        const scrollBottom = windowRef.current!.clientHeight + windowRef.current!.scrollTop;
-        const elementBottom = rowHeight * elementIndex + rowHeight;
-        if (elementBottom > scrollBottom) {
-          scrollCoordinates.top = elementBottom - windowRef.current!.clientHeight;
-        } else if (rowHeight * elementIndex < windowRef.current!.scrollTop) {
-          scrollCoordinates.top = rowHeight * elementIndex;
-        }
+        scrollCoordinates.top = scrollIntoView({
+          clientHeight: windowRef.current!.clientHeight,
+          scrollTop: windowRef.current!.scrollTop,
+          offsetHeight: rowHeight,
+          offsetTop: rowHeight * elementIndex,
+        });
       }
 
-      const needScroll = !isColVisible || typeof scrollCoordinates.top !== undefined;
-      if (needScroll) {
+      if (
+        typeof scrollCoordinates.left !== undefined ||
+        typeof scrollCoordinates.top !== undefined
+      ) {
         apiRef.current.scroll(scrollCoordinates);
+        return true;
       }
 
-      return needScroll;
+      return false;
     },
     [
       totalRowCount,
@@ -247,7 +248,6 @@ export const useGridVirtualRows = (apiRef: GridApiRef): void => {
       options.pagination,
       paginationState.page,
       paginationState.pageSize,
-      gridState,
       windowRef,
       columnsMeta.positions,
       rowHeight,
@@ -334,16 +334,16 @@ export const useGridVirtualRows = (apiRef: GridApiRef): void => {
 
   React.useEffect(() => {
     if (
-      gridState.rendering.renderContext?.paginationCurrentPage !== gridState.pagination.page &&
+      gridState.rendering.renderContext?.paginationCurrentPage !== paginationState.page &&
       apiRef.current.updateViewport
     ) {
-      logger.debug(`State pagination.page changed to ${gridState.pagination.page}. `);
+      logger.debug(`State paginationState.page changed to ${paginationState.page}. `);
       apiRef.current.updateViewport(true);
       resetScroll();
     }
   }, [
     apiRef,
-    gridState.pagination.page,
+    paginationState.page,
     gridState.rendering.renderContext?.paginationCurrentPage,
     logger,
     resetScroll,
@@ -379,30 +379,22 @@ export const useGridVirtualRows = (apiRef: GridApiRef): void => {
     };
   }, []);
 
-  const preventViewportScroll = React.useCallback(
-    (event: any) => {
-      logger.debug('Using keyboard to navigate cells, converting scroll events ');
+  const preventScroll = React.useCallback((event: any) => {
+    event.target.scrollLeft = 0;
+    event.target.scrollTop = 0;
+  }, []);
 
-      event.target.scrollLeft = 0;
-      event.target.scrollTop = 0;
-      event.preventDefault();
-      event.stopPropagation();
-      return false;
-    },
-    [logger],
-  );
-
-  useNativeEventListener(apiRef, windowRef, GRID_SCROLL, handleScroll, { passive: true });
+  useNativeEventListener(apiRef, windowRef, 'scroll', handleScroll, { passive: true });
   useNativeEventListener(
     apiRef,
     () => apiRef.current?.renderingZoneRef?.current?.parentElement,
-    GRID_SCROLL,
-    preventViewportScroll,
+    'scroll',
+    preventScroll,
   );
   useNativeEventListener(
     apiRef,
-    () => apiRef.current?.columnHeadersContainerElementRef?.current?.parentElement,
-    GRID_SCROLL,
-    preventViewportScroll,
+    () => apiRef.current?.columnHeadersContainerElementRef?.current,
+    'scroll',
+    preventScroll,
   );
 };

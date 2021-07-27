@@ -5,13 +5,13 @@ import { GridCellParams } from '../../models/params/gridCellParams';
 import { isEscapeKey } from '../../utils/keyboardUtils';
 
 const renderSingleSelectOptions = (option) =>
-  typeof option === 'string' ? (
-    <MenuItem key={option} value={option}>
-      {option}
-    </MenuItem>
-  ) : (
+  typeof option === 'object' ? (
     <MenuItem key={option.value} value={option.value}>
       {option.label}
+    </MenuItem>
+  ) : (
+    <MenuItem key={option} value={option}>
+      {option}
     </MenuItem>
   );
 
@@ -33,12 +33,9 @@ export function GridEditSingleSelectCell(props: GridCellParams & SelectProps) {
   } = props;
 
   const handleChange = (event) => {
-    const editProps = { value: event.target.value };
-
-    if (event.key) {
-      api.setEditCellProps({ id, field, props: editProps }, event);
-    } else {
-      api.commitCellChange({ id, field, props: editProps }, event);
+    api.setEditCellValue({ id, field, value: event.target.value }, event);
+    if (!event.key) {
+      api.commitCellChange({ id, field }, event);
       api.setCellMode(id, field, 'view');
     }
   };

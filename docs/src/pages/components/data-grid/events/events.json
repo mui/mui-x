@@ -62,16 +62,12 @@
     "description": "Fired when a cell loses focus. Called with a <a href=\"/api/data-grid/grid-cell-params/\">GridCellParams</a> object."
   },
   {
-    "name": "cellEditPropsChange",
-    "description": "Fired when the props of the edit input changes. Called with a GridEditCellPropsParams object."
+    "name": "editCellPropsChange",
+    "description": "Fired when the props of the edit cell changes. Called with a GridEditCellPropsParams object."
   },
   {
-    "name": "cellEditPropsChangeCommitted",
+    "name": "cellEditCommit",
     "description": "Fired when the props of the edit input are committed. Called with a GridEditCellPropsParams object."
-  },
-  {
-    "name": "cellValueChange",
-    "description": "Fired when the value of a cell changes. Called with a GridEditCellValueParams object."
   },
   {
     "name": "cellEditEnter",
@@ -106,12 +102,8 @@
     "description": "Fired when a <code>mouseleave</code> event happens in a row.  Called with a <a href=\"/api/data-grid/grid-row-params/\">GridRowParams</a> object."
   },
   {
-    "name": "editRowModelChange",
+    "name": "editRowsModelChange",
     "description": "Fired when the row editing model changes. Called with a GridEditRowModelParams object."
-  },
-  {
-    "name": "rowSelected",
-    "description": "Fired when a row is selected or unselected. Called with a GridRowSelectedParams object."
   },
   {
     "name": "columnHeaderKeyDown",
@@ -129,14 +121,8 @@
     "name": "selectionChange",
     "description": "Fired when the selection state of one or multiple rows changes.\nCalled with a GridSelectionModelChangeParams object."
   },
-  {
-    "name": "pageChange",
-    "description": "Fired when the current page change. Called with a GridPageChangeParams object."
-  },
-  {
-    "name": "pageSizeChange",
-    "description": "Fired when the page size change. Called with a GridPageChangeParams object."
-  },
+  { "name": "pageChange", "description": "Fired when the page changes." },
+  { "name": "pageSizeChange", "description": "Fired when the page size changes." },
   {
     "name": "rowsScroll",
     "description": "Fired during the scroll of the grid viewport. Called with a GridScrollParams object."
@@ -164,7 +150,7 @@
   { "name": "columnOrderChange", "description": "Fired when the user ends resizing a column." },
   {
     "name": "columnsChange",
-    "description": "Fired when the columns state is changed.\nCalled with an array of strings correspoding to the field names."
+    "description": "Fired when the columns state is changed.\nCalled with an array of strings corresponding to the field names."
   },
   {
     "name": "sortModelChange",
@@ -172,7 +158,7 @@
   },
   {
     "name": "filterModelChange",
-    "description": "Fired when the filter model changes.\nCalled with a GridFilterModelParams object."
+    "description": "Fired when the filter model changes.\nCalled with a GridFilterModel object."
   },
   {
     "name": "stateChange",

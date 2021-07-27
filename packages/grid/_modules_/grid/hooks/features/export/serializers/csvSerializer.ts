@@ -36,7 +36,7 @@ export function serialiseRow(
 interface BuildCSVOptions {
   columns: GridColumns;
   rows: Map<GridRowId, GridRowModel>;
-  selectedRows?: Record<string, GridRowId>;
+  selectedRowIds: GridRowId[];
   getCellParams: (id: GridRowId, field: string) => GridCellParams;
   delimiterCharacter: GridExportCsvDelimiter;
   includeHeaders?: boolean;
@@ -46,18 +46,15 @@ export function buildCSV(options: BuildCSVOptions): string {
   const {
     columns,
     rows,
-    selectedRows,
+    selectedRowIds,
     getCellParams,
     delimiterCharacter,
     includeHeaders = true,
   } = options;
   let rowIds = [...rows.keys()];
 
-  if (selectedRows) {
-    const selectedRowIds = Object.keys(selectedRows);
-    if (selectedRowIds.length) {
-      rowIds = rowIds.filter((id) => selectedRowIds.includes(`${id}`));
-    }
+  if (selectedRowIds.length) {
+    rowIds = rowIds.filter((id) => selectedRowIds.includes(`${id}`));
   }
 
   const CSVBody = rowIds

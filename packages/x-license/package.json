@@ -1,6 +1,6 @@
 {
   "name": "@material-ui/x-license",
-  "version": "4.0.0-alpha.33",
+  "version": "4.0.0-alpha.34",
   "description": "Material-UI X License verification",
   "author": "Material-UI Team",
   "main": "dist/cjs/index.js",
@@ -10,9 +10,18 @@
     "typescript": "tsc -p tsconfig.json",
     "build": "rollup -c"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mui-org/material-ui-x.git",
+    "directory": "packages/x-license"
+  },
   "files": [
     "dist/*"
   ],
+  "bugs": {
+    "url": "https://github.com/mui-org/material-ui-x/issues"
+  },
+  "homepage": "https://material-ui.com/components/data-grid/",
   "license": "See LICENSE file",
   "sideEffects": false,
   "publishConfig": {

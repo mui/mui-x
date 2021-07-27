@@ -22,11 +22,10 @@ import {
 } from '../../../utils/domUtils';
 import { GridApiRef, CursorCoordinates, GridColumnHeaderParams } from '../../../models';
 import { useGridApiEventHandler, useGridApiOptionHandler } from '../../root/useGridApiEventHandler';
-import { optionsSelector } from '../../utils/optionsSelector';
-import { useGridSelector } from '../core/useGridSelector';
 import { useGridState } from '../core/useGridState';
+import { useNativeEventListener } from '../../root/useNativeEventListener';
+import { GridComponentProps } from '../../../GridComponentProps';
 
-const MIN_COL_WIDTH = 50;
 let cachedSupportsTouchActionNone = false;
 
 // TODO: remove support for Safari < 13.
@@ -36,6 +35,10 @@ let cachedSupportsTouchActionNone = false;
 // Over 80% of the iOS phones are compatible
 // in August 2020.
 function doesSupportTouchActionNone(): boolean {
+  // The document is not defined in the server-side
+  if (typeof document === 'undefined') {
+    return cachedSupportsTouchActionNone;
+  }
   if (!cachedSupportsTouchActionNone) {
     const element = document.createElement('div');
     element.style.touchAction = 'none';
@@ -68,7 +71,10 @@ function trackFinger(event, currentTouchId): CursorCoordinates | boolean {
 }
 
 // TODO improve experience for last column
-export const useGridColumnResize = (apiRef: GridApiRef) => {
+export const useGridColumnResize = (
+  apiRef: GridApiRef,
+  props: Pick<GridComponentProps, 'onColumnResize' | 'onColumnWidthChange'>,
+) => {
   const logger = useLogger('useGridColumnResize');
   const [, setGridState, forceUpdate] = useGridState(apiRef);
   const colDefRef = React.useRef<GridColDef>();
@@ -77,7 +83,6 @@ export const useGridColumnResize = (apiRef: GridApiRef) => {
   const initialOffset = React.useRef<number>();
   const stopResizeEventTimeout = React.useRef<any>();
   const touchId = React.useRef<number>();
-  const options = useGridSelector(apiRef, optionsSelector);
 
   const updateWidth = (newWidth: number) => {
     logger.debug(`Updating width to ${newWidth} for col ${colDefRef.current!.field}`);
@@ -129,7 +134,7 @@ export const useGridColumnResize = (apiRef: GridApiRef) => {
       initialOffset.current +
       nativeEvent.clientX -
       colElementRef.current!.getBoundingClientRect().left;
-    newWidth = Math.max(MIN_COL_WIDTH, newWidth);
+    newWidth = Math.max(colDefRef.current?.minWidth!, newWidth);
 
     updateWidth(newWidth);
     apiRef.current.publishEvent(GRID_COLUMN_RESIZE, {
@@ -224,7 +229,7 @@ export const useGridColumnResize = (apiRef: GridApiRef) => {
       initialOffset.current! +
       (finger as CursorCoordinates).x -
       colElementRef.current!.getBoundingClientRect().left;
-    newWidth = Math.max(MIN_COL_WIDTH, newWidth);
+    newWidth = Math.max(colDefRef.current?.minWidth!, newWidth);
 
     updateWidth(newWidth);
     apiRef.current.publishEvent(GRID_COLUMN_RESIZE, {
@@ -310,27 +315,24 @@ export const useGridColumnResize = (apiRef: GridApiRef) => {
   }, [setGridState, forceUpdate]);
 
   React.useEffect(() => {
-    const columnHeadersElement = apiRef.current!.columnHeadersElementRef?.current;
-    if (!columnHeadersElement) {
-      return () => {};
-    }
-
-    columnHeadersElement.addEventListener('touchstart', handleTouchStart, {
-      passive: doesSupportTouchActionNone(),
-    });
-
     return () => {
-      columnHeadersElement.removeEventListener('touchstart', handleTouchStart);
-
       clearTimeout(stopResizeEventTimeout.current);
       stopListening();
     };
   }, [apiRef, handleTouchStart, stopListening]);
 
+  useNativeEventListener(
+    apiRef,
+    () => apiRef.current?.columnHeadersElementRef?.current,
+    'touchstart',
+    handleTouchStart,
+    { passive: doesSupportTouchActionNone() },
+  );
+
   useGridApiEventHandler(apiRef, GRID_COLUMN_SEPARATOR_MOUSE_DOWN, handleColumnResizeMouseDown);
   useGridApiEventHandler(apiRef, GRID_COLUMN_RESIZE_START, handleResizeStart);
   useGridApiEventHandler(apiRef, GRID_COLUMN_RESIZE_STOP, handleResizeStop);
 
-  useGridApiOptionHandler(apiRef, GRID_COLUMN_RESIZE, options.onColumnResize);
-  useGridApiOptionHandler(apiRef, GRID_COLUMN_WIDTH_CHANGE, options.onColumnWidthChange);
+  useGridApiOptionHandler(apiRef, GRID_COLUMN_RESIZE, props.onColumnResize);
+  useGridApiOptionHandler(apiRef, GRID_COLUMN_WIDTH_CHANGE, props.onColumnWidthChange);
 };

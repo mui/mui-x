@@ -15,8 +15,8 @@ export default function ControlledSelectionGrid() {
     <div style={{ height: 400, width: '100%' }}>
       <DataGrid
         checkboxSelection
-        onSelectionModelChange={(newSelection) => {
-          setSelectionModel(newSelection.selectionModel);
+        onSelectionModelChange={(newSelectionModel) => {
+          setSelectionModel(newSelectionModel);
         }}
         selectionModel={selectionModel}
         {...data}

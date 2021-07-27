@@ -5,8 +5,8 @@ import Slider from '@material-ui/core/Slider';
 import Tooltip from '@material-ui/core/Tooltip';
 import { createStyles, makeStyles } from '@material-ui/styles';
 import { debounce } from '@material-ui/core/utils';
-import { Theme, fade } from '@material-ui/core/styles';
-import { createTheme } from '../../../_modules_/grid/utils/utils';
+import { Theme } from '@material-ui/core/styles';
+import { createTheme, muiStyleAlpha } from '../../../_modules_/grid/utils/utils';
 
 const defaultTheme = createTheme();
 const useStyles = makeStyles(
@@ -44,7 +44,7 @@ const useStyles = makeStyles(
         width: 5,
         borderRadius: 0,
         marginTop: 0,
-        backgroundColor: fade('#000000', 0.2),
+        backgroundColor: muiStyleAlpha('#000000', 0.2),
       },
     }),
   { defaultTheme },
@@ -87,8 +87,15 @@ function EditProgress(props: GridCellParams) {
     setValueState(Number(value));
   }, [value]);
 
+  const handleRef = (element) => {
+    if (element) {
+      element.querySelector('[role="slider"]').focus();
+    }
+  };
+
   return (
     <Slider
+      ref={handleRef}
       classes={{
         ...classes,
         track: clsx(classes.track, {

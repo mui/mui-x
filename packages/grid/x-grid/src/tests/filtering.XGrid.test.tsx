@@ -1,30 +1,29 @@
-import * as React from 'react';
-import { expect } from 'chai';
-import { spy, useFakeTimers } from 'sinon';
 import {
+  getInitialGridFilterState,
   GridApiRef,
-  GridFilterModel,
   GridComponentProps,
+  GridFilterModel,
   GridLinkOperator,
   GridPreferencePanelsValue,
   GridRowModel,
-  GridFilterModelParams,
-  GridRowId,
+  SUBMIT_FILTER_STROKE_TIME,
   useGridApiRef,
   XGrid,
-  SUBMIT_FILTER_STROKE_TIME,
 } from '@material-ui/x-grid';
+import { expect } from 'chai';
+import { useData } from 'packages/storybook/src/hooks/useData';
+import * as React from 'react';
+import { spy, useFakeTimers } from 'sinon';
 import {
-  // @ts-expect-error need to migrate helpers to TypeScript
-  screen,
   createClientRenderStrictMode,
   // @ts-expect-error need to migrate helpers to TypeScript
   fireEvent,
   // @ts-expect-error need to migrate helpers to TypeScript
+  screen,
+  // @ts-expect-error need to migrate helpers to TypeScript
   waitFor,
 } from 'test/utils';
 import { getColumnHeaderCell, getColumnValues } from 'test/utils/helperFn';
-import { useData } from 'packages/storybook/src/hooks/useData';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -44,26 +43,26 @@ describe('<XGrid /> - Filter', () => {
 
   let apiRef: GridApiRef;
 
-  const TestCase = (props: Partial<GridComponentProps>) => {
-    const baselineProps = {
-      autoHeight: isJSDOM,
-      rows: [
-        {
-          id: 0,
-          brand: 'Nike',
-        },
-        {
-          id: 1,
-          brand: 'Adidas',
-        },
-        {
-          id: 2,
-          brand: 'Puma',
-        },
-      ],
-      columns: [{ field: 'brand' }],
-    };
+  const baselineProps = {
+    autoHeight: isJSDOM,
+    rows: [
+      {
+        id: 0,
+        brand: 'Nike',
+      },
+      {
+        id: 1,
+        brand: 'Adidas',
+      },
+      {
+        id: 2,
+        brand: 'Puma',
+      },
+    ],
+    columns: [{ field: 'brand' }],
+  };
 
+  const TestCase = (props: Partial<GridComponentProps>) => {
     const { rows, ...other } = props;
     apiRef = useGridApiRef();
     return (
@@ -126,7 +125,7 @@ describe('<XGrid /> - Filter', () => {
   });
 
   it('should allow apiRef to setFilterModel', () => {
-    render(<TestCase filterModel={filterModel} />);
+    render(<TestCase />);
     apiRef.current.setFilterModel({
       items: [
         {
@@ -143,11 +142,13 @@ describe('<XGrid /> - Filter', () => {
     const newModel = {
       items: [
         {
+          id: 1,
           columnField: 'brand',
           value: 'a',
           operatorValue: 'contains',
         },
         {
+          id: 2,
           columnField: 'brand',
           value: 'm',
           operatorValue: 'contains',
@@ -159,15 +160,17 @@ describe('<XGrid /> - Filter', () => {
   });
 
   it('should allow multiple filter via apiRef', () => {
-    render(<TestCase filterModel={filterModel} />);
+    render(<TestCase />);
     const newModel = {
       items: [
         {
+          id: 1,
           columnField: 'brand',
           value: 'a',
           operatorValue: 'startsWith',
         },
         {
+          id: 2,
           columnField: 'brand',
           value: 's',
           operatorValue: 'endsWith',
@@ -182,11 +185,13 @@ describe('<XGrid /> - Filter', () => {
     const newModel: GridFilterModel = {
       items: [
         {
+          id: 1,
           columnField: 'brand',
           value: 'a',
           operatorValue: 'startsWith',
         },
         {
+          id: 2,
           columnField: 'brand',
           value: 'a',
           operatorValue: 'endsWith',
@@ -198,16 +203,18 @@ describe('<XGrid /> - Filter', () => {
     expect(getColumnValues()).to.deep.equal(['Adidas', 'Puma']);
   });
 
-  it('should trigger onFilterModelChange when the link operator changes', () => {
+  it('should trigger onFilterModelChange when the link operator changes but not change the state', () => {
     const onFilterModelChange = spy();
     const newModel: GridFilterModel = {
       items: [
         {
+          id: 1,
           columnField: 'brand',
           value: 'a',
           operatorValue: 'startsWith',
         },
         {
+          id: 2,
           columnField: 'brand',
           value: 'a',
           operatorValue: 'endsWith',
@@ -223,15 +230,14 @@ describe('<XGrid /> - Filter', () => {
         }}
       />,
     );
-    // TODO should equal 0, the state doesn't change
-    expect(onFilterModelChange.callCount).to.equal(4);
+    expect(onFilterModelChange.callCount).to.equal(0);
     expect(getColumnValues()).to.deep.equal([]);
     onFilterModelChange.callCount = 0;
 
     const select = screen.queryAllByRole('combobox', { name: /Operators/i })[1];
     fireEvent.change(select, { target: { value: 'or' } });
     expect(onFilterModelChange.callCount).to.equal(1);
-    expect(getColumnValues()).to.deep.equal(['Adidas', 'Puma']);
+    expect(getColumnValues()).to.deep.equal([]);
   });
 
   it('should only select visible rows', () => {
@@ -248,7 +254,7 @@ describe('<XGrid /> - Filter', () => {
     render(<TestCase checkboxSelection filterModel={newModel} />);
     const checkAllCell = getColumnHeaderCell(0).querySelector('input');
     fireEvent.click(checkAllCell);
-    expect(apiRef.current.getState().selection).to.deep.equal({ 1: 1 });
+    expect(apiRef.current.getState().selection).to.deep.equal([1]);
   });
 
   it('should allow to clear filters by passing an empty filter model', () => {
@@ -267,16 +273,9 @@ describe('<XGrid /> - Filter', () => {
     expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
   });
 
-  it('should show the latest visible rows', () => {
-    let visibleRows: Map<GridRowId, GridRowModel> = new Map();
-    const handleFilterChange = (params: GridFilterModelParams) => {
-      visibleRows = params.visibleRows;
-    };
-
+  it('should show the latest visibleRows', () => {
     render(
       <TestCase
-        filterModel={filterModel}
-        onFilterModelChange={handleFilterChange}
         state={{
           preferencePanel: {
             open: true,
@@ -286,12 +285,11 @@ describe('<XGrid /> - Filter', () => {
       />,
     );
 
-    expect(getColumnValues()).to.deep.equal(['Adidas', 'Puma']);
     const input = screen.getByPlaceholderText('Filter value');
     fireEvent.change(input, { target: { value: 'ad' } });
     clock.tick(SUBMIT_FILTER_STROKE_TIME);
-    expect(visibleRows.size).to.equal(1);
-    expect(visibleRows.get(1)).to.deep.equal({ id: 1, brand: 'Adidas' });
+    expect(getColumnValues()).to.deep.equal(['Adidas']);
+
     expect(apiRef.current.getVisibleRowModels().size).to.equal(1);
     expect(apiRef.current.getVisibleRowModels().get(1)).to.deep.equal({ id: 1, brand: 'Adidas' });
   });
@@ -370,8 +368,8 @@ describe('<XGrid /> - Filter', () => {
         const [rows, setRows] = React.useState<GridRowModel[]>([]);
         const [filterValue, setFilterValue] = React.useState();
 
-        const handleFilterChange = React.useCallback((params) => {
-          setFilterValue(params.filterModel.items[0].value);
+        const handleFilterChange = React.useCallback((newFilterModel: GridFilterModel) => {
+          setFilterValue(newFilterModel.items[0].value);
         }, []);
 
         React.useEffect(() => {
@@ -412,7 +410,6 @@ describe('<XGrid /> - Filter', () => {
 
       render(<AddServerFilterGrid />);
       const addButton = screen.getByRole('button', { name: /Add Filter/i });
-      clock.tick(100);
       fireEvent.click(addButton);
       const filterForms = document.querySelectorAll(`.MuiGridFilterForm-root`);
       expect(filterForms).to.have.length(2);
@@ -424,5 +421,101 @@ describe('<XGrid /> - Filter', () => {
     expect(screen.getByText('Total Rows: 3')).not.to.equal(null);
     setProps({ filterModel });
     expect(screen.getByText('Total Rows: 2 of 3')).not.to.equal(null);
+  });
+
+  describe('control Filter', () => {
+    it('should update the filter state when neither the model nor the onChange are set', () => {
+      render(
+        <TestCase
+          state={{
+            preferencePanel: {
+              open: true,
+              openedPanelValue: GridPreferencePanelsValue.filters,
+            },
+          }}
+        />,
+      );
+      const addButton = screen.getByRole('button', { name: /Add Filter/i });
+      fireEvent.click(addButton);
+      const filterForms = document.querySelectorAll(`.MuiGridFilterForm-root`);
+      expect(filterForms).to.have.length(2);
+    });
+
+    it('should not update the filter state when the filterModelProp is set', () => {
+      const testFilterModel: GridFilterModel = { items: [], linkOperator: GridLinkOperator.Or };
+      render(
+        <TestCase
+          filterModel={testFilterModel}
+          state={{
+            preferencePanel: {
+              open: true,
+              openedPanelValue: GridPreferencePanelsValue.filters,
+            },
+          }}
+        />,
+      );
+      const addButton = screen.getByRole('button', { name: /Add Filter/i });
+      fireEvent.click(addButton);
+      const filterForms = document.querySelectorAll(`.MuiGridFilterForm-root`);
+      expect(filterForms).to.have.length(0);
+    });
+
+    it('should update the filter state when the model is not set, but the onChange is set', () => {
+      const onModelChange = spy();
+      const { setProps } = render(<TestCase onFilterModelChange={onModelChange} />);
+      expect(onModelChange.callCount).to.equal(0);
+      setProps({
+        state: {
+          preferencePanel: {
+            open: true,
+            openedPanelValue: GridPreferencePanelsValue.filters,
+          },
+        },
+      });
+      expect(onModelChange.callCount).to.equal(1);
+      const addButton = screen.getByRole('button', { name: /Add Filter/i });
+      fireEvent.click(addButton);
+      const filterForms = document.querySelectorAll(`.MuiGridFilterForm-root`);
+      expect(filterForms).to.have.length(2);
+      expect(onModelChange.callCount).to.equal(2);
+      expect(onModelChange.lastCall.firstArg.items.length).to.deep.equal(2);
+      expect(onModelChange.lastCall.firstArg.linkOperator).to.deep.equal(GridLinkOperator.And);
+    });
+
+    it('should control filter state when the model and the onChange are set', () => {
+      const ControlCase = (props: Partial<GridComponentProps>) => {
+        const { rows, columns, ...others } = props;
+        const [caseFilterModel, setFilterModel] = React.useState<any>(getInitialGridFilterState());
+        const handleFilterChange = (newModel) => {
+          setFilterModel(newModel);
+        };
+
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <XGrid
+              autoHeight={isJSDOM}
+              columns={columns || baselineProps.columns}
+              rows={rows || baselineProps.rows}
+              filterModel={caseFilterModel}
+              onFilterModelChange={handleFilterChange}
+              state={{
+                preferencePanel: {
+                  open: true,
+                  openedPanelValue: GridPreferencePanelsValue.filters,
+                },
+              }}
+              {...others}
+            />
+          </div>
+        );
+      };
+
+      render(<ControlCase />);
+      const addButton = screen.getByRole('button', { name: /Add Filter/i });
+      fireEvent.click(addButton);
+
+      const filterForms = document.querySelectorAll(`.MuiGridFilterForm-root`);
+      expect(filterForms).to.have.length(2);
+    });
   });
 });

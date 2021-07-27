@@ -4,7 +4,7 @@ import { writeFileSync, mkdirSync } from 'fs';
 import path from 'path';
 import kebabCase from 'lodash/kebabCase';
 import * as prettier from 'prettier';
-import { renderInline as renderMarkdownInline } from '../../node_modules/@material-ui/monorepo/docs/src/modules/utils/parseMarkdown';
+import { renderInline as renderMarkdownInline } from '../../node_modules/@material-ui/monorepo/docs/packages/markdown';
 
 type Api = {
   name: string;
@@ -230,6 +230,8 @@ function run(argv: { outputDirectory?: string }) {
     'GridRowParams',
     'GridSelectionApi',
     'GridFilterApi',
+    'GridCsvExportApi',
+    'GridExportCsvOptions',
   ];
 
   apisToGenerate.forEach((apiName) => {
@@ -243,6 +245,7 @@ function run(argv: { outputDirectory?: string }) {
       description: reflection.comment?.shortText,
       properties: findProperties(reflection),
     };
+
     const slug = kebabCase(reflection!.name);
     const markdown = generateMarkdown(api, apisToGenerate);
 

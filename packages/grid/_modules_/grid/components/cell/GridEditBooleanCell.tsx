@@ -3,7 +3,6 @@ import clsx from 'clsx';
 import Checkbox from '@material-ui/core/Checkbox';
 // @ts-expect-error fixed in Material-UI v5, types definitions were added.
 import { unstable_useId as useId } from '@material-ui/core/utils';
-import { GRID_CELL_EDIT_PROPS_CHANGE } from '../../constants/eventsConstants';
 import { GridCellParams } from '../../models/params/gridCellParams';
 
 export function GridEditBooleanCell(
@@ -32,9 +31,8 @@ export function GridEditBooleanCell(
   const handleChange = React.useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const newValue = event.target.checked;
-      const editProps = { value: newValue };
       setValueState(newValue);
-      api.publishEvent(GRID_CELL_EDIT_PROPS_CHANGE, { id: idProp, field, props: editProps }, event);
+      api.setEditCellValue({ id: idProp, field, value: newValue }, event);
     },
     [api, field, idProp],
   );

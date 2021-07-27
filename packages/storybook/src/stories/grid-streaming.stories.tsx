@@ -20,7 +20,6 @@ export default {
 export const SlowUpdateGrid = () => {
   const options: GridOptionsProp = {
     onSelectionModelChange: (params) => action('onSelectionChange', { depth: 1 })(params),
-    onRowSelected: (params) => action('onRowSelected')(params),
   };
   const rate = { min: 1000, max: 5000 };
   return (
@@ -35,7 +34,6 @@ export const SlowUpdateGrid = () => {
 export const FastUpdateGrid = () => {
   const options: GridOptionsProp = {
     onSelectionModelChange: (params) => action('onSelectionChange', { depth: 1 })(params),
-    onRowSelected: (params) => action('onRowSelected')(params),
   };
   const rate = { min: 100, max: 500 };
   return (
@@ -50,7 +48,6 @@ export const FastUpdateGrid = () => {
 export const SingleSubscriptionFast = () => {
   const options: GridOptionsProp = {
     onSelectionModelChange: (params) => action('onSelectionChange', { depth: 1 })(params),
-    onRowSelected: (params) => action('onRowSelected')(params),
   };
   const rate = { min: 100, max: 500 };
   return (

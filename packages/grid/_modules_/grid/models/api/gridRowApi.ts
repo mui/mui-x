@@ -46,5 +46,5 @@ export interface GridRowApi {
    * @param {GridRowId} id The id of the row.
    * @returns {GridRowModel} The row data.
    */
-  getRow: (id: GridRowId) => GridRowModel;
+  getRow: (id: GridRowId) => GridRowModel | null;
 }

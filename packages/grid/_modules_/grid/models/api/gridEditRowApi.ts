@@ -1,8 +1,12 @@
 import { GridCellMode } from '../gridCell';
-import { GridEditCellProps, GridEditRowsModel } from '../gridEditRowModel';
+import { GridEditRowsModel } from '../gridEditRowModel';
 import { GridRowId } from '../gridRows';
 import { GridCellParams } from '../params/gridCellParams';
-import { GridEditCellValueParams, GridEditCellPropsParams } from '../params/gridEditCellParams';
+import {
+  GridEditCellPropsParams,
+  GridCommitCellChangeParams,
+  GridEditCellValueParams,
+} from '../params/gridEditCellParams';
 
 /**
  * The editing API interface that is available in the grid `apiRef`.
@@ -44,28 +48,17 @@ export interface GridEditRowApi {
    */
   setEditCellProps: (params: GridEditCellPropsParams) => void;
   /**
-   * Gets the input props for the edit cell of a given `rowId` and `field`.
-   * @param {GridRowId} rowId The id of the row.
-   * @param {string} field The column field.
-   * @returns {GridEditCellProps} The props for the edit cell.
+   * Sets the value of the edit cell.
+   * Commonly used inside the edit cell component.
+   * @param {GridEditCellValueParams} params Contains the id, field and value to set.
+   * @param {React.SyntheticEvent} event The event to pass forward.
    */
-  getEditCellProps: (rowId: GridRowId, field: string) => GridEditCellProps;
+  setEditCellValue: (params: GridEditCellValueParams, event?: React.SyntheticEvent) => void;
   /**
-   * Gets the params to be passed when calling `setEditCellProps`.
-   * @param {GridRowId} rowId The id of the row.
-   * @param {string} field The column field.
-   * @returns {GridEditCellPropsParams} The params.
+   * Updates the field at the given id with the value stored in the edit row model.
+   * @param {GridCommitCellChangeParams} params The id and field to commit to.
+   * @param {React.SyntheticEvent} event The event to pass forward.
+   * @returns {boolean} A boolean indicating if there is an error.
    */
-  getEditCellPropsParams: (rowId: GridRowId, field: string) => GridEditCellPropsParams;
-  /**
-   * Commits a cell change. Used to update the value when editing a cell.
-   * @param {GridEditCellPropsParams} params The new params.
-   */
-  commitCellChange: (params: GridEditCellPropsParams) => void;
-  /**
-   * Sets the cell value.
-   * @param {GridEditCellValueParams} params An object with the row id, the field and the new value.
-   * @ignore - do not document.
-   */
-  setCellValue: (params: GridEditCellValueParams) => void;
+  commitCellChange: (params: GridCommitCellChangeParams, event?: React.SyntheticEvent) => boolean;
 }
