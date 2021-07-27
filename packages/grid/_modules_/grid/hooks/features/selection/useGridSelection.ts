@@ -19,6 +19,9 @@ import {
   selectedIdsLookupSelector,
 } from './gridSelectionSelector';
 
+const getArraySelectionModel = (selectionModel: GridSelectionModel) =>
+  Array.isArray(selectionModel) ? [...selectionModel] : [selectionModel];
+
 export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps): void => {
   const logger = useLogger('useGridSelection');
   const [, setGridState, forceUpdate] = useGridState(apiRef);
@@ -142,7 +145,7 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
 
   const setSelectionModel = React.useCallback(
     (model: GridSelectionModel) => {
-      apiRef.current.selectRows(model, true, true);
+      apiRef.current.selectRows(getArraySelectionModel(model), true, true);
     },
     [apiRef],
   );
@@ -186,7 +189,7 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
   React.useEffect(() => {
     // Rows changed
     setGridState((state) => {
-      const newSelectionState = [...state.selection];
+      const newSelectionState = getArraySelectionModel(state.selection);
       const selectionLookup = selectedIdsLookupSelector(state);
       let hasChanged = false;
       newSelectionState.forEach((id: GridRowId) => {
@@ -217,7 +220,7 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
   React.useEffect(() => {
     // isRowSelectable changed
     setGridState((state) => {
-      const newSelectionState = [...state.selection];
+      const newSelectionState = getArraySelectionModel(state.selection);
       const selectionLookup = selectedIdsLookupSelector(state);
       let hasChanged = false;
       newSelectionState.forEach((id: GridRowId) => {

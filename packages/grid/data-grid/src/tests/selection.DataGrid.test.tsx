@@ -179,7 +179,7 @@ describe('<DataGrid /> - Selection', () => {
   });
 
   describe('props: selectionModel', () => {
-    it('should select rows when initialised', () => {
+    it('should select rows when initialised (array-version)', () => {
       render(
         <div style={{ width: 300, height: 300 }}>
           <DataGrid
@@ -199,6 +199,60 @@ describe('<DataGrid /> - Selection', () => {
           />
         </div>,
       );
+      const row = getRow(1);
+      expect(row).to.have.class('Mui-selected');
+    });
+
+    it('should select rows when initialised (non-array version)', () => {
+      render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid
+            autoHeight={isJSDOM}
+            rows={[
+              {
+                id: 0,
+                brand: 'Nike',
+              },
+              {
+                id: 1,
+                brand: 'Hugo Boss',
+              },
+            ]}
+            columns={[{ field: 'brand', width: 100 }]}
+            selectionModel={1}
+          />
+        </div>,
+      );
+      const row = getRow(1);
+      expect(row).to.have.class('Mui-selected');
+    });
+
+    it('should allow to switch selectionModel from array version to non array version', () => {
+      const data = {
+        rows: [
+          {
+            id: 0,
+            brand: 'Nike',
+          },
+          {
+            id: 1,
+            brand: 'Hugo Boss',
+          },
+        ],
+        columns: [{ field: 'brand', width: 100 }],
+      };
+
+      function Demo(props) {
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGrid autoHeight={isJSDOM} {...data} selectionModel={props.selectionModel} />
+          </div>
+        );
+      }
+
+      const { setProps } = render(<Demo selectionModel={[1]} />);
+
+      setProps({ selectionModel: 1 });
       const row = getRow(1);
       expect(row).to.have.class('Mui-selected');
     });
