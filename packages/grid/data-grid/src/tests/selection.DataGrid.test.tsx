@@ -376,9 +376,7 @@ describe('<DataGrid /> - Selection', () => {
         render(<TestDataGrid />);
       })
         // @ts-expect-error need to migrate helpers to TypeScript
-        .toErrorDev(
-          'selectionModel can only contain 1 item in DataGrid without checkbox selection.',
-        );
+        .toErrorDev('selectionModel can only be of 1 item in DataGrid');
     });
 
     it('should not throw console error when selectionModel contains more than 1 item in DataGrid with checkbox selection', () => {
