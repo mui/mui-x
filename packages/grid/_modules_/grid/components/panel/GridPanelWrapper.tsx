@@ -29,7 +29,7 @@ export function GridPanelWrapper(
     ? {
         getDoc: () => document,
       }
-    : {} as any;
+    : ({} as any);
 
   return (
     <TrapFocus open disableEnforceFocus isEnabled={isEnabled} {...extraProps}>
