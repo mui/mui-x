@@ -176,6 +176,6 @@
   },
   {
     "name": "viewportRowsChange",
-    "description": "Fired when a the viewport rows change. Called with a GridViewportRowsChange object."
+    "description": "Fired when the viewport rows change. Called with a GridViewportRowsChange object."
   }
 ]
