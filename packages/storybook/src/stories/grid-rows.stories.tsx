@@ -18,6 +18,7 @@ import {
   XGrid,
   GRID_CELL_EDIT_EXIT,
   GridEditCellPropsParams,
+  GridCellEditCommitParams,
   GRID_CELL_EDIT_ENTER,
   MuiEvent,
 } from '@material-ui/x-grid';
@@ -482,22 +483,22 @@ export function EditRowsControl() {
   }, []);
 
   const onCellEditCommit = React.useCallback(
-    (params: GridEditCellPropsParams, event: MuiEvent<React.SyntheticEvent>) => {
-      const { id, field, props } = params;
+    (params: GridCellEditCommitParams, event: MuiEvent<React.SyntheticEvent>) => {
+      const { id, field, value } = params;
       event.persist();
       // we stop propagation as we want to switch back to view mode after we updated the value on the server
       event.defaultMuiPrevented = true;
 
       let cellUpdate: any = { id };
-      cellUpdate[field] = props.value;
+      cellUpdate[field] = value;
 
       const newState = {};
       newState[id] = {};
-      newState[id][field] = { ...props, endAdornment: <GridLoadIcon /> };
+      newState[id][field] = { value, endAdornment: <GridLoadIcon /> };
       setEditRowsModel((state) => ({ ...state, ...newState }));
 
       if (field === 'fullname') {
-        const [firstname, lastname] = props.value!.toString().split(' ');
+        const [firstname, lastname] = value!.toString().split(' ');
         cellUpdate = { id, firstname, lastname };
       }
 

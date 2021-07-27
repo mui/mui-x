@@ -18,6 +18,7 @@ import {
   GridCellModeChangeParams,
   GridEditCellPropsParams,
   GridEditCellValueParams,
+  GridCellEditCommitParams,
 } from './params/gridEditCellParams';
 import { GridRowScrollEndParams } from './params/gridRowScrollEndParams';
 import { GridColumnOrderChangeParams } from './params/gridColumnOrderChangeParams';
@@ -213,11 +214,11 @@ export interface GridOptions {
   ) => void;
   /**
    * Callback fired when the cell changes are committed.
-   * @param {GridEditCellPropsParams} params With all properties from [[GridEditCellPropsParams]].
-   * @param {MuiEvent} event The event that caused this prop to be called.
+   * @param {GridCellEditCommitParams} params With all properties from [[GridCellEditCommitParams]].
+   * @param {MuiEvent<React.SyntheticEvent>} event The event that caused this prop to be called.
    */
   onCellEditCommit?: (
-    params: GridEditCellPropsParams,
+    params: GridCellEditCommitParams,
     event: MuiEvent<React.SyntheticEvent>,
   ) => void;
   /**
