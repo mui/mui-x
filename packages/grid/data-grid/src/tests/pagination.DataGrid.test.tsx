@@ -23,7 +23,7 @@ import { DEFAULT_PAGE_SIZE } from '../../../_modules_/grid/hooks/features/pagina
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
-describe.only('<DataGrid /> - Pagination', () => {
+describe('<DataGrid /> - Pagination', () => {
   // TODO v5: replace with createClientRender
   const render = createClientRenderStrictMode();
 
