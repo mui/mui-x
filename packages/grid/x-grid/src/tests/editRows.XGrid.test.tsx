@@ -553,6 +553,7 @@ describe('<XGrid /> - Edit Rows', () => {
   });
 
   it('should keep the right type', () => {
+    // TODO create a separate group for the "number" column type tests
     const Test = (props: Partial<GridComponentProps>) => {
       apiRef = useGridApiRef();
       return (
@@ -667,6 +668,29 @@ describe('<XGrid /> - Edit Rows', () => {
     fireEvent.keyDown(input, { key: 'Enter' });
     expect(onCellEditCommit.callCount).to.equal(1);
     expect(onCellEditCommit.lastCall.args[0]).to.deep.equal({ id: 1, field: 'brand', value: 'n' });
+  });
+
+  describe('column type: boolean', () => {
+    it('should call onEditCellPropsChange with the correct params', () => {
+      const onEditCellPropsChange = spy();
+      render(
+        <TestCase
+          rows={[{ id: 0, isAdmin: false }]}
+          columns={[{ field: 'isAdmin', type: 'boolean', editable: true }]}
+          onEditCellPropsChange={onEditCellPropsChange}
+        />,
+      );
+      const cell = getCell(0, 0);
+      cell.focus();
+      fireEvent.doubleClick(cell);
+      const input = cell.querySelector('input')!;
+      fireEvent.click(input);
+      expect(onEditCellPropsChange.args[0][0]).to.deep.equal({
+        id: 0,
+        field: 'isAdmin',
+        props: { value: true },
+      });
+    });
   });
 
   describe('validation', () => {
