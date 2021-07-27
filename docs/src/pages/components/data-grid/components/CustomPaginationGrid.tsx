@@ -35,7 +35,6 @@ export default function CustomPaginationGrid() {
   return (
     <div style={{ height: 400, width: '100%' }}>
       <DataGrid
-        pagination
         pageSize={5}
         components={{
           Pagination: CustomPagination,

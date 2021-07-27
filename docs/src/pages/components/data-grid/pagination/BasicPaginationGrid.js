@@ -11,7 +11,7 @@ export default function BasicPaginationGrid() {
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <DataGrid pagination {...data} />
+      <DataGrid {...data} />
     </div>
   );
 }
