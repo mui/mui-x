@@ -1,6 +1,5 @@
 import * as React from 'react';
 import MUICheckbox from '@material-ui/core/Checkbox';
-
 import { GridApiRef } from '../../models/api/gridApiRef';
 import { GridApiRefComponentsProperty } from '../../models/api/gridComponentsApi';
 import { GridSlotsComponent } from '../../models/gridSlotsComponent';
