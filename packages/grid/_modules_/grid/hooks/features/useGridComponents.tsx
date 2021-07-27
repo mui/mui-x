@@ -1,8 +1,73 @@
 import * as React from 'react';
+import MUICheckbox from '@material-ui/core/Checkbox';
+
 import { GridApiRef } from '../../models/api/gridApiRef';
 import { GridApiRefComponentsProperty } from '../../models/api/gridComponentsApi';
-import { DEFAULT_GRID_SLOTS_COMPONENTS, GridSlotsComponent } from '../../models/gridSlotsComponent';
+import { GridSlotsComponent } from '../../models/gridSlotsComponent';
 import { GridSlotsComponentsProps } from '../../models/gridSlotsComponentsProps';
+import { GridIconSlotsComponent } from '../../models';
+import {
+  GridArrowDownwardIcon,
+  GridArrowUpwardIcon,
+  GridCheckIcon,
+  GridCloseIcon,
+  GridColumnIcon,
+  GridColumnMenu,
+  GridColumnsPanel,
+  GridFilterAltIcon,
+  GridFilterListIcon,
+  GridFilterPanel,
+  GridFooter,
+  GridHeader,
+  GridLoadingOverlay,
+  GridNoRowsOverlay,
+  GridPagination,
+  GridPanel,
+  GridPreferencesPanel,
+  GridSaveAltIcon,
+  GridSeparatorIcon,
+  GridTableRowsIcon,
+  GridTripleDotsVerticalIcon,
+  GridViewHeadlineIcon,
+  GridViewStreamIcon,
+} from '../../components';
+import { GridColumnUnsortedIcon } from '../../components/columnHeaders/GridColumnUnsortedIcon';
+import { ErrorOverlay } from '../../components/ErrorOverlay';
+import { GridNoResultsOverlay } from '../../components/GridNoResultsOverlay';
+
+const DEFAULT_GRID_SLOTS_ICONS: GridIconSlotsComponent = {
+  BooleanCellTrueIcon: GridCheckIcon,
+  BooleanCellFalseIcon: GridCloseIcon,
+  OpenFilterButtonIcon: GridFilterListIcon,
+  ColumnFilteredIcon: GridFilterAltIcon,
+  ColumnSelectorIcon: GridColumnIcon,
+  ColumnMenuIcon: GridTripleDotsVerticalIcon,
+  ColumnUnsortedIcon: GridColumnUnsortedIcon,
+  ColumnSortedAscendingIcon: GridArrowUpwardIcon,
+  ColumnSortedDescendingIcon: GridArrowDownwardIcon,
+  ColumnResizeIcon: GridSeparatorIcon,
+  DensityCompactIcon: GridViewHeadlineIcon,
+  DensityStandardIcon: GridTableRowsIcon,
+  DensityComfortableIcon: GridViewStreamIcon,
+  ExportIcon: GridSaveAltIcon,
+};
+
+export const DEFAULT_GRID_SLOTS_COMPONENTS: GridApiRefComponentsProperty = {
+  ...DEFAULT_GRID_SLOTS_ICONS,
+  Checkbox: MUICheckbox,
+  ColumnMenu: GridColumnMenu,
+  ColumnsPanel: GridColumnsPanel,
+  ErrorOverlay,
+  FilterPanel: GridFilterPanel,
+  Footer: GridFooter,
+  Header: GridHeader,
+  PreferencesPanel: GridPreferencesPanel,
+  LoadingOverlay: GridLoadingOverlay,
+  NoResultsOverlay: GridNoResultsOverlay,
+  NoRowsOverlay: GridNoRowsOverlay,
+  Pagination: GridPagination,
+  Panel: GridPanel,
+};
 
 export const useGridComponents = (
   apiRef: GridApiRef,

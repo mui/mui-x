@@ -7,6 +7,8 @@ import { gridPaginationSelector } from '../hooks/features/pagination/gridPaginat
 import { optionsSelector } from '../hooks/utils/optionsSelector';
 import { useGridApiContext } from '../hooks/root/useGridApiContext';
 import { getMuiVersion, createTheme } from '../utils';
+import { GridRootPropsContext } from '../context/GridRootPropsContext';
+import { DEFAULT_PAGE_SIZE } from '../hooks/features/pagination/gridPaginationState';
 
 const defaultTheme = createTheme();
 // Used to hide the Rows per page selector on small devices
@@ -45,6 +47,7 @@ export const GridPagination = React.forwardRef<
 >(function GridPagination(props, ref) {
   const classes = useStyles();
   const apiRef = useGridApiContext();
+  const rootProps = React.useContext(GridRootPropsContext)!;
   const paginationState = useGridSelector(apiRef, gridPaginationSelector);
 
   const lastPage = React.useMemo(
@@ -82,23 +85,21 @@ export const GridPagination = React.forwardRef<
     };
   };
 
-  const hasPageSizeInRowsPerPageOptions = options.rowsPerPageOptions?.includes(
-    paginationState.pageSize,
-  );
-
-  if (
-    process.env.NODE_ENV !== 'production' &&
-    !warnedOnceMissingPageSizeInRowsPerPageOptions &&
-    options.rowsPerPageOptions &&
-    !hasPageSizeInRowsPerPageOptions
-  ) {
-    console.warn(
-      [
-        `Material-UI: The current pageSize (${paginationState.pageSize}) is not preset in the rowsPerPageOptions.`,
-        `Add it to show the pagination select.`,
-      ].join('\n'),
-    );
-    warnedOnceMissingPageSizeInRowsPerPageOptions = true;
+  if (process.env.NODE_ENV !== 'production') {
+    if (
+      !warnedOnceMissingPageSizeInRowsPerPageOptions &&
+      !rootProps.rowsPerPageOptions!.includes(rootProps.pageSize ?? DEFAULT_PAGE_SIZE)
+    ) {
+      console.warn(
+        [
+          `Material-UI: The page size \`${
+            rootProps.pageSize ?? DEFAULT_PAGE_SIZE
+          }\` is not preset in the \`rowsPerPageOptions\``,
+          `Add it to show the pagination select.`,
+        ].join('\n'),
+      );
+      warnedOnceMissingPageSizeInRowsPerPageOptions = true;
+    }
   }
 
   return (
@@ -114,7 +115,11 @@ export const GridPagination = React.forwardRef<
       component="div"
       count={paginationState.rowCount}
       page={paginationState.page <= lastPage ? paginationState.page : lastPage}
-      rowsPerPageOptions={hasPageSizeInRowsPerPageOptions ? options.rowsPerPageOptions : []}
+      rowsPerPageOptions={
+        options.rowsPerPageOptions?.includes(paginationState.pageSize)
+          ? options.rowsPerPageOptions
+          : []
+      }
       rowsPerPage={paginationState.pageSize}
       {...apiRef!.current.getLocaleText('MuiTablePagination')}
       {...getPaginationChangeHandlers()}
