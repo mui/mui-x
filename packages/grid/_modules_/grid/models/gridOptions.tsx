@@ -379,15 +379,13 @@ export interface GridOptions {
   /**
    * Callback fired when the current page has changed.
    * @param page Index of the page displayed on the Grid.
-   * @param event [[MuiEvent<{}>]].
    */
-  onPageChange?: (page: number, event: MuiEvent<{}>) => void;
+  onPageChange?: (page: number) => void;
   /**
    * Callback fired when the page size has changed.
    * @param pageSize Size of the page displayed on the Grid.
-   * @param event [[MuiEvent<{}>]].
    */
-  onPageSizeChange?: (pageSize: number, event: MuiEvent<{}>) => void;
+  onPageSizeChange?: (pageSize: number) => void;
   /**
    * Callback fired when a click event comes from a row container element.
    * @param param With all properties from [[GridRowParams]].
