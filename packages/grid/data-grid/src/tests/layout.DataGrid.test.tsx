@@ -521,13 +521,20 @@ describe('<DataGrid /> - Layout & Warnings', () => {
 
     describe('autoHeight', () => {
       it('should have the correct intrinsic height', () => {
+        const headerHeight = 40;
+        const rowHeight = 30;
         render(
           <div style={{ width: 300 }}>
-            <DataGrid {...baselineProps} headerHeight={40} rowHeight={30} autoHeight />
+            <DataGrid
+              {...baselineProps}
+              headerHeight={headerHeight}
+              rowHeight={rowHeight}
+              autoHeight
+            />
           </div>,
         );
         expect(document.querySelector('.MuiDataGrid-main')!.clientHeight).to.equal(
-          40 + 30 * baselineProps.rows.length,
+          headerHeight + rowHeight * baselineProps.rows.length,
         );
       });
 
@@ -536,12 +543,14 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         if (/macintosh/i.test(window.navigator.userAgent)) {
           this.skip();
         }
+        const headerHeight = 40;
+        const rowHeight = 30;
         render(
           <div style={{ width: 150 }}>
             <DataGrid
               {...baselineProps}
-              headerHeight={40}
-              rowHeight={30}
+              headerHeight={headerHeight}
+              rowHeight={rowHeight}
               columns={[{ field: 'brand' }, { field: 'year' }]}
               autoHeight
             />
@@ -551,7 +560,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         const scrollBarSize = gridWindow!.scrollHeight - gridWindow!.clientHeight;
         expect(scrollBarSize).not.to.equal(0);
         expect(document.querySelector('.MuiDataGrid-main')!.clientHeight).to.equal(
-          scrollBarSize + 40 + 30 * baselineProps.rows.length,
+          scrollBarSize + headerHeight + rowHeight * baselineProps.rows.length,
         );
       });
     });
