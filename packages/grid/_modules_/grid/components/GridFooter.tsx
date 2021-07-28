@@ -16,7 +16,7 @@ export const GridFooter = React.forwardRef<HTMLDivElement, GridFooterContainerPr
     const rootProps = useGridRootProps();
     const totalRowCount = useGridSelector(apiRef, gridRowCountSelector);
     const selectedRowCount = useGridSelector(apiRef, selectedGridRowsCountSelector);
-    const pagination = useGridSelector(apiRef, gridPaginationSelector);
+    const paginationState = useGridSelector(apiRef, gridPaginationSelector);
     const visibleRowCount = useGridSelector(apiRef, visibleGridRowCountSelector);
 
     const SelectedRowCountElement =
@@ -33,7 +33,7 @@ export const GridFooter = React.forwardRef<HTMLDivElement, GridFooterContainerPr
 
     const PaginationComponent =
       !!rootProps.pagination &&
-      pagination.pageSize != null &&
+      paginationState.pageSize != null &&
       !rootProps.hideFooterPagination &&
       apiRef?.current.components.Pagination;
 

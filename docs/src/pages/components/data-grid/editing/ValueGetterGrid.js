@@ -12,10 +12,9 @@ export default function ValueGetterGrid() {
   const [rows, setRows] = React.useState(defaultRows);
 
   const handleCellEditCommit = React.useCallback(
-    ({ id, field, props }) => {
+    ({ id, field, value }) => {
       if (field === 'fullName') {
-        const data = props; // Fix eslint value is missing in prop-types for JS files
-        const [firstName, lastName] = data.value.toString().split(' ');
+        const [firstName, lastName] = value.toString().split(' ');
         const updatedRows = rows.map((row) => {
           if (row.id === id) {
             return { ...row, firstName, lastName };

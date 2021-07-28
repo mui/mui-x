@@ -53,6 +53,7 @@ export const GridViewport: ViewportType = React.forwardRef<HTMLDivElement, {}>(
         renderState.renderContext.firstRowIdx,
         renderState.renderContext.lastRowIdx!,
       );
+
       return renderedRows.map(([id, row], idx) => (
         <GridRow
           className={
