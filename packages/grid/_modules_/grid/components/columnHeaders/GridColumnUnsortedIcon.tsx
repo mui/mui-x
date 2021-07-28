@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { useGridApiContext } from '../../hooks/root/useGridApiContext';
-import { GridRootPropsContext } from '../../context/GridRootPropsContext';
+import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
 export const GridColumnUnsortedIcon = React.memo(function GridColumnHeaderSortIcon(props) {
   const apiRef = useGridApiContext();
-  const rootProps = React.useContext(GridRootPropsContext)!;
+  const rootProps = useGridRootProps();
   const [nextSortDirection] = rootProps.sortingOrder!;
 
   const Icon =

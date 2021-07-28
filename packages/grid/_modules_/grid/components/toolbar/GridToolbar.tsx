@@ -7,11 +7,11 @@ import { GridToolbarColumnsButton } from './GridToolbarColumnsButton';
 import { GridToolbarDensitySelector } from './GridToolbarDensitySelector';
 import { GridToolbarFilterButton } from './GridToolbarFilterButton';
 import { GridToolbarExport } from './GridToolbarExport';
-import { GridRootPropsContext } from '../../context/GridRootPropsContext';
+import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
 export const GridToolbar = React.forwardRef<HTMLDivElement, GridToolbarContainerProps>(
   function GridToolbar(props, ref) {
-    const rootProps = React.useContext(GridRootPropsContext)!;
+    const rootProps = useGridRootProps();
 
     if (
       rootProps.disableColumnFilter &&

@@ -8,12 +8,12 @@ import { useGridApiContext } from '../hooks/root/useGridApiContext';
 import { GridRowCount } from './GridRowCount';
 import { GridSelectedRowCount } from './GridSelectedRowCount';
 import { GridFooterContainer, GridFooterContainerProps } from './containers/GridFooterContainer';
-import { GridRootPropsContext } from '../context/GridRootPropsContext';
+import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 
 export const GridFooter = React.forwardRef<HTMLDivElement, GridFooterContainerProps>(
   function GridFooter(props, ref) {
     const apiRef = useGridApiContext();
-    const rootProps = React.useContext(GridRootPropsContext)!;
+    const rootProps = useGridRootProps();
     const totalRowCount = useGridSelector(apiRef, gridRowCountSelector);
     const selectedRowCount = useGridSelector(apiRef, selectedGridRowsCountSelector);
     const pagination = useGridSelector(apiRef, gridPaginationSelector);

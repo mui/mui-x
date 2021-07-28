@@ -17,7 +17,7 @@ import { GridTranslationKeys } from '../../models/api/gridLocaleTextApi';
 import { GridFilterItem } from '../../models/gridFilterItem';
 import { createTheme } from '../../utils/utils';
 import { useGridApiContext } from '../../hooks/root/useGridApiContext';
-import { GridRootPropsContext } from '../../context/GridRootPropsContext';
+import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
 const defaultTheme = createTheme();
 const useStyles = makeStyles(
@@ -48,7 +48,7 @@ export const GridToolbarFilterButton = React.forwardRef<
   const buttonProps = componentsProps.button || {};
   const classes = useStyles();
   const apiRef = useGridApiContext();
-  const rootProps = React.useContext(GridRootPropsContext)!;
+  const rootProps = useGridRootProps();
   const counter = useGridSelector(apiRef, filterGridItemsCounterSelector);
   const activeFilters = useGridSelector(apiRef, activeGridFilterItemsSelector);
   const lookup = useGridSelector(apiRef, gridColumnLookupSelector);

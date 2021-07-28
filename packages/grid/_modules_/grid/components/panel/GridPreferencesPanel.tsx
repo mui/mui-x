@@ -4,7 +4,7 @@ import { useGridSelector } from '../../hooks/features/core/useGridSelector';
 import { gridPreferencePanelStateSelector } from '../../hooks/features/preferencesPanel/gridPreferencePanelSelector';
 import { GridPreferencePanelsValue } from '../../hooks/features/preferencesPanel/gridPreferencePanelsValue';
 import { useGridApiContext } from '../../hooks/root/useGridApiContext';
-import { GridRootPropsContext } from '../../context/GridRootPropsContext';
+import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
 export const GridPreferencesPanel = React.forwardRef<
   HTMLDivElement,
@@ -12,7 +12,7 @@ export const GridPreferencesPanel = React.forwardRef<
 >(function GridPreferencesPanel(props, ref) {
   const apiRef = useGridApiContext();
   const columns = useGridSelector(apiRef, allGridColumnsSelector);
-  const rootProps = React.useContext(GridRootPropsContext)!;
+  const rootProps = useGridRootProps();
   const preferencePanelState = useGridSelector(apiRef, gridPreferencePanelStateSelector);
 
   const isColumnsTabOpen =

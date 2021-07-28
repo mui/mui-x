@@ -2,7 +2,6 @@ import * as React from 'react';
 import clsx from 'clsx';
 import { useForkRef } from '@material-ui/core/utils';
 import NoSsr from '@material-ui/core/NoSsr';
-import { GridRootPropsContext } from '../../context/GridRootPropsContext';
 import { optionsSelector } from '../../hooks/utils/optionsSelector';
 import { GridRootContainerRef } from '../../models/gridRootContainerRef';
 import { useStyles } from './GridRootStyles';
@@ -10,6 +9,7 @@ import { visibleGridColumnsLengthSelector } from '../../hooks/features/columns/g
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
 import { useGridState } from '../../hooks/features/core/useGridState';
 import { useGridApiContext } from '../../hooks/root/useGridApiContext';
+import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
 export type GridRootProps = React.HTMLAttributes<HTMLDivElement>;
 
@@ -19,7 +19,7 @@ export const GridRoot = React.forwardRef<HTMLDivElement, GridRootProps>(function
 ) {
   const classes = useStyles();
   const apiRef = useGridApiContext();
-  const rootProps = React.useContext(GridRootPropsContext)!;
+  const rootProps = useGridRootProps();
   const { children, className: classNameProp, ...other } = props;
   const visibleColumnsLength = useGridSelector(apiRef, visibleGridColumnsLengthSelector);
   const [gridState] = useGridState(apiRef!);
