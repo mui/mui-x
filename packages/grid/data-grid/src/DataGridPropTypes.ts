@@ -3,7 +3,7 @@ import { chainPropTypes } from '@material-ui/utils';
 import { MAX_PAGE_SIZE } from './DataGridProps';
 
 // @ts-ignore
-export const DATAGRID_PROPTYPES = {
+export const DATA_GRID_PROPTYPES = {
   apiRef: chainPropTypes(PropTypes.any, (props: any) => {
     if (props.apiRef != null) {
       return new Error(

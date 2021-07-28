@@ -4,7 +4,7 @@ import { useGridApiMethod } from '../../root/useGridApiMethod';
 import { useGridSelector } from '../core/useGridSelector';
 import { allGridColumnsSelector, visibleGridColumnsSelector } from '../columns';
 import { visibleSortedGridRowsSelector } from '../filter';
-import { gridSelectionStateSelector } from '../selection';
+import { gridArraySelectionStateSelector } from '../selection';
 import { GridCsvExportApi } from '../../../models/api/gridCsvExportApi';
 import { GridExportCsvOptions } from '../../../models/gridExport';
 import { useLogger } from '../../utils/useLogger';
@@ -17,7 +17,7 @@ export const useGridCsvExport = (apiRef: GridApiRef): void => {
   const visibleColumns = useGridSelector(apiRef, visibleGridColumnsSelector);
   const columns = useGridSelector(apiRef, allGridColumnsSelector);
   const visibleSortedRows = useGridSelector(apiRef, visibleSortedGridRowsSelector);
-  const selection = useGridSelector(apiRef, gridSelectionStateSelector);
+  const selection = useGridSelector(apiRef, gridArraySelectionStateSelector);
 
   const getDataAsCsv = React.useCallback(
     (options?: GridExportCsvOptions): string => {
@@ -38,7 +38,7 @@ export const useGridCsvExport = (apiRef: GridApiRef): void => {
       return buildCSV({
         columns: exportedColumns,
         rows: visibleSortedRows,
-        selectedRowIds: Array.isArray(selection) ? selection : [selection],
+        selectedRowIds: selection,
         getCellParams: apiRef.current.getCellParams,
         delimiterCharacter: options?.delimiter || ',',
       });

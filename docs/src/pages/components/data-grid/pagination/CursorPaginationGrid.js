@@ -71,6 +71,7 @@ export default function CursorPaginationGrid() {
       <DataGrid
         rows={rows}
         columns={data.columns}
+        pagination
         pageSize={5}
         rowCount={100}
         paginationMode="server"

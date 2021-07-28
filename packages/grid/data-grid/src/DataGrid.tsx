@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DATAGRID_PROPTYPES } from './DataGridPropTypes';
+import { DATA_GRID_PROPTYPES } from './DataGridPropTypes';
 import {
   DEFAULT_GRID_OPTIONS,
   GridBody,
@@ -25,8 +25,6 @@ const DATA_GRID_FORCED_PROPS: Omit<GridComponentProps, keyof DataGridProps> = {
   onRowsScrollEnd: undefined,
   checkboxSelectionVisibleOnly: false,
 };
-
-export const DATA_GRID_DEFAULT_PROPS = DEFAULT_GRID_OPTIONS;
 
 const DataGridRaw = React.forwardRef<HTMLDivElement, DataGridProps>(function DataGrid(
   inProps,
@@ -61,9 +59,9 @@ const DataGridRaw = React.forwardRef<HTMLDivElement, DataGridProps>(function Dat
   );
 });
 
-DataGridRaw.defaultProps = DATA_GRID_DEFAULT_PROPS;
+DataGridRaw.defaultProps = DEFAULT_GRID_OPTIONS;
 
 export const DataGrid = React.memo(DataGridRaw);
 
 // @ts-ignore
-DataGrid.propTypes = DATAGRID_PROPTYPES;
+DataGrid.propTypes = DATA_GRID_PROPTYPES;

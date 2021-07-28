@@ -14,6 +14,7 @@ import { useGridSelector } from '../core/useGridSelector';
 import { useGridState } from '../core/useGridState';
 import { gridRowsLookupSelector } from '../rows/gridRowsSelector';
 import {
+  gridArraySelectionStateSelector,
   gridSelectionStateSelector,
   selectedGridRowsSelector,
   selectedIdsLookupSelector,
@@ -189,7 +190,7 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
   React.useEffect(() => {
     // Rows changed
     setGridState((state) => {
-      const newSelectionState = getArraySelectionModel(state.selection);
+      const newSelectionState = gridArraySelectionStateSelector(state);
       const selectionLookup = selectedIdsLookupSelector(state);
       let hasChanged = false;
       newSelectionState.forEach((id: GridRowId) => {
@@ -220,7 +221,7 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
   React.useEffect(() => {
     // isRowSelectable changed
     setGridState((state) => {
-      const newSelectionState = getArraySelectionModel(state.selection);
+      const newSelectionState = gridArraySelectionStateSelector(state);
       const selectionLookup = selectedIdsLookupSelector(state);
       let hasChanged = false;
       newSelectionState.forEach((id: GridRowId) => {

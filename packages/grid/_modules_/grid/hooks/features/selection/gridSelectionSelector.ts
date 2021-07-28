@@ -6,7 +6,7 @@ import { GridRowId } from '../../../models/gridRows';
 export const gridSelectionStateSelector = (state: GridState) => state.selection;
 
 export const gridArraySelectionStateSelector = (state: GridState) =>
-  Array.isArray(state.selection) ? state.selection : [state.selection];
+  Array.isArray(state.selection) ? [...state.selection] : [state.selection];
 
 export const selectedGridRowsCountSelector = createSelector(
   gridArraySelectionStateSelector,

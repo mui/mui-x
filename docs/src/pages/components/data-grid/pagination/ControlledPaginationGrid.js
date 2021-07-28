@@ -17,6 +17,7 @@ export default function ControlledPaginationGrid() {
         page={page}
         onPageChange={(newPage) => setPage(newPage)}
         pageSize={5}
+        pagination
         {...data}
       />
     </div>

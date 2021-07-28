@@ -6,11 +6,11 @@ export interface GridGridDensity {
   headerHeight: number;
 }
 
-export const DEFAULT_GRID_DENSITY = GridDensityTypes.Standard;
+const DEFAULT_GRID_DENSITY = GridDensityTypes.Standard;
 
-export const DEFAULT_GRID_ROW_HEIGHT = 52;
+const DEFAULT_GRID_ROW_HEIGHT = 52;
 
-export const DEFAULT_GRID_HEADER_HEIGHT = 56;
+const DEFAULT_GRID_HEADER_HEIGHT = 56;
 
 export function getInitialGridDensityState(): GridGridDensity {
   return {

@@ -9,13 +9,7 @@ import {
   waitFor,
 } from 'test/utils';
 import { expect } from 'chai';
-import {
-  DataGrid,
-  DataGridProps,
-  DATA_GRID_DEFAULT_PROPS,
-  GridLinkOperator,
-  GridRowsProp,
-} from '@material-ui/data-grid';
+import { DataGrid, DataGridProps, GridLinkOperator, GridRowsProp } from '@material-ui/data-grid';
 import { getColumnValues, getRows } from 'test/utils/helperFn';
 import { spy } from 'sinon';
 import { useData } from 'packages/storybook/src/hooks/useData';
@@ -328,12 +322,21 @@ describe('<DataGrid /> - Pagination', () => {
     it('should always render the same amount of rows and fit the viewport', () => {
       const nbRows = 27;
       const height = 780;
-      render(<TestCaseAutoPageSize nbRows={nbRows} height={height} />);
+      const headerHeight = 56;
+      const rowHeight = 52;
+
+      render(
+        <TestCaseAutoPageSize
+          nbRows={nbRows}
+          height={height}
+          headerHeight={headerHeight}
+          rowHeight={rowHeight}
+        />,
+      );
 
       const footerHeight = document.querySelector('.MuiDataGrid-footerContainer')!.clientHeight;
       const expectedFullPageRowsLength = Math.floor(
-        (height - DATA_GRID_DEFAULT_PROPS.headerHeight - footerHeight) /
-          DATA_GRID_DEFAULT_PROPS.rowHeight,
+        (height - headerHeight - footerHeight) / rowHeight,
       );
 
       let rows = getRows();
@@ -372,23 +375,25 @@ describe('<DataGrid /> - Pagination', () => {
 
       const heightBefore = 780;
       const heightAfter = 360;
+      const headerHeight = 56;
+      const rowHeight = 52;
 
       const { setProps } = render(
         <TestCaseAutoPageSize
           nbRows={nbRows}
           height={heightBefore}
+          headerHeight={headerHeight}
+          rowHeight={rowHeight}
           onPageSizeChange={onPageSizeChange}
         />,
       );
 
       const footerHeight = document.querySelector('.MuiDataGrid-footerContainer')!.clientHeight;
       const expectedViewportRowsLengthBefore = Math.floor(
-        (heightBefore - DATA_GRID_DEFAULT_PROPS.headerHeight - footerHeight) /
-          DATA_GRID_DEFAULT_PROPS.rowHeight,
+        (heightBefore - headerHeight - footerHeight) / rowHeight,
       );
       const expectedViewportRowsLengthAfter = Math.floor(
-        (heightAfter - DATA_GRID_DEFAULT_PROPS.headerHeight - footerHeight) /
-          DATA_GRID_DEFAULT_PROPS.rowHeight,
+        (heightAfter - headerHeight - footerHeight) / rowHeight,
       );
 
       let rows = document.querySelectorAll('.MuiDataGrid-viewport [role="row"]');
