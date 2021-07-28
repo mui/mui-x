@@ -63,7 +63,6 @@ export const CsvExport = () => {
     </div>
   );
 };
-
 export function AutoHeightComfortableGridSnap() {
   const { data } = useDemoData({
     dataSet: 'Commodity',
