@@ -1,7 +1,6 @@
 import { GridComponentProps } from '../../_modules_/grid/GridComponentProps';
 import { useGridClipboard } from '../../_modules_/grid/hooks/features/clipboard/useGridClipboard';
 import { useGridColumnMenu } from '../../_modules_/grid/hooks/features/columnMenu/useGridColumnMenu';
-import { useGridColumnReorder } from '../../_modules_/grid/hooks/features/columnReorder/useGridColumnReorder';
 import { useGridColumnResize } from '../../_modules_/grid/hooks/features/columnResize/useGridColumnResize';
 import { useGridColumns } from '../../_modules_/grid/hooks/features/columns/useGridColumns';
 import { useGridControlState } from '../../_modules_/grid/hooks/features/core/useGridControlState';
@@ -62,7 +61,6 @@ export const useDataGridComponent = (apiRef: GridApiRef, props: GridComponentPro
   useGridContainerProps(apiRef);
   useGridDensity(apiRef);
   useGridVirtualRows(apiRef);
-  useGridColumnReorder(apiRef);
   useGridColumnResize(apiRef, props);
   useGridPageSize(apiRef, props);
   useGridPage(apiRef, props);
