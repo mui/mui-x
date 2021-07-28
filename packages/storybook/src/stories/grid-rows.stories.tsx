@@ -483,11 +483,11 @@ export function EditRowsControl() {
   }, []);
 
   const onCellEditCommit = React.useCallback(
-    (params: GridCellEditCommitParams, event?: React.SyntheticEvent) => {
+    (params: GridCellEditCommitParams, event: MuiEvent<React.SyntheticEvent>) => {
       const { id, field, value } = params;
-      event!.persist();
+      event.persist();
       // we stop propagation as we want to switch back to view mode after we updated the value on the server
-      event!.stopPropagation();
+      event.defaultMuiPrevented = true;
 
       let cellUpdate: any = { id };
       cellUpdate[field] = value;
@@ -607,12 +607,12 @@ export function ValidateEditValueWithApiRefGrid() {
   const classes = useEditCellStyles();
 
   const onEditCellPropsChange = React.useCallback(
-    ({ id, field, props }: GridEditCellPropsParams, event?: React.SyntheticEvent) => {
+    ({ id, field, props }: GridEditCellPropsParams, event: MuiEvent<React.SyntheticEvent>) => {
       if (field === 'email') {
         const isValid = validateEmail(props.value);
         apiRef.current.setEditCellProps({ id, field, props: { ...props, error: !isValid } });
         // Prevent the native behavior.
-        event?.stopPropagation();
+        event.defaultMuiPrevented = true;
       }
     },
     [apiRef],
@@ -676,7 +676,10 @@ export function ValidateEditValueServerSide() {
   const keyStrokeTimeoutRef = React.useRef<any>();
 
   const handleCellEditPropChange = React.useCallback(
-    async ({ id, field, props }: GridEditCellPropsParams, event) => {
+    async (
+      { id, field, props }: GridEditCellPropsParams,
+      event: MuiEvent<React.SyntheticEvent>,
+    ) => {
       if (field === 'username') {
         // TODO refactor this block
         clearTimeout(promiseTimeout);
@@ -688,7 +691,7 @@ export function ValidateEditValueServerSide() {
           apiRef.current.setEditCellProps({ id, field, props: { ...props, error: !isValid } });
         }, 200);
 
-        event.stopPropagation();
+        event.defaultMuiPrevented = true;
       }
     },
     [apiRef],
@@ -742,25 +745,28 @@ export function EditCellUsingExternalButtonGrid() {
   }, []);
 
   const handleDoubleCellClick = React.useCallback(
-    (params: GridCellParams, event: React.SyntheticEvent) => {
-      event.stopPropagation();
+    (params: GridCellParams, event: MuiEvent<React.MouseEvent>) => {
+      event.defaultMuiPrevented = true;
     },
     [],
   );
 
   // Prevent from rolling back on escape
-  const handleCellKeyDown = React.useCallback((params, event: React.KeyboardEvent) => {
+  const handleCellKeyDown = React.useCallback((params, event: MuiEvent<React.KeyboardEvent>) => {
     if (['Escape', 'Delete', 'Backspace', 'Enter'].includes(event.key)) {
-      event.stopPropagation();
+      event.defaultMuiPrevented = true;
     }
   }, []);
 
   // Prevent from committing on focus out
-  const handleCellFocusOut = React.useCallback((params, event?: MuiEvent<MouseEvent>) => {
-    if (params.cellMode === 'edit' && event) {
-      event.defaultMuiPrevented = true;
-    }
-  }, []);
+  const handleCellFocusOut = React.useCallback(
+    (params, event: MuiEvent<React.SyntheticEvent | DocumentEventMap['click']>) => {
+      if (params.cellMode === 'edit' && event) {
+        event.defaultMuiPrevented = true;
+      }
+    },
+    [],
+  );
 
   return (
     <React.Fragment>
@@ -807,13 +813,13 @@ export function EditCellWithCellClickGrid() {
   const apiRef = useGridApiRef();
 
   const handleCellClick = React.useCallback(
-    (params: GridCellParams, event) => {
+    (params: GridCellParams, event: MuiEvent<React.MouseEvent>) => {
       // Or you can use the editRowModel prop, but I find it easier
       // apiRef.current.setCellMode(params.id, params.field, 'edit');
       apiRef.current.publishEvent(GRID_CELL_EDIT_ENTER, params, event);
 
       // if I want to prevent selection I can do
-      event.stopPropagation();
+      event.defaultMuiPrevented = true;
     },
     [apiRef],
   );
@@ -832,16 +838,13 @@ export function EditCellWithMessageGrid() {
   const [message, setMessage] = React.useState('');
 
   React.useEffect(() => {
-    return apiRef.current.subscribeEvent(
-      GRID_CELL_EDIT_ENTER,
-      (params: GridCellParams, event?: React.SyntheticEvent) => {
-        setMessage(`Editing cell with value: ${params.value} at row: ${params.id}, column: ${
-          params.field
-        },
-                        triggered by ${event!.type}
-      `);
+    return apiRef.current.subscribeEvent(GRID_CELL_EDIT_ENTER, (params: GridCellParams, event) => {
+      setMessage(`Editing cell with value: ${params.value} at row: ${params.id}, column: ${
+        params.field
       },
-    );
+                        triggered by ${(event as React.SyntheticEvent)!.type}
+      `);
+    });
   }, [apiRef]);
 
   React.useEffect(() => {
