@@ -14,7 +14,10 @@ import { GridContextProvider } from '../../_modules_/grid/context/GridContextPro
 import { useDataGridComponent } from './useDataGridComponent';
 import { DataGridProps, MAX_PAGE_SIZE } from './DataGridProps';
 
-const DATA_GRID_FORCED_PROPS: Omit<GridComponentProps, keyof DataGridProps> = {
+const DATA_GRID_FORCED_PROPS: Omit<
+  GridComponentProps,
+  Exclude<keyof DataGridProps, 'pagination'>
+> = {
   apiRef: undefined,
   disableColumnResize: true,
   disableColumnReorder: true,
