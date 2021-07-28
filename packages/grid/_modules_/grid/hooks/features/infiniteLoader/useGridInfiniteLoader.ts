@@ -13,7 +13,7 @@ import { GridRowScrollEndParams } from '../../../models/params/gridRowScrollEndP
 import { visibleGridColumnsSelector } from '../columns/gridColumnsSelector';
 import { GridComponentProps } from '../../../GridComponentProps';
 import { GridScrollParams } from '../../../models/params/gridScrollParams';
-import { GridViewportRowsChange } from '../../../models/params/gridViewportRowsChange';
+import { GridViewportRowsChangeParams } from '../../../models/params/gridViewportRowsChangeParams';
 
 export const useGridInfiniteLoader = (
   apiRef: GridApiRef,
@@ -71,7 +71,7 @@ export const useGridInfiniteLoader = (
       ) {
         totalRowsScrolledHeight.current += options.rowHeight;
         firstRowIndex.current += 1;
-        const viewportRowsChangeParams: GridViewportRowsChange = {
+        const viewportRowsChangeParams: GridViewportRowsChangeParams = {
           firstRowIndex: firstRowIndex.current,
           lastRowIndex: containerSizes.viewportPageSize + firstRowIndex.current,
           api: apiRef,
@@ -85,7 +85,7 @@ export const useGridInfiniteLoader = (
       ) {
         totalRowsScrolledHeight.current -= options.rowHeight;
         firstRowIndex.current -= 1;
-        const viewportRowsChangeParams: GridViewportRowsChange = {
+        const viewportRowsChangeParams: GridViewportRowsChangeParams = {
           firstRowIndex: firstRowIndex.current,
           lastRowIndex: containerSizes.viewportPageSize + firstRowIndex.current,
           api: apiRef,

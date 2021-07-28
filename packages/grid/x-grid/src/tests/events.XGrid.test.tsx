@@ -74,11 +74,10 @@ describe('<XGrid /> - Events Params', () => {
   };
 
   const TestVirtualization = (props: Partial<XGridProps>) => {
-    apiRef = useGridApiRef();
     const data = useData(50, 10);
     return (
       <div style={{ width: 300, height: 300 }}>
-        <XGrid rows={data.rows} columns={data.columns} apiRef={apiRef} {...props} />
+        <XGrid rows={data.rows} columns={data.columns} {...props} />
       </div>
     );
   };
@@ -301,14 +300,20 @@ describe('<XGrid /> - Events Params', () => {
   });
 
   it('call onViewportRowsChange when the viewport rows change', () => {
+    const headerHeight = 40;
+    const rowHeight = 40;
+    const offset = 10;
+    const border = 1;
+    const pageSize = 4;
     const handleViewportRowsChange = spy();
     const { container } = render(
-      <div style={{ width: 300, height: 300 }}>
-        <TestVirtualization rowHeight={40} onViewportRowsChange={handleViewportRowsChange} />
+      <div
+        style={{ width: 300, height: headerHeight + pageSize * rowHeight + offset + border * 2 }}
+      >
+        <TestVirtualization rowHeight={rowHeight} onViewportRowsChange={handleViewportRowsChange} />
       </div>,
     );
     const gridWindow = container.querySelector('.MuiDataGrid-window');
-    const pageSize = apiRef.current.getState().containerSizes.viewportPageSize;
     // scroll 1 rows.
     gridWindow.scrollTop = 40;
     gridWindow.dispatchEvent(new Event('scroll'));
