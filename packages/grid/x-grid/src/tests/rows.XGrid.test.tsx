@@ -415,7 +415,7 @@ describe('<XGrid /> - Rows', () => {
 
     describe('Pagination', () => {
       it('should render only the pageSize', () => {
-        render(<TestCaseVirtualization pagination pageSize={32} />);
+        render(<TestCaseVirtualization pagination pageSize={32} rowsPerPageOptions={[32]} />);
         const gridWindow = document.querySelector('.MuiDataGrid-window')!;
         gridWindow.scrollTop = 10e6; // scroll to the bottom
         gridWindow.dispatchEvent(new Event('scroll'));
@@ -429,7 +429,15 @@ describe('<XGrid /> - Rows', () => {
       });
 
       it('should not virtualized the last page if smaller than viewport', () => {
-        render(<TestCaseVirtualization pagination pageSize={32} page={3} height={500} />);
+        render(
+          <TestCaseVirtualization
+            pagination
+            pageSize={32}
+            rowsPerPageOptions={[32]}
+            page={3}
+            height={500}
+          />,
+        );
         const gridWindow = document.querySelector('.MuiDataGrid-window')!;
         gridWindow.scrollTop = 10e6; // scroll to the bottom
         gridWindow.dispatchEvent(new Event('scroll'));
