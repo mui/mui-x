@@ -7,6 +7,7 @@ import {
 } from '../../../constants/eventsConstants';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridColumnApi } from '../../../models/api/gridColumnApi';
+import { gridCheckboxSelectionColDef } from '../../../models/colDef/gridCheckboxSelection';
 import {
   GridColDef,
   GridColumns,
@@ -15,12 +16,17 @@ import {
   GridStateColDef,
   GridColumnLookup,
 } from '../../../models/colDef/gridColDef';
-
+import { GridColumnTypesRecord } from '../../../models/colDef/gridColTypeDef';
+import { getGridDefaultColumnTypes } from '../../../models/colDef/gridDefaultColumnTypes';
+import { getGridColDef } from '../../../models/colDef/getGridColDef';
+import { Logger } from '../../../models/logger';
 import { GridColumnOrderChangeParams } from '../../../models/params/gridColumnOrderChangeParams';
+import { mergeGridColTypes } from '../../../utils/mergeUtils';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
 import { optionsSelector } from '../../utils/optionsSelector';
 import { useLogger } from '../../utils/useLogger';
 import { useGridSelector } from '../core/useGridSelector';
+import { GridLocaleText, GridTranslationKeys } from '../../../models/api/gridLocaleTextApi';
 import { useGridState } from '../core/useGridState';
 import {
   allGridColumnsSelector,
@@ -28,19 +34,8 @@ import {
   visibleGridColumnsSelector,
 } from './gridColumnsSelector';
 import { useGridApiOptionHandler } from '../../root/useGridApiEventHandler';
+import { GRID_STRING_COL_DEF } from '../../../models/colDef/gridStringColDef';
 import { GridComponentProps } from '../../../GridComponentProps';
-
-import {
-  getGridColDef,
-  getGridDefaultColumnTypes,
-  GRID_STRING_COL_DEF,
-  gridCheckboxSelectionColDef,
-  GridColumnTypesRecord,
-  GridLocaleText,
-  GridTranslationKeys,
-  Logger,
-} from '../../../models';
-import { mergeGridColTypes } from '../../../utils';
 
 type RawGridColumnsState = Omit<GridColumnsState, 'lookup'> & {
   lookup: { [field: string]: GridColDef | GridStateColDef };
