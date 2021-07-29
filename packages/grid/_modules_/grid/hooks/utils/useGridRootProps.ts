@@ -1,5 +1,4 @@
 import * as React from 'react';
-
 import { GridRootPropsContext } from '../../context/GridRootPropsContext';
 
 export const useGridRootProps = () => {
