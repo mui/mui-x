@@ -58,13 +58,15 @@ export function buildCSV(options: BuildCSVOptions): string {
   }
 
   const CSVBody = rowIds
-    .reduce<string>((acc, id) => {
-      return `${acc}${serialiseRow(id, columns, getCellParams, delimiterCharacter).join(
-        delimiterCharacter,
-      )}\r\n`;
-    }, '')
+    .reduce<string>(
+      (acc, id) =>
+        `${acc}${serialiseRow(id, columns, getCellParams, delimiterCharacter).join(
+          delimiterCharacter,
+        )}\r\n`,
+      '',
+    )
     .trim();
-  
+
   if (!includeHeaders) {
     return CSVBody;
   }
