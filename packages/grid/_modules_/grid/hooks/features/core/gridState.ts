@@ -31,7 +31,7 @@ import {
   getInitialGridRenderingState,
   InternalRenderingState,
 } from '../virtualization/renderingState';
-import { GridPaginationState } from '../pagination/gridPaginationState';
+import { getInitialPaginationState, GridPaginationState } from '../pagination/gridPaginationState';
 
 export interface GridState {
   rows: InternalGridRowsState;
@@ -64,12 +64,7 @@ export const getInitialGridState = (): GridState => ({
   rows: getInitialGridRowState(),
   licenseStatus: LicenseStatus.NotFound,
   editRows: {},
-  pagination: {
-    page: 0,
-    pageCount: 0,
-    rowCount: 0,
-    pageSize: 100,
-  },
+  pagination: getInitialPaginationState(),
   options: DEFAULT_GRID_OPTIONS,
   isScrolling: false,
   columns: getInitialGridColumnsState(),

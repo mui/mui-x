@@ -125,6 +125,7 @@ describe('<DataGrid /> - Selection', () => {
             // @ts-ignore
             pagination
             pageSize={1}
+            rowsPerPageOptions={[1]}
           />
         </div>,
       );
