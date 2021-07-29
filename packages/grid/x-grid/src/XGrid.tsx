@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { LicenseInfo } from '@material-ui/x-license';
 import { ponyfillGlobal } from '@material-ui/utils';
 import {
-  DEFAULT_GRID_OPTIONS,
+  DEFAULT_GRID_PROPS_FROM_OPTIONS,
   GridComponentProps,
   GridBody,
   GridErrorHandler,
@@ -11,6 +11,7 @@ import {
   GridHeaderPlaceholder,
   GridRoot,
   useGridApiRef,
+  useThemeProps,
 } from '../../_modules_/grid';
 import { GridContextProvider } from '../../_modules_/grid/context/GridContextProvider';
 import { useXGridComponent } from './useXGridComponent';
@@ -31,11 +32,12 @@ export type XGridProps = GridComponentProps;
 
 const XGridRaw = React.forwardRef<HTMLDivElement, XGridProps>(function XGrid(inProps, ref) {
   const apiRef = useGridApiRef(inProps.apiRef);
+  const props = useThemeProps({ props: inProps, name: 'MuiDataGrid' });
 
-  useXGridComponent(apiRef, inProps);
+  useXGridComponent(apiRef, props);
 
   return (
-    <GridContextProvider apiRef={apiRef} props={inProps}>
+    <GridContextProvider apiRef={apiRef} props={props}>
       <GridRoot ref={ref}>
         <GridErrorHandler>
           <GridHeaderPlaceholder />
@@ -47,7 +49,7 @@ const XGridRaw = React.forwardRef<HTMLDivElement, XGridProps>(function XGrid(inP
   );
 });
 
-XGridRaw.defaultProps = DEFAULT_GRID_OPTIONS;
+XGridRaw.defaultProps = DEFAULT_GRID_PROPS_FROM_OPTIONS;
 
 export const XGrid = React.memo(XGridRaw);
 

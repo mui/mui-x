@@ -1,9 +1,8 @@
 import * as React from 'react';
 import { DATA_GRID_PROPTYPES } from './DataGridPropTypes';
 import {
-  DEFAULT_GRID_OPTIONS,
+  DEFAULT_GRID_PROPS_FROM_OPTIONS,
   GridBody,
-  GridComponentProps,
   GridErrorHandler,
   GridFooterPlaceholder,
   GridHeaderPlaceholder,
@@ -12,39 +11,14 @@ import {
 } from '../../_modules_/grid';
 import { GridContextProvider } from '../../_modules_/grid/context/GridContextProvider';
 import { useDataGridComponent } from './useDataGridComponent';
-import { DataGridProps, MAX_PAGE_SIZE } from './DataGridProps';
-
-const DATA_GRID_FORCED_PROPS: Omit<
-  GridComponentProps,
-  Exclude<keyof DataGridProps, 'pagination'>
-> = {
-  apiRef: undefined,
-  disableColumnResize: true,
-  disableColumnReorder: true,
-  disableMultipleColumnsFiltering: true,
-  disableMultipleColumnsSorting: true,
-  disableMultipleSelection: true,
-  pagination: true,
-  onRowsScrollEnd: undefined,
-  checkboxSelectionVisibleOnly: false,
-};
+import { DataGridProps } from './DataGridProps';
+import { useDataGridProps } from './useDataGridProps';
 
 const DataGridRaw = React.forwardRef<HTMLDivElement, DataGridProps>(function DataGrid(
   inProps,
   ref,
 ) {
-  if (inProps.pageSize! > MAX_PAGE_SIZE) {
-    throw new Error(`'props.pageSize' cannot exceed 100 in DataGrid.`);
-  }
-
-  const props = React.useMemo<GridComponentProps>(
-    () => ({
-      ...inProps,
-      ...DATA_GRID_FORCED_PROPS,
-    }),
-    [inProps],
-  );
-
+  const props = useDataGridProps(inProps);
   const apiRef = useGridApiRef();
 
   useDataGridComponent(apiRef, props);
@@ -62,7 +36,7 @@ const DataGridRaw = React.forwardRef<HTMLDivElement, DataGridProps>(function Dat
   );
 });
 
-DataGridRaw.defaultProps = DEFAULT_GRID_OPTIONS;
+DataGridRaw.defaultProps = DEFAULT_GRID_PROPS_FROM_OPTIONS;
 
 export const DataGrid = React.memo(DataGridRaw);
 

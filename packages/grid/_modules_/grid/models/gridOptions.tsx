@@ -523,15 +523,14 @@ export interface GridOptions {
 }
 
 /**
- * The default [[GridOptions]] object that will be used to merge with the 'options' passed in the react component prop.
+ * The default options to inject in the props of DataGrid or XGrid.
  */
-export const DEFAULT_GRID_OPTIONS = {
+export const DEFAULT_GRID_PROPS_FROM_OPTIONS = {
   columnBuffer: 2,
   columnTypes: getGridDefaultColumnTypes(),
   density: GridDensityTypes.Standard,
   filterMode: GridFeatureModeConstant.client,
   headerHeight: 56,
-  localeText: GRID_DEFAULT_LOCALE_TEXT,
   paginationMode: GridFeatureModeConstant.client,
   rowHeight: 52,
   rowsPerPageOptions: [25, 50, 100],
@@ -540,4 +539,12 @@ export const DEFAULT_GRID_OPTIONS = {
   sortingOrder: ['asc' as const, 'desc' as const, null],
   logger: console,
   logLevel: process.env.NODE_ENV === 'production' ? 'error' : 'warn',
+};
+
+/**
+ * The default [[GridOptions]] object that will be used to merge with the 'options' passed in the react component prop.
+ */
+export const DEFAULT_GRID_OPTIONS = {
+  ...DEFAULT_GRID_PROPS_FROM_OPTIONS,
+  localeText: GRID_DEFAULT_LOCALE_TEXT,
 };
