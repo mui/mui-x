@@ -51,7 +51,7 @@ const DEFAULT_GRID_SLOTS_ICONS: GridIconSlotsComponent = {
   ExportIcon: GridSaveAltIcon,
 };
 
-const DEFAULT_GRID_SLOTS_COMPONENTS: GridApiRefComponentsProperty = {
+export const DEFAULT_GRID_SLOTS_COMPONENTS: GridApiRefComponentsProperty = {
   ...DEFAULT_GRID_SLOTS_ICONS,
   Checkbox: MUICheckbox,
   ColumnMenu: GridColumnMenu,

@@ -190,6 +190,35 @@ describe('<XGrid /> - Export', () => {
       ).to.equal(['id;Brand', '0;Nike', '1;Adidas'].join('\r\n'));
     });
 
+    it('should only export the selected rows if any', () => {
+      const TestCaseCSVExport = () => {
+        apiRef = useGridApiRef();
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <XGrid
+              {...baselineProps}
+              apiRef={apiRef}
+              columns={[{ field: 'id' }, { field: 'brand', headerName: 'Brand' }]}
+              rows={[
+                {
+                  id: 0,
+                  brand: 'Nike',
+                },
+                {
+                  id: 1,
+                  brand: 'Adidas',
+                },
+              ]}
+              selectionModel={[0]}
+            />
+          </div>
+        );
+      };
+
+      render(<TestCaseCSVExport />);
+      expect(apiRef.current.getDataAsCsv()).to.equal(['id,Brand', '0,Nike'].join('\r\n'));
+    });
+
     it('should not export hidden column', () => {
       const TestCaseCSVExport = () => {
         apiRef = useGridApiRef();
