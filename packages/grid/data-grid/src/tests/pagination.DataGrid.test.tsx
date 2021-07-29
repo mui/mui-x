@@ -19,7 +19,6 @@ import {
 import { getColumnValues, getRows } from 'test/utils/helperFn';
 import { spy } from 'sinon';
 import { useData } from 'packages/storybook/src/hooks/useData';
-import { DEFAULT_PAGE_SIZE } from '../../../_modules_/grid/hooks/features/pagination/gridPaginationState';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -362,7 +361,7 @@ describe('<DataGrid /> - Pagination', () => {
         render(<BaselineTestCase rowsPerPageOptions={[25, 50]} />);
         // @ts-expect-error need to migrate helpers to TypeScript
       }).toWarnDev([
-        `Material-UI: The page size \`${DEFAULT_PAGE_SIZE}\` is not preset in the \`rowsPerPageOptions\``,
+        `Material-UI: The page size \`100\` is not preset in the \`rowsPerPageOptions\``,
       ]);
     });
   });

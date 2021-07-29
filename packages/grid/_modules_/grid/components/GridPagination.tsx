@@ -8,7 +8,6 @@ import { optionsSelector } from '../hooks/utils/optionsSelector';
 import { useGridApiContext } from '../hooks/root/useGridApiContext';
 import { getMuiVersion, createTheme } from '../utils';
 import { GridRootPropsContext } from '../context/GridRootPropsContext';
-import { DEFAULT_PAGE_SIZE } from '../hooks/features/pagination/gridPaginationState';
 
 const defaultTheme = createTheme();
 // Used to hide the Rows per page selector on small devices
@@ -88,12 +87,13 @@ export const GridPagination = React.forwardRef<
     const warnedOnceMissingPageSizeInRowsPerPageOptions = React.useRef(false);
     if (
       !warnedOnceMissingPageSizeInRowsPerPageOptions.current &&
-      !rootProps.rowsPerPageOptions!.includes(rootProps.pageSize ?? DEFAULT_PAGE_SIZE)
+      !rootProps.autoPageSize &&
+      !rootProps.rowsPerPageOptions!.includes(rootProps.pageSize ?? paginationState.pageSize)
     ) {
       console.warn(
         [
           `Material-UI: The page size \`${
-            rootProps.pageSize ?? DEFAULT_PAGE_SIZE
+            rootProps.pageSize ?? paginationState.pageSize
           }\` is not preset in the \`rowsPerPageOptions\``,
           `Add it to show the pagination select.`,
         ].join('\n'),

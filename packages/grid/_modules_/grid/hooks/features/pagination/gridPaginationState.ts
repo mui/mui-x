@@ -5,11 +5,9 @@ export interface GridPaginationState {
   rowCount: number;
 }
 
-export const DEFAULT_PAGE_SIZE = 100;
-
 export const getInitialPaginationState = (): GridPaginationState => ({
   page: 0,
   pageCount: 0,
   rowCount: 0,
-  pageSize: DEFAULT_PAGE_SIZE,
+  pageSize: 100,
 });
