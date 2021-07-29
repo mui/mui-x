@@ -1,10 +1,12 @@
 import React from 'react';
+import { GridComponentProps } from '../../../GridComponentProps';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridControlStateApi } from '../../../models/api/gridControlStateApi';
 import { ControlStateItem } from '../../../models/controlStateItem';
+import { Signature } from '../../root/useGridApiEventHandler';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
 
-export function useGridControlState(apiRef: GridApiRef) {
+export function useGridControlState(apiRef: GridApiRef, props: GridComponentProps) {
   const controlStateMapRef = React.useRef<Record<string, ControlStateItem<any>>>({});
 
   const updateControlState = React.useCallback((controlStateItem: ControlStateItem<any>) => {
@@ -41,8 +43,14 @@ export function useGridControlState(apiRef: GridApiRef) {
         if (hasSubStateChanged) {
           if (controlState.propOnChange) {
             const newModel = newSubState;
+            const callbackOptions =
+              props.signature === Signature.XGrid
+                ? {
+                    api: apiRef.current,
+                  }
+                : {};
             if (controlState.propModel !== newModel) {
-              controlState.propOnChange(newModel);
+              controlState.propOnChange(newModel, callbackOptions);
             }
             shouldUpdate =
               controlState.propModel === undefined || controlState.propModel === newModel;
@@ -67,7 +75,7 @@ export function useGridControlState(apiRef: GridApiRef) {
         },
       };
     },
-    [apiRef],
+    [apiRef, props],
   );
 
   const controlStateApi: GridControlStateApi = {

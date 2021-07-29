@@ -23,7 +23,7 @@ export function useApi(apiRef: GridApiRef): void {
       if (event && isSynthenticEvent(event) && event.isPropagationStopped()) {
         return;
       }
-      apiRef.current.emit(name, params, event);
+      apiRef.current.emit(name, params, event, {});
     },
     [apiRef],
   );
