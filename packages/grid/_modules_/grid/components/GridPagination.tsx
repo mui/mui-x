@@ -6,7 +6,7 @@ import { useGridSelector } from '../hooks/features/core/useGridSelector';
 import { gridPaginationSelector } from '../hooks/features/pagination/gridPaginationSelector';
 import { optionsSelector } from '../hooks/utils/optionsSelector';
 import { useGridApiContext } from '../hooks/root/useGridApiContext';
-import { getMuiVersion, createTheme } from '../utils';
+import { createTheme, getMuiVersion } from '../utils/utils';
 
 const defaultTheme = createTheme();
 // Used to hide the Rows per page selector on small devices
