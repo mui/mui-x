@@ -12,8 +12,10 @@ import {
   GridValueGetterParams,
   GridToolbar,
   DataGridProps,
+  ptBR,
 } from '@material-ui/data-grid';
 import { useData } from 'packages/storybook/src/hooks/useData';
+import { createTheme, ThemeProvider } from '@material-ui/core/styles';
 import { getColumnHeaderCell, getColumnValues, raf } from 'test/utils/helperFn';
 
 describe('<DataGrid /> - Layout & Warnings', () => {
@@ -617,6 +619,17 @@ describe('<DataGrid /> - Layout & Warnings', () => {
       );
 
       expect(getByText('Size')).not.to.equal(null);
+    });
+
+    it('should support translations in the theme', () => {
+      const { getByRole } = render(
+        <ThemeProvider theme={createTheme({}, ptBR)}>
+          <div style={{ width: 300, height: 300 }}>
+            <DataGrid {...baselineProps} />
+          </div>
+        </ThemeProvider>,
+      );
+      expect(getByRole('button', { name: 'Ordenar' })).not.to.equal(null);
     });
   });
 
