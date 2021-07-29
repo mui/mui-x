@@ -20,7 +20,6 @@ const DataGridRaw = React.forwardRef<HTMLDivElement, DataGridProps>(function Dat
 ) {
   const props = useDataGridProps(inProps);
   const apiRef = useGridApiRef();
-
   useDataGridComponent(apiRef, props);
 
   return (

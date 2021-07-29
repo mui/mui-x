@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { DataGridProps, MAX_PAGE_SIZE } from './DataGridProps';
-import { GRID_DEFAULT_LOCALE_TEXT, GridComponentProps, useThemeProps } from '../../_modules_';
+import { GridComponentProps, useThemeProps } from '../../_modules_';
 
 const DATA_GRID_FORCED_PROPS: Omit<
   GridComponentProps,
