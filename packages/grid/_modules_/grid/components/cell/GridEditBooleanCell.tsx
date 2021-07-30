@@ -19,12 +19,14 @@ export function GridEditBooleanCell(
     colDef,
     cellMode,
     isEditable,
+    tabIndex,
     className,
     getValue,
     hasFocus,
     ...other
   } = props;
 
+  const inputRef = React.useRef<HTMLInputElement>(null);
   const id = useId();
   const [valueState, setValueState] = React.useState(value);
 
@@ -41,11 +43,17 @@ export function GridEditBooleanCell(
     setValueState(value);
   }, [value]);
 
+  React.useLayoutEffect(() => {
+    if (hasFocus && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [hasFocus]);
+
   return (
     <label htmlFor={id} className={clsx('MuiDataGrid-editBooleanCell', className)} {...other}>
       <Checkbox
-        autoFocus
         id={id}
+        inputRef={inputRef}
         checked={Boolean(valueState)}
         onChange={handleChange}
         size="small"

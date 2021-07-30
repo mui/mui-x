@@ -13,11 +13,13 @@ export function GridEditDateCell(props: GridCellParams & InputBaseProps) {
     colDef,
     cellMode,
     isEditable,
+    tabIndex,
     hasFocus,
     getValue,
     ...other
   } = props;
 
+  const inputRef = React.useRef<any>();
   const [valueState, setValueState] = React.useState(value);
 
   const handleChange = React.useCallback(
@@ -54,6 +56,12 @@ export function GridEditDateCell(props: GridCellParams & InputBaseProps) {
     setValueState(value);
   }, [value]);
 
+  React.useLayoutEffect(() => {
+    if (hasFocus && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [hasFocus]);
+
   let valueToDisplay = valueState || '';
   if (valueState instanceof Date) {
     const offset = valueState.getTimezoneOffset();
@@ -63,7 +71,7 @@ export function GridEditDateCell(props: GridCellParams & InputBaseProps) {
 
   return (
     <InputBase
-      autoFocus
+      inputRef={inputRef}
       fullWidth
       className="MuiDataGrid-editInputCell"
       type={isDateTime ? 'datetime-local' : 'date'}

@@ -4,7 +4,7 @@ import {
   // @ts-expect-error need to migrate helpers to TypeScript
   fireEvent,
 } from 'test/utils';
-import { useFakeTimers } from 'sinon';
+import { useFakeTimers, spy } from 'sinon';
 import { expect } from 'chai';
 import { getCell, getColumnValues } from 'test/utils/helperFn';
 import {
@@ -14,6 +14,7 @@ import {
   useGridApiRef,
   XGrid,
   XGridProps,
+  GRID_CELL_FOCUS_OUT,
 } from '@material-ui/x-grid';
 import { useData } from 'packages/storybook/src/hooks/useData';
 
@@ -597,6 +598,7 @@ describe('<XGrid /> - Rows', () => {
     it('should focus the clicked cell in the state', () => {
       render(<TestCase rows={baselineProps.rows} />);
 
+      fireEvent.mouseUp(getCell(0, 0));
       fireEvent.click(getCell(0, 0));
       expect(apiRef.current.getState().focus.cell).to.deep.equal({
         id: baselineProps.rows[0].id,
@@ -615,12 +617,65 @@ describe('<XGrid /> - Rows', () => {
     it('should not reset focus when removing a row not containing the focus cell', () => {
       const { setProps } = render(<TestCase rows={baselineProps.rows} />);
 
+      fireEvent.mouseUp(getCell(1, 0));
       fireEvent.click(getCell(1, 0));
       setProps({ rows: baselineProps.rows.slice(1) });
       expect(apiRef.current.getState().focus.cell).to.deep.equal({
         id: baselineProps.rows[1].id,
         field: baselineProps.columns[0].field,
       });
+    });
+
+    it('should set the focus when pressing a key inside a cell', () => {
+      render(<TestCase rows={baselineProps.rows} />);
+      const cell = getCell(1, 0);
+      cell.focus();
+      fireEvent.keyDown(cell, { key: 'a' });
+      expect(apiRef.current.getState().focus.cell).to.deep.equal({
+        id: baselineProps.rows[1].id,
+        field: baselineProps.columns[0].field,
+      });
+    });
+
+    it('should update the focus when clicking from one cell to another', () => {
+      render(<TestCase rows={baselineProps.rows} />);
+      fireEvent.mouseUp(getCell(1, 0));
+      fireEvent.click(getCell(1, 0));
+      expect(apiRef.current.getState().focus.cell).to.deep.equal({
+        id: baselineProps.rows[1].id,
+        field: baselineProps.columns[0].field,
+      });
+      fireEvent.mouseUp(getCell(2, 1));
+      fireEvent.click(getCell(2, 1));
+      expect(apiRef.current.getState().focus.cell).to.deep.equal({
+        id: baselineProps.rows[2].id,
+        field: baselineProps.columns[1].field,
+      });
+    });
+
+    it('should reset focus when clicking outside the focused cell', () => {
+      render(<TestCase rows={baselineProps.rows} />);
+      fireEvent.mouseUp(getCell(1, 0));
+      fireEvent.click(getCell(1, 0));
+      expect(apiRef.current.getState().focus.cell).to.deep.equal({
+        id: baselineProps.rows[1].id,
+        field: baselineProps.columns[0].field,
+      });
+      fireEvent.click(document.body);
+      expect(apiRef.current.getState().focus.cell).to.deep.equal(null);
+    });
+
+    it('should publish GRID_CELL_FOCUS_OUT when clicking outside the focused cell', () => {
+      const onCellFocusOut = spy();
+      render(<TestCase rows={baselineProps.rows} />);
+      apiRef.current.subscribeEvent(GRID_CELL_FOCUS_OUT, onCellFocusOut);
+      fireEvent.mouseUp(getCell(1, 0));
+      fireEvent.click(getCell(1, 0));
+      expect(onCellFocusOut.callCount).to.equal(0);
+      fireEvent.click(document.body);
+      expect(onCellFocusOut.callCount).to.equal(1);
+      expect(onCellFocusOut.args[0][0].id).to.equal(baselineProps.rows[1].id);
+      expect(onCellFocusOut.args[0][0].field).to.equal(baselineProps.columns[0].field);
     });
   });
 });

@@ -26,11 +26,14 @@ export function GridEditSingleSelectCell(props: GridCellParams & SelectProps) {
     colDef,
     cellMode,
     isEditable,
+    tabIndex,
     className,
     getValue,
     hasFocus,
     ...other
   } = props;
+
+  const ref = React.useRef<any>();
 
   const handleChange = (event) => {
     api.setEditCellValue({ id, field, value: event.target.value }, event);
@@ -46,14 +49,22 @@ export function GridEditSingleSelectCell(props: GridCellParams & SelectProps) {
     }
   };
 
+  React.useLayoutEffect(() => {
+    if (hasFocus && ref.current) {
+      // TODO v5: replace with inputRef.current.focus()
+      // See https://github.com/mui-org/material-ui/issues/21441
+      ref.current.querySelector('[role="button"]').focus();
+    }
+  }, [hasFocus]);
+
   return (
     <Select
+      ref={ref}
       value={value}
       onChange={handleChange}
       MenuProps={{
         onClose: handleClose,
       }}
-      autoFocus
       fullWidth
       open
       {...other}

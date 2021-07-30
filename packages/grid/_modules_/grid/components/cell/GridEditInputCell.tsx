@@ -13,11 +13,13 @@ export function GridEditInputCell(props: GridCellParams & InputBaseProps) {
     colDef,
     cellMode,
     isEditable,
+    tabIndex,
     hasFocus,
     getValue,
     ...other
   } = props;
 
+  const inputRef = React.useRef<any>();
   const [valueState, setValueState] = React.useState(value);
 
   const handleChange = React.useCallback(
@@ -33,9 +35,15 @@ export function GridEditInputCell(props: GridCellParams & InputBaseProps) {
     setValueState(value);
   }, [value]);
 
+  React.useLayoutEffect(() => {
+    if (hasFocus && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [hasFocus]);
+
   return (
     <InputBase
-      autoFocus
+      inputRef={inputRef}
       className="MuiDataGrid-editInputCell"
       fullWidth
       type={colDef.type === 'number' ? colDef.type : 'text'}

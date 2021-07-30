@@ -145,13 +145,17 @@ export const GridCell = React.memo(function GridCell(props: GridCellProps) {
   };
 
   React.useLayoutEffect(() => {
-    const doc = ownerDocument(apiRef!.current.rootElementRef!.current as HTMLElement);
+    if (!hasFocus) {
+      return;
+    }
 
-    if (
-      hasFocus &&
-      cellRef.current &&
-      (!doc.activeElement || !cellRef.current!.contains(doc.activeElement))
-    ) {
+    if (cellMode === 'edit' && isEditable) {
+      return;
+    }
+
+    const doc = ownerDocument(apiRef!.current.rootElementRef!.current as HTMLElement)!;
+
+    if (cellRef.current && (doc.activeElement || !cellRef.current!.contains(doc.activeElement))) {
       const focusableElement = cellRef.current!.querySelector('[tabindex="0"]') as HTMLElement;
       if (focusableElement) {
         focusableElement!.focus();
@@ -175,7 +179,7 @@ export const GridCell = React.memo(function GridCell(props: GridCellProps) {
       data-mode={cellMode}
       aria-colindex={colIndex + 1}
       style={style}
-      tabIndex={tabIndex}
+      tabIndex={cellMode === 'view' || !isEditable ? tabIndex : -1}
       {...eventsHandlers}
     >
       {children || valueToRender?.toString()}
