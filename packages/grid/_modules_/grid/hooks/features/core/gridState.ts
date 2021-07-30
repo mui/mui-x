@@ -4,6 +4,7 @@ import {
   GridScrollBarState,
   GridViewportSizeState,
 } from '../../../models/gridContainerProps';
+import { GridFilterModel } from '../../../models/gridFilterModel';
 import { GridEditRowsModel } from '../../../models/gridEditRowModel';
 import { DEFAULT_GRID_OPTIONS, GridOptions } from '../../../models/gridOptions';
 import { GridColumnMenuState } from '../columnMenu/columnMenuState';
@@ -16,7 +17,7 @@ import {
   GridColumnResizeState,
 } from '../columnResize/columnResizeState';
 import { GridGridDensity, getInitialGridDensityState } from '../density/densityState';
-import { GridFilterModelState, getInitialGridFilterState } from '../filter/gridFilterModelState';
+import { getInitialGridFilterState } from '../filter/gridFilterModelState';
 import {
   getInitialVisibleGridRowsState,
   VisibleGridRowsState,
@@ -50,7 +51,7 @@ export interface GridState {
   focus: GridFocusState;
   tabIndex: GridTabIndexState;
   selection: GridSelectionState;
-  filter: GridFilterModelState;
+  filter: GridFilterModel;
   visibleRows: VisibleGridRowsState;
   preferencePanel: GridPreferencePanelState;
   density: GridGridDensity;
