@@ -251,6 +251,7 @@ describe('<XGrid /> - Selection', () => {
           checkboxSelectionVisibleOnly
           pagination
           pageSize={1}
+          rowsPerPageOptions={[1]}
         />
       </div>,
     );
