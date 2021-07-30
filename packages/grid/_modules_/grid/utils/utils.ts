@@ -17,10 +17,6 @@ export function isObject(value: any): value is Record<string, any> {
   return typeof value === 'object';
 }
 
-export function getThemePaletteMode(palette: any): string {
-  return palette.type || palette.mode;
-}
-
 export function getMuiVersion(): string {
   if (!('fade' in styles)) {
     return 'v5';
