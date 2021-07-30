@@ -9,7 +9,7 @@ import {
   GRID_ROW_OVER,
 } from '../constants/eventsConstants';
 import { GridRowId } from '../models';
-import { isFunction } from '../utils';
+import { isFunction } from '../utils/utils';
 import { gridDensityRowHeightSelector } from '../hooks/features/density';
 import { useGridApiContext } from '../hooks/root/useGridApiContext';
 import { useGridSelector } from '../hooks/features/core/useGridSelector';

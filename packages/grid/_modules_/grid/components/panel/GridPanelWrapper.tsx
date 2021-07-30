@@ -2,7 +2,7 @@ import * as React from 'react';
 import clsx from 'clsx';
 import TrapFocus from '@material-ui/core/Unstable_TrapFocus';
 import { makeStyles } from '@material-ui/styles';
-import { getMuiVersion } from '../../utils';
+import { getMuiVersion } from '../../utils/utils';
 
 const useStyles = makeStyles(
   () => ({

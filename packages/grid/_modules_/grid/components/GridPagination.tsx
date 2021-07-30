@@ -5,7 +5,7 @@ import { makeStyles } from '@material-ui/styles';
 import { useGridSelector } from '../hooks/features/core/useGridSelector';
 import { gridPaginationSelector } from '../hooks/features/pagination/gridPaginationSelector';
 import { useGridApiContext } from '../hooks/root/useGridApiContext';
-import { getMuiVersion, createTheme } from '../utils';
+import { createTheme, getMuiVersion } from '../utils/utils';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 
 const defaultTheme = createTheme();

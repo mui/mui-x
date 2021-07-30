@@ -12,7 +12,6 @@ import {
   GridEditRowsModel,
   GridLoadIcon,
   GridColDef,
-  isOverflown,
   GridRowData,
   useGridApiRef,
   XGrid,
@@ -25,6 +24,10 @@ import {
 import { useDemoData } from '@material-ui/x-grid-data-generator';
 import { action } from '@storybook/addon-actions';
 import { randomInt } from '../data/random-generator';
+
+function isOverflown(element: Element): boolean {
+  return element.scrollHeight > element.clientHeight || element.scrollWidth > element.clientWidth;
+}
 
 export default {
   title: 'X-Grid Tests/Rows',
