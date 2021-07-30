@@ -11,9 +11,9 @@ import {
   GridHeaderPlaceholder,
   GridRoot,
   useGridApiRef,
-  useThemeProps,
 } from '../../_modules_/grid';
 import { GridContextProvider } from '../../_modules_/grid/context/GridContextProvider';
+import { useThemeProps } from '../../_modules_/grid/utils/material-ui-utils';
 import { useXGridComponent } from './useXGridComponent';
 
 // This is the package release date. Each package version should update this const

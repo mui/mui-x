@@ -2,17 +2,16 @@
 import * as React from 'react';
 import { createMuiTheme, Theme } from '@material-ui/core/styles';
 import { makeStyles } from '@material-ui/styles';
-import {
-  DataGrid,
-  getThemePaletteMode,
-  GridColumns,
-  GridRowsProp,
-} from '@material-ui/data-grid';
+import { DataGrid, GridColumns, GridRowsProp } from '@material-ui/data-grid';
 import {
   randomCreatedDate,
   randomTraderName,
   randomUpdatedDate,
 } from '@material-ui/x-grid-data-generator';
+
+function getThemePaletteMode(palette: any): string {
+  return palette.type || palette.mode;
+}
 
 const defaultTheme = createMuiTheme();
 const useStyles = makeStyles(

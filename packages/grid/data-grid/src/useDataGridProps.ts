@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { DataGridProps, MAX_PAGE_SIZE } from './DataGridProps';
-import { GridComponentProps, useThemeProps } from '../../_modules_';
+import { GridComponentProps } from '../../_modules_';
+import { useThemeProps } from '../../_modules_/grid/utils/material-ui-utils';
 
 const DATA_GRID_FORCED_PROPS: Omit<
   GridComponentProps,
