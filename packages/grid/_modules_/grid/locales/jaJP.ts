@@ -1,6 +1,6 @@
 import { jaJP as jaJPCore } from '@material-ui/core/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, Localization } from '../utils';
+import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
 const jaJPGrid: Partial<GridLocaleText> = {
   // Root
