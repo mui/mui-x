@@ -117,7 +117,7 @@ export const useGridColumnResize = (
           element: colElementRef.current,
           colDef: colDefRef.current,
           api: apiRef,
-          width: colDefRef.current?.width,
+          width: colDefRef.current?.computedWidth,
         },
         nativeEvent,
       );
