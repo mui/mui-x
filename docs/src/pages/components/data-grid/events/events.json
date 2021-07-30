@@ -66,11 +66,11 @@
     "description": "Fired when the props of the edit input are committed. Called with a GridEditCellPropsParams object."
   },
   {
-    "name": "cellEditEnter",
+    "name": "cellEditStart",
     "description": "Fired when the cell turns to edit mode. Called with a <a href=\"/api/data-grid/grid-cell-params/\">GridCellParams</a> object."
   },
   {
-    "name": "cellEditExit",
+    "name": "cellEditStop",
     "description": "Fired when the cell turns back to view mode. Called with a <a href=\"/api/data-grid/grid-cell-params/\">GridCellParams</a> object."
   },
   {

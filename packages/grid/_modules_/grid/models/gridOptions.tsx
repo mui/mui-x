@@ -225,13 +225,13 @@ export interface GridOptions {
    * @param {GridCellParams} params With all properties from [[GridCellParams]].
    * @param {React.SyntheticEvent} event The event that caused this prop to be called.
    */
-  onCellEditEnter?: (params: GridCellParams, event?: React.SyntheticEvent) => void;
+  onCellEditStart?: (params: GridCellParams, event?: React.SyntheticEvent) => void;
   /**
    * Callback fired when the cell turns to view mode.
    * @param {GridCellParams} params With all properties from [[GridCellParams]].
    * @param {React.SyntheticEvent} event The event that caused this prop to be called.
    */
-  onCellEditExit?: (params: GridCellParams, event?: React.SyntheticEvent) => void;
+  onCellEditStop?: (params: GridCellParams, event?: React.SyntheticEvent) => void;
   /**
    * Callback fired when an exception is thrown in the grid, or when the `showError` API method is called.
    */

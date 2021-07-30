@@ -4,8 +4,8 @@ import {
   GRID_EDIT_CELL_PROPS_CHANGE,
   GRID_CELL_EDIT_COMMIT,
   GRID_CELL_DOUBLE_CLICK,
-  GRID_CELL_EDIT_ENTER,
-  GRID_CELL_EDIT_EXIT,
+  GRID_CELL_EDIT_START,
+  GRID_CELL_EDIT_STOP,
   GRID_CELL_NAVIGATION_KEY_DOWN,
   GRID_CELL_MOUSE_DOWN,
   GRID_CELL_KEY_DOWN,
@@ -54,7 +54,7 @@ export function useGridEditRows(
       return;
     }
     apiRef.current.commitCellChange(params, event);
-    apiRef.current.publishEvent(GRID_CELL_EDIT_EXIT, params, event);
+    apiRef.current.publishEvent(GRID_CELL_EDIT_STOP, params, event);
   };
 
   const handleCellFocusOut = useEventCallback(
@@ -249,12 +249,12 @@ export function useGridEditRows(
 
       const isModifierKeyPressed = event.ctrlKey || event.metaKey || event.altKey;
       if (!isEditMode && isCellEnterEditModeKeys(event.key) && !isModifierKeyPressed) {
-        apiRef.current.publishEvent(GRID_CELL_EDIT_ENTER, params, event);
+        apiRef.current.publishEvent(GRID_CELL_EDIT_START, params, event);
       }
       if (!isEditMode && isDeleteKeys(event.key)) {
         apiRef.current.setEditCellValue({ id, field, value: '' });
         apiRef.current.commitCellChange({ id, field }, event);
-        apiRef.current.publishEvent(GRID_CELL_EDIT_EXIT, params, event);
+        apiRef.current.publishEvent(GRID_CELL_EDIT_STOP, params, event);
       }
       if (isEditMode && isCellEditCommitKeys(event.key)) {
         const commitParams = { id, field };
@@ -263,7 +263,7 @@ export function useGridEditRows(
         }
       }
       if (isEditMode && isCellExitEditModeKeys(event.key)) {
-        apiRef.current.publishEvent(GRID_CELL_EDIT_EXIT, params, event);
+        apiRef.current.publishEvent(GRID_CELL_EDIT_STOP, params, event);
       }
     },
     [apiRef],
@@ -294,7 +294,7 @@ export function useGridEditRows(
       if (!params.isEditable) {
         return;
       }
-      apiRef.current.publishEvent(GRID_CELL_EDIT_ENTER, params, event);
+      apiRef.current.publishEvent(GRID_CELL_EDIT_START, params, event);
     },
     [apiRef],
   );
@@ -304,15 +304,15 @@ export function useGridEditRows(
   useGridApiEventHandler(apiRef, GRID_CELL_DOUBLE_CLICK, handleCellDoubleClick);
   useGridApiEventHandler(apiRef, GRID_CELL_FOCUS_OUT, handleCellFocusOut);
   useGridApiEventHandler(apiRef, GRID_COLUMN_HEADER_DRAG_START, handleColumnHeaderDragStart);
-  useGridApiEventHandler(apiRef, GRID_CELL_EDIT_ENTER, handleCellEditEnter);
-  useGridApiEventHandler(apiRef, GRID_CELL_EDIT_EXIT, handleCellEditExit);
+  useGridApiEventHandler(apiRef, GRID_CELL_EDIT_START, handleCellEditEnter);
+  useGridApiEventHandler(apiRef, GRID_CELL_EDIT_STOP, handleCellEditExit);
   useGridApiEventHandler(apiRef, GRID_CELL_EDIT_COMMIT, handleCellEditCommit);
   useGridApiEventHandler(apiRef, GRID_EDIT_CELL_PROPS_CHANGE, handleEditCellPropsChange);
 
   useGridApiOptionHandler(apiRef, GRID_CELL_EDIT_COMMIT, options.onCellEditCommit);
   useGridApiOptionHandler(apiRef, GRID_EDIT_CELL_PROPS_CHANGE, options.onEditCellPropsChange);
-  useGridApiOptionHandler(apiRef, GRID_CELL_EDIT_ENTER, options.onCellEditEnter);
-  useGridApiOptionHandler(apiRef, GRID_CELL_EDIT_EXIT, options.onCellEditExit);
+  useGridApiOptionHandler(apiRef, GRID_CELL_EDIT_START, options.onCellEditStart);
+  useGridApiOptionHandler(apiRef, GRID_CELL_EDIT_STOP, options.onCellEditStop);
 
   useGridApiMethod<GridEditRowApi>(
     apiRef,

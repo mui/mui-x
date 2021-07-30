@@ -157,13 +157,13 @@ export const GRID_CELL_EDIT_COMMIT = 'cellEditCommit';
  * Fired when the cell turns to edit mode. Called with a [[GridCellParams]] object.
  * @event
  */
-export const GRID_CELL_EDIT_ENTER = 'cellEditEnter';
+export const GRID_CELL_EDIT_START = 'cellEditStart';
 
 /**
  * Fired when the cell turns back to view mode. Called with a [[GridCellParams]] object.
  * @event
  */
-export const GRID_CELL_EDIT_EXIT = 'cellEditExit';
+export const GRID_CELL_EDIT_STOP = 'cellEditStop';
 
 /**
  * Fired when a [navigation key](/components/data-grid/accessibility#keyboard-navigation) is pressed in a cell.
