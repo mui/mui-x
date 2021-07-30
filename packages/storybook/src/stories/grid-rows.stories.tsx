@@ -24,7 +24,6 @@ import {
 import { useDemoData } from '@material-ui/x-grid-data-generator';
 import { action } from '@storybook/addon-actions';
 import { randomInt } from '../data/random-generator';
-import { useData } from '../hooks/useData';
 
 export default {
   title: 'X-Grid Tests/Rows',
@@ -929,17 +928,3 @@ export function SnapGridWidthEdgeScroll() {
     </div>
   );
 }
-
-export const TestOnViewportRowsChange = () => {
-  const data = useData(100, 50);
-
-  return (
-    <div style={{ height: 600 }}>
-      <XGrid
-        columns={data.columns}
-        rows={data.rows}
-        onViewportRowsChange={params => console.log(params)}
-      />
-    </div>
-  );
-};
