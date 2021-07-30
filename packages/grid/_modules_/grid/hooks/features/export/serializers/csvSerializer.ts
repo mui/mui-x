@@ -54,7 +54,7 @@ export function buildCSV(options: BuildCSVOptions): string {
   let rowIds = [...rows.keys()];
 
   if (selectedRowIds.length) {
-    rowIds = rowIds.filter((id) => selectedRowIds.includes(`${id}`));
+    rowIds = rowIds.filter((id) => selectedRowIds.includes(id));
   }
 
   const CSVBody = rowIds

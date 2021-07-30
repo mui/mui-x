@@ -1,34 +1,5 @@
 import * as React from 'react';
-import MUICheckbox from '@material-ui/core/Checkbox';
-import { ErrorOverlay } from '../components/ErrorOverlay';
-import { GridFooter } from '../components/GridFooter';
-import { GridHeader } from '../components/GridHeader';
-import { GridPreferencesPanel } from '../components/panel/GridPreferencesPanel';
-import {
-  GridArrowDownwardIcon,
-  GridArrowUpwardIcon,
-  GridColumnIcon,
-  GridFilterAltIcon,
-  GridFilterListIcon,
-  GridSeparatorIcon,
-  GridTableRowsIcon,
-  GridTripleDotsVerticalIcon,
-  GridViewHeadlineIcon,
-  GridViewStreamIcon,
-  GridSaveAltIcon,
-  GridCloseIcon,
-  GridCheckIcon,
-} from '../components/icons/index';
-import { GridLoadingOverlay } from '../components/GridLoadingOverlay';
-import { GridColumnMenu } from '../components/menu/columnMenu/GridColumnMenu';
-import { GridNoRowsOverlay } from '../components/GridNoRowsOverlay';
-import { GridNoResultsOverlay } from '../components/GridNoResultsOverlay';
-import { GridPagination } from '../components/GridPagination';
-import { GridColumnsPanel } from '../components/panel/GridColumnsPanel';
-import { GridFilterPanel } from '../components/panel/filterPanel/GridFilterPanel';
-import { GridPanel } from '../components/panel/GridPanel';
-import { GridColumnUnsortedIcon } from '../components/columnHeaders/GridColumnUnsortedIcon';
-import { GridApiRefComponentsProperty } from './api/gridComponentsApi';
+
 import { GridIconSlotsComponent } from './gridIconSlotsComponent';
 
 /**
@@ -94,37 +65,3 @@ export interface GridSlotsComponent extends GridIconSlotsComponent {
    */
   Panel?: React.JSXElementConstructor<any>;
 }
-
-export const DEFAULT_GRID_SLOTS_ICONS: GridIconSlotsComponent = {
-  BooleanCellTrueIcon: GridCheckIcon,
-  BooleanCellFalseIcon: GridCloseIcon,
-  OpenFilterButtonIcon: GridFilterListIcon,
-  ColumnFilteredIcon: GridFilterAltIcon,
-  ColumnSelectorIcon: GridColumnIcon,
-  ColumnMenuIcon: GridTripleDotsVerticalIcon,
-  ColumnUnsortedIcon: GridColumnUnsortedIcon,
-  ColumnSortedAscendingIcon: GridArrowUpwardIcon,
-  ColumnSortedDescendingIcon: GridArrowDownwardIcon,
-  ColumnResizeIcon: GridSeparatorIcon,
-  DensityCompactIcon: GridViewHeadlineIcon,
-  DensityStandardIcon: GridTableRowsIcon,
-  DensityComfortableIcon: GridViewStreamIcon,
-  ExportIcon: GridSaveAltIcon,
-};
-
-export const DEFAULT_GRID_SLOTS_COMPONENTS: GridApiRefComponentsProperty = {
-  ...DEFAULT_GRID_SLOTS_ICONS,
-  Checkbox: MUICheckbox,
-  ColumnMenu: GridColumnMenu,
-  ColumnsPanel: GridColumnsPanel,
-  ErrorOverlay,
-  FilterPanel: GridFilterPanel,
-  Footer: GridFooter,
-  Header: GridHeader,
-  PreferencesPanel: GridPreferencesPanel,
-  LoadingOverlay: GridLoadingOverlay,
-  NoResultsOverlay: GridNoResultsOverlay,
-  NoRowsOverlay: GridNoRowsOverlay,
-  Pagination: GridPagination,
-  Panel: GridPanel,
-};

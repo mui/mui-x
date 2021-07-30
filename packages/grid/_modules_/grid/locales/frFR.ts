@@ -1,6 +1,6 @@
 import { frFR as frFRCore } from '@material-ui/core/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, Localization } from '../utils';
+import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
 const frFRGrid: Partial<GridLocaleText> = {
   // Root

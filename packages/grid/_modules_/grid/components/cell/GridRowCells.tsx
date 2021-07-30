@@ -7,10 +7,10 @@ import {
   GridRowId,
   GridEditRowProps,
   GridStateColDef,
-} from '../../models/index';
+} from '../../models';
 import { GridCell, GridCellProps } from './GridCell';
 import { useGridApiContext } from '../../hooks/root/useGridApiContext';
-import { isFunction } from '../../utils/index';
+import { isFunction } from '../../utils/utils';
 import { GRID_CSS_CLASS_PREFIX } from '../../constants/cssClassesConstants';
 
 interface RowCellsProps {

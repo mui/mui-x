@@ -124,6 +124,7 @@ describe('<DataGrid /> - Selection', () => {
             checkboxSelection
             pagination
             pageSize={1}
+            rowsPerPageOptions={[1]}
           />
         </div>,
       );

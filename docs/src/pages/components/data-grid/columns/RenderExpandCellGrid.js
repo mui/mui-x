@@ -4,7 +4,7 @@ import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import Popper from '@material-ui/core/Popper';
 import { makeStyles } from '@material-ui/styles';
-import { DataGrid, isOverflown } from '@material-ui/data-grid';
+import { DataGrid } from '@material-ui/data-grid';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -21,6 +21,13 @@ const useStyles = makeStyles(() => ({
     },
   },
 }));
+
+function isOverflown(element) {
+  return (
+    element.scrollHeight > element.clientHeight ||
+    element.scrollWidth > element.clientWidth
+  );
+}
 
 const GridCellExpand = React.memo(function GridCellExpand(props) {
   const { width, value } = props;
