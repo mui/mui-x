@@ -125,7 +125,11 @@ describe('<XGrid /> - Edit Rows', () => {
   });
 
   it('should allow to stop double click using stopPropagation', () => {
-    render(<TestCase onCellDoubleClick={(params, event) => event.stopPropagation()} />);
+    render(
+      <TestCase
+        onCellDoubleClick={(params, event) => (event as React.SyntheticEvent).stopPropagation()}
+      />,
+    );
     const cell = getCell(1, 0);
     cell.focus();
     fireEvent.doubleClick(cell);
@@ -201,7 +205,7 @@ describe('<XGrid /> - Edit Rows', () => {
       code: 1,
       target: cell,
       isPropagationStopped: () => false,
-    });
+    } as any);
     // fireEvent.keyDown(cell, { key: 'a', code: 1, target: cell });
 
     expect(cell).to.have.class('MuiDataGrid-cell--editable');

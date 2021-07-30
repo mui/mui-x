@@ -1,6 +1,6 @@
 import { ptBR as ptBRCore } from '@material-ui/core/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, Localization } from '../utils';
+import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
 const ptBRGrid: Partial<GridLocaleText> = {
   // Root

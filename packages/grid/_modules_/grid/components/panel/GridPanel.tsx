@@ -6,7 +6,8 @@ import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import Paper from '@material-ui/core/Paper';
 import Popper, { PopperProps } from '@material-ui/core/Popper';
 import { useGridApiContext } from '../../hooks/root/useGridApiContext';
-import { isEscapeKey, getMuiVersion, createTheme } from '../../utils';
+import { getMuiVersion, createTheme } from '../../utils/utils';
+import { isEscapeKey } from '../../utils/keyboardUtils';
 import {
   InternalStandardProps as StandardProps,
   generateUtilityClasses,

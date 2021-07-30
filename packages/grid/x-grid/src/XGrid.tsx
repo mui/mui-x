@@ -2,7 +2,8 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { LicenseInfo, useLicenseVerifier } from '@material-ui/x-license';
 import { ponyfillGlobal } from '@material-ui/utils';
-import { GridComponent, GridComponentProps, useThemeProps } from '../../_modules_/grid';
+import { GridComponent, GridComponentProps } from '../../_modules_/grid';
+import { useThemeProps } from '../../_modules_/grid/utils/material-ui-utils';
 
 // This is the package release date. Each package version should update this const
 // automatically when a new version is published on npm.

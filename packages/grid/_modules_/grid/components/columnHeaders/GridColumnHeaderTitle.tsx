@@ -1,7 +1,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import Tooltip from '@material-ui/core/Tooltip';
-import { isOverflown } from '../../utils/index';
+import { isOverflown } from '../../utils/domUtils';
 
 const ColumnHeaderInnerTitle = React.forwardRef<
   HTMLDivElement,
