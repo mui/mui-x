@@ -9,10 +9,14 @@ import { GridMainContainer } from '../containers/GridMainContainer';
 import { GridWindow } from '../containers/GridWindow';
 import { GridAutoSizer } from '../GridAutoSizer';
 import { GridViewport } from '../GridViewport';
-import { Watermark } from '../Watermark';
 import { GridOverlays } from './GridOverlays';
 
-export function GridBody() {
+interface GridBodyProps {
+  children?: React.ReactNode;
+}
+
+export function GridBody(props: GridBodyProps) {
+  const { children } = props;
   const apiRef = useGridApiContext();
   const rootProps = React.useContext(GridRootPropsContext)!;
 
@@ -34,7 +38,6 @@ export function GridBody() {
   return (
     <GridMainContainer>
       <GridOverlays />
-      <Watermark />
       <GridColumnsContainer ref={columnsContainerRef}>
         <GridColumnsHeader ref={columnsHeaderRef} />
       </GridColumnsContainer>
@@ -49,6 +52,7 @@ export function GridBody() {
           </GridWindow>
         )}
       </GridAutoSizer>
+      {children}
     </GridMainContainer>
   );
 }

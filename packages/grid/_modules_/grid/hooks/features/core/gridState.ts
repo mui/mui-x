@@ -56,7 +56,6 @@ export interface GridState {
   preferencePanel: GridPreferencePanelState;
   density: GridGridDensity;
   error?: any;
-  verifyLicense?: boolean;
   licenseStatus: LicenseStatus;
 }
 

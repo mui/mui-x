@@ -12,9 +12,5 @@ export function useLicenseState(apiRef: GridApiRef) {
     setGridState((state) => ({ ...state, licenseStatus }));
   }, [setGridState, licenseStatus]);
 
-  React.useEffect(() => {
-    setGridState((state) => ({ ...state, verifyLicense: true }));
-  });
-
   return licenseStatus;
 }

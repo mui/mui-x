@@ -24,8 +24,7 @@ function getLicenseErrorMessage(licenseStatus: string) {
   }
 }
 
-const licenseStatusSelector = (state: GridState) =>
-  state.verifyLicense ? state.licenseStatus : LicenseStatus.Valid;
+const licenseStatusSelector = (state: GridState) => state.licenseStatus;
 
 export function Watermark() {
   const apiRef = useGridApiContext();

@@ -15,6 +15,7 @@ import {
 import { GridContextProvider } from '../../_modules_/grid/context/GridContextProvider';
 import { useThemeProps } from '../../_modules_/grid/utils/material-ui-utils';
 import { useXGridComponent } from './useXGridComponent';
+import { Watermark } from '../../_modules_/grid/components/Watermark';
 
 // This is the package release date. Each package version should update this const
 // automatically when a new version is published on npm.
@@ -41,7 +42,9 @@ const XGridRaw = React.forwardRef<HTMLDivElement, XGridProps>(function XGrid(inP
       <GridRoot ref={ref}>
         <GridErrorHandler>
           <GridHeaderPlaceholder />
-          <GridBody />
+          <GridBody>
+            <Watermark />
+          </GridBody>
           <GridFooterPlaceholder />
         </GridErrorHandler>
       </GridRoot>
