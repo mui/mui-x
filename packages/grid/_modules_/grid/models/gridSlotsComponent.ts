@@ -8,7 +8,7 @@ import { GridIconSlotsComponent } from './gridIconSlotsComponent';
  */
 export interface GridSlotsComponent extends GridIconSlotsComponent {
   /**
-   * Checkbox component used in the grid for both header and cells. By default, it uses the Material-UI core Checkbox component.
+   * The custom Checkbox component used in the grid for both header and cells.
    */
   Checkbox?: React.JSXElementConstructor<any>;
   /**
@@ -37,15 +37,15 @@ export interface GridSlotsComponent extends GridIconSlotsComponent {
    */
   PreferencesPanel?: React.JSXElementConstructor<any>;
   /**
-   * Overlay component rendered when the grid is in a loading state.
+   * Loading overlay component rendered when the grid is in a loading state.
    */
   LoadingOverlay?: React.JSXElementConstructor<any>;
   /**
-   * Overlay component rendered when the grid has no results after filtering.
+   * No results overlay component rendered when the grid has no results after filtering.
    */
   NoResultsOverlay?: React.JSXElementConstructor<any>;
   /**
-   * Overlay component rendered when the grid has no rows.
+   * No rows overlay component rendered when the grid has no rows.
    */
   NoRowsOverlay?: React.JSXElementConstructor<any>;
   /**
