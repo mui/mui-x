@@ -38,6 +38,7 @@ export interface GridVirtualizationApi {
   /**
    * Refreshes the viewport cells according to the scroll positions
    * @param {boolean} forceRender If `true`, forces a rerender. By default, it is `false`.
+   * @ignore - do not document.
    */
   updateViewport: (forceRender?: boolean) => void;
 }
