@@ -1,6 +1,6 @@
 import { nlNL as nlNLCore } from '@material-ui/core/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, Localization } from '../utils';
+import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
 const nlNLGrid: Partial<GridLocaleText> = {
   // Root

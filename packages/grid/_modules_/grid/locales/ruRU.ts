@@ -1,6 +1,6 @@
 import { ruRU as ruRUCore } from '@material-ui/core/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, Localization } from '../utils';
+import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
 export const ruRUGrid: Partial<GridLocaleText> = {
   // Root

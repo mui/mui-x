@@ -7,9 +7,12 @@ import {
   GridEditCellPropsParams,
   GridRowsProp,
   useGridApiRef,
-  getThemePaletteMode,
   XGrid,
 } from '@material-ui/x-grid';
+
+function getThemePaletteMode(palette: any): string {
+  return palette.type || palette.mode;
+}
 
 const defaultTheme = createMuiTheme();
 const useStyles = makeStyles(
