@@ -14,7 +14,7 @@ export interface GridControlStateApi {
   /**
    * Allows the internal grid state to apply the registered control state constraint.
    * @param {GridState} state The new modified state that would be the next if the state is not controlled.
-   * @returns {ignoreSetState: boolean, postUpdate: () => void}, ignoreSetState let the state know if it should update, and postUpdate is a callback function triggered if the state has updated.
+   * @returns {{ ignoreSetState: boolean, postUpdate: () => void }} ignoreSetState let the state know if it should update, and postUpdate is a callback function triggered if the state has updated.
    * @ignore - do not document.
    */
   applyControlStateConstraint: (state: GridState) => {
