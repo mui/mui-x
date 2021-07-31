@@ -548,6 +548,7 @@ export interface GridOptions {
    * @param params
    * @param event [[MuiEvent<{}>]].
    * @param {MuiCallbackDetails} details Additional details for this callback.
+   * @private
    */
   onStateChange?: (params: any, event: MuiEvent<{}>, details?: any) => void;
   /**
