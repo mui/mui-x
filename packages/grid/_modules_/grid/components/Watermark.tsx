@@ -23,10 +23,11 @@ function getLicenseErrorMessage(licenseStatus: string) {
       throw new Error('Material-UI: Unhandled license status.');
   }
 }
+
 const licenseStatusSelector = (state: GridState) =>
   state.verifyLicense ? state.licenseStatus : LicenseStatus.Valid;
 
-export const Watermark = () => {
+export function Watermark() {
   const apiRef = useGridApiContext();
 
   const licenseStatus = useGridSelector(apiRef, licenseStatusSelector);
@@ -53,4 +54,4 @@ export const Watermark = () => {
       {getLicenseErrorMessage(licenseStatus)}{' '}
     </div>
   );
-};
+}
