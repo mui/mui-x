@@ -17,9 +17,9 @@ export const useGridReducer = <State, Action>(
       if (gridState[stateId] === undefined) {
         gridState[stateId] = initialState;
       }
-      setGridState((oldState) => {
-        const newState = { ...oldState };
-        newState[stateId] = reducer(oldState[stateId], action);
+      setGridState((state) => {
+        const newState = { ...state };
+        newState[stateId] = reducer(state[stateId], action);
         return newState;
       });
       forceUpdate();

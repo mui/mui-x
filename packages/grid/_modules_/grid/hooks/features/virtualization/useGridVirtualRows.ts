@@ -58,15 +58,15 @@ export const useGridVirtualRows = (apiRef: GridApiRef): void => {
   const [renderedColRef, updateRenderedCols] = useGridVirtualColumns(options, apiRef);
 
   const setRenderingState = React.useCallback(
-    (state: Partial<InternalRenderingState>) => {
+    (newState: Partial<InternalRenderingState>) => {
       let stateChanged = false;
-      setGridState((oldState) => {
-        const currentRenderingState = { ...oldState.rendering, ...state };
-        if (!isDeepEqual(oldState.rendering, currentRenderingState)) {
+      setGridState((state) => {
+        const currentRenderingState = { ...state.rendering, ...newState };
+        if (!isDeepEqual(state.rendering, currentRenderingState)) {
           stateChanged = true;
-          return { ...oldState, rendering: currentRenderingState };
+          return { ...state, rendering: currentRenderingState };
         }
-        return oldState;
+        return state;
       });
       return stateChanged;
     },
