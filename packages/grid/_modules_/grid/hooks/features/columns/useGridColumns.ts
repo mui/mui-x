@@ -22,7 +22,6 @@ import { Logger } from '../../../models/logger';
 import { GridColumnOrderChangeParams } from '../../../models/params/gridColumnOrderChangeParams';
 import { mergeGridColTypes } from '../../../utils/mergeUtils';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
-import { optionsSelector } from '../../utils/optionsSelector';
 import { useLogger } from '../../utils/useLogger';
 import { useGridSelector } from '../core/useGridSelector';
 import { GridLocaleText, GridTranslationKeys } from '../../../models/api/gridLocaleTextApi';
@@ -89,7 +88,7 @@ function updateColumnsWidth(columns: GridColumns, viewportWidth: number): GridCo
 
 function hydrateColumns(
   columns: GridColumns,
-  columnTypes: GridColumnTypesRecord,
+  columnTypes: GridColumnTypesRecord = {},
   withCheckboxSelection: boolean,
   logger: Logger,
   getLocaleText: <T extends GridTranslationKeys>(key: T) => GridLocaleText[T],
@@ -139,14 +138,16 @@ const upsertColumnsState = (
 
 export function useGridColumns(
   apiRef: GridApiRef,
-  props: Pick<GridComponentProps, 'columns' | 'onColumnVisibilityChange'>,
+  props: Pick<
+    GridComponentProps,
+    'columns' | 'onColumnVisibilityChange' | 'columnTypes' | 'checkboxSelection'
+  >,
 ): void {
   const logger = useLogger('useGridColumns');
   const [gridState, setGridState, forceUpdate] = useGridState(apiRef);
   const columnsMeta = useGridSelector(apiRef, gridColumnsMetaSelector);
   const allColumns = useGridSelector(apiRef, allGridColumnsSelector);
   const visibleColumns = useGridSelector(apiRef, visibleGridColumnsSelector);
-  const options = useGridSelector(apiRef, optionsSelector);
 
   const updateState = React.useCallback(
     (newState: GridInternalColumns, emit = true) => {
@@ -303,8 +304,8 @@ export function useGridColumns(
     if (props.columns.length > 0) {
       const hydratedColumns = hydrateColumns(
         props.columns,
-        options.columnTypes,
-        !!options.checkboxSelection,
+        props.columnTypes,
+        !!props.checkboxSelection,
         logger,
         apiRef.current.getLocaleText,
       );
@@ -318,8 +319,8 @@ export function useGridColumns(
     logger,
     apiRef,
     props.columns,
-    options.columnTypes,
-    options.checkboxSelection,
+    props.columnTypes,
+    props.checkboxSelection,
     updateState,
     setColumnsState,
   ]);
