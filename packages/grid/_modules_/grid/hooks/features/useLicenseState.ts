@@ -1,5 +1,5 @@
-import { useLicenseVerifier } from '@material-ui/x-license';
 import * as React from 'react';
+import { useLicenseVerifier } from '@material-ui/x-license';
 import { GridApiRef } from '../../models/api/gridApiRef';
 import { useGridState } from './core/useGridState';
 
