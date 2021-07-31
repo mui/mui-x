@@ -4,16 +4,16 @@
 export interface GridSlotsComponentsProps {
   checkbox?: any;
   columnMenu?: any;
+  columnsPanel?: any;
   errorOverlay?: any;
+  filterPanel?: any;
   footer?: any;
   header?: any;
-  toolbar?: any;
-  preferencesPanel?: any;
   loadingOverlay?: any;
   noResultsOverlay?: any;
   noRowsOverlay?: any;
   pagination?: any;
-  filterPanel?: any;
   panel?: any;
-  columnsPanel?: any;
+  preferencesPanel?: any;
+  toolbar?: any;
 }
