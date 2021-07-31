@@ -1,0 +1,16 @@
+{
+  "name": "GridVirtualizationApi",
+  "description": "The virtualization API interface that is available in the grid.",
+  "properties": [
+    {
+      "name": "scroll",
+      "description": "Triggers the viewport to scroll to the given positions (in pixels).",
+      "type": "(params: Partial<GridScrollParams>) => void"
+    },
+    {
+      "name": "scrollToIndexes",
+      "description": "Triggers the viewport to scroll to the cell at indexes given by <code>params</code>. Returns <code>true</code> if the grid had to scroll to reach the target.",
+      "type": "(params: Optional<GridCellIndexCoordinates, 'rowIndex'>) => boolean"
+    }
+  ]
+}
