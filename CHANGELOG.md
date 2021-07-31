@@ -22,13 +22,12 @@ Big thanks to the 8 contributors who made this release possible. Here are some h
   - The `onEditCellChange` prop was renamed to `onEditCellPropsChange`.
   - The `onEditCellChangeCommitted` prop was renamed to `onCellEditCommit`.
   - The `onEditRowModelChange` prop was removed. Use the new `onEditRowsModelChange` prop.
-
     ```diff
     -onEditRowModelChange?: (params: GridEditRowModelParams)
     +onEditRowsModelChange?: (editRowsModel: GridEditRowsModel)
     ```
 
-- [DataGrid] Improve controllable cell edit (#2143) @m4theushw
+- [XGrid] Improve controllable cell edit (#2143) @m4theushw
 
   - The `cellEditPropsChange` event was renamed to `editCellPropsChange`.
   - The `cellEditPropsChangeCommitted` event was renamed to `cellEditCommit`.
