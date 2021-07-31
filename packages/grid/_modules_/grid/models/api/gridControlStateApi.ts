@@ -1,5 +1,5 @@
 import { GridState } from '../../hooks/features/core/gridState';
-import { ControlStateItem } from '../controlStateItem';
+import { GridControlStateItem } from '../controlStateItem';
 
 /**
  * The control state API interface that is available in the grid `apiRef`.
@@ -7,10 +7,10 @@ import { ControlStateItem } from '../controlStateItem';
 export interface GridControlStateApi {
   /**
    * Updates a control state that binds the model, the onChange prop, and the grid state together.
-   * @param {ControlStateItem<TModel>} controlState The [[ControlStateItem]] to be registered.
+   * @param {GridControlStateItem<TModel>} controlState The [[GridControlStateItem]] to be registered.
    * @ignore - do not document.
    */
-  updateControlState: <TModel>(controlState: ControlStateItem<TModel>) => void;
+  updateControlState: <TModel>(controlState: GridControlStateItem<TModel>) => void;
   /**
    * Allows the internal grid state to apply the registered control state constraint.
    * @param {GridState} state The new modified state that would be the next if the state is not controlled.
