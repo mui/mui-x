@@ -3,7 +3,7 @@ import * as React from 'react';
 import { fireEvent, screen, createClientRenderStrictMode } from 'test/utils';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { DataGrid, GridSelectionModel } from '@material-ui/data-grid';
+import { DataGrid, DataGridProps } from '@material-ui/data-grid';
 import { getCell, getRow } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
@@ -266,7 +266,7 @@ describe('<DataGrid /> - Selection', () => {
           </div>
         );
       }
-      const selectionModel: GridSelectionModel = [0];
+      const selectionModel: DataGridProps['selectionModel'] = 0;
       const { setProps } = render(<Demo selectionModel={selectionModel} />);
       expect(onSelectionModelChange.callCount).to.equal(0);
       const firstRow = getRow(0);
