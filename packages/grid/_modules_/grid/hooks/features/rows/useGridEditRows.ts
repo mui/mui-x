@@ -338,9 +338,7 @@ export function useGridEditRows(
       propModel: props.editRowsModel,
       propOnChange: props.onEditRowsModelChange,
       stateSelector: (state) => state.editRows,
-      onChangeCallback: (model: GridEditRowsModel) => {
-        apiRef.current.publishEvent(GRID_EDIT_ROWS_MODEL_CHANGE, model);
-      },
+      changeEvent: GRID_EDIT_ROWS_MODEL_CHANGE,
     });
   }, [apiRef, props.editRowsModel, props.onEditRowsModelChange]);
 }

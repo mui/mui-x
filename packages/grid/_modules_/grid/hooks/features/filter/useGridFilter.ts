@@ -301,9 +301,7 @@ export const useGridFilter = (
       propModel: props.filterModel,
       propOnChange: props.onFilterModelChange,
       stateSelector: (state) => state.filter,
-      onChangeCallback: (model) => {
-        apiRef.current.publishEvent(GRID_FILTER_MODEL_CHANGE, model);
-      },
+      changeEvent: GRID_FILTER_MODEL_CHANGE,
     });
   }, [apiRef, props.filterModel, props.onFilterModelChange]);
 

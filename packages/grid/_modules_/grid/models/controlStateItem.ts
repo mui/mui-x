@@ -5,5 +5,5 @@ export interface GridControlStateItem<TModel> {
   propModel?: any;
   stateSelector: (state: GridState) => TModel;
   propOnChange?: (model: TModel) => void;
-  onChangeCallback?: (model: TModel) => void;
+  changeEvent: string;
 }

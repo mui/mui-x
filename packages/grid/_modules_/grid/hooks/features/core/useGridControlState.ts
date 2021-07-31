@@ -64,9 +64,7 @@ export function useGridControlState(apiRef: GridApiRef) {
               controlState.propOnChange(model);
             }
 
-            if (controlState.onChangeCallback) {
-              controlState.onChangeCallback!(model);
-            }
+            apiRef.current.publishEvent(controlState.changeEvent, model);
           });
         },
       };

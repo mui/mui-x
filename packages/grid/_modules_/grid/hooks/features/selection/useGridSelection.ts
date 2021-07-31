@@ -180,9 +180,7 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
       propModel: props.selectionModel,
       propOnChange: props.onSelectionModelChange,
       stateSelector: gridSelectionStateSelector,
-      onChangeCallback: (model: GridSelectionModel) => {
-        apiRef.current.publishEvent(GRID_SELECTION_CHANGE, model);
-      },
+      changeEvent: GRID_SELECTION_CHANGE,
     });
   }, [apiRef, props.onSelectionModelChange, props.selectionModel]);
 

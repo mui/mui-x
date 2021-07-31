@@ -314,9 +314,7 @@ export const useGridSorting = (
       propModel: props.sortModel,
       propOnChange: props.onSortModelChange,
       stateSelector: (state) => state.sorting.sortModel,
-      onChangeCallback: (model) => {
-        apiRef.current.publishEvent(GRID_SORT_MODEL_CHANGE, model);
-      },
+      changeEvent: GRID_SORT_MODEL_CHANGE,
     });
   }, [apiRef, props.sortModel, props.onSortModelChange]);
 
