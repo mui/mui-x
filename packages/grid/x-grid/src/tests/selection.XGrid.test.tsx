@@ -15,6 +15,7 @@ import {
   GridSelectionModel,
   useGridApiRef,
   XGrid,
+  GRID_SELECTION_CHANGE,
 } from '@material-ui/x-grid';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
@@ -322,6 +323,15 @@ describe('<XGrid /> - Selection', () => {
       expect(getRow(0)).not.to.have.class('Mui-selected');
       expect(getRow(1)).to.have.class('Mui-selected');
       expect(getRow(2)).to.have.class('Mui-selected');
+    });
+
+    it('should not publish GRID_SELECTION_CHANGE if the selection state did not change ', () => {
+      const handleSelectionChange = spy();
+      const selectionModel = [];
+      render(<Test selectionModel={selectionModel} />);
+      apiRef.current.subscribeEvent(GRID_SELECTION_CHANGE, handleSelectionChange);
+      apiRef.current.setSelectionModel(selectionModel);
+      expect(handleSelectionChange.callCount).to.equal(0);
     });
   });
 });
