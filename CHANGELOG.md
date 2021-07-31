@@ -3,6 +3,94 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 4.0.0-alpha.35
+
+_July 31, 2021_
+
+Big thanks to the 8 contributors who made this release possible. Here are some highlights ✨:
+
+- ⚛️ Complete the idiomatic support of controllable props (#2143, #2099) @m4theushw, @flaviendelangle
+- ✨ Improve support of @material-ui/core@v5 (#2224, #2240) @oliviertassinari, @siriwatknp
+- 🐛 Fix 7 bugs and regressions
+
+### `@material-ui/data-grid@v4.0.0-alpha.35` / `@material-ui/x-grid@v4.0.0-alpha.35`
+
+#### Breaking changes
+
+- [DataGrid] Improve controllable cell edit (#2143) @m4theushw
+
+  - The `onEditCellChange` prop was renamed to `onEditCellPropsChange`.
+  - The `onEditCellChangeCommitted` prop was renamed to `onCellEditCommit`.
+  - The `onEditRowModelChange` prop was removed. Use the new `onEditRowsModelChange` prop.
+
+    ```diff
+    -onEditRowModelChange?: (params: GridEditRowModelParams)
+    +onEditRowsModelChange?: (editRowsModel: GridEditRowsModel)
+    ```
+
+- [DataGrid] Improve controllable cell edit (#2143) @m4theushw
+
+  - The `cellEditPropsChange` event was renamed to `editCellPropsChange`.
+  - The `cellEditPropsChangeCommitted` event was renamed to `cellEditCommit`.
+  - The `cellValueChange` event was removed. Listen to `cellEditCommit` to detect when the value is committed.
+  - The `editRowModelChange` event was renamed to `editRowsModelChange`.
+
+- [DataGrid] Improve controllable pagination (#2099) @flaviendelangle
+
+  - The `pageSize` is now a controlled prop. If you set a value, you also need to handle updates with onPageSizeChange. See [the documentation](https://material-ui.com/components/data-grid/pagination/#page-size).
+  - Change the controllable API signature:
+
+    ```diff
+    // Signature
+    -onPageChange?: (params: GridPageChangeParams) => void;
+    +onPageChange?: (page: number) => void;
+
+    // Usage
+    -<DataGrid onPageChange={(params: GridPageChangeParams) => setPage(params.page)} />
+    +<DataGrid onPageChange={(page: number) => setPage(page)} />
+    ```
+
+    ```diff
+    // Signature
+    -onPageSizeChange?: (params: GridPageChangeParams) => void;
+    +onPageSizeChange?: (pageSize: number) => void;
+
+    // Usage
+    -<DataGrid onPageSizeChange={(params: GridPageChangeParams) => setPageSize(params.pageSize)} />
+    +<DataGrid onPageSizeChange={(pageSize: number) => setPageSize(pageSize)} />
+    ```
+
+#### Changes
+
+- [DataGrid] Fix `Controlled selection` console error (#2197) @ZeeshanTamboli
+- [DataGrid] Fix `disableMultipleColumnsFiltering` console warning @ZeeshanTamboli
+- [DataGrid] Fix CSV export when selected row id is number (#2232) @flaviendelangle
+- [DataGrid] Fix horizontal scroll when no rows (#2159) @m4theushw
+- [DataGrid] Fix id passed to setEditCellValue (#2215) @m4theushw
+- [DataGrid] Fix missing value in onCellEditCommit (#2214) @m4theushw
+- [DataGrid] Fix prop-type warning with v5 (#2224) @oliviertassinari
+- [DataGrid] Fix support for singleSelect with numeric values (#2112) @m4theushw
+- [DataGrid] Improve translations to the Turkish locale (#2203) @cihanyakar
+- [DataGrid] Use event.defaultMuiPrevented to prevent the default behavior (#2179) @m4theushw
+- [DataGrid] Warn when pageSize is not present in rowsPerPageOptions (#2014) @flaviendelangle
+- [XGrid] Fix v5 filter select display (#2240) @siriwatknp
+
+### Docs
+
+- [docs] Add missing API docs (#2167) @ZeeshanTamboli
+- [docs] Describe how to export custom rendered cells (#2194) @m4theushw
+- [docs] Generate api doc for the GridExportCSVOptions interface (#2102) @flaviendelangle
+- [docs] Handle generics in api doc generation (#2210) @flaviendelangle
+
+### Core
+
+- [core] Don't export the internal utils (#2233) @flaviendelangle
+- [core] Receive patch and minor dependency updates (#2221) @flaviendelangle
+- [test] Add tests for column resizing (#2211) @flaviendelangle
+- [test] Fix singleSelect tests (#2200) @m4theushw
+- [test] Sync Karma config (#2191) @m4theushw
+- [test] Test support for theme translations (#2229) @m4theushw
+
 ## [4.0.0-alpha.34](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.33...v4.0.0-alpha.34)
 
 _July 21, 2021_
@@ -1548,16 +1636,16 @@ Big thanks to the 8 contributors who made this release possible. Here are some h
 ### @material-ui/x-grid@v4.0.0-alpha.9 / @material-ui/data-grid@v4.0.0-alpha.9
 
 - [DataGrid] Fix keyboard with multiple grids (#562) @dtassone
-- [DataGrid] Add touch support on column resize (#537) @danailH
+- [DataGrid] Add touch support on column resize (#537) @DanailH
 - [DataGrid] Refactor containerSizes in smaller state (#544) @dtassone
 - [DataGrid] Fix display of row count and selected rows on mobile (#508) @oliviertassinari
 - [DataGrid] Apply review from #412 (#515) @oliviertassinari
 - [DataGrid] Avoid paint step (#531) @oliviertassinari
-- [DataGrid] Refactor rendering, remove rafUpdate (#532) @Dtassone
+- [DataGrid] Refactor rendering, remove rafUpdate (#532) @dtassone
 - [DataGrid] Add missing reselect dependency (#534) @dtassone
 - [DataGrid] Raf Timer stored in apiRef (#506) @dtassone
 - [DataGrid] Fix webpack v5 support (#449) @oliviertassinari
-- [DataGrid] Rework columnReorder to work with the new state management (#505) @danailH
+- [DataGrid] Rework columnReorder to work with the new state management (#505) @DanailH
 - [DataGrid] Fix performance issues (#501) @dtassone
 - [DataGrid] Refactor columns scrolling (#500) @dtassone
 - [DataGrid] Replace require with import (#455) @oliviertassinari
@@ -1574,7 +1662,7 @@ Big thanks to the 8 contributors who made this release possible. Here are some h
 ### Core
 
 - [core] Batch small changes (#546) @oliviertassinari
-- [core] Improve types (#448) @olivertassinari
+- [core] Improve types (#448) @oliviertassinari
 - [core] Run prettier (#482) @oliviertassinari
 - [core] Disable generation of changelogs @oliviertassinari
 - [test] Karma should fail if errors are thrown (#543) @oliviertassinari
