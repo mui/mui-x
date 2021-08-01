@@ -1,4 +1,5 @@
 // Keys are translated from enUS
+export * from './arSD';
 export * from './bgBG';
 export * from './csCZ';
 export * from './deDE';
