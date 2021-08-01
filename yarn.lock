@@ -3974,9 +3974,9 @@
     csstype "^3.0.2"
 
 "@types/requestidlecallback@^0.3.1":
-  version "0.3.3"
-  resolved "https://registry.yarnpkg.com/@types/requestidlecallback/-/requestidlecallback-0.3.3.tgz#07676e9b4b1c8834b582614052c2609beecec753"
-  integrity sha512-mfxnDYJ8joLlrwlr7v3ipl6NHidl+pLbZZ9hH0+h90UOH1oum43rMepyI/nZzykTuVKr90bH/LohLlRSxbe75g==
+  version "0.3.4"
+  resolved "https://registry.yarnpkg.com/@types/requestidlecallback/-/requestidlecallback-0.3.4.tgz#819e22b8994cf547e1f17f9cb79805a5a3bb1db5"
+  integrity sha512-aTSyiZuRemRLTQkJPb25L7A4/eR2Teo5l4yJ1V6P3+MFxEZckTDkNKNtr/V1zEOMzS6H8DgxF22U6jPAPrzQvw==
 
 "@types/resolve@1.17.1":
   version "1.17.1"
