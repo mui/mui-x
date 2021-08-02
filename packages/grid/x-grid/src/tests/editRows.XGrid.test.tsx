@@ -751,19 +751,19 @@ describe('<XGrid /> - Edit Rows', () => {
       cell.focus();
       fireEvent.doubleClick(cell);
       expect(onEditRowsModelChange.callCount).to.equal(1);
-      // expect(onEditRowsModelChange.lastCall.firstArg).to.deep.equal({
-      //   1: { year: { value: 1961 } },
-      // });
-      // const input = cell.querySelector('input')!;
-      // fireEvent.change(input, { target: { value: 1970 } });
-      // expect(onEditRowsModelChange.lastCall.firstArg).to.deep.equal({
-      //   1: { year: { value: '1970' } },
-      // });
-      // fireEvent.keyDown(input, { key: 'Enter' });
-      // expect(cell).to.have.text('1970');
-      // expect(onEditRowsModelChange.lastCall.firstArg).to.deep.equal({});
-      // expect(onEditRowsModelChange.callCount).to.equal(3);
-      // expect(cell.querySelector('input')).to.equal(null);
+      expect(onEditRowsModelChange.lastCall.firstArg).to.deep.equal({
+        1: { year: { value: 1961 } },
+      });
+      const input = cell.querySelector('input')!;
+      fireEvent.change(input, { target: { value: 1970 } });
+      expect(onEditRowsModelChange.lastCall.firstArg).to.deep.equal({
+        1: { year: { value: '1970' } },
+      });
+      fireEvent.keyDown(input, { key: 'Enter' });
+      expect(cell).to.have.text('1970');
+      expect(onEditRowsModelChange.lastCall.firstArg).to.deep.equal({});
+      expect(onEditRowsModelChange.callCount).to.equal(3);
+      expect(cell.querySelector('input')).to.equal(null);
     });
 
     it('should control the state when the model and the onChange are set', () => {

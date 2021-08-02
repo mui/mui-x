@@ -20,7 +20,7 @@ import { useGridApiMethod } from '../../root/useGridApiMethod';
 import { useLogger } from '../../utils/useLogger';
 import { useGridState } from '../core/useGridState';
 import { getInitialGridRowState, InternalGridRowsState } from './gridRowsState';
-import { useGridSelector } from '../core';
+import { useGridSelector } from '../core/useGridSelector';
 import { gridRowsStateSelector } from './gridRowsSelector';
 
 function getGridRowId(
