@@ -51,12 +51,12 @@ export default function ValidateServerNameGrid() {
         clearTimeout(promiseTimeout);
         clearTimeout(keyStrokeTimeoutRef.current);
 
-        let oldModel = apiRef.current.getEditRowsModel();
+        let newModel = apiRef.current.getEditRowsModel();
         apiRef.current.setEditRowsModel({
-          ...oldModel,
+          ...newModel,
           [id]: {
-            ...oldModel[id],
-            [field]: { ...oldModel[id][field], error: true },
+            ...newModel[id],
+            [field]: { ...newModel[id][field], error: true },
           },
         });
 
@@ -64,12 +64,12 @@ export default function ValidateServerNameGrid() {
         keyStrokeTimeoutRef.current = setTimeout(async () => {
           const data = props; // Fix eslint value is missing in prop-types for JS files
           const isValid = await validateName(data.value.toString());
-          oldModel = apiRef.current.getEditRowsModel();
+          newModel = apiRef.current.getEditRowsModel();
           apiRef.current.setEditRowsModel({
-            ...oldModel,
+            ...newModel,
             [id]: {
-              ...oldModel[id],
-              [field]: { ...oldModel[id][field], error: !isValid },
+              ...newModel[id],
+              [field]: { ...newModel[id][field], error: !isValid },
             },
           });
         }, 100);

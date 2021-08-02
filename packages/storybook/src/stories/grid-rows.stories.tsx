@@ -613,13 +613,13 @@ export function ValidateEditValueWithApiRefGrid() {
     ({ id, field, props }: GridEditCellPropsParams, event: MuiEvent<React.SyntheticEvent>) => {
       if (field === 'email') {
         const isValid = validateEmail(props.value);
-        const oldModel = apiRef.current.getEditRowsModel();
+        const newModel = apiRef.current.getEditRowsModel();
         apiRef.current.setEditRowsModel({
-          ...oldModel,
+          ...newModel,
           [id]: {
-            ...oldModel[id],
+            ...newModel[id],
             [field]: {
-              ...oldModel[id][field],
+              ...newModel[id][field],
               error: !isValid,
             },
           },
@@ -698,13 +698,13 @@ export function ValidateEditValueServerSide() {
         clearTimeout(promiseTimeout);
         clearTimeout(keyStrokeTimeoutRef.current);
 
-        let oldModel = apiRef.current.getEditRowsModel();
+        let newModel = apiRef.current.getEditRowsModel();
         apiRef.current.setEditRowsModel({
-          ...oldModel,
+          ...newModel,
           [id]: {
-            ...oldModel[id],
+            ...newModel[id],
             [field]: {
-              ...oldModel[id][field],
+              ...newModel[id][field],
               error: true,
             },
           },
@@ -712,13 +712,13 @@ export function ValidateEditValueServerSide() {
 
         keyStrokeTimeoutRef.current = setTimeout(async () => {
           const isValid = await validateUsername(props.value!.toString());
-          oldModel = apiRef.current.getEditRowsModel();
+          newModel = apiRef.current.getEditRowsModel();
           apiRef.current.setEditRowsModel({
-            ...oldModel,
+            ...newModel,
             [id]: {
-              ...oldModel[id],
+              ...newModel[id],
               [field]: {
-                ...oldModel[id][field],
+                ...newModel[id][field],
                 error: !isValid,
               },
             },
