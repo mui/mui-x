@@ -3,7 +3,7 @@ import { escapeRegExp } from '../../utils/utils';
 import { GridFilterItem } from '../gridFilterItem';
 import { GridFilterOperator } from '../gridFilterOperator';
 
-export const getGridStringOperators: () => GridFilterOperator[] = () => [
+export const getGridStringOperators = (): GridFilterOperator[] => [
   {
     value: 'contains',
     getApplyFilterFn: (filterItem: GridFilterItem) => {

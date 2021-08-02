@@ -193,7 +193,7 @@ describe('<DataGrid /> - Filter', () => {
       expect(getColumnValues()).to.deep.equal(['Nike']);
     });
 
-    it('should allow operator isEmpty', () => {
+    it('should allow operator isEmpty for string field', () => {
       const rows = [
         {
           id: 0,
@@ -222,7 +222,7 @@ describe('<DataGrid /> - Filter', () => {
       expect(getColumnValues()).to.deep.equal(['Adidas', 'Puma']);
     });
 
-    it('should allow operator isNotEmpty', () => {
+    it('should allow operator isNotEmpty for string field', () => {
       const rows = [
         {
           id: 0,
@@ -249,6 +249,110 @@ describe('<DataGrid /> - Filter', () => {
         />,
       );
       expect(getColumnValues()).to.deep.equal(['Nike']);
+    });
+
+    it('should allow operator isEmpty for number field', () => {
+      const rows = [
+        {
+          id: 0,
+          quantity: 0,
+        },
+        {
+          id: 1,
+          quantity: null,
+        },
+        {
+          id: 2,
+          quantity: 100,
+        },
+      ];
+      render(
+        <TestCase
+          operatorValue="isEmpty"
+          field="quantity"
+          columns={[{ field: 'id' }, { field: 'quantity', type: 'number' }]}
+          rows={rows}
+        />,
+      );
+      expect(getColumnValues(0)).to.deep.equal(['1']);
+    });
+
+    it('should allow operator isNotEmpty for number field', () => {
+      const rows = [
+        {
+          id: 0,
+          quantity: 0,
+        },
+        {
+          id: 1,
+          quantity: null,
+        },
+        {
+          id: 2,
+          quantity: 100,
+        },
+      ];
+      render(
+        <TestCase
+          operatorValue="isNotEmpty"
+          field="quantity"
+          columns={[{ field: 'id' }, { field: 'quantity', type: 'number' }]}
+          rows={rows}
+        />,
+      );
+      expect(getColumnValues(0)).to.deep.equal(['0', '2']);
+    });
+
+    it('should allow operator isEmpty for date field', () => {
+      const rows = [
+        {
+          id: 0,
+          date: new Date(1984, 1, 1),
+        },
+        {
+          id: 1,
+          date: null,
+        },
+        {
+          id: 2,
+          date: new Date(1992, 1, 1),
+        },
+      ];
+      render(
+        <TestCase
+          operatorValue="isEmpty"
+          field="date"
+          columns={[{ field: 'id' }, { field: 'date', type: 'date' }]}
+          rows={rows}
+        />,
+      );
+      expect(getColumnValues(0)).to.deep.equal(['1']);
+    });
+
+    it('should allow operator isNotEmpty for date field', () => {
+      const rows = [
+        {
+          id: 0,
+          date: new Date(1984, 1, 1),
+        },
+        {
+          id: 1,
+          date: null,
+        },
+        {
+          id: 2,
+          date: new Date(1992, 1, 1),
+        },
+      ];
+      render(
+        <TestCase
+          operatorValue="isNotEmpty"
+          field="date"
+          columns={[{ field: 'id' }, { field: 'date', type: 'date' }]}
+          rows={rows}
+        />,
+      );
+      expect(getColumnValues(0)).to.deep.equal(['0', '2']);
     });
 
     [
