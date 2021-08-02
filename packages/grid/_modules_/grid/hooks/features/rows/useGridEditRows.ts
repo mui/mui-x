@@ -35,19 +35,24 @@ import {
 } from '../../../utils/keyboardUtils';
 import { useGridApiEventHandler, useGridApiOptionHandler } from '../../root/useGridApiEventHandler';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
-import { optionsSelector } from '../../utils/optionsSelector';
 import { useEventCallback } from '../../../utils/material-ui-utils';
 import { useLogger } from '../../utils/useLogger';
-import { useGridSelector } from '../core/useGridSelector';
 import { useGridState } from '../core/useGridState';
 
 export function useGridEditRows(
   apiRef: GridApiRef,
-  props: Pick<GridComponentProps, 'editRowsModel' | 'onEditRowsModelChange'>,
+  props: Pick<
+    GridComponentProps,
+    | 'editRowsModel'
+    | 'onEditRowsModelChange'
+    | 'onCellEditCommit'
+    | 'onEditCellPropsChange'
+    | 'onCellModeChange'
+    | 'isCellEditable'
+  >,
 ) {
   const logger = useLogger('useGridEditRows');
   const [, setGridState, forceUpdate] = useGridState(apiRef);
-  const options = useGridSelector(apiRef, optionsSelector);
 
   const commitPropsAndExit = (params: GridCellParams, event: MouseEvent | React.SyntheticEvent) => {
     if (params.cellMode === 'view') {
@@ -117,9 +122,9 @@ export function useGridEditRows(
     (params: GridCellParams) =>
       params.colDef.editable &&
       params.colDef!.renderEditCell &&
-      (!options.isCellEditable || options.isCellEditable(params)),
+      (!props.isCellEditable || props.isCellEditable(params)),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [options.isCellEditable],
+    [props.isCellEditable],
   );
 
   const setEditCellValue = React.useCallback(
@@ -307,11 +312,11 @@ export function useGridEditRows(
   useGridApiEventHandler(apiRef, GRID_CELL_EDIT_COMMIT, handleCellEditCommit);
   useGridApiEventHandler(apiRef, GRID_EDIT_CELL_PROPS_CHANGE, handleEditCellPropsChange);
 
-  useGridApiOptionHandler(apiRef, GRID_CELL_EDIT_COMMIT, options.onCellEditCommit);
+  useGridApiOptionHandler(apiRef, GRID_CELL_EDIT_COMMIT, props.onCellEditCommit);
   // TODO remove, use onEditRowsModelChange directly
-  useGridApiOptionHandler(apiRef, GRID_EDIT_CELL_PROPS_CHANGE, options.onEditCellPropsChange);
+  useGridApiOptionHandler(apiRef, GRID_EDIT_CELL_PROPS_CHANGE, props.onEditCellPropsChange);
   // TODO remove because GRID_CELL_EDIT_ENTER and GRID_CELL_EDIT_EXIT can be used
-  useGridApiOptionHandler(apiRef, GRID_CELL_MODE_CHANGE, options.onCellModeChange);
+  useGridApiOptionHandler(apiRef, GRID_CELL_MODE_CHANGE, props.onCellModeChange);
 
   useGridApiMethod<GridEditRowApi>(
     apiRef,
@@ -329,10 +334,6 @@ export function useGridEditRows(
   );
 
   React.useEffect(() => {
-    apiRef.current.setEditRowsModel(options.editRowsModel || {});
-  }, [apiRef, options.editRowsModel]);
-
-  React.useEffect(() => {
     apiRef.current.updateControlState<GridEditRowsModel>({
       stateId: 'editRows',
       propModel: props.editRowsModel,
@@ -343,4 +344,12 @@ export function useGridEditRows(
       },
     });
   }, [apiRef, props.editRowsModel, props.onEditRowsModelChange]);
+
+  React.useEffect(() => {
+    const oldEditRowsModel = apiRef.current.getState().editRows;
+
+    if (props.editRowsModel !== undefined && props.editRowsModel !== oldEditRowsModel) {
+      apiRef.current.setEditRowsModel(props.editRowsModel || {});
+    }
+  }, [apiRef, props.editRowsModel]);
 }

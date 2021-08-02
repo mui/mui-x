@@ -2,8 +2,6 @@ import * as React from 'react';
 import MUICheckbox from '@material-ui/core/Checkbox';
 import { GridApiRef } from '../../models/api/gridApiRef';
 import { GridApiRefComponentsProperty } from '../../models/api/gridComponentsApi';
-import { GridSlotsComponent } from '../../models/gridSlotsComponent';
-import { GridSlotsComponentsProps } from '../../models/gridSlotsComponentsProps';
 import { GridIconSlotsComponent } from '../../models';
 import {
   GridArrowDownwardIcon,
@@ -33,6 +31,7 @@ import {
 import { GridColumnUnsortedIcon } from '../../components/columnHeaders/GridColumnUnsortedIcon';
 import { ErrorOverlay } from '../../components/ErrorOverlay';
 import { GridNoResultsOverlay } from '../../components/GridNoResultsOverlay';
+import { GridComponentProps } from '../../GridComponentProps';
 
 const DEFAULT_GRID_SLOTS_ICONS: GridIconSlotsComponent = {
   BooleanCellTrueIcon: GridCheckIcon,
@@ -70,12 +69,9 @@ export const DEFAULT_GRID_SLOTS_COMPONENTS: GridApiRefComponentsProperty = {
 
 export const useGridComponents = (
   apiRef: GridApiRef,
-  {
-    components,
-    componentsProps,
-  }: { components?: GridSlotsComponent; componentsProps?: GridSlotsComponentsProps },
+  { components, componentsProps }: Pick<GridComponentProps, 'components' | 'componentsProps'>,
 ) => {
-  const mappedComponents: GridApiRefComponentsProperty = React.useMemo(() => {
+  const mappedComponents = React.useMemo<GridApiRefComponentsProperty>(() => {
     return {
       BooleanCellTrueIcon:
         (components && components.BooleanCellTrueIcon) ||

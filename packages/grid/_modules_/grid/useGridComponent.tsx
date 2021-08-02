@@ -53,7 +53,7 @@ export const useGridComponent = (apiRef: GridApiRef, props: GridComponentProps) 
   useGridEditRows(apiRef, props);
   useGridFocus(apiRef, props);
   useGridKeyboard(apiRef);
-  useGridKeyboardNavigation(apiRef);
+  useGridKeyboardNavigation(apiRef, props);
   useGridSelection(apiRef, props);
   useGridSorting(apiRef, props);
   useGridColumnMenu(apiRef);
