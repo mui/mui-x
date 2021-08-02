@@ -88,7 +88,7 @@ function updateColumnsWidth(columns: GridColumns, viewportWidth: number): GridCo
 
 function hydrateColumns(
   columns: GridColumns,
-  columnTypes: GridColumnTypesRecord = {},
+  columnTypes: GridColumnTypesRecord,
   withCheckboxSelection: boolean,
   logger: Logger,
   getLocaleText: <T extends GridTranslationKeys>(key: T) => GridLocaleText[T],
