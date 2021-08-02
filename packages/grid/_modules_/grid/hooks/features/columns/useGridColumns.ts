@@ -304,7 +304,7 @@ export function useGridColumns(
     if (props.columns.length > 0) {
       const hydratedColumns = hydrateColumns(
         props.columns,
-        props.columnTypes,
+        props.columnTypes!,
         !!props.checkboxSelection,
         logger,
         apiRef.current.getLocaleText,
