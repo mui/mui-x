@@ -6,8 +6,10 @@ import { GridLoadIcon } from '../../icons/index';
 import { GridFilterInputValueProps } from './GridFilterInputValueProps';
 import { GridColDef } from '../../../models/colDef/gridColDef';
 
-const renderSingleSelectOptions = ({ valueOptions }: GridColDef) =>
-  ['', ...valueOptions!].map((option) =>
+const renderSingleSelectOptions = ({ valueOptions }: GridColDef) => {
+  const iterableColumnValues = valueOptions ? ['', ...valueOptions] : [''];
+
+  return iterableColumnValues.map((option) =>
     typeof option === 'object' ? (
       <option key={option.value} value={option.value}>
         {option.label}
@@ -18,6 +20,7 @@ const renderSingleSelectOptions = ({ valueOptions }: GridColDef) =>
       </option>
     ),
   );
+};
 
 export const SUBMIT_FILTER_STROKE_TIME = 500;
 
