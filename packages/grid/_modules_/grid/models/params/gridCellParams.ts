@@ -1,6 +1,6 @@
 import { GridCellMode, GridCellValue } from '../gridCell';
 import { GridRowId, GridRowModel } from '../gridRows';
-import type { GridColDef } from '../colDef';
+import type { GridStateColDef } from '../colDef';
 import type { GridApi } from '../api';
 
 /**
@@ -30,7 +30,7 @@ export interface GridCellParams {
   /**
    * The column of the row that the current cell belongs to.
    */
-  colDef: GridColDef;
+  colDef: GridStateColDef;
   /**
    * GridApi that let you manipulate the grid.
    */
