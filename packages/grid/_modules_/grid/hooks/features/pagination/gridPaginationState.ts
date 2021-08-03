@@ -1,9 +1,13 @@
-import { GridFeatureMode } from '../../../models/gridFeatureMode';
-
 export interface GridPaginationState {
+  pageSize: number;
   page: number;
   pageCount: number;
-  pageSize: number;
   rowCount: number;
-  paginationMode: GridFeatureMode;
 }
+
+export const getInitialPaginationState = (): GridPaginationState => ({
+  page: 0,
+  pageCount: 0,
+  rowCount: 0,
+  pageSize: 100,
+});

@@ -101,7 +101,11 @@ describe('<XGrid /> - Edit Rows', () => {
   });
 
   it('should allow to stop double click using stopPropagation', () => {
-    render(<TestCase onCellDoubleClick={(params, event) => event.stopPropagation()} />);
+    render(
+      <TestCase
+        onCellDoubleClick={(params, event) => (event as React.SyntheticEvent).stopPropagation()}
+      />,
+    );
     const cell = getCell(1, 0);
     cell.focus();
     fireEvent.doubleClick(cell);
@@ -177,7 +181,7 @@ describe('<XGrid /> - Edit Rows', () => {
       code: 1,
       target: cell,
       isPropagationStopped: () => false,
-    });
+    } as any);
     // fireEvent.keyDown(cell, { key: 'a', code: 1, target: cell });
 
     expect(cell).to.have.class('MuiDataGrid-cell--editable');
@@ -330,28 +334,6 @@ describe('<XGrid /> - Edit Rows', () => {
     expect(getActiveCell()).to.equal('2-1');
   });
 
-  it('should the focus to the new field', () => {
-    const handleCellBlur = (params, event) => {
-      if (params.cellMode === 'edit') {
-        event?.stopPropagation();
-      }
-    };
-    render(<TestCase onCellBlur={handleCellBlur} />);
-    // Turn first cell into edit mode
-    apiRef!.current.setCellMode(0, 'brand', 'edit');
-
-    // Turn second cell into edit mode
-    getCell(1, 0).focus();
-    apiRef!.current.setCellMode(1, 'brand', 'edit');
-    expect(document.querySelectorAll('input').length).to.equal(2);
-
-    // Try to focus the first cell's input
-    const input0 = getCell(0, 0).querySelector('input');
-    input0!.focus();
-    fireEvent.click(input0);
-    expect(document.activeElement).to.have.property('value', 'Nike');
-  });
-
   it('should apply the valueParser before saving the value', () => {
     const valueParser = stub().withArgs('62').returns(1962);
     render(
@@ -475,82 +457,85 @@ describe('<XGrid /> - Edit Rows', () => {
     });
   });
 
-  it('should change cell value correctly when column type is singleSelect and valueOptions is array of strings', () => {
-    render(
-      <div style={{ width: 300, height: 300 }}>
-        <XGrid
-          columns={[
-            {
-              field: 'brand',
-              type: 'singleSelect',
-              valueOptions: ['Nike', 'Adidas'],
-              editable: true,
-            },
-          ]}
-          rows={[
-            {
-              id: 0,
-              brand: 'Nike',
-            },
-          ]}
-        />
-      </div>,
-    );
-
-    const cell = getCell(0, 0);
-    fireEvent.doubleClick(cell);
-    fireEvent.click(screen.queryAllByRole('option')[1]);
-
-    expect(cell).not.to.have.class('MuiDataGrid-cell--editing');
-    expect(cell).to.have.text('Adidas');
-  });
-
-  it('should change cell value correctly when column type is singleSelect and valueOptions is array of objects', () => {
-    const countries = [
-      {
-        value: 'fr',
-        label: 'France',
-      },
-      {
-        value: 'it',
-        label: 'Italy',
-      },
-    ];
-
-    render(
-      <div style={{ width: 300, height: 300 }}>
-        <XGrid
-          columns={[
-            {
-              field: 'country',
-              type: 'singleSelect',
-              valueOptions: countries,
-              valueFormatter: (params) => {
-                const result = countries.find((country) => country.value === params.value);
-                return result!.label;
+  describe('column type: singleSelect', () => {
+    it('should change cell value correctly when the valueOptions is array of strings', () => {
+      render(
+        <div style={{ width: 300, height: 300 }}>
+          <XGrid
+            columns={[
+              {
+                field: 'brand',
+                type: 'singleSelect',
+                valueOptions: ['Nike', 'Adidas'],
+                editable: true,
               },
-              editable: true,
-            },
-          ]}
-          rows={[
-            {
-              id: 0,
-              country: 'fr',
-            },
-          ]}
-        />
-      </div>,
-    );
+            ]}
+            rows={[
+              {
+                id: 0,
+                brand: 'Nike',
+              },
+            ]}
+          />
+        </div>,
+      );
 
-    const cell = getCell(0, 0);
-    fireEvent.doubleClick(cell);
-    fireEvent.click(screen.queryAllByRole('option')[1]);
+      const cell = getCell(0, 0);
+      fireEvent.doubleClick(cell);
+      fireEvent.click(screen.queryAllByRole('option')[1]);
 
-    expect(cell).not.to.have.class('MuiDataGrid-cell--editing');
-    expect(cell).to.have.text('Italy');
+      expect(cell).not.to.have.class('MuiDataGrid-cell--editing');
+      expect(cell).to.have.text('Adidas');
+    });
+
+    it('should change cell value correctly when the valueOptions is array of objects', () => {
+      const countries = [
+        {
+          value: 'fr',
+          label: 'France',
+        },
+        {
+          value: 'it',
+          label: 'Italy',
+        },
+      ];
+
+      render(
+        <div style={{ width: 300, height: 300 }}>
+          <XGrid
+            columns={[
+              {
+                field: 'country',
+                type: 'singleSelect',
+                valueOptions: countries,
+                valueFormatter: (params) => {
+                  const result = countries.find((country) => country.value === params.value);
+                  return result!.label;
+                },
+                editable: true,
+              },
+            ]}
+            rows={[
+              {
+                id: 0,
+                country: 'fr',
+              },
+            ]}
+          />
+        </div>,
+      );
+
+      const cell = getCell(0, 0);
+      fireEvent.doubleClick(cell);
+      fireEvent.click(screen.queryAllByRole('option')[1]);
+
+      expect(cell).not.to.have.class('MuiDataGrid-cell--editing');
+      expect(cell).to.have.text('Italy');
+    });
   });
 
   it('should keep the right type', () => {
+    // TODO create a separate group for the "number" column type tests
     const Test = (props: Partial<GridComponentProps>) => {
       apiRef = useGridApiRef();
       return (
@@ -651,6 +636,42 @@ describe('<XGrid /> - Edit Rows', () => {
       const input = cell.querySelector('input')!;
       fireEvent.change(input, { target: { value: '' } });
       expect(onEditCellPropsChange.args[0][0].props.value).to.equal(null);
+    });
+  });
+
+  it('should call onCellEditCommit with the correct params', () => {
+    const onCellEditCommit = spy();
+    render(<TestCase onCellEditCommit={onCellEditCommit} />);
+    const cell = getCell(1, 0);
+    cell.focus();
+    fireEvent.doubleClick(cell);
+    const input = cell.querySelector('input')!;
+    fireEvent.change(input, { target: { value: 'n' } });
+    fireEvent.keyDown(input, { key: 'Enter' });
+    expect(onCellEditCommit.callCount).to.equal(1);
+    expect(onCellEditCommit.lastCall.args[0]).to.deep.equal({ id: 1, field: 'brand', value: 'n' });
+  });
+
+  describe('column type: boolean', () => {
+    it('should call onEditCellPropsChange with the correct params', () => {
+      const onEditCellPropsChange = spy();
+      render(
+        <TestCase
+          rows={[{ id: 0, isAdmin: false }]}
+          columns={[{ field: 'isAdmin', type: 'boolean', editable: true }]}
+          onEditCellPropsChange={onEditCellPropsChange}
+        />,
+      );
+      const cell = getCell(0, 0);
+      cell.focus();
+      fireEvent.doubleClick(cell);
+      const input = cell.querySelector('input')!;
+      fireEvent.click(input);
+      expect(onEditCellPropsChange.args[0][0]).to.deep.equal({
+        id: 0,
+        field: 'isAdmin',
+        props: { value: true },
+      });
     });
   });
 

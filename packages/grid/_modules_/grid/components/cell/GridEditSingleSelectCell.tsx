@@ -5,13 +5,13 @@ import { GridCellParams } from '../../models/params/gridCellParams';
 import { isEscapeKey } from '../../utils/keyboardUtils';
 
 const renderSingleSelectOptions = (option) =>
-  typeof option === 'string' ? (
-    <MenuItem key={option} value={option}>
-      {option}
-    </MenuItem>
-  ) : (
+  typeof option === 'object' ? (
     <MenuItem key={option.value} value={option.value}>
       {option.label}
+    </MenuItem>
+  ) : (
+    <MenuItem key={option} value={option}>
+      {option}
     </MenuItem>
   );
 

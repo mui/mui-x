@@ -4,7 +4,7 @@ import {
   screen,
 } from 'test/utils';
 import { expect } from 'chai';
-import { DataGrid, GridToolbar } from '@material-ui/data-grid';
+import { DataGrid, GridToolbar, GridPreferencePanelsValue } from '@material-ui/data-grid';
 import { getColumnValues } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
@@ -21,18 +21,21 @@ describe('<DataGrid /> - Filter', () => {
         brand: 'Nike',
         isPublished: false,
         country: 'United States',
+        status: 0,
       },
       {
         id: 1,
         brand: 'Adidas',
         isPublished: true,
         country: 'Germany',
+        status: 0,
       },
       {
         id: 2,
         brand: 'Puma',
         isPublished: true,
         country: 'Germany',
+        status: 2,
       },
     ],
     columns: [
@@ -43,6 +46,15 @@ describe('<DataGrid /> - Filter', () => {
         type: 'singleSelect',
         valueOptions: ['United States', 'Germany', 'France'],
       },
+      {
+        field: 'status',
+        type: 'singleSelect',
+        valueOptions: [
+          { value: 0, label: 'Payment Pending' },
+          { value: 1, label: 'Shipped' },
+          { value: 2, label: 'Delivered' },
+        ],
+      },
     ],
   };
 
@@ -52,8 +64,9 @@ describe('<DataGrid /> - Filter', () => {
     operatorValue?: string;
     value?: any;
     field?: string;
+    state?: any;
   }) => {
-    const { operatorValue, value, rows, columns, field = 'brand' } = props;
+    const { operatorValue, value, rows, columns, field = 'brand', ...other } = props;
     return (
       <div style={{ width: 300, height: 300 }}>
         <DataGrid
@@ -70,6 +83,7 @@ describe('<DataGrid /> - Filter', () => {
             ],
           }}
           disableColumnFilter={false}
+          {...other}
         />
       </div>
     );
@@ -638,49 +652,142 @@ describe('<DataGrid /> - Filter', () => {
     });
   });
 
-  describe('select operators', () => {
-    it('should allow operator is', () => {
-      const { setProps } = render(<TestCase value="a" operatorValue="contains" />);
-      setProps({
-        field: 'country',
-        operatorValue: 'is',
-        value: 'United States',
+  describe('singleSelect operators', () => {
+    describe('simple options', () => {
+      it('should allow operator is', () => {
+        const { setProps } = render(<TestCase value="a" operatorValue="contains" />);
+        setProps({
+          field: 'country',
+          operatorValue: 'is',
+          value: 'United States',
+        });
+        expect(getColumnValues()).to.deep.equal(['Nike']);
+        setProps({
+          field: 'country',
+          operatorValue: 'is',
+          value: 'Germany',
+        });
+        expect(getColumnValues()).to.deep.equal(['Adidas', 'Puma']);
+        setProps({
+          field: 'country',
+          operatorValue: 'is',
+          value: '',
+        });
+        expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
       });
-      expect(getColumnValues()).to.deep.equal(['Nike']);
-      setProps({
-        field: 'country',
-        operatorValue: 'is',
-        value: 'Germany',
+
+      it('should allow operator not', () => {
+        const { setProps } = render(<TestCase value="a" operatorValue="contains" />);
+        setProps({
+          field: 'country',
+          operatorValue: 'not',
+          value: 'United States',
+        });
+        expect(getColumnValues()).to.deep.equal(['Adidas', 'Puma']);
+        setProps({
+          field: 'country',
+          operatorValue: 'not',
+          value: 'Germany',
+        });
+        expect(getColumnValues()).to.deep.equal(['Nike']);
+        setProps({
+          field: 'country',
+          operatorValue: 'not',
+          value: '',
+        });
+        expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
       });
-      expect(getColumnValues()).to.deep.equal(['Adidas', 'Puma']);
-      setProps({
-        field: 'country',
-        operatorValue: 'is',
-        value: '',
+
+      it('should work with numeric values', () => {
+        const { setProps } = render(
+          <TestCase
+            rows={[
+              { id: 1, name: 'Hair Dryer', voltage: 220 },
+              { id: 2, name: 'Dishwasher', voltage: 110 },
+              { id: 3, name: 'Microwave', voltage: 220 },
+            ]}
+            columns={[
+              { field: 'name' },
+              { field: 'voltage', type: 'singleSelect', valueOptions: [220, 110] },
+            ]}
+            field="voltage"
+            operatorValue="is"
+            state={{
+              preferencePanel: {
+                open: true,
+                openedPanelValue: GridPreferencePanelsValue.filters,
+              },
+            }}
+          />,
+        );
+        expect(getColumnValues()).to.deep.equal(['Hair Dryer', 'Dishwasher', 'Microwave']);
+        setProps({ value: 220 });
+        expect(getColumnValues()).to.deep.equal(['Hair Dryer', 'Microwave']);
       });
-      expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
     });
 
-    it('should allow operator not', () => {
-      const { setProps } = render(<TestCase value="a" operatorValue="contains" />);
-      setProps({
-        field: 'country',
-        operatorValue: 'not',
-        value: 'United States',
+    describe('complex options', () => {
+      it('should allow operator is', () => {
+        const { setProps } = render(<TestCase value="a" operatorValue="contains" />);
+        setProps({
+          field: 'status',
+          operatorValue: 'is',
+          value: 0,
+        });
+        expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas']);
+        setProps({
+          field: 'status',
+          operatorValue: 'is',
+          value: 2,
+        });
+        expect(getColumnValues()).to.deep.equal(['Puma']);
+        setProps({
+          field: 'status',
+          operatorValue: 'is',
+          value: '',
+        });
+        expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
       });
-      expect(getColumnValues()).to.deep.equal(['Adidas', 'Puma']);
-      setProps({
-        field: 'country',
-        operatorValue: 'not',
-        value: 'Germany',
+
+      it('should allow operator not', () => {
+        const { setProps } = render(<TestCase value="a" operatorValue="contains" />);
+        setProps({
+          field: 'status',
+          operatorValue: 'not',
+          value: 0,
+        });
+        expect(getColumnValues()).to.deep.equal(['Puma']);
+        setProps({
+          field: 'status',
+          operatorValue: 'not',
+          value: 2,
+        });
+        expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas']);
+        setProps({
+          field: 'status',
+          operatorValue: 'not',
+          value: '',
+        });
+        expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
       });
-      expect(getColumnValues()).to.deep.equal(['Nike']);
-      setProps({
-        field: 'country',
-        operatorValue: 'not',
-        value: '',
+
+      it('should work with numeric values', () => {
+        const { setProps } = render(
+          <TestCase
+            field="status"
+            operatorValue="is"
+            state={{
+              preferencePanel: {
+                open: true,
+                openedPanelValue: GridPreferencePanelsValue.filters,
+              },
+            }}
+          />,
+        );
+        expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
+        setProps({ value: 2 });
+        expect(getColumnValues()).to.deep.equal(['Puma']);
       });
-      expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
     });
   });
 

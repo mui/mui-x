@@ -27,3 +27,9 @@ export interface GridCommitCellChangeParams {
   id: GridRowId;
   field: string;
 }
+
+export interface GridCellEditCommitParams {
+  id: GridRowId;
+  field: string;
+  value: GridCellValue;
+}

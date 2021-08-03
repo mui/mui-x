@@ -2,7 +2,11 @@
 import * as React from 'react';
 import { createMuiTheme } from '@material-ui/core/styles';
 import { makeStyles } from '@material-ui/styles';
-import { useGridApiRef, getThemePaletteMode, XGrid } from '@material-ui/x-grid';
+import { useGridApiRef, XGrid } from '@material-ui/x-grid';
+
+function getThemePaletteMode(palette) {
+  return palette.type || palette.mode;
+}
 
 const defaultTheme = createMuiTheme();
 const useStyles = makeStyles(
@@ -64,7 +68,7 @@ export default function ValidateServerNameGrid() {
           });
         }, 100);
 
-        event.stopPropagation();
+        event.defaultMuiPrevented = true;
       }
     },
     [apiRef],

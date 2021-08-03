@@ -12,8 +12,10 @@ import {
   GridValueGetterParams,
   GridToolbar,
   DataGridProps,
+  ptBR,
 } from '@material-ui/data-grid';
 import { useData } from 'packages/storybook/src/hooks/useData';
+import { createTheme, ThemeProvider } from '@material-ui/core/styles';
 import { getColumnHeaderCell, getColumnValues, raf } from 'test/utils/helperFn';
 
 describe('<DataGrid /> - Layout & Warnings', () => {
@@ -95,7 +97,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
       expect(rect.width).to.equal(400 - 2);
     });
 
-    // Adapation of describeConformance()
+    // Adaptation of describeConformance()
     describe('Material-UI component API', () => {
       it(`attaches the ref`, () => {
         const ref = React.createRef<HTMLDivElement>();
@@ -339,7 +341,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         ];
 
         render(
-          <div style={{ width: 200, height: 300 }}>
+          <div style={{ width: 602, height: 300 }}>
             <DataGrid columns={columns} rows={rows} />
           </div>,
         );
@@ -349,7 +351,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         const secondColumnWidthVal = secondColumn.style.width.split('px')[0];
         // @ts-expect-error need to migrate helpers to TypeScript
         expect(firstColumn).toHaveInlineStyle({
-          width: `${2 * parseInt(secondColumnWidthVal, 10)}px`,
+          width: `${2 * Number(secondColumnWidthVal)}px`,
         });
       });
 
@@ -504,8 +506,10 @@ describe('<DataGrid /> - Layout & Warnings', () => {
           },
         ];
 
+        const totalWidth = 700;
+
         render(
-          <div style={{ width: 200, height: 300 }}>
+          <div style={{ width: totalWidth, height: 300 }}>
             <DataGrid columns={columns} rows={rows} checkboxSelection />
           </div>,
         );
@@ -515,19 +519,54 @@ describe('<DataGrid /> - Layout & Warnings', () => {
             (width, item) => width + item.clientWidth,
             0,
           ),
-        ).to.equal(200 - 2);
+        ).to.equal(totalWidth - 2);
       });
     });
 
-    it('should have the correct intrinsic height when autoHeight={true}', () => {
-      render(
-        <div style={{ width: 300 }}>
-          <DataGrid {...baselineProps} headerHeight={40} rowHeight={30} autoHeight />
-        </div>,
-      );
-      expect(document.querySelector('.MuiDataGrid-main')!.clientHeight).to.equal(
-        40 + 30 * baselineProps.rows.length,
-      );
+    describe('autoHeight', () => {
+      it('should have the correct intrinsic height', () => {
+        const headerHeight = 40;
+        const rowHeight = 30;
+        render(
+          <div style={{ width: 300 }}>
+            <DataGrid
+              {...baselineProps}
+              headerHeight={headerHeight}
+              rowHeight={rowHeight}
+              autoHeight
+            />
+          </div>,
+        );
+        expect(document.querySelector('.MuiDataGrid-main')!.clientHeight).to.equal(
+          headerHeight + rowHeight * baselineProps.rows.length,
+        );
+      });
+
+      it('should include the scrollbar in the intrinsic height when there are more columns to show', function test() {
+        // On MacOS the scrollbar has zero width
+        if (/macintosh/i.test(window.navigator.userAgent)) {
+          this.skip();
+        }
+        const headerHeight = 40;
+        const rowHeight = 30;
+        render(
+          <div style={{ width: 150 }}>
+            <DataGrid
+              {...baselineProps}
+              headerHeight={headerHeight}
+              rowHeight={rowHeight}
+              columns={[{ field: 'brand' }, { field: 'year' }]}
+              autoHeight
+            />
+          </div>,
+        );
+        const gridWindow = document.querySelector('.MuiDataGrid-window');
+        const scrollBarSize = gridWindow!.scrollHeight - gridWindow!.clientHeight;
+        expect(scrollBarSize).not.to.equal(0);
+        expect(document.querySelector('.MuiDataGrid-main')!.clientHeight).to.equal(
+          scrollBarSize + headerHeight + rowHeight * baselineProps.rows.length,
+        );
+      });
     });
 
     // A function test counterpart of ScrollbarOverflowVerticalSnap.
@@ -544,6 +583,20 @@ describe('<DataGrid /> - Layout & Warnings', () => {
       const gridWindow = document.querySelector('.MuiDataGrid-window');
       // It should not have a horizontal scrollbar
       expect(gridWindow!.scrollWidth - gridWindow!.clientWidth).to.equal(0);
+    });
+
+    it('should have a horizontal scrollbar when there are more columns to show and no rows', function test() {
+      // On MacOS the scrollbar has zero width
+      if (/macintosh/i.test(window.navigator.userAgent)) {
+        this.skip();
+      }
+      render(
+        <div style={{ width: 150, height: 300 }}>
+          <DataGrid columns={[{ field: 'brand' }, { field: 'year' }]} rows={[]} />
+        </div>,
+      );
+      const gridWindow = document.querySelector('.MuiDataGrid-window');
+      expect(gridWindow!.scrollWidth - gridWindow!.clientWidth).not.to.equal(0);
     });
   });
 
@@ -617,6 +670,17 @@ describe('<DataGrid /> - Layout & Warnings', () => {
       );
 
       expect(getByText('Size')).not.to.equal(null);
+    });
+
+    it('should support translations in the theme', () => {
+      const { getByRole } = render(
+        <ThemeProvider theme={createTheme({}, ptBR)}>
+          <div style={{ width: 300, height: 300 }}>
+            <DataGrid {...baselineProps} />
+          </div>
+        </ThemeProvider>,
+      );
+      expect(getByRole('button', { name: 'Ordenar' })).not.to.equal(null);
     });
   });
 

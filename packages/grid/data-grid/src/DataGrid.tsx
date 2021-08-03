@@ -1,7 +1,8 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { chainPropTypes } from '@material-ui/utils';
-import { GridComponent, GridComponentProps, GridRowId, useThemeProps } from '../../_modules_/grid';
+import { GridComponent, GridComponentProps, GridRowId } from '../../_modules_/grid';
+import { useThemeProps } from '../../_modules_/grid/utils/material-ui-utils';
 
 const FORCED_PROPS: Partial<GridComponentProps> = {
   disableColumnResize: true,
@@ -148,7 +149,7 @@ DataGrid.propTypes = {
       return new Error(
         [
           `Material-UI: \`<DataGrid disableMultipleColumnsFiltering={false} />\` is not a valid prop.`,
-          'Only single column sorting is available in the MIT version.',
+          'Only single column filtering is available in the MIT version.',
           '',
           'You need to upgrade to the XGrid component to unlock this feature.',
         ].join('\n'),
@@ -251,13 +252,17 @@ DataGrid.propTypes = {
   selectionModel: chainPropTypes(
     PropTypes.oneOfType([PropTypes.number, PropTypes.string, PropTypes.array]),
     (props: any) => {
-      if (Array.isArray(props.selectionModel) && props.selectionModel.length > 1) {
+      if (
+        !props.checkboxSelection &&
+        Array.isArray(props.selectionModel) &&
+        props.selectionModel.length > 1
+      ) {
         return new Error(
           [
             `Material-UI: \`<DataGrid selectionModel={${JSON.stringify(
               props.selectionModel,
             )}} />\` is not a valid prop.`,
-            'selectionModel can only be of 1 item in DataGrid.',
+            'selectionModel can only contain 1 item in DataGrid without checkbox selection.',
             '',
             'You need to upgrade to the XGrid component to unlock multiple selection.',
           ].join('\n'),

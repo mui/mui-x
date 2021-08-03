@@ -124,6 +124,7 @@ describe('<DataGrid /> - Selection', () => {
             checkboxSelection
             pagination
             pageSize={1}
+            rowsPerPageOptions={[1]}
           />
         </div>,
       );
@@ -344,6 +345,48 @@ describe('<DataGrid /> - Selection', () => {
       setProps({ isRowSelectable: (params) => params.id > 0 });
       expect(getRow(0)).not.to.have.class('Mui-selected');
       expect(getRow(1)).not.to.have.class('Mui-selected');
+    });
+  });
+
+  describe('console error', () => {
+    const data = {
+      rows: [
+        {
+          id: 0,
+          brand: 'Nike',
+        },
+        {
+          id: 1,
+          brand: 'Hugo Boss',
+        },
+      ],
+      columns: [{ field: 'brand', width: 100 }],
+      selectionModel: [0, 1],
+    };
+    function TestDataGrid(props) {
+      return (
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid {...data} {...props} />
+        </div>
+      );
+    }
+
+    it('should throw console error when selectionModel contains more than 1 item in DataGrid without checkbox selection', () => {
+      expect(() => {
+        render(<TestDataGrid />);
+      })
+        // @ts-expect-error need to migrate helpers to TypeScript
+        .toErrorDev(
+          'selectionModel can only contain 1 item in DataGrid without checkbox selection.',
+        );
+    });
+
+    it('should not throw console error when selectionModel contains more than 1 item in DataGrid with checkbox selection', () => {
+      expect(() => {
+        render(<TestDataGrid checkboxSelection />);
+      })
+        .not // @ts-expect-error need to migrate helpers to TypeScript
+        .toErrorDev();
     });
   });
 });

@@ -2,20 +2,20 @@ import * as React from 'react';
 import clsx from 'clsx';
 import { GridCellIdentifier } from '../../hooks/features/focus/gridFocusState';
 import {
-  GridColumns,
   GridRowModel,
   GridCellParams,
   GridRowId,
   GridEditRowProps,
-} from '../../models/index';
+  GridStateColDef,
+} from '../../models';
 import { GridCell, GridCellProps } from './GridCell';
 import { useGridApiContext } from '../../hooks/root/useGridApiContext';
-import { isFunction } from '../../utils/index';
+import { isFunction } from '../../utils/utils';
 import { GRID_CSS_CLASS_PREFIX } from '../../constants/cssClassesConstants';
 
 interface RowCellsProps {
   cellClassName?: string;
-  columns: GridColumns;
+  columns: GridStateColDef[];
   extendRowFullWidth: boolean;
   firstColIdx: number;
   id: GridRowId;
@@ -96,7 +96,7 @@ export const GridRowCells = React.memo(function GridRowCells(props: RowCellsProp
     const cellProps: GridCellProps = {
       value: cellParams.value,
       field: column.field,
-      width: column.width!,
+      width: column.computedWidth,
       rowId: id,
       height,
       showRightBorder,

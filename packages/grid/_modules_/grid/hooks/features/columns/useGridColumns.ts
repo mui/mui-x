@@ -11,9 +11,10 @@ import { gridCheckboxSelectionColDef } from '../../../models/colDef/gridCheckbox
 import {
   GridColDef,
   GridColumns,
-  GridColumnsMeta,
   getInitialGridColumnsState,
-  GridInternalColumns,
+  GridColumnsState,
+  GridStateColDef,
+  GridColumnLookup,
 } from '../../../models/colDef/gridColDef';
 import { GridColumnTypesRecord } from '../../../models/colDef/gridColTypeDef';
 import { getGridDefaultColumnTypes } from '../../../models/colDef/gridDefaultColumnTypes';
@@ -36,57 +37,60 @@ import { useGridApiOptionHandler } from '../../root/useGridApiEventHandler';
 import { GRID_STRING_COL_DEF } from '../../../models/colDef/gridStringColDef';
 import { GridComponentProps } from '../../../GridComponentProps';
 
-function updateColumnsWidth(columns: GridColumns, viewportWidth: number): GridColumns {
-  const numberOfFluidColumns = columns.filter((column) => !!column.flex && !column.hide).length;
-  let flexDivider = 0;
+type RawGridColumnsState = Omit<GridColumnsState, 'lookup'> & {
+  lookup: { [field: string]: GridColDef | GridStateColDef };
+};
 
-  if (numberOfFluidColumns && viewportWidth) {
-    columns.forEach((column) => {
-      if (!column.hide) {
-        if (!column.flex) {
-          viewportWidth -= Math.max(column.minWidth!, column.width!);
-        } else {
-          flexDivider += column.flex;
-        }
+function getStateColumns(
+  columns: (GridColDef | GridStateColDef)[],
+  viewportWidth: number,
+): GridStateColDef[] {
+  let totalFlexUnits = 0;
+  let widthToAllocateInFlex = viewportWidth;
+
+  const stateColumns: GridStateColDef[] = [];
+
+  // Compute the width of non-flex columns and how much width must be allocated between the flex columns
+  for (let i = 0; i < columns.length; i += 1) {
+    const column = { ...columns[i] } as GridStateColDef;
+
+    if (column.hide) {
+      column.computedWidth = 0;
+    } else {
+      const minWidth = column.minWidth ?? GRID_STRING_COL_DEF.minWidth!;
+
+      if (column.flex && column.flex > 0) {
+        totalFlexUnits += column.flex;
+        column.computedWidth = minWidth;
+      } else {
+        const computedWidth = Math.max(column.width ?? GRID_STRING_COL_DEF.width!, minWidth);
+        column.computedWidth = computedWidth;
+        widthToAllocateInFlex -= computedWidth;
       }
-    });
+    }
+
+    stateColumns.push(column);
   }
 
-  let newColumns = columns;
-  if (numberOfFluidColumns) {
-    const flexMultiplier = viewportWidth / flexDivider;
-    newColumns = columns.map((column) => {
-      if (!column.flex) {
-        return {
-          ...column,
-          width: Math.max(column.minWidth!, column.width!),
-        };
-      }
+  // Compute the width of flex columns
+  if (totalFlexUnits && widthToAllocateInFlex > 0) {
+    const widthPerFlexUnit =
+      totalFlexUnits > 0 ? Math.floor(widthToAllocateInFlex / totalFlexUnits) : 0;
 
-      let newWidth = column.minWidth! ?? GRID_STRING_COL_DEF.width;
-      if (viewportWidth > 0) {
-        const flexColumnWidth = Math.floor(flexMultiplier * column.flex!);
-        newWidth =
-          column.minWidth && column.minWidth > flexColumnWidth ? column.minWidth : flexColumnWidth;
-      }
+    for (let i = 0; i < stateColumns.length; i += 1) {
+      const column = stateColumns[i];
 
-      return {
-        ...column,
-        width: newWidth,
-      };
-    });
-  } else {
-    newColumns = columns.map((column) => {
-      return {
-        ...column,
-        width: Math.max(column.minWidth!, column.width!),
-      };
-    });
+      if (!column.hide && column.flex && column.flex > 0) {
+        stateColumns[i].computedWidth = Math.max(
+          widthPerFlexUnit * column.flex,
+          column.computedWidth,
+        );
+      }
+    }
   }
 
-  return newColumns;
+  return stateColumns;
 }
-
 function hydrateColumns(
   columns: GridColumns,
   columnTypes: GridColumnTypesRecord,
@@ -107,19 +111,16 @@ function hydrateColumns(
   return extendedColumns;
 }
 
-function toLookup(logger: Logger, allColumns: GridColumns) {
+function toLookup(logger: Logger, allColumns: GridStateColDef[]): GridColumnLookup {
   logger.debug('Building columns lookup');
   return allColumns.reduce((lookup, col) => {
     lookup[col.field] = col;
     return lookup;
-  }, {} as { [key: string]: GridColDef });
+  }, {});
 }
 
-const upsertColumnsState = (
-  columnUpdates: GridColDef[],
-  prevColumnsState?: GridInternalColumns,
-) => {
-  const newState: GridInternalColumns = {
+const upsertColumnsState = (columnUpdates: GridColDef[], prevColumnsState?: GridColumnsState) => {
+  const newState: RawGridColumnsState = {
     all: [...(prevColumnsState?.all ?? [])],
     lookup: { ...(prevColumnsState?.lookup ?? {}) },
   };
@@ -149,7 +150,7 @@ export function useGridColumns(
   const options = useGridSelector(apiRef, optionsSelector);
 
   const updateState = React.useCallback(
-    (newState: GridInternalColumns, emit = true) => {
+    (newState: GridColumnsState, emit = true) => {
       logger.debug('Updating columns state.');
 
       setGridState((oldState) => ({ ...oldState, columns: newState }));
@@ -162,14 +163,23 @@ export function useGridColumns(
     [logger, setGridState, forceUpdate, apiRef],
   );
 
-  const getColumn: (field: string) => GridColDef = React.useCallback(
+  const getColumn = React.useCallback<GridColumnApi['getColumn']>(
     (field) => apiRef.current.state.columns.lookup[field],
     [apiRef],
   );
 
-  const getAllColumns: () => GridColumns = React.useCallback(() => allColumns, [allColumns]);
-  const getVisibleColumns = React.useCallback(() => visibleColumns, [visibleColumns]);
-  const getColumnsMeta: () => GridColumnsMeta = React.useCallback(() => columnsMeta, [columnsMeta]);
+  const getAllColumns = React.useCallback<GridColumnApi['getAllColumns']>(
+    () => allColumns,
+    [allColumns],
+  );
+  const getVisibleColumns = React.useCallback<GridColumnApi['getVisibleColumns']>(
+    () => visibleColumns,
+    [visibleColumns],
+  );
+  const getColumnsMeta = React.useCallback<GridColumnApi['getColumnsMeta']>(
+    () => columnsMeta,
+    [columnsMeta],
+  );
 
   const getColumnIndex = React.useCallback(
     (field: string, useVisibleColumns: boolean = true): number =>
@@ -188,15 +198,15 @@ export function useGridColumns(
   );
 
   const setColumnsState = React.useCallback(
-    (newState: GridInternalColumns, emit?: boolean) => {
+    (newState: RawGridColumnsState, emit?: boolean) => {
       logger.debug('updating GridColumns with new state');
 
       // Avoid dependency on gridState to avoid infinite loop
       const refGridState = apiRef.current.getState();
       const newColumns: GridColumns = newState.all.map((field) => newState.lookup[field]);
-      const updatedCols = updateColumnsWidth(newColumns, refGridState.viewportSizes.width);
+      const updatedCols = getStateColumns(newColumns, refGridState.viewportSizes.width);
 
-      const finalState: GridInternalColumns = {
+      const finalState: GridColumnsState = {
         all: updatedCols.map((col) => col.field),
         lookup: toLookup(logger, updatedCols),
       };
