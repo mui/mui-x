@@ -10,7 +10,7 @@ import Portal from '@material-ui/unstyled/Portal';
 import { expect } from 'chai';
 import * as React from 'react';
 import { getActiveCell, getCell, getColumnHeaderCell } from 'test/utils/helperFn';
-import { stub, spy } from 'sinon';
+import { stub, spy, useFakeTimers } from 'sinon';
 import {
   createClientRenderStrictMode,
   // @ts-expect-error need to migrate helpers to TypeScript
@@ -22,11 +22,12 @@ import {
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<XGrid /> - Edit Rows', () => {
+  let clock;
   let baselineProps;
 
-  // TODO v5: replace with createClientRender
-  const render = createClientRenderStrictMode();
   beforeEach(() => {
+    clock = useFakeTimers();
+
     baselineProps = {
       autoHeight: isJSDOM,
       rows: [
@@ -52,6 +53,13 @@ describe('<XGrid /> - Edit Rows', () => {
       ],
     };
   });
+
+  afterEach(() => {
+    clock.restore();
+  });
+
+  // TODO v5: replace with createClientRender
+  const render = createClientRenderStrictMode();
 
   let apiRef: GridApiRef;
 
@@ -276,6 +284,7 @@ describe('<XGrid /> - Edit Rows', () => {
     const otherCell = getCell(2, 1);
     fireEvent.mouseUp(otherCell);
     fireEvent.click(otherCell);
+    clock.tick(0);
     fireEvent.focus(otherCell);
     expect(cell).not.to.have.class('MuiDataGrid-cell--editing');
     expect(cell).to.have.text('1970');
@@ -332,6 +341,7 @@ describe('<XGrid /> - Edit Rows', () => {
     const otherCell = getCell(2, 1);
     fireEvent.mouseUp(otherCell);
     fireEvent.click(otherCell);
+    clock.tick(0);
     fireEvent.focus(otherCell);
     expect(cell).not.to.have.class('MuiDataGrid-cell--editing');
     expect(cell).to.have.text('1970');

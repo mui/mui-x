@@ -184,5 +184,15 @@ describe('e2e', () => {
         await page.evaluate(() => document.querySelector('[role="row"]')!.textContent!),
       ).to.equal('yearbrand');
     });
+
+    it('should select one row', async () => {
+      await renderFixture('DataGrid/CheckboxSelection');
+      await page.click('[role="cell"][data-rowindex="0"] input');
+      expect(
+        await page.evaluate(
+          () => document.querySelector('[role="row"][data-rowindex="0"]')!.className!,
+        ),
+      ).to.contain('Mui-selected');
+    });
   });
 });

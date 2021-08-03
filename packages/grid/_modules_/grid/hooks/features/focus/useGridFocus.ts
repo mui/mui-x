@@ -18,11 +18,13 @@ import { useGridState } from '../core/useGridState';
 import { useLogger } from '../../utils/useLogger';
 import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
 import { GridComponentProps } from '../../../GridComponentProps';
+import { isNavigationKey } from '../../../utils';
 
 export const useGridFocus = (apiRef: GridApiRef, props: Pick<GridComponentProps, 'rows'>): void => {
   const logger = useLogger('useGridFocus');
   const [, setGridState, forceUpdate] = useGridState(apiRef);
   const lastClickedCell = React.useRef<GridCellParams | null>(null);
+  const clickTimout = React.useRef<any>(null);
 
   const setCellFocus = React.useCallback(
     (id: GridRowId, field: string) => {
@@ -74,8 +76,8 @@ export const useGridFocus = (apiRef: GridApiRef, props: Pick<GridComponentProps,
 
   const handleCellKeyDown = React.useCallback(
     (params: GridCellParams, event: React.KeyboardEvent) => {
-      // Ignore Enter and Tab because GRID_CELL_NAVIGATION_KEY_DOWN handles the focus
-      if (event.key === 'Enter' || event.key === 'Tab') {
+      // GRID_CELL_NAVIGATION_KEY_DOWN handles the focus on Enter, Tab and navigation keys
+      if (event.key === 'Enter' || event.key === 'Tab' || isNavigationKey(event.key)) {
         return;
       }
       apiRef.current.setCellFocus(params.id, params.field);
@@ -188,10 +190,17 @@ export const useGridFocus = (apiRef: GridApiRef, props: Pick<GridComponentProps,
 
   React.useEffect(() => {
     const doc = ownerDocument(apiRef.current.rootElementRef!.current as HTMLElement);
-    doc.addEventListener('click', handleDocumentClick, true);
+    const handleDocumentClickAsync = (event) => {
+      // If the state is changed during the capture phase, onChange will not be fired
+      // By delaying the state update, there is time for other callbacks to be called first
+      // See https://github.com/facebook/react/issues/13424
+      clickTimout.current = setTimeout(() => handleDocumentClick(event));
+    };
+    doc.addEventListener('click', handleDocumentClickAsync, true);
 
     return () => {
-      doc.removeEventListener('click', handleDocumentClick, true);
+      clearTimeout(clickTimout.current);
+      doc.removeEventListener('click', handleDocumentClickAsync, true);
     };
   }, [apiRef, handleDocumentClick]);
 
