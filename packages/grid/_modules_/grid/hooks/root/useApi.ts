@@ -5,6 +5,9 @@ import { useLogger } from '../utils/useLogger';
 import { GRID_COMPONENT_ERROR, GRID_UNMOUNT } from '../../constants/eventsConstants';
 import { useGridApiMethod } from './useGridApiMethod';
 import { MuiEvent } from '../../models/gridOptions';
+import { Signature } from './useGridApiEventHandler';
+import { useGridSelector } from '../features/core/useGridSelector';
+import { optionsSelector } from '../utils/optionsSelector';
 
 const isSynthenticEvent = (event: any): event is React.SyntheticEvent => {
   return event.isPropagationStopped !== undefined;
@@ -12,6 +15,7 @@ const isSynthenticEvent = (event: any): event is React.SyntheticEvent => {
 
 export function useApi(apiRef: GridApiRef): void {
   const logger = useLogger('useApi');
+  const { signature } = useGridSelector(apiRef, optionsSelector);
 
   const publishEvent = React.useCallback(
     (
@@ -23,9 +27,15 @@ export function useApi(apiRef: GridApiRef): void {
       if (event && isSynthenticEvent(event) && event.isPropagationStopped()) {
         return;
       }
-      apiRef.current.emit(name, params, event, {});
+      const details =
+        signature === Signature.XGrid
+          ? {
+              api: apiRef.current,
+            }
+          : {};
+      apiRef.current.emit(name, params, event, details);
     },
-    [apiRef],
+    [apiRef, signature],
   );
 
   const subscribeEvent = React.useCallback(
