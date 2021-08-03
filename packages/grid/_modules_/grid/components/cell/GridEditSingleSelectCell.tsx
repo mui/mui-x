@@ -50,7 +50,7 @@ export function GridEditSingleSelectCell(props: GridCellParams & SelectProps) {
   };
 
   React.useLayoutEffect(() => {
-    if (hasFocus && ref.current) {
+    if (hasFocus) {
       // TODO v5: replace with inputRef.current.focus()
       // See https://github.com/mui-org/material-ui/issues/21441
       ref.current.querySelector('[role="button"]').focus();

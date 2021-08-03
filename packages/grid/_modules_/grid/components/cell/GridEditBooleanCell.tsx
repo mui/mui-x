@@ -44,8 +44,8 @@ export function GridEditBooleanCell(
   }, [value]);
 
   React.useLayoutEffect(() => {
-    if (hasFocus && inputRef.current) {
-      inputRef.current.focus();
+    if (hasFocus) {
+      inputRef.current!.focus();
     }
   }, [hasFocus]);
 

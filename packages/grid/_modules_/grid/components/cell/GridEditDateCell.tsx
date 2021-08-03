@@ -19,7 +19,7 @@ export function GridEditDateCell(props: GridCellParams & InputBaseProps) {
     ...other
   } = props;
 
-  const inputRef = React.useRef<any>();
+  const inputRef = React.useRef<HTMLInputElement>();
   const [valueState, setValueState] = React.useState(value);
 
   const handleChange = React.useCallback(
@@ -57,8 +57,8 @@ export function GridEditDateCell(props: GridCellParams & InputBaseProps) {
   }, [value]);
 
   React.useLayoutEffect(() => {
-    if (hasFocus && inputRef.current) {
-      inputRef.current.focus();
+    if (hasFocus) {
+      inputRef.current!.focus();
     }
   }, [hasFocus]);
 
