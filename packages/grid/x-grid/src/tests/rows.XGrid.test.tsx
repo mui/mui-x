@@ -678,18 +678,18 @@ describe('<XGrid /> - Rows', () => {
     });
 
     it('should publish GRID_CELL_FOCUS_OUT when clicking outside the focused cell', () => {
-      const onCellFocusOut = spy();
+      const handleCellFocusOut = spy();
       render(<TestCase rows={baselineProps.rows} />);
-      apiRef.current.subscribeEvent(GRID_CELL_FOCUS_OUT, onCellFocusOut);
+      apiRef.current.subscribeEvent(GRID_CELL_FOCUS_OUT, handleCellFocusOut);
       fireEvent.mouseUp(getCell(1, 0));
       fireEvent.click(getCell(1, 0));
       clock.tick(0);
-      expect(onCellFocusOut.callCount).to.equal(0);
+      expect(handleCellFocusOut.callCount).to.equal(0);
       fireEvent.click(document.body);
       clock.tick(1);
-      expect(onCellFocusOut.callCount).to.equal(1);
-      expect(onCellFocusOut.args[0][0].id).to.equal(baselineProps.rows[1].id);
-      expect(onCellFocusOut.args[0][0].field).to.equal(baselineProps.columns[0].field);
+      expect(handleCellFocusOut.callCount).to.equal(1);
+      expect(handleCellFocusOut.args[0][0].id).to.equal(baselineProps.rows[1].id);
+      expect(handleCellFocusOut.args[0][0].field).to.equal(baselineProps.columns[0].field);
     });
   });
 });
