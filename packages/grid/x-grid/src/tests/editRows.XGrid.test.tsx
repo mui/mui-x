@@ -475,7 +475,8 @@ describe('<XGrid /> - Edit Rows', () => {
     render(<TestCase />);
     const cell = getCell(0, 0);
     fireEvent.doubleClick(cell);
-    expect(document.activeElement).to.equal(screen.getByRole('textbox'));
+    // @ts-expect-error need to migrate helpers to TypeScript
+    expect(screen.getByRole('textbox')).toHaveFocus();
   });
 
   describe('column type: singleSelect', () => {
@@ -578,7 +579,8 @@ describe('<XGrid /> - Edit Rows', () => {
       );
       const cell = getCell(0, 0);
       fireEvent.doubleClick(cell);
-      expect(document.activeElement).to.equal(screen.getByRole('button', { name: 'Nike' }));
+      // @ts-expect-error need to migrate helpers to TypeScript
+      expect(screen.getByRole('button', { name: 'Nike' })).toHaveFocus();
     });
   });
 
@@ -657,7 +659,8 @@ describe('<XGrid /> - Edit Rows', () => {
       );
       const cell = getCell(0, 0);
       fireEvent.doubleClick(cell);
-      expect(document.activeElement).to.equal(screen.getByRole('cell').querySelector('input'));
+      // @ts-expect-error need to migrate helpers to TypeScript
+      expect(screen.getByRole('cell').querySelector('input')).toHaveFocus();
     });
   });
 
@@ -707,7 +710,8 @@ describe('<XGrid /> - Edit Rows', () => {
       );
       const cell = getCell(0, 0);
       fireEvent.doubleClick(cell);
-      expect(document.activeElement).to.equal(screen.getByRole('cell').querySelector('input'));
+      // @ts-expect-error need to migrate helpers to TypeScript
+      expect(screen.getByRole('cell').querySelector('input')).toHaveFocus();
     });
   });
 
@@ -755,7 +759,8 @@ describe('<XGrid /> - Edit Rows', () => {
       );
       const cell = getCell(0, 0);
       fireEvent.doubleClick(cell);
-      expect(document.activeElement).to.equal(screen.getByRole('checkbox'));
+      // @ts-expect-error need to migrate helpers to TypeScript
+      expect(screen.getByRole('checkbox')).toHaveFocus();
     });
   });
 
