@@ -297,7 +297,7 @@ function RenderCellExpand(params: GridCellParams) {
   return (
     <GridCellExpand
       value={params.value ? params.value.toString() : ''}
-      width={params.colDef.width}
+      width={params.colDef.computedWidth}
     />
   );
 }
