@@ -31,7 +31,7 @@
     {
       "name": "setFilterModel",
       "description": "Sets the filter model to the one given by <code>model</code>.",
-      "type": "(model: GridFilterModelState) => void"
+      "type": "(model: GridFilterModel) => void"
     },
     {
       "name": "showFilterPanel",

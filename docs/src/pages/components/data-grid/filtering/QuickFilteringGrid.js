@@ -4,7 +4,6 @@ import IconButton from '@material-ui/core/IconButton';
 import TextField from '@material-ui/core/TextField';
 import {
   DataGrid,
-  escapeRegExp,
   GridToolbarDensitySelector,
   GridToolbarFilterButton,
 } from '@material-ui/data-grid';
@@ -13,6 +12,10 @@ import ClearIcon from '@material-ui/icons/Clear';
 import SearchIcon from '@material-ui/icons/Search';
 import { createMuiTheme } from '@material-ui/core/styles';
 import { makeStyles } from '@material-ui/styles';
+
+function escapeRegExp(value) {
+  return value.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
+}
 
 const defaultTheme = createMuiTheme();
 const useStyles = makeStyles(

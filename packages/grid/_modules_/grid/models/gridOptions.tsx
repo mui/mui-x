@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { GRID_DEFAULT_LOCALE_TEXT } from '../constants/localeTextConstants';
-import { GridFilterModel } from '../hooks/features/filter/gridFilterModelState';
+import { GridFilterModel } from './gridFilterModel';
 import { GridLocaleText } from './api/gridLocaleTextApi';
 import { GridColumnTypesRecord } from './colDef/gridColTypeDef';
 import { getGridDefaultColumnTypes } from './colDef/gridDefaultColumnTypes';
