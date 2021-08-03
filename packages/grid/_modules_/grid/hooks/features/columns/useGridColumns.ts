@@ -3,7 +3,6 @@ import {
   GRID_COLUMNS_CHANGE,
   GRID_COLUMN_ORDER_CHANGE,
   GRID_COLUMN_WIDTH_CHANGE,
-  GRID_COLUMN_VISIBILITY_CHANGE,
 } from '../../../constants/eventsConstants';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridColumnApi } from '../../../models/api/gridColumnApi';
