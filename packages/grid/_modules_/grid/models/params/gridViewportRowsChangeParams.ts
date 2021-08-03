@@ -10,8 +10,4 @@ export interface GridViewportRowsChangeParams {
    * The index of the last row in the viewport.
    */
   lastRowIndex: number;
-  /**
-   * Api that let you manipulate the grid.
-   */
-  api: any;
 }

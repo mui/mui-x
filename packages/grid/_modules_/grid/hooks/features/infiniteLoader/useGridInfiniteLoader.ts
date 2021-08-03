@@ -12,8 +12,9 @@ import { useGridApiEventHandler, useGridApiOptionHandler } from '../../root/useG
 import { GridRowScrollEndParams } from '../../../models/params/gridRowScrollEndParams';
 import { visibleGridColumnsSelector } from '../columns/gridColumnsSelector';
 import { GridComponentProps } from '../../../GridComponentProps';
-import { GridScrollParams } from '../../../models/params/gridScrollParams';
+import { renderStateSelector } from '../virtualization/renderingStateSelector';
 import { GridViewportRowsChangeParams } from '../../../models/params/gridViewportRowsChangeParams';
+import { GridScrollParams } from '../../../models/params/gridScrollParams';
 
 export const useGridInfiniteLoader = (
   apiRef: GridApiRef,
@@ -23,12 +24,14 @@ export const useGridInfiniteLoader = (
   const containerSizes = useGridSelector(apiRef, gridContainerSizesSelector);
   const visibleColumns = useGridSelector(apiRef, visibleGridColumnsSelector);
   const isInScrollBottomArea = React.useRef<boolean>(false);
-  const totalRowsScrolledHeight = React.useRef<number>(0);
-  const lastScrollPosition = React.useRef<GridScrollParams>({ top: 0, left: 0 });
-  const firstRowIndex = React.useRef<number>(0);
+  const renderState = useGridSelector(apiRef, renderStateSelector);
+  const previousRenderContext = React.useRef<null | {
+    firstRowIndex: number;
+    lastRowIndex: number;
+  }>(null);
 
   const handleRowsScrollEnd = React.useCallback(
-    (scrollPosition) => {
+    (scrollPosition: GridScrollParams) => {
       if (!containerSizes) {
         return;
       }
@@ -57,47 +60,6 @@ export const useGridInfiniteLoader = (
     [apiRef, options, visibleColumns, containerSizes],
   );
 
-  const handleViewportRowsChange = React.useCallback(
-    (scrollPosition) => {
-      if (!containerSizes) {
-        return;
-      }
-      const firstPartialRow =
-        containerSizes.windowSizes.height - containerSizes.viewportPageSize * options.rowHeight;
-
-      if (
-        lastScrollPosition.current.top < scrollPosition.top &&
-        firstPartialRow + totalRowsScrolledHeight.current + 1 <= scrollPosition.top
-      ) {
-        totalRowsScrolledHeight.current += options.rowHeight;
-        firstRowIndex.current += 1;
-        const viewportRowsChangeParams: GridViewportRowsChangeParams = {
-          firstRowIndex: firstRowIndex.current,
-          lastRowIndex: containerSizes.viewportPageSize + firstRowIndex.current,
-          api: apiRef,
-        };
-        apiRef.current.publishEvent(GRID_VIEWPORT_ROWS_CHANGE, viewportRowsChangeParams);
-      }
-
-      if (
-        lastScrollPosition.current.top > scrollPosition.top &&
-        totalRowsScrolledHeight.current - firstPartialRow - 1 >= scrollPosition.top
-      ) {
-        totalRowsScrolledHeight.current -= options.rowHeight;
-        firstRowIndex.current -= 1;
-        const viewportRowsChangeParams: GridViewportRowsChangeParams = {
-          firstRowIndex: firstRowIndex.current,
-          lastRowIndex: containerSizes.viewportPageSize + firstRowIndex.current,
-          api: apiRef,
-        };
-        apiRef.current.publishEvent(GRID_VIEWPORT_ROWS_CHANGE, viewportRowsChangeParams);
-      }
-
-      lastScrollPosition.current = scrollPosition;
-    },
-    [apiRef, options, containerSizes],
-  );
-
   const handleGridScroll = React.useCallback(() => {
     if (!props.onRowsScrollEnd && !props.onViewportRowsChange) {
       return;
@@ -105,13 +67,36 @@ export const useGridInfiniteLoader = (
 
     const scrollPosition = apiRef.current.getScrollPosition();
 
-    if (props.onViewportRowsChange) {
-      handleViewportRowsChange(scrollPosition);
-    }
     if (props.onRowsScrollEnd) {
       handleRowsScrollEnd(scrollPosition);
     }
-  }, [props, apiRef, handleViewportRowsChange, handleRowsScrollEnd]);
+  }, [props, apiRef, handleRowsScrollEnd]);
+
+  // TODO: Check if onViewportRowsChange works as expected once virtualization is reworked
+  React.useEffect(() => {
+    const renderContext = renderState.renderContext!;
+
+    if (!props.onViewportRowsChange || !renderContext) {
+      return;
+    }
+
+    if (
+      !previousRenderContext.current ||
+      renderContext.firstRowIdx !== previousRenderContext.current.firstRowIndex ||
+      renderContext.lastRowIdx !== previousRenderContext.current.lastRowIndex
+    ) {
+      const viewportRowsChangeParams: GridViewportRowsChangeParams = {
+        firstRowIndex: renderContext.firstRowIdx!,
+        lastRowIndex: renderContext.lastRowIdx!,
+      };
+      apiRef.current.publishEvent(GRID_VIEWPORT_ROWS_CHANGE, viewportRowsChangeParams);
+    }
+
+    previousRenderContext.current = {
+      firstRowIndex: renderContext.firstRowIdx!,
+      lastRowIndex: renderContext.lastRowIdx!,
+    };
+  }, [apiRef, props.onViewportRowsChange, renderState]);
 
   useGridApiEventHandler(apiRef, GRID_ROWS_SCROLL, handleGridScroll);
   useGridApiOptionHandler(apiRef, GRID_ROWS_SCROLL_END, props.onRowsScrollEnd);
