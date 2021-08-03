@@ -279,7 +279,7 @@ export function useGridEditRows(
   const handleCellDoubleClick = React.useCallback(
     (...args) => {
       // TODO don't publish if cell is not editable
-      apiRef.current.publishEvent(GridEvents.cellEnter, ...args);
+      apiRef.current.publishEvent(GridEvents.cellEditEnter, ...args);
     },
     [apiRef],
   );
