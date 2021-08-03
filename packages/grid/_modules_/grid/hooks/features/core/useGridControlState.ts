@@ -43,14 +43,14 @@ export function useGridControlState(apiRef: GridApiRef, props: GridComponentProp
         if (hasSubStateChanged) {
           if (controlState.propOnChange) {
             const newModel = newSubState;
-            const callbackOptions =
+            const details =
               props.signature === Signature.XGrid
                 ? {
                     api: apiRef.current,
                   }
                 : {};
             if (controlState.propModel !== newModel) {
-              controlState.propOnChange(newModel, callbackOptions);
+              controlState.propOnChange(newModel, details);
             }
             shouldUpdate =
               controlState.propModel === undefined || controlState.propModel === newModel;

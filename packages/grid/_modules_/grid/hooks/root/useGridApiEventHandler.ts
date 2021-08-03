@@ -8,11 +8,10 @@ import { GridApi } from '../../models/api/gridApi';
 
 // TODO: Remove once [[GridApi]] cycle dependency is fixed
 /**
- * Callback options.
+ * Callback details.
  */
-export interface MuiCallbackOptions {
+export interface MuiCallbackDetails {
   api?: GridApi;
-  reason?: string;
 }
 
 /**
@@ -37,14 +36,14 @@ export function useGridApiEventHandler(
       const enhancedHandler = (
         params: any,
         event: MuiEvent<React.SyntheticEvent | DocumentEventMap[keyof DocumentEventMap] | {}>,
-        callbackOptions: MuiCallbackOptions = {},
+        details: MuiCallbackDetails = {},
       ) => {
         if (signature === Signature.XGrid) {
-          callbackOptions.api = apiRef.current;
+          details.api = apiRef.current;
         }
 
         if (!event.defaultMuiPrevented) {
-          handler(params, event, callbackOptions);
+          handler(params, event, details);
         }
       };
       return apiRef.current.subscribeEvent(eventName, enhancedHandler, options);
