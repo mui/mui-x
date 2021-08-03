@@ -15,10 +15,9 @@ import {
   GridRowData,
   useGridApiRef,
   XGrid,
-  GRID_CELL_EDIT_EXIT,
+  GridEvents,
   GridEditCellPropsParams,
   GridCellEditCommitParams,
-  GRID_CELL_EDIT_ENTER,
   MuiEvent,
 } from '@material-ui/x-grid';
 import { useDemoData } from '@material-ui/x-grid-data-generator';
@@ -507,7 +506,7 @@ export function EditRowsControl() {
 
       setTimeout(() => {
         apiRef.current.updateRows([cellUpdate]);
-        apiRef.current.publishEvent(GRID_CELL_EDIT_EXIT, params, event);
+        apiRef.current.publishEvent(GridEvents.cellEditExit, params, event);
       }, randomInt(300, 2000));
     },
     [apiRef],
@@ -819,7 +818,7 @@ export function EditCellWithCellClickGrid() {
     (params: GridCellParams, event: MuiEvent<React.MouseEvent>) => {
       // Or you can use the editRowModel prop, but I find it easier
       // apiRef.current.setCellMode(params.id, params.field, 'edit');
-      apiRef.current.publishEvent(GRID_CELL_EDIT_ENTER, params, event);
+      apiRef.current.publishEvent(GridEvents.cellEditEnter, params, event);
 
       // if I want to prevent selection I can do
       event.defaultMuiPrevented = true;
@@ -841,13 +840,16 @@ export function EditCellWithMessageGrid() {
   const [message, setMessage] = React.useState('');
 
   React.useEffect(() => {
-    return apiRef.current.subscribeEvent(GRID_CELL_EDIT_ENTER, (params: GridCellParams, event) => {
-      setMessage(`Editing cell with value: ${params.value} at row: ${params.id}, column: ${
-        params.field
-      },
+    return apiRef.current.subscribeEvent(
+      GridEvents.cellEditEnter,
+      (params: GridCellParams, event) => {
+        setMessage(`Editing cell with value: ${params.value} at row: ${params.id}, column: ${
+          params.field
+        },
                         triggered by ${(event as React.SyntheticEvent)!.type}
       `);
-    });
+      },
+    );
   }, [apiRef]);
 
   React.useEffect(() => {

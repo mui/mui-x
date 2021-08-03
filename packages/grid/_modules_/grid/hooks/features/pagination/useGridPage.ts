@@ -2,7 +2,7 @@ import * as React from 'react';
 import { GridApiRef } from '../../../models';
 import { useGridSelector, useGridState } from '../core';
 import { useLogger } from '../../utils';
-import { GRID_PAGE_CHANGE, GRID_PAGE_SIZE_CHANGE } from '../../../constants';
+import { GridEvents } from '../../../constants/eventsConstants';
 import { GridComponentProps } from '../../../GridComponentProps';
 import { useGridApiEventHandler, useGridApiMethod } from '../../root';
 import { GridPageApi } from '../../../models/api/gridPageApi';
@@ -59,7 +59,7 @@ export const useGridPage = (
       propOnChange: props.onPageChange,
       stateSelector: (state) => state.pagination.page,
       onChangeCallback: (page) => {
-        apiRef.current.publishEvent(GRID_PAGE_CHANGE, page);
+        apiRef.current.publishEvent(GridEvents.pageChange, page);
       },
     });
   }, [apiRef, props.page, props.onPageChange]);
@@ -104,7 +104,7 @@ export const useGridPage = (
     [setGridState, forceUpdate],
   );
 
-  useGridApiEventHandler(apiRef, GRID_PAGE_SIZE_CHANGE, handlePageSizeChange);
+  useGridApiEventHandler(apiRef, GridEvents.pageSizeChange, handlePageSizeChange);
 
   const pageApi: GridPageApi = {
     setPage,

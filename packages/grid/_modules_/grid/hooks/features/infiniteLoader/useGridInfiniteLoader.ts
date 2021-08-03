@@ -2,7 +2,7 @@ import * as React from 'react';
 import { optionsSelector } from '../../utils/optionsSelector';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { useGridSelector } from '../core/useGridSelector';
-import { GRID_ROWS_SCROLL, GRID_ROWS_SCROLL_END } from '../../../constants/eventsConstants';
+import { GridEvents } from '../../../constants/eventsConstants';
 import { gridContainerSizesSelector } from '../../root/gridContainerSizesSelector';
 import { useGridApiEventHandler, useGridApiOptionHandler } from '../../root/useGridApiEventHandler';
 import { GridRowScrollEndParams } from '../../../models/params/gridRowScrollEndParams';
@@ -41,11 +41,11 @@ export const useGridInfiniteLoader = (
         viewportPageSize: containerSizes.viewportPageSize,
         virtualRowsCount: containerSizes.virtualRowsCount,
       };
-      apiRef.current.publishEvent(GRID_ROWS_SCROLL_END, rowScrollEndParam);
+      apiRef.current.publishEvent(GridEvents.rowsScrollEnd, rowScrollEndParam);
       isInScrollBottomArea.current = true;
     }
   }, [options, containerSizes, apiRef, visibleColumns]);
 
-  useGridApiEventHandler(apiRef, GRID_ROWS_SCROLL, handleGridScroll);
-  useGridApiOptionHandler(apiRef, GRID_ROWS_SCROLL_END, props.onRowsScrollEnd);
+  useGridApiEventHandler(apiRef, GridEvents.rowsScroll, handleGridScroll);
+  useGridApiOptionHandler(apiRef, GridEvents.rowsScrollEnd, props.onRowsScrollEnd);
 };

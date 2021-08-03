@@ -2,11 +2,11 @@ import * as React from 'react';
 import { GridApiRef } from '../../models/api/gridApiRef';
 import { GridSubscribeEventOptions } from '../../utils/eventEmitter/GridEventEmitter';
 import { useLogger } from '../utils/useLogger';
-import { GRID_COMPONENT_ERROR, GRID_UNMOUNT } from '../../constants/eventsConstants';
+import { GridEvents } from '../../constants/eventsConstants';
 import { useGridApiMethod } from './useGridApiMethod';
 import { MuiEvent } from '../../models/gridOptions';
 
-const isSynthenticEvent = (event: any): event is React.SyntheticEvent => {
+const isSyntheticEvent = (event: any): event is React.SyntheticEvent => {
   return event.isPropagationStopped !== undefined;
 };
 
@@ -20,7 +20,7 @@ export function useApi(apiRef: GridApiRef): void {
       event: MuiEvent<React.SyntheticEvent | DocumentEventMap[keyof DocumentEventMap] | {}> = {},
     ) => {
       event.defaultMuiPrevented = false;
-      if (event && isSynthenticEvent(event) && event.isPropagationStopped()) {
+      if (event && isSyntheticEvent(event) && event.isPropagationStopped()) {
         return;
       }
       apiRef.current.emit(name, params, event);
@@ -47,7 +47,7 @@ export function useApi(apiRef: GridApiRef): void {
 
   const showError = React.useCallback(
     (args) => {
-      apiRef.current.publishEvent(GRID_COMPONENT_ERROR, args);
+      apiRef.current.publishEvent(GridEvents.componentError, args);
     },
     [apiRef],
   );
@@ -58,7 +58,7 @@ export function useApi(apiRef: GridApiRef): void {
 
     return () => {
       logger.info('Unmounting Grid component. Clearing all events listeners.');
-      api.emit(GRID_UNMOUNT);
+      api.emit(GridEvents.unmount);
       api.removeAllListeners();
     };
   }, [logger, apiRef]);

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
-import { GRID_KEYDOWN } from '../../../constants/eventsConstants';
+import { GridEvents } from '../../../constants/eventsConstants';
 import { buildCSV } from '../export/serializers/csvSerializer';
 import { useGridSelector } from '../core/useGridSelector';
 import { visibleGridColumnsSelector } from '../columns/gridColumnsSelector';
@@ -82,7 +82,7 @@ export const useGridClipboard = (apiRef: GridApiRef): void => {
     [apiRef],
   );
 
-  useGridApiEventHandler(apiRef, GRID_KEYDOWN, handleKeydown);
+  useGridApiEventHandler(apiRef, GridEvents.keydown, handleKeydown);
 
   const clipboardApi: GridClipboardApi = {
     copySelectedRowsToClipboard,

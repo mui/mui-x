@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GRID_ROWS_SCROLL } from '../../../constants/eventsConstants';
+import { GridEvents } from '../../../constants/eventsConstants';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridVirtualizationApi } from '../../../models/api/gridVirtualizationApi';
 import { GridCellIndexCoordinates } from '../../../models/gridCell';
@@ -177,7 +177,7 @@ export const useGridVirtualRows = (apiRef: GridApiRef): void => {
           top: windowRef.current.scrollTop,
         },
       });
-      apiRef.current.publishEvent(GRID_ROWS_SCROLL, scrollParams);
+      apiRef.current.publishEvent(GridEvents.rowsScroll, scrollParams);
 
       const pageChanged =
         lastState.rendering.renderContext &&

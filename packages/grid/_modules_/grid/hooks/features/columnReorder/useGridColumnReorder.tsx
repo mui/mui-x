@@ -1,15 +1,7 @@
 import * as React from 'react';
 import { useLogger } from '../../utils/useLogger';
 import { GridApiRef } from '../../../models/api/gridApiRef';
-import {
-  GRID_COLUMN_HEADER_DRAG_START,
-  GRID_COLUMN_HEADER_DRAG_OVER,
-  GRID_COLUMN_HEADER_DRAG_ENTER,
-  GRID_COLUMN_HEADER_DRAG_END,
-  GRID_CELL_DRAG_ENTER,
-  GRID_CELL_DRAG_OVER,
-  GRID_CELL_DRAG_END,
-} from '../../../constants/eventsConstants';
+import { GridEvents } from '../../../constants/eventsConstants';
 import { GRID_COLUMN_HEADER_DRAGGING_CSS_CLASS } from '../../../constants/cssClassesConstants';
 import { GridColumnHeaderParams } from '../../../models/params/gridColumnHeaderParams';
 import { GridCellParams } from '../../../models/params/gridCellParams';
@@ -159,11 +151,11 @@ export const useGridColumnReorder = (apiRef: GridApiRef): void => {
     [options.disableColumnReorder, logger, setGridState, forceUpdate, apiRef, dragColField],
   );
 
-  useGridApiEventHandler(apiRef, GRID_COLUMN_HEADER_DRAG_START, handleColumnHeaderDragStart);
-  useGridApiEventHandler(apiRef, GRID_COLUMN_HEADER_DRAG_ENTER, handleDragEnter);
-  useGridApiEventHandler(apiRef, GRID_COLUMN_HEADER_DRAG_OVER, handleDragOver);
-  useGridApiEventHandler(apiRef, GRID_COLUMN_HEADER_DRAG_END, handleDragEnd);
-  useGridApiEventHandler(apiRef, GRID_CELL_DRAG_ENTER, handleDragEnter);
-  useGridApiEventHandler(apiRef, GRID_CELL_DRAG_OVER, handleDragOver);
-  useGridApiEventHandler(apiRef, GRID_CELL_DRAG_END, handleDragEnd);
+  useGridApiEventHandler(apiRef, GridEvents.columnHeaderDragStart, handleColumnHeaderDragStart);
+  useGridApiEventHandler(apiRef, GridEvents.columnHeaderDragEnter, handleDragEnter);
+  useGridApiEventHandler(apiRef, GridEvents.columnHeaderDragOver, handleDragOver);
+  useGridApiEventHandler(apiRef, GridEvents.columnHeaderDragEnd, handleDragEnd);
+  useGridApiEventHandler(apiRef, GridEvents.cellDragEnter, handleDragEnter);
+  useGridApiEventHandler(apiRef, GridEvents.cellDragOver, handleDragOver);
+  useGridApiEventHandler(apiRef, GridEvents.cellDragEnd, handleDragEnd);
 };

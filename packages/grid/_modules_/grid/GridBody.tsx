@@ -7,7 +7,7 @@ import { useGridApiContext } from './hooks/root/useGridApiContext';
 import { GridAutoSizer } from './components/GridAutoSizer';
 import { GridViewport } from './components/GridViewport';
 import { Watermark } from './components/Watermark';
-import { GRID_RESIZE } from './constants/eventsConstants';
+import { GridEvents } from './constants/eventsConstants';
 import { GridRootPropsContext } from './context/GridRootPropsContext';
 import { GridOverlays } from './GridOverlays';
 import { ElementSize } from './models/elementSize';
@@ -27,7 +27,7 @@ export function GridBody() {
   apiRef.current.renderingZoneRef = renderingZoneRef;
 
   const handleResize = React.useCallback(
-    (size: ElementSize) => apiRef.current.publishEvent(GRID_RESIZE, size),
+    (size: ElementSize) => apiRef.current.publishEvent(GridEvents.resize, size),
     [apiRef],
   );
 

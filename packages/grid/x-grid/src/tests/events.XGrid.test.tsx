@@ -16,7 +16,7 @@ import {
   GridCellParams,
   GridRowsProp,
   GridColumns,
-  GRID_ROWS_SCROLL,
+  GridEvents,
   GRID_CELL_CSS_CLASS,
 } from '@material-ui/x-grid';
 import { getCell, getColumnHeaderCell, getRow } from 'test/utils/helperFn';
@@ -265,7 +265,7 @@ describe('<XGrid /> - Events Params', () => {
     const handleOnRowsScrollEnd = spy();
 
     render(<TestEvents onRowsScrollEnd={handleOnRowsScrollEnd} />);
-    apiRef.current.publishEvent(GRID_ROWS_SCROLL);
+    apiRef.current.publishEvent(GridEvents.rowsScroll);
     expect(handleOnRowsScrollEnd.callCount).to.equal(1);
   });
 

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useForkRef } from '@material-ui/core/utils';
-import { GRID_CELL_NAVIGATION_KEY_DOWN } from '../../constants/eventsConstants';
+import { GridEvents } from '../../constants/eventsConstants';
 import { GridCellParams } from '../../models/params/gridCellParams';
 import { isNavigationKey, isSpaceKey } from '../../utils/keyboardUtils';
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
@@ -44,7 +44,7 @@ export const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, Gri
           event.stopPropagation();
         }
         if (isNavigationKey(event.key) && !event.shiftKey) {
-          apiRef!.current.publishEvent(GRID_CELL_NAVIGATION_KEY_DOWN, props, event);
+          apiRef!.current.publishEvent(GridEvents.cellNavigationKeyDown, props, event);
         }
       },
       [apiRef, props],
