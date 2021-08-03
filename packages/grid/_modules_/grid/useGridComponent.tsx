@@ -3,6 +3,7 @@ import { useGridColumnMenu } from './hooks/features/columnMenu/useGridColumnMenu
 import { useGridColumnReorder } from './hooks/features/columnReorder/useGridColumnReorder';
 import { useGridColumnResize } from './hooks/features/columnResize/useGridColumnResize';
 import { useGridColumns } from './hooks/features/columns/useGridColumns';
+import {useGridVisibleColumns} from "./hooks/features/columns/useGridVisibleColumns";
 import { useGridControlState } from './hooks/features/core/useGridControlState';
 import { useGridDensity } from './hooks/features/density/useGridDensity';
 import { useGridCsvExport } from './hooks/features/export/useGridCsvExport';
@@ -48,6 +49,7 @@ export const useGridComponent = (apiRef: GridApiRef, props: GridComponentProps) 
   useResizeContainer(apiRef, props);
   useGridFreezeRows(apiRef, props);
   useGridColumns(apiRef, props);
+  useGridVisibleColumns(apiRef, props)
   useGridParamsApi(apiRef);
   useGridRows(apiRef, props);
   useGridEditRows(apiRef, props);

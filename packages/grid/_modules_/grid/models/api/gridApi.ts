@@ -1,4 +1,5 @@
 import { GridColumnApi } from './gridColumnApi';
+import { GridVisibleColumnApi } from './gridVisibleColumnApi';
 import { GridColumnMenuApi } from './gridColumnMenuApi';
 import { GridComponentsApi } from './gridComponentsApi';
 import { GridControlStateApi } from './gridControlStateApi';
@@ -34,6 +35,7 @@ export interface GridApi
     GridEditRowApi,
     GridParamsApi,
     GridColumnApi,
+    GridVisibleColumnApi,
     GridSelectionApi,
     GridSortApi,
     GridVirtualizationApi,

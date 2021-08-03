@@ -33,7 +33,6 @@ import {
   gridColumnsMetaSelector,
   visibleGridColumnsSelector,
 } from './gridColumnsSelector';
-import { useGridApiOptionHandler } from '../../root/useGridApiEventHandler';
 import { GRID_STRING_COL_DEF } from '../../../models/colDef/gridStringColDef';
 import { GridComponentProps } from '../../../GridComponentProps';
 
@@ -172,10 +171,7 @@ export function useGridColumns(
     () => allColumns,
     [allColumns],
   );
-  const getVisibleColumns = React.useCallback<GridColumnApi['getVisibleColumns']>(
-    () => visibleColumns,
-    [visibleColumns],
-  );
+
   const getColumnsMeta = React.useCallback<GridColumnApi['getColumnsMeta']>(
     () => columnsMeta,
     [columnsMeta],
@@ -230,24 +226,6 @@ export function useGridColumns(
     [updateColumns],
   );
 
-  const setColumnVisibility = React.useCallback(
-    (field: string, isVisible: boolean) => {
-      const col = getColumn(field);
-      const updatedCol = { ...col, hide: !isVisible };
-
-      updateColumns([updatedCol]);
-      forceUpdate();
-
-      apiRef.current.publishEvent(GRID_COLUMN_VISIBILITY_CHANGE, {
-        field,
-        colDef: updatedCol,
-        api: apiRef,
-        isVisible,
-      });
-    },
-    [apiRef, forceUpdate, getColumn, updateColumns],
-  );
-
   const setColumnIndex = React.useCallback(
     (field: string, targetIndexPosition: number) => {
       const oldIndexPosition = gridState.columns.all.findIndex((col) => col === field);
@@ -296,11 +274,9 @@ export function useGridColumns(
     getAllColumns,
     getColumnIndex,
     getColumnPosition,
-    getVisibleColumns,
     getColumnsMeta,
     updateColumn,
     updateColumns,
-    setColumnVisibility,
     setColumnIndex,
     setColumnWidth,
   };
@@ -343,7 +319,4 @@ export function useGridColumns(
 
     apiRef.current.updateColumns(currentColumns);
   }, [apiRef, gridState.viewportSizes.width, logger]);
-
-  // Grid Option Handlers
-  useGridApiOptionHandler(apiRef, GRID_COLUMN_VISIBILITY_CHANGE, props.onColumnVisibilityChange);
 }

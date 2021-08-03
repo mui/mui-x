@@ -5,23 +5,18 @@ import { GridColDef, GridColumnsMeta, GridStateColDef } from '../colDef/gridColD
  */
 export interface GridColumnApi {
   /**
-   * Returns the [[GridColDef]] for the given `field`.
+   * Returns the [[GridStateColDef]] for the given `field`.
    * @param {string} field The column field.
    * @returns {{GridStateColDef}} The [[GridStateColDef]].
    */
   getColumn: (field: string) => GridStateColDef;
   /**
-   * Returns an array of [[GridColDef]] containing all the column definitions.
+   * Returns an array of [[GridStateColDef]] containing all the column definitions.
    * @returns {GridStateColDef[]} An array of [[GridStateColDef]].
    */
   getAllColumns: () => GridStateColDef[];
   /**
-   * Returns the currently visible columns.
-   * @returns {GridStateColDef[]} An array of [[GridStateColDef]].
-   */
-  getVisibleColumns: () => GridStateColDef[];
-  /**
-   * Returns the [[GridColumnsMeta]] for each column.
+   * Returns the [[GridColumnsMeta]] for each visible column.
    * @returns {GridColumnsMeta[]} All [[GridColumnsMeta]] objects.
    */
   getColumnsMeta: () => GridColumnsMeta;
@@ -49,12 +44,6 @@ export interface GridColumnApi {
    * @param {GridColDef[]} cols The new column [[GridColDef]] objects.
    */
   updateColumns: (cols: GridColDef[]) => void;
-  /**
-   * Changes the visibility of the column referred by `field`.
-   * @param {string} field The column to change visibility.
-   * @param {boolean} isVisible Pass `true` to show the column, or `false` to hide it.
-   */
-  setColumnVisibility: (field: string, isVisible: boolean) => void;
   /**
    * Moves a column from its original position to the position given by `targetIndexPosition`.
    * @param {string} field The field name
