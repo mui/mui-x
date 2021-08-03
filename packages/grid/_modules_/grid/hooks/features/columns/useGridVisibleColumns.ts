@@ -9,40 +9,40 @@ import { useGridState } from '../core/useGridState';
 import { visibleGridColumnsSelector } from './gridColumnsSelector';
 
 export const useGridVisibleColumns = (
-    apiRef: GridApiRef,
-    props: Pick<GridComponentProps, 'onColumnVisibilityChange'>,
+  apiRef: GridApiRef,
+  props: Pick<GridComponentProps, 'onColumnVisibilityChange'>,
 ) => {
-    const [, , forceUpdate] = useGridState(apiRef);
+  const [, , forceUpdate] = useGridState(apiRef);
 
-    const setColumnVisibility = React.useCallback(
-        (field: string, isVisible: boolean) => {
-            const col = apiRef.current.getColumn(field);
-            const updatedCol = { ...col, hide: !isVisible };
+  const setColumnVisibility = React.useCallback(
+    (field: string, isVisible: boolean) => {
+      const col = apiRef.current.getColumn(field);
+      const updatedCol = { ...col, hide: !isVisible };
 
-            apiRef.current.updateColumns([updatedCol]);
-            forceUpdate();
+      apiRef.current.updateColumns([updatedCol]);
+      forceUpdate();
 
-            apiRef.current.publishEvent(GRID_COLUMN_VISIBILITY_CHANGE, {
-                field,
-                colDef: updatedCol,
-                api: apiRef,
-                isVisible,
-            });
-        },
-        [apiRef, forceUpdate],
-    );
+      apiRef.current.publishEvent(GRID_COLUMN_VISIBILITY_CHANGE, {
+        field,
+        colDef: updatedCol,
+        api: apiRef,
+        isVisible,
+      });
+    },
+    [apiRef, forceUpdate],
+  );
 
-    const getVisibleColumns = React.useCallback(
-        () => visibleGridColumnsSelector(apiRef.current.getState()),
-        [apiRef],
-    );
+  const getVisibleColumns = React.useCallback(
+    () => visibleGridColumnsSelector(apiRef.current.getState()),
+    [apiRef],
+  );
 
-    const visibleColumnsApi: GridVisibleColumnApi = {
-        getVisibleColumns,
-        setColumnVisibility,
-    };
+  const visibleColumnsApi: GridVisibleColumnApi = {
+    getVisibleColumns,
+    setColumnVisibility,
+  };
 
-    useGridApiMethod(apiRef, visibleColumnsApi, 'GridVisibleColumnsApi');
+  useGridApiMethod(apiRef, visibleColumnsApi, 'GridVisibleColumnsApi');
 
-    useGridApiOptionHandler(apiRef, GRID_COLUMN_VISIBILITY_CHANGE, props.onColumnVisibilityChange);
+  useGridApiOptionHandler(apiRef, GRID_COLUMN_VISIBILITY_CHANGE, props.onColumnVisibilityChange);
 };
