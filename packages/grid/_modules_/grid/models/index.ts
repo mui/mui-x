@@ -5,6 +5,7 @@ export * from './elementSize';
 export * from './gridEditRowModel';
 export * from './gridFeatureMode';
 export * from './gridFilterItem';
+export * from './gridFilterModel';
 export * from './gridFilterOperator';
 export * from './gridOptions';
 export * from './gridRootContainerRef';
