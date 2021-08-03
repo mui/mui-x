@@ -1,7 +1,7 @@
 import { GridStateColDef } from '../colDef/gridColDef';
 
 /**
- * The column API interface that is available in the grid [[apiRef]].
+ * The visible column API interface that is available in the grid [[apiRef]].
  */
 export interface GridVisibleColumnApi {
   /**
