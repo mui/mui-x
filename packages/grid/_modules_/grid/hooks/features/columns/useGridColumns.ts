@@ -139,7 +139,7 @@ const upsertColumnsState = (columnUpdates: GridColDef[], prevColumnsState?: Grid
 
 export function useGridColumns(
   apiRef: GridApiRef,
-  props: Pick<GridComponentProps, 'columns' | 'onColumnVisibilityChange'>,
+  props: Pick<GridComponentProps, 'columns'>,
 ): void {
   const logger = useLogger('useGridColumns');
   const [gridState, setGridState, forceUpdate] = useGridState(apiRef);
