@@ -1,4 +1,4 @@
-import { arSD as arSDCore } from '@material-ui/core/locale';
+import { enUS as enUSCore } from '@material-ui/core/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -85,9 +85,7 @@ const arSDGrid: Partial<GridLocaleText> = {
 
   // Rows selected footer text
   footerRowSelected: (count) =>
-    count !== 1
-      ? `${count.toLocaleString()} صفوف مختارة`
-      : `${count.toLocaleString()} صفوف مختارة`,
+    count !== 1 ? `${count.toLocaleString()} صفوف مختارة` : `${count.toLocaleString()} صفوف مختارة`,
 
   // Total rows footer text
   footerTotalRows: 'إجمالي الصفوف:',
@@ -102,9 +100,6 @@ const arSDGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: 'صحيح',
   booleanCellFalseLabel: 'خاطئة',
-
-  // Used core components translation keys
-  MuiTablePagination: {},
 };
 
-export const arSD: Localization = getGridLocalization(arSDGrid, arSDCore);
+export const arSD: Localization = getGridLocalization(arSDGrid, enUSCore);
