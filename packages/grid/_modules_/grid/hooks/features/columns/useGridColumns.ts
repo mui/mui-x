@@ -90,9 +90,10 @@ function getStateColumns(
 
   return stateColumns;
 }
+
 function hydrateColumns(
   columns: GridColumns,
-  columnTypes: GridColumnTypesRecord,
+  columnTypes: GridColumnTypesRecord = {},
   withCheckboxSelection: boolean,
   logger: Logger,
   getLocaleText: <T extends GridTranslationKeys>(key: T) => GridLocaleText[T],
@@ -314,7 +315,7 @@ export function useGridColumns(
     if (props.columns.length > 0) {
       const hydratedColumns = hydrateColumns(
         props.columns,
-        props.columnTypes!,
+        props.columnTypes,
         !!props.checkboxSelection,
         logger,
         apiRef.current.getLocaleText,

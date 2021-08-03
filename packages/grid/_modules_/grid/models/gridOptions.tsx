@@ -3,7 +3,6 @@ import { GRID_DEFAULT_LOCALE_TEXT } from '../constants/localeTextConstants';
 import { GridFilterModel } from './gridFilterModel';
 import { GridLocaleText } from './api/gridLocaleTextApi';
 import { GridColumnTypesRecord } from './colDef/gridColTypeDef';
-import { getGridDefaultColumnTypes } from './colDef/gridDefaultColumnTypes';
 import { GridDensity, GridDensityTypes } from './gridDensity';
 import { GridEditRowsModel } from './gridEditRowModel';
 import { GridFeatureMode, GridFeatureModeConstant } from './gridFeatureMode';
@@ -64,7 +63,7 @@ export interface GridOptions {
   /**
    * Extend native column types with your new column types.
    */
-  columnTypes: GridColumnTypesRecord;
+  columnTypes?: GridColumnTypesRecord;
   /**
    * Override or extend the styles applied to the component.
    */
@@ -528,7 +527,6 @@ export interface GridOptions {
  */
 export const DEFAULT_GRID_OPTIONS: GridOptions = {
   columnBuffer: 2,
-  columnTypes: getGridDefaultColumnTypes(),
   density: GridDensityTypes.Standard,
   filterMode: GridFeatureModeConstant.client,
   headerHeight: 56,
