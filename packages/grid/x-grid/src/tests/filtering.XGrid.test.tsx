@@ -232,7 +232,6 @@ describe('<XGrid /> - Filter', () => {
     );
     expect(onFilterModelChange.callCount).to.equal(0);
     expect(getColumnValues()).to.deep.equal([]);
-    onFilterModelChange.callCount = 0;
 
     const select = screen.queryAllByRole('combobox', { name: /Operators/i })[1];
     fireEvent.change(select, { target: { value: 'or' } });

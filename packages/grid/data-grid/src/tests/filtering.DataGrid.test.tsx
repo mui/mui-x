@@ -828,8 +828,9 @@ describe('<DataGrid /> - Filter', () => {
         },
       ],
       columns: [{ field: 'country' }],
+      field: 'country',
     });
-    expect(getColumnValues()).to.deep.equal(['France', 'UK', 'US']);
+    expect(getColumnValues()).to.deep.equal(['France']);
   });
 
   it('should translate operators dynamically in toolbar without crashing ', () => {
