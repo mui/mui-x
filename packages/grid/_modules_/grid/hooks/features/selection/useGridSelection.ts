@@ -5,7 +5,6 @@ import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridSelectionApi } from '../../../models/api/gridSelectionApi';
 import { GridRowParams } from '../../../models/params/gridRowParams';
 import { GridRowId, GridRowModel } from '../../../models/gridRows';
-import { GridSelectionModel } from '../../../models/gridSelectionModel';
 import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
 import { optionsSelector } from '../../utils/optionsSelector';
@@ -187,7 +186,7 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
   useGridApiMethod(apiRef, selectionApi, 'GridSelectionApi');
 
   React.useEffect(() => {
-    apiRef.current.updateControlState<GridSelectionModel>({
+    apiRef.current.updateControlState<GridRowId[]>({
       stateId: 'selection',
       propModel: propSelectionModel,
       propOnChange: props.onSelectionModelChange,

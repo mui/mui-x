@@ -24,6 +24,7 @@ import { GridResizeParams } from './params/gridResizeParams';
 import { GridColumnResizeParams } from './params/gridColumnResizeParams';
 import { GridColumnVisibilityChangeParams } from './params/gridColumnVisibilityChangeParams';
 import { GridClasses } from './gridClasses';
+import { GridRowId } from './gridRows';
 
 export type MuiEvent<E> = E & {
   defaultMuiPrevented?: boolean;
@@ -441,9 +442,9 @@ export interface GridOptions {
   onResize?: (param: GridResizeParams, event: MuiEvent<{}>) => void;
   /**
    * Callback fired when the selection state of one or multiple rows changes.
-   * @param selectionModel With all the row ids [[GridSelectionModel]].
+   * @param selectionModel With all the row ids [[GridRowId]].
    */
-  onSelectionModelChange?: (selectionModel: GridSelectionModel) => void;
+  onSelectionModelChange?: (selectionModel: GridRowId[]) => void;
   /**
    * Callback fired when the sort model changes before a column is sorted.
    * @param param With all properties from [[GridSortModel]].
