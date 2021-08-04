@@ -1,24 +1,39 @@
-import { createSelector } from 'reselect';
-import { gridRowsLookupSelector } from '../rows/gridRowsSelector';
+import { createSelector, OutputSelector } from 'reselect';
+import { gridRowsLookupSelector, GridRowsLookup } from '../rows/gridRowsSelector';
 import { GridState } from '../core/gridState';
-import { GridRowId } from '../../../models/gridRows';
+import { GridSelectionState } from './gridSelectionState';
+import { GridRowId, GridRowModel } from '../../../models/gridRows';
 
 export const gridSelectionStateSelector = (state: GridState) => state.selection;
-
-export const selectedGridRowsCountSelector = createSelector(
-  gridSelectionStateSelector,
-  (selection) => selection.length,
+export const selectedGridRowsCountSelector: OutputSelector<
+    GridState,
+    number,
+    (res: GridSelectionState) => number
+    > = createSelector<GridState, GridSelectionState, number>(
+    gridSelectionStateSelector,
+    (selection) => selection.length,
 );
 
-export const selectedGridRowsSelector = createSelector(
-  gridSelectionStateSelector,
-  gridRowsLookupSelector,
-  (selectedRows, rowsLookup) => new Map(selectedRows.map((id) => [id, rowsLookup[id]])),
+export const selectedGridRowsSelector = createSelector<
+    GridState,
+    GridSelectionState,
+    GridRowsLookup,
+    Map<GridRowId, GridRowModel>
+    >(
+    gridSelectionStateSelector,
+    gridRowsLookupSelector,
+    (selectedRows, rowsLookup) => new Map(selectedRows.map((id) => [id, rowsLookup[id]])),
 );
 
-export const selectedIdsLookupSelector = createSelector(gridSelectionStateSelector, (selection) =>
-  selection.reduce((lookup, rowId) => {
-    lookup[rowId] = rowId;
-    return lookup;
-  }, {} as Record<string, GridRowId>),
+export const selectedIdsLookupSelector: OutputSelector<
+    GridState,
+    Record<string, GridRowId>,
+    (res: GridSelectionState) => Record<string, GridRowId>
+    > = createSelector<GridState, GridSelectionState, Record<string, GridRowId>>(
+    gridSelectionStateSelector,
+    (selection) =>
+        selection.reduce((lookup, rowId) => {
+            lookup[rowId] = rowId;
+            return lookup;
+        }, {}),
 );
