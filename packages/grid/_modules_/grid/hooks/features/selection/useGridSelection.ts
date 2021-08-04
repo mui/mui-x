@@ -157,11 +157,11 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
     ],
   );
 
-  const setSelectionModel = React.useCallback(
-    (model: GridSelectionModel) => {
+  const setSelectionModel = React.useCallback<GridSelectionApi['setSelectionModel']>(
+    (model) => {
       const currentModel = apiRef.current.getState().selection;
       if (currentModel !== model) {
-        setGridState((state) => ({ ...state, selection: getArraySelectionModel(model) || [] }));
+        setGridState((state) => ({ ...state, selection: model }));
       }
     },
     [setGridState, apiRef],

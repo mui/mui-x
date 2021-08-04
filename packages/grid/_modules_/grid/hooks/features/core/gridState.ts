@@ -26,13 +26,13 @@ import {
 import { GridFocusState, GridTabIndexState } from '../focus/gridFocusState';
 import { GridPreferencePanelState } from '../preferencesPanel/gridPreferencePanelState';
 import { getInitialGridRowState, InternalGridRowsState } from '../rows/gridRowsState';
+import { GridSelectionState } from '../selection/gridSelectionState';
 import { getInitialGridSortingState, GridSortingState } from '../sorting/gridSortingState';
 import {
   getInitialGridRenderingState,
   InternalRenderingState,
 } from '../virtualization/renderingState';
 import { getInitialPaginationState, GridPaginationState } from '../pagination/gridPaginationState';
-import { GridRowId } from '../../../models/gridRows';
 
 export interface GridState {
   rows: InternalGridRowsState;
@@ -51,7 +51,7 @@ export interface GridState {
   sorting: GridSortingState;
   focus: GridFocusState;
   tabIndex: GridTabIndexState;
-  selection: GridRowId[];
+  selection: GridSelectionState;
   filter: GridFilterModel;
   visibleRows: VisibleGridRowsState;
   preferencePanel: GridPreferencePanelState;
