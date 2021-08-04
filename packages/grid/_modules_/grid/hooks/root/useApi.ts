@@ -12,10 +12,7 @@ const isSynthenticEvent = (event: any): event is React.SyntheticEvent => {
   return event.isPropagationStopped !== undefined;
 };
 
-export function useApi(
-  apiRef: GridApiRef,
-  { signature }: Pick<GridComponentProps, 'signature'>,
-): void {
+export function useApi(apiRef: GridApiRef, props: Pick<GridComponentProps, 'signature'>): void {
   const logger = useLogger('useApi');
 
   const publishEvent = React.useCallback(
@@ -28,10 +25,10 @@ export function useApi(
       if (event && isSynthenticEvent(event) && event.isPropagationStopped()) {
         return;
       }
-      const details = signature === Signature.XGrid ? { api: apiRef.current } : {};
+      const details = props.signature === Signature.XGrid ? { api: apiRef.current } : {};
       apiRef.current.emit(name, params, event, details);
     },
-    [apiRef, signature],
+    [apiRef, props.signature],
   );
 
   const subscribeEvent = React.useCallback(
