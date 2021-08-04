@@ -29,6 +29,7 @@ export type DataGridProps = Omit<
   | 'options'
   | 'onRowsScrollEnd'
   | 'pagination'
+  | 'signature'
   | 'scrollEndThreshold'
   | 'selectionModel'
 > & {
@@ -71,6 +72,7 @@ const DataGridRaw = React.forwardRef<HTMLDivElement, DataGridProps>(function Dat
       {...FORCED_PROPS}
       selectionModel={selectionModel}
       licenseStatus="Valid"
+      signature="DataGrid"
     />
   );
 });

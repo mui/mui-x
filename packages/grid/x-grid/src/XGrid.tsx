@@ -17,13 +17,20 @@ if (process.env.NODE_ENV !== 'production' && RELEASE_INFO === '__RELEASE' + '_IN
 
 LicenseInfo.setReleaseInfo(RELEASE_INFO);
 
-export type XGridProps = Omit<GridComponentProps, 'licenseStatus'>;
+export type XGridProps = Omit<GridComponentProps, 'licenseStatus' | 'signature'>;
 
 const XGridRaw = React.forwardRef<HTMLDivElement, XGridProps>(function XGrid(inProps, ref) {
   const props = useThemeProps({ props: inProps, name: 'MuiDataGrid' });
   const licenseStatus = useLicenseVerifier();
 
-  return <GridComponent ref={ref} {...props} licenseStatus={licenseStatus.toString()} />;
+  return (
+    <GridComponent
+      ref={ref}
+      {...props}
+      licenseStatus={licenseStatus.toString()}
+      signature="XGrid"
+    />
+  );
 });
 
 export const XGrid = React.memo(XGridRaw);
