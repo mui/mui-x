@@ -54,7 +54,7 @@ RatingEditInputCell.propTypes = {
   /**
    * GridApi that let you manipulate the grid.
    */
-  api: PropTypes.object.isRequired,
+  api: PropTypes.any.isRequired,
   /**
    * The column field of the cell that triggered the event
    */
