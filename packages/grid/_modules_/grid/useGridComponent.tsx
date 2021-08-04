@@ -38,7 +38,7 @@ import { GridApiRef } from './models/api/gridApiRef';
 
 export const useGridComponent = (apiRef: GridApiRef, props: GridComponentProps) => {
   useLoggerFactory(apiRef, props);
-  useApi(apiRef);
+  useApi(apiRef, props);
   useErrorHandler(apiRef, props);
   useGridControlState(apiRef, props);
   useGridScrollbarSizeDetector(apiRef, props);

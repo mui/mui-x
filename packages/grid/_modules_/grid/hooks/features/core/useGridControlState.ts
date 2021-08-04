@@ -43,12 +43,7 @@ export function useGridControlState(apiRef: GridApiRef, props: GridComponentProp
         if (hasSubStateChanged) {
           if (controlState.propOnChange) {
             const newModel = newSubState;
-            const details =
-              props.signature === Signature.XGrid
-                ? {
-                    api: apiRef.current,
-                  }
-                : {};
+            const details = props.signature === Signature.XGrid ? { api: apiRef.current } : {};
             if (controlState.propModel !== newModel) {
               controlState.propOnChange(newModel, details);
             }
@@ -75,7 +70,7 @@ export function useGridControlState(apiRef: GridApiRef, props: GridComponentProp
         },
       };
     },
-    [apiRef, props],
+    [apiRef, props.signature],
   );
 
   const controlStateApi: GridControlStateApi = {
