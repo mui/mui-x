@@ -227,7 +227,7 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
   React.useEffect(() => {
     // isRowSelectable changed
     setGridState((state) => {
-      const newSelectionState = gridSelectionStateSelector(state);
+      const newSelectionState = [...state.selection];
       const selectionLookup = selectedIdsLookupSelector(state);
       let hasChanged = false;
       newSelectionState.forEach((id: GridRowId) => {
