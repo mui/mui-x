@@ -52,6 +52,7 @@ const XGridRaw = React.forwardRef<HTMLDivElement, XGridProps>(function XGrid(inP
   );
 });
 
+// TODO remove defaultProps, API is going away in React, soon or later.
 XGridRaw.defaultProps = DEFAULT_GRID_PROPS_FROM_OPTIONS;
 
 export const XGrid = React.memo(XGridRaw);
