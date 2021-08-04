@@ -26,7 +26,7 @@ import {
 import { GridFocusState, GridTabIndexState } from '../focus/gridFocusState';
 import { GridPreferencePanelState } from '../preferencesPanel/gridPreferencePanelState';
 import { getInitialGridRowState, InternalGridRowsState } from '../rows/gridRowsState';
-import { GridSelectionState } from '../selection/gridSelectionState';
+import { GridSelectionModel } from '../../../models/gridSelectionModel';
 import { getInitialGridSortingState, GridSortingState } from '../sorting/gridSortingState';
 import {
   getInitialGridRenderingState,
@@ -51,7 +51,7 @@ export interface GridState {
   sorting: GridSortingState;
   focus: GridFocusState;
   tabIndex: GridTabIndexState;
-  selection: GridSelectionState;
+  selection: GridSelectionModel;
   filter: GridFilterModel;
   visibleRows: VisibleGridRowsState;
   preferencePanel: GridPreferencePanelState;
