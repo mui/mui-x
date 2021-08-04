@@ -73,8 +73,7 @@ function getStateColumns(
 
   // Compute the width of flex columns
   if (totalFlexUnits && widthToAllocateInFlex > 0) {
-    const widthPerFlexUnit =
-      totalFlexUnits > 0 ? Math.floor(widthToAllocateInFlex / totalFlexUnits) : 0;
+    const widthPerFlexUnit = totalFlexUnits > 0 ? widthToAllocateInFlex / totalFlexUnits : 0;
 
     for (let i = 0; i < stateColumns.length; i += 1) {
       const column = stateColumns[i];
