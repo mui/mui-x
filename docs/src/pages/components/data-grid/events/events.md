@@ -8,7 +8,11 @@ title: Data Grid - Events
 
 ## Subscribing to events
 
-You can subscribe to one of the [events emitted](/components/data-grid/events/#catalog-of-events) by calling `apiRef.current.subscribeEvent()` with the name of the event and a handler. The handler will be called with three arguments: an object with information related to the event, a `MuiEvent` containing the DOM event or the React synthetic event, when available and a `MuiCallbackDetails` containing the `GridApi` if `XGrid` is being used.
+You can subscribe to one of the [events emitted](/components/data-grid/events/#catalog-of-events) by calling `apiRef.current.subscribeEvent()` with the name of the event and a handler. The handler will be called with three arguments:
+
+1. an object with information related to the event
+2. a `MuiEvent` containing the DOM event or the React synthetic event, when available
+3. a `MuiCallbackDetails` containing the `GridApi` only if `XGrid` is being used.
 
 ```tsx
 /**
