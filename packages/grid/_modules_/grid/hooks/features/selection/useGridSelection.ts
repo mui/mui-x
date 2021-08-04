@@ -213,7 +213,7 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
       return;
     }
 
-    apiRef.current.setSelectionModel(props.selectionModel);
+    apiRef.current.setSelectionModel(getArraySelectionModel(props.selectionModel));
   }, [apiRef, props.selectionModel, setGridState]);
 
   React.useEffect(() => {
