@@ -1,4 +1,3 @@
-import type { GridApi } from '../api';
 import type { GridStateColDef } from '../colDef';
 
 /**
@@ -16,5 +15,5 @@ export interface GridColumnHeaderParams {
   /**
    * API ref that let you manipulate the grid.
    */
-  api: GridApi;
+  api: any;
 }

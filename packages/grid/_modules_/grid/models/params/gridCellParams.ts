@@ -1,7 +1,6 @@
 import { GridCellMode, GridCellValue } from '../gridCell';
 import { GridRowId, GridRowModel } from '../gridRows';
 import type { GridStateColDef } from '../colDef';
-import type { GridApi } from '../api';
 
 /**
  * Object passed as parameter in the column [[GridColDef]] cell renderer.
@@ -34,7 +33,7 @@ export interface GridCellParams {
   /**
    * GridApi that let you manipulate the grid.
    */
-  api: GridApi;
+  api: any;
   /**
    * If true, the cell is editable.
    */

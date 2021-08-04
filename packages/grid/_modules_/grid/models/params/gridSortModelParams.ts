@@ -1,6 +1,5 @@
 import { GridColumns } from '../colDef/gridColDef';
 import { GridSortModel } from '../gridSortModel';
-import type { GridApi } from '../api';
 
 /**
  * Object passed as parameter of the column sorted event.
@@ -17,5 +16,5 @@ export interface GridSortModelParams {
   /**
    * Api that let you manipulate the grid.
    */
-  api: GridApi;
+  api: any;
 }

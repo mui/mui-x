@@ -1,6 +1,5 @@
 import { GridCellValue } from '../gridCell';
 import { GridRowId, GridRowModel } from '../gridRows';
-import type { GridApi } from '../api';
 import type { GridColumns } from '../colDef';
 
 /**
@@ -22,7 +21,7 @@ export interface GridRowParams {
   /**
    * GridApiRef that let you manipulate the grid.
    */
-  api: GridApi;
+  api: any;
   /**
    * Get the cell value of a row and field.
    * @param id
