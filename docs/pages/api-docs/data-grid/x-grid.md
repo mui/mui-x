@@ -69,7 +69,6 @@ import { XGrid } from '@material-ui/x-grid';
 | <span class="prop-name">onCellOut</span> | <span class="prop-type">(params: GridCellParams, event: MuiEvent<React.MouseEvent>) => void</span> |   | Callback fired when a mouse out comes from a cell element. |
 | <span class="prop-name">onCellEnter</span> | <span class="prop-type">(params: GridCellParams, event: MuiEvent<React.MouseEvent>) => void</span> |   | Callback fired when a mouse enter event comes from a cell element. |
 | <span class="prop-name">onCellLeave</span> | <span class="prop-type">(params: GridCellParams, event: MuiEvent<React.MouseEvent>) => void</span> |   | Callback fired when a mouse leave event comes from a cell element. |
-| <span class="prop-name">onCellModeChange</span> | <span class="prop-type">(params: GridCellModeChangeParams, event: MuiEvent<{}>) => void |   | Callback fired when the cell mode changed. |
 | <span class="prop-name">onColumnHeaderClick</span> | <span class="prop-type">(param: GridColumnHeaderParams, event: MuiEvent<React.MouseEvent>) => void</span> |   | Callback fired when a click event comes from a column header element. |
 | <span class="prop-name">onColumnHeaderDoubleClick</span> | <span class="prop-type">(param: GridColumnHeaderParams, event: MuiEvent<React.MouseEvent>) => void</span> |   | Callback fired when a double click event comes from a column header element. |
 | <span class="prop-name">onColumnHeaderOver</span> | <span class="prop-type">(param: GridColumnHeaderParams, event: MuiEvent<React.MouseEvent>) => void</span> |   | Callback fired when a mouseover event comes from a column header element. |
@@ -83,6 +82,8 @@ import { XGrid } from '@material-ui/x-grid';
 | <span class="prop-name">onError</span> | <span class="prop-type">(args: any) => void</span> |   | Callback fired when an exception is thrown in the grid, or when the `showError` API method is called. |
 | <span class="prop-name">onEditCellPropsChange</span> | <span class="prop-type">(params: GridEditCellPropsParams, event: MuiEvent<React.SyntheticEvent>) => void</span> |   |  Callback fired when the edit cell value changes. |
 | <span class="prop-name">onCellEditCommit</span> | <span class="prop-type">(params: GridEditCellPropsParams, event: MuiEvent<React.SyntheticEvent>) => void</span> |   | Callback fired when the cell changes are going to be committed. |
+| <span class="prop-name">onCellEditStart</span> | <span class="prop-type">(params: GridCellParams, event: React.SyntheticEvent) => void</span> |   | Callback fired when the cell turns to edit mode. |
+| <span class="prop-name">onCellEditStop</span> | <span class="prop-type">(params: GridCellParams, event: React.SyntheticEvent) => void</span> |   | Callback fired when the cell turns to view mode. |
 | <span class="prop-name">onEditRowModelChange</span> | <span class="prop-type">(params: GridEditRowModelParams) => void</span> |   |  Callback fired when the EditRowModel changed. |
 | <span class="prop-name">onFilterModelChange</span> | <span class="prop-type">(model: GridFilterModel) => void</span> |   | Callback fired when the Filter model changes before the filters are applied. |
 | <span class="prop-name">onPageChange</span> | <span class="prop-type">(page: number) => void</span> |   | Callback fired when the current page has changed. |

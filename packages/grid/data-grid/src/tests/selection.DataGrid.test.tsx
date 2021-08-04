@@ -3,7 +3,7 @@ import * as React from 'react';
 import { fireEvent, screen, createClientRenderStrictMode } from 'test/utils';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { DataGrid } from '@material-ui/data-grid';
+import { DataGrid, DataGridProps } from '@material-ui/data-grid';
 import { getCell, getRow } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);

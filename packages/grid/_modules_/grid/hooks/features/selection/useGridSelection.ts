@@ -146,9 +146,12 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
 
   const setSelectionModel = React.useCallback(
     (model: GridSelectionModel) => {
-      apiRef.current.selectRows(getArraySelectionModel(model), true, true);
+      const currentModel = apiRef.current.getState().selection;
+      if (currentModel !== model) {
+        setGridState((state) => ({ ...state, selection: getArraySelectionModel(model) || [] }));
+      }
     },
-    [apiRef],
+    [setGridState, apiRef],
   );
 
   const handleRowClick = React.useCallback(
@@ -181,9 +184,7 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
       propModel: props.selectionModel,
       propOnChange: props.onSelectionModelChange,
       stateSelector: gridSelectionStateSelector,
-      onChangeCallback: (model: GridSelectionModel) => {
-        apiRef.current.publishEvent(GRID_SELECTION_CHANGE, model);
-      },
+      changeEvent: GRID_SELECTION_CHANGE,
     });
   }, [apiRef, props.onSelectionModelChange, props.selectionModel]);
 
@@ -208,14 +209,11 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
   }, [rowsLookup, apiRef, setGridState, forceUpdate]);
 
   React.useEffect(() => {
-    // prop selectionModel changed
     if (props.selectionModel === undefined) {
       return;
     }
-    const currentModel = apiRef.current.getState().selection;
-    if (currentModel !== props.selectionModel) {
-      setGridState((state) => ({ ...state, selection: props.selectionModel || [] }));
-    }
+
+    apiRef.current.setSelectionModel(props.selectionModel);
   }, [apiRef, props.selectionModel, setGridState]);
 
   React.useEffect(() => {

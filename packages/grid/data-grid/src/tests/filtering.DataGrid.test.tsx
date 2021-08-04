@@ -65,6 +65,7 @@ describe('<DataGrid /> - Filter', () => {
     value?: any;
     field?: string;
     state?: any;
+    columnTypes?: any;
   }) => {
     const { operatorValue, value, rows, columns, field = 'brand', ...other } = props;
     return (
@@ -104,6 +105,23 @@ describe('<DataGrid /> - Filter', () => {
   it('should apply the filterModel prop correctly', () => {
     render(<TestCase value="a" operatorValue="contains" />);
     expect(getColumnValues()).to.deep.equal(['Adidas', 'Puma']);
+  });
+
+  it('should apply the filterModel prop correctly when filtering extended columns', () => {
+    render(
+      <TestCase
+        rows={[
+          { id: 0, price: 0 },
+          { id: 1, price: 1 },
+        ]}
+        columnTypes={{ price: { extendType: 'number' } }}
+        columns={[{ field: 'price', type: 'price' }]}
+        field="price"
+        value={1}
+        operatorValue="="
+      />,
+    );
+    expect(getColumnValues()).to.deep.equal(['1']);
   });
 
   it('should apply the filterModel prop correctly when row prop changes', () => {
@@ -810,8 +828,9 @@ describe('<DataGrid /> - Filter', () => {
         },
       ],
       columns: [{ field: 'country' }],
+      field: 'country',
     });
-    expect(getColumnValues()).to.deep.equal(['France', 'UK', 'US']);
+    expect(getColumnValues()).to.deep.equal(['France']);
   });
 
   it('should translate operators dynamically in toolbar without crashing ', () => {
