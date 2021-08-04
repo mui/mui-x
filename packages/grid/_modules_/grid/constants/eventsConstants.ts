@@ -26,6 +26,7 @@ export enum GridEvents {
 
   /**
    * Fired when the mode of a cell changes. Called with a [[GridCellModeChangeParams]] object.
+   * @ignore - do not document
    */
   cellModeChange = 'cellModeChange',
 
@@ -130,12 +131,12 @@ export enum GridEvents {
   /**
    * Fired when the cell turns to edit mode. Called with a [[GridCellParams]] object.
    */
-  cellEditEnter = 'cellEditEnter',
+  cellEditStart = 'cellEditStart',
 
   /**
    * Fired when the cell turns back to view mode. Called with a [[GridCellParams]] object.
    */
-  cellEditExit = 'cellEditExit',
+  cellEditStop = 'cellEditStop',
 
   /**
    * Fired when a [navigation key](/components/data-grid/accessibility#keyboard-navigation) is pressed in a cell.

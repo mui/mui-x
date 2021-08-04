@@ -33,8 +33,7 @@ function EditIncoterm(props: GridCellParams) {
   const { id, value, api, field } = props;
 
   const handleChange = (event) => {
-    const editProps = { value: event.target.value };
-    api.setEditCellProps({ id, field, props: editProps }, event);
+    api.setEditCellValue({ id, field, value: event.target.value }, event);
     if (!event.key) {
       api.commitCellChange({ id, field });
       api.setCellMode(id, field, 'view');

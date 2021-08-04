@@ -97,7 +97,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
       expect(rect.width).to.equal(400 - 2);
     });
 
-    // Adapation of describeConformance()
+    // Adaptation of describeConformance()
     describe('Material-UI component API', () => {
       it(`attaches the ref`, () => {
         const ref = React.createRef<HTMLDivElement>();
@@ -341,7 +341,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         ];
 
         render(
-          <div style={{ width: 200, height: 300 }}>
+          <div style={{ width: 602, height: 300 }}>
             <DataGrid columns={columns} rows={rows} />
           </div>,
         );
@@ -351,7 +351,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         const secondColumnWidthVal = secondColumn.style.width.split('px')[0];
         // @ts-expect-error need to migrate helpers to TypeScript
         expect(firstColumn).toHaveInlineStyle({
-          width: `${2 * parseInt(secondColumnWidthVal, 10)}px`,
+          width: `${2 * Number(secondColumnWidthVal)}px`,
         });
       });
 
@@ -506,8 +506,10 @@ describe('<DataGrid /> - Layout & Warnings', () => {
           },
         ];
 
+        const totalWidth = 700;
+
         render(
-          <div style={{ width: 200, height: 300 }}>
+          <div style={{ width: totalWidth, height: 300 }}>
             <DataGrid columns={columns} rows={rows} checkboxSelection />
           </div>,
         );
@@ -517,7 +519,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
             (width, item) => width + item.clientWidth,
             0,
           ),
-        ).to.equal(200 - 2);
+        ).to.equal(totalWidth - 2);
       });
     });
 

@@ -18,29 +18,25 @@ export const useGridState = (
   const setGridState = React.useCallback(
     (stateUpdaterFn: (oldState: GridState) => GridState) => {
       const newState = stateUpdaterFn(apiRef.current.state);
-      const hasChanged = apiRef.current.state !== newState;
-      if (!hasChanged) {
+      if (apiRef.current.state === newState) {
+        return false;
+      }
+
+      const { ignoreSetState, postUpdate } = apiRef.current.applyControlStateConstraint(newState);
+
+      if (!ignoreSetState) {
         // We always assign it as we mutate rows for perf reason.
         apiRef.current.state = newState;
-        return false;
+
+        if (apiRef.current.publishEvent) {
+          const params: GridStateChangeParams = { api: apiRef.current, state: newState };
+          apiRef.current.publishEvent(GridEvents.stateChange, params);
+        }
       }
 
-      const { shouldUpdate, postUpdate } = apiRef.current.applyControlStateConstraint(newState);
+      postUpdate();
 
-      if (!shouldUpdate) {
-        return false;
-      }
-      // We always assign it as we mutate rows for perf reason.
-      apiRef.current.state = newState;
-
-      if (hasChanged && apiRef.current.publishEvent) {
-        const params: GridStateChangeParams = { api: apiRef.current, state: newState };
-        apiRef.current.publishEvent(GridEvents.stateChange, params);
-
-        postUpdate();
-      }
-
-      return hasChanged;
+      return !ignoreSetState;
     },
     [apiRef],
   );

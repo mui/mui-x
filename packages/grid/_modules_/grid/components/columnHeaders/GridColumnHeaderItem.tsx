@@ -3,7 +3,7 @@ import clsx from 'clsx';
 // @ts-expect-error fixed in Material-UI v5, types definitions were added.
 import { unstable_useId as useId } from '@material-ui/core/utils';
 import { GridEvents } from '../../constants/eventsConstants';
-import { GridColDef, GRID_NUMBER_COLUMN_TYPE } from '../../models/colDef/index';
+import { GridStateColDef, GRID_NUMBER_COLUMN_TYPE } from '../../models/colDef/index';
 import { GridOptions } from '../../models/gridOptions';
 import { GridSortDirection } from '../../models/gridSortModel';
 import { useGridApiContext } from '../../hooks/root/useGridApiContext';
@@ -17,7 +17,7 @@ import { isFunction } from '../../utils/utils';
 
 interface GridColumnHeaderItemProps {
   colIndex: number;
-  column: GridColDef;
+  column: GridStateColDef;
   columnMenuOpen: boolean;
   headerHeight: number;
   isDragging: boolean;
@@ -132,7 +132,7 @@ export function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
     ...classNames,
   );
 
-  const width = column.width!;
+  const width = column.computedWidth;
 
   let ariaSort: any;
   if (sortDirection != null) {

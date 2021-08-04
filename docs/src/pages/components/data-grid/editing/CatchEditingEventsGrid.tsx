@@ -21,7 +21,7 @@ export default function CatchEditingEventsGrid() {
 
   React.useEffect(() => {
     return apiRef.current.subscribeEvent(
-      GridEvents.cellEditEnter,
+      GridEvents.cellEditStart,
       (params: GridCellParams, event) => {
         setMessage(
           `Editing cell with value: ${params.value} and row id: ${
@@ -35,7 +35,7 @@ export default function CatchEditingEventsGrid() {
   }, [apiRef]);
 
   React.useEffect(() => {
-    return apiRef.current.subscribeEvent(GridEvents.cellEditExit, () => {
+    return apiRef.current.subscribeEvent(GridEvents.cellEditStop, () => {
       setMessage('');
     });
   }, [apiRef]);

@@ -7,8 +7,7 @@ const SelectEditInputCell = (props: GridCellParams) => {
   const { id, value, api, field } = props;
 
   const handleChange = (event) => {
-    const editProps = { value: event.target.value };
-    api.setEditCellProps({ id, field, props: editProps });
+    api.setEditCellValue({ id, field, value: event.target.value }, event);
     api.commitCellChange({ id, field });
     api.setCellMode(id, field, 'view');
   };
