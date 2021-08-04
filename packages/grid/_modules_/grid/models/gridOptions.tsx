@@ -15,7 +15,6 @@ import { GridRowParams } from './params/gridRowParams';
 import { GridSelectionModel } from './gridSelectionModel';
 import { GridSortDirection, GridSortModel } from './gridSortModel';
 import {
-  GridCellModeChangeParams,
   GridEditCellPropsParams,
   GridEditCellValueParams,
   GridCellEditCommitParams,
@@ -235,6 +234,18 @@ export interface GridOptions {
     details?: any,
   ) => void;
   /**
+   * Callback fired when the cell turns to edit mode.
+   * @param {GridCellParams} params With all properties from [[GridCellParams]].
+   * @param {React.SyntheticEvent} event The event that caused this prop to be called.
+   */
+  onCellEditStart?: (params: GridCellParams, event?: React.SyntheticEvent) => void;
+  /**
+   * Callback fired when the cell turns to view mode.
+   * @param {GridCellParams} params With all properties from [[GridCellParams]].
+   * @param {React.SyntheticEvent} event The event that caused this prop to be called.
+   */
+  onCellEditStop?: (params: GridCellParams, event?: React.SyntheticEvent) => void;
+  /**
    * Callback fired when an exception is thrown in the grid, or when the `showError` API method is called.
    * @param args
    * @param {MuiCallbackDetails} details Additional details for this callback.
@@ -319,13 +330,6 @@ export interface GridOptions {
    * @param {MuiCallbackDetails} details Additional details for this callback.
    */
   onCellLeave?: (params: GridCellParams, event: MuiEvent<React.MouseEvent>, details?: any) => void;
-  /**
-   * Callback fired when the cell mode changed.
-   * @param params With all properties from [[GridCellModeChangeParams]].
-   * @param event [[MuiEvent<{}>]].
-   * @param {MuiCallbackDetails} details Additional details for this callback.
-   */
-  onCellModeChange?: (params: GridCellModeChangeParams, event: MuiEvent<{}>, details?: any) => void;
   /**
    * Callback fired when the cell value changed.
    * @param params With all properties from [[GridEditCellValueParams]].

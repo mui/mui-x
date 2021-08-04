@@ -67,8 +67,7 @@ function EditProgress(props: GridCellParams) {
 
   const updateCellEditProps = React.useCallback(
     (newValue) => {
-      const editProps = { value: newValue };
-      api.setEditCellProps({ id, field, props: editProps });
+      api.setEditCellValue({ id, field, value: newValue });
     },
     [api, field, id],
   );

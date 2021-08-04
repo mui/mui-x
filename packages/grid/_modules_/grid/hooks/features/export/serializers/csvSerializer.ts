@@ -1,7 +1,7 @@
 import {
   GridCellParams,
   gridCheckboxSelectionColDef,
-  GridColumns,
+  GridStateColDef,
   GridRowId,
   GridRowModel,
 } from '../../../../models';
@@ -18,7 +18,7 @@ const serialiseCellValue = (value: any, delimiterCharacter: GridExportCsvDelimit
 
 export function serialiseRow(
   id: GridRowId,
-  columns: GridColumns,
+  columns: GridStateColDef[],
   getCellParams: (id: GridRowId, field: string) => GridCellParams,
   delimiterCharacter: GridExportCsvDelimiter,
 ): Array<string> {
@@ -34,7 +34,7 @@ export function serialiseRow(
 }
 
 interface BuildCSVOptions {
-  columns: GridColumns;
+  columns: GridStateColDef[];
   rows: Map<GridRowId, GridRowModel>;
   selectedRowIds: GridRowId[];
   getCellParams: (id: GridRowId, field: string) => GridCellParams;
