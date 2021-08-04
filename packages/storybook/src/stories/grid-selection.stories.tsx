@@ -1,7 +1,7 @@
 import { useDemoData } from '@material-ui/x-grid-data-generator';
 import * as React from 'react';
 import { action } from '@storybook/addon-actions';
-import { XGrid, GridOptionsProp, useGridApiRef } from '@material-ui/x-grid';
+import { XGrid, GridOptionsProp, GridSelectionModel, useGridApiRef } from '@material-ui/x-grid';
 import { getData, GridData } from '../data/data-service';
 import { useData } from '../hooks/useData';
 
@@ -87,7 +87,7 @@ export function HandleSelection() {
     />
   );
 }
-export const GridSelectionModel = () => {
+export const GridSelection = () => {
   const data = useData(200, 200);
 
   return <XGrid rows={data.rows} columns={data.columns} selectionModel={[1, 2, 3]} />;
