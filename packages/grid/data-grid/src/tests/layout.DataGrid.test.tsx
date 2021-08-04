@@ -420,13 +420,13 @@ describe('<DataGrid /> - Layout & Warnings', () => {
           </div>,
         );
 
-        const expectedWidth = ((containerWidth - 2) / 3).toFixed(3);
-        const firstColumnWidth = getColumnHeaderCell(0).style.width.split('px')[0];
-        const secondColumnWidth = getColumnHeaderCell(1).style.width.split('px')[0];
-        const thirdColumnWidth = getColumnHeaderCell(2).style.width.split('px')[0];
-        expect(firstColumnWidth).to.equal(expectedWidth);
-        expect(secondColumnWidth).to.equal(expectedWidth);
-        expect(thirdColumnWidth).to.equal(expectedWidth);
+        const expectedWidth = (containerWidth - 2) / 3;
+        const firstColumnWidth = Number(getColumnHeaderCell(0).style.width.split('px')[0]);
+        const secondColumnWidth = Number(getColumnHeaderCell(1).style.width.split('px')[0]);
+        const thirdColumnWidth = Number(getColumnHeaderCell(2).style.width.split('px')[0]);
+        expect(Math.abs(firstColumnWidth - expectedWidth)).to.be.lessThan(0.1);
+        expect(Math.abs(secondColumnWidth - expectedWidth)).to.be.lessThan(0.1);
+        expect(Math.abs(thirdColumnWidth - expectedWidth)).to.be.lessThan(0.1);
       });
 
       it('should handle hidden columns', () => {
