@@ -19,28 +19,23 @@ import {
   selectedIdsLookupSelector,
 } from './gridSelectionSelector';
 
-const getArraySelectionModel = (selectionModel: GridSelectionModel | undefined) => {
-  if (selectionModel == null) {
-    return selectionModel;
-  }
-
-  if (Array.isArray(selectionModel)) {
-    return selectionModel;
-  }
-
-  return [selectionModel];
-};
-
 export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps): void => {
   const logger = useLogger('useGridSelection');
   const [, setGridState, forceUpdate] = useGridState(apiRef);
   const options = useGridSelector(apiRef, optionsSelector);
   const rowsLookup = useGridSelector(apiRef, gridRowsLookupSelector);
 
-  const propSelectionModel = React.useMemo(
-    () => getArraySelectionModel(props.selectionModel),
-    [props.selectionModel],
-  );
+  const propSelectionModel = React.useMemo(() => {
+    if (props.selectionModel == null) {
+      return props.selectionModel;
+    }
+
+    if (Array.isArray(props.selectionModel)) {
+      return props.selectionModel;
+    }
+
+    return [props.selectionModel];
+  }, [props.selectionModel]);
 
   const { checkboxSelection, disableMultipleSelection, disableSelectionOnClick, isRowSelectable } =
     options;
