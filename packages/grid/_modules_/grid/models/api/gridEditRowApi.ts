@@ -3,11 +3,7 @@ import { GridCellMode } from '../gridCell';
 import { GridEditRowsModel } from '../gridEditRowModel';
 import { GridRowId } from '../gridRows';
 import { GridCellParams } from '../params/gridCellParams';
-import {
-  GridEditCellPropsParams,
-  GridCommitCellChangeParams,
-  GridEditCellValueParams,
-} from '../params/gridEditCellParams';
+import { GridCommitCellChangeParams, GridEditCellValueParams } from '../params/gridEditCellParams';
 
 /**
  * The editing API interface that is available in the grid `apiRef`.
@@ -43,11 +39,6 @@ export interface GridEditRowApi {
    * @returns {boolean} A boolean value determining if the cell is editable.
    */
   isCellEditable: (params: GridCellParams) => boolean;
-  /**
-   * Sets the input props of the edit cell.
-   * @param {GridEditCellPropsParams} params The params to set.
-   */
-  setEditCellProps: (params: GridEditCellPropsParams) => void;
   /**
    * Sets the value of the edit cell.
    * Commonly used inside the edit cell component.
