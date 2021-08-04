@@ -2,7 +2,6 @@ import * as React from 'react';
 import MUICheckbox from '@material-ui/core/Checkbox';
 import { GridApiRef } from '../../models/api/gridApiRef';
 import { GridApiRefComponentsProperty } from '../../models/api/gridComponentsApi';
-import { GridIconSlotsComponent } from '../../models';
 import {
   GridArrowDownwardIcon,
   GridArrowUpwardIcon,
@@ -33,38 +32,34 @@ import { ErrorOverlay } from '../../components/ErrorOverlay';
 import { GridNoResultsOverlay } from '../../components/GridNoResultsOverlay';
 import { GridComponentProps } from '../../GridComponentProps';
 
-const DEFAULT_GRID_SLOTS_ICONS: GridIconSlotsComponent = {
-  BooleanCellTrueIcon: GridCheckIcon,
+export const DEFAULT_GRID_SLOTS_COMPONENTS: GridApiRefComponentsProperty = {
   BooleanCellFalseIcon: GridCloseIcon,
-  OpenFilterButtonIcon: GridFilterListIcon,
+  BooleanCellTrueIcon: GridCheckIcon,
+  Checkbox: MUICheckbox,
   ColumnFilteredIcon: GridFilterAltIcon,
-  ColumnSelectorIcon: GridColumnIcon,
+  ColumnMenu: GridColumnMenu,
   ColumnMenuIcon: GridTripleDotsVerticalIcon,
-  ColumnUnsortedIcon: GridColumnUnsortedIcon,
+  ColumnResizeIcon: GridSeparatorIcon,
+  ColumnSelectorIcon: GridColumnIcon,
   ColumnSortedAscendingIcon: GridArrowUpwardIcon,
   ColumnSortedDescendingIcon: GridArrowDownwardIcon,
-  ColumnResizeIcon: GridSeparatorIcon,
+  ColumnsPanel: GridColumnsPanel,
+  ColumnUnsortedIcon: GridColumnUnsortedIcon,
+  DensityComfortableIcon: GridViewStreamIcon,
   DensityCompactIcon: GridViewHeadlineIcon,
   DensityStandardIcon: GridTableRowsIcon,
-  DensityComfortableIcon: GridViewStreamIcon,
-  ExportIcon: GridSaveAltIcon,
-};
-
-export const DEFAULT_GRID_SLOTS_COMPONENTS: GridApiRefComponentsProperty = {
-  ...DEFAULT_GRID_SLOTS_ICONS,
-  Checkbox: MUICheckbox,
-  ColumnMenu: GridColumnMenu,
-  ColumnsPanel: GridColumnsPanel,
   ErrorOverlay,
+  ExportIcon: GridSaveAltIcon,
   FilterPanel: GridFilterPanel,
   Footer: GridFooter,
   Header: GridHeader,
-  PreferencesPanel: GridPreferencesPanel,
   LoadingOverlay: GridLoadingOverlay,
   NoResultsOverlay: GridNoResultsOverlay,
   NoRowsOverlay: GridNoRowsOverlay,
+  OpenFilterButtonIcon: GridFilterListIcon,
   Pagination: GridPagination,
   Panel: GridPanel,
+  PreferencesPanel: GridPreferencesPanel,
 };
 
 export const useGridComponents = (
