@@ -8,13 +8,13 @@ import { GridAutoSizer } from './components/GridAutoSizer';
 import { GridViewport } from './components/GridViewport';
 import { Watermark } from './components/Watermark';
 import { GRID_RESIZE } from './constants/eventsConstants';
-import { GridRootPropsContext } from './context/GridRootPropsContext';
 import { GridOverlays } from './GridOverlays';
 import { ElementSize } from './models/elementSize';
+import { useGridRootProps } from './hooks/utils/useGridRootProps';
 
 export function GridBody() {
   const apiRef = useGridApiContext();
-  const rootProps = React.useContext(GridRootPropsContext)!;
+  const rootProps = useGridRootProps();
 
   const columnsHeaderRef = React.useRef<HTMLDivElement>(null);
   const columnsContainerRef = React.useRef<HTMLDivElement>(null);

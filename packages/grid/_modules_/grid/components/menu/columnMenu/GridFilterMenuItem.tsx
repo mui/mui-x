@@ -1,14 +1,13 @@
 import * as React from 'react';
 import MenuItem from '@material-ui/core/MenuItem';
-import { useGridSelector } from '../../../hooks/features/core/useGridSelector';
-import { optionsSelector } from '../../../hooks/utils/optionsSelector';
 import { useGridApiContext } from '../../../hooks/root/useGridApiContext';
 import { GridFilterItemProps } from './GridFilterItemProps';
+import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 
 export const GridFilterMenuItem = (props: GridFilterItemProps) => {
   const { column, onClick } = props;
   const apiRef = useGridApiContext();
-  const options = useGridSelector(apiRef, optionsSelector);
+  const rootProps = useGridRootProps();
 
   const showFilter = React.useCallback(
     (event: React.MouseEvent<HTMLElement>) => {
@@ -18,7 +17,7 @@ export const GridFilterMenuItem = (props: GridFilterItemProps) => {
     [apiRef, column?.field, onClick],
   );
 
-  if (options.disableColumnFilter || !column?.filterable) {
+  if (rootProps.disableColumnFilter || !column?.filterable) {
     return null;
   }
 
