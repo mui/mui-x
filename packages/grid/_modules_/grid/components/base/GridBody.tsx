@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { GRID_RESIZE } from '../../constants/eventsConstants';
-import { GridRootPropsContext } from '../../context/GridRootPropsContext';
 import { useGridApiContext } from '../../hooks/root/useGridApiContext';
 import { ElementSize } from '../../models/elementSize';
 import { GridColumnsHeader } from '../columnHeaders/GridColumnHeaders';
@@ -10,6 +9,7 @@ import { GridWindow } from '../containers/GridWindow';
 import { GridAutoSizer } from '../GridAutoSizer';
 import { GridViewport } from '../GridViewport';
 import { GridOverlays } from './GridOverlays';
+import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
 interface GridBodyProps {
   children?: React.ReactNode;
@@ -18,7 +18,7 @@ interface GridBodyProps {
 export function GridBody(props: GridBodyProps) {
   const { children } = props;
   const apiRef = useGridApiContext();
-  const rootProps = React.useContext(GridRootPropsContext)!;
+  const rootProps = useGridRootProps();
 
   const columnsHeaderRef = React.useRef<HTMLDivElement>(null);
   const columnsContainerRef = React.useRef<HTMLDivElement>(null);
