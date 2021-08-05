@@ -3,6 +3,7 @@ import Select, { SelectProps } from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import { GridCellParams } from '../../models/params/gridCellParams';
 import { isEscapeKey } from '../../utils/keyboardUtils';
+import { useEnhancedEffect } from '../../utils/material-ui-utils';
 
 const renderSingleSelectOptions = (option) =>
   typeof option === 'object' ? (
@@ -49,7 +50,7 @@ export function GridEditSingleSelectCell(props: GridCellParams & SelectProps) {
     }
   };
 
-  React.useLayoutEffect(() => {
+  useEnhancedEffect(() => {
     if (hasFocus) {
       // TODO v5: replace with inputRef.current.focus()
       // See https://github.com/mui-org/material-ui/issues/21441

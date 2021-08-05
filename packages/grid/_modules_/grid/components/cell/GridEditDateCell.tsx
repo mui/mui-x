@@ -1,6 +1,7 @@
 import * as React from 'react';
 import InputBase, { InputBaseProps } from '@material-ui/core/InputBase';
 import { GridCellParams } from '../../models/params/gridCellParams';
+import { useEnhancedEffect } from '../../utils/material-ui-utils';
 
 export function GridEditDateCell(props: GridCellParams & InputBaseProps) {
   const {
@@ -56,7 +57,7 @@ export function GridEditDateCell(props: GridCellParams & InputBaseProps) {
     setValueState(value);
   }, [value]);
 
-  React.useLayoutEffect(() => {
+  useEnhancedEffect(() => {
     if (hasFocus) {
       inputRef.current!.focus();
     }
