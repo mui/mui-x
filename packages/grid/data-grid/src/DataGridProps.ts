@@ -19,6 +19,7 @@ export type DataGridProps = Omit<
   | 'onRowsScrollEnd'
   | 'pagination'
   | 'scrollEndThreshold'
+  | 'signature'
 > & {
   pagination?: true;
 };

@@ -63,11 +63,15 @@ export interface GridComponentProps extends GridOptionsProp {
   /**
    * Set a callback fired when the state of the grid is updated.
    */
-  onStateChange?: (params: GridStateChangeParams, event: MuiEvent<{}>) => void; // We are overriding the handler in GridOptions to fix the params type and avoid the cycle dependency
+  onStateChange?: (params: GridStateChangeParams, event: MuiEvent<{}>, details: any) => void; // We are overriding the handler in GridOptions to fix the params type and avoid the cycle dependency
   /**
    * Set of rows of type [[GridRowsProp]].
    */
   rows: GridRowsProp;
+  /**
+   * @internal enum
+   */
+  signature: string;
   /**
    * Set the whole state of the grid.
    */

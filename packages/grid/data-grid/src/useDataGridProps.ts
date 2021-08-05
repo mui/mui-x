@@ -16,6 +16,7 @@ const DATA_GRID_FORCED_PROPS: Omit<
   pagination: true,
   onRowsScrollEnd: undefined,
   checkboxSelectionVisibleOnly: false,
+  signature: 'DataGrid',
 };
 
 export const useDataGridProps = (inProps: DataGridProps): GridComponentProps => {

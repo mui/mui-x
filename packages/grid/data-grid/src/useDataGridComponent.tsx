@@ -37,9 +37,9 @@ import { GridApiRef } from '../../_modules_/grid/models/api/gridApiRef';
 
 export const useDataGridComponent = (apiRef: GridApiRef, props: GridComponentProps) => {
   useLoggerFactory(apiRef, props);
-  useApi(apiRef);
+  useApi(apiRef, props);
   useErrorHandler(apiRef, props);
-  useGridControlState(apiRef);
+  useGridControlState(apiRef, props);
   useGridScrollbarSizeDetector(apiRef, props);
   useOptionsProp(apiRef, props);
   useEvents(apiRef, props);
