@@ -59,13 +59,7 @@ const columns = [
 export default function ColumnTypesGrid() {
   return (
     <div style={{ height: 300, width: '100%' }}>
-      <DataGrid
-        columns={columns}
-        rows={rows}
-        filterModel={{
-          items: [{ columnField: 'name', operatorValue: 'equals', value: 'Kate' }],
-        }}
-      />
+      <DataGrid columns={columns} rows={rows} />
     </div>
   );
 }
