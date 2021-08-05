@@ -1,18 +1,22 @@
 import * as React from 'react';
-import { GridColumnsHeader } from './components/columnHeaders/GridColumnHeaders';
-import { GridColumnsContainer } from './components/containers/GridColumnsContainer';
-import { GridMainContainer } from './components/containers/GridMainContainer';
-import { GridWindow } from './components/containers/GridWindow';
-import { useGridApiContext } from './hooks/root/useGridApiContext';
-import { GridAutoSizer } from './components/GridAutoSizer';
-import { GridViewport } from './components/GridViewport';
-import { Watermark } from './components/Watermark';
-import { GRID_RESIZE } from './constants/eventsConstants';
+import { GRID_RESIZE } from '../../constants/eventsConstants';
+import { useGridApiContext } from '../../hooks/root/useGridApiContext';
+import { ElementSize } from '../../models/elementSize';
+import { GridColumnsHeader } from '../columnHeaders/GridColumnHeaders';
+import { GridColumnsContainer } from '../containers/GridColumnsContainer';
+import { GridMainContainer } from '../containers/GridMainContainer';
+import { GridWindow } from '../containers/GridWindow';
+import { GridAutoSizer } from '../GridAutoSizer';
+import { GridViewport } from '../GridViewport';
 import { GridOverlays } from './GridOverlays';
-import { ElementSize } from './models/elementSize';
-import { useGridRootProps } from './hooks/utils/useGridRootProps';
+import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
-export function GridBody() {
+interface GridBodyProps {
+  children?: React.ReactNode;
+}
+
+export function GridBody(props: GridBodyProps) {
+  const { children } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
 
@@ -34,7 +38,6 @@ export function GridBody() {
   return (
     <GridMainContainer>
       <GridOverlays />
-      <Watermark licenseStatus={rootProps.licenseStatus} />
       <GridColumnsContainer ref={columnsContainerRef}>
         <GridColumnsHeader ref={columnsHeaderRef} />
       </GridColumnsContainer>
@@ -49,6 +52,7 @@ export function GridBody() {
           </GridWindow>
         )}
       </GridAutoSizer>
+      {children}
     </GridMainContainer>
   );
 }

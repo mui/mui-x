@@ -6,12 +6,11 @@ import { GridColumnTypesRecord } from './colDef/gridColTypeDef';
 import { GridDensity, GridDensityTypes } from './gridDensity';
 import { GridEditRowsModel } from './gridEditRowModel';
 import { GridFeatureMode, GridFeatureModeConstant } from './gridFeatureMode';
-import { GridRowId } from './gridRows';
 import { Logger } from './logger';
 import { GridCellParams } from './params/gridCellParams';
 import { GridColumnHeaderParams } from './params/gridColumnHeaderParams';
 import { GridRowParams } from './params/gridRowParams';
-import { GridSelectionModel } from './gridSelectionModel';
+import { GridInputSelectionModel, GridSelectionModel } from './gridSelectionModel';
 import { GridSortDirection, GridSortModel } from './gridSortModel';
 import {
   GridEditCellPropsParams,
@@ -518,10 +517,10 @@ export interface GridOptions {
   onResize?: (param: GridResizeParams, event: MuiEvent<{}>, details?: any) => void;
   /**
    * Callback fired when the selection state of one or multiple rows changes.
-   * @param selectionModel With all the row ids [[GridRowId]][].
+   * @param selectionModel With all the row ids [[GridSelectionModel]].
    * @param {MuiCallbackDetails} details Additional details for this callback.
    */
-  onSelectionModelChange?: (selectionModel: GridRowId[], details?: any) => void;
+  onSelectionModelChange?: (selectionModel: GridSelectionModel, details?: any) => void;
   /**
    * Callback fired when the sort model changes before a column is sorted.
    * @param model With all properties from [[GridSortModel]].
@@ -581,7 +580,7 @@ export interface GridOptions {
   /**
    * Set the selection model of the grid.
    */
-  selectionModel?: GridSelectionModel;
+  selectionModel?: GridInputSelectionModel;
   /**
    * @internal enum
    */
@@ -614,20 +613,27 @@ export interface GridOptions {
 }
 
 /**
- * The default [[GridOptions]] object that will be used to merge with the 'options' passed in the react component prop.
+ * The default options to inject in the props of DataGrid or XGrid.
  */
-export const DEFAULT_GRID_OPTIONS: GridOptions = {
+export const DEFAULT_GRID_PROPS_FROM_OPTIONS = {
   columnBuffer: 2,
   density: GridDensityTypes.Standard,
   filterMode: GridFeatureModeConstant.client,
   headerHeight: 56,
-  localeText: GRID_DEFAULT_LOCALE_TEXT,
   paginationMode: GridFeatureModeConstant.client,
   rowHeight: 52,
   rowsPerPageOptions: [25, 50, 100],
   scrollEndThreshold: 80,
   sortingMode: GridFeatureModeConstant.client,
-  sortingOrder: ['asc', 'desc', null],
+  sortingOrder: ['asc' as const, 'desc' as const, null],
   logger: console,
   logLevel: process.env.NODE_ENV === 'production' ? 'error' : 'warn',
+};
+
+/**
+ * The default [[GridOptions]] object that will be used to merge with the 'options' passed in the react component prop.
+ */
+export const DEFAULT_GRID_OPTIONS = {
+  ...DEFAULT_GRID_PROPS_FROM_OPTIONS,
+  localeText: GRID_DEFAULT_LOCALE_TEXT,
 };

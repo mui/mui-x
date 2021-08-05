@@ -38,6 +38,9 @@ const hasCursorPositionChanged = (
 ): boolean =>
   currentCoordinates.x !== nextCoordinates.x || currentCoordinates.y !== nextCoordinates.y;
 
+/**
+ * Only available in XGrid
+ */
 export const useGridColumnReorder = (
   apiRef: GridApiRef,
   props: Pick<GridComponentProps, 'disableColumnReorder'>,
