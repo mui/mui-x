@@ -308,7 +308,7 @@ describe('<XGrid /> - Events Params', () => {
       </div>,
     );
 
-    expect(handleViewportRowsChange.callCount).to.equal(1); // should be 1
+    expect(handleViewportRowsChange.callCount).to.equal(1);
     expect(handleViewportRowsChange.lastCall.args[0].firstRowIndex).to.equal(0); // should be 1
     expect(handleViewportRowsChange.lastCall.args[0].lastRowIndex).to.equal(4); // should be pageSize + 1
 
