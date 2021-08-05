@@ -25,7 +25,7 @@ Big thanks to the 4 contributors who made this release possible. Here are some h
   - Rename `onCellEditEnd` prop to `onCellEditStop`.
 
   ```diff
-   <DataGrid
+  <DataGrid
   - onCellEditEnter={...}
   - onCellEditExit={...}
   + onCellEditStart={...}
@@ -33,7 +33,7 @@ Big thanks to the 4 contributors who made this release possible. Here are some h
   />
   ```
 
-  - [XGrid] The `setEditCellProps` API call is not available anymore. 
+  - [XGrid] The `setEditCellProps` API call is not available anymore.
     Use the [controlled editing](https://material-ui.com/components/data-grid/editing/#controlled-editing) or `setEditRowsModel`.
 
   ```diff
