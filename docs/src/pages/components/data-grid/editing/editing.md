@@ -87,7 +87,7 @@ Server-side validation works like client-side [validation](#validation).
 - Validate the value in the server.
 - Once the server responds, set the `error` attribute to false if it is valid. This allows to commit it.
 
-**Note:** To prevent the default client-side behavior, use `event.stopPropagation()`.
+**Note:** To prevent the default client-side behavior, set `event.defaultMuiPrevented` to `true`.
 
 This demo shows how you can validate a username asynchronously and prevent the user from committing the value while validating.
 It's using `XGrid` but the same approach can be used with `DataGrid`.
@@ -104,7 +104,7 @@ The demo lets you edit the ratings by double-clicking the cell.
 
 ### Edit using external button [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-pro/)
 
-You can override the default [start editing](#start-editing) triggers using the `event.stopPropagation()` API on the synthetic React events.
+You can override the default [start editing](#start-editing) triggers using the [`event.defaultMuiPrevented`](/components/data-grid/events#disabling-the-default-behavior) on the synthetic React events.
 
 {{"demo": "pages/components/data-grid/editing/StartEditButtonGrid.js", "bg": "inline", "disableAd": true}}
 
@@ -113,8 +113,8 @@ You can override the default [start editing](#start-editing) triggers using the 
 The editing feature leverages the event capability of the grid and the apiRef.
 The following events can be imported and used to customize the edition:
 
-- `cellEditEnter`: emitted when the cell turns to edit mode.
-- `cellEditExit`: emitted when the cell turns back to view mode.
+- `cellEditStart`: emitted when the cell turns to edit mode.
+- `cellEditStop`: emitted when the cell turns back to view mode.
 - `cellEditCommit`: emitted when the new value is commited.
 - `editCellPropsChange`: emitted when the props passed to the edit cell component are changed.
 

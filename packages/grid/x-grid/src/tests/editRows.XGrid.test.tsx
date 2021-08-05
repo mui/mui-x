@@ -63,15 +63,39 @@ describe('<XGrid /> - Edit Rows', () => {
     );
   };
 
-  it('isCellEditable should add the class MuiDataGrid-cell--editable to editable cells but not prevent a cell from switching mode', () => {
-    render(<TestCase isCellEditable={(params) => params.value === 'Adidas'} />);
-    const cellNike = getCell(0, 0);
-    expect(cellNike).not.to.have.class('MuiDataGrid-cell--editable');
-    const cellAdidas = getCell(1, 0);
-    expect(cellAdidas).to.have.class('MuiDataGrid-cell--editable');
+  describe('isCellEditable', () => {
+    it('should add the class MuiDataGrid-cell--editable to editable cells but not prevent a cell from switching mode', () => {
+      render(<TestCase isCellEditable={(params) => params.value === 'Adidas'} />);
+      const cellNike = getCell(0, 0);
+      expect(cellNike).not.to.have.class('MuiDataGrid-cell--editable');
+      const cellAdidas = getCell(1, 0);
+      expect(cellAdidas).to.have.class('MuiDataGrid-cell--editable');
 
-    apiRef!.current.setCellMode(0, 'brand', 'edit');
-    expect(cellNike).to.have.class('MuiDataGrid-cell--editing');
+      apiRef!.current.setCellMode(0, 'brand', 'edit');
+      expect(cellNike).to.have.class('MuiDataGrid-cell--editing');
+    });
+
+    it('should not allow to edit a cell with double-click', () => {
+      render(<TestCase isCellEditable={(params) => params.value === 'Adidas'} />);
+      const cellNike = getCell(0, 0);
+      const cellAdidas = getCell(1, 0);
+      fireEvent.doubleClick(cellNike);
+      expect(cellNike).not.to.have.class('MuiDataGrid-cell--editing');
+      fireEvent.doubleClick(cellAdidas);
+      expect(cellAdidas).to.have.class('MuiDataGrid-cell--editing');
+    });
+
+    it('should not allow to edit a cell with Enter', () => {
+      render(<TestCase isCellEditable={(params) => params.value === 'Adidas'} />);
+      const cellNike = getCell(0, 0);
+      const cellAdidas = getCell(1, 0);
+      cellNike.focus();
+      fireEvent.keyDown(cellNike, { key: 'Enter' });
+      expect(cellNike).not.to.have.class('MuiDataGrid-cell--editing');
+      cellAdidas.focus();
+      fireEvent.keyDown(cellAdidas, { key: 'Enter' });
+      expect(cellAdidas).to.have.class('MuiDataGrid-cell--editing');
+    });
   });
 
   it('should allow to switch between cell mode', () => {
@@ -101,7 +125,11 @@ describe('<XGrid /> - Edit Rows', () => {
   });
 
   it('should allow to stop double click using stopPropagation', () => {
-    render(<TestCase onCellDoubleClick={(params, event) => event.stopPropagation()} />);
+    render(
+      <TestCase
+        onCellDoubleClick={(params, event) => (event as React.SyntheticEvent).stopPropagation()}
+      />,
+    );
     const cell = getCell(1, 0);
     cell.focus();
     fireEvent.doubleClick(cell);
@@ -177,7 +205,7 @@ describe('<XGrid /> - Edit Rows', () => {
       code: 1,
       target: cell,
       isPropagationStopped: () => false,
-    });
+    } as any);
     // fireEvent.keyDown(cell, { key: 'a', code: 1, target: cell });
 
     expect(cell).to.have.class('MuiDataGrid-cell--editable');
@@ -330,7 +358,8 @@ describe('<XGrid /> - Edit Rows', () => {
     expect(getActiveCell()).to.equal('2-1');
   });
 
-  it('should the focus to the new field', () => {
+  // TODO add one test for each column type because what really sets the focus is the autoFocus prop
+  it('should move the focus to the new field', () => {
     const handleCellBlur = (params, event) => {
       if (params.cellMode === 'edit') {
         event?.stopPropagation();
@@ -655,6 +684,19 @@ describe('<XGrid /> - Edit Rows', () => {
       fireEvent.change(input, { target: { value: '' } });
       expect(onEditCellPropsChange.args[0][0].props.value).to.equal(null);
     });
+  });
+
+  it('should call onCellEditCommit with the correct params', () => {
+    const onCellEditCommit = spy();
+    render(<TestCase onCellEditCommit={onCellEditCommit} />);
+    const cell = getCell(1, 0);
+    cell.focus();
+    fireEvent.doubleClick(cell);
+    const input = cell.querySelector('input')!;
+    fireEvent.change(input, { target: { value: 'n' } });
+    fireEvent.keyDown(input, { key: 'Enter' });
+    expect(onCellEditCommit.callCount).to.equal(1);
+    expect(onCellEditCommit.lastCall.args[0]).to.deep.equal({ id: 1, field: 'brand', value: 'n' });
   });
 
   describe('column type: boolean', () => {

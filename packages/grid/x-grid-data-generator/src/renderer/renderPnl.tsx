@@ -2,8 +2,8 @@ import * as React from 'react';
 import clsx from 'clsx';
 import { Theme } from '@material-ui/core/styles';
 import { createStyles, makeStyles } from '@material-ui/styles';
-import { GridCellParams, getThemePaletteMode } from '../../../_modules_/grid';
-import { createTheme } from '../../../_modules_/grid/utils/utils';
+import { GridCellParams } from '../../../_modules_/grid';
+import { createTheme, getThemePaletteMode } from '../../../_modules_/grid/utils/utils';
 
 const defaultTheme = createTheme();
 const useStyles = makeStyles(

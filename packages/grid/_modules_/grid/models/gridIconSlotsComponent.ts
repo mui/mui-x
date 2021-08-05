@@ -17,11 +17,11 @@ export interface GridIconSlotsComponent {
    */
   ColumnMenuIcon?: React.JSXElementConstructor<any>;
   /**
-   * Icon displayed on the open filter button present in the toolbar by default
+   * Icon displayed on the open filter button present in the toolbar by default.
    */
   OpenFilterButtonIcon?: React.JSXElementConstructor<any>;
   /**
-   * Icon displayed on the column header menu to show that a filer has been applied to the column.
+   * Icon displayed on the column header menu to show that a filter has been applied to the column.
    */
   ColumnFilteredIcon?: React.JSXElementConstructor<any>;
   /**
@@ -33,11 +33,11 @@ export interface GridIconSlotsComponent {
    */
   ColumnUnsortedIcon?: React.ElementType | null;
   /**
-   * Icon displayed on the side of the column header title when sorted in Ascending order.
+   * Icon displayed on the side of the column header title when sorted in ascending order.
    */
   ColumnSortedAscendingIcon?: React.JSXElementConstructor<any>;
   /**
-   * Icon displayed on the side of the column header title when sorted in Descending order.
+   * Icon displayed on the side of the column header title when sorted in descending order.
    */
   ColumnSortedDescendingIcon?: React.JSXElementConstructor<any>;
   /**
@@ -53,7 +53,7 @@ export interface GridIconSlotsComponent {
    */
   DensityStandardIcon?: React.JSXElementConstructor<any>;
   /**
-   * Icon displayed on the comfortable density option in the toolbar.
+   * Icon displayed on the "comfortable" density option in the toolbar.
    */
   DensityComfortableIcon?: React.JSXElementConstructor<any>;
   /**

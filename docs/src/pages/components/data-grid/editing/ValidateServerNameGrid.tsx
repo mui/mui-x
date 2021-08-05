@@ -7,9 +7,12 @@ import {
   GridEditCellPropsParams,
   GridRowsProp,
   useGridApiRef,
-  getThemePaletteMode,
   XGrid,
 } from '@material-ui/x-grid';
+
+function getThemePaletteMode(palette: any): string {
+  return palette.type || palette.mode;
+}
 
 const defaultTheme = createMuiTheme();
 const useStyles = makeStyles(
@@ -54,23 +57,30 @@ export default function ValidateServerNameGrid() {
         clearTimeout(promiseTimeout);
         clearTimeout(keyStrokeTimeoutRef.current);
 
-        apiRef.current.setEditCellProps({
-          id,
-          field,
-          props: { ...props, error: true },
+        let newModel = apiRef.current.getEditRowsModel();
+        apiRef.current.setEditRowsModel({
+          ...newModel,
+          [id]: {
+            ...newModel[id],
+            [field]: { ...newModel[id][field], error: true },
+          },
         });
+
         // basic debouncing here
         keyStrokeTimeoutRef.current = setTimeout(async () => {
           const data = props; // Fix eslint value is missing in prop-types for JS files
           const isValid = await validateName(data.value!.toString());
-          apiRef.current.setEditCellProps({
-            id,
-            field,
-            props: { ...props, error: !isValid },
+          newModel = apiRef.current.getEditRowsModel();
+          apiRef.current.setEditRowsModel({
+            ...newModel,
+            [id]: {
+              ...newModel[id],
+              [field]: { ...newModel[id][field], error: !isValid },
+            },
           });
         }, 100);
 
-        event.stopPropagation();
+        event.defaultMuiPrevented = true;
       }
     },
     [apiRef],

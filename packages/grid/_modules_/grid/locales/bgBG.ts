@@ -1,6 +1,6 @@
 import { bgBG as bgBGCore } from '@material-ui/core/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, Localization } from '../utils';
+import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
 const bgBGGrid: Partial<GridLocaleText> = {
   // Root

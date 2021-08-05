@@ -4,17 +4,31 @@ import { GridSubscribeEventOptions } from '../../utils/eventEmitter/GridEventEmi
 import { useLogger } from '../utils/useLogger';
 import { GRID_COMPONENT_ERROR, GRID_UNMOUNT } from '../../constants/eventsConstants';
 import { useGridApiMethod } from './useGridApiMethod';
+import { MuiEvent } from '../../models/gridOptions';
+import { Signature } from './useGridApiEventHandler';
+import { GridComponentProps } from '../../GridComponentProps';
 
-export function useApi(apiRef: GridApiRef): void {
+const isSynthenticEvent = (event: any): event is React.SyntheticEvent => {
+  return event.isPropagationStopped !== undefined;
+};
+
+export function useApi(apiRef: GridApiRef, props: Pick<GridComponentProps, 'signature'>): void {
   const logger = useLogger('useApi');
 
   const publishEvent = React.useCallback(
-    (name: string, params: any, event?: React.SyntheticEvent) => {
-      if (!event || !event.isPropagationStopped || !event.isPropagationStopped()) {
-        apiRef.current.emit(name, params, event);
+    (
+      name: string,
+      params: any,
+      event: MuiEvent<React.SyntheticEvent | DocumentEventMap[keyof DocumentEventMap] | {}> = {},
+    ) => {
+      event.defaultMuiPrevented = false;
+      if (event && isSynthenticEvent(event) && event.isPropagationStopped()) {
+        return;
       }
+      const details = props.signature === Signature.XGrid ? { api: apiRef.current } : {};
+      apiRef.current.emit(name, params, event, details);
     },
-    [apiRef],
+    [apiRef, props.signature],
   );
 
   const subscribeEvent = React.useCallback(

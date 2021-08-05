@@ -2,13 +2,13 @@ import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { GridOptions } from '../models/gridOptions';
 import { getMuiVersion } from './utils';
 
-export interface LocalizationV4 {
+interface LocalizationV4 {
   props: {
     MuiDataGrid: Pick<GridOptions, 'localeText'>;
   };
 }
 
-export interface LocalizationV5 {
+interface LocalizationV5 {
   components: {
     MuiDataGrid: {
       defaultProps: Pick<GridOptions, 'localeText'>;

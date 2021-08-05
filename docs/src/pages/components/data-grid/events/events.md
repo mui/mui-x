@@ -8,7 +8,11 @@ title: Data Grid - Events
 
 ## Subscribing to events
 
-You can subscribe to one of the [events emitted](/components/data-grid/events/#catalog-of-events) by calling `apiRef.current.subscribeEvent()` with the name of the event and a handler. The handler will be called with two arguments: a object with information related to the event and, optionally, a `React.SyntheticEvent` object if the event was emitted by a DOM element.
+You can subscribe to one of the [events emitted](/components/data-grid/events/#catalog-of-events) by calling `apiRef.current.subscribeEvent()` with the name of the event and a handler. The handler will be called with three arguments:
+
+1. an object with information related to the event
+2. a `MuiEvent` containing the DOM event or the React synthetic event, when available
+3. a `MuiCallbackDetails` containing the `GridApi` only if `XGrid` is being used.
 
 ```tsx
 /**
@@ -20,14 +24,33 @@ You can subscribe to one of the [events emitted](/components/data-grid/events/#c
  */
 subscribeEvent: (
   event: string,
-  handler: (params: any, event?: React.SyntheticEvent) => void,
+  handler: (params: any, event: MuiEvent, details: MuiCallbackDetails) => void,
   options?: GridSubscribeEventOptions,
 ) => () => void;
 ```
 
 The following demo shows how to subscribe to the `columnResize` event. Try it by resizing the columns.
 
-{{"demo": "pages/components/data-grid/events/SubscribeToEvents.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"demo": "pages/components/data-grid/events/SubscribeToEvents.js", "bg": "inline"}}
+
+## Disabling the default behavior
+
+Depending on the use case, it might be necessary to disable the default action taken by an event.
+The `MuiEvent` passed to the event handler has a `defaultMuiPrevented` property to control when the default behavior can be executed or not.
+Set it to `true` to block the default handling of an event and implement your own.
+
+```tsx
+<DataGrid
+  onCellClick={(params: GridCellParams, event: MuiEvent<React.MouseEvent>) => {
+    event.defaultMuiPrevented = true;
+  }}
+/>
+```
+
+Usually, double clicking a cell will put it into [edit mode](/components/data-grid/editing/).
+The following example changes this behavior by also requiring <kbd class="key">CTRL</kbd> to be pressed.
+
+{{"demo": "pages/components/data-grid/events/DoubleClickWithCtrlToEdit.js", "bg": "inline"}}
 
 ## Catalog of events
 

@@ -24,7 +24,13 @@ describe('<XGrid /> - Pagination', () => {
 
         return (
           <div style={{ width: 300, height: 300 }}>
-            <XGrid {...basicData} apiRef={apiRef} pagination pageSize={1} />
+            <XGrid
+              {...basicData}
+              apiRef={apiRef}
+              pagination
+              pageSize={1}
+              rowsPerPageOptions={[1]}
+            />
           </div>
         );
       };
@@ -47,7 +53,13 @@ describe('<XGrid /> - Pagination', () => {
 
         return (
           <div style={{ width: 300, height: 300 }}>
-            <XGrid {...basicData} apiRef={apiRef} pagination pageSize={1} />
+            <XGrid
+              {...basicData}
+              apiRef={apiRef}
+              pagination
+              pageSize={1}
+              rowsPerPageOptions={[1]}
+            />
           </div>
         );
       };
@@ -78,6 +90,7 @@ describe('<XGrid /> - Pagination', () => {
               apiRef={apiRef}
               autoHeight={isJSDOM}
               pageSize={pageSize}
+              rowsPerPageOptions={[pageSize]}
               onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
               pagination
             />

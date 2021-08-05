@@ -3,7 +3,7 @@ import * as React from 'react';
 import {
   DataGrid,
   GridColDef,
-  GridEditCellPropsParams,
+  GridCellEditCommitParams,
   GridValueGetterParams,
 } from '@material-ui/data-grid';
 
@@ -17,10 +17,9 @@ export default function ValueGetterGrid() {
   const [rows, setRows] = React.useState<any[]>(defaultRows);
 
   const handleCellEditCommit = React.useCallback(
-    ({ id, field, props }: GridEditCellPropsParams) => {
+    ({ id, field, value }: GridCellEditCommitParams) => {
       if (field === 'fullName') {
-        const data = props; // Fix eslint value is missing in prop-types for JS files
-        const [firstName, lastName] = data.value!.toString().split(' ');
+        const [firstName, lastName] = value!.toString().split(' ');
         const updatedRows = rows.map((row) => {
           if (row.id === id) {
             return { ...row, firstName, lastName };

@@ -1,6 +1,6 @@
 import { plPL as plPLCore } from '@material-ui/core/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, Localization } from '../utils';
+import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
 export const plPLGrid: Partial<GridLocaleText> = {
   // Root
