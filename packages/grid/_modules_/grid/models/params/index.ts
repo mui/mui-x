@@ -6,7 +6,6 @@ export * from './gridColumnResizeParams';
 export * from './gridSlotComponentProps';
 export * from './gridRowParams';
 export * from './gridScrollParams';
-export * from './gridSelectionModelChangeParams';
 export * from './gridSortModelParams';
 export * from './gridStateChangeParams';
 export * from './gridRowScrollEndParams';

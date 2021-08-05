@@ -646,7 +646,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         // @ts-expect-error need to migrate helpers to TypeScript
       }).toErrorDev([
         'The data grid component requires all rows to have a unique id property',
-        'The above error occurred in the <ForwardRef(GridComponent)> component',
+        'The above error occurred in the <ForwardRef(DataGrid)> component',
       ]);
       expect((errorRef.current as any).errors).to.have.length(1);
       expect((errorRef.current as any).errors[0].toString()).to.include(

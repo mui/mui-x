@@ -2,13 +2,12 @@ import * as React from 'react';
 import MenuItem from '@material-ui/core/MenuItem';
 import { GridFilterItemProps } from './GridFilterItemProps';
 import { useGridApiContext } from '../../../hooks/root/useGridApiContext';
-import { useGridSelector } from '../../../hooks/features/core/useGridSelector';
-import { optionsSelector } from '../../../hooks/utils/optionsSelector';
+import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 
 export const HideGridColMenuItem = (props: GridFilterItemProps) => {
   const { column, onClick } = props;
   const apiRef = useGridApiContext();
-  const options = useGridSelector(apiRef, optionsSelector);
+  const rootProps = useGridRootProps();
   const timeoutRef = React.useRef<any>();
 
   const toggleColumn = React.useCallback(
@@ -25,7 +24,7 @@ export const HideGridColMenuItem = (props: GridFilterItemProps) => {
     return () => clearTimeout(timeoutRef.current);
   }, []);
 
-  if (options.disableColumnSelector) {
+  if (rootProps.disableColumnSelector) {
     return null;
   }
 
