@@ -145,11 +145,7 @@ export const GridCell = React.memo(function GridCell(props: GridCellProps) {
   };
 
   React.useLayoutEffect(() => {
-    if (!hasFocus) {
-      return;
-    }
-
-    if (cellMode === 'edit' && isEditable) {
+    if (!hasFocus || cellMode === 'edit') {
       return;
     }
 
