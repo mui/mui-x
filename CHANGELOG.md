@@ -11,7 +11,7 @@ Big thanks to the 4 contributors who made this release possible. Here are some h
 
 - 🚀 Polish the cell editing API (#2220) @m4theushw
 - ⚡️ Add `details` param to each callback option in `XGrid` (#2236) @DanailH
-- 💅 Work on internal optimisations and code separation (#2176, #2243, #2235, #2213) @flaviendelangle
+- 💅 Work on internal optimizations and code separation (#2176, #2243, #2235, #2213) @flaviendelangle
 - 🐞 Fix 1 bugs
 
 ### `@material-ui/data-grid@v4.0.0-alpha.36` / `@material-ui/x-grid@v4.0.0-alpha.36`
