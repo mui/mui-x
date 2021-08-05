@@ -175,7 +175,7 @@ export const GridCell = React.memo(function GridCell(props: GridCellProps) {
       data-mode={cellMode}
       aria-colindex={colIndex + 1}
       style={style}
-      tabIndex={cellMode === 'view' || !isEditable ? tabIndex : -1}
+      tabIndex={tabIndex}
       {...eventsHandlers}
     >
       {children || valueToRender?.toString()}
