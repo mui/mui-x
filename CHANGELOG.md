@@ -62,7 +62,7 @@ Big thanks to the 4 contributors who made this release possible. Here are some h
 
 - [core] Isolate `DataGrid` and `XGrid` (#2176) @dtassone
 - [core] Move `GridFilterModel` in the models directory (#2243) @flaviendelangle
-- [core] Added new column internal `computedWidth` field (#2235) @flaviendelangle
+- [core] Add new column internal `computedWidth` field (#2235) @flaviendelangle
 - [core] Use `rootProps` instead of `options` in the grid components except for `classes` (#2213) @flaviendelangle
 - [core] Fix `rebaseWhen=auto` not working (#2271) @oliviertassinari
 
