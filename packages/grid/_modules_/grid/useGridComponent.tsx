@@ -60,9 +60,9 @@ export const useGridComponent = (apiRef: GridApiRef, props: GridComponentProps) 
   useGridPreferencesPanel(apiRef);
   useGridFilter(apiRef, props);
   useGridContainerProps(apiRef);
-  useGridDensity(apiRef);
+  useGridDensity(apiRef, props);
   useGridVirtualRows(apiRef);
-  useGridColumnReorder(apiRef);
+  useGridColumnReorder(apiRef, props);
   useGridColumnResize(apiRef, props);
   useGridPageSize(apiRef, props);
   useGridPage(apiRef, props);
