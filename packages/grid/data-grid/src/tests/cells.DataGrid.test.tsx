@@ -64,35 +64,16 @@ describe('<DataGrid /> - Cells', () => {
     expect(getCell(0, 0)).to.have.class('foobar');
   });
 
-  describe('type `boolean`', () => {
-    it('able to render number from provided `renderCell`', () => {
-      render(
-        <div style={{ width: 300, height: 500 }}>
-          <DataGrid
-            autoHeight={isJSDOM}
-            columns={[
-              {
-                field: 'number',
-                headerName: 'Number',
-                type: 'boolean',
-                renderCell: (params) => (params.value ? 1 : 0),
-              },
-            ]}
-            rows={[
-              {
-                id: 1,
-                number: false,
-              },
-              {
-                id: 2,
-                number: true,
-              },
-            ]}
-          />
-        </div>,
-      );
-      expect(getCell(0, 0)).to.have.text('0');
-      expect(getCell(1, 0)).to.have.text('1');
-    });
+  it('should allow renderCell to return a false-ish value', () => {
+    render(
+      <div style={{ width: 300, height: 500 }}>
+        <DataGrid
+          autoHeight={isJSDOM}
+          columns={[{ field: 'brand', renderCell: () => 0 }]}
+          rows={[{ id: 1, brand: 'Nike' }]}
+        />
+      </div>,
+    );
+    expect(getCell(0, 0)).to.have.text('0');
   });
 });
