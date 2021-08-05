@@ -13,11 +13,11 @@ import {
 } from '../../hooks/features/filter/gridFilterSelector';
 import { gridPreferencePanelStateSelector } from '../../hooks/features/preferencesPanel/gridPreferencePanelSelector';
 import { GridPreferencePanelsValue } from '../../hooks/features/preferencesPanel/gridPreferencePanelsValue';
-import { optionsSelector } from '../../hooks/utils/optionsSelector';
 import { GridTranslationKeys } from '../../models/api/gridLocaleTextApi';
 import { GridFilterItem } from '../../models/gridFilterItem';
 import { createTheme } from '../../utils/utils';
 import { useGridApiContext } from '../../hooks/root/useGridApiContext';
+import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
 const defaultTheme = createTheme();
 const useStyles = makeStyles(
@@ -48,7 +48,7 @@ export const GridToolbarFilterButton = React.forwardRef<
   const buttonProps = componentsProps.button || {};
   const classes = useStyles();
   const apiRef = useGridApiContext();
-  const options = useGridSelector(apiRef, optionsSelector);
+  const rootProps = useGridRootProps();
   const counter = useGridSelector(apiRef, filterGridItemsCounterSelector);
   const activeFilters = useGridSelector(apiRef, activeGridFilterItemsSelector);
   const lookup = useGridSelector(apiRef, gridColumnLookupSelector);
@@ -101,7 +101,7 @@ export const GridToolbarFilterButton = React.forwardRef<
   };
 
   // Disable the button if the corresponding is disabled
-  if (options.disableColumnFilter) {
+  if (rootProps.disableColumnFilter) {
     return null;
   }
 

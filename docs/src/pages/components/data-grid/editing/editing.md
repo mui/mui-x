@@ -113,8 +113,8 @@ You can override the default [start editing](#start-editing) triggers using the 
 The editing feature leverages the event capability of the grid and the apiRef.
 The following events can be imported and used to customize the edition:
 
-- `cellEditEnter`: emitted when the cell turns to edit mode.
-- `cellEditExit`: emitted when the cell turns back to view mode.
+- `cellEditStart`: emitted when the cell turns to edit mode.
+- `cellEditStop`: emitted when the cell turns back to view mode.
 - `cellEditCommit`: emitted when the new value is commited.
 - `editCellPropsChange`: emitted when the props passed to the edit cell component are changed.
 

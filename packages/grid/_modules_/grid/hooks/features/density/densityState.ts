@@ -1,5 +1,4 @@
-import { GridDensity } from '../../../models/gridDensity';
-import { DEFAULT_GRID_OPTIONS } from '../../../models/gridOptions';
+import { GridDensity, GridDensityTypes } from '../../../models/gridDensity';
 
 export interface GridGridDensity {
   value: GridDensity;
@@ -9,8 +8,8 @@ export interface GridGridDensity {
 
 export function getInitialGridDensityState(): GridGridDensity {
   return {
-    value: DEFAULT_GRID_OPTIONS.density,
-    rowHeight: DEFAULT_GRID_OPTIONS.rowHeight,
-    headerHeight: DEFAULT_GRID_OPTIONS.headerHeight,
+    value: GridDensityTypes.Standard,
+    rowHeight: 52,
+    headerHeight: 56,
   };
 }
