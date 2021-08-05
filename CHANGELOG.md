@@ -33,7 +33,9 @@ Big thanks to the 4 contributors who made this release possible. Here are some h
   />
   ```
 
-  - [XGrid] The `setEditCellProps` API call is not available anymore. Use the [controlled editing](https://material-ui.com/components/data-grid/editing/#controlled-editing) or `setEditRowsModel`.
+  - [XGrid] The `setEditCellProps` API call is not available anymore. 
+    Use the [controlled editing](https://material-ui.com/components/data-grid/editing/#controlled-editing) or `setEditRowsModel`.
+
  ```diff
   -apiRef.current.setEditCellProps({ id, field, props: { ...props, error: true } });
   +apiRef.current.setEditRowsModel({
