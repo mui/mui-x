@@ -25,12 +25,12 @@ Big thanks to the 4 contributors who made this release possible. Here are some h
   - Rename `onCellEditEnd` prop to `onCellEditStop`.
 
   ```diff
-  <DataGrid
-  - onCellEditEnter={...}
-  - onCellEditExit={...}
-  + onCellEditStart={...}
-  + onCellEditStop={...}
-  />
+   <DataGrid
+  -  onCellEditEnter={...}
+  -  onCellEditExit={...}
+  +  onCellEditStart={...}
+  +  onCellEditStop={...}
+   />
   ```
 
   - [XGrid] The `setEditCellProps` API call is not available anymore.
