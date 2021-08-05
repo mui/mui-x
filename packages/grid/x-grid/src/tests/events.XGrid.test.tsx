@@ -77,11 +77,7 @@ describe('<XGrid /> - Events Params', () => {
 
   const TestVirtualization = (props: Partial<XGridProps>) => {
     const data = useData(200, 10);
-    return (
-      <div style={{ width: 300, height: 300 }}>
-        <XGrid rows={data.rows} columns={data.columns} {...props} />
-      </div>
-    );
+    return <XGrid rows={data.rows} columns={data.columns} {...props} />;
   };
 
   describe('columnHeaderParams', () => {
@@ -304,34 +300,35 @@ describe('<XGrid /> - Events Params', () => {
   it('call onViewportRowsChange when the viewport rows change', async () => {
     const headerHeight = 40;
     const rowHeight = 40;
-    const offset = 10;
-    const border = 1;
     const pageSize = 4;
     const handleViewportRowsChange = spy();
     const { container } = render(
-      <div
-        style={{ width: 300, height: headerHeight + pageSize * rowHeight + offset + border * 2 }}
-      >
+      <div style={{ width: 300, height: headerHeight + rowHeight * pageSize }}>
         <TestVirtualization rowHeight={rowHeight} onViewportRowsChange={handleViewportRowsChange} />
       </div>,
     );
+
+    expect(handleViewportRowsChange.callCount).to.equal(1); // should be 1
+    expect(handleViewportRowsChange.lastCall.args[0].firstRowIndex).to.equal(0); // should be 1
+    expect(handleViewportRowsChange.lastCall.args[0].lastRowIndex).to.equal(4); // should be pageSize + 1
+
     const gridWindow = container.querySelector('.MuiDataGrid-window');
-    // scroll 8 rows so that the renderContext is updated. To be changed to a scroll of 1 row.
-    gridWindow.scrollTop = pageSize * rowHeight * 2;
+    // scroll 4 rows so that the renderContext is updated. To be changed to a scroll of 1 row.
+    gridWindow.scrollTop = rowHeight * pageSize;
     gridWindow.dispatchEvent(new Event('scroll'));
     await waitFor(() => {
       expect(handleViewportRowsChange.callCount).to.equal(2); // should be 1
-      expect(handleViewportRowsChange.lastCall.args[0].firstRowIndex).to.equal(8); // should be 1
-      expect(handleViewportRowsChange.lastCall.args[0].lastRowIndex).to.equal(16); // should be pageSize + 1
+      expect(handleViewportRowsChange.lastCall.args[0].firstRowIndex).to.equal(4); // should be 1
+      expect(handleViewportRowsChange.lastCall.args[0].lastRowIndex).to.equal(8); // should be pageSize + 1
     });
 
-    // scroll another 8 rows so that the renderContext is updated. To be changed to a scroll of 2 row.
-    gridWindow.scrollTop = pageSize * rowHeight * 4;
+    // scroll another 4 rows so that the renderContext is updated. To be changed to a scroll of 2 row.
+    gridWindow.scrollTop = rowHeight * pageSize * 2;
     gridWindow.dispatchEvent(new Event('scroll'));
     await waitFor(() => {
       expect(handleViewportRowsChange.callCount).to.equal(3);
-      expect(handleViewportRowsChange.lastCall.args[0].firstRowIndex).to.equal(16); // should be 2
-      expect(handleViewportRowsChange.lastCall.args[0].lastRowIndex).to.equal(24); // should be pageSize + 1
+      expect(handleViewportRowsChange.lastCall.args[0].firstRowIndex).to.equal(8); // should be 2
+      expect(handleViewportRowsChange.lastCall.args[0].lastRowIndex).to.equal(12); // should be pageSize + 1
     });
   });
 });
