@@ -24,7 +24,7 @@ Big thanks to the 4 contributors who made this release possible. Here are some h
   - Rename `onCellEditEnter` prop to `onCellEditStart`.
   - Rename `onCellEditEnd` prop to `onCellEditStop`.
 
- ```diff
+  ```diff
   <DataGrid
   - onCellEditEnter={...}
   - onCellEditExit={...}
