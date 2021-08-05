@@ -333,10 +333,11 @@ describe('<XGrid /> - Events Params', () => {
       </div>,
     );
 
-    expect(handleViewportRowsChange.callCount).to.equal(1);
-    expect(handleViewportRowsChange.lastCall.args[0].firstRowIndex).to.equal(0);
-    expect(handleViewportRowsChange.lastCall.args[0].lastRowIndex).to.equal(4); // should be pageSize + 1
-
+    await waitFor(() => {
+      expect(handleViewportRowsChange.callCount).to.equal(1);
+      expect(handleViewportRowsChange.lastCall.args[0].firstRowIndex).to.equal(0);
+      expect(handleViewportRowsChange.lastCall.args[0].lastRowIndex).to.equal(4); // should be pageSize + 1
+    });
     const gridWindow = container.querySelector('.MuiDataGrid-window');
     // scroll 4 rows so that the renderContext is updated. To be changed to a scroll of 1 row.
     gridWindow.scrollTop = rowHeight * pageSize;
