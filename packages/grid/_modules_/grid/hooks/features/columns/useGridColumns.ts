@@ -309,7 +309,7 @@ export function useGridColumns(
 
   useGridApiMethod(apiRef, colApi, 'ColApi');
 
-  React.useEffect(() => {
+  const setColumnsFromProps = React.useCallback(() => {
     logger.info(`GridColumns have changed, new length ${props.columns.length}`);
 
     if (props.columns.length > 0) {
@@ -329,14 +329,14 @@ export function useGridColumns(
   }, [
     logger,
     apiRef,
+    updateState,
+    setColumnsState,
     props.columns,
     props.columnTypes,
     props.checkboxSelection,
-    updateState,
-    setColumnsState,
   ]);
 
-  React.useEffect(() => {
+  const updateColumnsTotalWidth = React.useCallback(() => {
     logger.debug(
       `GridColumns gridState.viewportSizes.width, changed ${gridState.viewportSizes.width}`,
     );
@@ -345,6 +345,30 @@ export function useGridColumns(
 
     apiRef.current.updateColumns(currentColumns);
   }, [apiRef, gridState.viewportSizes.width, logger]);
+
+  const hasInitializedColumns = React.useRef(false);
+
+  React.useEffect(() => {
+    if (hasInitializedColumns.current) {
+      setColumnsFromProps();
+    }
+  }, [setColumnsFromProps]);
+
+  React.useEffect(() => {
+    if (hasInitializedColumns.current) {
+      updateColumnsTotalWidth();
+    }
+  }, [updateColumnsTotalWidth]);
+
+  React.useEffect(() => {
+    if (!hasInitializedColumns.current) {
+      setColumnsFromProps();
+
+      if (gridState.viewportSizes.width) {
+        hasInitializedColumns.current = true;
+      }
+    }
+  }, [setColumnsFromProps, gridState.viewportSizes.width]);
 
   // Grid Option Handlers
   useGridApiOptionHandler(apiRef, GRID_COLUMN_VISIBILITY_CHANGE, props.onColumnVisibilityChange);
