@@ -212,7 +212,7 @@ export const useGridVirtualRows = (apiRef: GridApiRef): void => {
         scrollCoordinates.left = scrollIntoView({
           clientHeight: windowRef.current!.clientWidth,
           scrollTop: windowRef.current!.scrollLeft,
-          offsetHeight: visibleColumns[params.colIndex].width,
+          offsetHeight: visibleColumns[params.colIndex].computedWidth,
           offsetTop: columnsMeta.positions[params.colIndex],
         });
       }

@@ -1,22 +1,22 @@
 import { createSelector, OutputSelector } from 'reselect';
 import { gridRowsLookupSelector, GridRowsLookup } from '../rows/gridRowsSelector';
 import { GridState } from '../core/gridState';
-import { GridSelectionState } from './gridSelectionState';
 import { GridRowId, GridRowModel } from '../../../models/gridRows';
+import { GridSelectionModel } from '../../../models/gridSelectionModel';
 
 export const gridSelectionStateSelector = (state: GridState) => state.selection;
 export const selectedGridRowsCountSelector: OutputSelector<
   GridState,
   number,
-  (res: GridSelectionState) => number
-> = createSelector<GridState, GridSelectionState, number>(
+  (res: GridSelectionModel) => number
+> = createSelector<GridState, GridSelectionModel, number>(
   gridSelectionStateSelector,
   (selection) => selection.length,
 );
 
 export const selectedGridRowsSelector = createSelector<
   GridState,
-  GridSelectionState,
+  GridSelectionModel,
   GridRowsLookup,
   Map<GridRowId, GridRowModel>
 >(
@@ -28,8 +28,8 @@ export const selectedGridRowsSelector = createSelector<
 export const selectedIdsLookupSelector: OutputSelector<
   GridState,
   Record<string, GridRowId>,
-  (res: GridSelectionState) => Record<string, GridRowId>
-> = createSelector<GridState, GridSelectionState, Record<string, GridRowId>>(
+  (res: GridSelectionModel) => Record<string, GridRowId>
+> = createSelector<GridState, GridSelectionModel, Record<string, GridRowId>>(
   gridSelectionStateSelector,
   (selection) =>
     selection.reduce((lookup, rowId) => {

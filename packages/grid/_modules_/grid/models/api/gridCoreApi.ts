@@ -56,6 +56,7 @@ export interface GridCoreApi extends GridEventEmitter {
     handler: (
       params: any,
       event: MuiEvent<React.SyntheticEvent | DocumentEventMap[keyof DocumentEventMap] | {}>,
+      details: any,
     ) => void,
     options?: GridSubscribeEventOptions,
   ) => () => void;

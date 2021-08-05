@@ -1,4 +1,7 @@
 import * as React from 'react';
+import { GridState } from '../hooks/features/core/gridState';
+import { useGridSelector } from '../hooks/features/core/useGridSelector';
+import { useGridApiContext } from '../hooks/root/useGridApiContext';
 
 // we duplicate licenseStatus to avoid adding a dependency on x-license.
 enum LicenseStatus {
@@ -21,12 +24,12 @@ function getLicenseErrorMessage(licenseStatus: string) {
   }
 }
 
-export interface WatermarkProps {
-  licenseStatus: string;
-}
+const licenseStatusSelector = (state: GridState) => state.licenseStatus;
 
-export const Watermark = (props: WatermarkProps) => {
-  const { licenseStatus } = props;
+export function Watermark() {
+  const apiRef = useGridApiContext();
+
+  const licenseStatus = useGridSelector(apiRef, licenseStatusSelector);
   if (licenseStatus === LicenseStatus.Valid.toString()) {
     return null;
   }
@@ -50,4 +53,4 @@ export const Watermark = (props: WatermarkProps) => {
       {getLicenseErrorMessage(licenseStatus)}{' '}
     </div>
   );
-};
+}
