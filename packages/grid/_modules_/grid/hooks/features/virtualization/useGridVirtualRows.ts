@@ -79,6 +79,9 @@ export const useGridVirtualRows = (apiRef: GridApiRef): void => {
         return null;
       }
       let minRowIdx = 0;
+
+      console.log(`getRenderRowProps, pageSize: ${paginationState.pageSize}`);
+
       if (
         options.pagination &&
         paginationState.pageSize != null &&
