@@ -154,7 +154,7 @@ export function useGridColumns(
     (newState: GridColumnsState, emit = true) => {
       logger.debug('Updating columns state.');
 
-      setGridState((oldState) => ({ ...oldState, columns: newState }));
+      setGridState((state) => ({ ...state, columns: newState }));
       forceUpdate();
 
       if (apiRef.current && emit) {

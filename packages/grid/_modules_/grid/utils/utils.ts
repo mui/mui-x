@@ -17,6 +17,7 @@ export function isObject(value: any): value is Record<string, any> {
   return typeof value === 'object';
 }
 
+// TODO v5: remove
 export function getThemePaletteMode(palette: any): string {
   return palette.type || palette.mode;
 }
