@@ -415,7 +415,7 @@ export interface GridOptions {
    */
   onStateChange?: (params: any) => void;
   /**
-   * Callback fired when the virtual page changes.
+   * Callback fired when the rows in the viewport change.
    */
   onViewportRowsChange?: (params: GridViewportRowsChangeParams) => void;
   /**
