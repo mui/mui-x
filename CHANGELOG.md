@@ -9,7 +9,7 @@ _August 5, 2021_
 
 Big thanks to the 4 contributors who made this release possible. Here are some highlights ✨:
 
-- 🚀 Polish the cell editing api (#2220) @m4theushw
+- 🚀 Polish the cell editing API (#2220) @m4theushw
 - ⚡️ Add `details` param to each callback option in `XGrid` (#2236) @DanailH
 - 💅 Work on internal optimisations and code separation (#2176, #2243, #2235, #2213) @flaviendelangle
 - 🐞 Fix 1 bugs
