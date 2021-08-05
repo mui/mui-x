@@ -189,10 +189,10 @@ export const useGridFocus = (apiRef: GridApiRef, props: Pick<GridComponentProps,
 
   React.useEffect(() => {
     const doc = ownerDocument(apiRef.current.rootElementRef!.current as HTMLElement);
-    doc.addEventListener('click', handleDocumentClick, true);
+    doc.addEventListener('click', handleDocumentClick);
 
     return () => {
-      doc.removeEventListener('click', handleDocumentClick, true);
+      doc.removeEventListener('click', handleDocumentClick);
     };
   }, [apiRef, handleDocumentClick]);
 
