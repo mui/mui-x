@@ -317,7 +317,7 @@ describe('<XGrid /> - Events Params', () => {
     gridWindow.scrollTop = rowHeight * pageSize;
     gridWindow.dispatchEvent(new Event('scroll'));
     await waitFor(() => {
-      expect(handleViewportRowsChange.callCount).to.equal(2); // should be 1
+      expect(handleViewportRowsChange.callCount).to.equal(2);
       expect(handleViewportRowsChange.lastCall.args[0].firstRowIndex).to.equal(4); // should be 1
       expect(handleViewportRowsChange.lastCall.args[0].lastRowIndex).to.equal(8); // should be pageSize + 1
     });
