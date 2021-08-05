@@ -24,7 +24,6 @@ export const useGridFocus = (apiRef: GridApiRef, props: Pick<GridComponentProps,
   const logger = useLogger('useGridFocus');
   const [, setGridState, forceUpdate] = useGridState(apiRef);
   const lastClickedCell = React.useRef<GridCellParams | null>(null);
-  const clickTimeout = React.useRef<any>(null);
 
   const setCellFocus = React.useCallback(
     (id: GridRowId, field: string) => {
@@ -190,17 +189,10 @@ export const useGridFocus = (apiRef: GridApiRef, props: Pick<GridComponentProps,
 
   React.useEffect(() => {
     const doc = ownerDocument(apiRef.current.rootElementRef!.current as HTMLElement);
-    const handleDocumentClickAsync = (event) => {
-      // If the state is changed during the capture phase, onChange will not be fired
-      // By delaying the state update, there is time for other callbacks to be called first
-      // See https://github.com/facebook/react/issues/13424
-      clickTimeout.current = setTimeout(() => handleDocumentClick(event));
-    };
-    doc.addEventListener('click', handleDocumentClickAsync, true);
+    doc.addEventListener('click', handleDocumentClick, true);
 
     return () => {
-      clearTimeout(clickTimeout.current);
-      doc.removeEventListener('click', handleDocumentClickAsync, true);
+      doc.removeEventListener('click', handleDocumentClick, true);
     };
   }, [apiRef, handleDocumentClick]);
 

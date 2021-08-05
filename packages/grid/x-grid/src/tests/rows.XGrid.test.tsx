@@ -569,8 +569,6 @@ describe('<XGrid /> - Rows', () => {
     };
 
     beforeEach(() => {
-      clock = useFakeTimers();
-
       baselineProps = {
         autoHeight: isJSDOM,
         rows: [
@@ -606,7 +604,6 @@ describe('<XGrid /> - Rows', () => {
 
       fireEvent.mouseUp(getCell(0, 0));
       fireEvent.click(getCell(0, 0));
-      clock.tick(0);
       expect(apiRef.current.getState().focus.cell).to.deep.equal({
         id: baselineProps.rows[0].id,
         field: baselineProps.columns[0].field,
@@ -626,7 +623,6 @@ describe('<XGrid /> - Rows', () => {
 
       fireEvent.mouseUp(getCell(1, 0));
       fireEvent.click(getCell(1, 0));
-      clock.tick(0);
       setProps({ rows: baselineProps.rows.slice(1) });
       expect(apiRef.current.getState().focus.cell).to.deep.equal({
         id: baselineProps.rows[1].id,
@@ -649,14 +645,12 @@ describe('<XGrid /> - Rows', () => {
       render(<TestCase rows={baselineProps.rows} />);
       fireEvent.mouseUp(getCell(1, 0));
       fireEvent.click(getCell(1, 0));
-      clock.tick(0);
       expect(apiRef.current.getState().focus.cell).to.deep.equal({
         id: baselineProps.rows[1].id,
         field: baselineProps.columns[0].field,
       });
       fireEvent.mouseUp(getCell(2, 1));
       fireEvent.click(getCell(2, 1));
-      clock.tick(1);
       expect(apiRef.current.getState().focus.cell).to.deep.equal({
         id: baselineProps.rows[2].id,
         field: baselineProps.columns[1].field,
@@ -667,13 +661,11 @@ describe('<XGrid /> - Rows', () => {
       render(<TestCase rows={baselineProps.rows} />);
       fireEvent.mouseUp(getCell(1, 0));
       fireEvent.click(getCell(1, 0));
-      clock.tick(0);
       expect(apiRef.current.getState().focus.cell).to.deep.equal({
         id: baselineProps.rows[1].id,
         field: baselineProps.columns[0].field,
       });
       fireEvent.click(document.body);
-      clock.tick(1);
       expect(apiRef.current.getState().focus.cell).to.deep.equal(null);
     });
 
@@ -683,10 +675,8 @@ describe('<XGrid /> - Rows', () => {
       apiRef.current.subscribeEvent(GRID_CELL_FOCUS_OUT, handleCellFocusOut);
       fireEvent.mouseUp(getCell(1, 0));
       fireEvent.click(getCell(1, 0));
-      clock.tick(0);
       expect(handleCellFocusOut.callCount).to.equal(0);
       fireEvent.click(document.body);
-      clock.tick(1);
       expect(handleCellFocusOut.callCount).to.equal(1);
       expect(handleCellFocusOut.args[0][0].id).to.equal(baselineProps.rows[1].id);
       expect(handleCellFocusOut.args[0][0].field).to.equal(baselineProps.columns[0].field);
