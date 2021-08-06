@@ -332,7 +332,7 @@ export const useGridVirtualRows = (
       `totalRowCount has changed to ${totalRowCount} or containerSizes changed, updating viewport.`,
     );
     apiRef.current.updateViewport(true);
-  }, [logger, totalRowCount, apiRef, gridState.containerSizes]);
+  }, [logger, totalRowCount, apiRef, gridState.containerSizes, gridState.viewportSizes]);
 
   React.useEffect(() => {
     return () => {
