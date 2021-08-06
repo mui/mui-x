@@ -221,7 +221,7 @@ function extractEvents(eventsObject: TypeDoc.DeclarationReflection, apisToGenera
     });
   });
 
-  return events.sort((a, b) => (a.name > b.name ? 1 : -1));
+  return events.sort((a, b) => a.name.localeCompare(b.name));
 }
 
 function run(argv: { outputDirectory?: string }) {

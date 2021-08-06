@@ -85,16 +85,16 @@
     "description": "Fired when the user stops resizing a column. Called with an object <code>{ field: string }</code>."
   },
   {
+    "name": "columnsChange",
+    "description": "Fired when the columns state is changed.\nCalled with an array of strings corresponding to the field names."
+  },
+  {
     "name": "columnVisibilityChange",
     "description": "Fired when a column visibility changes. Called with a GridColumnVisibilityChangeParams object."
   },
   {
     "name": "columnWidthChange",
     "description": "Fired when the width of a column is changed. Called with a GridColumnResizeParams object."
-  },
-  {
-    "name": "columnsChange",
-    "description": "Fired when the columns state is changed.\nCalled with an array of strings corresponding to the field names."
   },
   { "name": "componentError", "description": "Fired when an exception is thrown in the grid." },
   {
