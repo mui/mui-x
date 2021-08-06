@@ -328,26 +328,11 @@ export const useGridVirtualRows = (
   useGridApiMethod(apiRef, virtualApi, 'GridVirtualizationApi');
 
   React.useEffect(() => {
-    if (
-      gridState.containerSizes !== gridState.rendering.renderedSizes &&
-      apiRef.current.updateViewport
-    ) {
-      logger.debug(`gridState.containerSizes updated, updating viewport. `);
-      apiRef.current.updateViewport(true);
-    }
-  }, [apiRef, gridState.containerSizes, gridState.rendering.renderedSizes, logger]);
-
-  React.useEffect(() => {
-    logger.debug(`totalRowCount has changed to ${totalRowCount}, updating viewport.`);
+    logger.debug(
+      `totalRowCount has changed to ${totalRowCount} or containerSizes changed, updating viewport.`,
+    );
     apiRef.current.updateViewport(true);
-  }, [
-    logger,
-    totalRowCount,
-    apiRef,
-    gridState.viewportSizes,
-    gridState.scrollBar,
-    gridState.containerSizes,
-  ]);
+  }, [logger, totalRowCount, apiRef, gridState.containerSizes]);
 
   React.useEffect(() => {
     return () => {
