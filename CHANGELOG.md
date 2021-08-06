@@ -21,7 +21,7 @@ Big thanks to the 6 contributors who made this release possible. Here are some h
 
 - [DataGrid] Polish cell editing (#2220) @m4theushw
 
-  - Replace `onCellModeChange` prop with `onCellEditEnter` or `onCellEditExit`.
+  - Replace `onCellModeChange` prop with `onCellEditStart` or `onCellEditStop`.
   - Rename `onCellEditEnter` prop to `onCellEditStart`.
   - Rename `onCellEditEnd` prop to `onCellEditStop`.
 
