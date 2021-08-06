@@ -5,7 +5,7 @@ import { GridRenderContextProps } from '../../../models/gridRenderContextProps';
 export interface InternalRenderingState {
   virtualPage: number;
   virtualRowsCount: number;
-  renderContext: GridRenderContextProps | null;
+  renderContext: Partial<GridRenderContextProps> | null;
   realScroll: GridScrollParams;
   renderingZoneScroll: GridScrollParams;
   renderedSizes: GridContainerProps | null;

@@ -43,13 +43,13 @@ export interface GridRenderRowProps {
  */
 export interface GridRenderPaginationProps {
   /**
-   * The current page.
+   * The current page if pagination is enabled.
    */
-  paginationCurrentPage: number;
+  paginationCurrentPage?: number;
   /**
-   * The page size.
+   * The page size if pagination is enabled.
    */
-  pageSize: number;
+  pageSize?: number;
 }
 
 /**
