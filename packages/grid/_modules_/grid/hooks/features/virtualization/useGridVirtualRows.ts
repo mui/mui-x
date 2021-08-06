@@ -58,32 +58,38 @@ const getRenderingState = ({
     return null;
   }
 
-  const { containerSizes, pagination, rendering } = apiRef.current.getState();
+  const state = apiRef.current.getState();
 
-  if (containerSizes == null) {
+  if (state.containerSizes == null) {
     return null;
   }
   let minRowIdx = 0;
 
-  if (props.pagination && pagination.pageSize != null && props.paginationMode === 'client') {
-    minRowIdx = pagination.pageSize * pagination.page;
+  if (props.pagination && state.pagination.pageSize != null && props.paginationMode === 'client') {
+    minRowIdx = state.pagination.pageSize * state.pagination.page;
   }
 
-  const firstRowIdx = rendering.virtualPage * containerSizes.viewportPageSize + minRowIdx;
-  let lastRowIdx = firstRowIdx + containerSizes.renderingZonePageSize;
-  const maxIndex = containerSizes.virtualRowsCount + minRowIdx;
+  const firstRowIdx =
+    state.rendering.virtualPage * state.containerSizes.viewportPageSize + minRowIdx;
+  let lastRowIdx = firstRowIdx + state.containerSizes.renderingZonePageSize;
+  const maxIndex = state.containerSizes.virtualRowsCount + minRowIdx;
   if (lastRowIdx > maxIndex) {
     lastRowIdx = maxIndex;
   }
 
-  const rowProps: GridRenderRowProps = { page: rendering.virtualPage, firstRowIdx, lastRowIdx };
+  const rowProps: GridRenderRowProps = {
+    page: state.rendering.virtualPage,
+    firstRowIdx,
+    lastRowIdx,
+  };
 
   const newRenderCtx: Partial<GridRenderContextProps> = {
     ...renderedColRef.current,
     ...rowProps,
-    paginationCurrentPage: pagination.page,
-    pageSize: pagination.pageSize,
+    paginationCurrentPage: state.pagination.page,
+    pageSize: state.pagination.pageSize,
   };
+
   return newRenderCtx;
 };
 
@@ -286,9 +292,7 @@ export const useGridVirtualRows = (
       forceUpdate();
     }, 300);
 
-    if (apiRef.current.updateViewport) {
-      apiRef.current.updateViewport();
-    }
+    apiRef.current.updateViewport();
   }, [windowRef, apiRef, setGridState, forceUpdate]);
 
   const scroll = React.useCallback(
@@ -349,17 +353,15 @@ export const useGridVirtualRows = (
   }, [apiRef, gridState.containerSizes, gridState.rendering.renderedSizes, logger]);
 
   React.useEffect(() => {
-    if (apiRef.current.updateViewport) {
-      logger.debug(`totalRowCount has changed to ${totalRowCount}, updating viewport.`);
-      apiRef.current.updateViewport(true);
-    }
+    logger.debug(`totalRowCount has changed to ${totalRowCount}, updating viewport.`);
+    apiRef.current.updateViewport(true);
   }, [
     logger,
     totalRowCount,
+    apiRef,
     gridState.viewportSizes,
     gridState.scrollBar,
     gridState.containerSizes,
-    apiRef,
   ]);
 
   React.useEffect(() => {
@@ -389,22 +391,19 @@ export const useGridVirtualRows = (
 
   const handlePageChange = React.useCallback(
     (page: number) => {
-      if (apiRef.current.updateViewport) {
-        logger.debug(`State paginationState.page changed to ${page}. `);
-        apiRef.current.updateViewport(true);
-        resetScroll();
-      }
+      logger.debug(`State paginationState.page changed to ${page}. `);
+      apiRef.current.updateViewport(true);
+      resetScroll();
     },
     [apiRef, logger, resetScroll],
   );
 
-  React.useEffect(() => {
-    if (apiRef.current.updateViewport && props.page != null) {
-      logger.debug(`Controlled props.page changed to ${props.page}. `);
-      apiRef.current.updateViewport(true);
-      resetScroll();
-    }
-  }, [resetScroll, apiRef, logger, props.page]);
-
   useGridApiEventHandler(apiRef, GRID_PAGE_CHANGE, handlePageChange);
+
+  // We need to listen manually to the prop update because the GRID_PAGE_CHANGE event is not triggered when the prop in controlled and changed
+  React.useEffect(() => {
+    logger.debug(`Controlled props.page changed to ${props.page}. `);
+    apiRef.current.updateViewport(true);
+    resetScroll();
+  }, [resetScroll, apiRef, logger, props.page]);
 };
