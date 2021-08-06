@@ -140,8 +140,8 @@ export const useGridFocus = (apiRef: GridApiRef, props: Pick<GridComponentProps,
       if (cellParams) {
         apiRef.current.setCellFocus(cellParams.id, cellParams.field);
       } else {
-        setGridState((previousState) => ({
-          ...previousState,
+        setGridState((state) => ({
+          ...state,
           focus: { cell: null, columnHeader: null },
         }));
         forceUpdate();
