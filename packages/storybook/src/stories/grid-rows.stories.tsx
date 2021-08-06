@@ -12,19 +12,22 @@ import {
   GridEditRowsModel,
   GridLoadIcon,
   GridColDef,
-  isOverflown,
   GridRowData,
   useGridApiRef,
   XGrid,
-  GRID_CELL_EDIT_EXIT,
+  GRID_CELL_EDIT_STOP,
   GridEditCellPropsParams,
   GridCellEditCommitParams,
-  GRID_CELL_EDIT_ENTER,
+  GRID_CELL_EDIT_START,
   MuiEvent,
 } from '@material-ui/x-grid';
 import { useDemoData } from '@material-ui/x-grid-data-generator';
 import { action } from '@storybook/addon-actions';
 import { randomInt } from '../data/random-generator';
+
+function isOverflown(element: Element): boolean {
+  return element.scrollHeight > element.clientHeight || element.scrollWidth > element.clientWidth;
+}
 
 export default {
   title: 'X-Grid Tests/Rows',
@@ -297,7 +300,7 @@ function RenderCellExpand(params: GridCellParams) {
   return (
     <GridCellExpand
       value={params.value ? params.value.toString() : ''}
-      width={params.colDef.width}
+      width={params.colDef.computedWidth}
     />
   );
 }
@@ -517,7 +520,7 @@ export function EditRowsControl() {
 
       setTimeout(() => {
         apiRef.current.updateRows([cellUpdate]);
-        apiRef.current.publishEvent(GRID_CELL_EDIT_EXIT, params, event);
+        apiRef.current.publishEvent(GRID_CELL_EDIT_STOP, params, event);
       }, randomInt(300, 2000));
     },
     [apiRef],
@@ -649,7 +652,17 @@ export function ValidateEditValueWithApiRefGrid() {
     ({ id, field, props }: GridEditCellPropsParams, event: MuiEvent<React.SyntheticEvent>) => {
       if (field === 'email') {
         const isValid = validateEmail(props.value);
-        apiRef.current.setEditCellProps({ id, field, props: { ...props, error: !isValid } });
+        const newModel = apiRef.current.getEditRowsModel();
+        apiRef.current.setEditRowsModel({
+          ...newModel,
+          [id]: {
+            ...newModel[id],
+            [field]: {
+              ...newModel[id][field],
+              error: !isValid,
+            },
+          },
+        });
         // Prevent the native behavior.
         event.defaultMuiPrevented = true;
       }
@@ -724,10 +737,31 @@ export function ValidateEditValueServerSide() {
         clearTimeout(promiseTimeout);
         clearTimeout(keyStrokeTimeoutRef.current);
 
-        apiRef.current.setEditCellProps({ id, field, props: { ...props, error: true } });
+        let newModel = apiRef.current.getEditRowsModel();
+        apiRef.current.setEditRowsModel({
+          ...newModel,
+          [id]: {
+            ...newModel[id],
+            [field]: {
+              ...newModel[id][field],
+              error: true,
+            },
+          },
+        });
+
         keyStrokeTimeoutRef.current = setTimeout(async () => {
           const isValid = await validateUsername(props.value!.toString());
-          apiRef.current.setEditCellProps({ id, field, props: { ...props, error: !isValid } });
+          newModel = apiRef.current.getEditRowsModel();
+          apiRef.current.setEditRowsModel({
+            ...newModel,
+            [id]: {
+              ...newModel[id],
+              [field]: {
+                ...newModel[id][field],
+                error: !isValid,
+              },
+            },
+          });
         }, 200);
 
         event.defaultMuiPrevented = true;
@@ -855,7 +889,7 @@ export function EditCellWithCellClickGrid() {
     (params: GridCellParams, event: MuiEvent<React.MouseEvent>) => {
       // Or you can use the editRowModel prop, but I find it easier
       // apiRef.current.setCellMode(params.id, params.field, 'edit');
-      apiRef.current.publishEvent(GRID_CELL_EDIT_ENTER, params, event);
+      apiRef.current.publishEvent(GRID_CELL_EDIT_START, params, event);
 
       // if I want to prevent selection I can do
       event.defaultMuiPrevented = true;
@@ -877,7 +911,7 @@ export function EditCellWithMessageGrid() {
   const [message, setMessage] = React.useState('');
 
   React.useEffect(() => {
-    return apiRef.current.subscribeEvent(GRID_CELL_EDIT_ENTER, (params: GridCellParams, event) => {
+    return apiRef.current.subscribeEvent(GRID_CELL_EDIT_START, (params: GridCellParams, event) => {
       setMessage(`Editing cell with value: ${params.value} at row: ${params.id}, column: ${
         params.field
       },

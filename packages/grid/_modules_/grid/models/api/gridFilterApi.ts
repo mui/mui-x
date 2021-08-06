@@ -1,5 +1,5 @@
 import { GridRowId, GridRowModel } from '../gridRows';
-import { GridFilterModel } from '../../hooks/features/filter/gridFilterModelState';
+import { GridFilterModel } from '../gridFilterModel';
 import { GridFilterItem, GridLinkOperator } from '../gridFilterItem';
 
 /**

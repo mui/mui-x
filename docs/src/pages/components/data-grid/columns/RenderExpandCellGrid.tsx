@@ -3,12 +3,7 @@ import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import Popper from '@material-ui/core/Popper';
 import { createStyles, makeStyles } from '@material-ui/styles';
-import {
-  DataGrid,
-  GridColDef,
-  GridCellParams,
-  isOverflown,
-} from '@material-ui/data-grid';
+import { DataGrid, GridColDef, GridCellParams } from '@material-ui/data-grid';
 
 interface GridCellExpandProps {
   value: string;
@@ -32,6 +27,13 @@ const useStyles = makeStyles(() =>
     },
   }),
 );
+
+function isOverflown(element: Element): boolean {
+  return (
+    element.scrollHeight > element.clientHeight ||
+    element.scrollWidth > element.clientWidth
+  );
+}
 
 const GridCellExpand = React.memo(function GridCellExpand(
   props: GridCellExpandProps,
@@ -119,7 +121,7 @@ function renderCellExpand(params: GridCellParams) {
   return (
     <GridCellExpand
       value={params.value ? params.value.toString() : ''}
-      width={params.colDef.width}
+      width={params.colDef.computedWidth}
     />
   );
 }

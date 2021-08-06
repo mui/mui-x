@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { createClientRenderStrictMode } from 'test/utils';
 import { expect } from 'chai';
-import { GridApiRef, useGridApiRef, XGrid } from '@material-ui/x-grid';
+import { createTheme, ThemeProvider } from '@material-ui/core/styles';
+import { GridApiRef, useGridApiRef, XGrid, ptBR } from '@material-ui/x-grid';
 
 describe('<XGrid /> - Layout', () => {
   // TODO v5: replace with createClientRender
@@ -32,7 +33,7 @@ describe('<XGrid /> - Layout', () => {
     }
   });
 
-  // Adapation of describeConformance()
+  // Adaptation of describeConformance()
   describe('Material-UI component API', () => {
     it(`attaches the ref`, () => {
       const ref = React.createRef<HTMLDivElement>();
@@ -135,5 +136,16 @@ describe('<XGrid /> - Layout', () => {
         width: '148px', // because of the 2px border
       });
     });
+  });
+
+  it('should support translations in the theme', () => {
+    const { getByRole } = render(
+      <ThemeProvider theme={createTheme({}, ptBR)}>
+        <div style={{ width: 300, height: 300 }}>
+          <XGrid {...baselineProps} />
+        </div>
+      </ThemeProvider>,
+    );
+    expect(getByRole('button', { name: 'Ordenar' })).not.to.equal(null);
   });
 });

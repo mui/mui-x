@@ -1,6 +1,6 @@
 import { deDE as deDECore } from '@material-ui/core/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, Localization } from '../utils';
+import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
 const deDEGrid: Partial<GridLocaleText> = {
   // Root
@@ -28,9 +28,9 @@ const deDEGrid: Partial<GridLocaleText> = {
     count !== 1 ? `${count} aktive Filter` : `${count} aktiver Filter`,
 
   // Export selector toolbar button text
-  // toolbarExport: 'Export',
-  // toolbarExportLabel: 'Export',
-  // toolbarExportCSV: 'Download as CSV',
+  toolbarExport: 'Exportieren',
+  toolbarExportLabel: 'Exportieren',
+  toolbarExportCSV: 'Download als CSV',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'Finde Spalte',
@@ -60,8 +60,8 @@ const deDEGrid: Partial<GridLocaleText> = {
   filterOperatorBefore: 'ist vor',
   filterOperatorOnOrBefore: 'ist an oder vor',
   filterOperatorAfter: 'ist nach',
-  // filterOperatorIsEmpty: 'is empty',
-  // filterOperatorIsNotEmpty: 'is not empty',
+  filterOperatorIsEmpty: 'ist leer',
+  filterOperatorIsNotEmpty: 'ist nicht leer',
 
   // Column menu text
   columnMenuLabel: 'Menü',

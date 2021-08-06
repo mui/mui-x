@@ -12,9 +12,10 @@ import {
 import {
   GridApiRef,
   GridComponentProps,
-  GridSelectionModel,
+  GridInputSelectionModel,
   useGridApiRef,
   XGrid,
+  GRID_SELECTION_CHANGE,
 } from '@material-ui/x-grid';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
@@ -70,11 +71,11 @@ describe('<XGrid /> - Selection', () => {
   };
 
   describe('getSelectedRows', () => {
-    it('should not change before onSelectionModelChange', () => {
+    it('should handle the event internally before triggering onSelectionModelChange', () => {
       render(
         <Test
           onSelectionModelChange={(model) => {
-            expect(apiRef!.current.getSelectedRows().size).to.equal(0);
+            expect(apiRef!.current.getSelectedRows().size).to.equal(1);
             expect(model).to.deep.equal([1]);
           }}
         />,
@@ -251,6 +252,7 @@ describe('<XGrid /> - Selection', () => {
           checkboxSelectionVisibleOnly
           pagination
           pageSize={1}
+          rowsPerPageOptions={[1]}
         />
       </div>,
     );
@@ -269,7 +271,7 @@ describe('<XGrid /> - Selection', () => {
     });
 
     it('should not update the selection model when the selectionModelProp is set', () => {
-      const selectionModel: GridSelectionModel = [1];
+      const selectionModel: GridInputSelectionModel = [1];
       render(<Test selectionModel={selectionModel} />);
 
       expect(getRow(0)).not.to.have.class('Mui-selected');
@@ -321,6 +323,15 @@ describe('<XGrid /> - Selection', () => {
       expect(getRow(0)).not.to.have.class('Mui-selected');
       expect(getRow(1)).to.have.class('Mui-selected');
       expect(getRow(2)).to.have.class('Mui-selected');
+    });
+
+    it('should not publish GRID_SELECTION_CHANGE if the selection state did not change ', () => {
+      const handleSelectionChange = spy();
+      const selectionModel = [];
+      render(<Test selectionModel={selectionModel} />);
+      apiRef.current.subscribeEvent(GRID_SELECTION_CHANGE, handleSelectionChange);
+      apiRef.current.setSelectionModel(selectionModel);
+      expect(handleSelectionChange.callCount).to.equal(0);
     });
   });
 });

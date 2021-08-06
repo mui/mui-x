@@ -4,7 +4,6 @@ import { createMuiTheme, Theme } from '@material-ui/core/styles';
 import { makeStyles } from '@material-ui/styles';
 import {
   DataGrid,
-  getThemePaletteMode,
   GridColumns,
   GridEditRowsModel,
   GridRowsProp,
@@ -15,6 +14,11 @@ import {
   randomTraderName,
   randomUpdatedDate,
 } from '@material-ui/x-grid-data-generator';
+
+// TODO v5: remove
+function getThemePaletteMode(palette: any): string {
+  return palette.type || palette.mode;
+}
 
 const defaultTheme = createMuiTheme();
 const useStyles = makeStyles(

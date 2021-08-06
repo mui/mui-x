@@ -4,3 +4,10 @@ export interface GridPaginationState {
   pageCount: number;
   rowCount: number;
 }
+
+export const getInitialPaginationState = (): GridPaginationState => ({
+  page: 0,
+  pageCount: 0,
+  rowCount: 0,
+  pageSize: 100,
+});

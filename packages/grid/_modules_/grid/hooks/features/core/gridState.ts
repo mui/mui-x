@@ -1,22 +1,24 @@
-import { getInitialGridColumnsState, GridInternalColumns } from '../../../models/colDef/gridColDef';
+import { LicenseStatus } from '@material-ui/x-license';
+import { getInitialGridColumnsState, GridColumnsState } from '../../../models/colDef/gridColDef';
 import {
   GridContainerProps,
   GridScrollBarState,
   GridViewportSizeState,
 } from '../../../models/gridContainerProps';
+import { GridFilterModel } from '../../../models/gridFilterModel';
 import { GridEditRowsModel } from '../../../models/gridEditRowModel';
 import { DEFAULT_GRID_OPTIONS, GridOptions } from '../../../models/gridOptions';
 import { GridColumnMenuState } from '../columnMenu/columnMenuState';
 import {
-  GridColumnReorderState,
   getInitialGridColumnReorderState,
+  GridColumnReorderState,
 } from '../columnReorder/columnReorderState';
 import {
   getInitialGridColumnResizeState,
   GridColumnResizeState,
 } from '../columnResize/columnResizeState';
 import { GridGridDensity, getInitialGridDensityState } from '../density/densityState';
-import { GridFilterModelState, getInitialGridFilterState } from '../filter/gridFilterModelState';
+import { getInitialGridFilterState } from '../filter/gridFilterModelState';
 import {
   getInitialVisibleGridRowsState,
   VisibleGridRowsState,
@@ -24,13 +26,13 @@ import {
 import { GridFocusState, GridTabIndexState } from '../focus/gridFocusState';
 import { GridPreferencePanelState } from '../preferencesPanel/gridPreferencePanelState';
 import { getInitialGridRowState, InternalGridRowsState } from '../rows/gridRowsState';
-import { GridSelectionState } from '../selection/gridSelectionState';
+import { GridSelectionModel } from '../../../models/gridSelectionModel';
 import { getInitialGridSortingState, GridSortingState } from '../sorting/gridSortingState';
 import {
   getInitialGridRenderingState,
   InternalRenderingState,
 } from '../virtualization/renderingState';
-import { GridPaginationState } from '../pagination/gridPaginationState';
+import { getInitialPaginationState, GridPaginationState } from '../pagination/gridPaginationState';
 
 export interface GridState {
   rows: InternalGridRowsState;
@@ -38,7 +40,7 @@ export interface GridState {
   pagination: GridPaginationState;
   options: GridOptions;
   isScrolling: boolean;
-  columns: GridInternalColumns;
+  columns: GridColumnsState;
   columnReorder: GridColumnReorderState;
   columnResize: GridColumnResizeState;
   columnMenu: GridColumnMenuState;
@@ -49,23 +51,20 @@ export interface GridState {
   sorting: GridSortingState;
   focus: GridFocusState;
   tabIndex: GridTabIndexState;
-  selection: GridSelectionState;
-  filter: GridFilterModelState;
+  selection: GridSelectionModel;
+  filter: GridFilterModel;
   visibleRows: VisibleGridRowsState;
   preferencePanel: GridPreferencePanelState;
   density: GridGridDensity;
   error?: any;
+  licenseStatus: LicenseStatus;
 }
 
 export const getInitialGridState = (): GridState => ({
   rows: getInitialGridRowState(),
+  licenseStatus: LicenseStatus.NotFound,
   editRows: {},
-  pagination: {
-    page: 0,
-    pageCount: 0,
-    rowCount: 0,
-    pageSize: 100,
-  },
+  pagination: getInitialPaginationState(),
   options: DEFAULT_GRID_OPTIONS,
   isScrolling: false,
   columns: getInitialGridColumnsState(),

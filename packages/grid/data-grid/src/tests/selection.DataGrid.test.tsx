@@ -122,8 +122,10 @@ describe('<DataGrid /> - Selection', () => {
             ]}
             columns={[{ field: 'brand', width: 100 }]}
             checkboxSelection
+            // @ts-ignore
             pagination
             pageSize={1}
+            rowsPerPageOptions={[1]}
           />
         </div>,
       );
@@ -179,7 +181,31 @@ describe('<DataGrid /> - Selection', () => {
   });
 
   describe('props: selectionModel', () => {
-    it('should select rows when initialised', () => {
+    it('should select rows when initialised (array-version)', () => {
+      render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid
+            autoHeight={isJSDOM}
+            rows={[
+              {
+                id: 0,
+                brand: 'Nike',
+              },
+              {
+                id: 1,
+                brand: 'Hugo Boss',
+              },
+            ]}
+            columns={[{ field: 'brand', width: 100 }]}
+            selectionModel={[1]}
+          />
+        </div>,
+      );
+      const row = getRow(1);
+      expect(row).to.have.class('Mui-selected');
+    });
+
+    it('should select rows when initialised (non-array version)', () => {
       render(
         <div style={{ width: 300, height: 300 }}>
           <DataGrid
@@ -199,6 +225,36 @@ describe('<DataGrid /> - Selection', () => {
           />
         </div>,
       );
+      const row = getRow(1);
+      expect(row).to.have.class('Mui-selected');
+    });
+
+    it('should allow to switch selectionModel from array version to non array version', () => {
+      const data = {
+        rows: [
+          {
+            id: 0,
+            brand: 'Nike',
+          },
+          {
+            id: 1,
+            brand: 'Hugo Boss',
+          },
+        ],
+        columns: [{ field: 'brand', width: 100 }],
+      };
+
+      function Demo(props) {
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGrid autoHeight={isJSDOM} {...data} selectionModel={props.selectionModel} />
+          </div>
+        );
+      }
+
+      const { setProps } = render(<Demo selectionModel={[1]} />);
+
+      setProps({ selectionModel: 1 });
       const row = getRow(1);
       expect(row).to.have.class('Mui-selected');
     });
@@ -234,7 +290,7 @@ describe('<DataGrid /> - Selection', () => {
       const row0 = getRow(0);
       expect(row0).to.have.class('Mui-selected');
 
-      setProps({ selectionModel: 1 });
+      setProps({ selectionModel: [1] });
       // TODO fix this assertion. The model is forced from the outside, hence shouldn't change.
       // https://github.com/mui-org/material-ui-x/issues/190
       expect(row0).not.to.have.class('Mui-selected');
@@ -265,11 +321,12 @@ describe('<DataGrid /> - Selection', () => {
           </div>
         );
       }
-      const { setProps } = render(<Demo selectionModel={0} />);
+      const selectionModel = [0];
+      const { setProps } = render(<Demo selectionModel={selectionModel} />);
       expect(onSelectionModelChange.callCount).to.equal(0);
       const firstRow = getRow(0);
       expect(firstRow).to.have.class('Mui-selected');
-      setProps({ selectionModel: 0 });
+      setProps({ selectionModel });
       expect(onSelectionModelChange.callCount).to.equal(0);
       expect(getRow(0)).to.have.class('Mui-selected');
     });
@@ -288,7 +345,7 @@ describe('<DataGrid /> - Selection', () => {
           },
         ],
         columns: [{ field: 'brand', width: 100 }],
-        selectionModel: 1,
+        selectionModel: [1],
         isRowSelectable: (params) => params.id > 0,
       };
 
@@ -304,7 +361,7 @@ describe('<DataGrid /> - Selection', () => {
       expect(getRow(0)).not.to.have.class('Mui-selected');
       expect(getRow(1)).to.have.class('Mui-selected');
 
-      setProps({ selectionModel: 0 });
+      setProps({ selectionModel: [0] });
       expect(getRow(0)).to.have.class('Mui-selected');
       expect(getRow(1)).not.to.have.class('Mui-selected');
     });
@@ -375,9 +432,7 @@ describe('<DataGrid /> - Selection', () => {
         render(<TestDataGrid />);
       })
         // @ts-expect-error need to migrate helpers to TypeScript
-        .toErrorDev(
-          'selectionModel can only contain 1 item in DataGrid without checkbox selection.',
-        );
+        .toErrorDev('selectionModel can only be of 1 item in DataGrid');
     });
 
     it('should not throw console error when selectionModel contains more than 1 item in DataGrid with checkbox selection', () => {

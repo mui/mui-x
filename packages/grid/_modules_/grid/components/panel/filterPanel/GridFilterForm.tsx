@@ -34,7 +34,7 @@ const useStyles = makeStyles(
       padding: 8,
     },
     linkOperatorSelect: {
-      width: 60,
+      minWidth: 60,
     },
     columnSelect: {
       width: 150,
@@ -153,6 +153,7 @@ export function GridFilterForm(props: GridFilterFormProps) {
         </IconButton>
       </FormControl>
       <FormControl
+        variant="standard"
         className={classes.linkOperatorSelect}
         style={{
           display: hasMultipleFilters ? 'block' : 'none',
