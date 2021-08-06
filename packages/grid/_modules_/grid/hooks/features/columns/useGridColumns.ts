@@ -73,8 +73,7 @@ function getStateColumns(
 
   // Compute the width of flex columns
   if (totalFlexUnits && widthToAllocateInFlex > 0) {
-    const widthPerFlexUnit =
-      totalFlexUnits > 0 ? Math.floor(widthToAllocateInFlex / totalFlexUnits) : 0;
+    const widthPerFlexUnit = totalFlexUnits > 0 ? widthToAllocateInFlex / totalFlexUnits : 0;
 
     for (let i = 0; i < stateColumns.length; i += 1) {
       const column = stateColumns[i];
@@ -155,7 +154,7 @@ export function useGridColumns(
     (newState: GridColumnsState, emit = true) => {
       logger.debug('Updating columns state.');
 
-      setGridState((oldState) => ({ ...oldState, columns: newState }));
+      setGridState((state) => ({ ...state, columns: newState }));
       forceUpdate();
 
       if (apiRef.current && emit) {
@@ -309,7 +308,7 @@ export function useGridColumns(
 
   useGridApiMethod(apiRef, colApi, 'ColApi');
 
-  const setColumnsFromProps = React.useCallback(() => {
+  React.useEffect(() => {
     logger.info(`GridColumns have changed, new length ${props.columns.length}`);
 
     if (props.columns.length > 0) {
@@ -329,14 +328,14 @@ export function useGridColumns(
   }, [
     logger,
     apiRef,
-    updateState,
-    setColumnsState,
     props.columns,
     props.columnTypes,
     props.checkboxSelection,
+    updateState,
+    setColumnsState,
   ]);
 
-  const updateColumnsTotalWidth = React.useCallback(() => {
+  React.useEffect(() => {
     logger.debug(
       `GridColumns gridState.viewportSizes.width, changed ${gridState.viewportSizes.width}`,
     );
@@ -345,30 +344,6 @@ export function useGridColumns(
 
     apiRef.current.updateColumns(currentColumns);
   }, [apiRef, gridState.viewportSizes.width, logger]);
-
-  const hasInitializedColumns = React.useRef(false);
-
-  React.useEffect(() => {
-    if (hasInitializedColumns.current) {
-      setColumnsFromProps();
-    }
-  }, [setColumnsFromProps]);
-
-  React.useEffect(() => {
-    if (hasInitializedColumns.current) {
-      updateColumnsTotalWidth();
-    }
-  }, [updateColumnsTotalWidth]);
-
-  React.useEffect(() => {
-    if (!hasInitializedColumns.current) {
-      setColumnsFromProps();
-
-      if (gridState.viewportSizes.width) {
-        hasInitializedColumns.current = true;
-      }
-    }
-  }, [setColumnsFromProps, gridState.viewportSizes.width]);
 
   // Grid Option Handlers
   useGridApiOptionHandler(apiRef, GRID_COLUMN_VISIBILITY_CHANGE, props.onColumnVisibilityChange);
