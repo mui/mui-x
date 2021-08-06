@@ -29,7 +29,7 @@ export interface GridVirtualizationApi {
    * Get the current renderContext.
    * @ignore - do not document.
    */
-  getRenderContextState: () => Partial<GridRenderContextProps> | undefined;
+  getRenderContextState: () => GridRenderContextProps | undefined;
   /**
    * Returns the current scroll position.
    * @returns {GridScrollParams} The scroll positions.

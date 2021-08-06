@@ -7,6 +7,7 @@ import { GridScrollParams } from '../../../models/params/gridScrollParams';
 import {
   GridRenderColumnsProps,
   GridRenderContextProps,
+  GridRenderPaginationProps,
   GridRenderRowProps,
 } from '../../../models/gridRenderContextProps';
 import { isDeepEqual, Optional } from '../../../utils/utils';
@@ -29,6 +30,7 @@ import { gridDensityRowHeightSelector } from '../density/densitySelector';
 import { scrollStateSelector } from './renderingStateSelector';
 import { useGridApiEventHandler } from '../../root';
 import { GridComponentProps } from '../../../GridComponentProps';
+import { GridFeatureMode } from '../../../models';
 
 // Logic copied from https://www.w3.org/TR/wai-aria-practices/examples/listbox/js/listbox.js
 // Similar to https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollIntoView
@@ -47,25 +49,23 @@ function scrollIntoView(dimensions) {
 
 const getRenderingState = ({
   apiRef,
-  props,
+  pagination,
+  paginationMode,
   renderedColRef,
 }: {
   apiRef: GridApiRef;
-  props: Pick<GridComponentProps, 'pagination' | 'paginationMode'>;
+  pagination: boolean;
+  paginationMode: GridFeatureMode;
   renderedColRef: React.MutableRefObject<GridRenderColumnsProps | null>;
-}): Partial<GridRenderContextProps> | null => {
-  if (apiRef.current.state.containerSizes == null) {
-    return null;
-  }
-
+}): GridRenderContextProps | null => {
   const state = apiRef.current.getState();
 
-  if (state.containerSizes == null) {
+  if (!state.containerSizes || !renderedColRef.current) {
     return null;
   }
   let minRowIdx = 0;
 
-  if (props.pagination && state.pagination.pageSize != null && props.paginationMode === 'client') {
+  if (pagination && state.pagination.pageSize != null && paginationMode === 'client') {
     minRowIdx = state.pagination.pageSize * state.pagination.page;
   }
 
@@ -83,14 +83,18 @@ const getRenderingState = ({
     lastRowIdx,
   };
 
-  const newRenderCtx: Partial<GridRenderContextProps> = {
-    ...renderedColRef.current,
-    ...rowProps,
+  const columnsProps: GridRenderColumnsProps = renderedColRef.current;
+
+  const paginationProps: GridRenderPaginationProps = {
     paginationCurrentPage: state.pagination.page,
     pageSize: state.pagination.pageSize,
   };
 
-  return newRenderCtx;
+  return {
+    ...columnsProps,
+    ...rowProps,
+    ...paginationProps,
+  };
 };
 
 export const useGridVirtualRows = (
@@ -131,8 +135,9 @@ export const useGridVirtualRows = (
   const reRender = React.useCallback(() => {
     const renderingState = getRenderingState({
       apiRef,
-      props: { pagination: props.pagination, paginationMode: props.paginationMode },
       renderedColRef,
+      pagination: props.pagination!,
+      paginationMode: props.paginationMode!,
     });
     const hasChanged = setRenderingState({
       renderContext: renderingState,
