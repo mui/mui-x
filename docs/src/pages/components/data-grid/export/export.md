@@ -12,14 +12,10 @@ The DataGrid allows the data to be exported to CSV by composing a [toolbar](/com
 
 {{"demo": "pages/components/data-grid/export/ExportSelectorGrid.js", "bg": "inline"}}
 
-Alternatively, you can export data using the imperative API available in XGrid:
-
-{{"demo": "pages/components/data-grid/export/CsvExportApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
-
 ### Customize exported columns
 
 By default, the CSV will only contain the visible columns of the grid.
-To include or hide other columns, there are two ways:
+There are two ways to include or hide other columns:
 
 1. Define the exact columns to be exported with the `fields` attribute in the [`csvOptions`](/api/data-grid/grid-export-csv-options/) prop of [`GridToolbarExport`](/components/data-grid/components/#toolbar).
 
@@ -41,7 +37,7 @@ Set `allColumns` in [`csvOptions`](/api/data-grid/grid-export-csv-options/) to t
 
 ### Export custom rendered cells
 
-When the value of a field is an object or a `renderCell` is provided, the CSV export might not display correctly the value.
+When the value of a field is an object or a `renderCell` is provided, the CSV export might not display the value correctly.
 You can provide a [`valueFormatter`](/components/data-grid/columns/#value-formatter) with a string representation to be used.
 
 ```jsx
@@ -55,6 +51,12 @@ You can provide a [`valueFormatter`](/components/data-grid/columns/#value-format
   ]}
 />
 ```
+
+### apiRef [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-pro/)
+
+You can export data using the imperative API available in XGrid:
+
+{{"demo": "pages/components/data-grid/export/CsvExportApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
 
 ## 🚧 Print
 
