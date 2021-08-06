@@ -48,13 +48,29 @@ Big thanks to the 6 contributors who made this release possible. Here are some h
   +});
   ```
 
+- [DataGrid] Allow non-integer column width for flex columns (#2282) @flaviendelangle
+
+  - The `width` property of the columns is no longer updated with the actual width of of the column. Use the new `computedWidth` property in the callbacks instead.
+
+  ```diff
+  const columns: GridColDef = [
+    {
+    field: "name",
+    width: 100,
+    renderCell: ({ value, colDef }) => {
+    - console.log(colDef.width!)
+    + console.log(colDef.computedWidth)
+      return value
+    }
+  ]
+  ```
+
 #### Changes
 
 - [DataGrid] Canonical controlled state behavior (#2208) @oliviertassinari
 - [DataGrid] Fix filter with extended columns (#2246) @m4theushw
 - [DataGrid] Remove default value of columnTypes prop (#2280) @m4theushw
 - [DataGrid] Add German (deDE) translation for export and isEmpty operator (#2285) @ChristopherBussick
-- [DataGrid] Allow non-integer column width for flex columns (#2282) @flaviendelangle
 - [XGrid] Add `details` param to each callback option in `XGrid` (#2236) @DanailH
 
 ### Docs
