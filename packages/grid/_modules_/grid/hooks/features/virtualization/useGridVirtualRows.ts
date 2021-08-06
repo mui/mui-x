@@ -5,7 +5,7 @@ import { GridVirtualizationApi } from '../../../models/api/gridVirtualizationApi
 import { GridCellIndexCoordinates } from '../../../models/gridCell';
 import { GridScrollParams } from '../../../models/params/gridScrollParams';
 import { GridRenderContextProps, GridRenderRowProps } from '../../../models/gridRenderContextProps';
-import { isDeepEqual, Optional } from '../../../utils/utils';
+import { isDeepEqual } from '../../../utils/utils';
 import { useEnhancedEffect } from '../../../utils/material-ui-utils';
 import { optionsSelector } from '../../utils/optionsSelector';
 import {
@@ -199,7 +199,7 @@ export const useGridVirtualRows = (apiRef: GridApiRef): void => {
   );
 
   const scrollToIndexes = React.useCallback(
-    (params: Optional<GridCellIndexCoordinates, 'rowIndex'>) => {
+    (params: Partial<GridCellIndexCoordinates>) => {
       if (totalRowCount === 0 || visibleColumns.length === 0) {
         return false;
       }

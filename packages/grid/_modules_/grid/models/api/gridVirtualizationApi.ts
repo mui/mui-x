@@ -2,7 +2,6 @@ import { GridCellIndexCoordinates } from '../gridCell';
 import { GridContainerProps } from '../gridContainerProps';
 import { GridScrollParams } from '../params/gridScrollParams';
 import { GridRenderContextProps } from '../gridRenderContextProps';
-import { Optional } from '../../utils/utils';
 
 /**
  * The virtualization API interface that is available in the grid [[apiRef]].
@@ -19,7 +18,7 @@ export interface GridVirtualizationApi {
    * @param {GridCellIndexCoordinates} params The indexes where the cell is.
    * @returns {boolean} Returns `true` if the index was outside of the viewport and the grid had to scroll to reach the target.
    */
-  scrollToIndexes: (params: Optional<GridCellIndexCoordinates, 'rowIndex'>) => boolean;
+  scrollToIndexes: (params: Partial<GridCellIndexCoordinates>) => boolean;
   /**
    * Get the current containerProps.
    * @ignore - do not document.
@@ -38,6 +37,7 @@ export interface GridVirtualizationApi {
   /**
    * Refreshes the viewport cells according to the scroll positions
    * @param {boolean} forceRender If `true`, forces a rerender. By default, it is `false`.
+   * @ignore - do not document.
    */
   updateViewport: (forceRender?: boolean) => void;
 }

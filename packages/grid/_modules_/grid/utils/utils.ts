@@ -64,9 +64,6 @@ export function localStorageAvailable() {
   }
 }
 
-// Util to make specific interface properties optional
-export type Optional<T, K extends keyof T> = Pick<Partial<T>, K> & Omit<T, K>;
-
 export function getDataGridUtilityClass(slot) {
   return generateUtilityClass(GRID_CSS_CLASS_PREFIX, slot);
 }
