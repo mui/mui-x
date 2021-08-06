@@ -30,7 +30,6 @@ import { gridDensityRowHeightSelector } from '../density/densitySelector';
 import { scrollStateSelector } from './renderingStateSelector';
 import { useGridApiEventHandler } from '../../root';
 import { GridComponentProps } from '../../../GridComponentProps';
-import { GridFeatureMode } from '../../../models';
 
 // Logic copied from https://www.w3.org/TR/wai-aria-practices/examples/listbox/js/listbox.js
 // Similar to https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollIntoView
@@ -46,56 +45,6 @@ function scrollIntoView(dimensions) {
   }
   return undefined;
 }
-
-const getRenderingState = ({
-  apiRef,
-  pagination,
-  paginationMode,
-  renderedColRef,
-}: {
-  apiRef: GridApiRef;
-  pagination: boolean;
-  paginationMode: GridFeatureMode;
-  renderedColRef: React.MutableRefObject<GridRenderColumnsProps | null>;
-}): GridRenderContextProps | null => {
-  const state = apiRef.current.getState();
-
-  if (!state.containerSizes || !renderedColRef.current) {
-    return null;
-  }
-  let minRowIdx = 0;
-
-  if (pagination && state.pagination.pageSize != null && paginationMode === 'client') {
-    minRowIdx = state.pagination.pageSize * state.pagination.page;
-  }
-
-  const firstRowIdx =
-    state.rendering.virtualPage * state.containerSizes.viewportPageSize + minRowIdx;
-  let lastRowIdx = firstRowIdx + state.containerSizes.renderingZonePageSize;
-  const maxIndex = state.containerSizes.virtualRowsCount + minRowIdx;
-  if (lastRowIdx > maxIndex) {
-    lastRowIdx = maxIndex;
-  }
-
-  const rowProps: GridRenderRowProps = {
-    page: state.rendering.virtualPage,
-    firstRowIdx,
-    lastRowIdx,
-  };
-
-  const columnsProps: GridRenderColumnsProps = renderedColRef.current;
-
-  const paginationProps: GridRenderPaginationProps = {
-    paginationCurrentPage: state.pagination.page,
-    pageSize: state.pagination.pageSize,
-  };
-
-  return {
-    ...columnsProps,
-    ...rowProps,
-    ...paginationProps,
-  };
-};
 
 export const useGridVirtualRows = (
   apiRef: GridApiRef,
@@ -132,13 +81,52 @@ export const useGridVirtualRows = (
     [setGridState],
   );
 
+  const getRenderingState = React.useCallback((): GridRenderContextProps | null => {
+    const state = apiRef.current.getState();
+
+    if (!state.containerSizes || !renderedColRef.current) {
+      return null;
+    }
+    let minRowIdx = 0;
+
+    if (
+      props.pagination &&
+      state.pagination.pageSize != null &&
+      props.paginationMode === 'client'
+    ) {
+      minRowIdx = state.pagination.pageSize * state.pagination.page;
+    }
+
+    const firstRowIdx =
+      state.rendering.virtualPage * state.containerSizes.viewportPageSize + minRowIdx;
+    let lastRowIdx = firstRowIdx + state.containerSizes.renderingZonePageSize;
+    const maxIndex = state.containerSizes.virtualRowsCount + minRowIdx;
+    if (lastRowIdx > maxIndex) {
+      lastRowIdx = maxIndex;
+    }
+
+    const rowProps: GridRenderRowProps = {
+      page: state.rendering.virtualPage,
+      firstRowIdx,
+      lastRowIdx,
+    };
+
+    const columnsProps: GridRenderColumnsProps = renderedColRef.current;
+
+    const paginationProps: GridRenderPaginationProps = {
+      paginationCurrentPage: state.pagination.page,
+      pageSize: state.pagination.pageSize,
+    };
+
+    return {
+      ...columnsProps,
+      ...rowProps,
+      ...paginationProps,
+    };
+  }, [apiRef, renderedColRef, props.pagination, props.paginationMode]);
+
   const reRender = React.useCallback(() => {
-    const renderingState = getRenderingState({
-      apiRef,
-      renderedColRef,
-      pagination: props.pagination!,
-      paginationMode: props.paginationMode!,
-    });
+    const renderingState = getRenderingState();
     const hasChanged = setRenderingState({
       renderContext: renderingState,
       renderedSizes: apiRef.current.state.containerSizes,
@@ -147,15 +135,7 @@ export const useGridVirtualRows = (
       logger.debug('reRender: trigger rendering');
       forceUpdate();
     }
-  }, [
-    apiRef,
-    logger,
-    forceUpdate,
-    setRenderingState,
-    renderedColRef,
-    props.pagination,
-    props.paginationMode,
-  ]);
+  }, [apiRef, logger, forceUpdate, setRenderingState, getRenderingState]);
 
   const updateViewport = React.useCallback(
     (forceReRender = false) => {
