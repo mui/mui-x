@@ -4,6 +4,11 @@ import { renderBooleanCell } from '../../components/cell/GridBooleanCell';
 import { renderEditBooleanCell } from '../../components/cell/GridEditBooleanCell';
 import { gridNumberComparer } from '../../utils/sortingUtils';
 import { getGridBooleanOperators } from './gridBooleanOperators';
+import { GridValueFormatterParams } from '../params/gridCellParams';
+
+function gridBooleanFormatter({ value, api }: GridValueFormatterParams) {
+  return api.getLocaleText(value ? 'booleanCellTrueLabel' : 'booleanCellFalseLabel');
+}
 
 export const GRID_BOOLEAN_COL_DEF: GridColTypeDef = {
   ...GRID_STRING_COL_DEF,
@@ -13,5 +18,6 @@ export const GRID_BOOLEAN_COL_DEF: GridColTypeDef = {
   renderCell: renderBooleanCell,
   renderEditCell: renderEditBooleanCell,
   sortComparator: gridNumberComparer,
+  valueFormatter: gridBooleanFormatter,
   filterOperators: getGridBooleanOperators(),
 };
