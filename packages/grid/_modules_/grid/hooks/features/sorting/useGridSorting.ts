@@ -150,10 +150,10 @@ export const useGridSorting = (
 
     if (options.sortingMode === GridFeatureModeConstant.server) {
       logger.debug('Skipping sorting rows as sortingMode = server');
-      setGridState((oldState) => {
+      setGridState((state) => {
         return {
-          ...oldState,
-          sorting: { ...oldState.sorting, sortedRows },
+          ...state,
+          sorting: { ...state.sorting, sortedRows },
         };
       });
       return;
@@ -174,10 +174,10 @@ export const useGridSorting = (
         .map((field) => field[0].id);
     }
 
-    setGridState((oldState) => {
+    setGridState((state) => {
       return {
-        ...oldState,
-        sorting: { ...oldState.sorting, sortedRows },
+        ...state,
+        sorting: { ...state.sorting, sortedRows },
       };
     });
     forceUpdate();
@@ -194,8 +194,8 @@ export const useGridSorting = (
 
   const setSortModel = React.useCallback(
     (sortModel: GridSortModel) => {
-      setGridState((oldState) => {
-        return { ...oldState, sorting: { ...oldState.sorting, sortModel } };
+      setGridState((state) => {
+        return { ...state, sorting: { ...state.sorting, sortModel } };
       });
       forceUpdate();
       apiRef.current.applySorting();

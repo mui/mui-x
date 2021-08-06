@@ -84,8 +84,8 @@ export const useGridFocus = (apiRef: GridApiRef, props: Pick<GridComponentProps,
 
   const handleBlur = React.useCallback(() => {
     logger.debug(`Clearing focus`);
-    setGridState((previousState) => ({
-      ...previousState,
+    setGridState((state) => ({
+      ...state,
       focus: { cell: null, columnHeader: null },
     }));
   }, [logger, setGridState]);
@@ -119,8 +119,8 @@ export const useGridFocus = (apiRef: GridApiRef, props: Pick<GridComponentProps,
         return;
       }
 
-      setGridState((previousState) => ({
-        ...previousState,
+      setGridState((state) => ({
+        ...state,
         focus: { cell: null, columnHeader: null },
       }));
 
@@ -162,8 +162,8 @@ export const useGridFocus = (apiRef: GridApiRef, props: Pick<GridComponentProps,
       const updatedRow = apiRef.current.getRow(cell.id);
 
       if (!updatedRow) {
-        setGridState((previousState) => ({
-          ...previousState,
+        setGridState((state) => ({
+          ...state,
           focus: { cell: null, columnHeader: null },
         }));
       }
