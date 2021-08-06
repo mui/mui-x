@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { GridColDef, XGrid, GridColTypeDef, GridValueGetterParams } from '@material-ui/x-grid';
+import { useDemoData } from '@material-ui/x-grid-data-generator';
 import CreateIcon from '@material-ui/icons/Create';
 import Button from '@material-ui/core/Button';
 import { useData } from '../hooks/useData';
@@ -389,3 +390,32 @@ export const SingleSelectColumnType = () => {
     </div>
   );
 };
+
+export function FlexLayoutGridSnap() {
+  const { data } = useDemoData({
+    dataSet: 'Commodity',
+    rowLength: 15,
+    maxColumns: 6,
+  });
+
+  const tmpData = JSON.parse(JSON.stringify(data));
+  tmpData.columns.forEach((item) => {
+    item.flex = 1;
+  });
+  return (
+    <div style={{ height: '400px', width: '400px' }}>
+      <div style={{ display: 'flex', height: '100%' }}>
+        <div style={{ flexGrow: 1 }}>
+          <XGrid
+            autoHeight
+            showCellRightBorder
+            showColumnRightBorder
+            disableExtendRowFullWidth
+            rows={tmpData.rows}
+            columns={tmpData.columns}
+          />
+        </div>
+      </div>
+    </div>
+  );
+}

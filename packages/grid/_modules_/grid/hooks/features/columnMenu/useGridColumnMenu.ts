@@ -45,18 +45,18 @@ export const useGridColumnMenu = (apiRef: GridApiRef): void => {
   );
 
   const handleColumnResizeStart = React.useCallback(() => {
-    setGridState((oldState) => {
-      if (oldState.columnMenu.open) {
+    setGridState((state) => {
+      if (state.columnMenu.open) {
         return {
-          ...oldState,
+          ...state,
           columnMenu: {
-            ...oldState.columnMenu,
+            ...state.columnMenu,
             open: false,
           },
         };
       }
 
-      return oldState;
+      return state;
     });
   }, [setGridState]);
 

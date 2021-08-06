@@ -40,10 +40,10 @@ export const useGridPage = (
     (page: number) => {
       logger.debug(`Setting page to ${page}`);
 
-      setGridState((oldState) => ({
-        ...oldState,
+      setGridState((state) => ({
+        ...state,
         pagination: applyValidPage({
-          ...oldState.pagination,
+          ...state.pagination,
           page,
         }),
       }));
@@ -63,16 +63,16 @@ export const useGridPage = (
   }, [apiRef, props.page, props.onPageChange]);
 
   React.useEffect(() => {
-    setGridState((oldState) => {
+    setGridState((state) => {
       const rowCount = props.rowCount !== undefined ? props.rowCount : visibleRowCount;
-      const pageCount = getPageCount(rowCount, oldState.pagination.pageSize);
+      const pageCount = getPageCount(rowCount, state.pagination.pageSize);
 
-      const page = props.page == null ? oldState.pagination.page : props.page;
+      const page = props.page == null ? state.pagination.page : props.page;
 
       return {
-        ...oldState,
+        ...state,
         pagination: applyValidPage({
-          ...oldState.pagination,
+          ...state.pagination,
           page,
           rowCount,
           pageCount,
@@ -84,15 +84,15 @@ export const useGridPage = (
 
   const handlePageSizeChange = React.useCallback(
     (pageSize: number) => {
-      setGridState((oldState) => {
-        const pageCount = getPageCount(oldState.pagination.rowCount, pageSize);
+      setGridState((state) => {
+        const pageCount = getPageCount(state.pagination.rowCount, pageSize);
 
         return {
-          ...oldState,
+          ...state,
           pagination: applyValidPage({
-            ...oldState.pagination,
+            ...state.pagination,
             pageCount,
-            page: oldState.pagination.page,
+            page: state.pagination.page,
           }),
         };
       });

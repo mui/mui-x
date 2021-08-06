@@ -32,7 +32,7 @@ export function PageSize100() {
 
   return (
     <div className="grid-container">
-      <XGrid rows={data.rows} columns={data.columns} pagination pageSize={100} />
+      <DataGrid rows={data.rows} columns={data.columns} pageSize={100} />
     </div>
   );
 }
@@ -366,7 +366,6 @@ export function ServerPaginationDocsDemo() {
       <DataGrid
         rows={rows}
         columns={data.columns}
-        pagination
         pageSize={5}
         rowCount={100}
         paginationMode="server"
@@ -383,7 +382,7 @@ export function CommodityAutoPageSizeSnap() {
   });
   return (
     <div className="grid-container">
-      <DataGrid rows={data.rows} columns={data.columns} pagination autoPageSize />
+      <DataGrid rows={data.rows} columns={data.columns} autoPageSize />
     </div>
   );
 }
@@ -407,7 +406,7 @@ const xyColumns = [
 export function SmallAutoPageSizeLastPageSnap() {
   return (
     <div style={{ height: 400, width: 400 }}>
-      <DataGrid pagination autoPageSize rows={xyRows} columns={xyColumns} page={1} />
+      <DataGrid autoPageSize rows={xyRows} columns={xyColumns} page={1} />
     </div>
   );
 }

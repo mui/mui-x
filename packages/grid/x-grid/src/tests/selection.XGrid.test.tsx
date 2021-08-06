@@ -12,7 +12,7 @@ import {
 import {
   GridApiRef,
   GridComponentProps,
-  GridSelectionModel,
+  GridInputSelectionModel,
   useGridApiRef,
   XGrid,
   GridEvents,
@@ -271,7 +271,7 @@ describe('<XGrid /> - Selection', () => {
     });
 
     it('should not update the selection model when the selectionModelProp is set', () => {
-      const selectionModel: GridSelectionModel = [1];
+      const selectionModel: GridInputSelectionModel = [1];
       render(<Test selectionModel={selectionModel} />);
 
       expect(getRow(0)).not.to.have.class('Mui-selected');

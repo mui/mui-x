@@ -304,9 +304,9 @@ export const useGridColumnResize = (
 
   const handleResizeStart = React.useCallback(
     ({ field }) => {
-      setGridState((oldState) => ({
-        ...oldState,
-        columnResize: { ...oldState.columnResize, resizingColumnField: field },
+      setGridState((state) => ({
+        ...state,
+        columnResize: { ...state.columnResize, resizingColumnField: field },
       }));
       forceUpdate();
     },
@@ -314,9 +314,9 @@ export const useGridColumnResize = (
   );
 
   const handleResizeStop = React.useCallback(() => {
-    setGridState((oldState) => ({
-      ...oldState,
-      columnResize: { ...oldState.columnResize, resizingColumnField: '' },
+    setGridState((state) => ({
+      ...state,
+      columnResize: { ...state.columnResize, resizingColumnField: '' },
     }));
     forceUpdate();
   }, [setGridState, forceUpdate]);
