@@ -16,7 +16,7 @@ import {
 } from '@material-ui/data-grid';
 import { useData } from 'packages/storybook/src/hooks/useData';
 import { createTheme, ThemeProvider } from '@material-ui/core/styles';
-import { getColumnHeaderCell, getColumnValues, raf } from 'test/utils/helperFn';
+import {getColumnHeaderCell, getColumnValues, raf, sleep} from 'test/utils/helperFn';
 
 describe('<DataGrid /> - Layout & Warnings', () => {
   // TODO v5: replace with createClientRender
@@ -71,7 +71,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
       }
     });
 
-    it('should resize the width of the columns', async () => {
+    it.only('should resize the width of the columns', async () => {
       clock.restore();
       interface TestCaseProps {
         width?: number;
@@ -92,6 +92,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
 
       setProps({ width: 400 });
       await raf();
+      await sleep(1000)
 
       rect = container.querySelector('[role="row"][data-rowindex="0"]').getBoundingClientRect();
       expect(rect.width).to.equal(400 - 2);
