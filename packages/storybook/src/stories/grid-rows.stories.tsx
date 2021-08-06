@@ -593,6 +593,19 @@ export function EditCellSnap() {
     apiRef.current.setCellMode(1, 'brand', 'edit');
   });
 
+  React.useEffect(() => {
+    const handleClick = () => {
+      apiRef.current.setCellMode(1, 'brand', 'edit');
+    };
+
+    // Prevents from exiting the edit mode when there's a click to switch between regression tests
+    document.addEventListener('click', handleClick);
+
+    return () => {
+      document.removeEventListener('click', handleClick);
+    };
+  }, [apiRef]);
+
   return (
     <div className="grid-container">
       <XGrid {...baselineProps} apiRef={apiRef} />
@@ -606,6 +619,19 @@ export function EditBooleanCellSnap() {
   React.useEffect(() => {
     apiRef.current.setCellMode(1, 'isPublished', 'edit');
   });
+
+  React.useEffect(() => {
+    const handleClick = () => {
+      apiRef.current.setCellMode(1, 'isPublished', 'edit');
+    };
+
+    // Prevents from exiting the edit mode when there's a click to switch between regression tests
+    document.addEventListener('click', handleClick);
+
+    return () => {
+      document.removeEventListener('click', handleClick);
+    };
+  }, [apiRef]);
 
   return (
     <div className="grid-container">
