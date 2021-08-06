@@ -18,7 +18,7 @@ import { useGridState } from '../core/useGridState';
 import { useLogger } from '../../utils/useLogger';
 import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
 import { GridComponentProps } from '../../../GridComponentProps';
-import { isNavigationKey } from '../../../utils';
+import { isNavigationKey } from '../../../utils/keyboardUtils';
 
 export const useGridFocus = (apiRef: GridApiRef, props: Pick<GridComponentProps, 'rows'>): void => {
   const logger = useLogger('useGridFocus');
