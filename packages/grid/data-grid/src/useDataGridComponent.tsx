@@ -60,10 +60,10 @@ export const useDataGridComponent = (apiRef: GridApiRef, props: GridComponentPro
   useGridFilter(apiRef, props);
   useGridContainerProps(apiRef);
   useGridDensity(apiRef);
+  useGridColumnResize(apiRef, props);
   useGridPageSize(apiRef, props);
   useGridPage(apiRef, props);
   useGridVirtualRows(apiRef, props);
-  useGridColumnResize(apiRef, props);
   useGridCsvExport(apiRef);
   useGridInfiniteLoader(apiRef, props);
   useGridClipboard(apiRef);
