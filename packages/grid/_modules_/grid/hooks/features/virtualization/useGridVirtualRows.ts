@@ -123,7 +123,7 @@ export const useGridVirtualRows = (
       ...rowProps,
       ...paginationProps,
     };
-  }, [apiRef, renderedColRef, props.pagination, props.paginationMode]);
+  }, [renderedColRef, apiRef, props.pagination, props.paginationMode]);
 
   const reRender = React.useCallback(() => {
     const renderingState = getRenderingState();
@@ -135,7 +135,7 @@ export const useGridVirtualRows = (
       logger.debug('reRender: trigger rendering');
       forceUpdate();
     }
-  }, [apiRef, logger, forceUpdate, setRenderingState, getRenderingState]);
+  }, [apiRef, getRenderingState, logger, forceUpdate, setRenderingState]);
 
   const updateViewport = React.useCallback(
     (forceReRender = false) => {
@@ -215,11 +215,11 @@ export const useGridVirtualRows = (
       }
 
       if (params.rowIndex != null) {
-        const paginationState = apiRef.current.getState().pagination;
+        const state = apiRef.current.getState();
 
         const elementIndex = !options.pagination
           ? params.rowIndex
-          : params.rowIndex - paginationState.page * paginationState.pageSize;
+          : params.rowIndex - state.pagination.page * state.pagination.pageSize;
 
         scrollCoordinates.top = scrollIntoView({
           clientHeight: windowRef.current!.clientHeight,
