@@ -163,7 +163,7 @@ export const GridCell = React.memo(function GridCell(props: GridCellProps) {
       tabIndex={tabIndex}
       {...eventsHandlers}
     >
-      {children || valueToRender?.toString()}
+      {children != null ? children : valueToRender?.toString()}
     </div>
   );
 });
