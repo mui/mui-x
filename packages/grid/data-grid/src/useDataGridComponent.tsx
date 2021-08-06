@@ -62,7 +62,7 @@ export const useDataGridComponent = (apiRef: GridApiRef, props: GridComponentPro
   useGridDensity(apiRef);
   useGridPageSize(apiRef, props);
   useGridPage(apiRef, props);
-  useGridVirtualRows(apiRef);
+  useGridVirtualRows(apiRef, props);
   useGridColumnResize(apiRef, props);
   useGridCsvExport(apiRef);
   useGridInfiniteLoader(apiRef, props);

@@ -386,7 +386,7 @@ describe('<DataGrid /> - Pagination', () => {
       expect(getColumnValues(0)).to.deep.equal(['0']);
     });
 
-    it.only('should be compatible with controlled page', () => {
+    it('should be compatible with controlled page', () => {
       render(<BaselineTestCase autoPageSize page={2} />);
       expect(getColumnValues(0)).to.deep.equal(['6', '7', '8']);
     });
