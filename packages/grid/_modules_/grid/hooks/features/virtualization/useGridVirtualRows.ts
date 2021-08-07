@@ -5,7 +5,7 @@ import { GridVirtualizationApi } from '../../../models/api/gridVirtualizationApi
 import { GridCellIndexCoordinates } from '../../../models/gridCell';
 import { GridScrollParams } from '../../../models/params/gridScrollParams';
 import { GridRenderContextProps, GridRenderRowProps } from '../../../models/gridRenderContextProps';
-import { isDeepEqual, Optional } from '../../../utils/utils';
+import { isDeepEqual } from '../../../utils/utils';
 import { useEnhancedEffect } from '../../../utils/material-ui-utils';
 import { optionsSelector } from '../../utils/optionsSelector';
 import {
@@ -58,15 +58,15 @@ export const useGridVirtualRows = (apiRef: GridApiRef): void => {
   const [renderedColRef, updateRenderedCols] = useGridVirtualColumns(options, apiRef);
 
   const setRenderingState = React.useCallback(
-    (state: Partial<InternalRenderingState>) => {
+    (newState: Partial<InternalRenderingState>) => {
       let stateChanged = false;
-      setGridState((oldState) => {
-        const currentRenderingState = { ...oldState.rendering, ...state };
-        if (!isDeepEqual(oldState.rendering, currentRenderingState)) {
+      setGridState((state) => {
+        const currentRenderingState = { ...state.rendering, ...newState };
+        if (!isDeepEqual(state.rendering, currentRenderingState)) {
           stateChanged = true;
-          return { ...oldState, rendering: currentRenderingState };
+          return { ...state, rendering: currentRenderingState };
         }
-        return oldState;
+        return state;
       });
       return stateChanged;
     },
@@ -199,7 +199,7 @@ export const useGridVirtualRows = (apiRef: GridApiRef): void => {
   );
 
   const scrollToIndexes = React.useCallback(
-    (params: Optional<GridCellIndexCoordinates, 'rowIndex'>) => {
+    (params: Partial<GridCellIndexCoordinates>) => {
       if (totalRowCount === 0 || visibleColumns.length === 0) {
         return false;
       }
@@ -212,7 +212,7 @@ export const useGridVirtualRows = (apiRef: GridApiRef): void => {
         scrollCoordinates.left = scrollIntoView({
           clientHeight: windowRef.current!.clientWidth,
           scrollTop: windowRef.current!.scrollLeft,
-          offsetHeight: visibleColumns[params.colIndex].width,
+          offsetHeight: visibleColumns[params.colIndex].computedWidth,
           offsetTop: columnsMeta.positions[params.colIndex],
         });
       }

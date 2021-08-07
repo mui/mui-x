@@ -9,13 +9,7 @@ import {
   waitFor,
 } from 'test/utils';
 import { expect } from 'chai';
-import {
-  DataGrid,
-  DataGridProps,
-  DEFAULT_GRID_OPTIONS,
-  GridLinkOperator,
-  GridRowsProp,
-} from '@material-ui/data-grid';
+import { DataGrid, DataGridProps, GridLinkOperator, GridRowsProp } from '@material-ui/data-grid';
 import { getColumnValues, getRows } from 'test/utils/helperFn';
 import { spy } from 'sinon';
 import { useData } from 'packages/storybook/src/hooks/useData';
@@ -35,7 +29,7 @@ describe('<DataGrid /> - Pagination', () => {
 
     return (
       <div style={{ width: 300, height }}>
-        <DataGrid {...basicData} autoHeight={isJSDOM} pagination {...other} />
+        <DataGrid {...basicData} autoHeight={isJSDOM} {...other} />
       </div>
     );
   };
@@ -181,7 +175,6 @@ describe('<DataGrid /> - Pagination', () => {
 
         return (
           <BaselineTestCase
-            pagination
             page={page}
             onPageChange={handlePageChange}
             pageSize={5}
@@ -383,7 +376,7 @@ describe('<DataGrid /> - Pagination', () => {
 
       return (
         <div style={{ width: 300, height: props.height }}>
-          <DataGrid columns={data.columns} rows={data.rows} autoPageSize pagination {...other} />
+          <DataGrid columns={data.columns} rows={data.rows} autoPageSize {...other} />
         </div>
       );
     };
@@ -401,12 +394,21 @@ describe('<DataGrid /> - Pagination', () => {
     it('should always render the same amount of rows and fit the viewport', () => {
       const nbRows = 27;
       const height = 780;
-      render(<TestCaseAutoPageSize nbRows={nbRows} height={height} />);
+      const headerHeight = 56;
+      const rowHeight = 52;
+
+      render(
+        <TestCaseAutoPageSize
+          nbRows={nbRows}
+          height={height}
+          headerHeight={headerHeight}
+          rowHeight={rowHeight}
+        />,
+      );
 
       const footerHeight = document.querySelector('.MuiDataGrid-footerContainer')!.clientHeight;
       const expectedFullPageRowsLength = Math.floor(
-        (height - DEFAULT_GRID_OPTIONS.headerHeight - footerHeight) /
-          DEFAULT_GRID_OPTIONS.rowHeight,
+        (height - headerHeight - footerHeight) / rowHeight,
       );
 
       let rows = getRows();
@@ -445,23 +447,25 @@ describe('<DataGrid /> - Pagination', () => {
 
       const heightBefore = 780;
       const heightAfter = 360;
+      const headerHeight = 56;
+      const rowHeight = 52;
 
       const { setProps } = render(
         <TestCaseAutoPageSize
           nbRows={nbRows}
           height={heightBefore}
+          headerHeight={headerHeight}
+          rowHeight={rowHeight}
           onPageSizeChange={onPageSizeChange}
         />,
       );
 
       const footerHeight = document.querySelector('.MuiDataGrid-footerContainer')!.clientHeight;
       const expectedViewportRowsLengthBefore = Math.floor(
-        (heightBefore - DEFAULT_GRID_OPTIONS.headerHeight - footerHeight) /
-          DEFAULT_GRID_OPTIONS.rowHeight,
+        (heightBefore - headerHeight - footerHeight) / rowHeight,
       );
       const expectedViewportRowsLengthAfter = Math.floor(
-        (heightAfter - DEFAULT_GRID_OPTIONS.headerHeight - footerHeight) /
-          DEFAULT_GRID_OPTIONS.rowHeight,
+        (heightAfter - headerHeight - footerHeight) / rowHeight,
       );
 
       let rows = document.querySelectorAll('.MuiDataGrid-viewport [role="row"]');
@@ -527,7 +531,6 @@ describe('<DataGrid /> - Pagination', () => {
           <DataGrid
             columns={[{ field: 'id' }]}
             rows={rows}
-            pagination
             pageSize={1}
             rowsPerPageOptions={[1]}
             rowCount={3}

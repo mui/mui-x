@@ -216,7 +216,7 @@ function findProperties(reflection: TypeDoc.DeclarationReflection) {
 
 function extractEvents(project: TypeDoc.ProjectReflection, apisToGenerate) {
   const events: { name: string; description: string }[] = [];
-  const allEvents = project?.getReflectionsByKind(TypeDoc.ReflectionKind.Event);
+  const allEvents = project.getReflectionsByKind(TypeDoc.ReflectionKind.Event);
 
   allEvents!.forEach((event) => {
     if (!event.flags.isConst) {
@@ -229,7 +229,7 @@ function extractEvents(project: TypeDoc.ProjectReflection, apisToGenerate) {
     });
   });
 
-  return events;
+  return events.sort((a, b) => a.name.localeCompare(b.name));
 }
 
 function run(argv: { outputDirectory?: string }) {
@@ -258,6 +258,7 @@ function run(argv: { outputDirectory?: string }) {
     'GridFilterApi',
     'GridCsvExportApi',
     'GridExportCsvOptions',
+    'GridVirtualizationApi',
   ];
 
   apisToGenerate.forEach((apiName) => {

@@ -21,7 +21,8 @@ import { useGridSelector } from '../core/useGridSelector';
 import { useGridState } from '../core/useGridState';
 import { GridPreferencePanelsValue } from '../preferencesPanel/gridPreferencePanelsValue';
 import { sortedGridRowsSelector } from '../sorting/gridSortingSelector';
-import { getInitialGridFilterState, GridFilterModel } from './gridFilterModelState';
+import { getInitialGridFilterState } from './gridFilterModelState';
+import { GridFilterModel } from '../../../models/gridFilterModel';
 import { visibleSortedGridRowsSelector } from './gridFilterSelector';
 import { getInitialVisibleGridRowsState } from './visibleGridRowsState';
 
@@ -301,16 +302,13 @@ export const useGridFilter = (
       propModel: props.filterModel,
       propOnChange: props.onFilterModelChange,
       stateSelector: (state) => state.filter,
-      onChangeCallback: (model) => {
-        apiRef.current.publishEvent(GRID_FILTER_MODEL_CHANGE, model);
-      },
+      changeEvent: GRID_FILTER_MODEL_CHANGE,
     });
   }, [apiRef, props.filterModel, props.onFilterModelChange]);
 
   React.useEffect(() => {
-    const filterModel = props.filterModel;
-    if (filterModel && filterModel.items.length > 1) {
-      const hasItemsWithoutIds = filterModel.items.find((item) => item.id == null);
+    if (props.filterModel !== undefined && props.filterModel.items.length > 1) {
+      const hasItemsWithoutIds = props.filterModel.items.find((item) => item.id == null);
       if (hasItemsWithoutIds) {
         throw new Error(
           "The 'id' field is required on filterModel.items when you use multiple filters.",
@@ -318,7 +316,7 @@ export const useGridFilter = (
       }
     }
     const oldFilterModel = apiRef.current.state.filter;
-    if (filterModel && !isDeepEqual(filterModel, oldFilterModel)) {
+    if (props.filterModel !== undefined && props.filterModel !== oldFilterModel) {
       logger.debug('filterModel prop changed, applying filters');
       setGridState((state) => ({
         ...state,

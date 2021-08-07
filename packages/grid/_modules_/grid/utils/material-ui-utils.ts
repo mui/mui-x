@@ -16,7 +16,7 @@ export type DistributiveOmit<T, K extends keyof any> = T extends any ? Omit<T, K
 /**
  * TODO import from the core v5 directly
  *
- * @private ONLY USE FROM WITHIN mui-org/material-ui
+ * @internal ONLY USE FROM WITHIN mui-org/material-ui
  *
  * Internal helper type for conform (describeConformance) components
  * However, we don't declare classes on this type.
@@ -45,17 +45,20 @@ export const useEnhancedEffect =
 
 // TODO replace with { useThemeProps } from @material-ui/core/styles.
 export function useThemeProps({ props: inputProps, name }) {
-  const props = { ...inputProps };
   const contextTheme: any = useTheme();
-  const more = getThemeProps({ theme: contextTheme, name, props });
-  const theme = more.theme || contextTheme;
-  const isRtl = theme.direction === 'rtl';
 
-  return {
-    theme,
-    isRtl,
-    ...more,
-  };
+  return React.useMemo(() => {
+    const props = { ...inputProps };
+    const more = getThemeProps({ theme: contextTheme, name, props });
+    const theme = more.theme || contextTheme;
+    const isRtl = theme.direction === 'rtl';
+
+    return {
+      theme,
+      isRtl,
+      ...more,
+    };
+  }, [inputProps, name, contextTheme]);
 }
 
 // TODO replace with { unstable_composeClasses } from '@material-ui/unstyled'

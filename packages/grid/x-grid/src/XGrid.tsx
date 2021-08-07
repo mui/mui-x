@@ -1,9 +1,21 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { LicenseInfo, useLicenseVerifier } from '@material-ui/x-license';
+import { LicenseInfo } from '@material-ui/x-license';
 import { ponyfillGlobal } from '@material-ui/utils';
-import { GridComponent, GridComponentProps } from '../../_modules_/grid';
-import { useThemeProps } from '../../_modules_/grid/utils/material-ui-utils';
+import {
+  DEFAULT_GRID_PROPS_FROM_OPTIONS,
+  GridBody,
+  GridErrorHandler,
+  GridFooterPlaceholder,
+  GridHeaderPlaceholder,
+  GridRoot,
+  useGridApiRef,
+} from '../../_modules_/grid';
+import { GridContextProvider } from '../../_modules_/grid/context/GridContextProvider';
+import { useXGridComponent } from './useXGridComponent';
+import { Watermark } from '../../_modules_/grid/components/Watermark';
+import { XGridProps } from './XGridProps';
+import { useXGridProps } from './useXGridProps';
 
 // This is the package release date. Each package version should update this const
 // automatically when a new version is published on npm.
@@ -17,14 +29,28 @@ if (process.env.NODE_ENV !== 'production' && RELEASE_INFO === '__RELEASE' + '_IN
 
 LicenseInfo.setReleaseInfo(RELEASE_INFO);
 
-export type XGridProps = Omit<GridComponentProps, 'licenseStatus'>;
-
 const XGridRaw = React.forwardRef<HTMLDivElement, XGridProps>(function XGrid(inProps, ref) {
-  const props = useThemeProps({ props: inProps, name: 'MuiDataGrid' });
-  const licenseStatus = useLicenseVerifier();
+  const apiRef = useGridApiRef(inProps.apiRef);
+  const props = useXGridProps(inProps);
+  useXGridComponent(apiRef, props);
 
-  return <GridComponent ref={ref} {...props} licenseStatus={licenseStatus.toString()} />;
+  return (
+    <GridContextProvider apiRef={apiRef} props={props}>
+      <GridRoot ref={ref}>
+        <GridErrorHandler>
+          <GridHeaderPlaceholder />
+          <GridBody>
+            <Watermark />
+          </GridBody>
+          <GridFooterPlaceholder />
+        </GridErrorHandler>
+      </GridRoot>
+    </GridContextProvider>
+  );
 });
+
+// TODO remove defaultProps, API is going away in React, soon or later.
+XGridRaw.defaultProps = DEFAULT_GRID_PROPS_FROM_OPTIONS;
 
 export const XGrid = React.memo(XGridRaw);
 

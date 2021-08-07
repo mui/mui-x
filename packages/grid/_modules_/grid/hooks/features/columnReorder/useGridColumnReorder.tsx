@@ -38,6 +38,9 @@ const hasCursorPositionChanged = (
 ): boolean =>
   currentCoordinates.x !== nextCoordinates.x || currentCoordinates.y !== nextCoordinates.y;
 
+/**
+ * Only available in XGrid
+ */
 export const useGridColumnReorder = (apiRef: GridApiRef): void => {
   const logger = useLogger('useGridColumnReorder');
 
@@ -69,9 +72,9 @@ export const useGridColumnReorder = (apiRef: GridApiRef): void => {
       dragColNode.current = event.currentTarget;
       dragColNode.current.classList.add(GRID_COLUMN_HEADER_DRAGGING_CSS_CLASS);
 
-      setGridState((oldState) => ({
-        ...oldState,
-        columnReorder: { ...oldState.columnReorder, dragCol: params.field },
+      setGridState((state) => ({
+        ...state,
+        columnReorder: { ...state.columnReorder, dragCol: params.field },
       }));
       forceUpdate();
 
@@ -150,9 +153,9 @@ export const useGridColumnReorder = (apiRef: GridApiRef): void => {
         originColumnIndex.current = null;
       }
 
-      setGridState((oldState) => ({
-        ...oldState,
-        columnReorder: { ...oldState.columnReorder, dragCol: '' },
+      setGridState((state) => ({
+        ...state,
+        columnReorder: { ...state.columnReorder, dragCol: '' },
       }));
       forceUpdate();
     },
