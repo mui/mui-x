@@ -3,7 +3,7 @@ import { GridComponentProps } from '../../../GridComponentProps';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridControlStateApi } from '../../../models/api/gridControlStateApi';
 import { GridControlStateItem } from '../../../models/controlStateItem';
-import { Signature } from '../../root/useGridApiEventHandler';
+import { GridSignature } from '../../root/useGridApiEventHandler';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
 
 export function useGridControlState(apiRef: GridApiRef, props: GridComponentProps) {
@@ -63,7 +63,7 @@ export function useGridControlState(apiRef: GridApiRef, props: GridComponentProp
             const model = controlStateMap[stateId].stateSelector(newState);
 
             if (controlState.propOnChange) {
-              const details = props.signature === Signature.XGrid ? { api: apiRef.current } : {};
+              const details = props.signature === GridSignature.XGrid ? { api: apiRef.current } : {};
               controlState.propOnChange(model, details);
             }
 

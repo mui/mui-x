@@ -13,9 +13,9 @@ export interface GridCallbackDetails {
 }
 
 /**
- * Signature enum.
+ * GridSignature enum.
  */
-export enum Signature {
+export enum GridSignature {
   DataGrid = 'DataGrid',
   XGrid = 'XGrid',
 }
