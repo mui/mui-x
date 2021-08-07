@@ -10,7 +10,7 @@ import { GridApi } from '../../models/api/gridApi';
 /**
  * Callback details.
  */
-export interface MuiCallbackDetails {
+export interface GridCallbackDetails {
   api?: GridApi;
 }
 
@@ -36,7 +36,7 @@ export function useGridApiEventHandler(
       const enhancedHandler = (
         params: any,
         event: MuiEvent<React.SyntheticEvent | DocumentEventMap[keyof DocumentEventMap] | {}>,
-        details: MuiCallbackDetails = {},
+        details: GridCallbackDetails = {},
       ) => {
         if (signature === Signature.XGrid) {
           details.api = apiRef.current;
