@@ -63,7 +63,8 @@ export function useGridControlState(apiRef: GridApiRef, props: GridComponentProp
             const model = controlStateMap[stateId].stateSelector(newState);
 
             if (controlState.propOnChange) {
-              const details = props.signature === GridSignature.XGrid ? { api: apiRef.current } : {};
+              const details =
+                props.signature === GridSignature.XGrid ? { api: apiRef.current } : {};
               controlState.propOnChange(model, details);
             }
 
