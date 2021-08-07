@@ -13,7 +13,8 @@ export interface GridCallbackDetails {
 }
 
 /**
- * GridSignature enum.
+ * Signal to the underlying logic what version of the public component API
+ * of the data grid is exposed.
  */
 export enum GridSignature {
   DataGrid = 'DataGrid',

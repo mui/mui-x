@@ -608,6 +608,8 @@ export interface GridOptions {
    */
   selectionModel?: GridInputSelectionModel;
   /**
+   * Signal to the underlying logic what version of the public component API
+   * of the data grid is exposed.
    * @internal enum
    */
   signature?: string;
