@@ -8,8 +8,7 @@ export interface GridStateApi {
   state: GridState;
   /**
    * Returns the state of the grid.
-   * @param {string} stateId The part of the state to be returned.
-   * @returns {any} The state of the grid.
+   * @returns {GridState} The state of the grid.
    */
   getState: () => GridState;
   /**

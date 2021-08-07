@@ -41,7 +41,7 @@ export const useGridFocus = (apiRef: GridApiRef, props: Pick<GridComponentProps,
 
   const setColumnHeaderFocus = React.useCallback(
     (field: string, event?: React.SyntheticEvent) => {
-      const { cell } = apiRef.current.getState().focus;
+      const { cell } = apiRef.current.state.focus;
       if (cell) {
         apiRef.current.publishEvent(
           GRID_CELL_FOCUS_OUT,
@@ -92,7 +92,7 @@ export const useGridFocus = (apiRef: GridApiRef, props: Pick<GridComponentProps,
 
   const handleCellMouseUp = React.useCallback(
     (params: GridCellParams) => {
-      const { cell } = apiRef.current.getState().focus;
+      const { cell } = apiRef.current.state.focus;
       if (!cell) {
         return;
       }
@@ -109,7 +109,7 @@ export const useGridFocus = (apiRef: GridApiRef, props: Pick<GridComponentProps,
       const isInsideFocusedCell = insideFocusedCell.current;
       insideFocusedCell.current = false;
 
-      const { cell } = apiRef.current.getState().focus;
+      const { cell } = apiRef.current.state.focus;
       if (!cell || isInsideFocusedCell) {
         return;
       }
@@ -138,7 +138,7 @@ export const useGridFocus = (apiRef: GridApiRef, props: Pick<GridComponentProps,
       if (params.cellMode === 'view') {
         return;
       }
-      const { cell } = apiRef.current.getState().focus;
+      const { cell } = apiRef.current.state.focus;
       if (cell?.id !== params.id || cell?.field !== params.field) {
         apiRef.current.setCellFocus(params.id, params.field);
       }
@@ -156,7 +156,7 @@ export const useGridFocus = (apiRef: GridApiRef, props: Pick<GridComponentProps,
   );
 
   React.useEffect(() => {
-    const { cell } = apiRef.current.getState().focus;
+    const { cell } = apiRef.current.state.focus;
 
     if (cell) {
       const updatedRow = apiRef.current.getRow(cell.id);

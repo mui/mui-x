@@ -40,7 +40,7 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
     options;
 
   const getSelectedRows = React.useCallback(
-    () => selectedGridRowsSelector(apiRef.current.getState()),
+    () => selectedGridRowsSelector(apiRef.current.state),
     [apiRef],
   );
 
@@ -153,7 +153,7 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
 
   const setSelectionModel = React.useCallback<GridSelectionApi['setSelectionModel']>(
     (model) => {
-      const currentModel = apiRef.current.getState().selection;
+      const currentModel = apiRef.current.state.selection;
       if (currentModel !== model) {
         setGridState((state) => ({ ...state, selection: model }));
       }

@@ -176,7 +176,7 @@ export function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
   );
 
   React.useLayoutEffect(() => {
-    const columnMenuState = apiRef!.current.getState().columnMenu;
+    const columnMenuState = apiRef!.current.state.columnMenu;
     if (hasFocus && !columnMenuState.open) {
       const focusableElement = headerCellRef.current!.querySelector(
         '[tabindex="0"]',

@@ -159,7 +159,7 @@ export const useGridSorting = (
       return;
     }
 
-    const sortModel = apiRef.current.getState().sorting.sortModel;
+    const sortModel = apiRef.current.state.sorting.sortModel;
 
     if (sortModel.length > 0) {
       const comparatorList = buildComparatorList(sortModel);

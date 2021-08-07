@@ -30,8 +30,8 @@ export const GridHeaderCheckbox = React.forwardRef<HTMLInputElement, GridColumnH
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
       const checked = event.target.checked;
       const rowsToBeSelected = options.checkboxSelectionVisibleOnly
-        ? gridPaginatedVisibleSortedGridRowIdsSelector(apiRef.current.getState())
-        : visibleSortedGridRowIdsSelector(apiRef.current.getState());
+        ? gridPaginatedVisibleSortedGridRowIdsSelector(apiRef.current.state)
+        : visibleSortedGridRowIdsSelector(apiRef.current.state);
       apiRef!.current.selectRows(rowsToBeSelected, checked, !event.target.indeterminate);
     };
 

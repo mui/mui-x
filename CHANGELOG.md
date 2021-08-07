@@ -203,7 +203,7 @@ Big thanks to the 11 contributors who made this release possible. Here are some 
 
   ```diff
   -const filterState = apiRef.current.getState('filter');
-  +const filterState = apiRef.current.getState().filter;
+  +const filterState = apiRef.current.state.filter;
   ```
 
 - [DataGrid] Improve controllable sorting (#2095) @dtassone

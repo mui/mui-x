@@ -64,7 +64,7 @@ export function useGridEditRows(
   );
 
   const handleColumnHeaderDragStart = useEventCallback((nativeEvent) => {
-    const { cell } = apiRef.current.getState().focus;
+    const { cell } = apiRef.current.state.focus;
     if (!cell) {
       return;
     }
@@ -106,7 +106,7 @@ export function useGridEditRows(
 
   const getCellMode = React.useCallback(
     (id, field) => {
-      const editState = apiRef.current.getState().editRows;
+      const editState = apiRef.current.state.editRows;
       const isEditing = editState[id] && editState[id][field];
       return isEditing ? 'edit' : 'view';
     },
@@ -172,7 +172,7 @@ export function useGridEditRows(
   );
 
   const getEditRowsModel = React.useCallback(
-    (): GridEditRowsModel => apiRef.current.getState().editRows,
+    (): GridEditRowsModel => apiRef.current.state.editRows,
     [apiRef],
   );
 

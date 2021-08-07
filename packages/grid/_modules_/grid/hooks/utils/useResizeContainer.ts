@@ -20,7 +20,7 @@ export function useResizeContainer(
     gridLogger.debug(`resizing...`);
 
     apiRef.current.publishEvent(GRID_DEBOUNCED_RESIZE, {
-      containerSize: apiRef.current.getState().containerSizes?.windowSizes,
+      containerSize: apiRef.current.state.containerSizes?.windowSizes,
     });
   }, [apiRef, gridLogger]);
 

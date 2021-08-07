@@ -134,7 +134,7 @@ export const useGridVirtualRows = (apiRef: GridApiRef): void => {
 
   const updateViewport = React.useCallback(
     (forceReRender = false) => {
-      const lastState = apiRef.current.getState();
+      const lastState = apiRef.current.state;
       const containerProps = lastState.containerSizes;
       if (!windowRef || !windowRef.current || !containerProps) {
         return;
@@ -302,7 +302,7 @@ export const useGridVirtualRows = (apiRef: GridApiRef): void => {
   );
 
   const getScrollPosition = React.useCallback(
-    () => scrollStateSelector(apiRef.current.getState()),
+    () => scrollStateSelector(apiRef.current.state),
     [apiRef],
   );
 
