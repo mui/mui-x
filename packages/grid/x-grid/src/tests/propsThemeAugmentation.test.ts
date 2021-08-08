@@ -2,7 +2,7 @@ import { createTheme } from '@material-ui/core';
 
 createTheme({
   props: {
-    MuiDataGrid: {
+    MuiXGrid: {
       disableMultipleColumnsFiltering: true,
     },
   },

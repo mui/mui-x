@@ -1,7 +1,7 @@
 import { XGridProps } from './XGridProps';
 
 export interface XGridComponentProps {
-  MuiDataGrid: XGridProps;
+  MuiXGrid: XGridProps;
 }
 
 declare module '@material-ui/core/styles' {
