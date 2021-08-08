@@ -4,6 +4,6 @@ export interface XGridComponentProps {
   MuiDataGrid: XGridProps;
 }
 
-declare module '@material-ui/core/styles/props' {
+declare module '@material-ui/core/styles' {
   interface ComponentsPropsList extends XGridComponentProps {}
 }
