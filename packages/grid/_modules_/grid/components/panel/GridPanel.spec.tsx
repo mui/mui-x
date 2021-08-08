@@ -13,7 +13,6 @@ function MyPanel() {
           },
         }}
       />
-      {/* @ts-expect-error foo classes doesn't exist */}
       <GridPanel classes={{ foo: 'foo' }} />
     </div>
   );
