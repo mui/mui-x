@@ -9,6 +9,7 @@ import {
   randomUpdatedDate,
 } from '@material-ui/x-grid-data-generator';
 
+// TODO v5: remove
 function getThemePaletteMode(palette) {
   return palette.type || palette.mode;
 }

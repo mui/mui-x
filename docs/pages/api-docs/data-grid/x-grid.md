@@ -69,16 +69,16 @@ import { XGrid } from '@material-ui/x-grid';
 | <span class="prop-name">onCellOut</span> | <span class="prop-type">(params: GridCellParams, event: MuiEvent<React.MouseEvent>) => void</span> |   | Callback fired when a mouse out comes from a cell element. |
 | <span class="prop-name">onCellEnter</span> | <span class="prop-type">(params: GridCellParams, event: MuiEvent<React.MouseEvent>) => void</span> |   | Callback fired when a mouse enter event comes from a cell element. |
 | <span class="prop-name">onCellLeave</span> | <span class="prop-type">(params: GridCellParams, event: MuiEvent<React.MouseEvent>) => void</span> |   | Callback fired when a mouse leave event comes from a cell element. |
-| <span class="prop-name">onColumnHeaderClick</span> | <span class="prop-type">(param: GridColumnHeaderParams, event: MuiEvent<React.MouseEvent>) => void</span> |   | Callback fired when a click event comes from a column header element. |
-| <span class="prop-name">onColumnHeaderDoubleClick</span> | <span class="prop-type">(param: GridColumnHeaderParams, event: MuiEvent<React.MouseEvent>) => void</span> |   | Callback fired when a double click event comes from a column header element. |
-| <span class="prop-name">onColumnHeaderOver</span> | <span class="prop-type">(param: GridColumnHeaderParams, event: MuiEvent<React.MouseEvent>) => void</span> |   | Callback fired when a mouseover event comes from a column header element. |
-| <span class="prop-name">onColumnHeaderOut</span> | <span class="prop-type">(param: GridColumnHeaderParams, event: MuiEvent<React.MouseEvent>) => void</span> |   | Callback fired when a mouseout event comes from a column header element. |
-| <span class="prop-name">onColumnHeaderEnter</span> | <span class="prop-type">(param: GridColumnHeaderParams, event: MuiEvent<React.MouseEvent>) => void</span> |   | Callback fired when a mouse enter event comes from a column header element. |
-| <span class="prop-name">onColumnHeaderLeave</span> | <span class="prop-type">(param: GridColumnHeaderParams, event: MuiEvent<React.MouseEvent>) => void</span> |   | Callback fired when a mouse leave event comes from a column header element. |
-| <span class="prop-name">onColumnOrderChange</span> | <span class="prop-type">(param: GridColumnOrderChangeParams, event: MuiEvent<React.MouseEvent>) => void</span> |   | Callback fired when a column is reordered. |
-| <span class="prop-name">onColumnResize</span> | <span class="prop-type">(param: GridColumnResizeParams, event: MuiEvent<{}>) => void</span> |   | Callback fired while a column is being resized. |
-| <span class="prop-name">onColumnWidthChange</span> | <span class="prop-type">(param: GridColumnResizeParams, event: MuiEvent<{}>) => void</span> |   | Callback fired when the width of a column is changed. |
-| <span class="prop-name">onColumnVisibilityChange</span> | <span class="prop-type">(param: GridColumnVisibilityChangeParams, event: MuiEvent<{}>) => void</span> |   | Callback fired when a column visibility changes. |
+| <span class="prop-name">onColumnHeaderClick</span> | <span class="prop-type">(params: GridColumnHeaderParams, event: MuiEvent<React.MouseEvent>) => void</span> |   | Callback fired when a click event comes from a column header element. |
+| <span class="prop-name">onColumnHeaderDoubleClick</span> | <span class="prop-type">(params: GridColumnHeaderParams, event: MuiEvent<React.MouseEvent>) => void</span> |   | Callback fired when a double click event comes from a column header element. |
+| <span class="prop-name">onColumnHeaderOver</span> | <span class="prop-type">(params: GridColumnHeaderParams, event: MuiEvent<React.MouseEvent>) => void</span> |   | Callback fired when a mouseover event comes from a column header element. |
+| <span class="prop-name">onColumnHeaderOut</span> | <span class="prop-type">(params: GridColumnHeaderParams, event: MuiEvent<React.MouseEvent>) => void</span> |   | Callback fired when a mouseout event comes from a column header element. |
+| <span class="prop-name">onColumnHeaderEnter</span> | <span class="prop-type">(params: GridColumnHeaderParams, event: MuiEvent<React.MouseEvent>) => void</span> |   | Callback fired when a mouse enter event comes from a column header element. |
+| <span class="prop-name">onColumnHeaderLeave</span> | <span class="prop-type">(params: GridColumnHeaderParams, event: MuiEvent<React.MouseEvent>) => void</span> |   | Callback fired when a mouse leave event comes from a column header element. |
+| <span class="prop-name">onColumnOrderChange</span> | <span class="prop-type">(params: GridColumnOrderChangeParams, event: MuiEvent<React.MouseEvent>) => void</span> |   | Callback fired when a column is reordered. |
+| <span class="prop-name">onColumnResize</span> | <span class="prop-type">(params: GridColumnResizeParams, event: MuiEvent<{}>) => void</span> |   | Callback fired while a column is being resized. |
+| <span class="prop-name">onColumnWidthChange</span> | <span class="prop-type">(params: GridColumnResizeParams, event: MuiEvent<{}>) => void</span> |   | Callback fired when the width of a column is changed. |
+| <span class="prop-name">onColumnVisibilityChange</span> | <span class="prop-type">(params: GridColumnVisibilityChangeParams, event: MuiEvent<{}>) => void</span> |   | Callback fired when a column visibility changes. |
 | <span class="prop-name">onError</span> | <span class="prop-type">(args: any) => void</span> |   | Callback fired when an exception is thrown in the grid, or when the `showError` API method is called. |
 | <span class="prop-name">onEditCellPropsChange</span> | <span class="prop-type">(params: GridEditCellPropsParams, event: MuiEvent<React.SyntheticEvent>) => void</span> |   |  Callback fired when the edit cell value changes. |
 | <span class="prop-name">onCellEditCommit</span> | <span class="prop-type">(params: GridEditCellPropsParams, event: MuiEvent<React.SyntheticEvent>) => void</span> |   | Callback fired when the cell changes are going to be committed. |
@@ -88,14 +88,14 @@ import { XGrid } from '@material-ui/x-grid';
 | <span class="prop-name">onFilterModelChange</span> | <span class="prop-type">(model: GridFilterModel) => void</span> |   | Callback fired when the Filter model changes before the filters are applied. |
 | <span class="prop-name">onPageChange</span> | <span class="prop-type">(page: number) => void</span> |   | Callback fired when the current page has changed. |
 | <span class="prop-name">onPageSizeChange</span> | <span class="prop-type">(pageSize: number) => void</span> |   | Callback fired when the page size has changed. |
-| <span class="prop-name">onResize</span> | <span class="prop-type">(param: GridResizeParams, event: MuiEvent<{}>) => void</span> |   | Callback fired when the grid is being resized. |
-| <span class="prop-name">onRowClick</span> | <span class="prop-type">(param: GridRowParams, event: MuiEvent<React.MouseEvent>) => void</span> |   | Callback fired when a click event comes from a row container element. |
-| <span class="prop-name">onRowDoubleClick</span> | <span class="prop-type">(param: GridRowParams, event: MuiEvent<React.MouseEvent>) => void</span> |   | Callback fired when a double click event comes from a row container element. |
-| <span class="prop-name">onRowOver</span> | <span class="prop-type">(param: GridRowParams, event: MuiEvent<React.MouseEvent>) => void</span> |   | Callback fired when a mouse over comes from a row container element. |
-| <span class="prop-name">onRowOut</span> | <span class="prop-type">(param: GridRowParams, event: MuiEvent<React.MouseEvent>) => void</span> |   | Callback fired when a mouse out comes from a row container element. |
-| <span class="prop-name">onRowEnter</span> | <span class="prop-type">(param: GridRowParams, event: MuiEvent<React.MouseEvent>) => void</span> |   | Callback fired when a mouse enter comes from a row container element. |
-| <span class="prop-name">onRowLeave</span> | <span class="prop-type">(param: GridRowParams, event: MuiEvent<React.MouseEvent>) => void</span> |   | Callback fired when a mouse leave event comes from a row container element. |
-| <span class="prop-name">onRowsScrollEnd</span> | <span class="prop-type">(param: GridRowScrollEndParams, event: MuiEvent<{}>) => void</span> |   | Callback fired when scrolling to the bottom of the grid viewport. |
+| <span class="prop-name">onResize</span> | <span class="prop-type">(params: GridResizeParams, event: MuiEvent<{}>) => void</span> |   | Callback fired when the grid is being resized. |
+| <span class="prop-name">onRowClick</span> | <span class="prop-type">(params: GridRowParams, event: MuiEvent<React.MouseEvent>) => void</span> |   | Callback fired when a click event comes from a row container element. |
+| <span class="prop-name">onRowDoubleClick</span> | <span class="prop-type">(params: GridRowParams, event: MuiEvent<React.MouseEvent>) => void</span> |   | Callback fired when a double click event comes from a row container element. |
+| <span class="prop-name">onRowOver</span> | <span class="prop-type">(params: GridRowParams, event: MuiEvent<React.MouseEvent>) => void</span> |   | Callback fired when a mouse over comes from a row container element. |
+| <span class="prop-name">onRowOut</span> | <span class="prop-type">(params: GridRowParams, event: MuiEvent<React.MouseEvent>) => void</span> |   | Callback fired when a mouse out comes from a row container element. |
+| <span class="prop-name">onRowEnter</span> | <span class="prop-type">(params: GridRowParams, event: MuiEvent<React.MouseEvent>) => void</span> |   | Callback fired when a mouse enter comes from a row container element. |
+| <span class="prop-name">onRowLeave</span> | <span class="prop-type">(params: GridRowParams, event: MuiEvent<React.MouseEvent>) => void</span> |   | Callback fired when a mouse leave event comes from a row container element. |
+| <span class="prop-name">onRowsScrollEnd</span> | <span class="prop-type">(params: GridRowScrollEndParams, event: MuiEvent<{}>) => void</span> |   | Callback fired when scrolling to the bottom of the grid viewport. |
 | <span class="prop-name">onSelectionModelChange</span> | <span class="prop-type">(model: GridSelectionModel) => void</span> |   | Callback fired when the selection state of one or multiple rows changes. |
 | <span class="prop-name">onSortModelChange</span> | <span class="prop-type">(model: GridSortModel) => void</span> |   | Callback fired when the sort model changes before a column is sorted. |
 | <span class="prop-name">page</span> | <span class="prop-type">number</span> | 1   |  Set the current page. |
@@ -118,40 +118,35 @@ The `ref` is forwarded to the root element.
 
 ## Slots
 
-Api of the `components` props of type `GridSlotsComponent`
+You can use the [slots API](/components/data-grid/components/#overriding-components) to override nested components or to inject extra props.
 
 | Name | Type | Default | Description |
 |:-----|:-----|:--------|:------------|
-| <span class="prop-name">Checkbox</span> | <span class="prop-type">elementType</span> | <span class="prop-type">Checkbox</span> | Checkbox component used in the grid for both header and cells. Default it uses the Material UI core Checkbox component.|
-| <span class="prop-name">ColumnMenu</span> | <span class="prop-type">elementType&lt;GridColumnMenuProps></span> | <span class="prop-type">GridColumnMenu</span> | Column menu component rendered by clicking on the 3 dots "kebab" icon in column headers.|
-| <span class="prop-name">ColumnsPanel</span> | <span class="prop-type">elementType</span> | <span class="prop-type">ColumnsPanel</span> | GridColumns panel component rendered when clicking the columns button.|
-| <span class="prop-name">ErrorOverlay</span> | <span class="prop-type">elementType&lt;ErrorOverlayProps></span> | <span class="prop-type">ErrorOverlay</span> | Error overlay component rendered above the grid when an error is caught.|
-| <span class="prop-name">FilterPanel</span> | <span class="prop-type">elementType</span> | <span class="prop-type">FilterPanel</span> | Filter panel component rendered when clicking the filter button.|
-| <span class="prop-name">Footer</span> | <span class="prop-type">elementType</span> | <span class="prop-type">GridFooter</span> | Footer component rendered at the bottom of the grid viewport.|
-| <span class="prop-name">Toolbar</span> | <span class="prop-type">elementType</span> | <span class="prop-type">GridToolbar</span> | Toolbar component rendered above the grid column header bar.|
-| <span class="prop-name">PreferencesPanel</span> | <span class="prop-type">elementType</span> | <span class="prop-type">PreferencesPanel</span> | PreferencesPanel component that renders the ColumnSelector or FilterPanel within a Panel component.|
-| <span class="prop-name">LoadingOverlay</span> | <span class="prop-type">elementType</span> | <span class="prop-type">LoadingOverlay</span> | Loading overlay component rendered when the grid is in a loading state.|
-| <span class="prop-name">NoResultsOverlay</span> | <span class="prop-type">elementType</span> | <span class="prop-type">NoResultsOverlay </span> | No results overlay component rendered when the grid has no results after filtering.|
-| <span class="prop-name">NoRowsOverlay</span> | <span class="prop-type">elementType</span> | <span class="prop-type">NoRowsOverlay</span> | No rows overlay component rendered when the grid has no rows.|
-| <span class="prop-name">Pagination</span> | <span class="prop-type">elementType</span> | <span class="prop-type">Pagination</span> | Pagination component rendered in the grid footer by default.|
-| <span class="prop-name">Panel</span> | <span class="prop-type">elementType&lt;GridPanelProps></span> | <span class="prop-type">Panel</span> | Panel component wrapping the filters and columns panels. |
-
-### Icons Slots
-
-| Name | Type | Default | Description |
-|:-----|:-----|:--------|:------------|
+| <span class="prop-name">Checkbox</span> | <span class="prop-type">elementType</span> | <span class="prop-type">Checkbox</span> | Checkbox component used in the grid for both header and cells. By default, it uses the Material-UI core Checkbox component. |
+| <span class="prop-name">ColumnFilteredIcon</span> | <span class="prop-type">elementType </span> | <span class="prop-type">FilterAltIcon</span> | Icon displayed on the column header menu to show that a filter has been applied to the column. |
+| <span class="prop-name">ColumnMenu</span> | <span class="prop-type">elementType&lt;GridColumnMenuProps></span> | <span class="prop-type">GridColumnMenu</span> | Column menu component rendered by clicking on the 3 dots "kebab" icon in column headers. |
 | <span class="prop-name">ColumnMenuIcon</span> | <span class="prop-type">elementType </span> | <span class="prop-type">TripleDotsVerticalIcon</span> | Icon displayed on the side of the column header title to display the filter input component. |
-| <span class="prop-name">ColumnFilteredIcon</span> | <span class="prop-type">elementType </span> | <span class="prop-type">FilterAltIcon</span> | Icon displayed on the column header menu to show that a filer has been applied to the column. |
-| <span class="prop-name">ColumnSelectorIcon</span> | <span class="prop-type">elementType </span> | <span class="prop-type">ColumnIcon</span> | Icon displayed on the column menu selector tab. |
-| <span class="prop-name">ColumnUnsortedIcon</span> | <span class="prop-type">React.ElementType<br>&#124;&nbsp;null </span> | <span class="prop-type">GridColumnUnsortedIcon</span> | Icon displayed on the side of the column header title when unsorted. |
-| <span class="prop-name">ColumnSortedAscendingIcon</span> | <span class="prop-type">elementType </span> | <span class="prop-type">ArrowUpwardIcon</span> | Icon displayed on the side of the column header title when sorted in Ascending order. |
-| <span class="prop-name">ColumnSortedDescendingIcon</span> | <span class="prop-type">elementType </span> | <span class="prop-type">ArrowDownwardIcon</span> | Icon displayed on the side of the column header title when sorted in Descending order.|
 | <span class="prop-name">ColumnResizeIcon</span> | <span class="prop-type">elementType </span> | <span class="prop-type">SeparatorIcon</span> |  Icon displayed in between two column headers that allows to resize the column header. |
+| <span class="prop-name">ColumnSelectorIcon</span> | <span class="prop-type">elementType </span> | <span class="prop-type">ColumnIcon</span> | Icon displayed on the column menu selector tab. |
+| <span class="prop-name">ColumnSortedAscendingIcon</span> | <span class="prop-type">elementType </span> | <span class="prop-type">ArrowUpwardIcon</span> | Icon displayed on the side of the column header title when sorted in ascending order. |
+| <span class="prop-name">ColumnSortedDescendingIcon</span> | <span class="prop-type">elementType </span> | <span class="prop-type">ArrowDownwardIcon</span> | Icon displayed on the side of the column header title when sorted in descending order.|
+| <span class="prop-name">ColumnsPanel</span> | <span class="prop-type">elementType</span> | <span class="prop-type">ColumnsPanel</span> | GridColumns panel component rendered when clicking the columns button.|
+| <span class="prop-name">ColumnUnsortedIcon</span> | <span class="prop-type">React.ElementType<br>&#124;&nbsp;null </span> | <span class="prop-type">GridColumnUnsortedIcon</span> | Icon displayed on the side of the column header title when unsorted. |
+| <span class="prop-name">DensityComfortableIcon</span> | <span class="prop-type">elementType </span> | <span class="prop-type">ViewStreamIcon</span> | Icon displayed on the "comfortable" density option in the toolbar. |
 | <span class="prop-name">DensityCompactIcon</span> | <span class="prop-type">elementType </span> | <span class="prop-type">ViewHeadlineIcon</span> | Icon displayed on the compact density option in the toolbar. |
 | <span class="prop-name">DensityStandardIcon</span> | <span class="prop-type">elementType </span> | <span class="prop-type">TableRowsIcon</span> | Icon displayed on the standard density option in the toolbar. |
-| <span class="prop-name">DensityComfortableIcon</span> | <span class="prop-type">elementType </span> | <span class="prop-type">ViewStreamIcon</span> | Icon displayed on the comfortable density option in the toolbar. |
+| <span class="prop-name">ErrorOverlay</span> | <span class="prop-type">elementType&lt;ErrorOverlayProps></span> | <span class="prop-type">ErrorOverlay</span> | Error overlay component rendered above the grid when an error is caught. |
 | <span class="prop-name">ExportIcon</span> | <span class="prop-type">elementType </span> | <span class="prop-type">GridSaveAltIcon</span> | Icon displayed on the export button in the toolbar. |
+| <span class="prop-name">FilterPanel</span> | <span class="prop-type">elementType</span> | <span class="prop-type">FilterPanel</span> | Filter panel component rendered when clicking the filter button. |
+| <span class="prop-name">Footer</span> | <span class="prop-type">elementType</span> | <span class="prop-type">GridFooter</span> | Footer component rendered at the bottom of the grid viewport. |
+| <span class="prop-name">LoadingOverlay</span> | <span class="prop-type">elementType</span> | <span class="prop-type">LoadingOverlay</span> | Overlay component rendered when the grid is in a loading state. |
+| <span class="prop-name">NoResultsOverlay</span> | <span class="prop-type">elementType</span> | <span class="prop-type">NoResultsOverlay </span> | Overlay component rendered when the grid has no results after filtering. |
+| <span class="prop-name">NoRowsOverlay</span> | <span class="prop-type">elementType</span> | <span class="prop-type">NoRowsOverlay</span> | Overlay component rendered when the grid has no rows. |
 | <span class="prop-name">OpenFilterButtonIcon</span> | <span class="prop-type">elementType </span> | <span class="prop-type">FilterListIcon</span> | Icon displayed on the open filter button present in the toolbar by default. |
+| <span class="prop-name">Pagination</span> | <span class="prop-type">elementType</span> | <span class="prop-type">Pagination</span> | Pagination component rendered in the grid footer by default.|
+| <span class="prop-name">Panel</span> | <span class="prop-type">elementType&lt;GridPanelProps></span> | <span class="prop-type">Panel</span> | Panel component wrapping the filters and columns panels. |
+| <span class="prop-name">PreferencesPanel</span> | <span class="prop-type">elementType</span> | <span class="prop-type">PreferencesPanel</span> | PreferencesPanel component that renders the ColumnSelector or FilterPanel within a Panel component.|
+| <span class="prop-name">Toolbar</span> | <span class="prop-type">elementType</span> | <span class="prop-type">GridToolbar</span> | Toolbar component rendered above the grid column header bar.|
 
 ## CSS
 

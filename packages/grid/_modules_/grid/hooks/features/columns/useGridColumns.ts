@@ -73,8 +73,7 @@ function getStateColumns(
 
   // Compute the width of flex columns
   if (totalFlexUnits && widthToAllocateInFlex > 0) {
-    const widthPerFlexUnit =
-      totalFlexUnits > 0 ? Math.floor(widthToAllocateInFlex / totalFlexUnits) : 0;
+    const widthPerFlexUnit = totalFlexUnits > 0 ? widthToAllocateInFlex / totalFlexUnits : 0;
 
     for (let i = 0; i < stateColumns.length; i += 1) {
       const column = stateColumns[i];
@@ -90,9 +89,10 @@ function getStateColumns(
 
   return stateColumns;
 }
+
 function hydrateColumns(
   columns: GridColumns,
-  columnTypes: GridColumnTypesRecord,
+  columnTypes: GridColumnTypesRecord = {},
   withCheckboxSelection: boolean,
   logger: Logger,
   getLocaleText: <T extends GridTranslationKeys>(key: T) => GridLocaleText[T],
@@ -154,7 +154,7 @@ export function useGridColumns(
     (newState: GridColumnsState, emit = true) => {
       logger.debug('Updating columns state.');
 
-      setGridState((oldState) => ({ ...oldState, columns: newState }));
+      setGridState((state) => ({ ...state, columns: newState }));
       forceUpdate();
 
       if (apiRef.current && emit) {
@@ -314,7 +314,7 @@ export function useGridColumns(
     if (props.columns.length > 0) {
       const hydratedColumns = hydrateColumns(
         props.columns,
-        props.columnTypes!,
+        props.columnTypes,
         !!props.checkboxSelection,
         logger,
         apiRef.current.getLocaleText,

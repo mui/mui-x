@@ -17,6 +17,7 @@ export function isObject(value: any): value is Record<string, any> {
   return typeof value === 'object';
 }
 
+// TODO v5: remove
 export function getThemePaletteMode(palette: any): string {
   return palette.type || palette.mode;
 }
@@ -62,9 +63,6 @@ export function localStorageAvailable() {
     return false;
   }
 }
-
-// Util to make specific interface properties optional
-export type Optional<T, K extends keyof T> = Pick<Partial<T>, K> & Omit<T, K>;
 
 export function getDataGridUtilityClass(slot) {
   return generateUtilityClass(GRID_CSS_CLASS_PREFIX, slot);

@@ -388,6 +388,47 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         });
       });
 
+      it('should split the columns equally if they are all flex', () => {
+        const rows = [
+          {
+            id: 1,
+            name: 'John Doe',
+            age: 30,
+          },
+        ];
+
+        const columns = [
+          {
+            field: 'id',
+            flex: 1,
+          },
+          {
+            field: 'name',
+            flex: 1,
+          },
+          {
+            field: 'age',
+            flex: 1,
+          },
+        ];
+
+        const containerWidth = 400;
+
+        render(
+          <div style={{ width: containerWidth, height: 300 }}>
+            <DataGrid columns={columns} rows={rows} />
+          </div>,
+        );
+
+        const expectedWidth = (containerWidth - 2) / 3;
+        const firstColumnWidth = Number(getColumnHeaderCell(0).style.width.split('px')[0]);
+        const secondColumnWidth = Number(getColumnHeaderCell(1).style.width.split('px')[0]);
+        const thirdColumnWidth = Number(getColumnHeaderCell(2).style.width.split('px')[0]);
+        expect(Math.abs(firstColumnWidth - expectedWidth)).to.be.lessThan(0.1);
+        expect(Math.abs(secondColumnWidth - expectedWidth)).to.be.lessThan(0.1);
+        expect(Math.abs(thirdColumnWidth - expectedWidth)).to.be.lessThan(0.1);
+      });
+
       it('should handle hidden columns', () => {
         const rows = [{ id: 1, firstName: 'Jon' }];
         const columns = [
@@ -646,7 +687,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         // @ts-expect-error need to migrate helpers to TypeScript
       }).toErrorDev([
         'The data grid component requires all rows to have a unique id property',
-        'The above error occurred in the <ForwardRef(GridComponent)> component',
+        'The above error occurred in the <ForwardRef(DataGrid)> component',
       ]);
       expect((errorRef.current as any).errors).to.have.length(1);
       expect((errorRef.current as any).errors[0].toString()).to.include(

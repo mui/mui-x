@@ -3,6 +3,90 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 4.0.0-alpha.36
+
+_August 5, 2021_
+
+Big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
+
+- 🚀 Polish the cell editing API (#2220) @m4theushw
+- ⚡️ Add `details` param to each callback option in `XGrid` (#2236) @DanailH
+- 💅 Work on internal optimizations and code separation (#2176, #2243, #2235, #2213) @flaviendelangle
+- ✨ Allow non-integer column width for flex columns (#2282) @flaviendelangle
+- 🐞 Fix one bug related to filtering
+
+### `@material-ui/data-grid@v4.0.0-alpha.36` / `@material-ui/x-grid@v4.0.0-alpha.36`
+
+#### Breaking changes
+
+- [DataGrid] Polish cell editing (#2220) @m4theushw
+
+  - Replace `onCellModeChange` prop with `onCellEditStart` or `onCellEditStop`.
+  - Rename `onCellEditEnter` prop to `onCellEditStart`.
+  - Rename `onCellEditEnd` prop to `onCellEditStop`.
+
+  ```diff
+   <DataGrid
+  -  onCellEditEnter={...}
+  -  onCellEditExit={...}
+  +  onCellEditStart={...}
+  +  onCellEditStop={...}
+   />
+  ```
+
+  - [XGrid] The `setEditCellProps` API call is not available anymore.
+    Use the [controlled editing](https://material-ui.com/components/data-grid/editing/#controlled-editing) or `setEditRowsModel`.
+
+  ```diff
+  -apiRef.current.setEditCellProps({ id, field, props: { ...props, error: true } });
+  +apiRef.current.setEditRowsModel({
+  +  ...oldModel,
+  +  [id]: {
+  +    ...oldModel[id],
+  +    [field]: { ...oldModel[id][field], error: true },
+  +  },
+  +});
+  ```
+
+- [DataGrid] Allow non-integer column width for flex columns (#2282) @flaviendelangle
+
+  - The `width` property of the columns is no longer updated with the actual width of of the column. Use the new `computedWidth` property in the callbacks instead.
+
+  ```diff
+  const columns: GridColDef = [
+    {
+    field: "name",
+    width: 100,
+    renderCell: ({ value, colDef }) => {
+    - console.log(colDef.width!)
+    + console.log(colDef.computedWidth)
+      return value
+    }
+  ]
+  ```
+
+#### Changes
+
+- [DataGrid] Canonical controlled state behavior (#2208) @oliviertassinari
+- [DataGrid] Fix filter with extended columns (#2246) @m4theushw
+- [DataGrid] Remove default value of columnTypes prop (#2280) @m4theushw
+- [DataGrid] Add German (deDE) translation for export and isEmpty operator (#2285) @ChristopherBussick
+- [XGrid] Add `details` param to each callback option in `XGrid` (#2236) @DanailH
+
+### Docs
+
+- [docs] Improve slot API docs (#2219) @oliviertassinari
+- [docs] Document virtualization APIs in virtualization section (#2247) @ZeeshanTamboli
+
+### Core
+
+- [core] Isolate `DataGrid` and `XGrid` (#2176) @dtassone
+- [core] Move `GridFilterModel` in the models directory (#2243) @flaviendelangle
+- [core] Add new column internal `computedWidth` field (#2235) @flaviendelangle
+- [core] Use `rootProps` instead of `options` in the grid components except for `classes` (#2213) @flaviendelangle
+- [core] Fix `rebaseWhen=auto` not working (#2271) @oliviertassinari
+- [core] Batch small changes (#2249) @oliviertassinari
+
 ## 4.0.0-alpha.35
 
 _July 31, 2021_
