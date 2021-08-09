@@ -116,7 +116,6 @@ export const useGridColumnResize = (
         {
           element: colElementRef.current,
           colDef: colDefRef.current,
-          api: apiRef,
           width: colDefRef.current?.computedWidth,
         },
         nativeEvent,
@@ -147,7 +146,6 @@ export const useGridColumnResize = (
       {
         element: colElementRef.current,
         colDef: colDefRef.current,
-        api: apiRef,
         width: newWidth,
       },
       nativeEvent,
@@ -246,7 +244,6 @@ export const useGridColumnResize = (
       {
         element: colElementRef.current,
         colDef: colDefRef.current,
-        api: apiRef,
         width: newWidth,
       },
       nativeEvent,

@@ -284,7 +284,6 @@ export function useGridColumns(
       apiRef.current.publishEvent(GRID_COLUMN_WIDTH_CHANGE, {
         element: apiRef.current.getColumnHeaderElement(field),
         colDef: column,
-        api: apiRef,
         width,
       });
     },
