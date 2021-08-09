@@ -11,7 +11,7 @@ export default function BasisPaginationGrid() {
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <XGrid pagination pageSize={200} {...data} />
+      <XGrid pagination pageSize={200} rowsPerPageOptions={[200]} {...data} />
     </div>
   );
 }
