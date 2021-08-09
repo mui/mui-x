@@ -1,5 +1,9 @@
 import * as React from 'react';
-import { GridColumns, DataGrid, GridCellParams } from '@material-ui/data-grid';
+import {
+  GridColumns,
+  DataGrid,
+  GridCellOptionsParams,
+} from '@material-ui/data-grid';
 import { makeStyles } from '@material-ui/core/styles';
 
 const columns: GridColumns = [
@@ -37,7 +41,7 @@ export default function StylingAllCells() {
       <DataGrid
         rows={rows}
         columns={columns}
-        getCellClassName={(params: GridCellParams) => {
+        getCellClassName={(params: GridCellOptionsParams) => {
           if (params.field === 'city') {
             return '';
           }

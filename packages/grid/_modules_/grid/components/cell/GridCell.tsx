@@ -82,6 +82,7 @@ export const GridCell = React.memo(function GridCell(props: GridCellProps) {
       }
 
       const params = apiRef!.current.getCellParams(rowId, field || '');
+      delete params.api;
       apiRef!.current.publishEvent(eventName, params, event);
     },
     [apiRef, field, rowId],
@@ -90,6 +91,7 @@ export const GridCell = React.memo(function GridCell(props: GridCellProps) {
   const publishMouseUp = React.useCallback(
     (eventName: string) => (event: React.MouseEvent) => {
       const params = apiRef!.current.getCellParams(rowId, field || '');
+      delete params.api;
       apiRef!.current.publishEvent(eventName, params, event);
     },
     [apiRef, field, rowId],
@@ -106,12 +108,9 @@ export const GridCell = React.memo(function GridCell(props: GridCellProps) {
       ) {
         return;
       }
-
-      apiRef!.current.publishEvent(
-        eventName,
-        apiRef!.current.getCellParams(rowId!, field || ''),
-        event,
-      );
+      const params = apiRef!.current.getCellParams(rowId!, field || '');
+      delete params.api;
+      apiRef!.current.publishEvent(eventName, params, event);
     },
     [apiRef, field, rowId],
   );

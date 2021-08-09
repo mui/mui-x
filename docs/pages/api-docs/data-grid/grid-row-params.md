@@ -14,7 +14,6 @@ import { GridRowParams } from '@material-ui/data-grid';
 
 | Name                                    | Type                                                                              | Description                                                |
 | :-------------------------------------- | :-------------------------------------------------------------------------------- | :--------------------------------------------------------- |
-| <span class="prop-name">api</span>      | <span class="prop-type">any</span>                                                | GridApiRef that let you manipulate the grid.               |
 | <span class="prop-name">columns</span>  | <span class="prop-type">any</span>                                                | All grid columns.                                          |
 | <span class="prop-name">getValue</span> | <span class="prop-type">(id: GridRowId, field: string) =&gt; GridCellValue</span> | Get the cell value of a row and field.                     |
 | <span class="prop-name">id</span>       | <span class="prop-type">GridRowId</span>                                          | The grid row id.                                           |

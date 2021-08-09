@@ -90,7 +90,9 @@ export const GridRowCells = React.memo(function GridRowCells(props: RowCellsProp
     }
 
     if (getCellClassName) {
-      classNames.push(getCellClassName(cellParams));
+      const classNameParams = { ...cellParams };
+      delete classNameParams.api;
+      classNames.push(getCellClassName(classNameParams));
     }
 
     const cellProps: GridCellProps = {

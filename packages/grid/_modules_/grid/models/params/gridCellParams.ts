@@ -60,6 +60,11 @@ export interface GridCellParams {
 /**
  * Alias of GridCellParams.
  */
+export type GridCellOptionsParams = Omit<GridCellParams, 'api'>;
+
+/**
+ * Alias of GridCellParams.
+ */
 export type GridValueGetterParams = Omit<GridCellParams, 'formattedValue' | 'isEditable'>;
 
 /**

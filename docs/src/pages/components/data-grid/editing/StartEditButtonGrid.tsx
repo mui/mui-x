@@ -2,12 +2,12 @@
 import * as React from 'react';
 import Button from '@material-ui/core/Button';
 import {
-  GridCellParams,
   GridColumns,
   GridRowsProp,
   useGridApiRef,
   XGrid,
   GridApiRef,
+  GridCellOptionsParams,
 } from '@material-ui/x-grid';
 import {
   randomCreatedDate,
@@ -76,9 +76,9 @@ function EditToolbar(props: EditToolbarProps) {
 export default function StartEditButtonGrid() {
   const apiRef = useGridApiRef();
   const [selectedCellParams, setSelectedCellParams] =
-    React.useState<GridCellParams | null>(null);
+    React.useState<GridCellOptionsParams | null>(null);
 
-  const handleCellClick = React.useCallback((params: GridCellParams) => {
+  const handleCellClick = React.useCallback((params: GridCellOptionsParams) => {
     setSelectedCellParams(params);
   }, []);
 

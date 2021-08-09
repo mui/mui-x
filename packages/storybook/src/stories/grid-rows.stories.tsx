@@ -20,6 +20,7 @@ import {
   GridCellEditCommitParams,
   GRID_CELL_EDIT_START,
   MuiEvent,
+  GridCellOptionsParams,
 } from '@material-ui/x-grid';
 import { useDemoData } from '@material-ui/x-grid-data-generator';
 import { action } from '@storybook/addon-actions';
@@ -467,12 +468,15 @@ export function EditRowsControl() {
     apiRef.current.setCellMode(id, field, 'edit');
   }, [apiRef, selectedCell]);
 
-  const onCellClick = React.useCallback((params: GridCellParams) => {
+  const onCellClick = React.useCallback((params: GridCellOptionsParams) => {
     setSelectedCell([params.row.id!.toString(), params.field, params.value]);
     setIsEditable(!!params.isEditable);
   }, []);
 
-  const isCellEditable = React.useCallback((params: GridCellParams) => params.row.id !== 0, []);
+  const isCellEditable = React.useCallback(
+    (params: GridCellOptionsParams) => params.row.id !== 0,
+    [],
+  );
 
   const onEditRowsModelChange = React.useCallback((newModel: GridEditRowsModel) => {
     const updatedModel = { ...newModel };
@@ -749,7 +753,9 @@ export function EditCellUsingExternalButtonGrid() {
   const classes = useEditCellStyles();
   const [buttonLabel, setButtonLabel] = React.useState('Edit');
 
-  const [selectedCellParams, setSelectedCellParams] = React.useState<GridCellParams | null>(null);
+  const [selectedCellParams, setSelectedCellParams] = React.useState<GridCellOptionsParams | null>(
+    null,
+  );
 
   const handleButtonClick = React.useCallback(() => {
     if (!selectedCellParams) {
@@ -767,7 +773,7 @@ export function EditCellUsingExternalButtonGrid() {
     // Or you can use the editRowModel prop, but I find it easier
   }, [apiRef, selectedCellParams]);
 
-  const handleCellClick = React.useCallback((params: GridCellParams) => {
+  const handleCellClick = React.useCallback((params: GridCellOptionsParams) => {
     setSelectedCellParams(params);
 
     const { cellMode } = params;
@@ -779,7 +785,7 @@ export function EditCellUsingExternalButtonGrid() {
   }, []);
 
   const handleDoubleCellClick = React.useCallback(
-    (params: GridCellParams, event: MuiEvent<React.MouseEvent>) => {
+    (params: GridCellOptionsParams, event: MuiEvent<React.MouseEvent>) => {
       event.defaultMuiPrevented = true;
     },
     [],
@@ -847,7 +853,7 @@ export function EditCellWithCellClickGrid() {
   const apiRef = useGridApiRef();
 
   const handleCellClick = React.useCallback(
-    (params: GridCellParams, event: MuiEvent<React.MouseEvent>) => {
+    (params: GridCellOptionsParams, event: MuiEvent<React.MouseEvent>) => {
       // Or you can use the editRowModel prop, but I find it easier
       // apiRef.current.setCellMode(params.id, params.field, 'edit');
       apiRef.current.publishEvent(GRID_CELL_EDIT_START, params, event);
