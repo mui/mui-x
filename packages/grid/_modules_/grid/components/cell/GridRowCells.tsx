@@ -112,7 +112,10 @@ export const GridRowCells = React.memo(function GridRowCells(props: RowCellsProp
       isSelected,
       hasFocus: cellFocus !== null && cellFocus.id === id && cellFocus.field === column.field,
       tabIndex:
-        cellTabIndex !== null && cellTabIndex.id === id && cellTabIndex.field === column.field
+        cellTabIndex !== null &&
+        cellTabIndex.id === id &&
+        cellTabIndex.field === column.field &&
+        cellParams.cellMode === 'view'
           ? 0
           : -1,
       className: clsx(classNames),

@@ -1,3 +1,5 @@
+import type { GridStateColDef } from '../colDef';
+
 /**
  * Object passed as parameter of the column order change event.
  */
@@ -13,7 +15,7 @@ export interface GridColumnOrderChangeParams {
   /**
    * The column of the current header component.
    */
-  colDef: any;
+  colDef: GridStateColDef;
   /**
    * The target column index.
    */

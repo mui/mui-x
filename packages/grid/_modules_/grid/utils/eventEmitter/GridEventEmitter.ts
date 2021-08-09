@@ -6,6 +6,9 @@ export type GridListener = (params: any, event?: React.SyntheticEvent) => void;
 export type GridSubscribeEventOptions = { isFirst?: boolean };
 
 export class GridEventEmitter extends EventEmitter {
+  /**
+   * @ignore - do not document.
+   */
   on(eventName: string, listener: GridListener, options?: GridSubscribeEventOptions): void {
     if (!Array.isArray(this.events[eventName])) {
       this.events[eventName] = [];
