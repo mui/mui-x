@@ -77,7 +77,7 @@ export function useEvents(
   useNativeEventListener(
     apiRef,
     apiRef.current.rootElementRef!,
-    GridEvents.keydown,
+    'keydown',
     getHandler(GridEvents.keydown),
   );
 }
