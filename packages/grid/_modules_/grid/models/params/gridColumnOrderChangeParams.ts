@@ -22,8 +22,4 @@ export interface GridColumnOrderChangeParams {
    * The old column index.
    */
   oldIndex: number;
-  /**
-   * API ref that let you manipulate the grid.
-   */
-  api: any;
 }

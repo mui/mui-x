@@ -263,7 +263,6 @@ export function useGridColumns(
         colDef: apiRef.current.getColumn(field),
         targetIndex: targetIndexPosition,
         oldIndex: oldIndexPosition,
-        api: apiRef.current,
       };
       apiRef.current.publishEvent(GRID_COLUMN_ORDER_CHANGE, params);
 
