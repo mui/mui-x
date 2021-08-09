@@ -16,8 +16,4 @@ export interface GridRowScrollEndParams {
    * The grid visible columns.
    */
   visibleColumns: GridColumns;
-  /**
-   * API ref that let you manipulate the grid.
-   */
-  api: any;
 }
