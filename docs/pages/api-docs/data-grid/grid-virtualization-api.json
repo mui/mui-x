@@ -1,0 +1,13 @@
+{
+  "name": "GridVirtualizationApi",
+  "description": "The virtualization API interface that is available in the grid apiRef.",
+  "properties": [
+    { "name": "getScrollPosition", "description": "", "type": "() => GridScrollParams" },
+    { "name": "scroll", "description": "", "type": "(params: Partial<GridScrollParams>) => void" },
+    {
+      "name": "scrollToIndexes",
+      "description": "",
+      "type": "(params: Partial<GridCellIndexCoordinates>) => boolean"
+    }
+  ]
+}

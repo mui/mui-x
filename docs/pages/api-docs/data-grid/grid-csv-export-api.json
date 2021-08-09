@@ -4,12 +4,12 @@
   "properties": [
     {
       "name": "exportDataAsCsv",
-      "description": "Downloads and exports a CSV of the grid&#39;s data.",
+      "description": "",
       "type": "(options?: GridExportCsvOptions) => void"
     },
     {
       "name": "getDataAsCsv",
-      "description": "Returns the grid data as a CSV string.\nThis method is used internally by <code>exportDataAsCsv</code>.",
+      "description": "",
       "type": "(options?: GridExportCsvOptions) => string"
     }
   ]

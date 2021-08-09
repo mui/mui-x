@@ -1,5 +1,6 @@
 import { GridColumns } from '../colDef/gridColDef';
 import { GridSortModel } from '../gridSortModel';
+
 /**
  * Object passed as parameter of the column sorted event.
  */
