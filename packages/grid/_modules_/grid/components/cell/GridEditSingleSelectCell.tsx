@@ -3,6 +3,7 @@ import Select, { SelectProps } from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import { GridCellParams } from '../../models/params/gridCellParams';
 import { isEscapeKey } from '../../utils/keyboardUtils';
+import { useEnhancedEffect } from '../../utils/material-ui-utils';
 
 const renderSingleSelectOptions = (option) =>
   typeof option === 'object' ? (
@@ -26,11 +27,14 @@ export function GridEditSingleSelectCell(props: GridCellParams & SelectProps) {
     colDef,
     cellMode,
     isEditable,
+    tabIndex,
     className,
     getValue,
     hasFocus,
     ...other
   } = props;
+
+  const ref = React.useRef<any>();
 
   const handleChange = (event) => {
     api.setEditCellValue({ id, field, value: event.target.value }, event);
@@ -46,14 +50,22 @@ export function GridEditSingleSelectCell(props: GridCellParams & SelectProps) {
     }
   };
 
+  useEnhancedEffect(() => {
+    if (hasFocus) {
+      // TODO v5: replace with inputRef.current.focus()
+      // See https://github.com/mui-org/material-ui/issues/21441
+      ref.current.querySelector('[role="button"]').focus();
+    }
+  }, [hasFocus]);
+
   return (
     <Select
+      ref={ref}
       value={value}
       onChange={handleChange}
       MenuProps={{
         onClose: handleClose,
       }}
-      autoFocus
       fullWidth
       open
       {...other}
