@@ -207,7 +207,10 @@ function EditToolbar(props: EditToolbarProps) {
     const id = randomId();
     apiRef.current.updateRows([{ id, isNew: true }]);
     apiRef.current.setRowMode(id, 'edit');
-    apiRef.current.setCellFocus(id, 'name');
+    setTimeout(() => {
+      // Prevent this click from removing the focus
+      apiRef.current.setCellFocus(id, 'name');
+    });
   };
 
   return (
