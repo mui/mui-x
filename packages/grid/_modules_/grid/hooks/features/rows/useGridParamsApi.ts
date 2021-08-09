@@ -33,7 +33,6 @@ export function useGridParamsApi(apiRef: GridApiRef) {
     (field: string): GridColumnHeaderParams => ({
       field,
       colDef: apiRef.current.getColumn(field),
-      api: apiRef!.current,
     }),
     [apiRef],
   );

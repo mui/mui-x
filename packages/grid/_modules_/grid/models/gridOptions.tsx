@@ -403,7 +403,7 @@ export interface GridOptions {
   ) => void;
   /**
    * Callback fired when a column is reordered.
-   * @param params With all properties from [[GridColumnHeaderParams]].
+   * @param params With all properties from [[GridColumnOrderChangeParams]].
    * @param event [[MuiEvent<{}>]].
    * @param {MuiCallbackDetails} details Additional details for this callback.
    */

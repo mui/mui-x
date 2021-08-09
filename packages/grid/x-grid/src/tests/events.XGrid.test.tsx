@@ -87,7 +87,6 @@ describe('<XGrid /> - Events Params', () => {
       expect(eventArgs!.params).to.deep.include({
         colDef: apiRef!.current.getColumn('age'),
         field: 'age',
-        api: apiRef.current,
       });
     });
   });
