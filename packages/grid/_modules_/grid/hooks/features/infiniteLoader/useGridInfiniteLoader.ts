@@ -61,22 +61,16 @@ export const useGridInfiniteLoader = (
   );
 
   const handleGridScroll = React.useCallback(() => {
-    if (!props.onRowsScrollEnd && !props.onViewportRowsChange) {
-      return;
-    }
-
     const scrollPosition = apiRef.current.getScrollPosition();
 
-    if (props.onRowsScrollEnd) {
-      handleRowsScrollEnd(scrollPosition);
-    }
-  }, [props, apiRef, handleRowsScrollEnd]);
+    handleRowsScrollEnd(scrollPosition);
+  }, [apiRef, handleRowsScrollEnd]);
 
   // TODO: Check if onViewportRowsChange works as expected once virtualization is reworked
   React.useEffect(() => {
     const renderContext = renderState.renderContext!;
 
-    if (!props.onViewportRowsChange || !renderContext) {
+    if (!renderContext) {
       return;
     }
 
