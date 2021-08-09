@@ -19,9 +19,10 @@ export function useResizeContainer(
   const resizeFn = React.useCallback(() => {
     gridLogger.debug(`resizing...`);
 
-    apiRef.current.publishEvent(GRID_DEBOUNCED_RESIZE, {
-      containerSize: apiRef.current.getState().containerSizes?.windowSizes,
-    });
+    apiRef.current.publishEvent(
+      GRID_DEBOUNCED_RESIZE,
+      apiRef.current.getState().containerSizes?.windowSizes,
+    );
   }, [apiRef, gridLogger]);
 
   const eventsApi: GridEventsApi = { resize: resizeFn };

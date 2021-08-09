@@ -81,7 +81,7 @@ import { DataGrid } from '@material-ui/data-grid';
 | <span class="prop-name">onFilterModelChange</span> | <span class="prop-type">(model: GridFilterModel) => void</span> |   | Callback fired when the Filter model changes before the filters are applied. |
 | <span class="prop-name">onPageChange</span> | <span class="prop-type">(page: number) => void</span> |   | Callback fired when the current page has changed. |
 | <span class="prop-name">onPageSizeChange</span> | <span class="prop-type">(pageSize: number) => void</span> |   | Callback fired when the page size has changed. |
-| <span class="prop-name">onResize</span> | <span class="prop-type">(params: GridResizeParams, event: MuiEvent<{}>) => void</span> |   | Callback fired when the grid is being resized. |
+| <span class="prop-name">onResize</span> | <span class="prop-type">(containerSize: ElementSize, event: MuiEvent<{}>) => void</span> |   | Callback fired when the grid is being resized. |
 | <span class="prop-name">onRowClick</span> | <span class="prop-type">(params: GridRowParams, event: MouseEvent<React.MouseEvent>) => void</span> |   | Callback fired when a click event comes from a row container element. |
 | <span class="prop-name">onRowDoubleClick</span> | <span class="prop-type">(params: GridRowParams, event: MouseEvent<React.MouseEvent>) => void</span> |   | Callback fired when a double click event comes from a row container element. |
 | <span class="prop-name">onRowOver</span> | <span class="prop-type">(params: GridRowParams, event: MouseEvent<React.MouseEvent>) => void</span> |   | Callback fired when a mouse over comes from a row container element. |

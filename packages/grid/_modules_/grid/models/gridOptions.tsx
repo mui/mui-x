@@ -19,10 +19,10 @@ import {
 } from './params/gridEditCellParams';
 import { GridRowScrollEndParams } from './params/gridRowScrollEndParams';
 import { GridColumnOrderChangeParams } from './params/gridColumnOrderChangeParams';
-import { GridResizeParams } from './params/gridResizeParams';
 import { GridColumnResizeParams } from './params/gridColumnResizeParams';
 import { GridColumnVisibilityChangeParams } from './params/gridColumnVisibilityChangeParams';
 import { GridClasses } from './gridClasses';
+import { ElementSize } from './elementSize';
 
 export type MuiEvent<E> = E & {
   defaultMuiPrevented?: boolean;
@@ -526,11 +526,11 @@ export interface GridOptions {
   ) => void;
   /**
    * Callback fired when the grid is resized.
-   * @param params With all properties from [[GridResizeParams]].
+   * @param containerSize With all properties from [[ElementSize]].
    * @param event [[MuiEvent<{}>]].
    * @param {MuiCallbackDetails} details Additional details for this callback.
    */
-  onResize?: (params: GridResizeParams, event: MuiEvent<{}>, details?: any) => void;
+  onResize?: (containerSize: ElementSize, event: MuiEvent<{}>, details?: any) => void;
   /**
    * Callback fired when the selection state of one or multiple rows changes.
    * @param selectionModel With all the row ids [[GridSelectionModel]].

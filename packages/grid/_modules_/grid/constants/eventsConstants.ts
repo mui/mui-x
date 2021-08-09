@@ -1,12 +1,12 @@
 // Web standard events
 
 /**
- * Fired when the grid is resized. Called with a [[GridResizeParams]] object.
+ * Fired when the grid is resized. Called with a [[ElementSize]] object.
  * @event
  */
 export const GRID_RESIZE = 'resize';
 /**
- * Fired when the grid is resized with a debounced time of 60ms. Called with a [[GridResizeParams]] object.
+ * Fired when the grid is resized with a debounced time of 60ms. Called with a [[ElementSize]] object.
  * @event
  */
 export const GRID_DEBOUNCED_RESIZE = 'debouncedResize';
@@ -431,7 +431,7 @@ export const GRID_SORT_MODEL_CHANGE = 'sortModelChange';
 export const GRID_FILTER_MODEL_CHANGE = 'filterModelChange';
 
 /**
- * Fired when the state of the grid is updated. Called with a [[GridStateChangeParams]] object.
+ * Fired when the state of the grid is updated. Called with a [[GridState]] object.
  * @event
  */
 export const GRID_STATE_CHANGE = 'stateChange';
