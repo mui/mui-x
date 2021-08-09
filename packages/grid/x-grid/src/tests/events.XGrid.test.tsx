@@ -107,7 +107,6 @@ describe('<XGrid /> - Events Params', () => {
         id: 2,
         row: baselineProps.rows[1],
         columns: apiRef!.current.getAllColumns(),
-        api: apiRef.current,
         getValue: apiRef.current.getCellValue,
       });
     });

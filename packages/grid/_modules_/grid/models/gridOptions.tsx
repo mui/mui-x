@@ -269,7 +269,7 @@ export interface GridOptions {
   onCellClick?: (params: GridCellParams, event: MuiEvent<React.MouseEvent>, details?: any) => void;
   /**
    * Callback fired when a double click event comes from a cell element.
-   * @param params With all properties from [[CellParams]].
+   * @param params With all properties from [[GridCellParams]].
    * @param event [[MuiEvent<React.MouseEvent>]].
    * @param {MuiCallbackDetails} details Additional details for this callback.
    */

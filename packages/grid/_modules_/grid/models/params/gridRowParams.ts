@@ -18,10 +18,6 @@ export interface GridRowParams {
    */
   columns: any;
   /**
-   * GridApiRef that let you manipulate the grid.
-   */
-  api: any;
-  /**
    * Get the cell value of a row and field.
    * @param id
    * @param field
