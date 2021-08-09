@@ -11,10 +11,6 @@ export interface GridColumnVisibilityChangeParams {
    */
   colDef: any;
   /**
-   * API ref that let you manipulate the grid.
-   */
-  api: any;
-  /**
    * The visibility state of the column.
    */
   isVisible: boolean;

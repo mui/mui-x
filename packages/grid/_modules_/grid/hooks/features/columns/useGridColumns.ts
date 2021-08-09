@@ -242,7 +242,6 @@ export function useGridColumns(
       apiRef.current.publishEvent(GRID_COLUMN_VISIBILITY_CHANGE, {
         field,
         colDef: updatedCol,
-        api: apiRef,
         isVisible,
       });
     },
