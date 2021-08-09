@@ -3,6 +3,7 @@ import clsx from 'clsx';
 import Checkbox from '@material-ui/core/Checkbox';
 // @ts-expect-error fixed in Material-UI v5, types definitions were added.
 import { unstable_useId as useId } from '@material-ui/core/utils';
+import { useEnhancedEffect } from '../../utils/material-ui-utils';
 import { GridCellParams } from '../../models/params/gridCellParams';
 
 export function GridEditBooleanCell(
@@ -19,12 +20,14 @@ export function GridEditBooleanCell(
     colDef,
     cellMode,
     isEditable,
+    tabIndex,
     className,
     getValue,
     hasFocus,
     ...other
   } = props;
 
+  const inputRef = React.useRef<HTMLInputElement>(null);
   const id = useId();
   const [valueState, setValueState] = React.useState(value);
 
@@ -41,11 +44,17 @@ export function GridEditBooleanCell(
     setValueState(value);
   }, [value]);
 
+  useEnhancedEffect(() => {
+    if (hasFocus) {
+      inputRef.current!.focus();
+    }
+  }, [hasFocus]);
+
   return (
     <label htmlFor={id} className={clsx('MuiDataGrid-editBooleanCell', className)} {...other}>
       <Checkbox
-        autoFocus
         id={id}
+        inputRef={inputRef}
         checked={Boolean(valueState)}
         onChange={handleChange}
         size="small"

@@ -93,6 +93,7 @@ describe('<DataGrid /> - Keyboard', () => {
     const input = screen.getByTestId('custom-input');
     input.focus();
     expect(getActiveCell()).to.equal('0-1');
+    input.focus(); // The focus moves back to the cell
     fireEvent.keyDown(input, { key: 'ArrowLeft' });
     expect(getActiveCell()).to.equal('0-1');
   });
@@ -127,14 +128,19 @@ describe('<DataGrid /> - Keyboard', () => {
     expect(handleKeyDown.returnValues).to.deep.equal([true]);
   });
 
-  const KeyboardTest = (props: { nbRows?: number }) => {
+  const KeyboardTest = (props: { nbRows?: number; checkboxSelection?: boolean }) => {
     const data = useData(props.nbRows || 100, 20);
     const transformColSizes = (columns: GridColumns) =>
       columns.map((column) => ({ ...column, width: 60 }));
 
     return (
       <div style={{ width: 300, height: 360 }}>
-        <DataGrid autoHeight={isJSDOM} rows={data.rows} columns={transformColSizes(data.columns)} />
+        <DataGrid
+          autoHeight={isJSDOM}
+          rows={data.rows}
+          columns={transformColSizes(data.columns)}
+          checkboxSelection={props.checkboxSelection}
+        />
       </div>
     );
   };
@@ -158,6 +164,20 @@ describe('<DataGrid /> - Keyboard', () => {
     expect(getActiveColumnHeader()).to.equal('2');
     fireEvent.keyDown(document.activeElement!, { key: 'ArrowDown' });
     expect(getActiveCell()).to.equal('0-1');
+  });
+
+  it('cell navigation with arrows and checkboxSelection', () => {
+    render(<KeyboardTest nbRows={10} checkboxSelection />);
+    getCell(0, 0).querySelector('input')!.focus();
+    expect(getActiveCell()).to.equal('0-0');
+    fireEvent.keyDown(document.activeElement!, { key: 'ArrowRight' });
+    expect(getActiveCell()).to.equal('0-1');
+    fireEvent.keyDown(document.activeElement!, { key: 'ArrowLeft' });
+    expect(getActiveCell()).to.equal('0-0');
+    fireEvent.keyDown(document.activeElement!, { key: 'ArrowDown' });
+    expect(getActiveCell()).to.equal('1-0');
+    fireEvent.keyDown(document.activeElement!, { key: 'ArrowUp' });
+    expect(getActiveCell()).to.equal('0-0');
   });
 
   it('Shift + Space should select a row', () => {

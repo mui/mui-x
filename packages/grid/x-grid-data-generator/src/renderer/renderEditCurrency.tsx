@@ -46,8 +46,7 @@ function EditCurrency(props: GridCellParams) {
 
   const handleChange = React.useCallback(
     (event, newValue) => {
-      const editProps = { value: newValue.toUpperCase() };
-      api.setEditCellProps({ id, field, props: editProps }, event);
+      api.setEditCellValue({ id, field, value: newValue.toUpperCase() }, event);
       if (!event.key) {
         api.commitCellChange({ id, field });
         api.setCellMode(id, field, 'view');

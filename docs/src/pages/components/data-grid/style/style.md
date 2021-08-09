@@ -47,7 +47,7 @@ interface GridRowParams {
   /**
    * All grid columns.
    */
-  columns: any;
+  columns: GridColumns;
   /**
    * GridApiRef that let you manipulate the grid.
    */

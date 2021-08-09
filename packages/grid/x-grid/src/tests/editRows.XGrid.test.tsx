@@ -4,6 +4,7 @@ import {
   GridComponentProps,
   useGridApiRef,
   XGrid,
+  GridEditSingleSelectCell,
 } from '@material-ui/x-grid';
 import Portal from '@material-ui/unstyled/Portal';
 import { expect } from 'chai';
@@ -25,6 +26,7 @@ describe('<XGrid /> - Edit Rows', () => {
 
   // TODO v5: replace with createClientRender
   const render = createClientRenderStrictMode();
+
   beforeEach(() => {
     baselineProps = {
       autoHeight: isJSDOM,
@@ -63,15 +65,39 @@ describe('<XGrid /> - Edit Rows', () => {
     );
   };
 
-  it('isCellEditable should add the class MuiDataGrid-cell--editable to editable cells but not prevent a cell from switching mode', () => {
-    render(<TestCase isCellEditable={(params) => params.value === 'Adidas'} />);
-    const cellNike = getCell(0, 0);
-    expect(cellNike).not.to.have.class('MuiDataGrid-cell--editable');
-    const cellAdidas = getCell(1, 0);
-    expect(cellAdidas).to.have.class('MuiDataGrid-cell--editable');
+  describe('isCellEditable', () => {
+    it('should add the class MuiDataGrid-cell--editable to editable cells but not prevent a cell from switching mode', () => {
+      render(<TestCase isCellEditable={(params) => params.value === 'Adidas'} />);
+      const cellNike = getCell(0, 0);
+      expect(cellNike).not.to.have.class('MuiDataGrid-cell--editable');
+      const cellAdidas = getCell(1, 0);
+      expect(cellAdidas).to.have.class('MuiDataGrid-cell--editable');
 
-    apiRef!.current.setCellMode(0, 'brand', 'edit');
-    expect(cellNike).to.have.class('MuiDataGrid-cell--editing');
+      apiRef!.current.setCellMode(0, 'brand', 'edit');
+      expect(cellNike).to.have.class('MuiDataGrid-cell--editing');
+    });
+
+    it('should not allow to edit a cell with double-click', () => {
+      render(<TestCase isCellEditable={(params) => params.value === 'Adidas'} />);
+      const cellNike = getCell(0, 0);
+      const cellAdidas = getCell(1, 0);
+      fireEvent.doubleClick(cellNike);
+      expect(cellNike).not.to.have.class('MuiDataGrid-cell--editing');
+      fireEvent.doubleClick(cellAdidas);
+      expect(cellAdidas).to.have.class('MuiDataGrid-cell--editing');
+    });
+
+    it('should not allow to edit a cell with Enter', () => {
+      render(<TestCase isCellEditable={(params) => params.value === 'Adidas'} />);
+      const cellNike = getCell(0, 0);
+      const cellAdidas = getCell(1, 0);
+      cellNike.focus();
+      fireEvent.keyDown(cellNike, { key: 'Enter' });
+      expect(cellNike).not.to.have.class('MuiDataGrid-cell--editing');
+      cellAdidas.focus();
+      fireEvent.keyDown(cellAdidas, { key: 'Enter' });
+      expect(cellAdidas).to.have.class('MuiDataGrid-cell--editing');
+    });
   });
 
   it('should allow to switch between cell mode', () => {
@@ -207,7 +233,7 @@ describe('<XGrid /> - Edit Rows', () => {
     expect(cell).to.have.text('Adidas');
   });
 
-  it('should allow to save an edit changes using Enter', () => {
+  it('should allow to save changes using Enter', () => {
     render(<TestCase />);
     const cell = getCell(1, 0);
     cell.focus();
@@ -273,6 +299,7 @@ describe('<XGrid /> - Edit Rows', () => {
     expect(cell.querySelector('input')!.value).to.equal('1970');
 
     const otherCell = getCell(2, 1);
+    fireEvent.mouseUp(otherCell);
     fireEvent.click(otherCell);
     fireEvent.focus(otherCell);
     expect(cell).not.to.have.class('MuiDataGrid-cell--editing');
@@ -318,8 +345,9 @@ describe('<XGrid /> - Edit Rows', () => {
   it('should work correctly when the cell editing was initiated programmatically', () => {
     render(<TestCase />);
     apiRef.current.setCellMode(1, 'year', 'edit');
-    expect(getActiveCell()).to.equal('1-1');
     const cell = getCell(1, 1);
+    cell.focus();
+    expect(getActiveCell()).to.equal('1-1');
     const input = cell.querySelector('input')!;
     expect(input.value).to.equal('1961');
 
@@ -327,11 +355,35 @@ describe('<XGrid /> - Edit Rows', () => {
     expect(cell.querySelector('input')!.value).to.equal('1970');
 
     const otherCell = getCell(2, 1);
+    fireEvent.mouseUp(otherCell);
     fireEvent.click(otherCell);
     fireEvent.focus(otherCell);
     expect(cell).not.to.have.class('MuiDataGrid-cell--editing');
     expect(cell).to.have.text('1970');
     expect(getActiveCell()).to.equal('2-1');
+  });
+
+  // TODO add one test for each column type because what really sets the focus is the autoFocus prop
+  it('should move the focus to the new field', () => {
+    const handleCellBlur = (params, event) => {
+      if (params.cellMode === 'edit') {
+        event?.stopPropagation();
+      }
+    };
+    render(<TestCase onCellBlur={handleCellBlur} />);
+    // Turn first cell into edit mode
+    apiRef!.current.setCellMode(0, 'brand', 'edit');
+
+    // Turn second cell into edit mode
+    getCell(1, 0).focus();
+    apiRef!.current.setCellMode(1, 'brand', 'edit');
+    expect(document.querySelectorAll('input').length).to.equal(2);
+
+    // Try to focus the first cell's input
+    const input0 = getCell(0, 0).querySelector('input');
+    input0!.focus();
+    fireEvent.click(input0);
+    expect(document.activeElement).to.have.property('value', 'Nike');
   });
 
   it('should apply the valueParser before saving the value', () => {
@@ -457,6 +509,14 @@ describe('<XGrid /> - Edit Rows', () => {
     });
   });
 
+  it('should set the focus correctly', () => {
+    render(<TestCase />);
+    const cell = getCell(0, 0);
+    fireEvent.doubleClick(cell);
+    // @ts-expect-error need to migrate helpers to TypeScript
+    expect(screen.getByRole('textbox')).toHaveFocus();
+  });
+
   describe('column type: singleSelect', () => {
     it('should change cell value correctly when the valueOptions is array of strings', () => {
       render(
@@ -532,6 +592,34 @@ describe('<XGrid /> - Edit Rows', () => {
       expect(cell).not.to.have.class('MuiDataGrid-cell--editing');
       expect(cell).to.have.text('Italy');
     });
+
+    it('should set the focus correctly', () => {
+      render(
+        <TestCase
+          columns={[
+            {
+              field: 'brand',
+              type: 'singleSelect',
+              valueOptions: ['Nike', 'Adidas'],
+              editable: true,
+              renderEditCell: (params: any) => (
+                <GridEditSingleSelectCell {...params} open={false} /> // Force to appear closed
+              ),
+            },
+          ]}
+          rows={[
+            {
+              id: 0,
+              brand: 'Nike',
+            },
+          ]}
+        />,
+      );
+      const cell = getCell(0, 0);
+      fireEvent.doubleClick(cell);
+      // @ts-expect-error need to migrate helpers to TypeScript
+      expect(screen.getByRole('button', { name: 'Nike' })).toHaveFocus();
+    });
   });
 
   it('should keep the right type', () => {
@@ -599,6 +687,19 @@ describe('<XGrid /> - Edit Rows', () => {
       fireEvent.change(input, { target: { value: '' } });
       expect(onEditCellPropsChange.args[0][0].props.value).to.equal(null);
     });
+
+    it('should set the focus correctly', () => {
+      render(
+        <TestCase
+          rows={[{ id: 0, date: new Date(2021, 6, 5) }]}
+          columns={[{ field: 'date', type: 'date', editable: true }]}
+        />,
+      );
+      const cell = getCell(0, 0);
+      fireEvent.doubleClick(cell);
+      // @ts-expect-error need to migrate helpers to TypeScript
+      expect(screen.getByRole('cell').querySelector('input')).toHaveFocus();
+    });
   });
 
   describe('column type: dateTime', () => {
@@ -637,6 +738,19 @@ describe('<XGrid /> - Edit Rows', () => {
       fireEvent.change(input, { target: { value: '' } });
       expect(onEditCellPropsChange.args[0][0].props.value).to.equal(null);
     });
+
+    it('should set the focus correctly', () => {
+      render(
+        <TestCase
+          rows={[{ id: 0, date: new Date(2021, 6, 5, 14, 30) }]}
+          columns={[{ field: 'date', type: 'dateTime', editable: true }]}
+        />,
+      );
+      const cell = getCell(0, 0);
+      fireEvent.doubleClick(cell);
+      // @ts-expect-error need to migrate helpers to TypeScript
+      expect(screen.getByRole('cell').querySelector('input')).toHaveFocus();
+    });
   });
 
   it('should call onCellEditCommit with the correct params', () => {
@@ -672,6 +786,19 @@ describe('<XGrid /> - Edit Rows', () => {
         field: 'isAdmin',
         props: { value: true },
       });
+    });
+
+    it('should set the focus correctly', () => {
+      render(
+        <TestCase
+          rows={[{ id: 0, isAdmin: false }]}
+          columns={[{ field: 'isAdmin', type: 'boolean', editable: true }]}
+        />,
+      );
+      const cell = getCell(0, 0);
+      fireEvent.doubleClick(cell);
+      // @ts-expect-error need to migrate helpers to TypeScript
+      expect(screen.getByRole('checkbox')).toHaveFocus();
     });
   });
 
@@ -738,6 +865,7 @@ describe('<XGrid /> - Edit Rows', () => {
       render(<TestCase editRowsModel={{ 1: { year: { value: 1961 } } }} />);
       const cell = getCell(1, 1);
       const input = cell.querySelector('input')!;
+      input.focus();
       expect(input.value).to.equal('1961');
       fireEvent.change(input, { target: { value: '1970' } });
       fireEvent.keyDown(input, { key: 'Enter' });
@@ -776,6 +904,7 @@ describe('<XGrid /> - Edit Rows', () => {
       );
       const cell = getCell(1, 1);
       const input = cell.querySelector('input')!;
+      input.focus();
       fireEvent.change(input, { target: { value: 1970 } });
       expect(onEditRowsModelChange.lastCall.firstArg).to.deep.equal({
         1: { year: { value: '1970' } },

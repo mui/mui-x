@@ -118,7 +118,7 @@ function renderCellExpand(params) {
   return (
     <GridCellExpand
       value={params.value ? params.value.toString() : ''}
-      width={params.colDef.width}
+      width={params.colDef.computedWidth}
     />
   );
 }
@@ -127,7 +127,7 @@ renderCellExpand.propTypes = {
   /**
    * The column of the row that the current cell belongs to.
    */
-  colDef: PropTypes.any.isRequired,
+  colDef: PropTypes.object.isRequired,
   /**
    * The cell value, but if the column has valueGetter, use getValue.
    */

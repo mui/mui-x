@@ -23,13 +23,14 @@ import {
   gridViewportSizesSelector,
   gridScrollBarSizeSelector,
 } from '../hooks/root/gridContainerSizesSelector';
+import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 
 type ViewportType = React.ForwardRefExoticComponent<React.RefAttributes<HTMLDivElement>>;
 
 export const GridViewport: ViewportType = React.forwardRef<HTMLDivElement, {}>(
   function GridViewport(props, renderingZoneRef) {
     const apiRef = useGridApiContext();
-
+    const rootProps = useGridRootProps();
     const options = useGridSelector(apiRef, optionsSelector);
     const containerSizes = useGridSelector(apiRef, gridContainerSizesSelector);
     const viewportSizes = useGridSelector(apiRef, gridViewportSizesSelector);
@@ -73,15 +74,15 @@ export const GridViewport: ViewportType = React.forwardRef<HTMLDivElement, {}>(
             lastColIdx={renderState.renderContext!.lastColIdx!}
             hasScrollX={scrollBarState.hasScrollX}
             hasScrollY={scrollBarState.hasScrollY}
-            showCellRightBorder={!!options.showCellRightBorder}
-            extendRowFullWidth={!options.disableExtendRowFullWidth}
+            showCellRightBorder={!!rootProps.showCellRightBorder}
+            extendRowFullWidth={!rootProps.disableExtendRowFullWidth}
             rowIndex={renderState.renderContext!.firstRowIdx! + idx}
             cellFocus={cellFocus}
             cellTabIndex={cellTabIndex}
             isSelected={selectionLookup[id] !== undefined}
             editRowState={editRowsState[id]}
             cellClassName={options.classes?.cell}
-            getCellClassName={options.getCellClassName}
+            getCellClassName={rootProps.getCellClassName}
           />
           <GridEmptyCell width={renderState.renderContext!.rightEmptyWidth} height={rowHeight} />
         </GridRow>
