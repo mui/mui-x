@@ -44,7 +44,7 @@ function buildApplyFilterFn(
   };
 }
 
-export const getGridDateOperators: (showTime?: boolean) => GridFilterOperator[] = (showTime) => [
+export const getGridDateOperators = (showTime?: boolean): GridFilterOperator[] => [
   {
     value: 'is',
     getApplyFilterFn: (filterItem: GridFilterItem) => {
@@ -97,5 +97,21 @@ export const getGridDateOperators: (showTime?: boolean) => GridFilterOperator[] 
     },
     InputComponent: GridFilterInputValue,
     InputComponentProps: { type: showTime ? 'datetime-local' : 'date' },
+  },
+  {
+    value: 'isEmpty',
+    getApplyFilterFn: () => {
+      return ({ value }): boolean => {
+        return value == null;
+      };
+    },
+  },
+  {
+    value: 'isNotEmpty',
+    getApplyFilterFn: () => {
+      return ({ value }): boolean => {
+        return value != null;
+      };
+    },
   },
 ];
