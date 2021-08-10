@@ -8,12 +8,9 @@ import {
 } from './licenseErrorMessageUtils';
 import { LicenseStatus } from './licenseStatus';
 
-export function useLicenseVerifier() {
-  const [licenseStatus, setLicenseStatus] = React.useState(LicenseStatus.Invalid);
-
-  React.useEffect(() => {
+export function useLicenseVerifier(): LicenseStatus {
+  return React.useMemo(() => {
     const newLicenseStatus = verifyLicense(LicenseInfo.getReleaseInfo(), LicenseInfo.getKey());
-    setLicenseStatus(newLicenseStatus);
     if (newLicenseStatus === LicenseStatus.Invalid) {
       showInvalidLicenseError();
     } else if (newLicenseStatus === LicenseStatus.NotFound) {
@@ -21,7 +18,6 @@ export function useLicenseVerifier() {
     } else if (newLicenseStatus === LicenseStatus.Expired) {
       showExpiredLicenseError();
     }
+    return newLicenseStatus;
   }, []);
-
-  return licenseStatus;
 }
