@@ -65,6 +65,7 @@ describe('<DataGrid /> - Filter', () => {
     value?: any;
     field?: string;
     state?: any;
+    columnTypes?: any;
   }) => {
     const { operatorValue, value, rows, columns, field = 'brand', ...other } = props;
     return (
@@ -104,6 +105,23 @@ describe('<DataGrid /> - Filter', () => {
   it('should apply the filterModel prop correctly', () => {
     render(<TestCase value="a" operatorValue="contains" />);
     expect(getColumnValues()).to.deep.equal(['Adidas', 'Puma']);
+  });
+
+  it('should apply the filterModel prop correctly when filtering extended columns', () => {
+    render(
+      <TestCase
+        rows={[
+          { id: 0, price: 0 },
+          { id: 1, price: 1 },
+        ]}
+        columnTypes={{ price: { extendType: 'number' } }}
+        columns={[{ field: 'price', type: 'price' }]}
+        field="price"
+        value={1}
+        operatorValue="="
+      />,
+    );
+    expect(getColumnValues()).to.deep.equal(['1']);
   });
 
   it('should apply the filterModel prop correctly when row prop changes', () => {
@@ -354,6 +372,58 @@ describe('<DataGrid /> - Filter', () => {
         expect(getColumnValues()).to.deep.equal(expected.map((res) => res.toLocaleString()));
       });
     });
+
+    it('should allow operator isEmpty', () => {
+      const rows = [
+        {
+          id: 0,
+          quantity: 0,
+        },
+        {
+          id: 1,
+          quantity: null,
+        },
+        {
+          id: 2,
+          quantity: 100,
+        },
+      ];
+      render(
+        <TestCase
+          operatorValue="isEmpty"
+          field="quantity"
+          columns={[{ field: 'id' }, { field: 'quantity', type: 'number' }]}
+          rows={rows}
+        />,
+      );
+      expect(getColumnValues(0)).to.deep.equal(['1']);
+    });
+
+    it('should allow operator isNotEmpty', () => {
+      const rows = [
+        {
+          id: 0,
+          quantity: 0,
+        },
+        {
+          id: 1,
+          quantity: null,
+        },
+        {
+          id: 2,
+          quantity: 100,
+        },
+      ];
+      render(
+        <TestCase
+          operatorValue="isNotEmpty"
+          field="quantity"
+          columns={[{ field: 'id' }, { field: 'quantity', type: 'number' }]}
+          rows={rows}
+        />,
+      );
+      expect(getColumnValues(0)).to.deep.equal(['0', '2']);
+    });
   });
 
   describe('date operators', () => {
@@ -391,6 +461,58 @@ describe('<DataGrid /> - Filter', () => {
           />,
         );
         expect(getColumnValues()).to.deep.equal(['12/1/2000', '1/1/2001', '1/1/2002']);
+      });
+
+      it('should allow operator isEmpty', () => {
+        const rows = [
+          {
+            id: 0,
+            date: new Date(1984, 1, 1),
+          },
+          {
+            id: 1,
+            date: null,
+          },
+          {
+            id: 2,
+            date: new Date(1992, 1, 1),
+          },
+        ];
+        render(
+          <TestCase
+            operatorValue="isEmpty"
+            field="date"
+            columns={[{ field: 'id' }, { field: 'date', type: 'date' }]}
+            rows={rows}
+          />,
+        );
+        expect(getColumnValues(0)).to.deep.equal(['1']);
+      });
+
+      it('should allow operator isNotEmpty', () => {
+        const rows = [
+          {
+            id: 0,
+            date: new Date(1984, 1, 1),
+          },
+          {
+            id: 1,
+            date: null,
+          },
+          {
+            id: 2,
+            date: new Date(1992, 1, 1),
+          },
+        ];
+        render(
+          <TestCase
+            operatorValue="isNotEmpty"
+            field="date"
+            columns={[{ field: 'id' }, { field: 'date', type: 'date' }]}
+            rows={rows}
+          />,
+        );
+        expect(getColumnValues(0)).to.deep.equal(['0', '2']);
       });
     });
 
@@ -810,8 +932,9 @@ describe('<DataGrid /> - Filter', () => {
         },
       ],
       columns: [{ field: 'country' }],
+      field: 'country',
     });
-    expect(getColumnValues()).to.deep.equal(['France', 'UK', 'US']);
+    expect(getColumnValues()).to.deep.equal(['France']);
   });
 
   it('should translate operators dynamically in toolbar without crashing ', () => {

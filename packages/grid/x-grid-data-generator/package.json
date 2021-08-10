@@ -1,6 +1,6 @@
 {
   "name": "@material-ui/x-grid-data-generator",
-  "version": "4.0.0-alpha.35",
+  "version": "4.0.0-alpha.36",
   "description": "Generate fake data for demo purposes only.",
   "author": "Material-UI Team",
   "main": "dist/cjs/index.js",

@@ -1,6 +1,7 @@
 import * as React from 'react';
 import InputBase, { InputBaseProps } from '@material-ui/core/InputBase';
 import { GridCellParams } from '../../models/params/gridCellParams';
+import { useEnhancedEffect } from '../../utils/material-ui-utils';
 
 export function GridEditInputCell(props: GridCellParams & InputBaseProps) {
   const {
@@ -13,11 +14,13 @@ export function GridEditInputCell(props: GridCellParams & InputBaseProps) {
     colDef,
     cellMode,
     isEditable,
+    tabIndex,
     hasFocus,
     getValue,
     ...other
   } = props;
 
+  const inputRef = React.useRef<HTMLInputElement>();
   const [valueState, setValueState] = React.useState(value);
 
   const handleChange = React.useCallback(
@@ -33,9 +36,15 @@ export function GridEditInputCell(props: GridCellParams & InputBaseProps) {
     setValueState(value);
   }, [value]);
 
+  useEnhancedEffect(() => {
+    if (hasFocus) {
+      inputRef.current!.focus();
+    }
+  }, [hasFocus]);
+
   return (
     <InputBase
-      autoFocus
+      inputRef={inputRef}
       className="MuiDataGrid-editInputCell"
       fullWidth
       type={colDef.type === 'number' ? colDef.type : 'text'}

@@ -1,4 +1,4 @@
-import { getInitialGridColumnsState, GridInternalColumns } from '../../../models/colDef/gridColDef';
+import { getInitialGridColumnsState, GridColumnsState } from '../../../models/colDef/gridColDef';
 import {
   GridContainerProps,
   GridScrollBarState,
@@ -9,8 +9,8 @@ import { GridEditRowsModel } from '../../../models/gridEditRowModel';
 import { DEFAULT_GRID_OPTIONS, GridOptions } from '../../../models/gridOptions';
 import { GridColumnMenuState } from '../columnMenu/columnMenuState';
 import {
-  GridColumnReorderState,
   getInitialGridColumnReorderState,
+  GridColumnReorderState,
 } from '../columnReorder/columnReorderState';
 import {
   getInitialGridColumnResizeState,
@@ -25,7 +25,7 @@ import {
 import { GridFocusState, GridTabIndexState } from '../focus/gridFocusState';
 import { GridPreferencePanelState } from '../preferencesPanel/gridPreferencePanelState';
 import { getInitialGridRowState, InternalGridRowsState } from '../rows/gridRowsState';
-import { GridSelectionState } from '../selection/gridSelectionState';
+import { GridSelectionModel } from '../../../models/gridSelectionModel';
 import { getInitialGridSortingState, GridSortingState } from '../sorting/gridSortingState';
 import {
   getInitialGridRenderingState,
@@ -39,7 +39,7 @@ export interface GridState {
   pagination: GridPaginationState;
   options: GridOptions;
   isScrolling: boolean;
-  columns: GridInternalColumns;
+  columns: GridColumnsState;
   columnReorder: GridColumnReorderState;
   columnResize: GridColumnResizeState;
   columnMenu: GridColumnMenuState;
@@ -50,7 +50,7 @@ export interface GridState {
   sorting: GridSortingState;
   focus: GridFocusState;
   tabIndex: GridTabIndexState;
-  selection: GridSelectionState;
+  selection: GridSelectionModel;
   filter: GridFilterModel;
   visibleRows: VisibleGridRowsState;
   preferencePanel: GridPreferencePanelState;

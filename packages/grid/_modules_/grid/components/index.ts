@@ -1,3 +1,4 @@
+export * from './base';
 export * from './cell';
 export * from './containers';
 export * from './columnHeaders';
@@ -20,5 +21,4 @@ export * from './GridRow';
 export * from './GridSelectedRowCount';
 export * from './GridStickyContainer';
 export * from './GridViewport';
-export * from './Watermark';
 export * from './GridScrollArea';

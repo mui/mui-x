@@ -19,13 +19,13 @@ import {
   isTabKey,
 } from '../../../utils/keyboardUtils';
 import { gridContainerSizesSelector } from '../../root/gridContainerSizesSelector';
-import { optionsSelector } from '../../utils/optionsSelector';
 import { visibleGridColumnsLengthSelector } from '../columns/gridColumnsSelector';
 import { useGridSelector } from '../core/useGridSelector';
 import { gridPaginationSelector } from '../pagination/gridPaginationSelector';
 import { gridRowCountSelector } from '../rows/gridRowsSelector';
 import { useLogger } from '../../utils/useLogger';
 import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
+import { GridComponentProps } from '../../../GridComponentProps';
 
 const getNextCellIndexes = (key: string, indexes: GridCellIndexCoordinates) => {
   if (!isArrowKeys(key)) {
@@ -63,9 +63,11 @@ const getNextColumnHeaderIndexes = (key: string, indexes: GridColumnHeaderIndexC
   }
 };
 
-export const useGridKeyboardNavigation = (apiRef: GridApiRef): void => {
+export const useGridKeyboardNavigation = (
+  apiRef: GridApiRef,
+  props: Pick<GridComponentProps, 'pagination'>,
+): void => {
   const logger = useLogger('useGridKeyboardNavigation');
-  const options = useGridSelector(apiRef, optionsSelector);
   const paginationState = useGridSelector(apiRef, gridPaginationSelector);
   const totalRowCount = useGridSelector(apiRef, gridRowCountSelector);
   const colCount = useGridSelector(apiRef, visibleGridColumnsLengthSelector);
@@ -91,7 +93,7 @@ export const useGridKeyboardNavigation = (apiRef: GridApiRef): void => {
       const isCtrlPressed = event.ctrlKey || event.metaKey || event.shiftKey;
       let rowCount = totalRowCount;
 
-      if (options.pagination && totalRowCount > paginationState.pageSize) {
+      if (props.pagination && totalRowCount > paginationState.pageSize) {
         rowCount = paginationState.pageSize * (paginationState.page + 1);
       }
 
@@ -111,7 +113,7 @@ export const useGridKeyboardNavigation = (apiRef: GridApiRef): void => {
           // In that case we go to first row, first col, or last row last col!
           let newRowIndex = 0;
           if (colIdx === 0) {
-            newRowIndex = options.pagination ? rowCount - paginationState.pageSize : 0;
+            newRowIndex = props.pagination ? rowCount - paginationState.pageSize : 0;
           } else {
             newRowIndex = rowCount - 1;
           }
@@ -151,7 +153,7 @@ export const useGridKeyboardNavigation = (apiRef: GridApiRef): void => {
     },
     [
       totalRowCount,
-      options.pagination,
+      props.pagination,
       paginationState.pageSize,
       paginationState.page,
       colCount,

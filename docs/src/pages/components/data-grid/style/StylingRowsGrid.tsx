@@ -4,6 +4,7 @@ import { useDemoData } from '@material-ui/x-grid-data-generator';
 import { createTheme, darken, lighten, Theme } from '@material-ui/core/styles';
 import { makeStyles } from '@material-ui/styles';
 
+// TODO v5: remove
 function getThemePaletteMode(palette: any): string {
   return palette.type || palette.mode;
 }

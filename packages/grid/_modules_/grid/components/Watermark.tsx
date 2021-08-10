@@ -1,12 +1,5 @@
 import * as React from 'react';
-
-// we duplicate licenseStatus to avoid adding a dependency on x-license.
-enum LicenseStatus {
-  NotFound = 'NotFound',
-  Invalid = 'Invalid',
-  Expired = 'Expired',
-  Valid = 'Valid',
-}
+import { useLicenseVerifier, LicenseStatus } from '@material-ui/x-license';
 
 function getLicenseErrorMessage(licenseStatus: string) {
   switch (licenseStatus) {
@@ -21,13 +14,9 @@ function getLicenseErrorMessage(licenseStatus: string) {
   }
 }
 
-export interface WatermarkProps {
-  licenseStatus: string;
-}
-
-export const Watermark = (props: WatermarkProps) => {
-  const { licenseStatus } = props;
-  if (licenseStatus === LicenseStatus.Valid.toString()) {
+export function Watermark() {
+  const licenseStatus = useLicenseVerifier();
+  if (licenseStatus === LicenseStatus.Valid) {
     return null;
   }
 
@@ -46,8 +35,7 @@ export const Watermark = (props: WatermarkProps) => {
         fontSize: 24,
       }}
     >
-      {' '}
-      {getLicenseErrorMessage(licenseStatus)}{' '}
+      {getLicenseErrorMessage(licenseStatus)}
     </div>
   );
-};
+}

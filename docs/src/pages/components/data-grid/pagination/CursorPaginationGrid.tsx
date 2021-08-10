@@ -85,6 +85,7 @@ export default function CursorPaginationGrid() {
         columns={data.columns}
         pagination
         pageSize={5}
+        rowsPerPageOptions={[5]}
         rowCount={100}
         paginationMode="server"
         onPageChange={handlePageChange}
