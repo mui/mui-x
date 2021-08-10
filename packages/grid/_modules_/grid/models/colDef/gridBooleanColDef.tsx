@@ -7,7 +7,9 @@ import { getGridBooleanOperators } from './gridBooleanOperators';
 import { GridValueFormatterParams } from '../params/gridCellParams';
 
 function gridBooleanFormatter({ value, api }: GridValueFormatterParams) {
-  return api.getLocaleText(value ? 'booleanCellTrueLabel' : 'booleanCellFalseLabel');
+  return value
+    ? api.getLocaleText('booleanCellTrueLabel')
+    : api.getLocaleText('booleanCellFalseLabel');
 }
 
 export const GRID_BOOLEAN_COL_DEF: GridColTypeDef = {
