@@ -19,6 +19,15 @@ import { optionsSelector } from '../utils/optionsSelector';
 import { useLogger } from '../utils/useLogger';
 import { useGridApiEventHandler } from './useGridApiEventHandler';
 
+/**
+ * @requires useOptionsProp (state)
+ * @requires useGridDensity (state)
+ * @requires useGridColumns (state)
+ * @requires useGridFilter (state)
+ * @requires useGridPage (state)
+ * @requires useGridPageSize (state)
+ * TODO: Impossible priority - useGridPageSize also needs to be after useGridContainerProps
+ */
 export const useGridContainerProps = (apiRef: GridApiRef) => {
   const logger = useLogger('useGridContainerProps');
   const [gridState, setGridState, forceUpdate] = useGridState(apiRef);

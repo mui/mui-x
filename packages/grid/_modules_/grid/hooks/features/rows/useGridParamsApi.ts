@@ -24,6 +24,14 @@ function warnMissingColumn(field) {
   warnedOnce = true;
 }
 
+/**
+ * @requires useGridColumns (method)
+ * @requires useGridRows (method)
+ * @requires useGridFocus (state)
+ * @requires useGridEditRows (method)
+ * TODO: Impossible priority - useGridEditRows also needs to be after useGridParamsApi
+ * TODO: Impossible priority - useGridFocus also needs to be after useGridParamsApi
+ */
 export function useGridParamsApi(apiRef: GridApiRef) {
   const getColumnHeaderParams = React.useCallback(
     (field: string): GridColumnHeaderParams => ({

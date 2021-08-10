@@ -137,6 +137,10 @@ const upsertColumnsState = (columnUpdates: GridColDef[], prevColumnsState?: Grid
   return newState;
 };
 
+/**
+ * @requires useGridParamsApi (method)
+ * TODO: Impossible priority - useGridParamsApi also needs to be after useGridColumns
+ */
 export function useGridColumns(
   apiRef: GridApiRef,
   props: Pick<

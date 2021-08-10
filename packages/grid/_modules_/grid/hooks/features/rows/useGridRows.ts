@@ -52,6 +52,10 @@ export function convertGridRowsPropToState(
   return state;
 }
 
+/**
+ * @requires useGridSorting (method)
+ * TODO: Impossible priority - useGridSorting also needs to be after useGridRows (which causes all the existence check for apiRef.current.apiRef.current.getSortedRowIds)
+ */
 export const useGridRows = (
   apiRef: GridApiRef,
   props: Pick<GridComponentProps, 'rows' | 'getRowId' | 'rowCount'>,

@@ -39,6 +39,12 @@ import { useEventCallback } from '../../../utils/material-ui-utils';
 import { useLogger } from '../../utils/useLogger';
 import { useGridState } from '../core/useGridState';
 
+/**
+ * @requires useGridFocus - can be after, async only
+ * @requires useGridParamsApi (method)
+ * @requires useGridColumns (state)
+ * @requires useGridControlState (method)
+ */
 export function useGridEditRows(
   apiRef: GridApiRef,
   props: Pick<

@@ -40,6 +40,14 @@ function scrollIntoView(dimensions) {
   return undefined;
 }
 
+/**
+ * @requires useGridContainerProps (state)
+ * @requires useGridColumns (state)
+ * @requires useGridPage (state)
+ * @requires useGridPageSize (state)
+ * @requires useGridRows (state)
+ * @requires useGridDensity (state)
+ */
 export const useGridVirtualRows = (apiRef: GridApiRef): void => {
   const logger = useLogger('useGridVirtualRows');
   const colRef = apiRef.current.columnHeadersElementRef!;

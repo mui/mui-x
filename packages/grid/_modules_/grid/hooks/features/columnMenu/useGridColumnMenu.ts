@@ -6,6 +6,10 @@ import { useGridState } from '../core/useGridState';
 import { useGridApiEventHandler } from '../../root';
 import { GRID_COLUMN_RESIZE_START } from '../../../constants';
 
+/**
+ * @requires useGridPreferencePanel (method)
+ * @requires useGridVirtualRows (state)
+ */
 export const useGridColumnMenu = (apiRef: GridApiRef): void => {
   const logger = useLogger('useGridColumnMenu');
   const [gridState, setGridState, forceUpdate] = useGridState(apiRef);
@@ -41,7 +45,7 @@ export const useGridColumnMenu = (apiRef: GridApiRef): void => {
         hideColumnMenu();
       }
     },
-    [logger, showColumnMenu, hideColumnMenu, gridState],
+    [logger, showColumnMenu, hideColumnMenu, gridState.columnMenu],
   );
 
   const handleColumnResizeStart = React.useCallback(() => {

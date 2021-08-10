@@ -40,6 +40,7 @@ const hasCursorPositionChanged = (
 
 /**
  * Only available in XGrid
+ * @requires useGridColumns (method)
  */
 export const useGridColumnReorder = (
   apiRef: GridApiRef,

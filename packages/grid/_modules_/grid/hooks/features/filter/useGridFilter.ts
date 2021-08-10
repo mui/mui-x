@@ -25,6 +25,12 @@ import { GridFilterModel } from '../../../models/gridFilterModel';
 import { visibleSortedGridRowsSelector } from './gridFilterSelector';
 import { getInitialVisibleGridRowsState } from './visibleGridRowsState';
 
+/**
+ * @requires useGridColumns (state, method, event)
+ * @requires useGridParamsApi (method)
+ * @requires useGridRows (event)
+ * @requires useGridControlState (method)
+ */
 export const useGridFilter = (
   apiRef: GridApiRef,
   props: Pick<
@@ -166,7 +172,7 @@ export const useGridFilter = (
         }
         if (newItem.columnField != null && newItem.operatorValue == null) {
           // we select a default operator
-          const column = apiRef!.current!.getColumn(newItem.columnField);
+          const column = apiRef.current.getColumn(newItem.columnField);
           newItem.operatorValue = column && column!.filterOperators![0].value!;
         }
         if (props.disableMultipleColumnsFiltering && items.length > 1) {
@@ -218,7 +224,7 @@ export const useGridFilter = (
             ? gridState.filter.items[gridState.filter.items.length - 1]
             : null;
         if (!lastFilter || lastFilter.columnField !== targetColumnField) {
-          apiRef!.current.upsertFilter({ columnField: targetColumnField });
+          apiRef.current.upsertFilter({ columnField: targetColumnField });
         }
       }
       apiRef.current.showPreferences(GridPreferencePanelsValue.filters);

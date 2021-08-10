@@ -17,6 +17,13 @@ import { isEnterKey, isNavigationKey, isSpaceKey } from '../../../utils/keyboard
 import { useLogger } from '../../utils/useLogger';
 import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
 
+/**
+ * @requires useGridSelection (method)
+ * @requires useGridRows (method)
+ * @requires useGridFocus (state)
+ * @requires useGridParamsApi (method)
+ * @requires useGridColumnMenu (method)
+ */
 export const useGridKeyboard = (apiRef: GridApiRef): void => {
   const logger = useLogger('useGridKeyboard');
 

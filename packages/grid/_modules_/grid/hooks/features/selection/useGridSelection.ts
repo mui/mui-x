@@ -18,6 +18,12 @@ import {
   selectedIdsLookupSelector,
 } from './gridSelectionSelector';
 
+/**
+ * @requires useOptionsProp (state)
+ * @requires useGridRows (state, method)
+ * @requires useGridParamsApi (method)
+ * @requires useGridControlState (method)
+ */
 export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps): void => {
   const logger = useLogger('useGridSelection');
   const [, setGridState, forceUpdate] = useGridState(apiRef);

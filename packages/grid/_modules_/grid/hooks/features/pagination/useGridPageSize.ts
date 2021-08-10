@@ -9,6 +9,11 @@ import { useGridSelector, useGridState } from '../core';
 import { visibleGridRowCountSelector } from '../filter';
 import { gridContainerSizesSelector } from '../../root/gridContainerSizesSelector';
 
+/**
+ * @requires useGridControlState (method)
+ * @requires useGridContainerProps (state)
+ * @requires useGridFilter (state)
+ */
 export const useGridPageSize = (
   apiRef: GridApiRef,
   props: Pick<GridComponentProps, 'pageSize' | 'onPageSizeChange' | 'autoPageSize'>,

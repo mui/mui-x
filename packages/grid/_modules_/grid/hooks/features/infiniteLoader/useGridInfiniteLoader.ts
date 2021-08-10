@@ -8,6 +8,11 @@ import { GridRowScrollEndParams } from '../../../models/params/gridRowScrollEndP
 import { visibleGridColumnsSelector } from '../columns/gridColumnsSelector';
 import { GridComponentProps } from '../../../GridComponentProps';
 
+/**
+ * @requires useGridColumns (state)
+ * @requires useGridContainerProps (state)
+ * @requires useGridVirtualRows (method, event)
+ */
 export const useGridInfiniteLoader = (
   apiRef: GridApiRef,
   props: Pick<GridComponentProps, 'onRowsScrollEnd' | 'scrollEndThreshold'>,
