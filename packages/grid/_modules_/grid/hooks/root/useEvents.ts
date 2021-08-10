@@ -1,8 +1,6 @@
-import * as React from 'react';
 import { GridApiRef } from '../../models/api/gridApiRef';
 import { GridEvents } from '../../constants/eventsConstants';
 import { useGridApiOptionHandler } from './useGridApiEventHandler';
-import { useNativeEventListener } from './useNativeEventListener';
 import { GridComponentProps } from '../../GridComponentProps';
 
 export function useEvents(

@@ -1,7 +1,5 @@
 import * as React from 'react';
 import { GridApiRef } from '../../../models/api/gridApiRef';
-import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
-import { GridEvents } from '../../../constants/eventsConstants';
 import { buildCSV } from '../export/serializers/csvSerializer';
 import { useGridSelector } from '../core/useGridSelector';
 import { visibleGridColumnsSelector } from '../columns/gridColumnsSelector';
