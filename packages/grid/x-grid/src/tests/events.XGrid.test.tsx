@@ -359,8 +359,8 @@ describe('<XGrid /> - Events Params', () => {
     gridWindow.dispatchEvent(new Event('scroll'));
     await waitFor(() => {
       expect(handleViewportRowsChange.callCount).to.equal(3);
-      expect(handleViewportRowsChange.lastCall.args[0].firstRowIndex).to.equal(10); // should be 2
-      expect(handleViewportRowsChange.lastCall.args[0].lastRowIndex).to.equal(14); // should be pageSize + 1
+      expect(handleViewportRowsChange.lastCall.args[0].firstRowIndex).to.equal(8); // should be 2
+      expect(handleViewportRowsChange.lastCall.args[0].lastRowIndex).to.equal(12); // should be pageSize + 1
     });
   });
 });
