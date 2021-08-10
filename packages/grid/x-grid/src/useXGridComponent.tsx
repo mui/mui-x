@@ -28,7 +28,6 @@ import { useApi } from '../../_modules_/grid/hooks/root/useApi';
 import { useEvents } from '../../_modules_/grid/hooks/root/useEvents';
 import { useGridContainerProps } from '../../_modules_/grid/hooks/root/useGridContainerProps';
 import { useErrorHandler } from '../../_modules_/grid/hooks/utils/useErrorHandler';
-import { useGridScrollbarSizeDetector } from '../../_modules_/grid/hooks/utils/useGridScrollbarSizeDetector';
 import { useLoggerFactory } from '../../_modules_/grid/hooks/utils/useLogger';
 import { useOptionsProp } from '../../_modules_/grid/hooks/utils/useOptionsProp';
 import { useRenderInfoLog } from '../../_modules_/grid/hooks/utils/useRenderInfoLog';
@@ -41,7 +40,6 @@ export const useXGridComponent = (apiRef: GridApiRef, props: GridComponentProps)
   useApi(apiRef, props);
   useErrorHandler(apiRef, props);
   useGridControlState(apiRef, props);
-  useGridScrollbarSizeDetector(apiRef, props);
   useOptionsProp(apiRef, props);
   useEvents(apiRef, props);
   useLocaleText(apiRef);
