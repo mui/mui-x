@@ -23,7 +23,7 @@ import { InternalRenderingState } from './renderingState';
 import { useGridVirtualColumns } from './useGridVirtualColumns';
 import { gridDensityRowHeightSelector } from '../density/densitySelector';
 import { scrollStateSelector } from './renderingStateSelector';
-import {GridComponentProps} from "../../../GridComponentProps";
+import { GridComponentProps } from '../../../GridComponentProps';
 
 // Logic copied from https://www.w3.org/TR/wai-aria-practices/examples/listbox/js/listbox.js
 // Similar to https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollIntoView
@@ -40,7 +40,13 @@ function scrollIntoView(dimensions) {
   return undefined;
 }
 
-export const useGridVirtualRows = (apiRef: GridApiRef, props: Pick<GridComponentProps, 'pagination' | 'paginationMode' | 'columnBuffer' | 'disableExtendRowFullWidth'>): void => {
+export const useGridVirtualRows = (
+  apiRef: GridApiRef,
+  props: Pick<
+    GridComponentProps,
+    'pagination' | 'paginationMode' | 'columnBuffer' | 'disableExtendRowFullWidth'
+  >,
+): void => {
   const logger = useLogger('useGridVirtualRows');
   const colRef = apiRef.current.columnHeadersElementRef!;
   const windowRef = apiRef.current.windowRef!;
@@ -81,7 +87,7 @@ export const useGridVirtualRows = (apiRef: GridApiRef, props: Pick<GridComponent
       if (
         props.pagination &&
         paginationState.pageSize != null &&
-          props.paginationMode === 'client'
+        props.paginationMode === 'client'
       ) {
         minRowIdx = paginationState.pageSize * paginationState.page;
       }
@@ -98,9 +104,9 @@ export const useGridVirtualRows = (apiRef: GridApiRef, props: Pick<GridComponent
     },
     [
       apiRef,
-        props.pagination,
+      props.pagination,
       paginationState.pageSize,
-        props.paginationMode,
+      props.paginationMode,
       paginationState.page,
     ],
   );
@@ -244,7 +250,7 @@ export const useGridVirtualRows = (apiRef: GridApiRef, props: Pick<GridComponent
       visibleColumns,
       logger,
       apiRef,
-        props.pagination,
+      props.pagination,
       paginationState.page,
       paginationState.pageSize,
       windowRef,

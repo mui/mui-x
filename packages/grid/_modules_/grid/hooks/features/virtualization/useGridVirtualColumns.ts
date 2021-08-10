@@ -15,7 +15,7 @@ import {
   visibleGridColumnsSelector,
 } from '../columns/gridColumnsSelector';
 import { useGridSelector } from '../core/useGridSelector';
-import {GridComponentProps} from "../../../GridComponentProps";
+import { GridComponentProps } from '../../../GridComponentProps';
 
 type UpdateRenderedColsFnType = (
   containerProps: GridContainerProps | null,
@@ -50,7 +50,7 @@ function getIdxFromScroll(
 
 export const useGridVirtualColumns = (
   apiRef: GridApiRef,
-  props: Pick<GridComponentProps, 'columnBuffer' | 'disableExtendRowFullWidth'>
+  props: Pick<GridComponentProps, 'columnBuffer' | 'disableExtendRowFullWidth'>,
 ): UseVirtualColumnsReturnType => {
   const logger = useLogger('useGridVirtualColumns');
 
@@ -141,7 +141,7 @@ export const useGridVirtualColumns = (
       getColumnFromScroll,
       getColumnIdxFromScroll,
       props.columnBuffer,
-        props.disableExtendRowFullWidth,
+      props.disableExtendRowFullWidth,
       visibleColumns,
       columnsMeta.positions,
       columnsMeta.totalWidth,

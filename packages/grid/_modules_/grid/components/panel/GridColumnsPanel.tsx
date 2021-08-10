@@ -15,7 +15,7 @@ import { GridPanelFooter } from './GridPanelFooter';
 import { GridPanelHeader } from './GridPanelHeader';
 import { GridPanelWrapper } from './GridPanelWrapper';
 import { GRID_EXPERIMENTAL_ENABLED } from '../../constants';
-import {useGridRootProps} from "../../hooks/utils/useGridRootProps";
+import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
 const useStyles = makeStyles(
   {
@@ -42,7 +42,7 @@ export function GridColumnsPanel() {
   const apiRef = useGridApiContext();
   const searchInputRef = React.useRef<HTMLInputElement>(null);
   const columns = useGridSelector(apiRef, allGridColumnsSelector);
-  const rootProps = useGridRootProps()
+  const rootProps = useGridRootProps();
   const [searchValue, setSearchValue] = React.useState('');
 
   const toggleColumn = React.useCallback(

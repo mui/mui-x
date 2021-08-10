@@ -12,13 +12,13 @@ import { selectedGridRowsCountSelector } from '../../hooks/features/selection/gr
 import { GridColumnHeaderParams } from '../../models/params/gridColumnHeaderParams';
 import { isNavigationKey, isSpaceKey } from '../../utils/keyboardUtils';
 import { useGridApiContext } from '../../hooks/root/useGridApiContext';
-import {useGridRootProps} from "../../hooks/utils/useGridRootProps";
+import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
 export const GridHeaderCheckbox = React.forwardRef<HTMLInputElement, GridColumnHeaderParams>(
   function GridHeaderCheckbox(props, ref) {
     const [, forceUpdate] = React.useState(false);
     const apiRef = useGridApiContext();
-    const rootProps = useGridRootProps()
+    const rootProps = useGridRootProps();
     const tabIndexState = useGridSelector(apiRef, gridTabIndexColumnHeaderSelector);
     const totalSelectedRows = useGridSelector(apiRef, selectedGridRowsCountSelector);
     const totalRows = useGridSelector(apiRef, gridRowCountSelector);
