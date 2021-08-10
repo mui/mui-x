@@ -7,7 +7,6 @@ import TextField from '@material-ui/core/TextField';
 import { makeStyles } from '@material-ui/styles';
 import { allGridColumnsSelector } from '../../hooks/features/columns/gridColumnsSelector';
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
-import { optionsSelector } from '../../hooks/utils/optionsSelector';
 import { useGridApiContext } from '../../hooks/root/useGridApiContext';
 import { GridDragIcon } from '../icons/index';
 import { GridPanelContent } from './GridPanelContent';
