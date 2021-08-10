@@ -9,6 +9,7 @@ import {
 import { ElementSize } from '../../models/elementSize';
 import { isDeepEqual } from '../../utils/utils';
 import { gridColumnsTotalWidthSelector } from '../features/columns/gridColumnsSelector';
+import { GridState } from '../features/core/gridState';
 import { useGridSelector } from '../features/core/useGridSelector';
 import { useGridState } from '../features/core/useGridState';
 import { gridDensityRowHeightSelector } from '../features/density/densitySelector';
@@ -21,6 +22,7 @@ import { useGridApiEventHandler } from './useGridApiEventHandler';
 export const useGridContainerProps = (apiRef: GridApiRef) => {
   const logger = useLogger('useGridContainerProps');
   const [gridState, setGridState, forceUpdate] = useGridState(apiRef);
+  const windowSizesRef = React.useRef<ElementSize>({ width: 0, height: 0 });
   const options = useGridSelector(apiRef, optionsSelector);
   const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
   const columnsTotalWidth = useGridSelector(apiRef, gridColumnsTotalWidthSelector);
@@ -46,10 +48,10 @@ export const useGridContainerProps = (apiRef: GridApiRef) => {
   ]);
 
   const getScrollBar = React.useCallback(
-    (rowsCount: number, windowSizes: ElementSize): GridScrollBarState => {
+    (rowsCount: number) => {
       logger.debug('Calculating scrollbar sizes.');
 
-      let hasScrollX = columnsTotalWidth > windowSizes.width;
+      let hasScrollX = columnsTotalWidth > windowSizesRef.current.width;
       const scrollBarSize = {
         y: 0,
         x: hasScrollX ? options.scrollbarSize! : 0,
@@ -64,12 +66,12 @@ export const useGridContainerProps = (apiRef: GridApiRef) => {
       const hasScrollY =
         !options.autoPageSize &&
         !options.autoHeight &&
-        requiredSize + scrollBarSize.x > windowSizes.height;
+        requiredSize + scrollBarSize.x > windowSizesRef.current.height;
 
       scrollBarSize.y = hasScrollY ? options.scrollbarSize! : 0;
 
       // We recalculate the scroll x to consider the size of the y scrollbar.
-      hasScrollX = columnsTotalWidth + scrollBarSize.y > windowSizes.width;
+      hasScrollX = columnsTotalWidth + scrollBarSize.y > windowSizesRef.current.width;
       scrollBarSize.x = hasScrollX ? options.scrollbarSize! : 0;
 
       logger.debug(`Scrollbar size on axis x: ${scrollBarSize.x}, y: ${scrollBarSize.y}`);
@@ -87,21 +89,29 @@ export const useGridContainerProps = (apiRef: GridApiRef) => {
   );
 
   const getViewport = React.useCallback(
-    (
-      rowsCount: number,
-      scrollBarState: GridScrollBarState,
-      windowSizes: ElementSize,
-    ): GridViewportSizeState => {
+    (rowsCount: number, scrollBarState: GridScrollBarState) => {
+      if (!windowRef?.current) {
+        return null;
+      }
+
       logger.debug('Calculating container sizes.');
 
-      return {
-        width: windowSizes.width - scrollBarState.scrollBarSize.y,
+      const window = windowRef.current.getBoundingClientRect();
+      windowSizesRef.current = { width: window.width, height: window.height };
+
+      logger.debug(
+        `window Size - W: ${windowSizesRef.current.width} H: ${windowSizesRef.current.height} `,
+      );
+
+      const viewportSize = {
+        width: windowSizesRef.current!.width - scrollBarState.scrollBarSize.y,
         height: options.autoHeight
           ? rowsCount * rowHeight
-          : windowSizes.height - scrollBarState.scrollBarSize.x,
+          : windowSizesRef.current!.height - scrollBarState.scrollBarSize.x,
       };
+      return viewportSize;
     },
-    [logger, options.autoHeight, rowHeight],
+    [logger, options.autoHeight, rowHeight, windowRef],
   );
 
   const getContainerProps = React.useCallback(
@@ -109,7 +119,6 @@ export const useGridContainerProps = (apiRef: GridApiRef) => {
       rowsCount: number,
       viewportSizes: GridViewportSizeState,
       scrollBarState: GridScrollBarState,
-      windowSizes: ElementSize,
     ): GridContainerProps | null => {
       if (
         !windowRef ||
@@ -121,7 +130,7 @@ export const useGridContainerProps = (apiRef: GridApiRef) => {
       }
 
       const requiredSize = rowsCount * rowHeight;
-      const diff = requiredSize - windowSizes.height;
+      const diff = requiredSize - windowSizesRef.current.height;
       // we activate virtualization when we have more than 2 rows outside the viewport
       const isVirtualized = diff > rowHeight * 2;
 
@@ -155,7 +164,7 @@ export const useGridContainerProps = (apiRef: GridApiRef) => {
             width: columnsTotalWidth,
             height: requiredHeight,
           },
-          windowSizes,
+          windowSizes: windowSizesRef.current,
           lastPage: 1,
         };
         logger.debug('Fixed container props', indexes);
@@ -196,7 +205,7 @@ export const useGridContainerProps = (apiRef: GridApiRef) => {
           height: renderingZoneHeight,
         },
         renderingZoneScrollHeight: renderingZoneMaxScrollHeight,
-        windowSizes,
+        windowSizes: windowSizesRef.current,
         lastPage: viewportMaxPages,
       };
 
@@ -206,53 +215,58 @@ export const useGridContainerProps = (apiRef: GridApiRef) => {
     [windowRef, columnsTotalWidth, rowHeight, options.autoPageSize, options.autoHeight, logger],
   );
 
+  const updateStateIfChanged = React.useCallback(
+    (
+      shouldUpdate: (oldState: GridState) => boolean,
+      newStateUpdate: (state: GridState) => GridState,
+    ) => {
+      let update = false;
+      setGridState((state) => {
+        update = shouldUpdate(state);
+        if (update) {
+          return newStateUpdate(state);
+        }
+        return state;
+      });
+      if (update) {
+        forceUpdate();
+      }
+    },
+    [forceUpdate, setGridState],
+  );
+
   const refreshContainerSizes = React.useCallback(() => {
     logger.debug('Refreshing container sizes');
+    const rowsCount = getVirtualRowCount();
+    const scrollBar = getScrollBar(rowsCount);
 
-    if (!windowRef?.current) {
+    const viewportSizes = getViewport(rowsCount, scrollBar);
+    if (!viewportSizes) {
       return;
     }
 
-    const window = windowRef.current.getBoundingClientRect();
-    const windowSizes: ElementSize = { width: window.width, height: window.height };
+    updateStateIfChanged(
+      (state) => state.scrollBar !== scrollBar,
+      (state) => ({ ...state, scrollBar }),
+    );
 
-    logger.debug(`window Size - W: ${windowSizes.width} H: ${windowSizes.height} `);
+    updateStateIfChanged(
+      (state) => state.viewportSizes !== viewportSizes,
+      (state) => ({ ...state, viewportSizes }),
+    );
 
-    const rowsCount = getVirtualRowCount();
-    const scrollBar = getScrollBar(rowsCount, windowSizes);
-    const viewportSizes = getViewport(rowsCount, scrollBar, windowSizes);
-    const containerSizes = getContainerProps(rowsCount, viewportSizes, scrollBar, windowSizes);
-    const prevState = apiRef.current.getState();
-
-    let shouldUpdate = false;
-    if (!isDeepEqual(prevState.scrollBar, scrollBar)) {
-      setGridState((state) => ({ ...state, scrollBar }));
-      shouldUpdate = true;
-    }
-
-    if (!isDeepEqual(prevState.viewportSizes, viewportSizes)) {
-      setGridState((state) => ({ ...state, viewportSizes }));
-      shouldUpdate = true;
-    }
-
-    if (!isDeepEqual(prevState.containerSizes, containerSizes)) {
-      setGridState((state) => ({ ...state, containerSizes }));
-      shouldUpdate = true;
-    }
-
-    if (shouldUpdate) {
-      forceUpdate();
-    }
+    const containerState = getContainerProps(rowsCount, viewportSizes, scrollBar);
+    updateStateIfChanged(
+      (state) => !isDeepEqual(state.containerSizes, containerState),
+      (state) => ({ ...state, containerSizes: containerState }),
+    );
   }, [
-    apiRef,
-    logger,
-    setGridState,
-    forceUpdate,
-    windowRef,
     getContainerProps,
     getScrollBar,
     getViewport,
     getVirtualRowCount,
+    logger,
+    updateStateIfChanged,
   ]);
 
   React.useEffect(() => {
