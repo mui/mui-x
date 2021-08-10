@@ -1,7 +1,6 @@
 import * as React from 'react';
 import {
   GridContainerProps,
-  GridOptions,
   GridRenderColumnsProps,
   GridVirtualizationApi,
   GridApiRef,
@@ -16,6 +15,7 @@ import {
   visibleGridColumnsSelector,
 } from '../columns/gridColumnsSelector';
 import { useGridSelector } from '../core/useGridSelector';
+import {GridComponentProps} from "../../../GridComponentProps";
 
 type UpdateRenderedColsFnType = (
   containerProps: GridContainerProps | null,
@@ -49,8 +49,8 @@ function getIdxFromScroll(
 }
 
 export const useGridVirtualColumns = (
-  options: GridOptions,
   apiRef: GridApiRef,
+  props: Pick<GridComponentProps, 'columnBuffer' | 'disableExtendRowFullWidth'>
 ): UseVirtualColumnsReturnType => {
   const logger = useLogger('useGridVirtualColumns');
 
@@ -94,7 +94,7 @@ export const useGridVirtualColumns = (
       const lastDisplayedIdx = getColumnIdxFromScroll(scrollLeft + windowWidth);
       const prevFirstColIdx = renderedColRef?.current?.firstColIdx || 0;
       const prevLastColIdx = renderedColRef?.current?.lastColIdx || 0;
-      const columnBuffer = options.columnBuffer;
+      const columnBuffer = props.columnBuffer!;
       const tolerance = columnBuffer > 1 ? columnBuffer - 1 : columnBuffer; // Math.floor(columnBuffer / 2);
       const diffFirst = Math.abs(firstDisplayedIdx - tolerance - prevFirstColIdx);
       const diffLast = Math.abs(lastDisplayedIdx + tolerance - prevLastColIdx);
@@ -123,7 +123,7 @@ export const useGridVirtualColumns = (
           columnsMeta.totalWidth -
           columnsMeta.positions[newRenderedColState.lastColIdx] -
           visibleColumns[newRenderedColState.lastColIdx].computedWidth;
-      } else if (!options.disableExtendRowFullWidth) {
+      } else if (!props.disableExtendRowFullWidth) {
         newRenderedColState.rightEmptyWidth =
           apiRef.current.state.viewportSizes.width - columnsMeta.totalWidth;
       }
@@ -140,8 +140,8 @@ export const useGridVirtualColumns = (
       logger,
       getColumnFromScroll,
       getColumnIdxFromScroll,
-      options.columnBuffer,
-      options.disableExtendRowFullWidth,
+      props.columnBuffer,
+        props.disableExtendRowFullWidth,
       visibleColumns,
       columnsMeta.positions,
       columnsMeta.totalWidth,

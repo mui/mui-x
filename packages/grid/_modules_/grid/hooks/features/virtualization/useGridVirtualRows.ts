@@ -7,7 +7,6 @@ import { GridScrollParams } from '../../../models/params/gridScrollParams';
 import { GridRenderContextProps, GridRenderRowProps } from '../../../models/gridRenderContextProps';
 import { isDeepEqual } from '../../../utils/utils';
 import { useEnhancedEffect } from '../../../utils/material-ui-utils';
-import { optionsSelector } from '../../utils/optionsSelector';
 import {
   gridColumnsMetaSelector,
   visibleGridColumnsSelector,
@@ -24,6 +23,7 @@ import { InternalRenderingState } from './renderingState';
 import { useGridVirtualColumns } from './useGridVirtualColumns';
 import { gridDensityRowHeightSelector } from '../density/densitySelector';
 import { scrollStateSelector } from './renderingStateSelector';
+import {GridComponentProps} from "../../../GridComponentProps";
 
 // Logic copied from https://www.w3.org/TR/wai-aria-practices/examples/listbox/js/listbox.js
 // Similar to https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollIntoView
@@ -40,14 +40,13 @@ function scrollIntoView(dimensions) {
   return undefined;
 }
 
-export const useGridVirtualRows = (apiRef: GridApiRef): void => {
+export const useGridVirtualRows = (apiRef: GridApiRef, props: Pick<GridComponentProps, 'pagination' | 'paginationMode' | 'columnBuffer' | 'disableExtendRowFullWidth'>): void => {
   const logger = useLogger('useGridVirtualRows');
   const colRef = apiRef.current.columnHeadersElementRef!;
   const windowRef = apiRef.current.windowRef!;
   const renderingZoneRef = apiRef.current.renderingZoneRef!;
 
   const [gridState, setGridState, forceUpdate] = useGridState(apiRef);
-  const options = useGridSelector(apiRef, optionsSelector);
   const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
   const paginationState = useGridSelector(apiRef, gridPaginationSelector);
   const totalRowCount = useGridSelector(apiRef, gridRowCountSelector);
@@ -55,7 +54,7 @@ export const useGridVirtualRows = (apiRef: GridApiRef): void => {
   const columnsMeta = useGridSelector(apiRef, gridColumnsMetaSelector);
 
   const [scrollTo] = useGridScrollFn(renderingZoneRef, colRef);
-  const [renderedColRef, updateRenderedCols] = useGridVirtualColumns(options, apiRef);
+  const [renderedColRef, updateRenderedCols] = useGridVirtualColumns(apiRef, props);
 
   const setRenderingState = React.useCallback(
     (newState: Partial<InternalRenderingState>) => {
@@ -80,9 +79,9 @@ export const useGridVirtualRows = (apiRef: GridApiRef): void => {
       }
       let minRowIdx = 0;
       if (
-        options.pagination &&
+        props.pagination &&
         paginationState.pageSize != null &&
-        options.paginationMode === 'client'
+          props.paginationMode === 'client'
       ) {
         minRowIdx = paginationState.pageSize * paginationState.page;
       }
@@ -99,9 +98,9 @@ export const useGridVirtualRows = (apiRef: GridApiRef): void => {
     },
     [
       apiRef,
-      options.pagination,
+        props.pagination,
       paginationState.pageSize,
-      options.paginationMode,
+        props.paginationMode,
       paginationState.page,
     ],
   );
@@ -218,7 +217,7 @@ export const useGridVirtualRows = (apiRef: GridApiRef): void => {
       }
 
       if (params.rowIndex != null) {
-        const elementIndex = !options.pagination
+        const elementIndex = !props.pagination
           ? params.rowIndex
           : params.rowIndex - paginationState.page * paginationState.pageSize;
 
@@ -245,7 +244,7 @@ export const useGridVirtualRows = (apiRef: GridApiRef): void => {
       visibleColumns,
       logger,
       apiRef,
-      options.pagination,
+        props.pagination,
       paginationState.page,
       paginationState.pageSize,
       windowRef,

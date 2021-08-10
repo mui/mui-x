@@ -61,7 +61,7 @@ export const useXGridComponent = (apiRef: GridApiRef, props: GridComponentProps)
   useGridFilter(apiRef, props);
   useGridContainerProps(apiRef);
   useGridDensity(apiRef, props);
-  useGridVirtualRows(apiRef);
+  useGridVirtualRows(apiRef, props);
   useGridColumnReorder(apiRef, props);
   useGridColumnResize(apiRef, props);
   useGridPageSize(apiRef, props);
