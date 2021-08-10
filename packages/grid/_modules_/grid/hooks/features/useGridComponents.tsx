@@ -2,8 +2,6 @@ import * as React from 'react';
 import MUICheckbox from '@material-ui/core/Checkbox';
 import { GridApiRef } from '../../models/api/gridApiRef';
 import { GridApiRefComponentsProperty } from '../../models/api/gridComponentsApi';
-import { GridSlotsComponent } from '../../models/gridSlotsComponent';
-import { GridSlotsComponentsProps } from '../../models/gridSlotsComponentsProps';
 import {
   GridArrowDownwardIcon,
   GridArrowUpwardIcon,
@@ -32,6 +30,7 @@ import {
 import { GridColumnUnsortedIcon } from '../../components/columnHeaders/GridColumnUnsortedIcon';
 import { ErrorOverlay } from '../../components/ErrorOverlay';
 import { GridNoResultsOverlay } from '../../components/GridNoResultsOverlay';
+import { GridComponentProps } from '../../GridComponentProps';
 
 export const DEFAULT_GRID_SLOTS_COMPONENTS: GridApiRefComponentsProperty = {
   BooleanCellFalseIcon: GridCloseIcon,
@@ -65,79 +64,89 @@ export const DEFAULT_GRID_SLOTS_COMPONENTS: GridApiRefComponentsProperty = {
 
 export const useGridComponents = (
   apiRef: GridApiRef,
-  {
-    components,
-    componentsProps,
-  }: { components?: GridSlotsComponent; componentsProps?: GridSlotsComponentsProps },
+  props: Pick<GridComponentProps, 'components' | 'componentsProps'>,
 ) => {
-  const mappedComponents: GridApiRefComponentsProperty = React.useMemo(() => {
+  const mappedComponents = React.useMemo<GridApiRefComponentsProperty>(() => {
     return {
       BooleanCellTrueIcon:
-        (components && components.BooleanCellTrueIcon) ||
+        (props.components && props.components.BooleanCellTrueIcon) ||
         DEFAULT_GRID_SLOTS_COMPONENTS.BooleanCellTrueIcon,
       BooleanCellFalseIcon:
-        (components && components.BooleanCellFalseIcon) ||
+        (props.components && props.components.BooleanCellFalseIcon) ||
         DEFAULT_GRID_SLOTS_COMPONENTS.BooleanCellFalseIcon,
       ColumnFilteredIcon:
-        (components && components.ColumnFilteredIcon) ||
+        (props.components && props.components.ColumnFilteredIcon) ||
         DEFAULT_GRID_SLOTS_COMPONENTS.ColumnFilteredIcon,
       ColumnMenuIcon:
-        (components && components.ColumnMenuIcon) || DEFAULT_GRID_SLOTS_COMPONENTS.ColumnMenuIcon,
+        (props.components && props.components.ColumnMenuIcon) ||
+        DEFAULT_GRID_SLOTS_COMPONENTS.ColumnMenuIcon,
       ColumnResizeIcon:
-        (components && components.ColumnResizeIcon) ||
+        (props.components && props.components.ColumnResizeIcon) ||
         DEFAULT_GRID_SLOTS_COMPONENTS.ColumnResizeIcon,
       ColumnSelectorIcon:
-        (components && components.ColumnSelectorIcon) ||
+        (props.components && props.components.ColumnSelectorIcon) ||
         DEFAULT_GRID_SLOTS_COMPONENTS.ColumnSelectorIcon,
       ColumnUnsortedIcon:
-        components?.ColumnUnsortedIcon === undefined
+        props.components?.ColumnUnsortedIcon === undefined
           ? DEFAULT_GRID_SLOTS_COMPONENTS.ColumnUnsortedIcon
-          : components?.ColumnUnsortedIcon,
+          : props.components?.ColumnUnsortedIcon,
       ColumnSortedAscendingIcon:
-        (components && components.ColumnSortedAscendingIcon) ||
+        (props.components && props.components.ColumnSortedAscendingIcon) ||
         DEFAULT_GRID_SLOTS_COMPONENTS.ColumnSortedAscendingIcon,
       ColumnSortedDescendingIcon:
-        (components && components.ColumnSortedDescendingIcon) ||
+        (props.components && props.components.ColumnSortedDescendingIcon) ||
         DEFAULT_GRID_SLOTS_COMPONENTS.ColumnSortedDescendingIcon,
       DensityComfortableIcon:
-        (components && components.DensityComfortableIcon) ||
+        (props.components && props.components.DensityComfortableIcon) ||
         DEFAULT_GRID_SLOTS_COMPONENTS.DensityComfortableIcon,
       DensityCompactIcon:
-        (components && components.DensityCompactIcon) ||
+        (props.components && props.components.DensityCompactIcon) ||
         DEFAULT_GRID_SLOTS_COMPONENTS.DensityCompactIcon,
       DensityStandardIcon:
-        (components && components.DensityStandardIcon) ||
+        (props.components && props.components.DensityStandardIcon) ||
         DEFAULT_GRID_SLOTS_COMPONENTS.DensityStandardIcon,
-      ExportIcon: (components && components.ExportIcon) || DEFAULT_GRID_SLOTS_COMPONENTS.ExportIcon,
+      ExportIcon:
+        (props.components && props.components.ExportIcon) ||
+        DEFAULT_GRID_SLOTS_COMPONENTS.ExportIcon,
       OpenFilterButtonIcon:
-        (components && components.OpenFilterButtonIcon) ||
+        (props.components && props.components.OpenFilterButtonIcon) ||
         DEFAULT_GRID_SLOTS_COMPONENTS.OpenFilterButtonIcon,
-      Checkbox: (components && components.Checkbox) || DEFAULT_GRID_SLOTS_COMPONENTS.Checkbox,
-      ColumnMenu: (components && components.ColumnMenu) || DEFAULT_GRID_SLOTS_COMPONENTS.ColumnMenu,
+      Checkbox:
+        (props.components && props.components.Checkbox) || DEFAULT_GRID_SLOTS_COMPONENTS.Checkbox,
+      ColumnMenu:
+        (props.components && props.components.ColumnMenu) ||
+        DEFAULT_GRID_SLOTS_COMPONENTS.ColumnMenu,
       ErrorOverlay:
-        (components && components.ErrorOverlay) || DEFAULT_GRID_SLOTS_COMPONENTS.ErrorOverlay,
-      Footer: (components && components.Footer) || DEFAULT_GRID_SLOTS_COMPONENTS.Footer,
-      Header: (components && components.Header) || DEFAULT_GRID_SLOTS_COMPONENTS.Header,
-      Toolbar: components && components.Toolbar,
+        (props.components && props.components.ErrorOverlay) ||
+        DEFAULT_GRID_SLOTS_COMPONENTS.ErrorOverlay,
+      Footer: (props.components && props.components.Footer) || DEFAULT_GRID_SLOTS_COMPONENTS.Footer,
+      Header: (props.components && props.components.Header) || DEFAULT_GRID_SLOTS_COMPONENTS.Header,
+      Toolbar: props.components && props.components.Toolbar,
       PreferencesPanel:
-        (components && components.PreferencesPanel) ||
+        (props.components && props.components.PreferencesPanel) ||
         DEFAULT_GRID_SLOTS_COMPONENTS.PreferencesPanel,
       LoadingOverlay:
-        (components && components.LoadingOverlay) || DEFAULT_GRID_SLOTS_COMPONENTS.LoadingOverlay,
+        (props.components && props.components.LoadingOverlay) ||
+        DEFAULT_GRID_SLOTS_COMPONENTS.LoadingOverlay,
       NoResultsOverlay:
-        (components && components.NoResultsOverlay) ||
+        (props.components && props.components.NoResultsOverlay) ||
         DEFAULT_GRID_SLOTS_COMPONENTS.NoResultsOverlay,
       NoRowsOverlay:
-        (components && components.NoRowsOverlay) || DEFAULT_GRID_SLOTS_COMPONENTS.NoRowsOverlay,
-      Pagination: (components && components.Pagination) || DEFAULT_GRID_SLOTS_COMPONENTS.Pagination,
+        (props.components && props.components.NoRowsOverlay) ||
+        DEFAULT_GRID_SLOTS_COMPONENTS.NoRowsOverlay,
+      Pagination:
+        (props.components && props.components.Pagination) ||
+        DEFAULT_GRID_SLOTS_COMPONENTS.Pagination,
       FilterPanel:
-        (components && components.FilterPanel) || DEFAULT_GRID_SLOTS_COMPONENTS.FilterPanel,
+        (props.components && props.components.FilterPanel) ||
+        DEFAULT_GRID_SLOTS_COMPONENTS.FilterPanel,
       ColumnsPanel:
-        (components && components.ColumnsPanel) || DEFAULT_GRID_SLOTS_COMPONENTS.ColumnsPanel,
-      Panel: (components && components.Panel) || DEFAULT_GRID_SLOTS_COMPONENTS.Panel,
+        (props.components && props.components.ColumnsPanel) ||
+        DEFAULT_GRID_SLOTS_COMPONENTS.ColumnsPanel,
+      Panel: (props.components && props.components.Panel) || DEFAULT_GRID_SLOTS_COMPONENTS.Panel,
     };
-  }, [components]);
+  }, [props.components]);
 
   apiRef.current.components = mappedComponents;
-  apiRef.current.componentsProps = componentsProps;
+  apiRef.current.componentsProps = props.componentsProps;
 };
