@@ -2,9 +2,10 @@ import * as React from 'react';
 import InputBase, { InputBaseProps } from '@material-ui/core/InputBase';
 import { GridCellParams } from '../../models/params/gridCellParams';
 import { useEnhancedEffect } from '../../utils/material-ui-utils';
+import { GridEditMode } from '../../models/gridEditRowModel';
 
 interface GridEditDateCellProps extends GridCellParams {
-  editMode?: 'row' | 'cell';
+  editMode?: GridEditMode;
 }
 
 export function GridEditDateCell(props: GridEditDateCellProps & InputBaseProps) {

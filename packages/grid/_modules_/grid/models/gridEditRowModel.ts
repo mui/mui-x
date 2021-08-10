@@ -8,3 +8,5 @@ export interface GridEditCellProps {
 export type GridEditRowProps = { [field: string]: GridEditCellProps };
 
 export type GridEditRowsModel = { [rowId: string]: GridEditRowProps };
+
+export type GridEditMode = 'cell' | 'row';

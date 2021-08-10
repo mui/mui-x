@@ -34,7 +34,7 @@ import { DataGrid } from '@material-ui/data-grid';
 | <span class="prop-name">disableExtendRowFullWidth</span> | <span class="prop-type">boolean</span> | false | If `true`, rows will not be extended to fill the full width of the grid container. |
 | <span class="prop-name">disableSelectionOnClick</span> | <span class="prop-type">boolean</span> | false | If `true`, the selection on click on a row or cell is disabled. |
 | <span class="prop-name">error</span> | <span class="prop-type">any</span> |   | An error that will turn the grid into its error state and display the error component. |
-| <span class="prop-name">editMode</span> | <span class="prop-type">`cell` \| `row`</span> | 'cell'  | Controls whether to use the cell or row editing. |
+| <span class="prop-name">editMode</span> | <span class="prop-type">GridEditMode</span> | 'cell'  | Controls whether to use the cell or row editing. |
 | <span class="prop-name">editRowsModel</span> | <span class="prop-type">GridEditRowsModel</span> | undefined  | Set the edit rows model of the grid. |
 | <span class="prop-name">filterMode</span> | <span class="prop-type">GridFeatureMode</span> | 'client' | Filtering can be processed on the server or client-side. Set it to `server` if you would like to handle filtering on the server-side. |
 | <span class="prop-name">filterModel</span> | <span class="prop-type">GridFilterModel</span> |   | Set the filter model of the grid. |

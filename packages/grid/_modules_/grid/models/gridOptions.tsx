@@ -4,7 +4,7 @@ import { GridFilterModel } from './gridFilterModel';
 import { GridLocaleText } from './api/gridLocaleTextApi';
 import { GridColumnTypesRecord } from './colDef/gridColTypeDef';
 import { GridDensity, GridDensityTypes } from './gridDensity';
-import { GridEditRowsModel } from './gridEditRowModel';
+import { GridEditRowsModel, GridEditMode } from './gridEditRowModel';
 import { GridFeatureMode, GridFeatureModeConstant } from './gridFeatureMode';
 import { Logger } from './logger';
 import { GridCellParams } from './params/gridCellParams';
@@ -130,7 +130,7 @@ export interface GridOptions {
    * Controls whether to use the cell or row editing.
    * @default "cell"
    */
-  editMode?: 'row' | 'cell';
+  editMode?: GridEditMode;
   /**
    * Set the edit rows model of the grid.
    */

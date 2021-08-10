@@ -108,7 +108,7 @@ export function useGridEditRows(
     commitPropsAndExit(params, nativeEvent);
   });
 
-  const setCellMode = React.useCallback(
+  const setCellMode = React.useCallback<GridEditRowApi['setCellMode']>(
     (id, field, mode: GridCellMode) => {
       const isInEditMode = apiRef.current.getCellMode(id, field) === 'edit';
       if ((mode === 'edit' && isInEditMode) || (mode === 'view' && !isInEditMode)) {
@@ -140,7 +140,7 @@ export function useGridEditRows(
     [apiRef, forceUpdate, logger, setGridState],
   );
 
-  const setRowMode = React.useCallback(
+  const setRowMode = React.useCallback<GridEditRowApi['setRowMode']>(
     (id, mode) => {
       setGridState((state) => {
         const newEditRowsState: GridEditRowsModel = { ...state.editRows };
@@ -162,7 +162,7 @@ export function useGridEditRows(
     [apiRef, columns, forceUpdate, setGridState],
   );
 
-  const getRowMode = React.useCallback(
+  const getRowMode = React.useCallback<GridEditRowApi['getRowMode']>(
     (id) => {
       if (props.editMode === 'cell') {
         return 'view';
@@ -172,7 +172,7 @@ export function useGridEditRows(
     [apiRef, props.editMode],
   );
 
-  const getCellMode = React.useCallback(
+  const getCellMode = React.useCallback<GridEditRowApi['getCellMode']>(
     (id, field) => {
       const editState = apiRef.current.getState().editRows;
       const isEditing = editState[id] && editState[id][field];
@@ -182,7 +182,7 @@ export function useGridEditRows(
   );
 
   // TODO it's returning undefined when colDef.editable is undefined
-  const isCellEditable = React.useCallback(
+  const isCellEditable = React.useCallback<GridEditRowApi['isCellEditable']>(
     (params: GridCellParams) =>
       !!params.colDef.editable &&
       !!params.colDef!.renderEditCell &&
@@ -191,7 +191,7 @@ export function useGridEditRows(
     [props.isCellEditable],
   );
 
-  const setEditCellValue = React.useCallback(
+  const setEditCellValue = React.useCallback<GridEditRowApi['setEditCellValue']>(
     (params: GridEditCellValueParams, event?: React.SyntheticEvent) => {
       const newParams: GridEditCellPropsParams = {
         id: params.id,
@@ -230,7 +230,7 @@ export function useGridEditRows(
     [setEditCellProps],
   );
 
-  const setEditRowsModel = React.useCallback(
+  const setEditRowsModel = React.useCallback<GridEditRowApi['setEditRowsModel']>(
     (editRows: GridEditRowsModel): void => {
       logger.debug(`Setting row model`);
 
@@ -240,12 +240,12 @@ export function useGridEditRows(
     [forceUpdate, logger, setGridState],
   );
 
-  const getEditRowsModel = React.useCallback(
+  const getEditRowsModel = React.useCallback<GridEditRowApi['getEditRowsModel']>(
     (): GridEditRowsModel => apiRef.current.getState().editRows,
     [apiRef],
   );
 
-  const commitCellChange = React.useCallback(
+  const commitCellChange = React.useCallback<GridEditRowApi['commitCellChange']>(
     (params: GridCommitCellChangeParams, event?: MouseEvent | React.SyntheticEvent): boolean => {
       const { id, field } = params;
       const model = apiRef.current.getEditRowsModel();
@@ -281,7 +281,7 @@ export function useGridEditRows(
     [apiRef, logger, props.editMode],
   );
 
-  const commitRowChange = React.useCallback(
+  const commitRowChange = React.useCallback<GridEditRowApi['commitRowChange']>(
     (id: GridRowId, event?: React.SyntheticEvent): boolean => {
       if (props.editMode === 'cell') {
         throw new Error(`Material-UI: You can't commit changes when the edit mode is 'cell'`);
@@ -293,7 +293,7 @@ export function useGridEditRows(
         throw new Error(`Material-UI: Row at id: ${id} is not being editted`);
       }
 
-      const hasFieldWithError = Object.keys(row).some((field) => !!row[field].error);
+      const hasFieldWithError = Object.values(row).some((value) => !!value.error);
       if (!hasFieldWithError) {
         apiRef.current.publishEvent(GRID_ROW_EDIT_COMMIT, id, event);
         return true;

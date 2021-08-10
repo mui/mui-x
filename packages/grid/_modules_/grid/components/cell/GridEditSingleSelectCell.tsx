@@ -4,6 +4,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import { GridCellParams } from '../../models/params/gridCellParams';
 import { isEscapeKey } from '../../utils/keyboardUtils';
 import { useEnhancedEffect } from '../../utils/material-ui-utils';
+import { GridEditMode } from '../../models/gridEditRowModel';
 
 const renderSingleSelectOptions = (option) =>
   typeof option === 'object' ? (
@@ -17,7 +18,7 @@ const renderSingleSelectOptions = (option) =>
   );
 
 interface GridEditSingleSelectCellProps extends GridCellParams {
-  editMode?: 'row' | 'cell';
+  editMode?: GridEditMode;
 }
 
 export function GridEditSingleSelectCell(props: GridEditSingleSelectCellProps & SelectProps) {
