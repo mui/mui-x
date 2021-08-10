@@ -16,6 +16,7 @@ import {
   GridApi,
   GridRowParams,
   MuiEvent,
+  GridToolbarContainer,
 } from '@material-ui/x-grid';
 import {
   randomCreatedDate,
@@ -214,11 +215,11 @@ function EditToolbar(props: EditToolbarProps) {
   };
 
   return (
-    <div>
+    <GridToolbarContainer>
       <Button color="primary" startIcon={<AddIcon />} onClick={handleClick}>
         Add Record
       </Button>
-    </div>
+    </GridToolbarContainer>
   );
 }
 

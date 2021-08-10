@@ -7,7 +7,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import SaveIcon from '@material-ui/icons/Save';
 import CancelIcon from '@material-ui/icons/Cancel';
-import { useGridApiRef, XGrid } from '@material-ui/x-grid';
+import { useGridApiRef, XGrid, GridToolbarContainer } from '@material-ui/x-grid';
 import {
   randomCreatedDate,
   randomTraderName,
@@ -201,11 +201,11 @@ function EditToolbar(props) {
   };
 
   return (
-    <div>
+    <GridToolbarContainer>
       <Button color="primary" startIcon={<AddIcon />} onClick={handleClick}>
         Add Record
       </Button>
-    </div>
+    </GridToolbarContainer>
   );
 }
 

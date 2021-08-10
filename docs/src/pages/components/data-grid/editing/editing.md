@@ -170,12 +170,12 @@ You can handle the `onEditRowsModelChange` callback to control the `GridEditRows
 
 ### Conditional validation
 
-Having all cells of a row in edit mode allows to validate a field based on the value of another one.
+Having all cells of a row in edit mode allows validating a field based on the value of another one.
 To accomplish that, set the `onEditRowsModelChange` prop and return a new model with the `error` attribute of the invalid field set to `true`.
-Use the other fieds available in the model to check if the validation should run or not.
+Use the other fields available in the model to check if the validation should run or not.
 Once at the least one field has the `error` attribute equals to true no new value will be commited.
 
-**Note:** For server-side validation, the same [approach](/components/data-grid/editing/#server-side-validation) from the cell editing can be used.
+**Note:** For server-side validation, the same [approach](#server-side-validation) from the cell editing can be used.
 
 The following demo only requires a value for the "Paid at" column if the "Is paid?" column was checked.
 
@@ -183,7 +183,7 @@ The following demo only requires a value for the "Paid at" column if the "Is pai
 
 ### Control with external buttons [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-pro/)
 
-You can [disable the default behavior](/components/data-grid/events#disabling-the-default-behavior) of the grid and control the row edit using external buttons.
+You can [disable the default behavior](/components/data-grid/events/#disabling-the-default-behavior) of the grid and control the row edit using external buttons.
 
 Here is shown how a full-featured CRUD can be created.
 
