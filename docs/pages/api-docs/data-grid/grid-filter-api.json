@@ -4,28 +4,44 @@
   "properties": [
     {
       "name": "applyFilter",
-      "description": "",
+      "description": "Applies a GridFilterItem on alls rows. If no <code>linkOperator</code> is given, the &quot;and&quot; operator is used.",
       "type": "(item: GridFilterItem, linkOperator?: GridLinkOperator) => void"
     },
     {
       "name": "applyFilterLinkOperator",
-      "description": "",
+      "description": "Changes the GridLinkOperator used to connect the filters.",
       "type": "(operator: GridLinkOperator) => void"
     },
-    { "name": "applyFilters", "description": "", "type": "() => void" },
-    { "name": "deleteFilter", "description": "", "type": "(item: GridFilterItem) => void" },
+    {
+      "name": "applyFilters",
+      "description": "Applies all filters on all rows.",
+      "type": "() => void"
+    },
+    {
+      "name": "deleteFilter",
+      "description": "Deletes a GridFilterItem.",
+      "type": "(item: GridFilterItem) => void"
+    },
     {
       "name": "getVisibleRowModels",
-      "description": "",
+      "description": "Returns a sorted <code>Map</code> containing only the visible rows.",
       "type": "() => Map<GridRowId, GridRowData>"
     },
-    { "name": "hideFilterPanel", "description": "", "type": "() => void" },
-    { "name": "setFilterModel", "description": "", "type": "(model: GridFilterModel) => void" },
+    { "name": "hideFilterPanel", "description": "Hides the filter panel.", "type": "() => void" },
+    {
+      "name": "setFilterModel",
+      "description": "Sets the filter model to the one given by <code>model</code>.",
+      "type": "(model: GridFilterModel) => void"
+    },
     {
       "name": "showFilterPanel",
-      "description": "",
+      "description": "Shows the filter panel. If <code>targetColumnField</code> is given, a filter for this field is also added.",
       "type": "(targetColumnField?: string) => void"
     },
-    { "name": "upsertFilter", "description": "", "type": "(item: GridFilterItem) => void" }
+    {
+      "name": "upsertFilter",
+      "description": "Updates or inserts a GridFilterItem.",
+      "type": "(item: GridFilterItem) => void"
+    }
   ]
 }
