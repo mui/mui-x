@@ -76,9 +76,14 @@ describe('<XGrid /> - Events Params', () => {
     );
   };
 
-  const TestVirtualization = (props: Partial<XGridProps>) => {
-    const data = useData(200, 10);
-    return <XGrid rows={data.rows} columns={data.columns} {...props} />;
+  const TestVirtualization = (props) => {
+    const { width, height, ...other } = props;
+    const data = useData(50, 5);
+    return (
+      <div style={{ width: width || 300, height: height || 300 }}>
+        <XGrid rows={data.rows} columns={data.columns} {...other} />
+      </div>
+    );
   };
 
   describe('columnHeaderParams', () => {
@@ -331,18 +336,17 @@ describe('<XGrid /> - Events Params', () => {
     const border = 2;
     const handleViewportRowsChange = spy();
     const { container } = render(
-      <div style={{ width: 300, height: border + headerHeight + rowHeight * pageSize }}>
-        <TestVirtualization
-          rowHeight={rowHeight}
-          headerHeight={headerHeight}
-          hideFooter
-          onViewportRowsChange={handleViewportRowsChange}
-        />
-      </div>,
+      <TestVirtualization
+        height={border + headerHeight + rowHeight * pageSize}
+        rowHeight={rowHeight}
+        headerHeight={headerHeight}
+        hideFooter
+        onViewportRowsChange={handleViewportRowsChange}
+      />,
     );
 
     await waitFor(() => {
-      // expect(handleViewportRowsChange.callCount).to.equal(1);
+      expect(handleViewportRowsChange.callCount).to.equal(1);
       expect(handleViewportRowsChange.lastCall.args[0].firstRowIndex).to.equal(0);
       expect(handleViewportRowsChange.lastCall.args[0].lastRowIndex).to.equal(8); // should be pageSize + 1
     });
@@ -351,7 +355,7 @@ describe('<XGrid /> - Events Params', () => {
     gridWindow.scrollTop = rowHeight * pageSize;
     gridWindow.dispatchEvent(new Event('scroll'));
     await waitFor(() => {
-      // expect(handleViewportRowsChange.callCount).to.equal(2);
+      expect(handleViewportRowsChange.callCount).to.equal(2);
       expect(handleViewportRowsChange.lastCall.args[0].firstRowIndex).to.equal(4); // should be 1
       expect(handleViewportRowsChange.lastCall.args[0].lastRowIndex).to.equal(12); // should be pageSize + 1
     });
@@ -360,7 +364,7 @@ describe('<XGrid /> - Events Params', () => {
     gridWindow.scrollTop = rowHeight * pageSize * 2;
     gridWindow.dispatchEvent(new Event('scroll'));
     await waitFor(() => {
-      // expect(handleViewportRowsChange.callCount).to.equal(3);
+      expect(handleViewportRowsChange.callCount).to.equal(3);
       expect(handleViewportRowsChange.lastCall.args[0].firstRowIndex).to.equal(8); // should be 2
       expect(handleViewportRowsChange.lastCall.args[0].lastRowIndex).to.equal(16); // should be pageSize + 1
     });
