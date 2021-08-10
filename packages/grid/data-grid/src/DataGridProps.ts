@@ -14,7 +14,6 @@ export type DataGridProps = Omit<
   | 'disableMultipleColumnsFiltering'
   | 'disableMultipleColumnsSorting'
   | 'disableMultipleSelection'
-  | 'licenseStatus'
   | 'options'
   | 'onRowsScrollEnd'
   | 'onViewportRowsChange'

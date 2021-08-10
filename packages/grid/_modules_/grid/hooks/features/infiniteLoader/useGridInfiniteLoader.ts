@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { optionsSelector } from '../../utils/optionsSelector';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { useGridSelector } from '../core/useGridSelector';
 import {
@@ -18,9 +17,11 @@ import { GridScrollParams } from '../../../models/params/gridScrollParams';
 
 export const useGridInfiniteLoader = (
   apiRef: GridApiRef,
-  props: Pick<GridComponentProps, 'onRowsScrollEnd' | 'onViewportRowsChange'>,
+  props: Pick<
+    GridComponentProps,
+    'onRowsScrollEnd' | 'onViewportRowsChange' | 'scrollEndThreshold'
+  >,
 ): void => {
-  const options = useGridSelector(apiRef, optionsSelector);
   const containerSizes = useGridSelector(apiRef, gridContainerSizesSelector);
   const visibleColumns = useGridSelector(apiRef, visibleGridColumnsSelector);
   const isInScrollBottomArea = React.useRef<boolean>(false);
@@ -37,7 +38,7 @@ export const useGridInfiniteLoader = (
       }
 
       const scrollPositionBottom =
-        scrollPosition.top + containerSizes.windowSizes.height + options.scrollEndThreshold;
+        scrollPosition.top + containerSizes.windowSizes.height + props.scrollEndThreshold!;
 
       if (scrollPositionBottom < containerSizes.dataContainerSizes.height) {
         isInScrollBottomArea.current = false;
@@ -57,7 +58,7 @@ export const useGridInfiniteLoader = (
         isInScrollBottomArea.current = true;
       }
     },
-    [apiRef, options, visibleColumns, containerSizes],
+    [apiRef, props.scrollEndThreshold, visibleColumns, containerSizes],
   );
 
   const handleGridScroll = React.useCallback(() => {

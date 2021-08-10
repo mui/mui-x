@@ -208,34 +208,24 @@ Big thanks to the 11 contributors who made this release possible. Here are some 
 
 - [DataGrid] Improve controllable sorting (#2095) @dtassone
 
-  Update the prop arguments:
+  Normalize the controlled prop signature:
 
   ```diff
-  -onSortModelChange?: (params: GridSortModelParams) => void;
-  +onSortModelChange?: (model: GridSortModel) => void;
-  ```
-
-  Update the model with the first argument directly:
-
-  ```diff
-  -<DataGrid onSortModelChange = {(params: GridSortModelParams)=>  setSortModel(params.model)} />
-  +<DataGrid onSortModelChange = {(model: GridSortModel)=> setSortModel(model) } />
+   <DataGrid
+  -  onSortModelChange={(params: GridSortModelParams) => setSortModel(params.model)}
+  +  onSortModelChange={(model: GridSortModel) => setSortModel(model)}
+   />
   ```
 
 - [DataGrid] Improve controllable filter (#1909) @dtassone
 
-  Update the prop arguments:
+  Normalize the controlled prop signature:
 
   ```diff
-  -onFilterModelChange?: (params: GridFilterModelParams) => void;
-  +onFilterModelChange?: (model: GridFilterModel) => void;
-  ```
-
-  Update the model with the first argument directly:
-
-  ```diff
-  -<DataGrid onFilterModelChange = {(params: GridFilterModelParams)=>  setFilterModel(params.model)} />
-  +<DataGrid onFilterModelChange = {(model: GridFilterModel)=> setFilterModel(model) } />
+   <DataGrid
+  -  onFilterModelChange={(params: GridFilterModelParams) => setFilterModel(params.model)}
+  +  onFilterModelChange={(model: GridFilterModel) => setFilterModel(model)}
+   />
   ```
 
 - [DataGrid] Improve the editing API (#1955) @m4theushw
@@ -283,19 +273,22 @@ Big thanks to the 11 contributors who made this release possible. Here are some 
 
 - [DataGrid] Implement useControlState hook, and add control state on selectionModel (#1823) @dtassone
 
-  Update the prop arguments:
+  Normalize the controlled prop signature:
 
   ```diff
-  -props.onRowSelected
-  -onSelectionModelChange?: (params: GridSelectionModelChangeParams) => void;
-  +onSelectionModelChange?: (model: GridSelectionModel) => void;
+   <DataGrid
+  -  onSelectionModelChange={(params: GridSelectionModelChangeParams) => setSelectionModel(params.model)}
+  +  onSelectionModelChange={(model: GridSelectionModel) => setSelectionModel(model)}
+   />
   ```
 
-  Update the model with the first argument directly:
+  Replace `onRowSelected` with the existing API:
 
   ```diff
-  -<DataGrid onSelectionModelChange = {(params: GridSelectionModelChangeParams)=>  setSelectionModel(params.model)} />
-  +<DataGrid onSelectionModelChange = {(model: GridSelectionModel)=> setSelectionModel(model) } />
+   <DataGrid
+  -  onRowSelected={(params: GridRowSelectedParams) =>  }
+  +  onSelectionModelChange={(model: GridSelectionModel) => }
+   />
   ```
 
 #### Changes

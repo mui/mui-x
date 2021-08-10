@@ -228,25 +228,27 @@ describe('<XGrid /> - Events Params', () => {
     });
 
     it('should allow to prevent the default behavior', () => {
-      const preventDefault = (params, event) => {
+      const handleCellDoubleClick = spy((params, event) => {
         event.defaultMuiPrevented = true;
-      };
-      render(<TestEvents onCellDoubleClick={preventDefault} />);
+      });
+      render(<TestEvents onCellDoubleClick={handleCellDoubleClick} />);
       const cell = getCell(1, 1);
       fireEvent.doubleClick(cell);
+      expect(handleCellDoubleClick.callCount).to.equal(1);
       expect(cell).not.to.have.class(`${GRID_CELL_CSS_CLASS}--editing`);
     });
 
     it('should allow to prevent the default behavior while allowing the event to propagate', () => {
-      const preventDefault = (params, event) => {
+      const handleEditCellPropsChange = spy((params, event) => {
         event.defaultMuiPrevented = true;
-      };
-      render(<TestEvents onEditCellPropsChange={preventDefault} />);
+      });
+      render(<TestEvents onEditCellPropsChange={handleEditCellPropsChange} />);
       const cell = getCell(1, 1);
       cell.focus();
       fireEvent.doubleClick(cell);
       const input = cell.querySelector('input')!;
       fireEvent.change(input, { target: { value: 'Lisa' } });
+      expect(handleEditCellPropsChange.callCount).to.equal(1);
       fireEvent.keyDown(input, { key: 'Enter' });
       expect(cell).to.have.text('Jack');
     });

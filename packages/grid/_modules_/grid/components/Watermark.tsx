@@ -1,15 +1,5 @@
 import * as React from 'react';
-import { GridState } from '../hooks/features/core/gridState';
-import { useGridSelector } from '../hooks/features/core/useGridSelector';
-import { useGridApiContext } from '../hooks/root/useGridApiContext';
-
-// we duplicate licenseStatus to avoid adding a dependency on x-license.
-enum LicenseStatus {
-  NotFound = 'NotFound',
-  Invalid = 'Invalid',
-  Expired = 'Expired',
-  Valid = 'Valid',
-}
+import { useLicenseVerifier, LicenseStatus } from '@material-ui/x-license';
 
 function getLicenseErrorMessage(licenseStatus: string) {
   switch (licenseStatus) {
@@ -24,13 +14,9 @@ function getLicenseErrorMessage(licenseStatus: string) {
   }
 }
 
-const licenseStatusSelector = (state: GridState) => state.licenseStatus;
-
 export function Watermark() {
-  const apiRef = useGridApiContext();
-
-  const licenseStatus = useGridSelector(apiRef, licenseStatusSelector);
-  if (licenseStatus === LicenseStatus.Valid.toString()) {
+  const licenseStatus = useLicenseVerifier();
+  if (licenseStatus === LicenseStatus.Valid) {
     return null;
   }
 
@@ -49,8 +35,7 @@ export function Watermark() {
         fontSize: 24,
       }}
     >
-      {' '}
-      {getLicenseErrorMessage(licenseStatus)}{' '}
+      {getLicenseErrorMessage(licenseStatus)}
     </div>
   );
 }
