@@ -119,10 +119,11 @@ export function useGridEditRows(
     [apiRef],
   );
 
+  // TODO it's returning undefined when colDef.editable is undefined
   const isCellEditable = React.useCallback(
     (params: GridCellParams) =>
-      params.colDef.editable &&
-      params.colDef!.renderEditCell &&
+      !!params.colDef.editable &&
+      !!params.colDef!.renderEditCell &&
       (!props.isCellEditable || props.isCellEditable(params)),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [props.isCellEditable],

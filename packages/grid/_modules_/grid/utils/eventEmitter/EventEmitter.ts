@@ -19,6 +19,9 @@ export class EventEmitter {
    */
   events: { [key: string]: Listener[] } = {};
 
+  /**
+   * @ignore - do not document.
+   */
   on(eventName: string, listener: Listener): void {
     if (!Array.isArray(this.events[eventName])) {
       this.events[eventName] = [];
@@ -39,6 +42,9 @@ export class EventEmitter {
     }
   }
 
+  /**
+   * @ignore - do not document.
+   */
   removeListener(eventName: string, listener: Listener): void {
     if (Array.isArray(this.events[eventName])) {
       const idx = this.events[eventName].indexOf(listener);
@@ -49,6 +55,9 @@ export class EventEmitter {
     }
   }
 
+  /**
+   * @ignore - do not document.
+   */
   removeAllListeners(eventName?: string): void {
     if (!eventName) {
       this.events = {};
@@ -57,6 +66,9 @@ export class EventEmitter {
     }
   }
 
+  /**
+   * @ignore - do not document.
+   */
   emit(eventName: string, ...args: any[]): void {
     if (Array.isArray(this.events[eventName])) {
       const listeners = this.events[eventName].slice();
@@ -68,6 +80,9 @@ export class EventEmitter {
     }
   }
 
+  /**
+   * @ignore - do not document.
+   */
   once(eventName: string, listener: Listener): void {
     // eslint-disable-next-line consistent-this
     const that = this;
