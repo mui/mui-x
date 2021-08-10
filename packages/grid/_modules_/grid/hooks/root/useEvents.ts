@@ -66,18 +66,4 @@ export function useEvents(
 
   useGridApiOptionHandler(apiRef, GridEvents.componentError, props.onError);
   useGridApiOptionHandler(apiRef, GridEvents.stateChange, props.onStateChange);
-
-  const getHandler = React.useCallback(
-    (name: string) =>
-      (...args: any[]) =>
-        apiRef.current.publishEvent(name, ...args),
-    [apiRef],
-  );
-
-  useNativeEventListener(
-    apiRef,
-    apiRef.current.rootElementRef!,
-    'keydown',
-    getHandler(GridEvents.keydown),
-  );
 }

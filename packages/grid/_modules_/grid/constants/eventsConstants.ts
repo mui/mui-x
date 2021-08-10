@@ -8,10 +8,6 @@ export enum GridEvents {
    */
   debouncedResize = 'debouncedResize',
   /**
-   * @ignore - do not document.
-   */
-  keydown = 'keydown',
-  /**
    * Fired when an exception is thrown in the grid.
    */
   componentError = 'componentError',
