@@ -2,7 +2,7 @@ import { GridFilterInputValue } from '../../components/panel/filterPanel/GridFil
 import { GridFilterItem } from '../gridFilterItem';
 import { GridFilterOperator } from '../gridFilterOperator';
 
-export const getGridNumericColumnOperators: () => GridFilterOperator[] = () => [
+export const getGridNumericColumnOperators = (): GridFilterOperator[] => [
   {
     label: '=',
     value: '=',
@@ -92,5 +92,21 @@ export const getGridNumericColumnOperators: () => GridFilterOperator[] = () => [
     },
     InputComponent: GridFilterInputValue,
     InputComponentProps: { type: 'number' },
+  },
+  {
+    value: 'isEmpty',
+    getApplyFilterFn: () => {
+      return ({ value }): boolean => {
+        return value == null;
+      };
+    },
+  },
+  {
+    value: 'isNotEmpty',
+    getApplyFilterFn: () => {
+      return ({ value }): boolean => {
+        return value != null;
+      };
+    },
   },
 ];
