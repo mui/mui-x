@@ -10,9 +10,9 @@ export interface GridScrollBarState {
    */
   hasScrollX: boolean;
   /**
-   * The scrollbar size.
+   * The scrollbars sizes.
    */
-  scrollBarSize: { x: number; y: number };
+  scrollBarsSizes: { x: number; y: number };
 }
 
 /**

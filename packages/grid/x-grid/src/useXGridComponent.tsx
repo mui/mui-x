@@ -59,7 +59,7 @@ export const useXGridComponent = (apiRef: GridApiRef, props: GridComponentProps)
   useGridColumnMenu(apiRef);
   useGridPreferencesPanel(apiRef);
   useGridFilter(apiRef, props);
-  useGridContainerProps(apiRef);
+  useGridContainerProps(apiRef, props);
   useGridDensity(apiRef, props);
   useGridVirtualRows(apiRef);
   useGridColumnReorder(apiRef, props);
