@@ -69,7 +69,7 @@ export const getInitialGridState = (): GridState => ({
   columnResize: getInitialGridColumnResizeState(),
   rendering: getInitialGridRenderingState(),
   containerSizes: null,
-  scrollBar: { hasScrollX: false, hasScrollY: false, scrollBarsSizes: { x: 0, y: 0 } },
+  scrollBar: { hasScrollX: false, hasScrollY: false, sizes: { x: 0, y: 0 } },
   viewportSizes: { width: 0, height: 1 },
   sorting: getInitialGridSortingState(),
   focus: { cell: null, columnHeader: null },

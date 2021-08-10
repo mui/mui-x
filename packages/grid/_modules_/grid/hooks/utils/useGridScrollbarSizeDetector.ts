@@ -8,7 +8,6 @@ import { useGridSelector } from '../features/core/useGridSelector';
 import { useGridState } from '../features/core/useGridState';
 import { useLogger } from './useLogger';
 
-
 export function useGridScrollbarSizeDetector(
   apiRef: GridApiRef,
   props: Pick<GridComponentProps, 'scrollbarSize'>,
@@ -16,6 +15,4 @@ export function useGridScrollbarSizeDetector(
   const logger = useLogger('useGridScrollbarSizeDetector');
   const [, setGridState] = useGridState(apiRef);
   const hasColumns = useGridSelector(apiRef, allGridColumnsSelector).length > 0;
-
-
 }

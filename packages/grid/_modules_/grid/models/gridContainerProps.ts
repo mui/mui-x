@@ -12,7 +12,7 @@ export interface GridScrollBarState {
   /**
    * The scrollbars sizes.
    */
-  scrollBarsSizes: { x: number; y: number };
+  sizes: { x: number; y: number };
 }
 
 /**
