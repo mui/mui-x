@@ -51,12 +51,13 @@ export const useGridContainerProps = (
   const windowRef = apiRef.current.windowRef;
 
   const rootElement = apiRef.current?.rootElementRef?.current;
+  const hasColumns = !!columnsTotalWidth;
   const scrollbarSize = React.useMemo(() => {
     if (props.scrollbarSize != null) {
       return props.scrollbarSize;
     }
 
-    if (!columnsTotalWidth || !rootElement) {
+    if (!hasColumns || !rootElement) {
       return 0;
     }
 
@@ -65,7 +66,7 @@ export const useGridContainerProps = (
     logger.debug(`Detected scroll bar size ${detectedScrollbarSize}.`);
 
     return detectedScrollbarSize;
-  }, [rootElement, logger, props.scrollbarSize, columnsTotalWidth]);
+  }, [rootElement, logger, props.scrollbarSize, hasColumns]);
 
   const getVirtualRowCount = React.useCallback(() => {
     logger.debug('Calculating virtual row count.');
