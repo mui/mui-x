@@ -2,7 +2,7 @@ import * as React from 'react';
 import { ownerDocument, capitalize } from '@material-ui/core/utils';
 import clsx from 'clsx';
 import { GridEvents } from '../../constants/eventsConstants';
-import { GRID_CSS_CLASS_PREFIX } from '../../constants/cssClassesConstants';
+import { gridClasses } from '../../gridClasses';
 import { GridAlignment, GridCellMode, GridCellValue, GridRowId } from '../../models/index';
 import { useGridApiContext } from '../../hooks/root/useGridApiContext';
 
@@ -51,9 +51,9 @@ export const GridCell = React.memo(function GridCell(props: GridCellProps) {
   const cellRef = React.useRef<HTMLDivElement>(null);
   const apiRef = useGridApiContext();
 
-  const cssClasses = clsx(className, `${GRID_CSS_CLASS_PREFIX}-cell--text${capitalize(align)}`, {
-    [`${GRID_CSS_CLASS_PREFIX}-withBorder`]: showRightBorder,
-    [`${GRID_CSS_CLASS_PREFIX}-cell--editable`]: isEditable,
+  const cssClasses = clsx(className, `${gridClasses[`cell--text${capitalize(align)}`]}`, {
+    [`${gridClasses.withBorder}`]: showRightBorder,
+    [`${gridClasses['cell--editable']}`]: isEditable,
   });
 
   const publishBlur = React.useCallback(

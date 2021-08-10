@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { SvgIconProps } from '@material-ui/core/SvgIcon';
 import { GridCellParams } from '../../models/params/gridCellParams';
+import { gridClasses } from '../../gridClasses';
 
 export const GridBooleanCell = React.memo((props: GridCellParams & SvgIconProps) => {
   const {
@@ -27,7 +28,7 @@ export const GridBooleanCell = React.memo((props: GridCellParams & SvgIconProps)
   return (
     <Icon
       fontSize="small"
-      className="MuiDataGrid-booleanCell"
+      className={gridClasses.booleanCell}
       titleAccess={api.getLocaleText(value ? 'booleanCellTrueLabel' : 'booleanCellFalseLabel')}
       data-value={Boolean(value)}
       {...other}

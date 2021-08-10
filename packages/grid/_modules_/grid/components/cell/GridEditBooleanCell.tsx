@@ -5,6 +5,7 @@ import Checkbox from '@material-ui/core/Checkbox';
 import { unstable_useId as useId } from '@material-ui/core/utils';
 import { useEnhancedEffect } from '../../utils/material-ui-utils';
 import { GridCellParams } from '../../models/params/gridCellParams';
+import { gridClasses } from '../../gridClasses';
 
 export function GridEditBooleanCell(
   props: GridCellParams &
@@ -51,7 +52,7 @@ export function GridEditBooleanCell(
   }, [hasFocus]);
 
   return (
-    <label htmlFor={id} className={clsx('MuiDataGrid-editBooleanCell', className)} {...other}>
+    <label htmlFor={id} className={clsx(gridClasses.editBooleanCell, className)} {...other}>
       <Checkbox
         id={id}
         inputRef={inputRef}

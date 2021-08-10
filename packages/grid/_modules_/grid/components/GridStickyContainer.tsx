@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { gridClasses } from '../gridClasses';
 import { ElementSize } from '../models';
 
 interface GridStickyContainerProps extends ElementSize {
@@ -9,7 +10,7 @@ export function GridStickyContainer(props: GridStickyContainerProps) {
   const { height, width, children } = props;
   return (
     <div
-      className="MuiDataGrid-viewport"
+      className={gridClasses.viewport}
       style={{
         minWidth: width,
         maxWidth: width,

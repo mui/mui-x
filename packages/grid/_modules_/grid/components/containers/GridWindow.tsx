@@ -8,6 +8,7 @@ import {
 import { gridDataContainerHeightSelector } from '../../hooks/root/gridContainerSizesSelector';
 import { optionsSelector } from '../../hooks/utils/optionsSelector';
 import { useGridApiContext } from '../../hooks/root/useGridApiContext';
+import { gridClasses } from '../../gridClasses';
 
 export interface GridWindowProps extends React.HTMLAttributes<HTMLDivElement> {
   size: { width: number; height: number };
@@ -42,7 +43,7 @@ export const GridWindow = React.forwardRef<HTMLDivElement, GridWindowProps>(func
 
   return (
     <div
-      className="MuiDataGrid-windowContainer"
+      className={gridClasses.windowContainer}
       style={{
         width: size.width,
         height: containerHeight,
@@ -50,7 +51,7 @@ export const GridWindow = React.forwardRef<HTMLDivElement, GridWindowProps>(func
     >
       <div
         ref={ref}
-        className={clsx('MuiDataGrid-window', className)}
+        className={clsx(gridClasses.window, className)}
         {...other}
         style={{ top: headerHeight, overflowY: autoHeight ? 'hidden' : 'auto' }}
       />

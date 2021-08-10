@@ -1,8 +1,4 @@
-import {
-  GRID_CELL_CSS_CLASS,
-  GRID_COLUMN_HEADER_CSS_CLASS,
-  GRID_ROW_CSS_CLASS,
-} from '../constants/cssClassesConstants';
+import { gridClasses } from '../gridClasses';
 import { GridRowId } from '../models/gridRows';
 
 export function isOverflown(element: Element): boolean {
@@ -17,15 +13,15 @@ export function getRowEl(cell?: Element | null): HTMLElement | null {
   if (!cell) {
     return null;
   }
-  return findParentElementFromClassName(cell as HTMLDivElement, GRID_ROW_CSS_CLASS)! as HTMLElement;
+  return findParentElementFromClassName(cell as HTMLDivElement, gridClasses.row)! as HTMLElement;
 }
 
 export function isGridCellRoot(elem: Element | null): boolean {
-  return elem != null && elem.classList.contains(GRID_CELL_CSS_CLASS);
+  return elem != null && elem.classList.contains(gridClasses.cell);
 }
 
 export function isGridHeaderCellRoot(elem: Element | null): boolean {
-  return elem != null && elem.classList.contains(GRID_COLUMN_HEADER_CSS_CLASS);
+  return elem != null && elem.classList.contains(gridClasses.columnHeader);
 }
 
 export function getIdFromRowElem(rowEl: Element): string {
@@ -46,7 +42,7 @@ export function findGridCellElementsFromCol(col: HTMLElement): NodeListOf<Elemen
   if (!root) {
     throw new Error('Material-UI: The root element is not found.');
   }
-  const cells = root.querySelectorAll(`.${GRID_CELL_CSS_CLASS}[data-field="${field}"]`);
+  const cells = root.querySelectorAll(`.${gridClasses.cell}[data-field="${field}"]`);
   return cells;
 }
 
@@ -62,7 +58,7 @@ export function getGridColumnHeaderElement(root: Element, field: string) {
 
 export function getGridRowElement(root: Element, id: GridRowId) {
   return root.querySelector(
-    `.${GRID_ROW_CSS_CLASS}[data-id="${escapeOperandAttributeSelector(String(id))}"]`,
+    `.${gridClasses.row}[data-id="${escapeOperandAttributeSelector(String(id))}"]`,
   ) as HTMLDivElement;
 }
 
@@ -72,6 +68,6 @@ export function getGridCellElement(root: Element, { id, field }: { id: GridRowId
     return null;
   }
   return row.querySelector(
-    `.${GRID_CELL_CSS_CLASS}[data-field="${escapeOperandAttributeSelector(field)}"]`,
+    `.${gridClasses.cell}[data-field="${escapeOperandAttributeSelector(field)}"]`,
   ) as HTMLDivElement;
 }

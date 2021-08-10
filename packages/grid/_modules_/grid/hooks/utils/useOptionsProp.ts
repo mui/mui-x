@@ -8,12 +8,6 @@ import { composeClasses } from '../../utils/material-ui-utils';
 import { useGridReducer } from '../features/core/useGridReducer';
 import { useLogger } from './useLogger';
 import { getDataGridUtilityClass } from '../../utils/utils';
-import {
-  GRID_CELL_CSS_CLASS_SUFFIX,
-  GRID_COLUMN_HEADER_CSS_CLASS_SUFFIX,
-  GRID_ROOT_CSS_CLASS_SUFFIX,
-  GRID_ROW_CSS_CLASS_SUFFIX,
-} from '../../constants/cssClassesConstants';
 
 // REDUCER
 export function optionsReducer(
@@ -35,10 +29,10 @@ export function useOptionsProp(apiRef: GridApiRef, props: GridComponentProps): G
       ...props,
       classes: composeClasses(
         {
-          root: [GRID_ROOT_CSS_CLASS_SUFFIX],
-          columnHeader: [GRID_COLUMN_HEADER_CSS_CLASS_SUFFIX],
-          row: [GRID_ROW_CSS_CLASS_SUFFIX],
-          cell: [GRID_CELL_CSS_CLASS_SUFFIX],
+          root: ['root'],
+          columnHeader: ['columnHeader'],
+          row: ['row'],
+          cell: ['cell'],
         },
         getDataGridUtilityClass,
         props.classes as Record<string, string>,
