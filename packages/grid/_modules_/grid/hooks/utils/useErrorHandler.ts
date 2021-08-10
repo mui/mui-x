@@ -3,8 +3,9 @@ import { GridEvents } from '../../constants/eventsConstants';
 import { GridApiRef } from '../../models/api';
 import { useGridState } from '../features/core/useGridState';
 import { useGridApiEventHandler } from '../root/useGridApiEventHandler';
+import { GridComponentProps } from '../../GridComponentProps';
 
-export function useErrorHandler(apiRef: GridApiRef, props) {
+export function useErrorHandler(apiRef: GridApiRef, props: Pick<GridComponentProps, 'error'>) {
   const [, setGridState] = useGridState(apiRef);
 
   const handleError = React.useCallback(
