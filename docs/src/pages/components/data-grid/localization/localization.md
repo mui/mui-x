@@ -76,6 +76,7 @@ import { DataGrid, nlNL } from '@material-ui/data-grid';
 
 | Locale                  | BCP 47 language tag | Import name |
 | :---------------------- | :------------------ | :---------- |
+| Arabic (Sudan)          | ar-SD               | `arSD`      |
 | Bulgarian               | bg-BG               | `bgBG`      |
 | Czech                   | cs-CZ               | `csCZ`      |
 | Dutch                   | nl-NL               | `nlNL`      |

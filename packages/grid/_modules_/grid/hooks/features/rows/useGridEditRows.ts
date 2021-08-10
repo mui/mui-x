@@ -41,23 +41,34 @@ import {
 } from '../../../utils/keyboardUtils';
 import { useGridApiEventHandler, useGridApiOptionHandler } from '../../root/useGridApiEventHandler';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
-import { optionsSelector } from '../../utils/optionsSelector';
 import { allGridColumnsSelector } from '../columns/gridColumnsSelector';
 import { useEventCallback } from '../../../utils/material-ui-utils';
 import { useLogger } from '../../utils/useLogger';
-import { useGridSelector } from '../core/useGridSelector';
 import { useGridState } from '../core/useGridState';
+import { useGridSelector } from '../core/useGridSelector';
 
 export function useGridEditRows(
   apiRef: GridApiRef,
-  props: Pick<GridComponentProps, 'editRowsModel' | 'onEditRowsModelChange' | 'editMode'>,
+  props: Pick<
+    GridComponentProps,
+    | 'editRowsModel'
+    | 'onEditRowsModelChange'
+    | 'onEditCellPropsChange'
+    | 'onCellEditCommit'
+    | 'onCellEditStart'
+    | 'onCellEditStop'
+    | 'onRowEditCommit'
+    | 'onRowEditStart'
+    | 'onRowEditStop'
+    | 'isCellEditable'
+    | 'editMode'
+  >,
 ) {
   const logger = useLogger('useGridEditRows');
   const [, setGridState, forceUpdate] = useGridState(apiRef);
-  const options = useGridSelector(apiRef, optionsSelector);
-  const columns = useGridSelector(apiRef, allGridColumnsSelector);
   const focusTimeout = React.useRef<any>(null);
   const nextFocusedCell = React.useRef<GridCellParams | null>(null);
+  const columns = useGridSelector(apiRef, allGridColumnsSelector);
 
   const commitPropsAndExit = (params: GridCellParams, event: MouseEvent | React.SyntheticEvent) => {
     if (params.cellMode === 'view') {
@@ -175,9 +186,9 @@ export function useGridEditRows(
     (params: GridCellParams) =>
       !!params.colDef.editable &&
       !!params.colDef!.renderEditCell &&
-      (!options.isCellEditable || options.isCellEditable(params)),
+      (!props.isCellEditable || props.isCellEditable(params)),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [options.isCellEditable],
+    [props.isCellEditable],
   );
 
   const setEditCellValue = React.useCallback(
@@ -462,13 +473,13 @@ export function useGridEditRows(
   useGridApiEventHandler(apiRef, GRID_ROW_EDIT_STOP, handleRowEditStop);
   useGridApiEventHandler(apiRef, GRID_ROW_EDIT_COMMIT, handleRowEditCommit);
 
-  useGridApiOptionHandler(apiRef, GRID_EDIT_CELL_PROPS_CHANGE, options.onEditCellPropsChange);
-  useGridApiOptionHandler(apiRef, GRID_CELL_EDIT_COMMIT, options.onCellEditCommit);
-  useGridApiOptionHandler(apiRef, GRID_CELL_EDIT_START, options.onCellEditStart);
-  useGridApiOptionHandler(apiRef, GRID_CELL_EDIT_STOP, options.onCellEditStop);
-  useGridApiOptionHandler(apiRef, GRID_ROW_EDIT_COMMIT, options.onRowEditCommit);
-  useGridApiOptionHandler(apiRef, GRID_ROW_EDIT_START, options.onRowEditStart);
-  useGridApiOptionHandler(apiRef, GRID_ROW_EDIT_STOP, options.onRowEditStop);
+  useGridApiOptionHandler(apiRef, GRID_EDIT_CELL_PROPS_CHANGE, props.onEditCellPropsChange);
+  useGridApiOptionHandler(apiRef, GRID_CELL_EDIT_COMMIT, props.onCellEditCommit);
+  useGridApiOptionHandler(apiRef, GRID_CELL_EDIT_START, props.onCellEditStart);
+  useGridApiOptionHandler(apiRef, GRID_CELL_EDIT_STOP, props.onCellEditStop);
+  useGridApiOptionHandler(apiRef, GRID_ROW_EDIT_COMMIT, props.onRowEditCommit);
+  useGridApiOptionHandler(apiRef, GRID_ROW_EDIT_START, props.onRowEditStart);
+  useGridApiOptionHandler(apiRef, GRID_ROW_EDIT_STOP, props.onRowEditStop);
 
   useGridApiMethod<GridEditRowApi>(
     apiRef,
@@ -488,10 +499,6 @@ export function useGridEditRows(
   );
 
   React.useEffect(() => {
-    apiRef.current.setEditRowsModel(options.editRowsModel || {});
-  }, [apiRef, options.editRowsModel]);
-
-  React.useEffect(() => {
     apiRef.current.updateControlState<GridEditRowsModel>({
       stateId: 'editRows',
       propModel: props.editRowsModel,
@@ -500,4 +507,12 @@ export function useGridEditRows(
       changeEvent: GRID_EDIT_ROWS_MODEL_CHANGE,
     });
   }, [apiRef, props.editRowsModel, props.onEditRowsModelChange]);
+
+  React.useEffect(() => {
+    const currentEditRowsModel = apiRef.current.getState().editRows;
+
+    if (props.editRowsModel !== undefined && props.editRowsModel !== currentEditRowsModel) {
+      apiRef.current.setEditRowsModel(props.editRowsModel || {});
+    }
+  }, [apiRef, props.editRowsModel]);
 }

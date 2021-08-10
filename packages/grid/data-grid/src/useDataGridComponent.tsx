@@ -52,14 +52,14 @@ export const useDataGridComponent = (apiRef: GridApiRef, props: GridComponentPro
   useGridEditRows(apiRef, props);
   useGridFocus(apiRef, props);
   useGridKeyboard(apiRef);
-  useGridKeyboardNavigation(apiRef);
+  useGridKeyboardNavigation(apiRef, props);
   useGridSelection(apiRef, props);
   useGridSorting(apiRef, props);
   useGridColumnMenu(apiRef);
   useGridPreferencesPanel(apiRef);
   useGridFilter(apiRef, props);
   useGridContainerProps(apiRef);
-  useGridDensity(apiRef);
+  useGridDensity(apiRef, props);
   useGridVirtualRows(apiRef);
   useGridColumnResize(apiRef, props);
   useGridPageSize(apiRef, props);

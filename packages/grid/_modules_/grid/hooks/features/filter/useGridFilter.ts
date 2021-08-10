@@ -14,7 +14,6 @@ import { GridRowId, GridRowModel } from '../../../models/gridRows';
 import { isDeepEqual } from '../../../utils/utils';
 import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
-import { optionsSelector } from '../../utils/optionsSelector';
 import { useLogger } from '../../utils/useLogger';
 import { filterableGridColumnsIdsSelector } from '../columns/gridColumnsSelector';
 import { useGridSelector } from '../core/useGridSelector';
@@ -28,12 +27,18 @@ import { getInitialVisibleGridRowsState } from './visibleGridRowsState';
 
 export const useGridFilter = (
   apiRef: GridApiRef,
-  props: Pick<GridComponentProps, 'rows' | 'filterModel' | 'onFilterModelChange'>,
+  props: Pick<
+    GridComponentProps,
+    | 'rows'
+    | 'filterModel'
+    | 'onFilterModelChange'
+    | 'filterMode'
+    | 'disableMultipleColumnsFiltering'
+  >,
 ): void => {
   const logger = useLogger('useGridFilter');
   const [gridState, setGridState, forceUpdate] = useGridState(apiRef);
   const filterableColumnsIds = useGridSelector(apiRef, filterableGridColumnsIdsSelector);
-  const options = useGridSelector(apiRef, optionsSelector);
 
   const clearFilteredRows = React.useCallback(() => {
     logger.debug('clearing filtered rows');
@@ -120,7 +125,7 @@ export const useGridFilter = (
   );
 
   const applyFilters = React.useCallback(() => {
-    if (options.filterMode === GridFeatureModeConstant.server) {
+    if (props.filterMode === GridFeatureModeConstant.server) {
       forceUpdate();
       return;
     }
@@ -132,7 +137,7 @@ export const useGridFilter = (
       apiRef.current.applyFilter(filterItem, linkOperator);
     });
     forceUpdate();
-  }, [apiRef, clearFilteredRows, forceUpdate, options.filterMode]);
+  }, [apiRef, clearFilteredRows, forceUpdate, props.filterMode]);
 
   const upsertFilter = React.useCallback(
     (item: GridFilterItem) => {
@@ -164,7 +169,7 @@ export const useGridFilter = (
           const column = apiRef!.current!.getColumn(newItem.columnField);
           newItem.operatorValue = column && column!.filterOperators![0].value!;
         }
-        if (options.disableMultipleColumnsFiltering && items.length > 1) {
+        if (props.disableMultipleColumnsFiltering && items.length > 1) {
           items.length = 1;
         }
         const newState = {
@@ -180,7 +185,7 @@ export const useGridFilter = (
       setGridState,
       apiRef,
       applyFilters,
-      options.disableMultipleColumnsFiltering,
+      props.disableMultipleColumnsFiltering,
       filterableColumnsIds,
     ],
   );

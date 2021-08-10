@@ -1,4 +1,3 @@
-import { LicenseStatus } from '@material-ui/x-license';
 import { getInitialGridColumnsState, GridColumnsState } from '../../../models/colDef/gridColDef';
 import {
   GridContainerProps,
@@ -57,12 +56,10 @@ export interface GridState {
   preferencePanel: GridPreferencePanelState;
   density: GridGridDensity;
   error?: any;
-  licenseStatus: LicenseStatus;
 }
 
 export const getInitialGridState = (): GridState => ({
   rows: getInitialGridRowState(),
-  licenseStatus: LicenseStatus.NotFound,
   editRows: {},
   pagination: getInitialPaginationState(),
   options: DEFAULT_GRID_OPTIONS,
