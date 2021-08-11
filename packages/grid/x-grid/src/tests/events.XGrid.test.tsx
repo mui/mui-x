@@ -330,43 +330,24 @@ describe('<XGrid /> - Events Params', () => {
   });
 
   it('call onViewportRowsChange when the viewport rows change', async () => {
-    // const headerHeight = 40;
-    // const rowHeight = 40;
-    // const pageSize = 4;
-    // const border = 2;
     const handleViewportRowsChange = spy();
+    // TODO: Set the dimentions of the grid once the Windows test issues are resolved.
     const { container } = render(
-      <TestVirtualization
-        // height={border + headerHeight + rowHeight * pageSize}
-        // rowHeight={rowHeight}
-        // headerHeight={headerHeight}
-        // hideFooter
-        onViewportRowsChange={handleViewportRowsChange}
-      />,
+      <TestVirtualization onViewportRowsChange={handleViewportRowsChange} />,
     );
 
     await waitFor(() => {
-      // expect(handleViewportRowsChange.callCount).to.equal(1);
       expect(handleViewportRowsChange.lastCall.args[0].firstRowIndex).to.equal(0);
       expect(handleViewportRowsChange.lastCall.args[0].lastRowIndex).to.equal(6); // should be pageSize + 1
     });
     const gridWindow = container.querySelector('.MuiDataGrid-window');
-    // scroll 4 rows so that the renderContext is updated. To be changed to a scroll of 1 row.
+    // scroll 6 rows so that the renderContext is updated. To be changed to a scroll of 1 row.
+    // TODO: set RowHeight directly. Currently 52 is used because the test fails under Windows.
     gridWindow.scrollTop = 52 * 6;
     gridWindow.dispatchEvent(new Event('scroll'));
     await waitFor(() => {
-      // expect(handleViewportRowsChange.callCount).to.equal(2);
       expect(handleViewportRowsChange.lastCall.args[0].firstRowIndex).to.equal(6); // should be 1
       expect(handleViewportRowsChange.lastCall.args[0].lastRowIndex).to.equal(12); // should be pageSize + 1
     });
-
-    // scroll another 4 rows so that the renderContext is updated. To be changed to a scroll of 2 row.
-    // gridWindow.scrollTop = 52 * 6 * 2;
-    // gridWindow.dispatchEvent(new Event('scroll'));
-    // await waitFor(() => {
-    //   // expect(handleViewportRowsChange.callCount).to.equal(3);
-    //   expect(handleViewportRowsChange.lastCall.args[0].firstRowIndex).to.equal(15); // should be 2
-    //   expect(handleViewportRowsChange.lastCall.args[0].lastRowIndex).to.equal(21); // should be pageSize + 1
-    // });
   });
 });
