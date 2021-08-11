@@ -23,6 +23,7 @@ import { useGridSelection } from '../../_modules_/grid/hooks/features/selection/
 import { useGridSorting } from '../../_modules_/grid/hooks/features/sorting/useGridSorting';
 import { useGridComponents } from '../../_modules_/grid/hooks/features/useGridComponents';
 import { useGridVirtualRows } from '../../_modules_/grid/hooks/features/virtualization/useGridVirtualRows';
+import { useGridScroll } from '../../_modules_/grid/hooks/features/scroll/useGridScroll';
 import { useApi } from '../../_modules_/grid/hooks/root/useApi';
 import { useEvents } from '../../_modules_/grid/hooks/root/useEvents';
 import { useGridContainerProps } from '../../_modules_/grid/hooks/root/useGridContainerProps';
@@ -60,6 +61,7 @@ export const useDataGridComponent = (apiRef: GridApiRef, props: GridComponentPro
   useGridFilter(apiRef, props);
   useGridContainerProps(apiRef);
   useGridDensity(apiRef, props);
+  useGridScroll(apiRef, props);
   useGridVirtualRows(apiRef);
   useGridColumnResize(apiRef, props);
   useGridPageSize(apiRef, props);

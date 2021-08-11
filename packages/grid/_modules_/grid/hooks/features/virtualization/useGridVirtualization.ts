@@ -48,8 +48,8 @@ function getIdxFromScroll(
     : getIdxFromScroll(offset, positions, pivot + 1, sliceEnd);
 }
 
-export const useGridVirtualRows = (apiRef: GridApiRef): void => {
-  const logger = useLogger('useGridVirtualRows');
+export const useGridVirtualization = (apiRef: GridApiRef): void => {
+  const logger = useLogger('useGridVirtualization');
   const colRef = apiRef.current.columnHeadersElementRef!;
   const windowRef = apiRef.current.windowRef!;
   const renderingZoneRef = apiRef.current.renderingZoneRef!;
@@ -382,24 +382,7 @@ export const useGridVirtualRows = (apiRef: GridApiRef): void => {
     apiRef,
   ]);
 
-  const preventScroll = React.useCallback((event: any) => {
-    event.target.scrollLeft = 0;
-    event.target.scrollTop = 0;
-  }, []);
-
   useNativeEventListener(apiRef, windowRef, 'scroll', handleScroll, { passive: true });
-  useNativeEventListener(
-    apiRef,
-    () => apiRef.current?.renderingZoneRef?.current?.parentElement,
-    'scroll',
-    preventScroll,
-  );
-  useNativeEventListener(
-    apiRef,
-    () => apiRef.current?.columnHeadersContainerElementRef?.current,
-    'scroll',
-    preventScroll,
-  );
 
   const resetRenderedColState = React.useCallback(() => {
     logger.debug('Clearing previous renderedColRef');
