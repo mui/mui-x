@@ -644,7 +644,7 @@ describe('<XGrid /> - Rows', () => {
       const cell = getCell(1, 0);
       cell.focus();
       fireEvent.keyDown(cell, { key: 'a' });
-      expect(apiRef.current.getState().focus.cell).to.deep.equal({
+      expect(apiRef.current.state.focus.cell).to.deep.equal({
         id: baselineProps.rows[1].id,
         field: baselineProps.columns[0].field,
       });
@@ -654,13 +654,13 @@ describe('<XGrid /> - Rows', () => {
       render(<TestCase rows={baselineProps.rows} />);
       fireEvent.mouseUp(getCell(1, 0));
       fireEvent.click(getCell(1, 0));
-      expect(apiRef.current.getState().focus.cell).to.deep.equal({
+      expect(apiRef.current.state.focus.cell).to.deep.equal({
         id: baselineProps.rows[1].id,
         field: baselineProps.columns[0].field,
       });
       fireEvent.mouseUp(getCell(2, 1));
       fireEvent.click(getCell(2, 1));
-      expect(apiRef.current.getState().focus.cell).to.deep.equal({
+      expect(apiRef.current.state.focus.cell).to.deep.equal({
         id: baselineProps.rows[2].id,
         field: baselineProps.columns[1].field,
       });
@@ -670,12 +670,12 @@ describe('<XGrid /> - Rows', () => {
       render(<TestCase rows={baselineProps.rows} />);
       fireEvent.mouseUp(getCell(1, 0));
       fireEvent.click(getCell(1, 0));
-      expect(apiRef.current.getState().focus.cell).to.deep.equal({
+      expect(apiRef.current.state.focus.cell).to.deep.equal({
         id: baselineProps.rows[1].id,
         field: baselineProps.columns[0].field,
       });
       fireEvent.click(document.body);
-      expect(apiRef.current.getState().focus.cell).to.deep.equal(null);
+      expect(apiRef.current.state.focus.cell).to.deep.equal(null);
     });
 
     it('should publish "cellFocusOut" when clicking outside the focused cell', () => {

@@ -333,7 +333,7 @@ export function useGridEditRows(
   }, [apiRef, props.editRowsModel, props.onEditRowsModelChange]);
 
   React.useEffect(() => {
-    const currentEditRowsModel = apiRef.current.getState().editRows;
+    const currentEditRowsModel = apiRef.current.state.editRows;
 
     if (props.editRowsModel !== undefined && props.editRowsModel !== currentEditRowsModel) {
       apiRef.current.setEditRowsModel(props.editRowsModel || {});
