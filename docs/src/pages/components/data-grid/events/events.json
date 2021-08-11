@@ -113,10 +113,6 @@
     "name": "filterModelChange",
     "description": "Fired when the filter model changes.\nCalled with a GridFilterModel object."
   },
-  {
-    "name": "viewportRowsChange",
-    "description": "Fired when the rows in the viewport change. Called with a GridViewportRowsChange object."
-  },
   { "name": "pageChange", "description": "Fired when the page changes." },
   { "name": "pageSizeChange", "description": "Fired when the page size changes." },
   {
@@ -167,5 +163,9 @@
     "name": "stateChange",
     "description": "Fired when the state of the grid is updated. Called with a GridStateChangeParams object."
   },
-  { "name": "unmount", "description": "Fired when the grid is unmounted." }
+  { "name": "unmount", "description": "Fired when the grid is unmounted." },
+  {
+    "name": "viewportRowsChange",
+    "description": "Fired when the rows in the viewport changed. Called with a GridViewportRowsChange object."
+  }
 ]
