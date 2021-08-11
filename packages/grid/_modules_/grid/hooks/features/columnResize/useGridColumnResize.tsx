@@ -83,6 +83,7 @@ export const useGridColumnResize = (
 
     colDefRef.current!.computedWidth = newWidth;
     colDefRef.current!.width = newWidth;
+    colDefRef.current!.flex = undefined;
 
     colElementRef.current!.style.width = `${newWidth}px`;
     colElementRef.current!.style.minWidth = `${newWidth}px`;
