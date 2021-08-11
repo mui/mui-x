@@ -2,8 +2,7 @@
 import * as React from 'react';
 import Alert from '@material-ui/lab/Alert';
 import {
-  GRID_CELL_EDIT_START,
-  GRID_CELL_EDIT_STOP,
+  GridEvents,
   GridCellParams,
   GridColumns,
   GridRowsProp,
@@ -22,7 +21,7 @@ export default function CatchEditingEventsGrid() {
 
   React.useEffect(() => {
     return apiRef.current.subscribeEvent(
-      GRID_CELL_EDIT_START,
+      GridEvents.cellEditStart,
       (params: GridCellParams, event) => {
         setMessage(
           `Editing cell with value: ${params.value} and row id: ${
@@ -36,7 +35,7 @@ export default function CatchEditingEventsGrid() {
   }, [apiRef]);
 
   React.useEffect(() => {
-    return apiRef.current.subscribeEvent(GRID_CELL_EDIT_STOP, () => {
+    return apiRef.current.subscribeEvent(GridEvents.cellEditStop, () => {
       setMessage('');
     });
   }, [apiRef]);

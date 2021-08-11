@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GRID_COMPONENT_ERROR } from '../../constants';
+import { GridEvents } from '../../constants/eventsConstants';
 import { GridApiRef } from '../../models/api';
 import { useGridState } from '../features/core/useGridState';
 import { useGridApiEventHandler } from '../root/useGridApiEventHandler';
@@ -20,5 +20,5 @@ export function useErrorHandler(apiRef: GridApiRef, props: Pick<GridComponentPro
     handleError(props.error);
   }, [handleError, props.error]);
 
-  useGridApiEventHandler(apiRef, GRID_COMPONENT_ERROR, handleError);
+  useGridApiEventHandler(apiRef, GridEvents.componentError, handleError);
 }

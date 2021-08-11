@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { ownerDocument } from '@material-ui/core/utils';
-import { GRID_DEBOUNCED_RESIZE } from '../../constants/eventsConstants';
+import { GridEvents } from '../../constants/eventsConstants';
 import { GridApiRef } from '../../models/api/gridApiRef';
 import {
   GridContainerProps,
@@ -304,5 +304,5 @@ export const useGridContainerProps = (
     refreshContainerSizes();
   }, [gridState.columns, props.hideFooter, refreshContainerSizes, visibleRowsCount]);
 
-  useGridApiEventHandler(apiRef, GRID_DEBOUNCED_RESIZE, refreshContainerSizes);
+  useGridApiEventHandler(apiRef, GridEvents.debouncedResize, refreshContainerSizes);
 };
