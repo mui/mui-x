@@ -23,6 +23,7 @@ import { GridResizeParams } from './params/gridResizeParams';
 import { GridColumnResizeParams } from './params/gridColumnResizeParams';
 import { GridColumnVisibilityChangeParams } from './params/gridColumnVisibilityChangeParams';
 import { GridClasses } from './gridClasses';
+import { GridViewportRowsChangeParams } from './params/gridViewportRowsChangeParams';
 
 export type MuiEvent<E> = E & {
   defaultMuiPrevented?: boolean;
@@ -551,6 +552,14 @@ export interface GridOptions {
    * @internal
    */
   onStateChange?: (params: any, event: MuiEvent<{}>, details?: any) => void;
+  /**
+   * Callback fired when the rows in the viewport change.
+   */
+  onViewportRowsChange?: (
+    params: GridViewportRowsChangeParams,
+    event: MuiEvent<{}>,
+    details?: any,
+  ) => void;
   /**
    * Set the current page.
    * @default 1
