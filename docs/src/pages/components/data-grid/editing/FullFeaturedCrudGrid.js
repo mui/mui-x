@@ -194,10 +194,13 @@ function EditToolbar(props) {
     const id = randomId();
     apiRef.current.updateRows([{ id, isNew: true }]);
     apiRef.current.setRowMode(id, 'edit');
+    // Wait for the grid to render with the new row
     setTimeout(() => {
-      // Prevent this click from removing the focus
+      apiRef.current.scrollToIndexes({
+        rowIndex: apiRef.current.getRowsCount() - 1,
+      });
       apiRef.current.setCellFocus(id, 'name');
-    });
+    }, 150);
   };
 
   return (
