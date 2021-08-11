@@ -8,7 +8,9 @@ import { capitalize, unstable_useId as useId } from '@material-ui/core/utils';
 import { makeStyles } from '@material-ui/styles';
 import { filterableGridColumnsSelector } from '../../../hooks/features/columns/gridColumnsSelector';
 import { useGridSelector } from '../../../hooks/features/core/useGridSelector';
+import { GridColDef } from '../../../models/colDef/gridColDef';
 import { GridFilterItem, GridLinkOperator } from '../../../models/gridFilterItem';
+import { GridFilterOperator } from '../../../models/gridFilterOperator';
 import { useGridApiContext } from '../../../hooks/root/useGridApiContext';
 import { GridCloseIcon } from '../../icons/index';
 import { GridTranslationKeys } from '../../../models/api/gridLocaleTextApi';
@@ -73,16 +75,13 @@ export function GridFilterForm(props: GridFilterFormProps) {
   const columnSelectLabelId = useId();
   const operatorSelectId = useId();
   const operatorSelectLabelId = useId();
-
-  const getCurrentColumn = React.useCallback(() => {
+  const [currentColumn, setCurrentColumn] = React.useState<GridColDef | null>(() => {
     if (!item.columnField) {
       return null;
     }
     return apiRef!.current.getColumn(item.columnField)!;
-  }, [apiRef, item]);
-
-  const getCurrentOperator = React.useCallback(() => {
-    const currentColumn = getCurrentColumn();
+  });
+  const [currentOperator, setCurrentOperator] = React.useState<GridFilterOperator | null>(() => {
     if (!item.operatorValue || !currentColumn) {
       return null;
     }
@@ -91,20 +90,18 @@ export function GridFilterForm(props: GridFilterFormProps) {
       currentColumn.filterOperators?.find((operator) => operator.value === item.operatorValue) ||
       null
     );
-  }, [item, getCurrentColumn]);
+  });
 
-  const CurrentOperatorInputComponent = React.useCallback(() => {
-    const currentOperator = getCurrentOperator();
+  React.useEffect(() => {
+    if (!item.columnField) {
+      return;
+    }
 
-    return currentOperator?.InputComponent ? (
-      <currentOperator.InputComponent
-        apiRef={apiRef}
-        item={item}
-        applyValue={applyFilterChanges}
-        {...currentOperator.InputComponentProps}
-      />
-    ) : null;
-  }, [apiRef, item, getCurrentOperator, applyFilterChanges]);
+    const column = apiRef!.current.getColumn(item.columnField)!;
+    const newOperator = column.filterOperators![0];
+    setCurrentOperator(newOperator);
+    setCurrentColumn(column);
+  }, [apiRef, item]);
 
   const changeColumn = React.useCallback(
     (event: React.ChangeEvent<{ value: unknown }>) => {
@@ -129,8 +126,12 @@ export function GridFilterForm(props: GridFilterFormProps) {
         ...item,
         operatorValue,
       });
+      const newOperator =
+        currentColumn!.filterOperators?.find((operator) => operator.value === operatorValue) ||
+        null;
+      setCurrentOperator(newOperator);
     },
-    [applyFilterChanges, item],
+    [applyFilterChanges, currentColumn, item],
   );
 
   const changeLinkOperator = React.useCallback(
@@ -216,7 +217,7 @@ export function GridFilterForm(props: GridFilterFormProps) {
           onChange={changeOperator}
           native
         >
-          {getCurrentColumn()?.filterOperators?.map((operator) => (
+          {currentColumn?.filterOperators?.map((operator) => (
             <option key={operator.value} value={operator.value}>
               {operator.label ||
                 apiRef!.current.getLocaleText(
@@ -227,7 +228,14 @@ export function GridFilterForm(props: GridFilterFormProps) {
         </Select>
       </FormControl>
       <FormControl variant="standard" className={classes.filterValueInput}>
-        <CurrentOperatorInputComponent />
+        {currentOperator?.InputComponent && (
+          <currentOperator.InputComponent
+            apiRef={apiRef}
+            item={item}
+            applyValue={applyFilterChanges}
+            {...currentOperator.InputComponentProps}
+          />
+        )}
       </FormControl>
     </div>
   );

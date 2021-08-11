@@ -61,6 +61,7 @@ export function GridFilterInputValue(props: GridTypeFilterInputValueProps & Text
       setIsApplying(true);
       filterTimeout.current = setTimeout(() => {
         applyValue({ ...item, value });
+        setIsApplying(false);
       }, SUBMIT_FILTER_STROKE_TIME);
     },
     [apiRef, applyValue, item, type],
@@ -69,7 +70,6 @@ export function GridFilterInputValue(props: GridTypeFilterInputValueProps & Text
   React.useEffect(() => {
     return () => {
       clearTimeout(filterTimeout.current);
-      setIsApplying(false);
     };
   }, []);
 
