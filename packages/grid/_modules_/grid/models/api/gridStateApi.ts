@@ -9,6 +9,7 @@ export interface GridStateApi {
   /**
    * Returns the state of the grid.
    * @returns {GridState} The state of the grid.
+   * @ignore - do not document.
    */
   getState: () => GridState;
   /**
