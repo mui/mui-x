@@ -86,25 +86,8 @@ export function GridFilterForm(props: GridFilterFormProps) {
     if (!item.operatorValue || !currentColumn) {
       return null;
     }
-
-    return (
-      currentColumn.filterOperators?.find((operator) => operator.value === item.operatorValue) ||
-      null
-    );
+    return currentColumn.filterOperators?.find((operator) => operator.value === item.operatorValue);
   }, [item, getCurrentColumn]);
-
-  const CurrentOperatorInputComponent = React.useCallback(() => {
-    const currentOperator = getCurrentOperator();
-
-    return currentOperator?.InputComponent ? (
-      <currentOperator.InputComponent
-        apiRef={apiRef}
-        item={item}
-        applyValue={applyFilterChanges}
-        {...currentOperator.InputComponentProps}
-      />
-    ) : null;
-  }, [apiRef, item, getCurrentOperator, applyFilterChanges]);
 
   const changeColumn = React.useCallback(
     (event: React.ChangeEvent<{ value: unknown }>) => {
@@ -147,6 +130,8 @@ export function GridFilterForm(props: GridFilterFormProps) {
   const handleDeleteFilter = React.useCallback(() => {
     deleteFilter(item);
   }, [deleteFilter, item]);
+
+  const currentOperator = getCurrentOperator();
 
   return (
     <div className={classes.root}>
@@ -227,7 +212,14 @@ export function GridFilterForm(props: GridFilterFormProps) {
         </Select>
       </FormControl>
       <FormControl variant="standard" className={classes.filterValueInput}>
-        <CurrentOperatorInputComponent />
+        {currentOperator?.InputComponent ? (
+          <currentOperator.InputComponent
+            apiRef={apiRef}
+            item={item}
+            applyValue={applyFilterChanges}
+            {...currentOperator.InputComponentProps}
+          />
+        ) : null}
       </FormControl>
     </div>
   );
