@@ -63,4 +63,17 @@ describe('<DataGrid /> - Cells', () => {
     );
     expect(getCell(0, 0)).to.have.class('foobar');
   });
+
+  it('should allow renderCell to return a false-ish value', () => {
+    render(
+      <div style={{ width: 300, height: 500 }}>
+        <DataGrid
+          autoHeight={isJSDOM}
+          columns={[{ field: 'brand', renderCell: () => 0 }]}
+          rows={[{ id: 1, brand: 'Nike' }]}
+        />
+      </div>,
+    );
+    expect(getCell(0, 0)).to.have.text('0');
+  });
 });

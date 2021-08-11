@@ -1,10 +1,5 @@
 import * as React from 'react';
-import {
-  GRID_COLUMNS_CHANGE,
-  GRID_FILTER_MODEL_CHANGE,
-  GRID_ROWS_SET,
-  GRID_ROWS_UPDATE,
-} from '../../../constants/eventsConstants';
+import { GridEvents } from '../../../constants/eventsConstants';
 import { GridComponentProps } from '../../../GridComponentProps';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridFilterApi } from '../../../models/api/gridFilterApi';
@@ -14,7 +9,6 @@ import { GridRowId, GridRowModel } from '../../../models/gridRows';
 import { isDeepEqual } from '../../../utils/utils';
 import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
-import { optionsSelector } from '../../utils/optionsSelector';
 import { useLogger } from '../../utils/useLogger';
 import { filterableGridColumnsIdsSelector } from '../columns/gridColumnsSelector';
 import { useGridSelector } from '../core/useGridSelector';
@@ -28,12 +22,18 @@ import { getInitialVisibleGridRowsState } from './visibleGridRowsState';
 
 export const useGridFilter = (
   apiRef: GridApiRef,
-  props: Pick<GridComponentProps, 'rows' | 'filterModel' | 'onFilterModelChange'>,
+  props: Pick<
+    GridComponentProps,
+    | 'rows'
+    | 'filterModel'
+    | 'onFilterModelChange'
+    | 'filterMode'
+    | 'disableMultipleColumnsFiltering'
+  >,
 ): void => {
   const logger = useLogger('useGridFilter');
   const [gridState, setGridState, forceUpdate] = useGridState(apiRef);
   const filterableColumnsIds = useGridSelector(apiRef, filterableGridColumnsIdsSelector);
-  const options = useGridSelector(apiRef, optionsSelector);
 
   const clearFilteredRows = React.useCallback(() => {
     logger.debug('clearing filtered rows');
@@ -120,7 +120,7 @@ export const useGridFilter = (
   );
 
   const applyFilters = React.useCallback(() => {
-    if (options.filterMode === GridFeatureModeConstant.server) {
+    if (props.filterMode === GridFeatureModeConstant.server) {
       forceUpdate();
       return;
     }
@@ -132,7 +132,7 @@ export const useGridFilter = (
       apiRef.current.applyFilter(filterItem, linkOperator);
     });
     forceUpdate();
-  }, [apiRef, clearFilteredRows, forceUpdate, options.filterMode]);
+  }, [apiRef, clearFilteredRows, forceUpdate, props.filterMode]);
 
   const upsertFilter = React.useCallback(
     (item: GridFilterItem) => {
@@ -164,7 +164,7 @@ export const useGridFilter = (
           const column = apiRef!.current!.getColumn(newItem.columnField);
           newItem.operatorValue = column && column!.filterOperators![0].value!;
         }
-        if (options.disableMultipleColumnsFiltering && items.length > 1) {
+        if (props.disableMultipleColumnsFiltering && items.length > 1) {
           items.length = 1;
         }
         const newState = {
@@ -180,7 +180,7 @@ export const useGridFilter = (
       setGridState,
       apiRef,
       applyFilters,
-      options.disableMultipleColumnsFiltering,
+      props.disableMultipleColumnsFiltering,
       filterableColumnsIds,
     ],
   );
@@ -302,7 +302,7 @@ export const useGridFilter = (
       propModel: props.filterModel,
       propOnChange: props.onFilterModelChange,
       stateSelector: (state) => state.filter,
-      changeEvent: GRID_FILTER_MODEL_CHANGE,
+      changeEvent: GridEvents.filterModelChange,
     });
   }, [apiRef, props.filterModel, props.onFilterModelChange]);
 
@@ -326,7 +326,7 @@ export const useGridFilter = (
     }
   }, [apiRef, logger, props.filterModel, setGridState]);
 
-  useGridApiEventHandler(apiRef, GRID_ROWS_SET, apiRef.current.applyFilters);
-  useGridApiEventHandler(apiRef, GRID_ROWS_UPDATE, apiRef.current.applyFilters);
-  useGridApiEventHandler(apiRef, GRID_COLUMNS_CHANGE, onColUpdated);
+  useGridApiEventHandler(apiRef, GridEvents.rowsSet, apiRef.current.applyFilters);
+  useGridApiEventHandler(apiRef, GridEvents.rowsUpdate, apiRef.current.applyFilters);
+  useGridApiEventHandler(apiRef, GridEvents.columnsChange, onColUpdated);
 };

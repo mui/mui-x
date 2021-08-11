@@ -1,13 +1,6 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import {
-  GRID_ROW_DOUBLE_CLICK,
-  GRID_ROW_CLICK,
-  GRID_ROW_ENTER,
-  GRID_ROW_LEAVE,
-  GRID_ROW_OUT,
-  GRID_ROW_OVER,
-} from '../constants/eventsConstants';
+import { GridEvents } from '../constants/eventsConstants';
 import { GridRowId } from '../models';
 import { isFunction } from '../utils/utils';
 import { gridDensityRowHeightSelector } from '../hooks/features/density';
@@ -49,12 +42,12 @@ export function GridRow(props: GridRowProps) {
 
   const mouseEventsHandlers = React.useMemo(
     () => ({
-      onClick: publish(GRID_ROW_CLICK),
-      onDoubleClick: publish(GRID_ROW_DOUBLE_CLICK),
-      onMouseOver: publish(GRID_ROW_OVER),
-      onMouseOut: publish(GRID_ROW_OUT),
-      onMouseEnter: publish(GRID_ROW_ENTER),
-      onMouseLeave: publish(GRID_ROW_LEAVE),
+      onClick: publish(GridEvents.rowClick),
+      onDoubleClick: publish(GridEvents.rowDoubleClick),
+      onMouseOver: publish(GridEvents.rowOver),
+      onMouseOut: publish(GridEvents.rowOut),
+      onMouseEnter: publish(GridEvents.rowEnter),
+      onMouseLeave: publish(GridEvents.rowLeave),
     }),
     [publish],
   );

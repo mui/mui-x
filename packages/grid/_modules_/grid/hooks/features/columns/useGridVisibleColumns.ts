@@ -4,7 +4,7 @@ import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridVisibleColumnApi } from '../../../models/api/gridVisibleColumnApi';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
 import { useGridApiOptionHandler } from '../../root/useGridApiEventHandler';
-import { GRID_COLUMN_VISIBILITY_CHANGE } from '../../../constants/eventsConstants';
+import { GridEvents } from '../../../constants/eventsConstants';
 import { useGridState } from '../core/useGridState';
 import { visibleGridColumnsSelector } from './gridColumnsSelector';
 
@@ -22,7 +22,7 @@ export const useGridVisibleColumns = (
       apiRef.current.updateColumns([updatedCol]);
       forceUpdate();
 
-      apiRef.current.publishEvent(GRID_COLUMN_VISIBILITY_CHANGE, {
+      apiRef.current.publishEvent(GridEvents.columnVisibilityChange, {
         field,
         colDef: updatedCol,
         api: apiRef,
@@ -44,5 +44,5 @@ export const useGridVisibleColumns = (
 
   useGridApiMethod(apiRef, visibleColumnsApi, 'GridVisibleColumnsApi');
 
-  useGridApiOptionHandler(apiRef, GRID_COLUMN_VISIBILITY_CHANGE, props.onColumnVisibilityChange);
+  useGridApiOptionHandler(apiRef, GridEvents.columnVisibilityChange, props.onColumnVisibilityChange);
 };

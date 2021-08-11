@@ -2,7 +2,7 @@ import * as React from 'react';
 import { GridApiRef } from '../../../models';
 import { useGridSelector, useGridState } from '../core';
 import { useLogger } from '../../utils';
-import { GRID_PAGE_CHANGE, GRID_PAGE_SIZE_CHANGE } from '../../../constants';
+import { GridEvents } from '../../../constants/eventsConstants';
 import { GridComponentProps } from '../../../GridComponentProps';
 import { useGridApiEventHandler, useGridApiMethod } from '../../root';
 import { GridPageApi } from '../../../models/api/gridPageApi';
@@ -40,10 +40,10 @@ export const useGridPage = (
     (page: number) => {
       logger.debug(`Setting page to ${page}`);
 
-      setGridState((oldState) => ({
-        ...oldState,
+      setGridState((state) => ({
+        ...state,
         pagination: applyValidPage({
-          ...oldState.pagination,
+          ...state.pagination,
           page,
         }),
       }));
@@ -58,21 +58,21 @@ export const useGridPage = (
       propModel: props.page,
       propOnChange: props.onPageChange,
       stateSelector: (state) => state.pagination.page,
-      changeEvent: GRID_PAGE_CHANGE,
+      changeEvent: GridEvents.pageChange,
     });
   }, [apiRef, props.page, props.onPageChange]);
 
   React.useEffect(() => {
-    setGridState((oldState) => {
+    setGridState((state) => {
       const rowCount = props.rowCount !== undefined ? props.rowCount : visibleRowCount;
-      const pageCount = getPageCount(rowCount, oldState.pagination.pageSize);
+      const pageCount = getPageCount(rowCount, state.pagination.pageSize);
 
-      const page = props.page == null ? oldState.pagination.page : props.page;
+      const page = props.page == null ? state.pagination.page : props.page;
 
       return {
-        ...oldState,
+        ...state,
         pagination: applyValidPage({
-          ...oldState.pagination,
+          ...state.pagination,
           page,
           rowCount,
           pageCount,
@@ -84,15 +84,15 @@ export const useGridPage = (
 
   const handlePageSizeChange = React.useCallback(
     (pageSize: number) => {
-      setGridState((oldState) => {
-        const pageCount = getPageCount(oldState.pagination.rowCount, pageSize);
+      setGridState((state) => {
+        const pageCount = getPageCount(state.pagination.rowCount, pageSize);
 
         return {
-          ...oldState,
+          ...state,
           pagination: applyValidPage({
-            ...oldState.pagination,
+            ...state.pagination,
             pageCount,
-            page: oldState.pagination.page,
+            page: state.pagination.page,
           }),
         };
       });
@@ -102,7 +102,7 @@ export const useGridPage = (
     [setGridState, forceUpdate],
   );
 
-  useGridApiEventHandler(apiRef, GRID_PAGE_SIZE_CHANGE, handlePageSizeChange);
+  useGridApiEventHandler(apiRef, GridEvents.pageSizeChange, handlePageSizeChange);
 
   const pageApi: GridPageApi = {
     setPage,

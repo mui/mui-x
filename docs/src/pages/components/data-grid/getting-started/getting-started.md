@@ -18,14 +18,15 @@ npm install @material-ui/data-grid
 yarn add @material-ui/data-grid
 ```
 
-The grid has a peer dependency on Material-UI core components. If you are not already using Material-UI in your project, you can install it with:
+The grid has two peer dependencies on Material-UI components.
+If you are not already using Material-UI in your project, you can install it with:
 
 ```sh
 // with npm
-npm install @material-ui/core
+npm install @material-ui/core @material-ui/styles
 
 // with yarn
-yarn add @material-ui/core
+yarn add @material-ui/core @material-ui/styles
 ```
 
 ## Quick start

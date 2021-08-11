@@ -25,7 +25,13 @@ export default function ApiRefPaginationGrid() {
         Set page 2
       </Button>
       <div style={{ height: 400, width: '100%', marginTop: 16 }}>
-        <XGrid pagination pageSize={5} apiRef={apiRef} {...data} />
+        <XGrid
+          pagination
+          pageSize={5}
+          rowsPerPageOptions={[5]}
+          apiRef={apiRef}
+          {...data}
+        />
       </div>
     </div>
   );

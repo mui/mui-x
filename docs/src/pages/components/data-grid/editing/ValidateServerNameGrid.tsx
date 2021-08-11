@@ -10,6 +10,7 @@ import {
   XGrid,
 } from '@material-ui/x-grid';
 
+// TODO v5: remove
 function getThemePaletteMode(palette: any): string {
   return palette.type || palette.mode;
 }

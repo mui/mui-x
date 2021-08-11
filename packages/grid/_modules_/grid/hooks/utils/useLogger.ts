@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Logger } from '../../models/logger';
 import { localStorageAvailable } from '../../utils/utils';
+import { GridComponentProps } from '../../GridComponentProps';
 
 const forceDebug = localStorageAvailable() && window.localStorage.getItem('DEBUG') != null;
 
@@ -49,19 +50,21 @@ let factory: LoggerFactoryFn | null;
 
 export function useLoggerFactory(
   apiRef: any,
-  { logger, logLevel }: { logger?: Logger; logLevel?: string | false },
+  props: Pick<GridComponentProps, 'logger' | 'logLevel'>,
 ) {
   if (forceDebug) {
     factory = defaultFactory('debug');
     return;
   }
 
-  if (!logger) {
-    factory = logLevel ? defaultFactory(logLevel.toString()) : null;
+  if (!props.logger) {
+    factory = props.logLevel ? defaultFactory(props.logLevel.toString()) : null;
     return;
   }
 
-  factory = logLevel ? (name: string) => getAppender(name, logLevel.toString(), logger) : null;
+  factory = props.logLevel
+    ? (name: string) => getAppender(name, props.logLevel!.toString(), props.logger)
+    : null;
 }
 
 export function useLogger(name: string): Logger {

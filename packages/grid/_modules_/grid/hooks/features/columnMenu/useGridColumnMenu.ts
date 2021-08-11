@@ -4,7 +4,7 @@ import { useGridApiMethod } from '../../root/useGridApiMethod';
 import { useLogger } from '../../utils/useLogger';
 import { useGridState } from '../core/useGridState';
 import { useGridApiEventHandler } from '../../root';
-import { GRID_COLUMN_RESIZE_START } from '../../../constants';
+import { GridEvents } from '../../../constants/eventsConstants';
 
 export const useGridColumnMenu = (apiRef: GridApiRef): void => {
   const logger = useLogger('useGridColumnMenu');
@@ -45,18 +45,18 @@ export const useGridColumnMenu = (apiRef: GridApiRef): void => {
   );
 
   const handleColumnResizeStart = React.useCallback(() => {
-    setGridState((oldState) => {
-      if (oldState.columnMenu.open) {
+    setGridState((state) => {
+      if (state.columnMenu.open) {
         return {
-          ...oldState,
+          ...state,
           columnMenu: {
-            ...oldState.columnMenu,
+            ...state.columnMenu,
             open: false,
           },
         };
       }
 
-      return oldState;
+      return state;
     });
   }, [setGridState]);
 
@@ -76,5 +76,5 @@ export const useGridColumnMenu = (apiRef: GridApiRef): void => {
     'ColumnMenuApi',
   );
 
-  useGridApiEventHandler(apiRef, GRID_COLUMN_RESIZE_START, handleColumnResizeStart);
+  useGridApiEventHandler(apiRef, GridEvents.columnResizeStart, handleColumnResizeStart);
 };

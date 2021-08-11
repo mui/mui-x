@@ -24,7 +24,6 @@ import { useGridRows } from '../../_modules_/grid/hooks/features/rows/useGridRow
 import { useGridSelection } from '../../_modules_/grid/hooks/features/selection/useGridSelection';
 import { useGridSorting } from '../../_modules_/grid/hooks/features/sorting/useGridSorting';
 import { useGridComponents } from '../../_modules_/grid/hooks/features/useGridComponents';
-import { useLicenseState } from '../../_modules_/grid/hooks/features/useLicenseState';
 import { useGridVirtualRows } from '../../_modules_/grid/hooks/features/virtualization/useGridVirtualRows';
 import { useApi } from '../../_modules_/grid/hooks/root/useApi';
 import { useEvents } from '../../_modules_/grid/hooks/root/useEvents';
@@ -40,7 +39,6 @@ import { GridApiRef } from '../../_modules_/grid/models/api/gridApiRef';
 
 export const useXGridComponent = (apiRef: GridApiRef, props: GridComponentProps) => {
   useLoggerFactory(apiRef, props);
-  useLicenseState(apiRef);
   useApi(apiRef, props);
   useErrorHandler(apiRef, props);
   useGridControlState(apiRef, props);
@@ -57,16 +55,16 @@ export const useXGridComponent = (apiRef: GridApiRef, props: GridComponentProps)
   useGridEditRows(apiRef, props);
   useGridFocus(apiRef, props);
   useGridKeyboard(apiRef);
-  useGridKeyboardNavigation(apiRef);
+  useGridKeyboardNavigation(apiRef, props);
   useGridSelection(apiRef, props);
   useGridSorting(apiRef, props);
   useGridColumnMenu(apiRef);
   useGridPreferencesPanel(apiRef);
   useGridFilter(apiRef, props);
   useGridContainerProps(apiRef);
-  useGridDensity(apiRef);
+  useGridDensity(apiRef, props);
   useGridVirtualRows(apiRef);
-  useGridColumnReorder(apiRef);
+  useGridColumnReorder(apiRef, props);
   useGridColumnResize(apiRef, props);
   useGridPageSize(apiRef, props);
   useGridPage(apiRef, props);

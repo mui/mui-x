@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GRID_STATE_CHANGE } from '../../../constants/eventsConstants';
+import { GridEvents } from '../../../constants/eventsConstants';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridApi } from '../../../models/api/gridApi';
 import { GridStateChangeParams } from '../../../models/params/gridStateChangeParams';
@@ -31,7 +31,7 @@ export const useGridApi = (apiRef: GridApiRef): GridApi => {
       apiRef.current.state = state;
       forceUpdate(() => state);
       const params: GridStateChangeParams = { api: apiRef.current, state };
-      apiRef.current.publishEvent(GRID_STATE_CHANGE, params);
+      apiRef.current.publishEvent(GridEvents.stateChange, params);
     },
     [apiRef],
   );
