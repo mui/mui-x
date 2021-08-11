@@ -176,7 +176,7 @@ export const useGridContainerProps = (apiRef: GridApiRef) => {
       const viewportMaxPages =
         viewportPageSize > 0 ? Math.ceil(rowsCount / viewportPageSize) - 1 : 0;
 
-      // We multiply by 2 for virtualization to work with useGridVirtualRows scroll system
+      // We multiply by 2 for virtualization to work with useGridVirtualization scroll system
       const renderingZonePageSize = viewportPageSize * 2;
       const renderingZoneHeight = renderingZonePageSize * rowHeight;
       const renderingZoneMaxScrollHeight = renderingZoneHeight - viewportSizes.height;
