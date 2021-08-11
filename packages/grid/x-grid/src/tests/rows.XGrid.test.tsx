@@ -14,7 +14,6 @@ import {
   useGridApiRef,
   XGrid,
   XGridProps,
-  GRID_CELL_FOCUS_OUT,
 } from '@material-ui/x-grid';
 import { useData } from 'packages/storybook/src/hooks/useData';
 
@@ -679,10 +678,10 @@ describe('<XGrid /> - Rows', () => {
       expect(apiRef.current.getState().focus.cell).to.deep.equal(null);
     });
 
-    it('should publish GRID_CELL_FOCUS_OUT when clicking outside the focused cell', () => {
+    it('should publish "cellFocusOut" when clicking outside the focused cell', () => {
       const handleCellFocusOut = spy();
       render(<TestCase rows={baselineProps.rows} />);
-      apiRef.current.subscribeEvent(GRID_CELL_FOCUS_OUT, handleCellFocusOut);
+      apiRef.current.subscribeEvent('cellFocusOut', handleCellFocusOut);
       fireEvent.mouseUp(getCell(1, 0));
       fireEvent.click(getCell(1, 0));
       expect(handleCellFocusOut.callCount).to.equal(0);

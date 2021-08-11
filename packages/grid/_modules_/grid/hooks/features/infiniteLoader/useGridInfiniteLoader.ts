@@ -1,11 +1,7 @@
 import * as React from 'react';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { useGridSelector } from '../core/useGridSelector';
-import {
-  GRID_ROWS_SCROLL,
-  GRID_ROWS_SCROLL_END,
-  GRID_VIEWPORT_ROWS_CHANGE,
-} from '../../../constants/eventsConstants';
+import { GridEvents } from '../../../constants/eventsConstants';
 import { gridContainerSizesSelector } from '../../root/gridContainerSizesSelector';
 import { useGridApiEventHandler, useGridApiOptionHandler } from '../../root/useGridApiEventHandler';
 import { GridRowScrollEndParams } from '../../../models/params/gridRowScrollEndParams';
@@ -54,7 +50,7 @@ export const useGridInfiniteLoader = (
           viewportPageSize: containerSizes.viewportPageSize,
           virtualRowsCount: containerSizes.virtualRowsCount,
         };
-        apiRef.current.publishEvent(GRID_ROWS_SCROLL_END, rowScrollEndParam);
+        apiRef.current.publishEvent(GridEvents.rowsScrollEnd, rowScrollEndParam);
         isInScrollBottomArea.current = true;
       }
     },
@@ -84,7 +80,7 @@ export const useGridInfiniteLoader = (
         firstRowIndex: renderContext.firstRowIdx!,
         lastRowIndex: renderContext.lastRowIdx!,
       };
-      apiRef.current.publishEvent(GRID_VIEWPORT_ROWS_CHANGE, viewportRowsChangeParams);
+      apiRef.current.publishEvent(GridEvents.gridViewportRowsChange, viewportRowsChangeParams);
     }
 
     previousRenderContext.current = {
@@ -93,7 +89,7 @@ export const useGridInfiniteLoader = (
     };
   }, [apiRef, props.onViewportRowsChange, renderState]);
 
-  useGridApiEventHandler(apiRef, GRID_ROWS_SCROLL, handleGridScroll);
-  useGridApiOptionHandler(apiRef, GRID_ROWS_SCROLL_END, props.onRowsScrollEnd);
-  useGridApiOptionHandler(apiRef, GRID_VIEWPORT_ROWS_CHANGE, props.onViewportRowsChange);
+  useGridApiEventHandler(apiRef, GridEvents.rowsScroll, handleGridScroll);
+  useGridApiOptionHandler(apiRef, GridEvents.rowsScrollEnd, props.onRowsScrollEnd);
+  useGridApiOptionHandler(apiRef, GridEvents.gridViewportRowsChange, props.onViewportRowsChange);
 };
