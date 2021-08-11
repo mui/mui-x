@@ -3,7 +3,6 @@ import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridColumnInformationApi } from '../../../models/api/gridColumnApi';
 
 import { useGridApiMethod } from '../../root/useGridApiMethod';
-import { useGridSelector } from '../core/useGridSelector';
 import {
   allGridColumnsSelector,
   gridColumnsMetaSelector,
@@ -11,39 +10,37 @@ import {
 } from './gridColumnsSelector';
 
 export const useGridColumnInformation = (apiRef: GridApiRef): void => {
-  const columnsMeta = useGridSelector(apiRef, gridColumnsMetaSelector);
-  const allColumns = useGridSelector(apiRef, allGridColumnsSelector);
-  const visibleColumns = useGridSelector(apiRef, visibleGridColumnsSelector);
-
   const getColumn = React.useCallback<GridColumnInformationApi['getColumn']>(
     (field) => apiRef.current.state.columns.lookup[field],
     [apiRef],
   );
 
   const getAllColumns = React.useCallback<GridColumnInformationApi['getAllColumns']>(
-    () => allColumns,
-    [allColumns],
+    () => allGridColumnsSelector(apiRef.current.state),
+    [apiRef],
   );
 
   const getColumnsMeta = React.useCallback<GridColumnInformationApi['getColumnsMeta']>(
-    () => columnsMeta,
-    [columnsMeta],
+    () => gridColumnsMetaSelector(apiRef.current.state),
+    [apiRef],
   );
 
-  const getColumnIndex = React.useCallback(
-    (field: string, useVisibleColumns: boolean = true): number =>
-      useVisibleColumns
-        ? visibleColumns.findIndex((col) => col.field === field)
-        : allColumns.findIndex((col) => col.field === field),
-    [allColumns, visibleColumns],
+  const getColumnIndex = React.useCallback<GridColumnInformationApi['getColumnIndex']>(
+    (field: string, useVisibleColumns: boolean = true): number => {
+      const columns = useVisibleColumns
+        ? visibleGridColumnsSelector(apiRef.current.state)
+        : allGridColumnsSelector(apiRef.current.state);
+      return columns.findIndex((col) => col.field === field);
+    },
+    [apiRef],
   );
 
   const getColumnPosition: (field: string) => number = React.useCallback(
     (field) => {
       const index = getColumnIndex(field);
-      return columnsMeta.positions[index];
+      return gridColumnsMetaSelector(apiRef.current.state).positions[index];
     },
-    [columnsMeta.positions, getColumnIndex],
+    [apiRef, getColumnIndex],
   );
 
   const colApi: GridColumnInformationApi = {

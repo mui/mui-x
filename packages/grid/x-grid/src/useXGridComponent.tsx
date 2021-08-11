@@ -4,7 +4,6 @@ import { useGridColumnMenu } from '../../_modules_/grid/hooks/features/columnMen
 import { useGridColumnReorder } from '../../_modules_/grid/hooks/features/columnReorder/useGridColumnReorder';
 import { useGridColumnResize } from '../../_modules_/grid/hooks/features/columnResize/useGridColumnResize';
 import { useGridColumns } from '../../_modules_/grid/hooks/features/columns/useGridColumns';
-import { useGridVisibleColumns } from '../../_modules_/grid/hooks/features/columns/useGridVisibleColumns';
 import { useGridControlState } from '../../_modules_/grid/hooks/features/core/useGridControlState';
 import { useGridDensity } from '../../_modules_/grid/hooks/features/density/useGridDensity';
 import { useGridCsvExport } from '../../_modules_/grid/hooks/features/export/useGridCsvExport';
