@@ -1,9 +1,5 @@
 import * as React from 'react';
-import {
-  GRID_ROWS_CLEAR,
-  GRID_ROWS_SET,
-  GRID_ROWS_UPDATE,
-} from '../../../constants/eventsConstants';
+import { GridEvents } from '../../../constants/eventsConstants';
 import { GridComponentProps } from '../../../GridComponentProps';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridRowApi } from '../../../models/api/gridRowApi';
@@ -20,6 +16,8 @@ import { useGridApiMethod } from '../../root/useGridApiMethod';
 import { useLogger } from '../../utils/useLogger';
 import { useGridState } from '../core/useGridState';
 import { getInitialGridRowState, InternalGridRowsState } from './gridRowsState';
+import { useGridSelector } from '../core/useGridSelector';
+import { gridRowsStateSelector } from './gridRowsSelector';
 
 function getGridRowId(
   rowData: GridRowData,
@@ -52,10 +50,11 @@ export function convertGridRowsPropToState(
 
 export const useGridRows = (
   apiRef: GridApiRef,
-  { rows, getRowId }: Pick<GridComponentProps, 'rows' | 'getRowId'>,
+  props: Pick<GridComponentProps, 'rows' | 'getRowId' | 'rowCount'>,
 ): void => {
   const logger = useLogger('useGridRows');
-  const [gridState, setGridState, updateComponent] = useGridState(apiRef);
+  const [, setGridState, updateComponent] = useGridState(apiRef);
+  const stateRows = useGridSelector(apiRef, gridRowsStateSelector);
   const updateTimeout = React.useRef<any>();
 
   const forceUpdate = React.useCallback(
@@ -74,7 +73,7 @@ export const useGridRows = (
     [logger, updateComponent],
   );
 
-  const internalRowsState = React.useRef<InternalGridRowsState>(gridState.rows);
+  const internalRowsState = React.useRef<InternalGridRowsState>(stateRows);
 
   React.useEffect(() => {
     return () => clearTimeout(updateTimeout!.current);
@@ -83,14 +82,14 @@ export const useGridRows = (
   React.useEffect(() => {
     setGridState((state) => {
       internalRowsState.current = convertGridRowsPropToState(
-        rows,
-        state.options.rowCount,
-        getRowId,
+        props.rows,
+        props.rowCount,
+        props.getRowId,
       );
 
       return { ...state, rows: internalRowsState.current };
     });
-  }, [getRowId, rows, setGridState]);
+  }, [props.getRowId, props.rows, props.rowCount, setGridState]);
 
   const getRowIndexFromId = React.useCallback(
     (id: GridRowId): number => {
@@ -120,31 +119,27 @@ export const useGridRows = (
       logger.debug(`updating all rows, new length ${allNewRows.length}`);
 
       if (internalRowsState.current.allRows.length > 0) {
-        apiRef.current.publishEvent(GRID_ROWS_CLEAR);
+        apiRef.current.publishEvent(GridEvents.rowsClear);
       }
 
       const allRows: GridRowId[] = [];
       const idRowsLookup = allNewRows.reduce((acc, row) => {
-        const id = getGridRowId(row, getRowId);
+        const id = getGridRowId(row, props.getRowId);
         acc[id] = row;
         allRows.push(id);
         return acc;
       }, {});
 
       const totalRowCount =
-        gridState.options &&
-        gridState.options.rowCount &&
-        gridState.options.rowCount > allRows.length
-          ? gridState.options.rowCount
-          : allRows.length;
+        props.rowCount && props.rowCount > allRows.length ? props.rowCount : allRows.length;
 
       internalRowsState.current = { idRowsLookup, allRows, totalRowCount };
 
       setGridState((state) => ({ ...state, rows: internalRowsState.current }));
 
-      forceUpdate(() => apiRef.current.publishEvent(GRID_ROWS_SET));
+      forceUpdate(() => apiRef.current.publishEvent(GridEvents.rowsSet));
     },
-    [logger, gridState.options, setGridState, forceUpdate, apiRef, getRowId],
+    [logger, setGridState, forceUpdate, apiRef, props.getRowId, props.rowCount],
   );
 
   const updateRows = React.useCallback(
@@ -153,7 +148,7 @@ export const useGridRows = (
       const uniqUpdates = updates.reduce((acc, update) => {
         const id = getGridRowId(
           update,
-          getRowId,
+          props.getRowId,
           'A row was provided without id when calling updateRows():',
         );
         acc[id] = acc[id] != null ? { ...acc[id!], ...update } : update;
@@ -201,9 +196,9 @@ export const useGridRows = (
         ];
         setRows(newRows);
       }
-      forceUpdate(() => apiRef.current.publishEvent(GRID_ROWS_UPDATE));
+      forceUpdate(() => apiRef.current.publishEvent(GridEvents.rowsUpdate));
     },
-    [apiRef, forceUpdate, getRow, getRowId, setGridState, setRows],
+    [apiRef, forceUpdate, getRow, props.getRowId, setGridState, setRows],
   );
 
   const getRowModels = React.useCallback(

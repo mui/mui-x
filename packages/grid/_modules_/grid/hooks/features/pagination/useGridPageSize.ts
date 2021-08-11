@@ -3,7 +3,7 @@ import { GridApiRef } from '../../../models';
 import { GridComponentProps } from '../../../GridComponentProps';
 import { GridPageSizeApi } from '../../../models/api/gridPageSizeApi';
 import { useGridApiMethod } from '../../root';
-import { GRID_PAGE_SIZE_CHANGE } from '../../../constants';
+import { GridEvents } from '../../../constants/eventsConstants';
 import { useLogger } from '../../utils';
 import { useGridSelector, useGridState } from '../core';
 import { visibleGridRowCountSelector } from '../filter';
@@ -40,7 +40,7 @@ export const useGridPageSize = (
       propModel: props.pageSize,
       propOnChange: props.onPageSizeChange,
       stateSelector: (state) => state.pagination.pageSize,
-      changeEvent: GRID_PAGE_SIZE_CHANGE,
+      changeEvent: GridEvents.pageSizeChange,
     });
   }, [apiRef, props.pageSize, props.onPageSizeChange]);
 
@@ -58,7 +58,7 @@ export const useGridPageSize = (
 
     if (pageSize !== prevPageSize) {
       if (props.autoPageSize) {
-        apiRef.current.publishEvent(GRID_PAGE_SIZE_CHANGE, autoPageSize);
+        apiRef.current.publishEvent(GridEvents.pageSizeChange, autoPageSize);
       }
 
       setGridState((state) => ({

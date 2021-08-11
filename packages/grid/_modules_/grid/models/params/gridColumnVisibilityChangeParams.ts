@@ -1,3 +1,5 @@
+import type { GridStateColDef } from '../colDef';
+
 /**
  * Object passed as parameter of the column visibility change event.
  */
@@ -9,7 +11,7 @@ export interface GridColumnVisibilityChangeParams {
   /**
    * The column of the current header component.
    */
-  colDef: any;
+  colDef: GridStateColDef;
   /**
    * API ref that let you manipulate the grid.
    */

@@ -30,38 +30,8 @@ function generateType(type, needsParenthesis = false) {
   }
   if (type.type === 'reflection') {
     if (type.declaration.signatures && type.declaration.signatures.length === 1) {
-      const signature: TypeDoc.SignatureReflection = type.declaration.signatures[0];
-
-      let text = needsParenthesis ? '(' : '';
-
-      // Handle function generic parameters
-      if (signature.typeParameters?.length) {
-        text += '<';
-        text += signature.typeParameters
-          .map((generic) => {
-            let genericLine = generic.name;
-            if (generic.type) genericLine += ` extends ${generateType(generic.type)}`;
-            if (generic.default) genericLine += ` = ${generateType(generic.default)}`;
-            return genericLine;
-          })
-          .join(', ');
-        text += '>';
-      }
-
-      text += '(';
-      text += signature
-        .parameters!.map((param) => {
-          let paramText = param.flags.isRest ? `...${param.name}` : param.name;
-          if (param.flags.isOptional) paramText += '?';
-          if (param.defaultValue) paramText += '?';
-          return `${paramText}: ${generateType(param.type)}`;
-        })
-        .join(', ');
-      text += ')';
-      if (signature.type) {
-        text += ` => ${generateType(signature.type)}`;
-      }
-      return needsParenthesis ? `${text})` : text;
+      // eslint-disable-next-line @typescript-eslint/no-use-before-define
+      return generateSignature(type.declaration.signatures[0], needsParenthesis);
     }
     if (type.declaration.children) {
       let text = '{ ';
@@ -93,6 +63,37 @@ function generateType(type, needsParenthesis = false) {
   }
 
   return '';
+}
+
+function generateSignature(signature, needsParenthesis = false) {
+  let text = needsParenthesis ? '(' : '';
+  if (signature.typeParameters?.length) {
+    // Handle function generic parameters
+    text += '<';
+    text += signature.typeParameters
+      .map((generic) => {
+        let genericLine = generic.name;
+        if (generic.type) genericLine += ` extends ${generateType(generic.type)}`;
+        if (generic.default) genericLine += ` = ${generateType(generic.default)}`;
+        return genericLine;
+      })
+      .join(', ');
+    text += '>';
+  }
+  text += '(';
+  text += signature
+    .parameters!.map((param) => {
+      let paramText = param.flags.isRest ? `...${param.name}` : param.name;
+      if (param.flags.isOptional) paramText += '?';
+      if (param.defaultValue) paramText += '?';
+      return `${paramText}: ${generateType(param.type)}`;
+    })
+    .join(', ');
+  text += ')';
+  if (signature.type) {
+    text += ` => ${generateType(signature.type)}`;
+  }
+  return needsParenthesis ? `${text})` : text;
 }
 
 function escapeCell(value) {
@@ -132,8 +133,8 @@ function generateProperties(api: Api, apisToGenerate) {
   api.properties.forEach((propertyReflection) => {
     let name = propertyReflection.name;
     const type = propertyReflection!.type as any;
-    const signatures = type.declaration?.signatures;
-    const comment = signatures?.length ? signatures[0].comment : propertyReflection.comment;
+    const signature = propertyReflection.signatures ? propertyReflection.signatures[0] : null;
+    const comment = signature?.comment || propertyReflection.comment;
     const description = linkify(comment?.shortText || '', apisToGenerate, 'markdown');
 
     if (propertyReflection.flags.isOptional) {
@@ -148,7 +149,9 @@ function generateProperties(api: Api, apisToGenerate) {
       defaultValue = `<span class="prop-default">${escapeCell(defaultTag.text)}</span>`;
     }
 
-    const typeFormatted = `<span class="prop-type">${escapeCell(generateType(type))}</span>`;
+    const typeFormatted = `<span class="prop-type">${escapeCell(
+      signature ? generateSignature(signature) : generateType(type),
+    )}</span>`;
 
     if (hasDefaultValue) {
       text += `| ${name} | ${typeFormatted} | ${defaultValue} | ${escapeCell(description)} |\n`;
@@ -205,20 +208,21 @@ function writePrettifiedFile(filename: string, data: string, prettierConfigPath:
 }
 
 function findProperties(reflection: TypeDoc.DeclarationReflection) {
-  return reflection.children!.filter((child) => child.kindOf(TypeDoc.ReflectionKind.Property));
+  const properties = reflection.children!.filter((child) =>
+    child.kindOf([TypeDoc.ReflectionKind.Property, TypeDoc.ReflectionKind.Method]),
+  );
+  return properties.sort((a, b) => a.name.localeCompare(b.name));
 }
 
-function extractEvents(project: TypeDoc.ProjectReflection, apisToGenerate) {
+function extractEvents(eventsObject: TypeDoc.DeclarationReflection, apisToGenerate) {
   const events: { name: string; description: string }[] = [];
-  const allEvents = project.getReflectionsByKind(TypeDoc.ReflectionKind.Event);
+  const allEvents = eventsObject.children!;
 
-  allEvents!.forEach((event) => {
-    if (!event.flags.isConst) {
-      return;
-    }
+  allEvents.forEach((event) => {
     const description = linkify(event.comment?.shortText || '', apisToGenerate, 'html');
+
     events.push({
-      name: (event as any).type.value,
+      name: event.escapedName!,
       description: renderMarkdownInline(description),
     });
   });
@@ -253,6 +257,7 @@ function run(argv: { outputDirectory?: string }) {
     'GridCsvExportApi',
     'GridExportCsvOptions',
     'GridVirtualizationApi',
+    'GridEvents',
   ];
 
   apisToGenerate.forEach((apiName) => {
@@ -275,14 +280,13 @@ function run(argv: { outputDirectory?: string }) {
         name: reflection.name,
         description: linkify(reflection.comment?.shortText, apisToGenerate, 'html'),
         properties: api.properties.map((propertyReflection) => {
-          const type = propertyReflection!.type as any;
-          const signatures = type.declaration!.signatures;
-          const comment = signatures.length ? signatures[0].comment : null;
+          const signature = propertyReflection.signatures ? propertyReflection.signatures[0] : null;
+          const comment = signature?.comment || propertyReflection.comment;
           const description = linkify(comment?.shortText || '', apisToGenerate, 'html');
           const response: any = {
             name: propertyReflection.name,
             description: renderMarkdownInline(description),
-            type: generateType(type),
+            type: signature ? generateSignature(signature) : generateType(propertyReflection.type),
           };
           return response;
         }),
@@ -294,6 +298,17 @@ function run(argv: { outputDirectory?: string }) {
       );
       // eslint-disable-next-line no-console
       console.log('Built JSON file for', api.name);
+    } else if (reflection.name === 'GridEvents') {
+      const events = extractEvents(reflection, apisToGenerate);
+
+      writePrettifiedFile(
+        path.resolve(workspaceRoot, 'docs/src/pages/components/data-grid/events/events.json'),
+        JSON.stringify(events),
+        prettierConfigPath,
+      );
+
+      // eslint-disable-next-line no-console
+      console.log('Built events file');
     } else {
       writePrettifiedFile(
         path.resolve(outputDirectory, `${slug}.md`),
@@ -326,17 +341,6 @@ Page.getInitialProps = () => {
       console.log('Built API docs for', api.name);
     }
   });
-
-  const events = extractEvents(project!, apisToGenerate);
-
-  writePrettifiedFile(
-    path.resolve(workspaceRoot, 'docs/src/pages/components/data-grid/events/events.json'),
-    JSON.stringify(events),
-    prettierConfigPath,
-  );
-
-  // eslint-disable-next-line no-console
-  console.log('Built events file');
 }
 
 yargs

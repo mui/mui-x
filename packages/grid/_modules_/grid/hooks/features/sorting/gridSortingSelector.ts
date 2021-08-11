@@ -10,24 +10,15 @@ import {
 import { GridSortingState } from './gridSortingState';
 
 const sortingGridStateSelector = (state: GridState) => state.sorting;
-export const sortedGridRowIdsSelector = createSelector<
-  GridState,
-  GridSortingState,
-  GridRowId[],
-  GridRowId[]
->(
+
+export const sortedGridRowIdsSelector = createSelector(
   sortingGridStateSelector,
   unorderedGridRowIdsSelector,
-  (sortingState: GridSortingState, allRows: GridRowId[]) => {
-    return sortingState.sortedRows.length ? sortingState.sortedRows : allRows;
-  },
+  (sortingState: GridSortingState, allRows: GridRowId[]) =>
+    sortingState.sortedRows.length ? sortingState.sortedRows : allRows,
 );
-export const sortedGridRowsSelector = createSelector<
-  GridState,
-  GridRowId[],
-  GridRowsLookup,
-  Map<GridRowId, GridRowModel>
->(
+
+export const sortedGridRowsSelector = createSelector(
   sortedGridRowIdsSelector,
   gridRowsLookupSelector,
   (sortedIds: GridRowId[], idRowsLookup: GridRowsLookup) => {
@@ -38,7 +29,8 @@ export const sortedGridRowsSelector = createSelector<
     return map;
   },
 );
-export const gridSortModelSelector = createSelector<GridState, GridSortingState, GridSortModel>(
+
+export const gridSortModelSelector = createSelector(
   sortingGridStateSelector,
   (sorting) => sorting.sortModel,
 );
@@ -47,17 +39,17 @@ export type GridSortColumnLookup = Record<
   string,
   { sortDirection: GridSortDirection; sortIndex?: number }
 >;
-export const gridSortColumnLookupSelector = createSelector<
-  GridState,
-  GridSortModel,
-  GridSortColumnLookup
->(gridSortModelSelector, (sortModel: GridSortModel) => {
-  const result: GridSortColumnLookup = sortModel.reduce((res, sortItem, index) => {
-    res[sortItem.field] = {
-      sortDirection: sortItem.sort,
-      sortIndex: sortModel.length > 1 ? index + 1 : undefined,
-    };
-    return res;
-  }, {});
-  return result;
-});
+
+export const gridSortColumnLookupSelector = createSelector(
+  gridSortModelSelector,
+  (sortModel: GridSortModel) => {
+    const result: GridSortColumnLookup = sortModel.reduce((res, sortItem, index) => {
+      res[sortItem.field] = {
+        sortDirection: sortItem.sort,
+        sortIndex: sortModel.length > 1 ? index + 1 : undefined,
+      };
+      return res;
+    }, {});
+    return result;
+  },
+);

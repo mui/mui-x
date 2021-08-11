@@ -1,12 +1,7 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 import * as React from 'react';
 import Alert from '@material-ui/lab/Alert';
-import {
-  GRID_CELL_EDIT_START,
-  GRID_CELL_EDIT_STOP,
-  useGridApiRef,
-  XGrid,
-} from '@material-ui/x-grid';
+import { GridEvents, useGridApiRef, XGrid } from '@material-ui/x-grid';
 import {
   randomCreatedDate,
   randomTraderName,
@@ -18,15 +13,18 @@ export default function CatchEditingEventsGrid() {
   const [message, setMessage] = React.useState('');
 
   React.useEffect(() => {
-    return apiRef.current.subscribeEvent(GRID_CELL_EDIT_START, (params, event) => {
-      setMessage(
-        `Editing cell with value: ${params.value} and row id: ${params.id}, column: ${params.field}, triggered by ${event.type}.`,
-      );
-    });
+    return apiRef.current.subscribeEvent(
+      GridEvents.cellEditStart,
+      (params, event) => {
+        setMessage(
+          `Editing cell with value: ${params.value} and row id: ${params.id}, column: ${params.field}, triggered by ${event.type}.`,
+        );
+      },
+    );
   }, [apiRef]);
 
   React.useEffect(() => {
-    return apiRef.current.subscribeEvent(GRID_CELL_EDIT_STOP, () => {
+    return apiRef.current.subscribeEvent(GridEvents.cellEditStop, () => {
       setMessage('');
     });
   }, [apiRef]);
