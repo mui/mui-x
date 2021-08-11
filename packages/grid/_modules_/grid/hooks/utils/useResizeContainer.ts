@@ -21,7 +21,7 @@ export function useResizeContainer(
 
     apiRef.current.publishEvent(
       GridEvents.debouncedResize,
-      apiRef.current.getState().containerSizes?.windowSizes,
+      apiRef.current.state.containerSizes?.windowSizes,
     );
   }, [apiRef, gridLogger]);
 
