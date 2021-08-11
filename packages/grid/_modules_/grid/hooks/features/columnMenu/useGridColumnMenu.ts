@@ -4,7 +4,7 @@ import { useGridApiMethod } from '../../root/useGridApiMethod';
 import { useLogger } from '../../utils/useLogger';
 import { useGridState } from '../core/useGridState';
 import { useGridApiEventHandler } from '../../root';
-import { GRID_COLUMN_RESIZE_START } from '../../../constants';
+import { GridEvents } from '../../../constants/eventsConstants';
 
 /**
  * @requires useGridPreferencePanel (method)
@@ -80,5 +80,5 @@ export const useGridColumnMenu = (apiRef: GridApiRef): void => {
     'ColumnMenuApi',
   );
 
-  useGridApiEventHandler(apiRef, GRID_COLUMN_RESIZE_START, handleColumnResizeStart);
+  useGridApiEventHandler(apiRef, GridEvents.columnResizeStart, handleColumnResizeStart);
 };

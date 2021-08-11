@@ -1,8 +1,5 @@
 import * as React from 'react';
-import {
-  GRID_CELL_NAVIGATION_KEY_DOWN,
-  GRID_COLUMN_HEADER_NAVIGATION_KEY_DOWN,
-} from '../../../constants/eventsConstants';
+import { GridEvents } from '../../../constants/eventsConstants';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import {
   GridCellIndexCoordinates,
@@ -221,6 +218,6 @@ export const useGridKeyboardNavigation = (
     [apiRef, colCount, containerSizes, logger],
   );
 
-  useGridApiEventHandler(apiRef, GRID_CELL_NAVIGATION_KEY_DOWN, navigateCells);
-  useGridApiEventHandler(apiRef, GRID_COLUMN_HEADER_NAVIGATION_KEY_DOWN, navigateColumnHeaders);
+  useGridApiEventHandler(apiRef, GridEvents.cellNavigationKeyDown, navigateCells);
+  useGridApiEventHandler(apiRef, GridEvents.columnHeaderNavigationKeyDown, navigateColumnHeaders);
 };

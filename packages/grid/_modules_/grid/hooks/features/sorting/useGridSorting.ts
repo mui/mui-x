@@ -1,13 +1,5 @@
 import * as React from 'react';
-import {
-  GRID_COLUMN_HEADER_CLICK,
-  GRID_COLUMN_HEADER_KEY_DOWN,
-  GRID_COLUMNS_CHANGE,
-  GRID_ROWS_CLEAR,
-  GRID_ROWS_SET,
-  GRID_ROWS_UPDATE,
-  GRID_SORT_MODEL_CHANGE,
-} from '../../../constants/eventsConstants';
+import { GridEvents } from '../../../constants/eventsConstants';
 import { GridComponentProps } from '../../../GridComponentProps';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridSortApi } from '../../../models/api/gridSortApi';
@@ -290,12 +282,12 @@ export const useGridSorting = (
     });
   }, [setGridState]);
 
-  useGridApiEventHandler(apiRef, GRID_COLUMN_HEADER_CLICK, handleColumnHeaderClick);
-  useGridApiEventHandler(apiRef, GRID_COLUMN_HEADER_KEY_DOWN, handleColumnHeaderKeyDown);
-  useGridApiEventHandler(apiRef, GRID_ROWS_SET, apiRef.current.applySorting);
-  useGridApiEventHandler(apiRef, GRID_ROWS_CLEAR, onRowsCleared);
-  useGridApiEventHandler(apiRef, GRID_ROWS_UPDATE, apiRef.current.applySorting);
-  useGridApiEventHandler(apiRef, GRID_COLUMNS_CHANGE, onColUpdated);
+  useGridApiEventHandler(apiRef, GridEvents.columnHeaderClick, handleColumnHeaderClick);
+  useGridApiEventHandler(apiRef, GridEvents.columnHeaderKeyDown, handleColumnHeaderKeyDown);
+  useGridApiEventHandler(apiRef, GridEvents.rowsSet, apiRef.current.applySorting);
+  useGridApiEventHandler(apiRef, GridEvents.rowsClear, onRowsCleared);
+  useGridApiEventHandler(apiRef, GridEvents.rowsUpdate, apiRef.current.applySorting);
+  useGridApiEventHandler(apiRef, GridEvents.columnsChange, onColUpdated);
 
   const sortApi: GridSortApi = {
     getSortModel,
@@ -325,7 +317,7 @@ export const useGridSorting = (
       propModel: props.sortModel,
       propOnChange: props.onSortModelChange,
       stateSelector: (state) => state.sorting.sortModel,
-      changeEvent: GRID_SORT_MODEL_CHANGE,
+      changeEvent: GridEvents.sortModelChange,
     });
   }, [apiRef, props.sortModel, props.onSortModelChange]);
 

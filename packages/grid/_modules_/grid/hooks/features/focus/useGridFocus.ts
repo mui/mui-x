@@ -1,14 +1,6 @@
 import * as React from 'react';
 import { ownerDocument } from '@material-ui/core/utils';
-import {
-  GRID_CELL_DOUBLE_CLICK,
-  GRID_CELL_MOUSE_UP,
-  GRID_CELL_FOCUS_OUT,
-  GRID_CELL_KEY_DOWN,
-  GRID_COLUMN_HEADER_BLUR,
-  GRID_COLUMN_HEADER_FOCUS,
-  GRID_CELL_MODE_CHANGE,
-} from '../../../constants/eventsConstants';
+import { GridEvents } from '../../../constants/eventsConstants';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridFocusApi } from '../../../models/api/gridFocusApi';
 import { GridRowId } from '../../../models/gridRows';
@@ -50,7 +42,7 @@ export const useGridFocus = (apiRef: GridApiRef, props: Pick<GridComponentProps,
       const { cell } = apiRef.current.getState().focus;
       if (cell) {
         apiRef.current.publishEvent(
-          GRID_CELL_FOCUS_OUT,
+          GridEvents.cellFocusOut,
           apiRef.current.getCellParams(cell.id, cell.field),
           event,
         );
@@ -137,7 +129,7 @@ export const useGridFocus = (apiRef: GridApiRef, props: Pick<GridComponentProps,
       // There's a focused cell but another cell was clicked
       // Publishes an event to notify that the focus was lost
       apiRef.current.publishEvent(
-        GRID_CELL_FOCUS_OUT,
+        GridEvents.cellFocusOut,
         apiRef.current.getCellParams(focusedCell.id, focusedCell.field),
         event,
       );
@@ -201,10 +193,10 @@ export const useGridFocus = (apiRef: GridApiRef, props: Pick<GridComponentProps,
     };
   }, [apiRef, handleDocumentClick]);
 
-  useGridApiEventHandler(apiRef, GRID_COLUMN_HEADER_BLUR, handleBlur);
-  useGridApiEventHandler(apiRef, GRID_CELL_DOUBLE_CLICK, handleCellDoubleClick);
-  useGridApiEventHandler(apiRef, GRID_CELL_MOUSE_UP, handleCellMouseUp);
-  useGridApiEventHandler(apiRef, GRID_CELL_KEY_DOWN, handleCellKeyDown);
-  useGridApiEventHandler(apiRef, GRID_CELL_MODE_CHANGE, handleCellModeChange);
-  useGridApiEventHandler(apiRef, GRID_COLUMN_HEADER_FOCUS, handleColumnHeaderFocus);
+  useGridApiEventHandler(apiRef, GridEvents.columnHeaderBlur, handleBlur);
+  useGridApiEventHandler(apiRef, GridEvents.cellDoubleClick, handleCellDoubleClick);
+  useGridApiEventHandler(apiRef, GridEvents.cellMouseUp, handleCellMouseUp);
+  useGridApiEventHandler(apiRef, GridEvents.cellKeyDown, handleCellKeyDown);
+  useGridApiEventHandler(apiRef, GridEvents.cellModeChange, handleCellModeChange);
+  useGridApiEventHandler(apiRef, GridEvents.columnHeaderFocus, handleColumnHeaderFocus);
 };

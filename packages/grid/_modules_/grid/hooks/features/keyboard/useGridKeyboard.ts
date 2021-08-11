@@ -1,11 +1,6 @@
 import * as React from 'react';
 import { GRID_ROW_CSS_CLASS } from '../../../constants/cssClassesConstants';
-import {
-  GRID_CELL_KEY_DOWN,
-  GRID_CELL_NAVIGATION_KEY_DOWN,
-  GRID_COLUMN_HEADER_KEY_DOWN,
-  GRID_COLUMN_HEADER_NAVIGATION_KEY_DOWN,
-} from '../../../constants/eventsConstants';
+import { GridEvents } from '../../../constants/eventsConstants';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridCellParams } from '../../../models/params/gridCellParams';
 import {
@@ -49,7 +44,7 @@ export const useGridKeyboard = (apiRef: GridApiRef): void => {
         selectionFromRowIndex = selectedRowsIndex[diffWithCurrentIndex.indexOf(minIndex)];
       }
 
-      apiRef.current.publishEvent(GRID_CELL_NAVIGATION_KEY_DOWN, params, event);
+      apiRef.current.publishEvent(GridEvents.cellNavigationKeyDown, params, event);
 
       const focusCell = apiRef.current.getState().focus.cell!;
       const rowIndex = apiRef.current.getRowIndex(focusCell.id);
@@ -87,7 +82,7 @@ export const useGridKeyboard = (apiRef: GridApiRef): void => {
       }
 
       if (isNavigationKey(event.key) && !event.shiftKey) {
-        apiRef.current.publishEvent(GRID_CELL_NAVIGATION_KEY_DOWN, cellParams, event);
+        apiRef.current.publishEvent(GridEvents.cellNavigationKeyDown, cellParams, event);
         return;
       }
 
@@ -119,7 +114,7 @@ export const useGridKeyboard = (apiRef: GridApiRef): void => {
       }
 
       if (isNavigationKey(event.key) && !isSpaceKey(event.key) && !event.shiftKey) {
-        apiRef.current.publishEvent(GRID_COLUMN_HEADER_NAVIGATION_KEY_DOWN, params, event);
+        apiRef.current.publishEvent(GridEvents.cellNavigationKeyDown, params, event);
         return;
       }
 
@@ -130,6 +125,6 @@ export const useGridKeyboard = (apiRef: GridApiRef): void => {
     [apiRef],
   );
 
-  useGridApiEventHandler(apiRef, GRID_CELL_KEY_DOWN, handleCellKeyDown);
-  useGridApiEventHandler(apiRef, GRID_COLUMN_HEADER_KEY_DOWN, handleColumnHeaderKeyDown);
+  useGridApiEventHandler(apiRef, GridEvents.cellKeyDown, handleCellKeyDown);
+  useGridApiEventHandler(apiRef, GridEvents.columnHeaderKeyDown, handleColumnHeaderKeyDown);
 };
