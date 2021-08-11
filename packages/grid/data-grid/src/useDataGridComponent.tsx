@@ -48,7 +48,6 @@ export const useDataGridComponent = (apiRef: GridApiRef, props: GridComponentPro
   useResizeContainer(apiRef, props);
   useGridFreezeRows(apiRef, props);
   useGridColumns(apiRef, props);
-  useGridVisibleColumns(apiRef, props);
   useGridParamsApi(apiRef);
   useGridRows(apiRef, props);
   useGridEditRows(apiRef, props);

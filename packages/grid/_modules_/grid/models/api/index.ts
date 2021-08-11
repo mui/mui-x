@@ -2,7 +2,6 @@ export * from './gridApiRef';
 export * from './gridParamsApi';
 export * from './gridCoreApi';
 export * from './gridColumnApi';
-export * from './gridVisibleColumnApi';
 export * from './gridComponentsApi';
 export * from './gridDensityApi';
 export * from './gridEventsApi';

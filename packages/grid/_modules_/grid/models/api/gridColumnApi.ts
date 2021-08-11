@@ -1,9 +1,6 @@
 import { GridColDef, GridColumnsMeta, GridStateColDef } from '../colDef/gridColDef';
 
-/**
- * The column API interface that is available in the grid [[apiRef]].
- */
-export interface GridColumnApi {
+export interface GridColumnInformationApi {
   /**
    * Returns the [[GridStateColDef]] for the given `field`.
    * @param {string} field The column field.
@@ -34,6 +31,9 @@ export interface GridColumnApi {
    * @returns {number} The position in pixels.
    */
   getColumnPosition: (field: string) => number;
+}
+
+export interface GridColumnUpdateApi {
   /**
    * Updates the definition of a column.
    * @param {GridColDef} col The new [[GridColDef]] object.
@@ -57,3 +57,22 @@ export interface GridColumnApi {
    */
   setColumnWidth: (field: string, width: number) => void;
 }
+
+export interface GridVisibleColumnApi {
+  /**
+   * Returns the currently visible columns.
+   * @returns {GridStateColDef[]} An array of [[GridStateColDef]].
+   */
+  getVisibleColumns: () => GridStateColDef[];
+  /**
+   * Changes the visibility of the column referred by `field`.
+   * @param {string} field The column to change visibility.
+   * @param {boolean} isVisible Pass `true` to show the column, or `false` to hide it.
+   */
+  setColumnVisibility: (field: string, isVisible: boolean) => void;
+}
+
+/**
+ * The column API interface that is available in the grid [[apiRef]].
+ */
+export type GridColumnApi = GridColumnUpdateApi & GridColumnInformationApi & GridVisibleColumnApi;

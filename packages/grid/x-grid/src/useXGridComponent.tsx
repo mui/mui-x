@@ -49,7 +49,6 @@ export const useXGridComponent = (apiRef: GridApiRef, props: GridComponentProps)
   useResizeContainer(apiRef, props);
   useGridFreezeRows(apiRef, props);
   useGridColumns(apiRef, props);
-  useGridVisibleColumns(apiRef, props);
   useGridParamsApi(apiRef);
   useGridRows(apiRef, props);
   useGridEditRows(apiRef, props);

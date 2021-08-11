@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { GridComponentProps } from '../../../GridComponentProps';
 import { GridApiRef } from '../../../models/api/gridApiRef';
-import { GridVisibleColumnApi } from '../../../models/api/gridVisibleColumnApi';
+import { GridVisibleColumnApi } from '../../../models/api/gridColumnApi';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
 import { useGridApiOptionHandler } from '../../root/useGridApiEventHandler';
 import { GridEvents } from '../../../constants/eventsConstants';
@@ -44,5 +44,9 @@ export const useGridVisibleColumns = (
 
   useGridApiMethod(apiRef, visibleColumnsApi, 'GridVisibleColumnsApi');
 
-  useGridApiOptionHandler(apiRef, GridEvents.columnVisibilityChange, props.onColumnVisibilityChange);
+  useGridApiOptionHandler(
+    apiRef,
+    GridEvents.columnVisibilityChange,
+    props.onColumnVisibilityChange,
+  );
 };
