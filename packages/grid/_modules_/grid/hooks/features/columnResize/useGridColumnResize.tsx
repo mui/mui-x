@@ -3,13 +3,7 @@ import { ownerDocument } from '@material-ui/core/utils';
 import { GridStateColDef } from '../../../models/colDef';
 import { useLogger } from '../../utils';
 import { useEventCallback } from '../../../utils/material-ui-utils';
-import {
-  GRID_COLUMN_SEPARATOR_MOUSE_DOWN,
-  GRID_COLUMN_RESIZE_START,
-  GRID_COLUMN_RESIZE_STOP,
-  GRID_COLUMN_RESIZE,
-  GRID_COLUMN_WIDTH_CHANGE,
-} from '../../../constants/eventsConstants';
+import { GridEvents } from '../../../constants/eventsConstants';
 import {
   GRID_COLUMN_HEADER_CSS_CLASS,
   GRID_COLUMN_HEADER_SEPARATOR_RESIZABLE_CSS_CLASS,
@@ -89,6 +83,7 @@ export const useGridColumnResize = (
 
     colDefRef.current!.computedWidth = newWidth;
     colDefRef.current!.width = newWidth;
+    colDefRef.current!.flex = undefined;
 
     colElementRef.current!.style.width = `${newWidth}px`;
     colElementRef.current!.style.minWidth = `${newWidth}px`;
@@ -110,9 +105,9 @@ export const useGridColumnResize = (
 
     clearTimeout(stopResizeEventTimeout.current);
     stopResizeEventTimeout.current = setTimeout(() => {
-      apiRef.current.publishEvent(GRID_COLUMN_RESIZE_STOP, null, nativeEvent);
+      apiRef.current.publishEvent(GridEvents.columnResizeStop, null, nativeEvent);
       apiRef.current.publishEvent(
-        GRID_COLUMN_WIDTH_CHANGE,
+        GridEvents.columnWidthChange,
         {
           element: colElementRef.current,
           colDef: colDefRef.current,
@@ -143,7 +138,7 @@ export const useGridColumnResize = (
 
     updateWidth(newWidth);
     apiRef.current.publishEvent(
-      GRID_COLUMN_RESIZE,
+      GridEvents.columnResize,
       {
         element: colElementRef.current,
         colDef: colDefRef.current,
@@ -177,7 +172,7 @@ export const useGridColumnResize = (
       ) as HTMLDivElement;
 
       logger.debug(`Start Resize on col ${colDef.field}`);
-      apiRef.current.publishEvent(GRID_COLUMN_RESIZE_START, { field: colDef.field }, event);
+      apiRef.current.publishEvent(GridEvents.columnResizeStart, { field: colDef.field }, event);
 
       colDefRef.current = colDef;
       colElementRef.current = apiRef.current!.columnHeadersElementRef?.current!.querySelector(
@@ -214,7 +209,7 @@ export const useGridColumnResize = (
 
     clearTimeout(stopResizeEventTimeout.current);
     stopResizeEventTimeout.current = setTimeout(() => {
-      apiRef.current.publishEvent(GRID_COLUMN_RESIZE_STOP, null, nativeEvent);
+      apiRef.current.publishEvent(GridEvents.columnResizeStop, null, nativeEvent);
     });
 
     logger.debug(
@@ -242,7 +237,7 @@ export const useGridColumnResize = (
 
     updateWidth(newWidth);
     apiRef.current.publishEvent(
-      GRID_COLUMN_RESIZE,
+      GridEvents.columnResize,
       {
         element: colElementRef.current,
         colDef: colDefRef.current,
@@ -279,7 +274,7 @@ export const useGridColumnResize = (
     const colDef = apiRef.current.getColumn(field);
 
     logger.debug(`Start Resize on col ${colDef.field}`);
-    apiRef.current.publishEvent(GRID_COLUMN_RESIZE_START, { field }, event);
+    apiRef.current.publishEvent(GridEvents.columnResizeStart, { field }, event);
 
     colDefRef.current = colDef;
     colElementRef.current = findHeaderElementFromField(
@@ -342,10 +337,10 @@ export const useGridColumnResize = (
     { passive: doesSupportTouchActionNone() },
   );
 
-  useGridApiEventHandler(apiRef, GRID_COLUMN_SEPARATOR_MOUSE_DOWN, handleColumnResizeMouseDown);
-  useGridApiEventHandler(apiRef, GRID_COLUMN_RESIZE_START, handleResizeStart);
-  useGridApiEventHandler(apiRef, GRID_COLUMN_RESIZE_STOP, handleResizeStop);
+  useGridApiEventHandler(apiRef, GridEvents.columnSeparatorMouseDown, handleColumnResizeMouseDown);
+  useGridApiEventHandler(apiRef, GridEvents.columnResizeStart, handleResizeStart);
+  useGridApiEventHandler(apiRef, GridEvents.columnResizeStop, handleResizeStop);
 
-  useGridApiOptionHandler(apiRef, GRID_COLUMN_RESIZE, props.onColumnResize);
-  useGridApiOptionHandler(apiRef, GRID_COLUMN_WIDTH_CHANGE, props.onColumnWidthChange);
+  useGridApiOptionHandler(apiRef, GridEvents.columnResize, props.onColumnResize);
+  useGridApiOptionHandler(apiRef, GridEvents.columnWidthChange, props.onColumnWidthChange);
 };

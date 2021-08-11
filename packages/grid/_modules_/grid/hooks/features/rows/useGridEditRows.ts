@@ -1,22 +1,5 @@
 import * as React from 'react';
-import {
-  GRID_CELL_MODE_CHANGE,
-  GRID_EDIT_CELL_PROPS_CHANGE,
-  GRID_CELL_EDIT_COMMIT,
-  GRID_CELL_DOUBLE_CLICK,
-  GRID_CELL_EDIT_START,
-  GRID_CELL_EDIT_STOP,
-  GRID_CELL_NAVIGATION_KEY_DOWN,
-  GRID_CELL_MOUSE_DOWN,
-  GRID_CELL_KEY_DOWN,
-  GRID_COLUMN_HEADER_DRAG_START,
-  GRID_CELL_FOCUS_OUT,
-  GRID_EDIT_ROWS_MODEL_CHANGE,
-  GRID_CELL_FOCUS_IN,
-  GRID_ROW_EDIT_STOP,
-  GRID_ROW_EDIT_COMMIT,
-  GRID_ROW_EDIT_START,
-} from '../../../constants/eventsConstants';
+import { GridEvents } from '../../../constants/eventsConstants';
 import { GridComponentProps } from '../../../GridComponentProps';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridRowId } from '../../../models/gridRows';
@@ -78,14 +61,14 @@ export function useGridEditRows(
       nextFocusedCell.current = null;
       focusTimeout.current = setTimeout(() => {
         if (nextFocusedCell.current?.id !== params.id) {
-          apiRef.current.commitRowChange(params.id);
+          apiRef.current.commitRowChange(params.id, event);
           const rowParams = apiRef.current.getRowParams(params.id);
-          apiRef.current.publishEvent(GRID_ROW_EDIT_STOP, rowParams, event);
+          apiRef.current.publishEvent(GridEvents.rowEditStop, rowParams, event);
         }
       });
     } else {
-      apiRef.current.commitCellChange(params);
-      apiRef.current.publishEvent(GRID_CELL_EDIT_STOP, params, event);
+      apiRef.current.commitCellChange(params, event);
+      apiRef.current.publishEvent(GridEvents.cellEditStop, params, event);
     }
   };
 
@@ -130,7 +113,7 @@ export function useGridEditRows(
         return { ...state, editRows: newEditRowsState };
       });
       forceUpdate();
-      apiRef.current.publishEvent(GRID_CELL_MODE_CHANGE, {
+      apiRef.current.publishEvent(GridEvents.cellModeChange, {
         id,
         field,
         mode,
@@ -198,7 +181,7 @@ export function useGridEditRows(
         field: params.field,
         props: { value: params.value },
       };
-      apiRef.current.publishEvent(GRID_EDIT_CELL_PROPS_CHANGE, newParams, event);
+      apiRef.current.publishEvent(GridEvents.editCellPropsChange, newParams, event);
     },
     [apiRef],
   );
@@ -256,7 +239,7 @@ export function useGridEditRows(
       const { error, value } = model[id][field];
       if (!error) {
         const commitParams: GridCellEditCommitParams = { ...params, value };
-        apiRef.current.publishEvent(GRID_CELL_EDIT_COMMIT, commitParams, event);
+        apiRef.current.publishEvent(GridEvents.cellEditCommit, commitParams, event);
         return true;
       }
       return false;
@@ -295,7 +278,7 @@ export function useGridEditRows(
 
       const hasFieldWithError = Object.values(row).some((value) => !!value.error);
       if (!hasFieldWithError) {
-        apiRef.current.publishEvent(GRID_ROW_EDIT_COMMIT, id, event);
+        apiRef.current.publishEvent(GridEvents.rowEditCommit, id, event);
         return true;
       }
 
@@ -335,7 +318,7 @@ export function useGridEditRows(
       apiRef.current.setRowMode(params.id, 'view');
 
       if (event.key === 'Enter') {
-        apiRef.current.publishEvent(GRID_CELL_NAVIGATION_KEY_DOWN, params, event);
+        apiRef.current.publishEvent(GridEvents.cellNavigationKeyDown, params, event);
       }
     },
     [apiRef],
@@ -384,12 +367,12 @@ export function useGridEditRows(
         if (isEditMode) {
           if (event.key === 'Enter') {
             apiRef.current.commitRowChange(params.id);
-            apiRef.current.publishEvent(GRID_ROW_EDIT_STOP, rowParams, event);
+            apiRef.current.publishEvent(GridEvents.rowEditStop, rowParams, event);
           } else if (event.key === 'Escape') {
-            apiRef.current.publishEvent(GRID_ROW_EDIT_STOP, rowParams, event);
+            apiRef.current.publishEvent(GridEvents.rowEditStop, rowParams, event);
           }
         } else if (event.key === 'Enter') {
-          apiRef.current.publishEvent(GRID_ROW_EDIT_START, rowParams, event);
+          apiRef.current.publishEvent(GridEvents.rowEditStart, rowParams, event);
         }
         return;
       }
@@ -397,12 +380,12 @@ export function useGridEditRows(
       const isModifierKeyPressed = event.ctrlKey || event.metaKey || event.altKey;
 
       if (!isEditMode && isCellEnterEditModeKeys(event.key) && !isModifierKeyPressed) {
-        apiRef.current.publishEvent(GRID_CELL_EDIT_START, params, event);
+        apiRef.current.publishEvent(GridEvents.cellEditStart, params, event);
       }
       if (!isEditMode && isDeleteKeys(event.key)) {
         apiRef.current.setEditCellValue({ id, field, value: '' });
         apiRef.current.commitCellChange({ id, field }, event);
-        apiRef.current.publishEvent(GRID_CELL_EDIT_STOP, params, event);
+        apiRef.current.publishEvent(GridEvents.cellEditStop, params, event);
       }
       if (isEditMode && isCellEditCommitKeys(event.key)) {
         const commitParams = { id, field };
@@ -411,7 +394,7 @@ export function useGridEditRows(
         }
       }
       if (isEditMode && isCellExitEditModeKeys(event.key)) {
-        apiRef.current.publishEvent(GRID_CELL_EDIT_STOP, params, event);
+        apiRef.current.publishEvent(GridEvents.cellEditStop, params, event);
       }
     },
     [apiRef, props.editMode],
@@ -427,7 +410,7 @@ export function useGridEditRows(
       }
 
       if (isCellEditCommitKeys(event.key)) {
-        apiRef.current.publishEvent(GRID_CELL_NAVIGATION_KEY_DOWN, params, event);
+        apiRef.current.publishEvent(GridEvents.cellNavigationKeyDown, params, event);
         return;
       }
       if (event.key === 'Escape' || isDeleteKeys(event.key)) {
@@ -444,42 +427,42 @@ export function useGridEditRows(
       }
       if (props.editMode === 'row') {
         const rowParams = apiRef.current.getRowParams(params.id);
-        apiRef.current.publishEvent(GRID_ROW_EDIT_START, rowParams, event);
+        apiRef.current.publishEvent(GridEvents.rowEditStart, rowParams, event);
       } else {
-        apiRef.current.publishEvent(GRID_CELL_EDIT_START, params, event);
+        apiRef.current.publishEvent(GridEvents.cellEditStart, params, event);
       }
     },
     [apiRef, props.editMode],
   );
 
   // General events
-  useGridApiEventHandler(apiRef, GRID_CELL_KEY_DOWN, handleCellKeyDown);
-  useGridApiEventHandler(apiRef, GRID_CELL_MOUSE_DOWN, preventTextSelection);
-  useGridApiEventHandler(apiRef, GRID_CELL_DOUBLE_CLICK, handleCellDoubleClick);
-  useGridApiEventHandler(apiRef, GRID_CELL_FOCUS_OUT, handleCellFocusOut);
-  useGridApiEventHandler(apiRef, GRID_CELL_FOCUS_IN, handleCellFocusIn);
-  useGridApiEventHandler(apiRef, GRID_COLUMN_HEADER_DRAG_START, handleColumnHeaderDragStart);
+  useGridApiEventHandler(apiRef, GridEvents.cellKeyDown, handleCellKeyDown);
+  useGridApiEventHandler(apiRef, GridEvents.cellMouseDown, preventTextSelection);
+  useGridApiEventHandler(apiRef, GridEvents.cellDoubleClick, handleCellDoubleClick);
+  useGridApiEventHandler(apiRef, GridEvents.cellFocusOut, handleCellFocusOut);
+  useGridApiEventHandler(apiRef, GridEvents.cellFocusIn, handleCellFocusIn);
+  useGridApiEventHandler(apiRef, GridEvents.columnHeaderDragStart, handleColumnHeaderDragStart);
 
   // Events shared between cell and row editing
-  useGridApiEventHandler(apiRef, GRID_EDIT_CELL_PROPS_CHANGE, handleEditCellPropsChange);
+  useGridApiEventHandler(apiRef, GridEvents.editCellPropsChange, handleEditCellPropsChange);
 
   // Events exclusive to cell editing
-  useGridApiEventHandler(apiRef, GRID_CELL_EDIT_START, handleCellEditStart);
-  useGridApiEventHandler(apiRef, GRID_CELL_EDIT_STOP, handleCellEditStop);
-  useGridApiEventHandler(apiRef, GRID_CELL_EDIT_COMMIT, handleCellEditCommit);
+  useGridApiEventHandler(apiRef, GridEvents.cellEditStart, handleCellEditStart);
+  useGridApiEventHandler(apiRef, GridEvents.cellEditStop, handleCellEditStop);
+  useGridApiEventHandler(apiRef, GridEvents.cellEditCommit, handleCellEditCommit);
 
   // Events exclusive to row editing
-  useGridApiEventHandler(apiRef, GRID_ROW_EDIT_START, handleRowEditStart);
-  useGridApiEventHandler(apiRef, GRID_ROW_EDIT_STOP, handleRowEditStop);
-  useGridApiEventHandler(apiRef, GRID_ROW_EDIT_COMMIT, handleRowEditCommit);
+  useGridApiEventHandler(apiRef, GridEvents.rowEditStart, handleRowEditStart);
+  useGridApiEventHandler(apiRef, GridEvents.rowEditStop, handleRowEditStop);
+  useGridApiEventHandler(apiRef, GridEvents.rowEditCommit, handleRowEditCommit);
 
-  useGridApiOptionHandler(apiRef, GRID_EDIT_CELL_PROPS_CHANGE, props.onEditCellPropsChange);
-  useGridApiOptionHandler(apiRef, GRID_CELL_EDIT_COMMIT, props.onCellEditCommit);
-  useGridApiOptionHandler(apiRef, GRID_CELL_EDIT_START, props.onCellEditStart);
-  useGridApiOptionHandler(apiRef, GRID_CELL_EDIT_STOP, props.onCellEditStop);
-  useGridApiOptionHandler(apiRef, GRID_ROW_EDIT_COMMIT, props.onRowEditCommit);
-  useGridApiOptionHandler(apiRef, GRID_ROW_EDIT_START, props.onRowEditStart);
-  useGridApiOptionHandler(apiRef, GRID_ROW_EDIT_STOP, props.onRowEditStop);
+  useGridApiOptionHandler(apiRef, GridEvents.editCellPropsChange, props.onEditCellPropsChange);
+  useGridApiOptionHandler(apiRef, GridEvents.cellEditCommit, props.onCellEditCommit);
+  useGridApiOptionHandler(apiRef, GridEvents.cellEditStart, props.onCellEditStart);
+  useGridApiOptionHandler(apiRef, GridEvents.cellEditStop, props.onCellEditStop);
+  useGridApiOptionHandler(apiRef, GridEvents.rowEditCommit, props.onRowEditCommit);
+  useGridApiOptionHandler(apiRef, GridEvents.rowEditStart, props.onRowEditStart);
+  useGridApiOptionHandler(apiRef, GridEvents.rowEditStop, props.onRowEditStop);
 
   useGridApiMethod<GridEditRowApi>(
     apiRef,
@@ -504,7 +487,7 @@ export function useGridEditRows(
       propModel: props.editRowsModel,
       propOnChange: props.onEditRowsModelChange,
       stateSelector: (state) => state.editRows,
-      changeEvent: GRID_EDIT_ROWS_MODEL_CHANGE,
+      changeEvent: GridEvents.editRowsModelChange,
     });
   }, [apiRef, props.editRowsModel, props.onEditRowsModelChange]);
 

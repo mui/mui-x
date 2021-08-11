@@ -1,14 +1,14 @@
 import * as React from 'react';
-import { GRID_UNMOUNT } from '../../constants/eventsConstants';
+import { GridEvents } from '../../constants/eventsConstants';
 import { GridApiRef } from '../../models/api/gridApiRef';
 import { isFunction } from '../../utils/utils';
 import { useLogger } from '../utils/useLogger';
 
-export const useNativeEventListener = (
+export const useNativeEventListener = <E extends Event>(
   apiRef: GridApiRef,
   ref: React.MutableRefObject<HTMLDivElement | null> | (() => Element | undefined | null),
   eventName: string,
-  handler?: (event: Event) => any,
+  handler?: (event: E) => any,
   options?: AddEventListenerOptions,
 ) => {
   const logger = useLogger('useNativeEventListener');
@@ -43,7 +43,7 @@ export const useNativeEventListener = (
         bindedElem.removeEventListener(eventName, wrapHandler, options);
       };
 
-      apiRef.current.subscribeEvent(GRID_UNMOUNT, unsubscribe);
+      apiRef.current.subscribeEvent(GridEvents.unmount, unsubscribe);
     }
   }, [ref, wrapHandler, eventName, added, logger, options, apiRef]);
 };

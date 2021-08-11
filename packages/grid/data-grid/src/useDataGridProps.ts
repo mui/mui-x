@@ -15,6 +15,7 @@ const DATA_GRID_FORCED_PROPS: Omit<
   disableMultipleSelection: true,
   pagination: true,
   onRowsScrollEnd: undefined,
+  onViewportRowsChange: undefined,
   checkboxSelectionVisibleOnly: false,
   signature: 'DataGrid',
 };

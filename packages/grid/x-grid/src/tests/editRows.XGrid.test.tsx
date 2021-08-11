@@ -1,5 +1,5 @@
 import {
-  GRID_CELL_KEY_DOWN,
+  GridEvents,
   GridApiRef,
   GridComponentProps,
   useGridApiRef,
@@ -209,7 +209,7 @@ describe('<XGrid /> - Edit Rows', () => {
     cell.focus();
     expect(cell).to.have.text('Adidas');
     const params = apiRef.current.getCellParams(1, 'brand');
-    apiRef.current.publishEvent(GRID_CELL_KEY_DOWN, params, {
+    apiRef.current.publishEvent(GridEvents.cellKeyDown, params, {
       key: 'a',
       code: 1,
       target: cell,

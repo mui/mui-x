@@ -321,36 +321,35 @@ describe('<XGrid /> - Columns', () => {
         expect(getColumnHeaderCell(1)).toHaveInlineStyle({ width: '150px' });
       });
 
-      // TODO: Uncomment after fixing behavior (https://github.com/mui-org/material-ui-x/issues/2129)
-      // it('should be able to resize a column with flex twice (separator resize)', () => {
-      //   const twoColumns = [
-      //     { field: 'id', flex: 1 },
-      //     { field: 'brand', width: 100 },
-      //   ];
-      //
-      //   render(<Test columns={twoColumns} />);
-      //
-      //   // @ts-expect-error need to migrate helpers to TypeScript
-      //   expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '198px' });
-      //
-      //   const separator = getColumnHeaderCell(0).querySelector(
-      //       `.${GRID_COLUMN_HEADER_SEPARATOR_RESIZABLE_CSS_CLASS}`,
-      //   );
-      //
-      //   fireEvent.mouseDown(separator, { clientX: 200 });
-      //   fireEvent.mouseMove(separator, { clientX: 100, buttons: 1 });
-      //   fireEvent.mouseUp(separator);
-      //
-      //   // @ts-expect-error need to migrate helpers to TypeScript
-      //   expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '98px' });
-      //
-      //   fireEvent.mouseDown(separator, { clientX: 100 });
-      //   fireEvent.mouseMove(separator, { clientX: 150, buttons: 1 });
-      //   fireEvent.mouseUp(separator);
-      //
-      //   // @ts-expect-error need to migrate helpers to TypeScript
-      //   expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '148px' });
-      // });
+      it('should be able to resize a column with flex twice (separator resize)', () => {
+        const twoColumns = [
+          { field: 'id', flex: 1 },
+          { field: 'brand', width: 100 },
+        ];
+
+        render(<Test columns={twoColumns} />);
+
+        // @ts-expect-error need to migrate helpers to TypeScript
+        expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '198px' });
+
+        const separator = getColumnHeaderCell(0).querySelector(
+          `.${GRID_COLUMN_HEADER_SEPARATOR_RESIZABLE_CSS_CLASS}`,
+        );
+
+        fireEvent.mouseDown(separator, { clientX: 200 });
+        fireEvent.mouseMove(separator, { clientX: 100, buttons: 1 });
+        fireEvent.mouseUp(separator);
+
+        // @ts-expect-error need to migrate helpers to TypeScript
+        expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '98px' });
+
+        fireEvent.mouseDown(separator, { clientX: 100 });
+        fireEvent.mouseMove(separator, { clientX: 150, buttons: 1 });
+        fireEvent.mouseUp(separator);
+
+        // @ts-expect-error need to migrate helpers to TypeScript
+        expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '148px' });
+      });
     });
   });
 });
