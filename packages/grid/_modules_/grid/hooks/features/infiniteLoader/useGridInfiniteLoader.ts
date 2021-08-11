@@ -80,7 +80,7 @@ export const useGridInfiniteLoader = (
         firstRowIndex: renderContext.firstRowIdx!,
         lastRowIndex: renderContext.lastRowIdx!,
       };
-      apiRef.current.publishEvent(GridEvents.gridViewportRowsChange, viewportRowsChangeParams);
+      apiRef.current.publishEvent(GridEvents.viewportRowsChange, viewportRowsChangeParams);
     }
 
     previousRenderContext.current = {
@@ -91,5 +91,5 @@ export const useGridInfiniteLoader = (
 
   useGridApiEventHandler(apiRef, GridEvents.rowsScroll, handleGridScroll);
   useGridApiOptionHandler(apiRef, GridEvents.rowsScrollEnd, props.onRowsScrollEnd);
-  useGridApiOptionHandler(apiRef, GridEvents.gridViewportRowsChange, props.onViewportRowsChange);
+  useGridApiOptionHandler(apiRef, GridEvents.viewportRowsChange, props.onViewportRowsChange);
 };

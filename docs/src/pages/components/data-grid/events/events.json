@@ -114,7 +114,7 @@
     "description": "Fired when the filter model changes.\nCalled with a GridFilterModel object."
   },
   {
-    "name": "gridViewportRowsChange",
+    "name": "viewportRowsChange",
     "description": "Fired when the rows in the viewport change. Called with a GridViewportRowsChange object."
   },
   { "name": "pageChange", "description": "Fired when the page changes." },

@@ -308,5 +308,5 @@ export enum GridEvents {
   /**
    * Fired when the rows in the viewport change. Called with a [[GridViewportRowsChange]] object.
    */
-  gridViewportRowsChange = 'viewportRowsChange',
+  viewportRowsChange = 'viewportRowsChange',
 }
