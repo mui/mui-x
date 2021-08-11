@@ -306,7 +306,7 @@ export enum GridEvents {
    */
   columnVisibilityChange = 'columnVisibilityChange',
   /**
-   * Fired when the rows in the viewport changed. Called with a [[GridViewportRowsChange]] object.
+   * Fired when the rows in the viewport is changed. Called with a [[GridViewportRowsChange]] object.
    */
   viewportRowsChange = 'viewportRowsChange',
 }

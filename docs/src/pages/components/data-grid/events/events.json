@@ -166,6 +166,6 @@
   { "name": "unmount", "description": "Fired when the grid is unmounted." },
   {
     "name": "viewportRowsChange",
-    "description": "Fired when the rows in the viewport changed. Called with a GridViewportRowsChange object."
+    "description": "Fired when the rows in the viewport is changed. Called with a GridViewportRowsChange object."
   }
 ]
