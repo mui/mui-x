@@ -555,7 +555,7 @@ export interface GridOptions {
   /**
    * Callback fired when the rows in the viewport change.
    */
-  onViewportRowsChange?: (params: GridViewportRowsChangeParams) => void;
+  onViewportRowsChange?: (params: GridViewportRowsChangeParams, event: MuiEvent<{}>, details?: any) => void;
   /**
    * Set the current page.
    * @default 1
