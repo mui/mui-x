@@ -128,7 +128,11 @@ describe('<DataGrid /> - Keyboard', () => {
     expect(handleKeyDown.returnValues).to.deep.equal([true]);
   });
 
-  const KeyboardTest = (props: { nbRows?: number; checkboxSelection?: boolean }) => {
+  const KeyboardTest = (props: {
+    nbRows?: number;
+    checkboxSelection?: boolean;
+    disableVirtualization?: boolean;
+  }) => {
     const data = useData(props.nbRows || 100, 20);
     const transformColSizes = (columns: GridColumns) =>
       columns.map((column) => ({ ...column, width: 60 }));
@@ -140,6 +144,7 @@ describe('<DataGrid /> - Keyboard', () => {
           rows={data.rows}
           columns={transformColSizes(data.columns)}
           checkboxSelection={props.checkboxSelection}
+          disableVirtualization={props.disableVirtualization}
         />
       </div>
     );
@@ -191,16 +196,11 @@ describe('<DataGrid /> - Keyboard', () => {
   });
 
   it('Space only should go to the bottom of the page', function test() {
-    if (isJSDOM) {
-      // Need layouting for row virtualization
-      this.skip();
-    }
-
-    render(<KeyboardTest />);
+    render(<KeyboardTest disableVirtualization />);
     getCell(0, 0).focus();
     expect(getActiveCell()).to.equal('0-0');
     fireEvent.keyDown(document.activeElement!, { key: ' ' });
-    expect(getActiveCell()).to.equal('4-0');
+    expect(getActiveCell()).to.equal('99-0');
   });
 
   it('Space only should go to the bottom of the page even with small number of rows', () => {
@@ -212,12 +212,7 @@ describe('<DataGrid /> - Keyboard', () => {
   });
 
   it('Home / End navigation', async function test() {
-    if (isJSDOM) {
-      // Need layouting for column virtualization
-      this.skip();
-    }
-
-    render(<KeyboardTest />);
+    render(<KeyboardTest disableVirtualization />);
     getCell(1, 1).focus();
     expect(getActiveCell()).to.equal('1-1');
     fireEvent.keyDown(document.activeElement!, { key: 'Home' });

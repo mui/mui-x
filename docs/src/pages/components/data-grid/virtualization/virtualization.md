@@ -33,9 +33,13 @@ By default, 2 columns are rendered outside of the viewport. You can change this 
 
 You can disable column virtualization by setting the column buffer to a higher number than the number of rendered columns, e.g. with `columnBuffer={columns.length}` or `columnBuffer={Number.MAX_SAFE_INTEGER}`.
 
-## apiRef [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-pro/)
+## Disable virtualization
 
-{{"demo": "pages/components/data-grid/virtualization/VirtualizationApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
+The virtualization can be disabled entirely using the `disableVirtualization` prop.
+
+```tsx
+<DataGrid {...data} disableVirtualization />
+```
 
 ## API
 

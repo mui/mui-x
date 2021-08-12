@@ -127,6 +127,11 @@ export interface GridOptions {
    */
   disableSelectionOnClick?: boolean;
   /**
+   * If `true`, the virtualization is disabled.
+   * @default false
+   */
+  disableVirtualization?: boolean;
+  /**
    * Set the edit rows model of the grid.
    */
   editRowsModel?: GridEditRowsModel;

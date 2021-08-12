@@ -974,6 +974,21 @@ export function SwitchVirtualization() {
     </div>
   );
 }
+
+export function DisableVirtualization() {
+  const { data } = useDemoData({
+    dataSet: 'Commodity',
+    rowLength: 200,
+    maxColumns: 4,
+  });
+
+  return (
+    <div style={{ width: '100%', height: '100%' }}>
+      <XGrid rows={data.rows} columns={data.columns} pagination disableVirtualization />
+    </div>
+  );
+}
+
 export function DeferRendering() {
   const [deferRows, setRows] = React.useState<any>([]);
   const [deferColumns] = React.useState([{ field: 'id', headerName: 'Id', width: 100 }]);

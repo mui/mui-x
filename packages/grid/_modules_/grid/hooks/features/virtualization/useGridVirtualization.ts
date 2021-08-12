@@ -229,6 +229,10 @@ export const useGridVirtualization = (apiRef: GridApiRef): void => {
 
   const updateViewport = React.useCallback(
     (forceReRender = false) => {
+      if (options.disableVirtualization) {
+        return;
+      }
+
       const lastState = apiRef.current.getState();
       const containerProps = lastState.containerSizes;
       if (!windowRef || !windowRef.current || !containerProps) {
@@ -290,6 +294,7 @@ export const useGridVirtualization = (apiRef: GridApiRef): void => {
       setRenderingState,
       updateRenderedCols,
       windowRef,
+      options.disableVirtualization,
     ],
   );
 
@@ -306,6 +311,10 @@ export const useGridVirtualization = (apiRef: GridApiRef): void => {
 
   const scrollingTimeout = React.useRef<any>(null);
   const handleScroll = React.useCallback(() => {
+    if (options.disableVirtualization) {
+      return;
+    }
+
     // On iOS the inertia scrolling allows to return negative values.
     if (windowRef.current!.scrollLeft < 0 || windowRef.current!.scrollTop < 0) return;
 
@@ -322,7 +331,7 @@ export const useGridVirtualization = (apiRef: GridApiRef): void => {
     if (apiRef.current.updateViewport) {
       apiRef.current.updateViewport();
     }
-  }, [windowRef, apiRef, setGridState, forceUpdate]);
+  }, [options.disableVirtualization, windowRef, apiRef, setGridState, forceUpdate]);
 
   const getContainerPropsState = React.useCallback(
     () => gridState.containerSizes,
@@ -334,6 +343,10 @@ export const useGridVirtualization = (apiRef: GridApiRef): void => {
   }, [gridState.rendering.renderContext]);
 
   useEnhancedEffect(() => {
+    if (options.disableVirtualization) {
+      return;
+    }
+
     if (renderingZoneRef && renderingZoneRef.current) {
       logger.debug('applying scrollTop ', gridState.rendering.renderingZoneScroll.top);
       scrollTo(gridState.rendering.renderingZoneScroll);

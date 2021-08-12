@@ -40,6 +40,7 @@ import { XGrid } from '@material-ui/x-grid';
 | <span class="prop-name">disableMultipleColumnsSorting</span> | <span class="prop-type">boolean</span> | false | If `true`, sorting with multiple columns is disabled. |
 | <span class="prop-name">disableMultipleSelection</span> | <span class="prop-type">boolean</span> | false | If `true`, multiple selection using the CTRL or CMD key is disabled. |
 | <span class="prop-name">disableSelectionOnClick</span> | <span class="prop-type">boolean</span> | false | If `true`, the selection on click on a row or cell is disabled. |
+| <span class="prop-name">disableVirtualization</span> | <span class="prop-type">boolean</span> | false | If `true`, the virtualization is disabled. |
 | <span class="prop-name">error</span> | <span class="prop-type">any</span> |   | An error that will turn the grid into its error state and display the error component. |
 | <span class="prop-name">editRowsModel</span> | <span class="prop-type">GridEditRowsModel</span> | undefined | Set the edit rows model of the grid. |
 | <span class="prop-name">filterMode</span> | <span class="prop-type">GridFeatureMode</span> | 'client' | Filtering can be processed on the server or client-side. Set it to `server` if you would like to handle filtering on the server-side. |

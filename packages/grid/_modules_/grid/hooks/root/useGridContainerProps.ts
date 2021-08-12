@@ -132,7 +132,7 @@ export const useGridContainerProps = (apiRef: GridApiRef) => {
       const requiredSize = rowsCount * rowHeight;
       const diff = requiredSize - windowSizesRef.current.height;
       // we activate virtualization when we have more than 2 rows outside the viewport
-      const isVirtualized = diff > rowHeight * 2;
+      const isVirtualized = diff > rowHeight * 2 && !options.disableVirtualization;
 
       if (options.autoPageSize || options.autoHeight || !isVirtualized) {
         const viewportFitHeightSize = Math.floor(viewportSizes.height / rowHeight);
@@ -212,7 +212,15 @@ export const useGridContainerProps = (apiRef: GridApiRef) => {
       logger.debug('virtualized container props', indexes);
       return indexes;
     },
-    [windowRef, columnsTotalWidth, rowHeight, options.autoPageSize, options.autoHeight, logger],
+    [
+      windowRef,
+      columnsTotalWidth,
+      rowHeight,
+      options.disableVirtualization,
+      options.autoPageSize,
+      options.autoHeight,
+      logger,
+    ],
   );
 
   const updateStateIfChanged = React.useCallback(
