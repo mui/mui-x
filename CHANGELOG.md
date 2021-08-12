@@ -26,7 +26,7 @@ This is the last alpha release. We are moving to beta in the next release, next 
 
 - [XGrid] Replace event constants with the `GridEvents` enum (#2279) @flaviendelangle
 
-  ```
+  ```diff
   -import { GRID_CELL_EDIT_START } from '@material-ui/x-grid';
   -apiRef.current.subscribeEvent(GRID_CELL_EDIT_START, (params, event) => { ... });
   +import { GridEvents } from '@material-ui/x-grid';
