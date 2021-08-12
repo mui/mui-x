@@ -39,7 +39,7 @@ export const useGridKeyboard = (apiRef: GridApiRef): void => {
 
       apiRef.current.publishEvent(GridEvents.cellNavigationKeyDown, params, event);
 
-      const focusCell = apiRef.current.getState().focus.cell!;
+      const focusCell = apiRef.current.state.focus.cell!;
       const rowIndex = apiRef.current.getRowIndex(focusCell.id);
       // We select the rows in between
       const rowIds = Array(Math.abs(rowIndex - selectionFromRowIndex) + 1).fill(

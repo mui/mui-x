@@ -284,7 +284,7 @@ export const useGridFilter = (
 
   const onColUpdated = React.useCallback(() => {
     logger.debug('onColUpdated - GridColumns changed, applying filters');
-    const filterState = apiRef.current.getState().filter;
+    const filterState = apiRef.current.state.filter;
     const columnsIds = filterableGridColumnsIdsSelector(apiRef.current.state);
     logger.debug('GridColumns changed, applying filters');
 
