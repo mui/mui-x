@@ -210,7 +210,9 @@ function EditToolbar(props: EditToolbarProps) {
     apiRef.current.setRowMode(id, 'edit');
     // Wait for the grid to render with the new row
     setTimeout(() => {
-      apiRef.current.scrollToIndexes({ rowIndex: apiRef.current.getRowsCount() - 1 });
+      apiRef.current.scrollToIndexes({
+        rowIndex: apiRef.current.getRowsCount() - 1,
+      });
       apiRef.current.setCellFocus(id, 'name');
     }, 150);
   };

@@ -199,6 +199,7 @@ function EditToolbar(props) {
       apiRef.current.scrollToIndexes({
         rowIndex: apiRef.current.getRowsCount() - 1,
       });
+
       apiRef.current.setCellFocus(id, 'name');
     }, 150);
   };
