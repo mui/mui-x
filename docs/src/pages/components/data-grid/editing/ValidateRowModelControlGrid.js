@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 import * as React from 'react';
-import { createMuiTheme } from '@material-ui/core/styles';
+import { createTheme } from '@material-ui/core/styles';
 import { makeStyles } from '@material-ui/styles';
 import { DataGrid } from '@material-ui/data-grid';
 import {
@@ -15,7 +15,7 @@ function getThemePaletteMode(palette) {
   return palette.type || palette.mode;
 }
 
-const defaultTheme = createMuiTheme();
+const defaultTheme = createTheme();
 const useStyles = makeStyles(
   (theme) => {
     const isDark = getThemePaletteMode(theme.palette) === 'dark';

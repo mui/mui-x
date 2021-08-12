@@ -46,7 +46,7 @@ export const useGridPageSize = (
 
   React.useEffect(() => {
     const autoPageSize = containerSizes?.viewportPageSize;
-    const prevPageSize = apiRef.current.getState().pagination.pageSize;
+    const prevPageSize = apiRef.current.state.pagination.pageSize;
 
     let pageSize = prevPageSize;
 

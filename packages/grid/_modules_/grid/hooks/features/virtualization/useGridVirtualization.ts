@@ -233,7 +233,7 @@ export const useGridVirtualization = (apiRef: GridApiRef): void => {
         return;
       }
 
-      const lastState = apiRef.current.getState();
+      const lastState = apiRef.current.state;
       const containerProps = lastState.containerSizes;
       if (!windowRef || !windowRef.current || !containerProps) {
         return;

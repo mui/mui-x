@@ -1,7 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
-import { createMuiTheme } from '@material-ui/core/styles';
+import { createTheme } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import {
   GridColumnMenu,
@@ -13,7 +13,7 @@ import {
 } from '@material-ui/x-grid';
 import StarOutlineIcon from '@material-ui/icons/StarOutline';
 
-const defaultTheme = createMuiTheme();
+const defaultTheme = createTheme();
 const useStyles = makeStyles(
   (theme) => ({
     primary: {
