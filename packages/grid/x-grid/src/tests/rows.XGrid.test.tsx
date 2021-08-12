@@ -595,6 +595,16 @@ describe('<XGrid /> - Rows', () => {
       apiRef.current.setPage(1);
       expect(document.querySelectorAll('[role="row"][data-rowindex]')).to.have.length(50);
     });
+
+    it('should translate to the correct position on scroll', () => {
+      render(<TestCase />);
+      const gridWindow = document.querySelector('.MuiDataGrid-window')!;
+      const renderingZone = document.querySelector('.MuiDataGrid-renderingZone')! as HTMLElement;
+      expect(renderingZone.style.transform).to.equal('translate3d(0px, 0px, 0px)');
+      gridWindow.scrollTop = 100;
+      gridWindow.dispatchEvent(new Event('scroll'));
+      expect(renderingZone.style.transform).to.equal('translate3d(0px, -100px, 0px)');
+    });
   });
 
   describe('Cell focus', () => {
