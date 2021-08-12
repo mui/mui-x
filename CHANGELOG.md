@@ -3,6 +3,51 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 4.0.0-alpha.37
+
+_July 12, 2021_
+
+Big thanks to the 7 contributors who made this release possible. Here are some highlights ✨:
+
+- 🔎 Add the \"is empty\" and \"is not empty\" filter operators to date and number columns (#2274) @flaviendelangle
+- ⚡️ Only support @material-ui/core 4.12.0 or higher (#2281) @DanailH
+- 🐞 Fix a regression to not require @material-ui/x-license when using the DataGrid (#2295) @oliviertassinari
+- 👁️ Add `onViewportRowsChange` prop (#2038) @DanailH
+- 📃 Translate booleans when exporting rows to CSV (#2296) @m4theushw
+
+### `@material-ui/data-grid@v4.0.0-alpha.37` / `@material-ui/x-grid@v4.0.0-alpha.37`
+
+#### Changes
+
+- [DataGrid] Add @material-ui/styles as peer dependency (#2288) @m4theushw
+- [DataGrid] Add Sudanese Arabic (arSD) locale (#2269) @YassinHussein
+- [DataGrid] Add \"is empty\" and \"is not empty\" filter operators to date and number columns (#2274) @flaviendelangle
+- [DataGrid] Avoid crash if `valueOptions` is missing in the `GridColDef` when using `singleSelect` (#2276) @DanailH
+- [DataGrid] Remove the use of the `autoFocus` attribute (#2239) @m4theushw
+- [DataGrid] Drop support for @material-ui/core below 4.12.0 (#2281) @DanailH
+- [DataGrid] Fix when `renderCell` returns false-ish values (#2242) @siriwatknp
+- [DataGrid] Group events into a single enum (#2279) @flaviendelangle
+- [DataGrid] Improve error message if using multiple versions of data grid (#2311) @ZeeshanTamboli
+- [DataGrid] Make resized column not flexible (#2308) @flaviendelangle
+- [DataGrid] Merge `useGridVirtualColumns` into `useGridVirtualRows` (#2314) @m4theushw
+- [DataGrid] Remove dependency on x-license (#2295) @oliviertassinari
+- [DataGrid] Translate booleans when exporting to CSV (#2296) @m4theushw
+- [XGrid] Add `onViewportRowsChange` prop (#2038) @DanailH
+
+### Docs
+
+- [docs] Fix page size warnings (#2301) @oliviertassinari
+- [docs] Sort events alphabetically (#2278) @flaviendelangle
+
+### Core
+
+- [core] Assert that `event.defaultMuiPrevented` is called (#2302) @oliviertassinari
+- [core] Reduce options usage in feature hooks (#2275, #2284) @flaviendelangle
+- [core] Remove use of `getState` (#2300) @oliviertassinari
+- [core] Try rangeStrategy: bump @oliviertassinari
+- [core] Use type inference in selectors (#2244) @flaviendelangle
+- [core] Improve type coverage of `colDef` (#2188) @flaviendelangle
+
 ## 4.0.0-alpha.36
 
 _August 5, 2021_
