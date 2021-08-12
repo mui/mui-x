@@ -12,10 +12,26 @@ Big thanks to the 7 contributors who made this release possible. Here are some h
 - 🔎 Add the \"is empty\" and \"is not empty\" filter operators to date and number columns (#2274) @flaviendelangle
 - ⚡️ Only support @material-ui/core 4.12.0 or higher (#2281) @DanailH
 - 🐞 Fix a regression to not require @material-ui/x-license when using the DataGrid (#2295) @oliviertassinari
-- 👁️ Add `onViewportRowsChange` prop (#2038) @DanailH
+- 👁️ Add `onViewportRowsChange` prop for `XGrid` only (#2038) @DanailH
 - 📃 Translate booleans when exporting rows to CSV (#2296) @m4theushw
+- 🌎 Add Sudanese Arabic (arSD) locale (#2269) @YassinHussein
+
+This is the last alpha release. We are moving to beta in the next release, next week.
 
 ### `@material-ui/data-grid@v4.0.0-alpha.37` / `@material-ui/x-grid@v4.0.0-alpha.37`
+
+#### Breaking changes
+
+- [DataGrid] Update @material-ui/core to `^4.12.0` or higher (#2281) @DanailH
+
+- [XGrid] Replace event constants with the `GridEvents` enum (#2279) @flaviendelangle
+
+  ```
+  -import { GRID_CELL_EDIT_START } from '@material-ui/x-grid';
+  -apiRef.current.subscribeEvent(GRID_CELL_EDIT_START, (params, event) => { ... });
+  +import { GridEvents } from '@material-ui/x-grid';
+  +apiRef.current.subscribeEvent(GridEvents.cellEditStart, (params, event) => { ... });
+  ```
 
 #### Changes
 
@@ -44,7 +60,7 @@ Big thanks to the 7 contributors who made this release possible. Here are some h
 - [core] Assert that `event.defaultMuiPrevented` is called (#2302) @oliviertassinari
 - [core] Reduce options usage in feature hooks (#2275, #2284) @flaviendelangle
 - [core] Remove use of `getState` (#2300) @oliviertassinari
-- [core] Try rangeStrategy: bump @oliviertassinari
+- [core] Try `rangeStrategy: bump` @oliviertassinari
 - [core] Use type inference in selectors (#2244) @flaviendelangle
 - [core] Improve type coverage of `colDef` (#2188) @flaviendelangle
 
