@@ -11,13 +11,12 @@ import { optionsSelector } from '../hooks/utils/optionsSelector';
 export interface GridRowProps {
   id: GridRowId;
   selected: boolean;
-  className: string;
   rowIndex: number;
   children: React.ReactNode;
 }
 
 export function GridRow(props: GridRowProps) {
-  const { selected, id, className, rowIndex, children } = props;
+  const { selected, id, rowIndex, children } = props;
   const ariaRowIndex = rowIndex + 2; // 1 for the header row and 1 as it's 1 based
   const apiRef = useGridApiContext();
   const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
@@ -59,7 +58,7 @@ export function GridRow(props: GridRowProps) {
 
   const rowClassName =
     isFunction(getRowClassName) && getRowClassName(apiRef!.current.getRowParams(id));
-  const cssClasses = clsx(className, rowClassName, classes?.row, {
+  const cssClasses = clsx(rowClassName, classes?.row, {
     'Mui-selected': selected,
   });
 
