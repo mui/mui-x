@@ -23,7 +23,6 @@ This is the last alpha release. We are moving to beta in the next release, next 
 #### Breaking changes
 
 - [DataGrid] Update @material-ui/core to `^4.12.0` or higher (#2281) @DanailH
-
 - [XGrid] Replace event constants with the `GridEvents` enum (#2279) @flaviendelangle
 
   ```diff
