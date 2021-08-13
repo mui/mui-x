@@ -23,10 +23,10 @@ The default locale of Material-UI is English (United States).
 You can use the theme to configure the locale text:
 
 ```jsx
-import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+import { createTheme, ThemeProvider } from '@material-ui/core/styles';
 import { DataGrid, bgBG } from '@material-ui/data-grid';
 
-const theme = createMuiTheme(
+const theme = createTheme(
   {
     palette: {
       primary: { main: '#1976d2' },
@@ -40,16 +40,16 @@ const theme = createMuiTheme(
 </ThemeProvider>;
 ```
 
-Note that `createMuiTheme` accepts any number of arguments.
+Note that `createTheme` accepts any number of arguments.
 If you are already using the [translations of the core components](/guides/localization/#locale-text), you can add `bgBG` as a new argument.
 The same import works for `XGrid` as it's an extension of `DataGrid`.
 
 ```jsx
-import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+import { createTheme, ThemeProvider } from '@material-ui/core/styles';
 import { DataGrid, bgBG } from '@material-ui/data-grid';
 import { bgBG as coreBgBG } from '@material-ui/core/locale';
 
-const theme = createMuiTheme(
+const theme = createTheme(
   {
     palette: {
       primary: { main: '#1976d2' },
@@ -64,7 +64,7 @@ const theme = createMuiTheme(
 </ThemeProvider>;
 ```
 
-If you want to pass language translations directly to the grid without using `createMuiTheme` and `ThemeProvider`, you can directly load the language translations from the `@material-ui/data-grid` or `@material-ui/x-grid` package.
+If you want to pass language translations directly to the grid without using `createTheme` and `ThemeProvider`, you can directly load the language translations from the `@material-ui/data-grid` or `@material-ui/x-grid` package.
 
 ```jsx
 import { DataGrid, nlNL } from '@material-ui/data-grid';
@@ -76,6 +76,7 @@ import { DataGrid, nlNL } from '@material-ui/data-grid';
 
 | Locale                  | BCP 47 language tag | Import name |
 | :---------------------- | :------------------ | :---------- |
+| Arabic (Sudan)          | ar-SD               | `arSD`      |
 | Bulgarian               | bg-BG               | `bgBG`      |
 | Czech                   | cs-CZ               | `csCZ`      |
 | Dutch                   | nl-NL               | `nlNL`      |

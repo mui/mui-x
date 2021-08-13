@@ -372,6 +372,58 @@ describe('<DataGrid /> - Filter', () => {
         expect(getColumnValues()).to.deep.equal(expected.map((res) => res.toLocaleString()));
       });
     });
+
+    it('should allow operator isEmpty', () => {
+      const rows = [
+        {
+          id: 0,
+          quantity: 0,
+        },
+        {
+          id: 1,
+          quantity: null,
+        },
+        {
+          id: 2,
+          quantity: 100,
+        },
+      ];
+      render(
+        <TestCase
+          operatorValue="isEmpty"
+          field="quantity"
+          columns={[{ field: 'id' }, { field: 'quantity', type: 'number' }]}
+          rows={rows}
+        />,
+      );
+      expect(getColumnValues(0)).to.deep.equal(['1']);
+    });
+
+    it('should allow operator isNotEmpty', () => {
+      const rows = [
+        {
+          id: 0,
+          quantity: 0,
+        },
+        {
+          id: 1,
+          quantity: null,
+        },
+        {
+          id: 2,
+          quantity: 100,
+        },
+      ];
+      render(
+        <TestCase
+          operatorValue="isNotEmpty"
+          field="quantity"
+          columns={[{ field: 'id' }, { field: 'quantity', type: 'number' }]}
+          rows={rows}
+        />,
+      );
+      expect(getColumnValues(0)).to.deep.equal(['0', '2']);
+    });
   });
 
   describe('date operators', () => {
@@ -409,6 +461,58 @@ describe('<DataGrid /> - Filter', () => {
           />,
         );
         expect(getColumnValues()).to.deep.equal(['12/1/2000', '1/1/2001', '1/1/2002']);
+      });
+
+      it('should allow operator isEmpty', () => {
+        const rows = [
+          {
+            id: 0,
+            date: new Date(1984, 1, 1),
+          },
+          {
+            id: 1,
+            date: null,
+          },
+          {
+            id: 2,
+            date: new Date(1992, 1, 1),
+          },
+        ];
+        render(
+          <TestCase
+            operatorValue="isEmpty"
+            field="date"
+            columns={[{ field: 'id' }, { field: 'date', type: 'date' }]}
+            rows={rows}
+          />,
+        );
+        expect(getColumnValues(0)).to.deep.equal(['1']);
+      });
+
+      it('should allow operator isNotEmpty', () => {
+        const rows = [
+          {
+            id: 0,
+            date: new Date(1984, 1, 1),
+          },
+          {
+            id: 1,
+            date: null,
+          },
+          {
+            id: 2,
+            date: new Date(1992, 1, 1),
+          },
+        ];
+        render(
+          <TestCase
+            operatorValue="isNotEmpty"
+            field="date"
+            columns={[{ field: 'id' }, { field: 'date', type: 'date' }]}
+            rows={rows}
+          />,
+        );
+        expect(getColumnValues(0)).to.deep.equal(['0', '2']);
       });
     });
 
@@ -728,6 +832,30 @@ describe('<DataGrid /> - Filter', () => {
               { field: 'name' },
               { field: 'voltage', type: 'singleSelect', valueOptions: [220, 110] },
             ]}
+            field="voltage"
+            operatorValue="is"
+            state={{
+              preferencePanel: {
+                open: true,
+                openedPanelValue: GridPreferencePanelsValue.filters,
+              },
+            }}
+          />,
+        );
+        expect(getColumnValues()).to.deep.equal(['Hair Dryer', 'Dishwasher', 'Microwave']);
+        setProps({ value: 220 });
+        expect(getColumnValues()).to.deep.equal(['Hair Dryer', 'Microwave']);
+      });
+
+      it('should work if valueOptions is not provided', () => {
+        const { setProps } = render(
+          <TestCase
+            rows={[
+              { id: 1, name: 'Hair Dryer', voltage: 220 },
+              { id: 2, name: 'Dishwasher', voltage: 110 },
+              { id: 3, name: 'Microwave', voltage: 220 },
+            ]}
+            columns={[{ field: 'name' }, { field: 'voltage', type: 'singleSelect' }]}
             field="voltage"
             operatorValue="is"
             state={{

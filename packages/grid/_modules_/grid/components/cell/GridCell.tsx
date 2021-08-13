@@ -1,22 +1,7 @@
 import * as React from 'react';
 import { ownerDocument, capitalize } from '@material-ui/core/utils';
 import clsx from 'clsx';
-import {
-  GRID_CELL_BLUR,
-  GRID_CELL_CLICK,
-  GRID_CELL_DOUBLE_CLICK,
-  GRID_CELL_ENTER,
-  GRID_CELL_FOCUS,
-  GRID_CELL_KEY_DOWN,
-  GRID_CELL_LEAVE,
-  GRID_CELL_MOUSE_DOWN,
-  GRID_CELL_MOUSE_UP,
-  GRID_CELL_OUT,
-  GRID_CELL_OVER,
-  GRID_CELL_DRAG_START,
-  GRID_CELL_DRAG_ENTER,
-  GRID_CELL_DRAG_OVER,
-} from '../../constants/eventsConstants';
+import { GridEvents } from '../../constants/eventsConstants';
 import { GRID_CSS_CLASS_PREFIX } from '../../constants/cssClassesConstants';
 import { GridAlignment, GridCellMode, GridCellValue, GridRowId } from '../../models/index';
 import { useGridApiContext } from '../../hooks/root/useGridApiContext';
@@ -118,20 +103,20 @@ export const GridCell = React.memo(function GridCell(props: GridCellProps) {
 
   const eventsHandlers = React.useMemo(
     () => ({
-      onClick: publish(GRID_CELL_CLICK),
-      onDoubleClick: publish(GRID_CELL_DOUBLE_CLICK),
-      onMouseDown: publish(GRID_CELL_MOUSE_DOWN),
-      onMouseUp: publishMouseUp(GRID_CELL_MOUSE_UP),
-      onMouseOver: publish(GRID_CELL_OVER),
-      onMouseOut: publish(GRID_CELL_OUT),
-      onMouseEnter: publish(GRID_CELL_ENTER),
-      onMouseLeave: publish(GRID_CELL_LEAVE),
-      onKeyDown: publish(GRID_CELL_KEY_DOWN),
-      onBlur: publishBlur(GRID_CELL_BLUR),
-      onFocus: publish(GRID_CELL_FOCUS),
-      onDragStart: publish(GRID_CELL_DRAG_START),
-      onDragEnter: publish(GRID_CELL_DRAG_ENTER),
-      onDragOver: publish(GRID_CELL_DRAG_OVER),
+      onClick: publish(GridEvents.cellClick),
+      onDoubleClick: publish(GridEvents.cellDoubleClick),
+      onMouseDown: publish(GridEvents.cellMouseDown),
+      onMouseUp: publishMouseUp(GridEvents.cellMouseUp),
+      onMouseOver: publish(GridEvents.cellOver),
+      onMouseOut: publish(GridEvents.cellOut),
+      onMouseEnter: publish(GridEvents.cellEnter),
+      onMouseLeave: publish(GridEvents.cellLeave),
+      onKeyDown: publish(GridEvents.cellKeyDown),
+      onBlur: publishBlur(GridEvents.cellBlur),
+      onFocus: publish(GridEvents.cellFocus),
+      onDragStart: publish(GridEvents.cellDragStart),
+      onDragEnter: publish(GridEvents.cellDragEnter),
+      onDragOver: publish(GridEvents.cellDragOver),
     }),
     [publish, publishBlur, publishMouseUp],
   );
@@ -145,13 +130,13 @@ export const GridCell = React.memo(function GridCell(props: GridCellProps) {
   };
 
   React.useLayoutEffect(() => {
-    const doc = ownerDocument(apiRef!.current.rootElementRef!.current as HTMLElement);
+    if (!hasFocus || cellMode === 'edit') {
+      return;
+    }
 
-    if (
-      hasFocus &&
-      cellRef.current &&
-      (!doc.activeElement || !cellRef.current!.contains(doc.activeElement))
-    ) {
+    const doc = ownerDocument(apiRef!.current.rootElementRef!.current as HTMLElement)!;
+
+    if (cellRef.current && !cellRef.current.contains(doc.activeElement!)) {
       const focusableElement = cellRef.current!.querySelector('[tabindex="0"]') as HTMLElement;
       if (focusableElement) {
         focusableElement!.focus();

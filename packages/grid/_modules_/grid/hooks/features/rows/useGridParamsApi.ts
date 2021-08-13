@@ -11,7 +11,6 @@ import {
   getGridRowElement,
 } from '../../../utils/domUtils';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
-import { useGridSelector } from '../core/useGridSelector';
 import { gridFocusCellSelector, gridTabIndexCellSelector } from '../focus/gridFocusStateSelector';
 
 let warnedOnce = false;
@@ -26,9 +25,6 @@ function warnMissingColumn(field) {
 }
 
 export function useGridParamsApi(apiRef: GridApiRef) {
-  const cellFocus = useGridSelector(apiRef, gridFocusCellSelector);
-  const cellTabIndex = useGridSelector(apiRef, gridTabIndexCellSelector);
-
   const getColumnHeaderParams = React.useCallback(
     (field: string): GridColumnHeaderParams => ({
       field,
@@ -66,6 +62,9 @@ export function useGridParamsApi(apiRef: GridApiRef) {
         throw new Error(`No row with id #${id} found`);
       }
 
+      const cellFocus = gridFocusCellSelector(apiRef.current.state);
+      const cellTabIndex = gridTabIndexCellSelector(apiRef.current.state);
+
       const params: GridValueGetterParams = {
         id,
         field,
@@ -81,7 +80,7 @@ export function useGridParamsApi(apiRef: GridApiRef) {
 
       return params;
     },
-    [apiRef, cellFocus, cellTabIndex],
+    [apiRef],
   );
 
   const getCellParams = React.useCallback(
@@ -93,6 +92,9 @@ export function useGridParamsApi(apiRef: GridApiRef) {
       if (!row) {
         throw new Error(`No row with id #${id} found`);
       }
+
+      const cellFocus = gridFocusCellSelector(apiRef.current.state);
+      const cellTabIndex = gridTabIndexCellSelector(apiRef.current.state);
 
       const params: GridCellParams = {
         id,
@@ -114,7 +116,7 @@ export function useGridParamsApi(apiRef: GridApiRef) {
 
       return params;
     },
-    [apiRef, cellFocus, cellTabIndex],
+    [apiRef],
   );
 
   const getCellValue = React.useCallback(

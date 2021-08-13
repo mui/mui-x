@@ -1,6 +1,6 @@
 {
   "name": "@material-ui/x-grid-data-generator",
-  "version": "4.0.0-alpha.36",
+  "version": "4.0.0-alpha.37",
   "description": "Generate fake data for demo purposes only.",
   "author": "Material-UI Team",
   "main": "dist/cjs/index.js",
@@ -41,8 +41,8 @@
     "yargs": "^17.0.1"
   },
   "peerDependencies": {
-    "@material-ui/core": "^4.11.2 || ^5.0.0-beta.0",
-    "@material-ui/icons": "^4.11.2 || ^5.0.0-beta.0",
+    "@material-ui/core": "^4.12.0 || ^5.0.0-beta.0",
+    "@material-ui/icons": "^4.12.0 || ^5.0.0-beta.0",
     "@material-ui/lab": "^4.0.0-alpha.58 || ^5.0.0-alpha.39",
     "react": "^17.0.0"
   },

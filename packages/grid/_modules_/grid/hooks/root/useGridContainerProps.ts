@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GRID_DEBOUNCED_RESIZE } from '../../constants/eventsConstants';
+import { GridEvents } from '../../constants/eventsConstants';
 import { GridApiRef } from '../../models/api/gridApiRef';
 import {
   GridContainerProps,
@@ -273,5 +273,5 @@ export const useGridContainerProps = (apiRef: GridApiRef) => {
     refreshContainerSizes();
   }, [gridState.columns, gridState.options.hideFooter, refreshContainerSizes, visibleRowsCount]);
 
-  useGridApiEventHandler(apiRef, GRID_DEBOUNCED_RESIZE, refreshContainerSizes);
+  useGridApiEventHandler(apiRef, GridEvents.debouncedResize, refreshContainerSizes);
 };

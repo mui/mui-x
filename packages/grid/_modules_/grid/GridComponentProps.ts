@@ -69,7 +69,9 @@ export interface GridComponentProps extends GridOptionsProp {
    */
   rows: GridRowsProp;
   /**
-   * @internal enum
+   * Signal to the underlying logic what version of the public component API
+   * of the data grid is exposed [[GridSignature]].
+   * @internal
    */
   signature: string;
   /**

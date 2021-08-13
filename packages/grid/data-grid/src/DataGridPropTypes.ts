@@ -134,6 +134,19 @@ export const DATA_GRID_PROPTYPES = {
     }
     return null;
   }),
+  onViewportRowsChange: chainPropTypes(PropTypes.any, (props: any) => {
+    if (props.onViewportRowsChange != null) {
+      return new Error(
+        [
+          `Material-UI: \`onViewportRowsChange\` is not a valid prop.`,
+          'onViewportRowsChange is not available in the MIT version.',
+          '',
+          'You need to upgrade to the XGrid component to unlock this feature.',
+        ].join('\n'),
+      );
+    }
+    return null;
+  }),
   pageSize: chainPropTypes(PropTypes.number, (props: any) => {
     if (props.pageSize && props.pageSize > MAX_PAGE_SIZE) {
       return new Error(

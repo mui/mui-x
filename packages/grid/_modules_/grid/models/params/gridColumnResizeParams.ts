@@ -1,3 +1,5 @@
+import type { GridStateColDef } from '../colDef';
+
 /**
  * Object passed as parameter of the column resize event.
  */
@@ -9,7 +11,7 @@ export interface GridColumnResizeParams {
   /**
    * The column of the current header component.
    */
-  colDef: any;
+  colDef: GridStateColDef;
   /**
    * API ref that let you manipulate the grid.
    */

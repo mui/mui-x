@@ -15,10 +15,9 @@ import {
   GridRowData,
   useGridApiRef,
   XGrid,
-  GRID_CELL_EDIT_STOP,
+  GridEvents,
   GridEditCellPropsParams,
   GridCellEditCommitParams,
-  GRID_CELL_EDIT_START,
   MuiEvent,
 } from '@material-ui/x-grid';
 import { useDemoData } from '@material-ui/x-grid-data-generator';
@@ -64,7 +63,10 @@ const baselineProps = {
       isPublished: true,
     },
   ],
-  columns: [{ field: 'brand' }, { field: 'isPublished', type: 'boolean' }],
+  columns: [
+    { field: 'brand', editable: true },
+    { field: 'isPublished', type: 'boolean' },
+  ],
 };
 
 function getStoryRowId(row) {
@@ -382,6 +384,7 @@ const baselineEditProps = {
       DOB: new Date(1996, 10, 2),
       meetup: new Date(2020, 2, 25, 10, 50, 0),
       isAdmin: true,
+      country: 'Spain',
     },
     {
       id: 1,
@@ -394,6 +397,7 @@ const baselineEditProps = {
       DOB: new Date(1992, 1, 20),
       meetup: new Date(2020, 4, 15, 10, 50, 0),
       isAdmin: true,
+      country: 'Netherlands',
     },
     {
       id: 2,
@@ -406,6 +410,7 @@ const baselineEditProps = {
       DOB: new Date(1986, 0, 12),
       meetup: new Date(2020, 3, 5, 10, 50, 0),
       isAdmin: false,
+      country: 'Brazil',
     },
   ],
   columns: [
@@ -417,6 +422,13 @@ const baselineEditProps = {
       valueGetter: ({ row }) => `${row.firstname || ''} ${row.lastname || ''}`,
     },
     { field: 'isAdmin', width: 120, type: 'boolean', editable: true },
+    {
+      field: 'country',
+      width: 120,
+      type: 'singleSelect',
+      editable: true,
+      valueOptions: ['Bulgaria', 'Netherlands', 'France', 'Italy', 'Brazil', 'Spain'],
+    },
     { field: 'username', editable: true },
     { field: 'email', editable: true, width: 150 },
     { field: 'age', width: 50, type: 'number', editable: true },
@@ -507,7 +519,7 @@ export function EditRowsControl() {
 
       setTimeout(() => {
         apiRef.current.updateRows([cellUpdate]);
-        apiRef.current.publishEvent(GRID_CELL_EDIT_STOP, params, event);
+        apiRef.current.publishEvent(GridEvents.cellEditStop, params, event);
       }, randomInt(300, 2000));
     },
     [apiRef],
@@ -583,6 +595,19 @@ export function EditCellSnap() {
     apiRef.current.setCellMode(1, 'brand', 'edit');
   });
 
+  React.useEffect(() => {
+    const handleClick = () => {
+      apiRef.current.setCellMode(1, 'brand', 'edit');
+    };
+
+    // Prevents from exiting the edit mode when there's a click to switch between regression tests
+    document.addEventListener('click', handleClick);
+
+    return () => {
+      document.removeEventListener('click', handleClick);
+    };
+  }, [apiRef]);
+
   return (
     <div className="grid-container">
       <XGrid {...baselineProps} apiRef={apiRef} />
@@ -596,6 +621,19 @@ export function EditBooleanCellSnap() {
   React.useEffect(() => {
     apiRef.current.setCellMode(1, 'isPublished', 'edit');
   });
+
+  React.useEffect(() => {
+    const handleClick = () => {
+      apiRef.current.setCellMode(1, 'isPublished', 'edit');
+    };
+
+    // Prevents from exiting the edit mode when there's a click to switch between regression tests
+    document.addEventListener('click', handleClick);
+
+    return () => {
+      document.removeEventListener('click', handleClick);
+    };
+  }, [apiRef]);
 
   return (
     <div className="grid-container">
@@ -850,7 +888,7 @@ export function EditCellWithCellClickGrid() {
     (params: GridCellParams, event: MuiEvent<React.MouseEvent>) => {
       // Or you can use the editRowModel prop, but I find it easier
       // apiRef.current.setCellMode(params.id, params.field, 'edit');
-      apiRef.current.publishEvent(GRID_CELL_EDIT_START, params, event);
+      apiRef.current.publishEvent(GridEvents.cellEditStart, params, event);
 
       // if I want to prevent selection I can do
       event.defaultMuiPrevented = true;
@@ -872,13 +910,16 @@ export function EditCellWithMessageGrid() {
   const [message, setMessage] = React.useState('');
 
   React.useEffect(() => {
-    return apiRef.current.subscribeEvent(GRID_CELL_EDIT_START, (params: GridCellParams, event) => {
-      setMessage(`Editing cell with value: ${params.value} at row: ${params.id}, column: ${
-        params.field
-      },
+    return apiRef.current.subscribeEvent(
+      GridEvents.cellEditStart,
+      (params: GridCellParams, event) => {
+        setMessage(`Editing cell with value: ${params.value} at row: ${params.id}, column: ${
+          params.field
+        },
                         triggered by ${(event as React.SyntheticEvent)!.type}
       `);
-    });
+      },
+    );
   }, [apiRef]);
 
   React.useEffect(() => {
