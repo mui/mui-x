@@ -1,4 +1,4 @@
-import { DataGridProps } from './DataGridProps';
+import { DataGridProps } from '../DataGridProps';
 
 export interface DataGridComponentProps {
   MuiDataGrid: DataGridProps;

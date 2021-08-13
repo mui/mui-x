@@ -4,4 +4,3 @@ export * from './hooks';
 export * from './locales';
 export * from './models';
 export * from './GridComponentProps';
-export * from './overridesThemeAugmentation';
