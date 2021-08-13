@@ -23,9 +23,6 @@ export const useStyles = makeStyles(
         height: '100%',
         display: 'flex',
         flexDirection: 'column',
-        '& *, & *::before, & *::after': {
-          boxSizing: 'inherit',
-        },
         '&.MuiDataGrid-autoHeight': {
           height: 'auto',
         },
@@ -88,6 +85,7 @@ export const useStyles = makeStyles(
           WebkitTapHighlightColor: 'transparent',
           lineHeight: null,
           padding: '0 10px',
+          boxSizing: 'border-box',
         },
         '& .MuiDataGrid-columnHeader:focus-within, & .MuiDataGrid-cell:focus-within': {
           outline: `solid ${muiStyleAlpha(theme.palette.primary.main, 0.5)} 1px`,
