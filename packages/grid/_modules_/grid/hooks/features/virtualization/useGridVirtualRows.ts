@@ -381,25 +381,14 @@ export const useGridVirtualRows = (apiRef: GridApiRef): void => {
     setRenderingState({ renderingZoneScroll: { left: 0, top: 0 } });
   }, [scrollTo, setRenderingState, windowRef]);
 
-  const scrollingTimeout = React.useRef<any>(null);
   const handleScroll = React.useCallback(() => {
     // On iOS the inertia scrolling allows to return negative values.
     if (windowRef.current!.scrollLeft < 0 || windowRef.current!.scrollTop < 0) return;
 
-    if (!scrollingTimeout.current) {
-      setGridState((state) => ({ ...state, isScrolling: true }));
-    }
-    clearTimeout(scrollingTimeout.current);
-    scrollingTimeout.current = setTimeout(() => {
-      scrollingTimeout.current = null;
-      setGridState((state) => ({ ...state, isScrolling: false }));
-      forceUpdate();
-    }, 300);
-
     if (apiRef.current.updateViewport) {
       apiRef.current.updateViewport();
     }
-  }, [windowRef, apiRef, setGridState, forceUpdate]);
+  }, [windowRef, apiRef]);
 
   // TODO move to useGridScroll, it's the same regardless of whether virtualization is on or not
   const scroll = React.useCallback(
@@ -471,10 +460,6 @@ export const useGridVirtualRows = (apiRef: GridApiRef): void => {
       logger.debug(`totalRowCount has changed to ${totalRowCount}, updating viewport.`);
       apiRef.current.updateViewport(true);
     }
-
-    return () => {
-      clearTimeout(scrollingTimeout.current);
-    };
   }, [
     logger,
     totalRowCount,

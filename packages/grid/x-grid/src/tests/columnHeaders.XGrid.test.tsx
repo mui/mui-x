@@ -40,6 +40,21 @@ describe('<XGrid /> - Column Headers', () => {
     ],
   };
 
+  it('should close the menu when the window is scrolled', async () => {
+    render(
+      <div style={{ width: 300, height: 500 }}>
+        <XGrid {...baselineProps} columns={[{ field: 'brand' }]} />
+      </div>,
+    );
+    const columnCell = getColumnHeaderCell(0);
+    const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]');
+    fireEvent.click(menuIconButton);
+    await waitFor(() => expect(screen.queryByRole('menu')).not.to.equal(null));
+    const gridWindow = document.querySelector('.MuiDataGrid-window')!;
+    gridWindow.dispatchEvent(new Event('scroll'));
+    await waitFor(() => expect(screen.queryByRole('menu')).to.equal(null));
+  });
+
   describe('GridColumnHeaderMenu', () => {
     it('should close the menu of a column when resizing this column', async () => {
       render(

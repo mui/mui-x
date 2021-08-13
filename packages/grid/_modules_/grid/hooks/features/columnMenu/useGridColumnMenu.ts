@@ -45,26 +45,12 @@ export const useGridColumnMenu = (apiRef: GridApiRef): void => {
   );
 
   const handleColumnResizeStart = React.useCallback(() => {
-    setGridState((state) => {
-      if (state.columnMenu.open) {
-        return {
-          ...state,
-          columnMenu: {
-            ...state.columnMenu,
-            open: false,
-          },
-        };
-      }
+    hideColumnMenu();
+  }, [hideColumnMenu]);
 
-      return state;
-    });
-  }, [setGridState]);
-
-  React.useEffect(() => {
-    if (gridState.isScrolling) {
-      hideColumnMenu();
-    }
-  }, [gridState.isScrolling, hideColumnMenu]);
+  const handleRowsScroll = React.useCallback(() => {
+    hideColumnMenu();
+  }, [hideColumnMenu]);
 
   useGridApiMethod(
     apiRef,
@@ -77,4 +63,5 @@ export const useGridColumnMenu = (apiRef: GridApiRef): void => {
   );
 
   useGridApiEventHandler(apiRef, GridEvents.columnResizeStart, handleColumnResizeStart);
+  useGridApiEventHandler(apiRef, GridEvents.rowsScroll, handleRowsScroll);
 };
