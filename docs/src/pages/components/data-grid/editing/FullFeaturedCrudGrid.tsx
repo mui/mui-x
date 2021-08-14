@@ -3,9 +3,9 @@ import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/Add';
 import IconButton from '@material-ui/core/IconButton';
 import EditIcon from '@material-ui/icons/Edit';
-import DeleteIcon from '@material-ui/icons/Delete';
+import DeleteIcon from '@material-ui/icons/DeleteOutlined';
 import SaveIcon from '@material-ui/icons/Save';
-import CancelIcon from '@material-ui/icons/Cancel';
+import CancelIcon from '@material-ui/icons/Close';
 import {
   GridRowsProp,
   useGridApiRef,
@@ -35,9 +35,10 @@ const useStyles = makeStyles(
       display: 'inline-flex',
       alignItems: 'center',
       gap: theme.spacing(1),
+      color: theme.palette.text.secondary,
     },
-    save: {
-      color: theme.palette.success.main,
+    textPrimary: {
+      color: theme.palette.text.primary,
     },
   }),
   { defaultTheme },
@@ -86,21 +87,21 @@ function RowMenuCell(props: RowMenuProps) {
     return (
       <div className={classes.root}>
         <IconButton
-          color="inherit"
+          color="primary"
           size="small"
           aria-label="save"
-          className={classes.save}
           onClick={handleSaveClick}
         >
-          <SaveIcon />
+          <SaveIcon fontSize="small" />
         </IconButton>
         <IconButton
-          color="secondary"
+          color="inherit"
           size="small"
           aria-label="cancel"
+          className={classes.textPrimary}
           onClick={handleCancelClick}
         >
-          <CancelIcon />
+          <CancelIcon fontSize="small" />
         </IconButton>
       </div>
     );
@@ -109,20 +110,21 @@ function RowMenuCell(props: RowMenuProps) {
   return (
     <div className={classes.root}>
       <IconButton
-        color="primary"
+        color="inherit"
+        className={classes.textPrimary}
         size="small"
         aria-label="edit"
         onClick={handleEditClick}
       >
-        <EditIcon />
+        <EditIcon fontSize="small" />
       </IconButton>
       <IconButton
-        color="secondary"
+        color="inherit"
         size="small"
         aria-label="delete"
         onClick={handleDeleteClick}
       >
-        <DeleteIcon />
+        <DeleteIcon fontSize="small" />
       </IconButton>
     </div>
   );
@@ -188,7 +190,7 @@ const columns: GridColumns = [
     headerName: 'Actions',
     renderCell: RowMenuCell,
     sortable: false,
-    width: 120,
+    width: 100,
     headerAlign: 'center',
     filterable: false,
     align: 'center',
@@ -220,7 +222,7 @@ function EditToolbar(props: EditToolbarProps) {
   return (
     <GridToolbarContainer>
       <Button color="primary" startIcon={<AddIcon />} onClick={handleClick}>
-        Add Record
+        Add record
       </Button>
     </GridToolbarContainer>
   );
