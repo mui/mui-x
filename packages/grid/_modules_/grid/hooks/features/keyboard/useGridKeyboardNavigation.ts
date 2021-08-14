@@ -70,7 +70,7 @@ export const useGridKeyboardNavigation = (
   const totalRowCount = useGridSelector(apiRef, gridRowCountSelector);
   const colCount = useGridSelector(apiRef, visibleGridColumnsLengthSelector);
   const containerSizes = useGridSelector(apiRef, gridContainerSizesSelector);
-  const visibleSortedRows = useGridSelector(apiRef, visibleSortedGridRowsAsArraySelector);
+  const visibleSortedRowsAsArray = useGridSelector(apiRef, visibleSortedGridRowsAsArraySelector);
 
   const mapKey = (event: React.KeyboardEvent) => {
     if (isEnterKey(event.key)) {
@@ -86,7 +86,7 @@ export const useGridKeyboardNavigation = (
     (params: GridCellParams, event: React.KeyboardEvent) => {
       event.preventDefault();
       const colIndex = apiRef.current.getColumnIndex(params.field);
-      const rowIndex = visibleSortedRows.findIndex(([id]) => id === params.id);
+      const rowIndex = visibleSortedRowsAsArray.findIndex(([id]) => id === params.id);
 
       const key = mapKey(event);
       const isCtrlPressed = event.ctrlKey || event.metaKey || event.shiftKey;
@@ -147,12 +147,12 @@ export const useGridKeyboardNavigation = (
       );
       apiRef.current.scrollToIndexes(nextCellIndexes);
       const field = apiRef.current.getVisibleColumns()[nextCellIndexes.colIndex].field;
-      const [id] = visibleSortedRows[nextCellIndexes.rowIndex];
+      const [id] = visibleSortedRowsAsArray[nextCellIndexes.rowIndex];
       apiRef.current.setCellFocus(id, field);
     },
     [
       apiRef,
-      visibleSortedRows,
+      visibleSortedRowsAsArray,
       totalRowCount,
       props.pagination,
       paginationState.pageSize,

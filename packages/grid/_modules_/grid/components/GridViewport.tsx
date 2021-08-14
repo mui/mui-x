@@ -40,7 +40,7 @@ export const GridViewport: ViewportType = React.forwardRef<HTMLDivElement, {}>(
     const cellFocus = useGridSelector(apiRef, gridFocusCellSelector);
     const cellTabIndex = useGridSelector(apiRef, gridTabIndexCellSelector);
     const selectionLookup = useGridSelector(apiRef, selectedIdsLookupSelector);
-    const rows = useGridSelector(apiRef, visibleSortedGridRowsAsArraySelector);
+    const visibleSortedRowsAsArray = useGridSelector(apiRef, visibleSortedGridRowsAsArraySelector);
     const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
     const editRowsState = useGridSelector(apiRef, gridEditRowsStateSelector);
 
@@ -49,7 +49,7 @@ export const GridViewport: ViewportType = React.forwardRef<HTMLDivElement, {}>(
         return null;
       }
 
-      const renderedRows = rows.slice(
+      const renderedRows = visibleSortedRowsAsArray.slice(
         renderState.renderContext.firstRowIdx,
         renderState.renderContext.lastRowIdx!,
       );
