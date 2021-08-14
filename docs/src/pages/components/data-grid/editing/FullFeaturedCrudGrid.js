@@ -14,10 +14,10 @@ import {
   randomUpdatedDate,
   randomId,
 } from '@material-ui/x-grid-data-generator';
-import { createMuiTheme } from '@material-ui/core/styles';
+import { createTheme } from '@material-ui/core/styles';
 import { makeStyles } from '@material-ui/styles';
 
-const defaultTheme = createMuiTheme();
+const defaultTheme = createTheme();
 
 const useStyles = makeStyles(
   (theme) => ({

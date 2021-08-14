@@ -4,7 +4,7 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import Popper from '@material-ui/core/Popper';
 import Paper from '@material-ui/core/Paper';
-import { createMuiTheme, Theme } from '@material-ui/core/styles';
+import { createTheme, Theme } from '@material-ui/core/styles';
 import { createStyles, makeStyles } from '@material-ui/styles';
 import {
   GridCellValue,
@@ -195,7 +195,7 @@ interface GridCellExpandProps {
   width: number;
 }
 
-const defaultTheme = createMuiTheme();
+const defaultTheme = createTheme();
 const useStyles = makeStyles(
   (theme: Theme) =>
     createStyles({
