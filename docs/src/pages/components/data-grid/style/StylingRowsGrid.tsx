@@ -4,23 +4,14 @@ import { useDemoData } from '@material-ui/x-grid-data-generator';
 import { createTheme, darken, lighten, Theme } from '@material-ui/core/styles';
 import { makeStyles } from '@material-ui/styles';
 
-// TODO v5: remove
-function getThemePaletteMode(palette: any): string {
-  return palette.type || palette.mode;
-}
-
 const defaultTheme = createTheme();
 const useStyles = makeStyles(
   (theme: Theme) => {
     const getBackgroundColor = (color) =>
-      getThemePaletteMode(theme.palette) === 'dark'
-        ? darken(color, 0.6)
-        : lighten(color, 0.6);
+      theme.palette.mode === 'dark' ? darken(color, 0.6) : lighten(color, 0.6);
 
     const getHoverBackgroundColor = (color) =>
-      getThemePaletteMode(theme.palette) === 'dark'
-        ? darken(color, 0.5)
-        : lighten(color, 0.5);
+      theme.palette.mode === 'dark' ? darken(color, 0.5) : lighten(color, 0.5);
 
     return {
       root: {
