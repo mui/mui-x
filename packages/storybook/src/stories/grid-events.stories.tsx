@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { action } from '@storybook/addon-actions';
-import { XGrid, GridOptionsProp } from '@material-ui/x-grid';
+import { XGrid, GridOptionsProp } from '@mui/x-data-grid-pro';
 import { useData } from '../hooks/useData';
 
 export default {

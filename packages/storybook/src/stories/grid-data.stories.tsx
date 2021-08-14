@@ -1,6 +1,6 @@
 import { Story } from '@storybook/react';
 import * as React from 'react';
-import { XGrid, GridOptionsProp, GridComponentProps } from '@material-ui/x-grid';
+import { XGrid, GridOptionsProp, GridComponentProps } from '@mui/x-data-grid-pro';
 import { useData } from '../hooks/useData';
 
 export default {

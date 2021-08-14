@@ -1,7 +1,7 @@
 import Button from '@material-ui/core/Button';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import { makeStyles } from '@material-ui/styles';
-import { DataGrid } from '@material-ui/data-grid';
+import { DataGrid } from '@mui/x-data-grid';
 import Rating from '@material-ui/lab/Rating';
 import {
   GridColDef,
@@ -16,8 +16,8 @@ import {
   useGridApiRef,
   XGrid,
   getInitialGridFilterState,
-} from '@material-ui/x-grid';
-import { useDemoData, randomArrayItem } from '@material-ui/x-grid-data-generator';
+} from '@mui/x-data-grid-pro';
+import { useDemoData, randomArrayItem } from '@mui/x-data-grid-generator';
 import { action } from '@storybook/addon-actions';
 import * as React from 'react';
 import { randomInt } from '../data/random-generator';

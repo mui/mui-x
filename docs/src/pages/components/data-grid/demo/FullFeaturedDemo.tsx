@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { XGrid, GridToolbar } from '@material-ui/x-grid';
-import { useDemoData } from '@material-ui/x-grid-data-generator';
+import { XGrid, GridToolbar } from '@mui/x-data-grid-pro';
+import { useDemoData } from '@mui/x-data-grid-generator';
 import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
 import { makeStyles } from '@material-ui/styles';
 import { createTheme, Theme } from '@material-ui/core/styles';

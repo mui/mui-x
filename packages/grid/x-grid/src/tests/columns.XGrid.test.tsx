@@ -16,7 +16,7 @@ import {
   useGridApiRef,
   XGrid,
   GRID_COLUMN_HEADER_SEPARATOR_RESIZABLE_CSS_CLASS,
-} from '@material-ui/x-grid';
+} from '@mui/x-data-grid-pro';
 import { getColumnHeaderCell, getCell } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);

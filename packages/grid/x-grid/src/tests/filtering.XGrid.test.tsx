@@ -9,7 +9,7 @@ import {
   SUBMIT_FILTER_STROKE_TIME,
   useGridApiRef,
   XGrid,
-} from '@material-ui/x-grid';
+} from '@mui/x-data-grid-pro';
 import { expect } from 'chai';
 import { useData } from 'packages/storybook/src/hooks/useData';
 import * as React from 'react';

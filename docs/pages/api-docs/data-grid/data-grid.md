@@ -5,7 +5,7 @@
 ## Import
 
 ```js
-import { DataGrid } from '@material-ui/data-grid';
+import { DataGrid } from '@mui/x-data-grid';
 ```
 
 ## Props

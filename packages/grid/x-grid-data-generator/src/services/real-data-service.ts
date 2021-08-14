@@ -1,4 +1,4 @@
-import { GridColDef, GridRowId } from '@material-ui/x-grid';
+import { GridColDef, GridRowId } from '@mui/x-data-grid-pro';
 import asyncWorker from '../asyncWorker';
 
 export interface DataRowModel {

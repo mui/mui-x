@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridColumns, XGrid } from '@material-ui/x-grid';
+import { GridColumns, XGrid } from '@mui/x-data-grid-pro';
 
 const columns: GridColumns = [
   { field: 'name', type: 'string' },

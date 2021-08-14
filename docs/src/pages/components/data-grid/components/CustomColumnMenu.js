@@ -10,7 +10,7 @@ import {
   SortGridMenuItems,
   useGridApiRef,
   XGrid,
-} from '@material-ui/x-grid';
+} from '@mui/x-data-grid-pro';
 import StarOutlineIcon from '@material-ui/icons/StarOutline';
 
 const defaultTheme = createTheme();

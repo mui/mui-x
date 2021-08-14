@@ -9,7 +9,7 @@ import {
   gridPanelClasses as classes,
   useGridApiRef,
   GridApiContext,
-} from '@material-ui/data-grid';
+} from '@mui/x-data-grid';
 import { Popper } from '@material-ui/core';
 
 describe('<GridPanel />', () => {

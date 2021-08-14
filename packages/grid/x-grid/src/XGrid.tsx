@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { LicenseInfo } from '@material-ui/x-license';
+import { LicenseInfo } from '@mui/x-license-pro';
 import { ponyfillGlobal } from '@material-ui/utils';
 import {
   DEFAULT_GRID_PROPS_FROM_OPTIONS,

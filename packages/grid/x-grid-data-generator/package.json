@@ -1,5 +1,5 @@
 {
-  "name": "@material-ui/x-grid-data-generator",
+  "name": "@mui/x-data-grid-generator",
   "version": "4.0.0-alpha.37",
   "description": "Generate fake data for demo purposes only.",
   "author": "Material-UI Team",

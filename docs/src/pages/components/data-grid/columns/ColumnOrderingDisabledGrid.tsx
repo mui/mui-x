@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { XGrid } from '@material-ui/x-grid';
+import { XGrid } from '@mui/x-data-grid-pro';
 
 const rows = [
   {

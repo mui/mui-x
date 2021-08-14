@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 import * as React from 'react';
-import { DataGrid } from '@material-ui/data-grid';
+import { DataGrid } from '@mui/x-data-grid';
 import {
   randomCreatedDate,
   randomTraderName,
   randomUpdatedDate,
-} from '@material-ui/x-grid-data-generator';
+} from '@mui/x-data-grid-generator';
 import Alert from '@material-ui/lab/Alert';
 
 export default function EditRowsModelControlGrid() {
