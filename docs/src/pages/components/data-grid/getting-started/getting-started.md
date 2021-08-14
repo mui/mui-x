@@ -160,8 +160,8 @@ The enterprise components come in two plans: Pro and Premium.
 | [Clipboard](/components/data-grid/export/#clipboard)                                      |    ❌     |              🚧               |                  🚧                   |
 | [Excel export](/components/data-grid/export/#excel-export)                                |    ❌     |              ❌               |                  🚧                   |
 | **Rendering**                                                                             |           |                               |                                       |
-| [Column virtualization](/components/data-grid/virtualization/#column-virtualization)      |    ✅     |              ✅               |                  ✅                   |
 | [Customizable components](/components/data-grid/components/)                              |    ✅     |              ✅               |                  ✅                   |
+| [Column virtualization](/components/data-grid/virtualization/#column-virtualization)      |    ✅     |              ✅               |                  ✅                   |
 | [Row virtualization > 100 rows](/components/data-grid/virtualization/#row-virtualization) |    ❌     |              ✅               |                  ✅                   |
 | **Group & Pivot**                                                                         |           |                               |                                       |
 | [Tree data](/components/data-grid/group-pivot/#tree-data)                                 |    ❌     |              🚧               |                  🚧                   |
