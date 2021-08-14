@@ -1556,7 +1556,7 @@ Big thanks to the 4 contributors who made this release possible. Here are some h
 ### Docs
 
 - [docs] Add docs for data grid column selector (#837) @DanailH
-- [docs] Clarify feature split between pro and premium (#779) @oliviertassinari
+- [docs] Clarify feature split between Pro and Premium (#779) @oliviertassinari
 
 ### Core
 
