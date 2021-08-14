@@ -125,6 +125,11 @@ export function useGridEditRows(
 
   const setRowMode = React.useCallback<GridEditRowApi['setRowMode']>(
     (id, mode) => {
+      const isInEditMode = apiRef.current.getRowMode(id) === 'edit';
+      if ((mode === 'edit' && isInEditMode) || (mode === 'view' && !isInEditMode)) {
+        return;
+      }
+
       setGridState((state) => {
         const newEditRowsState: GridEditRowsModel = { ...state.editRows };
         if (mode === 'edit') {
