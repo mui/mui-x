@@ -18,7 +18,7 @@
   "dependencies": {
     "@material-ui/core": "^4.9.12",
     "@material-ui/data-grid": "4.0.0-alpha.37",
-    "@material-ui/icons": "^4.9.1",
+    "@material-ui/icons": "^4.11.2",
     "@material-ui/lab": "^4.0.0-alpha.54",
     "@material-ui/x-grid": "4.0.0-alpha.37",
     "@material-ui/x-grid-data-generator": "4.0.0-alpha.37",
