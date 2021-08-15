@@ -5247,7 +5247,7 @@ babel-plugin-polyfill-regenerator@^0.2.2:
   dependencies:
     "@babel/helper-define-polyfill-provider" "^0.2.2"
 
-babel-plugin-preval@^2.0.0:
+babel-plugin-preval@^2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/babel-plugin-preval/-/babel-plugin-preval-2.0.1.tgz#76a552a1670bb21307f80b927b89fbeb37cf205c"
   integrity sha512-7rTkwsuiATlwB7aE9X78LpvfOhocO8K82mAacju6K1dR2uyg83jhSwKvV5PXZnB8Rh92uzMuKIxu2IZoSAVHbQ==
