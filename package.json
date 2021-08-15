@@ -74,7 +74,7 @@
     "@types/prettier": "^2.2.3",
     "@types/react": "^17.0.1",
     "@types/react-dom": "^17.0.9",
-    "@types/requestidlecallback": "^0.3.1",
+    "@types/requestidlecallback": "^0.3.4",
     "@types/sinon": "^10.0.2",
     "@types/yargs": "^17.0.0",
     "@typescript-eslint/eslint-plugin": "^4.11.1",
