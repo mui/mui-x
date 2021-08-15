@@ -87,7 +87,7 @@
     "chai-dom": "^1.8.2",
     "compression-webpack-plugin": "^6.0.2",
     "concurrently": "^6.0.0",
-    "cross-env": "^7.0.2",
+    "cross-env": "^7.0.3",
     "enzyme": "^3.11.0",
     "eslint": "^7.4.0",
     "eslint-config-airbnb-typescript": "^12.3.1",
