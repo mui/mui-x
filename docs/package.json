@@ -29,7 +29,7 @@
     "@types/react-dom": "^17.0.9",
     "@types/react-router-dom": "^5.1.0",
     "accept-language": "^3.0.18",
-    "address": "^1.0.3",
+    "address": "^1.1.2",
     "ast-types": "^0.14.2",
     "autoprefixer": "^10.1.0",
     "babel-plugin-module-resolver": "^4.0.0",
