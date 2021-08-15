@@ -68,7 +68,7 @@
     "@testing-library/react": "^12.0.0",
     "@types/chai": "^4.2.3",
     "@types/chai-dom": "^0.0.10",
-    "@types/enzyme": "^3.10.5",
+    "@types/enzyme": "^3.10.9",
     "@types/mocha": "^9.0.0",
     "@types/node": "^16.0.0",
     "@types/prettier": "^2.2.3",
