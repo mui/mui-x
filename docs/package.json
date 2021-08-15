@@ -39,7 +39,7 @@
     "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
     "clean-css": "^5.0.1",
     "clipboard-copy": "^3.0.0",
-    "clsx": "^1.0.4",
+    "clsx": "^1.1.1",
     "core-js": "^2.6.12",
     "cross-env": "^7.0.3",
     "docsearch.js": "^2.6.3",
