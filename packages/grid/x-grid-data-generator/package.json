@@ -2,7 +2,7 @@
   "name": "@mui/x-data-grid-generator",
   "version": "4.0.0-alpha.37",
   "description": "Generate fake data for demo purposes only.",
-  "author": "Material-UI Team",
+  "author": "MUI Team",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
   "types": "dist/esm/x-grid-data-generator.d.ts",

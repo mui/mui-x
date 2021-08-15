@@ -2,7 +2,7 @@
   "name": "storybook",
   "version": "4.0.0-alpha.37",
   "description": "Storybook components",
-  "author": "Material-UI Team",
+  "author": "MUI Team",
   "private": true,
   "scripts": {
     "start": "start-storybook -p 6006 --ci",
