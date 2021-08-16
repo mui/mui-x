@@ -1,4 +1,3 @@
-import { GridContainerProps } from '../../../models/gridContainerProps';
 import { GridScrollParams } from '../../../models/params/gridScrollParams';
 import { GridRenderContextProps } from '../../../models/gridRenderContextProps';
 
@@ -8,7 +7,6 @@ export interface InternalRenderingState {
   renderContext: Partial<GridRenderContextProps> | null;
   realScroll: GridScrollParams;
   renderingZoneScroll: GridScrollParams;
-  renderedSizes: GridContainerProps | null;
 }
 
 export const getInitialGridRenderingState = (): InternalRenderingState => {
@@ -18,6 +16,5 @@ export const getInitialGridRenderingState = (): InternalRenderingState => {
     renderingZoneScroll: { left: 0, top: 0 },
     virtualPage: 0,
     virtualRowsCount: 0,
-    renderedSizes: null,
   };
 };

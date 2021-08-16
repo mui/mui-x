@@ -198,7 +198,7 @@ export function useGridColumns(
       logger.debug('updating GridColumns with new state');
 
       // Avoid dependency on gridState to avoid infinite loop
-      const refGridState = apiRef.current.getState();
+      const refGridState = apiRef.current.state;
       const newColumns: GridColumns = newState.all.map((field) => newState.lookup[field]);
       const updatedCols = getStateColumns(newColumns, refGridState.viewportSizes.width);
 
@@ -215,7 +215,7 @@ export function useGridColumns(
   const updateColumns = React.useCallback(
     (cols: GridColDef[]) => {
       // Avoid dependency on gridState to avoid infinite loop
-      const newState = upsertColumnsState(cols, apiRef.current.getState().columns);
+      const newState = upsertColumnsState(cols, apiRef.current.state.columns);
       setColumnsState(newState, false);
     },
     [apiRef, setColumnsState],
@@ -332,7 +332,7 @@ export function useGridColumns(
       `GridColumns gridState.viewportSizes.width, changed ${gridState.viewportSizes.width}`,
     );
     // Avoid dependency on gridState as I only want to update cols when viewport size changed.
-    const currentColumns = allGridColumnsSelector(apiRef.current.getState());
+    const currentColumns = allGridColumnsSelector(apiRef.current.state);
 
     apiRef.current.updateColumns(currentColumns);
   }, [apiRef, gridState.viewportSizes.width, logger]);

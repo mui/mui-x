@@ -7,42 +7,88 @@ import { useGridApiEventHandler, useGridApiOptionHandler } from '../../root/useG
 import { GridRowScrollEndParams } from '../../../models/params/gridRowScrollEndParams';
 import { visibleGridColumnsSelector } from '../columns/gridColumnsSelector';
 import { GridComponentProps } from '../../../GridComponentProps';
+import { renderStateSelector } from '../virtualization/renderingStateSelector';
+import { GridViewportRowsChangeParams } from '../../../models/params/gridViewportRowsChangeParams';
+import { GridScrollParams } from '../../../models/params/gridScrollParams';
 
 export const useGridInfiniteLoader = (
   apiRef: GridApiRef,
-  props: Pick<GridComponentProps, 'onRowsScrollEnd' | 'scrollEndThreshold'>,
+  props: Pick<
+    GridComponentProps,
+    'onRowsScrollEnd' | 'onViewportRowsChange' | 'scrollEndThreshold'
+  >,
 ): void => {
   const containerSizes = useGridSelector(apiRef, gridContainerSizesSelector);
   const visibleColumns = useGridSelector(apiRef, visibleGridColumnsSelector);
   const isInScrollBottomArea = React.useRef<boolean>(false);
+  const renderState = useGridSelector(apiRef, renderStateSelector);
+  const previousRenderContext = React.useRef<null | {
+    firstRowIndex: number;
+    lastRowIndex: number;
+  }>(null);
+
+  const handleRowsScrollEnd = React.useCallback(
+    (scrollPosition: GridScrollParams) => {
+      if (!containerSizes) {
+        return;
+      }
+
+      const scrollPositionBottom =
+        scrollPosition.top + containerSizes.windowSizes.height + props.scrollEndThreshold!;
+
+      if (scrollPositionBottom < containerSizes.dataContainerSizes.height) {
+        isInScrollBottomArea.current = false;
+      }
+
+      if (
+        scrollPositionBottom >= containerSizes.dataContainerSizes.height &&
+        !isInScrollBottomArea.current
+      ) {
+        const rowScrollEndParam: GridRowScrollEndParams = {
+          visibleColumns,
+          viewportPageSize: containerSizes.viewportPageSize,
+          virtualRowsCount: containerSizes.virtualRowsCount,
+        };
+        apiRef.current.publishEvent(GridEvents.rowsScrollEnd, rowScrollEndParam);
+        isInScrollBottomArea.current = true;
+      }
+    },
+    [apiRef, props.scrollEndThreshold, visibleColumns, containerSizes],
+  );
 
   const handleGridScroll = React.useCallback(() => {
-    if (!containerSizes) {
+    const scrollPosition = apiRef.current.getScrollPosition();
+
+    handleRowsScrollEnd(scrollPosition);
+  }, [apiRef, handleRowsScrollEnd]);
+
+  // TODO: Check if onViewportRowsChange works as expected once virtualization is reworked
+  React.useEffect(() => {
+    const renderContext = renderState.renderContext!;
+
+    if (!renderContext) {
       return;
     }
 
-    const scrollPosition = apiRef.current.getScrollPosition();
-    const scrollPositionBottom =
-      scrollPosition.top + containerSizes.windowSizes.height + props.scrollEndThreshold!;
-
-    if (scrollPositionBottom < containerSizes.dataContainerSizes.height) {
-      isInScrollBottomArea.current = false;
-    }
-
     if (
-      scrollPositionBottom >= containerSizes.dataContainerSizes.height &&
-      !isInScrollBottomArea.current
+      !previousRenderContext.current ||
+      renderContext.firstRowIdx !== previousRenderContext.current.firstRowIndex ||
+      renderContext.lastRowIdx !== previousRenderContext.current.lastRowIndex
     ) {
-      const rowScrollEndParam: GridRowScrollEndParams = {
-        visibleColumns,
-        viewportPageSize: containerSizes.viewportPageSize,
-        virtualRowsCount: containerSizes.virtualRowsCount,
+      const viewportRowsChangeParams: GridViewportRowsChangeParams = {
+        firstRowIndex: renderContext.firstRowIdx!,
+        lastRowIndex: renderContext.lastRowIdx!,
       };
-      apiRef.current.publishEvent(GridEvents.rowsScrollEnd, rowScrollEndParam);
-      isInScrollBottomArea.current = true;
+      apiRef.current.publishEvent(GridEvents.viewportRowsChange, viewportRowsChangeParams);
     }
-  }, [props.scrollEndThreshold, containerSizes, apiRef, visibleColumns]);
+
+    previousRenderContext.current = {
+      firstRowIndex: renderContext.firstRowIdx!,
+      lastRowIndex: renderContext.lastRowIdx!,
+    };
+  }, [apiRef, props.onViewportRowsChange, renderState]);
 
   useGridApiEventHandler(apiRef, GridEvents.rowsScroll, handleGridScroll);
   useGridApiOptionHandler(apiRef, GridEvents.rowsScrollEnd, props.onRowsScrollEnd);
+  useGridApiOptionHandler(apiRef, GridEvents.viewportRowsChange, props.onViewportRowsChange);
 };
