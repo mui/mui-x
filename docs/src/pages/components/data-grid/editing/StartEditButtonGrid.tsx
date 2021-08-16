@@ -7,7 +7,7 @@ import {
   useGridApiRef,
   XGrid,
   GridApiRef,
-  GridCellOptionsParams,
+  GridCellParams,
 } from '@material-ui/x-grid';
 import {
   randomCreatedDate,
@@ -76,9 +76,9 @@ function EditToolbar(props: EditToolbarProps) {
 export default function StartEditButtonGrid() {
   const apiRef = useGridApiRef();
   const [selectedCellParams, setSelectedCellParams] =
-    React.useState<GridCellOptionsParams | null>(null);
+    React.useState<GridCellParams | null>(null);
 
-  const handleCellClick = React.useCallback((params: GridCellOptionsParams) => {
+  const handleCellClick = React.useCallback((params: GridCellParams) => {
     setSelectedCellParams(params);
   }, []);
 

@@ -1,8 +1,8 @@
 import * as React from 'react';
 import Avatar from '@material-ui/core/Avatar';
-import { GridCellParams } from '@material-ui/x-grid';
+import { GridRenderCellParams } from '@material-ui/x-grid';
 
-export function renderAvatar(params: GridCellParams) {
+export function renderAvatar(params: GridRenderCellParams) {
   return (
     <Avatar style={{ backgroundColor: params.value as any }}>
       {params.row.name!.toString().toUpperCase().substring(0, 1)}

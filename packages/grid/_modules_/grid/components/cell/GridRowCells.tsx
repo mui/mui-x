@@ -79,20 +79,18 @@ export const GridRowCells = React.memo(function GridRowCells(props: RowCellsProp
     let cellComponent: React.ReactNode = null;
 
     if (editCellState == null && column.renderCell) {
-      cellComponent = column.renderCell(cellParams);
+      cellComponent = column.renderCell({ ...cellParams, api: apiRef.current });
       classNames.push(`${GRID_CSS_CLASS_PREFIX}-cell--withRenderer`);
     }
 
     if (editCellState != null && column.renderEditCell) {
-      const params = { ...cellParams, ...editCellState };
+      const params = { ...cellParams, ...editCellState, api: apiRef.current };
       cellComponent = column.renderEditCell(params);
       classNames.push(`${GRID_CSS_CLASS_PREFIX}-cell--editing`);
     }
 
     if (getCellClassName) {
-      const classNameParams = { ...cellParams };
-      delete classNameParams.api;
-      classNames.push(getCellClassName(classNameParams));
+      classNames.push(getCellClassName(cellParams));
     }
 
     const cellProps: GridCellProps = {

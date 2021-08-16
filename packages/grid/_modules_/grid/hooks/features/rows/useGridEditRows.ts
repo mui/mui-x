@@ -107,10 +107,10 @@ export function useGridEditRows(
   );
 
   const isCellEditable = React.useCallback(
-    ({ api, ...other }: GridCellParams) =>
-      !!other.colDef.editable &&
-      !!other.colDef!.renderEditCell &&
-      (!props.isCellEditable || props.isCellEditable(other)),
+    (params: GridCellParams) =>
+      !!params.colDef.editable &&
+      !!params.colDef!.renderEditCell &&
+      (!props.isCellEditable || props.isCellEditable(params)),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [props.isCellEditable],
   );
@@ -240,16 +240,14 @@ export function useGridEditRows(
 
       const isEditMode = cellMode === 'edit';
       const isModifierKeyPressed = event.ctrlKey || event.metaKey || event.altKey;
-      const stripedParams = { ...params };
-      delete stripedParams.api;
 
       if (!isEditMode && isCellEnterEditModeKeys(event.key) && !isModifierKeyPressed) {
-        apiRef.current.publishEvent(GridEvents.cellEditStart, stripedParams, event);
+        apiRef.current.publishEvent(GridEvents.cellEditStart, params, event);
       }
       if (!isEditMode && isDeleteKeys(event.key)) {
         apiRef.current.setEditCellValue({ id, field, value: '' });
         apiRef.current.commitCellChange({ id, field }, event);
-        apiRef.current.publishEvent(GridEvents.cellEditStop, stripedParams, event);
+        apiRef.current.publishEvent(GridEvents.cellEditStop, params, event);
       }
       if (isEditMode && isCellEditCommitKeys(event.key)) {
         const commitParams = { id, field };
@@ -258,7 +256,7 @@ export function useGridEditRows(
         }
       }
       if (isEditMode && isCellExitEditModeKeys(event.key)) {
-        apiRef.current.publishEvent(GridEvents.cellEditStop, stripedParams, event);
+        apiRef.current.publishEvent(GridEvents.cellEditStop, params, event);
       }
     },
     [apiRef],

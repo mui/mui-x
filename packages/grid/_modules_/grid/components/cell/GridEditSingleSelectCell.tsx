@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Select, { SelectProps } from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
-import { GridCellParams } from '../../models/params/gridCellParams';
+import { GridRenderCellParams } from '../../models/params/gridCellParams';
 import { isEscapeKey } from '../../utils/keyboardUtils';
 import { useEnhancedEffect } from '../../utils/material-ui-utils';
 
@@ -16,7 +16,7 @@ const renderSingleSelectOptions = (option) =>
     </MenuItem>
   );
 
-export function GridEditSingleSelectCell(props: GridCellParams & SelectProps) {
+export function GridEditSingleSelectCell(props: GridRenderCellParams & SelectProps) {
   const {
     id,
     value,

@@ -4,10 +4,10 @@ import Checkbox from '@material-ui/core/Checkbox';
 // @ts-expect-error fixed in Material-UI v5, types definitions were added.
 import { unstable_useId as useId } from '@material-ui/core/utils';
 import { useEnhancedEffect } from '../../utils/material-ui-utils';
-import { GridCellParams } from '../../models/params/gridCellParams';
+import { GridRenderCellParams } from '../../models/params/gridCellParams';
 
 export function GridEditBooleanCell(
-  props: GridCellParams &
+  props: GridRenderCellParams &
     React.DetailedHTMLProps<React.LabelHTMLAttributes<HTMLLabelElement>, HTMLLabelElement>,
 ) {
   const {

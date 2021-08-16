@@ -31,10 +31,6 @@ export interface GridCellParams {
    */
   colDef: GridStateColDef;
   /**
-   * GridApi that let you manipulate the grid.
-   */
-  api: any;
-  /**
    * If true, the cell is editable.
    */
   isEditable?: boolean;
@@ -59,16 +55,21 @@ export interface GridCellParams {
 }
 
 /**
- * Alias of GridCellParams.
+ * GridCellParams containing api.
  */
-export type GridCellOptionsParams = Omit<GridCellParams, 'api'>;
+export interface GridRenderCellParams extends GridCellParams {
+  /**
+   * GridApi that let you manipulate the grid.
+   */
+  api: any;
+}
 
 /**
- * Alias of GridCellParams.
+ * Alias of GridRenderCellParams.
  */
-export type GridValueGetterParams = Omit<GridCellParams, 'formattedValue' | 'isEditable'>;
+export type GridValueGetterParams = Omit<GridRenderCellParams, 'formattedValue' | 'isEditable'>;
 
 /**
- * Alias of GridCellParams.
+ * Alias of GridRenderCellParams.
  */
-export type GridValueFormatterParams = Omit<GridCellParams, 'formattedValue' | 'isEditable'>;
+export type GridValueFormatterParams = Omit<GridRenderCellParams, 'formattedValue' | 'isEditable'>;

@@ -7,7 +7,7 @@ import { GridDensity, GridDensityTypes } from './gridDensity';
 import { GridEditRowsModel } from './gridEditRowModel';
 import { GridFeatureMode, GridFeatureModeConstant } from './gridFeatureMode';
 import { Logger } from './logger';
-import { GridCellOptionsParams } from './params/gridCellParams';
+import { GridCellParams } from './params/gridCellParams';
 import { GridColumnHeaderParams } from './params/gridColumnHeaderParams';
 import { GridRowParams } from './params/gridRowParams';
 import { GridInputSelectionModel, GridSelectionModel } from './gridSelectionModel';
@@ -147,10 +147,10 @@ export interface GridOptions {
   filterModel?: GridFilterModel;
   /**
    * Function that applies CSS classes dynamically on cells.
-   * @param {GridCellOptionsParams} params With all properties from [[GridCellOptionsParams]].
+   * @param {GridCellParams} params With all properties from [[GridCellParams]].
    * @param {MuiCallbackDetails} details Additional details for this callback.
    */
-  getCellClassName?: (params: GridCellOptionsParams, details?: any) => string;
+  getCellClassName?: (params: GridCellParams, details?: any) => string;
   /**
    * Function that applies CSS classes dynamically on rows.
    * @param {GridRowParams} params With all properties from [[GridRowParams]].
@@ -184,10 +184,10 @@ export interface GridOptions {
   hideFooterSelectedRowCount?: boolean;
   /**
    * Callback fired when a cell is rendered, returns true if the cell is editable.
-   * @param {GridCellOptionsParams} params With all properties from [[GridCellOptionsParams]].
+   * @param {GridCellParams} params With all properties from [[GridCellParams]].
    * @param {MuiCallbackDetails} details Additional details for this callback.
    */
-  isCellEditable?: (params: GridCellOptionsParams, details?: any) => boolean;
+  isCellEditable?: (params: GridCellParams, details?: any) => boolean;
   /**
    * Determines if a row can be selected.
    * @param {GridRowParams} params With all properties from [[GridRowParams]].
@@ -233,16 +233,16 @@ export interface GridOptions {
   ) => void;
   /**
    * Callback fired when the cell turns to edit mode.
-   * @param {GridCellOptionsParams} params With all properties from [[GridCellOptionsParams]].
+   * @param {GridCellParams} params With all properties from [[GridCellParams]].
    * @param {React.SyntheticEvent} event The event that caused this prop to be called.
    */
-  onCellEditStart?: (params: GridCellOptionsParams, event?: React.SyntheticEvent) => void;
+  onCellEditStart?: (params: GridCellParams, event?: React.SyntheticEvent) => void;
   /**
    * Callback fired when the cell turns to view mode.
-   * @param {GridCellOptionsParams} params With all properties from [[GridCellOptionsParams]].
+   * @param {GridCellParams} params With all properties from [[GridCellParams]].
    * @param {React.SyntheticEvent} event The event that caused this prop to be called.
    */
-  onCellEditStop?: (params: GridCellOptionsParams, event?: React.SyntheticEvent) => void;
+  onCellEditStop?: (params: GridCellParams, event?: React.SyntheticEvent) => void;
   /**
    * Callback fired when an exception is thrown in the grid, or when the `showError` API method is called.
    * @param args
@@ -251,103 +251,83 @@ export interface GridOptions {
   onError?: (args: any, details?: any) => void;
   /**
    * Callback fired when the active element leaves a cell.
-   * @param params With all properties from [[GridCellOptionsParams]].
+   * @param params With all properties from [[GridCellParams]].
    * @param event [[MuiEvent<React.SyntheticEvent>]].
    * @param {MuiCallbackDetails} details Additional details for this callback.
    */
   onCellBlur?: (
-    params: GridCellOptionsParams,
+    params: GridCellParams,
     event: MuiEvent<React.SyntheticEvent>,
     details?: any,
   ) => void;
   /**
    * Callback fired when a click event comes from a cell element.
-   * @param params With all properties from [[GridCellOptionsParams]].
+   * @param params With all properties from [[GridCellParams]].
    * @param event [[MuiEvent<React.MouseEvent>]].
    * @param {MuiCallbackDetails} details Additional details for this callback.
    */
-  onCellClick?: (
-    params: GridCellOptionsParams,
-    event: MuiEvent<React.MouseEvent>,
-    details?: any,
-  ) => void;
+  onCellClick?: (params: GridCellParams, event: MuiEvent<React.MouseEvent>, details?: any) => void;
   /**
    * Callback fired when a double click event comes from a cell element.
-   * @param params With all properties from [[GridCellOptionsParams]].
+   * @param params With all properties from [[GridCellParams]].
    * @param event [[MuiEvent<React.MouseEvent>]].
    * @param {MuiCallbackDetails} details Additional details for this callback.
    */
   onCellDoubleClick?: (
-    params: GridCellOptionsParams,
+    params: GridCellParams,
     event: MuiEvent<React.MouseEvent>,
     details?: any,
   ) => void;
   /**
    * Callback fired when a cell loses focus.
-   * @param params With all properties from [[GridCellOptionsParams]].
+   * @param params With all properties from [[GridCellParams]].
    * @param event [[MuiEvent<React.SyntheticEvent | DocumentEventMap['click']>]].
    * @param {MuiCallbackDetails} details Additional details for this callback.
    */
   onCellFocusOut?: (
-    params: GridCellOptionsParams,
+    params: GridCellParams,
     event: MuiEvent<React.SyntheticEvent | DocumentEventMap['click']>,
     details?: any,
   ) => void;
   /**
    * Callback fired when a keydown event comes from a cell element.
-   * @param params With all properties from [[GridCellOptionsParams]].
+   * @param params With all properties from [[GridCellParams]].
    * @param event [[MuiEvent<React.KeyboardEvent>]].
    * @param {MuiCallbackDetails} details Additional details for this callback.
    */
   onCellKeyDown?: (
-    params: GridCellOptionsParams,
+    params: GridCellParams,
     event: MuiEvent<React.KeyboardEvent>,
     details?: any,
   ) => void;
   /**
    * Callback fired when a mouseover event comes from a cell element.
-   * @param params With all properties from [[GridCellOptionsParams]].
+   * @param params With all properties from [[GridCellParams]].
    * @param event [[MuiEvent<React.MouseEvent>]].
    * @param {MuiCallbackDetails} details Additional details for this callback.
    */
-  onCellOver?: (
-    params: GridCellOptionsParams,
-    event: MuiEvent<React.MouseEvent>,
-    details?: any,
-  ) => void;
+  onCellOver?: (params: GridCellParams, event: MuiEvent<React.MouseEvent>, details?: any) => void;
   /**
    * Callback fired when a mouseout event comes from a cell element.
-   * @param params With all properties from [[GridCellOptionsParams]].
+   * @param params With all properties from [[GridCellParams]].
    * @param event [[MuiEvent<React.MouseEvent>]].
    * @param {MuiCallbackDetails} details Additional details for this callback.
    */
-  onCellOut?: (
-    params: GridCellOptionsParams,
-    event: MuiEvent<React.MouseEvent>,
-    details?: any,
-  ) => void;
+  onCellOut?: (params: GridCellParams, event: MuiEvent<React.MouseEvent>, details?: any) => void;
   /**
    * Callback fired when a mouse enter event comes from a cell element.
-   * @param params With all properties from [[GridCellOptionsParams]].
+   * @param params With all properties from [[GridCellParams]].
    * @param event [[MuiEvent<React.MouseEvent>]].
    * @param {MuiCallbackDetails} details Additional details for this callback.
    */
-  onCellEnter?: (
-    params: GridCellOptionsParams,
-    event: MuiEvent<React.MouseEvent>,
-    details?: any,
-  ) => void;
+  onCellEnter?: (params: GridCellParams, event: MuiEvent<React.MouseEvent>, details?: any) => void;
   /**
    * Callback fired when a mouse leave event comes from a cell element.
-   * @param params With all properties from [[GridCellOptionsParams]].
+   * @param params With all properties from [[GridCellParams]].
    * @param event [[MuiEvent<React.MouseEvent>]].
    * @param {MuiCallbackDetails} details Additional details for this callback.
    */
-  onCellLeave?: (
-    params: GridCellOptionsParams,
-    event: MuiEvent<React.MouseEvent>,
-    details?: any,
-  ) => void;
+  onCellLeave?: (params: GridCellParams, event: MuiEvent<React.MouseEvent>, details?: any) => void;
   /**
    * Callback fired when the cell value changed.
    * @param params With all properties from [[GridEditCellValueParams]].

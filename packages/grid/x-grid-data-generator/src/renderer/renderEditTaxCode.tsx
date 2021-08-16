@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridCellParams } from '@material-ui/data-grid';
+import { GridRenderCellParams } from '@material-ui/data-grid';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import { createStyles, makeStyles } from '@material-ui/styles';
@@ -26,7 +26,7 @@ const useStyles = makeStyles(
   { defaultTheme },
 );
 
-function EditTaxCode(props: GridCellParams) {
+function EditTaxCode(props: GridRenderCellParams) {
   const classes = useStyles();
   const { id, value, api, field } = props;
 
@@ -67,6 +67,6 @@ function EditTaxCode(props: GridCellParams) {
   );
 }
 
-export function renderEditTaxCode(params: GridCellParams) {
+export function renderEditTaxCode(params: GridRenderCellParams) {
   return <EditTaxCode {...params} />;
 }
