@@ -51,7 +51,7 @@ describe('<XGrid /> - State', () => {
     const header = screen.getByRole('columnheader', { name: 'brand' });
     fireEvent.click(header);
     expect(onStateParams).to.equal(apiRef.current.state);
-    expect(onStateParams).to.not.equal(undefined);
+    expect(onStateParams).not.to.equal(undefined);
   });
 
   it('should allow to control the state using apiRef', () => {

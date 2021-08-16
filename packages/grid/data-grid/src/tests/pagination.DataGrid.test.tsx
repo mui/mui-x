@@ -434,7 +434,7 @@ describe('<DataGrid /> - Pagination', () => {
 
       // make sure there is no more pages.
       const nextPageBtn = document.querySelector('.MuiTablePagination-actions button:last-child');
-      expect(nextPageBtn!.getAttribute('disabled')).to.not.equal(
+      expect(nextPageBtn!.getAttribute('disabled')).not.to.equal(
         null,
         'next page should be disabled.',
       );
