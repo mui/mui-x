@@ -12,12 +12,16 @@ The component leverages the power of React and TypeScript, to provide the best U
 
 Data tables display information in a grid-like format of rows and columns. They organize information in a way that’s easy to scan so that users can look for patterns and insights. The data grid comes in 2 versions, both in Material-UI X:
 
-- `DataGrid` **MIT licensed** as part of the Community plan.
-- `XGrid` **Commercially licensed** as part of Pro and Premium plans.
+The data grid comes with two different licenses:
 
-The features only available in the commercial version are suffixed with a <span class="pro"></span> icon.
-You can check the [feature comparison](/components/data-grid/getting-started/#feature-comparison) for more details.
-See [Pricing](https://material-ui.com/store/items/material-ui-pro/) for details on purchasing licenses.
+- [DataGrid](https://material-ui.com/api/data-grid/data-grid/), it's [MIT licensed](https://tldrlegal.com/license/mit-license) and available on npm as `@material-ui/data-grid`.
+- [XGrid](https://material-ui.com/api/data-grid/x-grid/), it's **Commercially licensed** and available on npm as `@material-ui/x-grid`.
+  The features only available in the commercial version are suffixed with a <span class="pro"></span> icon for the Pro plan or a <span class="premium"></span> icon for the Premium plan.
+
+  <img src="/static/x/header-icon.png" style="width: 454px; margin-bottom: 2rem;" alt="">
+
+  You can check the [feature comparison](#feature-comparison) for more details.
+  See [Pricing](https://material-ui.com/store/items/material-ui-pro/) for details on purchasing licenses.
 
 ### MIT version
 
