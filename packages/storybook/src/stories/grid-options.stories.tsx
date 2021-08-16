@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridColDef, XGrid } from '@material-ui/x-grid';
+import { GridColDef, XGrid } from '@mui/x-data-grid-pro';
 import { useData } from '../hooks/useData';
 
 export default {

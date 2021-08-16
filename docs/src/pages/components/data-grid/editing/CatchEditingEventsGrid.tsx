@@ -8,12 +8,12 @@ import {
   GridRowsProp,
   useGridApiRef,
   XGrid,
-} from '@material-ui/x-grid';
+} from '@mui/x-data-grid-pro';
 import {
   randomCreatedDate,
   randomTraderName,
   randomUpdatedDate,
-} from '@material-ui/x-grid-data-generator';
+} from '@mui/x-data-grid-generator';
 
 export default function CatchEditingEventsGrid() {
   const apiRef = useGridApiRef();

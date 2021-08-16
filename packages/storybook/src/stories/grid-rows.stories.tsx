@@ -19,8 +19,8 @@ import {
   GridEditCellPropsParams,
   GridCellEditCommitParams,
   MuiEvent,
-} from '@material-ui/x-grid';
-import { useDemoData } from '@material-ui/x-grid-data-generator';
+} from '@mui/x-data-grid-pro';
+import { useDemoData } from '@mui/x-data-grid-generator';
 import { action } from '@storybook/addon-actions';
 import { randomInt } from '../data/random-generator';
 

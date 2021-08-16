@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { fromEvent, Subscription } from 'rxjs';
 import { takeUntil, tap } from 'rxjs/operators';
-import { GridColDef, GridOptionsProp, XGrid, useGridApiRef } from '@material-ui/x-grid';
+import { GridColDef, GridOptionsProp, XGrid, useGridApiRef } from '@mui/x-data-grid-pro';
 import { pricingColumns, PricingModel } from '../data/streaming/pricing-service';
 import { subscribeFeed } from '../data/streaming/single-subscription-service';
 

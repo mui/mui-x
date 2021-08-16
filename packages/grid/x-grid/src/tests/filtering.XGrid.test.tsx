@@ -9,7 +9,7 @@ import {
   SUBMIT_FILTER_STROKE_TIME,
   useGridApiRef,
   XGrid,
-} from '@material-ui/x-grid';
+} from '@mui/x-data-grid-pro';
 import { expect } from 'chai';
 import { useData } from 'packages/storybook/src/hooks/useData';
 import * as React from 'react';
@@ -329,7 +329,7 @@ describe('<XGrid /> - Filter', () => {
       apiRef.current.setFilterModel(newModel);
 
       await waitFor(() =>
-        expect(document.querySelector('.MuiDataGrid-filterIcon')).to.not.equal(null),
+        expect(document.querySelector('.MuiDataGrid-filterIcon')).not.to.equal(null),
       );
       const t1 = performance.now();
       const time = Math.round(t1 - t0);

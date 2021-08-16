@@ -8,14 +8,14 @@ title: Data Grid - Getting started
 
 ## Installation
 
-Using your favorite package manager, install `@material-ui/x-grid` for the full-featured enterprise grid, or `@material-ui/data-grid` for the free community version.
+Using your favorite package manager, install `@mui/x-data-grid-pro` for the full-featured enterprise grid, or `@mui/x-data-grid` for the free community version.
 
 ```sh
 // with npm
-npm install @material-ui/data-grid
+npm install @mui/x-data-grid
 
 // with yarn
-yarn add @material-ui/data-grid
+yarn add @mui/x-data-grid
 ```
 
 The grid has two peer dependencies on Material-UI components.
@@ -35,7 +35,7 @@ First, you have to import the component as below.
 To avoid name conflicts the component is named `XGrid` for the full-featured enterprise grid, and `DataGrid` for the free community version.
 
 ```js
-import { DataGrid } from '@material-ui/data-grid';
+import { DataGrid } from '@mui/x-data-grid';
 ```
 
 ### Define rows
@@ -73,7 +73,7 @@ Putting it together, this all you need to get started, as you can see in this li
 
 ```jsx
 import React from 'react';
-import { DataGrid, GridRowsProp, GridColDef } from '@material-ui/data-grid';
+import { DataGrid, GridRowsProp, GridColDef } from '@mui/x-data-grid';
 
 const rows: GridRowsProp = [
   { id: 1, col1: 'Hello', col2: 'World' },
@@ -182,7 +182,7 @@ This key should be provided to the enterprise package to remove the watermark an
 the warnings in the console.
 
 ```jsx
-import { LicenseInfo } from '@material-ui/x-grid';
+import { LicenseInfo } from '@mui/x-data-grid-pro';
 
 LicenseInfo.setLicenseKey(
   'x0jTPl0USVkVZV0SsMjM1kDNyADM5cjM2ETPZJVSQhVRsIDN0YTM6IVREJ1T0b9586ef25c9853decfa7709eee27a1e',

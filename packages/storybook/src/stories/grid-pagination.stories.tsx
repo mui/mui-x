@@ -1,8 +1,8 @@
-import { DataGrid } from '@material-ui/data-grid';
-import { useDemoData } from '@material-ui/x-grid-data-generator';
+import { DataGrid } from '@mui/x-data-grid';
+import { useDemoData } from '@mui/x-data-grid-generator';
 import * as React from 'react';
 import { Story, Meta } from '@storybook/react';
-import { GridApiRef, useGridApiRef, XGrid, GridRowsProp } from '@material-ui/x-grid';
+import { GridApiRef, useGridApiRef, XGrid, GridRowsProp } from '@mui/x-data-grid-pro';
 import Button from '@material-ui/core/Button';
 import Pagination from '@material-ui/lab/Pagination';
 import { action } from '@storybook/addon-actions';

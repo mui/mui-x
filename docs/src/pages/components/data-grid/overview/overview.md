@@ -25,7 +25,7 @@ The first version is meant to simplify the [Table demo](https://material-ui.com/
 This abstraction also set constraints that allow the component to implement new features.
 
 ```js
-import { DataGrid } from '@material-ui/data-grid';
+import { DataGrid } from '@mui/x-data-grid';
 ```
 
 {{"demo": "pages/components/data-grid/overview/DataGridDemo.js", "defaultCodeOpen": false, "bg": "inline"}}
@@ -35,7 +35,7 @@ import { DataGrid } from '@material-ui/data-grid';
 The following grid displays 31 columns and 100,000 rows - over 3 million cells in total.
 
 ```js
-import { XGrid } from '@material-ui/x-grid';
+import { XGrid } from '@mui/x-data-grid-pro';
 ```
 
 {{"demo": "pages/components/data-grid/overview/XGridDemo.js", "defaultCodeOpen": false, "disableAd": true, "bg": "inline"}}

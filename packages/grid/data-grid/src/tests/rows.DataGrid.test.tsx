@@ -7,7 +7,7 @@ import {
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import Portal from '@material-ui/core/Portal';
-import { DataGrid } from '@material-ui/data-grid';
+import { DataGrid } from '@mui/x-data-grid';
 import { getColumnValues, getRow } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);

@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 import * as React from 'react';
 import Alert from '@material-ui/lab/Alert';
-import { GridEvents, useGridApiRef, XGrid } from '@material-ui/x-grid';
+import { GridEvents, useGridApiRef, XGrid } from '@mui/x-data-grid-pro';
 import {
   randomCreatedDate,
   randomTraderName,
   randomUpdatedDate,
-} from '@material-ui/x-grid-data-generator';
+} from '@mui/x-data-grid-generator';
 
 export default function CatchEditingEventsGrid() {
   const apiRef = useGridApiRef();

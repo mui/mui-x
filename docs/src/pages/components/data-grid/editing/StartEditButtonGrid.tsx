@@ -8,12 +8,12 @@ import {
   useGridApiRef,
   XGrid,
   GridApiRef,
-} from '@material-ui/x-grid';
+} from '@mui/x-data-grid-pro';
 import {
   randomCreatedDate,
   randomTraderName,
   randomUpdatedDate,
-} from '@material-ui/x-grid-data-generator';
+} from '@mui/x-data-grid-generator';
 import { createTheme, Theme } from '@material-ui/core/styles';
 import { makeStyles } from '@material-ui/styles';
 

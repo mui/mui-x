@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { makeStyles } from '@material-ui/styles';
 import Rating from '@material-ui/lab/Rating';
-import { DataGrid, GridCellParams } from '@material-ui/data-grid';
+import { DataGrid, GridCellParams } from '@mui/x-data-grid';
 
 function renderRating(params) {
   return <Rating readOnly value={params.value} />;

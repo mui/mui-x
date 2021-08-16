@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { XGrid } from '@material-ui/x-grid';
-import { useDemoData } from '@material-ui/x-grid-data-generator';
+import { XGrid } from '@mui/x-data-grid-pro';
+import { useDemoData } from '@mui/x-data-grid-generator';
 
 export default function ColumnOrderingGrid() {
   const { data } = useDemoData({

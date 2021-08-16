@@ -15,7 +15,7 @@ import {
   gridPreferencePanelStateSelector,
   GridPreferencePanelsValue,
   GridStateChangeParams,
-} from '@material-ui/x-grid';
+} from '@mui/x-data-grid-pro';
 import DoneIcon from '@material-ui/icons/Done';
 import ClearIcon from '@material-ui/icons/Clear';
 import CreateIcon from '@material-ui/icons/Create';

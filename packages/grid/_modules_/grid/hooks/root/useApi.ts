@@ -5,7 +5,7 @@ import { useLogger } from '../utils/useLogger';
 import { GridEvents } from '../../constants/eventsConstants';
 import { useGridApiMethod } from './useGridApiMethod';
 import { MuiEvent } from '../../models/gridOptions';
-import { Signature } from './useGridApiEventHandler';
+import { GridSignature } from './useGridApiEventHandler';
 import { GridComponentProps } from '../../GridComponentProps';
 
 const isSyntheticEvent = (event: any): event is React.SyntheticEvent => {
@@ -25,7 +25,7 @@ export function useApi(apiRef: GridApiRef, props: Pick<GridComponentProps, 'sign
       if (event && isSyntheticEvent(event) && event.isPropagationStopped()) {
         return;
       }
-      const details = props.signature === Signature.XGrid ? { api: apiRef.current } : {};
+      const details = props.signature === GridSignature.XGrid ? { api: apiRef.current } : {};
       apiRef.current.emit(name, params, event, details);
     },
     [apiRef, props.signature],

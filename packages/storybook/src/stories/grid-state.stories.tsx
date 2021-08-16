@@ -6,7 +6,7 @@ import {
   useGridApiRef,
   GridStateChangeParams,
   XGrid,
-} from '@material-ui/x-grid';
+} from '@mui/x-data-grid-pro';
 import { useData } from '../hooks/useData';
 
 export default {
