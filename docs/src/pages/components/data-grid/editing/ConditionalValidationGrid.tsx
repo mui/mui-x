@@ -27,7 +27,7 @@ const useStyles = makeStyles(
         },
         '& .Mui-error': {
           backgroundColor: `rgb(126,10,15, ${isDark ? 0 : 0.1})`,
-          color: isDark ? '#ff4343' : '#750f0f',
+          color: theme.palette.error.main,
         },
       },
     };

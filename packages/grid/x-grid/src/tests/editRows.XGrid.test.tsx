@@ -309,7 +309,6 @@ describe('<XGrid /> - Edit Rows', () => {
     fireEvent.mouseUp(otherCell);
     fireEvent.click(otherCell);
     fireEvent.focus(otherCell);
-    clock.tick(0);
     expect(cell).not.to.have.class('MuiDataGrid-cell--editing');
     expect(cell).to.have.text('1970');
     expect(getActiveCell()).to.equal('2-1');
@@ -366,7 +365,6 @@ describe('<XGrid /> - Edit Rows', () => {
     fireEvent.mouseUp(otherCell);
     fireEvent.click(otherCell);
     fireEvent.focus(otherCell);
-    clock.tick(0);
     expect(cell).not.to.have.class('MuiDataGrid-cell--editing');
     expect(cell).to.have.text('1970');
     expect(getActiveCell()).to.equal('2-1');
@@ -1002,7 +1000,6 @@ describe('<XGrid /> - Edit Rows', () => {
       fireEvent.mouseUp(getCell(2, 0));
       fireEvent.click(getCell(2, 0));
       clock.tick(0);
-      clock.tick(1);
       expect(cell).not.to.have.class('MuiDataGrid-cell--editing');
       expect(cell).to.have.text('ADIDAS');
     });

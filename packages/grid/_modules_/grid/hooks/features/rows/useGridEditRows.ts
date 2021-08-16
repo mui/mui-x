@@ -238,7 +238,7 @@ export function useGridEditRows(
       const { id, field } = params;
       const model = apiRef.current.getEditRowsModel();
       if (!model[id] || !model[id][field]) {
-        throw new Error(`Material-UI: Cell at id: ${id} and field: ${field} is not in edit mode`);
+        throw new Error(`Material-UI: Cell at id: ${id} and field: ${field} is not in edit mode.`);
       }
 
       const { error, value } = model[id][field];
@@ -255,7 +255,7 @@ export function useGridEditRows(
   const handleCellEditCommit = React.useCallback(
     (params: GridCommitCellChangeParams) => {
       if (props.editMode === 'row') {
-        throw new Error(`Material-UI: You can't commit changes when the edit mode is 'row'`);
+        throw new Error(`Material-UI: You can't commit changes when the edit mode is 'row'.`);
       }
 
       const { id, field } = params;
@@ -272,13 +272,13 @@ export function useGridEditRows(
   const commitRowChange = React.useCallback<GridEditRowApi['commitRowChange']>(
     (id: GridRowId, event?: React.SyntheticEvent): boolean => {
       if (props.editMode === 'cell') {
-        throw new Error(`Material-UI: You can't commit changes when the edit mode is 'cell'`);
+        throw new Error(`Material-UI: You can't commit changes when the edit mode is 'cell'.`);
       }
 
       const model = apiRef.current.getEditRowsModel();
       const row = model[id];
       if (!row) {
-        throw new Error(`Material-UI: Row at id: ${id} is not being editted`);
+        throw new Error(`Material-UI: Row at id: ${id} is not being editted.`);
       }
 
       const hasFieldWithError = Object.values(row).some((value) => !!value.error);
@@ -334,7 +334,7 @@ export function useGridEditRows(
       const model = apiRef.current.getEditRowsModel();
       const editRow = model[id];
       if (!editRow) {
-        throw new Error(`Material-UI: Row at id: ${id} is not being editted`);
+        throw new Error(`Material-UI: Row at id: ${id} is not being editted.`);
       }
 
       const row = apiRef.current.getRow(id);
