@@ -52,7 +52,7 @@ describe('<XGrid /> - State', () => {
     fireEvent.click(header);
     expect(onStateParams.api).to.equal(apiRef.current);
     expect(onStateParams.state).to.equal(apiRef.current.state);
-    expect(onStateParams.state).to.not.equal(undefined);
+    expect(onStateParams.state).not.to.equal(undefined);
   });
 
   it('should allow to control the state using apiRef', () => {
