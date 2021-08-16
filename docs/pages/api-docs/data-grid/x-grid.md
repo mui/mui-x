@@ -5,7 +5,7 @@
 ## Import
 
 ```js
-import { XGrid } from '@material-ui/x-grid';
+import { XGrid } from '@mui/x-data-grid-pro';
 ```
 
 ## Props

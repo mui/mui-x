@@ -1,6 +1,6 @@
 import { interval, Observable } from 'rxjs';
 import { flatMap } from 'rxjs/operators';
-import { GridRowId } from '@material-ui/x-grid';
+import { GridRowId } from '@mui/x-data-grid-pro';
 import { currencyPairs } from '../currency-pairs';
 import { random, randomPrice } from '../random-generator';
 

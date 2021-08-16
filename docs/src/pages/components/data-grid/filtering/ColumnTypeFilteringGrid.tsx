@@ -4,8 +4,8 @@ import {
   DataGrid,
   GridColTypeDef,
   getGridNumericColumnOperators,
-} from '@material-ui/data-grid';
-import { useDemoData } from '@material-ui/x-grid-data-generator';
+} from '@mui/x-data-grid';
+import { useDemoData } from '@mui/x-data-grid-generator';
 
 const priceColumnType: GridColTypeDef = {
   extendType: 'number',
