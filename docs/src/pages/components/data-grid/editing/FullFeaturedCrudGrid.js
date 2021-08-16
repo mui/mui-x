@@ -7,13 +7,13 @@ import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/DeleteOutlined';
 import SaveIcon from '@material-ui/icons/Save';
 import CancelIcon from '@material-ui/icons/Close';
-import { useGridApiRef, XGrid, GridToolbarContainer } from '@material-ui/x-grid';
+import { useGridApiRef, XGrid, GridToolbarContainer } from '@mui/x-data-grid-pro';
 import {
   randomCreatedDate,
   randomTraderName,
   randomUpdatedDate,
   randomId,
-} from '@material-ui/x-grid-data-generator';
+} from '@mui/x-data-grid-generator';
 import { createTheme } from '@material-ui/core/styles';
 import { makeStyles } from '@material-ui/styles';
 

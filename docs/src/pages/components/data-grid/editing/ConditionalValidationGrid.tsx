@@ -6,8 +6,8 @@ import {
   GridColumns,
   GridEditRowsModel,
   GridRowsProp,
-} from '@material-ui/data-grid';
-import { randomPrice } from '@material-ui/x-grid-data-generator';
+} from '@mui/x-data-grid';
+import { randomPrice } from '@mui/x-data-grid-generator';
 
 function getThemePaletteMode(palette: any): string {
   return palette.type || palette.mode;
