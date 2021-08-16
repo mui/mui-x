@@ -105,7 +105,7 @@ The data grid comes with two different licenses:
 - [XGrid](https://material-ui.com/api/data-grid/x-grid/), it's **Commercially licensed** and available on npm as `@material-ui/x-grid`.
   The features only available in the commercial version are suffixed with a <span class="pro"></span> icon for the Pro plan or a <span class="premium"></span> icon for the Premium plan.
 
-  <img src="/static/x/header-icon.png" style="width: 454px; margin-bottom: 2rem;" alt="">
+  <img src="/static/x/header-icon.png" style="width: 431px; height: 123px; object-fit: contain; margin-bottom: 2rem;" alt="" loading="lazy">
 
   You can check the [feature comparison](#feature-comparison) for more details.
   See [Pricing](https://material-ui.com/store/items/material-ui-pro/) for details on purchasing licenses.
@@ -119,7 +119,7 @@ Please take the component for a test run, no need to contact us.
 
 If you have an enterprise grid running with an expired or missing license key, the grid displays a watermark, and a warning is shown in the console (_Material-UI Unlicensed product_).
 
-<img src="/static/x/watermark.png" style="width: 658px; margin-bottom: 3rem" alt="">
+<img src="/static/x/watermark.png" style="width: 658px; height: 175px; object-fit: contain; margin-bottom: 3rem" alt="" loading="lazy">
 
 ### Feature comparison
 
