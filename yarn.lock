@@ -2372,12 +2372,12 @@
     react-is "^16.8.0 || ^17.0.0"
 
 "@material-ui/monorepo@https://github.com/mui-org/material-ui.git#master":
-  version "4.12.1"
-  resolved "https://github.com/mui-org/material-ui.git#6d08a5531307edea32c38204f400555f8ec65072"
+  version "4.12.3"
+  resolved "https://github.com/mui-org/material-ui.git#5cc1d0fc8756534f181d55af02a5a0d65b486603"
 
 "@material-ui/monorepo@https://github.com/mui-org/material-ui.git#next":
-  version "5.0.0-beta.0"
-  resolved "https://github.com/mui-org/material-ui.git#b5a27b18db60138d7b65a02d04f8162d074f32be"
+  version "5.0.0-beta.4"
+  resolved "https://github.com/mui-org/material-ui.git#5314e4247502b786b7993ff8bd813ee2db6e8682"
 
 "@material-ui/styles@^4.11.4":
   version "4.11.4"
