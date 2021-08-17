@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ElementSize, XGrid } from '@material-ui/x-grid';
+import { ElementSize, XGrid } from '@mui/x-data-grid-pro';
 import '../style/grid-stories.css';
 import { useData } from '../hooks/useData';
 

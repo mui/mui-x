@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Rating from '@material-ui/lab/Rating';
-import { GridRenderCellParams } from '@material-ui/data-grid';
+import { GridRenderCellParams } from '@mui/x-data-grid';
 import { makeStyles } from '@material-ui/styles';
 import { Theme } from '@material-ui/core/styles';
 

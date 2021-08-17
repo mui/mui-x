@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { XGrid, GridColDef, useGridApiRef, GridOverlay } from '@material-ui/x-grid';
+import { XGrid, GridColDef, useGridApiRef, GridOverlay } from '@mui/x-data-grid-pro';
 import '../style/grid-stories.css';
 
 export default {

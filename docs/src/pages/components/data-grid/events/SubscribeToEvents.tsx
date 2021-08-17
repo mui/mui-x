@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { XGrid, useGridApiRef } from '@material-ui/x-grid';
+import { XGrid, useGridApiRef } from '@mui/x-data-grid-pro';
 import Alert from '@material-ui/lab/Alert';
-import { useDemoData } from '@material-ui/x-grid-data-generator';
+import { useDemoData } from '@mui/x-data-grid-generator';
 
 export default function SubscribeToEvents() {
   const apiRef = useGridApiRef();

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import InputAdornment from '@material-ui/core/InputAdornment';
-import { DataGrid, getGridNumericColumnOperators } from '@material-ui/data-grid';
-import { useDemoData } from '@material-ui/x-grid-data-generator';
+import { DataGrid, getGridNumericColumnOperators } from '@mui/x-data-grid';
+import { useDemoData } from '@mui/x-data-grid-generator';
 
 const priceColumnType = {
   extendType: 'number',

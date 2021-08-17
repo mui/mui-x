@@ -4,7 +4,7 @@ import {
   DataGrid,
   GridRowModel,
   GridFilterModel,
-} from '@material-ui/data-grid';
+} from '@mui/x-data-grid';
 
 function loadServerRows(commodityFilterValue?: string): Promise<any> {
   const serverRows = [

@@ -107,7 +107,7 @@ export const useGridKeyboard = (apiRef: GridApiRef): void => {
       }
 
       if (isNavigationKey(event.key) && !isSpaceKey(event.key) && !event.shiftKey) {
-        apiRef.current.publishEvent(GridEvents.cellNavigationKeyDown, params, event);
+        apiRef.current.publishEvent(GridEvents.columnHeaderNavigationKeyDown, params, event);
         return;
       }
 
