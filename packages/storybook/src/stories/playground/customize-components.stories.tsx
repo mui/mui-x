@@ -14,7 +14,7 @@ import {
   useGridApiRef,
   gridPreferencePanelStateSelector,
   GridPreferencePanelsValue,
-  GridStateChangeParams,
+  GridState,
 } from '@mui/x-data-grid-pro';
 import DoneIcon from '@material-ui/icons/Done';
 import ClearIcon from '@material-ui/icons/Clear';
@@ -413,8 +413,8 @@ export const OutsideColumnsPanel = () => {
   const apiRef = useGridApiRef();
   const [open, setOpen] = React.useState(false);
 
-  const handleStateChange = React.useCallback((params: GridStateChangeParams) => {
-    const preferencePanelState = gridPreferencePanelStateSelector(params.state);
+  const handleStateChange = React.useCallback((state: GridState) => {
+    const preferencePanelState = gridPreferencePanelStateSelector(state);
     const isColumnsTabOpen =
       preferencePanelState.openedPanelValue === GridPreferencePanelsValue.columns;
     setOpen(isColumnsTabOpen);

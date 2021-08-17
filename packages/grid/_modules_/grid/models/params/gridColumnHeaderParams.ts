@@ -12,8 +12,4 @@ export interface GridColumnHeaderParams {
    * The column of the current header component.
    */
   colDef: GridStateColDef;
-  /**
-   * API ref that let you manipulate the grid.
-   */
-  api: any;
 }

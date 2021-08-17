@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridCellParams } from '@mui/x-data-grid';
+import { GridRenderCellParams } from '@mui/x-data-grid';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import { createStyles, makeStyles } from '@material-ui/styles';
@@ -26,7 +26,7 @@ const useStyles = makeStyles(
   { defaultTheme },
 );
 
-function EditRateType(props: GridCellParams) {
+function EditRateType(props: GridRenderCellParams) {
   const classes = useStyles();
   const { id, value, api, field } = props;
 
@@ -67,6 +67,6 @@ function EditRateType(props: GridCellParams) {
   );
 }
 
-export function renderEditRateType(params: GridCellParams) {
+export function renderEditRateType(params: GridRenderCellParams) {
   return <EditRateType {...params} />;
 }

@@ -1,10 +1,10 @@
 import * as React from 'react';
 import Select, { SelectProps } from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
-import { GridCellParams } from '../../models/params/gridCellParams';
+import { GridRenderEditCellParams } from '../../models/params/gridCellParams';
 import { isEscapeKey } from '../../utils/keyboardUtils';
 import { useEnhancedEffect } from '../../utils/material-ui-utils';
-import { GridEditMode } from '../../models/gridEditRowModel';
+import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
 const renderSingleSelectOptions = (option) =>
   typeof option === 'object' ? (
@@ -17,11 +17,7 @@ const renderSingleSelectOptions = (option) =>
     </MenuItem>
   );
 
-interface GridEditSingleSelectCellProps extends GridCellParams {
-  editMode?: GridEditMode;
-}
-
-export function GridEditSingleSelectCell(props: GridEditSingleSelectCellProps & SelectProps) {
+export function GridEditSingleSelectCell(props: GridRenderEditCellParams & SelectProps) {
   const {
     id,
     value,
@@ -36,24 +32,24 @@ export function GridEditSingleSelectCell(props: GridEditSingleSelectCellProps & 
     className,
     getValue,
     hasFocus,
-    editMode,
     ...other
   } = props;
 
   const ref = React.useRef<any>();
-  const [open, setOpen] = React.useState(editMode === 'cell');
+  const rootProps = useGridRootProps();
+  const [open, setOpen] = React.useState(rootProps.editMode === 'cell');
 
   const handleChange = (event) => {
     setOpen(false);
     api.setEditCellValue({ id, field, value: event.target.value }, event);
-    if (!event.key && editMode === 'cell') {
+    if (!event.key && rootProps.editMode === 'cell') {
       api.commitCellChange({ id, field }, event);
       api.setCellMode(id, field, 'view');
     }
   };
 
   const handleClose = (event, reason) => {
-    if (editMode === 'row') {
+    if (rootProps.editMode === 'row') {
       setOpen(false);
       return;
     }

@@ -1,14 +1,9 @@
 import * as React from 'react';
 import InputBase, { InputBaseProps } from '@material-ui/core/InputBase';
-import { GridCellParams } from '../../models/params/gridCellParams';
+import { GridRenderEditCellParams } from '../../models/params/gridCellParams';
 import { useEnhancedEffect } from '../../utils/material-ui-utils';
-import { GridEditMode } from '../../models/gridEditRowModel';
 
-interface GridEditInputCellProps extends GridCellParams {
-  editMode?: GridEditMode;
-}
-
-export function GridEditInputCell(props: GridEditInputCellProps & InputBaseProps) {
+export function GridEditInputCell(props: GridRenderEditCellParams & InputBaseProps) {
   const {
     id,
     value,
@@ -22,7 +17,6 @@ export function GridEditInputCell(props: GridEditInputCellProps & InputBaseProps
     tabIndex,
     hasFocus,
     getValue,
-    editMode,
     ...other
   } = props;
 

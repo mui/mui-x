@@ -1,10 +1,10 @@
 export enum GridEvents {
   /**
-   * Fired when the grid is resized. Called with a [[GridResizeParams]] object.
+   * Fired when the grid is resized. Called with a [[ElementSize]] object.
    */
   resize = 'resize',
   /**
-   * Fired when the grid is resized with a debounced time of 60ms. Called with a [[GridResizeParams]] object.
+   * Fired when the grid is resized with a debounced time of 60ms. Called with a [[ElementSize]] object.
    */
   debouncedResize = 'debouncedResize',
   /**
@@ -314,7 +314,7 @@ export enum GridEvents {
    */
   filterModelChange = 'filterModelChange',
   /**
-   * Fired when the state of the grid is updated. Called with a [[GridStateChangeParams]] object.
+   * Fired when the state of the grid is updated. Called with a [[GridState]] object.
    */
   stateChange = 'stateChange',
   /**

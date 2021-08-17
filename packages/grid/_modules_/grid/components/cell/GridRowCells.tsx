@@ -12,7 +12,6 @@ import { GridCell, GridCellProps } from './GridCell';
 import { useGridApiContext } from '../../hooks/root/useGridApiContext';
 import { isFunction } from '../../utils/utils';
 import { GRID_CSS_CLASS_PREFIX } from '../../constants/cssClassesConstants';
-import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
 interface RowCellsProps {
   cellClassName?: string;
@@ -54,7 +53,6 @@ export const GridRowCells = React.memo(function GridRowCells(props: RowCellsProp
     ...other
   } = props;
   const apiRef = useGridApiContext();
-  const rootProps = useGridRootProps();
 
   const cellsProps = columns.slice(firstColIdx, lastColIdx + 1).map((column, colIdx) => {
     const colIndex = firstColIdx + colIdx;
@@ -82,12 +80,12 @@ export const GridRowCells = React.memo(function GridRowCells(props: RowCellsProp
     let cellComponent: React.ReactNode = null;
 
     if (editCellState == null && column.renderCell) {
-      cellComponent = column.renderCell(cellParams);
+      cellComponent = column.renderCell({ ...cellParams, api: apiRef.current });
       classNames.push(`${GRID_CSS_CLASS_PREFIX}-cell--withRenderer`);
     }
 
     if (editCellState != null && column.renderEditCell) {
-      const params = { editMode: rootProps.editMode, ...cellParams, ...editCellState };
+      const params = { ...cellParams, ...editCellState, api: apiRef.current };
       cellComponent = column.renderEditCell(params);
       classNames.push(`${GRID_CSS_CLASS_PREFIX}-cell--editing`);
     }

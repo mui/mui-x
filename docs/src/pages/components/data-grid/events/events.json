@@ -103,7 +103,7 @@
   { "name": "componentError", "description": "Fired when an exception is thrown in the grid." },
   {
     "name": "debouncedResize",
-    "description": "Fired when the grid is resized with a debounced time of 60ms. Called with a GridResizeParams object."
+    "description": "Fired when the grid is resized with a debounced time of 60ms. Called with a ElementSize object."
   },
   {
     "name": "editCellPropsChange",
@@ -121,7 +121,7 @@
   { "name": "pageSizeChange", "description": "Fired when the page size changes." },
   {
     "name": "resize",
-    "description": "Fired when the grid is resized. Called with a GridResizeParams object."
+    "description": "Fired when the grid is resized. Called with a ElementSize object."
   },
   {
     "name": "rowClick",
@@ -177,7 +177,7 @@
   },
   {
     "name": "stateChange",
-    "description": "Fired when the state of the grid is updated. Called with a GridStateChangeParams object."
+    "description": "Fired when the state of the grid is updated. Called with a GridState object."
   },
   { "name": "unmount", "description": "Fired when the grid is unmounted." },
   {
