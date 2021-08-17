@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { DataGrid, GridRowParams } from '@material-ui/data-grid';
-import { useDemoData } from '@material-ui/x-grid-data-generator';
+import { DataGrid, GridRowParams } from '@mui/x-data-grid';
+import { useDemoData } from '@mui/x-data-grid-generator';
 
 export default function DisableRowSelection() {
   const { data } = useDemoData({

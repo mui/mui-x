@@ -5,7 +5,7 @@ import {
   useGridApiRef,
   XGrid,
   GridEditSingleSelectCell,
-} from '@material-ui/x-grid';
+} from '@mui/x-data-grid-pro';
 import Portal from '@material-ui/unstyled/Portal';
 import { expect } from 'chai';
 import * as React from 'react';

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataGrid, GridValueFormatterParams } from '@material-ui/data-grid';
+import { DataGrid, GridValueFormatterParams } from '@mui/x-data-grid';
 
 const rows = [
   {

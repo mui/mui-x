@@ -6,11 +6,8 @@ import {
   GridSortDirection,
   GridValueGetterParams,
   GridSortModel,
-} from '@material-ui/data-grid';
-import {
-  randomCreatedDate,
-  randomUpdatedDate,
-} from '@material-ui/x-grid-data-generator';
+} from '@mui/x-data-grid';
+import { randomCreatedDate, randomUpdatedDate } from '@mui/x-data-grid-generator';
 
 const columns: GridColumns = [
   { field: 'name' },

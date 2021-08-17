@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { XGrid, GridOverlay } from '@material-ui/x-grid';
+import { XGrid, GridOverlay } from '@mui/x-data-grid-pro';
 import LinearProgress from '@material-ui/core/LinearProgress';
-import { useDemoData } from '@material-ui/x-grid-data-generator';
+import { useDemoData } from '@mui/x-data-grid-generator';
 import '../style/grid-stories.css';
 import { action } from '@storybook/addon-actions';
 

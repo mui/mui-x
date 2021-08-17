@@ -3,7 +3,7 @@ import * as React from 'react';
 import { fireEvent, screen, createClientRenderStrictMode } from 'test/utils';
 import { getColumnValues } from 'test/utils/helperFn';
 import { expect } from 'chai';
-import { XGrid, useGridApiRef } from '@material-ui/x-grid';
+import { XGrid, useGridApiRef } from '@mui/x-data-grid-pro';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -51,7 +51,7 @@ describe('<XGrid /> - State', () => {
     const header = screen.getByRole('columnheader', { name: 'brand' });
     fireEvent.click(header);
     expect(onStateParams).to.equal(apiRef.current.state);
-    expect(onStateParams).to.not.equal(undefined);
+    expect(onStateParams).not.to.equal(undefined);
   });
 
   it('should allow to control the state using apiRef', () => {

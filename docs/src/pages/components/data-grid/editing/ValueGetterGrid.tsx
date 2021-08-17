@@ -5,7 +5,7 @@ import {
   GridColDef,
   GridCellEditCommitParams,
   GridValueGetterParams,
-} from '@material-ui/data-grid';
+} from '@mui/x-data-grid';
 
 function getFullName(params: GridValueGetterParams) {
   return `${params.getValue(params.id, 'firstName') || ''} ${

@@ -1,4 +1,4 @@
-import { generateReleaseInfo } from '@material-ui/x-license';
+import { generateReleaseInfo } from '@mui/x-license-pro';
 import replace from '@rollup/plugin-replace';
 import typescript from 'rollup-plugin-typescript2';
 import cleaner from 'rollup-plugin-cleaner';

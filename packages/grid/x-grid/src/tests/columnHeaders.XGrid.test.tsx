@@ -9,7 +9,7 @@ import {
   waitFor,
 } from 'test/utils';
 import { expect } from 'chai';
-import { GRID_COLUMN_HEADER_SEPARATOR_RESIZABLE_CSS_CLASS, XGrid } from '@material-ui/x-grid';
+import { GRID_COLUMN_HEADER_SEPARATOR_RESIZABLE_CSS_CLASS, XGrid } from '@mui/x-data-grid-pro';
 import { getColumnHeaderCell } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);

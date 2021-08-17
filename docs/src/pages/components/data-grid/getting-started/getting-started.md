@@ -8,14 +8,14 @@ title: Data Grid - Getting started
 
 ## Installation
 
-Using your favorite package manager, install `@material-ui/x-grid` for the full-featured enterprise grid, or `@material-ui/data-grid` for the free community version.
+Using your favorite package manager, install `@mui/x-data-grid-pro` for the full-featured enterprise grid, or `@mui/x-data-grid` for the free community version.
 
 ```sh
 // with npm
-npm install @material-ui/data-grid
+npm install @mui/x-data-grid
 
 // with yarn
-yarn add @material-ui/data-grid
+yarn add @mui/x-data-grid
 ```
 
 The grid has two peer dependencies on Material-UI components.
@@ -35,7 +35,7 @@ First, you have to import the component as below.
 To avoid name conflicts the component is named `XGrid` for the full-featured enterprise grid, and `DataGrid` for the free community version.
 
 ```js
-import { DataGrid } from '@material-ui/data-grid';
+import { DataGrid } from '@mui/x-data-grid';
 ```
 
 ### Define rows
@@ -73,7 +73,7 @@ Putting it together, this all you need to get started, as you can see in this li
 
 ```jsx
 import React from 'react';
-import { DataGrid, GridRowsProp, GridColDef } from '@material-ui/data-grid';
+import { DataGrid, GridRowsProp, GridColDef } from '@mui/x-data-grid';
 
 const rows: GridRowsProp = [
   { id: 1, col1: 'Hello', col2: 'World' },
@@ -97,19 +97,18 @@ export default function App() {
 
 {{"demo": "pages/components/data-grid/getting-started/Codesandbox.js", "hideToolbar": true, "bg": true}}
 
-## Enterprise
+## Licenses
 
-The data grid comes in 2 versions:
+The data grid comes with two different licenses:
 
-- `DataGrid` **MIT licensed** as part of the community edition. It's an extension of `@material-ui/core`.
-- `XGrid` **Commercially licensed** as part of the X product line offering.
+- [DataGrid](https://material-ui.com/api/data-grid/data-grid/), it's [MIT licensed](https://tldrlegal.com/license/mit-license) and available on npm as `@material-ui/data-grid`.
+- [XGrid](https://material-ui.com/api/data-grid/x-grid/), it's **Commercially licensed** and available on npm as `@material-ui/x-grid`.
+  The features only available in the commercial version are suffixed with a <span class="pro"></span> icon for the Pro plan or a <span class="premium"></span> icon for the Premium plan.
 
-The features only available in the commercial version are suffixed with a <span style="font-size: 14px" role="img" title="Pro" class="pro"></span> icon for the pro plan or a <span style="font-size: 14px" role="img" title="Premium" class="premium"></span> icon for the premium plan.
+  <img src="/static/x/header-icon.png" style="width: 431px; height: 123px; object-fit: contain; margin-bottom: 2rem;" alt="" loading="lazy">
 
-<img src="/static/x/header-icon.png" style="width: 454px; margin-bottom: 2rem;" alt="">
-
-You can check the [feature comparison](#feature-comparison) for more details.
-See [Pricing](https://material-ui.com/store/items/material-ui-pro/) for details on purchasing licenses.
+  You can check the [feature comparison](#feature-comparison) for more details.
+  See [Pricing](https://material-ui.com/store/items/material-ui-pro/) for details on purchasing licenses.
 
 ### Try XGrid for free
 
@@ -120,7 +119,7 @@ Please take the component for a test run, no need to contact us.
 
 If you have an enterprise grid running with an expired or missing license key, the grid displays a watermark, and a warning is shown in the console (_Material-UI Unlicensed product_).
 
-<img src="/static/x/watermark.png" style="width: 658px; margin-bottom: 3rem" alt="">
+<img src="/static/x/watermark.png" style="width: 658px; height: 175px; object-fit: contain; margin-bottom: 3rem" alt="" loading="lazy">
 
 ### Feature comparison
 
@@ -131,11 +130,11 @@ The enterprise components come in two plans: Pro and Premium.
 | Features                                                                                  | Community | Pro <span class="pro"></span> | Premium <span class="premium"></span> |
 | :---------------------------------------------------------------------------------------- | :-------: | :---------------------------: | :-----------------------------------: |
 | **Column**                                                                                |           |                               |
-| [Column resizing](/components/data-grid/columns/#column-resizing)                         |    ❌     |              ✅               |                  ✅                   |
 | [Column groups](/components/data-grid/columns/#column-groups)                             |    🚧     |              🚧               |                  🚧                   |
+| [Column spanning](/components/data-grid/columns/#column-spanning)                         |    🚧     |              🚧               |                  🚧                   |
+| [Column resizing](/components/data-grid/columns/#column-resizing)                         |    ❌     |              ✅               |                  ✅                   |
 | [Column reorder](/components/data-grid/columns/#column-reorder)                           |    ❌     |              ✅               |                  ✅                   |
 | [Column pinning](/components/data-grid/columns/#column-pinning)                           |    ❌     |              🚧               |                  🚧                   |
-| [Column spanning](/components/data-grid/columns/#column-spanning)                         |    🚧     |              🚧               |                  🚧                   |
 | **Row**                                                                                   |           |                               |                                       |
 | [Row sorting](/components/data-grid/rows/#row-sorting)                                    |    ✅     |              ✅               |                  ✅                   |
 | [Row height](/components/data-grid/rows/#row-height)                                      |    ✅     |              ✅               |                  ✅                   |
@@ -146,9 +145,9 @@ The enterprise components come in two plans: Pro and Premium.
 | [Multi-row selection](/components/data-grid/selection/#multiple-row-selection)            |    ❌     |              ✅               |                  ✅                   |
 | [Range selection](/components/data-grid/selection/#range-selection)                       |    ❌     |              ❌               |                  🚧                   |
 | **Filtering**                                                                             |           |                               |                                       |
+| [Quick filter](/components/data-grid/filtering/#quick-filter)                             |    🚧     |              🚧               |                  🚧                   |
 | [Column filters](/components/data-grid/filtering/#column-filters)                         |    ✅     |              ✅               |                  ✅                   |
 | [Multi-column filtering](/components/data-grid/filtering/#multi-column-filtering)         |    ❌     |              ✅               |                  ✅                   |
-| [Quick filter](/components/data-grid/filtering/#quick-filter)                             |    🚧     |              🚧               |                  🚧                   |
 | **Pagination**                                                                            |           |                               |                                       |
 | [Pagination](/components/data-grid/pagination/)                                           |    ✅     |              ✅               |                  ✅                   |
 | [Pagination > 100 rows per page](/components/data-grid/pagination/#paginate-gt-100-rows)  |    ❌     |              ✅               |                  ✅                   |
@@ -158,12 +157,12 @@ The enterprise components come in two plans: Pro and Premium.
 | **Import & export**                                                                       |           |                               |                                       |
 | [CSV export](/components/data-grid/export/#csv-export)                                    |    ✅     |              ✅               |                  ✅                   |
 | [Print](/components/data-grid/export/#print)                                              |    🚧     |              🚧               |                  🚧                   |
-| [Excel export](/components/data-grid/export/#excel-export)                                |    ❌     |              ❌               |                  🚧                   |
 | [Clipboard](/components/data-grid/export/#clipboard)                                      |    ❌     |              🚧               |                  🚧                   |
+| [Excel export](/components/data-grid/export/#excel-export)                                |    ❌     |              ❌               |                  🚧                   |
 | **Rendering**                                                                             |           |                               |                                       |
+| [Customizable components](/components/data-grid/components/)                              |    ✅     |              ✅               |                  ✅                   |
 | [Column virtualization](/components/data-grid/virtualization/#column-virtualization)      |    ✅     |              ✅               |                  ✅                   |
 | [Row virtualization > 100 rows](/components/data-grid/virtualization/#row-virtualization) |    ❌     |              ✅               |                  ✅                   |
-| [Customizable components](/components/data-grid/components/)                              |    ✅     |              ✅               |                  ✅                   |
 | **Group & Pivot**                                                                         |           |                               |                                       |
 | [Tree data](/components/data-grid/group-pivot/#tree-data)                                 |    ❌     |              🚧               |                  🚧                   |
 | [Master detail](/components/data-grid/group-pivot/#master-detail)                         |    ❌     |              🚧               |                  🚧                   |
@@ -182,7 +181,7 @@ This key should be provided to the enterprise package to remove the watermark an
 the warnings in the console.
 
 ```jsx
-import { LicenseInfo } from '@material-ui/x-grid';
+import { LicenseInfo } from '@mui/x-data-grid-pro';
 
 LicenseInfo.setLicenseKey(
   'x0jTPl0USVkVZV0SsMjM1kDNyADM5cjM2ETPZJVSQhVRsIDN0YTM6IVREJ1T0b9586ef25c9853decfa7709eee27a1e',

@@ -16,7 +16,7 @@ import {
   useGridApiRef,
   XGrid,
   GRID_COLUMN_HEADER_SEPARATOR_RESIZABLE_CSS_CLASS,
-} from '@material-ui/x-grid';
+} from '@mui/x-data-grid-pro';
 import { getColumnHeaderCell, getCell } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
@@ -60,7 +60,7 @@ describe('<XGrid /> - Columns', () => {
       render(<Test />);
       expect(screen.queryByRole('menu')).to.equal(null);
       apiRef!.current.showColumnMenu('brand');
-      await waitFor(() => expect(screen.queryByRole('menu')).to.not.equal(null));
+      await waitFor(() => expect(screen.queryByRole('menu')).not.to.equal(null));
     });
 
     it('should set the correct id and aria-labelledby', async () => {
@@ -80,7 +80,7 @@ describe('<XGrid /> - Columns', () => {
       render(<Test />);
       expect(screen.queryByRole('menu')).to.equal(null);
       apiRef!.current.toggleColumnMenu('brand');
-      await waitFor(() => expect(screen.queryByRole('menu')).to.not.equal(null));
+      await waitFor(() => expect(screen.queryByRole('menu')).not.to.equal(null));
       apiRef!.current.toggleColumnMenu('brand');
       await waitFor(() => expect(screen.queryByRole('menu')).to.equal(null));
     });

@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { action } from '@storybook/addon-actions';
-import { GridOptionsProp, XGrid, useGridApiRef } from '@material-ui/x-grid';
+import { GridOptionsProp, XGrid, useGridApiRef } from '@mui/x-data-grid-pro';
 import { interval } from 'rxjs';
-import { randomInt, randomUserName } from '@material-ui/x-grid-data-generator';
+import { randomInt, randomUserName } from '@mui/x-data-grid-generator';
 import { FeedGrid } from '../components/feed-grid';
 import { PricingGrid } from '../components/pricing-grid';
 

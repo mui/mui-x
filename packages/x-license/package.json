@@ -1,8 +1,8 @@
 {
-  "name": "@material-ui/x-license",
+  "name": "@mui/x-license-pro",
   "version": "4.0.0-alpha.37",
   "description": "Material-UI X License verification",
-  "author": "Material-UI Team",
+  "author": "MUI Team",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
   "types": "dist/x-license.d.ts",

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Button from '@material-ui/core/Button';
-import { XGrid, useGridApiRef } from '@material-ui/x-grid';
-import { useDemoData } from '@material-ui/x-grid-data-generator';
+import { XGrid, useGridApiRef } from '@mui/x-data-grid-pro';
+import { useDemoData } from '@mui/x-data-grid-generator';
 
 export default function ApiRefPaginationGrid() {
   const apiRef = useGridApiRef();

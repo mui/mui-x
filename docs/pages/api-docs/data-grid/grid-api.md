@@ -5,7 +5,7 @@
 ## Import
 
 ```js
-import { GridApi } from '@material-ui/x-grid';
+import { GridApi } from '@mui/x-data-grid-pro';
 ```
 
 ## Properties

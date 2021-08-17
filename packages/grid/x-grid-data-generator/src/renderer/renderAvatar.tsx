@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Avatar from '@material-ui/core/Avatar';
-import { GridRenderCellParams } from '@material-ui/x-grid';
+import { GridRenderCellParams } from '@mui/x-data-grid-pro';
 
 export function renderAvatar(params: GridRenderCellParams) {
   return (

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Button from '@material-ui/core/Button';
-import { GridState, GridSortingState, useGridApiRef, XGrid } from '@material-ui/x-grid';
+import { GridState, GridSortingState, useGridApiRef, XGrid } from '@mui/x-data-grid-pro';
 import { useData } from '../hooks/useData';
 
 export default {

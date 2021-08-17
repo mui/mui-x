@@ -14,7 +14,7 @@ import {
   HideGridColMenuItem,
   GridColumnMenuProps,
   useGridSlotComponentProps,
-} from '@material-ui/data-grid';
+} from '@mui/x-data-grid';
 import RecipeReviewCard from './RecipeReviewCard';
 
 export function SortedDescendingIcon() {

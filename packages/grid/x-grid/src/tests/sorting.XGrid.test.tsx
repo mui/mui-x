@@ -1,11 +1,6 @@
 import * as React from 'react';
-import {
-  GridApiRef,
-  GridComponentProps,
-  GridSortModel,
-  useGridApiRef,
-} from '@material-ui/data-grid';
-import { XGrid } from '@material-ui/x-grid';
+import { GridApiRef, GridComponentProps, GridSortModel, useGridApiRef } from '@mui/x-data-grid';
+import { XGrid } from '@mui/x-data-grid-pro';
 import { expect } from 'chai';
 import { spy, useFakeTimers } from 'sinon';
 import { getColumnValues, getCell, getColumnHeaderCell } from 'test/utils/helperFn';

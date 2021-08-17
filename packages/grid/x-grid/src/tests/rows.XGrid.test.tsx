@@ -14,7 +14,7 @@ import {
   useGridApiRef,
   XGrid,
   XGridProps,
-} from '@material-ui/x-grid';
+} from '@mui/x-data-grid-pro';
 import { useData } from 'packages/storybook/src/hooks/useData';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);

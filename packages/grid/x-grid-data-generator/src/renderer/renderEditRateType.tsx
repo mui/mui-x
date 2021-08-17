@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridRenderCellParams } from '@material-ui/data-grid';
+import { GridRenderCellParams } from '@mui/x-data-grid';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import { createStyles, makeStyles } from '@material-ui/styles';

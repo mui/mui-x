@@ -7,13 +7,13 @@ import {
   GridColumns,
   GridEditRowsModel,
   GridRowsProp,
-} from '@material-ui/data-grid';
+} from '@mui/x-data-grid';
 import {
   randomCreatedDate,
   randomEmail,
   randomTraderName,
   randomUpdatedDate,
-} from '@material-ui/x-grid-data-generator';
+} from '@mui/x-data-grid-generator';
 
 // TODO v5: remove
 function getThemePaletteMode(palette: any): string {

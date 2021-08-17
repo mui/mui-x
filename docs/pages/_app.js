@@ -1,6 +1,6 @@
 /* eslint-disable import/first */
 
-import { LicenseInfo } from '@material-ui/x-grid';
+import { LicenseInfo } from '@mui/x-data-grid-pro';
 
 // Remove the license warning from demonstration purposes
 LicenseInfo.setLicenseKey(
@@ -45,13 +45,13 @@ ponyfillGlobal.muiDocConfig = {
 
     if (
       newDeps['@material-ui/x'] ||
-      newDeps['@material-ui/x-grid'] ||
-      newDeps['@material-ui/data-grid']
+      newDeps['@mui/x-data-grid-pro'] ||
+      newDeps['@mui/x-data-grid']
     ) {
       newDeps['@material-ui/core'] = versions['@material-ui/core'];
     }
 
-    if (newDeps['@material-ui/x-grid-data-generator']) {
+    if (newDeps['@mui/x-data-grid-generator']) {
       newDeps['@material-ui/core'] = versions['@material-ui/core'];
       newDeps['@material-ui/icons'] = versions['@material-ui/icons'];
       newDeps['@material-ui/lab'] = versions['@material-ui/lab'];
@@ -62,12 +62,9 @@ ponyfillGlobal.muiDocConfig = {
   csbGetVersions: (versions, { muiCommitRef }) => {
     const output = {
       ...versions,
-      '@material-ui/x-grid': getMuiPackageVersion('x-grid', muiCommitRef),
-      '@material-ui/x-grid-data-generator': getMuiPackageVersion(
-        'x-grid-data-generator',
-        muiCommitRef,
-      ),
-      '@material-ui/data-grid': getMuiPackageVersion('data-grid', muiCommitRef),
+      '@mui/x-data-grid-pro': getMuiPackageVersion('x-grid', muiCommitRef),
+      '@mui/x-data-grid-generator': getMuiPackageVersion('x-grid-data-generator', muiCommitRef),
+      '@mui/x-data-grid': getMuiPackageVersion('data-grid', muiCommitRef),
     };
     return output;
   },
