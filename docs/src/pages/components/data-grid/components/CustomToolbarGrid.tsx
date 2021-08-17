@@ -6,8 +6,8 @@ import {
   GridToolbarFilterButton,
   GridToolbarExport,
   GridToolbarDensitySelector,
-} from '@material-ui/data-grid';
-import { useDemoData } from '@material-ui/x-grid-data-generator';
+} from '@mui/x-data-grid';
+import { useDemoData } from '@mui/x-data-grid-generator';
 
 function CustomToolbar() {
   return (

@@ -4,7 +4,7 @@ import {
   screen,
 } from 'test/utils';
 import { expect } from 'chai';
-import { DataGrid, GridToolbar, GridPreferencePanelsValue } from '@material-ui/data-grid';
+import { DataGrid, GridToolbar, GridPreferencePanelsValue } from '@mui/x-data-grid';
 import { getColumnValues } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
@@ -832,6 +832,30 @@ describe('<DataGrid /> - Filter', () => {
               { field: 'name' },
               { field: 'voltage', type: 'singleSelect', valueOptions: [220, 110] },
             ]}
+            field="voltage"
+            operatorValue="is"
+            state={{
+              preferencePanel: {
+                open: true,
+                openedPanelValue: GridPreferencePanelsValue.filters,
+              },
+            }}
+          />,
+        );
+        expect(getColumnValues()).to.deep.equal(['Hair Dryer', 'Dishwasher', 'Microwave']);
+        setProps({ value: 220 });
+        expect(getColumnValues()).to.deep.equal(['Hair Dryer', 'Microwave']);
+      });
+
+      it('should work if valueOptions is not provided', () => {
+        const { setProps } = render(
+          <TestCase
+            rows={[
+              { id: 1, name: 'Hair Dryer', voltage: 220 },
+              { id: 2, name: 'Dishwasher', voltage: 110 },
+              { id: 3, name: 'Microwave', voltage: 220 },
+            ]}
+            columns={[{ field: 'name' }, { field: 'voltage', type: 'singleSelect' }]}
             field="voltage"
             operatorValue="is"
             state={{

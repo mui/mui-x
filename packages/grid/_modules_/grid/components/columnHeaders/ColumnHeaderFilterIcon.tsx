@@ -22,9 +22,7 @@ export function ColumnHeaderFilterIcon(props: ColumnHeaderFilterIconProps) {
       event.preventDefault();
       event.stopPropagation();
 
-      const { open, openedPanelValue } = gridPreferencePanelStateSelector(
-        apiRef!.current.getState(),
-      );
+      const { open, openedPanelValue } = gridPreferencePanelStateSelector(apiRef!.current.state);
 
       if (open && openedPanelValue === GridPreferencePanelsValue.filters) {
         apiRef!.current.hideFilterPanel();

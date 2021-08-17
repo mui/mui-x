@@ -2,22 +2,21 @@ import * as React from 'react';
 import { MuiEvent } from '../../models/gridOptions';
 import { GridApiRef } from '../../models/api/gridApiRef';
 import { useLogger } from '../utils/useLogger';
-import { useGridSelector } from '../features/core/useGridSelector';
-import { optionsSelector } from '../utils/optionsSelector';
 import { GridApi } from '../../models/api/gridApi';
 
 // TODO: Remove once [[GridApi]] cycle dependency is fixed
 /**
  * Callback details.
  */
-export interface MuiCallbackDetails {
+export interface GridCallbackDetails {
   api?: GridApi;
 }
 
 /**
- * Signature enum.
+ * Signal to the underlying logic what version of the public component API
+ * of the data grid is exposed.
  */
-export enum Signature {
+export enum GridSignature {
   DataGrid = 'DataGrid',
   XGrid = 'XGrid',
 }
@@ -29,19 +28,14 @@ export function useGridApiEventHandler(
   options?: { isFirst?: boolean },
 ) {
   const logger = useLogger('useGridApiEventHandler');
-  const { signature } = useGridSelector(apiRef, optionsSelector);
 
   React.useEffect(() => {
     if (handler && eventName) {
       const enhancedHandler = (
         params: any,
         event: MuiEvent<React.SyntheticEvent | DocumentEventMap[keyof DocumentEventMap] | {}>,
-        details: MuiCallbackDetails = {},
+        details: GridCallbackDetails,
       ) => {
-        if (signature === Signature.XGrid) {
-          details.api = apiRef.current;
-        }
-
         if (!event.defaultMuiPrevented) {
           handler(params, event, details);
         }
@@ -50,7 +44,7 @@ export function useGridApiEventHandler(
     }
 
     return undefined;
-  }, [apiRef, logger, eventName, handler, options, signature]);
+  }, [apiRef, logger, eventName, handler, options]);
 }
 
 const optionsSubscriberOptions = { isFirst: true };

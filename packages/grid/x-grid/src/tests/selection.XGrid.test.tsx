@@ -16,7 +16,7 @@ import {
   useGridApiRef,
   XGrid,
   GridEvents,
-} from '@material-ui/x-grid';
+} from '@mui/x-data-grid-pro';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 

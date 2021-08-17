@@ -16,3 +16,5 @@ export interface GridClasses {
    */
   cell?: string;
 }
+
+export type GridClassKey = keyof GridClasses;

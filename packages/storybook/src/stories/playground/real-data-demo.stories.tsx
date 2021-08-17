@@ -1,8 +1,8 @@
-import { DataGrid, GridToolbar } from '@material-ui/data-grid';
+import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import * as React from 'react';
 import { Story, Meta, DecoratorFn } from '@storybook/react';
-import { XGridProps, GridPreferencePanelsValue, XGrid } from '@material-ui/x-grid';
-import { useDemoData, DemoDataOptions } from '@material-ui/x-grid-data-generator';
+import { XGridProps, GridPreferencePanelsValue, XGrid } from '@mui/x-data-grid-pro';
+import { useDemoData, DemoDataOptions } from '@mui/x-data-grid-generator';
 import { useData } from '../../hooks/useData';
 import {
   ColumnMenuComponent,

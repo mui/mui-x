@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { GridOverlay, DataGrid } from '@material-ui/data-grid';
-import { useDemoData } from '@material-ui/x-grid-data-generator';
-import { createMuiTheme } from '@material-ui/core/styles';
+import { GridOverlay, DataGrid } from '@mui/x-data-grid';
+import { useDemoData } from '@mui/x-data-grid-generator';
+import { createTheme } from '@material-ui/core/styles';
 import { makeStyles } from '@material-ui/styles';
 
-const defaultTheme = createMuiTheme();
+const defaultTheme = createTheme();
 const useStyles = makeStyles(
   (theme) => ({
     root: {

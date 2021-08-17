@@ -1,7 +1,7 @@
 import * as React from 'react';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import { DataGrid } from '@material-ui/data-grid';
+import { DataGrid } from '@mui/x-data-grid';
 
 export function SortedDescendingIcon() {
   return <ExpandMoreIcon className="icon" />;

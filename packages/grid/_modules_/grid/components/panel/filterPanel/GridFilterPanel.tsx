@@ -1,8 +1,6 @@
 import * as React from 'react';
 import Button from '@material-ui/core/Button';
-import { useGridSelector } from '../../../hooks/features/core/useGridSelector';
 import { useGridState } from '../../../hooks/features/core/useGridState';
-import { optionsSelector } from '../../../hooks/utils/optionsSelector';
 import { GridFilterItem, GridLinkOperator } from '../../../models/gridFilterItem';
 import { useGridApiContext } from '../../../hooks/root/useGridApiContext';
 import { GridAddIcon } from '../../icons/index';
@@ -10,11 +8,12 @@ import { GridPanelContent } from '../GridPanelContent';
 import { GridPanelFooter } from '../GridPanelFooter';
 import { GridPanelWrapper } from '../GridPanelWrapper';
 import { GridFilterForm } from './GridFilterForm';
+import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 
 export function GridFilterPanel() {
   const apiRef = useGridApiContext();
   const [gridState] = useGridState(apiRef!);
-  const { disableMultipleColumnsFiltering } = useGridSelector(apiRef, optionsSelector);
+  const rootProps = useGridRootProps();
 
   const hasMultipleFilters = React.useMemo(
     () => gridState.filter.items.length > 1,
@@ -69,7 +68,7 @@ export function GridFilterPanel() {
           />
         ))}
       </GridPanelContent>
-      {!disableMultipleColumnsFiltering && (
+      {!rootProps.disableMultipleColumnsFiltering && (
         <GridPanelFooter>
           <Button onClick={addNewFilter} startIcon={<GridAddIcon />} color="primary">
             {apiRef!.current.getLocaleText('filterPanelAddFilter')}

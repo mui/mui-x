@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { DataGrid } from '@material-ui/data-grid';
-import { useDemoData } from '@material-ui/x-grid-data-generator';
-import { createMuiTheme, darken, lighten, Theme } from '@material-ui/core/styles';
+import { DataGrid } from '@mui/x-data-grid';
+import { useDemoData } from '@mui/x-data-grid-generator';
+import { createTheme, darken, lighten, Theme } from '@material-ui/core/styles';
 import { makeStyles } from '@material-ui/styles';
 
 // TODO v5: remove
@@ -9,7 +9,7 @@ function getThemePaletteMode(palette: any): string {
   return palette.type || palette.mode;
 }
 
-const defaultTheme = createMuiTheme();
+const defaultTheme = createTheme();
 const useStyles = makeStyles(
   (theme: Theme) => {
     const getBackgroundColor = (color) =>

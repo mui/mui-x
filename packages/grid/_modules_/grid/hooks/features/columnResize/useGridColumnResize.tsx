@@ -80,6 +80,7 @@ export const useGridColumnResize = (
 
     colDefRef.current!.computedWidth = newWidth;
     colDefRef.current!.width = newWidth;
+    colDefRef.current!.flex = undefined;
 
     colElementRef.current!.style.width = `${newWidth}px`;
     colElementRef.current!.style.minWidth = `${newWidth}px`;
@@ -107,7 +108,6 @@ export const useGridColumnResize = (
         {
           element: colElementRef.current,
           colDef: colDefRef.current,
-          api: apiRef,
           width: colDefRef.current?.computedWidth,
         },
         nativeEvent,
@@ -138,7 +138,6 @@ export const useGridColumnResize = (
       {
         element: colElementRef.current,
         colDef: colDefRef.current,
-        api: apiRef,
         width: newWidth,
       },
       nativeEvent,
@@ -235,7 +234,6 @@ export const useGridColumnResize = (
       {
         element: colElementRef.current,
         colDef: colDefRef.current,
-        api: apiRef,
         width: newWidth,
       },
       nativeEvent,

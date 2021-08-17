@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { SvgIconProps } from '@material-ui/core/SvgIcon';
-import { GridCellParams } from '../../models/params/gridCellParams';
 import { gridClasses } from '../../gridClasses';
+import { GridRenderCellParams } from '../../models/params/gridCellParams';
 
-export const GridBooleanCell = React.memo((props: GridCellParams & SvgIconProps) => {
+export const GridBooleanCell = React.memo((props: GridRenderCellParams & SvgIconProps) => {
   const {
     id,
     value,

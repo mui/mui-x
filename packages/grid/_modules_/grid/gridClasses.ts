@@ -3,6 +3,7 @@ import { generateUtilityClasses } from './utils/material-ui-utils';
 export const gridClasses = generateUtilityClasses('MuiDataGrid', [
   'root',
   'row',
+  'row--editing',
   'cell',
   'withBorder',
   'cell--editing',

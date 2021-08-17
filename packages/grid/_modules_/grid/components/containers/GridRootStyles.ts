@@ -24,9 +24,6 @@ export const useStyles = makeStyles(
         height: '100%',
         display: 'flex',
         flexDirection: 'column',
-        '& *, & *::before, & *::after': {
-          boxSizing: 'inherit',
-        },
         [`&.${gridClasses.autoHeight}`]: {
           height: 'auto',
         },
@@ -89,6 +86,7 @@ export const useStyles = makeStyles(
           WebkitTapHighlightColor: 'transparent',
           lineHeight: null,
           padding: '0 10px',
+          boxSizing: 'border-box',
         },
         [`& .${gridClasses.columnHeader}:focus-within, & .${gridClasses.cell}:focus-within`]: {
           outline: `solid ${muiStyleAlpha(theme.palette.primary.main, 0.5)} 1px`,
@@ -263,6 +261,13 @@ export const useStyles = makeStyles(
             outline: `solid ${theme.palette.primary.main} 1px`,
             outlineOffset: '-1px',
           },
+        },
+        [`& .${gridClasses['row--editing']}`]: {
+          boxShadow: theme.shadows[2],
+        },
+        [`& .${gridClasses['row--editing']} .${gridClasses.cell}`]: {
+          boxShadow: theme.shadows[0],
+          backgroundColor: theme.palette.background.paper,
         },
         [`& .${gridClasses.editInputCell}`]: {
           ...theme.typography.body2,

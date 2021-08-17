@@ -1,10 +1,10 @@
 import * as React from 'react';
 import InputBase, { InputBaseProps } from '@material-ui/core/InputBase';
-import { GridCellParams } from '../../models/params/gridCellParams';
+import { GridRenderEditCellParams } from '../../models/params/gridCellParams';
 import { useEnhancedEffect } from '../../utils/material-ui-utils';
 import { gridClasses } from '../../gridClasses';
 
-export function GridEditDateCell(props: GridCellParams & InputBaseProps) {
+export function GridEditDateCell(props: GridRenderEditCellParams & InputBaseProps) {
   const {
     id,
     value,

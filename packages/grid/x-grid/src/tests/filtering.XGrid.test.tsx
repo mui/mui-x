@@ -9,7 +9,7 @@ import {
   SUBMIT_FILTER_STROKE_TIME,
   useGridApiRef,
   XGrid,
-} from '@material-ui/x-grid';
+} from '@mui/x-data-grid-pro';
 import { expect } from 'chai';
 import { useData } from 'packages/storybook/src/hooks/useData';
 import * as React from 'react';
@@ -253,7 +253,7 @@ describe('<XGrid /> - Filter', () => {
     render(<TestCase checkboxSelection filterModel={newModel} />);
     const checkAllCell = getColumnHeaderCell(0).querySelector('input');
     fireEvent.click(checkAllCell);
-    expect(apiRef.current.getState().selection).to.deep.equal([1]);
+    expect(apiRef.current.state.selection).to.deep.equal([1]);
   });
 
   it('should allow to clear filters by passing an empty filter model', () => {
@@ -329,7 +329,7 @@ describe('<XGrid /> - Filter', () => {
       apiRef.current.setFilterModel(newModel);
 
       await waitFor(() =>
-        expect(document.querySelector('.MuiDataGrid-filterIcon')).to.not.equal(null),
+        expect(document.querySelector('.MuiDataGrid-filterIcon')).not.to.equal(null),
       );
       const t1 = performance.now();
       const time = Math.round(t1 - t0);

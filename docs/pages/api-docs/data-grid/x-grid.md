@@ -5,8 +5,12 @@
 ## Import
 
 ```js
-import { XGrid } from '@material-ui/x-grid';
+import { XGrid } from '@mui/x-data-grid-pro';
 ```
+
+## Component name
+
+The name <code>MuiDataGridPro</code> can be used when providing [default props](/customization/globals/#default-props) or [style overrides](/customization/globals/#css) in the theme.
 
 ## Props
 
@@ -41,6 +45,7 @@ import { XGrid } from '@material-ui/x-grid';
 | <span class="prop-name">disableMultipleSelection</span> | <span class="prop-type">boolean</span> | false | If `true`, multiple selection using the CTRL or CMD key is disabled. |
 | <span class="prop-name">disableSelectionOnClick</span> | <span class="prop-type">boolean</span> | false | If `true`, the selection on click on a row or cell is disabled. |
 | <span class="prop-name">error</span> | <span class="prop-type">any</span> |   | An error that will turn the grid into its error state and display the error component. |
+| <span class="prop-name">editMode</span> | <span class="prop-type">GridEditMode</span> | 'cell'  | Controls whether to use the cell or row editing. |
 | <span class="prop-name">editRowsModel</span> | <span class="prop-type">GridEditRowsModel</span> | undefined | Set the edit rows model of the grid. |
 | <span class="prop-name">filterMode</span> | <span class="prop-type">GridFeatureMode</span> | 'client' | Filtering can be processed on the server or client-side. Set it to `server` if you would like to handle filtering on the server-side. |
 | <span class="prop-name">filterModel</span> | <span class="prop-type">GridFilterModel</span> |   | Set the filter model of the grid. |
@@ -81,14 +86,17 @@ import { XGrid } from '@material-ui/x-grid';
 | <span class="prop-name">onColumnVisibilityChange</span> | <span class="prop-type">(params: GridColumnVisibilityChangeParams, event: MuiEvent<{}>) => void</span> |   | Callback fired when a column visibility changes. |
 | <span class="prop-name">onError</span> | <span class="prop-type">(args: any) => void</span> |   | Callback fired when an exception is thrown in the grid, or when the `showError` API method is called. |
 | <span class="prop-name">onEditCellPropsChange</span> | <span class="prop-type">(params: GridEditCellPropsParams, event: MuiEvent<React.SyntheticEvent>) => void</span> |   |  Callback fired when the edit cell value changes. |
-| <span class="prop-name">onCellEditCommit</span> | <span class="prop-type">(params: GridEditCellPropsParams, event: MuiEvent<React.SyntheticEvent>) => void</span> |   | Callback fired when the cell changes are going to be committed. |
+| <span class="prop-name">onCellEditCommit</span> | <span class="prop-type">(params: GridEditCellPropsParams, event: MuiEvent<React.SyntheticEvent>) => void</span> |   | Callback fired when the cell changes are committed. |
 | <span class="prop-name">onCellEditStart</span> | <span class="prop-type">(params: GridCellParams, event: React.SyntheticEvent) => void</span> |   | Callback fired when the cell turns to edit mode. |
 | <span class="prop-name">onCellEditStop</span> | <span class="prop-type">(params: GridCellParams, event: React.SyntheticEvent) => void</span> |   | Callback fired when the cell turns to view mode. |
+| <span class="prop-name">onRowEditCommit</span> | <span class="prop-type">(id: GridRowId, event: MouseEvent<React.SyntheticEvent>) => void</span> |   | Callback fired when the row changes are committed. |
+| <span class="prop-name">onRowEditStart</span> | <span class="prop-type">(params: GridRowParams, event: React.SyntheticEvent) => void</span> |   | Callback fired when the row turns to edit mode. |
+| <span class="prop-name">onRowEditStop</span> | <span class="prop-type">(params: GridRowParams, event: React.SyntheticEvent) => void</span> |   | Callback fired when the row turns to view mode. |
 | <span class="prop-name">onEditRowModelChange</span> | <span class="prop-type">(params: GridEditRowModelParams) => void</span> |   |  Callback fired when the EditRowModel changed. |
 | <span class="prop-name">onFilterModelChange</span> | <span class="prop-type">(model: GridFilterModel) => void</span> |   | Callback fired when the Filter model changes before the filters are applied. |
 | <span class="prop-name">onPageChange</span> | <span class="prop-type">(page: number) => void</span> |   | Callback fired when the current page has changed. |
 | <span class="prop-name">onPageSizeChange</span> | <span class="prop-type">(pageSize: number) => void</span> |   | Callback fired when the page size has changed. |
-| <span class="prop-name">onResize</span> | <span class="prop-type">(params: GridResizeParams, event: MuiEvent<{}>) => void</span> |   | Callback fired when the grid is being resized. |
+| <span class="prop-name">onResize</span> | <span class="prop-type">(containerSize: ElementSize, event: MuiEvent<{}>) => void</span> |   | Callback fired when the grid is being resized. |
 | <span class="prop-name">onRowClick</span> | <span class="prop-type">(params: GridRowParams, event: MuiEvent<React.MouseEvent>) => void</span> |   | Callback fired when a click event comes from a row container element. |
 | <span class="prop-name">onRowDoubleClick</span> | <span class="prop-type">(params: GridRowParams, event: MuiEvent<React.MouseEvent>) => void</span> |   | Callback fired when a double click event comes from a row container element. |
 | <span class="prop-name">onRowOver</span> | <span class="prop-type">(params: GridRowParams, event: MuiEvent<React.MouseEvent>) => void</span> |   | Callback fired when a mouse over comes from a row container element. |
@@ -98,6 +106,7 @@ import { XGrid } from '@material-ui/x-grid';
 | <span class="prop-name">onRowsScrollEnd</span> | <span class="prop-type">(params: GridRowScrollEndParams, event: MuiEvent<{}>) => void</span> |   | Callback fired when scrolling to the bottom of the grid viewport. |
 | <span class="prop-name">onSelectionModelChange</span> | <span class="prop-type">(model: GridSelectionModel) => void</span> |   | Callback fired when the selection state of one or multiple rows changes. |
 | <span class="prop-name">onSortModelChange</span> | <span class="prop-type">(model: GridSortModel) => void</span> |   | Callback fired when the sort model changes before a column is sorted. |
+| <span class="prop-name">onViewportRowsChange</span> | <span class="prop-type">(params: GridViewportRowsChangeParams) => void</span> |   | Callback fired when the rows in the viewport change. |
 | <span class="prop-name">page</span> | <span class="prop-type">number</span> | 1   |  Set the current page. |
 | <span class="prop-name">pageSize</span> | <span class="prop-type">number</span> | 100 | Set the number of rows in one page. |
 | <span class="prop-name">pagination</span> | <span class="prop-type">boolean</span> | false | If `true`, pagination is enabled. |

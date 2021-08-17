@@ -1,43 +1,21 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 import * as React from 'react';
-import {
-  DataGrid,
-  GridColumns,
-  GridEditRowsModel,
-  GridRowsProp,
-} from '@material-ui/data-grid';
+import { DataGrid } from '@mui/x-data-grid';
 import {
   randomCreatedDate,
   randomTraderName,
   randomUpdatedDate,
-} from '@material-ui/x-grid-data-generator';
-import Alert from '@material-ui/lab/Alert';
+} from '@mui/x-data-grid-generator';
 
-export default function EditRowsModelControlGrid() {
-  const [editRowsModel, setEditRowsModel] = React.useState({});
-
-  const handleEditRowsModelChange = React.useCallback((model: GridEditRowsModel) => {
-    setEditRowsModel(model);
-  }, []);
-
+export default function BasicRowEditingGrid() {
   return (
-    <div style={{ width: '100%' }}>
-      <Alert severity="info" style={{ marginBottom: 8 }}>
-        <code>editRowsModel: {JSON.stringify(editRowsModel)}</code>
-      </Alert>
-      <div style={{ height: 400, width: '100%' }}>
-        <DataGrid
-          rows={rows}
-          columns={columns}
-          editRowsModel={editRowsModel}
-          onEditRowsModelChange={handleEditRowsModelChange}
-        />
-      </div>
+    <div style={{ height: 300, width: '100%' }}>
+      <DataGrid editMode="row" rows={rows} columns={columns} />
     </div>
   );
 }
 
-const columns: GridColumns = [
+const columns = [
   { field: 'name', headerName: 'Name', width: 180, editable: true },
   { field: 'age', headerName: 'Age', type: 'number', editable: true },
   {
@@ -56,7 +34,7 @@ const columns: GridColumns = [
   },
 ];
 
-const rows: GridRowsProp = [
+const rows = [
   {
     id: 1,
     name: randomTraderName(),
