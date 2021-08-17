@@ -15,8 +15,8 @@ import {
   GridInputSelectionModel,
   useGridApiRef,
   XGrid,
-  GRID_SELECTION_CHANGE,
-} from '@material-ui/x-grid';
+  GridEvents,
+} from '@mui/x-data-grid-pro';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -329,7 +329,7 @@ describe('<XGrid /> - Selection', () => {
       const handleSelectionChange = spy();
       const selectionModel = [];
       render(<Test selectionModel={selectionModel} />);
-      apiRef.current.subscribeEvent(GRID_SELECTION_CHANGE, handleSelectionChange);
+      apiRef.current.subscribeEvent(GridEvents.selectionChange, handleSelectionChange);
       apiRef.current.setSelectionModel(selectionModel);
       expect(handleSelectionChange.callCount).to.equal(0);
     });

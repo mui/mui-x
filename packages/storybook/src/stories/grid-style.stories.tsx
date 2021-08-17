@@ -1,6 +1,6 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import { XGrid, GridOptionsProp, GridColDef } from '@material-ui/x-grid';
+import { XGrid, GridOptionsProp, GridColDef } from '@mui/x-data-grid-pro';
 import DoneIcon from '@material-ui/icons/Done';
 import ClearIcon from '@material-ui/icons/Clear';
 import { useData } from '../hooks/useData';

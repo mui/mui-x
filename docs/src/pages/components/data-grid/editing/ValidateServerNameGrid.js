@@ -1,15 +1,15 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 import * as React from 'react';
-import { createMuiTheme } from '@material-ui/core/styles';
+import { createTheme } from '@material-ui/core/styles';
 import { makeStyles } from '@material-ui/styles';
-import { useGridApiRef, XGrid } from '@material-ui/x-grid';
+import { useGridApiRef, XGrid } from '@mui/x-data-grid-pro';
 
 // TODO v5: remove
 function getThemePaletteMode(palette) {
   return palette.type || palette.mode;
 }
 
-const defaultTheme = createMuiTheme();
+const defaultTheme = createTheme();
 const useStyles = makeStyles(
   (theme) => {
     const isDark = getThemePaletteMode(theme.palette) === 'dark';

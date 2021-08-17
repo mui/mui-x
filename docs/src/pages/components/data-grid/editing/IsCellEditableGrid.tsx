@@ -1,20 +1,20 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 import * as React from 'react';
-import { createMuiTheme, Theme } from '@material-ui/core/styles';
+import { createTheme, Theme } from '@material-ui/core/styles';
 import { makeStyles } from '@material-ui/styles';
-import { DataGrid, GridColumns, GridRowsProp } from '@material-ui/data-grid';
+import { DataGrid, GridColumns, GridRowsProp } from '@mui/x-data-grid';
 import {
   randomCreatedDate,
   randomTraderName,
   randomUpdatedDate,
-} from '@material-ui/x-grid-data-generator';
+} from '@mui/x-data-grid-generator';
 
 // TODO v5: remove
 function getThemePaletteMode(palette: any): string {
   return palette.type || palette.mode;
 }
 
-const defaultTheme = createMuiTheme();
+const defaultTheme = createTheme();
 const useStyles = makeStyles(
   (theme: Theme) => {
     const backgroundColor =

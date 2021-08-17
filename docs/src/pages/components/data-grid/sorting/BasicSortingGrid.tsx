@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { DataGrid, GridSortModel } from '@material-ui/data-grid';
-import { useDemoData } from '@material-ui/x-grid-data-generator';
+import { DataGrid, GridSortModel } from '@mui/x-data-grid';
+import { useDemoData } from '@mui/x-data-grid-generator';
 
 export default function BasicSortingGrid() {
   const { data } = useDemoData({

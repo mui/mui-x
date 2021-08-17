@@ -1,11 +1,11 @@
 import {
-  GRID_CELL_KEY_DOWN,
+  GridEvents,
   GridApiRef,
   GridComponentProps,
   useGridApiRef,
   XGrid,
   GridEditSingleSelectCell,
-} from '@material-ui/x-grid';
+} from '@mui/x-data-grid-pro';
 import Portal from '@material-ui/unstyled/Portal';
 import { expect } from 'chai';
 import * as React from 'react';
@@ -202,7 +202,7 @@ describe('<XGrid /> - Edit Rows', () => {
     cell.focus();
     expect(cell).to.have.text('Adidas');
     const params = apiRef.current.getCellParams(1, 'brand');
-    apiRef.current.publishEvent(GRID_CELL_KEY_DOWN, params, {
+    apiRef.current.publishEvent(GridEvents.cellKeyDown, params, {
       key: 'a',
       code: 1,
       target: cell,

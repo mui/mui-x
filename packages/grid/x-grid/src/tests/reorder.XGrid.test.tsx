@@ -20,7 +20,7 @@ import {
   useGridApiRef,
   XGrid,
   GRID_COLUMN_HEADER_DRAGGING_CSS_CLASS,
-} from '@material-ui/x-grid';
+} from '@mui/x-data-grid-pro';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 

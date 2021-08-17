@@ -1,4 +1,4 @@
-import { GridApiRef, GridColumns, useGridApiRef, XGrid } from '@material-ui/x-grid';
+import { GridApiRef, GridColumns, useGridApiRef, XGrid } from '@mui/x-data-grid-pro';
 import { expect } from 'chai';
 import * as React from 'react';
 import { createClientRenderStrictMode } from 'test/utils';
@@ -379,6 +379,28 @@ describe('<XGrid /> - Export', () => {
           fields: ['id', 'brand'],
         }),
       ).to.equal(['id,Brand', '0,Nike', '1,Adidas'].join('\r\n'));
+    });
+
+    it('should work with booleans', () => {
+      const TestCaseCSVExport = () => {
+        apiRef = useGridApiRef();
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <XGrid
+              {...baselineProps}
+              apiRef={apiRef}
+              localeText={{ booleanCellTrueLabel: 'Yes', booleanCellFalseLabel: 'No' }}
+              columns={[{ field: 'id' }, { field: 'isAdmin', type: 'boolean' }]}
+              rows={[
+                { id: 0, isAdmin: true },
+                { id: 1, isAdmin: false },
+              ]}
+            />
+          </div>
+        );
+      };
+      render(<TestCaseCSVExport />);
+      expect(apiRef.current.getDataAsCsv()).to.equal(['id,isAdmin', '0,Yes', '1,No'].join('\r\n'));
     });
   });
 });

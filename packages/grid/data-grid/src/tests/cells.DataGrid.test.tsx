@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { createClientRenderStrictMode } from 'test/utils';
 import { expect } from 'chai';
-import { DataGrid } from '@material-ui/data-grid';
+import { DataGrid } from '@mui/x-data-grid';
 import { getCell } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);

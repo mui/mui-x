@@ -1,8 +1,5 @@
 import * as React from 'react';
-import {
-  GRID_COLUMN_HEADER_NAVIGATION_KEY_DOWN,
-  GRID_SELECTION_CHANGE,
-} from '../../constants/eventsConstants';
+import { GridEvents } from '../../constants/eventsConstants';
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
 import { gridPaginatedVisibleSortedGridRowIdsSelector } from '../../hooks/features/pagination/gridPaginationSelector';
 import { visibleSortedGridRowIdsSelector } from '../../hooks/features/filter/gridFilterSelector';
@@ -30,8 +27,8 @@ export const GridHeaderCheckbox = React.forwardRef<HTMLInputElement, GridColumnH
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
       const checked = event.target.checked;
       const rowsToBeSelected = rootProps.checkboxSelectionVisibleOnly
-        ? gridPaginatedVisibleSortedGridRowIdsSelector(apiRef.current.getState())
-        : visibleSortedGridRowIdsSelector(apiRef.current.getState());
+        ? gridPaginatedVisibleSortedGridRowIdsSelector(apiRef.current.state)
+        : visibleSortedGridRowIdsSelector(apiRef.current.state);
       apiRef!.current.selectRows(rowsToBeSelected, checked, !event.target.indeterminate);
     };
 
@@ -49,7 +46,7 @@ export const GridHeaderCheckbox = React.forwardRef<HTMLInputElement, GridColumnH
           event.stopPropagation();
         }
         if (isNavigationKey(event.key) && !event.shiftKey) {
-          apiRef!.current.publishEvent(GRID_COLUMN_HEADER_NAVIGATION_KEY_DOWN, props, event);
+          apiRef!.current.publishEvent(GridEvents.columnHeaderNavigationKeyDown, props, event);
         }
       },
       [apiRef, props],
@@ -60,7 +57,7 @@ export const GridHeaderCheckbox = React.forwardRef<HTMLInputElement, GridColumnH
     }, []);
 
     React.useEffect(() => {
-      return apiRef?.current.subscribeEvent(GRID_SELECTION_CHANGE, handleSelectionChange);
+      return apiRef?.current.subscribeEvent(GridEvents.selectionChange, handleSelectionChange);
     }, [apiRef, handleSelectionChange]);
 
     const CheckboxComponent = apiRef?.current.components.Checkbox!;

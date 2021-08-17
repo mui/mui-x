@@ -1,10 +1,5 @@
 import * as React from 'react';
-import {
-  GRID_COLUMNS_CHANGE,
-  GRID_COLUMN_ORDER_CHANGE,
-  GRID_COLUMN_WIDTH_CHANGE,
-  GRID_COLUMN_VISIBILITY_CHANGE,
-} from '../../../constants/eventsConstants';
+import { GridEvents } from '../../../constants/eventsConstants';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridColumnApi } from '../../../models/api/gridColumnApi';
 import { gridCheckboxSelectionColDef } from '../../../models/colDef/gridCheckboxSelection';
@@ -158,7 +153,7 @@ export function useGridColumns(
       forceUpdate();
 
       if (apiRef.current && emit) {
-        apiRef.current.publishEvent(GRID_COLUMNS_CHANGE, newState.all);
+        apiRef.current.publishEvent(GridEvents.columnsChange, newState.all);
       }
     },
     [logger, setGridState, forceUpdate, apiRef],
@@ -203,7 +198,7 @@ export function useGridColumns(
       logger.debug('updating GridColumns with new state');
 
       // Avoid dependency on gridState to avoid infinite loop
-      const refGridState = apiRef.current.getState();
+      const refGridState = apiRef.current.state;
       const newColumns: GridColumns = newState.all.map((field) => newState.lookup[field]);
       const updatedCols = getStateColumns(newColumns, refGridState.viewportSizes.width);
 
@@ -220,7 +215,7 @@ export function useGridColumns(
   const updateColumns = React.useCallback(
     (cols: GridColDef[]) => {
       // Avoid dependency on gridState to avoid infinite loop
-      const newState = upsertColumnsState(cols, apiRef.current.getState().columns);
+      const newState = upsertColumnsState(cols, apiRef.current.state.columns);
       setColumnsState(newState, false);
     },
     [apiRef, setColumnsState],
@@ -239,7 +234,7 @@ export function useGridColumns(
       updateColumns([updatedCol]);
       forceUpdate();
 
-      apiRef.current.publishEvent(GRID_COLUMN_VISIBILITY_CHANGE, {
+      apiRef.current.publishEvent(GridEvents.columnVisibilityChange, {
         field,
         colDef: updatedCol,
         api: apiRef,
@@ -266,7 +261,7 @@ export function useGridColumns(
         oldIndex: oldIndexPosition,
         api: apiRef.current,
       };
-      apiRef.current.publishEvent(GRID_COLUMN_ORDER_CHANGE, params);
+      apiRef.current.publishEvent(GridEvents.columnOrderChange, params);
 
       const updatedColumns = [...gridState.columns.all];
       updatedColumns.splice(targetIndexPosition, 0, updatedColumns.splice(oldIndexPosition, 1)[0]);
@@ -282,7 +277,7 @@ export function useGridColumns(
       const column = apiRef.current.getColumn(field);
       apiRef.current.updateColumn({ ...column, width });
 
-      apiRef.current.publishEvent(GRID_COLUMN_WIDTH_CHANGE, {
+      apiRef.current.publishEvent(GridEvents.columnWidthChange, {
         element: apiRef.current.getColumnHeaderElement(field),
         colDef: column,
         api: apiRef,
@@ -340,11 +335,15 @@ export function useGridColumns(
       `GridColumns gridState.viewportSizes.width, changed ${gridState.viewportSizes.width}`,
     );
     // Avoid dependency on gridState as I only want to update cols when viewport size changed.
-    const currentColumns = allGridColumnsSelector(apiRef.current.getState());
+    const currentColumns = allGridColumnsSelector(apiRef.current.state);
 
     apiRef.current.updateColumns(currentColumns);
   }, [apiRef, gridState.viewportSizes.width, logger]);
 
   // Grid Option Handlers
-  useGridApiOptionHandler(apiRef, GRID_COLUMN_VISIBILITY_CHANGE, props.onColumnVisibilityChange);
+  useGridApiOptionHandler(
+    apiRef,
+    GridEvents.columnVisibilityChange,
+    props.onColumnVisibilityChange,
+  );
 }

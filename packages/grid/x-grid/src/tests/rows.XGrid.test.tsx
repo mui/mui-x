@@ -14,8 +14,7 @@ import {
   useGridApiRef,
   XGrid,
   XGridProps,
-  GRID_CELL_FOCUS_OUT,
-} from '@material-ui/x-grid';
+} from '@mui/x-data-grid-pro';
 import { useData } from 'packages/storybook/src/hooks/useData';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
@@ -323,7 +322,7 @@ describe('<XGrid /> - Rows', () => {
         />,
       );
 
-      const isVirtualized = apiRef!.current!.getState().containerSizes!.isVirtualized;
+      const isVirtualized = apiRef!.current!.state.containerSizes!.isVirtualized;
       expect(isVirtualized).to.equal(false);
     });
 
@@ -340,7 +339,7 @@ describe('<XGrid /> - Rows', () => {
         />,
       );
 
-      let isVirtualized = apiRef!.current!.getState().containerSizes!.isVirtualized;
+      let isVirtualized = apiRef!.current!.state.containerSizes!.isVirtualized;
       expect(isVirtualized).to.equal(false);
 
       render(
@@ -352,13 +351,13 @@ describe('<XGrid /> - Rows', () => {
         />,
       );
 
-      isVirtualized = apiRef!.current!.getState().containerSizes!.isVirtualized;
+      isVirtualized = apiRef!.current!.state.containerSizes!.isVirtualized;
       expect(isVirtualized).to.equal(true);
     });
 
     it('should render last row when scrolling to the bottom', () => {
       render(<TestCaseVirtualization nbRows={996} hideFooter height={600} />);
-      const totalHeight = apiRef!.current!.getState().containerSizes?.totalSizes.height!;
+      const totalHeight = apiRef!.current!.state.containerSizes?.totalSizes.height!;
 
       const gridWindow = document.querySelector('.MuiDataGrid-window')!;
       const renderingZone = document.querySelector('.MuiDataGrid-renderingZone')! as HTMLElement;
@@ -375,14 +374,14 @@ describe('<XGrid /> - Rows', () => {
     it('Rows should not be virtualized when the grid is in pagination autoPageSize', () => {
       render(<TestCaseVirtualization autoPageSize pagination />);
 
-      const isVirtualized = apiRef!.current!.getState().containerSizes!.isVirtualized;
+      const isVirtualized = apiRef!.current!.state.containerSizes!.isVirtualized;
       expect(isVirtualized).to.equal(false);
     });
 
     it('Rows should not be virtualized when the grid is in autoHeight', () => {
       render(<TestCaseVirtualization autoHeight />);
 
-      const isVirtualized = apiRef!.current!.getState().containerSizes!.isVirtualized;
+      const isVirtualized = apiRef!.current!.state.containerSizes!.isVirtualized;
       expect(isVirtualized).to.equal(false);
     });
 
@@ -396,7 +395,7 @@ describe('<XGrid /> - Rows', () => {
       let lastCell = document.querySelector('[role="row"]:last-child [role="cell"]:first-child')!;
       expect(lastCell).to.have.text('995');
 
-      let virtualPage = apiRef!.current!.getState().rendering!.virtualPage;
+      let virtualPage = apiRef!.current!.state.rendering!.virtualPage;
       expect(virtualPage).to.equal(98);
 
       setProps({ nbRows: 9 });
@@ -407,10 +406,10 @@ describe('<XGrid /> - Rows', () => {
       const renderingZone = document.querySelector('.MuiDataGrid-renderingZone')! as HTMLElement;
       expect(renderingZone.children.length).to.equal(9);
 
-      virtualPage = apiRef!.current!.getState().rendering!.virtualPage;
+      virtualPage = apiRef!.current!.state.rendering!.virtualPage;
       expect(virtualPage).to.equal(0);
 
-      const isVirtualized = apiRef!.current!.getState().containerSizes!.isVirtualized;
+      const isVirtualized = apiRef!.current!.state.containerSizes!.isVirtualized;
       expect(isVirtualized).to.equal(false);
     });
 
@@ -425,7 +424,7 @@ describe('<XGrid /> - Rows', () => {
           '[role="row"]:last-child [role="cell"]:first-child',
         )!;
         expect(lastCell).to.have.text('31');
-        const totalHeight = apiRef!.current!.getState().containerSizes?.totalSizes.height!;
+        const totalHeight = apiRef!.current!.state.containerSizes?.totalSizes.height!;
         expect(gridWindow.scrollHeight).to.equal(totalHeight);
       });
 
@@ -450,9 +449,9 @@ describe('<XGrid /> - Rows', () => {
         expect(gridWindow.scrollTop).to.equal(0);
         expect(gridWindow.scrollHeight).to.equal(gridWindow.clientHeight);
 
-        const isVirtualized = apiRef!.current!.getState().containerSizes!.isVirtualized;
+        const isVirtualized = apiRef!.current!.state.containerSizes!.isVirtualized;
         expect(isVirtualized).to.equal(false);
-        const virtualRowsCount = apiRef!.current!.getState().containerSizes!.virtualRowsCount;
+        const virtualRowsCount = apiRef!.current!.state.containerSizes!.virtualRowsCount;
         expect(virtualRowsCount).to.equal(4);
       });
 
@@ -472,9 +471,9 @@ describe('<XGrid /> - Rows', () => {
         expect(gridWindow.scrollTop).to.equal(0);
         expect(gridWindow.scrollHeight).to.equal(gridWindow.clientHeight);
 
-        const isVirtualized = apiRef!.current!.getState().containerSizes!.isVirtualized;
+        const isVirtualized = apiRef!.current!.state.containerSizes!.isVirtualized;
         expect(isVirtualized).to.equal(false);
-        const virtualRowsCount = apiRef!.current!.getState().containerSizes!.virtualRowsCount;
+        const virtualRowsCount = apiRef!.current!.state.containerSizes!.virtualRowsCount;
         expect(virtualRowsCount).to.equal(7);
       });
     });
@@ -614,7 +613,7 @@ describe('<XGrid /> - Rows', () => {
 
       fireEvent.mouseUp(getCell(0, 0));
       fireEvent.click(getCell(0, 0));
-      expect(apiRef.current.getState().focus.cell).to.deep.equal({
+      expect(apiRef.current.state.focus.cell).to.deep.equal({
         id: baselineProps.rows[0].id,
         field: baselineProps.columns[0].field,
       });
@@ -625,7 +624,7 @@ describe('<XGrid /> - Rows', () => {
 
       fireEvent.click(getCell(0, 0));
       setProps({ rows: baselineProps.rows.slice(1) });
-      expect(apiRef.current.getState().focus.cell).to.equal(null);
+      expect(apiRef.current.state.focus.cell).to.equal(null);
     });
 
     it('should not reset focus when removing a row not containing the focus cell', () => {
@@ -634,7 +633,7 @@ describe('<XGrid /> - Rows', () => {
       fireEvent.mouseUp(getCell(1, 0));
       fireEvent.click(getCell(1, 0));
       setProps({ rows: baselineProps.rows.slice(1) });
-      expect(apiRef.current.getState().focus.cell).to.deep.equal({
+      expect(apiRef.current.state.focus.cell).to.deep.equal({
         id: baselineProps.rows[1].id,
         field: baselineProps.columns[0].field,
       });
@@ -645,7 +644,7 @@ describe('<XGrid /> - Rows', () => {
       const cell = getCell(1, 0);
       cell.focus();
       fireEvent.keyDown(cell, { key: 'a' });
-      expect(apiRef.current.getState().focus.cell).to.deep.equal({
+      expect(apiRef.current.state.focus.cell).to.deep.equal({
         id: baselineProps.rows[1].id,
         field: baselineProps.columns[0].field,
       });
@@ -655,13 +654,13 @@ describe('<XGrid /> - Rows', () => {
       render(<TestCase rows={baselineProps.rows} />);
       fireEvent.mouseUp(getCell(1, 0));
       fireEvent.click(getCell(1, 0));
-      expect(apiRef.current.getState().focus.cell).to.deep.equal({
+      expect(apiRef.current.state.focus.cell).to.deep.equal({
         id: baselineProps.rows[1].id,
         field: baselineProps.columns[0].field,
       });
       fireEvent.mouseUp(getCell(2, 1));
       fireEvent.click(getCell(2, 1));
-      expect(apiRef.current.getState().focus.cell).to.deep.equal({
+      expect(apiRef.current.state.focus.cell).to.deep.equal({
         id: baselineProps.rows[2].id,
         field: baselineProps.columns[1].field,
       });
@@ -671,18 +670,18 @@ describe('<XGrid /> - Rows', () => {
       render(<TestCase rows={baselineProps.rows} />);
       fireEvent.mouseUp(getCell(1, 0));
       fireEvent.click(getCell(1, 0));
-      expect(apiRef.current.getState().focus.cell).to.deep.equal({
+      expect(apiRef.current.state.focus.cell).to.deep.equal({
         id: baselineProps.rows[1].id,
         field: baselineProps.columns[0].field,
       });
       fireEvent.click(document.body);
-      expect(apiRef.current.getState().focus.cell).to.deep.equal(null);
+      expect(apiRef.current.state.focus.cell).to.deep.equal(null);
     });
 
-    it('should publish GRID_CELL_FOCUS_OUT when clicking outside the focused cell', () => {
+    it('should publish "cellFocusOut" when clicking outside the focused cell', () => {
       const handleCellFocusOut = spy();
       render(<TestCase rows={baselineProps.rows} />);
-      apiRef.current.subscribeEvent(GRID_CELL_FOCUS_OUT, handleCellFocusOut);
+      apiRef.current.subscribeEvent('cellFocusOut', handleCellFocusOut);
       fireEvent.mouseUp(getCell(1, 0));
       fireEvent.click(getCell(1, 0));
       expect(handleCellFocusOut.callCount).to.equal(0);

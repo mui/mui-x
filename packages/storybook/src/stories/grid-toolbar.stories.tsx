@@ -1,7 +1,7 @@
-import { DataGrid } from '@material-ui/data-grid';
-import { useDemoData } from '@material-ui/x-grid-data-generator';
+import { DataGrid } from '@mui/x-data-grid';
+import { useDemoData } from '@mui/x-data-grid-generator';
 import * as React from 'react';
-import { XGrid, GridToolbar } from '@material-ui/x-grid';
+import { XGrid, GridToolbar } from '@mui/x-data-grid-pro';
 import '../style/grid-stories.css';
 import { useData } from '../hooks/useData';
 

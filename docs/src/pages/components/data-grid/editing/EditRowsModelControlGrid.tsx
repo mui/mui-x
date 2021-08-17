@@ -5,12 +5,12 @@ import {
   GridColumns,
   GridEditRowsModel,
   GridRowsProp,
-} from '@material-ui/data-grid';
+} from '@mui/x-data-grid';
 import {
   randomCreatedDate,
   randomTraderName,
   randomUpdatedDate,
-} from '@material-ui/x-grid-data-generator';
+} from '@mui/x-data-grid-generator';
 import Alert from '@material-ui/lab/Alert';
 
 export default function EditRowsModelControlGrid() {

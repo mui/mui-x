@@ -6,7 +6,7 @@ import {
 import { getColumnValues } from 'test/utils/helperFn';
 import * as React from 'react';
 import { expect } from 'chai';
-import { XGrid, useGridApiRef } from '@material-ui/x-grid';
+import { XGrid, useGridApiRef } from '@mui/x-data-grid-pro';
 import { useData } from 'packages/storybook/src/hooks/useData';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);

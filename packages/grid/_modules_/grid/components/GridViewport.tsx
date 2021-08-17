@@ -56,9 +56,6 @@ export const GridViewport: ViewportType = React.forwardRef<HTMLDivElement, {}>(
 
       return renderedRows.map(([id, row], idx) => (
         <GridRow
-          className={
-            (renderState.renderContext!.firstRowIdx! + idx) % 2 === 0 ? 'Mui-even' : 'Mui-odd'
-          }
           key={id}
           id={id}
           selected={selectionLookup[id] !== undefined}

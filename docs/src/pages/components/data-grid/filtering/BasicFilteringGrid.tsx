@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { DataGrid, GridToolbar } from '@material-ui/data-grid';
-import { useDemoData } from '@material-ui/x-grid-data-generator';
+import { DataGrid, GridToolbar } from '@mui/x-data-grid';
+import { useDemoData } from '@mui/x-data-grid-generator';
 
 export default function BasicFilteringGrid() {
   const { data } = useDemoData({

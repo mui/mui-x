@@ -8,7 +8,7 @@ import {
 } from 'test/utils';
 import { getColumnHeadersTextContent } from 'test/utils/helperFn';
 import { expect } from 'chai';
-import { DataGrid, GridToolbar } from '@material-ui/data-grid';
+import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import {
   COMFORTABLE_DENSITY_FACTOR,
   COMPACT_DENSITY_FACTOR,

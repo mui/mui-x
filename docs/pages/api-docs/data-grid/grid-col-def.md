@@ -5,9 +5,9 @@
 ## Import
 
 ```js
-import { GridColDef } from '@material-ui/x-grid';
+import { GridColDef } from '@mui/x-data-grid-pro';
 // or
-import { GridColDef } from '@material-ui/data-grid';
+import { GridColDef } from '@mui/x-data-grid';
 ```
 
 ## Properties

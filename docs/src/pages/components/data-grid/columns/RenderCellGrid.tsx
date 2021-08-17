@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Button from '@material-ui/core/Button';
-import { DataGrid, GridColDef, GridCellParams } from '@material-ui/data-grid';
+import { DataGrid, GridColDef, GridCellParams } from '@mui/x-data-grid';
 
 const columns: GridColDef[] = [
   {

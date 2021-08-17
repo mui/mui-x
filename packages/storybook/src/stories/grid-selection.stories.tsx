@@ -1,7 +1,7 @@
-import { useDemoData } from '@material-ui/x-grid-data-generator';
+import { useDemoData } from '@mui/x-data-grid-generator';
 import * as React from 'react';
 import { action } from '@storybook/addon-actions';
-import { XGrid, GridOptionsProp, GridSelectionModel, useGridApiRef } from '@material-ui/x-grid';
+import { XGrid, GridOptionsProp, GridSelectionModel, useGridApiRef } from '@mui/x-data-grid-pro';
 import { getData, GridData } from '../data/data-service';
 import { useData } from '../hooks/useData';
 

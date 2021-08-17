@@ -11,10 +11,10 @@ function resolvePath(sourcePath, currentFile, opts) {
 }
 
 const alias = {
-  '@material-ui/data-grid': '../packages/grid/data-grid/src',
-  '@material-ui/x-grid-data-generator': '../packages/grid/x-grid-data-generator/src',
-  '@material-ui/x-grid': '../packages/grid/x-grid/src',
-  '@material-ui/x-license': '../packages/x-license/src',
+  '@mui/x-data-grid': '../packages/grid/data-grid/src',
+  '@mui/x-data-grid-generator': '../packages/grid/x-grid-data-generator/src',
+  '@mui/x-data-grid-pro': '../packages/grid/x-grid/src',
+  '@mui/x-license-pro': '../packages/x-license/src',
   // Help in the event npm and git are significantly desynchronized.
   '@material-ui/core': './node_modules/@material-ui/monorepo/packages/material-ui/src',
   '@material-ui/styles': './node_modules/@material-ui/monorepo/packages/material-ui-styles/src',

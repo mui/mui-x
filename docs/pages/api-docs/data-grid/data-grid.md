@@ -5,8 +5,12 @@
 ## Import
 
 ```js
-import { DataGrid } from '@material-ui/data-grid';
+import { DataGrid } from '@mui/x-data-grid';
 ```
+
+## Component name
+
+The name <code>MuiDataGrid</code> can be used when providing [default props](/customization/globals/#default-props) or [style overrides](/customization/globals/#css) in the theme.
 
 ## Props
 

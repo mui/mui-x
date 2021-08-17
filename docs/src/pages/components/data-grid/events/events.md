@@ -12,7 +12,7 @@ You can subscribe to one of the [events emitted](/components/data-grid/events/#c
 
 1. an object with information related to the event
 2. a `MuiEvent` containing the DOM event or the React synthetic event, when available
-3. a `MuiCallbackDetails` containing the `GridApi` only if `XGrid` is being used.
+3. a `GridCallbackDetails` containing the `GridApi` only if `XGrid` is being used.
 
 ```tsx
 /**
@@ -24,7 +24,7 @@ You can subscribe to one of the [events emitted](/components/data-grid/events/#c
  */
 subscribeEvent: (
   event: string,
-  handler: (params: any, event: MuiEvent, details: MuiCallbackDetails) => void,
+  handler: (params: any, event: MuiEvent, details: GridCallbackDetails) => void,
   options?: GridSubscribeEventOptions,
 ) => () => void;
 ```

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridCellParams } from '@material-ui/data-grid';
+import { GridCellParams } from '@mui/x-data-grid';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import InputBase from '@material-ui/core/InputBase';
 import { createStyles, makeStyles } from '@material-ui/styles';

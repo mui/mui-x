@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { makeStyles } from '@material-ui/styles';
-import { createMuiTheme, Theme } from '@material-ui/core/styles';
+import { createTheme, Theme } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import {
   GridColumnMenu,
@@ -10,10 +10,10 @@ import {
   SortGridMenuItems,
   useGridApiRef,
   XGrid,
-} from '@material-ui/x-grid';
+} from '@mui/x-data-grid-pro';
 import StarOutlineIcon from '@material-ui/icons/StarOutline';
 
-const defaultTheme = createMuiTheme();
+const defaultTheme = createTheme();
 const useStyles = makeStyles(
   (theme: Theme) => ({
     primary: {

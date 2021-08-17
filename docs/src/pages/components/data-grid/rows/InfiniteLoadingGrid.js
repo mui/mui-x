@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { XGrid, GridOverlay } from '@material-ui/x-grid';
+import { XGrid, GridOverlay } from '@mui/x-data-grid-pro';
 import {
   useDemoData,
   getRealData,
   getCommodityColumns,
-} from '@material-ui/x-grid-data-generator';
+} from '@mui/x-data-grid-generator';
 import LinearProgress from '@material-ui/core/LinearProgress';
 
 const MAX_ROW_LENGTH = 500;

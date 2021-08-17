@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { makeStyles } from '@material-ui/styles';
-import { GridCellParams } from '@material-ui/x-grid';
+import { GridCellParams } from '@mui/x-data-grid-pro';
 
 // ISO 3166-1 alpha-2
 // ⚠️ No support for IE 11
