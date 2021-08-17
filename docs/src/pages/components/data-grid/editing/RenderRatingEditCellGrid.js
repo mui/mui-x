@@ -55,6 +55,8 @@ RatingEditInputCell.propTypes = {
    * GridApi that let you manipulate the grid.
    */
   api: PropTypes.any.isRequired,
+  field: PropTypes.string.isRequired,
+  id: PropTypes.string.isRequired,
   value: PropTypes.oneOfType([
     PropTypes.instanceOf(Date),
     PropTypes.number,

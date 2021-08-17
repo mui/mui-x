@@ -66,7 +66,7 @@ export interface GridRenderCellParams extends GridCellParams {
 }
 
 /**
- * GridCellParams containing api.
+ * GridEditCellProps containing api.
  */
 export interface GridRenderEditCellParams extends GridEditCellProps {
   /**

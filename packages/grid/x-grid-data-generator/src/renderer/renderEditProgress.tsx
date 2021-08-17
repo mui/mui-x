@@ -1,6 +1,6 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import { GridRenderEditCellParams } from '@material-ui/data-grid';
+import { GridRenderEditCellParams } from '@mui/x-data-grid';
 import Slider from '@material-ui/core/Slider';
 import Tooltip from '@material-ui/core/Tooltip';
 import { createStyles, makeStyles } from '@material-ui/styles';

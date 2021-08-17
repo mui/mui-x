@@ -3,7 +3,7 @@ import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import Popper from '@material-ui/core/Popper';
 import { createStyles, makeStyles } from '@material-ui/styles';
-import { DataGrid, GridColDef, GridRenderCellParams } from '@material-ui/data-grid';
+import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 
 interface GridCellExpandProps {
   value: string;
