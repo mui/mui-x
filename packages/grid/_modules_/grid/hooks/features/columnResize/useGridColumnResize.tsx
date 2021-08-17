@@ -4,10 +4,7 @@ import { GridStateColDef } from '../../../models/colDef';
 import { useLogger } from '../../utils';
 import { useEventCallback } from '../../../utils/material-ui-utils';
 import { GridEvents } from '../../../constants/eventsConstants';
-import {
-  GRID_COLUMN_HEADER_CSS_CLASS,
-  GRID_COLUMN_HEADER_SEPARATOR_RESIZABLE_CSS_CLASS,
-} from '../../../constants/cssClassesConstants';
+import { gridClasses } from '../../../gridClasses';
 import {
   findGridCellElementsFromCol,
   findParentElementFromClassName,
@@ -155,9 +152,7 @@ export const useGridColumnResize = (
       }
 
       // Skip if the column isn't resizable
-      if (
-        !event.currentTarget.classList.contains(GRID_COLUMN_HEADER_SEPARATOR_RESIZABLE_CSS_CLASS)
-      ) {
+      if (!event.currentTarget.classList.contains(gridClasses['columnSeparator--resizable'])) {
         return;
       }
 
@@ -166,7 +161,7 @@ export const useGridColumnResize = (
 
       colElementRef.current = findParentElementFromClassName(
         event.currentTarget,
-        GRID_COLUMN_HEADER_CSS_CLASS,
+        gridClasses.columnHeader,
       ) as HTMLDivElement;
 
       logger.debug(`Start Resize on col ${colDef.field}`);
@@ -248,7 +243,7 @@ export const useGridColumnResize = (
   const handleTouchStart = useEventCallback((event) => {
     const cellSeparator = findParentElementFromClassName(
       event.target,
-      GRID_COLUMN_HEADER_SEPARATOR_RESIZABLE_CSS_CLASS,
+      gridClasses['columnSeparator--resizable'],
     );
     // Let the event bubble if the target is not a col separator
     if (!cellSeparator) return;
@@ -265,7 +260,7 @@ export const useGridColumnResize = (
 
     colElementRef.current = findParentElementFromClassName(
       event.target,
-      GRID_COLUMN_HEADER_CSS_CLASS,
+      gridClasses.columnHeader,
     ) as HTMLDivElement;
     const field = getFieldFromHeaderElem(colElementRef.current!);
     const colDef = apiRef.current.getColumn(field);

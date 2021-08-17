@@ -28,6 +28,7 @@ const useStyles = makeStyles(
     root: {
       zIndex: theme.zIndex.modal,
       '& .MuiDataGrid-gridMenuList': {
+        // TODO: Rename to MuiGridMenu-menuList
         outline: 0,
       },
     },

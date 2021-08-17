@@ -2,6 +2,7 @@ import * as React from 'react';
 import InputBase, { InputBaseProps } from '@material-ui/core/InputBase';
 import { GridRenderEditCellParams } from '../../models/params/gridCellParams';
 import { useEnhancedEffect } from '../../utils/material-ui-utils';
+import { gridClasses } from '../../gridClasses';
 
 export function GridEditInputCell(props: GridRenderEditCellParams & InputBaseProps) {
   const {
@@ -45,7 +46,7 @@ export function GridEditInputCell(props: GridRenderEditCellParams & InputBasePro
   return (
     <InputBase
       inputRef={inputRef}
-      className="MuiDataGrid-editInputCell"
+      className={gridClasses.editInputCell}
       fullWidth
       type={colDef.type === 'number' ? colDef.type : 'text'}
       value={valueState || ''}

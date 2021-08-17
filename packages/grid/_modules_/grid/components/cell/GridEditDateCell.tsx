@@ -2,6 +2,7 @@ import * as React from 'react';
 import InputBase, { InputBaseProps } from '@material-ui/core/InputBase';
 import { GridRenderEditCellParams } from '../../models/params/gridCellParams';
 import { useEnhancedEffect } from '../../utils/material-ui-utils';
+import { gridClasses } from '../../gridClasses';
 
 export function GridEditDateCell(props: GridRenderEditCellParams & InputBaseProps) {
   const {
@@ -74,7 +75,7 @@ export function GridEditDateCell(props: GridRenderEditCellParams & InputBaseProp
     <InputBase
       inputRef={inputRef}
       fullWidth
-      className="MuiDataGrid-editInputCell"
+      className={gridClasses.editInputCell}
       type={isDateTime ? 'datetime-local' : 'date'}
       value={valueToDisplay}
       onChange={handleChange}

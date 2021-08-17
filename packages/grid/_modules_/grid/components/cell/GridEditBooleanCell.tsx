@@ -4,6 +4,7 @@ import Checkbox from '@material-ui/core/Checkbox';
 // @ts-expect-error fixed in Material-UI v5, types definitions were added.
 import { unstable_useId as useId } from '@material-ui/core/utils';
 import { useEnhancedEffect } from '../../utils/material-ui-utils';
+import { gridClasses } from '../../gridClasses';
 import { GridRenderEditCellParams } from '../../models/params/gridCellParams';
 
 export function GridEditBooleanCell(
@@ -51,7 +52,7 @@ export function GridEditBooleanCell(
   }, [hasFocus]);
 
   return (
-    <label htmlFor={id} className={clsx('MuiDataGrid-editBooleanCell', className)} {...other}>
+    <label htmlFor={id} className={clsx(gridClasses.editBooleanCell, className)} {...other}>
       <Checkbox
         id={id}
         inputRef={inputRef}

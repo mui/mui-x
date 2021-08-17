@@ -9,6 +9,7 @@ import { selectedGridRowsCountSelector } from '../../hooks/features/selection/gr
 import { GridColumnHeaderParams } from '../../models/params/gridColumnHeaderParams';
 import { isNavigationKey, isSpaceKey } from '../../utils/keyboardUtils';
 import { useGridApiContext } from '../../hooks/root/useGridApiContext';
+import { gridClasses } from '../../gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
 export const GridHeaderCheckbox = React.forwardRef<HTMLInputElement, GridColumnHeaderParams>(
@@ -68,7 +69,7 @@ export const GridHeaderCheckbox = React.forwardRef<HTMLInputElement, GridColumnH
         indeterminate={isIndeterminate}
         checked={isChecked}
         onChange={handleChange}
-        className="MuiDataGrid-checkboxInput"
+        className={gridClasses.checkboxInput}
         color="primary"
         inputProps={{ 'aria-label': 'Select All Rows checkbox' }}
         tabIndex={tabIndex}

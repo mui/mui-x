@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GRID_ROW_CSS_CLASS } from '../../../constants/cssClassesConstants';
+import { gridClasses } from '../../../gridClasses';
 import { GridEvents } from '../../../constants/eventsConstants';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridCellParams } from '../../../models/params/gridCellParams';
@@ -20,7 +20,7 @@ export const useGridKeyboard = (apiRef: GridApiRef): void => {
     (params: GridCellParams, event: React.KeyboardEvent) => {
       const rowEl = findParentElementFromClassName(
         event.target as HTMLDivElement,
-        GRID_ROW_CSS_CLASS,
+        gridClasses.row,
       )! as HTMLElement;
 
       const currentRowIndex = Number(rowEl.getAttribute('data-rowindex'));

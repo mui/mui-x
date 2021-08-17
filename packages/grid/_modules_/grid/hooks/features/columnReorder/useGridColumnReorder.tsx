@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useLogger } from '../../utils/useLogger';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridEvents } from '../../../constants/eventsConstants';
-import { GRID_COLUMN_HEADER_DRAGGING_CSS_CLASS } from '../../../constants/cssClassesConstants';
+import { gridClasses } from '../../../gridClasses';
 import { GridColumnHeaderParams } from '../../../models/params/gridColumnHeaderParams';
 import { GridCellParams } from '../../../models/params/gridCellParams';
 import { CursorCoordinates } from '../../../models/cursorCoordinates';
@@ -64,7 +64,7 @@ export const useGridColumnReorder = (
       logger.debug(`Start dragging col ${params.field}`);
 
       dragColNode.current = event.currentTarget;
-      dragColNode.current.classList.add(GRID_COLUMN_HEADER_DRAGGING_CSS_CLASS);
+      dragColNode.current.classList.add(gridClasses['columnSeparator--dragging']);
 
       setGridState((state) => ({
         ...state,
@@ -73,7 +73,7 @@ export const useGridColumnReorder = (
       forceUpdate();
 
       removeDnDStylesTimeout.current = setTimeout(() => {
-        dragColNode.current!.classList.remove(GRID_COLUMN_HEADER_DRAGGING_CSS_CLASS);
+        dragColNode.current!.classList.remove(gridClasses['columnSeparator--dragging']);
       });
 
       originColumnIndex.current = apiRef.current.getColumnIndex(params.field, false);
