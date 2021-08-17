@@ -4,7 +4,7 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import Popper from '@material-ui/core/Popper';
 import Paper from '@material-ui/core/Paper';
-import { createMuiTheme, Theme } from '@material-ui/core/styles';
+import { createTheme, Theme } from '@material-ui/core/styles';
 import { createStyles, makeStyles } from '@material-ui/styles';
 import {
   GridCellValue,
@@ -19,8 +19,8 @@ import {
   GridEditCellPropsParams,
   GridCellEditCommitParams,
   MuiEvent,
-} from '@material-ui/x-grid';
-import { useDemoData } from '@material-ui/x-grid-data-generator';
+} from '@mui/x-data-grid-pro';
+import { useDemoData } from '@mui/x-data-grid-generator';
 import { action } from '@storybook/addon-actions';
 import { randomInt } from '../data/random-generator';
 
@@ -195,7 +195,7 @@ interface GridCellExpandProps {
   width: number;
 }
 
-const defaultTheme = createMuiTheme();
+const defaultTheme = createTheme();
 const useStyles = makeStyles(
   (theme: Theme) =>
     createStyles({
@@ -557,12 +557,31 @@ export function EditRowsBasic() {
         <XGrid
           {...baselineEditProps}
           apiRef={apiRef}
+          editMode="row"
+          disableSelectionOnClick
+          // onEditRowsModelChange={action('onEditRowsModelChange')}
+        />
+      </div>
+    </React.Fragment>
+  );
+}
+export function EditCellsBasic() {
+  const apiRef = useGridApiRef();
+
+  return (
+    <React.Fragment>
+      <div className="grid-container">
+        <XGrid
+          {...baselineEditProps}
+          apiRef={apiRef}
+          editMode="cell"
           onEditRowsModelChange={action('onEditRowsModelChange')}
         />
       </div>
     </React.Fragment>
   );
 }
+
 const singleData = { rows: [...baselineEditProps.rows], columns: [...baselineEditProps.columns] };
 singleData.rows.length = 1;
 singleData.columns.length = 1;

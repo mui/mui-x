@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridCellMode } from '../gridCell';
+import { GridCellMode, GridRowMode } from '../gridCell';
 import { GridEditRowsModel } from '../gridEditRowModel';
 import { GridRowId } from '../gridRows';
 import { GridCellParams } from '../params/gridCellParams';
@@ -34,6 +34,18 @@ export interface GridEditRowApi {
    */
   getCellMode: (id: GridRowId, field: string) => GridCellMode;
   /**
+   * Sets the mode of a row.
+   * @param {GridRowId} id The id of the row.
+   * @param {GridRowMode} mode Can be: `"edit"`, `"view"`.
+   */
+  setRowMode: (id: GridRowId, mode: GridRowMode) => void;
+  /**
+   * Gets the mode of a row.
+   * @param {GridRowId} id The id of the row.
+   * @returns Returns `"edit"` or `"view"`.
+   */
+  getRowMode: (id: GridRowId) => GridRowMode;
+  /**
    * Controls if a cell is editable.
    * @param {GridCellParams} params The cell params.
    * @returns {boolean} A boolean value determining if the cell is editable.
@@ -52,8 +64,12 @@ export interface GridEditRowApi {
    * @param {React.SyntheticEvent} event The event to pass forward.
    * @returns {boolean} A boolean indicating if there is an error.
    */
-  commitCellChange: (
-    params: GridCommitCellChangeParams,
-    event?: MouseEvent | React.SyntheticEvent,
-  ) => boolean;
+  commitCellChange: (params: GridCommitCellChangeParams, event?: any) => boolean;
+  /**
+   * Updates the row at the given id with the values stored in the edit row model.
+   * @param {GridRowId} id The id to commit to.
+   * @param {React.SyntheticEvent} event The event to pass forward.
+   * @returns {boolean} A boolean indicating if there is an error.
+   */
+  commitRowChange: (id: GridRowId, event?: any) => boolean;
 }

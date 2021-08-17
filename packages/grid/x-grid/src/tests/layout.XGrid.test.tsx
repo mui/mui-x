@@ -2,7 +2,7 @@ import * as React from 'react';
 import { createClientRenderStrictMode } from 'test/utils';
 import { expect } from 'chai';
 import { createTheme, ThemeProvider } from '@material-ui/core/styles';
-import { GridApiRef, useGridApiRef, XGrid, ptBR } from '@material-ui/x-grid';
+import { GridApiRef, useGridApiRef, XGrid, ptBR } from '@mui/x-data-grid-pro';
 
 describe('<XGrid /> - Layout', () => {
   // TODO v5: replace with createClientRender

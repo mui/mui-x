@@ -11,6 +11,7 @@ import {
 import { isEnterKey, isNavigationKey, isSpaceKey } from '../../../utils/keyboardUtils';
 import { useLogger } from '../../utils/useLogger';
 import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
+import { GridCellModes } from '../../../models/gridEditRowModel';
 
 export const useGridKeyboard = (apiRef: GridApiRef): void => {
   const logger = useLogger('useGridKeyboard');
@@ -63,7 +64,7 @@ export const useGridKeyboard = (apiRef: GridApiRef): void => {
 
       // Get the most recent params because the cell mode may have changed by another listener
       const cellParams = apiRef.current.getCellParams(params.id, params.field);
-      const isEditMode = cellParams.cellMode === 'edit';
+      const isEditMode = cellParams.cellMode === GridCellModes.Edit;
       if (isEditMode) {
         return;
       }
@@ -107,7 +108,7 @@ export const useGridKeyboard = (apiRef: GridApiRef): void => {
       }
 
       if (isNavigationKey(event.key) && !isSpaceKey(event.key) && !event.shiftKey) {
-        apiRef.current.publishEvent(GridEvents.cellNavigationKeyDown, params, event);
+        apiRef.current.publishEvent(GridEvents.columnHeaderNavigationKeyDown, params, event);
         return;
       }
 

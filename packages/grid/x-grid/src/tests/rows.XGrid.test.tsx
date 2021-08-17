@@ -14,7 +14,7 @@ import {
   useGridApiRef,
   XGrid,
   XGridProps,
-} from '@material-ui/x-grid';
+} from '@mui/x-data-grid-pro';
 import { useData } from 'packages/storybook/src/hooks/useData';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
@@ -604,10 +604,6 @@ describe('<XGrid /> - Rows', () => {
       };
     });
 
-    afterEach(() => {
-      clock.restore();
-    });
-
     it('should focus the clicked cell in the state', () => {
       render(<TestCase rows={baselineProps.rows} />);
 
@@ -689,6 +685,26 @@ describe('<XGrid /> - Rows', () => {
       expect(handleCellFocusOut.callCount).to.equal(1);
       expect(handleCellFocusOut.args[0][0].id).to.equal(baselineProps.rows[1].id);
       expect(handleCellFocusOut.args[0][0].field).to.equal(baselineProps.columns[0].field);
+    });
+
+    it('should not crash when the row is removed during the click', () => {
+      expect(() => {
+        render(<TestCase rows={baselineProps.rows} />);
+        const cell = getCell(0, 0);
+        fireEvent.mouseUp(cell);
+        fireEvent.click(cell);
+        apiRef.current.updateRows([{ id: 1, _action: 'delete' }]);
+      }).not.to.throw();
+    });
+
+    it('should not crash when the row is removed between events', () => {
+      expect(() => {
+        render(<TestCase rows={baselineProps.rows} />);
+        const cell = getCell(0, 0);
+        fireEvent.mouseEnter(cell);
+        apiRef.current.updateRows([{ id: 1, _action: 'delete' }]);
+        fireEvent.mouseLeave(cell);
+      }).not.to.throw();
     });
   });
 });

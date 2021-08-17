@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { createTheme } from '@material-ui/core/styles';
 import { makeStyles } from '@material-ui/styles';
-import { useGridApiRef, XGrid } from '@material-ui/x-grid';
+import { useGridApiRef, XGrid } from '@mui/x-data-grid-pro';
 
 // TODO v5: remove
 function getThemePaletteMode(palette) {

@@ -5,6 +5,8 @@ import { GridColumnHeaderClassNamePropType } from '../gridColumnHeaderClass';
 import { GridFilterOperator } from '../gridFilterOperator';
 import {
   GridCellParams,
+  GridRenderCellParams,
+  GridRenderEditCellParams,
   GridValueFormatterParams,
   GridValueGetterParams,
 } from '../params/gridCellParams';
@@ -110,12 +112,12 @@ export interface GridColDef {
    * Allows to override the component rendered as cell for this column.
    * @param params
    */
-  renderCell?: (params: GridCellParams) => React.ReactNode;
+  renderCell?: (params: GridRenderCellParams) => React.ReactNode;
   /**
    * Allows to override the component rendered in edit cell mode for this column.
    * @param params
    */
-  renderEditCell?: (params: GridCellParams) => React.ReactNode;
+  renderEditCell?: (params: GridRenderEditCellParams) => React.ReactNode;
   /**
    * Class name that will be added in the column header cell.
    */

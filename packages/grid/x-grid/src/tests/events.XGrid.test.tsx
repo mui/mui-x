@@ -20,7 +20,7 @@ import {
   GridColumns,
   GridEvents,
   GRID_CELL_CSS_CLASS,
-} from '@material-ui/x-grid';
+} from '@mui/x-data-grid-pro';
 import { getCell, getColumnHeaderCell, getRow } from 'test/utils/helperFn';
 import { spy } from 'sinon';
 import { useData } from 'packages/storybook/src/hooks/useData';
@@ -100,7 +100,6 @@ describe('<XGrid /> - Events Params', () => {
       expect(eventArgs!.params).to.deep.include({
         colDef: apiRef!.current.getColumn('age'),
         field: 'age',
-        api: apiRef.current,
       });
     });
   });
@@ -121,7 +120,6 @@ describe('<XGrid /> - Events Params', () => {
         id: 2,
         row: baselineProps.rows[1],
         columns: apiRef!.current.getAllColumns(),
-        api: apiRef.current,
         getValue: apiRef.current.getCellValue,
       });
     });
@@ -146,7 +144,6 @@ describe('<XGrid /> - Events Params', () => {
         isEditable: true,
         row: baselineProps.rows[1],
         colDef: apiRef!.current.getColumn('first'),
-        api: apiRef.current,
         hasFocus: false,
         tabIndex: -1,
         getValue: apiRef.current.getCellValue,
@@ -173,7 +170,6 @@ describe('<XGrid /> - Events Params', () => {
         isEditable: true,
         row: baselineProps.rows[1],
         colDef: apiRef!.current.getColumn('first'),
-        api: apiRef.current,
         hasFocus: false,
         tabIndex: -1,
         getValue: apiRef.current.getCellValue,

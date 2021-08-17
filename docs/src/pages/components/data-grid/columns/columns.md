@@ -175,7 +175,7 @@ const columns: GridColDef[] = [
   {
     field: 'date',
     headerName: 'Year',
-    renderCell: (params: GridCellParams) => (
+    renderCell: (params: GridRenderCellParams) => (
       <strong>
         {(params.value as Date).getFullYear()}
         <Button

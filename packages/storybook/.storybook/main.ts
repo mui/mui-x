@@ -90,13 +90,13 @@ const config: StorybookConfig = {
       ...config.resolve,
       extensions: ['.js', '.ts', '.tsx'],
       alias: {
-        '@material-ui/data-grid': path.resolve(__dirname, '../../../packages/grid/data-grid/src'),
-        '@material-ui/x-grid-data-generator': path.resolve(
+        '@mui/x-data-grid': path.resolve(__dirname, '../../../packages/grid/data-grid/src'),
+        '@mui/x-data-grid-generator': path.resolve(
           __dirname,
           '../../../packages/grid/x-grid-data-generator/src',
         ),
-        '@material-ui/x-grid': path.resolve(__dirname, '../../../packages/grid/x-grid/src'),
-        '@material-ui/x-license': path.resolve(__dirname, '../../../packages/x-license/src'),
+        '@mui/x-data-grid-pro': path.resolve(__dirname, '../../../packages/grid/x-grid/src'),
+        '@mui/x-license-pro': path.resolve(__dirname, '../../../packages/x-license/src'),
       },
     };
     return config;

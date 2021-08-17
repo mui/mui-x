@@ -1,5 +1,5 @@
-import { GridLinkOperator, XGrid } from '@material-ui/x-grid';
-import { useDemoData } from '@material-ui/x-grid-data-generator';
+import { GridLinkOperator, XGrid } from '@mui/x-data-grid-pro';
+import { useDemoData } from '@mui/x-data-grid-generator';
 import * as React from 'react';
 
 const filterModel = {

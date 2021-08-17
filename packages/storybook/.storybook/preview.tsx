@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { LicenseInfo } from '@material-ui/x-grid';
+import { LicenseInfo } from '@mui/x-data-grid-pro';
 import { INITIAL_VIEWPORTS } from '@storybook/addon-viewport';
 import { configureActions } from '@storybook/addon-actions';
 

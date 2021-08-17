@@ -8,7 +8,7 @@ import {
   GridRowsProp,
   useGridApiRef,
   XGrid,
-} from '@material-ui/x-grid';
+} from '@mui/x-data-grid-pro';
 
 // TODO v5: remove
 function getThemePaletteMode(palette: any): string {

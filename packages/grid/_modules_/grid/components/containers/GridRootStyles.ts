@@ -23,9 +23,6 @@ export const useStyles = makeStyles(
         height: '100%',
         display: 'flex',
         flexDirection: 'column',
-        '& *, & *::before, & *::after': {
-          boxSizing: 'inherit',
-        },
         '&.MuiDataGrid-autoHeight': {
           height: 'auto',
         },
@@ -88,6 +85,7 @@ export const useStyles = makeStyles(
           WebkitTapHighlightColor: 'transparent',
           lineHeight: null,
           padding: '0 10px',
+          boxSizing: 'border-box',
         },
         '& .MuiDataGrid-columnHeader:focus-within, & .MuiDataGrid-cell:focus-within': {
           outline: `solid ${muiStyleAlpha(theme.palette.primary.main, 0.5)} 1px`,
@@ -260,6 +258,13 @@ export const useStyles = makeStyles(
             outline: `solid ${theme.palette.primary.main} 1px`,
             outlineOffset: '-1px',
           },
+        },
+        '& .MuiDataGrid-row--editing': {
+          boxShadow: theme.shadows[2],
+        },
+        '& .MuiDataGrid-row--editing .MuiDataGrid-cell': {
+          boxShadow: theme.shadows[0],
+          backgroundColor: theme.palette.background.paper,
         },
         '& .MuiDataGrid-editInputCell': {
           ...theme.typography.body2,

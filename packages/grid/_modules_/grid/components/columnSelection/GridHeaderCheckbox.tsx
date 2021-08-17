@@ -9,13 +9,13 @@ import { selectedGridRowsCountSelector } from '../../hooks/features/selection/gr
 import { GridColumnHeaderParams } from '../../models/params/gridColumnHeaderParams';
 import { isNavigationKey, isSpaceKey } from '../../utils/keyboardUtils';
 import { useGridApiContext } from '../../hooks/root/useGridApiContext';
-import { optionsSelector } from '../../hooks/utils/optionsSelector';
+import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
 export const GridHeaderCheckbox = React.forwardRef<HTMLInputElement, GridColumnHeaderParams>(
   function GridHeaderCheckbox(props, ref) {
     const [, forceUpdate] = React.useState(false);
     const apiRef = useGridApiContext();
-    const options = useGridSelector(apiRef, optionsSelector);
+    const rootProps = useGridRootProps();
     const tabIndexState = useGridSelector(apiRef, gridTabIndexColumnHeaderSelector);
     const totalSelectedRows = useGridSelector(apiRef, selectedGridRowsCountSelector);
     const totalRows = useGridSelector(apiRef, gridRowCountSelector);
@@ -26,7 +26,7 @@ export const GridHeaderCheckbox = React.forwardRef<HTMLInputElement, GridColumnH
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
       const checked = event.target.checked;
-      const rowsToBeSelected = options.checkboxSelectionVisibleOnly
+      const rowsToBeSelected = rootProps.checkboxSelectionVisibleOnly
         ? gridPaginatedVisibleSortedGridRowIdsSelector(apiRef.current.state)
         : visibleSortedGridRowIdsSelector(apiRef.current.state);
       apiRef!.current.selectRows(rowsToBeSelected, checked, !event.target.indeterminate);

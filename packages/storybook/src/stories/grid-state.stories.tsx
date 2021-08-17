@@ -1,12 +1,6 @@
 import * as React from 'react';
 import Button from '@material-ui/core/Button';
-import {
-  GridState,
-  GridSortingState,
-  useGridApiRef,
-  GridStateChangeParams,
-  XGrid,
-} from '@material-ui/x-grid';
+import { GridState, GridSortingState, useGridApiRef, XGrid } from '@mui/x-data-grid-pro';
 import { useData } from '../hooks/useData';
 
 export default {
@@ -25,12 +19,12 @@ export function PartialControlUseState() {
   const [gridState, setGridState] = React.useState<GridState | undefined>();
   const colToSort = 'currencyPair';
 
-  const onStateChange = React.useCallback((params: GridStateChangeParams) => {
+  const onStateChange = React.useCallback((state: GridState) => {
     if (
-      params.state.sorting.sortModel.length > 0 &&
-      !params.state.sorting.sortModel.some((sort) => sort.field === colToSort)
+      state.sorting.sortModel.length > 0 &&
+      !state.sorting.sortModel.some((sort) => sort.field === colToSort)
     ) {
-      const newState = { ...params.state };
+      const newState = { ...state };
       newState.sorting.sortModel = [{ field: colToSort, sort: 'asc' }];
       setGridState(newState);
     }
@@ -67,11 +61,11 @@ export function PartialControlApiRef() {
   const apiRef = useGridApiRef();
 
   const onStateChange = React.useCallback(
-    (params: GridStateChangeParams) => {
+    (state: GridState) => {
       if (
-        params.state.columns.all.length > 0 &&
-        (params.state.sorting.sortModel.length === 0 ||
-          !params.state.sorting.sortModel.some((sort) => sort.field === 'currencyPair'))
+        state.columns.all.length > 0 &&
+        (state.sorting.sortModel.length === 0 ||
+          !state.sorting.sortModel.some((sort) => sort.field === 'currencyPair'))
       ) {
         apiRef.current.setState((previousState: GridState) => {
           const sorting: GridSortingState = {

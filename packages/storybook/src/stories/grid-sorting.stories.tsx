@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Button from '@material-ui/core/Button';
-import { randomInt } from '@material-ui/x-grid-data-generator';
+import { randomInt } from '@mui/x-data-grid-generator';
 import {
   GridColDef,
   XGrid,
@@ -8,7 +8,7 @@ import {
   GridSortModel,
   useGridApiRef,
   getInitialGridSortingState,
-} from '@material-ui/x-grid';
+} from '@mui/x-data-grid-pro';
 import { action } from '@storybook/addon-actions';
 
 export default {

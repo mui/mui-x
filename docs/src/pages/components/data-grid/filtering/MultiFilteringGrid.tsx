@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { GridFilterModel, XGrid } from '@material-ui/x-grid';
-import { useDemoData } from '@material-ui/x-grid-data-generator';
+import { GridFilterModel, XGrid } from '@mui/x-data-grid-pro';
+import { useDemoData } from '@mui/x-data-grid-generator';
 
 export default function MultiFilteringGrid() {
   const { data } = useDemoData({

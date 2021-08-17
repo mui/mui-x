@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridApiRef, useGridApiRef, XGrid } from '@material-ui/x-grid';
+import { GridApiRef, useGridApiRef, XGrid } from '@mui/x-data-grid-pro';
 import { expect } from 'chai';
 import { stub } from 'sinon';
 import {

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useLicenseVerifier, LicenseStatus } from '@material-ui/x-license';
+import { useLicenseVerifier, LicenseStatus } from '@mui/x-license-pro';
 
 function getLicenseErrorMessage(licenseStatus: string) {
   switch (licenseStatus) {

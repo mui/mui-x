@@ -60,7 +60,7 @@ The editable cells have a green background for better visibility.
 The `editRowsModel` prop lets you control the editing state.
 You can handle the `onEditRowsModelChange` callback to control the `GridEditRowsModel` state.
 
-{{"demo": "pages/components/data-grid/editing/EditRowsModelControlGrid.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"demo": "pages/components/data-grid/editing/CellEditControlGrid.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ### Column with valueGetter
 
@@ -124,14 +124,83 @@ The demo shows how to catch the start & end edit events to log which cell is edi
 
 {{"demo": "pages/components/data-grid/editing/CatchEditingEventsGrid.js", "bg": "inline", "disableAd": true}}
 
-## 🚧 Row editing
-
-> ⚠️ This feature isn't implemented yet. It's coming.
->
-> 👍 Upvote [issue #204](https://github.com/mui-org/material-ui-x/issues/204) if you want to see it land faster.
+## Row editing
 
 Row editing allows to edit all the cells of a row at once.
-The edition can be performed directly in the cells or in a popup or a modal.
+It is based on the [cell editing](/components/data-grid/editing/#cell-editing), thus most of the features are also supported.
+To enable it, change the edit mode to `"row"` using the `editMode` prop, then set to `true` the `editable` property in the `GridColDef` object of those columns that should be editable.
+
+```tsx
+<DataGrid editMode="row" columns={[{ field: 'name', editable: true }]} />
+```
+
+{{"demo": "pages/components/data-grid/editing/BasicRowEditingGrid.js", "bg": "inline", "defaultCodeOpen": false}}
+
+### Start editing
+
+If a cell is editable and has focus, any of the following interactions will start the edit mode of the corresponding row:
+
+- A <kbd class="key">Enter</kbd> keydown
+- A double click on the cell
+- A call to `apiRef.current.setRowMode(id, 'edit')`.
+  ```tsx
+  /**
+    * Sets the mode of a row.
+    * @param {GridRowId} id The id of the row.
+    * @param {GridRowMode} mode Can be: `"edit"`, `"view"`.
+    */
+  setRowMode: (id: GridRowId, mode: GridRowMode) => void;
+  ```
+
+### Stop editing
+
+If a row is in edit mode and one of its cells is focused, any of the following interactions will stop the edit mode:
+
+- A <kbd class="key">Escape</kbd> keydown. It will also roll back changes done in the row.
+- A <kbd class="key">Enter</kbd> keydown. It will also save and goes to the cell at the next row at the same column.
+- A mouse click outside the row
+- A call to `apiRef.current.setRowMode(id, 'view')`.
+
+### Controlled editing
+
+The `editRowsModel` prop lets you control the editing state.
+You can handle the `onEditRowsModelChange` callback to control the `GridEditRowsModel` state.
+
+{{"demo": "pages/components/data-grid/editing/RowEditControlGrid.js", "bg": "inline", "defaultCodeOpen": false}}
+
+### Conditional validation
+
+Having all cells of a row in edit mode allows validating a field based on the value of another one.
+To accomplish that, set the `onEditRowsModelChange` prop and return a new model with the `error` attribute of the invalid field set to `true`.
+Use the other fields available in the model to check if the validation should run or not.
+Once at the least one field has the `error` attribute equals to true no new value will be commited.
+
+**Note:** For server-side validation, the same [approach](#server-side-validation) from the cell editing can be used.
+
+The following demo only requires a value for the "Paid at" column if the "Is paid?" column was checked.
+
+{{"demo": "pages/components/data-grid/editing/ConditionalValidationGrid.js", "bg": "inline", "defaultCodeOpen": false}}
+
+### Control with external buttons [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-pro/)
+
+You can [disable the default behavior](/components/data-grid/events/#disabling-the-default-behavior) of the grid and control the row edit using external buttons.
+
+Here is shown how a full-featured CRUD can be created.
+
+{{"demo": "pages/components/data-grid/editing/FullFeaturedCrudGrid.js", "bg": "inline", "disableAd": true}}
+
+### Events [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-pro/)
+
+The following events can be imported and used to customize the row edition:
+
+- `rowEditStart`: emitted when the row turns to edit mode.
+- `rowEditStop`: emitted when the row turns back to view mode.
+- `rowEditCommit`: emitted when the new row values are commited.
+- `editCellPropsChange`: emitted when the props passed to an edit cell component are changed.
+
+## apiRef [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-pro/)
+
+{{"demo": "pages/components/data-grid/editing/EditApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
 
 ## API
 

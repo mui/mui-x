@@ -53,6 +53,7 @@ export const GridRowCells = React.memo(function GridRowCells(props: RowCellsProp
     ...other
   } = props;
   const apiRef = useGridApiContext();
+
   const cellsProps = columns.slice(firstColIdx, lastColIdx + 1).map((column, colIdx) => {
     const colIndex = firstColIdx + colIdx;
     const isLastColumn = colIndex === columns.length - 1;
@@ -79,12 +80,12 @@ export const GridRowCells = React.memo(function GridRowCells(props: RowCellsProp
     let cellComponent: React.ReactNode = null;
 
     if (editCellState == null && column.renderCell) {
-      cellComponent = column.renderCell(cellParams);
+      cellComponent = column.renderCell({ ...cellParams, api: apiRef.current });
       classNames.push(`${GRID_CSS_CLASS_PREFIX}-cell--withRenderer`);
     }
 
     if (editCellState != null && column.renderEditCell) {
-      const params = { ...cellParams, ...editCellState };
+      const params = { ...cellParams, ...editCellState, api: apiRef.current };
       cellComponent = column.renderEditCell(params);
       classNames.push(`${GRID_CSS_CLASS_PREFIX}-cell--editing`);
     }

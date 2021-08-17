@@ -4,7 +4,7 @@ import {
   screen,
 } from 'test/utils';
 import { expect } from 'chai';
-import { DataGrid, GridToolbar, GridPreferencePanelsValue } from '@material-ui/data-grid';
+import { DataGrid, GridToolbar, GridPreferencePanelsValue } from '@mui/x-data-grid';
 import { getColumnValues } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
