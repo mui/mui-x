@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridRenderCellParams } from '@material-ui/data-grid';
+import { GridRenderEditCellParams } from '@material-ui/data-grid';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import InputBase from '@material-ui/core/InputBase';
 import { createStyles, makeStyles } from '@material-ui/styles';
@@ -40,7 +40,7 @@ const useStyles = makeStyles(
   { defaultTheme },
 );
 
-function EditCurrency(props: GridRenderCellParams) {
+function EditCurrency(props: GridRenderEditCellParams) {
   const classes = useStyles();
   const { id, value, api, field } = props;
 
@@ -87,6 +87,6 @@ function EditCurrency(props: GridRenderCellParams) {
   );
 }
 
-export function renderEditCurrency(params: GridRenderCellParams) {
+export function renderEditCurrency(params: GridRenderEditCellParams) {
   return <EditCurrency {...params} />;
 }

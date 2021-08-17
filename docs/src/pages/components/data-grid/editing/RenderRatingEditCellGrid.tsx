@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { makeStyles } from '@material-ui/styles';
 import Rating from '@material-ui/lab/Rating';
-import { DataGrid, GridRenderCellParams } from '@material-ui/data-grid';
+import { DataGrid, GridRenderEditCellParams } from '@material-ui/data-grid';
 
 function renderRating(params) {
   return <Rating readOnly value={params.value} />;
@@ -16,7 +16,7 @@ const useStyles = makeStyles({
   },
 });
 
-function RatingEditInputCell(props: GridRenderCellParams) {
+function RatingEditInputCell(props: GridRenderEditCellParams) {
   const { id, value, api, field } = props;
   const classes = useStyles();
 

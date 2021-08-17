@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridRenderCellParams } from '@material-ui/data-grid';
+import { GridRenderEditCellParams } from '@material-ui/data-grid';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import InputBase from '@material-ui/core/InputBase';
 import { createStyles, makeStyles } from '@material-ui/styles';
@@ -40,7 +40,7 @@ const useStyles = makeStyles(
   { defaultTheme },
 );
 
-function EditCountry(props: GridRenderCellParams) {
+function EditCountry(props: GridRenderEditCellParams) {
   const classes = useStyles();
   const { id, value, api, field } = props;
 
@@ -88,6 +88,6 @@ function EditCountry(props: GridRenderCellParams) {
   );
 }
 
-export function renderEditCountry(params: GridRenderCellParams) {
+export function renderEditCountry(params: GridRenderEditCellParams) {
   return <EditCountry {...params} />;
 }

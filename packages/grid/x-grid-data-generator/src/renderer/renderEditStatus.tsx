@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridRenderCellParams } from '@material-ui/data-grid';
+import { GridRenderEditCellParams } from '@material-ui/data-grid';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
@@ -32,7 +32,7 @@ const useStyles = makeStyles(
   { defaultTheme },
 );
 
-function EditStatus(props: GridRenderCellParams) {
+function EditStatus(props: GridRenderEditCellParams) {
   const classes = useStyles();
   const { id, value, api, field } = props;
 
@@ -92,6 +92,6 @@ function EditStatus(props: GridRenderCellParams) {
   );
 }
 
-export function renderEditStatus(params: GridRenderCellParams) {
+export function renderEditStatus(params: GridRenderEditCellParams) {
   return <EditStatus {...params} />;
 }

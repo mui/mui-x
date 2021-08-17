@@ -546,7 +546,7 @@ export interface GridOptions {
   onSortModelChange?: (model: GridSortModel, details?: any) => void;
   /**
    * Callback fired when the state of the grid is updated.
-   * @param state
+   * @param state The new state.
    * @param event [[MuiEvent<{}>]].
    * @param {GridCallbackDetails} details Additional details for this callback.
    * @internal
