@@ -3,7 +3,13 @@ import { ownerDocument, capitalize } from '@material-ui/core/utils';
 import clsx from 'clsx';
 import { GridEvents } from '../../constants/eventsConstants';
 import { GRID_CSS_CLASS_PREFIX } from '../../constants/cssClassesConstants';
-import { GridAlignment, GridCellMode, GridCellValue, GridRowId } from '../../models/index';
+import {
+  GridAlignment,
+  GridCellMode,
+  GridCellModes,
+  GridCellValue,
+  GridRowId,
+} from '../../models/index';
 import { useGridApiContext } from '../../hooks/root/useGridApiContext';
 
 export interface GridCellProps {
@@ -132,7 +138,7 @@ export const GridCell = React.memo(function GridCell(props: GridCellProps) {
   };
 
   React.useLayoutEffect(() => {
-    if (!hasFocus || cellMode === 'edit') {
+    if (!hasFocus || cellMode === GridCellModes.Edit) {
       return;
     }
 

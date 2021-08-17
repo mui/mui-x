@@ -5,6 +5,7 @@ import { GridRenderEditCellParams } from '../../models/params/gridCellParams';
 import { isEscapeKey } from '../../utils/keyboardUtils';
 import { useEnhancedEffect } from '../../utils/material-ui-utils';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
+import { GridEditModes } from '../../models/gridEditRowModel';
 
 const renderSingleSelectOptions = (option) =>
   typeof option === 'object' ? (
@@ -49,7 +50,7 @@ export function GridEditSingleSelectCell(props: GridRenderEditCellParams & Selec
   };
 
   const handleClose = (event, reason) => {
-    if (rootProps.editMode === 'row') {
+    if (rootProps.editMode === GridEditModes.Row) {
       setOpen(false);
       return;
     }
