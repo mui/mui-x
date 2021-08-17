@@ -75,7 +75,7 @@ To validate the value in the cells, use `onEditRowsModelChange` to set the `erro
 If this attribute is true, the value will never be commited.
 This prop is invoked when a change is triggered by the edit cell component.
 
-Alternatively, you can use the `GridEditRowsModel` state mentioned in the [Control editing](#controlled-editing) section.
+Alternatively, you can use the `GridEditRowsModel` state mentioned in the [Controlled editing](#controlled-editing) section.
 
 {{"demo": "pages/components/data-grid/editing/ValidateRowModelControlGrid.js", "bg": "inline"}}
 
