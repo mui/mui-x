@@ -3,7 +3,13 @@ import { ownerDocument, capitalize } from '@material-ui/core/utils';
 import clsx from 'clsx';
 import { GridEvents } from '../../constants/eventsConstants';
 import { GRID_CSS_CLASS_PREFIX } from '../../constants/cssClassesConstants';
-import { GridAlignment, GridCellMode, GridCellValue, GridRowId } from '../../models/index';
+import {
+  GridAlignment,
+  GridCellMode,
+  GridCellModes,
+  GridCellValue,
+  GridRowId,
+} from '../../models/index';
 import { useGridApiContext } from '../../hooks/root/useGridApiContext';
 
 export interface GridCellProps {
@@ -91,6 +97,12 @@ export const GridCell = React.memo(function GridCell(props: GridCellProps) {
       ) {
         return;
       }
+
+      // The row might have been deleted during the click
+      if (!apiRef.current.getRow(rowId)) {
+        return;
+      }
+
       const params = apiRef!.current.getCellParams(rowId!, field || '');
       apiRef!.current.publishEvent(eventName, params, event);
     },
@@ -126,7 +138,7 @@ export const GridCell = React.memo(function GridCell(props: GridCellProps) {
   };
 
   React.useLayoutEffect(() => {
-    if (!hasFocus || cellMode === 'edit') {
+    if (!hasFocus || cellMode === GridCellModes.Edit) {
       return;
     }
 
@@ -156,7 +168,7 @@ export const GridCell = React.memo(function GridCell(props: GridCellProps) {
       data-mode={cellMode}
       aria-colindex={colIndex + 1}
       style={style}
-      tabIndex={tabIndex}
+      tabIndex={cellMode === 'view' || !isEditable ? tabIndex : -1}
       {...eventsHandlers}
     >
       {children != null ? children : valueToRender?.toString()}

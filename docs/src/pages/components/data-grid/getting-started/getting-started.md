@@ -152,7 +152,7 @@ The enterprise components come in two plans: Pro and Premium.
 | [Pagination](/components/data-grid/pagination/)                                           |    ✅     |              ✅               |                  ✅                   |
 | [Pagination > 100 rows per page](/components/data-grid/pagination/#paginate-gt-100-rows)  |    ❌     |              ✅               |                  ✅                   |
 | **Editing**                                                                               |           |                               |                                       |
-| [Row editing](/components/data-grid/editing/#row-editing)                                 |    🚧     |              🚧               |                  🚧                   |
+| [Row editing](/components/data-grid/editing/#row-editing)                                 |    ✅     |              ✅               |                  ✅                   |
 | [Cell editing](/components/data-grid/editing/#cell-editing)                               |    ✅     |              ✅               |                  ✅                   |
 | **Import & export**                                                                       |           |                               |                                       |
 | [CSV export](/components/data-grid/export/#csv-export)                                    |    ✅     |              ✅               |                  ✅                   |

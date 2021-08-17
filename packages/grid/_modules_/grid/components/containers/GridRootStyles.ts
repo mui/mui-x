@@ -259,6 +259,13 @@ export const useStyles = makeStyles(
             outlineOffset: '-1px',
           },
         },
+        '& .MuiDataGrid-row--editing': {
+          boxShadow: theme.shadows[2],
+        },
+        '& .MuiDataGrid-row--editing .MuiDataGrid-cell': {
+          boxShadow: theme.shadows[0],
+          backgroundColor: theme.palette.background.paper,
+        },
         '& .MuiDataGrid-editInputCell': {
           ...theme.typography.body2,
           padding: '1px 0',

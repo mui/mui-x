@@ -1,6 +1,11 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 import * as React from 'react';
-import { DataGrid } from '@mui/x-data-grid';
+import {
+  DataGrid,
+  GridColumns,
+  GridEditRowsModel,
+  GridRowsProp,
+} from '@mui/x-data-grid';
 import {
   randomCreatedDate,
   randomTraderName,
@@ -8,10 +13,10 @@ import {
 } from '@mui/x-data-grid-generator';
 import Alert from '@material-ui/lab/Alert';
 
-export default function EditRowsModelControlGrid() {
+export default function CellEditControlGrid() {
   const [editRowsModel, setEditRowsModel] = React.useState({});
 
-  const handleEditRowsModelChange = React.useCallback((model) => {
+  const handleEditRowsModelChange = React.useCallback((model: GridEditRowsModel) => {
     setEditRowsModel(model);
   }, []);
 
@@ -32,7 +37,7 @@ export default function EditRowsModelControlGrid() {
   );
 }
 
-const columns = [
+const columns: GridColumns = [
   { field: 'name', headerName: 'Name', width: 180, editable: true },
   { field: 'age', headerName: 'Age', type: 'number', editable: true },
   {
@@ -51,7 +56,7 @@ const columns = [
   },
 ];
 
-const rows = [
+const rows: GridRowsProp = [
   {
     id: 1,
     name: randomTraderName(),

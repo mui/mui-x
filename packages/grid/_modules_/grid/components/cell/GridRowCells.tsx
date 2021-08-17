@@ -53,6 +53,7 @@ export const GridRowCells = React.memo(function GridRowCells(props: RowCellsProp
     ...other
   } = props;
   const apiRef = useGridApiContext();
+
   const cellsProps = columns.slice(firstColIdx, lastColIdx + 1).map((column, colIdx) => {
     const colIndex = firstColIdx + colIdx;
     const isLastColumn = colIndex === columns.length - 1;

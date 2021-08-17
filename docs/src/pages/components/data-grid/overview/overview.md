@@ -85,7 +85,6 @@ We provide three options:
 
 While development of the data grid component is moving fast, there are still many additional features that we plan to implement. Some of them:
 
-- [Row & Cell editing](/components/data-grid/editing/)
 - Headless (hooks only)
 - [Column pinning](/components/data-grid/columns/#column-pinning) <span class="pro"></span>
 - [Tree data](/components/data-grid/group-pivot/#tree-data) <span class="pro"></span>

@@ -32,6 +32,10 @@
     "description": "Fired when a cell gains focus. Called with a <a href=\"/api/data-grid/grid-cell-params/\">GridCellParams</a> object."
   },
   {
+    "name": "cellFocusIn",
+    "description": "Fired when a cell gains focus. Called with a <a href=\"/api/data-grid/grid-cell-params/\">GridCellParams</a> object."
+  },
+  {
     "name": "cellFocusOut",
     "description": "Fired when a cell loses focus. Called with a <a href=\"/api/data-grid/grid-cell-params/\">GridCellParams</a> object."
   },
@@ -126,6 +130,18 @@
   {
     "name": "rowDoubleClick",
     "description": "Fired when a row is double-clicked. Called with a <a href=\"/api/data-grid/grid-row-params/\">GridRowParams</a> object."
+  },
+  {
+    "name": "rowEditCommit",
+    "description": "Fired when the props of the edit input are committed. Called with the GridRowId of the row."
+  },
+  {
+    "name": "rowEditStart",
+    "description": "Fired when the row turns to edit mode. Called with a <a href=\"/api/data-grid/grid-cell-params/\">GridCellParams</a> object."
+  },
+  {
+    "name": "rowEditStop",
+    "description": "Fired when the row turns back to view mode. Called with a <a href=\"/api/data-grid/grid-cell-params/\">GridCellParams</a> object."
   },
   {
     "name": "rowEnter",
