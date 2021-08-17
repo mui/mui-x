@@ -1,12 +1,12 @@
 import * as React from 'react';
-import { ElementSize, GridColDef, XGrid } from '@mui/x-data-grid-pro';
+import { ElementSize, GridColDef, DataGridPro } from '@mui/x-data-grid-pro';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import '../style/grid-stories.css';
 import { useData } from '../hooks/useData';
 
 export default {
   title: 'X-Grid Tests/Reorder',
-  component: XGrid,
+  component: DataGridPro,
   parameters: {
     options: { selectedPanel: 'storybook/storysource/panel' },
     docs: {
@@ -21,7 +21,7 @@ export const ReorderSmallDataset = () => {
 
   return (
     <div style={{ width: size.width, height: size.height, display: 'flex' }}>
-      <XGrid rows={data.rows} columns={data.columns} />
+      <DataGridPro rows={data.rows} columns={data.columns} />
     </div>
   );
 };
@@ -45,7 +45,7 @@ export const DisableReorderOnSomeColumn = () => {
 
   return (
     <div className="grid-container">
-      <XGrid rows={data.rows} columns={columns} checkboxSelection />
+      <DataGridPro rows={data.rows} columns={columns} checkboxSelection />
     </div>
   );
 };

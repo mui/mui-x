@@ -28,13 +28,13 @@ Row selection can be performed with a simple mouse click, or using the [keyboard
 
 Single row selection is enable by default with the `DataGrid` component.
 To unselect a row, hold the <kbd class="key">CTRL</kbd> key and click on it.
-For the `XGrid`, you need to disable multiple row selection with `disableMultipleSelection={true}`.
+For the `DataGridPro`, you need to disable multiple row selection with `disableMultipleSelection={true}`.
 
 {{"demo": "pages/components/data-grid/selection/SingleRowSelectionGrid.js", "bg": "inline"}}
 
 ### Multiple row selection [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-pro/)
 
-To select multiple rows on the `XGrid` component, hold the <kbd class="key">CTRL</kbd> key while selecting rows.
+To select multiple rows on the `DataGridPro` component, hold the <kbd class="key">CTRL</kbd> key while selecting rows.
 
 {{"demo": "pages/components/data-grid/selection/MultipleRowSelectionGrid.js", "disableAd": true, "bg": "inline"}}
 
@@ -83,4 +83,4 @@ With this feature, you will be able to select ranges of cells across the Grid.
 ## API
 
 - [DataGrid](/api/data-grid/data-grid/)
-- [XGrid](/api/data-grid/x-grid/)
+- [DataGridPro](/api/data-grid/data-grid-pro/)

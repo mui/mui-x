@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { XGrid } from '@mui/x-data-grid-pro';
+import { DataGridPro } from '@mui/x-data-grid-pro';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
-export default function XGridDemo() {
+export default function DataGridProDemo() {
   const { data } = useDemoData({
     dataSet: 'Commodity',
     rowLength: 100000,
@@ -11,7 +11,7 @@ export default function XGridDemo() {
 
   return (
     <div style={{ height: 520, width: '100%' }}>
-      <XGrid
+      <DataGridPro
         {...data}
         loading={data.rows.length === 0}
         rowHeight={38}

@@ -9,12 +9,15 @@ import {
   waitFor,
 } from 'test/utils';
 import { expect } from 'chai';
-import { GRID_COLUMN_HEADER_SEPARATOR_RESIZABLE_CSS_CLASS, XGrid } from '@mui/x-data-grid-pro';
+import {
+  GRID_COLUMN_HEADER_SEPARATOR_RESIZABLE_CSS_CLASS,
+  DataGridPro,
+} from '@mui/x-data-grid-pro';
 import { getColumnHeaderCell } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
-describe('<XGrid /> - Column Headers', () => {
+describe('<DataGridPro /> - Column Headers', () => {
   // TODO v5: replace with createClientRender
   const render = createClientRenderStrictMode();
 
@@ -44,7 +47,7 @@ describe('<XGrid /> - Column Headers', () => {
     it('should close the menu of a column when resizing this column', async () => {
       render(
         <div style={{ width: 300, height: 500 }}>
-          <XGrid
+          <DataGridPro
             {...baselineProps}
             columns={[
               { field: 'brand', resizable: true },
@@ -71,7 +74,7 @@ describe('<XGrid /> - Column Headers', () => {
     it('should close the menu of a column when resizing another column', async () => {
       render(
         <div style={{ width: 300, height: 500 }}>
-          <XGrid
+          <DataGridPro
             {...baselineProps}
             columns={[
               { field: 'brand', resizable: true },

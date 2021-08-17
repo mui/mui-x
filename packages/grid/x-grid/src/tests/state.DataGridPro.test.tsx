@@ -3,11 +3,11 @@ import * as React from 'react';
 import { fireEvent, screen, createClientRenderStrictMode } from 'test/utils';
 import { getColumnValues } from 'test/utils/helperFn';
 import { expect } from 'chai';
-import { XGrid, useGridApiRef } from '@mui/x-data-grid-pro';
+import { DataGridPro, useGridApiRef } from '@mui/x-data-grid-pro';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
-describe('<XGrid /> - State', () => {
+describe('<DataGridPro /> - State', () => {
   // TODO v5: replace with createClientRender
   const render = createClientRenderStrictMode();
 
@@ -42,7 +42,7 @@ describe('<XGrid /> - State', () => {
 
       return (
         <div style={{ width: 300, height: 300 }}>
-          <XGrid {...baselineProps} onStateChange={onStateChange} apiRef={apiRef} />
+          <DataGridPro {...baselineProps} onStateChange={onStateChange} apiRef={apiRef} />
         </div>
       );
     }
@@ -65,7 +65,7 @@ describe('<XGrid /> - State', () => {
       }, [apiRef]);
       return (
         <div style={{ width: 300, height: 300 }}>
-          <XGrid {...baselineProps} apiRef={apiRef} />
+          <DataGridPro {...baselineProps} apiRef={apiRef} />
         </div>
       );
     }

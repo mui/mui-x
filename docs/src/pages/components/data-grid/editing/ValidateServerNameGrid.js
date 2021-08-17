@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { createTheme } from '@material-ui/core/styles';
 import { makeStyles } from '@material-ui/styles';
-import { useGridApiRef, XGrid } from '@mui/x-data-grid-pro';
+import { useGridApiRef, DataGridPro } from '@mui/x-data-grid-pro';
 
 // TODO v5: remove
 function getThemePaletteMode(palette) {
@@ -90,7 +90,7 @@ export default function ValidateServerNameGrid() {
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <XGrid
+      <DataGridPro
         className={classes.root}
         apiRef={apiRef}
         rows={rows}

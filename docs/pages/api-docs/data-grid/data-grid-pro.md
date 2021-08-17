@@ -1,11 +1,11 @@
-# XGrid API
+# DataGridPro API
 
-<p class="description">The API documentation of the XGrid React component. Learn more about the props, slots and CSS customization points.</p>
+<p class="description">The API documentation of the DataGridPro React component. Learn more about the props, slots and CSS customization points.</p>
 
 ## Import
 
 ```js
-import { XGrid } from '@mui/x-data-grid-pro';
+import { DataGridPro } from '@mui/x-data-grid-pro';
 ```
 
 ## Component name
@@ -199,4 +199,4 @@ If that's not sufficient, you can check the [implementation of the component sty
 
 ## Demos
 
-- [XGrid](/components/data-grid/#commercial-version)
+- [DataGridPro](/components/data-grid/#commercial-version)

@@ -3,7 +3,7 @@ import {
   GridApiRef,
   GridComponentProps,
   useGridApiRef,
-  XGrid,
+  DataGridPro,
   GridEditSingleSelectCell,
 } from '@mui/x-data-grid-pro';
 import Portal from '@material-ui/unstyled/Portal';
@@ -21,7 +21,7 @@ import {
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
-describe('<XGrid /> - Edit Rows', () => {
+describe('<DataGridPro /> - Edit Rows', () => {
   let clock;
   let baselineProps;
 
@@ -67,7 +67,7 @@ describe('<XGrid /> - Edit Rows', () => {
     apiRef = useGridApiRef();
     return (
       <div style={{ width: 300, height: 300 }}>
-        <XGrid {...baselineProps} apiRef={apiRef} {...props} />
+        <DataGridPro {...baselineProps} apiRef={apiRef} {...props} />
       </div>
     );
   };
@@ -397,7 +397,7 @@ describe('<XGrid /> - Edit Rows', () => {
     const valueParser = stub().withArgs('62').returns(1962);
     render(
       <div style={{ width: 300, height: 300 }}>
-        <XGrid
+        <DataGridPro
           {...baselineProps}
           columns={[
             { field: 'brand', editable: true },
@@ -528,7 +528,7 @@ describe('<XGrid /> - Edit Rows', () => {
     it('should change cell value correctly when the valueOptions is array of strings', () => {
       render(
         <div style={{ width: 300, height: 300 }}>
-          <XGrid
+          <DataGridPro
             columns={[
               {
                 field: 'brand',
@@ -569,7 +569,7 @@ describe('<XGrid /> - Edit Rows', () => {
 
       render(
         <div style={{ width: 300, height: 300 }}>
-          <XGrid
+          <DataGridPro
             columns={[
               {
                 field: 'country',
@@ -635,7 +635,7 @@ describe('<XGrid /> - Edit Rows', () => {
       apiRef = useGridApiRef();
       return (
         <div style={{ width: 300, height: 300 }}>
-          <XGrid
+          <DataGridPro
             {...baselineProps}
             apiRef={apiRef}
             columns={[{ field: 'year', type: 'number', editable: true }]}

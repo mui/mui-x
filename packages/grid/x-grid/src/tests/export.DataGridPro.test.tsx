@@ -1,11 +1,11 @@
-import { GridApiRef, GridColumns, useGridApiRef, XGrid } from '@mui/x-data-grid-pro';
+import { GridApiRef, GridColumns, useGridApiRef, DataGridPro } from '@mui/x-data-grid-pro';
 import { expect } from 'chai';
 import * as React from 'react';
 import { createClientRenderStrictMode } from 'test/utils';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
-describe('<XGrid /> - Export', () => {
+describe('<DataGridPro /> - Export', () => {
   // TODO v5: replace with createClientRender
   const render = createClientRenderStrictMode();
 
@@ -23,7 +23,7 @@ describe('<XGrid /> - Export', () => {
         apiRef = useGridApiRef();
         return (
           <div style={{ width: 300, height: 300 }}>
-            <XGrid
+            <DataGridPro
               {...baselineProps}
               apiRef={apiRef}
               columns={columns}
@@ -66,7 +66,7 @@ describe('<XGrid /> - Export', () => {
         apiRef = useGridApiRef();
         return (
           <div style={{ width: 300, height: 300 }}>
-            <XGrid
+            <DataGridPro
               {...baselineProps}
               apiRef={apiRef}
               columns={columns}
@@ -96,7 +96,7 @@ describe('<XGrid /> - Export', () => {
         apiRef = useGridApiRef();
         return (
           <div style={{ width: 300, height: 300 }}>
-            <XGrid
+            <DataGridPro
               {...baselineProps}
               apiRef={apiRef}
               columns={[
@@ -133,7 +133,7 @@ describe('<XGrid /> - Export', () => {
         apiRef = useGridApiRef();
         return (
           <div style={{ width: 300, height: 300 }}>
-            <XGrid
+            <DataGridPro
               {...baselineProps}
               apiRef={apiRef}
               columns={columns}
@@ -163,7 +163,7 @@ describe('<XGrid /> - Export', () => {
         apiRef = useGridApiRef();
         return (
           <div style={{ width: 300, height: 300 }}>
-            <XGrid
+            <DataGridPro
               {...baselineProps}
               apiRef={apiRef}
               columns={columns}
@@ -195,7 +195,7 @@ describe('<XGrid /> - Export', () => {
         apiRef = useGridApiRef();
         return (
           <div style={{ width: 300, height: 300 }}>
-            <XGrid
+            <DataGridPro
               {...baselineProps}
               apiRef={apiRef}
               columns={[{ field: 'id' }, { field: 'brand', headerName: 'Brand' }]}
@@ -224,7 +224,7 @@ describe('<XGrid /> - Export', () => {
         apiRef = useGridApiRef();
         return (
           <div style={{ width: 300, height: 300 }}>
-            <XGrid
+            <DataGridPro
               {...baselineProps}
               apiRef={apiRef}
               columns={[{ field: 'id' }, { field: 'brand', headerName: 'Brand', hide: true }]}
@@ -252,7 +252,7 @@ describe('<XGrid /> - Export', () => {
         apiRef = useGridApiRef();
         return (
           <div style={{ width: 300, height: 300 }}>
-            <XGrid
+            <DataGridPro
               {...baselineProps}
               apiRef={apiRef}
               columns={[{ field: 'id' }, { field: 'brand', headerName: 'Brand', hide: true }]}
@@ -284,7 +284,7 @@ describe('<XGrid /> - Export', () => {
         apiRef = useGridApiRef();
         return (
           <div style={{ width: 300, height: 300 }}>
-            <XGrid
+            <DataGridPro
               {...baselineProps}
               apiRef={apiRef}
               columns={[
@@ -319,7 +319,7 @@ describe('<XGrid /> - Export', () => {
         apiRef = useGridApiRef();
         return (
           <div style={{ width: 300, height: 300 }}>
-            <XGrid
+            <DataGridPro
               {...baselineProps}
               apiRef={apiRef}
               columns={[{ field: 'id' }, { field: 'brand', headerName: 'Brand', hide: true }]}
@@ -351,7 +351,7 @@ describe('<XGrid /> - Export', () => {
         apiRef = useGridApiRef();
         return (
           <div style={{ width: 300, height: 300 }}>
-            <XGrid
+            <DataGridPro
               {...baselineProps}
               apiRef={apiRef}
               columns={[
@@ -386,7 +386,7 @@ describe('<XGrid /> - Export', () => {
         apiRef = useGridApiRef();
         return (
           <div style={{ width: 300, height: 300 }}>
-            <XGrid
+            <DataGridPro
               {...baselineProps}
               apiRef={apiRef}
               localeText={{ booleanCellTrueLabel: 'Yes', booleanCellFalseLabel: 'No' }}

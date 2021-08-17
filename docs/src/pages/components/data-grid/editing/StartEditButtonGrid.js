@@ -2,7 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import Button from '@material-ui/core/Button';
-import { useGridApiRef, XGrid } from '@mui/x-data-grid-pro';
+import { useGridApiRef, DataGridPro } from '@mui/x-data-grid-pro';
 import {
   randomCreatedDate,
   randomTraderName,
@@ -97,7 +97,7 @@ export default function StartEditButtonGrid() {
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <XGrid
+      <DataGridPro
         rows={rows}
         columns={columns}
         apiRef={apiRef}

@@ -9,7 +9,7 @@ import CancelIcon from '@material-ui/icons/Close';
 import {
   GridRowsProp,
   useGridApiRef,
-  XGrid,
+  DataGridPro,
   GridApiRef,
   GridColumns,
   GridRowId,
@@ -247,7 +247,7 @@ export default function FullFeaturedCrudGrid() {
 
   return (
     <div style={{ height: 500, width: '100%' }}>
-      <XGrid
+      <DataGridPro
         rows={rows}
         columns={columns}
         apiRef={apiRef}

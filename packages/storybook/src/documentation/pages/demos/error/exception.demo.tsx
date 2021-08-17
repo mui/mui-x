@@ -1,4 +1,4 @@
-import { GridColumns, GridRowsProp, XGrid } from '@mui/x-data-grid-pro';
+import { GridColumns, GridRowsProp, DataGridPro } from '@mui/x-data-grid-pro';
 import * as React from 'react';
 import { randomCreatedDate, randomUpdatedDate } from '@mui/x-data-grid-generator';
 
@@ -38,5 +38,5 @@ export default function ExceptionDemo() {
       lastLogin: randomUpdatedDate(),
     },
   ];
-  return <XGrid rows={rows} columns={columns} autoHeight />;
+  return <DataGridPro rows={rows} columns={columns} autoHeight />;
 }

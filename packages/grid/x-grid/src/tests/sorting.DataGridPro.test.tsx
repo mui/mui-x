@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { GridApiRef, GridComponentProps, GridSortModel, useGridApiRef } from '@mui/x-data-grid';
-import { XGrid } from '@mui/x-data-grid-pro';
+import { DataGridPro } from '@mui/x-data-grid-pro';
 import { expect } from 'chai';
 import { spy, useFakeTimers } from 'sinon';
 import { getColumnValues, getCell, getColumnHeaderCell } from 'test/utils/helperFn';
@@ -17,7 +17,7 @@ import { useData } from 'packages/storybook/src/hooks/useData';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
-describe('<XGrid /> - Sorting', () => {
+describe('<DataGridPro /> - Sorting', () => {
   let clock;
   const baselineProps = {
     autoHeight: isJSDOM,
@@ -59,7 +59,7 @@ describe('<XGrid /> - Sorting', () => {
     apiRef = useGridApiRef();
     return (
       <div style={{ width: 300, height: 300 }}>
-        <XGrid
+        <DataGridPro
           apiRef={apiRef}
           {...baselineProps}
           rows={props.rows || baselineProps.rows}
@@ -202,7 +202,7 @@ describe('<XGrid /> - Sorting', () => {
 
         return (
           <div style={{ width: 300, height: 300 }}>
-            <XGrid columns={data.columns} rows={data.rows} />
+            <DataGridPro columns={data.columns} rows={data.rows} />
           </div>
         );
       };
@@ -249,7 +249,7 @@ describe('<XGrid /> - Sorting', () => {
     function Test(props) {
       return (
         <div style={{ width: 300, height: 300 }}>
-          <XGrid {...baselineProps} columns={columns} checkboxSelection {...props} />
+          <DataGridPro {...baselineProps} columns={columns} checkboxSelection {...props} />
         </div>
       );
     }
@@ -301,7 +301,7 @@ describe('<XGrid /> - Sorting', () => {
 
         return (
           <div style={{ width: 300, height: 300 }}>
-            <XGrid
+            <DataGridPro
               autoHeight={isJSDOM}
               columns={columns || baselineProps.columns}
               rows={rows || baselineProps.rows}

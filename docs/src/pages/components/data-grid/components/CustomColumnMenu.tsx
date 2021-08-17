@@ -9,7 +9,7 @@ import {
   GridFilterMenuItem,
   SortGridMenuItems,
   useGridApiRef,
-  XGrid,
+  DataGridPro,
 } from '@mui/x-data-grid-pro';
 import StarOutlineIcon from '@material-ui/icons/StarOutline';
 
@@ -102,7 +102,7 @@ export default function CustomColumnMenu() {
         Toggle menu background
       </Button>
       <div style={{ height: 250, width: '100%', marginTop: 16 }}>
-        <XGrid
+        <DataGridPro
           apiRef={apiRef}
           columns={[
             { field: 'default', width: 150 },
@@ -118,7 +118,7 @@ export default function CustomColumnMenu() {
             },
             {
               id: 2,
-              name: 'XGrid',
+              name: 'DataGridPro',
               stars: 15000,
               default: 'Enterprise',
             },

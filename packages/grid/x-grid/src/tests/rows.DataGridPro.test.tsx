@@ -12,14 +12,14 @@ import {
   GridComponentProps,
   GridRowData,
   useGridApiRef,
-  XGrid,
-  XGridProps,
+  DataGridPro,
+  DataGridProProps,
 } from '@mui/x-data-grid-pro';
 import { useData } from 'packages/storybook/src/hooks/useData';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
-describe('<XGrid /> - Rows', () => {
+describe('<DataGridPro /> - Rows', () => {
   let clock;
   let baselineProps;
 
@@ -63,7 +63,7 @@ describe('<XGrid /> - Rows', () => {
 
       render(
         <div style={{ height: 300, width: 300 }}>
-          <XGrid rows={rows} columns={columns} checkboxSelection />
+          <DataGridPro rows={rows} columns={columns} checkboxSelection />
         </div>,
       );
     });
@@ -76,7 +76,7 @@ describe('<XGrid /> - Rows', () => {
           apiRef = useGridApiRef();
           return (
             <div style={{ width: 300, height: 300 }}>
-              <XGrid {...baselineProps} getRowId={getRowId} apiRef={apiRef} />
+              <DataGridPro {...baselineProps} getRowId={getRowId} apiRef={apiRef} />
             </div>
           );
         };
@@ -102,7 +102,7 @@ describe('<XGrid /> - Rows', () => {
         apiRef = useGridApiRef();
         return (
           <div style={{ width: 300, height: 300 }}>
-            <XGrid {...editableProps} apiRef={apiRef} getRowId={getRowId} />
+            <DataGridPro {...editableProps} apiRef={apiRef} getRowId={getRowId} />
           </div>
         );
       };
@@ -127,7 +127,7 @@ describe('<XGrid /> - Rows', () => {
         apiRef = useGridApiRef();
         return (
           <div style={{ width: 300, height: 300 }}>
-            <XGrid {...baselineProps} getRowId={getRowId} apiRef={apiRef} />
+            <DataGridPro {...baselineProps} getRowId={getRowId} apiRef={apiRef} />
           </div>
         );
       };
@@ -170,7 +170,7 @@ describe('<XGrid /> - Rows', () => {
       apiRef = useGridApiRef();
       return (
         <div style={{ width: 300, height: 300 }}>
-          <XGrid {...baselineProps} apiRef={apiRef} {...props} />
+          <DataGridPro {...baselineProps} apiRef={apiRef} {...props} />
         </div>
       );
     };
@@ -259,7 +259,7 @@ describe('<XGrid /> - Rows', () => {
         const getRowId = React.useCallback((row: GridRowData) => row.idField, []);
         return (
           <div style={{ width: 300, height: 300 }}>
-            <XGrid
+            <DataGridPro
               {...baselineProps}
               apiRef={apiRef}
               rows={baselineProps.rows.map((row) => ({ idField: row.id, brand: row.brand }))}
@@ -292,7 +292,7 @@ describe('<XGrid /> - Rows', () => {
 
     let apiRef: GridApiRef;
     const TestCaseVirtualization = (
-      props: Partial<XGridProps> & {
+      props: Partial<DataGridProProps> & {
         nbRows?: number;
         nbCols?: number;
         width?: number;
@@ -304,7 +304,7 @@ describe('<XGrid /> - Rows', () => {
 
       return (
         <div style={{ width: props.width || 300, height: props.height || 300 }}>
-          <XGrid apiRef={apiRef} columns={data.columns} rows={data.rows} {...props} />
+          <DataGridPro apiRef={apiRef} columns={data.columns} rows={data.rows} {...props} />
         </div>
       );
     };
@@ -567,12 +567,12 @@ describe('<XGrid /> - Rows', () => {
   describe('Cell focus', () => {
     let apiRef: GridApiRef;
 
-    const TestCase = ({ rows }: Pick<XGridProps, 'rows'>) => {
+    const TestCase = ({ rows }: Pick<DataGridProProps, 'rows'>) => {
       apiRef = useGridApiRef();
 
       return (
         <div style={{ width: 300, height: 300 }}>
-          <XGrid apiRef={apiRef} {...baselineProps} rows={rows} />
+          <DataGridPro apiRef={apiRef} {...baselineProps} rows={rows} />
         </div>
       );
     };

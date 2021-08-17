@@ -11,7 +11,7 @@ export const DATA_GRID_PROPTYPES = {
           `Material-UI: \`apiRef\` is not a valid prop.`,
           'GridApiRef is not available in the MIT version.',
           '',
-          'You need to upgrade to the XGrid component to unlock this feature.',
+          'You need to upgrade to the DataGridPro component to unlock this feature.',
         ].join('\n'),
       );
     }
@@ -24,7 +24,7 @@ export const DATA_GRID_PROPTYPES = {
           `Material-UI: \`<DataGrid checkboxSelectionVisibleOnly={true} />\` is not a valid prop.`,
           'Selecting all columns only on the current page is not available in the MIT version.',
           '',
-          'You need to upgrade to the XGrid component to unlock this feature.',
+          'You need to upgrade to the DataGridPro component to unlock this feature.',
         ].join('\n'),
       );
     }
@@ -37,7 +37,7 @@ export const DATA_GRID_PROPTYPES = {
           `Material-UI: \`column.resizable = true\` is not a valid prop.`,
           'Column resizing is not available in the MIT version.',
           '',
-          'You need to upgrade to the XGrid component to unlock this feature.',
+          'You need to upgrade to the DataGridPro component to unlock this feature.',
         ].join('\n'),
       );
     }
@@ -50,7 +50,7 @@ export const DATA_GRID_PROPTYPES = {
           `Material-UI: \`<DataGrid disableColumnReorder={false} />\` is not a valid prop.`,
           'Column reordering is not available in the MIT version.',
           '',
-          'You need to upgrade to the XGrid component to unlock this feature.',
+          'You need to upgrade to the DataGridPro component to unlock this feature.',
         ].join('\n'),
       );
     }
@@ -63,7 +63,7 @@ export const DATA_GRID_PROPTYPES = {
           `Material-UI: \`<DataGrid disableColumnResize={false} />\` is not a valid prop.`,
           'Column resizing is not available in the MIT version.',
           '',
-          'You need to upgrade to the XGrid component to unlock this feature.',
+          'You need to upgrade to the DataGridPro component to unlock this feature.',
         ].join('\n'),
       );
     }
@@ -76,7 +76,7 @@ export const DATA_GRID_PROPTYPES = {
           `Material-UI: \`<DataGrid disableMultipleColumnsFiltering={false} />\` is not a valid prop.`,
           'Only single column sorting is available in the MIT version.',
           '',
-          'You need to upgrade to the XGrid component to unlock this feature.',
+          'You need to upgrade to the DataGridPro component to unlock this feature.',
         ].join('\n'),
       );
     }
@@ -89,7 +89,7 @@ export const DATA_GRID_PROPTYPES = {
           `Material-UI: \`<DataGrid disableMultipleColumnsSorting={false} />\` is not a valid prop.`,
           'Only single column sorting is available in the MIT version.',
           '',
-          'You need to upgrade to the XGrid component to unlock this feature.',
+          'You need to upgrade to the DataGridPro component to unlock this feature.',
         ].join('\n'),
       );
     }
@@ -102,7 +102,7 @@ export const DATA_GRID_PROPTYPES = {
           `Material-UI: \`<DataGrid disableMultipleSelection={false} />\` is not a valid prop.`,
           'Only single column selection is available in the MIT version.',
           '',
-          'You need to upgrade to the XGrid component to unlock this feature.',
+          'You need to upgrade to the DataGridPro component to unlock this feature.',
         ].join('\n'),
       );
     }
@@ -115,7 +115,7 @@ export const DATA_GRID_PROPTYPES = {
           `Material-UI: \`<DataGrid filterModel={model} />\` is not a valid prop. \`model.items\` has more than 1 item.`,
           'Only single filter is available in the MIT version.',
           '',
-          'You need to upgrade to the XGrid component to unlock this feature.',
+          'You need to upgrade to the DataGridPro component to unlock this feature.',
         ].join('\n'),
       );
     }
@@ -128,7 +128,7 @@ export const DATA_GRID_PROPTYPES = {
           `Material-UI: \`onRowsScrollEnd\` is not a valid prop.`,
           'onRowsScrollEnd is not available in the MIT version.',
           '',
-          'You need to upgrade to the XGrid component to unlock this feature.',
+          'You need to upgrade to the DataGridPro component to unlock this feature.',
         ].join('\n'),
       );
     }
@@ -141,7 +141,7 @@ export const DATA_GRID_PROPTYPES = {
           `Material-UI: \`onViewportRowsChange\` is not a valid prop.`,
           'onViewportRowsChange is not available in the MIT version.',
           '',
-          'You need to upgrade to the XGrid component to unlock this feature.',
+          'You need to upgrade to the DataGridPro component to unlock this feature.',
         ].join('\n'),
       );
     }
@@ -154,7 +154,7 @@ export const DATA_GRID_PROPTYPES = {
           `Material-UI: \`<DataGrid pageSize={${props.pageSize}} />\` is not a valid prop.`,
           `Only page size below ${MAX_PAGE_SIZE} is available in the MIT version.`,
           '',
-          'You need to upgrade to the XGrid component to unlock this feature.',
+          'You need to upgrade to the DataGridPro component to unlock this feature.',
         ].join('\n'),
       );
     }
@@ -167,7 +167,7 @@ export const DATA_GRID_PROPTYPES = {
           'Material-UI: `<DataGrid pagination={false} />` is not a valid prop.',
           'Infinite scrolling is not available in the MIT version.',
           '',
-          'You need to upgrade to the XGrid component to disable the pagination.',
+          'You need to upgrade to the DataGridPro component to disable the pagination.',
         ].join('\n'),
       );
     }
@@ -181,7 +181,7 @@ export const DATA_GRID_PROPTYPES = {
           `Material-UI: \`<DataGrid scrollEndThreshold={${props.scrollEndThreshold}} />\` is not a valid prop.`,
           'scrollEndThreshold is not available in the MIT version.',
           '',
-          'You need to upgrade to the XGrid component to unlock this feature.',
+          'You need to upgrade to the DataGridPro component to unlock this feature.',
         ].join('\n'),
       );
     }
@@ -202,7 +202,7 @@ export const DATA_GRID_PROPTYPES = {
             )}} />\` is not a valid prop.`,
             'selectionModel can only be of 1 item in DataGrid.',
             '',
-            'You need to upgrade to the XGrid component to unlock multiple selection.',
+            'You need to upgrade to the DataGridPro component to unlock multiple selection.',
           ].join('\n'),
         );
       }

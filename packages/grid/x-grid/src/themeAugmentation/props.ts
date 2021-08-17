@@ -1,9 +1,9 @@
-import { XGridProps } from '../XGridProps';
+import { DataGridProProps } from '../DataGridProProps';
 
-export interface XGridComponentProps {
-  MuiDataGridPro: XGridProps;
+export interface DataGridProComponentProps {
+  MuiDataGridPro: DataGridProProps;
 }
 
 declare module '@material-ui/core/styles' {
-  interface ComponentsPropsList extends XGridComponentProps {}
+  interface ComponentsPropsList extends DataGridProComponentProps {}
 }

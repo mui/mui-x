@@ -14,8 +14,8 @@ Data tables display information in a grid-like format of rows and columns. They 
 
 The data grid comes with two different licenses:
 
-- [DataGrid](https://material-ui.com/api/data-grid/data-grid/), it's [MIT licensed](https://tldrlegal.com/license/mit-license) and available on npm as `@material-ui/data-grid`.
-- [XGrid](https://material-ui.com/api/data-grid/x-grid/), it's **Commercially licensed** and available on npm as `@material-ui/x-grid`.
+- [DataGrid](https://material-ui.com/api/data-grid/data-grid/), it's [MIT licensed](https://tldrlegal.com/license/mit-license) and available on npm as `@mui/x-data-grid`.
+- [DataGridPro](https://material-ui.com/api/data-grid/data-grid-pro/), it's **Commercially licensed** and available on npm as `@mui/x-data-grid-pro`.
   The features only available in the commercial version are suffixed with a <span class="pro"></span> icon for the Pro plan or a <span class="premium"></span> icon for the Premium plan.
 
   <img src="/static/x/header-icon.png" style="width: 454px; margin-bottom: 2rem;" alt="">
@@ -39,10 +39,10 @@ import { DataGrid } from '@mui/x-data-grid';
 The following grid displays 31 columns and 100,000 rows - over 3 million cells in total.
 
 ```js
-import { XGrid } from '@mui/x-data-grid-pro';
+import { DataGridPro } from '@mui/x-data-grid-pro';
 ```
 
-{{"demo": "pages/components/data-grid/overview/XGridDemo.js", "defaultCodeOpen": false, "disableAd": true, "bg": "inline"}}
+{{"demo": "pages/components/data-grid/overview/DataGridProDemo.js", "defaultCodeOpen": false, "disableAd": true, "bg": "inline"}}
 
 You can check the [feature comparison](/components/data-grid/getting-started/#feature-comparison) for more details.
 See [Pricing](https://material-ui.com/store/items/material-ui-pro/) for details on purchasing licenses.
@@ -107,4 +107,4 @@ Here are some resources you might be interested in to learn more about the grid:
 ## API
 
 - [DataGrid](/api/data-grid/data-grid/)
-- [XGrid](/api/data-grid/x-grid/)
+- [DataGridPro](/api/data-grid/data-grid-pro/)

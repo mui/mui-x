@@ -32,7 +32,7 @@ yarn add @material-ui/core @material-ui/styles
 ## Quick start
 
 First, you have to import the component as below.
-To avoid name conflicts the component is named `XGrid` for the full-featured enterprise grid, and `DataGrid` for the free community version.
+To avoid name conflicts the component is named `DataGridPro` for the full-featured enterprise grid, and `DataGrid` for the free community version.
 
 ```js
 import { DataGrid } from '@mui/x-data-grid';
@@ -48,7 +48,7 @@ Here is an example
 ```js
 const rows: GridRowsProp = [
   { id: 1, col1: 'Hello', col2: 'World' },
-  { id: 2, col1: 'XGrid', col2: 'is Awesome' },
+  { id: 2, col1: 'DataGridPro', col2: 'is Awesome' },
   { id: 3, col1: 'Material-UI', col2: 'is Amazing' },
 ];
 ```
@@ -77,7 +77,7 @@ import { DataGrid, GridRowsProp, GridColDef } from '@mui/x-data-grid';
 
 const rows: GridRowsProp = [
   { id: 1, col1: 'Hello', col2: 'World' },
-  { id: 2, col1: 'XGrid', col2: 'is Awesome' },
+  { id: 2, col1: 'DataGridPro', col2: 'is Awesome' },
   { id: 3, col1: 'Material-UI', col2: 'is Amazing' },
 ];
 
@@ -101,8 +101,8 @@ export default function App() {
 
 The data grid comes with two different licenses:
 
-- [DataGrid](https://material-ui.com/api/data-grid/data-grid/), it's [MIT licensed](https://tldrlegal.com/license/mit-license) and available on npm as `@material-ui/data-grid`.
-- [XGrid](https://material-ui.com/api/data-grid/x-grid/), it's **Commercially licensed** and available on npm as `@material-ui/x-grid`.
+- [DataGrid](https://material-ui.com/api/data-grid/data-grid/), it's [MIT licensed](https://tldrlegal.com/license/mit-license) and available on npm as `@mui/x-data-grid`.
+- [DataGridPro](https://material-ui.com/api/data-grid/data-grid-pro/), it's **Commercially licensed** and available on npm as `@mui/x-data-grid-pro`.
   The features only available in the commercial version are suffixed with a <span class="pro"></span> icon for the Pro plan or a <span class="premium"></span> icon for the Premium plan.
 
   <img src="/static/x/header-icon.png" style="width: 431px; height: 123px; object-fit: contain; margin-bottom: 2rem;" alt="" loading="lazy">
@@ -110,9 +110,9 @@ The data grid comes with two different licenses:
   You can check the [feature comparison](#feature-comparison) for more details.
   See [Pricing](https://material-ui.com/store/items/material-ui-pro/) for details on purchasing licenses.
 
-### Try XGrid for free
+### Try DataGridPro for free
 
-You are free to install and try `XGrid` as long as it is not used for development of a feature intended for production.
+You are free to install and try `DataGridPro` as long as it is not used for development of a feature intended for production.
 Please take the component for a test run, no need to contact us.
 
 ### Invalid license
@@ -123,7 +123,7 @@ If you have an enterprise grid running with an expired or missing license key, t
 
 ### Feature comparison
 
-The following table summarizes the features available in the community `DataGrid` and enterprise `XGrid` components.
+The following table summarizes the features available in the community `DataGrid` and enterprise `DataGridPro` components.
 All the features of the community version are available in the enterprise one.
 The enterprise components come in two plans: Pro and Premium.
 
@@ -228,4 +228,4 @@ Here is [the public roadmap](https://github.com/mui-org/material-ui-x/projects/1
 ## API
 
 - [DataGrid](/api/data-grid/data-grid/)
-- [XGrid](/api/data-grid/x-grid/)
+- [DataGridPro](/api/data-grid/data-grid-pro/)

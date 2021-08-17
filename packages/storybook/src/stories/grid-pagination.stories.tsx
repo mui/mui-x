@@ -2,7 +2,7 @@ import { DataGrid } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import * as React from 'react';
 import { Story, Meta } from '@storybook/react';
-import { GridApiRef, useGridApiRef, XGrid, GridRowsProp } from '@mui/x-data-grid-pro';
+import { GridApiRef, useGridApiRef, DataGridPro, GridRowsProp } from '@mui/x-data-grid-pro';
 import Button from '@material-ui/core/Button';
 import Pagination from '@material-ui/lab/Pagination';
 import { action } from '@storybook/addon-actions';
@@ -11,7 +11,7 @@ import { getData, GridData } from '../data/data-service';
 
 export default {
   title: 'X-Grid Tests/Pagination',
-  component: XGrid,
+  component: DataGridPro,
   parameters: {
     options: { selectedPanel: 'storybook/storysource/panel' },
   },
@@ -22,7 +22,7 @@ export function PaginationDefault() {
 
   return (
     <div className="grid-container">
-      <XGrid rows={data.rows} columns={data.columns} pagination />
+      <DataGridPro rows={data.rows} columns={data.columns} pagination />
     </div>
   );
 }
@@ -41,7 +41,7 @@ export const PaginationArgs: Story = (props) => {
   const { rowCount, ...others } = props;
   const data = useData(rowCount, 20);
 
-  return <XGrid rows={data.rows} columns={data.columns} {...others} />;
+  return <DataGridPro rows={data.rows} columns={data.columns} {...others} />;
 };
 PaginationArgs.args = {
   pagination: true,
@@ -60,7 +60,7 @@ export function HiddenPagination() {
 
   return (
     <div className="grid-container">
-      <XGrid
+      <DataGridPro
         rows={data.rows}
         columns={data.columns}
         pageSize={100}
@@ -116,7 +116,7 @@ export function PaginationApiTests() {
         </Button>
       </div>
       <div className="grid-container">
-        <XGrid
+        <DataGridPro
           apiRef={apiRef}
           rows={data.rows}
           columns={data.columns}
@@ -166,7 +166,7 @@ export function AutoPagination() {
         </Button>
       </div>
       <div style={{ width: size.width, height: size.height }}>
-        <XGrid rows={data.rows} columns={data.columns} autoPageSize pagination />
+        <DataGridPro rows={data.rows} columns={data.columns} autoPageSize pagination />
       </div>
     </React.Fragment>
   );
@@ -219,7 +219,7 @@ export function ServerPaginationWithEventHandler() {
 
   return (
     <div className="grid-container">
-      <XGrid
+      <DataGridPro
         rows={rows}
         columns={data.columns}
         pagination
@@ -239,7 +239,7 @@ export function Page1Prop() {
 
   return (
     <div className="grid-container">
-      <XGrid
+      <DataGridPro
         rows={data.rows}
         columns={data.columns}
         pagination
@@ -255,7 +255,7 @@ export function Page2PropSnap() {
 
   return (
     <div className="grid-container">
-      <XGrid
+      <DataGridPro
         rows={data.rows}
         columns={data.columns}
         pagination
@@ -276,7 +276,7 @@ export function Page2Api() {
 
   return (
     <div className="grid-container">
-      <XGrid
+      <DataGridPro
         apiRef={apiRef}
         rows={data.rows}
         columns={data.columns}
@@ -312,7 +312,7 @@ export const GridTest = () => {
   }, [apiRef]);
   return (
     <div style={{ width: 300, height: 300 }}>
-      <XGrid
+      <DataGridPro
         rows={gridTestRows}
         apiRef={apiRef}
         columns={columns}

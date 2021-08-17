@@ -12,10 +12,10 @@ import {
   useGridApiRef,
 } from '../../_modules_/grid';
 import { GridContextProvider } from '../../_modules_/grid/context/GridContextProvider';
-import { useXGridComponent } from './useXGridComponent';
+import { useDataGridProComponent } from './useDataGridProComponent';
 import { Watermark } from '../../_modules_/grid/components/Watermark';
-import { XGridProps } from './XGridProps';
-import { useXGridProps } from './useXGridProps';
+import { DataGridProProps } from './DataGridProProps';
+import { useDataGridProProps } from './useDataGridProProps';
 
 // This is the package release date. Each package version should update this const
 // automatically when a new version is published on npm.
@@ -29,10 +29,13 @@ if (process.env.NODE_ENV !== 'production' && RELEASE_INFO === '__RELEASE' + '_IN
 
 LicenseInfo.setReleaseInfo(RELEASE_INFO);
 
-const XGridRaw = React.forwardRef<HTMLDivElement, XGridProps>(function XGrid(inProps, ref) {
+const DataGridProRaw = React.forwardRef<HTMLDivElement, DataGridProProps>(function DataGridPro(
+  inProps,
+  ref,
+) {
   const apiRef = useGridApiRef(inProps.apiRef);
-  const props = useXGridProps(inProps);
-  useXGridComponent(apiRef, props);
+  const props = useDataGridProProps(inProps);
+  useDataGridProComponent(apiRef, props);
 
   return (
     <GridContextProvider apiRef={apiRef} props={props}>
@@ -50,12 +53,12 @@ const XGridRaw = React.forwardRef<HTMLDivElement, XGridProps>(function XGrid(inP
 });
 
 // TODO remove defaultProps, API is going away in React, soon or later.
-XGridRaw.defaultProps = DEFAULT_GRID_PROPS_FROM_OPTIONS;
+DataGridProRaw.defaultProps = DEFAULT_GRID_PROPS_FROM_OPTIONS;
 
-export const XGrid = React.memo(XGridRaw);
+export const DataGridPro = React.memo(DataGridProRaw);
 
 // @ts-ignore
-XGridRaw.propTypes = {
+DataGridProRaw.propTypes = {
   columns: PropTypes.array.isRequired,
   rows: PropTypes.array.isRequired,
 } as any;

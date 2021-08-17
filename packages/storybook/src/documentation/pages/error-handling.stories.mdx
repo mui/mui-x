@@ -1,15 +1,15 @@
-import { XGrid } from '@mui/x-data-grid-pro';
+import { DataGridPro } from '@mui/x-data-grid-pro';
 import ExceptionDemo from './demos/error/exception.demo';
 import ServerErrorDemo from './demos/error/serverError.demo';
 import ServerErrorStateDemo from './demos/error/serverErrorState.demo';
 import CustomErrorDemo from './demos/error/customError.demo';
 
-<Meta title="1. Docs/13. Error handling" component={XGrid} />
+<Meta title="1. Docs/13. Error handling" component={DataGridPro} />
 
 # Error handling
 
 Handling error on the UI and in the grid, is critical to avoid breaking the whole application, or even displaying corrupted data.
-Therefore, XGrid is wrapped with an [error boundary](https://reactjs.org/docs/error-boundaries.html) internally. So if the component throws an unhandled exception anywhere in the tree,
+Therefore, DataGridPro is wrapped with an [error boundary](https://reactjs.org/docs/error-boundaries.html) internally. So if the component throws an unhandled exception anywhere in the tree,
 the exception will get handled by the error boundary, and a nice error message overlay will be displayed.
 
 <ExceptionDemo />
@@ -21,7 +21,7 @@ The error component is also part of the customization components and can be repl
 ```tsx
 ...
 return (
-    <XGrid
+    <DataGridPro
       rows={rows}
       columns={columns}
       components={{
@@ -46,7 +46,7 @@ React.useEffect(()=> {
   }
 }, [setError]);
 
-<XGrid rows={rows} columns={columns} error={error} />
+<DataGridPro rows={rows} columns={columns} error={error} />
 ```
 
 <ServerErrorStateDemo />
@@ -64,7 +64,7 @@ React.useEffect(()=> {
   }
 }, [apiRef]);
 
-<XGrid rows={rows} columns={columns} apiRef={apiRef} />
+<DataGridPro rows={rows} columns={columns} apiRef={apiRef} />
 ```
 
 <ServerErrorDemo />

@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { action } from '@storybook/addon-actions';
-import { XGrid, GridOptionsProp } from '@mui/x-data-grid-pro';
+import { DataGridPro, GridOptionsProp } from '@mui/x-data-grid-pro';
 import { useData } from '../hooks/useData';
 
 export default {
   title: 'X-Grid Tests/Events',
-  component: XGrid,
+  component: DataGridPro,
   parameters: {
     options: { selectedPanel: 'storybook/storysource/panel' },
     docs: {
@@ -30,7 +30,7 @@ export function AllEvents() {
     onStateChange: (params) => action('onStateChange')(params),
   };
 
-  return <XGrid rows={data.rows} columns={data.columns} {...options} />;
+  return <DataGridPro rows={data.rows} columns={data.columns} {...options} />;
 }
 
 export const OnRowClick = () => {
@@ -40,7 +40,7 @@ export const OnRowClick = () => {
     onRowClick: (params) => action('row click')(params),
   };
 
-  return <XGrid rows={data.rows} columns={data.columns} {...options} />;
+  return <DataGridPro rows={data.rows} columns={data.columns} {...options} />;
 };
 export const OnRowDoubleClick = () => {
   const data = useData(2000, 200);
@@ -49,7 +49,7 @@ export const OnRowDoubleClick = () => {
     onRowDoubleClick: (params) => action('row double click')(params),
   };
 
-  return <XGrid rows={data.rows} columns={data.columns} {...options} />;
+  return <DataGridPro rows={data.rows} columns={data.columns} {...options} />;
 };
 
 export const OnRowHover = () => {
@@ -58,7 +58,7 @@ export const OnRowHover = () => {
     onRowOver: (params) => action('Row over')(params),
   };
 
-  return <XGrid rows={data.rows} columns={data.columns} {...options} />;
+  return <DataGridPro rows={data.rows} columns={data.columns} {...options} />;
 };
 
 export const OnCellClick = () => {
@@ -67,7 +67,7 @@ export const OnCellClick = () => {
     onCellClick: (params) => action('cell click')(params),
   };
 
-  return <XGrid rows={data.rows} columns={data.columns} {...options} />;
+  return <DataGridPro rows={data.rows} columns={data.columns} {...options} />;
 };
 export const OnCellClickNotPropagated = () => {
   const data = useData(2000, 200);
@@ -78,7 +78,7 @@ export const OnCellClickNotPropagated = () => {
     },
   };
 
-  return <XGrid rows={data.rows} columns={data.columns} {...options} />;
+  return <DataGridPro rows={data.rows} columns={data.columns} {...options} />;
 };
 export const OnCellDoubleClick = () => {
   const data = useData(2000, 200);
@@ -87,7 +87,7 @@ export const OnCellDoubleClick = () => {
     onCellDoubleClick: (params) => action('Cell double click')(params),
   };
 
-  return <XGrid rows={data.rows} columns={data.columns} {...options} />;
+  return <DataGridPro rows={data.rows} columns={data.columns} {...options} />;
 };
 export const OnCellHover = () => {
   const data = useData(2000, 200);
@@ -95,7 +95,7 @@ export const OnCellHover = () => {
     onCellOver: (params) => action('cell over')(params),
   };
 
-  return <XGrid rows={data.rows} columns={data.columns} {...options} />;
+  return <DataGridPro rows={data.rows} columns={data.columns} {...options} />;
 };
 
 export const OnColumnHeaderClick = () => {
@@ -103,5 +103,5 @@ export const OnColumnHeaderClick = () => {
   const options: GridOptionsProp = {
     onColumnHeaderClick: (params) => action('Header click')(params),
   };
-  return <XGrid rows={data.rows} columns={data.columns} {...options} />;
+  return <DataGridPro rows={data.rows} columns={data.columns} {...options} />;
 };

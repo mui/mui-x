@@ -10,10 +10,10 @@ import {
 } from 'test/utils';
 import { expect } from 'chai';
 import {
-  XGrid,
+  DataGridPro,
   GridColumnHeaderParams,
   useGridApiRef,
-  XGridProps,
+  DataGridProProps,
   GridRowParams,
   GridCellParams,
   GridRowsProp,
@@ -25,7 +25,7 @@ import { getCell, getColumnHeaderCell, getRow } from 'test/utils/helperFn';
 import { spy } from 'sinon';
 import { useData } from 'packages/storybook/src/hooks/useData';
 
-describe('<XGrid /> - Events Params', () => {
+describe('<DataGridPro /> - Events Params', () => {
   // TODO v5: replace with createClientRender
   const render = createClientRenderStrictMode();
 
@@ -67,11 +67,11 @@ describe('<XGrid /> - Events Params', () => {
   });
 
   let apiRef;
-  const TestEvents = (props: Partial<XGridProps>) => {
+  const TestEvents = (props: Partial<DataGridProProps>) => {
     apiRef = useGridApiRef();
     return (
       <div style={{ width: 300, height: 300 }}>
-        <XGrid apiRef={apiRef} {...baselineProps} {...props} />
+        <DataGridPro apiRef={apiRef} {...baselineProps} {...props} />
       </div>
     );
   };
@@ -81,7 +81,7 @@ describe('<XGrid /> - Events Params', () => {
     const data = useData(50, 5);
     return (
       <div style={{ width: width || 300, height: height || 300 }}>
-        <XGrid rows={data.rows} columns={data.columns} {...other} />
+        <DataGridPro rows={data.rows} columns={data.columns} {...other} />
       </div>
     );
   };
@@ -315,7 +315,11 @@ describe('<XGrid /> - Events Params', () => {
 
     const { container } = render(
       <div style={{ width: 300, height: 300 }}>
-        <XGrid columns={data.columns} rows={data.rows} onRowsScrollEnd={handleRowsScrollEnd} />
+        <DataGridPro
+          columns={data.columns}
+          rows={data.rows}
+          onRowsScrollEnd={handleRowsScrollEnd}
+        />
       </div>,
     );
     const gridWindow = container.querySelector('.MuiDataGrid-window');

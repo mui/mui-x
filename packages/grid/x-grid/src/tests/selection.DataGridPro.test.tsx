@@ -14,7 +14,7 @@ import {
   GridComponentProps,
   GridInputSelectionModel,
   useGridApiRef,
-  XGrid,
+  DataGridPro,
   GridEvents,
 } from '@mui/x-data-grid-pro';
 
@@ -24,7 +24,7 @@ function getSelectedRows(apiRef) {
   return Array.from(apiRef.current.getSelectedRows().keys());
 }
 
-describe('<XGrid /> - Selection', () => {
+describe('<DataGridPro /> - Selection', () => {
   // TODO v5: replace with createClientRender
   const render = createClientRenderStrictMode();
 
@@ -65,7 +65,7 @@ describe('<XGrid /> - Selection', () => {
     apiRef = useGridApiRef();
     return (
       <div style={{ width: 300, height: 300 }}>
-        <XGrid apiRef={apiRef} {...baselineProps} {...props} />
+        <DataGridPro apiRef={apiRef} {...baselineProps} {...props} />
       </div>
     );
   };
@@ -151,7 +151,7 @@ describe('<XGrid /> - Selection', () => {
       const handleSelectionChange = (model) => setSelectionModelState(model);
       return (
         <div style={{ width: 300, height: 300 }}>
-          <XGrid
+          <DataGridPro
             apiRef={apiRef}
             {...baselineProps}
             {...props}
@@ -183,7 +183,7 @@ describe('<XGrid /> - Selection', () => {
 
       return (
         <div style={{ width: 300, height: 300 }}>
-          <XGrid
+          <DataGridPro
             apiRef={apiRef}
             {...baselineProps}
             {...props}
@@ -236,7 +236,7 @@ describe('<XGrid /> - Selection', () => {
   it('should only select visible rows on the current page', () => {
     render(
       <div style={{ width: 300, height: 300 }}>
-        <XGrid
+        <DataGridPro
           rows={[
             {
               id: 0,
@@ -304,7 +304,7 @@ describe('<XGrid /> - Selection', () => {
 
         return (
           <div style={{ width: 300, height: 300 }}>
-            <XGrid
+            <DataGridPro
               autoHeight={isJSDOM}
               columns={columns || baselineProps.columns}
               rows={rows || baselineProps.rows}

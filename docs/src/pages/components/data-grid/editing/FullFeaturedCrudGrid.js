@@ -7,7 +7,11 @@ import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/DeleteOutlined';
 import SaveIcon from '@material-ui/icons/Save';
 import CancelIcon from '@material-ui/icons/Close';
-import { useGridApiRef, XGrid, GridToolbarContainer } from '@mui/x-data-grid-pro';
+import {
+  useGridApiRef,
+  DataGridPro,
+  GridToolbarContainer,
+} from '@mui/x-data-grid-pro';
 import {
   randomCreatedDate,
   randomTraderName,
@@ -234,7 +238,7 @@ export default function FullFeaturedCrudGrid() {
 
   return (
     <div style={{ height: 500, width: '100%' }}>
-      <XGrid
+      <DataGridPro
         rows={rows}
         columns={columns}
         apiRef={apiRef}

@@ -2,9 +2,9 @@ import * as React from 'react';
 import { createClientRenderStrictMode } from 'test/utils';
 import { expect } from 'chai';
 import { createTheme, ThemeProvider } from '@material-ui/core/styles';
-import { GridApiRef, useGridApiRef, XGrid, ptBR } from '@mui/x-data-grid-pro';
+import { GridApiRef, useGridApiRef, DataGridPro, ptBR } from '@mui/x-data-grid-pro';
 
-describe('<XGrid /> - Layout', () => {
+describe('<DataGridPro /> - Layout', () => {
   // TODO v5: replace with createClientRender
   const render = createClientRenderStrictMode();
 
@@ -39,7 +39,7 @@ describe('<XGrid /> - Layout', () => {
       const ref = React.createRef<HTMLDivElement>();
       const { container } = render(
         <div style={{ width: 300, height: 300 }}>
-          <XGrid {...baselineProps} ref={ref} />
+          <DataGridPro {...baselineProps} ref={ref} />
         </div>,
       );
       expect(ref.current).to.be.instanceof(window.HTMLDivElement);
@@ -55,7 +55,7 @@ describe('<XGrid /> - Layout', () => {
 
       const { container } = render(
         <div style={{ width: 300, height: 300 }}>
-          <XGrid {...baselineProps} className={className} />
+          <DataGridPro {...baselineProps} className={className} />
         </div>,
       );
 
@@ -66,7 +66,7 @@ describe('<XGrid /> - Layout', () => {
     it('applies the style to the root component', () => {
       render(
         <div style={{ width: 300, height: 300 }}>
-          <XGrid
+          <DataGridPro
             {...baselineProps}
             style={{
               mixBlendMode: 'darken',
@@ -91,7 +91,7 @@ describe('<XGrid /> - Layout', () => {
 
         return (
           <div style={{ width: 300, height: 500 }}>
-            <XGrid {...props} apiRef={apiRef} />
+            <DataGridPro {...props} apiRef={apiRef} />
           </div>
         );
       };
@@ -142,7 +142,7 @@ describe('<XGrid /> - Layout', () => {
     const { getByRole } = render(
       <ThemeProvider theme={createTheme({}, ptBR)}>
         <div style={{ width: 300, height: 300 }}>
-          <XGrid {...baselineProps} />
+          <DataGridPro {...baselineProps} />
         </div>
       </ThemeProvider>,
     );

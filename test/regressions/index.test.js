@@ -81,7 +81,7 @@ async function main() {
           this.timeout(0);
         }
 
-        if (pathURL === '/docs-components-data-grid-overview/XGridDemo') {
+        if (pathURL === '/docs-components-data-grid-overview/DataGridProDemo') {
           this.timeout(6000);
         }
 

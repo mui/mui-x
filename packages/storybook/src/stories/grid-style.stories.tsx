@@ -1,6 +1,6 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import { XGrid, GridOptionsProp, GridColDef } from '@mui/x-data-grid-pro';
+import { DataGridPro, GridOptionsProp, GridColDef } from '@mui/x-data-grid-pro';
 import DoneIcon from '@material-ui/icons/Done';
 import ClearIcon from '@material-ui/icons/Clear';
 import { useData } from '../hooks/useData';
@@ -8,7 +8,7 @@ import '../style/grid-stories.css';
 
 export default {
   title: 'X-Grid Tests/Styling',
-  component: XGrid,
+  component: DataGridPro,
   parameters: {
     options: { selectedPanel: 'storybook/storysource/panel' },
     docs: {
@@ -25,12 +25,12 @@ export const BigRowsAndHeader = () => {
     checkboxSelection: true,
   };
 
-  return <XGrid rows={data.rows} columns={data.columns} {...options} />;
+  return <DataGridPro rows={data.rows} columns={data.columns} {...options} />;
 };
 
 export const Unset = () => {
   const data = useData(200, 200);
-  return <XGrid rows={data.rows} columns={data.columns} />;
+  return <DataGridPro rows={data.rows} columns={data.columns} />;
 };
 
 export const Small = () => {
@@ -39,7 +39,7 @@ export const Small = () => {
     headerHeight: 35,
     rowHeight: 27,
   };
-  return <XGrid rows={data.rows} columns={data.columns} {...options} />;
+  return <DataGridPro rows={data.rows} columns={data.columns} {...options} />;
 };
 
 interface IsDoneProps {
@@ -142,7 +142,7 @@ export const ColumnCellClass = () => {
 
   return (
     <div className="grid-container">
-      <XGrid rows={rows} columns={cols} />
+      <DataGridPro rows={rows} columns={cols} />
     </div>
   );
 };
@@ -153,7 +153,7 @@ export const ColumnHeaderClass = () => {
 
   return (
     <div className="grid-container">
-      <XGrid rows={rows} columns={cols} />
+      <DataGridPro rows={rows} columns={cols} />
     </div>
   );
 };
@@ -165,7 +165,7 @@ export const ColumnCellRenderer = () => {
 
   return (
     <div className="grid-container">
-      <XGrid rows={rows} columns={cols} />
+      <DataGridPro rows={rows} columns={cols} />
     </div>
   );
 };
@@ -176,7 +176,7 @@ export const ColumnCellRendererWithPadding = () => {
 
   return (
     <div className="grid-container" style={{ padding: 50 }}>
-      <XGrid rows={rows} columns={cols} />
+      <DataGridPro rows={rows} columns={cols} />
     </div>
   );
 };
