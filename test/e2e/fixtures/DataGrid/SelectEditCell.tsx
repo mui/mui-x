@@ -1,9 +1,9 @@
 import * as React from 'react';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
-import { DataGrid, GridCellParams } from '@mui/x-data-grid';
+import { DataGrid, GridRenderEditCellParams } from '@mui/x-data-grid';
 
-const SelectEditInputCell = (props: GridCellParams) => {
+const SelectEditInputCell = (props: GridRenderEditCellParams) => {
   const { id, value, api, field } = props;
 
   const handleChange = (event) => {

@@ -91,12 +91,8 @@ export const GridCell = React.memo(function GridCell(props: GridCellProps) {
       ) {
         return;
       }
-
-      apiRef!.current.publishEvent(
-        eventName,
-        apiRef!.current.getCellParams(rowId!, field || ''),
-        event,
-      );
+      const params = apiRef!.current.getCellParams(rowId!, field || '');
+      apiRef!.current.publishEvent(eventName, params, event);
     },
     [apiRef, field, rowId],
   );

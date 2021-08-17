@@ -237,7 +237,6 @@ export function useGridColumns(
       apiRef.current.publishEvent(GridEvents.columnVisibilityChange, {
         field,
         colDef: updatedCol,
-        api: apiRef,
         isVisible,
       });
     },
@@ -259,7 +258,6 @@ export function useGridColumns(
         colDef: apiRef.current.getColumn(field),
         targetIndex: targetIndexPosition,
         oldIndex: oldIndexPosition,
-        api: apiRef.current,
       };
       apiRef.current.publishEvent(GridEvents.columnOrderChange, params);
 
@@ -280,7 +278,6 @@ export function useGridColumns(
       apiRef.current.publishEvent(GridEvents.columnWidthChange, {
         element: apiRef.current.getColumnHeaderElement(field),
         colDef: column,
-        api: apiRef,
         width,
       });
     },

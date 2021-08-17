@@ -1,6 +1,7 @@
 import { GridCellMode, GridCellValue } from '../gridCell';
 import { GridRowId, GridRowModel } from '../gridRows';
 import type { GridStateColDef } from '../colDef';
+import { GridEditCellProps } from '../gridEditRowModel';
 
 /**
  * Object passed as parameter in the column [[GridColDef]] cell renderer.
@@ -31,10 +32,6 @@ export interface GridCellParams {
    */
   colDef: GridStateColDef;
   /**
-   * GridApi that let you manipulate the grid.
-   */
-  api: any;
-  /**
    * If true, the cell is editable.
    */
   isEditable?: boolean;
@@ -59,11 +56,31 @@ export interface GridCellParams {
 }
 
 /**
- * Alias of GridCellParams.
+ * GridCellParams containing api.
  */
-export type GridValueGetterParams = Omit<GridCellParams, 'formattedValue' | 'isEditable'>;
+export interface GridRenderCellParams extends GridCellParams {
+  /**
+   * GridApi that let you manipulate the grid.
+   */
+  api: any;
+}
 
 /**
- * Alias of GridCellParams.
+ * GridEditCellProps containing api.
  */
-export type GridValueFormatterParams = Omit<GridCellParams, 'formattedValue' | 'isEditable'>;
+export interface GridRenderEditCellParams extends GridEditCellProps {
+  /**
+   * GridApi that let you manipulate the grid.
+   */
+  api: any;
+}
+
+/**
+ * Alias of GridRenderCellParams.
+ */
+export type GridValueGetterParams = Omit<GridRenderCellParams, 'formattedValue' | 'isEditable'>;
+
+/**
+ * Alias of GridRenderCellParams.
+ */
+export type GridValueFormatterParams = Omit<GridRenderCellParams, 'formattedValue' | 'isEditable'>;

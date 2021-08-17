@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Rating from '@material-ui/lab/Rating';
-import { GridCellParams } from '@mui/x-data-grid';
+import { GridRenderEditCellParams } from '@mui/x-data-grid';
 import { makeStyles } from '@material-ui/styles';
 import { Theme } from '@material-ui/core/styles';
 
@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-function EditRating(props: GridCellParams) {
+function EditRating(props: GridRenderEditCellParams) {
   const { id, value, api, field } = props;
   const classes = useStyles();
 

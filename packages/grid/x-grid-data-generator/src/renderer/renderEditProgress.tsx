@@ -1,6 +1,6 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import { GridCellParams } from '@mui/x-data-grid';
+import { GridRenderEditCellParams } from '@mui/x-data-grid';
 import Slider from '@material-ui/core/Slider';
 import Tooltip from '@material-ui/core/Tooltip';
 import { createStyles, makeStyles } from '@material-ui/styles';
@@ -60,7 +60,7 @@ function ValueLabelComponent(props) {
   );
 }
 
-function EditProgress(props: GridCellParams) {
+function EditProgress(props: GridRenderEditCellParams) {
   const classes = useStyles();
   const { id, value, api, field } = props;
   const [valueState, setValueState] = React.useState(Number(value));
@@ -114,6 +114,6 @@ function EditProgress(props: GridCellParams) {
   );
 }
 
-export function renderEditProgress(params: GridCellParams) {
+export function renderEditProgress(params: GridRenderEditCellParams) {
   return <EditProgress {...params} />;
 }

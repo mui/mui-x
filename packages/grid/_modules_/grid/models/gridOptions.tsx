@@ -19,10 +19,10 @@ import {
 } from './params/gridEditCellParams';
 import { GridRowScrollEndParams } from './params/gridRowScrollEndParams';
 import { GridColumnOrderChangeParams } from './params/gridColumnOrderChangeParams';
-import { GridResizeParams } from './params/gridResizeParams';
 import { GridColumnResizeParams } from './params/gridColumnResizeParams';
 import { GridColumnVisibilityChangeParams } from './params/gridColumnVisibilityChangeParams';
 import { GridClasses } from './gridClasses';
+import { ElementSize } from './elementSize';
 import { GridViewportRowsChangeParams } from './params/gridViewportRowsChangeParams';
 
 export type MuiEvent<E> = E & {
@@ -270,7 +270,7 @@ export interface GridOptions {
   onCellClick?: (params: GridCellParams, event: MuiEvent<React.MouseEvent>, details?: any) => void;
   /**
    * Callback fired when a double click event comes from a cell element.
-   * @param params With all properties from [[CellParams]].
+   * @param params With all properties from [[GridCellParams]].
    * @param event [[MuiEvent<React.MouseEvent>]].
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
@@ -404,7 +404,7 @@ export interface GridOptions {
   ) => void;
   /**
    * Callback fired when a column is reordered.
-   * @param params With all properties from [[GridColumnHeaderParams]].
+   * @param params With all properties from [[GridColumnOrderChangeParams]].
    * @param event [[MuiEvent<{}>]].
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
@@ -527,11 +527,11 @@ export interface GridOptions {
   ) => void;
   /**
    * Callback fired when the grid is resized.
-   * @param params With all properties from [[GridResizeParams]].
+   * @param containerSize With all properties from [[ElementSize]].
    * @param event [[MuiEvent<{}>]].
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
-  onResize?: (params: GridResizeParams, event: MuiEvent<{}>, details?: any) => void;
+  onResize?: (containerSize: ElementSize, event: MuiEvent<{}>, details?: any) => void;
   /**
    * Callback fired when the selection state of one or multiple rows changes.
    * @param selectionModel With all the row ids [[GridSelectionModel]].
@@ -546,12 +546,12 @@ export interface GridOptions {
   onSortModelChange?: (model: GridSortModel, details?: any) => void;
   /**
    * Callback fired when the state of the grid is updated.
-   * @param params
+   * @param state The new state.
    * @param event [[MuiEvent<{}>]].
    * @param {GridCallbackDetails} details Additional details for this callback.
    * @internal
    */
-  onStateChange?: (params: any, event: MuiEvent<{}>, details?: any) => void;
+  onStateChange?: (state: any, event: MuiEvent<{}>, details?: any) => void;
   /**
    * Callback fired when the rows in the viewport change.
    */

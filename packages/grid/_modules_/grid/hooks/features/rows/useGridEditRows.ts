@@ -106,7 +106,6 @@ export function useGridEditRows(
     [apiRef],
   );
 
-  // TODO it's returning undefined when colDef.editable is undefined
   const isCellEditable = React.useCallback(
     (params: GridCellParams) =>
       !!params.colDef.editable &&
@@ -240,8 +239,8 @@ export function useGridEditRows(
       }
 
       const isEditMode = cellMode === 'edit';
-
       const isModifierKeyPressed = event.ctrlKey || event.metaKey || event.altKey;
+
       if (!isEditMode && isCellEnterEditModeKeys(event.key) && !isModifierKeyPressed) {
         apiRef.current.publishEvent(GridEvents.cellEditStart, params, event);
       }
