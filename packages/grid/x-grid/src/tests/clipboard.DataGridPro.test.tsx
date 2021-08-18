@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridApiRef, useGridApiRef, XGrid } from '@mui/x-data-grid-pro';
+import { GridApiRef, useGridApiRef, DataGridPro } from '@mui/x-data-grid-pro';
 import { expect } from 'chai';
 import { stub } from 'sinon';
 import {
@@ -11,7 +11,7 @@ import { getCell } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
-describe('<XGrid /> - Clipboard', () => {
+describe('<DataGridPro /> - Clipboard', () => {
   // TODO v5: replace with createClientRender
   const render = createClientRenderStrictMode();
 
@@ -27,7 +27,7 @@ describe('<XGrid /> - Clipboard', () => {
     apiRef = useGridApiRef();
     return (
       <div style={{ width: 300, height: 300 }}>
-        <XGrid
+        <DataGridPro
           {...baselineProps}
           apiRef={apiRef}
           columns={columns}

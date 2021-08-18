@@ -90,7 +90,7 @@ Server-side validation works like client-side [validation](#validation).
 **Note:** To prevent the default client-side behavior, set `event.defaultMuiPrevented` to `true`.
 
 This demo shows how you can validate a username asynchronously and prevent the user from committing the value while validating.
-It's using `XGrid` but the same approach can be used with `DataGrid`.
+It's using `DataGridPro` but the same approach can be used with `DataGrid`.
 
 {{"demo": "pages/components/data-grid/editing/ValidateServerNameGrid.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -205,4 +205,4 @@ The following events can be imported and used to customize the row edition:
 ## API
 
 - [DataGrid](/api/data-grid/data-grid/)
-- [XGrid](/api/data-grid/x-grid/)
+- [DataGridPro](/api/data-grid/data-grid-pro/)

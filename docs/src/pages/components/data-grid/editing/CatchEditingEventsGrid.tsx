@@ -7,7 +7,7 @@ import {
   GridColumns,
   GridRowsProp,
   useGridApiRef,
-  XGrid,
+  DataGridPro,
 } from '@mui/x-data-grid-pro';
 import {
   randomCreatedDate,
@@ -43,7 +43,7 @@ export default function CatchEditingEventsGrid() {
   return (
     <div style={{ width: '100%' }}>
       <div style={{ height: 180, width: '100%' }}>
-        <XGrid rows={rows} columns={columns} apiRef={apiRef} />
+        <DataGridPro rows={rows} columns={columns} apiRef={apiRef} />
       </div>
       {message && (
         <Alert severity="info" style={{ marginTop: 8 }}>

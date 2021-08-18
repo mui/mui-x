@@ -139,7 +139,7 @@ Below is a very simple demo on how you could achieve server-side filtering.
 
 ## Multi-column filtering [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-pro/)
 
-`XGrid` supports filtering by multiple columns.
+`DataGridPro` supports filtering by multiple columns.
 The default operator that will be applied between filters is an And.
 
 {{"demo": "pages/components/data-grid/filtering/MultiFilteringGrid.js", "bg": "inline", "disableAd": true}}
@@ -176,4 +176,4 @@ However, it can be implemented as in the demo below.
 ## API
 
 - [DataGrid](/api/data-grid/data-grid/)
-- [XGrid](/api/data-grid/x-grid/)
+- [DataGridPro](/api/data-grid/data-grid-pro/)

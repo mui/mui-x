@@ -8,7 +8,7 @@ title: Data Grid - Paging
 
 By default, the MIT `DataGrid` displays the rows with pagination, and up to 100 rows per page.
 
-On the other hand, the commercial `XGrid` component displays, by default, all the rows with infinite scrolling (and virtualization) and without the 100 rows per page limitation. You need to set the `pagination` prop to enable the pagination feature in such a case.
+On the other hand, the commercial `DataGridPro` component displays, by default, all the rows with infinite scrolling (and virtualization) and without the 100 rows per page limitation. You need to set the `pagination` prop to enable the pagination feature in such a case.
 
 ## Basic example
 
@@ -57,7 +57,7 @@ You can customize the rendering of the pagination in the footer following [the c
 ## Paginate > 100 rows [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-pro/)
 
 The `DataGrid` component can display up to 100 rows per page.
-The `XGrid` component removes this limitation.
+The `DataGridPro` component removes this limitation.
 The following demo displays 200 rows per page:
 
 {{"demo": "pages/components/data-grid/pagination/200PaginationGrid.js", "disableAd": true, "bg": "inline"}}
@@ -80,4 +80,4 @@ Below is an example of how you can reset the page using the imperative `setPage`
 ## API
 
 - [DataGrid](/api/data-grid/data-grid/)
-- [XGrid](/api/data-grid/x-grid/)
+- [DataGridPro](/api/data-grid/data-grid-pro/)

@@ -25,7 +25,7 @@ export function useApi(apiRef: GridApiRef, props: Pick<GridComponentProps, 'sign
       if (event && isSyntheticEvent(event) && event.isPropagationStopped()) {
         return;
       }
-      const details = props.signature === GridSignature.XGrid ? { api: apiRef.current } : {};
+      const details = props.signature === GridSignature.DataGridPro ? { api: apiRef.current } : {};
       apiRef.current.emit(name, params, event, details);
     },
     [apiRef, props.signature],

@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { GridColDef, XGrid } from '@mui/x-data-grid-pro';
+import { GridColDef, DataGridPro } from '@mui/x-data-grid-pro';
 import { useData } from '../hooks/useData';
 
 export default {
   title: 'X-Grid Tests/Options',
-  component: XGrid,
+  component: DataGridPro,
   parameters: {
     options: { selectedPanel: 'storybook/storysource/panel' },
   },
@@ -25,7 +25,7 @@ const rows = [
 export const NoLogger = () => {
   return (
     <div className="grid-container">
-      <XGrid rows={rows} columns={columns} {...{ logLevel: false }} />
+      <DataGridPro rows={rows} columns={columns} {...{ logLevel: false }} />
     </div>
   );
 };
@@ -40,7 +40,7 @@ export const CustomLogger = () => {
   };
   return (
     <div className="grid-container">
-      <XGrid rows={rows} columns={columns} {...{ logger }} />
+      <DataGridPro rows={rows} columns={columns} {...{ logger }} />
     </div>
   );
 };
@@ -49,7 +49,7 @@ export const NoRowExtend = () => {
   const data = useData(20, 2);
   return (
     <div className="grid-container">
-      <XGrid rows={data.rows} columns={data.columns} disableExtendRowFullWidth />
+      <DataGridPro rows={data.rows} columns={data.columns} disableExtendRowFullWidth />
     </div>
   );
 };
@@ -58,7 +58,7 @@ export const NoRowExtendCellBorder = () => {
   const data = useData(20, 2);
   return (
     <div className="grid-container">
-      <XGrid
+      <DataGridPro
         rows={data.rows}
         columns={data.columns}
         disableExtendRowFullWidth
@@ -72,7 +72,7 @@ export const CellRightBorder = () => {
   const data = useData(20, 2);
   return (
     <div className="grid-container">
-      <XGrid rows={data.rows} columns={data.columns} showCellRightBorder />
+      <DataGridPro rows={data.rows} columns={data.columns} showCellRightBorder />
     </div>
   );
 };
@@ -81,7 +81,7 @@ export const ColumnRightBorder = () => {
   const data = useData(20, 2);
   return (
     <div className="grid-container">
-      <XGrid rows={data.rows} columns={data.columns} showColumnRightBorder />
+      <DataGridPro rows={data.rows} columns={data.columns} showColumnRightBorder />
     </div>
   );
 };
@@ -89,7 +89,7 @@ export const AutoHeightSmall = () => {
   const data = useData(8, 12);
   return (
     <div>
-      <XGrid rows={data.rows} columns={data.columns} autoHeight />
+      <DataGridPro rows={data.rows} columns={data.columns} autoHeight />
     </div>
   );
 };
@@ -98,7 +98,7 @@ export const AutoHeightLarge = () => {
   const data = useData(75, 20);
   return (
     <div>
-      <XGrid rows={data.rows} columns={data.columns} autoHeight />
+      <DataGridPro rows={data.rows} columns={data.columns} autoHeight />
     </div>
   );
 };

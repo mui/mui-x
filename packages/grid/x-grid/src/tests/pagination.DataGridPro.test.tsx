@@ -6,12 +6,12 @@ import {
 import { getColumnValues } from 'test/utils/helperFn';
 import * as React from 'react';
 import { expect } from 'chai';
-import { XGrid, useGridApiRef } from '@mui/x-data-grid-pro';
+import { DataGridPro, useGridApiRef } from '@mui/x-data-grid-pro';
 import { useData } from 'packages/storybook/src/hooks/useData';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
-describe('<XGrid /> - Pagination', () => {
+describe('<DataGridPro /> - Pagination', () => {
   // TODO v5: replace with createClientRender
   const render = createClientRenderStrictMode();
 
@@ -24,7 +24,7 @@ describe('<XGrid /> - Pagination', () => {
 
         return (
           <div style={{ width: 300, height: 300 }}>
-            <XGrid
+            <DataGridPro
               {...basicData}
               apiRef={apiRef}
               pagination
@@ -53,7 +53,7 @@ describe('<XGrid /> - Pagination', () => {
 
         return (
           <div style={{ width: 300, height: 300 }}>
-            <XGrid
+            <DataGridPro
               {...basicData}
               apiRef={apiRef}
               pagination
@@ -85,7 +85,7 @@ describe('<XGrid /> - Pagination', () => {
 
         return (
           <div style={{ width: 300, height: 300 }}>
-            <XGrid
+            <DataGridPro
               {...basicData}
               apiRef={apiRef}
               autoHeight={isJSDOM}

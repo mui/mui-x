@@ -3,7 +3,7 @@ import Button from '@material-ui/core/Button';
 import { randomInt } from '@mui/x-data-grid-generator';
 import {
   GridColDef,
-  XGrid,
+  DataGridPro,
   GridRowsProp,
   GridSortModel,
   useGridApiRef,
@@ -13,7 +13,7 @@ import { action } from '@storybook/addon-actions';
 
 export default {
   title: 'X-Grid Tests/Sorting',
-  component: XGrid,
+  component: DataGridPro,
   parameters: {
     options: { selectedPanel: 'storybook/action/panel' },
     docs: {
@@ -75,7 +75,7 @@ export const HeadersClick = () => {
     <React.Fragment>
       <p>Click column headers to sort</p>
       <div className="grid-container">
-        <XGrid rows={getRows()} columns={getColumns()} />
+        <DataGridPro rows={getRows()} columns={getColumns()} />
       </div>
     </React.Fragment>
   );
@@ -86,7 +86,11 @@ export const SortingOrderOverrideOption = () => {
     <React.Fragment>
       <p>Click column headers to sort</p>
       <div className="grid-container">
-        <XGrid rows={getRows()} columns={getColumns()} {...{ sortingOrder: ['desc', 'asc'] }} />
+        <DataGridPro
+          rows={getRows()}
+          columns={getColumns()}
+          {...{ sortingOrder: ['desc', 'asc'] }}
+        />
       </div>
     </React.Fragment>
   );
@@ -97,7 +101,7 @@ export const StringSortingAsc = () => {
 
   return (
     <div className="grid-container">
-      <XGrid
+      <DataGridPro
         rows={getRows()}
         columns={columns}
         sortModel={[{ field: columns[1].field, sort: 'asc' }]}
@@ -110,7 +114,7 @@ export const StringSortingDesc = () => {
 
   return (
     <div className="grid-container">
-      <XGrid
+      <DataGridPro
         rows={getRows()}
         columns={columns}
         sortModel={[{ field: columns[1].field, sort: 'desc' }]}
@@ -122,7 +126,7 @@ export const NumberSortingAsc = () => {
   const columns = getColumns();
   return (
     <div className="grid-container">
-      <XGrid
+      <DataGridPro
         rows={getRows()}
         columns={columns}
         sortModel={[{ field: columns[2].field, sort: 'asc' }]}
@@ -135,7 +139,7 @@ export const NumberSortingDesc = () => {
 
   return (
     <div className="grid-container">
-      <XGrid
+      <DataGridPro
         rows={getRows()}
         columns={columns}
         sortModel={[{ field: columns[2].field, sort: 'desc' }]}
@@ -147,7 +151,7 @@ export const DateSortingAsc = () => {
   const columns = getColumns();
   return (
     <div className="grid-container">
-      <XGrid
+      <DataGridPro
         rows={getRows()}
         columns={columns}
         sortModel={[{ field: columns[3].field, sort: 'asc' }]}
@@ -160,7 +164,7 @@ export const DateSortingDesc = () => {
 
   return (
     <div className="grid-container">
-      <XGrid
+      <DataGridPro
         rows={getRows()}
         columns={columns}
         sortModel={[{ field: columns[3].field, sort: 'desc' }]}
@@ -173,7 +177,7 @@ export const DateTimeSortingAsc = () => {
 
   return (
     <div className="grid-container">
-      <XGrid
+      <DataGridPro
         rows={getRows()}
         columns={columns}
         sortModel={[{ field: columns[4].field, sort: 'asc' }]}
@@ -186,7 +190,7 @@ export const DateTimeSortingDesc = () => {
 
   return (
     <div className="grid-container">
-      <XGrid
+      <DataGridPro
         rows={getRows()}
         columns={columns}
         sortModel={[{ field: columns[4].field, sort: 'desc' }]}
@@ -199,7 +203,7 @@ export const MultipleSorting = () => {
   const columns = getColumns();
   return (
     <div className="grid-container">
-      <XGrid
+      <DataGridPro
         rows={getRows()}
         columns={columns}
         sortModel={[
@@ -216,7 +220,7 @@ export const MultipleAndSortIndex = () => {
 
   return (
     <div className="grid-container">
-      <XGrid
+      <DataGridPro
         rows={getRows()}
         columns={columns}
         sortModel={[
@@ -242,7 +246,7 @@ export const UnsortableLastCol = () => {
 
   return (
     <div className="grid-container">
-      <XGrid rows={getRows()} columns={columns} />
+      <DataGridPro rows={getRows()} columns={columns} />
     </div>
   );
 };
@@ -263,7 +267,7 @@ export const CustomComparator = () => {
 
   return (
     <div className="grid-container">
-      <XGrid
+      <DataGridPro
         rows={getRows()}
         columns={columns}
         sortModel={[{ field: columns[columns.length - 1].field, sort: 'asc' }]}
@@ -281,7 +285,7 @@ export const SortingWithFormatter = () => {
 
   return (
     <div className="grid-container">
-      <XGrid
+      <DataGridPro
         rows={getRows()}
         columns={columns}
         sortModel={[{ field: columns[2].field, sort: 'desc' }]}
@@ -301,7 +305,7 @@ export const SortModelOptionsMultiple = () => {
 
   return (
     <div className="grid-container">
-      <XGrid rows={getRows()} columns={getColumns()} {...{ sortModel }} />
+      <DataGridPro rows={getRows()} columns={getColumns()} {...{ sortModel }} />
     </div>
   );
 };
@@ -313,7 +317,7 @@ export const ApiSingleSorted = () => {
 
   return (
     <div className="grid-container">
-      <XGrid rows={getRows()} columns={getColumns()} apiRef={apiRef} />
+      <DataGridPro rows={getRows()} columns={getColumns()} apiRef={apiRef} />
     </div>
   );
 };
@@ -328,7 +332,7 @@ export const ApiMultipleSorted = () => {
 
   return (
     <div className="grid-container">
-      <XGrid rows={getRows()} columns={getColumns()} apiRef={apiRef} />
+      <DataGridPro rows={getRows()} columns={getColumns()} apiRef={apiRef} />
     </div>
   );
 };
@@ -368,7 +372,7 @@ export const SortedEventsApi = () => {
         </ol>
       </div>
       <div className="grid-container">
-        <XGrid
+        <DataGridPro
           rows={rows}
           columns={cols}
           onSortModelChange={handleOnSortModelChange}
@@ -413,7 +417,7 @@ export const SortedEventsOptions = () => {
         </ol>
       </div>
       <div className="grid-container">
-        <XGrid
+        <DataGridPro
           rows={rows}
           columns={cols}
           {...{
@@ -475,7 +479,7 @@ export const ServerSideSorting = () => {
 
   return (
     <div className="grid-container">
-      <XGrid
+      <DataGridPro
         apiRef={apiRef}
         rows={rows}
         columns={columns}
@@ -517,7 +521,7 @@ export const ResetSortingRows = () => {
   return (
     <div className="grid-container" style={{ flexDirection: 'column' }}>
       <Button onClick={() => createRandomRows()}>Random Rows</Button>
-      <XGrid rows={rows} columns={columns} sortModel={[{ field: 'team', sort: 'asc' }]} />
+      <DataGridPro rows={rows} columns={columns} sortModel={[{ field: 'team', sort: 'asc' }]} />
     </div>
   );
 };
@@ -528,7 +532,7 @@ export const OriginalOrder = () => {
 
   return (
     <div className="grid-container" style={{ flexDirection: 'column' }}>
-      <XGrid rows={simpleRows} columns={idOnlyCols} />
+      <DataGridPro rows={simpleRows} columns={idOnlyCols} />
     </div>
   );
 };
@@ -563,7 +567,7 @@ export function SimpleModelWithOnChangeControlSort() {
   }, []);
 
   return (
-    <XGrid
+    <DataGridPro
       rows={simpleRows}
       columns={simpleColumns}
       sortModel={simpleSortModel}
@@ -595,7 +599,7 @@ export function SimpleModelControlSort() {
 
   const [simpleSortModel] = React.useState<GridSortModel>([{ field: 'name', sort: 'desc' }]);
 
-  return <XGrid rows={simpleRows} columns={simpleColumns} sortModel={simpleSortModel} />;
+  return <DataGridPro rows={simpleRows} columns={simpleColumns} sortModel={simpleSortModel} />;
 }
 export function SimpleOnChangeControlSort() {
   const [simpleColumns] = React.useState([
@@ -624,5 +628,7 @@ export function SimpleOnChangeControlSort() {
     console.log('Sort model changed to', model);
   }, []);
 
-  return <XGrid rows={simpleRows} columns={simpleColumns} onSortModelChange={handleSortChange} />;
+  return (
+    <DataGridPro rows={simpleRows} columns={simpleColumns} onSortModelChange={handleSortChange} />
+  );
 }

@@ -165,7 +165,7 @@ const rows = [
   },
   {
     id: 2,
-    col1: 'XGrid',
+    col1: 'DataGridPro',
     col2: 'is Awesome',
     col3: 'In publishing and graphic design, Lorem ipsum is a placeholder text or a typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before final copy is available.',
   },
@@ -183,7 +183,7 @@ const rows = [
   },
   {
     id: 5,
-    col1: 'XGrid',
+    col1: 'DataGridPro',
     col2: 'is Awesome',
     col3: 'Typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before final copy is available.',
   },

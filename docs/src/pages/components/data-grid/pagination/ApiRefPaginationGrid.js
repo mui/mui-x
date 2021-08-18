@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Button from '@material-ui/core/Button';
-import { XGrid, useGridApiRef } from '@mui/x-data-grid-pro';
+import { DataGridPro, useGridApiRef } from '@mui/x-data-grid-pro';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
 export default function ApiRefPaginationGrid() {
@@ -25,7 +25,7 @@ export default function ApiRefPaginationGrid() {
         Set page 2
       </Button>
       <div style={{ height: 400, width: '100%', marginTop: 16 }}>
-        <XGrid
+        <DataGridPro
           pagination
           pageSize={5}
           rowsPerPageOptions={[5]}

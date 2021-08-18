@@ -31,7 +31,7 @@ const hasCursorPositionChanged = (
   currentCoordinates.x !== nextCoordinates.x || currentCoordinates.y !== nextCoordinates.y;
 
 /**
- * Only available in XGrid
+ * Only available in DataGridPro
  */
 export const useGridColumnReorder = (
   apiRef: GridApiRef,

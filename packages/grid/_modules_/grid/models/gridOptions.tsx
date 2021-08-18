@@ -665,7 +665,7 @@ export interface GridOptions {
 }
 
 /**
- * The default options to inject in the props of DataGrid or XGrid.
+ * The default options to inject in the props of DataGrid or DataGridPro.
  */
 export const DEFAULT_GRID_PROPS_FROM_OPTIONS = {
   columnBuffer: 2,

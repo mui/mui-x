@@ -5,7 +5,7 @@ import {
   GridColumns,
   GridRowsProp,
   useGridApiRef,
-  XGrid,
+  DataGridPro,
   GridApiRef,
   GridCellParams,
 } from '@mui/x-data-grid-pro';
@@ -106,7 +106,7 @@ export default function StartEditButtonGrid() {
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <XGrid
+      <DataGridPro
         rows={rows}
         columns={columns}
         apiRef={apiRef}

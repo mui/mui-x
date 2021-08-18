@@ -7,7 +7,7 @@ import {
   GridEditCellPropsParams,
   GridRowsProp,
   useGridApiRef,
-  XGrid,
+  DataGridPro,
 } from '@mui/x-data-grid-pro';
 
 // TODO v5: remove
@@ -96,7 +96,7 @@ export default function ValidateServerNameGrid() {
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <XGrid
+      <DataGridPro
         className={classes.root}
         apiRef={apiRef}
         rows={rows}

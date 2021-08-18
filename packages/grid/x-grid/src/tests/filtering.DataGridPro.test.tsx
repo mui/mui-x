@@ -8,7 +8,7 @@ import {
   GridRowModel,
   SUBMIT_FILTER_STROKE_TIME,
   useGridApiRef,
-  XGrid,
+  DataGridPro,
 } from '@mui/x-data-grid-pro';
 import { expect } from 'chai';
 import { useData } from 'packages/storybook/src/hooks/useData';
@@ -27,7 +27,7 @@ import { getColumnHeaderCell, getColumnValues } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
-describe('<XGrid /> - Filter', () => {
+describe('<DataGridPro /> - Filter', () => {
   let clock;
 
   beforeEach(() => {
@@ -67,7 +67,7 @@ describe('<XGrid /> - Filter', () => {
     apiRef = useGridApiRef();
     return (
       <div style={{ width: 300, height: 300 }}>
-        <XGrid
+        <DataGridPro
           apiRef={apiRef}
           {...baselineProps}
           rows={rows || baselineProps.rows}
@@ -310,7 +310,7 @@ describe('<XGrid /> - Filter', () => {
         apiRef = useGridApiRef();
         return (
           <div style={{ width: 300, height: 300 }}>
-            <XGrid apiRef={apiRef} columns={data.columns} rows={data.rows} />
+            <DataGridPro apiRef={apiRef} columns={data.columns} rows={data.rows} />
           </div>
         );
       };
@@ -391,7 +391,7 @@ describe('<XGrid /> - Filter', () => {
 
         return (
           <div style={{ height: 400, width: 400 }}>
-            <XGrid
+            <DataGridPro
               rows={rows}
               columns={columns}
               filterMode="server"
@@ -491,7 +491,7 @@ describe('<XGrid /> - Filter', () => {
 
         return (
           <div style={{ width: 300, height: 300 }}>
-            <XGrid
+            <DataGridPro
               autoHeight={isJSDOM}
               columns={columns || baselineProps.columns}
               rows={rows || baselineProps.rows}

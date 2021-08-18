@@ -64,7 +64,7 @@ export function useGridControlState(apiRef: GridApiRef, props: GridComponentProp
 
             if (controlState.propOnChange) {
               const details =
-                props.signature === GridSignature.XGrid ? { api: apiRef.current } : {};
+                props.signature === GridSignature.DataGridPro ? { api: apiRef.current } : {};
               controlState.propOnChange(model, details);
             }
 

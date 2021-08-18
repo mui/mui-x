@@ -18,7 +18,7 @@ import {
 import {
   GridApiRef,
   useGridApiRef,
-  XGrid,
+  DataGridPro,
   GRID_COLUMN_HEADER_DRAGGING_CSS_CLASS,
 } from '@mui/x-data-grid-pro';
 
@@ -43,7 +43,7 @@ function createDragEndEvent(target: ChildNode, isOutsideTheGrid: boolean = false
   return dragEndEvent;
 }
 
-describe('<XGrid /> - Reorder', () => {
+describe('<DataGridPro /> - Reorder', () => {
   // TODO v5: replace with createClientRender
   const render = createClientRenderStrictMode();
 
@@ -71,7 +71,11 @@ describe('<XGrid /> - Reorder', () => {
         apiRef = useGridApiRef();
         return (
           <div style={{ width, height: 300 }}>
-            <XGrid apiRef={apiRef} columns={baselineProps.columns} rows={baselineProps.rows} />
+            <DataGridPro
+              apiRef={apiRef}
+              columns={baselineProps.columns}
+              rows={baselineProps.rows}
+            />
           </div>
         );
       };
@@ -98,7 +102,7 @@ describe('<XGrid /> - Reorder', () => {
 
       return (
         <div style={{ width: 300, height: 300 }}>
-          <XGrid apiRef={apiRef} rows={rows} columns={columns} />
+          <DataGridPro apiRef={apiRef} rows={rows} columns={columns} />
         </div>
       );
     };
@@ -121,7 +125,7 @@ describe('<XGrid /> - Reorder', () => {
 
       return (
         <div style={{ width: 300, height: 300 }}>
-          <XGrid apiRef={apiRef} rows={rows} columns={columns} />
+          <DataGridPro apiRef={apiRef} rows={rows} columns={columns} />
         </div>
       );
     };
@@ -152,7 +156,7 @@ describe('<XGrid /> - Reorder', () => {
 
       return (
         <div style={{ width: 300, height: 300 }}>
-          <XGrid apiRef={apiRef} rows={rows} columns={columns} />
+          <DataGridPro apiRef={apiRef} rows={rows} columns={columns} />
         </div>
       );
     };
@@ -183,7 +187,7 @@ describe('<XGrid /> - Reorder', () => {
 
       return (
         <div style={{ width: 300, height: 300 }}>
-          <XGrid apiRef={apiRef} rows={rows} columns={columns} disableColumnReorder />
+          <DataGridPro apiRef={apiRef} rows={rows} columns={columns} disableColumnReorder />
         </div>
       );
     };
@@ -208,7 +212,7 @@ describe('<XGrid /> - Reorder', () => {
 
       return (
         <div style={{ width: 300, height: 300 }}>
-          <XGrid apiRef={apiRef} rows={rows} columns={columns} disableColumnReorder />
+          <DataGridPro apiRef={apiRef} rows={rows} columns={columns} disableColumnReorder />
         </div>
       );
     };
@@ -236,7 +240,7 @@ describe('<XGrid /> - Reorder', () => {
 
         return (
           <div style={{ width: 300, height: 300 }}>
-            <XGrid apiRef={apiRef} rows={rows} columns={columns} />
+            <DataGridPro apiRef={apiRef} rows={rows} columns={columns} />
           </div>
         );
       };
@@ -275,7 +279,7 @@ describe('<XGrid /> - Reorder', () => {
 
         return (
           <div style={{ width: 300, height: 300 }}>
-            <XGrid apiRef={apiRef} rows={rows} columns={columns} />
+            <DataGridPro apiRef={apiRef} rows={rows} columns={columns} />
           </div>
         );
       };
@@ -310,7 +314,7 @@ describe('<XGrid /> - Reorder', () => {
 
         return (
           <div style={{ width: 300, height: 300 }}>
-            <XGrid apiRef={apiRef} rows={rows} columns={columns} />
+            <DataGridPro apiRef={apiRef} rows={rows} columns={columns} />
           </div>
         );
       };
@@ -342,7 +346,7 @@ describe('<XGrid /> - Reorder', () => {
       const Test = () => {
         return (
           <div style={{ width: 300, height: 300 }}>
-            <XGrid rows={rows} columns={columns} />
+            <DataGridPro rows={rows} columns={columns} />
           </div>
         );
       };

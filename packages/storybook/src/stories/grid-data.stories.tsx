@@ -1,11 +1,11 @@
 import { Story } from '@storybook/react';
 import * as React from 'react';
-import { XGrid, GridOptionsProp, GridComponentProps } from '@mui/x-data-grid-pro';
+import { DataGridPro, GridOptionsProp, GridComponentProps } from '@mui/x-data-grid-pro';
 import { useData } from '../hooks/useData';
 
 export default {
   title: 'X-Grid Tests/Dataset',
-  component: XGrid,
+  component: DataGridPro,
   parameters: {
     options: { selectedPanel: 'storybook/storysource/panel' },
     docs: {
@@ -24,7 +24,7 @@ const GridDataSet = ({ nbRows, nbCols, loading, ...options }: GridDatasetProps) 
   const data = useData(nbRows, nbCols);
   return (
     <div className="grid-container">
-      <XGrid rows={data.rows} columns={data.columns} {...options} loading={loading} />
+      <DataGridPro rows={data.rows} columns={data.columns} {...options} loading={loading} />
     </div>
   );
 };
@@ -70,7 +70,7 @@ const DemoDynamicContainerTemplate: Story<
   return (
     <div className="demo-rendering grid-container" style={{ padding: 10 }}>
       <div style={{ width, height }}>
-        <XGrid rows={data.rows} columns={data.columns} {...args} />
+        <DataGridPro rows={data.rows} columns={data.columns} {...args} />
       </div>
     </div>
   );

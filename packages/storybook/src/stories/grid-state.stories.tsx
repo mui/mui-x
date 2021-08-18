@@ -1,11 +1,11 @@
 import * as React from 'react';
 import Button from '@material-ui/core/Button';
-import { GridState, GridSortingState, useGridApiRef, XGrid } from '@mui/x-data-grid-pro';
+import { GridState, GridSortingState, useGridApiRef, DataGridPro } from '@mui/x-data-grid-pro';
 import { useData } from '../hooks/useData';
 
 export default {
   title: 'X-Grid Tests/State',
-  component: XGrid,
+  component: DataGridPro,
   parameters: {
     options: { selectedPanel: 'storybook/storysource/panel' },
     docs: {
@@ -31,7 +31,7 @@ export function PartialControlUseState() {
   }, []);
 
   return (
-    <XGrid
+    <DataGridPro
       rows={data.rows}
       columns={data.columns}
       onStateChange={onStateChange}
@@ -54,7 +54,7 @@ export function SetStateApi() {
     });
   }, [apiRef]);
 
-  return <XGrid rows={data.rows} columns={data.columns} apiRef={apiRef} />;
+  return <DataGridPro rows={data.rows} columns={data.columns} apiRef={apiRef} />;
 }
 export function PartialControlApiRef() {
   const data = useData(2000, 200);
@@ -80,7 +80,12 @@ export function PartialControlApiRef() {
   );
 
   return (
-    <XGrid rows={data.rows} columns={data.columns} onStateChange={onStateChange} apiRef={apiRef} />
+    <DataGridPro
+      rows={data.rows}
+      columns={data.columns}
+      onStateChange={onStateChange}
+      apiRef={apiRef}
+    />
   );
 }
 const defaultProps = {
@@ -124,7 +129,7 @@ export function InitialState() {
     <div>
       <Button onClick={updateDirection}>Change direction</Button>
       <div style={{ width: 500, height: 500 }}>
-        <XGrid {...defaultProps} state={gridState} />
+        <DataGridPro {...defaultProps} state={gridState} />
       </div>
     </div>
   );
@@ -142,7 +147,7 @@ export function InitialStateWithApiRef() {
 
   return (
     <div style={{ width: 300, height: 300 }}>
-      <XGrid {...defaultProps} apiRef={apiRef} />
+      <DataGridPro {...defaultProps} apiRef={apiRef} />
     </div>
   );
 }

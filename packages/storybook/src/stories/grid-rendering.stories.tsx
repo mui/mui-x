@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { XGrid, GridOverlay } from '@mui/x-data-grid-pro';
+import { DataGridPro, GridOverlay } from '@mui/x-data-grid-pro';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import '../style/grid-stories.css';
@@ -17,7 +17,7 @@ function CustomLoadingOverlay() {
 
 export default {
   title: 'X-Grid Tests/Rendering',
-  component: XGrid,
+  component: DataGridPro,
   parameters: {
     options: { selectedPanel: 'storybook/storysource/panel' },
     docs: {
@@ -48,7 +48,7 @@ export const RenderInputInCell = () => {
 
   return (
     <div className="grid-container">
-      <XGrid rows={rows} columns={columns} />
+      <DataGridPro rows={rows} columns={columns} />
     </div>
   );
 };
@@ -66,7 +66,7 @@ export const InfiniteLoading = () => {
 
   return (
     <div className="grid-container">
-      <XGrid
+      <DataGridPro
         {...data}
         loading={loading}
         onRowsScrollEnd={handleOnRowsScrollEnd}
@@ -89,7 +89,7 @@ export function ScrollbarOverflowVerticalSnap() {
 
   return (
     <div className="grid-container">
-      <XGrid pagination {...data} />
+      <DataGridPro pagination {...data} />
     </div>
   );
 }

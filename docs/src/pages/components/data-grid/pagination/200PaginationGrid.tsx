@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { XGrid } from '@mui/x-data-grid-pro';
+import { DataGridPro } from '@mui/x-data-grid-pro';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
 export default function BasisPaginationGrid() {
@@ -11,7 +11,7 @@ export default function BasisPaginationGrid() {
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <XGrid pagination pageSize={200} rowsPerPageOptions={[200]} {...data} />
+      <DataGridPro pagination pageSize={200} rowsPerPageOptions={[200]} {...data} />
     </div>
   );
 }

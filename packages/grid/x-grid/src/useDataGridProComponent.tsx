@@ -35,7 +35,7 @@ import { useResizeContainer } from '../../_modules_/grid/hooks/utils/useResizeCo
 import { useStateProp } from '../../_modules_/grid/hooks/utils/useStateProp';
 import { GridApiRef } from '../../_modules_/grid/models/api/gridApiRef';
 
-export const useXGridComponent = (apiRef: GridApiRef, props: GridComponentProps) => {
+export const useDataGridProComponent = (apiRef: GridApiRef, props: GridComponentProps) => {
   useLoggerFactory(apiRef, props);
   useApi(apiRef, props);
   useErrorHandler(apiRef, props);

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { fromEvent, Subscription } from 'rxjs';
 import { takeUntil, tap } from 'rxjs/operators';
-import { XGrid, GridColDef, GridOptionsProp, useGridApiRef } from '@mui/x-data-grid-pro';
+import { DataGridPro, GridColDef, GridOptionsProp, useGridApiRef } from '@mui/x-data-grid-pro';
 import {
   PricingModel,
   subscribeCurrencyPair,
@@ -69,7 +69,7 @@ export const PricingGrid = (props: PricingGridProps) => {
         </button>
       </div>
       <div style={{ width: 800, height: 600 }}>
-        <XGrid rows={rows} columns={columns} apiRef={apiRef} {...props} getRowId={getRowId} />
+        <DataGridPro rows={rows} columns={columns} apiRef={apiRef} {...props} getRowId={getRowId} />
       </div>
     </React.Fragment>
   );

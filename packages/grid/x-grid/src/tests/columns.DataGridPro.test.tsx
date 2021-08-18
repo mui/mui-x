@@ -14,14 +14,14 @@ import {
   GridApiRef,
   GridComponentProps,
   useGridApiRef,
-  XGrid,
+  DataGridPro,
   GRID_COLUMN_HEADER_SEPARATOR_RESIZABLE_CSS_CLASS,
 } from '@mui/x-data-grid-pro';
 import { getColumnHeaderCell, getCell } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
-describe('<XGrid /> - Columns', () => {
+describe('<DataGridPro /> - Columns', () => {
   // TODO v5: replace with createClientRender
   const render = createClientRenderStrictMode();
 
@@ -50,7 +50,7 @@ describe('<XGrid /> - Columns', () => {
     apiRef = useGridApiRef();
     return (
       <div style={{ width: 300, height: 300 }}>
-        <XGrid apiRef={apiRef} {...baselineProps} {...props} />
+        <DataGridPro apiRef={apiRef} {...baselineProps} {...props} />
       </div>
     );
   };
