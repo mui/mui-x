@@ -17,25 +17,24 @@ import { useGridState } from '../core/useGridState';
 import { useNativeEventListener } from '../../root/useNativeEventListener';
 import { GridComponentProps } from '../../../GridComponentProps';
 
-let cachedSupportsTouchActionNone = false;
-
 // TODO: remove support for Safari < 13.
 // https://caniuse.com/#search=touch-action
 //
 // Safari, on iOS, supports touch action since v13.
 // Over 80% of the iOS phones are compatible
 // in August 2020.
+// Utilizing the CSS.supports method to check if touch-action is supported.
+// Since CSS.supports is supported on all but Edge@12 and IE and touch-action
+// is supported on both Edge@12 and IE if CSS.supports is not available that means that
+// touch-action will be supported
+let cachedSupportsTouchActionNone = false;
 function doesSupportTouchActionNone(): boolean {
-  // The document is not defined in the server-side
-  if (typeof document === 'undefined') {
-    return cachedSupportsTouchActionNone;
-  }
-  if (!cachedSupportsTouchActionNone) {
-    const element = document.createElement('div');
-    element.style.touchAction = 'none';
-    document.body.appendChild(element);
-    cachedSupportsTouchActionNone = window.getComputedStyle(element).touchAction === 'none';
-    element.parentElement!.removeChild(element);
+  if (cachedSupportsTouchActionNone === undefined) {
+    if (typeof CSS !== 'undefined' && typeof CSS.supports === 'function') {
+      cachedSupportsTouchActionNone = CSS.supports('touch-action', 'none');
+    } else {
+      cachedSupportsTouchActionNone = true;
+    }
   }
   return cachedSupportsTouchActionNone;
 }
