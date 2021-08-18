@@ -131,6 +131,7 @@ describe('<DataGrid /> - Keyboard', () => {
   const KeyboardTest = (props: {
     nbRows?: number;
     checkboxSelection?: boolean;
+    filterModel?: any;
     width?: number;
   }) => {
     const data = useData(props.nbRows || 100, 20);
@@ -144,13 +145,14 @@ describe('<DataGrid /> - Keyboard', () => {
           rows={data.rows}
           columns={transformColSizes(data.columns)}
           checkboxSelection={props.checkboxSelection}
+          filterModel={props.filterModel}
         />
       </div>
     );
   };
 
   /* eslint-disable material-ui/disallow-active-element-as-key-event-target */
-  it('cell navigation with arrows', () => {
+  it('should support cell navigation with arrows', () => {
     render(<KeyboardTest nbRows={10} />);
     getCell(0, 0).focus();
     expect(getActiveCell()).to.equal('0-0');
@@ -170,13 +172,28 @@ describe('<DataGrid /> - Keyboard', () => {
     expect(getActiveCell()).to.equal('0-1');
   });
 
-  it('cell navigation with arrows and checkboxSelection', () => {
+  it('should support cell navigation with arrows and checkboxSelection', () => {
     render(<KeyboardTest nbRows={10} checkboxSelection />);
     getCell(0, 0).querySelector('input')!.focus();
     expect(getActiveCell()).to.equal('0-0');
     fireEvent.keyDown(document.activeElement!, { key: 'ArrowRight' });
     expect(getActiveCell()).to.equal('0-1');
     fireEvent.keyDown(document.activeElement!, { key: 'ArrowLeft' });
+    expect(getActiveCell()).to.equal('0-0');
+    fireEvent.keyDown(document.activeElement!, { key: 'ArrowDown' });
+    expect(getActiveCell()).to.equal('1-0');
+    fireEvent.keyDown(document.activeElement!, { key: 'ArrowUp' });
+    expect(getActiveCell()).to.equal('0-0');
+  });
+
+  it('should support cell navigation with arrows when rows are filtered', () => {
+    render(
+      <KeyboardTest
+        nbRows={10}
+        filterModel={{ items: [{ columnField: 'id', value: 1, operatorValue: '!=' }] }}
+      />,
+    );
+    getCell(0, 0).focus();
     expect(getActiveCell()).to.equal('0-0');
     fireEvent.keyDown(document.activeElement!, { key: 'ArrowDown' });
     expect(getActiveCell()).to.equal('1-0');
