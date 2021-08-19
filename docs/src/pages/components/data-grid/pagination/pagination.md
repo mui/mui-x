@@ -38,7 +38,7 @@ By default, this feature is off.
 
 By default, pagination works on the client-side.
 To switch it to server-side, set `paginationMode="server"`.
-You also need to set the `rowCount` prop to so the grid know the total number of pages.
+You also need to set the `rowCount` prop so that the grid knows the total number of pages.
 Finally, you need to handle the `onPageChange` callback to load the rows for the corresponding page.
 
 {{"demo": "pages/components/data-grid/pagination/ServerPaginationGrid.js", "bg": "inline"}}
