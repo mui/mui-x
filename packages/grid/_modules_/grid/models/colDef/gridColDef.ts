@@ -13,6 +13,8 @@ import {
 import { GridColumnHeaderParams } from '../params/gridColumnHeaderParams';
 import { GridComparatorFn } from '../gridSortModel';
 import { GridColType, GridNativeColTypes } from './gridColType';
+import { GridRowParams } from '../params/gridRowParams';
+import { GridActionsCellItemProps } from '../../components/cell/GridActionsCellItem';
 
 /**
  * Alignment used in position elements in Cells.
@@ -162,7 +164,21 @@ export interface GridColDef {
   disableExport?: boolean;
 }
 
-export type GridColumns = GridColDef[];
+export interface GridActionsColDef extends GridColDef {
+  /**
+   * Type allows to merge this object with a default definition [[GridColDef]].
+   * @default 'actions'
+   */
+  type: 'actions';
+  /**
+   * Function that returns the actions to be shown.
+   * @param {GridRowParams} params The params for each row.
+   * @returns {React.ReactElement<GridActionsCellItemProps>[]} An array of [[GridActionsCell]] elements.
+   */
+  getActions: (params: GridRowParams) => React.ReactElement<GridActionsCellItemProps>[];
+}
+
+export type GridColumns = (GridColDef | GridActionsColDef)[];
 export type GridColTypeDef = Omit<GridColDef, 'field'> & { extendType?: GridNativeColTypes };
 
 export interface GridStateColDef extends GridColDef {

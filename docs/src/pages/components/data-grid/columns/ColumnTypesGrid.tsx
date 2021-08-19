@@ -1,8 +1,10 @@
 import * as React from 'react';
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGrid, GridActionsCellItem, GridRowId } from '@mui/x-data-grid';
+import DeleteIcon from '@material-ui/icons/Delete';
+import SecurityIcon from '@material-ui/icons/Security';
 import { randomCreatedDate, randomUpdatedDate } from '@mui/x-data-grid-generator';
 
-const rows = [
+const initialRows = [
   {
     id: 1,
     name: 'Damien',
@@ -18,7 +20,7 @@ const rows = [
     age: 36,
     dateCreated: randomCreatedDate(),
     lastLogin: randomUpdatedDate(),
-    isAdmin: true,
+    isAdmin: false,
     country: 'France',
   },
   {
@@ -33,6 +35,19 @@ const rows = [
 ];
 
 export default function ColumnTypesGrid() {
+  const [rows, setRows] = React.useState(initialRows);
+
+  const deleteUser = (id: GridRowId) => () => {
+    setRows(rows.filter((row) => row.id !== id));
+  };
+
+  const toggleAdmin = (id: GridRowId) => () => {
+    const newUsers = rows.map((row) =>
+      row.id === id ? { ...row, isAdmin: !row.isAdmin } : row,
+    );
+    setRows(newUsers);
+  };
+
   return (
     <div style={{ height: 300, width: '100%' }}>
       <DataGrid
@@ -45,7 +60,7 @@ export default function ColumnTypesGrid() {
           {
             field: 'country',
             type: 'singleSelect',
-            width: 150,
+            width: 120,
             valueOptions: [
               'Bulgaria',
               'Netherlands',
@@ -53,6 +68,24 @@ export default function ColumnTypesGrid() {
               'United Kingdom',
               'Spain',
               'Brazil',
+            ],
+          },
+          {
+            field: 'actions',
+            type: 'actions',
+            width: 80,
+            getActions: (params) => [
+              <GridActionsCellItem
+                icon={<DeleteIcon />}
+                label="Delete"
+                onClick={deleteUser(params.id)}
+                alwaysVisible
+              />,
+              <GridActionsCellItem
+                icon={<SecurityIcon />}
+                label="Toggle Admin"
+                onClick={toggleAdmin(params.id)}
+              />,
             ],
           },
         ]}
