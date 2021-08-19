@@ -116,4 +116,4 @@ The following demo leverages the CSS customization API to match the Ant Design s
 ## API
 
 - [DataGrid](/api/data-grid/data-grid/)
-- [XGrid](/api/data-grid/x-grid/)
+- [DataGridPro](/api/data-grid/data-grid-pro/)

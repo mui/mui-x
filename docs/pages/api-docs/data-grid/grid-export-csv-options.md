@@ -5,9 +5,9 @@
 ## Import
 
 ```js
-import { GridExportCsvOptions } from '@material-ui/x-grid';
+import { GridExportCsvOptions } from '@mui/x-data-grid-pro';
 // or
-import { GridExportCsvOptions } from '@material-ui/data-grid';
+import { GridExportCsvOptions } from '@mui/x-data-grid';
 ```
 
 ## Properties

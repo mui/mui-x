@@ -8,15 +8,15 @@ const workspaceRoot = path.join(__dirname, '..', '..');
 async function getWebpackEntries() {
   return [
     {
-      name: '@material-ui/x-grid',
+      name: '@mui/x-data-grid-pro',
       path: 'packages/grid/x-grid/dist/index-esm.js',
     },
     {
-      name: '@material-ui/data-grid',
+      name: '@mui/x-data-grid',
       path: 'packages/grid/data-grid/dist/index-esm.js',
     },
     {
-      name: '@material-ui/x-license',
+      name: '@mui/x-license-pro',
       path: 'packages/x-license/dist/esm/index.js',
     },
   ];
@@ -58,18 +58,12 @@ module.exports = async function webpackConfig(webpack, environment) {
       ],
       resolve: {
         alias: {
-          '@material-ui/data-grid': path.join(
-            workspaceRoot,
-            'packages/grid/x-grid/dist/index-esm.js',
-          ),
-          '@material-ui/x-grid': path.join(
+          '@mui/x-data-grid': path.join(workspaceRoot, 'packages/grid/x-grid/dist/index-esm.js'),
+          '@mui/x-data-grid-pro': path.join(
             workspaceRoot,
             'packages/grid/data-grid/dist/index-esm.js',
           ),
-          '@material-ui/x-license': path.join(
-            workspaceRoot,
-            'packages/x-license/dist/esm/index.js',
-          ),
+          '@mui/x-license-pro': path.join(workspaceRoot, 'packages/x-license/dist/esm/index.js'),
         },
       },
       entry: { [entry.name]: path.join(workspaceRoot, entry.path) },

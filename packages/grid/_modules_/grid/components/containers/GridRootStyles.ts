@@ -1,6 +1,7 @@
 import { darken, lighten, Theme } from '@material-ui/core/styles';
 import { makeStyles } from '@material-ui/styles';
 import { getThemePaletteMode, muiStyleAlpha, createTheme } from '../../utils/utils';
+import { gridClasses } from '../../gridClasses';
 
 const defaultTheme = createTheme();
 export const useStyles = makeStyles(
@@ -23,19 +24,16 @@ export const useStyles = makeStyles(
         height: '100%',
         display: 'flex',
         flexDirection: 'column',
-        '& *, & *::before, & *::after': {
-          boxSizing: 'inherit',
-        },
-        '&.MuiDataGrid-autoHeight': {
+        [`&.${gridClasses.autoHeight}`]: {
           height: 'auto',
         },
-        '& .MuiDataGrid-main': {
+        [`& .${gridClasses.main}`]: {
           position: 'relative',
           flexGrow: 1,
           display: 'flex',
           flexDirection: 'column',
         },
-        '& .MuiDataGrid-overlay': {
+        [`& .${gridClasses.overlay}`]: {
           display: 'flex',
           position: 'absolute',
           top: 0,
@@ -50,12 +48,12 @@ export const useStyles = makeStyles(
             theme.palette.action.disabledOpacity,
           ),
         },
-        '& .MuiDataGrid-toolbarContainer': {
+        [`& .${gridClasses.toolbarContainer}`]: {
           display: 'flex',
           alignItems: 'center',
           padding: '4px 4px 0',
         },
-        '& .MuiDataGrid-columnsContainer': {
+        [`& .${gridClasses.columnsContainer}`]: {
           position: 'absolute',
           top: 0,
           left: 0,
@@ -65,60 +63,61 @@ export const useStyles = makeStyles(
           flexDirection: 'column',
           borderBottom: `1px solid ${borderColor}`,
         },
-        '& .MuiDataGrid-scrollArea': {
+        [`& .${gridClasses.scrollArea}`]: {
           position: 'absolute',
           top: 0,
           zIndex: 101,
           width: 20,
           bottom: 0,
         },
-        '& .MuiDataGrid-scrollArea--left': {
+        [`& .${gridClasses['scrollArea--left']}`]: {
           left: 0,
         },
-        '& .MuiDataGrid-scrollArea--right': {
+        [`& .${gridClasses['scrollArea--right']}`]: {
           right: 0,
         },
-        '& .MuiDataGrid-columnHeaderWrapper': {
+        [`& .${gridClasses.columnHeaderWrapper}`]: {
           display: 'flex',
           width: '100%',
           alignItems: 'center',
           overflow: 'hidden',
         },
-        '& .MuiDataGrid-columnHeader, & .MuiDataGrid-cell': {
+        [`& .${gridClasses.columnHeader}, & .${gridClasses.cell}`]: {
           WebkitTapHighlightColor: 'transparent',
           lineHeight: null,
           padding: '0 10px',
+          boxSizing: 'border-box',
         },
-        '& .MuiDataGrid-columnHeader:focus-within, & .MuiDataGrid-cell:focus-within': {
+        [`& .${gridClasses.columnHeader}:focus-within, & .${gridClasses.cell}:focus-within`]: {
           outline: `solid ${muiStyleAlpha(theme.palette.primary.main, 0.5)} 1px`,
           outlineWidth: 1,
           outlineOffset: -1,
         },
-        '& .MuiDataGrid-columnHeader:focus, & .MuiDataGrid-cell:focus': {
+        [`& .${gridClasses.columnHeader}:focus, & .${gridClasses.cell}:focus`]: {
           outline: `solid ${theme.palette.primary.main} 1px`,
         },
-        '& .MuiDataGrid-columnHeaderCheckbox, & .MuiDataGrid-cellCheckbox': {
+        [`& .${gridClasses.columnHeaderCheckbox}, & .${gridClasses.cellCheckbox}`]: {
           padding: 0,
           justifyContent: 'center',
           alignItems: 'center',
         },
-        '& .MuiDataGrid-columnHeader': {
+        [`& .${gridClasses.columnHeader}`]: {
           position: 'relative',
           display: 'flex',
           alignItems: 'center',
         },
-        '& .MuiDataGrid-columnHeader:not(.MuiDataGrid-columnHeader--sorted) .MuiDataGrid-sortIcon':
+        [`& .${gridClasses.columnHeader}:not(.${gridClasses['columnHeader--sorted']}) .${gridClasses.sortIcon}`]:
           {
             opacity: 0,
             transition: theme.transitions.create(['opacity'], {
               duration: theme.transitions.duration.shorter,
             }),
           },
-        '& .MuiDataGrid-columnHeader:not(.MuiDataGrid-columnHeader--sorted):hover .MuiDataGrid-sortIcon':
+        [`& .${gridClasses.columnHeader}:not(.${gridClasses['columnHeader--sorted']}):hover .${gridClasses.sortIcon}`]:
           {
             opacity: 0.5,
           },
-        '& .MuiDataGrid-columnHeaderTitleContainer': {
+        [`& .${gridClasses.columnHeaderTitleContainer}`]: {
           display: 'flex',
           alignItems: 'center',
           minWidth: 0,
@@ -127,34 +126,35 @@ export const useStyles = makeStyles(
           overflow: 'hidden',
           padding: '0 6px',
         },
-        '& .MuiDataGrid-sortIcon, & .MuiDataGrid-filterIcon': {
+        [`& .${gridClasses.sortIcon}, & .${gridClasses.filterIcon}`]: {
           fontSize: 'inherit',
         },
-        '& .MuiDataGrid-columnHeader--sortable': {
+        [`& .${gridClasses['columnHeader--sortable']}`]: {
           cursor: 'pointer',
         },
-        '& .MuiDataGrid-columnHeader--alignCenter .MuiDataGrid-columnHeaderTitleContainer': {
-          justifyContent: 'center',
-        },
-        '& .MuiDataGrid-columnHeader--alignRight .MuiDataGrid-columnHeaderDraggableContainer, & .MuiDataGrid-columnHeader--alignRight .MuiDataGrid-columnHeaderTitleContainer':
+        [`& .${gridClasses['columnHeader--alignCenter']} .${gridClasses.columnHeaderTitleContainer}`]:
+          {
+            justifyContent: 'center',
+          },
+        [`& .${gridClasses['columnHeader--alignRight']} .${gridClasses.columnHeaderDraggableContainer}, & .${gridClasses['columnHeader--alignRight']} .${gridClasses.columnHeaderTitleContainer}`]:
           {
             flexDirection: 'row-reverse',
           },
-        '& .MuiDataGrid-columnHeader--alignCenter .MuiDataGrid-menuIcon, & .MuiDataGrid-columnHeader--alignRight .MuiDataGrid-menuIcon':
+        [`& .${gridClasses['columnHeader--alignCenter']} .${gridClasses.menuIcon}, & .${gridClasses['columnHeader--alignRight']} .${gridClasses.menuIcon}`]:
           {
             marginRight: 'auto',
             marginLeft: -6,
           },
-        '& .MuiDataGrid-columnHeaderTitle': {
+        [`& .${gridClasses.columnHeaderTitle}`]: {
           textOverflow: 'ellipsis',
           overflow: 'hidden',
           whiteSpace: 'nowrap',
           fontWeight: theme.typography.fontWeightMedium,
         },
-        '& .MuiDataGrid-columnHeader--moving': {
+        [`& .${gridClasses['columnHeader--moving']}`]: {
           backgroundColor: theme.palette.action.hover,
         },
-        '& .MuiDataGrid-columnSeparator': {
+        [`& .${gridClasses.columnSeparator}`]: {
           position: 'absolute',
           right: -12,
           zIndex: 100,
@@ -163,7 +163,7 @@ export const useStyles = makeStyles(
           justifyContent: 'center',
           color: borderColor,
         },
-        '& .MuiDataGrid-columnSeparator--resizable': {
+        [`& .${gridClasses['columnSeparator--resizable']}`]: {
           cursor: 'col-resize',
           touchAction: 'none',
           '&:hover': {
@@ -177,36 +177,37 @@ export const useStyles = makeStyles(
             color: theme.palette.text.primary,
           },
         },
-        '& .MuiDataGrid-iconSeparator': {
+        [`& .${gridClasses.iconSeparator}`]: {
           color: 'inherit',
         },
-        '& .MuiDataGrid-menuIcon': {
+        [`& .${gridClasses.menuIcon}`]: {
           visibility: 'hidden',
           fontSize: 20,
           marginRight: -6,
           display: 'flex',
           alignItems: 'center',
         },
-        '& .MuiDataGrid-columnHeader:hover .MuiDataGrid-menuIcon, .MuiDataGrid-menuOpen': {
-          visibility: 'visible',
-        },
-        '& .MuiDataGrid-columnHeaderWrapper.scroll .MuiDataGrid-columnHeader:last-child': {
+        [`& .${gridClasses.columnHeader}:hover .${gridClasses.menuIcon}, .${gridClasses.menuOpen}`]:
+          {
+            visibility: 'visible',
+          },
+        [`& .${gridClasses.columnHeaderWrapper}.scroll .${gridClasses.columnHeader}:last-child`]: {
           borderRight: 'none',
         },
-        '& .MuiDataGrid-dataContainer': {
+        [`& .${gridClasses.dataContainer}`]: {
           position: 'relative',
           flexGrow: 1,
           display: 'flex',
           flexDirection: 'column',
         },
-        '& .MuiDataGrid-window': {
+        [`& .${gridClasses.window}`]: {
           position: 'absolute',
           bottom: 0,
           left: 0,
           right: 0,
           overflowX: 'auto',
         },
-        '& .MuiDataGrid-viewport': {
+        [`& .${gridClasses.viewport}`]: {
           position: 'sticky',
           top: 0,
           left: 0,
@@ -214,7 +215,7 @@ export const useStyles = makeStyles(
           flexDirection: 'column',
           overflow: 'hidden',
         },
-        '& .MuiDataGrid-row': {
+        [`& .${gridClasses.row}`]: {
           display: 'flex',
           width: 'fit-content',
           '&:hover': {
@@ -244,14 +245,14 @@ export const useStyles = makeStyles(
             },
           },
         },
-        '& .MuiDataGrid-cell': {
+        [`& .${gridClasses.cell}`]: {
           display: 'block',
           overflow: 'hidden',
           textOverflow: 'ellipsis',
           whiteSpace: 'nowrap',
           borderBottom: `1px solid ${borderColor}`,
         },
-        '& .MuiDataGrid-cell.MuiDataGrid-cell--editing': {
+        [`& .${gridClasses.cell}.${gridClasses['cell--editing']}`]: {
           padding: 1,
           display: 'flex',
           boxShadow: theme.shadows[2],
@@ -261,7 +262,14 @@ export const useStyles = makeStyles(
             outlineOffset: '-1px',
           },
         },
-        '& .MuiDataGrid-editInputCell': {
+        [`& .${gridClasses['row--editing']}`]: {
+          boxShadow: theme.shadows[2],
+        },
+        [`& .${gridClasses['row--editing']} .${gridClasses.cell}`]: {
+          boxShadow: theme.shadows[0],
+          backgroundColor: theme.palette.background.paper,
+        },
+        [`& .${gridClasses.editInputCell}`]: {
           ...theme.typography.body2,
           padding: '1px 0',
           '& input': {
@@ -269,62 +277,62 @@ export const useStyles = makeStyles(
             height: '100%',
           },
         },
-        '& .MuiDataGrid-editBooleanCell': {
+        [`& .${gridClasses.editBooleanCell}`]: {
           display: 'flex',
           height: '100%',
           width: '100%',
           alignItems: 'center',
           justifyContent: 'center',
         },
-        '& .MuiDataGrid-booleanCell[data-value="true"]': {
+        [`& .${gridClasses.booleanCell}[data-value="true"]`]: {
           color: theme.palette.text.secondary,
         },
-        '& .MuiDataGrid-booleanCell[data-value="false"]': {
+        [`& .${gridClasses.booleanCell}[data-value="false"]`]: {
           color: theme.palette.text.disabled,
         },
         // The very last cell
-        '& .MuiDataGrid-columnHeaderWrapper .MuiDataGrid-cell': {
+        [`& .${gridClasses.columnHeaderWrapper} .${gridClasses.cell}`]: {
           borderBottom: 'none',
         },
-        '& .MuiDataGrid-cell--withRenderer': {
+        [`& .${gridClasses['cell--withRenderer']}`]: {
           display: 'flex',
           alignItems: 'center',
         },
-        '& .MuiDataGrid-withBorder': {
+        [`& .${gridClasses.withBorder}`]: {
           borderRight: `1px solid ${borderColor}`,
         },
-        '& .MuiDataGrid-cell--textLeft': {
+        [`& .${gridClasses['cell--textLeft']}`]: {
           textAlign: 'left',
         },
-        '& .MuiDataGrid-cell--textLeft.MuiDataGrid-cell--withRenderer, & .MuiDataGrid-cell--textLeft.MuiDataGrid-cell--editing':
+        [`& .${gridClasses['cell--textLeft']}.${gridClasses['cell--withRenderer']}, & .${gridClasses['cell--textLeft']}.${gridClasses['cell--editing']}`]:
           {
             justifyContent: 'flex-start',
           },
-        '& .MuiDataGrid-cell--textRight': {
+        [`& .${gridClasses['cell--textRight']}`]: {
           textAlign: 'right',
         },
-        '& .MuiDataGrid-cell--textRight.MuiDataGrid-cell--withRenderer, & .MuiDataGrid-cell--textRight.MuiDataGrid-cell--editing':
+        [`& .${gridClasses['cell--textRight']}.${gridClasses['cell--withRenderer']}, & .${gridClasses['cell--textRight']}.${gridClasses['cell--editing']}`]:
           {
             justifyContent: 'flex-end',
           },
-        '& .MuiDataGrid-cell--textCenter': {
+        [`& .${gridClasses['cell--textCenter']}`]: {
           textAlign: 'center',
         },
-        '& .MuiDataGrid-cell--textCenter.MuiDataGrid-cell--withRenderer, & .MuiDataGrid-cell--textCenter.MuiDataGrid-cell--editing':
+        [`& .${gridClasses['cell--textCenter']}.${gridClasses['cell--withRenderer']}, & .${gridClasses['cell--textCenter']}.${gridClasses['cell--editing']}`]:
           {
             justifyContent: 'center',
           },
-        '& .MuiDataGrid-rowCount, & .MuiDataGrid-selectedRowCount': {
+        [`& .${gridClasses.rowCount}, & .${gridClasses.selectedRowCount}`]: {
           alignItems: 'center',
           display: 'flex',
           margin: theme.spacing(0, 2),
         },
-        '& .MuiDataGrid-footerContainer': {
+        [`& .${gridClasses.footerContainer}`]: {
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
           minHeight: 52, // Match TablePagination min height
-          '& .MuiDataGrid-selectedRowCount': {
+          [`& .${gridClasses.selectedRowCount}`]: {
             visibility: 'hidden',
             width: 0,
             height: 0,
@@ -335,14 +343,14 @@ export const useStyles = makeStyles(
             },
           },
         },
-        '& .MuiDataGrid-columnHeaderDropZone .MuiDataGrid-columnHeaderDraggableContainer': {
+        [`& .${gridClasses.columnHeaderDropZone} .${gridClasses.columnHeaderDraggableContainer}`]: {
           cursor: 'move',
         },
-        '& .MuiDataGrid-columnHeaderDraggableContainer': {
+        [`& .${gridClasses.columnHeaderDraggableContainer}`]: {
           display: 'flex',
           width: '100%',
         },
-        '& .MuiDataGrid-columnHeader--dragging': {
+        [`& .${gridClasses['columnHeader--dragging']}`]: {
           background: theme.palette.background.paper,
           padding: '0 12px',
           borderRadius: theme.shape.borderRadius,

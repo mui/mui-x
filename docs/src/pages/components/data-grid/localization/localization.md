@@ -24,7 +24,7 @@ You can use the theme to configure the locale text:
 
 ```jsx
 import { createTheme, ThemeProvider } from '@material-ui/core/styles';
-import { DataGrid, bgBG } from '@material-ui/data-grid';
+import { DataGrid, bgBG } from '@mui/x-data-grid';
 
 const theme = createTheme(
   {
@@ -42,11 +42,11 @@ const theme = createTheme(
 
 Note that `createTheme` accepts any number of arguments.
 If you are already using the [translations of the core components](/guides/localization/#locale-text), you can add `bgBG` as a new argument.
-The same import works for `XGrid` as it's an extension of `DataGrid`.
+The same import works for `DataGridPro` as it's an extension of `DataGrid`.
 
 ```jsx
 import { createTheme, ThemeProvider } from '@material-ui/core/styles';
-import { DataGrid, bgBG } from '@material-ui/data-grid';
+import { DataGrid, bgBG } from '@mui/x-data-grid';
 import { bgBG as coreBgBG } from '@material-ui/core/locale';
 
 const theme = createTheme(
@@ -64,10 +64,10 @@ const theme = createTheme(
 </ThemeProvider>;
 ```
 
-If you want to pass language translations directly to the grid without using `createTheme` and `ThemeProvider`, you can directly load the language translations from the `@material-ui/data-grid` or `@material-ui/x-grid` package.
+If you want to pass language translations directly to the grid without using `createTheme` and `ThemeProvider`, you can directly load the language translations from the `@mui/x-data-grid` or `@mui/x-data-grid-pro` package.
 
 ```jsx
-import { DataGrid, nlNL } from '@material-ui/data-grid';
+import { DataGrid, nlNL } from '@mui/x-data-grid';
 
 <DataGrid localeText={nlNL.props.MuiDataGrid.localeText} />;
 ```
@@ -104,4 +104,4 @@ See the [Docs](https://material-ui.com/components/data-grid/localization/) for m
 ## API
 
 - [DataGrid](/api/data-grid/data-grid/)
-- [XGrid](/api/data-grid/x-grid/)
+- [DataGridPro](/api/data-grid/data-grid-pro/)

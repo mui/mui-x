@@ -4,7 +4,7 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import Popper from '@material-ui/core/Popper';
 import Paper from '@material-ui/core/Paper';
-import { createMuiTheme, Theme } from '@material-ui/core/styles';
+import { createTheme, Theme } from '@material-ui/core/styles';
 import { createStyles, makeStyles } from '@material-ui/styles';
 import {
   GridCellValue,
@@ -14,13 +14,13 @@ import {
   GridColDef,
   GridRowData,
   useGridApiRef,
-  XGrid,
+  DataGridPro,
   GridEvents,
   GridEditCellPropsParams,
   GridCellEditCommitParams,
   MuiEvent,
-} from '@material-ui/x-grid';
-import { useDemoData } from '@material-ui/x-grid-data-generator';
+} from '@mui/x-data-grid-pro';
+import { useDemoData } from '@mui/x-data-grid-generator';
 import { action } from '@storybook/addon-actions';
 import { randomInt } from '../data/random-generator';
 
@@ -30,7 +30,7 @@ function isOverflown(element: Element): boolean {
 
 export default {
   title: 'X-Grid Tests/Rows',
-  component: XGrid,
+  component: DataGridPro,
   parameters: {
     options: { selectedPanel: 'storybook/storysource/panel' },
     docs: {
@@ -87,7 +87,7 @@ export function NoId() {
 
   return (
     <div className="grid-container">
-      <XGrid columns={baselineProps.columns} rows={rows} getRowId={getStoryRowId} />
+      <DataGridPro columns={baselineProps.columns} rows={rows} getRowId={getStoryRowId} />
     </div>
   );
 }
@@ -96,7 +96,7 @@ export function CommodityNewRowId() {
   const getRowId = React.useCallback((row: GridRowData) => `${row.desk}-${row.commodity}`, []);
   return (
     <div className="grid-container">
-      <XGrid
+      <DataGridPro
         rows={data.rows}
         columns={data.columns.filter((c) => c.field !== 'id')}
         getRowId={getRowId}
@@ -119,7 +119,7 @@ export function SetRowsViaApi() {
         </Button>
       </div>
       <div className="grid-container">
-        <XGrid {...baselineProps} apiRef={apiRef} />
+        <DataGridPro {...baselineProps} apiRef={apiRef} />
       </div>
     </React.Fragment>
   );
@@ -143,7 +143,7 @@ export function SetCommodityRowsViaApi() {
         </Button>
       </div>
       <div className="grid-container">
-        <XGrid rows={data.rows} columns={data.columns} apiRef={apiRef} />
+        <DataGridPro rows={data.rows} columns={data.columns} apiRef={apiRef} />
       </div>
     </React.Fragment>
   );
@@ -184,7 +184,7 @@ export function ChangeRowsAndColumns() {
         </Button>
       </div>
       <div className="grid-container">
-        <XGrid rows={rows} columns={cols} />
+        <DataGridPro rows={rows} columns={cols} />
       </div>
     </React.Fragment>
   );
@@ -195,7 +195,7 @@ interface GridCellExpandProps {
   width: number;
 }
 
-const defaultTheme = createMuiTheme();
+const defaultTheme = createTheme();
 const useStyles = makeStyles(
   (theme: Theme) =>
     createStyles({
@@ -318,7 +318,7 @@ const rows: any = [
   },
   {
     id: 2,
-    col1: 'XGrid',
+    col1: 'DataGridPro',
     col2: 'is Awesome',
     col3: 'In publishing and graphic design, Lorem ipsum is a placeholder text or a typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before final copy is available.',
   },
@@ -336,7 +336,7 @@ const rows: any = [
   },
   {
     id: 5,
-    col1: 'XGrid',
+    col1: 'DataGridPro',
     col2: 'is Awesome',
     col3: 'Typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before final copy is available.',
   },
@@ -361,7 +361,7 @@ export function ExpendRowCell() {
 
   return (
     <div style={{ height: 300, width: 600 }}>
-      <XGrid rows={rows} columns={columns} apiRef={apiRef} />
+      <DataGridPro rows={rows} columns={columns} apiRef={apiRef} />
     </div>
   );
 }
@@ -534,7 +534,7 @@ export function EditRowsControl() {
         </Button>
       </div>
       <div className="grid-container">
-        <XGrid
+        <DataGridPro
           className={classes.root}
           {...baselineEditProps}
           apiRef={apiRef}
@@ -554,15 +554,34 @@ export function EditRowsBasic() {
   return (
     <React.Fragment>
       <div className="grid-container">
-        <XGrid
+        <DataGridPro
           {...baselineEditProps}
           apiRef={apiRef}
+          editMode="row"
+          disableSelectionOnClick
+          // onEditRowsModelChange={action('onEditRowsModelChange')}
+        />
+      </div>
+    </React.Fragment>
+  );
+}
+export function EditCellsBasic() {
+  const apiRef = useGridApiRef();
+
+  return (
+    <React.Fragment>
+      <div className="grid-container">
+        <DataGridPro
+          {...baselineEditProps}
+          apiRef={apiRef}
+          editMode="cell"
           onEditRowsModelChange={action('onEditRowsModelChange')}
         />
       </div>
     </React.Fragment>
   );
 }
+
 const singleData = { rows: [...baselineEditProps.rows], columns: [...baselineEditProps.columns] };
 singleData.rows.length = 1;
 singleData.columns.length = 1;
@@ -571,7 +590,7 @@ singleData.columns[0].width = 200;
 export function SingleCellBasic() {
   return (
     <div className="grid-container">
-      <XGrid {...singleData} onEditRowsModelChange={action('onEditRowsModelChange')} />
+      <DataGridPro {...singleData} onEditRowsModelChange={action('onEditRowsModelChange')} />
     </div>
   );
 }
@@ -583,7 +602,7 @@ export function CommodityEdit() {
 
   return (
     <div style={{ width: '100%', height: 600 }}>
-      <XGrid {...data} />
+      <DataGridPro {...data} />
     </div>
   );
 }
@@ -610,7 +629,7 @@ export function EditCellSnap() {
 
   return (
     <div className="grid-container">
-      <XGrid {...baselineProps} apiRef={apiRef} />
+      <DataGridPro {...baselineProps} apiRef={apiRef} />
     </div>
   );
 }
@@ -637,7 +656,7 @@ export function EditBooleanCellSnap() {
 
   return (
     <div className="grid-container">
-      <XGrid {...baselineProps} apiRef={apiRef} />
+      <DataGridPro {...baselineProps} apiRef={apiRef} />
     </div>
   );
 }
@@ -671,7 +690,7 @@ export function ValidateEditValueWithApiRefGrid() {
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <XGrid
+      <DataGridPro
         className={classes.root}
         {...baselineEditProps}
         apiRef={apiRef}
@@ -699,7 +718,7 @@ export function ValidateEditValueWithEditCellModelPropGrid() {
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <XGrid
+      <DataGridPro
         className={classes.root}
         {...baselineEditProps}
         apiRef={apiRef}
@@ -771,7 +790,7 @@ export function ValidateEditValueServerSide() {
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <XGrid
+      <DataGridPro
         className={classes.root}
         {...baselineEditProps}
         apiRef={apiRef}
@@ -846,7 +865,7 @@ export function EditCellUsingExternalButtonGrid() {
         {buttonLabel}
       </Button>
       <div style={{ height: 400, width: '100%' }}>
-        <XGrid
+        <DataGridPro
           className={classes.root}
           {...baselineEditProps}
           apiRef={apiRef}
@@ -869,7 +888,7 @@ export function EditCellWithModelGrid() {
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <XGrid
+      <DataGridPro
         {...baselineEditProps}
         editRowsModel={editRowsModel}
         onEditRowsModelChange={handleEditRowsModelChange}
@@ -898,7 +917,12 @@ export function EditCellWithCellClickGrid() {
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <XGrid {...baselineEditProps} apiRef={apiRef} onCellClick={handleCellClick} autoHeight />
+      <DataGridPro
+        {...baselineEditProps}
+        apiRef={apiRef}
+        onCellClick={handleCellClick}
+        autoHeight
+      />
     </div>
   );
 }
@@ -931,7 +955,7 @@ export function EditCellWithMessageGrid() {
   return (
     <div style={{ height: 400, width: '100%' }}>
       {message && <Alert severity="info">{message}</Alert>}
-      <XGrid {...baselineEditProps} apiRef={apiRef} autoHeight />
+      <DataGridPro {...baselineEditProps} apiRef={apiRef} autoHeight />
     </div>
   );
 }
@@ -969,7 +993,7 @@ export function SwitchVirtualization() {
         <Button onClick={() => handleButtonClick(100)}>100 items</Button>
       </div>
       <div style={{ width: '100%', height: 500 }}>
-        <XGrid rows={data.rows} columns={data.columns} />
+        <DataGridPro rows={data.rows} columns={data.columns} />
       </div>
     </div>
   );
@@ -984,7 +1008,7 @@ export function DisableVirtualization() {
 
   return (
     <div style={{ width: '100%', height: '100%' }}>
-      <XGrid rows={data.rows} columns={data.columns} pagination disableVirtualization />
+      <DataGridPro rows={data.rows} columns={data.columns} pagination disableVirtualization />
     </div>
   );
 }
@@ -1001,12 +1025,12 @@ export function DeferRendering() {
     };
   }, []);
 
-  return <XGrid autoHeight columns={deferColumns} rows={deferRows} />;
+  return <DataGridPro autoHeight columns={deferColumns} rows={deferRows} />;
 }
 
 export const ZeroHeightGrid = () => (
   <div style={{ width: 300, height: 0 }}>
-    <XGrid {...baselineProps} />
+    <DataGridPro {...baselineProps} />
   </div>
 );
 
@@ -1018,7 +1042,7 @@ export function SnapGridWidthEdgeScroll() {
   });
   return (
     <div style={{ height: 400, width: 710 }}>
-      <XGrid {...data} />
+      <DataGridPro {...data} />
     </div>
   );
 }

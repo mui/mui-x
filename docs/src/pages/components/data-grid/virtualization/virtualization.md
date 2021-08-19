@@ -44,4 +44,4 @@ The virtualization can be disabled entirely using the `disableVirtualization` pr
 ## API
 
 - [DataGrid](/api/data-grid/data-grid/)
-- [XGrid](/api/data-grid/x-grid/)
+- [DataGridPro](/api/data-grid/data-grid-pro/)

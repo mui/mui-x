@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { XGrid } from '@material-ui/x-grid';
+import { DataGridPro } from '@mui/x-data-grid-pro';
 
 const rows = [
   {
@@ -12,7 +12,7 @@ const rows = [
 export default function ColumnOrderingDisabledGrid() {
   return (
     <div style={{ height: 250, width: '100%' }}>
-      <XGrid
+      <DataGridPro
         columns={[
           { field: 'id' },
           { field: 'username' },

@@ -10,7 +10,6 @@ import {
 import { GridContainerProps } from '../../../models/gridContainerProps';
 import { isDeepEqual } from '../../../utils/utils';
 import { useEnhancedEffect } from '../../../utils/material-ui-utils';
-import { optionsSelector } from '../../utils/optionsSelector';
 import {
   gridColumnsMetaSelector,
   visibleGridColumnsSelector,
@@ -24,6 +23,7 @@ import { useNativeEventListener } from '../../root/useNativeEventListener';
 import { useLogger } from '../../utils/useLogger';
 import { useGridScrollFn } from '../../utils/useGridScrollFn';
 import { InternalRenderingState } from './renderingState';
+import { GridComponentProps } from '../../../GridComponentProps';
 import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
 
 // Uses binary search to avoid looping through all possible positions
@@ -48,14 +48,23 @@ function getIdxFromScroll(
     : getIdxFromScroll(offset, positions, pivot + 1, sliceEnd);
 }
 
-export const useGridVirtualization = (apiRef: GridApiRef): void => {
+export const useGridVirtualization = (
+  apiRef: GridApiRef,
+  props: Pick<
+    GridComponentProps,
+    | 'pagination'
+    | 'paginationMode'
+    | 'columnBuffer'
+    | 'disableExtendRowFullWidth'
+    | 'disableVirtualization'
+  >,
+): void => {
   const logger = useLogger('useGridVirtualization');
   const colRef = apiRef.current.columnHeadersElementRef!;
   const windowRef = apiRef.current.windowRef!;
   const renderingZoneRef = apiRef.current.renderingZoneRef!;
 
   const [gridState, setGridState, forceUpdate] = useGridState(apiRef);
-  const options = useGridSelector(apiRef, optionsSelector);
   const paginationState = useGridSelector(apiRef, gridPaginationSelector);
   const totalRowCount = useGridSelector(apiRef, gridRowCountSelector);
   const visibleColumns = useGridSelector(apiRef, visibleGridColumnsSelector);
@@ -89,9 +98,9 @@ export const useGridVirtualization = (apiRef: GridApiRef): void => {
       }
       let minRowIdx = 0;
       if (
-        options.pagination &&
+        props.pagination &&
         paginationState.pageSize != null &&
-        options.paginationMode === 'client'
+        props.paginationMode === 'client'
       ) {
         minRowIdx = paginationState.pageSize * paginationState.page;
       }
@@ -108,9 +117,9 @@ export const useGridVirtualization = (apiRef: GridApiRef): void => {
     },
     [
       apiRef,
-      options.pagination,
+      props.pagination,
       paginationState.pageSize,
-      options.paginationMode,
+      props.paginationMode,
       paginationState.page,
     ],
   );
@@ -172,7 +181,7 @@ export const useGridVirtualization = (apiRef: GridApiRef): void => {
       const lastDisplayedIdx = getColumnIdxFromScroll(scrollLeft + windowWidth);
       const prevFirstColIdx = renderedColRef?.current?.firstColIdx || 0;
       const prevLastColIdx = renderedColRef?.current?.lastColIdx || 0;
-      const columnBuffer = options.columnBuffer;
+      const columnBuffer = props.columnBuffer!;
       const tolerance = columnBuffer > 1 ? columnBuffer - 1 : columnBuffer; // Math.floor(columnBuffer / 2);
       const diffFirst = Math.abs(firstDisplayedIdx - tolerance - prevFirstColIdx);
       const diffLast = Math.abs(lastDisplayedIdx + tolerance - prevLastColIdx);
@@ -201,7 +210,7 @@ export const useGridVirtualization = (apiRef: GridApiRef): void => {
           columnsMeta.totalWidth -
           columnsMeta.positions[newRenderedColState.lastColIdx] -
           visibleColumns[newRenderedColState.lastColIdx].computedWidth;
-      } else if (!options.disableExtendRowFullWidth) {
+      } else if (!props.disableExtendRowFullWidth) {
         newRenderedColState.rightEmptyWidth =
           apiRef.current.state.viewportSizes.width - columnsMeta.totalWidth;
       }
@@ -221,15 +230,15 @@ export const useGridVirtualization = (apiRef: GridApiRef): void => {
       getColumnFromScroll,
       getColumnIdxFromScroll,
       logger,
-      options.columnBuffer,
-      options.disableExtendRowFullWidth,
+      props.columnBuffer,
+      props.disableExtendRowFullWidth,
       visibleColumns,
     ],
   );
 
   const updateViewport = React.useCallback(
     (forceReRender = false) => {
-      if (options.disableVirtualization) {
+      if (props.disableVirtualization) {
         return;
       }
 
@@ -294,7 +303,7 @@ export const useGridVirtualization = (apiRef: GridApiRef): void => {
       setRenderingState,
       updateRenderedCols,
       windowRef,
-      options.disableVirtualization,
+      props.disableVirtualization,
     ],
   );
 
@@ -311,7 +320,7 @@ export const useGridVirtualization = (apiRef: GridApiRef): void => {
 
   const scrollingTimeout = React.useRef<any>(null);
   const handleScroll = React.useCallback(() => {
-    if (options.disableVirtualization) {
+    if (props.disableVirtualization) {
       return;
     }
 
@@ -331,7 +340,7 @@ export const useGridVirtualization = (apiRef: GridApiRef): void => {
     if (apiRef.current.updateViewport) {
       apiRef.current.updateViewport();
     }
-  }, [options.disableVirtualization, windowRef, apiRef, setGridState, forceUpdate]);
+  }, [props.disableVirtualization, windowRef, apiRef, setGridState, forceUpdate]);
 
   const getContainerPropsState = React.useCallback(
     () => gridState.containerSizes,
@@ -343,7 +352,7 @@ export const useGridVirtualization = (apiRef: GridApiRef): void => {
   }, [gridState.rendering.renderContext]);
 
   useEnhancedEffect(() => {
-    if (options.disableVirtualization) {
+    if (props.disableVirtualization) {
       return;
     }
 

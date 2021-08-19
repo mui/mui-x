@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridColumns, useGridApiRef, XGrid } from '@material-ui/x-grid';
+import { GridColumns, useGridApiRef, DataGridPro } from '@mui/x-data-grid-pro';
 
 const columns: GridColumns = [
   { field: 'name', type: 'string' },
@@ -29,5 +29,5 @@ export default function ServerErrorDemo() {
     });
   }, [apiRef, setLoading]);
 
-  return <XGrid rows={[]} columns={columns} autoHeight apiRef={apiRef} loading={loading} />;
+  return <DataGridPro rows={[]} columns={columns} autoHeight apiRef={apiRef} loading={loading} />;
 }

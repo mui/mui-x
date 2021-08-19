@@ -14,6 +14,7 @@ import { ColumnHeaderMenuIcon } from './ColumnHeaderMenuIcon';
 import { ColumnHeaderFilterIcon } from './ColumnHeaderFilterIcon';
 import { GridColumnHeaderMenu } from '../menu/columnMenu/GridColumnHeaderMenu';
 import { isFunction } from '../../utils/utils';
+import { gridClasses } from '../../gridClasses';
 
 interface GridColumnHeaderItemProps {
   colIndex: number;
@@ -113,21 +114,21 @@ export function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
 
   if (column.headerClassName) {
     const headerClassName = isFunction(column.headerClassName)
-      ? column.headerClassName({ field: column.field, colDef: column, api: apiRef.current })
+      ? column.headerClassName({ field: column.field, colDef: column })
       : column.headerClassName;
 
     classNames.push(headerClassName);
   }
 
   const cssClasses = clsx(
-    column.headerAlign === 'center' && 'MuiDataGrid-columnHeader--alignCenter',
-    column.headerAlign === 'right' && 'MuiDataGrid-columnHeader--alignRight',
+    column.headerAlign === 'center' && gridClasses['columnHeader--alignCenter'],
+    column.headerAlign === 'right' && gridClasses['columnHeader--alignRight'],
     {
-      'MuiDataGrid-columnHeader--sortable': column.sortable,
-      'MuiDataGrid-columnHeader--moving': isDragging,
-      'MuiDataGrid-columnHeader--sorted': isColumnSorted,
-      'MuiDataGrid-columnHeader--numeric': isColumnNumeric,
-      'MuiDataGrid-withBorder': showColumnRightBorder,
+      [gridClasses['columnHeader--sortable']]: column.sortable,
+      [gridClasses['columnHeader--moving']]: isDragging,
+      [gridClasses['columnHeader--sorted']]: isColumnSorted,
+      [gridClasses['columnHeader--numeric']]: isColumnNumeric,
+      [gridClasses.withBorder]: showColumnRightBorder,
     },
     ...classNames,
   );
@@ -192,11 +193,11 @@ export function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
       {...mouseEventsHandlers}
     >
       <div
-        className="MuiDataGrid-columnHeaderDraggableContainer"
+        className={gridClasses.columnHeaderDraggableContainer}
         draggable={!disableColumnReorder && !column.disableReorder}
         {...draggableEventHandlers}
       >
-        <div className="MuiDataGrid-columnHeaderTitleContainer">
+        <div className={gridClasses.columnHeaderTitleContainer}>
           {headerComponent || (
             <GridColumnHeaderTitle
               label={column.headerName || column.field}

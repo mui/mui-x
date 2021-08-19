@@ -87,7 +87,7 @@ Set the column definition attribute `hide` to `true` to hide the column.
 
 ### Resizing [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-pro/)
 
-By default, `XGrid` allows all columns to be resized by dragging the right portion of the column separator.
+By default, `DataGridPro` allows all columns to be resized by dragging the right portion of the column separator.
 
 To prevent the resizing of a column, set `resizable: false` in the `GridColDef`.
 Alternatively, to disable all columns resize, set the prop `disableColumnResize={true}`.
@@ -175,7 +175,7 @@ const columns: GridColDef[] = [
   {
     field: 'date',
     headerName: 'Year',
-    renderCell: (params: GridCellParams) => (
+    renderCell: (params: GridRenderCellParams) => (
       <strong>
         {(params.value as Date).getFullYear()}
         <Button
@@ -298,7 +298,7 @@ To disable the column selector, set the prop `disableColumnSelector={true}`.
 
 ## Column reorder [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-pro/)
 
-By default, `XGrid` allows all column reordering by dragging the header cells and moving them left or right.
+By default, `DataGridPro` allows all column reordering by dragging the header cells and moving them left or right.
 
 {{"demo": "pages/components/data-grid/columns/ColumnOrderingGrid.js", "disableAd": true, "bg": "inline"}}
 
@@ -345,4 +345,4 @@ This is very close to the "column spanning" in an HTML `<table>`.
 ## API
 
 - [DataGrid](/api/data-grid/data-grid/)
-- [XGrid](/api/data-grid/x-grid/)
+- [DataGridPro](/api/data-grid/data-grid-pro/)

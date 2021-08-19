@@ -3,23 +3,6 @@ import { DataGridProps, MAX_PAGE_SIZE } from './DataGridProps';
 import { GridComponentProps } from '../../_modules_/grid/GridComponentProps';
 import { useThemeProps } from '../../_modules_/grid/utils/material-ui-utils';
 
-const DATA_GRID_FORCED_PROPS: Omit<
-  GridComponentProps,
-  Exclude<keyof DataGridProps, 'pagination'>
-> = {
-  apiRef: undefined,
-  disableColumnResize: true,
-  disableColumnReorder: true,
-  disableMultipleColumnsFiltering: true,
-  disableMultipleColumnsSorting: true,
-  disableMultipleSelection: true,
-  pagination: true,
-  onRowsScrollEnd: undefined,
-  onViewportRowsChange: undefined,
-  checkboxSelectionVisibleOnly: false,
-  signature: 'DataGrid',
-};
-
 export const useDataGridProps = (inProps: DataGridProps): GridComponentProps => {
   if (inProps.pageSize! > MAX_PAGE_SIZE) {
     throw new Error(`'props.pageSize' cannot exceed 100 in DataGrid.`);
@@ -30,7 +13,18 @@ export const useDataGridProps = (inProps: DataGridProps): GridComponentProps => 
   return React.useMemo<GridComponentProps>(
     () => ({
       ...themedProps,
-      ...DATA_GRID_FORCED_PROPS,
+      // force props
+      apiRef: undefined,
+      disableColumnResize: true,
+      disableColumnReorder: true,
+      disableMultipleColumnsFiltering: true,
+      disableMultipleColumnsSorting: true,
+      disableMultipleSelection: true,
+      pagination: true,
+      onRowsScrollEnd: undefined,
+      onViewportRowsChange: undefined,
+      checkboxSelectionVisibleOnly: false,
+      signature: 'DataGrid',
     }),
     [themedProps],
   );

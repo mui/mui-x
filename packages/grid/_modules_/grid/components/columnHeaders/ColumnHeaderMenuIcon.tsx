@@ -3,6 +3,7 @@ import clsx from 'clsx';
 import IconButton from '@material-ui/core/IconButton';
 import { useGridApiContext } from '../../hooks/root/useGridApiContext';
 import { GridStateColDef } from '../../models/colDef/gridColDef';
+import { gridClasses } from '../../gridClasses';
 
 export interface ColumnHeaderMenuIconProps {
   column: GridStateColDef;
@@ -27,11 +28,11 @@ export const ColumnHeaderMenuIcon = React.memo((props: ColumnHeaderMenuIconProps
   );
 
   return (
-    <div className={clsx('MuiDataGrid-menuIcon', { 'MuiDataGrid-menuOpen': open })}>
+    <div className={clsx(gridClasses.menuIcon, { [gridClasses.menuOpen]: open })}>
       <IconButton
         ref={iconButtonRef}
         tabIndex={-1}
-        className="MuiDataGrid-menuIconButton"
+        className={gridClasses.menuIconButton}
         aria-label={apiRef!.current.getLocaleText('columnMenuLabel')}
         title={apiRef!.current.getLocaleText('columnMenuLabel')}
         size="small"

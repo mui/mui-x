@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { GridOverlay, DataGrid } from '@material-ui/data-grid';
+import { GridOverlay, DataGrid } from '@mui/x-data-grid';
 import LinearProgress from '@material-ui/core/LinearProgress';
-import { useDemoData } from '@material-ui/x-grid-data-generator';
+import { useDemoData } from '@mui/x-data-grid-generator';
 
 function CustomLoadingOverlay() {
   return (

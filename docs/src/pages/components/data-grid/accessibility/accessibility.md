@@ -93,4 +93,4 @@ On macOS, replace <kbd class="key">CTRL</kbd> with <kbd class="key">⌘ Command<
 ## API
 
 - [DataGrid](/api/data-grid/data-grid/)
-- [XGrid](/api/data-grid/x-grid/)
+- [DataGridPro](/api/data-grid/data-grid-pro/)

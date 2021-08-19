@@ -7,8 +7,8 @@ import {
   GridEditCellPropsParams,
   GridRowsProp,
   useGridApiRef,
-  XGrid,
-} from '@material-ui/x-grid';
+  DataGridPro,
+} from '@mui/x-data-grid-pro';
 
 // TODO v5: remove
 function getThemePaletteMode(palette: any): string {
@@ -96,7 +96,7 @@ export default function ValidateServerNameGrid() {
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <XGrid
+      <DataGridPro
         className={classes.root}
         apiRef={apiRef}
         rows={rows}

@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { XGrid, GridColDef, useGridApiRef, GridOverlay } from '@material-ui/x-grid';
+import { DataGridPro, GridColDef, useGridApiRef, GridOverlay } from '@mui/x-data-grid-pro';
 import '../style/grid-stories.css';
 
 export default {
   title: 'X-Grid Tests/Error Handling',
-  component: XGrid,
+  component: DataGridPro,
   parameters: {
     options: { selectedPanel: 'storybook/storysource/panel' },
     docs: {
@@ -110,7 +110,7 @@ export const ThrowException = () => {
 
   return (
     <div className="grid-container">
-      <XGrid rows={rows} columns={cols} />
+      <DataGridPro rows={rows} columns={cols} />
     </div>
   );
 };
@@ -128,7 +128,7 @@ export const ShowErrorApi = () => {
 
   return (
     <div className="grid-container">
-      <XGrid rows={rows} columns={cols} apiRef={api} />
+      <DataGridPro rows={rows} columns={cols} apiRef={api} />
     </div>
   );
 };
@@ -138,7 +138,11 @@ export const ErrorProp = () => {
 
   return (
     <div className="grid-container">
-      <XGrid rows={rows} columns={cols} error={{ message: 'Error can also be set in props!' }} />
+      <DataGridPro
+        rows={rows}
+        columns={cols}
+        error={{ message: 'Error can also be set in props!' }}
+      />
     </div>
   );
 };
@@ -166,7 +170,7 @@ export const CustomError = () => {
 
   return (
     <div className="grid-container">
-      <XGrid
+      <DataGridPro
         rows={rows}
         columns={cols}
         apiRef={api}
@@ -189,7 +193,7 @@ export const CustomErrorWithException = () => {
 
   return (
     <div className="grid-container">
-      <XGrid
+      <DataGridPro
         rows={rows}
         columns={cols}
         components={{
@@ -220,7 +224,7 @@ export const AsyncErrorApi = () => {
 
   return (
     <div className="grid-container">
-      <XGrid rows={rows} columns={cols} apiRef={api} />
+      <DataGridPro rows={rows} columns={cols} apiRef={api} />
     </div>
   );
 };
@@ -245,7 +249,7 @@ export const OnErrorHandler = () => {
     <React.Fragment>
       <div>{errorMessage}</div>
       <div className="grid-container">
-        <XGrid rows={rows} columns={cols} {...{ onError }} />
+        <DataGridPro rows={rows} columns={cols} {...{ onError }} />
       </div>
     </React.Fragment>
   );

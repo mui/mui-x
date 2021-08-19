@@ -1,14 +1,14 @@
 import * as React from 'react';
 import { action } from '@storybook/addon-actions';
-import { GridOptionsProp, XGrid, useGridApiRef } from '@material-ui/x-grid';
+import { GridOptionsProp, DataGridPro, useGridApiRef } from '@mui/x-data-grid-pro';
 import { interval } from 'rxjs';
-import { randomInt, randomUserName } from '@material-ui/x-grid-data-generator';
+import { randomInt, randomUserName } from '@mui/x-data-grid-generator';
 import { FeedGrid } from '../components/feed-grid';
 import { PricingGrid } from '../components/pricing-grid';
 
 export default {
   title: 'X-Grid Tests/Streaming',
-  component: XGrid,
+  component: DataGridPro,
   parameters: {
     options: { selectedPanel: 'storybook/storysource/panel' },
     docs: {
@@ -77,5 +77,5 @@ export function SimpleRxUpdate() {
     return () => subscription.unsubscribe();
   }, [apiRef]);
 
-  return <XGrid rows={[]} columns={columns} apiRef={apiRef} autoHeight />;
+  return <DataGridPro rows={[]} columns={columns} apiRef={apiRef} autoHeight />;
 }

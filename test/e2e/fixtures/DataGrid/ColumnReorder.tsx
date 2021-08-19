@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { XGrid } from '@material-ui/x-grid';
+import { DataGridPro } from '@mui/x-data-grid-pro';
 
 const baselineProps = {
   rows: [
@@ -28,7 +28,7 @@ const baselineProps = {
 export default function ColumnReorder() {
   return (
     <div style={{ width: 300, height: 300 }}>
-      <XGrid {...baselineProps} />
+      <DataGridPro {...baselineProps} />
     </div>
   );
 }

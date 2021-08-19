@@ -7,7 +7,7 @@ import {
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import Portal from '@material-ui/core/Portal';
-import { DataGrid } from '@material-ui/data-grid';
+import { DataGrid } from '@mui/x-data-grid';
 import { getColumnValues, getRow } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
@@ -85,10 +85,11 @@ describe('<DataGrid /> - Rows', () => {
 
   it('should apply the CSS class returned by getRowClassName', () => {
     const getRowId = (row) => `${row.clientId}`;
-    const getRowClassName = (params) => (params.getValue(params.id, 'age') < 20 ? 'under-age' : '');
+    const handleRowClassName = (params) =>
+      params.getValue(params.id, 'age') < 20 ? 'under-age' : '';
     render(
       <div style={{ width: 300, height: 300 }}>
-        <DataGrid getRowClassName={getRowClassName} getRowId={getRowId} {...baselineProps} />
+        <DataGrid getRowClassName={handleRowClassName} getRowId={getRowId} {...baselineProps} />
       </div>,
     );
     expect(getRow(0)).to.have.class('under-age');
