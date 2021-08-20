@@ -22,6 +22,7 @@ const defaultAlias = {
   '@mui/x-data-grid-generator': './packages/grid/x-grid-data-generator/src',
   '@mui/x-data-grid-pro': './packages/grid/x-grid/src',
   '@mui/x-license-pro': './packages/x-license/src',
+  'typescript-to-proptypes': '@material-ui/monorepo/packages/typescript-to-proptypes/src',
   docs: './node_modules/@material-ui/monorepo/docs',
 };
 

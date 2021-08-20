@@ -41,7 +41,7 @@ module.exports = {
     REACT_STRICT_MODE: reactStrictMode,
     // Set by Netlify
     GRID_EXPERIMENTAL_ENABLED: process.env.PULL_REQUEST === 'false' ? 'false' : 'true',
-    SOURCE_CODE_ROOT_URL: 'https://github.com/mui-org/material-ui-x/blob/master',
+    SOURCE_CODE_ROOT_URL: 'https://github.com/mui-org/material-ui-x/blob/next',
     SOURCE_CODE_REPO: 'https://github.com/mui-org/material-ui-x',
   },
   webpack5: true,
