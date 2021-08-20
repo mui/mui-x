@@ -92,7 +92,7 @@ The name <code>MuiDataGridPro</code> can be used when providing [default props](
 | <span class="prop-name">onRowEditCommit</span> | <span class="prop-type">(id: GridRowId, event: MouseEvent<React.SyntheticEvent>) => void</span> |   | Callback fired when the row changes are committed. |
 | <span class="prop-name">onRowEditStart</span> | <span class="prop-type">(params: GridRowParams, event: React.SyntheticEvent) => void</span> |   | Callback fired when the row turns to edit mode. |
 | <span class="prop-name">onRowEditStop</span> | <span class="prop-type">(params: GridRowParams, event: React.SyntheticEvent) => void</span> |   | Callback fired when the row turns to view mode. |
-| <span class="prop-name">onEditRowsModelChange</span> | <span class="prop-type">(editRowsModel: GridEditRowsModel, details?: any) => void</span> |   |   Callback fired when the `editRowsModel` changes. |
+| <span class="prop-name">onEditRowsModelChange</span> | <span class="prop-type">(editRowsModel: GridEditRowsModel, details?: any) => void</span> |   |  Callback fired when the `editRowsModel` changes. |
 | <span class="prop-name">onFilterModelChange</span> | <span class="prop-type">(model: GridFilterModel) => void</span> |   | Callback fired when the Filter model changes before the filters are applied. |
 | <span class="prop-name">onPageChange</span> | <span class="prop-type">(page: number) => void</span> |   | Callback fired when the current page has changed. |
 | <span class="prop-name">onPageSizeChange</span> | <span class="prop-type">(pageSize: number) => void</span> |   | Callback fired when the page size has changed. |
