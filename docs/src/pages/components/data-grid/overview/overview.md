@@ -71,6 +71,7 @@ We provide three options:
 - High performance 🚀
 - [Filtering](/components/data-grid/filtering/) and [multi-filtering](/components/data-grid/filtering/#multi-column-filtering) <span class="pro"></span>
 - [Pagination](/components/data-grid/pagination/)
+- [Editing](/components/data-grid/editing/)
 - [Sorting](/components/data-grid/sorting) and [multi-sort](/components/data-grid/sorting/#multi-column-sorting) <span class="pro"></span>
 - [Selection](/components/data-grid/selection/)
 - [Column virtualization](/components/data-grid/virtualization/#column-virtualization) and [rows virtualization](/components/data-grid/virtualization/#row-virtualization) <span class="pro"></span>
