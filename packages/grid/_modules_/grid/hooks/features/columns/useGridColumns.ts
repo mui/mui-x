@@ -136,7 +136,7 @@ export function useGridColumns(
   const allColumns = useGridSelector(apiRef, allGridColumnsSelector);
   const visibleColumns = useGridSelector(apiRef, visibleGridColumnsSelector);
 
-  const getGridColumnsState = React.useCallback(
+  const setGridColumnsState = React.useCallback(
     (columnsState: GridColumnsState, emit = true) => {
       logger.debug('Updating columns state.');
 
@@ -201,9 +201,9 @@ export function useGridColumns(
         }, {}),
       };
 
-      getGridColumnsState(columnState, emit);
+      setGridColumnsState(columnState, emit);
     },
-    [apiRef, logger, getGridColumnsState],
+    [apiRef, logger, setGridColumnsState],
   );
 
   const updateColumns = React.useCallback(
@@ -256,9 +256,9 @@ export function useGridColumns(
 
       const updatedColumns = [...gridState.columns.all];
       updatedColumns.splice(targetIndexPosition, 0, updatedColumns.splice(oldIndexPosition, 1)[0]);
-      getGridColumnsState({ ...gridState.columns, all: updatedColumns });
+      setGridColumnsState({ ...gridState.columns, all: updatedColumns });
     },
-    [apiRef, gridState.columns, logger, getGridColumnsState],
+    [apiRef, gridState.columns, logger, setGridColumnsState],
   );
 
   const setColumnWidth = React.useCallback(
