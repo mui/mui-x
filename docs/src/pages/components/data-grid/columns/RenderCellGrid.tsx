@@ -1,15 +1,20 @@
 import * as React from 'react';
 import Button from '@material-ui/core/Button';
-import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
+import {
+  DataGrid,
+  GridColDef,
+  GridRenderCellParams,
+  GridRowData,
+} from '@mui/x-data-grid';
 
 const columns: GridColDef[] = [
   {
     field: 'date',
     headerName: 'Year',
     width: 150,
-    renderCell: (params: GridRenderCellParams) => (
+    renderCell: (params: GridRenderCellParams<Date>) => (
       <strong>
-        {(params.value as Date).getFullYear()}
+        {params.value.getFullYear()}
         <Button
           variant="contained"
           color="primary"
@@ -23,7 +28,7 @@ const columns: GridColDef[] = [
   },
 ];
 
-const rows = [
+const rows: GridRowData<Date>[] = [
   {
     id: 1,
     date: new Date(1979, 0, 1),

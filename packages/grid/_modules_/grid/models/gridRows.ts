@@ -1,16 +1,20 @@
 export type GridRowsProp = Readonly<GridRowData[]>;
-export type GridRowData = { [key: string]: any };
+interface ID {
+  id: any;
+}
+interface RowIndexSignature<T> {
+  [key: string]: T;
+}
+export type GridRowData<T = any> = RowIndexSignature<T> | ID;
 
 /**
  * The key value object representing the data of a row.
  */
-export type GridRowModel = GridRowData;
+export type GridRowModel<T = any> = GridRowData<T>;
 
 export type GridUpdateAction = 'delete';
 
-export interface GridRowModelUpdate extends GridRowData {
-  _action?: GridUpdateAction;
-}
+export type GridRowModelUpdate = GridRowData & { _action?: GridUpdateAction };
 
 /**
  * The type of Id supported by the grid.
