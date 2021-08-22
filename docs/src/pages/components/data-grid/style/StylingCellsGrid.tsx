@@ -1,6 +1,11 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import { GridColumns, DataGrid, GridCellParams } from '@mui/x-data-grid';
+import {
+  GridColumns,
+  DataGrid,
+  GridCellParams,
+  GridRowData,
+} from '@mui/x-data-grid';
 import { makeStyles } from '@material-ui/styles';
 
 const columns: GridColumns = [
@@ -20,7 +25,13 @@ const columns: GridColumns = [
   },
 ];
 
-const rows = [
+interface StylingCellsGridRow {
+  id: number;
+  name: string;
+  score: number;
+}
+
+const rows: GridRowData<StylingCellsGridRow>[] = [
   {
     id: 1,
     name: 'Jane',

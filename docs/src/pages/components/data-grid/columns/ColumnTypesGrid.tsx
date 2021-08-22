@@ -1,8 +1,18 @@
 import * as React from 'react';
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGrid, GridRowData } from '@mui/x-data-grid';
 import { randomCreatedDate, randomUpdatedDate } from '@mui/x-data-grid-generator';
 
-const rows = [
+interface ColumnTypesGridRow {
+  id: number;
+  name: string;
+  age: number;
+  dateCreated: Date;
+  lastLogin: Date;
+  isAdmin: boolean;
+  country: string;
+}
+
+const rows: GridRowData<ColumnTypesGridRow>[] = [
   {
     id: 1,
     name: 'Damien',

@@ -1,7 +1,13 @@
 import * as React from 'react';
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGrid, GridRowData } from '@mui/x-data-grid';
 
-const rows = [
+interface HeaderColumnsGridRow {
+  id: number;
+  username: string;
+  age: number;
+}
+
+const rows: GridRowData<HeaderColumnsGridRow>[] = [
   {
     id: 1,
     username: '@MaterialUI',

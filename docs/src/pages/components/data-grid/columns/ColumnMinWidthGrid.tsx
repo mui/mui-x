@@ -1,7 +1,13 @@
 import * as React from 'react';
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGrid, GridRowData } from '@mui/x-data-grid';
 
-const rows = [
+interface ColumnMinWidthGridRow {
+  id: number;
+  username: string;
+  age: number;
+}
+
+const rows: GridRowData<ColumnMinWidthGridRow>[] = [
   {
     id: 1,
     username: '@MaterialUI',

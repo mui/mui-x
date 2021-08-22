@@ -1,5 +1,10 @@
 import * as React from 'react';
-import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
+import {
+  DataGrid,
+  GridColDef,
+  GridRowData,
+  GridValueGetterParams,
+} from '@mui/x-data-grid';
 
 function getFullName(params: GridValueGetterParams) {
   return `${params.getValue(params.id, 'firstName') || ''} ${
@@ -19,7 +24,13 @@ const columns: GridColDef[] = [
   },
 ];
 
-const rows = [
+interface ValueGetterGridRow {
+  id: number;
+  lastName: string;
+  firstName: string;
+}
+
+const rows: GridRowData<ValueGetterGridRow>[] = [
   { id: 1, lastName: 'Snow', firstName: 'Jon' },
   { id: 2, lastName: 'Lannister', firstName: 'Cersei' },
   { id: 3, lastName: 'Lannister', firstName: 'Jaime' },

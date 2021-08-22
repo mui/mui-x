@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridColumns, DataGrid } from '@mui/x-data-grid';
+import { GridColumns, DataGrid, GridRowData } from '@mui/x-data-grid';
 import { makeStyles } from '@material-ui/styles';
 
 const columns: GridColumns = [
@@ -17,7 +17,13 @@ const columns: GridColumns = [
   },
 ];
 
-const rows = [
+interface StylingHeaderGridRow {
+  id: number;
+  first: string;
+  last: string;
+}
+
+const rows: GridRowData<StylingHeaderGridRow>[] = [
   {
     id: 1,
     first: 'Jane',

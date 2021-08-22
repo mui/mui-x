@@ -1,5 +1,10 @@
 import * as React from 'react';
-import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
+import {
+  DataGrid,
+  GridColDef,
+  GridRowData,
+  GridValueGetterParams,
+} from '@mui/x-data-grid';
 
 const columns: GridColDef[] = [
   { field: 'id', headerName: 'ID', width: 90 },
@@ -35,7 +40,14 @@ const columns: GridColDef[] = [
   },
 ];
 
-const rows = [
+interface DataGridDemoRow {
+  id: number;
+  lastName: string;
+  firstName: string | null;
+  age: number | null;
+}
+
+const rows: GridRowData<DataGridDemoRow>[] = [
   { id: 1, lastName: 'Snow', firstName: 'Jon', age: 35 },
   { id: 2, lastName: 'Lannister', firstName: 'Cersei', age: 42 },
   { id: 3, lastName: 'Lannister', firstName: 'Jaime', age: 45 },

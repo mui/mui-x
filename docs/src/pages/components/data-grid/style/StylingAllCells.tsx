@@ -1,5 +1,10 @@
 import * as React from 'react';
-import { GridColumns, DataGrid, GridCellParams } from '@mui/x-data-grid';
+import {
+  GridColumns,
+  DataGrid,
+  GridCellParams,
+  GridRowData,
+} from '@mui/x-data-grid';
 import { makeStyles } from '@material-ui/core/styles';
 
 const columns: GridColumns = [
@@ -9,7 +14,15 @@ const columns: GridColumns = [
   { field: 'dec', type: 'number', valueFormatter: ({ value }) => `${value} °C` },
 ];
 
-const rows = [
+interface StylingAllCellsRow {
+  id: number;
+  city: string;
+  oct: number;
+  nov: number;
+  dec: number;
+}
+
+const rows: GridRowData<StylingAllCellsRow>[] = [
   { id: 1, city: 'Amsterdam', oct: 7.1, nov: 4, dec: 10.2 },
   { id: 2, city: 'Barcelona', oct: 14.9, nov: 12.3, dec: 18.2 },
   { id: 3, city: 'Paris', oct: 8.1, nov: 5.4, dec: 12.3 },

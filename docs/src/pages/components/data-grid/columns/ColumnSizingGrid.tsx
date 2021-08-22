@@ -1,7 +1,13 @@
 import * as React from 'react';
-import { DataGridPro } from '@mui/x-data-grid-pro';
+import { DataGridPro, GridRowData } from '@mui/x-data-grid-pro';
 
-const rows = [
+interface ColumnSizingGridRow {
+  id: number;
+  username: string;
+  age: number;
+}
+
+const rows: GridRowData<ColumnSizingGridRow>[] = [
   {
     id: 1,
     username: '@MaterialUI',

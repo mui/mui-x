@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { makeStyles } from '@material-ui/styles';
 import Rating from '@material-ui/lab/Rating';
-import { DataGrid, GridRenderCellParams } from '@mui/x-data-grid';
+import { DataGrid, GridRenderCellParams, GridRowData } from '@mui/x-data-grid';
 
 function renderRating(params: GridRenderCellParams<number>) {
   return <Rating readOnly value={params.value} />;
@@ -78,7 +78,13 @@ const columns = [
   },
 ];
 
-const rows = [
+interface RenderRatingEditCellGridRow {
+  id: number;
+  places: string;
+  rating: number;
+}
+
+const rows: GridRowData<RenderRatingEditCellGridRow>[] = [
   { id: 1, places: 'Barcelona', rating: 5 },
   { id: 2, places: 'Rio de Janeiro', rating: 4 },
   { id: 3, places: 'London', rating: 3 },

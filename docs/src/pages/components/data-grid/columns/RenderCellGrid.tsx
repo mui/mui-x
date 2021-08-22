@@ -1,6 +1,11 @@
 import * as React from 'react';
 import Button from '@material-ui/core/Button';
-import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
+import {
+  DataGrid,
+  GridColDef,
+  GridRenderCellParams,
+  GridRowData,
+} from '@mui/x-data-grid';
 
 const columns: GridColDef[] = [
   {
@@ -23,7 +28,12 @@ const columns: GridColDef[] = [
   },
 ];
 
-const rows = [
+interface RenderCellGridRow {
+  id: number;
+  date: Date;
+}
+
+const rows: GridRowData<RenderCellGridRow>[] = [
   {
     id: 1,
     date: new Date(1979, 0, 1),
