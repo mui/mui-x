@@ -16,3 +16,4 @@ export * from './ruRU';
 export * from './skSK';
 export * from './trTR';
 export * from './ukUA';
+export * from './zhCN';
