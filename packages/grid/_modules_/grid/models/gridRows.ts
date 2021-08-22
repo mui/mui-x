@@ -1,5 +1,4 @@
 export type GridRowsProp = Readonly<GridRowData[]>;
-
 export type GridRowData<T = any> = { [key: string]: T };
 
 /**
@@ -9,7 +8,9 @@ export type GridRowModel<T = any> = GridRowData<T>;
 
 export type GridUpdateAction = 'delete';
 
-export type GridRowModelUpdate = GridRowData & { _action?: GridUpdateAction };
+export interface GridRowModelUpdate extends GridRowData {
+  _action?: GridUpdateAction;
+}
 
 /**
  * The type of Id supported by the grid.
