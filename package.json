@@ -102,7 +102,7 @@
     "format-util": "^1.0.5",
     "glob-gitignore": "^1.0.14",
     "jsdom": "^16.5.3",
-    "karma": "^6.1.1",
+    "karma": "^6.3.4",
     "karma-browserstack-launcher": "^1.6.0",
     "karma-chrome-launcher": "^3.1.0",
     "karma-mocha": "^2.0.1",
