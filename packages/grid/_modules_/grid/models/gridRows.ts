@@ -1,11 +1,6 @@
 export type GridRowsProp = Readonly<GridRowData[]>;
-interface ID {
-  id: any;
-}
-interface RowIndexSignature<T> {
-  [key: string]: T;
-}
-export type GridRowData<T = any> = RowIndexSignature<T> | ID;
+
+export type GridRowData<T = any> = { [key: string]: T };
 
 /**
  * The key value object representing the data of a row.
