@@ -12,7 +12,6 @@ This is the first offitial stable release of the `DataGrid` and `DataGridPro`. I
 Big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
 
 - 🚀 Introduce the [row editing](https://material-ui.com/components/data-grid/editing/#row-editing) feature (#2098) @m4theushw
-- ⚛️ Remove unused row CSS classes (#2327) @ZeeshanTamboli
 - ⚡️ Rename `XGrid` to `DataGridPro` (#2382) @m4theushw
 - ✨ Move packages to `@mui` scope (#2341) @oliviertassinari
 - 💡 The `api` property was removed from the callback params. To access the API, use the `DataGridPro` (#2312) @DanailH
