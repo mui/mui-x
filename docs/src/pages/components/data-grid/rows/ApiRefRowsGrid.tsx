@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataGridPro, GridRowData, useGridApiRef } from '@mui/x-data-grid-pro';
+import { DataGridPro, useGridApiRef } from '@mui/x-data-grid-pro';
 import { interval } from 'rxjs';
 import { randomInt, randomUserName } from '@mui/x-data-grid-generator';
 
@@ -9,13 +9,7 @@ const columns = [
   { field: 'age', width: 80, type: 'number' },
 ];
 
-interface ApiRefRowsGridRow {
-  id: number;
-  username: string;
-  age: number;
-}
-
-const rows: GridRowData<ApiRefRowsGridRow>[] = [
+const rows = [
   { id: 1, username: randomUserName(), age: randomInt(10, 80) },
   { id: 2, username: randomUserName(), age: randomInt(10, 80) },
   { id: 3, username: randomUserName(), age: randomInt(10, 80) },

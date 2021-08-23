@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataGrid, GridColDef, GridRowData } from '@mui/x-data-grid';
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
 
 const columns: GridColDef[] = [
   {
@@ -17,12 +17,7 @@ const columns: GridColDef[] = [
   },
 ];
 
-interface RenderHeaderGridRow {
-  id: number;
-  date: Date;
-}
-
-const rows: GridRowData<RenderHeaderGridRow>[] = [
+const rows = [
   {
     id: 1,
     date: new Date(1979, 0, 1),

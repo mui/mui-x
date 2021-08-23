@@ -1,16 +1,9 @@
 import * as React from 'react';
 import { makeStyles } from '@material-ui/styles';
-import { DataGrid, GridColTypeDef, GridRowData } from '@mui/x-data-grid';
+import { DataGrid, GridColTypeDef } from '@mui/x-data-grid';
 import { randomStatusOptions, randomPrice } from '@mui/x-data-grid-generator';
 
-interface CustomColumnTypesGridRow {
-  id: number;
-  status: any;
-  subTotal: number;
-  total: number;
-}
-
-const rows: GridRowData<CustomColumnTypesGridRow>[] = [
+const rows = [
   {
     id: 1,
     status: randomStatusOptions(),

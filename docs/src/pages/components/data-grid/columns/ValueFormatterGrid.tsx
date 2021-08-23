@@ -1,12 +1,7 @@
 import * as React from 'react';
-import { DataGrid, GridRowData, GridValueFormatterParams } from '@mui/x-data-grid';
+import { DataGrid, GridValueFormatterParams } from '@mui/x-data-grid';
 
-interface ValueFormatterGridRow {
-  id: number;
-  taxRate: number;
-}
-
-const rows: GridRowData<ValueFormatterGridRow>[] = [
+const rows = [
   {
     id: 1,
     taxRate: 0.1,

@@ -1,13 +1,7 @@
 import * as React from 'react';
-import { DataGridPro, GridRowData } from '@mui/x-data-grid-pro';
+import { DataGridPro } from '@mui/x-data-grid-pro';
 
-interface ColumnOrderingDisabledGridRow {
-  id: number;
-  username: string;
-  age: number;
-}
-
-const rows: GridRowData<ColumnOrderingDisabledGridRow>[] = [
+const rows = [
   {
     id: 1,
     username: '@MaterialUI',
