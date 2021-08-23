@@ -7,7 +7,6 @@ import TextField from '@material-ui/core/TextField';
 import { makeStyles } from '@material-ui/styles';
 import { allGridColumnsSelector } from '../../hooks/features/columns/gridColumnsSelector';
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
-import { optionsSelector } from '../../hooks/utils/optionsSelector';
 import { useGridApiContext } from '../../hooks/root/useGridApiContext';
 import { GridDragIcon } from '../icons/index';
 import { GridPanelContent } from './GridPanelContent';
@@ -15,6 +14,7 @@ import { GridPanelFooter } from './GridPanelFooter';
 import { GridPanelHeader } from './GridPanelHeader';
 import { GridPanelWrapper } from './GridPanelWrapper';
 import { GRID_EXPERIMENTAL_ENABLED } from '../../constants';
+import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
 const useStyles = makeStyles(
   {
@@ -41,7 +41,7 @@ export function GridColumnsPanel() {
   const apiRef = useGridApiContext();
   const searchInputRef = React.useRef<HTMLInputElement>(null);
   const columns = useGridSelector(apiRef, allGridColumnsSelector);
-  const { disableColumnReorder } = useGridSelector(apiRef, optionsSelector);
+  const rootProps = useGridRootProps();
   const [searchValue, setSearchValue] = React.useState('');
 
   const toggleColumn = React.useCallback(
@@ -118,7 +118,7 @@ export function GridColumnsPanel() {
                 }
                 label={column.headerName || column.field}
               />
-              {!disableColumnReorder && GRID_EXPERIMENTAL_ENABLED && (
+              {!rootProps.disableColumnReorder && GRID_EXPERIMENTAL_ENABLED && (
                 <IconButton
                   draggable
                   className={classes.dragIcon}

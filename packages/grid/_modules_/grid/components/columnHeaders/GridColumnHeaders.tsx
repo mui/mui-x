@@ -11,7 +11,7 @@ import { GridColumnHeadersItemCollection } from './GridColumnHeadersItemCollecti
 import { gridDensityHeaderHeightSelector } from '../../hooks/features/density/densitySelector';
 import { gridColumnReorderDragColSelector } from '../../hooks/features/columnReorder/columnReorderSelector';
 import { gridContainerSizesSelector } from '../../hooks/root/gridContainerSizesSelector';
-import { GRID_COLUMN_HEADER_DROP_ZONE_CSS_CLASS } from '../../constants/cssClassesConstants';
+import { gridClasses } from '../../gridClasses';
 
 export const gridScrollbarStateSelector = (state: GridState) => state.scrollBar;
 
@@ -27,9 +27,9 @@ export const GridColumnsHeader = React.forwardRef<HTMLDivElement, {}>(function G
   const { hasScrollX } = useGridSelector(apiRef, gridScrollbarStateSelector);
   const dragCol = useGridSelector(apiRef, gridColumnReorderDragColSelector);
 
-  const wrapperCssClasses = clsx('MuiDataGrid-columnHeaderWrapper', {
+  const wrapperCssClasses = clsx(gridClasses.columnHeaderWrapper, {
     scroll: hasScrollX,
-    [GRID_COLUMN_HEADER_DROP_ZONE_CSS_CLASS]: dragCol,
+    [gridClasses.columnHeaderDropZone]: dragCol,
   });
 
   const renderedCols = React.useMemo(() => {

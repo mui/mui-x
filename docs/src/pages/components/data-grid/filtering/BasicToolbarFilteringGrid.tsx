@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { DataGrid, GridFilterModel, GridToolbar } from '@material-ui/data-grid';
-import { useDemoData } from '@material-ui/x-grid-data-generator';
+import { DataGrid, GridFilterModel, GridToolbar } from '@mui/x-data-grid';
+import { useDemoData } from '@mui/x-data-grid-generator';
 
 const riceFilterModel: GridFilterModel = {
   items: [{ columnField: 'commodity', operatorValue: 'contains', value: 'rice' }],

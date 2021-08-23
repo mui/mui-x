@@ -5,6 +5,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import { gridPreferencePanelStateSelector } from '../../hooks/features/preferencesPanel/gridPreferencePanelSelector';
 import { GridPreferencePanelsValue } from '../../hooks/features/preferencesPanel/gridPreferencePanelsValue';
 import { useGridApiContext } from '../../hooks/root/useGridApiContext';
+import { gridClasses } from '../../gridClasses';
 
 export interface ColumnHeaderFilterIconProps {
   counter?: number;
@@ -44,7 +45,7 @@ export function ColumnHeaderFilterIcon(props: ColumnHeaderFilterIconProps) {
       size="small"
       tabIndex={-1}
     >
-      <FilteredColumnIconElement className="MuiDataGrid-filterIcon" fontSize="small" />
+      <FilteredColumnIconElement className={gridClasses.filterIcon} fontSize="small" />
     </IconButton>
   );
 
@@ -57,7 +58,7 @@ export function ColumnHeaderFilterIcon(props: ColumnHeaderFilterIconProps) {
       }
       enterDelay={1000}
     >
-      <div className="MuiDataGrid-iconButtonContainer">
+      <div className={gridClasses.iconButtonContainer}>
         {counter > 1 && (
           <Badge badgeContent={counter} color="default">
             {iconButton}

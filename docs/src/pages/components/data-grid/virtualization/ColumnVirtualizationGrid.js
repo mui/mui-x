@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataGrid } from '@material-ui/data-grid';
+import { DataGrid } from '@mui/x-data-grid';
 
 function useData(rowLength, columnLength) {
   const [data, setData] = React.useState({ columns: [], rows: [] });

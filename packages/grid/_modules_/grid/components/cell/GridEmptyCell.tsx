@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GRID_CELL_CSS_CLASS } from '../../constants/cssClassesConstants';
+import { gridClasses } from '../../gridClasses';
 
 export interface GridEmptyCellProps {
   width?: number;
@@ -23,7 +23,7 @@ export const GridEmptyCell = React.memo(function GridEmptyCell({
         minHeight: height,
         maxHeight: height,
       }}
-      className={GRID_CELL_CSS_CLASS}
+      className={gridClasses.cell}
     />
   );
 });

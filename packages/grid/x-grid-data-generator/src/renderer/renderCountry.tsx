@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { makeStyles } from '@material-ui/styles';
-import { GridCellParams } from '@material-ui/x-grid';
+import { GridRenderCellParams } from '@mui/x-data-grid-pro';
 
 // ISO 3166-1 alpha-2
 // ⚠️ No support for IE 11
@@ -48,6 +48,6 @@ const Country = React.memo(function Country(props: CountryProps) {
   );
 });
 
-export function renderCountry(params: GridCellParams) {
+export function renderCountry(params: GridRenderCellParams) {
   return <Country value={params.value as any} />;
 }

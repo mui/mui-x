@@ -1,10 +1,10 @@
 export enum GridEvents {
   /**
-   * Fired when the grid is resized. Called with a [[GridResizeParams]] object.
+   * Fired when the grid is resized. Called with a [[ElementSize]] object.
    */
   resize = 'resize',
   /**
-   * Fired when the grid is resized with a debounced time of 60ms. Called with a [[GridResizeParams]] object.
+   * Fired when the grid is resized with a debounced time of 60ms. Called with a [[ElementSize]] object.
    */
   debouncedResize = 'debouncedResize',
   /**
@@ -66,6 +66,10 @@ export enum GridEvents {
    */
   cellFocus = 'cellFocus',
   /**
+   * Fired when a cell gains focus. Called with a [[GridCellParams]] object.
+   */
+  cellFocusIn = 'cellFocusIn',
+  /**
    * Fired when a cell loses focus. Called with a [[GridCellParams]] object.
    */
   cellFocusOut = 'cellFocusOut',
@@ -109,6 +113,18 @@ export enum GridEvents {
    * Fired when the cell turns back to view mode. Called with a [[GridCellParams]] object.
    */
   cellEditStop = 'cellEditStop',
+  /**
+   * Fired when the row turns to edit mode. Called with a [[GridCellParams]] object.
+   */
+  rowEditStart = 'rowEditStart',
+  /**
+   * Fired when the row turns back to view mode. Called with a [[GridCellParams]] object.
+   */
+  rowEditStop = 'rowEditStop',
+  /**
+   * Fired when the props of the edit input are committed. Called with the [[GridRowId]] of the row.
+   */
+  rowEditCommit = 'rowEditCommit',
   /**
    * Fired when a [navigation key](/components/data-grid/accessibility#keyboard-navigation) is pressed in a cell.
    * Called with a [[GridCellParams]] object.
@@ -298,7 +314,7 @@ export enum GridEvents {
    */
   filterModelChange = 'filterModelChange',
   /**
-   * Fired when the state of the grid is updated. Called with a [[GridStateChangeParams]] object.
+   * Fired when the state of the grid is updated. Called with a [[GridState]] object.
    */
   stateChange = 'stateChange',
   /**

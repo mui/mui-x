@@ -1,7 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { XGrid, GridToolbar } from '@material-ui/x-grid';
-import { useDemoData } from '@material-ui/x-grid-data-generator';
+import { DataGridPro, GridToolbar } from '@mui/x-data-grid-pro';
+import { useDemoData } from '@mui/x-data-grid-generator';
 import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
 import { makeStyles } from '@material-ui/styles';
 import { createTheme } from '@material-ui/core/styles';
@@ -314,7 +314,7 @@ export default function FullFeaturedDemo() {
         type={type}
         theme={getActiveTheme()}
       />
-      <XGrid
+      <DataGridPro
         className={isAntDesign ? antDesignClasses.root : undefined}
         {...data}
         components={{

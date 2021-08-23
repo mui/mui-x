@@ -4,7 +4,7 @@ import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import Popper from '@material-ui/core/Popper';
 import { makeStyles } from '@material-ui/styles';
-import { DataGrid } from '@material-ui/data-grid';
+import { DataGrid } from '@mui/x-data-grid';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -165,7 +165,7 @@ const rows = [
   },
   {
     id: 2,
-    col1: 'XGrid',
+    col1: 'DataGridPro',
     col2: 'is Awesome',
     col3: 'In publishing and graphic design, Lorem ipsum is a placeholder text or a typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before final copy is available.',
   },
@@ -183,7 +183,7 @@ const rows = [
   },
   {
     id: 5,
-    col1: 'XGrid',
+    col1: 'DataGridPro',
     col2: 'is Awesome',
     col3: 'Typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before final copy is available.',
   },

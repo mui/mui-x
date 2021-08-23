@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Theme } from '@material-ui/core/styles';
 import { createStyles, makeStyles } from '@material-ui/styles';
-import { GridCellParams } from '@material-ui/x-grid';
+import { GridCellParams } from '@mui/x-data-grid-pro';
 import Rating from '@material-ui/lab/Rating';
 import { createTheme } from '../../../_modules_/grid/utils/utils';
 

@@ -6,8 +6,8 @@ import {
   DataGrid,
   GridToolbarDensitySelector,
   GridToolbarFilterButton,
-} from '@material-ui/data-grid';
-import { useDemoData } from '@material-ui/x-grid-data-generator';
+} from '@mui/x-data-grid';
+import { useDemoData } from '@mui/x-data-grid-generator';
 import ClearIcon from '@material-ui/icons/Clear';
 import SearchIcon from '@material-ui/icons/Search';
 import { createTheme } from '@material-ui/core/styles';

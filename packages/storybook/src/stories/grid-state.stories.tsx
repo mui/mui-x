@@ -1,17 +1,11 @@
 import * as React from 'react';
 import Button from '@material-ui/core/Button';
-import {
-  GridState,
-  GridSortingState,
-  useGridApiRef,
-  GridStateChangeParams,
-  XGrid,
-} from '@material-ui/x-grid';
+import { GridState, GridSortingState, useGridApiRef, DataGridPro } from '@mui/x-data-grid-pro';
 import { useData } from '../hooks/useData';
 
 export default {
   title: 'X-Grid Tests/State',
-  component: XGrid,
+  component: DataGridPro,
   parameters: {
     options: { selectedPanel: 'storybook/storysource/panel' },
     docs: {
@@ -25,19 +19,19 @@ export function PartialControlUseState() {
   const [gridState, setGridState] = React.useState<GridState | undefined>();
   const colToSort = 'currencyPair';
 
-  const onStateChange = React.useCallback((params: GridStateChangeParams) => {
+  const onStateChange = React.useCallback((state: GridState) => {
     if (
-      params.state.sorting.sortModel.length > 0 &&
-      !params.state.sorting.sortModel.some((sort) => sort.field === colToSort)
+      state.sorting.sortModel.length > 0 &&
+      !state.sorting.sortModel.some((sort) => sort.field === colToSort)
     ) {
-      const newState = { ...params.state };
+      const newState = { ...state };
       newState.sorting.sortModel = [{ field: colToSort, sort: 'asc' }];
       setGridState(newState);
     }
   }, []);
 
   return (
-    <XGrid
+    <DataGridPro
       rows={data.rows}
       columns={data.columns}
       onStateChange={onStateChange}
@@ -60,18 +54,18 @@ export function SetStateApi() {
     });
   }, [apiRef]);
 
-  return <XGrid rows={data.rows} columns={data.columns} apiRef={apiRef} />;
+  return <DataGridPro rows={data.rows} columns={data.columns} apiRef={apiRef} />;
 }
 export function PartialControlApiRef() {
   const data = useData(2000, 200);
   const apiRef = useGridApiRef();
 
   const onStateChange = React.useCallback(
-    (params: GridStateChangeParams) => {
+    (state: GridState) => {
       if (
-        params.state.columns.all.length > 0 &&
-        (params.state.sorting.sortModel.length === 0 ||
-          !params.state.sorting.sortModel.some((sort) => sort.field === 'currencyPair'))
+        state.columns.all.length > 0 &&
+        (state.sorting.sortModel.length === 0 ||
+          !state.sorting.sortModel.some((sort) => sort.field === 'currencyPair'))
       ) {
         apiRef.current.setState((previousState: GridState) => {
           const sorting: GridSortingState = {
@@ -86,7 +80,12 @@ export function PartialControlApiRef() {
   );
 
   return (
-    <XGrid rows={data.rows} columns={data.columns} onStateChange={onStateChange} apiRef={apiRef} />
+    <DataGridPro
+      rows={data.rows}
+      columns={data.columns}
+      onStateChange={onStateChange}
+      apiRef={apiRef}
+    />
   );
 }
 const defaultProps = {
@@ -130,7 +129,7 @@ export function InitialState() {
     <div>
       <Button onClick={updateDirection}>Change direction</Button>
       <div style={{ width: 500, height: 500 }}>
-        <XGrid {...defaultProps} state={gridState} />
+        <DataGridPro {...defaultProps} state={gridState} />
       </div>
     </div>
   );
@@ -148,7 +147,7 @@ export function InitialStateWithApiRef() {
 
   return (
     <div style={{ width: 300, height: 300 }}>
-      <XGrid {...defaultProps} apiRef={apiRef} />
+      <DataGridPro {...defaultProps} apiRef={apiRef} />
     </div>
   );
 }

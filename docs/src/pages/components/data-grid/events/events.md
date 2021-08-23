@@ -12,7 +12,7 @@ You can subscribe to one of the [events emitted](/components/data-grid/events/#c
 
 1. an object with information related to the event
 2. a `MuiEvent` containing the DOM event or the React synthetic event, when available
-3. a `GridCallbackDetails` containing the `GridApi` only if `XGrid` is being used.
+3. a `GridCallbackDetails` containing the `GridApi` only if `DataGridPro` is being used.
 
 ```tsx
 /**
@@ -59,4 +59,4 @@ The following example changes this behavior by also requiring <kbd class="key">C
 ## API
 
 - [DataGrid](/api/data-grid/data-grid/)
-- [XGrid](/api/data-grid/x-grid/)
+- [DataGridPro](/api/data-grid/data-grid-pro/)

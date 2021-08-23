@@ -40,4 +40,4 @@ You can disable column virtualization by setting the column buffer to a higher n
 ## API
 
 - [DataGrid](/api/data-grid/data-grid/)
-- [XGrid](/api/data-grid/x-grid/)
+- [DataGridPro](/api/data-grid/data-grid-pro/)

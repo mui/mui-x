@@ -1,13 +1,18 @@
 import * as React from 'react';
-import { GridColDef, XGrid, GridColTypeDef, GridValueGetterParams } from '@material-ui/x-grid';
-import { useDemoData } from '@material-ui/x-grid-data-generator';
+import {
+  GridColDef,
+  DataGridPro,
+  GridColTypeDef,
+  GridValueGetterParams,
+} from '@mui/x-data-grid-pro';
+import { useDemoData } from '@mui/x-data-grid-generator';
 import CreateIcon from '@material-ui/icons/Create';
 import Button from '@material-ui/core/Button';
 import { useData } from '../hooks/useData';
 
 export default {
   title: 'X-Grid Tests/Columns',
-  component: XGrid,
+  component: DataGridPro,
   parameters: {
     options: { selectedPanel: 'storybook/storysource/panel' },
     docs: {
@@ -20,13 +25,13 @@ export function SmallColSizes() {
   const data = useData(100, 20);
   const transformColSizes = (columns: GridColDef[]) => columns.map((c) => ({ ...c, width: 60 }));
 
-  return <XGrid rows={data.rows} columns={transformColSizes(data.columns)} />;
+  return <DataGridPro rows={data.rows} columns={transformColSizes(data.columns)} />;
 }
 
 export function VerySmallColSizes() {
   const data = useData(100, 20);
   const transformColSizes = (columns: GridColDef[]) => columns.map((c) => ({ ...c, width: 50 }));
-  return <XGrid rows={data.rows} columns={transformColSizes(data.columns)} />;
+  return <DataGridPro rows={data.rows} columns={transformColSizes(data.columns)} />;
 }
 export function ColumnDescriptionTooltip() {
   const data = useData(100, 20);
@@ -38,14 +43,14 @@ export function ColumnDescriptionTooltip() {
       return c;
     });
 
-  return <XGrid rows={data.rows} columns={transformColSizes(data.columns)} />;
+  return <DataGridPro rows={data.rows} columns={transformColSizes(data.columns)} />;
 }
 
 export function HiddenColumns() {
   const data = useData(100, 20);
   const transformColSizes = (columns: GridColDef[]) =>
     columns.map((c, idx) => ({ ...c, hide: idx % 2 === 0 }));
-  return <XGrid rows={data.rows} columns={transformColSizes(data.columns)} />;
+  return <DataGridPro rows={data.rows} columns={transformColSizes(data.columns)} />;
 }
 
 export function UpdateColumnsBtn() {
@@ -138,7 +143,7 @@ export function UpdateColumnsBtn() {
         </Button>
       </div>
       <div className="grid-container">
-        <XGrid rows={rows} columns={cols} />
+        <DataGridPro rows={rows} columns={cols} />
       </div>
     </React.Fragment>
   );
@@ -156,7 +161,7 @@ export function HeaderComponent() {
 
   return (
     <div className="grid-container">
-      <XGrid rows={data.rows} columns={transformCols(data.columns)} />
+      <DataGridPro rows={data.rows} columns={transformCols(data.columns)} />
     </div>
   );
 }
@@ -182,7 +187,7 @@ export function ColumnsAlign() {
 
   return (
     <div className="grid-container">
-      <XGrid rows={data.rows} columns={transformCols(data.columns)} />
+      <DataGridPro rows={data.rows} columns={transformCols(data.columns)} />
     </div>
   );
 }
@@ -212,7 +217,7 @@ export function NewColumnTypes() {
 
   return (
     <div className="grid-container">
-      <XGrid
+      <DataGridPro
         rows={data.rows}
         columns={transformCols(data.columns)}
         columnTypes={{ price: priceColumnType, unknownPrice: unknownPriceColumnType }}
@@ -233,7 +238,7 @@ export const FlexColumnsWithCheckbox = () => {
 
   return (
     <div className="grid-container">
-      <XGrid rows={data.rows} columns={transformColSizes(data.columns)} checkboxSelection />
+      <DataGridPro rows={data.rows} columns={transformColSizes(data.columns)} checkboxSelection />
     </div>
   );
 };
@@ -250,7 +255,7 @@ export const FewFlexColumns = () => {
 
   return (
     <div className="grid-container">
-      <XGrid rows={data.rows} columns={transformColSizes(data.columns)} />
+      <DataGridPro rows={data.rows} columns={transformColSizes(data.columns)} />
     </div>
   );
 };
@@ -267,7 +272,7 @@ export const SeveralFlexColumn = () => {
 
   return (
     <div className="grid-container">
-      <XGrid rows={data.rows} columns={transformColSizes(data.columns)} />
+      <DataGridPro rows={data.rows} columns={transformColSizes(data.columns)} />
     </div>
   );
 };
@@ -284,7 +289,7 @@ export const FlexColumnWidth2000 = () => {
 
   return (
     <div className="grid-container">
-      <XGrid rows={data.rows} columns={transformColSizes(data.columns)} />
+      <DataGridPro rows={data.rows} columns={transformColSizes(data.columns)} />
     </div>
   );
 };
@@ -313,7 +318,7 @@ export const ValueGetterAndFormatter = () => {
 
   return (
     <div className="grid-container">
-      <XGrid rows={data.rows} columns={data.columns} />
+      <DataGridPro rows={data.rows} columns={data.columns} />
     </div>
   );
 };
@@ -386,7 +391,7 @@ export const SingleSelectColumnType = () => {
 
   return (
     <div className="grid-container">
-      <XGrid rows={data.rows} columns={data.columns} />
+      <DataGridPro rows={data.rows} columns={data.columns} />
     </div>
   );
 };
@@ -406,7 +411,7 @@ export function FlexLayoutGridSnap() {
     <div style={{ height: '400px', width: '400px' }}>
       <div style={{ display: 'flex', height: '100%' }}>
         <div style={{ flexGrow: 1 }}>
-          <XGrid
+          <DataGridPro
             autoHeight
             showCellRightBorder
             showColumnRightBorder

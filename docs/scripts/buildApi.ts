@@ -167,14 +167,14 @@ function generateImportStatement(api: Api) {
   // TODO: Check if interface was exported
   if (api.name === 'GridApi') {
     return `\`\`\`js
-import { ${api.name} } from '@material-ui/x-grid';
+import { ${api.name} } from '@mui/x-data-grid-pro';
 \`\`\``;
   }
 
   return `\`\`\`js
-import { ${api.name} } from '@material-ui/x-grid';
+import { ${api.name} } from '@mui/x-data-grid-pro';
 // or
-import { ${api.name} } from '@material-ui/data-grid';
+import { ${api.name} } from '@mui/x-data-grid';
 \`\`\``;
 }
 
@@ -257,6 +257,7 @@ function run(argv: { outputDirectory?: string }) {
     'GridCsvExportApi',
     'GridExportCsvOptions',
     'GridVirtualizationApi',
+    'GridEditRowApi',
     'GridEvents',
   ];
 

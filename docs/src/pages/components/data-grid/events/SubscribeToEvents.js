@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { XGrid, useGridApiRef } from '@material-ui/x-grid';
+import { DataGridPro, useGridApiRef } from '@mui/x-data-grid-pro';
 import Alert from '@material-ui/lab/Alert';
-import { useDemoData } from '@material-ui/x-grid-data-generator';
+import { useDemoData } from '@mui/x-data-grid-generator';
 
 export default function SubscribeToEvents() {
   const apiRef = useGridApiRef();
@@ -23,7 +23,7 @@ export default function SubscribeToEvents() {
   return (
     <div style={{ width: '100%' }}>
       <div style={{ height: 180, width: '100%' }}>
-        <XGrid apiRef={apiRef} {...data} />
+        <DataGridPro apiRef={apiRef} {...data} />
       </div>
       {message && (
         <Alert severity="info" style={{ marginTop: 8 }}>

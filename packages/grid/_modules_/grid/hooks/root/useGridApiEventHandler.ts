@@ -18,7 +18,7 @@ export interface GridCallbackDetails {
  */
 export enum GridSignature {
   DataGrid = 'DataGrid',
-  XGrid = 'XGrid',
+  DataGridPro = 'DataGridPro',
 }
 
 export function useGridApiEventHandler(

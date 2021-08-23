@@ -9,3 +9,4 @@
 /ja/* /:splat 200
 
 # Redirections
+/api/data-grid/x-grid/ /api/data-grid/data-grid-pro/ 301

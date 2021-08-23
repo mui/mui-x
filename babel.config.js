@@ -18,10 +18,10 @@ if (process.env.BABEL_ENV === 'es') {
 }
 
 const defaultAlias = {
-  '@material-ui/data-grid': './packages/grid/data-grid/src',
-  '@material-ui/x-grid-data-generator': './packages/grid/x-grid-data-generator/src',
-  '@material-ui/x-grid': './packages/grid/x-grid/src',
-  '@material-ui/x-license': './packages/x-license/src',
+  '@mui/x-data-grid': './packages/grid/data-grid/src',
+  '@mui/x-data-grid-generator': './packages/grid/x-grid-data-generator/src',
+  '@mui/x-data-grid-pro': './packages/grid/x-grid/src',
+  '@mui/x-license-pro': './packages/x-license/src',
 };
 
 module.exports = {
