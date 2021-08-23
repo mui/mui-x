@@ -129,7 +129,7 @@ This is the last alpha release. We are moving to beta in the next release, next 
 - [DataGrid] Remove private API from the export (#2299) @oliviertassinari
 - [DataGrid] Replace hard coded classes with `gridClasses` (#2320) @m4theushw
 - [DataGrid] Introduce row editing feature (#2098) @m4theushw
-- [DataGrid] TypeScript module augmentation for theme (#2307) @ZeeshanTamboli
+- [DataGrid] Add TypeScript module augmentation for the theme (#2307) @ZeeshanTamboli
 - [DataGrid] Use `rowIndex` relative to visible rows on keyboard navigation (#2336) @m4theushw
 
 ### Docs
