@@ -53,7 +53,7 @@ This is the last alpha release. We are moving to beta in the next release, next 
 
 #### Changes
 
-- [DataGrid] Don't apply `box-sizing: border-box` on everything (#2330) @m4theushw
+- [DataGrid] Fix `box-sizing: border-box` leak (#2330) @m4theushw
 - [DataGrid] Fix keyboard navigation header regression (#2342) @oliviertassinari
 - [DataGrid] Keep prop-types in the same file (#2345) @oliviertassinari
 - [DataGrid] Remove `apiRef` from all `options` callback params (#2312) @DanailH
