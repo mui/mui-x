@@ -17,7 +17,7 @@ Big thanks to the 6 contributors who made this release possible. Here are some h
 - 💡 The `api` property was removed from the callback params. To access the API, use the `DataGridPro` (#2312) @DanailH
 
 
-### `@mui/x-data-grid@v4.0.0-alpha.38` / `@mui/x-data-grid-pro@v4.0.0-alpha.38`
+### `@mui/x-data-grid@v4.0.0` / `@mui/x-data-grid-pro@v4.0.0`
 
 #### Breaking changes
 
