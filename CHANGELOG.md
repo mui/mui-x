@@ -27,7 +27,7 @@ This is the last alpha release. We are moving to beta in the next release, next 
 - [DataGridPro] Rename `XGrid` to `DataGridPro` (#2382) @m4theushw
 
   ```diff
-  -import { XGrid } from '@mui/x-data-grid-pro';
+  -import { XGrid } from '@material-ui/x-grid';
   +import { DataGridPro } from '@mui/x-data-grid-pro';
   ```
 
