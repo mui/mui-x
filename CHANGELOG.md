@@ -34,86 +34,17 @@ This is the last alpha release. We are moving to beta in the next release, next 
 - [core] Move packages to `@mui` scope (#2341) @oliviertassinari
 
   ```diff
-  - import { DataGrid } from '@material-ui/data-grid';
-  + import { DataGrid } from '@mui/x-data-grid';
+  -import { DataGrid } from '@material-ui/data-grid';
+  +import { DataGrid } from '@mui/x-data-grid';
   ```
 
   ```diff
-  - import { LicenseInfo } from '@material-ui/x-grid';
-  + import { LicenseInfo } from '@mui/x-data-grid-pro';
+  -import { LicenseInfo } from '@material-ui/x-grid';
+  +import { LicenseInfo } from '@mui/x-data-grid-pro';
   ```
 
 - [DataGrid] The `api` property was removed from the callback params. To access the API, use the `DataGridPro`. (#2312) @DanailH
-
-  ```diff
-  export interface GridColumnHeaderParams {
-    * The column of the current header component.
-    */
-    colDef: GridStateColDef;
-    -  /**
-    -  * API ref that let you manipulate the grid.
-    -  */
-    - api: any;
-  }
-  ```
-
-  ```diff
-  export interface GridColumnOrderChangeParams {
-    * The old column index.
-    */
-    oldIndex: number;
-    -  /**
-    -   * API ref that let you manipulate the grid.
-    -   */
-    -  api: any;
-  }
-  ```
-
-  ```diff
-  export interface GridColumnResizeParams {
-    * The column of the current header component.
-    */
-    colDef: GridStateColDef;
-  -  /**
-  -   * API ref that let you manipulate the grid.
-  -   */
-  -  api: any;
-  ```
-
-  ```diff
-  export interface GridColumnVisibilityChangeParams {
-    * The column of the current header component.
-    */
-    colDef: GridStateColDef;
-  -  /**
-  -   * API ref that let you manipulate the grid.
-  -   */
-  -  api: any;
-  ```
-
-  ```diff
-  export interface GridRowParams {
-    * All grid columns.
-    */
-    columns: GridColumns;
-  -  /**
-  -   * GridApiRef that let you manipulate the grid.
-  -   */
-  -  api: any;
-  ```
-
-  ```diff
-  export interface GridRowScrollEndParams {
-    * The grid visible columns.
-    */
-    visibleColumns: GridColumns;
-  -  /**
-  -   * API ref that let you manipulate the grid.
-  -   */
-  -  api: any;
-  ```
-
-  - [DataGridPro] The `api` property was removed from the callback params. To access the API, use the `api` property available in the new `details` param.
+  The `api` property is no longer available in the callback params. To access the API, use the `api` propertyfrom the new `details` param.
   ```
   -<DataGridPro onColumnResize={(params, event, details) => console.log(params.api)} />
   +<DataGridPro onColumnResize={(params, event, details) => console.log(details.api)} />
