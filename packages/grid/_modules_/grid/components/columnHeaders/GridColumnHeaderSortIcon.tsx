@@ -5,6 +5,7 @@ import { GridIconSlotsComponent } from '../../models/gridIconSlotsComponent';
 import { GridSortDirection } from '../../models/gridSortModel';
 import { useGridApiContext } from '../../hooks/root/useGridApiContext';
 import { gridClasses } from '../../gridClasses';
+import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
 export interface GridColumnHeaderSortIconProps {
   direction: GridSortDirection;
@@ -26,8 +27,9 @@ export const GridColumnHeaderSortIcon = React.memo(function GridColumnHeaderSort
 ) {
   const { direction, index } = props;
   const apiRef = useGridApiContext();
+  const rootProps = useGridRootProps();
 
-  const unsortedIcon = apiRef!.current.components.ColumnUnsortedIcon;
+  const unsortedIcon = rootProps.components.ColumnUnsortedIcon;
   if (direction == null && unsortedIcon === null) {
     return null;
   }
@@ -39,7 +41,7 @@ export const GridColumnHeaderSortIcon = React.memo(function GridColumnHeaderSort
       title={apiRef!.current.getLocaleText('columnHeaderSortIconLabel')}
       size="small"
     >
-      {getIcon(apiRef!.current.components, direction)}
+      {getIcon(rootProps.components, direction)}
     </IconButton>
   );
 

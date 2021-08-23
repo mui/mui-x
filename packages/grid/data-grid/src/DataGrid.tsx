@@ -2,7 +2,6 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { chainPropTypes } from '@material-ui/utils';
 import {
-  DEFAULT_GRID_PROPS_FROM_OPTIONS,
   GridBody,
   GridErrorHandler,
   GridFooterPlaceholder,
@@ -35,8 +34,6 @@ const DataGridRaw = React.forwardRef<HTMLDivElement, DataGridProps>(function Dat
     </GridContextProvider>
   );
 });
-
-DataGridRaw.defaultProps = DEFAULT_GRID_PROPS_FROM_OPTIONS;
 
 export const DataGrid = React.memo(DataGridRaw);
 

@@ -7,7 +7,6 @@ import { GridRowParams } from '../../../models/params/gridRowParams';
 import { GridRowId, GridRowModel } from '../../../models/gridRows';
 import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
-import { optionsSelector } from '../../utils/optionsSelector';
 import { useLogger } from '../../utils/useLogger';
 import { useGridSelector } from '../core/useGridSelector';
 import { useGridState } from '../core/useGridState';
@@ -21,7 +20,6 @@ import {
 export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps): void => {
   const logger = useLogger('useGridSelection');
   const [, setGridState, forceUpdate] = useGridState(apiRef);
-  const options = useGridSelector(apiRef, optionsSelector);
   const rowsLookup = useGridSelector(apiRef, gridRowsLookupSelector);
 
   const propSelectionModel = React.useMemo(() => {
@@ -37,7 +35,7 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
   }, [props.selectionModel]);
 
   const { checkboxSelection, disableMultipleSelection, disableSelectionOnClick, isRowSelectable } =
-    options;
+    props;
 
   const getSelectedRows = React.useCallback(
     () => selectedGridRowsSelector(apiRef.current.state),

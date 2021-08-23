@@ -21,7 +21,7 @@ export function GridErrorHandler(props) {
       logger={logger}
       render={(errorProps) => (
         <GridMainContainer>
-          <apiRef.current.components.ErrorOverlay
+          <rootProps.components.ErrorOverlay
             {...errorProps}
             {...rootProps.componentsProps?.errorOverlay}
           />

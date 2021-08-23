@@ -6,7 +6,6 @@ import {
 } from '../../../models/gridContainerProps';
 import { GridFilterModel } from '../../../models/gridFilterModel';
 import { GridEditRowsModel } from '../../../models/gridEditRowModel';
-import { DEFAULT_GRID_OPTIONS, GridOptions } from '../../../models/gridOptions';
 import { GridColumnMenuState } from '../columnMenu/columnMenuState';
 import {
   getInitialGridColumnReorderState,
@@ -37,7 +36,6 @@ export interface GridState {
   rows: InternalGridRowsState;
   editRows: GridEditRowsModel;
   pagination: GridPaginationState;
-  options: GridOptions;
   isScrolling: boolean;
   columns: GridColumnsState;
   columnReorder: GridColumnReorderState;
@@ -62,7 +60,6 @@ export const getInitialGridState = (): GridState => ({
   rows: getInitialGridRowState(),
   editRows: {},
   pagination: getInitialPaginationState(),
-  options: DEFAULT_GRID_OPTIONS,
   isScrolling: false,
   columns: getInitialGridColumnsState(),
   columnReorder: getInitialGridColumnReorderState(),

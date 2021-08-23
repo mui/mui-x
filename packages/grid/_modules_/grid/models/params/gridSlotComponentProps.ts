@@ -1,9 +1,9 @@
 import { GridState } from '../../hooks/features/core/gridState';
 import { GridApiRef } from '../api/gridApiRef';
 import { GridColumns } from '../colDef/gridColDef';
-import { GridOptions } from '../gridOptions';
 import { GridRootContainerRef } from '../gridRootContainerRef';
 import { GridRowModel } from '../gridRows';
+import { GridComponentProps } from '../../GridComponentProps';
 
 /**
  * Object passed as React prop in the component override.
@@ -22,9 +22,10 @@ export interface GridSlotComponentProps {
    */
   columns: GridColumns;
   /**
-   * The full set of options.
+   * The processed props passed to the grid component
+   * It includes all the default values
    */
-  options: GridOptions;
+  rootProps: GridComponentProps;
   /**
    * GridApiRef that let you manipulate the grid.
    */

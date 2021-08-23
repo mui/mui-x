@@ -32,13 +32,13 @@ export const GridFooter = React.forwardRef<HTMLDivElement, GridFooterContainerPr
       ) : null;
 
     const PaginationComponent =
-      !!rootProps.pagination &&
+      rootProps.pagination &&
       paginationState.pageSize != null &&
       !rootProps.hideFooterPagination &&
-      apiRef?.current.components.Pagination;
+      rootProps.components.Pagination;
 
     const PaginationElement = PaginationComponent && (
-      <PaginationComponent {...apiRef?.current.componentsProps?.pagination} />
+      <PaginationComponent {...rootProps.componentsProps?.pagination} />
     );
 
     return (

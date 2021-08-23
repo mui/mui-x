@@ -1,6 +1,6 @@
 import { Story } from '@storybook/react';
 import * as React from 'react';
-import { DataGridPro, GridOptionsProp, GridComponentProps } from '@mui/x-data-grid-pro';
+import { DataGridPro, DataGridProProps } from '@mui/x-data-grid-pro';
 import { useData } from '../hooks/useData';
 
 export default {
@@ -14,17 +14,16 @@ export default {
   },
 };
 
-interface GridDatasetProps extends GridOptionsProp {
+interface GridDatasetProps extends Omit<DataGridProProps, 'rows' | 'columns'> {
   nbRows: number;
   nbCols: number;
-  loading?: boolean;
 }
 
-const GridDataSet = ({ nbRows, nbCols, loading, ...options }: GridDatasetProps) => {
+const GridDataSet = ({ nbRows, nbCols, ...other }: GridDatasetProps) => {
   const data = useData(nbRows, nbCols);
   return (
     <div className="grid-container">
-      <DataGridPro rows={data.rows} columns={data.columns} {...options} loading={loading} />
+      <DataGridPro rows={data.rows} columns={data.columns} {...other} />
     </div>
   );
 };
@@ -64,7 +63,7 @@ const DemoDynamicContainerTemplate: Story<
     width: number | string;
     nbRows: number;
     nbCols: number;
-  } & GridComponentProps
+  } & DataGridProProps
 > = ({ nbRows, nbCols, height, width, rows, columns, ...args }) => {
   const data = useData(nbRows, nbCols);
   return (

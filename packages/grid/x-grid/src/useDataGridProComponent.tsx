@@ -22,14 +22,12 @@ import { useGridParamsApi } from '../../_modules_/grid/hooks/features/rows/useGr
 import { useGridRows } from '../../_modules_/grid/hooks/features/rows/useGridRows';
 import { useGridSelection } from '../../_modules_/grid/hooks/features/selection/useGridSelection';
 import { useGridSorting } from '../../_modules_/grid/hooks/features/sorting/useGridSorting';
-import { useGridComponents } from '../../_modules_/grid/hooks/features/useGridComponents';
 import { useGridVirtualRows } from '../../_modules_/grid/hooks/features/virtualization/useGridVirtualRows';
 import { useApi } from '../../_modules_/grid/hooks/root/useApi';
 import { useEvents } from '../../_modules_/grid/hooks/root/useEvents';
 import { useGridContainerProps } from '../../_modules_/grid/hooks/root/useGridContainerProps';
 import { useErrorHandler } from '../../_modules_/grid/hooks/utils/useErrorHandler';
 import { useLoggerFactory } from '../../_modules_/grid/hooks/utils/useLogger';
-import { useOptionsProp } from '../../_modules_/grid/hooks/utils/useOptionsProp';
 import { useRenderInfoLog } from '../../_modules_/grid/hooks/utils/useRenderInfoLog';
 import { useResizeContainer } from '../../_modules_/grid/hooks/utils/useResizeContainer';
 import { useStateProp } from '../../_modules_/grid/hooks/utils/useStateProp';
@@ -40,9 +38,8 @@ export const useDataGridProComponent = (apiRef: GridApiRef, props: GridComponent
   useApi(apiRef, props);
   useErrorHandler(apiRef, props);
   useGridControlState(apiRef, props);
-  useOptionsProp(apiRef, props);
   useEvents(apiRef, props);
-  useLocaleText(apiRef);
+  useLocaleText(apiRef, props);
   useResizeContainer(apiRef, props);
   useGridFreezeRows(apiRef, props);
   useGridColumns(apiRef, props);
@@ -67,7 +64,6 @@ export const useDataGridProComponent = (apiRef: GridApiRef, props: GridComponent
   useGridCsvExport(apiRef);
   useGridInfiniteLoader(apiRef, props);
   useGridClipboard(apiRef);
-  useGridComponents(apiRef, props);
   useStateProp(apiRef, props);
   useRenderInfoLog(apiRef);
 };
