@@ -50,7 +50,6 @@ This is the last alpha release. We are moving to beta in the next release, next 
   +<DataGridPro onColumnResize={(params, event, details) => console.log(details.api)} />
   ```
 
-
 #### Changes
 
 - [DataGrid] Fix `box-sizing: border-box` leak (#2330) @m4theushw
