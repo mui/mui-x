@@ -157,7 +157,7 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
         forceUpdate();
       }
     },
-    [setGridState, apiRef],
+    [setGridState, apiRef, forceUpdate],
   );
 
   const handleRowClick = React.useCallback(
