@@ -43,4 +43,4 @@ export const GridToolbarColumnsButton = React.forwardRef<HTMLButtonElement, Butt
       </Button>
     );
   },
-);
+) as (props: ButtonProps) => JSX.Element;
