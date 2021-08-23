@@ -7,7 +7,7 @@ import {
   GridProcessedMergedOptions,
   GridMergedOptions,
 } from './models/gridOptions';
-import { MuiEvent } from "./models/muiEvent";
+import { MuiEvent } from './models/muiEvent';
 import { GridRowId, GridRowIdGetter, GridRowsProp } from './models/gridRows';
 import { ElementSize } from './models/elementSize';
 import { GridColumnTypesRecord } from './models/colDef/gridColTypeDef';

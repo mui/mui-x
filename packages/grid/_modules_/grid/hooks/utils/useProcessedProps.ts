@@ -92,87 +92,20 @@ export const useProcessedProps = (inProps: GridInputComponentProps) => {
   );
 
   const components = React.useMemo<GridSlotsComponent>(() => {
-    return {
-      BooleanCellTrueIcon:
-        (inProps.components && inProps.components.BooleanCellTrueIcon) ||
-        DEFAULT_GRID_SLOTS_COMPONENTS.BooleanCellTrueIcon,
-      BooleanCellFalseIcon:
-        (inProps.components && inProps.components.BooleanCellFalseIcon) ||
-        DEFAULT_GRID_SLOTS_COMPONENTS.BooleanCellFalseIcon,
-      ColumnFilteredIcon:
-        (inProps.components && inProps.components.ColumnFilteredIcon) ||
-        DEFAULT_GRID_SLOTS_COMPONENTS.ColumnFilteredIcon,
-      ColumnMenuIcon:
-        (inProps.components && inProps.components.ColumnMenuIcon) ||
-        DEFAULT_GRID_SLOTS_COMPONENTS.ColumnMenuIcon,
-      ColumnResizeIcon:
-        (inProps.components && inProps.components.ColumnResizeIcon) ||
-        DEFAULT_GRID_SLOTS_COMPONENTS.ColumnResizeIcon,
-      ColumnSelectorIcon:
-        (inProps.components && inProps.components.ColumnSelectorIcon) ||
-        DEFAULT_GRID_SLOTS_COMPONENTS.ColumnSelectorIcon,
-      ColumnUnsortedIcon:
-        inProps.components?.ColumnUnsortedIcon || DEFAULT_GRID_SLOTS_COMPONENTS.ColumnUnsortedIcon,
-      ColumnSortedAscendingIcon:
-        (inProps.components && inProps.components.ColumnSortedAscendingIcon) ||
-        DEFAULT_GRID_SLOTS_COMPONENTS.ColumnSortedAscendingIcon,
-      ColumnSortedDescendingIcon:
-        (inProps.components && inProps.components.ColumnSortedDescendingIcon) ||
-        DEFAULT_GRID_SLOTS_COMPONENTS.ColumnSortedDescendingIcon,
-      DensityComfortableIcon:
-        (inProps.components && inProps.components.DensityComfortableIcon) ||
-        DEFAULT_GRID_SLOTS_COMPONENTS.DensityComfortableIcon,
-      DensityCompactIcon:
-        (inProps.components && inProps.components.DensityCompactIcon) ||
-        DEFAULT_GRID_SLOTS_COMPONENTS.DensityCompactIcon,
-      DensityStandardIcon:
-        (inProps.components && inProps.components.DensityStandardIcon) ||
-        DEFAULT_GRID_SLOTS_COMPONENTS.DensityStandardIcon,
-      ExportIcon:
-        (inProps.components && inProps.components.ExportIcon) ||
-        DEFAULT_GRID_SLOTS_COMPONENTS.ExportIcon,
-      OpenFilterButtonIcon:
-        (inProps.components && inProps.components.OpenFilterButtonIcon) ||
-        DEFAULT_GRID_SLOTS_COMPONENTS.OpenFilterButtonIcon,
-      Checkbox:
-        (inProps.components && inProps.components.Checkbox) ||
-        DEFAULT_GRID_SLOTS_COMPONENTS.Checkbox,
-      ColumnMenu:
-        (inProps.components && inProps.components.ColumnMenu) ||
-        DEFAULT_GRID_SLOTS_COMPONENTS.ColumnMenu,
-      ErrorOverlay:
-        (inProps.components && inProps.components.ErrorOverlay) ||
-        DEFAULT_GRID_SLOTS_COMPONENTS.ErrorOverlay,
-      Footer:
-        (inProps.components && inProps.components.Footer) || DEFAULT_GRID_SLOTS_COMPONENTS.Footer,
-      Header:
-        (inProps.components && inProps.components.Header) || DEFAULT_GRID_SLOTS_COMPONENTS.Header,
-      Toolbar:
-        (inProps.components && inProps.components.Toolbar) || DEFAULT_GRID_SLOTS_COMPONENTS.Toolbar,
-      PreferencesPanel:
-        (inProps.components && inProps.components.PreferencesPanel) ||
-        DEFAULT_GRID_SLOTS_COMPONENTS.PreferencesPanel,
-      LoadingOverlay:
-        (inProps.components && inProps.components.LoadingOverlay) ||
-        DEFAULT_GRID_SLOTS_COMPONENTS.LoadingOverlay,
-      NoResultsOverlay:
-        (inProps.components && inProps.components.NoResultsOverlay) ||
-        DEFAULT_GRID_SLOTS_COMPONENTS.NoResultsOverlay,
-      NoRowsOverlay:
-        (inProps.components && inProps.components.NoRowsOverlay) ||
-        DEFAULT_GRID_SLOTS_COMPONENTS.NoRowsOverlay,
-      Pagination:
-        (inProps.components && inProps.components.Pagination) ||
-        DEFAULT_GRID_SLOTS_COMPONENTS.Pagination,
-      FilterPanel:
-        (inProps.components && inProps.components.FilterPanel) ||
-        DEFAULT_GRID_SLOTS_COMPONENTS.FilterPanel,
-      ColumnsPanel:
-        (inProps.components && inProps.components.ColumnsPanel) ||
-        DEFAULT_GRID_SLOTS_COMPONENTS.ColumnsPanel,
-      Panel:
-        (inProps.components && inProps.components.Panel) || DEFAULT_GRID_SLOTS_COMPONENTS.Panel,
-    };
+    const overrides = inProps.components;
+
+    if (!overrides) {
+      return { ...DEFAULT_GRID_SLOTS_COMPONENTS };
+    }
+
+    const mergedComponents = {} as GridSlotsComponent;
+
+    Object.keys(DEFAULT_GRID_SLOTS_COMPONENTS).forEach((key) => {
+      mergedComponents[key] =
+        overrides[key] === undefined ? DEFAULT_GRID_SLOTS_COMPONENTS[key] : overrides[key];
+    });
+
+    return mergedComponents;
   }, [inProps.components]);
 
   return React.useMemo<GridComponentProps>(
