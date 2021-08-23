@@ -154,6 +154,7 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
       const currentModel = apiRef.current.state.selection;
       if (currentModel !== model) {
         setGridState((state) => ({ ...state, selection: model }));
+        forceUpdate();
       }
     },
     [setGridState, apiRef],
