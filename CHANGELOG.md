@@ -115,9 +115,8 @@ This is the last alpha release. We are moving to beta in the next release, next 
 
   - [DataGridPro] The `api` property was removed from the callback params. To access the API, use the `api` property available in the new `details` param.
   ```
-  <DataGridPro
-    onColumnResize={(params, event, details) => console.log(details.api)}
-  />
+  -<DataGridPro onColumnResize={(params, event, details) => console.log(params.api)} />
+  +<DataGridPro onColumnResize={(params, event, details) => console.log(details.api)} />
   ```
 
   - `GridStateChangeParams` is removed, instead `onStateChange` first param is `GridState`.
