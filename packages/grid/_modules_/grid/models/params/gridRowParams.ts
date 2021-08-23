@@ -3,7 +3,7 @@ import { GridRowId, GridRowModel } from '../gridRows';
 import type { GridColumns } from '../colDef';
 
 /**
- * Object passed as parameter in the column [[GridColDef]] cell renderer.
+ * Object passed as parameter in the row callbacks.
  */
 export interface GridRowParams {
   /**
