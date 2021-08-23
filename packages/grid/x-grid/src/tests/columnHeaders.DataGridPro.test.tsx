@@ -46,7 +46,7 @@ describe('<DataGridPro /> - Column Headers', () => {
   it('should close the menu when the window is scrolled', async () => {
     render(
       <div style={{ width: 300, height: 500 }}>
-        <XGrid {...baselineProps} columns={[{ field: 'brand' }]} />
+        <DataGridPro {...baselineProps} columns={[{ field: 'brand' }]} />
       </div>,
     );
     const columnCell = getColumnHeaderCell(0);
