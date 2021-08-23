@@ -13,7 +13,7 @@ Big thanks to the 6 contributors who made this release possible. Here are some h
 - ⚛️ Remove unused row CSS classes (#2327) @ZeeshanTamboli
 - ⚡️ Rename `XGrid` to `DataGridPro` (#2382) @m4theushw
 - ✨ Move packages to `@mui` scope (#2341) @oliviertassinari
-- 💡 Remove `apiRef` from all `options` callback params (#2312) @DanailH
+- 💡 Add the `details` param to all callbacks (#2312) @DanailH
 
 This is the last alpha release. We are moving to beta in the next release, next week.
 
