@@ -5,7 +5,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## 4.0.0-alpha.38
 
-_Jul 23, 2021_
+_Aug 23, 2021_
 
 Big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
 
