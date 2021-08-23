@@ -146,7 +146,7 @@ This is the last alpha release. We are moving to beta in the next release, next 
 - [core] Simplify `useGridColumns` hook (#2343) @oliviertassinari
 - [core] Reduce `options` internal usage (#2318) @flaviendelangle
 - [core] Remove `DataGridPropTypes` (#2432) @flaviendelangle
-- [core] Stop using `options.scrollbarSize` (#2317) @flaviendelangle
+- [core] Remove usages of `options.scrollbarSize` (#2317) @flaviendelangle
 - [core] Update `doesSupportTouchActionNone` implementation (#2378) @DanailH
 - [core] Upgrade dependency with the monorepo (#2377) @oliviertassinari
 - [test] Use `.not.to.equal` in favour of `to.not.equal` (#2340) @oliviertassinari
