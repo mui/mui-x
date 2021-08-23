@@ -7,10 +7,6 @@ import { GridSortDirection } from './gridSortModel';
 import { GridSlotsComponent } from './gridSlotsComponent';
 import { GridClasses } from './gridClasses';
 
-export type MuiEvent<E> = E & {
-  defaultMuiPrevented?: boolean;
-};
-
 export type GridMergedOptions = {
   [key in keyof GridProcessedMergedOptions]: Partial<GridProcessedMergedOptions[key]>;
 };

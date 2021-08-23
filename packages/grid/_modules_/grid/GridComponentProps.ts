@@ -3,11 +3,11 @@ import { GridState } from './hooks/features/core/gridState';
 import { GridApiRef } from './models/api/gridApiRef';
 import { GridColumns } from './models/colDef/gridColDef';
 import {
-  MuiEvent,
   GridSimpleOptions,
   GridProcessedMergedOptions,
   GridMergedOptions,
 } from './models/gridOptions';
+import { MuiEvent } from "./models/muiEvent";
 import { GridRowId, GridRowIdGetter, GridRowsProp } from './models/gridRows';
 import { ElementSize } from './models/elementSize';
 import { GridColumnTypesRecord } from './models/colDef/gridColTypeDef';

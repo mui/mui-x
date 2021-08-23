@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { MuiEvent } from '../gridOptions';
+import { MuiEvent } from '../muiEvent';
 import {
   GridEventEmitter,
   GridSubscribeEventOptions,
