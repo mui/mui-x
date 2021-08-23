@@ -44,14 +44,6 @@ export const useGridColumnMenu = (apiRef: GridApiRef): void => {
     [logger, showColumnMenu, hideColumnMenu, gridState],
   );
 
-  const handleColumnResizeStart = React.useCallback(() => {
-    hideColumnMenu();
-  }, [hideColumnMenu]);
-
-  const handleRowsScroll = React.useCallback(() => {
-    hideColumnMenu();
-  }, [hideColumnMenu]);
-
   useGridApiMethod(
     apiRef,
     {
@@ -62,6 +54,6 @@ export const useGridColumnMenu = (apiRef: GridApiRef): void => {
     'ColumnMenuApi',
   );
 
-  useGridApiEventHandler(apiRef, GridEvents.columnResizeStart, handleColumnResizeStart);
-  useGridApiEventHandler(apiRef, GridEvents.rowsScroll, handleRowsScroll);
+  useGridApiEventHandler(apiRef, GridEvents.columnResizeStart, hideColumnMenu);
+  useGridApiEventHandler(apiRef, GridEvents.rowsScroll, hideColumnMenu);
 };
