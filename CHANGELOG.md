@@ -83,7 +83,7 @@ This is the last alpha release. We are moving to beta in the next release, next 
 
 ## 4.0.0-alpha.37
 
-_Jul 12, 2021_
+_Aug 12, 2021_
 
 Big thanks to the 7 contributors who made this release possible. Here are some highlights ✨:
 
