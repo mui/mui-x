@@ -3,6 +3,160 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 4.0.0-alpha.38
+
+_Jul 23, 2021_
+
+Big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
+
+- 🚀 Introduce row editing feature (#2098) @m4theushw
+- ⚛️ Remove unused row CSS classes (#2327) @ZeeshanTamboli
+- ⚡️ Rename `XGrid` to `DataGridPro` (#2382) @m4theushw
+- ✨ Move packages to `@mui` scope (#2341) @oliviertassinari
+- 💡 Remove `apiRef` from all `options` callback params (#2312) @DanailH
+
+This is the last alpha release. We are moving to beta in the next release, next week.
+
+### `@mui/x-data-grid@v4.0.0-alpha.38` / `@mui/x-data-grid-pro@v4.0.0-alpha.38`
+
+#### Breaking changes
+
+- [DataGrid] Remove unused row CSS classes (#2327) @ZeeshanTamboli
+  The CSS classes `.Mui-odd` and `.Mui-even` were removed from the row. Use the `:nth-child(odd|even)` selector to replace them.
+
+- [DataGridPro] Rename `XGrid` to `DataGridPro` (#2382) @m4theushw
+
+  ```diff
+  - import { XGrid } from '@mui/x-data-grid-pro';
+  + import { DataGridPro } from '@mui/x-data-grid-pro';
+  ```
+
+- [core] Move packages to `@mui` scope (#2341) @oliviertassinari
+
+  ```diff
+  - import { DataGrid } from '@material-ui/data-grid';
+  + import { DataGrid } from '@mui/x-data-grid';
+  ```
+
+  ```diff
+  - import { LicenseInfo } from '@material-ui/x-grid';
+  + import { LicenseInfo } from '@mui/x-data-grid-pro';
+  ```
+
+- [DataGrid] Remove `apiRef` from all `options` callback params (#2312) @DanailH
+
+  ```diff
+  export interface GridColumnHeaderParams {
+    * The column of the current header component.
+    */
+    colDef: GridStateColDef;
+    -  /**
+    -  * API ref that let you manipulate the grid.
+    -  */
+    - api: any;
+  }
+  ```
+
+  ```diff
+  export interface GridColumnOrderChangeParams {
+    * The old column index.
+    */
+    oldIndex: number;
+    -  /**
+    -   * API ref that let you manipulate the grid.
+    -   */
+    -  api: any;
+  }
+  ```
+
+  ```diff
+  export interface GridColumnResizeParams {
+    * The column of the current header component.
+    */
+    colDef: GridStateColDef;
+  -  /**
+  -   * API ref that let you manipulate the grid.
+  -   */
+  -  api: any;
+  ```
+
+  ```diff
+  export interface GridColumnVisibilityChangeParams {
+    * The column of the current header component.
+    */
+    colDef: GridStateColDef;
+  -  /**
+  -   * API ref that let you manipulate the grid.
+  -   */
+  -  api: any;
+  ```
+
+  ```diff
+  export interface GridRowParams {
+    * All grid columns.
+    */
+    columns: GridColumns;
+  -  /**
+  -   * GridApiRef that let you manipulate the grid.
+  -   */
+  -  api: any;
+  ```
+
+  ```diff
+  export interface GridRowScrollEndParams {
+    * The grid visible columns.
+    */
+    visibleColumns: GridColumns;
+  -  /**
+  -   * API ref that let you manipulate the grid.
+  -   */
+  -  api: any;
+  ```
+
+  - All DataGrid props callbacks don't provide access to `api` anymore. To access `api` you need to use `DataGridPro` and access it from the details parameter.
+  ```
+  <DataGridPro
+    onColumnResize={(params, event, details) => console.log(details.api)}
+  />
+  ```
+
+  - `GridStateChangeParams` is removed, instead `onStateChange` first param is `GridState`.
+  ```diff
+  - onStateChange?: (params: GridStateChangeParams, event: MuiEvent<{}>, details: any) => void;
+  + onStateChange?: (state: GridState, event: MuiEvent<{}>, details: any) => void;
+  ```
+
+#### Changes
+
+- [DataGrid] Don't apply `box-sizing: border-box` on everything (#2330) @m4theushw
+- [DataGrid] Fix keyboard navigation header regression (#2342) @oliviertassinari
+- [DataGrid] Keep prop-types in the same file (#2345) @oliviertassinari
+- [DataGrid] Remove `apiRef` from all `options` callback params (#2312) @DanailH
+- [DataGrid] Remove private API from the export (#2299) @oliviertassinari
+- [DataGrid] Replace hard coded classes with `gridClasses` (#2320) @m4theushw
+- [DataGrid] Introduce row editing feature (#2098) @m4theushw
+- [DataGrid] TypeScript module augmentation for theme (#2307) @ZeeshanTamboli
+- [DataGrid] Use `rowIndex` relative to visible rows on keyboard navigation (#2336) @m4theushw
+
+### Docs
+
+- [docs] Add `Row & Cell editing` in features list (#2396) @ZeeshanTamboli
+- [docs] Add redirect from `XGrid` to `DataGridPro` (#2389) @m4theushw
+- [docs] Fix docs for `onEditRowsModelChange` prop (#2394) @ZeeshanTamboli
+- [docs] Fix docs links and pagination sentence (#2381) @ZeeshanTamboli
+- [docs] Fix `onCellEditCommit` param type (#2390) @ArthurPedroti
+- [docs] Update the icons for the new branding (#2339) @oliviertassinari
+
+### Core
+
+- [core] Simplify `useGridColumns` hook (#2343) @oliviertassinari
+- [core] Reduce `options` internal usage (#2318) @flaviendelangle
+- [core] Remove `DataGridPropTypes` (#2432) @flaviendelangle
+- [core] Stop using `options.scrollbarSize` (#2317) @flaviendelangle
+- [core] Update `doesSupportTouchActionNone` implementation (#2378) @DanailH
+- [core] Upgrade dependency with the monorepo (#2377) @oliviertassinari
+- [test] Use `.not.to.equal` in favour of `to.not.equal` (#2340) @oliviertassinari
+
 ## 4.0.0-alpha.37
 
 _Jul 12, 2021_
