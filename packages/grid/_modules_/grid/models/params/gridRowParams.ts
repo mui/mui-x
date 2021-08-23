@@ -5,7 +5,7 @@ import type { GridColumns } from '../colDef';
 /**
  * Object passed as parameter in the row callbacks.
  */
-export interface GridRowParams {
+export interface GridRowParams<RowDataType = any> {
   /**
    * The grid row id.
    */
@@ -13,7 +13,7 @@ export interface GridRowParams {
   /**
    * The row model of the row that the current cell belongs to.
    */
-  row: GridRowModel;
+  row: GridRowModel<RowDataType>;
   /**
    * All grid columns.
    */

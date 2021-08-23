@@ -1,5 +1,5 @@
 export type GridRowsProp = Readonly<GridRowData[]>;
-export type GridRowData<RowType = any> = RowType;
+export type GridRowData<RowType = { [key: string]: any }> = RowType;
 
 /**
  * The key value object representing the data of a row.
