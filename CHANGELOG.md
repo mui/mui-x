@@ -43,7 +43,9 @@ This is the last alpha release. We are moving to beta in the next release, next 
   +import { LicenseInfo } from '@mui/x-data-grid-pro';
   ```
 
-- [DataGrid] The `api` property was removed from the callback params. To access the API, use the `DataGridPro`. (#2312) @DanailH
+- [DataGrid] The `api` property was removed from the callback params (#2312) @DanailH
+
+  To access the API, use the `DataGridPro` and get it from the new `details` param. 
 
   ```diff
   -<DataGridPro onColumnResize={(params, event) => console.log(params.api)} />
