@@ -113,7 +113,7 @@ This is the last alpha release. We are moving to beta in the next release, next 
   -  api: any;
   ```
 
-  - All DataGrid props callbacks don't provide access to `api` anymore. To access `api` you need to use `DataGridPro` and access it from the details parameter.
+  - [DataGridPro] The `api` property was removed from the callback params. To access the API, use the `api` property available in the new `details` param.
   ```
   <DataGridPro
     onColumnResize={(params, event, details) => console.log(details.api)}
