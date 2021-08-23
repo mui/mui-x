@@ -119,11 +119,6 @@ This is the last alpha release. We are moving to beta in the next release, next 
   +<DataGridPro onColumnResize={(params, event, details) => console.log(details.api)} />
   ```
 
-  - `GridStateChangeParams` is removed, instead `onStateChange` first param is `GridState`.
-  ```diff
-  - onStateChange?: (params: GridStateChangeParams, event: MuiEvent<{}>, details: any) => void;
-  + onStateChange?: (state: GridState, event: MuiEvent<{}>, details: any) => void;
-  ```
 
 #### Changes
 
