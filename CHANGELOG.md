@@ -9,7 +9,7 @@ _Jul 23, 2021_
 
 Big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
 
-- 🚀 Introduce row editing feature (#2098) @m4theushw
+- 🚀 Introduce the [row editing](https://material-ui.com/components/data-grid/editing/#row-editing) feature (#2098) @m4theushw
 - ⚛️ Remove unused row CSS classes (#2327) @ZeeshanTamboli
 - ⚡️ Rename `XGrid` to `DataGridPro` (#2382) @m4theushw
 - ✨ Move packages to `@mui` scope (#2341) @oliviertassinari
