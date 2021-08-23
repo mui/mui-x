@@ -28,6 +28,10 @@ export interface GridSlotsComponent extends GridIconSlotsComponent {
    */
   Header: React.JSXElementConstructor<any>;
   /**
+   * Toolbar component rendered inside the Header component.
+   */
+  Toolbar: React.JSXElementConstructor<any> | null;
+  /**
    * PreferencesPanel component rendered inside the Header component.
    */
   PreferencesPanel: React.JSXElementConstructor<any>;
@@ -59,8 +63,4 @@ export interface GridSlotsComponent extends GridIconSlotsComponent {
    * Panel component wrapping the filters and columns panels.
    */
   Panel: React.JSXElementConstructor<any>;
-  /**
-   * Toolbar component rendered inside the Header component.
-   */
-  Toolbar: React.JSXElementConstructor<any> | null;
 }

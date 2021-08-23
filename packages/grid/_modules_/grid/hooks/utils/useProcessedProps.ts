@@ -59,6 +59,7 @@ export const DEFAULT_GRID_SLOTS_COMPONENTS: GridSlotsComponent = {
   ErrorOverlay,
   Footer: GridFooter,
   Header: GridHeader,
+  Toolbar: null,
   PreferencesPanel: GridPreferencesPanel,
   LoadingOverlay: GridLoadingOverlay,
   NoResultsOverlay: GridNoResultsOverlay,
@@ -67,7 +68,6 @@ export const DEFAULT_GRID_SLOTS_COMPONENTS: GridSlotsComponent = {
   FilterPanel: GridFilterPanel,
   ColumnsPanel: GridColumnsPanel,
   Panel: GridPanel,
-  Toolbar: null,
 };
 
 export const useProcessedProps = (inProps: GridInputComponentProps) => {
