@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-license-pro",
-  "version": "4.0.0-alpha.38",
+  "version": "4.0.0",
   "description": "Material-UI X License verification",
   "author": "MUI Team",
   "main": "dist/cjs/index.js",
