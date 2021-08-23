@@ -13,7 +13,7 @@ Big thanks to the 6 contributors who made this release possible. Here are some h
 - ⚛️ Remove unused row CSS classes (#2327) @ZeeshanTamboli
 - ⚡️ Rename `XGrid` to `DataGridPro` (#2382) @m4theushw
 - ✨ Move packages to `@mui` scope (#2341) @oliviertassinari
-- 💡 Add the `details` param to all callbacks (#2312) @DanailH
+- 💡 The `api` property was removed from the callback params. To access the API, use the `DataGridPro`. (#2312) @DanailH
 
 This is the last alpha release. We are moving to beta in the next release, next week.
 
@@ -22,7 +22,7 @@ This is the last alpha release. We are moving to beta in the next release, next 
 #### Breaking changes
 
 - [DataGrid] Remove unused row CSS classes (#2327) @ZeeshanTamboli
-  The CSS classes `.Mui-odd` and `.Mui-even` were removed from the row. Use the `:nth-child(odd|even)` selector to replace them.
+  The CSS classes `.Mui-odd` and `.Mui-even` were removed from the row.
 
 - [DataGridPro] Rename `XGrid` to `DataGridPro` (#2382) @m4theushw
 
@@ -44,7 +44,7 @@ This is the last alpha release. We are moving to beta in the next release, next 
   ```
 
 - [DataGrid] The `api` property was removed from the callback params. To access the API, use the `DataGridPro`. (#2312) @DanailH
-  The `api` property is no longer available in the callback params. To access the API, use the `api` propertyfrom the new `details` param.
+
   ```diff
   -<DataGridPro onColumnResize={(params, event, details) => console.log(params.api)} />
   +<DataGridPro onColumnResize={(params, event, details) => console.log(details.api)} />
@@ -55,8 +55,6 @@ This is the last alpha release. We are moving to beta in the next release, next 
 
 - [DataGrid] Fix `box-sizing: border-box` leak (#2330) @m4theushw
 - [DataGrid] Fix keyboard navigation header regression (#2342) @oliviertassinari
-- [DataGrid] Keep prop-types in the same file (#2345) @oliviertassinari
-- [DataGrid] Remove `apiRef` from all `options` callback params (#2312) @DanailH
 - [DataGrid] Remove private API from the export (#2299) @oliviertassinari
 - [DataGrid] Replace hard coded classes with `gridClasses` (#2320) @m4theushw
 - [DataGrid] Introduce row editing feature (#2098) @m4theushw
@@ -74,6 +72,7 @@ This is the last alpha release. We are moving to beta in the next release, next 
 
 ### Core
 
+- [code] Keep prop-types in the same file (#2345) @oliviertassinari
 - [core] Simplify `useGridColumns` hook (#2343) @oliviertassinari
 - [core] Reduce `options` internal usage (#2318) @flaviendelangle
 - [core] Remove `DataGridPropTypes` (#2432) @flaviendelangle
