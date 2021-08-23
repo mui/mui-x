@@ -7,7 +7,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 _Aug 23, 2021_
 
-This is the first offitial stable release of the `DataGrid` and `DataGridPro`. It supports `@material-ui/core` v4 and has a partial support for v5. From this release on we will release new features for the `DataGrid` and `DataGridPro` under version `5.0.0-beta.0` and have full support for `@material-ui/core` v5.
+This is the first official stable release of the `DataGrid` and `DataGridPro`. It supports `@material-ui/core` v4 and has partial support for v5. From this release on we will release new features for the `DataGrid` and `DataGridPro` under version `5.0.0-beta.0` and have full support for `@material-ui/core` v5.
 
 Big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
 
