@@ -44,8 +44,7 @@ This is the last alpha release. We are moving to beta in the next release, next 
   ```
 
 - [DataGrid] The `api` property was removed from the callback params (#2312) @DanailH
-
-  To access the API, use the `DataGridPro` and get it from the new `details` param. 
+  To access the API, use the `DataGridPro` and get it from the new `details` param.
 
   ```diff
   -<DataGridPro onColumnResize={(params, event) => console.log(params.api)} />
