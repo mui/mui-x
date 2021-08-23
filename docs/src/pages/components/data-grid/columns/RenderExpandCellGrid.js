@@ -131,13 +131,7 @@ renderCellExpand.propTypes = {
   /**
    * The cell value, but if the column has valueGetter, use getValue.
    */
-  value: PropTypes.oneOfType([
-    PropTypes.instanceOf(Date),
-    PropTypes.number,
-    PropTypes.object,
-    PropTypes.string,
-    PropTypes.bool,
-  ]),
+  value: PropTypes.string.isRequired,
 };
 
 const columns = [
