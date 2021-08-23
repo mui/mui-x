@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import FormControl from '@material-ui/core/FormControl';
 import IconButton from '@material-ui/core/IconButton';
 import InputLabel from '@material-ui/core/InputLabel';
@@ -53,7 +54,7 @@ const useStyles = makeStyles(
   { name: 'MuiGridFilterForm' },
 );
 
-export function GridFilterForm(props: GridFilterFormProps) {
+function GridFilterForm(props: GridFilterFormProps) {
   const {
     item,
     hasMultipleFilters,
@@ -224,3 +225,25 @@ export function GridFilterForm(props: GridFilterFormProps) {
     </div>
   );
 }
+
+GridFilterForm.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  applyFilterChanges: PropTypes.func.isRequired,
+  applyMultiFilterOperatorChanges: PropTypes.func.isRequired,
+  deleteFilter: PropTypes.func.isRequired,
+  disableMultiFilterOperator: PropTypes.bool,
+  hasMultipleFilters: PropTypes.bool.isRequired,
+  item: PropTypes.shape({
+    columnField: PropTypes.string,
+    id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    operatorValue: PropTypes.string,
+    value: PropTypes.any,
+  }).isRequired,
+  multiFilterOperator: PropTypes.oneOf(['and', 'or']),
+  showMultiFilterOperators: PropTypes.bool,
+} as any;
+
+export { GridFilterForm };

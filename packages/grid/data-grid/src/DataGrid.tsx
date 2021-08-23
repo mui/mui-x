@@ -89,22 +89,19 @@ DataGridRaw.propTypes = {
   /**
    * Set of columns of type [[GridColumns]].
    */
-  columns: chainPropTypes(
-    PropTypes /* @typescript-to-proptypes-ignore */.array.isRequired,
-    (props: any) => {
-      if (props.columns && props.columns.some((column) => column.resizable)) {
-        return new Error(
-          [
-            `Material-UI: \`column.resizable = true\` is not a valid prop.`,
-            'Column resizing is not available in the MIT version.',
-            '',
-            'You need to upgrade to the DataGridPro component to unlock this feature.',
-          ].join('\n'),
-        );
-      }
-      return null;
-    },
-  ),
+  columns: chainPropTypes(PropTypes.array.isRequired, (props: any) => {
+    if (props.columns && props.columns.some((column) => column.resizable)) {
+      return new Error(
+        [
+          `Material-UI: \`column.resizable = true\` is not a valid prop.`,
+          'Column resizing is not available in the MIT version.',
+          '',
+          'You need to upgrade to the DataGridPro component to unlock this feature.',
+        ].join('\n'),
+      );
+    }
+    return null;
+  }),
   /**
    * Extend native column types with your new column types.
    */
@@ -217,7 +214,7 @@ DataGridRaw.propTypes = {
   /**
    * Set the filter model of the grid.
    */
-  filterModel: chainPropTypes(PropTypes /* @typescript-to-proptypes-ignore */.any, (props: any) => {
+  filterModel: chainPropTypes(PropTypes.any, (props: any) => {
     if (props.filterModel != null && props.filterModel.items.length > 1) {
       return new Error(
         [
@@ -599,7 +596,7 @@ DataGridRaw.propTypes = {
    * Set the number of rows in one page.
    * @default 100
    */
-  pageSize: chainPropTypes(PropTypes /* @typescript-to-proptypes-ignore */.number, (props: any) => {
+  pageSize: chainPropTypes(PropTypes.number, (props: any) => {
     if (props.pageSize && props.pageSize > MAX_PAGE_SIZE) {
       return new Error(
         [
@@ -616,7 +613,7 @@ DataGridRaw.propTypes = {
    * If `true`, pagination is enabled.
    * @default false
    */
-  pagination: (props: any) /* @typescript-to-proptypes-ignore */ => {
+  pagination: (props: any) => {
     if (props.pagination === false) {
       return new Error(
         [
@@ -661,11 +658,7 @@ DataGridRaw.propTypes = {
    * Set the selection model of the grid.
    */
   selectionModel: chainPropTypes(
-    PropTypes /* @typescript-to-proptypes-ignore */.oneOfType([
-      PropTypes.number,
-      PropTypes.string,
-      PropTypes.array,
-    ]),
+    PropTypes.oneOfType([PropTypes.number, PropTypes.string, PropTypes.array]),
     (props: any) => {
       if (
         !props.checkboxSelection &&
