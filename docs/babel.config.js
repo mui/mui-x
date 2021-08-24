@@ -20,6 +20,7 @@ const alias = {
   '@material-ui/styles': './node_modules/@material-ui/monorepo/packages/material-ui-styles/src',
   '@material-ui/docs': './node_modules/@material-ui/monorepo/packages/material-ui-docs/src',
   '@material-ui/lab': './node_modules/@material-ui/monorepo/packages/material-ui-lab/src',
+  '@material-ui/markdown': './node_modules/@material-ui/monorepo/docs/packages/markdown',
   docs: './node_modules/@material-ui/monorepo/docs',
   docsx: './',
   modules: './node_modules/@material-ui/monorepo/modules',
@@ -61,6 +62,7 @@ module.exports = {
     /@babel[\\|/]runtime/,
     // Fix const foo = /{{(.+?)}}/gs; crashing.
     /prettier/,
+    /@material-ui[\\|/]docs[\\|/]markdown/,
   ],
   env: {
     production: {
