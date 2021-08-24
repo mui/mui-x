@@ -7,19 +7,16 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 _Aug 23, 2021_
 
-This is the first offitial stable release of the `DataGrid` and `DataGridPro`. It supports `@material-ui/core` v4 and has a partial support for v5. From this release on we will release new features for the `DataGrid` and `DataGridPro` under version `5.0.0-beta.0` and have full support for `@material-ui/core` v5.
+The first official stable release of `DataGrid` and `DataGridPro`. It supports `@material-ui/core` v4 and has partial support for v5. From this release on new features for the `DataGrid` and `DataGridPro` components will be released under version `5.0.0-beta.0` and have full support for `@material-ui/core` v5. Support for existing users on v4 will still be provided via patch releases.
 
 Big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
 
 - 🚀 Introduce the [row editing](https://material-ui.com/components/data-grid/editing/#row-editing) feature (#2098) @m4theushw
-- ⚛️ Remove unused row CSS classes (#2327) @ZeeshanTamboli
 - ⚡️ Rename `XGrid` to `DataGridPro` as part of the new branding (#2382) @m4theushw
 - ✨ Move packages to `@mui` scope as part of the new branding (#2341) @oliviertassinari
 - 💡 The `api` property was removed from the callback params. To access the API, use the `DataGridPro` (#2312) @DanailH
 
-This is the last alpha release. We are moving to beta in the next release, next week.
-
-### `@mui/x-data-grid@v4.0.0-alpha.38` / `@mui/x-data-grid-pro@v4.0.0-alpha.38`
+### `@mui/x-data-grid@v4.0.0` / `@mui/x-data-grid-pro@v4.0.0`
 
 #### Breaking changes
 
@@ -27,7 +24,8 @@ This is the last alpha release. We are moving to beta in the next release, next 
   The CSS classes `.Mui-odd` and `.Mui-even` were removed from the row.
 
 - Move packages to `@mui` scope and rename `XGrid` to `DataGridPro` (#2341) @oliviertassinari (#2382) @m4theushw
-  As part of the new branding  the pagaces scope changes from `@material-ui` to `@mui`. Renaming from `XGrid` to `DataGridPro` is to align the component and [plan names](https://material-ui.com/components/data-grid/getting-started/#feature-comparison)
+  As part of the new branding, the packages scope changes from `@material-ui` to `@mui`.
+  Renaming from `XGrid` to `DataGridPro` is to align the component and [plan names](https://material-ui.com/components/data-grid/getting-started/#feature-comparison)
 
   ```diff
   -import { DataGrid } from '@material-ui/data-grid';
