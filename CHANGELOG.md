@@ -53,7 +53,7 @@ Big thanks to the 6 contributors who made this release possible. Here are some h
 - [DataGrid] Introduce row editing feature (#2098) @m4theushw
 - [DataGrid] Remove private API from the export (#2299) @oliviertassinari
 - [DataGrid] Replace hard coded classes with `gridClasses` (#2320) @m4theushw
-- [DataGrid] Use `rowIndex` relative to visible rows on keyboard navigation (#2336) @m4theushw
+- [DataGrid] Fix keyboard navigation on filtered rows (#2336) @m4theushw
 
 ### Docs
 
