@@ -5,7 +5,7 @@ import { Logger } from '../logger';
  */
 export interface GridLoggerApi {
   /**
-   * @internal
+   * @ignore - do not document.
    */
   getLogger: (name: string) => Logger;
 }
