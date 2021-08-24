@@ -12,13 +12,13 @@ This is the first official stable release of `DataGrid` and `DataGridPro` 🎉�
 Big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
 
 - 🚀 Introduce the [row editing](https://material-ui.com/components/data-grid/editing/#row-editing) feature (#2098) @m4theushw
-- ⚡️ Rename the name of the `XGrid` component to `DataGridPro`. This should help clarify the products vs. plans separation (#2382) @m4theushw
+- ⚡️ Rename the name of the `XGrid` component to `DataGridPro` (#2382) @m4theushw
 
-  MUI X is a product line on its own. It contains MIT and Commercial software. Removing X from the name of the paid components should help remove a possible confusion: the MIT version of X is meant to be valuable enough for developers to use it, without feeling that it's crippled compared to other OSS alternatives.
+  This should help clarify the products vs. plans separation. MUI X is a product line on its own. It contains MIT and Commercial software. Removing X from the name of the paid components should help remove a possible confusion: the MIT version of X is meant to be valuable enough for developers to use it, without feeling that it's crippled compared to other OSS alternatives.
   The Pro prefix should help make it clear what's MIT and what's not.
-- ✨ Rename the `@material-ui` npm scope to `@mui`. This is part of the ongoing rebranding of the project and company (#2341) @oliviertassinari
+- ✨ Rename the `@material-ui` npm scope to `@mui` (#2341) @oliviertassinari
 
-  Material-UI is our current official name. However, we are going to change it. It's too long to write, read, pronounce. It also associates us top much with Material Design. In the new feature, the whole project/company is moving to https://mui.com/.
+  This is part of the ongoing rebranding of the project and company. Material-UI is our current official name. However, we are going to change it. It's too long to write, read, pronounce. It associates us top much with Material Design. In the near future, the whole project/company is moving to https://mui.com/.
 - 💡 The `api` property was removed from the callback params. To access the API, use the `DataGridPro` (#2312) @DanailH
 
 ### `@mui/x-data-grid@v4.0.0` / `@mui/x-data-grid-pro@v4.0.0`
