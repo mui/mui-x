@@ -12,18 +12,18 @@ export type GridActionsCellItemProps = {
 );
 
 export const GridActionsCellItem = (props: GridActionsCellItemProps) => {
-  const { label, icon, alwaysVisible, ...rest } = props;
+  const { label, icon, alwaysVisible, ...other } = props;
 
   if (alwaysVisible) {
     return (
-      <IconButton size="small" aria-label={label} {...(rest as any)}>
+      <IconButton size="small" aria-label={label} {...(other as any)}>
         {React.cloneElement(icon!, { fontSize: 'small' })}
       </IconButton>
     );
   }
 
   return (
-    <MenuItem {...(rest as any)}>
+    <MenuItem {...(other as any)}>
       {icon && <ListItemIcon>{icon}</ListItemIcon>}
       {label}
     </MenuItem>
