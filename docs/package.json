@@ -71,7 +71,7 @@
     "recast": "^0.20.4",
     "redux": "^4.1.1",
     "redux-logger": "^3.0.6",
-    "rimraf": "^3.0.0",
+    "rimraf": "^3.0.2",
     "webfontloader": "^1.6.28",
     "webpack-bundle-analyzer": "^4.1.0"
   },
