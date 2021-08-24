@@ -20,7 +20,7 @@ Big thanks to the 6 contributors who made this release possible. Here are some h
 
 #### Breaking changes
 
-- [DataGrid] Move packages to `@mui` scope and rename `XGrid` to `DataGridPro` (#2341) @oliviertassinari (#2382) @m4theushw
+- [DataGrid] Move packages to `@mui` scope and rename `XGrid` to `DataGridPro` (#2341, #2382) @m4theushw @oliviertassinari
   As part of the new branding, the packages scope changed from `@material-ui` to `@mui`.
   Renaming from `XGrid` to `DataGridPro` is to align the component and [plan names](https://material-ui.com/components/data-grid/getting-started/#feature-comparison).
 
@@ -47,30 +47,30 @@ Big thanks to the 6 contributors who made this release possible. Here are some h
 
 #### Changes
 
+- [DataGrid] Add TypeScript module augmentation for the theme (#2307) @ZeeshanTamboli
 - [DataGrid] Fix `box-sizing: border-box` leak (#2330) @m4theushw
 - [DataGrid] Fix keyboard navigation header regression (#2342) @oliviertassinari
+- [DataGrid] Introduce row editing feature (#2098) @m4theushw
 - [DataGrid] Remove private API from the export (#2299) @oliviertassinari
 - [DataGrid] Replace hard coded classes with `gridClasses` (#2320) @m4theushw
-- [DataGrid] Introduce row editing feature (#2098) @m4theushw
-- [DataGrid] Add TypeScript module augmentation for the theme (#2307) @ZeeshanTamboli
 - [DataGrid] Use `rowIndex` relative to visible rows on keyboard navigation (#2336) @m4theushw
 
 ### Docs
 
 - [docs] Add `Row & Cell editing` in features list (#2396) @ZeeshanTamboli
 - [docs] Add redirect from `XGrid` to `DataGridPro` (#2389) @m4theushw
+- [docs] Fix `onCellEditCommit` param type (#2390) @ArthurPedroti
 - [docs] Fix docs for `onEditRowsModelChange` prop (#2394) @ZeeshanTamboli
 - [docs] Fix docs links and pagination sentence (#2381) @ZeeshanTamboli
-- [docs] Fix `onCellEditCommit` param type (#2390) @ArthurPedroti
 - [docs] Update the icons for the new branding (#2339) @oliviertassinari
 
 ### Core
 
 - [code] Keep prop-types in the same file (#2345) @oliviertassinari
-- [core] Simplify `useGridColumns` hook (#2343) @oliviertassinari
 - [core] Reduce `options` internal usage (#2318) @flaviendelangle
 - [core] Remove `DataGridPropTypes` (#2432) @flaviendelangle
 - [core] Remove usages of `options.scrollbarSize` (#2317) @flaviendelangle
+- [core] Simplify `useGridColumns` hook (#2343) @oliviertassinari
 - [core] Update `doesSupportTouchActionNone` implementation (#2378) @DanailH
 - [core] Upgrade dependency with the monorepo (#2377) @oliviertassinari
 - [test] Use `.not.to.equal` in favour of `to.not.equal` (#2340) @oliviertassinari
