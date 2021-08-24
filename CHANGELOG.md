@@ -5,7 +5,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## 4.0.0
 
-_Aug 23, 2021_
+_Aug 24, 2021_
 
 The first official stable release of `DataGrid` and `DataGridPro`. It supports `@material-ui/core` v4 and has partial support for v5. From this release on new features for the `DataGrid` and `DataGridPro` components will be released under version `5.0.0-beta.0` and have full support for `@material-ui/core` v5. Support for existing users on v4 will still be provided via patch releases.
 
