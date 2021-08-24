@@ -66,7 +66,7 @@ Big thanks to the 6 contributors who made this release possible. Here are some h
 
 ### Core
 
-- [code] Keep prop-types in the same file (#2345) @oliviertassinari
+- [core] Keep prop-types in the same file (#2345) @oliviertassinari
 - [core] Reduce `options` internal usage (#2318) @flaviendelangle
 - [core] Remove `DataGridPropTypes` (#2432) @flaviendelangle
 - [core] Remove usages of `options.scrollbarSize` (#2317) @flaviendelangle
