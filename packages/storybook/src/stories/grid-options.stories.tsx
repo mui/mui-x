@@ -40,7 +40,7 @@ export const CustomLogger = () => {
   };
   return (
     <div className="grid-container">
-      <DataGridPro rows={rows} columns={columns} logger={logger} logLevel='debug' />
+      <DataGridPro rows={rows} columns={columns} logger={logger} logLevel="debug" />
     </div>
   );
 };

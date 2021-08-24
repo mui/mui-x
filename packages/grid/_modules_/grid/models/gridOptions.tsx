@@ -679,7 +679,7 @@ export const DEFAULT_GRID_PROPS_FROM_OPTIONS = {
   sortingMode: GridFeatureModeConstant.client,
   sortingOrder: ['asc' as const, 'desc' as const, null],
   logger: console,
-  logLevel: process.env.NODE_ENV === 'production' ? 'error' as const : 'warn' as const,
+  logLevel: process.env.NODE_ENV === 'production' ? ('error' as const) : ('warn' as const),
   editMode: 'cell' as const,
 };
 
