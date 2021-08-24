@@ -3,6 +3,7 @@ import clsx from 'clsx';
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
 import { gridDensityHeaderHeightSelector } from '../../hooks/features/density/densitySelector';
 import { useGridApiContext } from '../../hooks/root/useGridApiContext';
+import { gridClasses } from '../../gridClasses';
 
 export type GridOverlayProps = React.HTMLAttributes<HTMLDivElement>;
 
@@ -17,7 +18,7 @@ export const GridOverlay = React.forwardRef<HTMLDivElement, GridOverlayProps>(fu
   return (
     <div
       ref={ref}
-      className={clsx('MuiDataGrid-overlay', className)}
+      className={clsx(gridClasses.overlay, className)}
       style={{ top: headerHeight, ...style }}
       {...other}
     />

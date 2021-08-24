@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 import * as React from 'react';
 import Alert from '@material-ui/lab/Alert';
-import { GridEvents, useGridApiRef, XGrid } from '@material-ui/x-grid';
+import { GridEvents, useGridApiRef, DataGridPro } from '@mui/x-data-grid-pro';
 import {
   randomCreatedDate,
   randomTraderName,
   randomUpdatedDate,
-} from '@material-ui/x-grid-data-generator';
+} from '@mui/x-data-grid-generator';
 
 export default function CatchEditingEventsGrid() {
   const apiRef = useGridApiRef();
@@ -32,7 +32,7 @@ export default function CatchEditingEventsGrid() {
   return (
     <div style={{ width: '100%' }}>
       <div style={{ height: 180, width: '100%' }}>
-        <XGrid rows={rows} columns={columns} apiRef={apiRef} />
+        <DataGridPro rows={rows} columns={columns} apiRef={apiRef} />
       </div>
       {message && (
         <Alert severity="info" style={{ marginTop: 8 }}>

@@ -1,10 +1,10 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { XGrid, GridToolbar } from '@material-ui/x-grid';
-import { useDemoData } from '@material-ui/x-grid-data-generator';
+import { DataGridPro, GridToolbar } from '@mui/x-data-grid-pro';
+import { useDemoData } from '@mui/x-data-grid-generator';
 import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
 import { makeStyles } from '@material-ui/styles';
-import { createMuiTheme } from '@material-ui/core/styles';
+import { createTheme } from '@material-ui/core/styles';
 import FormControl from '@material-ui/core/FormControl';
 import FormGroup from '@material-ui/core/FormGroup';
 import Button from '@material-ui/core/Button';
@@ -12,7 +12,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 
-const defaultTheme = createMuiTheme();
+const defaultTheme = createTheme();
 const useStylesAntDesign = makeStyles(
   (theme) => ({
     root: {
@@ -314,7 +314,7 @@ export default function FullFeaturedDemo() {
         type={type}
         theme={getActiveTheme()}
       />
-      <XGrid
+      <DataGridPro
         className={isAntDesign ? antDesignClasses.root : undefined}
         {...data}
         components={{

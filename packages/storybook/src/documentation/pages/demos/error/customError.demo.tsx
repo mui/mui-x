@@ -1,6 +1,6 @@
-import { GridColumns, GridOverlay, GridRowsProp, XGrid } from '@material-ui/x-grid';
+import { GridColumns, GridOverlay, GridRowsProp, DataGridPro } from '@mui/x-data-grid-pro';
 import * as React from 'react';
-import { randomCreatedDate, randomUpdatedDate } from '@material-ui/x-grid-data-generator';
+import { randomCreatedDate, randomUpdatedDate } from '@mui/x-data-grid-generator';
 
 function CustomErrorOverlay(props) {
   return (
@@ -50,7 +50,7 @@ export default function CustomErrorDemo() {
     },
   ];
   return (
-    <XGrid
+    <DataGridPro
       rows={rows}
       columns={columns}
       autoHeight

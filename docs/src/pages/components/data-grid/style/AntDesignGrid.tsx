@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { DataGrid, useGridSlotComponentProps } from '@material-ui/data-grid';
-import { useDemoData } from '@material-ui/x-grid-data-generator';
-import { createMuiTheme, Theme } from '@material-ui/core/styles';
+import { DataGrid, useGridSlotComponentProps } from '@mui/x-data-grid';
+import { useDemoData } from '@mui/x-data-grid-generator';
+import { createTheme, Theme } from '@material-ui/core/styles';
 import { createStyles, makeStyles } from '@material-ui/styles';
 import Pagination from '@material-ui/lab/Pagination';
 import PaginationItem from '@material-ui/lab/PaginationItem';
@@ -50,7 +50,7 @@ function customCheckbox(theme: Theme) {
   };
 }
 
-const defaultTheme = createMuiTheme();
+const defaultTheme = createTheme();
 const useStyles = makeStyles(
   (theme: Theme) =>
     createStyles({

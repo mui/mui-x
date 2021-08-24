@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { ownerDocument } from '@material-ui/core/utils';
 import { GridEvents } from '../../constants/eventsConstants';
 import { GridApiRef } from '../../models/api/gridApiRef';
 import {
@@ -15,9 +16,23 @@ import { useGridState } from '../features/core/useGridState';
 import { gridDensityRowHeightSelector } from '../features/density/densitySelector';
 import { visibleGridRowCountSelector } from '../features/filter/gridFilterSelector';
 import { gridPaginationSelector } from '../features/pagination/gridPaginationSelector';
-import { optionsSelector } from '../utils/optionsSelector';
 import { useLogger } from '../utils/useLogger';
 import { useGridApiEventHandler } from './useGridApiEventHandler';
+import { GridComponentProps } from '../../GridComponentProps';
+
+function getScrollbarSize(doc: Document, element: HTMLElement): number {
+  const scrollDiv = doc.createElement('div');
+  scrollDiv.style.width = '99px';
+  scrollDiv.style.height = '99px';
+  scrollDiv.style.position = 'absolute';
+  scrollDiv.style.overflow = 'scroll';
+  scrollDiv.className = 'scrollDiv';
+  element.appendChild(scrollDiv);
+  const scrollbarSize = scrollDiv.offsetWidth - scrollDiv.clientWidth;
+  element.removeChild(scrollDiv);
+
+  return scrollbarSize;
+}
 
 /**
  * @requires useOptionsProp (state)
@@ -28,73 +43,89 @@ import { useGridApiEventHandler } from './useGridApiEventHandler';
  * @requires useGridPageSize (state)
  * TODO: Impossible priority - useGridPageSize also needs to be after useGridContainerProps
  */
-export const useGridContainerProps = (apiRef: GridApiRef) => {
+export const useGridContainerProps = (
+  apiRef: GridApiRef,
+  props: Pick<
+    GridComponentProps,
+    'pagination' | 'autoPageSize' | 'pageSize' | 'autoHeight' | 'hideFooter' | 'scrollbarSize'
+  >,
+) => {
   const logger = useLogger('useGridContainerProps');
   const [gridState, setGridState, forceUpdate] = useGridState(apiRef);
   const windowSizesRef = React.useRef<ElementSize>({ width: 0, height: 0 });
-  const options = useGridSelector(apiRef, optionsSelector);
   const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
   const columnsTotalWidth = useGridSelector(apiRef, gridColumnsTotalWidthSelector);
   const visibleRowsCount = useGridSelector(apiRef, visibleGridRowCountSelector);
   const paginationState = useGridSelector(apiRef, gridPaginationSelector);
   const windowRef = apiRef.current.windowRef;
 
+  const rootElement = apiRef.current?.rootElementRef?.current;
+  const hasColumns = !!columnsTotalWidth;
+  const scrollbarSize = React.useMemo(() => {
+    if (props.scrollbarSize != null) {
+      return props.scrollbarSize;
+    }
+
+    if (!hasColumns || !rootElement) {
+      return 0;
+    }
+
+    const doc = ownerDocument(rootElement);
+    const detectedScrollbarSize = getScrollbarSize(doc, rootElement);
+    logger.debug(`Detected scroll bar size ${detectedScrollbarSize}.`);
+
+    return detectedScrollbarSize;
+  }, [rootElement, logger, props.scrollbarSize, hasColumns]);
+
   const getVirtualRowCount = React.useCallback(() => {
     logger.debug('Calculating virtual row count.');
-    if (options.pagination && (!options.autoPageSize || options.pageSize)) {
+    if (props.pagination && (!props.autoPageSize || props.pageSize)) {
       const rowsLeft = visibleRowsCount - paginationState.page * paginationState.pageSize;
       return rowsLeft > paginationState.pageSize ? paginationState.pageSize : rowsLeft;
     }
     return visibleRowsCount;
   }, [
     logger,
-    options.autoPageSize,
-    options.pagination,
-    options.pageSize,
+    props.autoPageSize,
+    props.pagination,
+    props.pageSize,
     paginationState.page,
     paginationState.pageSize,
     visibleRowsCount,
   ]);
 
   const getScrollBar = React.useCallback(
-    (rowsCount: number) => {
+    (rowsCount: number): GridScrollBarState => {
       logger.debug('Calculating scrollbar sizes.');
 
       let hasScrollX = columnsTotalWidth > windowSizesRef.current.width;
-      const scrollBarSize = {
+      const scrollBarsSizes = {
         y: 0,
-        x: hasScrollX ? options.scrollbarSize! : 0,
+        x: hasScrollX ? scrollbarSize : 0,
       };
 
       if (rowsCount === 0) {
-        return { hasScrollX, hasScrollY: false, scrollBarSize };
+        return { hasScrollX, hasScrollY: false, sizes: scrollBarsSizes };
       }
 
       const requiredSize = rowsCount * rowHeight;
 
       const hasScrollY =
-        !options.autoPageSize &&
-        !options.autoHeight &&
-        requiredSize + scrollBarSize.x > windowSizesRef.current.height;
+        !props.autoPageSize &&
+        !props.autoHeight &&
+        requiredSize + scrollBarsSizes.x > windowSizesRef.current.height;
 
-      scrollBarSize.y = hasScrollY ? options.scrollbarSize! : 0;
+      scrollBarsSizes.y = hasScrollY ? scrollbarSize : 0;
 
       // We recalculate the scroll x to consider the size of the y scrollbar.
-      hasScrollX = columnsTotalWidth + scrollBarSize.y > windowSizesRef.current.width;
-      scrollBarSize.x = hasScrollX ? options.scrollbarSize! : 0;
+      hasScrollX = columnsTotalWidth + scrollBarsSizes.y > windowSizesRef.current.width;
+      scrollBarsSizes.x = hasScrollX ? scrollbarSize : 0;
 
-      logger.debug(`Scrollbar size on axis x: ${scrollBarSize.x}, y: ${scrollBarSize.y}`);
+      logger.debug(`Scrollbar size on axis x: ${scrollBarsSizes.x}, y: ${scrollBarsSizes.y}`);
 
-      return { hasScrollX, hasScrollY, scrollBarSize };
+      return { hasScrollX, hasScrollY, sizes: scrollBarsSizes };
     },
-    [
-      logger,
-      columnsTotalWidth,
-      options.autoPageSize,
-      options.autoHeight,
-      rowHeight,
-      options.scrollbarSize,
-    ],
+    [logger, columnsTotalWidth, props.autoPageSize, props.autoHeight, rowHeight, scrollbarSize],
   );
 
   const getViewport = React.useCallback(
@@ -113,14 +144,14 @@ export const useGridContainerProps = (apiRef: GridApiRef) => {
       );
 
       const viewportSize = {
-        width: windowSizesRef.current!.width - scrollBarState.scrollBarSize.y,
-        height: options.autoHeight
+        width: windowSizesRef.current!.width - scrollBarState.sizes.y,
+        height: props.autoHeight
           ? rowsCount * rowHeight
-          : windowSizesRef.current!.height - scrollBarState.scrollBarSize.x,
+          : windowSizesRef.current!.height - scrollBarState.sizes.x,
       };
       return viewportSize;
     },
-    [logger, options.autoHeight, rowHeight, windowRef],
+    [logger, props.autoHeight, rowHeight, windowRef],
   );
 
   const getContainerProps = React.useCallback(
@@ -143,7 +174,7 @@ export const useGridContainerProps = (apiRef: GridApiRef) => {
       // we activate virtualization when we have more than 2 rows outside the viewport
       const isVirtualized = diff > rowHeight * 2;
 
-      if (options.autoPageSize || options.autoHeight || !isVirtualized) {
+      if (props.autoPageSize || props.autoHeight || !isVirtualized) {
         const viewportFitHeightSize = Math.floor(viewportSizes.height / rowHeight);
         const viewportPageSize =
           scrollBarState.hasScrollY || rowsCount < viewportFitHeightSize
@@ -151,7 +182,7 @@ export const useGridContainerProps = (apiRef: GridApiRef) => {
             : viewportFitHeightSize;
 
         const requiredHeight = Math.max(
-          viewportPageSize * rowHeight + (options.autoHeight ? scrollBarState.scrollBarSize.x : 0),
+          viewportPageSize * rowHeight + (props.autoHeight ? scrollBarState.sizes.x : 0),
           1,
         );
 
@@ -221,7 +252,7 @@ export const useGridContainerProps = (apiRef: GridApiRef) => {
       logger.debug('virtualized container props', indexes);
       return indexes;
     },
-    [windowRef, columnsTotalWidth, rowHeight, options.autoPageSize, options.autoHeight, logger],
+    [windowRef, columnsTotalWidth, rowHeight, props.autoPageSize, props.autoHeight, logger],
   );
 
   const updateStateIfChanged = React.useCallback(
@@ -280,7 +311,7 @@ export const useGridContainerProps = (apiRef: GridApiRef) => {
 
   React.useEffect(() => {
     refreshContainerSizes();
-  }, [gridState.columns, gridState.options.hideFooter, refreshContainerSizes, visibleRowsCount]);
+  }, [gridState.columns, props.hideFooter, refreshContainerSizes, visibleRowsCount]);
 
   useGridApiEventHandler(apiRef, GridEvents.debouncedResize, refreshContainerSizes);
 };

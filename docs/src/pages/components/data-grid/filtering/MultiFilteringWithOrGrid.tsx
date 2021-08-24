@@ -1,5 +1,9 @@
-import { GridFilterModel, GridLinkOperator, XGrid } from '@material-ui/x-grid';
-import { useDemoData } from '@material-ui/x-grid-data-generator';
+import {
+  GridFilterModel,
+  GridLinkOperator,
+  DataGridPro,
+} from '@mui/x-data-grid-pro';
+import { useDemoData } from '@mui/x-data-grid-generator';
 import * as React from 'react';
 
 const filterModel: GridFilterModel = {
@@ -19,7 +23,7 @@ export default function MultiFilteringWithOrGrid() {
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <XGrid {...data} filterModel={filterModel} />
+      <DataGridPro {...data} filterModel={filterModel} />
     </div>
   );
 }

@@ -1,11 +1,11 @@
 import * as React from 'react';
-import { ElementSize, XGrid } from '@material-ui/x-grid';
+import { ElementSize, DataGridPro } from '@mui/x-data-grid-pro';
 import '../style/grid-stories.css';
 import { useData } from '../hooks/useData';
 
 export default {
   title: 'X-Grid Tests/Resize',
-  component: XGrid,
+  component: DataGridPro,
   parameters: {
     options: { selectedPanel: 'storybook/storysource/panel' },
     docs: {
@@ -29,7 +29,7 @@ export const ResizeSmallDataset = () => {
         </button>
       </div>
       <div style={{ width: size.width, height: size.height }}>
-        <XGrid rows={data.rows} columns={data.columns} />
+        <DataGridPro rows={data.rows} columns={data.columns} />
       </div>
     </React.Fragment>
   );
@@ -50,7 +50,7 @@ export const ResizeLargeDataset = () => {
         </button>
       </div>
       <div style={{ width: size.width, height: size.height }}>
-        <XGrid rows={data.rows} columns={data.columns} />
+        <DataGridPro rows={data.rows} columns={data.columns} />
       </div>
     </React.Fragment>
   );

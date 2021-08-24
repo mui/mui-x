@@ -22,9 +22,10 @@ export function useGridResizeContainer(
   const resizeFn = React.useCallback(() => {
     gridLogger.debug(`resizing...`);
 
-    apiRef.current.publishEvent(GridEvents.debouncedResize, {
-      containerSize: apiRef.current.getState().containerSizes?.windowSizes,
-    });
+    apiRef.current.publishEvent(
+      GridEvents.debouncedResize,
+      apiRef.current.state.containerSizes?.windowSizes,
+    );
   }, [apiRef, gridLogger]);
 
   const eventsApi: GridEventsApi = { resize: resizeFn };

@@ -1,26 +1,26 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 import * as React from 'react';
-import { createMuiTheme, Theme } from '@material-ui/core/styles';
+import { createTheme, Theme } from '@material-ui/core/styles';
 import { makeStyles } from '@material-ui/styles';
 import {
   DataGrid,
   GridColumns,
   GridEditRowsModel,
   GridRowsProp,
-} from '@material-ui/data-grid';
+} from '@mui/x-data-grid';
 import {
   randomCreatedDate,
   randomEmail,
   randomTraderName,
   randomUpdatedDate,
-} from '@material-ui/x-grid-data-generator';
+} from '@mui/x-data-grid-generator';
 
 // TODO v5: remove
 function getThemePaletteMode(palette: any): string {
   return palette.type || palette.mode;
 }
 
-const defaultTheme = createMuiTheme();
+const defaultTheme = createTheme();
 const useStyles = makeStyles(
   (theme: Theme) => {
     const isDark = getThemePaletteMode(theme.palette) === 'dark';

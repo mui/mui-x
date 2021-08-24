@@ -1,21 +1,21 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 import * as React from 'react';
-import { createMuiTheme, Theme } from '@material-ui/core/styles';
+import { createTheme, Theme } from '@material-ui/core/styles';
 import { makeStyles } from '@material-ui/styles';
 import {
   GridColumns,
   GridEditCellPropsParams,
   GridRowsProp,
   useGridApiRef,
-  XGrid,
-} from '@material-ui/x-grid';
+  DataGridPro,
+} from '@mui/x-data-grid-pro';
 
 // TODO v5: remove
 function getThemePaletteMode(palette: any): string {
   return palette.type || palette.mode;
 }
 
-const defaultTheme = createMuiTheme();
+const defaultTheme = createTheme();
 const useStyles = makeStyles(
   (theme: Theme) => {
     const isDark = getThemePaletteMode(theme.palette) === 'dark';
@@ -96,7 +96,7 @@ export default function ValidateServerNameGrid() {
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <XGrid
+      <DataGridPro
         className={classes.root}
         apiRef={apiRef}
         rows={rows}

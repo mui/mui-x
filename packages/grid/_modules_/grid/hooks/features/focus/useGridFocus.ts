@@ -24,6 +24,10 @@ export const useGridFocus = (apiRef: GridApiRef, props: Pick<GridComponentProps,
 
   const setCellFocus = React.useCallback(
     (id: GridRowId, field: string) => {
+      // The row might have been deleted
+      if (!apiRef.current.getRow(id)) {
+        return;
+      }
       setGridState((state) => {
         logger.debug(`Focusing on cell with id=${id} and field=${field}`);
         return {
@@ -33,13 +37,14 @@ export const useGridFocus = (apiRef: GridApiRef, props: Pick<GridComponentProps,
         };
       });
       forceUpdate();
+      apiRef.current.publishEvent(GridEvents.cellFocusIn, apiRef.current.getCellParams(id, field));
     },
-    [forceUpdate, logger, setGridState],
+    [apiRef, forceUpdate, logger, setGridState],
   );
 
   const setColumnHeaderFocus = React.useCallback(
     (field: string, event?: React.SyntheticEvent) => {
-      const { cell } = apiRef.current.getState().focus;
+      const { cell } = apiRef.current.state.focus;
       if (cell) {
         apiRef.current.publishEvent(
           GridEvents.cellFocusOut,
@@ -108,7 +113,7 @@ export const useGridFocus = (apiRef: GridApiRef, props: Pick<GridComponentProps,
       const cellParams = lastClickedCell.current;
       lastClickedCell.current = null;
 
-      const { cell: focusedCell } = apiRef.current.getState().focus;
+      const { cell: focusedCell } = apiRef.current.state.focus;
 
       if (!focusedCell) {
         if (cellParams) {
@@ -123,6 +128,11 @@ export const useGridFocus = (apiRef: GridApiRef, props: Pick<GridComponentProps,
 
       const cellElement = apiRef.current.getCellElement(focusedCell.id, focusedCell.field);
       if (cellElement?.contains(event.target as HTMLElement)) {
+        return;
+      }
+
+      // The row might have been deleted during the click
+      if (!apiRef.current.getRow(focusedCell.id)) {
         return;
       }
 
@@ -152,7 +162,7 @@ export const useGridFocus = (apiRef: GridApiRef, props: Pick<GridComponentProps,
       if (params.cellMode === 'view') {
         return;
       }
-      const { cell } = apiRef.current.getState().focus;
+      const { cell } = apiRef.current.state.focus;
       if (cell?.id !== params.id || cell?.field !== params.field) {
         apiRef.current.setCellFocus(params.id, params.field);
       }
@@ -170,7 +180,7 @@ export const useGridFocus = (apiRef: GridApiRef, props: Pick<GridComponentProps,
   );
 
   React.useEffect(() => {
-    const { cell } = apiRef.current.getState().focus;
+    const { cell } = apiRef.current.state.focus;
 
     if (cell) {
       const updatedRow = apiRef.current.getRow(cell.id);

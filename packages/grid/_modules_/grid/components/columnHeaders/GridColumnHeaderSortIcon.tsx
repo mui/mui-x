@@ -4,6 +4,7 @@ import IconButton from '@material-ui/core/IconButton';
 import { GridIconSlotsComponent } from '../../models/gridIconSlotsComponent';
 import { GridSortDirection } from '../../models/gridSortModel';
 import { useGridApiContext } from '../../hooks/root/useGridApiContext';
+import { gridClasses } from '../../gridClasses';
 
 export interface GridColumnHeaderSortIconProps {
   direction: GridSortDirection;
@@ -17,7 +18,7 @@ function getIcon(icons: GridIconSlotsComponent, direction: GridSortDirection) {
   } else if (direction === 'desc') {
     Icon = icons!.ColumnSortedDescendingIcon!;
   }
-  return <Icon fontSize="small" className="MuiDataGrid-sortIcon" />;
+  return <Icon fontSize="small" className={gridClasses.sortIcon} />;
 }
 
 export const GridColumnHeaderSortIcon = React.memo(function GridColumnHeaderSortIcon(
@@ -43,7 +44,7 @@ export const GridColumnHeaderSortIcon = React.memo(function GridColumnHeaderSort
   );
 
   return (
-    <div className="MuiDataGrid-iconButtonContainer">
+    <div className={gridClasses.iconButtonContainer}>
       {index != null && (
         <Badge badgeContent={index} color="default">
           {iconButton}

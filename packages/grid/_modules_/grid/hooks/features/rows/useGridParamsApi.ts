@@ -37,7 +37,6 @@ export function useGridParamsApi(apiRef: GridApiRef) {
     (field: string): GridColumnHeaderParams => ({
       field,
       colDef: apiRef.current.getColumn(field),
-      api: apiRef!.current,
     }),
     [apiRef],
   );
@@ -54,7 +53,6 @@ export function useGridParamsApi(apiRef: GridApiRef) {
         id,
         columns: apiRef.current.getAllColumns(),
         row,
-        api: apiRef.current,
         getValue: apiRef.current.getCellValue,
       };
       return params;
@@ -70,8 +68,8 @@ export function useGridParamsApi(apiRef: GridApiRef) {
         throw new Error(`No row with id #${id} found`);
       }
 
-      const cellFocus = gridFocusCellSelector(apiRef.current.getState());
-      const cellTabIndex = gridTabIndexCellSelector(apiRef.current.getState());
+      const cellFocus = gridFocusCellSelector(apiRef.current.state);
+      const cellTabIndex = gridTabIndexCellSelector(apiRef.current.state);
 
       const params: GridValueGetterParams = {
         id,
@@ -101,8 +99,8 @@ export function useGridParamsApi(apiRef: GridApiRef) {
         throw new Error(`No row with id #${id} found`);
       }
 
-      const cellFocus = gridFocusCellSelector(apiRef.current.getState());
-      const cellTabIndex = gridTabIndexCellSelector(apiRef.current.getState());
+      const cellFocus = gridFocusCellSelector(apiRef.current.state);
+      const cellTabIndex = gridTabIndexCellSelector(apiRef.current.state);
 
       const params: GridCellParams = {
         id,
@@ -111,14 +109,13 @@ export function useGridParamsApi(apiRef: GridApiRef) {
         colDef,
         cellMode: apiRef.current.getCellMode(id, field),
         getValue: apiRef.current.getCellValue,
-        api: apiRef.current,
         hasFocus: cellFocus !== null && cellFocus.field === field && cellFocus.id === id,
         tabIndex: cellTabIndex && cellTabIndex.field === field && cellTabIndex.id === id ? 0 : -1,
         value,
         formattedValue: value,
       };
       if (colDef.valueFormatter) {
-        params.formattedValue = colDef.valueFormatter(params);
+        params.formattedValue = colDef.valueFormatter({ ...params, api: apiRef.current });
       }
       params.isEditable = colDef && apiRef.current.isCellEditable(params);
 

@@ -4,6 +4,7 @@ import { GridHeaderCheckbox } from '../../components/columnSelection/GridHeaderC
 import { selectedIdsLookupSelector } from '../../hooks/features/selection/gridSelectionSelector';
 import { GridColDef } from './gridColDef';
 import { GRID_BOOLEAN_COL_DEF } from './gridBooleanColDef';
+import { gridClasses } from '../../gridClasses';
 
 export const gridCheckboxSelectionColDef: GridColDef = {
   ...GRID_BOOLEAN_COL_DEF,
@@ -16,11 +17,11 @@ export const gridCheckboxSelectionColDef: GridColDef = {
   disableColumnMenu: true,
   disableReorder: true,
   valueGetter: (params) => {
-    const selectionLookup = selectedIdsLookupSelector(params.api.getState());
+    const selectionLookup = selectedIdsLookupSelector(params.api.state);
     return selectionLookup[params.id] !== undefined;
   },
   renderHeader: (params) => <GridHeaderCheckbox {...params} />,
   renderCell: (params) => <GridCellCheckboxRenderer {...params} />,
-  cellClassName: 'MuiDataGrid-cellCheckbox',
-  headerClassName: 'MuiDataGrid-columnHeaderCheckbox',
+  cellClassName: gridClasses.cellCheckbox,
+  headerClassName: gridClasses.columnHeaderCheckbox,
 };

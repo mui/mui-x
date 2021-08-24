@@ -76,9 +76,9 @@ export const GridToolbarFilterButton = React.forwardRef<
       <div>
         {apiRef!.current.getLocaleText('toolbarFiltersTooltipActive')(counter)}
         <ul className={classes.list}>
-          {activeFilters.map((item) => ({
+          {activeFilters.map((item, index) => ({
             ...(lookup[item.columnField!] && (
-              <li key={item.id}>
+              <li key={index}>
                 {`${lookup[item.columnField!].headerName || item.columnField}
                   ${getOperatorLabel(item)}
                   ${item.value}`}

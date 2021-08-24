@@ -4,8 +4,8 @@ import clsx from 'clsx';
 import { Story, Meta } from '@storybook/react';
 import {
   GridColDef,
-  XGrid,
-  XGridProps,
+  DataGridPro,
+  DataGridProProps,
   GridPanelProps,
   GridPreferencesPanel,
   GridFooter,
@@ -14,8 +14,8 @@ import {
   useGridApiRef,
   gridPreferencePanelStateSelector,
   GridPreferencePanelsValue,
-  GridStateChangeParams,
-} from '@material-ui/x-grid';
+  GridState,
+} from '@mui/x-data-grid-pro';
 import DoneIcon from '@material-ui/icons/Done';
 import ClearIcon from '@material-ui/icons/Clear';
 import CreateIcon from '@material-ui/icons/Create';
@@ -35,7 +35,7 @@ import {
 
 export default {
   title: 'X-Grid Demos/Custom-Components',
-  component: XGrid,
+  component: DataGridPro,
   parameters: {
     docs: {
       page: null,
@@ -65,11 +65,11 @@ const defaultData = {
   ],
 };
 
-const Template: Story<XGridProps> = (args) => {
+const Template: Story<DataGridProProps> = (args) => {
   const data = useData(500, 50);
   return (
     <div className="grid-container">
-      <XGrid {...data} {...args} />
+      <DataGridPro {...data} {...args} />
     </div>
   );
 };
@@ -325,7 +325,7 @@ export function DynamicIconUpdate() {
         </Button>
       </div>
       <div className="grid-container">
-        <XGrid
+        <DataGridPro
           {...data}
           components={{
             DensityStandardIcon: icon,
@@ -413,8 +413,8 @@ export const OutsideColumnsPanel = () => {
   const apiRef = useGridApiRef();
   const [open, setOpen] = React.useState(false);
 
-  const handleStateChange = React.useCallback((params: GridStateChangeParams) => {
-    const preferencePanelState = gridPreferencePanelStateSelector(params.state);
+  const handleStateChange = React.useCallback((state: GridState) => {
+    const preferencePanelState = gridPreferencePanelStateSelector(state);
     const isColumnsTabOpen =
       preferencePanelState.openedPanelValue === GridPreferencePanelsValue.columns;
     setOpen(isColumnsTabOpen);
@@ -425,7 +425,7 @@ export const OutsideColumnsPanel = () => {
       <GridApiContext.Provider value={apiRef}>
         <SidePanel open={open} />
         <div className="grid-container">
-          <XGrid
+          <DataGridPro
             {...data}
             apiRef={apiRef}
             onStateChange={handleStateChange}

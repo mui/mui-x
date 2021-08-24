@@ -1,10 +1,6 @@
 import * as React from 'react';
-import { GridRowsProp, DataGrid, GridRowId } from '@material-ui/data-grid';
-import {
-  useDemoData,
-  GridData,
-  DataRowModel,
-} from '@material-ui/x-grid-data-generator';
+import { GridRowsProp, DataGrid, GridRowId } from '@mui/x-data-grid';
+import { useDemoData, GridData, DataRowModel } from '@mui/x-data-grid-generator';
 
 interface ServerBasedGridResponse {
   rows: DataRowModel[];

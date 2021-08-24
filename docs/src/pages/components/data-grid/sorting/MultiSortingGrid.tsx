@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { XGrid, GridSortDirection, GridSortModel } from '@material-ui/x-grid';
-import { useDemoData } from '@material-ui/x-grid-data-generator';
+import { DataGridPro, GridSortDirection, GridSortModel } from '@mui/x-data-grid-pro';
+import { useDemoData } from '@mui/x-data-grid-generator';
 
 export default function MultiSortingGrid() {
   const { data } = useDemoData({
@@ -22,7 +22,7 @@ export default function MultiSortingGrid() {
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <XGrid
+      <DataGridPro
         {...data}
         sortModel={sortModel}
         onSortModelChange={(model) => setSortModel(model)}

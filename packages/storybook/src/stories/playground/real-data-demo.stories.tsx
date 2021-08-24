@@ -1,8 +1,8 @@
-import { DataGrid, GridToolbar } from '@material-ui/data-grid';
+import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import * as React from 'react';
 import { Story, Meta, DecoratorFn } from '@storybook/react';
-import { XGridProps, GridPreferencePanelsValue, XGrid } from '@material-ui/x-grid';
-import { useDemoData, DemoDataOptions } from '@material-ui/x-grid-data-generator';
+import { DataGridProProps, GridPreferencePanelsValue, DataGridPro } from '@mui/x-data-grid-pro';
+import { useDemoData, DemoDataOptions } from '@mui/x-data-grid-generator';
 import { useData } from '../../hooks/useData';
 import {
   ColumnMenuComponent,
@@ -16,14 +16,14 @@ import {
 
 export interface PlaygroundProps {
   multipleGrid: boolean;
-  license: 'XGrid' | 'DataGrid';
+  license: 'DataGridPro' | 'DataGrid';
 }
 
 const gridContainer: DecoratorFn = (storyFn) => <div className="grid-container">{storyFn()}</div>;
 
 export default {
   title: 'X-Grid Demos/Playground',
-  component: XGrid,
+  component: DataGridPro,
   argTypes: {
     dataSet: {
       defaultValue: 'Commodity',
@@ -33,10 +33,10 @@ export default {
       },
     },
     license: {
-      defaultValue: 'XGrid',
+      defaultValue: 'DataGridPro',
       control: {
         type: 'inline-radio',
-        options: ['XGrid', 'DataGrid'],
+        options: ['DataGridPro', 'DataGrid'],
       },
     },
     rowLength: {
@@ -65,7 +65,7 @@ export default {
   },
 } as Meta;
 
-const DemoTemplate: Story<XGridProps & DemoDataOptions & PlaygroundProps> = ({
+const DemoTemplate: Story<DataGridProProps & DemoDataOptions & PlaygroundProps> = ({
   rows,
   columns,
   dataSet,
@@ -83,7 +83,7 @@ const DemoTemplate: Story<XGridProps & DemoDataOptions & PlaygroundProps> = ({
     data = demoData.data;
   }
 
-  const Grid = license === 'XGrid' ? XGrid : DataGrid;
+  const Grid = license === 'DataGridPro' ? DataGridPro : DataGrid;
 
   return !multipleGrid ? (
     <Grid rows={data.rows} columns={data.columns} {...(args as unknown)} />

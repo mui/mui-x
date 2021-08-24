@@ -1,7 +1,7 @@
 import Button from '@material-ui/core/Button';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import { makeStyles } from '@material-ui/styles';
-import { DataGrid } from '@material-ui/data-grid';
+import { DataGrid } from '@mui/x-data-grid';
 import Rating from '@material-ui/lab/Rating';
 import {
   GridColDef,
@@ -14,10 +14,10 @@ import {
   GridPreferencePanelsValue,
   GridRowModel,
   useGridApiRef,
-  XGrid,
+  DataGridPro,
   getInitialGridFilterState,
-} from '@material-ui/x-grid';
-import { useDemoData, randomArrayItem } from '@material-ui/x-grid-data-generator';
+} from '@mui/x-data-grid-pro';
+import { useDemoData, randomArrayItem } from '@mui/x-data-grid-generator';
 import { action } from '@storybook/addon-actions';
 import * as React from 'react';
 import { randomInt } from '../data/random-generator';
@@ -25,7 +25,7 @@ import { useData } from '../hooks/useData';
 
 export default {
   title: 'X-Grid Tests/Filter',
-  component: XGrid,
+  component: DataGridPro,
   parameters: {
     options: { selectedPanel: 'storybook/storysource/panel' },
     docs: {
@@ -39,7 +39,7 @@ export function CommodityWithOpenFilters() {
 
   return (
     <div className="grid-container">
-      <XGrid
+      <DataGridPro
         rows={data.rows}
         columns={data.columns}
         checkboxSelection
@@ -58,7 +58,7 @@ export function CommodityWithOpenFiltersAndState() {
 
   return (
     <div className="grid-container">
-      <XGrid
+      <DataGridPro
         rows={data.rows}
         columns={data.columns}
         state={{
@@ -88,7 +88,7 @@ export function WithNewOperator() {
         </Button>
       </div>
       <div className="grid-container">
-        <XGrid
+        <DataGridPro
           rows={data.rows}
           columns={data.columns}
           filterModel={{
@@ -120,7 +120,7 @@ export function CommodityWithNewRowsViaProps() {
         </Button>
       </div>
       <div className="grid-container">
-        <XGrid
+        <DataGridPro
           rows={data.rows}
           columns={data.columns}
           filterModel={{
@@ -164,7 +164,7 @@ export function CommodityWithNewColsViaProps() {
         </Button>
       </div>
       <div className="grid-container">
-        <XGrid
+        <DataGridPro
           rows={data.rows}
           columns={cols}
           filterModel={{
@@ -197,7 +197,7 @@ export function CommodityNoToolbar() {
         </Button>
       </div>
       <div className="grid-container">
-        <XGrid
+        <DataGridPro
           rows={data.rows}
           columns={data.columns}
           filterModel={{
@@ -238,7 +238,7 @@ export function CommodityWithEmptyCells() {
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <XGrid
+      <DataGridPro
         {...data}
         rows={rows}
         filterModel={{
@@ -298,7 +298,7 @@ export function ServerFilterViaProps() {
 
   return (
     <div className="grid-container">
-      <XGrid
+      <DataGridPro
         rows={rows}
         columns={demoServer.data.columns}
         filterMode={'server'}
@@ -362,7 +362,7 @@ export function SimpleServerFilter() {
 
   return (
     <div className="grid-container">
-      <XGrid
+      <DataGridPro
         rows={rows}
         columns={columns}
         filterMode={'server'}
@@ -391,7 +391,7 @@ export function CommodityWithNewRowsViaApi() {
         </Button>
       </div>
       <div className="grid-container">
-        <XGrid
+        <DataGridPro
           rows={data.rows}
           columns={data.columns}
           apiRef={apiRef}
@@ -471,7 +471,7 @@ export function CustomFilterOperator() {
 
   return (
     <div className="grid-container">
-      <XGrid
+      <DataGridPro
         rows={data.rows}
         columns={columns}
         filterModel={{
@@ -524,7 +524,7 @@ export function RatingOperator() {
   }, [data.columns]);
   return (
     <div className="grid-container">
-      <XGrid
+      <DataGridPro
         rows={data.rows}
         columns={columns}
         filterModel={{
@@ -566,7 +566,7 @@ export function ColumnsAlign() {
 
   return (
     <div className="grid-container">
-      <XGrid rows={data.rows} columns={transformedCols} />
+      <DataGridPro rows={data.rows} columns={transformedCols} />
     </div>
   );
 }
@@ -671,7 +671,7 @@ export function DemoMultiFilteringGrid() {
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <XGrid filterModel={demoFilterModel} {...data} checkboxSelection />
+      <DataGridPro filterModel={demoFilterModel} {...data} checkboxSelection />
     </div>
   );
 }
@@ -684,7 +684,7 @@ export function NoResultsSnap() {
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <XGrid
+      <DataGridPro
         {...data}
         filterModel={{
           items: [
@@ -769,7 +769,11 @@ export function MultiFilteringWithOrGrid() {
   }, []);
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <XGrid {...data} onFilterModelChange={handleFilterChange} filterModel={filterModelState} />
+      <DataGridPro
+        {...data}
+        onFilterModelChange={handleFilterChange}
+        filterModel={filterModelState}
+      />
       <p>
         Last filter change: {lastFilterChange.toISOString()} called = {called.current}
       </p>
@@ -806,7 +810,7 @@ export function SimpleModelWithOnChangeControlFilter() {
   }, []);
 
   return (
-    <XGrid
+    <DataGridPro
       rows={simpleRows}
       columns={simpleColumns}
       filterModel={simpleFilterModel}
@@ -840,7 +844,7 @@ export function SimpleModelControlFilter() {
     linkOperator: GridLinkOperator.And,
   });
 
-  return <XGrid rows={simpleRows} columns={simpleColumns} filterModel={simpleFilterModel} />;
+  return <DataGridPro rows={simpleRows} columns={simpleColumns} filterModel={simpleFilterModel} />;
 }
 export function SimpleOnChangeControlFilter() {
   const [simpleColumns] = React.useState([
@@ -869,6 +873,10 @@ export function SimpleOnChangeControlFilter() {
   }, []);
 
   return (
-    <XGrid rows={simpleRows} columns={simpleColumns} onFilterModelChange={handleFilterChange} />
+    <DataGridPro
+      rows={simpleRows}
+      columns={simpleColumns}
+      onFilterModelChange={handleFilterChange}
+    />
   );
 }

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GRID_ROW_CSS_CLASS } from '../../../constants/cssClassesConstants';
+import { gridClasses } from '../../../gridClasses';
 import { GridEvents } from '../../../constants/eventsConstants';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridCellParams } from '../../../models/params/gridCellParams';
@@ -11,6 +11,7 @@ import {
 import { isEnterKey, isNavigationKey, isSpaceKey } from '../../../utils/keyboardUtils';
 import { useLogger } from '../../utils/useLogger';
 import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
+import { GridCellModes } from '../../../models/gridEditRowModel';
 
 /**
  * @requires useGridSelection (method)
@@ -26,7 +27,7 @@ export const useGridKeyboard = (apiRef: GridApiRef): void => {
     (params: GridCellParams, event: React.KeyboardEvent) => {
       const rowEl = findParentElementFromClassName(
         event.target as HTMLDivElement,
-        GRID_ROW_CSS_CLASS,
+        gridClasses.row,
       )! as HTMLElement;
 
       const currentRowIndex = Number(rowEl.getAttribute('data-rowindex'));
@@ -46,7 +47,7 @@ export const useGridKeyboard = (apiRef: GridApiRef): void => {
 
       apiRef.current.publishEvent(GridEvents.cellNavigationKeyDown, params, event);
 
-      const focusCell = apiRef.current.getState().focus.cell!;
+      const focusCell = apiRef.current.state.focus.cell!;
       const rowIndex = apiRef.current.getRowIndex(focusCell.id);
       // We select the rows in between
       const rowIds = Array(Math.abs(rowIndex - selectionFromRowIndex) + 1).fill(
@@ -70,7 +71,7 @@ export const useGridKeyboard = (apiRef: GridApiRef): void => {
 
       // Get the most recent params because the cell mode may have changed by another listener
       const cellParams = apiRef.current.getCellParams(params.id, params.field);
-      const isEditMode = cellParams.cellMode === 'edit';
+      const isEditMode = cellParams.cellMode === GridCellModes.Edit;
       if (isEditMode) {
         return;
       }
@@ -114,7 +115,7 @@ export const useGridKeyboard = (apiRef: GridApiRef): void => {
       }
 
       if (isNavigationKey(event.key) && !isSpaceKey(event.key) && !event.shiftKey) {
-        apiRef.current.publishEvent(GridEvents.cellNavigationKeyDown, params, event);
+        apiRef.current.publishEvent(GridEvents.columnHeaderNavigationKeyDown, params, event);
         return;
       }
 
