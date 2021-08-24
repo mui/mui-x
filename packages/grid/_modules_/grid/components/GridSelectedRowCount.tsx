@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { useGridApiContext } from '../hooks/root/useGridApiContext';
 import { gridClasses } from '../gridClasses';
@@ -9,7 +10,7 @@ interface SelectedRowCountProps {
 
 type GridSelectedRowCountProps = React.HTMLAttributes<HTMLDivElement> & SelectedRowCountProps;
 
-export const GridSelectedRowCount = React.forwardRef<HTMLDivElement, GridSelectedRowCountProps>(
+const GridSelectedRowCount = React.forwardRef<HTMLDivElement, GridSelectedRowCountProps>(
   function GridSelectedRowCount(props, ref) {
     const { className, selectedRowCount, ...other } = props;
     const apiRef = useGridApiContext();
@@ -22,3 +23,13 @@ export const GridSelectedRowCount = React.forwardRef<HTMLDivElement, GridSelecte
     );
   },
 );
+
+GridSelectedRowCount.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  selectedRowCount: PropTypes.number.isRequired,
+} as any;
+
+export { GridSelectedRowCount };

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import { ownerDocument, capitalize } from '@material-ui/core/utils';
 import clsx from 'clsx';
 import { GridEvents } from '../../constants/eventsConstants';
@@ -32,7 +33,7 @@ export interface GridCellProps {
   tabIndex: 0 | -1;
 }
 
-export const GridCell = React.memo(function GridCell(props: GridCellProps) {
+function GridCellRaw(props: GridCellProps) {
   const {
     align,
     className,
@@ -174,4 +175,44 @@ export const GridCell = React.memo(function GridCell(props: GridCellProps) {
       {children != null ? children : valueToRender?.toString()}
     </div>
   );
-});
+}
+
+const GridCell = React.memo(GridCellRaw);
+
+GridCellRaw.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  align: PropTypes.oneOf(['center', 'left', 'right']).isRequired,
+  cellMode: PropTypes.oneOf(['edit', 'view']),
+  children: PropTypes.node,
+  className: PropTypes.string,
+  colIndex: PropTypes.number.isRequired,
+  field: PropTypes.string.isRequired,
+  formattedValue: PropTypes.oneOfType([
+    PropTypes.instanceOf(Date),
+    PropTypes.number,
+    PropTypes.object,
+    PropTypes.string,
+    PropTypes.bool,
+  ]),
+  hasFocus: PropTypes.bool,
+  height: PropTypes.number.isRequired,
+  isEditable: PropTypes.bool,
+  isSelected: PropTypes.bool,
+  rowId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  rowIndex: PropTypes.number.isRequired,
+  showRightBorder: PropTypes.bool,
+  tabIndex: PropTypes.oneOf([-1, 0]).isRequired,
+  value: PropTypes.oneOfType([
+    PropTypes.instanceOf(Date),
+    PropTypes.number,
+    PropTypes.object,
+    PropTypes.string,
+    PropTypes.bool,
+  ]),
+  width: PropTypes.number.isRequired,
+} as any;
+
+export { GridCell };

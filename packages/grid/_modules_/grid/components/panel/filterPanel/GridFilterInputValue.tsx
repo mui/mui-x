@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import TextField, { TextFieldProps } from '@material-ui/core/TextField';
 // @ts-expect-error fixed in Material-UI v5, types definitions were added.
 import { unstable_useId as useId } from '@material-ui/core/utils';
@@ -28,7 +29,7 @@ export interface GridTypeFilterInputValueProps extends GridFilterInputValueProps
   type?: 'text' | 'number' | 'date' | 'datetime-local' | 'singleSelect';
 }
 
-export function GridFilterInputValue(props: GridTypeFilterInputValueProps & TextFieldProps) {
+function GridFilterInputValue(props: GridTypeFilterInputValueProps & TextFieldProps) {
   const { item, applyValue, type, apiRef, ...others } = props;
   const filterTimeout = React.useRef<any>();
   const [filterValueState, setFilterValueState] = React.useState(item.value || '');
@@ -98,3 +99,20 @@ export function GridFilterInputValue(props: GridTypeFilterInputValueProps & Text
     />
   );
 }
+
+GridFilterInputValue.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  apiRef: PropTypes.any.isRequired,
+  applyValue: PropTypes.func.isRequired,
+  item: PropTypes.shape({
+    columnField: PropTypes.string,
+    id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    operatorValue: PropTypes.string,
+    value: PropTypes.any,
+  }).isRequired,
+} as any;
+
+export { GridFilterInputValue };

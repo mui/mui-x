@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { GridEvents } from '../constants/eventsConstants';
 import { useGridApiEventHandler } from '../hooks/root/useGridApiEventHandler';
@@ -14,7 +15,7 @@ interface ScrollAreaProps {
   scrollDirection: 'left' | 'right';
 }
 
-export const GridScrollArea = React.memo(function GridScrollArea(props: ScrollAreaProps) {
+function GridScrollAreaRaw(props: ScrollAreaProps) {
   const { scrollDirection } = props;
   const rootRef = React.useRef<HTMLDivElement>(null);
   const api = useGridApiContext();
@@ -76,4 +77,16 @@ export const GridScrollArea = React.memo(function GridScrollArea(props: ScrollAr
       onDragOver={handleDragOver}
     />
   ) : null;
-});
+}
+
+GridScrollAreaRaw.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  scrollDirection: PropTypes.oneOf(['left', 'right']).isRequired,
+} as any;
+
+const GridScrollArea = React.memo(GridScrollAreaRaw);
+
+export { GridScrollArea };

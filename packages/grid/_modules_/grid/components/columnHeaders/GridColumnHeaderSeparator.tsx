@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { useGridApiContext } from '../../hooks/root/useGridApiContext';
 import { gridClasses } from '../../gridClasses';
@@ -10,9 +11,7 @@ export interface GridColumnHeaderSeparatorProps extends React.HTMLAttributes<HTM
   height: number;
 }
 
-export const GridColumnHeaderSeparator = React.memo(function GridColumnHeaderSeparator(
-  props: GridColumnHeaderSeparatorProps,
-) {
+function GridColumnHeaderSeparatorRaw(props: GridColumnHeaderSeparatorProps) {
   const { resizable, resizing, height, ...other } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
@@ -37,4 +36,18 @@ export const GridColumnHeaderSeparator = React.memo(function GridColumnHeaderSep
       <ColumnResizeIcon className={gridClasses.iconSeparator} />
     </div>
   );
-});
+}
+
+const GridColumnHeaderSeparator = React.memo(GridColumnHeaderSeparatorRaw);
+
+GridColumnHeaderSeparatorRaw.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  height: PropTypes.number.isRequired,
+  resizable: PropTypes.bool.isRequired,
+  resizing: PropTypes.bool.isRequired,
+} as any;
+
+export { GridColumnHeaderSeparator };

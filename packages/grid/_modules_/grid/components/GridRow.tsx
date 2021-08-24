@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { GRID_CSS_CLASS_PREFIX } from '../constants/cssClassesConstants';
 import { GridEvents } from '../constants/eventsConstants';
@@ -17,7 +18,7 @@ export interface GridRowProps {
   children: React.ReactNode;
 }
 
-export function GridRow(props: GridRowProps) {
+function GridRow(props: GridRowProps) {
   const { selected, id, rowIndex, children } = props;
   const ariaRowIndex = rowIndex + 2; // 1 for the header row and 1 as it's 1 based
   const apiRef = useGridApiContext();
@@ -87,3 +88,16 @@ export function GridRow(props: GridRowProps) {
     </div>
   );
 }
+
+GridRow.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  children: PropTypes.node,
+  id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  rowIndex: PropTypes.number.isRequired,
+  selected: PropTypes.bool.isRequired,
+} as any;
+
+export { GridRow };

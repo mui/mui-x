@@ -30,7 +30,10 @@ async function generateProptypes(program: ttp.ts.Program, sourceFile: string) {
     ].join('\n'),
     reconcilePropTypes: (prop, previous, generated) => {
       const usedCustomValidator = previous !== undefined && !previous.startsWith('PropTypes');
-      return usedCustomValidator ? previous! : generated;
+      const ignoreGenerated =
+        previous !== undefined &&
+        previous.startsWith('PropTypes /* @typescript-to-proptypes-ignore */');
+      return usedCustomValidator || ignoreGenerated ? previous! : generated;
     },
     shouldInclude: ({ component, prop }) => {
       if (['children', 'state'].includes(prop.name) && component.name.startsWith('DataGrid')) {
@@ -58,47 +61,44 @@ async function generateProptypes(program: ttp.ts.Program, sourceFile: string) {
   await fse.writeFile(sourceFile, correctedLineEndings);
 }
 
+function findComponents(folderPath) {
+  const files = fse.readdirSync(folderPath, { withFileTypes: true });
+  return files.reduce((acc, file) => {
+    if (file.isDirectory()) {
+      const filesInFolder = findComponents(path.join(folderPath, file.name));
+      return [...acc, ...filesInFolder];
+    }
+    if (/[A-Z]+.*\.tsx/.test(file.name)) {
+      return [...acc, path.join(folderPath, file.name)];
+    }
+    return acc;
+  }, []);
+}
+
 async function run() {
-  const files = [
+  const componentsToAddPropTypes = [
     path.resolve(__dirname, '../../packages/grid/data-grid/src/DataGrid.tsx'),
     path.resolve(__dirname, '../../packages/grid/x-grid/src/DataGridPro.tsx'),
-    // TODO discover the components below based on if they use makeStyles()
-    path.resolve(__dirname, '../../packages/grid/_modules_/grid/components/GridPagination.tsx'),
-    path.resolve(__dirname, '../../packages/grid/_modules_/grid/components/menu/GridMenu.tsx'),
-    path.resolve(
-      __dirname,
-      '../../packages/grid/_modules_/grid/components/panel/GridColumnsPanel.tsx',
-    ),
-    path.resolve(__dirname, '../../packages/grid/_modules_/grid/components/panel/GridPanel.tsx'),
-    path.resolve(
-      __dirname,
-      '../../packages/grid/_modules_/grid/components/panel/GridPanelContent.tsx',
-    ),
-    path.resolve(
-      __dirname,
-      '../../packages/grid/_modules_/grid/components/panel/GridPanelFooter.tsx',
-    ),
-    path.resolve(
-      __dirname,
-      '../../packages/grid/_modules_/grid/components/panel/GridPanelHeader.tsx',
-    ),
-    path.resolve(
-      __dirname,
-      '../../packages/grid/_modules_/grid/components/panel/GridPanelWrapper.tsx',
-    ),
-    path.resolve(
-      __dirname,
-      '../../packages/grid/_modules_/grid/components/panel/filterPanel/GridFilterForm.tsx',
-    ),
-    path.resolve(
-      __dirname,
-      '../../packages/grid/_modules_/grid/components/toolbar/GridToolbarFilterButton.tsx',
-    ),
   ];
 
-  const program = ttp.createTSProgram(files, tsconfig);
+  const indexPath = path.resolve(__dirname, '../../packages/grid/_modules_/index.ts');
+  const program = ttp.createTSProgram([...componentsToAddPropTypes, indexPath], tsconfig);
+  const checker = program.getTypeChecker();
+  const indexFile = program.getSourceFile(indexPath)!;
+  const symbol = checker.getSymbolAtLocation(indexFile);
+  const exports = checker.getExportsOfModule(symbol!);
 
-  const promises = files.map<Promise<void>>(async (file) => {
+  const componentsFolder = path.resolve(__dirname, '../../packages/grid/_modules_/grid/components');
+  const components = findComponents(componentsFolder);
+  components.forEach((component) => {
+    const componentName = path.basename(component).replace('.tsx', '');
+    const isExported = exports.find((e) => e.name === componentName);
+    if (isExported) {
+      componentsToAddPropTypes.push(component);
+    }
+  });
+
+  const promises = componentsToAddPropTypes.map<Promise<void>>(async (file) => {
     try {
       await generateProptypes(program, file);
     } catch (error) {
