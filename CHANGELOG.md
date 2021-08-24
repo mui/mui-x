@@ -20,10 +20,7 @@ Big thanks to the 6 contributors who made this release possible. Here are some h
 
 #### Breaking changes
 
-- [DataGrid] Remove unused row CSS classes (#2327) @ZeeshanTamboli
-  The CSS classes `.Mui-odd` and `.Mui-even` were removed from the row.
-
-- Move packages to `@mui` scope and rename `XGrid` to `DataGridPro` (#2341) @oliviertassinari (#2382) @m4theushw
+- [DataGrid] Move packages to `@mui` scope and rename `XGrid` to `DataGridPro` (#2341) @oliviertassinari (#2382) @m4theushw
   As part of the new branding, the packages scope changed from `@material-ui` to `@mui`.
   Renaming from `XGrid` to `DataGridPro` is to align the component and [plan names](https://material-ui.com/components/data-grid/getting-started/#feature-comparison).
 
@@ -44,6 +41,9 @@ Big thanks to the 6 contributors who made this release possible. Here are some h
   -<DataGridPro onColumnResize={(params, event) => console.log(params.api)} />
   +<DataGridPro onColumnResize={(params, event, details) => console.log(details.api)} />
   ```
+
+- [DataGrid] Remove unused row CSS classes (#2327) @ZeeshanTamboli
+  The CSS classes `.Mui-odd` and `.Mui-even` were removed from the row.
 
 #### Changes
 
