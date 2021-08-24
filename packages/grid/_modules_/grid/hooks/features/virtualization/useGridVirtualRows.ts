@@ -22,7 +22,7 @@ import { gridPaginationSelector } from '../pagination/gridPaginationSelector';
 import { gridRowCountSelector } from '../rows/gridRowsSelector';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
 import { useNativeEventListener } from '../../root/useNativeEventListener';
-import { useLogger } from '../../utils/useLogger';
+import { useGridLogger } from '../../utils/useGridLogger';
 import { useGridScrollFn } from '../../utils/useGridScrollFn';
 import { InternalRenderingState } from './renderingState';
 import { gridDensityRowHeightSelector } from '../density/densitySelector';
@@ -74,7 +74,7 @@ export const useGridVirtualRows = (
     'pagination' | 'paginationMode' | 'columnBuffer' | 'disableExtendRowFullWidth'
   >,
 ): void => {
-  const logger = useLogger('useGridVirtualRows');
+  const logger = useGridLogger(apiRef, 'useGridVirtualRows');
   const colRef = apiRef.current.columnHeadersElementRef!;
   const windowRef = apiRef.current.windowRef!;
   const renderingZoneRef = apiRef.current.renderingZoneRef!;
@@ -89,7 +89,7 @@ export const useGridVirtualRows = (
   const containerPropsRef = React.useRef<GridContainerProps | null>(null);
   const lastScrollLeftRef = React.useRef<number>(0);
 
-  const [scrollTo] = useGridScrollFn(renderingZoneRef, colRef);
+  const [scrollTo] = useGridScrollFn(apiRef, renderingZoneRef, colRef);
 
   const setRenderingState = React.useCallback(
     (newState: Partial<InternalRenderingState>) => {

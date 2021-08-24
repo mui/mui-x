@@ -19,7 +19,7 @@ import { isDesc, nextGridSortDirection } from '../../../utils/sortingUtils';
 import { isEnterKey } from '../../../utils/keyboardUtils';
 import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
-import { useLogger } from '../../utils/useLogger';
+import { useGridLogger } from '../../utils/useGridLogger';
 import { allGridColumnsSelector } from '../columns/gridColumnsSelector';
 import { useGridSelector } from '../core/useGridSelector';
 import { useGridState } from '../core/useGridState';
@@ -38,7 +38,7 @@ export const useGridSorting = (
     | 'disableMultipleColumnsSorting'
   >,
 ) => {
-  const logger = useLogger('useGridSorting');
+  const logger = useGridLogger(apiRef, 'useGridSorting');
 
   const [gridState, setGridState, forceUpdate] = useGridState(apiRef);
   const rowCount = useGridSelector(apiRef, gridRowCountSelector);
