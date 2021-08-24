@@ -11,7 +11,7 @@ _Aug 24, 2021_
 
 We have been iterating on the component for [18 months](https://github.com/mui-org/material-ui-x/commit/705cb0f387b5f3aa056bf40c4183a2342b317447). With the latest introduction of the [row edit](https://material-ui.com/components/data-grid/editing/#row-editing) feature, a load of bug fixes, and a polish of the documentation. We believe the component deserves a stable release.
 
-The MUI X v4.0.0 supports [MUI Core](https://github.com/mui-org/material-ui) v4 and has partial support for v5-beta. With the soon-to-be-released v5 version of the core components, we are moving ongoing work to the v5 release line (Core and X).
+The MUI X v4.0.0 release supports [MUI Core](https://github.com/mui-org/material-ui) v4 and has partial support for v5-beta. With the soon-to-be-released v5 version of the core components, we are moving ongoing work to the v5 release line (Core and X).
 The support for existing developers on MUI v4 might be degraded going forward, we encourage you to migrate to MUI Core v5-beta and soon MUI X v5-beta.
 
 Big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
