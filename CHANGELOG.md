@@ -51,7 +51,6 @@ Big thanks to the 6 contributors who made this release possible. Here are some h
 - [DataGrid] Fix `box-sizing: border-box` leak (#2330) @m4theushw
 - [DataGrid] Fix keyboard navigation header regression (#2342) @oliviertassinari
 - [DataGrid] Introduce row editing feature (#2098) @m4theushw
-- [DataGrid] Remove private API from the export (#2299) @oliviertassinari
 - [DataGrid] Replace hard coded classes with `gridClasses` (#2320) @m4theushw
 - [DataGrid] Fix keyboard navigation on filtered rows (#2336) @m4theushw
 
@@ -69,6 +68,7 @@ Big thanks to the 6 contributors who made this release possible. Here are some h
 - [core] Keep prop-types in the same file (#2345) @oliviertassinari
 - [core] Reduce `options` internal usage (#2318) @flaviendelangle
 - [core] Remove `DataGridPropTypes` (#2432) @flaviendelangle
+- [core] Remove private API from the export (#2299) @oliviertassinari
 - [core] Remove usages of `options.scrollbarSize` (#2317) @flaviendelangle
 - [core] Simplify `useGridColumns` hook (#2343) @oliviertassinari
 - [core] Update `doesSupportTouchActionNone` implementation (#2378) @DanailH
