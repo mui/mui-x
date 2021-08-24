@@ -7,13 +7,16 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 _Aug 24, 2021_
 
-This is the first official stable release of `DataGrid` and `DataGridPro`. It supports `@material-ui/core` v4 and has partial support for v5. From this release on new features for the `DataGrid` and `DataGridPro` components will be released under version `5.0.0-beta.0` and will have full support for `@material-ui/core` v5. Support for existing users on v4 will still be provided via patch releases.
+This is the first official stable release of `DataGrid` and `DataGridPro` 🎉🎉. It supports `@material-ui/core` v4 and has partial support for v5. From this release on new features for the `DataGrid` and `DataGridPro` components will be released under version `5.0.0-beta.0` and will have full support for `@material-ui/core` v5. Support for existing users on v4 will still be provided via patch releases.
 
 Big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
 
 - 🚀 Introduce the [row editing](https://material-ui.com/components/data-grid/editing/#row-editing) feature (#2098) @m4theushw
-- ⚡️ Rename `XGrid` to `DataGridPro` as part of the new branding (#2382) @m4theushw
-- ✨ Move packages to `@mui` scope as part of the new branding (#2341) @oliviertassinari
+- ⚡️ Rename the name of the `XGrid` component to `DataGridPro`. This should help clarify the products vs. plans separation (#2382) @m4theushw
+  MUI X is a product line on its own. It contains MIT and Commercial software. Removing X from the name of the paid components should help remove a possible confusion: the MIT version of X is meant to be valuable enough for developers to us it, without feeling that it's crippled compared to other OSS alternatives.
+  The Pro prefix should help make it clear what's MIT and what's not.
+- ✨ Rename the `@material-ui` npm scope to `@mui`. This is part of the ongoing rebranding of the project and company (#2341) @oliviertassinari
+  Material-UI is our current official name. However, we are going to change it. It's too long to write, read, pronounce. It also associate us to much to Material Design. In the new feature, the whole project/company is moving to https://mui.com/.
 - 💡 The `api` property was removed from the callback params. To access the API, use the `DataGridPro` (#2312) @DanailH
 
 ### `@mui/x-data-grid@v4.0.0` / `@mui/x-data-grid-pro@v4.0.0`
@@ -21,8 +24,7 @@ Big thanks to the 6 contributors who made this release possible. Here are some h
 #### Breaking changes
 
 - [DataGrid] Move packages to `@mui` scope and rename `XGrid` to `DataGridPro` (#2341, #2382) @m4theushw @oliviertassinari
-  As part of the new branding, the packages scope changed from `@material-ui` to `@mui`.
-  Renaming from `XGrid` to `DataGridPro` is to align the component and [plan names](https://material-ui.com/components/data-grid/getting-started/#feature-comparison).
+  You can find in the above highlight section why we are making these name changes. You can migrate following these steps:
 
   ```diff
   -import { DataGrid } from '@material-ui/data-grid';
@@ -38,8 +40,10 @@ Big thanks to the 6 contributors who made this release possible. Here are some h
   To access the API, use the `DataGridPro` and get it from the new `details` param.
 
   ```diff
-  -<DataGridPro onColumnResize={(params, event) => console.log(params.api)} />
-  +<DataGridPro onColumnResize={(params, event, details) => console.log(details.api)} />
+   <DataGridPro
+  -  onColumnResize={(params, event) => console.log(params.api)}
+  +  onColumnResize={(params, event, details) => console.log(details.api)}
+   />
   ```
 
 - [DataGrid] Remove unused row CSS classes (#2327) @ZeeshanTamboli
