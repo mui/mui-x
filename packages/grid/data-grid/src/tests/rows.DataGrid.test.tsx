@@ -139,7 +139,7 @@ describe('<DataGrid /> - Rows', () => {
       expect(getActions.args[0][0].row).to.deep.equal({ id: 1 });
     });
 
-    it('should always show the actions marked as alwaysVisible', () => {
+    it('should always show the actions not marked as showInMenu', () => {
       render(
         <div style={{ width: 300, height: 300 }}>
           <DataGrid
@@ -150,8 +150,8 @@ describe('<DataGrid /> - Rows', () => {
                 field: 'actions',
                 type: 'actions',
                 getActions: () => [
-                  <GridActionsCellItem icon={<span />} label="delete" alwaysVisible />,
-                  <GridActionsCellItem label="print" />,
+                  <GridActionsCellItem icon={<span />} label="delete" />,
+                  <GridActionsCellItem label="print" showInMenu />,
                 ],
               },
             ]}
@@ -162,7 +162,7 @@ describe('<DataGrid /> - Rows', () => {
       expect(screen.queryByText('print')).to.equal(null);
     });
 
-    it('should show in a menu the actions not marked as alwaysVisible', async () => {
+    it('should show in a menu the actions marked as showInMenu', async () => {
       render(
         <div style={{ width: 300, height: 300 }}>
           <DataGrid
@@ -172,7 +172,7 @@ describe('<DataGrid /> - Rows', () => {
               {
                 field: 'actions',
                 type: 'actions',
-                getActions: () => [<GridActionsCellItem label="print" />],
+                getActions: () => [<GridActionsCellItem label="print" showInMenu />],
               },
             ]}
           />

@@ -278,7 +278,7 @@ However, some types require additional properties to be set to make them work co
     type: 'actions',
     getActions: (params: GridRowParams) => [
       <GridActionsCellItem icon={...} label="Delete">,
-      <GridActionsCellItem icon={...} label="Print" alwaysVisible>,
+      <GridActionsCellItem icon={...} label="Print" showInMenu>,
     ]
   }
   ```

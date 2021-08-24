@@ -7,14 +7,14 @@ export type GridActionsCellItemProps = {
   label: string;
   icon?: React.ReactElement;
 } & (
-  | ({ alwaysVisible: true; icon: React.ReactElement } & IconButtonProps)
-  | ({ alwaysVisible?: false } & MenuItemProps)
+  | ({ showInMenu?: false; icon: React.ReactElement } & IconButtonProps)
+  | ({ showInMenu: true } & MenuItemProps)
 );
 
 export const GridActionsCellItem = (props: GridActionsCellItemProps) => {
-  const { label, icon, alwaysVisible, ...other } = props;
+  const { label, icon, showInMenu, ...other } = props;
 
-  if (alwaysVisible) {
+  if (!showInMenu) {
     return (
       <IconButton size="small" aria-label={label} {...(other as any)}>
         {React.cloneElement(icon!, { fontSize: 'small' })}

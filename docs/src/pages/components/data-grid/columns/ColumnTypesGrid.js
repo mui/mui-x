@@ -84,7 +84,6 @@ export default function ColumnTypesGrid() {
             icon={<DeleteIcon />}
             label="Delete"
             onClick={deleteUser(params.id)}
-            alwaysVisible
           />,
           <GridActionsCellItem
             icon={<SecurityIcon />}

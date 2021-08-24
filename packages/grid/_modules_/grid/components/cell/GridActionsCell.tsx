@@ -30,13 +30,13 @@ export const GridActionsCell = (props: GridRenderCellParams) => {
   };
 
   const options = colDef.getActions(api.getRowParams(id));
-  const alwaysVisibleButtons = options.filter((option) => option.props.alwaysVisible);
-  const notAlwaysVisibleButtons = options.filter((option) => !option.props.alwaysVisible);
+  const iconButtons = options.filter((option) => !option.props.showInMenu);
+  const menuButtons = options.filter((option) => option.props.showInMenu);
 
   return (
     <div className={gridClasses.actionsCell}>
-      {alwaysVisibleButtons.map((button, index) => React.cloneElement(button, { key: index }))}
-      {notAlwaysVisibleButtons.length > 0 && (
+      {iconButtons.map((button, index) => React.cloneElement(button, { key: index }))}
+      {menuButtons.length > 0 && (
         <IconButton
           id={buttonId}
           aria-label={api.getLocaleText('actionsCellMore')}
@@ -49,7 +49,7 @@ export const GridActionsCell = (props: GridRenderCellParams) => {
           <MoreVertIcon fontSize="small" />
         </IconButton>
       )}
-      {notAlwaysVisibleButtons.length > 0 && (
+      {menuButtons.length > 0 && (
         <GridMenu
           id={menuId}
           onClickAway={hideMenu}
@@ -60,9 +60,7 @@ export const GridActionsCell = (props: GridRenderCellParams) => {
           aria-labelledby={buttonId}
         >
           <MenuList className="MuiDataGrid-gridMenuList">
-            {notAlwaysVisibleButtons.map((button, index) =>
-              React.cloneElement(button, { key: index }),
-            )}
+            {menuButtons.map((button, index) => React.cloneElement(button, { key: index }))}
           </MenuList>
         </GridMenu>
       )}
