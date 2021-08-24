@@ -47,11 +47,11 @@ Big thanks to the 6 contributors who made this release possible. Here are some h
 
 #### Changes
 
+- [DataGrid] Add `gridClasses` API instead of hard coded classes (#2320) @m4theushw
+- [DataGrid] Add row editing feature (#2098) @m4theushw
 - [DataGrid] Add TypeScript module augmentation for the theme (#2307) @ZeeshanTamboli
 - [DataGrid] Fix `box-sizing: border-box` leak (#2330) @m4theushw
 - [DataGrid] Fix keyboard navigation header regression (#2342) @oliviertassinari
-- [DataGrid] Introduce row editing feature (#2098) @m4theushw
-- [DataGrid] Replace hard coded classes with `gridClasses` (#2320) @m4theushw
 - [DataGrid] Fix keyboard navigation on filtered rows (#2336) @m4theushw
 
 ### Docs
