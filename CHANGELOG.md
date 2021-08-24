@@ -23,7 +23,7 @@ Big thanks to the 6 contributors who made this release possible. Here are some h
   The Pro prefix should help make it clear what's MIT and what's not.
 - ✨ Rename the `@material-ui` npm scope to `@mui` (#2341) @oliviertassinari
 
-  This is part of the ongoing rebranding of the project and company. Material-UI is our current official name. However, we are going to change it. It's too long to write, read, pronounce. It associates us top much with Material Design. In the near future, the whole project/company is moving to https://mui.com/.
+  This is part of the ongoing rebranding of the project and company. Material-UI is our current official name. However, we are going to change it. It's too long to write, read, pronounce. It associates us top much with Material Design. In the near future, the whole project/company is moving to MUI and https://mui.com/.
 - 💡 The `api` property was removed from the callback params. To access the API, use the `DataGridPro` (#2312) @DanailH
 
 ### `@mui/x-data-grid@v4.0.0` / `@mui/x-data-grid-pro@v4.0.0`
