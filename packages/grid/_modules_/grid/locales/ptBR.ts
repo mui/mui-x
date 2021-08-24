@@ -97,6 +97,9 @@ const ptBRGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: 'sim',
   booleanCellFalseLabel: 'não',
+
+  // Actions cell more text
+  actionsCellMore: 'mais',
 };
 
 export const ptBR: Localization = getGridLocalization(ptBRGrid, ptBRCore);

@@ -93,6 +93,9 @@ const frFRGrid: Partial<GridLocaleText> = {
 
   // Checkbox selection text
   checkboxSelectionHeaderName: 'Sélection',
+
+  // Actions cell more text
+  // actionsCellMore: 'more',
 };
 
 export const frFR: Localization = getGridLocalization(frFRGrid, frFRCore);
