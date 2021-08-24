@@ -13,8 +13,8 @@ Big thanks to the 6 contributors who made this release possible. Here are some h
 
 - 🚀 Introduce the [row editing](https://material-ui.com/components/data-grid/editing/#row-editing) feature (#2098) @m4theushw
 - ⚛️ Remove unused row CSS classes (#2327) @ZeeshanTamboli
-- ⚡️ Rename `XGrid` to `DataGridPro` (#2382) @m4theushw
-- ✨ Move packages to `@mui` scope (#2341) @oliviertassinari
+- ⚡️ Rename `XGrid` to `DataGridPro` as part of the new branding (#2382) @m4theushw
+- ✨ Move packages to `@mui` scope as part of the new branding (#2341) @oliviertassinari
 - 💡 The `api` property was removed from the callback params. To access the API, use the `DataGridPro` (#2312) @DanailH
 
 This is the last alpha release. We are moving to beta in the next release, next week.
@@ -26,14 +26,8 @@ This is the last alpha release. We are moving to beta in the next release, next 
 - [DataGrid] Remove unused row CSS classes (#2327) @ZeeshanTamboli
   The CSS classes `.Mui-odd` and `.Mui-even` were removed from the row.
 
-- [DataGridPro] Rename `XGrid` to `DataGridPro` (#2382) @m4theushw
-
-  ```diff
-  -import { XGrid } from '@material-ui/x-grid';
-  +import { DataGridPro } from '@mui/x-data-grid-pro';
-  ```
-
-- [core] Move packages to `@mui` scope (#2341) @oliviertassinari
+- Move packages to `@mui` scope and rename `XGrid` to `DataGridPro` (#2341) @oliviertassinari (#2382) @m4theushw
+  As part of the new branding  the pagaces scope changes from `@material-ui` to `@mui`. Renaming from `XGrid` to `DataGridPro` is to align the component and [plan names](https://material-ui.com/components/data-grid/getting-started/#feature-comparison)
 
   ```diff
   -import { DataGrid } from '@material-ui/data-grid';
@@ -41,8 +35,8 @@ This is the last alpha release. We are moving to beta in the next release, next 
   ```
 
   ```diff
-  -import { LicenseInfo } from '@material-ui/x-grid';
-  +import { LicenseInfo } from '@mui/x-data-grid-pro';
+  -import { XGrid } from '@material-ui/x-grid';
+  +import { DataGridPro } from '@mui/x-data-grid-pro';
   ```
 
 - [DataGrid] The `api` property was removed from the callback params (#2312) @DanailH
