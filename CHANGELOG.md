@@ -7,7 +7,12 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 _Aug 24, 2021_
 
-This is the first official stable release of `DataGrid` and `DataGridPro` 🎉🎉. It supports `@material-ui/core` v4 and has partial support for v5. From this release on new features for the `DataGrid` and `DataGridPro` components will be released under version `5.0.0-beta.0` and will have full support for `@material-ui/core` v5. Support for existing users on v4 will still be provided via patch releases.
+🎉 This is the first official stable release of the data grid component 🎉!
+
+We have been iterating on the component for 18 months. With the latest introduction of the [row edit feature](https://material-ui.com/components/data-grid/editing/#row-editing), a load of bug fixes, and a polish of the documentation. We believe the component deserves a stable release.
+
+The MUI X v4 supports `@material-ui/core` v4 and has partial support for [MUI Core](https://github.com/mui-org/material-ui) v5. With the soon-to-be-released v5 version of the core components, we are moving ongoing work to the v5 release line (Core and X).
+The support for existing developers on MUI v4 might be degraded going forward, we encourage you to migrate to v5.
 
 Big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
 
