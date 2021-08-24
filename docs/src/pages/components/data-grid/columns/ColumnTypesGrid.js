@@ -37,61 +37,69 @@ const initialRows = [
 export default function ColumnTypesGrid() {
   const [rows, setRows] = React.useState(initialRows);
 
-  const deleteUser = (id) => () => {
-    setRows(rows.filter((row) => row.id !== id));
-  };
+  const deleteUser = React.useCallback(
+    (id) => () => {
+      setRows((prevRows) => prevRows.filter((row) => row.id !== id));
+    },
+    [],
+  );
 
-  const toggleAdmin = (id) => () => {
-    const newUsers = rows.map((row) =>
-      row.id === id ? { ...row, isAdmin: !row.isAdmin } : row,
-    );
+  const toggleAdmin = React.useCallback(
+    (id) => () => {
+      setRows((prevRows) =>
+        prevRows.map((row) =>
+          row.id === id ? { ...row, isAdmin: !row.isAdmin } : row,
+        ),
+      );
+    },
+    [],
+  );
 
-    setRows(newUsers);
-  };
+  const columns = React.useMemo(
+    () => [
+      { field: 'name', type: 'string' },
+      { field: 'age', type: 'number' },
+      { field: 'dateCreated', type: 'date', width: 130 },
+      { field: 'lastLogin', type: 'dateTime', width: 180 },
+      { field: 'isAdmin', type: 'boolean', width: 120 },
+      {
+        field: 'country',
+        type: 'singleSelect',
+        width: 120,
+        valueOptions: [
+          'Bulgaria',
+          'Netherlands',
+          'France',
+          'United Kingdom',
+          'Spain',
+          'Brazil',
+        ],
+      },
+      {
+        field: 'actions',
+        type: 'actions',
+        width: 80,
+        getActions: (params) => [
+          <GridActionsCellItem
+            icon={<DeleteIcon />}
+            label="Delete"
+            onClick={deleteUser(params.id)}
+            alwaysVisible
+          />,
+          <GridActionsCellItem
+            icon={<SecurityIcon />}
+            label="Toggle Admin"
+            onClick={toggleAdmin(params.id)}
+          />,
+        ],
+      },
+    ],
+    [deleteUser, toggleAdmin],
+  );
 
   return (
     <div style={{ height: 300, width: '100%' }}>
-      <DataGrid
-        columns={[
-          { field: 'name', type: 'string' },
-          { field: 'age', type: 'number' },
-          { field: 'dateCreated', type: 'date', width: 130 },
-          { field: 'lastLogin', type: 'dateTime', width: 180 },
-          { field: 'isAdmin', type: 'boolean', width: 120 },
-          {
-            field: 'country',
-            type: 'singleSelect',
-            width: 120,
-            valueOptions: [
-              'Bulgaria',
-              'Netherlands',
-              'France',
-              'United Kingdom',
-              'Spain',
-              'Brazil',
-            ],
-          },
-          {
-            field: 'actions',
-            type: 'actions',
-            width: 80,
-            getActions: (params) => [
-              <GridActionsCellItem
-                icon={<DeleteIcon />}
-                label="Delete"
-                onClick={deleteUser(params.id)}
-                alwaysVisible
-              />,
-              <GridActionsCellItem
-                icon={<SecurityIcon />}
-                label="Toggle Admin"
-                onClick={toggleAdmin(params.id)}
-              />,
-            ],
-          },
-        ]}
-        rows={rows}
-      />
+      <DataGrid columns={columns} rows={rows} />
     </div>
   );
 }
