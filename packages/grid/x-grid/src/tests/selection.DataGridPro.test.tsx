@@ -338,27 +338,27 @@ describe('<DataGridPro /> - Selection', () => {
     it('should select all the lines when using infinite scroll', () => {
       const SelectAllTest = () => {
         apiRef = useGridApiRef();
-        const data = useData(1000, 2)
+        const data = useData(1000, 2);
         return (
-            <div style={{ height: 300, width: 300 }}>
-              <DataGridPro
-                  {...data}
-                  loading={data.rows.length === 0}
-                  checkboxSelection
-                  checkboxSelectionVisibleOnly
-                  apiRef={apiRef}
-              />
-            </div>
-        )
-      }
+          <div style={{ height: 300, width: 300 }}>
+            <DataGridPro
+              {...data}
+              loading={data.rows.length === 0}
+              checkboxSelection
+              checkboxSelectionVisibleOnly
+              apiRef={apiRef}
+            />
+          </div>
+        );
+      };
 
-      render(<SelectAllTest />)
+      render(<SelectAllTest />);
 
       const selectAll = screen.getByRole('checkbox', {
         name: /select all rows checkbox/i,
       });
-      fireEvent.click(selectAll)
-      expect(apiRef.current.getSelectedRows().size).to.equal(1000)
-    })
+      fireEvent.click(selectAll);
+      expect(apiRef.current.getSelectedRows().size).to.equal(1000);
+    });
   });
 });
