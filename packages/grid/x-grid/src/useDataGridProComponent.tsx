@@ -7,6 +7,7 @@ import { useGridColumns } from '../../_modules_/grid/hooks/features/columns/useG
 import { useGridControlState } from '../../_modules_/grid/hooks/features/core/useGridControlState';
 import { useGridDensity } from '../../_modules_/grid/hooks/features/density/useGridDensity';
 import { useGridCsvExport } from '../../_modules_/grid/hooks/features/export/useGridCsvExport';
+import { useGridPrintExport } from '../../_modules_/grid/hooks/features/export/useGridPrintExport';
 import { useGridFilter } from '../../_modules_/grid/hooks/features/filter/useGridFilter';
 import { useGridFocus } from '../../_modules_/grid/hooks/features/focus/useGridFocus';
 import { useGridInfiniteLoader } from '../../_modules_/grid/hooks/features/infiniteLoader/useGridInfiniteLoader';
@@ -65,6 +66,7 @@ export const useDataGridProComponent = (apiRef: GridApiRef, props: GridComponent
   useGridPageSize(apiRef, props);
   useGridPage(apiRef, props);
   useGridCsvExport(apiRef);
+  useGridPrintExport(apiRef);
   useGridInfiniteLoader(apiRef, props);
   useGridClipboard(apiRef);
   useGridComponents(apiRef, props);

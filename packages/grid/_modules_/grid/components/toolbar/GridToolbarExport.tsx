@@ -9,12 +9,14 @@ import { useGridApiContext } from '../../hooks/root/useGridApiContext';
 import { GridMenu } from '../menu/GridMenu';
 import { GridExportCsvOptions } from '../../models/gridExport';
 
-interface GridExportFormatCsv {
-  format: 'csv';
+type GridExportFormatTypes = 'csv' | 'print';
+
+interface GridExportFormat {
+  format: GridExportFormatTypes;
   formatOptions?: GridExportCsvOptions;
 }
 
-type GridExportFormatOption = GridExportFormatCsv;
+type GridExportFormatOption = GridExportFormat;
 
 type GridExportOption = GridExportFormatOption & {
   label: React.ReactNode;
@@ -33,12 +35,17 @@ export const GridToolbarExport = React.forwardRef<HTMLButtonElement, GridToolbar
     const [anchorEl, setAnchorEl] = React.useState(null);
     const ExportIcon = apiRef!.current.components!.ExportIcon!;
 
-    const exportOptions: Array<GridExportOption> = [];
-    exportOptions.push({
-      label: apiRef!.current.getLocaleText('toolbarExportCSV'),
-      format: 'csv',
-      formatOptions: csvOptions,
-    });
+    const exportOptions: Array<GridExportOption> = [
+      {
+        label: apiRef!.current.getLocaleText('toolbarExportCSV'),
+        format: 'csv',
+        formatOptions: csvOptions,
+      },
+      {
+        label: apiRef!.current.getLocaleText('toolbarExportPrint'),
+        format: 'print',
+      },
+    ];
 
     const handleMenuOpen = (event) => {
       setAnchorEl(event.currentTarget);
@@ -46,8 +53,15 @@ export const GridToolbarExport = React.forwardRef<HTMLButtonElement, GridToolbar
     };
     const handleMenuClose = () => setAnchorEl(null);
     const handleExport = (option: GridExportOption) => () => {
-      if (option.format === 'csv') {
-        apiRef!.current.exportDataAsCsv(option.formatOptions);
+      switch (option.format) {
+        case 'csv':
+          apiRef!.current.exportDataAsCsv(option.formatOptions);
+          break;
+        case 'print':
+          apiRef!.current.exportDataAsPrint();
+          break;
+        default:
+          break;
       }
 
       setAnchorEl(null);

@@ -31,6 +31,7 @@ export interface GridLocaleText {
   toolbarExport: React.ReactNode;
   toolbarExportLabel: string;
   toolbarExportCSV: React.ReactNode;
+  toolbarExportPrint: React.ReactNode;
 
   // Columns panel text
   columnsPanelTextFieldLabel: string;

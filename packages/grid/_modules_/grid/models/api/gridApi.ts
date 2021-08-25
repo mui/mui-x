@@ -15,6 +15,7 @@ import { GridPageApi } from './gridPageApi';
 import { GridPageSizeApi } from './gridPageSizeApi';
 import { GridParamsApi } from './gridParamsApi';
 import { GridPreferencesPanelApi } from './gridPreferencesPanelApi';
+import { GridPrintExportApi } from './gridPrintExportApi';
 import { GridRowApi } from './gridRowApi';
 import { GridSelectionApi } from './gridSelectionApi';
 import { GridSortApi } from './gridSortApi';
@@ -44,6 +45,7 @@ export interface GridApi
     GridFilterApi,
     GridColumnMenuApi,
     GridPreferencesPanelApi,
+    GridPrintExportApi,
     GridLocaleTextApi,
     GridControlStateApi,
     GridClipboardApi {}
