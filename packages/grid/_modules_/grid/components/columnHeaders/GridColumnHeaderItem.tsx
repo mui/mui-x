@@ -24,14 +24,14 @@ interface GridColumnHeaderItemProps {
   isDragging: boolean;
   isResizing: boolean;
   isLastColumn: boolean;
-  extendRowFullWidth: boolean
+  extendRowFullWidth: boolean;
   sortDirection: GridSortDirection;
   sortIndex?: number;
   options: GridOptions;
   filterItemsCounter?: number;
   hasFocus?: boolean;
-  hasScrollX: boolean
-  hasScrollY: boolean
+  hasScrollX: boolean;
+  hasScrollY: boolean;
   tabIndex: 0 | -1;
 }
 
@@ -50,8 +50,8 @@ export function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
     filterItemsCounter,
     hasFocus,
     tabIndex,
-      hasScrollX,
-      hasScrollY,
+    hasScrollX,
+    hasScrollY,
     extendRowFullWidth,
   } = props;
   const apiRef = useGridApiContext();
@@ -72,8 +72,8 @@ export function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
   const isColumnNumeric = column.type === GRID_NUMBER_COLUMN_TYPE;
   const removeLastBorderRight = isLastColumn && hasScrollX && !hasScrollY;
   const showRightBorder = !isLastColumn
-      ? showColumnRightBorder
-      : !removeLastBorderRight && !extendRowFullWidth;
+    ? showColumnRightBorder
+    : !removeLastBorderRight && !extendRowFullWidth;
 
   let headerComponent: React.ReactNode = null;
   if (column.renderHeader && apiRef!.current) {
