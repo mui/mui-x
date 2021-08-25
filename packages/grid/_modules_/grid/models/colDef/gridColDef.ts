@@ -178,12 +178,13 @@ export interface GridActionsColDef extends GridColDef {
   getActions: (params: GridRowParams) => React.ReactElement<GridActionsCellItemProps>[];
 }
 
-export type GridColumns = (GridColDef | GridActionsColDef)[];
+export type GridEnrichedColDef = GridColDef | GridActionsColDef;
+
+export type GridColumns = GridEnrichedColDef[];
+
 export type GridColTypeDef = Omit<GridColDef, 'field'> & { extendType?: GridNativeColTypes };
 
-export interface GridStateColDef extends GridColDef {
-  computedWidth: number;
-}
+export type GridStateColDef = GridEnrichedColDef & { computedWidth: number };
 
 /**
  * Meta Info about columns.
