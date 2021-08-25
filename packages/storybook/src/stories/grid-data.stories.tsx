@@ -69,8 +69,6 @@ const DemoDynamicContainerTemplate: Story<GridDynamicContainerProps> = ({
   nbCols,
   height,
   width,
-  rows,
-  columns,
   ...args
 }) => {
   const data = useData(nbRows, nbCols);
