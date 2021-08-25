@@ -17,6 +17,7 @@ import {
   DataGridPro,
   GridEvents,
 } from '@mui/x-data-grid-pro';
+import { useData } from 'packages/storybook/src/hooks/useData';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -333,5 +334,31 @@ describe('<DataGridPro /> - Selection', () => {
       apiRef.current.setSelectionModel(selectionModel);
       expect(handleSelectionChange.callCount).to.equal(0);
     });
+
+    it('should select all the lines when using infinite scroll', () => {
+      const SelectAllTest = () => {
+        apiRef = useGridApiRef();
+        const data = useData(1000, 2)
+        return (
+            <div style={{ height: 300, width: 300 }}>
+              <DataGridPro
+                  {...data}
+                  loading={data.rows.length === 0}
+                  checkboxSelection
+                  checkboxSelectionVisibleOnly
+                  apiRef={apiRef}
+              />
+            </div>
+        )
+      }
+
+      render(<SelectAllTest />)
+
+      const selectAll = screen.getByRole('checkbox', {
+        name: /select all rows checkbox/i,
+      });
+      fireEvent.click(selectAll)
+      expect(apiRef.current.getSelectedRows().size).to.equal(1000)
+    })
   });
 });
