@@ -3,9 +3,6 @@ import { GridRowId, GridRowModel } from '../gridRows';
 import type { GridStateColDef } from '../colDef';
 import { GridEditCellProps } from '../gridEditRowModel';
 
-/**
- * Object passed as parameter in the column [[GridColDef]] cell renderer.
- */
 export interface GridCellParams {
   /**
    * The grid row id.
@@ -49,8 +46,9 @@ export interface GridCellParams {
   tabIndex: 0 | -1;
   /**
    * Get the cell value of a row and field.
-   * @param id
-   * @param field
+   * @param {GridRowId} id The row id.
+   * @param {string} field The field.
+   * @returns {GridCellValue} The cell value.
    */
   getValue: (id: GridRowId, field: string) => GridCellValue;
 }

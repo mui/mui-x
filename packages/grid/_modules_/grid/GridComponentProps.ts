@@ -61,6 +61,9 @@ export interface GridComponentProps extends GridOptionsProp {
   nonce?: string;
   /**
    * Set a callback fired when the state of the grid is updated.
+   * @param {GridState} state The new state.
+   * @param {MuiEvent<{}>} event The event object.
+   * @param {any} details Additional details for this callback.
    */
   onStateChange?: (state: GridState, event: MuiEvent<{}>, details: any) => void; // We are overriding the handler in GridOptions to fix the params type and avoid the cycle dependency
   /**
