@@ -5,7 +5,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## 4.0.0
 
-_Aug 24, 2021_
+_Aug 25, 2021_
 
 🎉 This is the first official stable release of the data grid component 🎉!
 
