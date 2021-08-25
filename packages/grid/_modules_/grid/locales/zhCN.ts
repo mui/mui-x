@@ -1,4 +1,4 @@
-import { enUS as enUSCore } from '@material-ui/core/locale';
+import { zhCN as zhCNCore } from '@material-ui/core/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -103,4 +103,4 @@ export const zhCNGrid: Partial<GridLocaleText> = {
   MuiTablePagination: {},
 };
 
-export const zhCN: Localization = getGridLocalization(zhCNGrid, enUSCore);
+export const zhCN: Localization = getGridLocalization(zhCNGrid, zhCNCore);
