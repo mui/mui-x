@@ -20,7 +20,7 @@ A big thanks to the 6 contributors who made this release possible. Here are some
 
   <img src="https://user-images.githubusercontent.com/3165635/130665023-3c0730ab-502e-4da1-8bc1-d572427ad2d6.gif" width="851" height="382" />
 
-- ⚡️ Rename the name of the `XGrid` component to `DataGridPro` (#2382) @m4theushw
+- ⚡️ Rename the `XGrid` component to `DataGridPro` (#2382) @m4theushw
 
   This should help clarify the products vs. plans separation. [MUI X](https://github.com/mui-org/material-ui-x) is a product line on its own. It contains MIT and Commercial software. Removing X from the name of the paid components should help remove a possible confusion: the MIT version of X is meant to be valuable enough for developers to use it, without feeling that it's crippled compared to other OSS alternatives.
   The Pro prefix should help make it clear what's MIT and what's not.
