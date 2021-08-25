@@ -5,15 +5,12 @@ export const GridHeader = React.forwardRef<HTMLDivElement, React.HTMLAttributes<
   function GridHeader(props, ref) {
     const rootProps = useGridRootProps();
 
-    const ToolbarComponent = rootProps.components.Toolbar;
-    const ToolbarElement = ToolbarComponent && (
-      <ToolbarComponent {...rootProps.componentsProps?.toolbar} />
-    );
-
     return (
       <div ref={ref} {...props}>
         <rootProps.components.PreferencesPanel {...rootProps.componentsProps?.preferencesPanel} />
-        {ToolbarElement}
+        {rootProps.components.Toolbar && (
+          <rootProps.components.Toolbar {...rootProps.componentsProps?.toolbar} />
+        )}
       </div>
     );
   },

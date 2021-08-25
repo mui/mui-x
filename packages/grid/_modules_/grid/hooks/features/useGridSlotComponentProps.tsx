@@ -5,26 +5,21 @@ import { visibleGridColumnsSelector } from './columns/gridColumnsSelector';
 import { useGridSelector } from './core/useGridSelector';
 import { useGridState } from './core/useGridState';
 import { unorderedGridRowModelsSelector } from './rows/gridRowsSelector';
-import { useGridRootProps } from '../utils/useGridRootProps';
 
 export const useGridSlotComponentProps = () => {
   const apiRef = useGridApiContext();
-  const rootProps = useGridRootProps();
   const rows = useGridSelector(apiRef, unorderedGridRowModelsSelector);
   const columns = useGridSelector(apiRef, visibleGridColumnsSelector);
   const [state] = useGridState(apiRef!);
 
-  const slotComponentProps: GridSlotComponentProps = React.useMemo(
+  return React.useMemo<GridSlotComponentProps>(
     () => ({
       state,
       rows,
       columns,
-      rootProps,
       apiRef: apiRef!,
       rootElement: apiRef!.current.rootElementRef!,
     }),
-    [state, rows, columns, rootProps, apiRef],
+    [state, rows, columns, apiRef],
   );
-
-  return slotComponentProps;
 };

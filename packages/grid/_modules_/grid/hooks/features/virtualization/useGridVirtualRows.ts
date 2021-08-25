@@ -113,11 +113,7 @@ export const useGridVirtualRows = (
         return null;
       }
       let minRowIdx = 0;
-      if (
-        props.pagination &&
-        paginationState.pageSize != null &&
-        props.paginationMode === 'client'
-      ) {
+      if (props.pagination && props.paginationMode === 'client') {
         minRowIdx = paginationState.pageSize * paginationState.page;
       }
 

@@ -57,14 +57,22 @@ export const Grid5234 = () => <GridDataSet nbRows={5234} nbCols={100} />;
 export const Grid10000 = () => <GridDataSet nbRows={10000} nbCols={100} />;
 export const Grid100000 = () => <GridDataSet nbRows={100000} nbCols={100} />;
 
-const DemoDynamicContainerTemplate: Story<
-  {
-    height: number;
-    width: number | string;
-    nbRows: number;
-    nbCols: number;
-  } & DataGridProProps
-> = ({ nbRows, nbCols, height, width, rows, columns, ...args }) => {
+interface GridDynamicContainerProps extends Omit<DataGridProProps, 'rows' | 'columns'> {
+  height: number;
+  width: number | string;
+  nbRows: number;
+  nbCols: number;
+}
+
+const DemoDynamicContainerTemplate: Story<GridDynamicContainerProps> = ({
+  nbRows,
+  nbCols,
+  height,
+  width,
+  rows,
+  columns,
+  ...args
+}) => {
   const data = useData(nbRows, nbCols);
   return (
     <div className="demo-rendering grid-container" style={{ padding: 10 }}>
@@ -74,7 +82,9 @@ const DemoDynamicContainerTemplate: Story<
     </div>
   );
 };
+
 export const GridXRowsPlay = DemoDynamicContainerTemplate.bind({});
+
 GridXRowsPlay.args = {
   height: 560,
   width: '100%',
