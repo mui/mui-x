@@ -77,7 +77,7 @@ export const GridToolbarDensitySelector = React.forwardRef<HTMLButtonElement, Bu
       return null;
     }
 
-    const renderDensityOptions: Array<React.ReactElement> = densityOptions.map((option, index) => (
+    const densityElements = densityOptions.map<React.ReactElement>((option, index) => (
       <MenuItem
         key={index}
         onClick={() => handleDensityUpdate(option.value)}
@@ -118,7 +118,7 @@ export const GridToolbarDensitySelector = React.forwardRef<HTMLButtonElement, Bu
             onKeyDown={handleListKeyDown}
             autoFocusItem={Boolean(anchorEl)}
           >
-            {renderDensityOptions}
+            {densityElements}
           </MenuList>
         </GridMenu>
       </React.Fragment>
