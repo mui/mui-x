@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import { gridClasses } from '../../gridClasses';
 
 export interface GridEmptyCellProps {
@@ -6,10 +7,7 @@ export interface GridEmptyCellProps {
   height?: number;
 }
 
-export const GridEmptyCell = React.memo(function GridEmptyCell({
-  width,
-  height,
-}: GridEmptyCellProps) {
+function GridEmptyCellRaw({ width, height }: GridEmptyCellProps) {
   if (!width || !height) {
     return null;
   }
@@ -26,4 +24,17 @@ export const GridEmptyCell = React.memo(function GridEmptyCell({
       className={gridClasses.cell}
     />
   );
-});
+}
+
+GridEmptyCellRaw.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  height: PropTypes.number,
+  width: PropTypes.number,
+} as any;
+
+const GridEmptyCell = React.memo(GridEmptyCellRaw);
+
+export { GridEmptyCell };

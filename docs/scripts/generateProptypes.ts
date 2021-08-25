@@ -12,7 +12,7 @@ const prettierConfig = prettier.resolveConfig.sync(process.cwd(), {
 });
 
 async function generateProptypes(program: ttp.ts.Program, sourceFile: string) {
-  const proptypes = ttp.parseFromProgram(sourceFile, program);
+  const proptypes = ttp.parseFromProgram(sourceFile, program, { checkDeclarations: true });
 
   if (proptypes.body.length === 0) {
     return;

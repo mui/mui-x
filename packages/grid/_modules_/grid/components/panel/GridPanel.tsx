@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { Theme } from '@material-ui/core/styles';
 import { makeStyles } from '@material-ui/styles';
@@ -47,10 +48,7 @@ const useStyles = makeStyles(
 
 export const gridPanelClasses = generateUtilityClasses('MuiGridPanel', ['root', 'paper']);
 
-export const GridPanel = React.forwardRef<HTMLDivElement, GridPanelProps>(function GridPanel(
-  props,
-  ref,
-) {
+function GridPanelRaw(props, ref) {
   const { children, className, open, ...other } = props;
   const classes = useStyles(other);
   const apiRef = useGridApiContext();
@@ -108,4 +106,29 @@ export const GridPanel = React.forwardRef<HTMLDivElement, GridPanelProps>(functi
       </ClickAwayListener>
     </Popper>
   );
-}) as (props: GridPanelProps) => JSX.Element;
+}
+
+GridPanelRaw.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  children: PropTypes.node,
+  /**
+   * Override or extend the styles applied to the component.
+   */
+  classes: PropTypes.shape({
+    paper: PropTypes.string,
+    root: PropTypes.string,
+  }),
+  /**
+   * If `true`, the popper is visible.
+   */
+  open: PropTypes.bool.isRequired,
+} as any;
+
+const GridPanel = React.forwardRef<HTMLDivElement, GridPanelProps>(GridPanelRaw) as (
+  props: GridPanelProps,
+) => JSX.Element;
+
+export { GridPanel };
