@@ -17,12 +17,25 @@ import {
   selectedGridRowsSelector,
   selectedIdsLookupSelector,
 } from './gridSelectionSelector';
+import {sortedGridRowsSelector} from "../sorting";
+
+type GridSelectionMode = 'multiple' | 'single' | 'range'
+
+interface RowModelParams {
+  id: GridRowId;
+  row: GridRowModel;
+  isSelected?: boolean;
+  forceToggle,
+  selectionMode: GridSelectionMode;
+}
 
 export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps): void => {
   const logger = useLogger('useGridSelection');
   const [, setGridState, forceUpdate] = useGridState(apiRef);
   const options = useGridSelector(apiRef, optionsSelector);
   const rowsLookup = useGridSelector(apiRef, gridRowsLookupSelector);
+
+  const lastRowToggledByClick = React.useRef<GridRowId | null>(null)
 
   const propSelectionModel = React.useMemo(() => {
     if (props.selectionModel == null) {
@@ -44,17 +57,9 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
     [apiRef],
   );
 
-  interface RowModelParams {
-    id: GridRowId;
-    row: GridRowModel;
-    allowMultipleOverride?: boolean;
-    isSelected?: boolean;
-    isMultipleKey?: boolean;
-  }
-
   const selectRowModel = React.useCallback(
     (rowModelParams: RowModelParams) => {
-      const { id, allowMultipleOverride, isSelected, isMultipleKey } = rowModelParams;
+      const { id, isSelected, selectionMode, forceToggle } = rowModelParams;
 
       if (isRowSelectable && !isRowSelectable(apiRef.current.getRowParams(id))) {
         return;
@@ -63,37 +68,71 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
       logger.debug(`Selecting row ${id}`);
 
       setGridState((state) => {
-        let selectionLookup = selectedIdsLookupSelector(state);
-        const allowMultiSelect =
-          allowMultipleOverride ||
-          (!disableMultipleSelection && isMultipleKey) ||
-          checkboxSelection;
+        const selection = gridSelectionStateSelector(state)
+        let newSelection: GridRowId[]
 
-        if (allowMultiSelect) {
-          const isRowSelected = isSelected == null ? selectionLookup[id] === undefined : isSelected;
-          if (isRowSelected) {
-            selectionLookup[id] = id;
-          } else {
-            delete selectionLookup[id];
+        const isRowSelectedBefore = selection.includes(id)
+
+        switch (selectionMode) {
+          case "single": {
+            const shouldRowBeSelectedAfter = isSelected ?? (forceToggle ? !isRowSelectedBefore : true)
+
+            if (shouldRowBeSelectedAfter) {
+              newSelection = [id]
+            } else {
+              newSelection = []
+            }
+            break;
           }
-        } else {
-          const isRowSelected =
-            isSelected == null ? !isMultipleKey || selectionLookup[id] === undefined : isSelected;
-          selectionLookup = {};
-          if (isRowSelected) {
-            selectionLookup[id] = id;
+
+          case "multiple": {
+            const shouldRowBeSelectedAfter = isSelected ?? !isRowSelectedBefore
+
+            newSelection = selection.filter(el => el !== id)
+
+            if (shouldRowBeSelectedAfter) {
+              newSelection.push(id)
+            }
+
+            break;
+          }
+
+          case "range": {
+            if (lastRowToggledByClick.current == null) {
+              newSelection = [id]
+            } else {
+              const shouldRowBeSelectedAfter = isSelected ?? !isRowSelectedBefore
+
+              const sortedRowsId = [...sortedGridRowsSelector(state).keys()]
+              const lastClickedId = sortedRowsId.indexOf(lastRowToggledByClick.current)
+              const clickedId = sortedRowsId.indexOf(id)
+              const [start, end] = lastClickedId > clickedId ? [clickedId, lastClickedId] : [lastClickedId, clickedId]
+              const rowsToToggleId = sortedRowsId.slice(start, end + 1)
+
+              newSelection = [
+                  ...selection.filter(el => !rowsToToggleId.includes(el)),
+                  ...(shouldRowBeSelectedAfter ? rowsToToggleId : [])
+              ]
+            }
+
+            break;
+          }
+
+          default: {
+            newSelection = selection
           }
         }
-        return { ...state, selection: Object.values(selectionLookup) };
+
+        return { ...state, selection: newSelection };
       });
+
+      lastRowToggledByClick.current = id
       forceUpdate();
     },
     [
       isRowSelectable,
-      disableMultipleSelection,
       apiRef,
       logger,
-      checkboxSelection,
       forceUpdate,
       setGridState,
     ],
@@ -110,8 +149,9 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
       selectRowModel({
         id,
         row,
-        allowMultipleOverride: allowMultiple,
         isSelected,
+        selectionMode: allowMultiple ? 'multiple' : 'single',
+        forceToggle: false,
       });
     },
     [apiRef, selectRowModel],
@@ -120,7 +160,7 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
   const selectRows = React.useCallback(
     (ids: GridRowId[], isSelected = true, deSelectOthers = false) => {
       const selectableIds = isRowSelectable
-        ? ids.filter((id) => isRowSelectable!(apiRef.current.getRowParams(id)))
+        ? ids.filter((id) => isRowSelectable(apiRef.current.getRowParams(id)))
         : ids;
 
       if (disableMultipleSelection && selectableIds.length > 1 && !checkboxSelection) {
@@ -128,15 +168,25 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
       }
 
       setGridState((state) => {
-        const selectionLookup = deSelectOthers ? {} : selectedIdsLookupSelector(state);
+        if (deSelectOthers) {
+          return { ...state, selection: isSelected ? selectableIds : [] }
+        }
+
+        // We clone the existing map to avoid mutating the same map returned by the selector to others part of the project
+        const selectionLookup = new Map(selectedIdsLookupSelector(state).entries())
+
         selectableIds.forEach((id) => {
           if (isSelected) {
-            selectionLookup[id] = id;
-          } else if (selectionLookup[id] !== undefined) {
-            delete selectionLookup[id];
+            selectionLookup.set(id, true);
+          } else {
+            selectionLookup.delete(id)
           }
         });
-        return { ...state, selection: Object.values(selectionLookup) };
+
+        return {
+          ...state,
+          selection: [...selectionLookup.keys()],
+        }
       });
 
       forceUpdate();
@@ -163,20 +213,33 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
 
   const handleRowClick = React.useCallback(
     (params: GridRowParams, event: React.MouseEvent) => {
-      if (!disableSelectionOnClick) {
-        selectRowModel({
-          id: params.id,
-          row: params.row,
-          isMultipleKey: event.metaKey || event.ctrlKey,
-        });
+      if (disableSelectionOnClick) {
+        return
       }
+
+      const hasCtrlKey = (event.metaKey || event.ctrlKey)
+
+      let selectionMode: GridSelectionMode
+      if (!disableMultipleSelection && event.shiftKey) {
+        selectionMode = 'range'
+      } else if ((!disableMultipleSelection && hasCtrlKey) || checkboxSelection) {
+        selectionMode = 'multiple'
+      } else {
+        selectionMode = 'single'
+      }
+
+      selectRowModel({
+        id: params.id,
+        row: params.row,
+        selectionMode,
+        forceToggle: hasCtrlKey,
+      });
     },
-    [disableSelectionOnClick, selectRowModel],
+    [checkboxSelection, disableMultipleSelection, disableSelectionOnClick, selectRowModel],
   );
 
   useGridApiEventHandler(apiRef, GridEvents.rowClick, handleRowClick);
 
-  // TODO handle Cell Click/range selection?
   const selectionApi: GridSelectionApi = {
     selectRow,
     getSelectedRows,
@@ -199,16 +262,17 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
     // Rows changed
     setGridState((state) => {
       const newSelectionState = gridSelectionStateSelector(state);
-      const selectionLookup = selectedIdsLookupSelector(state);
+      // We clone the existing map to avoid mutating the same map returned by the selector to others part of the project
+      const selectionLookup = new Map(selectedIdsLookupSelector(state).entries());
       let hasChanged = false;
       newSelectionState.forEach((id: GridRowId) => {
         if (!rowsLookup[id]) {
-          delete selectionLookup[id];
+          selectionLookup.delete(id);
           hasChanged = true;
         }
       });
       if (hasChanged) {
-        return { ...state, selection: Object.values(selectionLookup) };
+        return { ...state, selection: [...selectionLookup.keys()] };
       }
       return state;
     });
@@ -226,19 +290,12 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
   React.useEffect(() => {
     // isRowSelectable changed
     setGridState((state) => {
-      const newSelectionState = [...state.selection];
-      const selectionLookup = selectedIdsLookupSelector(state);
-      let hasChanged = false;
-      newSelectionState.forEach((id: GridRowId) => {
-        const isSelectable = !isRowSelectable || isRowSelectable(apiRef.current.getRowParams(id));
-        if (!isSelectable) {
-          delete selectionLookup[id];
-          hasChanged = true;
-        }
-      });
-      if (hasChanged) {
-        return { ...state, selection: Object.values(selectionLookup) };
+      const newSelectionState = state.selection.filter(id => !isRowSelectable || isRowSelectable(apiRef.current.getRowParams(id)))
+
+      if (newSelectionState.length < state.selection.length) {
+        return { ...state, selection: newSelectionState }
       }
+
       return state;
     });
     forceUpdate();
