@@ -15,6 +15,7 @@ export default {
     },
   },
 };
+
 export const DensitySelectorCompact = () => {
   const data = useData(100, 50);
 
@@ -31,6 +32,7 @@ export const DensitySelectorCompact = () => {
     </div>
   );
 };
+
 export const DensitySelectorComfortable = () => {
   const data = useData(100, 50);
 
