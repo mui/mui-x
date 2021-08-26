@@ -6,6 +6,8 @@ import { DataGrid, DataGridProps } from '@mui/x-data-grid';
 import { getCell, getRow } from 'test/utils/helperFn';
 import { useData } from 'storybook/src/hooks/useData';
 
+const isJSDOM = /jsdom/.test(window.navigator.userAgent);
+
 describe('<DataGrid /> - Selection', () => {
   // TODO v5: replace with createClientRender
   const render = createClientRenderStrictMode();
@@ -16,9 +18,13 @@ describe('<DataGrid /> - Selection', () => {
   ) => {
     const data = useData(2, 2);
 
+    if (!data.rows.length) {
+      return null;
+    }
+
     return (
       <div style={{ width: 300, height: 300 }}>
-        <DataGrid {...data} {...props} />
+        <DataGrid {...data} {...props} autoHeight={isJSDOM} />
       </div>
     );
   };

@@ -25,6 +25,8 @@ function getSelectedRows(apiRef) {
   return Array.from(apiRef.current.getSelectedRows().keys());
 }
 
+const isJSDOM = /jsdom/.test(window.navigator.userAgent);
+
 describe('<DataGridPro /> - Selection', () => {
   // TODO v5: replace with createClientRender
   const render = createClientRenderStrictMode();
@@ -40,7 +42,7 @@ describe('<DataGridPro /> - Selection', () => {
 
     return (
       <div style={{ width: 300, height: 300 }}>
-        <DataGridPro {...data} {...props} apiRef={apiRef} />
+        <DataGridPro {...data} {...props} apiRef={apiRef} autoHeight={isJSDOM} />
       </div>
     );
   };
