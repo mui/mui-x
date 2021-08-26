@@ -94,6 +94,7 @@ import { DataGrid, nlNL } from '@mui/x-data-grid';
 | Spanish (Spain)         | es-ES               | `esES`      |
 | Turkish                 | tr-TR               | `trTR`      |
 | Ukraine                 | uk-UA               | `ukUA`      |
+| Simplified Chinese      | zh-CN               | `zhCN`      |
 
 You can [find the source](https://github.com/mui-org/material-ui-x/blob/HEAD/packages/grid/_modules_/grid/locales) in the GitHub repository.
 
