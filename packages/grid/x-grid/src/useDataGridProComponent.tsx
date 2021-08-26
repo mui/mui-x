@@ -66,7 +66,7 @@ export const useDataGridProComponent = (apiRef: GridApiRef, props: GridComponent
   useGridPageSize(apiRef, props);
   useGridPage(apiRef, props);
   useGridCsvExport(apiRef);
-  useGridPrintExport(apiRef);
+  useGridPrintExport(apiRef, props);
   useGridInfiniteLoader(apiRef, props);
   useGridClipboard(apiRef);
   useGridComponents(apiRef, props);
