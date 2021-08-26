@@ -47,7 +47,8 @@ export const DensitySelectorComfortable = () => {
     </div>
   );
 };
-export const CsvExport = () => {
+
+export const Export = () => {
   const data = useData(100, 50);
 
   return (
