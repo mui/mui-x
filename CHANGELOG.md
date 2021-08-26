@@ -5,7 +5,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## 4.0.0
 
-_Aug 25, 2021_
+_Aug 26, 2021_
 
 🎉 This is the first official stable release of the data grid component 🎉!
 
@@ -43,7 +43,9 @@ A big thanks to the 6 contributors who made this release possible. Here are some
 
   ```diff
   -import { XGrid } from '@material-ui/x-grid';
+  -<XGrid />
   +import { DataGridPro } from '@mui/x-data-grid-pro';
+  +<DataGridPro />
   ```
 
 - [DataGrid] The `api` property was removed from the callback params (#2312) @DanailH
