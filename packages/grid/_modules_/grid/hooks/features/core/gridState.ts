@@ -38,7 +38,6 @@ export interface GridState {
   editRows: GridEditRowsModel;
   pagination: GridPaginationState;
   options: GridOptions;
-  isScrolling: boolean;
   columns: GridColumnsState;
   columnReorder: GridColumnReorderState;
   columnResize: GridColumnResizeState;
@@ -63,7 +62,6 @@ export const getInitialGridState = (): GridState => ({
   editRows: {},
   pagination: getInitialPaginationState(),
   options: DEFAULT_GRID_OPTIONS,
-  isScrolling: false,
   columns: getInitialGridColumnsState(),
   columnReorder: getInitialGridColumnReorderState(),
   columnResize: getInitialGridColumnResizeState(),

@@ -161,7 +161,7 @@ export const useGridFilter = (
         }
         if (newItem.columnField != null && newItem.operatorValue == null) {
           // we select a default operator
-          const column = apiRef!.current!.getColumn(newItem.columnField);
+          const column = apiRef.current.getColumn(newItem.columnField);
           newItem.operatorValue = column && column!.filterOperators![0].value!;
         }
         if (props.disableMultipleColumnsFiltering && items.length > 1) {
@@ -213,7 +213,7 @@ export const useGridFilter = (
             ? gridState.filter.items[gridState.filter.items.length - 1]
             : null;
         if (!lastFilter || lastFilter.columnField !== targetColumnField) {
-          apiRef!.current.upsertFilter({ columnField: targetColumnField });
+          apiRef.current.upsertFilter({ columnField: targetColumnField });
         }
       }
       apiRef.current.showPreferences(GridPreferencePanelsValue.filters);
@@ -222,7 +222,7 @@ export const useGridFilter = (
   );
   const hideFilterPanel = React.useCallback(() => {
     logger.debug('Hiding filter panel');
-    apiRef?.current.hidePreferences();
+    apiRef.current.hidePreferences();
   }, [apiRef, logger]);
 
   const applyFilterLinkOperator = React.useCallback(
