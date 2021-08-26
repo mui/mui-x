@@ -1,14 +1,11 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import {
-  GRID_COLUMN_HEADER_DRAG_START,
-  GRID_COLUMN_HEADER_DRAG_END,
-  GRID_ROWS_SCROLL,
-} from '../constants/eventsConstants';
+import { GridEvents } from '../constants/eventsConstants';
 import { useGridApiEventHandler } from '../hooks/root/useGridApiEventHandler';
 import { GridApiRef } from '../models/api/gridApiRef';
 import { GridScrollParams } from '../models/params/gridScrollParams';
 import { useGridApiContext } from '../hooks/root/useGridApiContext';
+import { gridClasses } from '../gridClasses';
 
 const CLIFF = 1;
 const SLOP = 1.5;
@@ -68,14 +65,14 @@ export const GridScrollArea = React.memo(function GridScrollArea(props: ScrollAr
     setDragging((prevdragging) => !prevdragging);
   }, []);
 
-  useGridApiEventHandler(api as GridApiRef, GRID_ROWS_SCROLL, handleScrolling);
-  useGridApiEventHandler(api as GridApiRef, GRID_COLUMN_HEADER_DRAG_START, toggleDragging);
-  useGridApiEventHandler(api as GridApiRef, GRID_COLUMN_HEADER_DRAG_END, toggleDragging);
+  useGridApiEventHandler(api as GridApiRef, GridEvents.rowsScroll, handleScrolling);
+  useGridApiEventHandler(api as GridApiRef, GridEvents.columnHeaderDragStart, toggleDragging);
+  useGridApiEventHandler(api as GridApiRef, GridEvents.columnHeaderDragEnd, toggleDragging);
 
   return dragging ? (
     <div
       ref={rootRef}
-      className={clsx('MuiDataGrid-scrollArea', `MuiDataGrid-scrollArea--${scrollDirection}`)}
+      className={clsx(gridClasses.scrollArea, gridClasses[`scrollArea--${scrollDirection}`])}
       onDragOver={handleDragOver}
     />
   ) : null;

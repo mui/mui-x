@@ -1,10 +1,11 @@
 import * as React from 'react';
 import { useForkRef } from '@material-ui/core/utils';
-import { GRID_CELL_NAVIGATION_KEY_DOWN } from '../../constants/eventsConstants';
+import { GridEvents } from '../../constants/eventsConstants';
 import { GridCellParams } from '../../models/params/gridCellParams';
 import { isNavigationKey, isSpaceKey } from '../../utils/keyboardUtils';
 import { useGridApiContext } from '../../hooks/root/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
+import { gridClasses } from '../../gridClasses';
 
 export const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridCellParams>(
   function GridCellCheckboxRenderer(props, ref) {
@@ -14,7 +15,7 @@ export const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, Gri
     const checkboxElement = React.useRef<HTMLInputElement | null>(null);
 
     const handleRef = useForkRef(checkboxElement, ref);
-    const element = props.api.getCellElement(id, field);
+    const element = apiRef.current.getCellElement(id, field);
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
       apiRef!.current.selectRow(id, event.target.checked, true);
@@ -43,7 +44,7 @@ export const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, Gri
           event.stopPropagation();
         }
         if (isNavigationKey(event.key) && !event.shiftKey) {
-          apiRef!.current.publishEvent(GRID_CELL_NAVIGATION_KEY_DOWN, props, event);
+          apiRef!.current.publishEvent(GridEvents.cellNavigationKeyDown, props, event);
         }
       },
       [apiRef, props],
@@ -61,7 +62,7 @@ export const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, Gri
         checked={!!value}
         onChange={handleChange}
         onClick={handleClick}
-        className="MuiDataGrid-checkboxInput"
+        className={gridClasses.checkboxInput}
         color="primary"
         inputProps={{ 'aria-label': 'Select Row checkbox' }}
         onKeyDown={handleKeyDown}

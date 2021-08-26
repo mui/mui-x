@@ -1,10 +1,5 @@
 import * as React from 'react';
-import {
-  GRID_COLUMNS_CHANGE,
-  GRID_FILTER_MODEL_CHANGE,
-  GRID_ROWS_SET,
-  GRID_ROWS_UPDATE,
-} from '../../../constants/eventsConstants';
+import { GridEvents } from '../../../constants/eventsConstants';
 import { GridComponentProps } from '../../../GridComponentProps';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridFilterApi } from '../../../models/api/gridFilterApi';
@@ -289,7 +284,7 @@ export const useGridFilter = (
 
   const onColUpdated = React.useCallback(() => {
     logger.debug('onColUpdated - GridColumns changed, applying filters');
-    const filterState = apiRef.current.getState().filter;
+    const filterState = apiRef.current.state.filter;
     const columnsIds = filterableGridColumnsIdsSelector(apiRef.current.state);
     logger.debug('GridColumns changed, applying filters');
 
@@ -307,7 +302,7 @@ export const useGridFilter = (
       propModel: props.filterModel,
       propOnChange: props.onFilterModelChange,
       stateSelector: (state) => state.filter,
-      changeEvent: GRID_FILTER_MODEL_CHANGE,
+      changeEvent: GridEvents.filterModelChange,
     });
   }, [apiRef, props.filterModel, props.onFilterModelChange]);
 
@@ -331,7 +326,7 @@ export const useGridFilter = (
     }
   }, [apiRef, logger, props.filterModel, setGridState]);
 
-  useGridApiEventHandler(apiRef, GRID_ROWS_SET, apiRef.current.applyFilters);
-  useGridApiEventHandler(apiRef, GRID_ROWS_UPDATE, apiRef.current.applyFilters);
-  useGridApiEventHandler(apiRef, GRID_COLUMNS_CHANGE, onColUpdated);
+  useGridApiEventHandler(apiRef, GridEvents.rowsSet, apiRef.current.applyFilters);
+  useGridApiEventHandler(apiRef, GridEvents.rowsUpdate, apiRef.current.applyFilters);
+  useGridApiEventHandler(apiRef, GridEvents.columnsChange, onColUpdated);
 };

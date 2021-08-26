@@ -1,7 +1,7 @@
 import * as React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
-import { LicenseInfo } from '@material-ui/x-grid';
+import { LicenseInfo } from '@mui/x-data-grid-pro';
 import { withStyles } from '@material-ui/styles';
 import webfontloader from 'webfontloader';
 import TestViewer from 'test/regressions/TestViewer';

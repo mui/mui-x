@@ -1,8 +1,8 @@
 {
-  "name": "@material-ui/x-license",
-  "version": "4.0.0-alpha.36",
+  "name": "@mui/x-license-pro",
+  "version": "4.0.0-alpha.37",
   "description": "Material-UI X License verification",
-  "author": "Material-UI Team",
+  "author": "MUI Team",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
   "types": "dist/x-license.d.ts",
@@ -31,12 +31,12 @@
     "licensegen": "./bin/license-gen-script.js"
   },
   "dependencies": {
-    "@material-ui/utils": "^5.0.0-alpha.14",
+    "@material-ui/utils": "^5.0.0-beta.4",
     "esm": "^3.2.25",
     "yargs": "^17.0.1"
   },
   "peerDependencies": {
-    "react": "^17.0.0"
+    "react": "^17.0.2"
   },
   "setupFiles": [
     "<rootDir>/src/setupTests.js"

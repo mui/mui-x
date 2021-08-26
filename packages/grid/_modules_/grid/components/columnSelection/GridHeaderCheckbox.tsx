@@ -1,8 +1,5 @@
 import * as React from 'react';
-import {
-  GRID_COLUMN_HEADER_NAVIGATION_KEY_DOWN,
-  GRID_SELECTION_CHANGE,
-} from '../../constants/eventsConstants';
+import { GridEvents } from '../../constants/eventsConstants';
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
 import { gridPaginatedVisibleSortedGridRowIdsSelector } from '../../hooks/features/pagination/gridPaginationSelector';
 import { visibleSortedGridRowIdsSelector } from '../../hooks/features/filter/gridFilterSelector';
@@ -12,13 +9,14 @@ import { selectedGridRowsCountSelector } from '../../hooks/features/selection/gr
 import { GridColumnHeaderParams } from '../../models/params/gridColumnHeaderParams';
 import { isNavigationKey, isSpaceKey } from '../../utils/keyboardUtils';
 import { useGridApiContext } from '../../hooks/root/useGridApiContext';
-import { optionsSelector } from '../../hooks/utils/optionsSelector';
+import { gridClasses } from '../../gridClasses';
+import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
 export const GridHeaderCheckbox = React.forwardRef<HTMLInputElement, GridColumnHeaderParams>(
   function GridHeaderCheckbox(props, ref) {
     const [, forceUpdate] = React.useState(false);
     const apiRef = useGridApiContext();
-    const options = useGridSelector(apiRef, optionsSelector);
+    const rootProps = useGridRootProps();
     const tabIndexState = useGridSelector(apiRef, gridTabIndexColumnHeaderSelector);
     const totalSelectedRows = useGridSelector(apiRef, selectedGridRowsCountSelector);
     const totalRows = useGridSelector(apiRef, gridRowCountSelector);
@@ -29,9 +27,9 @@ export const GridHeaderCheckbox = React.forwardRef<HTMLInputElement, GridColumnH
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
       const checked = event.target.checked;
-      const rowsToBeSelected = options.checkboxSelectionVisibleOnly
-        ? gridPaginatedVisibleSortedGridRowIdsSelector(apiRef.current.getState())
-        : visibleSortedGridRowIdsSelector(apiRef.current.getState());
+      const rowsToBeSelected = rootProps.checkboxSelectionVisibleOnly
+        ? gridPaginatedVisibleSortedGridRowIdsSelector(apiRef.current.state)
+        : visibleSortedGridRowIdsSelector(apiRef.current.state);
       apiRef!.current.selectRows(rowsToBeSelected, checked, !event.target.indeterminate);
     };
 
@@ -49,7 +47,7 @@ export const GridHeaderCheckbox = React.forwardRef<HTMLInputElement, GridColumnH
           event.stopPropagation();
         }
         if (isNavigationKey(event.key) && !event.shiftKey) {
-          apiRef!.current.publishEvent(GRID_COLUMN_HEADER_NAVIGATION_KEY_DOWN, props, event);
+          apiRef!.current.publishEvent(GridEvents.columnHeaderNavigationKeyDown, props, event);
         }
       },
       [apiRef, props],
@@ -60,7 +58,7 @@ export const GridHeaderCheckbox = React.forwardRef<HTMLInputElement, GridColumnH
     }, []);
 
     React.useEffect(() => {
-      return apiRef?.current.subscribeEvent(GRID_SELECTION_CHANGE, handleSelectionChange);
+      return apiRef?.current.subscribeEvent(GridEvents.selectionChange, handleSelectionChange);
     }, [apiRef, handleSelectionChange]);
 
     const CheckboxComponent = apiRef?.current.components.Checkbox!;
@@ -71,7 +69,7 @@ export const GridHeaderCheckbox = React.forwardRef<HTMLInputElement, GridColumnH
         indeterminate={isIndeterminate}
         checked={isChecked}
         onChange={handleChange}
-        className="MuiDataGrid-checkboxInput"
+        className={gridClasses.checkboxInput}
         color="primary"
         inputProps={{ 'aria-label': 'Select All Rows checkbox' }}
         tabIndex={tabIndex}

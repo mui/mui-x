@@ -5,16 +5,15 @@
 ## Import
 
 ```js
-import { GridCellParams } from '@material-ui/x-grid';
+import { GridCellParams } from '@mui/x-data-grid-pro';
 // or
-import { GridCellParams } from '@material-ui/data-grid';
+import { GridCellParams } from '@mui/x-data-grid';
 ```
 
 ## Properties
 
 | Name                                                                                         | Type                                                                              | Description                                                      |
 | :------------------------------------------------------------------------------------------- | :-------------------------------------------------------------------------------- | :--------------------------------------------------------------- |
-| <span class="prop-name">api</span>                                                           | <span class="prop-type">any</span>                                                | GridApi that let you manipulate the grid.                        |
 | <span class="prop-name">cellMode</span>                                                      | <span class="prop-type">GridCellMode</span>                                       | The mode of the cell.                                            |
 | <span class="prop-name">colDef</span>                                                        | <span class="prop-type">GridStateColDef</span>                                    | The column of the row that the current cell belongs to.          |
 | <span class="prop-name">field</span>                                                         | <span class="prop-type">string</span>                                             | The column field of the cell that triggered the event            |

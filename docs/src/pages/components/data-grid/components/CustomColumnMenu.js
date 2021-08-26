@@ -1,7 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
-import { createMuiTheme } from '@material-ui/core/styles';
+import { createTheme } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import {
   GridColumnMenu,
@@ -9,11 +9,11 @@ import {
   GridFilterMenuItem,
   SortGridMenuItems,
   useGridApiRef,
-  XGrid,
-} from '@material-ui/x-grid';
+  DataGridPro,
+} from '@mui/x-data-grid-pro';
 import StarOutlineIcon from '@material-ui/icons/StarOutline';
 
-const defaultTheme = createMuiTheme();
+const defaultTheme = createTheme();
 const useStyles = makeStyles(
   (theme) => ({
     primary: {
@@ -108,7 +108,7 @@ export default function CustomColumnMenu() {
         Toggle menu background
       </Button>
       <div style={{ height: 250, width: '100%', marginTop: 16 }}>
-        <XGrid
+        <DataGridPro
           apiRef={apiRef}
           columns={[
             { field: 'default', width: 150 },
@@ -124,7 +124,7 @@ export default function CustomColumnMenu() {
             },
             {
               id: 2,
-              name: 'XGrid',
+              name: 'DataGridPro',
               stars: 15000,
               default: 'Enterprise',
             },

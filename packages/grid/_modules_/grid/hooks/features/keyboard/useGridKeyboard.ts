@@ -1,11 +1,6 @@
 import * as React from 'react';
-import { GRID_ROW_CSS_CLASS } from '../../../constants/cssClassesConstants';
-import {
-  GRID_CELL_KEY_DOWN,
-  GRID_CELL_NAVIGATION_KEY_DOWN,
-  GRID_COLUMN_HEADER_KEY_DOWN,
-  GRID_COLUMN_HEADER_NAVIGATION_KEY_DOWN,
-} from '../../../constants/eventsConstants';
+import { gridClasses } from '../../../gridClasses';
+import { GridEvents } from '../../../constants/eventsConstants';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridCellParams } from '../../../models/params/gridCellParams';
 import {
@@ -16,6 +11,7 @@ import {
 import { isEnterKey, isNavigationKey, isSpaceKey } from '../../../utils/keyboardUtils';
 import { useLogger } from '../../utils/useLogger';
 import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
+import { GridCellModes } from '../../../models/gridEditRowModel';
 
 export const useGridKeyboard = (apiRef: GridApiRef): void => {
   const logger = useLogger('useGridKeyboard');
@@ -24,7 +20,7 @@ export const useGridKeyboard = (apiRef: GridApiRef): void => {
     (params: GridCellParams, event: React.KeyboardEvent) => {
       const rowEl = findParentElementFromClassName(
         event.target as HTMLDivElement,
-        GRID_ROW_CSS_CLASS,
+        gridClasses.row,
       )! as HTMLElement;
 
       const currentRowIndex = Number(rowEl.getAttribute('data-rowindex'));
@@ -42,9 +38,9 @@ export const useGridKeyboard = (apiRef: GridApiRef): void => {
         selectionFromRowIndex = selectedRowsIndex[diffWithCurrentIndex.indexOf(minIndex)];
       }
 
-      apiRef.current.publishEvent(GRID_CELL_NAVIGATION_KEY_DOWN, params, event);
+      apiRef.current.publishEvent(GridEvents.cellNavigationKeyDown, params, event);
 
-      const focusCell = apiRef.current.getState().focus.cell!;
+      const focusCell = apiRef.current.state.focus.cell!;
       const rowIndex = apiRef.current.getRowIndex(focusCell.id);
       // We select the rows in between
       const rowIds = Array(Math.abs(rowIndex - selectionFromRowIndex) + 1).fill(
@@ -68,7 +64,7 @@ export const useGridKeyboard = (apiRef: GridApiRef): void => {
 
       // Get the most recent params because the cell mode may have changed by another listener
       const cellParams = apiRef.current.getCellParams(params.id, params.field);
-      const isEditMode = cellParams.cellMode === 'edit';
+      const isEditMode = cellParams.cellMode === GridCellModes.Edit;
       if (isEditMode) {
         return;
       }
@@ -80,7 +76,7 @@ export const useGridKeyboard = (apiRef: GridApiRef): void => {
       }
 
       if (isNavigationKey(event.key) && !event.shiftKey) {
-        apiRef.current.publishEvent(GRID_CELL_NAVIGATION_KEY_DOWN, cellParams, event);
+        apiRef.current.publishEvent(GridEvents.cellNavigationKeyDown, cellParams, event);
         return;
       }
 
@@ -112,7 +108,7 @@ export const useGridKeyboard = (apiRef: GridApiRef): void => {
       }
 
       if (isNavigationKey(event.key) && !isSpaceKey(event.key) && !event.shiftKey) {
-        apiRef.current.publishEvent(GRID_COLUMN_HEADER_NAVIGATION_KEY_DOWN, params, event);
+        apiRef.current.publishEvent(GridEvents.columnHeaderNavigationKeyDown, params, event);
         return;
       }
 
@@ -123,6 +119,6 @@ export const useGridKeyboard = (apiRef: GridApiRef): void => {
     [apiRef],
   );
 
-  useGridApiEventHandler(apiRef, GRID_CELL_KEY_DOWN, handleCellKeyDown);
-  useGridApiEventHandler(apiRef, GRID_COLUMN_HEADER_KEY_DOWN, handleColumnHeaderKeyDown);
+  useGridApiEventHandler(apiRef, GridEvents.cellKeyDown, handleCellKeyDown);
+  useGridApiEventHandler(apiRef, GridEvents.columnHeaderKeyDown, handleColumnHeaderKeyDown);
 };

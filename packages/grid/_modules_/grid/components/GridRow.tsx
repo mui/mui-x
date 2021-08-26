@@ -1,14 +1,9 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import {
-  GRID_ROW_DOUBLE_CLICK,
-  GRID_ROW_CLICK,
-  GRID_ROW_ENTER,
-  GRID_ROW_LEAVE,
-  GRID_ROW_OUT,
-  GRID_ROW_OVER,
-} from '../constants/eventsConstants';
-import { GridRowId } from '../models';
+import { GRID_CSS_CLASS_PREFIX } from '../constants/cssClassesConstants';
+import { GridEvents } from '../constants/eventsConstants';
+import { GridRowId } from '../models/gridRows';
+import { GridEditModes, GridRowModes } from '../models/gridEditRowModel';
 import { isFunction } from '../utils/utils';
 import { gridDensityRowHeightSelector } from '../hooks/features/density';
 import { useGridApiContext } from '../hooks/root/useGridApiContext';
@@ -18,17 +13,16 @@ import { optionsSelector } from '../hooks/utils/optionsSelector';
 export interface GridRowProps {
   id: GridRowId;
   selected: boolean;
-  className: string;
   rowIndex: number;
   children: React.ReactNode;
 }
 
 export function GridRow(props: GridRowProps) {
-  const { selected, id, className, rowIndex, children } = props;
+  const { selected, id, rowIndex, children } = props;
   const ariaRowIndex = rowIndex + 2; // 1 for the header row and 1 as it's 1 based
   const apiRef = useGridApiContext();
   const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
-  const { classes, getRowClassName } = useGridSelector(apiRef, optionsSelector);
+  const { classes, getRowClassName, editMode } = useGridSelector(apiRef, optionsSelector);
 
   const publish = React.useCallback(
     (eventName: string) => (event: React.MouseEvent) => {
@@ -42,6 +36,11 @@ export function GridRow(props: GridRowProps) {
         return;
       }
 
+      // The row might have been deleted
+      if (!apiRef.current.getRow(id)) {
+        return;
+      }
+
       apiRef!.current.publishEvent(eventName, apiRef?.current.getRowParams(id), event);
     },
     [apiRef, id],
@@ -49,12 +48,12 @@ export function GridRow(props: GridRowProps) {
 
   const mouseEventsHandlers = React.useMemo(
     () => ({
-      onClick: publish(GRID_ROW_CLICK),
-      onDoubleClick: publish(GRID_ROW_DOUBLE_CLICK),
-      onMouseOver: publish(GRID_ROW_OVER),
-      onMouseOut: publish(GRID_ROW_OUT),
-      onMouseEnter: publish(GRID_ROW_ENTER),
-      onMouseLeave: publish(GRID_ROW_LEAVE),
+      onClick: publish(GridEvents.rowClick),
+      onDoubleClick: publish(GridEvents.rowDoubleClick),
+      onMouseOver: publish(GridEvents.rowOver),
+      onMouseOut: publish(GridEvents.rowOut),
+      onMouseEnter: publish(GridEvents.rowEnter),
+      onMouseLeave: publish(GridEvents.rowLeave),
     }),
     [publish],
   );
@@ -66,8 +65,10 @@ export function GridRow(props: GridRowProps) {
 
   const rowClassName =
     isFunction(getRowClassName) && getRowClassName(apiRef!.current.getRowParams(id));
-  const cssClasses = clsx(className, rowClassName, classes?.row, {
+  const cssClasses = clsx(rowClassName, classes?.row, {
     'Mui-selected': selected,
+    [`${GRID_CSS_CLASS_PREFIX}-row--editing`]: apiRef.current.getRowMode(id) === GridRowModes.Edit,
+    [`${GRID_CSS_CLASS_PREFIX}-row--editable`]: editMode === GridEditModes.Row,
   });
 
   return (

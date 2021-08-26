@@ -1,9 +1,6 @@
 import * as React from 'react';
-import { DataGrid } from '@material-ui/data-grid';
-import {
-  randomCreatedDate,
-  randomUpdatedDate,
-} from '@material-ui/x-grid-data-generator';
+import { DataGrid } from '@mui/x-data-grid';
+import { randomCreatedDate, randomUpdatedDate } from '@mui/x-data-grid-generator';
 
 const rows = [
   {

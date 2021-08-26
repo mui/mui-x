@@ -1,5 +1,4 @@
 import * as styles from '@material-ui/core/styles';
-import { GRID_CSS_CLASS_PREFIX } from '../constants/cssClassesConstants';
 import isDeepEqual from '../lib/lodash/isDeepEqual';
 import { generateUtilityClass } from './material-ui-utils';
 
@@ -65,7 +64,7 @@ export function localStorageAvailable() {
 }
 
 export function getDataGridUtilityClass(slot) {
-  return generateUtilityClass(GRID_CSS_CLASS_PREFIX, slot);
+  return generateUtilityClass('MuiDataGrid', slot);
 }
 
 export function escapeRegExp(value: string): string {

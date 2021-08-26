@@ -2,23 +2,8 @@ import * as React from 'react';
 import clsx from 'clsx';
 // @ts-expect-error fixed in Material-UI v5, types definitions were added.
 import { unstable_useId as useId } from '@material-ui/core/utils';
-import {
-  GRID_COLUMN_HEADER_KEY_DOWN,
-  GRID_COLUMN_HEADER_CLICK,
-  GRID_COLUMN_HEADER_DOUBLE_CLICK,
-  GRID_COLUMN_HEADER_ENTER,
-  GRID_COLUMN_HEADER_LEAVE,
-  GRID_COLUMN_HEADER_OUT,
-  GRID_COLUMN_HEADER_OVER,
-  GRID_COLUMN_HEADER_DRAG_ENTER,
-  GRID_COLUMN_HEADER_DRAG_OVER,
-  GRID_COLUMN_HEADER_DRAG_START,
-  GRID_COLUMN_HEADER_DRAG_END,
-  GRID_COLUMN_SEPARATOR_MOUSE_DOWN,
-  GRID_COLUMN_HEADER_FOCUS,
-  GRID_COLUMN_HEADER_BLUR,
-} from '../../constants/eventsConstants';
-import { GRID_NUMBER_COLUMN_TYPE, GridStateColDef } from '../../models/colDef/index';
+import { GridEvents } from '../../constants/eventsConstants';
+import { GridStateColDef, GRID_NUMBER_COLUMN_TYPE } from '../../models/colDef/index';
 import { GridOptions } from '../../models/gridOptions';
 import { GridSortDirection } from '../../models/gridSortModel';
 import { useGridApiContext } from '../../hooks/root/useGridApiContext';
@@ -29,6 +14,7 @@ import { ColumnHeaderMenuIcon } from './ColumnHeaderMenuIcon';
 import { ColumnHeaderFilterIcon } from './ColumnHeaderFilterIcon';
 import { GridColumnHeaderMenu } from '../menu/columnMenu/GridColumnHeaderMenu';
 import { isFunction } from '../../utils/utils';
+import { gridClasses } from '../../gridClasses';
 
 interface GridColumnHeaderItemProps {
   colIndex: number;
@@ -94,32 +80,32 @@ export function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
 
   const mouseEventsHandlers = React.useMemo(
     () => ({
-      onClick: publish(GRID_COLUMN_HEADER_CLICK),
-      onDoubleClick: publish(GRID_COLUMN_HEADER_DOUBLE_CLICK),
-      onMouseOver: publish(GRID_COLUMN_HEADER_OVER),
-      onMouseOut: publish(GRID_COLUMN_HEADER_OUT),
-      onMouseEnter: publish(GRID_COLUMN_HEADER_ENTER),
-      onMouseLeave: publish(GRID_COLUMN_HEADER_LEAVE),
-      onKeyDown: publish(GRID_COLUMN_HEADER_KEY_DOWN),
-      onFocus: publish(GRID_COLUMN_HEADER_FOCUS),
-      onBlur: publish(GRID_COLUMN_HEADER_BLUR),
+      onClick: publish(GridEvents.columnHeaderClick),
+      onDoubleClick: publish(GridEvents.columnHeaderDoubleClick),
+      onMouseOver: publish(GridEvents.columnHeaderOver),
+      onMouseOut: publish(GridEvents.columnHeaderOut),
+      onMouseEnter: publish(GridEvents.columnHeaderEnter),
+      onMouseLeave: publish(GridEvents.columnHeaderLeave),
+      onKeyDown: publish(GridEvents.columnHeaderKeyDown),
+      onFocus: publish(GridEvents.columnHeaderFocus),
+      onBlur: publish(GridEvents.columnHeaderBlur),
     }),
     [publish],
   );
 
   const draggableEventHandlers = React.useMemo(
     () => ({
-      onDragStart: publish(GRID_COLUMN_HEADER_DRAG_START),
-      onDragEnter: publish(GRID_COLUMN_HEADER_DRAG_ENTER),
-      onDragOver: publish(GRID_COLUMN_HEADER_DRAG_OVER),
-      onDragEnd: publish(GRID_COLUMN_HEADER_DRAG_END),
+      onDragStart: publish(GridEvents.columnHeaderDragStart),
+      onDragEnter: publish(GridEvents.columnHeaderDragEnter),
+      onDragOver: publish(GridEvents.columnHeaderDragOver),
+      onDragEnd: publish(GridEvents.columnHeaderDragEnd),
     }),
     [publish],
   );
 
   const resizeEventHandlers = React.useMemo(
     () => ({
-      onMouseDown: publish(GRID_COLUMN_SEPARATOR_MOUSE_DOWN),
+      onMouseDown: publish(GridEvents.columnSeparatorMouseDown),
     }),
     [publish],
   );
@@ -128,21 +114,21 @@ export function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
 
   if (column.headerClassName) {
     const headerClassName = isFunction(column.headerClassName)
-      ? column.headerClassName({ field: column.field, colDef: column, api: apiRef.current })
+      ? column.headerClassName({ field: column.field, colDef: column })
       : column.headerClassName;
 
     classNames.push(headerClassName);
   }
 
   const cssClasses = clsx(
-    column.headerAlign === 'center' && 'MuiDataGrid-columnHeader--alignCenter',
-    column.headerAlign === 'right' && 'MuiDataGrid-columnHeader--alignRight',
+    column.headerAlign === 'center' && gridClasses['columnHeader--alignCenter'],
+    column.headerAlign === 'right' && gridClasses['columnHeader--alignRight'],
     {
-      'MuiDataGrid-columnHeader--sortable': column.sortable,
-      'MuiDataGrid-columnHeader--moving': isDragging,
-      'MuiDataGrid-columnHeader--sorted': isColumnSorted,
-      'MuiDataGrid-columnHeader--numeric': isColumnNumeric,
-      'MuiDataGrid-withBorder': showColumnRightBorder,
+      [gridClasses['columnHeader--sortable']]: column.sortable,
+      [gridClasses['columnHeader--moving']]: isDragging,
+      [gridClasses['columnHeader--sorted']]: isColumnSorted,
+      [gridClasses['columnHeader--numeric']]: isColumnNumeric,
+      [gridClasses.withBorder]: showColumnRightBorder,
     },
     ...classNames,
   );
@@ -176,7 +162,7 @@ export function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
   );
 
   React.useLayoutEffect(() => {
-    const columnMenuState = apiRef!.current.getState().columnMenu;
+    const columnMenuState = apiRef!.current.state.columnMenu;
     if (hasFocus && !columnMenuState.open) {
       const focusableElement = headerCellRef.current!.querySelector(
         '[tabindex="0"]',
@@ -207,11 +193,11 @@ export function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
       {...mouseEventsHandlers}
     >
       <div
-        className="MuiDataGrid-columnHeaderDraggableContainer"
+        className={gridClasses.columnHeaderDraggableContainer}
         draggable={!disableColumnReorder && !column.disableReorder}
         {...draggableEventHandlers}
       >
-        <div className="MuiDataGrid-columnHeaderTitleContainer">
+        <div className={gridClasses.columnHeaderTitleContainer}>
           {headerComponent || (
             <GridColumnHeaderTitle
               label={column.headerName || column.field}

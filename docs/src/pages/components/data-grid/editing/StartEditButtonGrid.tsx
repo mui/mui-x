@@ -2,22 +2,22 @@
 import * as React from 'react';
 import Button from '@material-ui/core/Button';
 import {
-  GridCellParams,
   GridColumns,
   GridRowsProp,
   useGridApiRef,
-  XGrid,
+  DataGridPro,
   GridApiRef,
-} from '@material-ui/x-grid';
+  GridCellParams,
+} from '@mui/x-data-grid-pro';
 import {
   randomCreatedDate,
   randomTraderName,
   randomUpdatedDate,
-} from '@material-ui/x-grid-data-generator';
-import { createMuiTheme, Theme } from '@material-ui/core/styles';
+} from '@mui/x-data-grid-generator';
+import { createTheme, Theme } from '@material-ui/core/styles';
 import { makeStyles } from '@material-ui/styles';
 
-const defaultTheme = createMuiTheme();
+const defaultTheme = createTheme();
 const useStyles = makeStyles(
   (theme: Theme) => ({
     root: {
@@ -106,7 +106,7 @@ export default function StartEditButtonGrid() {
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <XGrid
+      <DataGridPro
         rows={rows}
         columns={columns}
         apiRef={apiRef}

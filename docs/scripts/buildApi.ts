@@ -167,14 +167,14 @@ function generateImportStatement(api: Api) {
   // TODO: Check if interface was exported
   if (api.name === 'GridApi') {
     return `\`\`\`js
-import { ${api.name} } from '@material-ui/x-grid';
+import { ${api.name} } from '@mui/x-data-grid-pro';
 \`\`\``;
   }
 
   return `\`\`\`js
-import { ${api.name} } from '@material-ui/x-grid';
+import { ${api.name} } from '@mui/x-data-grid-pro';
 // or
-import { ${api.name} } from '@material-ui/data-grid';
+import { ${api.name} } from '@mui/x-data-grid';
 \`\`\``;
 }
 
@@ -214,17 +214,15 @@ function findProperties(reflection: TypeDoc.DeclarationReflection) {
   return properties.sort((a, b) => a.name.localeCompare(b.name));
 }
 
-function extractEvents(project: TypeDoc.ProjectReflection, apisToGenerate) {
+function extractEvents(eventsObject: TypeDoc.DeclarationReflection, apisToGenerate) {
   const events: { name: string; description: string }[] = [];
-  const allEvents = project.getReflectionsByKind(TypeDoc.ReflectionKind.Event);
+  const allEvents = eventsObject.children!;
 
-  allEvents!.forEach((event) => {
-    if (!event.flags.isConst) {
-      return;
-    }
+  allEvents.forEach((event) => {
     const description = linkify(event.comment?.shortText || '', apisToGenerate, 'html');
+
     events.push({
-      name: (event as any).type.value,
+      name: event.escapedName!,
       description: renderMarkdownInline(description),
     });
   });
@@ -259,6 +257,8 @@ function run(argv: { outputDirectory?: string }) {
     'GridCsvExportApi',
     'GridExportCsvOptions',
     'GridVirtualizationApi',
+    'GridEditRowApi',
+    'GridEvents',
   ];
 
   apisToGenerate.forEach((apiName) => {
@@ -299,6 +299,17 @@ function run(argv: { outputDirectory?: string }) {
       );
       // eslint-disable-next-line no-console
       console.log('Built JSON file for', api.name);
+    } else if (reflection.name === 'GridEvents') {
+      const events = extractEvents(reflection, apisToGenerate);
+
+      writePrettifiedFile(
+        path.resolve(workspaceRoot, 'docs/src/pages/components/data-grid/events/events.json'),
+        JSON.stringify(events),
+        prettierConfigPath,
+      );
+
+      // eslint-disable-next-line no-console
+      console.log('Built events file');
     } else {
       writePrettifiedFile(
         path.resolve(outputDirectory, `${slug}.md`),
@@ -331,17 +342,6 @@ Page.getInitialProps = () => {
       console.log('Built API docs for', api.name);
     }
   });
-
-  const events = extractEvents(project!, apisToGenerate);
-
-  writePrettifiedFile(
-    path.resolve(workspaceRoot, 'docs/src/pages/components/data-grid/events/events.json'),
-    JSON.stringify(events),
-    prettierConfigPath,
-  );
-
-  // eslint-disable-next-line no-console
-  console.log('Built events file');
 }
 
 yargs

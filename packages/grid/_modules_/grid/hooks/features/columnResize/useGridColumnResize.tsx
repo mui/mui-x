@@ -3,17 +3,8 @@ import { ownerDocument } from '@material-ui/core/utils';
 import { GridStateColDef } from '../../../models/colDef';
 import { useLogger } from '../../utils';
 import { useEventCallback } from '../../../utils/material-ui-utils';
-import {
-  GRID_COLUMN_SEPARATOR_MOUSE_DOWN,
-  GRID_COLUMN_RESIZE_START,
-  GRID_COLUMN_RESIZE_STOP,
-  GRID_COLUMN_RESIZE,
-  GRID_COLUMN_WIDTH_CHANGE,
-} from '../../../constants/eventsConstants';
-import {
-  GRID_COLUMN_HEADER_CSS_CLASS,
-  GRID_COLUMN_HEADER_SEPARATOR_RESIZABLE_CSS_CLASS,
-} from '../../../constants/cssClassesConstants';
+import { GridEvents } from '../../../constants/eventsConstants';
+import { gridClasses } from '../../../gridClasses';
 import {
   findGridCellElementsFromCol,
   findParentElementFromClassName,
@@ -26,25 +17,24 @@ import { useGridState } from '../core/useGridState';
 import { useNativeEventListener } from '../../root/useNativeEventListener';
 import { GridComponentProps } from '../../../GridComponentProps';
 
-let cachedSupportsTouchActionNone = false;
-
 // TODO: remove support for Safari < 13.
 // https://caniuse.com/#search=touch-action
 //
 // Safari, on iOS, supports touch action since v13.
 // Over 80% of the iOS phones are compatible
 // in August 2020.
+// Utilizing the CSS.supports method to check if touch-action is supported.
+// Since CSS.supports is supported on all but Edge@12 and IE and touch-action
+// is supported on both Edge@12 and IE if CSS.supports is not available that means that
+// touch-action will be supported
+let cachedSupportsTouchActionNone = false;
 function doesSupportTouchActionNone(): boolean {
-  // The document is not defined in the server-side
-  if (typeof document === 'undefined') {
-    return cachedSupportsTouchActionNone;
-  }
-  if (!cachedSupportsTouchActionNone) {
-    const element = document.createElement('div');
-    element.style.touchAction = 'none';
-    document.body.appendChild(element);
-    cachedSupportsTouchActionNone = window.getComputedStyle(element).touchAction === 'none';
-    element.parentElement!.removeChild(element);
+  if (cachedSupportsTouchActionNone === undefined) {
+    if (typeof CSS !== 'undefined' && typeof CSS.supports === 'function') {
+      cachedSupportsTouchActionNone = CSS.supports('touch-action', 'none');
+    } else {
+      cachedSupportsTouchActionNone = true;
+    }
   }
   return cachedSupportsTouchActionNone;
 }
@@ -89,6 +79,7 @@ export const useGridColumnResize = (
 
     colDefRef.current!.computedWidth = newWidth;
     colDefRef.current!.width = newWidth;
+    colDefRef.current!.flex = undefined;
 
     colElementRef.current!.style.width = `${newWidth}px`;
     colElementRef.current!.style.minWidth = `${newWidth}px`;
@@ -110,13 +101,12 @@ export const useGridColumnResize = (
 
     clearTimeout(stopResizeEventTimeout.current);
     stopResizeEventTimeout.current = setTimeout(() => {
-      apiRef.current.publishEvent(GRID_COLUMN_RESIZE_STOP, null, nativeEvent);
+      apiRef.current.publishEvent(GridEvents.columnResizeStop, null, nativeEvent);
       apiRef.current.publishEvent(
-        GRID_COLUMN_WIDTH_CHANGE,
+        GridEvents.columnWidthChange,
         {
           element: colElementRef.current,
           colDef: colDefRef.current,
-          api: apiRef,
           width: colDefRef.current?.computedWidth,
         },
         nativeEvent,
@@ -143,11 +133,10 @@ export const useGridColumnResize = (
 
     updateWidth(newWidth);
     apiRef.current.publishEvent(
-      GRID_COLUMN_RESIZE,
+      GridEvents.columnResize,
       {
         element: colElementRef.current,
         colDef: colDefRef.current,
-        api: apiRef,
         width: newWidth,
       },
       nativeEvent,
@@ -162,9 +151,7 @@ export const useGridColumnResize = (
       }
 
       // Skip if the column isn't resizable
-      if (
-        !event.currentTarget.classList.contains(GRID_COLUMN_HEADER_SEPARATOR_RESIZABLE_CSS_CLASS)
-      ) {
+      if (!event.currentTarget.classList.contains(gridClasses['columnSeparator--resizable'])) {
         return;
       }
 
@@ -173,11 +160,11 @@ export const useGridColumnResize = (
 
       colElementRef.current = findParentElementFromClassName(
         event.currentTarget,
-        GRID_COLUMN_HEADER_CSS_CLASS,
+        gridClasses.columnHeader,
       ) as HTMLDivElement;
 
       logger.debug(`Start Resize on col ${colDef.field}`);
-      apiRef.current.publishEvent(GRID_COLUMN_RESIZE_START, { field: colDef.field }, event);
+      apiRef.current.publishEvent(GridEvents.columnResizeStart, { field: colDef.field }, event);
 
       colDefRef.current = colDef;
       colElementRef.current = apiRef.current!.columnHeadersElementRef?.current!.querySelector(
@@ -214,7 +201,7 @@ export const useGridColumnResize = (
 
     clearTimeout(stopResizeEventTimeout.current);
     stopResizeEventTimeout.current = setTimeout(() => {
-      apiRef.current.publishEvent(GRID_COLUMN_RESIZE_STOP, null, nativeEvent);
+      apiRef.current.publishEvent(GridEvents.columnResizeStop, null, nativeEvent);
     });
 
     logger.debug(
@@ -242,11 +229,10 @@ export const useGridColumnResize = (
 
     updateWidth(newWidth);
     apiRef.current.publishEvent(
-      GRID_COLUMN_RESIZE,
+      GridEvents.columnResize,
       {
         element: colElementRef.current,
         colDef: colDefRef.current,
-        api: apiRef,
         width: newWidth,
       },
       nativeEvent,
@@ -256,7 +242,7 @@ export const useGridColumnResize = (
   const handleTouchStart = useEventCallback((event) => {
     const cellSeparator = findParentElementFromClassName(
       event.target,
-      GRID_COLUMN_HEADER_SEPARATOR_RESIZABLE_CSS_CLASS,
+      gridClasses['columnSeparator--resizable'],
     );
     // Let the event bubble if the target is not a col separator
     if (!cellSeparator) return;
@@ -273,13 +259,13 @@ export const useGridColumnResize = (
 
     colElementRef.current = findParentElementFromClassName(
       event.target,
-      GRID_COLUMN_HEADER_CSS_CLASS,
+      gridClasses.columnHeader,
     ) as HTMLDivElement;
     const field = getFieldFromHeaderElem(colElementRef.current!);
     const colDef = apiRef.current.getColumn(field);
 
     logger.debug(`Start Resize on col ${colDef.field}`);
-    apiRef.current.publishEvent(GRID_COLUMN_RESIZE_START, { field }, event);
+    apiRef.current.publishEvent(GridEvents.columnResizeStart, { field }, event);
 
     colDefRef.current = colDef;
     colElementRef.current = findHeaderElementFromField(
@@ -342,10 +328,10 @@ export const useGridColumnResize = (
     { passive: doesSupportTouchActionNone() },
   );
 
-  useGridApiEventHandler(apiRef, GRID_COLUMN_SEPARATOR_MOUSE_DOWN, handleColumnResizeMouseDown);
-  useGridApiEventHandler(apiRef, GRID_COLUMN_RESIZE_START, handleResizeStart);
-  useGridApiEventHandler(apiRef, GRID_COLUMN_RESIZE_STOP, handleResizeStop);
+  useGridApiEventHandler(apiRef, GridEvents.columnSeparatorMouseDown, handleColumnResizeMouseDown);
+  useGridApiEventHandler(apiRef, GridEvents.columnResizeStart, handleResizeStart);
+  useGridApiEventHandler(apiRef, GridEvents.columnResizeStop, handleResizeStop);
 
-  useGridApiOptionHandler(apiRef, GRID_COLUMN_RESIZE, props.onColumnResize);
-  useGridApiOptionHandler(apiRef, GRID_COLUMN_WIDTH_CHANGE, props.onColumnWidthChange);
+  useGridApiOptionHandler(apiRef, GridEvents.columnResize, props.onColumnResize);
+  useGridApiOptionHandler(apiRef, GridEvents.columnWidthChange, props.onColumnWidthChange);
 };

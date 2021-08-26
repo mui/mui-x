@@ -1,24 +1,15 @@
 import * as React from 'react';
 import { ownerDocument, capitalize } from '@material-ui/core/utils';
 import clsx from 'clsx';
+import { GridEvents } from '../../constants/eventsConstants';
+import { gridClasses } from '../../gridClasses';
 import {
-  GRID_CELL_BLUR,
-  GRID_CELL_CLICK,
-  GRID_CELL_DOUBLE_CLICK,
-  GRID_CELL_ENTER,
-  GRID_CELL_FOCUS,
-  GRID_CELL_KEY_DOWN,
-  GRID_CELL_LEAVE,
-  GRID_CELL_MOUSE_DOWN,
-  GRID_CELL_MOUSE_UP,
-  GRID_CELL_OUT,
-  GRID_CELL_OVER,
-  GRID_CELL_DRAG_START,
-  GRID_CELL_DRAG_ENTER,
-  GRID_CELL_DRAG_OVER,
-} from '../../constants/eventsConstants';
-import { GRID_CSS_CLASS_PREFIX } from '../../constants/cssClassesConstants';
-import { GridAlignment, GridCellMode, GridCellValue, GridRowId } from '../../models/index';
+  GridAlignment,
+  GridCellMode,
+  GridCellModes,
+  GridCellValue,
+  GridRowId,
+} from '../../models/index';
 import { useGridApiContext } from '../../hooks/root/useGridApiContext';
 
 export interface GridCellProps {
@@ -66,9 +57,9 @@ export const GridCell = React.memo(function GridCell(props: GridCellProps) {
   const cellRef = React.useRef<HTMLDivElement>(null);
   const apiRef = useGridApiContext();
 
-  const cssClasses = clsx(className, `${GRID_CSS_CLASS_PREFIX}-cell--text${capitalize(align)}`, {
-    [`${GRID_CSS_CLASS_PREFIX}-withBorder`]: showRightBorder,
-    [`${GRID_CSS_CLASS_PREFIX}-cell--editable`]: isEditable,
+  const cssClasses = clsx(className, `${gridClasses[`cell--text${capitalize(align)}`]}`, {
+    [`${gridClasses.withBorder}`]: showRightBorder,
+    [`${gridClasses['cell--editable']}`]: isEditable,
   });
 
   const publishBlur = React.useCallback(
@@ -107,31 +98,33 @@ export const GridCell = React.memo(function GridCell(props: GridCellProps) {
         return;
       }
 
-      apiRef!.current.publishEvent(
-        eventName,
-        apiRef!.current.getCellParams(rowId!, field || ''),
-        event,
-      );
+      // The row might have been deleted during the click
+      if (!apiRef.current.getRow(rowId)) {
+        return;
+      }
+
+      const params = apiRef!.current.getCellParams(rowId!, field || '');
+      apiRef!.current.publishEvent(eventName, params, event);
     },
     [apiRef, field, rowId],
   );
 
   const eventsHandlers = React.useMemo(
     () => ({
-      onClick: publish(GRID_CELL_CLICK),
-      onDoubleClick: publish(GRID_CELL_DOUBLE_CLICK),
-      onMouseDown: publish(GRID_CELL_MOUSE_DOWN),
-      onMouseUp: publishMouseUp(GRID_CELL_MOUSE_UP),
-      onMouseOver: publish(GRID_CELL_OVER),
-      onMouseOut: publish(GRID_CELL_OUT),
-      onMouseEnter: publish(GRID_CELL_ENTER),
-      onMouseLeave: publish(GRID_CELL_LEAVE),
-      onKeyDown: publish(GRID_CELL_KEY_DOWN),
-      onBlur: publishBlur(GRID_CELL_BLUR),
-      onFocus: publish(GRID_CELL_FOCUS),
-      onDragStart: publish(GRID_CELL_DRAG_START),
-      onDragEnter: publish(GRID_CELL_DRAG_ENTER),
-      onDragOver: publish(GRID_CELL_DRAG_OVER),
+      onClick: publish(GridEvents.cellClick),
+      onDoubleClick: publish(GridEvents.cellDoubleClick),
+      onMouseDown: publish(GridEvents.cellMouseDown),
+      onMouseUp: publishMouseUp(GridEvents.cellMouseUp),
+      onMouseOver: publish(GridEvents.cellOver),
+      onMouseOut: publish(GridEvents.cellOut),
+      onMouseEnter: publish(GridEvents.cellEnter),
+      onMouseLeave: publish(GridEvents.cellLeave),
+      onKeyDown: publish(GridEvents.cellKeyDown),
+      onBlur: publishBlur(GridEvents.cellBlur),
+      onFocus: publish(GridEvents.cellFocus),
+      onDragStart: publish(GridEvents.cellDragStart),
+      onDragEnter: publish(GridEvents.cellDragEnter),
+      onDragOver: publish(GridEvents.cellDragOver),
     }),
     [publish, publishBlur, publishMouseUp],
   );
@@ -145,7 +138,7 @@ export const GridCell = React.memo(function GridCell(props: GridCellProps) {
   };
 
   React.useLayoutEffect(() => {
-    if (!hasFocus || cellMode === 'edit') {
+    if (!hasFocus || cellMode === GridCellModes.Edit) {
       return;
     }
 
@@ -175,7 +168,7 @@ export const GridCell = React.memo(function GridCell(props: GridCellProps) {
       data-mode={cellMode}
       aria-colindex={colIndex + 1}
       style={style}
-      tabIndex={tabIndex}
+      tabIndex={cellMode === 'view' || !isEditable ? tabIndex : -1}
       {...eventsHandlers}
     >
       {children != null ? children : valueToRender?.toString()}

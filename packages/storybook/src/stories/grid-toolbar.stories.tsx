@@ -1,13 +1,13 @@
-import { DataGrid } from '@material-ui/data-grid';
-import { useDemoData } from '@material-ui/x-grid-data-generator';
+import { DataGrid } from '@mui/x-data-grid';
+import { useDemoData } from '@mui/x-data-grid-generator';
 import * as React from 'react';
-import { XGrid, GridToolbar } from '@material-ui/x-grid';
+import { DataGridPro, GridToolbar } from '@mui/x-data-grid-pro';
 import '../style/grid-stories.css';
 import { useData } from '../hooks/useData';
 
 export default {
   title: 'X-Grid Tests/Toolbar',
-  component: XGrid,
+  component: DataGridPro,
   parameters: {
     options: { selectedPanel: 'storybook/storysource/panel' },
     docs: {
@@ -20,7 +20,7 @@ export const DensitySelectorCompact = () => {
 
   return (
     <div style={{ height: 600 }}>
-      <XGrid
+      <DataGridPro
         rows={data.rows}
         columns={data.columns}
         density="compact"
@@ -36,7 +36,7 @@ export const DensitySelectorComfortable = () => {
 
   return (
     <div style={{ height: 600 }}>
-      <XGrid
+      <DataGridPro
         columns={data.columns}
         rows={data.rows}
         density="comfortable"
@@ -52,7 +52,7 @@ export const CsvExport = () => {
 
   return (
     <div style={{ height: 600 }}>
-      <XGrid
+      <DataGridPro
         columns={data.columns}
         rows={data.rows}
         checkboxSelection

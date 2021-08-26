@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { XGrid, GridOverlay } from '@material-ui/x-grid';
+import { DataGridPro, GridOverlay } from '@mui/x-data-grid-pro';
 import {
   useDemoData,
   getRealData,
   getCommodityColumns,
-} from '@material-ui/x-grid-data-generator';
+} from '@mui/x-data-grid-generator';
 import LinearProgress from '@material-ui/core/LinearProgress';
 
 const MAX_ROW_LENGTH = 500;
@@ -63,7 +63,7 @@ export default function InfiniteLoadingGrid() {
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <XGrid
+      <DataGridPro
         {...data}
         rows={data.rows.concat(loadedRows)}
         loading={loading}

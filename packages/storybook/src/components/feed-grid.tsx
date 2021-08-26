@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { fromEvent, Subscription } from 'rxjs';
 import { takeUntil, tap } from 'rxjs/operators';
-import { GridColDef, GridOptionsProp, XGrid, useGridApiRef } from '@material-ui/x-grid';
+import { GridColDef, GridOptionsProp, DataGridPro, useGridApiRef } from '@mui/x-data-grid-pro';
 import { pricingColumns, PricingModel } from '../data/streaming/pricing-service';
 import { subscribeFeed } from '../data/streaming/single-subscription-service';
 
@@ -68,7 +68,7 @@ export const FeedGrid = (props: FeedGridProps) => {
         </button>
       </div>
       <div style={{ width: 800, height: 600 }}>
-        <XGrid rows={rows} columns={columns} apiRef={apiRef} {...props} getRowId={getRowId} />
+        <DataGridPro rows={rows} columns={columns} apiRef={apiRef} {...props} getRowId={getRowId} />
       </div>
     </React.Fragment>
   );

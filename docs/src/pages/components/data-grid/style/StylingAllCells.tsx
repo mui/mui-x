@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridColumns, DataGrid, GridCellParams } from '@material-ui/data-grid';
+import { GridColumns, DataGrid, GridCellParams } from '@mui/x-data-grid';
 import { makeStyles } from '@material-ui/core/styles';
 
 const columns: GridColumns = [

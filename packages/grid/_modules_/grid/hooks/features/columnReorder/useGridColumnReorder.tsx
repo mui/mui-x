@@ -1,16 +1,8 @@
 import * as React from 'react';
 import { useLogger } from '../../utils/useLogger';
 import { GridApiRef } from '../../../models/api/gridApiRef';
-import {
-  GRID_COLUMN_HEADER_DRAG_START,
-  GRID_COLUMN_HEADER_DRAG_OVER,
-  GRID_COLUMN_HEADER_DRAG_ENTER,
-  GRID_COLUMN_HEADER_DRAG_END,
-  GRID_CELL_DRAG_ENTER,
-  GRID_CELL_DRAG_OVER,
-  GRID_CELL_DRAG_END,
-} from '../../../constants/eventsConstants';
-import { GRID_COLUMN_HEADER_DRAGGING_CSS_CLASS } from '../../../constants/cssClassesConstants';
+import { GridEvents } from '../../../constants/eventsConstants';
+import { gridClasses } from '../../../gridClasses';
 import { GridColumnHeaderParams } from '../../../models/params/gridColumnHeaderParams';
 import { GridCellParams } from '../../../models/params/gridCellParams';
 import { CursorCoordinates } from '../../../models/cursorCoordinates';
@@ -39,7 +31,7 @@ const hasCursorPositionChanged = (
   currentCoordinates.x !== nextCoordinates.x || currentCoordinates.y !== nextCoordinates.y;
 
 /**
- * Only available in XGrid
+ * Only available in DataGridPro
  */
 export const useGridColumnReorder = (
   apiRef: GridApiRef,
@@ -72,7 +64,7 @@ export const useGridColumnReorder = (
       logger.debug(`Start dragging col ${params.field}`);
 
       dragColNode.current = event.currentTarget;
-      dragColNode.current.classList.add(GRID_COLUMN_HEADER_DRAGGING_CSS_CLASS);
+      dragColNode.current.classList.add(gridClasses['columnSeparator--dragging']);
 
       setGridState((state) => ({
         ...state,
@@ -81,7 +73,7 @@ export const useGridColumnReorder = (
       forceUpdate();
 
       removeDnDStylesTimeout.current = setTimeout(() => {
-        dragColNode.current!.classList.remove(GRID_COLUMN_HEADER_DRAGGING_CSS_CLASS);
+        dragColNode.current!.classList.remove(gridClasses['columnSeparator--dragging']);
       });
 
       originColumnIndex.current = apiRef.current.getColumnIndex(params.field, false);
@@ -164,11 +156,11 @@ export const useGridColumnReorder = (
     [props.disableColumnReorder, logger, setGridState, forceUpdate, apiRef, dragColField],
   );
 
-  useGridApiEventHandler(apiRef, GRID_COLUMN_HEADER_DRAG_START, handleColumnHeaderDragStart);
-  useGridApiEventHandler(apiRef, GRID_COLUMN_HEADER_DRAG_ENTER, handleDragEnter);
-  useGridApiEventHandler(apiRef, GRID_COLUMN_HEADER_DRAG_OVER, handleDragOver);
-  useGridApiEventHandler(apiRef, GRID_COLUMN_HEADER_DRAG_END, handleDragEnd);
-  useGridApiEventHandler(apiRef, GRID_CELL_DRAG_ENTER, handleDragEnter);
-  useGridApiEventHandler(apiRef, GRID_CELL_DRAG_OVER, handleDragOver);
-  useGridApiEventHandler(apiRef, GRID_CELL_DRAG_END, handleDragEnd);
+  useGridApiEventHandler(apiRef, GridEvents.columnHeaderDragStart, handleColumnHeaderDragStart);
+  useGridApiEventHandler(apiRef, GridEvents.columnHeaderDragEnter, handleDragEnter);
+  useGridApiEventHandler(apiRef, GridEvents.columnHeaderDragOver, handleDragOver);
+  useGridApiEventHandler(apiRef, GridEvents.columnHeaderDragEnd, handleDragEnd);
+  useGridApiEventHandler(apiRef, GridEvents.cellDragEnter, handleDragEnter);
+  useGridApiEventHandler(apiRef, GridEvents.cellDragOver, handleDragOver);
+  useGridApiEventHandler(apiRef, GridEvents.cellDragEnd, handleDragEnd);
 };

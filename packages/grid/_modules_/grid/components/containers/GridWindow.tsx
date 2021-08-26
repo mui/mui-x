@@ -6,8 +6,9 @@ import {
   gridDensityRowHeightSelector,
 } from '../../hooks/features/density/densitySelector';
 import { gridDataContainerHeightSelector } from '../../hooks/root/gridContainerSizesSelector';
-import { optionsSelector } from '../../hooks/utils/optionsSelector';
 import { useGridApiContext } from '../../hooks/root/useGridApiContext';
+import { gridClasses } from '../../gridClasses';
+import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
 export interface GridWindowProps extends React.HTMLAttributes<HTMLDivElement> {
   size: { width: number; height: number };
@@ -19,7 +20,7 @@ export const GridWindow = React.forwardRef<HTMLDivElement, GridWindowProps>(func
 ) {
   const { className, size, ...other } = props;
   const apiRef = useGridApiContext();
-  const { autoHeight } = useGridSelector(apiRef, optionsSelector);
+  const rootProps = useGridRootProps();
   const headerHeight = useGridSelector(apiRef, gridDensityHeaderHeightSelector);
   const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
   const dataContainerHeight = useGridSelector(apiRef, gridDataContainerHeightSelector);
@@ -32,17 +33,17 @@ export const GridWindow = React.forwardRef<HTMLDivElement, GridWindowProps>(func
   }, [apiRef]);
 
   const containerHeight = React.useMemo(() => {
-    if (!autoHeight) {
+    if (!rootProps.autoHeight) {
       return size.height;
     }
     // If we have no rows, we give the size of 2 rows to display the no rows overlay
     const dataHeight = dataContainerHeight < rowHeight ? rowHeight * 2 : dataContainerHeight;
     return headerHeight + dataHeight;
-  }, [autoHeight, dataContainerHeight, headerHeight, rowHeight, size.height]);
+  }, [rootProps.autoHeight, dataContainerHeight, headerHeight, rowHeight, size.height]);
 
   return (
     <div
-      className="MuiDataGrid-windowContainer"
+      className={gridClasses.windowContainer}
       style={{
         width: size.width,
         height: containerHeight,
@@ -50,9 +51,9 @@ export const GridWindow = React.forwardRef<HTMLDivElement, GridWindowProps>(func
     >
       <div
         ref={ref}
-        className={clsx('MuiDataGrid-window', className)}
+        className={clsx(gridClasses.window, className)}
         {...other}
-        style={{ top: headerHeight, overflowY: autoHeight ? 'hidden' : 'auto' }}
+        style={{ top: headerHeight, overflowY: rootProps.autoHeight ? 'hidden' : 'auto' }}
       />
     </div>
   );

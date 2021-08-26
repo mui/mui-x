@@ -1,13 +1,18 @@
-import { useDemoData } from '@material-ui/x-grid-data-generator';
+import { useDemoData } from '@mui/x-data-grid-generator';
 import * as React from 'react';
 import { action } from '@storybook/addon-actions';
-import { XGrid, GridOptionsProp, GridSelectionModel, useGridApiRef } from '@material-ui/x-grid';
+import {
+  DataGridPro,
+  GridOptionsProp,
+  GridSelectionModel,
+  useGridApiRef,
+} from '@mui/x-data-grid-pro';
 import { getData, GridData } from '../data/data-service';
 import { useData } from '../hooks/useData';
 
 export default {
   title: 'X-Grid Tests/Selection',
-  component: XGrid,
+  component: DataGridPro,
   parameters: {
     options: { selectedPanel: 'storybook/storysource/panel' },
     docs: {
@@ -31,7 +36,7 @@ export const ApiPreSelectedRows = () => {
     setData(getData(50, 5));
   }, []);
 
-  return <XGrid rows={data.rows} columns={data.columns} apiRef={apiRef} />;
+  return <DataGridPro rows={data.rows} columns={data.columns} apiRef={apiRef} />;
 };
 
 export const EventsMapped = () => {
@@ -41,26 +46,31 @@ export const EventsMapped = () => {
     onSelectionModelChange: (params) => action('onSelectionChange', { depth: 1 })(params),
   };
 
-  return <XGrid rows={data.rows} columns={data.columns} {...options} />;
+  return <DataGridPro rows={data.rows} columns={data.columns} {...options} />;
 };
 
 export const SingleSelect = () => {
   const data = useData(200, 200);
-  return <XGrid rows={data.rows} columns={data.columns} disableMultipleSelection />;
+  return <DataGridPro rows={data.rows} columns={data.columns} disableMultipleSelection />;
 };
 
 export const MultipleSelect = () => {
   const data = useData(200, 200);
-  return <XGrid rows={data.rows} columns={data.columns} />;
+  return <DataGridPro rows={data.rows} columns={data.columns} />;
 };
 export const MultipleSelectWithCheckbox = () => {
   const data = useData(200, 200);
-  return <XGrid rows={data.rows} columns={data.columns} checkboxSelection />;
+  return <DataGridPro rows={data.rows} columns={data.columns} checkboxSelection />;
 };
 export const MultipleSelectWithCheckboxNoClick = () => {
   const data = useData(200, 200);
   return (
-    <XGrid rows={data.rows} columns={data.columns} checkboxSelection disableSelectionOnClick />
+    <DataGridPro
+      rows={data.rows}
+      columns={data.columns}
+      checkboxSelection
+      disableSelectionOnClick
+    />
   );
 };
 
@@ -79,7 +89,7 @@ export function HandleSelection() {
   );
 
   return (
-    <XGrid
+    <DataGridPro
       {...data}
       checkboxSelection
       selectionModel={selectionModel}
@@ -90,14 +100,14 @@ export function HandleSelection() {
 export const GridSelection = () => {
   const data = useData(200, 200);
 
-  return <XGrid rows={data.rows} columns={data.columns} selectionModel={[1, 2, 3]} />;
+  return <DataGridPro rows={data.rows} columns={data.columns} selectionModel={[1, 2, 3]} />;
 };
 
 export const UnselectableRows = () => {
   const data = useData(200, 200);
 
   return (
-    <XGrid
+    <DataGridPro
       rows={data.rows}
       columns={data.columns}
       isRowSelectable={(params) => Number(params.id) % 2 === 0}
@@ -134,7 +144,7 @@ export function ControlSelection() {
 
   return (
     <div style={{ width: 300, height: 300 }}>
-      <XGrid
+      <DataGridPro
         columns={storyState.columns}
         rows={storyState.rows}
         selectionModel={selectionModel}
@@ -167,7 +177,7 @@ export function NoControlSelection() {
 
   return (
     <div style={{ width: 300, height: 300 }}>
-      <XGrid columns={storyState.columns} rows={storyState.rows} />
+      <DataGridPro columns={storyState.columns} rows={storyState.rows} />
     </div>
   );
 }
@@ -180,7 +190,7 @@ export function LargeControlSelection() {
   }, []);
 
   return (
-    <XGrid
+    <DataGridPro
       columns={data.columns}
       rows={data.rows}
       selectionModel={selectionModel}

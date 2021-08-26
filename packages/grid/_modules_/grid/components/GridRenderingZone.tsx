@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { ElementSize } from '../models';
+import { gridClasses } from '../gridClasses';
 
 type WithChildren = { children?: React.ReactNode };
 
@@ -9,7 +10,7 @@ export const GridRenderingZone = React.forwardRef<HTMLDivElement, ElementSize & 
     return (
       <div
         ref={ref}
-        className="MuiDataGrid-renderingZone"
+        className={gridClasses.renderingZone}
         style={{
           maxHeight: height,
           width,

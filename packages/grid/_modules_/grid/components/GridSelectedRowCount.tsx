@@ -1,6 +1,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { useGridApiContext } from '../hooks/root/useGridApiContext';
+import { gridClasses } from '../gridClasses';
 
 interface SelectedRowCountProps {
   selectedRowCount: number;
@@ -15,7 +16,7 @@ export const GridSelectedRowCount = React.forwardRef<HTMLDivElement, GridSelecte
     const rowSelectedText = apiRef!.current.getLocaleText('footerRowSelected')(selectedRowCount);
 
     return (
-      <div ref={ref} className={clsx('MuiDataGrid-selectedRowCount', className)} {...other}>
+      <div ref={ref} className={clsx(gridClasses.selectedRowCount, className)} {...other}>
         {rowSelectedText}
       </div>
     );

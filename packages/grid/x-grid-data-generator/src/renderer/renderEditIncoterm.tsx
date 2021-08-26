@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridCellParams } from '@material-ui/data-grid';
+import { GridRenderEditCellParams } from '@mui/x-data-grid';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
@@ -28,7 +28,7 @@ const useStyles = makeStyles(
   { defaultTheme },
 );
 
-function EditIncoterm(props: GridCellParams) {
+function EditIncoterm(props: GridRenderEditCellParams) {
   const classes = useStyles();
   const { id, value, api, field } = props;
 
@@ -75,6 +75,6 @@ function EditIncoterm(props: GridCellParams) {
   );
 }
 
-export function renderEditIncoterm(params: GridCellParams) {
+export function renderEditIncoterm(params: GridRenderEditCellParams) {
   return <EditIncoterm {...params} />;
 }

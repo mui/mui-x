@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GRID_ROW_CLICK, GRID_SELECTION_CHANGE } from '../../../constants/eventsConstants';
+import { GridEvents } from '../../../constants/eventsConstants';
 import { GridComponentProps } from '../../../GridComponentProps';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridSelectionApi } from '../../../models/api/gridSelectionApi';
@@ -40,7 +40,7 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
     options;
 
   const getSelectedRows = React.useCallback(
-    () => selectedGridRowsSelector(apiRef.current.getState()),
+    () => selectedGridRowsSelector(apiRef.current.state),
     [apiRef],
   );
 
@@ -153,7 +153,7 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
 
   const setSelectionModel = React.useCallback<GridSelectionApi['setSelectionModel']>(
     (model) => {
-      const currentModel = apiRef.current.getState().selection;
+      const currentModel = apiRef.current.state.selection;
       if (currentModel !== model) {
         setGridState((state) => ({ ...state, selection: model }));
       }
@@ -174,7 +174,7 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
     [disableSelectionOnClick, selectRowModel],
   );
 
-  useGridApiEventHandler(apiRef, GRID_ROW_CLICK, handleRowClick);
+  useGridApiEventHandler(apiRef, GridEvents.rowClick, handleRowClick);
 
   // TODO handle Cell Click/range selection?
   const selectionApi: GridSelectionApi = {
@@ -191,7 +191,7 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
       propModel: propSelectionModel,
       propOnChange: props.onSelectionModelChange,
       stateSelector: gridSelectionStateSelector,
-      changeEvent: GRID_SELECTION_CHANGE,
+      changeEvent: GridEvents.selectionChange,
     });
   }, [apiRef, props.onSelectionModelChange, propSelectionModel]);
 

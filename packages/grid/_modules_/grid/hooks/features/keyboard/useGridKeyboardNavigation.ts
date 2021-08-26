@@ -1,8 +1,5 @@
 import * as React from 'react';
-import {
-  GRID_CELL_NAVIGATION_KEY_DOWN,
-  GRID_COLUMN_HEADER_NAVIGATION_KEY_DOWN,
-} from '../../../constants/eventsConstants';
+import { GridEvents } from '../../../constants/eventsConstants';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import {
   GridCellIndexCoordinates,
@@ -19,13 +16,14 @@ import {
   isTabKey,
 } from '../../../utils/keyboardUtils';
 import { gridContainerSizesSelector } from '../../root/gridContainerSizesSelector';
-import { optionsSelector } from '../../utils/optionsSelector';
 import { visibleGridColumnsLengthSelector } from '../columns/gridColumnsSelector';
 import { useGridSelector } from '../core/useGridSelector';
 import { gridPaginationSelector } from '../pagination/gridPaginationSelector';
 import { gridRowCountSelector } from '../rows/gridRowsSelector';
 import { useLogger } from '../../utils/useLogger';
 import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
+import { GridComponentProps } from '../../../GridComponentProps';
+import { visibleSortedGridRowsAsArraySelector } from '../filter/gridFilterSelector';
 
 const getNextCellIndexes = (key: string, indexes: GridCellIndexCoordinates) => {
   if (!isArrowKeys(key)) {
@@ -63,13 +61,16 @@ const getNextColumnHeaderIndexes = (key: string, indexes: GridColumnHeaderIndexC
   }
 };
 
-export const useGridKeyboardNavigation = (apiRef: GridApiRef): void => {
+export const useGridKeyboardNavigation = (
+  apiRef: GridApiRef,
+  props: Pick<GridComponentProps, 'pagination'>,
+): void => {
   const logger = useLogger('useGridKeyboardNavigation');
-  const options = useGridSelector(apiRef, optionsSelector);
   const paginationState = useGridSelector(apiRef, gridPaginationSelector);
   const totalRowCount = useGridSelector(apiRef, gridRowCountSelector);
   const colCount = useGridSelector(apiRef, visibleGridColumnsLengthSelector);
   const containerSizes = useGridSelector(apiRef, gridContainerSizesSelector);
+  const visibleSortedRowsAsArray = useGridSelector(apiRef, visibleSortedGridRowsAsArraySelector);
 
   const mapKey = (event: React.KeyboardEvent) => {
     if (isEnterKey(event.key)) {
@@ -85,13 +86,13 @@ export const useGridKeyboardNavigation = (apiRef: GridApiRef): void => {
     (params: GridCellParams, event: React.KeyboardEvent) => {
       event.preventDefault();
       const colIndex = apiRef.current.getColumnIndex(params.field);
-      const rowIndex = apiRef.current.getRowIndex(params.id);
+      const rowIndex = visibleSortedRowsAsArray.findIndex(([id]) => id === params.id);
 
       const key = mapKey(event);
       const isCtrlPressed = event.ctrlKey || event.metaKey || event.shiftKey;
       let rowCount = totalRowCount;
 
-      if (options.pagination && totalRowCount > paginationState.pageSize) {
+      if (props.pagination && totalRowCount > paginationState.pageSize) {
         rowCount = paginationState.pageSize * (paginationState.page + 1);
       }
 
@@ -111,7 +112,7 @@ export const useGridKeyboardNavigation = (apiRef: GridApiRef): void => {
           // In that case we go to first row, first col, or last row last col!
           let newRowIndex = 0;
           if (colIdx === 0) {
-            newRowIndex = options.pagination ? rowCount - paginationState.pageSize : 0;
+            newRowIndex = props.pagination ? rowCount - paginationState.pageSize : 0;
           } else {
             newRowIndex = rowCount - 1;
           }
@@ -146,17 +147,18 @@ export const useGridKeyboardNavigation = (apiRef: GridApiRef): void => {
       );
       apiRef.current.scrollToIndexes(nextCellIndexes);
       const field = apiRef.current.getVisibleColumns()[nextCellIndexes.colIndex].field;
-      const id = apiRef.current.getRowIdFromRowIndex(nextCellIndexes.rowIndex);
+      const [id] = visibleSortedRowsAsArray[nextCellIndexes.rowIndex];
       apiRef.current.setCellFocus(id, field);
     },
     [
+      apiRef,
+      visibleSortedRowsAsArray,
       totalRowCount,
-      options.pagination,
+      props.pagination,
       paginationState.pageSize,
       paginationState.page,
       colCount,
       logger,
-      apiRef,
       containerSizes,
     ],
   );
@@ -210,6 +212,6 @@ export const useGridKeyboardNavigation = (apiRef: GridApiRef): void => {
     [apiRef, colCount, containerSizes, logger],
   );
 
-  useGridApiEventHandler(apiRef, GRID_CELL_NAVIGATION_KEY_DOWN, navigateCells);
-  useGridApiEventHandler(apiRef, GRID_COLUMN_HEADER_NAVIGATION_KEY_DOWN, navigateColumnHeaders);
+  useGridApiEventHandler(apiRef, GridEvents.cellNavigationKeyDown, navigateCells);
+  useGridApiEventHandler(apiRef, GridEvents.columnHeaderNavigationKeyDown, navigateColumnHeaders);
 };

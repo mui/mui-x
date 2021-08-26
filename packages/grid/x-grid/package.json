@@ -1,8 +1,8 @@
 {
-  "name": "@material-ui/x-grid",
-  "version": "4.0.0-alpha.36",
+  "name": "@mui/x-data-grid-pro",
+  "version": "4.0.0-alpha.37",
   "description": "The commercial edition of the data grid component (Material-UI X).",
-  "author": "Material-UI Team",
+  "author": "MUI Team",
   "main": "dist/index-cjs.js",
   "module": "dist/index-esm.js",
   "types": "dist/x-grid.d.ts",
@@ -22,6 +22,7 @@
     "react",
     "react-component",
     "material-ui",
+    "mui",
     "react-table",
     "table",
     "datatable",
@@ -39,16 +40,16 @@
     "directory": "packages/grid/x-grid"
   },
   "dependencies": {
-    "@material-ui/utils": "^5.0.0-alpha.14",
-    "@material-ui/x-license": "4.0.0-alpha.36",
+    "@material-ui/utils": "^5.0.0-beta.4",
+    "@mui/x-license-pro": "4.0.0-alpha.37",
     "clsx": "^1.0.4",
     "prop-types": "^15.7.2",
     "reselect": "^4.0.0"
   },
   "peerDependencies": {
-    "@material-ui/core": "^4.9.12 || ^5.0.0-beta.0",
-    "@material-ui/styles": "^4.9.10 || ^5.0.0-beta.0",
-    "react": "^17.0.0"
+    "@material-ui/core": "^4.12.0 || ^5.0.0-beta.0",
+    "@material-ui/styles": "^4.11.4 || ^5.0.0-beta.0",
+    "react": "^17.0.2"
   },
   "setupFiles": [
     "<rootDir>/src/setupTests.js"

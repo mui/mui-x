@@ -4,7 +4,7 @@ import {
   ErrorBoundary,
 } from 'test/utils';
 import { expect } from 'chai';
-import { DataGrid, GridOverlay } from '@material-ui/data-grid';
+import { DataGrid, GridOverlay } from '@mui/x-data-grid';
 
 describe('<DataGrid /> - Components', () => {
   // TODO v5: replace with createClientRender

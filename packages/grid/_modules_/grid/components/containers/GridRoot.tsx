@@ -10,6 +10,7 @@ import { useGridSelector } from '../../hooks/features/core/useGridSelector';
 import { useGridState } from '../../hooks/features/core/useGridState';
 import { useGridApiContext } from '../../hooks/root/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
+import { gridClasses } from '../../gridClasses';
 
 export type GridRootProps = React.HTMLAttributes<HTMLDivElement>;
 
@@ -33,7 +34,7 @@ export const GridRoot = React.forwardRef<HTMLDivElement, GridRootProps>(function
       <div
         ref={handleRef}
         className={clsx(classes.root, options.classes?.root, rootProps.className, classNameProp, {
-          'MuiDataGrid-autoHeight': rootProps.autoHeight,
+          [gridClasses.autoHeight]: rootProps.autoHeight,
         })}
         role="grid"
         aria-colcount={visibleColumnsLength}

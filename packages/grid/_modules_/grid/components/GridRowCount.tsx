@@ -1,6 +1,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { useGridApiContext } from '../hooks/root/useGridApiContext';
+import { gridClasses } from '../gridClasses';
 
 interface RowCountProps {
   rowCount: number;
@@ -24,7 +25,7 @@ export const GridRowCount = React.forwardRef<HTMLDivElement, GridRowCountProps>(
         : rowCount.toLocaleString();
 
     return (
-      <div ref={ref} className={clsx('MuiDataGrid-rowCount', className)} {...other}>
+      <div ref={ref} className={clsx(gridClasses.rowCount, className)} {...other}>
         {apiRef!.current.getLocaleText('footerTotalRows')} {text}
       </div>
     );
