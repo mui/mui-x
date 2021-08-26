@@ -2,36 +2,29 @@ import * as React from 'react';
 // @ts-expect-error need to migrate helpers to TypeScript
 import { fireEvent, screen, createClientRenderStrictMode } from 'test/utils';
 import { expect } from 'chai';
-import { spy } from 'sinon';
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGrid, DataGridProps } from '@mui/x-data-grid';
 import { getCell, getRow } from 'test/utils/helperFn';
-
-const isJSDOM = /jsdom/.test(window.navigator.userAgent);
+import { useData } from 'storybook/src/hooks/useData';
 
 describe('<DataGrid /> - Selection', () => {
   // TODO v5: replace with createClientRender
   const render = createClientRenderStrictMode();
 
-  describe('no checkboxSelection prop - selection/deselection', () => {
-    const TestDataGridSelection = () => (
+  const TestDataGridSelection = (
+    props: Omit<DataGridProps, 'rows' | 'columns'> &
+      Partial<Pick<DataGridProps, 'rows' | 'columns'>>,
+  ) => {
+    const data = useData(2, 2);
+
+    return (
       <div style={{ width: 300, height: 300 }}>
-        <DataGrid
-          rows={[
-            {
-              id: 0,
-              brand: 'Nike',
-            },
-            {
-              id: 1,
-              brand: 'Adidas',
-            },
-          ]}
-          columns={[{ field: 'brand', width: 100 }]}
-        />
+        <DataGrid {...data} {...props} />
       </div>
     );
+  };
 
-    it('should select one row at a time on click WITHOUT keypress', () => {
+  describe('no checkboxSelection prop - selection/deselection', () => {
+    it('should select one row at a time on click WITHOUT ctrl or meta keypress', () => {
       render(<TestDataGridSelection />);
       const firstRow = getRow(0);
       const secondRow = getRow(1);
@@ -64,7 +57,7 @@ describe('<DataGrid /> - Selection', () => {
       });
     });
 
-    it('should not deselect the selected row on click WITHOUT keypress', () => {
+    it('should not deselect the selected row on click WITHOUT meta or ctrl keypress', () => {
       render(<TestDataGridSelection />);
       const firstRow = getRow(0);
       fireEvent.click(getCell(0, 0));
@@ -76,59 +69,23 @@ describe('<DataGrid /> - Selection', () => {
 
   describe('prop: checkboxSelection', () => {
     it('should check and uncheck when double clicking the row', () => {
-      render(
-        <div style={{ width: 300, height: 300 }}>
-          <DataGrid
-            autoHeight={isJSDOM}
-            rows={[
-              {
-                id: 0,
-                brand: 'Nike',
-              },
-            ]}
-            columns={[{ field: 'brand', width: 100 }]}
-            checkboxSelection
-            hideFooter
-          />
-        </div>,
-      );
+      render(<TestDataGridSelection checkboxSelection />);
       const row = getRow(0);
       const checkbox = row!.querySelector('input');
       expect(row).not.to.have.class('Mui-selected');
       expect(checkbox).to.have.property('checked', false);
 
-      fireEvent.click(screen.getByRole('cell', { name: 'Nike' }));
+      fireEvent.click(getCell(0, 0));
       expect(row!.classList.contains('Mui-selected')).to.equal(true, 'class mui-selected 1');
       expect(checkbox).to.have.property('checked', true);
 
-      fireEvent.click(screen.getByRole('cell', { name: 'Nike' }));
+      fireEvent.click(getCell(0, 0));
       expect(row!.classList.contains('Mui-selected')).to.equal(false, 'class mui-selected 2');
       expect(checkbox).to.have.property('checked', false);
     });
 
     it('should select all visible rows regardless of pagination', () => {
-      render(
-        <div style={{ width: 300, height: 300 }}>
-          <DataGrid
-            rows={[
-              {
-                id: 0,
-                brand: 'Nike',
-              },
-              {
-                id: 1,
-                brand: 'Puma',
-              },
-            ]}
-            columns={[{ field: 'brand', width: 100 }]}
-            checkboxSelection
-            // @ts-ignore
-            pagination
-            pageSize={1}
-            rowsPerPageOptions={[1]}
-          />
-        </div>,
-      );
+      render(<TestDataGridSelection checkboxSelection pageSize={1} rowsPerPageOptions={[1]} />);
       const selectAllCheckbox = document.querySelector('input[type="checkbox"]');
       fireEvent.click(selectAllCheckbox);
       expect(getRow(0)).to.have.class('Mui-selected');
@@ -137,16 +94,7 @@ describe('<DataGrid /> - Selection', () => {
     });
 
     it('with no rows, the checkbox should not be checked', () => {
-      render(
-        <div style={{ width: 300, height: 300 }}>
-          <DataGrid
-            autoHeight={isJSDOM}
-            rows={[]}
-            checkboxSelection
-            columns={[{ field: 'brand', width: 100 }]}
-          />
-        </div>,
-      );
+      render(<TestDataGridSelection rows={[]} checkboxSelection />);
       const selectAll = screen.getByRole('checkbox', {
         name: /select all rows checkbox/i,
       });
@@ -155,25 +103,7 @@ describe('<DataGrid /> - Selection', () => {
 
     it('should disable the checkbox if isRowSelectable returns false', () => {
       render(
-        <div style={{ width: 300, height: 300 }}>
-          <DataGrid
-            autoHeight={isJSDOM}
-            rows={[
-              {
-                id: 0,
-                brand: 'Nike',
-              },
-              {
-                id: 1,
-                brand: 'Adidas',
-              },
-            ]}
-            columns={[{ field: 'brand', width: 100 }]}
-            isRowSelectable={(params) => params.id === 0}
-            checkboxSelection
-            hideFooter
-          />
-        </div>,
+        <TestDataGridSelection isRowSelectable={(params) => params.id === 0} checkboxSelection />,
       );
       expect(getRow(0).querySelector('input')).to.have.property('disabled', false);
       expect(getRow(1).querySelector('input')).to.have.property('disabled', true);
@@ -182,77 +112,19 @@ describe('<DataGrid /> - Selection', () => {
 
   describe('props: selectionModel', () => {
     it('should select rows when initialised (array-version)', () => {
-      render(
-        <div style={{ width: 300, height: 300 }}>
-          <DataGrid
-            autoHeight={isJSDOM}
-            rows={[
-              {
-                id: 0,
-                brand: 'Nike',
-              },
-              {
-                id: 1,
-                brand: 'Hugo Boss',
-              },
-            ]}
-            columns={[{ field: 'brand', width: 100 }]}
-            selectionModel={[1]}
-          />
-        </div>,
-      );
+      render(<TestDataGridSelection selectionModel={[1]} />);
       const row = getRow(1);
       expect(row).to.have.class('Mui-selected');
     });
 
     it('should select rows when initialised (non-array version)', () => {
-      render(
-        <div style={{ width: 300, height: 300 }}>
-          <DataGrid
-            autoHeight={isJSDOM}
-            rows={[
-              {
-                id: 0,
-                brand: 'Nike',
-              },
-              {
-                id: 1,
-                brand: 'Hugo Boss',
-              },
-            ]}
-            columns={[{ field: 'brand', width: 100 }]}
-            selectionModel={1}
-          />
-        </div>,
-      );
+      render(<TestDataGridSelection selectionModel={1} />);
       const row = getRow(1);
       expect(row).to.have.class('Mui-selected');
     });
 
     it('should allow to switch selectionModel from array version to non array version', () => {
-      const data = {
-        rows: [
-          {
-            id: 0,
-            brand: 'Nike',
-          },
-          {
-            id: 1,
-            brand: 'Hugo Boss',
-          },
-        ],
-        columns: [{ field: 'brand', width: 100 }],
-      };
-
-      function Demo(props) {
-        return (
-          <div style={{ width: 300, height: 300 }}>
-            <DataGrid autoHeight={isJSDOM} {...data} selectionModel={props.selectionModel} />
-          </div>
-        );
-      }
-
-      const { setProps } = render(<Demo selectionModel={[1]} />);
+      const { setProps } = render(<TestDataGridSelection />);
 
       setProps({ selectionModel: 1 });
       const row = getRow(1);
@@ -260,28 +132,7 @@ describe('<DataGrid /> - Selection', () => {
     });
 
     it('should deselect other selected rows', () => {
-      const data = {
-        rows: [
-          {
-            id: 0,
-            brand: 'Nike',
-          },
-          {
-            id: 1,
-            brand: 'Hugo Boss',
-          },
-        ],
-        columns: [{ field: 'brand', width: 100 }],
-      };
-      function Demo(props) {
-        return (
-          <div style={{ width: 300, height: 300 }}>
-            <DataGrid autoHeight={isJSDOM} {...data} selectionModel={props.selectionModel} />
-          </div>
-        );
-      }
-
-      const { setProps } = render(<Demo />);
+      const { setProps } = render(<TestDataGridSelection />);
 
       const row1 = getRow(1);
       expect(row1).not.to.have.class('Mui-selected');
@@ -297,67 +148,10 @@ describe('<DataGrid /> - Selection', () => {
       expect(row1).to.have.class('Mui-selected');
     });
 
-    it('should not call onSelectionModelChange if the new value is the same', () => {
-      const onSelectionModelChange = spy();
-      const data = {
-        rows: [
-          {
-            id: 0,
-            brand: 'Nike',
-          },
-          {
-            id: 1,
-            brand: 'Hugo Boss',
-          },
-        ],
-        columns: [{ field: 'brand', width: 100 }],
-        checkboxSelection: true,
-        onSelectionModelChange,
-      };
-      function Demo(props) {
-        return (
-          <div style={{ width: 300, height: 300 }}>
-            <DataGrid {...data} selectionModel={props.selectionModel} />
-          </div>
-        );
-      }
-      const selectionModel = [0];
-      const { setProps } = render(<Demo selectionModel={selectionModel} />);
-      expect(onSelectionModelChange.callCount).to.equal(0);
-      const firstRow = getRow(0);
-      expect(firstRow).to.have.class('Mui-selected');
-      setProps({ selectionModel });
-      expect(onSelectionModelChange.callCount).to.equal(0);
-      expect(getRow(0)).to.have.class('Mui-selected');
-    });
-
     it('should filter out unselectable rows when the selectionModel prop changes', () => {
-      const data = {
-        autoHeight: isJSDOM,
-        rows: [
-          {
-            id: 0,
-            brand: 'Nike',
-          },
-          {
-            id: 1,
-            brand: 'Adidas',
-          },
-        ],
-        columns: [{ field: 'brand', width: 100 }],
-        selectionModel: [1],
-        isRowSelectable: (params) => params.id > 0,
-      };
-
-      function Demo(props) {
-        return (
-          <div style={{ width: 300, height: 300 }}>
-            <DataGrid {...props} />
-          </div>
-        );
-      }
-
-      const { setProps } = render(<Demo {...data} />);
+      const { setProps } = render(
+        <TestDataGridSelection selectionModel={[1]} isRowSelectable={(params) => params.id > 0} />,
+      );
       expect(getRow(0)).not.to.have.class('Mui-selected');
       expect(getRow(1)).to.have.class('Mui-selected');
 
@@ -369,31 +163,7 @@ describe('<DataGrid /> - Selection', () => {
 
   describe('props: isRowSelectable', () => {
     it('should update the selected rows when the isRowSelectable prop changes', () => {
-      const data = {
-        autoHeight: isJSDOM,
-        rows: [
-          {
-            id: 0,
-            brand: 'Nike',
-          },
-          {
-            id: 1,
-            brand: 'Adidas',
-          },
-        ],
-        columns: [{ field: 'brand', width: 100 }],
-        isRowSelectable: () => true,
-      };
-
-      function Demo(props) {
-        return (
-          <div style={{ width: 300, height: 300 }}>
-            <DataGrid {...props} />
-          </div>
-        );
-      }
-
-      const { setProps } = render(<Demo {...data} />);
+      const { setProps } = render(<TestDataGridSelection isRowSelectable={() => true} />);
       fireEvent.click(getRow(0));
       expect(getRow(0)).to.have.class('Mui-selected');
       expect(getRow(1)).not.to.have.class('Mui-selected');
@@ -405,31 +175,9 @@ describe('<DataGrid /> - Selection', () => {
   });
 
   describe('console error', () => {
-    const data = {
-      rows: [
-        {
-          id: 0,
-          brand: 'Nike',
-        },
-        {
-          id: 1,
-          brand: 'Hugo Boss',
-        },
-      ],
-      columns: [{ field: 'brand', width: 100 }],
-      selectionModel: [0, 1],
-    };
-    function TestDataGrid(props) {
-      return (
-        <div style={{ width: 300, height: 300 }}>
-          <DataGrid {...data} {...props} />
-        </div>
-      );
-    }
-
     it('should throw console error when selectionModel contains more than 1 item in DataGrid without checkbox selection', () => {
       expect(() => {
-        render(<TestDataGrid />);
+        render(<TestDataGridSelection selectionModel={[0, 1]} />);
       })
         // @ts-expect-error need to migrate helpers to TypeScript
         .toErrorDev('selectionModel can only be of 1 item in DataGrid');
@@ -437,7 +185,7 @@ describe('<DataGrid /> - Selection', () => {
 
     it('should not throw console error when selectionModel contains more than 1 item in DataGrid with checkbox selection', () => {
       expect(() => {
-        render(<TestDataGrid checkboxSelection />);
+        render(<TestDataGridSelection selectionModel={[0, 1]} checkboxSelection />);
       })
         .not // @ts-expect-error need to migrate helpers to TypeScript
         .toErrorDev();
