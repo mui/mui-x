@@ -56,25 +56,23 @@ export const GridToolbarFilterButton = React.forwardRef<
 
   const tooltipContentNode = React.useMemo(() => {
     if (preferencePanel.open) {
-      return apiRef!.current.getLocaleText('toolbarFiltersTooltipHide') as React.ReactElement;
+      return apiRef.current.getLocaleText('toolbarFiltersTooltipHide') as React.ReactElement;
     }
     if (counter === 0) {
-      return apiRef!.current.getLocaleText('toolbarFiltersTooltipShow') as React.ReactElement;
+      return apiRef.current.getLocaleText('toolbarFiltersTooltipShow') as React.ReactElement;
     }
 
     const getOperatorLabel = (item: GridFilterItem): string =>
       lookup[item.columnField!].filterOperators!.find(
         (operator) => operator.value === item.operatorValue,
       )!.label ||
-      apiRef!
-        .current!.getLocaleText(
-          `filterOperator${capitalize(item.operatorValue!)}` as GridTranslationKeys,
-        )!
+      apiRef.current
+        .getLocaleText(`filterOperator${capitalize(item.operatorValue!)}` as GridTranslationKeys)!
         .toString();
 
     return (
       <div>
-        {apiRef!.current.getLocaleText('toolbarFiltersTooltipActive')(counter)}
+        {apiRef.current.getLocaleText('toolbarFiltersTooltipActive')(counter)}
         <ul className={classes.list}>
           {activeFilters.map((item, index) => ({
             ...(lookup[item.columnField!] && (
@@ -93,9 +91,9 @@ export const GridToolbarFilterButton = React.forwardRef<
   const toggleFilter = (event) => {
     const { open, openedPanelValue } = preferencePanel;
     if (open && openedPanelValue === GridPreferencePanelsValue.filters) {
-      apiRef!.current.hideFilterPanel();
+      apiRef.current.hideFilterPanel();
     } else {
-      apiRef!.current.showFilterPanel();
+      apiRef.current.showFilterPanel();
     }
     buttonProps.onClick?.(event);
   };
@@ -112,7 +110,7 @@ export const GridToolbarFilterButton = React.forwardRef<
         ref={ref}
         size="small"
         color="primary"
-        aria-label={apiRef!.current.getLocaleText('toolbarFiltersLabel')}
+        aria-label={apiRef.current.getLocaleText('toolbarFiltersLabel')}
         startIcon={
           <Badge badgeContent={counter} color="primary">
             <OpenFilterButtonIcon />
@@ -121,7 +119,7 @@ export const GridToolbarFilterButton = React.forwardRef<
         {...buttonProps}
         onClick={toggleFilter}
       >
-        {apiRef!.current.getLocaleText('toolbarFilters')}
+        {apiRef.current.getLocaleText('toolbarFilters')}
       </Button>
     </Tooltip>
   );

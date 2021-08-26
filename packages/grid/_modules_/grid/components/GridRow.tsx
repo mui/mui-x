@@ -41,7 +41,7 @@ export function GridRow(props: GridRowProps) {
         return;
       }
 
-      apiRef!.current.publishEvent(eventName, apiRef?.current.getRowParams(id), event);
+      apiRef.current.publishEvent(eventName, apiRef.current.getRowParams(id), event);
     },
     [apiRef, id],
   );
@@ -64,7 +64,7 @@ export function GridRow(props: GridRowProps) {
   };
 
   const rowClassName =
-    isFunction(getRowClassName) && getRowClassName(apiRef!.current.getRowParams(id));
+    isFunction(getRowClassName) && getRowClassName(apiRef.current.getRowParams(id));
   const cssClasses = clsx(rowClassName, classes?.row, {
     'Mui-selected': selected,
     [`${GRID_CSS_CLASS_PREFIX}-row--editing`]: apiRef.current.getRowMode(id) === GridRowModes.Edit,

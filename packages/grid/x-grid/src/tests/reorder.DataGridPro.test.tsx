@@ -84,7 +84,7 @@ describe('<DataGridPro /> - Reorder', () => {
 
       expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'brand']);
       act(() => {
-        apiRef!.current.setColumnIndex('id', 1);
+        apiRef.current.setColumnIndex('id', 1);
       });
       setProps({ width: 200 });
       await raf();

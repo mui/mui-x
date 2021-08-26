@@ -75,14 +75,14 @@ describe('<DataGridPro /> - Selection', () => {
       render(
         <Test
           onSelectionModelChange={(model) => {
-            expect(apiRef!.current.getSelectedRows().size).to.equal(1);
+            expect(apiRef.current.getSelectedRows().size).to.equal(1);
             expect(model).to.deep.equal([1]);
           }}
         />,
       );
-      expect(apiRef!.current.getSelectedRows().size).to.equal(0);
-      apiRef!.current.selectRow(1);
-      expect(apiRef!.current.getSelectedRows().get(1)).to.equal(baselineProps.rows[1]);
+      expect(apiRef.current.getSelectedRows().size).to.equal(0);
+      apiRef.current.selectRow(1);
+      expect(apiRef.current.getSelectedRows().get(1)).to.equal(baselineProps.rows[1]);
     });
   });
 
@@ -90,14 +90,14 @@ describe('<DataGridPro /> - Selection', () => {
     it('should call onSelectionModelChange with the ids selected', () => {
       const handleSelectionModelChange = spy();
       render(<Test onSelectionModelChange={handleSelectionModelChange} />);
-      apiRef!.current.selectRow(1);
+      apiRef.current.selectRow(1);
       expect(handleSelectionModelChange.lastCall.args[0]).to.deep.equal([1]);
-      apiRef!.current.selectRow(2);
+      apiRef.current.selectRow(2);
       expect(handleSelectionModelChange.lastCall.args[0]).to.deep.equal([2]);
       // Keep old selection
-      apiRef!.current.selectRow(3, true, true);
+      apiRef.current.selectRow(3, true, true);
       expect(handleSelectionModelChange.lastCall.args[0]).to.deep.equal([2, 3]);
-      apiRef!.current.selectRow(3, false, true);
+      apiRef.current.selectRow(3, false, true);
       expect(handleSelectionModelChange.lastCall.args[0]).to.deep.equal([2]);
     });
 
@@ -109,9 +109,9 @@ describe('<DataGridPro /> - Selection', () => {
           onSelectionModelChange={handleSelectionModelChange}
         />,
       );
-      apiRef!.current.selectRow(0);
+      apiRef.current.selectRow(0);
       expect(handleSelectionModelChange.callCount).to.equal(0);
-      apiRef!.current.selectRow(1);
+      apiRef.current.selectRow(1);
       expect(handleSelectionModelChange.callCount).to.equal(1);
     });
   });
@@ -120,14 +120,14 @@ describe('<DataGridPro /> - Selection', () => {
     it('should call onSelectionModelChange with the ids selected', () => {
       const handleSelectionModelChange = spy();
       render(<Test onSelectionModelChange={handleSelectionModelChange} />);
-      apiRef!.current.selectRows([1, 2]);
+      apiRef.current.selectRows([1, 2]);
       expect(handleSelectionModelChange.lastCall.args[0]).to.deep.equal([1, 2]);
-      apiRef!.current.selectRows([3]);
+      apiRef.current.selectRows([3]);
       expect(handleSelectionModelChange.lastCall.args[0]).to.deep.equal([1, 2, 3]);
-      apiRef!.current.selectRows([1, 2], false);
+      apiRef.current.selectRows([1, 2], false);
       expect(handleSelectionModelChange.lastCall.args[0]).to.deep.equal([3]);
       // Deselect others
-      apiRef!.current.selectRows([4, 5], true, true);
+      apiRef.current.selectRows([4, 5], true, true);
       expect(handleSelectionModelChange.lastCall.args[0]).to.deep.equal([4, 5]);
     });
 
@@ -139,7 +139,7 @@ describe('<DataGridPro /> - Selection', () => {
           onSelectionModelChange={handleSelectionModelChange}
         />,
       );
-      apiRef!.current.selectRows([0, 1, 2]);
+      apiRef.current.selectRows([0, 1, 2]);
       expect(handleSelectionModelChange.lastCall.args[0]).to.deep.equal([1, 2]);
     });
   });

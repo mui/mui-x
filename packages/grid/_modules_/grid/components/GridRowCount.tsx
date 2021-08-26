@@ -21,12 +21,12 @@ export const GridRowCount = React.forwardRef<HTMLDivElement, GridRowCountProps>(
 
     const text =
       visibleRowCount < rowCount
-        ? apiRef!.current.getLocaleText('footerTotalVisibleRows')(visibleRowCount, rowCount)
+        ? apiRef.current.getLocaleText('footerTotalVisibleRows')(visibleRowCount, rowCount)
         : rowCount.toLocaleString();
 
     return (
       <div ref={ref} className={clsx(gridClasses.rowCount, className)} {...other}>
-        {apiRef!.current.getLocaleText('footerTotalRows')} {text}
+        {apiRef.current.getLocaleText('footerTotalRows')} {text}
       </div>
     );
   },

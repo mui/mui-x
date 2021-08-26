@@ -47,15 +47,15 @@ export function GridColumnsPanel() {
   const toggleColumn = React.useCallback(
     (event: React.MouseEvent<HTMLButtonElement>) => {
       const { name } = event.target as HTMLInputElement;
-      const column = apiRef!.current.getColumn(name);
-      apiRef!.current.setColumnVisibility(name, !!column.hide);
+      const column = apiRef.current.getColumn(name);
+      apiRef.current.setColumnVisibility(name, !!column.hide);
     },
     [apiRef],
   );
 
   const toggleAllColumns = React.useCallback(
     (value: boolean) => {
-      apiRef!.current.updateColumns(
+      apiRef.current.updateColumns(
         columns.map((col) => {
           col.hide = value;
           return col;
@@ -92,8 +92,8 @@ export function GridColumnsPanel() {
     <GridPanelWrapper>
       <GridPanelHeader>
         <TextField
-          label={apiRef!.current.getLocaleText('columnsPanelTextFieldLabel')}
-          placeholder={apiRef!.current.getLocaleText('columnsPanelTextFieldPlaceholder')}
+          label={apiRef.current.getLocaleText('columnsPanelTextFieldLabel')}
+          placeholder={apiRef.current.getLocaleText('columnsPanelTextFieldPlaceholder')}
           inputRef={searchInputRef}
           value={searchValue}
           onChange={handleSearchValueChange}
@@ -122,8 +122,8 @@ export function GridColumnsPanel() {
                 <IconButton
                   draggable
                   className={classes.dragIcon}
-                  aria-label={apiRef!.current.getLocaleText('columnsPanelDragIconLabel')}
-                  title={apiRef!.current.getLocaleText('columnsPanelDragIconLabel')}
+                  aria-label={apiRef.current.getLocaleText('columnsPanelDragIconLabel')}
+                  title={apiRef.current.getLocaleText('columnsPanelDragIconLabel')}
                   size="small"
                   disabled
                 >
@@ -136,10 +136,10 @@ export function GridColumnsPanel() {
       </GridPanelContent>
       <GridPanelFooter>
         <Button onClick={hideAllColumns} color="primary">
-          {apiRef!.current.getLocaleText('columnsPanelHideAllButton')}
+          {apiRef.current.getLocaleText('columnsPanelHideAllButton')}
         </Button>
         <Button onClick={showAllColumns} color="primary">
-          {apiRef!.current.getLocaleText('columnsPanelShowAllButton')}
+          {apiRef.current.getLocaleText('columnsPanelShowAllButton')}
         </Button>
       </GridPanelFooter>
     </GridPanelWrapper>
