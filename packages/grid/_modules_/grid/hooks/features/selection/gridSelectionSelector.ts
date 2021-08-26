@@ -17,4 +17,7 @@ export const selectedGridRowsSelector = createSelector(
     new Map<GridRowId, GridRowModel>(selectedRows.map((id) => [id, rowsLookup[id]])),
 );
 
-export const selectedIdsLookupSelector = createSelector(gridSelectionStateSelector, (selection) => new Map<GridRowId, true>(selection.map(el => [el, true])))
+export const selectedIdsLookupSelector = createSelector(
+  gridSelectionStateSelector,
+  (selection) => new Map<GridRowId, true>(selection.map((el) => [el, true])),
+);
