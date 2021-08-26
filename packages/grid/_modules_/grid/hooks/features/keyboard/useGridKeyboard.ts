@@ -113,7 +113,7 @@ export const useGridKeyboard = (apiRef: GridApiRef): void => {
       }
 
       if (isEnterKey(event.key) && (event.ctrlKey || event.metaKey)) {
-        apiRef!.current.toggleColumnMenu(params.field);
+        apiRef.current.toggleColumnMenu(params.field);
       }
     },
     [apiRef],

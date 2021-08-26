@@ -80,7 +80,7 @@ describe('<DataGridPro /> - Edit Rows', () => {
       const cellAdidas = getCell(1, 0);
       expect(cellAdidas).to.have.class('MuiDataGrid-cell--editable');
 
-      apiRef!.current.setCellMode(0, 'brand', 'edit');
+      apiRef.current.setCellMode(0, 'brand', 'edit');
       expect(cellNike).to.have.class('MuiDataGrid-cell--editing');
     });
 
@@ -109,14 +109,14 @@ describe('<DataGridPro /> - Edit Rows', () => {
 
   it('should allow to switch between cell mode', () => {
     render(<TestCase />);
-    apiRef!.current.setCellMode(1, 'brand', 'edit');
+    apiRef.current.setCellMode(1, 'brand', 'edit');
     const cell = getCell(1, 0);
 
     expect(cell).to.have.class('MuiDataGrid-cell--editable');
     expect(cell).to.have.class('MuiDataGrid-cell--editing');
     expect(cell.querySelector('input')!.value).to.equal('Adidas');
 
-    apiRef!.current.setCellMode(1, 'brand', 'view');
+    apiRef.current.setCellMode(1, 'brand', 'view');
     expect(cell).to.have.class('MuiDataGrid-cell--editable');
     expect(cell).not.to.have.class('MuiDataGrid-cell--editing');
     expect(cell.querySelector('input')).to.equal(null);
@@ -379,11 +379,11 @@ describe('<DataGridPro /> - Edit Rows', () => {
     };
     render(<TestCase onCellBlur={handleCellBlur} />);
     // Turn first cell into edit mode
-    apiRef!.current.setCellMode(0, 'brand', 'edit');
+    apiRef.current.setCellMode(0, 'brand', 'edit');
 
     // Turn second cell into edit mode
     getCell(1, 0).focus();
-    apiRef!.current.setCellMode(1, 'brand', 'edit');
+    apiRef.current.setCellMode(1, 'brand', 'edit');
     expect(document.querySelectorAll('input').length).to.equal(2);
 
     // Try to focus the first cell's input

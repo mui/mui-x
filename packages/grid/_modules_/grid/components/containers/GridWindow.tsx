@@ -29,7 +29,7 @@ export const GridWindow = React.forwardRef<HTMLDivElement, GridWindowProps>(func
     // refs are run before effect. Waiting for an effect guarentees that
     // windowRef is resolved first.
     // Once windowRef is resolved, we can update the size of the container.
-    apiRef!.current.resize();
+    apiRef.current.resize();
   }, [apiRef]);
 
   const containerHeight = React.useMemo(() => {

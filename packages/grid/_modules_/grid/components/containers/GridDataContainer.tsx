@@ -10,7 +10,7 @@ type GridDataContainerProps = React.HTMLAttributes<HTMLDivElement>;
 export function GridDataContainer(props: GridDataContainerProps) {
   const { className, ...other } = props;
   const apiRef = useGridApiContext();
-  const dataContainerSizes = useGridSelector(apiRef!, gridDataContainerSizesSelector);
+  const dataContainerSizes = useGridSelector(apiRef, gridDataContainerSizesSelector);
 
   const style: any = {
     // TODO remove min

@@ -497,13 +497,13 @@ export const useGridVirtualRows = (
   useNativeEventListener(apiRef, windowRef, 'scroll', handleScroll, { passive: true });
   useNativeEventListener(
     apiRef,
-    () => apiRef.current?.renderingZoneRef?.current?.parentElement,
+    () => apiRef.current.renderingZoneRef?.current?.parentElement,
     'scroll',
     preventScroll,
   );
   useNativeEventListener(
     apiRef,
-    () => apiRef.current?.columnHeadersContainerElementRef?.current,
+    () => apiRef.current.columnHeadersContainerElementRef?.current,
     'scroll',
     preventScroll,
   );

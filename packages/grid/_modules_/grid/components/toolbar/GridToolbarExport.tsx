@@ -31,11 +31,11 @@ export const GridToolbarExport = React.forwardRef<HTMLButtonElement, GridToolbar
     const buttonId = useId();
     const menuId = useId();
     const [anchorEl, setAnchorEl] = React.useState(null);
-    const ExportIcon = apiRef!.current.components!.ExportIcon!;
+    const ExportIcon = apiRef.current!.components!.ExportIcon!;
 
     const exportOptions: Array<GridExportOption> = [];
     exportOptions.push({
-      label: apiRef!.current.getLocaleText('toolbarExportCSV'),
+      label: apiRef.current.getLocaleText('toolbarExportCSV'),
       format: 'csv',
       formatOptions: csvOptions,
     });
@@ -47,7 +47,7 @@ export const GridToolbarExport = React.forwardRef<HTMLButtonElement, GridToolbar
     const handleMenuClose = () => setAnchorEl(null);
     const handleExport = (option: GridExportOption) => () => {
       if (option.format === 'csv') {
-        apiRef!.current.exportDataAsCsv(option.formatOptions);
+        apiRef.current.exportDataAsCsv(option.formatOptions);
       }
 
       setAnchorEl(null);
@@ -70,14 +70,14 @@ export const GridToolbarExport = React.forwardRef<HTMLButtonElement, GridToolbar
           size="small"
           startIcon={<ExportIcon />}
           aria-expanded={anchorEl ? 'true' : undefined}
-          aria-label={apiRef!.current.getLocaleText('toolbarExportLabel')}
+          aria-label={apiRef.current.getLocaleText('toolbarExportLabel')}
           aria-haspopup="menu"
           aria-labelledby={menuId}
           id={buttonId}
           {...other}
           onClick={handleMenuOpen}
         >
-          {apiRef!.current.getLocaleText('toolbarExport')}
+          {apiRef.current.getLocaleText('toolbarExport')}
         </Button>
         <GridMenu
           open={Boolean(anchorEl)}
