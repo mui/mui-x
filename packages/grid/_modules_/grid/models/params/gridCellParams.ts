@@ -3,6 +3,9 @@ import { GridRowId, GridRowModel } from '../gridRows';
 import type { GridStateColDef } from '../colDef';
 import { GridEditCellProps } from '../gridEditRowModel';
 
+/**
+ * Object passed as parameter in the column [[GridColDef]] cell renderer.
+ */
 export interface GridCellParams {
   /**
    * The grid row id.
