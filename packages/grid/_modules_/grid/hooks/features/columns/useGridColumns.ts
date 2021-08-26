@@ -312,6 +312,13 @@ export function useGridColumns(
     logger.debug(
       `GridColumns gridState.viewportSizes.width, changed ${gridState.viewportSizes.width}`,
     );
+
+    // This hook is meant to update the column's width when the viewport changes
+    // We can skip the whole block if the width is missing
+    if (gridState.viewportSizes.width === 0) {
+      return;
+    }
+
     // Avoid dependency on gridState as I only want to update cols when viewport size changed.
     setColumnsState(apiRef.current.state.columns);
   }, [apiRef, setColumnsState, gridState.viewportSizes.width, logger]);
