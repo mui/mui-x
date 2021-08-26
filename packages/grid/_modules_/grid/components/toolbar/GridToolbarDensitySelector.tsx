@@ -24,9 +24,9 @@ export const GridToolbarDensitySelector = React.forwardRef<HTMLButtonElement, Bu
     const densityMenuId = useId();
     const [anchorEl, setAnchorEl] = React.useState(null);
 
-    const DensityCompactIcon = apiRef.current!.components!.DensityCompactIcon!;
-    const DensityStandardIcon = apiRef.current!.components!.DensityStandardIcon!;
-    const DensityComfortableIcon = apiRef.current!.components!.DensityComfortableIcon!;
+    const DensityCompactIcon = apiRef!.current!.components!.DensityCompactIcon!;
+    const DensityStandardIcon = apiRef!.current!.components!.DensityStandardIcon!;
+    const DensityComfortableIcon = apiRef!.current!.components!.DensityComfortableIcon!;
 
     const DensityOptions: Array<GridDensityOption> = [
       {

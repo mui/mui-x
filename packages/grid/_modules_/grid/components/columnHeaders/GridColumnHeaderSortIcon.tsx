@@ -27,7 +27,7 @@ export const GridColumnHeaderSortIcon = React.memo(function GridColumnHeaderSort
   const { direction, index } = props;
   const apiRef = useGridApiContext();
 
-  const unsortedIcon = apiRef.current!.components.ColumnUnsortedIcon;
+  const unsortedIcon = apiRef!.current!.components.ColumnUnsortedIcon;
   if (direction == null && unsortedIcon === null) {
     return null;
   }
@@ -39,7 +39,7 @@ export const GridColumnHeaderSortIcon = React.memo(function GridColumnHeaderSort
       title={apiRef.current.getLocaleText('columnHeaderSortIconLabel')}
       size="small"
     >
-      {getIcon(apiRef.current!.components, direction)}
+      {getIcon(apiRef!.current!.components, direction)}
     </IconButton>
   );
 

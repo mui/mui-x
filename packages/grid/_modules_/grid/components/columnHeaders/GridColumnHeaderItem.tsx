@@ -221,8 +221,8 @@ export function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
         field={column.field}
         open={columnMenuOpen}
         target={iconButtonRef.current}
-        ContentComponent={apiRef.current!.components.ColumnMenu}
-        contentComponentProps={apiRef.current!.componentsProps?.columnMenu}
+        ContentComponent={apiRef!.current!.components.ColumnMenu}
+        contentComponentProps={apiRef!.current!.componentsProps?.columnMenu}
       />
     </div>
   );

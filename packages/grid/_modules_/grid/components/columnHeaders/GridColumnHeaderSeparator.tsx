@@ -16,7 +16,7 @@ export const GridColumnHeaderSeparator = React.memo(function GridColumnHeaderSep
   const { resizable, resizing, height, ...other } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
-  const ColumnResizeIcon = apiRef.current.components!.ColumnResizeIcon!;
+  const ColumnResizeIcon = apiRef!.current.components!.ColumnResizeIcon!;
 
   const stopClick = React.useCallback((event: React.MouseEvent<HTMLDivElement>) => {
     event.preventDefault();

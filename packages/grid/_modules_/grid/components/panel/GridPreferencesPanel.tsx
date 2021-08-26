@@ -19,9 +19,9 @@ export const GridPreferencesPanel = React.forwardRef<
     preferencePanelState.openedPanelValue === GridPreferencePanelsValue.columns;
   const isFiltersTabOpen = !preferencePanelState.openedPanelValue || !isColumnsTabOpen;
 
-  const ColumnSelectorComponent = apiRef.current!.components.ColumnsPanel!;
-  const FilterPanelComponent = apiRef.current!.components.FilterPanel!;
-  const Panel = apiRef.current!.components.Panel!;
+  const ColumnSelectorComponent = apiRef!.current!.components.ColumnsPanel!;
+  const FilterPanelComponent = apiRef!.current!.components.FilterPanel!;
+  const Panel = apiRef!.current!.components.Panel!;
   return (
     <Panel
       ref={ref}
