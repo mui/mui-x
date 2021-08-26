@@ -31,7 +31,7 @@ export const GridToolbarExport = React.forwardRef<HTMLButtonElement, GridToolbar
     const buttonId = useId();
     const menuId = useId();
     const [anchorEl, setAnchorEl] = React.useState(null);
-    const ExportIcon = apiRef.current!.components!.ExportIcon!;
+    const ExportIcon = apiRef!.current!.components!.ExportIcon!;
 
     const exportOptions: Array<GridExportOption> = [];
     exportOptions.push({

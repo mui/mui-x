@@ -103,7 +103,7 @@ export const GridToolbarFilterButton = React.forwardRef<
     return null;
   }
 
-  const OpenFilterButtonIcon = apiRef.current!.components!.OpenFilterButtonIcon!;
+  const OpenFilterButtonIcon = apiRef!.current.components!.OpenFilterButtonIcon!;
   return (
     <Tooltip title={tooltipContentNode} enterDelay={1000} {...other}>
       <Button
