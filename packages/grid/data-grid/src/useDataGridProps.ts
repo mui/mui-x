@@ -10,6 +10,16 @@ export const useDataGridProps = (inProps: DataGridProps): GridComponentProps => 
 
   const themedProps = useThemeProps({ props: inProps, name: 'MuiDataGrid' });
 
+  const classes = React.useMemo(() => {
+    if (!inProps.classes) {
+      return {};
+    }
+    return Object.entries(inProps.classes).reduce((acc, [key, value]) => {
+      acc[key.replace('__', '--')] = value;
+      return acc;
+    }, {});
+  }, [inProps.classes]);
+
   return React.useMemo<GridComponentProps>(
     () => ({
       ...themedProps,
@@ -25,7 +35,8 @@ export const useDataGridProps = (inProps: DataGridProps): GridComponentProps => 
       onViewportRowsChange: undefined,
       checkboxSelectionVisibleOnly: false,
       signature: 'DataGrid',
+      classes,
     }),
-    [themedProps],
+    [themedProps, classes],
   );
 };

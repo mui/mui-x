@@ -3,14 +3,26 @@ import clsx from 'clsx';
 import Tooltip from '@material-ui/core/Tooltip';
 import { isOverflown } from '../../utils/domUtils';
 import { gridClasses } from '../../gridClasses';
+import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
 const ColumnHeaderInnerTitle = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(function ColumnHeaderInnerTitle(props, ref) {
   const { className, ...other } = props;
+  const rootProps = useGridRootProps();
 
-  return <div ref={ref} className={clsx(gridClasses.columnHeaderTitle, className)} {...other} />;
+  return (
+    <div
+      ref={ref}
+      className={clsx(
+        gridClasses.columnHeaderTitle,
+        rootProps.classes?.columnHeaderTitle,
+        className,
+      )}
+      {...other}
+    />
+  );
 });
 
 export interface GridColumnHeaderTitleProps {

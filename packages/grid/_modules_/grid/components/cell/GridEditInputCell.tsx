@@ -1,8 +1,10 @@
 import * as React from 'react';
+import clsx from 'clsx';
 import InputBase, { InputBaseProps } from '@material-ui/core/InputBase';
 import { GridRenderEditCellParams } from '../../models/params/gridCellParams';
 import { useEnhancedEffect } from '../../utils/material-ui-utils';
 import { gridClasses } from '../../gridClasses';
+import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
 export function GridEditInputCell(props: GridRenderEditCellParams & InputBaseProps) {
   const {
@@ -23,6 +25,7 @@ export function GridEditInputCell(props: GridRenderEditCellParams & InputBasePro
 
   const inputRef = React.useRef<HTMLInputElement>();
   const [valueState, setValueState] = React.useState(value);
+  const rootProps = useGridRootProps();
 
   const handleChange = React.useCallback(
     (event) => {
@@ -46,7 +49,7 @@ export function GridEditInputCell(props: GridRenderEditCellParams & InputBasePro
   return (
     <InputBase
       inputRef={inputRef}
-      className={gridClasses.editInputCell}
+      className={clsx(gridClasses.editInputCell, rootProps.classes?.editInputCell)}
       fullWidth
       type={colDef.type === 'number' ? colDef.type : 'text'}
       value={valueState || ''}

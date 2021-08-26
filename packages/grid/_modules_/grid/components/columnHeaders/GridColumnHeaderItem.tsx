@@ -13,8 +13,9 @@ import { GridColumnHeaderSeparator } from './GridColumnHeaderSeparator';
 import { ColumnHeaderMenuIcon } from './ColumnHeaderMenuIcon';
 import { ColumnHeaderFilterIcon } from './ColumnHeaderFilterIcon';
 import { GridColumnHeaderMenu } from '../menu/columnMenu/GridColumnHeaderMenu';
-import { isFunction } from '../../utils/utils';
-import { gridClasses } from '../../gridClasses';
+import { getDataGridUtilityClass } from '../../gridClasses';
+import { composeClasses } from '../../utils/material-ui-utils';
+import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
 interface GridColumnHeaderItemProps {
   colIndex: number;
@@ -31,13 +32,38 @@ interface GridColumnHeaderItemProps {
   tabIndex: 0 | -1;
 }
 
+const useUtilityClasses = (ownerState) => {
+  const { column, classes, isDragging, sortDirection, showColumnRightBorder } = ownerState;
+
+  const isColumnSorted = sortDirection != null;
+  // todo refactor to a prop on col isNumeric or ?? ie: coltype===price wont work
+  const isColumnNumeric = column.type === GRID_NUMBER_COLUMN_TYPE;
+
+  const slots = {
+    root: [
+      'columnHeader',
+      column.headerAlign === 'left' && 'columnHeader--alignLeft',
+      column.headerAlign === 'center' && 'columnHeader--alignCenter',
+      column.headerAlign === 'right' && 'columnHeader--alignRight',
+      column.sortable && 'columnHeader--sortable',
+      isDragging && 'columnHeader--moving',
+      isColumnSorted && 'columnHeader--sorted',
+      isColumnNumeric && 'columnHeader--numeric',
+      showColumnRightBorder && 'withBorder',
+    ],
+    draggableContainer: ['columnHeaderDraggableContainer'],
+    titleContainer: ['columnHeaderTitleContainer'],
+  };
+
+  return composeClasses(slots, getDataGridUtilityClass, classes);
+};
+
 export function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
   const {
     column,
     columnMenuOpen,
     colIndex,
     headerHeight,
-    isDragging,
     isResizing,
     sortDirection,
     sortIndex,
@@ -51,17 +77,9 @@ export function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
   const columnMenuId: string = useId();
   const columnMenuButtonId: string = useId();
   const iconButtonRef = React.useRef<HTMLButtonElement>(null);
-  const {
-    classes,
-    disableColumnReorder,
-    showColumnRightBorder,
-    disableColumnResize,
-    disableColumnMenu,
-    disableColumnFilter,
-  } = options;
-  const isColumnSorted = sortDirection != null;
-  // todo refactor to a prop on col isNumeric or ?? ie: coltype===price wont work
-  const isColumnNumeric = column.type === GRID_NUMBER_COLUMN_TYPE;
+  const rootProps = useGridRootProps();
+  const { disableColumnReorder, disableColumnResize, disableColumnMenu, disableColumnFilter } =
+    options;
 
   let headerComponent: React.ReactNode = null;
   if (column.renderHeader) {
@@ -110,28 +128,12 @@ export function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
     [publish],
   );
 
-  const classNames = [classes?.columnHeader];
-
-  if (column.headerClassName) {
-    const headerClassName = isFunction(column.headerClassName)
-      ? column.headerClassName({ field: column.field, colDef: column })
-      : column.headerClassName;
-
-    classNames.push(headerClassName);
-  }
-
-  const cssClasses = clsx(
-    column.headerAlign === 'center' && gridClasses['columnHeader--alignCenter'],
-    column.headerAlign === 'right' && gridClasses['columnHeader--alignRight'],
-    {
-      [gridClasses['columnHeader--sortable']]: column.sortable,
-      [gridClasses['columnHeader--moving']]: isDragging,
-      [gridClasses['columnHeader--sorted']]: isColumnSorted,
-      [gridClasses['columnHeader--numeric']]: isColumnNumeric,
-      [gridClasses.withBorder]: showColumnRightBorder,
-    },
-    ...classNames,
-  );
+  const ownerState = {
+    ...props,
+    classes: rootProps.classes,
+    showColumnRightBorder: rootProps.showColumnRightBorder,
+  };
+  const classes = useUtilityClasses(ownerState);
 
   const width = column.computedWidth;
 
@@ -175,10 +177,15 @@ export function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
     }
   });
 
+  const headerClassName =
+    typeof column.headerClassName === 'function'
+      ? column.headerClassName({ field: column.field, colDef: column })
+      : column.headerClassName;
+
   return (
     <div
       ref={headerCellRef}
-      className={cssClasses}
+      className={clsx(classes.root, headerClassName)}
       key={column.field}
       data-field={column.field}
       style={{
@@ -193,11 +200,11 @@ export function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
       {...mouseEventsHandlers}
     >
       <div
-        className={gridClasses.columnHeaderDraggableContainer}
+        className={classes.draggableContainer}
         draggable={!disableColumnReorder && !column.disableReorder}
         {...draggableEventHandlers}
       >
-        <div className={gridClasses.columnHeaderTitleContainer}>
+        <div className={classes.titleContainer}>
           {headerComponent || (
             <GridColumnHeaderTitle
               label={column.headerName || column.field}

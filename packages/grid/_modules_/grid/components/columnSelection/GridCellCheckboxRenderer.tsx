@@ -1,4 +1,5 @@
 import * as React from 'react';
+import clsx from 'clsx';
 import { useForkRef } from '@material-ui/core/utils';
 import { GridEvents } from '../../constants/eventsConstants';
 import { GridCellParams } from '../../models/params/gridCellParams';
@@ -62,7 +63,7 @@ export const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, Gri
         checked={!!value}
         onChange={handleChange}
         onClick={handleClick}
-        className={gridClasses.checkboxInput}
+        className={clsx(gridClasses.checkboxInput, rootProps.classes?.checkboxInput)}
         color="primary"
         inputProps={{ 'aria-label': 'Select Row checkbox' }}
         onKeyDown={handleKeyDown}

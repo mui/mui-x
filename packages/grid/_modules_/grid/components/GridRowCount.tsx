@@ -2,6 +2,7 @@ import * as React from 'react';
 import clsx from 'clsx';
 import { useGridApiContext } from '../hooks/root/useGridApiContext';
 import { gridClasses } from '../gridClasses';
+import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 
 interface RowCountProps {
   rowCount: number;
@@ -14,6 +15,7 @@ export const GridRowCount = React.forwardRef<HTMLDivElement, GridRowCountProps>(
   function GridRowCount(props, ref) {
     const { className, rowCount, visibleRowCount, ...other } = props;
     const apiRef = useGridApiContext();
+    const rootProps = useGridRootProps();
 
     if (rowCount === 0) {
       return null;
@@ -25,7 +27,11 @@ export const GridRowCount = React.forwardRef<HTMLDivElement, GridRowCountProps>(
         : rowCount.toLocaleString();
 
     return (
-      <div ref={ref} className={clsx(gridClasses.rowCount, className)} {...other}>
+      <div
+        ref={ref}
+        className={clsx(gridClasses.rowCount, rootProps.classes?.rowCount, className)}
+        {...other}
+      >
         {apiRef.current.getLocaleText('footerTotalRows')} {text}
       </div>
     );

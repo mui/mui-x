@@ -11,9 +11,21 @@ import { GridColumnHeadersItemCollection } from './GridColumnHeadersItemCollecti
 import { gridDensityHeaderHeightSelector } from '../../hooks/features/density/densitySelector';
 import { gridColumnReorderDragColSelector } from '../../hooks/features/columnReorder/columnReorderSelector';
 import { gridContainerSizesSelector } from '../../hooks/root/gridContainerSizesSelector';
-import { gridClasses } from '../../gridClasses';
+import { getDataGridUtilityClass } from '../../gridClasses';
+import { composeClasses } from '../../utils/material-ui-utils';
+import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
 export const gridScrollbarStateSelector = (state: GridState) => state.scrollBar;
+
+const useUtilityClasses = (ownerState) => {
+  const { dragCol, classes } = ownerState;
+
+  const slots = {
+    wrapper: ['columnHeaderWrapper', dragCol && 'columnHeaderDropZone'],
+  };
+
+  return composeClasses(slots, getDataGridUtilityClass, classes);
+};
 
 export const GridColumnsHeader = React.forwardRef<HTMLDivElement, {}>(function GridColumnsHeader(
   props,
@@ -26,11 +38,10 @@ export const GridColumnsHeader = React.forwardRef<HTMLDivElement, {}>(function G
   const renderCtx = useGridSelector(apiRef, renderStateSelector).renderContext;
   const { hasScrollX } = useGridSelector(apiRef, gridScrollbarStateSelector);
   const dragCol = useGridSelector(apiRef, gridColumnReorderDragColSelector);
+  const rootProps = useGridRootProps();
 
-  const wrapperCssClasses = clsx(gridClasses.columnHeaderWrapper, {
-    scroll: hasScrollX,
-    [gridClasses.columnHeaderDropZone]: dragCol,
-  });
+  const ownerState = { ...props, dragCol, classes: rootProps.classes };
+  const classes = useUtilityClasses(ownerState);
 
   const renderedCols = React.useMemo(() => {
     if (renderCtx == null) {
@@ -44,7 +55,7 @@ export const GridColumnsHeader = React.forwardRef<HTMLDivElement, {}>(function G
       <GridScrollArea scrollDirection="left" />
       <div
         ref={ref}
-        className={wrapperCssClasses}
+        className={clsx(classes.wrapper, hasScrollX && 'scroll')}
         aria-rowindex={1}
         role="row"
         style={{ minWidth: containerSizes?.totalSizes?.width }}

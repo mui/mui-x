@@ -1,4 +1,5 @@
 import * as React from 'react';
+import clsx from 'clsx';
 import { useLogger } from '../../utils/useLogger';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridEvents } from '../../../constants/eventsConstants';
@@ -35,7 +36,7 @@ const hasCursorPositionChanged = (
  */
 export const useGridColumnReorder = (
   apiRef: GridApiRef,
-  props: Pick<GridComponentProps, 'disableColumnReorder'>,
+  props: Pick<GridComponentProps, 'disableColumnReorder' | 'classes'>,
 ): void => {
   const logger = useLogger('useGridColumnReorder');
 
@@ -63,8 +64,13 @@ export const useGridColumnReorder = (
 
       logger.debug(`Start dragging col ${params.field}`);
 
+      const draggingClassName = clsx(
+        gridClasses['columnHeader--dragging'],
+        props.classes?.columnHeader__dragging,
+      );
+
       dragColNode.current = event.currentTarget;
-      dragColNode.current.classList.add(gridClasses['columnSeparator--dragging']);
+      dragColNode.current.classList.add(draggingClassName);
 
       setGridState((state) => ({
         ...state,
@@ -73,12 +79,19 @@ export const useGridColumnReorder = (
       forceUpdate();
 
       removeDnDStylesTimeout.current = setTimeout(() => {
-        dragColNode.current!.classList.remove(gridClasses['columnSeparator--dragging']);
+        dragColNode.current!.classList.remove(draggingClassName);
       });
 
       originColumnIndex.current = apiRef.current.getColumnIndex(params.field, false);
     },
-    [props.disableColumnReorder, logger, setGridState, forceUpdate, apiRef],
+    [
+      props.disableColumnReorder,
+      props.classes?.columnHeader__dragging,
+      logger,
+      setGridState,
+      forceUpdate,
+      apiRef,
+    ],
   );
 
   const handleDragEnter = React.useCallback(

@@ -6,6 +6,7 @@ import { unstable_useId as useId } from '@material-ui/core/utils';
 import { useEnhancedEffect } from '../../utils/material-ui-utils';
 import { gridClasses } from '../../gridClasses';
 import { GridRenderEditCellParams } from '../../models/params/gridCellParams';
+import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
 export function GridEditBooleanCell(
   props: GridRenderEditCellParams &
@@ -31,6 +32,7 @@ export function GridEditBooleanCell(
   const inputRef = React.useRef<HTMLInputElement>(null);
   const id = useId();
   const [valueState, setValueState] = React.useState(value);
+  const rootProps = useGridRootProps();
 
   const handleChange = React.useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -52,7 +54,11 @@ export function GridEditBooleanCell(
   }, [hasFocus]);
 
   return (
-    <label htmlFor={id} className={clsx(gridClasses.editBooleanCell, className)} {...other}>
+    <label
+      htmlFor={id}
+      className={clsx(gridClasses.editBooleanCell, rootProps.classes?.editBooleanCell, className)}
+      {...other}
+    >
       <Checkbox
         id={id}
         inputRef={inputRef}

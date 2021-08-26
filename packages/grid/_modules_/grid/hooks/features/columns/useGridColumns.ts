@@ -1,4 +1,5 @@
 import * as React from 'react';
+import clsx from 'clsx';
 import { GridEvents } from '../../../constants/eventsConstants';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridColumnApi } from '../../../models/api/gridColumnApi';
@@ -27,6 +28,7 @@ import {
 import { useGridApiOptionHandler } from '../../root/useGridApiEventHandler';
 import { GRID_STRING_COL_DEF } from '../../../models/colDef/gridStringColDef';
 import { GridComponentProps } from '../../../GridComponentProps';
+import { gridClasses, GridClasses } from '../../../gridClasses';
 
 type RawGridColumnsState = Omit<GridColumnsState, 'lookup'> & {
   lookup: { [field: string]: GridColDef | GridStateColDef };
@@ -84,6 +86,7 @@ function hydrateColumnsType(
   columnTypes: GridColumnTypesRecord = {},
   getLocaleText: <T extends GridTranslationKeys>(key: T) => GridLocaleText[T],
   checkboxSelection?: boolean,
+  classes?: GridClasses,
 ): GridColumns {
   const mergedColTypes = mergeGridColTypes(getGridDefaultColumnTypes(), columnTypes);
   const extendedColumns = columns.map((column) => ({
@@ -95,6 +98,8 @@ function hydrateColumnsType(
     return [
       {
         ...gridCheckboxSelectionColDef,
+        cellClassName: clsx(gridClasses.cellCheckbox, classes?.cellCheckbox),
+        columnHeaderCheckbox: clsx(gridClasses.columnHeaderCheckbox, classes?.columnHeaderCheckbox),
         headerName: getLocaleText('checkboxSelectionHeaderName'),
       },
       ...extendedColumns,
@@ -127,7 +132,7 @@ export function useGridColumns(
   apiRef: GridApiRef,
   props: Pick<
     GridComponentProps,
-    'columns' | 'onColumnVisibilityChange' | 'columnTypes' | 'checkboxSelection'
+    'columns' | 'onColumnVisibilityChange' | 'columnTypes' | 'checkboxSelection' | 'classes'
   >,
 ): void {
   const logger = useLogger('useGridColumns');
@@ -302,11 +307,20 @@ export function useGridColumns(
       props.columnTypes,
       apiRef.current.getLocaleText,
       props.checkboxSelection,
+      props.classes,
     );
 
     const columnState = upsertColumnsState(hydratedColumns);
     setColumnsState(columnState);
-  }, [logger, apiRef, setColumnsState, props.columns, props.columnTypes, props.checkboxSelection]);
+  }, [
+    logger,
+    apiRef,
+    setColumnsState,
+    props.columns,
+    props.columnTypes,
+    props.checkboxSelection,
+    props.classes,
+  ]);
 
   React.useEffect(() => {
     logger.debug(

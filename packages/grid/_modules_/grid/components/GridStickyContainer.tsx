@@ -1,6 +1,8 @@
 import * as React from 'react';
+import clsx from 'clsx';
 import { gridClasses } from '../gridClasses';
 import { ElementSize } from '../models';
+import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 
 interface GridStickyContainerProps extends ElementSize {
   children: React.ReactNode;
@@ -8,9 +10,10 @@ interface GridStickyContainerProps extends ElementSize {
 
 export function GridStickyContainer(props: GridStickyContainerProps) {
   const { height, width, children } = props;
+  const rootProps = useGridRootProps();
   return (
     <div
-      className={gridClasses.viewport}
+      className={clsx(gridClasses.viewport, rootProps.classes?.viewport)}
       style={{
         minWidth: width,
         maxWidth: width,

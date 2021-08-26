@@ -5,15 +5,31 @@ import Tooltip from '@material-ui/core/Tooltip';
 import { gridPreferencePanelStateSelector } from '../../hooks/features/preferencesPanel/gridPreferencePanelSelector';
 import { GridPreferencePanelsValue } from '../../hooks/features/preferencesPanel/gridPreferencePanelsValue';
 import { useGridApiContext } from '../../hooks/root/useGridApiContext';
-import { gridClasses } from '../../gridClasses';
+import { getDataGridUtilityClass } from '../../gridClasses';
+import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
+import { composeClasses } from '../../utils/material-ui-utils';
 
 export interface ColumnHeaderFilterIconProps {
   counter?: number;
 }
 
+const useUtilityClasses = (ownerState) => {
+  const { classes } = ownerState;
+
+  const slots = {
+    container: ['iconButtonContainer'],
+    icon: ['filterIcon'],
+  };
+
+  return composeClasses(slots, getDataGridUtilityClass, classes);
+};
+
 export function ColumnHeaderFilterIcon(props: ColumnHeaderFilterIconProps) {
   const { counter } = props;
   const apiRef = useGridApiContext();
+  const rootProps = useGridRootProps();
+  const ownerState = { ...props, classes: rootProps.classes };
+  const classes = useUtilityClasses(ownerState);
 
   const FilteredColumnIconElement = apiRef!.current.components.ColumnFilteredIcon!;
 
@@ -45,7 +61,7 @@ export function ColumnHeaderFilterIcon(props: ColumnHeaderFilterIconProps) {
       size="small"
       tabIndex={-1}
     >
-      <FilteredColumnIconElement className={gridClasses.filterIcon} fontSize="small" />
+      <FilteredColumnIconElement className={classes.icon} fontSize="small" />
     </IconButton>
   );
 
@@ -58,7 +74,7 @@ export function ColumnHeaderFilterIcon(props: ColumnHeaderFilterIconProps) {
       }
       enterDelay={1000}
     >
-      <div className={gridClasses.iconButtonContainer}>
+      <div className={classes.container}>
         {counter > 1 && (
           <Badge badgeContent={counter} color="default">
             {iconButton}

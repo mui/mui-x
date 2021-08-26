@@ -1,10 +1,11 @@
 import * as React from 'react';
-import clsx from 'clsx';
 import { GridEvents } from '../constants/eventsConstants';
 import { useGridApiEventHandler } from '../hooks/root/useGridApiEventHandler';
 import { GridScrollParams } from '../models/params/gridScrollParams';
 import { useGridApiContext } from '../hooks/root/useGridApiContext';
-import { gridClasses } from '../gridClasses';
+import { getDataGridUtilityClass } from '../gridClasses';
+import { composeClasses } from '../utils/material-ui-utils';
+import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 
 const CLIFF = 1;
 const SLOP = 1.5;
@@ -12,6 +13,16 @@ const SLOP = 1.5;
 interface ScrollAreaProps {
   scrollDirection: 'left' | 'right';
 }
+
+const useUtilityClasses = (ownerState) => {
+  const { scrollDirection, classes } = ownerState;
+
+  const slots = {
+    root: ['scrollArea', `scrollArea--${scrollDirection}`],
+  };
+
+  return composeClasses(slots, getDataGridUtilityClass, classes);
+};
 
 export const GridScrollArea = React.memo(function GridScrollArea(props: ScrollAreaProps) {
   const { scrollDirection } = props;
@@ -23,6 +34,9 @@ export const GridScrollArea = React.memo(function GridScrollArea(props: ScrollAr
     left: 0,
     top: 0,
   });
+  const rootProps = useGridRootProps();
+  const ownerState = { ...props, classes: rootProps.classes };
+  const classes = useUtilityClasses(ownerState);
 
   const handleScrolling = React.useCallback((newScrollPosition) => {
     scrollPosition.current = newScrollPosition;
@@ -69,10 +83,6 @@ export const GridScrollArea = React.memo(function GridScrollArea(props: ScrollAr
   useGridApiEventHandler(apiRef, GridEvents.columnHeaderDragEnd, toggleDragging);
 
   return dragging ? (
-    <div
-      ref={rootRef}
-      className={clsx(gridClasses.scrollArea, gridClasses[`scrollArea--${scrollDirection}`])}
-      onDragOver={handleDragOver}
-    />
+    <div ref={rootRef} className={classes.root} onDragOver={handleDragOver} />
   ) : null;
 });

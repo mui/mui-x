@@ -151,9 +151,6 @@ export const useStyles = makeStyles(
           whiteSpace: 'nowrap',
           fontWeight: theme.typography.fontWeightMedium,
         },
-        [`& .${gridClasses['columnHeader--moving']}`]: {
-          backgroundColor: theme.palette.action.hover,
-        },
         [`& .${gridClasses.columnSeparator}`]: {
           position: 'absolute',
           right: -12,
@@ -173,7 +170,7 @@ export const useStyles = makeStyles(
               color: borderColor,
             },
           },
-          '&.Mui-resizing': {
+          [`&.${gridClasses['columnSeparator--resizing']}`]: {
             color: theme.palette.text.primary,
           },
         },

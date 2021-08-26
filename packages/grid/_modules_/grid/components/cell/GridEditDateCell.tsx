@@ -1,8 +1,10 @@
 import * as React from 'react';
+import clsx from 'clsx';
 import InputBase, { InputBaseProps } from '@material-ui/core/InputBase';
 import { GridRenderEditCellParams } from '../../models/params/gridCellParams';
 import { useEnhancedEffect } from '../../utils/material-ui-utils';
 import { gridClasses } from '../../gridClasses';
+import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
 export function GridEditDateCell(props: GridRenderEditCellParams & InputBaseProps) {
   const {
@@ -23,6 +25,7 @@ export function GridEditDateCell(props: GridRenderEditCellParams & InputBaseProp
 
   const inputRef = React.useRef<HTMLInputElement>();
   const [valueState, setValueState] = React.useState(value);
+  const rootProps = useGridRootProps();
 
   const handleChange = React.useCallback(
     (event) => {
@@ -75,7 +78,7 @@ export function GridEditDateCell(props: GridRenderEditCellParams & InputBaseProp
     <InputBase
       inputRef={inputRef}
       fullWidth
-      className={gridClasses.editInputCell}
+      className={clsx(gridClasses.editInputCell, rootProps.classes?.editInputCell)}
       type={isDateTime ? 'datetime-local' : 'date'}
       value={valueToDisplay}
       onChange={handleChange}

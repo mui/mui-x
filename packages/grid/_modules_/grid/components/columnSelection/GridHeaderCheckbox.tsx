@@ -1,4 +1,5 @@
 import * as React from 'react';
+import clsx from 'clsx';
 import { GridEvents } from '../../constants/eventsConstants';
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
 import { gridPaginatedVisibleSortedGridRowIdsSelector } from '../../hooks/features/pagination/gridPaginationSelector';
@@ -69,7 +70,7 @@ export const GridHeaderCheckbox = React.forwardRef<HTMLInputElement, GridColumnH
         indeterminate={isIndeterminate}
         checked={isChecked}
         onChange={handleChange}
-        className={gridClasses.checkboxInput}
+        className={clsx(gridClasses.checkboxInput, rootProps.classes?.checkboxInput)}
         color="primary"
         inputProps={{ 'aria-label': 'Select All Rows checkbox' }}
         tabIndex={tabIndex}

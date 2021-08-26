@@ -22,7 +22,7 @@ import { GridColumnOrderChangeParams } from './params/gridColumnOrderChangeParam
 import { GridColumnResizeParams } from './params/gridColumnResizeParams';
 import { GridColumnVisibilityChangeParams } from './params/gridColumnVisibilityChangeParams';
 import { GridRowId } from './gridRows';
-import { GridClasses } from './gridClasses';
+import { GridClasses } from '../gridClasses';
 import { ElementSize } from './elementSize';
 import { GridViewportRowsChangeParams } from './params/gridViewportRowsChangeParams';
 
