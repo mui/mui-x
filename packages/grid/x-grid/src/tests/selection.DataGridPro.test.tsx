@@ -40,6 +40,10 @@ describe('<DataGridPro /> - Selection', () => {
     apiRef = useGridApiRef();
     const data = useData(4, 2);
 
+    if (!data.rows.length) {
+      return null;
+    }
+
     return (
       <div style={{ width: 300, height: 300 }}>
         <DataGridPro {...data} {...props} apiRef={apiRef} autoHeight={isJSDOM} />
@@ -220,7 +224,6 @@ describe('<DataGridPro /> - Selection', () => {
     it('should not update the selection model when the selectionModelProp is set', () => {
       const selectionModel: GridInputSelectionModel = [1];
       render(<TestDataGridSelection selectionModel={selectionModel} />);
-
       expect(getRow(0)).not.to.have.class('Mui-selected');
       expect(getRow(1)).to.have.class('Mui-selected');
       fireEvent.click(getCell(0, 0));
