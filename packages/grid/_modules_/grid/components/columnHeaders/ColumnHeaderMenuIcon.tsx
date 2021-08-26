@@ -23,7 +23,7 @@ export const ColumnHeaderMenuIcon = React.memo((props: ColumnHeaderMenuIconProps
     (event: React.MouseEvent<HTMLButtonElement>) => {
       event.preventDefault();
       event.stopPropagation();
-      apiRef!.current.toggleColumnMenu(column.field);
+      apiRef.current.toggleColumnMenu(column.field);
     },
     [apiRef, column.field],
   );
@@ -34,8 +34,8 @@ export const ColumnHeaderMenuIcon = React.memo((props: ColumnHeaderMenuIconProps
         ref={iconButtonRef}
         tabIndex={-1}
         className={gridClasses.menuIconButton}
-        aria-label={apiRef!.current.getLocaleText('columnMenuLabel')}
-        title={apiRef!.current.getLocaleText('columnMenuLabel')}
+        aria-label={apiRef.current.getLocaleText('columnMenuLabel')}
+        title={apiRef.current.getLocaleText('columnMenuLabel')}
         size="small"
         onClick={handleMenuIconClick}
         aria-expanded={open ? 'true' : undefined}

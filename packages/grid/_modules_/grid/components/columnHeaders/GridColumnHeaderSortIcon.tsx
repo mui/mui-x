@@ -43,8 +43,8 @@ export const GridColumnHeaderSortIcon = React.memo(function GridColumnHeaderSort
   const iconButton = (
     <IconButton
       tabIndex={-1}
-      aria-label={apiRef!.current.getLocaleText('columnHeaderSortIconLabel')}
-      title={apiRef!.current.getLocaleText('columnHeaderSortIconLabel')}
+      aria-label={apiRef.current.getLocaleText('columnHeaderSortIconLabel')}
+      title={apiRef.current.getLocaleText('columnHeaderSortIconLabel')}
       size="small"
     >
       {iconElement}

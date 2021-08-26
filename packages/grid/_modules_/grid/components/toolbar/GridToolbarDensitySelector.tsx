@@ -27,17 +27,17 @@ export const GridToolbarDensitySelector = React.forwardRef<HTMLButtonElement, Bu
     const densityOptions: GridDensityOption[] = [
       {
         icon: <rootProps.components.DensityCompactIcon />,
-        label: apiRef!.current.getLocaleText('toolbarDensityCompact'),
+        label: apiRef.current.getLocaleText('toolbarDensityCompact'),
         value: GridDensityTypes.Compact,
       },
       {
         icon: <rootProps.components.DensityStandardIcon />,
-        label: apiRef!.current.getLocaleText('toolbarDensityStandard'),
+        label: apiRef.current.getLocaleText('toolbarDensityStandard'),
         value: GridDensityTypes.Standard,
       },
       {
         icon: <rootProps.components.DensityComfortableIcon />,
-        label: apiRef!.current.getLocaleText('toolbarDensityComfortable'),
+        label: apiRef.current.getLocaleText('toolbarDensityComfortable'),
         value: GridDensityTypes.Comfortable,
       },
     ];
@@ -59,7 +59,7 @@ export const GridToolbarDensitySelector = React.forwardRef<HTMLButtonElement, Bu
     };
     const handleDensitySelectorClose = () => setAnchorEl(null);
     const handleDensityUpdate = (newDensity: GridDensity) => {
-      apiRef!.current.setDensity(newDensity);
+      apiRef.current.setDensity(newDensity);
       setAnchorEl(null);
     };
 
@@ -95,7 +95,7 @@ export const GridToolbarDensitySelector = React.forwardRef<HTMLButtonElement, Bu
           color="primary"
           size="small"
           startIcon={startIcon}
-          aria-label={apiRef!.current.getLocaleText('toolbarDensityLabel')}
+          aria-label={apiRef.current.getLocaleText('toolbarDensityLabel')}
           aria-expanded={anchorEl ? 'true' : undefined}
           aria-haspopup="menu"
           aria-labelledby={densityMenuId}
@@ -103,7 +103,7 @@ export const GridToolbarDensitySelector = React.forwardRef<HTMLButtonElement, Bu
           {...other}
           onClick={handleDensitySelectorOpen}
         >
-          {apiRef!.current.getLocaleText('toolbarDensity')}
+          {apiRef.current.getLocaleText('toolbarDensity')}
         </Button>
         <GridMenu
           open={Boolean(anchorEl)}

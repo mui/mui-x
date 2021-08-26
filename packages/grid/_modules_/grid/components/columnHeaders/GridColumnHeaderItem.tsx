@@ -55,15 +55,15 @@ export function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
   const isColumnNumeric = column.type === GRID_NUMBER_COLUMN_TYPE;
 
   let headerComponent: React.ReactNode = null;
-  if (column.renderHeader && apiRef!.current) {
-    headerComponent = column.renderHeader(apiRef!.current.getColumnHeaderParams(column.field));
+  if (column.renderHeader) {
+    headerComponent = column.renderHeader(apiRef.current.getColumnHeaderParams(column.field));
   }
 
   const publish = React.useCallback(
     (eventName: string) => (event: React.MouseEvent | React.DragEvent) =>
-      apiRef!.current.publishEvent(
+      apiRef.current.publishEvent(
         eventName,
-        apiRef!.current.getColumnHeaderParams(column.field),
+        apiRef.current.getColumnHeaderParams(column.field),
         event,
       ),
     [apiRef, column.field],
@@ -153,7 +153,7 @@ export function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
   );
 
   React.useLayoutEffect(() => {
-    const columnMenuState = apiRef!.current.state.columnMenu;
+    const columnMenuState = apiRef.current.state.columnMenu;
     if (hasFocus && !columnMenuState.open) {
       const focusableElement = headerCellRef.current!.querySelector(
         '[tabindex="0"]',

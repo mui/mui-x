@@ -50,7 +50,7 @@ export const useGridContainerProps = (
   const paginationState = useGridSelector(apiRef, gridPaginationSelector);
   const windowRef = apiRef.current.windowRef;
 
-  const rootElement = apiRef.current?.rootElementRef?.current;
+  const rootElement = apiRef.current.rootElementRef?.current;
   const hasColumns = !!columnsTotalWidth;
   const scrollbarSize = React.useMemo(() => {
     if (props.scrollbarSize != null) {

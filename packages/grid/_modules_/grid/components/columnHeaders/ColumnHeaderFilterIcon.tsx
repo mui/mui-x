@@ -22,12 +22,12 @@ export function ColumnHeaderFilterIcon(props: ColumnHeaderFilterIconProps) {
       event.preventDefault();
       event.stopPropagation();
 
-      const { open, openedPanelValue } = gridPreferencePanelStateSelector(apiRef!.current.state);
+      const { open, openedPanelValue } = gridPreferencePanelStateSelector(apiRef.current.state);
 
       if (open && openedPanelValue === GridPreferencePanelsValue.filters) {
-        apiRef!.current.hideFilterPanel();
+        apiRef.current.hideFilterPanel();
       } else {
-        apiRef!.current.showFilterPanel();
+        apiRef.current.showFilterPanel();
       }
     },
     [apiRef],
@@ -41,7 +41,7 @@ export function ColumnHeaderFilterIcon(props: ColumnHeaderFilterIconProps) {
     <IconButton
       onClick={toggleFilter}
       color="default"
-      aria-label={apiRef!.current.getLocaleText('columnHeaderFiltersLabel')}
+      aria-label={apiRef.current.getLocaleText('columnHeaderFiltersLabel')}
       size="small"
       tabIndex={-1}
     >
@@ -55,7 +55,7 @@ export function ColumnHeaderFilterIcon(props: ColumnHeaderFilterIconProps) {
   return (
     <Tooltip
       title={
-        apiRef!.current.getLocaleText('columnHeaderFiltersTooltipActive')(
+        apiRef.current.getLocaleText('columnHeaderFiltersTooltipActive')(
           counter,
         ) as React.ReactElement
       }
