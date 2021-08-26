@@ -67,7 +67,7 @@
     "react-redux": "^7.2.4",
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
-    "react-text-mask": "^5.0.2",
+    "react-text-mask": "^5.4.3",
     "recast": "^0.20.5",
     "redux": "^4.1.1",
     "redux-logger": "^3.0.6",
