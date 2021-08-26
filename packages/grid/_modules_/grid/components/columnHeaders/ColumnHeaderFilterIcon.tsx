@@ -15,7 +15,7 @@ export function ColumnHeaderFilterIcon(props: ColumnHeaderFilterIconProps) {
   const { counter } = props;
   const apiRef = useGridApiContext();
 
-  const FilteredColumnIconElement = apiRef.current!.components.ColumnFilteredIcon!;
+  const FilteredColumnIconElement = apiRef!.current.components.ColumnFilteredIcon!;
 
   const toggleFilter = React.useCallback(
     (event: React.MouseEvent<HTMLButtonElement>) => {

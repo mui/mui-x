@@ -16,7 +16,7 @@ export interface ColumnHeaderMenuIconProps {
 export const ColumnHeaderMenuIcon = React.memo((props: ColumnHeaderMenuIconProps) => {
   const { column, open, columnMenuId, columnMenuButtonId, iconButtonRef } = props;
   const apiRef = useGridApiContext();
-  const ColumnMenuIcon = apiRef.current!.components.ColumnMenuIcon!;
+  const ColumnMenuIcon = apiRef!.current.components.ColumnMenuIcon!;
 
   const handleMenuIconClick = React.useCallback(
     (event: React.MouseEvent<HTMLButtonElement>) => {
