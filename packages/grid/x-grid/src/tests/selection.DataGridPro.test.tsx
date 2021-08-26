@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import {getCell, getColumnValues, getRow} from 'test/utils/helperFn';
+import { getCell, getColumnValues, getRow } from 'test/utils/helperFn';
 import {
   // @ts-expect-error need to migrate helpers to TypeScript
   screen,
@@ -191,13 +191,13 @@ describe('<DataGridPro /> - Selection', () => {
 
   it('should only select visible rows on the current page', () => {
     render(
-        <TestDataGridSelection
-          checkboxSelection
-          checkboxSelectionVisibleOnly
-          pagination
-          pageSize={1}
-          rowsPerPageOptions={[1]}
-        />
+      <TestDataGridSelection
+        checkboxSelection
+        checkboxSelectionVisibleOnly
+        pagination
+        pageSize={1}
+        rowsPerPageOptions={[1]}
+      />,
     );
     const selectAll = screen.getByRole('checkbox', {
       name: /select all rows checkbox/i,
@@ -248,10 +248,10 @@ describe('<DataGridPro /> - Selection', () => {
         };
 
         return (
-            <TestDataGridSelection
-                selectionModel={selectionModel}
-                onSelectionModelChange={handleSelectionChange}
-            />
+          <TestDataGridSelection
+            selectionModel={selectionModel}
+            onSelectionModelChange={handleSelectionChange}
+          />
         );
       };
 
