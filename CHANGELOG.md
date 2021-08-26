@@ -7,7 +7,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 _Aug 26, 2021_
 
-🎉 This is the first official stable release of the data grid component 🎉!
+🎉 This is the first stable release of the data grid component 🎉!
 
 We have been iterating on the component for [18 months](https://github.com/mui-org/material-ui-x/commit/705cb0f387b5f3aa056bf40c4183a2342b317447). With the  introduction of the [row edit](https://material-ui.com/components/data-grid/editing/#row-editing) feature, many bug fixes, and polishing of the documentation, we believe the component is ready for a stable release.
 
