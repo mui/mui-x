@@ -1,6 +1,65 @@
 import { generateUtilityClasses } from './utils/material-ui-utils';
 
-export const gridClasses = generateUtilityClasses('MuiDataGrid', [
+export interface GridClasses {
+  root: string;
+  row: string;
+  'row--editing': string;
+  cell: string;
+  withBorder: string;
+  'cell--editing': string;
+  'cell--editable': string;
+  'cell--withRenderer': string;
+  'cell--textLeft': string;
+  'cell--textCenter': string;
+  'cell--textRight': string;
+  columnHeader: string;
+  'columnHeader--dragging': string;
+  columnHeaderWrapper: string;
+  scrollArea: string;
+  'scrollArea--left': string;
+  'scrollArea--right': string;
+  columnsContainer: string;
+  toolbarContainer: string;
+  overlay: string;
+  main: string;
+  dataContainer: string;
+  window: string;
+  windowContainer: string;
+  viewport: string;
+  autoHeight: string;
+  columnHeaderCheckbox: string;
+  cellCheckbox: string;
+  'columnHeader--sorted': string;
+  'columnHeader--sortable': string;
+  'columnHeader--moving': string;
+  'columnHeader--numeric': string;
+  'columnHeader--alignLeft': string;
+  'columnHeader--alignCenter': string;
+  'columnHeader--alignRight': string;
+  columnHeaderDraggableContainer: string;
+  columnHeaderTitle: string;
+  iconButtonContainer: string;
+  sortIcon: string;
+  filterIcon: string;
+  menuIcon: string;
+  menuIconButton: string;
+  columnHeaderTitleContainer: string;
+  columnSeparator: string;
+  'columnSeparator--resizable': string;
+  iconSeparator: string;
+  menuOpen: string;
+  editInputCell: string;
+  editBooleanCell: string;
+  booleanCell: string;
+  checkboxInput: string;
+  rowCount: string;
+  selectedRowCount: string;
+  footerContainer: string;
+  columnHeaderDropZone: string;
+  renderingZone: string;
+}
+
+export const gridClasses : GridClasses = generateUtilityClasses('MuiDataGrid', [
   'root',
   'row',
   'row--editing',
@@ -48,7 +107,6 @@ export const gridClasses = generateUtilityClasses('MuiDataGrid', [
   'columnSeparator--resizable',
   'iconSeparator',
   'menuOpen',
-  'columnHeaderWrapper',
   'editInputCell',
   'editBooleanCell',
   'booleanCell',
@@ -57,6 +115,5 @@ export const gridClasses = generateUtilityClasses('MuiDataGrid', [
   'selectedRowCount',
   'footerContainer',
   'columnHeaderDropZone',
-  'columnHeaderDraggableContainer',
   'renderingZone',
 ]);

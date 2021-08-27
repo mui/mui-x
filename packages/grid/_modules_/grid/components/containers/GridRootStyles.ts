@@ -1,7 +1,8 @@
 import { darken, lighten, Theme } from '@material-ui/core/styles';
 import { makeStyles } from '@material-ui/styles';
 import { getThemePaletteMode, muiStyleAlpha, createTheme } from '../../utils/utils';
-import { gridClasses } from '../../gridClasses';
+import { gridClasses, GridClasses } from '../../gridClasses';
+import { nameof } from '../../utils/nameof';
 
 const defaultTheme = createTheme();
 export const useStyles = makeStyles(
@@ -47,11 +48,6 @@ export const useStyles = makeStyles(
             theme.palette.background.default,
             theme.palette.action.disabledOpacity,
           ),
-        },
-        [`& .${gridClasses.toolbarContainer}`]: {
-          display: 'flex',
-          alignItems: 'center',
-          padding: '4px 4px 0',
         },
         [`& .${gridClasses.columnsContainer}`]: {
           position: 'absolute',
@@ -357,6 +353,11 @@ export const useStyles = makeStyles(
           opacity: theme.palette.action.disabledOpacity,
         },
       },
+      [nameof<GridClasses>('toolbarContainer')]: {
+        display: 'flex',
+        alignItems: 'center',
+        padding: '4px 4px 0',
+      }
     };
 
     if (getThemePaletteMode(theme.palette) === 'dark') {
