@@ -1,6 +1,6 @@
 import { generateUtilityClasses } from './utils/material-ui-utils';
 
-const rawClasses = [ 
+const rawClasses = [
   'root',
   'row',
   'row--editing',
@@ -56,9 +56,9 @@ const rawClasses = [
   'selectedRowCount',
   'footerContainer',
   'columnHeaderDropZone',
-  'renderingZone'
+  'renderingZone',
 ] as const;
 
-export type GridClassNames = Record<(typeof rawClasses)[number], string>;
+export type GridClassNames = Record<typeof rawClasses[number], string>;
 
 export const gridClasses: GridClassNames = generateUtilityClasses('MuiDataGrid', [...rawClasses]);
