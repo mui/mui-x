@@ -1,7 +1,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { useStyles } from './GridRootStyles';
-import { GridClasses } from '../../gridClasses';
+import { GridClassNames } from '../../gridClasses';
 import { nameof } from '../../utils/nameof';
 
 export type GridToolbarContainerProps = React.HTMLAttributes<HTMLDivElement>;
@@ -17,7 +17,7 @@ export const GridToolbarContainer = React.forwardRef<HTMLDivElement, GridToolbar
     }
 
     return (
-      <div ref={ref} className={clsx(classes[nameof<GridClasses>('toolbarContainer')], className)} {...other}>
+      <div ref={ref} className={clsx(classes[nameof<GridClassNames>('toolbarContainer')], className)} {...other}>
         {children}
       </div>
     );

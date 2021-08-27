@@ -1,6 +1,6 @@
 import { generateUtilityClasses } from './utils/material-ui-utils';
 
-export interface GridClasses {
+export interface GridClassNames {
   root: string;
   row: string;
   'row--editing': string;
@@ -59,7 +59,7 @@ export interface GridClasses {
   renderingZone: string;
 }
 
-export const gridClasses : GridClasses = generateUtilityClasses('MuiDataGrid', [
+export const gridClasses : GridClassNames = generateUtilityClasses('MuiDataGrid', [
   'root',
   'row',
   'row--editing',
