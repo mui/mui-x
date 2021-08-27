@@ -4,7 +4,7 @@ import { fireEvent, screen, createClientRenderStrictMode } from 'test/utils';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { DataGrid } from '@mui/x-data-grid';
-import { getCell, getRow } from 'test/utils/helperFn';
+import { getCell, getColumnHeaderCell, getRow } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -347,6 +347,7 @@ describe('<DataGrid /> - Selection', () => {
         columns: [{ field: 'brand', width: 100 }],
         selectionModel: [1],
         isRowSelectable: (params) => params.id > 0,
+        checkboxSelection: true,
       };
 
       function Demo(props) {
@@ -360,9 +361,17 @@ describe('<DataGrid /> - Selection', () => {
       const { setProps } = render(<Demo {...data} />);
       expect(getRow(0)).not.to.have.class('Mui-selected');
       expect(getRow(1)).to.have.class('Mui-selected');
+      expect(getColumnHeaderCell(0).querySelector('input')).to.have.attr(
+        'data-indeterminate',
+        'true',
+      );
 
       setProps({ selectionModel: [0] });
-      expect(getRow(0)).to.have.class('Mui-selected');
+      expect(getColumnHeaderCell(0).querySelector('input')).to.have.attr(
+        'data-indeterminate',
+        'false',
+      );
+      expect(getRow(0)).not.to.have.class('Mui-selected');
       expect(getRow(1)).not.to.have.class('Mui-selected');
     });
   });
