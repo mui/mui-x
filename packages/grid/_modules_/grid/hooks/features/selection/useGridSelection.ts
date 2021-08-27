@@ -42,10 +42,7 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
   const { checkboxSelection, disableMultipleSelection, disableSelectionOnClick, isRowSelectable } =
     options;
 
-  const canHaveMultipleSelection = React.useMemo(
-    () => !disableMultipleSelection || checkboxSelection,
-    [disableMultipleSelection, checkboxSelection],
-  );
+  const canHaveMultipleSelection = !disableMultipleSelection || checkboxSelection
 
   const getSelectedRows = React.useCallback<GridSelectionApi['getSelectedRows']>(
     () => selectedGridRowsSelector(apiRef.current.state),
