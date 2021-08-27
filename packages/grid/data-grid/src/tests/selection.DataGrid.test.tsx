@@ -129,7 +129,7 @@ describe('<DataGrid /> - Selection', () => {
       expect(row).to.have.class('Mui-selected');
     });
 
-    it('should allow to switch selectionModel from array version to non array version', () => {
+    it('should allow to switch selectionModel from array version to non-array version', () => {
       const { setProps } = render(<TestDataGridSelection />);
 
       setProps({ selectionModel: 1 });
