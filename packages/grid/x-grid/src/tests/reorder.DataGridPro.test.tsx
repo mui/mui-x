@@ -227,7 +227,7 @@ describe('<DataGridPro /> - Reorder', () => {
     expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
   });
 
-  it('onColumnOrderChange should be called after the column has been reordered', () => {
+  it('should call onColumnOrderChange after the column has been reordered', () => {
     const onColumnOrderChange = spy();
     let apiRef: GridApiRef;
     const Test = () => {
