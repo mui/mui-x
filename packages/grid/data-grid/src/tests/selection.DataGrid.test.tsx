@@ -30,7 +30,7 @@ describe('<DataGrid /> - Selection', () => {
   };
 
   describe('no checkboxSelection prop - selection/deselection', () => {
-    it('should select one row at a time on click WITHOUT ctrl or meta keypress', () => {
+    it('should select one row at a time on click WITHOUT ctrl or meta pressed', () => {
       render(<TestDataGridSelection />);
       const firstRow = getRow(0);
       const secondRow = getRow(1);
