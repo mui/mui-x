@@ -20,11 +20,7 @@ function getIcon(icons: GridIconSlotsComponent, direction: GridSortDirection) {
     Icon = icons.ColumnSortedDescendingIcon;
   }
 
-  if (!Icon) {
-    return null;
-  }
-
-  return <Icon fontSize="small" className={gridClasses.sortIcon} />;
+  return Icon ? <Icon fontSize="small" className={gridClasses.sortIcon} /> : null;
 }
 
 export const GridColumnHeaderSortIcon = React.memo(function GridColumnHeaderSortIcon(
