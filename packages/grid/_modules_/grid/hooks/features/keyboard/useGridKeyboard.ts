@@ -31,9 +31,13 @@ export const useGridKeyboard = (apiRef: GridApiRef): void => {
       const startRowIndex = Number(rowEl.getAttribute('data-rowindex'));
       const startId = apiRef.current.getRowIdFromRowIndex(startRowIndex);
 
+      if (startId === focusCell.id) {
+        return;
+      }
+
       apiRef.current.selectRowRange(
         { startId, endId: focusCell.id },
-        apiRef.current.isRowSelected(startId),
+        !apiRef.current.isRowSelected(focusCell.id),
       );
     },
     [apiRef],
