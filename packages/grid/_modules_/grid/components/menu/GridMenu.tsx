@@ -39,7 +39,7 @@ const useStyles = makeStyles(
 export interface GridMenuProps extends Omit<PopperProps, 'onKeyDown'> {
   open: boolean;
   target: React.ReactNode;
-  onClickAway: (event?: React.MouseEvent<Document, MouseEvent>) => void;
+  onClickAway: (event: React.SyntheticEvent<Document, MouseEvent>) => void;
   position?: MenuPosition;
 }
 
