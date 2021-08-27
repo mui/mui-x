@@ -357,7 +357,7 @@ export const useStyles = makeStyles(
         display: 'flex',
         alignItems: 'center',
         padding: '4px 4px 0',
-      }
+      },
     };
 
     if (getThemePaletteMode(theme.palette) === 'dark') {

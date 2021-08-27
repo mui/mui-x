@@ -59,7 +59,7 @@ export interface GridClassNames {
   renderingZone: string;
 }
 
-export const gridClasses : GridClassNames = generateUtilityClasses('MuiDataGrid', [
+export const gridClasses: GridClassNames = generateUtilityClasses('MuiDataGrid', [
   'root',
   'row',
   'row--editing',

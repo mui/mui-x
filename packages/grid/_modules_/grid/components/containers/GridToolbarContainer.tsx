@@ -17,7 +17,11 @@ export const GridToolbarContainer = React.forwardRef<HTMLDivElement, GridToolbar
     }
 
     return (
-      <div ref={ref} className={clsx(classes[nameof<GridClassNames>('toolbarContainer')], className)} {...other}>
+      <div
+        ref={ref}
+        className={clsx(classes[nameof<GridClassNames>('toolbarContainer')], className)}
+        {...other}
+      >
         {children}
       </div>
     );
