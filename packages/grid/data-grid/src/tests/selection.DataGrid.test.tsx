@@ -99,7 +99,7 @@ describe('<DataGrid /> - Selection', () => {
       expect(getRow(1)).to.have.class('Mui-selected');
     });
 
-    it('with no rows, the checkbox should not be checked', () => {
+    it('should check the checkbox when there is no rows', () => {
       render(<TestDataGridSelection rows={[]} checkboxSelection />);
       const selectAll = screen.getByRole('checkbox', {
         name: /select all rows checkbox/i,
