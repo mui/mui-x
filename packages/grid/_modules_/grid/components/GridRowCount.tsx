@@ -11,24 +11,36 @@ interface RowCountProps {
 
 type GridRowCountProps = React.HTMLAttributes<HTMLDivElement> & RowCountProps;
 
-export const GridRowCount = React.forwardRef<HTMLDivElement, GridRowCountProps>(
-  function GridRowCount(props, ref) {
-    const { className, rowCount, visibleRowCount, ...other } = props;
-    const apiRef = useGridApiContext();
+const GridRowCount = React.forwardRef<HTMLDivElement, GridRowCountProps>(function GridRowCount(
+  props,
+  ref,
+) {
+  const { className, rowCount, visibleRowCount, ...other } = props;
+  const apiRef = useGridApiContext();
 
-    if (rowCount === 0) {
-      return null;
-    }
+  if (rowCount === 0) {
+    return null;
+  }
 
-    const text =
-      visibleRowCount < rowCount
-        ? apiRef.current.getLocaleText('footerTotalVisibleRows')(visibleRowCount, rowCount)
-        : rowCount.toLocaleString();
+  const text =
+    visibleRowCount < rowCount
+      ? apiRef.current.getLocaleText('footerTotalVisibleRows')(visibleRowCount, rowCount)
+      : rowCount.toLocaleString();
 
-    return (
-      <div ref={ref} className={clsx(gridClasses.rowCount, className)} {...other}>
-        {apiRef.current.getLocaleText('footerTotalRows')} {text}
-      </div>
-    );
-  },
-);
+  return (
+    <div ref={ref} className={clsx(gridClasses.rowCount, className)} {...other}>
+      {apiRef.current.getLocaleText('footerTotalRows')} {text}
+    </div>
+  );
+});
+
+GridRowCount.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  rowCount: PropTypes.number.isRequired,
+  visibleRowCount: PropTypes.number.isRequired,
+} as any;
+
+export { GridRowCount };
