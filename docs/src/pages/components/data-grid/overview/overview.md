@@ -4,7 +4,7 @@ title: React Data Grid component
 
 # Data Grid
 
-<p class="description">A fast and extendable data table and data grid for React. It's a feature-rich component available in MIT or Commercial versions.</p>
+<p class="description">A fast and extendable react data table and react data grid. It's a feature-rich component available in MIT or Commercial versions.</p>
 
 The component leverages the power of React and TypeScript, to provide the best UX while manipulating an unlimited set of data. It comes with an intuitive API for real-time updates, accessibility, as well as theming and custom templates, all with blazing fast performance.
 
