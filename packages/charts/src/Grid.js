@@ -2,7 +2,11 @@ import React, { useContext } from 'react';
 import ChartContext from './ChartContext';
 
 const Grid = (props) => {
-  const { dimensions, xTicks, yTicks } = useContext(ChartContext);
+  const {
+    dimensions: { boundedWidth, boundedHeight },
+    xTicks,
+    yTicks,
+  } = useContext(ChartContext);
   const {
     disableX = false,
     disableY = false,
@@ -23,13 +27,13 @@ const Grid = (props) => {
 
   return (
     <g>
-      <rect width={dimensions.boundedWidth} height={dimensions.boundedHeight} fill={fill} />
-      <g transform={`translate(0, ${dimensions.boundedHeight})`}>
+      <rect width={boundedWidth} height={boundedHeight} fill={fill} />
+      <g transform={`translate(0, ${boundedHeight})`}>
         {!disableX &&
           xTicks.map(({ offset, value }, index) => (
             <g key={index} transform={`translate(${offset}, 0)`}>
               <line
-                y2={-dimensions.boundedHeight}
+                y2={-boundedHeight}
                 stroke={getStroke(value)}
                 strokeWidth={getStrokeWidth(value)}
                 strokeDasharray={getStrokeDasharray(value)}
@@ -41,7 +45,7 @@ const Grid = (props) => {
           yTicks.map(({ offset, value }, index) => (
             <g key={index} transform={`translate(0, ${-offset})`}>
               <line
-                x2={dimensions.boundedWidth}
+                x2={boundedWidth}
                 stroke={getStroke(value)}
                 strokeWidth={getStrokeWidth(value)}
                 strokeDasharray={getStrokeDasharray(value)}

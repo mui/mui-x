@@ -11,7 +11,7 @@ const Line = (props) => {
   const {
     areaKeys,
     data,
-    dimensions,
+    dimensions: { boundedHeight },
     markerShape: markerShapeContext,
     smoothed: smoothedContext,
     stacked,
@@ -78,7 +78,7 @@ const Line = (props) => {
           stroke="none"
           fill={fill}
           strokeWidth={strokeWidth}
-          transform={`translate(0, ${dimensions.boundedHeight})`}
+          transform={`translate(0, ${boundedHeight})`}
         />
       )}
       <path
@@ -86,7 +86,7 @@ const Line = (props) => {
         stroke={stroke}
         fill="none"
         strokeWidth={strokeWidth}
-        transform={`translate(0, ${dimensions.boundedHeight})`}
+        transform={`translate(0, ${boundedHeight})`}
       />
       {markerShape != 'none' && (
         <Scatter

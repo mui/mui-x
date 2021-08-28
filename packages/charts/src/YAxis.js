@@ -2,7 +2,10 @@ import React, { useContext } from 'react';
 import ChartContext from './ChartContext';
 
 const YAxis = (props) => {
-  const { dimensions, yTicks } = useContext(ChartContext);
+  const {
+    dimensions: { boundedHeight, boundedWidth },
+    yTicks,
+  } = useContext(ChartContext);
   const {
     disableLine = false,
     disableTicks = false,
@@ -10,9 +13,6 @@ const YAxis = (props) => {
     fontSize = 10,
     label,
     labelFontSize = 14,
-    // labels = [],
-    // pixelsPerTick = 50,
-    // scaleType,
     stroke = 'currentColor',
     tickSize: tickSizeProp = 6,
   } = props;
@@ -20,10 +20,8 @@ const YAxis = (props) => {
   const tickSize = disableTicks ? 4 : tickSizeProp;
 
   return (
-    <g transform={`translate(0, ${dimensions.boundedHeight})`}>
-      {!disableLine && (
-        <line y2={-dimensions.boundedHeight} stroke={stroke} shapeRendering="crispEdges" />
-      )}
+    <g transform={`translate(0, ${boundedHeight})`}>
+      {!disableLine && <line y2={-boundedHeight} stroke={stroke} shapeRendering="crispEdges" />}
       {yTicks.map(({ value, offset }, index) => (
         <g key={index} transform={`translate(0, ${-offset})`}>
           {!disableTicks && <line x2={-tickSize} stroke={stroke} shapeRendering="crispEdges" />}
@@ -40,7 +38,7 @@ const YAxis = (props) => {
       {label && (
         <text
           fill={fill}
-          transform={`translate(0, -${dimensions.boundedHeight + 14})`}
+          transform={`translate(0, -${boundedHeight + 14})`}
           fontSize={labelFontSize}
           textAnchor="end"
         >

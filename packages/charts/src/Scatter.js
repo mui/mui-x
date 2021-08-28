@@ -11,7 +11,7 @@ const symbolNames = 'circle cross diamond square star triangle wye'.split(/ /);
 const Scatter = (props) => {
   const {
     data,
-    dimensions,
+    dimensions: { boundedHeight },
     invertMarkers: invertMarkersContext,
     markerSize,
     xKey: xKeyContext,
@@ -49,7 +49,7 @@ const Scatter = (props) => {
             z ? plot(z, zDomain, maxSize - minSize) + minSize : minSize,
           )()}
           transform={`translate(${xScale(x)}, 
-          ${dimensions.boundedHeight - yScale(y)})`}
+          ${boundedHeight - yScale(y)})`}
           fill={invertMarkers ? stroke : fill}
           stroke={invertMarkers ? fill : stroke}
           strokeWidth={strokeWidth}
