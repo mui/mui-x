@@ -20,7 +20,7 @@ The data grid comes with two different licenses:
 
   <img src="/static/x/header-icon.png" style="width: 454px; margin-bottom: 2rem;" alt="">
 
-  You can check the [feature comparison](#feature-comparison) for more details.
+  You can check the [feature comparison](/components/data-grid/getting-started/#feature-comparison) for more details.
   See [Pricing](https://material-ui.com/store/items/material-ui-pro/) for details on purchasing licenses.
 
 ### MIT version
