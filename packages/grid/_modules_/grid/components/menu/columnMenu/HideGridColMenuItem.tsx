@@ -16,7 +16,7 @@ const HideGridColMenuItem = (props: GridFilterItemProps) => {
       onClick(event);
       // time for the transition
       timeoutRef.current = setTimeout(() => {
-        apiRef!.current.setColumnVisibility(column?.field, false);
+        apiRef.current.setColumnVisibility(column?.field, false);
       }, 100);
     },
     [apiRef, column?.field, onClick],
@@ -32,7 +32,7 @@ const HideGridColMenuItem = (props: GridFilterItemProps) => {
 
   return (
     <MenuItem onClick={toggleColumn}>
-      {apiRef!.current.getLocaleText('columnMenuHideColumn')}
+      {apiRef.current.getLocaleText('columnMenuHideColumn')}
     </MenuItem>
   );
 };

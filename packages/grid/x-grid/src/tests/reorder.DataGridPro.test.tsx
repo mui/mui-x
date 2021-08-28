@@ -21,6 +21,8 @@ import {
   DataGridPro,
   GRID_COLUMN_HEADER_DRAGGING_CSS_CLASS,
 } from '@mui/x-data-grid-pro';
+import { useData } from 'storybook/src/hooks/useData';
+import { spy } from 'sinon';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -84,7 +86,7 @@ describe('<DataGridPro /> - Reorder', () => {
 
       expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'brand']);
       act(() => {
-        apiRef!.current.setColumnIndex('id', 1);
+        apiRef.current.setColumnIndex('id', 1);
       });
       setProps({ width: 200 });
       await raf();
@@ -223,6 +225,40 @@ describe('<DataGridPro /> - Reorder', () => {
     const dragEndEvent = createDragEndEvent(dragCol, true);
     fireEvent(dragCol, dragEndEvent);
     expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
+  });
+
+  it('should call onColumnOrderChange after the column has been reordered', () => {
+    const onColumnOrderChange = spy();
+    let apiRef: GridApiRef;
+    const Test = () => {
+      apiRef = useGridApiRef();
+      const data = useData(1, 3);
+
+      return (
+        <div style={{ width: 300, height: 300 }}>
+          <DataGridPro apiRef={apiRef} {...data} onColumnOrderChange={onColumnOrderChange} />
+        </div>
+      );
+    };
+
+    render(<Test />);
+
+    const dragCol = getColumnHeaderCell(0).firstChild!;
+    const targetCell = getCell(0, 2)!;
+
+    fireEvent.dragStart(dragCol);
+    fireEvent.dragEnter(targetCell);
+    const dragOverEvent = createDragOverEvent(targetCell);
+    fireEvent(targetCell, dragOverEvent);
+    const dragEndEvent = createDragEndEvent(dragCol);
+    fireEvent(dragCol, dragEndEvent);
+
+    expect(onColumnOrderChange.callCount).to.equal(1);
+    expect(onColumnOrderChange.lastCall.args[2].api.state.columns.all).to.deep.equal([
+      'currencyPair',
+      'price1M',
+      'id',
+    ]);
   });
 
   describe('column disableReorder', () => {

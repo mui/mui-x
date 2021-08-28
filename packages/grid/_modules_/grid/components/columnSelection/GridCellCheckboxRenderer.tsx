@@ -19,7 +19,7 @@ const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridCellPa
     const element = apiRef.current.getCellElement(id, field);
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-      apiRef!.current.selectRow(id, event.target.checked, true);
+      apiRef.current.selectRow(id, event.target.checked, true);
     };
 
     const handleClick = (event: React.MouseEvent<HTMLInputElement>) => {
@@ -45,7 +45,7 @@ const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridCellPa
           event.stopPropagation();
         }
         if (isNavigationKey(event.key) && !event.shiftKey) {
-          apiRef!.current.publishEvent(GridEvents.cellNavigationKeyDown, props, event);
+          apiRef.current.publishEvent(GridEvents.cellNavigationKeyDown, props, event);
         }
       },
       [apiRef, props],
@@ -54,7 +54,7 @@ const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridCellPa
     const CheckboxComponent = apiRef?.current.components.Checkbox!;
 
     const isSelectable =
-      !rootProps.isRowSelectable || rootProps.isRowSelectable(apiRef!.current.getRowParams(id));
+      !rootProps.isRowSelectable || rootProps.isRowSelectable(apiRef.current.getRowParams(id));
 
     return (
       <CheckboxComponent

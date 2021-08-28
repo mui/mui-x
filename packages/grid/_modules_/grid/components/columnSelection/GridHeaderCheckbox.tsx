@@ -31,12 +31,12 @@ const GridHeaderCheckbox = React.forwardRef<HTMLInputElement, GridColumnHeaderPa
       const rowsToBeSelected = rootProps.checkboxSelectionVisibleOnly
         ? gridPaginatedVisibleSortedGridRowIdsSelector(apiRef.current.state)
         : visibleSortedGridRowIdsSelector(apiRef.current.state);
-      apiRef!.current.selectRows(rowsToBeSelected, checked, !event.target.indeterminate);
+      apiRef.current.selectRows(rowsToBeSelected, checked, !event.target.indeterminate);
     };
 
     const tabIndex = tabIndexState !== null && tabIndexState.field === props.field ? 0 : -1;
     React.useLayoutEffect(() => {
-      const element = apiRef!.current.getColumnHeaderElement(props.field);
+      const element = apiRef.current.getColumnHeaderElement(props.field);
       if (tabIndex === 0 && element) {
         element!.tabIndex = -1;
       }
@@ -48,7 +48,7 @@ const GridHeaderCheckbox = React.forwardRef<HTMLInputElement, GridColumnHeaderPa
           event.stopPropagation();
         }
         if (isNavigationKey(event.key) && !event.shiftKey) {
-          apiRef!.current.publishEvent(GridEvents.columnHeaderNavigationKeyDown, props, event);
+          apiRef.current.publishEvent(GridEvents.columnHeaderNavigationKeyDown, props, event);
         }
       },
       [apiRef, props],
@@ -59,7 +59,7 @@ const GridHeaderCheckbox = React.forwardRef<HTMLInputElement, GridColumnHeaderPa
     }, []);
 
     React.useEffect(() => {
-      return apiRef?.current.subscribeEvent(GridEvents.selectionChange, handleSelectionChange);
+      return apiRef.current.subscribeEvent(GridEvents.selectionChange, handleSelectionChange);
     }, [apiRef, handleSelectionChange]);
 
     const CheckboxComponent = apiRef?.current.components.Checkbox!;

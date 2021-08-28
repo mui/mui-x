@@ -73,16 +73,16 @@ function GridCellRaw(props: GridCellProps) {
         return;
       }
 
-      const params = apiRef!.current.getCellParams(rowId, field || '');
-      apiRef!.current.publishEvent(eventName, params, event);
+      const params = apiRef.current.getCellParams(rowId, field || '');
+      apiRef.current.publishEvent(eventName, params, event);
     },
     [apiRef, field, rowId],
   );
 
   const publishMouseUp = React.useCallback(
     (eventName: string) => (event: React.MouseEvent) => {
-      const params = apiRef!.current.getCellParams(rowId, field || '');
-      apiRef!.current.publishEvent(eventName, params, event);
+      const params = apiRef.current.getCellParams(rowId, field || '');
+      apiRef.current.publishEvent(eventName, params, event);
     },
     [apiRef, field, rowId],
   );
@@ -104,8 +104,8 @@ function GridCellRaw(props: GridCellProps) {
         return;
       }
 
-      const params = apiRef!.current.getCellParams(rowId!, field || '');
-      apiRef!.current.publishEvent(eventName, params, event);
+      const params = apiRef.current.getCellParams(rowId!, field || '');
+      apiRef.current.publishEvent(eventName, params, event);
     },
     [apiRef, field, rowId],
   );
@@ -143,7 +143,7 @@ function GridCellRaw(props: GridCellProps) {
       return;
     }
 
-    const doc = ownerDocument(apiRef!.current.rootElementRef!.current as HTMLElement)!;
+    const doc = ownerDocument(apiRef.current.rootElementRef!.current as HTMLElement)!;
 
     if (cellRef.current && !cellRef.current.contains(doc.activeElement!)) {
       const focusableElement = cellRef.current!.querySelector('[tabindex="0"]') as HTMLElement;

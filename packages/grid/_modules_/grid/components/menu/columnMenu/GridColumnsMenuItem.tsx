@@ -14,7 +14,7 @@ const GridColumnsMenuItem = (props: GridFilterItemProps) => {
   const showColumns = React.useCallback(
     (event: React.MouseEvent<HTMLElement>) => {
       onClick(event);
-      apiRef!.current.showPreferences(GridPreferencePanelsValue.columns);
+      apiRef.current.showPreferences(GridPreferencePanelsValue.columns);
     },
     [apiRef, onClick],
   );
@@ -25,7 +25,7 @@ const GridColumnsMenuItem = (props: GridFilterItemProps) => {
 
   return (
     <MenuItem onClick={showColumns}>
-      {apiRef!.current.getLocaleText('columnMenuShowColumns')}
+      {apiRef.current.getLocaleText('columnMenuShowColumns')}
     </MenuItem>
   );
 };

@@ -24,7 +24,7 @@ const SortGridMenuItems = (props: GridFilterItemProps) => {
     (event: React.MouseEvent<HTMLElement>) => {
       onClick(event);
       const direction = event.currentTarget.getAttribute('data-value') || null;
-      apiRef?.current.sortColumn(column!, direction as GridSortDirection);
+      apiRef.current.sortColumn(column!, direction as GridSortDirection);
     },
     [apiRef, column, onClick],
   );
@@ -36,13 +36,13 @@ const SortGridMenuItems = (props: GridFilterItemProps) => {
   return (
     <React.Fragment>
       <MenuItem onClick={onSortMenuItemClick} disabled={sortDirection == null}>
-        {apiRef!.current.getLocaleText('columnMenuUnsort')}
+        {apiRef.current.getLocaleText('columnMenuUnsort')}
       </MenuItem>
       <MenuItem onClick={onSortMenuItemClick} data-value="asc" disabled={sortDirection === 'asc'}>
-        {apiRef!.current.getLocaleText('columnMenuSortAsc')}
+        {apiRef.current.getLocaleText('columnMenuSortAsc')}
       </MenuItem>
       <MenuItem onClick={onSortMenuItemClick} data-value="desc" disabled={sortDirection === 'desc'}>
-        {apiRef!.current.getLocaleText('columnMenuSortDesc')}
+        {apiRef.current.getLocaleText('columnMenuSortDesc')}
       </MenuItem>
     </React.Fragment>
   );

@@ -71,19 +71,19 @@ function GridPanelRaw(props, ref) {
   };
 
   const handleClickAway = React.useCallback(() => {
-    apiRef!.current.hidePreferences();
+    apiRef.current.hidePreferences();
   }, [apiRef]);
 
   const handleKeyDown = React.useCallback(
     (event: React.KeyboardEvent) => {
       if (isEscapeKey(event.key)) {
-        apiRef!.current.hidePreferences();
+        apiRef.current.hidePreferences();
       }
     },
     [apiRef],
   );
 
-  const anchorEl = apiRef?.current.columnHeadersContainerElementRef?.current;
+  const anchorEl = apiRef.current.columnHeadersContainerElementRef?.current;
 
   if (!anchorEl) {
     return null;

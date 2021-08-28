@@ -24,13 +24,13 @@ function GridColumnHeaderMenu({
   target,
 }: GridColumnHeaderMenuProps) {
   const apiRef = useGridApiContext();
-  const currentColumn = apiRef?.current.getColumn(field);
+  const currentColumn = apiRef.current.getColumn(field);
 
   const hideMenu = React.useCallback(
     (event) => {
       // Prevent triggering the sorting
       event.stopPropagation();
-      apiRef?.current.hideColumnMenu();
+      apiRef.current.hideColumnMenu();
     },
     [apiRef],
   );

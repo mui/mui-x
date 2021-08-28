@@ -137,7 +137,7 @@ export interface GridOptions {
    */
   editRowsModel?: GridEditRowsModel;
   /**
-   * Callback fired when the EditRowModel changes.
+   * Callback fired when the `editRowsModel` changes.
    * @param {GridEditRowsModel} editRowsModel With all properties from [[GridEditRowsModel]].
    * @param {GridCallbackDetails} details Additional details for this callback.
    */

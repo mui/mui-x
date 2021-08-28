@@ -63,7 +63,7 @@ function GridRowCellsRaw(props: RowCellsProps) {
       ? showCellRightBorder
       : !removeLastBorderRight && !props.extendRowFullWidth;
 
-    const cellParams: GridCellParams = apiRef!.current.getCellParams(id, column.field);
+    const cellParams: GridCellParams = apiRef.current.getCellParams(id, column.field);
 
     const classNames = [cellClassName];
 

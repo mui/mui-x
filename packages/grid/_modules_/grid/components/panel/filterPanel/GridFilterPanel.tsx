@@ -12,7 +12,7 @@ import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 
 export function GridFilterPanel() {
   const apiRef = useGridApiContext();
-  const [gridState] = useGridState(apiRef!);
+  const [gridState] = useGridState(apiRef);
   const rootProps = useGridRootProps();
 
   const hasMultipleFilters = React.useMemo(
@@ -22,25 +22,25 @@ export function GridFilterPanel() {
 
   const applyFilter = React.useCallback(
     (item: GridFilterItem) => {
-      apiRef!.current.upsertFilter(item);
+      apiRef.current.upsertFilter(item);
     },
     [apiRef],
   );
 
   const applyFilterLinkOperator = React.useCallback(
     (operator: GridLinkOperator) => {
-      apiRef!.current.applyFilterLinkOperator(operator);
+      apiRef.current.applyFilterLinkOperator(operator);
     },
     [apiRef],
   );
 
   const addNewFilter = React.useCallback(() => {
-    apiRef!.current.upsertFilter({});
+    apiRef.current.upsertFilter({});
   }, [apiRef]);
 
   const deleteFilter = React.useCallback(
     (item: GridFilterItem) => {
-      apiRef!.current.deleteFilter(item);
+      apiRef.current.deleteFilter(item);
     },
     [apiRef],
   );
@@ -71,7 +71,7 @@ export function GridFilterPanel() {
       {!rootProps.disableMultipleColumnsFiltering && (
         <GridPanelFooter>
           <Button onClick={addNewFilter} startIcon={<GridAddIcon />} color="primary">
-            {apiRef!.current.getLocaleText('filterPanelAddFilter')}
+            {apiRef.current.getLocaleText('filterPanelAddFilter')}
           </Button>
         </GridPanelFooter>
       )}

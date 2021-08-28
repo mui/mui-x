@@ -79,7 +79,7 @@ function GridFilterForm(props: GridFilterFormProps) {
     if (!item.columnField) {
       return null;
     }
-    return apiRef!.current.getColumn(item.columnField)!;
+    return apiRef.current.getColumn(item.columnField)!;
   }, [apiRef, item]);
 
   const getCurrentOperator = React.useCallback(() => {
@@ -93,7 +93,7 @@ function GridFilterForm(props: GridFilterFormProps) {
   const changeColumn = React.useCallback(
     (event: React.ChangeEvent<{ value: unknown }>) => {
       const columnField = event.target.value as string;
-      const column = apiRef!.current.getColumn(columnField)!;
+      const column = apiRef.current.getColumn(columnField)!;
       const newOperator = column.filterOperators![0];
 
       applyFilterChanges({
@@ -138,8 +138,8 @@ function GridFilterForm(props: GridFilterFormProps) {
     <div className={classes.root}>
       <FormControl variant="standard" className={classes.closeIcon}>
         <IconButton
-          aria-label={apiRef!.current.getLocaleText('filterPanelDeleteIconLabel')}
-          title={apiRef!.current.getLocaleText('filterPanelDeleteIconLabel')}
+          aria-label={apiRef.current.getLocaleText('filterPanelDeleteIconLabel')}
+          title={apiRef.current.getLocaleText('filterPanelDeleteIconLabel')}
           onClick={handleDeleteFilter}
           size="small"
         >
@@ -155,7 +155,7 @@ function GridFilterForm(props: GridFilterFormProps) {
         }}
       >
         <InputLabel htmlFor={linkOperatorSelectId} id={linkOperatorSelectLabelId}>
-          {apiRef!.current.getLocaleText('filterPanelOperators')}
+          {apiRef.current.getLocaleText('filterPanelOperators')}
         </InputLabel>
         <Select
           labelId={linkOperatorSelectLabelId}
@@ -166,16 +166,16 @@ function GridFilterForm(props: GridFilterFormProps) {
           native
         >
           <option key={GridLinkOperator.And.toString()} value={GridLinkOperator.And.toString()}>
-            {apiRef!.current.getLocaleText('filterPanelOperatorAnd')}
+            {apiRef.current.getLocaleText('filterPanelOperatorAnd')}
           </option>
           <option key={GridLinkOperator.Or.toString()} value={GridLinkOperator.Or.toString()}>
-            {apiRef!.current.getLocaleText('filterPanelOperatorOr')}
+            {apiRef.current.getLocaleText('filterPanelOperatorOr')}
           </option>
         </Select>
       </FormControl>
       <FormControl variant="standard" className={classes.columnSelect}>
         <InputLabel htmlFor={columnSelectId} id={columnSelectLabelId}>
-          {apiRef!.current.getLocaleText('filterPanelColumns')}
+          {apiRef.current.getLocaleText('filterPanelColumns')}
         </InputLabel>
         <Select
           labelId={columnSelectLabelId}
@@ -193,7 +193,7 @@ function GridFilterForm(props: GridFilterFormProps) {
       </FormControl>
       <FormControl variant="standard" className={classes.operatorSelect}>
         <InputLabel htmlFor={operatorSelectId} id={operatorSelectLabelId}>
-          {apiRef!.current.getLocaleText('filterPanelOperators')}
+          {apiRef.current.getLocaleText('filterPanelOperators')}
         </InputLabel>
         <Select
           labelId={operatorSelectLabelId}
@@ -205,7 +205,7 @@ function GridFilterForm(props: GridFilterFormProps) {
           {getCurrentColumn()?.filterOperators?.map((operator) => (
             <option key={operator.value} value={operator.value}>
               {operator.label ||
-                apiRef!.current.getLocaleText(
+                apiRef.current.getLocaleText(
                   `filterOperator${capitalize(operator.value)}` as GridTranslationKeys,
                 )}
             </option>

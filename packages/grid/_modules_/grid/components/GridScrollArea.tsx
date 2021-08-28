@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { GridEvents } from '../constants/eventsConstants';
 import { useGridApiEventHandler } from '../hooks/root/useGridApiEventHandler';
-import { GridApiRef } from '../models/api/gridApiRef';
 import { GridScrollParams } from '../models/params/gridScrollParams';
 import { useGridApiContext } from '../hooks/root/useGridApiContext';
 import { gridClasses } from '../gridClasses';
@@ -18,7 +17,7 @@ interface ScrollAreaProps {
 function GridScrollAreaRaw(props: ScrollAreaProps) {
   const { scrollDirection } = props;
   const rootRef = React.useRef<HTMLDivElement>(null);
-  const api = useGridApiContext();
+  const apiRef = useGridApiContext();
   const timeout = React.useRef<any>();
   const [dragging, setDragging] = React.useState<boolean>(false);
   const scrollPosition = React.useRef<GridScrollParams>({
@@ -47,13 +46,13 @@ function GridScrollAreaRaw(props: ScrollAreaProps) {
       clearTimeout(timeout.current);
       // Avoid freeze and inertia.
       timeout.current = setTimeout(() => {
-        api!.current.scroll({
+        apiRef.current.scroll({
           left: scrollPosition.current.left + offset,
           top: scrollPosition.current.top,
         });
       });
     },
-    [scrollDirection, api],
+    [scrollDirection, apiRef],
   );
 
   React.useEffect(() => {
@@ -66,9 +65,9 @@ function GridScrollAreaRaw(props: ScrollAreaProps) {
     setDragging((prevdragging) => !prevdragging);
   }, []);
 
-  useGridApiEventHandler(api as GridApiRef, GridEvents.rowsScroll, handleScrolling);
-  useGridApiEventHandler(api as GridApiRef, GridEvents.columnHeaderDragStart, toggleDragging);
-  useGridApiEventHandler(api as GridApiRef, GridEvents.columnHeaderDragEnd, toggleDragging);
+  useGridApiEventHandler(apiRef, GridEvents.rowsScroll, handleScrolling);
+  useGridApiEventHandler(apiRef, GridEvents.columnHeaderDragStart, toggleDragging);
+  useGridApiEventHandler(apiRef, GridEvents.columnHeaderDragEnd, toggleDragging);
 
   return dragging ? (
     <div

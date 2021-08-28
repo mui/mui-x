@@ -13,7 +13,7 @@ const GridFilterMenuItem = (props: GridFilterItemProps) => {
   const showFilter = React.useCallback(
     (event: React.MouseEvent<HTMLElement>) => {
       onClick(event);
-      apiRef!.current.showFilterPanel(column?.field);
+      apiRef.current.showFilterPanel(column?.field);
     },
     [apiRef, column?.field, onClick],
   );
@@ -23,7 +23,7 @@ const GridFilterMenuItem = (props: GridFilterItemProps) => {
   }
 
   return (
-    <MenuItem onClick={showFilter}>{apiRef!.current.getLocaleText('columnMenuFilter')}</MenuItem>
+    <MenuItem onClick={showFilter}>{apiRef.current.getLocaleText('columnMenuFilter')}</MenuItem>
   );
 };
 
