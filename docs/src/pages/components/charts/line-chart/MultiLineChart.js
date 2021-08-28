@@ -37,23 +37,21 @@ const lineData3 = [
 
 export default function MultiLineChart() {
   return (
-    <div style={{ width: '100%', height: 400 }}>
-      <LineChart
-        data={[lineData1, lineData2, lineData3]}
-        fill="white"
-        label="Growth"
-        margin={{ top: 70, bottom: 60, left: 60 }}
-        xScaleType="time"
-        invertMarkers
-        markerSize={50}
-      >
-        <Grid disableX />
-        <Line series={0} stroke="rgb(116,205,240)" strokeWidth={2} />
-        <Line series={1} stroke="rgb(150,219,124)" strokeWidth={2} />
-        <Line series={2} stroke="rgb(234,95,95)" strokeWidth={2} />
-        <XAxis label="Year" />
-        <YAxis label="Size" suffix="cm" disableLine disableTicks />
-      </LineChart>
-    </div>
+    <LineChart
+      data={[lineData1, lineData2, lineData3]}
+      fill="white"
+      label="Growth"
+      margin={{ top: 70, bottom: 60, left: 60 }}
+      xScaleType="time"
+      invertMarkers
+      markerSize={50}
+    >
+      <Grid disableX />
+      <Line series={0} stroke="rgb(116,205,240)" strokeWidth={2} />
+      <Line series={1} stroke="rgb(150,219,124)" strokeWidth={2} />
+      <Line series={2} stroke="rgb(234,95,95)" strokeWidth={2} />
+      <XAxis label="Year" />
+      <YAxis label="Size" suffix="cm" disableLine disableTicks />
+    </LineChart>
   );
 }

@@ -17,13 +17,11 @@ const lineData1 = [
 
 export default function SmoothedLineChart() {
   return (
-    <div style={{ width: '100%', height: 400 }}>
-      <LineChart smoothed data={lineData1} xScaleType="time" fill="white">
-        <Grid />
-        <Line stroke="rgb(235,97,97)" />
-        <XAxis />
-        <YAxis suffix="kg" />
-      </LineChart>
-    </div>
+    <LineChart smoothed data={lineData1} xScaleType="time" fill="white">
+      <Grid />
+      <Line stroke="rgb(235,97,97)" />
+      <XAxis />
+      <YAxis suffix="kg" />
+    </LineChart>
   );
 }

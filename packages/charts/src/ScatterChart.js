@@ -10,6 +10,7 @@ const ScatterChart = (props) => {
     children,
     data,
     fill = 'none',
+    height: heightProp = 400,
     invertMarkers = false,
     margin = { top: 40, bottom: 40, left: 50, right: 30 },
     pixelsPerTick = 50,
@@ -76,7 +77,7 @@ const ScatterChart = (props) => {
         zKey,
       }}
     >
-      <div ref={ref} style={{ height: '400px' }}>
+      <div ref={ref} style={{ width: '100%', height: `${heightProp}px` }}>
         <svg viewBox={`0 0 ${width} ${height}`}>
           <rect width={width} height={height} fill={fill} rx="4" />
           <g transform={`translate(${[marginLeft, marginTop].join(',')})`}>

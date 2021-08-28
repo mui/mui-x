@@ -17,13 +17,11 @@ const lineData1 = [
 
 export default function BasicLineChart() {
   return (
-    <div style={{ width: '100%', height: 400 }}>
-      <LineChart data={lineData1} xScaleType="time" fill="white">
-        <Grid />
-        <Line stroke="rgb(235,97,97)" markerShape="none" />
-        <XAxis />
-        <YAxis suffix="kg" />
-      </LineChart>
-    </div>
+    <LineChart data={lineData1} xScaleType="time" fill="white">
+      <Grid />
+      <Line stroke="rgb(235,97,97)" markerShape="none" />
+      <XAxis />
+      <YAxis suffix="kg" />
+    </LineChart>
   );
 }

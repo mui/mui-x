@@ -13,6 +13,7 @@ const LineChart = (props) => {
     children,
     data: dataProp,
     fill = 'none',
+    height: heightProp = '400',
     label,
     labelFontSize = 18,
     labelColor = '#777',
@@ -100,7 +101,7 @@ const LineChart = (props) => {
         yTicks,
       }}
     >
-      <div ref={ref} style={{ height: '400px' }}>
+      <div ref={ref} style={{ width: '100%', height: `${heightProp}px` }}>
         <svg viewBox={`0 0 ${width} ${height}`}>
           <rect width={width} height={height} fill={fill} rx="4" />
           <g transform={`translate(${[marginLeft, marginTop].join(',')})`}>

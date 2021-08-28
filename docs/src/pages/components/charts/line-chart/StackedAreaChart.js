@@ -13,40 +13,38 @@ const stackData = [
 ];
 export default function StackedAreaChart() {
   return (
-    <div style={{ width: '100%', height: 400 }}>
-      <LineChart
-        areaKeys={['apples', 'bananas', 'oranges']}
-        data={stackData}
-        fill="white"
-        smoothed
-        stacked
-        xScaleType="time"
-        xKey="month"
-        xDomain={[new Date(2021, 1, 1), new Date(2021, 4, 1)]}
-        yDomain={[0, 60]}
-      >
-        <Grid disableX />
-        <Line
-          series={2}
-          stroke="rgb(234,95,95)"
-          fill="rgba(234,95,95,0.5)"
-          strokeWidth={2}
-        />
-        <Line
-          series={1}
-          stroke="rgb(150,219,124)"
-          fill="rgba(150,219,124,0.5)"
-          strokeWidth={2}
-        />
-        <Line
-          series={0}
-          stroke="rgb(116,205,240)"
-          fill="rgba(116,205,240,0.5)"
-          strokeWidth={2}
-        />
-        <XAxis />
-        <YAxis suffix="cm" disableLine disableTicks />
-      </LineChart>
-    </div>
+    <LineChart
+      areaKeys={['apples', 'bananas', 'oranges']}
+      data={stackData}
+      fill="white"
+      smoothed
+      stacked
+      xScaleType="time"
+      xKey="month"
+      xDomain={[new Date(2021, 1, 1), new Date(2021, 4, 1)]}
+      yDomain={[0, 60]}
+    >
+      <Grid disableX />
+      <Line
+        series={2}
+        stroke="rgb(234,95,95)"
+        fill="rgba(234,95,95,0.5)"
+        strokeWidth={2}
+      />
+      <Line
+        series={1}
+        stroke="rgb(150,219,124)"
+        fill="rgba(150,219,124,0.5)"
+        strokeWidth={2}
+      />
+      <Line
+        series={0}
+        stroke="rgb(116,205,240)"
+        fill="rgba(116,205,240,0.5)"
+        strokeWidth={2}
+      />
+      <XAxis />
+      <YAxis suffix="cm" disableLine disableTicks />
+    </LineChart>
   );
 }

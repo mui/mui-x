@@ -37,40 +37,38 @@ const lineData3 = [
 
 export default function FilledMultiLineChart() {
   return (
-    <div style={{ width: '100%', height: 400 }}>
-      <LineChart
-        data={[lineData1, lineData2, lineData3]}
-        fill="white"
-        smooth
-        label="Growth"
-        margin={{ top: 70, bottom: 60, left: 60 }}
-        markerSize={40}
-        xScaleType="time"
-      >
-        <Grid disableX />
-        <Line
-          series={0}
-          stroke="rgb(116,205,240)"
-          fill="rgba(136,225,250,0.1)"
-          strokeWidth={2}
-        />
-        <Line
-          series={1}
-          stroke="rgb(150,219,124)"
-          fill="rgba(170,239,144,0.1)"
-          strokeWidth={2}
-          markerShape="square"
-        />
-        <Line
-          series={2}
-          stroke="rgb(234,95,95)"
-          fill="rgba(254,115,115,0.1)"
-          strokeWidth={2}
-          markerShape="triangle"
-        />
-        <XAxis label="Year" />
-        <YAxis label="Size" suffix="cm" disableLine disableTicks />
-      </LineChart>
-    </div>
+    <LineChart
+      data={[lineData1, lineData2, lineData3]}
+      fill="white"
+      smooth
+      label="Growth"
+      margin={{ top: 70, bottom: 60, left: 60 }}
+      markerSize={40}
+      xScaleType="time"
+    >
+      <Grid disableX />
+      <Line
+        series={0}
+        stroke="rgb(116,205,240)"
+        fill="rgba(136,225,250,0.1)"
+        strokeWidth={2}
+      />
+      <Line
+        series={1}
+        stroke="rgb(150,219,124)"
+        fill="rgba(170,239,144,0.1)"
+        strokeWidth={2}
+        markerShape="square"
+      />
+      <Line
+        series={2}
+        stroke="rgb(234,95,95)"
+        fill="rgba(254,115,115,0.1)"
+        strokeWidth={2}
+        markerShape="triangle"
+      />
+      <XAxis label="Year" />
+      <YAxis label="Size" suffix="cm" disableLine disableTicks />
+    </LineChart>
   );
 }

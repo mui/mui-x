@@ -22,13 +22,11 @@ const domains1 = [
 
 export default function MultiScatterChart() {
   return (
-    <div style={{ width: '100%', height: 400 }}>
-      <ScatterChart data={generateDataset(...domains1)} fill="white">
-        <Grid zeroStrokeDasharray="0" />
-        <Scatter fill="rgba(255,80,150,.5)" minSize={100} maxSize={100} />
-        <XAxis suffix="cm" disableTicks />
-        <YAxis suffix="kg" disableTicks />
-      </ScatterChart>
-    </div>
+    <ScatterChart data={generateDataset(...domains1)} fill="white">
+      <Grid zeroStrokeDasharray="0" />
+      <Scatter fill="rgba(255,80,150,.5)" minSize={100} maxSize={100} />
+      <XAxis suffix="cm" disableTicks />
+      <YAxis suffix="kg" disableTicks />
+    </ScatterChart>
   );
 }

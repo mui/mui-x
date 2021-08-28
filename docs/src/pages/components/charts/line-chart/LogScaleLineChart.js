@@ -17,19 +17,17 @@ const lineData1 = [
 
 export default function LogScaleLineChart() {
   return (
-    <div style={{ width: '100%', height: 400 }}>
-      <LineChart
-        smooth
-        data={lineData1}
-        xScaleType="time"
-        yScaleType="log"
-        fill="white"
-      >
-        <Grid />
-        <Line stroke="rgb(235,97,97)" />
-        <XAxis />
-        <YAxis suffix="kg" />
-      </LineChart>
-    </div>
+    <LineChart
+      smooth
+      data={lineData1}
+      xScaleType="time"
+      yScaleType="log"
+      fill="white"
+    >
+      <Grid />
+      <Line stroke="rgb(235,97,97)" />
+      <XAxis />
+      <YAxis suffix="kg" />
+    </LineChart>
   );
 }

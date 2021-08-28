@@ -27,35 +27,30 @@ const lineData2 = [
 
 export default function GradientFilledMultiLineChart() {
   return (
-    <div style={{ width: '100%', height: 400 }}>
-      <LineChart
-        data={[lineData1, lineData2]}
-        fill="white"
-        smooth
-        label="Growth"
-        markerShape="none"
-        margin={{ top: 70, bottom: 60, left: 60 }}
-        xScaleType="time"
-      >
-        <defs>
-          <linearGradient id="color1" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="5%" stopColor="#8884d8" stopOpacity={0.8} />
-            <stop offset="95%" stopColor="#8884d8" stopOpacity={0} />
-          </linearGradient>
-          <linearGradient id="color2" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="5%" stopColor="#82ca9d" stopOpacity={0.8} />
-            <stop offset="95%" stopColor="#82ca9d" stopOpacity={0} />
-          </linearGradient>
-        </defs>
-        <Grid disableX />
-        <Line series={0} stroke="rgb(206,150,220)" fill="url(#color1)" />
-        <Line series={1} stroke="rgb(150,219,124)" fill="url(#color2)" />
-        <XAxis
-          label="Day of week"
-          labels={['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']}
-        />
-        <YAxis label="Size" suffix="cm" disableLine disableTicks />
-      </LineChart>
-    </div>
+    <LineChart
+      data={[lineData1, lineData2]}
+      fill="white"
+      smooth
+      label="Growth"
+      markerShape="none"
+      margin={{ top: 70, bottom: 60, left: 60 }}
+      xScaleType="time"
+    >
+      <defs>
+        <linearGradient id="color1" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="5%" stopColor="#8884d8" stopOpacity={0.8} />
+          <stop offset="95%" stopColor="#8884d8" stopOpacity={0} />
+        </linearGradient>
+        <linearGradient id="color2" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="5%" stopColor="#82ca9d" stopOpacity={0.8} />
+          <stop offset="95%" stopColor="#82ca9d" stopOpacity={0} />
+        </linearGradient>
+      </defs>
+      <Grid disableX />
+      <Line series={0} stroke="rgb(206,150,220)" fill="url(#color1)" />
+      <Line series={1} stroke="rgb(150,219,124)" fill="url(#color2)" />
+      <XAxis label="Day of week" />
+      <YAxis label="Size" suffix="cm" disableLine disableTicks />
+    </LineChart>
   );
 }
