@@ -11,6 +11,7 @@ function resolvePath(sourcePath, currentFile, opts) {
 }
 
 const alias = {
+  '@mui/charts': '../packages/charts/src',
   '@mui/x-data-grid': '../packages/grid/data-grid/src',
   '@mui/x-data-grid-generator': '../packages/grid/x-grid-data-generator/src',
   '@mui/x-data-grid-pro': '../packages/grid/x-grid/src',

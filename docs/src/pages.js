@@ -49,6 +49,17 @@ dataGridComponent.children = [
   { pathname: '/components/data-grid/group-pivot', title: '🚧 Group & Pivot' },
 ];
 
+const chartComponent = lab.children[2];
+
+chartComponent.children = [
+  {
+    pathname: '/components/charts',
+    title: 'Overview',
+  },
+  { pathname: '/components/charts/line-chart' },
+  { pathname: '/components/charts/scatter-chart' },
+];
+
 dataGridComponentAPI.children = [
   { pathname: '/api-docs/data-grid', title: 'API Reference' },
   { pathname: '/api-docs/data-grid/data-grid', title: 'DataGrid' },
