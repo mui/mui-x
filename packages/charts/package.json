@@ -1,0 +1,44 @@
+{
+  "name": "@mui/charts",
+  "version": "0.1.0",
+  "description": "MUI React charts",
+  "author": "MUI Team",
+  "main": "dist/index-cjs.js",
+  "module": "dist/index-esm.js",
+  "types": "dist/data-grid.d.ts",
+  "files": [
+    "dist/*"
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mui-org/material-ui-x/issues"
+  },
+  "homepage": "https://material-ui.com/components/charts/",
+  "sideEffects": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [
+    "react",
+    "react-component",
+    "material-ui",
+    "mui",
+    "react-charts",
+    "charts"
+  ],
+  "dependencies": {
+    "@juggle/resize-observer": "3.3.1",
+    "d3": "^6.7.0",
+    "prop-types": "^15.7.2"
+  },
+  "peerDependencies": {
+    "@material-ui/styles": "^4.11.4 || ^5.0.0-beta.0",
+    "react": "^17.0.2"
+  },
+  "setupFiles": [
+    "<rootDir>/src/setupTests.js"
+  ],
+  "engines": {
+    "node": ">=12.0.0"
+  }
+}
