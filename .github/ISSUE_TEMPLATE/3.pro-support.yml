@@ -1,0 +1,58 @@
+name: 'Pro plan: support ❔'
+description: As a Pro plan user, I need support with MUI X.
+title: "[question] "
+labels: ['status: needs triage', 'pro plan', 'question']
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Pease provide a summary of the issue developers can search in the title above ⬆️.
+
+        ⚠️ **Don't use this form if the problem is a bug or a feature request, use the dedicated form instead.**
+
+        Thank you very much for contributing by creating an issue! ❤️
+  - type: input
+    id: contact
+    attributes:
+      label: Order id 💳
+      description: The order id used for the purchase of the Pro plan. Community users can [learn more about support](https://material-ui.com/getting-started/support/) in the documentation.
+      placeholder: 'ex. #11111'
+    validations:
+      required: true
+  - type: checkboxes
+    attributes:
+      label: Duplicates
+      description: Please [search the history](https://github.com/mui-org/material-ui-x/issues) to see if an issue already exists on the same problem.
+      options:
+        - label: I have searched the existing issues
+          required: true
+  - type: checkboxes
+    attributes:
+      label: Latest version
+      description: We roll bug fixes, performance enhancements, and other improvements into new releases.
+      options:
+        - label: I have tested the latest version
+          required: true
+  - type: textarea
+    attributes:
+      label: Summary 💡
+  - type: textarea
+    attributes:
+      label: The problem in depth 🔍
+  - type: textarea
+    attributes:
+      label: Context 🔦
+      description: What are you trying to accomplish? How has this issue affected you? Providing context helps us come up with a solution that is most useful in the real world.
+  - type: textarea
+    attributes:
+      label: Your Environment 🌎
+      description: Run `npx @material-ui/envinfo` and post the results. If you encounter issues with TypeScript please include the used tsconfig.
+      value: |
+        <details>
+          <summary>`npx @material-ui/envinfo`</summary>
+
+        ```
+          Don't forget to mention which browser you used.
+          Output from `npx @material-ui/envinfo` goes here.
+        ```
+        </details>
