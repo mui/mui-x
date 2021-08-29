@@ -5,13 +5,13 @@ body:
   - type: markdown
     attributes:
       value: |
-        Pease provide a summary of the issue developers can search in the title above ⬆️.
+        Pease provide a searchable summary of the issue in the title above ⬆️.
 
-        Thank you very much for contributing by creating an issue! ❤️
+        Thanks for contributing by creating an issue! ❤️
   - type: checkboxes
     attributes:
       label: Duplicates
-      description: Please [search the history](https://github.com/mui-org/material-ui-x/issues) to see if an issue already exists on the same problem.
+      description: Please [search the history](https://github.com/mui-org/material-ui-x/issues) to see if an issue already exists for the same problem.
       options:
         - label: I have searched the existing issues
           required: true
@@ -52,10 +52,10 @@ body:
   - type: textarea
     attributes:
       label: Context 🔦
-      description: What are you trying to accomplish? How has this issue affected you? Providing context helps us come up with a solution that is most useful in the real world.
+      description: What are you trying to accomplish? How has this issue affected you? Providing context helps us come up with the solution that is more useful in the real world.
   - type: input
     id: contact
     attributes:
       label: Order id 💳
-      description:  The [Pro plan](https://mui.com/pricing) comes with priority over the Community plan. Providing your order id might give your problem more attention.
+      description:  The [Pro plan](https://mui.com/pricing/) comes with priority over the Community plan. Providing your order id might give your problem more attention.
       placeholder: 'ex. #11111'
