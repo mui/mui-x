@@ -17596,10 +17596,10 @@ typedoc@^0.21.0:
     shiki "^0.9.3"
     typedoc-default-themes "^0.12.10"
 
-typescript-to-proptypes@^2.1.0:
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/typescript-to-proptypes/-/typescript-to-proptypes-2.2.0.tgz#4d22031523fa2ff6ef57c8e8161bc0c86dd61d72"
-  integrity sha512-d100buMQW5GXzmh2jcPndIQ1Bfg4uoJcFFpxAiCUCGZeDMxviLUWOGej8qfN3GBSU0ifepVugePdp2p7PzKw+A==
+typescript-to-proptypes@^2.2.1:
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/typescript-to-proptypes/-/typescript-to-proptypes-2.2.1.tgz#45fd201f6526bc45da3c5c0faa3b00cc23707613"
+  integrity sha512-FxVo0Rcf/c6dmHxA1DlAmpxct+1SuuDyX3Rl8MkfQt//yvZCMhWOuWZvJ3aP0/5eZTYIb+DpPt7htTL6A1xK9A==
   dependencies:
     "@babel/core" "^7.11.1"
     "@babel/plugin-syntax-class-properties" "^7.10.4"
