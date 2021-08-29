@@ -43,6 +43,7 @@ export default function FilledMultiLineChart() {
       smooth
       label="Growth"
       margin={{ top: 70, bottom: 60, left: 60 }}
+      markerShape="auto"
       markerSize={40}
       xScaleType="time"
     >
@@ -58,14 +59,12 @@ export default function FilledMultiLineChart() {
         stroke="rgb(150,219,124)"
         fill="rgba(170,239,144,0.1)"
         strokeWidth={2}
-        markerShape="square"
       />
       <Line
         series={2}
         stroke="rgb(234,95,95)"
         fill="rgba(254,115,115,0.1)"
         strokeWidth={2}
-        markerShape="triangle"
       />
       <XAxis label="Year" />
       <YAxis label="Size" suffix="cm" disableLine disableTicks />

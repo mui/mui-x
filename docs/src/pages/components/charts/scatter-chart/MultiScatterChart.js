@@ -30,14 +30,15 @@ export default function BasicScatterChart() {
     <ScatterChart
       data={[generateDataset(...domains1), generateDataset(...domains2)]}
       fill="white"
+      markerShape="auto"
     >
       <Grid
         strokeDasharray="5"
         zeroStroke="rgba(200,200,200,0.5)"
         zeroStrokeDasharray="0"
       />
-      <Scatter series={0} fill="rgba(255,100,0,.5)" shape="star" />
-      <Scatter series={1} fill="rgba(0,100,255,.5)" shape="triangle" />
+      <Scatter series={0} fill="rgba(255,100,0,.5)" />
+      <Scatter series={1} fill="rgba(0,100,255,.5)" />
       <XAxis suffix="cm" disableTicks />
       <YAxis suffix="kg" disableTicks />
     </ScatterChart>

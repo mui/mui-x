@@ -6,13 +6,19 @@ const plot = (value, domain, size) => {
   return ((value - domain[0]) / (domain[1] - domain[0])) * size;
 };
 
-const symbolNames = 'circle cross diamond square star triangle wye'.split(/ /);
-
+function useSymbol(shape, series = 0) {
+  const symbolNames = 'circle cross diamond square star triangle wye'.split(/ /);
+  if (shape === 'auto') {
+    return series % symbolNames.length;
+  }
+  return symbolNames.indexOf(shape) || 0;
+}
 const Scatter = (props) => {
   const {
     data,
     dimensions: { boundedHeight },
     invertMarkers: invertMarkersContext,
+    markerShape: markerShapeContext,
     markerSize,
     xKey: xKeyContext,
     xScale,
@@ -29,7 +35,7 @@ const Scatter = (props) => {
     maxSize = 500,
     fill = 'inherit',
     invertMarkers = invertMarkersContext,
-    shape = 'circle',
+    markerShape = markerShapeContext,
     stroke,
     strokeWidth,
     xKey = xKeyContext,
@@ -45,7 +51,7 @@ const Scatter = (props) => {
       {chartData.map(({ [xKey]: x, [yKey]: y, [zKey]: z }, i) => (
         <path
           d={d3.symbol(
-            d3.symbols[symbolNames.indexOf(shape)],
+            d3.symbols[useSymbol(markerShape, series)],
             z ? plot(z, zDomain, maxSize - minSize) + minSize : minSize,
           )()}
           transform={`translate(${xScale(x)}, 

@@ -64,8 +64,8 @@ const Line = (props) => {
       .y0(-yScale(yDomain[0]));
   }
 
-  const curve = d3.curveCatmullRom.alpha(0.5);
   if (smoothed) {
+    const curve = d3.curveCatmullRom.alpha(0.5);
     linePath = linePath.curve(curve);
     areaPath = areaPath.curve(curve);
   }
@@ -92,6 +92,7 @@ const Line = (props) => {
         <Scatter
           data={pointData}
           zDomain={[5, 5]}
+          series={series}
           shape={markerShape}
           stroke={stroke}
           strokeWidth={strokeWidth}
