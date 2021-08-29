@@ -73,7 +73,7 @@
     "redux-logger": "^3.0.6",
     "rimraf": "^3.0.2",
     "webfontloader": "^1.6.28",
-    "webpack-bundle-analyzer": "^4.1.0"
+    "webpack-bundle-analyzer": "^4.4.2"
   },
   "devDependencies": {
     "@babel/plugin-transform-react-constant-elements": "^7.14.5",
