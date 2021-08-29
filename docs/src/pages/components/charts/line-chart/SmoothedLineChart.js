@@ -17,7 +17,7 @@ const lineData1 = [
 
 export default function SmoothedLineChart() {
   return (
-    <LineChart smoothed data={lineData1} xScaleType="time" fill="white">
+    <LineChart smoothed data={lineData1} xScaleType="time">
       <Grid />
       <Line stroke="rgb(235,97,97)" />
       <XAxis />

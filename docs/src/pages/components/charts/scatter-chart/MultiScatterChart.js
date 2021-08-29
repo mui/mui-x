@@ -29,7 +29,6 @@ export default function BasicScatterChart() {
   return (
     <ScatterChart
       data={[generateDataset(...domains1), generateDataset(...domains2)]}
-      fill="white"
       markerShape="auto"
     >
       <Grid

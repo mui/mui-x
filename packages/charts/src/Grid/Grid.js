@@ -11,7 +11,7 @@ const Grid = (props) => {
     disableX = false,
     disableY = false,
     fill = 'none',
-    stroke = '#dddddd',
+    stroke = 'rgba(200, 200, 200, 0.5',
     strokeWidth = 1,
     strokeDasharray = '0',
     zeroStroke: zeroStrokeProp,

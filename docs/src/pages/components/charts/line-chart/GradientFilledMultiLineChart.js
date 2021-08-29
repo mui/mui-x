@@ -29,7 +29,6 @@ export default function GradientFilledMultiLineChart() {
   return (
     <LineChart
       data={[lineData1, lineData2]}
-      fill="white"
       smoothed
       label="Growth"
       markerShape="none"

@@ -16,7 +16,6 @@ export default function StackedAreaChart() {
     <LineChart
       areaKeys={['apples', 'bananas', 'oranges']}
       data={stackData}
-      fill="white"
       smoothed
       stacked
       xScaleType="time"
