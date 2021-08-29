@@ -1,19 +1,51 @@
 import React from 'react';
 import * as d3 from 'd3';
+import clsx from 'clsx';
+import { unstable_composeClasses as composeClasses } from '@material-ui/unstyled';
+import { styled } from '@material-ui/styles';
+import { useForkRef } from '@material-ui/core/utils';
+import { useThemeProps } from '@material-ui/styles';
 import ChartContext from '../ChartContext';
 import useChartDimensions from '../hooks/useChartDimensions';
 import useStackedArrays from '../hooks/useStackedArrays';
 import useTicks from '../hooks/useTicks';
 import useScale from '../hooks/useScale';
 import { getExtent, getMaxDataSetLength } from '../utils';
+import { getLineChartUtilityClass } from './lineChartClasses';
 
-const LineChart = (props) => {
+const useUtilityClasses = (ownerState) => {
+  const { classes } = ownerState;
+
+  const slots = {
+    root: ['root'],
+  };
+
+  return composeClasses(slots, getLineChartUtilityClass, classes);
+};
+
+const LineChartRoot = styled('div', {
+  name: 'MuiLineChart',
+  slot: 'Root',
+  overridesResolver: (props, styles) => {
+    // const { styleProps } = props;
+
+    return [styles.root];
+  },
+})(({ theme, styleProps }) => ({
+  height: 400,
+  width: '100%',
+}));
+
+const LineChart = React.forwardRef(function LineChart(props, ref) {
+  // const props = useThemeProps({ props: inProps, name: 'MuiLineChart' });
   const {
     areaKeys,
     children,
+    className,
+    component = 'div',
     data: dataProp,
     fill = 'none',
-    height: heightProp = '400',
+    height: heightProp = 400,
     invertMarkers = false,
     label,
     labelFontSize = 18,
@@ -30,7 +62,15 @@ const LineChart = (props) => {
     yDomain: yDomainProp,
     yKey = 'y',
     yScaleType = 'linear',
+    ...other
   } = props;
+
+  const styleProps = {
+    ...props,
+    height: heightProp,
+  };
+
+  const classes = useUtilityClasses(styleProps);
 
   let data = dataProp;
   if (stacked) {
@@ -49,7 +89,8 @@ const LineChart = (props) => {
     marginBottom: margin.bottom,
     marginLeft: margin.left,
   };
-  const [ref, dimensions] = useChartDimensions(chartSettings);
+  const [chartRef, dimensions] = useChartDimensions(chartSettings);
+  const handleRef = useForkRef(chartRef, ref);
   const { width, height, boundedWidth, boundedHeight, marginLeft, marginTop } = dimensions;
   const xDomain = xDomainProp || getExtent(data, (d) => d[xKey]);
   const yDomain = yDomainProp || getExtent(data, (d) => d[yKey]);
@@ -101,7 +142,13 @@ const LineChart = (props) => {
         yTicks,
       }}
     >
-      <div ref={ref} style={{ width: '100%', height: `${heightProp}px` }}>
+      <LineChartRoot
+        as={component}
+        // styleProps={styleProps}
+        className={clsx(classes.root, className)}
+        ref={handleRef}
+        {...other}
+      >
         <svg viewBox={`0 0 ${width} ${height}`}>
           <rect width={width} height={height} fill={fill} rx="4" />
           <g transform={`translate(${[marginLeft, marginTop].join(',')})`}>
@@ -118,9 +165,9 @@ const LineChart = (props) => {
             </text>
           )}
         </svg>
-      </div>
+      </LineChartRoot>
     </ChartContext.Provider>
   );
-};
+});
 
 export default LineChart;

@@ -18,7 +18,7 @@ const lineData1 = [
 export default function LogScaleLineChart() {
   return (
     <LineChart
-      smooth
+      smoothed
       data={lineData1}
       xScaleType="time"
       yScaleType="log"

@@ -40,7 +40,7 @@ export default function FilledMultiLineChart() {
     <LineChart
       data={[lineData1, lineData2, lineData3]}
       fill="white"
-      smooth
+      smoothed
       label="Growth"
       margin={{ top: 70, bottom: 60, left: 60 }}
       markerShape="auto"
