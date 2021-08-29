@@ -218,6 +218,10 @@ workflows:
       - test_browser:
           requires:
             - checkout
+          filters:
+            branches:
+              ignore:
+                -  /.*renovate.*/
       - test_types:
           requires:
             - checkout
