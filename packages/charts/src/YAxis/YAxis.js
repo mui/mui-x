@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import ChartContext from './ChartContext';
+import ChartContext from '../ChartContext';
 
 const YAxis = (props) => {
   const {

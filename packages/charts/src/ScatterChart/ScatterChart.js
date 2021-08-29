@@ -1,9 +1,9 @@
 import React from 'react';
-import useChartDimensions from './hooks/useChartDimensions';
-import ChartContext from './ChartContext';
-import useTicks from './hooks/useTicks';
-import useScale from './hooks/useScale';
-import { getExtent, getMaxDataSetLength } from './utils';
+import useChartDimensions from '../hooks/useChartDimensions';
+import ChartContext from '../ChartContext';
+import useTicks from '../hooks/useTicks';
+import useScale from '../hooks/useScale';
+import { getExtent, getMaxDataSetLength } from '../utils';
 
 const ScatterChart = (props) => {
   const {

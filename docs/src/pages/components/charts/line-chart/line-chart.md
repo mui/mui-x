@@ -8,7 +8,7 @@ title: Line chart
 
 ## Basic line chart
 
-{{"demo": "pages/components/charts/line-chart/BasicLineChart.js" noSsr}}
+{{"demo": "pages/components/charts/line-chart/BasicLineChart.js"}}
 
 ## Smoothed line chart
 

@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import * as d3 from 'd3';
-import ChartContext from './ChartContext';
+import ChartContext from '../ChartContext';
 
 const plot = (value, domain, size) => {
   return ((value - domain[0]) / (domain[1] - domain[0])) * size;

@@ -1,11 +1,11 @@
 import React from 'react';
 import * as d3 from 'd3';
-import useChartDimensions from './hooks/useChartDimensions';
-import ChartContext from './ChartContext';
-import useStackedArrays from './hooks/useStackedArrays';
-import useTicks from './hooks/useTicks';
-import useScale from './hooks/useScale';
-import { getExtent, getMaxDataSetLength } from './utils';
+import ChartContext from '../ChartContext';
+import useChartDimensions from '../hooks/useChartDimensions';
+import useStackedArrays from '../hooks/useStackedArrays';
+import useTicks from '../hooks/useTicks';
+import useScale from '../hooks/useScale';
+import { getExtent, getMaxDataSetLength } from '../utils';
 
 const LineChart = (props) => {
   const {

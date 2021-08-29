@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import * as d3 from 'd3';
-import ChartContext from './ChartContext';
-import Scatter from './Scatter';
+import ChartContext from '../ChartContext';
+import Scatter from '../Scatter/Scatter';
 
 function points(data, xKey) {
   return data.map((d) => ({ [xKey]: d.data[xKey], y: d[1] }));
