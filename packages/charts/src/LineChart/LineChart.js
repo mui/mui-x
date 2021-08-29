@@ -1,44 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import * as d3 from 'd3';
-import clsx from 'clsx';
-import { unstable_composeClasses as composeClasses } from '@material-ui/unstyled';
-import { styled } from '@material-ui/styles';
 import { useForkRef } from '@material-ui/core/utils';
-import { useThemeProps } from '@material-ui/styles';
 import ChartContext from '../ChartContext';
 import useChartDimensions from '../hooks/useChartDimensions';
 import useStackedArrays from '../hooks/useStackedArrays';
 import useTicks from '../hooks/useTicks';
 import useScale from '../hooks/useScale';
 import { getExtent, getMaxDataSetLength } from '../utils';
-import { getLineChartUtilityClass } from './lineChartClasses';
-
-const useUtilityClasses = (ownerState) => {
-  const { classes } = ownerState;
-
-  const slots = {
-    root: ['root'],
-  };
-
-  return composeClasses(slots, getLineChartUtilityClass, classes);
-};
-
-const LineChartRoot = styled('div', {
-  name: 'MuiLineChart',
-  slot: 'Root',
-  overridesResolver: (props, styles) => {
-    // const { styleProps } = props;
-
-    return [styles.root];
-  },
-})(({ theme, styleProps }) => ({
-  height: 400,
-  width: '100%',
-}));
 
 const LineChart = React.forwardRef(function LineChart(props, ref) {
-  // const props = useThemeProps({ props: inProps, name: 'MuiLineChart' });
   const {
     areaKeys,
     children,
@@ -46,7 +17,6 @@ const LineChart = React.forwardRef(function LineChart(props, ref) {
     component = 'div',
     data: dataProp,
     fill = 'none',
-    height: heightProp = 400,
     invertMarkers = false,
     label,
     labelFontSize = 18,
@@ -65,13 +35,6 @@ const LineChart = React.forwardRef(function LineChart(props, ref) {
     yScaleType = 'linear',
     ...other
   } = props;
-
-  const styleProps = {
-    ...props,
-    height: heightProp,
-  };
-
-  const classes = useUtilityClasses(styleProps);
 
   let data = dataProp;
   if (stacked) {
@@ -143,30 +106,22 @@ const LineChart = React.forwardRef(function LineChart(props, ref) {
         yTicks,
       }}
     >
-      <LineChartRoot
-        as={component}
-        // styleProps={styleProps}
-        className={clsx(classes.root, className)}
-        ref={handleRef}
-        {...other}
-      >
-        <svg viewBox={`0 0 ${width} ${height}`}>
-          <rect width={width} height={height} fill={fill} rx="4" />
-          <g transform={`translate(${[marginLeft, marginTop].join(',')})`}>
-            <g>{children}</g>
-          </g>
-          {label && (
-            <text
-              fill={labelColor}
-              transform={`translate(${width / 2}, ${50 - labelFontSize})`}
-              fontSize={labelFontSize}
-              textAnchor="middle"
-            >
-              {label}
-            </text>
-          )}
-        </svg>
-      </LineChartRoot>
+      <svg viewBox={`0 0 ${width} ${height}`} ref={handleRef} {...other}>
+        <rect width={width} height={height} fill={fill} rx="4" />
+        <g transform={`translate(${[marginLeft, marginTop].join(',')})`}>
+          <g>{children}</g>
+        </g>
+        {label && (
+          <text
+            fill={labelColor}
+            transform={`translate(${width / 2}, ${50 - labelFontSize})`}
+            fontSize={labelFontSize}
+            textAnchor="middle"
+          >
+            {label}
+          </text>
+        )}
+      </svg>
     </ChartContext.Provider>
   );
 });
@@ -179,7 +134,7 @@ LineChart.propTypes /* remove-proptypes */ = {
   /**
    * The content of the component.
    */
-  children: PropTypes.element.isRequired,
+  children: PropTypes.node.isRequired,
   /**
    * Override or extend the styles applied to the component.
    */

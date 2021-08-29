@@ -32,7 +32,6 @@
     "prop-types": "^15.7.2"
   },
   "peerDependencies": {
-    "@material-ui/styles": "^4.11.4 || ^5.0.0-beta.0",
     "react": "^17.0.2"
   },
   "setupFiles": [
