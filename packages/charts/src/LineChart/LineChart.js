@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import * as d3 from 'd3';
 import clsx from 'clsx';
 import { unstable_composeClasses as composeClasses } from '@material-ui/unstyled';
@@ -169,5 +170,124 @@ const LineChart = React.forwardRef(function LineChart(props, ref) {
     </ChartContext.Provider>
   );
 });
+
+LineChart.propTypes /* remove-proptypes */ = {
+  /**
+   * The area keys to use when stacking the data.
+   */
+  areaKeys: PropTypes.array,
+  /**
+   * The content of the component.
+   */
+  children: PropTypes.element.isRequired,
+  /**
+   * Override or extend the styles applied to the component.
+   */
+  classes: PropTypes.object,
+  /**
+   * @ignore
+   */
+  className: PropTypes.string,
+  /**
+   * The component used for the root node.
+   * Either a string to use a HTML element or a component.
+   */
+  component: PropTypes.elementType,
+  /**
+   * The data to use for the chart.
+   */
+  data: PropTypes.array,
+  /**
+   * The fill color to use for the area.
+   */
+  fill: PropTypes.string,
+  /**
+   * The height of the chart.
+   */
+  height: PropTypes.number,
+  /**
+   * Invert the line and fill colors of the point markers.
+   */
+  invertMarkers: PropTypes.bool,
+  /**
+   * The label to display above the chart.
+   */
+  label: PropTypes.string,
+  /**
+   * The font size of the label.
+   */
+  labelFontSize: PropTypes.number,
+  /**
+   * The color of the label.
+   */
+  labelColor: PropTypes.string,
+  /**
+   * The margin to use.
+   * Labels and axes fall within these margins.
+   */
+  margin: PropTypes.shape({
+    top: PropTypes.number,
+    right: PropTypes.number,
+    bottom: PropTypes.number,
+    left: PropTypes.number,
+  }),
+  /**
+   * The shape of the markers.
+   * If auto, the shape will be based on the data series.
+   */
+  markerShape: PropTypes.oneOf([
+    'auto',
+    'circle',
+    'cross',
+    'diamond',
+    'square',
+    'star',
+    'triangle',
+    'wye',
+    'none',
+  ]),
+  /**
+   * The size of the markers.
+   */
+  markerSize: PropTypes.number,
+  /**
+   * The maximum number of pixels per tick.
+   */
+  pixelsPerTick: PropTypes.number,
+  /**
+   * If `true`, the plotted lines will be smoothed.
+   */
+  smoothed: PropTypes.bool,
+  /**
+   * If `true`, the data will be stacked.
+   */
+  stacked: PropTypes.bool,
+  /**
+   * Override the calculated domain of the x axis.
+   */
+  xDomain: PropTypes.array,
+  /**
+   * The key to use for the x axis.
+   */
+
+  xKey: PropTypes.string,
+  /**
+   * The scale type to use for the x axis.
+   */
+  xScaleType: PropTypes.oneOf(['linear', 'time', 'log', 'point', 'pow', 'sqrt', 'utc']),
+  /**
+   * Override the calculated domain of the y axis.
+   */
+  yDomain: PropTypes.array,
+  /**
+   * The key to use for the y axis.
+   */
+
+  yKey: PropTypes.string,
+  /**
+   * The scale type to use for the y axis.
+   */
+  yScaleType: PropTypes.oneOf(['linear', 'time', 'log', 'point', 'pow', 'sqrt', 'utc']),
+};
 
 export default LineChart;

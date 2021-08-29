@@ -2,8 +2,6 @@ import * as d3 from 'd3';
 
 function getScale(scaleType) {
   switch (scaleType) {
-    case 'date':
-      return d3.scaleTime();
     case 'log':
       return d3.scaleLog();
     case 'point':
