@@ -2452,16 +2452,16 @@
     prop-types "^15.7.2"
     react-is "^16.8.0 || ^17.0.0"
 
-"@material-ui/utils@^5.0.0-beta.4":
-  version "5.0.0-beta.4"
-  resolved "https://registry.yarnpkg.com/@material-ui/utils/-/utils-5.0.0-beta.4.tgz#aa9ea73cc668291d9c66b152631beaf3262c425f"
-  integrity sha512-j6JA5WhENvpOFITZREOQwSizRl9ujjs2sJ/Ewl3MHf/LXzO1xBnZW0JTWLgflOva63MWxPJjS5JNQrR5PoG3gA==
+"@material-ui/utils@^5.0.0-beta.5":
+  version "5.0.0-beta.5"
+  resolved "https://registry.yarnpkg.com/@material-ui/utils/-/utils-5.0.0-beta.5.tgz#de492037e1f1f0910fda32e6f11b66dfcde2a1c2"
+  integrity sha512-wtJ3ovXWZdTAz5eLBqvMpYH/IBJb3qMQbGCyL1i00+sf7AUlAuv4QLx+QtX/siA6L7IpxUQVfqpoCpQH1eYRpQ==
   dependencies:
     "@babel/runtime" "^7.14.8"
-    "@types/prop-types" "^15.7.3"
+    "@types/prop-types" "^15.7.4"
     "@types/react-is" "^16.7.1 || ^17.0.0"
     prop-types "^15.7.2"
-    react-is "^17.0.0"
+    react-is "^17.0.2"
 
 "@mdx-js/loader@^1.6.22":
   version "1.6.22"
@@ -3918,7 +3918,7 @@
   resolved "https://registry.yarnpkg.com/@types/pretty-hrtime/-/pretty-hrtime-1.0.0.tgz#c5a2d644a135e988b2932f99737e67b3c62528d0"
   integrity sha512-xl+5r2rcrxdLViAYkkiLMYsoUs3qEyrAnHFyEzYysgRxdVp3WbhysxIvJIxZp9FvZ2CYezh0TaHZorivH+voOQ==
 
-"@types/prop-types@*", "@types/prop-types@^15.7.3":
+"@types/prop-types@*", "@types/prop-types@^15.7.3", "@types/prop-types@^15.7.4":
   version "15.7.4"
   resolved "https://registry.yarnpkg.com/@types/prop-types/-/prop-types-15.7.4.tgz#fcf7205c25dff795ee79af1e30da2c9790808f11"
   integrity sha512-rZ5drC/jWjrArrS8BR6SIr4cWpW09RNTYt9AMZo3Jwwif+iacXAqgVjm0B0Bv/S1jhDXKHqRVNCbACkJ89RAnQ==
