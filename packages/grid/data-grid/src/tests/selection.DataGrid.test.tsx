@@ -2,9 +2,10 @@ import * as React from 'react';
 // @ts-expect-error need to migrate helpers to TypeScript
 import { fireEvent, screen, createClientRenderStrictMode } from 'test/utils';
 import { expect } from 'chai';
-import { DataGrid, DataGridProps } from '@mui/x-data-grid';
-import { getCell, getRow } from 'test/utils/helperFn';
-import { useData } from 'storybook/src/hooks/useData';
+import { DataGrid, DataGridProps, GridInputSelectionModel } from '@mui/x-data-grid';
+import { getCell, getRow, getSelectedRowIndexes } from 'test/utils/helperFn';
+import { getData } from 'storybook/src/data/data-service';
+import { spy } from 'sinon';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -12,91 +13,75 @@ describe('<DataGrid /> - Selection', () => {
   // TODO v5: replace with createClientRender
   const render = createClientRenderStrictMode();
 
+  const defaultData = getData(4, 2);
+
   const TestDataGridSelection = (
     props: Omit<DataGridProps, 'rows' | 'columns'> &
       Partial<Pick<DataGridProps, 'rows' | 'columns'>>,
-  ) => {
-    const data = useData(2, 2);
+  ) => (
+    <div style={{ width: 300, height: 300 }}>
+      <DataGrid {...defaultData} {...props} autoHeight={isJSDOM} />
+    </div>
+  );
 
-    if (!data.rows.length) {
-      return null;
-    }
-
-    return (
-      <div style={{ width: 300, height: 300 }}>
-        <DataGrid {...data} {...props} autoHeight={isJSDOM} />
-      </div>
-    );
-  };
-
-  describe('no checkboxSelection prop - selection/deselection', () => {
+  describe('props: checkboxSelection = false (single selection)', () => {
     it('should select one row at a time on click WITHOUT ctrl or meta pressed', () => {
       render(<TestDataGridSelection />);
-      const firstRow = getRow(0);
-      const secondRow = getRow(1);
       fireEvent.click(getCell(0, 0));
-      expect(firstRow).to.have.class('Mui-selected');
+      expect(getSelectedRowIndexes()).to.deep.equal([0]);
       fireEvent.click(getCell(1, 0));
-      expect(firstRow).not.to.have.class('Mui-selected');
-      expect(secondRow).to.have.class('Mui-selected');
+      expect(getSelectedRowIndexes()).to.deep.equal([1]);
+    });
+
+    it(`should not deselect the selected row on click WITHOUT ctrl or meta pressed`, () => {
+      render(<TestDataGridSelection />);
+      fireEvent.click(getCell(0, 0));
+      expect(getSelectedRowIndexes()).to.deep.equal([0]);
+      fireEvent.click(getCell(0, 0));
+      expect(getSelectedRowIndexes()).to.deep.equal([0]);
     });
 
     ['metaKey', 'ctrlKey'].forEach((key) => {
       it(`should select one row at a time on click WITH ${key} pressed`, () => {
         render(<TestDataGridSelection />);
-        const firstRow = getRow(0);
-        const secondRow = getRow(1);
         fireEvent.click(getCell(0, 0), { [key]: true });
-        expect(firstRow).to.have.class('Mui-selected');
+        expect(getSelectedRowIndexes()).to.deep.equal([0]);
         fireEvent.click(getCell(1, 0), { [key]: true });
-        expect(firstRow).not.to.have.class('Mui-selected');
-        expect(secondRow).to.have.class('Mui-selected');
+        expect(getSelectedRowIndexes()).to.deep.equal([1]);
       });
 
       it(`should deselect the selected row on click WITH ${key} pressed`, () => {
         render(<TestDataGridSelection />);
-        const firstRow = getRow(0);
         fireEvent.click(getCell(0, 0));
-        expect(firstRow).to.have.class('Mui-selected');
+        expect(getSelectedRowIndexes()).to.deep.equal([0]);
         fireEvent.click(getCell(0, 0), { [key]: true });
-        expect(firstRow).not.to.have.class('Mui-selected');
+        expect(getSelectedRowIndexes()).to.deep.equal([]);
       });
-    });
-
-    it('should not deselect the selected row on click WITHOUT meta or ctrl keypress', () => {
-      render(<TestDataGridSelection />);
-      const firstRow = getRow(0);
-      fireEvent.click(getCell(0, 0));
-      expect(firstRow).to.have.class('Mui-selected');
-      fireEvent.click(getCell(0, 0));
-      expect(firstRow).to.have.class('Mui-selected');
     });
   });
 
-  describe('prop: checkboxSelection', () => {
+  describe('prop: checkboxSelection = true (multi selection)', () => {
     it('should check and uncheck when double clicking the row', () => {
       render(<TestDataGridSelection checkboxSelection />);
-      const row = getRow(0);
-      const checkbox = row!.querySelector('input');
-      expect(row).not.to.have.class('Mui-selected');
-      expect(checkbox).to.have.property('checked', false);
+      expect(getSelectedRowIndexes()).to.deep.equal([]);
+      expect(getRow(0).querySelector('input')).to.have.property('checked', false);
 
       fireEvent.click(getCell(0, 0));
-      expect(row!.classList.contains('Mui-selected')).to.equal(true, 'class mui-selected 1');
-      expect(checkbox).to.have.property('checked', true);
+      expect(getSelectedRowIndexes()).to.deep.equal([0]);
+      expect(getRow(0).querySelector('input')).to.have.property('checked', true);
 
       fireEvent.click(getCell(0, 0));
-      expect(row!.classList.contains('Mui-selected')).to.equal(false, 'class mui-selected 2');
-      expect(checkbox).to.have.property('checked', false);
+      expect(getSelectedRowIndexes()).to.deep.equal([]);
+      expect(getRow(0).querySelector('input')).to.have.property('checked', false);
     });
 
     it('should select all visible rows regardless of pagination', () => {
       render(<TestDataGridSelection checkboxSelection pageSize={1} rowsPerPageOptions={[1]} />);
       const selectAllCheckbox = document.querySelector('input[type="checkbox"]');
       fireEvent.click(selectAllCheckbox);
-      expect(getRow(0)).to.have.class('Mui-selected');
+      expect(getSelectedRowIndexes()).to.deep.equal([0]);
       fireEvent.click(screen.getByRole('button', { name: /next page/i }));
-      expect(getRow(1)).to.have.class('Mui-selected');
+      expect(getSelectedRowIndexes()).to.deep.equal([1]);
     });
 
     it('should check the checkbox when there is no rows', () => {
@@ -116,67 +101,146 @@ describe('<DataGrid /> - Selection', () => {
     });
   });
 
-  describe('props: selectionModel', () => {
+  describe('props: isRowSelectable', () => {
+    it('should update the selected rows when the isRowSelectable prop changes', async () => {
+      const { setProps } = render(
+        <TestDataGridSelection isRowSelectable={() => true} checkboxSelection />,
+      );
+
+      fireEvent.click(getRow(0));
+      fireEvent.click(getRow(1));
+
+      expect(getSelectedRowIndexes()).to.deep.equal([0, 1]);
+
+      setProps({ isRowSelectable: (params) => Number(params.id) % 2 === 0 });
+      expect(getSelectedRowIndexes()).to.deep.equal([0]);
+    });
+
+    it('should not select unselectable rows given in selectionModel', () => {
+      render(
+        <TestDataGridSelection
+          selectionModel={[0, 1]}
+          isRowSelectable={(params) => Number(params.id) % 2 === 0}
+          checkboxSelection
+        />,
+      );
+
+      expect(getSelectedRowIndexes()).to.deep.equal([0]);
+
+      // TODO: ID 1 and 3 should not be selected
+      // setProps({ selectionModel: [0, 1, 2, 3] });
+      // expect(getSelectedRowIndexes()).to.deep.equal([0, 2])
+    });
+  });
+
+  describe('props: rows', () => {
+    it('should remove the outdated selected rows when rows prop changes', () => {
+      const data = getData(4, 2);
+
+      const { setProps } = render(
+        <TestDataGridSelection selectionModel={[0, 1, 2]} checkboxSelection {...data} />,
+      );
+      expect(getSelectedRowIndexes()).to.deep.equal([0, 1, 2]);
+
+      setProps({
+        rows: data.rows.slice(0, 1),
+      });
+      expect(getSelectedRowIndexes()).to.deep.equal([0]);
+    });
+  });
+
+  describe('props: selectionModel and onSelectionModelChange', () => {
     it('should select rows when initialised (array-version)', () => {
       render(<TestDataGridSelection selectionModel={[1]} />);
-      const row = getRow(1);
-      expect(row).to.have.class('Mui-selected');
+      expect(getSelectedRowIndexes()).to.deep.equal([1]);
     });
 
     it('should select rows when initialised (non-array version)', () => {
       render(<TestDataGridSelection selectionModel={1} />);
-      const row = getRow(1);
-      expect(row).to.have.class('Mui-selected');
+      expect(getSelectedRowIndexes()).to.deep.equal([1]);
     });
 
     it('should allow to switch selectionModel from array version to non-array version', () => {
-      const { setProps } = render(<TestDataGridSelection />);
+      const { setProps } = render(<TestDataGridSelection selectionModel={[1]} />);
+      expect(getSelectedRowIndexes()).to.deep.equal([1]);
 
       setProps({ selectionModel: 1 });
-      const row = getRow(1);
-      expect(row).to.have.class('Mui-selected');
+      expect(getSelectedRowIndexes()).to.deep.equal([1]);
     });
 
-    it('should deselect other selected rows', () => {
-      const { setProps } = render(<TestDataGridSelection />);
+    it('should not call onSelectionModelChange on initialisation or on selectionModel prop change', () => {
+      const onSelectionModelChange = spy();
 
-      const row1 = getRow(1);
-      expect(row1).not.to.have.class('Mui-selected');
+      const { setProps } = render(
+        <TestDataGridSelection
+          onSelectionModelChange={onSelectionModelChange}
+          selectionModel={0}
+        />,
+      );
+      expect(onSelectionModelChange.callCount).to.equal(0);
+      setProps({ selectionModel: 1 });
+      expect(onSelectionModelChange.callCount).to.equal(0);
+    });
 
-      fireEvent.click(getCell(0, 0));
-      const row0 = getRow(0);
-      expect(row0).to.have.class('Mui-selected');
+    it('should deselect the old selected rows when updating selectionModel', () => {
+      const { setProps } = render(<TestDataGridSelection selectionModel={[0]} />);
+
+      expect(getSelectedRowIndexes()).to.deep.equal([0]);
 
       setProps({ selectionModel: [1] });
-      // TODO fix this assertion. The model is forced from the outside, hence shouldn't change.
-      // https://github.com/mui-org/material-ui-x/issues/190
-      expect(row0).not.to.have.class('Mui-selected');
-      expect(row1).to.have.class('Mui-selected');
+      expect(getSelectedRowIndexes()).to.deep.equal([1]);
     });
 
-    it('should filter out unselectable rows when the selectionModel prop changes', () => {
-      const { setProps } = render(
-        <TestDataGridSelection selectionModel={[1]} isRowSelectable={(params) => params.id > 0} />,
-      );
-      expect(getRow(0)).not.to.have.class('Mui-selected');
-      expect(getRow(1)).to.have.class('Mui-selected');
-
-      setProps({ selectionModel: [0] });
-      expect(getRow(0)).to.have.class('Mui-selected');
-      expect(getRow(1)).not.to.have.class('Mui-selected');
+    it('should update the selection when neither the model nor the onChange are set', () => {
+      render(<TestDataGridSelection />);
+      fireEvent.click(getCell(0, 0));
+      expect(getSelectedRowIndexes()).to.deep.equal([0]);
     });
-  });
 
-  describe('props: isRowSelectable', () => {
-    it('should update the selected rows when the isRowSelectable prop changes', () => {
-      const { setProps } = render(<TestDataGridSelection isRowSelectable={() => true} />);
-      fireEvent.click(getRow(0));
-      expect(getRow(0)).to.have.class('Mui-selected');
-      expect(getRow(1)).not.to.have.class('Mui-selected');
+    it('should not update the selection model when the selectionModelProp is set', () => {
+      const selectionModel: GridInputSelectionModel = [1];
+      render(<TestDataGridSelection selectionModel={selectionModel} />);
+      expect(getSelectedRowIndexes()).to.deep.equal([1]);
 
-      setProps({ isRowSelectable: (params) => params.id > 0 });
-      expect(getRow(0)).not.to.have.class('Mui-selected');
-      expect(getRow(1)).not.to.have.class('Mui-selected');
+      fireEvent.click(getCell(0, 0));
+      expect(getSelectedRowIndexes()).to.deep.equal([1]);
+    });
+
+    it('should update the selection when the model is not set, but the onChange is set', () => {
+      const onModelChange = spy();
+      render(<TestDataGridSelection onSelectionModelChange={onModelChange} />);
+
+      fireEvent.click(getCell(0, 0));
+      expect(getSelectedRowIndexes()).to.deep.equal([0]);
+      expect(onModelChange.callCount).to.equal(1);
+      expect(onModelChange.firstCall.firstArg).to.deep.equal([0]);
+    });
+
+    it('should control selection state when the model and the onChange are set', () => {
+      const ControlCase = () => {
+        const [selectionModel, setSelectionModel] = React.useState<any>([]);
+
+        const handleSelectionChange = (newModel) => {
+          if (newModel.length) {
+            setSelectionModel([...newModel, 2]);
+            return;
+          }
+          setSelectionModel(newModel);
+        };
+
+        return (
+          <TestDataGridSelection
+            selectionModel={selectionModel}
+            onSelectionModelChange={handleSelectionChange}
+            checkboxSelection
+          />
+        );
+      };
+
+      render(<ControlCase />);
+      expect(getSelectedRowIndexes()).to.deep.equal([]);
+      fireEvent.click(getCell(1, 0));
+      expect(getSelectedRowIndexes()).to.deep.equal([1, 2]);
     });
   });
 
