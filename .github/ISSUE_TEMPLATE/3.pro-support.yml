@@ -6,7 +6,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Pease provide a searchable summary of the issue in the title above ⬆️.
+        Please provide a searchable summary of the issue in the title above ⬆️.
 
         ⚠️ **Don't use this form if the problem is a bug or a feature request, use the dedicated form instead.**
 
@@ -15,7 +15,7 @@ body:
     id: contact
     attributes:
       label: Order id 💳
-      description: The order id of the purchased Pro plan. Community users can [learn more about support](https://material-ui.com/getting-started/support/) in the documentation.
+      description: The order ID of the purchased Pro plan. Community users can [learn more about support](https://material-ui.com/getting-started/support/) in the documentation.
       placeholder: 'ex. #11111'
     validations:
       required: true
@@ -42,7 +42,7 @@ body:
   - type: textarea
     attributes:
       label: Context 🔦
-      description: What are you trying to accomplish? How has this issue affected you? Providing context helps us come up with the solution that is more useful in the real world.
+      description: What are you trying to accomplish? How has this issue affected you? Providing context helps us come up with a solution that is more useful in the real world.
   - type: textarea
     attributes:
       label: Your Environment 🌎
