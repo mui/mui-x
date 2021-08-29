@@ -1290,10 +1290,10 @@
     "@babel/helper-validator-option" "^7.14.5"
     "@babel/plugin-transform-typescript" "^7.15.0"
 
-"@babel/register@^7.12.1", "@babel/register@^7.14.5":
-  version "7.14.5"
-  resolved "https://registry.yarnpkg.com/@babel/register/-/register-7.14.5.tgz#d0eac615065d9c2f1995842f85d6e56c345f3233"
-  integrity sha512-TjJpGz/aDjFGWsItRBQMOFTrmTI9tr79CHOK+KIvLeCkbxuOAk2M5QHjvruIMGoo9OuccMh5euplPzc5FjAKGg==
+"@babel/register@^7.12.1", "@babel/register@^7.14.5", "@babel/register@^7.15.3":
+  version "7.15.3"
+  resolved "https://registry.yarnpkg.com/@babel/register/-/register-7.15.3.tgz#6b40a549e06ec06c885b2ec42c3dd711f55fe752"
+  integrity sha512-mj4IY1ZJkorClxKTImccn4T81+UKTo4Ux0+OFSV9hME1ooqS9UV+pJ6BjD0qXPK4T3XW/KNa79XByjeEMZz+fw==
   dependencies:
     clone-deep "^4.0.1"
     find-cache-dir "^2.0.0"
@@ -1301,10 +1301,10 @@
     pirates "^4.0.0"
     source-map-support "^0.5.16"
 
-"@babel/runtime-corejs2@^7.14.8":
-  version "7.14.8"
-  resolved "https://registry.yarnpkg.com/@babel/runtime-corejs2/-/runtime-corejs2-7.14.8.tgz#d61c66727b998c57a170fd1d2ef885aac3ec9c27"
-  integrity sha512-Jj4fkQPFp73ia9y6BctEX5ypA1icbOVPtc9l0T1VnAv8EmzaN/Lm/WvnKNve1610VvHV69SLihpu9tHnVziBvw==
+"@babel/runtime-corejs2@^7.15.3":
+  version "7.15.3"
+  resolved "https://registry.yarnpkg.com/@babel/runtime-corejs2/-/runtime-corejs2-7.15.3.tgz#1ca4ecd06eac49a080e13ba39d19710fa1472cf5"
+  integrity sha512-iG7ypZmrdoKP1ckFurS8z97TR+Bqd6KaDsLQ9DiC/Rdxmrvy1nsCDlgfLNKfalbg9sFWdmIdNf+Hg+19XysSFg==
   dependencies:
     core-js "^2.6.5"
     regenerator-runtime "^0.13.4"
