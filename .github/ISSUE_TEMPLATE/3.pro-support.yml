@@ -45,7 +45,7 @@ body:
       description: What are you trying to accomplish? How has this issue affected you? Providing context helps us come up with a solution that is more useful in the real world.
   - type: textarea
     attributes:
-      label: Your Environment 🌎
+      label: Your environment 🌎
       description: Run `npx @material-ui/envinfo` and post the results. If you encounter issues with TypeScript please include the used tsconfig.
       value: |
         <details>
