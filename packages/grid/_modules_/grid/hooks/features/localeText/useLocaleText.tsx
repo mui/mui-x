@@ -4,6 +4,9 @@ import { GridLocaleTextApi } from '../../../models/api/gridLocaleTextApi';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
 import { GridComponentProps } from '../../../GridComponentProps';
 
+/**
+ * @requires useOptionsProp
+ */
 export const useLocaleText = (
   apiRef: GridApiRef,
   props: Pick<GridComponentProps, 'localeText'>,

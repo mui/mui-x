@@ -67,6 +67,14 @@ function getIdxFromScroll(
     : getIdxFromScroll(offset, positions, pivot + 1, sliceEnd);
 }
 
+/**
+ * @requires useGridContainerProps (state)
+ * @requires useGridColumns (state)
+ * @requires useGridPage (state)
+ * @requires useGridPageSize (state)
+ * @requires useGridRows (state)
+ * @requires useGridDensity (state)
+ */
 export const useGridVirtualRows = (
   apiRef: GridApiRef,
   props: Pick<

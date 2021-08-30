@@ -35,6 +35,12 @@ import { useLogger } from '../../utils/useLogger';
 import { useGridState } from '../core/useGridState';
 import { useGridSelector } from '../core/useGridSelector';
 
+/**
+ * @requires useGridFocus - can be after, async only
+ * @requires useGridParamsApi (method)
+ * @requires useGridColumns (state)
+ * @requires useGridControlState (method)
+ */
 export function useGridEditRows(
   apiRef: GridApiRef,
   props: Pick<
