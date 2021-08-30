@@ -13,8 +13,6 @@ const LineChart = React.forwardRef(function LineChart(props, ref) {
   const {
     areaKeys,
     children,
-    className,
-    component = 'div',
     data: dataProp,
     fill = 'none',
     invertMarkers = false,
@@ -135,19 +133,6 @@ LineChart.propTypes /* remove-proptypes */ = {
    * The content of the component.
    */
   children: PropTypes.node.isRequired,
-  /**
-   * Override or extend the styles applied to the component.
-   */
-  classes: PropTypes.object,
-  /**
-   * @ignore
-   */
-  className: PropTypes.string,
-  /**
-   * The component used for the root node.
-   * Either a string to use a HTML element or a component.
-   */
-  component: PropTypes.elementType,
   /**
    * The data to use for the chart.
    */
