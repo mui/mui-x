@@ -8,7 +8,6 @@ export * from './menu';
 export * from './panel';
 export * from './toolbar';
 
-export * from './GridApiContext';
 export * from './GridAutoSizer';
 export * from './GridFooter';
 export * from './GridHeader';
