@@ -105,7 +105,7 @@ const globalPseudoClassesMapping: Record<string, string> = {
 
 export function generateUtilityClass(componentName: string, slot: string): string {
   const globalPseudoClass = globalPseudoClassesMapping[slot];
-  return globalPseudoClass || `${componentName}-${slot}`;
+  return globalPseudoClass || `${componentName}-${slot}`.replace('__', '--');
 }
 
 // TODO replace with { generateUtilityClasses } from '@material-ui/unstyled';
