@@ -8,7 +8,7 @@ import {
 import { gridDataContainerHeightSelector } from '../../hooks/root/gridContainerSizesSelector';
 import { useGridApiContext } from '../../hooks/root/useGridApiContext';
 import { gridClasses } from '../../gridClasses';
-import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
+import { useGridRootProps } from '../../hooks/root/useGridRootProps';
 
 export interface GridWindowProps extends React.HTMLAttributes<HTMLDivElement> {
   size: { width: number; height: number };

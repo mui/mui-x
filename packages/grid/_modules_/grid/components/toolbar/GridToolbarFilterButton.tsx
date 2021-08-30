@@ -17,7 +17,7 @@ import { GridTranslationKeys } from '../../models/api/gridLocaleTextApi';
 import { GridFilterItem } from '../../models/gridFilterItem';
 import { createTheme } from '../../utils/utils';
 import { useGridApiContext } from '../../hooks/root/useGridApiContext';
-import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
+import { useGridRootProps } from '../../hooks/root/useGridRootProps';
 
 const defaultTheme = createTheme();
 const useStyles = makeStyles(

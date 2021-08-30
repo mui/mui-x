@@ -4,7 +4,7 @@ import { GridEvents } from '../../constants/eventsConstants';
 import { GridCellParams } from '../../models/params/gridCellParams';
 import { isNavigationKey, isSpaceKey } from '../../utils/keyboardUtils';
 import { useGridApiContext } from '../../hooks/root/useGridApiContext';
-import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
+import { useGridRootProps } from '../../hooks/root/useGridRootProps';
 import { gridClasses } from '../../gridClasses';
 
 export const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridCellParams>(

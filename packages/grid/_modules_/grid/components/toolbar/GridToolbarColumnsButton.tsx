@@ -4,7 +4,7 @@ import { useGridSelector } from '../../hooks/features/core/useGridSelector';
 import { gridPreferencePanelStateSelector } from '../../hooks/features/preferencesPanel/gridPreferencePanelSelector';
 import { GridPreferencePanelsValue } from '../../hooks/features/preferencesPanel/gridPreferencePanelsValue';
 import { useGridApiContext } from '../../hooks/root/useGridApiContext';
-import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
+import { useGridRootProps } from '../../hooks/root/useGridRootProps';
 
 export const GridToolbarColumnsButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
   function GridToolbarColumnsButton(props, ref) {

@@ -9,7 +9,7 @@ import { visibleGridColumnsLengthSelector } from '../../hooks/features/columns/g
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
 import { useGridState } from '../../hooks/features/core/useGridState';
 import { useGridApiContext } from '../../hooks/root/useGridApiContext';
-import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
+import { useGridRootProps } from '../../hooks/root/useGridRootProps';
 import { gridClasses } from '../../gridClasses';
 
 export type GridRootProps = React.HTMLAttributes<HTMLDivElement>;

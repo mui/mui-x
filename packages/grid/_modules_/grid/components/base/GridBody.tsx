@@ -9,7 +9,7 @@ import { GridWindow } from '../containers/GridWindow';
 import { GridAutoSizer } from '../GridAutoSizer';
 import { GridViewport } from '../GridViewport';
 import { GridOverlays } from './GridOverlays';
-import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
+import { useGridRootProps } from '../../hooks/root/useGridRootProps';
 
 interface GridBodyProps {
   children?: React.ReactNode;

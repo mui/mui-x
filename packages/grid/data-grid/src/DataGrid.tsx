@@ -13,7 +13,7 @@ import {
 import { useDataGridComponent } from './useDataGridComponent';
 import { MAX_PAGE_SIZE, DataGridProps } from './DataGridProps';
 import { useDataGridProps } from './useDataGridProps';
-import { GridRootPropsContext } from '../../_modules_/grid/hooks/utils/useGridRootProps';
+import { GridRootPropsContext } from '../../_modules_/grid/hooks/root/useGridRootProps';
 import { GridApiContext } from '../../_modules_/grid/hooks/root/useGridApiContext';
 
 const DataGridRaw = React.forwardRef<HTMLDivElement, DataGridProps>(function DataGrid(

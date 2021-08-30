@@ -2,7 +2,7 @@ import * as React from 'react';
 import MenuItem from '@material-ui/core/MenuItem';
 import { useGridApiContext } from '../../../hooks/root/useGridApiContext';
 import { GridFilterItemProps } from './GridFilterItemProps';
-import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
+import { useGridRootProps } from '../../../hooks/root/useGridRootProps';
 
 export const GridFilterMenuItem = (props: GridFilterItemProps) => {
   const { column, onClick } = props;

@@ -23,7 +23,7 @@ import {
   gridViewportSizesSelector,
   gridScrollBarSizeSelector,
 } from '../hooks/root/gridContainerSizesSelector';
-import { useGridRootProps } from '../hooks/utils/useGridRootProps';
+import { useGridRootProps } from '../hooks/root/useGridRootProps';
 
 type ViewportType = React.ForwardRefExoticComponent<React.RefAttributes<HTMLDivElement>>;
 

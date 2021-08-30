@@ -4,7 +4,7 @@ import { useGridApiContext } from '../../hooks/root/useGridApiContext';
 import { useLogger } from '../../hooks/utils/useLogger';
 import { GridMainContainer } from '../containers/GridMainContainer';
 import { ErrorBoundary } from '../ErrorBoundary';
-import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
+import { useGridRootProps } from '../../hooks/root/useGridRootProps';
 
 export function GridErrorHandler(props) {
   const { children } = props;

@@ -8,7 +8,7 @@ import { useGridApiContext } from '../hooks/root/useGridApiContext';
 import { GridRowCount } from './GridRowCount';
 import { GridSelectedRowCount } from './GridSelectedRowCount';
 import { GridFooterContainer, GridFooterContainerProps } from './containers/GridFooterContainer';
-import { useGridRootProps } from '../hooks/utils/useGridRootProps';
+import { useGridRootProps } from '../hooks/root/useGridRootProps';
 
 export const GridFooter = React.forwardRef<HTMLDivElement, GridFooterContainerProps>(
   function GridFooter(props, ref) {

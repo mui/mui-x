@@ -8,7 +8,7 @@ import { GridPanelContent } from '../GridPanelContent';
 import { GridPanelFooter } from '../GridPanelFooter';
 import { GridPanelWrapper } from '../GridPanelWrapper';
 import { GridFilterForm } from './GridFilterForm';
-import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
+import { useGridRootProps } from '../../../hooks/root/useGridRootProps';
 
 export function GridFilterPanel() {
   const apiRef = useGridApiContext();

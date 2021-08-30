@@ -15,7 +15,7 @@ import { useDataGridProComponent } from './useDataGridProComponent';
 import { Watermark } from '../../_modules_/grid/components/Watermark';
 import { DataGridProProps } from './DataGridProProps';
 import { useDataGridProProps } from './useDataGridProProps';
-import { GridRootPropsContext } from '../../_modules_/grid/hooks/utils/useGridRootProps';
+import { GridRootPropsContext } from '../../_modules_/grid/hooks/root/useGridRootProps';
 import { GridApiContext } from '../../_modules_/grid/hooks/root/useGridApiContext';
 
 // This is the package release date. Each package version should update this const

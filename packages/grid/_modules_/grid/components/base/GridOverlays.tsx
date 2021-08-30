@@ -3,7 +3,7 @@ import { useGridSelector } from '../../hooks/features/core/useGridSelector';
 import { visibleGridRowCountSelector } from '../../hooks/features/filter/gridFilterSelector';
 import { gridRowCountSelector } from '../../hooks/features/rows/gridRowsSelector';
 import { useGridApiContext } from '../../hooks/root/useGridApiContext';
-import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
+import { useGridRootProps } from '../../hooks/root/useGridRootProps';
 
 export function GridOverlays() {
   const apiRef = useGridApiContext();
