@@ -6,20 +6,28 @@ const plot = (value, domain, size) => {
   return ((value - domain[0]) / (domain[1] - domain[0])) * size;
 };
 
-function useSymbol(shape, series = 0) {
+const isInRange = (num, target, range) => {
+  const result = num >= Math.max(0, target - range) && num <= target + range;
+  return result;
+};
+
+function getSymbol(shape, series = 0) {
   const symbolNames = 'circle cross diamond square star triangle wye'.split(/ /);
   if (shape === 'auto') {
     return series % symbolNames.length;
   }
   return symbolNames.indexOf(shape) || 0;
 }
+
 const Scatter = (props) => {
   const {
     data,
     dimensions: { boundedHeight },
+    highlightMarkers,
     invertMarkers: invertMarkersContext,
     markerShape: markerShapeContext,
     markerSize,
+    mousePosition,
     xKey: xKeyContext,
     xScale,
     yKey: yKeyContext,
@@ -46,18 +54,36 @@ const Scatter = (props) => {
 
   const chartData = dataProp || data[series] || data;
 
+  const highlightMarker = (x) => {
+    return (
+      highlightMarkers &&
+      isInRange(
+        mousePosition.x,
+        xScale(x),
+        (xScale(chartData[1][xKey]) - xScale(chartData[0][xKey])) / 2,
+      )
+    );
+  };
   return (
     <g>
       {chartData.map(({ [xKey]: x, [yKey]: y, [zKey]: z }, i) => (
         <path
           d={d3.symbol(
-            d3.symbols[useSymbol(markerShape, series)],
+            d3.symbols[getSymbol(markerShape, series)],
             z ? plot(z, zDomain, maxSize - minSize) + minSize : minSize,
           )()}
           transform={`translate(${xScale(x)}, 
           ${boundedHeight - yScale(y)})`}
-          fill={invertMarkers ? stroke : fill}
-          stroke={invertMarkers ? fill : stroke}
+          fill={
+            (invertMarkers && !highlightMarker(x)) || (!invertMarkers && highlightMarker(x))
+              ? stroke
+              : fill
+          }
+          stroke={
+            (invertMarkers && !highlightMarker(x)) || (!invertMarkers && highlightMarker(x))
+              ? fill
+              : stroke
+          }
           strokeWidth={strokeWidth}
           key={i}
         />

@@ -46,10 +46,10 @@ export default function GradientFilledMultiLineChart() {
         </linearGradient>
       </defs>
       <Grid disableX />
-      <Line series={0} stroke="rgb(206,150,220)" fill="url(#color1)" />
-      <Line series={1} stroke="rgb(150,219,124)" fill="url(#color2)" />
       <XAxis label="Day of week" />
       <YAxis label="Size" suffix="cm" disableLine disableTicks />
+      <Line series={0} stroke="rgb(206,150,220)" fill="url(#color1)" />
+      <Line series={1} stroke="rgb(150,219,124)" fill="url(#color2)" />
     </LineChart>
   );
 }

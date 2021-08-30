@@ -24,6 +24,8 @@ export default function StackedAreaChart() {
       yDomain={[0, 60]}
     >
       <Grid disableX />
+      <XAxis />
+      <YAxis suffix="cm" disableLine disableTicks />
       <Line
         series={2}
         stroke="rgb(234,95,95)"
@@ -42,8 +44,6 @@ export default function StackedAreaChart() {
         fill="rgba(116,205,240,0.5)"
         strokeWidth={2}
       />
-      <XAxis />
-      <YAxis suffix="cm" disableLine disableTicks />
     </LineChart>
   );
 }

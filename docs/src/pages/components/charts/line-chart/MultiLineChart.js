@@ -39,19 +39,20 @@ export default function MultiLineChart() {
   return (
     <LineChart
       data={[lineData1, lineData2, lineData3]}
-      smoothed
+      highlightMarkers
+      invertMarkers
       label="Growth"
       margin={{ top: 70, bottom: 60, left: 60 }}
-      xScaleType="time"
-      invertMarkers
       markerSize={50}
+      smoothed
+      xScaleType="time"
     >
       <Grid disableX />
+      <XAxis label="Year" />
+      <YAxis label="Size" suffix="cm" disableLine disableTicks />
       <Line series={0} stroke="rgb(116,205,240)" strokeWidth={2} />
       <Line series={1} stroke="rgb(150,219,124)" strokeWidth={2} />
       <Line series={2} stroke="rgb(234,95,95)" strokeWidth={2} />
-      <XAxis label="Year" />
-      <YAxis label="Size" suffix="cm" disableLine disableTicks />
     </LineChart>
   );
 }

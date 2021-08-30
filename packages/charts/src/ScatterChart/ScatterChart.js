@@ -58,6 +58,19 @@ const ScatterChart = (props) => {
     maxTicks: maxYTicks,
   });
 
+  const [mousePosition, setMousePosition] = React.useState({
+    x: 0,
+    y: 0,
+  });
+
+  const handleMouseMove = (e) => {
+    // console.log(e);
+    setMousePosition({
+      x: e.nativeEvent.offsetX - marginLeft,
+      y: e.nativeEvent.offsetY - marginTop,
+    });
+  };
+
   return (
     <ChartContext.Provider
       value={{
@@ -65,6 +78,7 @@ const ScatterChart = (props) => {
         dimensions,
         invertMarkers,
         markerShape,
+        mousePosition,
         xScale,
         xDomain,
         yScale,

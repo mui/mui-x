@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import PropTypes from 'prop-types';
 import * as d3 from 'd3';
 import { useForkRef } from '@material-ui/core/utils';
@@ -7,6 +7,7 @@ import useChartDimensions from '../hooks/useChartDimensions';
 import useStackedArrays from '../hooks/useStackedArrays';
 import useTicks from '../hooks/useTicks';
 import useScale from '../hooks/useScale';
+import useThrottle from '../hooks/useThrottle';
 import { getExtent, getMaxDataSetLength } from '../utils';
 
 const LineChart = React.forwardRef(function LineChart(props, ref) {
@@ -15,6 +16,7 @@ const LineChart = React.forwardRef(function LineChart(props, ref) {
     children,
     data: dataProp,
     fill = 'none',
+    highlightMarkers = false,
     invertMarkers = false,
     label,
     labelFontSize = 18,
@@ -23,8 +25,8 @@ const LineChart = React.forwardRef(function LineChart(props, ref) {
     markerShape = 'circle',
     markerSize = 30,
     pixelsPerTick = 50,
-    smoothed,
-    stacked,
+    smoothed = false,
+    stacked = false,
     xDomain: xDomainProp,
     xKey = 'x',
     xScaleType = 'linear',
@@ -77,18 +79,39 @@ const LineChart = React.forwardRef(function LineChart(props, ref) {
     maxTicks: maxYTicks,
   });
 
+  const [mousePosition, setMousePosition] = React.useState({
+    x: -1,
+    y: -1,
+  });
+
+  const handleMouseMove = useThrottle((event) => {
+    setMousePosition({
+      x: event.nativeEvent.offsetX - marginLeft,
+      y: event.nativeEvent.offsetY - marginTop,
+    });
+  });
+
+  const handleMouseOut = () => {
+    setMousePosition({
+      x: -1,
+      y: -1,
+    });
+  };
+
   return (
     <ChartContext.Provider
       value={{
         areaKeys,
         data,
         dimensions,
+        highlightMarkers,
         invertMarkers,
         markerShape,
         markerSize,
         stacked,
         maxXTicks,
         maxYTicks,
+        mousePosition,
         smoothed,
         xDomain,
         xKey,
@@ -104,7 +127,13 @@ const LineChart = React.forwardRef(function LineChart(props, ref) {
         yTicks,
       }}
     >
-      <svg viewBox={`0 0 ${width} ${height}`} ref={handleRef} {...other}>
+      <svg
+        viewBox={`0 0 ${width} ${height}`}
+        ref={handleRef}
+        {...other}
+        onMouseMove={handleMouseMove}
+        onMouseOut={handleMouseOut}
+      >
         <rect width={width} height={height} fill={fill} rx="4" />
         <g transform={`translate(${[marginLeft, marginTop].join(',')})`}>
           <g>{children}</g>
@@ -145,6 +174,10 @@ LineChart.propTypes /* remove-proptypes */ = {
    * The height of the chart.
    */
   height: PropTypes.number,
+  /**
+   * If true, the markers will be highlighted when the mouse is over them.
+   */
+  highlightMarkers: PropTypes.bool,
   /**
    * Invert the line and fill colors of the point markers.
    */

@@ -47,6 +47,8 @@ export default function FilledMultiLineChart() {
       xScaleType="time"
     >
       <Grid disableX />
+      <XAxis label="Year" />
+      <YAxis label="Size" suffix="cm" disableLine disableTicks />
       <Line
         series={0}
         stroke="rgb(116,205,240)"
@@ -65,8 +67,6 @@ export default function FilledMultiLineChart() {
         fill="rgba(254,115,115,0.1)"
         strokeWidth={2}
       />
-      <XAxis label="Year" />
-      <YAxis label="Size" suffix="cm" disableLine disableTicks />
     </LineChart>
   );
 }
