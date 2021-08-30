@@ -34,6 +34,15 @@ function getScrollbarSize(doc: Document, element: HTMLElement): number {
   return scrollbarSize;
 }
 
+/**
+ * @requires useOptionsProp (state)
+ * @requires useGridDensity (state)
+ * @requires useGridColumns (state)
+ * @requires useGridFilter (state)
+ * @requires useGridPage (state)
+ * @requires useGridPageSize (state)
+ * TODO: Impossible priority - useGridPageSize also needs to be after useGridContainerProps
+ */
 export const useGridContainerProps = (
   apiRef: GridApiRef,
   props: Pick<
@@ -50,7 +59,7 @@ export const useGridContainerProps = (
   const paginationState = useGridSelector(apiRef, gridPaginationSelector);
   const windowRef = apiRef.current.windowRef;
 
-  const rootElement = apiRef.current?.rootElementRef?.current;
+  const rootElement = apiRef.current.rootElementRef?.current;
   const hasColumns = !!columnsTotalWidth;
   const scrollbarSize = React.useMemo(() => {
     if (props.scrollbarSize != null) {

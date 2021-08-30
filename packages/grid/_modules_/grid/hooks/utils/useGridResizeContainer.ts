@@ -9,7 +9,10 @@ import { GridComponentProps } from '../../GridComponentProps';
 
 const isTestEnvironment = process.env.NODE_ENV === 'test';
 
-export function useResizeContainer(
+/**
+ * @requires useGridContainerProps (state) - can be after, async only
+ */
+export function useGridResizeContainer(
   apiRef,
   props: Pick<GridComponentProps, 'autoHeight' | 'rows' | 'onResize'>,
 ) {

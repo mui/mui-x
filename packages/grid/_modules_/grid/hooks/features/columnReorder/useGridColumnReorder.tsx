@@ -32,6 +32,7 @@ const hasCursorPositionChanged = (
 
 /**
  * Only available in DataGridPro
+ * @requires useGridColumns (method)
  */
 export const useGridColumnReorder = (
   apiRef: GridApiRef,

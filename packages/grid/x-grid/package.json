@@ -40,7 +40,7 @@
     "directory": "packages/grid/x-grid"
   },
   "dependencies": {
-    "@material-ui/utils": "^5.0.0-beta.4",
+    "@material-ui/utils": "^5.0.0-beta.5",
     "@mui/x-license-pro": "4.0.0-alpha.37",
     "clsx": "^1.0.4",
     "prop-types": "^15.7.2",
@@ -49,7 +49,7 @@
   "peerDependencies": {
     "@material-ui/core": "^4.12.0 || ^5.0.0-beta.0",
     "@material-ui/styles": "^4.11.4 || ^5.0.0-beta.0",
-    "react": "^17.0.0"
+    "react": "^17.0.2"
   },
   "setupFiles": [
     "<rootDir>/src/setupTests.js"

@@ -3,7 +3,11 @@ import { GridEvents } from '../../constants/eventsConstants';
 import { useGridApiOptionHandler } from './useGridApiEventHandler';
 import { GridComponentProps } from '../../GridComponentProps';
 
-export function useEvents(
+/**
+ * @requires useGridFocus (event)
+ * @requires useGridColumns (event)
+ */
+export function useGridEvents(
   apiRef: GridApiRef,
   props: Pick<
     GridComponentProps,
