@@ -48,6 +48,14 @@ function getIdxFromScroll(
     : getIdxFromScroll(offset, positions, pivot + 1, sliceEnd);
 }
 
+/**
+ * @requires useGridContainerProps (state)
+ * @requires useGridColumns (state)
+ * @requires useGridPage (state)
+ * @requires useGridPageSize (state)
+ * @requires useGridRows (state)
+ * @requires useGridDensity (state)
+ */
 export const useGridVirtualization = (
   apiRef: GridApiRef,
   props: Pick<
@@ -318,7 +326,6 @@ export const useGridVirtualization = (
     setRenderingState({ renderingZoneScroll: { left: 0, top: 0 } });
   }, [scrollTo, setRenderingState, windowRef]);
 
-  const scrollingTimeout = React.useRef<any>(null);
   const handleScroll = React.useCallback(() => {
     if (props.disableVirtualization) {
       return;
@@ -327,20 +334,10 @@ export const useGridVirtualization = (
     // On iOS the inertia scrolling allows to return negative values.
     if (windowRef.current!.scrollLeft < 0 || windowRef.current!.scrollTop < 0) return;
 
-    if (!scrollingTimeout.current) {
-      setGridState((state) => ({ ...state, isScrolling: true }));
-    }
-    clearTimeout(scrollingTimeout.current);
-    scrollingTimeout.current = setTimeout(() => {
-      scrollingTimeout.current = null;
-      setGridState((state) => ({ ...state, isScrolling: false }));
-      forceUpdate();
-    }, 300);
-
     if (apiRef.current.updateViewport) {
       apiRef.current.updateViewport();
     }
-  }, [props.disableVirtualization, windowRef, apiRef, setGridState, forceUpdate]);
+  }, [props.disableVirtualization, windowRef, apiRef]);
 
   const getContainerPropsState = React.useCallback(
     () => gridState.containerSizes,
@@ -391,10 +388,6 @@ export const useGridVirtualization = (
       logger.debug(`totalRowCount has changed to ${totalRowCount}, updating viewport.`);
       apiRef.current.updateViewport(true);
     }
-
-    return () => {
-      clearTimeout(scrollingTimeout.current);
-    };
   }, [
     logger,
     totalRowCount,

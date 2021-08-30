@@ -217,6 +217,25 @@ describe('<DataGrid /> - Keyboard', () => {
     expect(getActiveCell()).to.equal('0-0');
   });
 
+  it('should navigate between column headers with arrows when rows are filtered', () => {
+    render(
+      <KeyboardTest
+        nbRows={10}
+        filterModel={{ items: [{ columnField: 'id', value: 1, operatorValue: '>' }] }}
+      />,
+    );
+    getCell(0, 0).focus();
+    expect(getActiveCell()).to.equal('0-0');
+    fireEvent.keyDown(document.activeElement!, { key: 'ArrowUp' });
+    expect(getActiveColumnHeader()).to.equal('1');
+    fireEvent.keyDown(document.activeElement!, { key: 'ArrowRight' });
+    expect(getActiveColumnHeader()).to.equal('2');
+    fireEvent.keyDown(document.activeElement!, { key: 'ArrowLeft' });
+    expect(getActiveColumnHeader()).to.equal('1');
+    fireEvent.keyDown(document.activeElement!, { key: 'ArrowDown' });
+    expect(getActiveCell()).to.equal('0-0');
+  });
+
   it('should scroll horizontally when navigating between column headers with arrows', function test() {
     if (isJSDOM) {
       // Need layouting for column virtualization

@@ -61,6 +61,15 @@ const getNextColumnHeaderIndexes = (key: string, indexes: GridColumnHeaderIndexC
   }
 };
 
+/**
+ * @requires useGridPage (state)
+ * @requires useGridPageSize (state)
+ * @requires useGridColumns (state, method)
+ * @requires useGridRows (state, method)
+ * @requires useGridContainerProps (state)
+ * @requires useGridFocus (method)
+ * @requires useGridVirtualRows (method)
+ */
 export const useGridKeyboardNavigation = (
   apiRef: GridApiRef,
   props: Pick<GridComponentProps, 'pagination'>,
@@ -193,7 +202,7 @@ export const useGridKeyboardNavigation = (
 
       if (!nextColumnHeaderIndexes) {
         const field = apiRef.current.getVisibleColumns()[colIndex].field;
-        const id = apiRef.current.getRowIdFromRowIndex(0);
+        const [id] = visibleSortedRowsAsArray[0];
         apiRef.current.setCellFocus(id, field);
         return;
       }
@@ -209,7 +218,7 @@ export const useGridKeyboardNavigation = (
       const field = apiRef.current.getVisibleColumns()[nextColumnHeaderIndexes.colIndex].field;
       apiRef.current.setColumnHeaderFocus(field, event);
     },
-    [apiRef, colCount, containerSizes, logger],
+    [apiRef, colCount, containerSizes, logger, visibleSortedRowsAsArray],
   );
 
   useGridApiEventHandler(apiRef, GridEvents.cellNavigationKeyDown, navigateCells);

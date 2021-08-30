@@ -12,7 +12,7 @@ export const useGridSlotComponentProps = () => {
   const options = useGridSelector(apiRef, optionsSelector);
   const rows = useGridSelector(apiRef, unorderedGridRowModelsSelector);
   const columns = useGridSelector(apiRef, visibleGridColumnsSelector);
-  const [state] = useGridState(apiRef!);
+  const [state] = useGridState(apiRef);
 
   const slotComponentProps: GridSlotComponentProps = React.useMemo(
     () => ({
@@ -20,8 +20,8 @@ export const useGridSlotComponentProps = () => {
       rows,
       columns,
       options,
-      apiRef: apiRef!,
-      rootElement: apiRef!.current.rootElementRef!,
+      apiRef,
+      rootElement: apiRef.current.rootElementRef!,
     }),
     [state, rows, columns, options, apiRef],
   );

@@ -6,15 +6,12 @@ import { gridCheckboxSelectionColDef } from '../../../models/colDef/gridCheckbox
 import {
   GridColDef,
   GridColumns,
-  getInitialGridColumnsState,
   GridColumnsState,
   GridStateColDef,
-  GridColumnLookup,
 } from '../../../models/colDef/gridColDef';
 import { GridColumnTypesRecord } from '../../../models/colDef/gridColTypeDef';
 import { getGridDefaultColumnTypes } from '../../../models/colDef/gridDefaultColumnTypes';
 import { getGridColDef } from '../../../models/colDef/getGridColDef';
-import { Logger } from '../../../models/logger';
 import { GridColumnOrderChangeParams } from '../../../models/params/gridColumnOrderChangeParams';
 import { mergeGridColTypes } from '../../../utils/mergeUtils';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
@@ -35,40 +32,37 @@ type RawGridColumnsState = Omit<GridColumnsState, 'lookup'> & {
   lookup: { [field: string]: GridColDef | GridStateColDef };
 };
 
-function getStateColumns(
+function hydrateColumnsWidth(
   columns: (GridColDef | GridStateColDef)[],
   viewportWidth: number,
 ): GridStateColDef[] {
   let totalFlexUnits = 0;
   let widthToAllocateInFlex = viewportWidth;
 
-  const stateColumns: GridStateColDef[] = [];
-
   // Compute the width of non-flex columns and how much width must be allocated between the flex columns
-  for (let i = 0; i < columns.length; i += 1) {
-    const column = { ...columns[i] } as GridStateColDef;
-
+  const stateColumns = columns.map((column) => {
+    const newColumn = { ...column } as GridStateColDef;
     if (column.hide) {
-      column.computedWidth = 0;
+      newColumn.computedWidth = 0;
     } else {
-      const minWidth = column.minWidth ?? GRID_STRING_COL_DEF.minWidth!;
+      const minWidth = newColumn.minWidth ?? GRID_STRING_COL_DEF.minWidth!;
 
-      if (column.flex && column.flex > 0) {
-        totalFlexUnits += column.flex;
-        column.computedWidth = minWidth;
+      if (newColumn.flex && newColumn.flex > 0) {
+        totalFlexUnits += newColumn.flex;
+        newColumn.computedWidth = minWidth;
       } else {
-        const computedWidth = Math.max(column.width ?? GRID_STRING_COL_DEF.width!, minWidth);
-        column.computedWidth = computedWidth;
+        const computedWidth = Math.max(newColumn.width ?? GRID_STRING_COL_DEF.width!, minWidth);
         widthToAllocateInFlex -= computedWidth;
+        newColumn.computedWidth = computedWidth;
       }
     }
 
-    stateColumns.push(column);
-  }
+    return newColumn;
+  });
 
   // Compute the width of flex columns
-  if (totalFlexUnits && widthToAllocateInFlex > 0) {
-    const widthPerFlexUnit = totalFlexUnits > 0 ? widthToAllocateInFlex / totalFlexUnits : 0;
+  if (totalFlexUnits > 0 && widthToAllocateInFlex > 0) {
+    const widthPerFlexUnit = widthToAllocateInFlex / totalFlexUnits;
 
     for (let i = 0; i < stateColumns.length; i += 1) {
       const column = stateColumns[i];
@@ -85,32 +79,29 @@ function getStateColumns(
   return stateColumns;
 }
 
-function hydrateColumns(
+function hydrateColumnsType(
   columns: GridColumns,
   columnTypes: GridColumnTypesRecord = {},
-  withCheckboxSelection: boolean,
-  logger: Logger,
   getLocaleText: <T extends GridTranslationKeys>(key: T) => GridLocaleText[T],
+  checkboxSelection?: boolean,
 ): GridColumns {
-  logger.debug('Hydrating GridColumns with default definitions');
   const mergedColTypes = mergeGridColTypes(getGridDefaultColumnTypes(), columnTypes);
-  const extendedColumns = columns.map((c) => ({ ...getGridColDef(mergedColTypes, c.type), ...c }));
+  const extendedColumns = columns.map((column) => ({
+    ...getGridColDef(mergedColTypes, column.type),
+    ...column,
+  }));
 
-  if (withCheckboxSelection) {
-    const checkboxSelection = { ...gridCheckboxSelectionColDef };
-    checkboxSelection.headerName = getLocaleText('checkboxSelectionHeaderName');
-    return [checkboxSelection, ...extendedColumns];
+  if (checkboxSelection) {
+    return [
+      {
+        ...gridCheckboxSelectionColDef,
+        headerName: getLocaleText('checkboxSelectionHeaderName'),
+      },
+      ...extendedColumns,
+    ];
   }
 
   return extendedColumns;
-}
-
-function toLookup(logger: Logger, allColumns: GridStateColDef[]): GridColumnLookup {
-  logger.debug('Building columns lookup');
-  return allColumns.reduce((lookup, col) => {
-    lookup[col.field] = col;
-    return lookup;
-  }, {});
 }
 
 const upsertColumnsState = (columnUpdates: GridColDef[], prevColumnsState?: GridColumnsState) => {
@@ -132,6 +123,10 @@ const upsertColumnsState = (columnUpdates: GridColDef[], prevColumnsState?: Grid
   return newState;
 };
 
+/**
+ * @requires useGridParamsApi (method)
+ * TODO: Impossible priority - useGridParamsApi also needs to be after useGridColumns
+ */
 export function useGridColumns(
   apiRef: GridApiRef,
   props: Pick<
@@ -145,15 +140,15 @@ export function useGridColumns(
   const allColumns = useGridSelector(apiRef, allGridColumnsSelector);
   const visibleColumns = useGridSelector(apiRef, visibleGridColumnsSelector);
 
-  const updateState = React.useCallback(
-    (newState: GridColumnsState, emit = true) => {
+  const setGridColumnsState = React.useCallback(
+    (columnsState: GridColumnsState, emit = true) => {
       logger.debug('Updating columns state.');
 
-      setGridState((state) => ({ ...state, columns: newState }));
+      setGridState((state) => ({ ...state, columns: columnsState }));
       forceUpdate();
 
-      if (apiRef.current && emit) {
-        apiRef.current.publishEvent(GridEvents.columnsChange, newState.all);
+      if (emit) {
+        apiRef.current.publishEvent(GridEvents.columnsChange, columnsState.all);
       }
     },
     [logger, setGridState, forceUpdate, apiRef],
@@ -198,49 +193,51 @@ export function useGridColumns(
       logger.debug('updating GridColumns with new state');
 
       // Avoid dependency on gridState to avoid infinite loop
-      const refGridState = apiRef.current.state;
-      const newColumns: GridColumns = newState.all.map((field) => newState.lookup[field]);
-      const updatedCols = getStateColumns(newColumns, refGridState.viewportSizes.width);
+      const viewportWidth = apiRef.current.state.viewportSizes.width;
+      let newColumns: GridColumns = newState.all.map((field) => newState.lookup[field]);
+      newColumns = hydrateColumnsWidth(newColumns, viewportWidth);
 
-      const finalState: GridColumnsState = {
-        all: updatedCols.map((col) => col.field),
-        lookup: toLookup(logger, updatedCols),
+      const columnState: GridColumnsState = {
+        all: newColumns.map((col) => col.field),
+        lookup: newColumns.reduce((acc, col) => {
+          acc[col.field] = col;
+          return acc;
+        }, {}),
       };
 
-      updateState(finalState, emit);
+      setGridColumnsState(columnState, emit);
     },
-    [apiRef, logger, updateState],
+    [apiRef, logger, setGridColumnsState],
   );
 
   const updateColumns = React.useCallback(
-    (cols: GridColDef[]) => {
+    (columns: GridColDef[]) => {
       // Avoid dependency on gridState to avoid infinite loop
-      const newState = upsertColumnsState(cols, apiRef.current.state.columns);
-      setColumnsState(newState, false);
+      const columnsState = upsertColumnsState(columns, apiRef.current.state.columns);
+      setColumnsState(columnsState, false);
     },
     [apiRef, setColumnsState],
   );
 
   const updateColumn = React.useCallback(
-    (col: GridColDef) => updateColumns([col]),
+    (column: GridColDef) => updateColumns([column]),
     [updateColumns],
   );
 
   const setColumnVisibility = React.useCallback(
     (field: string, isVisible: boolean) => {
-      const col = getColumn(field);
-      const updatedCol = { ...col, hide: !isVisible };
+      const column = getColumn(field);
+      const newColumn = { ...column, hide: !isVisible };
 
-      updateColumns([updatedCol]);
-      forceUpdate();
+      updateColumns([newColumn]);
 
       apiRef.current.publishEvent(GridEvents.columnVisibilityChange, {
         field,
-        colDef: updatedCol,
+        colDef: newColumn,
         isVisible,
       });
     },
-    [apiRef, forceUpdate, getColumn, updateColumns],
+    [apiRef, getColumn, updateColumns],
   );
 
   const setColumnIndex = React.useCallback(
@@ -252,6 +249,10 @@ export function useGridColumns(
 
       logger.debug(`Moving column ${field} to index ${targetIndexPosition}`);
 
+      const updatedColumns = [...gridState.columns.all];
+      updatedColumns.splice(targetIndexPosition, 0, updatedColumns.splice(oldIndexPosition, 1)[0]);
+      setGridColumnsState({ ...gridState.columns, all: updatedColumns });
+
       const params: GridColumnOrderChangeParams = {
         field,
         element: apiRef.current.getColumnHeaderElement(field),
@@ -260,12 +261,8 @@ export function useGridColumns(
         oldIndex: oldIndexPosition,
       };
       apiRef.current.publishEvent(GridEvents.columnOrderChange, params);
-
-      const updatedColumns = [...gridState.columns.all];
-      updatedColumns.splice(targetIndexPosition, 0, updatedColumns.splice(oldIndexPosition, 1)[0]);
-      updateState({ ...gridState.columns, all: updatedColumns });
     },
-    [apiRef, gridState.columns, logger, updateState],
+    [apiRef, gridState.columns, logger, setGridColumnsState],
   );
 
   const setColumnWidth = React.useCallback(
@@ -273,11 +270,12 @@ export function useGridColumns(
       logger.debug(`Updating column ${field} width to ${width}`);
 
       const column = apiRef.current.getColumn(field);
-      apiRef.current.updateColumn({ ...column, width });
+      const newColumn = { ...column, width };
+      apiRef.current.updateColumns([newColumn]);
 
       apiRef.current.publishEvent(GridEvents.columnWidthChange, {
         element: apiRef.current.getColumnHeaderElement(field),
-        colDef: column,
+        colDef: newColumn,
         width,
       });
     },
@@ -303,39 +301,31 @@ export function useGridColumns(
   React.useEffect(() => {
     logger.info(`GridColumns have changed, new length ${props.columns.length}`);
 
-    if (props.columns.length > 0) {
-      const hydratedColumns = hydrateColumns(
-        props.columns,
-        props.columnTypes,
-        !!props.checkboxSelection,
-        logger,
-        apiRef.current.getLocaleText,
-      );
+    const hydratedColumns = hydrateColumnsType(
+      props.columns,
+      props.columnTypes,
+      apiRef.current.getLocaleText,
+      props.checkboxSelection,
+    );
 
-      const newState = upsertColumnsState(hydratedColumns);
-      setColumnsState(newState);
-    } else {
-      updateState(getInitialGridColumnsState());
-    }
-  }, [
-    logger,
-    apiRef,
-    props.columns,
-    props.columnTypes,
-    props.checkboxSelection,
-    updateState,
-    setColumnsState,
-  ]);
+    const columnState = upsertColumnsState(hydratedColumns);
+    setColumnsState(columnState);
+  }, [logger, apiRef, setColumnsState, props.columns, props.columnTypes, props.checkboxSelection]);
 
   React.useEffect(() => {
     logger.debug(
       `GridColumns gridState.viewportSizes.width, changed ${gridState.viewportSizes.width}`,
     );
-    // Avoid dependency on gridState as I only want to update cols when viewport size changed.
-    const currentColumns = allGridColumnsSelector(apiRef.current.state);
 
-    apiRef.current.updateColumns(currentColumns);
-  }, [apiRef, gridState.viewportSizes.width, logger]);
+    // This hook is meant to update the column's width when the viewport changes
+    // We can skip the whole block if the width is missing
+    if (gridState.viewportSizes.width === 0) {
+      return;
+    }
+
+    // Avoid dependency on gridState as I only want to update cols when viewport size changed.
+    setColumnsState(apiRef.current.state.columns);
+  }, [apiRef, setColumnsState, gridState.viewportSizes.width, logger]);
 
   // Grid Option Handlers
   useGridApiOptionHandler(
