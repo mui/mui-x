@@ -86,7 +86,7 @@ function hydrateColumnsType(
   columnTypes: GridColumnTypesRecord = {},
   getLocaleText: <T extends GridTranslationKeys>(key: T) => GridLocaleText[T],
   checkboxSelection?: boolean,
-  classes?: GridClasses,
+  classes?: Partial<GridClasses>,
 ): GridColumns {
   const mergedColTypes = mergeGridColTypes(getGridDefaultColumnTypes(), columnTypes);
   const extendedColumns = columns.map((column) => ({

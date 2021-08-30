@@ -8,6 +8,7 @@ import {
   GridCellMode,
   GridCellModes,
   GridCellValue,
+  GridOptions,
   GridRowId,
 } from '../../models/index';
 import { useGridApiContext } from '../../hooks/root/useGridApiContext';
@@ -34,14 +35,18 @@ export interface GridCellProps {
   tabIndex: 0 | -1;
 }
 
-const useUtilityClasses = (ownerState) => {
+type OwnerState = GridCellProps & {
+  classes?: GridOptions['classes'];
+};
+
+const useUtilityClasses = (ownerState: OwnerState) => {
   const { align, showRightBorder, isEditable, classes } = ownerState;
 
   const slots = {
     root: [
       'cell',
-      `cell--text${capitalize(align)}`,
-      isEditable && 'cell--editable',
+      `cell__text${capitalize(align)}`,
+      isEditable && 'cell__editable',
       showRightBorder && 'withBorder',
     ],
   };

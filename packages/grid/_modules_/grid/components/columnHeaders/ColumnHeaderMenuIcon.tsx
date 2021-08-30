@@ -5,6 +5,7 @@ import { GridStateColDef } from '../../models/colDef/gridColDef';
 import { getDataGridUtilityClass } from '../../gridClasses';
 import { composeClasses } from '../../utils/material-ui-utils';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
+import { GridOptions } from '../../models/gridOptions';
 
 export interface ColumnHeaderMenuIconProps {
   column: GridStateColDef;
@@ -14,7 +15,11 @@ export interface ColumnHeaderMenuIconProps {
   iconButtonRef: React.RefObject<HTMLButtonElement>;
 }
 
-const useUtilityClasses = (ownerState) => {
+type OwnerState = ColumnHeaderMenuIconProps & {
+  classes?: GridOptions['classes'];
+};
+
+const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes, open } = ownerState;
 
   const slots = {

@@ -14,10 +14,16 @@ import { gridContainerSizesSelector } from '../../hooks/root/gridContainerSizesS
 import { getDataGridUtilityClass } from '../../gridClasses';
 import { composeClasses } from '../../utils/material-ui-utils';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
+import { GridOptions } from '../../models/gridOptions';
 
 export const gridScrollbarStateSelector = (state: GridState) => state.scrollBar;
 
-const useUtilityClasses = (ownerState) => {
+type OwnerState = {
+  classes?: GridOptions['classes'];
+  dragCol: string;
+};
+
+const useUtilityClasses = (ownerState: OwnerState) => {
   const { dragCol, classes } = ownerState;
 
   const slots = {

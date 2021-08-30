@@ -6,6 +6,7 @@ import { useGridApiContext } from '../hooks/root/useGridApiContext';
 import { getDataGridUtilityClass } from '../gridClasses';
 import { composeClasses } from '../utils/material-ui-utils';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
+import { GridOptions } from '../models/gridOptions';
 
 const CLIFF = 1;
 const SLOP = 1.5;
@@ -14,11 +15,15 @@ interface ScrollAreaProps {
   scrollDirection: 'left' | 'right';
 }
 
-const useUtilityClasses = (ownerState) => {
+type OwnerState = ScrollAreaProps & {
+  classes?: GridOptions['classes'];
+};
+
+const useUtilityClasses = (ownerState: OwnerState) => {
   const { scrollDirection, classes } = ownerState;
 
   const slots = {
-    root: ['scrollArea', `scrollArea--${scrollDirection}`],
+    root: ['scrollArea', `scrollArea__${scrollDirection}`],
   };
 
   return composeClasses(slots, getDataGridUtilityClass, classes);

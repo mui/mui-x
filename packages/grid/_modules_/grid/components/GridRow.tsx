@@ -9,6 +9,7 @@ import { useGridSelector } from '../hooks/features/core/useGridSelector';
 import { composeClasses } from '../utils/material-ui-utils';
 import { getDataGridUtilityClass } from '../gridClasses';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
+import { GridOptions } from '../models/gridOptions';
 
 export interface GridRowProps {
   id: GridRowId;
@@ -17,11 +18,17 @@ export interface GridRowProps {
   children: React.ReactNode;
 }
 
-const useUtilityClasses = (ownerState) => {
+type OwnerState = GridRowProps & {
+  editable: boolean;
+  editing: boolean;
+  classes?: GridOptions['classes'];
+};
+
+const useUtilityClasses = (ownerState: OwnerState) => {
   const { editable, editing, selected, classes } = ownerState;
 
   const slots = {
-    root: ['row', selected && 'selected', editable && 'row--editable', editing && 'row--editing'],
+    root: ['row', selected && 'selected', editable && 'row__editable', editing && 'row__editing'],
   };
 
   return composeClasses(slots, getDataGridUtilityClass, classes);

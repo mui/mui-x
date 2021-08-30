@@ -11,10 +11,16 @@ import { useGridApiContext } from '../../hooks/root/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { getDataGridUtilityClass } from '../../gridClasses';
 import { composeClasses } from '../../utils/material-ui-utils';
+import { GridOptions } from '../../models/gridOptions';
 
 export type GridRootProps = React.HTMLAttributes<HTMLDivElement>;
 
-const useUtilityClasses = (ownerState) => {
+type OwnerState = GridRootProps & {
+  classes?: GridOptions['classes'];
+  autoHeight?: GridOptions['autoHeight'];
+};
+
+const useUtilityClasses = (ownerState: OwnerState) => {
   const { autoHeight, classes } = ownerState;
 
   const slots = {

@@ -8,12 +8,17 @@ import { useGridApiContext } from '../../hooks/root/useGridApiContext';
 import { getDataGridUtilityClass } from '../../gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { composeClasses } from '../../utils/material-ui-utils';
+import { GridOptions } from '../../models/gridOptions';
 
 export interface ColumnHeaderFilterIconProps {
   counter?: number;
 }
 
-const useUtilityClasses = (ownerState) => {
+type OwnerState = ColumnHeaderFilterIconProps & {
+  classes?: GridOptions['classes'];
+};
+
+const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
 
   const slots = {

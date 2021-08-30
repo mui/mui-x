@@ -67,7 +67,7 @@ export interface GridOptions {
   /**
    * Override or extend the styles applied to the component.
    */
-  classes?: GridClasses;
+  classes?: Partial<GridClasses>;
   /**
    * Set the density of the grid.
    */

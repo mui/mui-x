@@ -4,235 +4,235 @@ export interface GridClasses {
   /**
    * Styles applied to the root element if `autoHeight={true}`.
    */
-  autoHeight?: string;
+  autoHeight: string;
   /**
    * Styles applied to the icon of the boolean cell.
    */
-  booleanCell?: string;
+  booleanCell: string;
   /**
    * Styles applied to the cell element if the cell is editable.
    */
-  cell__editable?: string;
+  cell__editable: string;
   /**
    * Styles applied to the cell element if the cell is in edit mode.
    */
-  cell__editing?: string;
+  cell__editing: string;
   /**
    * Styles applied to the cell element if `align="center"`.
    */
-  cell__textCenter?: string;
+  cell__textCenter: string;
   /**
    * Styles applied to the cell element if `align="left"`.
    */
-  cell__textLeft?: string;
+  cell__textLeft: string;
   /**
    * Styles applied to the cell element if `align="right"`.
    */
-  cell__textRight?: string;
+  cell__textRight: string;
   /**
    * Styles applied to the cell element if the cell has a custom renderer.
    */
-  cell__withRenderer?: string;
+  cell__withRenderer: string;
   /**
    * Styles applied to the cell element.
    */
-  cell?: string;
+  cell: string;
   /**
    * Styles applied to the cell checkbox element.
    */
-  cellCheckbox?: string;
+  cellCheckbox: string;
   /**
    * Styles applied to the selection checkbox element.
    */
-  checkboxInput?: string;
+  checkboxInput: string;
   /**
    * Styles applied to the column header if `headerAlign="center"`.
    */
-  columnHeader__alignCenter?: string;
+  columnHeader__alignCenter: string;
   /**
    * Styles applied to the column header if `headerAlign="left"`.
    */
-  columnHeader__alignLeft?: string;
+  columnHeader__alignLeft: string;
   /**
    * Styles applied to the column header if `headerAlign="right"`.
    */
-  columnHeader__alignRight?: string;
+  columnHeader__alignRight: string;
   /**
    * Styles applied to the floating column header element when it is dragged.
    */
-  columnHeader__dragging?: string;
+  columnHeader__dragging: string;
   /**
    * Styles applied to the column header if it is being dragged.
    */
-  columnHeader__moving?: string;
+  columnHeader__moving: string;
   /**
    * Styles applied to the column header if the type of the column is `number`.
    */
-  columnHeader__numeric?: string;
+  columnHeader__numeric: string;
   /**
    * Styles applied to the column header if the column is sortable.
    */
-  columnHeader__sortable?: string;
+  columnHeader__sortable: string;
   /**
    * Styles applied to the column header if the column is sorted.
    */
-  columnHeader__sorted?: string;
+  columnHeader__sorted: string;
   /**
    * Styles applied to the column header element.
    */
-  columnHeader?: string;
+  columnHeader: string;
   /**
    * Styles applied to the header checkbox cell element.
    */
-  columnHeaderCheckbox?: string;
+  columnHeaderCheckbox: string;
   /**
    * Styles applied to the column header's draggable container element.
    */
-  columnHeaderDraggableContainer?: string;
+  columnHeaderDraggableContainer: string;
   /**
    * Styles applied to the column headers wrapper if a column is being dragged.
    */
-  columnHeaderDropZone?: string;
+  columnHeaderDropZone: string;
   /**
    * Styles applied to the column header's title element;
    */
-  columnHeaderTitle?: string;
+  columnHeaderTitle: string;
   /**
    * Styles applied to the column header's title container element.
    */
-  columnHeaderTitleContainer?: string;
+  columnHeaderTitleContainer: string;
   /**
    * Styles applied to the column header's wrapper element.
    */
-  columnHeaderWrapper?: string;
+  columnHeaderWrapper: string;
   /**
    * Styles applied to the outer columns container element.
    */
-  columnsContainer?: string;
+  columnsContainer: string;
   /**
    * Styles applied to the column header separator if the column is resizable.
    */
-  columnSeparator__resizable?: string;
+  columnSeparator__resizable: string;
   /**
    * Styles applied to the column header separator if the column is being resized.
    */
-  columnSeparator__resizing?: string;
+  columnSeparator__resizing: string;
   /**
    * Styles applied to the column header separator element.
    */
-  columnSeparator?: string;
+  columnSeparator: string;
   /**
    * Styles applied to the data container element.
    */
-  dataContainer?: string;
+  dataContainer: string;
   /**
    * Styles applied to root of the boolean edit component.
    */
-  editBooleanCell?: string;
+  editBooleanCell: string;
   /**
    * Styles applied to the root of the input component.
    */
-  editInputCell?: string;
+  editInputCell: string;
   /**
    * Styles applied to the filter icon element.
    */
-  filterIcon?: string;
+  filterIcon: string;
   /**
    * Styles applied to the footer container element.
    */
-  footerContainer?: string;
+  footerContainer: string;
   /**
    * Styles applied to the column header icon's container.
    */
-  iconButtonContainer?: string;
+  iconButtonContainer: string;
   /**
    * Styles applied to the column header separator icon element.
    */
-  iconSeparator?: string;
+  iconSeparator: string;
   /**
    * Styles applied to the main container element.
    */
-  main?: string;
+  main: string;
   /**
    * Styles applied to the menu icon element.
    */
-  menuIcon?: string;
+  menuIcon: string;
   /**
    * Styles applied to the menu icon button element.
    */
-  menuIconButton?: string;
+  menuIconButton: string;
   /**
    * Styles applied to the menu icon element if the menu is open.
    */
-  menuOpen?: string;
+  menuOpen: string;
   /**
    * Styles applied to the overlay element.
    */
-  overlay?: string;
+  overlay: string;
   /**
    * Styles applied to the rendering zone element.
    */
-  renderingZone?: string;
+  renderingZone: string;
   /**
    * Styles applied to the root element.
    */
-  root?: string;
+  root: string;
   /**
    * Styles applied to the row element if the row is editable.
    */
-  row__editable?: string;
+  row__editable: string;
   /**
    * Styles applied to the row element if the row is in edit mode.
    */
-  row__editing?: string;
+  row__editing: string;
   /**
    * Styles applied to the row element.
    */
-  row?: string;
+  row: string;
   /**
    * Styles applied to the footer row count element.
    */
-  rowCount?: string;
+  rowCount: string;
   /**
    * Styles applied to both scroll area elements.
    */
-  scrollArea?: string;
+  scrollArea: string;
   /**
    * Styles applied to the left scroll area element.
    */
-  scrollAreaLeft?: string;
+  scrollAreaLeft: string;
   /**
    * Styles applied to the right scroll area element.
    */
-  scrollAreaRight?: string;
+  scrollAreaRight: string;
   /**
    * Styles applied to the footer selected row count element.
    */
-  selectedRowCount?: string;
+  selectedRowCount: string;
   /**
    * Styles applied to the sort icon element.
    */
-  sortIcon?: string;
+  sortIcon: string;
   /**
    * Styles applied to the toolbar container element.
    */
-  toolbarContainer?: string;
+  toolbarContainer: string;
   /**
    * Styles applied to the viewport element.
    */
-  viewport?: string;
+  viewport: string;
   /**
    * Styles applied to the window element.
    */
-  window?: string;
+  window: string;
   /**
    * Styles applied to the window container element.
    */
-  windowContainer?: string;
+  windowContainer: string;
   /**
    * Styles applied to both the cell and the column header if `showColumnRightBorder={true}`.
    */
-  withBorder?: string;
+  withBorder: string;
 }
 
 export type GridClassKey = keyof GridClasses;

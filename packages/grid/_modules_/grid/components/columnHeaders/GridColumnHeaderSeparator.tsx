@@ -3,6 +3,7 @@ import { useGridApiContext } from '../../hooks/root/useGridApiContext';
 import { getDataGridUtilityClass } from '../../gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { composeClasses } from '../../utils/material-ui-utils';
+import { GridOptions } from '../../models/gridOptions';
 
 export interface GridColumnHeaderSeparatorProps extends React.HTMLAttributes<HTMLDivElement> {
   resizable: boolean;
@@ -10,14 +11,18 @@ export interface GridColumnHeaderSeparatorProps extends React.HTMLAttributes<HTM
   height: number;
 }
 
-const useUtilityClasses = (ownerState) => {
+type OwnerState = GridColumnHeaderSeparatorProps & {
+  classes?: GridOptions['classes'];
+};
+
+const useUtilityClasses = (ownerState: OwnerState) => {
   const { resizable, resizing, classes } = ownerState;
 
   const slots = {
     root: [
       'columnSeparator',
-      resizable && 'columnSeparator--resizable',
-      resizing && 'columnSeparator--resizing',
+      resizable && 'columnSeparator__resizable',
+      resizing && 'columnSeparator__resizing',
     ],
     icon: ['iconSeparator'],
   };

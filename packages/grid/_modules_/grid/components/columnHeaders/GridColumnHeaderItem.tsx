@@ -32,7 +32,12 @@ interface GridColumnHeaderItemProps {
   tabIndex: 0 | -1;
 }
 
-const useUtilityClasses = (ownerState) => {
+type OwnerState = GridColumnHeaderItemProps & {
+  showColumnRightBorder: GridOptions['showColumnRightBorder'];
+  classes?: GridOptions['classes'];
+};
+
+const useUtilityClasses = (ownerState: OwnerState) => {
   const { column, classes, isDragging, sortDirection, showColumnRightBorder } = ownerState;
 
   const isColumnSorted = sortDirection != null;
@@ -42,13 +47,13 @@ const useUtilityClasses = (ownerState) => {
   const slots = {
     root: [
       'columnHeader',
-      column.headerAlign === 'left' && 'columnHeader--alignLeft',
-      column.headerAlign === 'center' && 'columnHeader--alignCenter',
-      column.headerAlign === 'right' && 'columnHeader--alignRight',
-      column.sortable && 'columnHeader--sortable',
-      isDragging && 'columnHeader--moving',
-      isColumnSorted && 'columnHeader--sorted',
-      isColumnNumeric && 'columnHeader--numeric',
+      column.headerAlign === 'left' && 'columnHeader__alignLeft',
+      column.headerAlign === 'center' && 'columnHeader__alignCenter',
+      column.headerAlign === 'right' && 'columnHeader__alignRight',
+      column.sortable && 'columnHeader__sortable',
+      isDragging && 'columnHeader__moving',
+      isColumnSorted && 'columnHeader__sorted',
+      isColumnNumeric && 'columnHeader__numeric',
       showColumnRightBorder && 'withBorder',
     ],
     draggableContainer: ['columnHeaderDraggableContainer'],
