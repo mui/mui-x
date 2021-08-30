@@ -1,5 +1,11 @@
 import * as React from 'react';
-import { GridApiContext } from '../../components/GridApiContext';
+import { GridApiRef } from '../../models/api/gridApiRef';
+
+export const GridApiContext = React.createContext<GridApiRef | undefined>(undefined);
+
+if (process.env.NODE_ENV !== 'production') {
+  GridApiContext.displayName = 'GridApiContext';
+}
 
 export function useGridApiContext() {
   const apiRef = React.useContext(GridApiContext);

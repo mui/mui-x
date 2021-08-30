@@ -1,5 +1,11 @@
 import * as React from 'react';
-import { GridRootPropsContext } from '../../context/GridRootPropsContext';
+import { GridComponentProps } from '../../GridComponentProps';
+
+export const GridRootPropsContext = React.createContext<GridComponentProps | undefined>(undefined);
+
+if (process.env.NODE_ENV !== 'production') {
+  GridRootPropsContext.displayName = 'GridRootPropsContext';
+}
 
 export const useGridRootProps = () => {
   const contextValue = React.useContext(GridRootPropsContext);

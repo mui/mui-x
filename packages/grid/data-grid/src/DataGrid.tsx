@@ -10,10 +10,11 @@ import {
   GridRoot,
   useGridApiRef,
 } from '../../_modules_/grid';
-import { GridContextProvider } from '../../_modules_/grid/context/GridContextProvider';
 import { useDataGridComponent } from './useDataGridComponent';
 import { MAX_PAGE_SIZE, DataGridProps } from './DataGridProps';
 import { useDataGridProps } from './useDataGridProps';
+import { GridRootPropsContext } from '../../_modules_/grid/hooks/utils/useGridRootProps';
+import { GridApiContext } from '../../_modules_/grid/hooks/root/useGridApiContext';
 
 const DataGridRaw = React.forwardRef<HTMLDivElement, DataGridProps>(function DataGrid(
   inProps,
@@ -24,15 +25,17 @@ const DataGridRaw = React.forwardRef<HTMLDivElement, DataGridProps>(function Dat
   useDataGridComponent(apiRef, props);
 
   return (
-    <GridContextProvider apiRef={apiRef} props={props}>
-      <GridRoot ref={ref}>
-        <GridErrorHandler>
-          <GridHeaderPlaceholder />
-          <GridBody />
-          <GridFooterPlaceholder />
-        </GridErrorHandler>
-      </GridRoot>
-    </GridContextProvider>
+    <GridRootPropsContext.Provider value={props}>
+      <GridApiContext.Provider value={apiRef}>
+        <GridRoot ref={ref}>
+          <GridErrorHandler>
+            <GridHeaderPlaceholder />
+            <GridBody />
+            <GridFooterPlaceholder />
+          </GridErrorHandler>
+        </GridRoot>
+      </GridApiContext.Provider>
+    </GridRootPropsContext.Provider>
   );
 });
 

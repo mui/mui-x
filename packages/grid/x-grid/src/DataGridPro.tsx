@@ -11,11 +11,12 @@ import {
   GridRoot,
   useGridApiRef,
 } from '../../_modules_/grid';
-import { GridContextProvider } from '../../_modules_/grid/context/GridContextProvider';
 import { useDataGridProComponent } from './useDataGridProComponent';
 import { Watermark } from '../../_modules_/grid/components/Watermark';
 import { DataGridProProps } from './DataGridProProps';
 import { useDataGridProProps } from './useDataGridProProps';
+import { GridRootPropsContext } from '../../_modules_/grid/hooks/utils/useGridRootProps';
+import { GridApiContext } from '../../_modules_/grid/hooks/root/useGridApiContext';
 
 // This is the package release date. Each package version should update this const
 // automatically when a new version is published on npm.
@@ -38,17 +39,19 @@ const DataGridProRaw = React.forwardRef<HTMLDivElement, DataGridProProps>(functi
   useDataGridProComponent(apiRef, props);
 
   return (
-    <GridContextProvider apiRef={apiRef} props={props}>
-      <GridRoot ref={ref}>
-        <GridErrorHandler>
-          <GridHeaderPlaceholder />
-          <GridBody>
-            <Watermark />
-          </GridBody>
-          <GridFooterPlaceholder />
-        </GridErrorHandler>
-      </GridRoot>
-    </GridContextProvider>
+    <GridRootPropsContext.Provider value={props}>
+      <GridApiContext.Provider value={apiRef}>
+        <GridRoot ref={ref}>
+          <GridErrorHandler>
+            <GridHeaderPlaceholder />
+            <GridBody>
+              <Watermark />
+            </GridBody>
+            <GridFooterPlaceholder />
+          </GridErrorHandler>
+        </GridRoot>
+      </GridApiContext.Provider>
+    </GridRootPropsContext.Provider>
   );
 });
 
