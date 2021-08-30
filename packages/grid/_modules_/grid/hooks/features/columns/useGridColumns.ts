@@ -245,6 +245,10 @@ export function useGridColumns(
 
       logger.debug(`Moving column ${field} to index ${targetIndexPosition}`);
 
+      const updatedColumns = [...gridState.columns.all];
+      updatedColumns.splice(targetIndexPosition, 0, updatedColumns.splice(oldIndexPosition, 1)[0]);
+      setGridColumnsState({ ...gridState.columns, all: updatedColumns });
+
       const params: GridColumnOrderChangeParams = {
         field,
         element: apiRef.current.getColumnHeaderElement(field),
@@ -253,10 +257,6 @@ export function useGridColumns(
         oldIndex: oldIndexPosition,
       };
       apiRef.current.publishEvent(GridEvents.columnOrderChange, params);
-
-      const updatedColumns = [...gridState.columns.all];
-      updatedColumns.splice(targetIndexPosition, 0, updatedColumns.splice(oldIndexPosition, 1)[0]);
-      setGridColumnsState({ ...gridState.columns, all: updatedColumns });
     },
     [apiRef, gridState.columns, logger, setGridColumnsState],
   );
