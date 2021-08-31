@@ -25,7 +25,7 @@ export function GridColumnHeaderMenu({
   const currentColumn = apiRef.current.getColumn(field);
 
   const hideMenu = React.useCallback(
-    (event: React.SyntheticEvent<any, any>) => {
+    (event: React.SyntheticEvent<any>) => {
       // Prevent triggering the sorting
       event.stopPropagation();
       apiRef.current.hideColumnMenu();
