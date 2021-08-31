@@ -162,7 +162,7 @@ describe('<DataGrid /> - Pagination', () => {
       expect(getColumnValues()).to.deep.equal(['0']);
     });
 
-    it('should go to last page when page is controlled and the current page is greater than the last page', () => {
+    it.only('should go to last page when page is controlled and the current page is greater than the last page', () => {
       const onPageChange = spy();
 
       const TestCasePaginationFilteredData = () => {

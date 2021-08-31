@@ -3,7 +3,7 @@ import { useGridClipboard } from '../../_modules_/grid/hooks/features/clipboard/
 import { useGridColumnMenu } from '../../_modules_/grid/hooks/features/columnMenu/useGridColumnMenu';
 import { useGridColumnResize } from '../../_modules_/grid/hooks/features/columnResize/useGridColumnResize';
 import { useGridColumns } from '../../_modules_/grid/hooks/features/columns/useGridColumns';
-import { useGridControlState } from '../../_modules_/grid/hooks/features/core/useGridControlState';
+import { useGridControlStateManager } from '../../_modules_/grid/hooks/features/core/useGridControlStateManager';
 import { useGridDensity } from '../../_modules_/grid/hooks/features/density/useGridDensity';
 import { useGridCsvExport } from '../../_modules_/grid/hooks/features/export/useGridCsvExport';
 import { useGridFilter } from '../../_modules_/grid/hooks/features/filter/useGridFilter';
@@ -36,7 +36,7 @@ export const useDataGridComponent = (apiRef: GridApiRef, props: GridComponentPro
   useLoggerFactory(apiRef, props);
   useApi(apiRef, props);
   useErrorHandler(apiRef, props);
-  useGridControlState(apiRef, props);
+  useGridControlStateManager(apiRef, props);
   useLocaleText(apiRef, props);
   useGridResizeContainer(apiRef, props);
   useGridFreezeRows(apiRef, props);
@@ -50,10 +50,10 @@ export const useDataGridComponent = (apiRef: GridApiRef, props: GridComponentPro
   useGridPreferencesPanel(apiRef);
   useGridFilter(apiRef, props);
   useGridDensity(apiRef, props);
-  useGridContainerProps(apiRef, props);
   useGridColumnResize(apiRef, props);
   useGridPageSize(apiRef, props);
   useGridPage(apiRef, props);
+  useGridContainerProps(apiRef, props);
   useGridVirtualRows(apiRef, props);
   useGridColumnMenu(apiRef);
   useGridKeyboard(apiRef);

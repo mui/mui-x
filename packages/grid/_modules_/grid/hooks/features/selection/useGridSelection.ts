@@ -21,7 +21,7 @@ import {
  * @requires useOptionsProp (state)
  * @requires useGridRows (state, method)
  * @requires useGridParamsApi (method)
- * @requires useGridControlState (method)
+ * @requires useGridControlStateManager (method)
  */
 export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps): void => {
   const logger = useLogger('useGridSelection');

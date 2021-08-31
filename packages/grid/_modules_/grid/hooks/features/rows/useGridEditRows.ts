@@ -39,7 +39,7 @@ import { useGridSelector } from '../core/useGridSelector';
  * @requires useGridFocus - can be after, async only
  * @requires useGridParamsApi (method)
  * @requires useGridColumns (state)
- * @requires useGridControlState (method)
+ * @requires useGridControlStateManager (method)
  */
 export function useGridEditRows(
   apiRef: GridApiRef,

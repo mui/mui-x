@@ -28,7 +28,7 @@ import { sortedGridRowIdsSelector, sortedGridRowsSelector } from './gridSortingS
 
 /**
  * @requires useGridRows (state, event)
- * @requires useGridControlState (method)
+ * @requires useGridControlStateManager (method)
  * @requires useGridColumns (event)
  */
 export const useGridSorting = (

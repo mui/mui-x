@@ -58,7 +58,7 @@ export interface GridState {
 export const getInitialGridState = (): GridState => ({
   rows: getInitialGridRowState(),
   editRows: {},
-  pagination: getInitialPaginationState(),
+  // pagination: getInitialPaginationState(),
   columns: getInitialGridColumnsState(),
   columnReorder: getInitialGridColumnReorderState(),
   columnResize: getInitialGridColumnResizeState(),
@@ -75,4 +75,4 @@ export const getInitialGridState = (): GridState => ({
   preferencePanel: { open: false },
   visibleRows: getInitialVisibleGridRowsState(),
   density: getInitialGridDensityState(),
-});
+} as any as GridState);

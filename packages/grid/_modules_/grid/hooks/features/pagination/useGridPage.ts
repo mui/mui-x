@@ -9,6 +9,8 @@ import { useGridApiMethod } from '../../root/useGridApiMethod';
 import { GridPageApi } from '../../../models/api/gridPageApi';
 import { GridPaginationState } from './gridPaginationState';
 import { visibleGridRowCountSelector } from '../filter';
+import { useGridStateInit } from '../../utils/useGridStateInit';
+import {useGridRegisterControlState} from "../../utils/useGridRegisterControlState";
 
 const getPageCount = (rowCount: number, pageSize: number): number => {
   if (pageSize > 0 && rowCount > 0) {
@@ -30,7 +32,7 @@ const applyValidPage = (paginationState: GridPaginationState): GridPaginationSta
 };
 
 /**
- * @requires useGridControlState (method)
+ * @requires useGridControlStateManager (method)
  * @requires useGridPageSize (state, event)
  * @requires useGridFilter (state)
  */
@@ -41,6 +43,24 @@ export const useGridPage = (
   const logger = useLogger('useGridPage');
   const [, setGridState, forceUpdate] = useGridState(apiRef);
   const visibleRowCount = useGridSelector(apiRef, visibleGridRowCountSelector);
+
+  useGridStateInit(apiRef, (state) => ({
+    ...state,
+    pagination: {
+      ...state.pagination!,
+      page: 0,
+      pageCount: getPageCount(props.rowCount ?? 0, state.pagination!.pageSize!),
+      rowCount: props.rowCount ?? 0,
+    },
+  }));
+
+  useGridRegisterControlState(apiRef, {
+    stateId: 'page',
+    propModel: props.page,
+    propOnChange: props.onPageChange,
+    stateSelector: (state) => state.pagination.page,
+    changeEvent: GridEvents.pageChange,
+  })
 
   const setPage = React.useCallback(
     (page: number) => {
@@ -57,16 +77,6 @@ export const useGridPage = (
     },
     [setGridState, forceUpdate, logger],
   );
-
-  React.useEffect(() => {
-    apiRef.current.updateControlState({
-      stateId: 'page',
-      propModel: props.page,
-      propOnChange: props.onPageChange,
-      stateSelector: (state) => state.pagination.page,
-      changeEvent: GridEvents.pageChange,
-    });
-  }, [apiRef, props.page, props.onPageChange]);
 
   React.useEffect(() => {
     setGridState((state) => {
