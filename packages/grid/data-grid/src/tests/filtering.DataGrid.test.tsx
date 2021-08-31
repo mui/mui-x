@@ -1047,6 +1047,6 @@ describe('<DataGrid /> - Filter', () => {
         rows={rows}
       />,
     );
-    expect(screen.queryByTitle('1 active filter')).not.to.equal(null);
+    expect(screen.queryByLabelText('1 active filter')).not.to.equal(null);
   });
 });
