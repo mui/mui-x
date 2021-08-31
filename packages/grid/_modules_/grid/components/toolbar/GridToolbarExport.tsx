@@ -103,4 +103,4 @@ export const GridToolbarExport = React.forwardRef<HTMLButtonElement, GridToolbar
       </React.Fragment>
     );
   },
-);
+) as (props: GridToolbarExportProps) => JSX.Element;

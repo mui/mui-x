@@ -1,11 +1,12 @@
 import { GridLocaleText } from './api/gridLocaleTextApi';
 import { GridDensity, GridDensityTypes } from './gridDensity';
-import { GridEditMode, GridEditModes } from './gridEditRowModel';
+import {GridEditMode, GridEditModes, GridEditRowsModel} from './gridEditRowModel';
 import { GridFeatureMode, GridFeatureModeConstant } from './gridFeatureMode';
 import { Logger } from './logger';
 import { GridSortDirection } from './gridSortModel';
 import { GridSlotsComponent } from './gridSlotsComponent';
 import { GridClasses } from './gridClasses';
+import {GridFilterModel} from "./gridFilterModel";
 
 export type GridMergedOptions = {
   [key in keyof GridProcessedMergedOptions]: Partial<GridProcessedMergedOptions[key]>;
@@ -124,13 +125,21 @@ export interface GridSimpleOptions {
    * Controls whether to use the cell or row editing.
    * @default "cell"
    */
-  editMode: GridEditMode;
+  editMode?: GridEditMode;
+  /**
+   * Set the edit rows model of the grid.
+   */
+  editRowsModel?: GridEditRowsModel;
   /**
    * Filtering can be processed on the server or client-side.
    * Set it to 'server' if you would like to handle filtering on the server-side.
    * @default "client"
    */
-  filterMode: GridFeatureMode;
+  filterMode?: GridFeatureMode;
+  /**
+   * Set the filter model of the grid.
+   */
+  filterModel?: GridFilterModel;
   /**
    * Set the height in pixel of the column headers in the grid.
    * @default 56

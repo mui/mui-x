@@ -417,8 +417,8 @@ interface GridComponentOtherProps {
   onResize?: (containerSize: ElementSize, event: MuiEvent<{}>, details?: any) => void;
   /**
    * Callback fired when the state of the grid is updated.
-   * @param state The new state.
-   * @param event [[MuiEvent<{}>]].
+   * @param {GridState} state The new state.
+   * @param {MuiEvent<{}>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
    * @internal
    */

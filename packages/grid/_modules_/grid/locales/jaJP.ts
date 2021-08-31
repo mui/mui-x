@@ -4,8 +4,8 @@ import { getGridLocalization, Localization } from '../utils/getGridLocalization'
 
 const jaJPGrid: Partial<GridLocaleText> = {
   // Root
-  noRowsLabel: '行がありません',
-  // noResultsOverlayLabel: 'No results found.',
+  noRowsLabel: '行がありません。',
+  noResultsOverlayLabel: '結果がありません。',
   errorOverlayDefaultLabel: 'エラーが発生しました。',
 
   // Density selector toolbar button text
@@ -59,8 +59,8 @@ const jaJPGrid: Partial<GridLocaleText> = {
   filterOperatorOnOrAfter: '...以降',
   filterOperatorBefore: '...より前',
   filterOperatorOnOrBefore: '...以前',
-  // filterOperatorIsEmpty: 'is empty',
-  // filterOperatorIsNotEmpty: 'is not empty',
+  filterOperatorIsEmpty: '...空である',
+  filterOperatorIsNotEmpty: '...空でない',
 
   // Column menu text
   columnMenuLabel: 'メニュー',
@@ -83,8 +83,15 @@ const jaJPGrid: Partial<GridLocaleText> = {
   footerTotalRows: '総行数:',
 
   // Total visible rows footer text
-  // footerTotalVisibleRows: (visibleCount, totalCount) =>
-  //   `${visibleCount.toLocaleString()} of ${totalCount.toLocaleString()}`,
+  footerTotalVisibleRows: (visibleCount, totalCount) =>
+    `${visibleCount.toLocaleString()} / ${totalCount.toLocaleString()}`,
+
+  // Checkbox selection text
+  checkboxSelectionHeaderName: 'チェックボックス',
+
+  // Boolean cell text
+  booleanCellTrueLabel: '真',
+  booleanCellFalseLabel: '偽',
 };
 
 export const jaJP: Localization = getGridLocalization(jaJPGrid, jaJPCore);

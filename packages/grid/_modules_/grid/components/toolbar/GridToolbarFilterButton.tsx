@@ -122,4 +122,4 @@ export const GridToolbarFilterButton = React.forwardRef<
       </Button>
     </Tooltip>
   );
-});
+}) as (props: GridToolbarFilterButtonProps) => JSX.Element;
