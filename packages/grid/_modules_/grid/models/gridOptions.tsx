@@ -1,12 +1,12 @@
 import { GridLocaleText } from './api/gridLocaleTextApi';
 import { GridDensity, GridDensityTypes } from './gridDensity';
-import {GridEditMode, GridEditModes, GridEditRowsModel} from './gridEditRowModel';
+import { GridEditMode, GridEditModes, GridEditRowsModel } from './gridEditRowModel';
 import { GridFeatureMode, GridFeatureModeConstant } from './gridFeatureMode';
 import { Logger } from './logger';
 import { GridSortDirection } from './gridSortModel';
 import { GridSlotsComponent } from './gridSlotsComponent';
 import { GridClasses } from './gridClasses';
-import {GridFilterModel} from "./gridFilterModel";
+import { GridFilterModel } from './gridFilterModel';
 
 export type GridMergedOptions = {
   [key in keyof GridProcessedMergedOptions]: Partial<GridProcessedMergedOptions[key]>;
