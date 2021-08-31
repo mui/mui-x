@@ -21,6 +21,7 @@ const blacklist = [
   'docs-components-data-grid-filtering/ColumnTypeFilteringGrid.png', // Needs interaction
   'docs-components-data-grid-filtering/CustomRatingOperator.png', // Needs interaction
   'docs-components-data-grid-filtering/ExtendNumericOperator.png', // Needs interaction
+  'docs-components-data-grid-components/CustomFooter.png', // Needs @material-ui/lab v4
   // 'docs-system-typography',
   /^stories(.*)(?<!Snap)\.png$/, // Excludes stories that aren't suffixed with 'Snap'.
 ];
