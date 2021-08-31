@@ -14,5 +14,4 @@ export * from './virtualization';
 
 export * from './useGridApiRef';
 export * from './columnResize';
-export * from './useGridComponents';
 export * from './useGridSlotComponentProps';

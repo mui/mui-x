@@ -121,11 +121,7 @@ export const useGridVirtualRows = (
         return null;
       }
       let minRowIdx = 0;
-      if (
-        props.pagination &&
-        paginationState.pageSize != null &&
-        props.paginationMode === 'client'
-      ) {
+      if (props.pagination && props.paginationMode === 'client') {
         minRowIdx = paginationState.pageSize * paginationState.page;
       }
 
@@ -205,7 +201,7 @@ export const useGridVirtualRows = (
       const lastDisplayedIdx = getColumnIdxFromScroll(scrollLeft + windowWidth);
       const prevFirstColIdx = renderedColRef?.current?.firstColIdx || 0;
       const prevLastColIdx = renderedColRef?.current?.lastColIdx || 0;
-      const columnBuffer = props.columnBuffer!;
+      const columnBuffer = props.columnBuffer;
       const tolerance = columnBuffer > 1 ? columnBuffer - 1 : columnBuffer; // Math.floor(columnBuffer / 2);
       const diffFirst = Math.abs(firstDisplayedIdx - tolerance - prevFirstColIdx);
       const diffLast = Math.abs(lastDisplayedIdx + tolerance - prevLastColIdx);

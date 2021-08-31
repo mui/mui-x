@@ -11,7 +11,6 @@ export const GridToolbarColumnsButton = React.forwardRef<HTMLButtonElement, Butt
     const { onClick, ...other } = props;
     const apiRef = useGridApiContext();
     const rootProps = useGridRootProps();
-    const ColumnSelectorIcon = apiRef!.current.components.ColumnSelectorIcon!;
     const { open, openedPanelValue } = useGridSelector(apiRef, gridPreferencePanelStateSelector);
 
     const showColumns = (event) => {
@@ -35,7 +34,7 @@ export const GridToolbarColumnsButton = React.forwardRef<HTMLButtonElement, Butt
         size="small"
         color="primary"
         aria-label={apiRef.current.getLocaleText('toolbarColumnsLabel')}
-        startIcon={<ColumnSelectorIcon />}
+        startIcon={<rootProps.components.ColumnSelectorIcon />}
         {...other}
         onClick={showColumns}
       >

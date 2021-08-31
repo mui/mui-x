@@ -73,7 +73,7 @@ export const useGridSorting = (
       if (existing) {
         const nextSort =
           directionOverride === undefined
-            ? nextGridSortDirection(props.sortingOrder!, existing.sort)
+            ? nextGridSortDirection(props.sortingOrder, existing.sort)
             : directionOverride;
 
         return nextSort == null ? undefined : { ...existing, sort: nextSort };
@@ -82,7 +82,7 @@ export const useGridSorting = (
         field: col.field,
         sort:
           directionOverride === undefined
-            ? nextGridSortDirection(props.sortingOrder!)
+            ? nextGridSortDirection(props.sortingOrder)
             : directionOverride,
       };
     },

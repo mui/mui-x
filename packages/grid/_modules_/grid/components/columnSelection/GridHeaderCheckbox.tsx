@@ -61,10 +61,8 @@ export const GridHeaderCheckbox = React.forwardRef<HTMLInputElement, GridColumnH
       return apiRef.current.subscribeEvent(GridEvents.selectionChange, handleSelectionChange);
     }, [apiRef, handleSelectionChange]);
 
-    const CheckboxComponent = apiRef?.current.components.Checkbox!;
-
     return (
-      <CheckboxComponent
+      <rootProps.components.Checkbox
         ref={ref}
         indeterminate={isIndeterminate}
         checked={isChecked}
@@ -74,7 +72,7 @@ export const GridHeaderCheckbox = React.forwardRef<HTMLInputElement, GridColumnH
         inputProps={{ 'aria-label': 'Select All Rows checkbox' }}
         tabIndex={tabIndex}
         onKeyDown={handleKeyDown}
-        {...apiRef?.current.componentsProps?.checkbox}
+        {...rootProps.componentsProps?.checkbox}
       />
     );
   },

@@ -85,7 +85,7 @@ export const GridPagination = React.forwardRef<
     if (
       !warnedOnceMissingPageSizeInRowsPerPageOptions.current &&
       !rootProps.autoPageSize &&
-      !rootProps.rowsPerPageOptions!.includes(rootProps.pageSize ?? paginationState.pageSize)
+      !rootProps.rowsPerPageOptions.includes(rootProps.pageSize ?? paginationState.pageSize)
     ) {
       console.warn(
         [
