@@ -1,4 +1,4 @@
-import { GridApi } from './gridApi';
+import type { GridApi } from './gridApi';
 
 /**
  * Additional details passed to the callbacks
