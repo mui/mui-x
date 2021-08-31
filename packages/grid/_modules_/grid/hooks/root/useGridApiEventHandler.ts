@@ -2,7 +2,7 @@ import * as React from 'react';
 import { MuiEvent } from '../../models/muiEvent';
 import { GridApiRef } from '../../models/api/gridApiRef';
 import { useLogger } from '../utils/useLogger';
-import { GridCallbackDetails } from '../../models/api/gridApiDetails';
+import { GridCallbackDetails } from '../../models/api/gridCallbackDetails';
 
 /**
  * Signal to the underlying logic what version of the public component API

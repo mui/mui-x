@@ -29,7 +29,7 @@ import { GridColumnResizeParams } from './models/params/gridColumnResizeParams';
 import { GridColumnVisibilityChangeParams } from './models/params/gridColumnVisibilityChangeParams';
 import { GridViewportRowsChangeParams } from './models/params/gridViewportRowsChangeParams';
 import { GridSlotsComponentsProps } from './models/gridSlotsComponentsProps';
-import { GridCallbackDetails } from './models/api/gridApiDetails';
+import { GridCallbackDetails } from './models/api/gridCallbackDetails';
 
 /**
  * The grid component react props before applying the default values.

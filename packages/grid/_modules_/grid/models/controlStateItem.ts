@@ -1,5 +1,5 @@
 import { GridState } from '../hooks/features/core/gridState';
-import { GridCallbackDetails } from './api/gridApiDetails';
+import { GridCallbackDetails } from './api/gridCallbackDetails';
 
 export interface GridControlStateItem<TModel> {
   stateId: string;
