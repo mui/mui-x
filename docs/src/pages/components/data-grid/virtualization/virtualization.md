@@ -9,7 +9,7 @@ title: Data Grid - Virtualization
 DOM virtualization is the feature that allows the grid to handle an unlimited\* number of rows and columns.
 This is a built-in feature of the rendering engine and greatly improves rendering performance.
 
-_unlimited\*: Browsers set a limit on the number of pixels a scroll container can host: 17.5 million pixels on Firefox, 33.5 million pixels on Chrome, Edge, and Safari. A [reproduction](https://codesandbox.io/s/beautiful-silence-1yifo?file=/src/App.js)._
+_\*unlimited: Browsers set a limit on the number of pixels a scroll container can host: 17.5 million pixels on Firefox, 33.5 million pixels on Chrome, Edge, and Safari. A [reproduction](https://codesandbox.io/s/beautiful-silence-1yifo?file=/src/App.js)._
 
 ## Row virtualization [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-pro/)
 
@@ -33,9 +33,16 @@ By default, 2 columns are rendered outside of the viewport. You can change this 
 
 You can disable column virtualization by setting the column buffer to a higher number than the number of rendered columns, e.g. with `columnBuffer={columns.length}` or `columnBuffer={Number.MAX_SAFE_INTEGER}`.
 
-## apiRef [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-pro/)
+## Disable virtualization
 
-{{"demo": "pages/components/data-grid/virtualization/VirtualizationApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
+The virtualization can be disabled completely using the `disableVirtualization` prop.
+You may want to turn it off to be able to test the grid with a headless browser, like jsdom.
+
+```tsx
+<DataGrid {...data} disableVirtualization />
+```
+
+**Note**: Disabling the virtualization will increase the size of the DOM and drastically reduce the performance. Use it only for testing purposes or on small datasets.
 
 ## API
 
