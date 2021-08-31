@@ -122,6 +122,11 @@ export interface GridSimpleOptions {
    */
   disableSelectionOnClick: boolean;
   /**
+   * If `true`, the virtualization is disabled.
+   * @default false
+   */
+  disableVirtualization?: boolean;
+  /**
    * Controls whether to use the cell or row editing.
    * @default "cell"
    */
