@@ -3,7 +3,6 @@ import { GridApiRef } from '../../models/api/gridApiRef';
 import { GridApi } from '../../models/api/gridApi';
 import { GridEventEmitter } from '../../utils/eventEmitter/GridEventEmitter';
 
-
 // Public developers facing overload
 export function useGridApiRef(): GridApiRef;
 
