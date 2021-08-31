@@ -2,15 +2,7 @@ import * as React from 'react';
 import { MuiEvent } from '../../models/muiEvent';
 import { GridApiRef } from '../../models/api/gridApiRef';
 import { useLogger } from '../utils/useLogger';
-import { GridApi } from '../../models/api/gridApi';
-
-// TODO: Remove once [[GridApi]] cycle dependency is fixed
-/**
- * Callback details.
- */
-export interface GridCallbackDetails {
-  api?: GridApi;
-}
+import { GridApiDetails } from '../../models/api/gridApiDetails';
 
 /**
  * Signal to the underlying logic what version of the public component API
@@ -34,7 +26,7 @@ export function useGridApiEventHandler(
       const enhancedHandler = (
         params: any,
         event: MuiEvent<React.SyntheticEvent | DocumentEventMap[keyof DocumentEventMap] | {}>,
-        details: GridCallbackDetails,
+        details: GridApiDetails,
       ) => {
         if (!event.defaultMuiPrevented) {
           handler(params, event, details);
