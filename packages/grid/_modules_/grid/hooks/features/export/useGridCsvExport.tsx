@@ -12,6 +12,13 @@ import { exportAs } from '../../../utils/exportAs';
 import { buildCSV } from './serializers/csvSerializer';
 import { GridStateColDef } from '../../../models';
 
+/**
+ * @requires useGridColumns (state)
+ * @requires useGridFilter (state)
+ * @requires useGridSorting (state)
+ * @requires useGridSelection (state)
+ * @requires useGridParamsApi (method)
+ */
 export const useGridCsvExport = (apiRef: GridApiRef): void => {
   const logger = useLogger('useGridCsvExport');
   const visibleColumns = useGridSelector(apiRef, visibleGridColumnsSelector);

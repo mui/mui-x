@@ -20,6 +20,12 @@ import { GridFilterModel } from '../../../models/gridFilterModel';
 import { visibleSortedGridRowsSelector } from './gridFilterSelector';
 import { getInitialVisibleGridRowsState } from './visibleGridRowsState';
 
+/**
+ * @requires useGridColumns (state, method, event)
+ * @requires useGridParamsApi (method)
+ * @requires useGridRows (event)
+ * @requires useGridControlState (method)
+ */
 export const useGridFilter = (
   apiRef: GridApiRef,
   props: Pick<

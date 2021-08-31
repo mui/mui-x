@@ -5,6 +5,9 @@ import { GridLocaleTextApi } from '../../../models/api/gridLocaleTextApi';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
 import { useGridSelector } from '../core/useGridSelector';
 
+/**
+ * @requires useOptionsProp
+ */
 export const useLocaleText = (apiRef: GridApiRef): void => {
   const { localeText } = useGridSelector(apiRef, optionsSelector);
   const getLocaleText = React.useCallback(
