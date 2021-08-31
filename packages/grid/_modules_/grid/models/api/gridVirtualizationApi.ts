@@ -21,11 +21,13 @@ export interface GridVirtualizationApi {
   scrollToIndexes: (params: Partial<GridCellIndexCoordinates>) => boolean;
   /**
    * Get the current containerProps.
+   * @returns {GridContainerProps | null} The container properties.
    * @ignore - do not document.
    */
   getContainerPropsState: () => GridContainerProps | null;
   /**
    * Get the current renderContext.
+   * @returns {Partial<GridRenderContextProps> | undefined} The render context.
    * @ignore - do not document.
    */
   getRenderContextState: () => Partial<GridRenderContextProps> | undefined;
