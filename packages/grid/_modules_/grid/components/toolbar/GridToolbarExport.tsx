@@ -7,13 +7,11 @@ import MenuItem from '@material-ui/core/MenuItem';
 import { isHideMenuKey, isTabKey } from '../../utils/keyboardUtils';
 import { useGridApiContext } from '../../hooks/root/useGridApiContext';
 import { GridMenu } from '../menu/GridMenu';
-import { GridExportCsvOptions } from '../../models/gridExport';
-
-type GridExportFormatTypes = 'csv' | 'print';
+import { GridCsvExportOptions, GridExportFormat as ExportTypes } from '../../models/gridExport';
 
 interface GridExportFormat {
-  format: GridExportFormatTypes;
-  formatOptions?: GridExportCsvOptions;
+  format: ExportTypes;
+  formatOptions?: GridCsvExportOptions;
 }
 
 type GridExportFormatOption = GridExportFormat;
@@ -23,7 +21,7 @@ type GridExportOption = GridExportFormatOption & {
 };
 
 export interface GridToolbarExportProps extends ButtonProps {
-  csvOptions?: GridExportCsvOptions;
+  csvOptions?: GridCsvExportOptions;
 }
 
 export const GridToolbarExport = React.forwardRef<HTMLButtonElement, GridToolbarExportProps>(
