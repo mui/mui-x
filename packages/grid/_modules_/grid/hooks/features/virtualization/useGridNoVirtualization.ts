@@ -27,7 +27,7 @@ export const useGridNoVirtualization = (
 
     let firstRowIdx = 0;
     const { page, pageSize } = paginationState;
-    if (props.pagination && pageSize != null && props.paginationMode === 'client') {
+    if (props.pagination && props.paginationMode === 'client') {
       firstRowIdx = pageSize * page;
     }
     const lastRowIdx = firstRowIdx + gridState.containerSizes.virtualRowsCount;
