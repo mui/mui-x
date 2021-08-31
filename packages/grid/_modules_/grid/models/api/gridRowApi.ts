@@ -6,12 +6,12 @@ import { GridRowModel, GridRowId, GridRowModelUpdate } from '../gridRows';
 export interface GridRowApi {
   /**
    * Gets the full set of rows as [[Map<GridRowId, GridRowModel>]].
-   * @returns {Map<GridRowId, GridRowModel>}
+   * @returns {Map<GridRowId, GridRowModel>} The full set of rows.
    */
   getRowModels: () => Map<GridRowId, GridRowModel>;
   /**
    * Gets the total number of rows in the grid.
-   * @returns {number}
+   * @returns {number} The number of rows.
    */
   getRowsCount: () => number;
   /**
