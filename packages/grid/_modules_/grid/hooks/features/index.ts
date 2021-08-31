@@ -15,5 +15,4 @@ export * from './scroll';
 
 export * from './useGridApiRef';
 export * from './columnResize';
-export * from './useGridComponents';
 export * from './useGridSlotComponentProps';

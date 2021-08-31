@@ -63,7 +63,7 @@ export function useLoggerFactory(
   }
 
   factory = props.logLevel
-    ? (name: string) => getAppender(name, props.logLevel!.toString(), props.logger)
+    ? (name: string) => getAppender(name, props.logLevel.toString(), props.logger)
     : null;
 }
 

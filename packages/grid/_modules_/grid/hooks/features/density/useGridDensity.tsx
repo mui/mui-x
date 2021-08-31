@@ -71,7 +71,7 @@ export const useGridDensity = (
   );
 
   React.useEffect(() => {
-    setDensity(props.density!, props.headerHeight, props.rowHeight);
+    setDensity(props.density, props.headerHeight, props.rowHeight);
   }, [setDensity, props.density, props.rowHeight, props.headerHeight]);
 
   const densityApi: GridDensityApi = {

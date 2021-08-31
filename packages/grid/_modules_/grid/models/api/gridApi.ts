@@ -1,6 +1,5 @@
 import { GridColumnApi } from './gridColumnApi';
 import { GridColumnMenuApi } from './gridColumnMenuApi';
-import { GridComponentsApi } from './gridComponentsApi';
 import { GridControlStateApi } from './gridControlStateApi';
 import { GridCoreApi } from './gridCoreApi';
 import { GridClipboardApi } from './gridClipboardApi';
@@ -27,7 +26,6 @@ import { GridScrollApi } from './gridScrollApi';
  */
 export interface GridApi
   extends GridCoreApi,
-    GridComponentsApi,
     GridStateApi,
     GridDensityApi,
     GridEventsApi,
