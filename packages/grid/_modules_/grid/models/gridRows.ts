@@ -1,11 +1,12 @@
 export type GridRowsProp = Readonly<GridRowData[]>;
-export type GridRowType = { [key: string]: any };
-export type GridRowData<RowType = GridRowType> = RowType;
+export type GridRowDefaultData = { [key: string]: any };
+export type GridRowData<RowType extends GridRowDefaultData = GridRowDefaultData> = RowType;
 
 /**
  * The key value object representing the data of a row.
  */
-export type GridRowModel<RowType = any> = GridRowData<RowType>;
+export type GridRowModel<RowType extends GridRowDefaultData = GridRowDefaultData> =
+  GridRowData<RowType>;
 
 export type GridUpdateAction = 'delete';
 

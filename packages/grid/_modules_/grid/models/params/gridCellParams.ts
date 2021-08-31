@@ -1,12 +1,15 @@
 import { GridCellMode, GridCellValue } from '../gridCell';
-import { GridRowType, GridRowId, GridRowModel } from '../gridRows';
+import { GridRowDefaultData, GridRowId, GridRowModel } from '../gridRows';
 import type { GridStateColDef } from '../colDef';
 import { GridEditCellProps } from '../gridEditRowModel';
 
 /**
  * Object passed as parameter in the column [[GridColDef]] cell renderer.
  */
-export interface GridCellParams<T = GridCellValue, RowType extends GridRowType = GridRowType> {
+export interface GridCellParams<
+  T = GridCellValue,
+  RowType extends GridRowDefaultData = GridRowDefaultData,
+> {
   /**
    * The grid row id.
    */
@@ -58,8 +61,10 @@ export interface GridCellParams<T = GridCellValue, RowType extends GridRowType =
 /**
  * GridCellParams containing api.
  */
-export interface GridRenderCellParams<T = any, RowType extends GridRowType = GridRowType>
-  extends GridCellParams<T, RowType> {
+export interface GridRenderCellParams<
+  T = any,
+  RowType extends GridRowDefaultData = GridRowDefaultData,
+> extends GridCellParams<T, RowType> {
   /**
    * GridApi that let you manipulate the grid.
    */
