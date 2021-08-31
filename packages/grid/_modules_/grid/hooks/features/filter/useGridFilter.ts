@@ -281,9 +281,9 @@ export const useGridFilter = (
   );
 
   React.useEffect(() => {
-      logger.debug('Rows prop changed, applying filters');
-      clearFilteredRows();
-      apiRef.current.applyFilters();
+    logger.debug('Rows prop changed, applying filters');
+    clearFilteredRows();
+    apiRef.current.applyFilters();
   }, [apiRef, clearFilteredRows, logger, props.rows]);
 
   const onColUpdated = React.useCallback(() => {
