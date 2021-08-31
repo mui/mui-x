@@ -1,7 +1,7 @@
-export { default } from './Grid';
-export { default } from './Line/Line';
-export { default } from './LineChart/LineChart';
-export { default } from './Scatter/Scatter';
-export { default } from './ScatterChart/ScatterChart';
-export { default } from './XAxis/XAxis';
-export { default } from './YAxis';
+export { default as Grid } from './Grid';
+export { default as Line } from './Line';
+export { default as LineChart } from './LineChart';
+export { default as Scatter } from './Scatter';
+export { default as ScatterChart } from './ScatterChart';
+export { default as XAxis } from './XAxis';
+export { default as YAxis } from './YAxis';

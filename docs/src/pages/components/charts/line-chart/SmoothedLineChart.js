@@ -4,6 +4,7 @@ import Line from '@mui/charts/Line';
 import XAxis from '@mui/charts/XAxis';
 import YAxis from '@mui/charts/YAxis';
 import Grid from '@mui/charts/Grid';
+import Tooltip from '@mui/charts/Tooltip';
 
 const lineData1 = [
   { x: new Date(2015, 0, 1), y: 4 },
@@ -17,10 +18,11 @@ const lineData1 = [
 
 export default function SmoothedLineChart() {
   return (
-    <LineChart smoothed data={lineData1} xScaleType="time">
+    <LineChart smoothed data={lineData1} xScaleType="time" highlightMarkers>
       <Grid />
       <XAxis />
       <YAxis suffix="kg" />
+      <Tooltip />
       <Line stroke="rgb(235,97,97)" />
     </LineChart>
   );

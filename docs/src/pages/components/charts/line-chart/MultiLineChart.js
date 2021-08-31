@@ -4,6 +4,7 @@ import Line from '@mui/charts/Line';
 import XAxis from '@mui/charts/XAxis';
 import YAxis from '@mui/charts/YAxis';
 import Grid from '@mui/charts/Grid';
+import Tooltip from '@mui/charts/Tooltip';
 
 const lineData1 = [
   { x: new Date(2015, 0, 1), y: 4 },
@@ -50,6 +51,7 @@ export default function MultiLineChart() {
       <Grid disableX />
       <XAxis label="Year" />
       <YAxis label="Size" suffix="cm" disableLine disableTicks />
+      <Tooltip />
       <Line series={0} stroke="rgb(116,205,240)" strokeWidth={2} />
       <Line series={1} stroke="rgb(150,219,124)" strokeWidth={2} />
       <Line series={2} stroke="rgb(234,95,95)" strokeWidth={2} />
