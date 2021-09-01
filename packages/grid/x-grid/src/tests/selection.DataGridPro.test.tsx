@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { getColumnValues, getRow, getSelectedRowIndexes } from 'test/utils/helperFn';
+import { getColumnValues, getSelectedRowIndexes } from 'test/utils/helperFn';
 import {
   // @ts-expect-error need to migrate helpers to TypeScript
   screen,
@@ -42,7 +42,7 @@ describe('<DataGridPro /> - Selection', () => {
     );
   };
 
-  describe.only('prop: checkboxSelectionVisibleOnly', () => {
+  describe('prop: checkboxSelectionVisibleOnly', () => {
     it('should select all visible of all pages if checkboxSelectionVisibleOnly = false', () => {
       render(
         <TestDataGridSelection
