@@ -49,8 +49,8 @@ export default [
               dest: './data-grid/dist',
             },
             {
-              src: './x-grid/package.json',
-              dest: './x-grid/dist',
+              src: './data-grid/package.json',
+              dest: './data-grid/dist',
               transform: () => {
                 const contents = { ...pkg };
                 contents.main = 'index-cjs.js';
