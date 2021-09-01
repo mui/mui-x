@@ -8,12 +8,12 @@ import {
   GridCellMode,
   GridCellModes,
   GridCellValue,
-  GridOptions,
   GridRowId,
 } from '../../models/index';
 import { useGridApiContext } from '../../hooks/root/useGridApiContext';
 import { composeClasses } from '../../utils/material-ui-utils';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
+import { GridComponentProps } from '../../GridComponentProps';
 
 export interface GridCellProps {
   align: GridAlignment;
@@ -36,7 +36,7 @@ export interface GridCellProps {
 }
 
 type OwnerState = GridCellProps & {
-  classes?: GridOptions['classes'];
+  classes?: GridComponentProps['classes'];
 };
 
 const useUtilityClasses = (ownerState: OwnerState) => {

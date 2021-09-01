@@ -256,7 +256,7 @@ function run(argv: { outputDirectory?: string }) {
     'GridFilterApi',
     'GridCsvExportApi',
     'GridExportCsvOptions',
-    'GridVirtualizationApi',
+    'GridScrollApi',
     'GridEditRowApi',
     'GridEvents',
   ];

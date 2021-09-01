@@ -1,12 +1,7 @@
 import { useDemoData } from '@mui/x-data-grid-generator';
 import * as React from 'react';
 import { action } from '@storybook/addon-actions';
-import {
-  DataGridPro,
-  GridOptionsProp,
-  GridSelectionModel,
-  useGridApiRef,
-} from '@mui/x-data-grid-pro';
+import { DataGridPro, GridSelectionModel, useGridApiRef } from '@mui/x-data-grid-pro';
 import { getData, GridData } from '../data/data-service';
 import { useData } from '../hooks/useData';
 
@@ -42,11 +37,13 @@ export const ApiPreSelectedRows = () => {
 export const EventsMapped = () => {
   const data = useData(200, 200);
 
-  const options: GridOptionsProp = {
-    onSelectionModelChange: (params) => action('onSelectionChange', { depth: 1 })(params),
-  };
-
-  return <DataGridPro rows={data.rows} columns={data.columns} {...options} />;
+  return (
+    <DataGridPro
+      rows={data.rows}
+      columns={data.columns}
+      onSelectionModelChange={(params) => action('onSelectionChange', { depth: 1 })(params)}
+    />
+  );
 };
 
 export const SingleSelect = () => {

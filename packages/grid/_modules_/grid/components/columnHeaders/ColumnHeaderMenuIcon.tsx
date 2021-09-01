@@ -5,7 +5,7 @@ import { GridStateColDef } from '../../models/colDef/gridColDef';
 import { getDataGridUtilityClass } from '../../gridClasses';
 import { composeClasses } from '../../utils/material-ui-utils';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { GridOptions } from '../../models/gridOptions';
+import { GridComponentProps } from '../../GridComponentProps';
 
 export interface ColumnHeaderMenuIconProps {
   column: GridStateColDef;
@@ -16,7 +16,7 @@ export interface ColumnHeaderMenuIconProps {
 }
 
 type OwnerState = ColumnHeaderMenuIconProps & {
-  classes?: GridOptions['classes'];
+  classes?: GridComponentProps['classes'];
 };
 
 const useUtilityClasses = (ownerState: OwnerState) => {
@@ -33,7 +33,6 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 export const ColumnHeaderMenuIcon = React.memo((props: ColumnHeaderMenuIconProps) => {
   const { column, open, columnMenuId, columnMenuButtonId, iconButtonRef } = props;
   const apiRef = useGridApiContext();
-  const ColumnMenuIcon = apiRef!.current.components.ColumnMenuIcon!;
   const rootProps = useGridRootProps();
   const ownerState = { ...props, classes: rootProps.classes };
   const classes = useUtilityClasses(ownerState);
@@ -62,7 +61,7 @@ export const ColumnHeaderMenuIcon = React.memo((props: ColumnHeaderMenuIconProps
         aria-controls={columnMenuId}
         id={columnMenuButtonId}
       >
-        <ColumnMenuIcon fontSize="small" />
+        <rootProps.components.ColumnMenuIcon fontSize="small" />
       </IconButton>
     </div>
   );

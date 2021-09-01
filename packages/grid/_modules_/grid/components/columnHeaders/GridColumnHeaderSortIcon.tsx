@@ -7,7 +7,7 @@ import { useGridApiContext } from '../../hooks/root/useGridApiContext';
 import { getDataGridUtilityClass } from '../../gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { composeClasses } from '../../utils/material-ui-utils';
-import { GridOptions } from '../../models/gridOptions';
+import { GridComponentProps } from '../../GridComponentProps';
 
 export interface GridColumnHeaderSortIconProps {
   direction: GridSortDirection;
@@ -15,7 +15,7 @@ export interface GridColumnHeaderSortIconProps {
 }
 
 type OwnerState = GridColumnHeaderSortIconProps & {
-  classes?: GridOptions['classes'];
+  classes?: GridComponentProps['classes'];
 };
 
 const useUtilityClasses = (ownerState: OwnerState) => {
@@ -30,13 +30,13 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 };
 
 function getIcon(icons: GridIconSlotsComponent, direction: GridSortDirection, className: string) {
-  let Icon = icons!.ColumnUnsortedIcon!;
+  let Icon = icons.ColumnUnsortedIcon;
   if (direction === 'asc') {
-    Icon = icons!.ColumnSortedAscendingIcon!;
+    Icon = icons.ColumnSortedAscendingIcon;
   } else if (direction === 'desc') {
-    Icon = icons!.ColumnSortedDescendingIcon!;
+    Icon = icons.ColumnSortedDescendingIcon;
   }
-  return <Icon fontSize="small" className={className} />;
+  return Icon ? <Icon fontSize="small" className={className} /> : null;
 }
 
 export const GridColumnHeaderSortIcon = React.memo(function GridColumnHeaderSortIcon(
@@ -48,8 +48,8 @@ export const GridColumnHeaderSortIcon = React.memo(function GridColumnHeaderSort
   const ownerState = { ...props, classes: rootProps.classes };
   const classes = useUtilityClasses(ownerState);
 
-  const unsortedIcon = apiRef!.current.components.ColumnUnsortedIcon;
-  if (direction == null && unsortedIcon === null) {
+  const iconElement = getIcon(rootProps.components, direction, classes.icon);
+  if (!iconElement) {
     return null;
   }
 
@@ -60,7 +60,7 @@ export const GridColumnHeaderSortIcon = React.memo(function GridColumnHeaderSort
       title={apiRef.current.getLocaleText('columnHeaderSortIconLabel')}
       size="small"
     >
-      {getIcon(apiRef!.current.components, direction, classes.icon)}
+      {iconElement}
     </IconButton>
   );
 

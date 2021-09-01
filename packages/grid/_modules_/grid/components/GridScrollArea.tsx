@@ -6,7 +6,7 @@ import { useGridApiContext } from '../hooks/root/useGridApiContext';
 import { getDataGridUtilityClass } from '../gridClasses';
 import { composeClasses } from '../utils/material-ui-utils';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
-import { GridOptions } from '../models/gridOptions';
+import { GridComponentProps } from '../GridComponentProps';
 
 const CLIFF = 1;
 const SLOP = 1.5;
@@ -16,7 +16,7 @@ interface ScrollAreaProps {
 }
 
 type OwnerState = ScrollAreaProps & {
-  classes?: GridOptions['classes'];
+  classes?: GridComponentProps['classes'];
 };
 
 const useUtilityClasses = (ownerState: OwnerState) => {

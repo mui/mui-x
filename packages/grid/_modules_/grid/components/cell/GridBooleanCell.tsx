@@ -24,8 +24,9 @@ export const GridBooleanCell = React.memo((props: GridRenderCellParams & SvgIcon
   const rootProps = useGridRootProps();
 
   const Icon = React.useMemo(
-    () => (value ? api.components.BooleanCellTrueIcon! : api.components.BooleanCellFalseIcon!),
-    [api.components.BooleanCellFalseIcon, api.components.BooleanCellTrueIcon, value],
+    () =>
+      value ? rootProps.components.BooleanCellTrueIcon : rootProps.components.BooleanCellFalseIcon,
+    [rootProps.components.BooleanCellFalseIcon, rootProps.components.BooleanCellTrueIcon, value],
   );
 
   return (

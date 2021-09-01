@@ -4,7 +4,6 @@ import clsx from 'clsx';
 import { unstable_useId as useId } from '@material-ui/core/utils';
 import { GridEvents } from '../../constants/eventsConstants';
 import { GridStateColDef, GRID_NUMBER_COLUMN_TYPE } from '../../models/colDef/index';
-import { GridOptions } from '../../models/gridOptions';
 import { GridSortDirection } from '../../models/gridSortModel';
 import { useGridApiContext } from '../../hooks/root/useGridApiContext';
 import { GridColumnHeaderSortIcon } from './GridColumnHeaderSortIcon';
@@ -16,6 +15,7 @@ import { GridColumnHeaderMenu } from '../menu/columnMenu/GridColumnHeaderMenu';
 import { getDataGridUtilityClass } from '../../gridClasses';
 import { composeClasses } from '../../utils/material-ui-utils';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
+import { GridComponentProps } from '../../GridComponentProps';
 
 interface GridColumnHeaderItemProps {
   colIndex: number;
@@ -26,15 +26,14 @@ interface GridColumnHeaderItemProps {
   isResizing: boolean;
   sortDirection: GridSortDirection;
   sortIndex?: number;
-  options: GridOptions;
   filterItemsCounter?: number;
   hasFocus?: boolean;
   tabIndex: 0 | -1;
 }
 
 type OwnerState = GridColumnHeaderItemProps & {
-  showColumnRightBorder: GridOptions['showColumnRightBorder'];
-  classes?: GridOptions['classes'];
+  showColumnRightBorder: GridComponentProps['showColumnRightBorder'];
+  classes?: GridComponentProps['classes'];
 };
 
 const useUtilityClasses = (ownerState: OwnerState) => {
@@ -72,19 +71,16 @@ export function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
     isResizing,
     sortDirection,
     sortIndex,
-    options,
     filterItemsCounter,
     hasFocus,
     tabIndex,
   } = props;
   const apiRef = useGridApiContext();
+  const rootProps = useGridRootProps();
   const headerCellRef = React.useRef<HTMLDivElement>(null);
   const columnMenuId: string = useId();
   const columnMenuButtonId: string = useId();
   const iconButtonRef = React.useRef<HTMLButtonElement>(null);
-  const rootProps = useGridRootProps();
-  const { disableColumnReorder, disableColumnResize, disableColumnMenu, disableColumnFilter } =
-    options;
 
   let headerComponent: React.ReactNode = null;
   if (column.renderHeader) {
@@ -149,7 +145,7 @@ export function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
     };
   }
 
-  const columnMenuIconButton = !disableColumnMenu && !column.disableColumnMenu && (
+  const columnMenuIconButton = !rootProps.disableColumnMenu && !column.disableColumnMenu && (
     <ColumnHeaderMenuIcon
       column={column}
       columnMenuId={columnMenuId}
@@ -161,7 +157,7 @@ export function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
 
   const columnTitleIconButtons = (
     <React.Fragment>
-      {!disableColumnFilter && <ColumnHeaderFilterIcon counter={filterItemsCounter} />}
+      {!rootProps.disableColumnFilter && <ColumnHeaderFilterIcon counter={filterItemsCounter} />}
       {column.sortable && !column.hideSortIcons && (
         <GridColumnHeaderSortIcon direction={sortDirection} index={sortIndex} />
       )}
@@ -206,7 +202,7 @@ export function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
     >
       <div
         className={classes.draggableContainer}
-        draggable={!disableColumnReorder && !column.disableReorder}
+        draggable={!rootProps.disableColumnReorder && !column.disableReorder}
         {...draggableEventHandlers}
       >
         <div className={classes.titleContainer}>
@@ -222,7 +218,7 @@ export function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
         {columnMenuIconButton}
       </div>
       <GridColumnHeaderSeparator
-        resizable={!disableColumnResize && !!column.resizable}
+        resizable={!rootProps.disableColumnResize && !!column.resizable}
         resizing={isResizing}
         height={headerHeight}
         {...resizeEventHandlers}
@@ -233,8 +229,8 @@ export function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
         field={column.field}
         open={columnMenuOpen}
         target={iconButtonRef.current}
-        ContentComponent={apiRef!.current.components.ColumnMenu}
-        contentComponentProps={apiRef!.current.componentsProps?.columnMenu}
+        ContentComponent={rootProps.components.ColumnMenu}
+        contentComponentProps={rootProps.componentsProps?.columnMenu}
       />
     </div>
   );

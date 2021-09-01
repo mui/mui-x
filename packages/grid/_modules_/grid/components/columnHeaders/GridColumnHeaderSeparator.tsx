@@ -1,9 +1,8 @@
 import * as React from 'react';
-import { useGridApiContext } from '../../hooks/root/useGridApiContext';
 import { getDataGridUtilityClass } from '../../gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { composeClasses } from '../../utils/material-ui-utils';
-import { GridOptions } from '../../models/gridOptions';
+import { GridComponentProps } from '../../GridComponentProps';
 
 export interface GridColumnHeaderSeparatorProps extends React.HTMLAttributes<HTMLDivElement> {
   resizable: boolean;
@@ -12,7 +11,7 @@ export interface GridColumnHeaderSeparatorProps extends React.HTMLAttributes<HTM
 }
 
 type OwnerState = GridColumnHeaderSeparatorProps & {
-  classes?: GridOptions['classes'];
+  classes?: GridComponentProps['classes'];
 };
 
 const useUtilityClasses = (ownerState: OwnerState) => {
@@ -34,9 +33,7 @@ export const GridColumnHeaderSeparator = React.memo(function GridColumnHeaderSep
   props: GridColumnHeaderSeparatorProps,
 ) {
   const { resizable, resizing, height, ...other } = props;
-  const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
-  const ColumnResizeIcon = apiRef!.current.components!.ColumnResizeIcon!;
   const ownerState = { ...props, classes: rootProps.classes };
   const classes = useUtilityClasses(ownerState);
 
@@ -53,7 +50,7 @@ export const GridColumnHeaderSeparator = React.memo(function GridColumnHeaderSep
       {...other}
       onClick={stopClick}
     >
-      <ColumnResizeIcon className={classes.icon} />
+      <rootProps.components.ColumnResizeIcon className={classes.icon} />
     </div>
   );
 });

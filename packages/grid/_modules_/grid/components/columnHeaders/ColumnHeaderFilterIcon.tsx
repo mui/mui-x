@@ -8,14 +8,14 @@ import { useGridApiContext } from '../../hooks/root/useGridApiContext';
 import { getDataGridUtilityClass } from '../../gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { composeClasses } from '../../utils/material-ui-utils';
-import { GridOptions } from '../../models/gridOptions';
+import { GridComponentProps } from '../../GridComponentProps';
 
 export interface ColumnHeaderFilterIconProps {
   counter?: number;
 }
 
 type OwnerState = ColumnHeaderFilterIconProps & {
-  classes?: GridOptions['classes'];
+  classes?: GridComponentProps['classes'];
 };
 
 const useUtilityClasses = (ownerState: OwnerState) => {
@@ -35,8 +35,6 @@ export function ColumnHeaderFilterIcon(props: ColumnHeaderFilterIconProps) {
   const rootProps = useGridRootProps();
   const ownerState = { ...props, classes: rootProps.classes };
   const classes = useUtilityClasses(ownerState);
-
-  const FilteredColumnIconElement = apiRef!.current.components.ColumnFilteredIcon!;
 
   const toggleFilter = React.useCallback(
     (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -66,7 +64,7 @@ export function ColumnHeaderFilterIcon(props: ColumnHeaderFilterIconProps) {
       size="small"
       tabIndex={-1}
     >
-      <FilteredColumnIconElement className={classes.icon} fontSize="small" />
+      <rootProps.components.ColumnFilteredIcon className={classes.icon} fontSize="small" />
     </IconButton>
   );
 

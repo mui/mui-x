@@ -11,6 +11,11 @@ import { renderStateSelector } from '../virtualization/renderingStateSelector';
 import { GridViewportRowsChangeParams } from '../../../models/params/gridViewportRowsChangeParams';
 import { GridScrollParams } from '../../../models/params/gridScrollParams';
 
+/**
+ * @requires useGridColumns (state)
+ * @requires useGridContainerProps (state)
+ * @requires useGridVirtualRows (method, event)
+ */
 export const useGridInfiniteLoader = (
   apiRef: GridApiRef,
   props: Pick<

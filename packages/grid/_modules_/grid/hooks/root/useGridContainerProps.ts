@@ -34,11 +34,26 @@ function getScrollbarSize(doc: Document, element: HTMLElement): number {
   return scrollbarSize;
 }
 
+/**
+ * @requires useOptionsProp (state)
+ * @requires useGridDensity (state)
+ * @requires useGridColumns (state)
+ * @requires useGridFilter (state)
+ * @requires useGridPage (state)
+ * @requires useGridPageSize (state)
+ * TODO: Impossible priority - useGridPageSize also needs to be after useGridContainerProps
+ */
 export const useGridContainerProps = (
   apiRef: GridApiRef,
   props: Pick<
     GridComponentProps,
-    'pagination' | 'autoPageSize' | 'pageSize' | 'autoHeight' | 'hideFooter' | 'scrollbarSize'
+    | 'pagination'
+    | 'autoPageSize'
+    | 'pageSize'
+    | 'autoHeight'
+    | 'hideFooter'
+    | 'scrollbarSize'
+    | 'disableVirtualization'
   >,
 ) => {
   const logger = useLogger('useGridContainerProps');
@@ -163,7 +178,7 @@ export const useGridContainerProps = (
       const requiredSize = rowsCount * rowHeight;
       const diff = requiredSize - windowSizesRef.current.height;
       // we activate virtualization when we have more than 2 rows outside the viewport
-      const isVirtualized = diff > rowHeight * 2;
+      const isVirtualized = diff > rowHeight * 2 && !props.disableVirtualization;
 
       if (props.autoPageSize || props.autoHeight || !isVirtualized) {
         const viewportFitHeightSize = Math.floor(viewportSizes.height / rowHeight);
@@ -207,7 +222,7 @@ export const useGridContainerProps = (
       const viewportMaxPages =
         viewportPageSize > 0 ? Math.ceil(rowsCount / viewportPageSize) - 1 : 0;
 
-      // We multiply by 2 for virtualization to work with useGridVirtualRows scroll system
+      // We multiply by 2 for virtualization to work with useGridVirtualization scroll system
       const renderingZonePageSize = viewportPageSize * 2;
       const renderingZoneHeight = renderingZonePageSize * rowHeight;
       const renderingZoneMaxScrollHeight = renderingZoneHeight - viewportSizes.height;
@@ -243,7 +258,15 @@ export const useGridContainerProps = (
       logger.debug('virtualized container props', indexes);
       return indexes;
     },
-    [windowRef, columnsTotalWidth, rowHeight, props.autoPageSize, props.autoHeight, logger],
+    [
+      windowRef,
+      columnsTotalWidth,
+      rowHeight,
+      props.autoPageSize,
+      props.autoHeight,
+      props.disableVirtualization,
+      logger,
+    ],
   );
 
   const updateStateIfChanged = React.useCallback(

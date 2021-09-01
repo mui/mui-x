@@ -9,7 +9,7 @@ import { useGridSelector } from '../hooks/features/core/useGridSelector';
 import { composeClasses } from '../utils/material-ui-utils';
 import { getDataGridUtilityClass } from '../gridClasses';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
-import { GridOptions } from '../models/gridOptions';
+import { GridComponentProps } from '../GridComponentProps';
 
 export interface GridRowProps {
   id: GridRowId;
@@ -21,7 +21,7 @@ export interface GridRowProps {
 type OwnerState = GridRowProps & {
   editable: boolean;
   editing: boolean;
-  classes?: GridOptions['classes'];
+  classes?: GridComponentProps['classes'];
 };
 
 const useUtilityClasses = (ownerState: OwnerState) => {
@@ -38,8 +38,8 @@ export function GridRow(props: GridRowProps) {
   const { selected, id, rowIndex, children } = props;
   const ariaRowIndex = rowIndex + 2; // 1 for the header row and 1 as it's 1 based
   const apiRef = useGridApiContext();
-  const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
   const rootProps = useGridRootProps();
+  const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
 
   const ownerState = {
     ...props,
