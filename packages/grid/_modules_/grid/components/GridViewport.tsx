@@ -44,15 +44,22 @@ export const GridViewport: ViewportType = React.forwardRef<HTMLDivElement, {}>(
     const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
     const editRowsState = useGridSelector(apiRef, gridEditRowsStateSelector);
 
-    const filteredSelection =
-      typeof rootProps.isRowSelectable === 'function'
-        ? selection.filter((id) => rootProps.isRowSelectable!(apiRef.current.getRowParams(id)))
-        : selection;
+    const filteredSelection = React.useMemo(
+      () =>
+        typeof rootProps.isRowSelectable === 'function'
+          ? selection.filter((id) => rootProps.isRowSelectable!(apiRef.current.getRowParams(id)))
+          : selection,
+      [apiRef, rootProps.isRowSelectable, selection],
+    );
 
-    const selectionLookup = filteredSelection.reduce((lookup, rowId) => {
-      lookup[rowId] = rowId;
-      return lookup;
-    }, {});
+    const selectionLookup = React.useMemo(
+      () =>
+        filteredSelection.reduce((lookup, rowId) => {
+          lookup[rowId] = rowId;
+          return lookup;
+        }, {}),
+      [filteredSelection],
+    );
 
     const getRowsElements = () => {
       if (renderState.renderContext == null) {

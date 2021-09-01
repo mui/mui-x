@@ -21,10 +21,13 @@ export const GridHeaderCheckbox = React.forwardRef<HTMLInputElement, GridColumnH
     const selection = useGridSelector(apiRef, gridSelectionStateSelector);
     const totalRows = useGridSelector(apiRef, gridRowCountSelector);
 
-    const filteredSelection =
-      typeof rootProps.isRowSelectable === 'function'
-        ? selection.filter((id) => rootProps.isRowSelectable!(apiRef.current.getRowParams(id)))
-        : selection;
+    const filteredSelection = React.useMemo(
+      () =>
+        typeof rootProps.isRowSelectable === 'function'
+          ? selection.filter((id) => rootProps.isRowSelectable!(apiRef.current.getRowParams(id)))
+          : selection,
+      [apiRef, rootProps.isRowSelectable, selection],
+    );
 
     const totalSelectedRows = filteredSelection.length;
     const isIndeterminate = totalSelectedRows > 0 && totalSelectedRows !== totalRows;
