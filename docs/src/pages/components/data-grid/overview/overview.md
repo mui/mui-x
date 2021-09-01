@@ -4,7 +4,7 @@ title: React Data Grid component
 
 # Data Grid
 
-<p class="description">A fast and extendable data table and data grid for React. It's a feature-rich component available in MIT or Commercial versions.</p>
+<p class="description">A fast and extendable react data table and react data grid. It's a feature-rich component available in MIT or Commercial versions.</p>
 
 The component leverages the power of React and TypeScript, to provide the best UX while manipulating an unlimited set of data. It comes with an intuitive API for real-time updates, accessibility, as well as theming and custom templates, all with blazing fast performance.
 
@@ -20,7 +20,7 @@ The data grid comes with two different licenses:
 
   <img src="/static/x/header-icon.png" style="width: 454px; margin-bottom: 2rem;" alt="">
 
-  You can check the [feature comparison](#feature-comparison) for more details.
+  You can check the [feature comparison](/components/data-grid/getting-started/#feature-comparison) for more details.
   See [Pricing](https://material-ui.com/store/items/material-ui-pro/) for details on purchasing licenses.
 
 ### MIT version
@@ -71,6 +71,7 @@ We provide three options:
 - High performance 🚀
 - [Filtering](/components/data-grid/filtering/) and [multi-filtering](/components/data-grid/filtering/#multi-column-filtering) <span class="pro"></span>
 - [Pagination](/components/data-grid/pagination/)
+- [Row & Cell editing](/components/data-grid/editing/)
 - [Sorting](/components/data-grid/sorting) and [multi-sort](/components/data-grid/sorting/#multi-column-sorting) <span class="pro"></span>
 - [Selection](/components/data-grid/selection/)
 - [Column virtualization](/components/data-grid/virtualization/#column-virtualization) and [rows virtualization](/components/data-grid/virtualization/#row-virtualization) <span class="pro"></span>

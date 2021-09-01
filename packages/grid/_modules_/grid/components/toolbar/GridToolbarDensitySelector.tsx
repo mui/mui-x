@@ -24,38 +24,34 @@ export const GridToolbarDensitySelector = React.forwardRef<HTMLButtonElement, Bu
     const densityMenuId = useId();
     const [anchorEl, setAnchorEl] = React.useState(null);
 
-    const DensityCompactIcon = apiRef!.current.components!.DensityCompactIcon!;
-    const DensityStandardIcon = apiRef!.current.components!.DensityStandardIcon!;
-    const DensityComfortableIcon = apiRef!.current.components!.DensityComfortableIcon!;
-
-    const DensityOptions: Array<GridDensityOption> = [
+    const densityOptions: GridDensityOption[] = [
       {
-        icon: <DensityCompactIcon />,
-        label: apiRef!.current.getLocaleText('toolbarDensityCompact'),
+        icon: <rootProps.components.DensityCompactIcon />,
+        label: apiRef.current.getLocaleText('toolbarDensityCompact'),
         value: GridDensityTypes.Compact,
       },
       {
-        icon: <DensityStandardIcon />,
-        label: apiRef!.current.getLocaleText('toolbarDensityStandard'),
+        icon: <rootProps.components.DensityStandardIcon />,
+        label: apiRef.current.getLocaleText('toolbarDensityStandard'),
         value: GridDensityTypes.Standard,
       },
       {
-        icon: <DensityComfortableIcon />,
-        label: apiRef!.current.getLocaleText('toolbarDensityComfortable'),
+        icon: <rootProps.components.DensityComfortableIcon />,
+        label: apiRef.current.getLocaleText('toolbarDensityComfortable'),
         value: GridDensityTypes.Comfortable,
       },
     ];
 
-    const getSelectedDensityIcon = React.useCallback((): React.ReactElement => {
+    const startIcon = React.useMemo<React.ReactElement>(() => {
       switch (densityValue) {
         case GridDensityTypes.Compact:
-          return <DensityCompactIcon />;
+          return <rootProps.components.DensityCompactIcon />;
         case GridDensityTypes.Comfortable:
-          return <DensityComfortableIcon />;
+          return <rootProps.components.DensityComfortableIcon />;
         default:
-          return <DensityStandardIcon />;
+          return <rootProps.components.DensityStandardIcon />;
       }
-    }, [densityValue, DensityCompactIcon, DensityComfortableIcon, DensityStandardIcon]);
+    }, [densityValue, rootProps]);
 
     const handleDensitySelectorOpen = (event) => {
       setAnchorEl(event.currentTarget);
@@ -63,7 +59,7 @@ export const GridToolbarDensitySelector = React.forwardRef<HTMLButtonElement, Bu
     };
     const handleDensitySelectorClose = () => setAnchorEl(null);
     const handleDensityUpdate = (newDensity: GridDensity) => {
-      apiRef!.current.setDensity(newDensity);
+      apiRef.current.setDensity(newDensity);
       setAnchorEl(null);
     };
 
@@ -81,7 +77,7 @@ export const GridToolbarDensitySelector = React.forwardRef<HTMLButtonElement, Bu
       return null;
     }
 
-    const renderDensityOptions: Array<React.ReactElement> = DensityOptions.map((option, index) => (
+    const densityElements = densityOptions.map<React.ReactElement>((option, index) => (
       <MenuItem
         key={index}
         onClick={() => handleDensityUpdate(option.value)}
@@ -98,8 +94,8 @@ export const GridToolbarDensitySelector = React.forwardRef<HTMLButtonElement, Bu
           ref={ref}
           color="primary"
           size="small"
-          startIcon={getSelectedDensityIcon()}
-          aria-label={apiRef!.current.getLocaleText('toolbarDensityLabel')}
+          startIcon={startIcon}
+          aria-label={apiRef.current.getLocaleText('toolbarDensityLabel')}
           aria-expanded={anchorEl ? 'true' : undefined}
           aria-haspopup="menu"
           aria-labelledby={densityMenuId}
@@ -107,7 +103,7 @@ export const GridToolbarDensitySelector = React.forwardRef<HTMLButtonElement, Bu
           {...other}
           onClick={handleDensitySelectorOpen}
         >
-          {apiRef!.current.getLocaleText('toolbarDensity')}
+          {apiRef.current.getLocaleText('toolbarDensity')}
         </Button>
         <GridMenu
           open={Boolean(anchorEl)}
@@ -122,10 +118,10 @@ export const GridToolbarDensitySelector = React.forwardRef<HTMLButtonElement, Bu
             onKeyDown={handleListKeyDown}
             autoFocusItem={Boolean(anchorEl)}
           >
-            {renderDensityOptions}
+            {densityElements}
           </MenuList>
         </GridMenu>
       </React.Fragment>
     );
   },
-);
+) as (props: ButtonProps) => JSX.Element;

@@ -2,6 +2,7 @@ import * as React from 'react';
 import { SvgIconProps } from '@material-ui/core/SvgIcon';
 import { gridClasses } from '../../gridClasses';
 import { GridRenderCellParams } from '../../models/params/gridCellParams';
+import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
 export const GridBooleanCell = React.memo((props: GridRenderCellParams & SvgIconProps) => {
   const {
@@ -20,9 +21,12 @@ export const GridBooleanCell = React.memo((props: GridRenderCellParams & SvgIcon
     ...other
   } = props;
 
+  const rootProps = useGridRootProps();
+
   const Icon = React.useMemo(
-    () => (value ? api.components.BooleanCellTrueIcon! : api.components.BooleanCellFalseIcon!),
-    [api.components.BooleanCellFalseIcon, api.components.BooleanCellTrueIcon, value],
+    () =>
+      value ? rootProps.components.BooleanCellTrueIcon : rootProps.components.BooleanCellFalseIcon,
+    [rootProps.components.BooleanCellFalseIcon, rootProps.components.BooleanCellTrueIcon, value],
   );
 
   return (

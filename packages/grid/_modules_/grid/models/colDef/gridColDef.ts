@@ -90,7 +90,8 @@ export interface GridColDef {
   align?: GridAlignment;
   /**
    * Function that allows to get a specific data instead of field to render in the cell.
-   * @param params
+   * @param {GridValueGetterParams} params Object containing parameters for the getter.
+   * @returns {GridCellValue} The cell value.
    */
   valueGetter?: (params: GridValueGetterParams) => GridCellValue;
   /**
@@ -112,12 +113,14 @@ export interface GridColDef {
   cellClassName?: GridCellClassNamePropType;
   /**
    * Allows to override the component rendered as cell for this column.
-   * @param params
+   * @param {GridRenderCellParams} params Object containing parameters for the renderer.
+   * @returns {React.ReactNode} The element to be rendered.
    */
   renderCell?: (params: GridRenderCellParams) => React.ReactNode;
   /**
    * Allows to override the component rendered in edit cell mode for this column.
-   * @param params
+   * @param {GridRenderEditCellParams} params Object containing parameters for the renderer.
+   * @returns {React.ReactNode} The element to be rendered.
    */
   renderEditCell?: (params: GridRenderEditCellParams) => React.ReactNode;
   /**
@@ -126,7 +129,8 @@ export interface GridColDef {
   headerClassName?: GridColumnHeaderClassNamePropType;
   /**
    * Allows to render a component in the column header cell.
-   * @param params
+   * @param {GridColumnHeaderParams} params Object containing parameters for the renderer.
+   * @returns {React.ReactNode} The element to be rendered.
    */
   renderHeader?: (params: GridColumnHeaderParams) => React.ReactNode;
   /**

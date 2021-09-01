@@ -9,7 +9,7 @@ title: Data Grid - Components
 ## Overriding components
 
 As part of the customization API, the grid allows you to override internal components with the `components` prop.
-The prop accepts an object of type [`GridSlotsComponent`](/api/data-grid/#slots).
+The prop accepts an object of type [`GridSlotsComponent`](/api/data-grid/data-grid/#slots).
 
 If you wish to pass additional props in a component slot, you can do it using the `componentsProps` prop. This prop is of type `GridSlotsComponentsProps`.
 
@@ -38,7 +38,6 @@ Therefore, the grid exposes a `useGridSlotComponentProps` hook which allows retr
 - `state`: the current grid state.
 - `rows`: the current rows in the grid.
 - `columns`: the current columns in the grid.
-- `options`: the current set of options in the grid.
 - `apiRef`<span class="pro"></span>: the `GridApi` ref that allows manipulating the grid.
 - `rootElement`: the root DOM element.
 
@@ -54,7 +53,7 @@ function CustomRowCounter() {
 
 ## Components
 
-The full list of overridable components can be found on the [`GridSlotsComponent`](/api/data-grid/#slots) API page.
+The full list of overridable components can be found on the [`GridSlotsComponent`](/api/data-grid/data-grid/#slots) API page.
 
 ### Column menu
 

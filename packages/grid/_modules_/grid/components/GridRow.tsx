@@ -8,7 +8,7 @@ import { isFunction } from '../utils/utils';
 import { gridDensityRowHeightSelector } from '../hooks/features/density';
 import { useGridApiContext } from '../hooks/root/useGridApiContext';
 import { useGridSelector } from '../hooks/features/core/useGridSelector';
-import { optionsSelector } from '../hooks/utils/optionsSelector';
+import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 
 export interface GridRowProps {
   id: GridRowId;
@@ -21,8 +21,8 @@ export function GridRow(props: GridRowProps) {
   const { selected, id, rowIndex, children } = props;
   const ariaRowIndex = rowIndex + 2; // 1 for the header row and 1 as it's 1 based
   const apiRef = useGridApiContext();
+  const rootProps = useGridRootProps();
   const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
-  const { classes, getRowClassName, editMode } = useGridSelector(apiRef, optionsSelector);
 
   const publish = React.useCallback(
     (eventName: string) => (event: React.MouseEvent) => {
@@ -41,7 +41,7 @@ export function GridRow(props: GridRowProps) {
         return;
       }
 
-      apiRef!.current.publishEvent(eventName, apiRef?.current.getRowParams(id), event);
+      apiRef.current.publishEvent(eventName, apiRef.current.getRowParams(id), event);
     },
     [apiRef, id],
   );
@@ -64,11 +64,12 @@ export function GridRow(props: GridRowProps) {
   };
 
   const rowClassName =
-    isFunction(getRowClassName) && getRowClassName(apiRef!.current.getRowParams(id));
-  const cssClasses = clsx(rowClassName, classes?.row, {
+    isFunction(rootProps.getRowClassName) &&
+    rootProps.getRowClassName(apiRef.current.getRowParams(id));
+  const cssClasses = clsx(rowClassName, rootProps.classes.row, {
     'Mui-selected': selected,
     [`${GRID_CSS_CLASS_PREFIX}-row--editing`]: apiRef.current.getRowMode(id) === GridRowModes.Edit,
-    [`${GRID_CSS_CLASS_PREFIX}-row--editable`]: editMode === GridEditModes.Row,
+    [`${GRID_CSS_CLASS_PREFIX}-row--editable`]: rootProps.editMode === GridEditModes.Row,
   });
 
   return (

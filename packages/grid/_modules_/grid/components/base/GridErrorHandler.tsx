@@ -17,11 +17,11 @@ export function GridErrorHandler(props) {
     <ErrorBoundary
       hasError={gridState.error != null}
       componentProps={gridState.error}
-      api={apiRef!}
+      api={apiRef}
       logger={logger}
       render={(errorProps) => (
         <GridMainContainer>
-          <apiRef.current.components.ErrorOverlay
+          <rootProps.components.ErrorOverlay
             {...errorProps}
             {...rootProps.componentsProps?.errorOverlay}
           />
