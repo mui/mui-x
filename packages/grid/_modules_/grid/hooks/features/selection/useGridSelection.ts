@@ -193,7 +193,7 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
 
       lastRowToggledByClick.current = params.id;
     },
-    [apiRef, checkboxSelection, disableMultipleSelection, disableSelectionOnClick],
+    [apiRef, checkboxSelection, canHaveMultipleSelection, disableSelectionOnClick],
   );
 
   useGridApiEventHandler(apiRef, GridEvents.rowClick, handleRowClick);
