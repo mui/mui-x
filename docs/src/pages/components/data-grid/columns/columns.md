@@ -260,7 +260,7 @@ The following are the native column types:
 To use most of the column types, you only need to define the `type` property in your column definition.
 However, some types require additional properties to be set to make them work correctly:
 
-- If the column is `type: 'singleSelect'` you also need to set the `valueOptions` property in that column definition.
+- If the column type is `'singleSelect'`, you also need to set the `valueOptions` property in the respective column definition.
 
   ```tsx
   {
@@ -270,15 +270,15 @@ However, some types require additional properties to be set to make them work co
   }
   ```
 
-- If the column is `type: 'actions'` you need to provide a `getActions` function that returns the actions available for each row.
+- If the column type is `'actions'`, you need to provide a `getActions` function that returns the actions available for each row.
 
   ```tsx
   {
     field: 'actions',
     type: 'actions',
     getActions: (params: GridRowParams) => [
-      <GridActionsCellItem icon={...} label="Delete">,
-      <GridActionsCellItem icon={...} label="Print" showInMenu>,
+      <GridActionsCellItem icon={...} onClick={...} label="Delete">,
+      <GridActionsCellItem icon={...} onClick={...} label="Print" showInMenu>,
     ]
   }
   ```

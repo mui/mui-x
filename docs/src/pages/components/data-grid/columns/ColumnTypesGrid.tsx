@@ -89,6 +89,7 @@ export default function ColumnTypesGrid() {
             icon={<SecurityIcon />}
             label="Toggle Admin"
             onClick={toggleAdmin(params.id)}
+            showInMenu
           />,
         ],
       },
