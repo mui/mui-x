@@ -7,7 +7,12 @@ import MenuItem from '@material-ui/core/MenuItem';
 import { isHideMenuKey, isTabKey } from '../../utils/keyboardUtils';
 import { useGridApiContext } from '../../hooks/root/useGridApiContext';
 import { GridMenu } from '../menu/GridMenu';
-import { GridCsvExportOptions, GridExportFormat as ExportTypes } from '../../models/gridExport';
+import {
+  GridCsvExportOptions,
+  GridExportFormat as ExportTypes,
+  GridPrintExportOptions,
+} from '../../models/gridExport';
+import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
 interface GridExportFormat {
   format: ExportTypes;
@@ -22,26 +27,28 @@ type GridExportOption = GridExportFormatOption & {
 
 export interface GridToolbarExportProps extends ButtonProps {
   csvOptions?: GridCsvExportOptions;
+  printOptions?: GridPrintExportOptions;
 }
 
 export const GridToolbarExport = React.forwardRef<HTMLButtonElement, GridToolbarExportProps>(
   function GridToolbarExport(props, ref) {
-    const { csvOptions, onClick, ...other } = props;
+    const { csvOptions, printOptions, onClick, ...other } = props;
     const apiRef = useGridApiContext();
+    const rootProps = useGridRootProps();
     const buttonId = useId();
     const menuId = useId();
     const [anchorEl, setAnchorEl] = React.useState(null);
-    const ExportIcon = apiRef!.current.components!.ExportIcon!;
 
     const exportOptions: Array<GridExportOption> = [
       {
-        label: apiRef!.current.getLocaleText('toolbarExportCSV'),
+        label: apiRef.current.getLocaleText('toolbarExportCSV'),
         format: 'csv',
         formatOptions: csvOptions,
       },
       {
-        label: apiRef!.current.getLocaleText('toolbarExportPrint'),
+        label: apiRef.current.getLocaleText('toolbarExportPrint'),
         format: 'print',
+        formatOptions: printOptions,
       },
     ];
 
@@ -53,10 +60,10 @@ export const GridToolbarExport = React.forwardRef<HTMLButtonElement, GridToolbar
     const handleExport = (option: GridExportOption) => () => {
       switch (option.format) {
         case 'csv':
-          apiRef!.current.exportDataAsCsv(option.formatOptions);
+          apiRef.current.exportDataAsCsv(option.formatOptions);
           break;
         case 'print':
-          apiRef!.current.exportDataAsPrint();
+          apiRef.current.exportDataAsPrint(option.formatOptions);
           break;
         default:
           break;
@@ -80,16 +87,16 @@ export const GridToolbarExport = React.forwardRef<HTMLButtonElement, GridToolbar
           ref={ref}
           color="primary"
           size="small"
-          startIcon={<ExportIcon />}
+          startIcon={<rootProps.components.ExportIcon />}
           aria-expanded={anchorEl ? 'true' : undefined}
-          aria-label={apiRef!.current.getLocaleText('toolbarExportLabel')}
+          aria-label={apiRef.current.getLocaleText('toolbarExportLabel')}
           aria-haspopup="menu"
           aria-labelledby={menuId}
           id={buttonId}
           {...other}
           onClick={handleMenuOpen}
         >
-          {apiRef!.current.getLocaleText('toolbarExport')}
+          {apiRef.current.getLocaleText('toolbarExport')}
         </Button>
         <GridMenu
           open={Boolean(anchorEl)}
@@ -114,4 +121,4 @@ export const GridToolbarExport = React.forwardRef<HTMLButtonElement, GridToolbar
       </React.Fragment>
     );
   },
-);
+) as (props: GridToolbarExportProps) => JSX.Element;

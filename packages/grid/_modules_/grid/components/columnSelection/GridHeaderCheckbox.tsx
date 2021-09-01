@@ -30,12 +30,12 @@ export const GridHeaderCheckbox = React.forwardRef<HTMLInputElement, GridColumnH
       const rowsToBeSelected = rootProps.checkboxSelectionVisibleOnly
         ? gridPaginatedVisibleSortedGridRowIdsSelector(apiRef.current.state)
         : visibleSortedGridRowIdsSelector(apiRef.current.state);
-      apiRef!.current.selectRows(rowsToBeSelected, checked, !event.target.indeterminate);
+      apiRef.current.selectRows(rowsToBeSelected, checked, !event.target.indeterminate);
     };
 
     const tabIndex = tabIndexState !== null && tabIndexState.field === props.field ? 0 : -1;
     React.useLayoutEffect(() => {
-      const element = apiRef!.current.getColumnHeaderElement(props.field);
+      const element = apiRef.current.getColumnHeaderElement(props.field);
       if (tabIndex === 0 && element) {
         element!.tabIndex = -1;
       }
@@ -47,7 +47,7 @@ export const GridHeaderCheckbox = React.forwardRef<HTMLInputElement, GridColumnH
           event.stopPropagation();
         }
         if (isNavigationKey(event.key) && !event.shiftKey) {
-          apiRef!.current.publishEvent(GridEvents.columnHeaderNavigationKeyDown, props, event);
+          apiRef.current.publishEvent(GridEvents.columnHeaderNavigationKeyDown, props, event);
         }
       },
       [apiRef, props],
@@ -58,13 +58,11 @@ export const GridHeaderCheckbox = React.forwardRef<HTMLInputElement, GridColumnH
     }, []);
 
     React.useEffect(() => {
-      return apiRef?.current.subscribeEvent(GridEvents.selectionChange, handleSelectionChange);
+      return apiRef.current.subscribeEvent(GridEvents.selectionChange, handleSelectionChange);
     }, [apiRef, handleSelectionChange]);
 
-    const CheckboxComponent = apiRef?.current.components.Checkbox!;
-
     return (
-      <CheckboxComponent
+      <rootProps.components.Checkbox
         ref={ref}
         indeterminate={isIndeterminate}
         checked={isChecked}
@@ -74,7 +72,7 @@ export const GridHeaderCheckbox = React.forwardRef<HTMLInputElement, GridColumnH
         inputProps={{ 'aria-label': 'Select All Rows checkbox' }}
         tabIndex={tabIndex}
         onKeyDown={handleKeyDown}
-        {...apiRef?.current.componentsProps?.checkbox}
+        {...rootProps.componentsProps?.checkbox}
       />
     );
   },

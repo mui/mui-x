@@ -123,6 +123,10 @@ const upsertColumnsState = (columnUpdates: GridColDef[], prevColumnsState?: Grid
   return newState;
 };
 
+/**
+ * @requires useGridParamsApi (method)
+ * TODO: Impossible priority - useGridParamsApi also needs to be after useGridColumns
+ */
 export function useGridColumns(
   apiRef: GridApiRef,
   props: Pick<
@@ -245,6 +249,10 @@ export function useGridColumns(
 
       logger.debug(`Moving column ${field} to index ${targetIndexPosition}`);
 
+      const updatedColumns = [...gridState.columns.all];
+      updatedColumns.splice(targetIndexPosition, 0, updatedColumns.splice(oldIndexPosition, 1)[0]);
+      setGridColumnsState({ ...gridState.columns, all: updatedColumns });
+
       const params: GridColumnOrderChangeParams = {
         field,
         element: apiRef.current.getColumnHeaderElement(field),
@@ -253,10 +261,6 @@ export function useGridColumns(
         oldIndex: oldIndexPosition,
       };
       apiRef.current.publishEvent(GridEvents.columnOrderChange, params);
-
-      const updatedColumns = [...gridState.columns.all];
-      updatedColumns.splice(targetIndexPosition, 0, updatedColumns.splice(oldIndexPosition, 1)[0]);
-      setGridColumnsState({ ...gridState.columns, all: updatedColumns });
     },
     [apiRef, gridState.columns, logger, setGridColumnsState],
   );
@@ -312,6 +316,13 @@ export function useGridColumns(
     logger.debug(
       `GridColumns gridState.viewportSizes.width, changed ${gridState.viewportSizes.width}`,
     );
+
+    // This hook is meant to update the column's width when the viewport changes
+    // We can skip the whole block if the width is missing
+    if (gridState.viewportSizes.width === 0) {
+      return;
+    }
+
     // Avoid dependency on gridState as I only want to update cols when viewport size changed.
     setColumnsState(apiRef.current.state.columns);
   }, [apiRef, setColumnsState, gridState.viewportSizes.width, logger]);

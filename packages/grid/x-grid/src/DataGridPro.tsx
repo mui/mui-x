@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { LicenseInfo } from '@mui/x-license-pro';
 import { ponyfillGlobal } from '@material-ui/utils';
 import {
-  DEFAULT_GRID_PROPS_FROM_OPTIONS,
   GridBody,
   GridErrorHandler,
   GridFooterPlaceholder,
@@ -51,9 +50,6 @@ const DataGridProRaw = React.forwardRef<HTMLDivElement, DataGridProProps>(functi
     </GridContextProvider>
   );
 });
-
-// TODO remove defaultProps, API is going away in React, soon or later.
-DataGridProRaw.defaultProps = DEFAULT_GRID_PROPS_FROM_OPTIONS;
 
 export const DataGridPro = React.memo(DataGridProRaw);
 

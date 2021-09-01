@@ -18,8 +18,8 @@ export function useGridScrollFn(
       if (renderingZoneElementRef && renderingZoneElementRef.current) {
         logger.debug(`Moving ${renderingZoneElementRef.current.className} to: ${v.left}-${v.top}`);
         // Force the creation of a layer, avoid paint when changing the transform value.
-        renderingZoneElementRef.current!.style.transform = `translate3d(-${v.left}px, -${v.top}px, 0)`;
-        columnHeadersElementRef.current!.style.transform = `translate3d(-${v.left}px, 0, 0)`;
+        renderingZoneElementRef.current!.style.transform = `translate3d(${-v.left}px, ${-v.top}px, 0px)`;
+        columnHeadersElementRef.current!.style.transform = `translate3d(${-v.left}px, 0px, 0px)`;
         previousValue.current = v;
       }
     },
