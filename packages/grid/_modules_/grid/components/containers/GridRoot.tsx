@@ -9,26 +9,9 @@ import { useGridSelector } from '../../hooks/features/core/useGridSelector';
 import { useGridState } from '../../hooks/features/core/useGridState';
 import { useGridApiContext } from '../../hooks/root/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { getDataGridUtilityClass } from '../../gridClasses';
-import { composeClasses } from '../../utils/material-ui-utils';
-import { GridComponentProps } from '../../GridComponentProps';
+import { gridClasses } from '../../gridClasses';
 
 export type GridRootProps = React.HTMLAttributes<HTMLDivElement>;
-
-type OwnerState = GridRootProps & {
-  classes?: GridComponentProps['classes'];
-  autoHeight?: GridComponentProps['autoHeight'];
-};
-
-const useUtilityClasses = (ownerState: OwnerState) => {
-  const { autoHeight, classes } = ownerState;
-
-  const slots = {
-    root: ['root', autoHeight && 'autoHeight'],
-  };
-
-  return composeClasses(slots, getDataGridUtilityClass, classes);
-};
 
 export const GridRoot = React.forwardRef<HTMLDivElement, GridRootProps>(function GridRoot(
   props,
@@ -43,16 +26,21 @@ export const GridRoot = React.forwardRef<HTMLDivElement, GridRootProps>(function
   const rootContainerRef: GridRootContainerRef = React.useRef<HTMLDivElement>(null);
   const handleRef = useForkRef(rootContainerRef, ref);
 
-  const ownerState = { ...props, autoHeight: rootProps.autoHeight, classes: rootProps.classes };
-  const classes = useUtilityClasses(ownerState);
-
   apiRef.current.rootElementRef = rootContainerRef;
 
   return (
     <NoSsr>
       <div
         ref={handleRef}
-        className={clsx(rootProps.className, classNameProp, stylesClasses.root, classes.root)}
+        className={clsx(
+          stylesClasses.root,
+          rootProps.classes?.root,
+          rootProps.className,
+          classNameProp,
+          {
+            [gridClasses.autoHeight]: rootProps.autoHeight,
+          },
+        )}
         role="grid"
         aria-colcount={visibleColumnsLength}
         aria-rowcount={gridState.rows.totalRowCount}
