@@ -4,6 +4,7 @@ import sourceMaps from 'rollup-plugin-sourcemaps';
 import { terser } from 'rollup-plugin-terser';
 import commonjs from 'rollup-plugin-commonjs';
 import dts from 'rollup-plugin-dts';
+import copy from 'rollup-plugin-copy';
 import pkg from './package.json';
 
 // dev build if watching, prod build if not
@@ -36,6 +37,26 @@ export default [
       commonjs(),
       !production && sourceMaps(),
       production && terser(),
+      production &&
+        copy({
+          targets: [
+            {
+              src: ['./README.md', './LICENSE.md'],
+              dest: './dist',
+            },
+            {
+              src: './package.json',
+              dest: './dist',
+              transform: () => {
+                const contents = { ...pkg };
+                contents.main = 'cjs/index.js';
+                contents.module = 'esm/index.js';
+                contents.types = 'x-license.d.ts';
+                return JSON.stringify(contents, null, 2);
+              },
+            },
+          ],
+        }),
     ],
   },
   {

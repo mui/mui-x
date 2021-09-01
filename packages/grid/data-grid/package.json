@@ -6,9 +6,6 @@
   "main": "dist/index-cjs.js",
   "module": "dist/index-esm.js",
   "types": "dist/data-grid.d.ts",
-  "files": [
-    "dist/*"
-  ],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/mui-org/material-ui-x/issues"

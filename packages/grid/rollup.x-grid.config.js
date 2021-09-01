@@ -6,6 +6,7 @@ import sourceMaps from 'rollup-plugin-sourcemaps';
 import { terser } from 'rollup-plugin-terser';
 import dts from 'rollup-plugin-dts';
 import command from 'rollup-plugin-command';
+import copy from 'rollup-plugin-copy';
 import pkg from './x-grid/package.json';
 
 // dev build if watching, prod build if not
@@ -45,6 +46,30 @@ export default [
     plugins: [
       dts(),
       !production && sourceMaps(),
+      production &&
+        copy({
+          targets: [
+            {
+              src: ['./x-grid/README.md', './x-grid/LICENSE'],
+              dest: './x-grid/dist',
+            },
+            {
+              src: './x-grid/package.json',
+              dest: './x-grid/dist',
+              transform: () => {
+                const contents = { ...pkg };
+                contents.main = 'index-cjs.js';
+                contents.module = 'index-esm.js';
+                contents.types = 'x-grid.d.ts';
+                return JSON.stringify(contents, null, 2);
+              },
+            },
+            {
+              src: './x-grid/dist/x-grid/src/themeAugmentation',
+              dest: './x-grid/dist',
+            },
+          ],
+        }),
       production &&
         command(
           [

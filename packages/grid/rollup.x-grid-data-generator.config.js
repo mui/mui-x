@@ -5,6 +5,7 @@ import { terser } from 'rollup-plugin-terser';
 import commonjs from 'rollup-plugin-commonjs';
 import dts from 'rollup-plugin-dts';
 import command from 'rollup-plugin-command';
+import copy from 'rollup-plugin-copy';
 import pkg from './x-grid-data-generator/package.json';
 
 // dev build if watching, prod build if not
@@ -46,12 +47,29 @@ export default [
       dts(),
       !production && sourceMaps(),
       production &&
+        copy({
+          targets: [
+            {
+              src: [
+                './x-grid-data-generator/package.json',
+                './x-grid-data-generator/README.md',
+                './x-grid-data-generator/LICENSE',
+              ],
+              dest: './x-grid-data-generator/dist',
+            },
+          ],
+        }),
+      production &&
         command(
           [
-            `rm -rf ./x-grid-data-generator/dist/data-grid/`,
-            `rm -rf ./x-grid-data-generator/dist/_modules_ `,
-            `rm -rf ./x-grid-data-generator/dist/x-grid`,
-            `rm -rf ./x-grid-data-generator/dist/x-grid-data-generator`,
+            `rm -rf ./x-grid-data-generator/dist/cjs/data-grid/`,
+            `rm -rf ./x-grid-data-generator/dist/cjs/_modules_ `,
+            `rm -rf ./x-grid-data-generator/dist/cjs/x-grid`,
+            `rm -rf ./x-grid-data-generator/dist/cjs/x-grid-data-generator`,
+            `rm -rf ./x-grid-data-generator/dist/esm/data-grid/`,
+            `rm -rf ./x-grid-data-generator/dist/esm/_modules_ `,
+            `rm -rf ./x-grid-data-generator/dist/esm/x-grid`,
+            `rm -rf ./x-grid-data-generator/dist/esm/x-grid-data-generator`,
           ],
           {
             exitOnFail: true,

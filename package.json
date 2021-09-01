@@ -46,8 +46,8 @@
     "build:codesandbox": "yarn release:build",
     "release:version": "lerna version --exact --no-changelog --no-push --no-git-tag-version",
     "release:build": "cd packages/x-license && yarn build && cd ../grid/x-grid && yarn build && cd ../data-grid && yarn build && cd ../x-grid-data-generator && yarn build",
-    "release:publish": "lerna publish from-package --dist-tag latest",
-    "release:publish:dry-run": "lerna publish from-package --dist-tag latest --registry=\"http://localhost:4873/\""
+    "release:publish": "lerna publish from-package --dist-tag next --contents dist",
+    "release:publish:dry-run": "lerna publish from-package --dist-tag next --contents dist --registry=\"http://localhost:4873/\""
   },
   "devDependencies": {
     "@babel/core": "^7.15.0",
@@ -120,6 +120,7 @@
     "rollup-plugin-cleaner": "^1.0.0",
     "rollup-plugin-command": "^1.1.3",
     "rollup-plugin-commonjs": "^10.1.0",
+    "rollup-plugin-copy": "^3.4.0",
     "rollup-plugin-dts": "^3.0.2",
     "rollup-plugin-sourcemaps": "^0.6.3",
     "rollup-plugin-terser": "^7.0.2",
