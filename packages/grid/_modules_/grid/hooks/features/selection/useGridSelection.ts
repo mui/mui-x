@@ -7,7 +7,6 @@ import { GridRowParams } from '../../../models/params/gridRowParams';
 import { GridRowId } from '../../../models/gridRows';
 import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
-import { optionsSelector } from '../../utils/optionsSelector';
 import { useLogger } from '../../utils/useLogger';
 import { useGridSelector } from '../core/useGridSelector';
 import { useGridState } from '../core/useGridState';
@@ -19,10 +18,14 @@ import {
 } from './gridSelectionSelector';
 import { sortedGridRowsSelector } from '../sorting';
 
+/**
+ * @requires useGridRows (state, method)
+ * @requires useGridParamsApi (method)
+ * @requires useGridControlState (method)
+ */
 export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps): void => {
   const logger = useLogger('useGridSelection');
   const [, setGridState, forceUpdate] = useGridState(apiRef);
-  const options = useGridSelector(apiRef, optionsSelector);
   const rowsLookup = useGridSelector(apiRef, gridRowsLookupSelector);
 
   const lastRowToggledByClick = React.useRef<GridRowId | null>(null);
@@ -40,7 +43,7 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
   }, [props.selectionModel]);
 
   const { checkboxSelection, disableMultipleSelection, disableSelectionOnClick, isRowSelectable } =
-    options;
+    props;
 
   const canHaveMultipleSelection = !disableMultipleSelection || checkboxSelection;
 
@@ -157,9 +160,10 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
       const currentModel = apiRef.current.state.selection;
       if (currentModel !== model) {
         setGridState((state) => ({ ...state, selection: model }));
+        forceUpdate();
       }
     },
-    [setGridState, apiRef],
+    [setGridState, apiRef, forceUpdate],
   );
 
   const isRowSelected = React.useCallback<GridSelectionApi['isRowSelected']>(
@@ -260,6 +264,7 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
       const newSelectionState = state.selection.filter(
         (id) => !isRowSelectable || isRowSelectable(apiRef.current.getRowParams(id)),
       );
+
 
       if (newSelectionState.length < state.selection.length) {
         return { ...state, selection: newSelectionState };

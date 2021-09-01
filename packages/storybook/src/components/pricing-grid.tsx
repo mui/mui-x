@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { fromEvent, Subscription } from 'rxjs';
 import { takeUntil, tap } from 'rxjs/operators';
-import { DataGridPro, GridColDef, GridOptionsProp, useGridApiRef } from '@mui/x-data-grid-pro';
+import { DataGridPro, DataGridProProps, GridColDef, useGridApiRef } from '@mui/x-data-grid-pro';
 import {
   PricingModel,
   subscribeCurrencyPair,
@@ -9,10 +9,9 @@ import {
 } from '../data/streaming/pricing-service';
 import { currencyPairs } from '../data/currency-pairs';
 
-export interface PricingGridProps {
+export interface PricingGridProps extends Omit<DataGridProProps, 'columns' | 'rows' | 'getRowId'> {
   min?: number;
   max?: number;
-  options?: GridOptionsProp;
 }
 export const PricingGrid = (props: PricingGridProps) => {
   const { min, max } = props;

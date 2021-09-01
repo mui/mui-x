@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { MuiEvent } from '../gridOptions';
+import { MuiEvent } from '../muiEvent';
 import {
   GridEventEmitter,
   GridSubscribeEventOptions,
@@ -63,7 +63,8 @@ export interface GridCoreApi extends GridEventEmitter {
   /**
    * Emits an event.
    * @param {string} name The name of the event.
-   * @param {...*} args Arguments to be passed to the handlers.
+   * @param {any} params Arguments to be passed to the handlers.
+   * @param {MuiEvent<React.SyntheticEvent | DocumentEventMap[keyof DocumentEventMap]>} event The event object to pass forward.
    */
   publishEvent: (
     name: string,

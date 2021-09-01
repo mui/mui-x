@@ -29,6 +29,11 @@ const applyValidPage = (paginationState: GridPaginationState): GridPaginationSta
   };
 };
 
+/**
+ * @requires useGridControlState (method)
+ * @requires useGridPageSize (state, event)
+ * @requires useGridFilter (state)
+ */
 export const useGridPage = (
   apiRef: GridApiRef,
   props: Pick<GridComponentProps, 'page' | 'onPageChange' | 'rowCount'>,

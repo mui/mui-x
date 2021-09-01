@@ -12,6 +12,13 @@ import { isEnterKey, isNavigationKey, isSpaceKey } from '../../../utils/keyboard
 import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
 import { GridCellModes } from '../../../models/gridEditRowModel';
 
+/**
+ * @requires useGridSelection (method)
+ * @requires useGridRows (method)
+ * @requires useGridFocus (state)
+ * @requires useGridParamsApi (method)
+ * @requires useGridColumnMenu (method)
+ */
 export const useGridKeyboard = (apiRef: GridApiRef): void => {
   const expandSelection = React.useCallback(
     (params: GridCellParams, event: React.KeyboardEvent) => {

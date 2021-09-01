@@ -2,6 +2,9 @@ import { GridApiRef } from '../../models/api/gridApiRef';
 import { useGridState } from '../features/core/useGridState';
 import { useLogger } from './useLogger';
 
+/**
+ * @requires useGridVirtualRows (state)
+ */
 export function useRenderInfoLog(apiRef: GridApiRef) {
   const [gridState] = useGridState(apiRef);
   const logger = useLogger('useRenderInfoLog');
