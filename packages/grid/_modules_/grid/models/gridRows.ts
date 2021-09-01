@@ -27,8 +27,8 @@ export type GridRowIdGetter = (row: GridRowData) => GridRowId;
 /**
  * An helper function to check if the id provided is valid.
  *
- * @param id Id as [[GridRowId]].
- * @param row Row as [[GridRowData]].
+ * @param {GridRowId} id Id as [[GridRowId]].
+ * @param {GridRowModel | Partial<GridRowModel>} row Row as [[GridRowData]].
  * @returns a boolean
  */
 export function checkGridRowIdIsValid(

@@ -52,8 +52,9 @@ export interface GridCellParams<
   tabIndex: 0 | -1;
   /**
    * Get the cell value of a row and field.
-   * @param id
-   * @param field
+   * @param {GridRowId} id The row id.
+   * @param {string} field The field.
+   * @returns {GridCellValue} The cell value.
    */
   getValue: (id: GridRowId, field: string) => T;
 }

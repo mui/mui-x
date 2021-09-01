@@ -11,8 +11,8 @@ export * from './rows';
 export * from './selection';
 export * from './sorting';
 export * from './virtualization';
+export * from './scroll';
 
 export * from './useGridApiRef';
 export * from './columnResize';
-export * from './useGridComponents';
 export * from './useGridSlotComponentProps';

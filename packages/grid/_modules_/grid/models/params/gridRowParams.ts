@@ -20,8 +20,9 @@ export interface GridRowParams<RowDataType extends GridRowDefaultData = GridRowD
   columns: GridColumns;
   /**
    * Get the cell value of a row and field.
-   * @param id
-   * @param field
+   * @param {GridRowId} id The row id.
+   * @param {string} field The field.
+   * @returns {GridCellValue} The cell value.
    */
   getValue: (id: GridRowId, field: string) => GridCellValue;
 }
