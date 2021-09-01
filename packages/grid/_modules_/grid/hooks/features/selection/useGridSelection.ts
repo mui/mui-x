@@ -244,7 +244,7 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
     }
 
     apiRef.current.setSelectionModel(propSelectionModel);
-  }, [apiRef, propSelectionModel, setGridState]);
+  }, [apiRef, propSelectionModel]);
 
   React.useEffect(() => {
     // isRowSelectable changed
