@@ -95,6 +95,24 @@ describe('<DataGridPro /> - Selection', () => {
     });
   });
 
+  describe('apiRef: isRowSelected', () => {
+    it('should check if the rows selected by clicking on the rows are selected', () => {
+      render(<TestDataGridSelection />);
+
+      fireEvent.click(getRow(1));
+
+      expect(apiRef.current.isRowSelected(0)).to.equal(false);
+      expect(apiRef.current.isRowSelected(1)).to.equal(true);
+    });
+
+    it('should check if the rows selected with the selectionModel prop are selected', () => {
+      render(<TestDataGridSelection selectionModel={[1]} />);
+
+      expect(apiRef.current.isRowSelected(0)).to.equal(false);
+      expect(apiRef.current.isRowSelected(1)).to.equal(true);
+    });
+  });
+
   describe('apiRef: selectRow', () => {
     it('should call onSelectionModelChange with the ids selected', () => {
       const handleSelectionModelChange = spy();
@@ -130,12 +148,16 @@ describe('<DataGridPro /> - Selection', () => {
     it('should call onSelectionModelChange with the ids selected', () => {
       const handleSelectionModelChange = spy();
       render(<TestDataGridSelection onSelectionModelChange={handleSelectionModelChange} />);
+
       apiRef.current.selectRows([1, 2]);
       expect(handleSelectionModelChange.lastCall.args[0]).to.deep.equal([1, 2]);
+
       apiRef.current.selectRows([3]);
       expect(handleSelectionModelChange.lastCall.args[0]).to.deep.equal([1, 2, 3]);
+
       apiRef.current.selectRows([1, 2], false);
       expect(handleSelectionModelChange.lastCall.args[0]).to.deep.equal([3]);
+
       // Deselect others
       apiRef.current.selectRows([4, 5], true, true);
       expect(handleSelectionModelChange.lastCall.args[0]).to.deep.equal([4, 5]);
@@ -151,6 +173,69 @@ describe('<DataGridPro /> - Selection', () => {
       );
       apiRef.current.selectRows([0, 1, 2]);
       expect(handleSelectionModelChange.lastCall.args[0]).to.deep.equal([1, 2]);
+    });
+
+    it('should not select a range of several elements when disableMultipleSelection = true', () => {
+      render(<TestDataGridSelection disableMultipleSelection />);
+
+      apiRef.current.selectRows([0, 1, 2], true);
+      expect(getSelectedRowIndexes()).to.deep.equal([]);
+    });
+  });
+
+  describe('apiRef: selectRowRange', () => {
+    it('should select all the rows in the range', () => {
+      render(<TestDataGridSelection />);
+
+      apiRef.current.selectRowRange({ startId: 1, endId: 3 }, true);
+      expect(getSelectedRowIndexes()).to.deep.equal([1, 2, 3]);
+    });
+
+    it('should unselect all the rows in the range', () => {
+      render(<TestDataGridSelection />);
+
+      apiRef.current.setSelectionModel([2, 3]);
+      expect(getSelectedRowIndexes()).to.deep.equal([2, 3]);
+      apiRef.current.selectRowRange({ startId: 0, endId: 3 }, false);
+      expect(getSelectedRowIndexes()).to.deep.equal([]);
+    });
+
+    it('should not unselect the selected elements in the range to be selected', () => {
+      render(<TestDataGridSelection />);
+
+      apiRef.current.setSelectionModel([2]);
+      apiRef.current.selectRowRange({ startId: 1, endId: 3 }, true);
+      expect(getSelectedRowIndexes()).to.deep.equal([1, 2, 3]);
+    });
+
+    it('should not reset the other selections when resetSelection = false', () => {
+      render(<TestDataGridSelection />);
+
+      apiRef.current.setSelectionModel([0]);
+      apiRef.current.selectRowRange({ startId: 2, endId: 3 }, true, false);
+      expect(getSelectedRowIndexes()).to.deep.equal([0, 2, 3]);
+    });
+
+    it('should reset the other selections when resetSelection = true', () => {
+      render(<TestDataGridSelection />);
+
+      apiRef.current.setSelectionModel([0]);
+      apiRef.current.selectRowRange({ startId: 2, endId: 3 }, true, true);
+      expect(getSelectedRowIndexes()).to.deep.equal([2, 3]);
+    });
+
+    it('should not select unselectable rows inside the range', () => {
+      render(<TestDataGridSelection isRowSelectable={(params) => Number(params.id) % 2 === 1} />);
+
+      apiRef.current.selectRowRange({ startId: 1, endId: 3 }, true);
+      expect(getSelectedRowIndexes()).to.deep.equal([1, 3]);
+    });
+
+    it('should not select a range of several elements when disableMultipleSelection = true', () => {
+      render(<TestDataGridSelection disableMultipleSelection />);
+
+      apiRef.current.selectRowRange({ startId: 1, endId: 3 }, true);
+      expect(getSelectedRowIndexes()).to.deep.equal([]);
     });
   });
 

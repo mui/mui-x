@@ -58,6 +58,14 @@ describe('<DataGrid /> - Selection', () => {
         expect(getSelectedRowIndexes()).to.deep.equal([]);
       });
     });
+
+    it('should not select a range with shift pressed', () => {
+      render(<TestDataGridSelection />);
+      fireEvent.click(getCell(0, 0));
+      expect(getSelectedRowIndexes()).to.deep.equal([0]);
+      fireEvent.click(getCell(2, 0), { shiftKey: true });
+      expect(getSelectedRowIndexes()).to.deep.equal([2]);
+    });
   });
 
   describe('prop: checkboxSelection = true (multi selection)', () => {
@@ -98,6 +106,14 @@ describe('<DataGrid /> - Selection', () => {
       );
       expect(getRow(0).querySelector('input')).to.have.property('disabled', false);
       expect(getRow(1).querySelector('input')).to.have.property('disabled', true);
+    });
+
+    it('should select a range with shift pressed', () => {
+      render(<TestDataGridSelection checkboxSelection />);
+      fireEvent.click(getCell(0, 0));
+      expect(getSelectedRowIndexes()).to.deep.equal([0]);
+      fireEvent.click(getCell(2, 0), { shiftKey: true });
+      expect(getSelectedRowIndexes()).to.deep.equal([0, 1, 2]);
     });
   });
 

@@ -168,7 +168,7 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
 
       const hasCtrlKey = event.metaKey || event.ctrlKey;
 
-      if (!disableMultipleSelection && event.shiftKey) {
+      if (canHaveMultipleSelection && event.shiftKey) {
         apiRef.current.selectRowRange(
           {
             startId: lastRowToggledByClick.current ?? params.id,
@@ -179,7 +179,7 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
 
         event.stopPropagation();
       } else {
-        const resetSelection = (disableMultipleSelection || !hasCtrlKey) && !checkboxSelection;
+        const resetSelection = !hasCtrlKey || !canHaveMultipleSelection;
         if (resetSelection) {
           apiRef.current.selectRow(
             params.id,
