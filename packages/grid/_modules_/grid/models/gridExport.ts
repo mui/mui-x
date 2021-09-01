@@ -68,7 +68,7 @@ export interface GridPrintExportOptions {
   /**
    * One or more classes passed to the print window.
    */
-  bodyClass?: boolean;
+  bodyClass?: string;
   /**
    * Provide Print specific styles to the print window.
    */

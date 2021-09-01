@@ -11,54 +11,55 @@ import { GridComponentProps } from '../../../GridComponentProps';
 import { GridPrintExportOptions } from '../../../models/gridExport';
 import { allGridColumnsSelector } from '../columns/gridColumnsSelector';
 
+type PrintWindowOnLoad = (
+  printWindow: HTMLIFrameElement,
+  options?: Pick<
+    GridPrintExportOptions,
+    'copyStyles' | 'bodyClass' | 'pageStyle' | 'hideToolbar' | 'hideFooter'
+  >,
+) => void;
+
 export const useGridPrintExport = (
   apiRef: GridApiRef,
   props: Pick<GridComponentProps, 'rowHeight'>,
 ): void => {
   const logger = useLogger('useGridPrintExport');
+  const [, setGridState, forceUpdate] = useGridState(apiRef);
   const visibleSortedRows = useGridSelector(apiRef, visibleSortedGridRowsSelector);
   const columns = useGridSelector(apiRef, allGridColumnsSelector);
-  const [, setGridState, forceUpdate] = useGridState(apiRef);
-  const gridCacheState = React.useRef<any>(null);
   const doc = React.useRef<Document | null>(null);
-  const defaultHiddenColumns = React.useRef<string[]>([]);
+  const previousGridState = React.useRef<any>(null);
+  const previousHiddenColumns = React.useRef<string[]>([]);
 
   React.useEffect(() => {
     doc.current = ownerDocument(apiRef!.current.rootElementRef!.current as HTMLElement);
   }, [apiRef]);
 
   const prepGridForPrint = React.useCallback(
-    (fields = [], allColumns): void => {
-      const hiddenColumns: string[] = [];
-
-      if (fields.lenght) {
+    (fields?: string[], allColumns?: boolean): void => {
+      // Show only wanted columns
+      if (fields && fields.length) {
         apiRef!.current.updateColumns(
           columns.map((column) => {
             if (!column.hide) {
-              hiddenColumns.push(column.field);
+              previousHiddenColumns.current.push(column.field);
             }
 
+            // Show all columns
             if (allColumns) {
               column.hide = true;
               return column;
             }
 
-            if (!fields.includes(column.field)) {
-              column.hide = true;
-            } else {
-              column.hide = false;
-            }
+            column.hide = !fields.includes(column.field);
 
             return column;
           }),
         );
       }
 
-      defaultHiddenColumns.current = hiddenColumns;
-
       setGridState((state) => {
-        gridCacheState.current = state;
-
+        previousGridState.current = state;
         return {
           ...state,
           containerSizes: {
@@ -80,20 +81,26 @@ export const useGridPrintExport = (
     [columns, visibleSortedRows, props.rowHeight, apiRef, setGridState, forceUpdate],
   );
 
-  const buildPrintWindow = React.useCallback((title): HTMLIFrameElement => {
+  const buildPrintWindow = React.useCallback((title?: string): HTMLIFrameElement => {
     const iframeEl = document.createElement('iframe');
+
     iframeEl.style.position = 'absolute';
-    iframeEl.style.top = '-100px';
-    iframeEl.style.left = '-100px';
     iframeEl.style.width = '0px';
     iframeEl.style.height = '0px';
-    iframeEl.title = title;
+    iframeEl.title = title || document.title;
 
     return iframeEl;
   }, []);
 
-  const handlePrintWindowOnLoad = React.useCallback(
-    (printWindow, copyStyles, bodyClass, pageStyle, hideToolbar, hideFooter): void => {
+  const handlePrintWindowLoad: PrintWindowOnLoad = React.useCallback(
+    (printWindow, options): void => {
+      const normalizeOptions = {
+        copyStyles: true,
+        hideToolbar: false,
+        hideFooter: false,
+        ...options,
+      };
+
       // Some agents, such as IE11 and Enzyme (as of 2 Jun 2020) continuously call the
       // `onload` callback. This ensures that it is only called once.
       printWindow.onload = null;
@@ -106,39 +113,42 @@ export const useGridPrintExport = (
 
       const gridRootElement = apiRef!.current.rootElementRef!.current;
       const gridClone = gridRootElement!.cloneNode(true) as HTMLElement;
-      if (hideToolbar) {
-        (gridClone.querySelector('.MuiDataGrid-toolbarContainer') as HTMLElement).style.display =
-          'none';
+
+      if (normalizeOptions.hideToolbar) {
+        gridClone.querySelector('.MuiDataGrid-toolbarContainer')?.remove();
       }
 
-      if (hideFooter) {
-        (gridClone.querySelector('.MuiDataGrid-footerContainer') as HTMLElement).style.display =
-          'none';
+      if (normalizeOptions.hideFooter) {
+        gridClone.querySelector('.MuiDataGrid-footerContainer')?.remove();
       }
 
+      // Expand container height to accommodate all rows
       gridClone.style.height = `${visibleSortedRows.size * props.rowHeight!}px`;
       printDoc.body.appendChild(gridClone);
 
-      const defaultPageStyle = typeof pageStyle === 'function' ? pageStyle() : pageStyle;
+      const defaultPageStyle =
+        typeof normalizeOptions.pageStyle === 'function'
+          ? normalizeOptions.pageStyle()
+          : normalizeOptions.pageStyle;
       if (typeof defaultPageStyle !== 'string') {
         const styleElement = printDoc.createElement('style');
         styleElement.appendChild(printDoc.createTextNode(defaultPageStyle));
         printDoc.head.appendChild(styleElement);
       }
 
-      if (bodyClass) {
-        printDoc.body.classList.add(...bodyClass.split(' '));
+      if (normalizeOptions.bodyClass) {
+        printDoc.body.classList.add(...normalizeOptions.bodyClass.split(' '));
       }
 
-      if (copyStyles) {
-        const headEls = doc.current!.querySelectorAll("style, link[rel='stylesheet']");
+      if (normalizeOptions.copyStyles) {
+        const headStyleElements = doc.current!.querySelectorAll("style, link[rel='stylesheet']");
 
         // eslint-disable-next-line no-plusplus
-        for (let i = 0; i < headEls.length; i++) {
-          const node = headEls[i];
+        for (let i = 0; i < headStyleElements.length; i++) {
+          const node = headStyleElements[i];
           if (node.tagName === 'STYLE') {
-            const newHeadEl = printDoc.createElement(node.tagName);
-            const sheet = (node as HTMLStyleElement).sheet as CSSStyleSheet;
+            const newHeadStyleElements = printDoc.createElement(node.tagName);
+            const sheet = (node as HTMLStyleElement).sheet;
 
             if (sheet) {
               let styleCSS = '';
@@ -149,48 +159,43 @@ export const useGridPrintExport = (
                   styleCSS += `${sheet.cssRules[j].cssText}\r\n`;
                 }
               }
-              newHeadEl.setAttribute('id', `react-to-print-${i}`);
-              newHeadEl.appendChild(printDoc.createTextNode(styleCSS));
-              printDoc.head.appendChild(newHeadEl);
+              newHeadStyleElements.appendChild(printDoc.createTextNode(styleCSS));
+              printDoc.head.appendChild(newHeadStyleElements);
             }
           } else if (node.getAttribute('href')) {
-            // Many browsers will do all sorts of weird things if they encounter an
-            // empty `href` tag (which is invalid HTML). Some will attempt to load
-            // the current page. Some will attempt to load the page's parent
-            // directory. These problems can cause `react-to-print` to stop without
-            // any error being thrown. To avoid such problems we simply do not
-            // attempt to load these links.
+            // If `href` tag is empty, avoid loading these links
 
-            const newHeadEl = printDoc.createElement(node.tagName);
+            const newHeadStyleElements = printDoc.createElement(node.tagName);
 
-            // node.attributes has NamedNodeMap type that is not an Array and
-            // can be iterated only via direct [i] access
+            // node.attributes is of type NamedNodeMap
             // eslint-disable-next-line no-plusplus
             for (let j = 0; j < node.attributes.length; j++) {
-              // eslint-disable-line max-len
               const attr = node.attributes[j];
               if (attr) {
-                newHeadEl.setAttribute(attr.nodeName, attr.nodeValue || '');
+                newHeadStyleElements.setAttribute(attr.nodeName, attr.nodeValue || '');
               }
             }
 
-            printDoc.head.appendChild(newHeadEl);
+            printDoc.head.appendChild(newHeadStyleElements);
           }
         }
       }
 
+      // Trigger print
       printWindow.contentWindow!.print();
     },
     [apiRef, doc, visibleSortedRows.size, props.rowHeight],
   );
 
-  const handlePrintWindowOnAfterPrint = React.useCallback(
-    (printWindow): void => {
+  const handlePrintWindowAfterPrint = React.useCallback(
+    (printWindow: HTMLIFrameElement): void => {
+      // Remove the print iframe
       doc.current!.body.removeChild(printWindow);
 
+      // Revert columns to their original state
       apiRef!.current.updateColumns(
         columns.map((column) => {
-          if (defaultHiddenColumns.current.includes(column.field)) {
+          if (previousHiddenColumns.current.includes(column.field)) {
             column.hide = true;
           } else {
             column.hide = false;
@@ -202,56 +207,40 @@ export const useGridPrintExport = (
       // Revert grid to previous state
       setGridState((state) => ({
         ...state,
-        ...gridCacheState.current,
+        ...previousGridState.current,
       }));
       forceUpdate();
 
-      gridCacheState.current = null;
-      defaultHiddenColumns.current = [];
+      // Clear local state
+      previousGridState.current = null;
+      previousHiddenColumns.current = [];
     },
-    [gridCacheState, defaultHiddenColumns, columns, apiRef, setGridState, forceUpdate],
+    [previousGridState, previousHiddenColumns, columns, apiRef, setGridState, forceUpdate],
   );
 
   const exportDataAsPrint = React.useCallback(
     (options?: GridPrintExportOptions): void => {
       logger.debug(`Export data as Print`);
 
-      const allOptions = {
-        fileName: document.title,
-        allColumns: false,
-        copyStyles: true,
-        hideToolbar: true,
-        hideFooter: true,
-        ...options,
-      };
-
       if (!apiRef!.current.rootElementRef!.current) {
         throw new Error('No Grid Root element available');
       }
 
-      prepGridForPrint(allOptions.fields, allOptions.allColumns);
-      const printWindow = buildPrintWindow(allOptions.fileName);
+      prepGridForPrint(options?.fields, options?.allColumns);
+      const printWindow = buildPrintWindow(options?.fileName);
 
       doc.current!.body.appendChild(printWindow);
 
-      printWindow.onload = () =>
-        handlePrintWindowOnLoad(
-          printWindow,
-          allOptions.copyStyles,
-          allOptions.bodyClass,
-          allOptions.pageStyle,
-          allOptions.hideToolbar,
-          allOptions.hideFooter,
-        );
-      printWindow.contentWindow!.onafterprint = () => handlePrintWindowOnAfterPrint(printWindow);
+      printWindow.onload = () => handlePrintWindowLoad(printWindow, options);
+      printWindow.contentWindow!.onafterprint = () => handlePrintWindowAfterPrint(printWindow);
     },
     [
       logger,
       apiRef,
       prepGridForPrint,
       buildPrintWindow,
-      handlePrintWindowOnLoad,
-      handlePrintWindowOnAfterPrint,
+      handlePrintWindowLoad,
+      handlePrintWindowAfterPrint,
     ],
   );
 
