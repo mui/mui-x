@@ -23,7 +23,7 @@ export default function useThrottle(func, wait = 166) {
     return () => {
       clearTimeout(timeout);
     };
-  }, []);
+  }, [timeout]);
 
   return throttled;
 }

@@ -3,7 +3,7 @@ import ChartContext from '../ChartContext';
 
 const YAxis = (props) => {
   const {
-    dimensions: { boundedHeight, boundedWidth },
+    dimensions: { boundedHeight },
     yTicks,
   } = useContext(ChartContext);
   const {

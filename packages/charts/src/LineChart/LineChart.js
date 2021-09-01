@@ -37,12 +37,13 @@ const LineChart = React.forwardRef(function LineChart(props, ref) {
   } = props;
 
   let data = dataProp;
+  const stackedData = useStackedArrays(dataProp);
   if (stacked) {
     if (areaKeys) {
       const stackGen = d3.stack().keys(areaKeys);
-      data = stackGen(data);
+      data = stackGen(dataProp);
     } else {
-      data = useStackedArrays(dataProp);
+      data = stackedData;
     }
   }
 
@@ -61,22 +62,19 @@ const LineChart = React.forwardRef(function LineChart(props, ref) {
   const xRange = [0, boundedWidth];
   const yRange = [0, boundedHeight];
   const maxXTicks = getMaxDataSetLength(data) - 1;
-  const maxYTicks = 999; // TODO: get this from the data
   const xScale = useScale(xScaleType, xDomainProp || xDomain, xRange);
   const yScale = useScale(yScaleType, yDomainProp || yDomain, yRange);
   const xTicks = useTicks({
-    domain: xDomain,
     range: xRange,
-    scaleType: xScaleType,
+    scale: xScale,
     pixelsPerTick,
     maxTicks: maxXTicks,
   });
   const yTicks = useTicks({
-    domain: yDomain,
     range: yRange,
-    scaleType: yScaleType,
+    scale: yScale,
     pixelsPerTick,
-    maxTicks: maxYTicks,
+    maxTicks: 999,
   });
 
   const [mousePosition, setMousePosition] = React.useState({
@@ -109,8 +107,6 @@ const LineChart = React.forwardRef(function LineChart(props, ref) {
         markerShape,
         markerSize,
         stacked,
-        maxXTicks,
-        maxYTicks,
         mousePosition,
         smoothed,
         xDomain,
@@ -187,22 +183,22 @@ LineChart.propTypes /* remove-proptypes */ = {
    */
   label: PropTypes.string,
   /**
-   * The font size of the label.
-   */
-  labelFontSize: PropTypes.number,
-  /**
    * The color of the label.
    */
   labelColor: PropTypes.string,
+  /**
+   * The font size of the label.
+   */
+  labelFontSize: PropTypes.number,
   /**
    * The margin to use.
    * Labels and axes fall within these margins.
    */
   margin: PropTypes.shape({
-    top: PropTypes.number,
-    right: PropTypes.number,
     bottom: PropTypes.number,
     left: PropTypes.number,
+    right: PropTypes.number,
+    top: PropTypes.number,
   }),
   /**
    * The shape of the markers.

@@ -88,7 +88,7 @@ const Line = (props) => {
         strokeWidth={strokeWidth}
         transform={`translate(0, ${boundedHeight})`}
       />
-      {markerShape != 'none' && (
+      {markerShape !== 'none' && (
         <Scatter
           data={pointData}
           zDomain={[5, 5]}

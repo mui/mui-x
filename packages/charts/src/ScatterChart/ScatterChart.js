@@ -40,36 +40,20 @@ const ScatterChart = (props) => {
   const xRange = [0, boundedWidth];
   const yRange = [0, boundedHeight];
   const maxXTicks = getMaxDataSetLength(data) - 1;
-  const maxYTicks = 999; // TODO: get this from the data
   const xScale = useScale(xScaleType, xDomain, xRange);
   const yScale = useScale(yScaleType, yDomain, yRange);
   const xTicks = useTicks({
-    domain: xDomain,
     range: xRange,
-    scaleType: xScaleType,
+    scale: xScale,
     pixelsPerTick,
     maxTicks: maxXTicks,
   });
   const yTicks = useTicks({
-    domain: yDomain,
     range: yRange,
-    scaleType: yScaleType,
+    scale: yScale,
     pixelsPerTick,
-    maxTicks: maxYTicks,
+    maxTicks: 999,
   });
-
-  const [mousePosition, setMousePosition] = React.useState({
-    x: 0,
-    y: 0,
-  });
-
-  const handleMouseMove = (e) => {
-    // console.log(e);
-    setMousePosition({
-      x: e.nativeEvent.offsetX - marginLeft,
-      y: e.nativeEvent.offsetY - marginTop,
-    });
-  };
 
   return (
     <ChartContext.Provider
@@ -78,7 +62,6 @@ const ScatterChart = (props) => {
         dimensions,
         invertMarkers,
         markerShape,
-        mousePosition,
         xScale,
         xDomain,
         yScale,

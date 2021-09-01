@@ -14,7 +14,11 @@ function useStackedArrays(arrays) {
   return useMemo(() => {
     if (Array.isArray(arrays[0])) {
       return arrays.reduce((acc, curr) => {
-        acc.length > 0 ? acc.push(sumArrays(acc[acc.length - 1], curr)) : acc.push(curr);
+        if (acc.length > 0) {
+          acc.push(sumArrays(acc[acc.length - 1], curr));
+        } else {
+          acc.push(curr);
+        }
         return acc;
       }, []);
     }
