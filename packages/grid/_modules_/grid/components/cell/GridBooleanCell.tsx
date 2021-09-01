@@ -1,9 +1,22 @@
 import * as React from 'react';
-import clsx from 'clsx';
 import { SvgIconProps } from '@material-ui/core/SvgIcon';
-import { gridClasses } from '../../gridClasses';
+import { getDataGridUtilityClass } from '../../gridClasses';
 import { GridRenderCellParams } from '../../models/params/gridCellParams';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
+import { GridComponentProps } from '../../GridComponentProps';
+import { composeClasses } from '../../utils/material-ui-utils';
+
+type OwnerState = { classes: GridComponentProps['classes'] };
+
+const useUtilityClasses = (ownerState: OwnerState) => {
+  const { classes } = ownerState;
+
+  const slots = {
+    root: ['booleanCell'],
+  };
+
+  return composeClasses(slots, getDataGridUtilityClass, classes);
+};
 
 export const GridBooleanCell = React.memo((props: GridRenderCellParams & SvgIconProps) => {
   const {
@@ -22,6 +35,8 @@ export const GridBooleanCell = React.memo((props: GridRenderCellParams & SvgIcon
     ...other
   } = props;
   const rootProps = useGridRootProps();
+  const ownerState = { classes: rootProps.classes };
+  const classes = useUtilityClasses(ownerState);
 
   const Icon = React.useMemo(
     () =>
@@ -32,7 +47,7 @@ export const GridBooleanCell = React.memo((props: GridRenderCellParams & SvgIcon
   return (
     <Icon
       fontSize="small"
-      className={clsx(gridClasses.booleanCell, rootProps.classes?.booleanCell)}
+      className={classes.root}
       titleAccess={api.getLocaleText(value ? 'booleanCellTrueLabel' : 'booleanCellFalseLabel')}
       data-value={Boolean(value)}
       {...other}

@@ -1,9 +1,8 @@
 import * as React from 'react';
-import clsx from 'clsx';
 import { useLogger } from '../../utils/useLogger';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridEvents } from '../../../constants/eventsConstants';
-import { gridClasses } from '../../../gridClasses';
+import { getDataGridUtilityClass } from '../../../gridClasses';
 import { GridColumnHeaderParams } from '../../../models/params/gridColumnHeaderParams';
 import { GridCellParams } from '../../../models/params/gridCellParams';
 import { CursorCoordinates } from '../../../models/cursorCoordinates';
@@ -12,6 +11,7 @@ import { useGridSelector } from '../core/useGridSelector';
 import { useGridState } from '../core/useGridState';
 import { gridColumnReorderDragColSelector } from './columnReorderSelector';
 import { GridComponentProps } from '../../../GridComponentProps';
+import { composeClasses } from '../../../utils/material-ui-utils';
 
 const CURSOR_MOVE_DIRECTION_LEFT = 'left';
 const CURSOR_MOVE_DIRECTION_RIGHT = 'right';
@@ -30,6 +30,18 @@ const hasCursorPositionChanged = (
   nextCoordinates: CursorCoordinates,
 ): boolean =>
   currentCoordinates.x !== nextCoordinates.x || currentCoordinates.y !== nextCoordinates.y;
+
+type OwnerState = { classes: GridComponentProps['classes'] };
+
+const useUtilityClasses = (ownerState: OwnerState) => {
+  const { classes } = ownerState;
+
+  const slots = {
+    columnHeaderDragging: ['columnHeader__dragging'],
+  };
+
+  return composeClasses(slots, getDataGridUtilityClass, classes);
+};
 
 /**
  * Only available in DataGridPro
@@ -50,6 +62,8 @@ export const useGridColumnReorder = (
   });
   const originColumnIndex = React.useRef<number | null>(null);
   const removeDnDStylesTimeout = React.useRef<any>();
+  const ownerState = { classes: props.classes };
+  const classes = useUtilityClasses(ownerState);
 
   React.useEffect(() => {
     return () => {
@@ -65,13 +79,8 @@ export const useGridColumnReorder = (
 
       logger.debug(`Start dragging col ${params.field}`);
 
-      const draggingClassName = clsx(
-        gridClasses['columnHeader--dragging'],
-        props.classes?.columnHeader__dragging,
-      );
-
       dragColNode.current = event.currentTarget;
-      dragColNode.current.classList.add(draggingClassName);
+      dragColNode.current.classList.add(classes.columnHeaderDragging);
 
       setGridState((state) => ({
         ...state,
@@ -80,14 +89,14 @@ export const useGridColumnReorder = (
       forceUpdate();
 
       removeDnDStylesTimeout.current = setTimeout(() => {
-        dragColNode.current!.classList.remove(draggingClassName);
+        dragColNode.current!.classList.remove(classes.columnHeaderDragging);
       });
 
       originColumnIndex.current = apiRef.current.getColumnIndex(params.field, false);
     },
     [
       props.disableColumnReorder,
-      props.classes?.columnHeader__dragging,
+      classes.columnHeaderDragging,
       logger,
       setGridState,
       forceUpdate,

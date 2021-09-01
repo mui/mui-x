@@ -1,5 +1,4 @@
 import * as React from 'react';
-import clsx from 'clsx';
 import { GridEvents } from '../../constants/eventsConstants';
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
 import { gridPaginatedVisibleSortedGridRowIdsSelector } from '../../hooks/features/pagination/gridPaginationSelector';
@@ -10,14 +9,30 @@ import { selectedGridRowsCountSelector } from '../../hooks/features/selection/gr
 import { GridColumnHeaderParams } from '../../models/params/gridColumnHeaderParams';
 import { isNavigationKey, isSpaceKey } from '../../utils/keyboardUtils';
 import { useGridApiContext } from '../../hooks/root/useGridApiContext';
-import { gridClasses } from '../../gridClasses';
+import { getDataGridUtilityClass } from '../../gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
+import { composeClasses } from '../../utils/material-ui-utils';
+import { GridComponentProps } from '../../GridComponentProps';
+
+type OwnerState = { classes: GridComponentProps['classes'] };
+
+const useUtilityClasses = (ownerState: OwnerState) => {
+  const { classes } = ownerState;
+
+  const slots = {
+    root: ['checkboxInput'],
+  };
+
+  return composeClasses(slots, getDataGridUtilityClass, classes);
+};
 
 export const GridHeaderCheckbox = React.forwardRef<HTMLInputElement, GridColumnHeaderParams>(
   function GridHeaderCheckbox(props, ref) {
     const [, forceUpdate] = React.useState(false);
     const apiRef = useGridApiContext();
     const rootProps = useGridRootProps();
+    const ownerState = { classes: rootProps.classes };
+    const classes = useUtilityClasses(ownerState);
     const tabIndexState = useGridSelector(apiRef, gridTabIndexColumnHeaderSelector);
     const totalSelectedRows = useGridSelector(apiRef, selectedGridRowsCountSelector);
     const totalRows = useGridSelector(apiRef, gridRowCountSelector);
@@ -68,7 +83,7 @@ export const GridHeaderCheckbox = React.forwardRef<HTMLInputElement, GridColumnH
         indeterminate={isIndeterminate}
         checked={isChecked}
         onChange={handleChange}
-        className={clsx(gridClasses.checkboxInput, rootProps.classes?.checkboxInput)}
+        className={classes.root}
         color="primary"
         inputProps={{ 'aria-label': 'Select All Rows checkbox' }}
         tabIndex={tabIndex}

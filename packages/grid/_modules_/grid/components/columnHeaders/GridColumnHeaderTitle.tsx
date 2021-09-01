@@ -2,8 +2,22 @@ import * as React from 'react';
 import clsx from 'clsx';
 import Tooltip from '@material-ui/core/Tooltip';
 import { isOverflown } from '../../utils/domUtils';
-import { gridClasses } from '../../gridClasses';
+import { getDataGridUtilityClass } from '../../gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
+import { composeClasses } from '../../utils/material-ui-utils';
+import { GridComponentProps } from '../../GridComponentProps';
+
+type OwnerState = { classes: GridComponentProps['classes'] };
+
+const useUtilityClasses = (ownerState: OwnerState) => {
+  const { classes } = ownerState;
+
+  const slots = {
+    root: ['columnHeaderTitle'],
+  };
+
+  return composeClasses(slots, getDataGridUtilityClass, classes);
+};
 
 const ColumnHeaderInnerTitle = React.forwardRef<
   HTMLDivElement,
@@ -11,18 +25,10 @@ const ColumnHeaderInnerTitle = React.forwardRef<
 >(function ColumnHeaderInnerTitle(props, ref) {
   const { className, ...other } = props;
   const rootProps = useGridRootProps();
+  const ownerState = { classes: rootProps.classes };
+  const classes = useUtilityClasses(ownerState);
 
-  return (
-    <div
-      ref={ref}
-      className={clsx(
-        gridClasses.columnHeaderTitle,
-        rootProps.classes?.columnHeaderTitle,
-        className,
-      )}
-      {...other}
-    />
-  );
+  return <div ref={ref} className={clsx(classes.root, className)} {...other} />;
 });
 
 export interface GridColumnHeaderTitleProps {

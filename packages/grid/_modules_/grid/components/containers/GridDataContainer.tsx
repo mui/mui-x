@@ -3,16 +3,32 @@ import clsx from 'clsx';
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
 import { gridDataContainerSizesSelector } from '../../hooks/root/gridContainerSizesSelector';
 import { useGridApiContext } from '../../hooks/root/useGridApiContext';
-import { gridClasses } from '../../gridClasses';
+import { getDataGridUtilityClass } from '../../gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
+import { composeClasses } from '../../utils/material-ui-utils';
+import { GridComponentProps } from '../../GridComponentProps';
 
 type GridDataContainerProps = React.HTMLAttributes<HTMLDivElement>;
+
+type OwnerState = { classes: GridComponentProps['classes'] };
+
+const useUtilityClasses = (ownerState: OwnerState) => {
+  const { classes } = ownerState;
+
+  const slots = {
+    root: ['dataContainer'],
+  };
+
+  return composeClasses(slots, getDataGridUtilityClass, classes);
+};
 
 export function GridDataContainer(props: GridDataContainerProps) {
   const { className, ...other } = props;
   const apiRef = useGridApiContext();
   const dataContainerSizes = useGridSelector(apiRef, gridDataContainerSizesSelector);
   const rootProps = useGridRootProps();
+  const ownerState = { classes: rootProps.classes };
+  const classes = useUtilityClasses(ownerState);
 
   const style: any = {
     // TODO remove min
@@ -20,11 +36,5 @@ export function GridDataContainer(props: GridDataContainerProps) {
     minHeight: dataContainerSizes?.height,
   };
 
-  return (
-    <div
-      className={clsx(gridClasses.dataContainer, className, rootProps.classes?.dataContainer)}
-      style={style}
-      {...other}
-    />
-  );
+  return <div className={clsx(classes.root, className)} style={style} {...other} />;
 }
