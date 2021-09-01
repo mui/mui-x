@@ -61,69 +61,58 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
       if (resetSelection) {
         logger.debug(`Setting selection for row ${id}`);
 
-        setGridState((state) => ({ ...state, selection: isSelected ? [id] : [] }));
+        apiRef.current.setSelectionModel(isSelected ? [id] : []);
       } else {
         logger.debug(`Toggling selection for row ${id}`);
 
-        setGridState((state) => {
-          const selection = gridSelectionStateSelector(state);
-          const newSelection: GridRowId[] = selection.filter((el) => el !== id);
+        const selection = gridSelectionStateSelector(apiRef.current.state);
+        const newSelection: GridRowId[] = selection.filter((el) => el !== id);
 
-          if (isSelected) {
-            newSelection.push(id);
-          }
+        if (isSelected) {
+          newSelection.push(id);
+        }
 
-          if (newSelection.length > 1 && !canHaveMultipleSelection) {
-            return state;
-          }
-
-          return { ...state, selection: newSelection };
-        });
+        const isSelectionValid = newSelection.length < 2 || canHaveMultipleSelection;
+        if (isSelectionValid) {
+          apiRef.current.setSelectionModel(newSelection);
+        }
       }
-
-      forceUpdate();
     },
-    [apiRef, forceUpdate, setGridState, isRowSelectable, logger, canHaveMultipleSelection],
+    [apiRef, isRowSelectable, logger, canHaveMultipleSelection],
   );
 
   const selectRows = React.useCallback<GridSelectionApi['selectRows']>(
     (ids: GridRowId[], isSelected = true, resetSelection = false) => {
-      setGridState((state) => {
-        const selectableIds = isRowSelectable
-          ? ids.filter((id) => isRowSelectable(apiRef.current.getRowParams(id)))
-          : ids;
+      logger.debug(`Setting selection for several rows`);
 
-        let newSelection: GridRowId[];
-        if (resetSelection) {
-          newSelection = isSelected ? selectableIds : [];
-        } else {
-          // We clone the existing map to avoid mutating the same map returned by the selector to others part of the project
-          const selectionLookup = new Map(selectedIdsLookupSelector(state).entries());
+      const selectableIds = isRowSelectable
+        ? ids.filter((id) => isRowSelectable(apiRef.current.getRowParams(id)))
+        : ids;
 
-          selectableIds.forEach((id) => {
-            if (isSelected) {
-              selectionLookup.set(id, true);
-            } else {
-              selectionLookup.delete(id);
-            }
-          });
+      let newSelection: GridRowId[];
+      if (resetSelection) {
+        newSelection = isSelected ? selectableIds : [];
+      } else {
+        // We clone the existing map to avoid mutating the same map returned by the selector to others part of the project
+        const selectionLookup = new Map(selectedIdsLookupSelector(apiRef.current.state).entries());
 
-          newSelection = [...selectionLookup.keys()];
-        }
+        selectableIds.forEach((id) => {
+          if (isSelected) {
+            selectionLookup.set(id, true);
+          } else {
+            selectionLookup.delete(id);
+          }
+        });
 
-        if (newSelection.length > 1 && !canHaveMultipleSelection) {
-          return state;
-        }
+        newSelection = [...selectionLookup.keys()];
+      }
 
-        return {
-          ...state,
-          selection: newSelection,
-        };
-      });
-
-      forceUpdate();
+      const isSelectionValid = newSelection.length < 2 || canHaveMultipleSelection;
+      if (isSelectionValid) {
+        apiRef.current.setSelectionModel(newSelection);
+      }
     },
-    [isRowSelectable, canHaveMultipleSelection, setGridState, forceUpdate, apiRef],
+    [apiRef, isRowSelectable, logger, canHaveMultipleSelection],
   );
 
   const selectRowRange = React.useCallback<GridSelectionApi['selectRowRange']>(
@@ -231,24 +220,23 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
 
   React.useEffect(() => {
     // Rows changed
-    setGridState((state) => {
-      const newSelectionState = gridSelectionStateSelector(state);
-      // We clone the existing map to avoid mutating the same map returned by the selector to others part of the project
-      const selectionLookup = new Map(selectedIdsLookupSelector(state).entries());
-      let hasChanged = false;
-      newSelectionState.forEach((id: GridRowId) => {
-        if (!rowsLookup[id]) {
-          selectionLookup.delete(id);
-          hasChanged = true;
-        }
-      });
-      if (hasChanged) {
-        return { ...state, selection: [...selectionLookup.keys()] };
+    const currentSelection = gridSelectionStateSelector(apiRef.current.state);
+
+    // We clone the existing map to avoid mutating the same map returned by the selector to others part of the project
+    const selectionLookup = new Map(selectedIdsLookupSelector(apiRef.current.state).entries());
+
+    let hasChanged = false;
+    currentSelection.forEach((id: GridRowId) => {
+      if (!rowsLookup[id]) {
+        selectionLookup.delete(id);
+        hasChanged = true;
       }
-      return state;
     });
-    forceUpdate();
-  }, [rowsLookup, apiRef, setGridState, forceUpdate]);
+
+    if (hasChanged) {
+      apiRef.current.setSelectionModel([...selectionLookup.keys()]);
+    }
+  }, [rowsLookup, apiRef]);
 
   React.useEffect(() => {
     if (propSelectionModel === undefined) {
@@ -260,18 +248,16 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
 
   React.useEffect(() => {
     // isRowSelectable changed
-    setGridState((state) => {
-      const newSelectionState = state.selection.filter(
-        (id) => !isRowSelectable || isRowSelectable(apiRef.current.getRowParams(id)),
+    const currentSelection = gridSelectionStateSelector(apiRef.current.state);
+
+    if (isRowSelectable) {
+      const newSelection = currentSelection.filter((id) =>
+        isRowSelectable(apiRef.current.getRowParams(id)),
       );
 
-
-      if (newSelectionState.length < state.selection.length) {
-        return { ...state, selection: newSelectionState };
+      if (newSelection.length < currentSelection.length) {
+        apiRef.current.setSelectionModel(newSelection);
       }
-
-      return state;
-    });
-    forceUpdate();
-  }, [apiRef, setGridState, forceUpdate, isRowSelectable]);
+    }
+  }, [apiRef, isRowSelectable]);
 };
