@@ -97,3 +97,9 @@ export function getRow(rowIndex: number): HTMLElement {
   }
   return row as HTMLElement;
 }
+
+export function getSelectedRowIndexes() {
+  return [...getRows()]
+    .filter((row) => row.classList.contains('Mui-selected'))
+    .map((row) => Number((row as HTMLElement).dataset.rowindex));
+}

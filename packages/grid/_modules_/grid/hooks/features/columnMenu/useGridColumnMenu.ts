@@ -6,6 +6,10 @@ import { useGridState } from '../core/useGridState';
 import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
 import { GridEvents } from '../../../constants/eventsConstants';
 
+/**
+ * @requires useGridPreferencePanel (method)
+ * @requires useGridVirtualRows (state)
+ */
 export const useGridColumnMenu = (apiRef: GridApiRef): void => {
   const logger = useLogger('useGridColumnMenu');
   const [gridState, setGridState, forceUpdate] = useGridState(apiRef);
@@ -41,30 +45,8 @@ export const useGridColumnMenu = (apiRef: GridApiRef): void => {
         hideColumnMenu();
       }
     },
-    [logger, showColumnMenu, hideColumnMenu, gridState],
+    [logger, showColumnMenu, hideColumnMenu, gridState.columnMenu],
   );
-
-  const handleColumnResizeStart = React.useCallback(() => {
-    setGridState((state) => {
-      if (state.columnMenu.open) {
-        return {
-          ...state,
-          columnMenu: {
-            ...state.columnMenu,
-            open: false,
-          },
-        };
-      }
-
-      return state;
-    });
-  }, [setGridState]);
-
-  React.useEffect(() => {
-    if (gridState.isScrolling) {
-      hideColumnMenu();
-    }
-  }, [gridState.isScrolling, hideColumnMenu]);
 
   useGridApiMethod(
     apiRef,
@@ -76,5 +58,6 @@ export const useGridColumnMenu = (apiRef: GridApiRef): void => {
     'ColumnMenuApi',
   );
 
-  useGridApiEventHandler(apiRef, GridEvents.columnResizeStart, handleColumnResizeStart);
+  useGridApiEventHandler(apiRef, GridEvents.columnResizeStart, hideColumnMenu);
+  useGridApiEventHandler(apiRef, GridEvents.rowsScroll, hideColumnMenu);
 };

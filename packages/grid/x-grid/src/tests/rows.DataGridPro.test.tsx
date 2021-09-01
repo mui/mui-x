@@ -322,7 +322,7 @@ describe('<DataGridPro /> - Rows', () => {
         />,
       );
 
-      const isVirtualized = apiRef!.current!.state.containerSizes!.isVirtualized;
+      const isVirtualized = apiRef.current.state.containerSizes!.isVirtualized;
       expect(isVirtualized).to.equal(false);
     });
 
@@ -339,7 +339,7 @@ describe('<DataGridPro /> - Rows', () => {
         />,
       );
 
-      let isVirtualized = apiRef!.current!.state.containerSizes!.isVirtualized;
+      let isVirtualized = apiRef.current.state.containerSizes!.isVirtualized;
       expect(isVirtualized).to.equal(false);
 
       render(
@@ -351,13 +351,13 @@ describe('<DataGridPro /> - Rows', () => {
         />,
       );
 
-      isVirtualized = apiRef!.current!.state.containerSizes!.isVirtualized;
+      isVirtualized = apiRef.current.state.containerSizes!.isVirtualized;
       expect(isVirtualized).to.equal(true);
     });
 
     it('should render last row when scrolling to the bottom', () => {
       render(<TestCaseVirtualization nbRows={996} hideFooter height={600} />);
-      const totalHeight = apiRef!.current!.state.containerSizes?.totalSizes.height!;
+      const totalHeight = apiRef.current.state.containerSizes?.totalSizes.height!;
 
       const gridWindow = document.querySelector('.MuiDataGrid-window')!;
       const renderingZone = document.querySelector('.MuiDataGrid-renderingZone')! as HTMLElement;
@@ -374,14 +374,14 @@ describe('<DataGridPro /> - Rows', () => {
     it('Rows should not be virtualized when the grid is in pagination autoPageSize', () => {
       render(<TestCaseVirtualization autoPageSize pagination />);
 
-      const isVirtualized = apiRef!.current!.state.containerSizes!.isVirtualized;
+      const isVirtualized = apiRef.current.state.containerSizes!.isVirtualized;
       expect(isVirtualized).to.equal(false);
     });
 
     it('Rows should not be virtualized when the grid is in autoHeight', () => {
       render(<TestCaseVirtualization autoHeight />);
 
-      const isVirtualized = apiRef!.current!.state.containerSizes!.isVirtualized;
+      const isVirtualized = apiRef.current.state.containerSizes!.isVirtualized;
       expect(isVirtualized).to.equal(false);
     });
 
@@ -395,7 +395,7 @@ describe('<DataGridPro /> - Rows', () => {
       let lastCell = document.querySelector('[role="row"]:last-child [role="cell"]:first-child')!;
       expect(lastCell).to.have.text('995');
 
-      let virtualPage = apiRef!.current!.state.rendering!.virtualPage;
+      let virtualPage = apiRef.current.state.rendering!.virtualPage;
       expect(virtualPage).to.equal(98);
 
       setProps({ nbRows: 9 });
@@ -406,10 +406,10 @@ describe('<DataGridPro /> - Rows', () => {
       const renderingZone = document.querySelector('.MuiDataGrid-renderingZone')! as HTMLElement;
       expect(renderingZone.children.length).to.equal(9);
 
-      virtualPage = apiRef!.current!.state.rendering!.virtualPage;
+      virtualPage = apiRef.current.state.rendering!.virtualPage;
       expect(virtualPage).to.equal(0);
 
-      const isVirtualized = apiRef!.current!.state.containerSizes!.isVirtualized;
+      const isVirtualized = apiRef.current.state.containerSizes!.isVirtualized;
       expect(isVirtualized).to.equal(false);
     });
 
@@ -424,7 +424,7 @@ describe('<DataGridPro /> - Rows', () => {
           '[role="row"]:last-child [role="cell"]:first-child',
         )!;
         expect(lastCell).to.have.text('31');
-        const totalHeight = apiRef!.current!.state.containerSizes?.totalSizes.height!;
+        const totalHeight = apiRef.current.state.containerSizes?.totalSizes.height!;
         expect(gridWindow.scrollHeight).to.equal(totalHeight);
       });
 
@@ -449,9 +449,9 @@ describe('<DataGridPro /> - Rows', () => {
         expect(gridWindow.scrollTop).to.equal(0);
         expect(gridWindow.scrollHeight).to.equal(gridWindow.clientHeight);
 
-        const isVirtualized = apiRef!.current!.state.containerSizes!.isVirtualized;
+        const isVirtualized = apiRef.current.state.containerSizes!.isVirtualized;
         expect(isVirtualized).to.equal(false);
-        const virtualRowsCount = apiRef!.current!.state.containerSizes!.virtualRowsCount;
+        const virtualRowsCount = apiRef.current.state.containerSizes!.virtualRowsCount;
         expect(virtualRowsCount).to.equal(4);
       });
 
@@ -471,9 +471,9 @@ describe('<DataGridPro /> - Rows', () => {
         expect(gridWindow.scrollTop).to.equal(0);
         expect(gridWindow.scrollHeight).to.equal(gridWindow.clientHeight);
 
-        const isVirtualized = apiRef!.current!.state.containerSizes!.isVirtualized;
+        const isVirtualized = apiRef.current.state.containerSizes!.isVirtualized;
         expect(isVirtualized).to.equal(false);
-        const virtualRowsCount = apiRef!.current!.state.containerSizes!.virtualRowsCount;
+        const virtualRowsCount = apiRef.current.state.containerSizes!.virtualRowsCount;
         expect(virtualRowsCount).to.equal(7);
       });
     });
@@ -561,6 +561,49 @@ describe('<DataGridPro /> - Rows', () => {
         apiRef.current.scrollToIndexes({ rowIndex: 0, colIndex: 1 });
         expect(gridWindow.scrollLeft).to.equal(columnWidth * 3 - width);
       });
+    });
+  });
+
+  describe('no virtualization', () => {
+    let apiRef: GridApiRef;
+
+    const TestCase = (props: Partial<DataGridProProps> & { nbRows?: number; nbCols?: number }) => {
+      apiRef = useGridApiRef();
+      const data = useData(props.nbRows || 100, props.nbCols || 10);
+      return (
+        <div style={{ width: 300, height: 300 }}>
+          <DataGridPro
+            apiRef={apiRef}
+            columns={data.columns}
+            rows={data.rows}
+            disableVirtualization
+            {...props}
+          />
+        </div>
+      );
+    };
+
+    it('should allow to disable virtualization', () => {
+      render(<TestCase nbRows={100} nbCols={10} />);
+      expect(document.querySelectorAll('[role="row"][data-rowindex]')).to.have.length(100);
+      expect(document.querySelectorAll('[role="cell"]')).to.have.length(100 * 10);
+    });
+
+    it('should render the correct rows when changing pages', () => {
+      render(<TestCase nbRows={150} nbCols={10} pagination />);
+      expect(document.querySelectorAll('[role="row"][data-rowindex]')).to.have.length(100);
+      apiRef.current.setPage(1);
+      expect(document.querySelectorAll('[role="row"][data-rowindex]')).to.have.length(50);
+    });
+
+    it('should translate to the correct position on scroll', () => {
+      render(<TestCase />);
+      const gridWindow = document.querySelector('.MuiDataGrid-window')!;
+      const renderingZone = document.querySelector('.MuiDataGrid-renderingZone')! as HTMLElement;
+      expect(renderingZone.style.transform).to.equal('translate3d(0px, 0px, 0px)');
+      gridWindow.scrollTop = 100;
+      gridWindow.dispatchEvent(new Event('scroll'));
+      expect(renderingZone.style.transform).to.equal('translate3d(0px, -100px, 0px)');
     });
   });
 

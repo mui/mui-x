@@ -59,14 +59,14 @@ describe('<DataGridPro /> - Columns', () => {
     it('should open the column menu', async () => {
       render(<Test />);
       expect(screen.queryByRole('menu')).to.equal(null);
-      apiRef!.current.showColumnMenu('brand');
+      apiRef.current.showColumnMenu('brand');
       await waitFor(() => expect(screen.queryByRole('menu')).not.to.equal(null));
     });
 
     it('should set the correct id and aria-labelledby', async () => {
       render(<Test />);
       expect(screen.queryByRole('menu')).to.equal(null);
-      apiRef!.current.showColumnMenu('brand');
+      apiRef.current.showColumnMenu('brand');
       await waitFor(() => {
         const menu = screen.queryByRole('menu');
         expect(menu.id).to.match(/^mui-[0-9]+/);
@@ -79,9 +79,9 @@ describe('<DataGridPro /> - Columns', () => {
     it('should toggle the column menu', async () => {
       render(<Test />);
       expect(screen.queryByRole('menu')).to.equal(null);
-      apiRef!.current.toggleColumnMenu('brand');
+      apiRef.current.toggleColumnMenu('brand');
       await waitFor(() => expect(screen.queryByRole('menu')).not.to.equal(null));
-      apiRef!.current.toggleColumnMenu('brand');
+      apiRef.current.toggleColumnMenu('brand');
       await waitFor(() => expect(screen.queryByRole('menu')).to.equal(null));
     });
   });
@@ -190,7 +190,7 @@ describe('<DataGridPro /> - Columns', () => {
         // @ts-expect-error need to migrate helpers to TypeScript
         expect(getColumnHeaderCell(1)).toHaveInlineStyle({ width: '100px' });
 
-        apiRef!.current.setColumnWidth('brand', 150);
+        apiRef.current.setColumnWidth('brand', 150);
 
         // @ts-expect-error need to migrate helpers to TypeScript
         expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '148px' });
@@ -238,7 +238,7 @@ describe('<DataGridPro /> - Columns', () => {
         // @ts-expect-error need to migrate helpers to TypeScript
         expect(getColumnHeaderCell(1)).toHaveInlineStyle({ width: '100px' });
 
-        apiRef!.current.setColumnWidth('brand', 150);
+        apiRef.current.setColumnWidth('brand', 150);
 
         // @ts-expect-error need to migrate helpers to TypeScript
         expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '175px' });
@@ -286,7 +286,7 @@ describe('<DataGridPro /> - Columns', () => {
         // @ts-expect-error need to migrate helpers to TypeScript
         expect(getColumnHeaderCell(1)).toHaveInlineStyle({ width: '100px' });
 
-        apiRef!.current.setColumnWidth('brand', 150);
+        apiRef.current.setColumnWidth('brand', 150);
 
         // @ts-expect-error need to migrate helpers to TypeScript
         expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '148px' });

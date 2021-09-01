@@ -98,7 +98,7 @@ describe('<DataGridPro /> - Events Params', () => {
       fireEvent.click(ageColumnElement);
 
       expect(eventArgs!.params).to.deep.include({
-        colDef: apiRef!.current.getColumn('age'),
+        colDef: apiRef.current.getColumn('age'),
         field: 'age',
       });
     });
@@ -119,7 +119,7 @@ describe('<DataGridPro /> - Events Params', () => {
       expect(eventArgs!.params).to.deep.include({
         id: 2,
         row: baselineProps.rows[1],
-        columns: apiRef!.current.getAllColumns(),
+        columns: apiRef.current.getAllColumns(),
         getValue: apiRef.current.getCellValue,
       });
     });
@@ -143,7 +143,7 @@ describe('<DataGridPro /> - Events Params', () => {
         formattedValue: 'Jack',
         isEditable: true,
         row: baselineProps.rows[1],
-        colDef: apiRef!.current.getColumn('first'),
+        colDef: apiRef.current.getColumn('first'),
         hasFocus: false,
         tabIndex: -1,
         getValue: apiRef.current.getCellValue,
@@ -169,7 +169,7 @@ describe('<DataGridPro /> - Events Params', () => {
         formattedValue: 'Jack',
         isEditable: true,
         row: baselineProps.rows[1],
-        colDef: apiRef!.current.getColumn('first'),
+        colDef: apiRef.current.getColumn('first'),
         hasFocus: false,
         tabIndex: -1,
         getValue: apiRef.current.getCellValue,

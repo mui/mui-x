@@ -4,7 +4,7 @@ import { GridSubscribeEventOptions } from '../../utils/eventEmitter/GridEventEmi
 import { useLogger } from '../utils/useLogger';
 import { GridEvents } from '../../constants/eventsConstants';
 import { useGridApiMethod } from './useGridApiMethod';
-import { MuiEvent } from '../../models/gridOptions';
+import { MuiEvent } from '../../models/muiEvent';
 import { GridSignature } from './useGridApiEventHandler';
 import { GridComponentProps } from '../../GridComponentProps';
 

@@ -13,7 +13,7 @@ export const GridSelectedRowCount = React.forwardRef<HTMLDivElement, GridSelecte
   function GridSelectedRowCount(props, ref) {
     const { className, selectedRowCount, ...other } = props;
     const apiRef = useGridApiContext();
-    const rowSelectedText = apiRef!.current.getLocaleText('footerRowSelected')(selectedRowCount);
+    const rowSelectedText = apiRef.current.getLocaleText('footerRowSelected')(selectedRowCount);
 
     return (
       <div ref={ref} className={clsx(gridClasses.selectedRowCount, className)} {...other}>

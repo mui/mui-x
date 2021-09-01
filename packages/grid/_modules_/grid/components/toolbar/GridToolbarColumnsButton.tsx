@@ -11,14 +11,13 @@ export const GridToolbarColumnsButton = React.forwardRef<HTMLButtonElement, Butt
     const { onClick, ...other } = props;
     const apiRef = useGridApiContext();
     const rootProps = useGridRootProps();
-    const ColumnSelectorIcon = apiRef!.current.components.ColumnSelectorIcon!;
     const { open, openedPanelValue } = useGridSelector(apiRef, gridPreferencePanelStateSelector);
 
     const showColumns = (event) => {
       if (open && openedPanelValue === GridPreferencePanelsValue.columns) {
-        apiRef!.current.hidePreferences();
+        apiRef.current.hidePreferences();
       } else {
-        apiRef!.current.showPreferences(GridPreferencePanelsValue.columns);
+        apiRef.current.showPreferences(GridPreferencePanelsValue.columns);
       }
 
       onClick?.(event);
@@ -34,13 +33,13 @@ export const GridToolbarColumnsButton = React.forwardRef<HTMLButtonElement, Butt
         ref={ref}
         size="small"
         color="primary"
-        aria-label={apiRef!.current.getLocaleText('toolbarColumnsLabel')}
-        startIcon={<ColumnSelectorIcon />}
+        aria-label={apiRef.current.getLocaleText('toolbarColumnsLabel')}
+        startIcon={<rootProps.components.ColumnSelectorIcon />}
         {...other}
         onClick={showColumns}
       >
-        {apiRef!.current.getLocaleText('toolbarColumns')}
+        {apiRef.current.getLocaleText('toolbarColumns')}
       </Button>
     );
   },
-);
+) as (props: ButtonProps) => JSX.Element;

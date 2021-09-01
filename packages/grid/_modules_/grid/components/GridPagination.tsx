@@ -14,7 +14,7 @@ const useStyles = makeStyles(
   (theme: Theme) => ({
     selectLabel: {
       display: 'none',
-      [theme.breakpoints.up('md')]: {
+      [theme.breakpoints.up('sm')]: {
         display: 'block',
       },
     },
@@ -22,14 +22,14 @@ const useStyles = makeStyles(
       // input label
       '&[id]': {
         display: 'none',
-        [theme.breakpoints.up('md')]: {
+        [theme.breakpoints.up('sm')]: {
           display: 'block',
         },
       },
     },
     input: {
       display: 'none',
-      [theme.breakpoints.up('md')]: {
+      [theme.breakpoints.up('sm')]: {
         display: 'inline-flex',
       },
     },
@@ -53,14 +53,14 @@ export const GridPagination = React.forwardRef<
   const handlePageSizeChange = React.useCallback(
     (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
       const newPageSize = Number(event.target.value);
-      apiRef!.current!.setPageSize(newPageSize);
+      apiRef.current.setPageSize(newPageSize);
     },
     [apiRef],
   );
 
   const handlePageChange = React.useCallback(
     (event: any, page: number) => {
-      apiRef!.current!.setPage(page);
+      apiRef.current.setPage(page);
     },
     [apiRef],
   );
@@ -85,7 +85,7 @@ export const GridPagination = React.forwardRef<
     if (
       !warnedOnceMissingPageSizeInRowsPerPageOptions.current &&
       !rootProps.autoPageSize &&
-      !rootProps.rowsPerPageOptions!.includes(rootProps.pageSize ?? paginationState.pageSize)
+      !rootProps.rowsPerPageOptions.includes(rootProps.pageSize ?? paginationState.pageSize)
     ) {
       console.warn(
         [
@@ -118,7 +118,7 @@ export const GridPagination = React.forwardRef<
           : []
       }
       rowsPerPage={paginationState.pageSize}
-      {...apiRef!.current.getLocaleText('MuiTablePagination')}
+      {...apiRef.current.getLocaleText('MuiTablePagination')}
       {...getPaginationChangeHandlers()}
       {...props}
     />
