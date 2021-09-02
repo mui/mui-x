@@ -18,7 +18,13 @@ const lineData1 = [
 
 export default function SmoothedLineChart() {
   return (
-    <LineChart smoothed data={lineData1} xScaleType="time" highlightMarkers>
+    <LineChart
+      smoothed
+      data={lineData1}
+      xScaleType="time"
+      highlightMarkers
+      pixelsPerTick={200}
+    >
       <Grid />
       <XAxis />
       <YAxis suffix="kg" />

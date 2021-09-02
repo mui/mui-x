@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
+import * as d3 from 'd3';
 import Popper from '@material-ui/core/Popper';
 import Paper from '@material-ui/core/Paper';
 import ChartContext from '../ChartContext';
@@ -11,16 +12,24 @@ const isInRange = (num, target, range) => {
 
 function Tooltip(props) {
   const {
+    data,
     dimensions: { boundedHeight },
     mousePosition,
+    xKey,
+    xScale,
     xTicks,
   } = useContext(ChartContext);
-  const { stroke = 'rgba(200, 200, 200, 0.8)', strokeDasharray = '0', strokeWidth = 1 } = props;
 
+  const { stroke = 'rgba(200, 200, 200, 0.8)', strokeDasharray = '0', strokeWidth = 1 } = props;
   const strokeRef = React.useRef({});
+
+  // eslint-disable-next-line prefer-spread
+  const flatX = [].concat.apply([], data).map((d) => d[xKey]);
+  const xOffsets = [...new Set(flatX.map((d) => xScale(d)))].sort(d3.ascending);
+
   // If the mouse is close to a vertical line, return true
   const isHighlighted = (offset) =>
-    isInRange(mousePosition.x, offset, (xTicks[1].offset - xTicks[0].offset) / 2);
+    isInRange(mousePosition.x, offset, (xOffsets[1] - xOffsets[0]) / 2);
 
   return (
     <React.Fragment>
@@ -31,8 +40,8 @@ function Tooltip(props) {
       </Popper>
       <g>
         <g transform={`translate(0, ${boundedHeight})`}>
-          {xTicks.map(
-            ({ offset }, index) =>
+          {xOffsets.map(
+            (offset, index) =>
               isHighlighted(offset) && (
                 <g key={index} transform={`translate(${offset}, 0)`}>
                   <line
