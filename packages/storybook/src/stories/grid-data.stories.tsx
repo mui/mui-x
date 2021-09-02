@@ -1,6 +1,6 @@
 import { Story } from '@storybook/react';
 import * as React from 'react';
-import { DataGridPro, GridOptionsProp, GridComponentProps } from '@mui/x-data-grid-pro';
+import { DataGridPro, DataGridProProps } from '@mui/x-data-grid-pro';
 import { useData } from '../hooks/useData';
 
 export default {
@@ -14,17 +14,16 @@ export default {
   },
 };
 
-interface GridDatasetProps extends GridOptionsProp {
+interface GridDatasetProps extends Omit<DataGridProProps, 'rows' | 'columns'> {
   nbRows: number;
   nbCols: number;
-  loading?: boolean;
 }
 
-const GridDataSet = ({ nbRows, nbCols, loading, ...options }: GridDatasetProps) => {
+const GridDataSet = ({ nbRows, nbCols, ...other }: GridDatasetProps) => {
   const data = useData(nbRows, nbCols);
   return (
     <div className="grid-container">
-      <DataGridPro rows={data.rows} columns={data.columns} {...options} loading={loading} />
+      <DataGridPro rows={data.rows} columns={data.columns} {...other} />
     </div>
   );
 };
@@ -58,14 +57,20 @@ export const Grid5234 = () => <GridDataSet nbRows={5234} nbCols={100} />;
 export const Grid10000 = () => <GridDataSet nbRows={10000} nbCols={100} />;
 export const Grid100000 = () => <GridDataSet nbRows={100000} nbCols={100} />;
 
-const DemoDynamicContainerTemplate: Story<
-  {
-    height: number;
-    width: number | string;
-    nbRows: number;
-    nbCols: number;
-  } & GridComponentProps
-> = ({ nbRows, nbCols, height, width, rows, columns, ...args }) => {
+interface GridDynamicContainerProps extends Omit<DataGridProProps, 'rows' | 'columns'> {
+  height: number;
+  width: number | string;
+  nbRows: number;
+  nbCols: number;
+}
+
+const DemoDynamicContainerTemplate: Story<GridDynamicContainerProps> = ({
+  nbRows,
+  nbCols,
+  height,
+  width,
+  ...args
+}) => {
   const data = useData(nbRows, nbCols);
   return (
     <div className="demo-rendering grid-container" style={{ padding: 10 }}>
@@ -75,7 +80,9 @@ const DemoDynamicContainerTemplate: Story<
     </div>
   );
 };
+
 export const GridXRowsPlay = DemoDynamicContainerTemplate.bind({});
+
 GridXRowsPlay.args = {
   height: 560,
   width: '100%',

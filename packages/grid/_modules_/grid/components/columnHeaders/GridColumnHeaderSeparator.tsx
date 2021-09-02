@@ -1,6 +1,5 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import { useGridApiContext } from '../../hooks/root/useGridApiContext';
 import { gridClasses } from '../../gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
@@ -14,9 +13,7 @@ export const GridColumnHeaderSeparator = React.memo(function GridColumnHeaderSep
   props: GridColumnHeaderSeparatorProps,
 ) {
   const { resizable, resizing, height, ...other } = props;
-  const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
-  const ColumnResizeIcon = apiRef!.current.components!.ColumnResizeIcon!;
 
   const stopClick = React.useCallback((event: React.MouseEvent<HTMLDivElement>) => {
     event.preventDefault();
@@ -34,7 +31,7 @@ export const GridColumnHeaderSeparator = React.memo(function GridColumnHeaderSep
       {...other}
       onClick={stopClick}
     >
-      <ColumnResizeIcon className={gridClasses.iconSeparator} />
+      <rootProps.components.ColumnResizeIcon className={gridClasses.iconSeparator} />
     </div>
   );
 });

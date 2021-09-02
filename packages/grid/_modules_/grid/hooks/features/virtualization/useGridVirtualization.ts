@@ -2,8 +2,6 @@ import * as React from 'react';
 import { GridEvents } from '../../../constants/eventsConstants';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridVirtualizationApi } from '../../../models/api/gridVirtualizationApi';
-import { GridCellIndexCoordinates } from '../../../models/gridCell';
-import { GridScrollParams } from '../../../models/params/gridScrollParams';
 import {
   GridRenderContextProps,
   GridRenderRowProps,
@@ -25,25 +23,8 @@ import { useNativeEventListener } from '../../root/useNativeEventListener';
 import { useLogger } from '../../utils/useLogger';
 import { useGridScrollFn } from '../../utils/useGridScrollFn';
 import { InternalRenderingState } from './renderingState';
-import { gridDensityRowHeightSelector } from '../density/densitySelector';
-import { scrollStateSelector } from './renderingStateSelector';
 import { GridComponentProps } from '../../../GridComponentProps';
 import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
-
-// Logic copied from https://www.w3.org/TR/wai-aria-practices/examples/listbox/js/listbox.js
-// Similar to https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollIntoView
-function scrollIntoView(dimensions) {
-  const { clientHeight, scrollTop, offsetHeight, offsetTop } = dimensions;
-
-  const elementBottom = offsetTop + offsetHeight;
-  if (elementBottom - clientHeight > scrollTop) {
-    return elementBottom - clientHeight;
-  }
-  if (offsetTop < scrollTop) {
-    return offsetTop;
-  }
-  return undefined;
-}
 
 // Uses binary search to avoid looping through all possible positions
 function getIdxFromScroll(
@@ -67,20 +48,31 @@ function getIdxFromScroll(
     : getIdxFromScroll(offset, positions, pivot + 1, sliceEnd);
 }
 
-export const useGridVirtualRows = (
+/**
+ * @requires useGridContainerProps (state)
+ * @requires useGridColumns (state)
+ * @requires useGridPage (state)
+ * @requires useGridPageSize (state)
+ * @requires useGridRows (state)
+ * @requires useGridDensity (state)
+ */
+export const useGridVirtualization = (
   apiRef: GridApiRef,
   props: Pick<
     GridComponentProps,
-    'pagination' | 'paginationMode' | 'columnBuffer' | 'disableExtendRowFullWidth'
+    | 'pagination'
+    | 'paginationMode'
+    | 'columnBuffer'
+    | 'disableExtendRowFullWidth'
+    | 'disableVirtualization'
   >,
 ): void => {
-  const logger = useLogger('useGridVirtualRows');
+  const logger = useLogger('useGridVirtualization');
   const colRef = apiRef.current.columnHeadersElementRef!;
   const windowRef = apiRef.current.windowRef!;
   const renderingZoneRef = apiRef.current.renderingZoneRef!;
 
   const [gridState, setGridState, forceUpdate] = useGridState(apiRef);
-  const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
   const paginationState = useGridSelector(apiRef, gridPaginationSelector);
   const totalRowCount = useGridSelector(apiRef, gridRowCountSelector);
   const visibleColumns = useGridSelector(apiRef, visibleGridColumnsSelector);
@@ -113,11 +105,7 @@ export const useGridVirtualRows = (
         return null;
       }
       let minRowIdx = 0;
-      if (
-        props.pagination &&
-        paginationState.pageSize != null &&
-        props.paginationMode === 'client'
-      ) {
+      if (props.pagination && props.paginationMode === 'client') {
         minRowIdx = paginationState.pageSize * paginationState.page;
       }
 
@@ -197,7 +185,7 @@ export const useGridVirtualRows = (
       const lastDisplayedIdx = getColumnIdxFromScroll(scrollLeft + windowWidth);
       const prevFirstColIdx = renderedColRef?.current?.firstColIdx || 0;
       const prevLastColIdx = renderedColRef?.current?.lastColIdx || 0;
-      const columnBuffer = props.columnBuffer!;
+      const columnBuffer = props.columnBuffer;
       const tolerance = columnBuffer > 1 ? columnBuffer - 1 : columnBuffer; // Math.floor(columnBuffer / 2);
       const diffFirst = Math.abs(firstDisplayedIdx - tolerance - prevFirstColIdx);
       const diffLast = Math.abs(lastDisplayedIdx + tolerance - prevLastColIdx);
@@ -254,6 +242,10 @@ export const useGridVirtualRows = (
 
   const updateViewport = React.useCallback(
     (forceReRender = false) => {
+      if (props.disableVirtualization) {
+        return;
+      }
+
       const lastState = apiRef.current.state;
       const containerProps = lastState.containerSizes;
       if (!windowRef || !windowRef.current || !containerProps) {
@@ -315,63 +307,7 @@ export const useGridVirtualRows = (
       setRenderingState,
       updateRenderedCols,
       windowRef,
-    ],
-  );
-
-  // TODO move to useGridScroll, it's the same regardless of whether virtualization is on or not
-  const scrollToIndexes = React.useCallback(
-    (params: Partial<GridCellIndexCoordinates>) => {
-      if (totalRowCount === 0 || visibleColumns.length === 0) {
-        return false;
-      }
-
-      logger.debug(`Scrolling to cell at row ${params.rowIndex}, col: ${params.colIndex} `);
-
-      const scrollCoordinates: any = {};
-
-      if (params.colIndex != null) {
-        scrollCoordinates.left = scrollIntoView({
-          clientHeight: windowRef.current!.clientWidth,
-          scrollTop: windowRef.current!.scrollLeft,
-          offsetHeight: visibleColumns[params.colIndex].computedWidth,
-          offsetTop: columnsMeta.positions[params.colIndex],
-        });
-      }
-
-      if (params.rowIndex != null) {
-        const elementIndex = !props.pagination
-          ? params.rowIndex
-          : params.rowIndex - paginationState.page * paginationState.pageSize;
-
-        scrollCoordinates.top = scrollIntoView({
-          clientHeight: windowRef.current!.clientHeight,
-          scrollTop: windowRef.current!.scrollTop,
-          offsetHeight: rowHeight,
-          offsetTop: rowHeight * elementIndex,
-        });
-      }
-
-      if (
-        typeof scrollCoordinates.left !== undefined ||
-        typeof scrollCoordinates.top !== undefined
-      ) {
-        apiRef.current.scroll(scrollCoordinates);
-        return true;
-      }
-
-      return false;
-    },
-    [
-      totalRowCount,
-      visibleColumns,
-      logger,
-      apiRef,
-      props.pagination,
-      paginationState.page,
-      paginationState.pageSize,
-      windowRef,
-      columnsMeta.positions,
-      rowHeight,
+      props.disableVirtualization,
     ],
   );
 
@@ -387,35 +323,17 @@ export const useGridVirtualRows = (
   }, [scrollTo, setRenderingState, windowRef]);
 
   const handleScroll = React.useCallback(() => {
+    if (props.disableVirtualization) {
+      return;
+    }
+
     // On iOS the inertia scrolling allows to return negative values.
     if (windowRef.current!.scrollLeft < 0 || windowRef.current!.scrollTop < 0) return;
 
     if (apiRef.current.updateViewport) {
       apiRef.current.updateViewport();
     }
-  }, [windowRef, apiRef]);
-
-  // TODO move to useGridScroll, it's the same regardless of whether virtualization is on or not
-  const scroll = React.useCallback(
-    (params: Partial<GridScrollParams>) => {
-      if (windowRef.current && params.left != null && colRef.current) {
-        colRef.current.scrollLeft = params.left;
-        windowRef.current.scrollLeft = params.left;
-        logger.debug(`Scrolling left: ${params.left}`);
-      }
-      if (windowRef.current && params.top != null) {
-        windowRef.current.scrollTop = params.top;
-        logger.debug(`Scrolling top: ${params.top}`);
-      }
-      logger.debug(`Scrolling, updating container, and viewport`);
-    },
-    [windowRef, colRef, logger],
-  );
-
-  const getScrollPosition = React.useCallback(
-    () => scrollStateSelector(apiRef.current.state),
-    [apiRef],
-  );
+  }, [props.disableVirtualization, windowRef, apiRef]);
 
   const getContainerPropsState = React.useCallback(
     () => gridState.containerSizes,
@@ -427,6 +345,10 @@ export const useGridVirtualRows = (
   }, [gridState.rendering.renderContext]);
 
   useEnhancedEffect(() => {
+    if (props.disableVirtualization) {
+      return;
+    }
+
     if (renderingZoneRef && renderingZoneRef.current) {
       logger.debug('applying scrollTop ', gridState.rendering.renderingZoneScroll.top);
       scrollTo(gridState.rendering.renderingZoneScroll);
@@ -434,11 +356,8 @@ export const useGridVirtualRows = (
   });
 
   const virtualApi: Partial<GridVirtualizationApi> = {
-    scroll,
-    scrollToIndexes,
     getContainerPropsState,
     getRenderContextState,
-    getScrollPosition,
     updateViewport,
   };
   useGridApiMethod(apiRef, virtualApi, 'GridVirtualizationApi');
@@ -474,24 +393,7 @@ export const useGridVirtualRows = (
     apiRef,
   ]);
 
-  const preventScroll = React.useCallback((event: any) => {
-    event.target.scrollLeft = 0;
-    event.target.scrollTop = 0;
-  }, []);
-
   useNativeEventListener(apiRef, windowRef, 'scroll', handleScroll, { passive: true });
-  useNativeEventListener(
-    apiRef,
-    () => apiRef.current.renderingZoneRef?.current?.parentElement,
-    'scroll',
-    preventScroll,
-  );
-  useNativeEventListener(
-    apiRef,
-    () => apiRef.current.columnHeadersContainerElementRef?.current,
-    'scroll',
-    preventScroll,
-  );
 
   const resetRenderedColState = React.useCallback(() => {
     logger.debug('Clearing previous renderedColRef');

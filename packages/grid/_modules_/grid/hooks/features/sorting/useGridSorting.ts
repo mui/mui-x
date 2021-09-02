@@ -26,6 +26,11 @@ import { useGridState } from '../core/useGridState';
 import { gridRowCountSelector } from '../rows/gridRowsSelector';
 import { sortedGridRowIdsSelector, sortedGridRowsSelector } from './gridSortingSelector';
 
+/**
+ * @requires useGridRows (state, event)
+ * @requires useGridControlState (method)
+ * @requires useGridColumns (event)
+ */
 export const useGridSorting = (
   apiRef: GridApiRef,
   props: Pick<
@@ -68,7 +73,7 @@ export const useGridSorting = (
       if (existing) {
         const nextSort =
           directionOverride === undefined
-            ? nextGridSortDirection(props.sortingOrder!, existing.sort)
+            ? nextGridSortDirection(props.sortingOrder, existing.sort)
             : directionOverride;
 
         return nextSort == null ? undefined : { ...existing, sort: nextSort };
@@ -77,7 +82,7 @@ export const useGridSorting = (
         field: col.field,
         sort:
           directionOverride === undefined
-            ? nextGridSortDirection(props.sortingOrder!)
+            ? nextGridSortDirection(props.sortingOrder)
             : directionOverride,
       };
     },

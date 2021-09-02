@@ -61,6 +61,15 @@ const getNextColumnHeaderIndexes = (key: string, indexes: GridColumnHeaderIndexC
   }
 };
 
+/**
+ * @requires useGridPage (state)
+ * @requires useGridPageSize (state)
+ * @requires useGridColumns (state, method)
+ * @requires useGridRows (state, method)
+ * @requires useGridContainerProps (state)
+ * @requires useGridFocus (method)
+ * @requires useGridVirtualRows (method)
+ */
 export const useGridKeyboardNavigation = (
   apiRef: GridApiRef,
   props: Pick<GridComponentProps, 'pagination'>,

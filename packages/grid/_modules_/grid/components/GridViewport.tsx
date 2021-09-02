@@ -10,7 +10,6 @@ import {
 import { gridEditRowsStateSelector } from '../hooks/features/rows/gridEditRowsSelector';
 import { gridSelectionStateSelector } from '../hooks/features/selection/gridSelectionSelector';
 import { renderStateSelector } from '../hooks/features/virtualization/renderingStateSelector';
-import { optionsSelector } from '../hooks/utils/optionsSelector';
 import { useGridApiContext } from '../hooks/root/useGridApiContext';
 import { GridDataContainer } from './containers/GridDataContainer';
 import { GridEmptyCell } from './cell/GridEmptyCell';
@@ -31,7 +30,6 @@ export const GridViewport: ViewportType = React.forwardRef<HTMLDivElement, {}>(
   function GridViewport(props, renderingZoneRef) {
     const apiRef = useGridApiContext();
     const rootProps = useGridRootProps();
-    const options = useGridSelector(apiRef, optionsSelector);
     const containerSizes = useGridSelector(apiRef, gridContainerSizesSelector);
     const viewportSizes = useGridSelector(apiRef, gridViewportSizesSelector);
     const scrollBarState = useGridSelector(apiRef, gridScrollBarSizeSelector);
@@ -88,14 +86,14 @@ export const GridViewport: ViewportType = React.forwardRef<HTMLDivElement, {}>(
             lastColIdx={renderState.renderContext!.lastColIdx!}
             hasScrollX={scrollBarState.hasScrollX}
             hasScrollY={scrollBarState.hasScrollY}
-            showCellRightBorder={!!rootProps.showCellRightBorder}
+            showCellRightBorder={rootProps.showCellRightBorder}
             extendRowFullWidth={!rootProps.disableExtendRowFullWidth}
             rowIndex={renderState.renderContext!.firstRowIdx! + idx}
             cellFocus={cellFocus}
             cellTabIndex={cellTabIndex}
             isSelected={selectionLookup[id] !== undefined}
             editRowState={editRowsState[id]}
-            cellClassName={options.classes?.cell}
+            cellClassName={rootProps.classes.cell}
             getCellClassName={rootProps.getCellClassName}
           />
           <GridEmptyCell width={renderState.renderContext!.rightEmptyWidth} height={rowHeight} />
