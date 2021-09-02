@@ -119,12 +119,13 @@ describe('<DataGridPro /> - Selection', () => {
       render(<TestDataGridSelection onSelectionModelChange={handleSelectionModelChange} />);
       apiRef.current.selectRow(1);
       expect(handleSelectionModelChange.lastCall.args[0]).to.deep.equal([1]);
-      apiRef.current.selectRow(2);
+      // Reset old selection
+      apiRef.current.selectRow(2, true, true);
       expect(handleSelectionModelChange.lastCall.args[0]).to.deep.equal([2]);
       // Keep old selection
-      apiRef.current.selectRow(3, true, true);
+      apiRef.current.selectRow(3);
       expect(handleSelectionModelChange.lastCall.args[0]).to.deep.equal([2, 3]);
-      apiRef.current.selectRow(3, false, true);
+      apiRef.current.selectRow(3, false);
       expect(handleSelectionModelChange.lastCall.args[0]).to.deep.equal([2]);
     });
 
