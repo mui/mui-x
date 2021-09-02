@@ -6,4 +6,6 @@ export const useGridRegisterControlState = <TModel>(
   controlStateItem: GridControlStateItem<TModel>,
 ) => {
   apiRef.current.updateControlState(controlStateItem);
+
+  return controlStateItem.propModel !== undefined;
 };

@@ -5,9 +5,3 @@ export interface InternalGridRowsState {
   allRows: GridRowId[];
   totalRowCount: number;
 }
-
-export const getInitialGridRowState: () => InternalGridRowsState = () => ({
-  idRowsLookup: {},
-  allRows: [],
-  totalRowCount: 0,
-});

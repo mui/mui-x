@@ -34,6 +34,8 @@ import { useEventCallback } from '../../../utils/material-ui-utils';
 import { useLogger } from '../../utils/useLogger';
 import { useGridState } from '../core/useGridState';
 import { useGridSelector } from '../core/useGridSelector';
+import { useGridRegisterControlState } from '../../utils/useGridRegisterControlState';
+import { useGridStateInit } from '../../utils/useGridStateInit';
 
 /**
  * @requires useGridFocus - can be after, async only
@@ -59,10 +61,21 @@ export function useGridEditRows(
   >,
 ) {
   const logger = useLogger('useGridEditRows');
+
+  useGridStateInit(apiRef, (state) => ({ ...state, editRows: {} }));
+
   const [, setGridState, forceUpdate] = useGridState(apiRef);
   const focusTimeout = React.useRef<any>(null);
   const nextFocusedCell = React.useRef<GridCellParams | null>(null);
   const columns = useGridSelector(apiRef, allGridColumnsSelector);
+
+  useGridRegisterControlState(apiRef, {
+    stateId: 'editRows',
+    propModel: props.editRowsModel,
+    propOnChange: props.onEditRowsModelChange,
+    stateSelector: (state) => state.editRows,
+    changeEvent: GridEvents.editRowsModelChange,
+  });
 
   const commitPropsAndExit = (params: GridCellParams, event: MouseEvent | React.SyntheticEvent) => {
     if (params.cellMode === GridCellModes.View) {
@@ -503,20 +516,10 @@ export function useGridEditRows(
   );
 
   React.useEffect(() => {
-    apiRef.current.updateControlState<GridEditRowsModel>({
-      stateId: 'editRows',
-      propModel: props.editRowsModel,
-      propOnChange: props.onEditRowsModelChange,
-      stateSelector: (state) => state.editRows,
-      changeEvent: GridEvents.editRowsModelChange,
-    });
-  }, [apiRef, props.editRowsModel, props.onEditRowsModelChange]);
-
-  React.useEffect(() => {
     const currentEditRowsModel = apiRef.current.state.editRows;
 
     if (props.editRowsModel !== undefined && props.editRowsModel !== currentEditRowsModel) {
-      apiRef.current.setEditRowsModel(props.editRowsModel || {});
+      apiRef.current.setEditRowsModel(props.editRowsModel);
     }
   }, [apiRef, props.editRowsModel]);
 }

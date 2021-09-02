@@ -218,11 +218,14 @@ export const useGridSorting = (
 
   const setSortModel = React.useCallback(
     (sortModel: GridSortModel) => {
-      setGridState((state) => {
-        return { ...state, sorting: { ...state.sorting, sortModel } };
-      });
-      forceUpdate();
-      apiRef.current.applySorting();
+      const currentModel = gridSortModelSelector(apiRef.current.state);
+      if (sortModel !== currentModel) {
+        setGridState((state) => {
+          return { ...state, sorting: { ...state.sorting, sortModel } };
+        });
+        forceUpdate();
+        apiRef.current.applySorting();
+      }
     },
     [setGridState, forceUpdate, apiRef],
   );
@@ -333,11 +336,10 @@ export const useGridSorting = (
   }, [rowCount, apiRef, logger]);
 
   React.useEffect(() => {
-    const oldSortModel = gridSortModelSelector(apiRef.current.state);
-    if (props.sortModel !== undefined && props.sortModel !== oldSortModel) {
-      setSortModel(props.sortModel);
+    if (props.sortModel !== undefined) {
+      apiRef.current.setSortModel(props.sortModel);
     }
-  }, [props.sortModel, apiRef, setSortModel]);
+  }, [props.sortModel, apiRef]);
 
   useFirstRender(() => apiRef.current.applySorting());
 };

@@ -57,11 +57,13 @@ describe('<DataGridPro /> - State', () => {
   it('should allow to control the state using apiRef', () => {
     function GridStateTest() {
       const apiRef = useGridApiRef();
+
       React.useEffect(() => {
         apiRef.current.setState((prev) => ({
           ...prev,
           sorting: { ...prev.sorting, sortModel: [{ field: 'brand', sort: 'asc' }] },
         }));
+        apiRef.current.applySorting();
       }, [apiRef]);
       return (
         <div style={{ width: 300, height: 300 }}>

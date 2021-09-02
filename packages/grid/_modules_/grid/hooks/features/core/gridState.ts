@@ -22,7 +22,7 @@ import {
 } from '../filter/visibleGridRowsState';
 import { GridFocusState, GridTabIndexState } from '../focus/gridFocusState';
 import { GridPreferencePanelState } from '../preferencesPanel/gridPreferencePanelState';
-import { getInitialGridRowState, InternalGridRowsState } from '../rows/gridRowsState';
+import { InternalGridRowsState } from '../rows/gridRowsState';
 import { GridSelectionModel } from '../../../models/gridSelectionModel';
 import { GridSortingState } from '../sorting/gridSortingState';
 import {
@@ -56,8 +56,8 @@ export interface GridState {
 
 export const getInitialGridState = (): GridState =>
   ({
-    rows: getInitialGridRowState(),
-    editRows: {},
+    // rows: getInitialGridRowState(),
+    // editRows: {},
     // pagination: getInitialPaginationState(),
     // columns: getInitialGridColumnsState(),
     columnReorder: getInitialGridColumnReorderState(),
@@ -69,7 +69,7 @@ export const getInitialGridState = (): GridState =>
     // sorting: getInitialGridSortingState(),
     focus: { cell: null, columnHeader: null },
     tabIndex: { cell: null, columnHeader: null },
-    selection: [],
+    // selection: [],
     // filter: getInitialGridFilterState(),
     columnMenu: { open: false },
     preferencePanel: { open: false },

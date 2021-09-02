@@ -16,6 +16,8 @@ import {
   selectedGridRowsSelector,
   selectedIdsLookupSelector,
 } from './gridSelectionSelector';
+import { useGridRegisterControlState } from '../../utils/useGridRegisterControlState';
+import { useGridStateInit } from '../../utils/useGridStateInit';
 
 /**
  * @requires useOptionsProp (state)
@@ -25,8 +27,6 @@ import {
  */
 export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps): void => {
   const logger = useLogger('useGridSelection');
-  const [, setGridState, forceUpdate] = useGridState(apiRef);
-  const rowsLookup = useGridSelector(apiRef, gridRowsLookupSelector);
 
   const propSelectionModel = React.useMemo(() => {
     if (props.selectionModel == null) {
@@ -39,6 +39,19 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
 
     return [props.selectionModel];
   }, [props.selectionModel]);
+
+  useGridStateInit(apiRef, (state) => ({ ...state, selection: propSelectionModel ?? [] }));
+
+  const [, setGridState, forceUpdate] = useGridState(apiRef);
+  const rowsLookup = useGridSelector(apiRef, gridRowsLookupSelector);
+
+  const isStateControlled = useGridRegisterControlState(apiRef, {
+    stateId: 'selection',
+    propModel: propSelectionModel,
+    propOnChange: props.onSelectionModelChange,
+    stateSelector: gridSelectionStateSelector,
+    changeEvent: GridEvents.selectionChange,
+  });
 
   const { checkboxSelection, disableMultipleSelection, disableSelectionOnClick, isRowSelectable } =
     props;
@@ -191,16 +204,6 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
   useGridApiMethod(apiRef, selectionApi, 'GridSelectionApi');
 
   React.useEffect(() => {
-    apiRef.current.updateControlState<GridRowId[]>({
-      stateId: 'selection',
-      propModel: propSelectionModel,
-      propOnChange: props.onSelectionModelChange,
-      stateSelector: gridSelectionStateSelector,
-      changeEvent: GridEvents.selectionChange,
-    });
-  }, [apiRef, props.onSelectionModelChange, propSelectionModel]);
-
-  React.useEffect(() => {
     // Rows changed
     setGridState((state) => {
       const newSelectionState = gridSelectionStateSelector(state);
@@ -218,7 +221,7 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
       return state;
     });
     forceUpdate();
-  }, [rowsLookup, apiRef, setGridState, forceUpdate]);
+  }, [rowsLookup, apiRef, setGridState, forceUpdate, isStateControlled]);
 
   React.useEffect(() => {
     if (propSelectionModel === undefined) {
@@ -229,6 +232,10 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
   }, [apiRef, propSelectionModel, setGridState]);
 
   React.useEffect(() => {
+    if (isStateControlled) {
+      return;
+    }
+
     // isRowSelectable changed
     setGridState((state) => {
       const newSelectionState = [...state.selection];
@@ -247,5 +254,5 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
       return state;
     });
     forceUpdate();
-  }, [apiRef, setGridState, forceUpdate, isRowSelectable]);
+  }, [apiRef, setGridState, forceUpdate, isRowSelectable, isStateControlled]);
 };

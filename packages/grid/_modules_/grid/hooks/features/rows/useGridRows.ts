@@ -15,9 +15,8 @@ import {
 import { useGridApiMethod } from '../../root/useGridApiMethod';
 import { useLogger } from '../../utils/useLogger';
 import { useGridState } from '../core/useGridState';
-import { getInitialGridRowState, InternalGridRowsState } from './gridRowsState';
-import { useGridSelector } from '../core/useGridSelector';
-import { gridRowsStateSelector } from './gridRowsSelector';
+import { InternalGridRowsState } from './gridRowsState';
+import { useGridStateInit } from '../../utils/useGridStateInit';
 
 function getGridRowId(
   rowData: GridRowData,
@@ -35,7 +34,8 @@ export function convertGridRowsPropToState(
   rowIdGetter?: GridRowIdGetter,
 ): InternalGridRowsState {
   const state: InternalGridRowsState = {
-    ...getInitialGridRowState(),
+    idRowsLookup: {},
+    allRows: [],
     totalRowCount: totalRowCount && totalRowCount > rows.length ? totalRowCount : rows.length,
   };
 
@@ -57,8 +57,19 @@ export const useGridRows = (
   props: Pick<GridComponentProps, 'rows' | 'getRowId' | 'rowCount'>,
 ): void => {
   const logger = useLogger('useGridRows');
+  const internalRowsState = React.useRef() as React.MutableRefObject<InternalGridRowsState>;
+
+  useGridStateInit(apiRef, (state) => {
+    internalRowsState.current = convertGridRowsPropToState(
+      props.rows,
+      props.rowCount,
+      props.getRowId,
+    );
+
+    return { ...state, rows: internalRowsState.current };
+  });
+
   const [, setGridState, updateComponent] = useGridState(apiRef);
-  const stateRows = useGridSelector(apiRef, gridRowsStateSelector);
   const updateTimeout = React.useRef<any>();
 
   const forceUpdate = React.useCallback(
@@ -76,8 +87,6 @@ export const useGridRows = (
     },
     [logger, updateComponent],
   );
-
-  const internalRowsState = React.useRef<InternalGridRowsState>(stateRows);
 
   React.useEffect(() => {
     return () => clearTimeout(updateTimeout!.current);
