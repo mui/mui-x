@@ -179,11 +179,12 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
 
         event.stopPropagation();
       } else {
-        const resetSelection = !hasCtrlKey || !canHaveMultipleSelection;
+        const resetSelection = !canHaveMultipleSelection || (!hasCtrlKey && !checkboxSelection);
+
         if (resetSelection) {
           apiRef.current.selectRow(
             params.id,
-            hasCtrlKey ? !apiRef.current.isRowSelected(params.id) : true,
+            hasCtrlKey || checkboxSelection ? !apiRef.current.isRowSelected(params.id) : true,
             true,
           );
         } else {
@@ -193,7 +194,7 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
 
       lastRowToggledByClick.current = params.id;
     },
-    [apiRef, checkboxSelection, canHaveMultipleSelection, disableSelectionOnClick],
+    [apiRef, checkboxSelection, canHaveMultipleSelection, disableSelectionOnClick, checkboxSelection],
   );
 
   useGridApiEventHandler(apiRef, GridEvents.rowClick, handleRowClick);
