@@ -17,5 +17,5 @@ export interface GridDensityApi {
    * @param {number} headerHeight The new header height.
    * @param {number} rowHeight The new row height.
    */
-  setDensity: (size: GridDensity, headerHeight?: number, rowHeight?: number) => void;
+  setDensity: (density: GridDensity, headerHeight?: number, rowHeight?: number) => void;
 }

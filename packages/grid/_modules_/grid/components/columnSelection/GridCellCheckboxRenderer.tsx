@@ -18,7 +18,7 @@ export const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, Gri
     const element = apiRef.current.getCellElement(id, field);
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-      apiRef!.current.selectRow(id, event.target.checked, true);
+      apiRef.current.selectRow(id, event.target.checked, true);
     };
 
     const handleClick = (event: React.MouseEvent<HTMLInputElement>) => {
@@ -44,19 +44,17 @@ export const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, Gri
           event.stopPropagation();
         }
         if (isNavigationKey(event.key) && !event.shiftKey) {
-          apiRef!.current.publishEvent(GridEvents.cellNavigationKeyDown, props, event);
+          apiRef.current.publishEvent(GridEvents.cellNavigationKeyDown, props, event);
         }
       },
       [apiRef, props],
     );
 
-    const CheckboxComponent = apiRef?.current.components.Checkbox!;
-
     const isSelectable =
-      !rootProps.isRowSelectable || rootProps.isRowSelectable(apiRef!.current.getRowParams(id));
+      !rootProps.isRowSelectable || rootProps.isRowSelectable(apiRef.current.getRowParams(id));
 
     return (
-      <CheckboxComponent
+      <rootProps.components.Checkbox
         ref={handleRef}
         tabIndex={tabIndex}
         checked={!!value}
@@ -67,7 +65,7 @@ export const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, Gri
         inputProps={{ 'aria-label': 'Select Row checkbox' }}
         onKeyDown={handleKeyDown}
         disabled={!isSelectable}
-        {...apiRef?.current.componentsProps?.checkbox}
+        {...rootProps.componentsProps?.checkbox}
       />
     );
   },

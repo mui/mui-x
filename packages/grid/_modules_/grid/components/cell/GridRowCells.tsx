@@ -62,7 +62,7 @@ export const GridRowCells = React.memo(function GridRowCells(props: RowCellsProp
       ? showCellRightBorder
       : !removeLastBorderRight && !props.extendRowFullWidth;
 
-    const cellParams: GridCellParams = apiRef!.current.getCellParams(id, column.field);
+    const cellParams: GridCellParams = apiRef.current.getCellParams(id, column.field);
 
     const classNames = [cellClassName];
 

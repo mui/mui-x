@@ -7,7 +7,6 @@ import { GridRowParams } from '../../../models/params/gridRowParams';
 import { GridRowId, GridRowModel } from '../../../models/gridRows';
 import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
-import { optionsSelector } from '../../utils/optionsSelector';
 import { useLogger } from '../../utils/useLogger';
 import { useGridSelector } from '../core/useGridSelector';
 import { useGridState } from '../core/useGridState';
@@ -18,10 +17,15 @@ import {
   selectedIdsLookupSelector,
 } from './gridSelectionSelector';
 
+/**
+ * @requires useOptionsProp (state)
+ * @requires useGridRows (state, method)
+ * @requires useGridParamsApi (method)
+ * @requires useGridControlState (method)
+ */
 export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps): void => {
   const logger = useLogger('useGridSelection');
   const [, setGridState, forceUpdate] = useGridState(apiRef);
-  const options = useGridSelector(apiRef, optionsSelector);
   const rowsLookup = useGridSelector(apiRef, gridRowsLookupSelector);
 
   const propSelectionModel = React.useMemo(() => {
@@ -37,7 +41,7 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
   }, [props.selectionModel]);
 
   const { checkboxSelection, disableMultipleSelection, disableSelectionOnClick, isRowSelectable } =
-    options;
+    props;
 
   const getSelectedRows = React.useCallback(
     () => selectedGridRowsSelector(apiRef.current.state),
@@ -156,9 +160,10 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
       const currentModel = apiRef.current.state.selection;
       if (currentModel !== model) {
         setGridState((state) => ({ ...state, selection: model }));
+        forceUpdate();
       }
     },
-    [setGridState, apiRef],
+    [setGridState, apiRef, forceUpdate],
   );
 
   const handleRowClick = React.useCallback(
@@ -236,6 +241,7 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
           hasChanged = true;
         }
       });
+
       if (hasChanged) {
         return { ...state, selection: Object.values(selectionLookup) };
       }

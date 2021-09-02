@@ -3,6 +3,7 @@ const path = require('path');
 
 module.exports = {
   ...baseline,
+  plugins: [...baseline.plugins, 'jsdoc'],
   settings: {
     'import/resolver': {
       webpack: {
@@ -21,6 +22,13 @@ module.exports = {
     '@typescript-eslint/return-await': 'off',
     // TODO move rule into main repo to allow deep @material-ui/monorepo imports
     'no-restricted-imports': 'off',
+    'jsdoc/require-param': ['error', { contexts: ['TSFunctionType'] }],
+    'jsdoc/require-param-type': ['error', { contexts: ['TSFunctionType'] }],
+    'jsdoc/require-param-name': ['error', { contexts: ['TSFunctionType'] }],
+    'jsdoc/require-param-description': ['error', { contexts: ['TSFunctionType'] }],
+    'jsdoc/require-returns': ['error', { contexts: ['TSFunctionType'] }],
+    'jsdoc/require-returns-type': ['error', { contexts: ['TSFunctionType'] }],
+    'jsdoc/require-returns-description': ['error', { contexts: ['TSFunctionType'] }],
   },
   overrides: [
     ...baseline.overrides,

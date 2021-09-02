@@ -30,6 +30,11 @@ function writeToClipboardPolyfill(data: string) {
   }
 }
 
+/**
+ * @requires useGridColumns (state)
+ * @requires useGridParamsApi (method)
+ * @requires useGridSelection (method)
+ */
 export const useGridClipboard = (apiRef: GridApiRef): void => {
   const visibleColumns = useGridSelector(apiRef, visibleGridColumnsSelector);
 

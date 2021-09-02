@@ -1,6 +1,5 @@
 import { GridColumnApi } from './gridColumnApi';
 import { GridColumnMenuApi } from './gridColumnMenuApi';
-import { GridComponentsApi } from './gridComponentsApi';
 import { GridControlStateApi } from './gridControlStateApi';
 import { GridCoreApi } from './gridCoreApi';
 import { GridClipboardApi } from './gridClipboardApi';
@@ -20,13 +19,13 @@ import { GridSelectionApi } from './gridSelectionApi';
 import { GridSortApi } from './gridSortApi';
 import { GridStateApi } from './gridStateApi';
 import { GridVirtualizationApi } from './gridVirtualizationApi';
+import { GridScrollApi } from './gridScrollApi';
 
 /**
  * The full grid API.
  */
 export interface GridApi
   extends GridCoreApi,
-    GridComponentsApi,
     GridStateApi,
     GridDensityApi,
     GridEventsApi,
@@ -46,4 +45,5 @@ export interface GridApi
     GridPreferencesPanelApi,
     GridLocaleTextApi,
     GridControlStateApi,
-    GridClipboardApi {}
+    GridClipboardApi,
+    GridScrollApi {}
