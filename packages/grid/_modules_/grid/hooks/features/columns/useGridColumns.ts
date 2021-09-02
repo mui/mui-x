@@ -27,6 +27,7 @@ import {
 import { useGridApiOptionHandler } from '../../root/useGridApiEventHandler';
 import { GRID_STRING_COL_DEF } from '../../../models/colDef/gridStringColDef';
 import { GridComponentProps } from '../../../GridComponentProps';
+import { useGridStateInit } from '../../utils/useGridStateInit';
 
 type RawGridColumnsState = Omit<GridColumnsState, 'lookup'> & {
   lookup: { [field: string]: GridColDef | GridStateColDef };
@@ -135,6 +136,33 @@ export function useGridColumns(
   >,
 ): void {
   const logger = useLogger('useGridColumns');
+
+  useGridStateInit(apiRef, (state) => {
+    const hydratedColumns = hydrateColumnsType(
+      props.columns,
+      props.columnTypes,
+      apiRef.current.getLocaleText,
+      props.checkboxSelection,
+    );
+
+    const columns = upsertColumnsState(hydratedColumns);
+    let newColumns: GridColumns = columns.all.map((field) => columns.lookup[field]);
+    newColumns = hydrateColumnsWidth(newColumns, 0);
+
+    const columnState: GridColumnsState = {
+      all: newColumns.map((col) => col.field),
+      lookup: newColumns.reduce((acc, col) => {
+        acc[col.field] = col;
+        return acc;
+      }, {}),
+    };
+
+    return {
+      ...state,
+      columns: columnState,
+    };
+  });
+
   const [gridState, setGridState, forceUpdate] = useGridState(apiRef);
   const columnsMeta = useGridSelector(apiRef, gridColumnsMetaSelector);
   const allColumns = useGridSelector(apiRef, allGridColumnsSelector);

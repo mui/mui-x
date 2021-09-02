@@ -9,7 +9,13 @@ import {
   waitFor,
 } from 'test/utils';
 import { expect } from 'chai';
-import {DataGrid, DataGridProps, GridFilterModel, GridLinkOperator, GridRowsProp} from '@mui/x-data-grid';
+import {
+  DataGrid,
+  DataGridProps,
+  GridFilterModel,
+  GridLinkOperator,
+  GridRowsProp,
+} from '@mui/x-data-grid';
 import { getColumnValues, getRows } from 'test/utils/helperFn';
 import { spy } from 'sinon';
 import { useData } from 'packages/storybook/src/hooks/useData';
@@ -174,7 +180,7 @@ describe('<DataGrid /> - Pagination', () => {
             value: '3',
           },
         ],
-      }
+      };
 
       const TestCasePaginationFilteredData = () => {
         const [page, setPage] = React.useState(1);

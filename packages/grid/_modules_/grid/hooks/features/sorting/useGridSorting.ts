@@ -24,7 +24,14 @@ import { allGridColumnsSelector } from '../columns/gridColumnsSelector';
 import { useGridSelector } from '../core/useGridSelector';
 import { useGridState } from '../core/useGridState';
 import { gridRowCountSelector } from '../rows/gridRowsSelector';
-import { sortedGridRowIdsSelector, sortedGridRowsSelector } from './gridSortingSelector';
+import {
+  gridSortModelSelector,
+  sortedGridRowIdsSelector,
+  sortedGridRowsSelector,
+} from './gridSortingSelector';
+import { useGridStateInit } from '../../utils/useGridStateInit';
+import { useFirstRender } from '../../utils/useFirstRender';
+import { useGridRegisterControlState } from '../../utils/useGridRegisterControlState';
 
 /**
  * @requires useGridRows (state, event)
@@ -45,13 +52,30 @@ export const useGridSorting = (
 ) => {
   const logger = useLogger('useGridSorting');
 
-  const [gridState, setGridState, forceUpdate] = useGridState(apiRef);
+  useGridStateInit(apiRef, (state) => ({
+    ...state,
+    sorting: {
+      sortModel: props.sortModel ?? [],
+      sortedRows: [],
+    },
+  }));
+
+  const [, setGridState, forceUpdate] = useGridState(apiRef);
   const rowCount = useGridSelector(apiRef, gridRowCountSelector);
+
+  useGridRegisterControlState(apiRef, {
+    stateId: 'sortModel',
+    propModel: props.sortModel,
+    propOnChange: props.onSortModelChange,
+    stateSelector: (state) => state.sorting.sortModel,
+    changeEvent: GridEvents.sortModelChange,
+  });
 
   const upsertSortModel = React.useCallback(
     (field: string, sortItem?: GridSortItem): GridSortModel => {
-      const existingIdx = gridState.sorting.sortModel.findIndex((c) => c.field === field);
-      let newSortModel = [...gridState.sorting.sortModel];
+      const sortModel = gridSortModelSelector(apiRef.current.state);
+      const existingIdx = sortModel.findIndex((c) => c.field === field);
+      let newSortModel = [...sortModel];
       if (existingIdx > -1) {
         if (!sortItem) {
           newSortModel.splice(existingIdx, 1);
@@ -59,16 +83,17 @@ export const useGridSorting = (
           newSortModel.splice(existingIdx, 1, sortItem);
         }
       } else {
-        newSortModel = [...gridState.sorting.sortModel, sortItem!];
+        newSortModel = [...sortModel, sortItem!];
       }
       return newSortModel;
     },
-    [gridState.sorting.sortModel],
+    [apiRef],
   );
 
   const createSortItem = React.useCallback(
     (col: GridColDef, directionOverride?: GridSortDirection): GridSortItem | undefined => {
-      const existing = gridState.sorting.sortModel.find((c) => c.field === col.field);
+      const sortModel = gridSortModelSelector(apiRef.current.state);
+      const existing = sortModel.find((c) => c.field === col.field);
 
       if (existing) {
         const nextSort =
@@ -86,7 +111,7 @@ export const useGridSorting = (
             : directionOverride,
       };
     },
-    [gridState.sorting.sortModel, props.sortingOrder],
+    [apiRef, props.sortingOrder],
   );
 
   const getSortCellParams = React.useCallback(
@@ -153,16 +178,14 @@ export const useGridSorting = (
 
     if (props.sortingMode === GridFeatureModeConstant.server) {
       logger.debug('Skipping sorting rows as sortingMode = server');
-      setGridState((state) => {
-        return {
-          ...state,
-          sorting: { ...state.sorting, sortedRows },
-        };
-      });
+      setGridState((state) => ({
+        ...state,
+        sorting: { ...state.sorting, sortedRows },
+      }));
       return;
     }
 
-    const sortModel = apiRef.current.state.sorting.sortModel;
+    const sortModel = gridSortModelSelector(apiRef.current.state);
 
     if (sortModel.length > 0) {
       const comparatorList = buildComparatorList(sortModel);
@@ -177,12 +200,10 @@ export const useGridSorting = (
         .map((field) => field[0].id);
     }
 
-    setGridState((state) => {
-      return {
-        ...state,
-        sorting: { ...state.sorting, sortedRows },
-      };
-    });
+    setGridState((state) => ({
+      ...state,
+      sorting: { ...state.sorting, sortedRows },
+    }));
     forceUpdate();
   }, [
     apiRef,
@@ -248,8 +269,8 @@ export const useGridSorting = (
   }, [setGridState]);
 
   const getSortModel = React.useCallback(
-    () => gridState.sorting.sortModel,
-    [gridState.sorting.sortModel],
+    () => gridSortModelSelector(apiRef.current.state),
+    [apiRef],
   );
 
   const getSortedRows = React.useCallback(
@@ -312,19 +333,11 @@ export const useGridSorting = (
   }, [rowCount, apiRef, logger]);
 
   React.useEffect(() => {
-    apiRef.current.updateControlState<GridSortModel>({
-      stateId: 'sortModel',
-      propModel: props.sortModel,
-      propOnChange: props.onSortModelChange,
-      stateSelector: (state) => state.sorting.sortModel,
-      changeEvent: GridEvents.sortModelChange,
-    });
-  }, [apiRef, props.sortModel, props.onSortModelChange]);
-
-  React.useEffect(() => {
-    const oldSortModel = apiRef.current.state.sorting.sortModel;
+    const oldSortModel = gridSortModelSelector(apiRef.current.state);
     if (props.sortModel !== undefined && props.sortModel !== oldSortModel) {
       setSortModel(props.sortModel);
     }
   }, [props.sortModel, apiRef, setSortModel]);
+
+  useFirstRender(() => apiRef.current.applySorting());
 };

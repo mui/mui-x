@@ -9,7 +9,7 @@ import { useGridSelector, useGridState } from '../core';
 import { visibleGridRowCountSelector } from '../filter';
 import { gridContainerSizesSelector } from '../../root/gridContainerSizesSelector';
 import { useGridStateInit } from '../../utils/useGridStateInit';
-import {useGridRegisterControlState} from "../../utils/useGridRegisterControlState";
+import { useGridRegisterControlState } from '../../utils/useGridRegisterControlState';
 
 /**
  * @requires useGridControlStateManager (method)
@@ -21,14 +21,15 @@ export const useGridPageSize = (
   props: Pick<GridComponentProps, 'pageSize' | 'onPageSizeChange' | 'autoPageSize'>,
 ) => {
   const logger = useLogger('useGridPageSize');
-  const [, setGridState, forceUpdate] = useGridState(apiRef);
-  const visibleRowCount = useGridSelector(apiRef, visibleGridRowCountSelector);
-  const containerSizes = useGridSelector(apiRef, gridContainerSizesSelector);
 
   useGridStateInit(apiRef, (state) => ({
     ...state,
     pagination: { pageSize: props.pageSize ?? 100 },
   }));
+  const [, setGridState, forceUpdate] = useGridState(apiRef);
+
+  const visibleRowCount = useGridSelector(apiRef, visibleGridRowCountSelector);
+  const containerSizes = useGridSelector(apiRef, gridContainerSizesSelector);
 
   useGridRegisterControlState(apiRef, {
     stateId: 'pageSize',
@@ -36,7 +37,7 @@ export const useGridPageSize = (
     propOnChange: props.onPageSizeChange,
     stateSelector: (state) => state.pagination.pageSize,
     changeEvent: GridEvents.pageSizeChange,
-  })
+  });
 
   const setPageSize = React.useCallback(
     (pageSize: number) => {

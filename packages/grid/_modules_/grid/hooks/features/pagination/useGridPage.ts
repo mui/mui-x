@@ -10,7 +10,7 @@ import { GridPageApi } from '../../../models/api/gridPageApi';
 import { GridPaginationState } from './gridPaginationState';
 import { visibleGridRowCountSelector } from '../filter';
 import { useGridStateInit } from '../../utils/useGridStateInit';
-import {useGridRegisterControlState} from "../../utils/useGridRegisterControlState";
+import { useGridRegisterControlState } from '../../utils/useGridRegisterControlState';
 
 const getPageCount = (rowCount: number, pageSize: number): number => {
   if (pageSize > 0 && rowCount > 0) {
@@ -41,8 +41,6 @@ export const useGridPage = (
   props: Pick<GridComponentProps, 'page' | 'onPageChange' | 'rowCount'>,
 ) => {
   const logger = useLogger('useGridPage');
-  const [, setGridState, forceUpdate] = useGridState(apiRef);
-  const visibleRowCount = useGridSelector(apiRef, visibleGridRowCountSelector);
 
   useGridStateInit(apiRef, (state) => ({
     ...state,
@@ -53,6 +51,9 @@ export const useGridPage = (
       rowCount: props.rowCount ?? 0,
     },
   }));
+  const [, setGridState, forceUpdate] = useGridState(apiRef);
+
+  const visibleRowCount = useGridSelector(apiRef, visibleGridRowCountSelector);
 
   useGridRegisterControlState(apiRef, {
     stateId: 'page',
@@ -60,7 +61,7 @@ export const useGridPage = (
     propOnChange: props.onPageChange,
     stateSelector: (state) => state.pagination.page,
     changeEvent: GridEvents.pageChange,
-  })
+  });
 
   const setPage = React.useCallback(
     (page: number) => {

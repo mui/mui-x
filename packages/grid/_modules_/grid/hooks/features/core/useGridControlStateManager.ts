@@ -9,17 +9,22 @@ import { useGridApiMethod } from '../../root/useGridApiMethod';
 export function useGridControlStateManager(apiRef: GridApiRef, props: GridComponentProps) {
   const controlStateMapRef = React.useRef<Record<string, GridControlStateItem<any>>>({});
 
-  const updateControlState = React.useCallback<GridControlStateApi['updateControlState']>((controlStateItem) => {
-    const { stateId, stateSelector, ...others } = controlStateItem;
+  const updateControlState = React.useCallback<GridControlStateApi['updateControlState']>(
+    (controlStateItem) => {
+      const { stateId, stateSelector, ...others } = controlStateItem;
 
-    controlStateMapRef.current[stateId] = {
-      ...others,
-      stateId,
-      stateSelector: !stateSelector ? (state) => state[stateId] : stateSelector,
-    };
-  }, []);
+      controlStateMapRef.current[stateId] = {
+        ...others,
+        stateId,
+        stateSelector: !stateSelector ? (state) => state[stateId] : stateSelector,
+      };
+    },
+    [],
+  );
 
-  const applyControlStateConstraint = React.useCallback<GridControlStateApi['applyControlStateConstraint']>(
+  const applyControlStateConstraint = React.useCallback<
+    GridControlStateApi['applyControlStateConstraint']
+  >(
     (newState) => {
       let ignoreSetState = false;
       const updatedStateIds: string[] = [];
@@ -37,7 +42,11 @@ export function useGridControlStateManager(apiRef: GridApiRef, props: GridCompon
         }
 
         // The state is controlled, the prop should always win
-        if (controlState.propModel !== undefined && (newSubState !== controlState.propModel) && (newSubState !== oldState)) {
+        if (
+          controlState.propModel !== undefined &&
+          newSubState !== controlState.propModel &&
+          newSubState !== oldState
+        ) {
           ignoreSetState = true;
         }
       });

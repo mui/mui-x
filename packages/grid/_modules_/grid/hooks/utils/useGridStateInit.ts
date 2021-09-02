@@ -14,6 +14,6 @@ export const useGridStateInit = (
 
   if (!isInitialized.current) {
     apiRef.current.state = callback(apiRef.current.state) as GridState;
-    isInitialized.current = true
+    isInitialized.current = true;
   }
 };
