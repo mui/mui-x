@@ -8,14 +8,19 @@
       "type": "() => Map<GridRowId, GridRowData>"
     },
     {
+      "name": "isRowSelected",
+      "description": "Returns the current selection status of a row",
+      "type": "(id: GridRowId) => boolean"
+    },
+    {
       "name": "selectRow",
       "description": "Change the selection state of a row.",
-      "type": "(id: GridRowId, isSelected?: boolean, allowMultiple?: boolean) => void"
+      "type": "(id: GridRowId, isSelected?: boolean, resetSelection?: boolean) => void"
     },
     {
       "name": "selectRows",
       "description": "Change the selection state of multiple rows.",
-      "type": "(ids: GridRowId[], isSelected?: boolean, deselectOtherRows?: boolean) => void"
+      "type": "(ids: GridRowId[], isSelected?: boolean, resetSelection?: boolean) => void"
     },
     {
       "name": "setSelectionModel",

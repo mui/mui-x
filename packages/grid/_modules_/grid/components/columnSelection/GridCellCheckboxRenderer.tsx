@@ -18,7 +18,7 @@ export const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, Gri
     const element = apiRef.current.getCellElement(id, field);
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-      apiRef.current.selectRow(id, event.target.checked, true);
+      apiRef.current.selectRow(id, event.target.checked, false);
     };
 
     const handleClick = (event: React.MouseEvent<HTMLInputElement>) => {

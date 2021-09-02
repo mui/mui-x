@@ -78,7 +78,7 @@ export const useGridKeyboard = (apiRef: GridApiRef): void => {
 
       if (isSpaceKey(event.key) && event.shiftKey) {
         event.preventDefault();
-        apiRef.current.selectRow(cellParams.id);
+        apiRef.current.selectRow(cellParams.id, undefined, false);
         return;
       }
 

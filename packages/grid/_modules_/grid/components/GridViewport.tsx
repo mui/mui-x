@@ -56,7 +56,7 @@ export const GridViewport: ViewportType = React.forwardRef<HTMLDivElement, {}>(
         <GridRow
           key={id}
           id={id}
-          selected={selectionLookup[id] !== undefined}
+          selected={!!selectionLookup.get(id)}
           rowIndex={renderState.renderContext!.firstRowIdx! + idx}
         >
           <GridEmptyCell width={renderState.renderContext!.leftEmptyWidth} height={rowHeight} />
