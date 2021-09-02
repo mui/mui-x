@@ -60,7 +60,10 @@ function trackFinger(event, currentTouchId): CursorCoordinates | boolean {
   };
 }
 
-// TODO improve experience for last column
+/**
+ * TODO: improve experience for last column
+ * @requires useGridColumns (method, event)
+ */
 export const useGridColumnResize = (
   apiRef: GridApiRef,
   props: Pick<GridComponentProps, 'onColumnResize' | 'onColumnWidthChange'>,
@@ -97,7 +100,7 @@ export const useGridColumnResize = (
     // eslint-disable-next-line @typescript-eslint/no-use-before-define
     stopListening();
 
-    apiRef.current!.updateColumn(colDefRef.current!);
+    apiRef.current.updateColumn(colDefRef.current!);
 
     clearTimeout(stopResizeEventTimeout.current);
     stopResizeEventTimeout.current = setTimeout(() => {
@@ -167,7 +170,7 @@ export const useGridColumnResize = (
       apiRef.current.publishEvent(GridEvents.columnResizeStart, { field: colDef.field }, event);
 
       colDefRef.current = colDef;
-      colElementRef.current = apiRef.current!.columnHeadersElementRef?.current!.querySelector(
+      colElementRef.current = apiRef.current.columnHeadersElementRef?.current!.querySelector(
         `[data-field="${colDef.field}"]`,
       ) as HTMLDivElement;
 
@@ -197,7 +200,7 @@ export const useGridColumnResize = (
     // eslint-disable-next-line @typescript-eslint/no-use-before-define
     stopListening();
 
-    apiRef.current!.updateColumn(colDefRef.current!);
+    apiRef.current.updateColumn(colDefRef.current!);
 
     clearTimeout(stopResizeEventTimeout.current);
     stopResizeEventTimeout.current = setTimeout(() => {
@@ -269,7 +272,7 @@ export const useGridColumnResize = (
 
     colDefRef.current = colDef;
     colElementRef.current = findHeaderElementFromField(
-      apiRef.current!.columnHeadersElementRef?.current!,
+      apiRef.current.columnHeadersElementRef?.current!,
       colDef.field,
     ) as HTMLDivElement;
     colCellElementsRef.current = findGridCellElementsFromCol(
@@ -322,7 +325,7 @@ export const useGridColumnResize = (
 
   useNativeEventListener(
     apiRef,
-    () => apiRef.current?.columnHeadersElementRef?.current,
+    () => apiRef.current.columnHeadersElementRef?.current,
     'touchstart',
     handleTouchStart,
     { passive: doesSupportTouchActionNone() },

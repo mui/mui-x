@@ -4,7 +4,6 @@ import clsx from 'clsx';
 import { unstable_useId as useId } from '@material-ui/core/utils';
 import { GridEvents } from '../../constants/eventsConstants';
 import { GridStateColDef, GRID_NUMBER_COLUMN_TYPE } from '../../models/colDef/index';
-import { GridOptions } from '../../models/gridOptions';
 import { GridSortDirection } from '../../models/gridSortModel';
 import { useGridApiContext } from '../../hooks/root/useGridApiContext';
 import { GridColumnHeaderSortIcon } from './GridColumnHeaderSortIcon';
@@ -15,6 +14,7 @@ import { ColumnHeaderFilterIcon } from './ColumnHeaderFilterIcon';
 import { GridColumnHeaderMenu } from '../menu/columnMenu/GridColumnHeaderMenu';
 import { isFunction } from '../../utils/utils';
 import { gridClasses } from '../../gridClasses';
+import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
 interface GridColumnHeaderItemProps {
   colIndex: number;
@@ -27,7 +27,6 @@ interface GridColumnHeaderItemProps {
   extendRowFullWidth: boolean;
   sortDirection: GridSortDirection;
   sortIndex?: number;
-  options: GridOptions;
   filterItemsCounter?: number;
   hasFocus?: boolean;
   hasScrollX: boolean;
@@ -46,7 +45,6 @@ export function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
     isLastColumn,
     sortDirection,
     sortIndex,
-    options,
     filterItemsCounter,
     hasFocus,
     tabIndex,
@@ -55,36 +53,29 @@ export function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
     extendRowFullWidth,
   } = props;
   const apiRef = useGridApiContext();
+  const rootProps = useGridRootProps();
   const headerCellRef = React.useRef<HTMLDivElement>(null);
   const columnMenuId: string = useId();
   const columnMenuButtonId: string = useId();
   const iconButtonRef = React.useRef<HTMLButtonElement>(null);
-  const {
-    classes,
-    disableColumnReorder,
-    showColumnRightBorder,
-    disableColumnResize,
-    disableColumnMenu,
-    disableColumnFilter,
-  } = options;
   const isColumnSorted = sortDirection != null;
   // todo refactor to a prop on col isNumeric or ?? ie: coltype===price wont work
   const isColumnNumeric = column.type === GRID_NUMBER_COLUMN_TYPE;
   const removeLastBorderRight = isLastColumn && hasScrollX && !hasScrollY;
   const showRightBorder = !isLastColumn
-    ? showColumnRightBorder
+    ? rootProps.showColumnRightBorder
     : !removeLastBorderRight && !extendRowFullWidth;
 
   let headerComponent: React.ReactNode = null;
-  if (column.renderHeader && apiRef!.current) {
-    headerComponent = column.renderHeader(apiRef!.current.getColumnHeaderParams(column.field));
+  if (column.renderHeader) {
+    headerComponent = column.renderHeader(apiRef.current.getColumnHeaderParams(column.field));
   }
 
   const publish = React.useCallback(
     (eventName: string) => (event: React.MouseEvent | React.DragEvent) =>
-      apiRef!.current.publishEvent(
+      apiRef.current.publishEvent(
         eventName,
-        apiRef!.current.getColumnHeaderParams(column.field),
+        apiRef.current.getColumnHeaderParams(column.field),
         event,
       ),
     [apiRef, column.field],
@@ -122,7 +113,7 @@ export function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
     [publish],
   );
 
-  const classNames = [classes?.columnHeader];
+  const classNames = [rootProps.classes.columnHeader];
 
   if (column.headerClassName) {
     const headerClassName = isFunction(column.headerClassName)
@@ -154,7 +145,7 @@ export function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
     };
   }
 
-  const columnMenuIconButton = !disableColumnMenu && !column.disableColumnMenu && (
+  const columnMenuIconButton = !rootProps.disableColumnMenu && !column.disableColumnMenu && (
     <ColumnHeaderMenuIcon
       column={column}
       columnMenuId={columnMenuId}
@@ -166,7 +157,7 @@ export function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
 
   const columnTitleIconButtons = (
     <React.Fragment>
-      {!disableColumnFilter && <ColumnHeaderFilterIcon counter={filterItemsCounter} />}
+      {!rootProps.disableColumnFilter && <ColumnHeaderFilterIcon counter={filterItemsCounter} />}
       {column.sortable && !column.hideSortIcons && (
         <GridColumnHeaderSortIcon direction={sortDirection} index={sortIndex} />
       )}
@@ -174,7 +165,7 @@ export function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
   );
 
   React.useLayoutEffect(() => {
-    const columnMenuState = apiRef!.current.state.columnMenu;
+    const columnMenuState = apiRef.current.state.columnMenu;
     if (hasFocus && !columnMenuState.open) {
       const focusableElement = headerCellRef.current!.querySelector(
         '[tabindex="0"]',
@@ -206,7 +197,7 @@ export function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
     >
       <div
         className={gridClasses.columnHeaderDraggableContainer}
-        draggable={!disableColumnReorder && !column.disableReorder}
+        draggable={!rootProps.disableColumnReorder && !column.disableReorder}
         {...draggableEventHandlers}
       >
         <div className={gridClasses.columnHeaderTitleContainer}>
@@ -222,7 +213,7 @@ export function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
         {columnMenuIconButton}
       </div>
       <GridColumnHeaderSeparator
-        resizable={!disableColumnResize && !!column.resizable}
+        resizable={!rootProps.disableColumnResize && !!column.resizable}
         resizing={isResizing}
         height={headerHeight}
         {...resizeEventHandlers}
@@ -233,8 +224,8 @@ export function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
         field={column.field}
         open={columnMenuOpen}
         target={iconButtonRef.current}
-        ContentComponent={apiRef!.current.components.ColumnMenu}
-        contentComponentProps={apiRef!.current.componentsProps?.columnMenu}
+        ContentComponent={rootProps.components.ColumnMenu}
+        contentComponentProps={rootProps.componentsProps?.columnMenu}
       />
     </div>
   );

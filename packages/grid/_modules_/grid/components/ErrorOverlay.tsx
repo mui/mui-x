@@ -10,7 +10,7 @@ export const ErrorOverlay = React.forwardRef<HTMLDivElement, ErrorOverlayProps>(
   function ErrorOverlay(props: ErrorOverlayProps, ref) {
     const { message, ...other } = props;
     const apiRef = useGridApiContext();
-    const defaultLabel = apiRef!.current.getLocaleText('errorOverlayDefaultLabel');
+    const defaultLabel = apiRef.current.getLocaleText('errorOverlayDefaultLabel');
 
     return (
       <GridOverlay ref={ref} {...other}>

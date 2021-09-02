@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { MuiEvent } from '../../models/gridOptions';
+import { MuiEvent } from '../../models/muiEvent';
 import { GridApiRef } from '../../models/api/gridApiRef';
 import { useLogger } from '../utils/useLogger';
 import { GridApi } from '../../models/api/gridApi';
