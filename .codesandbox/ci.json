@@ -8,10 +8,10 @@
     "packages/grid/x-grid-data-generator"
   ],
   "publishDirectory": {
-    "@mui/x-license-pro": "packages/x-license",
-    "@mui/x-data-grid": "packages/grid/data-grid",
-    "@mui/x-data-grid-pro": "packages/grid/x-grid",
-    "@mui/x-data-grid-generator": "packages/grid/x-grid-data-generator"
+    "@mui/x-license-pro": "packages/x-license/dist",
+    "@mui/x-data-grid": "packages/grid/data-grid/dist",
+    "@mui/x-data-grid-pro": "packages/grid/x-grid/dist",
+    "@mui/x-data-grid-generator": "packages/grid/x-grid-data-generator/dist"
   },
   "sandboxes": [
     "new",
