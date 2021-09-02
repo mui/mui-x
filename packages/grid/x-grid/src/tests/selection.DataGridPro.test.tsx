@@ -95,6 +95,24 @@ describe('<DataGridPro /> - Selection', () => {
     });
   });
 
+  describe('apiRef: isRowSelected', () => {
+    it('should check if the rows selected by clicking on the rows are selected', () => {
+      render(<TestDataGridSelection />);
+
+      fireEvent.click(getRow(1));
+
+      expect(apiRef.current.isRowSelected(0)).to.equal(false);
+      expect(apiRef.current.isRowSelected(1)).to.equal(true);
+    });
+
+    it('should check if the rows selected with the selectionModel prop are selected', () => {
+      render(<TestDataGridSelection selectionModel={[1]} />);
+
+      expect(apiRef.current.isRowSelected(0)).to.equal(false);
+      expect(apiRef.current.isRowSelected(1)).to.equal(true);
+    });
+  });
+
   describe('apiRef: selectRow', () => {
     it('should call onSelectionModelChange with the ids selected', () => {
       const handleSelectionModelChange = spy();

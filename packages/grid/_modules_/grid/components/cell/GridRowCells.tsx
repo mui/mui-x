@@ -33,7 +33,7 @@ interface RowCellsProps {
   editRowState?: GridEditRowProps;
 }
 
-export const GridRowCells = React.memo(function GridRowCells(props: RowCellsProps) {
+export const GridRowCells = function GridRowCells(props: RowCellsProps) {
   const {
     columns,
     firstColIdx,
@@ -131,4 +131,4 @@ export const GridRowCells = React.memo(function GridRowCells(props: RowCellsProp
       ))}
     </React.Fragment>
   );
-});
+};

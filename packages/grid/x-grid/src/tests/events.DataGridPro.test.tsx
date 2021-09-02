@@ -264,7 +264,7 @@ describe('<DataGridPro /> - Events Params', () => {
       expect(handleSelection.lastCall.firstArg).to.deep.equal([2]);
     });
 
-    it('should not select a row if options.disableSelectionOnClick', () => {
+    it('should not select a row if props.disableSelectionOnClick', () => {
       const handleSelection = spy();
       render(<TestEvents onSelectionModelChange={handleSelection} disableSelectionOnClick />);
       const cell11 = getCell(1, 1);
