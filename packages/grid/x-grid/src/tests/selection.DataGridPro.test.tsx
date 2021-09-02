@@ -43,7 +43,7 @@ describe('<DataGridPro /> - Selection', () => {
   };
 
   describe('prop: checkboxSelectionVisibleOnly', () => {
-    it('should select all visible of all pages if checkboxSelectionVisibleOnly = false', () => {
+    it('should select all visible rows of all pages if checkboxSelectionVisibleOnly = false', () => {
       render(
         <TestDataGridSelection
           checkboxSelection
@@ -54,7 +54,7 @@ describe('<DataGridPro /> - Selection', () => {
       );
       const selectAllCheckbox = document.querySelector('input[type="checkbox"]');
       fireEvent.click(selectAllCheckbox);
-      expect(apiRef.current.getSelectedRows().size).to.equal(4);
+      expect(apiRef.current.getSelectedRows()).to.have.length(4);
     });
 
     it('should select all visible rows of the current page if checkboxSelectionVisibleOnly = true and pagination is enabled', () => {
@@ -69,10 +69,10 @@ describe('<DataGridPro /> - Selection', () => {
       );
       const selectAllCheckbox = document.querySelector('input[type="checkbox"]');
       fireEvent.click(selectAllCheckbox);
-      expect(Array.from(apiRef.current.getSelectedRows().keys())).to.deep.equal([0]);
+      expect(apiRef.current.getSelectedRows()).to.have.keys([0]);
     });
 
-    it('should select all the lines when if checkboxSelectionVisibleOnly = false and pagination is not enabled', () => {
+    it('should select all rows when if checkboxSelectionVisibleOnly = false and pagination is not enabled', () => {
       render(
         <TestDataGridSelection
           checkboxSelection
@@ -85,10 +85,10 @@ describe('<DataGridPro /> - Selection', () => {
         name: /select all rows checkbox/i,
       });
       fireEvent.click(selectAll);
-      expect(apiRef.current.getSelectedRows().size).to.equal(100);
+      expect(apiRef.current.getSelectedRows()).to.have.length(100);
     });
 
-    it('should select all the lines if checkboxSelectionVisibleOnly = true and pagination is not enabled', () => {
+    it('should throw a console error if checkboxSelectionVisibleOnly is used without pagination', () => {
       expect(() => {
         render(
           <TestDataGridSelection checkboxSelection checkboxSelectionVisibleOnly rowLength={100} />,
@@ -96,7 +96,7 @@ describe('<DataGridPro /> - Selection', () => {
       })
         // @ts-expect-error need to migrate helpers to TypeScript
         .toErrorDev(
-          'Material-UI: `checkboxSelectionVisibleOnly` can not be used when the pagination is not enabled.',
+          'Material-UI: The `checkboxSelectionVisibleOnly` prop has no effect when the pagination is not enabled.',
         );
     });
   });
@@ -106,12 +106,12 @@ describe('<DataGridPro /> - Selection', () => {
       render(
         <TestDataGridSelection
           onSelectionModelChange={(model) => {
-            expect(apiRef.current.getSelectedRows().size).to.equal(1);
+            expect(apiRef.current.getSelectedRows()).to.have.length(1);
             expect(model).to.deep.equal([1]);
           }}
         />,
       );
-      expect(apiRef.current.getSelectedRows().size).to.equal(0);
+      expect(apiRef.current.getSelectedRows()).to.have.length(0);
       apiRef.current.selectRow(1);
       expect(apiRef.current.getSelectedRows().get(1)).to.deep.equal({
         id: 1,

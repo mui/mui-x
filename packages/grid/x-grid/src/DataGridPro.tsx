@@ -58,9 +58,9 @@ DataGridProRaw.propTypes = {
   columns: PropTypes.array.isRequired,
   rows: PropTypes.array.isRequired,
   checkboxSelectionVisibleOnly: chainPropTypes(PropTypes.bool, (props: any) => {
-    if (!props.pagination && props.checkboxSelectionVisibleOnly === true) {
+    if (!props.pagination && props.checkboxSelectionVisibleOnly) {
       return new Error(
-        'Material-UI: `checkboxSelectionVisibleOnly` can not be used when the pagination is not enabled.',
+        'Material-UI: The `checkboxSelectionVisibleOnly` prop has no effect when the pagination is not enabled.',
       );
     }
     return null;
