@@ -73,19 +73,26 @@ describe('<DataGridPro /> - Selection', () => {
     });
 
     it('should select all rows when if checkboxSelectionVisibleOnly = false and pagination is not enabled', () => {
+      const rowLength = 10
+
       render(
         <TestDataGridSelection
           checkboxSelection
           checkboxSelectionVisibleOnly={false}
-          rowLength={100}
+          rowLength={rowLength}
         />,
       );
+
+      console.log('A')
 
       const selectAll = screen.getByRole('checkbox', {
         name: /select all rows checkbox/i,
       });
+      console.log('B')
       fireEvent.click(selectAll);
-      expect(apiRef.current.getSelectedRows()).to.have.length(100);
+      console.log('C')
+      expect(apiRef.current.getSelectedRows()).to.have.length(rowLength);
+      console.log('D')
     });
 
     it('should throw a console error if checkboxSelectionVisibleOnly is used without pagination', () => {
