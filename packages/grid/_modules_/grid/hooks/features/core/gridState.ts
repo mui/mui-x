@@ -1,4 +1,4 @@
-import { getInitialGridColumnsState, GridColumnsState } from '../../../models/colDef/gridColDef';
+import { GridColumnsState } from '../../../models/colDef/gridColDef';
 import {
   GridContainerProps,
   GridScrollBarState,
@@ -59,7 +59,7 @@ export const getInitialGridState = (): GridState =>
     rows: getInitialGridRowState(),
     editRows: {},
     // pagination: getInitialPaginationState(),
-    columns: getInitialGridColumnsState(),
+    // columns: getInitialGridColumnsState(),
     columnReorder: getInitialGridColumnReorderState(),
     columnResize: getInitialGridColumnResizeState(),
     rendering: getInitialGridRenderingState(),

@@ -5,7 +5,3 @@ export interface GridSortingState {
   sortedRows: GridRowId[];
   sortModel: GridSortModel;
 }
-
-export function getInitialGridSortingState(): GridSortingState {
-  return { sortedRows: [], sortModel: [] };
-}
