@@ -135,18 +135,19 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
       }
 
       const hasCtrlKey = event.metaKey || event.ctrlKey;
-      const resetSelection = !hasCtrlKey || !canHaveMultipleSelection;
+      const resetSelection = !canHaveMultipleSelection || (!hasCtrlKey && !checkboxSelection);
+
       if (resetSelection) {
         apiRef.current.selectRow(
           params.id,
-          hasCtrlKey ? !apiRef.current.isRowSelected(params.id) : true,
+          hasCtrlKey || checkboxSelection ? !apiRef.current.isRowSelected(params.id) : true,
           true,
         );
       } else {
         apiRef.current.selectRow(params.id, !apiRef.current.isRowSelected(params.id), false);
       }
     },
-    [apiRef, canHaveMultipleSelection, disableSelectionOnClick],
+    [apiRef, canHaveMultipleSelection, disableSelectionOnClick, checkboxSelection],
   );
 
   useGridApiEventHandler(apiRef, GridEvents.rowClick, handleRowClick);
