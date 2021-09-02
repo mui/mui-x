@@ -15,6 +15,7 @@ import { gridColumnMenuStateSelector } from '../../hooks/features/columnMenu/col
 import { GridStateColDef } from '../../models/colDef/gridColDef';
 import { useGridApiContext } from '../../hooks/root/useGridApiContext';
 import { GridColumnHeaderItem } from './GridColumnHeaderItem';
+import { useGridProSelector } from '../../hooks/features/core/useGridProSelector';
 
 export interface GridColumnHeadersItemCollectionProps {
   columns: GridStateColDef[];
@@ -25,7 +26,7 @@ export function GridColumnHeadersItemCollection(props: GridColumnHeadersItemColl
   const apiRef = useGridApiContext();
   const sortColumnLookup = useGridSelector(apiRef, gridSortColumnLookupSelector);
   const filterColumnLookup = useGridSelector(apiRef, filterGridColumnLookupSelector);
-  const dragCol = useGridSelector(apiRef, gridColumnReorderDragColSelector);
+  const dragCol = useGridProSelector(apiRef, gridColumnReorderDragColSelector);
   const resizingColumnField = useGridSelector(apiRef, gridResizingColumnFieldSelector);
   const columnHeaderFocus = useGridSelector(apiRef, gridFocusColumnHeaderSelector);
   const renderCtx = useGridSelector(apiRef, renderStateSelector).renderContext;

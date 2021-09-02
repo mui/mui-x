@@ -5,13 +5,17 @@ import { useLogger } from '../../utils/useLogger';
 import { useGridState } from '../core/useGridState';
 import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
 import { GridEvents } from '../../../constants/eventsConstants';
+import { useGridStateInit } from '../../utils/useGridStateInit';
 
 /**
- * @requires useGridPreferencePanel (method)
+ * @requires useGridPreferencesPanel (method)
  * @requires useGridVirtualRows (state)
  */
 export const useGridColumnMenu = (apiRef: GridApiRef): void => {
   const logger = useLogger('useGridColumnMenu');
+
+  useGridStateInit(apiRef, (state) => ({ ...state, columnMenu: { open: false } }));
+
   const [gridState, setGridState, forceUpdate] = useGridState(apiRef);
 
   const showColumnMenu = React.useCallback(

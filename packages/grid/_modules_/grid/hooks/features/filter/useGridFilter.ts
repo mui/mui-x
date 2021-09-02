@@ -18,7 +18,6 @@ import { sortedGridRowsSelector } from '../sorting/gridSortingSelector';
 import { getInitialGridFilterState } from './gridFilterModelState';
 import { GridFilterModel } from '../../../models/gridFilterModel';
 import { filterGridStateSelector, visibleSortedGridRowsSelector } from './gridFilterSelector';
-import { getInitialVisibleGridRowsState } from './visibleGridRowsState';
 import { useGridRegisterControlState } from '../../utils/useGridRegisterControlState';
 import { useGridStateInit } from '../../utils/useGridStateInit';
 import { useFirstRender } from '../../utils/useFirstRender';
@@ -45,6 +44,9 @@ export const useGridFilter = (
   useGridStateInit(apiRef, (state) => ({
     ...state,
     filter: props.filterModel ?? getInitialGridFilterState(),
+    visibleRows: {
+      visibleRowsLookup: {},
+    },
   }));
 
   const [, setGridState, forceUpdate] = useGridState(apiRef);
@@ -62,7 +64,9 @@ export const useGridFilter = (
     logger.debug('clearing filtered rows');
     setGridState((state) => ({
       ...state,
-      visibleRows: getInitialVisibleGridRowsState(),
+      visibleRows: {
+        visibleRowsLookup: {},
+      },
     }));
   }, [logger, setGridState]);
 

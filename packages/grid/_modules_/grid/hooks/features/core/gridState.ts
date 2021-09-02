@@ -7,19 +7,10 @@ import {
 import { GridFilterModel } from '../../../models/gridFilterModel';
 import { GridEditRowsModel } from '../../../models/gridEditRowModel';
 import { GridColumnMenuState } from '../columnMenu/columnMenuState';
-import {
-  getInitialGridColumnReorderState,
-  GridColumnReorderState,
-} from '../columnReorder/columnReorderState';
-import {
-  getInitialGridColumnResizeState,
-  GridColumnResizeState,
-} from '../columnResize/columnResizeState';
-import { GridGridDensity, getInitialGridDensityState } from '../density/densityState';
-import {
-  getInitialVisibleGridRowsState,
-  VisibleGridRowsState,
-} from '../filter/visibleGridRowsState';
+import { GridColumnReorderState } from '../columnReorder/columnReorderState';
+import { GridColumnResizeState } from '../columnResize/columnResizeState';
+import { GridDensityState } from '../density/densityState';
+import { VisibleGridRowsState } from '../filter/visibleGridRowsState';
 import { GridFocusState, GridTabIndexState } from '../focus/gridFocusState';
 import { GridPreferencePanelState } from '../preferencesPanel/gridPreferencePanelState';
 import { InternalGridRowsState } from '../rows/gridRowsState';
@@ -50,7 +41,7 @@ export interface GridState {
   filter: GridFilterModel;
   visibleRows: VisibleGridRowsState;
   preferencePanel: GridPreferencePanelState;
-  density: GridGridDensity;
+  density: GridDensityState;
   error?: any;
 }
 
@@ -60,19 +51,19 @@ export const getInitialGridState = (): GridState =>
     // editRows: {},
     // pagination: getInitialPaginationState(),
     // columns: getInitialGridColumnsState(),
-    columnReorder: getInitialGridColumnReorderState(),
-    columnResize: getInitialGridColumnResizeState(),
+    // columnReorder: getInitialGridColumnReorderState(),
+    // columnResize: getInitialGridColumnResizeState(),
     rendering: getInitialGridRenderingState(),
     containerSizes: null,
     scrollBar: { hasScrollX: false, hasScrollY: false, sizes: { x: 0, y: 0 } },
     viewportSizes: { width: 0, height: 1 },
     // sorting: getInitialGridSortingState(),
-    focus: { cell: null, columnHeader: null },
-    tabIndex: { cell: null, columnHeader: null },
+    // focus: { cell: null, columnHeader: null },
+    // tabIndex: { cell: null, columnHeader: null },
     // selection: [],
     // filter: getInitialGridFilterState(),
-    columnMenu: { open: false },
-    preferencePanel: { open: false },
-    visibleRows: getInitialVisibleGridRowsState(),
-    density: getInitialGridDensityState(),
+    // columnMenu: { open: false },
+    // preferencePanel: { open: false },
+    // visibleRows: getInitialVisibleGridRowsState(),
+    // density: getInitialGridDensityState(),
   } as any as GridState);
