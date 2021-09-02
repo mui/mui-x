@@ -519,7 +519,7 @@ export function useGridEditRows(
     const currentEditRowsModel = apiRef.current.state.editRows;
 
     if (props.editRowsModel !== undefined && props.editRowsModel !== currentEditRowsModel) {
-      apiRef.current.setEditRowsModel(props.editRowsModel);
+      apiRef.current.setEditRowsModel(props.editRowsModel || {});
     }
   }, [apiRef, props.editRowsModel]);
 }

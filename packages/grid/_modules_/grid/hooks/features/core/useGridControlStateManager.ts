@@ -11,12 +11,11 @@ export function useGridControlStateManager(apiRef: GridApiRef, props: GridCompon
 
   const updateControlState = React.useCallback<GridControlStateApi['updateControlState']>(
     (controlStateItem) => {
-      const { stateId, stateSelector, ...others } = controlStateItem;
+      const { stateId, ...others } = controlStateItem;
 
       controlStateMapRef.current[stateId] = {
         ...others,
         stateId,
-        stateSelector: !stateSelector ? (state) => state[stateId] : stateSelector,
       };
     },
     [],
@@ -35,18 +34,16 @@ export function useGridControlStateManager(apiRef: GridApiRef, props: GridCompon
         const oldState = controlState.stateSelector(apiRef.current.state);
         const newSubState = controlState.stateSelector(newState);
 
-        // TODO newSubState !== controlState.propModel shouldn't be necessary
-        // but we need it for the initial state.
-        if (newSubState !== oldState && newSubState !== controlState.propModel) {
+        if (newSubState === oldState) {
+          return;
+        }
+
+        if (newSubState !== controlState.propModel) {
           updatedStateIds.push(controlState.stateId);
         }
 
         // The state is controlled, the prop should always win
-        if (
-          controlState.propModel !== undefined &&
-          newSubState !== controlState.propModel &&
-          newSubState !== oldState
-        ) {
+        if (controlState.propModel !== undefined && newSubState !== controlState.propModel) {
           ignoreSetState = true;
         }
       });
