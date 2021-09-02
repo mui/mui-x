@@ -241,6 +241,7 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
           hasChanged = true;
         }
       });
+
       if (hasChanged) {
         return { ...state, selection: Object.values(selectionLookup) };
       }
