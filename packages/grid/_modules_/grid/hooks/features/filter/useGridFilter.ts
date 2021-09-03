@@ -30,10 +30,7 @@ export const useGridFilter = (
   apiRef: GridApiRef,
   props: Pick<
     GridComponentProps,
-    | 'filterModel'
-    | 'onFilterModelChange'
-    | 'filterMode'
-    | 'disableMultipleColumnsFiltering'
+    'filterModel' | 'onFilterModelChange' | 'filterMode' | 'disableMultipleColumnsFiltering'
   >,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridFilter');
