@@ -16,7 +16,7 @@ export const useGridNoVirtualization = (
   const columnsHeaderRef = apiRef.current.columnHeadersElementRef;
   const renderingZoneRef = apiRef.current.renderingZoneRef;
   const [gridState, setGridState, forceUpdate] = useGridState(apiRef);
-  const [scrollTo] = useGridScrollFn(renderingZoneRef!, columnsHeaderRef!);
+  const [scrollTo] = useGridScrollFn(apiRef, renderingZoneRef!, columnsHeaderRef!);
   const paginationState = useGridSelector(apiRef, gridPaginationSelector);
   const visibleColumns = useGridSelector(apiRef, visibleGridColumnsSelector);
 
