@@ -93,7 +93,9 @@ export const useGridRows = (
 
       return { ...state, rows: internalRowsState.current };
     });
-  }, [props.getRowId, props.rows, props.rowCount, setGridState]);
+
+    apiRef.current.publishEvent(GridEvents.rowsSet)
+  }, [apiRef, props.getRowId, props.rows, props.rowCount, setGridState]);
 
   const getRowIndexFromId = React.useCallback(
     (id: GridRowId): number => {

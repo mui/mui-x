@@ -35,7 +35,6 @@ export const useGridSorting = (
   apiRef: GridApiRef,
   props: Pick<
     GridComponentProps,
-    | 'rows'
     | 'sortModel'
     | 'onSortModelChange'
     | 'sortingOrder'
@@ -298,11 +297,6 @@ export const useGridSorting = (
     applySorting,
   };
   useGridApiMethod(apiRef, sortApi, 'GridSortApi');
-
-  React.useEffect(() => {
-    // When the rows prop change, we re apply the sorting.
-    apiRef.current.applySorting();
-  }, [apiRef, props.rows]);
 
   React.useEffect(() => {
     if (rowCount > 0) {
