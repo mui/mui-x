@@ -14,12 +14,12 @@ export default [
     input: './data-grid/src/index.ts',
     output: [
       {
-        file: './data-grid/dist/index-esm.js',
+        file: './data-grid/build/index-esm.js',
         format: 'esm',
         sourcemap: !production,
       },
       {
-        file: './data-grid/dist/index-cjs.js',
+        file: './data-grid/build/index-cjs.js',
         format: 'cjs',
         sourcemap: !production,
       },
@@ -28,7 +28,7 @@ export default [
     plugins: [
       production &&
         cleaner({
-          targets: ['./data-grid/dist/'],
+          targets: ['./data-grid/build/'],
         }),
       typescript({ tsconfig: 'tsconfig.build.json' }),
       !production && sourceMaps(),
@@ -36,8 +36,8 @@ export default [
     ],
   },
   {
-    input: './data-grid/dist/data-grid/src/index.d.ts',
-    output: [{ file: './data-grid/dist/data-grid.d.ts', format: 'es' }],
+    input: './data-grid/build/data-grid/src/index.d.ts',
+    output: [{ file: './data-grid/build/data-grid.d.ts', format: 'es' }],
     plugins: [
       dts(),
       !production && sourceMaps(),
@@ -46,11 +46,11 @@ export default [
           targets: [
             {
               src: ['./data-grid/README.md', './data-grid/LICENSE'],
-              dest: './data-grid/dist',
+              dest: './data-grid/build',
             },
             {
               src: './data-grid/package.json',
-              dest: './data-grid/dist',
+              dest: './data-grid/build',
               transform: () => {
                 const contents = { ...pkg };
                 contents.main = 'index-cjs.js';
@@ -60,18 +60,18 @@ export default [
               },
             },
             {
-              src: './data-grid/dist/data-grid/src/themeAugmentation',
-              dest: './data-grid/dist',
+              src: './data-grid/build/data-grid/src/themeAugmentation',
+              dest: './data-grid/build',
             },
           ],
         }),
       production &&
         command(
           [
-            `rm -rf ./data-grid/dist/data-grid/`,
-            `rm -rf ./data-grid/dist/_modules_ `,
-            `rm -rf ./data-grid/dist/x-grid`,
-            `rm -rf ./data-grid/dist/x-grid-data-generator`,
+            `rm -rf ./data-grid/build/data-grid/`,
+            `rm -rf ./data-grid/build/_modules_ `,
+            `rm -rf ./data-grid/build/x-grid`,
+            `rm -rf ./data-grid/build/x-grid-data-generator`,
           ],
           {
             exitOnFail: true,

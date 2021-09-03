@@ -3,9 +3,9 @@
   "version": "4.0.0-alpha.37",
   "description": "The community edition of the data grid component (Material-UI X).",
   "author": "MUI Team",
-  "main": "dist/index-cjs.js",
-  "module": "dist/index-esm.js",
-  "types": "dist/data-grid.d.ts",
+  "main": "build/index-cjs.js",
+  "module": "build/index-esm.js",
+  "types": "build/data-grid.d.ts",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/mui-org/material-ui-x/issues"

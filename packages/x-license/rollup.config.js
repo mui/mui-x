@@ -17,12 +17,12 @@ export default [
     },
     output: [
       {
-        dir: 'dist/esm',
+        dir: 'build/esm',
         format: 'esm',
         sourcemap: !production,
       },
       {
-        dir: 'dist/cjs',
+        dir: 'build/cjs',
         format: 'cjs',
         sourcemap: !production,
       },
@@ -31,7 +31,7 @@ export default [
     plugins: [
       production &&
         cleaner({
-          targets: ['./dist/'],
+          targets: ['./build/'],
         }),
       typescript({ tsconfig: 'tsconfig.build.json' }),
       commonjs(),
@@ -42,11 +42,11 @@ export default [
           targets: [
             {
               src: ['./README.md', './LICENSE.md'],
-              dest: './dist',
+              dest: './build',
             },
             {
               src: './package.json',
-              dest: './dist',
+              dest: './build',
               transform: () => {
                 const contents = { ...pkg };
                 contents.main = 'cjs/index.js';
@@ -60,8 +60,8 @@ export default [
     ],
   },
   {
-    input: './dist/esm/index.d.ts',
-    output: [{ file: 'dist/x-license.d.ts', format: 'es' }],
+    input: './build/esm/index.d.ts',
+    output: [{ file: 'build/x-license.d.ts', format: 'es' }],
     plugins: [dts(), !production && sourceMaps()],
   },
 ];

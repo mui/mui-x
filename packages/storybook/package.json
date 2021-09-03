@@ -6,8 +6,8 @@
   "private": true,
   "scripts": {
     "start": "start-storybook -p 6006 --ci",
-    "build": "build-storybook -o dist/ --quiet",
-    "export": "mv dist ../../docs/export/storybook",
+    "build": "build-storybook -o build/ --quiet",
+    "export": "mv build ../../docs/export/storybook",
     "typescript": "tsc -p tsconfig.json"
   },
   "repository": {

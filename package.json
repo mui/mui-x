@@ -46,8 +46,8 @@
     "build:codesandbox": "yarn release:build",
     "release:version": "lerna version --exact --no-changelog --no-push --no-git-tag-version",
     "release:build": "cd packages/x-license && yarn build && cd ../grid/x-grid && yarn build && cd ../data-grid && yarn build && cd ../x-grid-data-generator && yarn build",
-    "release:publish": "lerna publish from-package --dist-tag next --contents dist",
-    "release:publish:dry-run": "lerna publish from-package --dist-tag next --contents dist --registry=\"http://localhost:4873/\""
+    "release:publish": "lerna publish from-package --dist-tag next --contents build",
+    "release:publish:dry-run": "lerna publish from-package --dist-tag next --contents build --registry=\"http://localhost:4873/\""
   },
   "devDependencies": {
     "@babel/core": "^7.15.0",
