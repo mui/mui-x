@@ -1,4 +1,4 @@
-# [Material-UI X Pro](https://material-ui.com/x-advanced/)
+# [Material-UI X Pro](https://material-ui.com/x/)
 
 This is commercial software.
 To use it, you need to agree to the [**End User License Agreement for Material-UI X Pro**](https://material-ui.com/x/license/).
