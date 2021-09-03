@@ -1,6 +1,6 @@
 import * as React from 'react';
-import IconButton from '@material-ui/core/IconButton';
-import TextField from '@material-ui/core/TextField';
+import IconButton from '@mui/material/IconButton';
+import TextField from '@mui/material/TextField';
 import {
   DataGrid,
   GridToolbarDensitySelector,

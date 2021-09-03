@@ -2,7 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@mui/styles';
 import { createTheme } from '@mui/material/styles';
-import Button from '@material-ui/core/Button';
+import Button from '@mui/material/Button';
 import {
   GridColumnMenu,
   GridColumnMenuContainer,
