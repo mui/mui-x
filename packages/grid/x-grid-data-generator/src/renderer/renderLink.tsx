@@ -19,7 +19,7 @@ interface DemoLinkProps {
 export const DemoLink = React.memo(function DemoLink(props: DemoLinkProps) {
   const classes = useStyles();
 
-  const handleClick = (event) => {
+  const handleClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
     event.preventDefault();
     event.stopPropagation();
   };
