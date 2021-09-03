@@ -21,9 +21,7 @@ import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { allGridColumnsSelector } from '../columns/gridColumnsSelector';
-import { useGridSelector } from '../core/useGridSelector';
 import { useGridState } from '../core/useGridState';
-import { gridRowCountSelector } from '../rows/gridRowsSelector';
 import { sortedGridRowIdsSelector, sortedGridRowsSelector } from './gridSortingSelector';
 
 /**
@@ -45,7 +43,6 @@ export const useGridSorting = (
   const logger = useGridLogger(apiRef, 'useGridSorting');
 
   const [gridState, setGridState, forceUpdate] = useGridState(apiRef);
-  const rowCount = useGridSelector(apiRef, gridRowCountSelector);
 
   const upsertSortModel = React.useCallback(
     (field: string, sortItem?: GridSortItem): GridSortModel => {
@@ -297,13 +294,6 @@ export const useGridSorting = (
     applySorting,
   };
   useGridApiMethod(apiRef, sortApi, 'GridSortApi');
-
-  React.useEffect(() => {
-    if (rowCount > 0) {
-      logger.debug('row changed, applying sortModel');
-      apiRef.current.applySorting();
-    }
-  }, [rowCount, apiRef, logger]);
 
   React.useEffect(() => {
     apiRef.current.updateControlState<GridSortModel>({

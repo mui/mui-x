@@ -62,6 +62,7 @@ describe('<DataGridPro /> - State', () => {
           ...prev,
           sorting: { ...prev.sorting, sortModel: [{ field: 'brand', sort: 'asc' }] },
         }));
+        apiRef.current.applySorting();
       }, [apiRef]);
       return (
         <div style={{ width: 300, height: 300 }}>
