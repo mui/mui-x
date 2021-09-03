@@ -1,9 +1,9 @@
 import { createSelector } from 'reselect';
 import { GridState } from '../core/gridState';
 
-export const renderStateSelector = (state: GridState) => state.rendering;
+export const gridRenderStateSelector = (state: GridState) => state.rendering;
 
-export const scrollStateSelector = createSelector(
-  renderStateSelector,
+export const gridScrollStateSelector = createSelector(
+  gridRenderStateSelector,
   (renderingState) => renderingState.realScroll,
 );

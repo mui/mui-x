@@ -13,7 +13,7 @@ import { gridRowCountSelector } from '../rows/gridRowsSelector';
 import { gridDensityRowHeightSelector } from '../density/densitySelector';
 import { GridScrollParams } from '../../../models/params/gridScrollParams';
 import { GridScrollApi } from '../../../models/api/gridScrollApi';
-import { scrollStateSelector } from '../virtualization/renderingStateSelector';
+import { gridScrollStateSelector } from '../virtualization/renderingStateSelector';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
 import { useNativeEventListener } from '../../root/useNativeEventListener';
 
@@ -32,6 +32,13 @@ function scrollIntoView(dimensions) {
   return undefined;
 }
 
+/**
+ * @requires useGridPage (state)
+ * @requires useGridPageSize (state)
+ * @requires useGridColumns (state)
+ * @requires useGridRows (state)
+ * @requires useGridDensity (state)
+ */
 export const useGridScroll = (
   apiRef: GridApiRef,
   props: Pick<GridComponentProps, 'pagination'>,
@@ -119,7 +126,7 @@ export const useGridScroll = (
   );
 
   const getScrollPosition = React.useCallback<GridScrollApi['getScrollPosition']>(
-    () => scrollStateSelector(apiRef.current.getState()),
+    () => gridScrollStateSelector(apiRef.current.state),
     [apiRef],
   );
 
