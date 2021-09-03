@@ -1,6 +1,6 @@
 {
-  "name": "GridVirtualizationApi",
-  "description": "The virtualization API interface that is available in the grid apiRef.",
+  "name": "GridScrollApi",
+  "description": "The scroll API interface that is available in the grid apiRef.",
   "properties": [
     {
       "name": "getScrollPosition",

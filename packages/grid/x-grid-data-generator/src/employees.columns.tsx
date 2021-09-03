@@ -25,8 +25,9 @@ import {
   renderEditCountry,
 } from './renderer';
 import { COUNTRY_ISO_OPTIONS } from './services/static-data';
+import { GridColDefGenerator } from './services/gridColDefGenerator';
 
-export const getEmployeeColumns: () => any[] = () => [
+export const getEmployeeColumns = (): GridColDefGenerator[] => [
   {
     field: 'id',
     generateData: randomId,
