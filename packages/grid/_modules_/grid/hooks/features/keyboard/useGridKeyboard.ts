@@ -9,12 +9,12 @@ import {
   isGridHeaderCellRoot,
 } from '../../../utils/domUtils';
 import { isEnterKey, isNavigationKey, isSpaceKey } from '../../../utils/keyboardUtils';
-import { useLogger } from '../../utils/useLogger';
+import { useGridLogger } from '../../utils/useGridLogger';
 import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
 import { GridCellModes } from '../../../models/gridEditRowModel';
 
 export const useGridKeyboard = (apiRef: GridApiRef): void => {
-  const logger = useLogger('useGridKeyboard');
+  const logger = useGridLogger(apiRef, 'useGridKeyboard');
 
   const expandSelection = React.useCallback(
     (params: GridCellParams, event: React.KeyboardEvent) => {

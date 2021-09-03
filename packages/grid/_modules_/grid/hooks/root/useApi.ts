@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { GridApiRef } from '../../models/api/gridApiRef';
 import { GridSubscribeEventOptions } from '../../utils/eventEmitter/GridEventEmitter';
-import { useLogger } from '../utils/useLogger';
+import { useGridLogger } from '../utils/useGridLogger';
 import { GridEvents } from '../../constants/eventsConstants';
 import { useGridApiMethod } from './useGridApiMethod';
 import { MuiEvent } from '../../models/gridOptions';
@@ -13,7 +13,7 @@ const isSyntheticEvent = (event: any): event is React.SyntheticEvent => {
 };
 
 export function useApi(apiRef: GridApiRef, props: Pick<GridComponentProps, 'signature'>): void {
-  const logger = useLogger('useApi');
+  const logger = useGridLogger(apiRef, 'useApi');
 
   const publishEvent = React.useCallback(
     (

@@ -1,10 +1,10 @@
 import { GridApiRef } from '../../models/api/gridApiRef';
 import { useGridState } from '../features/core/useGridState';
-import { useLogger } from './useLogger';
+import { useGridLogger } from './useGridLogger';
 
 export function useRenderInfoLog(apiRef: GridApiRef) {
   const [gridState] = useGridState(apiRef);
-  const logger = useLogger('useRenderInfoLog');
+  const logger = useGridLogger(apiRef, 'useRenderInfoLog');
 
   if (gridState.rendering.renderContext != null) {
     const { page, firstColIdx, lastColIdx, firstRowIdx, lastRowIdx } =

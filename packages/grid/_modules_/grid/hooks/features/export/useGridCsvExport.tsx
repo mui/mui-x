@@ -7,13 +7,13 @@ import { visibleSortedGridRowsSelector } from '../filter';
 import { gridSelectionStateSelector } from '../selection';
 import { GridCsvExportApi } from '../../../models/api/gridCsvExportApi';
 import { GridExportCsvOptions } from '../../../models/gridExport';
-import { useLogger } from '../../utils/useLogger';
+import { useGridLogger } from '../../utils/useGridLogger';
 import { exportAs } from '../../../utils/exportAs';
 import { buildCSV } from './serializers/csvSerializer';
 import { GridStateColDef } from '../../../models';
 
 export const useGridCsvExport = (apiRef: GridApiRef): void => {
-  const logger = useLogger('useGridCsvExport');
+  const logger = useGridLogger(apiRef, 'useGridCsvExport');
   const visibleColumns = useGridSelector(apiRef, visibleGridColumnsSelector);
   const columns = useGridSelector(apiRef, allGridColumnsSelector);
   const visibleSortedRows = useGridSelector(apiRef, visibleSortedGridRowsSelector);

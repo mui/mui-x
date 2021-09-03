@@ -27,7 +27,7 @@ import { useApi } from '../../_modules_/grid/hooks/root/useApi';
 import { useEvents } from '../../_modules_/grid/hooks/root/useEvents';
 import { useGridContainerProps } from '../../_modules_/grid/hooks/root/useGridContainerProps';
 import { useErrorHandler } from '../../_modules_/grid/hooks/utils/useErrorHandler';
-import { useLoggerFactory } from '../../_modules_/grid/hooks/utils/useLogger';
+import { useGridLoggerFactory } from '../../_modules_/grid/hooks/utils/useGridLogger';
 import { useOptionsProp } from '../../_modules_/grid/hooks/utils/useOptionsProp';
 import { useRenderInfoLog } from '../../_modules_/grid/hooks/utils/useRenderInfoLog';
 import { useResizeContainer } from '../../_modules_/grid/hooks/utils/useResizeContainer';
@@ -35,7 +35,7 @@ import { useStateProp } from '../../_modules_/grid/hooks/utils/useStateProp';
 import { GridApiRef } from '../../_modules_/grid/models/api/gridApiRef';
 
 export const useDataGridComponent = (apiRef: GridApiRef, props: GridComponentProps) => {
-  useLoggerFactory(apiRef, props);
+  useGridLoggerFactory(apiRef, props);
   useApi(apiRef, props);
   useErrorHandler(apiRef, props);
   useGridControlState(apiRef, props);

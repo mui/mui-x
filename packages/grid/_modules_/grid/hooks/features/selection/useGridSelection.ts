@@ -8,7 +8,7 @@ import { GridRowId, GridRowModel } from '../../../models/gridRows';
 import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
 import { optionsSelector } from '../../utils/optionsSelector';
-import { useLogger } from '../../utils/useLogger';
+import { useGridLogger } from '../../utils/useGridLogger';
 import { useGridSelector } from '../core/useGridSelector';
 import { useGridState } from '../core/useGridState';
 import { gridRowsLookupSelector } from '../rows/gridRowsSelector';
@@ -19,7 +19,7 @@ import {
 } from './gridSelectionSelector';
 
 export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps): void => {
-  const logger = useLogger('useGridSelection');
+  const logger = useGridLogger(apiRef, 'useGridSelection');
   const [, setGridState, forceUpdate] = useGridState(apiRef);
   const options = useGridSelector(apiRef, optionsSelector);
   const rowsLookup = useGridSelector(apiRef, gridRowsLookupSelector);

@@ -215,7 +215,7 @@ export interface GridOptions {
    * Allows to pass the logging level or false to turn off logging.
    * @default debug
    */
-  logLevel?: string | false;
+  logLevel?: keyof Logger | false;
   /**
    * Callback fired when the edit cell value changes.
    * @param {GridEditCellPropsParams} params With all properties from [[GridEditCellPropsParams]].
@@ -679,7 +679,7 @@ export const DEFAULT_GRID_PROPS_FROM_OPTIONS = {
   sortingMode: GridFeatureModeConstant.client,
   sortingOrder: ['asc' as const, 'desc' as const, null],
   logger: console,
-  logLevel: process.env.NODE_ENV === 'production' ? 'error' : 'warn',
+  logLevel: process.env.NODE_ENV === 'production' ? ('error' as const) : ('warn' as const),
   editMode: 'cell' as const,
 };
 

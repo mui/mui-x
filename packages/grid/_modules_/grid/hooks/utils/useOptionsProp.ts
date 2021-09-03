@@ -6,7 +6,7 @@ import { GridApiRef } from '../../models/api/gridApiRef';
 import { DEFAULT_GRID_OPTIONS, GridOptions } from '../../models/gridOptions';
 import { composeClasses } from '../../utils/material-ui-utils';
 import { useGridReducer } from '../features/core/useGridReducer';
-import { useLogger } from './useLogger';
+import { useGridLogger } from './useGridLogger';
 import { getDataGridUtilityClass } from '../../utils/utils';
 
 // REDUCER
@@ -22,7 +22,7 @@ export function optionsReducer(
   }
 }
 export function useOptionsProp(apiRef: GridApiRef, props: GridComponentProps): GridOptions {
-  const logger = useLogger('useOptionsProp');
+  const logger = useGridLogger(apiRef, 'useOptionsProp');
 
   const options: GridOptionsProp = React.useMemo(
     () => ({

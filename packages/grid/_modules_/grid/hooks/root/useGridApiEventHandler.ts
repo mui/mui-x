@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { MuiEvent } from '../../models/gridOptions';
 import { GridApiRef } from '../../models/api/gridApiRef';
-import { useLogger } from '../utils/useLogger';
+import { useGridLogger } from '../utils/useGridLogger';
 import { GridApi } from '../../models/api/gridApi';
 
 // TODO: Remove once [[GridApi]] cycle dependency is fixed
@@ -27,7 +27,7 @@ export function useGridApiEventHandler(
   handler?: (...args: any) => void,
   options?: { isFirst?: boolean },
 ) {
-  const logger = useLogger('useGridApiEventHandler');
+  const logger = useGridLogger(apiRef, 'useGridApiEventHandler');
 
   React.useEffect(() => {
     if (handler && eventName) {
