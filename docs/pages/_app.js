@@ -20,6 +20,7 @@ import jssRtl from 'jss-rtl';
 import { CacheProvider } from '@emotion/react';
 import { useRouter } from 'next/router';
 import { StylesProvider, jssPreset } from '@mui/styles';
+import { ponyfillGlobal } from '@mui/utils';
 import pages from 'docsx/src/pages';
 import PageContext from 'docs/src/modules/components/PageContext';
 import GoogleAnalytics from 'docs/src/modules/components/GoogleAnalytics';
@@ -39,6 +40,46 @@ import {
 } from 'docs/src/modules/utils/i18n';
 import DocsStyledEngineProvider from 'docs/src/modules/utils/StyledEngineProvider';
 import createEmotionCache from 'docs/src/createEmotionCache';
+
+function getMuiPackageVersion(packageName, commitRef) {
+  if (commitRef === undefined) {
+    return 'latest';
+  }
+  const shortSha = commitRef.slice(0, 8);
+  return `https://pkg.csb.dev/mui-org/material-ui-x/commit/${shortSha}/@material-ui/${packageName}`;
+}
+
+ponyfillGlobal.muiDocConfig = {
+  csbIncludePeerDependencies: (deps, { versions }) => {
+    const newDeps = { ...deps };
+
+    if (newDeps['@mui/x-data-grid-pro'] || newDeps['@mui/x-data-grid']) {
+      newDeps['@material-ui/core'] = versions['@material-ui/core'];
+      newDeps['@material-ui/styles'] = versions['@material-ui/styles'];
+    }
+
+    if (newDeps['@mui/x-data-grid-generator']) {
+      newDeps['@material-ui/core'] = versions['@material-ui/core'];
+      newDeps['@material-ui/icons'] = versions['@material-ui/icons'];
+      newDeps['@material-ui/lab'] = versions['@material-ui/lab'];
+    }
+
+    return newDeps;
+  },
+  csbGetVersions: (versions, { muiCommitRef }) => {
+    const output = {
+      ...versions,
+      '@material-ui/core': 'next',
+      '@material-ui/icons': 'next',
+      '@material-ui/lab': 'next',
+      '@material-ui/styles': 'next',
+      '@mui/x-data-grid-pro': getMuiPackageVersion('x-grid', muiCommitRef),
+      '@mui/x-data-grid-generator': getMuiPackageVersion('x-grid-data-generator', muiCommitRef),
+      '@mui/x-data-grid': getMuiPackageVersion('data-grid', muiCommitRef),
+    };
+    return output;
+  },
+};
 
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache();
