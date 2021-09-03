@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { GridOverlay, DataGrid } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
-import { createTheme } from '@material-ui/core/styles';
-import { makeStyles } from '@material-ui/styles';
+import { createTheme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 
 const defaultTheme = createTheme();
 const useStyles = makeStyles(

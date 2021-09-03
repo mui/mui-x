@@ -1,7 +1,6 @@
-/* eslint-disable @typescript-eslint/no-use-before-define */
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 import Rating from '@material-ui/lab/Rating';
 import { DataGrid } from '@mui/x-data-grid';
 

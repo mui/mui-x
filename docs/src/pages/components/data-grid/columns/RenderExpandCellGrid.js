@@ -3,24 +3,26 @@ import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import Popper from '@material-ui/core/Popper';
-import { makeStyles } from '@material-ui/styles';
+import { createStyles, makeStyles } from '@mui/styles';
 import { DataGrid } from '@mui/x-data-grid';
 
-const useStyles = makeStyles(() => ({
-  root: {
-    alignItems: 'center',
-    lineHeight: '24px',
-    width: '100%',
-    height: '100%',
-    position: 'relative',
-    display: 'flex',
-    '& .cellValue': {
-      whiteSpace: 'nowrap',
-      overflow: 'hidden',
-      textOverflow: 'ellipsis',
+const useStyles = makeStyles(() =>
+  createStyles({
+    root: {
+      alignItems: 'center',
+      lineHeight: '24px',
+      width: '100%',
+      height: '100%',
+      position: 'relative',
+      display: 'flex',
+      '& .cellValue': {
+        whiteSpace: 'nowrap',
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+      },
     },
-  },
-}));
+  }),
+);
 
 function isOverflown(element) {
   return (

@@ -1,15 +1,7 @@
-import React from 'react';
+import * as React from 'react';
 import MarkdownDocs from 'docs/src/modules/components/MarkdownDocs';
-import { prepareMarkdown } from 'docs/src/modules/utils/parseMarkdown';
+import { demos, docs, demoComponents } from './grid-row-params.md?@mui/markdown';
 
-const pageFilename = 'api/grid-row-params';
-const requireRaw = require.context('!raw-loader!./', false, /\/grid-row-params\.md$/);
-
-export default function Page({ docs }) {
-  return <MarkdownDocs docs={docs} />;
+export default function Page() {
+  return <MarkdownDocs demos={demos} docs={docs} demoComponents={demoComponents} />;
 }
-
-Page.getInitialProps = () => {
-  const { demos, docs } = prepareMarkdown({ pageFilename, requireRaw });
-  return { demos, docs };
-};

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/styles';
-import { createTheme } from '@material-ui/core/styles';
+import { makeStyles } from '@mui/styles';
+import { createTheme } from '@mui/material/styles';
 import Button from '@material-ui/core/Button';
 import {
   GridColumnMenu,

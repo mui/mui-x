@@ -18,8 +18,8 @@ import {
   randomUpdatedDate,
   randomId,
 } from '@mui/x-data-grid-generator';
-import { createTheme } from '@material-ui/core/styles';
-import { makeStyles } from '@material-ui/styles';
+import { createTheme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 
 const defaultTheme = createTheme();
 

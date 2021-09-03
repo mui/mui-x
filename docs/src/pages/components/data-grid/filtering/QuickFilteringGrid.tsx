@@ -9,8 +9,8 @@ import {
 import { useDemoData } from '@mui/x-data-grid-generator';
 import ClearIcon from '@material-ui/icons/Clear';
 import SearchIcon from '@material-ui/icons/Search';
-import { createTheme, Theme } from '@material-ui/core/styles';
-import { createStyles, makeStyles } from '@material-ui/styles';
+import { createTheme, Theme } from '@mui/material/styles';
+import { createStyles, makeStyles } from '@mui/styles';
 
 function escapeRegExp(value: string): string {
   return value.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
