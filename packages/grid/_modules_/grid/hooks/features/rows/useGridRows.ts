@@ -13,7 +13,7 @@ import {
   GridRowData,
 } from '../../../models/gridRows';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
-import { useLogger } from '../../utils/useLogger';
+import { useGridLogger } from '../../utils/useGridLogger';
 import { useGridState } from '../core/useGridState';
 import { InternalGridRowsState } from './gridRowsState';
 import { useGridStateInit } from '../../utils/useGridStateInit';
@@ -56,7 +56,7 @@ export const useGridRows = (
   apiRef: GridApiRef,
   props: Pick<GridComponentProps, 'rows' | 'getRowId' | 'rowCount'>,
 ): void => {
-  const logger = useLogger('useGridRows');
+  const logger = useGridLogger(apiRef, 'useGridRows');
   const internalRowsState = React.useRef() as React.MutableRefObject<InternalGridRowsState>;
 
   useGridStateInit(apiRef, (state) => {
@@ -68,7 +68,6 @@ export const useGridRows = (
 
     return { ...state, rows: internalRowsState.current };
   });
-
   const [, setGridState, updateComponent] = useGridState(apiRef);
   const updateTimeout = React.useRef<any>();
 

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { GridApiRef } from '../../../models';
 import { useGridSelector, useGridState } from '../core';
-import { useLogger } from '../../utils';
+import { useGridLogger } from '../../utils';
 import { GridEvents } from '../../../constants/eventsConstants';
 import { GridComponentProps } from '../../../GridComponentProps';
 import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
@@ -40,7 +40,7 @@ export const useGridPage = (
   apiRef: GridApiRef,
   props: Pick<GridComponentProps, 'page' | 'onPageChange' | 'rowCount'>,
 ) => {
-  const logger = useLogger('useGridPage');
+  const logger = useGridLogger(apiRef, 'useGridPage');
 
   useGridStateInit(apiRef, (state) => ({
     ...state,

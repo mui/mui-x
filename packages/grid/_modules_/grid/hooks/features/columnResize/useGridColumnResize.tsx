@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { ownerDocument } from '@material-ui/core/utils';
 import { GridStateColDef } from '../../../models/colDef';
-import { useLogger } from '../../utils';
+import { useGridLogger } from '../../utils';
 import { useEventCallback } from '../../../utils/material-ui-utils';
 import { GridEvents } from '../../../constants/eventsConstants';
 import { gridClasses } from '../../../gridClasses';
@@ -69,13 +69,12 @@ export const useGridColumnResize = (
   apiRef: GridApiRef,
   props: Pick<GridComponentProps, 'onColumnResize' | 'onColumnWidthChange'>,
 ) => {
-  const logger = useLogger('useGridColumnResize');
+  const logger = useGridLogger(apiRef, 'useGridColumnResize');
 
   useGridStateInit(apiRef, (state) => ({
     ...state,
     columnResize: { resizingColumnField: '' },
   }));
-
   const [, setGridState, forceUpdate] = useGridState(apiRef);
   const colDefRef = React.useRef<GridStateColDef>();
   const colElementRef = React.useRef<HTMLDivElement>();

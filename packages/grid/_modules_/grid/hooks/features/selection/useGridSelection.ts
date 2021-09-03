@@ -7,7 +7,7 @@ import { GridRowParams } from '../../../models/params/gridRowParams';
 import { GridRowId, GridRowModel } from '../../../models/gridRows';
 import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
-import { useLogger } from '../../utils/useLogger';
+import { useGridLogger } from '../../utils/useGridLogger';
 import { useGridSelector } from '../core/useGridSelector';
 import { useGridState } from '../core/useGridState';
 import { gridRowsLookupSelector } from '../rows/gridRowsSelector';
@@ -26,7 +26,7 @@ import { useGridStateInit } from '../../utils/useGridStateInit';
  * @requires useGridControlStateManager (method)
  */
 export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps): void => {
-  const logger = useLogger('useGridSelection');
+  const logger = useGridLogger(apiRef, 'useGridSelection');
 
   const propSelectionModel = React.useMemo(() => {
     if (props.selectionModel == null) {

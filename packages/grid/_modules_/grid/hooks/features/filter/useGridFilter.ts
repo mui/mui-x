@@ -9,7 +9,7 @@ import { GridRowId, GridRowModel } from '../../../models/gridRows';
 import { isDeepEqual } from '../../../utils/utils';
 import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
-import { useLogger } from '../../utils/useLogger';
+import { useGridLogger } from '../../utils/useGridLogger';
 import { filterableGridColumnsIdsSelector } from '../columns/gridColumnsSelector';
 import { useGridSelector } from '../core/useGridSelector';
 import { useGridState } from '../core/useGridState';
@@ -39,7 +39,7 @@ export const useGridFilter = (
     | 'disableMultipleColumnsFiltering'
   >,
 ): void => {
-  const logger = useLogger('useGridFilter');
+  const logger = useGridLogger(apiRef, 'useGridFilter');
 
   useGridStateInit(apiRef, (state) => ({
     ...state,
