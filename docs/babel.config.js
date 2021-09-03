@@ -15,11 +15,11 @@ const alias = {
   '@mui/x-data-grid-generator': '../packages/grid/x-grid-data-generator/src',
   '@mui/x-data-grid-pro': '../packages/grid/x-grid/src',
   '@mui/x-license-pro': '../packages/x-license/src',
-  '@mui/docs': './node_modules/@material-ui/monorepo/packages/material-ui-docs/src',
-  '@mui/markdown': './node_modules/@material-ui/monorepo/docs/packages/markdown',
+  '@mui/docs': '../node_modules/@material-ui/monorepo/packages/material-ui-docs/src',
+  '@mui/markdown': '../node_modules/@material-ui/monorepo/docs/packages/markdown',
   '@material-ui/core': '../node_modules/@mui/material',
   '@material-ui/styles': '../node_modules/@mui/styles',
-  docs: './node_modules/@material-ui/monorepo/docs',
+  docs: '../node_modules/@material-ui/monorepo/docs',
   docsx: './',
 };
 

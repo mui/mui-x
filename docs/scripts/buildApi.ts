@@ -4,7 +4,7 @@ import { writeFileSync, mkdirSync } from 'fs';
 import path from 'path';
 import kebabCase from 'lodash/kebabCase';
 import * as prettier from 'prettier';
-import { renderInline as renderMarkdownInline } from '../../node_modules/@material-ui/monorepo/docs/packages/markdown';
+import { renderInline as renderMarkdownInline } from 'docs/packages/markdown';
 
 type Api = {
   name: string;

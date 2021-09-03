@@ -24,7 +24,6 @@
     "@emotion/react": "^11.4.1",
     "@emotion/server": "^11.4.0",
     "@emotion/styled": "^11.3.0",
-    "@material-ui/monorepo": "https://github.com/mui-org/material-ui.git#next",
     "@mui/icons-material": "^5.0.0-rc.0",
     "@mui/material": "^5.0.0-rc.0",
     "@mui/styles": "^5.0.0-rc.0",
