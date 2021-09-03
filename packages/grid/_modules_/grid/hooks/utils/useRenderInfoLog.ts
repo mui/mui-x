@@ -1,7 +1,7 @@
 import { GridApiRef } from '../../models/api/gridApiRef';
 import { useLogger } from './useLogger';
-import {useGridSelector} from "../features";
-import {gridRenderStateSelector} from "../features/virtualization/renderingStateSelector";
+import { useGridSelector } from '../features';
+import { gridRenderingSelector } from '../features/virtualization/renderingStateSelector';
 
 /**
  * @requires useGridVirtualization (state)
@@ -10,11 +10,10 @@ import {gridRenderStateSelector} from "../features/virtualization/renderingState
 export function useRenderInfoLog(apiRef: GridApiRef) {
   const logger = useLogger('useRenderInfoLog');
 
-  const rendering = useGridSelector(apiRef, gridRenderStateSelector)
+  const rendering = useGridSelector(apiRef, gridRenderingSelector);
 
   if (rendering.renderContext != null) {
-    const { page, firstColIdx, lastColIdx, firstRowIdx, lastRowIdx } =
-      rendering.renderContext!;
+    const { page, firstColIdx, lastColIdx, firstRowIdx, lastRowIdx } = rendering.renderContext!;
     logger.info(
       `Rendering, page: ${page}, col: ${firstColIdx}-${lastColIdx}, row: ${firstRowIdx}-${lastRowIdx}`,
     );

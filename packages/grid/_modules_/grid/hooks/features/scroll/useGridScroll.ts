@@ -13,7 +13,7 @@ import { gridRowCountSelector } from '../rows/gridRowsSelector';
 import { gridDensityRowHeightSelector } from '../density/densitySelector';
 import { GridScrollParams } from '../../../models/params/gridScrollParams';
 import { GridScrollApi } from '../../../models/api/gridScrollApi';
-import { gridScrollStateSelector } from '../virtualization/renderingStateSelector';
+import { gridScrollSelector } from '../virtualization/renderingStateSelector';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
 import { useNativeEventListener } from '../../root/useNativeEventListener';
 
@@ -126,7 +126,7 @@ export const useGridScroll = (
   );
 
   const getScrollPosition = React.useCallback<GridScrollApi['getScrollPosition']>(
-    () => gridScrollStateSelector(apiRef.current.state),
+    () => gridScrollSelector(apiRef.current.state),
     [apiRef],
   );
 

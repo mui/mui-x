@@ -7,7 +7,7 @@ import { useGridApiEventHandler, useGridApiOptionHandler } from '../../root/useG
 import { GridRowScrollEndParams } from '../../../models/params/gridRowScrollEndParams';
 import { visibleGridColumnsSelector } from '../columns/gridColumnsSelector';
 import { GridComponentProps } from '../../../GridComponentProps';
-import { gridRenderStateSelector } from '../virtualization/renderingStateSelector';
+import { gridRenderingSelector } from '../virtualization/renderingStateSelector';
 import { GridViewportRowsChangeParams } from '../../../models/params/gridViewportRowsChangeParams';
 import { GridScrollParams } from '../../../models/params/gridScrollParams';
 
@@ -27,7 +27,7 @@ export const useGridInfiniteLoader = (
 ): void => {
   const containerSizes = useGridSelector(apiRef, gridContainerSizesSelector);
   const visibleColumns = useGridSelector(apiRef, visibleGridColumnsSelector);
-  const renderState = useGridSelector(apiRef, gridRenderStateSelector);
+  const renderState = useGridSelector(apiRef, gridRenderingSelector);
 
   const isInScrollBottomArea = React.useRef<boolean>(false);
   const previousRenderContext = React.useRef<null | {

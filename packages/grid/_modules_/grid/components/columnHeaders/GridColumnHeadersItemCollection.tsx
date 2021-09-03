@@ -9,7 +9,7 @@ import {
   gridTabIndexColumnHeaderSelector,
 } from '../../hooks/features/focus/gridFocusStateSelector';
 import { gridSortColumnLookupSelector } from '../../hooks/features/sorting/gridSortingSelector';
-import { gridRenderStateSelector } from '../../hooks/features/virtualization/renderingStateSelector';
+import { gridRenderingSelector } from '../../hooks/features/virtualization/renderingStateSelector';
 import { gridDensityHeaderHeightSelector } from '../../hooks/features/density/densitySelector';
 import { gridColumnMenuSelector } from '../../hooks/features/columnMenu/columnMenuSelector';
 import { GridStateColDef } from '../../models/colDef/gridColDef';
@@ -28,7 +28,7 @@ export function GridColumnHeadersItemCollection(props: GridColumnHeadersItemColl
   const dragCol = useGridSelector(apiRef, gridColumnReorderDragColSelector);
   const resizingColumnField = useGridSelector(apiRef, gridResizingColumnFieldSelector);
   const columnHeaderFocus = useGridSelector(apiRef, gridFocusColumnHeaderSelector);
-  const renderCtx = useGridSelector(apiRef, gridRenderStateSelector).renderContext;
+  const renderCtx = useGridSelector(apiRef, gridRenderingSelector).renderContext;
   const tabIndexState = useGridSelector(apiRef, gridTabIndexColumnHeaderSelector);
   const cellTabIndexState = useGridSelector(apiRef, gridTabIndexCellSelector);
   const headerHeight = useGridSelector(apiRef, gridDensityHeaderHeightSelector);

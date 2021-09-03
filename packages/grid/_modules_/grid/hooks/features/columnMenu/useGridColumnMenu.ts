@@ -5,8 +5,8 @@ import { useLogger } from '../../utils/useLogger';
 import { useGridState } from '../core/useGridState';
 import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
 import { GridEvents } from '../../../constants/eventsConstants';
-import {useGridSelector} from "../core";
-import {gridColumnMenuSelector} from "./columnMenuSelector";
+import { useGridSelector } from '../core';
+import { gridColumnMenuSelector } from './columnMenuSelector';
 
 /**
  * @requires useGridColumnResize (event)
@@ -16,7 +16,7 @@ import {gridColumnMenuSelector} from "./columnMenuSelector";
 export const useGridColumnMenu = (apiRef: GridApiRef): void => {
   const logger = useLogger('useGridColumnMenu');
   const [, setGridState, forceUpdate] = useGridState(apiRef);
-  const columnMenu = useGridSelector(apiRef, gridColumnMenuSelector)
+  const columnMenu = useGridSelector(apiRef, gridColumnMenuSelector);
 
   const showColumnMenu = React.useCallback(
     (field: string) => {
