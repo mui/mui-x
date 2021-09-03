@@ -7,8 +7,8 @@ import {
   GridToolbarFilterButton,
 } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
-import ClearIcon from '@material-ui/icons/Clear';
-import SearchIcon from '@material-ui/icons/Search';
+import ClearIcon from '@mui/icons-material/Clear';
+import SearchIcon from '@mui/icons-material/Search';
 import { createTheme, Theme } from '@mui/material/styles';
 import { createStyles, makeStyles } from '@mui/styles';
 

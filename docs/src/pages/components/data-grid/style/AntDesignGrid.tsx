@@ -3,8 +3,8 @@ import { DataGrid, useGridSlotComponentProps } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import { createTheme, Theme } from '@mui/material/styles';
 import { createStyles, makeStyles } from '@mui/styles';
-import Pagination from '@material-ui/lab/Pagination';
-import PaginationItem from '@material-ui/lab/PaginationItem';
+import Pagination from '@mui/material/Pagination';
+import PaginationItem from '@mui/material/PaginationItem';
 
 function customCheckbox(theme: Theme) {
   return {

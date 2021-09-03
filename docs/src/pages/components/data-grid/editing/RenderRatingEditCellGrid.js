@@ -1,7 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@mui/styles';
-import Rating from '@material-ui/lab/Rating';
+import Rating from '@mui/material/Rating';
 import { DataGrid } from '@mui/x-data-grid';
 
 function renderRating(params) {

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { DataGridPro, GridToolbar } from '@mui/x-data-grid-pro';
 import { useDemoData } from '@mui/x-data-grid-generator';
-import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
+import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import { makeStyles } from '@mui/styles';
 import { createTheme, Theme } from '@mui/material/styles';
 import FormControl from '@material-ui/core/FormControl';

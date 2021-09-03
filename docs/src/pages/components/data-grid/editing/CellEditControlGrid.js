@@ -5,7 +5,7 @@ import {
   randomTraderName,
   randomUpdatedDate,
 } from '@mui/x-data-grid-generator';
-import Alert from '@material-ui/lab/Alert';
+import Alert from '@mui/material/Alert';
 
 export default function CellEditControlGrid() {
   const [editRowsModel, setEditRowsModel] = React.useState({});

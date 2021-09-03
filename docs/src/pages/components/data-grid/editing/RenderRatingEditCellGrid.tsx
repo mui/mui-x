@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { makeStyles } from '@mui/styles';
-import Rating from '@material-ui/lab/Rating';
+import Rating from '@mui/material/Rating';
 import { DataGrid, GridRenderCellParams } from '@mui/x-data-grid';
 
 function renderRating(params) {

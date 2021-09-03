@@ -11,7 +11,7 @@ import {
   useGridApiRef,
   DataGridPro,
 } from '@mui/x-data-grid-pro';
-import StarOutlineIcon from '@material-ui/icons/StarOutline';
+import StarOutlineIcon from '@mui/icons-material/StarOutline';
 
 const defaultTheme = createTheme();
 const useStyles = makeStyles(
