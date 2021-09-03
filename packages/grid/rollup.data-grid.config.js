@@ -45,7 +45,7 @@ export default [
         copy({
           targets: [
             {
-              src: ['./data-grid/README.md', './data-grid/LICENSE'],
+              src: ['./data-grid/README.md', './data-grid/LICENSE', '../../CHANGELOG.md'],
               dest: './data-grid/build',
             },
             {

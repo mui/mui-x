@@ -50,7 +50,7 @@ export default [
         copy({
           targets: [
             {
-              src: ['./x-grid/README.md', './x-grid/LICENSE.md'],
+              src: ['./x-grid/README.md', './x-grid/LICENSE.md', '../../CHANGELOG.md'],
               dest: './x-grid/build',
             },
             {

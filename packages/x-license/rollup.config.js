@@ -41,7 +41,7 @@ export default [
         copy({
           targets: [
             {
-              src: ['./README.md', './LICENSE.md'],
+              src: ['./README.md', './LICENSE.md', '../../CHANGELOG.md'],
               dest: './build',
             },
             {

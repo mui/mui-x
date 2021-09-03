@@ -42,7 +42,9 @@ export default [
   },
   {
     input: './x-grid-data-generator/build/esm/x-grid-data-generator/src/index.d.ts',
-    output: [{ file: './x-grid-data-generator/build/esm/x-grid-data-generator.d.ts', format: 'es' }],
+    output: [
+      { file: './x-grid-data-generator/build/esm/x-grid-data-generator.d.ts', format: 'es' },
+    ],
     plugins: [
       dts(),
       !production && sourceMaps(),
@@ -54,6 +56,7 @@ export default [
                 './x-grid-data-generator/package.json',
                 './x-grid-data-generator/README.md',
                 './x-grid-data-generator/LICENSE',
+                '../../CHANGELOG.md',
               ],
               dest: './x-grid-data-generator/build',
             },
