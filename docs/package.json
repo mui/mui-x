@@ -17,9 +17,9 @@
     "typescript:transpile:dev": "node scripts/formattedTSDemos --watch"
   },
   "dependencies": {
-    "@babel/core": "^7.15.0",
+    "@babel/core": "^7.15.5",
     "@babel/plugin-transform-object-assign": "^7.14.5",
-    "@babel/runtime-corejs2": "^7.15.3",
+    "@babel/runtime-corejs2": "^7.15.4",
     "@material-ui/core": "^4.9.12",
     "@material-ui/docs": "^4.0.0-beta.3",
     "@material-ui/icons": "^4.11.2",
