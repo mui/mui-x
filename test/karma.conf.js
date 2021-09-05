@@ -2,7 +2,9 @@ const playwright = require('playwright');
 const webpack = require('webpack');
 
 const CI = Boolean(process.env.CI);
-const isPR = Boolean(process.env.CIRCLE_PR_NUMBER);
+// renovate PRs are based off of upstream branches.
+// Their CI run will be a branch based run not PR run and therefore won't have a CIRCLE_PR_NUMBER
+const isPR = Boolean(process.env.CIRCLE_PULL_REQUEST);
 
 let build = `material-ui-x local ${new Date().toISOString()}`;
 
