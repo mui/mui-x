@@ -120,7 +120,7 @@
     "rollup-plugin-cleaner": "^1.0.0",
     "rollup-plugin-command": "^1.1.3",
     "rollup-plugin-commonjs": "^10.1.0",
-    "rollup-plugin-dts": "^3.0.2",
+    "rollup-plugin-dts": "^4.0.0",
     "rollup-plugin-sourcemaps": "^0.6.3",
     "rollup-plugin-terser": "^7.0.2",
     "rollup-plugin-typescript2": "^0.30.0",
