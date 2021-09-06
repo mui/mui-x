@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { GridRenderEditCellParams } from '@mui/x-data-grid';
-import Select from '@material-ui/core/Select';
+import Select, { SelectProps } from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
+import { MenuProps } from '@material-ui/core/Menu';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import ReportProblemIcon from '@material-ui/icons/ReportProblem';
@@ -36,15 +37,15 @@ function EditStatus(props: GridRenderEditCellParams) {
   const classes = useStyles();
   const { id, value, api, field } = props;
 
-  const handleChange = (event) => {
+  const handleChange: SelectProps['onChange'] = (event) => {
     api.setEditCellValue({ id, field, value: event.target.value }, event);
-    if (!event.key) {
+    if (!(event as any).key) {
       api.commitCellChange({ id, field });
       api.setCellMode(id, field, 'view');
     }
   };
 
-  const handleClose = (event, reason) => {
+  const handleClose: MenuProps['onClose'] = (event, reason) => {
     if (reason === 'backdropClick') {
       api.setCellMode(id, field, 'view');
     }

@@ -53,7 +53,7 @@ DataGrid.propTypes = {
     return null;
   }),
   checkboxSelectionVisibleOnly: chainPropTypes(PropTypes.bool, (props: any) => {
-    if (props.checkboxSelectionVisibleOnly === true) {
+    if (props.checkboxSelectionVisibleOnly) {
       return new Error(
         [
           `Material-UI: \`<DataGrid checkboxSelectionVisibleOnly={true} />\` is not a valid prop.`,

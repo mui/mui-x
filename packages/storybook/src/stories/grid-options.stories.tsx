@@ -25,7 +25,7 @@ const rows = [
 export const NoLogger = () => {
   return (
     <div className="grid-container">
-      <DataGridPro rows={rows} columns={columns} {...{ logLevel: false }} />
+      <DataGridPro rows={rows} columns={columns} logLevel={false} />
     </div>
   );
 };
@@ -34,13 +34,13 @@ export const CustomLogger = () => {
   const logger = {
     debug: () => {},
     // eslint-disable-next-line no-console
-    info: (...args) => console.info(`CUSTOM-LOGGING =>${args[0]}`, args.slice(1)),
-    warn: (...args) => console.warn(`CUSTOM-LOGGING =>${args[0]}`, args.slice(1)),
-    error: (...args) => console.error(`CUSTOM-LOGGING =>${args[0]}`, args.slice(1)),
+    info: (...args) => console.info(`CUSTOM-LOGGING => ${args[0]}`, args.slice(1)),
+    warn: (...args) => console.warn(`CUSTOM-LOGGING => ${args[0]}`, args.slice(1)),
+    error: (...args) => console.error(`CUSTOM-LOGGING => ${args[0]}`, args.slice(1)),
   };
   return (
     <div className="grid-container">
-      <DataGridPro rows={rows} columns={columns} {...{ logger }} />
+      <DataGridPro rows={rows} columns={columns} logger={logger} logLevel="debug" />
     </div>
   );
 };

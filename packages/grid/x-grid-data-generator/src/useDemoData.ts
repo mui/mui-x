@@ -4,8 +4,9 @@ import { GridData, getRealData } from './services/real-data-service';
 import { getCommodityColumns } from './commodities.columns';
 import { getEmployeeColumns } from './employees.columns';
 import asyncWorker from './asyncWorker';
+import { GridColDefGenerator } from './services/gridColDefGenerator';
 
-const dataCache = new LRUCache({
+const dataCache = new LRUCache<string, GridData>({
   max: 10,
   maxAge: 60 * 5 * 1e3, // 5 minutes
 });
@@ -28,7 +29,11 @@ export interface DemoDataOptions {
 
 // Generate fake data from a seed.
 // It's about x20 faster than getRealData.
-async function extrapolateSeed(rowLength, columns, data): Promise<any> {
+async function extrapolateSeed(
+  rowLength: number,
+  columns: GridColDefGenerator[],
+  data: GridData,
+): Promise<GridData> {
   return new Promise<any>((resolve) => {
     const seed = data.rows;
     const rows = data.rows.slice();
@@ -61,7 +66,7 @@ async function extrapolateSeed(rowLength, columns, data): Promise<any> {
   });
 }
 
-function deepFreeze(object) {
+const deepFreeze = <T>(object: T): T => {
   // Retrieve the property names defined on object
   const propNames = Object.getOwnPropertyNames(object);
 
@@ -69,7 +74,7 @@ function deepFreeze(object) {
 
   // eslint-disable-next-line no-restricted-syntax
   for (const name of propNames) {
-    const value = object[name];
+    const value = object[name as keyof T];
 
     if (value && typeof value === 'object') {
       deepFreeze(value);
@@ -77,7 +82,7 @@ function deepFreeze(object) {
   }
 
   return Object.freeze(object);
-}
+};
 
 export const useDemoData = (options: DemoDataOptions): DemoDataReturnType => {
   const [rowLength, setRowLength] = React.useState(options.rowLength);
@@ -104,7 +109,7 @@ export const useDemoData = (options: DemoDataOptions): DemoDataReturnType => {
     // Cache to allow fast switch between the JavaScript and TypeScript version
     // of the demos.
     if (dataCache.has(cacheKey)) {
-      const newData = dataCache.get(cacheKey);
+      const newData = dataCache.get(cacheKey)!;
       setData(newData);
       setLoading(false);
       return undefined;
@@ -115,7 +120,7 @@ export const useDemoData = (options: DemoDataOptions): DemoDataReturnType => {
     (async () => {
       setLoading(true);
 
-      let newData;
+      let newData: GridData;
       const columns = getColumns();
       if (rowLength > 1000) {
         newData = await getRealData(1000, columns);

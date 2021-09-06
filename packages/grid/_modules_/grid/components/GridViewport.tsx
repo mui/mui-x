@@ -8,7 +8,7 @@ import {
   gridTabIndexCellSelector,
 } from '../hooks/features/focus/gridFocusStateSelector';
 import { gridEditRowsStateSelector } from '../hooks/features/rows/gridEditRowsSelector';
-import { selectedIdsLookupSelector } from '../hooks/features/selection/gridSelectionSelector';
+import { gridSelectionStateSelector } from '../hooks/features/selection/gridSelectionSelector';
 import { renderStateSelector } from '../hooks/features/virtualization/renderingStateSelector';
 import { useGridApiContext } from '../hooks/root/useGridApiContext';
 import { GridDataContainer } from './containers/GridDataContainer';
@@ -37,10 +37,27 @@ export const GridViewport: ViewportType = React.forwardRef<HTMLDivElement, {}>(
     const renderState = useGridSelector(apiRef, renderStateSelector);
     const cellFocus = useGridSelector(apiRef, gridFocusCellSelector);
     const cellTabIndex = useGridSelector(apiRef, gridTabIndexCellSelector);
-    const selectionLookup = useGridSelector(apiRef, selectedIdsLookupSelector);
+    const selection = useGridSelector(apiRef, gridSelectionStateSelector);
     const visibleSortedRowsAsArray = useGridSelector(apiRef, visibleSortedGridRowsAsArraySelector);
     const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
     const editRowsState = useGridSelector(apiRef, gridEditRowsStateSelector);
+
+    const filteredSelection = React.useMemo(
+      () =>
+        typeof rootProps.isRowSelectable === 'function'
+          ? selection.filter((id) => rootProps.isRowSelectable!(apiRef.current.getRowParams(id)))
+          : selection,
+      [apiRef, rootProps.isRowSelectable, selection],
+    );
+
+    const selectionLookup = React.useMemo(
+      () =>
+        filteredSelection.reduce((lookup, rowId) => {
+          lookup[rowId] = rowId;
+          return lookup;
+        }, {}),
+      [filteredSelection],
+    );
 
     const getRowsElements = () => {
       if (renderState.renderContext == null) {
