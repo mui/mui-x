@@ -293,7 +293,7 @@ export const useStyles = makeStyles(
         [`& .${gridClasses.actionsCell}`]: {
           display: 'inline-flex',
           alignItems: 'center',
-          gap: theme.spacing(1),
+          gridGap: theme.spacing(1),
         },
         // The very last cell
         [`& .${gridClasses.columnHeaderWrapper} .${gridClasses.cell}`]: {
