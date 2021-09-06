@@ -20,6 +20,7 @@ import {
   GridColumns,
   GridEvents,
   GRID_CELL_CSS_CLASS,
+  GridApiRef,
 } from '@mui/x-data-grid-pro';
 import { getCell, getColumnHeaderCell, getRow } from 'test/utils/helperFn';
 import { spy } from 'sinon';
@@ -66,7 +67,7 @@ describe('<DataGridPro /> - Events Params', () => {
     }
   });
 
-  let apiRef;
+  let apiRef: GridApiRef;
   const TestEvents = (props: Partial<DataGridProProps>) => {
     apiRef = useGridApiRef();
     return (
@@ -331,7 +332,7 @@ describe('<DataGridPro /> - Events Params', () => {
 
   it('call onViewportRowsChange when the viewport rows change', async () => {
     const handleViewportRowsChange = spy();
-    // TODO: Set the dimentions of the grid once the Windows test issues are resolved.
+    // TODO: Set the dimensions of the grid once the Windows test issues are resolved.
     const { container } = render(
       <TestVirtualization onViewportRowsChange={handleViewportRowsChange} />,
     );
@@ -349,5 +350,15 @@ describe('<DataGridPro /> - Events Params', () => {
       expect(handleViewportRowsChange.lastCall.args[0].firstRowIndex).to.equal(6); // should be 1
       expect(handleViewportRowsChange.lastCall.args[0].lastRowIndex).to.equal(12); // should be pageSize + 1
     });
+  });
+
+  it('should publish GridEvents.unmount when unmounting the Grid', () => {
+    const onUnmount = spy();
+
+    const { unmount } = render(<TestEvents />);
+
+    apiRef.current.subscribeEvent('unmount', onUnmount);
+    unmount();
+    expect(onUnmount.calledOnce).to.equal(true);
   });
 });

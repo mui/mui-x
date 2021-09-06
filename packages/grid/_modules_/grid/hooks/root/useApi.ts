@@ -60,7 +60,7 @@ export function useApi(apiRef: GridApiRef, props: Pick<GridComponentProps, 'sign
 
     return () => {
       logger.info('Unmounting Grid component. Clearing all events listeners.');
-      api.emit(GridEvents.unmount);
+      api.publishEvent(GridEvents.unmount);
       api.removeAllListeners();
     };
   }, [logger, apiRef]);
