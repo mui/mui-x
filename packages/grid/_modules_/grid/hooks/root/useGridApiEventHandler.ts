@@ -1,8 +1,11 @@
 import * as React from 'react';
-import { MuiEvent } from '../../models/muiEvent';
 import { GridApiRef } from '../../models/api/gridApiRef';
-import { useGridLogger } from '../utils/useGridLogger';
 import { GridApi } from '../../models/api/gridApi';
+import {
+  GridListener,
+  GridSubscribeEventOptions,
+  GridValidEvent,
+} from '../../utils/eventEmitter/GridEventEmitter';
 
 // TODO: Remove once [[GridApi]] cycle dependency is fixed
 /**
@@ -21,38 +24,47 @@ export enum GridSignature {
   DataGridPro = 'DataGridPro',
 }
 
-export function useGridApiEventHandler(
+export function useGridApiEventHandler<Params, Event extends GridValidEvent>(
   apiRef: GridApiRef,
   eventName: string,
-  handler?: (...args: any) => void,
-  options?: { isFirst?: boolean },
+  handler?: GridListener<Params, Event>,
+  options?: GridSubscribeEventOptions,
 ) {
-  const logger = useGridLogger(apiRef, 'useGridApiEventHandler');
+  const subscription = React.useRef<(() => void) | null>(null);
+  const handlerRef = React.useRef<GridListener<Params, Event> | undefined>();
+  handlerRef.current = handler;
+
+  if (!subscription.current && handlerRef.current) {
+    const enhancedHandler: GridListener<Params, Event> = (params, event, details) => {
+      if (!event.defaultMuiPrevented) {
+        handlerRef.current?.(params, event, details);
+      }
+    };
+
+    subscription.current = apiRef.current.subscribeEvent<Params, Event>(
+      eventName,
+      enhancedHandler,
+      options,
+    );
+  } else if (!handlerRef.current && subscription.current) {
+    subscription.current();
+    subscription.current = null;
+  }
 
   React.useEffect(() => {
-    if (handler && eventName) {
-      const enhancedHandler = (
-        params: any,
-        event: MuiEvent<React.SyntheticEvent | DocumentEventMap[keyof DocumentEventMap] | {}>,
-        details: GridCallbackDetails,
-      ) => {
-        if (!event.defaultMuiPrevented) {
-          handler(params, event, details);
-        }
-      };
-      return apiRef.current.subscribeEvent(eventName, enhancedHandler, options);
-    }
-
-    return undefined;
-  }, [apiRef, logger, eventName, handler, options]);
+    return () => {
+      subscription.current?.();
+    };
+  }, []);
 }
 
-const optionsSubscriberOptions = { isFirst: true };
-export function useGridApiOptionHandler(
+const optionsSubscriberOptions: GridSubscribeEventOptions = { isFirst: true };
+
+export function useGridApiOptionHandler<Params, Event extends GridValidEvent>(
   apiRef: GridApiRef,
   eventName: string,
-  handler?: (...args: any) => void,
+  handler?: GridListener<Params, Event>,
 ) {
   // Validate that only one per event name?
-  useGridApiEventHandler(apiRef, eventName, handler, optionsSubscriberOptions);
+  useGridApiEventHandler<Params, Event>(apiRef, eventName, handler, optionsSubscriberOptions);
 }

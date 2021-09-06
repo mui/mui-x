@@ -14,9 +14,7 @@ export default function SubscribeToEvents() {
 
   React.useEffect(() => {
     return apiRef.current.subscribeEvent('columnResize', (params) => {
-      setMessage(
-        `Column ${params.colDef.headerName} resized to ${params.computedWidth}px.`,
-      );
+      setMessage(`Column ${params.colDef.headerName} resized to ${params.width}px.`);
     });
   }, [apiRef]);
 
