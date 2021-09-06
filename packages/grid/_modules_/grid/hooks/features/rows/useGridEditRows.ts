@@ -422,7 +422,7 @@ export function useGridEditRows(
   );
 
   const handleCellEditStop = React.useCallback(
-    (params: GridCellParams, event: React.SyntheticEvent) => {
+    (params: GridCellParams, event: React.SyntheticEvent | {}) => {
       setCellMode(params.id, params.field, GridCellModes.View);
 
       if (!isKeyboardEvent(event)) {
