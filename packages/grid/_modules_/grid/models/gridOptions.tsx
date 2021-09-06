@@ -53,6 +53,7 @@ export interface GridSimpleOptions {
   checkboxSelection: boolean;
   /**
    * If `true`, the "Select All" header checkbox selects only the rows on the current page. To be used in combination with `checkboxSelection`.
+   * It only works if the pagination is enabled.
    * @default false
    */
   checkboxSelectionVisibleOnly: boolean;
@@ -177,9 +178,9 @@ export interface GridSimpleOptions {
   logger: Logger;
   /**
    * Allows to pass the logging level or false to turn off logging.
-   * @default error
+   * @default "debug"
    */
-  logLevel: string | false;
+  logLevel?: keyof Logger | false;
   /**
    * If `true`, pagination is enabled.
    * @default false
@@ -259,7 +260,7 @@ export const GRID_DEFAULT_SIMPLE_OPTIONS: GridSimpleOptions = {
   hideFooterRowCount: false,
   hideFooterSelectedRowCount: false,
   logger: console,
-  logLevel: process.env.NODE_ENV === 'production' ? 'error' : 'warn',
+  logLevel: process.env.NODE_ENV === 'production' ? ('error' as const) : ('warn' as const),
   pagination: false,
   paginationMode: GridFeatureModeConstant.client,
   rowHeight: 52,

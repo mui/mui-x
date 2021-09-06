@@ -1,5 +1,5 @@
 import { GridApiRef } from '../../models/api/gridApiRef';
-import { useLogger } from './useLogger';
+import { useGridLogger } from './useGridLogger';
 import { useGridSelector } from '../features';
 import { gridRenderingSelector } from '../features/virtualization/renderingStateSelector';
 
@@ -8,7 +8,7 @@ import { gridRenderingSelector } from '../features/virtualization/renderingState
  * @requires useGridNoVirtualization (state)
  */
 export function useRenderInfoLog(apiRef: GridApiRef) {
-  const logger = useLogger('useRenderInfoLog');
+  const logger = useGridLogger(apiRef, 'useRenderInfoLog');
 
   const rendering = useGridSelector(apiRef, gridRenderingSelector);
 

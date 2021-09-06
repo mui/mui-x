@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
-import { useLogger } from '../../utils/useLogger';
+import { useGridLogger } from '../../utils/useGridLogger';
 import { useGridState } from '../core/useGridState';
 import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
 import { GridEvents } from '../../../constants/eventsConstants';
@@ -14,7 +14,7 @@ import { gridColumnMenuSelector } from './columnMenuSelector';
  * @requires useGridVirtualization (event)
  */
 export const useGridColumnMenu = (apiRef: GridApiRef): void => {
-  const logger = useLogger('useGridColumnMenu');
+  const logger = useGridLogger(apiRef, 'useGridColumnMenu');
   const [, setGridState, forceUpdate] = useGridState(apiRef);
   const columnMenu = useGridSelector(apiRef, gridColumnMenuSelector);
 

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { GridCellIndexCoordinates } from '../../../models/gridCell';
 import { GridApiRef } from '../../../models/api/gridApiRef';
-import { useLogger } from '../../utils/useLogger';
+import { useGridLogger } from '../../utils/useGridLogger';
 import {
   gridColumnsMetaSelector,
   visibleGridColumnsSelector,
@@ -43,7 +43,7 @@ export const useGridScroll = (
   apiRef: GridApiRef,
   props: Pick<GridComponentProps, 'pagination'>,
 ): void => {
-  const logger = useLogger('useGridScroll');
+  const logger = useGridLogger(apiRef, 'useGridScroll');
   const colRef = apiRef.current.columnHeadersElementRef!;
   const windowRef = apiRef.current.windowRef!;
 
