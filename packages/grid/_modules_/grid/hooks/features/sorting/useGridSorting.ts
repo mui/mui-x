@@ -219,30 +219,6 @@ export const useGridSorting = (
     [upsertSortModel, setSortModel, createSortItem, props.disableMultipleColumnsSorting],
   );
 
-  const handleColumnHeaderClick = React.useCallback(
-    ({ colDef }: GridColumnHeaderParams, event: React.MouseEvent) => {
-      const allowMultipleSorting = event.shiftKey || event.metaKey || event.ctrlKey;
-      sortColumn(colDef, undefined, allowMultipleSorting);
-    },
-    [sortColumn],
-  );
-
-  const handleColumnHeaderKeyDown = React.useCallback(
-    ({ colDef }: GridColumnHeaderParams, event: React.KeyboardEvent) => {
-      // CTRL + Enter opens the column menu
-      if (isEnterKey(event.key) && !event.ctrlKey && !event.metaKey) {
-        sortColumn(colDef, undefined, event.shiftKey);
-      }
-    },
-    [sortColumn],
-  );
-
-  const onRowsCleared = React.useCallback(() => {
-    setGridState((state) => {
-      return { ...state, sorting: { ...state.sorting, sortedRows: [] } };
-    });
-  }, [setGridState]);
-
   const getSortModel = React.useCallback(
     () => gridState.sorting.sortModel,
     [gridState.sorting.sortModel],
@@ -257,33 +233,6 @@ export const useGridSorting = (
     (): GridRowId[] => sortedGridRowIdsSelector(apiRef.current.state),
     [apiRef],
   );
-
-  const onColUpdated = React.useCallback(() => {
-    // When the columns change we check that the sorted columns are still part of the dataset
-    setGridState((state) => {
-      const sortModel = state.sorting.sortModel;
-      const latestColumns = allGridColumnsSelector(state);
-      let newModel = sortModel;
-      if (sortModel.length > 0) {
-        newModel = sortModel.reduce((model, sortedCol) => {
-          const exist = latestColumns.find((col) => col.field === sortedCol.field);
-          if (exist) {
-            model.push(sortedCol);
-          }
-          return model;
-        }, [] as GridSortModel);
-      }
-
-      return { ...state, sorting: { ...state.sorting, sortModel: newModel } };
-    });
-  }, [setGridState]);
-
-  useGridApiEventHandler(apiRef, GridEvents.columnHeaderClick, handleColumnHeaderClick);
-  useGridApiEventHandler(apiRef, GridEvents.columnHeaderKeyDown, handleColumnHeaderKeyDown);
-  useGridApiEventHandler(apiRef, GridEvents.rowsSet, apiRef.current.applySorting);
-  useGridApiEventHandler(apiRef, GridEvents.rowsClear, onRowsCleared);
-  useGridApiEventHandler(apiRef, GridEvents.rowsUpdate, apiRef.current.applySorting);
-  useGridApiEventHandler(apiRef, GridEvents.columnsChange, onColUpdated);
 
   const sortApi: GridSortApi = {
     getSortModel,
@@ -311,4 +260,55 @@ export const useGridSorting = (
       setSortModel(props.sortModel);
     }
   }, [props.sortModel, apiRef, setSortModel]);
+
+  const handleColumnHeaderClick = React.useCallback(
+    ({ colDef }: GridColumnHeaderParams, event: React.MouseEvent) => {
+      const allowMultipleSorting = event.shiftKey || event.metaKey || event.ctrlKey;
+      sortColumn(colDef, undefined, allowMultipleSorting);
+    },
+    [sortColumn],
+  );
+
+  const handleColumnHeaderKeyDown = React.useCallback(
+    ({ colDef }: GridColumnHeaderParams, event: React.KeyboardEvent) => {
+      // CTRL + Enter opens the column menu
+      if (isEnterKey(event.key) && !event.ctrlKey && !event.metaKey) {
+        sortColumn(colDef, undefined, event.shiftKey);
+      }
+    },
+    [sortColumn],
+  );
+
+  const onRowsCleared = React.useCallback(() => {
+    setGridState((state) => {
+      return { ...state, sorting: { ...state.sorting, sortedRows: [] } };
+    });
+  }, [setGridState]);
+
+  const onColUpdated = React.useCallback(() => {
+    // When the columns change we check that the sorted columns are still part of the dataset
+    setGridState((state) => {
+      const sortModel = state.sorting.sortModel;
+      const latestColumns = allGridColumnsSelector(state);
+      let newModel = sortModel;
+      if (sortModel.length > 0) {
+        newModel = sortModel.reduce((model, sortedCol) => {
+          const exist = latestColumns.find((col) => col.field === sortedCol.field);
+          if (exist) {
+            model.push(sortedCol);
+          }
+          return model;
+        }, [] as GridSortModel);
+      }
+
+      return { ...state, sorting: { ...state.sorting, sortModel: newModel } };
+    });
+  }, [setGridState]);
+
+  useGridApiEventHandler(apiRef, GridEvents.columnHeaderClick, handleColumnHeaderClick);
+  useGridApiEventHandler(apiRef, GridEvents.columnHeaderKeyDown, handleColumnHeaderKeyDown);
+  useGridApiEventHandler(apiRef, GridEvents.rowsSet, apiRef.current.applySorting);
+  useGridApiEventHandler(apiRef, GridEvents.rowsClear, onRowsCleared);
+  useGridApiEventHandler(apiRef, GridEvents.rowsUpdate, apiRef.current.applySorting);
+  useGridApiEventHandler(apiRef, GridEvents.columnsChange, onColUpdated);
 };
