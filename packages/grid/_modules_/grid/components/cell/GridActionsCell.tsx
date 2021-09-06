@@ -6,16 +6,19 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 import { unstable_useId as useId } from '@material-ui/core/utils';
 import { GridRenderCellParams } from '../../models/params/gridCellParams';
 import { gridClasses } from '../../gridClasses';
-import { GridMenu } from '../menu/GridMenu';
+import { GridMenu, GridMenuProps } from '../menu/GridMenu';
 import { GridActionsColDef } from '../../models/colDef/gridColDef';
 
-const hasActions = (colDef): colDef is GridActionsColDef => typeof colDef.getActions === 'function';
+const hasActions = (colDef: any): colDef is GridActionsColDef =>
+  typeof colDef.getActions === 'function';
 
-export const GridActionsCell = (props: GridRenderCellParams) => {
+type GridActionsCellProps = GridRenderCellParams & Pick<GridMenuProps, 'position'>;
+
+export const GridActionsCell = (props: GridActionsCellProps) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const menuId = useId();
   const buttonId = useId();
-  const { colDef, id, api } = props;
+  const { colDef, id, api, position = 'bottom-end' } = props;
 
   if (!hasActions(colDef)) {
     throw new Error('Material-UI: Missing the `getActions` property in the `GridColDef`.');
@@ -56,7 +59,7 @@ export const GridActionsCell = (props: GridRenderCellParams) => {
           onClick={hideMenu}
           open={Boolean(anchorEl)}
           target={anchorEl}
-          position="bottom"
+          position={position}
           aria-labelledby={buttonId}
         >
           <MenuList className="MuiDataGrid-gridMenuList">
