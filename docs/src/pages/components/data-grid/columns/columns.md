@@ -270,7 +270,8 @@ However, some types require additional properties to be set to make them work co
   }
   ```
 
-- If the column type is `'actions'`, you need to provide a `getActions` function that returns the actions available for each row.
+- If the column type is `'actions'`, you need to provide a `getActions` function that returns an array of actions available for each row (React elements).
+  You can add the `showInMenu` prop on the returned React elements to signal the data grid to group these actions inside a row menu.
 
   ```tsx
   {
