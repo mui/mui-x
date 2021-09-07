@@ -37,7 +37,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
 
   const slots = {
-    columnHeaderDragging: ['columnHeader__dragging'],
+    columnHeaderDragging: ['columnHeader--dragging'],
   };
 
   return composeClasses(slots, getDataGridUtilityClass, classes);

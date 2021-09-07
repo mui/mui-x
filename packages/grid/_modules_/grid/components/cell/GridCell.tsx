@@ -45,8 +45,8 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   const slots = {
     root: [
       'cell',
-      `cell__text${capitalize(align)}`,
-      isEditable && 'cell__editable',
+      `cell--text${capitalize(align)}`,
+      isEditable && 'cell--editable',
       showRightBorder && 'withBorder',
     ],
   };

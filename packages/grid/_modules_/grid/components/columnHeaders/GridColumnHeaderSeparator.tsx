@@ -20,8 +20,8 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   const slots = {
     root: [
       'columnSeparator',
-      resizable && 'columnSeparator__resizable',
-      resizing && 'columnSeparator__resizing',
+      resizable && 'columnSeparator--resizable',
+      resizing && 'columnSeparator--resizing',
     ],
     icon: ['iconSeparator'],
   };

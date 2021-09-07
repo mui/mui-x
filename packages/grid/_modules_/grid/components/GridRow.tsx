@@ -28,7 +28,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   const { editable, editing, selected, classes } = ownerState;
 
   const slots = {
-    root: ['row', selected && 'selected', editable && 'row__editable', editing && 'row__editing'],
+    root: ['row', selected && 'selected', editable && 'row--editable', editing && 'row--editing'],
   };
 
   return composeClasses(slots, getDataGridUtilityClass, classes);

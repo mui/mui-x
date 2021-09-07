@@ -128,7 +128,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         it('should support class names with underscores', () => {
           render(
             <div style={{ width: 300, height: 300 }}>
-              <DataGrid {...baselineProps} classes={{ columnHeader__sortable: 'foobar' }} />
+              <DataGrid {...baselineProps} classes={{ 'columnHeader--sortable': 'foobar' }} />
             </div>,
           );
           expect(getColumnHeaderCell(0)).to.have.class('foobar');

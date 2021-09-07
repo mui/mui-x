@@ -12,27 +12,27 @@ export interface GridClasses {
   /**
    * Styles applied to the cell element if the cell is editable.
    */
-  cell__editable: string;
+  'cell--editable': string;
   /**
    * Styles applied to the cell element if the cell is in edit mode.
    */
-  cell__editing: string;
+  'cell--editing': string;
   /**
    * Styles applied to the cell element if `align="center"`.
    */
-  cell__textCenter: string;
+  'cell--textCenter': string;
   /**
    * Styles applied to the cell element if `align="left"`.
    */
-  cell__textLeft: string;
+  'cell--textLeft': string;
   /**
    * Styles applied to the cell element if `align="right"`.
    */
-  cell__textRight: string;
+  'cell--textRight': string;
   /**
    * Styles applied to the cell element if the cell has a custom renderer.
    */
-  cell__withRenderer: string;
+  'cell--withRenderer': string;
   /**
    * Styles applied to the cell element.
    */
@@ -48,35 +48,35 @@ export interface GridClasses {
   /**
    * Styles applied to the column header if `headerAlign="center"`.
    */
-  columnHeader__alignCenter: string;
+  'columnHeader--alignCenter': string;
   /**
    * Styles applied to the column header if `headerAlign="left"`.
    */
-  columnHeader__alignLeft: string;
+  'columnHeader--alignLeft': string;
   /**
    * Styles applied to the column header if `headerAlign="right"`.
    */
-  columnHeader__alignRight: string;
+  'columnHeader--alignRight': string;
   /**
    * Styles applied to the floating column header element when it is dragged.
    */
-  columnHeader__dragging: string;
+  'columnHeader--dragging': string;
   /**
    * Styles applied to the column header if it is being dragged.
    */
-  columnHeader__moving: string;
+  'columnHeader--moving': string;
   /**
    * Styles applied to the column header if the type of the column is `number`.
    */
-  columnHeader__numeric: string;
+  'columnHeader--numeric': string;
   /**
    * Styles applied to the column header if the column is sortable.
    */
-  columnHeader__sortable: string;
+  'columnHeader--sortable': string;
   /**
    * Styles applied to the column header if the column is sorted.
    */
-  columnHeader__sorted: string;
+  'columnHeader--sorted': string;
   /**
    * Styles applied to the column header element.
    */
@@ -112,11 +112,11 @@ export interface GridClasses {
   /**
    * Styles applied to the column header separator if the column is resizable.
    */
-  columnSeparator__resizable: string;
+  'columnSeparator--resizable': string;
   /**
    * Styles applied to the column header separator if the column is being resized.
    */
-  columnSeparator__resizing: string;
+  'columnSeparator--resizing': string;
   /**
    * Styles applied to the column header separator element.
    */
@@ -180,11 +180,11 @@ export interface GridClasses {
   /**
    * Styles applied to the row element if the row is editable.
    */
-  row__editable: string;
+  'row--editable': string;
   /**
    * Styles applied to the row element if the row is in edit mode.
    */
-  row__editing: string;
+  'row--editing': string;
   /**
    * Styles applied to the row element.
    */

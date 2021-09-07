@@ -83,7 +83,7 @@ export const GridRowCells = React.memo(function GridRowCells(props: RowCellsProp
       cellComponent = column.renderCell({ ...cellParams, api: apiRef.current });
       // TODO move to GridCell
       classNames.push(
-        clsx(gridClasses['cell--withRenderer'], rootProps.classes?.cell__withRenderer),
+        clsx(gridClasses['cell--withRenderer'], rootProps.classes?.['cell--withRenderer']),
       );
     }
 
@@ -91,7 +91,7 @@ export const GridRowCells = React.memo(function GridRowCells(props: RowCellsProp
       const params = { ...cellParams, ...editCellState, api: apiRef.current };
       cellComponent = column.renderEditCell(params);
       // TODO move to GridCell
-      classNames.push(clsx(gridClasses['cell--editing'], rootProps.classes?.cell__editing));
+      classNames.push(clsx(gridClasses['cell--editing'], rootProps.classes?.['cell--editing']));
     }
 
     if (getCellClassName) {
