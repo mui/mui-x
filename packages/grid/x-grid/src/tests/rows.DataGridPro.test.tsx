@@ -564,6 +564,49 @@ describe('<DataGridPro /> - Rows', () => {
     });
   });
 
+  describe('no virtualization', () => {
+    let apiRef: GridApiRef;
+
+    const TestCase = (props: Partial<DataGridProProps> & { nbRows?: number; nbCols?: number }) => {
+      apiRef = useGridApiRef();
+      const data = useData(props.nbRows || 100, props.nbCols || 10);
+      return (
+        <div style={{ width: 300, height: 300 }}>
+          <DataGridPro
+            apiRef={apiRef}
+            columns={data.columns}
+            rows={data.rows}
+            disableVirtualization
+            {...props}
+          />
+        </div>
+      );
+    };
+
+    it('should allow to disable virtualization', () => {
+      render(<TestCase nbRows={100} nbCols={10} />);
+      expect(document.querySelectorAll('[role="row"][data-rowindex]')).to.have.length(100);
+      expect(document.querySelectorAll('[role="cell"]')).to.have.length(100 * 10);
+    });
+
+    it('should render the correct rows when changing pages', () => {
+      render(<TestCase nbRows={150} nbCols={10} pagination />);
+      expect(document.querySelectorAll('[role="row"][data-rowindex]')).to.have.length(100);
+      apiRef.current.setPage(1);
+      expect(document.querySelectorAll('[role="row"][data-rowindex]')).to.have.length(50);
+    });
+
+    it('should translate to the correct position on scroll', () => {
+      render(<TestCase />);
+      const gridWindow = document.querySelector('.MuiDataGrid-window')!;
+      const renderingZone = document.querySelector('.MuiDataGrid-renderingZone')! as HTMLElement;
+      expect(renderingZone.style.transform).to.equal('translate3d(0px, 0px, 0px)');
+      gridWindow.scrollTop = 100;
+      gridWindow.dispatchEvent(new Event('scroll'));
+      expect(renderingZone.style.transform).to.equal('translate3d(0px, -100px, 0px)');
+    });
+  });
+
   describe('Cell focus', () => {
     let apiRef: GridApiRef;
 

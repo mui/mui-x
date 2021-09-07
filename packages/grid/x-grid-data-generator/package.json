@@ -37,6 +37,7 @@
     "lru-cache": "^6.0.0"
   },
   "devDependencies": {
+    "@types/lru-cache": "^5.1.1",
     "esm": "^3.2.25",
     "yargs": "^17.0.1"
   },

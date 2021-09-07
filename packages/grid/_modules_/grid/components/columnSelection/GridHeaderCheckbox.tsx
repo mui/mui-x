@@ -5,29 +5,58 @@ import { gridPaginatedVisibleSortedGridRowIdsSelector } from '../../hooks/featur
 import { visibleSortedGridRowIdsSelector } from '../../hooks/features/filter/gridFilterSelector';
 import { gridTabIndexColumnHeaderSelector } from '../../hooks/features/focus/gridFocusStateSelector';
 import { gridRowCountSelector } from '../../hooks/features/rows/gridRowsSelector';
-import { selectedGridRowsCountSelector } from '../../hooks/features/selection/gridSelectionSelector';
+import { gridSelectionStateSelector } from '../../hooks/features/selection/gridSelectionSelector';
 import { GridColumnHeaderParams } from '../../models/params/gridColumnHeaderParams';
 import { isNavigationKey, isSpaceKey } from '../../utils/keyboardUtils';
 import { useGridApiContext } from '../../hooks/root/useGridApiContext';
-import { gridClasses } from '../../gridClasses';
+import { getDataGridUtilityClass } from '../../gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
+import { composeClasses } from '../../utils/material-ui-utils';
+import { GridComponentProps } from '../../GridComponentProps';
+
+type OwnerState = { classes: GridComponentProps['classes'] };
+
+const useUtilityClasses = (ownerState: OwnerState) => {
+  const { classes } = ownerState;
+
+  const slots = {
+    root: ['checkboxInput'],
+  };
+
+  return composeClasses(slots, getDataGridUtilityClass, classes);
+};
 
 export const GridHeaderCheckbox = React.forwardRef<HTMLInputElement, GridColumnHeaderParams>(
   function GridHeaderCheckbox(props, ref) {
     const [, forceUpdate] = React.useState(false);
     const apiRef = useGridApiContext();
     const rootProps = useGridRootProps();
+    const ownerState = { classes: rootProps.classes };
+    const classes = useUtilityClasses(ownerState);
     const tabIndexState = useGridSelector(apiRef, gridTabIndexColumnHeaderSelector);
-    const totalSelectedRows = useGridSelector(apiRef, selectedGridRowsCountSelector);
+    const selection = useGridSelector(apiRef, gridSelectionStateSelector);
     const totalRows = useGridSelector(apiRef, gridRowCountSelector);
 
+    const filteredSelection = React.useMemo(
+      () =>
+        typeof rootProps.isRowSelectable === 'function'
+          ? selection.filter((id) => rootProps.isRowSelectable!(apiRef.current.getRowParams(id)))
+          : selection,
+      [apiRef, rootProps.isRowSelectable, selection],
+    );
+
+    const totalSelectedRows = filteredSelection.length;
     const isIndeterminate = totalSelectedRows > 0 && totalSelectedRows !== totalRows;
     // TODO core v5 remove || isIndeterminate, no longer has any effect
     const isChecked = (totalSelectedRows > 0 && totalSelectedRows === totalRows) || isIndeterminate;
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
       const checked = event.target.checked;
-      const rowsToBeSelected = rootProps.checkboxSelectionVisibleOnly
+
+      const shouldLimitSelectionToCurrentPage =
+        rootProps.checkboxSelectionVisibleOnly && rootProps.pagination;
+
+      const rowsToBeSelected = shouldLimitSelectionToCurrentPage
         ? gridPaginatedVisibleSortedGridRowIdsSelector(apiRef.current.state)
         : visibleSortedGridRowIdsSelector(apiRef.current.state);
       apiRef.current.selectRows(rowsToBeSelected, checked, !event.target.indeterminate);
@@ -67,7 +96,7 @@ export const GridHeaderCheckbox = React.forwardRef<HTMLInputElement, GridColumnH
         indeterminate={isIndeterminate}
         checked={isChecked}
         onChange={handleChange}
-        className={gridClasses.checkboxInput}
+        className={classes.root}
         color="primary"
         inputProps={{ 'aria-label': 'Select All Rows checkbox' }}
         tabIndex={tabIndex}

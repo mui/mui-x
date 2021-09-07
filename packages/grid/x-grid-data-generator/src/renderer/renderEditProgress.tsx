@@ -1,7 +1,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { GridRenderEditCellParams } from '@mui/x-data-grid';
-import Slider from '@material-ui/core/Slider';
+import Slider, { SliderProps } from '@material-ui/core/Slider';
 import Tooltip from '@material-ui/core/Tooltip';
 import { createStyles, makeStyles } from '@material-ui/styles';
 import { debounce } from '@material-ui/core/utils';
@@ -50,7 +50,7 @@ const useStyles = makeStyles(
   { defaultTheme },
 );
 
-function ValueLabelComponent(props) {
+const ValueLabelComponent: SliderProps['ValueLabelComponent'] = (props) => {
   const { children, open, value } = props;
 
   return (
@@ -58,7 +58,7 @@ function ValueLabelComponent(props) {
       {children}
     </Tooltip>
   );
-}
+};
 
 function EditProgress(props: GridRenderEditCellParams) {
   const classes = useStyles();
@@ -77,8 +77,8 @@ function EditProgress(props: GridRenderEditCellParams) {
     [updateCellEditProps],
   );
 
-  const handleChange = (event, newValue) => {
-    setValueState(newValue);
+  const handleChange = (event: React.ChangeEvent<{}>, newValue: number | number[]) => {
+    setValueState(newValue as number);
     debouncedUpdateCellEditProps(newValue);
   };
 
@@ -86,9 +86,9 @@ function EditProgress(props: GridRenderEditCellParams) {
     setValueState(Number(value));
   }, [value]);
 
-  const handleRef = (element) => {
+  const handleRef: SliderProps['ref'] = (element) => {
     if (element) {
-      element.querySelector('[role="slider"]').focus();
+      element.querySelector<HTMLElement>('[role="slider"]')!.focus();
     }
   };
 

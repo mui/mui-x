@@ -17,7 +17,7 @@ export const GridRoot = React.forwardRef<HTMLDivElement, GridRootProps>(function
   props,
   ref,
 ) {
-  const classes = useStyles();
+  const stylesClasses = useStyles();
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
   const { children, className: classNameProp, ...other } = props;
@@ -25,15 +25,22 @@ export const GridRoot = React.forwardRef<HTMLDivElement, GridRootProps>(function
   const [gridState] = useGridState(apiRef);
   const rootContainerRef: GridRootContainerRef = React.useRef<HTMLDivElement>(null);
   const handleRef = useForkRef(rootContainerRef, ref);
+
   apiRef.current.rootElementRef = rootContainerRef;
 
   return (
     <NoSsr>
       <div
         ref={handleRef}
-        className={clsx(classes.root, rootProps.classes.root, rootProps.className, classNameProp, {
-          [gridClasses.autoHeight]: rootProps.autoHeight,
-        })}
+        className={clsx(
+          stylesClasses.root,
+          rootProps.classes?.root,
+          rootProps.className,
+          classNameProp,
+          {
+            [gridClasses.autoHeight]: rootProps.autoHeight,
+          },
+        )}
         role="grid"
         aria-colcount={visibleColumnsLength}
         aria-rowcount={gridState.rows.totalRowCount}

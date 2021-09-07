@@ -1,5 +1,5 @@
 import * as React from 'react';
-import ClickAwayListener from '@material-ui/core/ClickAwayListener';
+import ClickAwayListener, { ClickAwayListenerProps } from '@material-ui/core/ClickAwayListener';
 import Grow from '@material-ui/core/Grow';
 import Paper from '@material-ui/core/Paper';
 import Popper, { PopperProps } from '@material-ui/core/Popper';
@@ -39,7 +39,7 @@ const useStyles = makeStyles(
 export interface GridMenuProps extends Omit<PopperProps, 'onKeyDown'> {
   open: boolean;
   target: React.ReactNode;
-  onClickAway: (event: MouseEvent | TouchEvent) => void;
+  onClickAway: ClickAwayListenerProps['onClickAway'];
   position?: MenuPosition;
 }
 

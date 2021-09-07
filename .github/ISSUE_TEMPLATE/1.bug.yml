@@ -24,15 +24,15 @@ body:
           required: true
   - type: textarea
     attributes:
-      label: Current Behavior 😯
+      label: Current behavior 😯
       description: Describe what happens instead of the expected behavior.
   - type: textarea
     attributes:
-      label: Expected Behavior 🤔
+      label: Expected behavior 🤔
       description: Describe what should happen.
   - type: textarea
     attributes:
-      label: Steps to Reproduce 🕹
+      label: Steps to reproduce 🕹
       description: |
         Provide a link to a live example (you can use codesandbox.io) and an unambiguous set of steps to reproduce this bug.
         Include code to reproduce, if relevant (which it most likely is).
@@ -41,7 +41,7 @@ body:
 
         If you have an issue concerning TypeScript please start from this TypeScript playground: https://material-ui.com/r/ts-issue-template.
 
-        Issues that we can't reproduced are closed.
+        Issues that we can't reproduce will be closed.
       value: |
         Steps:
 
@@ -53,9 +53,22 @@ body:
     attributes:
       label: Context 🔦
       description: What are you trying to accomplish? How has this issue affected you? Providing context helps us come up with a solution that is more useful in the real world.
+  - type: textarea
+    attributes:
+      label: Your environment 🌎
+      description: Run `npx @mui/envinfo` and post the results. If you encounter issues with TypeScript please include the used tsconfig.
+      value: |
+        <details>
+          <summary>`npx @mui/envinfo`</summary>
+
+        ```
+          Don't forget to mention which browser you used.
+          Output from `npx @mui/envinfo` goes here.
+        ```
+        </details>
   - type: input
     id: contact
     attributes:
-      label: Order id 💳
-      description:  The [Pro plan](https://mui.com/pricing/) comes with priority over the Community plan. Providing your order ID might give your problem more attention.
+      label: Order ID 💳 (optional)
+      description: The [Pro plan](https://mui.com/pricing/) comes with priority over the Community plan. Providing your order ID might give your problem more attention.
       placeholder: 'ex. #11111'

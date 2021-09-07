@@ -7,7 +7,7 @@ import { GridRowParams } from '../../../models/params/gridRowParams';
 import { GridRowId, GridRowModel } from '../../../models/gridRows';
 import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
-import { useLogger } from '../../utils/useLogger';
+import { useGridLogger } from '../../utils/useGridLogger';
 import { useGridSelector } from '../core/useGridSelector';
 import { useGridState } from '../core/useGridState';
 import { gridRowsLookupSelector } from '../rows/gridRowsSelector';
@@ -24,7 +24,7 @@ import {
  * @requires useGridControlState (method)
  */
 export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps): void => {
-  const logger = useLogger('useGridSelection');
+  const logger = useGridLogger(apiRef, 'useGridSelection');
   const [, setGridState, forceUpdate] = useGridState(apiRef);
   const rowsLookup = useGridSelector(apiRef, gridRowsLookupSelector);
 
@@ -241,6 +241,7 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
           hasChanged = true;
         }
       });
+
       if (hasChanged) {
         return { ...state, selection: Object.values(selectionLookup) };
       }
