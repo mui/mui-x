@@ -287,13 +287,6 @@ export enum GridEvents {
    */
   rowsSet = 'rowsSet',
   /**
-   * Implementation detail.
-   * Fired to reset the sortedRow when the set of rows changes.
-   * It's important as the rendered rows are coming from the sortedRow
-   * @ignore - do not document.
-   */
-  rowsClear = 'rowsClear',
-  /**
    * Fired when the columns state is changed.
    * Called with an array of strings corresponding to the field names.
    */
