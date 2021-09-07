@@ -30,7 +30,7 @@ export interface GridEditRowApi {
    * Gets the mode of a cell.
    * @param {GridRowId} id The id of the row.
    * @param {string} field The field to get the mode.
-   * @returns Returns `"edit"` or `"view"`.
+   * @returns {GridCellMode} Returns `"edit"` or `"view"`.
    */
   getCellMode: (id: GridRowId, field: string) => GridCellMode;
   /**
@@ -42,7 +42,7 @@ export interface GridEditRowApi {
   /**
    * Gets the mode of a row.
    * @param {GridRowId} id The id of the row.
-   * @returns Returns `"edit"` or `"view"`.
+   * @returns {GridRowMode} Returns `"edit"` or `"view"`.
    */
   getRowMode: (id: GridRowId) => GridRowMode;
   /**

@@ -51,13 +51,11 @@ const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridCellPa
       [apiRef, props],
     );
 
-    const CheckboxComponent = apiRef?.current.components.Checkbox!;
-
     const isSelectable =
       !rootProps.isRowSelectable || rootProps.isRowSelectable(apiRef.current.getRowParams(id));
 
     return (
-      <CheckboxComponent
+      <rootProps.components.Checkbox
         ref={handleRef}
         tabIndex={tabIndex}
         checked={!!value}
@@ -68,7 +66,7 @@ const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridCellPa
         inputProps={{ 'aria-label': 'Select Row checkbox' }}
         onKeyDown={handleKeyDown}
         disabled={!isSelectable}
-        {...apiRef?.current.componentsProps?.checkbox}
+        {...rootProps.componentsProps?.checkbox}
       />
     );
   },
@@ -151,8 +149,9 @@ GridCellCheckboxForwardRef.propTypes = {
   ]),
   /**
    * Get the cell value of a row and field.
-   * @param id
-   * @param field
+   * @param {GridRowId} id The row id.
+   * @param {string} field The field.
+   * @returns {GridCellValue} The cell value.
    */
   getValue: PropTypes.func.isRequired,
   /**

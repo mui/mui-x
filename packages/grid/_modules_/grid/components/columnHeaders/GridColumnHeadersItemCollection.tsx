@@ -13,7 +13,6 @@ import { gridSortColumnLookupSelector } from '../../hooks/features/sorting/gridS
 import { renderStateSelector } from '../../hooks/features/virtualization/renderingStateSelector';
 import { gridDensityHeaderHeightSelector } from '../../hooks/features/density/densitySelector';
 import { gridColumnMenuStateSelector } from '../../hooks/features/columnMenu/columnMenuSelector';
-import { optionsSelector } from '../../hooks/utils/optionsSelector';
 import { GridStateColDef } from '../../models/colDef/gridColDef';
 import { useGridApiContext } from '../../hooks/root/useGridApiContext';
 import { GridColumnHeaderItem } from './GridColumnHeaderItem';
@@ -25,7 +24,6 @@ export interface GridColumnHeadersItemCollectionProps {
 function GridColumnHeadersItemCollection(props: GridColumnHeadersItemCollectionProps) {
   const { columns } = props;
   const apiRef = useGridApiContext();
-  const options = useGridSelector(apiRef, optionsSelector);
   const sortColumnLookup = useGridSelector(apiRef, gridSortColumnLookupSelector);
   const filterColumnLookup = useGridSelector(apiRef, filterGridColumnLookupSelector);
   const dragCol = useGridSelector(apiRef, gridColumnReorderDragColSelector);
@@ -63,7 +61,6 @@ function GridColumnHeadersItemCollection(props: GridColumnHeadersItemCollectionP
         {...sortColumnLookup[col.field]}
         columnMenuOpen={open}
         filterItemsCounter={filterColumnLookup[col.field] && filterColumnLookup[col.field].length}
-        options={options}
         headerHeight={headerHeight}
         isDragging={col.field === dragCol}
         column={col}

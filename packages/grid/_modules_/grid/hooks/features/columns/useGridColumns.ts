@@ -15,7 +15,7 @@ import { getGridColDef } from '../../../models/colDef/getGridColDef';
 import { GridColumnOrderChangeParams } from '../../../models/params/gridColumnOrderChangeParams';
 import { mergeGridColTypes } from '../../../utils/mergeUtils';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
-import { useLogger } from '../../utils/useLogger';
+import { useGridLogger } from '../../utils/useGridLogger';
 import { useGridSelector } from '../core/useGridSelector';
 import { GridLocaleText, GridTranslationKeys } from '../../../models/api/gridLocaleTextApi';
 import { useGridState } from '../core/useGridState';
@@ -123,6 +123,10 @@ const upsertColumnsState = (columnUpdates: GridColDef[], prevColumnsState?: Grid
   return newState;
 };
 
+/**
+ * @requires useGridParamsApi (method)
+ * TODO: Impossible priority - useGridParamsApi also needs to be after useGridColumns
+ */
 export function useGridColumns(
   apiRef: GridApiRef,
   props: Pick<
@@ -130,7 +134,7 @@ export function useGridColumns(
     'columns' | 'onColumnVisibilityChange' | 'columnTypes' | 'checkboxSelection'
   >,
 ): void {
-  const logger = useLogger('useGridColumns');
+  const logger = useGridLogger(apiRef, 'useGridColumns');
   const [gridState, setGridState, forceUpdate] = useGridState(apiRef);
   const columnsMeta = useGridSelector(apiRef, gridColumnsMetaSelector);
   const allColumns = useGridSelector(apiRef, allGridColumnsSelector);

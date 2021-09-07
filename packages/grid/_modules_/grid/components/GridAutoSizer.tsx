@@ -16,6 +16,8 @@ export interface AutoSizerSize {
 export interface AutoSizerProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'children'> {
   /**
    * Function responsible for rendering children.
+   * @param {AutoSizerSize} size The grid's size.
+   * @returns {React.ReactNode} The children to render.
    */
   children: (size: AutoSizerSize) => React.ReactNode;
   /**
@@ -44,6 +46,7 @@ export interface AutoSizerProps extends Omit<React.HTMLAttributes<HTMLDivElement
   nonce?: string;
   /**
    * Callback to be invoked on-resize.
+   * @param {AutoSizerSize} size The grid's size.
    */
   onResize?: (size: AutoSizerSize) => void;
 }
@@ -186,6 +189,7 @@ GridAutoSizer.propTypes = {
   nonce: PropTypes.string,
   /**
    * Callback to be invoked on-resize.
+   * @param {AutoSizerSize} size The grid's size.
    */
   onResize: PropTypes.func,
 } as any;

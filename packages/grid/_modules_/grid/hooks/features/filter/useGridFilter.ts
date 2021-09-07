@@ -9,7 +9,7 @@ import { GridRowId, GridRowModel } from '../../../models/gridRows';
 import { isDeepEqual } from '../../../utils/utils';
 import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
-import { useLogger } from '../../utils/useLogger';
+import { useGridLogger } from '../../utils/useGridLogger';
 import { filterableGridColumnsIdsSelector } from '../columns/gridColumnsSelector';
 import { useGridSelector } from '../core/useGridSelector';
 import { useGridState } from '../core/useGridState';
@@ -20,6 +20,12 @@ import { GridFilterModel } from '../../../models/gridFilterModel';
 import { visibleSortedGridRowsSelector } from './gridFilterSelector';
 import { getInitialVisibleGridRowsState } from './visibleGridRowsState';
 
+/**
+ * @requires useGridColumns (state, method, event)
+ * @requires useGridParamsApi (method)
+ * @requires useGridRows (event)
+ * @requires useGridControlState (method)
+ */
 export const useGridFilter = (
   apiRef: GridApiRef,
   props: Pick<
@@ -31,7 +37,7 @@ export const useGridFilter = (
     | 'disableMultipleColumnsFiltering'
   >,
 ): void => {
-  const logger = useLogger('useGridFilter');
+  const logger = useGridLogger(apiRef, 'useGridFilter');
   const [gridState, setGridState, forceUpdate] = useGridState(apiRef);
   const filterableColumnsIds = useGridSelector(apiRef, filterableGridColumnsIdsSelector);
 
@@ -275,11 +281,9 @@ export const useGridFilter = (
   );
 
   React.useEffect(() => {
-    if (apiRef.current) {
-      logger.debug('Rows prop changed, applying filters');
-      clearFilteredRows();
-      apiRef.current.applyFilters();
-    }
+    logger.debug('Rows prop changed, applying filters');
+    clearFilteredRows();
+    apiRef.current.applyFilters();
   }, [apiRef, clearFilteredRows, logger, props.rows]);
 
   const onColUpdated = React.useCallback(() => {

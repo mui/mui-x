@@ -1,7 +1,11 @@
 import * as React from 'react';
 import { DataGridProps, MAX_PAGE_SIZE } from './DataGridProps';
-import { GridComponentProps } from '../../_modules_/grid/GridComponentProps';
+import {
+  GridComponentProps,
+  GridInputComponentProps,
+} from '../../_modules_/grid/GridComponentProps';
 import { useThemeProps } from '../../_modules_/grid/utils/material-ui-utils';
+import { useProcessedProps } from '../../_modules_/grid/hooks/utils/useProcessedProps';
 
 export const useDataGridProps = (inProps: DataGridProps): GridComponentProps => {
   if (inProps.pageSize! > MAX_PAGE_SIZE) {
@@ -11,7 +15,7 @@ export const useDataGridProps = (inProps: DataGridProps): GridComponentProps => 
   const themedProps = useThemeProps({ props: inProps, name: 'MuiDataGrid' });
 
   // TODO force scrollEndThreshold to undefined
-  return React.useMemo<GridComponentProps>(
+  const props = React.useMemo<GridInputComponentProps>(
     () => ({
       ...themedProps,
       // force props
@@ -29,4 +33,6 @@ export const useDataGridProps = (inProps: DataGridProps): GridComponentProps => 
     }),
     [themedProps],
   );
+
+  return useProcessedProps(props);
 };

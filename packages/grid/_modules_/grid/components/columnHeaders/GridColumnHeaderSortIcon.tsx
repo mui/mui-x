@@ -6,6 +6,7 @@ import { GridIconSlotsComponent } from '../../models/gridIconSlotsComponent';
 import { GridSortDirection } from '../../models/gridSortModel';
 import { useGridApiContext } from '../../hooks/root/useGridApiContext';
 import { gridClasses } from '../../gridClasses';
+import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
 export interface GridColumnHeaderSortIconProps {
   direction: GridSortDirection;
@@ -13,21 +14,24 @@ export interface GridColumnHeaderSortIconProps {
 }
 
 function getIcon(icons: GridIconSlotsComponent, direction: GridSortDirection) {
-  let Icon = icons!.ColumnUnsortedIcon!;
+  let Icon = icons.ColumnUnsortedIcon;
   if (direction === 'asc') {
-    Icon = icons!.ColumnSortedAscendingIcon!;
+    Icon = icons.ColumnSortedAscendingIcon;
   } else if (direction === 'desc') {
-    Icon = icons!.ColumnSortedDescendingIcon!;
+    Icon = icons.ColumnSortedDescendingIcon;
   }
-  return <Icon fontSize="small" className={gridClasses.sortIcon} />;
+
+  return Icon ? <Icon fontSize="small" className={gridClasses.sortIcon} /> : null;
 }
 
 function GridColumnHeaderSortIconRaw(props: GridColumnHeaderSortIconProps) {
   const { direction, index } = props;
   const apiRef = useGridApiContext();
+  const rootProps = useGridRootProps();
 
-  const unsortedIcon = apiRef!.current.components.ColumnUnsortedIcon;
-  if (direction == null && unsortedIcon === null) {
+  const iconElement = getIcon(rootProps.components, direction);
+
+  if (!iconElement) {
     return null;
   }
 
@@ -38,7 +42,7 @@ function GridColumnHeaderSortIconRaw(props: GridColumnHeaderSortIconProps) {
       title={apiRef.current.getLocaleText('columnHeaderSortIconLabel')}
       size="small"
     >
-      {getIcon(apiRef!.current.components, direction)}
+      {iconElement}
     </IconButton>
   );
 

@@ -13,7 +13,7 @@ import {
   GridRowData,
 } from '../../../models/gridRows';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
-import { useLogger } from '../../utils/useLogger';
+import { useGridLogger } from '../../utils/useGridLogger';
 import { useGridState } from '../core/useGridState';
 import { getInitialGridRowState, InternalGridRowsState } from './gridRowsState';
 import { useGridSelector } from '../core/useGridSelector';
@@ -48,11 +48,15 @@ export function convertGridRowsPropToState(
   return state;
 }
 
+/**
+ * @requires useGridSorting (method)
+ * TODO: Impossible priority - useGridSorting also needs to be after useGridRows (which causes all the existence check for apiRef.current.apiRef.current.getSortedRowIds)
+ */
 export const useGridRows = (
   apiRef: GridApiRef,
   props: Pick<GridComponentProps, 'rows' | 'getRowId' | 'rowCount'>,
 ): void => {
-  const logger = useLogger('useGridRows');
+  const logger = useGridLogger(apiRef, 'useGridRows');
   const [, setGridState, updateComponent] = useGridState(apiRef);
   const stateRows = useGridSelector(apiRef, gridRowsStateSelector);
   const updateTimeout = React.useRef<any>();

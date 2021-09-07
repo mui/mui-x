@@ -1,15 +1,26 @@
 version: 2.1
 
+parameters:
+  browserstack-force:
+    description: Whether to force browserstack usage. We have limited resources on browserstack so the pipeline might decide to skip browserstack if this parameter isn't set to true.
+    type: boolean
+    default: false
+  react-dist-tag:
+    description: The dist-tag of react to be used
+    type: string
+    default: stable
+
 defaults: &defaults
   parameters:
     react-dist-tag:
       description: The dist-tag of react to be used
       type: string
-      default: stable
+      default: << pipeline.parameters.react-dist-tag >>
   environment:
     # Keep in sync with "Save playwright cache"
     PLAYWRIGHT_BROWSERS_PATH: /tmp/pw-browsers
     # expose it globally otherwise we have to thread it from each job to the install command
+    BROWSERSTACK_FORCE: << pipeline.parameters.browserstack-force >>
     REACT_DIST_TAG: << parameters.react-dist-tag >>
   working_directory: /tmp/material-ui-x
   docker:
@@ -153,7 +164,7 @@ jobs:
   test_browser:
     <<: *defaults
     docker:
-      - image: mcr.microsoft.com/playwright@sha256:b1fa463bae2eee613e1bd20ac3867948947e6fcb379a6dfaab19f4742ef1c1fe
+      - image: mcr.microsoft.com/playwright@sha256:310e3ca5bb884f4b9a4a8452dbabda4a35ac62a0d6f46eee953558e8d7d4cfb0
         environment:
           NODE_ENV: development # Needed if playwright is in `devDependencies`
     steps:
@@ -184,7 +195,7 @@ jobs:
   test_e2e:
     <<: *defaults
     docker:
-      - image: mcr.microsoft.com/playwright@sha256:b1fa463bae2eee613e1bd20ac3867948947e6fcb379a6dfaab19f4742ef1c1fe
+      - image: mcr.microsoft.com/playwright@sha256:310e3ca5bb884f4b9a4a8452dbabda4a35ac62a0d6f46eee953558e8d7d4cfb0
         environment:
           NODE_ENV: development # Needed if playwright is in `devDependencies`
     steps:
@@ -197,7 +208,7 @@ jobs:
   test_regressions:
     <<: *defaults
     docker:
-      - image: mcr.microsoft.com/playwright@sha256:b1fa463bae2eee613e1bd20ac3867948947e6fcb379a6dfaab19f4742ef1c1fe
+      - image: mcr.microsoft.com/playwright@sha256:310e3ca5bb884f4b9a4a8452dbabda4a35ac62a0d6f46eee953558e8d7d4cfb0
         environment:
           NODE_ENV: development # Needed if playwright is in `devDependencies`
     steps:

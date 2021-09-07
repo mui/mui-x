@@ -7,7 +7,7 @@ export const getGridNumericColumnOperators = (): GridFilterOperator[] => [
     label: '=',
     value: '=',
     getApplyFilterFn: (filterItem: GridFilterItem) => {
-      if (!filterItem.value) {
+      if (filterItem.value == null) {
         return null;
       }
 
@@ -22,7 +22,7 @@ export const getGridNumericColumnOperators = (): GridFilterOperator[] => [
     label: '!=',
     value: '!=',
     getApplyFilterFn: (filterItem: GridFilterItem) => {
-      if (!filterItem.value) {
+      if (filterItem.value == null) {
         return null;
       }
 
@@ -37,7 +37,7 @@ export const getGridNumericColumnOperators = (): GridFilterOperator[] => [
     label: '>',
     value: '>',
     getApplyFilterFn: (filterItem: GridFilterItem) => {
-      if (!filterItem.value) {
+      if (filterItem.value == null) {
         return null;
       }
 
@@ -52,7 +52,7 @@ export const getGridNumericColumnOperators = (): GridFilterOperator[] => [
     label: '>=',
     value: '>=',
     getApplyFilterFn: (filterItem: GridFilterItem) => {
-      if (!filterItem.value) {
+      if (filterItem.value == null) {
         return null;
       }
 
@@ -67,7 +67,7 @@ export const getGridNumericColumnOperators = (): GridFilterOperator[] => [
     label: '<',
     value: '<',
     getApplyFilterFn: (filterItem: GridFilterItem) => {
-      if (!filterItem.value) {
+      if (filterItem.value == null) {
         return null;
       }
 
@@ -82,7 +82,7 @@ export const getGridNumericColumnOperators = (): GridFilterOperator[] => [
     label: '<=',
     value: '<=',
     getApplyFilterFn: (filterItem: GridFilterItem) => {
-      if (!filterItem.value) {
+      if (filterItem.value == null) {
         return null;
       }
 

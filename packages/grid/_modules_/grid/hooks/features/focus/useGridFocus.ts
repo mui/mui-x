@@ -7,13 +7,18 @@ import { GridRowId } from '../../../models/gridRows';
 import { GridCellParams } from '../../../models/params/gridCellParams';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
 import { useGridState } from '../core/useGridState';
-import { useLogger } from '../../utils/useLogger';
+import { useGridLogger } from '../../utils/useGridLogger';
 import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
 import { GridComponentProps } from '../../../GridComponentProps';
 import { isNavigationKey } from '../../../utils/keyboardUtils';
 
+/**
+ * @requires useGridParamsApi (method)
+ * @requires useGridRows (method)
+ * @requires useGridEditRows (event)
+ */
 export const useGridFocus = (apiRef: GridApiRef, props: Pick<GridComponentProps, 'rows'>): void => {
-  const logger = useLogger('useGridFocus');
+  const logger = useGridLogger(apiRef, 'useGridFocus');
   const [, setGridState, forceUpdate] = useGridState(apiRef);
   const lastClickedCell = React.useRef<GridCellParams | null>(null);
 

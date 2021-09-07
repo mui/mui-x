@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useLogger } from '../../utils/useLogger';
+import { useGridLogger } from '../../utils/useGridLogger';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridEvents } from '../../../constants/eventsConstants';
 import { gridClasses } from '../../../gridClasses';
@@ -32,12 +32,13 @@ const hasCursorPositionChanged = (
 
 /**
  * Only available in DataGridPro
+ * @requires useGridColumns (method)
  */
 export const useGridColumnReorder = (
   apiRef: GridApiRef,
   props: Pick<GridComponentProps, 'disableColumnReorder'>,
 ): void => {
-  const logger = useLogger('useGridColumnReorder');
+  const logger = useGridLogger(apiRef, 'useGridColumnReorder');
 
   const [, setGridState, forceUpdate] = useGridState(apiRef);
   const dragColField = useGridSelector(apiRef, gridColumnReorderDragColSelector);

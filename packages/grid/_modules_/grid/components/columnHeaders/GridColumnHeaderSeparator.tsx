@@ -1,7 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { useGridApiContext } from '../../hooks/root/useGridApiContext';
 import { gridClasses } from '../../gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
@@ -13,9 +12,7 @@ export interface GridColumnHeaderSeparatorProps extends React.HTMLAttributes<HTM
 
 function GridColumnHeaderSeparatorRaw(props: GridColumnHeaderSeparatorProps) {
   const { resizable, resizing, height, ...other } = props;
-  const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
-  const ColumnResizeIcon = apiRef!.current.components!.ColumnResizeIcon!;
 
   const stopClick = React.useCallback((event: React.MouseEvent<HTMLDivElement>) => {
     event.preventDefault();
@@ -33,7 +30,7 @@ function GridColumnHeaderSeparatorRaw(props: GridColumnHeaderSeparatorProps) {
       {...other}
       onClick={stopClick}
     >
-      <ColumnResizeIcon className={gridClasses.iconSeparator} />
+      <rootProps.components.ColumnResizeIcon className={gridClasses.iconSeparator} />
     </div>
   );
 }

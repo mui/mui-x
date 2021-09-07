@@ -1,13 +1,17 @@
 import * as React from 'react';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
-import { useLogger } from '../../utils/useLogger';
+import { useGridLogger } from '../../utils/useGridLogger';
 import { useGridState } from '../core/useGridState';
 import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
 import { GridEvents } from '../../../constants/eventsConstants';
 
+/**
+ * @requires useGridPreferencePanel (method)
+ * @requires useGridVirtualRows (state)
+ */
 export const useGridColumnMenu = (apiRef: GridApiRef): void => {
-  const logger = useLogger('useGridColumnMenu');
+  const logger = useGridLogger(apiRef, 'useGridColumnMenu');
   const [gridState, setGridState, forceUpdate] = useGridState(apiRef);
 
   const showColumnMenu = React.useCallback(
@@ -41,7 +45,7 @@ export const useGridColumnMenu = (apiRef: GridApiRef): void => {
         hideColumnMenu();
       }
     },
-    [logger, showColumnMenu, hideColumnMenu, gridState],
+    [logger, showColumnMenu, hideColumnMenu, gridState.columnMenu],
   );
 
   useGridApiMethod(

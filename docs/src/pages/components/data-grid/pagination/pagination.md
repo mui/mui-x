@@ -1,10 +1,10 @@
 ---
-title: Data Grid - Paging
+title: Data Grid - Pagination
 ---
 
 # Data Grid - Pagination
 
-<p class="description">Through paging, a segment of data can be viewed from the assigned data source.</p>
+<p class="description">Through pagination, a segment of data can be viewed from the assigned data source.</p>
 
 By default, the MIT `DataGrid` displays the rows with pagination, and up to 100 rows per page.
 

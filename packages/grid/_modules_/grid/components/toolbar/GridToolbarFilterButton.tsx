@@ -102,7 +102,6 @@ const GridToolbarFilterButton = React.forwardRef<HTMLButtonElement, GridToolbarF
       return null;
     }
 
-    const OpenFilterButtonIcon = apiRef!.current.components!.OpenFilterButtonIcon!;
     return (
       <Tooltip title={tooltipContentNode} enterDelay={1000} {...other}>
         <Button
@@ -112,7 +111,7 @@ const GridToolbarFilterButton = React.forwardRef<HTMLButtonElement, GridToolbarF
           aria-label={apiRef.current.getLocaleText('toolbarFiltersLabel')}
           startIcon={
             <Badge badgeContent={counter} color="primary">
-              <OpenFilterButtonIcon />
+              <rootProps.components.OpenFilterButtonIcon />
             </Badge>
           }
           {...buttonProps}

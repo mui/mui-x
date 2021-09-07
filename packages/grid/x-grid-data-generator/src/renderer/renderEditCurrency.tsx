@@ -9,7 +9,7 @@ import { CURRENCY_OPTIONS } from '../services/static-data';
 
 // ISO 3166-1 alpha-2
 // ⚠️ No support for IE 11
-function countryToFlag(isoCode) {
+function countryToFlag(isoCode: string) {
   return typeof String.fromCodePoint !== 'undefined'
     ? isoCode
         .toUpperCase()

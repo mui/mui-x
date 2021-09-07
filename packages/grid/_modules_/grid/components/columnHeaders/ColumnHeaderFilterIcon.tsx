@@ -6,6 +6,7 @@ import { gridPreferencePanelStateSelector } from '../../hooks/features/preferenc
 import { GridPreferencePanelsValue } from '../../hooks/features/preferencesPanel/gridPreferencePanelsValue';
 import { useGridApiContext } from '../../hooks/root/useGridApiContext';
 import { gridClasses } from '../../gridClasses';
+import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
 export interface ColumnHeaderFilterIconProps {
   counter?: number;
@@ -14,8 +15,7 @@ export interface ColumnHeaderFilterIconProps {
 export function ColumnHeaderFilterIcon(props: ColumnHeaderFilterIconProps) {
   const { counter } = props;
   const apiRef = useGridApiContext();
-
-  const FilteredColumnIconElement = apiRef!.current.components.ColumnFilteredIcon!;
+  const rootProps = useGridRootProps();
 
   const toggleFilter = React.useCallback(
     (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -45,7 +45,10 @@ export function ColumnHeaderFilterIcon(props: ColumnHeaderFilterIconProps) {
       size="small"
       tabIndex={-1}
     >
-      <FilteredColumnIconElement className={gridClasses.filterIcon} fontSize="small" />
+      <rootProps.components.ColumnFilteredIcon
+        className={gridClasses.filterIcon}
+        fontSize="small"
+      />
     </IconButton>
   );
 
