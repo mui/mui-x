@@ -173,7 +173,7 @@ export const useStyles = makeStyles(
               color: borderColor,
             },
           },
-          '&.Mui-resizing': {
+          [`&.${gridClasses['columnSeparator--resizing']}`]: {
             color: theme.palette.text.primary,
           },
         },

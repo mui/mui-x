@@ -3,9 +3,23 @@ import clsx from 'clsx';
 import Checkbox from '@material-ui/core/Checkbox';
 // @ts-expect-error fixed in Material-UI v5, types definitions were added.
 import { unstable_useId as useId } from '@material-ui/core/utils';
-import { useEnhancedEffect } from '../../utils/material-ui-utils';
-import { gridClasses } from '../../gridClasses';
+import { composeClasses, useEnhancedEffect } from '../../utils/material-ui-utils';
+import { getDataGridUtilityClass } from '../../gridClasses';
 import { GridRenderEditCellParams } from '../../models/params/gridCellParams';
+import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
+import { GridComponentProps } from '../../GridComponentProps';
+
+type OwnerState = { classes: GridComponentProps['classes'] };
+
+const useUtilityClasses = (ownerState: OwnerState) => {
+  const { classes } = ownerState;
+
+  const slots = {
+    root: ['editBooleanCell'],
+  };
+
+  return composeClasses(slots, getDataGridUtilityClass, classes);
+};
 
 export function GridEditBooleanCell(
   props: GridRenderEditCellParams &
@@ -31,6 +45,9 @@ export function GridEditBooleanCell(
   const inputRef = React.useRef<HTMLInputElement>(null);
   const id = useId();
   const [valueState, setValueState] = React.useState(value);
+  const rootProps = useGridRootProps();
+  const ownerState = { classes: rootProps.classes };
+  const classes = useUtilityClasses(ownerState);
 
   const handleChange = React.useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -52,7 +69,7 @@ export function GridEditBooleanCell(
   }, [hasFocus]);
 
   return (
-    <label htmlFor={id} className={clsx(gridClasses.editBooleanCell, className)} {...other}>
+    <label htmlFor={id} className={clsx(classes.root, className)} {...other}>
       <Checkbox
         id={id}
         inputRef={inputRef}
