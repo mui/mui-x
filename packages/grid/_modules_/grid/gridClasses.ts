@@ -52,6 +52,7 @@ export const gridClasses = generateUtilityClasses('MuiDataGrid', [
   'editInputCell',
   'editBooleanCell',
   'booleanCell',
+  'actionsCell',
   'checkboxInput',
   'rowCount',
   'selectedRowCount',

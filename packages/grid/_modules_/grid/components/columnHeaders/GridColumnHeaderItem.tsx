@@ -201,7 +201,7 @@ export function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
         <div className={gridClasses.columnHeaderTitleContainer}>
           {headerComponent || (
             <GridColumnHeaderTitle
-              label={column.headerName || column.field}
+              label={column.headerName ?? column.field}
               description={column.description}
               columnWidth={width}
             />

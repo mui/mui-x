@@ -98,6 +98,9 @@ export interface GridLocaleText {
   booleanCellTrueLabel: string;
   booleanCellFalseLabel: string;
 
+  // Actions cell more text
+  actionsCellMore: string;
+
   // Used core components translation keys
   MuiTablePagination: Omit<
     ComponentsPropsList['MuiTablePagination'],
