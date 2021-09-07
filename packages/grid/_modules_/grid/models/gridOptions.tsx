@@ -234,7 +234,7 @@ export interface GridSimpleOptions {
    * It can be useful if you have a high update rate
    * @default 0
    */
-  throttleRowsMs: number
+  throttleRowsMs: number;
 }
 
 /**

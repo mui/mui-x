@@ -14,7 +14,7 @@ import {
 import { useGridApiMethod } from '../../root/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { useGridState } from '../core/useGridState';
-import {getInitialGridRowState, GridRowsInternalCache, GridRowsState} from './gridRowsState';
+import { getInitialGridRowState, GridRowsInternalCache, GridRowsState } from './gridRowsState';
 import {
   gridRowCountSelector,
   gridRowsLookupSelector,
@@ -68,7 +68,7 @@ export const useGridRows = (
       state: getInitialGridRowState(),
       timeout: null,
       lastUpdateMs: 0,
-    }
+    };
   }
 
   const getRowIndex = React.useCallback<GridRowApi['getRowIndex']>(
@@ -96,36 +96,39 @@ export const useGridRows = (
     [apiRef],
   );
 
-  const throttledRowsChange = React.useCallback((newState: GridRowsState, throttle: boolean) => {
-    const run = () => {
+  const throttledRowsChange = React.useCallback(
+    (newState: GridRowsState, throttle: boolean) => {
+      const run = () => {
+        rowsCache.current.timeout = null;
+        rowsCache.current.lastUpdateMs = Date.now();
+        setGridState((state) => ({ ...state, rows: rowsCache.current.state }));
+        apiRef.current.publishEvent(GridEvents.rowsSet);
+        forceUpdate();
+      };
+
+      if (rowsCache.current.timeout) {
+        clearTimeout(rowsCache.current.timeout);
+      }
+
+      rowsCache.current.state = newState;
       rowsCache.current.timeout = null;
-      rowsCache.current.lastUpdateMs = Date.now()
-      setGridState((state) => ({ ...state, rows: rowsCache.current.state }));
-      apiRef.current.publishEvent(GridEvents.rowsSet)
-      forceUpdate();
-    }
 
-    if (rowsCache.current.timeout) {
-      clearTimeout(rowsCache.current.timeout)
-    }
+      const throttleRemainingTimeMs =
+        props.throttleRowsMs - (Date.now() - rowsCache.current.lastUpdateMs);
 
-    rowsCache.current.state = newState
-    rowsCache.current.timeout = null
-
-    const throttleRemainingTimeMs = props.throttleRowsMs - (Date.now() - rowsCache.current.lastUpdateMs)
-
-    if (throttle && throttleRemainingTimeMs > 0) {
-      rowsCache.current.timeout = setTimeout(run, throttleRemainingTimeMs)
-    } else {
-      run()
-    }
-
-  }, [apiRef, forceUpdate, setGridState, rowsCache, props.throttleRowsMs])
+      if (throttle && throttleRemainingTimeMs > 0) {
+        rowsCache.current.timeout = setTimeout(run, throttleRemainingTimeMs);
+      } else {
+        run();
+      }
+    },
+    [apiRef, forceUpdate, setGridState, rowsCache, props.throttleRowsMs],
+  );
 
   const setRows = React.useCallback<GridRowApi['setRows']>(
     (rows) => {
       logger.debug(`Updating all rows, new length ${rows.length}`);
-      throttledRowsChange(convertGridRowsPropToState(rows, props.rowCount, props.getRowId), true)
+      throttledRowsChange(convertGridRowsPropToState(rows, props.rowCount, props.getRowId), true);
     },
     [logger, throttledRowsChange, props.rowCount, props.getRowId],
   );
@@ -144,7 +147,7 @@ export const useGridRows = (
       }, {});
 
       const addedRows: [GridRowId, GridRowModel][] = [];
-      const modifiedRows: [GridRowId, GridRowModel][] = []
+      const modifiedRows: [GridRowId, GridRowModel][] = [];
       const deletedRowIds: GridRowId[] = [];
 
       Object.entries(uniqUpdates).forEach(([id, partialRow]) => {
@@ -160,35 +163,43 @@ export const useGridRows = (
           return;
         }
 
-        modifiedRows.push([id, partialRow])
+        modifiedRows.push([id, partialRow]);
       });
 
       if (deletedRowIds.length > 0) {
-        deletedRowIds.forEach(id => {
-          delete rowsCache.current.state.idRowsLookup[id]
-        })
+        deletedRowIds.forEach((id) => {
+          delete rowsCache.current.state.idRowsLookup[id];
+        });
       }
 
-      const state = { ...rowsCache.current.state }
+      const state = { ...rowsCache.current.state };
 
       if (addedRows.length > 0) {
         state.idRowsLookup = {
           ...state.idRowsLookup,
-          ...Object.fromEntries(addedRows)
-        }
+          ...Object.fromEntries(addedRows),
+        };
       }
 
       if (modifiedRows.length > 0) {
         state.idRowsLookup = {
           ...state.idRowsLookup,
-          ...Object.fromEntries(modifiedRows.map(([id, partialRow]) => [id, { ...apiRef.current.getRow(id), ...partialRow}]))
-        }
+          ...Object.fromEntries(
+            modifiedRows.map(([id, partialRow]) => [
+              id,
+              { ...apiRef.current.getRow(id), ...partialRow },
+            ]),
+          ),
+        };
       }
 
-      state.allRows = Object.keys(rowsCache.current.state.idRowsLookup)
-      state.totalRowCount = props.rowCount && props.rowCount > state.allRows.length ? props.rowCount : state.allRows.length
+      state.allRows = Object.keys(rowsCache.current.state.idRowsLookup);
+      state.totalRowCount =
+        props.rowCount && props.rowCount > state.allRows.length
+          ? props.rowCount
+          : state.allRows.length;
 
-      throttledRowsChange(state, true)
+      throttledRowsChange(state, true);
     },
     [apiRef, props.getRowId, props.rowCount, throttledRowsChange],
   );
@@ -220,7 +231,10 @@ export const useGridRows = (
 
   React.useEffect(() => {
     logger.debug(`Updating all rows, new length ${props.rows.length}`);
-    throttledRowsChange(convertGridRowsPropToState(props.rows, props.rowCount, props.getRowId), false)
+    throttledRowsChange(
+      convertGridRowsPropToState(props.rows, props.rowCount, props.getRowId),
+      false,
+    );
   }, [props.rows, props.rowCount, props.getRowId, logger, throttledRowsChange]);
 
   const rowApi: GridRowApi = {

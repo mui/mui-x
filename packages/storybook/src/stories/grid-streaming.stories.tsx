@@ -64,7 +64,7 @@ export const SingleSubscriptionFast = () => {
       />
     </React.Fragment>
   );
-}
+};
 
 export const SingleSubscriptionFastWithThrottle = () => {
   const rate = { min: 50, max: 500 };

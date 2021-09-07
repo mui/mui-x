@@ -7,9 +7,9 @@ export interface GridRowsState {
 }
 
 export interface GridRowsInternalCache {
-  state: GridRowsState,
-  timeout: NodeJS.Timeout | null,
-  lastUpdateMs: number,
+  state: GridRowsState;
+  timeout: NodeJS.Timeout | null;
+  lastUpdateMs: number;
 }
 
 export const getInitialGridRowState: () => GridRowsState = () => ({
