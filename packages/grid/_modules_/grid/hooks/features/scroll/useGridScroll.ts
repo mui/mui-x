@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { GridCellIndexCoordinates } from '../../../models/gridCell';
 import { GridApiRef } from '../../../models/api/gridApiRef';
-import { useLogger } from '../../utils/useLogger';
+import { useGridLogger } from '../../utils/useGridLogger';
 import {
   gridColumnsMetaSelector,
   visibleGridColumnsSelector,
@@ -13,7 +13,7 @@ import { gridRowCountSelector } from '../rows/gridRowsSelector';
 import { gridDensityRowHeightSelector } from '../density/densitySelector';
 import { GridScrollParams } from '../../../models/params/gridScrollParams';
 import { GridScrollApi } from '../../../models/api/gridScrollApi';
-import { scrollStateSelector } from '../virtualization/renderingStateSelector';
+import { gridScrollSelector } from '../virtualization/renderingStateSelector';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
 import { useNativeEventListener } from '../../root/useNativeEventListener';
 
@@ -32,11 +32,18 @@ function scrollIntoView(dimensions) {
   return undefined;
 }
 
+/**
+ * @requires useGridPage (state)
+ * @requires useGridPageSize (state)
+ * @requires useGridColumns (state)
+ * @requires useGridRows (state)
+ * @requires useGridDensity (state)
+ */
 export const useGridScroll = (
   apiRef: GridApiRef,
   props: Pick<GridComponentProps, 'pagination'>,
 ): void => {
-  const logger = useLogger('useGridScroll');
+  const logger = useGridLogger(apiRef, 'useGridScroll');
   const colRef = apiRef.current.columnHeadersElementRef!;
   const windowRef = apiRef.current.windowRef!;
 
@@ -119,7 +126,7 @@ export const useGridScroll = (
   );
 
   const getScrollPosition = React.useCallback<GridScrollApi['getScrollPosition']>(
-    () => scrollStateSelector(apiRef.current.getState()),
+    () => gridScrollSelector(apiRef.current.state),
     [apiRef],
   );
 

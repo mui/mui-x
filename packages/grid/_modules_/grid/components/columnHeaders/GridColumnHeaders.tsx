@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import { visibleGridColumnsSelector } from '../../hooks/features/columns/gridColumnsSelector';
 import { GridState } from '../../hooks/features/core/gridState';
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
-import { renderStateSelector } from '../../hooks/features/virtualization/renderingStateSelector';
+import { gridRenderingSelector } from '../../hooks/features/virtualization/renderingStateSelector';
 import { useGridApiContext } from '../../hooks/root/useGridApiContext';
 import { GridEmptyCell } from '../cell/GridEmptyCell';
 import { GridScrollArea } from '../GridScrollArea';
@@ -23,7 +23,7 @@ export const GridColumnsHeader = React.forwardRef<HTMLDivElement, {}>(function G
   const columns = useGridSelector(apiRef, visibleGridColumnsSelector);
   const containerSizes = useGridSelector(apiRef, gridContainerSizesSelector);
   const headerHeight = useGridSelector(apiRef, gridDensityHeaderHeightSelector);
-  const renderCtx = useGridSelector(apiRef, renderStateSelector).renderContext;
+  const renderCtx = useGridSelector(apiRef, gridRenderingSelector).renderContext;
   const { hasScrollX } = useGridSelector(apiRef, gridScrollbarStateSelector);
   const dragCol = useGridSelector(apiRef, gridColumnReorderDragColSelector);
 

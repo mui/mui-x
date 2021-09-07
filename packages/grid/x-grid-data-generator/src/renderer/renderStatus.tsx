@@ -40,8 +40,10 @@ const useStyles = makeStyles(
   { defaultTheme },
 );
 
+type Statuses = keyof ReturnType<typeof useStyles>;
+
 interface StatusProps {
-  status: string;
+  status: Statuses;
 }
 
 const Status = React.memo((props: StatusProps) => {
@@ -57,7 +59,7 @@ const Status = React.memo((props: StatusProps) => {
   } else if (status === 'Filled') {
     icon = <DoneIcon className="icon" />;
   }
-  let label = status;
+  let label: string = status;
   if (status === 'PartiallyFilled') {
     label = 'Partially Filled';
   }
@@ -73,5 +75,5 @@ const Status = React.memo((props: StatusProps) => {
 });
 
 export function renderStatus(params: GridCellParams) {
-  return <Status status={params.value!.toString()} />;
+  return <Status status={params.value!.toString() as Statuses} />;
 }

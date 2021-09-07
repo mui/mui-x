@@ -14,7 +14,7 @@ export const GridColumnMenuContainer = React.forwardRef<HTMLUListElement, GridCo
           event.preventDefault();
         }
         if (isHideMenuKey(event.key)) {
-          hideMenu();
+          hideMenu(event);
         }
       },
       [hideMenu],
