@@ -68,7 +68,7 @@ const getNextColumnHeaderIndexes = (key: string, indexes: GridColumnHeaderIndexC
  * @requires useGridRows (state, method)
  * @requires useGridContainerProps (state)
  * @requires useGridFocus (method)
- * @requires useGridVirtualRows (method)
+ * @requires useGridScroll (method)
  */
 export const useGridKeyboardNavigation = (
   apiRef: GridApiRef,
