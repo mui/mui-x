@@ -23,10 +23,14 @@ interface GridColumnHeaderItemProps {
   headerHeight: number;
   isDragging: boolean;
   isResizing: boolean;
+  isLastColumn: boolean;
+  extendRowFullWidth: boolean;
   sortDirection: GridSortDirection;
   sortIndex?: number;
   filterItemsCounter?: number;
   hasFocus?: boolean;
+  hasScrollX: boolean;
+  hasScrollY: boolean;
   tabIndex: 0 | -1;
 }
 
@@ -38,11 +42,15 @@ export function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
     headerHeight,
     isDragging,
     isResizing,
+    isLastColumn,
     sortDirection,
     sortIndex,
     filterItemsCounter,
     hasFocus,
     tabIndex,
+    hasScrollX,
+    hasScrollY,
+    extendRowFullWidth,
   } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
@@ -53,6 +61,10 @@ export function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
   const isColumnSorted = sortDirection != null;
   // todo refactor to a prop on col isNumeric or ?? ie: coltype===price wont work
   const isColumnNumeric = column.type === GRID_NUMBER_COLUMN_TYPE;
+  const removeLastBorderRight = isLastColumn && hasScrollX && !hasScrollY;
+  const showRightBorder = !isLastColumn
+    ? rootProps.showColumnRightBorder
+    : !removeLastBorderRight && !extendRowFullWidth;
 
   let headerComponent: React.ReactNode = null;
   if (column.renderHeader) {
@@ -119,7 +131,7 @@ export function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
       [gridClasses['columnHeader--moving']]: isDragging,
       [gridClasses['columnHeader--sorted']]: isColumnSorted,
       [gridClasses['columnHeader--numeric']]: isColumnNumeric,
-      [gridClasses.withBorder]: rootProps.showColumnRightBorder,
+      [gridClasses.withBorder]: showRightBorder,
     },
     ...classNames,
   );
