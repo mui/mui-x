@@ -229,6 +229,12 @@ export interface GridSimpleOptions {
    * @default "client"
    */
   sortingMode: GridFeatureMode;
+  /**
+   * If the Grid receives an updates through `apiRef.current.updateRows`, `apiRef.current.setRows` or `props.rows`, it will wait this amount of time before applying the update
+   * It can be useful if you have a high update rate
+   * @default 0
+   */
+  throttleRowsMs: number
 }
 
 /**
@@ -270,4 +276,5 @@ export const GRID_DEFAULT_SIMPLE_OPTIONS: GridSimpleOptions = {
   showColumnRightBorder: false,
   sortingOrder: ['asc' as const, 'desc' as const, null],
   sortingMode: GridFeatureModeConstant.client,
+  throttleRowsMs: 0,
 };

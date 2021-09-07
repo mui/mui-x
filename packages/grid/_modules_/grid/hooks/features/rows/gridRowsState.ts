@@ -1,12 +1,18 @@
 import { GridRowId, GridRowModel } from '../../../models/gridRows';
 
-export interface InternalGridRowsState {
+export interface GridRowsState {
   idRowsLookup: Record<GridRowId, GridRowModel>;
   allRows: GridRowId[];
   totalRowCount: number;
 }
 
-export const getInitialGridRowState: () => InternalGridRowsState = () => ({
+export interface GridRowsInternalCache {
+  state: GridRowsState,
+  timeout: NodeJS.Timeout | null,
+  lastUpdateMs: number,
+}
+
+export const getInitialGridRowState: () => GridRowsState = () => ({
   idRowsLookup: {},
   allRows: [],
   totalRowCount: 0,
