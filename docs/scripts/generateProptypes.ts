@@ -12,7 +12,23 @@ const prettierConfig = prettier.resolveConfig.sync(process.cwd(), {
 });
 
 async function generateProptypes(program: ttp.ts.Program, sourceFile: string) {
-  const proptypes = ttp.parseFromProgram(sourceFile, program, { checkDeclarations: true });
+  const proptypes = ttp.parseFromProgram(sourceFile, program, {
+    checkDeclarations: true,
+    shouldResolveObject: ({ name }) => {
+      const propsToNotResolve = [
+        'classes',
+        'components',
+        'componentsProps',
+        'columns',
+        'currentColumn',
+        'colDef',
+      ];
+      if (propsToNotResolve.includes(name)) {
+        return false;
+      }
+      return undefined;
+    },
+  });
 
   if (proptypes.body.length === 0) {
     return;
@@ -101,7 +117,7 @@ async function run() {
   const promises = componentsToAddPropTypes.map<Promise<void>>(async (file) => {
     try {
       await generateProptypes(program, file);
-    } catch (error) {
+    } catch (error: any) {
       error.message = `${file}: ${error.message}`;
       throw error;
     }

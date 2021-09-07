@@ -133,9 +133,7 @@ GridToolbarFilterButton.propTypes = {
    * The props used for each slot inside.
    * @default {}
    */
-  componentsProps: PropTypes.shape({
-    button: PropTypes.object,
-  }),
+  componentsProps: PropTypes.object,
 } as any;
 
 export { GridToolbarFilterButton };

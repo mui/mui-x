@@ -68,12 +68,7 @@ DataGridRaw.propTypes = {
   /**
    * Override or extend the styles applied to the component.
    */
-  classes: PropTypes.shape({
-    cell: PropTypes.string,
-    columnHeader: PropTypes.string,
-    root: PropTypes.string,
-    row: PropTypes.string,
-  }),
+  classes: PropTypes.object,
   /**
    * @ignore
    */
@@ -106,55 +101,11 @@ DataGridRaw.propTypes = {
   /**
    * Overrideable components.
    */
-  components: PropTypes.shape({
-    BooleanCellFalseIcon: PropTypes.elementType.isRequired,
-    BooleanCellTrueIcon: PropTypes.elementType.isRequired,
-    Checkbox: PropTypes.elementType.isRequired,
-    ColumnFilteredIcon: PropTypes.elementType.isRequired,
-    ColumnMenu: PropTypes.elementType.isRequired,
-    ColumnMenuIcon: PropTypes.elementType.isRequired,
-    ColumnResizeIcon: PropTypes.elementType.isRequired,
-    ColumnSelectorIcon: PropTypes.elementType.isRequired,
-    ColumnSortedAscendingIcon: PropTypes.func,
-    ColumnSortedDescendingIcon: PropTypes.func,
-    ColumnsPanel: PropTypes.elementType.isRequired,
-    ColumnUnsortedIcon: PropTypes.func,
-    DensityComfortableIcon: PropTypes.elementType.isRequired,
-    DensityCompactIcon: PropTypes.elementType.isRequired,
-    DensityStandardIcon: PropTypes.elementType.isRequired,
-    ErrorOverlay: PropTypes.elementType.isRequired,
-    ExportIcon: PropTypes.elementType.isRequired,
-    FilterPanel: PropTypes.elementType.isRequired,
-    Footer: PropTypes.elementType.isRequired,
-    Header: PropTypes.elementType.isRequired,
-    LoadingOverlay: PropTypes.elementType.isRequired,
-    NoResultsOverlay: PropTypes.elementType.isRequired,
-    NoRowsOverlay: PropTypes.elementType.isRequired,
-    OpenFilterButtonIcon: PropTypes.elementType.isRequired,
-    Pagination: PropTypes.func,
-    Panel: PropTypes.elementType.isRequired,
-    PreferencesPanel: PropTypes.elementType.isRequired,
-    Toolbar: PropTypes.func,
-  }),
+  components: PropTypes.object,
   /**
    * Overrideable components props dynamically passed to the component at rendering.
    */
-  componentsProps: PropTypes.shape({
-    checkbox: PropTypes.any,
-    columnMenu: PropTypes.any,
-    columnsPanel: PropTypes.any,
-    errorOverlay: PropTypes.any,
-    filterPanel: PropTypes.any,
-    footer: PropTypes.any,
-    header: PropTypes.any,
-    loadingOverlay: PropTypes.any,
-    noResultsOverlay: PropTypes.any,
-    noRowsOverlay: PropTypes.any,
-    pagination: PropTypes.any,
-    panel: PropTypes.any,
-    preferencesPanel: PropTypes.any,
-    toolbar: PropTypes.any,
-  }),
+  componentsProps: PropTypes.object,
   /**
    * Set the density of the grid.
    * @default "standard"

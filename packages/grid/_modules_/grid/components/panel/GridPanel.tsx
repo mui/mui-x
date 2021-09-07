@@ -116,10 +116,7 @@ GridPanel.propTypes = {
   /**
    * Override or extend the styles applied to the component.
    */
-  classes: PropTypes.shape({
-    paper: PropTypes.string,
-    root: PropTypes.string,
-  }),
+  classes: PropTypes.object,
   /**
    * If `true`, the popper is visible.
    */
