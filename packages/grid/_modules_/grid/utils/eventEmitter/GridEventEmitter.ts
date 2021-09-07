@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { EventEmitter } from './EventEmitter';
 import { MuiEvent } from '../../models/muiEvent';
+import { GridCallbackDetails } from '../../models/api/gridCallbackDetails';
 
 export type GridValidEvent = MuiEvent<
   React.SyntheticEvent | DocumentEventMap[keyof DocumentEventMap] | {}
@@ -8,7 +9,7 @@ export type GridValidEvent = MuiEvent<
 export type GridListener<Params, Event extends GridValidEvent> = (
   params: Params,
   event: Event,
-  details: any,
+  details: GridCallbackDetails,
 ) => void;
 export type GridSubscribeEventOptions = { isFirst?: boolean };
 

@@ -49,12 +49,10 @@ function getIdxFromScroll(
 }
 
 /**
- * @requires useGridContainerProps (state)
  * @requires useGridColumns (state)
  * @requires useGridPage (state)
  * @requires useGridPageSize (state)
  * @requires useGridRows (state)
- * @requires useGridDensity (state)
  */
 export const useGridVirtualization = (
   apiRef: GridApiRef,
