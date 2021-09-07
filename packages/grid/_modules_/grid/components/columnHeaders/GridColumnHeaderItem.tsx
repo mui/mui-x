@@ -24,20 +24,24 @@ interface GridColumnHeaderItemProps {
   headerHeight: number;
   isDragging: boolean;
   isResizing: boolean;
+  isLastColumn: boolean;
+  extendRowFullWidth: boolean;
   sortDirection: GridSortDirection;
   sortIndex?: number;
   filterItemsCounter?: number;
   hasFocus?: boolean;
+  hasScrollX: boolean;
+  hasScrollY: boolean;
   tabIndex: 0 | -1;
 }
 
 type OwnerState = GridColumnHeaderItemProps & {
-  showColumnRightBorder: GridComponentProps['showColumnRightBorder'];
+  showRightBorder: boolean;
   classes?: GridComponentProps['classes'];
 };
 
 const useUtilityClasses = (ownerState: OwnerState) => {
-  const { column, classes, isDragging, sortDirection, showColumnRightBorder } = ownerState;
+  const { column, classes, isDragging, sortDirection, showRightBorder } = ownerState;
 
   const isColumnSorted = sortDirection != null;
   // todo refactor to a prop on col isNumeric or ?? ie: coltype===price wont work
@@ -53,7 +57,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
       isDragging && 'columnHeader--moving',
       isColumnSorted && 'columnHeader--sorted',
       isColumnNumeric && 'columnHeader--numeric',
-      showColumnRightBorder && 'withBorder',
+      showRightBorder && 'withBorder',
     ],
     draggableContainer: ['columnHeaderDraggableContainer'],
     titleContainer: ['columnHeaderTitleContainer'],
@@ -69,11 +73,15 @@ export function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
     colIndex,
     headerHeight,
     isResizing,
+    isLastColumn,
     sortDirection,
     sortIndex,
     filterItemsCounter,
     hasFocus,
     tabIndex,
+    hasScrollX,
+    hasScrollY,
+    extendRowFullWidth,
   } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
@@ -129,10 +137,15 @@ export function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
     [publish],
   );
 
+  const removeLastBorderRight = isLastColumn && hasScrollX && !hasScrollY;
+  const showRightBorder = !isLastColumn
+    ? rootProps.showColumnRightBorder
+    : !removeLastBorderRight && !extendRowFullWidth;
+
   const ownerState = {
     ...props,
     classes: rootProps.classes,
-    showColumnRightBorder: rootProps.showColumnRightBorder,
+    showRightBorder,
   };
   const classes = useUtilityClasses(ownerState);
 
@@ -167,9 +180,7 @@ export function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
   React.useLayoutEffect(() => {
     const columnMenuState = apiRef.current.state.columnMenu;
     if (hasFocus && !columnMenuState.open) {
-      const focusableElement = headerCellRef.current!.querySelector(
-        '[tabindex="0"]',
-      ) as HTMLElement;
+      const focusableElement = headerCellRef.current!.querySelector<HTMLElement>('[tabindex="0"]');
       if (focusableElement) {
         focusableElement!.focus();
       } else {
@@ -208,7 +219,7 @@ export function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
         <div className={classes.titleContainer}>
           {headerComponent || (
             <GridColumnHeaderTitle
-              label={column.headerName || column.field}
+              label={column.headerName ?? column.field}
               description={column.description}
               columnWidth={width}
             />

@@ -1,2 +1,2 @@
-export * from './useLogger';
+export * from './useGridLogger';
 export * from './useGridScrollFn';

@@ -93,6 +93,9 @@ const itITGrid: Partial<GridLocaleText> = {
 
   // Checkbox selection text
   checkboxSelectionHeaderName: 'Seleziona',
+
+  // Actions cell more text
+  actionsCellMore: 'più',
 };
 
 export const itIT: Localization = getGridLocalization(itITGrid, itITCore);

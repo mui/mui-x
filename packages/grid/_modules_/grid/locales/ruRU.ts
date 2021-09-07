@@ -129,6 +129,9 @@ export const ruRUGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: 'истина',
   booleanCellFalseLabel: 'ложь',
+
+  // Actions cell more text
+  // actionsCellMore: 'more',
 };
 
 export const ruRU: Localization = getGridLocalization(ruRUGrid, ruRUCore);

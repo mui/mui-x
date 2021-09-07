@@ -290,6 +290,11 @@ export const useStyles = makeStyles(
         [`& .${gridClasses.booleanCell}[data-value="false"]`]: {
           color: theme.palette.text.disabled,
         },
+        [`& .${gridClasses.actionsCell}`]: {
+          display: 'inline-flex',
+          alignItems: 'center',
+          gridGap: theme.spacing(1),
+        },
         // The very last cell
         [`& .${gridClasses.columnHeaderWrapper} .${gridClasses.cell}`]: {
           borderBottom: 'none',

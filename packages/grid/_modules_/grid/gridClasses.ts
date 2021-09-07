@@ -242,6 +242,7 @@ export function getDataGridUtilityClass(slot: string): string {
 }
 
 export const gridClasses = generateUtilityClasses('MuiDataGrid', [
+  'actionsCell',
   'autoHeight',
   'booleanCell',
   'cell--editable',
