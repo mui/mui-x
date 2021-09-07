@@ -2,6 +2,7 @@ import * as React from 'react';
 import clsx from 'clsx';
 import { GridRenderEditCellParams } from '@mui/x-data-grid';
 import Slider, { SliderProps } from '@material-ui/core/Slider';
+import { ValueLabelProps } from '@material-ui/unstyled/SliderUnstyled';
 import Tooltip from '@material-ui/core/Tooltip';
 import { createStyles, makeStyles } from '@material-ui/styles';
 import { debounce } from '@material-ui/core/utils';
@@ -50,7 +51,7 @@ const useStyles = makeStyles(
   { defaultTheme },
 );
 
-const ValueLabelComponent: SliderProps['ValueLabelComponent'] = (props) => {
+const ValueLabelComponent = (props: ValueLabelProps) => {
   const { children, open, value } = props;
 
   return (
@@ -77,7 +78,7 @@ function EditProgress(props: GridRenderEditCellParams) {
     [updateCellEditProps],
   );
 
-  const handleChange = (event: React.ChangeEvent<{}>, newValue: number | number[]) => {
+  const handleChange = (event: Event, newValue: number | number[]) => {
     setValueState(newValue as number);
     debouncedUpdateCellEditProps(newValue);
   };
