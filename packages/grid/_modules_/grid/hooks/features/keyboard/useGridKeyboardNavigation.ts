@@ -76,8 +76,6 @@ export const useGridKeyboardNavigation = (
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridKeyboardNavigation');
   const paginationState = useGridSelector(apiRef, gridPaginationSelector);
-  const totalRowCount = useGridSelector(apiRef, gridRowCountSelector);
-  const colCount = useGridSelector(apiRef, visibleGridColumnsLengthSelector);
   const containerSizes = useGridSelector(apiRef, gridContainerSizesSelector);
   const visibleSortedRowsAsArray = useGridSelector(apiRef, visibleSortedGridRowsAsArraySelector);
 
@@ -94,6 +92,9 @@ export const useGridKeyboardNavigation = (
   const navigateCells = React.useCallback(
     (params: GridCellParams, event: React.KeyboardEvent) => {
       event.preventDefault();
+      const colCount = visibleGridColumnsLengthSelector(apiRef.current.state);
+      const totalRowCount = gridRowCountSelector(apiRef.current.state);
+
       const colIndex = apiRef.current.getColumnIndex(params.field);
       const rowIndex = visibleSortedRowsAsArray.findIndex(([id]) => id === params.id);
 
@@ -162,11 +163,9 @@ export const useGridKeyboardNavigation = (
     [
       apiRef,
       visibleSortedRowsAsArray,
-      totalRowCount,
       props.pagination,
       paginationState.pageSize,
       paginationState.page,
-      colCount,
       logger,
       containerSizes,
     ],
@@ -174,6 +173,8 @@ export const useGridKeyboardNavigation = (
 
   const navigateColumnHeaders = React.useCallback(
     (params: GridColumnHeaderParams, event: React.KeyboardEvent) => {
+      const colCount = visibleGridColumnsLengthSelector(apiRef.current.state);
+
       event.preventDefault();
       let nextColumnHeaderIndexes: GridColumnHeaderIndexCoordinates | null;
       const colIndex = apiRef.current.getColumnIndex(params.field);
@@ -218,7 +219,7 @@ export const useGridKeyboardNavigation = (
       const field = apiRef.current.getVisibleColumns()[nextColumnHeaderIndexes.colIndex].field;
       apiRef.current.setColumnHeaderFocus(field, event);
     },
-    [apiRef, colCount, containerSizes, logger, visibleSortedRowsAsArray],
+    [apiRef, containerSizes, logger, visibleSortedRowsAsArray],
   );
 
   useGridApiEventHandler(apiRef, GridEvents.cellNavigationKeyDown, navigateCells);

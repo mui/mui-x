@@ -86,8 +86,6 @@ describe('<DataGridPro /> - Rows', () => {
           { clientId: 'c2', age: 30 },
           { clientId: 'c3', age: 31 },
         ]);
-        clock.tick(100);
-
         expect(getColumnValues(2)).to.deep.equal(['11', '30', '31']);
       });
     });
@@ -175,8 +173,8 @@ describe('<DataGridPro /> - Rows', () => {
       );
     };
 
-    it('should allow to reset rows with setRows and render after 100ms', () => {
-      render(<TestCase />);
+    it('should allow to throttle row update', () => {
+      render(<TestCase throttleRowsMs={100} />);
       expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
       const newRows = [
         {
@@ -190,14 +188,6 @@ describe('<DataGridPro /> - Rows', () => {
       expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
       clock.tick(50);
       expect(getColumnValues()).to.deep.equal(['Asics']);
-
-      apiRef.current.setRows(baselineProps.rows);
-      // Force an update before the 100ms
-      apiRef.current.forceUpdate(() => apiRef.current.state);
-      // Tradeoff, the value is YOLO
-      expect(getColumnValues()).to.deep.equal(['Nike']);
-      clock.tick(100);
-      expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
     });
 
     it('should allow to update row data', () => {
@@ -205,7 +195,6 @@ describe('<DataGridPro /> - Rows', () => {
       apiRef.current.updateRows([{ id: 1, brand: 'Fila' }]);
       apiRef.current.updateRows([{ id: 0, brand: 'Pata' }]);
       apiRef.current.updateRows([{ id: 2, brand: 'Pum' }]);
-      clock.tick(100);
       expect(getColumnValues()).to.deep.equal(['Pata', 'Fila', 'Pum']);
     });
 
@@ -215,7 +204,6 @@ describe('<DataGridPro /> - Rows', () => {
       apiRef.current.updateRows([{ id: 0, brand: 'Pata' }]);
       apiRef.current.updateRows([{ id: 2, brand: 'Pum' }]);
       apiRef.current.updateRows([{ id: 3, brand: 'Jordan' }]);
-      clock.tick(100);
       expect(getColumnValues()).to.deep.equal(['Pata', 'Fila', 'Pum', 'Jordan']);
     });
 
@@ -227,7 +215,6 @@ describe('<DataGridPro /> - Rows', () => {
         { id: 2, brand: 'Pum' },
         { id: 3, brand: 'Jordan' },
       ]);
-      clock.tick(100);
       expect(getColumnValues()).to.deep.equal(['Pata', 'Fila', 'Pum', 'Jordan']);
     });
 
@@ -237,7 +224,6 @@ describe('<DataGridPro /> - Rows', () => {
       apiRef.current.updateRows([{ id: 0, brand: 'Apple' }]);
       apiRef.current.updateRows([{ id: 2, _action: 'delete' }]);
       apiRef.current.updateRows([{ id: 5, brand: 'Atari' }]);
-      clock.tick(100);
       expect(getColumnValues()).to.deep.equal(['Apple', 'Atari']);
     });
 
@@ -249,7 +235,6 @@ describe('<DataGridPro /> - Rows', () => {
         { id: 2, _action: 'delete' },
         { id: 5, brand: 'Atari' },
       ]);
-      clock.tick(100);
       expect(getColumnValues()).to.deep.equal(['Apple', 'Atari']);
     });
 
@@ -277,7 +262,6 @@ describe('<DataGridPro /> - Rows', () => {
         { idField: 2, _action: 'delete' },
         { idField: 5, brand: 'Atari' },
       ]);
-      clock.tick(100);
       expect(getColumnValues()).to.deep.equal(['Apple', 'Atari']);
     });
   });

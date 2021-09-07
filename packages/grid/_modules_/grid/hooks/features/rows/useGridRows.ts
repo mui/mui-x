@@ -136,21 +136,27 @@ export const useGridRows = (
   const updateRows = React.useCallback<GridRowApi['updateRows']>(
     (updates) => {
       // we removes duplicate updates. A server can batch updates, and send several updates for the same row in one fn call.
-      const uniqUpdates = updates.reduce<{ [id: string]: GridRowModel }>((acc, update) => {
+      const uniqUpdates = new Map<GridRowId, GridRowModel>();
+
+      updates.forEach((update) => {
         const id = getGridRowId(
           update,
           props.getRowId,
           'A row was provided without id when calling updateRows():',
         );
-        acc[id] = acc[id] != null ? { ...acc[id!], ...update } : update;
-        return acc;
-      }, {});
+
+        if (uniqUpdates.has(id)) {
+          uniqUpdates.set(id, { ...uniqUpdates.get(id), ...update });
+        } else {
+          uniqUpdates.set(id, update);
+        }
+      });
 
       const addedRows: [GridRowId, GridRowModel][] = [];
       const modifiedRows: [GridRowId, GridRowModel][] = [];
       const deletedRowIds: GridRowId[] = [];
 
-      Object.entries(uniqUpdates).forEach(([id, partialRow]) => {
+      uniqUpdates.forEach((partialRow, id) => {
         // eslint-disable-next-line no-underscore-dangle
         if (partialRow._action === 'delete') {
           deletedRowIds.push(id);
@@ -166,24 +172,29 @@ export const useGridRows = (
         modifiedRows.push([id, partialRow]);
       });
 
+      let idRowsLookup = { ...rowsCache.current.state.idRowsLookup };
+      let allRows = [...rowsCache.current.state.allRows];
+
       if (deletedRowIds.length > 0) {
         deletedRowIds.forEach((id) => {
-          delete rowsCache.current.state.idRowsLookup[id];
+          delete idRowsLookup[id];
         });
+
+        allRows = allRows.filter((id) => !deletedRowIds.includes(id));
       }
 
-      const state = { ...rowsCache.current.state };
-
       if (addedRows.length > 0) {
-        state.idRowsLookup = {
-          ...state.idRowsLookup,
+        idRowsLookup = {
+          ...idRowsLookup,
           ...Object.fromEntries(addedRows),
         };
+
+        allRows = [...allRows, ...addedRows.map(([id]) => id)];
       }
 
       if (modifiedRows.length > 0) {
-        state.idRowsLookup = {
-          ...state.idRowsLookup,
+        idRowsLookup = {
+          ...idRowsLookup,
           ...Object.fromEntries(
             modifiedRows.map(([id, partialRow]) => [
               id,
@@ -193,11 +204,14 @@ export const useGridRows = (
         };
       }
 
-      state.allRows = Object.keys(rowsCache.current.state.idRowsLookup);
-      state.totalRowCount =
-        props.rowCount && props.rowCount > state.allRows.length
-          ? props.rowCount
-          : state.allRows.length;
+      const totalRowCount =
+        props.rowCount && props.rowCount > allRows.length ? props.rowCount : allRows.length;
+
+      const state: GridRowsState = {
+        idRowsLookup,
+        allRows,
+        totalRowCount,
+      };
 
       throttledRowsChange(state, true);
     },
