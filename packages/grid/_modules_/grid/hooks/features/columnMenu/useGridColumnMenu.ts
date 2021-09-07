@@ -6,16 +6,20 @@ import { useGridState } from '../core/useGridState';
 import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
 import { GridEvents } from '../../../constants/eventsConstants';
 import { useGridStateInit } from '../../utils/useGridStateInit';
+import { useGridSelector } from '../core/useGridSelector';
+import { gridColumnMenuSelector } from './columnMenuSelector';
 
 /**
- * @requires useGridPreferencesPanel (method)
- * @requires useGridVirtualRows (state)
+ * @requires useGridColumnResize (event)
+ * @requires useGridInfiniteLoader (event)
+ * @requires useGridVirtualization (event)
  */
 export const useGridColumnMenu = (apiRef: GridApiRef): void => {
   const logger = useGridLogger(apiRef, 'useGridColumnMenu');
 
   useGridStateInit(apiRef, (state) => ({ ...state, columnMenu: { open: false } }));
-  const [gridState, setGridState, forceUpdate] = useGridState(apiRef);
+  const [, setGridState, forceUpdate] = useGridState(apiRef);
+  const columnMenu = useGridSelector(apiRef, gridColumnMenuSelector);
 
   const showColumnMenu = React.useCallback(
     (field: string) => {
@@ -42,13 +46,13 @@ export const useGridColumnMenu = (apiRef: GridApiRef): void => {
   const toggleColumnMenu = React.useCallback(
     (field: string) => {
       logger.debug('Toggle Column Menu');
-      if (!gridState.columnMenu.open || gridState.columnMenu.field !== field) {
+      if (!columnMenu.open || columnMenu.field !== field) {
         showColumnMenu(field);
       } else {
         hideColumnMenu();
       }
     },
-    [logger, showColumnMenu, hideColumnMenu, gridState.columnMenu],
+    [logger, showColumnMenu, hideColumnMenu, columnMenu],
   );
 
   useGridApiMethod(

@@ -61,11 +61,11 @@ export const useDataGridProComponent = (apiRef: GridApiRef, props: GridComponent
   useGridScroll(apiRef, props);
   useGridNoVirtualization(apiRef, props);
   useGridVirtualization(apiRef, props);
+  useGridInfiniteLoader(apiRef, props);
   useGridColumnMenu(apiRef);
   useGridKeyboard(apiRef);
   useGridKeyboardNavigation(apiRef, props);
   useGridCsvExport(apiRef);
-  useGridInfiniteLoader(apiRef, props);
   useGridClipboard(apiRef);
   useGridEvents(apiRef, props);
   useStateProp(apiRef, props);
