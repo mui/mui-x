@@ -282,12 +282,12 @@ export enum GridEvents {
    */
   columnOrderChange = 'columnOrderChange',
   /**
-   * Fired when the rows are updated.
+   * Fired when some of the rows are updated.
    * @ignore - do not document.
    */
   rowsUpdate = 'rowsUpdate',
   /**
-   * Fired when the rows are updated.
+   * Fired when all the rows are updated.
    * @ignore - do not document.
    */
   rowsSet = 'rowsSet',
