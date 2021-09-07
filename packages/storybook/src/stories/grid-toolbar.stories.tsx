@@ -51,7 +51,11 @@ export const DensitySelectorComfortable = () => {
 };
 
 export const Export = () => {
-  const data = useData(100, 50);
+  const { data } = useDemoData({
+    dataSet: 'Commodity',
+    rowLength: 100,
+    maxColumns: 15,
+  });
 
   return (
     <div style={{ height: 600 }}>

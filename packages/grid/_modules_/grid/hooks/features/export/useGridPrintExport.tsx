@@ -28,58 +28,69 @@ export const useGridPrintExport = (
   const visibleSortedRows = useGridSelector(apiRef, visibleSortedGridRowsSelector);
   const columns = useGridSelector(apiRef, allGridColumnsSelector);
   const doc = React.useRef<Document | null>(null);
-  const previousGridState = React.useRef<any>(null);
+  const previousContainerSizes = React.useRef<any>(null);
+  const previousViewportSizes = React.useRef<any>(null);
   const previousHiddenColumns = React.useRef<string[]>([]);
 
   React.useEffect(() => {
     doc.current = ownerDocument(apiRef!.current.rootElementRef!.current as HTMLElement);
   }, [apiRef]);
 
-  const prepGridForPrint = React.useCallback(
-    (fields?: string[], allColumns?: boolean): void => {
-      // Show only wanted columns
-      if (fields && fields.length) {
+  // Returns a promise because updateColumns triggers state update and
+  // the new state needs to be in place before the grid can be sized correctly
+  const updateGridColumnsForPrint = React.useCallback(
+    (fields?: string[], allColumns?: boolean) =>
+      new Promise<void>((resolve) => {
+        if (!fields && !allColumns) {
+          resolve();
+          return;
+        }
+
+        // Show only wanted columns.
         apiRef!.current.updateColumns(
           columns.map((column) => {
-            if (!column.hide) {
+            if (column.hide) {
               previousHiddenColumns.current.push(column.field);
             }
 
             // Show all columns
             if (allColumns) {
-              column.hide = true;
+              column.hide = false;
               return column;
             }
 
-            column.hide = !fields.includes(column.field);
+            column.hide = !fields?.includes(column.field);
 
             return column;
           }),
         );
-      }
+        resolve();
+      }),
+    [columns, apiRef],
+  );
 
-      setGridState((state) => {
-        previousGridState.current = state;
-        return {
-          ...state,
-          containerSizes: {
-            ...state.containerSizes!,
-            renderingZone: {
-              ...state.containerSizes!.renderingZone,
-              height: visibleSortedRows.size * props.rowHeight!,
-            },
-            renderingZonePageSize: visibleSortedRows.size,
-          },
-          viewportSizes: {
-            ...state.viewportSizes,
+  const prepGridContainerForPrint = React.useCallback((): void => {
+    setGridState((state) => {
+      previousContainerSizes.current = state.containerSizes;
+      previousViewportSizes.current = state.viewportSizes;
+      return {
+        ...state,
+        containerSizes: {
+          ...state.containerSizes!,
+          renderingZone: {
+            ...state.containerSizes!.renderingZone,
             height: visibleSortedRows.size * props.rowHeight!,
           },
-        };
-      });
-      forceUpdate();
-    },
-    [columns, visibleSortedRows, props.rowHeight, apiRef, setGridState, forceUpdate],
-  );
+          renderingZonePageSize: visibleSortedRows.size,
+        },
+        viewportSizes: {
+          ...state.viewportSizes,
+          height: visibleSortedRows.size * props.rowHeight!,
+        },
+      };
+    });
+    forceUpdate();
+  }, [visibleSortedRows, props.rowHeight, setGridState, forceUpdate]);
 
   const buildPrintWindow = React.useCallback((title?: string): HTMLIFrameElement => {
     const iframeEl = document.createElement('iframe');
@@ -192,41 +203,41 @@ export const useGridPrintExport = (
       // Remove the print iframe
       doc.current!.body.removeChild(printWindow);
 
-      // Revert columns to their original state
-      apiRef!.current.updateColumns(
-        columns.map((column) => {
-          if (previousHiddenColumns.current.includes(column.field)) {
-            column.hide = true;
-          } else {
-            column.hide = false;
-          }
-          return column;
-        }),
-      );
-
       // Revert grid to previous state
       setGridState((state) => ({
         ...state,
-        ...previousGridState.current,
+        ...previousContainerSizes.current,
+        ...previousViewportSizes.current,
       }));
-      forceUpdate();
+
+      // Revert columns to their original state
+      if (previousHiddenColumns.current.length) {
+        apiRef!.current.updateColumns(
+          columns.map((column) => {
+            column.hide = previousHiddenColumns.current.includes(column.field);
+            return column;
+          }),
+        );
+      }
 
       // Clear local state
-      previousGridState.current = null;
+      previousContainerSizes.current = null;
+      previousViewportSizes.current = null;
       previousHiddenColumns.current = [];
     },
-    [previousGridState, previousHiddenColumns, columns, apiRef, setGridState, forceUpdate],
+    [columns, apiRef, setGridState],
   );
 
   const exportDataAsPrint = React.useCallback(
-    (options?: GridPrintExportOptions): void => {
+    async (options?: GridPrintExportOptions) => {
       logger.debug(`Export data as Print`);
 
       if (!apiRef!.current.rootElementRef!.current) {
         throw new Error('No Grid Root element available');
       }
 
-      prepGridForPrint(options?.fields, options?.allColumns);
+      await updateGridColumnsForPrint(options?.fields, options?.allColumns);
+      prepGridContainerForPrint();
       const printWindow = buildPrintWindow(options?.fileName);
 
       doc.current!.body.appendChild(printWindow);
@@ -237,10 +248,11 @@ export const useGridPrintExport = (
     [
       logger,
       apiRef,
-      prepGridForPrint,
+      prepGridContainerForPrint,
       buildPrintWindow,
       handlePrintWindowLoad,
       handlePrintWindowAfterPrint,
+      updateGridColumnsForPrint,
     ],
   );
 
