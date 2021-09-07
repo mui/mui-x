@@ -4,16 +4,21 @@ import { GridComponentProps } from '../../../GridComponentProps';
 import { GridPageSizeApi } from '../../../models/api/gridPageSizeApi';
 import { useGridApiMethod } from '../../root';
 import { GridEvents } from '../../../constants/eventsConstants';
-import { useLogger } from '../../utils';
+import { useGridLogger } from '../../utils';
 import { useGridSelector, useGridState } from '../core';
 import { visibleGridRowCountSelector } from '../filter';
 import { gridContainerSizesSelector } from '../../root/gridContainerSizesSelector';
 
+/**
+ * @requires useGridControlState (method)
+ * @requires useGridContainerProps (state)
+ * @requires useGridFilter (state)
+ */
 export const useGridPageSize = (
   apiRef: GridApiRef,
   props: Pick<GridComponentProps, 'pageSize' | 'onPageSizeChange' | 'autoPageSize'>,
 ) => {
-  const logger = useLogger('useGridPageSize');
+  const logger = useGridLogger(apiRef, 'useGridPageSize');
   const [, setGridState, forceUpdate] = useGridState(apiRef);
   const visibleRowCount = useGridSelector(apiRef, visibleGridRowCountSelector);
   const containerSizes = useGridSelector(apiRef, gridContainerSizesSelector);

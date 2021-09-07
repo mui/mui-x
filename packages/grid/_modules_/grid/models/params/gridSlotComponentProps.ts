@@ -1,7 +1,6 @@
 import { GridState } from '../../hooks/features/core/gridState';
 import { GridApiRef } from '../api/gridApiRef';
 import { GridColumns } from '../colDef/gridColDef';
-import { GridOptions } from '../gridOptions';
 import { GridRootContainerRef } from '../gridRootContainerRef';
 import { GridRowModel } from '../gridRows';
 
@@ -21,10 +20,6 @@ export interface GridSlotComponentProps {
    * The full set of columns.
    */
   columns: GridColumns;
-  /**
-   * The full set of options.
-   */
-  options: GridOptions;
   /**
    * GridApiRef that let you manipulate the grid.
    */

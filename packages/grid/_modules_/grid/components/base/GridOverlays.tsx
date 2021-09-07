@@ -16,23 +16,17 @@ export function GridOverlays() {
   const showNoResultsOverlay = !rootProps.loading && totalRowCount > 0 && visibleRowCount === 0;
 
   if (showNoRowsOverlay) {
-    return (
-      <apiRef.current.components.NoRowsOverlay {...rootProps.componentsProps?.noRowsOverlay} />
-    );
+    return <rootProps.components.NoRowsOverlay {...rootProps.componentsProps?.noRowsOverlay} />;
   }
 
   if (showNoResultsOverlay) {
     return (
-      <apiRef.current.components.NoResultsOverlay
-        {...rootProps.componentsProps?.noResultsOverlay}
-      />
+      <rootProps.components.NoResultsOverlay {...rootProps.componentsProps?.noResultsOverlay} />
     );
   }
 
   if (rootProps.loading) {
-    return (
-      <apiRef.current.components.LoadingOverlay {...rootProps.componentsProps?.loadingOverlay} />
-    );
+    return <rootProps.components.LoadingOverlay {...rootProps.componentsProps?.loadingOverlay} />;
   }
   return null;
 }

@@ -145,7 +145,7 @@ export const GridCell = React.memo(function GridCell(props: GridCellProps) {
     const doc = ownerDocument(apiRef.current.rootElementRef!.current as HTMLElement)!;
 
     if (cellRef.current && !cellRef.current.contains(doc.activeElement!)) {
-      const focusableElement = cellRef.current!.querySelector('[tabindex="0"]') as HTMLElement;
+      const focusableElement = cellRef.current!.querySelector<HTMLElement>('[tabindex="0"]');
       if (focusableElement) {
         focusableElement!.focus();
       } else {

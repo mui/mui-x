@@ -10,7 +10,7 @@ export function GridHeaderPlaceholder() {
 
   return (
     <div ref={headerRef}>
-      <apiRef.current.components.Header {...rootProps.componentsProps?.header} />
+      <rootProps.components.Header {...rootProps.componentsProps?.header} />
     </div>
   );
 }

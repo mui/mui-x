@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { useGridSelector } from '../hooks/features/core/useGridSelector';
-import { gridPaginationSelector } from '../hooks/features/pagination/gridPaginationSelector';
 import { gridRowCountSelector } from '../hooks/features/rows/gridRowsSelector';
 import { selectedGridRowsCountSelector } from '../hooks/features/selection/gridSelectionSelector';
 import { visibleGridRowCountSelector } from '../hooks/features/filter/gridFilterSelector';
@@ -16,36 +15,31 @@ export const GridFooter = React.forwardRef<HTMLDivElement, GridFooterContainerPr
     const rootProps = useGridRootProps();
     const totalRowCount = useGridSelector(apiRef, gridRowCountSelector);
     const selectedRowCount = useGridSelector(apiRef, selectedGridRowsCountSelector);
-    const paginationState = useGridSelector(apiRef, gridPaginationSelector);
     const visibleRowCount = useGridSelector(apiRef, visibleGridRowCountSelector);
 
-    const SelectedRowCountElement =
+    const selectedRowCountElement =
       !rootProps.hideFooterSelectedRowCount && selectedRowCount > 0 ? (
         <GridSelectedRowCount selectedRowCount={selectedRowCount} />
       ) : (
         <div />
       );
 
-    const RowCountElement =
+    const rowCountElement =
       !rootProps.hideFooterRowCount && !rootProps.pagination ? (
         <GridRowCount rowCount={totalRowCount} visibleRowCount={visibleRowCount} />
       ) : null;
 
-    const PaginationComponent =
-      !!rootProps.pagination &&
-      paginationState.pageSize != null &&
+    const paginationElement = rootProps.pagination &&
       !rootProps.hideFooterPagination &&
-      apiRef?.current.components.Pagination;
-
-    const PaginationElement = PaginationComponent && (
-      <PaginationComponent {...apiRef?.current.componentsProps?.pagination} />
-    );
+      rootProps.components.Pagination && (
+        <rootProps.components.Pagination {...rootProps.componentsProps?.pagination} />
+      );
 
     return (
       <GridFooterContainer ref={ref} {...props}>
-        {SelectedRowCountElement}
-        {RowCountElement}
-        {PaginationElement}
+        {selectedRowCountElement}
+        {rowCountElement}
+        {paginationElement}
       </GridFooterContainer>
     );
   },

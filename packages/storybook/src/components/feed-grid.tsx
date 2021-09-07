@@ -1,14 +1,13 @@
 import * as React from 'react';
 import { fromEvent, Subscription } from 'rxjs';
 import { takeUntil, tap } from 'rxjs/operators';
-import { GridColDef, GridOptionsProp, DataGridPro, useGridApiRef } from '@mui/x-data-grid-pro';
+import { GridColDef, DataGridPro, useGridApiRef, DataGridProProps } from '@mui/x-data-grid-pro';
 import { pricingColumns, PricingModel } from '../data/streaming/pricing-service';
 import { subscribeFeed } from '../data/streaming/single-subscription-service';
 
-export interface FeedGridProps {
+export interface FeedGridProps extends Omit<DataGridProProps, 'rows' | 'columns' | 'getRowId'> {
   min?: number;
   max?: number;
-  options?: GridOptionsProp;
 }
 export const FeedGrid = (props: FeedGridProps) => {
   const { min, max } = props;

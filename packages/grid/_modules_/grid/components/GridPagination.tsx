@@ -14,7 +14,7 @@ const useStyles = makeStyles(
   (theme: Theme) => ({
     selectLabel: {
       display: 'none',
-      [theme.breakpoints.up('md')]: {
+      [theme.breakpoints.up('sm')]: {
         display: 'block',
       },
     },
@@ -22,14 +22,14 @@ const useStyles = makeStyles(
       // input label
       '&[id]': {
         display: 'none',
-        [theme.breakpoints.up('md')]: {
+        [theme.breakpoints.up('sm')]: {
           display: 'block',
         },
       },
     },
     input: {
       display: 'none',
-      [theme.breakpoints.up('md')]: {
+      [theme.breakpoints.up('sm')]: {
         display: 'inline-flex',
       },
     },
@@ -85,7 +85,7 @@ export const GridPagination = React.forwardRef<
     if (
       !warnedOnceMissingPageSizeInRowsPerPageOptions.current &&
       !rootProps.autoPageSize &&
-      !rootProps.rowsPerPageOptions!.includes(rootProps.pageSize ?? paginationState.pageSize)
+      !rootProps.rowsPerPageOptions.includes(rootProps.pageSize ?? paginationState.pageSize)
     ) {
       console.warn(
         [

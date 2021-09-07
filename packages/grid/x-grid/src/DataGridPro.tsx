@@ -1,9 +1,8 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { LicenseInfo } from '@mui/x-license-pro';
-import { ponyfillGlobal } from '@material-ui/utils';
+import { chainPropTypes, ponyfillGlobal } from '@material-ui/utils';
 import {
-  DEFAULT_GRID_PROPS_FROM_OPTIONS,
   GridBody,
   GridErrorHandler,
   GridFooterPlaceholder,
@@ -55,13 +54,18 @@ const DataGridProRaw = React.forwardRef<HTMLDivElement, DataGridProProps>(functi
   );
 });
 
-// TODO remove defaultProps, API is going away in React, soon or later.
-DataGridProRaw.defaultProps = DEFAULT_GRID_PROPS_FROM_OPTIONS;
-
 export const DataGridPro = React.memo(DataGridProRaw);
 
 // @ts-ignore
 DataGridProRaw.propTypes = {
   columns: PropTypes.array.isRequired,
   rows: PropTypes.array.isRequired,
+  checkboxSelectionVisibleOnly: chainPropTypes(PropTypes.bool, (props: any) => {
+    if (!props.pagination && props.checkboxSelectionVisibleOnly) {
+      return new Error(
+        'Material-UI: The `checkboxSelectionVisibleOnly` prop has no effect when the pagination is not enabled.',
+      );
+    }
+    return null;
+  }),
 } as any;

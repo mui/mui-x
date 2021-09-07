@@ -1,4 +1,4 @@
-import globalChance from 'chance';
+import globalChance, { Chance } from 'chance';
 import {
   COLORS,
   COMMODITY_OPTIONS,
@@ -12,7 +12,7 @@ import {
 } from './static-data';
 
 const chanceId = globalChance();
-let chance;
+let chance: Chance.Chance;
 
 if (process.env.DISABLE_CHANCE_RANDOM) {
   chance = globalChance(() => 0.5);
@@ -74,14 +74,15 @@ function datePast(years?: number, refDate?: string) {
   return date;
 }
 
-export const random = (min: number, max: number): number => chance.random() * (max - min) + min;
+export const random = (min: number, max: number): number => chance.floating({ min, max });
 export const randomInt = (min: number, max: number): number => Number(random(min, max).toFixed());
 export const randomPrice = (min = 0, max = 100000): number => Number(random(min, max).toFixed(2));
 export const randomRate = (): number => random(0, 1);
-export const randomDate = (start, end) =>
-  new Date(start.getTime() + chance.random() * (end.getTime() - start.getTime()));
-export const getDate = () => randomDate(new Date(2012, 0, 1), new Date());
-export const randomArrayItem = (arr: any[]) => arr[random(0, arr.length - 1).toFixed()];
+export const randomDate = (start: Date, end: Date) =>
+  new Date(
+    start.getTime() + chance.floating({ min: 0, max: 1 }) * (end.getTime() - start.getTime()),
+  );
+export const randomArrayItem = <T>(arr: T[]) => arr[randomInt(0, arr.length - 1)];
 export const randomBoolean = (): boolean => randomArrayItem([true, false]);
 
 export const randomColor = () => randomArrayItem(COLORS);
@@ -117,6 +118,7 @@ export const randomJobTitle = () => chance.profession();
 export const randomRating = () => randomInt(1, 5);
 export const randomName = () => chance.name();
 
-export const generateFilledQuantity = (data) =>
+export const generateFilledQuantity = (data: { quantity: number }) =>
   Number((data.quantity * randomRate()).toFixed()) / data.quantity;
-export const generateIsFilled = (data) => data.quantity === data.filledQuantity;
+export const generateIsFilled = (data: { quantity: number; filledQuantity: number }) =>
+  data.quantity === data.filledQuantity;

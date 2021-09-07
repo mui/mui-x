@@ -1,14 +1,14 @@
 import * as React from 'react';
 import { GridApiRef } from '../../models/api/gridApiRef';
 import { GridApi } from '../../models/api/gridApi';
-import { useLogger } from '../utils/useLogger';
+import { useGridLogger } from '../utils/useGridLogger';
 
 export function useGridApiMethod<T extends Partial<GridApi>>(
   apiRef: GridApiRef,
   apiMethods: T,
   apiName: string,
 ) {
-  const logger = useLogger('useGridApiMethod');
+  const logger = useGridLogger(apiRef, 'useGridApiMethod');
   const apiMethodsRef = React.useRef(apiMethods);
   const [apiMethodsNames] = React.useState(Object.keys(apiMethods));
 
