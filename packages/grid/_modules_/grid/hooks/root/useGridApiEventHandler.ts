@@ -2,15 +2,7 @@ import * as React from 'react';
 import { MuiEvent } from '../../models/muiEvent';
 import { GridApiRef } from '../../models/api/gridApiRef';
 import { useGridLogger } from '../utils/useGridLogger';
-import { GridApi } from '../../models/api/gridApi';
-
-// TODO: Remove once [[GridApi]] cycle dependency is fixed
-/**
- * Callback details.
- */
-export interface GridCallbackDetails {
-  api?: GridApi;
-}
+import { GridCallbackDetails } from '../../models/api/gridCallbackDetails';
 
 /**
  * Signal to the underlying logic what version of the public component API
