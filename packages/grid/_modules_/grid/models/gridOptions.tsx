@@ -230,8 +230,8 @@ export interface GridSimpleOptions {
    */
   sortingMode: GridFeatureMode;
   /**
-   * If the Grid receives an updates through `apiRef.current.updateRows`, `apiRef.current.setRows` or `props.rows`, it will wait this amount of time before applying the update
-   * It can be useful if you have a high update rate
+   * If positive, the Grid will throttle updates coming from `apiRef.current.updateRows` or `apiRef.current.setRows`.
+   * It can be useful if you have a high update rate but do not want to do heavy work like filtering / sorting or rendering on each  individual update.
    * @default 0
    */
   throttleRowsMs: number;
