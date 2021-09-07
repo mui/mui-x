@@ -48,7 +48,7 @@ const useStyles = makeStyles(
 
 export const gridPanelClasses = generateUtilityClasses('MuiGridPanel', ['root', 'paper']);
 
-function GridPanelRaw(props, ref) {
+const GridPanel = React.forwardRef<HTMLDivElement, GridPanelProps>((props, ref) => {
   const { children, className, open, ...other } = props;
   const classes = useStyles(other);
   const apiRef = useGridApiContext();
@@ -106,14 +106,13 @@ function GridPanelRaw(props, ref) {
       </ClickAwayListener>
     </Popper>
   );
-}
+});
 
-GridPanelRaw.propTypes = {
+GridPanel.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
-  children: PropTypes.node,
   /**
    * Override or extend the styles applied to the component.
    */
@@ -126,9 +125,5 @@ GridPanelRaw.propTypes = {
    */
   open: PropTypes.bool.isRequired,
 } as any;
-
-const GridPanel = React.forwardRef<HTMLDivElement, GridPanelProps>(GridPanelRaw) as (
-  props: GridPanelProps,
-) => JSX.Element;
 
 export { GridPanel };
