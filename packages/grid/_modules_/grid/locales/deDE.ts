@@ -90,6 +90,9 @@ const deDEGrid: Partial<GridLocaleText> = {
   // Total visible rows footer text
   footerTotalVisibleRows: (visibleCount, totalCount) =>
     `${visibleCount.toLocaleString()} von ${totalCount.toLocaleString()}`,
+
+  // Actions cell more text
+  // actionsCellMore: 'more',
 };
 
 export const deDE: Localization = getGridLocalization(deDEGrid, deDECore);

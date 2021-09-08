@@ -121,6 +121,9 @@ export const skSKGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: 'áno',
   booleanCellFalseLabel: 'nie',
+
+  // Actions cell more text
+  // actionsCellMore: 'more',
 };
 
 export const skSK: Localization = getGridLocalization(skSKGrid, skSKCore);
