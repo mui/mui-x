@@ -65,4 +65,12 @@ DataGridProRaw.propTypes = {
     }
     return null;
   }),
+  hideFooterRowCount: chainPropTypes(PropTypes.bool, (props: any) => {
+    if (props.pagination && props.hideFooterRowCount) {
+      return new Error(
+        'Material-UI: The `hideFooterRowCount` prop has no effect when the pagination is enabled.',
+      );
+    }
+    return null;
+  }),
 } as any;
