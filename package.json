@@ -17,7 +17,7 @@
     "storybook:export": "yarn workspace storybook export",
     "deduplicate": "node scripts/deduplicate.js",
     "stylelint": "stylelint '**/*.js' '**/*.ts' '**/*.tsx'",
-    "prettier": "node ./scripts/prettier.js --branch master",
+    "prettier": "node ./scripts/prettier.js",
     "prettier:all": "node ./scripts/prettier.js write",
     "size:snapshot": "node --max-old-space-size=2048 ./scripts/sizeSnapshot/create",
     "size:why": "yarn size:snapshot --analyze --accurateBundles",
