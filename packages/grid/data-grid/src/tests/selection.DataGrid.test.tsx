@@ -125,8 +125,7 @@ describe('<DataGrid /> - Selection', () => {
         />,
       );
 
-      // TODO: ID 1 should not be selected
-      // expect(getSelectedRowIndexes()).to.deep.equal([0]);
+      expect(getSelectedRowIndexes()).to.deep.equal([0]);
       setProps({ selectionModel: [0, 1, 2, 3] });
       expect(getSelectedRowIndexes()).to.deep.equal([0, 2]);
     });

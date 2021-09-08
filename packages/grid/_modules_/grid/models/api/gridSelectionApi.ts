@@ -6,7 +6,7 @@ import { GridRowId, GridRowModel } from '../gridRows';
 export interface GridSelectionApi {
   /**
    * Change the selection state of a row.
-   * @param {GridRowId} id The id of the row
+   * @param {GridRowId} id The id of the row.
    * @param {boolean} isSelected Pass `false` to unselect a row. Default is `true`.
    * @param {boolean} resetSelection Whether to reset the already selected rows or not. Default is `false`.
    */
@@ -19,8 +19,8 @@ export interface GridSelectionApi {
    */
   selectRows: (ids: GridRowId[], isSelected?: boolean, resetSelection?: boolean) => void;
   /**
-   * Returns the current selection status of a row
-   * @param {GridRowId} id The id of the row
+   * Determines if a row is selected or not.
+   * @param {GridRowId} id The id of the row.
    * @returns {boolean} A boolean indicating if the row is selected.
    */
   isRowSelected: (id: GridRowId) => boolean;

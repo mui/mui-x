@@ -9,7 +9,7 @@
     },
     {
       "name": "isRowSelected",
-      "description": "Returns the current selection status of a row",
+      "description": "Determines if a row is selected or not.",
       "type": "(id: GridRowId) => boolean"
     },
     {
