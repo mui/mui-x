@@ -12,9 +12,9 @@ import { GridCell, GridCellProps } from './GridCell';
 import { useGridApiContext } from '../../hooks/root/useGridApiContext';
 import { isFunction } from '../../utils/utils';
 import { gridClasses } from '../../gridClasses';
+import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
 interface RowCellsProps {
-  cellClassName?: string;
   columns: GridStateColDef[];
   extendRowFullWidth: boolean;
   firstColIdx: number;
@@ -49,10 +49,10 @@ export const GridRowCells = React.memo(function GridRowCells(props: RowCellsProp
     showCellRightBorder,
     isSelected,
     editRowState,
-    cellClassName,
     ...other
   } = props;
   const apiRef = useGridApiContext();
+  const rootProps = useGridRootProps();
 
   const cellsProps = columns.slice(firstColIdx, lastColIdx + 1).map((column, colIdx) => {
     const colIndex = firstColIdx + colIdx;
@@ -64,7 +64,7 @@ export const GridRowCells = React.memo(function GridRowCells(props: RowCellsProp
 
     const cellParams: GridCellParams = apiRef.current.getCellParams(id, column.field);
 
-    const classNames = [cellClassName];
+    const classNames: string[] = [];
 
     if (column.cellClassName) {
       classNames.push(
@@ -81,16 +81,21 @@ export const GridRowCells = React.memo(function GridRowCells(props: RowCellsProp
 
     if (editCellState == null && column.renderCell) {
       cellComponent = column.renderCell({ ...cellParams, api: apiRef.current });
-      classNames.push(gridClasses['cell--withRenderer']);
+      // TODO move to GridCell
+      classNames.push(
+        clsx(gridClasses['cell--withRenderer'], rootProps.classes?.['cell--withRenderer']),
+      );
     }
 
     if (editCellState != null && column.renderEditCell) {
       const params = { ...cellParams, ...editCellState, api: apiRef.current };
       cellComponent = column.renderEditCell(params);
-      classNames.push(gridClasses['cell--editing']);
+      // TODO move to GridCell
+      classNames.push(clsx(gridClasses['cell--editing'], rootProps.classes?.['cell--editing']));
     }
 
     if (getCellClassName) {
+      // TODO move to GridCell
       classNames.push(getCellClassName(cellParams));
     }
 

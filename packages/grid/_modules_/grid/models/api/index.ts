@@ -23,4 +23,5 @@ export * from './gridPrintExportApi';
 export * from './gridDisableVirtualizationApi';
 export * from './gridControlStateApi';
 export * from './gridClipboardApi';
+export * from './gridCallbackDetails';
 export * from './gridScrollApi';

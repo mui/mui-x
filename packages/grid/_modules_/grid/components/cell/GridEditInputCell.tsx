@@ -1,8 +1,22 @@
 import * as React from 'react';
 import InputBase, { InputBaseProps } from '@material-ui/core/InputBase';
 import { GridRenderEditCellParams } from '../../models/params/gridCellParams';
-import { useEnhancedEffect } from '../../utils/material-ui-utils';
-import { gridClasses } from '../../gridClasses';
+import { composeClasses, useEnhancedEffect } from '../../utils/material-ui-utils';
+import { getDataGridUtilityClass } from '../../gridClasses';
+import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
+import { GridComponentProps } from '../../GridComponentProps';
+
+type OwnerState = { classes: GridComponentProps['classes'] };
+
+const useUtilityClasses = (ownerState: OwnerState) => {
+  const { classes } = ownerState;
+
+  const slots = {
+    root: ['editInputCell'],
+  };
+
+  return composeClasses(slots, getDataGridUtilityClass, classes);
+};
 
 export function GridEditInputCell(props: GridRenderEditCellParams & InputBaseProps) {
   const {
@@ -23,6 +37,9 @@ export function GridEditInputCell(props: GridRenderEditCellParams & InputBasePro
 
   const inputRef = React.useRef<HTMLInputElement>();
   const [valueState, setValueState] = React.useState(value);
+  const rootProps = useGridRootProps();
+  const ownerState = { classes: rootProps.classes };
+  const classes = useUtilityClasses(ownerState);
 
   const handleChange = React.useCallback(
     (event) => {
@@ -46,7 +63,7 @@ export function GridEditInputCell(props: GridRenderEditCellParams & InputBasePro
   return (
     <InputBase
       inputRef={inputRef}
-      className={gridClasses.editInputCell}
+      className={classes.root}
       fullWidth
       type={colDef.type === 'number' ? colDef.type : 'text'}
       value={valueState || ''}

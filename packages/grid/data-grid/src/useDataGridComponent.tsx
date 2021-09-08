@@ -29,14 +29,14 @@ import { useApi } from '../../_modules_/grid/hooks/root/useApi';
 import { useGridEvents } from '../../_modules_/grid/hooks/root/useGridEvents';
 import { useGridContainerProps } from '../../_modules_/grid/hooks/root/useGridContainerProps';
 import { useErrorHandler } from '../../_modules_/grid/hooks/utils/useErrorHandler';
-import { useLoggerFactory } from '../../_modules_/grid/hooks/utils/useLogger';
+import { useGridLoggerFactory } from '../../_modules_/grid/hooks/utils/useGridLogger';
 import { useRenderInfoLog } from '../../_modules_/grid/hooks/utils/useRenderInfoLog';
 import { useGridResizeContainer } from '../../_modules_/grid/hooks/utils/useGridResizeContainer';
 import { useStateProp } from '../../_modules_/grid/hooks/utils/useStateProp';
 import { GridApiRef } from '../../_modules_/grid/models/api/gridApiRef';
 
 export const useDataGridComponent = (apiRef: GridApiRef, props: GridComponentProps) => {
-  useLoggerFactory(apiRef, props);
+  useGridLoggerFactory(apiRef, props);
   useApi(apiRef, props);
   useErrorHandler(apiRef, props);
   useGridControlState(apiRef, props);
@@ -60,12 +60,12 @@ export const useDataGridComponent = (apiRef: GridApiRef, props: GridComponentPro
   useGridScroll(apiRef, props);
   useGridNoVirtualization(apiRef, props);
   useGridVirtualization(apiRef, props);
+  useGridInfiniteLoader(apiRef, props);
   useGridColumnMenu(apiRef);
   useGridKeyboard(apiRef);
   useGridKeyboardNavigation(apiRef, props);
   useGridCsvExport(apiRef);
   useGridPrintExport(apiRef, props);
-  useGridInfiniteLoader(apiRef, props);
   useGridClipboard(apiRef);
   useGridEvents(apiRef, props);
   useStateProp(apiRef, props);

@@ -3,7 +3,7 @@ import ownerDocument from '@material-ui/core/utils/ownerDocument';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
 import { GridPrintExportApi } from '../../../models/api/gridPrintExportApi';
-import { useLogger } from '../../utils/useLogger';
+import { useGridLogger } from '../../utils/useGridLogger';
 import { useGridSelector } from '../core/useGridSelector';
 import { visibleSortedGridRowsSelector } from '../filter/gridFilterSelector';
 import { useGridState } from '../core/useGridState';
@@ -30,7 +30,7 @@ export const useGridPrintExport = (
   apiRef: GridApiRef,
   props: Pick<GridComponentProps, 'rowHeight' | 'pagination'>,
 ): void => {
-  const logger = useLogger('useGridPrintExport');
+  const logger = useGridLogger(apiRef, 'useGridPrintExport');
   const [gridState, setGridState] = useGridState(apiRef);
   const visibleSortedRows = useGridSelector(apiRef, visibleSortedGridRowsSelector);
   const columns = useGridSelector(apiRef, allGridColumnsSelector);

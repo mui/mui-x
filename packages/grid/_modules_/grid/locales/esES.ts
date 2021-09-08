@@ -90,6 +90,9 @@ const esESGrid: Partial<GridLocaleText> = {
   // Total visible rows footer text
   footerTotalVisibleRows: (visibleCount, totalCount) =>
     `${visibleCount.toLocaleString()} de ${totalCount.toLocaleString()}`,
+
+  // Actions cell more text
+  actionsCellMore: 'más',
 };
 
 export const esES: Localization = getGridLocalization(esESGrid, esESCore);

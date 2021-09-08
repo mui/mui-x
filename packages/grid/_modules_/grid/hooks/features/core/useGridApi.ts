@@ -4,11 +4,11 @@ import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridApi } from '../../../models/api/gridApi';
 import { isFunction } from '../../../utils/utils';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
-import { useLogger } from '../../utils/useLogger';
+import { useGridLogger } from '../../utils/useGridLogger';
 import { getInitialGridState, GridState } from './gridState';
 
 export const useGridApi = (apiRef: GridApiRef): GridApi => {
-  const logger = useLogger('useGridApi');
+  const logger = useGridLogger(apiRef, 'useGridApi');
   const [, forceUpdate] = React.useState<GridState>();
 
   if (!apiRef.current.state) {

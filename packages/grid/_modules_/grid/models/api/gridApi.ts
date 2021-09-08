@@ -21,6 +21,7 @@ import { GridSelectionApi } from './gridSelectionApi';
 import { GridSortApi } from './gridSortApi';
 import { GridStateApi } from './gridStateApi';
 import { GridVirtualizationApi } from './gridVirtualizationApi';
+import { GridLoggerApi } from './gridLoggerApi';
 import { GridScrollApi } from './gridScrollApi';
 
 /**
@@ -29,6 +30,7 @@ import { GridScrollApi } from './gridScrollApi';
 export interface GridApi
   extends GridCoreApi,
     GridStateApi,
+    GridLoggerApi,
     GridDensityApi,
     GridEventsApi,
     GridRowApi,

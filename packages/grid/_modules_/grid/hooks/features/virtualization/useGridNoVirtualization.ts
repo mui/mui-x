@@ -10,7 +10,15 @@ import { useGridSelector } from '../core';
 import { useGridState } from '../core/useGridState';
 import { visibleGridRowCountSelector } from '../filter/gridFilterSelector';
 import { gridPaginationSelector } from '../pagination/gridPaginationSelector';
+import { gridContainerSizesSelector } from '../../root/gridContainerSizesSelector';
 
+/**
+ * @requires useGridPage (state)
+ * @requires useGridPageSize (state)
+ * @requires useGridColumns (state)
+ * @requires useGridFilter (state)
+ * @requires useGridContainerProps (state)
+ */
 export const useGridNoVirtualization = (
   apiRef: GridApiRef,
   props: Pick<
@@ -21,14 +29,15 @@ export const useGridNoVirtualization = (
   const windowRef = apiRef.current.windowRef;
   const columnsHeaderRef = apiRef.current.columnHeadersElementRef;
   const renderingZoneRef = apiRef.current.renderingZoneRef;
-  const [gridState, setGridState, forceUpdate] = useGridState(apiRef);
-  const [scrollTo] = useGridScrollFn(renderingZoneRef!, columnsHeaderRef!);
+  const [, setGridState, forceUpdate] = useGridState(apiRef);
+  const [scrollTo] = useGridScrollFn(apiRef, renderingZoneRef!, columnsHeaderRef!);
   const paginationState = useGridSelector(apiRef, gridPaginationSelector);
   const visibleColumns = useGridSelector(apiRef, visibleGridColumnsSelector);
   const visibleRowCount = useGridSelector(apiRef, visibleGridRowCountSelector);
+  const containerSizes = useGridSelector(apiRef, gridContainerSizesSelector);
 
   const syncState = React.useCallback(() => {
-    if (!gridState.containerSizes || !windowRef?.current) {
+    if (!containerSizes || !windowRef?.current) {
       return;
     }
 
@@ -37,7 +46,7 @@ export const useGridNoVirtualization = (
     if (props.pagination && props.paginationMode === 'client') {
       firstRowIdx = pageSize * page;
     }
-    const lastRowIdx = firstRowIdx + gridState.containerSizes.virtualRowsCount;
+    const lastRowIdx = firstRowIdx + containerSizes.virtualRowsCount;
     const lastColIdx = visibleColumns.length > 0 ? visibleColumns.length - 1 : 0;
     const renderContext = { firstRowIdx, lastRowIdx, firstColIdx: 0, lastColIdx };
 
@@ -58,7 +67,7 @@ export const useGridNoVirtualization = (
     }));
     forceUpdate();
   }, [
-    gridState.containerSizes,
+    containerSizes,
     paginationState,
     props.pagination,
     props.paginationMode,
