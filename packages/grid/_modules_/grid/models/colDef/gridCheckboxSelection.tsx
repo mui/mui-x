@@ -4,7 +4,6 @@ import { GridHeaderCheckbox } from '../../components/columnSelection/GridHeaderC
 import { selectedIdsLookupSelector } from '../../hooks/features/selection/gridSelectionSelector';
 import { GridColDef } from './gridColDef';
 import { GRID_BOOLEAN_COL_DEF } from './gridBooleanColDef';
-import { gridClasses } from '../../gridClasses';
 
 export const gridCheckboxSelectionColDef: GridColDef = {
   ...GRID_BOOLEAN_COL_DEF,
@@ -22,6 +21,4 @@ export const gridCheckboxSelectionColDef: GridColDef = {
   },
   renderHeader: (params) => <GridHeaderCheckbox {...params} />,
   renderCell: (params) => <GridCellCheckboxRenderer {...params} />,
-  cellClassName: gridClasses.cellCheckbox,
-  headerClassName: gridClasses.columnHeaderCheckbox,
 };

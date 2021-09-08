@@ -20,7 +20,7 @@ import { visibleGridColumnsLengthSelector } from '../columns/gridColumnsSelector
 import { useGridSelector } from '../core/useGridSelector';
 import { gridPaginationSelector } from '../pagination/gridPaginationSelector';
 import { gridRowCountSelector } from '../rows/gridRowsSelector';
-import { useLogger } from '../../utils/useLogger';
+import { useGridLogger } from '../../utils/useGridLogger';
 import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
 import { GridComponentProps } from '../../../GridComponentProps';
 import { visibleSortedGridRowsAsArraySelector } from '../filter/gridFilterSelector';
@@ -68,13 +68,13 @@ const getNextColumnHeaderIndexes = (key: string, indexes: GridColumnHeaderIndexC
  * @requires useGridRows (state, method)
  * @requires useGridContainerProps (state)
  * @requires useGridFocus (method)
- * @requires useGridVirtualRows (method)
+ * @requires useGridScroll (method)
  */
 export const useGridKeyboardNavigation = (
   apiRef: GridApiRef,
   props: Pick<GridComponentProps, 'pagination'>,
 ): void => {
-  const logger = useLogger('useGridKeyboardNavigation');
+  const logger = useGridLogger(apiRef, 'useGridKeyboardNavigation');
   const paginationState = useGridSelector(apiRef, gridPaginationSelector);
   const totalRowCount = useGridSelector(apiRef, gridRowCountSelector);
   const colCount = useGridSelector(apiRef, visibleGridColumnsLengthSelector);

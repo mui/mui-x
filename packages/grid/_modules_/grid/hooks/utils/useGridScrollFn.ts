@@ -1,12 +1,14 @@
 import * as React from 'react';
 import { GridScrollFn, GridScrollParams } from '../../models/params/gridScrollParams';
-import { useLogger } from './useLogger';
+import { useGridLogger } from './useGridLogger';
+import { GridApiRef } from '../../models';
 
 export function useGridScrollFn(
+  apiRef: GridApiRef,
   renderingZoneElementRef: React.RefObject<HTMLDivElement>,
   columnHeadersElementRef: React.RefObject<HTMLDivElement>,
 ): [GridScrollFn] {
-  const logger = useLogger('useGridScrollFn');
+  const logger = useGridLogger(apiRef, 'useGridScrollFn');
   const previousValue = React.useRef<GridScrollParams>();
 
   const scrollTo: (v: GridScrollParams) => void = React.useCallback(

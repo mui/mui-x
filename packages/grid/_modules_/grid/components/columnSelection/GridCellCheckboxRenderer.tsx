@@ -5,13 +5,29 @@ import { GridCellParams } from '../../models/params/gridCellParams';
 import { isNavigationKey, isSpaceKey } from '../../utils/keyboardUtils';
 import { useGridApiContext } from '../../hooks/root/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { gridClasses } from '../../gridClasses';
+import { getDataGridUtilityClass } from '../../gridClasses';
+import { composeClasses } from '../../utils/material-ui-utils';
+import { GridComponentProps } from '../../GridComponentProps';
+
+type OwnerState = { classes: GridComponentProps['classes'] };
+
+const useUtilityClasses = (ownerState: OwnerState) => {
+  const { classes } = ownerState;
+
+  const slots = {
+    root: ['checkboxInput'],
+  };
+
+  return composeClasses(slots, getDataGridUtilityClass, classes);
+};
 
 export const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridCellParams>(
   function GridCellCheckboxRenderer(props, ref) {
     const { field, id, value, tabIndex, hasFocus } = props;
     const apiRef = useGridApiContext();
     const rootProps = useGridRootProps();
+    const ownerState = { classes: rootProps.classes };
+    const classes = useUtilityClasses(ownerState);
     const checkboxElement = React.useRef<HTMLInputElement | null>(null);
 
     const handleRef = useForkRef(checkboxElement, ref);
@@ -60,7 +76,7 @@ export const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, Gri
         checked={!!value}
         onChange={handleChange}
         onClick={handleClick}
-        className={gridClasses.checkboxInput}
+        className={classes.root}
         color="primary"
         inputProps={{ 'aria-label': 'Select Row checkbox' }}
         onKeyDown={handleKeyDown}
