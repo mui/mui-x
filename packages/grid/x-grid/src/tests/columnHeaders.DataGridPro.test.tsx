@@ -43,22 +43,22 @@ describe('<DataGridPro /> - Column Headers', () => {
     ],
   };
 
-  it('should close the menu when the window is scrolled', async () => {
-    render(
-      <div style={{ width: 300, height: 500 }}>
-        <DataGridPro {...baselineProps} columns={[{ field: 'brand' }]} />
-      </div>,
-    );
-    const columnCell = getColumnHeaderCell(0);
-    const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]');
-    fireEvent.click(menuIconButton);
-    await waitFor(() => expect(screen.queryByRole('menu')).not.to.equal(null));
-    const gridWindow = document.querySelector('.MuiDataGrid-window')!;
-    gridWindow.dispatchEvent(new Event('scroll'));
-    await waitFor(() => expect(screen.queryByRole('menu')).to.equal(null));
-  });
-
   describe('GridColumnHeaderMenu', () => {
+    it('should close the menu when the window is scrolled', async () => {
+      render(
+        <div style={{ width: 300, height: 500 }}>
+          <DataGridPro {...baselineProps} columns={[{ field: 'brand' }]} />
+        </div>,
+      );
+      const columnCell = getColumnHeaderCell(0);
+      const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]');
+      fireEvent.click(menuIconButton);
+      await waitFor(() => expect(screen.queryByRole('menu')).not.to.equal(null));
+      const gridWindow = document.querySelector('.MuiDataGrid-window')!;
+      gridWindow.dispatchEvent(new Event('scroll'));
+      await waitFor(() => expect(screen.queryByRole('menu')).to.equal(null));
+    });
+
     it('should close the menu of a column when resizing this column', async () => {
       render(
         <div style={{ width: 300, height: 500 }}>
@@ -111,6 +111,23 @@ describe('<DataGridPro /> - Column Headers', () => {
         `.${GRID_COLUMN_HEADER_SEPARATOR_RESIZABLE_CSS_CLASS}`,
       );
       fireEvent.mouseDown(separator);
+      await waitFor(() => expect(screen.queryByRole('menu')).to.equal(null));
+    });
+
+    it('should close the menu of a column when pressing the Escape key', async () => {
+      render(
+        <div style={{ width: 300, height: 500 }}>
+          <DataGridPro {...baselineProps} columns={[{ field: 'brand' }]} />
+        </div>,
+      );
+
+      const columnCell = getColumnHeaderCell(0);
+      const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]');
+
+      fireEvent.click(menuIconButton);
+      await waitFor(() => expect(screen.queryByRole('menu')).not.to.equal(null));
+      /* eslint-disable material-ui/disallow-active-element-as-key-event-target */
+      fireEvent.keyDown(document.activeElement!, { key: 'Escape' });
       await waitFor(() => expect(screen.queryByRole('menu')).to.equal(null));
     });
   });

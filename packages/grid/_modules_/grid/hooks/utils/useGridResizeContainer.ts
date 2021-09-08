@@ -4,16 +4,19 @@ import { GridEvents } from '../../constants/eventsConstants';
 import { ElementSize, GridEventsApi } from '../../models';
 import { useGridApiEventHandler, useGridApiOptionHandler } from '../root/useGridApiEventHandler';
 import { useGridApiMethod } from '../root/useGridApiMethod';
-import { useLogger } from './useLogger';
+import { useGridLogger } from './useGridLogger';
 import { GridComponentProps } from '../../GridComponentProps';
 
 const isTestEnvironment = process.env.NODE_ENV === 'test';
 
-export function useResizeContainer(
+/**
+ * @requires useGridContainerProps (state) - can be after, async only
+ */
+export function useGridResizeContainer(
   apiRef,
   props: Pick<GridComponentProps, 'autoHeight' | 'rows' | 'onResize'>,
 ) {
-  const gridLogger = useLogger('useResizeContainer');
+  const gridLogger = useGridLogger(apiRef, 'useResizeContainer');
   const warningShown = React.useRef(false);
 
   const resizeFn = React.useCallback(() => {

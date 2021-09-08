@@ -1,10 +1,12 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
+import { HTMLElementType } from '@material-ui/utils';
 import { useGridApiContext } from '../../../hooks/root/useGridApiContext';
 import { GridMenu } from '../GridMenu';
 
 export interface GridColumnHeaderMenuProps {
-  columnMenuId: string;
-  columnMenuButtonId: string;
+  columnMenuId?: string;
+  columnMenuButtonId?: string;
   ContentComponent: React.JSXElementConstructor<any>;
   contentComponentProps?: any;
   field: string;
@@ -12,7 +14,7 @@ export interface GridColumnHeaderMenuProps {
   target: Element | null;
 }
 
-export function GridColumnHeaderMenu({
+function GridColumnHeaderMenu({
   columnMenuId,
   columnMenuButtonId,
   ContentComponent,
@@ -25,7 +27,7 @@ export function GridColumnHeaderMenu({
   const currentColumn = apiRef.current.getColumn(field);
 
   const hideMenu = React.useCallback(
-    (event) => {
+    (event: React.SyntheticEvent<any>) => {
       // Prevent triggering the sorting
       event.stopPropagation();
       apiRef.current.hideColumnMenu();
@@ -55,3 +57,19 @@ export function GridColumnHeaderMenu({
     </GridMenu>
   );
 }
+
+GridColumnHeaderMenu.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  columnMenuButtonId: PropTypes.string,
+  columnMenuId: PropTypes.string,
+  ContentComponent: PropTypes.elementType.isRequired,
+  contentComponentProps: PropTypes.any,
+  field: PropTypes.string.isRequired,
+  open: PropTypes.bool.isRequired,
+  target: HTMLElementType,
+} as any;
+
+export { GridColumnHeaderMenu };

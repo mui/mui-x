@@ -2,6 +2,8 @@ import * as React from 'react';
 import { Logger } from '../../models/logger';
 import { localStorageAvailable } from '../../utils/utils';
 import { GridComponentProps } from '../../GridComponentProps';
+import { GridApiRef } from '../../models/api/gridApiRef';
+import { GridLoggerApi } from '../../models/api/gridLoggerApi';
 
 const forceDebug = localStorageAvailable() && window.localStorage.getItem('DEBUG') != null;
 
@@ -39,35 +41,35 @@ function getAppender(name: string, logLevel: string, appender: Logger = console)
   return logger as Logger;
 }
 
-const defaultFactory: (logLevel: string) => LoggerFactoryFn =
-  (logLevel: string) => (name: string) =>
-    getAppender(name, logLevel);
-
-type LoggerFactoryFn = (name: string) => Logger;
-
-// TODO Refactor to allow different logger for each grid in a page...
-let factory: LoggerFactoryFn | null;
-
-export function useLoggerFactory(
-  apiRef: any,
+export function useGridLoggerFactory(
+  apiRef: GridApiRef,
   props: Pick<GridComponentProps, 'logger' | 'logLevel'>,
 ) {
-  if (forceDebug) {
-    factory = defaultFactory('debug');
-    return;
-  }
+  apiRef.current.getLogger = React.useCallback<GridLoggerApi['getLogger']>(
+    (name: string): Logger => {
+      if (forceDebug) {
+        return getAppender(name, 'debug', props.logger);
+      }
 
-  if (!props.logger) {
-    factory = props.logLevel ? defaultFactory(props.logLevel.toString()) : null;
-    return;
-  }
+      if (!props.logLevel) {
+        return noopLogger;
+      }
 
-  factory = props.logLevel
-    ? (name: string) => getAppender(name, props.logLevel!.toString(), props.logger)
-    : null;
+      return getAppender(name, props.logLevel!.toString(), props.logger);
+    },
+    [props.logLevel, props.logger],
+  );
 }
 
-export function useLogger(name: string): Logger {
-  const { current: logger } = React.useRef(factory ? factory(name) : noopLogger);
-  return logger;
+export function useGridLogger(apiRef: GridApiRef, name: string): Logger {
+  const logger = React.useRef<Logger | null>(null);
+
+  if (logger.current) {
+    return logger.current;
+  }
+
+  const newLogger = apiRef.current.getLogger(name);
+  logger.current = newLogger;
+
+  return newLogger;
 }

@@ -1,14 +1,16 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { GRID_CSS_CLASS_PREFIX } from '../constants/cssClassesConstants';
 import { GridEvents } from '../constants/eventsConstants';
 import { GridRowId } from '../models/gridRows';
 import { GridEditModes, GridRowModes } from '../models/gridEditRowModel';
-import { isFunction } from '../utils/utils';
 import { gridDensityRowHeightSelector } from '../hooks/features/density';
 import { useGridApiContext } from '../hooks/root/useGridApiContext';
 import { useGridSelector } from '../hooks/features/core/useGridSelector';
-import { optionsSelector } from '../hooks/utils/optionsSelector';
+import { composeClasses } from '../utils/material-ui-utils';
+import { getDataGridUtilityClass } from '../gridClasses';
+import { useGridRootProps } from '../hooks/utils/useGridRootProps';
+import { GridComponentProps } from '../GridComponentProps';
 
 export interface GridRowProps {
   id: GridRowId;
@@ -17,12 +19,37 @@ export interface GridRowProps {
   children: React.ReactNode;
 }
 
-export function GridRow(props: GridRowProps) {
+type OwnerState = GridRowProps & {
+  editable: boolean;
+  editing: boolean;
+  classes?: GridComponentProps['classes'];
+};
+
+const useUtilityClasses = (ownerState: OwnerState) => {
+  const { editable, editing, selected, classes } = ownerState;
+
+  const slots = {
+    root: ['row', selected && 'selected', editable && 'row--editable', editing && 'row--editing'],
+  };
+
+  return composeClasses(slots, getDataGridUtilityClass, classes);
+};
+
+function GridRow(props: GridRowProps) {
   const { selected, id, rowIndex, children } = props;
   const ariaRowIndex = rowIndex + 2; // 1 for the header row and 1 as it's 1 based
   const apiRef = useGridApiContext();
+  const rootProps = useGridRootProps();
   const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
-  const { classes, getRowClassName, editMode } = useGridSelector(apiRef, optionsSelector);
+
+  const ownerState = {
+    ...props,
+    classes: rootProps.classes,
+    editing: apiRef.current.getRowMode(id) === GridRowModes.Edit,
+    editable: rootProps.editMode === GridEditModes.Row,
+  };
+
+  const classes = useUtilityClasses(ownerState);
 
   const publish = React.useCallback(
     (eventName: string) => (event: React.MouseEvent) => {
@@ -64,12 +91,8 @@ export function GridRow(props: GridRowProps) {
   };
 
   const rowClassName =
-    isFunction(getRowClassName) && getRowClassName(apiRef.current.getRowParams(id));
-  const cssClasses = clsx(rowClassName, classes?.row, {
-    'Mui-selected': selected,
-    [`${GRID_CSS_CLASS_PREFIX}-row--editing`]: apiRef.current.getRowMode(id) === GridRowModes.Edit,
-    [`${GRID_CSS_CLASS_PREFIX}-row--editable`]: editMode === GridEditModes.Row,
-  });
+    typeof rootProps.getRowClassName === 'function' &&
+    rootProps.getRowClassName(apiRef.current.getRowParams(id));
 
   return (
     <div
@@ -77,7 +100,7 @@ export function GridRow(props: GridRowProps) {
       data-id={id}
       data-rowindex={rowIndex}
       role="row"
-      className={cssClasses}
+      className={clsx(rowClassName, classes.root)}
       aria-rowindex={ariaRowIndex}
       aria-selected={selected}
       style={style}
@@ -87,3 +110,16 @@ export function GridRow(props: GridRowProps) {
     </div>
   );
 }
+
+GridRow.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  children: PropTypes.node,
+  id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  rowIndex: PropTypes.number.isRequired,
+  selected: PropTypes.bool.isRequired,
+} as any;
+
+export { GridRow };

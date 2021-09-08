@@ -31,10 +31,16 @@ import { useGridApiEventHandler, useGridApiOptionHandler } from '../../root/useG
 import { useGridApiMethod } from '../../root/useGridApiMethod';
 import { allGridColumnsSelector } from '../columns/gridColumnsSelector';
 import { useEventCallback } from '../../../utils/material-ui-utils';
-import { useLogger } from '../../utils/useLogger';
+import { useGridLogger } from '../../utils/useGridLogger';
 import { useGridState } from '../core/useGridState';
 import { useGridSelector } from '../core/useGridSelector';
 
+/**
+ * @requires useGridFocus - can be after, async only
+ * @requires useGridParamsApi (method)
+ * @requires useGridColumns (state)
+ * @requires useGridControlState (method)
+ */
 export function useGridEditRows(
   apiRef: GridApiRef,
   props: Pick<
@@ -52,7 +58,7 @@ export function useGridEditRows(
     | 'editMode'
   >,
 ) {
-  const logger = useLogger('useGridEditRows');
+  const logger = useGridLogger(apiRef, 'useGridEditRows');
   const [, setGridState, forceUpdate] = useGridState(apiRef);
   const focusTimeout = React.useRef<any>(null);
   const nextFocusedCell = React.useRef<GridCellParams | null>(null);

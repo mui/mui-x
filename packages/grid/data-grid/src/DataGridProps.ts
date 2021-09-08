@@ -1,4 +1,4 @@
-import { GridComponentProps } from '../../_modules_/grid/GridComponentProps';
+import { GridInputComponentProps } from '../../_modules_/grid/GridComponentProps';
 
 export const MAX_PAGE_SIZE = 100;
 
@@ -6,7 +6,7 @@ export const MAX_PAGE_SIZE = 100;
  * The grid component react props interface.
  */
 export type DataGridProps = Omit<
-  GridComponentProps,
+  GridInputComponentProps,
   | 'apiRef'
   | 'checkboxSelectionVisibleOnly'
   | 'disableColumnResize'
@@ -17,7 +17,6 @@ export type DataGridProps = Omit<
   | 'options'
   | 'onRowsScrollEnd'
   | 'onViewportRowsChange'
-  | 'pagination'
   | 'scrollEndThreshold'
   | 'signature'
 > & {

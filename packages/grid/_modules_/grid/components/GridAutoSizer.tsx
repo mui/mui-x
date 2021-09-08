@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import { useForkRef, ownerWindow } from '@material-ui/core/utils';
 import { useEventCallback, useEnhancedEffect } from '../utils/material-ui-utils';
 import createDetectElementResize from '../lib/createDetectElementResize';
@@ -15,6 +16,8 @@ export interface AutoSizerSize {
 export interface AutoSizerProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'children'> {
   /**
    * Function responsible for rendering children.
+   * @param {AutoSizerSize} size The grid's size.
+   * @returns {React.ReactNode} The children to render.
    */
   children: (size: AutoSizerSize) => React.ReactNode;
   /**
@@ -43,11 +46,12 @@ export interface AutoSizerProps extends Omit<React.HTMLAttributes<HTMLDivElement
   nonce?: string;
   /**
    * Callback to be invoked on-resize.
+   * @param {AutoSizerSize} size The grid's size.
    */
   onResize?: (size: AutoSizerSize) => void;
 }
 
-export const GridAutoSizer = React.forwardRef<HTMLDivElement, AutoSizerProps>(function AutoSizer(
+const GridAutoSizer = React.forwardRef<HTMLDivElement, AutoSizerProps>(function AutoSizer(
   props,
   ref,
 ) {
@@ -153,3 +157,41 @@ export const GridAutoSizer = React.forwardRef<HTMLDivElement, AutoSizerProps>(fu
     </div>
   );
 });
+
+GridAutoSizer.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  /**
+   * Default height to use for initial render; useful for SSR.
+   * @default null
+   */
+  defaultHeight: PropTypes.number,
+  /**
+   * Default width to use for initial render; useful for SSR.
+   * @default null
+   */
+  defaultWidth: PropTypes.number,
+  /**
+   * If `true`, disable dynamic :height property.
+   * @default false
+   */
+  disableHeight: PropTypes.bool,
+  /**
+   * If `true`, disable dynamic :width property.
+   * @default false
+   */
+  disableWidth: PropTypes.bool,
+  /**
+   * Nonce of the inlined stylesheet for Content Security Policy.
+   */
+  nonce: PropTypes.string,
+  /**
+   * Callback to be invoked on-resize.
+   * @param {AutoSizerSize} size The grid's size.
+   */
+  onResize: PropTypes.func,
+} as any;
+
+export { GridAutoSizer };
