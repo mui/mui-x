@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import { GridEvents } from '../../constants/eventsConstants';
 import { useGridApiContext } from '../../hooks/root/useGridApiContext';
 import { ElementSize } from '../../models/elementSize';
@@ -15,7 +16,7 @@ interface GridBodyProps {
   children?: React.ReactNode;
 }
 
-export function GridBody(props: GridBodyProps) {
+function GridBody(props: GridBodyProps) {
   const { children } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
@@ -56,3 +57,13 @@ export function GridBody(props: GridBodyProps) {
     </GridMainContainer>
   );
 }
+
+GridBody.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  children: PropTypes.node,
+} as any;
+
+export { GridBody };
