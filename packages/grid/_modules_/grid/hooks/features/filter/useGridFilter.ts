@@ -32,11 +32,7 @@ export const useGridFilter = (
   apiRef: GridApiRef,
   props: Pick<
     GridComponentProps,
-    | 'rows'
-    | 'filterModel'
-    | 'onFilterModelChange'
-    | 'filterMode'
-    | 'disableMultipleColumnsFiltering'
+    'filterModel' | 'onFilterModelChange' | 'filterMode' | 'disableMultipleColumnsFiltering'
   >,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridFilter');
@@ -301,12 +297,6 @@ export const useGridFilter = (
     },
     'FilterApi',
   );
-
-  React.useEffect(() => {
-    logger.debug('Rows prop changed, applying filters');
-    clearFilteredRows();
-    apiRef.current.applyFilters();
-  }, [apiRef, clearFilteredRows, logger, props.rows]);
 
   const onColUpdated = React.useCallback(() => {
     logger.debug('onColUpdated - GridColumns changed, applying filters');

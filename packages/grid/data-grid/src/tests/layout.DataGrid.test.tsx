@@ -110,7 +110,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         expect(ref.current).to.equal(container.firstChild.firstChild);
       });
 
-      describe('Apply the `classes` prop', () => {
+      describe('`classes` prop', () => {
         it("should apply the `root` rule name's value as a class to the root grid component", () => {
           const classes = {
             root: 'my_class_name',
@@ -123,6 +123,15 @@ describe('<DataGrid /> - Layout & Warnings', () => {
           );
 
           expect(container.firstChild.firstChild).to.have.class(classes.root);
+        });
+
+        it('should support class names with underscores', () => {
+          render(
+            <div style={{ width: 300, height: 300 }}>
+              <DataGrid {...baselineProps} classes={{ 'columnHeader--sortable': 'foobar' }} />
+            </div>,
+          );
+          expect(getColumnHeaderCell(0)).to.have.class('foobar');
         });
       });
 

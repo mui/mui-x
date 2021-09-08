@@ -15,6 +15,8 @@ import { gridColumnMenuSelector } from '../../hooks/features/columnMenu/columnMe
 import { GridStateColDef } from '../../models/colDef/gridColDef';
 import { useGridApiContext } from '../../hooks/root/useGridApiContext';
 import { GridColumnHeaderItem } from './GridColumnHeaderItem';
+import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
+import { gridScrollBarSizeSelector } from '../../hooks/root/gridContainerSizesSelector';
 import { useGridProSelector } from '../../hooks/features/core/useGridProSelector';
 
 export interface GridColumnHeadersItemCollectionProps {
@@ -34,6 +36,8 @@ export function GridColumnHeadersItemCollection(props: GridColumnHeadersItemColl
   const cellTabIndexState = useGridSelector(apiRef, gridTabIndexCellSelector);
   const headerHeight = useGridSelector(apiRef, gridDensityHeaderHeightSelector);
   const columnMenuState = useGridSelector(apiRef, gridColumnMenuSelector);
+  const scrollBarState = useGridSelector(apiRef, gridScrollBarSizeSelector);
+  const rootProps = useGridRootProps();
 
   const getColIndex = (index) => {
     if (renderCtx == null) {
@@ -66,6 +70,10 @@ export function GridColumnHeadersItemCollection(props: GridColumnHeadersItemColl
         column={col}
         colIndex={colIndex}
         isResizing={resizingColumnField === col.field}
+        isLastColumn={colIndex === columns.length - 1}
+        extendRowFullWidth={!rootProps.disableExtendRowFullWidth}
+        hasScrollX={scrollBarState.hasScrollX}
+        hasScrollY={scrollBarState.hasScrollY}
         hasFocus={hasFocus}
         tabIndex={tabIndex}
       />

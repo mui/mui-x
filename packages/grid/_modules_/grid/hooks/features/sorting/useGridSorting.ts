@@ -21,17 +21,15 @@ import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { allGridColumnsSelector } from '../columns/gridColumnsSelector';
-import { useGridSelector } from '../core/useGridSelector';
 import { useGridState } from '../core/useGridState';
-import { gridRowCountSelector } from '../rows/gridRowsSelector';
 import {
   gridSortModelSelector,
   sortedGridRowIdsSelector,
   sortedGridRowsSelector,
 } from './gridSortingSelector';
 import { useGridStateInit } from '../../utils/useGridStateInit';
-import { useFirstRender } from '../../utils/useFirstRender';
 import { useGridRegisterControlState } from '../../utils/useGridRegisterControlState';
+import { useFirstRender } from '../../utils/useFirstRender';
 
 /**
  * @requires useGridRows (state, event)
@@ -42,7 +40,6 @@ export const useGridSorting = (
   apiRef: GridApiRef,
   props: Pick<
     GridComponentProps,
-    | 'rows'
     | 'sortModel'
     | 'onSortModelChange'
     | 'sortingOrder'
@@ -61,7 +58,6 @@ export const useGridSorting = (
   }));
 
   const [, setGridState, forceUpdate] = useGridState(apiRef);
-  const rowCount = useGridSelector(apiRef, gridRowCountSelector);
 
   useGridRegisterControlState(apiRef, {
     stateId: 'sortModel',
@@ -220,9 +216,7 @@ export const useGridSorting = (
     (sortModel: GridSortModel) => {
       const currentModel = gridSortModelSelector(apiRef.current.state);
       if (sortModel !== currentModel) {
-        setGridState((state) => {
-          return { ...state, sorting: { ...state.sorting, sortModel } };
-        });
+        setGridState((state) => ({ ...state, sorting: { ...state.sorting, sortModel } }));
         forceUpdate();
         apiRef.current.applySorting();
       }
@@ -247,6 +241,39 @@ export const useGridSorting = (
     [upsertSortModel, setSortModel, createSortItem, props.disableMultipleColumnsSorting],
   );
 
+  const getSortModel = React.useCallback(
+    () => gridSortModelSelector(apiRef.current.state),
+    [apiRef],
+  );
+
+  const getSortedRows = React.useCallback(
+    (): GridRowModel[] => Object.values(sortedGridRowsSelector(apiRef.current.state)),
+    [apiRef],
+  );
+
+  const getSortedRowIds = React.useCallback(
+    (): GridRowId[] => sortedGridRowIdsSelector(apiRef.current.state),
+    [apiRef],
+  );
+
+  const sortApi: GridSortApi = {
+    getSortModel,
+    getSortedRows,
+    getSortedRowIds,
+    setSortModel,
+    sortColumn,
+    applySorting,
+  };
+  useGridApiMethod(apiRef, sortApi, 'GridSortApi');
+
+  React.useEffect(() => {
+    if (props.sortModel !== undefined) {
+      apiRef.current.setSortModel(props.sortModel);
+    }
+  }, [props.sortModel, apiRef]);
+
+  useFirstRender(() => apiRef.current.applySorting());
+
   const handleColumnHeaderClick = React.useCallback(
     ({ colDef }: GridColumnHeaderParams, event: React.MouseEvent) => {
       const allowMultipleSorting = event.shiftKey || event.metaKey || event.ctrlKey;
@@ -266,25 +293,8 @@ export const useGridSorting = (
   );
 
   const onRowsCleared = React.useCallback(() => {
-    setGridState((state) => {
-      return { ...state, sorting: { ...state.sorting, sortedRows: [] } };
-    });
+    setGridState((state) => ({ ...state, sorting: { ...state.sorting, sortedRows: [] } }));
   }, [setGridState]);
-
-  const getSortModel = React.useCallback(
-    () => gridSortModelSelector(apiRef.current.state),
-    [apiRef],
-  );
-
-  const getSortedRows = React.useCallback(
-    (): GridRowModel[] => Object.values(sortedGridRowsSelector(apiRef.current.state)),
-    [apiRef],
-  );
-
-  const getSortedRowIds = React.useCallback(
-    (): GridRowId[] => sortedGridRowIdsSelector(apiRef.current.state),
-    [apiRef],
-  );
 
   const onColUpdated = React.useCallback(() => {
     // When the columns change we check that the sorted columns are still part of the dataset
@@ -312,34 +322,4 @@ export const useGridSorting = (
   useGridApiEventHandler(apiRef, GridEvents.rowsClear, onRowsCleared);
   useGridApiEventHandler(apiRef, GridEvents.rowsUpdate, apiRef.current.applySorting);
   useGridApiEventHandler(apiRef, GridEvents.columnsChange, onColUpdated);
-
-  const sortApi: GridSortApi = {
-    getSortModel,
-    getSortedRows,
-    getSortedRowIds,
-    setSortModel,
-    sortColumn,
-    applySorting,
-  };
-  useGridApiMethod(apiRef, sortApi, 'GridSortApi');
-
-  React.useEffect(() => {
-    // When the rows prop change, we re apply the sorting.
-    apiRef.current.applySorting();
-  }, [apiRef, props.rows]);
-
-  React.useEffect(() => {
-    if (rowCount > 0) {
-      logger.debug('row changed, applying sortModel');
-      apiRef.current.applySorting();
-    }
-  }, [rowCount, apiRef, logger]);
-
-  React.useEffect(() => {
-    if (props.sortModel !== undefined) {
-      apiRef.current.setSortModel(props.sortModel);
-    }
-  }, [props.sortModel, apiRef]);
-
-  useFirstRender(() => apiRef.current.applySorting());
 };

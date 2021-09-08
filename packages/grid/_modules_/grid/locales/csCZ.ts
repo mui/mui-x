@@ -121,6 +121,9 @@ const csCZKGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: 'ano',
   booleanCellFalseLabel: 'ne',
+
+  // Actions cell more text
+  // actionsCellMore: 'more',
 };
 
 export const csCZ: Localization = getGridLocalization(csCZKGrid, csCZCore);
