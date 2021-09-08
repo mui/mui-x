@@ -21,7 +21,7 @@ export const gridScrollbarStateSelector = (state: GridState) => state.scrollBar;
 
 type OwnerState = {
   classes?: GridComponentProps['classes'];
-  dragCol: string;
+  dragCol: string | undefined;
 };
 
 const useUtilityClasses = (ownerState: OwnerState) => {
