@@ -1,10 +1,12 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import ClickAwayListener, { ClickAwayListenerProps } from '@material-ui/core/ClickAwayListener';
 import Grow from '@material-ui/core/Grow';
 import Paper from '@material-ui/core/Paper';
 import Popper, { PopperProps } from '@material-ui/core/Popper';
 import { Theme } from '@material-ui/core/styles';
 import { makeStyles } from '@material-ui/styles';
+import { HTMLElementType } from '@material-ui/utils';
 import { createTheme } from '../../utils/utils';
 
 type MenuPosition =
@@ -48,7 +50,7 @@ const transformOrigin = {
   'bottom-end': 'top right',
 };
 
-export const GridMenu = (props: GridMenuProps) => {
+const GridMenu = (props: GridMenuProps) => {
   const { open, target, onClickAway, children, position, ...other } = props;
   const prevTarget = React.useRef(target);
   const prevOpen = React.useRef(open);
@@ -82,3 +84,32 @@ export const GridMenu = (props: GridMenuProps) => {
     </Popper>
   );
 };
+
+GridMenu.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  onClickAway: PropTypes.func.isRequired,
+  /**
+   * If `true`, the popper is visible.
+   */
+  open: PropTypes.bool.isRequired,
+  position: PropTypes.oneOf([
+    'bottom-end',
+    'bottom-start',
+    'bottom',
+    'left-end',
+    'left-start',
+    'left',
+    'right-end',
+    'right-start',
+    'right',
+    'top-end',
+    'top-start',
+    'top',
+  ]),
+  target: HTMLElementType,
+} as any;
+
+export { GridMenu };
