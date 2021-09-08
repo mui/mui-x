@@ -110,7 +110,7 @@ function CustomToolbar() {
 The grid exposes props to hide specific elements of the UI:
 
 - `hideFooter`: If `true`, the footer component is hidden.
-- `hideFooterRowCount`: If `true`, the row count in the footer is hidden.
+- `hideFooterRowCount`: If `true`, the row count in the footer is hidden. It gets applied only when `pagination` is disabled.
 - `hideFooterSelectedRowCount`: If `true`, the selected row count in the footer is hidden.
 - `hideFooterPagination`: If `true`, the pagination component in the footer is hidden.
 
