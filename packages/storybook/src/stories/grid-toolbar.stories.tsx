@@ -54,7 +54,7 @@ export const Export = () => {
   const { data } = useDemoData({
     dataSet: 'Commodity',
     rowLength: 100,
-    maxColumns: 15,
+    maxColumns: 10,
   });
 
   return (

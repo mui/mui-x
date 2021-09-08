@@ -21,15 +21,14 @@ type PrintWindowOnLoad = (
 
 export const useGridPrintExport = (
   apiRef: GridApiRef,
-  props: Pick<GridComponentProps, 'rowHeight'>,
+  props: Pick<GridComponentProps, 'rowHeight' | 'pagination'>,
 ): void => {
   const logger = useLogger('useGridPrintExport');
-  const [, setGridState, forceUpdate] = useGridState(apiRef);
+  const [gridState, setGridState] = useGridState(apiRef);
   const visibleSortedRows = useGridSelector(apiRef, visibleSortedGridRowsSelector);
   const columns = useGridSelector(apiRef, allGridColumnsSelector);
   const doc = React.useRef<Document | null>(null);
-  const previousContainerSizes = React.useRef<any>(null);
-  const previousViewportSizes = React.useRef<any>(null);
+  const previousGridState = React.useRef<any>();
   const previousHiddenColumns = React.useRef<string[]>([]);
 
   React.useEffect(() => {
@@ -68,29 +67,6 @@ export const useGridPrintExport = (
       }),
     [columns, apiRef],
   );
-
-  const prepGridContainerForPrint = React.useCallback((): void => {
-    setGridState((state) => {
-      previousContainerSizes.current = state.containerSizes;
-      previousViewportSizes.current = state.viewportSizes;
-      return {
-        ...state,
-        containerSizes: {
-          ...state.containerSizes!,
-          renderingZone: {
-            ...state.containerSizes!.renderingZone,
-            height: visibleSortedRows.size * props.rowHeight!,
-          },
-          renderingZonePageSize: visibleSortedRows.size,
-        },
-        viewportSizes: {
-          ...state.viewportSizes,
-          height: visibleSortedRows.size * props.rowHeight!,
-        },
-      };
-    });
-    forceUpdate();
-  }, [visibleSortedRows, props.rowHeight, setGridState, forceUpdate]);
 
   const buildPrintWindow = React.useCallback((title?: string): HTMLIFrameElement => {
     const iframeEl = document.createElement('iframe');
@@ -206,8 +182,7 @@ export const useGridPrintExport = (
       // Revert grid to previous state
       setGridState((state) => ({
         ...state,
-        ...previousContainerSizes.current,
-        ...previousViewportSizes.current,
+        ...previousGridState.current,
       }));
 
       // Revert columns to their original state
@@ -221,8 +196,7 @@ export const useGridPrintExport = (
       }
 
       // Clear local state
-      previousContainerSizes.current = null;
-      previousViewportSizes.current = null;
+      previousGridState.current = null;
       previousHiddenColumns.current = [];
     },
     [columns, apiRef, setGridState],
@@ -236,19 +210,25 @@ export const useGridPrintExport = (
         throw new Error('No Grid Root element available');
       }
 
-      await updateGridColumnsForPrint(options?.fields, options?.allColumns);
-      prepGridContainerForPrint();
+      previousGridState.current = gridState;
+
+      if (props.pagination) {
+        apiRef.current.setPageSize(visibleSortedRows.size);
+      }
+
+      await updateGridColumnsForPrint(['desk'], options?.allColumns);
+      apiRef.current.disableVirtualization();
       const printWindow = buildPrintWindow(options?.fileName);
-
       doc.current!.body.appendChild(printWindow);
-
       printWindow.onload = () => handlePrintWindowLoad(printWindow, options);
       printWindow.contentWindow!.onafterprint = () => handlePrintWindowAfterPrint(printWindow);
     },
     [
+      visibleSortedRows,
+      props,
       logger,
       apiRef,
-      prepGridContainerForPrint,
+      gridState,
       buildPrintWindow,
       handlePrintWindowLoad,
       handlePrintWindowAfterPrint,

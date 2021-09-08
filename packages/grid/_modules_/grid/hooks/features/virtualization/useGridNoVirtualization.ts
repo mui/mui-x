@@ -1,16 +1,22 @@
 import * as React from 'react';
 import { GridComponentProps } from '../../../GridComponentProps';
 import { GridApiRef } from '../../../models/api/gridApiRef';
+import { GridDisableVirtualizationApi } from '../../../models/api/gridDisableVirtualizationApi';
+import { useGridApiMethod } from '../../root/useGridApiMethod';
 import { useNativeEventListener } from '../../root/useNativeEventListener';
 import { useGridScrollFn } from '../../utils/useGridScrollFn';
 import { visibleGridColumnsSelector } from '../columns/gridColumnsSelector';
 import { useGridSelector } from '../core';
 import { useGridState } from '../core/useGridState';
+import { visibleGridRowCountSelector } from '../filter/gridFilterSelector';
 import { gridPaginationSelector } from '../pagination/gridPaginationSelector';
 
 export const useGridNoVirtualization = (
   apiRef: GridApiRef,
-  props: Pick<GridComponentProps, 'disableVirtualization' | 'pagination' | 'paginationMode'>,
+  props: Pick<
+    GridComponentProps,
+    'disableVirtualization' | 'pagination' | 'paginationMode' | 'rowHeight'
+  >,
 ): void => {
   const windowRef = apiRef.current.windowRef;
   const columnsHeaderRef = apiRef.current.columnHeadersElementRef;
@@ -19,6 +25,7 @@ export const useGridNoVirtualization = (
   const [scrollTo] = useGridScrollFn(renderingZoneRef!, columnsHeaderRef!);
   const paginationState = useGridSelector(apiRef, gridPaginationSelector);
   const visibleColumns = useGridSelector(apiRef, visibleGridColumnsSelector);
+  const visibleRowCount = useGridSelector(apiRef, visibleGridRowCountSelector);
 
   const syncState = React.useCallback(() => {
     if (!gridState.containerSizes || !windowRef?.current) {
@@ -61,6 +68,25 @@ export const useGridNoVirtualization = (
     windowRef,
   ]);
 
+  const disableVirtualization = React.useCallback((): void => {
+    setGridState((state) => ({
+      ...state,
+      containerSizes: {
+        ...state.containerSizes!,
+        renderingZone: {
+          ...state.containerSizes!.renderingZone,
+          height: visibleRowCount * props.rowHeight!,
+        },
+        renderingZonePageSize: visibleRowCount,
+      },
+      viewportSizes: {
+        ...state.viewportSizes,
+        height: visibleRowCount * props.rowHeight!,
+      },
+    }));
+    syncState();
+  }, [visibleRowCount, props.rowHeight, setGridState, syncState]);
+
   React.useEffect(() => {
     if (!props.disableVirtualization) {
       return;
@@ -78,4 +104,10 @@ export const useGridNoVirtualization = (
   }, [props.disableVirtualization, scrollTo, windowRef, syncState]);
 
   useNativeEventListener(apiRef, windowRef!, 'scroll', handleScroll, { passive: true });
+
+  const disableVirtualizationApi: GridDisableVirtualizationApi = {
+    disableVirtualization,
+  };
+
+  useGridApiMethod(apiRef, disableVirtualizationApi, 'GridDisableVirtualization');
 };

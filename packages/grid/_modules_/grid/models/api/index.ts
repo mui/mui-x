@@ -20,6 +20,7 @@ export * from './gridFilterApi';
 export * from './gridColumnMenuApi';
 export * from './gridPreferencesPanelApi';
 export * from './gridPrintExportApi';
+export * from './gridDisableVirtualizationApi';
 export * from './gridControlStateApi';
 export * from './gridClipboardApi';
 export * from './gridScrollApi';
