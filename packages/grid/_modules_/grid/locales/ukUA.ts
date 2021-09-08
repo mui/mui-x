@@ -102,6 +102,9 @@ export const ukUAGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: 'правда',
   booleanCellFalseLabel: 'помилковий',
+
+  // Actions cell more text
+  // actionsCellMore: 'more',
 };
 
 export const ukUA: Localization = getGridLocalization(ukUAGrid, ukUACore);

@@ -29,6 +29,7 @@ import { GridColumnResizeParams } from './models/params/gridColumnResizeParams';
 import { GridColumnVisibilityChangeParams } from './models/params/gridColumnVisibilityChangeParams';
 import { GridViewportRowsChangeParams } from './models/params/gridViewportRowsChangeParams';
 import { GridSlotsComponentsProps } from './models/gridSlotsComponentsProps';
+import { GridClasses } from './gridClasses';
 import { GridCallbackDetails } from './models/api/gridCallbackDetails';
 
 /**
@@ -58,6 +59,10 @@ interface GridComponentOtherProps {
    * @internal
    */
   signature?: string;
+  /**
+   * Override or extend the styles applied to the component.
+   */
+  classes?: Partial<GridClasses>;
   /**
    * Extend native column types with your new column types.
    */

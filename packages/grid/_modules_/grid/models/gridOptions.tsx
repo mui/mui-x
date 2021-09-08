@@ -5,7 +5,6 @@ import { GridFeatureMode, GridFeatureModeConstant } from './gridFeatureMode';
 import { Logger } from './logger';
 import { GridSortDirection } from './gridSortModel';
 import { GridSlotsComponent } from './gridSlotsComponent';
-import { GridClasses } from './gridClasses';
 import { GridFilterModel } from './gridFilterModel';
 
 export type GridMergedOptions = {
@@ -25,10 +24,6 @@ export interface GridProcessedMergedOptions {
    * You can find all the translation keys supported in [the source](https://github.com/mui-org/material-ui-x/blob/HEAD/packages/grid/_modules_/grid/constants/localeTextConstants.ts) in the GitHub repository.
    */
   localeText: GridLocaleText;
-  /**
-   * Override or extend the styles applied to the component.
-   */
-  classes: GridClasses;
 }
 
 // TODO add multiSortKey

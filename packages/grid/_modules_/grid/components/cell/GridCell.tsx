@@ -2,7 +2,7 @@ import * as React from 'react';
 import { ownerDocument, capitalize } from '@material-ui/core/utils';
 import clsx from 'clsx';
 import { GridEvents } from '../../constants/eventsConstants';
-import { gridClasses } from '../../gridClasses';
+import { getDataGridUtilityClass } from '../../gridClasses';
 import {
   GridAlignment,
   GridCellMode,
@@ -11,6 +11,9 @@ import {
   GridRowId,
 } from '../../models/index';
 import { useGridApiContext } from '../../hooks/root/useGridApiContext';
+import { composeClasses } from '../../utils/material-ui-utils';
+import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
+import { GridComponentProps } from '../../GridComponentProps';
 
 export interface GridCellProps {
   align: GridAlignment;
@@ -32,10 +35,27 @@ export interface GridCellProps {
   tabIndex: 0 | -1;
 }
 
+type OwnerState = GridCellProps & {
+  classes?: GridComponentProps['classes'];
+};
+
+const useUtilityClasses = (ownerState: OwnerState) => {
+  const { align, showRightBorder, isEditable, classes } = ownerState;
+
+  const slots = {
+    root: [
+      'cell',
+      `cell--text${capitalize(align)}`,
+      isEditable && 'cell--editable',
+      showRightBorder && 'withBorder',
+    ],
+  };
+
+  return composeClasses(slots, getDataGridUtilityClass, classes);
+};
+
 export const GridCell = React.memo(function GridCell(props: GridCellProps) {
   const {
-    align,
-    className,
     children,
     colIndex,
     cellMode,
@@ -47,20 +67,19 @@ export const GridCell = React.memo(function GridCell(props: GridCellProps) {
     isSelected,
     rowIndex,
     rowId,
-    showRightBorder,
     tabIndex,
     value,
     width,
+    className,
   } = props;
 
   const valueToRender = formattedValue == null ? value : formattedValue;
   const cellRef = React.useRef<HTMLDivElement>(null);
   const apiRef = useGridApiContext();
 
-  const cssClasses = clsx(className, `${gridClasses[`cell--text${capitalize(align)}`]}`, {
-    [`${gridClasses.withBorder}`]: showRightBorder,
-    [`${gridClasses['cell--editable']}`]: isEditable,
-  });
+  const rootProps = useGridRootProps();
+  const ownerState = { ...props, classes: rootProps.classes };
+  const classes = useUtilityClasses(ownerState);
 
   const publishBlur = React.useCallback(
     (eventName: string) => (event: React.FocusEvent<HTMLDivElement>) => {
@@ -157,7 +176,7 @@ export const GridCell = React.memo(function GridCell(props: GridCellProps) {
   return (
     <div
       ref={cellRef}
-      className={cssClasses}
+      className={clsx(className, classes.root)}
       role="cell"
       data-value={value}
       data-field={field}
