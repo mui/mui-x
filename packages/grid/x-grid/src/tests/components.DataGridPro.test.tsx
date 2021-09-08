@@ -2,35 +2,24 @@ import * as React from 'react';
 import { createClientRenderStrictMode } from 'test/utils';
 import { expect } from 'chai';
 import { DataGridPro, gridClasses } from '@mui/x-data-grid-pro';
+import { useData } from 'packages/storybook/src/hooks/useData';
 
 describe('<DataGridPro/> - Components', () => {
   // TODO v5: replace with createClientRender
   const render = createClientRenderStrictMode();
 
-  const baselineProps = {
-    rows: [
-      {
-        id: 0,
-        brand: 'Nike',
-      },
-      {
-        id: 1,
-        brand: 'Adidas',
-      },
-      {
-        id: 2,
-        brand: 'Puma',
-      },
-    ],
-    columns: [{ field: 'brand' }],
-  };
-
-  it('should hide footer row count if `hideFooterRowCount` prop is set', () => {
-    render(
-      <div style={{ width: 300, height: 500 }}>
-        <DataGridPro {...baselineProps} hideFooterRowCount />
-      </div>,
-    );
-    expect(document.querySelectorAll(`.${gridClasses.rowCount}`).length).to.equal(0);
+  describe('footer', () => {
+    it('should hide the row count if `hideFooterRowCount` prop is set', () => {
+      const TestCase = () => {
+        const data = useData(100, 1);
+        return (
+          <div style={{ width: 500, height: 300 }}>
+            <DataGridPro {...data} hideFooterRowCount />
+          </div>
+        );
+      };
+      render(<TestCase />);
+      expect(document.querySelector(`.${gridClasses.rowCount}`)).to.equal(null);
+    });
   });
 });
