@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { getColumnValues, getSelectedRowIndexes } from 'test/utils/helperFn';
+import {getColumnValues, getRow, getSelectedRowIndexes} from 'test/utils/helperFn';
 import {
   // @ts-expect-error need to migrate helpers to TypeScript
   screen,
