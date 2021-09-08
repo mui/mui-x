@@ -7,7 +7,7 @@ import { GridRowParams } from '../../../models/params/gridRowParams';
 import { GridRowId } from '../../../models/gridRows';
 import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
-import { useLogger } from '../../utils/useLogger';
+import { useGridLogger } from '../../utils/useGridLogger';
 import { useGridSelector } from '../core/useGridSelector';
 import { useGridState } from '../core/useGridState';
 import { gridRowsLookupSelector } from '../rows/gridRowsSelector';
@@ -24,7 +24,7 @@ import { sortedGridRowsSelector } from '../sorting';
  * @requires useGridControlState (method)
  */
 export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps): void => {
-  const logger = useLogger('useGridSelection');
+  const logger = useGridLogger(apiRef, 'useGridSelection');
   const [, setGridState, forceUpdate] = useGridState(apiRef);
   const rowsLookup = useGridSelector(apiRef, gridRowsLookupSelector);
 
@@ -179,7 +179,9 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
 
         event.stopPropagation();
       } else {
-        const resetSelection = !canHaveMultipleSelection || (!hasCtrlKey && !checkboxSelection);
+        // Without checkboxSelection, multiple selection is only allowed if CTRL is pressed
+        const isMultipleSelectionDisabled = !checkboxSelection && !hasCtrlKey;
+        const resetSelection = !canHaveMultipleSelection || isMultipleSelectionDisabled;
 
         if (resetSelection) {
           apiRef.current.selectRow(
@@ -194,7 +196,13 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
 
       lastRowToggledByClick.current = params.id;
     },
-    [apiRef, checkboxSelection, canHaveMultipleSelection, disableSelectionOnClick, checkboxSelection],
+    [
+      apiRef,
+      checkboxSelection,
+      canHaveMultipleSelection,
+      disableSelectionOnClick,
+      checkboxSelection,
+    ],
   );
 
   useGridApiEventHandler(apiRef, GridEvents.rowClick, handleRowClick);

@@ -1,16 +1,8 @@
 import * as React from 'react';
 import { MuiEvent } from '../../models/muiEvent';
 import { GridApiRef } from '../../models/api/gridApiRef';
-import { useLogger } from '../utils/useLogger';
-import { GridApi } from '../../models/api/gridApi';
-
-// TODO: Remove once [[GridApi]] cycle dependency is fixed
-/**
- * Callback details.
- */
-export interface GridCallbackDetails {
-  api?: GridApi;
-}
+import { useGridLogger } from '../utils/useGridLogger';
+import { GridCallbackDetails } from '../../models/api/gridCallbackDetails';
 
 /**
  * Signal to the underlying logic what version of the public component API
@@ -27,7 +19,7 @@ export function useGridApiEventHandler(
   handler?: (...args: any) => void,
   options?: { isFirst?: boolean },
 ) {
-  const logger = useLogger('useGridApiEventHandler');
+  const logger = useGridLogger(apiRef, 'useGridApiEventHandler');
 
   React.useEffect(() => {
     if (handler && eventName) {

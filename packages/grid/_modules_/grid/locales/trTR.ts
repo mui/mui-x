@@ -84,6 +84,9 @@ const trTRGrid: Partial<GridLocaleText> = {
   // Total visible rows footer text
   footerTotalVisibleRows: (visibleCount, totalCount) =>
     `${visibleCount.toLocaleString()} / ${totalCount.toLocaleString()}`,
+
+  // Actions cell more text
+  // actionsCellMore: 'more',
 };
 
 export const trTR: Localization = getGridLocalization(trTRGrid, trTRCore);

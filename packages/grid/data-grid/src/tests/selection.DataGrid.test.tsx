@@ -3,7 +3,7 @@ import * as React from 'react';
 import { fireEvent, screen, createClientRenderStrictMode } from 'test/utils';
 import { expect } from 'chai';
 import { DataGrid, DataGridProps, GridInputSelectionModel } from '@mui/x-data-grid';
-import { getCell, getRow, getSelectedRowIndexes } from 'test/utils/helperFn';
+import { getCell, getRow, getSelectedRowIndexes, getColumnHeaderCell } from 'test/utils/helperFn';
 import { getData } from 'storybook/src/data/data-service';
 import { spy } from 'sinon';
 
@@ -133,7 +133,7 @@ describe('<DataGrid /> - Selection', () => {
     });
 
     it('should not select unselectable rows given in selectionModel', () => {
-      render(
+      const { setProps } = render(
         <TestDataGridSelection
           selectionModel={[0, 1]}
           isRowSelectable={(params) => Number(params.id) % 2 === 0}
@@ -141,11 +141,31 @@ describe('<DataGrid /> - Selection', () => {
         />,
       );
 
-      // TODO: ID 1 should not be selected
-      // expect(getSelectedRowIndexes()).to.deep.equal([0]);
-      // TODO: ID 1 and 3 should not be selected
-      // setProps({ selectionModel: [0, 1, 2, 3] });
-      // expect(getSelectedRowIndexes()).to.deep.equal([0, 2])
+      expect(getSelectedRowIndexes()).to.deep.equal([0]);
+      setProps({ selectionModel: [0, 1, 2, 3] });
+      expect(getSelectedRowIndexes()).to.deep.equal([0, 2]);
+    });
+
+    it('should filter out unselectable rows when the selectionModel prop changes', () => {
+      const { setProps } = render(
+        <TestDataGridSelection
+          selectionModel={[1]}
+          isRowSelectable={(params) => params.id > 0}
+          checkboxSelection
+        />,
+      );
+      expect(getSelectedRowIndexes()).to.deep.equal([1]);
+      expect(getColumnHeaderCell(0).querySelector('input')).to.have.attr(
+        'data-indeterminate',
+        'true',
+      );
+
+      setProps({ selectionModel: [0] });
+      expect(getColumnHeaderCell(0).querySelector('input')).to.have.attr(
+        'data-indeterminate',
+        'false',
+      );
+      expect(getSelectedRowIndexes()).to.deep.equal([]);
     });
   });
 

@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import { visibleGridColumnsSelector } from '../../hooks/features/columns/gridColumnsSelector';
 import { GridState } from '../../hooks/features/core/gridState';
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
-import { renderStateSelector } from '../../hooks/features/virtualization/renderingStateSelector';
+import { gridRenderingSelector } from '../../hooks/features/virtualization/renderingStateSelector';
 import { useGridApiContext } from '../../hooks/root/useGridApiContext';
 import { GridEmptyCell } from '../cell/GridEmptyCell';
 import { GridScrollArea } from '../GridScrollArea';
@@ -11,9 +11,27 @@ import { GridColumnHeadersItemCollection } from './GridColumnHeadersItemCollecti
 import { gridDensityHeaderHeightSelector } from '../../hooks/features/density/densitySelector';
 import { gridColumnReorderDragColSelector } from '../../hooks/features/columnReorder/columnReorderSelector';
 import { gridContainerSizesSelector } from '../../hooks/root/gridContainerSizesSelector';
-import { gridClasses } from '../../gridClasses';
+import { getDataGridUtilityClass } from '../../gridClasses';
+import { composeClasses } from '../../utils/material-ui-utils';
+import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
+import { GridComponentProps } from '../../GridComponentProps';
 
 export const gridScrollbarStateSelector = (state: GridState) => state.scrollBar;
+
+type OwnerState = {
+  classes?: GridComponentProps['classes'];
+  dragCol: string;
+};
+
+const useUtilityClasses = (ownerState: OwnerState) => {
+  const { dragCol, classes } = ownerState;
+
+  const slots = {
+    wrapper: ['columnHeaderWrapper', dragCol && 'columnHeaderDropZone'],
+  };
+
+  return composeClasses(slots, getDataGridUtilityClass, classes);
+};
 
 export const GridColumnsHeader = React.forwardRef<HTMLDivElement, {}>(function GridColumnsHeader(
   props,
@@ -23,14 +41,13 @@ export const GridColumnsHeader = React.forwardRef<HTMLDivElement, {}>(function G
   const columns = useGridSelector(apiRef, visibleGridColumnsSelector);
   const containerSizes = useGridSelector(apiRef, gridContainerSizesSelector);
   const headerHeight = useGridSelector(apiRef, gridDensityHeaderHeightSelector);
-  const renderCtx = useGridSelector(apiRef, renderStateSelector).renderContext;
+  const renderCtx = useGridSelector(apiRef, gridRenderingSelector).renderContext;
   const { hasScrollX } = useGridSelector(apiRef, gridScrollbarStateSelector);
   const dragCol = useGridSelector(apiRef, gridColumnReorderDragColSelector);
+  const rootProps = useGridRootProps();
 
-  const wrapperCssClasses = clsx(gridClasses.columnHeaderWrapper, {
-    scroll: hasScrollX,
-    [gridClasses.columnHeaderDropZone]: dragCol,
-  });
+  const ownerState = { ...props, dragCol, classes: rootProps.classes };
+  const classes = useUtilityClasses(ownerState);
 
   const renderedCols = React.useMemo(() => {
     if (renderCtx == null) {
@@ -44,7 +61,7 @@ export const GridColumnsHeader = React.forwardRef<HTMLDivElement, {}>(function G
       <GridScrollArea scrollDirection="left" />
       <div
         ref={ref}
-        className={wrapperCssClasses}
+        className={clsx(classes.wrapper, hasScrollX && 'scroll')}
         aria-rowindex={1}
         role="row"
         style={{ minWidth: containerSizes?.totalSizes?.width }}

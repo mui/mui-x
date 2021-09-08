@@ -10,3 +10,4 @@ export * from './gridStringColDef';
 export * from './gridColTypeDef';
 export * from './gridDefaultColumnTypes';
 export * from './gridStringOperators';
+export * from './gridActionsColDef';

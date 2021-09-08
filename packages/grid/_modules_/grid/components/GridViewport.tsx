@@ -8,8 +8,8 @@ import {
   gridTabIndexCellSelector,
 } from '../hooks/features/focus/gridFocusStateSelector';
 import { gridEditRowsStateSelector } from '../hooks/features/rows/gridEditRowsSelector';
-import { selectedIdsLookupSelector } from '../hooks/features/selection/gridSelectionSelector';
-import { renderStateSelector } from '../hooks/features/virtualization/renderingStateSelector';
+import { gridSelectionStateSelector } from '../hooks/features/selection/gridSelectionSelector';
+import { gridRenderingSelector } from '../hooks/features/virtualization/renderingStateSelector';
 import { useGridApiContext } from '../hooks/root/useGridApiContext';
 import { GridDataContainer } from './containers/GridDataContainer';
 import { GridEmptyCell } from './cell/GridEmptyCell';
@@ -34,13 +34,30 @@ export const GridViewport: ViewportType = React.forwardRef<HTMLDivElement, {}>(
     const viewportSizes = useGridSelector(apiRef, gridViewportSizesSelector);
     const scrollBarState = useGridSelector(apiRef, gridScrollBarSizeSelector);
     const visibleColumns = useGridSelector(apiRef, visibleGridColumnsSelector);
-    const renderState = useGridSelector(apiRef, renderStateSelector);
+    const renderState = useGridSelector(apiRef, gridRenderingSelector);
     const cellFocus = useGridSelector(apiRef, gridFocusCellSelector);
     const cellTabIndex = useGridSelector(apiRef, gridTabIndexCellSelector);
-    const selectionLookup = useGridSelector(apiRef, selectedIdsLookupSelector);
+    const selection = useGridSelector(apiRef, gridSelectionStateSelector);
     const visibleSortedRowsAsArray = useGridSelector(apiRef, visibleSortedGridRowsAsArraySelector);
     const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
     const editRowsState = useGridSelector(apiRef, gridEditRowsStateSelector);
+
+    const filteredSelection = React.useMemo(
+      () =>
+        typeof rootProps.isRowSelectable === 'function'
+          ? selection.filter((id) => rootProps.isRowSelectable!(apiRef.current.getRowParams(id)))
+          : selection,
+      [apiRef, rootProps.isRowSelectable, selection],
+    );
+
+    const selectionLookup = React.useMemo(
+      () =>
+        filteredSelection.reduce((lookup, rowId) => {
+          lookup[rowId] = rowId;
+          return lookup;
+        }, {}),
+      [filteredSelection],
+    );
 
     const getRowsElements = () => {
       if (renderState.renderContext == null) {
@@ -56,7 +73,7 @@ export const GridViewport: ViewportType = React.forwardRef<HTMLDivElement, {}>(
         <GridRow
           key={id}
           id={id}
-          selected={!!selectionLookup.get(id)}
+          selected={selectionLookup[id] !== undefined}
           rowIndex={renderState.renderContext!.firstRowIdx! + idx}
         >
           <GridEmptyCell width={renderState.renderContext!.leftEmptyWidth} height={rowHeight} />
@@ -76,7 +93,6 @@ export const GridViewport: ViewportType = React.forwardRef<HTMLDivElement, {}>(
             cellTabIndex={cellTabIndex}
             isSelected={selectionLookup[id] !== undefined}
             editRowState={editRowsState[id]}
-            cellClassName={rootProps.classes.cell}
             getCellClassName={rootProps.getCellClassName}
           />
           <GridEmptyCell width={renderState.renderContext!.rightEmptyWidth} height={rowHeight} />

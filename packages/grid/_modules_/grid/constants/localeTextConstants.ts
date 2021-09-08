@@ -101,6 +101,9 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
   booleanCellTrueLabel: 'true',
   booleanCellFalseLabel: 'false',
 
+  // Actions cell more text
+  actionsCellMore: 'more',
+
   // Used core components translation keys
   MuiTablePagination: {},
 };

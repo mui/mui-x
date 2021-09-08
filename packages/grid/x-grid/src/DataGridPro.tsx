@@ -1,7 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { LicenseInfo } from '@mui/x-license-pro';
-import { ponyfillGlobal } from '@material-ui/utils';
+import { chainPropTypes, ponyfillGlobal } from '@material-ui/utils';
 import {
   GridBody,
   GridErrorHandler,
@@ -57,4 +57,12 @@ export const DataGridPro = React.memo(DataGridProRaw);
 DataGridProRaw.propTypes = {
   columns: PropTypes.array.isRequired,
   rows: PropTypes.array.isRequired,
+  checkboxSelectionVisibleOnly: chainPropTypes(PropTypes.bool, (props: any) => {
+    if (!props.pagination && props.checkboxSelectionVisibleOnly) {
+      return new Error(
+        'Material-UI: The `checkboxSelectionVisibleOnly` prop has no effect when the pagination is not enabled.',
+      );
+    }
+    return null;
+  }),
 } as any;
