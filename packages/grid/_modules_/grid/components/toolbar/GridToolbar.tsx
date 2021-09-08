@@ -27,7 +27,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 
 export const GridToolbar = React.forwardRef<HTMLDivElement, GridToolbarContainerProps>(
   function GridToolbar(props, ref) {
-    const { className } = props;
+    const { className, ...other } = props;
     const rootProps = useGridRootProps();
     const ownerState = { classes: rootProps.classes };
     const classes = useUtilityClasses(ownerState);
@@ -41,7 +41,7 @@ export const GridToolbar = React.forwardRef<HTMLDivElement, GridToolbarContainer
     }
 
     return (
-      <GridToolbarContainer ref={ref} {...props} className={clsx(className, classes.root)}>
+      <GridToolbarContainer ref={ref} className={clsx(className, classes.root)} {...other}>
         <GridToolbarColumnsButton />
         <GridToolbarFilterButton />
         <GridToolbarDensitySelector />
