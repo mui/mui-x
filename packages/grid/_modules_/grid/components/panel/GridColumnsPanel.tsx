@@ -33,7 +33,7 @@ const useStyles = makeStyles(
       justifyContent: 'flex-end',
     },
   },
-  { name: 'MuiDataGridColumnsPanel' },
+  { name: 'MuiDataGridColumnsPanel' }, // TODO rename to MuiGridColumnsPanel
 );
 
 export function GridColumnsPanel() {
