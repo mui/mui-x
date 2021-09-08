@@ -32,6 +32,20 @@ export interface GridCellProps {
   tabIndex: 0 | -1;
 }
 
+// Based on https://stackoverflow.com/a/59518678
+let cachedSupportsPreventScroll: boolean;
+function doesSupportPreventScroll(): boolean {
+  if (cachedSupportsPreventScroll === undefined) {
+    document.createElement('div').focus({
+      get preventScroll() {
+        cachedSupportsPreventScroll = true;
+        return false;
+      },
+    });
+  }
+  return cachedSupportsPreventScroll;
+}
+
 export const GridCell = React.memo(function GridCell(props: GridCellProps) {
   const {
     align,
@@ -146,10 +160,14 @@ export const GridCell = React.memo(function GridCell(props: GridCellProps) {
 
     if (cellRef.current && !cellRef.current.contains(doc.activeElement!)) {
       const focusableElement = cellRef.current!.querySelector('[tabindex="0"]') as HTMLElement;
-      if (focusableElement) {
-        focusableElement!.focus();
+      const elementToFocus = focusableElement || cellRef.current;
+
+      if (doesSupportPreventScroll()) {
+        elementToFocus.focus({ preventScroll: true });
       } else {
-        cellRef.current!.focus();
+        const scrollPosition = apiRef.current.getScrollPosition();
+        elementToFocus.focus();
+        apiRef.current.scroll(scrollPosition);
       }
     }
   });
