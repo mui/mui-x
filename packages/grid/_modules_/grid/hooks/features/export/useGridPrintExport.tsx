@@ -32,7 +32,7 @@ export const useGridPrintExport = (
   const previousHiddenColumns = React.useRef<string[]>([]);
 
   React.useEffect(() => {
-    doc.current = ownerDocument(apiRef!.current.rootElementRef!.current as HTMLElement);
+    doc.current = ownerDocument(apiRef.current.rootElementRef!.current!);
   }, [apiRef]);
 
   // Returns a promise because updateColumns triggers state update and
@@ -46,7 +46,7 @@ export const useGridPrintExport = (
         }
 
         // Show only wanted columns.
-        apiRef!.current.updateColumns(
+        apiRef.current.updateColumns(
           columns.map((column) => {
             if (column.hide) {
               previousHiddenColumns.current.push(column.field);
@@ -98,7 +98,7 @@ export const useGridPrintExport = (
         return;
       }
 
-      const gridRootElement = apiRef!.current.rootElementRef!.current;
+      const gridRootElement = apiRef.current.rootElementRef!.current;
       const gridClone = gridRootElement!.cloneNode(true) as HTMLElement;
 
       if (normalizeOptions.hideToolbar) {
@@ -130,8 +130,7 @@ export const useGridPrintExport = (
       if (normalizeOptions.copyStyles) {
         const headStyleElements = doc.current!.querySelectorAll("style, link[rel='stylesheet']");
 
-        // eslint-disable-next-line no-plusplus
-        for (let i = 0; i < headStyleElements.length; i++) {
+        for (let i = 0; i < headStyleElements.length; i += 1) {
           const node = headStyleElements[i];
           if (node.tagName === 'STYLE') {
             const newHeadStyleElements = printDoc.createElement(node.tagName);
@@ -140,8 +139,7 @@ export const useGridPrintExport = (
             if (sheet) {
               let styleCSS = '';
               // NOTE: for-of is not supported by IE
-              // eslint-disable-next-line no-plusplus
-              for (let j = 0; j < sheet.cssRules.length; j++) {
+              for (let j = 0; j < sheet.cssRules.length; j += 1) {
                 if (typeof sheet.cssRules[j].cssText === 'string') {
                   styleCSS += `${sheet.cssRules[j].cssText}\r\n`;
                 }
@@ -154,9 +152,7 @@ export const useGridPrintExport = (
 
             const newHeadStyleElements = printDoc.createElement(node.tagName);
 
-            // node.attributes is of type NamedNodeMap
-            // eslint-disable-next-line no-plusplus
-            for (let j = 0; j < node.attributes.length; j++) {
+            for (let j = 0; j < node.attributes.length; j += 1) {
               const attr = node.attributes[j];
               if (attr) {
                 newHeadStyleElements.setAttribute(attr.nodeName, attr.nodeValue || '');
@@ -187,7 +183,7 @@ export const useGridPrintExport = (
 
       // Revert columns to their original state
       if (previousHiddenColumns.current.length) {
-        apiRef!.current.updateColumns(
+        apiRef.current.updateColumns(
           columns.map((column) => {
             column.hide = previousHiddenColumns.current.includes(column.field);
             return column;
@@ -206,7 +202,7 @@ export const useGridPrintExport = (
     async (options?: GridPrintExportOptions) => {
       logger.debug(`Export data as Print`);
 
-      if (!apiRef!.current.rootElementRef!.current) {
+      if (!apiRef.current.rootElementRef!.current) {
         throw new Error('No Grid Root element available');
       }
 
