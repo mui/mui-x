@@ -13,9 +13,10 @@ import { GridColumnHeaderSeparator } from './GridColumnHeaderSeparator';
 import { ColumnHeaderMenuIcon } from './ColumnHeaderMenuIcon';
 import { ColumnHeaderFilterIcon } from './ColumnHeaderFilterIcon';
 import { GridColumnHeaderMenu } from '../menu/columnMenu/GridColumnHeaderMenu';
-import { isFunction } from '../../utils/utils';
-import { gridClasses } from '../../gridClasses';
+import { getDataGridUtilityClass } from '../../gridClasses';
+import { composeClasses } from '../../utils/material-ui-utils';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
+import { GridComponentProps } from '../../GridComponentProps';
 
 interface GridColumnHeaderItemProps {
   colIndex: number;
@@ -24,12 +25,47 @@ interface GridColumnHeaderItemProps {
   headerHeight: number;
   isDragging: boolean;
   isResizing: boolean;
+  isLastColumn: boolean;
+  extendRowFullWidth: boolean;
   sortDirection: GridSortDirection;
   sortIndex?: number;
   filterItemsCounter?: number;
   hasFocus?: boolean;
+  hasScrollX: boolean;
+  hasScrollY: boolean;
   tabIndex: 0 | -1;
 }
+
+type OwnerState = GridColumnHeaderItemProps & {
+  showRightBorder: boolean;
+  classes?: GridComponentProps['classes'];
+};
+
+const useUtilityClasses = (ownerState: OwnerState) => {
+  const { column, classes, isDragging, sortDirection, showRightBorder } = ownerState;
+
+  const isColumnSorted = sortDirection != null;
+  // todo refactor to a prop on col isNumeric or ?? ie: coltype===price wont work
+  const isColumnNumeric = column.type === GRID_NUMBER_COLUMN_TYPE;
+
+  const slots = {
+    root: [
+      'columnHeader',
+      column.headerAlign === 'left' && 'columnHeader--alignLeft',
+      column.headerAlign === 'center' && 'columnHeader--alignCenter',
+      column.headerAlign === 'right' && 'columnHeader--alignRight',
+      column.sortable && 'columnHeader--sortable',
+      isDragging && 'columnHeader--moving',
+      isColumnSorted && 'columnHeader--sorted',
+      isColumnNumeric && 'columnHeader--numeric',
+      showRightBorder && 'withBorder',
+    ],
+    draggableContainer: ['columnHeaderDraggableContainer'],
+    titleContainer: ['columnHeaderTitleContainer'],
+  };
+
+  return composeClasses(slots, getDataGridUtilityClass, classes);
+};
 
 function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
   const {
@@ -37,13 +73,16 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
     columnMenuOpen,
     colIndex,
     headerHeight,
-    isDragging,
     isResizing,
+    isLastColumn,
     sortDirection,
     sortIndex,
     filterItemsCounter,
     hasFocus,
     tabIndex,
+    hasScrollX,
+    hasScrollY,
+    extendRowFullWidth,
   } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
@@ -51,9 +90,6 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
   const columnMenuId: string = useId();
   const columnMenuButtonId: string = useId();
   const iconButtonRef = React.useRef<HTMLButtonElement>(null);
-  const isColumnSorted = sortDirection != null;
-  // todo refactor to a prop on col isNumeric or ?? ie: coltype===price wont work
-  const isColumnNumeric = column.type === GRID_NUMBER_COLUMN_TYPE;
 
   let headerComponent: React.ReactNode = null;
   if (column.renderHeader) {
@@ -102,28 +138,18 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
     [publish],
   );
 
-  const classNames = [rootProps.classes.columnHeader];
+  const removeLastBorderRight = isLastColumn && hasScrollX && !hasScrollY;
+  const showRightBorder = !isLastColumn
+    ? rootProps.showColumnRightBorder
+    : !removeLastBorderRight && !extendRowFullWidth;
 
-  if (column.headerClassName) {
-    const headerClassName = isFunction(column.headerClassName)
-      ? column.headerClassName({ field: column.field, colDef: column })
-      : column.headerClassName;
+  const ownerState = {
+    ...props,
+    classes: rootProps.classes,
+    showRightBorder,
+  };
 
-    classNames.push(headerClassName);
-  }
-
-  const cssClasses = clsx(
-    column.headerAlign === 'center' && gridClasses['columnHeader--alignCenter'],
-    column.headerAlign === 'right' && gridClasses['columnHeader--alignRight'],
-    {
-      [gridClasses['columnHeader--sortable']]: column.sortable,
-      [gridClasses['columnHeader--moving']]: isDragging,
-      [gridClasses['columnHeader--sorted']]: isColumnSorted,
-      [gridClasses['columnHeader--numeric']]: isColumnNumeric,
-      [gridClasses.withBorder]: rootProps.showColumnRightBorder,
-    },
-    ...classNames,
-  );
+  const classes = useUtilityClasses(ownerState);
 
   const width = column.computedWidth;
 
@@ -165,10 +191,15 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
     }
   });
 
+  const headerClassName =
+    typeof column.headerClassName === 'function'
+      ? column.headerClassName({ field: column.field, colDef: column })
+      : column.headerClassName;
+
   return (
     <div
       ref={headerCellRef}
-      className={cssClasses}
+      className={clsx(classes.root, headerClassName)}
       key={column.field}
       data-field={column.field}
       style={{
@@ -183,14 +214,14 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
       {...mouseEventsHandlers}
     >
       <div
-        className={gridClasses.columnHeaderDraggableContainer}
+        className={classes.draggableContainer}
         draggable={!rootProps.disableColumnReorder && !column.disableReorder}
         {...draggableEventHandlers}
       >
-        <div className={gridClasses.columnHeaderTitleContainer}>
+        <div className={classes.titleContainer}>
           {headerComponent || (
             <GridColumnHeaderTitle
-              label={column.headerName || column.field}
+              label={column.headerName ?? column.field}
               description={column.description}
               columnWidth={width}
             />
@@ -275,10 +306,14 @@ GridColumnHeaderItem.propTypes = {
     width: PropTypes.number,
   }).isRequired,
   columnMenuOpen: PropTypes.bool.isRequired,
+  extendRowFullWidth: PropTypes.bool.isRequired,
   filterItemsCounter: PropTypes.number,
   hasFocus: PropTypes.bool,
+  hasScrollX: PropTypes.bool.isRequired,
+  hasScrollY: PropTypes.bool.isRequired,
   headerHeight: PropTypes.number.isRequired,
   isDragging: PropTypes.bool.isRequired,
+  isLastColumn: PropTypes.bool.isRequired,
   isResizing: PropTypes.bool.isRequired,
   sortDirection: PropTypes.oneOf(['asc', 'desc']),
   sortIndex: PropTypes.number,

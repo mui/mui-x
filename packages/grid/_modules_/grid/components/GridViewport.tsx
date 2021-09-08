@@ -9,7 +9,7 @@ import {
 } from '../hooks/features/focus/gridFocusStateSelector';
 import { gridEditRowsStateSelector } from '../hooks/features/rows/gridEditRowsSelector';
 import { gridSelectionStateSelector } from '../hooks/features/selection/gridSelectionSelector';
-import { renderStateSelector } from '../hooks/features/virtualization/renderingStateSelector';
+import { gridRenderingSelector } from '../hooks/features/virtualization/renderingStateSelector';
 import { useGridApiContext } from '../hooks/root/useGridApiContext';
 import { GridDataContainer } from './containers/GridDataContainer';
 import { GridEmptyCell } from './cell/GridEmptyCell';
@@ -34,7 +34,7 @@ export const GridViewport: ViewportType = React.forwardRef<HTMLDivElement, {}>(
     const viewportSizes = useGridSelector(apiRef, gridViewportSizesSelector);
     const scrollBarState = useGridSelector(apiRef, gridScrollBarSizeSelector);
     const visibleColumns = useGridSelector(apiRef, visibleGridColumnsSelector);
-    const renderState = useGridSelector(apiRef, renderStateSelector);
+    const renderState = useGridSelector(apiRef, gridRenderingSelector);
     const cellFocus = useGridSelector(apiRef, gridFocusCellSelector);
     const cellTabIndex = useGridSelector(apiRef, gridTabIndexCellSelector);
     const selection = useGridSelector(apiRef, gridSelectionStateSelector);
@@ -93,7 +93,6 @@ export const GridViewport: ViewportType = React.forwardRef<HTMLDivElement, {}>(
             cellTabIndex={cellTabIndex}
             isSelected={selectionLookup[id] !== undefined}
             editRowState={editRowsState[id]}
-            cellClassName={rootProps.classes.cell}
             getCellClassName={rootProps.getCellClassName}
           />
           <GridEmptyCell width={renderState.renderContext!.rightEmptyWidth} height={rowHeight} />

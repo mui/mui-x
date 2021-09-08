@@ -101,6 +101,9 @@ const arSDGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: 'صحيح',
   booleanCellFalseLabel: 'خاطئة',
+
+  // Actions cell more text
+  // actionsCellMore: 'more',
 };
 
 export const arSD: Localization = getGridLocalization(arSDGrid, enUSCore);

@@ -10,12 +10,14 @@ import {
   gridTabIndexColumnHeaderSelector,
 } from '../../hooks/features/focus/gridFocusStateSelector';
 import { gridSortColumnLookupSelector } from '../../hooks/features/sorting/gridSortingSelector';
-import { renderStateSelector } from '../../hooks/features/virtualization/renderingStateSelector';
+import { gridRenderingSelector } from '../../hooks/features/virtualization/renderingStateSelector';
 import { gridDensityHeaderHeightSelector } from '../../hooks/features/density/densitySelector';
-import { gridColumnMenuStateSelector } from '../../hooks/features/columnMenu/columnMenuSelector';
+import { gridColumnMenuSelector } from '../../hooks/features/columnMenu/columnMenuSelector';
 import { GridStateColDef } from '../../models/colDef/gridColDef';
 import { useGridApiContext } from '../../hooks/root/useGridApiContext';
 import { GridColumnHeaderItem } from './GridColumnHeaderItem';
+import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
+import { gridScrollBarSizeSelector } from '../../hooks/root/gridContainerSizesSelector';
 
 export interface GridColumnHeadersItemCollectionProps {
   columns: GridStateColDef[];
@@ -29,11 +31,13 @@ function GridColumnHeadersItemCollection(props: GridColumnHeadersItemCollectionP
   const dragCol = useGridSelector(apiRef, gridColumnReorderDragColSelector);
   const resizingColumnField = useGridSelector(apiRef, gridResizingColumnFieldSelector);
   const columnHeaderFocus = useGridSelector(apiRef, gridFocusColumnHeaderSelector);
-  const renderCtx = useGridSelector(apiRef, renderStateSelector).renderContext;
+  const renderCtx = useGridSelector(apiRef, gridRenderingSelector).renderContext;
   const tabIndexState = useGridSelector(apiRef, gridTabIndexColumnHeaderSelector);
   const cellTabIndexState = useGridSelector(apiRef, gridTabIndexCellSelector);
   const headerHeight = useGridSelector(apiRef, gridDensityHeaderHeightSelector);
-  const columnMenuState = useGridSelector(apiRef, gridColumnMenuStateSelector);
+  const columnMenuState = useGridSelector(apiRef, gridColumnMenuSelector);
+  const scrollBarState = useGridSelector(apiRef, gridScrollBarSizeSelector);
+  const rootProps = useGridRootProps();
 
   const getColIndex = (index) => {
     if (renderCtx == null) {
@@ -66,6 +70,10 @@ function GridColumnHeadersItemCollection(props: GridColumnHeadersItemCollectionP
         column={col}
         colIndex={colIndex}
         isResizing={resizingColumnField === col.field}
+        isLastColumn={colIndex === columns.length - 1}
+        extendRowFullWidth={!rootProps.disableExtendRowFullWidth}
+        hasScrollX={scrollBarState.hasScrollX}
+        hasScrollY={scrollBarState.hasScrollY}
         hasFocus={hasFocus}
         tabIndex={tabIndex}
       />

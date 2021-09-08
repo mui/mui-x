@@ -3,8 +3,6 @@ import MUICheckbox from '@material-ui/core/Checkbox';
 import { GRID_DEFAULT_LOCALE_TEXT } from '../../constants/localeTextConstants';
 import { GridComponentProps, GridInputComponentProps } from '../../GridComponentProps';
 import { GRID_DEFAULT_SIMPLE_OPTIONS } from '../../models/gridOptions';
-import { composeClasses } from '../../utils/material-ui-utils';
-import { getDataGridUtilityClass } from '../../utils/utils';
 import { GridIconSlotsComponent, GridSlotsComponent } from '../../models';
 import {
   GridArrowDownwardIcon,
@@ -71,21 +69,6 @@ export const DEFAULT_GRID_SLOTS_COMPONENTS: GridSlotsComponent = {
 };
 
 export const useProcessedProps = (inProps: GridInputComponentProps) => {
-  const classes = React.useMemo(
-    () =>
-      composeClasses(
-        {
-          root: ['root'],
-          columnHeader: ['columnHeader'],
-          row: ['row'],
-          cell: ['cell'],
-        },
-        getDataGridUtilityClass,
-        inProps.classes,
-      ),
-    [inProps.classes],
-  );
-
   const localeText = React.useMemo(
     () => ({ ...GRID_DEFAULT_LOCALE_TEXT, ...inProps.localeText }),
     [inProps.localeText],
@@ -112,10 +95,9 @@ export const useProcessedProps = (inProps: GridInputComponentProps) => {
     () => ({
       ...GRID_DEFAULT_SIMPLE_OPTIONS,
       ...inProps,
-      classes,
       localeText,
       components,
     }),
-    [inProps, classes, localeText, components],
+    [inProps, localeText, components],
   );
 };

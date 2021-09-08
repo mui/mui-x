@@ -13,9 +13,9 @@ import { GridCell, GridCellProps } from './GridCell';
 import { useGridApiContext } from '../../hooks/root/useGridApiContext';
 import { isFunction } from '../../utils/utils';
 import { gridClasses } from '../../gridClasses';
+import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
 interface RowCellsProps {
-  cellClassName?: string;
   columns: GridStateColDef[];
   extendRowFullWidth: boolean;
   firstColIdx: number;
@@ -50,10 +50,10 @@ function GridRowCellsRaw(props: RowCellsProps) {
     showCellRightBorder,
     isSelected,
     editRowState,
-    cellClassName,
     ...other
   } = props;
   const apiRef = useGridApiContext();
+  const rootProps = useGridRootProps();
 
   const cellsProps = columns.slice(firstColIdx, lastColIdx + 1).map((column, colIdx) => {
     const colIndex = firstColIdx + colIdx;
@@ -65,7 +65,7 @@ function GridRowCellsRaw(props: RowCellsProps) {
 
     const cellParams: GridCellParams = apiRef.current.getCellParams(id, column.field);
 
-    const classNames = [cellClassName];
+    const classNames: string[] = [];
 
     if (column.cellClassName) {
       classNames.push(
@@ -82,16 +82,21 @@ function GridRowCellsRaw(props: RowCellsProps) {
 
     if (editCellState == null && column.renderCell) {
       cellComponent = column.renderCell({ ...cellParams, api: apiRef.current });
-      classNames.push(gridClasses['cell--withRenderer']);
+      // TODO move to GridCell
+      classNames.push(
+        clsx(gridClasses['cell--withRenderer'], rootProps.classes?.['cell--withRenderer']),
+      );
     }
 
     if (editCellState != null && column.renderEditCell) {
       const params = { ...cellParams, ...editCellState, api: apiRef.current };
       cellComponent = column.renderEditCell(params);
-      classNames.push(gridClasses['cell--editing']);
+      // TODO move to GridCell
+      classNames.push(clsx(gridClasses['cell--editing'], rootProps.classes?.['cell--editing']));
     }
 
     if (getCellClassName) {
+      // TODO move to GridCell
       classNames.push(getCellClassName(cellParams));
     }
 
@@ -141,7 +146,6 @@ GridRowCellsRaw.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
-  cellClassName: PropTypes.string,
   cellFocus: PropTypes.shape({
     field: PropTypes.string.isRequired,
     id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,

@@ -1,9 +1,10 @@
 import { GridState } from '../hooks/features/core/gridState';
+import { GridCallbackDetails } from './api/gridCallbackDetails';
 
 export interface GridControlStateItem<TModel> {
   stateId: string;
-  propModel?: any;
+  propModel?: TModel;
   stateSelector: (state: GridState) => TModel;
-  propOnChange?: (model: TModel, details: any) => void;
+  propOnChange?: (model: TModel, details: GridCallbackDetails) => void;
   changeEvent: string;
 }

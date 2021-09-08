@@ -66,45 +66,45 @@ The name <code>MuiDataGridPro</code> can be used when providing [default props](
 | <span class="prop-name">logger</span> | <span class="prop-type">Logger</span> | null | Pass a custom logger in the components that implements the 'Logger' interface. |
 | <span class="prop-name">logLevel</span> | <span class="prop-type">string \| false</span> | false | Allows to pass the logging level or false to turn off logging. |
 | <span class="prop-name">nonce</span> | <span class="prop-type">string</span> |   | Nonce of the inline styles for [Content Security Policy](https://www.w3.org/TR/2016/REC-CSP2-20161215/#script-src-the-nonce-attribute). |
-| <span class="prop-name">onCellBlur</span> | <span class="prop-type">(params: GridCellParams, event: MuiEvent<React.FocusEvent>, details?: any) => void</span> |   | Callback fired when the active element leaves a cell. |
-| <span class="prop-name">onCellClick</span> | <span class="prop-type">(params: GridCellParams, event: MuiEvent<React.MouseEvent>, details?: any) => void</span> |   | Callback fired when a click event comes from a cell element. |
-| <span class="prop-name">onCellDoubleClick</span> | <span class="prop-type">(params: GridCellParams, event: MuiEvent<React.MouseEvent>, details?: any) => void</span> |   | Callback fired when a double click event comes from a cell element. |
+| <span class="prop-name">onCellBlur</span> | <span class="prop-type">(params: GridCellParams, event: MuiEvent<React.FocusEvent>, details: GridCallbackDetails) => void</span> |   | Callback fired when the active element leaves a cell. |
+| <span class="prop-name">onCellClick</span> | <span class="prop-type">(params: GridCellParams, event: MuiEvent<React.MouseEvent>, details: GridCallbackDetails) => void</span> |   | Callback fired when a click event comes from a cell element. |
+| <span class="prop-name">onCellDoubleClick</span> | <span class="prop-type">(params: GridCellParams, event: MuiEvent<React.MouseEvent>, details: GridCallbackDetails) => void</span> |   | Callback fired when a double click event comes from a cell element. |
 | <span class="prop-name">onCellFocusOut</span> | <span class="prop-type">(params: GridCellParams, event?: MuiEvent<MouseEvent>) => void</span> |   | Callback fired when a cell loses focus. |
-| <span class="prop-name">onCellKeyDown</span> | <span class="prop-type">(params: GridCellParams, event: MuiEvent<React.KeyboardEvent>, details?: any) => void</span> |   |  Callback fired when a keydown event comes from a cell element. |
-| <span class="prop-name">onCellOver</span> | <span class="prop-type">(params: GridCellParams, event: MuiEvent<React.MouseEvent>, details?: any) => void</span> |   | Callback fired when a mouse over event comes from a cell element. |
-| <span class="prop-name">onCellOut</span> | <span class="prop-type">(params: GridCellParams, event: MuiEvent<React.MouseEvent>, details?: any) => void</span> |   | Callback fired when a mouse out comes from a cell element. |
-| <span class="prop-name">onCellEnter</span> | <span class="prop-type">(params: GridCellParams, event: MuiEvent<React.MouseEvent>, details?: any) => void</span> |   | Callback fired when a mouse enter event comes from a cell element. |
-| <span class="prop-name">onCellLeave</span> | <span class="prop-type">(params: GridCellParams, event: MuiEvent<React.MouseEvent>, details?: any) => void</span> |   | Callback fired when a mouse leave event comes from a cell element. |
-| <span class="prop-name">onColumnHeaderClick</span> | <span class="prop-type">(params: GridColumnHeaderParams, event: MuiEvent<React.MouseEvent>, details?: any) => void</span> |   | Callback fired when a click event comes from a column header element. |
-| <span class="prop-name">onColumnHeaderDoubleClick</span> | <span class="prop-type">(params: GridColumnHeaderParams, event: MuiEvent<React.MouseEvent>, details?: any) => void</span> |   | Callback fired when a double click event comes from a column header element. |
-| <span class="prop-name">onColumnHeaderOver</span> | <span class="prop-type">(params: GridColumnHeaderParams, event: MuiEvent<React.MouseEvent>, details?: any) => void</span> |   | Callback fired when a mouseover event comes from a column header element. |
-| <span class="prop-name">onColumnHeaderOut</span> | <span class="prop-type">(params: GridColumnHeaderParams, event: MuiEvent<React.MouseEvent>, details?: any) => void</span> |   | Callback fired when a mouseout event comes from a column header element. |
-| <span class="prop-name">onColumnHeaderEnter</span> | <span class="prop-type">(params: GridColumnHeaderParams, event: MuiEvent<React.MouseEvent>, details?: any) => void</span> |   | Callback fired when a mouse enter event comes from a column header element. |
-| <span class="prop-name">onColumnHeaderLeave</span> | <span class="prop-type">(params: GridColumnHeaderParams, event: MuiEvent<React.MouseEvent>, details?: any) => void</span> |   | Callback fired when a mouse leave event comes from a column header element. |
-| <span class="prop-name">onColumnOrderChange</span> | <span class="prop-type">(params: GridColumnOrderChangeParams, event: MuiEvent<React.MouseEvent>, details?: any) => void</span> |   | Callback fired when a column is reordered. |
-| <span class="prop-name">onColumnResize</span> | <span class="prop-type">(params: GridColumnResizeParams, event: MuiEvent<{}>, details?: any) => void</span> |   | Callback fired while a column is being resized. |
-| <span class="prop-name">onColumnWidthChange</span> | <span class="prop-type">(params: GridColumnResizeParams, event: MuiEvent<{}>, details?: any) => void</span> |   | Callback fired when the width of a column is changed. |
-| <span class="prop-name">onColumnVisibilityChange</span> | <span class="prop-type">(params: GridColumnVisibilityChangeParams, event: MuiEvent<{}>, details?: any) => void</span> |   | Callback fired when a column visibility changes. |
+| <span class="prop-name">onCellKeyDown</span> | <span class="prop-type">(params: GridCellParams, event: MuiEvent<React.KeyboardEvent>, details: GridCallbackDetails) => void</span> |   |  Callback fired when a keydown event comes from a cell element. |
+| <span class="prop-name">onCellOver</span> | <span class="prop-type">(params: GridCellParams, event: MuiEvent<React.MouseEvent>, details: GridCallbackDetails) => void</span> |   | Callback fired when a mouse over event comes from a cell element. |
+| <span class="prop-name">onCellOut</span> | <span class="prop-type">(params: GridCellParams, event: MuiEvent<React.MouseEvent>, details: GridCallbackDetails) => void</span> |   | Callback fired when a mouse out comes from a cell element. |
+| <span class="prop-name">onCellEnter</span> | <span class="prop-type">(params: GridCellParams, event: MuiEvent<React.MouseEvent>, details: GridCallbackDetails) => void</span> |   | Callback fired when a mouse enter event comes from a cell element. |
+| <span class="prop-name">onCellLeave</span> | <span class="prop-type">(params: GridCellParams, event: MuiEvent<React.MouseEvent>, details: GridCallbackDetails) => void</span> |   | Callback fired when a mouse leave event comes from a cell element. |
+| <span class="prop-name">onColumnHeaderClick</span> | <span class="prop-type">(params: GridColumnHeaderParams, event: MuiEvent<React.MouseEvent>, details: GridCallbackDetails) => void</span> |   | Callback fired when a click event comes from a column header element. |
+| <span class="prop-name">onColumnHeaderDoubleClick</span> | <span class="prop-type">(params: GridColumnHeaderParams, event: MuiEvent<React.MouseEvent>, details: GridCallbackDetails) => void</span> |   | Callback fired when a double click event comes from a column header element. |
+| <span class="prop-name">onColumnHeaderOver</span> | <span class="prop-type">(params: GridColumnHeaderParams, event: MuiEvent<React.MouseEvent>, details: GridCallbackDetails) => void</span> |   | Callback fired when a mouseover event comes from a column header element. |
+| <span class="prop-name">onColumnHeaderOut</span> | <span class="prop-type">(params: GridColumnHeaderParams, event: MuiEvent<React.MouseEvent>, details: GridCallbackDetails) => void</span> |   | Callback fired when a mouseout event comes from a column header element. |
+| <span class="prop-name">onColumnHeaderEnter</span> | <span class="prop-type">(params: GridColumnHeaderParams, event: MuiEvent<React.MouseEvent>, details: GridCallbackDetails) => void</span> |   | Callback fired when a mouse enter event comes from a column header element. |
+| <span class="prop-name">onColumnHeaderLeave</span> | <span class="prop-type">(params: GridColumnHeaderParams, event: MuiEvent<React.MouseEvent>, details: GridCallbackDetails) => void</span> |   | Callback fired when a mouse leave event comes from a column header element. |
+| <span class="prop-name">onColumnOrderChange</span> | <span class="prop-type">(params: GridColumnOrderChangeParams, event: MuiEvent<React.MouseEvent>, details: GridCallbackDetails) => void</span> |   | Callback fired when a column is reordered. |
+| <span class="prop-name">onColumnResize</span> | <span class="prop-type">(params: GridColumnResizeParams, event: MuiEvent<{}>, details: GridCallbackDetails) => void</span> |   | Callback fired while a column is being resized. |
+| <span class="prop-name">onColumnWidthChange</span> | <span class="prop-type">(params: GridColumnResizeParams, event: MuiEvent<{}>, details: GridCallbackDetails) => void</span> |   | Callback fired when the width of a column is changed. |
+| <span class="prop-name">onColumnVisibilityChange</span> | <span class="prop-type">(params: GridColumnVisibilityChangeParams, event: MuiEvent<{}>, details: GridCallbackDetails) => void</span> |   | Callback fired when a column visibility changes. |
 | <span class="prop-name">onError</span> | <span class="prop-type">(args: any) => void</span> |   | Callback fired when an exception is thrown in the grid, or when the `showError` API method is called. |
-| <span class="prop-name">onEditCellPropsChange</span> | <span class="prop-type">(params: GridEditCellPropsParams, event: MuiEvent<React.SyntheticEvent>, details?: any) => void</span> |   |  Callback fired when the edit cell value changes. |
-| <span class="prop-name">onCellEditCommit</span> | <span class="prop-type">(params: GridCellEditCommitParams, event: MuiEvent<React.SyntheticEvent>, details?: any) => void</span> |   | Callback fired when the cell changes are committed. |
-| <span class="prop-name">onCellEditStart</span> | <span class="prop-type">(params: GridCellParams, event: MuiEvent<React.SyntheticEvent>, details?: any) => void</span> |   | Callback fired when the cell turns to edit mode. |
-| <span class="prop-name">onCellEditStop</span> | <span class="prop-type">(params: GridCellParams, event: MuiEvent<React.SyntheticEvent>, details?: any) => void</span> |   | Callback fired when the cell turns to view mode. |
-| <span class="prop-name">onRowEditCommit</span> | <span class="prop-type">(id: GridRowId, event: MuiEvent<React.SyntheticEvent>, details?: any) => void</span> |   | Callback fired when the row changes are committed. |
-| <span class="prop-name">onRowEditStart</span> | <span class="prop-type">(params: GridRowParams, event: MuiEvent<React.SyntheticEvent>, details?: any) => void</span> |   | Callback fired when the row turns to edit mode. |
-| <span class="prop-name">onRowEditStop</span> | <span class="prop-type">(params: GridRowParams, event: MuiEvent<React.SyntheticEvent>, details?: any) => void</span> |   | Callback fired when the row turns to view mode. |
-| <span class="prop-name">onEditRowsModelChange</span> | <span class="prop-type">(editRowsModel: GridEditRowsModel, details?: any) => void</span> |   |  Callback fired when the `editRowsModel` changes. |
+| <span class="prop-name">onEditCellPropsChange</span> | <span class="prop-type">(params: GridEditCellPropsParams, event: MuiEvent<React.SyntheticEvent>, details: GridCallbackDetails) => void</span> |   |  Callback fired when the edit cell value changes. |
+| <span class="prop-name">onCellEditCommit</span> | <span class="prop-type">(params: GridCellEditCommitParams, event: MuiEvent<React.SyntheticEvent>, details: GridCallbackDetails) => void</span> |   | Callback fired when the cell changes are committed. |
+| <span class="prop-name">onCellEditStart</span> | <span class="prop-type">(params: GridCellParams, event: MuiEvent<React.SyntheticEvent>, details: GridCallbackDetails) => void</span> |   | Callback fired when the cell turns to edit mode. |
+| <span class="prop-name">onCellEditStop</span> | <span class="prop-type">(params: GridCellParams, event: MuiEvent<React.SyntheticEvent>, details: GridCallbackDetails) => void</span> |   | Callback fired when the cell turns to view mode. |
+| <span class="prop-name">onRowEditCommit</span> | <span class="prop-type">(id: GridRowId, event: MuiEvent<React.SyntheticEvent>, details: GridCallbackDetails) => void</span> |   | Callback fired when the row changes are committed. |
+| <span class="prop-name">onRowEditStart</span> | <span class="prop-type">(params: GridRowParams, event: MuiEvent<React.SyntheticEvent>, details: GridCallbackDetails) => void</span> |   | Callback fired when the row turns to edit mode. |
+| <span class="prop-name">onRowEditStop</span> | <span class="prop-type">(params: GridRowParams, event: MuiEvent<React.SyntheticEvent>, details: GridCallbackDetails) => void</span> |   | Callback fired when the row turns to view mode. |
+| <span class="prop-name">onEditRowsModelChange</span> | <span class="prop-type">(editRowsModel: GridEditRowsModel, details: GridCallbackDetails) => void</span> |   |  Callback fired when the `editRowsModel` changes. |
 | <span class="prop-name">onFilterModelChange</span> | <span class="prop-type">(model: GridFilterModel) => void</span> |   | Callback fired when the Filter model changes before the filters are applied. |
 | <span class="prop-name">onPageChange</span> | <span class="prop-type">(page: number) => void</span> |   | Callback fired when the current page has changed. |
 | <span class="prop-name">onPageSizeChange</span> | <span class="prop-type">(pageSize: number) => void</span> |   | Callback fired when the page size has changed. |
-| <span class="prop-name">onResize</span> | <span class="prop-type">(containerSize: ElementSize, event: MuiEvent<{}>, details?: any) => void</span> |   | Callback fired when the grid is being resized. |
-| <span class="prop-name">onRowClick</span> | <span class="prop-type">(params: GridRowParams, event: MuiEvent<React.MouseEvent>, details?: any) => void</span> |   | Callback fired when a click event comes from a row container element. |
-| <span class="prop-name">onRowDoubleClick</span> | <span class="prop-type">(params: GridRowParams, event: MuiEvent<React.MouseEvent>, details?: any) => void</span> |   | Callback fired when a double click event comes from a row container element. |
-| <span class="prop-name">onRowOver</span> | <span class="prop-type">(params: GridRowParams, event: MuiEvent<React.MouseEvent>, details?: any) => void</span> |   | Callback fired when a mouse over comes from a row container element. |
-| <span class="prop-name">onRowOut</span> | <span class="prop-type">(params: GridRowParams, event: MuiEvent<React.MouseEvent>, details?: any) => void</span> |   | Callback fired when a mouse out comes from a row container element. |
-| <span class="prop-name">onRowEnter</span> | <span class="prop-type">(params: GridRowParams, event: MuiEvent<React.MouseEvent>, details?: any) => void</span> |   | Callback fired when a mouse enter comes from a row container element. |
-| <span class="prop-name">onRowLeave</span> | <span class="prop-type">(params: GridRowParams, event: MuiEvent<React.MouseEvent>, details?: any) => void</span> |   | Callback fired when a mouse leave event comes from a row container element. |
-| <span class="prop-name">onRowsScrollEnd</span> | <span class="prop-type">(params: GridRowScrollEndParams, event: MuiEvent<{}>, details?: any) => void</span> |   | Callback fired when scrolling to the bottom of the grid viewport. |
+| <span class="prop-name">onResize</span> | <span class="prop-type">(containerSize: ElementSize, event: MuiEvent<{}>, details: GridCallbackDetails) => void</span> |   | Callback fired when the grid is being resized. |
+| <span class="prop-name">onRowClick</span> | <span class="prop-type">(params: GridRowParams, event: MuiEvent<React.MouseEvent>, details: GridCallbackDetails) => void</span> |   | Callback fired when a click event comes from a row container element. |
+| <span class="prop-name">onRowDoubleClick</span> | <span class="prop-type">(params: GridRowParams, event: MuiEvent<React.MouseEvent>, details: GridCallbackDetails) => void</span> |   | Callback fired when a double click event comes from a row container element. |
+| <span class="prop-name">onRowOver</span> | <span class="prop-type">(params: GridRowParams, event: MuiEvent<React.MouseEvent>, details: GridCallbackDetails) => void</span> |   | Callback fired when a mouse over comes from a row container element. |
+| <span class="prop-name">onRowOut</span> | <span class="prop-type">(params: GridRowParams, event: MuiEvent<React.MouseEvent>, details: GridCallbackDetails) => void</span> |   | Callback fired when a mouse out comes from a row container element. |
+| <span class="prop-name">onRowEnter</span> | <span class="prop-type">(params: GridRowParams, event: MuiEvent<React.MouseEvent>, details: GridCallbackDetails) => void</span> |   | Callback fired when a mouse enter comes from a row container element. |
+| <span class="prop-name">onRowLeave</span> | <span class="prop-type">(params: GridRowParams, event: MuiEvent<React.MouseEvent>, details: GridCallbackDetails) => void</span> |   | Callback fired when a mouse leave event comes from a row container element. |
+| <span class="prop-name">onRowsScrollEnd</span> | <span class="prop-type">(params: GridRowScrollEndParams, event: MuiEvent<{}>, details: GridCallbackDetails) => void</span> |   | Callback fired when scrolling to the bottom of the grid viewport. |
 | <span class="prop-name">onSelectionModelChange</span> | <span class="prop-type">(model: GridSelectionModel) => void</span> |   | Callback fired when the selection state of one or multiple rows changes. |
 | <span class="prop-name">onSortModelChange</span> | <span class="prop-type">(model: GridSortModel) => void</span> |   | Callback fired when the sort model changes before a column is sorted. |
 | <span class="prop-name">onViewportRowsChange</span> | <span class="prop-type">(params: GridViewportRowsChangeParams) => void</span> |   | Callback fired when the rows in the viewport change. |
@@ -162,33 +162,64 @@ You can use the [slots API](/components/data-grid/components/#overriding-compone
 
 | Rule name | Global class | Description |
 |:-----|:-------------|:------------|
+| <span class="prop-name">autoHeight</span> | <span class="prop-name">.MuiDataGrid-autoHeight</span> | Styles applied to the root element if `autoHeight={true}`. |
+| <span class="prop-name">booleanCell</span> | <span class="prop-name">.MuiDataGrid-booleanCell</span> | Styles applied to the icon of the boolean cell. |
+| <span class="prop-name">cell--editable</span> | <span class="prop-name">.MuiDataGrid-cell--editable</span> | Styles applied to the cell element if the cell is editable. |
+| <span class="prop-name">cell--editing</span> | <span class="prop-name">.MuiDataGrid-cell--editing</span> | Styles applied to the cell element if the cell is in edit mode. |
+| <span class="prop-name">cell--textCenter</span> | <span class="prop-name">.MuiDataGrid-cell--textCenter</span> | Styles applied to the cell element if `align="center"`. |
+| <span class="prop-name">cell--textLeft</span> | <span class="prop-name">.MuiDataGrid-cell--textLeft</span> | Styles applied to the cell element if `align="left"`. |
+| <span class="prop-name">cell--textRight</span> | <span class="prop-name">.MuiDataGrid-cell--textRight</span> | Styles applied to the cell element if `align="right"`. |
+| <span class="prop-name">cell--withRenderer</span> | <span class="prop-name">.MuiDataGrid-cell--withRenderer</span> | Styles applied to the cell element if the cell has a custom renderer. |
+| <span class="prop-name">cell</span> | <span class="prop-name">.MuiDataGrid-cell</span> | Styles applied to the cell element. |
+| <span class="prop-name">cellCheckbox</span> | <span class="prop-name">.MuiDataGrid-cellCheckbox</span> | Styles applied to the cell checkbox element. |
+| <span class="prop-name">checkboxInput</span> | <span class="prop-name">.MuiDataGrid-checkboxInput</span> | Styles applied to the selection checkbox element. |
+| <span class="prop-name">columnHeader--alignCenter</span> | <span class="prop-name">.MuiDataGrid-columnHeader--alignCenter</span> | Styles applied to the column header if `headerAlign="center"`. |
+| <span class="prop-name">columnHeader--alignLeft</span> | <span class="prop-name">.MuiDataGrid-columnHeader--alignLeft</span> | Styles applied to the column header if `headerAlign="left"`. |
+| <span class="prop-name">columnHeader--alignRight</span> | <span class="prop-name">.MuiDataGrid-columnHeader--alignRight</span> | Styles applied to the column header if `headerAlign="right"`. |
+| <span class="prop-name">columnHeader--dragging</span> | <span class="prop-name">.MuiDataGrid-columnHeader--dragging</span> | Styles applied to the floating column header element when it is dragged. |
+| <span class="prop-name">columnHeader--moving</span> | <span class="prop-name">.MuiDataGrid-columnHeader--moving</span> | Styles applied to the column header if it is being dragged. |
+| <span class="prop-name">columnHeader--numeric</span> | <span class="prop-name">.MuiDataGrid-columnHeader--numeric</span> | Styles applied to the column header if the type of the column is `number`. |
+| <span class="prop-name">columnHeader--sortable</span> | <span class="prop-name">.MuiDataGrid-columnHeader--sortable</span> | Styles applied to the column header if the column is sortable. |
+| <span class="prop-name">columnHeader--sorted</span> | <span class="prop-name">.MuiDataGrid-columnHeader--sorted</span> | Styles applied to the column header if the column is sorted. |
+| <span class="prop-name">columnHeader</span> | <span class="prop-name">.MuiDataGrid-columnHeader</span> | Styles applied to the column header element. |
+| <span class="prop-name">columnHeaderCheckbox</span> | <span class="prop-name">.MuiDataGrid-columnHeaderCheckbox</span> | Styles applied to the header checkbox cell element. |
+| <span class="prop-name">columnHeaderDraggableContainer</span> | <span class="prop-name">.MuiDataGrid-columnHeaderDraggableContainer</span> | Styles applied to the column header's draggable container element. |
+| <span class="prop-name">columnHeaderDropZone</span> | <span class="prop-name">.MuiDataGrid-columnHeaderDropZone</span> | Styles applied to the column headers wrapper if a column is being dragged. |
+| <span class="prop-name">columnHeaderTitle</span> | <span class="prop-name">.MuiDataGrid-columnHeaderTitle</span> | Styles applied to the column header's title element; |
+| <span class="prop-name">columnHeaderTitleContainer</span> | <span class="prop-name">.MuiDataGrid-columnHeaderTitleContainer</span> | Styles applied to the column header's title container element. |
+| <span class="prop-name">columnHeaderWrapper</span> | <span class="prop-name">.MuiDataGrid-columnHeaderWrapper</span> | Styles applied to the column header's wrapper element. |
+| <span class="prop-name">columnsContainer</span> | <span class="prop-name">.MuiDataGrid-columnsContainer</span> | Styles applied to the outer columns container element. |
+| <span class="prop-name">columnSeparator--resizable</span> | <span class="prop-name">.MuiDataGrid-columnSeparator--resizable</span> | Styles applied to the column header separator if the column is resizable. |
+| <span class="prop-name">columnSeparator--resizing</span> | <span class="prop-name">.MuiDataGrid-columnSeparator--resizing</span> | Styles applied to the column header separator if the column is being resized. |
+| <span class="prop-name">columnSeparator</span> | <span class="prop-name">.MuiDataGrid-columnSeparator</span> | Styles applied to the column header separator element. |
+| <span class="prop-name">dataContainer</span> | <span class="prop-name">.MuiDataGrid-dataContainer</span> | Styles applied to the data container element. |
+| <span class="prop-name">editBooleanCell</span> | <span class="prop-name">.MuiDataGrid-editBooleanCell</span> | Styles applied to root of the boolean edit component. |
+| <span class="prop-name">editInputCell</span> | <span class="prop-name">.MuiDataGrid-editInputCell</span> | Styles applied to the root of the input component. |
+| <span class="prop-name">filterIcon</span> | <span class="prop-name">.MuiDataGrid-filterIcon</span> | Styles applied to the filter icon element. |
+| <span class="prop-name">footerContainer</span> | <span class="prop-name">.MuiDataGrid-footerContainer</span> | Styles applied to the footer container element. |
+| <span class="prop-name">iconButtonContainer</span> | <span class="prop-name">.MuiDataGrid-iconButtonContainer</span> | Styles applied to the column header icon's container. |
+| <span class="prop-name">iconSeparator</span> | <span class="prop-name">.MuiDataGrid-iconSeparator</span> | Styles applied to the column header separator icon element. |
+| <span class="prop-name">main</span> | <span class="prop-name">.MuiDataGrid-main</span> | Styles applied to the main container element. |
+| <span class="prop-name">menuIcon</span> | <span class="prop-name">.MuiDataGrid-menuIcon</span> | Styles applied to the menu icon element. |
+| <span class="prop-name">menuIconButton</span> | <span class="prop-name">.MuiDataGrid-menuIconButton</span> | Styles applied to the menu icon button element. |
+| <span class="prop-name">menuOpen</span> | <span class="prop-name">.MuiDataGrid-menuOpen</span> | Styles applied to the menu icon element if the menu is open. |
+| <span class="prop-name">overlay</span> | <span class="prop-name">.MuiDataGrid-overlay</span> | Styles applied to the overlay element. |
+| <span class="prop-name">renderingZone</span> | <span class="prop-name">.MuiDataGrid-renderingZone</span> | Styles applied to the rendering zone element. |
 | <span class="prop-name">root</span> | <span class="prop-name">.MuiDataGrid-root</span> | Styles applied to the root element. |
-|  | <span class="prop-name">.MuiDataGrid-mainGridContainer</span> | Styles applied to the main container element.|
-|  | <span class="prop-name">.MuiDataGrid-overlay</span> | Styles applied to the outer overlay element.|
-|  | <span class="prop-name">.MuiDataGrid-columnsContainer</span> | Styles applied to the outer columns container element.|
-|  | <span class="prop-name">.MuiDataGrid-columnHeaderWrapper</span> | Styles applied to the outer columns header cells container element.|
-| <span class="prop-name">columnHeader</span> | <span class="prop-name">.MuiDataGrid-columnHeader</span> | Styles applied to the header cell element.|
-| <span class="prop-name">cell</span> | <span class="prop-name">.MuiDataGrid-cell</span> | Styles applied to the cell element.|
-|  | <span class="prop-name">.MuiDataGrid-columnHeaderCheckbox</span> | Styles applied to the header checkbox cell element.|
-|  | <span class="prop-name">.MuiDataGrid-cellCheckbox</span> | Styles applied to the cell checkbox element.|
-|  | <span class="prop-name">.MuiDataGrid-columnHeader--sortable</span> | Styles applied to the sortable header cell element.|
-|  | <span class="prop-name">.MuiDataGrid-sortIcon</span> | Styles applied to the sort icon element.|
-|  | <span class="prop-name">.MuiDataGrid-columnHeader--alignCenter</span> | Styles applied to the centered header cell element.|
-|  | <span class="prop-name">.MuiDataGrid-columnHeader--alignRight</span> | Styles applied to the aligned right header cell element.|
-|  | <span class="prop-name">.MuiDataGrid-columnHeaderTitle</span> | Styles applied to the header cell title element.|
-|  | <span class="prop-name">.MuiDataGrid-columnSeparator</span> | Styles applied to the header cell separator element.|
-|  | <span class="prop-name">.MuiDataGrid-iconSeparator</span> | Styles applied to the header cell separator icon element.|
-|  | <span class="prop-name">.MuiDataGrid-dataContainer</span> | Styles applied to the data container element.|
-|  | <span class="prop-name">.MuiDataGrid-window</span> | Styles applied to the window element.|
-|  | <span class="prop-name">.MuiDataGrid-viewport</span> | Styles applied to the viewport element.|
-| <span class="prop-name">row</span> | <span class="prop-name">.MuiDataGrid-row</span> | Styles applied to the row element.|
-|  | <span class="prop-name">.MuiDataGrid-cell--withRenderer</span> | Styles applied to the customized cell element.|
-|  | <span class="prop-name">.MuiDataGrid-withBorder</span> | Styles applied to the cell element that has right border displayed.|
-|  | <span class="prop-name">.MuiDataGrid-cell--textLeft</span> | Styles applied to the aligned left cell element.|
-|  | <span class="prop-name">.MuiDataGrid-cell--textRight</span> | Styles applied to the aligned right cell element.|
-|  | <span class="prop-name">.MuiDataGrid-cell--textCenter</span> | Styles applied to the centered cell element.|
-|  | <span class="prop-name">.MuiDataGrid-rowCount</span> | Styles applied to the footer row count element.|
-|  | <span class="prop-name">.MuiDataGrid-selectedRowCount</span> | Styles applied to the footer selected row count element.|
+| <span class="prop-name">row--editable</span> | <span class="prop-name">.MuiDataGrid-row--editable</span> | Styles applied to the row element if the row is editable. |
+| <span class="prop-name">row--editing</span> | <span class="prop-name">.MuiDataGrid-row--editing</span> | Styles applied to the row element if the row is in edit mode. |
+| <span class="prop-name">row</span> | <span class="prop-name">.MuiDataGrid-row</span> | Styles applied to the row element. |
+| <span class="prop-name">rowCount</span> | <span class="prop-name">.MuiDataGrid-rowCount</span> | Styles applied to the footer row count element. |
+| <span class="prop-name">scrollArea</span> | <span class="prop-name">.MuiDataGrid-scrollArea</span> | Styles applied to both scroll area elements. |
+| <span class="prop-name">scrollAreaLeft</span> | <span class="prop-name">.MuiDataGrid-scrollAreaLeft</span> | Styles applied to the left scroll area element. |
+| <span class="prop-name">scrollAreaRight</span> | <span class="prop-name">.MuiDataGrid-scrollAreaRight</span> | Styles applied to the right scroll area element. |
+| <span class="prop-name">selectedRowCount</span> | <span class="prop-name">.MuiDataGrid-selectedRowCount</span> | Styles applied to the footer selected row count element. |
+| <span class="prop-name">sortIcon</span> | <span class="prop-name">.MuiDataGrid-sortIcon</span> | Styles applied to the sort icon element. |
+| <span class="prop-name">toolbarContainer</span> | <span class="prop-name">.MuiDataGrid-toolbarContainer</span> | Styles applied to the toolbar container element. |
+| <span class="prop-name">viewport</span> | <span class="prop-name">.MuiDataGrid-viewport</span> | Styles applied to the viewport element. |
+| <span class="prop-name">window</span> | <span class="prop-name">.MuiDataGrid-window</span> | Styles applied to the window element. |
+| <span class="prop-name">windowContainer</span> | <span class="prop-name">.MuiDataGrid-windowContainer</span> | Styles applied to the window container element. |
+| <span class="prop-name">withBorder</span> | <span class="prop-name">.MuiDataGrid-withBorder</span> | Styles applied to both the cell and the column header if `showColumnRightBorder={true}`. |
 
 You can override the style of the component thanks to one of these customization points:
 

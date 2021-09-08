@@ -8,12 +8,29 @@ import {
 } from '../../hooks/features/density/densitySelector';
 import { gridDataContainerHeightSelector } from '../../hooks/root/gridContainerSizesSelector';
 import { useGridApiContext } from '../../hooks/root/useGridApiContext';
-import { gridClasses } from '../../gridClasses';
+import { getDataGridUtilityClass } from '../../gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
+import { composeClasses } from '../../utils/material-ui-utils';
+import { GridComponentProps } from '../../GridComponentProps';
 
 export interface GridWindowProps extends React.HTMLAttributes<HTMLDivElement> {
   size: { width: number; height: number };
 }
+
+type OwnerState = GridWindowProps & {
+  classes?: GridComponentProps['classes'];
+};
+
+const useUtilityClasses = (ownerState: OwnerState) => {
+  const { classes } = ownerState;
+
+  const slots = {
+    root: ['windowContainer'],
+    window: ['window'],
+  };
+
+  return composeClasses(slots, getDataGridUtilityClass, classes);
+};
 
 const GridWindow = React.forwardRef<HTMLDivElement, GridWindowProps>(function GridWindow(
   props,
@@ -25,6 +42,8 @@ const GridWindow = React.forwardRef<HTMLDivElement, GridWindowProps>(function Gr
   const headerHeight = useGridSelector(apiRef, gridDensityHeaderHeightSelector);
   const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
   const dataContainerHeight = useGridSelector(apiRef, gridDataContainerHeightSelector);
+  const ownerProps = { ...props, classes: rootProps.classes };
+  const classes = useUtilityClasses(ownerProps);
 
   React.useEffect(() => {
     // refs are run before effect. Waiting for an effect guarentees that
@@ -44,7 +63,7 @@ const GridWindow = React.forwardRef<HTMLDivElement, GridWindowProps>(function Gr
 
   return (
     <div
-      className={gridClasses.windowContainer}
+      className={classes.root}
       style={{
         width: size.width,
         height: containerHeight,
@@ -52,7 +71,7 @@ const GridWindow = React.forwardRef<HTMLDivElement, GridWindowProps>(function Gr
     >
       <div
         ref={ref}
-        className={clsx(gridClasses.window, className)}
+        className={clsx(classes.window, className)}
         {...other}
         style={{ top: headerHeight, overflowY: rootProps.autoHeight ? 'hidden' : 'auto' }}
       />

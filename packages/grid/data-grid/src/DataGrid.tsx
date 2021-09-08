@@ -184,14 +184,12 @@ DataGridRaw.propTypes = {
   /**
    * Function that applies CSS classes dynamically on cells.
    * @param {GridCellParams} params With all properties from [[GridCellParams]].
-   * @param {any} details Additional details for this callback.
    * @returns {string} The CSS class to apply to the cell.
    */
   getCellClassName: PropTypes.func,
   /**
    * Function that applies CSS classes dynamically on rows.
    * @param {GridRowParams} params With all properties from [[GridRowParams]].
-   * @param {any} details Additional details for this callback.
    * @returns {string} The CSS class to apply to the row.
    */
   getRowClassName: PropTypes.func,
@@ -227,14 +225,12 @@ DataGridRaw.propTypes = {
   /**
    * Callback fired when a cell is rendered, returns true if the cell is editable.
    * @param {GridCellParams} params With all properties from [[GridCellParams]].
-   * @param {any} details Additional details for this callback.
    * @returns {boolean} A boolean indicating if the cell is editable.
    */
   isCellEditable: PropTypes.func,
   /**
    * Determines if a row can be selected.
    * @param {GridRowParams} params With all properties from [[GridRowParams]].
-   * @param {any} details Additional details for this callback.
    * @returns {boolean} A boolean indicating if the cell is selectable.
    */
   isRowSelectable: PropTypes.func,
@@ -270,28 +266,28 @@ DataGridRaw.propTypes = {
    * Callback fired when the active element leaves a cell.
    * @param {GridCallbackDetails} params With all properties from [[GridCellParams]].
    * @param {MuiEvent<React.SyntheticEvent>} event The event object.
-   * @param {any} details Additional details for this callback.
+   * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onCellBlur: PropTypes.func,
   /**
    * Callback fired when a click event comes from a cell element.
    * @param {GridCellParams} params With all properties from [[GridCellParams]].
    * @param {MuiEvent<React.MouseEvent>} event The event object.
-   * @param {any} details Additional details for this callback.
+   * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onCellClick: PropTypes.func,
   /**
    * Callback fired when a double click event comes from a cell element.
    * @param {GridCellParams} params With all properties from [[GridCellParams]].
    * @param {MuiEvent<React.MouseEvent>} event The event object.
-   * @param {any} details Additional details for this callback.
+   * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onCellDoubleClick: PropTypes.func,
   /**
    * Callback fired when the cell changes are committed.
    * @param {GridCellEditCommitParams} params With all properties from [[GridCellEditCommitParams]].
    * @param {MuiEvent<React.SyntheticEvent>} event The event that caused this prop to be called.
-   * @param {any} details Additional details for this callback.
+   * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onCellEditCommit: PropTypes.func,
   /**
@@ -310,177 +306,177 @@ DataGridRaw.propTypes = {
    * Callback fired when a mouse enter event comes from a cell element.
    * @param {GridCellParams} params With all properties from [[GridCellParams]].
    * @param {MuiEvent<React.MouseEvent>} event The event object.
-   * @param {any} details Additional details for this callback.
+   * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onCellEnter: PropTypes.func,
   /**
    * Callback fired when a cell loses focus.
    * @param {GridCellParams} params With all properties from [[GridCellParams]].
    * @param {MuiEvent<React.SyntheticEvent | DocumentEventMap['click']>} event The event object.
-   * @param {any} details Additional details for this callback.
+   * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onCellFocusOut: PropTypes.func,
   /**
    * Callback fired when a keydown event comes from a cell element.
    * @param {GridCellParams} params With all properties from [[GridCellParams]].
    * @param {MuiEvent<React.KeyboardEvent>} event The event object.
-   * @param {any} details Additional details for this callback.
+   * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onCellKeyDown: PropTypes.func,
   /**
    * Callback fired when a mouse leave event comes from a cell element.
    * @param {GridCellParams} params With all properties from [[GridCellParams]].
    * @param {MuiEvent<React.MouseEvent>} event The event object.
-   * @param {any} details Additional details for this callback.
+   * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onCellLeave: PropTypes.func,
   /**
    * Callback fired when a mouseout event comes from a cell element.
    * @param {GridCellParams} params With all properties from [[GridCellParams]].
    * @param {MuiEvent<React.MouseEvent>} event The event object.
-   * @param {any} details Additional details for this callback.
+   * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onCellOut: PropTypes.func,
   /**
    * Callback fired when a mouseover event comes from a cell element.
    * @param {GridCellParams} params With all properties from [[GridCellParams]].
    * @param {MuiEvent<React.MouseEvent>} event The event object.
-   * @param {any} details Additional details for this callback.
+   * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onCellOver: PropTypes.func,
   /**
    * Callback fired when the cell value changed.
    * @param {GridEditCellValueParams} params With all properties from [[GridEditCellValueParams]].
    * @param {MuiEvent<{}>} event The event object.
-   * @param {any} details Additional details for this callback.
+   * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onCellValueChange: PropTypes.func,
   /**
    * Callback fired when a click event comes from a column header element.
    * @param {GridColumnHeaderParams} params With all properties from [[GridColumnHeaderParams]].
    * @param {MuiEvent<React.SyntheticEvent>} event The event object.
-   * @param {any} details Additional details for this callback.
+   * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onColumnHeaderClick: PropTypes.func,
   /**
    * Callback fired when a double click event comes from a column header element.
    * @param {GridColumnHeaderParams} params With all properties from [[GridColumnHeaderParams]].
    * @param {MuiEvent<React.SyntheticEvent>} event The event object.
-   * @param {any} details Additional details for this callback.
+   * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onColumnHeaderDoubleClick: PropTypes.func,
   /**
    * Callback fired when a mouse enter event comes from a column header element.
    * @param {GridColumnHeaderParams} params With all properties from [[GridColumnHeaderParams]].
    * @param {MuiEvent<React.SyntheticEvent>} event The event object.
-   * @param {any} details Additional details for this callback.
+   * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onColumnHeaderEnter: PropTypes.func,
   /**
    * Callback fired when a mouse leave event comes from a column header element.
    * @param {GridColumnHeaderParams} params With all properties from [[GridColumnHeaderParams]].
    * @param {MuiEvent<React.SyntheticEvent>} event The event object.
-   * @param {any} details Additional details for this callback.
+   * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onColumnHeaderLeave: PropTypes.func,
   /**
    * Callback fired when a mouseout event comes from a column header element.
    * @param {GridColumnHeaderParams} params With all properties from [[GridColumnHeaderParams]].
    * @param {MuiEvent<React.SyntheticEvent>} event The event object.
-   * @param {any} details Additional details for this callback.
+   * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onColumnHeaderOut: PropTypes.func,
   /**
    * Callback fired when a mouseover event comes from a column header element.
    * @param {GridColumnHeaderParams} params With all properties from [[GridColumnHeaderParams]].
    * @param {MuiEvent<React.SyntheticEvent>} event The event object.
-   * @param {any} details Additional details for this callback.
+   * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onColumnHeaderOver: PropTypes.func,
   /**
    * Callback fired when a column is reordered.
    * @param {GridColumnOrderChangeParams} params With all properties from [[GridColumnOrderChangeParams]].
    * @param {MuiEvent<{}>} event The event object.
-   * @param {any} details Additional details for this callback.
+   * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onColumnOrderChange: PropTypes.func,
   /**
    * Callback fired while a column is being resized.
    * @param {GridColumnResizeParams} params With all properties from [[GridColumnResizeParams]].
    * @param {MuiEvent<{}>} event The event object.
-   * @param {any} details Additional details for this callback.
+   * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onColumnResize: PropTypes.func,
   /**
    * Callback fired when a column visibility changes.
    * @param {GridColumnVisibilityChangeParams} params With all properties from [[GridColumnVisibilityChangeParams]].
    * @param {MuiEvent<{}>} event The event object.
-   * @param {any} details Additional details for this callback.
+   * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onColumnVisibilityChange: PropTypes.func,
   /**
    * Callback fired when the width of a column is changed.
    * @param {GridCallbackDetails} params With all properties from [[GridColumnResizeParams]].
    * @param {MuiEvent<{}>} event The event object.
-   * @param {any} details Additional details for this callback.
+   * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onColumnWidthChange: PropTypes.func,
   /**
    * Callback fired when the edit cell value changes.
    * @param {GridEditCellPropsParams} params With all properties from [[GridEditCellPropsParams]].
    * @param {MuiEvent} event The event that caused this prop to be called.
-   * @param {any} details Additional details for this callback.
+   * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onEditCellPropsChange: PropTypes.func,
   /**
    * Callback fired when the `editRowsModel` changes.
    * @param {GridEditRowsModel} editRowsModel With all properties from [[GridEditRowsModel]].
-   * @param {any} details Additional details for this callback.
+   * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onEditRowsModelChange: PropTypes.func,
   /**
    * Callback fired when an exception is thrown in the grid.
    * @param {any} args The arguments passed to the `showError` call.
-   * @param {any} details Additional details for this callback.
+   * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onError: PropTypes.func,
   /**
    * Callback fired when the Filter model changes before the filters are applied.
    * @param {GridFilterModel} model With all properties from [[GridFilterModel]].
-   * @param {any} details Additional details for this callback.
+   * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onFilterModelChange: PropTypes.func,
   /**
    * Callback fired when the current page has changed.
    * @param {number} page Index of the page displayed on the Grid.
-   * @param {any} details Additional details for this callback.
+   * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onPageChange: PropTypes.func,
   /**
    * Callback fired when the page size has changed.
    * @param {number} pageSize Size of the page displayed on the Grid.
-   * @param {any} details Additional details for this callback.
+   * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onPageSizeChange: PropTypes.func,
   /**
    * Callback fired when the grid is resized.
    * @param {ElementSize} containerSize With all properties from [[ElementSize]].
    * @param {MuiEvent<{}>} event The event object.
-   * @param {any} details Additional details for this callback.
+   * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onResize: PropTypes.func,
   /**
    * Callback fired when a click event comes from a row container element.
    * @param {GridRowParams} params With all properties from [[GridRowParams]].
    * @param {MuiEvent<React.SyntheticEvent>} event The event object.
-   * @param {any} details Additional details for this callback.
+   * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onRowClick: PropTypes.func,
   /**
    * Callback fired when a double click event comes from a row container element.
    * @param {GridRowParams} params With all properties from [[RowParams]].
    * @param {MuiEvent<React.SyntheticEvent>} event The event object.
-   * @param {any} details Additional details for this callback.
+   * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onRowDoubleClick: PropTypes.func,
   /**
@@ -505,47 +501,47 @@ DataGridRaw.propTypes = {
    * Callback fired when a mouse enter event comes from a row container element.
    * @param {GridRowParams} params With all properties from [[GridRowParams]].
    * @param {MuiEvent<React.SyntheticEvent>} event The event object.
-   * @param {any} details Additional details for this callback.
+   * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onRowEnter: PropTypes.func,
   /**
    * Callback fired when a mouse leave event comes from a row container element.
    * @param {GridRowParams} params With all properties from [[GridRowParams]].
    * @param {MuiEvent<React.SyntheticEvent>} event The event object.
-   * @param {any} details Additional details for this callback.
+   * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onRowLeave: PropTypes.func,
   /**
    * Callback fired when a mouseout event comes from a row container element.
    * @param {GridRowParams} params With all properties from [[GridRowParams]].
    * @param {MuiEvent<React.SyntheticEvent>} event The event object.
-   * @param {any} details Additional details for this callback.
+   * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onRowOut: PropTypes.func,
   /**
    * Callback fired when a mouseover event comes from a row container element.
    * @param {GridRowParams} params With all properties from [[GridRowParams]].
    * @param {MuiEvent<React.SyntheticEvent>} event The event object.
-   * @param {any} details Additional details for this callback.
+   * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onRowOver: PropTypes.func,
   /**
    * Callback fired when the selection state of one or multiple rows changes.
    * @param {GridSelectionModel} selectionModel With all the row ids [[GridSelectionModel]].
-   * @param {any} details Additional details for this callback.
+   * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onSelectionModelChange: PropTypes.func,
   /**
    * Callback fired when the sort model changes before a column is sorted.
    * @param {GridSortModel} model With all properties from [[GridSortModel]].
-   * @param {any} details Additional details for this callback.
+   * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onSortModelChange: PropTypes.func,
   /**
    * Callback fired when the state of the grid is updated.
-   * @param {any} state The new state.
+   * @param {GridState} state The new state.
    * @param {MuiEvent<{}>} event The event object.
-   * @param {any} details Additional details for this callback.
+   * @param {GridCallbackDetails} details Additional details for this callback.
    * @internal
    */
   onStateChange: PropTypes.func,

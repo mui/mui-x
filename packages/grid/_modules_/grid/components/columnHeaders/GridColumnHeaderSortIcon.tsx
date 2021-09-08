@@ -5,32 +5,49 @@ import IconButton from '@material-ui/core/IconButton';
 import { GridIconSlotsComponent } from '../../models/gridIconSlotsComponent';
 import { GridSortDirection } from '../../models/gridSortModel';
 import { useGridApiContext } from '../../hooks/root/useGridApiContext';
-import { gridClasses } from '../../gridClasses';
+import { getDataGridUtilityClass } from '../../gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
+import { composeClasses } from '../../utils/material-ui-utils';
+import { GridComponentProps } from '../../GridComponentProps';
 
 export interface GridColumnHeaderSortIconProps {
   direction: GridSortDirection;
   index: number | undefined;
 }
 
-function getIcon(icons: GridIconSlotsComponent, direction: GridSortDirection) {
+type OwnerState = GridColumnHeaderSortIconProps & {
+  classes?: GridComponentProps['classes'];
+};
+
+const useUtilityClasses = (ownerState: OwnerState) => {
+  const { classes } = ownerState;
+
+  const slots = {
+    root: ['iconButtonContainer'],
+    icon: ['sortIcon'],
+  };
+
+  return composeClasses(slots, getDataGridUtilityClass, classes);
+};
+
+function getIcon(icons: GridIconSlotsComponent, direction: GridSortDirection, className: string) {
   let Icon = icons.ColumnUnsortedIcon;
   if (direction === 'asc') {
     Icon = icons.ColumnSortedAscendingIcon;
   } else if (direction === 'desc') {
     Icon = icons.ColumnSortedDescendingIcon;
   }
-
-  return Icon ? <Icon fontSize="small" className={gridClasses.sortIcon} /> : null;
+  return Icon ? <Icon fontSize="small" className={className} /> : null;
 }
 
 function GridColumnHeaderSortIconRaw(props: GridColumnHeaderSortIconProps) {
   const { direction, index } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
+  const ownerState = { ...props, classes: rootProps.classes };
+  const classes = useUtilityClasses(ownerState);
 
-  const iconElement = getIcon(rootProps.components, direction);
-
+  const iconElement = getIcon(rootProps.components, direction, classes.icon);
   if (!iconElement) {
     return null;
   }
@@ -47,7 +64,7 @@ function GridColumnHeaderSortIconRaw(props: GridColumnHeaderSortIconProps) {
   );
 
   return (
-    <div className={gridClasses.iconButtonContainer}>
+    <div className={classes.root}>
       {index != null && (
         <Badge badgeContent={index} color="default">
           {iconButton}
