@@ -67,7 +67,7 @@ export const useGridRows = (
     rowsCache.current = {
       state: getInitialGridRowState(),
       timeout: null,
-      lastUpdateMs: 0,
+      lastUpdateMs: null,
     };
   }
 
@@ -97,7 +97,7 @@ export const useGridRows = (
   );
 
   const throttledRowsChange = React.useCallback(
-    (newState: GridRowsState, throttle: boolean) => {
+    (newState: GridRowsState) => {
       const run = () => {
         rowsCache.current.timeout = null;
         rowsCache.current.lastUpdateMs = Date.now();
@@ -114,9 +114,11 @@ export const useGridRows = (
       rowsCache.current.timeout = null;
 
       const throttleRemainingTimeMs =
-        props.throttleRowsMs - (Date.now() - rowsCache.current.lastUpdateMs);
+        rowsCache.current.lastUpdateMs === null
+          ? 0
+          : props.throttleRowsMs - (Date.now() - rowsCache.current.lastUpdateMs);
 
-      if (throttle && throttleRemainingTimeMs > 0) {
+      if (throttleRemainingTimeMs > 0) {
         rowsCache.current.timeout = setTimeout(run, throttleRemainingTimeMs);
       } else {
         run();
@@ -128,7 +130,7 @@ export const useGridRows = (
   const setRows = React.useCallback<GridRowApi['setRows']>(
     (rows) => {
       logger.debug(`Updating all rows, new length ${rows.length}`);
-      throttledRowsChange(convertGridRowsPropToState(rows, props.rowCount, props.getRowId), true);
+      throttledRowsChange(convertGridRowsPropToState(rows, props.rowCount, props.getRowId));
     },
     [logger, throttledRowsChange, props.rowCount, props.getRowId],
   );
@@ -213,7 +215,7 @@ export const useGridRows = (
         totalRowCount,
       };
 
-      throttledRowsChange(state, true);
+      throttledRowsChange(state);
     },
     [apiRef, props.getRowId, props.rowCount, throttledRowsChange],
   );
@@ -245,10 +247,7 @@ export const useGridRows = (
 
   React.useEffect(() => {
     logger.debug(`Updating all rows, new length ${props.rows.length}`);
-    throttledRowsChange(
-      convertGridRowsPropToState(props.rows, props.rowCount, props.getRowId),
-      false,
-    );
+    throttledRowsChange(convertGridRowsPropToState(props.rows, props.rowCount, props.getRowId));
   }, [props.rows, props.rowCount, props.getRowId, logger, throttledRowsChange]);
 
   const rowApi: GridRowApi = {

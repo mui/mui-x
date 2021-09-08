@@ -53,6 +53,15 @@ Alternatively, if you would like to delete a row, you would need to pass an extr
 apiRef.current.updateRows([{ id: 1, _action: 'delete' }]);
 ```
 
+### Throttling grid update
+
+If you have high frequency updates, but you want to keep good performances, you can pass set the `throttleRowsMs` prop to define the maximum update frequency.
+When receiving updates more frequent than this threshold, the Grid will wait before applying the new values to avoid triggering heavy work too many times.
+
+The following demo updates the rows every 10ms but only apply them to the Grid every 500ms.
+
+{{"demo": "pages/components/data-grid/rows/ThrottledRowsGrid.js", "bg": "inline"}}
+
 ## Row height
 
 By default, the rows have a height of 52 pixels.
