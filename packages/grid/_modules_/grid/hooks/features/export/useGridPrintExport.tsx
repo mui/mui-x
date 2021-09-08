@@ -19,6 +19,13 @@ type PrintWindowOnLoad = (
   >,
 ) => void;
 
+/**
+ * @requires useGridColumns (state)
+ * @requires useGridFilter (state)
+ * @requires useGridSorting (state)
+ * @requires useGridNoVirtualization (method)
+ * @requires useGridParamsApi (method)
+ */
 export const useGridPrintExport = (
   apiRef: GridApiRef,
   props: Pick<GridComponentProps, 'rowHeight' | 'pagination'>,
