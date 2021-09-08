@@ -157,7 +157,7 @@ export interface GridSimpleOptions {
    */
   hideFooterPagination: boolean;
   /**
-   * If `true`, the row count in the footer is hidden. It gets applied only when `pagination` is disabled.
+   * If `true`, the row count in the footer is hidden.
    * @default false
    */
   hideFooterRowCount: boolean;
