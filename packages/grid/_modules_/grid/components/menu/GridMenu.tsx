@@ -92,7 +92,7 @@ GridMenu.propTypes = {
   // ----------------------------------------------------------------------
   onClickAway: PropTypes.func.isRequired,
   /**
-   * If `true`, the popper is visible.
+   * If `true`, the component is shown.
    */
   open: PropTypes.bool.isRequired,
   position: PropTypes.oneOf([
