@@ -26,8 +26,7 @@ export const getGridLocalization = (
       defaultProps: {
         localeText: {
           ...gridTranslations,
-          MuiTablePagination:
-              coreTranslations?.components?.MuiTablePagination.defaultProps || {},
+          MuiTablePagination: coreTranslations?.components?.MuiTablePagination.defaultProps || {},
         },
       },
     },

@@ -15,15 +15,11 @@ const useStyles = makeStyles(
       },
       positive: {
         color:
-          theme.palette.mode === 'light'
-            ? theme.palette.success.dark
-            : theme.palette.success.light,
+          theme.palette.mode === 'light' ? theme.palette.success.dark : theme.palette.success.light,
       },
       negative: {
         color:
-          theme.palette.mode === 'light'
-            ? theme.palette.error.dark
-            : theme.palette.error.light,
+          theme.palette.mode === 'light' ? theme.palette.error.dark : theme.palette.error.light,
       },
     }),
   { defaultTheme },
