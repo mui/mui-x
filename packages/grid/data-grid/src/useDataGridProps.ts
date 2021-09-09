@@ -28,7 +28,7 @@ export const useDataGridProps = (inProps: DataGridProps): GridComponentProps => 
       onRowsScrollEnd: undefined,
       onViewportRowsChange: undefined,
       checkboxSelectionVisibleOnly: false,
-        scrollEndThreshold: undefined,
+      scrollEndThreshold: undefined,
       signature: 'DataGrid',
     }),
     [themedProps],
