@@ -126,6 +126,9 @@ export const useStyles = makeStyles(
           overflow: 'hidden',
           padding: '0 6px',
         },
+        [`& .${gridClasses.iconButtonContainer}`]: {
+          display: 'flex',
+        },
         [`& .${gridClasses.sortIcon}, & .${gridClasses.filterIcon}`]: {
           fontSize: 'inherit',
         },

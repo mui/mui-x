@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import { gridColumnReorderDragColSelector } from '../../hooks/features/columnReorder/columnReorderSelector';
 import { gridResizingColumnFieldSelector } from '../../hooks/features/columnResize/columnResizeSelector';
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
@@ -23,7 +24,7 @@ export interface GridColumnHeadersItemCollectionProps {
   columns: GridStateColDef[];
 }
 
-export function GridColumnHeadersItemCollection(props: GridColumnHeadersItemCollectionProps) {
+function GridColumnHeadersItemCollection(props: GridColumnHeadersItemCollectionProps) {
   const { columns } = props;
   const apiRef = useGridApiContext();
   const sortColumnLookup = useGridSelector(apiRef, gridSortColumnLookupSelector);
@@ -82,3 +83,13 @@ export function GridColumnHeadersItemCollection(props: GridColumnHeadersItemColl
 
   return <React.Fragment>{items}</React.Fragment>;
 }
+
+GridColumnHeadersItemCollection.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  columns: PropTypes.arrayOf(PropTypes.object).isRequired,
+} as any;
+
+export { GridColumnHeadersItemCollection };

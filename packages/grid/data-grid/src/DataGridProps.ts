@@ -17,7 +17,6 @@ export type DataGridProps = Omit<
   | 'options'
   | 'onRowsScrollEnd'
   | 'onViewportRowsChange'
-  | 'pagination'
   | 'scrollEndThreshold'
   | 'signature'
 > & {
