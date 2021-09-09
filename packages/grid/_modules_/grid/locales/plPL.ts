@@ -1,4 +1,4 @@
-import { plPL as plPLCore } from '@material-ui/core/locale';
+import { plPL as plPLCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -85,6 +85,9 @@ export const plPLGrid: Partial<GridLocaleText> = {
   // Total visible rows footer text
   // footerTotalVisibleRows: (visibleCount, totalCount) =>
   //   `${visibleCount.toLocaleString()} of ${totalCount.toLocaleString()}`,
+
+  // Actions cell more text
+  // actionsCellMore: 'more',
 };
 
 export const plPL: Localization = getGridLocalization(plPLGrid, plPLCore);

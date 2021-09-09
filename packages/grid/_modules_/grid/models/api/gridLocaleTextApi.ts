@@ -1,4 +1,4 @@
-import { ComponentsPropsList } from '@material-ui/core/styles';
+import { ComponentsPropsList } from '@mui/material/styles';
 
 /**
  * Set the types of the texts in the grid.
@@ -97,6 +97,9 @@ export interface GridLocaleText {
   // Boolean cell text
   booleanCellTrueLabel: string;
   booleanCellFalseLabel: string;
+
+  // Actions cell more text
+  actionsCellMore: string;
 
   // Used core components translation keys
   MuiTablePagination: Omit<

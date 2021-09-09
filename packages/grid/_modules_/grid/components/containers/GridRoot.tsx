@@ -1,7 +1,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import { useForkRef } from '@material-ui/core/utils';
-import NoSsr from '@material-ui/core/NoSsr';
+import { useForkRef } from '@mui/material/utils';
+import NoSsr from '@mui/material/NoSsr';
 import { GridRootContainerRef } from '../../models/gridRootContainerRef';
 import { useStyles } from './GridRootStyles';
 import { visibleGridColumnsLengthSelector } from '../../hooks/features/columns/gridColumnsSelector';
@@ -17,7 +17,7 @@ export const GridRoot = React.forwardRef<HTMLDivElement, GridRootProps>(function
   props,
   ref,
 ) {
-  const classes = useStyles();
+  const stylesClasses = useStyles();
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
   const { children, className: classNameProp, ...other } = props;
@@ -25,15 +25,22 @@ export const GridRoot = React.forwardRef<HTMLDivElement, GridRootProps>(function
   const [gridState] = useGridState(apiRef);
   const rootContainerRef: GridRootContainerRef = React.useRef<HTMLDivElement>(null);
   const handleRef = useForkRef(rootContainerRef, ref);
+
   apiRef.current.rootElementRef = rootContainerRef;
 
   return (
     <NoSsr>
       <div
         ref={handleRef}
-        className={clsx(classes.root, rootProps.classes.root, rootProps.className, classNameProp, {
-          [gridClasses.autoHeight]: rootProps.autoHeight,
-        })}
+        className={clsx(
+          stylesClasses.root,
+          rootProps.classes?.root,
+          rootProps.className,
+          classNameProp,
+          {
+            [gridClasses.autoHeight]: rootProps.autoHeight,
+          },
+        )}
         role="grid"
         aria-colcount={visibleColumnsLength}
         aria-rowcount={gridState.rows.totalRowCount}

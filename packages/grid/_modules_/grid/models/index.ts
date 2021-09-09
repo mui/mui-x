@@ -22,6 +22,5 @@ export * from './gridSlotsComponent';
 export * from './gridSlotsComponentsProps';
 export * from './gridDensity';
 export * from './gridExport';
-export * from './gridClasses';
 export * from './logger';
 export * from './muiEvent';

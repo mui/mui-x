@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { getColumnValues, getRow, getSelectedRowIndexes } from 'test/utils/helperFn';
+import { getColumnValues, getSelectedRowIndexes } from 'test/utils/helperFn';
 import {
   // @ts-expect-error need to migrate helpers to TypeScript
   screen,
@@ -26,23 +26,24 @@ describe('<DataGridPro /> - Selection', () => {
 
   let apiRef: GridApiRef;
 
-  const defaultData = getData(4, 2);
-
-  const TestDataGridSelection = (
-    props: Omit<DataGridProProps, 'rows' | 'columns' | 'apiRef'> &
-      Partial<Pick<DataGridProProps, 'rows' | 'columns'>>,
-  ) => {
+  const TestDataGridSelection = ({
+    rowLength = 4,
+    ...other
+  }: Omit<DataGridProProps, 'rows' | 'columns' | 'apiRef'> &
+    Partial<Pick<DataGridProProps, 'rows' | 'columns'>> & { rowLength?: number }) => {
     apiRef = useGridApiRef();
+
+    const data = React.useMemo(() => getData(rowLength, 2), [rowLength]);
 
     return (
       <div style={{ width: 300, height: 300 }}>
-        <DataGridPro {...defaultData} {...props} apiRef={apiRef} autoHeight={isJSDOM} />
+        <DataGridPro {...data} {...other} apiRef={apiRef} autoHeight={isJSDOM} />
       </div>
     );
   };
 
   describe('prop: checkboxSelectionVisibleOnly', () => {
-    it('should select all visible rows regardless of pagination if checkboxSelectionVisibleOnly = false', () => {
+    it('should select all visible rows of all pages if checkboxSelectionVisibleOnly = false', () => {
       render(
         <TestDataGridSelection
           checkboxSelection
@@ -53,12 +54,10 @@ describe('<DataGridPro /> - Selection', () => {
       );
       const selectAllCheckbox = document.querySelector('input[type="checkbox"]');
       fireEvent.click(selectAllCheckbox);
-      expect(getRow(0)).to.have.class('Mui-selected');
-      fireEvent.click(screen.getByRole('button', { name: /next page/i }));
-      expect(getRow(1)).to.have.class('Mui-selected');
+      expect(apiRef.current.getSelectedRows()).to.have.length(4);
     });
 
-    it('should select all visible rows of the current page if checkboxSelectionVisibleOnly = true', () => {
+    it('should select all visible rows of the current page if checkboxSelectionVisibleOnly = true and pagination is enabled', () => {
       render(
         <TestDataGridSelection
           checkboxSelection
@@ -70,9 +69,37 @@ describe('<DataGridPro /> - Selection', () => {
       );
       const selectAllCheckbox = document.querySelector('input[type="checkbox"]');
       fireEvent.click(selectAllCheckbox);
-      expect(getRow(0)).to.have.class('Mui-selected');
-      fireEvent.click(screen.getByRole('button', { name: /next page/i }));
-      expect(getRow(1)).not.to.have.class('Mui-selected');
+      expect(apiRef.current.getSelectedRows()).to.have.keys([0]);
+    });
+
+    it('should select all rows when if checkboxSelectionVisibleOnly = false and pagination is not enabled', () => {
+      const rowLength = 10;
+
+      render(
+        <TestDataGridSelection
+          checkboxSelection
+          checkboxSelectionVisibleOnly={false}
+          rowLength={rowLength}
+        />,
+      );
+
+      const selectAll = screen.getByRole('checkbox', {
+        name: /select all rows checkbox/i,
+      });
+      fireEvent.click(selectAll);
+      expect(apiRef.current.getSelectedRows()).to.have.length(rowLength);
+    });
+
+    it('should throw a console error if checkboxSelectionVisibleOnly is used without pagination', () => {
+      expect(() => {
+        render(
+          <TestDataGridSelection checkboxSelection checkboxSelectionVisibleOnly rowLength={100} />,
+        );
+      })
+        // @ts-expect-error need to migrate helpers to TypeScript
+        .toErrorDev(
+          'Material-UI: The `checkboxSelectionVisibleOnly` prop has no effect when the pagination is not enabled.',
+        );
     });
   });
 
@@ -81,12 +108,12 @@ describe('<DataGridPro /> - Selection', () => {
       render(
         <TestDataGridSelection
           onSelectionModelChange={(model) => {
-            expect(apiRef.current.getSelectedRows().size).to.equal(1);
+            expect(apiRef.current.getSelectedRows()).to.have.length(1);
             expect(model).to.deep.equal([1]);
           }}
         />,
       );
-      expect(apiRef.current.getSelectedRows().size).to.equal(0);
+      expect(apiRef.current.getSelectedRows()).to.have.length(0);
       apiRef.current.selectRow(1);
       expect(apiRef.current.getSelectedRows().get(1)).to.deep.equal({
         id: 1,

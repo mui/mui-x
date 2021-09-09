@@ -1,9 +1,11 @@
-import { createTheme } from '@material-ui/core/styles';
+import { createTheme } from '@mui/material/styles';
 
 createTheme({
-  props: {
-    MuiDataGridPro: {
-      disableMultipleColumnsFiltering: true,
+  components: {
+    MuiDataGrid: {
+      defaultProps: {
+        disableMultipleColumnsFiltering: true,
+      },
     },
   },
 });

@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
-import { useLogger } from '../../utils/useLogger';
+import { useGridLogger } from '../../utils/useGridLogger';
 import { useGridState } from '../core/useGridState';
 import { GridPreferencePanelsValue } from './gridPreferencePanelsValue';
 
 export const useGridPreferencesPanel = (apiRef: GridApiRef): void => {
-  const logger = useLogger('useGridPreferencesPanel');
+  const logger = useGridLogger(apiRef, 'useGridPreferencesPanel');
   const [, setGridState, forceUpdate] = useGridState(apiRef);
   const hideTimeout = React.useRef<any>();
   const immediateTimeout = React.useRef<any>();

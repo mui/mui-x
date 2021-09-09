@@ -1,4 +1,4 @@
-import { esES as esESCore } from '@material-ui/core/locale';
+import { esES as esESCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -90,6 +90,9 @@ const esESGrid: Partial<GridLocaleText> = {
   // Total visible rows footer text
   footerTotalVisibleRows: (visibleCount, totalCount) =>
     `${visibleCount.toLocaleString()} de ${totalCount.toLocaleString()}`,
+
+  // Actions cell more text
+  actionsCellMore: 'más',
 };
 
 export const esES: Localization = getGridLocalization(esESGrid, esESCore);

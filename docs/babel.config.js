@@ -17,11 +17,9 @@ const alias = {
   '@mui/x-license-pro': '../packages/x-license/src',
   '@mui/docs': '../node_modules/@material-ui/monorepo/packages/material-ui-docs/src',
   '@mui/markdown': '../node_modules/@material-ui/monorepo/docs/packages/markdown',
-  '@material-ui/core': '../node_modules/@mui/material',
-  '@material-ui/styles': '../node_modules/@mui/styles',
-  '@material-ui/icons': '../node_modules/@mui/icons-material',
-  '@material-ui/lab': '../node_modules/@mui/material', // Most of the components in v4 went to the core in v5
-  docs: '../node_modules/@material-ui/monorepo/docs',
+  // Help in the event npm and git are significantly desynchronized.
+  '@material-ui/docs': './node_modules/@material-ui/monorepo/packages/material-ui-docs/src',
+  docs: './node_modules/@material-ui/monorepo/docs',
   docsx: './',
 };
 

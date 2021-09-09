@@ -2,7 +2,7 @@ import * as React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 import { LicenseInfo } from '@mui/x-data-grid-pro';
-import { withStyles } from '@material-ui/styles';
+import { withStyles } from '@mui/styles';
 import webfontloader from 'webfontloader';
 import TestViewer from 'test/regressions/TestViewer';
 import { useFakeTimers } from 'sinon';
@@ -21,6 +21,8 @@ const blacklist = [
   'docs-components-data-grid-filtering/ColumnTypeFilteringGrid.png', // Needs interaction
   'docs-components-data-grid-filtering/CustomRatingOperator.png', // Needs interaction
   'docs-components-data-grid-filtering/ExtendNumericOperator.png', // Needs interaction
+  // TODO import the Rating from @mui/material, not the lab.
+  'docs-components-data-grid-components/CustomFooter.png',
   // 'docs-system-typography',
   /^stories(.*)(?<!Snap)\.png$/, // Excludes stories that aren't suffixed with 'Snap'.
 ];

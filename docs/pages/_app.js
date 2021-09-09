@@ -19,8 +19,8 @@ import { create } from 'jss';
 import jssRtl from 'jss-rtl';
 import { CacheProvider } from '@emotion/react';
 import { useRouter } from 'next/router';
-import { StylesProvider, jssPreset } from '@mui/styles';
-import { ponyfillGlobal } from '@mui/utils';
+import { StylesProvider, jssPreset } from '@material-ui/styles';
+import { ponyfillGlobal } from '@material-ui/utils';
 import pages from 'docsx/src/pages';
 import PageContext from 'docs/src/modules/components/PageContext';
 import GoogleAnalytics from 'docs/src/modules/components/GoogleAnalytics';
@@ -46,7 +46,7 @@ function getMuiPackageVersion(packageName, commitRef) {
     return 'latest';
   }
   const shortSha = commitRef.slice(0, 8);
-  return `https://pkg.csb.dev/mui-org/material-ui-x/commit/${shortSha}/@material-ui/${packageName}`;
+  return `https://pkg.csb.dev/mui-org/material-ui-x/commit/${shortSha}/@mui/${packageName}`;
 }
 
 ponyfillGlobal.muiDocConfig = {
@@ -54,14 +54,13 @@ ponyfillGlobal.muiDocConfig = {
     const newDeps = { ...deps };
 
     if (newDeps['@mui/x-data-grid-pro'] || newDeps['@mui/x-data-grid']) {
-      newDeps['@material-ui/core'] = versions['@material-ui/core'];
-      newDeps['@material-ui/styles'] = versions['@material-ui/styles'];
+      newDeps['@mui/material'] = versions['@mui/material'];
+      newDeps['@mui/styles'] = versions['@mui/styles'];
     }
 
     if (newDeps['@mui/x-data-grid-generator']) {
-      newDeps['@material-ui/core'] = versions['@material-ui/core'];
-      newDeps['@material-ui/icons'] = versions['@material-ui/icons'];
-      newDeps['@material-ui/lab'] = versions['@material-ui/lab'];
+      newDeps['@mui/material'] = versions['@mui/material'];
+      newDeps['@mui/icons-material'] = versions['@mui/icons-material'];
     }
 
     return newDeps;
@@ -69,13 +68,9 @@ ponyfillGlobal.muiDocConfig = {
   csbGetVersions: (versions, { muiCommitRef }) => {
     const output = {
       ...versions,
-      '@material-ui/core': 'next',
-      '@material-ui/icons': 'next',
-      '@material-ui/lab': 'next',
-      '@material-ui/styles': 'next',
-      '@mui/x-data-grid-pro': getMuiPackageVersion('x-grid', muiCommitRef),
-      '@mui/x-data-grid-generator': getMuiPackageVersion('x-grid-data-generator', muiCommitRef),
-      '@mui/x-data-grid': getMuiPackageVersion('data-grid', muiCommitRef),
+      '@mui/x-data-grid-pro': getMuiPackageVersion('x-data-grid-pro', muiCommitRef),
+      '@mui/x-data-grid-generator': getMuiPackageVersion('x-data-grid-generator', muiCommitRef),
+      '@mui/x-data-grid': getMuiPackageVersion('x-data-grid', muiCommitRef),
     };
     return output;
   },

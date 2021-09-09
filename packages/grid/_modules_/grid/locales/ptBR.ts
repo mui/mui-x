@@ -1,4 +1,4 @@
-import { ptBR as ptBRCore } from '@material-ui/core/locale';
+import { ptBR as ptBRCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -97,6 +97,9 @@ const ptBRGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: 'sim',
   booleanCellFalseLabel: 'não',
+
+  // Actions cell more text
+  actionsCellMore: 'mais',
 };
 
 export const ptBR: Localization = getGridLocalization(ptBRGrid, ptBRCore);

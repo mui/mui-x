@@ -5,7 +5,6 @@ import { GridFeatureMode, GridFeatureModeConstant } from './gridFeatureMode';
 import { Logger } from './logger';
 import { GridSortDirection } from './gridSortModel';
 import { GridSlotsComponent } from './gridSlotsComponent';
-import { GridClasses } from './gridClasses';
 import { GridFilterModel } from './gridFilterModel';
 
 export type GridMergedOptions = {
@@ -25,10 +24,6 @@ export interface GridProcessedMergedOptions {
    * You can find all the translation keys supported in [the source](https://github.com/mui-org/material-ui-x/blob/HEAD/packages/grid/_modules_/grid/constants/localeTextConstants.ts) in the GitHub repository.
    */
   localeText: GridLocaleText;
-  /**
-   * Override or extend the styles applied to the component.
-   */
-  classes: GridClasses;
 }
 
 // TODO add multiSortKey
@@ -53,6 +48,7 @@ export interface GridSimpleOptions {
   checkboxSelection: boolean;
   /**
    * If `true`, the "Select All" header checkbox selects only the rows on the current page. To be used in combination with `checkboxSelection`.
+   * It only works if the pagination is enabled.
    * @default false
    */
   checkboxSelectionVisibleOnly: boolean;
@@ -162,6 +158,7 @@ export interface GridSimpleOptions {
   hideFooterPagination: boolean;
   /**
    * If `true`, the row count in the footer is hidden.
+   * It has no effect if the pagination is enabled.
    * @default false
    */
   hideFooterRowCount: boolean;
@@ -177,9 +174,9 @@ export interface GridSimpleOptions {
   logger: Logger;
   /**
    * Allows to pass the logging level or false to turn off logging.
-   * @default error
+   * @default "debug"
    */
-  logLevel: string | false;
+  logLevel?: keyof Logger | false;
   /**
    * If `true`, pagination is enabled.
    * @default false
@@ -259,7 +256,7 @@ export const GRID_DEFAULT_SIMPLE_OPTIONS: GridSimpleOptions = {
   hideFooterRowCount: false,
   hideFooterSelectedRowCount: false,
   logger: console,
-  logLevel: process.env.NODE_ENV === 'production' ? 'error' : 'warn',
+  logLevel: process.env.NODE_ENV === 'production' ? ('error' as const) : ('warn' as const),
   pagination: false,
   paginationMode: GridFeatureModeConstant.client,
   rowHeight: 52,

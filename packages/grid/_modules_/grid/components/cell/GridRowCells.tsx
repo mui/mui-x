@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { GridCellIdentifier } from '../../hooks/features/focus/gridFocusState';
 import {
@@ -12,9 +13,9 @@ import { GridCell, GridCellProps } from './GridCell';
 import { useGridApiContext } from '../../hooks/root/useGridApiContext';
 import { isFunction } from '../../utils/utils';
 import { gridClasses } from '../../gridClasses';
+import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
 interface RowCellsProps {
-  cellClassName?: string;
   columns: GridStateColDef[];
   extendRowFullWidth: boolean;
   firstColIdx: number;
@@ -33,7 +34,7 @@ interface RowCellsProps {
   editRowState?: GridEditRowProps;
 }
 
-export const GridRowCells = React.memo(function GridRowCells(props: RowCellsProps) {
+function GridRowCellsRaw(props: RowCellsProps) {
   const {
     columns,
     firstColIdx,
@@ -49,10 +50,10 @@ export const GridRowCells = React.memo(function GridRowCells(props: RowCellsProp
     showCellRightBorder,
     isSelected,
     editRowState,
-    cellClassName,
     ...other
   } = props;
   const apiRef = useGridApiContext();
+  const rootProps = useGridRootProps();
 
   const cellsProps = columns.slice(firstColIdx, lastColIdx + 1).map((column, colIdx) => {
     const colIndex = firstColIdx + colIdx;
@@ -64,7 +65,7 @@ export const GridRowCells = React.memo(function GridRowCells(props: RowCellsProp
 
     const cellParams: GridCellParams = apiRef.current.getCellParams(id, column.field);
 
-    const classNames = [cellClassName];
+    const classNames: string[] = [];
 
     if (column.cellClassName) {
       classNames.push(
@@ -81,16 +82,21 @@ export const GridRowCells = React.memo(function GridRowCells(props: RowCellsProp
 
     if (editCellState == null && column.renderCell) {
       cellComponent = column.renderCell({ ...cellParams, api: apiRef.current });
-      classNames.push(gridClasses['cell--withRenderer']);
+      // TODO move to GridCell
+      classNames.push(
+        clsx(gridClasses['cell--withRenderer'], rootProps.classes?.['cell--withRenderer']),
+      );
     }
 
     if (editCellState != null && column.renderEditCell) {
       const params = { ...cellParams, ...editCellState, api: apiRef.current };
       cellComponent = column.renderEditCell(params);
-      classNames.push(gridClasses['cell--editing']);
+      // TODO move to GridCell
+      classNames.push(clsx(gridClasses['cell--editing'], rootProps.classes?.['cell--editing']));
     }
 
     if (getCellClassName) {
+      // TODO move to GridCell
       classNames.push(getCellClassName(cellParams));
     }
 
@@ -131,4 +137,37 @@ export const GridRowCells = React.memo(function GridRowCells(props: RowCellsProp
       ))}
     </React.Fragment>
   );
-});
+}
+
+const GridRowCells = React.memo(GridRowCellsRaw);
+
+GridRowCellsRaw.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  cellFocus: PropTypes.shape({
+    field: PropTypes.string.isRequired,
+    id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  }),
+  cellTabIndex: PropTypes.shape({
+    field: PropTypes.string.isRequired,
+    id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  }),
+  columns: PropTypes.arrayOf(PropTypes.object).isRequired,
+  editRowState: PropTypes.object,
+  extendRowFullWidth: PropTypes.bool.isRequired,
+  firstColIdx: PropTypes.number.isRequired,
+  getCellClassName: PropTypes.func,
+  hasScrollX: PropTypes.bool.isRequired,
+  hasScrollY: PropTypes.bool.isRequired,
+  height: PropTypes.number.isRequired,
+  id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  isSelected: PropTypes.bool.isRequired,
+  lastColIdx: PropTypes.number.isRequired,
+  row: PropTypes.object.isRequired,
+  rowIndex: PropTypes.number.isRequired,
+  showCellRightBorder: PropTypes.bool.isRequired,
+} as any;
+
+export { GridRowCells };

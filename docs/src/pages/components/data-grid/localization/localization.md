@@ -47,7 +47,7 @@ The same import works for `DataGridPro` as it's an extension of `DataGrid`.
 ```jsx
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { DataGrid, bgBG } from '@mui/x-data-grid';
-import { bgBG as coreBgBG } from '@material-ui/core/locale';
+import { bgBG as coreBgBG } from '@mui/material/locale';
 
 const theme = createTheme(
   {
