@@ -90,18 +90,18 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
       if (resetSelection) {
         newSelection = isSelected ? selectableIds : [];
       } else {
-        // We clone the existing map to avoid mutating the same map returned by the selector to others part of the project
-        const selectionLookup = new Map(selectedIdsLookupSelector(apiRef.current.state).entries());
+        // We clone the existing object to avoid mutating the same object returned by the selector to others part of the project
+        const selectionLookup = { ...selectedIdsLookupSelector(apiRef.current.state) };
 
         selectableIds.forEach((id) => {
           if (isSelected) {
-            selectionLookup.set(id, true);
+            selectionLookup[id] = id;
           } else {
-            selectionLookup.delete(id);
+            delete selectionLookup[id];
           }
         });
 
-        newSelection = [...selectionLookup.keys()];
+        newSelection = Object.values(selectionLookup);
       }
 
       const isSelectionValid = newSelection.length < 2 || canHaveMultipleSelection;
@@ -179,19 +179,19 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
     // Rows changed
     const currentSelection = gridSelectionStateSelector(apiRef.current.state);
 
-    // We clone the existing map to avoid mutating the same map returned by the selector to others part of the project
-    const selectionLookup = new Map(selectedIdsLookupSelector(apiRef.current.state).entries());
+    // We clone the existing object to avoid mutating the same object returned by the selector to others part of the project
+    const selectionLookup = { ...selectedIdsLookupSelector(apiRef.current.state) };
 
     let hasChanged = false;
     currentSelection.forEach((id: GridRowId) => {
       if (!rowsLookup[id]) {
-        selectionLookup.delete(id);
+        delete selectionLookup[id];
         hasChanged = true;
       }
     });
 
     if (hasChanged) {
-      apiRef.current.setSelectionModel([...selectionLookup.keys()]);
+      apiRef.current.setSelectionModel(Object.values(selectionLookup));
     }
   }, [rowsLookup, apiRef]);
 

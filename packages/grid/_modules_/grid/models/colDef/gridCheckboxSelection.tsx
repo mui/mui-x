@@ -17,7 +17,7 @@ export const gridCheckboxSelectionColDef: GridColDef = {
   disableReorder: true,
   valueGetter: (params) => {
     const selectionLookup = selectedIdsLookupSelector(params.api.state);
-    return !!selectionLookup.get(params.id);
+    return selectionLookup[params.id] !== undefined;
   },
   renderHeader: (params) => <GridHeaderCheckbox {...params} />,
   renderCell: (params) => <GridCellCheckboxRenderer {...params} />,
