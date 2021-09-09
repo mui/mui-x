@@ -1,5 +1,5 @@
 import * as React from 'react';
-// @ts-expect-error fixed in Material-UI v5, types definitions were added.
+import PropTypes from 'prop-types';
 import { unstable_useId as useId } from '@material-ui/core/utils';
 import MenuList from '@material-ui/core/MenuList';
 import Button, { ButtonProps } from '@material-ui/core/Button';
@@ -25,7 +25,7 @@ export interface GridToolbarExportProps extends ButtonProps {
   csvOptions?: GridExportCsvOptions;
 }
 
-export const GridToolbarExport = React.forwardRef<HTMLButtonElement, GridToolbarExportProps>(
+const GridToolbarExport = React.forwardRef<HTMLButtonElement, GridToolbarExportProps>(
   function GridToolbarExport(props, ref) {
     const { csvOptions, onClick, ...other } = props;
     const apiRef = useGridApiContext();
@@ -103,4 +103,20 @@ export const GridToolbarExport = React.forwardRef<HTMLButtonElement, GridToolbar
       </React.Fragment>
     );
   },
-) as (props: GridToolbarExportProps) => JSX.Element;
+);
+
+GridToolbarExport.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  csvOptions: PropTypes.shape({
+    allColumns: PropTypes.bool,
+    delimiter: PropTypes.string,
+    fields: PropTypes.arrayOf(PropTypes.string),
+    fileName: PropTypes.string,
+    utf8WithBom: PropTypes.bool,
+  }),
+} as any;
+
+export { GridToolbarExport };

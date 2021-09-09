@@ -1,5 +1,4 @@
 import * as React from 'react';
-// @ts-expect-error fixed in Material-UI v5, types definitions were added.
 import { unstable_useId as useId } from '@material-ui/core/utils';
 import MenuList from '@material-ui/core/MenuList';
 import Button, { ButtonProps } from '@material-ui/core/Button';

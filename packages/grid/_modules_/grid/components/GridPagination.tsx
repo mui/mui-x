@@ -50,6 +50,7 @@ export const GridPagination = React.forwardRef<
     () => Math.floor(paginationState.rowCount / (paginationState.pageSize || 1)),
     [paginationState.rowCount, paginationState.pageSize],
   );
+
   const handlePageSizeChange = React.useCallback(
     (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
       const newPageSize = Number(event.target.value);
@@ -95,6 +96,7 @@ export const GridPagination = React.forwardRef<
           `Add it to show the pagination select.`,
         ].join('\n'),
       );
+
       warnedOnceMissingPageSizeInRowsPerPageOptions.current = true;
     }
   }
