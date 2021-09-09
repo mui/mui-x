@@ -1,4 +1,4 @@
-import { skSK as skSKCore } from '@material-ui/core/locale';
+import { skSK as skSKCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 

@@ -1,8 +1,8 @@
-import Button from '@material-ui/core/Button';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import { makeStyles } from '@material-ui/styles';
+import Button from '@mui/material/Button';
+import InputAdornment from '@mui/material/InputAdornment';
+import { makeStyles } from '@mui/styles';
 import { DataGrid } from '@mui/x-data-grid';
-import Rating from '@material-ui/core/Rating';
+import Rating from '@mui/material/Rating';
 import {
   GridColDef,
   GridColTypeDef,

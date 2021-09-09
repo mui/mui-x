@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ownerDocument } from '@material-ui/core/utils';
+import { ownerDocument } from '@mui/material/utils';
 import { GridStateColDef } from '../../../models/colDef';
 import { useGridLogger } from '../../utils';
 import { useEventCallback } from '../../../utils/material-ui-utils';

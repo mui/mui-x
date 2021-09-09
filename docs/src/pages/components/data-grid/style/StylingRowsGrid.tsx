@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
-import { createTheme, darken, lighten, Theme } from '@material-ui/core/styles';
-import { makeStyles } from '@material-ui/styles';
+import { createTheme, darken, lighten, Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 
 // TODO v5: remove
 function getThemePaletteMode(palette: any): string {

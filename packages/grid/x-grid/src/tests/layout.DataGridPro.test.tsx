@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { createClientRenderStrictMode } from 'test/utils';
 import { expect } from 'chai';
-import { createTheme, ThemeProvider } from '@material-ui/core/styles';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { GridApiRef, useGridApiRef, DataGridPro, ptBR } from '@mui/x-data-grid-pro';
 
 describe('<DataGridPro /> - Layout', () => {

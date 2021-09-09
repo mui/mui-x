@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { chainPropTypes } from '@material-ui/utils';
+import { chainPropTypes } from '@mui/utils';
 import {
   GridBody,
   GridErrorHandler,

@@ -2,7 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { useFakeTimers } from 'sinon';
-import { withStyles } from '@material-ui/styles';
+import { withStyles } from '@mui/styles';
 import { createTheme } from '../../packages/grid/_modules_/grid/utils/utils';
 
 const styles = (theme) => ({

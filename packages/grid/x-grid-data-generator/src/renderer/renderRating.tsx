@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { Theme } from '@material-ui/core/styles';
-import { createStyles, makeStyles } from '@material-ui/styles';
+import { Theme } from '@mui/material/styles';
+import { createStyles, makeStyles } from '@mui/styles';
 import { GridCellParams } from '@mui/x-data-grid-pro';
-import Rating from '@material-ui/lab/Rating';
+import Rating from '@mui/material/Rating';
 import { createTheme } from '../../../_modules_/grid/utils/utils';
 
 const defaultTheme = createTheme();
