@@ -39,7 +39,7 @@ function getMuiPackageVersion(packageName, commitRef) {
     return 'latest';
   }
   const shortSha = commitRef.slice(0, 8);
-  return `https://pkg.csb.dev/mui-org/material-ui-x/commit/${shortSha}/@material-ui/${packageName}`;
+  return `https://pkg.csb.dev/mui-org/material-ui-x/commit/${shortSha}/@mui/${packageName}`;
 }
 
 ponyfillGlobal.muiDocConfig = {
@@ -49,6 +49,9 @@ ponyfillGlobal.muiDocConfig = {
     if (newDeps['@mui/x-data-grid-pro'] || newDeps['@mui/x-data-grid']) {
       newDeps['@mui/material'] = versions['@mui/material'];
       newDeps['@mui/styles'] = versions['@mui/styles'];
+      // TODO remove @emotion once the docs is using the same infra from v5
+      newDeps['@emotion/styled'] = versions['@emotion/styled'];
+      newDeps['@emotion/react'] = versions['@emotion/react'];
     }
 
     if (newDeps['@mui/x-data-grid-generator']) {
@@ -61,12 +64,14 @@ ponyfillGlobal.muiDocConfig = {
   csbGetVersions: (versions, { muiCommitRef }) => {
     const output = {
       ...versions,
-      '@mui/x-data-grid-pro': getMuiPackageVersion('x-grid', muiCommitRef),
-      '@mui/x-data-grid-generator': getMuiPackageVersion('x-grid-data-generator', muiCommitRef),
-      '@mui/x-data-grid': getMuiPackageVersion('data-grid', muiCommitRef),
+      '@mui/x-data-grid-pro': getMuiPackageVersion('x-data-grid-pro', muiCommitRef),
+      '@mui/x-data-grid-generator': getMuiPackageVersion('x-data-grid-generator', muiCommitRef),
+      '@mui/x-data-grid': getMuiPackageVersion('x-data-grid', muiCommitRef),
       '@mui/material': 'next',
       '@mui/styles': 'next',
       '@mui/icons-material': 'next',
+      '@emotion/react': 'latest',
+      '@emotion/styled': 'latest',
     };
     return output;
   },
