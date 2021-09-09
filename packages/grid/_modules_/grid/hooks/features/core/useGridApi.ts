@@ -5,7 +5,7 @@ import { GridApi } from '../../../models/api/gridApi';
 import { isFunction } from '../../../utils/utils';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
-import { getInitialGridState, GridState } from './gridState';
+import { GridState } from './gridState';
 
 export const useGridApi = (apiRef: GridApiRef): GridApi => {
   const logger = useGridLogger(apiRef, 'useGridApi');
@@ -13,7 +13,7 @@ export const useGridApi = (apiRef: GridApiRef): GridApi => {
 
   if (!apiRef.current.state) {
     logger.info('Initialising state.');
-    apiRef.current.state = getInitialGridState();
+    apiRef.current.state = {} as GridState;
     apiRef.current.forceUpdate = forceUpdate;
   }
 

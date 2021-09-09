@@ -19,6 +19,7 @@ import { gridPaginationSelector } from '../features/pagination/gridPaginationSel
 import { useGridLogger } from '../utils/useGridLogger';
 import { useGridApiEventHandler } from './useGridApiEventHandler';
 import { GridComponentProps } from '../../GridComponentProps';
+import { useGridStateInit } from '../utils/useGridStateInit';
 
 function getScrollbarSize(doc: Document, element: HTMLElement): number {
   const scrollDiv = doc.createElement('div');
@@ -35,7 +36,6 @@ function getScrollbarSize(doc: Document, element: HTMLElement): number {
 }
 
 /**
- * @requires useOptionsProp (state)
  * @requires useGridDensity (state)
  * @requires useGridColumns (state)
  * @requires useGridFilter (state)
@@ -57,6 +57,14 @@ export const useGridContainerProps = (
   >,
 ) => {
   const logger = useGridLogger(apiRef, 'useGridContainerProps');
+
+  useGridStateInit(apiRef, (state) => ({
+    ...state,
+    containerSizes: null,
+    viewportSizes: { width: 0, height: 1 },
+    scrollBar: { hasScrollX: false, hasScrollY: false, sizes: { x: 0, y: 0 } },
+  }));
+
   const [gridState, setGridState, forceUpdate] = useGridState(apiRef);
   const windowSizesRef = React.useRef<ElementSize>({ width: 0, height: 0 });
   const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
