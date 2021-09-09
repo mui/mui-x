@@ -18,8 +18,8 @@ const alias = {
   '@mui/docs': '../node_modules/@material-ui/monorepo/packages/material-ui-docs/src',
   '@mui/markdown': '../node_modules/@material-ui/monorepo/docs/packages/markdown',
   // Help in the event npm and git are significantly desynchronized.
-  '@material-ui/docs': './node_modules/@material-ui/monorepo/packages/material-ui-docs/src',
-  docs: './node_modules/@material-ui/monorepo/docs',
+  '@material-ui/docs': '../node_modules/@material-ui/monorepo/packages/material-ui-docs/src',
+  docs: '../node_modules/@material-ui/monorepo/docs',
   docsx: './',
 };
 

@@ -20,6 +20,7 @@ import jssRtl from 'jss-rtl';
 import { CacheProvider } from '@emotion/react';
 import { useRouter } from 'next/router';
 import { StylesProvider, jssPreset } from '@mui/styles';
+import { ponyfillGlobal } from '@mui/utils';
 import pages from 'docsx/src/pages';
 import PageContext from 'docs/src/modules/components/PageContext';
 import GoogleAnalytics from 'docs/src/modules/components/GoogleAnalytics';
