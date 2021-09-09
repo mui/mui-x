@@ -66,11 +66,11 @@ function EditCountry(props: GridRenderEditCellParams) {
       open
       classes={classes}
       disableClearable
-      renderOption={(option) => (
-        <React.Fragment>
+      renderOption={(optionProps, option) => (
+        <li {...optionProps}>
           <span>{countryToFlag(option.code)}</span>
           {option.label}
-        </React.Fragment>
+        </li>
       )}
       renderInput={(params) => (
         <InputBase

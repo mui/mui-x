@@ -29,6 +29,7 @@ export const GridPreferencesPanel = React.forwardRef<
       {!rootProps.disableColumnSelector && isColumnsTabOpen && (
         <rootProps.components.ColumnsPanel {...rootProps.componentsProps?.columnsPanel} />
       )}
+
       {!rootProps.disableColumnFilter && isFiltersTabOpen && (
         <rootProps.components.FilterPanel {...rootProps.componentsProps?.filterPanel} />
       )}

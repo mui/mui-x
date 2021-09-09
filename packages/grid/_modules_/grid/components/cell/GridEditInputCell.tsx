@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import InputBase, { InputBaseProps } from '@material-ui/core/InputBase';
 import { GridRenderEditCellParams } from '../../models/params/gridCellParams';
 import { composeClasses, useEnhancedEffect } from '../../utils/material-ui-utils';
@@ -18,7 +19,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-export function GridEditInputCell(props: GridRenderEditCellParams & InputBaseProps) {
+function GridEditInputCell(props: GridRenderEditCellParams & InputBaseProps) {
   const {
     id,
     value,
@@ -72,4 +73,17 @@ export function GridEditInputCell(props: GridRenderEditCellParams & InputBasePro
     />
   );
 }
+
+GridEditInputCell.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  /**
+   * GridApi that let you manipulate the grid.
+   */
+  api: PropTypes.any.isRequired,
+} as any;
+
+export { GridEditInputCell };
 export const renderEditInputCell = (params) => <GridEditInputCell {...params} />;
