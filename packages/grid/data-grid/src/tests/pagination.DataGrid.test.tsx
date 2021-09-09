@@ -474,7 +474,7 @@ describe('<DataGrid /> - Pagination', () => {
       setProps({ height: heightAfter });
 
       await waitFor(() =>
-        expect(document.querySelector('.MuiTablePagination-caption')!.innerHTML).to.equal(
+        expect(document.querySelector('.MuiTablePagination-displayedRows')!.innerHTML).to.equal(
           `1-${expectedViewportRowsLengthAfter} of ${nbRows}`,
         ),
       );

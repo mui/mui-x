@@ -1,7 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-// @ts-expect-error fixed in Material-UI v5, types definitions were added.
 import { unstable_useId as useId } from '@material-ui/core/utils';
 import { GridEvents } from '../../constants/eventsConstants';
 import { GridStateColDef, GRID_NUMBER_COLUMN_TYPE } from '../../models/colDef/index';
@@ -87,8 +86,8 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
   const headerCellRef = React.useRef<HTMLDivElement>(null);
-  const columnMenuId: string = useId();
-  const columnMenuButtonId: string = useId();
+  const columnMenuId = useId();
+  const columnMenuButtonId = useId();
   const iconButtonRef = React.useRef<HTMLButtonElement>(null);
 
   let headerComponent: React.ReactNode = null;
@@ -163,8 +162,8 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
   const columnMenuIconButton = !rootProps.disableColumnMenu && !column.disableColumnMenu && (
     <ColumnHeaderMenuIcon
       column={column}
-      columnMenuId={columnMenuId}
-      columnMenuButtonId={columnMenuButtonId}
+      columnMenuId={columnMenuId!}
+      columnMenuButtonId={columnMenuButtonId!}
       open={columnMenuOpen}
       iconButtonRef={iconButtonRef}
     />
@@ -238,8 +237,8 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
         {...resizeEventHandlers}
       />
       <GridColumnHeaderMenu
-        columnMenuId={columnMenuId}
-        columnMenuButtonId={columnMenuButtonId}
+        columnMenuId={columnMenuId!}
+        columnMenuButtonId={columnMenuButtonId!}
         field={column.field}
         open={columnMenuOpen}
         target={iconButtonRef.current}

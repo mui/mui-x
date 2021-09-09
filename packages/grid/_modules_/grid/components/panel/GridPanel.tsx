@@ -118,7 +118,7 @@ GridPanel.propTypes = {
    */
   classes: PropTypes.object,
   /**
-   * If `true`, the popper is visible.
+   * If `true`, the component is shown.
    */
   open: PropTypes.bool.isRequired,
 } as any;

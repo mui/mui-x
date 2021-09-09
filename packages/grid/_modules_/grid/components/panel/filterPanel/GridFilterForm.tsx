@@ -3,8 +3,7 @@ import PropTypes from 'prop-types';
 import FormControl from '@material-ui/core/FormControl';
 import IconButton from '@material-ui/core/IconButton';
 import InputLabel from '@material-ui/core/InputLabel';
-import Select from '@material-ui/core/Select';
-// @ts-expect-error fixed in Material-UI v5, types definitions were added.
+import Select, { SelectChangeEvent } from '@material-ui/core/Select';
 import { capitalize, unstable_useId as useId } from '@material-ui/core/utils';
 import { makeStyles } from '@material-ui/styles';
 import { filterableGridColumnsSelector } from '../../../hooks/features/columns/gridColumnsSelector';
@@ -91,7 +90,7 @@ function GridFilterForm(props: GridFilterFormProps) {
   }, [item, getCurrentColumn]);
 
   const changeColumn = React.useCallback(
-    (event: React.ChangeEvent<{ value: unknown }>) => {
+    (event: SelectChangeEvent) => {
       const columnField = event.target.value as string;
       const column = apiRef.current.getColumn(columnField)!;
       const newOperator = column.filterOperators![0];
@@ -107,7 +106,7 @@ function GridFilterForm(props: GridFilterFormProps) {
   );
 
   const changeOperator = React.useCallback(
-    (event: React.ChangeEvent<{ value: unknown }>) => {
+    (event: SelectChangeEvent) => {
       const operatorValue = event.target.value as string;
       applyFilterChanges({
         ...item,
@@ -118,7 +117,7 @@ function GridFilterForm(props: GridFilterFormProps) {
   );
 
   const changeLinkOperator = React.useCallback(
-    (event: React.ChangeEvent<{ value: unknown }>) => {
+    (event: SelectChangeEvent) => {
       const linkOperator =
         (event.target.value as string) === GridLinkOperator.And.toString()
           ? GridLinkOperator.And
