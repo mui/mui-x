@@ -14,7 +14,6 @@ export const useDataGridProps = (inProps: DataGridProps): GridComponentProps => 
 
   const themedProps = useThemeProps({ props: inProps, name: 'MuiDataGrid' });
 
-  // TODO force scrollEndThreshold to undefined
   const props = React.useMemo<GridInputComponentProps>(
     () => ({
       ...themedProps,
@@ -29,6 +28,7 @@ export const useDataGridProps = (inProps: DataGridProps): GridComponentProps => 
       onRowsScrollEnd: undefined,
       onViewportRowsChange: undefined,
       checkboxSelectionVisibleOnly: false,
+        scrollEndThreshold: undefined,
       signature: 'DataGrid',
     }),
     [themedProps],
