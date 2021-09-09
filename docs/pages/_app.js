@@ -20,6 +20,7 @@ import { create } from 'jss';
 import rtl from 'jss-rtl';
 import { useRouter } from 'next/router';
 import { StylesProvider, jssPreset, useTheme } from '@material-ui/styles';
+import { StylesProvider as StylesProviderV5, createGenerateClassName } from '@mui/styles';
 import { ponyfillGlobal } from '@material-ui/utils';
 import { CacheProvider } from '@emotion/react';
 import createCache from '@emotion/cache';
@@ -354,6 +355,9 @@ const emotionCache = createCache({
   prepend: false, // Make the emotion styles win over jss
 });
 
+// By default the prefix is the same in v4 and v5, keeping that way could lead to conflicts
+const generateClassName = createGenerateClassName({ productionPrefix: 'demo-jss' });
+
 function AppWrapper(props) {
   const { children, pageProps } = props;
 
@@ -392,13 +396,15 @@ function AppWrapper(props) {
       <ReduxProvider store={redux}>
         <PageContext.Provider value={{ activePage, pages, versions: pageProps.versions }}>
           <CacheProvider value={emotionCache}>
-            <StylesProvider jss={jss}>
-              <ThemeProvider>
-                <ThemeProviderV5Bridge>
-                  <XWrapper>{children}</XWrapper>
-                </ThemeProviderV5Bridge>
-              </ThemeProvider>
-            </StylesProvider>
+            <StylesProviderV5 generateClassName={generateClassName}>
+              <StylesProvider jss={jss}>
+                <ThemeProvider>
+                  <ThemeProviderV5Bridge>
+                    <XWrapper>{children}</XWrapper>
+                  </ThemeProviderV5Bridge>
+                </ThemeProvider>
+              </StylesProvider>
+            </StylesProviderV5>
           </CacheProvider>
         </PageContext.Provider>
         <LanguageNegotiation />
