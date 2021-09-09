@@ -212,11 +212,7 @@ DataGridRaw.propTypes = {
    * @default false
    */
   hideFooterPagination: PropTypes.bool,
-  /**
-   * If `true`, the row count in the footer is hidden.
-   * @default false
-   */
-  hideFooterRowCount: PropTypes.bool,
+  hideFooterRowCount: PropTypes.oneOf([false]),
   /**
    * If `true`, the selected row count in the footer is hidden.
    * @default false

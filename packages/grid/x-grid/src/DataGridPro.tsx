@@ -260,6 +260,7 @@ DataGridProRaw.propTypes = {
   hideFooterPagination: PropTypes.bool,
   /**
    * If `true`, the row count in the footer is hidden.
+   * It has no effect if the pagination is enabled.
    * @default false
    */
   hideFooterRowCount: chainPropTypes(PropTypes.bool, (props: any) => {
