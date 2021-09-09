@@ -22,5 +22,4 @@ export type DataGridProps = Omit<
   | 'signature'
 > & {
   pagination?: true;
-  hideFooterRowCount?: false;
 };
