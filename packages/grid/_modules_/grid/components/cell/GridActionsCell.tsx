@@ -2,12 +2,12 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import IconButton from '@material-ui/core/IconButton';
 import MenuList from '@material-ui/core/MenuList';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
 import { unstable_useId as useId } from '@material-ui/core/utils';
 import { GridRenderCellParams } from '../../models/params/gridCellParams';
 import { gridClasses } from '../../gridClasses';
 import { GridMenu, GridMenuProps } from '../menu/GridMenu';
 import { GridActionsColDef } from '../../models/colDef/gridColDef';
+import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
 const hasActions = (colDef: any): colDef is GridActionsColDef =>
   typeof colDef.getActions === 'function';
@@ -18,6 +18,7 @@ const GridActionsCell = (props: GridActionsCellProps) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const menuId = useId();
   const buttonId = useId();
+  const rootProps = useGridRootProps();
   const { colDef, id, api, position = 'bottom-end' } = props;
 
   if (!hasActions(colDef)) {
@@ -49,7 +50,7 @@ const GridActionsCell = (props: GridActionsCellProps) => {
           size="small"
           onClick={showMenu}
         >
-          <MoreVertIcon fontSize="small" />
+          <rootProps.components.MoreActionsIcon fontSize="small" />
         </IconButton>
       )}
 
