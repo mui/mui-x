@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import { GridEvents } from '../../constants/eventsConstants';
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
 import { gridPaginatedVisibleSortedGridRowIdsSelector } from '../../hooks/features/pagination/gridPaginationSelector';
@@ -26,7 +27,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-export const GridHeaderCheckbox = React.forwardRef<HTMLInputElement, GridColumnHeaderParams>(
+const GridHeaderCheckbox = React.forwardRef<HTMLInputElement, GridColumnHeaderParams>(
   function GridHeaderCheckbox(props, ref) {
     const [, forceUpdate] = React.useState(false);
     const apiRef = useGridApiContext();
@@ -106,3 +107,20 @@ export const GridHeaderCheckbox = React.forwardRef<HTMLInputElement, GridColumnH
     );
   },
 );
+
+GridHeaderCheckbox.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  /**
+   * The column of the current header component.
+   */
+  colDef: PropTypes.object.isRequired,
+  /**
+   * The column field of the column that triggered the event
+   */
+  field: PropTypes.string.isRequired,
+} as any;
+
+export { GridHeaderCheckbox };

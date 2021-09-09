@@ -150,6 +150,12 @@ jobs:
           name: Lint JSON
           command: yarn jsonlint
       - run:
+          name: Generate PropTypes
+          command: yarn proptypes
+      - run:
+          name: '`yarn proptypes` changes committed?'
+          command: git diff --exit-code
+      - run:
           name: Generate the documentation
           command: yarn docs:api
       - run:
