@@ -2,7 +2,6 @@ import * as React from 'react';
 import clsx from 'clsx';
 import TrapFocus from '@material-ui/core/Unstable_TrapFocus';
 import { makeStyles } from '@material-ui/styles';
-import { getMuiVersion } from '../../utils/utils';
 
 const useStyles = makeStyles(
   () => ({
@@ -25,14 +24,9 @@ export function GridPanelWrapper(
 ) {
   const classes = useStyles();
   const { className, ...other } = props;
-  const extraProps = getMuiVersion().startsWith('v4')
-    ? {
-        getDoc: () => document,
-      }
-    : ({} as any);
 
   return (
-    <TrapFocus open disableEnforceFocus isEnabled={isEnabled} {...extraProps}>
+    <TrapFocus open disableEnforceFocus isEnabled={isEnabled}>
       <div tabIndex={-1} className={clsx(classes.root, className)} {...other} />
     </TrapFocus>
   );

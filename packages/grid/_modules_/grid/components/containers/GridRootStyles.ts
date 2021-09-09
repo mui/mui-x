@@ -1,13 +1,13 @@
 import { darken, lighten, Theme } from '@material-ui/core/styles';
 import { makeStyles } from '@material-ui/styles';
-import { getThemePaletteMode, muiStyleAlpha, createTheme } from '../../utils/utils';
+import { muiStyleAlpha, createTheme } from '../../utils/utils';
 import { gridClasses } from '../../gridClasses';
 
 const defaultTheme = createTheme();
 export const useStyles = makeStyles(
   (theme: Theme) => {
     const borderColor =
-      getThemePaletteMode(theme.palette) === 'light'
+      theme.palette.mode === 'light'
         ? lighten(muiStyleAlpha(theme.palette.divider, 1), 0.88)
         : darken(muiStyleAlpha(theme.palette.divider, 1), 0.68);
 
@@ -367,7 +367,7 @@ export const useStyles = makeStyles(
       },
     };
 
-    if (getThemePaletteMode(theme.palette) === 'dark') {
+    if (theme.palette.mode === 'dark') {
       // Values coming from mac OS.
       const track = '#202022';
       const thumb = '#585859';

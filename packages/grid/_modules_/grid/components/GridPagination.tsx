@@ -5,7 +5,7 @@ import { makeStyles } from '@material-ui/styles';
 import { useGridSelector } from '../hooks/features/core/useGridSelector';
 import { gridPaginationSelector } from '../hooks/features/pagination/gridPaginationSelector';
 import { useGridApiContext } from '../hooks/root/useGridApiContext';
-import { createTheme, getMuiVersion } from '../utils/utils';
+import { createTheme } from '../utils/utils';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 
 const defaultTheme = createTheme();
@@ -60,25 +60,11 @@ export const GridPagination = React.forwardRef<
   );
 
   const handlePageChange = React.useCallback(
-    (event: any, page: number) => {
+    (event: React.MouseEvent<HTMLButtonElement> | null, page: number) => {
       apiRef.current.setPage(page);
     },
     [apiRef],
   );
-
-  const getPaginationChangeHandlers = () => {
-    if (getMuiVersion() !== 'v4') {
-      return {
-        onPageChange: handlePageChange,
-        onRowsPerPageChange: handlePageSizeChange,
-      };
-    }
-
-    return {
-      onChangePage: handlePageChange,
-      onChangeRowsPerPage: handlePageSizeChange,
-    };
-  };
 
   if (process.env.NODE_ENV !== 'production') {
     // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -102,13 +88,10 @@ export const GridPagination = React.forwardRef<
   }
 
   return (
-    // @ts-ignore TODO remove once upgraded v4 support is dropped
     <TablePagination
       ref={ref}
       classes={{
-        ...(getMuiVersion() === 'v5'
-          ? { selectLabel: classes.selectLabel }
-          : { caption: classes.caption }),
+        selectLabel: classes.selectLabel,
         input: classes.input,
       }}
       component="div"
@@ -120,8 +103,9 @@ export const GridPagination = React.forwardRef<
           : []
       }
       rowsPerPage={paginationState.pageSize}
+      onPageChange={handlePageChange}
+      onRowsPerPageChange={handlePageSizeChange}
       {...apiRef.current.getLocaleText('MuiTablePagination')}
-      {...getPaginationChangeHandlers()}
       {...props}
     />
   );

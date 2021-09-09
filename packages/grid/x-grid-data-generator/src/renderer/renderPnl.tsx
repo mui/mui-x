@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import { Theme } from '@material-ui/core/styles';
 import { createStyles, makeStyles } from '@material-ui/styles';
 import { GridCellParams } from '../../../_modules_/grid';
-import { createTheme, getThemePaletteMode } from '../../../_modules_/grid/utils/utils';
+import { createTheme } from '../../../_modules_/grid/utils/utils';
 
 const defaultTheme = createTheme();
 const useStyles = makeStyles(
@@ -15,13 +15,13 @@ const useStyles = makeStyles(
       },
       positive: {
         color:
-          getThemePaletteMode(theme.palette) === 'light'
+          theme.palette.mode === 'light'
             ? theme.palette.success.dark
             : theme.palette.success.light,
       },
       negative: {
         color:
-          getThemePaletteMode(theme.palette) === 'light'
+          theme.palette.mode === 'light'
             ? theme.palette.error.dark
             : theme.palette.error.light,
       },
