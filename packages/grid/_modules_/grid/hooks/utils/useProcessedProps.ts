@@ -1,5 +1,5 @@
 import * as React from 'react';
-import MUICheckbox from '@material-ui/core/Checkbox';
+import MUICheckbox from '@mui/material/Checkbox';
 import { GRID_DEFAULT_LOCALE_TEXT } from '../../constants/localeTextConstants';
 import { GridComponentProps, GridInputComponentProps } from '../../GridComponentProps';
 import { GRID_DEFAULT_SIMPLE_OPTIONS } from '../../models/gridOptions';

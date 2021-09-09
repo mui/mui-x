@@ -1,4 +1,4 @@
-import { csCZ as csCZCore } from '@material-ui/core/locale';
+import { csCZ as csCZCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 

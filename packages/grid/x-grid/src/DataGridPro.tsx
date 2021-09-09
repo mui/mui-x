@@ -1,7 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { LicenseInfo } from '@mui/x-license-pro';
-import { chainPropTypes, ponyfillGlobal } from '@material-ui/utils';
+import { chainPropTypes, ponyfillGlobal } from '@mui/utils';
 import {
   GridBody,
   GridErrorHandler,

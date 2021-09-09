@@ -1,10 +1,10 @@
 import * as React from 'react';
-import Button from '@material-ui/core/Button';
-import AddIcon from '@material-ui/icons/Add';
-import EditIcon from '@material-ui/icons/Edit';
-import DeleteIcon from '@material-ui/icons/DeleteOutlined';
-import SaveIcon from '@material-ui/icons/Save';
-import CancelIcon from '@material-ui/icons/Close';
+import Button from '@mui/material/Button';
+import AddIcon from '@mui/icons-material/Add';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/DeleteOutlined';
+import SaveIcon from '@mui/icons-material/Save';
+import CancelIcon from '@mui/icons-material/Close';
 import {
   GridRowsProp,
   useGridApiRef,
@@ -22,8 +22,8 @@ import {
   randomUpdatedDate,
   randomId,
 } from '@mui/x-data-grid-generator';
-import { createTheme, Theme } from '@material-ui/core/styles';
-import { makeStyles } from '@material-ui/styles';
+import { createTheme, Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 
 const defaultTheme = createTheme();
 

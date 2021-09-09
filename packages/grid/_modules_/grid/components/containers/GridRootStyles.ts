@@ -1,5 +1,5 @@
-import { darken, lighten, Theme } from '@material-ui/core/styles';
-import { makeStyles } from '@material-ui/styles';
+import { darken, lighten, Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import { getThemePaletteMode, muiStyleAlpha, createTheme } from '../../utils/utils';
 import { gridClasses } from '../../gridClasses';
 

@@ -1,12 +1,12 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { GridRenderEditCellParams } from '@mui/x-data-grid';
-import Slider, { SliderProps } from '@material-ui/core/Slider';
-import { ValueLabelProps } from '@material-ui/unstyled/SliderUnstyled';
-import Tooltip from '@material-ui/core/Tooltip';
-import { createStyles, makeStyles } from '@material-ui/styles';
-import { debounce } from '@material-ui/core/utils';
-import { Theme } from '@material-ui/core/styles';
+import Slider, { SliderProps } from '@mui/material/Slider';
+import { ValueLabelProps } from '@mui/core/SliderUnstyled';
+import Tooltip from '@mui/material/Tooltip';
+import { createStyles, makeStyles } from '@mui/styles';
+import { debounce } from '@mui/material/utils';
+import { Theme } from '@mui/material/styles';
 import { createTheme, muiStyleAlpha } from '../../../_modules_/grid/utils/utils';
 
 const defaultTheme = createTheme();
@@ -20,6 +20,7 @@ const useStyles = makeStyles(
         alignItems: 'center',
         justifyContent: 'center',
         padding: 0,
+        borderRadius: 0,
       },
       rail: {
         height: '100%',
@@ -89,7 +90,7 @@ function EditProgress(props: GridRenderEditCellParams) {
 
   const handleRef: SliderProps['ref'] = (element) => {
     if (element) {
-      element.querySelector<HTMLElement>('[role="slider"]')!.focus();
+      element.querySelector<HTMLElement>('[type="range"]')!.focus();
     }
   };
 

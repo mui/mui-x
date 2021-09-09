@@ -1,4 +1,4 @@
-import { ComponentsOverrides, ComponentsProps } from '@material-ui/core/styles';
+import { ComponentsOverrides, ComponentsProps } from '@mui/material/styles';
 import { DataGridProps } from '../DataGridProps';
 
 export interface DataGridComponentsPropsList {
@@ -12,10 +12,10 @@ export interface DataGridComponents {
   };
 }
 
-declare module '@material-ui/core/styles' {
+declare module '@mui/material/styles' {
   interface ComponentsPropsList extends DataGridComponentsPropsList {}
 }
 
-declare module '@material-ui/core/styles/components' {
+declare module '@mui/material/styles/components' {
   interface Components extends DataGridComponents {}
 }

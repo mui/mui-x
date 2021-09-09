@@ -1,4 +1,4 @@
-import { itIT as itITCore } from '@material-ui/core/locale';
+import { itIT as itITCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
