@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { makeStyles } from '@mui/styles';
-import { Rating } from '@mui/material';
+import Rating from '@mui/material/Rating';
 import {
   GridFilterInputValueProps,
   DataGrid,
