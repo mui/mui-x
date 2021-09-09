@@ -483,6 +483,7 @@ DataGridProRaw.propTypes = {
   /**
    * Callback fired when an exception is thrown in the grid.
    * @param {any} args The arguments passed to the `showError` call.
+   * @param {MuiEvent<{}>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onError: PropTypes.func,
