@@ -48,11 +48,6 @@ export const useStyles = makeStyles(
             theme.palette.action.disabledOpacity,
           ),
         },
-        [`& .${gridClasses.toolbarContainer}`]: {
-          display: 'flex',
-          alignItems: 'center',
-          padding: '4px 4px 0',
-        },
         [`& .${gridClasses.columnsContainer}`]: {
           position: 'absolute',
           top: 0,

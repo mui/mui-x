@@ -11,7 +11,7 @@ const useStyles = makeStyles(
       padding: theme.spacing(1),
     },
   }),
-  { name: 'MuiDataGridPanelHeader', defaultTheme },
+  { name: 'MuiDataGridPanelHeader', defaultTheme }, // TODO rename to MuiGridPanelHeader
 );
 
 export function GridPanelHeader(
