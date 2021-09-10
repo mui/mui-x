@@ -34,7 +34,7 @@ interface RowCellsProps {
   editRowState?: GridEditRowProps;
 }
 
-function GridRowCellsRaw(props: RowCellsProps) {
+export function GridRowCells(props: RowCellsProps) {
   const {
     columns,
     firstColIdx,
@@ -139,9 +139,7 @@ function GridRowCellsRaw(props: RowCellsProps) {
   );
 }
 
-const GridRowCells = React.memo(GridRowCellsRaw);
-
-GridRowCellsRaw.propTypes = {
+GridRowCells.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
@@ -169,5 +167,3 @@ GridRowCellsRaw.propTypes = {
   rowIndex: PropTypes.number.isRequired,
   showCellRightBorder: PropTypes.bool.isRequired,
 } as any;
-
-export { GridRowCells };
