@@ -19,7 +19,7 @@
     },
     {
       "name": "selectRowRange",
-      "description": "Change the selection state of all the selectable row in a range.",
+      "description": "Change the selection state of all the selectable rows in a range.",
       "type": "(range: { endId: GridRowId; startId: GridRowId }, isSelected?: boolean, resetSelection?: boolean) => void"
     },
     {

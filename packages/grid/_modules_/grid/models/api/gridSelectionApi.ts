@@ -19,8 +19,8 @@ export interface GridSelectionApi {
    */
   selectRows: (ids: GridRowId[], isSelected?: boolean, resetSelection?: boolean) => void;
   /**
-   * Change the selection state of all the selectable row in a range.
-   * @param {Object} range The first range of row to select.
+   * Change the selection state of all the selectable rows in a range.
+   * @param {Object} range The range of rows to select.
    * @param {GridRowId} range.startId The first row id.
    * @param {GridRowId} range.endId The last row id.
    * @param {boolean} isSelected The new selection state. Default is `true`.

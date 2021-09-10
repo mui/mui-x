@@ -227,7 +227,7 @@ describe('<DataGridPro /> - Selection', () => {
       expect(getSelectedRowIndexes()).to.deep.equal([]);
     });
 
-    it('should not unselect the selected elements in the range to be selected', () => {
+    it('should not unselect the selected elements if the range is to be selected', () => {
       render(<TestDataGridSelection />);
 
       apiRef.current.setSelectionModel([2]);
