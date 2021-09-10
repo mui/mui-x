@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import * as React from 'react';
-import MenuList from '@material-ui/core/MenuList';
+import MenuList from '@mui/material/MenuList';
 import { isHideMenuKey, isTabKey } from '../../../utils/keyboardUtils';
 import { GridColumnMenuProps } from './GridColumnMenuProps';
 

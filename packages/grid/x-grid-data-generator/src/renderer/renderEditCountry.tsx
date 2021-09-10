@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { GridRenderEditCellParams } from '@mui/x-data-grid';
-import Autocomplete from '@material-ui/lab/Autocomplete';
-import InputBase from '@material-ui/core/InputBase';
-import { createStyles, makeStyles } from '@material-ui/styles';
-import { Theme } from '@material-ui/core/styles';
+import Autocomplete from '@mui/material/Autocomplete';
+import InputBase from '@mui/material/InputBase';
+import { createStyles, makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import { createTheme } from '../../../_modules_/grid/utils/utils';
 import { COUNTRY_ISO_OPTIONS } from '../services/static-data';
 

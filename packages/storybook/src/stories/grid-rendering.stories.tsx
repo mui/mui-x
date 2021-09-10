@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { DataGridPro, GridOverlay } from '@mui/x-data-grid-pro';
-import LinearProgress from '@material-ui/core/LinearProgress';
+import LinearProgress from '@mui/material/LinearProgress';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import '../style/grid-stories.css';
 import { action } from '@storybook/addon-actions';

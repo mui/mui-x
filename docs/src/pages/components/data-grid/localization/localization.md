@@ -23,7 +23,7 @@ The default locale of Material-UI is English (United States).
 You can use the theme to configure the locale text:
 
 ```jsx
-import { createTheme, ThemeProvider } from '@material-ui/core/styles';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { DataGrid, bgBG } from '@mui/x-data-grid';
 
 const theme = createTheme(
@@ -45,9 +45,9 @@ If you are already using the [translations of the core components](/guides/local
 The same import works for `DataGridPro` as it's an extension of `DataGrid`.
 
 ```jsx
-import { createTheme, ThemeProvider } from '@material-ui/core/styles';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { DataGrid, bgBG } from '@mui/x-data-grid';
-import { bgBG as coreBgBG } from '@material-ui/core/locale';
+import { bgBG as coreBgBG } from '@mui/material/locale';
 
 const theme = createTheme(
   {

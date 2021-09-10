@@ -6,7 +6,7 @@ import {
   DataGridPro,
   GridEditSingleSelectCell,
 } from '@mui/x-data-grid-pro';
-import Portal from '@material-ui/unstyled/Portal';
+import Portal from '@mui/core/Portal';
 import { expect } from 'chai';
 import * as React from 'react';
 import { getActiveCell, getCell, getRow, getColumnHeaderCell } from 'test/utils/helperFn';

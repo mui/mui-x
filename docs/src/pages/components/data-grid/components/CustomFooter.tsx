@@ -1,9 +1,9 @@
 import * as React from 'react';
-import Button from '@material-ui/core/Button';
-import { makeStyles } from '@material-ui/styles';
+import Button from '@mui/material/Button';
+import { makeStyles } from '@mui/styles';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import { DataGrid } from '@mui/x-data-grid';
-import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
+import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
 
 const useStyles = makeStyles({
   root: {

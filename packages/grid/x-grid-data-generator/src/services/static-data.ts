@@ -1,4 +1,4 @@
-import { blue, green, lightBlue, orange, pink, purple, red } from '@material-ui/core/colors';
+import { blue, green, lightBlue, orange, pink, purple, red } from '@mui/material/colors';
 
 export const COLORS = [
   pink[500],

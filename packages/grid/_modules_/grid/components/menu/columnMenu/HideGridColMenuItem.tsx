@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import MenuItem from '@material-ui/core/MenuItem';
+import MenuItem from '@mui/material/MenuItem';
 import { GridFilterItemProps } from './GridFilterItemProps';
 import { useGridApiContext } from '../../../hooks/root/useGridApiContext';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';

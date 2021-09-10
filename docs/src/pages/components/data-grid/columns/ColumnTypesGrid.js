@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
-import DeleteIcon from '@material-ui/icons/Delete';
-import SecurityIcon from '@material-ui/icons/Security';
-import FileCopyIcon from '@material-ui/icons/FileCopy';
+import DeleteIcon from '@mui/icons-material/Delete';
+import SecurityIcon from '@mui/icons-material/Security';
+import FileCopyIcon from '@mui/icons-material/FileCopy';
 import { randomCreatedDate, randomUpdatedDate } from '@mui/x-data-grid-generator';
 
 const initialRows = [

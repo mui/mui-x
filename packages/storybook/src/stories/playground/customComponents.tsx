@@ -1,12 +1,12 @@
 import * as React from 'react';
-import { withStyles } from '@material-ui/styles';
-import { green } from '@material-ui/core/colors';
-import Checkbox, { CheckboxProps } from '@material-ui/core/Checkbox';
-import LinearProgress from '@material-ui/core/LinearProgress';
-import CodeIcon from '@material-ui/icons/Code';
-import ExpandLessIcon from '@material-ui/icons/ExpandLess';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import Pagination from '@material-ui/lab/Pagination';
+import { withStyles } from '@mui/styles';
+import { green } from '@mui/material/colors';
+import Checkbox, { CheckboxProps } from '@mui/material/Checkbox';
+import LinearProgress from '@mui/material/LinearProgress';
+import CodeIcon from '@mui/icons-material/Code';
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import Pagination from '@mui/material/Pagination';
 import {
   GridFooterContainer,
   GridOverlay,

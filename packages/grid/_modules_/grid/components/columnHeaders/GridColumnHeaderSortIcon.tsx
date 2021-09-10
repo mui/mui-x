@@ -1,7 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import Badge from '@material-ui/core/Badge';
-import IconButton from '@material-ui/core/IconButton';
+import Badge from '@mui/material/Badge';
+import IconButton from '@mui/material/IconButton';
 import { GridIconSlotsComponent } from '../../models/gridIconSlotsComponent';
 import { GridSortDirection } from '../../models/gridSortModel';
 import { useGridApiContext } from '../../hooks/root/useGridApiContext';

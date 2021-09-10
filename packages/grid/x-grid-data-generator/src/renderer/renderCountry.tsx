@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 import { GridRenderCellParams } from '@mui/x-data-grid-pro';
 
 // ISO 3166-1 alpha-2

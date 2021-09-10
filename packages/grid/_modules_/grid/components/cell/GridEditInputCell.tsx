@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import InputBase, { InputBaseProps } from '@material-ui/core/InputBase';
+import InputBase, { InputBaseProps } from '@mui/material/InputBase';
 import { GridRenderEditCellParams } from '../../models/params/gridCellParams';
 import { composeClasses, useEnhancedEffect } from '../../utils/material-ui-utils';
 import { getDataGridUtilityClass } from '../../gridClasses';
