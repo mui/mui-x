@@ -14,12 +14,18 @@ import {
 import { useGridApiMethod } from '../../root/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { useGridState } from '../core/useGridState';
-import { getInitialGridRowState, GridRowsInternalCache, GridRowsState } from './gridRowsState';
+import { getInitialGridRowState, GridRowsState } from './gridRowsState';
 import {
   gridRowCountSelector,
   gridRowsLookupSelector,
   unorderedGridRowIdsSelector,
 } from './gridRowsSelector';
+
+export interface GridRowsInternalCache {
+  state: GridRowsState;
+  timeout: NodeJS.Timeout | null;
+  lastUpdateMs: number | null;
+}
 
 function getGridRowId(
   rowData: GridRowData,
@@ -61,15 +67,11 @@ export const useGridRows = (
   const logger = useGridLogger(apiRef, 'useGridRows');
   const [, setGridState, forceUpdate] = useGridState(apiRef);
 
-  const rowsCache = React.useRef() as React.MutableRefObject<GridRowsInternalCache>;
-
-  if (!rowsCache.current) {
-    rowsCache.current = {
-      state: getInitialGridRowState(),
-      timeout: null,
-      lastUpdateMs: null,
-    };
-  }
+  const rowsCache = React.useRef<GridRowsInternalCache>({
+    state: getInitialGridRowState(),
+    timeout: null,
+    lastUpdateMs: null,
+  });
 
   const getRowIndex = React.useCallback<GridRowApi['getRowIndex']>(
     (id) => {

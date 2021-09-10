@@ -16,7 +16,7 @@ const rows = [
   { id: 4, username: randomUserName(), age: randomInt(10, 80) },
 ];
 
-export default function ApiRefRowsGrid() {
+export default function ThrottledRowsGrid() {
   const apiRef = useGridApiRef();
 
   React.useEffect(() => {
@@ -46,7 +46,7 @@ export default function ApiRefRowsGrid() {
         rows={rows}
         columns={columns}
         apiRef={apiRef}
-        throttleRowsMs={500}
+        throttleRowsMs={2000}
       />
     </div>
   );

@@ -6,12 +6,6 @@ export interface GridRowsState {
   totalRowCount: number;
 }
 
-export interface GridRowsInternalCache {
-  state: GridRowsState;
-  timeout: NodeJS.Timeout | null;
-  lastUpdateMs: number | null;
-}
-
 export const getInitialGridRowState: () => GridRowsState = () => ({
   idRowsLookup: {},
   allRows: [],
