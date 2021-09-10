@@ -35,9 +35,7 @@ module.exports = {
     [
       'babel-plugin-transform-rename-import',
       {
-        replacements: [
-          { original: '@mui/utils/macros/MuiError.macro', replacement: 'react' },
-        ],
+        replacements: [{ original: '@mui/utils/macros/MuiError.macro', replacement: 'react' }],
       },
     ],
     'babel-plugin-optimize-clsx',
