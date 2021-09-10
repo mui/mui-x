@@ -20,7 +20,6 @@ import jssRtl from 'jss-rtl';
 import { CacheProvider } from '@emotion/react';
 import { useRouter } from 'next/router';
 import { StylesProvider, jssPreset } from '@mui/styles';
-import { ponyfillGlobal } from '@mui/utils';
 import pages from 'docsx/src/pages';
 import PageContext from 'docs/src/modules/components/PageContext';
 import GoogleAnalytics from 'docs/src/modules/components/GoogleAnalytics';
@@ -40,41 +39,6 @@ import {
 } from 'docs/src/modules/utils/i18n';
 import DocsStyledEngineProvider from 'docs/src/modules/utils/StyledEngineProvider';
 import createEmotionCache from 'docs/src/createEmotionCache';
-
-function getMuiPackageVersion(packageName, commitRef) {
-  if (commitRef === undefined) {
-    return 'latest';
-  }
-  const shortSha = commitRef.slice(0, 8);
-  return `https://pkg.csb.dev/mui-org/material-ui-x/commit/${shortSha}/@mui/${packageName}`;
-}
-
-ponyfillGlobal.muiDocConfig = {
-  csbIncludePeerDependencies: (deps, { versions }) => {
-    const newDeps = { ...deps };
-
-    if (newDeps['@mui/x-data-grid-pro'] || newDeps['@mui/x-data-grid']) {
-      newDeps['@mui/material'] = versions['@mui/material'];
-      newDeps['@mui/styles'] = versions['@mui/styles'];
-    }
-
-    if (newDeps['@mui/x-data-grid-generator']) {
-      newDeps['@mui/material'] = versions['@mui/material'];
-      newDeps['@mui/icons-material'] = versions['@mui/icons-material'];
-    }
-
-    return newDeps;
-  },
-  csbGetVersions: (versions, { muiCommitRef }) => {
-    const output = {
-      ...versions,
-      '@mui/x-data-grid-pro': getMuiPackageVersion('x-data-grid-pro', muiCommitRef),
-      '@mui/x-data-grid-generator': getMuiPackageVersion('x-data-grid-generator', muiCommitRef),
-      '@mui/x-data-grid': getMuiPackageVersion('x-data-grid', muiCommitRef),
-    };
-    return output;
-  },
-};
 
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache();
@@ -321,11 +285,9 @@ Tip: you can access the documentation \`theme\` object directly in the console.
 
 function findActivePage(currentPages, pathname) {
   const activePage = find(currentPages, (page) => {
-    if (page.children) {
-      if (pathname.indexOf(`${page.pathname}/`) === 0) {
-        // Check if one of the children matches (for /components)
-        return findActivePage(page.children, pathname);
-      }
+    if (page.children && pathname.indexOf(`${page.pathname}/`) === 0) {
+      // Check if one of the children matches (for /components)
+      return findActivePage(page.children, pathname);
     }
 
     // Should be an exact match if no children
@@ -339,6 +301,12 @@ function findActivePage(currentPages, pathname) {
   // We need to drill down
   if (activePage.pathname !== pathname) {
     return findActivePage(activePage.children, pathname);
+  }
+
+  if (activePage.pathname === '/api-docs/data-grid') {
+    // If the activePage is returned, it will crash.
+    // <AppLayoutDocsFooter /> won't find the links to the previous and next pages.
+    return activePage.children[0];
   }
 
   return activePage;

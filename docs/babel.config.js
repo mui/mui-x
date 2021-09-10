@@ -15,11 +15,10 @@ const alias = {
   '@mui/x-data-grid-generator': '../packages/grid/x-grid-data-generator/src',
   '@mui/x-data-grid-pro': '../packages/grid/x-grid/src',
   '@mui/x-license-pro': '../packages/x-license/src',
-  '@mui/docs': '../node_modules/@material-ui/monorepo/packages/material-ui-docs/src',
+  '@mui/docs': '../node_modules/@material-ui/monorepo/packages/mui-docs/src',
   '@mui/markdown': '../node_modules/@material-ui/monorepo/docs/packages/markdown',
-  // Help in the event npm and git are significantly desynchronized.
-  '@material-ui/docs': '../node_modules/@material-ui/monorepo/packages/material-ui-docs/src',
-  docs: '../node_modules/@material-ui/monorepo/docs',
+  '@material-ui/monorepo': '../node_modules/@material-ui/monorepo',
+  docs: '../node_modules/@material-ui/monorepo/docs', // TODO remove
   docsx: './',
 };
 

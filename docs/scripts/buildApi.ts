@@ -4,7 +4,7 @@ import { writeFileSync, mkdirSync } from 'fs';
 import path from 'path';
 import kebabCase from 'lodash/kebabCase';
 import * as prettier from 'prettier';
-import { renderInline as renderMarkdownInline } from 'docs/packages/markdown';
+import { renderInline as renderMarkdownInline } from '@material-ui/monorepo/docs/packages/markdown';
 
 type Api = {
   name: string;
@@ -330,7 +330,7 @@ function run(argv: { outputDirectory?: string }) {
       writePrettifiedFile(
         path.resolve(outputDirectory, `${slug}.js`),
         `import * as React from 'react';
-import MarkdownDocs from 'docs/src/modules/components/MarkdownDocs';
+import MarkdownDocs from '@material-ui/monorepo/docs/src/modules/components/MarkdownDocs';
 import { demos, docs, demoComponents } from './${slug}.md?@mui/markdown';
 
 export default function Page() {

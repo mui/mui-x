@@ -24,7 +24,6 @@ if (reactStrictMode) {
 
 module.exports = {
   eslint: {
-    // TODO: https://github.com/mui-org/material-ui/issues/25966
     ignoreDuringBuilds: true,
   },
   typescript: {
@@ -66,19 +65,6 @@ module.exports = {
       /(@material-ui[\\/]monorepo)$/,
       /(@material-ui[\\/]monorepo)[\\/](?!.*node_modules)/,
     ];
-
-    // if (config.externals) {
-    //   config.externals = config.externals.map((external) => {
-    //     if (typeof external !== 'function') return external;
-    //     return (ctx, req, cb) => {
-    //       return includesMonorepo.find((include) =>
-    //         req.startsWith('.') ? include.test(path.resolve(ctx, req)) : include.test(req),
-    //       )
-    //         ? cb()
-    //         : external(ctx, req, cb);
-    //     };
-    //   });
-    // }
 
     return {
       ...config,
