@@ -137,6 +137,14 @@ describe('<DataGridPro /> - Rows', () => {
   });
 
   describe('props: rows', () => {
+    beforeEach(() => {
+      clock = useFakeTimers();
+    });
+
+    afterEach(() => {
+      clock.restore();
+    });
+
     it('should support new dataset throttle', () => {
       const { rows, columns } = getData(5, 2);
 
