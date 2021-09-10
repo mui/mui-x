@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { GridColumns, DataGrid, GridCellParams } from '@mui/x-data-grid';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@mui/styles';
 
 const columns: GridColumns = [
   { field: 'city' },

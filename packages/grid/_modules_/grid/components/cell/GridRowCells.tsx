@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { GridCellIdentifier } from '../../hooks/features/focus/gridFocusState';
 import {
@@ -33,7 +34,7 @@ interface RowCellsProps {
   editRowState?: GridEditRowProps;
 }
 
-export const GridRowCells = React.memo(function GridRowCells(props: RowCellsProps) {
+export function GridRowCells(props: RowCellsProps) {
   const {
     columns,
     firstColIdx,
@@ -136,4 +137,33 @@ export const GridRowCells = React.memo(function GridRowCells(props: RowCellsProp
       ))}
     </React.Fragment>
   );
-});
+}
+
+GridRowCells.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  cellFocus: PropTypes.shape({
+    field: PropTypes.string.isRequired,
+    id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  }),
+  cellTabIndex: PropTypes.shape({
+    field: PropTypes.string.isRequired,
+    id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  }),
+  columns: PropTypes.arrayOf(PropTypes.object).isRequired,
+  editRowState: PropTypes.object,
+  extendRowFullWidth: PropTypes.bool.isRequired,
+  firstColIdx: PropTypes.number.isRequired,
+  getCellClassName: PropTypes.func,
+  hasScrollX: PropTypes.bool.isRequired,
+  hasScrollY: PropTypes.bool.isRequired,
+  height: PropTypes.number.isRequired,
+  id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  isSelected: PropTypes.bool.isRequired,
+  lastColIdx: PropTypes.number.isRequired,
+  row: PropTypes.object.isRequired,
+  rowIndex: PropTypes.number.isRequired,
+  showCellRightBorder: PropTypes.bool.isRequired,
+} as any;

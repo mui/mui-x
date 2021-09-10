@@ -10,7 +10,7 @@ import {
 } from 'test/utils';
 import { expect } from 'chai';
 import { spy, stub, SinonFakeTimers, useFakeTimers } from 'sinon';
-import Portal from '@material-ui/core/Portal';
+import Portal from '@mui/material/Portal';
 import { DataGrid, DataGridProps, GridActionsCellItem } from '@mui/x-data-grid';
 import { getColumnValues, getRow } from 'test/utils/helperFn';
 import { getData } from 'storybook/src/data/data-service';

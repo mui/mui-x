@@ -1,6 +1,7 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import Tooltip from '@material-ui/core/Tooltip';
+import Tooltip from '@mui/material/Tooltip';
 import { isOverflown } from '../../utils/domUtils';
 import { getDataGridUtilityClass } from '../../gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
@@ -38,7 +39,7 @@ export interface GridColumnHeaderTitleProps {
 }
 
 // No React.memo here as if we display the sort icon, we need to recalculate the isOver
-export function GridColumnHeaderTitle(props: GridColumnHeaderTitleProps) {
+function GridColumnHeaderTitle(props: GridColumnHeaderTitleProps) {
   const { label, description, columnWidth } = props;
   const titleRef = React.useRef<HTMLDivElement>(null);
   const [tooltip, setTooltip] = React.useState('');
@@ -60,3 +61,15 @@ export function GridColumnHeaderTitle(props: GridColumnHeaderTitleProps) {
     </Tooltip>
   );
 }
+
+GridColumnHeaderTitle.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  columnWidth: PropTypes.number.isRequired,
+  description: PropTypes.string,
+  label: PropTypes.string.isRequired,
+} as any;
+
+export { GridColumnHeaderTitle };

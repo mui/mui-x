@@ -1,7 +1,7 @@
 import * as React from 'react';
-import TablePagination from '@material-ui/core/TablePagination';
-import { Theme } from '@material-ui/core/styles';
-import { makeStyles } from '@material-ui/styles';
+import TablePagination from '@mui/material/TablePagination';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import { useGridSelector } from '../hooks/features/core/useGridSelector';
 import { gridPaginationSelector } from '../hooks/features/pagination/gridPaginationSelector';
 import { useGridApiContext } from '../hooks/root/useGridApiContext';
@@ -50,6 +50,7 @@ export const GridPagination = React.forwardRef<
     () => Math.floor(paginationState.rowCount / (paginationState.pageSize || 1)),
     [paginationState.rowCount, paginationState.pageSize],
   );
+
   const handlePageSizeChange = React.useCallback(
     (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
       const newPageSize = Number(event.target.value);
@@ -95,6 +96,7 @@ export const GridPagination = React.forwardRef<
           `Add it to show the pagination select.`,
         ].join('\n'),
       );
+
       warnedOnceMissingPageSizeInRowsPerPageOptions.current = true;
     }
   }

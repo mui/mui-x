@@ -1,7 +1,8 @@
 import * as React from 'react';
-import IconButton, { IconButtonProps } from '@material-ui/core/IconButton';
-import MenuItem, { MenuItemProps } from '@material-ui/core/MenuItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
+import PropTypes from 'prop-types';
+import IconButton, { IconButtonProps } from '@mui/material/IconButton';
+import MenuItem, { MenuItemProps } from '@mui/material/MenuItem';
+import ListItemIcon from '@mui/material/ListItemIcon';
 
 export type GridActionsCellItemProps = {
   label: string;
@@ -11,7 +12,7 @@ export type GridActionsCellItemProps = {
   | ({ showInMenu: true } & MenuItemProps)
 );
 
-export const GridActionsCellItem = (props: GridActionsCellItemProps) => {
+const GridActionsCellItem = (props: GridActionsCellItemProps) => {
   const { label, icon, showInMenu, ...other } = props;
 
   if (!showInMenu) {
@@ -29,3 +30,15 @@ export const GridActionsCellItem = (props: GridActionsCellItemProps) => {
     </MenuItem>
   );
 };
+
+GridActionsCellItem.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  icon: PropTypes.element,
+  label: PropTypes.string.isRequired,
+  showInMenu: PropTypes.bool,
+} as any;
+
+export { GridActionsCellItem };

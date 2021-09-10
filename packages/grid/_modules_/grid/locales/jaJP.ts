@@ -1,4 +1,4 @@
-import { jaJP as jaJPCore } from '@material-ui/core/locale';
+import { jaJP as jaJPCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 

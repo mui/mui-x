@@ -1,4 +1,4 @@
-import { ptBR as ptBRCore } from '@material-ui/core/locale';
+import { ptBR as ptBRCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
