@@ -40,6 +40,19 @@ function GridEditSingleSelectCell(props: GridRenderEditCellParams & SelectProps)
   const ref = React.useRef<any>();
   const rootProps = useGridRootProps();
   const [open, setOpen] = React.useState(rootProps.editMode === 'cell');
+  let valueOptionsFormatted = colDef.valueOptions;
+
+  if (colDef.valueFormatter) {
+    valueOptionsFormatted = colDef.valueOptions.map((option) =>
+      // valueFormatter is only applied to primitive type valueOptions
+      typeof option === 'object'
+        ? option
+        : {
+            value: option,
+            label: colDef.valueFormatter({ ...props, value: option }),
+          },
+    );
+  }
 
   const handleChange = (event) => {
     setOpen(false);
@@ -85,7 +98,7 @@ function GridEditSingleSelectCell(props: GridRenderEditCellParams & SelectProps)
       fullWidth
       {...other}
     >
-      {colDef.valueOptions?.map(renderSingleSelectOptions)}
+      {valueOptionsFormatted.map(renderSingleSelectOptions)}
     </Select>
   );
 }
