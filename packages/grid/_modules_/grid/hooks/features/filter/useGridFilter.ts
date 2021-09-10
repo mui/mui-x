@@ -271,7 +271,6 @@ export const useGridFilter = (
   const setFilterModel = React.useCallback<GridFilterApi['setFilterModel']>(
     (model) => {
       const currentModel = filterGridStateSelector(apiRef.current.state);
-
       if (currentModel !== model) {
         checkFilterModelValidity(model);
 
