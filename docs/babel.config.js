@@ -36,7 +36,7 @@ module.exports = {
       'babel-plugin-transform-rename-import',
       {
         replacements: [
-          { original: '@material-ui/utils/macros/MuiError.macro', replacement: 'react' },
+          { original: '@mui/utils/macros/MuiError.macro', replacement: 'react' },
         ],
       },
     ],
