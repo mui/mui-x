@@ -266,6 +266,7 @@ export const GRID_DEFAULT_SIMPLE_OPTIONS: GridSimpleOptions = {
   paginationMode: GridFeatureModeConstant.client,
   rowHeight: 52,
   rowsPerPageOptions: [25, 50, 100],
+  treeData: false,
   scrollEndThreshold: 80,
   showCellRightBorder: false,
   showColumnRightBorder: false,
