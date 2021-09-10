@@ -1,6 +1,5 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { gridColumnReorderDragColSelector } from '../../hooks/features/columnReorder/columnReorderSelector';
 import { gridResizingColumnFieldSelector } from '../../hooks/features/columnResize/columnResizeSelector';
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
 import { filterGridColumnLookupSelector } from '../../hooks/features/filter/gridFilterSelector';
@@ -18,10 +17,10 @@ import { useGridApiContext } from '../../hooks/root/useGridApiContext';
 import { GridColumnHeaderItem } from './GridColumnHeaderItem';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { gridScrollBarSizeSelector } from '../../hooks/root/gridContainerSizesSelector';
-import { useGridProSelector } from '../../hooks/features/core/useGridProSelector';
 
 export interface GridColumnHeadersItemCollectionProps {
   columns: GridStateColDef[];
+  dragCol?: string;
 }
 
 function GridColumnHeadersItemCollection(props: GridColumnHeadersItemCollectionProps) {
@@ -29,7 +28,6 @@ function GridColumnHeadersItemCollection(props: GridColumnHeadersItemCollectionP
   const apiRef = useGridApiContext();
   const sortColumnLookup = useGridSelector(apiRef, gridSortColumnLookupSelector);
   const filterColumnLookup = useGridSelector(apiRef, filterGridColumnLookupSelector);
-  const dragCol = useGridProSelector(apiRef, gridColumnReorderDragColSelector);
   const resizingColumnField = useGridSelector(apiRef, gridResizingColumnFieldSelector);
   const columnHeaderFocus = useGridSelector(apiRef, gridFocusColumnHeaderSelector);
   const renderCtx = useGridSelector(apiRef, gridRenderingSelector).renderContext;
@@ -67,7 +65,7 @@ function GridColumnHeadersItemCollection(props: GridColumnHeadersItemCollectionP
         columnMenuOpen={open}
         filterItemsCounter={filterColumnLookup[col.field] && filterColumnLookup[col.field].length}
         headerHeight={headerHeight}
-        isDragging={col.field === dragCol}
+        isDragging={col.field === props.dragCol}
         column={col}
         colIndex={colIndex}
         isResizing={resizingColumnField === col.field}

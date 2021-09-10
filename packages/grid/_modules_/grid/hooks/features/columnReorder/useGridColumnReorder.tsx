@@ -13,6 +13,7 @@ import { gridColumnReorderDragColSelector } from './columnReorderSelector';
 import { GridComponentProps } from '../../../GridComponentProps';
 import { useGridStateInit } from '../../utils/useGridStateInit';
 import { composeClasses } from '../../../utils/material-ui-utils';
+import { GridSlotsComponentsProps } from '../../../models';
 
 const CURSOR_MOVE_DIRECTION_LEFT = 'left';
 const CURSOR_MOVE_DIRECTION_RIGHT = 'right';
@@ -50,8 +51,8 @@ const useUtilityClasses = (ownerState: OwnerState) => {
  */
 export const useGridColumnReorder = (
   apiRef: GridApiRef,
-  props: Pick<GridComponentProps, 'disableColumnReorder' | 'classes'>,
-): void => {
+  props: GridComponentProps,
+): GridComponentProps => {
   const logger = useGridLogger(apiRef, 'useGridColumnReorder');
 
   useGridStateInit(apiRef, (state) => ({
@@ -192,4 +193,23 @@ export const useGridColumnReorder = (
   useGridApiEventHandler(apiRef, GridEvents.cellDragEnter, handleDragEnter);
   useGridApiEventHandler(apiRef, GridEvents.cellDragOver, handleDragOver);
   useGridApiEventHandler(apiRef, GridEvents.cellDragEnd, handleDragEnd);
+
+  const componentsProps = React.useMemo<GridSlotsComponentsProps>(
+    () => ({
+      ...props.componentsProps,
+      columnsHeader: {
+        ...props.componentsProps?.columnsHeader,
+        dragCol: dragColField,
+      },
+    }),
+    [props.componentsProps, dragColField],
+  );
+
+  return React.useMemo(
+    () => ({
+      ...props,
+      componentsProps,
+    }),
+    [props, componentsProps],
+  );
 };
