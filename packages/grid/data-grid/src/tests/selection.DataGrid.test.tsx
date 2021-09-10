@@ -124,6 +124,7 @@ describe('<DataGrid /> - Selection', () => {
           checkboxSelection
         />,
       );
+
       expect(getSelectedRowIndexes()).to.deep.equal([0]);
       setProps({ selectionModel: [0, 1, 2, 3] });
       expect(getSelectedRowIndexes()).to.deep.equal([0, 2]);

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 import * as React from 'react';
-import Alert from '@material-ui/lab/Alert';
+import Alert from '@mui/material/Alert';
 import { GridEvents, useGridApiRef, DataGridPro } from '@mui/x-data-grid-pro';
 import {
   randomCreatedDate,

@@ -1,4 +1,4 @@
-import Button from '@material-ui/core/Button';
+import Button from '@mui/material/Button';
 import * as React from 'react';
 import clsx from 'clsx';
 import { Story, Meta } from '@storybook/react';
@@ -16,9 +16,9 @@ import {
   GridPreferencePanelsValue,
   GridState,
 } from '@mui/x-data-grid-pro';
-import DoneIcon from '@material-ui/icons/Done';
-import ClearIcon from '@material-ui/icons/Clear';
-import CreateIcon from '@material-ui/icons/Create';
+import DoneIcon from '@mui/icons-material/Done';
+import ClearIcon from '@mui/icons-material/Clear';
+import CreateIcon from '@mui/icons-material/Create';
 import { useData } from '../../hooks/useData';
 import {
   CustomHeader,

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { useForkRef } from '@material-ui/core/utils';
+import { useForkRef } from '@mui/material/utils';
 import { GridEvents } from '../../constants/eventsConstants';
 import { GridCellParams } from '../../models/params/gridCellParams';
 import { isNavigationKey, isSpaceKey } from '../../utils/keyboardUtils';
@@ -35,7 +35,7 @@ const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridCellPa
     const element = apiRef.current.getCellElement(id, field);
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-      apiRef.current.selectRow(id, event.target.checked, true);
+      apiRef.current.selectRow(id, event.target.checked, false);
     };
 
     const handleClick = (event: React.MouseEvent<HTMLInputElement>) => {

@@ -1,12 +1,12 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import ClickAwayListener, { ClickAwayListenerProps } from '@material-ui/core/ClickAwayListener';
-import Grow from '@material-ui/core/Grow';
-import Paper from '@material-ui/core/Paper';
-import Popper, { PopperProps } from '@material-ui/core/Popper';
-import { Theme } from '@material-ui/core/styles';
-import { makeStyles } from '@material-ui/styles';
-import { HTMLElementType } from '@material-ui/utils';
+import ClickAwayListener, { ClickAwayListenerProps } from '@mui/material/ClickAwayListener';
+import Grow from '@mui/material/Grow';
+import Paper from '@mui/material/Paper';
+import Popper, { PopperProps } from '@mui/material/Popper';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
+import { HTMLElementType } from '@mui/utils';
 import { createTheme } from '../../utils/utils';
 
 type MenuPosition =

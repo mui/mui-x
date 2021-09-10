@@ -16,6 +16,7 @@ const FORCED_PROPS: { [key in ForcedPropsKey]-?: GridInputComponentProps[key] } 
   disableMultipleColumnsFiltering: true,
   disableMultipleColumnsSorting: true,
   disableMultipleSelection: true,
+  hideFooterRowCount: false,
   pagination: true,
   onRowsScrollEnd: undefined,
   onViewportRowsChange: undefined,

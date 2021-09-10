@@ -1,11 +1,11 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { Theme } from '@material-ui/core/styles';
-import { makeStyles } from '@material-ui/styles';
-import Badge from '@material-ui/core/Badge';
-import Button, { ButtonProps } from '@material-ui/core/Button';
-import Tooltip, { TooltipProps } from '@material-ui/core/Tooltip';
-import { capitalize } from '@material-ui/core/utils';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
+import Badge from '@mui/material/Badge';
+import Button, { ButtonProps } from '@mui/material/Button';
+import Tooltip, { TooltipProps } from '@mui/material/Tooltip';
+import { capitalize } from '@mui/material/utils';
 import { gridColumnLookupSelector } from '../../hooks/features/columns/gridColumnsSelector';
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
 import {

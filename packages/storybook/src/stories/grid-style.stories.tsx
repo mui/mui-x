@@ -1,8 +1,8 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { DataGridPro, GridColDef } from '@mui/x-data-grid-pro';
-import DoneIcon from '@material-ui/icons/Done';
-import ClearIcon from '@material-ui/icons/Clear';
+import DoneIcon from '@mui/icons-material/Done';
+import ClearIcon from '@mui/icons-material/Clear';
 import { useData } from '../hooks/useData';
 import '../style/grid-stories.css';
 

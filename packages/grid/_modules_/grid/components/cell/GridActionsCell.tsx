@@ -1,8 +1,8 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import IconButton from '@material-ui/core/IconButton';
-import MenuList from '@material-ui/core/MenuList';
-import { unstable_useId as useId } from '@material-ui/core/utils';
+import IconButton from '@mui/material/IconButton';
+import MenuList from '@mui/material/MenuList';
+import { unstable_useId as useId } from '@mui/material/utils';
 import { GridRenderCellParams } from '../../models/params/gridCellParams';
 import { gridClasses } from '../../gridClasses';
 import { GridMenu, GridMenuProps } from '../menu/GridMenu';
