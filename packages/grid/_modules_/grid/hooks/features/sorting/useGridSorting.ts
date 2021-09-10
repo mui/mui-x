@@ -7,7 +7,7 @@ import { GridCellValue } from '../../../models/gridCell';
 import { GridColDef } from '../../../models/colDef/gridColDef';
 import { GridFeatureModeConstant } from '../../../models/gridFeatureMode';
 import { GridColumnHeaderParams } from '../../../models/params/gridColumnHeaderParams';
-import { GridRowId, GridRowModel } from '../../../models/gridRows';
+import { GridRowId } from '../../../models/gridRows';
 import {
   GridFieldComparatorList,
   GridSortItem,
@@ -222,7 +222,7 @@ export const useGridSorting = (
         apiRef.current.applySorting();
       }
     },
-    [setGridState, forceUpdate, apiRef],
+    [apiRef, setGridState, forceUpdate, logger],
   );
 
   const sortColumn = React.useCallback<GridSortApi['sortColumn']>(
