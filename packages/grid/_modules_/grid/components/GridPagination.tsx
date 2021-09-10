@@ -1,7 +1,7 @@
 import * as React from 'react';
-import TablePagination from '@material-ui/core/TablePagination';
-import { Theme } from '@material-ui/core/styles';
-import { makeStyles } from '@material-ui/styles';
+import TablePagination from '@mui/material/TablePagination';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import { useGridSelector } from '../hooks/features/core/useGridSelector';
 import { gridPaginationSelector } from '../hooks/features/pagination/gridPaginationSelector';
 import { useGridApiContext } from '../hooks/root/useGridApiContext';

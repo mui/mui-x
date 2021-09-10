@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { GridCellParams } from '@mui/x-data-grid-pro';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 
 const useStyles = makeStyles({
   root: {

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { unstable_useId as useId } from '@material-ui/core/utils';
+import { unstable_useId as useId } from '@mui/material/utils';
 import { GridEvents } from '../../constants/eventsConstants';
 import { GridStateColDef, GRID_NUMBER_COLUMN_TYPE } from '../../models/colDef/index';
 import { GridSortDirection } from '../../models/gridSortModel';

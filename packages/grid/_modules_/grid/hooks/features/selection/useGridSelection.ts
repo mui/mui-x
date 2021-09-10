@@ -4,7 +4,7 @@ import { GridComponentProps } from '../../../GridComponentProps';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridSelectionApi } from '../../../models/api/gridSelectionApi';
 import { GridRowParams } from '../../../models/params/gridRowParams';
-import { GridRowId, GridRowModel } from '../../../models/gridRows';
+import { GridRowId } from '../../../models/gridRows';
 import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
@@ -18,7 +18,6 @@ import {
 } from './gridSelectionSelector';
 
 /**
- * @requires useOptionsProp (state)
  * @requires useGridRows (state, method)
  * @requires useGridParamsApi (method)
  * @requires useGridControlState (method)
@@ -43,116 +42,74 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
   const { checkboxSelection, disableMultipleSelection, disableSelectionOnClick, isRowSelectable } =
     props;
 
-  const getSelectedRows = React.useCallback(
+  const canHaveMultipleSelection = !disableMultipleSelection || checkboxSelection;
+
+  const getSelectedRows = React.useCallback<GridSelectionApi['getSelectedRows']>(
     () => selectedGridRowsSelector(apiRef.current.state),
     [apiRef],
   );
 
-  interface RowModelParams {
-    id: GridRowId;
-    row: GridRowModel;
-    allowMultipleOverride?: boolean;
-    isSelected?: boolean;
-    isMultipleKey?: boolean;
-  }
-
-  const selectRowModel = React.useCallback(
-    (rowModelParams: RowModelParams) => {
-      const { id, allowMultipleOverride, isSelected, isMultipleKey } = rowModelParams;
-
+  const selectRow = React.useCallback<GridSelectionApi['selectRow']>(
+    (id, isSelected = true, resetSelection = false) => {
       if (isRowSelectable && !isRowSelectable(apiRef.current.getRowParams(id))) {
         return;
       }
 
-      logger.debug(`Selecting row ${id}`);
+      if (resetSelection) {
+        logger.debug(`Setting selection for row ${id}`);
 
-      setGridState((state) => {
-        let selectionLookup = selectedIdsLookupSelector(state);
-        const allowMultiSelect =
-          allowMultipleOverride ||
-          (!disableMultipleSelection && isMultipleKey) ||
-          checkboxSelection;
+        apiRef.current.setSelectionModel(isSelected ? [id] : []);
+      } else {
+        logger.debug(`Toggling selection for row ${id}`);
 
-        if (allowMultiSelect) {
-          const isRowSelected = isSelected == null ? selectionLookup[id] === undefined : isSelected;
-          if (isRowSelected) {
+        const selection = gridSelectionStateSelector(apiRef.current.state);
+        const newSelection: GridRowId[] = selection.filter((el) => el !== id);
+
+        if (isSelected) {
+          newSelection.push(id);
+        }
+
+        const isSelectionValid = newSelection.length < 2 || canHaveMultipleSelection;
+        if (isSelectionValid) {
+          apiRef.current.setSelectionModel(newSelection);
+        }
+      }
+    },
+    [apiRef, isRowSelectable, logger, canHaveMultipleSelection],
+  );
+
+  const selectRows = React.useCallback<GridSelectionApi['selectRows']>(
+    (ids: GridRowId[], isSelected = true, resetSelection = false) => {
+      logger.debug(`Setting selection for several rows`);
+
+      const selectableIds = isRowSelectable
+        ? ids.filter((id) => isRowSelectable(apiRef.current.getRowParams(id)))
+        : ids;
+
+      let newSelection: GridRowId[];
+      if (resetSelection) {
+        newSelection = isSelected ? selectableIds : [];
+      } else {
+        // We clone the existing object to avoid mutating the same object returned by the selector to others part of the project
+        const selectionLookup = { ...selectedIdsLookupSelector(apiRef.current.state) };
+
+        selectableIds.forEach((id) => {
+          if (isSelected) {
             selectionLookup[id] = id;
           } else {
             delete selectionLookup[id];
           }
-        } else {
-          const isRowSelected =
-            isSelected == null ? !isMultipleKey || selectionLookup[id] === undefined : isSelected;
-          selectionLookup = {};
-          if (isRowSelected) {
-            selectionLookup[id] = id;
-          }
-        }
-        return { ...state, selection: Object.values(selectionLookup) };
-      });
-      forceUpdate();
-    },
-    [
-      isRowSelectable,
-      disableMultipleSelection,
-      apiRef,
-      logger,
-      checkboxSelection,
-      forceUpdate,
-      setGridState,
-    ],
-  );
-
-  const selectRow = React.useCallback(
-    (id: GridRowId, isSelected = true, allowMultiple = false) => {
-      const row = apiRef.current.getRow(id);
-
-      if (!row) {
-        return;
-      }
-
-      selectRowModel({
-        id,
-        row,
-        allowMultipleOverride: allowMultiple,
-        isSelected,
-      });
-    },
-    [apiRef, selectRowModel],
-  );
-
-  const selectRows = React.useCallback(
-    (ids: GridRowId[], isSelected = true, deSelectOthers = false) => {
-      const selectableIds = isRowSelectable
-        ? ids.filter((id) => isRowSelectable!(apiRef.current.getRowParams(id)))
-        : ids;
-
-      if (disableMultipleSelection && selectableIds.length > 1 && !checkboxSelection) {
-        return;
-      }
-
-      setGridState((state) => {
-        const selectionLookup = deSelectOthers ? {} : selectedIdsLookupSelector(state);
-        selectableIds.forEach((id) => {
-          if (isSelected) {
-            selectionLookup[id] = id;
-          } else if (selectionLookup[id] !== undefined) {
-            delete selectionLookup[id];
-          }
         });
-        return { ...state, selection: Object.values(selectionLookup) };
-      });
 
-      forceUpdate();
+        newSelection = Object.values(selectionLookup);
+      }
+
+      const isSelectionValid = newSelection.length < 2 || canHaveMultipleSelection;
+      if (isSelectionValid) {
+        apiRef.current.setSelectionModel(newSelection);
+      }
     },
-    [
-      isRowSelectable,
-      disableMultipleSelection,
-      checkboxSelection,
-      setGridState,
-      forceUpdate,
-      apiRef,
-    ],
+    [apiRef, isRowSelectable, logger, canHaveMultipleSelection],
   );
 
   const setSelectionModel = React.useCallback<GridSelectionApi['setSelectionModel']>(
@@ -166,17 +123,34 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
     [setGridState, apiRef, forceUpdate],
   );
 
+  const isRowSelected = React.useCallback<GridSelectionApi['isRowSelected']>(
+    (id) => gridSelectionStateSelector(apiRef.current.state).includes(id),
+    [apiRef],
+  );
+
   const handleRowClick = React.useCallback(
     (params: GridRowParams, event: React.MouseEvent) => {
-      if (!disableSelectionOnClick) {
-        selectRowModel({
-          id: params.id,
-          row: params.row,
-          isMultipleKey: event.metaKey || event.ctrlKey,
-        });
+      if (disableSelectionOnClick) {
+        return;
+      }
+
+      const hasCtrlKey = event.metaKey || event.ctrlKey;
+
+      // Without checkboxSelection, multiple selection is only allowed if CTRL is pressed
+      const isMultipleSelectionDisabled = !checkboxSelection && !hasCtrlKey;
+      const resetSelection = !canHaveMultipleSelection || isMultipleSelectionDisabled;
+
+      if (resetSelection) {
+        apiRef.current.selectRow(
+          params.id,
+          hasCtrlKey || checkboxSelection ? !apiRef.current.isRowSelected(params.id) : true,
+          true,
+        );
+      } else {
+        apiRef.current.selectRow(params.id, !apiRef.current.isRowSelected(params.id), false);
       }
     },
-    [disableSelectionOnClick, selectRowModel],
+    [apiRef, canHaveMultipleSelection, disableSelectionOnClick, checkboxSelection],
   );
 
   useGridApiEventHandler(apiRef, GridEvents.rowClick, handleRowClick);
@@ -184,9 +158,10 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
   // TODO handle Cell Click/range selection?
   const selectionApi: GridSelectionApi = {
     selectRow,
-    getSelectedRows,
     selectRows,
     setSelectionModel,
+    getSelectedRows,
+    isRowSelected,
   };
   useGridApiMethod(apiRef, selectionApi, 'GridSelectionApi');
 
@@ -202,23 +177,23 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
 
   React.useEffect(() => {
     // Rows changed
-    setGridState((state) => {
-      const newSelectionState = gridSelectionStateSelector(state);
-      const selectionLookup = selectedIdsLookupSelector(state);
-      let hasChanged = false;
-      newSelectionState.forEach((id: GridRowId) => {
-        if (!rowsLookup[id]) {
-          delete selectionLookup[id];
-          hasChanged = true;
-        }
-      });
-      if (hasChanged) {
-        return { ...state, selection: Object.values(selectionLookup) };
+    const currentSelection = gridSelectionStateSelector(apiRef.current.state);
+
+    // We clone the existing object to avoid mutating the same object returned by the selector to others part of the project
+    const selectionLookup = { ...selectedIdsLookupSelector(apiRef.current.state) };
+
+    let hasChanged = false;
+    currentSelection.forEach((id: GridRowId) => {
+      if (!rowsLookup[id]) {
+        delete selectionLookup[id];
+        hasChanged = true;
       }
-      return state;
     });
-    forceUpdate();
-  }, [rowsLookup, apiRef, setGridState, forceUpdate]);
+
+    if (hasChanged) {
+      apiRef.current.setSelectionModel(Object.values(selectionLookup));
+    }
+  }, [rowsLookup, apiRef]);
 
   React.useEffect(() => {
     if (propSelectionModel === undefined) {
@@ -226,27 +201,20 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
     }
 
     apiRef.current.setSelectionModel(propSelectionModel);
-  }, [apiRef, propSelectionModel, setGridState]);
+  }, [apiRef, propSelectionModel]);
 
   React.useEffect(() => {
     // isRowSelectable changed
-    setGridState((state) => {
-      const newSelectionState = [...state.selection];
-      const selectionLookup = selectedIdsLookupSelector(state);
-      let hasChanged = false;
-      newSelectionState.forEach((id: GridRowId) => {
-        const isSelectable = !isRowSelectable || isRowSelectable(apiRef.current.getRowParams(id));
-        if (!isSelectable) {
-          delete selectionLookup[id];
-          hasChanged = true;
-        }
-      });
+    const currentSelection = gridSelectionStateSelector(apiRef.current.state);
 
-      if (hasChanged) {
-        return { ...state, selection: Object.values(selectionLookup) };
+    if (isRowSelectable) {
+      const newSelection = currentSelection.filter((id) =>
+        isRowSelectable(apiRef.current.getRowParams(id)),
+      );
+
+      if (newSelection.length < currentSelection.length) {
+        apiRef.current.setSelectionModel(newSelection);
       }
-      return state;
-    });
-    forceUpdate();
-  }, [apiRef, setGridState, forceUpdate, isRowSelectable]);
+    }
+  }, [apiRef, isRowSelectable]);
 };

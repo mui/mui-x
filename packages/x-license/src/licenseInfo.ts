@@ -1,5 +1,5 @@
 /* eslint-disable no-underscore-dangle */
-import { ponyfillGlobal } from '@material-ui/utils';
+import { ponyfillGlobal } from '@mui/utils';
 
 // Store the license information in a global so it can be shared
 // when module duplication occurs. The duplication of the modules can happen

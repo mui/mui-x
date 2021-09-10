@@ -1,7 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { LicenseInfo } from '@mui/x-license-pro';
-import { chainPropTypes, ponyfillGlobal } from '@material-ui/utils';
+import { chainPropTypes, ponyfillGlobal } from '@mui/utils';
 import {
   GridBody,
   GridErrorHandler,
@@ -260,9 +260,17 @@ DataGridProRaw.propTypes = {
   hideFooterPagination: PropTypes.bool,
   /**
    * If `true`, the row count in the footer is hidden.
+   * It has no effect if the pagination is enabled.
    * @default false
    */
-  hideFooterRowCount: PropTypes.bool,
+  hideFooterRowCount: chainPropTypes(PropTypes.bool, (props: any) => {
+    if (props.pagination && props.hideFooterRowCount) {
+      return new Error(
+        'Material-UI: The `hideFooterRowCount` prop has no effect when the pagination is enabled.',
+      );
+    }
+    return null;
+  }),
   /**
    * If `true`, the selected row count in the footer is hidden.
    * @default false

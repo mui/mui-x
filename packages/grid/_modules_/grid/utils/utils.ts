@@ -1,4 +1,4 @@
-import * as styles from '@material-ui/core/styles';
+import * as styles from '@mui/material/styles';
 import isDeepEqual from '../lib/lodash/isDeepEqual';
 
 export { isDeepEqual };

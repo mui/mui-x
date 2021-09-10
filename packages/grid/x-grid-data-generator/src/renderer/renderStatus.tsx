@@ -1,13 +1,13 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import ReportProblemIcon from '@material-ui/icons/ReportProblem';
-import InfoIcon from '@material-ui/icons/Info';
-import AutorenewIcon from '@material-ui/icons/Autorenew';
-import DoneIcon from '@material-ui/icons/Done';
-import Chip from '@material-ui/core/Chip';
+import ReportProblemIcon from '@mui/icons-material/ReportProblem';
+import InfoIcon from '@mui/icons-material/Info';
+import AutorenewIcon from '@mui/icons-material/Autorenew';
+import DoneIcon from '@mui/icons-material/Done';
+import Chip from '@mui/material/Chip';
 import { GridCellParams } from '@mui/x-data-grid-pro';
-import { Theme } from '@material-ui/core/styles';
-import { createStyles, makeStyles } from '@material-ui/styles';
+import { Theme } from '@mui/material/styles';
+import { createStyles, makeStyles } from '@mui/styles';
 import { createTheme } from '../../../_modules_/grid/utils/utils';
 
 const defaultTheme = createTheme();

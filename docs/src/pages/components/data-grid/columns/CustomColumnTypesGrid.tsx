@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 import { DataGrid, GridColTypeDef } from '@mui/x-data-grid';
 import { randomStatusOptions, randomPrice } from '@mui/x-data-grid-generator';
 

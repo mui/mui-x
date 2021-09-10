@@ -23,10 +23,10 @@ If you are not already using Material-UI in your project, you can install it wit
 
 ```sh
 // with npm
-npm install @material-ui/core @material-ui/styles
+npm install @mui/material @mui/styles
 
 // with yarn
-yarn add @material-ui/core @material-ui/styles
+yarn add @mui/material @mui/styles
 ```
 
 ## Quick start

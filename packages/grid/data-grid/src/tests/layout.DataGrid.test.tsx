@@ -14,7 +14,7 @@ import {
   ptBR,
 } from '@mui/x-data-grid';
 import { useData } from 'packages/storybook/src/hooks/useData';
-import { createTheme, ThemeProvider } from '@material-ui/core/styles';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { getColumnHeaderCell, getColumnValues, raf } from 'test/utils/helperFn';
 
 describe('<DataGrid /> - Layout & Warnings', () => {

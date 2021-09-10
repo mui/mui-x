@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { ownerDocument, capitalize } from '@material-ui/core/utils';
+import { ownerDocument, capitalize } from '@mui/material/utils';
 import clsx from 'clsx';
 import { GridEvents } from '../../constants/eventsConstants';
 import { getDataGridUtilityClass } from '../../gridClasses';
