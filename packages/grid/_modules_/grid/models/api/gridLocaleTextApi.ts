@@ -1,4 +1,4 @@
-import { ComponentsPropsList } from '@material-ui/core/styles';
+import { ComponentsPropsList } from '@mui/material/styles';
 
 /**
  * Set the types of the texts in the grid.

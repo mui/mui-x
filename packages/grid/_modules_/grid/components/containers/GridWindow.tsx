@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
 import {
@@ -31,7 +32,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-export const GridWindow = React.forwardRef<HTMLDivElement, GridWindowProps>(function GridWindow(
+const GridWindow = React.forwardRef<HTMLDivElement, GridWindowProps>(function GridWindow(
   props,
   ref,
 ) {
@@ -77,3 +78,16 @@ export const GridWindow = React.forwardRef<HTMLDivElement, GridWindowProps>(func
     </div>
   );
 });
+
+GridWindow.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  size: PropTypes /* @typescript-to-proptypes-ignore */.shape({
+    height: PropTypes.number,
+    width: PropTypes.number,
+  }).isRequired,
+} as any;
+
+export { GridWindow };

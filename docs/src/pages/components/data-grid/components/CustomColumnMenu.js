@@ -1,8 +1,8 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/styles';
-import { createTheme } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
+import { makeStyles } from '@mui/styles';
+import { createTheme } from '@mui/material/styles';
+import Button from '@mui/material/Button';
 import {
   GridColumnMenu,
   GridColumnMenuContainer,
@@ -11,7 +11,7 @@ import {
   useGridApiRef,
   DataGridPro,
 } from '@mui/x-data-grid-pro';
-import StarOutlineIcon from '@material-ui/icons/StarOutline';
+import StarOutlineIcon from '@mui/icons-material/StarOutline';
 
 const defaultTheme = createTheme();
 const useStyles = makeStyles(

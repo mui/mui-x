@@ -19,8 +19,12 @@ import acceptLanguage from 'accept-language';
 import { create } from 'jss';
 import rtl from 'jss-rtl';
 import { useRouter } from 'next/router';
-import { StylesProvider, jssPreset } from '@material-ui/styles';
+import { StylesProvider, jssPreset, useTheme } from '@material-ui/styles';
+import { StylesProvider as StylesProviderV5, createGenerateClassName } from '@mui/styles';
 import { ponyfillGlobal } from '@material-ui/utils';
+import { CacheProvider } from '@emotion/react';
+import createCache from '@emotion/cache';
+import { createTheme, ThemeProvider as ThemeProviderV5 } from '@mui/material/styles';
 import pages from 'docsx/src/pages';
 import initRedux from 'docs/src/modules/redux/initRedux';
 import PageContext from 'docs/src/modules/components/PageContext';
@@ -36,25 +40,24 @@ function getMuiPackageVersion(packageName, commitRef) {
     return 'latest';
   }
   const shortSha = commitRef.slice(0, 8);
-  return `https://pkg.csb.dev/mui-org/material-ui-x/commit/${shortSha}/@material-ui/${packageName}`;
+  return `https://pkg.csb.dev/mui-org/material-ui-x/commit/${shortSha}/@mui/${packageName}`;
 }
 
 ponyfillGlobal.muiDocConfig = {
   csbIncludePeerDependencies: (deps, { versions }) => {
     const newDeps = { ...deps };
 
-    if (
-      newDeps['@material-ui/x'] ||
-      newDeps['@mui/x-data-grid-pro'] ||
-      newDeps['@mui/x-data-grid']
-    ) {
-      newDeps['@material-ui/core'] = versions['@material-ui/core'];
+    if (newDeps['@mui/x-data-grid-pro'] || newDeps['@mui/x-data-grid']) {
+      newDeps['@mui/material'] = versions['@mui/material'];
+      newDeps['@mui/styles'] = versions['@mui/styles'];
+      // TODO remove @emotion once the docs is using the same infra from v5
+      newDeps['@emotion/styled'] = versions['@emotion/styled'];
+      newDeps['@emotion/react'] = versions['@emotion/react'];
     }
 
     if (newDeps['@mui/x-data-grid-generator']) {
-      newDeps['@material-ui/core'] = versions['@material-ui/core'];
-      newDeps['@material-ui/icons'] = versions['@material-ui/icons'];
-      newDeps['@material-ui/lab'] = versions['@material-ui/lab'];
+      newDeps['@mui/material'] = versions['@mui/material'];
+      newDeps['@mui/icons-material'] = versions['@mui/icons-material'];
     }
 
     return newDeps;
@@ -62,9 +65,14 @@ ponyfillGlobal.muiDocConfig = {
   csbGetVersions: (versions, { muiCommitRef }) => {
     const output = {
       ...versions,
-      '@mui/x-data-grid-pro': getMuiPackageVersion('x-grid', muiCommitRef),
-      '@mui/x-data-grid-generator': getMuiPackageVersion('x-grid-data-generator', muiCommitRef),
-      '@mui/x-data-grid': getMuiPackageVersion('data-grid', muiCommitRef),
+      '@mui/x-data-grid-pro': getMuiPackageVersion('x-data-grid-pro', muiCommitRef),
+      '@mui/x-data-grid-generator': getMuiPackageVersion('x-data-grid-generator', muiCommitRef),
+      '@mui/x-data-grid': getMuiPackageVersion('x-data-grid', muiCommitRef),
+      '@mui/material': 'next',
+      '@mui/styles': 'next',
+      '@mui/icons-material': 'next',
+      '@emotion/react': 'latest',
+      '@emotion/styled': 'latest',
     };
     return output;
   },
@@ -325,6 +333,31 @@ function findActivePage(currentPages, pathname) {
   return activePage;
 }
 
+// The reference to the ThemeProvider is different from v4 and v5 = theme is not shared
+// This bridge allows demos to support the dark mode
+function ThemeProviderV5Bridge(props) {
+  const { children } = props;
+  const themeV4 = useTheme();
+  const themeV5 = React.useMemo(
+    () =>
+      createTheme({
+        palette: {
+          mode: themeV4.palette.type,
+        },
+      }),
+    [themeV4.palette.type],
+  );
+  return <ThemeProviderV5 theme={themeV5}>{children}</ThemeProviderV5>;
+}
+
+const emotionCache = createCache({
+  key: 'emotion-css',
+  prepend: false, // Make the emotion styles win over jss
+});
+
+// By default the prefix is the same in v4 and v5, keeping that way could lead to conflicts
+const generateClassName = createGenerateClassName({ productionPrefix: 'demo-jss' });
+
 function AppWrapper(props) {
   const { children, pageProps } = props;
 
@@ -362,11 +395,17 @@ function AppWrapper(props) {
       </NextHead>
       <ReduxProvider store={redux}>
         <PageContext.Provider value={{ activePage, pages, versions: pageProps.versions }}>
-          <StylesProvider jss={jss}>
-            <ThemeProvider>
-              <XWrapper>{children}</XWrapper>
-            </ThemeProvider>
-          </StylesProvider>
+          <CacheProvider value={emotionCache}>
+            <StylesProviderV5 generateClassName={generateClassName}>
+              <StylesProvider jss={jss}>
+                <ThemeProvider>
+                  <ThemeProviderV5Bridge>
+                    <XWrapper>{children}</XWrapper>
+                  </ThemeProviderV5Bridge>
+                </ThemeProvider>
+              </StylesProvider>
+            </StylesProviderV5>
+          </CacheProvider>
         </PageContext.Provider>
         <LanguageNegotiation />
         <Analytics />

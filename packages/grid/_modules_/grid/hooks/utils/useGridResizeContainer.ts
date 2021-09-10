@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { debounce } from '@material-ui/core/utils';
+import { debounce } from '@mui/material/utils';
 import { GridEvents } from '../../constants/eventsConstants';
 import { ElementSize, GridEventsApi } from '../../models';
 import { useGridApiEventHandler, useGridApiOptionHandler } from '../root/useGridApiEventHandler';

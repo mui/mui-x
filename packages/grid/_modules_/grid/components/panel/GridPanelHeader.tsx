@@ -1,7 +1,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import { Theme } from '@material-ui/core/styles';
-import { makeStyles } from '@material-ui/styles';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import { createTheme } from '../../utils/utils';
 
 const defaultTheme = createTheme();
@@ -11,7 +11,7 @@ const useStyles = makeStyles(
       padding: theme.spacing(1),
     },
   }),
-  { name: 'MuiDataGridPanelHeader', defaultTheme },
+  { name: 'MuiDataGridPanelHeader', defaultTheme }, // TODO rename to MuiGridPanelHeader
 );
 
 export function GridPanelHeader(

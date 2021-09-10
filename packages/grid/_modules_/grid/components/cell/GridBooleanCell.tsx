@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { SvgIconProps } from '@material-ui/core/SvgIcon';
+import { SvgIconProps } from '@mui/material/SvgIcon';
 import { getDataGridUtilityClass } from '../../gridClasses';
 import { GridRenderCellParams } from '../../models/params/gridCellParams';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';

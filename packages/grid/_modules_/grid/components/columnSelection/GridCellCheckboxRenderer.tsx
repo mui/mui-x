@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { useForkRef } from '@material-ui/core/utils';
+import PropTypes from 'prop-types';
+import { useForkRef } from '@mui/material/utils';
 import { GridEvents } from '../../constants/eventsConstants';
 import { GridCellParams } from '../../models/params/gridCellParams';
 import { isNavigationKey, isSpaceKey } from '../../utils/keyboardUtils';
@@ -21,7 +22,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-export const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridCellParams>(
+const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridCellParams>(
   function GridCellCheckboxRenderer(props, ref) {
     const { field, id, value, tabIndex, hasFocus } = props;
     const apiRef = useGridApiContext();
@@ -86,5 +87,73 @@ export const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, Gri
     );
   },
 );
+
+GridCellCheckboxForwardRef.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  /**
+   * The mode of the cell.
+   */
+  cellMode: PropTypes.oneOf(['edit', 'view']).isRequired,
+  /**
+   * The column of the row that the current cell belongs to.
+   */
+  colDef: PropTypes.object.isRequired,
+  /**
+   * The column field of the cell that triggered the event
+   */
+  field: PropTypes.string.isRequired,
+  /**
+   * The cell value formatted with the column valueFormatter.
+   */
+  formattedValue: PropTypes.oneOfType([
+    PropTypes.instanceOf(Date),
+    PropTypes.number,
+    PropTypes.object,
+    PropTypes.string,
+    PropTypes.bool,
+  ]),
+  /**
+   * Get the cell value of a row and field.
+   * @param {GridRowId} id The row id.
+   * @param {string} field The field.
+   * @returns {GridCellValue} The cell value.
+   */
+  getValue: PropTypes.func.isRequired,
+  /**
+   * If true, the cell is the active element.
+   */
+  hasFocus: PropTypes.bool.isRequired,
+  /**
+   * The grid row id.
+   */
+  id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  /**
+   * If true, the cell is editable.
+   */
+  isEditable: PropTypes.bool,
+  /**
+   * The row model of the row that the current cell belongs to.
+   */
+  row: PropTypes.object.isRequired,
+  /**
+   * the tabIndex value.
+   */
+  tabIndex: PropTypes.oneOf([-1, 0]).isRequired,
+  /**
+   * The cell value, but if the column has valueGetter, use getValue.
+   */
+  value: PropTypes.oneOfType([
+    PropTypes.instanceOf(Date),
+    PropTypes.number,
+    PropTypes.object,
+    PropTypes.string,
+    PropTypes.bool,
+  ]),
+} as any;
+
+export { GridCellCheckboxForwardRef };
 
 export const GridCellCheckboxRenderer = React.memo(GridCellCheckboxForwardRef);

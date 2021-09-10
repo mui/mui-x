@@ -21,13 +21,8 @@ const { fixBabelGeneratorIssues, fixLineEndings } = require('./helpers');
 
 const tsConfig = typescriptToProptypes.loadConfig(path.resolve(__dirname, '../tsconfig.json'));
 
-const unwrap = babel.createConfigItem(
-  require('../node_modules/@material-ui/monorepo/packages/babel-plugin-unwrap-createstyles'),
-);
-
 const babelConfig = {
   presets: ['@babel/preset-typescript'],
-  plugins: [unwrap],
   generatorOpts: { retainLines: true },
   babelrc: false,
   configFile: false,

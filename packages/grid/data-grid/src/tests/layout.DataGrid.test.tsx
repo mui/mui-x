@@ -1,5 +1,4 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
 import {
   createClientRenderStrictMode,
   // @ts-expect-error need to migrate helpers to TypeScript
@@ -15,7 +14,7 @@ import {
   ptBR,
 } from '@mui/x-data-grid';
 import { useData } from 'packages/storybook/src/hooks/useData';
-import { createTheme, ThemeProvider } from '@material-ui/core/styles';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { getColumnHeaderCell, getColumnValues, raf } from 'test/utils/helperFn';
 
 describe('<DataGrid /> - Layout & Warnings', () => {
@@ -651,22 +650,13 @@ describe('<DataGrid /> - Layout & Warnings', () => {
   });
 
   describe('warnings', () => {
-    before(() => {
-      PropTypes.resetWarningCache();
-    });
-
     it('should raise a warning if trying to use an enterprise feature', () => {
       expect(() => {
-        PropTypes.checkPropTypes(
-          // @ts-ignore
-          DataGrid.propTypes,
-          {
-            pagination: false,
-            columns: [],
-            rows: [],
-          },
-          'prop',
-          'MockedDataGrid',
+        render(
+          <div style={{ width: 150, height: 300 }}>
+            {/* @ts-ignore */}
+            <DataGrid pagination={false} columns={[]} rows={[]} />
+          </div>,
         );
         // @ts-expect-error need to migrate helpers to TypeScript
       }).toErrorDev('Material-UI: `<DataGrid pagination={false} />` is not a valid prop.');
