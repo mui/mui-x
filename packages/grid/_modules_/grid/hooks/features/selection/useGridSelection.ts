@@ -16,7 +16,7 @@ import {
   selectedGridRowsSelector,
   selectedIdsLookupSelector,
 } from './gridSelectionSelector';
-import { sortedGridRowsSelector } from '../sorting';
+import { sortedGridRowIdsSelector } from '../sorting';
 
 /**
  * @requires useGridRows (state, method)
@@ -132,7 +132,7 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
 
       logger.debug(`Expanding selection from row ${startId} to row ${endId}`);
 
-      const sortedRowsId = [...sortedGridRowsSelector(apiRef.current.state).keys()];
+      const sortedRowsId = sortedGridRowIdsSelector(apiRef.current.state);
       const startIndex = sortedRowsId.indexOf(startId);
       const endIndex = sortedRowsId.indexOf(endId);
       const [start, end] = startIndex > endIndex ? [endIndex, startIndex] : [startIndex, endIndex];
