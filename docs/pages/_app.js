@@ -24,6 +24,7 @@ import { ponyfillGlobal } from '@mui/utils';
 import pages from 'docsx/src/pages';
 import PageContext from 'docs/src/modules/components/PageContext';
 import GoogleAnalytics from 'docs/src/modules/components/GoogleAnalytics';
+import XWrapper from 'docsx/src/modules/XWrapper';
 import loadScript from 'docs/src/modules/utils/loadScript';
 import { ThemeProvider } from 'docs/src/modules/components/ThemeContext';
 import { pathnameToLanguage, getCookie } from 'docs/src/modules/utils/helpers';
@@ -389,7 +390,9 @@ function AppWrapper(props) {
           <PageContext.Provider value={{ activePage, pages }}>
             <StylesProvider jss={jss}>
               <ThemeProvider>
-                <DocsStyledEngineProvider>{children}</DocsStyledEngineProvider>
+                <DocsStyledEngineProvider>
+                  <XWrapper>{children}</XWrapper>
+                </DocsStyledEngineProvider>
               </ThemeProvider>
             </StylesProvider>
           </PageContext.Provider>
