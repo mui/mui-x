@@ -1,4 +1,4 @@
-import { zhCN as zhCNCore } from '@material-ui/core/locale';
+import { zhCN as zhCNCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 

@@ -1,4 +1,4 @@
-import { ukUA as ukUACore } from '@material-ui/core/locale';
+import { ukUA as ukUACore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 

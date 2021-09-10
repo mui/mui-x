@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import MenuItem from '@material-ui/core/MenuItem';
+import MenuItem from '@mui/material/MenuItem';
 import { useGridSelector } from '../../../hooks/features/core/useGridSelector';
 import { gridSortModelSelector } from '../../../hooks/features/sorting/gridSortingSelector';
 import { GridSortDirection } from '../../../models/gridSortModel';

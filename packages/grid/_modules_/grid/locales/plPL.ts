@@ -1,4 +1,4 @@
-import { plPL as plPLCore } from '@material-ui/core/locale';
+import { plPL as plPLCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 

@@ -1,8 +1,8 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import IconButton, { IconButtonProps } from '@material-ui/core/IconButton';
-import MenuItem, { MenuItemProps } from '@material-ui/core/MenuItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
+import IconButton, { IconButtonProps } from '@mui/material/IconButton';
+import MenuItem, { MenuItemProps } from '@mui/material/MenuItem';
+import ListItemIcon from '@mui/material/ListItemIcon';
 
 export type GridActionsCellItemProps = {
   label: string;

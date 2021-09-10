@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { chainPropTypes } from '@material-ui/utils';
+import { chainPropTypes } from '@mui/utils';
 import {
   GridBody,
   GridErrorHandler,
@@ -212,11 +212,6 @@ DataGridRaw.propTypes = {
    * @default false
    */
   hideFooterPagination: PropTypes.bool,
-  /**
-   * If `true`, the row count in the footer is hidden.
-   * @default false
-   */
-  hideFooterRowCount: PropTypes.bool,
   /**
    * If `true`, the selected row count in the footer is hidden.
    * @default false

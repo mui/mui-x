@@ -1,9 +1,9 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { unstable_useId as useId } from '@material-ui/core/utils';
-import MenuList from '@material-ui/core/MenuList';
-import Button, { ButtonProps } from '@material-ui/core/Button';
-import MenuItem from '@material-ui/core/MenuItem';
+import { unstable_useId as useId } from '@mui/material/utils';
+import MenuList from '@mui/material/MenuList';
+import Button, { ButtonProps } from '@mui/material/Button';
+import MenuItem from '@mui/material/MenuItem';
 import { isHideMenuKey, isTabKey } from '../../utils/keyboardUtils';
 import { useGridApiContext } from '../../hooks/root/useGridApiContext';
 import { GridMenu } from '../menu/GridMenu';

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { HTMLElementType } from '@material-ui/utils';
+import { HTMLElementType } from '@mui/utils';
 import { useGridApiContext } from '../../../hooks/root/useGridApiContext';
 import { GridMenu } from '../GridMenu';
 

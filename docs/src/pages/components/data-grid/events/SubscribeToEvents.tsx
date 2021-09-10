@@ -4,7 +4,7 @@ import {
   GridColumnResizeParams,
   useGridApiRef,
 } from '@mui/x-data-grid-pro';
-import Alert from '@material-ui/lab/Alert';
+import Alert from '@mui/material/Alert';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
 export default function SubscribeToEvents() {

@@ -1,10 +1,10 @@
 import * as React from 'react';
-import IconButton from '@material-ui/core/IconButton';
-import Switch from '@material-ui/core/Switch';
-import Button from '@material-ui/core/Button';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import TextField from '@material-ui/core/TextField';
-import { makeStyles } from '@material-ui/styles';
+import IconButton from '@mui/material/IconButton';
+import Switch from '@mui/material/Switch';
+import Button from '@mui/material/Button';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import TextField from '@mui/material/TextField';
+import { makeStyles } from '@mui/styles';
 import { allGridColumnsSelector } from '../../hooks/features/columns/gridColumnsSelector';
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
 import { useGridApiContext } from '../../hooks/root/useGridApiContext';
@@ -33,7 +33,7 @@ const useStyles = makeStyles(
       justifyContent: 'flex-end',
     },
   },
-  { name: 'MuiDataGridColumnsPanel' },
+  { name: 'MuiDataGridColumnsPanel' }, // TODO rename to MuiGridColumnsPanel
 );
 
 export function GridColumnsPanel() {

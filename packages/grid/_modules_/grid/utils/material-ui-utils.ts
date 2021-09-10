@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { useEventCallback as muiUseEventCallback } from '@material-ui/core/utils';
-import { getThemeProps } from '@material-ui/styles';
-import { StyledComponentProps, useTheme } from '@material-ui/core/styles';
+import { useEventCallback as muiUseEventCallback } from '@mui/material/utils';
+import { getThemeProps } from '@mui/styles';
+import { StyledComponentProps, useTheme } from '@mui/material/styles';
 
 /**
  * TODO import from the v5 directly
@@ -39,11 +39,11 @@ export function useEventCallback<T extends (...args: any[]) => any>(func: T): T 
   return muiUseEventCallback(func);
 }
 
-// TODO replace with { useEnhancedEffect } from @material-ui/core/utils.
+// TODO replace with { useEnhancedEffect } from @mui/material/utils.
 export const useEnhancedEffect =
   typeof window !== 'undefined' ? React.useLayoutEffect : React.useEffect;
 
-// TODO replace with { useThemeProps } from @material-ui/core/styles.
+// TODO replace with { useThemeProps } from @mui/material/styles.
 export function useThemeProps({ props: inputProps, name }) {
   const contextTheme: any = useTheme();
 

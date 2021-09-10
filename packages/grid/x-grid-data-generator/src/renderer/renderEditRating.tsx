@@ -1,8 +1,8 @@
 import * as React from 'react';
-import Rating from '@material-ui/lab/Rating';
+import Rating from '@mui/material/Rating';
 import { GridRenderEditCellParams } from '@mui/x-data-grid';
-import { makeStyles } from '@material-ui/styles';
-import { Theme } from '@material-ui/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {

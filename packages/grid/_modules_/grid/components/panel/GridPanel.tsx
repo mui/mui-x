@@ -1,11 +1,11 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { Theme } from '@material-ui/core/styles';
-import { makeStyles } from '@material-ui/styles';
-import ClickAwayListener from '@material-ui/core/ClickAwayListener';
-import Paper from '@material-ui/core/Paper';
-import Popper, { PopperProps } from '@material-ui/core/Popper';
+import { Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
+import ClickAwayListener from '@mui/material/ClickAwayListener';
+import Paper from '@mui/material/Paper';
+import Popper, { PopperProps } from '@mui/material/Popper';
 import { useGridApiContext } from '../../hooks/root/useGridApiContext';
 import { getMuiVersion, createTheme } from '../../utils/utils';
 import { isEscapeKey } from '../../utils/keyboardUtils';
