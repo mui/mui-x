@@ -16,7 +16,8 @@ import {
   DataGridProProps,
 } from '@mui/x-data-grid-pro';
 import { useData } from 'packages/storybook/src/hooks/useData';
-import { DataGridProps} from "@mui/x-data-grid";
+import { DataGridProps } from '@mui/x-data-grid';
+import { getData } from 'storybook/src/data/data-service';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -140,9 +141,9 @@ describe('<DataGridPro /> - Rows', () => {
       const { rows, columns } = getData(5, 2);
 
       const Test = (props: Pick<DataGridProps, 'rows'>) => (
-          <div style={{ width: 300, height: 300 }}>
-            <DataGridPro {...props} columns={columns} autoHeight={isJSDOM} throttleRowsMs={100} />
-          </div>
+        <div style={{ width: 300, height: 300 }}>
+          <DataGridPro {...props} columns={columns} autoHeight={isJSDOM} throttleRowsMs={100} />
+        </div>
       );
 
       const { setProps } = render(<Test rows={rows.slice(0, 2)} />);
@@ -157,7 +158,7 @@ describe('<DataGridPro /> - Rows', () => {
       clock.tick(50);
       expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3', '4']);
     });
-  })
+  });
 
   describe('updateRows', () => {
     beforeEach(() => {
