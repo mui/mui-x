@@ -626,11 +626,11 @@ describe('<DataGridPro /> - Edit Rows', () => {
 
       const cell = getCell(0, 0);
       fireEvent.doubleClick(cell);
-      const firstOption = screen.queryAllByRole('option')[0].innerText;
-      const secondOption = screen.queryAllByRole('option')[1].innerText;
+      const firstOption = screen.queryAllByRole('option')[0];
+      const secondOption = screen.queryAllByRole('option')[1];
 
-      expect(firstOption).to.equal('User');
-      expect(secondOption).to.equal('Admin');
+      expect(firstOption.innerText).to.equal('User');
+      expect(secondOption.innerText).to.equal('Admin');
     });
 
     it('should set the focus correctly', () => {
