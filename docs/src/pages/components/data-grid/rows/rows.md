@@ -53,7 +53,7 @@ Alternatively, if you would like to delete a row, you would need to pass an extr
 apiRef.current.updateRows([{ id: 1, _action: 'delete' }]);
 ```
 
-### Throttling grid update
+### Throttling grid update [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-pro/)
 
 If you have high frequency updates, but you want to keep good performances, you can pass set the `throttleRowsMs` prop to define the maximum update frequency.
 When receiving updates more frequent than this threshold, the Grid will wait before applying the new values to avoid triggering heavy work too many times.

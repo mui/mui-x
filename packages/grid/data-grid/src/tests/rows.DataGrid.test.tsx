@@ -80,28 +80,6 @@ describe('<DataGrid /> - Rows', () => {
       setProps({ rows });
       expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3', '4']);
     });
-
-    it('should support new dataset throttle', () => {
-      const { rows, columns } = getData(5, 2);
-
-      const Test = (props: Pick<DataGridProps, 'rows'>) => (
-        <div style={{ width: 300, height: 300 }}>
-          <DataGrid {...props} columns={columns} autoHeight={isJSDOM} throttleRowsMs={100} />
-        </div>
-      );
-
-      const { setProps } = render(<Test rows={rows.slice(0, 2)} />);
-
-      expect(getColumnValues(0)).to.deep.equal(['0', '1']);
-      clock.tick(150);
-      setProps({ rows: rows.slice(0, 3) });
-      expect(getColumnValues(0)).to.deep.equal(['0', '1', '2']);
-      clock.tick(50);
-      setProps({ rows });
-      expect(getColumnValues(0)).to.deep.equal(['0', '1', '2']);
-      clock.tick(50);
-      expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3', '4']);
-    });
   });
 
   it('should ignore events coming from a portal in the cell', () => {
