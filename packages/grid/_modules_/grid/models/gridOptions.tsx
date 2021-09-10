@@ -193,6 +193,11 @@ export interface GridSimpleOptions {
    */
   rowsPerPageOptions: number[];
   /**
+   * If `true`, the rows will be gathered in a tree structure, following the `getDataPath` prop
+   * @default false
+   */
+  treeData: boolean
+  /**
    * Set the area at the bottom of the grid viewport where onRowsScrollEnd is called.
    */
   scrollEndThreshold: number;
