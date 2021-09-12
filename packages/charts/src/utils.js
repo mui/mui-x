@@ -28,3 +28,18 @@ export function getMaxDataSetLength(data) {
   }
   return data.length;
 }
+
+// A function that finds objects in an array or nested arrays
+// that match the given key/value
+export function findObjects(array, key, value) {
+  if (Array.isArray(array[0])) {
+    // eslint-disable-next-line prefer-spread
+    array = [].concat.apply([], array);
+  }
+  return array.filter((obj) => obj[key].toString() === value.toString());
+}
+// Returns true if `num` is +/- `range` of `target`
+export function isInRange(num, target, range) {
+  const result = num >= Math.max(0, target - range) && num <= target + range;
+  return result;
+}

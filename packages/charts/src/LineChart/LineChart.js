@@ -25,6 +25,7 @@ const LineChart = React.forwardRef(function LineChart(props, ref) {
     markerShape = 'circle',
     markerSize = 30,
     pixelsPerTick = 50,
+    seriesLabels = [],
     smoothed = false,
     stacked = false,
     xDomain: xDomainProp,
@@ -106,6 +107,7 @@ const LineChart = React.forwardRef(function LineChart(props, ref) {
         invertMarkers,
         markerShape,
         markerSize,
+        seriesLabels,
         stacked,
         mousePosition,
         smoothed,
@@ -223,6 +225,10 @@ LineChart.propTypes /* remove-proptypes */ = {
    * The maximum number of pixels per tick.
    */
   pixelsPerTick: PropTypes.number,
+  /**
+   * The series labels. Used in the tooltip.
+   */
+  seriesLabels: PropTypes.array,
   /**
    * If `true`, the plotted lines will be smoothed.
    */

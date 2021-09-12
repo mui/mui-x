@@ -45,6 +45,7 @@ export default function MultiLineChart() {
       label="Growth"
       margin={{ top: 70, bottom: 60, left: 60 }}
       markerSize={50}
+      seriesLabels={['Blue', 'Green', 'Red']}
       smoothed
       xScaleType="time"
     >

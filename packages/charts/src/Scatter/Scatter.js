@@ -1,14 +1,10 @@
 import React, { useContext } from 'react';
 import * as d3 from 'd3';
 import ChartContext from '../ChartContext';
+import { isInRange } from '../utils';
 
 const plot = (value, domain, size) => {
   return ((value - domain[0]) / (domain[1] - domain[0])) * size;
-};
-
-const isInRange = (num, target, range) => {
-  const result = num >= Math.max(0, target - range) && num <= target + range;
-  return result;
 };
 
 function getSymbol(shape, series = 0) {
