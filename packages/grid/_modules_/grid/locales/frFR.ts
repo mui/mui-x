@@ -1,4 +1,4 @@
-import { frFR as frFRCore } from '@material-ui/core/locale';
+import { frFR as frFRCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -93,6 +93,9 @@ const frFRGrid: Partial<GridLocaleText> = {
 
   // Checkbox selection text
   checkboxSelectionHeaderName: 'Sélection',
+
+  // Actions cell more text
+  actionsCellMore: 'Plus',
 };
 
 export const frFR: Localization = getGridLocalization(frFRGrid, frFRCore);

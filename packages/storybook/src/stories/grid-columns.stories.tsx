@@ -6,8 +6,8 @@ import {
   GridValueGetterParams,
 } from '@mui/x-data-grid-pro';
 import { useDemoData } from '@mui/x-data-grid-generator';
-import CreateIcon from '@material-ui/icons/Create';
-import Button from '@material-ui/core/Button';
+import CreateIcon from '@mui/icons-material/Create';
+import Button from '@mui/material/Button';
 import { useData } from '../hooks/useData';
 
 export default {

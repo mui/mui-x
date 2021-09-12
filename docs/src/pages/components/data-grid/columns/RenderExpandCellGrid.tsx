@@ -1,8 +1,8 @@
 import * as React from 'react';
-import Typography from '@material-ui/core/Typography';
-import Paper from '@material-ui/core/Paper';
-import Popper from '@material-ui/core/Popper';
-import { createStyles, makeStyles } from '@material-ui/styles';
+import Typography from '@mui/material/Typography';
+import Paper from '@mui/material/Paper';
+import Popper from '@mui/material/Popper';
+import { createStyles, makeStyles } from '@mui/styles';
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 
 interface GridCellExpandProps {

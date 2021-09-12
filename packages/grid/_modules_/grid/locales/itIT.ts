@@ -1,4 +1,4 @@
-import { itIT as itITCore } from '@material-ui/core/locale';
+import { itIT as itITCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -93,6 +93,9 @@ const itITGrid: Partial<GridLocaleText> = {
 
   // Checkbox selection text
   checkboxSelectionHeaderName: 'Seleziona',
+
+  // Actions cell more text
+  actionsCellMore: 'più',
 };
 
 export const itIT: Localization = getGridLocalization(itITGrid, itITCore);

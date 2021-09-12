@@ -1,4 +1,4 @@
-import { deDE as deDECore } from '@material-ui/core/locale';
+import { deDE as deDECore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -90,6 +90,9 @@ const deDEGrid: Partial<GridLocaleText> = {
   // Total visible rows footer text
   footerTotalVisibleRows: (visibleCount, totalCount) =>
     `${visibleCount.toLocaleString()} von ${totalCount.toLocaleString()}`,
+
+  // Actions cell more text
+  // actionsCellMore: 'more',
 };
 
 export const deDE: Localization = getGridLocalization(deDEGrid, deDECore);

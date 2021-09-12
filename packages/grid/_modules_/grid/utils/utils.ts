@@ -1,6 +1,5 @@
-import * as styles from '@material-ui/core/styles';
+import * as styles from '@mui/material/styles';
 import isDeepEqual from '../lib/lodash/isDeepEqual';
-import { generateUtilityClass } from './material-ui-utils';
 
 export { isDeepEqual };
 
@@ -61,10 +60,6 @@ export function localStorageAvailable() {
   } catch (err) {
     return false;
   }
-}
-
-export function getDataGridUtilityClass(slot) {
-  return generateUtilityClass('MuiDataGrid', slot);
 }
 
 export function escapeRegExp(value: string): string {

@@ -1,4 +1,4 @@
-import { ukUA as ukUACore } from '@material-ui/core/locale';
+import { ukUA as ukUACore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -102,6 +102,9 @@ export const ukUAGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: 'правда',
   booleanCellFalseLabel: 'помилковий',
+
+  // Actions cell more text
+  // actionsCellMore: 'more',
 };
 
 export const ukUA: Localization = getGridLocalization(ukUAGrid, ukUACore);

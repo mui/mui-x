@@ -1,8 +1,9 @@
 import * as React from 'react';
-import { ownerDocument, capitalize } from '@material-ui/core/utils';
+import PropTypes from 'prop-types';
+import { ownerDocument, capitalize } from '@mui/material/utils';
 import clsx from 'clsx';
 import { GridEvents } from '../../constants/eventsConstants';
-import { gridClasses } from '../../gridClasses';
+import { getDataGridUtilityClass } from '../../gridClasses';
 import {
   GridAlignment,
   GridCellMode,
@@ -11,6 +12,9 @@ import {
   GridRowId,
 } from '../../models/index';
 import { useGridApiContext } from '../../hooks/root/useGridApiContext';
+import { composeClasses } from '../../utils/material-ui-utils';
+import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
+import { GridComponentProps } from '../../GridComponentProps';
 
 export interface GridCellProps {
   align: GridAlignment;
@@ -32,10 +36,41 @@ export interface GridCellProps {
   tabIndex: 0 | -1;
 }
 
-export const GridCell = React.memo(function GridCell(props: GridCellProps) {
+// Based on https://stackoverflow.com/a/59518678
+let cachedSupportsPreventScroll: boolean;
+function doesSupportPreventScroll(): boolean {
+  if (cachedSupportsPreventScroll === undefined) {
+    document.createElement('div').focus({
+      get preventScroll() {
+        cachedSupportsPreventScroll = true;
+        return false;
+      },
+    });
+  }
+  return cachedSupportsPreventScroll;
+}
+
+type OwnerState = GridCellProps & {
+  classes?: GridComponentProps['classes'];
+};
+
+const useUtilityClasses = (ownerState: OwnerState) => {
+  const { align, showRightBorder, isEditable, classes } = ownerState;
+
+  const slots = {
+    root: [
+      'cell',
+      `cell--text${capitalize(align)}`,
+      isEditable && 'cell--editable',
+      showRightBorder && 'withBorder',
+    ],
+  };
+
+  return composeClasses(slots, getDataGridUtilityClass, classes);
+};
+
+function GridCellRaw(props: GridCellProps) {
   const {
-    align,
-    className,
     children,
     colIndex,
     cellMode,
@@ -47,20 +82,19 @@ export const GridCell = React.memo(function GridCell(props: GridCellProps) {
     isSelected,
     rowIndex,
     rowId,
-    showRightBorder,
     tabIndex,
     value,
     width,
+    className,
   } = props;
 
   const valueToRender = formattedValue == null ? value : formattedValue;
   const cellRef = React.useRef<HTMLDivElement>(null);
   const apiRef = useGridApiContext();
 
-  const cssClasses = clsx(className, `${gridClasses[`cell--text${capitalize(align)}`]}`, {
-    [`${gridClasses.withBorder}`]: showRightBorder,
-    [`${gridClasses['cell--editable']}`]: isEditable,
-  });
+  const rootProps = useGridRootProps();
+  const ownerState = { ...props, classes: rootProps.classes };
+  const classes = useUtilityClasses(ownerState);
 
   const publishBlur = React.useCallback(
     (eventName: string) => (event: React.FocusEvent<HTMLDivElement>) => {
@@ -145,11 +179,15 @@ export const GridCell = React.memo(function GridCell(props: GridCellProps) {
     const doc = ownerDocument(apiRef.current.rootElementRef!.current as HTMLElement)!;
 
     if (cellRef.current && !cellRef.current.contains(doc.activeElement!)) {
-      const focusableElement = cellRef.current!.querySelector('[tabindex="0"]') as HTMLElement;
-      if (focusableElement) {
-        focusableElement!.focus();
+      const focusableElement = cellRef.current!.querySelector<HTMLElement>('[tabindex="0"]');
+      const elementToFocus = focusableElement || cellRef.current;
+
+      if (doesSupportPreventScroll()) {
+        elementToFocus.focus({ preventScroll: true });
       } else {
-        cellRef.current!.focus();
+        const scrollPosition = apiRef.current.getScrollPosition();
+        elementToFocus.focus();
+        apiRef.current.scroll(scrollPosition);
       }
     }
   });
@@ -157,7 +195,7 @@ export const GridCell = React.memo(function GridCell(props: GridCellProps) {
   return (
     <div
       ref={cellRef}
-      className={cssClasses}
+      className={clsx(className, classes.root)}
       role="cell"
       data-value={value}
       data-field={field}
@@ -174,4 +212,44 @@ export const GridCell = React.memo(function GridCell(props: GridCellProps) {
       {children != null ? children : valueToRender?.toString()}
     </div>
   );
-});
+}
+
+const GridCell = React.memo(GridCellRaw);
+
+GridCellRaw.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  align: PropTypes.oneOf(['center', 'left', 'right']).isRequired,
+  cellMode: PropTypes.oneOf(['edit', 'view']),
+  children: PropTypes.node,
+  className: PropTypes.string,
+  colIndex: PropTypes.number.isRequired,
+  field: PropTypes.string.isRequired,
+  formattedValue: PropTypes.oneOfType([
+    PropTypes.instanceOf(Date),
+    PropTypes.number,
+    PropTypes.object,
+    PropTypes.string,
+    PropTypes.bool,
+  ]),
+  hasFocus: PropTypes.bool,
+  height: PropTypes.number.isRequired,
+  isEditable: PropTypes.bool,
+  isSelected: PropTypes.bool,
+  rowId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  rowIndex: PropTypes.number.isRequired,
+  showRightBorder: PropTypes.bool,
+  tabIndex: PropTypes.oneOf([-1, 0]).isRequired,
+  value: PropTypes.oneOfType([
+    PropTypes.instanceOf(Date),
+    PropTypes.number,
+    PropTypes.object,
+    PropTypes.string,
+    PropTypes.bool,
+  ]),
+  width: PropTypes.number.isRequired,
+} as any;
+
+export { GridCell };

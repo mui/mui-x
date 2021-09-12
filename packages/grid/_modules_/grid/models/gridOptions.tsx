@@ -1,12 +1,10 @@
 import { GridLocaleText } from './api/gridLocaleTextApi';
 import { GridDensity, GridDensityTypes } from './gridDensity';
-import { GridEditMode, GridEditModes, GridEditRowsModel } from './gridEditRowModel';
+import { GridEditMode, GridEditModes } from './gridEditRowModel';
 import { GridFeatureMode, GridFeatureModeConstant } from './gridFeatureMode';
 import { Logger } from './logger';
 import { GridSortDirection } from './gridSortModel';
 import { GridSlotsComponent } from './gridSlotsComponent';
-import { GridClasses } from './gridClasses';
-import { GridFilterModel } from './gridFilterModel';
 
 export type GridMergedOptions = {
   [key in keyof GridProcessedMergedOptions]: Partial<GridProcessedMergedOptions[key]>;
@@ -25,15 +23,13 @@ export interface GridProcessedMergedOptions {
    * You can find all the translation keys supported in [the source](https://github.com/mui-org/material-ui-x/blob/HEAD/packages/grid/_modules_/grid/constants/localeTextConstants.ts) in the GitHub repository.
    */
   localeText: GridLocaleText;
-  /**
-   * Override or extend the styles applied to the component.
-   */
-  classes: GridClasses;
 }
 
-// TODO add multiSortKey
 /**
  * The grid options with a default in value overridable through props
+ * None of the entry of this interface should be optional, they all have default values and `GridInputComponentProps` already applies a `Partial<GridSimpleOptions>` for the public interface
+ * The controlled model do not have a default value at the prop processing level so they must be defined in `GridComponentOtherProps`
+ * TODO: add multiSortKey
  */
 export interface GridSimpleOptions {
   /**
@@ -53,6 +49,7 @@ export interface GridSimpleOptions {
   checkboxSelection: boolean;
   /**
    * If `true`, the "Select All" header checkbox selects only the rows on the current page. To be used in combination with `checkboxSelection`.
+   * It only works if the pagination is enabled.
    * @default false
    */
   checkboxSelectionVisibleOnly: boolean;
@@ -125,26 +122,18 @@ export interface GridSimpleOptions {
    * If `true`, the virtualization is disabled.
    * @default false
    */
-  disableVirtualization?: boolean;
+  disableVirtualization: boolean;
   /**
    * Controls whether to use the cell or row editing.
    * @default "cell"
    */
-  editMode?: GridEditMode;
-  /**
-   * Set the edit rows model of the grid.
-   */
-  editRowsModel?: GridEditRowsModel;
+  editMode: GridEditMode;
   /**
    * Filtering can be processed on the server or client-side.
    * Set it to 'server' if you would like to handle filtering on the server-side.
    * @default "client"
    */
-  filterMode?: GridFeatureMode;
-  /**
-   * Set the filter model of the grid.
-   */
-  filterModel?: GridFilterModel;
+  filterMode: GridFeatureMode;
   /**
    * Set the height in pixel of the column headers in the grid.
    * @default 56
@@ -162,6 +151,7 @@ export interface GridSimpleOptions {
   hideFooterPagination: boolean;
   /**
    * If `true`, the row count in the footer is hidden.
+   * It has no effect if the pagination is enabled.
    * @default false
    */
   hideFooterRowCount: boolean;
@@ -177,9 +167,9 @@ export interface GridSimpleOptions {
   logger: Logger;
   /**
    * Allows to pass the logging level or false to turn off logging.
-   * @default error
+   * @default "debug"
    */
-  logLevel: string | false;
+  logLevel: keyof Logger | false;
   /**
    * If `true`, pagination is enabled.
    * @default false
@@ -251,6 +241,7 @@ export const GRID_DEFAULT_SIMPLE_OPTIONS: GridSimpleOptions = {
   disableMultipleSelection: false,
   disableMultipleColumnsSorting: false,
   disableSelectionOnClick: false,
+  disableVirtualization: false,
   editMode: GridEditModes.Cell,
   filterMode: GridFeatureModeConstant.client,
   headerHeight: 56,
@@ -259,7 +250,7 @@ export const GRID_DEFAULT_SIMPLE_OPTIONS: GridSimpleOptions = {
   hideFooterRowCount: false,
   hideFooterSelectedRowCount: false,
   logger: console,
-  logLevel: process.env.NODE_ENV === 'production' ? 'error' : 'warn',
+  logLevel: process.env.NODE_ENV === 'production' ? ('error' as const) : ('warn' as const),
   pagination: false,
   paginationMode: GridFeatureModeConstant.client,
   rowHeight: 52,

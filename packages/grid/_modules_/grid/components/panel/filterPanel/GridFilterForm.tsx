@@ -1,11 +1,11 @@
 import * as React from 'react';
-import FormControl from '@material-ui/core/FormControl';
-import IconButton from '@material-ui/core/IconButton';
-import InputLabel from '@material-ui/core/InputLabel';
-import Select from '@material-ui/core/Select';
-// @ts-expect-error fixed in Material-UI v5, types definitions were added.
-import { capitalize, unstable_useId as useId } from '@material-ui/core/utils';
-import { makeStyles } from '@material-ui/styles';
+import PropTypes from 'prop-types';
+import FormControl from '@mui/material/FormControl';
+import IconButton from '@mui/material/IconButton';
+import InputLabel from '@mui/material/InputLabel';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
+import { capitalize, unstable_useId as useId } from '@mui/material/utils';
+import { makeStyles } from '@mui/styles';
 import { filterableGridColumnsSelector } from '../../../hooks/features/columns/gridColumnsSelector';
 import { useGridSelector } from '../../../hooks/features/core/useGridSelector';
 import { GridFilterItem, GridLinkOperator } from '../../../models/gridFilterItem';
@@ -53,7 +53,7 @@ const useStyles = makeStyles(
   { name: 'MuiGridFilterForm' },
 );
 
-export function GridFilterForm(props: GridFilterFormProps) {
+function GridFilterForm(props: GridFilterFormProps) {
   const {
     item,
     hasMultipleFilters,
@@ -90,7 +90,7 @@ export function GridFilterForm(props: GridFilterFormProps) {
   }, [item, getCurrentColumn]);
 
   const changeColumn = React.useCallback(
-    (event: React.ChangeEvent<{ value: unknown }>) => {
+    (event: SelectChangeEvent) => {
       const columnField = event.target.value as string;
       const column = apiRef.current.getColumn(columnField)!;
       const newOperator = column.filterOperators![0];
@@ -106,7 +106,7 @@ export function GridFilterForm(props: GridFilterFormProps) {
   );
 
   const changeOperator = React.useCallback(
-    (event: React.ChangeEvent<{ value: unknown }>) => {
+    (event: SelectChangeEvent) => {
       const operatorValue = event.target.value as string;
       applyFilterChanges({
         ...item,
@@ -117,7 +117,7 @@ export function GridFilterForm(props: GridFilterFormProps) {
   );
 
   const changeLinkOperator = React.useCallback(
-    (event: React.ChangeEvent<{ value: unknown }>) => {
+    (event: SelectChangeEvent) => {
       const linkOperator =
         (event.target.value as string) === GridLinkOperator.And.toString()
           ? GridLinkOperator.And
@@ -224,3 +224,25 @@ export function GridFilterForm(props: GridFilterFormProps) {
     </div>
   );
 }
+
+GridFilterForm.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  applyFilterChanges: PropTypes.func.isRequired,
+  applyMultiFilterOperatorChanges: PropTypes.func.isRequired,
+  deleteFilter: PropTypes.func.isRequired,
+  disableMultiFilterOperator: PropTypes.bool,
+  hasMultipleFilters: PropTypes.bool.isRequired,
+  item: PropTypes.shape({
+    columnField: PropTypes.string,
+    id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    operatorValue: PropTypes.string,
+    value: PropTypes.any,
+  }).isRequired,
+  multiFilterOperator: PropTypes.oneOf(['and', 'or']),
+  showMultiFilterOperators: PropTypes.bool,
+} as any;
+
+export { GridFilterForm };

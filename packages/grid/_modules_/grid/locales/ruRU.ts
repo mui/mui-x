@@ -1,4 +1,4 @@
-import { ruRU as ruRUCore } from '@material-ui/core/locale';
+import { ruRU as ruRUCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -129,6 +129,9 @@ export const ruRUGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: 'истина',
   booleanCellFalseLabel: 'ложь',
+
+  // Actions cell more text
+  // actionsCellMore: 'more',
 };
 
 export const ruRU: Localization = getGridLocalization(ruRUGrid, ruRUCore);

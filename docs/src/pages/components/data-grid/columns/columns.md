@@ -255,9 +255,34 @@ The following are the native column types:
 - `'dateTime'`
 - `'boolean'`
 - `'singleSelect'`
+- `'actions'`
 
-To apply a column type, you need to define the type property in your column definition.
-If the column is `type: 'singleSelect'` you also need to set the `valueOptions` property in that column definition.
+To use most of the column types, you only need to define the `type` property in your column definition.
+However, some types require additional properties to be set to make them work correctly:
+
+- If the column type is `'singleSelect'`, you also need to set the `valueOptions` property in the respective column definition.
+
+  ```tsx
+  {
+    field: 'country',
+    type: 'singleSelect',
+    valueOptions: ['United Kingdom', 'Spain', 'Brazil']
+  }
+  ```
+
+- If the column type is `'actions'`, you need to provide a `getActions` function that returns an array of actions available for each row (React elements).
+  You can add the `showInMenu` prop on the returned React elements to signal the data grid to group these actions inside a row menu.
+
+  ```tsx
+  {
+    field: 'actions',
+    type: 'actions',
+    getActions: (params: GridRowParams) => [
+      <GridActionsCellItem icon={...} onClick={...} label="Delete">,
+      <GridActionsCellItem icon={...} onClick={...} label="Print" showInMenu>,
+    ]
+  }
+  ```
 
 {{"demo": "pages/components/data-grid/columns/ColumnTypesGrid.js", "bg": "inline"}}
 

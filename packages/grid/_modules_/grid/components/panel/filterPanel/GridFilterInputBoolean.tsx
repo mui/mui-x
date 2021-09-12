@@ -1,5 +1,5 @@
 import * as React from 'react';
-import TextField, { TextFieldProps } from '@material-ui/core/TextField';
+import TextField, { TextFieldProps } from '@mui/material/TextField';
 import { GridFilterInputValueProps } from './GridFilterInputValueProps';
 
 export function GridFilterInputBoolean(props: GridFilterInputValueProps & TextFieldProps) {

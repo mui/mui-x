@@ -1,5 +1,5 @@
-import { darken, lighten, Theme } from '@material-ui/core/styles';
-import { makeStyles } from '@material-ui/styles';
+import { darken, lighten, Theme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import { getThemePaletteMode, muiStyleAlpha, createTheme } from '../../utils/utils';
 import { gridClasses } from '../../gridClasses';
 
@@ -47,11 +47,6 @@ export const useStyles = makeStyles(
             theme.palette.background.default,
             theme.palette.action.disabledOpacity,
           ),
-        },
-        [`& .${gridClasses.toolbarContainer}`]: {
-          display: 'flex',
-          alignItems: 'center',
-          padding: '4px 4px 0',
         },
         [`& .${gridClasses.columnsContainer}`]: {
           position: 'absolute',
@@ -126,6 +121,9 @@ export const useStyles = makeStyles(
           overflow: 'hidden',
           padding: '0 6px',
         },
+        [`& .${gridClasses.iconButtonContainer}`]: {
+          display: 'flex',
+        },
         [`& .${gridClasses.sortIcon}, & .${gridClasses.filterIcon}`]: {
           fontSize: 'inherit',
         },
@@ -173,7 +171,7 @@ export const useStyles = makeStyles(
               color: borderColor,
             },
           },
-          '&.Mui-resizing': {
+          [`&.${gridClasses['columnSeparator--resizing']}`]: {
             color: theme.palette.text.primary,
           },
         },
@@ -289,6 +287,11 @@ export const useStyles = makeStyles(
         },
         [`& .${gridClasses.booleanCell}[data-value="false"]`]: {
           color: theme.palette.text.disabled,
+        },
+        [`& .${gridClasses.actionsCell}`]: {
+          display: 'inline-flex',
+          alignItems: 'center',
+          gridGap: theme.spacing(1),
         },
         // The very last cell
         [`& .${gridClasses.columnHeaderWrapper} .${gridClasses.cell}`]: {

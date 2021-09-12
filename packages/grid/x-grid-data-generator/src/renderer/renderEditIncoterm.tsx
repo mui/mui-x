@@ -1,11 +1,12 @@
 import * as React from 'react';
 import { GridRenderEditCellParams } from '@mui/x-data-grid';
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import { createStyles, makeStyles } from '@material-ui/styles';
-import { Theme } from '@material-ui/core/styles';
+import Select, { SelectProps } from '@mui/material/Select';
+import { MenuProps } from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import { createStyles, makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import { createTheme } from '../../../_modules_/grid/utils/utils';
 import { INCOTERM_OPTIONS } from '../services/static-data';
 
@@ -32,15 +33,15 @@ function EditIncoterm(props: GridRenderEditCellParams) {
   const classes = useStyles();
   const { id, value, api, field } = props;
 
-  const handleChange = (event) => {
+  const handleChange: SelectProps['onChange'] = (event) => {
     api.setEditCellValue({ id, field, value: event.target.value }, event);
-    if (!event.key) {
+    if (!(event as any).key) {
       api.commitCellChange({ id, field });
       api.setCellMode(id, field, 'view');
     }
   };
 
-  const handleClose = (event, reason) => {
+  const handleClose: MenuProps['onClose'] = (event, reason) => {
     if (reason === 'backdropClick') {
       api.setCellMode(id, field, 'view');
     }

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { GridColumns, DataGrid, GridCellParams } from '@mui/x-data-grid';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 
 const columns: GridColumns = [
   {

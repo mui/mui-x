@@ -3,11 +3,15 @@ import {
   createClientRenderStrictMode,
   // @ts-expect-error need to migrate helpers to TypeScript
   fireEvent,
+  // @ts-expect-error need to migrate helpers to TypeScript
+  screen,
+  // @ts-expect-error need to migrate helpers to TypeScript
+  waitFor,
 } from 'test/utils';
 import { expect } from 'chai';
-import { spy } from 'sinon';
-import Portal from '@material-ui/core/Portal';
-import { DataGrid } from '@mui/x-data-grid';
+import { spy, stub } from 'sinon';
+import Portal from '@mui/material/Portal';
+import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
 import { getColumnValues, getRow } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
@@ -95,5 +99,88 @@ describe('<DataGrid /> - Rows', () => {
     expect(getRow(0)).to.have.class('under-age');
     expect(getRow(1)).to.have.class('under-age');
     expect(getRow(2)).not.to.have.class('under-age');
+  });
+
+  describe('columnType: actions', () => {
+    it('should throw an error if getActions is missing', function test() {
+      if (!isJSDOM) {
+        this.skip();
+      }
+      expect(() => {
+        render(
+          <div style={{ width: 300, height: 300 }}>
+            <DataGrid
+              {...baselineProps}
+              rows={[{ id: 1 }]}
+              columns={[{ field: 'actions', type: 'actions' }]}
+            />
+          </div>,
+        );
+      }) // @ts-expect-error need to migrate helpers to TypeScript
+        .toErrorDev([
+          'Material-UI: Missing the `getActions` property in the `GridColDef`.',
+          'The above error occurred in the <GridActionsCell> component',
+          'Material-UI: GridErrorHandler - An unexpected error occurred.',
+        ]);
+    });
+
+    it('should call getActions with the row params', () => {
+      const getActions = stub().returns([]);
+      render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid
+            {...baselineProps}
+            rows={[{ id: 1 }]}
+            columns={[{ field: 'actions', type: 'actions', getActions }]}
+          />
+        </div>,
+      );
+      expect(getActions.args[0][0].id).to.equal(1);
+      expect(getActions.args[0][0].row).to.deep.equal({ id: 1 });
+    });
+
+    it('should always show the actions not marked as showInMenu', () => {
+      render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid
+            {...baselineProps}
+            rows={[{ id: 1 }]}
+            columns={[
+              {
+                field: 'actions',
+                type: 'actions',
+                getActions: () => [
+                  <GridActionsCellItem icon={<span />} label="delete" />,
+                  <GridActionsCellItem label="print" showInMenu />,
+                ],
+              },
+            ]}
+          />
+        </div>,
+      );
+      expect(screen.queryByRole('button', { name: 'delete' })).not.to.equal(null);
+      expect(screen.queryByText('print')).to.equal(null);
+    });
+
+    it('should show in a menu the actions marked as showInMenu', async () => {
+      render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid
+            {...baselineProps}
+            rows={[{ id: 1 }]}
+            columns={[
+              {
+                field: 'actions',
+                type: 'actions',
+                getActions: () => [<GridActionsCellItem label="print" showInMenu />],
+              },
+            ]}
+          />
+        </div>,
+      );
+      expect(screen.queryByText('print')).to.equal(null);
+      fireEvent.click(screen.getByRole('button', { name: 'more' }));
+      await waitFor(() => expect(screen.queryByText('print')).not.to.equal(null));
+    });
   });
 });

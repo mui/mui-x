@@ -1,10 +1,11 @@
 import * as React from 'react';
-import clsx from 'clsx';
-import IconButton from '@material-ui/core/IconButton';
+import IconButton from '@mui/material/IconButton';
 import { useGridApiContext } from '../../hooks/root/useGridApiContext';
 import { GridStateColDef } from '../../models/colDef/gridColDef';
-import { gridClasses } from '../../gridClasses';
+import { getDataGridUtilityClass } from '../../gridClasses';
+import { composeClasses } from '../../utils/material-ui-utils';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
+import { GridComponentProps } from '../../GridComponentProps';
 
 export interface ColumnHeaderMenuIconProps {
   column: GridStateColDef;
@@ -14,10 +15,27 @@ export interface ColumnHeaderMenuIconProps {
   iconButtonRef: React.RefObject<HTMLButtonElement>;
 }
 
+type OwnerState = ColumnHeaderMenuIconProps & {
+  classes?: GridComponentProps['classes'];
+};
+
+const useUtilityClasses = (ownerState: OwnerState) => {
+  const { classes, open } = ownerState;
+
+  const slots = {
+    root: ['menuIcon', open && 'menuOpen'],
+    button: ['menuIconButton'],
+  };
+
+  return composeClasses(slots, getDataGridUtilityClass, classes);
+};
+
 export const ColumnHeaderMenuIcon = React.memo((props: ColumnHeaderMenuIconProps) => {
   const { column, open, columnMenuId, columnMenuButtonId, iconButtonRef } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
+  const ownerState = { ...props, classes: rootProps.classes };
+  const classes = useUtilityClasses(ownerState);
 
   const handleMenuIconClick = React.useCallback(
     (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -29,11 +47,11 @@ export const ColumnHeaderMenuIcon = React.memo((props: ColumnHeaderMenuIconProps
   );
 
   return (
-    <div className={clsx(gridClasses.menuIcon, { [gridClasses.menuOpen]: open })}>
+    <div className={classes.root}>
       <IconButton
         ref={iconButtonRef}
         tabIndex={-1}
-        className={gridClasses.menuIconButton}
+        className={classes.button}
         aria-label={apiRef.current.getLocaleText('columnMenuLabel')}
         title={apiRef.current.getLocaleText('columnMenuLabel')}
         size="small"

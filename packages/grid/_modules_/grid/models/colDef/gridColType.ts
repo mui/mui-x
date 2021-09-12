@@ -10,5 +10,6 @@ export type GridNativeColTypes =
   | 'date'
   | 'dateTime'
   | 'boolean'
-  | 'singleSelect';
+  | 'singleSelect'
+  | 'actions';
 export type GridColType = GridNativeColTypes | string;

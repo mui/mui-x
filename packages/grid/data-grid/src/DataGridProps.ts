@@ -14,10 +14,10 @@ export type DataGridProps = Omit<
   | 'disableMultipleColumnsFiltering'
   | 'disableMultipleColumnsSorting'
   | 'disableMultipleSelection'
+  | 'hideFooterRowCount'
   | 'options'
   | 'onRowsScrollEnd'
   | 'onViewportRowsChange'
-  | 'pagination'
   | 'scrollEndThreshold'
   | 'signature'
 > & {

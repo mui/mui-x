@@ -1,4 +1,4 @@
-import { skSK as skSKCore } from '@material-ui/core/locale';
+import { skSK as skSKCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -121,6 +121,9 @@ export const skSKGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: 'áno',
   booleanCellFalseLabel: 'nie',
+
+  // Actions cell more text
+  // actionsCellMore: 'more',
 };
 
 export const skSK: Localization = getGridLocalization(skSKGrid, skSKCore);
