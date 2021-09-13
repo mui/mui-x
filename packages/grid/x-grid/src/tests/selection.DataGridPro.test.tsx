@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { getColumnValues, getSelectedRowIndexes } from 'test/utils/helperFn';
+import { getColumnValues, getRow, getSelectedRowIndexes } from 'test/utils/helperFn';
 import {
   // @ts-expect-error need to migrate helpers to TypeScript
   screen,
@@ -122,18 +122,37 @@ describe('<DataGridPro /> - Selection', () => {
     });
   });
 
+  describe('apiRef: isRowSelected', () => {
+    it('should check if the rows selected by clicking on the rows are selected', () => {
+      render(<TestDataGridSelection />);
+
+      fireEvent.click(getRow(1));
+
+      expect(apiRef.current.isRowSelected(0)).to.equal(false);
+      expect(apiRef.current.isRowSelected(1)).to.equal(true);
+    });
+
+    it('should check if the rows selected with the selectionModel prop are selected', () => {
+      render(<TestDataGridSelection selectionModel={[1]} />);
+
+      expect(apiRef.current.isRowSelected(0)).to.equal(false);
+      expect(apiRef.current.isRowSelected(1)).to.equal(true);
+    });
+  });
+
   describe('apiRef: selectRow', () => {
     it('should call onSelectionModelChange with the ids selected', () => {
       const handleSelectionModelChange = spy();
       render(<TestDataGridSelection onSelectionModelChange={handleSelectionModelChange} />);
       apiRef.current.selectRow(1);
       expect(handleSelectionModelChange.lastCall.args[0]).to.deep.equal([1]);
-      apiRef.current.selectRow(2);
+      // Reset old selection
+      apiRef.current.selectRow(2, true, true);
       expect(handleSelectionModelChange.lastCall.args[0]).to.deep.equal([2]);
       // Keep old selection
-      apiRef.current.selectRow(3, true, true);
+      apiRef.current.selectRow(3);
       expect(handleSelectionModelChange.lastCall.args[0]).to.deep.equal([2, 3]);
-      apiRef.current.selectRow(3, false, true);
+      apiRef.current.selectRow(3, false);
       expect(handleSelectionModelChange.lastCall.args[0]).to.deep.equal([2]);
     });
 
