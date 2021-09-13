@@ -6,6 +6,7 @@ import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import ChartContext from '../ChartContext';
 import { findObjects, isInRange } from '../utils';
+import useTicks from '../hooks/useTicks';
 
 function Tooltip(props) {
   const {
@@ -26,7 +27,6 @@ function Tooltip(props) {
   const flatX = [].concat.apply([], data).map((d) => d[xKey]);
   // An array of x-offset values matching the data
   const xOffsets = [...new Set(flatX.map((d) => xScale(d)))].sort(d3.ascending);
-
   // Find the closest x-offset to the mouse position
   // TODO: Currently assumes that data points are equally spaced
   const offset = xOffsets.find((d) =>
@@ -38,16 +38,21 @@ function Tooltip(props) {
   // Add the series labels
   highlightedData =
     highlightedData && highlightedData.map((d, i) => ({ label: seriesLabels[i], ...d }));
+  // TODO: Make this work when the data is not equally spaced along the x-axis
+  const label = useTicks({ maxTicks: xOffsets.length, scale: xScale }).find(
+    (d) => d.offset === offset,
+  );
 
   return (
     <React.Fragment>
       <Popper
         open={strokeRef.current !== null}
-        placement="right"
+        placement="right-start"
         anchorEl={strokeRef.current}
-        style={{ padding: '8px', pointerEvents: 'none' }}
+        style={{ padding: '16px', pointerEvents: 'none' }}
       >
         <Paper style={{ padding: '8px' }}>
+          <Typography gutterBottom>{label && label.value}</Typography>
           {highlightedData &&
             highlightedData
               .sort((a, b) => d3.descending(a[yKey], b[yKey]))

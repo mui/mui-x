@@ -66,13 +66,11 @@ const LineChart = React.forwardRef(function LineChart(props, ref) {
   const xScale = useScale(xScaleType, xDomain, xRange);
   const yScale = useScale(yScaleType, yDomain, yRange);
   const xTicks = useTicks({
-    range: xRange,
     scale: xScale,
     pixelsPerTick,
     maxTicks: maxXTicks,
   });
   const yTicks = useTicks({
-    range: yRange,
     scale: yScale,
     pixelsPerTick,
     maxTicks: 999,
