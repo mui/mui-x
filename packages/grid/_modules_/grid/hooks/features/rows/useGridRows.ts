@@ -18,7 +18,6 @@ import { useGridState } from '../core/useGridState';
 import { getInitialGridRowState, GridRowsState } from './gridRowsState';
 import {
   gridRowCountSelector,
-  GridRowsLookup,
   gridRowsLookupSelector,
   unorderedGridRowIdsSelector,
 } from './gridRowsSelector';
@@ -60,8 +59,8 @@ export function convertGridRowsPropToState(
   return state;
 }
 
-const getFlatRowTree = (lookup: GridRowsLookup): GridRowTree =>
-  Object.fromEntries(Object.entries(lookup).map(([id, row]) => [id, { node: row, children: {} }]));
+const getFlatRowTree = (rowIds: GridRowId[]): GridRowTree =>
+  Object.fromEntries(rowIds.map((id) => [id, { id, children: {} }]));
 
 /**
  * @requires useGridSorting (method)
@@ -113,7 +112,7 @@ export const useGridRows = (
         const rowState = rowsCache.current.state;
         const tree = apiRef.current.groupRows
           ? apiRef.current.groupRows(rowState.idRowsLookup)
-          : getFlatRowTree(rowState.idRowsLookup);
+          : getFlatRowTree(rowState.allRows);
         setGridState((state) => ({ ...state, rows: { ...rowState, tree } }));
         apiRef.current.publishEvent(GridEvents.rowsSet);
         forceUpdate();

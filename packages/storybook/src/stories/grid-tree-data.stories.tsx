@@ -29,13 +29,8 @@ const columns: GridColumns = [
   },
 ];
 
+const getTreeDataPath = (row) => row.name.split('.');
+
 export function TreeData() {
-  return (
-    <DataGridPro
-      rows={rows}
-      columns={columns}
-      treeData
-      getTreeDataPath={(params) => params.row.name.split('.')}
-    />
-  );
+  return <DataGridPro rows={rows} columns={columns} treeData getTreeDataPath={getTreeDataPath} />;
 }

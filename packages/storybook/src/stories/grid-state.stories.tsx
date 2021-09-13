@@ -109,16 +109,27 @@ const defaultProps = {
 
 export function InitialState() {
   const [gridState, setGridState] = React.useState<Partial<GridState>>({
-    sorting: { sortModel: [{ field: 'brand', sort: 'desc' }], sortedRows: [2, 0, 1] },
+    sorting: {
+      sortModel: [{ field: 'brand', sort: 'desc' }],
+      sortedRows: [2, 0, 1],
+      sortedRowTree: [
+        { id: 2, children: [] },
+        { id: 0, children: [] },
+        { id: 1, children: [] },
+      ],
+    },
   });
 
   const updateDirection = React.useCallback(() => {
     setGridState((p) => {
       const newDirection = p.sorting!.sortModel[0]?.sort === 'desc' ? 'asc' : 'desc';
+      const sortedRows = [...p.sorting!.sortedRows!].reverse();
+
       return {
         ...p,
         sorting: {
-          sortedRows: [...p.sorting!.sortedRows!].reverse(),
+          sortedRows,
+          sortedRowTree: sortedRows.map((id) => ({ id, children: [] })),
           sortModel: [{ field: 'brand', sort: newDirection }],
         },
       };

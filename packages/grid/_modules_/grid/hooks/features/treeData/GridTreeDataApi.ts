@@ -1,5 +1,5 @@
-import { GridRowsLookup } from '../rows/gridRowsSelector';
 import { GridRowTree } from '../../../models/gridRows';
+import { GridRowsLookup } from '../rows';
 
 export interface GridTreeDataApi {
   /**

@@ -8,7 +8,7 @@ import {
   GridMergedOptions,
 } from './models/gridOptions';
 import { MuiEvent } from './models/muiEvent';
-import { GridRowId, GridRowIdGetter, GridRowsProp } from './models/gridRows';
+import { GridRowId, GridRowIdGetter, GridRowModel, GridRowsProp } from './models/gridRows';
 import { ElementSize } from './models/elementSize';
 import { GridColumnTypesRecord } from './models/colDef/gridColTypeDef';
 import { GridSortModel } from './models/gridSortModel';
@@ -104,7 +104,7 @@ interface GridComponentOtherProps {
    * @param {GridRowParams} params With all properties from [[GridRowParams]].
    * @returns {string[]} the path to the row
    */
-  getTreeDataPath?: (params: GridRowParams) => string[];
+  getTreeDataPath?: (row: GridRowModel) => string[];
   /**
    * Callback fired when the edit cell value changes.
    * @param {GridEditCellPropsParams} params With all properties from [[GridEditCellPropsParams]].

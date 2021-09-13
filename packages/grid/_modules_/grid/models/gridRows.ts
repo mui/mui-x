@@ -13,7 +13,7 @@ export interface GridRowModelUpdate extends GridRowData {
 }
 
 export interface GridRowTreeNode {
-  node: GridRowModel;
+  id: GridRowId;
   children: GridRowTree;
 }
 
