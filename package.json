@@ -72,7 +72,7 @@
     "@types/chai-dom": "^0.0.10",
     "@types/enzyme": "^3.10.9",
     "@types/mocha": "^9.0.0",
-    "@types/node": "^16.7.5",
+    "@types/node": "^16.9.1",
     "@types/prettier": "^2.3.2",
     "@types/react": "^17.0.20",
     "@types/react-dom": "^17.0.9",
