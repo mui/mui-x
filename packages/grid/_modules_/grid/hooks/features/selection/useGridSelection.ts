@@ -132,11 +132,11 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
 
       logger.debug(`Expanding selection from row ${startId} to row ${endId}`);
 
-      const sortedRowsId = visibleSortedGridRowIdsSelector(apiRef.current.state);
-      const startIndex = sortedRowsId.indexOf(startId);
-      const endIndex = sortedRowsId.indexOf(endId);
+      const visibleRowIds = visibleSortedGridRowIdsSelector(apiRef.current.state);
+      const startIndex = visibleRowIds.indexOf(startId);
+      const endIndex = visibleRowIds.indexOf(endId);
       const [start, end] = startIndex > endIndex ? [endIndex, startIndex] : [startIndex, endIndex];
-      const rowsBetweenStartAndEnd = sortedRowsId.slice(start, end + 1);
+      const rowsBetweenStartAndEnd = visibleRowIds.slice(start, end + 1);
 
       apiRef.current.selectRows(rowsBetweenStartAndEnd, isSelected, resetSelection);
     },
