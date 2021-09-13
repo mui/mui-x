@@ -71,10 +71,8 @@ const ScatterChart = (props) => {
         yScale,
         zDomain,
         xKey,
-        xRange: [0, boundedWidth],
         xTicks,
         yKey,
-        yRange: [0, boundedHeight],
         yTicks,
         zKey,
       }}
