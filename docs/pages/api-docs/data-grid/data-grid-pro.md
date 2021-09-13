@@ -150,6 +150,7 @@ You can use the [slots API](/components/data-grid/components/#overriding-compone
 | <span class="prop-name">FilterPanel</span> | <span class="prop-type">elementType</span> | <span class="prop-type">FilterPanel</span> | Filter panel component rendered when clicking the filter button. |
 | <span class="prop-name">Footer</span> | <span class="prop-type">elementType</span> | <span class="prop-type">GridFooter</span> | Footer component rendered at the bottom of the grid viewport. |
 | <span class="prop-name">LoadingOverlay</span> | <span class="prop-type">elementType</span> | <span class="prop-type">LoadingOverlay</span> | Overlay component rendered when the grid is in a loading state. |
+| <span class="prop-name">MoreActionsIcon</span> | <span class="prop-type">elementType</span> | <span class="prop-type">MoreVertIcon</span> | Icon displayed on the `actions` column type to open the menu. |
 | <span class="prop-name">NoResultsOverlay</span> | <span class="prop-type">elementType</span> | <span class="prop-type">NoResultsOverlay </span> | Overlay component rendered when the grid has no results after filtering. |
 | <span class="prop-name">NoRowsOverlay</span> | <span class="prop-type">elementType</span> | <span class="prop-type">NoRowsOverlay</span> | Overlay component rendered when the grid has no rows. |
 | <span class="prop-name">OpenFilterButtonIcon</span> | <span class="prop-type">elementType </span> | <span class="prop-type">FilterListIcon</span> | Icon displayed on the open filter button present in the toolbar by default. |
