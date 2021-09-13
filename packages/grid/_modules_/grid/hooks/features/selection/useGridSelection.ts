@@ -16,7 +16,7 @@ import {
   selectedGridRowsSelector,
   selectedIdsLookupSelector,
 } from './gridSelectionSelector';
-import { sortedGridRowIdsSelector } from '../sorting';
+import { visibleSortedGridRowIdsSelector } from '../filter';
 
 /**
  * @requires useGridRows (state, method)
@@ -132,7 +132,7 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
 
       logger.debug(`Expanding selection from row ${startId} to row ${endId}`);
 
-      const sortedRowsId = sortedGridRowIdsSelector(apiRef.current.state);
+      const sortedRowsId = visibleSortedGridRowIdsSelector(apiRef.current.state);
       const startIndex = sortedRowsId.indexOf(startId);
       const endIndex = sortedRowsId.indexOf(endId);
       const [start, end] = startIndex > endIndex ? [endIndex, startIndex] : [startIndex, endIndex];
@@ -198,14 +198,17 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
     [apiRef, canHaveMultipleSelection, disableSelectionOnClick, checkboxSelection],
   );
 
-  const preventSelectionOnShift = React.useCallback((_, event: React.MouseEvent) => {
-    if (canHaveMultipleSelection && event.shiftKey) {
-      window.getSelection()?.removeAllRanges()
-    }
-  }, [canHaveMultipleSelection])
+  const preventSelectionOnShift = React.useCallback(
+    (_, event: React.MouseEvent) => {
+      if (canHaveMultipleSelection && event.shiftKey) {
+        window.getSelection()?.removeAllRanges();
+      }
+    },
+    [canHaveMultipleSelection],
+  );
 
   useGridApiEventHandler(apiRef, GridEvents.rowClick, handleRowClick);
-  useGridApiEventHandler(apiRef, GridEvents.cellKeyDown, preventSelectionOnShift);
+  useGridApiEventHandler(apiRef, GridEvents.rowMouseDown, preventSelectionOnShift);
 
   const selectionApi: GridSelectionApi = {
     selectRow,

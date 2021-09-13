@@ -73,7 +73,7 @@ function GridRow(props: GridRowProps) {
     [apiRef, id],
   );
 
-  const mouseEventsHandlers = React.useMemo(
+  const mouseEventsHandlers = React.useMemo<Partial<React.HTMLAttributes<HTMLDivElement>>>(
     () => ({
       onClick: publish(GridEvents.rowClick),
       onDoubleClick: publish(GridEvents.rowDoubleClick),
@@ -81,6 +81,7 @@ function GridRow(props: GridRowProps) {
       onMouseOut: publish(GridEvents.rowOut),
       onMouseEnter: publish(GridEvents.rowEnter),
       onMouseLeave: publish(GridEvents.rowLeave),
+      onMouseDown: publish(GridEvents.rowMouseDown),
     }),
     [publish],
   );
