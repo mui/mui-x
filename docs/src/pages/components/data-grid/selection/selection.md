@@ -62,7 +62,15 @@ In the demo below only rows with quantity above 50000 can be selected:
 
 ## Controlled selection
 
+Use the `selectionModel` prop to control the grid selection. Each time the `selectionModel` changes the `onSelectionModelChange` callback is called with the new selection model value.
+
 {{"demo": "pages/components/data-grid/selection/ControlledSelectionGrid.js", "bg": "inline"}}
+
+### Controlled selection and server-side pagination
+
+Using controlled selection when `paginationMode="server"` can result in the `DataGrid` clearing the provided `selectionModel` on page change. Depending on your implementation of the server-side pagination, when the page changes and there are no rows in the grid with ids equal to the `GridRowId`s provided to the `selectionModel` the grid will clear the `selectionModel`. To prevent this either save the `selectionModel` and restore it later or append the newly loaded grid rows to the existing rows.
+
+{{"demo": "pages/components/data-grid/selection/ControlledSelectionServerPaginationGrid.js", "bg": "inline"}}
 
 ## apiRef [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-pro/)
 
