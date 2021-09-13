@@ -51,6 +51,7 @@ describe('<DataGridPro /> - Edit Rows', () => {
         { field: 'brand', editable: true },
         { field: 'year', editable: true },
       ],
+      throttleRowsMs: 0,
     };
   });
 
@@ -543,6 +544,7 @@ describe('<DataGridPro /> - Edit Rows', () => {
                 brand: 'Nike',
               },
             ]}
+            throttleRowsMs={0}
           />
         </div>,
       );
@@ -588,6 +590,7 @@ describe('<DataGridPro /> - Edit Rows', () => {
                 country: 'fr',
               },
             ]}
+            throttleRowsMs={0}
           />
         </div>,
       );

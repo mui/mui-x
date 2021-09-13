@@ -26,6 +26,7 @@ describe('<DataGridPro /> - Export', () => {
             <DataGridPro
               {...baselineProps}
               apiRef={apiRef}
+              throttleRowsMs={0}
               columns={columns}
               rows={[
                 {

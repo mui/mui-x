@@ -68,7 +68,7 @@ describe('<DataGridPro /> - Sorting', () => {
   const renderBrandSortedAsc = () => {
     const sortModel: GridSortModel = [{ field: 'brand', sort: 'asc' }];
 
-    render(<TestCase sortModel={sortModel} />);
+    render(<TestCase sortModel={sortModel} throttleRowsMs={0} />);
   };
 
   it('should apply the sortModel prop correctly', () => {
