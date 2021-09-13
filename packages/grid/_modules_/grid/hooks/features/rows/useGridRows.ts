@@ -242,6 +242,7 @@ export const useGridRows = (
   React.useEffect(() => {
     return () => {
       if (rowsCache.current.timeout !== null) {
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         clearTimeout(rowsCache.current.timeout);
       }
     };
