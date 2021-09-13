@@ -29,7 +29,7 @@ export default function SmoothedLineChart() {
       <XAxis />
       <YAxis suffix="kg" />
       <Tooltip />
-      <Line stroke="rgb(235,97,97)" />
+      <Line stroke="rgb(235,97,97)" markerShape="none" />
     </LineChart>
   );
 }

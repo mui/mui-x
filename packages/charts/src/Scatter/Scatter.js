@@ -62,31 +62,35 @@ const Scatter = (props) => {
       )
     );
   };
+
   return (
     <g>
-      {chartData.map(({ [xKey]: x, [yKey]: y, [zKey]: z }, i) => (
-        <path
-          d={d3.symbol(
-            d3.symbols[getSymbol(markerShape, series)],
-            z ? plot(z, zDomain, maxSize - minSize) + minSize : minSize,
-          )()}
-          transform={`translate(${xScale(x)}, 
+      {chartData.map(
+        ({ [xKey]: x, [yKey]: y, [zKey]: z }, i) =>
+          (markerShape !== 'none' || highlightMarker(x)) && (
+            <path
+              d={d3.symbol(
+                d3.symbols[getSymbol(markerShape, series)],
+                z ? plot(z, zDomain, maxSize - minSize) + minSize : minSize,
+              )()}
+              transform={`translate(${xScale(x)}, 
           ${boundedHeight - yScale(y)})`}
-          fill={
-            (invertMarkers && !highlightMarker(x)) || (!invertMarkers && highlightMarker(x))
-              ? stroke
-              : fill
-          }
-          stroke={
-            (invertMarkers && !highlightMarker(x)) || (!invertMarkers && highlightMarker(x))
-              ? fill
-              : stroke
-          }
-          strokeDasharray={strokeDasharray}
-          strokeWidth={strokeWidth}
-          key={i}
-        />
-      ))}
+              fill={
+                (invertMarkers && !highlightMarker(x)) || (!invertMarkers && highlightMarker(x))
+                  ? stroke
+                  : fill
+              }
+              stroke={
+                (invertMarkers && !highlightMarker(x)) || (!invertMarkers && highlightMarker(x))
+                  ? fill
+                  : stroke
+              }
+              strokeDasharray={strokeDasharray}
+              strokeWidth={strokeWidth}
+              key={i}
+            />
+          ),
+      )}
     </g>
   );
 };

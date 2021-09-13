@@ -13,6 +13,7 @@ const Line = (props) => {
     areaKeys,
     data,
     dimensions: { boundedHeight },
+    highlightMarkers,
     markerShape: markerShapeContext,
     smoothed: smoothedContext,
     stacked,
@@ -90,10 +91,11 @@ const Line = (props) => {
         strokeWidth={strokeWidth}
         transform={`translate(0, ${boundedHeight})`}
       />
-      {markerShape !== 'none' && (
+      {(markerShape !== 'none' || highlightMarkers) && (
         <Scatter
           data={pointData}
           zDomain={[5, 5]}
+          markerShape={markerShape}
           series={series}
           shape={markerShape}
           stroke={stroke}
