@@ -15,7 +15,7 @@ const ScatterChart = (props) => {
     label,
     labelColor = '#777',
     labelFontSize = 18,
-    margin = { top: 40, bottom: 40, left: 50, right: 30 },
+    margin: marginProp,
     markerShape = 'circle',
     pixelsPerTick = 50,
     xDomain: xDomainProp,
@@ -29,6 +29,7 @@ const ScatterChart = (props) => {
     ...other
   } = props;
 
+  const margin = { top: 40, bottom: 40, left: 50, right: 30, ...marginProp };
   const chartSettings = {
     marginTop: margin.top,
     marginBottom: margin.bottom,
@@ -84,17 +85,17 @@ const ScatterChart = (props) => {
         <rect width={width} height={height} fill={fill} rx="4" />
         <g transform={`translate(${[marginLeft, marginTop].join(',')})`}>
           <g>{children}</g>
-          {label && (
-            <text
-              fill={labelColor}
-              transform={`translate(${width / 2}, ${50 - labelFontSize})`}
-              fontSize={labelFontSize}
-              textAnchor="middle"
-            >
-              {label}
-            </text>
-          )}
         </g>
+        {label && (
+          <text
+            fill={labelColor}
+            transform={`translate(${width / 2}, ${50 - labelFontSize})`}
+            fontSize={labelFontSize}
+            textAnchor="middle"
+          >
+            {label}
+          </text>
+        )}
       </svg>
     </ChartContext.Provider>
   );

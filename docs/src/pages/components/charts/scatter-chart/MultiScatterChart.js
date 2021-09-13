@@ -29,6 +29,8 @@ export default function BasicScatterChart() {
   return (
     <ScatterChart
       data={[generateDataset(...domains1), generateDataset(...domains2)]}
+      label="Mine vs Yours"
+      margin={{ top: 70 }}
       markerShape="auto"
     >
       <Grid
