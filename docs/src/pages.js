@@ -26,6 +26,7 @@ const dataGridComponentAPI = componentsAPI.children.find(
 dataGridComponent.children = [
   {
     pathname: '/components/data-grid',
+    subheader: '/components/data-grid/overview',
     title: 'Overview',
   },
   { pathname: '/components/data-grid/demo' },
