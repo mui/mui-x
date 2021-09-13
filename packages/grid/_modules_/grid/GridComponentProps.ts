@@ -100,6 +100,12 @@ interface GridComponentOtherProps {
    */
   isRowSelectable?: (params: GridRowParams) => boolean;
   /**
+   * Determines the path of a row in the tree data
+   * @param {GridRowParams} params With all properties from [[GridRowParams]].
+   * @returns {string[]} the path to the row
+   */
+  getTreeDataPath?: (params: GridRowParams) => string[];
+  /**
    * Callback fired when the edit cell value changes.
    * @param {GridEditCellPropsParams} params With all properties from [[GridEditCellPropsParams]].
    * @param {MuiEvent} event The event that caused this prop to be called.

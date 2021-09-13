@@ -20,7 +20,6 @@ import {
   gridRowsLookupSelector,
   unorderedGridRowIdsSelector,
 } from './gridRowsSelector';
-import {useGridApiEventHandler} from "../../root/useGridApiEventHandler";
 
 export interface GridRowsInternalCache {
   state: GridRowsState;

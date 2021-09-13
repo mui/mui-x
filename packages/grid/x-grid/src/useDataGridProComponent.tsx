@@ -34,7 +34,7 @@ import { useRenderInfoLog } from '../../_modules_/grid/hooks/utils/useRenderInfo
 import { useGridResizeContainer } from '../../_modules_/grid/hooks/utils/useGridResizeContainer';
 import { useStateProp } from '../../_modules_/grid/hooks/utils/useStateProp';
 import { GridApiRef } from '../../_modules_/grid/models/api/gridApiRef';
-import {useGridTreeData} from "./features/treeData";
+import { useGridTreeData } from './features/treeData';
 
 export const useDataGridProComponent = (apiRef: GridApiRef, props: GridComponentProps) => {
   useGridLoggerFactory(apiRef, props);
@@ -45,8 +45,8 @@ export const useDataGridProComponent = (apiRef: GridApiRef, props: GridComponent
   useGridResizeContainer(apiRef, props);
   useGridFreezeRows(apiRef, props);
   useGridColumns(apiRef, props);
+  useGridTreeData(apiRef, props);
   useGridRows(apiRef, props);
-  useGridTreeData(apiRef, props)
   useGridParamsApi(apiRef);
   useGridEditRows(apiRef, props);
   useGridFocus(apiRef, props);

@@ -13,9 +13,9 @@ export interface GridRowModelUpdate extends GridRowData {
 }
 
 export interface GridRowTreeNode {
-    value: GridRowModel
-    collapsed: boolean
-    children: [],
+  value: GridRowModel;
+  collapsed: boolean;
+  children: [];
 }
 
 /**
