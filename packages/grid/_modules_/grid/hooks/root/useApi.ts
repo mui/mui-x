@@ -1,15 +1,12 @@
 import * as React from 'react';
 import { GridApiRef } from '../../models/api/gridApiRef';
-import {
-  GridListener,
-  GridSubscribeEventOptions,
-  GridValidEvent,
-} from '../../utils/eventEmitter/GridEventEmitter';
+import { GridListener, GridSubscribeEventOptions } from '../../utils/eventEmitter/GridEventEmitter';
 import { useGridLogger } from '../utils/useGridLogger';
 import { GridEvents } from '../../constants/eventsConstants';
 import { useGridApiMethod } from './useGridApiMethod';
 import { GridSignature } from './useGridApiEventHandler';
 import { GridComponentProps } from '../../GridComponentProps';
+import { MuiEvent } from '../../models/muiEvent';
 
 const isSyntheticEvent = (event: any): event is React.SyntheticEvent => {
   return event.isPropagationStopped !== undefined;
@@ -19,7 +16,7 @@ export function useApi(apiRef: GridApiRef, props: Pick<GridComponentProps, 'sign
   const logger = useGridLogger(apiRef, 'useApi');
 
   const publishEvent = React.useCallback(
-    (name: string, params: any, event: GridValidEvent = {}) => {
+    (name: string, params: any, event: MuiEvent = {}) => {
       event.defaultMuiPrevented = false;
       if (event && isSyntheticEvent(event) && event.isPropagationStopped()) {
         return;
@@ -31,7 +28,7 @@ export function useApi(apiRef: GridApiRef, props: Pick<GridComponentProps, 'sign
   );
 
   const subscribeEvent = React.useCallback(
-    <Params, Event extends GridValidEvent>(
+    <Params, Event extends MuiEvent>(
       event: string,
       handler: GridListener<Params, Event>,
       options?: GridSubscribeEventOptions,

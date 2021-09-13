@@ -4,7 +4,6 @@ import {
   GridEventEmitter,
   GridListener,
   GridSubscribeEventOptions,
-  GridValidEvent,
 } from '../../utils/eventEmitter/GridEventEmitter';
 
 /**
@@ -53,7 +52,7 @@ export interface GridCoreApi extends GridEventEmitter {
    * @param {object} options Additional options for this listener.
    * @returns {function} A function to unsubscribe from this event.
    */
-  subscribeEvent: <Params, Event extends GridValidEvent>(
+  subscribeEvent: <Params, Event extends MuiEvent>(
     event: string,
     handler: GridListener<Params, Event>,
     options?: GridSubscribeEventOptions,

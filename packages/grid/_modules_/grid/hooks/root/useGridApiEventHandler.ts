@@ -1,10 +1,7 @@
 import * as React from 'react';
 import { GridApiRef } from '../../models/api/gridApiRef';
-import {
-  GridListener,
-  GridSubscribeEventOptions,
-  GridValidEvent,
-} from '../../utils/eventEmitter/GridEventEmitter';
+import { GridListener, GridSubscribeEventOptions } from '../../utils/eventEmitter/GridEventEmitter';
+import { MuiEvent } from '../../models/muiEvent';
 
 /**
  * Signal to the underlying logic what version of the public component API
@@ -15,7 +12,7 @@ export enum GridSignature {
   DataGridPro = 'DataGridPro',
 }
 
-export function useGridApiEventHandler<Params, Event extends GridValidEvent>(
+export function useGridApiEventHandler<Params, Event extends MuiEvent>(
   apiRef: GridApiRef,
   eventName: string,
   handler?: GridListener<Params, Event>,
@@ -51,7 +48,7 @@ export function useGridApiEventHandler<Params, Event extends GridValidEvent>(
 
 const optionsSubscriberOptions: GridSubscribeEventOptions = { isFirst: true };
 
-export function useGridApiOptionHandler<Params, Event extends GridValidEvent>(
+export function useGridApiOptionHandler<Params, Event extends MuiEvent>(
   apiRef: GridApiRef,
   eventName: string,
   handler?: GridListener<Params, Event>,

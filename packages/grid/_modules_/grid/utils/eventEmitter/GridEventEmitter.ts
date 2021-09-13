@@ -1,12 +1,8 @@
-import * as React from 'react';
 import { EventEmitter } from './EventEmitter';
-import { MuiEvent } from '../../models/muiEvent';
 import { GridCallbackDetails } from '../../models/api/gridCallbackDetails';
+import { MuiEvent } from '../../models/muiEvent';
 
-export type GridValidEvent = MuiEvent<
-  React.SyntheticEvent | DocumentEventMap[keyof DocumentEventMap] | {}
->;
-export type GridListener<Params, Event extends GridValidEvent> = (
+export type GridListener<Params, Event extends MuiEvent> = (
   params: Params,
   event: Event,
   details: GridCallbackDetails,
@@ -17,7 +13,7 @@ export class GridEventEmitter extends EventEmitter {
   /**
    * @ignore - do not document.
    */
-  on<Params, Event extends GridValidEvent>(
+  on<Params, Event extends MuiEvent>(
     eventName: string,
     listener: GridListener<Params, Event>,
     options?: GridSubscribeEventOptions,
