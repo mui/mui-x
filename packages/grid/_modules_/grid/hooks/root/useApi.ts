@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { GridApiRef } from '../../models/api/gridApiRef';
-import { GridSubscribeEventOptions } from '../../utils/eventEmitter/GridEventEmitter';
+import { GridListener, GridSubscribeEventOptions } from '../../utils/eventEmitter/GridEventEmitter';
 import { useGridLogger } from '../utils/useGridLogger';
 import { GridEvents } from '../../constants/eventsConstants';
 import { useGridApiMethod } from './useGridApiMethod';
-import { MuiEvent } from '../../models/muiEvent';
 import { GridSignature } from './useGridApiEventHandler';
 import { GridComponentProps } from '../../GridComponentProps';
+import { MuiEvent } from '../../models/muiEvent';
 
 const isSyntheticEvent = (event: any): event is React.SyntheticEvent => {
   return event.isPropagationStopped !== undefined;
@@ -16,11 +16,7 @@ export function useApi(apiRef: GridApiRef, props: Pick<GridComponentProps, 'sign
   const logger = useGridLogger(apiRef, 'useApi');
 
   const publishEvent = React.useCallback(
-    (
-      name: string,
-      params: any,
-      event: MuiEvent<React.SyntheticEvent | DocumentEventMap[keyof DocumentEventMap] | {}> = {},
-    ) => {
+    (name: string, params: any, event: MuiEvent = {}) => {
       event.defaultMuiPrevented = false;
       if (event && isSyntheticEvent(event) && event.isPropagationStopped()) {
         return;
@@ -32,9 +28,9 @@ export function useApi(apiRef: GridApiRef, props: Pick<GridComponentProps, 'sign
   );
 
   const subscribeEvent = React.useCallback(
-    (
+    <Params, Event extends MuiEvent>(
       event: string,
-      handler: (...args) => void,
+      handler: GridListener<Params, Event>,
       options?: GridSubscribeEventOptions,
     ): (() => void) => {
       logger.debug(`Binding ${event} event`);
@@ -61,7 +57,7 @@ export function useApi(apiRef: GridApiRef, props: Pick<GridComponentProps, 'sign
 
     return () => {
       logger.info('Unmounting Grid component. Clearing all events listeners.');
-      api.emit(GridEvents.unmount);
+      api.publishEvent(GridEvents.unmount);
       api.removeAllListeners();
     };
   }, [logger, apiRef]);
