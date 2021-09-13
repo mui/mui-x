@@ -159,7 +159,7 @@ LineChart.propTypes /* remove-proptypes */ = {
   /**
    * The data to use for the chart.
    */
-  data: PropTypes.array,
+  data: PropTypes.array.isRequired,
   /**
    * The fill color to use for the area.
    */

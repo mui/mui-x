@@ -1,4 +1,5 @@
 import React, { useContext } from 'react';
+import PropTypes from 'prop-types';
 import * as d3 from 'd3';
 import ChartContext from '../ChartContext';
 import Scatter from '../Scatter/Scatter';
@@ -22,12 +23,13 @@ const Line = (props) => {
   } = useContext(ChartContext);
 
   const {
-    fill,
     data: dataProp,
+    fill,
     markerShape = markerShapeContext,
     series,
     smoothed = smoothedContext,
     stroke = 'currentColor',
+    strokeDasharray,
     strokeWidth = 1,
   } = props;
 
@@ -82,8 +84,9 @@ const Line = (props) => {
       )}
       <path
         d={linePath(chartData)}
-        stroke={stroke}
         fill="none"
+        stroke={stroke}
+        strokeDasharray={strokeDasharray}
         strokeWidth={strokeWidth}
         transform={`translate(0, ${boundedHeight})`}
       />
@@ -100,6 +103,51 @@ const Line = (props) => {
       )}
     </g>
   );
+};
+
+Line.propTypes /* remove-proptypes */ = {
+  /**
+   * The data to be plotted. Either an array of objects, or nested arrays of objects.
+   */
+  data: PropTypes.array,
+  /**
+   * The color of the area under the line.
+   */
+  fill: PropTypes.string,
+  /**
+   * The shape of the markers.
+   */
+  markerShape: PropTypes.oneOf([
+    'auto',
+    'circle',
+    'cross',
+    'diamond',
+    'square',
+    'star',
+    'triangle',
+    'wye',
+    'none',
+  ]),
+  /**
+   * The index of the series to be plotted.
+   */
+  series: PropTypes.number,
+  /**
+   * If true, the line will be smoothed.
+   */
+  smoothed: PropTypes.bool,
+  /**
+   * The stroke color of the marker line.
+   */
+  stroke: PropTypes.string,
+  /**
+   * The stroke pattern of the marker line.
+   */
+  strokeDasharray: PropTypes.string,
+  /**
+   * The stroke width of the marker line.
+   */
+  strokeWidth: PropTypes.number,
 };
 
 export default Line;
