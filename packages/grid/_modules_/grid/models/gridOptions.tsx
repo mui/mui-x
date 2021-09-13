@@ -224,9 +224,9 @@ export interface GridSimpleOptions {
    */
   sortingMode: GridFeatureMode;
   /**
-   * If positive, the Grid will throttle updates coming from `props.rows`, `apiRef.current.updateRows` or `apiRef.current.setRows`.
+   * If positive, the Grid will throttle updates coming from `apiRef.current.updateRows` and `apiRef.current.setRows`.
    * It can be useful if you have a high update rate but do not want to do heavy work like filtering / sorting or rendering on each  individual update.
-   * @default 0
+   * @default 50
    */
   throttleRowsMs: number;
 }
@@ -272,5 +272,5 @@ export const GRID_DEFAULT_SIMPLE_OPTIONS: GridSimpleOptions = {
   showColumnRightBorder: false,
   sortingOrder: ['asc' as const, 'desc' as const, null],
   sortingMode: GridFeatureModeConstant.client,
-  throttleRowsMs: 0,
+  throttleRowsMs: 50,
 };
