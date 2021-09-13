@@ -1,4 +1,5 @@
 import React, { useContext } from 'react';
+import PropTypes from 'prop-types';
 import ChartContext from '../ChartContext';
 
 const Grid = (props) => {
@@ -12,11 +13,11 @@ const Grid = (props) => {
     disableY = false,
     fill = 'none',
     stroke = 'rgba(200, 200, 200, 0.5',
-    strokeWidth = 1,
     strokeDasharray = '0',
+    strokeWidth = 1,
     zeroStroke: zeroStrokeProp,
-    zeroStrokeWidth: zeroStrokeWidthProp,
     zeroStrokeDasharray: zeroStrokeDasharrayProp,
+    zeroStrokeWidth: zeroStrokeWidthProp,
   } = props;
 
   const getStroke = (value) => (zeroStrokeProp && value === '0' ? zeroStrokeProp : stroke);
@@ -56,6 +57,45 @@ const Grid = (props) => {
       </g>
     </g>
   );
+};
+
+Grid.propTypes = {
+  /**
+   * Disable the x axis grid lines.
+   */
+  disableX: PropTypes.bool,
+  /**
+   * Disable the y axis grid lines
+   */
+  disableY: PropTypes.bool,
+  /**
+   * The fill color of the grid.
+   */
+  fill: PropTypes.string,
+  /**
+   * The stroke color of the grid.
+   */
+  stroke: PropTypes.string,
+  /**
+   * The stroke dash array of the grid.
+   */
+  strokeDasharray: PropTypes.string,
+  /**
+   * The stroke width of the grid.
+   */
+  strokeWidth: PropTypes.number,
+  /**
+   * The stroke color of the zero grid line.
+   */
+  zeroStroke: PropTypes.string,
+  /**
+   * The stroke dash array of the zero grid line.
+   */
+  zeroStrokeDasharray: PropTypes.string,
+  /**
+   * The stroke width of the zero grid line.
+   */
+  zeroStrokeWidth: PropTypes.number,
 };
 
 export default Grid;
