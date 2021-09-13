@@ -91,4 +91,5 @@ Tooltip.propTypes /* remove-proptypes */ = {
    */
   strokeWidth: PropTypes.number,
 };
+
 export default Tooltip;

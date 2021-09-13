@@ -1,4 +1,5 @@
 import React, { useContext } from 'react';
+import PropTypes from 'prop-types';
 import * as d3 from 'd3';
 import ChartContext from '../ChartContext';
 import { isInRange } from '../utils';
@@ -28,24 +29,25 @@ const Scatter = (props) => {
     xScale,
     yKey: yKeyContext,
     yScale,
-    zKey: zKeyContext,
     zDomain: zDomainContext,
+    zKey: zKeyContext,
   } = useContext(ChartContext);
 
   const {
     data: dataProp,
-    series,
-    minSize = markerSize || 30,
-    maxSize = 500,
     fill = 'inherit',
     invertMarkers = invertMarkersContext,
     markerShape = markerShapeContext,
+    maxSize = 500,
+    minSize = markerSize || 30,
+    series,
     stroke,
+    strokeDasharray,
     strokeWidth,
     xKey = xKeyContext,
     yKey = yKeyContext,
-    zKey = zKeyContext,
     zDomain = zDomainContext,
+    zKey = zKeyContext,
   } = props;
 
   const chartData = dataProp || data[series] || data;
@@ -80,12 +82,71 @@ const Scatter = (props) => {
               ? fill
               : stroke
           }
+          strokeDasharray={strokeDasharray}
           strokeWidth={strokeWidth}
           key={i}
         />
       ))}
     </g>
   );
+};
+
+Scatter.propTypes /* remove-proptypes */ = {
+  /**
+   * The data to be plotted. Either an array of objects, or nested arrays of objects.
+   */
+  data: PropTypes.array,
+  /**
+   * The fill color of the markers.
+   */
+  fill: PropTypes.string,
+  /**
+   * If `true`, the marker fill and stroke will be inverted.
+   */
+
+  invertMarkers: PropTypes.bool,
+  /**
+   * The shape of the markers.
+   */
+  markerShape: PropTypes.oneOf([
+    'auto',
+    'circle',
+    'cross',
+    'diamond',
+    'square',
+    'star',
+    'triangle',
+    'wye',
+    'none',
+  ]),
+  /**
+   * The maximum size of the markers.
+   */
+  maxSize: PropTypes.number,
+  /**
+   * The minimum size of the markers.
+   */
+  minSize: PropTypes.number,
+  /**
+   * For nested arrays, the series to be plotted.
+   */
+  series: PropTypes.number,
+  /**
+   * The stroke color of the marker line.
+   */
+  stroke: PropTypes.string,
+  /**
+   * The stroke pattern of the marker.
+   */
+  strokeDasharray: PropTypes.string,
+  /**
+   * The stroke width of the marker.
+   */
+  strokeWidth: PropTypes.number,
+  xKey: PropTypes.string,
+  yKey: PropTypes.string,
+  zDomain: PropTypes.arrayOf(PropTypes.number),
+  zKey: PropTypes.string,
 };
 
 export default Scatter;
