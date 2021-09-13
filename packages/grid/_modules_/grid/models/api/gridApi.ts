@@ -21,6 +21,7 @@ import { GridStateApi } from './gridStateApi';
 import { GridVirtualizationApi } from './gridVirtualizationApi';
 import { GridLoggerApi } from './gridLoggerApi';
 import { GridScrollApi } from './gridScrollApi';
+import type { GridTreeDataApi } from '../../hooks/features/treeData';
 
 /**
  * The full grid API.
@@ -48,4 +49,5 @@ export interface GridApi
     GridLocaleTextApi,
     GridControlStateApi,
     GridClipboardApi,
-    GridScrollApi {}
+    GridScrollApi,
+    Partial<GridTreeDataApi> {}

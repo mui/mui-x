@@ -13,10 +13,11 @@ export interface GridRowModelUpdate extends GridRowData {
 }
 
 export interface GridRowTreeNode {
-  value: GridRowModel;
-  collapsed: boolean;
-  children: [];
+  node: GridRowModel;
+  children: GridRowTree;
 }
+
+export type GridRowTree = { [nodeName: string]: GridRowTreeNode };
 
 /**
  * The type of Id supported by the grid.
