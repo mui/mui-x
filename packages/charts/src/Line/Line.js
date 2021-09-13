@@ -17,7 +17,6 @@ const Line = (props) => {
     stacked,
     xKey,
     xScale,
-    yDomain,
     yKey,
     yScale,
   } = useContext(ChartContext);
@@ -61,7 +60,7 @@ const Line = (props) => {
       .area()
       .x((d) => xScale(d[xKey]))
       .y1((d) => -yScale(d[yKey]))
-      .y0(-yScale(yDomain[0]));
+      .y0(-yScale(yScale.domain()[0]));
   }
 
   if (smoothed) {

@@ -63,8 +63,8 @@ const LineChart = React.forwardRef(function LineChart(props, ref) {
   const xRange = [0, boundedWidth];
   const yRange = [0, boundedHeight];
   const maxXTicks = getMaxDataSetLength(data) - 1;
-  const xScale = useScale(xScaleType, xDomainProp || xDomain, xRange);
-  const yScale = useScale(yScaleType, yDomainProp || yDomain, yRange);
+  const xScale = useScale(xScaleType, xDomain, xRange);
+  const yScale = useScale(yScaleType, yDomain, yRange);
   const xTicks = useTicks({
     range: xRange,
     scale: xScale,
@@ -111,13 +111,11 @@ const LineChart = React.forwardRef(function LineChart(props, ref) {
         stacked,
         mousePosition,
         smoothed,
-        xDomain,
         xKey,
         xScale,
         xScaleType,
         xRange,
         xTicks,
-        yDomain,
         yKey,
         yRange,
         yScale,

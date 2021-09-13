@@ -1,5 +1,4 @@
 import { useMemo } from 'react';
-import useScale from './useScale';
 
 function useTicks(options) {
   const { maxTicks = 999, pixelsPerTick, range, scale } = options;
