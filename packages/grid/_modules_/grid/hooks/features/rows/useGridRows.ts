@@ -10,6 +10,7 @@ import {
   GridRowsProp,
   GridRowIdGetter,
   GridRowData,
+  GridRowTree,
 } from '../../../models/gridRows';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
@@ -17,12 +18,15 @@ import { useGridState } from '../core/useGridState';
 import { getInitialGridRowState, GridRowsState } from './gridRowsState';
 import {
   gridRowCountSelector,
+  GridRowsLookup,
   gridRowsLookupSelector,
   unorderedGridRowIdsSelector,
 } from './gridRowsSelector';
 
+export type GridRowsInternalCacheState = Omit<GridRowsState, 'tree'>;
+
 export interface GridRowsInternalCache {
-  state: GridRowsState;
+  state: GridRowsInternalCacheState;
   timeout: NodeJS.Timeout | null;
   lastUpdateMs: number | null;
 }
@@ -41,7 +45,7 @@ export function convertGridRowsPropToState(
   rows: GridRowsProp,
   propRowCount?: number,
   rowIdGetter?: GridRowIdGetter,
-): GridRowsState {
+): GridRowsInternalCacheState {
   const state: GridRowsState = {
     ...getInitialGridRowState(),
     totalRowCount: propRowCount && propRowCount > rows.length ? propRowCount : rows.length,
@@ -55,6 +59,9 @@ export function convertGridRowsPropToState(
 
   return state;
 }
+
+const getFlatRowTree = (lookup: GridRowsLookup): GridRowTree =>
+  Object.fromEntries(Object.entries(lookup).map(([id, row]) => [id, { node: row, children: {} }]));
 
 /**
  * @requires useGridSorting (method)
@@ -99,11 +106,15 @@ export const useGridRows = (
   );
 
   const throttledRowsChange = React.useCallback(
-    (newState: GridRowsState, throttle: boolean) => {
+    (newState: GridRowsInternalCacheState, throttle: boolean) => {
       const run = () => {
         rowsCache.current.timeout = null;
         rowsCache.current.lastUpdateMs = Date.now();
-        setGridState((state) => ({ ...state, rows: rowsCache.current.state }));
+        const rowState = rowsCache.current.state;
+        const tree = apiRef.current.groupRows
+          ? apiRef.current.groupRows(rowState.idRowsLookup)
+          : getFlatRowTree(rowState.idRowsLookup);
+        setGridState((state) => ({ ...state, rows: { ...rowState, tree } }));
         apiRef.current.publishEvent(GridEvents.rowsSet);
         forceUpdate();
       };
@@ -192,7 +203,7 @@ export const useGridRows = (
       const totalRowCount =
         props.rowCount && props.rowCount > allRows.length ? props.rowCount : allRows.length;
 
-      const state: GridRowsState = {
+      const state: GridRowsInternalCacheState = {
         idRowsLookup,
         allRows,
         totalRowCount,
