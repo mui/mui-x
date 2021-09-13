@@ -33,7 +33,7 @@ export default function ControlledSelectionServerPaginationGrid() {
         return;
       }
 
-      setRows((state) => [...state, ...newRows]);
+      setRows((state) => [...newRows, ...state]);
       setLoading(false);
     })();
 
