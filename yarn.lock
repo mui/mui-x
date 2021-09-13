@@ -2140,7 +2140,7 @@
 
 "@material-ui/monorepo@https://github.com/mui-org/material-ui.git#next":
   version "5.0.0-rc.1"
-  resolved "https://github.com/mui-org/material-ui.git#a2fed75ecb067e838df94be4102b816f89f461db"
+  resolved "https://github.com/mui-org/material-ui.git#7e97b7f366cc96d46ea81a7cef854cca576cde1b"
 
 "@mdx-js/loader@^1.6.22":
   version "1.6.22"
