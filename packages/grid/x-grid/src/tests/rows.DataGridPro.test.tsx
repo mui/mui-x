@@ -78,12 +78,7 @@ describe('<DataGridPro /> - Rows', () => {
           apiRef = useGridApiRef();
           return (
             <div style={{ width: 300, height: 300 }}>
-              <DataGridPro
-                {...baselineProps}
-                getRowId={getRowId}
-                throttleRowsMs={0}
-                apiRef={apiRef}
-              />
+              <DataGridPro {...baselineProps} getRowId={getRowId} apiRef={apiRef} />
             </div>
           );
         };
@@ -198,17 +193,14 @@ describe('<DataGridPro /> - Rows', () => {
       );
     };
 
-    it('should throttle by default', () => {
+    it('should not throttle by default', () => {
       render(<TestCase />);
       expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
       apiRef.current.updateRows([{ id: 1, brand: 'Fila' }]);
-      clock.tick(25);
-      expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
-      clock.tick(25);
       expect(getColumnValues()).to.deep.equal(['Nike', 'Fila', 'Puma']);
     });
 
-    it('should allow to set the throttle duration', () => {
+    it('should allow to enable throttle', () => {
       render(<TestCase throttleRowsMs={100} />);
       expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
       apiRef.current.updateRows([{ id: 1, brand: 'Fila' }]);
@@ -218,15 +210,8 @@ describe('<DataGridPro /> - Rows', () => {
       expect(getColumnValues()).to.deep.equal(['Nike', 'Fila', 'Puma']);
     });
 
-    it('should allow to disable throttle', () => {
-      render(<TestCase throttleRowsMs={0} />);
-      expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
-      apiRef.current.updateRows([{ id: 1, brand: 'Fila' }]);
-      expect(getColumnValues()).to.deep.equal(['Nike', 'Fila', 'Puma']);
-    });
-
     it('should allow to update row data', () => {
-      render(<TestCase throttleRowsMs={0} />);
+      render(<TestCase />);
       apiRef.current.updateRows([{ id: 1, brand: 'Fila' }]);
       apiRef.current.updateRows([{ id: 0, brand: 'Pata' }]);
       apiRef.current.updateRows([{ id: 2, brand: 'Pum' }]);
@@ -234,7 +219,7 @@ describe('<DataGridPro /> - Rows', () => {
     });
 
     it('update row data can also add rows', () => {
-      render(<TestCase throttleRowsMs={0} />);
+      render(<TestCase />);
       apiRef.current.updateRows([{ id: 1, brand: 'Fila' }]);
       apiRef.current.updateRows([{ id: 0, brand: 'Pata' }]);
       apiRef.current.updateRows([{ id: 2, brand: 'Pum' }]);
@@ -243,7 +228,7 @@ describe('<DataGridPro /> - Rows', () => {
     });
 
     it('update row data can also add rows in bulk', () => {
-      render(<TestCase throttleRowsMs={0} />);
+      render(<TestCase />);
       apiRef.current.updateRows([
         { id: 1, brand: 'Fila' },
         { id: 0, brand: 'Pata' },
@@ -254,7 +239,7 @@ describe('<DataGridPro /> - Rows', () => {
     });
 
     it('update row data can also delete rows', () => {
-      render(<TestCase throttleRowsMs={0} />);
+      render(<TestCase />);
       apiRef.current.updateRows([{ id: 1, _action: 'delete' }]);
       apiRef.current.updateRows([{ id: 0, brand: 'Apple' }]);
       apiRef.current.updateRows([{ id: 2, _action: 'delete' }]);
@@ -263,7 +248,7 @@ describe('<DataGridPro /> - Rows', () => {
     });
 
     it('update row data can also delete rows in bulk', () => {
-      render(<TestCase throttleRowsMs={0} />);
+      render(<TestCase />);
       apiRef.current.updateRows([
         { id: 1, _action: 'delete' },
         { id: 0, brand: 'Apple' },
@@ -284,7 +269,6 @@ describe('<DataGridPro /> - Rows', () => {
               apiRef={apiRef}
               rows={baselineProps.rows.map((row) => ({ idField: row.id, brand: row.brand }))}
               getRowId={getRowId}
-              throttleRowsMs={0}
             />
           </div>
         );
@@ -341,7 +325,7 @@ describe('<DataGridPro /> - Rows', () => {
       );
     };
 
-    it('should throttle by default', () => {
+    it('should not throttle by default', () => {
       render(<TestCase />);
       expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
       const newRows = [
@@ -352,13 +336,10 @@ describe('<DataGridPro /> - Rows', () => {
       ];
       apiRef.current.setRows(newRows);
 
-      clock.tick(25);
-      expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
-      clock.tick(25);
       expect(getColumnValues()).to.deep.equal(['Asics']);
     });
 
-    it('should allow to set the throttle duration', () => {
+    it('should allow to enable throttle', () => {
       render(<TestCase throttleRowsMs={100} />);
       expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
       const newRows = [
@@ -372,19 +353,6 @@ describe('<DataGridPro /> - Rows', () => {
       clock.tick(50);
       expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
       clock.tick(50);
-      expect(getColumnValues()).to.deep.equal(['Asics']);
-    });
-
-    it('should allow to disable throttle', () => {
-      render(<TestCase throttleRowsMs={0} />);
-      expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
-      const newRows = [
-        {
-          id: 3,
-          brand: 'Asics',
-        },
-      ];
-      apiRef.current.setRows(newRows);
       expect(getColumnValues()).to.deep.equal(['Asics']);
     });
   });
