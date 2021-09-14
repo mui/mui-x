@@ -101,6 +101,9 @@ export const useStyles = makeStyles(
           display: 'flex',
           alignItems: 'center',
         },
+        [`& .${gridClasses['columnHeader--sorted']} .${gridClasses.iconButtonContainer}`]: {
+          display: 'flex',
+        },
         [`& .${gridClasses.columnHeader}:not(.${gridClasses['columnHeader--sorted']}) .${gridClasses.sortIcon}`]:
           {
             opacity: 0,
@@ -122,7 +125,7 @@ export const useStyles = makeStyles(
           padding: '0 6px',
         },
         [`& .${gridClasses.iconButtonContainer}`]: {
-          display: 'flex',
+          display: 'none',
         },
         [`& .${gridClasses.sortIcon}, & .${gridClasses.filterIcon}`]: {
           fontSize: 'inherit',
@@ -179,16 +182,25 @@ export const useStyles = makeStyles(
           color: 'inherit',
         },
         [`& .${gridClasses.menuIcon}`]: {
+          width: 0,
           visibility: 'hidden',
           fontSize: 20,
           marginRight: -6,
           display: 'flex',
           alignItems: 'center',
         },
-        [`& .${gridClasses.columnHeader}:hover .${gridClasses.menuIcon}, .${gridClasses.menuOpen}`]:
-          {
+        [`& .${gridClasses.columnHeader}:hover`]: {
+          [`& .${gridClasses.iconButtonContainer}`]: {
+            display: 'flex',
+          },
+          [`& .${gridClasses.menuIcon}`]: {
+            width: 'auto',
             visibility: 'visible',
           },
+        },
+        [`.${gridClasses.menuOpen}`]: {
+          visibility: 'visible',
+        },
         [`& .${gridClasses.columnHeaderWrapper}.scroll .${gridClasses.columnHeader}:last-child`]: {
           borderRight: 'none',
         },
