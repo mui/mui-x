@@ -14,9 +14,13 @@ import { filterableGridColumnsIdsSelector } from '../columns/gridColumnsSelector
 import { useGridState } from '../core/useGridState';
 import { GridPreferencePanelsValue } from '../preferencesPanel/gridPreferencePanelsValue';
 import { sortedGridRowsSelector } from '../sorting/gridSortingSelector';
-import { getInitialGridFilterState } from './gridFilterModelState';
+import { getDefaultGridFilterModel } from './gridFilterState';
 import { GridFilterModel } from '../../../models/gridFilterModel';
-import { filterGridStateSelector, visibleSortedGridRowsSelector } from './gridFilterSelector';
+import {
+  gridVisibleRowsLookupSelector,
+  visibleSortedGridRowsSelector,
+  gridFilterModelSelector,
+} from './gridFilterSelector';
 import { useGridRegisterControlState } from '../../utils/useGridRegisterControlState';
 import { useGridStateInit } from '../../utils/useGridStateInit';
 import { useFirstRender } from '../../utils/useFirstRender';
@@ -54,9 +58,10 @@ export const useGridFilter = (
 
     return {
       ...state,
-      filter: props.filterModel ?? getInitialGridFilterState(),
-      visibleRows: {
+      filter: {
+        filterModel: props.filterModel ?? getDefaultGridFilterModel(),
         visibleRowsLookup: {},
+        visibleRows: null,
       },
     };
   });
@@ -67,7 +72,7 @@ export const useGridFilter = (
     stateId: 'filter',
     propModel: props.filterModel,
     propOnChange: props.onFilterModelChange,
-    stateSelector: (state) => state.filter,
+    stateSelector: (state) => state.filter.filterModel,
     changeEvent: GridEvents.filterModelChange,
   });
 
@@ -112,7 +117,7 @@ export const useGridFilter = (
       }
 
       setGridState((state) => {
-        const visibleRowsLookup = { ...state.visibleRows.visibleRowsLookup };
+        const visibleRowsLookup = { ...gridVisibleRowsLookupSelector(state) };
 
         // We run the selector on the state here to avoid rendering the rows and then filtering again.
         // This way we have latest rows on the first rendering
@@ -134,8 +139,8 @@ export const useGridFilter = (
 
         return {
           ...state,
-          visibleRows: {
-            ...state.visibleRows,
+          filter: {
+            ...state.filter,
             visibleRowsLookup,
             visibleRows: Object.entries(visibleRowsLookup)
               .filter(([, isVisible]) => isVisible)
@@ -157,12 +162,14 @@ export const useGridFilter = (
     // Clearing filtered rows
     setGridState((state) => ({
       ...state,
-      visibleRows: {
+      filter: {
+        ...state.filter,
         visibleRowsLookup: {},
+        visibleRows: null,
       },
     }));
 
-    const { items, linkOperator } = apiRef.current.state.filter;
+    const { items, linkOperator } = gridFilterModelSelector(apiRef.current.state);
 
     items.forEach((filterItem) => {
       apiRef.current.applyFilter(filterItem, linkOperator);
@@ -176,7 +183,7 @@ export const useGridFilter = (
 
       setGridState((state) => {
         const filterableColumnsIds = filterableGridColumnsIdsSelector(state);
-        const items = [...state.filter.items];
+        const items = [...gridFilterModelSelector(state).items];
         const newItem = { ...item };
         const itemIndex = items.findIndex((filterItem) => filterItem.id === newItem.id);
 
@@ -204,11 +211,11 @@ export const useGridFilter = (
         if (props.disableMultipleColumnsFiltering && items.length > 1) {
           items.length = 1;
         }
-        const newState = {
+
+        return {
           ...state,
-          filter: { ...state.filter, items },
+          filter: { ...state.filter, filterModel: { ...state.filter.filterModel, items } },
         };
-        return newState;
       });
       apiRef.current.applyFilters();
     },
@@ -219,14 +226,16 @@ export const useGridFilter = (
     (item) => {
       logger.debug(`Deleting filter on column ${item.columnField} with value ${item.value}`);
       setGridState((state) => {
-        const items = [...state.filter.items.filter((filterItem) => filterItem.id !== item.id)];
-        const newState = {
+        const items = [
+          ...gridFilterModelSelector(state).items.filter((filterItem) => filterItem.id !== item.id),
+        ];
+
+        return {
           ...state,
-          filter: { ...state.filter, items },
+          filter: { ...state.filter, filterModel: { ...state.filter.filterModel, items } },
         };
-        return newState;
       });
-      if (apiRef.current.state.filter.items.length === 0) {
+      if (gridFilterModelSelector(apiRef.current.state).items.length === 0) {
         apiRef.current.upsertFilter({});
       }
       apiRef.current.applyFilters();
@@ -238,10 +247,10 @@ export const useGridFilter = (
     (targetColumnField) => {
       logger.debug('Displaying filter panel');
       if (targetColumnField) {
-        const filterState = filterGridStateSelector(apiRef.current.state);
+        const filterModel = gridFilterModelSelector(apiRef.current.state);
 
         const lastFilter =
-          filterState.items.length > 0 ? filterState.items[filterState.items.length - 1] : null;
+          filterModel.items.length > 0 ? filterModel.items[filterModel.items.length - 1] : null;
         if (!lastFilter || lastFilter.columnField !== targetColumnField) {
           apiRef.current.upsertFilter({ columnField: targetColumnField });
         }
@@ -261,7 +270,7 @@ export const useGridFilter = (
       logger.debug('Applying filter link operator');
       setGridState((state) => ({
         ...state,
-        filter: { ...state.filter, linkOperator },
+        filter: { ...state.filter, filterModel: { ...state.filter.filterModel, linkOperator } },
       }));
       apiRef.current.applyFilters();
     },
@@ -270,14 +279,17 @@ export const useGridFilter = (
 
   const setFilterModel = React.useCallback<GridFilterApi['setFilterModel']>(
     (model) => {
-      const currentModel = filterGridStateSelector(apiRef.current.state);
+      const currentModel = gridFilterModelSelector(apiRef.current.state);
       if (currentModel !== model) {
         checkFilterModelValidity(model);
 
         logger.debug('Setting filter model');
         setGridState((state) => ({
           ...state,
-          filter: model,
+          filter: {
+            ...state.filter,
+            filterModel: model,
+          },
         }));
         apiRef.current.applyFilters();
       }
@@ -308,11 +320,11 @@ export const useGridFilter = (
 
   const onColUpdated = React.useCallback(() => {
     logger.debug('onColUpdated - GridColumns changed, applying filters');
-    const filterState = apiRef.current.state.filter;
+    const filterModel = gridFilterModelSelector(apiRef.current.state);
     const columnsIds = filterableGridColumnsIdsSelector(apiRef.current.state);
     logger.debug('GridColumns changed, applying filters');
 
-    filterState.items.forEach((filter) => {
+    filterModel.items.forEach((filter) => {
       if (!columnsIds.find((field) => field === filter.columnField)) {
         apiRef.current.deleteFilter(filter);
       }
@@ -324,7 +336,7 @@ export const useGridFilter = (
     if (props.filterModel !== undefined) {
       apiRef.current.setFilterModel(props.filterModel);
     }
-  }, [apiRef, logger, props.filterModel, setGridState]);
+  }, [apiRef, logger, props.filterModel]);
 
   useFirstRender(() => apiRef.current.applyFilters());
 
