@@ -102,7 +102,8 @@ export const useStyles = makeStyles(
           alignItems: 'center',
         },
         [`& .${gridClasses['columnHeader--sorted']} .${gridClasses.iconButtonContainer}`]: {
-          display: 'flex',
+          visibility: 'visible',
+          width: 'auto',
         },
         [`& .${gridClasses.columnHeader}:not(.${gridClasses['columnHeader--sorted']}) .${gridClasses.sortIcon}`]:
           {
@@ -125,7 +126,9 @@ export const useStyles = makeStyles(
           padding: '0 6px',
         },
         [`& .${gridClasses.iconButtonContainer}`]: {
-          display: 'none',
+          display: 'flex',
+          visibility: 'hidden',
+          width: 0,
         },
         [`& .${gridClasses.sortIcon}, & .${gridClasses.filterIcon}`]: {
           fontSize: 'inherit',
@@ -191,7 +194,8 @@ export const useStyles = makeStyles(
         },
         [`& .${gridClasses.columnHeader}:hover`]: {
           [`& .${gridClasses.iconButtonContainer}`]: {
-            display: 'flex',
+            visibility: 'visible',
+            width: 'auto',
           },
           [`& .${gridClasses.menuIcon}`]: {
             width: 'auto',
