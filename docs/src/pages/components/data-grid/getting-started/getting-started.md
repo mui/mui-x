@@ -142,8 +142,8 @@ The enterprise components come in two plans: Pro and Premium.
 | [Row reordering](/components/data-grid/rows/#row-reorder)                                 |    ❌     |              🚧               |                  🚧                   |
 | **Selection**                                                                             |           |                               |                                       |
 | [Single row selection](/components/data-grid/selection/#single-row-selection)             |    ✅     |              ✅               |                  ✅                   |
+| [Row checkbox selection](/components/data-grid/selection/#checkbox-selection)             |    ✅     |              ✅               |                  ✅                   |
 | [Multiple row selection](/components/data-grid/selection/#multiple-row-selection)         |    ❌     |              ✅               |                  ✅                   |
-| [Row checkbox selection](/components/data-grid/selection/#checkbox-selection)             |    ❌     |              ✅               |                  ✅                   |
 | [Cell range selection](/components/data-grid/selection/#range-selection)                  |    ❌     |              ❌               |                  🚧                   |
 | **Filtering**                                                                             |           |                               |                                       |
 | [Quick filter](/components/data-grid/filtering/#quick-filter)                             |    🚧     |              🚧               |                  🚧                   |
