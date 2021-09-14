@@ -9,6 +9,7 @@ import { useGridSelector, useGridState } from '../core';
 import { gridContainerSizesSelector } from '../../root/gridContainerSizesSelector';
 import { useGridStateInit } from '../../utils/useGridStateInit';
 import { useGridRegisterControlState } from '../../utils/useGridRegisterControlState';
+import { gridPageSizeSelector } from './gridPaginationSelector';
 
 /**
  * @requires useGridControlStateManager (method)
@@ -33,7 +34,7 @@ export const useGridPageSize = (
     stateId: 'pageSize',
     propModel: props.pageSize,
     propOnChange: props.onPageSizeChange,
-    stateSelector: (state) => state.pagination.pageSize,
+    stateSelector: gridPageSizeSelector,
     changeEvent: GridEvents.pageSizeChange,
   });
 

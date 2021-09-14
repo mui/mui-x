@@ -58,6 +58,8 @@ export const useGridContainerProps = (
 ) => {
   const logger = useGridLogger(apiRef, 'useGridContainerProps');
 
+  // TODO: Remove from the state an add direct computation method
+  // See https://github.com/mui-org/material-ui-x/issues/820#issuecomment-897906608
   useGridStateInit(apiRef, (state) => ({
     ...state,
     containerSizes: null,

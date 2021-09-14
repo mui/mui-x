@@ -73,7 +73,7 @@ export function useGridEditRows(
     stateId: 'editRows',
     propModel: props.editRowsModel,
     propOnChange: props.onEditRowsModelChange,
-    stateSelector: (state) => state.editRows,
+    stateSelector: gridEditRowsStateSelector,
     changeEvent: GridEvents.editRowsModelChange,
   });
 

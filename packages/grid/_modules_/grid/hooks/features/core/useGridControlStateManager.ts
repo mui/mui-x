@@ -31,10 +31,10 @@ export function useGridControlStateManager(apiRef: GridApiRef, props: GridCompon
 
       Object.keys(controlStateMap).forEach((stateId) => {
         const controlState = controlStateMap[stateId];
-        const oldState = controlState.stateSelector(apiRef.current.state);
+        const oldSubState = controlState.stateSelector(apiRef.current.state);
         const newSubState = controlState.stateSelector(newState);
 
-        if (newSubState === oldState) {
+        if (newSubState === oldSubState) {
           return;
         }
 
