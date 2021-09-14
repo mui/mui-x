@@ -1,7 +1,7 @@
 const path = require('path');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 // const withTM = require('next-transpile-modules')(['@material-ui/monorepo']);
-const pkg = require('./node_modules/@material-ui/monorepo/package.json');
+const pkg = require('../node_modules/@material-ui/monorepo/package.json');
 const { findPages } = require('./src/modules/utils/find');
 const { LANGUAGES, LANGUAGES_SSR } = require('./src/modules/constants');
 
@@ -16,11 +16,16 @@ const workspaceRoot = path.join(__dirname, '../');
  * concurrent - ReactDOM.createRoot(Element).render(<App />)
  * @type {ReactRenderMode | 'legacy-strict'}
  */
-const reactMode = 'legacy';
-// eslint-disable-next-line no-console
-console.log(`Using React '${reactMode}' mode.`);
+const reactStrictMode = true;
+if (reactStrictMode) {
+  // eslint-disable-next-line no-console
+  console.log(`Using React.StrictMode.`);
+}
 
 module.exports = {
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
   typescript: {
     // Motivated by https://github.com/zeit/next.js/issues/7687
     ignoreDevErrors: true,
@@ -33,12 +38,13 @@ module.exports = {
     GITHUB_AUTH: process.env.GITHUB_AUTH,
     LIB_VERSION: pkg.version,
     PULL_REQUEST: process.env.PULL_REQUEST === 'true',
-    REACT_MODE: reactMode,
+    REACT_STRICT_MODE: reactStrictMode,
     // Set by Netlify
     GRID_EXPERIMENTAL_ENABLED: process.env.PULL_REQUEST === 'false' ? 'false' : 'true',
     SOURCE_CODE_ROOT_URL: 'https://github.com/mui-org/material-ui-x/blob/master',
     SOURCE_CODE_REPO: 'https://github.com/mui-org/material-ui-x',
   },
+  webpack5: true,
   webpack: (config, options) => {
     const plugins = config.plugins.slice();
 
@@ -60,32 +66,23 @@ module.exports = {
       /(@material-ui[\\/]monorepo)[\\/](?!.*node_modules)/,
     ];
 
-    if (config.externals) {
-      config.externals = config.externals.map((external) => {
-        if (typeof external !== 'function') return external;
-        return (ctx, req, cb) => {
-          return includesMonorepo.find((include) =>
-            req.startsWith('.') ? include.test(path.resolve(ctx, req)) : include.test(req),
-          )
-            ? cb()
-            : external(ctx, req, cb);
-        };
-      });
-    }
-
     return {
       ...config,
       plugins,
-      node: {
-        fs: 'empty',
-      },
       module: {
         ...config.module,
         rules: config.module.rules.concat([
           // used in some /getting-started/templates
           {
             test: /\.md$/,
-            loader: 'raw-loader',
+            oneOf: [
+              {
+                resourceQuery: /@mui\/markdown/,
+                use: require.resolve(
+                  '../node_modules/@material-ui/monorepo/docs/packages/markdown/loader',
+                ),
+              },
+            ],
           },
           {
             test: /\.+(js|jsx|mjs|ts|tsx)$/,
@@ -110,7 +107,6 @@ module.exports = {
       },
     };
   },
-  exportTrailingSlash: true,
   trailingSlash: true,
   // Next.js provides a `defaultPathMap` argument, we could simplify the logic.
   // However, we don't in order to prevent any regression in the `findPages()` method.
@@ -151,10 +147,7 @@ module.exports = {
 
     return map;
   },
-  experimental: {
-    reactMode: reactMode.startsWith('legacy') ? 'legacy' : reactMode,
-  },
-  reactStrictMode: reactMode === 'legacy-strict',
+  reactStrictMode,
   async rewrites() {
     return [
       { source: `/:lang(${LANGUAGES.join('|')})?/:rest*`, destination: '/:rest*' },

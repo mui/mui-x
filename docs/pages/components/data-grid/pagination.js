@@ -1,28 +1,11 @@
-import React from 'react';
+import * as React from 'react';
 import MarkdownDocs from 'docs/src/modules/components/MarkdownDocs';
-import { prepareMarkdown } from 'docs/src/modules/utils/parseMarkdown';
+import {
+  demos,
+  docs,
+  demoComponents,
+} from 'docsx/src/pages/components/data-grid/pagination/pagination.md?@mui/markdown';
 
-const pageFilename = 'components/data-grid/pagination';
-const requireDemo = require.context(
-  'docsx/src/pages/components/data-grid/pagination',
-  false,
-  /\.(js|tsx)$/,
-);
-const requireRaw = require.context(
-  '!raw-loader!../../../src/pages/components/data-grid/pagination',
-  false,
-  /\.(js|md|tsx)$/,
-);
-
-// Run styled-components ref logic
-// https://github.com/styled-components/styled-components/pull/2998
-requireDemo.keys().map(requireDemo);
-
-export default function Page({ demos, docs }) {
-  return <MarkdownDocs demos={demos} docs={docs} requireDemo={requireDemo} />;
+export default function Page() {
+  return <MarkdownDocs demos={demos} docs={docs} demoComponents={demoComponents} />;
 }
-
-Page.getInitialProps = () => {
-  const { demos, docs } = prepareMarkdown({ pageFilename, requireRaw });
-  return { demos, docs };
-};

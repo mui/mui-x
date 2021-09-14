@@ -46,7 +46,7 @@ const GridWindow = React.forwardRef<HTMLDivElement, GridWindowProps>(function Gr
   const classes = useUtilityClasses(ownerProps);
 
   React.useEffect(() => {
-    // refs are run before effect. Waiting for an effect guarentees that
+    // refs are run before effect. Waiting for an effect guarantees that
     // windowRef is resolved first.
     // Once windowRef is resolved, we can update the size of the container.
     apiRef.current.resize();
