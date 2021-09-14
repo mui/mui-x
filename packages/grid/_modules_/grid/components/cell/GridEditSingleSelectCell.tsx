@@ -49,7 +49,7 @@ function GridEditSingleSelectCell(props: GridRenderEditCellParams & SelectProps)
         ? option
         : {
             value: option,
-            label: String(colDef.valueFormatter({ ...props, value: option }),
+            label: String(colDef.valueFormatter({ ...props, value: option })),
           },
     );
   }
