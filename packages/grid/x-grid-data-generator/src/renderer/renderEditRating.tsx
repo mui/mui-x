@@ -2,9 +2,8 @@ import * as React from 'react';
 import Rating from '@mui/material/Rating';
 import { GridRenderEditCellParams } from '@mui/x-data-grid';
 import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
     alignItems: 'center',

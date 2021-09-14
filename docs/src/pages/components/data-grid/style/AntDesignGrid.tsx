@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { DataGrid, useGridSlotComponentProps } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
-import { createTheme, Theme } from '@mui/material/styles';
+import { createTheme } from '@mui/material/styles';
 import { createStyles, makeStyles } from '@mui/styles';
 import Pagination from '@mui/material/Pagination';
 import PaginationItem from '@mui/material/PaginationItem';
 
-function customCheckbox(theme: Theme) {
+function customCheckbox(theme) {
   return {
     '& .MuiCheckbox-root svg': {
       width: 16,
@@ -52,7 +52,7 @@ function customCheckbox(theme: Theme) {
 
 const defaultTheme = createTheme();
 const useStyles = makeStyles(
-  (theme: Theme) =>
+  (theme) =>
     createStyles({
       root: {
         border: 0,

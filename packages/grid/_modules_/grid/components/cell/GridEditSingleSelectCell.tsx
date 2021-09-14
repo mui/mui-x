@@ -38,6 +38,7 @@ function GridEditSingleSelectCell(props: GridRenderEditCellParams & SelectProps)
   } = props;
 
   const ref = React.useRef<any>();
+  const inputRef = React.useRef<any>();
   const rootProps = useGridRootProps();
   const [open, setOpen] = React.useState(rootProps.editMode === 'cell');
 
@@ -66,15 +67,14 @@ function GridEditSingleSelectCell(props: GridRenderEditCellParams & SelectProps)
 
   useEnhancedEffect(() => {
     if (hasFocus) {
-      // TODO v5: replace with inputRef.current.focus()
-      // See https://github.com/mui-org/material-ui/issues/21441
-      ref.current.querySelector('[role="button"]').focus();
+      inputRef.current.focus();
     }
   }, [hasFocus]);
 
   return (
     <Select
       ref={ref}
+      inputRef={inputRef}
       value={value}
       onChange={handleChange}
       open={open}
