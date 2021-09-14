@@ -82,7 +82,7 @@ function GridScrollAreaRaw(props: ScrollAreaProps) {
   }, []);
 
   const toggleDragging = React.useCallback(() => {
-    setDragging((prevdragging) => !prevdragging);
+    setDragging((prevDragging) => !prevDragging);
   }, []);
 
   useGridApiEventHandler(apiRef, GridEvents.rowsScroll, handleScrolling);

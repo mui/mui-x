@@ -10,7 +10,7 @@ import { GridCommitCellChangeParams, GridEditCellValueParams } from '../params/g
  */
 export interface GridEditRowApi {
   /**
-   * Set sthe edit rows model of the grid.
+   * Set the edit rows model of the grid.
    * @param {GridEditRowsModel} model The new edit rows model.
    */
   setEditRowsModel: (model: GridEditRowsModel) => void;
