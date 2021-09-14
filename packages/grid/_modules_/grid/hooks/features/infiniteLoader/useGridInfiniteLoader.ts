@@ -12,6 +12,7 @@ import { GridViewportRowsChangeParams } from '../../../models/params/gridViewpor
 import { GridScrollParams } from '../../../models/params/gridScrollParams';
 
 /**
+ * Only available in DataGridPro
  * @requires useGridColumns (state)
  * @requires useGridContainerProps (state)
  * @requires useGridScroll (method

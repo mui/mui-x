@@ -37,6 +37,7 @@ export const GridRoot = React.forwardRef<HTMLDivElement, GridRootProps>(function
           rootProps.classes?.root,
           rootProps.className,
           classNameProp,
+          gridClasses.root,
           {
             [gridClasses.autoHeight]: rootProps.autoHeight,
           },

@@ -154,9 +154,10 @@ interface GridComponentOtherProps {
   /**
    * Callback fired when an exception is thrown in the grid.
    * @param {any} args The arguments passed to the `showError` call.
+   * @param {MuiEvent<{}>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
-  onError?: (args: any, details: GridCallbackDetails) => void;
+  onError?: (args: any, event: MuiEvent<{}>, details: GridCallbackDetails) => void;
   /**
    * Callback fired when the active element leaves a cell.
    * @param {GridCallbackDetails} params With all properties from [[GridCellParams]].

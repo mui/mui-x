@@ -35,12 +35,12 @@ export const useNativeEventListener = <E extends Event>(
     if (targetElement && wrapHandler && eventName && !added) {
       logger.debug(`Binding native ${eventName} event`);
       targetElement.addEventListener(eventName, wrapHandler, options);
-      const bindedElem = targetElement;
+      const boundElem = targetElement;
       setAdded(true);
 
       const unsubscribe = () => {
         logger.debug(`Clearing native ${eventName} event`);
-        bindedElem.removeEventListener(eventName, wrapHandler, options);
+        boundElem.removeEventListener(eventName, wrapHandler, options);
       };
 
       apiRef.current.subscribeEvent(GridEvents.unmount, unsubscribe);

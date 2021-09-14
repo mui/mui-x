@@ -2,6 +2,7 @@ import * as React from 'react';
 import { MuiEvent } from '../muiEvent';
 import {
   GridEventEmitter,
+  GridListener,
   GridSubscribeEventOptions,
 } from '../../utils/eventEmitter/GridEventEmitter';
 
@@ -51,13 +52,9 @@ export interface GridCoreApi extends GridEventEmitter {
    * @param {object} options Additional options for this listener.
    * @returns {function} A function to unsubscribe from this event.
    */
-  subscribeEvent: (
+  subscribeEvent: <Params, Event extends MuiEvent>(
     event: string,
-    handler: (
-      params: any,
-      event: MuiEvent<React.SyntheticEvent | DocumentEventMap[keyof DocumentEventMap] | {}>,
-      details: any,
-    ) => void,
+    handler: GridListener<Params, Event>,
     options?: GridSubscribeEventOptions,
   ) => () => void;
   /**

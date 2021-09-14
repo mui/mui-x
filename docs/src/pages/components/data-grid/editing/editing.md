@@ -72,7 +72,7 @@ This is especially interesting when using the `valueGetter` on the column defini
 ### Client-side validation
 
 To validate the value in the cells, use `onEditRowsModelChange` to set the `error` attribute of the respective field when the value is invalid.
-If this attribute is true, the value will never be commited.
+If this attribute is true, the value will never be committed.
 This prop is invoked when a change is triggered by the edit cell component.
 
 Alternatively, you can use the `GridEditRowsModel` state mentioned in the [Controlled editing](#controlled-editing) section.
@@ -115,7 +115,7 @@ The following events can be imported and used to customize the edition:
 
 - `cellEditStart`: emitted when the cell turns to edit mode.
 - `cellEditStop`: emitted when the cell turns back to view mode.
-- `cellEditCommit`: emitted when the new value is commited.
+- `cellEditCommit`: emitted when the new value is committed.
 - `editCellPropsChange`: emitted when the props passed to the edit cell component are changed.
 
 Catching events can be used to add a callback after an event while ignoring its triggers.
@@ -173,7 +173,7 @@ You can handle the `onEditRowsModelChange` callback to control the `GridEditRows
 Having all cells of a row in edit mode allows validating a field based on the value of another one.
 To accomplish that, set the `onEditRowsModelChange` prop and return a new model with the `error` attribute of the invalid field set to `true`.
 Use the other fields available in the model to check if the validation should run or not.
-Once at the least one field has the `error` attribute equals to true no new value will be commited.
+Once at the least one field has the `error` attribute equals to true no new value will be committed.
 
 **Note:** For server-side validation, the same [approach](#server-side-validation) from the cell editing can be used.
 
@@ -195,7 +195,7 @@ The following events can be imported and used to customize the row edition:
 
 - `rowEditStart`: emitted when the row turns to edit mode.
 - `rowEditStop`: emitted when the row turns back to view mode.
-- `rowEditCommit`: emitted when the new row values are commited.
+- `rowEditCommit`: emitted when the new row values are committed.
 - `editCellPropsChange`: emitted when the props passed to an edit cell component are changed.
 
 ## apiRef [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-pro/)
