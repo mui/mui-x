@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-use-before-define */
 import * as React from 'react';
 import { createTheme, Theme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';

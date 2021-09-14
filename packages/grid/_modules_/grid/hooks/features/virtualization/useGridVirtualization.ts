@@ -339,7 +339,9 @@ export const useGridVirtualization = (
     }
 
     // On iOS the inertia scrolling allows to return negative values.
-    if (windowRef.current!.scrollLeft < 0 || windowRef.current!.scrollTop < 0) return;
+    if (windowRef.current!.scrollLeft < 0 || windowRef.current!.scrollTop < 0) {
+      return;
+    }
 
     if (apiRef.current.updateViewport) {
       apiRef.current.updateViewport();

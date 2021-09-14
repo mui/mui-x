@@ -1,15 +1,7 @@
-import React from 'react';
-import MarkdownDocs from 'docs/src/modules/components/MarkdownDocs';
-import { prepareMarkdown } from 'docs/src/modules/utils/parseMarkdown';
+import * as React from 'react';
+import MarkdownDocs from '@material-ui/monorepo/docs/src/modules/components/MarkdownDocs';
+import { demos, docs, demoComponents } from './grid-api.md?@mui/markdown';
 
-const pageFilename = 'api/grid-api';
-const requireRaw = require.context('!raw-loader!./', false, /\/grid-api\.md$/);
-
-export default function Page({ docs }) {
-  return <MarkdownDocs docs={docs} />;
+export default function Page() {
+  return <MarkdownDocs demos={demos} docs={docs} demoComponents={demoComponents} />;
 }
-
-Page.getInitialProps = () => {
-  const { demos, docs } = prepareMarkdown({ pageFilename, requireRaw });
-  return { demos, docs };
-};

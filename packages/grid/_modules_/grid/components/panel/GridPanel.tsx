@@ -49,8 +49,8 @@ const useStyles = makeStyles(
 export const gridPanelClasses = generateUtilityClasses('MuiGridPanel', ['root', 'paper']);
 
 const GridPanel = React.forwardRef<HTMLDivElement, GridPanelProps>((props, ref) => {
-  const { children, className, open, ...other } = props;
-  const classes = useStyles(other);
+  const { children, className, open, classes: classesProp, ...other } = props;
+  const classes = useStyles(props);
   const apiRef = useGridApiContext();
 
   const getPopperModifiers = (): any => {

@@ -39,6 +39,6 @@ describe('<GridPanel />', () => {
       return wrapper.find('span').childAt(0);
     },
     refInstanceof: window.HTMLDivElement,
-    skip: ['componentProp', 'reactTestRenderer'],
+    only: ['mergeClassName', 'propsSpread', 'refForwarding', 'rootClass'],
   }));
 });
