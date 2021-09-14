@@ -544,7 +544,6 @@ describe('<DataGridPro /> - Edit Rows', () => {
                 brand: 'Nike',
               },
             ]}
-            throttleRowsMs={0}
           />
         </div>,
       );
@@ -590,7 +589,6 @@ describe('<DataGridPro /> - Edit Rows', () => {
                 country: 'fr',
               },
             ]}
-            throttleRowsMs={0}
           />
         </div>,
       );

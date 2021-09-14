@@ -4,7 +4,7 @@ import { writeFileSync, mkdirSync } from 'fs';
 import path from 'path';
 import kebabCase from 'lodash/kebabCase';
 import * as prettier from 'prettier';
-import { renderInline as renderMarkdownInline } from '../../node_modules/@material-ui/monorepo/docs/packages/markdown';
+import { renderInline as renderMarkdownInline } from '@material-ui/monorepo/docs/packages/markdown';
 
 type Api = {
   name: string;
@@ -38,7 +38,9 @@ function generateType(type, needsParenthesis = false) {
       text += type.declaration.children
         .map((child) => {
           let memberText = child.name;
-          if (child.flags.isOptional) memberText += '?';
+          if (child.flags.isOptional) {
+            memberText += '?';
+          }
           return `${memberText}: ${child.type ? generateType(child.type) : 'any'}`;
         })
         .join('; ');
@@ -73,8 +75,12 @@ function generateSignature(signature, needsParenthesis = false) {
     text += signature.typeParameters
       .map((generic) => {
         let genericLine = generic.name;
-        if (generic.type) genericLine += ` extends ${generateType(generic.type)}`;
-        if (generic.default) genericLine += ` = ${generateType(generic.default)}`;
+        if (generic.type) {
+          genericLine += ` extends ${generateType(generic.type)}`;
+        }
+        if (generic.default) {
+          genericLine += ` = ${generateType(generic.default)}`;
+        }
         return genericLine;
       })
       .join(', ');
@@ -84,8 +90,12 @@ function generateSignature(signature, needsParenthesis = false) {
   text += signature
     .parameters!.map((param) => {
       let paramText = param.flags.isRest ? `...${param.name}` : param.name;
-      if (param.flags.isOptional) paramText += '?';
-      if (param.defaultValue) paramText += '?';
+      if (param.flags.isOptional) {
+        paramText += '?';
+      }
+      if (param.defaultValue) {
+        paramText += '?';
+      }
       return `${paramText}: ${generateType(param.type)}`;
     })
     .join(', ');
@@ -319,21 +329,13 @@ function run(argv: { outputDirectory?: string }) {
 
       writePrettifiedFile(
         path.resolve(outputDirectory, `${slug}.js`),
-        `import React from 'react';
-import MarkdownDocs from 'docs/src/modules/components/MarkdownDocs';
-import { prepareMarkdown } from 'docs/src/modules/utils/parseMarkdown';
+        `import * as React from 'react';
+import MarkdownDocs from '@material-ui/monorepo/docs/src/modules/components/MarkdownDocs';
+import { demos, docs, demoComponents } from './${slug}.md?@mui/markdown';
 
-const pageFilename = 'api/${slug}';
-const requireRaw = require.context('!raw-loader!./', false, /\\/${slug}\\.md$/);
-
-export default function Page({ docs }) {
-  return <MarkdownDocs docs={docs} />;
-}
-
-Page.getInitialProps = () => {
-  const { demos, docs } = prepareMarkdown({ pageFilename, requireRaw });
-  return { demos, docs };
-};
+export default function Page() {
+  return <MarkdownDocs demos={demos} docs={docs} demoComponents={demoComponents} />;
+}        
     `,
         prettierConfigPath,
       );

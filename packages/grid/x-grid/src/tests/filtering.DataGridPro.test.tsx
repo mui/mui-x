@@ -95,7 +95,7 @@ describe('<DataGridPro /> - Filter', () => {
   });
 
   it('should apply the filterModel prop correctly on GridApiRef setRows', () => {
-    render(<TestCase filterModel={filterModel} throttleRowsMs={0} />);
+    render(<TestCase filterModel={filterModel} />);
 
     const newRows = [
       {
@@ -116,7 +116,7 @@ describe('<DataGridPro /> - Filter', () => {
   });
 
   it('should apply the filterModel prop correctly on GridApiRef update row data', () => {
-    render(<TestCase filterModel={filterModel} throttleRowsMs={0} />);
+    render(<TestCase filterModel={filterModel} />);
     apiRef.current.updateRows([{ id: 1, brand: 'Fila' }]);
     apiRef.current.updateRows([{ id: 0, brand: 'Patagonia' }]);
     expect(getColumnValues()).to.deep.equal(['Patagonia', 'Fila', 'Puma']);
