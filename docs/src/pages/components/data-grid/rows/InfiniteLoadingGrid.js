@@ -5,7 +5,7 @@ import {
   getRealData,
   getCommodityColumns,
 } from '@mui/x-data-grid-generator';
-import LinearProgress from '@material-ui/core/LinearProgress';
+import LinearProgress from '@mui/material/LinearProgress';
 
 const MAX_ROW_LENGTH = 500;
 

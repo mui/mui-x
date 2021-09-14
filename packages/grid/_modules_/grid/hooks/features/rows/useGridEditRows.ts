@@ -31,7 +31,7 @@ import { useGridApiEventHandler, useGridApiOptionHandler } from '../../root/useG
 import { useGridApiMethod } from '../../root/useGridApiMethod';
 import { allGridColumnsSelector } from '../columns/gridColumnsSelector';
 import { useEventCallback } from '../../../utils/material-ui-utils';
-import { useLogger } from '../../utils/useLogger';
+import { useGridLogger } from '../../utils/useGridLogger';
 import { useGridState } from '../core/useGridState';
 import { useGridSelector } from '../core/useGridSelector';
 
@@ -58,7 +58,7 @@ export function useGridEditRows(
     | 'editMode'
   >,
 ) {
-  const logger = useLogger('useGridEditRows');
+  const logger = useGridLogger(apiRef, 'useGridEditRows');
   const [, setGridState, forceUpdate] = useGridState(apiRef);
   const focusTimeout = React.useRef<any>(null);
   const nextFocusedCell = React.useRef<GridCellParams | null>(null);
@@ -294,7 +294,7 @@ export function useGridEditRows(
       const model = apiRef.current.getEditRowsModel();
       const row = model[id];
       if (!row) {
-        throw new Error(`Material-UI: Row at id: ${id} is not being editted.`);
+        throw new Error(`Material-UI: Row at id: ${id} is not being edited.`);
       }
 
       const hasFieldWithError = Object.values(row).some((value) => !!value.error);
@@ -350,7 +350,7 @@ export function useGridEditRows(
       const model = apiRef.current.getEditRowsModel();
       const editRow = model[id];
       if (!editRow) {
-        throw new Error(`Material-UI: Row at id: ${id} is not being editted.`);
+        throw new Error(`Material-UI: Row at id: ${id} is not being edited.`);
       }
 
       const row = apiRef.current.getRow(id);
@@ -422,11 +422,10 @@ export function useGridEditRows(
   );
 
   const handleCellEditStop = React.useCallback(
-    (params: GridCellParams, event?: React.SyntheticEvent) => {
+    (params: GridCellParams, event: React.SyntheticEvent | {}) => {
       setCellMode(params.id, params.field, GridCellModes.View);
 
-      // When dispatched by the document, the event is not passed
-      if (!event || !isKeyboardEvent(event)) {
+      if (!isKeyboardEvent(event)) {
         return;
       }
 

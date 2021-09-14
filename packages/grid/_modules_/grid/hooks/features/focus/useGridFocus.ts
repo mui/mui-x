@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ownerDocument } from '@material-ui/core/utils';
+import { ownerDocument } from '@mui/material/utils';
 import { GridEvents } from '../../../constants/eventsConstants';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridFocusApi } from '../../../models/api/gridFocusApi';
@@ -7,7 +7,7 @@ import { GridRowId } from '../../../models/gridRows';
 import { GridCellParams } from '../../../models/params/gridCellParams';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
 import { useGridState } from '../core/useGridState';
-import { useLogger } from '../../utils/useLogger';
+import { useGridLogger } from '../../utils/useGridLogger';
 import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
 import { GridComponentProps } from '../../../GridComponentProps';
 import { isNavigationKey } from '../../../utils/keyboardUtils';
@@ -18,7 +18,7 @@ import { isNavigationKey } from '../../../utils/keyboardUtils';
  * @requires useGridEditRows (event)
  */
 export const useGridFocus = (apiRef: GridApiRef, props: Pick<GridComponentProps, 'rows'>): void => {
-  const logger = useLogger('useGridFocus');
+  const logger = useGridLogger(apiRef, 'useGridFocus');
   const [, setGridState, forceUpdate] = useGridState(apiRef);
   const lastClickedCell = React.useRef<GridCellParams | null>(null);
 

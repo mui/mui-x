@@ -15,11 +15,12 @@ npm install @mui/x-data-grid-pro
 yarn add @mui/x-data-grid-pro
 ```
 
-This component has two peer dependencies that you will need to install as well.
+This component has three peer dependencies that you will need to install as well.
 
 ```json
 "peerDependencies": {
-  "@material-ui/core": "^4.12.0 || ^5.0.0-beta.0",
+  "@mui/material": "^5.0.0-rc.1",
+  "@mui/styles": "^5.0.0-rc.1",
   "react": "^17.0.0"
 },
 ```

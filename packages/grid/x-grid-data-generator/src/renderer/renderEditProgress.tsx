@@ -1,11 +1,12 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { GridRenderEditCellParams } from '@mui/x-data-grid';
-import Slider from '@material-ui/core/Slider';
-import Tooltip from '@material-ui/core/Tooltip';
-import { createStyles, makeStyles } from '@material-ui/styles';
-import { debounce } from '@material-ui/core/utils';
-import { Theme } from '@material-ui/core/styles';
+import Slider, { SliderProps } from '@mui/material/Slider';
+import { ValueLabelProps } from '@mui/core/SliderUnstyled';
+import Tooltip from '@mui/material/Tooltip';
+import { createStyles, makeStyles } from '@mui/styles';
+import { debounce } from '@mui/material/utils';
+import { Theme } from '@mui/material/styles';
 import { createTheme, muiStyleAlpha } from '../../../_modules_/grid/utils/utils';
 
 const defaultTheme = createTheme();
@@ -19,6 +20,7 @@ const useStyles = makeStyles(
         alignItems: 'center',
         justifyContent: 'center',
         padding: 0,
+        borderRadius: 0,
       },
       rail: {
         height: '100%',
@@ -50,7 +52,7 @@ const useStyles = makeStyles(
   { defaultTheme },
 );
 
-function ValueLabelComponent(props) {
+const ValueLabelComponent = (props: ValueLabelProps) => {
   const { children, open, value } = props;
 
   return (
@@ -58,7 +60,7 @@ function ValueLabelComponent(props) {
       {children}
     </Tooltip>
   );
-}
+};
 
 function EditProgress(props: GridRenderEditCellParams) {
   const classes = useStyles();
@@ -77,8 +79,8 @@ function EditProgress(props: GridRenderEditCellParams) {
     [updateCellEditProps],
   );
 
-  const handleChange = (event, newValue) => {
-    setValueState(newValue);
+  const handleChange = (event: Event, newValue: number | number[]) => {
+    setValueState(newValue as number);
     debouncedUpdateCellEditProps(newValue);
   };
 
@@ -86,9 +88,9 @@ function EditProgress(props: GridRenderEditCellParams) {
     setValueState(Number(value));
   }, [value]);
 
-  const handleRef = (element) => {
+  const handleRef: SliderProps['ref'] = (element) => {
     if (element) {
-      element.querySelector('[role="slider"]').focus();
+      element.querySelector<HTMLElement>('[type="range"]')!.focus();
     }
   };
 
@@ -107,7 +109,7 @@ function EditProgress(props: GridRenderEditCellParams) {
       max={1}
       step={0.00001}
       onChange={handleChange}
-      ValueLabelComponent={ValueLabelComponent}
+      components={{ ValueLabel: ValueLabelComponent }}
       valueLabelDisplay="auto"
       valueLabelFormat={(newValue) => `${(newValue * 100).toLocaleString()} %`}
     />

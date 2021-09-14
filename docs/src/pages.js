@@ -13,7 +13,7 @@ if (lab.subheader !== '/components/lab') {
   throw new Error('Integration not compatible.');
 }
 
-const dataGridComponent = lab.children[3];
+const dataGridComponent = components.children[6];
 
 if (dataGridComponent.subheader !== '/components/data-grid') {
   throw new Error('Integration not compatible.');
@@ -26,6 +26,7 @@ const dataGridComponentAPI = componentsAPI.children.find(
 dataGridComponent.children = [
   {
     pathname: '/components/data-grid',
+    subheader: '/components/data-grid/overview',
     title: 'Overview',
   },
   { pathname: '/components/data-grid/demo' },
@@ -57,6 +58,8 @@ dataGridComponentAPI.children = [
   { pathname: '/api-docs/data-grid/grid-cell-params', title: 'GridCellParams' },
   { pathname: '/api-docs/data-grid/grid-row-params', title: 'GridRowParams' },
   { pathname: '/api-docs/data-grid/grid-export-csv-options', title: 'GridExportCSVOptions' },
-];
+].map((page) => {
+  return { ...page, linkProps: { as: page.pathname.replace(/^\/api-docs/, '/api') } };
+});
 
 export default pages;

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { GridDensity, GridDensityTypes } from '../../../models/gridDensity';
-import { useLogger } from '../../utils/useLogger';
+import { useGridLogger } from '../../utils/useGridLogger';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
 import { useGridState } from '../core/useGridState';
@@ -15,7 +15,7 @@ export const useGridDensity = (
   apiRef: GridApiRef,
   props: Pick<GridComponentProps, 'headerHeight' | 'rowHeight' | 'density'>,
 ): void => {
-  const logger = useLogger('useDensity');
+  const logger = useGridLogger(apiRef, 'useDensity');
   const [, setGridState, forceUpdate] = useGridState(apiRef);
 
   const getUpdatedDensityState = React.useCallback(

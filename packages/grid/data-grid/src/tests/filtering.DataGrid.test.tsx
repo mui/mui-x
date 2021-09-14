@@ -339,18 +339,25 @@ describe('<DataGrid /> - Filter', () => {
   describe('numeric operators', () => {
     [
       { operatorValue: '=', value: 1984, expected: [1984] },
-      { operatorValue: '!=', value: 1984, expected: [1954, 1974] },
+      { operatorValue: '!=', value: 1984, expected: [0, 1954, 1974] },
       { operatorValue: '>', value: 1974, expected: [1984] },
       { operatorValue: '>=', value: 1974, expected: [1984, 1974] },
-      { operatorValue: '<', value: 1974, expected: [1954] },
-      { operatorValue: '<=', value: 1974, expected: [1954, 1974] },
+      { operatorValue: '<', value: 1974, expected: [0, 1954] },
+      { operatorValue: '<=', value: 1974, expected: [0, 1954, 1974] },
+      { operatorValue: '=', value: 0, expected: [0] },
+      { operatorValue: '!=', value: 0, expected: [1984, 1954, 1974] },
+      { operatorValue: '>', value: 0, expected: [1984, 1954, 1974] },
+      { operatorValue: '>=', value: 0, expected: [0, 1984, 1954, 1974] },
+      { operatorValue: '<', value: 0, expected: [] },
+      { operatorValue: '<=', value: 0, expected: [0] },
     ].forEach(({ operatorValue, value, expected }) => {
-      it(`should allow object as value and work with valueGetter, operatorValue: ${operatorValue}`, () => {
+      it(`should allow object as value and work with valueGetter, operatorValue: ${operatorValue}, value: ${value}`, () => {
         render(
           <TestCase
             value={value.toString()}
             operatorValue={operatorValue}
             rows={[
+              { id: 2, brand: { year: 0 } },
               {
                 id: 3,
                 brand: { year: 1984 },
@@ -1047,6 +1054,6 @@ describe('<DataGrid /> - Filter', () => {
         rows={rows}
       />,
     );
-    expect(screen.queryByTitle('1 active filter')).not.to.equal(null);
+    expect(screen.queryByLabelText('1 active filter')).not.to.equal(null);
   });
 });

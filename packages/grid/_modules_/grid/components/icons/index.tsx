@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createSvgIcon } from '@material-ui/core/utils';
+import { createSvgIcon } from '@mui/material/utils';
 
 export const GridArrowUpwardIcon = createSvgIcon(
   <path d="M4 12l1.41 1.41L11 7.83V20h2V7.83l5.58 5.59L20 12l-8-8-8 8z" />,
@@ -87,4 +87,9 @@ export const GridSaveAltIcon = createSvgIcon(
 export const GridCheckIcon = createSvgIcon(
   <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />,
   'Check',
+);
+
+export const GridMoreVertIcon = createSvgIcon(
+  <path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z" />,
+  'MoreVert',
 );

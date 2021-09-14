@@ -1,4 +1,4 @@
-import { nlNL as nlNLCore } from '@material-ui/core/locale';
+import { nlNL as nlNLCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -90,6 +90,9 @@ const nlNLGrid: Partial<GridLocaleText> = {
   // Total visible rows footer text
   // footerTotalVisibleRows: (visibleCount, totalCount) =>
   //   `${visibleCount.toLocaleString()} of ${totalCount.toLocaleString()}`,
+
+  // Actions cell more text
+  // actionsCellMore: 'more',
 };
 
 export const nlNL: Localization = getGridLocalization(nlNLGrid, nlNLCore);

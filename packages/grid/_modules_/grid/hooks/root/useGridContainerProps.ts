@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ownerDocument } from '@material-ui/core/utils';
+import { ownerDocument } from '@mui/material/utils';
 import { GridEvents } from '../../constants/eventsConstants';
 import { GridApiRef } from '../../models/api/gridApiRef';
 import {
@@ -16,7 +16,7 @@ import { useGridState } from '../features/core/useGridState';
 import { gridDensityRowHeightSelector } from '../features/density/densitySelector';
 import { visibleGridRowCountSelector } from '../features/filter/gridFilterSelector';
 import { gridPaginationSelector } from '../features/pagination/gridPaginationSelector';
-import { useLogger } from '../utils/useLogger';
+import { useGridLogger } from '../utils/useGridLogger';
 import { useGridApiEventHandler } from './useGridApiEventHandler';
 import { GridComponentProps } from '../../GridComponentProps';
 
@@ -56,7 +56,7 @@ export const useGridContainerProps = (
     | 'disableVirtualization'
   >,
 ) => {
-  const logger = useLogger('useGridContainerProps');
+  const logger = useGridLogger(apiRef, 'useGridContainerProps');
   const [gridState, setGridState, forceUpdate] = useGridState(apiRef);
   const windowSizesRef = React.useRef<ElementSize>({ width: 0, height: 0 });
   const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ThemeProvider, unstable_createMuiStrictModeTheme } from '@material-ui/core/styles';
+import { ThemeProvider, unstable_createMuiStrictModeTheme } from '@mui/material/styles';
 import { createClientRender } from '@material-ui/monorepo/test/utils';
 
 export * from '@material-ui/monorepo/test/utils';

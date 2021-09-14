@@ -7,12 +7,6 @@ export interface GridStateApi {
    */
   state: GridState;
   /**
-   * Returns the state of the grid.
-   * @returns {GridState} The state of the grid.
-   * @ignore - do not document.
-   */
-  getState: () => GridState;
-  /**
    * Sets the whole state of the grid.
    * @param {function} state The new state or a function to return the new state.
    */

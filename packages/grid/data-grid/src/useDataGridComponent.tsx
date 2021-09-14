@@ -1,14 +1,12 @@
 import { GridComponentProps } from '../../_modules_/grid/GridComponentProps';
 import { useGridClipboard } from '../../_modules_/grid/hooks/features/clipboard/useGridClipboard';
 import { useGridColumnMenu } from '../../_modules_/grid/hooks/features/columnMenu/useGridColumnMenu';
-import { useGridColumnResize } from '../../_modules_/grid/hooks/features/columnResize/useGridColumnResize';
 import { useGridColumns } from '../../_modules_/grid/hooks/features/columns/useGridColumns';
 import { useGridControlState } from '../../_modules_/grid/hooks/features/core/useGridControlState';
 import { useGridDensity } from '../../_modules_/grid/hooks/features/density/useGridDensity';
 import { useGridCsvExport } from '../../_modules_/grid/hooks/features/export/useGridCsvExport';
 import { useGridFilter } from '../../_modules_/grid/hooks/features/filter/useGridFilter';
 import { useGridFocus } from '../../_modules_/grid/hooks/features/focus/useGridFocus';
-import { useGridInfiniteLoader } from '../../_modules_/grid/hooks/features/infiniteLoader/useGridInfiniteLoader';
 import { useGridKeyboard } from '../../_modules_/grid/hooks/features/keyboard/useGridKeyboard';
 import { useGridKeyboardNavigation } from '../../_modules_/grid/hooks/features/keyboard/useGridKeyboardNavigation';
 import { useLocaleText } from '../../_modules_/grid/hooks/features/localeText/useLocaleText';
@@ -28,14 +26,14 @@ import { useApi } from '../../_modules_/grid/hooks/root/useApi';
 import { useGridEvents } from '../../_modules_/grid/hooks/root/useGridEvents';
 import { useGridContainerProps } from '../../_modules_/grid/hooks/root/useGridContainerProps';
 import { useErrorHandler } from '../../_modules_/grid/hooks/utils/useErrorHandler';
-import { useLoggerFactory } from '../../_modules_/grid/hooks/utils/useLogger';
+import { useGridLoggerFactory } from '../../_modules_/grid/hooks/utils/useGridLogger';
 import { useRenderInfoLog } from '../../_modules_/grid/hooks/utils/useRenderInfoLog';
 import { useGridResizeContainer } from '../../_modules_/grid/hooks/utils/useGridResizeContainer';
 import { useStateProp } from '../../_modules_/grid/hooks/utils/useStateProp';
 import { GridApiRef } from '../../_modules_/grid/models/api/gridApiRef';
 
 export const useDataGridComponent = (apiRef: GridApiRef, props: GridComponentProps) => {
-  useLoggerFactory(apiRef, props);
+  useGridLoggerFactory(apiRef, props);
   useApi(apiRef, props);
   useErrorHandler(apiRef, props);
   useGridControlState(apiRef, props);
@@ -53,7 +51,6 @@ export const useDataGridComponent = (apiRef: GridApiRef, props: GridComponentPro
   useGridFilter(apiRef, props);
   useGridDensity(apiRef, props);
   useGridContainerProps(apiRef, props);
-  useGridColumnResize(apiRef, props);
   useGridPageSize(apiRef, props);
   useGridPage(apiRef, props);
   useGridScroll(apiRef, props);
@@ -63,7 +60,6 @@ export const useDataGridComponent = (apiRef: GridApiRef, props: GridComponentPro
   useGridKeyboard(apiRef);
   useGridKeyboardNavigation(apiRef, props);
   useGridCsvExport(apiRef);
-  useGridInfiniteLoader(apiRef, props);
   useGridClipboard(apiRef);
   useGridEvents(apiRef, props);
   useStateProp(apiRef, props);

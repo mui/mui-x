@@ -2,7 +2,7 @@ import * as React from 'react';
 import { GridEvents } from '../../constants/eventsConstants';
 import { GridApiRef } from '../../models/api/gridApiRef';
 import { isFunction } from '../../utils/utils';
-import { useLogger } from '../utils/useLogger';
+import { useGridLogger } from '../utils/useGridLogger';
 
 export const useNativeEventListener = <E extends Event>(
   apiRef: GridApiRef,
@@ -11,7 +11,7 @@ export const useNativeEventListener = <E extends Event>(
   handler?: (event: E) => any,
   options?: AddEventListenerOptions,
 ) => {
-  const logger = useLogger('useNativeEventListener');
+  const logger = useGridLogger(apiRef, 'useNativeEventListener');
   const [added, setAdded] = React.useState(false);
   const handlerRef = React.useRef(handler);
 
@@ -35,12 +35,12 @@ export const useNativeEventListener = <E extends Event>(
     if (targetElement && wrapHandler && eventName && !added) {
       logger.debug(`Binding native ${eventName} event`);
       targetElement.addEventListener(eventName, wrapHandler, options);
-      const bindedElem = targetElement;
+      const boundElem = targetElement;
       setAdded(true);
 
       const unsubscribe = () => {
         logger.debug(`Clearing native ${eventName} event`);
-        bindedElem.removeEventListener(eventName, wrapHandler, options);
+        boundElem.removeEventListener(eventName, wrapHandler, options);
       };
 
       apiRef.current.subscribeEvent(GridEvents.unmount, unsubscribe);

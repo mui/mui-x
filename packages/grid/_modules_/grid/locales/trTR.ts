@@ -1,4 +1,4 @@
-import { trTR as trTRCore } from '@material-ui/core/locale';
+import { trTR as trTRCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -84,6 +84,9 @@ const trTRGrid: Partial<GridLocaleText> = {
   // Total visible rows footer text
   footerTotalVisibleRows: (visibleCount, totalCount) =>
     `${visibleCount.toLocaleString()} / ${totalCount.toLocaleString()}`,
+
+  // Actions cell more text
+  // actionsCellMore: 'more',
 };
 
 export const trTR: Localization = getGridLocalization(trTRGrid, trTRCore);

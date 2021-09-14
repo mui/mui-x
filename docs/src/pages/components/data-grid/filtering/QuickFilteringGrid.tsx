@@ -1,16 +1,16 @@
 import * as React from 'react';
-import IconButton from '@material-ui/core/IconButton';
-import TextField from '@material-ui/core/TextField';
+import IconButton from '@mui/material/IconButton';
+import TextField from '@mui/material/TextField';
 import {
   DataGrid,
   GridToolbarDensitySelector,
   GridToolbarFilterButton,
 } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
-import ClearIcon from '@material-ui/icons/Clear';
-import SearchIcon from '@material-ui/icons/Search';
-import { createTheme, Theme } from '@material-ui/core/styles';
-import { createStyles, makeStyles } from '@material-ui/styles';
+import ClearIcon from '@mui/icons-material/Clear';
+import SearchIcon from '@mui/icons-material/Search';
+import { createTheme, Theme } from '@mui/material/styles';
+import { createStyles, makeStyles } from '@mui/styles';
 
 function escapeRegExp(value: string): string {
   return value.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');

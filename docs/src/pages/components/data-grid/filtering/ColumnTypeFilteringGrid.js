@@ -1,5 +1,5 @@
 import * as React from 'react';
-import InputAdornment from '@material-ui/core/InputAdornment';
+import InputAdornment from '@mui/material/InputAdornment';
 import { DataGrid, getGridNumericColumnOperators } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 

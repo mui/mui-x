@@ -31,7 +31,7 @@ export interface GridIconSlotsComponent {
   /**
    * Icon displayed on the side of the column header title when unsorted.
    */
-  ColumnUnsortedIcon: React.ElementType | null;
+  ColumnUnsortedIcon: React.JSXElementConstructor<any> | null;
   /**
    * Icon displayed on the side of the column header title when sorted in ascending order.
    */
@@ -60,4 +60,8 @@ export interface GridIconSlotsComponent {
    * Icon displayed on the open export button present in the toolbar by default.
    */
   ExportIcon: React.JSXElementConstructor<any>;
+  /**
+   * Icon displayed on the `actions` column type to open the menu.
+   */
+  MoreActionsIcon: React.JSXElementConstructor<any>;
 }

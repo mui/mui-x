@@ -1,8 +1,8 @@
 import * as React from 'react';
-import Rating from '@material-ui/lab/Rating';
+import Rating from '@mui/material/Rating';
 import { GridRenderEditCellParams } from '@mui/x-data-grid';
-import { makeStyles } from '@material-ui/styles';
-import { Theme } from '@material-ui/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -21,7 +21,7 @@ function EditRating(props: GridRenderEditCellParams) {
   const { id, value, api, field } = props;
   const classes = useStyles();
 
-  const handleChange = (event) => {
+  const handleChange = (event: any) => {
     api.setEditCellValue({ id, field, value: Number(event.target.value) }, event);
     // Check if the event is not from the keyboard
     // https://github.com/facebook/react/issues/7407
@@ -31,9 +31,9 @@ function EditRating(props: GridRenderEditCellParams) {
     }
   };
 
-  const handleRef = (element) => {
+  const handleRef = (element: HTMLElement | undefined) => {
     if (element) {
-      element.querySelector(`input[value="${value}"]`).focus();
+      element.querySelector<HTMLElement>(`input[value="${value}"]`)!.focus();
     }
   };
 
@@ -51,6 +51,6 @@ function EditRating(props: GridRenderEditCellParams) {
   );
 }
 
-export function renderEditRating(params) {
+export function renderEditRating(params: GridRenderEditCellParams) {
   return <EditRating {...params} />;
 }

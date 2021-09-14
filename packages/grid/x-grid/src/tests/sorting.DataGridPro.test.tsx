@@ -1,6 +1,11 @@
 import * as React from 'react';
-import { GridApiRef, GridComponentProps, GridSortModel, useGridApiRef } from '@mui/x-data-grid';
-import { DataGridPro } from '@mui/x-data-grid-pro';
+import {
+  DataGridPro,
+  GridApiRef,
+  GridComponentProps,
+  GridSortModel,
+  useGridApiRef,
+} from '@mui/x-data-grid-pro';
 import { expect } from 'chai';
 import { spy, useFakeTimers } from 'sinon';
 import { getColumnValues, getCell, getColumnHeaderCell } from 'test/utils/helperFn';

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { GridCellParams } from '@mui/x-data-grid-pro';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 
 const useStyles = makeStyles({
   root: {
@@ -19,7 +19,7 @@ interface DemoLinkProps {
 export const DemoLink = React.memo(function DemoLink(props: DemoLinkProps) {
   const classes = useStyles();
 
-  const handleClick = (event) => {
+  const handleClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
     event.preventDefault();
     event.stopPropagation();
   };

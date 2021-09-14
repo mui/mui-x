@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { ownerDocument } from '@material-ui/core/utils';
+import { ownerDocument } from '@mui/material/utils';
 import { GridStateColDef } from '../../../models/colDef';
-import { useLogger } from '../../utils';
+import { useGridLogger } from '../../utils';
 import { useEventCallback } from '../../../utils/material-ui-utils';
 import { GridEvents } from '../../../constants/eventsConstants';
 import { gridClasses } from '../../../gridClasses';
@@ -61,14 +61,15 @@ function trackFinger(event, currentTouchId): CursorCoordinates | boolean {
 }
 
 /**
- * TODO: improve experience for last column
+ * Only available in DataGridPro
  * @requires useGridColumns (method, event)
+ * TODO: improve experience for last column
  */
 export const useGridColumnResize = (
   apiRef: GridApiRef,
   props: Pick<GridComponentProps, 'onColumnResize' | 'onColumnWidthChange'>,
 ) => {
-  const logger = useLogger('useGridColumnResize');
+  const logger = useGridLogger(apiRef, 'useGridColumnResize');
   const [, setGridState, forceUpdate] = useGridState(apiRef);
   const colDefRef = React.useRef<GridStateColDef>();
   const colElementRef = React.useRef<HTMLDivElement>();
@@ -248,7 +249,9 @@ export const useGridColumnResize = (
       gridClasses['columnSeparator--resizable'],
     );
     // Let the event bubble if the target is not a col separator
-    if (!cellSeparator) return;
+    if (!cellSeparator) {
+      return;
+    }
     // If touch-action: none; is not supported we need to prevent the scroll manually.
     if (!doesSupportTouchActionNone()) {
       event.preventDefault();

@@ -194,5 +194,21 @@ describe('e2e', () => {
         ),
       ).to.contain('Mui-selected');
     });
+
+    it('should not scroll when changing the selected row', async () => {
+      await renderFixture('DataGrid/RowSelection');
+      await page.click('[role="cell"][data-rowindex="0"]');
+      await page.evaluate(() =>
+        document.querySelector('[role="cell"][data-rowindex="3"]')!.scrollIntoView(),
+      );
+      const scrollTop = await page.evaluate(
+        () => document.querySelector('.MuiDataGrid-window')!.scrollTop!,
+      );
+      expect(scrollTop).not.to.equal(0);
+      await page.click('[role="cell"][data-rowindex="3"]');
+      expect(
+        await page.evaluate(() => document.querySelector('.MuiDataGrid-window')!.scrollTop!),
+      ).to.equal(scrollTop);
+    });
   });
 });
