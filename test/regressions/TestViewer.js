@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { useFakeTimers } from 'sinon';
 import { withStyles } from '@mui/styles';
-import { createTheme } from '../../packages/grid/_modules_/grid/utils/utils';
+import { createTheme } from '@mui/material/styles';
 
 const styles = (theme) => ({
   root: {

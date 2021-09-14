@@ -1,15 +1,14 @@
-import { darken, lighten, Theme } from '@mui/material/styles';
+import { createTheme, darken, lighten, alpha } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
-import { muiStyleAlpha, createTheme } from '../../utils/utils';
 import { gridClasses } from '../../gridClasses';
 
 const defaultTheme = createTheme();
 export const useStyles = makeStyles(
-  (theme: Theme) => {
+  (theme) => {
     const borderColor =
       theme.palette.mode === 'light'
-        ? lighten(muiStyleAlpha(theme.palette.divider, 1), 0.88)
-        : darken(muiStyleAlpha(theme.palette.divider, 1), 0.68);
+        ? lighten(alpha(theme.palette.divider, 1), 0.88)
+        : darken(alpha(theme.palette.divider, 1), 0.68);
 
     const gridStyle: { root: any } = {
       root: {
@@ -43,7 +42,7 @@ export const useStyles = makeStyles(
           alignSelf: 'center',
           alignItems: 'center',
           justifyContent: 'center',
-          backgroundColor: muiStyleAlpha(
+          backgroundColor: alpha(
             theme.palette.background.default,
             theme.palette.action.disabledOpacity,
           ),
@@ -84,7 +83,7 @@ export const useStyles = makeStyles(
           boxSizing: 'border-box',
         },
         [`& .${gridClasses.columnHeader}:focus-within, & .${gridClasses.cell}:focus-within`]: {
-          outline: `solid ${muiStyleAlpha(theme.palette.primary.main, 0.5)} 1px`,
+          outline: `solid ${alpha(theme.palette.primary.main, 0.5)} 1px`,
           outlineWidth: 1,
           outlineOffset: -1,
         },
@@ -224,18 +223,18 @@ export const useStyles = makeStyles(
             },
           },
           '&.Mui-selected': {
-            backgroundColor: muiStyleAlpha(
+            backgroundColor: alpha(
               theme.palette.primary.main,
               theme.palette.action.selectedOpacity,
             ),
             '&:hover': {
-              backgroundColor: muiStyleAlpha(
+              backgroundColor: alpha(
                 theme.palette.primary.main,
                 theme.palette.action.selectedOpacity + theme.palette.action.hoverOpacity,
               ),
               // Reset on touch devices, it doesn't add specificity
               '@media (hover: none)': {
-                backgroundColor: muiStyleAlpha(
+                backgroundColor: alpha(
                   theme.palette.primary.main,
                   theme.palette.action.selectedOpacity,
                 ),

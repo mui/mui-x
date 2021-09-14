@@ -1,4 +1,3 @@
-import * as styles from '@mui/material/styles';
 import isDeepEqual from '../lib/lodash/isDeepEqual';
 
 export { isDeepEqual };
@@ -13,22 +12,6 @@ export function isFunction(value: any): value is Function {
 
 export function isObject(value: any): value is Record<string, any> {
   return typeof value === 'object';
-}
-
-export function muiStyleAlpha(color: string, value: number): string {
-  if ((styles as any)?.alpha) {
-    return (styles as any)?.alpha(color, value);
-  }
-  // deprecated name in v4.12 and v5
-  return (styles as any)?.fade(color, value);
-}
-
-export function createTheme(): styles.Theme {
-  if ((styles as any)?.createTheme) {
-    return (styles as any)?.createTheme();
-  }
-  // deprecated name in v4.12 and v5
-  return (styles as any)?.createMuiTheme();
 }
 
 export function localStorageAvailable() {

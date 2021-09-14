@@ -10,13 +10,12 @@ import InfoIcon from '@mui/icons-material/Info';
 import AutorenewIcon from '@mui/icons-material/Autorenew';
 import DoneIcon from '@mui/icons-material/Done';
 import { createStyles, makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import { createTheme } from '../../../_modules_/grid/utils/utils';
+import { createTheme } from '@mui/material/styles';
 import { STATUS_OPTIONS } from '../services/static-data';
 
 const defaultTheme = createTheme();
 const useStyles = makeStyles(
-  (theme: Theme) =>
+  (theme) =>
     createStyles({
       select: {
         display: 'flex',

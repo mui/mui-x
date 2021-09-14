@@ -1,17 +1,16 @@
 import * as React from 'react';
 import TablePagination from '@mui/material/TablePagination';
-import { Theme } from '@mui/material/styles';
+import { createTheme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
 import { useGridSelector } from '../hooks/features/core/useGridSelector';
 import { gridPaginationSelector } from '../hooks/features/pagination/gridPaginationSelector';
 import { useGridApiContext } from '../hooks/root/useGridApiContext';
-import { createTheme } from '../utils/utils';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 
 const defaultTheme = createTheme();
 // Used to hide the Rows per page selector on small devices
 const useStyles = makeStyles(
-  (theme: Theme) => ({
+  (theme) => ({
     selectLabel: {
       display: 'none',
       [theme.breakpoints.up('sm')]: {
