@@ -63,7 +63,7 @@ export const useGridSorting = (
     stateId: 'sortModel',
     propModel: props.sortModel,
     propOnChange: props.onSortModelChange,
-    stateSelector: (state) => state.sorting.sortModel,
+    stateSelector: gridSortModelSelector,
     changeEvent: GridEvents.sortModelChange,
   });
 

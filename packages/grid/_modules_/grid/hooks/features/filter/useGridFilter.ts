@@ -72,7 +72,7 @@ export const useGridFilter = (
     stateId: 'filter',
     propModel: props.filterModel,
     propOnChange: props.onFilterModelChange,
-    stateSelector: (state) => state.filter.filterModel,
+    stateSelector: gridFilterModelSelector,
     changeEvent: GridEvents.filterModelChange,
   });
 
