@@ -1,5 +1,5 @@
 import * as React from 'react';
-import TablePagination from '@mui/material/TablePagination';
+import TablePagination, { TablePaginationProps } from '@mui/material/TablePagination';
 import { createTheme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
 import { useGridSelector } from '../hooks/features/core/useGridSelector';
@@ -58,8 +58,8 @@ export const GridPagination = React.forwardRef<
     [apiRef],
   );
 
-  const handlePageChange = React.useCallback(
-    (event: React.MouseEvent<HTMLButtonElement> | null, page: number) => {
+  const handlePageChange = React.useCallback<TablePaginationProps['onPageChange']>(
+    (event, page) => {
       apiRef.current.setPage(page);
     },
     [apiRef],
