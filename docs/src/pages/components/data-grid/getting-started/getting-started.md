@@ -142,7 +142,7 @@ The enterprise components come in two plans: Pro and Premium.https://www.twitch.
 | [Row reordering](/components/data-grid/rows/#row-reorder)                                 |    ❌     |              🚧               |                  🚧                   |
 | **Selection**                                                                             |           |                               |                                       |
 | [Single row selection](/components/data-grid/selection/#single-row-selection)             |    ✅     |              ✅               |                  ✅                   |
-| [Checkbox selection](/components/data-grid/selection/#checkbox-selection)             |    ✅     |              ✅               |                  ✅                   |
+| [Checkbox selection](/components/data-grid/selection/#checkbox-selection)                 |    ✅     |              ✅               |                  ✅                   |
 | [Multiple row selection](/components/data-grid/selection/#multiple-row-selection)         |    ❌     |              ✅               |                  ✅                   |
 | [Cell range selection](/components/data-grid/selection/#range-selection)                  |    ❌     |              ❌               |                  🚧                   |
 | **Filtering**                                                                             |           |                               |                                       |

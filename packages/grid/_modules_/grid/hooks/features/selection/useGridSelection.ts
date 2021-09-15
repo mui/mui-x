@@ -166,20 +166,25 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
       }
 
       const hasCtrlKey = event.metaKey || event.ctrlKey;
-      const isMultipleSelectionDisabled = !checkboxSelection && !hasCtrlKey;
 
-      if (!isMultipleSelectionDisabled && event.shiftKey) {
-        apiRef.current.selectRowRange(
-          {
-            startId: lastRowToggledByClick.current ?? params.id,
-            endId: params.id,
-          },
-          !apiRef.current.isRowSelected(params.id),
-        );
-
-        event.preventDefault();
+      if (event.shiftKey && (canHaveMultipleSelection || checkboxSelection)) {
+        let endId = params.id;
+        const startId = lastRowToggledByClick.current ?? params.id;
+        const isSelected = apiRef.current.isRowSelected(params.id);
+        if (isSelected) {
+          const visibleRowIds = visibleSortedGridRowIdsSelector(apiRef.current.state);
+          const startIndex = visibleRowIds.findIndex((id) => id === startId);
+          const endIndex = visibleRowIds.findIndex((id) => id === endId);
+          if (startIndex > endIndex) {
+            endId = visibleRowIds[endIndex + 1];
+          } else {
+            endId = visibleRowIds[endIndex - 1];
+          }
+        }
+        apiRef.current.selectRowRange({ startId, endId }, !isSelected);
       } else {
         // Without checkboxSelection, multiple selection is only allowed if CTRL is pressed
+        const isMultipleSelectionDisabled = !checkboxSelection && !hasCtrlKey;
         const resetSelection = !canHaveMultipleSelection || isMultipleSelectionDisabled;
 
         if (resetSelection) {

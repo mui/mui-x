@@ -126,6 +126,16 @@ describe('<DataGrid /> - Selection', () => {
       fireEvent.click(getCell(2, 0), { shiftKey: true });
       expect(getSelectedRowIds()).to.deep.equal([0, 1, 2]);
     });
+
+    it('should unselect from last clicked cell to cell after clicked cell if clicking inside a selected range', () => {
+      render(<TestDataGridSelection checkboxSelection />);
+      fireEvent.click(getCell(0, 0));
+      expect(getSelectedRowIds()).to.deep.equal([0]);
+      fireEvent.click(getCell(3, 0), { shiftKey: true });
+      expect(getSelectedRowIds()).to.deep.equal([0, 1, 2, 3]);
+      fireEvent.click(getCell(1, 0), { shiftKey: true });
+      expect(getSelectedRowIds()).to.deep.equal([0, 1]);
+    });
   });
 
   describe('props: isRowSelectable', () => {
