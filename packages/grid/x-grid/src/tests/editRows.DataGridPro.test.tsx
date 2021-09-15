@@ -978,7 +978,7 @@ describe('<DataGridPro /> - Edit Rows', () => {
       expect(cell).to.have.text('ADIDAS');
     });
 
-    it('should move the focus to the right cell after commiting changes with Enter', () => {
+    it('should move the focus to the right cell after committing changes with Enter', () => {
       render(<TestCase editMode="row" />);
       const cell = getCell(1, 0);
       fireEvent.doubleClick(cell);

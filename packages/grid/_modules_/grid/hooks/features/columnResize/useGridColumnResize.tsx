@@ -62,8 +62,9 @@ function trackFinger(event, currentTouchId): CursorCoordinates | boolean {
 }
 
 /**
- * TODO: improve experience for last column
+ * Only available in DataGridPro
  * @requires useGridColumns (method, event)
+ * TODO: improve experience for last column
  */
 export const useGridColumnResize = (
   apiRef: GridApiRef,

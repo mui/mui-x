@@ -309,7 +309,7 @@ export function useGridEditRows(
       const model = apiRef.current.getEditRowsModel();
       const row = model[id];
       if (!row) {
-        throw new Error(`Material-UI: Row at id: ${id} is not being editted.`);
+        throw new Error(`Material-UI: Row at id: ${id} is not being edited.`);
       }
 
       const hasFieldWithError = Object.values(row).some((value) => !!value.error);
@@ -365,7 +365,7 @@ export function useGridEditRows(
       const model = apiRef.current.getEditRowsModel();
       const editRow = model[id];
       if (!editRow) {
-        throw new Error(`Material-UI: Row at id: ${id} is not being editted.`);
+        throw new Error(`Material-UI: Row at id: ${id} is not being edited.`);
       }
 
       const row = apiRef.current.getRow(id);
