@@ -198,6 +198,12 @@ DataGridRaw.propTypes = {
    */
   getRowId: PropTypes.func,
   /**
+   * Determines the path of a row in the tree data
+   * @param {GridRowParams} params With all properties from [[GridRowParams]].
+   * @returns {string[]} the path to the row
+   */
+  getTreeDataPath: PropTypes.func,
+  /**
    * Set the height in pixel of the column headers in the grid.
    * @default 56
    */
@@ -669,4 +675,9 @@ DataGridRaw.propTypes = {
    * @ignore
    */
   style: PropTypes.object,
+  /**
+   * If `true`, the rows will be gathered in a tree structure, following the `getDataPath` prop
+   * @default false
+   */
+  treeData: PropTypes.bool,
 } as any;
