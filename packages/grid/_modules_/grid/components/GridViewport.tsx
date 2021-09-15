@@ -69,6 +69,7 @@ export const GridViewport: ViewportType = React.forwardRef<HTMLDivElement, {}>(
         renderState.renderContext.lastRowIdx!,
       );
 
+      // TODO: Add tree children
       return renderedRows.map(([id, row], idx) => (
         <GridRow
           key={id}
@@ -79,7 +80,7 @@ export const GridViewport: ViewportType = React.forwardRef<HTMLDivElement, {}>(
           <GridEmptyCell width={renderState.renderContext!.leftEmptyWidth} height={rowHeight} />
           <GridRowCells
             columns={visibleColumns}
-            row={row}
+            row={row.node}
             id={id}
             height={rowHeight}
             firstColIdx={renderState.renderContext!.firstColIdx!}

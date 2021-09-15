@@ -10,7 +10,7 @@ import {
   GridRowsProp,
   GridRowIdGetter,
   GridRowData,
-  GridRowTree,
+  GridRowIdTree,
 } from '../../../models/gridRows';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
@@ -59,7 +59,7 @@ export function convertGridRowsPropToState(
   return state;
 }
 
-const getFlatRowTree = (rowIds: GridRowId[]): GridRowTree =>
+const getFlatRowTree = (rowIds: GridRowId[]): GridRowIdTree =>
   Object.fromEntries(rowIds.map((id) => [id, { id, children: {} }]));
 
 /**

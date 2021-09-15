@@ -1,46 +1,51 @@
 import { createSelector } from 'reselect';
 import { GridFilterItem } from '../../../models/gridFilterItem';
-import { GridRowId, GridRowModel } from '../../../models/gridRows';
+import { GridRowId  } from '../../../models/gridRows';
 import { GridState } from '../core/gridState';
 import { gridRowCountSelector } from '../rows/gridRowsSelector';
-import { sortedGridRowsSelector } from '../sorting/gridSortingSelector';
+import { gridSortedRowsTreeSelector} from '../sorting/gridSortingSelector';
 import { gridColumnLookupSelector } from '../columns/gridColumnsSelector';
+import {GridSortedRowsTreeNode} from "../sorting";
 
-export const visibleGridRowsStateSelector = (state: GridState) => state.visibleRows;
+export const gridVisibleRowStateSelector = (state: GridState) => state.visibleRows;
 
-export const visibleSortedGridRowsSelector = createSelector(
-  visibleGridRowsStateSelector,
-  sortedGridRowsSelector,
-  (visibleRowsState, sortedRows) => {
-    const map = new Map<GridRowId, GridRowModel>();
-    sortedRows.forEach((row, id) => {
-      if (visibleRowsState.visibleRowsLookup[id] !== false) {
-        map.set(id, row);
+export const gridSortedVisibleRowsSelector = createSelector(
+  gridVisibleRowStateSelector,
+  gridSortedRowsTreeSelector,
+  (visibleRowsState, sortedRowsTree) => {
+      const removeHiddenRows = (nodes: Map<GridRowId, GridSortedRowsTreeNode>) => {
+          const filteredRows = new Map<GridRowId, GridSortedRowsTreeNode>()
+
+          nodes.forEach((row, id) => {
+              if (visibleRowsState.visibleRowsLookup[id] !== false) {
+                  filteredRows.set(id, {
+                      node: row.node,
+                      children: removeHiddenRows(row.children)
+                  })
+              }
+          })
+
+          return filteredRows
       }
-    });
-    return map;
+
+      return removeHiddenRows(sortedRowsTree)
   },
 );
 
 export const visibleSortedGridRowsAsArraySelector = createSelector(
-  visibleSortedGridRowsSelector,
+    gridSortedVisibleRowsSelector,
   (visibleSortedRows) => [...visibleSortedRows.entries()],
 );
 
 export const visibleSortedGridRowIdsSelector = createSelector(
-  visibleSortedGridRowsSelector,
+    gridSortedVisibleRowsSelector,
   (visibleSortedRows) => [...visibleSortedRows.keys()],
 );
 
 export const visibleGridRowCountSelector = createSelector(
-  visibleGridRowsStateSelector,
+  gridVisibleRowStateSelector,
   gridRowCountSelector,
-  (visibleRowsState, totalRowsCount) => {
-    if (visibleRowsState.visibleRows == null) {
-      return totalRowsCount;
-    }
-    return visibleRowsState.visibleRows.length;
-  },
+  (visibleRowsState, totalRowsCount) => visibleRowsState.visibleRowsCount ?? totalRowsCount,
 );
 
 export const filterGridStateSelector = (state: GridState) => state.filter;

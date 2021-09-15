@@ -1,14 +1,19 @@
-import { GridRowId } from '../../../models/gridRows';
+import { GridRowId, GridRowModel } from '../../../models/gridRows';
 import { GridSortModel } from '../../../models/gridSortModel';
 
-export interface GridSortedRowTreeNode {
+export interface GridSortedRowsTreeNode {
+  node: GridRowModel;
+  children: Map<GridRowId, GridSortedRowsTreeNode>;
+}
+
+export interface GridSortedRowsIdTreeNode {
   id: GridRowId;
-  children: GridSortedRowTreeNode[];
+  children: GridSortedRowsIdTreeNode[];
 }
 
 export interface GridSortingState {
   sortedRows: GridRowId[];
-  sortedRowTree: GridSortedRowTreeNode[];
+  sortedRowTree: GridSortedRowsIdTreeNode[];
   sortModel: GridSortModel;
 }
 

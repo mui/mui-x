@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { GridTreeDataApi } from './GridTreeDataApi';
-import { GridRowId, GridRowTree } from '../../../models/gridRows';
+import { GridRowId, GridRowIdTree } from '../../../models/gridRows';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridComponentProps } from '../../../GridComponentProps';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
 
-const insertRowInTree = (tree: GridRowTree, id: GridRowId, path: string[]) => {
+const insertRowInTree = (tree: GridRowIdTree, id: GridRowId, path: string[]) => {
   if (path.length === 0) {
     throw new Error(`Material-UI: Could not insert row #${id} in the tree structure.`);
   }

@@ -7,7 +7,7 @@ import { GridCellValue } from '../../../models/gridCell';
 import { GridColDef } from '../../../models/colDef/gridColDef';
 import { GridFeatureModeConstant } from '../../../models/gridFeatureMode';
 import { GridColumnHeaderParams } from '../../../models/params/gridColumnHeaderParams';
-import { GridRowId, GridRowModel, GridRowTree } from '../../../models/gridRows';
+import { GridRowId, GridRowModel, GridRowIdTree } from '../../../models/gridRows';
 import {
   GridFieldComparatorList,
   GridSortItem,
@@ -22,9 +22,9 @@ import { useGridApiMethod } from '../../root/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { allGridColumnsSelector } from '../columns/gridColumnsSelector';
 import { useGridState } from '../core/useGridState';
-import { sortedGridRowIdsSelector, sortedGridRowsSelector } from './gridSortingSelector';
+import { sortedGridRowIdsSelector, gridSortedRowsSelector } from './gridSortingSelector';
 import { gridRowTreeSelector } from '../rows';
-import { GridSortedRowTreeNode } from './gridSortingState';
+import { GridSortedRowsIdTreeNode } from './gridSortingState';
 
 /**
  * @requires useGridRows (state, event)
@@ -177,7 +177,7 @@ export const useGridSorting = (
     // Tree sorting
     const aggregatedComparator = comparatorListAggregate(comparatorList);
 
-    const sortRowTree = (tree: GridRowTree): GridSortedRowTreeNode[] => {
+    const sortRowTree = (tree: GridRowIdTree): GridSortedRowsIdTreeNode[] => {
       return Object.entries(tree)
         .map(([name, value]) => {
           const params = comparatorList.map((colComparator) =>
@@ -246,7 +246,7 @@ export const useGridSorting = (
   );
 
   const getSortedRows = React.useCallback(
-    (): GridRowModel[] => Object.values(sortedGridRowsSelector(apiRef.current.state)),
+    (): GridRowModel[] => Object.values(gridSortedRowsSelector(apiRef.current.state)),
     [apiRef],
   );
 

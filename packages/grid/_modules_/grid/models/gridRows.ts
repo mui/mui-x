@@ -12,12 +12,12 @@ export interface GridRowModelUpdate extends GridRowData {
   _action?: GridUpdateAction;
 }
 
-export interface GridRowTreeNode {
+export interface GridRowIdTreeNode {
   id: GridRowId;
-  children: GridRowTree;
+  children: GridRowIdTree;
 }
 
-export type GridRowTree = { [nodeName: string]: GridRowTreeNode };
+export type GridRowIdTree = { [nodeName: string]: GridRowIdTreeNode };
 
 /**
  * The type of Id supported by the grid.
