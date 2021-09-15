@@ -46,7 +46,6 @@ export function TreeData() {
         {treeDataEnabled ? 'Disable tree data' : 'Enable tree data'}
       </Button>
       <DataGridPro
-        key={treeDataEnabled ? '1' : '0'}
         rows={rows}
         columns={columns}
         treeData={treeDataEnabled}

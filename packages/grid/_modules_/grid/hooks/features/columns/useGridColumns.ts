@@ -24,7 +24,7 @@ import {
   gridColumnsMetaSelector,
   visibleGridColumnsSelector,
 } from './gridColumnsSelector';
-import { useGridApiOptionHandler } from '../../root/useGridApiEventHandler';
+import { useGridApiEventHandler, useGridApiOptionHandler } from '../../root/useGridApiEventHandler';
 import { GRID_STRING_COL_DEF } from '../../../models/colDef/gridStringColDef';
 import { GridComponentProps } from '../../../GridComponentProps';
 import { getDataGridUtilityClass } from '../../../gridClasses';
@@ -358,6 +358,32 @@ export function useGridColumns(
     // Avoid dependency on gridState as I only want to update cols when viewport size changed.
     setColumnsState(apiRef.current.state.columns);
   }, [apiRef, setColumnsState, gridState.viewportSizes.width, logger]);
+
+  const handlePreProcessColumns = React.useCallback(() => {
+    logger.info(`Columns pre-processing have changed, regenerating the columns`);
+
+    const hydratedColumns = hydrateColumnsType(
+      props.columns,
+      props.columnTypes,
+      apiRef.current.getLocaleText,
+      props.checkboxSelection,
+      classes,
+    );
+
+    const preProcessedColumns = apiRef.current.applyAllColumnPreProcessing(hydratedColumns);
+    const columnState = upsertColumnsState(preProcessedColumns);
+    setColumnsState(columnState);
+  }, [
+    apiRef,
+    logger,
+    classes,
+    setColumnsState,
+    props.columns,
+    props.columnTypes,
+    props.checkboxSelection,
+  ]);
+
+  useGridApiEventHandler(apiRef, GridEvents.columnsPreProcessingChange, handlePreProcessColumns);
 
   // Grid Option Handlers
   useGridApiOptionHandler(

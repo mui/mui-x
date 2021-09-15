@@ -8,17 +8,18 @@ import { useGridApiMethod } from '../useGridApiMethod';
 import { GridEvents } from '../../../constants/eventsConstants';
 
 export const useGridColumnsPreProcessing = (apiRef: GridApiRef) => {
-  const columnsPreProcessingRef = React.useRef(new Map<string, GridColumnsPreProcessing>());
+  const columnsPreProcessingRef = React.useRef(new Map<string, GridColumnsPreProcessing | null>());
 
   const registerColumnPreProcessing = React.useCallback<
     GridColumnsPreProcessingApi['registerColumnPreProcessing']
   >(
-    (processingName, columnsPreProcessing: GridColumnsPreProcessing) => {
-      columnsPreProcessingRef.current.set(processingName, columnsPreProcessing);
+    (processingName, columnsPreProcessing) => {
+      const columnPreProcessingBefore = columnsPreProcessingRef.current.get(processingName) ?? null;
 
-      apiRef.current.publishEvent(GridEvents.columnsPreProcessingChange);
-
-      return () => columnsPreProcessingRef.current.delete(processingName);
+      if (columnPreProcessingBefore !== columnsPreProcessing) {
+        columnsPreProcessingRef.current.set(processingName, columnsPreProcessing);
+        apiRef.current.publishEvent(GridEvents.columnsPreProcessingChange);
+      }
     },
     [apiRef],
   );
@@ -29,7 +30,9 @@ export const useGridColumnsPreProcessing = (apiRef: GridApiRef) => {
     let preProcessedColumns = columns;
 
     columnsPreProcessingRef.current.forEach((columnsPreProcessing) => {
-      preProcessedColumns = columnsPreProcessing(preProcessedColumns);
+      if (columnsPreProcessing) {
+        preProcessedColumns = columnsPreProcessing(preProcessedColumns);
+      }
     });
 
     return preProcessedColumns;

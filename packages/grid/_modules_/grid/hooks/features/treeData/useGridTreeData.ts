@@ -95,16 +95,16 @@ export const useGridTreeData = (
 
   React.useEffect(() => {
     if (!props.treeData) {
-      return () => {};
+      apiRef.current.registerColumnPreProcessing('treeData', null);
+    } else {
+      const addCollapseColumn: GridColumnsPreProcessing = (columns) => [
+        {
+          ...GridTreeDataToggleExpansionColDef,
+        },
+        ...columns,
+      ];
+
+      apiRef.current.registerColumnPreProcessing('treeData', addCollapseColumn);
     }
-
-    const addCollapseColumn: GridColumnsPreProcessing = (columns) => [
-      {
-        ...GridTreeDataToggleExpansionColDef,
-      },
-      ...columns,
-    ];
-
-    return apiRef.current.registerColumnPreProcessing('treeData', addCollapseColumn);
   }, [apiRef, props.treeData]);
 };
