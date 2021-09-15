@@ -219,7 +219,7 @@ export const useGridPrintExport = (
         apiRef.current.setPageSize(visibleSortedRows.size);
       }
 
-      await updateGridColumnsForPrint(['desk'], options?.allColumns);
+      await updateGridColumnsForPrint(options?.fields, options?.allColumns);
       apiRef.current.disableVirtualization();
       const printWindow = buildPrintWindow(options?.fileName);
       doc.current!.body.appendChild(printWindow);
