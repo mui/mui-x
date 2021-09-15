@@ -166,8 +166,9 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
       }
 
       const hasCtrlKey = event.metaKey || event.ctrlKey;
+      const isMultipleSelectionDisabled = !checkboxSelection && !hasCtrlKey;
 
-      if (canHaveMultipleSelection && event.shiftKey) {
+      if (!isMultipleSelectionDisabled && event.shiftKey) {
         apiRef.current.selectRowRange(
           {
             startId: lastRowToggledByClick.current ?? params.id,
@@ -179,7 +180,6 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
         event.preventDefault();
       } else {
         // Without checkboxSelection, multiple selection is only allowed if CTRL is pressed
-        const isMultipleSelectionDisabled = !checkboxSelection && !hasCtrlKey;
         const resetSelection = !canHaveMultipleSelection || isMultipleSelectionDisabled;
 
         if (resetSelection) {

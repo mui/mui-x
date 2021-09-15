@@ -125,7 +125,7 @@ If you have an enterprise grid running with an expired or missing license key, t
 
 The following table summarizes the features available in the community `DataGrid` and enterprise `DataGridPro` components.
 All the features of the community version are available in the enterprise one.
-The enterprise components come in two plans: Pro and Premium.
+The enterprise components come in two plans: Pro and Premium.https://www.twitch.tv/directory/game/Art
 
 | Features                                                                                  | Community | Pro <span class="pro"></span> | Premium <span class="premium"></span> |
 | :---------------------------------------------------------------------------------------- | :-------: | :---------------------------: | :-----------------------------------: |
@@ -142,7 +142,7 @@ The enterprise components come in two plans: Pro and Premium.
 | [Row reordering](/components/data-grid/rows/#row-reorder)                                 |    ❌     |              🚧               |                  🚧                   |
 | **Selection**                                                                             |           |                               |                                       |
 | [Single row selection](/components/data-grid/selection/#single-row-selection)             |    ✅     |              ✅               |                  ✅                   |
-| [Row checkbox selection](/components/data-grid/selection/#checkbox-selection)             |    ✅     |              ✅               |                  ✅                   |
+| [Checkbox selection](/components/data-grid/selection/#checkbox-selection)             |    ✅     |              ✅               |                  ✅                   |
 | [Multiple row selection](/components/data-grid/selection/#multiple-row-selection)         |    ❌     |              ✅               |                  ✅                   |
 | [Cell range selection](/components/data-grid/selection/#range-selection)                  |    ❌     |              ❌               |                  🚧                   |
 | **Filtering**                                                                             |           |                               |                                       |
