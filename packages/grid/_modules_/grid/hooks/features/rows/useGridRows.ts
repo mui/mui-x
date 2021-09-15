@@ -126,7 +126,7 @@ export const useGridRows = (
         rowsCache.current.lastUpdateMs = Date.now();
         const { rowIds, ...rowState } = rowsCache.current.state;
         const tree = apiRef.current.groupRows
-          ? apiRef.current.groupRows(rowState.idRowsLookup)
+          ? apiRef.current.groupRows(rowState.idRowsLookup, rowIds)
           : getFlatRowTree(rowIds);
         setGridState((state) => ({ ...state, rows: { ...rowState, tree } }));
         apiRef.current.publishEvent(GridEvents.rowsSet);

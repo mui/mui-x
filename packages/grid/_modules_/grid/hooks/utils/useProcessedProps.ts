@@ -50,6 +50,8 @@ const DEFAULT_GRID_ICON_SLOTS_COMPONENTS: GridIconSlotsComponent = {
   DensityComfortableIcon: GridViewStreamIcon,
   ExportIcon: GridSaveAltIcon,
   MoreActionsIcon: GridMoreVertIcon,
+  TreeDataCollapseIcon: GridArrowUpwardIcon,
+  TreeDataExpandIcon: GridArrowDownwardIcon,
 };
 
 export const DEFAULT_GRID_SLOTS_COMPONENTS: GridSlotsComponent = {

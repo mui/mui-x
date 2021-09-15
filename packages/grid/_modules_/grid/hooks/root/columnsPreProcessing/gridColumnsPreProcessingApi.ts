@@ -1,9 +1,12 @@
-import { GridColumns} from "../../../models/colDef/gridColDef";
+import { GridColumns } from '../../../models/colDef/gridColDef';
 
 export type GridColumnsPreProcessing = (columns: GridColumns) => GridColumns;
-export type GridColumnsPreProcessingCleanup = () => void
+export type GridColumnsPreProcessingCleanup = () => void;
 
 export interface GridColumnsPreProcessingApi {
-    registerColumnPreProcessing: (columnsPreProcessing: GridColumnsPreProcessing) => GridColumnsPreProcessingCleanup,
-    applyAllColumnPreProcessing: GridColumnsPreProcessing
+  registerColumnPreProcessing: (
+    processingName: string,
+    columnsPreProcessing: GridColumnsPreProcessing,
+  ) => GridColumnsPreProcessingCleanup;
+  applyAllColumnPreProcessing: GridColumnsPreProcessing;
 }

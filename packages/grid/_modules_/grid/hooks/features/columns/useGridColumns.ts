@@ -331,8 +331,7 @@ export function useGridColumns(
       classes,
     );
 
-    const preProcessedColumns = apiRef.current.applyAllColumnPreProcessing(hydratedColumns)
-
+    const preProcessedColumns = apiRef.current.applyAllColumnPreProcessing(hydratedColumns);
     const columnState = upsertColumnsState(preProcessedColumns);
     setColumnsState(columnState);
   }, [

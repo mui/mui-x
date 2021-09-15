@@ -31,7 +31,7 @@ import {
   InternalRenderingState,
 } from '../virtualization/renderingState';
 import { getInitialPaginationState, GridPaginationState } from '../pagination/gridPaginationState';
-import {GridColumnsPreProcessing} from "../../../models/gridColumnsPreProcessing";
+import { GridTreeDataState } from '../treeData/gridTreeDataState';
 
 export interface GridState {
   rows: GridRowsState;
@@ -53,6 +53,7 @@ export interface GridState {
   visibleRows: VisibleGridRowsState;
   preferencePanel: GridPreferencePanelState;
   density: GridGridDensity;
+  treeData: GridTreeDataState;
   error?: any;
 }
 
@@ -76,4 +77,7 @@ export const getInitialGridState = (): GridState => ({
   preferencePanel: { open: false },
   visibleRows: getInitialVisibleGridRowsState(),
   density: getInitialGridDensityState(),
+  treeData: {
+    expandedRows: {},
+  },
 });

@@ -35,7 +35,7 @@ import { useGridResizeContainer } from '../../_modules_/grid/hooks/utils/useGrid
 import { useStateProp } from '../../_modules_/grid/hooks/utils/useStateProp';
 import { GridApiRef } from '../../_modules_/grid/models/api/gridApiRef';
 import { useGridTreeData } from '../../_modules_/grid/hooks/features/treeData';
-import {useGridColumnsPreProcessing} from "../../_modules_/grid/hooks/root/columnsPreProcessing";
+import { useGridColumnsPreProcessing } from '../../_modules_/grid/hooks/root/columnsPreProcessing';
 
 export const useDataGridProComponent = (apiRef: GridApiRef, props: GridComponentProps) => {
   useGridLoggerFactory(apiRef, props);
