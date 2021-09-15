@@ -6,7 +6,7 @@ import { GridLoadIcon } from '../../icons/index';
 import { GridFilterInputValueProps } from './GridFilterInputValueProps';
 import { GridColDef } from '../../../models/colDef/gridColDef';
 
-const renderSingleSelectOptions = ({ valueOptions }: GridColDef) => {
+const renderSingleSelectOptions = ({ valueOptions, valueFormatter, field }: GridColDef, api) => {
   const iterableColumnValues = valueOptions ? ['', ...valueOptions] : [''];
 
   return iterableColumnValues.map((option) =>
@@ -16,7 +16,7 @@ const renderSingleSelectOptions = ({ valueOptions }: GridColDef) => {
       </option>
     ) : (
       <option key={option} value={option}>
-        {option}
+        {valueFormatter && option !== '' ? valueFormatter({ value: option, field, api }) : option}
       </option>
     ),
   );
@@ -41,7 +41,10 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps & TextFieldPr
           SelectProps: {
             native: true,
           },
-          children: renderSingleSelectOptions(apiRef.current.getColumn(item.columnField)),
+          children: renderSingleSelectOptions(
+            apiRef.current.getColumn(item.columnField),
+            apiRef.current,
+          ),
         }
       : {};
 
@@ -57,7 +60,7 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps & TextFieldPr
       }
 
       clearTimeout(filterTimeout.current);
-      setFilterValueState(value);
+      setFilterValueState(String(value));
       setIsApplying(true);
       // TODO singleSelect doesn't a debounce
       filterTimeout.current = setTimeout(() => {
@@ -75,7 +78,7 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps & TextFieldPr
   }, []);
 
   React.useEffect(() => {
-    setFilterValueState(item.value || '');
+    setFilterValueState(String(item.value) || '');
   }, [item.value]);
 
   const InputProps = applying ? { endAdornment: <GridLoadIcon /> } : others.InputProps;
