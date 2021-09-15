@@ -1,6 +1,5 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { gridResizingColumnFieldSelector } from '../../hooks/features/columnResize/columnResizeSelector';
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
 import { filterGridColumnLookupSelector } from '../../hooks/features/filter/gridFilterSelector';
 import {
