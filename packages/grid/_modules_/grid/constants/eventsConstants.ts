@@ -292,6 +292,10 @@ export enum GridEvents {
    */
   columnsChange = 'columnsChange',
   /**
+   * Fired when a column pre-processing is changed
+   */
+  columnsPreProcessingChange = 'columnsPreProcessingChange',
+  /**
    * Fired when the sort model changes.
    * Called with a [[GridSortModelParams]] object.
    */

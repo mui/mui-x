@@ -31,6 +31,7 @@ import {
   InternalRenderingState,
 } from '../virtualization/renderingState';
 import { getInitialPaginationState, GridPaginationState } from '../pagination/gridPaginationState';
+import {GridColumnsPreProcessing} from "../../../models/gridColumnsPreProcessing";
 
 export interface GridState {
   rows: GridRowsState;

@@ -10,6 +10,8 @@ import {
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridComponentProps } from '../../../GridComponentProps';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
+import {GridColumnsPreProcessing} from "../../root/columnsPreProcessing";
+import {GridTreeDataCollapseColDef} from "./gridTreeDataCollapseColDef";
 
 const insertRowInTree = (tree: GridRowIdTree, id: GridRowId, path: string[]) => {
   if (path.length === 0) {
@@ -43,7 +45,7 @@ function getGridRowId(rowData: GridRowData, getRowId?: GridRowIdGetter): GridRow
  */
 export const useGridTreeData = (
   apiRef: GridApiRef,
-  props: Pick<GridComponentProps, 'getTreeDataPath' | 'getRowId'>,
+  props: Pick<GridComponentProps, 'treeData' | 'getTreeDataPath' | 'getRowId'>,
 ) => {
   const groupRows = React.useCallback<GridTreeDataApi['groupRows']>(
     (rowsLookup) => {
@@ -70,6 +72,21 @@ export const useGridTreeData = (
     },
     [props.getTreeDataPath],
   );
+
+  React.useEffect(() => {
+      if (!props.treeData) {
+          return
+      }
+
+      const addCollapseColumn: GridColumnsPreProcessing = (columns ) => [
+          {
+              ...GridTreeDataCollapseColDef,
+          },
+          ...columns,
+      ]
+
+      return apiRef.current.registerColumnPreProcessing(addCollapseColumn)
+  }, [])
 
   const treeDataApi: GridTreeDataApi = {
     groupRows,
