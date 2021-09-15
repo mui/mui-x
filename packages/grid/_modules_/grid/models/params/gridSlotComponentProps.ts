@@ -2,7 +2,7 @@ import { GridState } from '../../hooks/features/core/gridState';
 import { GridApiRef } from '../api/gridApiRef';
 import { GridColumns } from '../colDef/gridColDef';
 import { GridRootContainerRef } from '../gridRootContainerRef';
-import { GridRowModel } from '../gridRows';
+import { GridRowIdTree } from '../gridRows';
 
 /**
  * Object passed as React prop in the component override.
@@ -15,7 +15,7 @@ export interface GridSlotComponentProps {
   /**
    * The full set of rows.
    */
-  rows: GridRowModel[];
+  rows: GridRowIdTree;
   /**
    * The full set of columns.
    */

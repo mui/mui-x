@@ -16,14 +16,17 @@ import {
 import { useGridApiMethod } from '../../root/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { useGridState } from '../core/useGridState';
-import { getInitialGridRowState, GridRowsState } from './gridRowsState';
+import { GridRowsState } from './gridRowsState';
 import {
   gridRowCountSelector,
   gridRowsLookupSelector,
-  unorderedGridRowIdsSelector,
+  gridRowTreeSelector,
+  gridRowIdsFlatSelector,
 } from './gridRowsSelector';
 
-export type GridRowsInternalCacheState = Omit<GridRowsState, 'tree'>;
+export type GridRowsInternalCacheState = Omit<GridRowsState, 'tree'> & {
+  rowIds: GridRowId[];
+};
 
 export interface GridRowsInternalCache {
   state: GridRowsInternalCacheState;
@@ -46,15 +49,16 @@ export function convertGridRowsPropToState(
   propRowCount?: number,
   rowIdGetter?: GridRowIdGetter,
 ): GridRowsInternalCacheState {
-  const state: GridRowsState = {
-    ...getInitialGridRowState(),
+  const state: GridRowsInternalCacheState = {
+    idRowsLookup: {},
+    rowIds: [],
     totalRowCount: propRowCount && propRowCount > rows.length ? propRowCount : rows.length,
   };
 
   rows.forEach((rowData) => {
     const id = getGridRowId(rowData, rowIdGetter);
-    state.allRows.push(id);
     state.idRowsLookup[id] = rowData;
+    state.rowIds.push(id);
   });
 
   return state;
@@ -77,7 +81,11 @@ export const useGridRows = (
   const [, setGridState, forceUpdate] = useGridState(apiRef);
 
   const rowsCache = React.useRef<GridRowsInternalCache>({
-    state: getInitialGridRowState(),
+    state: {
+      idRowsLookup: {},
+      totalRowCount: 0,
+      rowIds: [],
+    },
     timeout: null,
     lastUpdateMs: null,
   });
@@ -87,7 +95,9 @@ export const useGridRows = (
       if (apiRef.current.getFlatSortedRowIds) {
         return apiRef.current.getFlatSortedRowIds().indexOf(id);
       }
-      return apiRef.current.state.rows.allRows.indexOf(id);
+
+      // TODO: Remove, getFlatSortedRowIds should always be defined
+      return gridRowIdsFlatSelector(apiRef.current.state).indexOf(id);
     },
     [apiRef],
   );
@@ -97,7 +107,9 @@ export const useGridRows = (
       if (apiRef.current.getFlatSortedRowIds) {
         return apiRef.current.getFlatSortedRowIds()[index];
       }
-      return apiRef.current.state.rows.allRows[index];
+
+      // TODO: Remove, getFlatSortedRowIds should always be defined
+      return gridRowIdsFlatSelector(apiRef.current.state)[index];
     },
     [apiRef],
   );
@@ -112,10 +124,10 @@ export const useGridRows = (
       const run = () => {
         rowsCache.current.timeout = null;
         rowsCache.current.lastUpdateMs = Date.now();
-        const rowState = rowsCache.current.state;
+        const { rowIds, ...rowState } = rowsCache.current.state;
         const tree = apiRef.current.groupRows
           ? apiRef.current.groupRows(rowState.idRowsLookup)
-          : getFlatRowTree(rowState.allRows);
+          : getFlatRowTree(rowIds);
         setGridState((state) => ({ ...state, rows: { ...rowState, tree } }));
         apiRef.current.publishEvent(GridEvents.rowsSet);
         forceUpdate();
@@ -178,7 +190,7 @@ export const useGridRows = (
       const deletedRowIds: GridRowId[] = [];
 
       const idRowsLookup = { ...rowsCache.current.state.idRowsLookup };
-      let allRows = [...rowsCache.current.state.allRows];
+      let rowIds = [...rowsCache.current.state.rowIds];
 
       uniqUpdates.forEach((partialRow, id) => {
         // eslint-disable-next-line no-underscore-dangle
@@ -191,7 +203,7 @@ export const useGridRows = (
         const oldRow = apiRef.current.getRow(id);
         if (!oldRow) {
           idRowsLookup[id] = partialRow;
-          allRows.push(id);
+          rowIds.push(id);
           return;
         }
 
@@ -199,15 +211,15 @@ export const useGridRows = (
       });
 
       if (deletedRowIds.length > 0) {
-        allRows = allRows.filter((id) => !deletedRowIds.includes(id));
+        rowIds = rowIds.filter((id) => !deletedRowIds.includes(id));
       }
 
       const totalRowCount =
-        props.rowCount && props.rowCount > allRows.length ? props.rowCount : allRows.length;
+        props.rowCount && props.rowCount > rowIds.length ? props.rowCount : rowIds.length;
 
       const state: GridRowsInternalCacheState = {
         idRowsLookup,
-        allRows,
+        rowIds,
         totalRowCount,
       };
 
@@ -216,12 +228,10 @@ export const useGridRows = (
     [apiRef, props.getRowId, props.rowCount, throttledRowsChange],
   );
 
-  const getRowModels = React.useCallback<GridRowApi['getRowModels']>(() => {
-    const allRows = unorderedGridRowIdsSelector(apiRef.current.state);
-    const idRowsLookup = gridRowsLookupSelector(apiRef.current.state);
-
-    return new Map(allRows.map((id) => [id, idRowsLookup[id]]));
-  }, [apiRef]);
+  const getRowModels = React.useCallback<GridRowApi['getRowModels']>(
+    () => gridRowTreeSelector(apiRef.current.state),
+    [apiRef],
+  );
 
   const getRowsCount = React.useCallback<GridRowApi['getRowsCount']>(
     () => gridRowCountSelector(apiRef.current.state),
@@ -229,7 +239,7 @@ export const useGridRows = (
   );
 
   const getAllRowIds = React.useCallback<GridRowApi['getAllRowIds']>(
-    () => unorderedGridRowIdsSelector(apiRef.current.state),
+    () => gridRowIdsFlatSelector(apiRef.current.state),
     [apiRef],
   );
 

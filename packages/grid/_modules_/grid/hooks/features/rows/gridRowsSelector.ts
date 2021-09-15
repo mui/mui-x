@@ -1,5 +1,5 @@
 import { createSelector } from 'reselect';
-import { GridRowId, GridRowModel } from '../../../models/gridRows';
+import { GridRowId, GridRowIdTree, GridRowModel } from '../../../models/gridRows';
 import { GridState } from '../core/gridState';
 import { GridRowsState } from './gridRowsState';
 
@@ -17,14 +17,11 @@ export const gridRowsLookupSelector = createSelector(
   (rows: GridRowsState) => rows.idRowsLookup,
 );
 
-export const unorderedGridRowIdsSelector = createSelector(
-  gridRowsStateSelector,
-  (rows: GridRowsState) => rows.allRows,
-);
-
 export const gridRowTreeSelector = createSelector(gridRowsStateSelector, (rows) => rows.tree);
 
-export const unorderedGridRowModelsSelector = createSelector(
-  gridRowsStateSelector,
-  (rows: GridRowsState) => rows.allRows.map((id) => rows.idRowsLookup[id]),
-);
+export const gridRowIdsFlatSelector = createSelector(gridRowTreeSelector, (tree) => {
+  const flattenRowIds = (nodes: GridRowIdTree): GridRowId[] =>
+    Array.from(nodes.values()).flatMap((node) => [node.id, ...flattenRowIds(node.children)]);
+
+  return flattenRowIds(tree);
+});

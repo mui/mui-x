@@ -4,11 +4,11 @@ import { GridSlotComponentProps } from '../../models/params/gridSlotComponentPro
 import { visibleGridColumnsSelector } from './columns/gridColumnsSelector';
 import { useGridSelector } from './core/useGridSelector';
 import { useGridState } from './core/useGridState';
-import { unorderedGridRowModelsSelector } from './rows/gridRowsSelector';
+import { gridRowTreeSelector } from './rows/gridRowsSelector';
 
 export const useGridSlotComponentProps = () => {
   const apiRef = useGridApiContext();
-  const rows = useGridSelector(apiRef, unorderedGridRowModelsSelector);
+  const rows = useGridSelector(apiRef, gridRowTreeSelector);
   const columns = useGridSelector(apiRef, visibleGridColumnsSelector);
   const [state] = useGridState(apiRef);
 
