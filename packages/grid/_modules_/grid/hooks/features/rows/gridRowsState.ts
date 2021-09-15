@@ -9,7 +9,7 @@ export interface GridRowsState {
 
 export const getInitialGridRowState: () => GridRowsState = () => ({
   idRowsLookup: {},
-  tree: {},
+  tree: new Map(),
   allRows: [],
   totalRowCount: 0,
 });

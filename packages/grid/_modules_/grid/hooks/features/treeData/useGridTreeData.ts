@@ -24,11 +24,12 @@ const insertRowInTree = (tree: GridRowIdTree, id: GridRowId, path: string[]) => 
   } else {
     const [nodeName, ...restPath] = path;
 
-    if (!tree.has(nodeName)) {
+    const parent = tree.get(nodeName);
+    if (!parent) {
       throw new Error(`Material-UI: Could not insert row #${id} in the tree structure.`);
     }
 
-    insertRowInTree(tree[nodeName].children, id, restPath);
+    insertRowInTree(parent.children, id, restPath);
   }
 };
 
