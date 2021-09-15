@@ -135,6 +135,30 @@ GridToolbarExport.propTypes = {
     fileName: PropTypes.string,
     utf8WithBom: PropTypes.bool,
   }),
+  printOptions: PropTypes.shape({
+    allColumns: PropTypes.bool,
+    bodyClass: PropTypes.string,
+    copyStyles: PropTypes.bool,
+    fields: PropTypes.arrayOf(PropTypes.string),
+    fileName: PropTypes.string,
+    hideFooter: PropTypes.bool,
+    hideToolbar: PropTypes.bool,
+    pageStyle: PropTypes.oneOfType([
+      PropTypes.shape({
+        '__@hasInstance@178': PropTypes.func.isRequired,
+        apply: PropTypes.func.isRequired,
+        arguments: PropTypes.any.isRequired,
+        bind: PropTypes.func.isRequired,
+        call: PropTypes.func.isRequired,
+        caller: PropTypes.object.isRequired,
+        length: PropTypes.number.isRequired,
+        name: PropTypes.string.isRequired,
+        prototype: PropTypes.any.isRequired,
+        toString: PropTypes.func.isRequired,
+      }),
+      PropTypes.string,
+    ]),
+  }),
 } as any;
 
 export { GridToolbarExport };
