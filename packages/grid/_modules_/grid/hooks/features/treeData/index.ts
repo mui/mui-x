@@ -1,2 +1,2 @@
 export * from './useGridTreeData';
-export * from './GridTreeDataApi';
+export * from './gridTreeDataApi';

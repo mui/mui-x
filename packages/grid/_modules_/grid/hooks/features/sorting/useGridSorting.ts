@@ -27,7 +27,7 @@ import {
   gridSortedRowIdsFlatSelector,
   gridSortedRowsSelector,
 } from './gridSortingSelector';
-import { gridRowTreeSelector } from '../rows';
+import { gridRowExpandedTreeSelector } from '../rows';
 import { GridSortedRowsIdTreeNode } from './gridSortingState';
 
 /**
@@ -151,8 +151,7 @@ export const useGridSorting = (
   );
 
   const applySorting = React.useCallback(() => {
-    const unsortedRowTree = gridRowTreeSelector(apiRef.current.state);
-
+    const unsortedRowTree = gridRowExpandedTreeSelector(apiRef.current.state);
     const skipServerSorting = props.sortingMode === GridFeatureModeConstant.server;
 
     if (skipServerSorting) {

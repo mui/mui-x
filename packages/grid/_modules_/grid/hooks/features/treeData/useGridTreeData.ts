@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridTreeDataApi } from './GridTreeDataApi';
+import { GridTreeDataApi } from './gridTreeDataApi';
 import {
   GridRowData,
   GridRowId,
@@ -12,9 +12,6 @@ import { GridComponentProps } from '../../../GridComponentProps';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
 import { GridColumnsPreProcessing } from '../../root/columnsPreProcessing';
 import { GridTreeDataToggleExpansionColDef } from './gridTreeDataToggleExpansionColDef';
-import { useGridState } from '../core';
-import { useGridLogger } from '../../utils';
-import { gridTreeDataExpandedRowsSelector } from './treeDataSelector';
 
 const insertRowInTree = (tree: GridRowIdTree, id: GridRowId, path: string[]) => {
   if (path.length === 0) {
@@ -50,17 +47,19 @@ export const useGridTreeData = (
   apiRef: GridApiRef,
   props: Pick<GridComponentProps, 'treeData' | 'getTreeDataPath' | 'getRowId'>,
 ) => {
-  const logger = useGridLogger(apiRef, 'useGridTreeData');
-  const [, setGridState, forceUpdate] = useGridState(apiRef);
-
   const groupRows = React.useCallback<GridTreeDataApi['groupRows']>(
     (rowsLookup, rowIds) => {
       if (!props.treeData) {
-        return new Map<string, GridRowIdTreeNode>(rowIds.map((id) => [id.toString(), { id, children: new Map() }]),)
+        return {
+          tree: new Map<string, GridRowIdTreeNode>(
+            rowIds.map((id) => [id.toString(), { id, children: new Map() }]),
+          ),
+          paths: Object.fromEntries(rowIds.map((id) => [id, [id.toString()]])),
+        };
       }
 
-      if (!props.getTreeDataPath ) {
-          throw new Error('Material-UI: No getTreeDataPath given to create the tree data.');
+      if (!props.getTreeDataPath) {
+        throw new Error('Material-UI: No getTreeDataPath given.');
       }
 
       const rows = Object.values(rowsLookup)
@@ -74,42 +73,22 @@ export const useGridTreeData = (
         })
         .sort((a, b) => a.path.length - b.path.length);
 
+      const paths = Object.fromEntries(rows.map((row) => [row.id, row.path]));
       const tree = new Map<string, GridRowIdTreeNode>();
       rows.forEach((row) => {
         insertRowInTree(tree, row.id, row.path);
       });
 
-      return tree;
+      return {
+        tree,
+        paths,
+      };
     },
-    [props.getTreeDataPath, props.getRowId],
-  );
-
-  const toggleTreeDataRow = React.useCallback<GridTreeDataApi['toggleTreeDataRow']>(
-    (id) => {
-      logger.debug(`Toggle tree data row #${id}`);
-      setGridState((state) => ({
-        ...state,
-        treeData: {
-          expandedRows: {
-            ...state.treeData.expandedRows,
-            [id]: !state.treeData.expandedRows[id],
-          },
-        },
-      }));
-      forceUpdate();
-    },
-    [setGridState, forceUpdate, logger],
-  );
-
-  const isTreeDataRowExpanded = React.useCallback<GridTreeDataApi['isTreeDataRowExpanded']>(
-    (id) => !!gridTreeDataExpandedRowsSelector(apiRef.current.state)[id],
-    [apiRef],
+    [props.getTreeDataPath, props.getRowId, props.treeData],
   );
 
   const treeDataApi: GridTreeDataApi = {
     groupRows,
-    toggleTreeDataRow,
-    isTreeDataRowExpanded,
   };
 
   useGridApiMethod(apiRef, treeDataApi, 'GridTreeDataApi');

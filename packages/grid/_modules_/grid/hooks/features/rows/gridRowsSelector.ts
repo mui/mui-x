@@ -19,6 +19,27 @@ export const gridRowsLookupSelector = createSelector(
 
 export const gridRowTreeSelector = createSelector(gridRowsStateSelector, (rows) => rows.tree);
 
+export const gridRowExpandedTreeSelector = createSelector(gridRowTreeSelector, (rowsTree) => {
+  const removeCollapsedNodes = (tree: GridRowIdTree) => {
+    const treeWithoutCollapsedChildren: GridRowIdTree = new Map();
+
+    tree.forEach((node, id) => {
+      const children: GridRowIdTree = node.expanded
+        ? removeCollapsedNodes(node.children)
+        : new Map();
+
+      treeWithoutCollapsedChildren.set(id, {
+        ...node,
+        children,
+      });
+    });
+
+    return treeWithoutCollapsedChildren;
+  };
+
+  return removeCollapsedNodes(rowsTree);
+});
+
 export const gridRowIdsFlatSelector = createSelector(gridRowTreeSelector, (tree) => {
   const flattenRowIds = (nodes: GridRowIdTree): GridRowId[] =>
     Array.from(nodes.values()).flatMap((node) => [node.id, ...flattenRowIds(node.children)]);

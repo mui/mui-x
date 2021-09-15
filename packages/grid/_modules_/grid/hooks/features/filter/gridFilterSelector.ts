@@ -1,6 +1,6 @@
 import { createSelector } from 'reselect';
 import { GridFilterItem } from '../../../models/gridFilterItem';
-import { GridRowId } from '../../../models/gridRows';
+import { GridRowId, GridRowModel } from '../../../models/gridRows';
 import { GridState } from '../core/gridState';
 import { gridRowCountSelector } from '../rows/gridRowsSelector';
 import { gridSortedRowsSelector } from '../sorting/gridSortingSelector';
@@ -32,9 +32,19 @@ export const gridSortedVisibleRowsSelector = createSelector(
   },
 );
 
-export const visibleSortedGridRowsAsArraySelector = createSelector(
+export const gridSortedVisibleRowsFlatSelector = createSelector(
   gridSortedVisibleRowsSelector,
-  (visibleSortedRows) => [...visibleSortedRows.entries()],
+  (rows) => {
+    const flattenRowIds = (
+      nodes: Map<GridRowId, GridSortedRowsTreeNode>,
+    ): { id: GridRowId; node: GridRowModel }[] =>
+      Array.from(nodes.entries()).flatMap(([id, row]) => [
+        { id, node: row.node },
+        ...flattenRowIds(row.children),
+      ]);
+
+    return flattenRowIds(rows);
+  },
 );
 
 export const visibleSortedGridRowIdsSelector = createSelector(

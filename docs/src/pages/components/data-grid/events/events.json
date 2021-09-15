@@ -93,6 +93,10 @@
     "description": "Fired when the columns state is changed.\nCalled with an array of strings corresponding to the field names."
   },
   {
+    "name": "columnsPreProcessingChange",
+    "description": "Fired when a column pre-processing is changed"
+  },
+  {
     "name": "columnVisibilityChange",
     "description": "Fired when a column visibility changes. Called with a GridColumnVisibilityChangeParams object."
   },

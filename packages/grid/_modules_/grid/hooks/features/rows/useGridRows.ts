@@ -10,8 +10,9 @@ import {
   GridRowsProp,
   GridRowIdGetter,
   GridRowData,
-  GridRowIdTree,
   GridRowIdTreeNode,
+  GridRowGroupingResult,
+  GridRowIdTree,
 } from '../../../models/gridRows';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
@@ -24,7 +25,7 @@ import {
   gridRowIdsFlatSelector,
 } from './gridRowsSelector';
 
-export type GridRowsInternalCacheState = Omit<GridRowsState, 'tree'> & {
+export type GridRowsInternalCacheState = Omit<GridRowsState, 'tree' | 'paths'> & {
   rowIds: GridRowId[];
 };
 
@@ -64,10 +65,43 @@ export function convertGridRowsPropToState(
   return state;
 }
 
-const getFlatRowTree = (rowIds: GridRowId[]): GridRowIdTree =>
-  new Map<string, GridRowIdTreeNode>(
+const getFlatRowTree = (rowIds: GridRowId[]): GridRowGroupingResult => ({
+  tree: new Map<string, GridRowIdTreeNode>(
     rowIds.map((id) => [id.toString(), { id, children: new Map() }]),
-  );
+  ),
+  paths: Object.fromEntries(rowIds.map((id) => [id, [id.toString()]])),
+});
+
+const setRowExpansionInTree = (
+  id: GridRowId,
+  tree: GridRowIdTree,
+  path: string[],
+  isExpanded: boolean,
+) => {
+  if (path.length === 0) {
+    throw new Error(`Material-UI: Invalid path for row #${id}.`);
+  }
+
+  const clonedMap = new Map(tree.entries());
+  const [nodeName, ...restPath] = path;
+  const nodeBefore = clonedMap.get(nodeName);
+
+  if (!nodeBefore) {
+    throw new Error(`Material-UI: Invalid path for row #${id}.`);
+  }
+
+  if (restPath.length === 0) {
+    clonedMap.set(nodeName, { ...nodeBefore, expanded: isExpanded });
+  } else {
+    clonedMap.set(nodeName, {
+      ...nodeBefore,
+      expanded: nodeBefore.expanded || isExpanded,
+      children: setRowExpansionInTree(id, nodeBefore.children, restPath, isExpanded),
+    });
+  }
+
+  return clonedMap;
+};
 
 /**
  * @requires useGridSorting (method)
@@ -125,10 +159,10 @@ export const useGridRows = (
         rowsCache.current.timeout = null;
         rowsCache.current.lastUpdateMs = Date.now();
         const { rowIds, ...rowState } = rowsCache.current.state;
-        const tree = apiRef.current.groupRows
+        const { tree, paths } = apiRef.current.groupRows
           ? apiRef.current.groupRows(rowState.idRowsLookup, rowIds)
           : getFlatRowTree(rowIds);
-        setGridState((state) => ({ ...state, rows: { ...rowState, tree } }));
+        setGridState((state) => ({ ...state, rows: { ...rowState, tree, paths } }));
         apiRef.current.publishEvent(GridEvents.rowsSet);
         forceUpdate();
       };
@@ -243,6 +277,59 @@ export const useGridRows = (
     [apiRef],
   );
 
+  const setRowExpansion = React.useCallback<GridRowApi['setRowExpansion']>(
+    (id, isExpanded) => {
+      setGridState((state) => {
+        const path = state.rows.paths[id];
+
+        return {
+          ...state,
+          rows: {
+            ...state.rows,
+            tree: setRowExpansionInTree(id, state.rows.tree, path, isExpanded),
+          },
+        };
+      });
+      forceUpdate();
+      apiRef.current.publishEvent(GridEvents.rowsSet);
+    },
+    [apiRef, setGridState, forceUpdate],
+  );
+
+  const isRowExpanded = React.useCallback<GridRowApi['isRowExpanded']>(
+    (id) => {
+      const getNodeFromTree = (tree: GridRowIdTree, path: string[]): GridRowIdTreeNode => {
+        if (path.length === 0) {
+          throw new Error(`Material-UI: No row with id #${id} found in row tree`);
+        }
+
+        const [nodeName, ...restPath] = path;
+        const node = tree.get(nodeName);
+
+        if (!node) {
+          throw new Error(`Material-UI: No row with id #${id} found in row tree`);
+        }
+
+        if (restPath.length === 0) {
+          return node;
+        }
+
+        return getNodeFromTree(node.children, restPath);
+      };
+
+      const path = apiRef.current.state.rows.paths[id];
+
+      if (!path) {
+        throw new Error(`Material-UI: No row with id #${id} found in row path list`);
+      }
+
+      const node = getNodeFromTree(apiRef.current.getRowModels(), path);
+
+      return !!node.expanded;
+    },
+    [apiRef],
+  );
+
   React.useEffect(() => {
     return () => {
       if (rowsCache.current.timeout !== null) {
@@ -269,6 +356,8 @@ export const useGridRows = (
     getAllRowIds,
     setRows,
     updateRows,
+    setRowExpansion,
+    isRowExpanded,
   };
 
   useGridApiMethod(apiRef, rowApi, 'GridRowApi');

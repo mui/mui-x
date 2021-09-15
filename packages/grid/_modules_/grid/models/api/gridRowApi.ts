@@ -47,4 +47,15 @@ export interface GridRowApi {
    * @returns {GridRowModel} The row data.
    */
   getRow: (id: GridRowId) => GridRowModel | null;
+  /**
+   * @param {GridRowId} id the ID of the row to toggle
+   * @param {boolean} isExpanded A boolean indicating if the row must be expanded
+   */
+  setRowExpansion: (id: GridRowId, isExpanded: boolean) => void;
+  /**
+   * Determines if a row is expanded or not.
+   * @param {GridRowId} id The id of the row.
+   * @returns {boolean} A boolean indicating if the row is expanded.
+   */
+  isRowExpanded: (id: GridRowId) => boolean;
 }

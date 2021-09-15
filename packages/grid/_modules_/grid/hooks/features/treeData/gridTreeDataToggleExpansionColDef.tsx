@@ -10,13 +10,14 @@ import { GridRowId } from '../../../models/gridRows';
 const TreeDataToggleIcon = ({ id }: { id: GridRowId }) => {
   const rootProps = useGridRootProps();
   const apiRef = useGridApiContext();
+  const isExpanded = apiRef.current.isRowExpanded(id);
 
-  const Icon = apiRef.current.isTreeDataRowExpanded!(id)
+  const Icon = isExpanded
     ? rootProps.components.TreeDataCollapseIcon
     : rootProps.components.TreeDataExpandIcon;
 
   return (
-    <IconButton size="small" onClick={() => apiRef.current.toggleTreeDataRow!(id)}>
+    <IconButton size="small" onClick={() => apiRef.current.setRowExpansion(id, !isExpanded)}>
       <Icon />
     </IconButton>
   );
@@ -31,7 +32,5 @@ export const GridTreeDataToggleExpansionColDef: GridColDef = {
   disableReorder: true,
   valueGetter: () => true,
   renderHeader: () => 'Header',
-  renderCell: (params) => {
-    return <TreeDataToggleIcon id={params.id} />;
-  },
+  renderCell: (params) => <TreeDataToggleIcon id={params.id} />,
 };

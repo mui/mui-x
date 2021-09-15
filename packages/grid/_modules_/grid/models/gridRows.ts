@@ -15,9 +15,15 @@ export interface GridRowModelUpdate extends GridRowData {
 export interface GridRowIdTreeNode {
   id: GridRowId;
   children: GridRowIdTree;
+  expanded?: boolean;
 }
 
 export type GridRowIdTree = Map<string, GridRowIdTreeNode>;
+
+export interface GridRowGroupingResult {
+  tree: GridRowIdTree;
+  paths: Record<GridRowId, string[]>;
+}
 
 /**
  * The type of Id supported by the grid.

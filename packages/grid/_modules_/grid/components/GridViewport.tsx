@@ -2,7 +2,7 @@ import * as React from 'react';
 import { visibleGridColumnsSelector } from '../hooks/features/columns/gridColumnsSelector';
 import { useGridSelector } from '../hooks/features/core/useGridSelector';
 import { gridDensityRowHeightSelector } from '../hooks/features/density/densitySelector';
-import { visibleSortedGridRowsAsArraySelector } from '../hooks/features/filter/gridFilterSelector';
+import { gridSortedVisibleRowsFlatSelector } from '../hooks/features/filter/gridFilterSelector';
 import {
   gridFocusCellSelector,
   gridTabIndexCellSelector,
@@ -38,7 +38,7 @@ export const GridViewport: ViewportType = React.forwardRef<HTMLDivElement, {}>(
     const cellFocus = useGridSelector(apiRef, gridFocusCellSelector);
     const cellTabIndex = useGridSelector(apiRef, gridTabIndexCellSelector);
     const selection = useGridSelector(apiRef, gridSelectionStateSelector);
-    const visibleSortedRowsAsArray = useGridSelector(apiRef, visibleSortedGridRowsAsArraySelector);
+    const visibleSortedRows = useGridSelector(apiRef, gridSortedVisibleRowsFlatSelector);
     const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
     const editRowsState = useGridSelector(apiRef, gridEditRowsStateSelector);
 
@@ -64,24 +64,24 @@ export const GridViewport: ViewportType = React.forwardRef<HTMLDivElement, {}>(
         return null;
       }
 
-      const renderedRows = visibleSortedRowsAsArray.slice(
+      const renderedRows = visibleSortedRows.slice(
         renderState.renderContext.firstRowIdx,
         renderState.renderContext.lastRowIdx!,
       );
 
       // TODO: Add tree children
-      return renderedRows.map(([id, row], idx) => (
+      return renderedRows.map((row, idx) => (
         <GridRow
-          key={id}
-          id={id}
-          selected={selectionLookup[id] !== undefined}
+          key={row.id}
+          id={row.id}
+          selected={selectionLookup[row.id] !== undefined}
           rowIndex={renderState.renderContext!.firstRowIdx! + idx}
         >
           <GridEmptyCell width={renderState.renderContext!.leftEmptyWidth} height={rowHeight} />
           <GridRowCells
             columns={visibleColumns}
             row={row.node}
-            id={id}
+            id={row.id}
             height={rowHeight}
             firstColIdx={renderState.renderContext!.firstColIdx!}
             lastColIdx={renderState.renderContext!.lastColIdx!}
@@ -92,8 +92,8 @@ export const GridViewport: ViewportType = React.forwardRef<HTMLDivElement, {}>(
             rowIndex={renderState.renderContext!.firstRowIdx! + idx}
             cellFocus={cellFocus}
             cellTabIndex={cellTabIndex}
-            isSelected={selectionLookup[id] !== undefined}
-            editRowState={editRowsState[id]}
+            isSelected={selectionLookup[row.id] !== undefined}
+            editRowState={editRowsState[row.id]}
             getCellClassName={rootProps.getCellClassName}
           />
           <GridEmptyCell width={renderState.renderContext!.rightEmptyWidth} height={rowHeight} />
