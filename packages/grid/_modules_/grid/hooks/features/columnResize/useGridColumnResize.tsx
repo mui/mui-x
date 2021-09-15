@@ -11,12 +11,19 @@ import {
   getFieldFromHeaderElem,
   findHeaderElementFromField,
 } from '../../../utils/domUtils';
-import { GridApiRef, CursorCoordinates, GridColumnHeaderParams } from '../../../models';
+import {
+  GridApiRef,
+  CursorCoordinates,
+  GridColumnHeaderParams,
+  GridSlotsComponentsProps,
+} from '../../../models';
 import { useGridApiEventHandler, useGridApiOptionHandler } from '../../root/useGridApiEventHandler';
 import { useGridState } from '../core/useGridState';
 import { useNativeEventListener } from '../../root/useNativeEventListener';
 import { GridComponentProps } from '../../../GridComponentProps';
 import { useGridStateInit } from '../../utils/useGridStateInit';
+import { useGridSelector } from '../core';
+import { gridResizingColumnFieldSelector } from './columnResizeSelector';
 
 // TODO: remove support for Safari < 13.
 // https://caniuse.com/#search=touch-action
@@ -66,10 +73,7 @@ function trackFinger(event, currentTouchId): CursorCoordinates | boolean {
  * @requires useGridColumns (method, event)
  * TODO: improve experience for last column
  */
-export const useGridColumnResize = (
-  apiRef: GridApiRef,
-  props: Pick<GridComponentProps, 'onColumnResize' | 'onColumnWidthChange'>,
-) => {
+export const useGridColumnResize = (apiRef: GridApiRef, props: GridComponentProps) => {
   const logger = useGridLogger(apiRef, 'useGridColumnResize');
 
   useGridStateInit(apiRef, (state) => ({
@@ -83,6 +87,7 @@ export const useGridColumnResize = (
   const initialOffset = React.useRef<number>();
   const stopResizeEventTimeout = React.useRef<any>();
   const touchId = React.useRef<number>();
+  const resizingColumnField = useGridSelector(apiRef, gridResizingColumnFieldSelector);
 
   const updateWidth = (newWidth: number) => {
     logger.debug(`Updating width to ${newWidth} for col ${colDefRef.current!.field}`);
@@ -346,4 +351,23 @@ export const useGridColumnResize = (
 
   useGridApiOptionHandler(apiRef, GridEvents.columnResize, props.onColumnResize);
   useGridApiOptionHandler(apiRef, GridEvents.columnWidthChange, props.onColumnWidthChange);
+
+  const componentsProps = React.useMemo<GridSlotsComponentsProps>(
+    () => ({
+      ...props.componentsProps,
+      columnsHeader: {
+        ...props.componentsProps?.columnsHeader,
+        resizeCol: resizingColumnField,
+      },
+    }),
+    [props.componentsProps, resizingColumnField],
+  );
+
+  return React.useMemo(
+    () => ({
+      ...props,
+      componentsProps,
+    }),
+    [props, componentsProps],
+  );
 };

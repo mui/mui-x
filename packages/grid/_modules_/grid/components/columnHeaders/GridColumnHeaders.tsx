@@ -34,6 +34,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 
 export interface GridColumnsHeaderProps {
   dragCol?: string;
+  resizeCol?: string;
 }
 
 export const GridColumnsHeader = React.forwardRef<HTMLDivElement, GridColumnsHeaderProps>(
@@ -67,7 +68,11 @@ export const GridColumnsHeader = React.forwardRef<HTMLDivElement, GridColumnsHea
           style={{ minWidth: containerSizes?.totalSizes?.width }}
         >
           <GridEmptyCell width={renderCtx?.leftEmptyWidth} height={headerHeight} />
-          <GridColumnHeadersItemCollection columns={renderedCols} dragCol={props.dragCol} />
+          <GridColumnHeadersItemCollection
+            columns={renderedCols}
+            dragCol={props.dragCol}
+            resizeCol={props.resizeCol}
+          />
           <GridEmptyCell width={renderCtx?.rightEmptyWidth} height={headerHeight} />
         </div>
         <GridScrollArea scrollDirection="right" />

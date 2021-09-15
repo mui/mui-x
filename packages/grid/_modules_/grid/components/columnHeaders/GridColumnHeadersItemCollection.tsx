@@ -21,14 +21,14 @@ import { gridScrollBarSizeSelector } from '../../hooks/root/gridContainerSizesSe
 export interface GridColumnHeadersItemCollectionProps {
   columns: GridStateColDef[];
   dragCol?: string;
+  resizeCol?: string;
 }
 
 function GridColumnHeadersItemCollection(props: GridColumnHeadersItemCollectionProps) {
-  const { columns } = props;
+  const { columns, dragCol, resizeCol } = props;
   const apiRef = useGridApiContext();
   const sortColumnLookup = useGridSelector(apiRef, gridSortColumnLookupSelector);
   const filterColumnLookup = useGridSelector(apiRef, filterGridColumnLookupSelector);
-  const resizingColumnField = useGridSelector(apiRef, gridResizingColumnFieldSelector);
   const columnHeaderFocus = useGridSelector(apiRef, gridFocusColumnHeaderSelector);
   const renderCtx = useGridSelector(apiRef, gridRenderingSelector).renderContext;
   const tabIndexState = useGridSelector(apiRef, gridTabIndexColumnHeaderSelector);
@@ -65,10 +65,10 @@ function GridColumnHeadersItemCollection(props: GridColumnHeadersItemCollectionP
         columnMenuOpen={open}
         filterItemsCounter={filterColumnLookup[col.field] && filterColumnLookup[col.field].length}
         headerHeight={headerHeight}
-        isDragging={col.field === props.dragCol}
+        isDragging={col.field === dragCol}
         column={col}
         colIndex={colIndex}
-        isResizing={resizingColumnField === col.field}
+        isResizing={resizeCol === col.field}
         isLastColumn={colIndex === columns.length - 1}
         extendRowFullWidth={!rootProps.disableExtendRowFullWidth}
         hasScrollX={scrollBarState.hasScrollX}
