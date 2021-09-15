@@ -44,7 +44,7 @@
     },
     {
       "name": "setEditRowsModel",
-      "description": "Set sthe edit rows model of the grid.",
+      "description": "Set the edit rows model of the grid.",
       "type": "(model: GridEditRowsModel) => void"
     },
     {
