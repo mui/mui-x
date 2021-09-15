@@ -8,7 +8,7 @@ import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
 import { GridPageApi } from '../../../models/api/gridPageApi';
 import { GridPaginationState } from './gridPaginationState';
-import { visibleGridRowCountSelector } from '../filter';
+import { gridVisibleRowCountSelector } from '../filter';
 
 const getPageCount = (rowCount: number, pageSize: number): number => {
   if (pageSize > 0 && rowCount > 0) {
@@ -40,7 +40,7 @@ export const useGridPage = (
 ) => {
   const logger = useGridLogger(apiRef, 'useGridPage');
   const [, setGridState, forceUpdate] = useGridState(apiRef);
-  const visibleRowCount = useGridSelector(apiRef, visibleGridRowCountSelector);
+  const visibleRowCount = useGridSelector(apiRef, gridVisibleRowCountSelector);
 
   const setPage = React.useCallback(
     (page: number) => {

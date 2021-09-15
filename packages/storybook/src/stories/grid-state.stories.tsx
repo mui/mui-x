@@ -111,8 +111,7 @@ export function InitialState() {
   const [gridState, setGridState] = React.useState<Partial<GridState>>({
     sorting: {
       sortModel: [{ field: 'brand', sort: 'desc' }],
-      sortedRows: [2, 0, 1],
-      sortedRowTree: [
+      sortedRows: [
         { id: 2, children: [] },
         { id: 0, children: [] },
         { id: 1, children: [] },

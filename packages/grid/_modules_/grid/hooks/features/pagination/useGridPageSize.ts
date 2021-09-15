@@ -6,7 +6,7 @@ import { useGridApiMethod } from '../../root';
 import { GridEvents } from '../../../constants/eventsConstants';
 import { useGridLogger } from '../../utils';
 import { useGridSelector, useGridState } from '../core';
-import { visibleGridRowCountSelector } from '../filter';
+import { gridVisibleRowCountSelector } from '../filter';
 import { gridContainerSizesSelector } from '../../root/gridContainerSizesSelector';
 
 /**
@@ -20,7 +20,7 @@ export const useGridPageSize = (
 ) => {
   const logger = useGridLogger(apiRef, 'useGridPageSize');
   const [, setGridState, forceUpdate] = useGridState(apiRef);
-  const visibleRowCount = useGridSelector(apiRef, visibleGridRowCountSelector);
+  const visibleRowCount = useGridSelector(apiRef, gridVisibleRowCountSelector);
   const containerSizes = useGridSelector(apiRef, gridContainerSizesSelector);
 
   const setPageSize = React.useCallback(

@@ -7,7 +7,7 @@ import { GridCellValue } from '../../../models/gridCell';
 import { GridColDef } from '../../../models/colDef/gridColDef';
 import { GridFeatureModeConstant } from '../../../models/gridFeatureMode';
 import { GridColumnHeaderParams } from '../../../models/params/gridColumnHeaderParams';
-import { GridRowId, GridRowModel, GridRowIdTree } from '../../../models/gridRows';
+import { GridRowId, GridRowIdTree } from '../../../models/gridRows';
 import {
   GridFieldComparatorList,
   GridSortItem,
@@ -22,7 +22,11 @@ import { useGridApiMethod } from '../../root/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { allGridColumnsSelector } from '../columns/gridColumnsSelector';
 import { useGridState } from '../core/useGridState';
-import { sortedGridRowIdsSelector, gridSortedRowsSelector } from './gridSortingSelector';
+import {
+  gridSortedRowIdsSelector,
+  gridSortedRowIdsFlatSelector,
+  gridSortedRowsSelector,
+} from './gridSortingSelector';
 import { gridRowTreeSelector } from '../rows';
 import { GridSortedRowsIdTreeNode } from './gridSortingState';
 
@@ -147,57 +151,42 @@ export const useGridSorting = (
   );
 
   const applySorting = React.useCallback(() => {
-    const unsortedRows = apiRef.current.getAllRowIds();
     const unsortedRowTree = gridRowTreeSelector(apiRef.current.state);
 
-    if (props.sortingMode === GridFeatureModeConstant.server) {
+    const skipServerSorting = props.sortingMode === GridFeatureModeConstant.server;
+
+    if (skipServerSorting) {
       logger.debug('Skipping sorting rows as sortingMode = server');
     }
 
     const sortModel = apiRef.current.state.sorting.sortModel;
     const comparatorList = buildComparatorList(sortModel);
-
-    // List sorting
-    // TODO: Remove
-    let sortedRows: GridRowId[];
-    if (sortModel.length > 0 && props.sortingMode === GridFeatureModeConstant.client) {
-      logger.debug('Sorting rows with ', sortModel);
-      sortedRows = unsortedRows
-        .map((id) => {
-          return comparatorList.map((colComparator) => {
-            return getSortCellParams(id, colComparator.field);
-          });
-        })
-        .sort(comparatorListAggregate(comparatorList))
-        .map((field) => field[0].id);
-    } else {
-      sortedRows = unsortedRows;
-    }
-
-    // Tree sorting
     const aggregatedComparator = comparatorListAggregate(comparatorList);
 
     const sortRowTree = (tree: GridRowIdTree): GridSortedRowsIdTreeNode[] => {
-      return Object.entries(tree)
-        .map(([name, value]) => {
-          const params = comparatorList.map((colComparator) =>
-            getSortCellParams(value.id, colComparator.field),
-          );
+      const rowsWithParams = Array.from(tree.entries()).map(([name, value]) => {
+        const params = comparatorList.map((colComparator) =>
+          getSortCellParams(value.id, colComparator.field),
+        );
 
-          return { value, name, params };
-        })
-        .sort((a, b) => aggregatedComparator(a.params, b.params))
-        .map((node) => ({
-          id: node.value.id,
-          children: sortRowTree(node.value.children),
-        }));
+        return { value, name, params };
+      });
+
+      const sortedRowsWithParams = skipServerSorting
+        ? rowsWithParams
+        : rowsWithParams.sort((a, b) => aggregatedComparator(a.params, b.params));
+
+      return sortedRowsWithParams.map((node) => ({
+        id: node.value.id,
+        children: sortRowTree(node.value.children),
+      }));
     };
-    const sortedRowTree = sortRowTree(unsortedRowTree);
+    const sortedRows = sortRowTree(unsortedRowTree);
 
     setGridState((state) => {
       return {
         ...state,
-        sorting: { ...state.sorting, sortedRows, sortedRowTree },
+        sorting: { ...state.sorting, sortedRows },
       };
     });
     forceUpdate();
@@ -245,13 +234,18 @@ export const useGridSorting = (
     [gridState.sorting.sortModel],
   );
 
-  const getSortedRows = React.useCallback(
-    (): GridRowModel[] => Object.values(gridSortedRowsSelector(apiRef.current.state)),
+  const getSortedRows = React.useCallback<GridSortApi['getSortedRows']>(
+    () => gridSortedRowsSelector(apiRef.current.state),
     [apiRef],
   );
 
-  const getSortedRowIds = React.useCallback(
-    (): GridRowId[] => sortedGridRowIdsSelector(apiRef.current.state),
+  const getSortedRowIds = React.useCallback<GridSortApi['getSortedRowIds']>(
+    () => gridSortedRowIdsSelector(apiRef.current.state),
+    [apiRef],
+  );
+
+  const getFlatSortedRowIds = React.useCallback<GridSortApi['getFlatSortedRowIds']>(
+    () => gridSortedRowIdsFlatSelector(apiRef.current.state),
     [apiRef],
   );
 
@@ -259,6 +253,7 @@ export const useGridSorting = (
     getSortModel,
     getSortedRows,
     getSortedRowIds,
+    getFlatSortedRowIds,
     setSortModel,
     sortColumn,
     applySorting,

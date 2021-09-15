@@ -1,6 +1,10 @@
 import { GridColDef } from '../colDef/gridColDef';
-import { GridRowId, GridRowModel } from '../gridRows';
+import { GridRowId } from '../gridRows';
 import { GridSortDirection, GridSortModel } from '../gridSortModel';
+import {
+  GridSortedRowsIdTreeNode,
+  GridSortedRowsTreeNode,
+} from '../../hooks/features/sorting/gridSortingState';
 
 /**
  * The sort API interface that is available in the grid [[apiRef]].
@@ -33,12 +37,17 @@ export interface GridSortApi {
   ) => void;
   /**
    * Returns all rows sorted according to the active sort model.
-   * @returns {GridRowModel[]} The sorted [[GridRowModel]] objects.
+   * @returns {Map<GridRowId, GridSortedRowsTreeNode>} The sorted [[GridRowModel]] objects.
    */
-  getSortedRows: () => GridRowModel[];
+  getSortedRows: () => Map<GridRowId, GridSortedRowsTreeNode>;
+  /**
+   * Returns all row ids sorted according to the active sort model.
+   * @returns {GridSortedRowsIdTreeNode[]} The sorted [[GridRowId]] values.
+   */
+  getSortedRowIds: () => GridSortedRowsIdTreeNode[];
   /**
    * Returns all row ids sorted according to the active sort model.
    * @returns {GridRowId[]} The sorted [[GridRowId]] values.
    */
-  getSortedRowIds: () => GridRowId[];
+  getFlatSortedRowIds: () => GridRowId[];
 }

@@ -11,6 +11,7 @@ import {
   GridRowIdGetter,
   GridRowData,
   GridRowIdTree,
+  GridRowIdTreeNode,
 } from '../../../models/gridRows';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
@@ -60,7 +61,9 @@ export function convertGridRowsPropToState(
 }
 
 const getFlatRowTree = (rowIds: GridRowId[]): GridRowIdTree =>
-  Object.fromEntries(rowIds.map((id) => [id, { id, children: {} }]));
+  new Map<string, GridRowIdTreeNode>(
+    rowIds.map((id) => [id.toString(), { id, children: new Map() }]),
+  );
 
 /**
  * @requires useGridSorting (method)
@@ -81,8 +84,8 @@ export const useGridRows = (
 
   const getRowIndex = React.useCallback<GridRowApi['getRowIndex']>(
     (id) => {
-      if (apiRef.current.getSortedRowIds) {
-        return apiRef.current.getSortedRowIds().indexOf(id);
+      if (apiRef.current.getFlatSortedRowIds) {
+        return apiRef.current.getFlatSortedRowIds().indexOf(id);
       }
       return apiRef.current.state.rows.allRows.indexOf(id);
     },
@@ -91,8 +94,8 @@ export const useGridRows = (
 
   const getRowIdFromRowIndex = React.useCallback<GridRowApi['getRowIdFromRowIndex']>(
     (index) => {
-      if (apiRef.current.getSortedRowIds) {
-        return apiRef.current.getSortedRowIds()[index];
+      if (apiRef.current.getFlatSortedRowIds) {
+        return apiRef.current.getFlatSortedRowIds()[index];
       }
       return apiRef.current.state.rows.allRows[index];
     },

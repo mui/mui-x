@@ -17,7 +17,7 @@ export interface GridRowIdTreeNode {
   children: GridRowIdTree;
 }
 
-export type GridRowIdTree = { [nodeName: string]: GridRowIdTreeNode };
+export type GridRowIdTree = Map<string, GridRowIdTreeNode>;
 
 /**
  * The type of Id supported by the grid.

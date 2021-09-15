@@ -419,6 +419,7 @@ describe('<DataGridPro /> - Edit Rows', () => {
     fireEvent.keyDown(input, { key: 'Enter' });
     expect(cell).not.to.have.class('MuiDataGrid-cell--editing');
     expect(cell).to.have.text('1962');
+
     expect(valueParser.callCount).to.equal(1);
     expect(valueParser.args[0][0]).to.equal('62');
     expect(valueParser.args[0][1]).to.deep.include({

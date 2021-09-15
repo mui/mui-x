@@ -5,7 +5,7 @@ import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridFilterApi } from '../../../models/api/gridFilterApi';
 import { GridFeatureModeConstant } from '../../../models/gridFeatureMode';
 import { GridFilterItem, GridLinkOperator } from '../../../models/gridFilterItem';
-import { GridRowId, GridRowModel } from '../../../models/gridRows';
+import { GridRowId } from '../../../models/gridRows';
 import { isDeepEqual } from '../../../utils/utils';
 import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
@@ -14,15 +14,11 @@ import { filterableGridColumnsIdsSelector } from '../columns/gridColumnsSelector
 import { useGridSelector } from '../core/useGridSelector';
 import { useGridState } from '../core/useGridState';
 import { GridPreferencePanelsValue } from '../preferencesPanel/gridPreferencePanelsValue';
-import { gridSortedRowsTreeSelector, gridSortedRowsSelector } from '../sorting/gridSortingSelector';
+import { gridSortedRowsSelector } from '../sorting/gridSortingSelector';
 import { getInitialGridFilterState } from './gridFilterModelState';
 import { GridFilterModel } from '../../../models/gridFilterModel';
 import { gridSortedVisibleRowsSelector } from './gridFilterSelector';
-import {
-  getInitialVisibleGridRowsState,
-  GridVisibleRowsTreeLookup,
-  GridVisibleRowsTreeNode,
-} from './visibleGridRowsState';
+import { getInitialVisibleGridRowsState } from './visibleGridRowsState';
 import { GridSortedRowsTreeNode } from '../sorting';
 
 /**
@@ -90,98 +86,44 @@ export const useGridFilter = (
       }
 
       setGridState((state) => {
-        // List filtering
-        // TODO: Remove
         const visibleRowsLookup = { ...state.visibleRows.visibleRowsLookup };
 
         // We run the selector on the state here to avoid rendering the rows and then filtering again.
         // This way we have latest rows on the first rendering
-        const rows = gridSortedRowsSelector(state);
+        const rowTree = gridSortedRowsSelector(state);
 
-        rows.forEach((row: GridRowModel, id: GridRowId) => {
-          const params = apiRef.current.getCellParams(id, newFilterItem.columnField!);
-
-          const isShown = applyFilterOnRow(params);
-          if (visibleRowsLookup[id] == null) {
-            visibleRowsLookup[id] = isShown;
-          } else {
-            visibleRowsLookup[id] =
-              linkOperator === GridLinkOperator.And
-                ? visibleRowsLookup[id] && isShown
-                : visibleRowsLookup[id] || isShown;
-          }
-        });
-
-        const visibleRows = Object.entries(visibleRowsLookup)
-          .filter(([, isVisible]) => isVisible)
-          .map(([id]) => id);
-
-        // Tree filtering
-        // We run the selector on the state here to avoid rendering the rows and then filtering again.
-        // This way we have latest rows on the first rendering
-        const rowTree = gridSortedRowsTreeSelector(state);
-
-        const filterRowTree = (
-          tree: Map<GridRowId, GridSortedRowsTreeNode>,
-          visibleLookup: GridVisibleRowsTreeLookup,
-        ) => {
-            if (tree.size === 0) {
-                return { lookup: {}, list: [], flatVisibleRows: [], count: 0, }
-            }
-
-          const visibleList: GridVisibleRowsTreeNode[] = [];
-            const flatVisibleRows: GridRowId[] = [];
-            let visibleRowsCount = 0
-
+        const filterRowTree = (tree: Map<GridRowId, GridSortedRowsTreeNode>) => {
           tree.forEach((node, id) => {
             const params = apiRef.current.getCellParams(id, newFilterItem.columnField!);
             const hasCurrentFilter = applyFilterOnRow(params);
-            const lookupElementBeforeCurrentFilter = visibleLookup[id];
+            const lookupElementBeforeCurrentFilter = visibleRowsLookup[id];
 
             let isVisible: boolean;
 
             if (lookupElementBeforeCurrentFilter == null) {
               isVisible = hasCurrentFilter;
             } else if (linkOperator === GridLinkOperator.And) {
-              isVisible = lookupElementBeforeCurrentFilter.isVisible && hasCurrentFilter;
+              isVisible = lookupElementBeforeCurrentFilter && hasCurrentFilter;
             } else {
-              isVisible = lookupElementBeforeCurrentFilter.isVisible || hasCurrentFilter;
+              isVisible = lookupElementBeforeCurrentFilter || hasCurrentFilter;
             }
 
-            const childrenBeforeFilter = { ...(lookupElementBeforeCurrentFilter?.children ?? {}) };
-            const childrenAfterFilter = filterRowTree(node.children, childrenBeforeFilter)
+            visibleRowsLookup[id] = isVisible;
 
-            visibleLookup[id] = {
-              isVisible,
-              children: childrenAfterFilter.lookup,
-            };
-
-            if (isVisible) {
-              visibleList.push({ id, children: childrenAfterFilter.list });
-                flatVisibleRows.push(id)
-              visibleRowsCount += 1
-            }
-
-            visibleRowsCount += childrenAfterFilter.count
-              flatVisibleRows.concat(childrenAfterFilter.flatVisibleRows)
+            filterRowTree(node.children);
           });
-
-          return { lookup: visibleLookup, list: visibleList, flatVisibleRows, count: visibleRowsCount };
         };
 
-        const visibleRowsTree = filterRowTree(rowTree, {
-          ...state.visibleRows.visibleRowsTreeLookup,
-        });
+        filterRowTree(rowTree);
 
         return {
           ...state,
           visibleRows: {
             ...state.visibleRows,
             visibleRowsLookup,
-            visibleRows,
-            visibleRowsTreeLookup: visibleRowsTree.lookup,
-            visibleRowsTree: visibleRowsTree.list,
-            visibleRowsCount: visibleRowsTree.count,
+            visibleRows: Object.entries(visibleRowsLookup)
+              .filter(([, isVisible]) => isVisible)
+              .map(([id]) => id),
           },
         };
       });

@@ -12,11 +12,10 @@ export interface GridSortedRowsIdTreeNode {
 }
 
 export interface GridSortingState {
-  sortedRows: GridRowId[];
-  sortedRowTree: GridSortedRowsIdTreeNode[];
+  sortedRows: GridSortedRowsIdTreeNode[];
   sortModel: GridSortModel;
 }
 
 export function getInitialGridSortingState(): GridSortingState {
-  return { sortedRows: [], sortedRowTree: [], sortModel: [] };
+  return { sortedRows: [], sortModel: [] };
 }
