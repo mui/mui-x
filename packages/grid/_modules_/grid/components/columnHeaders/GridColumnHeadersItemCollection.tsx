@@ -88,6 +88,7 @@ GridColumnHeadersItemCollection.propTypes = {
   // ----------------------------------------------------------------------
   columns: PropTypes.arrayOf(PropTypes.object).isRequired,
   dragCol: PropTypes.string,
+  resizeCol: PropTypes.string,
 } as any;
 
 export { GridColumnHeadersItemCollection };
