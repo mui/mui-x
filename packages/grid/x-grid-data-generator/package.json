@@ -3,12 +3,9 @@
   "version": "4.0.0",
   "description": "Generate fake data for demo purposes only.",
   "author": "MUI Team",
-  "main": "dist/cjs/index.js",
-  "module": "dist/esm/index.js",
-  "types": "dist/esm/x-grid-data-generator.d.ts",
-  "files": [
-    "dist/*"
-  ],
+  "main": "cjs/index.js",
+  "module": "esm/index.js",
+  "types": "esm/x-grid-data-generator.d.ts",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/mui-org/material-ui-x/issues"

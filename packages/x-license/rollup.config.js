@@ -4,6 +4,7 @@ import sourceMaps from 'rollup-plugin-sourcemaps';
 import { terser } from 'rollup-plugin-terser';
 import commonjs from 'rollup-plugin-commonjs';
 import dts from 'rollup-plugin-dts';
+import copy from 'rollup-plugin-copy';
 import pkg from './package.json';
 
 // dev build if watching, prod build if not
@@ -16,12 +17,12 @@ export default [
     },
     output: [
       {
-        dir: 'dist/esm',
+        dir: 'build/esm',
         format: 'esm',
         sourcemap: !production,
       },
       {
-        dir: 'dist/cjs',
+        dir: 'build/cjs',
         format: 'cjs',
         sourcemap: !production,
       },
@@ -30,17 +31,37 @@ export default [
     plugins: [
       production &&
         cleaner({
-          targets: ['./dist/'],
+          targets: ['./build/'],
         }),
       typescript({ tsconfig: 'tsconfig.build.json' }),
       commonjs(),
       !production && sourceMaps(),
       production && terser(),
+      production &&
+        copy({
+          targets: [
+            {
+              src: ['./README.md', './LICENSE.md', '../../CHANGELOG.md'],
+              dest: './build',
+            },
+            {
+              src: './package.json',
+              dest: './build',
+              transform: () => {
+                const contents = { ...pkg };
+                contents.main = 'cjs/index.js';
+                contents.module = 'esm/index.js';
+                contents.types = 'x-license.d.ts';
+                return JSON.stringify(contents, null, 2);
+              },
+            },
+          ],
+        }),
     ],
   },
   {
-    input: './dist/esm/index.d.ts',
-    output: [{ file: 'dist/x-license.d.ts', format: 'es' }],
+    input: './build/esm/index.d.ts',
+    output: [{ file: 'build/x-license.d.ts', format: 'es' }],
     plugins: [dts(), !production && sourceMaps()],
   },
 ];
