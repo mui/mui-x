@@ -152,10 +152,6 @@
     "description": "Fired when a <code>mouseleave</code> event happens in a row.  Called with a <a href=\"/api/data-grid/grid-row-params/\">GridRowParams</a> object."
   },
   {
-    "name": "rowMouseDown",
-    "description": "Fired when a <code>mousedown</code> event happens in a row. Called with a <a href=\"/api/data-grid/grid-row-params/\">GridRowParams</a> object."
-  },
-  {
     "name": "rowOut",
     "description": "Fired when a <code>mouseout</code> event happens in a row.  Called with a <a href=\"/api/data-grid/grid-row-params/\">GridRowParams</a> object."
   },

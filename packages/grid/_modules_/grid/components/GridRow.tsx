@@ -81,7 +81,6 @@ function GridRow(props: GridRowProps) {
       onMouseOut: publish(GridEvents.rowOut),
       onMouseEnter: publish(GridEvents.rowEnter),
       onMouseLeave: publish(GridEvents.rowLeave),
-      onMouseDown: publish(GridEvents.rowMouseDown),
     }),
     [publish],
   );

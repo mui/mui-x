@@ -139,10 +139,6 @@ export enum GridEvents {
    */
   rowDoubleClick = 'rowDoubleClick',
   /**
-   * Fired when a `mousedown` event happens in a row. Called with a [[GridRowParams]] object.
-   */
-  rowMouseDown = 'cellMouseDown',
-  /**
    * Fired when a `mouseover` event happens in a row.  Called with a [[GridRowParams]] object.
    */
   rowOver = 'rowOver',

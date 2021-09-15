@@ -213,7 +213,7 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
   );
 
   useGridApiEventHandler(apiRef, GridEvents.rowClick, handleRowClick);
-  useGridApiEventHandler(apiRef, GridEvents.rowMouseDown, preventSelectionOnShift);
+  useGridApiEventHandler(apiRef, GridEvents.cellMouseDown, preventSelectionOnShift);
 
   const selectionApi: GridSelectionApi = {
     selectRow,
