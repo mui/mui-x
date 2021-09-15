@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { DataGridPro, GridColumns } from '@mui/x-data-grid-pro';
 import { Meta } from '@storybook/react';
+import Button from '@mui/material/Button';
 
 export default {
   title: 'X-Grid Tests/Tree Data',
@@ -32,5 +33,25 @@ const columns: GridColumns = [
 const getTreeDataPath = (row) => row.name.split('.');
 
 export function TreeData() {
-  return <DataGridPro rows={rows} columns={columns} treeData getTreeDataPath={getTreeDataPath} />;
+  const [treeDataEnabled, setTreeDataEnabled] = React.useState(true);
+
+  return (
+    <React.Fragment>
+      <Button
+        onClick={() => setTreeDataEnabled((prev) => !prev)}
+        sx={{
+          my: 2,
+        }}
+      >
+        {treeDataEnabled ? 'Disable tree data' : 'Enable tree data'}
+      </Button>
+      <DataGridPro
+        key={treeDataEnabled ? '1' : '0'}
+        rows={rows}
+        columns={columns}
+        treeData={treeDataEnabled}
+        getTreeDataPath={getTreeDataPath}
+      />
+    </React.Fragment>
+  );
 }
