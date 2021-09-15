@@ -1,22 +1,22 @@
-import { createTheme } from '@material-ui/core/styles';
+import { createTheme } from '@mui/material/styles';
 
 createTheme({
-  overrides: {
+  components: {
     MuiDataGrid: {
-      root: {
-        backgroundColor: 'red',
+      defaultProps: {
+        checkboxSelection: true,
+        // @ts-expect-error invalid DataGrid prop
+        disableMultipleColumnsFiltering: true,
       },
-      // @ts-expect-error invalid class key
-      wrong: {
-        display: 'flex',
+      styleOverrides: {
+        root: {
+          backgroundColor: 'red',
+        },
+        // @ts-expect-error invalid class key
+        wrong: {
+          display: 'flex',
+        },
       },
-    },
-  },
-  props: {
-    MuiDataGrid: {
-      checkboxSelection: true,
-      // @ts-expect-error invalid DataGrid prop
-      disableMultipleColumnsFiltering: true,
     },
   },
 });

@@ -1,6 +1,7 @@
 import * as React from 'react';
-import Select, { SelectProps } from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
+import PropTypes from 'prop-types';
+import Select, { SelectProps } from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
 import { GridRenderEditCellParams } from '../../models/params/gridCellParams';
 import { isEscapeKey } from '../../utils/keyboardUtils';
 import { useEnhancedEffect } from '../../utils/material-ui-utils';
@@ -18,7 +19,7 @@ const renderSingleSelectOptions = (option) =>
     </MenuItem>
   );
 
-export function GridEditSingleSelectCell(props: GridRenderEditCellParams & SelectProps) {
+function GridEditSingleSelectCell(props: GridRenderEditCellParams & SelectProps) {
   const {
     id,
     value,
@@ -88,4 +89,17 @@ export function GridEditSingleSelectCell(props: GridRenderEditCellParams & Selec
     </Select>
   );
 }
+
+GridEditSingleSelectCell.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  /**
+   * GridApi that let you manipulate the grid.
+   */
+  api: PropTypes.any.isRequired,
+} as any;
+
+export { GridEditSingleSelectCell };
 export const renderEditSingleSelectCell = (params) => <GridEditSingleSelectCell {...params} />;

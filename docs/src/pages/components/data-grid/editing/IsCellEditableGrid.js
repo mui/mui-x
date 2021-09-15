@@ -1,7 +1,6 @@
-/* eslint-disable @typescript-eslint/no-use-before-define */
 import * as React from 'react';
-import { createTheme } from '@material-ui/core/styles';
-import { makeStyles } from '@material-ui/styles';
+import { createTheme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import { DataGrid } from '@mui/x-data-grid';
 import {
   randomCreatedDate,

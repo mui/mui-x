@@ -18,7 +18,7 @@ if (process.env.CIRCLECI) {
 
 const browserStack = {
   // |commits in PRs| >> |Merged commits|.
-  // Since we have limited ressources on browserstack we often time out on PRs.
+  // Since we have limited resources on browserstack we often time out on PRs.
   // However, browserstack rarely fails with a true-positive so we use it as a stop gap for release not merge.
   // But always enable it locally since people usually have to explicitly have to expose their browserstack access key anyway.
   enabled: !CI || !isPR || process.env.BROWSERSTACK_FORCE === 'true',

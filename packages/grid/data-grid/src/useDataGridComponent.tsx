@@ -1,7 +1,6 @@
 import { GridComponentProps } from '../../_modules_/grid/GridComponentProps';
 import { useGridClipboard } from '../../_modules_/grid/hooks/features/clipboard/useGridClipboard';
 import { useGridColumnMenu } from '../../_modules_/grid/hooks/features/columnMenu/useGridColumnMenu';
-import { useGridColumnResize } from '../../_modules_/grid/hooks/features/columnResize/useGridColumnResize';
 import { useGridColumns } from '../../_modules_/grid/hooks/features/columns/useGridColumns';
 import { useGridControlState } from '../../_modules_/grid/hooks/features/core/useGridControlState';
 import { useGridDensity } from '../../_modules_/grid/hooks/features/density/useGridDensity';
@@ -9,7 +8,6 @@ import { useGridCsvExport } from '../../_modules_/grid/hooks/features/export/use
 import { useGridPrintExport } from '../../_modules_/grid/hooks/features/export/useGridPrintExport';
 import { useGridFilter } from '../../_modules_/grid/hooks/features/filter/useGridFilter';
 import { useGridFocus } from '../../_modules_/grid/hooks/features/focus/useGridFocus';
-import { useGridInfiniteLoader } from '../../_modules_/grid/hooks/features/infiniteLoader/useGridInfiniteLoader';
 import { useGridKeyboard } from '../../_modules_/grid/hooks/features/keyboard/useGridKeyboard';
 import { useGridKeyboardNavigation } from '../../_modules_/grid/hooks/features/keyboard/useGridKeyboardNavigation';
 import { useLocaleText } from '../../_modules_/grid/hooks/features/localeText/useLocaleText';
@@ -54,13 +52,11 @@ export const useDataGridComponent = (apiRef: GridApiRef, props: GridComponentPro
   useGridFilter(apiRef, props);
   useGridDensity(apiRef, props);
   useGridContainerProps(apiRef, props);
-  useGridColumnResize(apiRef, props);
   useGridPageSize(apiRef, props);
   useGridPage(apiRef, props);
   useGridScroll(apiRef, props);
   useGridNoVirtualization(apiRef, props);
   useGridVirtualization(apiRef, props);
-  useGridInfiniteLoader(apiRef, props);
   useGridColumnMenu(apiRef);
   useGridKeyboard(apiRef);
   useGridKeyboardNavigation(apiRef, props);

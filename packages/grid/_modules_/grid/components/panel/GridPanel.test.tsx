@@ -10,7 +10,7 @@ import {
   useGridApiRef,
   GridApiContext,
 } from '@mui/x-data-grid';
-import { Popper } from '@material-ui/core';
+import Popper from '@mui/material/Popper';
 
 describe('<GridPanel />', () => {
   // TODO v5: replace with createClientRender
@@ -39,6 +39,6 @@ describe('<GridPanel />', () => {
       return wrapper.find('span').childAt(0);
     },
     refInstanceof: window.HTMLDivElement,
-    skip: ['componentProp', 'reactTestRenderer'],
+    only: ['mergeClassName', 'propsSpread', 'refForwarding', 'rootClass'],
   }));
 });

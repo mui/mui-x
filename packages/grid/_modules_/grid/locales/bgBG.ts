@@ -1,4 +1,4 @@
-import { bgBG as bgBGCore } from '@material-ui/core/locale';
+import { bgBG as bgBGCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 

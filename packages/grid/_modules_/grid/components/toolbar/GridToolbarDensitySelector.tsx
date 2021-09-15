@@ -1,10 +1,9 @@
 import * as React from 'react';
-// @ts-expect-error fixed in Material-UI v5, types definitions were added.
-import { unstable_useId as useId } from '@material-ui/core/utils';
-import MenuList from '@material-ui/core/MenuList';
-import Button, { ButtonProps } from '@material-ui/core/Button';
-import MenuItem from '@material-ui/core/MenuItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
+import { unstable_useId as useId } from '@mui/material/utils';
+import MenuList from '@mui/material/MenuList';
+import Button, { ButtonProps } from '@mui/material/Button';
+import MenuItem from '@mui/material/MenuItem';
+import ListItemIcon from '@mui/material/ListItemIcon';
 import { gridDensityValueSelector } from '../../hooks/features/density/densitySelector';
 import { GridDensity, GridDensityTypes } from '../../models/gridDensity';
 import { isHideMenuKey, isTabKey } from '../../utils/keyboardUtils';

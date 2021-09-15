@@ -1,7 +1,7 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import clsx from 'clsx';
-// @ts-expect-error fixed in Material-UI v5, types definitions were added.
-import { unstable_useId as useId } from '@material-ui/core/utils';
+import { unstable_useId as useId } from '@mui/material/utils';
 import { GridEvents } from '../../constants/eventsConstants';
 import { GridStateColDef, GRID_NUMBER_COLUMN_TYPE } from '../../models/colDef/index';
 import { GridSortDirection } from '../../models/gridSortModel';
@@ -66,7 +66,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-export function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
+function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
   const {
     column,
     columnMenuOpen,
@@ -86,8 +86,8 @@ export function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
   const headerCellRef = React.useRef<HTMLDivElement>(null);
-  const columnMenuId: string = useId();
-  const columnMenuButtonId: string = useId();
+  const columnMenuId = useId();
+  const columnMenuButtonId = useId();
   const iconButtonRef = React.useRef<HTMLButtonElement>(null);
 
   let headerComponent: React.ReactNode = null;
@@ -147,6 +147,7 @@ export function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
     classes: rootProps.classes,
     showRightBorder,
   };
+
   const classes = useUtilityClasses(ownerState);
 
   const width = column.computedWidth;
@@ -161,8 +162,8 @@ export function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
   const columnMenuIconButton = !rootProps.disableColumnMenu && !column.disableColumnMenu && (
     <ColumnHeaderMenuIcon
       column={column}
-      columnMenuId={columnMenuId}
-      columnMenuButtonId={columnMenuButtonId}
+      columnMenuId={columnMenuId!}
+      columnMenuButtonId={columnMenuButtonId!}
       open={columnMenuOpen}
       iconButtonRef={iconButtonRef}
     />
@@ -224,6 +225,7 @@ export function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
               columnWidth={width}
             />
           )}
+
           {columnTitleIconButtons}
         </div>
         {columnMenuIconButton}
@@ -235,8 +237,8 @@ export function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
         {...resizeEventHandlers}
       />
       <GridColumnHeaderMenu
-        columnMenuId={columnMenuId}
-        columnMenuButtonId={columnMenuButtonId}
+        columnMenuId={columnMenuId!}
+        columnMenuButtonId={columnMenuButtonId!}
         field={column.field}
         open={columnMenuOpen}
         target={iconButtonRef.current}
@@ -246,3 +248,75 @@ export function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
     </div>
   );
 }
+
+GridColumnHeaderItem.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  colIndex: PropTypes.number.isRequired,
+  column: PropTypes.shape({
+    align: PropTypes.oneOf(['center', 'left', 'right']),
+    cellClassName: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
+    computedWidth: PropTypes.number.isRequired,
+    description: PropTypes.string,
+    disableColumnMenu: PropTypes.bool,
+    disableExport: PropTypes.bool,
+    disableReorder: PropTypes.bool,
+    editable: PropTypes.bool,
+    field: PropTypes.string.isRequired,
+    filterable: PropTypes.bool,
+    filterOperators: PropTypes.arrayOf(
+      PropTypes.shape({
+        getApplyFilterFn: PropTypes.func.isRequired,
+        InputComponent: PropTypes.elementType,
+        InputComponentProps: PropTypes.object,
+        label: PropTypes.string,
+        value: PropTypes.string.isRequired,
+      }),
+    ),
+    flex: PropTypes.number,
+    headerAlign: PropTypes.oneOf(['center', 'left', 'right']),
+    headerClassName: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
+    headerName: PropTypes.string,
+    hide: PropTypes.bool,
+    hideSortIcons: PropTypes.bool,
+    minWidth: PropTypes.number,
+    renderCell: PropTypes.func,
+    renderEditCell: PropTypes.func,
+    renderHeader: PropTypes.func,
+    resizable: PropTypes.bool,
+    sortable: PropTypes.bool,
+    sortComparator: PropTypes.func,
+    type: PropTypes.string,
+    valueFormatter: PropTypes.func,
+    valueGetter: PropTypes.func,
+    valueOptions: PropTypes.arrayOf(
+      PropTypes.oneOfType([
+        PropTypes.number,
+        PropTypes.shape({
+          label: PropTypes.string.isRequired,
+          value: PropTypes.any.isRequired,
+        }),
+        PropTypes.string,
+      ]).isRequired,
+    ),
+    valueParser: PropTypes.func,
+    width: PropTypes.number,
+  }).isRequired,
+  columnMenuOpen: PropTypes.bool.isRequired,
+  extendRowFullWidth: PropTypes.bool.isRequired,
+  filterItemsCounter: PropTypes.number,
+  hasFocus: PropTypes.bool,
+  hasScrollX: PropTypes.bool.isRequired,
+  hasScrollY: PropTypes.bool.isRequired,
+  headerHeight: PropTypes.number.isRequired,
+  isDragging: PropTypes.bool.isRequired,
+  isLastColumn: PropTypes.bool.isRequired,
+  isResizing: PropTypes.bool.isRequired,
+  sortDirection: PropTypes.oneOf(['asc', 'desc']),
+  sortIndex: PropTypes.number,
+  tabIndex: PropTypes.oneOf([-1, 0]).isRequired,
+} as any;
+
+export { GridColumnHeaderItem };

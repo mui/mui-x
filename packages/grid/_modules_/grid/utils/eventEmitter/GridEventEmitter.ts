@@ -1,15 +1,23 @@
-import * as React from 'react';
 import { EventEmitter } from './EventEmitter';
+import { GridCallbackDetails } from '../../models/api/gridCallbackDetails';
+import { MuiEvent } from '../../models/muiEvent';
 
-// TODO replace any with Generics
-export type GridListener = (params: any, event?: React.SyntheticEvent) => void;
+export type GridListener<Params, Event extends MuiEvent> = (
+  params: Params,
+  event: Event,
+  details: GridCallbackDetails,
+) => void;
 export type GridSubscribeEventOptions = { isFirst?: boolean };
 
 export class GridEventEmitter extends EventEmitter {
   /**
    * @ignore - do not document.
    */
-  on(eventName: string, listener: GridListener, options?: GridSubscribeEventOptions): void {
+  on<Params, Event extends MuiEvent>(
+    eventName: string,
+    listener: GridListener<Params, Event>,
+    options?: GridSubscribeEventOptions,
+  ): void {
     if (!Array.isArray(this.events[eventName])) {
       this.events[eventName] = [];
     }

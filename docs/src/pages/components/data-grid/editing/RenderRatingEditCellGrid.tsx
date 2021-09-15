@@ -1,7 +1,6 @@
-/* eslint-disable @typescript-eslint/no-use-before-define */
 import * as React from 'react';
-import { makeStyles } from '@material-ui/styles';
-import Rating from '@material-ui/lab/Rating';
+import { makeStyles } from '@mui/styles';
+import Rating from '@mui/material/Rating';
 import { DataGrid, GridRenderCellParams } from '@mui/x-data-grid';
 
 function renderRating(params) {

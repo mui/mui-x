@@ -9,52 +9,59 @@ LicenseInfo.setLicenseKey(
 
 import 'docs/src/modules/components/bootstrap';
 // --- Post bootstrap -----
-import React from 'react';
+import * as React from 'react';
 import find from 'lodash/find';
-import { Provider as ReduxProvider, useDispatch, useSelector } from 'react-redux';
 import { loadCSS } from 'fg-loadcss/src/loadCSS';
 import NextHead from 'next/head';
 import PropTypes from 'prop-types';
 import acceptLanguage from 'accept-language';
 import { create } from 'jss';
-import rtl from 'jss-rtl';
+import jssRtl from 'jss-rtl';
+import { CacheProvider } from '@emotion/react';
 import { useRouter } from 'next/router';
-import { StylesProvider, jssPreset } from '@material-ui/styles';
-import { ponyfillGlobal } from '@material-ui/utils';
+import { StylesProvider, jssPreset } from '@mui/styles';
+import { ponyfillGlobal } from '@mui/utils';
 import pages from 'docsx/src/pages';
-import initRedux from 'docs/src/modules/redux/initRedux';
 import PageContext from 'docs/src/modules/components/PageContext';
 import GoogleAnalytics from 'docs/src/modules/components/GoogleAnalytics';
 import XWrapper from 'docsx/src/modules/XWrapper';
 import loadScript from 'docs/src/modules/utils/loadScript';
 import { ThemeProvider } from 'docs/src/modules/components/ThemeContext';
 import { pathnameToLanguage, getCookie } from 'docs/src/modules/utils/helpers';
-import { ACTION_TYPES, CODE_VARIANTS } from 'docs/src/modules/constants';
+import { CODE_VARIANTS, LANGUAGES } from 'docs/src/modules/constants';
+import {
+  CodeVariantProvider,
+  useCodeVariant,
+  useSetCodeVariant,
+} from 'docs/src/modules/utils/codeVariant';
+import {
+  UserLanguageProvider,
+  useSetUserLanguage,
+  useUserLanguage,
+} from 'docs/src/modules/utils/i18n';
+import DocsStyledEngineProvider from 'docs/src/modules/utils/StyledEngineProvider';
+import createEmotionCache from 'docs/src/createEmotionCache';
 
 function getMuiPackageVersion(packageName, commitRef) {
   if (commitRef === undefined) {
     return 'latest';
   }
   const shortSha = commitRef.slice(0, 8);
-  return `https://pkg.csb.dev/mui-org/material-ui-x/commit/${shortSha}/@material-ui/${packageName}`;
+  return `https://pkg.csb.dev/mui-org/material-ui-x/commit/${shortSha}/@mui/${packageName}`;
 }
 
 ponyfillGlobal.muiDocConfig = {
   csbIncludePeerDependencies: (deps, { versions }) => {
     const newDeps = { ...deps };
 
-    if (
-      newDeps['@material-ui/x'] ||
-      newDeps['@mui/x-data-grid-pro'] ||
-      newDeps['@mui/x-data-grid']
-    ) {
-      newDeps['@material-ui/core'] = versions['@material-ui/core'];
+    if (newDeps['@mui/x-data-grid-pro'] || newDeps['@mui/x-data-grid']) {
+      newDeps['@mui/material'] = versions['@mui/material'];
+      newDeps['@mui/styles'] = versions['@mui/styles'];
     }
 
     if (newDeps['@mui/x-data-grid-generator']) {
-      newDeps['@material-ui/core'] = versions['@material-ui/core'];
-      newDeps['@material-ui/icons'] = versions['@material-ui/icons'];
-      newDeps['@material-ui/lab'] = versions['@material-ui/lab'];
+      newDeps['@mui/material'] = versions['@mui/material'];
+      newDeps['@mui/icons-material'] = versions['@mui/icons-material'];
     }
 
     return newDeps;
@@ -62,17 +69,20 @@ ponyfillGlobal.muiDocConfig = {
   csbGetVersions: (versions, { muiCommitRef }) => {
     const output = {
       ...versions,
-      '@mui/x-data-grid-pro': getMuiPackageVersion('x-grid', muiCommitRef),
-      '@mui/x-data-grid-generator': getMuiPackageVersion('x-grid-data-generator', muiCommitRef),
-      '@mui/x-data-grid': getMuiPackageVersion('data-grid', muiCommitRef),
+      '@mui/x-data-grid-pro': getMuiPackageVersion('x-data-grid-pro', muiCommitRef),
+      '@mui/x-data-grid-generator': getMuiPackageVersion('x-data-grid-generator', muiCommitRef),
+      '@mui/x-data-grid': getMuiPackageVersion('x-data-grid', muiCommitRef),
     };
     return output;
   },
 };
 
+// Client-side cache, shared for the whole session of the user in the browser.
+const clientSideEmotionCache = createEmotionCache();
+
 // Configure JSS
 const jss = create({
-  plugins: [...jssPreset().plugins, rtl()],
+  plugins: [...jssPreset().plugins, jssRtl()],
   insertionPoint: process.browser ? document.querySelector('#insertion-point-jss') : null,
 });
 
@@ -88,21 +98,21 @@ function useFirstRender() {
 acceptLanguage.languages(['en', 'zh', 'pt', 'ru']);
 
 function LanguageNegotiation() {
-  const dispatch = useDispatch();
+  const setUserLanguage = useSetUserLanguage();
   const router = useRouter();
-  const userLanguage = useSelector((state) => state.options.userLanguage);
+  const userLanguage = useUserLanguage();
 
   React.useEffect(() => {
     const { userLanguage: userLanguageUrl, canonical } = pathnameToLanguage(router.asPath);
     const preferedLanguage =
-      getCookie('userLanguage') !== 'noDefault' && userLanguage === 'en'
-        ? acceptLanguage.get(navigator.language)
-        : userLanguage;
+      LANGUAGES.find((lang) => lang === getCookie('userLanguage')) ||
+      acceptLanguage.get(navigator.language) ||
+      userLanguage;
 
-    if (preferedLanguage !== userLanguage) {
+    if (userLanguageUrl === 'en' && userLanguage !== preferedLanguage) {
       window.location = preferedLanguage === 'en' ? canonical : `/${preferedLanguage}${canonical}`;
-    } else if (userLanguageUrl !== userLanguage) {
-      dispatch({ type: ACTION_TYPES.OPTIONS_CHANGE, payload: { userLanguage: userLanguageUrl } });
+    } else if (userLanguage !== userLanguageUrl) {
+      setUserLanguage(userLanguageUrl);
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -114,10 +124,8 @@ function LanguageNegotiation() {
  * @returns {string} - The persisted variant if the initial value is undefined
  */
 function usePersistCodeVariant() {
-  const dispatch = useDispatch();
-  const { codeVariant: initialCodeVariant = CODE_VARIANTS.JS } = useSelector(
-    (state) => state.options,
-  );
+  const initialCodeVariant = useCodeVariant();
+  const setCodeVariant = useSetCodeVariant();
 
   const isFirstRender = useFirstRender();
 
@@ -150,7 +158,7 @@ function usePersistCodeVariant() {
 
   React.useEffect(() => {
     if (codeVariant !== initialCodeVariant) {
-      dispatch({ type: ACTION_TYPES.OPTIONS_CHANGE, payload: { codeVariant } });
+      setCodeVariant(codeVariant);
     }
   });
 
@@ -171,7 +179,7 @@ function Analytics() {
     loadScript('https://www.google-analytics.com/analytics.js', document.querySelector('head'));
   }, []);
 
-  const options = useSelector((state) => state.options);
+  const userLanguage = useUserLanguage();
 
   const codeVariant = usePersistCodeVariant();
   React.useEffect(() => {
@@ -179,8 +187,8 @@ function Analytics() {
   }, [codeVariant]);
 
   React.useEffect(() => {
-    window.ga('set', 'dimension2', options.userLanguage);
-  }, [options.userLanguage]);
+    window.ga('set', 'dimension2', userLanguage);
+  }, [userLanguage]);
 
   React.useEffect(() => {
     /**
@@ -212,6 +220,18 @@ function Analytics() {
   return null;
 }
 
+let reloadInterval;
+
+// Avoid infinite loop when "Upload on reload" is set in the Chrome sw dev tools.
+function lazyReload() {
+  clearInterval(reloadInterval);
+  reloadInterval = setInterval(() => {
+    if (document.hasFocus()) {
+      window.location.reload();
+    }
+  }, 100);
+}
+
 // Inspired by
 // https://developers.google.com/web/tools/workbox/guides/advanced-recipes#offer_a_page_reload_for_users
 function forcePageReload(registration) {
@@ -239,7 +259,7 @@ function forcePageReload(registration) {
         registration.waiting.postMessage('skipWaiting');
       } else if (event.target.state === 'activated') {
         // Force the control of the page by the activated service worker.
-        window.location.reload();
+        lazyReload();
       }
     });
   }
@@ -258,7 +278,7 @@ async function registerServiceWorker() {
   if (
     'serviceWorker' in navigator &&
     process.env.NODE_ENV === 'production' &&
-    window.location.host.indexOf('material-ui.com') <= 0
+    window.location.host.indexOf('material-ui.com') !== -1
   ) {
     // register() automatically attempts to refresh the sw.js.
     const registration = await navigator.serviceWorker.register('/sw.js');
@@ -277,7 +297,7 @@ function loadDependencies() {
   dependenciesLoaded = true;
 
   loadCSS(
-    'https://fonts.googleapis.com/icon?family=Material+Icons',
+    'https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Two+Tone',
     document.querySelector('#material-icon-font'),
   );
 }
@@ -302,11 +322,9 @@ Tip: you can access the documentation \`theme\` object directly in the console.
 
 function findActivePage(currentPages, pathname) {
   const activePage = find(currentPages, (page) => {
-    if (page.children) {
-      if (pathname.indexOf(`${page.pathname}/`) === 0) {
-        // Check if one of the children matches (for /components)
-        return findActivePage(page.children, pathname);
-      }
+    if (page.children && pathname.indexOf(`${page.pathname}/`) === 0) {
+      // Check if one of the children matches (for /components)
+      return findActivePage(page.children, pathname);
     }
 
     // Should be an exact match if no children
@@ -322,6 +340,12 @@ function findActivePage(currentPages, pathname) {
     return findActivePage(activePage.children, pathname);
   }
 
+  if (activePage.pathname === '/api-docs/data-grid') {
+    // If the activePage is returned, it will crash.
+    // <AppLayoutDocsFooter /> won't find the links to the previous and next pages.
+    return activePage.children[0];
+  }
+
   return activePage;
 }
 
@@ -329,9 +353,6 @@ function AppWrapper(props) {
   const { children, pageProps } = props;
 
   const router = useRouter();
-  const [redux] = React.useState(() =>
-    initRedux({ options: { userLanguage: pageProps.userLanguage } }),
-  );
 
   React.useEffect(() => {
     loadDependencies();
@@ -346,7 +367,11 @@ function AppWrapper(props) {
 
   const activePage = findActivePage(pages, router.pathname);
 
-  let fonts = ['https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap'];
+  let fonts = [
+    // TODO: remove this values, they are considered blocking resources and slow all the pages on first render.
+    'https://fonts.googleapis.com/css?family=Roboto:300,400,400italic,500,700&display=swap',
+    'https://fonts.googleapis.com/css?family=Inter:400,600,700&display=swap',
+  ];
   if (router.pathname.match(/onepirate/)) {
     fonts = [
       'https://fonts.googleapis.com/css?family=Roboto+Condensed:700|Work+Sans:300,400&display=swap',
@@ -360,17 +385,21 @@ function AppWrapper(props) {
           <link rel="stylesheet" href={font} key={font} />
         ))}
       </NextHead>
-      <ReduxProvider store={redux}>
-        <PageContext.Provider value={{ activePage, pages, versions: pageProps.versions }}>
-          <StylesProvider jss={jss}>
-            <ThemeProvider>
-              <XWrapper>{children}</XWrapper>
-            </ThemeProvider>
-          </StylesProvider>
-        </PageContext.Provider>
-        <LanguageNegotiation />
-        <Analytics />
-      </ReduxProvider>
+      <UserLanguageProvider defaultUserLanguage={pageProps.userLanguage}>
+        <CodeVariantProvider>
+          <PageContext.Provider value={{ activePage, pages }}>
+            <StylesProvider jss={jss}>
+              <ThemeProvider>
+                <DocsStyledEngineProvider>
+                  <XWrapper>{children}</XWrapper>
+                </DocsStyledEngineProvider>
+              </ThemeProvider>
+            </StylesProvider>
+          </PageContext.Provider>
+          <LanguageNegotiation />
+          <Analytics />
+        </CodeVariantProvider>
+      </UserLanguageProvider>
       <GoogleAnalytics key={router.route} />
     </React.Fragment>
   );
@@ -382,17 +411,20 @@ AppWrapper.propTypes = {
 };
 
 export default function MyApp(props) {
-  const { Component, pageProps } = props;
+  const { Component, emotionCache = clientSideEmotionCache, pageProps } = props;
 
   return (
-    <AppWrapper pageProps={pageProps}>
-      <Component {...pageProps} />
-    </AppWrapper>
+    <CacheProvider value={emotionCache}>
+      <AppWrapper pageProps={pageProps}>
+        <Component {...pageProps} />
+      </AppWrapper>
+    </CacheProvider>
   );
 }
 
 MyApp.propTypes = {
   Component: PropTypes.elementType.isRequired,
+  emotionCache: PropTypes.object,
   pageProps: PropTypes.object.isRequired,
 };
 

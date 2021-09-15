@@ -15,14 +15,11 @@ const alias = {
   '@mui/x-data-grid-generator': '../packages/grid/x-grid-data-generator/src',
   '@mui/x-data-grid-pro': '../packages/grid/x-grid/src',
   '@mui/x-license-pro': '../packages/x-license/src',
-  // Help in the event npm and git are significantly desynchronized.
-  '@material-ui/core': './node_modules/@material-ui/monorepo/packages/material-ui/src',
-  '@material-ui/styles': './node_modules/@material-ui/monorepo/packages/material-ui-styles/src',
-  '@material-ui/docs': './node_modules/@material-ui/monorepo/packages/material-ui-docs/src',
-  '@material-ui/lab': './node_modules/@material-ui/monorepo/packages/material-ui-lab/src',
-  docs: './node_modules/@material-ui/monorepo/docs',
+  '@mui/docs': '../node_modules/@material-ui/monorepo/packages/mui-docs/src',
+  '@mui/markdown': '../node_modules/@material-ui/monorepo/docs/packages/markdown',
+  '@material-ui/monorepo': '../node_modules/@material-ui/monorepo',
+  docs: '../node_modules/@material-ui/monorepo/docs', // TODO remove
   docsx: './',
-  modules: './node_modules/@material-ui/monorepo/modules',
 };
 
 const { version: transformRuntimeVersion } = fse.readJSONSync(
@@ -38,9 +35,7 @@ module.exports = {
     [
       'babel-plugin-transform-rename-import',
       {
-        replacements: [
-          { original: '@material-ui/utils/macros/MuiError.macro', replacement: 'react' },
-        ],
+        replacements: [{ original: '@mui/utils/macros/MuiError.macro', replacement: 'react' }],
       },
     ],
     'babel-plugin-optimize-clsx',
@@ -61,6 +56,7 @@ module.exports = {
     /@babel[\\|/]runtime/,
     // Fix const foo = /{{(.+?)}}/gs; crashing.
     /prettier/,
+    /@material-ui[\\|/]docs[\\|/]markdown/,
   ],
   env: {
     production: {

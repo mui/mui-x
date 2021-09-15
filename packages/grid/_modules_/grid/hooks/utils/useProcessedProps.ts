@@ -1,5 +1,5 @@
 import * as React from 'react';
-import MUICheckbox from '@material-ui/core/Checkbox';
+import MUICheckbox from '@mui/material/Checkbox';
 import { GRID_DEFAULT_LOCALE_TEXT } from '../../constants/localeTextConstants';
 import { GridComponentProps, GridInputComponentProps } from '../../GridComponentProps';
 import { GRID_DEFAULT_SIMPLE_OPTIONS } from '../../models/gridOptions';
@@ -28,6 +28,7 @@ import {
   GridTripleDotsVerticalIcon,
   GridViewHeadlineIcon,
   GridViewStreamIcon,
+  GridMoreVertIcon,
 } from '../../components';
 import { GridColumnUnsortedIcon } from '../../components/columnHeaders/GridColumnUnsortedIcon';
 import { ErrorOverlay } from '../../components/ErrorOverlay';
@@ -48,6 +49,7 @@ const DEFAULT_GRID_ICON_SLOTS_COMPONENTS: GridIconSlotsComponent = {
   DensityStandardIcon: GridTableRowsIcon,
   DensityComfortableIcon: GridViewStreamIcon,
   ExportIcon: GridSaveAltIcon,
+  MoreActionsIcon: GridMoreVertIcon,
 };
 
 export const DEFAULT_GRID_SLOTS_COMPONENTS: GridSlotsComponent = {

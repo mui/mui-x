@@ -1,5 +1,5 @@
 import * as React from 'react';
-import ownerDocument from '@material-ui/core/utils/ownerDocument';
+import { ownerDocument } from '@mui/material/utils';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
 import { GridPrintExportApi } from '../../../models/api/gridPrintExportApi';

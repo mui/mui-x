@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import { getDataGridUtilityClass } from '../../gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { composeClasses } from '../../utils/material-ui-utils';
@@ -29,9 +30,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-export const GridColumnHeaderSeparator = React.memo(function GridColumnHeaderSeparator(
-  props: GridColumnHeaderSeparatorProps,
-) {
+function GridColumnHeaderSeparatorRaw(props: GridColumnHeaderSeparatorProps) {
   const { resizable, resizing, height, ...other } = props;
   const rootProps = useGridRootProps();
   const ownerState = { ...props, classes: rootProps.classes };
@@ -53,4 +52,18 @@ export const GridColumnHeaderSeparator = React.memo(function GridColumnHeaderSep
       <rootProps.components.ColumnResizeIcon className={classes.icon} />
     </div>
   );
-});
+}
+
+const GridColumnHeaderSeparator = React.memo(GridColumnHeaderSeparatorRaw);
+
+GridColumnHeaderSeparatorRaw.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  height: PropTypes.number.isRequired,
+  resizable: PropTypes.bool.isRequired,
+  resizing: PropTypes.bool.isRequired,
+} as any;
+
+export { GridColumnHeaderSeparator };

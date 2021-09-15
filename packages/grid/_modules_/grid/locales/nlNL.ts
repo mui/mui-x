@@ -1,4 +1,4 @@
-import { nlNL as nlNLCore } from '@material-ui/core/locale';
+import { nlNL as nlNLCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 

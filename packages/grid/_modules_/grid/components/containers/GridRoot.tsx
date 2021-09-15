@@ -1,7 +1,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import { useForkRef } from '@material-ui/core/utils';
-import NoSsr from '@material-ui/core/NoSsr';
+import { useForkRef } from '@mui/material/utils';
+import NoSsr from '@mui/material/NoSsr';
 import { GridRootContainerRef } from '../../models/gridRootContainerRef';
 import { useStyles } from './GridRootStyles';
 import { visibleGridColumnsLengthSelector } from '../../hooks/features/columns/gridColumnsSelector';
@@ -37,6 +37,7 @@ export const GridRoot = React.forwardRef<HTMLDivElement, GridRootProps>(function
           rootProps.classes?.root,
           rootProps.className,
           classNameProp,
+          gridClasses.root,
           {
             [gridClasses.autoHeight]: rootProps.autoHeight,
           },
