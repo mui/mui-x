@@ -86,7 +86,7 @@ A big thanks to the 9 contributors who made this release possible. Here are some
 - [DataGrid] Remove import to `@material-ui/icons` (#2576) @m4theushw
 - [DataGrid] Show page size controls on smaller resolutions (#2461) @michaldudak
 - [DataGrid] Vertically align column header icons (#2555) @oliviertassinari
-- [DataGrid] The numeric filter operators are not handling '0' correctly (#2528) @flaviendelangle
+- [DataGrid] Fix numeric filter operators not handling '0' correctly (#2528) @flaviendelangle
 
 #### Docs
 
