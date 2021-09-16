@@ -7,7 +7,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 _Sep 16, 2021_
 
-🎉 This is the first release of the data grid component with full support of the new MUI 5.0 release 🎉!
+🎉 This is the first release with support for the new MUI v5 🎉! In the next releases, we will be working to bring all the cool features from MUI v5 to the advanced components.
 
 A big thanks to the 9 contributors who made this release possible. Here are some highlights ✨:
 
