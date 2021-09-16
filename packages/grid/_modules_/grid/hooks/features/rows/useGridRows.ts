@@ -10,9 +10,9 @@ import {
   GridRowsProp,
   GridRowIdGetter,
   GridRowData,
-  GridRowIdTreeNode,
+  GridRowConfigTreeNode,
   GridRowGroupingResult,
-  GridRowIdTree,
+  GridRowConfigTree,
 } from '../../../models/gridRows';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
@@ -23,6 +23,7 @@ import {
   gridRowsLookupSelector,
   gridRowTreeSelector,
   gridRowIdsFlatSelector,
+  gridRowsPathSelector,
 } from './gridRowsSelector';
 
 export type GridRowsInternalCacheState = Omit<GridRowsState, 'tree' | 'paths'> & {
@@ -66,15 +67,38 @@ export function convertGridRowsPropToState(
 }
 
 const getFlatRowTree = (rowIds: GridRowId[]): GridRowGroupingResult => ({
-  tree: new Map<string, GridRowIdTreeNode>(
-    rowIds.map((id) => [id.toString(), { id, children: new Map() }]),
+  tree: new Map<string, GridRowConfigTreeNode>(
+    rowIds.map((id) => [id.toString(), { id, depth: 0 }]),
   ),
   paths: Object.fromEntries(rowIds.map((id) => [id, [id.toString()]])),
 });
 
+const getNodeFromTree = (tree: GridRowConfigTree, path: string[]): GridRowConfigTreeNode | null => {
+  if (path.length === 0) {
+    return null;
+  }
+
+  const [nodeName, ...restPath] = path;
+  const node = tree.get(nodeName);
+
+  if (!node) {
+    return null;
+  }
+
+  if (restPath.length === 0) {
+    return node;
+  }
+
+  if (!node.children) {
+    return null;
+  }
+
+  return getNodeFromTree(node.children, restPath);
+};
+
 const setRowExpansionInTree = (
   id: GridRowId,
-  tree: GridRowIdTree,
+  tree: GridRowConfigTree,
   path: string[],
   isExpanded: boolean,
 ) => {
@@ -93,6 +117,10 @@ const setRowExpansionInTree = (
   if (restPath.length === 0) {
     clonedMap.set(nodeName, { ...nodeBefore, expanded: isExpanded });
   } else {
+    if (!nodeBefore.children) {
+      throw new Error(`Material-UI: Invalid path for row #${id}.`);
+    }
+
     clonedMap.set(nodeName, {
       ...nodeBefore,
       expanded: nodeBefore.expanded || isExpanded,
@@ -296,36 +324,20 @@ export const useGridRows = (
     [apiRef, setGridState, forceUpdate],
   );
 
-  const isRowExpanded = React.useCallback<GridRowApi['isRowExpanded']>(
+  const getRowPath = React.useCallback<GridRowApi['getRowPath']>(
+    (id) => gridRowsPathSelector(apiRef.current.state)[id] ?? null,
+    [apiRef],
+  );
+
+  const getRowNode = React.useCallback<GridRowApi['getRowNode']>(
     (id) => {
-      const getNodeFromTree = (tree: GridRowIdTree, path: string[]): GridRowIdTreeNode => {
-        if (path.length === 0) {
-          throw new Error(`Material-UI: No row with id #${id} found in row tree`);
-        }
-
-        const [nodeName, ...restPath] = path;
-        const node = tree.get(nodeName);
-
-        if (!node) {
-          throw new Error(`Material-UI: No row with id #${id} found in row tree`);
-        }
-
-        if (restPath.length === 0) {
-          return node;
-        }
-
-        return getNodeFromTree(node.children, restPath);
-      };
-
-      const path = apiRef.current.state.rows.paths[id];
+      const path = apiRef.current.getRowPath(id);
 
       if (!path) {
         throw new Error(`Material-UI: No row with id #${id} found in row path list`);
       }
 
-      const node = getNodeFromTree(apiRef.current.getRowModels(), path);
-
-      return !!node.expanded;
+      return getNodeFromTree(apiRef.current.getRowModels(), path);
     },
     [apiRef],
   );
@@ -356,8 +368,9 @@ export const useGridRows = (
     getAllRowIds,
     setRows,
     updateRows,
+    getRowPath,
     setRowExpansion,
-    isRowExpanded,
+    getRowNode,
   };
 
   useGridApiMethod(apiRef, rowApi, 'GridRowApi');

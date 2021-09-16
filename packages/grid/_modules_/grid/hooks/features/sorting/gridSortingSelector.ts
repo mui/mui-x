@@ -16,7 +16,7 @@ export const gridSortedRowIdsFlatSelector = createSelector(
   gridSortedRowIdsSelector,
   (sortedRowIds) => {
     const flattenRowIds = (nodes: GridSortedRowsIdTreeNode[]): GridRowId[] =>
-      nodes.flatMap((node) => [node.id, ...flattenRowIds(node.children)]);
+      nodes.flatMap((node) => [node.id, ...(node.children ? flattenRowIds(node.children) : [])]);
 
     return flattenRowIds(sortedRowIds);
   },
@@ -30,7 +30,10 @@ export const gridSortedRowsSelector = createSelector(
       const map = new Map<GridRowId, GridSortedRowsTreeNode>();
 
       nodes.forEach((node) => {
-        map.set(node.id, { node: idRowsLookup[node.id], children: buildMap(node.children) });
+        map.set(node.id, {
+          node: idRowsLookup[node.id],
+          children: node.children ? buildMap(node.children) : undefined,
+        });
       });
 
       return map;

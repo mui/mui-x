@@ -7,7 +7,7 @@ import { GridCellValue } from '../../../models/gridCell';
 import { GridColDef } from '../../../models/colDef/gridColDef';
 import { GridFeatureModeConstant } from '../../../models/gridFeatureMode';
 import { GridColumnHeaderParams } from '../../../models/params/gridColumnHeaderParams';
-import { GridRowId, GridRowIdTree } from '../../../models/gridRows';
+import { GridRowId, GridRowConfigTree } from '../../../models/gridRows';
 import {
   GridFieldComparatorList,
   GridSortItem,
@@ -162,7 +162,7 @@ export const useGridSorting = (
     const comparatorList = buildComparatorList(sortModel);
     const aggregatedComparator = comparatorListAggregate(comparatorList);
 
-    const sortRowTree = (tree: GridRowIdTree): GridSortedRowsIdTreeNode[] => {
+    const sortRowTree = (tree: GridRowConfigTree): GridSortedRowsIdTreeNode[] => {
       const rowsWithParams = Array.from(tree.entries()).map(([name, value]) => {
         const params = comparatorList.map((colComparator) =>
           getSortCellParams(value.id, colComparator.field),
@@ -177,7 +177,7 @@ export const useGridSorting = (
 
       return sortedRowsWithParams.map((node) => ({
         id: node.value.id,
-        children: sortRowTree(node.value.children),
+        children: node.value.children ? sortRowTree(node.value.children) : undefined,
       }));
     };
     const sortedRows = sortRowTree(unsortedRowTree);

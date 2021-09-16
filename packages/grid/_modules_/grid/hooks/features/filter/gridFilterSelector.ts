@@ -20,7 +20,7 @@ export const gridSortedVisibleRowsSelector = createSelector(
         if (visibleRowsState.visibleRowsLookup[id] !== false) {
           filteredRows.set(id, {
             node: row.node,
-            children: removeHiddenRows(row.children),
+            children: row.children ? removeHiddenRows(row.children) : undefined,
           });
         }
       });
@@ -40,7 +40,7 @@ export const gridSortedVisibleRowsFlatSelector = createSelector(
     ): { id: GridRowId; node: GridRowModel }[] =>
       Array.from(nodes.entries()).flatMap(([id, row]) => [
         { id, node: row.node },
-        ...flattenRowIds(row.children),
+        ...(row.children ? flattenRowIds(row.children) : []),
       ]);
 
     return flattenRowIds(rows);

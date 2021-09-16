@@ -27,12 +27,13 @@ const columns: GridColumns = [
   },
   {
     field: 'name',
+    width: 200,
   },
 ];
 
 const getTreeDataPath = (row) => row.name.split('.');
 
-export function TreeData() {
+export function BasicTreeData() {
   const [treeDataEnabled, setTreeDataEnabled] = React.useState(true);
 
   return (

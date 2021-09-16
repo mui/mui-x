@@ -4,16 +4,21 @@ import {
   GridRowData,
   GridRowId,
   GridRowIdGetter,
-  GridRowIdTree,
-  GridRowIdTreeNode,
+  GridRowConfigTree,
+  GridRowConfigTreeNode,
 } from '../../../models/gridRows';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridComponentProps } from '../../../GridComponentProps';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
 import { GridColumnsPreProcessing } from '../../root/columnsPreProcessing';
-import { GridTreeDataToggleExpansionColDef } from './gridTreeDataToggleExpansionColDef';
+import { GridTreeDataGroupColDef } from './gridTreeDataGroupColDef';
 
-const insertRowInTree = (tree: GridRowIdTree, id: GridRowId, path: string[]) => {
+const insertRowInTree = (
+  tree: GridRowConfigTree,
+  id: GridRowId,
+  path: string[],
+  depth: number = 0,
+) => {
   if (path.length === 0) {
     throw new Error(`Material-UI: Could not insert row #${id} in the tree structure.`);
   }
@@ -21,7 +26,7 @@ const insertRowInTree = (tree: GridRowIdTree, id: GridRowId, path: string[]) => 
   if (path.length === 1) {
     tree.set(path[0], {
       id,
-      children: new Map<string, GridRowIdTreeNode>(),
+      depth,
     });
   } else {
     const [nodeName, ...restPath] = path;
@@ -31,7 +36,11 @@ const insertRowInTree = (tree: GridRowIdTree, id: GridRowId, path: string[]) => 
       throw new Error(`Material-UI: Could not insert row #${id} in the tree structure.`);
     }
 
-    insertRowInTree(parent.children, id, restPath);
+    if (!parent.children) {
+      parent.children = new Map<string, GridRowConfigTreeNode>();
+    }
+
+    insertRowInTree(parent.children, id, restPath, depth + 1);
   }
 };
 
@@ -51,8 +60,8 @@ export const useGridTreeData = (
     (rowsLookup, rowIds) => {
       if (!props.treeData) {
         return {
-          tree: new Map<string, GridRowIdTreeNode>(
-            rowIds.map((id) => [id.toString(), { id, children: new Map() }]),
+          tree: new Map<string, GridRowConfigTreeNode>(
+            rowIds.map((id) => [id.toString(), { id, depth: 0 }]),
           ),
           paths: Object.fromEntries(rowIds.map((id) => [id, [id.toString()]])),
         };
@@ -74,7 +83,7 @@ export const useGridTreeData = (
         .sort((a, b) => a.path.length - b.path.length);
 
       const paths = Object.fromEntries(rows.map((row) => [row.id, row.path]));
-      const tree = new Map<string, GridRowIdTreeNode>();
+      const tree = new Map<string, GridRowConfigTreeNode>();
       rows.forEach((row) => {
         insertRowInTree(tree, row.id, row.path);
       });
@@ -97,14 +106,14 @@ export const useGridTreeData = (
     if (!props.treeData) {
       apiRef.current.registerColumnPreProcessing('treeData', null);
     } else {
-      const addCollapseColumn: GridColumnsPreProcessing = (columns) => [
+      const addGroupingColumn: GridColumnsPreProcessing = (columns) => [
         {
-          ...GridTreeDataToggleExpansionColDef,
+          ...GridTreeDataGroupColDef,
         },
         ...columns,
       ];
 
-      apiRef.current.registerColumnPreProcessing('treeData', addCollapseColumn);
+      apiRef.current.registerColumnPreProcessing('treeData', addGroupingColumn);
     }
   }, [apiRef, props.treeData]);
 };

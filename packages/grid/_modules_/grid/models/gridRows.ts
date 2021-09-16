@@ -12,16 +12,17 @@ export interface GridRowModelUpdate extends GridRowData {
   _action?: GridUpdateAction;
 }
 
-export interface GridRowIdTreeNode {
+export interface GridRowConfigTreeNode {
   id: GridRowId;
-  children: GridRowIdTree;
+  children?: GridRowConfigTree;
   expanded?: boolean;
+  depth: number;
 }
 
-export type GridRowIdTree = Map<string, GridRowIdTreeNode>;
+export type GridRowConfigTree = Map<string, GridRowConfigTreeNode>;
 
 export interface GridRowGroupingResult {
-  tree: GridRowIdTree;
+  tree: GridRowConfigTree;
   paths: Record<GridRowId, string[]>;
 }
 

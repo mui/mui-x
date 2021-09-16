@@ -110,7 +110,9 @@ export const useGridFilter = (
 
             visibleRowsLookup[id] = isVisible;
 
-            filterRowTree(node.children);
+            if (node.children) {
+              filterRowTree(node.children);
+            }
           });
         };
 

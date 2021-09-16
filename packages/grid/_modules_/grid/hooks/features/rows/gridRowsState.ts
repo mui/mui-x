@@ -1,9 +1,9 @@
-import { GridRowId, GridRowModel, GridRowIdTree } from '../../../models/gridRows';
+import { GridRowId, GridRowModel, GridRowConfigTree } from '../../../models/gridRows';
 
 export interface GridRowsState {
   idRowsLookup: Record<GridRowId, GridRowModel>;
   paths: Record<GridRowId, string[]>;
-  tree: GridRowIdTree;
+  tree: GridRowConfigTree;
   totalRowCount: number;
 }
 

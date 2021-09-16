@@ -1,4 +1,10 @@
-import { GridRowModel, GridRowId, GridRowModelUpdate, GridRowIdTree } from '../gridRows';
+import {
+  GridRowModel,
+  GridRowId,
+  GridRowModelUpdate,
+  GridRowConfigTree,
+  GridRowConfigTreeNode,
+} from '../gridRows';
 
 /**
  * The Row API interface that is available in the grid `apiRef`.
@@ -6,9 +12,9 @@ import { GridRowModel, GridRowId, GridRowModelUpdate, GridRowIdTree } from '../g
 export interface GridRowApi {
   /**
    * Gets the full set of rows ordered in a tree structure.
-   * @returns {GridRowIdTree} The full set of rows.
+   * @returns {GridRowConfigTree} The full set of rows.
    */
-  getRowModels: () => GridRowIdTree;
+  getRowModels: () => GridRowConfigTree;
   /**
    * Gets the total number of rows in the grid.
    * @returns {number} The number of rows.
@@ -48,14 +54,19 @@ export interface GridRowApi {
    */
   getRow: (id: GridRowId) => GridRowModel | null;
   /**
-   * @param {GridRowId} id the ID of the row to toggle
-   * @param {boolean} isExpanded A boolean indicating if the row must be expanded
+   * Gets the row node from the internal tree structure.
+   * @param {GridRowId} id The id of the row.
+   * @returns {GridRowConfigTreeNode} The row data.
+   */
+  getRowNode: (id: GridRowId) => GridRowConfigTreeNode | null;
+  /**
+   * @param {GridRowId} id the ID of the row to toggle.
+   * @param {boolean} isExpanded A boolean indicating if the row must be expanded.
    */
   setRowExpansion: (id: GridRowId, isExpanded: boolean) => void;
   /**
-   * Determines if a row is expanded or not.
-   * @param {GridRowId} id The id of the row.
-   * @returns {boolean} A boolean indicating if the row is expanded.
+   * @param {GridRowId} id the ID of the row to toggle.
+   * @returns {string[] | null} path The path of the row.
    */
-  isRowExpanded: (id: GridRowId) => boolean;
+  getRowPath: (id: GridRowId) => string[] | null;
 }

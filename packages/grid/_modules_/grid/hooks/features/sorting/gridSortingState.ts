@@ -3,12 +3,12 @@ import { GridSortModel } from '../../../models/gridSortModel';
 
 export interface GridSortedRowsTreeNode {
   node: GridRowModel;
-  children: Map<GridRowId, GridSortedRowsTreeNode>;
+  children?: Map<GridRowId, GridSortedRowsTreeNode>;
 }
 
 export interface GridSortedRowsIdTreeNode {
   id: GridRowId;
-  children: GridSortedRowsIdTreeNode[];
+  children?: GridSortedRowsIdTreeNode[];
 }
 
 export interface GridSortingState {

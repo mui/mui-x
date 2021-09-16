@@ -11,6 +11,16 @@ export const GridArrowDownwardIcon = createSvgIcon(
   'ArrowDownward',
 );
 
+export const GridExpandMoreIcon = createSvgIcon(
+  <path d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z" />,
+  'ExpandMore',
+);
+
+export const GridExpandLessIcon = createSvgIcon(
+  <path d="m12 8-6 6 1.41 1.41L12 10.83l4.59 4.58L18 14z" />,
+  'ExpandMore',
+);
+
 export const GridFilterListIcon = createSvgIcon(
   <path d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z" />,
   'FilterList',
