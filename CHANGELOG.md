@@ -65,7 +65,7 @@ A big thanks to the 9 contributors who made this release possible. Here are some
 - [DataGrid] Add `disableVirtualization` prop (#2326) @m4theushw
 - [DataGrid] Add missing exports from param models (#2448) @flaviendelangle
 - [DataGrid] Add missing keys to the `classes` prop (#2458) @m4theushw
-- [DataGrid] Add row menu (#2385) @m4theushw
+- [DataGrid] Add `actions` column type (#2385) @m4theushw
 - [DataGrid] Add zhCN localization (#2431) @wlf100220
 - [DataGrid] Add koKR localization (#2446) @zzossig
 - [DataGrid] Clean the selection public api (#2523) @flaviendelangle
