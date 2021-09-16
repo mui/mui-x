@@ -47,7 +47,7 @@ A big thanks to the 9 contributors who made this release possible. Here are some
 
 #### Changes
 
-- [DataGridPro] Only apply checkboxSelectionVisibleOnly when pagination is enabled (#2443) @flaviendelangle
+- [DataGridPro] Only apply `checkboxSelectionVisibleOnly` when pagination is enabled (#2443) @flaviendelangle
 - [DataGridPro] Remove `apiRef.current.getState` method (#2579) @flaviendelangle
 - [DataGrid] Add `disableVirtualization` prop (#2326) @m4theushw
 - [DataGrid] Add missing exports from param models (#2448) @flaviendelangle
