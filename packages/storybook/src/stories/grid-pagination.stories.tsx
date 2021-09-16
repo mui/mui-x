@@ -295,7 +295,7 @@ const gridTestRows = [
   },
   {
     id: 1,
-    brand: 'Addidas',
+    brand: 'Adidas',
   },
   {
     id: 2,

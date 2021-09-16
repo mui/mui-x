@@ -29,22 +29,20 @@ export type GridRowIdGetter = (row: GridRowData) => GridRowId;
  *
  * @param {GridRowId} id Id as [[GridRowId]].
  * @param {GridRowModel | Partial<GridRowModel>} row Row as [[GridRowData]].
- * @returns a boolean
+ * @param {string} detailErrorMessage A custom error message to display for invalid IDs
  */
 export function checkGridRowIdIsValid(
   id: GridRowId,
   row: GridRowModel | Partial<GridRowModel>,
-  detailErrorMessage?: string,
-): boolean {
+  detailErrorMessage: string = 'A row was provided without id in the rows prop:',
+) {
   if (id == null) {
     throw new Error(
       [
         'Material-UI: The data grid component requires all rows to have a unique id property.',
-        detailErrorMessage || 'A row was provided without id in the rows prop:',
+        detailErrorMessage,
         JSON.stringify(row),
       ].join('\n'),
     );
   }
-
-  return true;
 }
