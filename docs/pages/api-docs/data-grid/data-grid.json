@@ -110,13 +110,6 @@
     "onStateChange": { "type": { "name": "func" } },
     "page": { "type": { "name": "number" }, "default": "1" },
     "pageSize": { "type": { "name": "custom", "description": "number" }, "default": "100" },
-    "pagination": {
-      "type": {
-        "name": "custom",
-        "description": "(props) => {\n  if (props.pagination === false) {\n    return new Error(\n      [\n        'Material-UI: `<DataGrid pagination={false} />` is not a valid prop.',\n        'Infinite scrolling is not available in the MIT version.',\n        '',\n        'You need to upgrade to the DataGridPro component to disable the pagination.',\n      ].join('\\n'),\n    );\n  }\n  return null;\n}"
-      },
-      "default": "false"
-    },
     "paginationMode": {
       "type": { "name": "enum", "description": "'client'<br>&#124;&nbsp;'server'" },
       "default": "\"client\""

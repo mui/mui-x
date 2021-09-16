@@ -481,6 +481,11 @@ async function buildDocs(options: {
     type: { name: string | undefined; description: string | undefined };
   }>(
     Object.entries(reactApi.props || []).map(([propName, propDescriptor]) => {
+      // TODO remove `pagination` from DataGrid's allowed props
+      if (propName === 'pagination' && reactApi.name === 'DataGrid') {
+        return [] as any;
+      }
+
       let prop: DescribeablePropDescriptor | null;
       try {
         prop = createDescribeableProp(propDescriptor, propName);
