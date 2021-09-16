@@ -107,17 +107,13 @@ export const useGridTreeData = (
       apiRef.current.registerColumnPreProcessing('treeData', null);
     } else {
       const addGroupingColumn: GridColumnsPreProcessing = (columns) => {
-        const index = columns[0].type === 'checkboxSelection' ? 1 : 0
+        const index = columns[0].type === 'checkboxSelection' ? 1 : 0;
         const groupingColumn = {
           ...GridTreeDataGroupColDef,
           ...props.groupingColDef,
-        }
+        };
 
-        return [
-            ...columns.slice(0, index),
-            groupingColumn,
-            ...columns.slice(index)
-        ];
+        return [...columns.slice(0, index), groupingColumn, ...columns.slice(index)];
       };
 
       apiRef.current.registerColumnPreProcessing('treeData', addGroupingColumn);
