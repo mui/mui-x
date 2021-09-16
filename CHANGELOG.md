@@ -107,7 +107,7 @@ A big thanks to the 9 contributors who made this release possible. Here are some
 - [core] Small fixes (#2511) @flaviendelangle
 - [core] Support for `@mui` packages (#2571) @m4theushw
 - [core] Synchronously subscribe to events in `useGridApiEventHandler` (#2557) @flaviendelangle
-- [core] Update browserslistrc (#2384) @DanailH
+- [core] Update `.browserslistrc` file (#2384) @DanailH
 - [core] Update monorepo version and copy assets (#2603) @m4theushw
 - [core] Update outdated hook requirements (#2526) @flaviendelangle
 - [test] Clean selection tests  (#2457) @flaviendelangle
