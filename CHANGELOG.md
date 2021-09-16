@@ -117,8 +117,7 @@ A big thanks to the 9 contributors who made this release possible. Here are some
 - [core] Replace remaining `@material-ui` usages (#2577) @m4theushw
 - [core] Replace the options with direct prop reads (#2433) @flaviendelangle
 - [core] Skip update on initial render (#2344) @oliviertassinari
-- [core] Small changes (#2607) @flaviendelangle
-- [core] Small fixes (#2511) @flaviendelangle
+- [core] Small changes (#2607, #2511) @flaviendelangle
 - [core] Support for `@mui` packages (#2571) @m4theushw
 - [core] Synchronously subscribe to events in `useGridApiEventHandler` (#2557) @flaviendelangle
 - [core] Update `.browserslistrc` file (#2384) @DanailH
