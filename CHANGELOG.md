@@ -90,7 +90,7 @@ A big thanks to the 9 contributors who made this release possible. Here are some
 
 #### Docs
 
-- [docs] Clarify confusion (#2525) @oliviertassinari
+- [docs] Clarify confusion between licenses (#2525) @oliviertassinari
 - [docs] Fix JSDoc comments (#2452) @m4theushw
 - [docs] Fix event argument in onXXX props (#2391) @m4theushw
 - [docs] Improve SEO ranking (#2467) @oliviertassinari
