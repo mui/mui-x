@@ -16,6 +16,7 @@ A big thanks to the 9 contributors who made this release possible. Here are some
 - 🎁 Add `actions` column type (#2385) @m4theushw
 - 👁 Allow to disable virtualization with the `disableVirtualization` prop (#2326) @m4theushw
 - 🚀 Introduce the new `isRowSelected` api method (#2523) @flaviendelangle
+- 🕹️ Show page size controls on smaller resolutions (#2461) @michaldudak
 - 🌎 Add Simplified Chinese (zhCN) localization (#2431) @wlf100220
 - 🌎 Add Korean (koKR) localization (#2446) @zzossig
 - 🐞 Bugfixes
