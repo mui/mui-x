@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataGridPro, GridColumns } from '@mui/x-data-grid-pro';
+import { DataGridPro, GridColumns, DataGridProProps } from '@mui/x-data-grid-pro';
 import { Meta } from '@storybook/react';
 import Button from '@mui/material/Button';
 
@@ -54,4 +54,33 @@ export function BasicTreeData() {
       />
     </React.Fragment>
   );
+}
+
+export function CustomGroupingColumn() {
+    const groupingColDef = React.useMemo<DataGridProProps['groupingColDef']>(() => ({
+        headerName: 'Custom header'
+    }), [])
+
+    return (
+        <DataGridPro
+            rows={rows}
+            columns={columns}
+            treeData
+            getTreeDataPath={getTreeDataPath}
+            groupingColDef={groupingColDef}
+        />
+    )
+}
+
+export function TreeDataWithCheckboxSelection() {
+    return (
+        <DataGridPro
+            rows={rows}
+            columns={columns}
+            treeData
+            getTreeDataPath={getTreeDataPath}
+            checkboxSelection
+            disableSelectionOnClick
+        />
+    )
 }

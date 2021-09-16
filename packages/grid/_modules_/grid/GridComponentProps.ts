@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { GridState } from './hooks/features/core/gridState';
 import { GridApiRef } from './models/api/gridApiRef';
-import { GridColumns } from './models/colDef/gridColDef';
+import {GridColDef, GridColumns} from './models/colDef/gridColDef';
 import {
   GridSimpleOptions,
   GridProcessedMergedOptions,
@@ -606,4 +606,8 @@ interface GridComponentOtherProps {
    * Overrideable components props dynamically passed to the component at rendering.
    */
   componentsProps?: GridSlotsComponentsProps;
+  /**
+   * The grouping column used by the tree data
+   */
+  groupingColDef?: Partial<GridColDef>
 }

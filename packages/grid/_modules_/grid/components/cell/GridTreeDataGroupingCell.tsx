@@ -46,6 +46,7 @@ const GridTreeDataGroupingCell = (props: GridRenderCellParams) => {
           <IconButton
             size="small"
             onClick={() => apiRef.current.setRowExpansion(id, !node?.expanded)}
+            tabIndex={-1}
           >
             <Icon fontSize="inherit" />
           </IconButton>

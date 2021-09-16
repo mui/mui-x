@@ -54,7 +54,7 @@ function getGridRowId(rowData: GridRowData, getRowId?: GridRowIdGetter): GridRow
  */
 export const useGridTreeData = (
   apiRef: GridApiRef,
-  props: Pick<GridComponentProps, 'treeData' | 'getTreeDataPath' | 'getRowId'>,
+  props: Pick<GridComponentProps, 'treeData' | 'getTreeDataPath' | 'getRowId' | 'groupingColDef'>,
 ) => {
   const groupRows = React.useCallback<GridTreeDataApi['groupRows']>(
     (rowsLookup, rowIds) => {
@@ -106,14 +106,21 @@ export const useGridTreeData = (
     if (!props.treeData) {
       apiRef.current.registerColumnPreProcessing('treeData', null);
     } else {
-      const addGroupingColumn: GridColumnsPreProcessing = (columns) => [
-        {
+      const addGroupingColumn: GridColumnsPreProcessing = (columns) => {
+        const index = columns[0].type === 'checkboxSelection' ? 1 : 0
+        const groupingColumn = {
           ...GridTreeDataGroupColDef,
-        },
-        ...columns,
-      ];
+          ...props.groupingColDef,
+        }
+
+        return [
+            ...columns.slice(0, index),
+            groupingColumn,
+            ...columns.slice(index)
+        ];
+      };
 
       apiRef.current.registerColumnPreProcessing('treeData', addGroupingColumn);
     }
-  }, [apiRef, props.treeData]);
+  }, [apiRef, props.treeData, props.groupingColDef]);
 };
