@@ -294,7 +294,7 @@ export function useGridEditRows(
       const model = apiRef.current.getEditRowsModel();
       const row = model[id];
       if (!row) {
-        throw new Error(`Material-UI: Row at id: ${id} is not being editted.`);
+        throw new Error(`Material-UI: Row at id: ${id} is not being edited.`);
       }
 
       const hasFieldWithError = Object.values(row).some((value) => !!value.error);
@@ -350,7 +350,7 @@ export function useGridEditRows(
       const model = apiRef.current.getEditRowsModel();
       const editRow = model[id];
       if (!editRow) {
-        throw new Error(`Material-UI: Row at id: ${id} is not being editted.`);
+        throw new Error(`Material-UI: Row at id: ${id} is not being edited.`);
       }
 
       const row = apiRef.current.getRow(id);
@@ -422,11 +422,10 @@ export function useGridEditRows(
   );
 
   const handleCellEditStop = React.useCallback(
-    (params: GridCellParams, event?: React.SyntheticEvent) => {
+    (params: GridCellParams, event: React.SyntheticEvent | {}) => {
       setCellMode(params.id, params.field, GridCellModes.View);
 
-      // When dispatched by the document, the event is not passed
-      if (!event || !isKeyboardEvent(event)) {
+      if (!isKeyboardEvent(event)) {
         return;
       }
 

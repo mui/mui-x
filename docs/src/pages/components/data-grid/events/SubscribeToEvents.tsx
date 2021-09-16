@@ -1,5 +1,9 @@
 import * as React from 'react';
-import { DataGridPro, useGridApiRef } from '@mui/x-data-grid-pro';
+import {
+  DataGridPro,
+  GridColumnResizeParams,
+  useGridApiRef,
+} from '@mui/x-data-grid-pro';
 import Alert from '@mui/material/Alert';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
@@ -13,11 +17,14 @@ export default function SubscribeToEvents() {
   });
 
   React.useEffect(() => {
-    return apiRef.current.subscribeEvent('columnResize', (params) => {
-      setMessage(
-        `Column ${params.colDef.headerName} resized to ${params.computedWidth}px.`,
-      );
-    });
+    return apiRef.current.subscribeEvent(
+      'columnResize',
+      (params: GridColumnResizeParams) => {
+        setMessage(
+          `Column ${params.colDef.headerName} resized to ${params.width}px.`,
+        );
+      },
+    );
   }, [apiRef]);
 
   return (

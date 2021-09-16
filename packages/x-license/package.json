@@ -1,11 +1,11 @@
 {
   "name": "@mui/x-license-pro",
-  "version": "4.0.0-alpha.37",
+  "version": "4.0.0",
   "description": "Material-UI X License verification",
   "author": "MUI Team",
-  "main": "dist/cjs/index.js",
-  "module": "dist/esm/index.js",
-  "types": "dist/x-license.d.ts",
+  "main": "build/cjs/index.js",
+  "module": "build/esm/index.js",
+  "types": "build/x-license.d.ts",
   "scripts": {
     "typescript": "tsc -p tsconfig.json",
     "build": "rollup -c"
@@ -15,9 +15,6 @@
     "url": "https://github.com/mui-org/material-ui-x.git",
     "directory": "packages/x-license"
   },
-  "files": [
-    "dist/*"
-  ],
   "bugs": {
     "url": "https://github.com/mui-org/material-ui-x/issues"
   },

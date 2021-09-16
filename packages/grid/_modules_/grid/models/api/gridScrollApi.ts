@@ -7,7 +7,7 @@ import { GridScrollParams } from '../params/gridScrollParams';
 export interface GridScrollApi {
   /**
    * Triggers the viewport to scroll to the given positions (in pixels).
-   * @param {GridScrollParams} params An object contaning the `left` or `top` position to scroll.
+   * @param {GridScrollParams} params An object containing the `left` or `top` position to scroll.
    */
   scroll: (params: Partial<GridScrollParams>) => void;
   /**
