@@ -1,5 +1,5 @@
 import { GridCellMode, GridCellValue } from '../gridCell';
-import { GridRowDefaultData, GridRowId, GridRowModel } from '../gridRows';
+import { GridRowId, GridRowModel } from '../gridRows';
 import type { GridStateColDef } from '../colDef';
 import { GridEditCellProps } from '../gridEditRowModel';
 
@@ -8,7 +8,8 @@ import { GridEditCellProps } from '../gridEditRowModel';
  */
 export interface GridCellParams<
   T = GridCellValue,
-  RowType extends GridRowDefaultData = GridRowDefaultData,
+  R extends GridRowModel = GridRowModel,
+  FormattedT = T,
 > {
   /**
    * The grid row id.
@@ -25,11 +26,11 @@ export interface GridCellParams<
   /**
    * The cell value formatted with the column valueFormatter.
    */
-  formattedValue: T;
+  formattedValue: FormattedT;
   /**
    * The row model of the row that the current cell belongs to.
    */
-  row: GridRowModel<RowType>;
+  row: GridRowModel<R>;
   /**
    * The column of the row that the current cell belongs to.
    */
@@ -56,7 +57,7 @@ export interface GridCellParams<
    * @param {string} field The field.
    * @returns {GridCellValue} The cell value.
    */
-  getValue: (id: GridRowId, field: string) => T;
+  getValue: (id: GridRowId, field: string) => GridCellValue;
 }
 
 /**
@@ -64,8 +65,9 @@ export interface GridCellParams<
  */
 export interface GridRenderCellParams<
   T = any,
-  RowType extends GridRowDefaultData = GridRowDefaultData,
-> extends GridCellParams<T, RowType> {
+  R extends GridRowModel = GridRowModel,
+  FormattedT = T,
+> extends GridCellParams<T, R, FormattedT> {
   /**
    * GridApi that let you manipulate the grid.
    */

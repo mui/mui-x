@@ -35,9 +35,7 @@ const columns: GridColumns = [
 The `getRowClassName` prop can be used to apply a custom CSS class on each row. It's called with a `GridRowParams` object and must return a string.
 
 ```tsx
-interface GridRowParams<
-  RowDataType extends GridRowDefaultData = GridRowDefaultData,
-> {
+interface GridRowParams<R extends GridRowModel = GridRowModel> {
   /**
    * The grid row id.
    */
@@ -45,7 +43,7 @@ interface GridRowParams<
   /**
    * The row model of the row that the current cell belongs to.
    */
-  row: GridRowModel<RowDataType>;
+  row: GridRowModel<R>;
   /**
    * All grid columns.
    */

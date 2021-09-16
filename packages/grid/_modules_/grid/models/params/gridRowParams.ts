@@ -1,11 +1,11 @@
 import { GridCellValue } from '../gridCell';
-import { GridRowDefaultData, GridRowId, GridRowModel } from '../gridRows';
+import { GridRowId, GridRowModel } from '../gridRows';
 import type { GridColumns } from '../colDef';
 
 /**
  * Object passed as parameter in the row callbacks.
  */
-export interface GridRowParams<RowDataType extends GridRowDefaultData = GridRowDefaultData> {
+export interface GridRowParams<R extends GridRowModel = GridRowModel> {
   /**
    * The grid row id.
    */
@@ -13,7 +13,7 @@ export interface GridRowParams<RowDataType extends GridRowDefaultData = GridRowD
   /**
    * The row model of the row that the current cell belongs to.
    */
-  row: GridRowModel<RowDataType>;
+  row: GridRowModel<R>;
   /**
    * All grid columns.
    */
