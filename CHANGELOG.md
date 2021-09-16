@@ -97,7 +97,7 @@ A big thanks to the 9 contributors who made this release possible. Here are some
 - [core] Polish issue template (#2503) @oliviertassinari
 - [core] Prepare `x-grid-data-generator` for noImplicitAny (#2505) @flaviendelangle
 - [core] Provide theme augmentation as separate module (#2520) @m4theushw
-- [core] Publish GridEvents.rowsSet when the rows state is modified after props.rows is updated (#2530) @flaviendelangle
+- [core] Publish `GridEvents.rowsSet` when the rows state is modified after `props.rows` is updated (#2530) @flaviendelangle
 - [core] Remove `state.isScrolling` (#2337) @m4theushw
 - [core] Remove useless apiRef optional chaining or non-null assertions (#2455) @flaviendelangle
 - [core] Replace remaining `@material-ui` usages (#2577) @m4theushw
