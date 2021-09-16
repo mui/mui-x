@@ -97,13 +97,7 @@ GridActionsCell.propTypes = {
   /**
    * The cell value formatted with the column valueFormatter.
    */
-  formattedValue: PropTypes.oneOfType([
-    PropTypes.instanceOf(Date),
-    PropTypes.number,
-    PropTypes.object,
-    PropTypes.string,
-    PropTypes.bool,
-  ]),
+  formattedValue: PropTypes.any.isRequired,
   /**
    * Get the cell value of a row and field.
    * @param {GridRowId} id The row id.
@@ -148,13 +142,7 @@ GridActionsCell.propTypes = {
   /**
    * The cell value, but if the column has valueGetter, use getValue.
    */
-  value: PropTypes.oneOfType([
-    PropTypes.instanceOf(Date),
-    PropTypes.number,
-    PropTypes.object,
-    PropTypes.string,
-    PropTypes.bool,
-  ]),
+  value: PropTypes.any.isRequired,
 } as any;
 
 export { GridActionsCell };
