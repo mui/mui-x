@@ -12,7 +12,7 @@ _Sep 16, 2021_
 A big thanks to the 9 contributors who made this release possible. Here are some highlights ✨:
 
 - ⚡ Migrate to the new `@mui/material` and `@mui/styles` packages and drop support for `@material-ui/core` (#2515, #2571) @m4theushw
-- 📚 Migrate to the new documentation infrastructure and design (#2441) @DanailH
+- 📚 Migrate to the new documentation infrastructure and design (#2441) (@DanailH, @m4theushw)
 - 🚀 Introduce the row menu feature  (#2385) @m4theushw
 - 🚀 Introduce the `disableVirtualization` prop (#2326) @m4theushw
 - 🚀 Introduce the new `isRowSelected` api method (#2523) @flaviendelangle
