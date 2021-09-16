@@ -14,6 +14,9 @@ A big thanks to the 9 contributors who made this release possible. Here are some
 - ⚡ Migrate to the new `@mui/material` and `@mui/styles` packages and drop support for `@material-ui/core` (#2515, #2571) @m4theushw
 - 📚 Migrate to the new documentation infrastructure and design (#2441) (@DanailH, @m4theushw)
 - 🎁 Add `actions` column type (#2385) @m4theushw
+
+  See the documentation for [more details](https://mui.com/components/data-grid/columns/#column-types).
+
 - 👁 Allow to disable virtualization with the `disableVirtualization` prop (#2326) @m4theushw
 - 🚀 Introduce the new `isRowSelected` api method (#2523) @flaviendelangle
 - 🕹️ Show page size controls on smaller resolutions (#2461) @michaldudak
