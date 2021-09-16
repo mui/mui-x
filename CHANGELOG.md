@@ -69,7 +69,7 @@ A big thanks to the 9 contributors who made this release possible. Here are some
 - [DataGrid] Add `actions` column type (#2385) @m4theushw
 - [DataGrid] Add zhCN localization (#2431) @wlf100220
 - [DataGrid] Add koKR localization (#2446) @zzossig
-- [DataGrid] Clean the selection public api (#2523) @flaviendelangle
+- [DataGrid] Clean the selection public API (#2523) @flaviendelangle
 - [DataGrid] Do not call `useGridColumnResize` and `useGridInfiniteLoader` (#2580) @flaviendelangle
 - [DataGrid] Do not show right border of last column header when its cells don't have it (#2444) @flaviendelangle
 - [DataGrid] Don't consider unselectable rows when `selectionModel` is used (#2464) @m4theushw
