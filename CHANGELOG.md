@@ -95,7 +95,7 @@ A big thanks to the 9 contributors who made this release possible. Here are some
 - [docs] Fix event argument in onXXX props (#2391) @m4theushw
 - [docs] Improve SEO ranking (#2467) @oliviertassinari
 - [docs] Replace 'paging' with 'pagination' (#2459) @michaldudak
-- [docs] Use same infra from v5 (#2441) @DanailH
+- [docs] Use same infrastructure from v5 (#2441) @DanailH
 
 #### Core
 
