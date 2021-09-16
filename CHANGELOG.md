@@ -93,7 +93,7 @@ A big thanks to the 9 contributors who made this release possible. Here are some
 - [core] Improve the feedback loop from developers (#2468) @oliviertassinari
 - [core] List the requirement of each hook (#2319) @flaviendelangle
 - [core] Only create one `GridEventEmitter` per Grid (#2504) @flaviendelangle
-- [core] Only run Prettier on files different from 'next' instead of 'master' (#2566) @flaviendelangle
+- [core] Only run Prettier on files different from `next` instead of `master` (#2566) @flaviendelangle
 - [core] Polish issue template (#2503) @oliviertassinari
 - [core] Prepare `x-grid-data-generator` for noImplicitAny (#2505) @flaviendelangle
 - [core] Provide theme augmentation as separate module (#2520) @m4theushw
