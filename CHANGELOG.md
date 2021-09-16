@@ -36,7 +36,7 @@ A big thanks to the 9 contributors who made this release possible. Here are some
   +const state = apiRef.current.state
   ```
 
-- [DataGridPro] Unification of the selection API parameters between `selectRow` and `selectRows`
+- [DataGridPro] The third argument in `apiRef.current.selectRow` is now inverted to keep consistency with other selection APIs. (#2523) @flaviendelangle
 
 
   ```diff
