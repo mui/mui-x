@@ -48,7 +48,13 @@ A big thanks to the 9 contributors who made this release possible. Here are some
 - [DataGrid] The module augmentation is not enabled by default. This change was done to prevent conflicts with projects using `DataGrid` and `DataGridPro` together. 
 
   In order to still be able to do overrides at the theme level, add the following imports to your project:
+- [DataGrid] The module augmentation is not enabled by default. This change was done to prevent conflicts with projects using `DataGrid` and `DataGridPro` together. 
 
+  In order to still be able to do overrides at the theme level, add the following imports to your project:
+
+  ```diff
+  +import type {} from '@mui/x-data-grid/themeAugmentation';
+  +import type {} from '@mui/x-data-grid-pro/themeAugmentation';
   ```diff
   +import type {} from '@mui/x-data-grid/themeAugmentation';
   +import type {} from '@mui/x-data-grid-pro/themeAugmentation';
