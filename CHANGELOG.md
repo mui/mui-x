@@ -44,7 +44,7 @@ A big thanks to the 9 contributors who made this release possible. Here are some
   +selectRow: (id: GridRowId, isSelected?: boolean, resetSelection?: boolean = false) => void;
   ```
 
-- [DataGrid] Replace the `options` with direct prop reads
+- [DataGrid] Remove the `options` prop from the return of `useGridSlotComponentProps`.
 
   ```diff
   -const { options } = useGridSlotComponentProps();
