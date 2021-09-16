@@ -56,20 +56,20 @@ A big thanks to the 9 contributors who made this release possible. Here are some
 - [DataGrid] Add zhCN localization (#2431) @wlf100220
 - [DataGrid] Add koKR localization (#2446) @zzossig
 - [DataGrid] Clean the selection public api (#2523) @flaviendelangle
-- [DataGrid] Do not call useGridColumnResize and useGridInfiniteLoader (#2580) @flaviendelangle
-- [DataGrid] Do not show right border of last column header when the its cells don't have it (#2444) @flaviendelangle
-- [DataGrid] Don't consider unselectable rows when selectionModel is used (#2464) @m4theushw
+- [DataGrid] Do not call `useGridColumnResize` and `useGridInfiniteLoader (#2580) @flaviendelangle
+- [DataGrid] Do not show right border of last column header when its cells don't have it (#2444) @flaviendelangle
+- [DataGrid] Don't consider unselectable rows when `selectionModel` is used (#2464) @m4theushw
 - [DataGrid] Drop v4 support (#2515) @m4theushw
-- [DataGrid] Fire columnOrderChange event after state update (#2451) @flaviendelangle
+- [DataGrid] Fire `columnOrderChange` event after state update (#2451) @flaviendelangle
 - [DataGrid] Fix TypeScript type error for toolbar components (#2393) @ZeeshanTamboli
 - [DataGrid] Fix navigation between column headers with rows filtered (#2440) @m4theushw
-- [DataGrid] Force scrollEndThreshold to undefined (#2574) @flaviendelangle
+- [DataGrid] Force `scrollEndThreshold` to undefined (#2574) @flaviendelangle
 - [DataGrid] Improve jaJP localization (#2502) @daikiojm
 - [DataGrid] Make `hideFooterRowCount` prop available only for DataGridPro (#2564) @ZeeshanTamboli
 - [DataGrid] Pressing `Escape` should close `GridColumnHeaderMenu` without errors (#2463) @DanailH
 - [DataGrid] Prevent scroll when selecting rows (#2558) @m4theushw
-- [DataGrid] Reduce specificity of GridToolbarContainer styles (#2462) @michaldudak
-- [DataGrid] Remove import to @material-ui/icons (#2576) @m4theushw
+- [DataGrid] Reduce specificity of `GridToolbarContainer` styles (#2462) @michaldudak
+- [DataGrid] Remove import to `@material-ui/icons` (#2576) @m4theushw
 - [DataGrid] Show page size controls on narrower screens (#2461) @michaldudak
 - [DataGrid] Vertically align column header icons (#2555) @oliviertassinari
 - [bug] The numeric filter operators are not handling '0' correctly (#2528) @flaviendelangle
@@ -87,26 +87,26 @@ A big thanks to the 9 contributors who made this release possible. Here are some
 
 - [core] Add typing to the details argument (#2512) @flaviendelangle
 - [core] Allow to create one logger per Grid instance (#2529) @flaviendelangle
-- [core] Clean GridSimpleOptions interface (#2578) @flaviendelangle
+- [core] Clean `GridSimpleOptions` interface (#2578) @flaviendelangle
 - [core] Fix PR detection mechanism for upstream PRs @oliviertassinari
 - [core] Generate propTypes (#2395) @m4theushw
 - [core] Improve the feedback loop from developers (#2468) @oliviertassinari
-- [core] List the requirement of each hooks (#2319) @flaviendelangle
-- [core] Only create one GridEventEmitter per Grid (#2504) @flaviendelangle
+- [core] List the requirement of each hook (#2319) @flaviendelangle
+- [core] Only create one `GridEventEmitter` per Grid (#2504) @flaviendelangle
 - [core] Only run Prettier on files different from 'next' instead of 'master' (#2566) @flaviendelangle
 - [core] Polish issue template (#2503) @oliviertassinari
-- [core] Prepare x-grid-data-generator for noImplicitAny (#2505) @flaviendelangle
+- [core] Prepare `x-grid-data-generator` for noImplicitAny (#2505) @flaviendelangle
 - [core] Provide theme augmentation as separate module (#2520) @m4theushw
 - [core] Publish GridEvents.rowsSet when the rows state is modified after props.rows is updated (#2530) @flaviendelangle
-- [core] Remove state.isScrolling (#2337) @m4theushw
+- [core] Remove `state.isScrolling` (#2337) @m4theushw
 - [core] Remove useless apiRef optional chaining or non-null assertions (#2455) @flaviendelangle
-- [core] Replace remaining @material-ui usages (#2577) @m4theushw
+- [core] Replace remaining `@material-ui` usages (#2577) @m4theushw
 - [core] Replace the options with direct prop reads (#2433) @flaviendelangle
 - [core] Skip update on initial render (#2344) @oliviertassinari
 - [core] Small changes (#2607) @flaviendelangle
 - [core] Small fixes (#2511) @flaviendelangle
-- [core] Support for @mui packages (#2571) @m4theushw
-- [core] Synchronously subscribe to events in useGridApiEventHandler (#2557) @flaviendelangle
+- [core] Support for `@mui` packages (#2571) @m4theushw
+- [core] Synchronously subscribe to events in `useGridApiEventHandler` (#2557) @flaviendelangle
 - [core] Update browserslistrc (#2384) @DanailH
 - [core] Update monorepo version and copy assets (#2603) @m4theushw
 - [core] Update outdated hook requirements (#2526) @flaviendelangle
