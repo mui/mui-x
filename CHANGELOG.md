@@ -18,6 +18,7 @@ A big thanks to the 9 contributors who made this release possible. Here are some
 - 🚀 Introduce the new `isRowSelected` api method (#2523) @flaviendelangle
 - 🌎 Add Simplified Chinese (zhCN) localization (#2431) @wlf100220
 - 🌎 Add Korean (koKR) localization (#2446) @zzossig
+- 🐞 Bugfixes
 
 ### `@mui/x-data-grid@v5.0.0-beta.0` / `@mui/x-data-grid-pro@v5.0.0-beta.0`
 
