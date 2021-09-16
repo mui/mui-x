@@ -80,7 +80,7 @@ A big thanks to the 9 contributors who made this release possible. Here are some
 - [DataGrid] Force `scrollEndThreshold` to undefined (#2574) @flaviendelangle
 - [DataGrid] Improve jaJP localization (#2502) @daikiojm
 - [DataGrid] Make `hideFooterRowCount` prop available only for DataGridPro (#2564) @ZeeshanTamboli
-- [DataGrid] Pressing <kbd>Escape</kbd> should close `GridColumnHeaderMenu` without errors (#2463) @DanailH
+- [DataGrid] Fix a bug where pressing <kbd>Escape</kbd> was not closing the `GridColumnHeaderMenu` (#2463) @DanailH
 - [DataGrid] Prevent scroll when selecting rows (#2558) @m4theushw
 - [DataGrid] Reduce specificity of `GridToolbarContainer` styles (#2462) @michaldudak
 - [DataGrid] Remove import to `@material-ui/icons` (#2576) @m4theushw
