@@ -83,7 +83,7 @@ A big thanks to the 9 contributors who made this release possible. Here are some
 - [DataGrid] Prevent scroll when selecting rows (#2558) @m4theushw
 - [DataGrid] Reduce specificity of `GridToolbarContainer` styles (#2462) @michaldudak
 - [DataGrid] Remove import to `@material-ui/icons` (#2576) @m4theushw
-- [DataGrid] Show page size controls on narrower screens (#2461) @michaldudak
+- [DataGrid] Show page size controls on smaller resolutions (#2461) @michaldudak
 - [DataGrid] Vertically align column header icons (#2555) @oliviertassinari
 - [DataGrid] The numeric filter operators are not handling '0' correctly (#2528) @flaviendelangle
 
