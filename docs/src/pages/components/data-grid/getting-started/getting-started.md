@@ -97,6 +97,30 @@ export default function App() {
 
 {{"demo": "pages/components/data-grid/getting-started/Codesandbox.js", "hideToolbar": true, "bg": true}}
 
+## TypeScript
+
+In order to benefit from the [CSS overrides](/customization/theme-components/#global-style-overrides) and [default prop customization](/customization/theme-components/#default-props) with the theme, TypeScript users need to import the following types.
+Internally, it uses module augmentation to extend the default theme structure.
+
+```tsx
+// When using TypeScript 4.x and above
+import type {} from '@mui/x-data-grid/themeAugmentation';
+import type {} from '@mui/x-data-grid-pro/themeAugmentation';
+
+const theme = createTheme({
+  components: {
+    // Use `DataGrid` on both DataGrid and DataGridPro
+    MuiDataGrid: {
+      styleOverrides: {
+        root: {
+          backgroundColor: 'red',
+        },
+      },
+    },
+  },
+});
+```
+
 ## Licenses
 
 The data grid comes with two different licenses:
