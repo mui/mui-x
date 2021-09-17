@@ -13,6 +13,5 @@ export const GridTreeDataGroupColDef: GridColDef = {
   disableReorder: true,
   align: 'left',
   width: 200,
-  valueGetter: () => true,
   renderCell: (params) => <GridTreeDataGroupingCell {...params} />,
 };

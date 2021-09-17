@@ -19,7 +19,7 @@ import { gridContainerSizesSelector } from '../../root/gridContainerSizesSelecto
 import { visibleGridColumnsLengthSelector } from '../columns/gridColumnsSelector';
 import { useGridSelector } from '../core/useGridSelector';
 import { gridPaginationSelector } from '../pagination/gridPaginationSelector';
-import { gridRowCountSelector } from '../rows/gridRowsSelector';
+import { gridRowExpandedCountSelector } from '../rows/gridRowsSelector';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
 import { GridComponentProps } from '../../../GridComponentProps';
@@ -76,7 +76,7 @@ export const useGridKeyboardNavigation = (
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridKeyboardNavigation');
   const paginationState = useGridSelector(apiRef, gridPaginationSelector);
-  const totalRowCount = useGridSelector(apiRef, gridRowCountSelector);
+  const expandedRowCount = useGridSelector(apiRef, gridRowExpandedCountSelector);
   const colCount = useGridSelector(apiRef, visibleGridColumnsLengthSelector);
   const containerSizes = useGridSelector(apiRef, gridContainerSizesSelector);
   const visibleSortedRows = useGridSelector(apiRef, gridSortedVisibleRowsFlatSelector);
@@ -99,9 +99,9 @@ export const useGridKeyboardNavigation = (
 
       const key = mapKey(event);
       const isCtrlPressed = event.ctrlKey || event.metaKey || event.shiftKey;
-      let rowCount = totalRowCount;
+      let rowCount = expandedRowCount;
 
-      if (props.pagination && totalRowCount > paginationState.pageSize) {
+      if (props.pagination && expandedRowCount > paginationState.pageSize) {
         rowCount = paginationState.pageSize * (paginationState.page + 1);
       }
 
@@ -162,7 +162,7 @@ export const useGridKeyboardNavigation = (
     [
       apiRef,
       visibleSortedRows,
-      totalRowCount,
+      expandedRowCount,
       props.pagination,
       paginationState.pageSize,
       paginationState.page,

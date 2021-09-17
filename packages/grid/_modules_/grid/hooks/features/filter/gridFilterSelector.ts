@@ -59,6 +59,7 @@ export const gridVisibleRowCountSelector = createSelector(
     if (visibleRowsState.visibleRows == null) {
       return totalRowsCount;
     }
+
     return visibleRowsState.visibleRows.length;
   },
 );

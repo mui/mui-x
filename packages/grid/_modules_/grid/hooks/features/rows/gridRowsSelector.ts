@@ -40,6 +40,27 @@ export const gridRowExpandedTreeSelector = createSelector(gridRowTreeSelector, (
   return removeCollapsedNodes(rowsTree);
 });
 
+export const gridRowExpandedCountSelector = createSelector(
+  gridRowExpandedTreeSelector,
+  (expandedRows) => {
+    const countNodes = (tree: GridRowConfigTree) => {
+      let count: number = 0;
+
+      tree.forEach((node) => {
+        count += 1;
+
+        if (node.children) {
+          count += countNodes(node.children);
+        }
+      });
+
+      return count;
+    };
+
+    return countNodes(expandedRows);
+  },
+);
+
 export const gridRowIdsFlatSelector = createSelector(gridRowTreeSelector, (tree) => {
   const flattenRowIds = (nodes: GridRowConfigTree): GridRowId[] =>
     Array.from(nodes.values()).flatMap((node) => [

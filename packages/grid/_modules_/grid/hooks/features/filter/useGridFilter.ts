@@ -14,7 +14,10 @@ import { filterableGridColumnsIdsSelector } from '../columns/gridColumnsSelector
 import { useGridSelector } from '../core/useGridSelector';
 import { useGridState } from '../core/useGridState';
 import { GridPreferencePanelsValue } from '../preferencesPanel/gridPreferencePanelsValue';
-import { gridSortedRowsSelector } from '../sorting/gridSortingSelector';
+import {
+  gridSortedRowIdsFlatSelector,
+  gridSortedRowsSelector,
+} from '../sorting/gridSortingSelector';
 import { getInitialGridFilterState } from './gridFilterModelState';
 import { GridFilterModel } from '../../../models/gridFilterModel';
 import { gridSortedVisibleRowsSelector } from './gridFilterSelector';
@@ -135,17 +138,32 @@ export const useGridFilter = (
   );
 
   const applyFilters = React.useCallback(() => {
-    if (props.filterMode === GridFeatureModeConstant.server) {
-      forceUpdate();
-      return;
-    }
-
-    clearFilteredRows();
-
     const { items, linkOperator } = apiRef.current.state.filter;
-    items.forEach((filterItem) => {
-      apiRef.current.applyFilter(filterItem, linkOperator);
-    });
+
+    const hasFilterToApply = props.filterMode === GridFeatureModeConstant.client && !!items.length;
+
+    if (hasFilterToApply) {
+      clearFilteredRows();
+
+      items.forEach((filterItem) => {
+        apiRef.current.applyFilter(filterItem, linkOperator);
+      });
+    } else {
+      setGridState((state) => {
+        const rowIds = gridSortedRowIdsFlatSelector(state);
+        const visibleRowsLookup = Object.fromEntries(rowIds.map((rowId) => [rowId, true]));
+        const visibleRows = [...rowIds];
+
+        return {
+          ...state,
+          visibleRows: {
+            ...state.visibleRows,
+            visibleRowsLookup,
+            visibleRows,
+          },
+        };
+      });
+    }
     forceUpdate();
   }, [apiRef, clearFilteredRows, forceUpdate, props.filterMode]);
 

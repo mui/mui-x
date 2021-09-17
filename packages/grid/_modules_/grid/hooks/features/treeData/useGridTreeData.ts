@@ -12,6 +12,11 @@ import { GridComponentProps } from '../../../GridComponentProps';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
 import { GridColumnsPreProcessing } from '../../root/columnsPreProcessing';
 import { GridTreeDataGroupColDef } from './gridTreeDataGroupColDef';
+import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
+import { GridEvents } from '../../../constants';
+import { GridCellModes, GridCellParams, MuiEvent } from '../../../models';
+import { isGridCellRoot } from '../../../utils/domUtils';
+import { isNavigationKey, isSpaceKey } from '../../../utils/keyboardUtils';
 
 const insertRowInTree = (
   tree: GridRowConfigTree,
@@ -119,4 +124,19 @@ export const useGridTreeData = (
       apiRef.current.registerColumnPreProcessing('treeData', addGroupingColumn);
     }
   }, [apiRef, props.treeData, props.groupingColDef]);
+
+  const handleCellKeyDown = React.useCallback(
+    (params: GridCellParams, event: MuiEvent<React.KeyboardEvent>) => {
+      // Get the most recent params because the cell mode may have changed by another listener
+      const cellParams = apiRef.current.getCellParams(params.id, params.field);
+
+      if (cellParams.field === '__tree_data_group__' && isSpaceKey(event.key)) {
+        event.stopPropagation();
+        apiRef.current.setRowExpansion(params.id, !apiRef.current.getRowNode(params.id)?.expanded);
+      }
+    },
+    [apiRef],
+  );
+
+  useGridApiEventHandler(apiRef, GridEvents.cellKeyDown, handleCellKeyDown);
 };
