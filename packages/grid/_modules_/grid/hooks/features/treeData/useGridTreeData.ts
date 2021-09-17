@@ -14,9 +14,8 @@ import { GridColumnsPreProcessing } from '../../root/columnsPreProcessing';
 import { GridTreeDataGroupColDef } from './gridTreeDataGroupColDef';
 import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
 import { GridEvents } from '../../../constants';
-import { GridCellModes, GridCellParams, GridColDef, MuiEvent } from '../../../models';
-import { isGridCellRoot } from '../../../utils/domUtils';
-import { isNavigationKey, isSpaceKey } from '../../../utils/keyboardUtils';
+import { GridCellParams, GridColDef, MuiEvent } from '../../../models';
+import { isSpaceKey } from '../../../utils/keyboardUtils';
 
 const insertRowInTree = (
   tree: GridRowConfigTree,
