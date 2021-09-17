@@ -628,7 +628,6 @@ describe('<DataGridPro /> - Edit Rows', () => {
       fireEvent.doubleClick(cell);
       const firstOption = screen.queryAllByRole('option')[0];
       const secondOption = screen.queryAllByRole('option')[1];
-
       expect(firstOption.innerText).to.equal('User');
       expect(secondOption.innerText).to.equal('Admin');
     });
