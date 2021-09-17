@@ -19,6 +19,7 @@ import { gridPaginationSelector } from '../features/pagination/gridPaginationSel
 import { useGridLogger } from '../utils/useGridLogger';
 import { useGridApiEventHandler } from './useGridApiEventHandler';
 import { GridComponentProps } from '../../GridComponentProps';
+import { height } from '@material-ui/monorepo/packages/mui-system';
 
 function getScrollbarSize(doc: Document, element: HTMLElement): number {
   const scrollDiv = doc.createElement('div');

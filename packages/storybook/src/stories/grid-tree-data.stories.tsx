@@ -11,27 +11,54 @@ export default {
   },
 } as Meta;
 
-const rows = [
-  { id: 0, name: 'A' },
-  { id: 1, name: 'A.A' },
-  { id: 2, name: 'B' },
-  { id: 3, name: 'B.A' },
-  { id: 4, name: 'B.B' },
-  { id: 5, name: 'B.B.A' },
-  { id: 6, name: 'C' },
-];
-
-const columns: GridColumns = [
-  {
-    field: 'id',
-  },
-  {
-    field: 'name',
-    width: 200,
-  },
-];
-
-const getTreeDataPath = (row) => row.name.split('.');
+const baselineProps: DataGridProProps = {
+  rows: [
+    { name: 'A' },
+    { name: 'A.A' },
+    { name: 'B' },
+    { name: 'B.A' },
+    { name: 'B.B' },
+    { name: 'B.B.A' },
+    { name: 'C' },
+    { name: 'D' },
+    { name: 'D.A' },
+    { name: 'D.B' },
+    { name: 'D.C' },
+    { name: 'D.D' },
+    { name: 'D.E' },
+    { name: 'D.F' },
+    { name: 'D.G' },
+    { name: 'D.H' },
+    { name: 'D.I' },
+    { name: 'D.J' },
+    { name: 'D.K' },
+    { name: 'E' },
+    { name: 'F' },
+    { name: 'F.A' },
+    { name: 'F.A.A' },
+    { name: 'F.A.B' },
+    { name: 'F.A.C' },
+    { name: 'F.A.D' },
+    { name: 'F.A.E' },
+    { name: 'G' },
+    { name: 'H' },
+    { name: 'I' },
+    { name: 'J' },
+  ],
+  columns: [
+    {
+      field: 'id',
+    },
+    {
+      field: 'name',
+      width: 200,
+    },
+  ],
+  treeData: true,
+  disableSelectionOnClick: true,
+  getRowId: (row) => row.name,
+  getTreeDataPath: (row) => row.name.split('.'),
+};
 
 export function BasicTreeData() {
   const [treeDataEnabled, setTreeDataEnabled] = React.useState(true);
@@ -46,12 +73,7 @@ export function BasicTreeData() {
       >
         {treeDataEnabled ? 'Disable tree data' : 'Enable tree data'}
       </Button>
-      <DataGridPro
-        rows={rows}
-        columns={columns}
-        treeData={treeDataEnabled}
-        getTreeDataPath={getTreeDataPath}
-      />
+      <DataGridPro {...baselineProps} treeData={treeDataEnabled} />
     </React.Fragment>
   );
 }
@@ -64,26 +86,17 @@ export function CustomGroupingColumn() {
     [],
   );
 
-  return (
-    <DataGridPro
-      rows={rows}
-      columns={columns}
-      treeData
-      getTreeDataPath={getTreeDataPath}
-      groupingColDef={groupingColDef}
-    />
-  );
+  return <DataGridPro {...baselineProps} groupingColDef={groupingColDef} />;
 }
 
 export function TreeDataWithCheckboxSelection() {
+  return <DataGridPro {...baselineProps} checkboxSelection />;
+}
+
+export function TreeDataPagination() {
   return (
-    <DataGridPro
-      rows={rows}
-      columns={columns}
-      treeData
-      getTreeDataPath={getTreeDataPath}
-      checkboxSelection
-      disableSelectionOnClick
-    />
+    <div>
+      <DataGridPro {...baselineProps} pagination pageSize={5} rowsPerPageOptions={[5]} autoHeight />
+    </div>
   );
 }
