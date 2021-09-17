@@ -80,6 +80,7 @@ A big thanks to the 9 contributors who made this release possible. Here are some
 - [DataGrid] Do not show right border of last column header when its cells don't have it (#2444) @flaviendelangle
 - [DataGrid] Don't consider unselectable rows when `selectionModel` is used (#2464) @m4theushw
 - [DataGrid] Drop v4 support (#2515) @m4theushw
+- [DataGrid] Export `useGridRootProps` (#2621) @flaviendelangle
 - [DataGrid] Fire `columnOrderChange` event after state update (#2451) @flaviendelangle
 - [DataGrid] Fix TypeScript type error for toolbar components (#2393) @ZeeshanTamboli
 - [DataGrid] Fix navigation between column headers with rows filtered (#2440) @m4theushw
