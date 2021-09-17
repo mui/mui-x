@@ -600,7 +600,7 @@ describe('<DataGridPro /> - Edit Rows', () => {
       expect(cell).to.have.text('Italy');
     });
 
-    it('should apply valueFormatter to select options when valueOptions is of primitive types', () => {
+    it.only('should apply valueFormatter to select options when valueOptions is of primitive types', () => {
       render(
         <div style={{ width: 300, height: 300 }}>
           <DataGridPro
@@ -628,8 +628,9 @@ describe('<DataGridPro /> - Edit Rows', () => {
       fireEvent.doubleClick(cell);
       const firstOption = screen.queryAllByRole('option')[0];
       const secondOption = screen.queryAllByRole('option')[1];
-      expect(firstOption.innerText).to.equal('User');
-      expect(secondOption.innerText).to.equal('Admin');
+
+      expect(firstOption).to.have.text('User');
+      expect(secondOption).to.have.text('Admin');
     });
 
     it('should set the focus correctly', () => {
