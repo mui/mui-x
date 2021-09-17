@@ -62,7 +62,7 @@ In the demo below only rows with quantity above 50000 can be selected:
 
 ## Controlled selection
 
-Use the `selectionModel` prop to control the selection. 
+Use the `selectionModel` prop to control the selection.
 Each time this prop changes, the `onSelectionModelChange` callback is called with the new selection value.
 
 {{"demo": "pages/components/data-grid/selection/ControlledSelectionGrid.js", "bg": "inline"}}

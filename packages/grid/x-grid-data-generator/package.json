@@ -1,14 +1,11 @@
 {
   "name": "@mui/x-data-grid-generator",
-  "version": "4.0.0-alpha.37",
+  "version": "5.0.0-beta.0",
   "description": "Generate fake data for demo purposes only.",
   "author": "MUI Team",
-  "main": "dist/cjs/index.js",
-  "module": "dist/esm/index.js",
-  "types": "dist/esm/x-grid-data-generator.d.ts",
-  "files": [
-    "dist/*"
-  ],
+  "main": "cjs/index.js",
+  "module": "esm/index.js",
+  "types": "esm/x-grid-data-generator.d.ts",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/mui-org/material-ui-x/issues"
@@ -43,8 +40,8 @@
     "yargs": "^17.0.1"
   },
   "peerDependencies": {
-    "@mui/icons-material": "^5.0.0-rc.1",
-    "@mui/material": "^5.0.0-rc.1",
+    "@mui/icons-material": "^5.0.0",
+    "@mui/material": "^5.0.0",
     "react": "^17.0.2"
   },
   "setupFiles": [

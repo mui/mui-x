@@ -6,7 +6,7 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import PropTypes from 'prop-types';
-import HighlightedCode from '../../../node_modules/@material-ui/monorepo/docs/src/modules/components/HighlightedCode';
+import HighlightedCode from 'docs/src/modules/components/HighlightedCode';
 
 const useStyles = makeStyles((theme) => ({
   root: {
