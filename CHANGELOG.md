@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 5.0.0-beta.1
+
+_Sep 17, 2021_
+
+Our precedent release did not include every file.
+This release is a follow-up fixing it.
+
+A big thanks to the 3 contributors who made this release possible.
+
+#### Docs
+- [docs] Explain how to use theme augmentation (#2582) @ZeeshanTamboli
+- [docs] Fix formatting (#2626) @m4theushw
+- [docs] Include packages from next tag (#2628) @m4theushw
+
+#### Core
+
+- [core] Copy bin folder when building the libraries (#2627) @flaviendelangle
+- [core] Remove prop-types during build (#2586) @m4theushw
+
 ## 5.0.0-beta.0
 
 _Sep 17, 2021_
