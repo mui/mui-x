@@ -73,7 +73,10 @@ function trackFinger(event, currentTouchId): CursorCoordinates | boolean {
  * @requires useGridColumns (method, event)
  * TODO: improve experience for last column
  */
-export const useGridColumnResize = (apiRef: GridApiRef, props: GridComponentProps) => {
+export const useGridColumnResize = (
+  apiRef: GridApiRef,
+  props: GridComponentProps,
+): GridComponentProps => {
   const logger = useGridLogger(apiRef, 'useGridColumnResize');
 
   useGridStateInit(apiRef, (state) => ({
