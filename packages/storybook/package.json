@@ -16,12 +16,12 @@
     "directory": "packages/storybook"
   },
   "dependencies": {
-    "@mui/icons-material": "^5.0.0-rc.1",
-    "@mui/material": "^5.0.0-rc.1",
-    "@mui/styles": "^5.0.0-rc.1",
+    "@mui/icons-material": "^5.0.0",
+    "@mui/material": "^5.0.0",
+    "@mui/styles": "^5.0.0",
     "@mui/x-data-grid": "4.0.0",
-    "@mui/x-data-grid-pro": "4.0.0",
     "@mui/x-data-grid-generator": "4.0.0",
+    "@mui/x-data-grid-pro": "4.0.0",
     "@mui/x-license-pro": "4.0.0",
     "react": "^17.0.2",
     "react-is": "^17.0.2",
