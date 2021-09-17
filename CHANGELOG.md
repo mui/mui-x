@@ -5,9 +5,10 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## 5.0.0-beta.0
 
-_Sep 16, 2021_
+_Sep 17, 2021_
 
-🎉 This is the first release with support for the new MUI v5 🎉! In the next releases, we will be working to bring all the cool features from MUI v5 to the advanced components.
+🎉 This is the first release with support for the new MUI v5 🎉! 
+In the next releases, we will be working to bring all the cool features from MUI v5 to the advanced components.
 
 This beta version of MUI X drops support for MUI v4. We encourage everyone to upgrade to MUI v5 to be able to continue to get all the upcoming features and fixes of MUI X. New versions of MUI X v4, containing only fixes, will still be released, but in a slower pace.
 
@@ -40,7 +41,6 @@ A big thanks to the 9 contributors who made this release possible. Here are some
 
 - [DataGridPro] The third argument in `apiRef.current.selectRow` is now inverted to keep consistency with other selection APIs. (#2523) @flaviendelangle
 
-
   ```diff
   -selectRow: (id: GridRowId, isSelected?: boolean, allowMultiple?: boolean = false) => void;
   +selectRow: (id: GridRowId, isSelected?: boolean, resetSelection?: boolean = false) => void;
@@ -52,9 +52,7 @@ A big thanks to the 9 contributors who made this release possible. Here are some
   -const { options } = useGridSlotComponentProps();
   +const rootProps = useGridRootProps();
   ``` 
-- [DataGrid] The module augmentation is not enabled by default. This change was done to prevent conflicts with projects using `DataGrid` and `DataGridPro` together. 
 
-  In order to still be able to do overrides at the theme level, add the following imports to your project:
 - [DataGrid] The module augmentation is not enabled by default. This change was done to prevent conflicts with projects using `DataGrid` and `DataGridPro` together. 
 
   In order to still be able to do overrides at the theme level, add the following imports to your project:
@@ -62,9 +60,8 @@ A big thanks to the 9 contributors who made this release possible. Here are some
   ```diff
   +import type {} from '@mui/x-data-grid/themeAugmentation';
   +import type {} from '@mui/x-data-grid-pro/themeAugmentation';
-  ```diff
-  +import type {} from '@mui/x-data-grid/themeAugmentation';
-  +import type {} from '@mui/x-data-grid-pro/themeAugmentation';
+  ```
+
 #### Changes
 
 - [DataGridPro] Only apply `checkboxSelectionVisibleOnly` when pagination is enabled (#2443) @flaviendelangle
