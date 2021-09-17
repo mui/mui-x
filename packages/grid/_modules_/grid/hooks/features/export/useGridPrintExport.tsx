@@ -65,7 +65,7 @@ export const useGridPrintExport = (
               return column;
             }
 
-            column.hide = !fields?.includes(column.field);
+            column.hide = !fields?.includes(column.field) || column.disableExport;
 
             return column;
           }),
