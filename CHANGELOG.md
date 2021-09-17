@@ -3,9 +3,97 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 4.0.0
+
+_Aug 27, 2021_
+
+🎉 This is the first stable release of the data grid component 🎉!
+
+We have been iterating on the component for [18 months](https://github.com/mui-org/material-ui-x/commit/705cb0f387b5f3aa056bf40c4183a2342b317447). With the  introduction of the [row edit](https://material-ui.com/components/data-grid/editing/#row-editing) feature, many bug fixes, and polishing of the documentation, we believe the component is ready for a stable release.
+
+The MUI X v4.0.0 release supports [MUI Core](https://github.com/mui-org/material-ui) v4 and has partial support for v5-beta. With the soon-to-be-released v5 version of the core components, we are moving ongoing work to the v5 release line (Core and X).
+The support for existing projects on MUI v4 won't be a priority going forward. We encourage you to migrate to MUI Core v5-beta and soon MUI X v5-beta. We don't patch, fix, or alter older versions. Using MUI Core v4 with MUI X v5 might lead to extra bundle size and configuration.
+
+A big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
+
+- 🚀 Introduce the [row editing](https://material-ui.com/components/data-grid/editing/#row-editing) feature (#2098) @m4theushw
+
+  <img src="https://user-images.githubusercontent.com/3165635/130665023-3c0730ab-502e-4da1-8bc1-d572427ad2d6.gif" width="851" height="382" />
+
+- ⚡️ Rename the `XGrid` component to `DataGridPro` (#2382) @m4theushw
+
+  This should help clarify the products vs. plans separation. [MUI X](https://github.com/mui-org/material-ui-x) is a product line on its own. It contains MIT and Commercial software. Removing X from the name of the paid components should help remove a possible confusion: the MIT version of X is meant to be valuable enough for developers to use it, without feeling that it's crippled compared to other OSS alternatives.
+  The Pro suffix should help make it clear what's MIT and what's not.
+- ✨ Rename the `@material-ui` npm scope to `@mui` (#2341) @oliviertassinari
+
+  This is part of the ongoing rebranding of the project and company. Material-UI is our current official name, however, we are going to change it. It's too long to write, read, and pronounce; and it is too closely associated with Material Design. In the near future, the whole project/company is moving to MUI and https://mui.com/.
+- 💡 The `api` property was removed from the callback params. To access the API, use the `DataGridPro` (#2312) @DanailH
+
+### `@mui/x-data-grid@v4.0.0` / `@mui/x-data-grid-pro@v4.0.0`
+
+#### Breaking changes
+
+- [DataGrid] Move packages to `@mui` scope and rename `XGrid` to `DataGridPro` (#2341, #2382) @m4theushw @oliviertassinari
+  You can find in the above highlight section why we are making these name changes. You can migrate following these steps:
+
+  ```diff
+  -import { DataGrid } from '@material-ui/data-grid';
+  +import { DataGrid } from '@mui/x-data-grid';
+  ```
+
+  ```diff
+  -import { XGrid } from '@material-ui/x-grid';
+  -<XGrid />
+  +import { DataGridPro } from '@mui/x-data-grid-pro';
+  +<DataGridPro />
+  ```
+
+- [DataGrid] The `api` property was removed from the callback params (#2312) @DanailH
+  To access the API, use the `DataGridPro` and get it from the new `details` param.
+
+  ```diff
+   <DataGridPro
+  -  onColumnResize={(params, event) => console.log(params.api)}
+  +  onColumnResize={(params, event, details) => console.log(details.api)}
+   />
+  ```
+
+- [DataGrid] Remove unused row CSS classes (#2327) @ZeeshanTamboli
+  The CSS classes `.Mui-odd` and `.Mui-even` were removed from the row.
+
+#### Changes
+
+- [DataGrid] Add `gridClasses` API instead of hard coded classes (#2320) @m4theushw
+- [DataGrid] Add row editing feature (#2098) @m4theushw
+- [DataGrid] Add TypeScript module augmentation for the theme (#2307) @ZeeshanTamboli
+- [DataGrid] Fix `box-sizing: border-box` leak (#2330) @m4theushw
+- [DataGrid] Fix keyboard navigation header regression (#2342) @oliviertassinari
+- [DataGrid] Fix keyboard navigation on filtered rows (#2336) @m4theushw
+
+### Docs
+
+- [docs] Add `Row & Cell editing` in features list (#2396) @ZeeshanTamboli
+- [docs] Add redirect from `XGrid` to `DataGridPro` (#2389) @m4theushw
+- [docs] Fix `onCellEditCommit` param type (#2390) @ArthurPedroti
+- [docs] Fix docs for `onEditRowsModelChange` prop (#2394) @ZeeshanTamboli
+- [docs] Fix docs links and pagination sentence (#2381) @ZeeshanTamboli
+- [docs] Update the icons for the new branding (#2339) @oliviertassinari
+
+### Core
+
+- [core] Keep prop-types in the same file (#2345) @oliviertassinari
+- [core] Reduce `options` internal usage (#2318) @flaviendelangle
+- [core] Remove `DataGridPropTypes` (#2432) @flaviendelangle
+- [core] Remove private API from the export (#2299) @oliviertassinari
+- [core] Remove usages of `options.scrollbarSize` (#2317) @flaviendelangle
+- [core] Simplify `useGridColumns` hook (#2343) @oliviertassinari
+- [core] Update `doesSupportTouchActionNone` implementation (#2378) @DanailH
+- [core] Upgrade dependency with the monorepo (#2377) @oliviertassinari
+- [test] Use `.not.to.equal` in favour of `to.not.equal` (#2340) @oliviertassinari
+
 ## 4.0.0-alpha.37
 
-_Jul 12, 2021_
+_Aug 12, 2021_
 
 Big thanks to the 7 contributors who made this release possible. Here are some highlights ✨:
 
