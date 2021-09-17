@@ -3,11 +3,30 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 5.0.0-beta.1
+
+_Sep 17, 2021_
+
+A big thanks to the 3 contributors who made this release possible.
+
+### `@mui/x-data-grid@v5.0.0-beta.1` / `@mui/x-data-grid-pro@v5.0.0-beta.1`
+
+#### Docs
+
+- [docs] Explain how to use theme augmentation (#2582) @ZeeshanTamboli
+- [docs] Fix formatting (#2626) @m4theushw
+- [docs] Include packages from next tag (#2628) @m4theushw
+
+#### Core
+
+- [core] Copy bin folder when building the libraries (#2627) @flaviendelangle
+- [core] Remove prop-types during build (#2586) @m4theushw
+
 ## 5.0.0-beta.0
 
 _Sep 17, 2021_
 
-🎉 This is the first release with support for the new MUI v5 🎉! 
+🎉 This is the first release with support for the new MUI v5 🎉!
 In the next releases, we will be working to bring all the cool features from MUI v5 to the advanced components.
 
 This beta version of MUI X drops support for MUI v4. We encourage everyone to upgrade to MUI v5 to be able to continue to get all the upcoming features and fixes of MUI X. New versions of MUI X v4, containing only fixes, will still be released, but in a slower pace.
@@ -51,9 +70,9 @@ A big thanks to the 9 contributors who made this release possible. Here are some
   ```diff
   -const { options } = useGridSlotComponentProps();
   +const rootProps = useGridRootProps();
-  ``` 
+  ```
 
-- [DataGrid] The module augmentation is not enabled by default. This change was done to prevent conflicts with projects using `DataGrid` and `DataGridPro` together. 
+- [DataGrid] The module augmentation is not enabled by default. This change was done to prevent conflicts with projects using `DataGrid` and `DataGridPro` together.
 
   In order to still be able to do overrides at the theme level, add the following imports to your project:
 
@@ -127,7 +146,7 @@ A big thanks to the 9 contributors who made this release possible. Here are some
 - [core] Update `.browserslistrc` file (#2384) @DanailH
 - [core] Update monorepo version and copy assets (#2603) @m4theushw
 - [core] Update outdated hook requirements (#2526) @flaviendelangle
-- [test] Clean selection tests  (#2457) @flaviendelangle
+- [test] Clean selection tests (#2457) @flaviendelangle
 - [test] Disable browserstack for PRs (#2531) @flaviendelangle
 
 ## 4.0.0
@@ -136,7 +155,7 @@ _Aug 27, 2021_
 
 🎉 This is the first stable release of the data grid component 🎉!
 
-We have been iterating on the component for [18 months](https://github.com/mui-org/material-ui-x/commit/705cb0f387b5f3aa056bf40c4183a2342b317447). With the  introduction of the [row edit](https://material-ui.com/components/data-grid/editing/#row-editing) feature, many bug fixes, and polishing of the documentation, we believe the component is ready for a stable release.
+We have been iterating on the component for [18 months](https://github.com/mui-org/material-ui-x/commit/705cb0f387b5f3aa056bf40c4183a2342b317447). With the introduction of the [row edit](https://material-ui.com/components/data-grid/editing/#row-editing) feature, many bug fixes, and polishing of the documentation, we believe the component is ready for a stable release.
 
 The MUI X v4.0.0 release supports [MUI Core](https://github.com/mui-org/material-ui) v4 and has partial support for v5-beta. With the soon-to-be-released v5 version of the core components, we are moving ongoing work to the v5 release line (Core and X).
 The support for existing projects on MUI v4 won't be a priority going forward. We encourage you to migrate to MUI Core v5-beta and soon MUI X v5-beta. We don't patch, fix, or alter older versions. Using MUI Core v4 with MUI X v5 might lead to extra bundle size and configuration.
@@ -151,9 +170,11 @@ A big thanks to the 6 contributors who made this release possible. Here are some
 
   This should help clarify the products vs. plans separation. [MUI X](https://github.com/mui-org/material-ui-x) is a product line on its own. It contains MIT and Commercial software. Removing X from the name of the paid components should help remove a possible confusion: the MIT version of X is meant to be valuable enough for developers to use it, without feeling that it's crippled compared to other OSS alternatives.
   The Pro suffix should help make it clear what's MIT and what's not.
+
 - ✨ Rename the `@material-ui` npm scope to `@mui` (#2341) @oliviertassinari
 
   This is part of the ongoing rebranding of the project and company. Material-UI is our current official name, however, we are going to change it. It's too long to write, read, and pronounce; and it is too closely associated with Material Design. In the near future, the whole project/company is moving to MUI and https://mui.com/.
+
 - 💡 The `api` property was removed from the callback params. To access the API, use the `DataGridPro` (#2312) @DanailH
 
 ### `@mui/x-data-grid@v4.0.0` / `@mui/x-data-grid-pro@v4.0.0`
