@@ -31,7 +31,7 @@ A big thanks to the 9 contributors who made this release possible. Here are some
 
 #### Breaking changes
 
-- [DataGridPro] Remove `apiRef.current.getState` method
+- [DataGridPro] Remove `apiRef.current.getState` method.
 
   ```diff
   -const state = apiRef.current.getState();
