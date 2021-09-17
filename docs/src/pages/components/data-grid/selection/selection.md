@@ -69,7 +69,15 @@ Each time this prop changes, the `onSelectionModelChange` callback is called wit
 
 ### Usage with server-side pagination
 
-Using controlled selection when `paginationMode="server"` can result in the `DataGrid` clearing the provided `selectionModel` on page change. Depending on your implementation of the server-side pagination, when the page changes and there are no rows in the grid with ids equal to the `GridRowId`s provided to the `selectionModel` the grid will clear the `selectionModel`. To prevent this either save the `selectionModel` and restore it later or append the newly loaded grid rows to the existing rows.
+Using the controlled selection with `paginationMode="server"` may result in selected rows being lost when the page is changed.
+This happens because the grid cross-checks with the `rows` prop and only calls `onSelectionModelChange` with existing row IDs.
+Depending on your server-side implementation, when the page changes and the new value for the `rows` prop does not include previously selected rows, the grid will call `onSelectionModelChange` with an empty value.
+To prevent this unwanted behavior, there are two ways:
+
+- Save the `selectionModel` **before the page is changed** and restore it later
+- Append the newly loaded rows to the existing rows
+
+The following demo shows how to implement the second solution:
 
 {{"demo": "pages/components/data-grid/selection/ControlledSelectionServerPaginationGrid.js", "bg": "inline"}}
 
