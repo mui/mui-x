@@ -600,7 +600,7 @@ describe('<DataGridPro /> - Edit Rows', () => {
       expect(cell).to.have.text('Italy');
     });
 
-    it.only('should apply valueFormatter to select options when valueOptions is of primitive types', () => {
+    it('should apply valueFormatter to select options when valueOptions is of primitive types', () => {
       render(
         <div style={{ width: 300, height: 300 }}>
           <DataGridPro
