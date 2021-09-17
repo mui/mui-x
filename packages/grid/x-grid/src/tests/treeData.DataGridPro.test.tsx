@@ -2,6 +2,7 @@ import {
   createClientRenderStrictMode,
   // @ts-expect-error need to migrate helpers to TypeScript
   fireEvent,
+  // @ts-expect-error need to migrate helpers to TypeScript
   screen,
 } from 'test/utils';
 import { getCell, getColumnHeadersTextContent, getColumnValues } from 'test/utils/helperFn';
@@ -30,7 +31,7 @@ const baselineProps: DataGridProProps = {
   getRowId: (row) => row.name,
 };
 
-describe.only('<DataGridPro /> - Pagination', () => {
+describe('<DataGridPro /> - Pagination', () => {
   // TODO v5: replace with createClientRender
   const render = createClientRenderStrictMode();
 

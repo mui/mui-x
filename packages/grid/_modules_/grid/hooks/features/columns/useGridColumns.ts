@@ -2,7 +2,6 @@ import * as React from 'react';
 import { GridEvents } from '../../../constants/eventsConstants';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridColumnApi } from '../../../models/api/gridColumnApi';
-import { gridCheckboxSelectionColDef } from '../../../models/colDef/gridCheckboxSelection';
 import {
   GridColDef,
   GridColumns,
@@ -17,7 +16,6 @@ import { mergeGridColTypes } from '../../../utils/mergeUtils';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { useGridSelector } from '../core/useGridSelector';
-import { GridLocaleText, GridTranslationKeys } from '../../../models/api/gridLocaleTextApi';
 import { useGridState } from '../core/useGridState';
 import {
   allGridColumnsSelector,
@@ -27,8 +25,6 @@ import {
 import { useGridApiEventHandler, useGridApiOptionHandler } from '../../root/useGridApiEventHandler';
 import { GRID_STRING_COL_DEF } from '../../../models/colDef/gridStringColDef';
 import { GridComponentProps } from '../../../GridComponentProps';
-import { getDataGridUtilityClass } from '../../../gridClasses';
-import { composeClasses } from '../../../utils/material-ui-utils';
 
 type RawGridColumnsState = Omit<GridColumnsState, 'lookup'> & {
   lookup: { [field: string]: GridColDef | GridStateColDef };
@@ -84,27 +80,12 @@ function hydrateColumnsWidth(
 function hydrateColumnsType(
   columns: GridColumns,
   columnTypes: GridColumnTypesRecord = {},
-  getLocaleText: <T extends GridTranslationKeys>(key: T) => GridLocaleText[T],
-  checkboxSelection: boolean,
-  classes: Record<'cellCheckbox' | 'columnHeaderCheckbox', string>,
 ): GridColumns {
   const mergedColTypes = mergeGridColTypes(getGridDefaultColumnTypes(), columnTypes);
   const extendedColumns = columns.map((column) => ({
     ...getGridColDef(mergedColTypes, column.type),
     ...column,
   }));
-
-  if (checkboxSelection) {
-    return [
-      {
-        ...gridCheckboxSelectionColDef,
-        cellClassName: classes.cellCheckbox,
-        columnHeaderCheckbox: classes.columnHeaderCheckbox,
-        headerName: getLocaleText('checkboxSelectionHeaderName'),
-      },
-      ...extendedColumns,
-    ];
-  }
 
   return extendedColumns;
 }
@@ -128,21 +109,6 @@ const upsertColumnsState = (columnUpdates: GridColDef[], prevColumnsState?: Grid
   return newState;
 };
 
-type OwnerState = { classes: GridComponentProps['classes'] };
-
-const useUtilityClasses = (ownerState: OwnerState) => {
-  const { classes } = ownerState;
-
-  return React.useMemo(() => {
-    const slots = {
-      cellCheckbox: ['cellCheckbox'],
-      columnHeaderCheckbox: ['columnHeaderCheckbox'],
-    };
-
-    return composeClasses(slots, getDataGridUtilityClass, classes);
-  }, [classes]);
-};
-
 /**
  * @requires useGridParamsApi (method)
  * TODO: Impossible priority - useGridParamsApi also needs to be after useGridColumns
@@ -159,8 +125,6 @@ export function useGridColumns(
   const columnsMeta = useGridSelector(apiRef, gridColumnsMetaSelector);
   const allColumns = useGridSelector(apiRef, allGridColumnsSelector);
   const visibleColumns = useGridSelector(apiRef, visibleGridColumnsSelector);
-  const ownerState = { classes: props.classes };
-  const classes = useUtilityClasses(ownerState);
 
   const setGridColumnsState = React.useCallback(
     (columnsState: GridColumnsState, emit = true) => {
@@ -323,26 +287,12 @@ export function useGridColumns(
   React.useEffect(() => {
     logger.info(`GridColumns have changed, new length ${props.columns.length}`);
 
-    const hydratedColumns = hydrateColumnsType(
-      props.columns,
-      props.columnTypes,
-      apiRef.current.getLocaleText,
-      props.checkboxSelection,
-      classes,
-    );
+    const hydratedColumns = hydrateColumnsType(props.columns, props.columnTypes);
 
     const preProcessedColumns = apiRef.current.applyAllColumnPreProcessing(hydratedColumns);
     const columnState = upsertColumnsState(preProcessedColumns);
     setColumnsState(columnState);
-  }, [
-    logger,
-    apiRef,
-    setColumnsState,
-    props.columns,
-    props.columnTypes,
-    props.checkboxSelection,
-    classes,
-  ]);
+  }, [logger, apiRef, setColumnsState, props.columns, props.columnTypes]);
 
   React.useEffect(() => {
     logger.debug(
@@ -362,26 +312,12 @@ export function useGridColumns(
   const handlePreProcessColumns = React.useCallback(() => {
     logger.info(`Columns pre-processing have changed, regenerating the columns`);
 
-    const hydratedColumns = hydrateColumnsType(
-      props.columns,
-      props.columnTypes,
-      apiRef.current.getLocaleText,
-      props.checkboxSelection,
-      classes,
-    );
+    const hydratedColumns = hydrateColumnsType(props.columns, props.columnTypes);
 
     const preProcessedColumns = apiRef.current.applyAllColumnPreProcessing(hydratedColumns);
     const columnState = upsertColumnsState(preProcessedColumns);
     setColumnsState(columnState);
-  }, [
-    apiRef,
-    logger,
-    classes,
-    setColumnsState,
-    props.columns,
-    props.columnTypes,
-    props.checkboxSelection,
-  ]);
+  }, [apiRef, logger, setColumnsState, props.columns, props.columnTypes]);
 
   useGridApiEventHandler(apiRef, GridEvents.columnsPreProcessingChange, handlePreProcessColumns);
 

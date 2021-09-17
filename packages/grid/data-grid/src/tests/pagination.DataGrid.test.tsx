@@ -495,7 +495,7 @@ describe('<DataGrid /> - Pagination', () => {
     expect(document.querySelector('.MuiTablePagination-root')).to.have.text('1-1 of 21');
   });
 
-  it('should support server side pagination', () => {
+  it.only('should support server side pagination', () => {
     const ServerPaginationGrid = () => {
       const [rows, setRows] = React.useState<GridRowsProp>([]);
       const [page, setPage] = React.useState(0);

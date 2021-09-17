@@ -45,14 +45,14 @@ export const useDataGridProComponent = (apiRef: GridApiRef, props: GridComponent
   useGridColumnsPreProcessing(apiRef);
   useLocaleText(apiRef, props);
   useGridResizeContainer(apiRef, props);
-  useGridFreezeRows(apiRef, props);
   useGridTreeData(apiRef, props);
+  useGridSelection(apiRef, props);
   useGridColumns(apiRef, props);
+  useGridFreezeRows(apiRef, props);
   useGridRows(apiRef, props);
   useGridParamsApi(apiRef);
   useGridEditRows(apiRef, props);
   useGridFocus(apiRef, props);
-  useGridSelection(apiRef, props);
   useGridSorting(apiRef, props);
   useGridPreferencesPanel(apiRef);
   useGridFilter(apiRef, props);
