@@ -9,6 +9,8 @@ _Sep 16, 2021_
 
 🎉 This is the first release with support for the new MUI v5 🎉! In the next releases, we will be working to bring all the cool features from MUI v5 to the advanced components.
 
+This beta version of MUI X drops support for MUI v4. We encourage everyone to upgrade to MUI v5 to be able to continue to get all the upcoming features and fixes of MUI X. New versions of MUI X v4, containing only fixes, will still be released, but in a slower pace.
+
 A big thanks to the 9 contributors who made this release possible. Here are some highlights ✨:
 
 - ⚡ Migrate to the new `@mui/material` and `@mui/styles` packages and drop support for `@material-ui/core` (#2515, #2571) @m4theushw
