@@ -47,6 +47,11 @@ const GridTreeDataGroupingCell = (props: GridRenderCellParams) => {
             size="small"
             onClick={() => apiRef.current.setRowExpansion(id, !node?.expanded)}
             tabIndex={-1}
+            aria-label={
+              node.expanded
+                ? apiRef.current.getLocaleText('treeDataCollapse')
+                : apiRef.current.getLocaleText('treeDataExpand')
+            }
           >
             <Icon fontSize="inherit" />
           </IconButton>

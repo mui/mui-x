@@ -14,7 +14,7 @@ import { GridColumnsPreProcessing } from '../../root/columnsPreProcessing';
 import { GridTreeDataGroupColDef } from './gridTreeDataGroupColDef';
 import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
 import { GridEvents } from '../../../constants';
-import { GridCellModes, GridCellParams, MuiEvent } from '../../../models';
+import { GridCellModes, GridCellParams, GridColDef, MuiEvent } from '../../../models';
 import { isGridCellRoot } from '../../../utils/domUtils';
 import { isNavigationKey, isSpaceKey } from '../../../utils/keyboardUtils';
 
@@ -113,8 +113,9 @@ export const useGridTreeData = (
     } else {
       const addGroupingColumn: GridColumnsPreProcessing = (columns) => {
         const index = columns[0].type === 'checkboxSelection' ? 1 : 0;
-        const groupingColumn = {
+        const groupingColumn: GridColDef = {
           ...GridTreeDataGroupColDef,
+          headerName: apiRef.current.getLocaleText('treeDataGroupingHeaderName'),
           ...props.groupingColDef,
         };
 
@@ -127,9 +128,7 @@ export const useGridTreeData = (
 
   const handleCellKeyDown = React.useCallback(
     (params: GridCellParams, event: MuiEvent<React.KeyboardEvent>) => {
-      // Get the most recent params because the cell mode may have changed by another listener
       const cellParams = apiRef.current.getCellParams(params.id, params.field);
-
       if (cellParams.field === '__tree_data_group__' && isSpaceKey(event.key)) {
         event.stopPropagation();
         apiRef.current.setRowExpansion(params.id, !apiRef.current.getRowNode(params.id)?.expanded);
