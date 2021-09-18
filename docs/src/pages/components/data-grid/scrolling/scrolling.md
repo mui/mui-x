@@ -4,7 +4,7 @@ title: Data Grid - Scrolling
 
 # Data Grid - Scrolling
 
-<p class="description">This section presents how to programatically control the scroll.</p>
+<p class="description">This section presents how to programmatically control the scroll.</p>
 
 ## Scrolling to specific cells [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-pro/)
 
