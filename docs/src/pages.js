@@ -13,7 +13,7 @@ if (lab.subheader !== '/components/lab') {
   throw new Error('Integration not compatible.');
 }
 
-const dataGridComponent = components.children[6];
+const dataGridComponent = components.children[7];
 
 if (dataGridComponent.subheader !== '/components/data-grid') {
   throw new Error('Integration not compatible.');
