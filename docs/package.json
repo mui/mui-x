@@ -51,7 +51,7 @@
     "fg-loadcss": "^2.1.0",
     "fs-extra": "^10.0.0",
     "jss": "^10.8.0",
-    "jss-plugin-template": "^10.0.3",
+    "jss-plugin-template": "^10.8.0",
     "jss-rtl": "^0.3.0",
     "lodash": "^4.17.21",
     "lz-string": "^1.4.4",
