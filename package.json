@@ -106,6 +106,7 @@
     "eslint-plugin-react-hooks": "^4.2.0",
     "format-util": "^1.0.5",
     "glob-gitignore": "^1.0.14",
+    "html-webpack-plugin": "^5.3.2",
     "jsdom": "^16.7.0",
     "karma": "^6.3.4",
     "karma-browserstack-launcher": "^1.6.0",
