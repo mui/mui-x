@@ -5673,10 +5673,10 @@ ccount@^1.0.0:
   resolved "https://registry.yarnpkg.com/ccount/-/ccount-1.0.5.tgz#ac82a944905a65ce204eb03023157edf29425c17"
   integrity sha512-MOli1W+nfbPLlKEhInaxhRdp7KVLFxLN5ykwzHgLsLI3H3gs5jjFAK4Eoj3OzzcxCtumDaI8onoVDeQyWaNTkw==
 
-chai-dom@^1.9.0:
-  version "1.9.0"
-  resolved "https://registry.yarnpkg.com/chai-dom/-/chai-dom-1.9.0.tgz#40c1b957b60c677b0d06ca320ee8f1e276d9ea04"
-  integrity sha512-UXSbhcGVBWv/5qVqbJY/giTDRyo3wKapUsWluEuVvxcJLFXkyf8l4D2PTd6trzrmca6WWnGdpaFkYdl1P0WjtA==
+chai-dom@^1.10.0:
+  version "1.10.0"
+  resolved "https://registry.yarnpkg.com/chai-dom/-/chai-dom-1.10.0.tgz#73f270fb316ff8ebcdd085cd8b71184b04255fa9"
+  integrity sha512-/FE0NvEGMXx1x1YQlc8ihLrEhH8JawflchuGe6ypIAX/4Zwmkr4cC3mfR9pDytbxsE/2LSm719TeU7VF/TCmtg==
 
 chai@^4.3.4:
   version "4.3.4"
