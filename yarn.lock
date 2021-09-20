@@ -2131,9 +2131,9 @@
     npmlog "^4.1.2"
     write-file-atomic "^3.0.3"
 
-"@material-ui/monorepo@https://github.com/mui-org/material-ui.git#next":
-  version "5.0.0-rc.1"
-  resolved "https://github.com/mui-org/material-ui.git#7e97b7f366cc96d46ea81a7cef854cca576cde1b"
+"@material-ui/monorepo@https://github.com/mui-org/material-ui.git#master":
+  version "5.0.0"
+  resolved "https://github.com/mui-org/material-ui.git#680f79be93b033d3c9ac66af763acdbebcaf0e69"
 
 "@mdx-js/loader@^1.6.22":
   version "1.6.22"
