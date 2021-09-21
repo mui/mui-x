@@ -2,7 +2,10 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import Select, { SelectProps } from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
-import { GridRenderEditCellParams } from '../../models/params/gridCellParams';
+import {
+  GridRenderEditCellParams,
+  GridValueFormatterParams,
+} from '../../models/params/gridCellParams';
 import { isEscapeKey } from '../../utils/keyboardUtils';
 import { useEnhancedEffect } from '../../utils/material-ui-utils';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
@@ -43,15 +46,17 @@ function GridEditSingleSelectCell(props: GridRenderEditCellParams & SelectProps)
   let valueOptionsFormatted = colDef.valueOptions;
 
   if (colDef.valueFormatter) {
-    valueOptionsFormatted = colDef.valueOptions.map((option) =>
-      // valueFormatter is only applied to primitive type valueOptions
-      typeof option === 'object'
-        ? option
-        : {
-            value: option,
-            label: String(colDef.valueFormatter({ ...props, value: option })),
-          },
-    );
+    valueOptionsFormatted = colDef.valueOptions.map((option) => {
+      if (typeof option === 'object') {
+        return option;
+      }
+
+      const params: GridValueFormatterParams = { field, api, value: option };
+      return {
+        value: option,
+        label: String(colDef.valueFormatter(params)),
+      };
+    });
   }
 
   const handleChange = (event) => {
