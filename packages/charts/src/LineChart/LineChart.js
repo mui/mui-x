@@ -57,6 +57,7 @@ const LineChart = React.forwardRef(function LineChart(props, ref) {
   };
   const [chartRef, dimensions] = useChartDimensions(chartSettings);
   const handleRef = useForkRef(chartRef, ref);
+  const [lines, setLines] = React.useState([]);
   const { width, height, boundedWidth, boundedHeight, marginLeft, marginTop } = dimensions;
   const xDomain = xDomainProp || getExtent(data, (d) => d[xKey]);
   const yDomain = yDomainProp || getExtent(data, (d) => d[yKey]);
@@ -95,6 +96,8 @@ const LineChart = React.forwardRef(function LineChart(props, ref) {
     });
   };
 
+  console.log(lines);
+
   return (
     <ChartContext.Provider
       value={{
@@ -103,9 +106,11 @@ const LineChart = React.forwardRef(function LineChart(props, ref) {
         dimensions,
         highlightMarkers,
         invertMarkers,
+        lines,
         markerShape,
         markerSize,
         seriesLabels,
+        setLines,
         stacked,
         mousePosition,
         smoothed,

@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import * as d3 from 'd3';
 import ChartContext from '../ChartContext';
@@ -14,6 +14,8 @@ const Line = (props) => {
     data,
     dimensions: { boundedHeight },
     highlightMarkers,
+    lines,
+    setLines,
     markerShape: markerShapeContext,
     smoothed: smoothedContext,
     stacked,
@@ -39,6 +41,11 @@ const Line = (props) => {
   let linePath;
   let areaPath;
   let pointData = chartData;
+
+  useEffect(() => {
+    const id = series || 0;
+    setLines({ ...lines, [id]: { markerShape, stroke } });
+  }, [lines, markerShape, series, setLines, stroke]);
 
   if (stacked && areaKeys) {
     linePath = d3
