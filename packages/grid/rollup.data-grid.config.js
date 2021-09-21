@@ -4,6 +4,7 @@ import sourceMaps from 'rollup-plugin-sourcemaps';
 import { terser } from 'rollup-plugin-terser';
 import dts from 'rollup-plugin-dts';
 import command from 'rollup-plugin-command';
+import babel from '@rollup/plugin-babel';
 import copy from 'rollup-plugin-copy';
 import pkg from './data-grid/package.json';
 
@@ -31,6 +32,18 @@ export default [
           targets: ['./data-grid/build/'],
         }),
       typescript({ tsconfig: 'tsconfig.build.json' }),
+      babel({
+        babelHelpers: 'bundled',
+        extensions: ['.tsx'],
+        plugins: [
+          [
+            'transform-react-remove-prop-types',
+            {
+              ignoreFilenames: ['DataGrid.tsx'],
+            },
+          ],
+        ],
+      }),
       !production && sourceMaps(),
       production && terser(),
     ],
