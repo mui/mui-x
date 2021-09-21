@@ -8,6 +8,7 @@ import { parse as parseDoctrine } from 'doctrine';
 import { defaultHandlers, parse as docgenParse, ReactDocgenApi } from 'react-docgen';
 import * as prettier from 'prettier';
 import { findPagesMarkdown } from 'docs/src/modules/utils/find';
+import { LANGUAGES } from 'docs/src/modules/constants';
 import * as ttp from '@material-ui/monorepo/packages/typescript-to-proptypes/src';
 import createGenerateClassName from '@mui/styles/createGenerateClassName';
 import createDescribeableProp, {
@@ -591,6 +592,20 @@ async function buildDocs(options: {
     JSON.stringify(componentApi),
     prettierConfigPath,
   );
+
+  LANGUAGES.forEach((language) => {
+    if (language !== 'en') {
+      try {
+        writePrettifiedFile(
+          path.join(apiDocsTranslationsDirectory, `${kebabCase(reactApi.name)}-${language}.json`),
+          JSON.stringify(componentApi),
+          prettierConfigPath,
+        );
+      } catch (error) {
+        // File exists
+      }
+    }
+  });
 
   /**
    * Gather the metadata needed for the component's API page.
