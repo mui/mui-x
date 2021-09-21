@@ -18,3 +18,4 @@ export * from './skSK';
 export * from './trTR';
 export * from './ukUA';
 export * from './zhCN';
+export * from './viVN';
