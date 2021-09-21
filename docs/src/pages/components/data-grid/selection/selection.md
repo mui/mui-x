@@ -77,7 +77,7 @@ To prevent this unwanted behavior, there are two ways:
 - Save the `selectionModel` **before the page is changed** and restore it later
 - Append the newly loaded rows to the existing rows
 
-The following demo shows how to implement the second solution:
+The following demo shows how to implement the first solution:
 
 {{"demo": "pages/components/data-grid/selection/ControlledSelectionServerPaginationGrid.js", "bg": "inline"}}
 
