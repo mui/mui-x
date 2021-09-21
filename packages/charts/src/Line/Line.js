@@ -44,8 +44,8 @@ const Line = (props) => {
 
   useEffect(() => {
     const id = series || 0;
-    setLines({ ...lines, [id]: { markerShape, stroke } });
-  }, [lines, markerShape, series, setLines, stroke]);
+    setLines((previousLines) => ({ ...previousLines, [id]: { markerShape, stroke } }));
+  }, [markerShape, series, setLines, stroke]);
 
   if (stacked && areaKeys) {
     linePath = d3

@@ -1,28 +1,12 @@
 import React from 'react';
 import MarkdownDocs from 'docs/src/modules/components/MarkdownDocs';
-import { prepareMarkdown } from 'docs/src/modules/utils/parseMarkdown';
 
-const pageFilename = 'components/charts/scatter-chart';
-const requireDemo = require.context(
-  'docsx/src/pages/components/charts/scatter-chart',
-  false,
-  /\.(js|tsx)$/,
-);
-const requireRaw = require.context(
-  '!raw-loader!../../../src/pages/components/charts/scatter-chart',
-  false,
-  /\.(js|md|tsx)$/,
-);
+import {
+  demos,
+  docs,
+  demoComponents,
+} from 'docsx/src/pages/components/charts/scatter-chart/scatter-chart.md?@mui/markdown';
 
-// Run styled-components ref logic
-// https://github.com/styled-components/styled-components/pull/2998
-requireDemo.keys().map(requireDemo);
-
-export default function Page({ demos, docs }) {
-  return <MarkdownDocs demos={demos} docs={docs} requireDemo={requireDemo} disableToc />;
+export default function Page() {
+  return <MarkdownDocs demos={demos} docs={docs} demoComponents={demoComponents} disableToc />;
 }
-
-Page.getInitialProps = () => {
-  const { demos, docs } = prepareMarkdown({ pageFilename, requireRaw });
-  return { demos, docs };
-};
