@@ -713,14 +713,14 @@ describe('<DataGrid /> - Layout & Warnings', () => {
     });
 
     it('should support translations in the theme', () => {
-      const { getByRole } = render(
+      render(
         <ThemeProvider theme={createTheme({}, ptBR)}>
           <div style={{ width: 300, height: 300 }}>
             <DataGrid {...baselineProps} />
           </div>
         </ThemeProvider>,
       );
-      expect(getByRole('button', { name: 'Ordenar' })).not.to.equal(null);
+      expect(document.querySelector('[title="Ordenar"]')).not.to.equal(null);
     });
   });
 
