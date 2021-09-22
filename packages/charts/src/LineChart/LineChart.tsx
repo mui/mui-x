@@ -1,12 +1,12 @@
-import * as React from 'react';
-import * as d3 from 'd3';
 import { useForkRef } from '@mui/material/utils';
+import * as d3 from 'd3';
+import * as React from 'react';
 import ChartContext from '../ChartContext';
 import useChartDimensions from '../hooks/useChartDimensions';
-import useStackedArrays from '../hooks/useStackedArrays';
-import useTicks from '../hooks/useTicks';
 import useScale from '../hooks/useScale';
+import useStackedArrays from '../hooks/useStackedArrays';
 import useThrottle from '../hooks/useThrottle';
+import useTicks from '../hooks/useTicks';
 import { getExtent, getMaxDataSetLength } from '../utils';
 
 interface ChartData<X, Y> {
@@ -19,6 +19,25 @@ interface Margin {
   left?: number;
   right?: number;
   top?: number;
+}
+
+type MarkerShape =
+  | 'auto'
+  | 'circle'
+  | 'cross'
+  | 'diamond'
+  | 'square'
+  | 'star'
+  | 'triangle'
+  | 'wye'
+  | 'none';
+
+interface Marker {
+  label: string;
+  series: number;
+  markerColor: string;
+  markerSize?: number;
+  markerShape?: MarkerShape;
 }
 
 export interface LineChartProps<X = unknown, Y = unknown> {
@@ -71,16 +90,7 @@ export interface LineChartProps<X = unknown, Y = unknown> {
    * The shape of the markers.
    * If auto, the shape will be based on the data series.
    */
-  markerShape?:
-    | 'auto'
-    | 'circle'
-    | 'cross'
-    | 'diamond'
-    | 'square'
-    | 'star'
-    | 'triangle'
-    | 'wye'
-    | 'none';
+  markerShape?: MarkerShape;
   /**
    * The size of the markers.
    */
@@ -90,9 +100,9 @@ export interface LineChartProps<X = unknown, Y = unknown> {
    */
   pixelsPerTick?: number;
   /**
-   * The series labels. Used in the tooltip.
+   * Information of one or more markers. Used in the tooltip and the legend.
    */
-  seriesLabels?: string[];
+  markers?: Marker[];
   /**
    * If `true`, the plotted lines will be smoothed.
    */
@@ -147,7 +157,7 @@ const LineChart = React.forwardRef(function LineChart<X = unknown, Y = unknown>(
     markerShape = 'circle',
     markerSize = 30,
     pixelsPerTick = 50,
-    seriesLabels = [],
+    markers = [],
     smoothed = false,
     stacked = false,
     xDomain: xDomainProp,
@@ -158,6 +168,20 @@ const LineChart = React.forwardRef(function LineChart<X = unknown, Y = unknown>(
     yScaleType = 'linear',
     ...other
   } = props;
+
+  // Fill default marker shape or size when not given
+  if (markers.length) {
+    markers.forEach((markerObj, i, arr) => {
+      const defaultMarkerValues = {};
+      if (!markerObj.markerShape) {
+        defaultMarkerValues['markerShape'] = 'circle';
+      }
+      if (!markerObj.markerSize) {
+        defaultMarkerValues['markerSize'] = 15;
+      }
+      arr[i] = { ...markerObj, ...defaultMarkerValues };
+    });
+  }
 
   let data = dataProp;
   const stackedData = useStackedArrays(dataProp);
@@ -229,7 +253,7 @@ const LineChart = React.forwardRef(function LineChart<X = unknown, Y = unknown>(
         lines,
         markerShape,
         markerSize,
-        seriesLabels,
+        markers,
         setLines,
         stacked,
         mousePosition,

@@ -1,6 +1,6 @@
-import React, { useContext } from 'react';
-import PropTypes from 'prop-types';
 import * as d3 from 'd3';
+import PropTypes from 'prop-types';
+import React, { useContext } from 'react';
 import ChartContext from '../ChartContext';
 import { isInRange } from '../utils';
 

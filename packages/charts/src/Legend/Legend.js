@@ -10,7 +10,7 @@ function Legend(props) {
     data,
     dimensions: { boundedHeight, boundedWidth },
     mousePosition,
-    seriesLabels,
+    markers,
     xKey,
     xScale,
     yKey,

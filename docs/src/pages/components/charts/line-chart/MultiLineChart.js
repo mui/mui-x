@@ -1,10 +1,10 @@
-import * as React from 'react';
-import LineChart from '@mui/charts/LineChart';
+import Grid from '@mui/charts/Grid';
 import Line from '@mui/charts/Line';
+import LineChart from '@mui/charts/LineChart';
+import Tooltip from '@mui/charts/Tooltip';
 import XAxis from '@mui/charts/XAxis';
 import YAxis from '@mui/charts/YAxis';
-import Grid from '@mui/charts/Grid';
-import Tooltip from '@mui/charts/Tooltip';
+import * as React from 'react';
 
 const lineData1 = [
   { x: new Date(2015, 0, 1), y: 4 },
@@ -36,6 +36,26 @@ const lineData3 = [
   { x: new Date(2021, 0, 1), y: 79 },
 ];
 
+const lineColors = ['rgb(116,205,240)', 'rgb(150,219,124)', 'rgb(234,95,95)'];
+
+const markers = [
+  {
+    label: 'Blue',
+    series: 0,
+    markerColor: lineColors[0],
+  },
+  {
+    label: 'Green',
+    series: 1,
+    markerColor: lineColors[1],
+  },
+  {
+    label: 'Red',
+    series: 2,
+    markerColor: lineColors[2],
+  },
+];
+
 export default function MultiLineChart() {
   return (
     <LineChart
@@ -45,7 +65,7 @@ export default function MultiLineChart() {
       label="Growth"
       margin={{ top: 70, bottom: 60, left: 60 }}
       markerSize={50}
-      seriesLabels={['Blue', 'Green', 'Red']}
+      markers={markers}
       smoothed
       xScaleType="time"
     >
@@ -53,9 +73,9 @@ export default function MultiLineChart() {
       <XAxis label="Year" />
       <YAxis label="Size" suffix="cm" disableLine disableTicks />
       <Tooltip />
-      <Line series={0} stroke="rgb(116,205,240)" strokeWidth={2} />
-      <Line series={1} stroke="rgb(150,219,124)" strokeWidth={2} />
-      <Line series={2} stroke="rgb(234,95,95)" strokeWidth={2} />
+      {lineColors.map((color, index) => (
+        <Line series={index} stroke={color} strokeWidth={2} />
+      ))}
     </LineChart>
   );
 }
