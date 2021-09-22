@@ -115,7 +115,11 @@ export function useGridParamsApi(apiRef: GridApiRef) {
         formattedValue: value,
       };
       if (colDef.valueFormatter) {
-        params.formattedValue = colDef.valueFormatter({ ...params, api: apiRef.current });
+        params.formattedValue = colDef.valueFormatter({
+          field: params.field,
+          value: params.value,
+          api: apiRef.current,
+        });
       }
       params.isEditable = colDef && apiRef.current.isCellEditable(params);
 
