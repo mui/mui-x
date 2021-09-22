@@ -1,10 +1,121 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import useChartDimensions from '../hooks/useChartDimensions';
 import ChartContext from '../ChartContext';
 import useTicks from '../hooks/useTicks';
 import useScale from '../hooks/useScale';
 import { getExtent, getMaxDataSetLength } from '../utils';
+
+interface ChartData<X, Y> {
+  x: X;
+  y: Y;
+}
+
+interface Margin {
+  bottom?: number;
+  left?: number;
+  right?: number;
+  top?: number;
+}
+
+export interface ScatterChartProps<X=number, Y=number> {
+  /**
+   * The content of the component.
+   */
+  children: React.ReactNode;
+  /**
+   * The data to use for the chart.
+   */
+  data: ChartData<X, Y>[];
+  /**
+   * The fill color to use for the area.
+   */
+  fill?: string;
+  /**
+   * The height of the chart.
+   */
+  height?: number;
+  /**
+   * If true, the markers will be highlighted when the mouse is over them.
+   */
+  highlightMarkers?: boolean;
+  /**
+   * Invert the line and fill colors of the point markers.
+   */
+  invertMarkers?: boolean;
+  /**
+   * The label to display above the chart.
+   */
+  label?: string;
+  /**
+   * The color of the label.
+   */
+  labelColor?: string;
+  /**
+   * The font size of the label.
+   */
+  labelFontSize?: number;
+  /**
+   * The margin to use.
+   * Labels and axes fall within these margins.
+   */
+  margin?: Margin;
+  /**
+   * The shape of the markers.
+   * If auto, the shape will be based on the data series.
+   */
+  markerShape?: 
+    'auto' |
+    'circle' |
+    'cross' |
+    'diamond' |
+    'square' |
+    'star' |
+    'triangle' |
+    'wye' |
+    'none';
+  /**
+   * The size of the markers.
+   */
+  markerSize?: number;
+ /**
+   * The maximum number of pixels per tick.
+   */
+  pixelsPerTick?: number;
+  /**
+   * Override the calculated domain of the x axis.
+   */
+  xDomain?: string[];
+  /**
+   * The key to use for the x axis.
+   */
+  xKey?: string;
+  /**
+   * The scale type to use for the x axis.
+   */
+  xScaleType?: 'linear' |'time' | 'log' | 'point' | 'pow' | 'sqrt' | 'utc';
+  /**
+   * Override the calculated domain of the y axis.
+   */
+  yDomain?: string[];
+  /**
+   * The key to use for the y axis.
+   */
+  yKey?: string;
+  /**
+   * The scale type to use for the y axis.
+   */
+  yScaleType?: 'linear' | 'time' | 'log' | 'point' | 'pow' | 'sqrt' | 'utc';
+  /**
+   * Override the calculated domain of the z axis.
+   */
+  zDomain: string[];
+  /**
+   * The key to use for the z axis.
+   * If `null`, the z axis will not be displayed.
+   */
+
+  zKey: string;
+}
 
 const ScatterChart = (props) => {
   const {
@@ -93,114 +204,6 @@ const ScatterChart = (props) => {
       </svg>
     </ChartContext.Provider>
   );
-};
-
-ScatterChart.propTypes /* remove-proptypes */ = {
-  /**
-   * The content of the component.
-   */
-  children: PropTypes.node.isRequired,
-  /**
-   * The data to use for the chart.
-   */
-  data: PropTypes.array,
-  /**
-   * The fill color to use for the area.
-   */
-  fill: PropTypes.string,
-  /**
-   * The height of the chart.
-   */
-  height: PropTypes.number,
-  /**
-   * If true, the markers will be highlighted when the mouse is over them.
-   */
-  highlightMarkers: PropTypes.bool,
-  /**
-   * Invert the line and fill colors of the point markers.
-   */
-  invertMarkers: PropTypes.bool,
-  /**
-   * The label to display above the chart.
-   */
-  label: PropTypes.string,
-  /**
-   * The color of the label.
-   */
-  labelColor: PropTypes.string,
-  /**
-   * The font size of the label.
-   */
-  labelFontSize: PropTypes.number,
-  /**
-   * The margin to use.
-   * Labels and axes fall within these margins.
-   */
-  margin: PropTypes.shape({
-    bottom: PropTypes.number,
-    left: PropTypes.number,
-    right: PropTypes.number,
-    top: PropTypes.number,
-  }),
-  /**
-   * The shape of the markers.
-   * If auto, the shape will be based on the data series.
-   */
-  markerShape: PropTypes.oneOf([
-    'auto',
-    'circle',
-    'cross',
-    'diamond',
-    'square',
-    'star',
-    'triangle',
-    'wye',
-    'none',
-  ]),
-  /**
-   * The size of the markers.
-   */
-  markerSize: PropTypes.number,
-  /**
-   * The maximum number of pixels per tick.
-   */
-  pixelsPerTick: PropTypes.number,
-  /**
-   * Override the calculated domain of the x axis.
-   */
-  xDomain: PropTypes.array,
-  /**
-   * The key to use for the x axis.
-   */
-
-  xKey: PropTypes.string,
-  /**
-   * The scale type to use for the x axis.
-   */
-  xScaleType: PropTypes.oneOf(['linear', 'time', 'log', 'point', 'pow', 'sqrt', 'utc']),
-  /**
-   * Override the calculated domain of the y axis.
-   */
-  yDomain: PropTypes.array,
-  /**
-   * The key to use for the y axis.
-   */
-
-  yKey: PropTypes.string,
-  /**
-   * The scale type to use for the y axis.
-   */
-  yScaleType: PropTypes.oneOf(['linear', 'time', 'log', 'point', 'pow', 'sqrt', 'utc']),
-  /**
-   * Override the calculated domain of the z axis.
-   */
-  zDomain: PropTypes.array,
-  /**
-   * The key to use for the z axis.
-   * If `null`, the z axis will not be displayed.
-   */
-
-  zKey: PropTypes.string,
 };
 
 export default ScatterChart;

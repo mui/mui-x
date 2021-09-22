@@ -78,6 +78,7 @@ componentsAPI.children = [
   ...componentsAPI.children,
   // Charts APIs
   { pathname: '/api-docs/data-grid/line-chart-props', title: 'LineChart' },
+  { pathname: '/api-docs/data-grid/scatter-chart-props', title: 'ScatterChat' },
 ].map((page) => {
   return { ...page, linkProps: { as: page.pathname.replace(/^\/api-docs/, '/api') } };
 });

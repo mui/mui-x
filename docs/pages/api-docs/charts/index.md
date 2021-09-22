@@ -5,3 +5,4 @@
 ## Components
 
 - [LineChart](/api/data-grid/line-chart-props/)
+- [ScatterChart](/api/data-grid/scatter-chart-props/)

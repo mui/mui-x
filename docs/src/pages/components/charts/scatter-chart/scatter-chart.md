@@ -15,3 +15,5 @@ title: Scatter chart
 {{"demo": "pages/components/charts/scatter-chart/MultiScatterChart.js"}}
 
 ## API
+
+- [ScatterChart](/api/data-grid/scatter-chart-props/)
