@@ -14,7 +14,6 @@ const Line = (props) => {
     data,
     dimensions: { boundedHeight },
     highlightMarkers,
-    lines,
     setLines,
     markerShape: markerShapeContext,
     smoothed: smoothedContext,
@@ -88,6 +87,7 @@ const Line = (props) => {
           fill={fill}
           strokeWidth={strokeWidth}
           transform={`translate(0, ${boundedHeight})`}
+          style={{ pointerEvents: 'none' }}
         />
       )}
       <path
@@ -97,6 +97,7 @@ const Line = (props) => {
         strokeDasharray={strokeDasharray}
         strokeWidth={strokeWidth}
         transform={`translate(0, ${boundedHeight})`}
+        style={{ pointerEvents: 'none' }}
       />
       {(markerShape !== 'none' || highlightMarkers) && (
         <Scatter
