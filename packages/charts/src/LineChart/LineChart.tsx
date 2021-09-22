@@ -174,10 +174,10 @@ const LineChart = React.forwardRef(function LineChart<X = unknown, Y = unknown>(
     markers.forEach((markerObj, i, arr) => {
       const defaultMarkerValues = {};
       if (!markerObj.markerShape) {
-        defaultMarkerValues['markerShape'] = 'circle';
+        defaultMarkerValues['markerShape'] = markerShape
       }
       if (!markerObj.markerSize) {
-        defaultMarkerValues['markerSize'] = 15;
+        defaultMarkerValues['markerSize'] = markerSize
       }
       arr[i] = { ...markerObj, ...defaultMarkerValues };
     });
