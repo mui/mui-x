@@ -21,7 +21,7 @@ interface Margin {
   top?: number;
 }
 
-export interface LineChartProps<X = number, Y = number> {
+export interface LineChartProps<X = unknown, Y = unknown> {
   /**
    * The area keys to use when stacking the data.
    */
@@ -33,7 +33,7 @@ export interface LineChartProps<X = number, Y = number> {
   /**
    * The data to use for the chart.
    */
-  data: ChartData<X, Y>[];
+  data: ChartData<X, Y>[] | ChartData<X, Y>[][];
   /**
    * The fill color to use for the area.
    */
@@ -128,7 +128,11 @@ export interface LineChartProps<X = number, Y = number> {
   yScaleType?: 'linear' | 'time' | 'log' | 'point' | 'pow' | 'sqrt' | 'utc';
 }
 
-const LineChart = React.forwardRef<SVGSVGElement, LineChartProps>(function LineChart(props, ref) {
+type LineChartComponent = (<X, Y>(
+  props: LineChartProps<X, Y> & React.RefAttributes<SVGSVGElement>,
+) => JSX.Element);
+
+const LineChart = React.forwardRef(function LineChart<X = unknown, Y = unknown>(props: LineChartProps<X, Y>, ref: React.Ref<SVGSVGElement>) {
   const {
     areaKeys,
     children,
@@ -264,6 +268,6 @@ const LineChart = React.forwardRef<SVGSVGElement, LineChartProps>(function LineC
       </svg>
     </ChartContext.Provider>
   );
-});
+}) as LineChartComponent;
 
 export default LineChart;

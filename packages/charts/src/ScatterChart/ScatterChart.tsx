@@ -1,4 +1,5 @@
 import React from 'react';
+import { useForkRef } from '@mui/material/utils';
 import useChartDimensions from '../hooks/useChartDimensions';
 import ChartContext from '../ChartContext';
 import useTicks from '../hooks/useTicks';
@@ -17,7 +18,7 @@ interface Margin {
   top?: number;
 }
 
-export interface ScatterChartProps<X=number, Y=number> {
+export interface ScatterChartProps<X = unknown, Y = unknown> {
   /**
    * The content of the component.
    */
@@ -25,7 +26,7 @@ export interface ScatterChartProps<X=number, Y=number> {
   /**
    * The data to use for the chart.
    */
-  data: ChartData<X, Y>[];
+  data: ChartData<X, Y>[] | ChartData<X, Y>[][];
   /**
    * The fill color to use for the area.
    */
@@ -108,16 +109,19 @@ export interface ScatterChartProps<X=number, Y=number> {
   /**
    * Override the calculated domain of the z axis.
    */
-  zDomain: string[];
+  zDomain?: string[];
   /**
    * The key to use for the z axis.
    * If `null`, the z axis will not be displayed.
    */
-
-  zKey: string;
+  zKey?: string;
 }
 
-const ScatterChart = (props) => {
+type ScatterChartComponent = (<X, Y>(
+  props: ScatterChartProps<X, Y> & React.RefAttributes<SVGSVGElement>,
+) => JSX.Element);
+
+const ScatterChart = React.forwardRef(function ScatterChart<X = unknown, Y = unknown>(props: ScatterChartProps<X, Y>, ref: React.Ref<SVGSVGElement>) {
   const {
     children,
     data,
@@ -148,7 +152,8 @@ const ScatterChart = (props) => {
     marginRight: margin.right,
   };
 
-  const [ref, dimensions] = useChartDimensions(chartSettings);
+  const [chartRef, dimensions] = useChartDimensions(chartSettings);
+  const handleRef = useForkRef(chartRef, ref);
   const { width, height, boundedWidth, boundedHeight, marginLeft, marginTop } = dimensions;
   const xDomain = xDomainProp || getExtent(data, (d) => d[xKey]);
   const yDomain = yDomainProp || getExtent(data, (d) => d[yKey]);
@@ -186,7 +191,7 @@ const ScatterChart = (props) => {
         zKey,
       }}
     >
-      <svg viewBox={`0 0 ${width} ${height}`} ref={ref} {...other}>
+      <svg viewBox={`0 0 ${width} ${height}`} ref={handleRef} {...other}>
         <rect width={width} height={height} fill={fill} rx="4" />
         <g transform={`translate(${[marginLeft, marginTop].join(',')})`}>
           <g>{children}</g>
@@ -204,6 +209,6 @@ const ScatterChart = (props) => {
       </svg>
     </ChartContext.Provider>
   );
-};
+}) as ScatterChartComponent;
 
 export default ScatterChart;
