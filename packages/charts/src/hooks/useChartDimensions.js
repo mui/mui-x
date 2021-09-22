@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from 'react';
 import { ResizeObserver } from '@juggle/resize-observer';
+import { useEffect, useRef, useState } from 'react';
 
 const combineChartDimensions = (dimensions) => {
   const parsedDimensions = {
@@ -35,17 +35,15 @@ const useChartDimensions = (passedSettings) => {
 
     const element = ref.current;
     const resizeObserver = new ResizeObserver((entries) => {
-      if (!Array.isArray(entries)) return;
-      if (!entries.length) return;
-
-      const entry = entries[0];
-
-      if (width !== entry.contentRect.width) setWidth(entry.contentRect.width);
-      if (height !== entry.contentRect.height) setHeight(entry.contentRect.height);
+      if (Array.isArray(entries) && entries.length) {
+        const entry = entries[0];
+        setWidth(entry.contentRect.width);
+        setHeight(entry.contentRect.height);
+      }
     });
     resizeObserver.observe(element);
 
-    return () => resizeObserver.unobserve(element);
+    return () => resizeObserver.disconnect();
   }, [dimensions, height, width]);
 
   const newSettings = combineChartDimensions({
