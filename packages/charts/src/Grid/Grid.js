@@ -32,27 +32,29 @@ const Grid = (props) => {
       <g transform={`translate(0, ${boundedHeight})`}>
         {!disableX &&
           xTicks.map(({ offset, value }, index) => (
-            <g key={index} transform={`translate(${offset}, 0)`}>
-              <line
-                y2={-boundedHeight}
-                stroke={getStroke(value)}
-                strokeWidth={getStrokeWidth(value)}
-                strokeDasharray={getStrokeDasharray(value)}
-                shapeRendering="crispEdges"
-              />
-            </g>
+            <line
+              key={index}
+              x1={offset}
+              x2={offset}
+              y2={-boundedHeight}
+              stroke={getStroke(value)}
+              strokeWidth={getStrokeWidth(value)}
+              strokeDasharray={getStrokeDasharray(value)}
+              shapeRendering="crispEdges"
+            />
           ))}
         {!disableY &&
           yTicks.map(({ offset, value }, index) => (
-            <g key={index} transform={`translate(0, ${-offset})`}>
-              <line
-                x2={boundedWidth}
-                stroke={getStroke(value)}
-                strokeWidth={getStrokeWidth(value)}
-                strokeDasharray={getStrokeDasharray(value)}
-                shapeRendering="crispEdges"
-              />
-            </g>
+            <line
+              key={index}
+              x2={boundedWidth}
+              y1={-offset}
+              y2={-offset}
+              stroke={getStroke(value)}
+              strokeWidth={getStrokeWidth(value)}
+              strokeDasharray={getStrokeDasharray(value)}
+              shapeRendering="crispEdges"
+            />
           ))}
       </g>
     </g>
