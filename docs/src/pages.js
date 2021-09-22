@@ -49,15 +49,16 @@ dataGridComponent.children = [
   { pathname: '/components/data-grid/group-pivot', title: '🚧 Group & Pivot' },
 ];
 
-const chartComponent = lab.children[2];
-
-chartComponent.children = [
+lab.children = [
+  ...lab.children,
   {
-    pathname: '/components/charts',
-    title: 'Overview',
+    title: 'Charts',
+    children: [
+      { pathname: '/components/charts', title: 'Overview' },
+      { pathname: '/components/charts/line-chart' },
+      { pathname: '/components/charts/scatter-chart' },
+    ]
   },
-  { pathname: '/components/charts/line-chart' },
-  { pathname: '/components/charts/scatter-chart' },
 ];
 
 dataGridComponentAPI.children = [
@@ -69,6 +70,14 @@ dataGridComponentAPI.children = [
   { pathname: '/api-docs/data-grid/grid-cell-params', title: 'GridCellParams' },
   { pathname: '/api-docs/data-grid/grid-row-params', title: 'GridRowParams' },
   { pathname: '/api-docs/data-grid/grid-export-csv-options', title: 'GridExportCSVOptions' },
+].map((page) => {
+  return { ...page, linkProps: { as: page.pathname.replace(/^\/api-docs/, '/api') } };
+});
+
+componentsAPI.children = [
+  ...componentsAPI.children,
+  // Charts APIs
+  { pathname: '/api-docs/data-grid/line-chart-props', title: 'LineChart' },
 ].map((page) => {
   return { ...page, linkProps: { as: page.pathname.replace(/^\/api-docs/, '/api') } };
 });

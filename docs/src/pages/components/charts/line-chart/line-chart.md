@@ -35,3 +35,5 @@ title: Line chart
 {{"demo": "pages/components/charts/line-chart/StackedAreaChart.js"}}
 
 ## API
+
+- [LineChart](/api/data-grid/line-chart-props/)

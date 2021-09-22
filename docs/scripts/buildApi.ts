@@ -257,7 +257,17 @@ function run(argv: { outputDirectory?: string }) {
   });
   const project = app.convert();
 
-  const apisToGenerate = [
+  const appCharts = new TypeDoc.Application();
+  appCharts.options.addReader(new TypeDoc.TSConfigReader());
+  appCharts.options.addReader(new TypeDoc.TypeDocReader());
+  appCharts.bootstrap({
+    entryPoints: ['packages/charts/src/index.ts'],
+    exclude: ['**/*.test.ts'],
+    tsconfig: 'packages/charts/tsconfig.json',
+  });
+  const projectCharts = appCharts.convert();
+
+  const gridApisToGenerate = [
     'GridApi',
     'GridColDef',
     'GridCellParams',
@@ -271,8 +281,14 @@ function run(argv: { outputDirectory?: string }) {
     'GridEvents',
   ];
 
+  const apisToGenerate = [
+    ...gridApisToGenerate,
+    'LineChartProps',
+  ];
+
   apisToGenerate.forEach((apiName) => {
-    const reflection = project!.findReflectionByName(apiName) as TypeDoc.DeclarationReflection;
+    // TODO: Very dirty, but it works :) 
+    const reflection = (gridApisToGenerate.indexOf(apiName) >= 0 ? project!.findReflectionByName(apiName) : projectCharts!.findReflectionByName(apiName)) as TypeDoc.DeclarationReflection;
     if (!reflection) {
       throw new Error(`Could not find reflection for "${apiName}".`);
     }
