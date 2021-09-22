@@ -43,6 +43,8 @@ Finally, you need to handle the `onPageChange` callback to load the rows for the
 
 {{"demo": "pages/components/data-grid/pagination/ServerPaginationGrid.js", "bg": "inline"}}
 
+**Note**: For more information regarding server-side pagination in combination with controlled selection check [here](/components/data-grid/selection/#usage-with-server-side-pagination)
+
 ## Cursor-based pagination
 
 You can adapt the pagination for your cursor-based pagination.
