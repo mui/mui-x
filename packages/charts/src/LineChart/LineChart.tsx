@@ -1,5 +1,4 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
 import * as d3 from 'd3';
 import { useForkRef } from '@mui/material/utils';
 import ChartContext from '../ChartContext';
@@ -10,7 +9,126 @@ import useScale from '../hooks/useScale';
 import useThrottle from '../hooks/useThrottle';
 import { getExtent, getMaxDataSetLength } from '../utils';
 
-const LineChart = React.forwardRef(function LineChart(props, ref) {
+interface ChartData<X, Y> {
+  x: X;
+  y: Y;
+}
+
+interface Margin {
+  bottom?: number;
+  left?: number;
+  right?: number;
+  top?: number;
+}
+
+export interface LineChartProps<X=number, Y=number> {
+  /**
+   * The area keys to use when stacking the data.
+   */
+  areaKeys?: string[];
+  /**
+   * The content of the component.
+   */
+  children: React.ReactNode;
+  /**
+   * The data to use for the chart.
+   */
+  data: ChartData<X, Y>[];
+  /**
+   * The fill color to use for the area.
+   */
+  fill?: string;
+  /**
+   * The height of the chart.
+   */
+  height?: number;
+  /**
+   * If true, the markers will be highlighted when the mouse is over them.
+   */
+  highlightMarkers?: boolean;
+  /**
+   * Invert the line and fill colors of the point markers.
+   */
+  invertMarkers?: boolean;
+  /**
+   * The label to display above the chart.
+   */
+  label?: string;
+  /**
+   * The color of the label.
+   */
+  labelColor?: string;
+  /**
+   * The font size of the label.
+   */
+  labelFontSize?: number;
+  /**
+   * The margin to use.
+   * Labels and axes fall within these margins.
+   */
+  margin?: Margin;
+  /**
+   * The shape of the markers.
+   * If auto, the shape will be based on the data series.
+   */
+  markerShape?: 
+    'auto' |
+    'circle' |
+    'cross' |
+    'diamond' |
+    'square' |
+    'star' |
+    'triangle' |
+    'wye' |
+    'none';
+  /**
+   * The size of the markers.
+   */
+  markerSize?: number;
+  /**
+   * The maximum number of pixels per tick.
+   */
+  pixelsPerTick?: number;
+  /**
+   * The series labels. Used in the tooltip.
+   */
+  seriesLabels?: string[];
+  /**
+   * If `true`, the plotted lines will be smoothed.
+   */
+  smoothed?: boolean,
+  /**
+   * If `true`, the data will be stacked.
+   */
+  stacked?: boolean;
+  /**
+   * Override the calculated domain of the x axis.
+   */
+  xDomain?: string[];
+  /**
+   * The key to use for the x axis.
+   */
+
+  xKey?: string;
+  /**
+   * The scale type to use for the x axis.
+   */
+  xScaleType?: 'linear' |'time' | 'log' | 'point' | 'pow' | 'sqrt' | 'utc';
+  /**
+   * Override the calculated domain of the y axis.
+   */
+  yDomain?: string[];
+  /**
+   * The key to use for the y axis.
+   */
+  yKey?: string;
+  /**
+   * The scale type to use for the y axis.
+   */
+  yScaleType?: 'linear' | 'time' | 'log' | 'point' | 'pow' | 'sqrt' | 'utc';
+}
+
+const LineChart = React.forwardRef<SVGSVGElement, LineChartProps>(function LineChart(props, ref) {
   const {
     areaKeys,
     children,
@@ -96,8 +214,6 @@ const LineChart = React.forwardRef(function LineChart(props, ref) {
     });
   };
 
-  console.log(lines);
-
   return (
     <ChartContext.Provider
       value={{
@@ -149,119 +265,5 @@ const LineChart = React.forwardRef(function LineChart(props, ref) {
     </ChartContext.Provider>
   );
 });
-
-LineChart.propTypes /* remove-proptypes */ = {
-  /**
-   * The area keys to use when stacking the data.
-   */
-  areaKeys: PropTypes.array,
-  /**
-   * The content of the component.
-   */
-  children: PropTypes.node.isRequired,
-  /**
-   * The data to use for the chart.
-   */
-  data: PropTypes.array.isRequired,
-  /**
-   * The fill color to use for the area.
-   */
-  fill: PropTypes.string,
-  /**
-   * The height of the chart.
-   */
-  height: PropTypes.number,
-  /**
-   * If true, the markers will be highlighted when the mouse is over them.
-   */
-  highlightMarkers: PropTypes.bool,
-  /**
-   * Invert the line and fill colors of the point markers.
-   */
-  invertMarkers: PropTypes.bool,
-  /**
-   * The label to display above the chart.
-   */
-  label: PropTypes.string,
-  /**
-   * The color of the label.
-   */
-  labelColor: PropTypes.string,
-  /**
-   * The font size of the label.
-   */
-  labelFontSize: PropTypes.number,
-  /**
-   * The margin to use.
-   * Labels and axes fall within these margins.
-   */
-  margin: PropTypes.shape({
-    bottom: PropTypes.number,
-    left: PropTypes.number,
-    right: PropTypes.number,
-    top: PropTypes.number,
-  }),
-  /**
-   * The shape of the markers.
-   * If auto, the shape will be based on the data series.
-   */
-  markerShape: PropTypes.oneOf([
-    'auto',
-    'circle',
-    'cross',
-    'diamond',
-    'square',
-    'star',
-    'triangle',
-    'wye',
-    'none',
-  ]),
-  /**
-   * The size of the markers.
-   */
-  markerSize: PropTypes.number,
-  /**
-   * The maximum number of pixels per tick.
-   */
-  pixelsPerTick: PropTypes.number,
-  /**
-   * The series labels. Used in the tooltip.
-   */
-  seriesLabels: PropTypes.array,
-  /**
-   * If `true`, the plotted lines will be smoothed.
-   */
-  smoothed: PropTypes.bool,
-  /**
-   * If `true`, the data will be stacked.
-   */
-  stacked: PropTypes.bool,
-  /**
-   * Override the calculated domain of the x axis.
-   */
-  xDomain: PropTypes.array,
-  /**
-   * The key to use for the x axis.
-   */
-
-  xKey: PropTypes.string,
-  /**
-   * The scale type to use for the x axis.
-   */
-  xScaleType: PropTypes.oneOf(['linear', 'time', 'log', 'point', 'pow', 'sqrt', 'utc']),
-  /**
-   * Override the calculated domain of the y axis.
-   */
-  yDomain: PropTypes.array,
-  /**
-   * The key to use for the y axis.
-   */
-
-  yKey: PropTypes.string,
-  /**
-   * The scale type to use for the y axis.
-   */
-  yScaleType: PropTypes.oneOf(['linear', 'time', 'log', 'point', 'pow', 'sqrt', 'utc']),
-};
 
 export default LineChart;

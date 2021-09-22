@@ -1,0 +1,14 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": "./",
+    "declaration": true,
+    "declarationDir": "./build",
+    "outDir": "./build",
+    "allowJs": true,
+    "types": ["node", "requestidlecallback"],
+    "rootDir": "./"
+  },
+  "include": ["./src/"],
+  "exclude": ["__tests__", "**/*.test.*", "node_modules"]
+}

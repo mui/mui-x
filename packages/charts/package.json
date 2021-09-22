@@ -18,6 +18,10 @@
   "publishConfig": {
     "access": "public"
   },
+  "scripts": {
+    "typescript": "tsc -p tsconfig.json",
+    "build": "cd ../ && rollup --config rollup.data-grid.config.js"
+  },
   "keywords": [
     "react",
     "react-component",
