@@ -21,7 +21,10 @@ function Tooltip(props) {
   } = useContext(ChartContext);
 
   const { stroke = 'rgba(200, 200, 200, 0.8)', strokeDasharray = '0', strokeWidth = 1 } = props;
-  const strokeRef = React.useRef(null);
+  const [strokeElement, setStrokeElement] = React.useState(null);
+  const updateStrokeRef = (element) => {
+    setStrokeElement(element);
+  };
 
   // Flatten the data
   // eslint-disable-next-line prefer-spread
@@ -47,30 +50,32 @@ function Tooltip(props) {
   return (
     <React.Fragment>
       <NoSsr>
-        <Popper
-          open={strokeRef.current !== null}
-          placement="right-start"
-          anchorEl={strokeRef.current}
-          style={{ padding: '16px', pointerEvents: 'none' }}
-        >
-          <Paper style={{ padding: '8px' }}>
-            <Typography gutterBottom>{label && label.value}</Typography>
-            {highlightedData &&
-              highlightedData
-                .sort((a, b) => d3.descending(a[yKey], b[yKey]))
-                .map((d) => (
-                  <Typography variant="body2">
-                    {d.label}
-                    {d.label ? ':' : null} {d[yKey]}
-                  </Typography>
-                ))}
-          </Paper>
-        </Popper>
+        {strokeElement && (
+          <Popper
+            open={strokeElement !== null}
+            placement="right-start"
+            anchorEl={strokeElement}
+            style={{ padding: '16px', pointerEvents: 'none' }}
+          >
+            <Paper style={{ padding: '8px' }}>
+              <Typography gutterBottom>{label && label.value}</Typography>
+              {highlightedData &&
+                highlightedData
+                  .sort((a, b) => d3.descending(a[yKey], b[yKey]))
+                  .map((d, index) => (
+                    <Typography variant="body2" key={index}>
+                      {d.label}
+                      {d.label ? ':' : null} {d[yKey]}
+                    </Typography>
+                  ))}
+            </Paper>
+          </Popper>
+        )}
         <g transform={`translate(0, ${boundedHeight})`} style={{ pointerEvents: 'none' }}>
           {offset !== undefined && (
             <g transform={`translate(${offset}, 0)`}>
               <line
-                ref={strokeRef}
+                ref={updateStrokeRef}
                 y2={-boundedHeight}
                 stroke={stroke}
                 strokeWidth={strokeWidth}
