@@ -57,7 +57,7 @@ lab.children = [
       { pathname: '/components/charts', title: 'Overview' },
       { pathname: '/components/charts/line-chart' },
       { pathname: '/components/charts/scatter-chart' },
-    ]
+    ],
   },
 ];
 

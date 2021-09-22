@@ -21,7 +21,7 @@ interface Margin {
   top?: number;
 }
 
-export interface LineChartProps<X=number, Y=number> {
+export interface LineChartProps<X = number, Y = number> {
   /**
    * The area keys to use when stacking the data.
    */
@@ -71,16 +71,16 @@ export interface LineChartProps<X=number, Y=number> {
    * The shape of the markers.
    * If auto, the shape will be based on the data series.
    */
-  markerShape?: 
-    'auto' |
-    'circle' |
-    'cross' |
-    'diamond' |
-    'square' |
-    'star' |
-    'triangle' |
-    'wye' |
-    'none';
+  markerShape?:
+    | 'auto'
+    | 'circle'
+    | 'cross'
+    | 'diamond'
+    | 'square'
+    | 'star'
+    | 'triangle'
+    | 'wye'
+    | 'none';
   /**
    * The size of the markers.
    */
@@ -96,7 +96,7 @@ export interface LineChartProps<X=number, Y=number> {
   /**
    * If `true`, the plotted lines will be smoothed.
    */
-  smoothed?: boolean,
+  smoothed?: boolean;
   /**
    * If `true`, the data will be stacked.
    */
@@ -113,7 +113,7 @@ export interface LineChartProps<X=number, Y=number> {
   /**
    * The scale type to use for the x axis.
    */
-  xScaleType?: 'linear' |'time' | 'log' | 'point' | 'pow' | 'sqrt' | 'utc';
+  xScaleType?: 'linear' | 'time' | 'log' | 'point' | 'pow' | 'sqrt' | 'utc';
   /**
    * Override the calculated domain of the y axis.
    */

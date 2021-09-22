@@ -79,15 +79,10 @@ export default [
           ],
         }),
       production &&
-        command(
-          [
-            `rm -rf ./charts/build/charts/`,
-          ],
-          {
-            exitOnFail: true,
-            wait: true,
-          },
-        ),
+        command([`rm -rf ./charts/build/charts/`], {
+          exitOnFail: true,
+          wait: true,
+        }),
     ],
   },
 ];

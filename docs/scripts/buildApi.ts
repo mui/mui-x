@@ -281,14 +281,15 @@ function run(argv: { outputDirectory?: string }) {
     'GridEvents',
   ];
 
-  const apisToGenerate = [
-    ...gridApisToGenerate,
-    'LineChartProps',
-  ];
+  const apisToGenerate = [...gridApisToGenerate, 'LineChartProps'];
 
   apisToGenerate.forEach((apiName) => {
-    // TODO: Very dirty, but it works :) 
-    const reflection = (gridApisToGenerate.indexOf(apiName) >= 0 ? project!.findReflectionByName(apiName) : projectCharts!.findReflectionByName(apiName)) as TypeDoc.DeclarationReflection;
+    // TODO: Very dirty, but it works :)
+    const reflection = (
+      gridApisToGenerate.indexOf(apiName) >= 0
+        ? project!.findReflectionByName(apiName)
+        : projectCharts!.findReflectionByName(apiName)
+    ) as TypeDoc.DeclarationReflection;
     if (!reflection) {
       throw new Error(`Could not find reflection for "${apiName}".`);
     }
