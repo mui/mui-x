@@ -116,7 +116,7 @@ export default function QuickFilteringGrid() {
         componentsProps={{
           toolbar: {
             value: searchText,
-            onChange: (event) => requestSearch(event.target.value),
+            onChange: (event: any) => requestSearch(event.target.value),
             clearSearch: () => requestSearch(''),
           },
         }}
