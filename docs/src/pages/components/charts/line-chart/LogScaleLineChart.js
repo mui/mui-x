@@ -1,9 +1,10 @@
-import * as React from 'react';
-import LineChart from '@mui/charts/LineChart';
+import Grid from '@mui/charts/Grid';
 import Line from '@mui/charts/Line';
+import LineChart from '@mui/charts/LineChart';
+import Tooltip from '@mui/charts/Tooltip';
 import XAxis from '@mui/charts/XAxis';
 import YAxis from '@mui/charts/YAxis';
-import Grid from '@mui/charts/Grid';
+import * as React from 'react';
 
 const lineData1 = [
   { x: new Date(2015, 0, 1), y: 4 },
@@ -15,12 +16,27 @@ const lineData1 = [
   { x: new Date(2021, 0, 1), y: 70 },
 ];
 
+const markers = [
+  {
+    label: 'Red',
+    series: 0,
+    markerColor: 'rgb(235,97,97)',
+  },
+];
+
 export default function LogScaleLineChart() {
   return (
-    <LineChart smoothed data={lineData1} xScaleType="time" yScaleType="log">
+    <LineChart
+      smoothed
+      data={lineData1}
+      xScaleType="time"
+      yScaleType="log"
+      markers={markers}
+    >
       <Grid />
       <XAxis />
       <YAxis suffix="kg" />
+      <Tooltip customStyle={{ borderRadius: 15 }} />
       <Line stroke="rgb(235,97,97)" />
     </LineChart>
   );

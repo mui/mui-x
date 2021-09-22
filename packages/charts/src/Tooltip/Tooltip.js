@@ -17,7 +17,8 @@ function getSymbol(shape, series = 0) {
   return symbolNames.indexOf(shape) || 0;
 }
 
-function Tooltip(props) {
+const Tooltip = (props) => {
+  const { customStyle = {} } = props;
   const {
     data,
     dimensions: { boundedHeight },
@@ -71,8 +72,10 @@ function Tooltip(props) {
             anchorEl={strokeElement}
             style={{ padding: '16px', pointerEvents: 'none' }}
           >
-            <Paper style={{ padding: '8px' }}>
-              <Typography gutterBottom>{label && label.value}</Typography>
+            <Paper style={{ padding: '8px', ...customStyle }}>
+              <Typography gutterBottom align="center">
+                {label && label.value}
+              </Typography>
               {highlightedData &&
                 highlightedData
                   .sort((a, b) => d3.descending(a[yKey], b[yKey]))
