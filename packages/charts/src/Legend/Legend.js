@@ -11,13 +11,13 @@ function Legend(props) {
     lines,
   } = useContext(ChartContext);
 
-  const { labelColor = '#777', labelFontSize = 12, spacing = 50 } = props;
+  const { labelColor = '#777', labelFontSize = 12, spacing = 50, position = 'top' } = props;
 
   return (
     <g
       transform={`translate(${
         boundedWidth / 2 - ((Object.keys(lines).length - 1) * spacing) / 2
-      }, ${boundedHeight + 68})`}
+      }, ${position === 'top' ? 0 : boundedHeight + 68})`}
       style={{ pointerEvents: 'none' }}
     >
       {lines &&
@@ -57,6 +57,7 @@ Legend.propTypes /* remove-proptypes */ = {
    * The font size of the label.
    */
   labelFontSize: PropTypes.number,
+  position: PropTypes.oneOf(['top', 'bottom']),
   /**
    * The spacing between the legend items.
    * @default 50

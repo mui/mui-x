@@ -4,6 +4,7 @@ import Line from '@mui/charts/Line';
 import XAxis from '@mui/charts/XAxis';
 import YAxis from '@mui/charts/YAxis';
 import Grid from '@mui/charts/Grid';
+import Legend from '@mui/charts/Legend';
 
 const lineData1 = [
   { x: new Date(2015, 0, 1), y: 4 },
@@ -41,7 +42,7 @@ export default function FilledMultiLineChart() {
       data={[lineData1, lineData2, lineData3]}
       smoothed
       label="Growth"
-      margin={{ top: 70, bottom: 60, left: 60 }}
+      margin={{ top: 70, bottom: 70, left: 60 }}
       markerShape="auto"
       markerSize={40}
       xScaleType="time"
@@ -54,19 +55,23 @@ export default function FilledMultiLineChart() {
         stroke="rgb(116,205,240)"
         fill="rgba(136,225,250,0.1)"
         strokeWidth={2}
+        label="Line 1"
       />
       <Line
         series={1}
         stroke="rgb(150,219,124)"
         fill="rgba(170,239,144,0.1)"
         strokeWidth={2}
+        label="Line 2"
       />
       <Line
         series={2}
         stroke="rgb(234,95,95)"
         fill="rgba(254,115,115,0.1)"
         strokeWidth={2}
+        label="Line 3"
       />
+      <Legend position="bottom" spacing={55} />
     </LineChart>
   );
 }
