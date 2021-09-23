@@ -111,12 +111,11 @@ const BarChart = React.forwardRef(function BarChart<X = unknown, Y = unknown>(
     children,
     data: dataProp,
     fill = 'none',
-
     label,
     labelColor = '#777',
     labelFontSize = 18,
     margin: marginProp,
-    pixelsPerTick = 50,
+    pixelsPerTick = 40,
     seriesLabels = [],
     stacked = false,
     xDomain: xDomainProp,
@@ -152,7 +151,7 @@ const BarChart = React.forwardRef(function BarChart<X = unknown, Y = unknown>(
   const { width, height, boundedWidth, boundedHeight, marginLeft, marginTop } = dimensions;
   const xDomain = xDomainProp || getExtent(data, (d) => d[xKey]);
   const yDomain = yDomainProp || getExtent(data, (d) => d[yKey]);
-  const padding = 20;
+  const padding = 10;
   const xRange = [padding * 2, boundedWidth - 2 * padding];
   const yRange = [0, boundedHeight];
   const maxXTicks = getMaxDataSetLength(data) - 1;

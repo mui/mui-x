@@ -6,7 +6,7 @@ const Bar = (props) => {
   const {
     areaKeys,
     data,
-    dimensions: { boundedHeight },
+    dimensions: { boundedWidth, boundedHeight },
     padding,
     setSeriesMeta,
     stacked,
@@ -26,7 +26,7 @@ const Bar = (props) => {
     spacingBetweenTicks = Math.min(spacingBetweenTicks, xScale(ticks[i]) - xScale(ticks[i - 1]));
   }
 
-  let barWidth = spacingBetweenTicks - (stacked ? -padding : padding);
+  let barWidth = boundedWidth/spacingBetweenTicks;
 
   useEffect(() => {
     const id = series || 0;

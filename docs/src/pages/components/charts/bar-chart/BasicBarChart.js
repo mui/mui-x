@@ -17,7 +17,6 @@ async function getData() {
     dataPoints[record[1]] = (dataPoints[record[1]] ?? 0) + record[2];
   });
 
-  console.log(dataPoints);
   return Object.keys(dataPoints).map((hour) => ({ x: hour, y: dataPoints[hour] }));
 }
 
