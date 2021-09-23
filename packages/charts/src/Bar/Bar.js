@@ -26,7 +26,11 @@ const Bar = (props) => {
     spacingBetweenTicks = Math.min(spacingBetweenTicks, xScale(ticks[i]) - xScale(ticks[i - 1]));
   }
 
-  let barWidth = boundedWidth/spacingBetweenTicks;
+  let barWidth = Math.min(boundedWidth/data.length - padding/2, 2*padding);
+  
+  if(series !== undefined && !stacked) {
+    barWidth = boundedWidth/data[0].length - 2*padding;
+  } 
 
   useEffect(() => {
     const id = series || 0;
