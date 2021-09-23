@@ -27,6 +27,7 @@ const Line = (props) => {
   const {
     data: dataProp,
     fill,
+    label,
     markerShape = markerShapeContext,
     series,
     smoothed = smoothedContext,
@@ -43,8 +44,11 @@ const Line = (props) => {
 
   useEffect(() => {
     const id = series || 0;
-    setLines((previousLines) => ({ ...previousLines, [id]: { markerShape, stroke } }));
-  }, [markerShape, series, setLines, stroke]);
+    setLines((previousLines) => ({
+      ...previousLines,
+      [id]: { fill, label, markerShape, stroke },
+    }));
+  }, [fill, label, markerShape, setLines, stroke]);
 
   if (stacked && areaKeys) {
     linePath = d3
@@ -124,6 +128,10 @@ Line.propTypes /* remove-proptypes */ = {
    * The color of the area under the line.
    */
   fill: PropTypes.string,
+  /**
+   * The label for the line to be used in the tooltip and legend.
+   */
+  label: PropTypes.string,
   /**
    * The shape of the markers.
    */

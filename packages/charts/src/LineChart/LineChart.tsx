@@ -212,11 +212,13 @@ const LineChart = React.forwardRef(function LineChart<X = unknown, Y = unknown>(
   const maxXTicks = getMaxDataSetLength(data) - 1;
   const xScale = useScale(xScaleType, xDomain, xRange);
   const yScale = useScale(yScaleType, yDomain, yRange);
+
   const xTicks = useTicks({
     scale: xScale,
     pixelsPerTick,
     maxTicks: maxXTicks,
   });
+
   const yTicks = useTicks({
     scale: yScale,
     pixelsPerTick,

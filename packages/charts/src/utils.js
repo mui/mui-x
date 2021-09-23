@@ -38,8 +38,18 @@ export function findObjects(array, key, value) {
   }
   return array.filter((obj) => obj[key].toString() === value.toString());
 }
+
 // Returns true if `num` is +/- `range` of `target`
 export function isInRange(num, target, range) {
   const result = num >= Math.max(0, target - range) && num <= target + range;
   return result;
+}
+
+// Returns a either a defined shape, or based on the series if 'auto'
+export function getSymbol(shape, series = 0) {
+  const symbolNames = 'circle cross diamond square star triangle wye'.split(/ /);
+  if (shape === 'auto') {
+    return series % symbolNames.length;
+  }
+  return symbolNames.indexOf(shape) || 0;
 }

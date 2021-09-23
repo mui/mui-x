@@ -2,19 +2,11 @@ import * as d3 from 'd3';
 import PropTypes from 'prop-types';
 import React, { useContext } from 'react';
 import ChartContext from '../ChartContext';
-import { isInRange } from '../utils';
+import { getSymbol, isInRange } from '../utils';
 
 const plot = (value, domain, size) => {
   return ((value - domain[0]) / (domain[1] - domain[0])) * size;
 };
-
-function getSymbol(shape, series = 0) {
-  const symbolNames = 'circle cross diamond square star triangle wye'.split(/ /);
-  if (shape === 'auto') {
-    return series % symbolNames.length;
-  }
-  return symbolNames.indexOf(shape) || 0;
-}
 
 const Scatter = (props) => {
   const {
@@ -35,7 +27,7 @@ const Scatter = (props) => {
 
   const {
     data: dataProp,
-    fill = 'inherit',
+    fill = 'currentColor',
     invertMarkers = invertMarkersContext,
     markerShape = markerShapeContext,
     maxSize = 500,
