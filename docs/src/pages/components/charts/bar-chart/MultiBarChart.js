@@ -67,14 +67,14 @@ export default function MultiLineChart() {
       data={[chartData?.morning, chartData?.afternoon, chartData?.night]}
       highlightMarkers
       invertMarkers
-      label="Commits to the MUI repo per day of week"
+      label="Commits to the MUI repo by day of week"
       margin={{ top: 70, bottom: 60, left: 60 }}
       markerSize={50}
       xScaleType="linear"
     >
       <Grid disableX />
       <XAxis label="Day of week" />
-      <YAxis label="Commit count" disableLine disableTicks />
+      <YAxis label="Count" disableLine disableTicks />
       <Tooltip />
       <Legend spacing={80} />
       <Bar series={0} label="Morning" fill="rgb(116,205,240)" />
