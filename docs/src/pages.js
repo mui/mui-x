@@ -57,6 +57,7 @@ lab.children = [
       { pathname: '/components/charts', title: 'Overview' },
       { pathname: '/components/charts/line-chart' },
       { pathname: '/components/charts/scatter-chart' },
+      { pathname: '/components/charts/bar-chart' },
     ],
   },
 ];
@@ -79,6 +80,7 @@ componentsAPI.children = [
   // Charts APIs
   { pathname: '/api-docs/data-grid/line-chart-props', title: 'LineChart' },
   { pathname: '/api-docs/data-grid/scatter-chart-props', title: 'ScatterChat' },
+  { pathname: '/api-docs/data-grid/bar-chart-props', title: 'BarChart' },
 ].map((page) => {
   return { ...page, linkProps: { as: page.pathname.replace(/^\/api-docs/, '/api') } };
 });
