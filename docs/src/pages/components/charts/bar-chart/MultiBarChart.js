@@ -1,61 +1,85 @@
-import Bar from '@mui/charts/Bar';
+import * as React from 'react';
 import BarChart from '@mui/charts/BarChart';
-import Grid from '@mui/charts/Grid';
-import Legend from '@mui/charts/Legend';
-import Tooltip from '@mui/charts/Tooltip';
+import Bar from '@mui/charts/Bar';
 import XAxis from '@mui/charts/XAxis';
 import YAxis from '@mui/charts/YAxis';
-import * as React from 'react';
+import Grid from '@mui/charts/Grid';
+import Tooltip from '@mui/charts/Tooltip';
+import Legend from '@mui/charts/Legend';
 
-const lineData1 = [
-  { x: new Date(2015, 0, 1), y: 4 },
-  { x: new Date(2016, 0, 1), y: 14 },
-  { x: new Date(2017, 0, 1), y: 36 },
-  { x: new Date(2018, 0, 1), y: 38 },
-  { x: new Date(2019, 0, 1), y: 54 },
-  { x: new Date(2020, 0, 1), y: 47 },
-  { x: new Date(2021, 0, 1), y: 70 },
-];
+async function getData() {
+  const response = await fetch(
+    'https://api.github.com/repos/mui-org/material-ui/stats/punch_card',
+  );
+  const rawData = await response.json();
 
-const lineData2 = [
-  { x: new Date(2015, 0, 1), y: 17 },
-  { x: new Date(2016, 0, 1), y: 16 },
-  { x: new Date(2017, 0, 1), y: 53 },
-  { x: new Date(2018, 0, 1), y: 29 },
-  { x: new Date(2019, 0, 1), y: 52 },
-  { x: new Date(2020, 0, 1), y: 68 },
-  { x: new Date(2021, 0, 1), y: 62 },
-];
+  const morningDataPoints = {};
+  const afternoonDataPoints = {};
+  const nightDataPoints = {};
 
-const lineData3 = [
-  { x: new Date(2015, 0, 1), y: 24 },
-  { x: new Date(2016, 0, 1), y: 29 },
-  { x: new Date(2017, 0, 1), y: 44 },
-  { x: new Date(2018, 0, 1), y: 33 },
-  { x: new Date(2019, 0, 1), y: 57 },
-  { x: new Date(2020, 0, 1), y: 54 },
-  { x: new Date(2021, 0, 1), y: 79 },
-];
+  rawData.forEach((record) => {
+    const day = record[0];
+    const hour = record[1];
+    const commitCount = record[2];
+
+    if (hour >= 6 && hour < 14) {
+      morningDataPoints[day] = (morningDataPoints[day] ?? 0) + commitCount;
+    }
+
+    if (hour >= 14 && hour < 22) {
+      afternoonDataPoints[day] = (afternoonDataPoints[day] ?? 0) + commitCount;
+    }
+
+    if (hour >= 22 || hour < 6) {
+      nightDataPoints[day] = (nightDataPoints[day] ?? 0) + commitCount;
+    }
+  });
+
+  return {
+    morning: Object.keys(morningDataPoints).map((day) => ({
+      x: day,
+      y: morningDataPoints[day],
+    })),
+    afternoon: Object.keys(afternoonDataPoints).map((day) => ({
+      x: day,
+      y: afternoonDataPoints[day],
+    })),
+    night: Object.keys(nightDataPoints).map((day) => ({
+      x: day,
+      y: nightDataPoints[day],
+    })),
+  };
+}
 
 export default function MultiLineChart() {
-  return (
+  const [chartData, setChartData] = React.useState(undefined);
+
+  React.useEffect(() => {
+    async function loadData() {
+      setChartData(await getData());
+    }
+
+    loadData();
+  }, []);
+
+  return chartData ? (
     <BarChart
-      data={[lineData1, lineData2, lineData3]}
+      data={[chartData?.morning, chartData?.afternoon, chartData?.night]}
       highlightMarkers
       invertMarkers
-      label="Growth"
+      label="Commits to the MUI repo per day of week"
       margin={{ top: 70, bottom: 60, left: 60 }}
       markerSize={50}
-      xScaleType="time"
+      xScaleType="linear"
     >
       <Grid disableX />
-      <XAxis label="Year" />
-      <YAxis label="Growth" disableLine disableTicks />
+      <XAxis label="Day of week" />
+      <YAxis label="Commit count" disableLine disableTicks />
       <Tooltip />
-      <Bar series={0} label="Apples" fill="rgb(116,205,240)" />
-      <Bar series={1} label="Pears" fill="rgb(150,219,124)" />
-      <Bar series={2} label="Bananas" fill="rgb(234,95,95)" />
-      <Legend spacing={64} />
+      <Legend spacing={80} />
+      <Bar series={0} label="Morning" fill="rgb(116,205,240)" />
+      <Bar series={1} label="Afternoon" fill="rgb(150,219,124)" />
+      <Bar series={2} label="Night" fill="rgb(234,95,95)" />
     </BarChart>
-  );
+  ) : null;
 }
