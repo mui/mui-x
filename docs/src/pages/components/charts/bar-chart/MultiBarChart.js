@@ -1,10 +1,11 @@
-import * as React from 'react';
-import BarChart from '@mui/charts/BarChart';
 import Bar from '@mui/charts/Bar';
+import BarChart from '@mui/charts/BarChart';
+import Grid from '@mui/charts/Grid';
+import Legend from '@mui/charts/Legend';
+import Tooltip from '@mui/charts/Tooltip';
 import XAxis from '@mui/charts/XAxis';
 import YAxis from '@mui/charts/YAxis';
-import Grid from '@mui/charts/Grid';
-import Tooltip from '@mui/charts/Tooltip';
+import * as React from 'react';
 
 const lineData1 = [
   { x: new Date(2015, 0, 1), y: 4 },
@@ -51,9 +52,10 @@ export default function MultiLineChart() {
       <XAxis label="Year" />
       <YAxis label="Size" suffix="cm" disableLine disableTicks />
       <Tooltip />
-      <Bar series={0} fill="rgb(116,205,240)" />
-      <Bar series={1} fill="rgb(150,219,124)" />
-      <Bar series={2} fill="rgb(234,95,95)" />
+      <Bar label="Blue" series={0} fill="rgb(116,205,240)" />
+      <Bar label="Green" series={1} fill="rgb(150,219,124)" />
+      <Bar label="Red" series={2} fill="rgb(234,95,95)" />
+      <Legend position="top" />
     </BarChart>
   );
 }

@@ -1,6 +1,6 @@
-import React, { useContext } from 'react';
-import PropTypes from 'prop-types';
 import * as d3 from 'd3';
+import PropTypes from 'prop-types';
+import React, { useContext } from 'react';
 import ChartContext from '../ChartContext';
 import { getSymbol } from '../utils';
 
@@ -22,10 +22,6 @@ function Legend(props) {
     >
       {seriesMeta &&
         Object.keys(seriesMeta).map((series) => {
-          // fill is defined only for scatter charts
-          if (!seriesMeta[series].fill) {
-            seriesMeta[series].fill = seriesMeta[series].markerShape === 'none' ? stroke : 'white';
-          }
           const {
             fill = 'currentColor',
             label,
