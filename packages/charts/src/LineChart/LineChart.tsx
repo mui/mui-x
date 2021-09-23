@@ -32,14 +32,6 @@ type MarkerShape =
   | 'wye'
   | 'none';
 
-interface Marker {
-  label: string;
-  series: number;
-  markerColor: string;
-  markerSize?: number;
-  markerShape?: MarkerShape;
-}
-
 export interface LineChartProps<X = unknown, Y = unknown> {
   /**
    * The area keys to use when stacking the data.
