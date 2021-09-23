@@ -22,6 +22,10 @@ function Legend(props) {
     >
       {lines &&
         Object.keys(lines).map((series) => {
+          // fill is defined only for scatter charts
+          if (!lines[series].fill) {
+            lines[series].fill = lines[series].markerShape === 'none' ? stroke : 'white';
+          }
           const { fill = 'currentColor', label, markerShape, stroke = 'currentColor' } = lines[
             series
           ];

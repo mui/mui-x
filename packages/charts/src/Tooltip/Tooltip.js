@@ -33,7 +33,7 @@ const Tooltip = (props) => {
     strokeDasharray = '0',
     strokeWidth = 1,
     customStyle = {},
-    markerSize = 20,
+    markerSize = 30,
   } = props;
   const [strokeElement, setStrokeElement] = React.useState(null);
   const updateStrokeRef = (element) => {
@@ -56,8 +56,14 @@ const Tooltip = (props) => {
   const linesData =
     lines &&
     Object.keys(lines).map((series) => {
-      const { fill = 'currentColor', label, markerShape, stroke = 'currentColor' } = lines[series];
-      return { series: series, fill: fill, label: label, markerShape: markerShape, stroke: stroke };
+      const { fill, label, markerShape, stroke = 'currentColor' } = lines[series];
+      return {
+        series,
+        fill: !fill ? markerShape === 'none' ? stroke : 'white' : fill, // fill is defined only for scatter charts
+        label,
+        markerShape,
+        stroke,
+      };
     });
   // Add the information of markers
   highlightedData =
@@ -149,7 +155,7 @@ Tooltip.propTypes /* remove-proptypes */ = {
   customStyle: PropTypes.object,
   /**
    * The size of the tooltip markers
-   * @default 20
+   * @default 30
    *
    */
   markerSize: PropTypes.number,
