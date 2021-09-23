@@ -51,7 +51,7 @@ A big thanks to the 5 contributors who made this release possible. Here are some
 
 - [docs] Add section for controlled selection and server-side pagination (#2602) @DanailH
 - [docs] Fix Algolia search (#2655) @oliviertassinari
-- [docs] Fix the seach results to make them helpful (#2656) @oliviertassinari
+- [docs] Improve the seach results relevance (#2656) @oliviertassinari
 - [docs] Update installation instructions (#2663) @m4theushw
 
 ### Core
