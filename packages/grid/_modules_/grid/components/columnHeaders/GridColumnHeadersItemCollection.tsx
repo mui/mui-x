@@ -59,7 +59,7 @@ function GridColumnHeadersItemCollection(props: GridColumnHeadersItemCollectionP
 
     return (
       <GridColumnHeaderItem
-        key={col.field}
+        key={idx}
         {...sortColumnLookup[col.field]}
         columnMenuOpen={open}
         filterItemsCounter={filterColumnLookup[col.field] && filterColumnLookup[col.field].length}
