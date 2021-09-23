@@ -20,7 +20,7 @@ export default function BasicBarChart() {
   const theme = useTheme();
   return (
     <BarChart data={barData} xScaleType="time">
-      <Grid />
+      <Grid disableX />
       <XAxis />
       <YAxis suffix="kg" />
       <Bar stroke="rgb(235,97,97)" fill={theme.palette.primary.main} />
