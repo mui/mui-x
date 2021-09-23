@@ -26,7 +26,9 @@
       "@mui/x-data-grid-pro": ["./packages/grid/x-grid/src"],
       "@mui/x-data-grid-pro/*": ["./packages/grid/x-grid/src/*"],
       "@mui/x-license-pro": ["./packages/x-license/src"],
-      "@mui/x-license-pro/*": ["./packages/x-license/src/*"]
+      "@mui/x-license-pro/*": ["./packages/x-license/src/*"],
+      "@mui/charts": ["./packages/charts/src"],
+      "@mui/charts/*": ["./packages/charts/src/*"]
     }
   }
 }
