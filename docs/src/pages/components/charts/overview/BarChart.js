@@ -25,18 +25,9 @@ export default function StackedAreaChart() {
       <Grid disableX />
       <XAxis />
       <YAxis suffix="cm" disableLine disableTicks />
-      <Bar
-        series={2}
-        fill="rgba(234,95,95,0.5)"
-      />
-      <Bar
-        series={1}
-        fill="rgba(150,219,124,0.5)"
-      />
-      <Bar
-        series={0}
-        fill="rgba(116,205,240,0.5)"
-      />
+      <Bar series={2} fill="rgba(234,95,95,0.5)" />
+      <Bar series={1} fill="rgba(150,219,124,0.5)" />
+      <Bar series={0} fill="rgba(116,205,240,0.5)" />
     </BarChart>
   );
 }

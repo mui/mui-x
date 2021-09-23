@@ -36,7 +36,8 @@ export default function StackedAreaChart() {
   );
 }
 
-const stackData = [{ date: new Date(2020, 1, 1), open: 122, close: 104 },
+const stackData = [
+  { date: new Date(2020, 1, 1), open: 122, close: 104 },
   { date: new Date(2020, 1, 1), open: 121, close: 70 },
   { date: new Date(2020, 2, 1), open: 101, close: 55 },
   { date: new Date(2020, 3, 1), open: 103, close: 45 },
@@ -69,5 +70,5 @@ const stackData = [{ date: new Date(2020, 1, 1), open: 122, close: 104 },
   { date: new Date(2022, 5, 1), open: 211, close: 114 },
   { date: new Date(2022, 6, 1), open: 233, close: 138 },
   { date: new Date(2022, 7, 1), open: 261, close: 141 },
-  { date: new Date(2022, 8, 1), open: 279, close: 130 }
-  ]
+  { date: new Date(2022, 8, 1), open: 279, close: 130 },
+];
