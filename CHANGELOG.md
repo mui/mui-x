@@ -65,8 +65,7 @@ A big thanks to the 3 contributors who made this release possible.
 
 ### `@mui/x-data-grid@v5.0.0-beta.1` / `@mui/x-data-grid-pro@v5.0.0-beta.1`
 
-There are no changes since the last release.
-Refer to `v5.0.0-beta.0` for the breaking changes.
+This is a hotfix to fix an important regression with `v5.0.0-beta.0`.
 
 ### Docs
 
