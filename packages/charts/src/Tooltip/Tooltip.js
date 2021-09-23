@@ -34,6 +34,7 @@ const Tooltip = (props) => {
     strokeWidth = 1,
     customStyle = {},
     markerSize = 30,
+    renderContent = null,
   } = props;
   const [strokeElement, setStrokeElement] = React.useState(null);
   const updateStrokeRef = (element) => {
@@ -57,7 +58,12 @@ const Tooltip = (props) => {
   const linesData =
     seriesMeta &&
     Object.keys(seriesMeta).map((series) => {
-      const { fill = 'currentColor', label, markerShape, stroke: markerStroke = 'currentColor' } = seriesMeta[series];
+      const {
+        fill = 'currentColor',
+        label,
+        markerShape,
+        stroke: markerStroke = 'currentColor',
+      } = seriesMeta[series];
       return {
         series,
         fill: isLineChart ? (markerShape === 'none' ? markerStroke : 'white') : fill,
@@ -88,35 +94,38 @@ const Tooltip = (props) => {
             anchorEl={strokeElement}
             style={{ padding: '16px', pointerEvents: 'none' }}
           >
-            <Paper style={{ padding: '16px', ...customStyle }}>
-              <Typography gutterBottom align="center">
-                {label && label.value}
-              </Typography>
-              {highlightedData &&
-                highlightedData
-                  .sort((a, b) => d3.descending(a[yKey], b[yKey]))
-                  .map((d, i) => (
-                    <Typography
-                      variant="body2"
-                      key={i}
-                      sx={{ display: 'flex', alignItems: 'center' }}
-                    >
-                      <svg width={markerSize} height={markerSize}>
-                        <path
-                          d={d3.symbol(
-                            d3.symbols[getSymbol(d.markerShape, d.series)],
-                            markerSize,
-                          )()}
-                          fill={invertMarkers ? d.stroke : d.fill}
-                          stroke={invertMarkers ? d.fill : d.stroke}
-                          transform={`translate(${markerSize / 2}, ${markerSize / 2})`}
-                        />
-                      </svg>
-                      {d.label}
-                      {d.label ? ':' : null} {d[yKey]}
-                    </Typography>
-                  ))}
-            </Paper>
+            {!renderContent && (
+              <Paper style={{ padding: '16px', ...customStyle }}>
+                <Typography gutterBottom align="center">
+                  {label && label.value}
+                </Typography>
+                {highlightedData &&
+                  highlightedData
+                    .sort((a, b) => d3.descending(a[yKey], b[yKey]))
+                    .map((d, i) => (
+                      <Typography
+                        variant="body2"
+                        key={i}
+                        sx={{ display: 'flex', alignItems: 'center' }}
+                      >
+                        <svg width={markerSize} height={markerSize}>
+                          <path
+                            d={d3.symbol(
+                              d3.symbols[getSymbol(d.markerShape, d.series)],
+                              markerSize,
+                            )()}
+                            fill={invertMarkers ? d.stroke : d.fill}
+                            stroke={invertMarkers ? d.fill : d.stroke}
+                            transform={`translate(${markerSize / 2}, ${markerSize / 2})`}
+                          />
+                        </svg>
+                        {d.label}
+                        {d.label ? ':' : null} {d[yKey]}
+                      </Typography>
+                    ))}
+              </Paper>
+            )}
+            {renderContent && renderContent(highlightedData)}
           </Popper>
         )}
         <g transform={`translate(0, ${boundedHeight})`} style={{ pointerEvents: 'none' }}>
@@ -149,6 +158,12 @@ Tooltip.propTypes /* remove-proptypes */ = {
    *
    */
   markerSize: PropTypes.number,
+  /**
+   * The content that can be rendered to replace the component.
+   *
+   * @param {array} highlightedData This array contains all data of multiple charts that are currently highllighted.
+   */
+  renderContent: PropTypes.func,
   /**
    * The stroke color of the marker line.
    */
