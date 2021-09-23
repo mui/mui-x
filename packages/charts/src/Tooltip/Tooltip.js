@@ -18,7 +18,6 @@ function getSymbol(shape, series = 0) {
 }
 
 const Tooltip = (props) => {
-  const { customStyle = {} } = props;
   const {
     data,
     dimensions: { boundedHeight },
@@ -28,7 +27,12 @@ const Tooltip = (props) => {
     xScale,
     yKey,
   } = useContext(ChartContext);
-  const { stroke = 'rgba(200, 200, 200, 0.8)', strokeDasharray = '0', strokeWidth = 1 } = props;
+  const {
+    stroke = 'rgba(200, 200, 200, 0.8)',
+    strokeDasharray = '0',
+    strokeWidth = 1,
+    customStyle = {},
+  } = props;
   const [strokeElement, setStrokeElement] = React.useState(null);
   const updateStrokeRef = (element) => {
     setStrokeElement(element);
@@ -119,7 +123,7 @@ const Tooltip = (props) => {
       </NoSsr>
     </React.Fragment>
   );
-}
+};
 
 Tooltip.propTypes /* remove-proptypes */ = {
   /**
@@ -134,6 +138,10 @@ Tooltip.propTypes /* remove-proptypes */ = {
    * The stroke width of the marker line.
    */
   strokeWidth: PropTypes.number,
+  /**
+   * The style of the tooltip box.
+   */
+  customStyle: PropTypes.object,
 };
 
 export default Tooltip;
