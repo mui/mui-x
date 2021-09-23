@@ -49,7 +49,7 @@ const Line = (props) => {
       ...previousLines,
       [id]: { fill, label, markerShape, stroke },
     }));
-  }, [fill, label, markerShape, setLines, stroke]);
+  }, [fill, label, markerShape, series, setLines, stroke]);
 
   if (stacked && areaKeys) {
     linePath = d3
