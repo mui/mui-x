@@ -8,50 +8,87 @@ import Slider from '@mui/material/Slider';
 import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
 
-const lineData1 = [
-  { x: new Date(2015, 0, 1), y: 4 },
-  { x: new Date(2016, 0, 1), y: 14 },
-  { x: new Date(2017, 0, 1), y: 36 },
-  { x: new Date(2018, 0, 1), y: 38 },
-  { x: new Date(2019, 0, 1), y: 54 },
-  { x: new Date(2020, 0, 1), y: 47 },
-  { x: new Date(2021, 0, 1), y: 70 },
-];
+async function getData() {
+  const cachedData = localStorage.getItem('covid-cases');
+  if (!cachedData) {
+    const response = await fetch(
+      'https://covid19.richdataservices.com/rds/api/query/int/jhu_country/select?cols=date_stamp,cnt_confirmed,cnt_death&where=(iso3166_1=US)&limit=5000',
+    );
+    const rawData = await response.json();
+    const formattedData = rawData.records.map((record) => ({
+      x: Date.parse(record[0]),
+      y: record[1],
+    }));
+
+    localStorage.setItem('covid-cases', JSON.stringify({ records: formattedData }));
+
+    return formattedData;
+  }
+
+  return JSON.parse(cachedData).records;
+}
 
 export default function ZoomableLineChart() {
-  const [domain, setDomain] = React.useState([
-    lineData1[0].x.getTime(),
-    lineData1[lineData1.length - 1].x.getTime(),
-  ]);
+  const [chartData, setChartData] = React.useState([]);
+
+  const [domain, setDomain] = React.useState(undefined);
+
+  React.useEffect(() => {
+    async function loadChartData() {
+      const records = (await getData()).map((r) => ({ ...r, x: new Date(r.x) }));
+      setChartData(records);
+    }
+
+    loadChartData();
+  }, []);
+
+  React.useEffect(() => {
+    if (chartData?.length) {
+      setDomain([
+        chartData[0].x.getTime(),
+        chartData[chartData.length - 1].x.getTime(),
+      ]);
+    } else {
+      setDomain(undefined);
+    }
+  }, [chartData]);
 
   const handleDomainChange = (event, newValue) => {
     setDomain(newValue);
   };
 
   const domainDate = React.useMemo(() => {
-    return [new Date(domain[0]), new Date(domain[1])];
+    return domain ? [new Date(domain[0]), new Date(domain[1])] : undefined;
   }, [domain]);
 
   return (
     <Stack sx={{ width: '100%' }}>
       <Box>
-        <LineChart data={lineData1} xScaleType="time" xDomain={domainDate}>
+        <LineChart
+          data={chartData}
+          xScaleType="time"
+          xDomain={domainDate}
+          label="COVID cases in the United States"
+          margin={{ left: 80 }}
+        >
           <Grid />
           <XAxis />
-          <YAxis suffix="kg" />
+          <YAxis />
           <Line stroke="rgb(235,97,97)" markerShape="none" />
         </LineChart>
       </Box>
-      <Box sx={{ width: '300px', m: '0 auto' }}>
-        <Slider
-          valueLabelDisplay="off"
-          value={domain}
-          onChange={handleDomainChange}
-          min={lineData1[0].x.getTime()}
-          max={lineData1[lineData1.length - 1].x.getTime()}
-          size="small"
-        />
-      </Box>
+      {domain && (
+        <Box sx={{ width: '300px', m: '0 auto' }}>
+          <Slider
+            valueLabelDisplay="off"
+            value={domain}
+            onChange={handleDomainChange}
+            min={chartData[0].x.getTime()}
+            max={chartData[chartData.length - 1].x.getTime()}
+            size="small"
+          />
+        </Box>
+      )}
     </Stack>
   );
 }
