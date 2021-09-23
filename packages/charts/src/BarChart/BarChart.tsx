@@ -43,14 +43,6 @@ export interface BarChartProps<X = unknown, Y = unknown> {
    */
   height?: number;
   /**
-   * If true, the markers will be highlighted when the mouse is over them.
-   */
-  highlightMarkers?: boolean;
-  /**
-   * Invert the bar and fill colors of the point markers.
-   */
-  invertMarkers?: boolean;
-  /**
    * The label to display above the chart.
    */
   label?: string;
@@ -67,24 +59,6 @@ export interface BarChartProps<X = unknown, Y = unknown> {
    * Labels and axes fall within these margins.
    */
   margin?: Margin;
-  /**
-   * The shape of the markers.
-   * If auto, the shape will be based on the data series.
-   */
-  markerShape?:
-    | 'auto'
-    | 'circle'
-    | 'cross'
-    | 'diamond'
-    | 'square'
-    | 'star'
-    | 'triangle'
-    | 'wye'
-    | 'none';
-  /**
-   * The size of the markers.
-   */
-  markerSize?: number;
   /**
    * The maximum number of pixels per tick.
    */
@@ -124,24 +98,24 @@ export interface BarChartProps<X = unknown, Y = unknown> {
   yScaleType?: 'linear' | 'time' | 'log' | 'point' | 'pow' | 'sqrt' | 'utc';
 }
 
-type BarChartComponent = (<X, Y>(
+type BarChartComponent = <X, Y>(
   props: BarChartProps<X, Y> & React.RefAttributes<SVGSVGElement>,
-) => JSX.Element);
+) => JSX.Element;
 
-const BarChart = React.forwardRef(function BarChart<X = unknown, Y = unknown>(props: BarChartProps<X, Y>, ref: React.Ref<SVGSVGElement>) {
+const BarChart = React.forwardRef(function BarChart<X = unknown, Y = unknown>(
+  props: BarChartProps<X, Y>,
+  ref: React.Ref<SVGSVGElement>,
+) {
   const {
     areaKeys,
     children,
     data: dataProp,
     fill = 'none',
-    highlightMarkers = false,
-    invertMarkers = false,
+
     label,
     labelColor = '#777',
     labelFontSize = 18,
     margin: marginProp,
-    markerShape = 'circle',
-    markerSize = 30,
     pixelsPerTick = 50,
     seriesLabels = [],
     stacked = false,
@@ -178,7 +152,7 @@ const BarChart = React.forwardRef(function BarChart<X = unknown, Y = unknown>(pr
   const xDomain = xDomainProp || getExtent(data, (d) => d[xKey]);
   const yDomain = yDomainProp || getExtent(data, (d) => d[yKey]);
   const padding = 20;
-  const xRange = [padding*2, boundedWidth - 2*padding];
+  const xRange = [padding * 2, boundedWidth - 2 * padding];
   const yRange = [0, boundedHeight];
   const maxXTicks = getMaxDataSetLength(data) - 1;
   const xScale = useScale(xScaleType, xDomain, xRange);
