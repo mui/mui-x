@@ -11,7 +11,7 @@ const stackData = [
   { month: new Date(2021, 3, 1), apples: 20, bananas: 25, oranges: 15 },
   { month: new Date(2021, 4, 1), apples: 20, bananas: 20, oranges: 15 },
 ];
-export default function StackedAreaChart() {
+export default function StackedBarChart() {
   return (
     <BarChart
       areaKeys={['apples', 'bananas', 'oranges']}
