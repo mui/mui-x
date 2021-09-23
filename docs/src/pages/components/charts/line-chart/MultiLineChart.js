@@ -2,7 +2,7 @@ import * as React from 'react';
 import Grid from '@mui/charts/Grid';
 import Line from '@mui/charts/Line';
 import LineChart from '@mui/charts/LineChart';
-// import Tooltip from '@mui/charts/Tooltip';
+import Tooltip from '@mui/charts/Tooltip';
 import XAxis from '@mui/charts/XAxis';
 import YAxis from '@mui/charts/YAxis';
 import Legend from '@mui/charts/Legend';
@@ -46,14 +46,13 @@ export default function MultiLineChart() {
       label="Growth"
       margin={{ top: 70, bottom: 70, left: 60 }}
       markerSize={50}
-      // markers={markers}
       smoothed
       xScaleType="time"
     >
       <Grid disableX />
       <XAxis label="Year" />
       <YAxis label="Size" suffix="cm" disableLine disableTicks />
-      {/* <Tooltip /> */}
+      <Tooltip />
       <Line series={0} label="Blue" stroke="rgb(116,205,240)" strokeWidth={2} />
       <Line series={1} label="Green" stroke="rgb(150,219,124)" strokeWidth={2} />
       <Line series={2} label="Red" stroke="rgb(234,95,95)" strokeWidth={2} />

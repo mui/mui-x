@@ -16,14 +16,6 @@ const lineData1 = [
   { x: new Date(2021, 0, 1), y: 70 },
 ];
 
-const markers = [
-  {
-    label: 'Red',
-    series: 0,
-    markerColor: 'rgb(235,97,97)',
-  },
-];
-
 export default function SmoothedLineChart() {
   return (
     <LineChart
@@ -32,7 +24,6 @@ export default function SmoothedLineChart() {
       xScaleType="time"
       highlightMarkers
       pixelsPerTick={200}
-      markers={markers}
     >
       <Grid />
       <XAxis />

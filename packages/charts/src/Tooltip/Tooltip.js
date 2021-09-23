@@ -22,16 +22,18 @@ const Tooltip = (props) => {
     data,
     dimensions: { boundedHeight },
     mousePosition,
-    markers,
+    invertMarkers,
     xKey,
     xScale,
     yKey,
+    lines,
   } = useContext(ChartContext);
   const {
     stroke = 'rgba(200, 200, 200, 0.8)',
     strokeDasharray = '0',
     strokeWidth = 1,
     customStyle = {},
+    markerSize = 20,
   } = props;
   const [strokeElement, setStrokeElement] = React.useState(null);
   const updateStrokeRef = (element) => {
@@ -51,16 +53,18 @@ const Tooltip = (props) => {
   // The data that matches the mouse position
   let highlightedData =
     offset !== undefined ? findObjects(data, xKey, xScale.invert(offset)) : null;
+  const linesData =
+    lines &&
+    Object.keys(lines).map((series) => {
+      const { fill = 'currentColor', label, markerShape, stroke = 'currentColor' } = lines[series];
+      return { series: series, fill: fill, label: label, markerShape: markerShape, stroke: stroke };
+    });
   // Add the information of markers
   highlightedData =
     highlightedData &&
     highlightedData.map((d, i) => ({
-      label: markers[i].label,
-      series: markers[i].series,
-      markerShape: markers[i].markerShape,
-      markerColor: markers[i].markerColor,
-      markerSize: markers[i].markerSize,
       ...d,
+      ...linesData[i],
     }));
   // TODO: Make this work when the data is not equally spaced along the x-axis
   const label = useTicks({ maxTicks: xOffsets.length, scale: xScale }).find(
@@ -89,14 +93,15 @@ const Tooltip = (props) => {
                       key={i}
                       sx={{ display: 'flex', alignItems: 'center' }}
                     >
-                      <svg width={d.markerSize} height={d.markerSize}>
+                      <svg width={markerSize} height={markerSize}>
                         <path
                           d={d3.symbol(
                             d3.symbols[getSymbol(d.markerShape, d.series)],
-                            d.markerSize,
+                            markerSize,
                           )()}
-                          transform={`translate(${d.markerSize / 2}, ${d.markerSize / 2})`}
-                          fill={d.markerColor}
+                          fill={invertMarkers ? d.stroke : d.fill}
+                          stroke={invertMarkers ? d.fill : d.stroke}
+                          transform={`translate(${markerSize / 2}, ${markerSize / 2})`}
                         />
                       </svg>
                       {d.label}
@@ -142,6 +147,12 @@ Tooltip.propTypes /* remove-proptypes */ = {
    * The style of the tooltip box.
    */
   customStyle: PropTypes.object,
+  /**
+   * The size of the tooltip markers
+   * @default 20
+   *
+   */
+  markerSize: PropTypes.number,
 };
 
 export default Tooltip;

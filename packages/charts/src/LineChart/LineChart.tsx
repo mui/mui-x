@@ -100,10 +100,6 @@ export interface LineChartProps<X = unknown, Y = unknown> {
    */
   pixelsPerTick?: number;
   /**
-   * Information of one or more markers. Used in the tooltip and the legend.
-   */
-  markers?: Marker[];
-  /**
    * If `true`, the plotted lines will be smoothed.
    */
   smoothed?: boolean;
@@ -160,7 +156,6 @@ const LineChart = React.forwardRef(function LineChart<X = unknown, Y = unknown>(
     markerShape = 'circle',
     markerSize = 30,
     pixelsPerTick = 50,
-    markers = [],
     smoothed = false,
     stacked = false,
     xDomain: xDomainProp,
@@ -171,20 +166,6 @@ const LineChart = React.forwardRef(function LineChart<X = unknown, Y = unknown>(
     yScaleType = 'linear',
     ...other
   } = props;
-
-  // Fill default marker shape or size when not given
-  if (markers.length) {
-    markers.forEach((markerObj, i, arr) => {
-      const defaultMarkerValues = {};
-      if (!markerObj.markerShape) {
-        defaultMarkerValues['markerShape'] = markerShape;
-      }
-      if (!markerObj.markerSize) {
-        defaultMarkerValues['markerSize'] = markerSize;
-      }
-      arr[i] = { ...markerObj, ...defaultMarkerValues };
-    });
-  }
 
   let data = dataProp;
   const stackedData = useStackedArrays(dataProp);
@@ -270,7 +251,6 @@ const LineChart = React.forwardRef(function LineChart<X = unknown, Y = unknown>(
         lines,
         markerShape,
         markerSize,
-        markers,
         setLines,
         stacked,
         mousePosition,
