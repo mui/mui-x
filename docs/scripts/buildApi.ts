@@ -281,7 +281,12 @@ function run(argv: { outputDirectory?: string }) {
     'GridEvents',
   ];
 
-  const apisToGenerate = [...gridApisToGenerate, 'LineChartProps', 'ScatterChartProps', 'BarChartProps'];
+  const apisToGenerate = [
+    ...gridApisToGenerate,
+    'LineChartProps',
+    'ScatterChartProps',
+    'BarChartProps',
+  ];
 
   apisToGenerate.forEach((apiName) => {
     // TODO: Very dirty, but it works :)

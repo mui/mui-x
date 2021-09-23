@@ -148,6 +148,7 @@ const BarChart = React.forwardRef(function BarChart<X = unknown, Y = unknown>(
   };
   const [chartRef, dimensions] = useChartDimensions(chartSettings);
   const handleRef = useForkRef(chartRef, ref);
+  const [seriesMeta, setSeriesMeta] = React.useState([]);
   const { width, height, boundedWidth, boundedHeight, marginLeft, marginTop } = dimensions;
   const xDomain = xDomainProp || getExtent(data, (d) => d[xKey]);
   const yDomain = yDomainProp || getExtent(data, (d) => d[yKey]);
@@ -205,6 +206,8 @@ const BarChart = React.forwardRef(function BarChart<X = unknown, Y = unknown>(
         yScale,
         yScaleType,
         yTicks,
+        seriesMeta,
+        setSeriesMeta,
       }}
     >
       <svg

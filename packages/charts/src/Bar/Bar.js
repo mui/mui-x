@@ -1,5 +1,5 @@
-import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
+import React, { useContext, useEffect } from 'react';
 import ChartContext from '../ChartContext';
 
 const Bar = (props) => {
@@ -13,9 +13,10 @@ const Bar = (props) => {
     stacked,
     areaKeys,
     padding,
+    setSeriesMeta,
   } = useContext(ChartContext);
 
-  const { data: dataProp, fill, series } = props;
+  const { data: dataProp, fill, series, label } = props;
 
   const chartData = dataProp || data[series] || data;
 
@@ -26,6 +27,14 @@ const Bar = (props) => {
   }
 
   let barWidth = spacingBetweenTicks - (stacked ? -padding : padding);
+
+  useEffect(() => {
+    const id = series || 0;
+    setSeriesMeta((previousSeriesMeta) => ({
+      ...previousSeriesMeta,
+      [id]: { fill, label },
+    }));
+  }, [fill, label, series, setSeriesMeta]);
 
   if (series !== undefined && !stacked) {
     const numOfSeries = data.length;
@@ -105,6 +114,10 @@ Bar.propTypes /* remove-proptypes */ = {
    * The color of the area under the bar.
    */
   fill: PropTypes.string,
+  /**
+   * The label for the bar to be used in the tooltip and legend.
+   */
+  label: PropTypes.string,
   /**
    * The data series to be plotted.
    */

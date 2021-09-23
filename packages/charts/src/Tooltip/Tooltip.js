@@ -39,6 +39,7 @@ const Tooltip = (props) => {
   const updateStrokeRef = (element) => {
     setStrokeElement(element);
   };
+  const isLineChart = seriesMeta[0] && seriesMeta[0].stroke;
 
   // Flatten the data
   // eslint-disable-next-line prefer-spread
@@ -56,15 +57,14 @@ const Tooltip = (props) => {
   const linesData =
     seriesMeta &&
     Object.keys(seriesMeta).map((series) => {
-      const { fill, label, markerShape, stroke: markerStroke = 'currentColor' } = seriesMeta[
-        series
-      ];
+      const { fill = 'currentColor', label, markerShape, stroke: markerStroke = 'currentColor' } = seriesMeta[series];
       return {
         series,
-        fill: !fill ? (markerShape === 'none' ? markerStroke : 'white') : fill, // fill is defined only for scatter charts
+        fill: isLineChart ? (markerShape === 'none' ? markerStroke : 'white') : fill,
+        // stroke is only defined for line charts
+        stroke: isLineChart ? markerStroke : fill,
         label,
         markerShape,
-        stroke: markerStroke,
       };
     });
   // Add the information of markers
@@ -88,7 +88,7 @@ const Tooltip = (props) => {
             anchorEl={strokeElement}
             style={{ padding: '16px', pointerEvents: 'none' }}
           >
-            <Paper style={{ padding: '8px', ...customStyle }}>
+            <Paper style={{ padding: '16px', ...customStyle }}>
               <Typography gutterBottom align="center">
                 {label && label.value}
               </Typography>
@@ -126,7 +126,7 @@ const Tooltip = (props) => {
                 ref={updateStrokeRef}
                 y2={-boundedHeight}
                 stroke={stroke}
-                strokeWidth={strokeWidth}
+                strokeWidth={isLineChart ? strokeWidth : 0}
                 strokeDasharray={strokeDasharray}
                 shapeRendering="crispEdges"
               />

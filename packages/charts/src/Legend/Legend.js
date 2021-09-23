@@ -26,9 +26,12 @@ function Legend(props) {
           if (!seriesMeta[series].fill) {
             seriesMeta[series].fill = seriesMeta[series].markerShape === 'none' ? stroke : 'white';
           }
-          const { fill = 'currentColor', label, markerShape, stroke = 'currentColor' } = seriesMeta[
-            series
-          ];
+          const {
+            fill = 'currentColor',
+            label,
+            markerShape,
+            stroke = 'currentColor',
+          } = seriesMeta[series];
           return (
             <React.Fragment key={series}>
               <path

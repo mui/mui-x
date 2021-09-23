@@ -64,21 +64,21 @@ export interface ScatterChartProps<X = unknown, Y = unknown> {
    * The shape of the markers.
    * If auto, the shape will be based on the data series.
    */
-  markerShape?: 
-    'auto' |
-    'circle' |
-    'cross' |
-    'diamond' |
-    'square' |
-    'star' |
-    'triangle' |
-    'wye' |
-    'none';
+  markerShape?:
+    | 'auto'
+    | 'circle'
+    | 'cross'
+    | 'diamond'
+    | 'square'
+    | 'star'
+    | 'triangle'
+    | 'wye'
+    | 'none';
   /**
    * The size of the markers.
    */
   markerSize?: number;
- /**
+  /**
    * The maximum number of pixels per tick.
    */
   pixelsPerTick?: number;
@@ -93,7 +93,7 @@ export interface ScatterChartProps<X = unknown, Y = unknown> {
   /**
    * The scale type to use for the x axis.
    */
-  xScaleType?: 'linear' |'time' | 'log' | 'point' | 'pow' | 'sqrt' | 'utc';
+  xScaleType?: 'linear' | 'time' | 'log' | 'point' | 'pow' | 'sqrt' | 'utc';
   /**
    * Override the calculated domain of the y axis.
    */
@@ -117,11 +117,14 @@ export interface ScatterChartProps<X = unknown, Y = unknown> {
   zKey?: string;
 }
 
-type ScatterChartComponent = (<X, Y>(
+type ScatterChartComponent = <X, Y>(
   props: ScatterChartProps<X, Y> & React.RefAttributes<SVGSVGElement>,
-) => JSX.Element);
+) => JSX.Element;
 
-const ScatterChart = React.forwardRef(function ScatterChart<X = unknown, Y = unknown>(props: ScatterChartProps<X, Y>, ref: React.Ref<SVGSVGElement>) {
+const ScatterChart = React.forwardRef(function ScatterChart<X = unknown, Y = unknown>(
+  props: ScatterChartProps<X, Y>,
+  ref: React.Ref<SVGSVGElement>,
+) {
   const {
     children,
     data,

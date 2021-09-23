@@ -6,4 +6,3 @@ export * from './ScatterChart';
 
 export { default as BarChart } from './BarChart';
 export * from './BarChart';
-
