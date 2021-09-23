@@ -3,6 +3,60 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 5.0.0-beta.2
+
+_Sep 23, 2021_
+
+A big thanks to the 5 contributors who made this release possible. Here are some highlights ✨:
+
+- 🇻🇳 Add Vietnamese (viVN) locale (#2668) @tuananh281098
+- 🇵🇱 Improve Polish (plPL) locale (#2632) @michallukowski
+- ⚡️ Apply the `valueFormatter` to `singleSelect` select options (#2581) @DanailH
+
+### `@mui/x-data-grid@v5.0.0-beta.2` / `@mui/x-data-grid-pro@v5.0.0-beta.2`
+
+#### Breaking changes
+
+- [DataGrid] The params passed to the `valueFormatter` were changed. (#2581) @DanailH
+  Use the `api` to get the missing params.
+  The `GridValueFormatterParams` interface has the following signature now:
+
+  ```diff
+  -export type GridValueFormatterParams = Omit<GridRenderCellParams, 'formattedValue' | 'isEditable'>;
+  +export interface GridValueFormatterParams {
+  +  /**
+  +   * The column field of the cell that triggered the event
+  +   */
+  +  field: string;
+  +  /**
+  +   * The cell value, but if the column has valueGetter, use getValue.
+  +   */
+  +  value: GridCellValue;
+  +  /**
+  +   * GridApi that let you manipulate the grid.
+  +   */
+  +  api: any;
+  +}
+  ```
+
+#### Changes
+
+- [DataGrid] Add Vietnamese (viVN) locale (#2668) @tuananh281098
+- [DataGrid] Apply the `valueFormatter` to `singleSelect` select options (#2581) @DanailH
+- [DataGrid] Free up column header space when icons are not visible (#2606) @DanailH
+- [DataGrid] Improve Polish (plPL) locale (#2632) @michallukowski
+
+### Docs
+
+- [docs] Add section for controlled selection and server-side pagination (#2602) @DanailH
+- [docs] Fix Algolia search (#2655) @oliviertassinari
+- [docs] Fix the seach results to make them helpful (#2656) @oliviertassinari
+- [docs] Update installation instructions (#2663) @m4theushw
+
+### Core
+
+- [core] Upgrade JSS plugins to 10.8.0 (#2667) @m4theushw
+
 ## 5.0.0-beta.1
 
 _Sep 17, 2021_
@@ -11,13 +65,16 @@ A big thanks to the 3 contributors who made this release possible.
 
 ### `@mui/x-data-grid@v5.0.0-beta.1` / `@mui/x-data-grid-pro@v5.0.0-beta.1`
 
-#### Docs
+There are no changes since the last release.
+Refer to `v5.0.0-beta.0` for the breaking changes.
+
+### Docs
 
 - [docs] Explain how to use theme augmentation (#2582) @ZeeshanTamboli
 - [docs] Fix formatting (#2626) @m4theushw
 - [docs] Include packages from next tag (#2628) @m4theushw
 
-#### Core
+### Core
 
 - [core] Copy bin folder when building the libraries (#2627) @flaviendelangle
 - [core] Remove prop-types during build (#2586) @m4theushw
@@ -617,7 +674,7 @@ Big thanks to the 11 contributors who made this release possible. Here are some 
 - [XGrid] Only show column sorting in the grid toolbar when experimental features enabled (#2091) @flaviendelangle
 - [XGrid] Prevent headers from scrolling during reordering (#2154) @m4theushw
 
-#### Docs
+### Docs
 
 - [docs] Add new cursor-based pagination paragraph (#1991) @flaviendelangle
 - [docs] Better explain what happens in the future (#2036) @oliviertassinari
@@ -625,7 +682,7 @@ Big thanks to the 11 contributors who made this release possible. Here are some 
 - [docs] Fix small typos in the documentation (#2169) @BrandonOldenhof
 - [docs] Fix typo in README (#2150) @studyhog
 
-#### Core
+### Core
 
 - [core] Add @material-ui/lab and @material-ui/icons as peer dependencies (#2012) @m4theushw
 - [core] Add additional test case for `onSelectionModelChange` (#1966) @DanailH
