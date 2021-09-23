@@ -4,7 +4,7 @@ title: Line chart
 
 # Line chart
 
-<p class="description">Line chart description goes here</p>
+<p class="description">The best line charts on the planet. Want it? Get in line!</p>
 
 ## Basic line chart
 

@@ -4,7 +4,7 @@ title: Scatter chart
 
 # Scatter chart
 
-<p class="description">Scatter chart description goes here</p>
+<p class="description">Scatter your stuff.</p>
 
 ## Basic scatter chart
 

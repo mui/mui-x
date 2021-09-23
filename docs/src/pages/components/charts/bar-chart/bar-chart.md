@@ -4,7 +4,7 @@ title: Bar chart
 
 # Bar chart
 
-<p class="description">Bar chart description goes here</p>
+<p class="description">We set the bar high with this one.</p>
 
 ## Basic bar chart
 
