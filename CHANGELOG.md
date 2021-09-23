@@ -11,7 +11,7 @@ A big thanks to the 5 contributors who made this release possible. Here are some
 
 - 🇻🇳 Add Vietnamese (viVN) locale (#2668) @tuananh281098
 - 🇵🇱 Improve Polish (plPL) locale (#2632) @michallukowski
-- ⚡️ Apply the `valueFormatter` to `singleSelect` select options (#2581) @DanailH
+- ⚡️ Apply the `valueFormatter` to the `singleSelect` column type (#2581) @DanailH
 
 ### `@mui/x-data-grid@v5.0.0-beta.2` / `@mui/x-data-grid-pro@v5.0.0-beta.2`
 
