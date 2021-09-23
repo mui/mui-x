@@ -207,7 +207,16 @@ const LineChart = React.forwardRef(function LineChart<X = unknown, Y = unknown>(
   const [chartRef, dimensions] = useChartDimensions(chartSettings);
   const handleRef = useForkRef(chartRef, ref);
   const [lines, setLines] = React.useState([]);
-  const { width, height, boundedWidth, boundedHeight, marginLeft, marginTop } = dimensions;
+  const {
+    width,
+    height,
+    boundedWidth,
+    boundedHeight,
+    marginLeft,
+    marginRight,
+    marginTop,
+    marginBottom,
+  } = dimensions;
   const xDomain = xDomainProp || getExtent(data, (d) => d[xKey]);
   const yDomain = yDomainProp || getExtent(data, (d) => d[yKey]);
   const xRange = [0, boundedWidth];
@@ -247,10 +256,13 @@ const LineChart = React.forwardRef(function LineChart<X = unknown, Y = unknown>(
     });
   };
 
+  const idRef = React.useRef('chart' + (Math.random() * 100000).toFixed(0));
+
   return (
     <ChartContext.Provider
       value={{
         areaKeys,
+        chartId: idRef.current,
         data,
         dimensions,
         highlightMarkers,
@@ -280,6 +292,14 @@ const LineChart = React.forwardRef(function LineChart<X = unknown, Y = unknown>(
         onMouseMove={handleMouseMove}
         onMouseOut={handleMouseOut}
       >
+        <defs>
+          <clipPath id={`${idRef.current}-clipPath`}>
+            <rect
+              width={width - marginLeft - marginRight}
+              height={height - marginTop - marginBottom}
+            />
+          </clipPath>
+        </defs>
         <rect width={width} height={height} fill={fill} rx="4" />
         <g transform={`translate(${[marginLeft, marginTop].join(',')})`}>
           <g>{children}</g>

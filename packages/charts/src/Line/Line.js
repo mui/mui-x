@@ -11,6 +11,7 @@ function points(data, xKey) {
 const Line = (props) => {
   const {
     areaKeys,
+    chartId,
     data,
     dimensions: { boundedHeight },
     highlightMarkers,
@@ -83,7 +84,7 @@ const Line = (props) => {
   }
 
   return (
-    <g>
+    <g clipPath={`url(#${chartId}-clipPath)`}>
       {fill && (
         <path
           d={areaPath(chartData)}
