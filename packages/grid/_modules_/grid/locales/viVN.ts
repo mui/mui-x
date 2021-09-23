@@ -57,9 +57,9 @@ const viVNGrid: Partial<GridLocaleText> = {
   filterOperatorIs: 'Là',
   filterOperatorNot: 'Không là',
   filterOperatorAfter: 'Trước',
-//   filterOperatorOnOrAfter: 'es en o posterior',
+  // filterOperatorOnOrAfter: 'is on or after',
   filterOperatorBefore: 'Sau',
-//   filterOperatorOnOrBefore: 'es en o anterior',
+  // filterOperatorOnOrBefore: 'is on or before',
   filterOperatorIsEmpty: 'Rỗng',
   filterOperatorIsNotEmpty: 'Khác rỗng',
 
@@ -80,9 +80,7 @@ const viVNGrid: Partial<GridLocaleText> = {
 
   // Rows selected footer text
   footerRowSelected: (count) =>
-    count > 1
-      ? `${count.toLocaleString()} hàng đã chọn`
-      : `${count.toLocaleString()} hàng đã chọn`,
+    count > 1 ? `${count.toLocaleString()} hàng đã chọn` : `${count.toLocaleString()} hàng đã chọn`,
 
   // Total rows footer text
   footerTotalRows: 'Tổng:',
