@@ -4,6 +4,7 @@ import Bar from '@mui/charts/Bar';
 import XAxis from '@mui/charts/XAxis';
 import YAxis from '@mui/charts/YAxis';
 import Grid from '@mui/charts/Grid';
+import Legend from '@mui/charts/Legend';
 
 const stackData = [
   { month: new Date(2021, 1, 1), apples: 10, bananas: 20, oranges: 15 },
@@ -21,13 +22,16 @@ export default function StackedBarChart() {
       xKey="month"
       xDomain={[new Date(2021, 1, 1), new Date(2021, 4, 1)]}
       yDomain={[0, 60]}
+      margin={{ top: 60, bottom: 70 }}
+      label="Sales"
     >
       <Grid disableX />
       <XAxis />
-      <YAxis suffix="cm" disableLine disableTicks />
-      <Bar series={2} fill="rgba(234,95,95,0.5)" />
-      <Bar series={1} fill="rgba(150,219,124,0.5)" />
-      <Bar series={0} fill="rgba(116,205,240,0.5)" />
+      <YAxis disableLine disableTicks label="USD (K)" />
+      <Bar series={2} label="MUI X Pro" fill="rgba(234,95,95,0.5)" />
+      <Bar series={1} label="Templates" fill="rgba(150,219,124,0.5)" />
+      <Bar series={0} label="Design kits" fill="rgba(116,205,240,0.5)" />
+      <Legend position="bottom" spacing={76} />
     </BarChart>
   );
 }

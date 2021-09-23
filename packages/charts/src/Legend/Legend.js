@@ -22,12 +22,15 @@ function Legend(props) {
     >
       {seriesMeta &&
         Object.keys(seriesMeta).map((series) => {
-          const {
-            fill = 'currentColor',
-            label,
-            markerShape,
-            stroke = 'currentColor',
-          } = seriesMeta[series];
+          const { fill, label, stroke } = seriesMeta[series];
+          let markerShape = seriesMeta[series];
+          if (!markerShape || markerShape === 'none') {
+            markerShape = 'circle';
+          }
+          // fill is defined only for scatter charts
+          if (!seriesMeta[series].fill) {
+            seriesMeta[series].fill = stroke || 'currentColor';
+          }
           return (
             <React.Fragment key={series}>
               <path

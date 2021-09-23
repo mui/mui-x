@@ -50,12 +50,12 @@ export default function MultiLineChart() {
     >
       <Grid disableX />
       <XAxis label="Year" />
-      <YAxis label="Size" suffix="cm" disableLine disableTicks />
+      <YAxis label="Growth" suffix="cm" disableLine disableTicks />
       <Tooltip />
-      <Bar label="Blue" series={0} fill="rgb(116,205,240)" />
-      <Bar label="Green" series={1} fill="rgb(150,219,124)" />
-      <Bar label="Red" series={2} fill="rgb(234,95,95)" />
-      <Legend position="top" />
+      <Bar series={0} label="Apples" fill="rgb(116,205,240)" />
+      <Bar series={1} label="Pears" fill="rgb(150,219,124)" />
+      <Bar series={2} label="Bananas" fill="rgb(234,95,95)" />
+      <Legend spacing={64} />
     </BarChart>
   );
 }
