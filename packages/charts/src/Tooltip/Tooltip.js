@@ -56,13 +56,15 @@ const Tooltip = (props) => {
   const linesData =
     seriesMeta &&
     Object.keys(seriesMeta).map((series) => {
-      const { fill, label, markerShape, stroke = 'currentColor' } = seriesMeta[series];
+      const { fill, label, markerShape, stroke: markerStroke = 'currentColor' } = seriesMeta[
+        series
+      ];
       return {
         series,
-        fill: !fill ? (markerShape === 'none' ? stroke : 'white') : fill, // fill is defined only for scatter charts
+        fill: !fill ? (markerShape === 'none' ? markerStroke : 'white') : fill, // fill is defined only for scatter charts
         label,
         markerShape,
-        stroke,
+        stroke: markerStroke,
       };
     });
   // Add the information of markers
@@ -138,6 +140,16 @@ const Tooltip = (props) => {
 
 Tooltip.propTypes /* remove-proptypes */ = {
   /**
+   * The style of the tooltip box.
+   */
+  customStyle: PropTypes.object,
+  /**
+   * The size of the tooltip markers
+   * @default 30
+   *
+   */
+  markerSize: PropTypes.number,
+  /**
    * The stroke color of the marker line.
    */
   stroke: PropTypes.string,
@@ -149,16 +161,6 @@ Tooltip.propTypes /* remove-proptypes */ = {
    * The stroke width of the marker line.
    */
   strokeWidth: PropTypes.number,
-  /**
-   * The style of the tooltip box.
-   */
-  customStyle: PropTypes.object,
-  /**
-   * The size of the tooltip markers
-   * @default 30
-   *
-   */
-  markerSize: PropTypes.number,
 };
 
 export default Tooltip;
