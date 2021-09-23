@@ -18,6 +18,7 @@ A big thanks to the 5 contributors who made this release possible. Here are some
 #### Breaking changes
 
 - [DataGrid] The params passed to the `valueFormatter` were changed. (#2581) @DanailH
+
   Use the `api` to get the missing params.
   The `GridValueFormatterParams` interface has the following signature now:
 
