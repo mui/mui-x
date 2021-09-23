@@ -2,8 +2,7 @@ import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import * as d3 from 'd3';
 import ChartContext from '../ChartContext';
-import { findObjects, getSymbol, isInRange } from '../utils';
-import useTicks from '../hooks/useTicks';
+import { getSymbol } from '../utils';
 
 function Legend(props) {
   const {
@@ -12,7 +11,6 @@ function Legend(props) {
     lines,
   } = useContext(ChartContext);
 
-  console.log({ lines }, lines.length);
   const { labelColor = '#777', labelFontSize = 12, spacing = 50 } = props;
 
   return (
@@ -23,12 +21,12 @@ function Legend(props) {
       style={{ pointerEvents: 'none' }}
     >
       {lines &&
-        Object.keys(lines).map((series, index) => {
+        Object.keys(lines).map((series) => {
           const { fill = 'currentColor', label, markerShape, stroke = 'currentColor' } = lines[
             series
           ];
           return (
-            <React.Fragment>
+            <React.Fragment key={series}>
               <path
                 d={d3.symbol(d3.symbols[getSymbol(markerShape, series)], 50)()}
                 fill={invertMarkers ? stroke : fill}
@@ -59,6 +57,12 @@ Legend.propTypes /* remove-proptypes */ = {
    * The font size of the label.
    */
   labelFontSize: PropTypes.number,
+  /**
+   * The spacing between the legend items.
+   * @default 50
+   *
+   */
+  spacing: PropTypes.number,
 };
 
 export default Legend;
