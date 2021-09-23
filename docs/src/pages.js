@@ -53,8 +53,9 @@ lab.children = [
   ...lab.children,
   {
     title: 'Charts',
+    pathname: '/components/charts',
     children: [
-      { pathname: '/components/charts', title: 'Overview' },
+      { pathname: '/components/charts/overview', title: "Overview" },
       { pathname: '/components/charts/line-chart' },
       { pathname: '/components/charts/scatter-chart' },
       { pathname: '/components/charts/bar-chart' },
