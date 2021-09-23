@@ -8,7 +8,7 @@ function Legend(props) {
   const {
     dimensions: { boundedHeight, boundedWidth },
     invertMarkers,
-    lines,
+    seriesMeta,
   } = useContext(ChartContext);
 
   const { labelColor = '#777', labelFontSize = 12, spacing = 50, position = 'top' } = props;
@@ -16,17 +16,17 @@ function Legend(props) {
   return (
     <g
       transform={`translate(${
-        boundedWidth / 2 - ((Object.keys(lines).length - 1) * spacing) / 2
+        boundedWidth / 2 - ((Object.keys(seriesMeta).length - 1) * spacing) / 2
       }, ${position === 'top' ? 0 : boundedHeight + 68})`}
       style={{ pointerEvents: 'none' }}
     >
-      {lines &&
-        Object.keys(lines).map((series) => {
+      {seriesMeta &&
+        Object.keys(seriesMeta).map((series) => {
           // fill is defined only for scatter charts
-          if (!lines[series].fill) {
-            lines[series].fill = lines[series].markerShape === 'none' ? stroke : 'white';
+          if (!seriesMeta[series].fill) {
+            seriesMeta[series].fill = seriesMeta[series].markerShape === 'none' ? stroke : 'white';
           }
-          const { fill = 'currentColor', label, markerShape, stroke = 'currentColor' } = lines[
+          const { fill = 'currentColor', label, markerShape, stroke = 'currentColor' } = seriesMeta[
             series
           ];
           return (

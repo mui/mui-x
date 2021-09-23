@@ -26,7 +26,7 @@ const Tooltip = (props) => {
     xKey,
     xScale,
     yKey,
-    lines,
+    seriesMeta,
   } = useContext(ChartContext);
   const {
     stroke = 'rgba(200, 200, 200, 0.8)',
@@ -54,12 +54,12 @@ const Tooltip = (props) => {
   let highlightedData =
     offset !== undefined ? findObjects(data, xKey, xScale.invert(offset)) : null;
   const linesData =
-    lines &&
-    Object.keys(lines).map((series) => {
-      const { fill, label, markerShape, stroke = 'currentColor' } = lines[series];
+    seriesMeta &&
+    Object.keys(seriesMeta).map((series) => {
+      const { fill, label, markerShape, stroke = 'currentColor' } = seriesMeta[series];
       return {
         series,
-        fill: !fill ? markerShape === 'none' ? stroke : 'white' : fill, // fill is defined only for scatter charts
+        fill: !fill ? (markerShape === 'none' ? stroke : 'white') : fill, // fill is defined only for scatter charts
         label,
         markerShape,
         stroke,

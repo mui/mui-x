@@ -15,7 +15,7 @@ const Line = (props) => {
     data,
     dimensions: { boundedHeight },
     highlightMarkers,
-    setLines,
+    setSeriesMeta,
     markerShape: markerShapeContext,
     smoothed: smoothedContext,
     stacked,
@@ -45,11 +45,11 @@ const Line = (props) => {
 
   useEffect(() => {
     const id = series || 0;
-    setLines((previousLines) => ({
-      ...previousLines,
+    setSeriesMeta((previousSeriesMeta) => ({
+      ...previousSeriesMeta,
       [id]: { fill, label, markerShape, stroke },
     }));
-  }, [fill, label, markerShape, series, setLines, stroke]);
+  }, [fill, label, markerShape, series, setSeriesMeta, stroke]);
 
   if (stacked && areaKeys) {
     linePath = d3

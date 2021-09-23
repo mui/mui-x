@@ -184,7 +184,7 @@ const LineChart = React.forwardRef(function LineChart<X = unknown, Y = unknown>(
   };
   const [chartRef, dimensions] = useChartDimensions(chartSettings);
   const handleRef = useForkRef(chartRef, ref);
-  const [lines, setLines] = React.useState([]);
+  const [seriesMeta, setSeriesMeta] = React.useState([]);
   const {
     width,
     height,
@@ -245,10 +245,10 @@ const LineChart = React.forwardRef(function LineChart<X = unknown, Y = unknown>(
         dimensions,
         highlightMarkers,
         invertMarkers,
-        lines,
+        seriesMeta,
         markerShape,
         markerSize,
-        setLines,
+        setSeriesMeta,
         stacked,
         mousePosition,
         smoothed,
