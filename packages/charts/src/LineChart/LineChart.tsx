@@ -114,7 +114,7 @@ export interface LineChartProps<X = unknown, Y = unknown> {
   /**
    * Override the calculated domain of the x axis.
    */
-  xDomain?: string[];
+  xDomain?: X[];
   /**
    * The key to use for the x axis.
    */
@@ -127,7 +127,7 @@ export interface LineChartProps<X = unknown, Y = unknown> {
   /**
    * Override the calculated domain of the y axis.
    */
-  yDomain?: string[];
+  yDomain?: Y[];
   /**
    * The key to use for the y axis.
    */
@@ -138,11 +138,14 @@ export interface LineChartProps<X = unknown, Y = unknown> {
   yScaleType?: 'linear' | 'time' | 'log' | 'point' | 'pow' | 'sqrt' | 'utc';
 }
 
-type LineChartComponent = (<X, Y>(
+type LineChartComponent = <X, Y>(
   props: LineChartProps<X, Y> & React.RefAttributes<SVGSVGElement>,
-) => JSX.Element);
+) => JSX.Element;
 
-const LineChart = React.forwardRef(function LineChart<X = unknown, Y = unknown>(props: LineChartProps<X, Y>, ref: React.Ref<SVGSVGElement>) {
+const LineChart = React.forwardRef(function LineChart<X = unknown, Y = unknown>(
+  props: LineChartProps<X, Y>,
+  ref: React.Ref<SVGSVGElement>,
+) {
   const {
     areaKeys,
     children,
@@ -174,10 +177,10 @@ const LineChart = React.forwardRef(function LineChart<X = unknown, Y = unknown>(
     markers.forEach((markerObj, i, arr) => {
       const defaultMarkerValues = {};
       if (!markerObj.markerShape) {
-        defaultMarkerValues['markerShape'] = markerShape
+        defaultMarkerValues['markerShape'] = markerShape;
       }
       if (!markerObj.markerSize) {
-        defaultMarkerValues['markerSize'] = markerSize
+        defaultMarkerValues['markerSize'] = markerSize;
       }
       arr[i] = { ...markerObj, ...defaultMarkerValues };
     });

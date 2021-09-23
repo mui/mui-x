@@ -18,6 +18,10 @@ title: Line chart
 
 {{"demo": "pages/components/charts/line-chart/LogScaleLineChart.js"}}
 
+## Zoomable line chart
+
+{{"demo": "pages/components/charts/line-chart/ZoomableLineChart.js"}}
+
 ## Multi-line chart
 
 {{"demo": "pages/components/charts/line-chart/MultiLineChart.js"}}
