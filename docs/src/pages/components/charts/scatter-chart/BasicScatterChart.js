@@ -22,7 +22,7 @@ const domains1 = [
 
 export default function MultiScatterChart() {
   return (
-    <ScatterChart data={generateDataset(...domains1)} fill="white">
+    <ScatterChart data={generateDataset(...domains1)} yDomain={null}>
       <Grid zeroStrokeDasharray="0" />
       <Scatter fill="rgba(255,80,150,.5)" minSize={100} maxSize={100} />
       <XAxis suffix="cm" disableTicks />

@@ -124,7 +124,7 @@ const BarChart = React.forwardRef(function BarChart<X = unknown, Y = unknown>(
     xDomain: xDomainProp,
     xKey = 'x',
     xScaleType = 'linear',
-    yDomain: yDomainProp,
+    yDomain: yDomainProp = [0],
     yKey = 'y',
     yScaleType = 'linear',
     padding = 10,

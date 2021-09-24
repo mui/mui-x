@@ -34,7 +34,7 @@ export default function GradientFilledMultiLineChart() {
       markerShape="none"
       margin={{ top: 70, bottom: 60, left: 60 }}
       xScaleType="time"
-      yDomain={[0]}
+      yDomain={null}
     >
       <defs>
         <linearGradient id="color1" x1="0" y1="0" x2="0" y2="1">

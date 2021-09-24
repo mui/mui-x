@@ -118,6 +118,7 @@ export interface LineChartProps<X = unknown, Y = unknown> {
   xScaleType?: 'linear' | 'time' | 'log' | 'point' | 'pow' | 'sqrt' | 'utc';
   /**
    * Override the calculated domain of the y axis.
+   * By default, the domain starts at zero. Set the value to null to calculate the true domain.
    */
   yDomain?: Y[];
   /**
@@ -158,7 +159,7 @@ const LineChart = React.forwardRef(function LineChart<X = unknown, Y = unknown>(
     xDomain: xDomainProp,
     xKey = 'x',
     xScaleType = 'linear',
-    yDomain: yDomainProp,
+    yDomain: yDomainProp = [0],
     yKey = 'y',
     yScaleType = 'linear',
     ...other

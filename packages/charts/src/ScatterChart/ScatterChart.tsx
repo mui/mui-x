@@ -139,7 +139,7 @@ const ScatterChart = React.forwardRef(function ScatterChart<X = unknown, Y = unk
     xDomain: xDomainProp,
     xKey = 'x',
     xScaleType = 'linear',
-    yDomain: yDomainProp,
+    yDomain: yDomainProp = [0],
     yKey = 'y',
     yScaleType = 'linear',
     zDomain: zDomainProp,
