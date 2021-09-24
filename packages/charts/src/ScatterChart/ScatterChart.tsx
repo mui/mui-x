@@ -158,9 +158,9 @@ const ScatterChart = React.forwardRef(function ScatterChart<X = unknown, Y = unk
   const [chartRef, dimensions] = useChartDimensions(chartSettings);
   const handleRef = useForkRef(chartRef, ref);
   const { width, height, boundedWidth, boundedHeight, marginLeft, marginTop } = dimensions;
-  const xDomain = xDomainProp || getExtent(data, (d) => d[xKey]);
-  const yDomain = yDomainProp || getExtent(data, (d) => d[yKey]);
-  const zDomain = zDomainProp || getExtent(data, (d) => d[zKey]);
+  const xDomain = getExtent(data, (d) => d[xKey], xDomainProp);
+  const yDomain = getExtent(data, (d) => d[yKey], yDomainProp);
+  const zDomain = getExtent(data, (d) => d[zKey], zDomainProp);
   const xRange = [0, boundedWidth];
   const yRange = [0, boundedHeight];
   const maxXTicks = getMaxDataSetLength(data) - 1;

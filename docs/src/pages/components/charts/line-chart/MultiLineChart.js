@@ -48,6 +48,7 @@ export default function MultiLineChart() {
       markerSize={50}
       smoothed
       xScaleType="time"
+      yDomain={[0]}
     >
       <Grid disableX />
       <XAxis label="Year" />

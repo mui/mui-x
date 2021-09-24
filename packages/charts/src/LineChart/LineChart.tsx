@@ -195,8 +195,9 @@ const LineChart = React.forwardRef(function LineChart<X = unknown, Y = unknown>(
     marginTop,
     marginBottom,
   } = dimensions;
-  const xDomain = xDomainProp || getExtent(data, (d) => d[xKey]);
-  const yDomain = yDomainProp || getExtent(data, (d) => d[yKey]);
+  const xDomain = getExtent(data, (d) => d[xKey], xDomainProp);
+  const yDomain = getExtent(data, (d) => d[yKey], yDomainProp);
+
   const xRange = [0, boundedWidth];
   const yRange = [0, boundedHeight];
   const maxXTicks = getMaxDataSetLength(data) - 1;

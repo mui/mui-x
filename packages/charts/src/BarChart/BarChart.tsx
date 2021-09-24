@@ -153,8 +153,8 @@ const BarChart = React.forwardRef(function BarChart<X = unknown, Y = unknown>(
   const handleRef = useForkRef(chartRef, ref);
   const [seriesMeta, setSeriesMeta] = React.useState([]);
   const { width, height, boundedWidth, boundedHeight, marginLeft, marginTop } = dimensions;
-  const xDomain = xDomainProp || getExtent(data, (d) => d[xKey]);
-  const yDomain = yDomainProp || getExtent(data, (d) => d[yKey]);
+  const xDomain = getExtent(data, (d) => d[xKey], xDomainProp);
+  const yDomain = getExtent(data, (d) => d[yKey], yDomainProp);
   const xRange = [padding * 2, boundedWidth - 2 * padding];
   const yRange = [0, boundedHeight];
   const maxXTicks = getMaxDataSetLength(data) - 1;

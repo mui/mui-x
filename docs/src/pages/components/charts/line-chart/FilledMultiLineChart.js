@@ -16,6 +16,7 @@ export default function FilledMultiLineChart() {
       markerShape="auto"
       markerSize={40}
       xScaleType="time"
+      yDomain={[0]}
     >
       <Grid disableX />
       <XAxis label="Year" />
