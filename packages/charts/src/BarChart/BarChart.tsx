@@ -76,9 +76,12 @@ export interface BarChartProps<X = unknown, Y = unknown> {
    */
   xDomain?: string[];
   /**
+   * The padding between the bars.
+   */
+  padding: number;
+  /**
    * The key to use for the x axis.
    */
-
   xKey?: string;
   /**
    * The scale type to use for the x axis.
@@ -124,6 +127,7 @@ const BarChart = React.forwardRef(function BarChart<X = unknown, Y = unknown>(
     yDomain: yDomainProp,
     yKey = 'y',
     yScaleType = 'linear',
+    padding = 10,
     ...other
   } = props;
 
@@ -151,7 +155,6 @@ const BarChart = React.forwardRef(function BarChart<X = unknown, Y = unknown>(
   const { width, height, boundedWidth, boundedHeight, marginLeft, marginTop } = dimensions;
   const xDomain = xDomainProp || getExtent(data, (d) => d[xKey]);
   const yDomain = yDomainProp || getExtent(data, (d) => d[yKey]);
-  const padding = 10;
   const xRange = [padding * 2, boundedWidth - 2 * padding];
   const yRange = [0, boundedHeight];
   const maxXTicks = getMaxDataSetLength(data) - 1;

@@ -5,7 +5,7 @@ import ChartContext from '../ChartContext';
 const Bar = (props) => {
   const {
     areaKeys,
-    data,
+    data = [],
     dimensions: { boundedWidth, boundedHeight },
     padding,
     setSeriesMeta,
@@ -20,17 +20,17 @@ const Bar = (props) => {
 
   const chartData = dataProp || data[series] || data;
 
-  let spacingBetweenTicks = 999;
-  const ticks = xScale.ticks();
-  for (let i = 1; i < ticks.length; i += 1) {
-    spacingBetweenTicks = Math.min(spacingBetweenTicks, xScale(ticks[i]) - xScale(ticks[i - 1]));
-  }
+  const isMultiBar = series !== undefined && !stacked;
 
-  let barWidth = Math.min(boundedWidth/data.length - padding/2, 2*padding);
-  
-  if(series !== undefined && !stacked) {
-    barWidth = boundedWidth/data[0].length - 2*padding;
-  } 
+
+  let barWidth = Math.min(boundedWidth / data.length - padding / 2, 4 * padding);
+
+  if (isMultiBar) {
+    barWidth = Math.min(
+      boundedWidth / (data.length * data[0].length) - padding / 2,
+      (4 * padding) / data.length,
+    );
+  }
 
   useEffect(() => {
     const id = series || 0;
@@ -40,14 +40,9 @@ const Bar = (props) => {
     }));
   }, [fill, label, series, setSeriesMeta]);
 
-  if (series !== undefined && !stacked) {
-    const numOfSeries = data.length;
-    barWidth /= numOfSeries;
-  }
-
   const getX = (d) => {
     let result = xScale(d[xKey]) - barWidth / 2;
-    if (series !== undefined && !stacked) {
+    if (isMultiBar) {
       result = xScale(d[xKey]);
       const numOfSeries = data.length;
       if (numOfSeries % 2 === 0) {

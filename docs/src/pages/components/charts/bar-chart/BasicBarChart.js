@@ -39,6 +39,7 @@ export default function BasicBarChart() {
       xDomain={[0, 23]}
       label="Commits to the MUI repo per hour of day"
       pixelsPerTick={30}
+      padding={5}
     >
       <Grid disableX />
       <XAxis />

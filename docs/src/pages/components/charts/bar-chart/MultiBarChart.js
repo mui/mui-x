@@ -69,8 +69,8 @@ export default function MultiLineChart() {
       invertMarkers
       label="Commits to the MUI repo by day of week"
       margin={{ top: 70, bottom: 60, left: 60 }}
-      markerSize={50}
       xScaleType="linear"
+      padding={15}
     >
       <Grid disableX />
       <XAxis label="Day of week" />

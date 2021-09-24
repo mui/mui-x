@@ -24,6 +24,7 @@ export default function StackedBarChart() {
       yDomain={[0, 60]}
       margin={{ top: 60, bottom: 70 }}
       label="Sales"
+      padding={20}
     >
       <Grid disableX />
       <XAxis />
