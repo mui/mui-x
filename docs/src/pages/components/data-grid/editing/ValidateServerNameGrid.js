@@ -23,33 +23,6 @@ const useStyles = makeStyles(
   { defaultTheme },
 );
 
-const columns = [
-  { field: 'name', headerName: 'MUI Contributor', width: 180, editable: true },
-];
-
-const rows = [
-  {
-    id: 1,
-    name: 'Damien',
-  },
-  {
-    id: 2,
-    name: 'Olivier',
-  },
-  {
-    id: 3,
-    name: 'Danail',
-  },
-  {
-    id: 4,
-    name: 'Matheus',
-  },
-  {
-    id: 5,
-    name: 'You?',
-  },
-];
-
 let promiseTimeout;
 function validateName(username) {
   const existingUsers = rows.map((row) => row.name.toLowerCase());
@@ -122,3 +95,30 @@ export default function ValidateServerNameGrid() {
     </div>
   );
 }
+
+const columns = [
+  { field: 'name', headerName: 'MUI Contributor', width: 180, editable: true },
+];
+
+const rows = [
+  {
+    id: 1,
+    name: 'Damien',
+  },
+  {
+    id: 2,
+    name: 'Olivier',
+  },
+  {
+    id: 3,
+    name: 'Danail',
+  },
+  {
+    id: 4,
+    name: 'Matheus',
+  },
+  {
+    id: 5,
+    name: 'You?',
+  },
+];

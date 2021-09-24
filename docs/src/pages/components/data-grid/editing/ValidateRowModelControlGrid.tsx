@@ -41,6 +41,37 @@ function validateEmail(email) {
   return re.test(String(email).toLowerCase());
 }
 
+export default function ValidateRowModelControlGrid() {
+  const [editRowsModel, setEditRowsModel] = React.useState<GridEditRowsModel>({});
+  const classes = useStyles();
+
+  const handleEditRowsModelChange = React.useCallback(
+    (newModel: GridEditRowsModel) => {
+      const updatedModel = { ...newModel };
+      Object.keys(updatedModel).forEach((id) => {
+        if (updatedModel[id].email) {
+          const isValid = validateEmail(updatedModel[id].email.value);
+          updatedModel[id].email = { ...updatedModel[id].email, error: !isValid };
+        }
+      });
+      setEditRowsModel(updatedModel);
+    },
+    [],
+  );
+
+  return (
+    <div style={{ height: 400, width: '100%' }}>
+      <DataGrid
+        className={classes.root}
+        rows={rows}
+        columns={columns}
+        editRowsModel={editRowsModel}
+        onEditRowsModelChange={handleEditRowsModelChange}
+      />
+    </div>
+  );
+}
+
 const columns: GridColumns = [
   { field: 'name', headerName: 'Name', width: 180, editable: true },
   { field: 'email', headerName: 'Email', width: 200, editable: true },
@@ -97,34 +128,3 @@ const rows: GridRowsProp = [
     lastLogin: randomUpdatedDate(),
   },
 ];
-
-export default function ValidateRowModelControlGrid() {
-  const [editRowsModel, setEditRowsModel] = React.useState<GridEditRowsModel>({});
-  const classes = useStyles();
-
-  const handleEditRowsModelChange = React.useCallback(
-    (newModel: GridEditRowsModel) => {
-      const updatedModel = { ...newModel };
-      Object.keys(updatedModel).forEach((id) => {
-        if (updatedModel[id].email) {
-          const isValid = validateEmail(updatedModel[id].email.value);
-          updatedModel[id].email = { ...updatedModel[id].email, error: !isValid };
-        }
-      });
-      setEditRowsModel(updatedModel);
-    },
-    [],
-  );
-
-  return (
-    <div style={{ height: 400, width: '100%' }}>
-      <DataGrid
-        className={classes.root}
-        rows={rows}
-        columns={columns}
-        editRowsModel={editRowsModel}
-        onEditRowsModelChange={handleEditRowsModelChange}
-      />
-    </div>
-  );
-}

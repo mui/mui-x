@@ -24,6 +24,20 @@ const useStyles = makeStyles(
   { defaultTheme },
 );
 
+export default function IsCellEditableGrid() {
+  const classes = useStyles();
+  return (
+    <div style={{ height: 400, width: '100%' }}>
+      <DataGrid
+        className={classes.root}
+        rows={rows}
+        columns={columns}
+        isCellEditable={(params) => params.row.age % 2 === 0}
+      />
+    </div>
+  );
+}
+
 const columns: GridColumns = [
   { field: 'name', headerName: 'Name', width: 180, editable: true },
   { field: 'age', headerName: 'Age', type: 'number', editable: true },
@@ -80,17 +94,3 @@ const rows: GridRowsProp = [
     lastLogin: randomUpdatedDate(),
   },
 ];
-
-export default function IsCellEditableGrid() {
-  const classes = useStyles();
-  return (
-    <div style={{ height: 400, width: '100%' }}>
-      <DataGrid
-        className={classes.root}
-        rows={rows}
-        columns={columns}
-        isCellEditable={(params) => params.row.age % 2 === 0}
-      />
-    </div>
-  );
-}
