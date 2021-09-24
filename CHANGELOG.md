@@ -5,7 +5,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## 5.0.0-beta.2
 
-_Sep 23, 2021_
+_Sep 24, 2021_
 
 A big thanks to the 5 contributors who made this release possible. Here are some highlights ✨:
 
