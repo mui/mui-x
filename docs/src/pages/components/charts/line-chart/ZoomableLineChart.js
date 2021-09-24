@@ -87,6 +87,7 @@ export default function ZoomableLineChart() {
             min={chartData[0].x.getTime()}
             max={chartData[chartData.length - 1].x.getTime()}
             size="small"
+            style={{ width: '100%' }}
           />
         </Box>
       )}

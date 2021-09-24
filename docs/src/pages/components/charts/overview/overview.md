@@ -11,7 +11,7 @@ Build your own charts using the decoupled, reusable React components avialable i
 
 ## Overview
 
-The chart library is the product of a hackthon at the first MUI company retreat, with a team of local and remote participants iterating on some core components produced @mbrookes.
+The chart library is the product of a hackthon at the first MUI company retreat, with a team of local and remote participants iterating on some components produced by one of the team.
 
 It's hacky, buggy, and incomplete; but we're proud of what we achieved in a limited amount of time, and hope that it will ultimately form the basis of a set of MIT chart components, with a paid extension for more advanced and esoteric ones.
 

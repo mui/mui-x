@@ -7,7 +7,7 @@ import Grid from '@mui/charts/Grid';
 
 export default function BasicLineChart() {
   return (
-    <LineChart data={data} xScaleType="time" pixelsPerTick={55}>
+    <LineChart data={data} xScaleType="time" pixelsPerTick={62}>
       <Grid />
       <XAxis />
       <YAxis suffix="kg" />
