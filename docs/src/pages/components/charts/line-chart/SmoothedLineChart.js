@@ -21,7 +21,7 @@ export default function SmoothedLineChart() {
       <Grid />
       <XAxis />
       <YAxis suffix="kg" />
-      <Line stroke="rgb(235,97,97)" markerShape="none" />
+      <Line stroke="rgb(150,219,124)" markerShape="none" />
     </LineChart>
   );
 }

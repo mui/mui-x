@@ -29,7 +29,7 @@ export default function LogScaleLineChart() {
       <Tooltip customStyle={{ borderRadius: 15 }} />
       <XAxis />
       <YAxis suffix="kg" />
-      <Line stroke="rgb(235,97,97)" />
+      <Line stroke="rgb(116,205,240)" />
     </LineChart>
   );
 }

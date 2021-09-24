@@ -14,8 +14,8 @@ export default function StackedAreaChart() {
       stacked
       xScaleType="time"
       xKey="date"
-      xDomain={[new Date(2020, 1, 1), new Date(2022, 10, 10)]}
-      yDomain={[0, 500]}
+      xDomain={[new Date(2020, 0, 1), new Date(2022, 9, 1)]}
+      yDomain={[0, 450]}
     >
       <Grid disableX />
       <XAxis />
@@ -37,7 +37,7 @@ export default function StackedAreaChart() {
 }
 
 const stackData = [
-  { date: new Date(2020, 1, 1), open: 122, close: 104 },
+  { date: new Date(2020, 0, 1), open: 122, close: 104 },
   { date: new Date(2020, 1, 1), open: 121, close: 70 },
   { date: new Date(2020, 2, 1), open: 101, close: 55 },
   { date: new Date(2020, 3, 1), open: 103, close: 45 },
@@ -49,7 +49,7 @@ const stackData = [
   { date: new Date(2020, 9, 1), open: 110, close: 225 },
   { date: new Date(2020, 10, 1), open: 157, close: 233 },
   { date: new Date(2020, 11, 1), open: 128, close: 232 },
-  { date: new Date(2020, 12, 1), open: 101, close: 235 },
+  { date: new Date(2021, 0, 1), open: 101, close: 235 },
   { date: new Date(2021, 1, 1), open: 109, close: 200 },
   { date: new Date(2021, 2, 1), open: 142, close: 214 },
   { date: new Date(2021, 3, 1), open: 123, close: 224 },
@@ -61,7 +61,7 @@ const stackData = [
   { date: new Date(2021, 9, 1), open: 73, close: 127 },
   { date: new Date(2021, 10, 1), open: 78, close: 154 },
   { date: new Date(2021, 11, 1), open: 116, close: 127 },
-  { date: new Date(2021, 12, 1), open: 136, close: 78 },
+  { date: new Date(2022, 0, 1), open: 136, close: 78 },
   { date: new Date(2022, 1, 1), open: 139, close: 61 },
   { date: new Date(2022, 2, 1), open: 201, close: 41 },
   { date: new Date(2022, 3, 1), open: 221, close: 72 },
@@ -70,4 +70,5 @@ const stackData = [
   { date: new Date(2022, 6, 1), open: 233, close: 138 },
   { date: new Date(2022, 7, 1), open: 261, close: 141 },
   { date: new Date(2022, 8, 1), open: 279, close: 130 },
+  { date: new Date(2022, 9, 1), open: 259, close: 135 },
 ];
