@@ -17,7 +17,7 @@ It's hacky, buggy, and incomplete; but we're proud of what we achieved in a limi
 
 This is the set of charts available at this moment:
 
-### Line Chart
+### Line Charts
 
 {{"demo": "pages/components/charts/overview/LineChart.js"}}
 
