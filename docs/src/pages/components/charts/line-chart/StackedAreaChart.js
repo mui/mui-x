@@ -63,7 +63,6 @@ const stackData = [
   { date: new Date(2021, 11, 1), open: 116, close: 127 },
   { date: new Date(2021, 12, 1), open: 136, close: 78 },
   { date: new Date(2022, 1, 1), open: 139, close: 61 },
-  { date: new Date(2022, 1, 1), open: 162, close: 13 },
   { date: new Date(2022, 2, 1), open: 201, close: 41 },
   { date: new Date(2022, 3, 1), open: 221, close: 72 },
   { date: new Date(2022, 4, 1), open: 257, close: 87 },
