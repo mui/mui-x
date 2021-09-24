@@ -1,6 +1,6 @@
 import * as React from 'react';
-import BarChart from '@mui/charts/BarChart';
 import { useTheme } from '@mui/material/styles';
+import BarChart from '@mui/charts/BarChart';
 import Bar from '@mui/charts/Bar';
 import XAxis from '@mui/charts/XAxis';
 import YAxis from '@mui/charts/YAxis';
@@ -40,6 +40,7 @@ export default function BasicBarChart() {
       label="Commits to the MUI repo per hour of day"
       pixelsPerTick={30}
       padding={5}
+      margin={{ top: 60 }}
     >
       <Grid disableX />
       <XAxis />

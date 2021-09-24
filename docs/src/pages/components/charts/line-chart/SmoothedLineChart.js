@@ -1,7 +1,6 @@
 import Grid from '@mui/charts/Grid';
 import Line from '@mui/charts/Line';
 import LineChart from '@mui/charts/LineChart';
-import Tooltip from '@mui/charts/Tooltip';
 import XAxis from '@mui/charts/XAxis';
 import YAxis from '@mui/charts/YAxis';
 import * as React from 'react';
@@ -18,17 +17,10 @@ const lineData1 = [
 
 export default function SmoothedLineChart() {
   return (
-    <LineChart
-      smoothed
-      data={lineData1}
-      xScaleType="time"
-      highlightMarkers
-      pixelsPerTick={200}
-    >
+    <LineChart smoothed data={lineData1} xScaleType="time">
       <Grid />
       <XAxis />
       <YAxis suffix="kg" />
-      <Tooltip />
       <Line stroke="rgb(235,97,97)" markerShape="none" />
     </LineChart>
   );

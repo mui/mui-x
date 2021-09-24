@@ -68,18 +68,18 @@ export default function MultiLineChart() {
       highlightMarkers
       invertMarkers
       label="Commits to the MUI repo by day of week"
-      margin={{ top: 70, bottom: 60, left: 60 }}
+      margin={{ top: 60, bottom: 70, left: 60 }}
       xScaleType="linear"
       padding={15}
     >
       <Grid disableX />
-      <XAxis label="Day of week" />
-      <YAxis label="Count" disableLine disableTicks />
-      <Tooltip />
-      <Legend spacing={80} />
       <Bar series={0} label="Morning" fill="rgb(116,205,240)" />
       <Bar series={1} label="Afternoon" fill="rgb(150,219,124)" />
       <Bar series={2} label="Night" fill="rgb(234,95,95)" />
+      <XAxis label="Day of week" />
+      <YAxis label="Count" disableLine disableTicks />
+      <Tooltip />
+      <Legend spacing={80} position="bottom" />
     </BarChart>
   ) : null;
 }
