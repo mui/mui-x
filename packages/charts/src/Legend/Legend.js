@@ -11,7 +11,13 @@ function Legend(props) {
     seriesMeta,
   } = useContext(ChartContext);
 
-  const { labelColor = '#777', labelFontSize = 12, spacing = 50, position = 'top' } = props;
+  const {
+    labelColor = '#777',
+    labelFontSize = 12,
+    markerSize = 30,
+    spacing = 50,
+    position = 'top',
+  } = props;
 
   return (
     <g
@@ -22,22 +28,22 @@ function Legend(props) {
     >
       {seriesMeta &&
         Object.keys(seriesMeta).map((series) => {
-          const { fill, label, stroke } = seriesMeta[series];
-          let markerShape = seriesMeta[series];
+          const { label, stroke } = seriesMeta[series];
+          let { fill, markerShape } = seriesMeta[series];
 
           if (!markerShape || markerShape === 'none') {
             markerShape = 'circle';
           }
 
-          // fill is defined only for scatter charts
-          if (!seriesMeta[series].fill) {
-            seriesMeta[series].fill = stroke || 'currentColor';
+          // fill is not always defined for line charts
+          if (!fill || fill === 'none') {
+            fill = stroke;
           }
 
           return (
             <React.Fragment key={series}>
               <path
-                d={d3.symbol(d3.symbols[getSymbol(markerShape, series)], 50)()}
+                d={d3.symbol(d3.symbols[getSymbol(markerShape, series)], markerSize)()}
                 fill={invertMarkers ? stroke : fill}
                 stroke={invertMarkers ? fill : stroke}
                 transform={`translate(${series * spacing - spacing / 2}, -4)`}
@@ -66,11 +72,18 @@ Legend.propTypes /* remove-proptypes */ = {
    * The font size of the label.
    */
   labelFontSize: PropTypes.number,
+  /**
+   * The size of the markers in the legend.
+   */
+  markerSize: PropTypes.number,
+  /**
+   * The position of the legend in the chart.
+   * @default 'top'
+   */
   position: PropTypes.oneOf(['top', 'bottom']),
   /**
    * The spacing between the legend items.
    * @default 50
-   *
    */
   spacing: PropTypes.number,
 };

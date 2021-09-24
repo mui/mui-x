@@ -1,10 +1,10 @@
+import React, { useContext } from 'react';
+import PropTypes from 'prop-types';
+import * as d3 from 'd3';
 import NoSsr from '@mui/core/NoSsr';
 import Paper from '@mui/material/Paper';
 import Popper from '@mui/material/Popper';
 import Typography from '@mui/material/Typography';
-import * as d3 from 'd3';
-import PropTypes from 'prop-types';
-import React, { useContext } from 'react';
 import ChartContext from '../ChartContext';
 import useTicks from '../hooks/useTicks';
 import { findObjects, isInRange } from '../utils';
@@ -43,6 +43,7 @@ const Tooltip = (props) => {
   const updateStrokeRef = (element) => {
     setStrokeElement(element);
   };
+
   const isLineChart = seriesMeta[0] && seriesMeta[0].stroke;
 
   // Flatten the data
@@ -65,19 +66,19 @@ const Tooltip = (props) => {
   const linesData =
     seriesMeta &&
     Object.keys(seriesMeta).map((series) => {
-      const { fill, label, markerShape, stroke: markerStroke } = seriesMeta[series];
+      // `fill` is not always defined for line charts
+      if (!seriesMeta[series].fill || seriesMeta[series].fill === 'none') {
+        seriesMeta[series].fill = 'white';
+      }
 
       return {
-        series,
-        fill: isLineChart ? (markerShape === 'none' ? markerStroke : 'white') : fill,
-        // stroke is only defined for line charts
-        stroke: isLineChart ? markerStroke : fill,
-        label,
-        markerShape,
+        ...seriesMeta[series],
+        // `stroke` is only defined for line charts
+        stroke: seriesMeta[series].stroke || 'white',
       };
     });
 
-  // Add the information of markers
+  // Add the information for the markers
   highlightedData =
     highlightedData &&
     highlightedData.map((d, i) => ({
@@ -110,7 +111,7 @@ const Tooltip = (props) => {
                     .sort((a, b) => d3.descending(a[yKey], b[yKey]))
                     .map((d, i) => (
                       <Typography
-                        variant="body2"
+                        variant="caption"
                         key={i}
                         sx={{ display: 'flex', alignItems: 'center' }}
                       >
@@ -159,15 +160,14 @@ Tooltip.propTypes /* remove-proptypes */ = {
    */
   customStyle: PropTypes.object,
   /**
-   * The size of the tooltip markers
+   * The size of the tooltip markers.
    * @default 30
-   *
    */
   markerSize: PropTypes.number,
   /**
    * The content that can be rendered to replace the component.
    *
-   * @param {array} highlightedData This array contains all data of multiple charts that are currently highllighted.
+   * @param {array} highlightedData Contains the data for multiple series that are currently highllighted.
    */
   renderContent: PropTypes.func,
   /**

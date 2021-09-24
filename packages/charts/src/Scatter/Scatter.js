@@ -27,7 +27,7 @@ const Scatter = (props) => {
 
   const {
     data: dataProp,
-    fill = 'currentColor',
+    fill,
     invertMarkers = invertMarkersContext,
     markerShape = markerShapeContext,
     maxSize = 500,

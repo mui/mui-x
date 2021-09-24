@@ -28,7 +28,7 @@ export interface ScatterChartProps<X = unknown, Y = unknown> {
    */
   data: ChartData<X, Y>[] | ChartData<X, Y>[][];
   /**
-   * The fill color to use for the area.
+   * The fill color to use for the chart area.
    */
   fill?: string;
   /**
