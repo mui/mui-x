@@ -5,7 +5,7 @@ import { useGridApiMethod } from '../../root/useGridApiMethod';
 import { GridPrintExportApi } from '../../../models/api/gridPrintExportApi';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { useGridSelector } from '../core/useGridSelector';
-import { visibleSortedGridRowsSelector } from '../filter/gridFilterSelector';
+import { visibleGridRowCountSelector } from '../filter/gridFilterSelector';
 import { useGridState } from '../core/useGridState';
 import { GridComponentProps } from '../../../GridComponentProps';
 import { GridPrintExportOptions } from '../../../models/gridExport';
@@ -28,11 +28,11 @@ type PrintWindowOnLoad = (
  */
 export const useGridPrintExport = (
   apiRef: GridApiRef,
-  props: Pick<GridComponentProps, 'rowHeight' | 'pagination'>,
+  props: Pick<GridComponentProps, 'rowHeight' | 'pagination' | 'headerHeight'>,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridPrintExport');
   const [gridState, setGridState] = useGridState(apiRef);
-  const visibleSortedRows = useGridSelector(apiRef, visibleSortedGridRowsSelector);
+  const visibleRowCount = useGridSelector(apiRef, visibleGridRowCountSelector);
   const columns = useGridSelector(apiRef, allGridColumnsSelector);
   const doc = React.useRef<Document | null>(null);
   const previousGridState = React.useRef<any>();
@@ -78,6 +78,7 @@ export const useGridPrintExport = (
   const buildPrintWindow = React.useCallback((title?: string): HTMLIFrameElement => {
     const iframeEl = document.createElement('iframe');
 
+    iframeEl.id = 'grid-print-window';
     iframeEl.style.position = 'absolute';
     iframeEl.style.width = '0px';
     iframeEl.style.height = '0px';
@@ -107,6 +108,10 @@ export const useGridPrintExport = (
 
       const gridRootElement = apiRef.current.rootElementRef!.current;
       const gridClone = gridRootElement!.cloneNode(true) as HTMLElement;
+      const gridToolbarElementHeight =
+        gridRootElement!.querySelector('.MuiDataGrid-toolbarContainer')?.clientHeight || 0;
+      const gridFooterElementHeight =
+        gridRootElement!.querySelector('.MuiDataGrid-footerContainer')?.clientHeight || 0;
 
       if (normalizeOptions.hideToolbar) {
         gridClone.querySelector('.MuiDataGrid-toolbarContainer')?.remove();
@@ -117,7 +122,12 @@ export const useGridPrintExport = (
       }
 
       // Expand container height to accommodate all rows
-      gridClone.style.height = `${visibleSortedRows.size * props.rowHeight!}px`;
+      gridClone.style.height = `${
+        visibleRowCount * props.rowHeight +
+        props.headerHeight +
+        gridToolbarElementHeight +
+        gridFooterElementHeight
+      }px`;
       printDoc.body.appendChild(gridClone);
 
       const defaultPageStyle =
@@ -174,7 +184,7 @@ export const useGridPrintExport = (
       // Trigger print
       printWindow.contentWindow!.print();
     },
-    [apiRef, doc, visibleSortedRows.size, props.rowHeight],
+    [apiRef, doc, visibleRowCount, props.rowHeight, props.headerHeight],
   );
 
   const handlePrintWindowAfterPrint = React.useCallback(
@@ -216,7 +226,7 @@ export const useGridPrintExport = (
       previousGridState.current = gridState;
 
       if (props.pagination) {
-        apiRef.current.setPageSize(visibleSortedRows.size);
+        apiRef.current.setPageSize(visibleRowCount);
       }
 
       await updateGridColumnsForPrint(options?.fields, options?.allColumns);
@@ -227,7 +237,7 @@ export const useGridPrintExport = (
       printWindow.contentWindow!.onafterprint = () => handlePrintWindowAfterPrint(printWindow);
     },
     [
-      visibleSortedRows,
+      visibleRowCount,
       props,
       logger,
       apiRef,
