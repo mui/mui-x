@@ -12,12 +12,12 @@ async function getData() {
   const cachedData = localStorage.getItem('covid-cases');
   if (!cachedData) {
     const response = await fetch(
-      'https://covid19.richdataservices.com/rds/api/query/int/jhu_country/select?cols=date_stamp,cnt_confirmed,cnt_death&where=(iso3166_1=US)&limit=5000',
+      'https://api.coronavirus.data.gov.uk/v1/data?filters=areaType=nation;areaName=england&structure={"date":"date","newCases":"newCasesByPublishDate"}',
     );
     const rawData = await response.json();
-    const formattedData = rawData.records.map((record) => ({
-      x: Date.parse(record[0]),
-      y: record[1],
+    const formattedData = rawData.data.map((record) => ({
+      x: Date.parse(record.date),
+      y: record.newCases,
     }));
 
     localStorage.setItem('covid-cases', JSON.stringify({ records: formattedData }));
@@ -35,7 +35,9 @@ export default function ZoomableLineChart() {
 
   React.useEffect(() => {
     async function loadChartData() {
-      const records = (await getData()).map((r) => ({ ...r, x: new Date(r.x) }));
+      const records = (await getData())
+        .reverse()
+        .map((r) => ({ ...r, x: new Date(r.x) }));
       setChartData(records);
     }
 
@@ -68,8 +70,8 @@ export default function ZoomableLineChart() {
           data={chartData}
           xScaleType="time"
           xDomain={domainDate}
-          label="COVID cases in the United States"
-          margin={{ left: 80 }}
+          label="New COVID cases per day in England"
+          margin={{ top: 60 }}
           pixelsPerTick={75}
         >
           <Grid />
