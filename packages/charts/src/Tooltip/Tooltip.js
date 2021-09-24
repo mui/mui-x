@@ -28,6 +28,7 @@ const Tooltip = (props) => {
     yKey,
     seriesMeta,
   } = useContext(ChartContext);
+
   const {
     stroke = 'rgba(200, 200, 200, 0.8)',
     strokeDasharray = '0',
@@ -36,7 +37,9 @@ const Tooltip = (props) => {
     markerSize = 30,
     renderContent = null,
   } = props;
+
   const [strokeElement, setStrokeElement] = React.useState(null);
+
   const updateStrokeRef = (element) => {
     setStrokeElement(element);
   };
@@ -45,25 +48,25 @@ const Tooltip = (props) => {
   // Flatten the data
   // eslint-disable-next-line prefer-spread
   const flatX = [].concat.apply([], data).map((d) => d[xKey]);
+
   // An array of x-offset values matching the data
   const xOffsets = [...new Set(flatX.map((d) => xScale(d)))].sort(d3.ascending);
+
   // Find the closest x-offset to the mouse position
   // TODO: Currently assumes that data points are equally spaced
   const offset = xOffsets.find((d) =>
     isInRange(mousePosition.x, d, (xOffsets[1] - xOffsets[0]) / 2),
   );
+
   // The data that matches the mouse position
   let highlightedData =
     offset !== undefined ? findObjects(data, xKey, xScale.invert(offset)) : null;
+
   const linesData =
     seriesMeta &&
     Object.keys(seriesMeta).map((series) => {
-      const {
-        fill = 'currentColor',
-        label,
-        markerShape,
-        stroke: markerStroke = 'currentColor',
-      } = seriesMeta[series];
+      const { fill, label, markerShape, stroke: markerStroke } = seriesMeta[series];
+
       return {
         series,
         fill: isLineChart ? (markerShape === 'none' ? markerStroke : 'white') : fill,
@@ -73,6 +76,7 @@ const Tooltip = (props) => {
         markerShape,
       };
     });
+
   // Add the information of markers
   highlightedData =
     highlightedData &&
@@ -80,10 +84,12 @@ const Tooltip = (props) => {
       ...d,
       ...linesData[i],
     }));
+
   // TODO: Make this work when the data is not equally spaced along the x-axis
   const label = useTicks({ maxTicks: xOffsets.length, scale: xScale }).find(
     (d) => d.offset === offset,
   );
+
   return (
     <React.Fragment>
       <NoSsr>
