@@ -8,16 +8,11 @@ import {
   randomUpdatedDate,
 } from '@mui/x-data-grid-generator';
 
-// TODO v5: remove
-function getThemePaletteMode(palette: any): string {
-  return palette.type || palette.mode;
-}
-
 const defaultTheme = createTheme();
 const useStyles = makeStyles(
   (theme: Theme) => {
     const backgroundColor =
-      getThemePaletteMode(theme.palette) === 'dark' ? '#376331' : 'rgb(217 243 190)';
+      theme.palette.mode === 'dark' ? '#376331' : 'rgb(217 243 190)';
     return {
       root: {
         '& .MuiDataGrid-cell--editable': {
@@ -28,20 +23,6 @@ const useStyles = makeStyles(
   },
   { defaultTheme },
 );
-
-export default function IsCellEditableGrid() {
-  const classes = useStyles();
-  return (
-    <div style={{ height: 400, width: '100%' }}>
-      <DataGrid
-        className={classes.root}
-        rows={rows}
-        columns={columns}
-        isCellEditable={(params) => params.row.age % 2 === 0}
-      />
-    </div>
-  );
-}
 
 const columns: GridColumns = [
   { field: 'name', headerName: 'Name', width: 180, editable: true },
@@ -99,3 +80,17 @@ const rows: GridRowsProp = [
     lastLogin: randomUpdatedDate(),
   },
 ];
+
+export default function IsCellEditableGrid() {
+  const classes = useStyles();
+  return (
+    <div style={{ height: 400, width: '100%' }}>
+      <DataGrid
+        className={classes.root}
+        rows={rows}
+        columns={columns}
+        isCellEditable={(params) => params.row.age % 2 === 0}
+      />
+    </div>
+  );
+}

@@ -14,15 +14,10 @@ import {
   randomUpdatedDate,
 } from '@mui/x-data-grid-generator';
 
-// TODO v5: remove
-function getThemePaletteMode(palette: any): string {
-  return palette.type || palette.mode;
-}
-
 const defaultTheme = createTheme();
 const useStyles = makeStyles(
   (theme: Theme) => {
-    const isDark = getThemePaletteMode(theme.palette) === 'dark';
+    const isDark = theme.palette.mode === 'dark';
 
     return {
       root: {
@@ -44,37 +39,6 @@ function validateEmail(email) {
   const re =
     /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   return re.test(String(email).toLowerCase());
-}
-
-export default function ValidateRowModelControlGrid() {
-  const [editRowsModel, setEditRowsModel] = React.useState<GridEditRowsModel>({});
-  const classes = useStyles();
-
-  const handleEditRowsModelChange = React.useCallback(
-    (newModel: GridEditRowsModel) => {
-      const updatedModel = { ...newModel };
-      Object.keys(updatedModel).forEach((id) => {
-        if (updatedModel[id].email) {
-          const isValid = validateEmail(updatedModel[id].email.value);
-          updatedModel[id].email = { ...updatedModel[id].email, error: !isValid };
-        }
-      });
-      setEditRowsModel(updatedModel);
-    },
-    [],
-  );
-
-  return (
-    <div style={{ height: 400, width: '100%' }}>
-      <DataGrid
-        className={classes.root}
-        rows={rows}
-        columns={columns}
-        editRowsModel={editRowsModel}
-        onEditRowsModelChange={handleEditRowsModelChange}
-      />
-    </div>
-  );
 }
 
 const columns: GridColumns = [
@@ -133,3 +97,34 @@ const rows: GridRowsProp = [
     lastLogin: randomUpdatedDate(),
   },
 ];
+
+export default function ValidateRowModelControlGrid() {
+  const [editRowsModel, setEditRowsModel] = React.useState<GridEditRowsModel>({});
+  const classes = useStyles();
+
+  const handleEditRowsModelChange = React.useCallback(
+    (newModel: GridEditRowsModel) => {
+      const updatedModel = { ...newModel };
+      Object.keys(updatedModel).forEach((id) => {
+        if (updatedModel[id].email) {
+          const isValid = validateEmail(updatedModel[id].email.value);
+          updatedModel[id].email = { ...updatedModel[id].email, error: !isValid };
+        }
+      });
+      setEditRowsModel(updatedModel);
+    },
+    [],
+  );
+
+  return (
+    <div style={{ height: 400, width: '100%' }}>
+      <DataGrid
+        className={classes.root}
+        rows={rows}
+        columns={columns}
+        editRowsModel={editRowsModel}
+        onEditRowsModelChange={handleEditRowsModelChange}
+      />
+    </div>
+  );
+}

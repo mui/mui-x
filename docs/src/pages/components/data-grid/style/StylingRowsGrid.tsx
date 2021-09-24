@@ -4,23 +4,16 @@ import { useDemoData } from '@mui/x-data-grid-generator';
 import { createTheme, darken, lighten, Theme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
 
-// TODO v5: remove
-function getThemePaletteMode(palette: any): string {
-  return palette.type || palette.mode;
-}
-
 const defaultTheme = createTheme();
 const useStyles = makeStyles(
   (theme: Theme) => {
+    const isDark = theme.palette.mode === 'dark';
+
     const getBackgroundColor = (color) =>
-      getThemePaletteMode(theme.palette) === 'dark'
-        ? darken(color, 0.6)
-        : lighten(color, 0.6);
+      isDark ? darken(color, 0.6) : lighten(color, 0.6);
 
     const getHoverBackgroundColor = (color) =>
-      getThemePaletteMode(theme.palette) === 'dark'
-        ? darken(color, 0.5)
-        : lighten(color, 0.5);
+      isDark ? darken(color, 0.5) : lighten(color, 0.5);
 
     return {
       root: {

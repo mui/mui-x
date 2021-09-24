@@ -9,15 +9,10 @@ import {
   DataGridPro,
 } from '@mui/x-data-grid-pro';
 
-// TODO v5: remove
-function getThemePaletteMode(palette: any): string {
-  return palette.type || palette.mode;
-}
-
 const defaultTheme = createTheme();
 const useStyles = makeStyles(
   (theme: Theme) => {
-    const isDark = getThemePaletteMode(theme.palette) === 'dark';
+    const isDark = theme.palette.mode === 'dark';
 
     return {
       root: {
@@ -33,6 +28,33 @@ const useStyles = makeStyles(
   },
   { defaultTheme },
 );
+
+const columns: GridColumns = [
+  { field: 'name', headerName: 'MUI Contributor', width: 180, editable: true },
+];
+
+const rows: GridRowsProp = [
+  {
+    id: 1,
+    name: 'Damien',
+  },
+  {
+    id: 2,
+    name: 'Olivier',
+  },
+  {
+    id: 3,
+    name: 'Danail',
+  },
+  {
+    id: 4,
+    name: 'Matheus',
+  },
+  {
+    id: 5,
+    name: 'You?',
+  },
+];
 
 let promiseTimeout: any;
 function validateName(username: string): Promise<boolean> {
@@ -106,30 +128,3 @@ export default function ValidateServerNameGrid() {
     </div>
   );
 }
-
-const columns: GridColumns = [
-  { field: 'name', headerName: 'MUI Contributor', width: 180, editable: true },
-];
-
-const rows: GridRowsProp = [
-  {
-    id: 1,
-    name: 'Damien',
-  },
-  {
-    id: 2,
-    name: 'Olivier',
-  },
-  {
-    id: 3,
-    name: 'Danail',
-  },
-  {
-    id: 4,
-    name: 'Matheus',
-  },
-  {
-    id: 5,
-    name: 'You?',
-  },
-];
