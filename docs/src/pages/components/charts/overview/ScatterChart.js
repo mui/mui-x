@@ -32,6 +32,7 @@ export default function BasicScatterChart() {
       label="Mine vs Yours"
       margin={{ top: 70 }}
       markerShape="auto"
+      yDomain={null}
     >
       <Grid
         strokeDasharray="5"

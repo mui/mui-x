@@ -4,12 +4,16 @@ title: Charts
 
 # Charts
 
-<p class="description">The chart library you always wanted. Available in MIT and Commercial versions.</p>
+<p class="description">The chart library you always wanted. Available in MIT and Commercial versions (Not really, but watch this space!).</p>
 
 MUI charts are built using SVG elements and a lightweight dependency on d3.
 Build your own charts using the decoupled, reusable React components avialable in the package.
 
 ## Overview
+
+The chart library is the product of a hackthon at the first MUI company retreat, with a team of local and remote participants iterating on some core components produced @mbrookes.
+
+It's hacky, buggy, and incomplete; but we're proud of what we achieved in a limited amount of time, and hope that it will ultimately form the basis of a set of MIT chart components, with a paid extension for more advanced and esoteric ones.
 
 This is the set of charts available at this moment:
 
@@ -21,9 +25,9 @@ This is the set of charts available at this moment:
 <LineChart {...chartProps}>
   <Grid disableX />
   <XAxis label="Year" />
-  <YAxis label="Size" suffix="cm" />
+  <YAxis label="Size" />
   <Line series={0} stroke="red" fill="pink" label="Line 1" />
-  <Line series={1} stroke="green" fill="linghtgreen" label="Line 2" />
+  <Line series={1} stroke="green" fill="linhtgreen" label="Line 2" />
   <Line series={2} stroke="blue" fill="lightblue" label="Line 3" />
   <Legend position="top" spacing={55} />
 </LineChart>
@@ -35,8 +39,6 @@ You can add/remove any part of the chart that you don't wish to use, and you wil
 ### Bar Charts
 
 {{"demo": "pages/components/charts/overview/MultiBarChart.js"}}
-
-{{"demo": "pages/components/charts/overview/BarChart.js"}}
 
 ### Scatter charts
 

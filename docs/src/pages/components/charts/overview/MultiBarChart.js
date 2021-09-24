@@ -40,17 +40,14 @@ export default function MultiLineChart() {
   return (
     <BarChart
       data={[lineData1, lineData2, lineData3]}
-      highlightMarkers
-      invertMarkers
       label="Growth"
       margin={{ top: 70, bottom: 60, left: 60 }}
-      markerSize={50}
       seriesLabels={['Blue', 'Green', 'Red']}
       xScaleType="time"
     >
       <Grid disableX />
       <XAxis label="Year" />
-      <YAxis label="Size" suffix="cm" disableLine disableTicks />
+      <YAxis label="Size" disableLine disableTicks />
       <Tooltip />
       <Bar series={0} fill="rgb(116,205,240)" />
       <Bar series={1} fill="rgb(150,219,124)" />
