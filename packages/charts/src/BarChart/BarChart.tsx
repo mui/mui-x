@@ -23,10 +23,6 @@ interface Margin {
 
 export interface BarChartProps<X = unknown, Y = unknown> {
   /**
-   * The area keys to use when stacking the data.
-   */
-  areaKeys?: string[];
-  /**
    * The content of the component.
    */
   children: React.ReactNode;
@@ -42,6 +38,10 @@ export interface BarChartProps<X = unknown, Y = unknown> {
    * The height of the chart.
    */
   height?: number;
+  /**
+   * The keys to use when stacking the data.
+   */
+  keys?: string[];
   /**
    * The label to display above the chart.
    */
@@ -110,7 +110,7 @@ const BarChart = React.forwardRef(function BarChart<X = unknown, Y = unknown>(
   ref: React.Ref<SVGSVGElement>,
 ) {
   const {
-    areaKeys,
+    keys,
     children,
     data: dataProp,
     fill = 'none',
@@ -134,8 +134,8 @@ const BarChart = React.forwardRef(function BarChart<X = unknown, Y = unknown>(
   let data = dataProp;
   const stackedData = useStackedArrays(dataProp);
   if (stacked) {
-    if (areaKeys) {
-      const stackGen = d3.stack().keys(areaKeys);
+    if (keys) {
+      const stackGen = d3.stack().keys(keys);
       data = stackGen(dataProp);
     } else {
       data = stackedData;
@@ -193,7 +193,7 @@ const BarChart = React.forwardRef(function BarChart<X = unknown, Y = unknown>(
   return (
     <ChartContext.Provider
       value={{
-        areaKeys,
+        keys,
         data,
         dimensions,
         seriesLabels,

@@ -15,14 +15,14 @@ const stackData = [
 export default function StackedBarChart() {
   return (
     <BarChart
-      areaKeys={['apples', 'bananas', 'oranges']}
+      keys={['apples', 'bananas', 'oranges']}
       data={stackData}
       stacked
       xScaleType="time"
       xKey="month"
       xDomain={[new Date(2021, 1, 1), new Date(2021, 4, 1)]}
       yDomain={[0, 60]}
-      margin={{ top: 60, bottom: 70 }}
+      margin={{ top: 60, bottom: 70, left: 60 }}
       label="Sales"
       padding={20}
     >

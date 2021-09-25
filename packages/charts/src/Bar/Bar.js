@@ -4,7 +4,7 @@ import ChartContext from '../ChartContext';
 
 const Bar = (props) => {
   const {
-    areaKeys,
+    keys,
     data = [],
     dimensions: { boundedWidth, boundedHeight },
     padding,
@@ -21,7 +21,6 @@ const Bar = (props) => {
   const chartData = dataProp || data[series] || data;
 
   const isMultiBar = series !== undefined && !stacked;
-
 
   let barWidth = Math.min(boundedWidth / data.length - padding / 2, 4 * padding);
 
@@ -63,7 +62,7 @@ const Bar = (props) => {
         }
         return result - (center - series) * barWidth - barWidth / 2;
       }
-    } else if (stacked && areaKeys) {
+    } else if (stacked && keys) {
       return xScale(d.data[xKey]) - barWidth / 2;
     }
 
@@ -71,7 +70,7 @@ const Bar = (props) => {
   };
 
   const getY = (d) => {
-    if (stacked && areaKeys) {
+    if (stacked && keys) {
       const height = yScale(d[1]) - yScale(d[0]);
       return boundedHeight - yScale(d[0]) - height;
     }
@@ -79,7 +78,7 @@ const Bar = (props) => {
   };
 
   const getHeight = (d) => {
-    if (stacked && areaKeys) {
+    if (stacked && keys) {
       return yScale(d[1]) - yScale(d[0]);
     }
     return yScale(d[yKey]);

@@ -34,7 +34,7 @@ type MarkerShape =
 
 export interface LineChartProps<X = unknown, Y = unknown> {
   /**
-   * The area keys to use when stacking the data.
+   * The keys to use when stacking the data.
    */
   areaKeys?: string[];
   /**
