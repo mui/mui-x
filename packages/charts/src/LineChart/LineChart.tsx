@@ -36,7 +36,7 @@ export interface LineChartProps<X = unknown, Y = unknown> {
   /**
    * The keys to use when stacking the data.
    */
-  areaKeys?: string[];
+  keys?: string[];
   /**
    * The content of the component.
    */
@@ -140,7 +140,7 @@ const LineChart = React.forwardRef(function LineChart<X = unknown, Y = unknown>(
   ref: React.Ref<SVGSVGElement>,
 ) {
   const {
-    areaKeys,
+    keys,
     children,
     data: dataProp,
     fill = 'none',
@@ -168,8 +168,8 @@ const LineChart = React.forwardRef(function LineChart<X = unknown, Y = unknown>(
   let data = dataProp;
   const stackedData = useStackedArrays(dataProp);
   if (stacked) {
-    if (areaKeys) {
-      const stackGen = d3.stack().keys(areaKeys);
+    if (keys) {
+      const stackGen = d3.stack().keys(keys);
       data = stackGen(dataProp);
     } else {
       data = stackedData;
@@ -236,13 +236,13 @@ const LineChart = React.forwardRef(function LineChart<X = unknown, Y = unknown>(
     });
   };
 
-  const id = useId(idProp);
+  const chartId = useId(idProp);
 
   return (
     <ChartContext.Provider
       value={{
-        areaKeys,
-        chartId: id,
+        keys,
+        chartId,
         data,
         dimensions,
         highlightMarkers,
@@ -267,13 +267,13 @@ const LineChart = React.forwardRef(function LineChart<X = unknown, Y = unknown>(
       <svg
         viewBox={`0 0 ${width} ${height}`}
         ref={handleRef}
-        id={id}
+        id={chartId}
         {...other}
         onMouseMove={handleMouseMove}
         onMouseOut={handleMouseOut}
       >
         <defs>
-          <clipPath id={`${id}-clipPath`}>
+          <clipPath id={`${chartId}-clipPath`}>
             <rect
               width={Math.max(width - marginLeft - marginRight, 0)}
               height={Math.max(height - marginTop - marginBottom, 0)}

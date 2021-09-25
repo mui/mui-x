@@ -10,7 +10,7 @@ function points(data, xKey) {
 
 const Line = (props) => {
   const {
-    areaKeys,
+    keys,
     chartId,
     data,
     dimensions: { boundedHeight },
@@ -51,7 +51,7 @@ const Line = (props) => {
     }));
   }, [fill, label, markerShape, series, setSeriesMeta, stroke]);
 
-  if (stacked && areaKeys) {
+  if (stacked && keys) {
     linePath = d3
       .line()
       .x((d) => xScale(d.data[xKey]))

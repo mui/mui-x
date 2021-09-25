@@ -8,7 +8,7 @@ import Grid from '@mui/charts/Grid';
 export default function StackedAreaChart() {
   return (
     <LineChart
-      areaKeys={['open', 'close']}
+      keys={['open', 'close']}
       data={stackData}
       smoothed
       stacked
