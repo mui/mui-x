@@ -29,9 +29,9 @@ export default function StackedBarChart() {
       <Grid disableX />
       <XAxis />
       <YAxis disableLine disableTicks label="USD (K)" />
-      <Bar series={2} label="MUI X Pro" fill="rgba(234,95,95,0.5)" />
-      <Bar series={1} label="Templates" fill="rgba(150,219,124,0.5)" />
-      <Bar series={0} label="Design kits" fill="rgba(116,205,240,0.5)" />
+      <Bar series={2} label="MUI X Pro" fill="rgba(234,95,95,0.8)" />
+      <Bar series={1} label="Templates" fill="rgba(150,219,124,0.8)" />
+      <Bar series={0} label="Design kits" fill="rgba(116,205,240,0.8)" />
       <Legend position="bottom" spacing={76} />
     </BarChart>
   );
