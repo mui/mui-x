@@ -6,21 +6,21 @@ import dts from 'rollup-plugin-dts';
 import command from 'rollup-plugin-command';
 import babel from '@rollup/plugin-babel';
 import copy from 'rollup-plugin-copy';
-import pkg from './charts/package.json';
+import pkg from './package.json';
 
 // dev build if watching, prod build if not
 const production = !process.env.ROLLUP_WATCH;
 export default [
   {
-    input: './charts/src/index.ts',
+    input: './src/index.ts',
     output: [
       {
-        file: './charts/build/index-esm.js',
+        file: './build/index-esm.js',
         format: 'esm',
         sourcemap: !production,
       },
       {
-        file: './charts/build/index-cjs.js',
+        file: './build/index-cjs.js',
         format: 'cjs',
         sourcemap: !production,
       },
@@ -29,7 +29,7 @@ export default [
     plugins: [
       production &&
         cleaner({
-          targets: ['./charts/build/'],
+          targets: ['./build/'],
         }),
       typescript({ tsconfig: 'tsconfig.build.json' }),
       babel({
@@ -49,8 +49,8 @@ export default [
     ],
   },
   {
-    input: './charts/build/charts/src/index.d.ts',
-    output: [{ file: './charts/build/charts.d.ts', format: 'es' }],
+    input: './build/src/index.d.ts',
+    output: [{ file: './build/charts.d.ts', format: 'es' }],
     plugins: [
       dts(),
       !production && sourceMaps(),
@@ -58,12 +58,12 @@ export default [
         copy({
           targets: [
             {
-              src: ['./charts/README.md', './charts/LICENSE', '../../CHANGELOG.md'],
-              dest: './charts/build',
+              src: ['./README.md', './LICENSE', '../../CHANGELOG.md'],
+              dest: './build',
             },
             {
-              src: './charts/package.json',
-              dest: './charts/build',
+              src: './package.json',
+              dest: './build',
               transform: () => {
                 const contents = { ...pkg };
                 contents.main = 'index-cjs.js';
@@ -73,13 +73,13 @@ export default [
               },
             },
             {
-              src: './charts/build/charts/src/themeAugmentation',
-              dest: './charts/build',
+              src: './build/src/themeAugmentation',
+              dest: './build',
             },
           ],
         }),
       production &&
-        command([`rm -rf ./charts/build/charts/`], {
+        command([`rm -rf ./build/`], {
           exitOnFail: true,
           wait: true,
         }),

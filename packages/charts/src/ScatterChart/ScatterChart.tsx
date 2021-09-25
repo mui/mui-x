@@ -1,7 +1,7 @@
 import React from 'react';
 import { useForkRef } from '@mui/material/utils';
-import useChartDimensions from '../hooks/useChartDimensions';
 import ChartContext from '../ChartContext';
+import useChartDimensions from '../hooks/useChartDimensions';
 import useTicks from '../hooks/useTicks';
 import useScale from '../hooks/useScale';
 import { getExtent, getMaxDataSetLength } from '../utils';

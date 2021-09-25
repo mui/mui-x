@@ -1,5 +1,5 @@
-import PropTypes from 'prop-types';
 import React, { useContext, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import ChartContext from '../ChartContext';
 
 const Bar = (props) => {

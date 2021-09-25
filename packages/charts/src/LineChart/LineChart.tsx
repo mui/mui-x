@@ -1,6 +1,6 @@
-import { unstable_useForkRef as useForkRef, unstable_useId as useId } from '@mui/utils';
-import * as d3 from 'd3';
 import * as React from 'react';
+import * as d3 from 'd3';
+import { unstable_useForkRef as useForkRef, unstable_useId as useId } from '@mui/utils';
 import ChartContext from '../ChartContext';
 import useChartDimensions from '../hooks/useChartDimensions';
 import useScale from '../hooks/useScale';

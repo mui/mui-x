@@ -1,12 +1,12 @@
-import * as d3 from 'd3';
-import PropTypes from 'prop-types';
 import React, { useContext } from 'react';
+import PropTypes from 'prop-types';
+import * as d3 from 'd3';
 import ChartContext from '../ChartContext';
 import { getSymbol } from '../utils';
 
 function Legend(props) {
   const {
-    dimensions: { boundedHeight, boundedWidth, width },
+    dimensions: { boundedHeight, boundedWidth },
     invertMarkers,
     seriesMeta,
   } = useContext(ChartContext);
