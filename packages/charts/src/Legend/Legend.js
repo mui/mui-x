@@ -6,7 +6,7 @@ import { getSymbol } from '../utils';
 
 function Legend(props) {
   const {
-    dimensions: { boundedHeight, boundedWidth },
+    dimensions: { boundedHeight, boundedWidth, width },
     invertMarkers,
     seriesMeta,
   } = useContext(ChartContext);
@@ -21,9 +21,9 @@ function Legend(props) {
 
   return (
     <g
-      transform={`translate(${
-        boundedWidth / 2 - ((Object.keys(seriesMeta).length - 1) * spacing) / 2
-      }, ${position === 'top' ? 0 : boundedHeight + 68})`}
+      transform={`translate(${boundedWidth / 2 - (Object.keys(seriesMeta).length * spacing) / 2}, ${
+        position === 'top' ? 0 : boundedHeight + 68
+      })`}
       style={{ pointerEvents: 'none' }}
     >
       {seriesMeta &&
@@ -46,13 +46,13 @@ function Legend(props) {
                 d={d3.symbol(d3.symbols[getSymbol(markerShape, series)], markerSize)()}
                 fill={invertMarkers ? stroke : fill}
                 stroke={invertMarkers ? fill : stroke}
-                transform={`translate(${series * spacing - spacing / 2}, -4)`}
+                transform={`translate(${series * spacing - markerSize / 5}, -4)`}
               />
               <text
                 fill={labelColor}
                 transform={`translate(${series * spacing}, 0)`}
                 fontSize={labelFontSize}
-                textAnchor="middle"
+                // textAnchor="middle"
               >
                 {label}
               </text>
