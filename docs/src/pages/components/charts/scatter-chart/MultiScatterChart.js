@@ -39,8 +39,16 @@ export default function BasicScatterChart() {
         zeroStroke="rgba(200,200,200,0.5)"
         zeroStrokeDasharray="0"
       />
-      <Scatter series={0} stroke="rgba(255, 100, 0)" fill="rgba(255, 100, 0, 0.5)" />
-      <Scatter series={1} stroke="rgba(0, 100, 255)" fill="rgba(0, 100, 255, 0.5)" />
+      <Scatter
+        series={0}
+        stroke="rgba(255, 100, 0, 0.7)"
+        fill="rgba(255, 100, 0, 0.5)"
+      />
+      <Scatter
+        series={1}
+        stroke="rgba(0, 100, 255, 0.7)"
+        fill="rgba(0, 100, 255, 0.5)"
+      />
       <XAxis suffix="cm" disableTicks />
       <YAxis suffix="kg" disableTicks />
     </ScatterChart>
