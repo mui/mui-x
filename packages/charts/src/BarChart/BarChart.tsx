@@ -31,7 +31,7 @@ export interface BarChartProps<X = unknown, Y = unknown> {
    */
   data: ChartData<X, Y>[] | ChartData<X, Y>[][];
   /**
-   * The fill color to use for the area.
+   * The fill color to use for the bar.
    */
   fill?: string;
   /**
@@ -155,7 +155,7 @@ const BarChart = React.forwardRef(function BarChart<X = unknown, Y = unknown>(
   const { width, height, boundedWidth, boundedHeight, marginLeft, marginTop } = dimensions;
   const xDomain = getExtent(data, (d) => d[xKey], xDomainProp);
   const yDomain = getExtent(data, (d) => d[yKey], yDomainProp);
-  const xRange = [padding * 2, boundedWidth - 2 * padding];
+  const xRange = [padding * 4, boundedWidth - 4 * padding];
   const yRange = [0, boundedHeight];
   const maxXTicks = getMaxDataSetLength(data) - 1;
   const xScale = useScale(xScaleType, xDomain, xRange);
