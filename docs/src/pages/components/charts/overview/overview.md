@@ -44,4 +44,8 @@ You can add/remove any part of the chart that you don't wish to use, and you wil
 
 {{"demo": "pages/components/charts/overview/ScatterChart.js"}}
 
+### [Scatter chart](/components/charts/scatter-chart/)
+
+{{"demo": "pages/components/charts/overview/PieChart.js"}}
+
 For more details and demos, take a look at each chart's dedicated page.
