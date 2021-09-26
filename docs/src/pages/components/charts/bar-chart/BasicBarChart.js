@@ -38,7 +38,7 @@ export default function BasicBarChart() {
       xScaleType="linear"
       xDomain={[0, 23]}
       label="Commits to the MUI repo per hour of day"
-      pixelsPerTick={30}
+      tickSpacing={30}
       padding={5}
       margin={{ top: 60 }}
     >

@@ -94,7 +94,7 @@ export interface LineChartProps<X = unknown, Y = unknown> {
   /**
    * The maximum number of pixels per tick.
    */
-  pixelsPerTick?: number;
+  tickSpacing?: number;
   /**
    * If `true`, the plotted lines will be smoothed.
    */
@@ -153,7 +153,7 @@ const LineChart = React.forwardRef(function LineChart<X = unknown, Y = unknown>(
     margin: marginProp,
     markerShape = 'circle',
     markerSize = 30,
-    pixelsPerTick = 50,
+    tickSpacing = 50,
     smoothed = false,
     stacked = false,
     xDomain: xDomainProp,
@@ -177,15 +177,18 @@ const LineChart = React.forwardRef(function LineChart<X = unknown, Y = unknown>(
   }
 
   const margin = { top: 40, bottom: 40, left: 50, right: 30, ...marginProp };
+
   const chartSettings = {
     marginTop: margin.top,
     marginRight: margin.right,
     marginBottom: margin.bottom,
     marginLeft: margin.left,
   };
+
   const [chartRef, dimensions] = useChartDimensions(chartSettings);
   const handleRef = useForkRef(chartRef, ref);
   const [seriesMeta, setSeriesMeta] = React.useState([]);
+
   const {
     width,
     height,
@@ -196,9 +199,9 @@ const LineChart = React.forwardRef(function LineChart<X = unknown, Y = unknown>(
     marginTop,
     marginBottom,
   } = dimensions;
+
   const xDomain = getExtent(data, (d) => d[xKey], xDomainProp);
   const yDomain = getExtent(data, (d) => d[yKey], yDomainProp);
-
   const xRange = [0, boundedWidth];
   const yRange = [0, boundedHeight];
   const maxXTicks = getMaxDataSetLength(data) - 1;
@@ -207,13 +210,13 @@ const LineChart = React.forwardRef(function LineChart<X = unknown, Y = unknown>(
 
   const xTicks = useTicks({
     scale: xScale,
-    pixelsPerTick,
+    tickSpacing,
     maxTicks: maxXTicks,
   });
 
   const yTicks = useTicks({
     scale: yScale,
-    pixelsPerTick,
+    tickSpacing,
     maxTicks: 999,
   });
 

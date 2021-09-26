@@ -81,7 +81,7 @@ export interface ScatterChartProps<X = unknown, Y = unknown> {
   /**
    * The maximum number of pixels per tick.
    */
-  pixelsPerTick?: number;
+  tickSpacing?: number;
   /**
    * Override the calculated domain of the x axis.
    */
@@ -135,7 +135,7 @@ const ScatterChart = React.forwardRef(function ScatterChart<X = unknown, Y = unk
     labelFontSize = 18,
     margin: marginProp,
     markerShape = 'circle',
-    pixelsPerTick = 50,
+    tickSpacing = 50,
     xDomain: xDomainProp,
     xKey = 'x',
     xScaleType = 'linear',
@@ -168,12 +168,12 @@ const ScatterChart = React.forwardRef(function ScatterChart<X = unknown, Y = unk
   const yScale = useScale(yScaleType, yDomain, yRange);
   const xTicks = useTicks({
     maxTicks: maxXTicks,
-    pixelsPerTick,
+    tickSpacing,
     scale: xScale,
   });
   const yTicks = useTicks({
     scale: yScale,
-    pixelsPerTick,
+    tickSpacing,
     maxTicks: 999,
   });
 

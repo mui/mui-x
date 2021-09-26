@@ -62,7 +62,7 @@ export interface BarChartProps<X = unknown, Y = unknown> {
   /**
    * The maximum number of pixels per tick.
    */
-  pixelsPerTick?: number;
+  tickSpacing?: number;
   /**
    * The series labels. Used in the tooltip.
    */
@@ -118,7 +118,7 @@ const BarChart = React.forwardRef(function BarChart<X = unknown, Y = unknown>(
     labelColor = '#777',
     labelFontSize = 18,
     margin: marginProp,
-    pixelsPerTick = 40,
+    tickSpacing = 40,
     seriesLabels = [],
     stacked = false,
     xDomain: xDomainProp,
@@ -162,12 +162,12 @@ const BarChart = React.forwardRef(function BarChart<X = unknown, Y = unknown>(
   const yScale = useScale(yScaleType, yDomain, yRange);
   const xTicks = useTicks({
     scale: xScale,
-    pixelsPerTick,
+    tickSpacing,
     maxTicks: maxXTicks,
   });
   const yTicks = useTicks({
     scale: yScale,
-    pixelsPerTick,
+    tickSpacing,
     maxTicks: 999,
   });
 

@@ -2,9 +2,9 @@
 title: Pie chart
 ---
 
-# Scatter chart
+# Pie chart
 
-<p class="description">Scatter your stuff.</p>
+<p class="description">Grab a slice!</p>
 
 ## Basic pie chart
 

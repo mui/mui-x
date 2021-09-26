@@ -72,7 +72,7 @@ export default function ZoomableLineChart() {
           xDomain={domainDate}
           label="New COVID cases per day in England"
           margin={{ top: 60 }}
-          pixelsPerTick={75}
+          tickSpacing={75}
         >
           <Grid />
           <XAxis />

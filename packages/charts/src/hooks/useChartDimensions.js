@@ -23,9 +23,9 @@ const combineChartDimensions = (dimensions) => {
   };
 };
 
-const useChartDimensions = (passedSettings) => {
+const useChartDimensions = (settings) => {
   const ref = useRef();
-  const dimensions = combineChartDimensions(passedSettings);
+  const dimensions = combineChartDimensions(settings);
 
   const [width, setWidth] = useState(0);
   const [height, setHeight] = useState(0);
