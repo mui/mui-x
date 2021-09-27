@@ -16,6 +16,7 @@ import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { GridComponentProps } from '../../GridComponentProps';
 import { useGridApiEventHandler } from '../../hooks/root/useGridApiEventHandler';
 import { GridEvents } from '../../constants/eventsConstants';
+import { GridColumnHeaderParams } from '../../models/params/gridColumnHeaderParams';
 
 export const gridScrollbarStateSelector = (state: GridState) => state.scrollBar;
 
@@ -65,15 +66,15 @@ export const GridColumnsHeader = React.forwardRef<HTMLDivElement, {}>(function G
   );
   const handleColumnResizeStop = React.useCallback(() => setResizeCol(''), []);
   const handleColumnReorderStart = React.useCallback(
-    (params: { field: string }) => setDragCol(params.field),
+    (params: GridColumnHeaderParams) => setDragCol(params.field),
     [],
   );
   const handleColumnReorderStop = React.useCallback(() => setDragCol(''), []);
 
   useGridApiEventHandler(apiRef, GridEvents.columnResizeStart, handleColumnResizeStart);
   useGridApiEventHandler(apiRef, GridEvents.columnResizeStop, handleColumnResizeStop);
-  useGridApiEventHandler(apiRef, GridEvents.columnReorderStart, handleColumnReorderStart);
-  useGridApiEventHandler(apiRef, GridEvents.columnReorderStop, handleColumnReorderStop);
+  useGridApiEventHandler(apiRef, GridEvents.columnHeaderDragStart, handleColumnReorderStart);
+  useGridApiEventHandler(apiRef, GridEvents.columnHeaderDragEnd, handleColumnReorderStop);
 
   return (
     <React.Fragment>
