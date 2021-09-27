@@ -2,7 +2,10 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import Select, { SelectProps } from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
-import { GridRenderEditCellParams } from '../../models/params/gridCellParams';
+import {
+  GridRenderEditCellParams,
+  GridValueFormatterParams,
+} from '../../models/params/gridCellParams';
 import { isEscapeKey } from '../../utils/keyboardUtils';
 import { useEnhancedEffect } from '../../utils/material-ui-utils';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
@@ -40,6 +43,21 @@ function GridEditSingleSelectCell(props: GridRenderEditCellParams & SelectProps)
   const ref = React.useRef<any>();
   const rootProps = useGridRootProps();
   const [open, setOpen] = React.useState(rootProps.editMode === 'cell');
+  let valueOptionsFormatted = colDef.valueOptions;
+
+  if (colDef.valueFormatter) {
+    valueOptionsFormatted = colDef.valueOptions.map((option) => {
+      if (typeof option === 'object') {
+        return option;
+      }
+
+      const params: GridValueFormatterParams = { field, api, value: option };
+      return {
+        value: option,
+        label: String(colDef.valueFormatter(params)),
+      };
+    });
+  }
 
   const handleChange = (event) => {
     setOpen(false);
@@ -85,7 +103,7 @@ function GridEditSingleSelectCell(props: GridRenderEditCellParams & SelectProps)
       fullWidth
       {...other}
     >
-      {colDef.valueOptions?.map(renderSingleSelectOptions)}
+      {valueOptionsFormatted.map(renderSingleSelectOptions)}
     </Select>
   );
 }

@@ -281,22 +281,10 @@ export enum GridEvents {
    */
   columnOrderChange = 'columnOrderChange',
   /**
-   * Fired when some of the rows are updated.
-   * @ignore - do not document.
-   */
-  rowsUpdate = 'rowsUpdate',
-  /**
    * Fired when all the rows are updated.
    * @ignore - do not document.
    */
   rowsSet = 'rowsSet',
-  /**
-   * Implementation detail.
-   * Fired to reset the sortedRow when the set of rows changes.
-   * It's important as the rendered rows are coming from the sortedRow
-   * @ignore - do not document.
-   */
-  rowsClear = 'rowsClear',
   /**
    * Fired when the columns state is changed.
    * Called with an array of strings corresponding to the field names.

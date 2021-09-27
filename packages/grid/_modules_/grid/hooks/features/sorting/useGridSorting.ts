@@ -279,12 +279,6 @@ export const useGridSorting = (
     [sortColumn],
   );
 
-  const onRowsCleared = React.useCallback(() => {
-    setGridState((state) => {
-      return { ...state, sorting: { ...state.sorting, sortedRows: [] } };
-    });
-  }, [setGridState]);
-
   const onColUpdated = React.useCallback(() => {
     // When the columns change we check that the sorted columns are still part of the dataset
     setGridState((state) => {
@@ -308,7 +302,5 @@ export const useGridSorting = (
   useGridApiEventHandler(apiRef, GridEvents.columnHeaderClick, handleColumnHeaderClick);
   useGridApiEventHandler(apiRef, GridEvents.columnHeaderKeyDown, handleColumnHeaderKeyDown);
   useGridApiEventHandler(apiRef, GridEvents.rowsSet, apiRef.current.applySorting);
-  useGridApiEventHandler(apiRef, GridEvents.rowsClear, onRowsCleared);
-  useGridApiEventHandler(apiRef, GridEvents.rowsUpdate, apiRef.current.applySorting);
   useGridApiEventHandler(apiRef, GridEvents.columnsChange, onColUpdated);
 };

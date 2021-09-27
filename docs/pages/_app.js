@@ -44,7 +44,7 @@ import createEmotionCache from 'docs/src/createEmotionCache';
 
 function getMuiPackageVersion(packageName, commitRef) {
   if (commitRef === undefined) {
-    return 'latest';
+    return 'next';
   }
   const shortSha = commitRef.slice(0, 8);
   return `https://pkg.csb.dev/mui-org/material-ui-x/commit/${shortSha}/@mui/${packageName}`;

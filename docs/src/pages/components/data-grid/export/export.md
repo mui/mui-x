@@ -54,7 +54,7 @@ You can provide a [`valueFormatter`](/components/data-grid/columns/#value-format
 
 ### apiRef [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-pro/)
 
-You can export data using the imperative API available in XGrid:
+You can export data using the imperative API available in DataGridPro:
 
 {{"demo": "pages/components/data-grid/export/CsvExportApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
 

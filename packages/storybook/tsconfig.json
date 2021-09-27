@@ -1,7 +1,7 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "outDir": "dist/",
+    "outDir": "build/",
     "rootDirs": ["src"],
     "types": ["node", "requestidlecallback"],
     "sourceMap": true
