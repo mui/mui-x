@@ -87,6 +87,8 @@ GridColumnHeadersItemCollection.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   columns: PropTypes.arrayOf(PropTypes.object).isRequired,
+  dragCol: PropTypes.string.isRequired,
+  resizeCol: PropTypes.string.isRequired,
 } as any;
 
 export { GridColumnHeadersItemCollection };

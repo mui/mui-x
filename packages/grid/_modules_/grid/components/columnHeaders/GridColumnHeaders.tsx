@@ -14,8 +14,8 @@ import { getDataGridUtilityClass } from '../../gridClasses';
 import { composeClasses } from '../../utils/material-ui-utils';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { GridComponentProps } from '../../GridComponentProps';
-import {useGridApiEventHandler} from "../../hooks/root/useGridApiEventHandler";
-import {GridEvents} from "../../constants/eventsConstants";
+import { useGridApiEventHandler } from '../../hooks/root/useGridApiEventHandler';
+import { GridEvents } from '../../constants/eventsConstants';
 
 export const gridScrollbarStateSelector = (state: GridState) => state.scrollBar;
 
@@ -60,13 +60,13 @@ export const GridColumnsHeader = React.forwardRef<HTMLDivElement, {}>(function G
   }, [columns, renderCtx]);
 
   const handleColumnResizeStart = React.useCallback(
-      (params: { field: string }) => setResizeCol(params.field),
-      [],
+    (params: { field: string }) => setResizeCol(params.field),
+    [],
   );
   const handleColumnResizeStop = React.useCallback(() => setResizeCol(''), []);
   const handleColumnReorderStart = React.useCallback(
-      (params: { field: string }) => setDragCol(params.field),
-      [],
+    (params: { field: string }) => setDragCol(params.field),
+    [],
   );
   const handleColumnReorderStop = React.useCallback(() => setDragCol(''), []);
 
@@ -87,9 +87,9 @@ export const GridColumnsHeader = React.forwardRef<HTMLDivElement, {}>(function G
       >
         <GridEmptyCell width={renderCtx?.leftEmptyWidth} height={headerHeight} />
         <GridColumnHeadersItemCollection
-            columns={renderedCols}
-            dragCol={dragCol}
-            resizeCol={resizeCol}
+          columns={renderedCols}
+          dragCol={dragCol}
+          resizeCol={resizeCol}
         />
         <GridEmptyCell width={renderCtx?.rightEmptyWidth} height={headerHeight} />
       </div>
