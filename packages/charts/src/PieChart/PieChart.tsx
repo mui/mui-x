@@ -41,7 +41,7 @@ export interface PieChartProps {
 const PieChart = React.forwardRef<SVGSVGElement, PieChartProps>(function PieChart(props, ref) {
   const { data, innerRadius = 0, margin: marginProp, radius: radiusProp, ...other } = props;
 
-  const margin = { top: 50, bottom: 50, left: 50, right: 50, ...marginProp };
+  const margin = { top: 10, bottom: 10, left: 10, right: 10, ...marginProp };
   const chartSettings = {
     marginTop: margin.top,
     marginBottom: margin.bottom,

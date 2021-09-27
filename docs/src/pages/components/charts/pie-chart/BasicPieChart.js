@@ -7,7 +7,6 @@ function generateData() {
   return d3.range(numSegments).map((i) => ({
     value: Math.abs(d3.randomNormal()()),
     fill: d3.schemePaired[i],
-    id: i,
     label: i,
   }));
 }
@@ -15,5 +14,9 @@ function generateData() {
 export default function BasicPieChart() {
   const data = generateData();
 
-  return <PieChart data={data} />;
+  return (
+    <div style={{ width: '100%', height: 300 }}>
+      <PieChart data={data} />
+    </div>
+  );
 }

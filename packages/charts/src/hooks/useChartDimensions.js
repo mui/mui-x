@@ -35,7 +35,7 @@ const useChartDimensions = (settings) => {
       return [ref, dimensions];
     }
 
-    const element = ref.current;
+    const element = ref.current.parentElement;
     const resizeObserver = new ResizeObserver((entries) => {
       if (Array.isArray(entries) && entries.length) {
         const entry = entries[0];
