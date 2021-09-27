@@ -5,7 +5,7 @@ import { getGridLocalization, Localization } from '../utils/getGridLocalization'
 export const plPLGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Brak danych',
-  // noResultsOverlayLabel: 'No results found.',
+  noResultsOverlayLabel: 'Nie znaleziono wyników.',
   errorOverlayDefaultLabel: 'Wystąpił błąd.',
 
   // Density selector toolbar button text
@@ -59,8 +59,8 @@ export const plPLGrid: Partial<GridLocaleText> = {
   filterOperatorOnOrAfter: 'większe lub równe',
   filterOperatorBefore: 'mniejsze niż',
   filterOperatorOnOrBefore: 'mniejsze lub równe',
-  // filterOperatorIsEmpty: 'is empty',
-  // filterOperatorIsNotEmpty: 'is not empty',
+  filterOperatorIsEmpty: 'jest pusty',
+  filterOperatorIsNotEmpty: 'nie jest pusty',
 
   // Column menu text
   columnMenuLabel: 'Menu',
@@ -83,11 +83,11 @@ export const plPLGrid: Partial<GridLocaleText> = {
   footerTotalRows: 'Łączna liczba wierszy:',
 
   // Total visible rows footer text
-  // footerTotalVisibleRows: (visibleCount, totalCount) =>
-  //   `${visibleCount.toLocaleString()} of ${totalCount.toLocaleString()}`,
+  footerTotalVisibleRows: (visibleCount, totalCount) =>
+    `${visibleCount.toLocaleString()} z ${totalCount.toLocaleString()}`,
 
   // Actions cell more text
-  // actionsCellMore: 'more',
+  actionsCellMore: 'więcej',
 };
 
 export const plPL: Localization = getGridLocalization(plPLGrid, plPLCore);

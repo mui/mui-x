@@ -1,6 +1,6 @@
 # DataGridPro API
 
-<p class="description">The API documentation of the DataGridPro React component. Learn more about the props, slots and CSS customization points.</p>
+<p class="description">The API documentation of the DataGridPro React component (formerly XGrid). Learn more about the props, slots and CSS customization points.</p>
 
 ## Import
 
@@ -10,7 +10,7 @@ import { DataGridPro } from '@mui/x-data-grid-pro';
 
 ## Component name
 
-The name <code>MuiDataGridPro</code> can be used when providing [default props](/customization/globals/#default-props) or [style overrides](/customization/globals/#css) in the theme.
+The name <code>MuiDataGrid</code> can be used when providing [default props](/customization/theme-components/#default-props) or [style overrides](/customization/theme-components/#global-style-overrides) in the theme.
 
 ## Props
 

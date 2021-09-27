@@ -705,4 +705,10 @@ DataGridProRaw.propTypes = {
    * @ignore
    */
   style: PropTypes.object,
+  /**
+   * If positive, the Grid will throttle updates coming from `apiRef.current.updateRows` and `apiRef.current.setRows`.
+   * It can be useful if you have a high update rate but do not want to do heavy work like filtering / sorting or rendering on each  individual update.
+   * @default 0
+   */
+  throttleRowsMs: PropTypes.number,
 } as any;

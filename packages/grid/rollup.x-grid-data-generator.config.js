@@ -56,6 +56,7 @@ export default [
                 './x-grid-data-generator/package.json',
                 './x-grid-data-generator/README.md',
                 './x-grid-data-generator/LICENSE',
+                './x-grid-data-generator/bin',
                 '../../CHANGELOG.md',
               ],
               dest: './x-grid-data-generator/build',
