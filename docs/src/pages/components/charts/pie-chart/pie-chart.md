@@ -12,9 +12,13 @@ title: Pie chart
 
 ## Donut chart
 
+Use the `innerRadius` prop to create a donut / dial.
+
 {{"demo": "pages/components/charts/pie-chart/DonutChart.js"}}
 
 ## Expanding pie chart
+
+Hover over a segment to expand it with the `expandOnHover` prop.
 
 {{"demo": "pages/components/charts/pie-chart/ExpandingPieChart.js"}}
 

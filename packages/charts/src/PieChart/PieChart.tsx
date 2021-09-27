@@ -33,7 +33,6 @@ export interface PieChartProps {
   innerRadius?: number;
   /**
    * The margin to use around the chart.
-   * Labels and fall within these margins.
    */
   margin?: Margin;
   /**
@@ -41,7 +40,7 @@ export interface PieChartProps {
    */
   radius?: number;
   /**
-   * The angle from which to start rendering the first slice.
+   * The angle in degrees from which to start rendering the first slice.
    */
   startAngle?: number;
 }
@@ -72,15 +71,15 @@ const PieChart = React.forwardRef<SVGSVGElement, PieChartProps>(function PieChar
 
   const pie = d3
     .pie()
-    .startAngle(startAngle)
-    .endAngle(startAngle + percentVisible * Math.PI * 2)
+    .startAngle((startAngle * Math.PI) / 180) // Degrees to radians
+    .endAngle(startAngle + ((((360 - startAngle) * Math.PI) / 180) * percentVisible) / 100)
     .value((d) => d.value);
 
   // From: https://codesandbox.io/s/drilldown-piechart-in-react-and-d3-d62y5
   useEffect(() => {
     d3.selection()
       .transition('pie-reveal')
-      .duration(3000)
+      .duration(500)
       .ease(d3.easeSinInOut)
       .tween('percentVisible', () => {
         const percentInterpolate = d3.interpolate(0, 100);
