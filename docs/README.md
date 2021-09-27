@@ -1,4 +1,4 @@
-# MUI docs
+# MUI X docs
 
 This is the documentation website of MUI X.
 
