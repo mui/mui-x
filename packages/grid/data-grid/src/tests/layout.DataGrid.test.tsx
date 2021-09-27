@@ -188,9 +188,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
           // Use timeout to allow simpler tests in JSDOM.
           clock.tick(0);
           // @ts-expect-error need to migrate helpers to TypeScript
-        }).toWarnDev(
-          'MUI: useResizeContainer - The parent of the grid has an empty height.',
-        );
+        }).toWarnDev('MUI: useResizeContainer - The parent of the grid has an empty height.');
       });
 
       it('should warn if the container has no intrinsic width', () => {
@@ -205,9 +203,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
           // Use timeout to allow simpler tests in JSDOM.
           clock.tick(0);
           // @ts-expect-error need to migrate helpers to TypeScript
-        }).toWarnDev(
-          'MUI: useResizeContainer - The parent of the grid has an empty width.',
-        );
+        }).toWarnDev('MUI: useResizeContainer - The parent of the grid has an empty width.');
       });
 
       it('should warn when GridCellParams.valueGetter is called with a missing column', () => {

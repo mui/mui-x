@@ -353,9 +353,7 @@ describe('<DataGrid /> - Pagination', () => {
       expect(() => {
         render(<BaselineTestCase rowsPerPageOptions={[25, 50]} />);
         // @ts-expect-error need to migrate helpers to TypeScript
-      }).toWarnDev([
-        `MUI: The page size \`100\` is not preset in the \`rowsPerPageOptions\``,
-      ]);
+      }).toWarnDev([`MUI: The page size \`100\` is not preset in the \`rowsPerPageOptions\``]);
     });
   });
 

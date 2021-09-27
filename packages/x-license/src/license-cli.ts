@@ -29,9 +29,7 @@ export function licenseGenCli() {
       },
       handler: (argv: HandlerArgv) => {
         if (!argv.order) {
-          throw new Error(
-            'MUI: You forgot to pass an order number. $ > licensegen -o order_123.',
-          );
+          throw new Error('MUI: You forgot to pass an order number. $ > licensegen -o order_123.');
         }
 
         const licenseDetails = {
