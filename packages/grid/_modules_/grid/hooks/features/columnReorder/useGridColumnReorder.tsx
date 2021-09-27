@@ -13,7 +13,6 @@ import { gridColumnReorderDragColSelector } from './columnReorderSelector';
 import { GridComponentProps } from '../../../GridComponentProps';
 import { useGridStateInit } from '../../utils/useGridStateInit';
 import { composeClasses } from '../../../utils/material-ui-utils';
-import { GridSlotsComponentsProps } from '../../../models';
 
 const CURSOR_MOVE_DIRECTION_LEFT = 'left';
 const CURSOR_MOVE_DIRECTION_RIGHT = 'right';
@@ -51,8 +50,8 @@ const useUtilityClasses = (ownerState: OwnerState) => {
  */
 export const useGridColumnReorder = (
   apiRef: GridApiRef,
-  props: GridComponentProps,
-): GridComponentProps => {
+  props: Pick<GridComponentProps, 'disableColumnReorder' | 'classes'>,
+) => {
   const logger = useGridLogger(apiRef, 'useGridColumnReorder');
 
   useGridStateInit(apiRef, (state) => ({
@@ -88,6 +87,8 @@ export const useGridColumnReorder = (
 
       dragColNode.current = event.currentTarget;
       dragColNode.current.classList.add(classes.columnHeaderDragging);
+
+      apiRef.current.publishEvent(GridEvents.columnReorderStart, { field: params.field });
 
       setGridState((state) => ({
         ...state,
@@ -171,6 +172,8 @@ export const useGridColumnReorder = (
       clearTimeout(removeDnDStylesTimeout.current);
       dragColNode.current = null;
 
+      apiRef.current.publishEvent(GridEvents.columnReorderStop, { field: params.field });
+
       // Check if the column was dropped outside the grid.
       if (event.dataTransfer.dropEffect === 'none') {
         apiRef.current.setColumnIndex(params.field, originColumnIndex.current!);
@@ -193,23 +196,4 @@ export const useGridColumnReorder = (
   useGridApiEventHandler(apiRef, GridEvents.cellDragEnter, handleDragEnter);
   useGridApiEventHandler(apiRef, GridEvents.cellDragOver, handleDragOver);
   useGridApiEventHandler(apiRef, GridEvents.cellDragEnd, handleDragEnd);
-
-  const componentsProps = React.useMemo<GridSlotsComponentsProps>(
-    () => ({
-      ...props.componentsProps,
-      columnsHeader: {
-        ...props.componentsProps?.columnsHeader,
-        dragCol: dragColField,
-      },
-    }),
-    [props.componentsProps, dragColField],
-  );
-
-  return React.useMemo(
-    () => ({
-      ...props,
-      componentsProps,
-    }),
-    [props, componentsProps],
-  );
 };

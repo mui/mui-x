@@ -19,8 +19,8 @@ import { gridScrollBarSizeSelector } from '../../hooks/root/gridContainerSizesSe
 
 export interface GridColumnHeadersItemCollectionProps {
   columns: GridStateColDef[];
-  dragCol?: string;
-  resizeCol?: string;
+  dragCol: string;
+  resizeCol: string;
 }
 
 function GridColumnHeadersItemCollection(props: GridColumnHeadersItemCollectionProps) {
@@ -87,8 +87,8 @@ GridColumnHeadersItemCollection.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   columns: PropTypes.arrayOf(PropTypes.object).isRequired,
-  dragCol: PropTypes.string,
-  resizeCol: PropTypes.string,
+  dragCol: PropTypes.string.isRequired,
+  resizeCol: PropTypes.string.isRequired,
 } as any;
 
 export { GridColumnHeadersItemCollection };

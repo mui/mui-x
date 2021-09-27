@@ -14,6 +14,8 @@ import { getDataGridUtilityClass } from '../../gridClasses';
 import { composeClasses } from '../../utils/material-ui-utils';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { GridComponentProps } from '../../GridComponentProps';
+import { useGridApiEventHandler } from '../../hooks/root/useGridApiEventHandler';
+import { GridEvents } from '../../constants/eventsConstants';
 
 export const gridScrollbarStateSelector = (state: GridState) => state.scrollBar;
 
@@ -32,51 +34,66 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-export interface GridColumnsHeaderProps {
-  dragCol?: string;
-  resizeCol?: string;
-}
+export const GridColumnsHeader = React.forwardRef<HTMLDivElement, {}>(function GridColumnsHeader(
+  props,
+  ref,
+) {
+  const [dragCol, setDragCol] = React.useState('');
+  const [resizeCol, setResizeCol] = React.useState('');
 
-export const GridColumnsHeader = React.forwardRef<HTMLDivElement, GridColumnsHeaderProps>(
-  function GridColumnsHeader(props, ref) {
-    const apiRef = useGridApiContext();
-    const columns = useGridSelector(apiRef, visibleGridColumnsSelector);
-    const containerSizes = useGridSelector(apiRef, gridContainerSizesSelector);
-    const headerHeight = useGridSelector(apiRef, gridDensityHeaderHeightSelector);
-    const renderCtx = useGridSelector(apiRef, gridRenderingSelector).renderContext;
-    const { hasScrollX } = useGridSelector(apiRef, gridScrollbarStateSelector);
-    const rootProps = useGridRootProps();
+  const apiRef = useGridApiContext();
+  const columns = useGridSelector(apiRef, visibleGridColumnsSelector);
+  const containerSizes = useGridSelector(apiRef, gridContainerSizesSelector);
+  const headerHeight = useGridSelector(apiRef, gridDensityHeaderHeightSelector);
+  const renderCtx = useGridSelector(apiRef, gridRenderingSelector).renderContext;
+  const { hasScrollX } = useGridSelector(apiRef, gridScrollbarStateSelector);
+  const rootProps = useGridRootProps();
 
-    const ownerState = { ...props, classes: rootProps.classes };
-    const classes = useUtilityClasses(ownerState);
+  const ownerState = { ...props, classes: rootProps.classes };
+  const classes = useUtilityClasses(ownerState);
 
-    const renderedCols = React.useMemo(() => {
-      if (renderCtx == null) {
-        return [];
-      }
-      return columns.slice(renderCtx.firstColIdx, renderCtx.lastColIdx! + 1);
-    }, [columns, renderCtx]);
+  const renderedCols = React.useMemo(() => {
+    if (renderCtx == null) {
+      return [];
+    }
+    return columns.slice(renderCtx.firstColIdx, renderCtx.lastColIdx! + 1);
+  }, [columns, renderCtx]);
 
-    return (
-      <React.Fragment>
-        <GridScrollArea scrollDirection="left" />
-        <div
-          ref={ref}
-          className={clsx(classes.wrapper, hasScrollX && 'scroll')}
-          aria-rowindex={1}
-          role="row"
-          style={{ minWidth: containerSizes?.totalSizes?.width }}
-        >
-          <GridEmptyCell width={renderCtx?.leftEmptyWidth} height={headerHeight} />
-          <GridColumnHeadersItemCollection
-            columns={renderedCols}
-            dragCol={props.dragCol}
-            resizeCol={props.resizeCol}
-          />
-          <GridEmptyCell width={renderCtx?.rightEmptyWidth} height={headerHeight} />
-        </div>
-        <GridScrollArea scrollDirection="right" />
-      </React.Fragment>
-    );
-  },
-);
+  const handleColumnResizeStart = React.useCallback(
+    (params: { field: string }) => setResizeCol(params.field),
+    [],
+  );
+  const handleColumnResizeStop = React.useCallback(() => setResizeCol(''), []);
+  const handleColumnReorderStart = React.useCallback(
+    (params: { field: string }) => setDragCol(params.field),
+    [],
+  );
+  const handleColumnReorderStop = React.useCallback(() => setDragCol(''), []);
+
+  useGridApiEventHandler(apiRef, GridEvents.columnResizeStart, handleColumnResizeStart);
+  useGridApiEventHandler(apiRef, GridEvents.columnResizeStop, handleColumnResizeStop);
+  useGridApiEventHandler(apiRef, GridEvents.columnReorderStart, handleColumnReorderStart);
+  useGridApiEventHandler(apiRef, GridEvents.columnReorderStop, handleColumnReorderStop);
+
+  return (
+    <React.Fragment>
+      <GridScrollArea scrollDirection="left" />
+      <div
+        ref={ref}
+        className={clsx(classes.wrapper, hasScrollX && 'scroll')}
+        aria-rowindex={1}
+        role="row"
+        style={{ minWidth: containerSizes?.totalSizes?.width }}
+      >
+        <GridEmptyCell width={renderCtx?.leftEmptyWidth} height={headerHeight} />
+        <GridColumnHeadersItemCollection
+          columns={renderedCols}
+          dragCol={dragCol}
+          resizeCol={resizeCol}
+        />
+        <GridEmptyCell width={renderCtx?.rightEmptyWidth} height={headerHeight} />
+      </div>
+      <GridScrollArea scrollDirection="right" />
+    </React.Fragment>
+  );
+});

@@ -7,7 +7,6 @@ export interface GridSlotsComponentsProps {
   checkbox?: any;
   columnMenu?: any;
   columnsPanel?: any;
-  columnsHeader?: GridColumnsHeaderProps;
   errorOverlay?: any;
   filterPanel?: any;
   footer?: any;

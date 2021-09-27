@@ -40,7 +40,7 @@ function GridBody(props: GridBodyProps) {
     <GridMainContainer>
       <GridOverlays />
       <GridColumnsContainer ref={columnsContainerRef}>
-        <GridColumnsHeader ref={columnsHeaderRef} {...rootProps.componentsProps?.columnsHeader} />
+        <GridColumnsHeader ref={columnsHeaderRef} />
       </GridColumnsContainer>
       <GridAutoSizer
         nonce={rootProps.nonce}
