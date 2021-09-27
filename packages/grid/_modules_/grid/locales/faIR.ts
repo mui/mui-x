@@ -1,3 +1,4 @@
+import { faIR as faIRCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -109,4 +110,4 @@ const faIRGrid: Partial<GridLocaleText> = {
   MuiTablePagination: {},
 };
 
-export const faIR: Localization = getGridLocalization(faIRGrid);
+export const faIR: Localization = getGridLocalization(faIRGrid, faIRCore);
