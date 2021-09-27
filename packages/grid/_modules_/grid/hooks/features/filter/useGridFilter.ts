@@ -30,7 +30,7 @@ const checkFilterModelValidity = (model: GridFilterModel) => {
     const hasItemsWithoutIds = model.items.find((item) => item.id == null);
     if (hasItemsWithoutIds) {
       throw new Error(
-        "The 'id' field is required on filterModel.items when you use multiple filters.",
+        "MUI: The 'id' field is required on `filterModel.items` when you use multiple filters.",
       );
     }
   }
