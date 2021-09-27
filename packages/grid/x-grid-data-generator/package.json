@@ -37,7 +37,7 @@
   "devDependencies": {
     "@types/lru-cache": "^5.1.1",
     "esm": "^3.2.25",
-    "yargs": "^17.0.1"
+    "yargs": "^17.2.1"
   },
   "peerDependencies": {
     "@mui/icons-material": "^5.0.1",
