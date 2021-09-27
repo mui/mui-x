@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import * as d3 from 'd3';
 import { useForkRef } from '@mui/material/utils';
 import useChartDimensions from '../hooks/useChartDimensions';
@@ -36,10 +36,21 @@ export interface PieChartProps {
    * The radius of the pie chart.
    */
   radius?: number;
+  /**
+   * The angle from which to start rendering the first slice.
+   */
+  startAngle?: number;
 }
 
 const PieChart = React.forwardRef<SVGSVGElement, PieChartProps>(function PieChart(props, ref) {
-  const { data, innerRadius = 0, margin: marginProp, radius: radiusProp, ...other } = props;
+  const {
+    data,
+    innerRadius = 0,
+    margin: marginProp,
+    radius: radiusProp,
+    startAngle = 0,
+    ...other
+  } = props;
 
   const margin = { top: 10, bottom: 10, left: 10, right: 10, ...marginProp };
   const chartSettings = {
@@ -52,8 +63,25 @@ const PieChart = React.forwardRef<SVGSVGElement, PieChartProps>(function PieChar
   const [chartRef, dimensions] = useChartDimensions(chartSettings);
   const { boundedHeight, boundedWidth, width, height } = dimensions;
   const handleRef = useForkRef(chartRef, ref);
+  const [percentVisible, setPercentVisible] = useState(0);
 
-  const pie = d3.pie().value((d) => d.value);
+  const pie = d3
+    .pie()
+    .startAngle(startAngle)
+    .endAngle(startAngle + percentVisible * Math.PI * 2)
+    .value((d) => d.value);
+
+  // From: https://codesandbox.io/s/drilldown-piechart-in-react-and-d3-d62y5
+  useEffect(() => {
+    d3.selection()
+      .transition('pie-reveal')
+      .duration(3000)
+      .ease(d3.easeSinInOut)
+      .tween('percentVisible', () => {
+        const percentInterpolate = d3.interpolate(0, 100);
+        return (t) => setPercentVisible(percentInterpolate(t));
+      });
+  }, [data]);
 
   const radius = radiusProp || Math.min(boundedWidth, boundedHeight) / 2;
 
