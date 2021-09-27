@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import * as d3 from 'd3';
 
 interface SliceData {
@@ -31,10 +31,31 @@ export interface PieSliceProps {
 }
 
 function PieSlice(props: PieSliceProps) {
-  const { data, innerRadius = 0, radius = 100 } = props;
-  const arc = d3.arc().innerRadius(innerRadius).outerRadius(radius);
+  const { data, expandOnHover, innerRadius = 0, radius = 100 } = props;
+  const [radiusAdd, setRadiusAdd] = useState(0);
+  const arc = d3
+    .arc()
+    .innerRadius(innerRadius + radiusAdd)
+    .outerRadius(radius + radiusAdd);
 
-  return <path style={{ fill: data.data.fill, stroke: data.data.stroke }} d={arc(data)} />;
+  function mouseOver() {
+    if (expandOnHover) {
+      setRadiusAdd(((radius - innerRadius) / 100) * 10);
+    }
+  }
+
+  function mouseOut() {
+    setRadiusAdd(0);
+  }
+
+  return (
+    <path
+      style={{ fill: data.data.fill, stroke: data.data.stroke }}
+      d={arc(data)}
+      onMouseOver={mouseOver}
+      onMouseOut={mouseOut}
+    />
+  );
 }
 
 export default PieSlice;

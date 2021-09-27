@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import * as d3 from 'd3';
 import { useForkRef } from '@mui/material/utils';
 import useChartDimensions from '../hooks/useChartDimensions';
@@ -26,6 +26,10 @@ export interface PieChartProps {
    * If true, the slice will expand when hovered
    * @default false
    */
+  expandOnHover?: boolean;
+  /**
+   * The radius at which to start the inside of the slice.
+   */
   innerRadius?: number;
   /**
    * The margin to use around the chart.
@@ -45,6 +49,7 @@ export interface PieChartProps {
 const PieChart = React.forwardRef<SVGSVGElement, PieChartProps>(function PieChart(props, ref) {
   const {
     data,
+    expandOnHover = false,
     innerRadius = 0,
     margin: marginProp,
     radius: radiusProp,
@@ -89,7 +94,13 @@ const PieChart = React.forwardRef<SVGSVGElement, PieChartProps>(function PieChar
     <svg viewBox={`0 0 ${width} ${height}`} ref={handleRef} {...other}>
       <g transform={`translate(${width / 2}, ${height / 2})`}>
         {pie(data).map((d, i) => (
-          <PieSlice data={d} key={i} radius={radius} innerRadius={innerRadius} />
+          <PieSlice
+            data={d}
+            key={i}
+            radius={radius}
+            innerRadius={innerRadius}
+            expandOnHover={expandOnHover}
+          />
         ))}
       </g>
     </svg>
