@@ -49,7 +49,7 @@ export const GridColumnsHeader = React.forwardRef<HTMLDivElement, {}>(function G
   const { hasScrollX } = useGridSelector(apiRef, gridScrollbarStateSelector);
   const rootProps = useGridRootProps();
 
-  const ownerState = { ...props, classes: rootProps.classes };
+  const ownerState = { dragCol, classes: rootProps.classes };
   const classes = useUtilityClasses(ownerState);
 
   const renderedCols = React.useMemo(() => {
