@@ -50,7 +50,7 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps & TextFieldPr
 
   const onFilterChange = React.useCallback(
     (event) => {
-      let value = event.target.value;
+      let value = event.target.value || '';
       // NativeSelect casts the value to a string.
       if (type === 'singleSelect') {
         const column = apiRef.current.getColumn(item.columnField);
@@ -78,7 +78,8 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps & TextFieldPr
   }, []);
 
   React.useEffect(() => {
-    setFilterValueState(String(item.value) || '');
+    const itemValue = item.value || '';
+    setFilterValueState(String(itemValue));
   }, [item.value]);
 
   const InputProps = applying ? { endAdornment: <GridLoadIcon /> } : others.InputProps;
