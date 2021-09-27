@@ -1,3 +1,5 @@
-import LandingPage from '@material-ui/monorepo/docs/pages/index';
+import * as React from 'react';
 
-export default LandingPage;
+export default function Home() {
+  return <div>/</div>;
+}

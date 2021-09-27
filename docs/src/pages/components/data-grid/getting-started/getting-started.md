@@ -12,10 +12,10 @@ Using your favorite package manager, install `@mui/x-data-grid-pro` for the full
 
 ```sh
 // with npm
-npm install @mui/x-data-grid
+npm install @mui/x-data-grid@next
 
 // with yarn
-yarn add @mui/x-data-grid
+yarn add @mui/x-data-grid@next
 ```
 
 The grid has two peer dependencies on Material-UI components.
@@ -109,7 +109,7 @@ import type {} from '@mui/x-data-grid-pro/themeAugmentation';
 
 const theme = createTheme({
   components: {
-    // Use `DataGrid` on both DataGrid and DataGridPro
+    // Use `MuiDataGrid` on both DataGrid and DataGridPro
     MuiDataGrid: {
       styleOverrides: {
         root: {

@@ -1,6 +1,6 @@
 {
   "name": "storybook",
-  "version": "5.0.0-beta.0",
+  "version": "5.0.0-beta.2",
   "description": "Storybook components",
   "author": "MUI Team",
   "private": true,
@@ -19,10 +19,10 @@
     "@mui/icons-material": "^5.0.0",
     "@mui/material": "^5.0.0",
     "@mui/styles": "^5.0.0",
-    "@mui/x-data-grid": "5.0.0-beta.0",
-    "@mui/x-data-grid-generator": "5.0.0-beta.0",
-    "@mui/x-data-grid-pro": "5.0.0-beta.0",
-    "@mui/x-license-pro": "5.0.0-beta.0",
+    "@mui/x-data-grid": "5.0.0-beta.2",
+    "@mui/x-data-grid-generator": "5.0.0-beta.2",
+    "@mui/x-data-grid-pro": "5.0.0-beta.2",
+    "@mui/x-license-pro": "5.0.0-beta.2",
     "react": "^17.0.2",
     "react-is": "^17.0.2",
     "rxjs": "^7.3.0"
