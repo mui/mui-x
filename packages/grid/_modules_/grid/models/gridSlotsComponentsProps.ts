@@ -1,5 +1,3 @@
-import type { GridColumnsHeaderProps } from '../components/columnHeaders/GridColumnHeaders';
-
 /**
  * Overrideable components props dynamically passed to the component at rendering.
  */
