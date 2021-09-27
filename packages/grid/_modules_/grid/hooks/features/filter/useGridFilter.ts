@@ -321,6 +321,5 @@ export const useGridFilter = (
   }, [apiRef, logger, props.filterModel, setGridState]);
 
   useGridApiEventHandler(apiRef, GridEvents.rowsSet, apiRef.current.applyFilters);
-  useGridApiEventHandler(apiRef, GridEvents.rowsUpdate, apiRef.current.applyFilters);
   useGridApiEventHandler(apiRef, GridEvents.columnsChange, onColUpdated);
 };
