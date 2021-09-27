@@ -19,6 +19,8 @@ import { GridColumnsPreProcessing } from '../../root/columnsPreProcessing';
 import { gridCheckboxSelectionColDef, GridColDef } from '../../../models';
 import { composeClasses } from '../../../utils/material-ui-utils';
 import { getDataGridUtilityClass } from '../../../gridClasses';
+import { useGridRegisterControlState } from '../../utils/useGridRegisterControlState';
+import { useGridStateInit } from '../../utils/useGridStateInit';
 
 type OwnerState = { classes: GridComponentProps['classes'] };
 
@@ -38,14 +40,10 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 /**
  * @requires useGridRows (state, method)
  * @requires useGridParamsApi (method)
- * @requires useGridControlState (method)
+ * @requires useGridControlStateManager (method)
  */
 export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps): void => {
   const logger = useGridLogger(apiRef, 'useGridSelection');
-  const [, setGridState, forceUpdate] = useGridState(apiRef);
-
-  const ownerState = { classes: props.classes };
-  const classes = useUtilityClasses(ownerState);
 
   const propSelectionModel = React.useMemo(() => {
     if (props.selectionModel == null) {
@@ -58,6 +56,21 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
 
     return [props.selectionModel];
   }, [props.selectionModel]);
+
+  useGridStateInit(apiRef, (state) => ({ ...state, selection: propSelectionModel ?? [] }));
+
+  const [, setGridState, forceUpdate] = useGridState(apiRef);
+
+  const ownerState = { classes: props.classes };
+  const classes = useUtilityClasses(ownerState);
+
+  const isStateControlled = useGridRegisterControlState(apiRef, {
+    stateId: 'selection',
+    propModel: propSelectionModel,
+    propOnChange: props.onSelectionModelChange,
+    stateSelector: gridSelectionStateSelector,
+    changeEvent: GridEvents.selectionChange,
+  });
 
   const { checkboxSelection, disableMultipleSelection, disableSelectionOnClick, isRowSelectable } =
     props;
@@ -134,13 +147,14 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
 
   const setSelectionModel = React.useCallback<GridSelectionApi['setSelectionModel']>(
     (model) => {
-      const currentModel = apiRef.current.state.selection;
+      const currentModel = gridSelectionStateSelector(apiRef.current.state);
       if (currentModel !== model) {
+        logger.debug(`Setting selection model`);
         setGridState((state) => ({ ...state, selection: model }));
         forceUpdate();
       }
     },
-    [setGridState, apiRef, forceUpdate],
+    [apiRef, setGridState, forceUpdate, logger],
   );
 
   const isRowSelected = React.useCallback<GridSelectionApi['isRowSelected']>(
@@ -186,24 +200,16 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
   useGridApiMethod(apiRef, selectionApi, 'GridSelectionApi');
 
   React.useEffect(() => {
-    apiRef.current.updateControlState<GridRowId[]>({
-      stateId: 'selection',
-      propModel: propSelectionModel,
-      propOnChange: props.onSelectionModelChange,
-      stateSelector: gridSelectionStateSelector,
-      changeEvent: GridEvents.selectionChange,
-    });
-  }, [apiRef, props.onSelectionModelChange, propSelectionModel]);
-
-  React.useEffect(() => {
-    if (propSelectionModel === undefined) {
-      return;
+    if (propSelectionModel !== undefined) {
+      apiRef.current.setSelectionModel(propSelectionModel);
     }
-
-    apiRef.current.setSelectionModel(propSelectionModel);
   }, [apiRef, propSelectionModel]);
 
   React.useEffect(() => {
+    if (isStateControlled) {
+      return;
+    }
+
     // isRowSelectable changed
     const currentSelection = gridSelectionStateSelector(apiRef.current.state);
 
@@ -216,7 +222,7 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
         apiRef.current.setSelectionModel(newSelection);
       }
     }
-  }, [apiRef, isRowSelectable]);
+  }, [apiRef, isRowSelectable, isStateControlled]);
 
   React.useEffect(() => {
     if (!props.checkboxSelection) {

@@ -15,7 +15,3 @@ export interface GridSortingState {
   sortedRows: GridSortedRowsIdTreeNode[];
   sortModel: GridSortModel;
 }
-
-export function getInitialGridSortingState(): GridSortingState {
-  return { sortedRows: [], sortModel: [] };
-}

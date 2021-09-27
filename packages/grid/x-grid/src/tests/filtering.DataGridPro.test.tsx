@@ -1,5 +1,5 @@
 import {
-  getInitialGridFilterState,
+  getDefaultGridFilterModel,
   GridApiRef,
   GridComponentProps,
   GridFilterModel,
@@ -485,7 +485,7 @@ describe('<DataGridPro /> - Filter', () => {
     it('should control filter state when the model and the onChange are set', () => {
       const ControlCase = (props: Partial<GridComponentProps>) => {
         const { rows, columns, ...others } = props;
-        const [caseFilterModel, setFilterModel] = React.useState<any>(getInitialGridFilterState());
+        const [caseFilterModel, setFilterModel] = React.useState(getDefaultGridFilterModel);
         const handleFilterChange = (newModel) => {
           setFilterModel(newModel);
         };

@@ -11,24 +11,40 @@ import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { filterableGridColumnsIdsSelector } from '../columns/gridColumnsSelector';
-import { useGridSelector } from '../core/useGridSelector';
 import { useGridState } from '../core/useGridState';
 import { GridPreferencePanelsValue } from '../preferencesPanel/gridPreferencePanelsValue';
 import {
   gridSortedRowIdsFlatSelector,
   gridSortedRowsSelector,
 } from '../sorting/gridSortingSelector';
-import { getInitialGridFilterState } from './gridFilterModelState';
+import { getDefaultGridFilterModel } from './gridFilterState';
 import { GridFilterModel } from '../../../models/gridFilterModel';
-import { gridSortedVisibleRowsSelector } from './gridFilterSelector';
-import { getInitialVisibleGridRowsState } from './visibleGridRowsState';
+import {
+  gridVisibleRowsLookupSelector,
+  gridSortedVisibleRowsSelector,
+  gridFilterModelSelector,
+} from './gridFilterSelector';
 import { GridSortedRowsTreeNode } from '../sorting';
+import { useGridRegisterControlState } from '../../utils/useGridRegisterControlState';
+import { useGridStateInit } from '../../utils/useGridStateInit';
+import { useFirstRender } from '../../utils/useFirstRender';
+
+const checkFilterModelValidity = (model: GridFilterModel) => {
+  if (model.items.length > 1) {
+    const hasItemsWithoutIds = model.items.find((item) => item.id == null);
+    if (hasItemsWithoutIds) {
+      throw new Error(
+        "MUI: The 'id' field is required on `filterModel.items` when you use multiple filters.",
+      );
+    }
+  }
+};
 
 /**
  * @requires useGridColumns (state, method, event)
  * @requires useGridParamsApi (method)
  * @requires useGridRows (event)
- * @requires useGridControlState (method)
+ * @requires useGridControlStateManager (method)
  */
 export const useGridFilter = (
   apiRef: GridApiRef,
@@ -38,16 +54,31 @@ export const useGridFilter = (
   >,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridFilter');
-  const [gridState, setGridState, forceUpdate] = useGridState(apiRef);
-  const filterableColumnsIds = useGridSelector(apiRef, filterableGridColumnsIdsSelector);
 
-  const clearFilteredRows = React.useCallback(() => {
-    logger.debug('clearing filtered rows');
-    setGridState((state) => ({
+  useGridStateInit(apiRef, (state) => {
+    if (props.filterModel) {
+      checkFilterModelValidity(props.filterModel);
+    }
+
+    return {
       ...state,
-      visibleRows: getInitialVisibleGridRowsState(),
-    }));
-  }, [logger, setGridState]);
+      filter: {
+        filterModel: props.filterModel ?? getDefaultGridFilterModel(),
+        visibleRowsLookup: {},
+        visibleRows: null,
+      },
+    };
+  });
+
+  const [, setGridState, forceUpdate] = useGridState(apiRef);
+
+  useGridRegisterControlState(apiRef, {
+    stateId: 'filter',
+    propModel: props.filterModel,
+    propOnChange: props.onFilterModelChange,
+    stateSelector: gridFilterModelSelector,
+    changeEvent: GridEvents.filterModelChange,
+  });
 
   const applyFilter = React.useCallback(
     (filterItem: GridFilterItem, linkOperator: GridLinkOperator = GridLinkOperator.And) => {
@@ -56,6 +87,7 @@ export const useGridFilter = (
       }
 
       const column = apiRef.current.getColumn(filterItem.columnField);
+
       if (!column) {
         return;
       }
@@ -89,7 +121,7 @@ export const useGridFilter = (
       }
 
       setGridState((state) => {
-        const visibleRowsLookup = { ...state.visibleRows.visibleRowsLookup };
+        const visibleRowsLookup = { ...gridVisibleRowsLookupSelector(state) };
 
         // We run the selector on the state here to avoid rendering the rows and then filtering again.
         // This way we have latest rows on the first rendering
@@ -123,8 +155,8 @@ export const useGridFilter = (
 
         return {
           ...state,
-          visibleRows: {
-            ...state.visibleRows,
+          filter: {
+            ...state.filter,
             visibleRowsLookup,
             visibleRows: Object.entries(visibleRowsLookup)
               .filter(([, isVisible]) => isVisible)
@@ -137,13 +169,21 @@ export const useGridFilter = (
     [apiRef, forceUpdate, logger, setGridState],
   );
 
-  const applyFilters = React.useCallback(() => {
-    const { items, linkOperator } = apiRef.current.state.filter;
+  const applyFilters = React.useCallback<GridFilterApi['applyFilters']>(() => {
+    const { items, linkOperator } = gridFilterModelSelector(apiRef.current.state);
 
     const hasFilterToApply = props.filterMode === GridFeatureModeConstant.client && !!items.length;
 
     if (hasFilterToApply) {
-      clearFilteredRows();
+      // Clearing filtered rows
+      setGridState((state) => ({
+        ...state,
+        filter: {
+          ...state.filter,
+          visibleRowsLookup: {},
+          visibleRows: null,
+        },
+      }));
 
       items.forEach((filterItem) => {
         apiRef.current.applyFilter(filterItem, linkOperator);
@@ -156,8 +196,8 @@ export const useGridFilter = (
 
         return {
           ...state,
-          visibleRows: {
-            ...state.visibleRows,
+          filter: {
+            ...state.filter,
             visibleRowsLookup,
             visibleRows,
           },
@@ -165,14 +205,15 @@ export const useGridFilter = (
       });
     }
     forceUpdate();
-  }, [apiRef, clearFilteredRows, forceUpdate, props.filterMode]);
+  }, [apiRef, setGridState, forceUpdate, props.filterMode]);
 
-  const upsertFilter = React.useCallback(
-    (item: GridFilterItem) => {
+  const upsertFilter = React.useCallback<GridFilterApi['upsertFilter']>(
+    (item) => {
       logger.debug('Upserting filter');
 
       setGridState((state) => {
-        const items = [...state.filter.items];
+        const filterableColumnsIds = filterableGridColumnsIdsSelector(state);
+        const items = [...gridFilterModelSelector(state).items];
         const newItem = { ...item };
         const itemIndex = items.findIndex((filterItem) => filterItem.id === newItem.id);
 
@@ -200,90 +241,90 @@ export const useGridFilter = (
         if (props.disableMultipleColumnsFiltering && items.length > 1) {
           items.length = 1;
         }
-        const newState = {
+
+        return {
           ...state,
-          filter: { ...state.filter, items },
+          filter: { ...state.filter, filterModel: { ...state.filter.filterModel, items } },
         };
-        return newState;
       });
-      applyFilters();
+      apiRef.current.applyFilters();
     },
-    [
-      logger,
-      setGridState,
-      apiRef,
-      applyFilters,
-      props.disableMultipleColumnsFiltering,
-      filterableColumnsIds,
-    ],
+    [apiRef, logger, setGridState, props.disableMultipleColumnsFiltering],
   );
 
-  const deleteFilter = React.useCallback(
-    (item: GridFilterItem) => {
+  const deleteFilter = React.useCallback<GridFilterApi['deleteFilter']>(
+    (item) => {
       logger.debug(`Deleting filter on column ${item.columnField} with value ${item.value}`);
       setGridState((state) => {
-        const items = [...state.filter.items.filter((filterItem) => filterItem.id !== item.id)];
-        const newState = {
+        const items = [
+          ...gridFilterModelSelector(state).items.filter((filterItem) => filterItem.id !== item.id),
+        ];
+
+        return {
           ...state,
-          filter: { ...state.filter, items },
+          filter: { ...state.filter, filterModel: { ...state.filter.filterModel, items } },
         };
-        return newState;
       });
-      if (apiRef.current.state.filter.items.length === 0) {
+      if (gridFilterModelSelector(apiRef.current.state).items.length === 0) {
         apiRef.current.upsertFilter({});
       }
-      applyFilters();
+      apiRef.current.applyFilters();
     },
-    [apiRef, applyFilters, logger, setGridState],
+    [apiRef, logger, setGridState],
   );
 
-  const showFilterPanel = React.useCallback(
-    (targetColumnField?: string) => {
+  const showFilterPanel = React.useCallback<GridFilterApi['showFilterPanel']>(
+    (targetColumnField) => {
       logger.debug('Displaying filter panel');
       if (targetColumnField) {
+        const filterModel = gridFilterModelSelector(apiRef.current.state);
+
         const lastFilter =
-          gridState.filter.items.length > 0
-            ? gridState.filter.items[gridState.filter.items.length - 1]
-            : null;
+          filterModel.items.length > 0 ? filterModel.items[filterModel.items.length - 1] : null;
         if (!lastFilter || lastFilter.columnField !== targetColumnField) {
           apiRef.current.upsertFilter({ columnField: targetColumnField });
         }
       }
       apiRef.current.showPreferences(GridPreferencePanelsValue.filters);
     },
-    [apiRef, gridState.filter.items, logger],
+    [apiRef, logger],
   );
-  const hideFilterPanel = React.useCallback(() => {
+
+  const hideFilterPanel = React.useCallback<GridFilterApi['hideFilterPanel']>(() => {
     logger.debug('Hiding filter panel');
     apiRef.current.hidePreferences();
   }, [apiRef, logger]);
 
-  const applyFilterLinkOperator = React.useCallback(
-    (linkOperator: GridLinkOperator = GridLinkOperator.And) => {
+  const applyFilterLinkOperator = React.useCallback<GridFilterApi['applyFilterLinkOperator']>(
+    (linkOperator) => {
       logger.debug('Applying filter link operator');
       setGridState((state) => ({
         ...state,
-        filter: { ...state.filter, linkOperator },
+        filter: { ...state.filter, filterModel: { ...state.filter.filterModel, linkOperator } },
       }));
-      applyFilters();
+      apiRef.current.applyFilters();
     },
-    [applyFilters, logger, setGridState],
+    [apiRef, logger, setGridState],
   );
 
-  const clearFilterModel = React.useCallback(() => {
-    clearFilteredRows();
-    logger.debug('Clearing filter model');
-    setGridState((state) => ({ ...state, filter: getInitialGridFilterState() }));
-  }, [clearFilteredRows, logger, setGridState]);
+  const setFilterModel = React.useCallback<GridFilterApi['setFilterModel']>(
+    (model) => {
+      const currentModel = gridFilterModelSelector(apiRef.current.state);
+      if (currentModel !== model) {
+        checkFilterModelValidity(model);
 
-  const setFilterModel = React.useCallback(
-    (model: GridFilterModel) => {
-      clearFilterModel();
-      logger.debug('Setting filter model');
-      applyFilterLinkOperator(model.linkOperator);
-      model.items.forEach((item) => upsertFilter(item));
+        logger.debug('Setting filter model');
+        setGridState((state) => ({
+          ...state,
+          filter: {
+            ...state.filter,
+            filterModel: model,
+          },
+        }));
+        apiRef.current.applyFilters();
+      }
     },
-    [applyFilterLinkOperator, clearFilterModel, logger, upsertFilter],
+    [apiRef, logger, setGridState],
   );
 
   const getVisibleRowModels = React.useCallback<GridFilterApi['getVisibleRowModels']>(
@@ -309,11 +350,11 @@ export const useGridFilter = (
 
   const onColUpdated = React.useCallback(() => {
     logger.debug('onColUpdated - GridColumns changed, applying filters');
-    const filterState = apiRef.current.state.filter;
+    const filterModel = gridFilterModelSelector(apiRef.current.state);
     const columnsIds = filterableGridColumnsIdsSelector(apiRef.current.state);
     logger.debug('GridColumns changed, applying filters');
 
-    filterState.items.forEach((filter) => {
+    filterModel.items.forEach((filter) => {
       if (!columnsIds.find((field) => field === filter.columnField)) {
         apiRef.current.deleteFilter(filter);
       }
@@ -322,34 +363,12 @@ export const useGridFilter = (
   }, [apiRef, logger]);
 
   React.useEffect(() => {
-    apiRef.current.updateControlState<GridFilterModel>({
-      stateId: 'filter',
-      propModel: props.filterModel,
-      propOnChange: props.onFilterModelChange,
-      stateSelector: (state) => state.filter,
-      changeEvent: GridEvents.filterModelChange,
-    });
-  }, [apiRef, props.filterModel, props.onFilterModelChange]);
+    if (props.filterModel !== undefined) {
+      apiRef.current.setFilterModel(props.filterModel);
+    }
+  }, [apiRef, logger, props.filterModel]);
 
-  React.useEffect(() => {
-    if (props.filterModel !== undefined && props.filterModel.items.length > 1) {
-      const hasItemsWithoutIds = props.filterModel.items.find((item) => item.id == null);
-      if (hasItemsWithoutIds) {
-        throw new Error(
-          "The 'id' field is required on filterModel.items when you use multiple filters.",
-        );
-      }
-    }
-    const oldFilterModel = apiRef.current.state.filter;
-    if (props.filterModel !== undefined && props.filterModel !== oldFilterModel) {
-      logger.debug('filterModel prop changed, applying filters');
-      setGridState((state) => ({
-        ...state,
-        filter: props.filterModel || getInitialGridFilterState(),
-      }));
-      apiRef.current.applyFilters();
-    }
-  }, [apiRef, logger, props.filterModel, setGridState]);
+  useFirstRender(() => apiRef.current.applyFilters());
 
   useGridApiEventHandler(apiRef, GridEvents.rowsSet, apiRef.current.applyFilters);
   useGridApiEventHandler(apiRef, GridEvents.columnsChange, onColUpdated);

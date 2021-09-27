@@ -6,10 +6,3 @@ export interface GridRowsState {
   tree: GridRowConfigTree;
   totalRowCount: number;
 }
-
-export const getInitialGridRowState: () => GridRowsState = () => ({
-  idRowsLookup: {},
-  paths: {},
-  tree: new Map(),
-  totalRowCount: 0,
-});

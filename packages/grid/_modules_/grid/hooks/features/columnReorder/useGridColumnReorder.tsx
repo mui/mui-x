@@ -11,6 +11,7 @@ import { useGridSelector } from '../core/useGridSelector';
 import { useGridState } from '../core/useGridState';
 import { gridColumnReorderDragColSelector } from './columnReorderSelector';
 import { GridComponentProps } from '../../../GridComponentProps';
+import { useGridStateInit } from '../../utils/useGridStateInit';
 import { composeClasses } from '../../../utils/material-ui-utils';
 
 const CURSOR_MOVE_DIRECTION_LEFT = 'left';
@@ -50,8 +51,13 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 export const useGridColumnReorder = (
   apiRef: GridApiRef,
   props: Pick<GridComponentProps, 'disableColumnReorder' | 'classes'>,
-): void => {
+) => {
   const logger = useGridLogger(apiRef, 'useGridColumnReorder');
+
+  useGridStateInit(apiRef, (state) => ({
+    ...state,
+    columnReorder: { dragCol: '' },
+  }));
 
   const [, setGridState, forceUpdate] = useGridState(apiRef);
   const dragColField = useGridSelector(apiRef, gridColumnReorderDragColSelector);
@@ -81,6 +87,8 @@ export const useGridColumnReorder = (
 
       dragColNode.current = event.currentTarget;
       dragColNode.current.classList.add(classes.columnHeaderDragging);
+
+      apiRef.current.publishEvent(GridEvents.columnReorderStart, { field: params.field });
 
       setGridState((state) => ({
         ...state,
@@ -163,6 +171,8 @@ export const useGridColumnReorder = (
 
       clearTimeout(removeDnDStylesTimeout.current);
       dragColNode.current = null;
+
+      apiRef.current.publishEvent(GridEvents.columnReorderStop, { field: params.field });
 
       // Check if the column was dropped outside the grid.
       if (event.dataTransfer.dropEffect === 'none') {

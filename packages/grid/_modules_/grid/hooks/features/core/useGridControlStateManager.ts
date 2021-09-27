@@ -6,20 +6,24 @@ import { GridControlStateItem } from '../../../models/controlStateItem';
 import { GridSignature } from '../../root/useGridApiEventHandler';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
 
-export function useGridControlState(apiRef: GridApiRef, props: GridComponentProps) {
+export function useGridControlStateManager(apiRef: GridApiRef, props: GridComponentProps) {
   const controlStateMapRef = React.useRef<Record<string, GridControlStateItem<any>>>({});
 
-  const updateControlState = React.useCallback((controlStateItem: GridControlStateItem<any>) => {
-    const { stateId, stateSelector, ...others } = controlStateItem;
+  const updateControlState = React.useCallback<GridControlStateApi['updateControlState']>(
+    (controlStateItem) => {
+      const { stateId, ...others } = controlStateItem;
 
-    controlStateMapRef.current[stateId] = {
-      ...others,
-      stateId,
-      stateSelector: !stateSelector ? (state) => state[stateId] : stateSelector,
-    };
-  }, []);
+      controlStateMapRef.current[stateId] = {
+        ...others,
+        stateId,
+      };
+    },
+    [],
+  );
 
-  const applyControlStateConstraint = React.useCallback(
+  const applyControlStateConstraint = React.useCallback<
+    GridControlStateApi['applyControlStateConstraint']
+  >(
     (newState) => {
       let ignoreSetState = false;
       const updatedStateIds: string[] = [];
@@ -27,12 +31,14 @@ export function useGridControlState(apiRef: GridApiRef, props: GridComponentProp
 
       Object.keys(controlStateMap).forEach((stateId) => {
         const controlState = controlStateMap[stateId];
-        const oldState = controlState.stateSelector(apiRef.current.state);
+        const oldSubState = controlState.stateSelector(apiRef.current.state);
         const newSubState = controlState.stateSelector(newState);
 
-        // TODO newSubState !== controlState.propModel shouldn't be necessary
-        // but we need it for the initial state.
-        if (newSubState !== oldState && newSubState !== controlState.propModel) {
+        if (newSubState === oldSubState) {
+          return;
+        }
+
+        if (newSubState !== controlState.propModel) {
           updatedStateIds.push(controlState.stateId);
         }
 

@@ -19,7 +19,7 @@ import { gridPaginationSelector } from '../features/pagination/gridPaginationSel
 import { useGridLogger } from '../utils/useGridLogger';
 import { useGridApiEventHandler } from './useGridApiEventHandler';
 import { GridComponentProps } from '../../GridComponentProps';
-import { height } from '@material-ui/monorepo/packages/mui-system';
+import { useGridStateInit } from '../utils/useGridStateInit';
 
 function getScrollbarSize(doc: Document, element: HTMLElement): number {
   const scrollDiv = doc.createElement('div');
@@ -36,7 +36,6 @@ function getScrollbarSize(doc: Document, element: HTMLElement): number {
 }
 
 /**
- * @requires useOptionsProp (state)
  * @requires useGridDensity (state)
  * @requires useGridColumns (state)
  * @requires useGridFilter (state)
@@ -51,6 +50,7 @@ export const useGridContainerProps = (
     | 'pagination'
     | 'autoPageSize'
     | 'pageSize'
+    | 'paginationMode'
     | 'autoHeight'
     | 'hideFooter'
     | 'scrollbarSize'
@@ -58,6 +58,16 @@ export const useGridContainerProps = (
   >,
 ) => {
   const logger = useGridLogger(apiRef, 'useGridContainerProps');
+
+  // TODO: Remove from the state an add direct computation method
+  // See https://github.com/mui-org/material-ui-x/issues/820#issuecomment-897906608
+  useGridStateInit(apiRef, (state) => ({
+    ...state,
+    containerSizes: null,
+    viewportSizes: { width: 0, height: 1 },
+    scrollBar: { hasScrollX: false, hasScrollY: false, sizes: { x: 0, y: 0 } },
+  }));
+
   const [gridState, setGridState, forceUpdate] = useGridState(apiRef);
   const windowSizesRef = React.useRef<ElementSize>({ width: 0, height: 0 });
   const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
@@ -86,7 +96,12 @@ export const useGridContainerProps = (
 
   const getVirtualRowCount = React.useCallback(() => {
     logger.debug('Calculating virtual row count.');
-    if (props.pagination && (!props.autoPageSize || props.pageSize)) {
+
+    if (
+      props.pagination &&
+      (!props.autoPageSize || props.pageSize) &&
+      props.paginationMode === 'client'
+    ) {
       const rowsLeft = visibleRowsCount - paginationState.page * paginationState.pageSize;
       return rowsLeft > paginationState.pageSize ? paginationState.pageSize : rowsLeft;
     }
@@ -95,6 +110,7 @@ export const useGridContainerProps = (
     logger,
     props.autoPageSize,
     props.pagination,
+    props.paginationMode,
     props.pageSize,
     paginationState.page,
     paginationState.pageSize,

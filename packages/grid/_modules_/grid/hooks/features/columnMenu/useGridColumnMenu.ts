@@ -5,7 +5,8 @@ import { useGridLogger } from '../../utils/useGridLogger';
 import { useGridState } from '../core/useGridState';
 import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
 import { GridEvents } from '../../../constants/eventsConstants';
-import { useGridSelector } from '../core';
+import { useGridStateInit } from '../../utils/useGridStateInit';
+import { useGridSelector } from '../core/useGridSelector';
 import { gridColumnMenuSelector } from './columnMenuSelector';
 
 /**
@@ -15,6 +16,8 @@ import { gridColumnMenuSelector } from './columnMenuSelector';
  */
 export const useGridColumnMenu = (apiRef: GridApiRef): void => {
   const logger = useGridLogger(apiRef, 'useGridColumnMenu');
+
+  useGridStateInit(apiRef, (state) => ({ ...state, columnMenu: { open: false } }));
   const [, setGridState, forceUpdate] = useGridState(apiRef);
   const columnMenu = useGridSelector(apiRef, gridColumnMenuSelector);
 

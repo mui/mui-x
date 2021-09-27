@@ -204,8 +204,3 @@ export interface GridColumnsState {
   all: string[];
   lookup: GridColumnLookup;
 }
-
-export const getInitialGridColumnsState = (): GridColumnsState => ({
-  all: [],
-  lookup: {},
-});
