@@ -277,14 +277,6 @@ export enum GridEvents {
    */
   columnResizeStop = 'columnResizeStop',
   /**
-   * Fired when the user starts reordering a column. Called with an object `{ field: string }`.
-   */
-  columnReorderStart = 'columnResizeStart',
-  /**
-   * Fired when the user stops reordering a column. Called with an object `{ field: string }`.
-   */
-  columnReorderStop = 'columnResizeStop',
-  /**
    * Fired when the user ends reordering a column.
    */
   columnOrderChange = 'columnOrderChange',
