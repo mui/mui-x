@@ -28,9 +28,9 @@ const itITGrid: Partial<GridLocaleText> = {
     count > 1 ? `${count} filtri attivi` : `${count} filtro attivo`,
 
   // Export selector toolbar button text
-  // toolbarExport: 'Esporta',
-  // toolbarExportLabel: 'Esporta',
-  // toolbarExportCSV: 'Esporta in CSV',
+  toolbarExport: 'Esporta',
+  toolbarExportLabel: 'Esporta',
+  toolbarExportCSV: 'Esporta in CSV',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'Cerca colonna',
