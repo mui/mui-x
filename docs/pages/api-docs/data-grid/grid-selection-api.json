@@ -4,7 +4,7 @@
   "properties": [
     {
       "name": "expandRowRangeSelection",
-      "description": "Change the selection state of all the selectable rows in a range.",
+      "description": "Change the selection state of all the selectable rows in the range between the current row and the last row called on selectRow or expandRowRangeSelection.",
       "type": "(id: GridRowId, resetSelection?: boolean) => void"
     },
     {

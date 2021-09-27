@@ -32,7 +32,7 @@ export interface GridSelectionApi {
     resetSelection?: boolean,
   ) => void;
   /**
-   * Change the selection state of all the selectable rows in a range.
+   * Change the selection state of all the selectable rows in the range between the current row and the last row called on selectRow or expandRowRangeSelection.
    * @param {GridRowId} id The id of the row the user is interacting with.
    * @param {boolean} resetSelection Whether to reset the selected rows outside of the range or not. Default is `false`.
    */
