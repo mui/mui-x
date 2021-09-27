@@ -87,7 +87,7 @@ function EditToolbar(props) {
       });
 
       apiRef.current.setCellFocus(id, 'name');
-    }, 150);
+    });
   };
 
   return (

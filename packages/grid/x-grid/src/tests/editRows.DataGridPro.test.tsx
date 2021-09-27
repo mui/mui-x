@@ -51,6 +51,7 @@ describe('<DataGridPro /> - Edit Rows', () => {
         { field: 'brand', editable: true },
         { field: 'year', editable: true },
       ],
+      throttleRowsMs: 0,
     };
   });
 

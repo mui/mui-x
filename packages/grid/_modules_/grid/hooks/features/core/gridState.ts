@@ -23,7 +23,7 @@ import {
 } from '../filter/visibleGridRowsState';
 import { GridFocusState, GridTabIndexState } from '../focus/gridFocusState';
 import { GridPreferencePanelState } from '../preferencesPanel/gridPreferencePanelState';
-import { getInitialGridRowState, InternalGridRowsState } from '../rows/gridRowsState';
+import { getInitialGridRowState, GridRowsState } from '../rows/gridRowsState';
 import { GridSelectionModel } from '../../../models/gridSelectionModel';
 import { getInitialGridSortingState, GridSortingState } from '../sorting/gridSortingState';
 import {
@@ -33,7 +33,7 @@ import {
 import { getInitialPaginationState, GridPaginationState } from '../pagination/gridPaginationState';
 
 export interface GridState {
-  rows: InternalGridRowsState;
+  rows: GridRowsState;
   editRows: GridEditRowsModel;
   pagination: GridPaginationState;
   columns: GridColumnsState;
