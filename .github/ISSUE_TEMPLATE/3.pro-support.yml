@@ -15,7 +15,7 @@ body:
     id: contact
     attributes:
       label: Order ID 💳
-      description: The order ID of the purchased Pro plan. Community users can [learn more about support](https://material-ui.com/getting-started/support/) in the documentation.
+      description: The order ID of the purchased Pro plan. Community users can [learn more about support](https://mui.com/getting-started/support/) in the documentation.
       placeholder: 'ex. #11111'
     validations:
       required: true

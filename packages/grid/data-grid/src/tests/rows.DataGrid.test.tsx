@@ -118,9 +118,9 @@ describe('<DataGrid /> - Rows', () => {
         );
       }) // @ts-expect-error need to migrate helpers to TypeScript
         .toErrorDev([
-          'Material-UI: Missing the `getActions` property in the `GridColDef`.',
+          'MUI: Missing the `getActions` property in the `GridColDef`.',
           'The above error occurred in the <GridActionsCell> component',
-          'Material-UI: GridErrorHandler - An unexpected error occurred.',
+          'MUI: GridErrorHandler - An unexpected error occurred.',
         ]);
     });
 

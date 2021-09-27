@@ -90,7 +90,7 @@ export const GridPagination = React.forwardRef<
     ) {
       console.warn(
         [
-          `Material-UI: The page size \`${
+          `MUI: The page size \`${
             rootProps.pageSize ?? paginationState.pageSize
           }\` is not preset in the \`rowsPerPageOptions\``,
           `Add it to show the pagination select.`,

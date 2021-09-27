@@ -30,7 +30,7 @@ export function licenseGenCli() {
       handler: (argv: HandlerArgv) => {
         if (!argv.order) {
           throw new Error(
-            'Material-UI: You forgot to pass an order number. $ > licensegen -o order_123.',
+            'MUI: You forgot to pass an order number. $ > licensegen -o order_123.',
           );
         }
 

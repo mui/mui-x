@@ -14,7 +14,7 @@ const expiryReg = /^.*EXPIRY=([0-9]+),.*$/;
 export function verifyLicense(releaseInfo: string, encodedLicense: string) {
   if (!releaseInfo) {
     throw new Error(
-      'Material-UI: The release information is missing. Not able to validate license.',
+      'MUI: The release information is missing. Not able to validate license.',
     );
   }
 
@@ -45,7 +45,7 @@ export function verifyLicense(releaseInfo: string, encodedLicense: string) {
   const pkgTimestamp = parseInt(base64Decode(releaseInfo), 10);
   if (Number.isNaN(pkgTimestamp)) {
     throw new Error(
-      'Material-UI: The release information is invalid. Not able to validate license.',
+      'MUI: The release information is invalid. Not able to validate license.',
     );
   }
 

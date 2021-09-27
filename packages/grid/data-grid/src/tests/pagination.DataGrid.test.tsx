@@ -334,7 +334,7 @@ describe('<DataGrid /> - Pagination', () => {
         render(<BaselineTestCase pageSize={pageSize} rowsPerPageOptions={[25, 50, 100]} />);
         // @ts-expect-error need to migrate helpers to TypeScript
       }).toWarnDev([
-        `Material-UI: The page size \`${pageSize}\` is not preset in the \`rowsPerPageOptions\``,
+        `MUI: The page size \`${pageSize}\` is not preset in the \`rowsPerPageOptions\``,
       ]);
     });
 
@@ -345,7 +345,7 @@ describe('<DataGrid /> - Pagination', () => {
         render(<BaselineTestCase pageSize={pageSize} />);
         // @ts-expect-error need to migrate helpers to TypeScript
       }).toWarnDev([
-        `Material-UI: The page size \`${pageSize}\` is not preset in the \`rowsPerPageOptions\``,
+        `MUI: The page size \`${pageSize}\` is not preset in the \`rowsPerPageOptions\``,
       ]);
     });
 
@@ -354,7 +354,7 @@ describe('<DataGrid /> - Pagination', () => {
         render(<BaselineTestCase rowsPerPageOptions={[25, 50]} />);
         // @ts-expect-error need to migrate helpers to TypeScript
       }).toWarnDev([
-        `Material-UI: The page size \`100\` is not preset in the \`rowsPerPageOptions\``,
+        `MUI: The page size \`100\` is not preset in the \`rowsPerPageOptions\``,
       ]);
     });
   });

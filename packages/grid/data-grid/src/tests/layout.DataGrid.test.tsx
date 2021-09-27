@@ -97,7 +97,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
     });
 
     // Adaptation of describeConformance()
-    describe('Material-UI component API', () => {
+    describe('MUI component API', () => {
       it(`attaches the ref`, () => {
         const ref = React.createRef<HTMLDivElement>();
         const { container } = render(
@@ -189,7 +189,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
           clock.tick(0);
           // @ts-expect-error need to migrate helpers to TypeScript
         }).toWarnDev(
-          'Material-UI: useResizeContainer - The parent of the grid has an empty height.',
+          'MUI: useResizeContainer - The parent of the grid has an empty height.',
         );
       });
 
@@ -206,7 +206,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
           clock.tick(0);
           // @ts-expect-error need to migrate helpers to TypeScript
         }).toWarnDev(
-          'Material-UI: useResizeContainer - The parent of the grid has an empty width.',
+          'MUI: useResizeContainer - The parent of the grid has an empty width.',
         );
       });
 
@@ -659,7 +659,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
           </div>,
         );
         // @ts-expect-error need to migrate helpers to TypeScript
-      }).toErrorDev('Material-UI: `<DataGrid pagination={false} />` is not a valid prop.');
+      }).toErrorDev('MUI: `<DataGrid pagination={false} />` is not a valid prop.');
     });
 
     it('should throw if the rows has no id', function test() {

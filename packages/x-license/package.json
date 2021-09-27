@@ -1,7 +1,7 @@
 {
   "name": "@mui/x-license-pro",
   "version": "5.0.0-beta.1",
-  "description": "Material-UI X License verification",
+  "description": "MUI X License verification",
   "author": "MUI Team",
   "main": "build/cjs/index.js",
   "module": "build/esm/index.js",
@@ -18,7 +18,7 @@
   "bugs": {
     "url": "https://github.com/mui-org/material-ui-x/issues"
   },
-  "homepage": "https://material-ui.com/components/data-grid/",
+  "homepage": "https://mui.com/components/data-grid/",
   "license": "See LICENSE file",
   "sideEffects": false,
   "publishConfig": {

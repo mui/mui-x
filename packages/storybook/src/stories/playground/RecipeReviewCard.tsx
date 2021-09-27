@@ -71,7 +71,7 @@ export default function RecipeReviewCard() {
       />
       <CardMedia
         className={classes.media}
-        image="http://material-ui.com/static/images/cards/paella.jpg"
+        image="http://mui.com/static/images/cards/paella.jpg"
         title="Paella dish"
       />
       <CardContent>

@@ -27,7 +27,7 @@ It replaces the previous values. This approach has some drawbacks:
 - You need to provide all the rows.
 - You might create a performance bottleneck when preparing the rows array to provide to the grid.
 
-### Infinite loading [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-pro/)
+### Infinite loading [<span class="pro"></span>](https://mui.com/store/items/material-ui-pro/)
 
 The grid provides a `onRowsScrollEnd` prop that can be used to load additional rows when the scroll reaches the bottom of the viewport area.
 
@@ -35,7 +35,7 @@ In addition, the area in which the callback provided to the `onRowsScrollEnd` is
 
 {{"demo": "pages/components/data-grid/rows/InfiniteLoadingGrid.js", "bg": "inline", "disableAd": true}}
 
-### apiRef [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-pro/)
+### apiRef [<span class="pro"></span>](https://mui.com/store/items/material-ui-pro/)
 
 The second way to update rows is to use the apiRef.
 This is an imperative API that is designed to solve the previous two limitations of the declarative `rows` prop. `apiRef.current.updateRows()`, updates the rows to the grid. It **merges** the new rows with the previous ones.
@@ -77,7 +77,7 @@ Row spanning allows to change this default behavior.
 It allows cells to span multiple rows.
 This is very close to the "row spanning" in an HTML `<table>`.
 
-## 🚧 Row reorder [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-pro/)
+## 🚧 Row reorder [<span class="pro"></span>](https://mui.com/store/items/material-ui-pro/)
 
 > ⚠️ This feature isn't implemented yet. It's coming.
 >

@@ -9,7 +9,7 @@ export default function BasicColumnsGrid() {
         rows={[
           {
             id: 1,
-            username: '@MaterialUI',
+            username: '@MUI',
             age: 20,
           },
         ]}

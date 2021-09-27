@@ -17,7 +17,7 @@ let warnedOnce = false;
 function warnMissingColumn(field) {
   console.warn(
     [
-      `Material-UI: You are calling getValue('${field}') but the column \`${field}\` is not defined.`,
+      `MUI: You are calling getValue('${field}') but the column \`${field}\` is not defined.`,
       `Instead, you can access the data from \`params.row.${field}\`.`,
     ].join('\n'),
   );
