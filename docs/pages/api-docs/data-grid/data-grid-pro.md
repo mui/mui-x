@@ -132,7 +132,7 @@ You can use the [slots API](/components/data-grid/components/#overriding-compone
 
 | Name | Type | Default | Description |
 |:-----|:-----|:--------|:------------|
-| <span class="prop-name">Checkbox</span> | <span class="prop-type">elementType</span> | <span class="prop-type">Checkbox</span> | Checkbox component used in the grid for both header and cells. By default, it uses the MUI core Checkbox component. |
+| <span class="prop-name">Checkbox</span> | <span class="prop-type">elementType</span> | <span class="prop-type">Checkbox</span> | Checkbox component used in the grid for both header and cells. By default, it uses the MUI Core Checkbox component. |
 | <span class="prop-name">ColumnFilteredIcon</span> | <span class="prop-type">elementType </span> | <span class="prop-type">FilterAltIcon</span> | Icon displayed on the column header menu to show that a filter has been applied to the column. |
 | <span class="prop-name">ColumnMenu</span> | <span class="prop-type">elementType&lt;GridColumnMenuProps></span> | <span class="prop-type">GridColumnMenu</span> | Column menu component rendered by clicking on the 3 dots "kebab" icon in column headers. |
 | <span class="prop-name">ColumnMenuIcon</span> | <span class="prop-type">elementType </span> | <span class="prop-type">TripleDotsVerticalIcon</span> | Icon displayed on the side of the column header title to display the filter input component. |
