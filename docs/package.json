@@ -27,7 +27,7 @@
     "@mui/icons-material": "^5.0.0",
     "@mui/material": "^5.0.0",
     "@mui/styles": "^5.0.1",
-    "@mui/utils": "^5.0.0",
+    "@mui/utils": "^5.0.1",
     "@trendmicro/react-interpolate": "^0.5.5",
     "@types/react-dom": "^17.0.9",
     "@types/react-router-dom": "^5.1.8",

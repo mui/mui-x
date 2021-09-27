@@ -10,11 +10,11 @@ import {
 import { currencyPairs } from '../data/currency-pairs';
 
 export interface PricingGridProps extends Omit<DataGridProProps, 'columns' | 'rows' | 'getRowId'> {
-  min?: number;
-  max?: number;
+  min: number;
+  max: number;
 }
 export const PricingGrid = (props: PricingGridProps) => {
-  const { min, max } = props;
+  const { min, max, ...other } = props;
   const [columns] = React.useState<GridColDef[]>(pricingColumns);
   const [rows] = React.useState<PricingModel[]>([]);
 
@@ -54,6 +54,7 @@ export const PricingGrid = (props: PricingGridProps) => {
       subscribeToStream();
     }
   };
+
   const getRowId = React.useCallback((row) => row.idfield, []);
   return (
     <React.Fragment>
@@ -68,7 +69,7 @@ export const PricingGrid = (props: PricingGridProps) => {
         </button>
       </div>
       <div style={{ width: 800, height: 600 }}>
-        <DataGridPro rows={rows} columns={columns} apiRef={apiRef} {...props} getRowId={getRowId} />
+        <DataGridPro rows={rows} columns={columns} apiRef={apiRef} {...other} getRowId={getRowId} />
       </div>
     </React.Fragment>
   );

@@ -94,7 +94,7 @@ function EditToolbar(props: EditToolbarProps) {
         rowIndex: apiRef.current.getRowsCount() - 1,
       });
       apiRef.current.setCellFocus(id, 'name');
-    }, 150);
+    });
   };
 
   return (
