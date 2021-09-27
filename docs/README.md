@@ -1,6 +1,6 @@
 # MUI docs
 
-This is the documentation website of MUI.
+This is the documentation website of MUI X.
 
 To start the docs site in development mode, from the project root, run:
 
