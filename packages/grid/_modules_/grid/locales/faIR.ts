@@ -109,5 +109,4 @@ const faIRGrid: Partial<GridLocaleText> = {
   MuiTablePagination: {},
 };
 
-
 export const faIR: Localization = getGridLocalization(faIRGrid);
