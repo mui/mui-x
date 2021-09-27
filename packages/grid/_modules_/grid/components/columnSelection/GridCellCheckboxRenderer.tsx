@@ -33,12 +33,18 @@ const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridCellPa
 
     const handleRef = useForkRef(checkboxElement, ref);
     const element = apiRef.current.getCellElement(id, field);
+    const shiftRef = React.useRef(false);
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-      apiRef.current.selectRow(id, event.target.checked, false);
+      if (shiftRef.current) {
+        apiRef.current.expandRowRangeSelection(id);
+      } else {
+        apiRef.current.selectRow(id, event.target.checked);
+      }
     };
 
     const handleClick = (event: React.MouseEvent<HTMLInputElement>) => {
+      shiftRef.current = event.shiftKey;
       event.stopPropagation();
     };
 

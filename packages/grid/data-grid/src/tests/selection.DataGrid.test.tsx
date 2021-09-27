@@ -119,11 +119,19 @@ describe('<DataGrid /> - Selection', () => {
       expect(getRow(1).querySelector('input')).to.have.property('disabled', true);
     });
 
-    it('should select a range with shift pressed', () => {
+    it('should select a range with shift pressed when clicking the row', () => {
       render(<TestDataGridSelection checkboxSelection />);
-      fireEvent.click(getCell(0, 0));
+      fireEvent.click(getCell(0, 1));
       expect(getSelectedRowIds()).to.deep.equal([0]);
-      fireEvent.click(getCell(2, 0), { shiftKey: true });
+      fireEvent.click(getCell(2, 1), { shiftKey: true });
+      expect(getSelectedRowIds()).to.deep.equal([0, 1, 2]);
+    });
+
+    it('should select a range with shift pressed when clicking the checkbox', () => {
+      render(<TestDataGridSelection checkboxSelection />);
+      fireEvent.click(getCell(0, 0).querySelector('input'));
+      expect(getSelectedRowIds()).to.deep.equal([0]);
+      fireEvent.click(getCell(2, 0).querySelector('input'), { shiftKey: true });
       expect(getSelectedRowIds()).to.deep.equal([0, 1, 2]);
     });
 

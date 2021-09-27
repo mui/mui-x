@@ -27,7 +27,7 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
   const logger = useGridLogger(apiRef, 'useGridSelection');
   const [, setGridState, forceUpdate] = useGridState(apiRef);
   const rowsLookup = useGridSelector(apiRef, gridRowsLookupSelector);
-  const lastRowToggledByClick = React.useRef<GridRowId | null>(null);
+  const lastRowToggled = React.useRef<GridRowId | null>(null);
 
   const propSelectionModel = React.useMemo(() => {
     if (props.selectionModel == null) {
@@ -56,6 +56,8 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
       if (isRowSelectable && !isRowSelectable(apiRef.current.getRowParams(id))) {
         return;
       }
+
+      lastRowToggled.current = id;
 
       if (resetSelection) {
         logger.debug(`Setting selection for row ${id}`);
@@ -143,6 +145,29 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
     [apiRef, logger],
   );
 
+  const expandRowRangeSelection = React.useCallback<GridSelectionApi['expandRowRangeSelection']>(
+    (id, resetSelection) => {
+      let endId = id;
+      const startId = lastRowToggled.current ?? id;
+      const isSelected = apiRef.current.isRowSelected(id);
+      if (isSelected) {
+        const visibleRowIds = visibleSortedGridRowIdsSelector(apiRef.current.state);
+        const startIndex = visibleRowIds.findIndex((rowId) => rowId === startId);
+        const endIndex = visibleRowIds.findIndex((rowId) => rowId === endId);
+        if (startIndex > endIndex) {
+          endId = visibleRowIds[endIndex + 1];
+        } else {
+          endId = visibleRowIds[endIndex - 1];
+        }
+      }
+
+      lastRowToggled.current = id;
+
+      apiRef.current.selectRowRange({ startId, endId }, !isSelected, resetSelection);
+    },
+    [apiRef],
+  );
+
   const setSelectionModel = React.useCallback<GridSelectionApi['setSelectionModel']>(
     (model) => {
       const currentModel = apiRef.current.state.selection;
@@ -168,20 +193,7 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
       const hasCtrlKey = event.metaKey || event.ctrlKey;
 
       if (event.shiftKey && (canHaveMultipleSelection || checkboxSelection)) {
-        let endId = params.id;
-        const startId = lastRowToggledByClick.current ?? params.id;
-        const isSelected = apiRef.current.isRowSelected(params.id);
-        if (isSelected) {
-          const visibleRowIds = visibleSortedGridRowIdsSelector(apiRef.current.state);
-          const startIndex = visibleRowIds.findIndex((id) => id === startId);
-          const endIndex = visibleRowIds.findIndex((id) => id === endId);
-          if (startIndex > endIndex) {
-            endId = visibleRowIds[endIndex + 1];
-          } else {
-            endId = visibleRowIds[endIndex - 1];
-          }
-        }
-        apiRef.current.selectRowRange({ startId, endId }, !isSelected);
+        apiRef.current.expandRowRangeSelection(params.id);
       } else {
         // Without checkboxSelection, multiple selection is only allowed if CTRL is pressed
         const isMultipleSelectionDisabled = !checkboxSelection && !hasCtrlKey;
@@ -197,8 +209,6 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
           apiRef.current.selectRow(params.id, !apiRef.current.isRowSelected(params.id), false);
         }
       }
-
-      lastRowToggledByClick.current = params.id;
     },
     [apiRef, canHaveMultipleSelection, disableSelectionOnClick, checkboxSelection],
   );
@@ -219,6 +229,7 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
     selectRow,
     selectRows,
     selectRowRange,
+    expandRowRangeSelection,
     setSelectionModel,
     getSelectedRows,
     isRowSelected,
