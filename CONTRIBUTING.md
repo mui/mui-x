@@ -1,6 +1,6 @@
 # Contributing to MUI X
 
-## MUI X vs. MUI
+## MUI X vs. MUI Core
 
 MUI X is an extension of MUI.
 The repositories are part of the same codebase.
