@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataGridPro, GridColumns, DataGridProProps } from '@mui/x-data-grid-pro';
+import { DataGridPro, DataGridProProps } from '@mui/x-data-grid-pro';
 import { Meta } from '@storybook/react';
 import Button from '@mui/material/Button';
 
