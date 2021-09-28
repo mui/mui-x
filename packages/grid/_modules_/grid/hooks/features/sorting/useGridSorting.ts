@@ -28,7 +28,6 @@ import {
   sortedGridRowsSelector,
 } from './gridSortingSelector';
 import { useGridStateInit } from '../../utils/useGridStateInit';
-import { useGridRegisterControlState } from '../../utils/useGridRegisterControlState';
 import { useFirstRender } from '../../utils/useFirstRender';
 
 /**
