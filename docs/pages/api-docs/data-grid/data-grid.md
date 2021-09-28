@@ -37,6 +37,7 @@ The name <code>MuiDataGrid</code> can be used when providing [default props](/cu
 | <span class="prop-name">disableDensitySelector</span> | <span class="prop-type">boolean</span> | false | If `true`, the density selector is disabled. |
 | <span class="prop-name">disableExtendRowFullWidth</span> | <span class="prop-type">boolean</span> | false | If `true`, rows will not be extended to fill the full width of the grid container. |
 | <span class="prop-name">disableSelectionOnClick</span> | <span class="prop-type">boolean</span> | false | If `true`, the selection on click on a row or cell is disabled. |
+| <span class="prop-name">disableVirtualization</span> | <span class="prop-type">boolean</span> | false | If `true`, the virtualization is disabled. |
 | <span class="prop-name">error</span> | <span class="prop-type">any</span> |   | An error that will turn the grid into its error state and display the error component. |
 | <span class="prop-name">editMode</span> | <span class="prop-type">GridEditMode</span> | 'cell'  | Controls whether to use the cell or row editing. |
 | <span class="prop-name">editRowsModel</span> | <span class="prop-type">GridEditRowsModel</span> | undefined  | Set the edit rows model of the grid. |
