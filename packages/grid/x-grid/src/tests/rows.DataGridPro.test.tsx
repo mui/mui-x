@@ -6,7 +6,7 @@ import {
 } from 'test/utils';
 import { useFakeTimers, spy } from 'sinon';
 import { expect } from 'chai';
-import { getCell, getColumnValues, raf, sleep } from 'test/utils/helperFn';
+import { getCell, getColumnValues } from 'test/utils/helperFn';
 import {
   GridApiRef,
   GridComponentProps,
@@ -218,7 +218,7 @@ describe('<DataGridPro /> - Rows', () => {
       expect(getColumnValues()).to.deep.equal(['Pata', 'Fila', 'Pum']);
     });
 
-    it.only('update row data can also add rows', () => {
+    it('update row data can also add rows', () => {
       render(<TestCase />);
       apiRef.current.updateRows([{ id: 1, brand: 'Fila' }]);
       apiRef.current.updateRows([{ id: 0, brand: 'Pata' }]);
