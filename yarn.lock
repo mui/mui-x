@@ -2375,9 +2375,9 @@
   version "4.12.3"
   resolved "https://github.com/mui-org/material-ui.git#5cc1d0fc8756534f181d55af02a5a0d65b486603"
 
-"@material-ui/monorepo@https://github.com/mui-org/material-ui.git#next":
-  version "5.0.0-beta.4"
-  resolved "https://github.com/mui-org/material-ui.git#5314e4247502b786b7993ff8bd813ee2db6e8682"
+"@material-ui/monorepo@https://github.com/mui-org/material-ui.git#v4.x":
+  version "4.12.3"
+  resolved "https://github.com/mui-org/material-ui.git#b7d2943f9a00021f526b1f55b98ba9e2d721cddd"
 
 "@material-ui/styles@^4.11.4":
   version "4.11.4"
