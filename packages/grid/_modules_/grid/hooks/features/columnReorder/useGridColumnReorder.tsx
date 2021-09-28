@@ -88,8 +88,6 @@ export const useGridColumnReorder = (
       dragColNode.current = event.currentTarget;
       dragColNode.current.classList.add(classes.columnHeaderDragging);
 
-      apiRef.current.publishEvent(GridEvents.columnReorderStart, { field: params.field });
-
       setGridState((state) => ({
         ...state,
         columnReorder: { ...state.columnReorder, dragCol: params.field },
@@ -171,8 +169,6 @@ export const useGridColumnReorder = (
 
       clearTimeout(removeDnDStylesTimeout.current);
       dragColNode.current = null;
-
-      apiRef.current.publishEvent(GridEvents.columnReorderStop, { field: params.field });
 
       // Check if the column was dropped outside the grid.
       if (event.dataTransfer.dropEffect === 'none') {
