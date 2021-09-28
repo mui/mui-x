@@ -1058,7 +1058,7 @@ describe('<DataGrid /> - Filter', () => {
   });
 
   describe('Filter preference panel', () => {
-    it('default filter input value should be empty string', () => {
+    it('should show an empty string as the default filter input value', () => {
       render(
         <TestCase
           field="brand"
@@ -1071,11 +1071,7 @@ describe('<DataGrid /> - Filter', () => {
           }}
         />,
       );
-
-      const filterValueInput: HTMLInputElement | null = document.querySelector(
-        '[placeholder="Filter value"]',
-      );
-      expect(filterValueInput!.value).to.equal('');
+      expect(screen.getByRole('textbox', { name: 'Value' }).value).to.equal('');
     });
   });
 });
