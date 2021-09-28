@@ -6,7 +6,7 @@ import {
 } from 'test/utils';
 import { useFakeTimers, spy } from 'sinon';
 import { expect } from 'chai';
-import {getCell, getColumnValues, raf, sleep} from 'test/utils/helperFn';
+import { getCell, getColumnValues, raf, sleep } from 'test/utils/helperFn';
 import {
   GridApiRef,
   GridComponentProps,

@@ -171,7 +171,7 @@ export const useGridFilter = (
       });
       forceUpdate();
 
-      return true
+      return true;
     },
     [apiRef, forceUpdate, logger, setGridState],
   );
@@ -181,44 +181,44 @@ export const useGridFilter = (
 
     let hasAppliedAtLeastOneFilter = false;
 
-      if (props.filterMode === GridFeatureModeConstant.client) {
-          // Clearing filtered rows
-          setGridState(state => ({
-              ...state,
-              filter: {
-                  ...state.filter,
-                  visibleRowsLookup: {},
-                  visibleRows: [],
-                  visibleRowCount: 0,
-              }
-          }))
+    if (props.filterMode === GridFeatureModeConstant.client) {
+      // Clearing filtered rows
+      setGridState((state) => ({
+        ...state,
+        filter: {
+          ...state.filter,
+          visibleRowsLookup: {},
+          visibleRows: [],
+          visibleRowCount: 0,
+        },
+      }));
 
-          items.forEach((filterItem) => {
-              const hasAppliedFilter = apiRef.current.applyFilter(filterItem, linkOperator)
-              hasAppliedAtLeastOneFilter = hasAppliedAtLeastOneFilter || hasAppliedFilter;
-          });
-      }
+      items.forEach((filterItem) => {
+        const hasAppliedFilter = apiRef.current.applyFilter(filterItem, linkOperator);
+        hasAppliedAtLeastOneFilter = hasAppliedAtLeastOneFilter || hasAppliedFilter;
+      });
+    }
 
-      //  If no filter has been applied, we set all rows to be visible
-      if (!hasAppliedAtLeastOneFilter) {
-          setGridState((state) => {
-              const rowIds = gridSortedRowIdsFlatSelector(state);
-              const visibleRowsLookup = Object.fromEntries(rowIds.map((rowId) => [rowId, true]));
-              const visibleRows = [...rowIds];
+    //  If no filter has been applied, we set all rows to be visible
+    if (!hasAppliedAtLeastOneFilter) {
+      setGridState((state) => {
+        const rowIds = gridSortedRowIdsFlatSelector(state);
+        const visibleRowsLookup = Object.fromEntries(rowIds.map((rowId) => [rowId, true]));
+        const visibleRows = [...rowIds];
 
-              return {
-                  ...state,
-                  filter: {
-                      ...state.filter,
-                      visibleRowsLookup,
-                      visibleRows,
-                      visibleRowCount: gridRowCountSelector(state),
-                  },
-              };
-          });
-      }
+        return {
+          ...state,
+          filter: {
+            ...state.filter,
+            visibleRowsLookup,
+            visibleRows,
+            visibleRowCount: gridRowCountSelector(state),
+          },
+        };
+      });
+    }
 
-      forceUpdate();
+    forceUpdate();
   }, [apiRef, setGridState, forceUpdate, props.filterMode]);
 
   const upsertFilter = React.useCallback<GridFilterApi['upsertFilter']>(
