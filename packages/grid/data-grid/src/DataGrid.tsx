@@ -199,7 +199,7 @@ DataGridRaw.propTypes = {
   getRowId: PropTypes.func,
   /**
    * Determines the path of a row in the tree data
-   * @param {GridRowParams} params With all properties from [[GridRowParams]].
+   * @param {GridRowModel} row The row from which we want the path.
    * @returns {string[]} the path to the row
    */
   getTreeDataPath: PropTypes.func,
