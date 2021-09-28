@@ -8,7 +8,6 @@ import { useGridLogger } from '../../utils';
 import { useGridSelector, useGridState } from '../core';
 import { gridContainerSizesSelector } from '../../root/gridContainerSizesSelector';
 import { useGridStateInit } from '../../utils/useGridStateInit';
-import { useGridRegisterControlState } from '../../utils/useGridRegisterControlState';
 import { gridPageSizeSelector } from './gridPaginationSelector';
 
 /**
@@ -30,7 +29,7 @@ export const useGridPageSize = (
 
   const containerSizes = useGridSelector(apiRef, gridContainerSizesSelector);
 
-  useGridRegisterControlState(apiRef, {
+  apiRef.current.updateControlState({
     stateId: 'pageSize',
     propModel: props.pageSize,
     propOnChange: props.onPageSizeChange,

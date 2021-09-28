@@ -25,7 +25,6 @@ import {
   gridFilterModelSelector,
 } from './gridFilterSelector';
 import { GridSortedRowsTreeNode } from '../sorting';
-import { useGridRegisterControlState } from '../../utils/useGridRegisterControlState';
 import { useGridStateInit } from '../../utils/useGridStateInit';
 import { useFirstRender } from '../../utils/useFirstRender';
 import { gridRowCountSelector } from '../rows';
@@ -74,7 +73,7 @@ export const useGridFilter = (
 
   const [, setGridState, forceUpdate] = useGridState(apiRef);
 
-  useGridRegisterControlState(apiRef, {
+  apiRef.current.updateControlState({
     stateId: 'filter',
     propModel: props.filterModel,
     propOnChange: props.onFilterModelChange,

@@ -10,7 +10,6 @@ import { GridPageApi } from '../../../models/api/gridPageApi';
 import { GridPaginationState } from './gridPaginationState';
 import { gridVisibleRowCountSelector } from '../filter';
 import { useGridStateInit } from '../../utils/useGridStateInit';
-import { useGridRegisterControlState } from '../../utils/useGridRegisterControlState';
 import { gridPageSelector } from './gridPaginationSelector';
 
 const getPageCount = (rowCount: number, pageSize: number): number => {
@@ -56,7 +55,7 @@ export const useGridPage = (
 
   const visibleRowCount = useGridSelector(apiRef, gridVisibleRowCountSelector);
 
-  useGridRegisterControlState(apiRef, {
+  apiRef.current.updateControlState({
     stateId: 'page',
     propModel: props.page,
     propOnChange: props.onPageChange,

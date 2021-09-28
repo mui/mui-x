@@ -34,7 +34,6 @@ import { useEventCallback } from '../../../utils/material-ui-utils';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { useGridState } from '../core/useGridState';
 import { useGridSelector } from '../core/useGridSelector';
-import { useGridRegisterControlState } from '../../utils/useGridRegisterControlState';
 import { useGridStateInit } from '../../utils/useGridStateInit';
 import { gridEditRowsStateSelector } from './gridEditRowsSelector';
 
@@ -69,7 +68,7 @@ export function useGridEditRows(
   const nextFocusedCell = React.useRef<GridCellParams | null>(null);
   const columns = useGridSelector(apiRef, allGridColumnsSelector);
 
-  useGridRegisterControlState(apiRef, {
+  apiRef.current.updateControlState({
     stateId: 'editRows',
     propModel: props.editRowsModel,
     propOnChange: props.onEditRowsModelChange,

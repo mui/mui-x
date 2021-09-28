@@ -19,7 +19,6 @@ import { GridColumnsPreProcessing } from '../../root/columnsPreProcessing';
 import { gridCheckboxSelectionColDef, GridColDef } from '../../../models';
 import { composeClasses } from '../../../utils/material-ui-utils';
 import { getDataGridUtilityClass } from '../../../gridClasses';
-import { useGridRegisterControlState } from '../../utils/useGridRegisterControlState';
 import { useGridStateInit } from '../../utils/useGridStateInit';
 
 type OwnerState = { classes: GridComponentProps['classes'] };
@@ -64,7 +63,7 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
   const ownerState = { classes: props.classes };
   const classes = useUtilityClasses(ownerState);
 
-  const isStateControlled = useGridRegisterControlState(apiRef, {
+  apiRef.current.updateControlState({
     stateId: 'selection',
     propModel: propSelectionModel,
     propOnChange: props.onSelectionModelChange,
@@ -205,6 +204,7 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
     }
   }, [apiRef, propSelectionModel]);
 
+  const isStateControlled = propSelectionModel != null;
   React.useEffect(() => {
     if (isStateControlled) {
       return;
