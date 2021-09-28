@@ -27,7 +27,11 @@ export const GridHeaderCheckbox = React.forwardRef<HTMLInputElement, GridColumnH
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
       const checked = event.target.checked;
-      const rowsToBeSelected = rootProps.checkboxSelectionVisibleOnly
+
+      const shouldLimitSelectionToCurrentPage =
+        rootProps.checkboxSelectionVisibleOnly && rootProps.pagination;
+
+      const rowsToBeSelected = shouldLimitSelectionToCurrentPage
         ? gridPaginatedVisibleSortedGridRowIdsSelector(apiRef.current.state)
         : visibleSortedGridRowIdsSelector(apiRef.current.state);
       apiRef!.current.selectRows(rowsToBeSelected, checked, !event.target.indeterminate);
