@@ -223,7 +223,7 @@ For instance, if you have a one-year license (default), you are not licensed to 
 
 ## Support
 
-For crowdsourced technical questions from expert MUI devs in our community. Also frequented by the MUI core team.
+For crowdsourced technical questions from expert MUI devs in our community. Also frequented by the MUI Core team.
 
 [Post a question](https://stackoverflow.com/questions/tagged/material-ui)
 
@@ -235,7 +235,7 @@ We use GitHub issues exclusively as a bug and feature request tracker. If you th
 
 ### StackOverflow <img src="/static/images/logos/stackoverflow.svg" width="24" height="24" alt="StackOverflow logo" loading="lazy" />
 
-For crowdsourced technical questions from expert MUI devs in our community. Also frequented by the MUI core team.
+For crowdsourced technical questions from expert MUI devs in our community. Also frequented by the MUI Core team.
 
 [Post a question](https://stackoverflow.com/questions/tagged/material-ui)
 
