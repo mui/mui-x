@@ -6,11 +6,11 @@ import { pricingColumns, PricingModel } from '../data/streaming/pricing-service'
 import { subscribeFeed } from '../data/streaming/single-subscription-service';
 
 export interface FeedGridProps extends Omit<DataGridProProps, 'rows' | 'columns' | 'getRowId'> {
-  min?: number;
-  max?: number;
+  min: number;
+  max: number;
 }
 export const FeedGrid = (props: FeedGridProps) => {
-  const { min, max } = props;
+  const { min, max, ...other } = props;
   const [columns] = React.useState<GridColDef[]>(pricingColumns);
   const [rows] = React.useState<PricingModel[]>([]);
 
@@ -67,7 +67,7 @@ export const FeedGrid = (props: FeedGridProps) => {
         </button>
       </div>
       <div style={{ width: 800, height: 600 }}>
-        <DataGridPro rows={rows} columns={columns} apiRef={apiRef} {...props} getRowId={getRowId} />
+        <DataGridPro rows={rows} columns={columns} apiRef={apiRef} {...other} getRowId={getRowId} />
       </div>
     </React.Fragment>
   );

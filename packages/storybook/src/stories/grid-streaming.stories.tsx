@@ -27,11 +27,13 @@ export const SlowUpdateGrid = () => {
       </p>
       <PricingGrid
         onSelectionModelChange={(params) => action('onSelectionChange', { depth: 1 })(params)}
+        throttleRowsMs={100}
         {...rate}
       />
     </React.Fragment>
   );
 };
+
 export const FastUpdateGrid = () => {
   const rate = { min: 100, max: 500 };
 
@@ -42,13 +44,15 @@ export const FastUpdateGrid = () => {
       </p>
       <PricingGrid
         onSelectionModelChange={(params) => action('onSelectionChange', { depth: 1 })(params)}
+        throttleRowsMs={100}
         {...rate}
       />
     </React.Fragment>
   );
 };
+
 export const SingleSubscriptionFast = () => {
-  const rate = { min: 100, max: 500 };
+  const rate = { min: 50, max: 500 };
   return (
     <React.Fragment>
       <p>
@@ -56,6 +60,22 @@ export const SingleSubscriptionFast = () => {
       </p>
       <FeedGrid
         onSelectionModelChange={(params) => action('onSelectionChange', { depth: 1 })(params)}
+        {...rate}
+      />
+    </React.Fragment>
+  );
+};
+
+export const SingleSubscriptionFastWithThrottle = () => {
+  const rate = { min: 50, max: 500 };
+  return (
+    <React.Fragment>
+      <p>
+        One Subscription for the whole feed! Update rate between {rate.min} - {rate.max} ms!
+      </p>
+      <FeedGrid
+        onSelectionModelChange={(params) => action('onSelectionChange', { depth: 1 })(params)}
+        throttleRowsMs={500}
         {...rate}
       />
     </React.Fragment>

@@ -112,7 +112,6 @@ describe('<DataGridPro /> - Filter', () => {
       },
     ];
     apiRef.current.setRows(newRows);
-    clock.tick(100);
     expect(getColumnValues()).to.deep.equal(['Asics']);
   });
 
@@ -120,7 +119,6 @@ describe('<DataGridPro /> - Filter', () => {
     render(<TestCase filterModel={filterModel} />);
     apiRef.current.updateRows([{ id: 1, brand: 'Fila' }]);
     apiRef.current.updateRows([{ id: 0, brand: 'Patagonia' }]);
-    clock.tick(100);
     expect(getColumnValues()).to.deep.equal(['Patagonia', 'Fila', 'Puma']);
   });
 

@@ -353,8 +353,8 @@ export const SingleSelectColumnType = () => {
 
   const data = {
     rows: [
-      { id: 0, country: 'bg', fruit: 1, rating: 5 },
-      { id: 1, country: 'nl', fruit: 2, rating: 4 },
+      { id: 0, country: 'bg', fruit: 1, rating: 5, role: 1 },
+      { id: 1, country: 'nl', fruit: 2, rating: 4, role: 0 },
     ],
     columns: [
       {
@@ -383,6 +383,14 @@ export const SingleSelectColumnType = () => {
         field: 'rating',
         type: 'singleSelect',
         valueOptions: ratings,
+        editable: true,
+        width: 200,
+      },
+      {
+        field: 'role',
+        type: 'singleSelect',
+        valueOptions: [0, 1, 2],
+        valueFormatter: ({ value }) => ['User', 'Admin', 'Superuser'][value],
         editable: true,
         width: 200,
       },
