@@ -31,7 +31,7 @@ export interface GridTypeFilterInputValueProps extends GridFilterInputValueProps
 function GridFilterInputValue(props: GridTypeFilterInputValueProps & TextFieldProps) {
   const { item, applyValue, type, apiRef, ...others } = props;
   const filterTimeout = React.useRef<any>();
-  const [filterValueState, setFilterValueState] = React.useState(item.value || '');
+  const [filterValueState, setFilterValueState] = React.useState(item.value ?? '');
   const [applying, setIsApplying] = React.useState(false);
   const id = useId();
   const singleSelectProps: TextFieldProps =
