@@ -17,7 +17,7 @@ import {
   gridSortedRowIdsFlatSelector,
   gridSortedRowsSelector,
 } from '../sorting/gridSortingSelector';
-import { getDefaultGridFilterModel } from './gridFilterState';
+import { getDefaultGridFilterModel, getEmptyVisibleRows } from './gridFilterState';
 import { GridFilterModel } from '../../../models/gridFilterModel';
 import {
   gridVisibleRowsLookupSelector,
@@ -27,7 +27,7 @@ import {
 import { GridSortedRowsTreeNode } from '../sorting';
 import { useGridStateInit } from '../../utils/useGridStateInit';
 import { useFirstRender } from '../../utils/useFirstRender';
-import { gridRowCountSelector } from '../rows';
+import { gridExpandedRowCountSelector, gridTopLevelRowCountSelector } from '../rows';
 
 const checkFilterModelValidity = (model: GridFilterModel) => {
   if (model.items.length > 1) {
@@ -64,9 +64,7 @@ export const useGridFilter = (
       ...state,
       filter: {
         filterModel: props.filterModel ?? getDefaultGridFilterModel(),
-        visibleRowsLookup: {},
-        visibleRows: [],
-        visibleRowCount: 0,
+        ...getEmptyVisibleRows(),
       },
     };
   });
@@ -123,12 +121,15 @@ export const useGridFilter = (
 
       setGridState((state) => {
         const visibleRowsLookup = { ...gridVisibleRowsLookupSelector(state) };
+        let visibleRowCount = 0;
+        let visibleTopLevelRowCount = 0;
+        const visibleRows: GridRowId[] = [];
 
         // We run the selector on the state here to avoid rendering the rows and then filtering again.
         // This way we have latest rows on the first rendering
         const rowTree = gridSortedRowsSelector(state);
 
-        const filterRowTree = (tree: Map<GridRowId, GridSortedRowsTreeNode>) => {
+        const filterRowTree = (tree: Map<GridRowId, GridSortedRowsTreeNode>, depth = 0) => {
           tree.forEach((node, id) => {
             const params = apiRef.current.getCellParams(id, newFilterItem.columnField!);
             const hasCurrentFilter = applyFilterOnRow(params);
@@ -146,17 +147,21 @@ export const useGridFilter = (
 
             visibleRowsLookup[id] = isVisible;
 
+            if (isVisible) {
+              visibleRows.push(id);
+              visibleRowCount += 1;
+              if (depth === 0) {
+                visibleTopLevelRowCount += 1;
+              }
+            }
+
             if (node.children) {
-              filterRowTree(node.children);
+              filterRowTree(node.children, depth + 1);
             }
           });
         };
 
         filterRowTree(rowTree);
-
-        const visibleRows = Object.entries(visibleRowsLookup)
-          .filter(([, isVisible]) => isVisible)
-          .map(([id]) => id);
 
         return {
           ...state,
@@ -164,7 +169,8 @@ export const useGridFilter = (
             ...state.filter,
             visibleRowsLookup,
             visibleRows,
-            visibleRowCount: visibleRows.length,
+            visibleRowCount,
+            visibleTopLevelRowCount,
           },
         };
       });
@@ -186,9 +192,7 @@ export const useGridFilter = (
         ...state,
         filter: {
           ...state.filter,
-          visibleRowsLookup: {},
-          visibleRows: [],
-          visibleRowCount: 0,
+          ...getEmptyVisibleRows(),
         },
       }));
 
@@ -211,11 +215,14 @@ export const useGridFilter = (
             ...state.filter,
             visibleRowsLookup,
             visibleRows,
-            visibleRowCount: gridRowCountSelector(state),
+            visibleRowCount: gridExpandedRowCountSelector(state),
+            visibleTopLevelRowCount: gridTopLevelRowCountSelector(state),
           },
         };
       });
     }
+
+    console.log(apiRef.current.state.filter.visibleRowCount);
 
     forceUpdate();
   }, [apiRef, setGridState, forceUpdate, props.filterMode]);

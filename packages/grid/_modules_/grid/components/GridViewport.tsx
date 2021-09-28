@@ -2,7 +2,10 @@ import * as React from 'react';
 import { visibleGridColumnsSelector } from '../hooks/features/columns/gridColumnsSelector';
 import { useGridSelector } from '../hooks/features/core/useGridSelector';
 import { gridDensityRowHeightSelector } from '../hooks/features/density/densitySelector';
-import { gridSortedVisibleRowsFlatSelector } from '../hooks/features/filter/gridFilterSelector';
+import {
+  gridSortedVisibleRowsAsArraySelector,
+  VisibleRow,
+} from '../hooks/features/filter/gridFilterSelector';
 import {
   gridFocusCellSelector,
   gridTabIndexCellSelector,
@@ -24,6 +27,15 @@ import {
 } from '../hooks/root/gridContainerSizesSelector';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 
+const getRowsSlice = (rows: VisibleRow[], startIndex: number, endIndex: number) => {
+  const topLevelRows = rows.slice(startIndex, endIndex);
+
+  const flattenRows = (nodes: VisibleRow[]) =>
+    nodes.flatMap((node) => [node, ...(node.children ? flattenRows(node.children) : [])]);
+
+  return flattenRows(topLevelRows);
+};
+
 type ViewportType = React.ForwardRefExoticComponent<React.RefAttributes<HTMLDivElement>>;
 
 export const GridViewport: ViewportType = React.forwardRef<HTMLDivElement, {}>(
@@ -38,7 +50,7 @@ export const GridViewport: ViewportType = React.forwardRef<HTMLDivElement, {}>(
     const cellFocus = useGridSelector(apiRef, gridFocusCellSelector);
     const cellTabIndex = useGridSelector(apiRef, gridTabIndexCellSelector);
     const selection = useGridSelector(apiRef, gridSelectionStateSelector);
-    const visibleSortedRows = useGridSelector(apiRef, gridSortedVisibleRowsFlatSelector);
+    const visibleSortedRows = useGridSelector(apiRef, gridSortedVisibleRowsAsArraySelector);
     const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
     const editRowsState = useGridSelector(apiRef, gridEditRowsStateSelector);
 
@@ -64,8 +76,9 @@ export const GridViewport: ViewportType = React.forwardRef<HTMLDivElement, {}>(
         return null;
       }
 
-      const renderedRows = visibleSortedRows.slice(
-        renderState.renderContext.firstRowIdx,
+      const renderedRows = getRowsSlice(
+        visibleSortedRows,
+        renderState.renderContext.firstRowIdx!,
         renderState.renderContext.lastRowIdx!,
       );
 

@@ -19,11 +19,11 @@ import { gridContainerSizesSelector } from '../../root/gridContainerSizesSelecto
 import { visibleGridColumnsLengthSelector } from '../columns/gridColumnsSelector';
 import { useGridSelector } from '../core/useGridSelector';
 import { gridPaginationSelector } from '../pagination/gridPaginationSelector';
-import { gridRowExpandedCountSelector } from '../rows/gridRowsSelector';
+import { gridExpandedRowCountSelector } from '../rows/gridRowsSelector';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
 import { GridComponentProps } from '../../../GridComponentProps';
-import { gridSortedVisibleRowsFlatSelector } from '../filter/gridFilterSelector';
+import { gridSortedVisibleRowsAsArrayFlatSelector } from '../filter/gridFilterSelector';
 
 const getNextCellIndexes = (key: string, indexes: GridCellIndexCoordinates) => {
   if (!isArrowKeys(key)) {
@@ -76,10 +76,10 @@ export const useGridKeyboardNavigation = (
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridKeyboardNavigation');
   const paginationState = useGridSelector(apiRef, gridPaginationSelector);
-  const expandedRowCount = useGridSelector(apiRef, gridRowExpandedCountSelector);
+  const expandedRowCount = useGridSelector(apiRef, gridExpandedRowCountSelector);
   const colCount = useGridSelector(apiRef, visibleGridColumnsLengthSelector);
   const containerSizes = useGridSelector(apiRef, gridContainerSizesSelector);
-  const visibleSortedRows = useGridSelector(apiRef, gridSortedVisibleRowsFlatSelector);
+  const visibleSortedRows = useGridSelector(apiRef, gridSortedVisibleRowsAsArrayFlatSelector);
 
   const mapKey = (event: React.KeyboardEvent) => {
     if (isEnterKey(event.key)) {

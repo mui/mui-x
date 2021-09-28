@@ -27,8 +27,17 @@ import {
   gridRowsPathSelector,
 } from './gridRowsSelector';
 
-export type GridRowsInternalCacheState = Omit<GridRowsState, 'tree' | 'paths'> & {
+export type GridRowsInternalCacheState = Omit<
+  GridRowsState,
+  'tree' | 'paths' | 'totalRowCount' | 'totalTopLevelRowCount'
+> & {
   rowIds: GridRowId[];
+
+  /**
+   * The row count property when the internal cache was created
+   * We are storing it instead of accessing it directly when storing the cache to avoid synchronization issues
+   */
+  propRowCount?: number;
 };
 
 export interface GridRowsInternalCache {
@@ -55,7 +64,7 @@ export function convertGridRowsPropToState(
   const state: GridRowsInternalCacheState = {
     idRowsLookup: {},
     rowIds: [],
-    totalRowCount: propRowCount && propRowCount > rows.length ? propRowCount : rows.length,
+    propRowCount,
   };
 
   rows.forEach((rowData) => {
@@ -132,13 +141,19 @@ const setRowExpansionInTree = (
   return clonedMap;
 };
 
-const getRowsStateFromCache = (rowsCache: GridRowsInternalCache, apiRef: GridApiRef) => {
-  const { rowIds, ...rowState } = rowsCache.state;
+const getRowsStateFromCache = (
+  rowsCache: GridRowsInternalCache,
+  apiRef: GridApiRef,
+): GridRowsState => {
+  const { rowIds, propRowCount = 0, ...rowState } = rowsCache.state;
   const { tree, paths } = apiRef.current.groupRows
     ? apiRef.current.groupRows(rowState.idRowsLookup, rowIds)
     : getFlatRowTree(rowIds);
 
-  return { ...rowState, tree, paths };
+  const totalRowCount = propRowCount > rowIds.length ? propRowCount : rowIds.length;
+  const totalTopLevelRowCount = propRowCount > tree.size ? propRowCount : tree.size;
+
+  return { ...rowState, tree, paths, totalRowCount, totalTopLevelRowCount };
 };
 
 /**
@@ -154,7 +169,7 @@ export const useGridRows = (
   const rowsCache = React.useRef<GridRowsInternalCache>({
     state: {
       idRowsLookup: {},
-      totalRowCount: 0,
+      propRowCount: undefined,
       rowIds: [],
     },
     timeout: null,
@@ -296,13 +311,10 @@ export const useGridRows = (
         rowIds = rowIds.filter((id) => !deletedRowIds.includes(id));
       }
 
-      const totalRowCount =
-        props.rowCount && props.rowCount > rowIds.length ? props.rowCount : rowIds.length;
-
       const state: GridRowsInternalCacheState = {
         idRowsLookup,
         rowIds,
-        totalRowCount,
+        propRowCount: props.rowCount,
       };
 
       throttledRowsChange(state, true);

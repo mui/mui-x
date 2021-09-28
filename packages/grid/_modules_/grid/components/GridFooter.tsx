@@ -1,8 +1,11 @@
 import * as React from 'react';
 import { useGridSelector } from '../hooks/features/core/useGridSelector';
-import { gridRowCountSelector } from '../hooks/features/rows/gridRowsSelector';
+import {
+  gridRowCountSelector,
+  gridTopLevelRowCountSelector,
+} from '../hooks/features/rows/gridRowsSelector';
 import { selectedGridRowsCountSelector } from '../hooks/features/selection/gridSelectionSelector';
-import { gridVisibleRowCountSelector } from '../hooks/features/filter/gridFilterSelector';
+import { gridVisibleTopLevelRowCountSelector } from '../hooks/features/filter/gridFilterSelector';
 import { useGridApiContext } from '../hooks/root/useGridApiContext';
 import { GridRowCount } from './GridRowCount';
 import { GridSelectedRowCount } from './GridSelectedRowCount';
@@ -13,9 +16,9 @@ export const GridFooter = React.forwardRef<HTMLDivElement, GridFooterContainerPr
   function GridFooter(props, ref) {
     const apiRef = useGridApiContext();
     const rootProps = useGridRootProps();
-    const totalRowCount = useGridSelector(apiRef, gridRowCountSelector);
+    const totalTopLevelRowCount = useGridSelector(apiRef, gridTopLevelRowCountSelector);
     const selectedRowCount = useGridSelector(apiRef, selectedGridRowsCountSelector);
-    const visibleRowCount = useGridSelector(apiRef, gridVisibleRowCountSelector);
+    const visibleTopLevelRowCount = useGridSelector(apiRef, gridVisibleTopLevelRowCountSelector);
 
     const selectedRowCountElement =
       !rootProps.hideFooterSelectedRowCount && selectedRowCount > 0 ? (
@@ -26,7 +29,7 @@ export const GridFooter = React.forwardRef<HTMLDivElement, GridFooterContainerPr
 
     const rowCountElement =
       !rootProps.hideFooterRowCount && !rootProps.pagination ? (
-        <GridRowCount rowCount={totalRowCount} visibleRowCount={visibleRowCount} />
+        <GridRowCount rowCount={totalTopLevelRowCount} visibleRowCount={visibleTopLevelRowCount} />
       ) : null;
 
     const paginationElement = rootProps.pagination &&

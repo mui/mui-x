@@ -11,6 +11,11 @@ export const gridRowCountSelector = createSelector(
   (rows) => rows.totalRowCount,
 );
 
+export const gridTopLevelRowCountSelector = createSelector(
+  gridRowsStateSelector,
+  (rows) => rows.totalTopLevelRowCount,
+);
+
 export const gridRowsLookupSelector = createSelector(
   gridRowsStateSelector,
   (rows) => rows.idRowsLookup,
@@ -40,7 +45,7 @@ export const gridRowExpandedTreeSelector = createSelector(gridRowTreeSelector, (
   return removeCollapsedNodes(rowsTree);
 });
 
-export const gridRowExpandedCountSelector = createSelector(
+export const gridExpandedRowCountSelector = createSelector(
   gridRowExpandedTreeSelector,
   (expandedRows) => {
     const countNodes = (tree: GridRowConfigTree) => {

@@ -28,6 +28,11 @@ export const gridVisibleRowCountSelector = createSelector(
   (filterState) => filterState.visibleRowCount,
 );
 
+export const gridVisibleTopLevelRowCountSelector = createSelector(
+  gridFilterStateSelector,
+  (filterState) => filterState.visibleTopLevelRowCount,
+);
+
 export const gridSortedVisibleRowsSelector = createSelector(
   gridVisibleRowsLookupSelector,
   gridSortedRowsSelector,
@@ -51,7 +56,23 @@ export const gridSortedVisibleRowsSelector = createSelector(
   },
 );
 
-export const gridSortedVisibleRowsFlatSelector = createSelector(
+export type VisibleRow = { id: GridRowId; node: GridRowModel; children?: VisibleRow[] };
+
+export const gridSortedVisibleRowsAsArraySelector = createSelector(
+  gridSortedVisibleRowsSelector,
+  (rows) => {
+    const flattenRowIds = (nodes: Map<GridRowId, GridSortedRowsTreeNode>): VisibleRow[] =>
+      Array.from(nodes.entries()).map(([id, row]) => ({
+        id,
+        node: row.node,
+        children: row.children ? flattenRowIds(row.children) : undefined,
+      }));
+
+    return flattenRowIds(rows);
+  },
+);
+
+export const gridSortedVisibleRowsAsArrayFlatSelector = createSelector(
   gridSortedVisibleRowsSelector,
   (rows) => {
     const flattenRowIds = (
