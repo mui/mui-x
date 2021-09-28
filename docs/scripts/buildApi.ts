@@ -38,7 +38,9 @@ function generateType(type, needsParenthesis = false) {
       text += type.declaration.children
         .map((child) => {
           let memberText = child.name;
-          if (child.flags.isOptional) memberText += '?';
+          if (child.flags.isOptional) {
+            memberText += '?';
+          }
           return `${memberText}: ${child.type ? generateType(child.type) : 'any'}`;
         })
         .join('; ');
@@ -73,8 +75,12 @@ function generateSignature(signature, needsParenthesis = false) {
     text += signature.typeParameters
       .map((generic) => {
         let genericLine = generic.name;
-        if (generic.type) genericLine += ` extends ${generateType(generic.type)}`;
-        if (generic.default) genericLine += ` = ${generateType(generic.default)}`;
+        if (generic.type) {
+          genericLine += ` extends ${generateType(generic.type)}`;
+        }
+        if (generic.default) {
+          genericLine += ` = ${generateType(generic.default)}`;
+        }
         return genericLine;
       })
       .join(', ');
@@ -84,8 +90,12 @@ function generateSignature(signature, needsParenthesis = false) {
   text += signature
     .parameters!.map((param) => {
       let paramText = param.flags.isRest ? `...${param.name}` : param.name;
-      if (param.flags.isOptional) paramText += '?';
-      if (param.defaultValue) paramText += '?';
+      if (param.flags.isOptional) {
+        paramText += '?';
+      }
+      if (param.defaultValue) {
+        paramText += '?';
+      }
       return `${paramText}: ${generateType(param.type)}`;
     })
     .join(', ');

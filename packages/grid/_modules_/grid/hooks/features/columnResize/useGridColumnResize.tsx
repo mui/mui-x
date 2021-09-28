@@ -245,7 +245,9 @@ export const useGridColumnResize = (
       gridClasses['columnSeparator--resizable'],
     );
     // Let the event bubble if the target is not a col separator
-    if (!cellSeparator) return;
+    if (!cellSeparator) {
+      return;
+    }
     // If touch-action: none; is not supported we need to prevent the scroll manually.
     if (!doesSupportTouchActionNone()) {
       event.preventDefault();
