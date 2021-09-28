@@ -11,9 +11,9 @@ const itITGrid: Partial<GridLocaleText> = {
   // Density selector toolbar button text
   toolbarDensity: 'Densità',
   toolbarDensityLabel: 'Densità',
-  toolbarDensityCompact: 'Compact',
+  toolbarDensityCompact: 'Compatta',
   toolbarDensityStandard: 'Standard',
-  toolbarDensityComfortable: 'Confortable',
+  toolbarDensityComfortable: 'Comoda',
 
   // Columns selector toolbar button text
   toolbarColumns: 'Colonne',
@@ -28,9 +28,9 @@ const itITGrid: Partial<GridLocaleText> = {
     count > 1 ? `${count} filtri attivi` : `${count} filtro attivo`,
 
   // Export selector toolbar button text
-  // toolbarExport: 'Export',
-  // toolbarExportLabel: 'Export',
-  // toolbarExportCSV: 'Download as CSV',
+  toolbarExport: 'Esporta',
+  toolbarExportLabel: 'Esporta',
+  toolbarExportCSV: 'Esporta in CSV',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'Cerca colonna',
@@ -85,7 +85,7 @@ const itITGrid: Partial<GridLocaleText> = {
       : `${count.toLocaleString()} record selezionato`,
 
   // Total rows footer text
-  footerTotalRows: 'Record totali :',
+  footerTotalRows: 'Record totali:',
 
   // Total visible rows footer text
   footerTotalVisibleRows: (visibleCount, totalCount) =>
