@@ -16,7 +16,6 @@ import {
   selectedGridRowsSelector,
   selectedIdsLookupSelector,
 } from './gridSelectionSelector';
-import { useGridRegisterControlState } from '../../utils/useGridRegisterControlState';
 import { useGridStateInit } from '../../utils/useGridStateInit';
 
 /**
@@ -44,7 +43,7 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
   const [, setGridState, forceUpdate] = useGridState(apiRef);
   const rowsLookup = useGridSelector(apiRef, gridRowsLookupSelector);
 
-  const isStateControlled = useGridRegisterControlState(apiRef, {
+  apiRef.current.updateControlState({
     stateId: 'selection',
     propModel: propSelectionModel,
     propOnChange: props.onSelectionModelChange,
@@ -205,6 +204,7 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
     }
   }, [apiRef, propSelectionModel]);
 
+  const isStateControlled = propSelectionModel != null;
   React.useEffect(() => {
     if (isStateControlled) {
       return;

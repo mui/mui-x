@@ -59,7 +59,7 @@ export const useGridSorting = (
 
   const [, setGridState, forceUpdate] = useGridState(apiRef);
 
-  useGridRegisterControlState(apiRef, {
+  apiRef.current.updateControlState({
     stateId: 'sortModel',
     propModel: props.sortModel,
     propOnChange: props.onSortModelChange,
