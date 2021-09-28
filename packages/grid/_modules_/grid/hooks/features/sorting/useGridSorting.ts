@@ -294,23 +294,19 @@ export const useGridSorting = (
 
   const onColUpdated = React.useCallback(() => {
     // When the columns change we check that the sorted columns are still part of the dataset
-    setGridState((state) => {
-      const sortModel = state.sorting.sortModel;
-      const latestColumns = allGridColumnsSelector(state);
-      let newModel = sortModel;
-      if (sortModel.length > 0) {
-        newModel = sortModel.reduce((model, sortedCol) => {
-          const exist = latestColumns.find((col) => col.field === sortedCol.field);
-          if (exist) {
-            model.push(sortedCol);
-          }
-          return model;
-        }, [] as GridSortModel);
-      }
+    const sortModel = gridSortModelSelector(apiRef.current.state);
+    const latestColumns = allGridColumnsSelector(apiRef.current.state);
 
-      return { ...state, sorting: { ...state.sorting, sortModel: newModel } };
-    });
-  }, [setGridState]);
+    if (sortModel.length > 0) {
+      const newModel = sortModel.filter((sortItem) =>
+        latestColumns.find((col) => col.field === sortItem.field),
+      );
+
+      if (newModel.length < sortModel.length) {
+        apiRef.current.setSortModel(newModel);
+      }
+    }
+  }, [apiRef]);
 
   useGridApiEventHandler(apiRef, GridEvents.columnHeaderClick, handleColumnHeaderClick);
   useGridApiEventHandler(apiRef, GridEvents.columnHeaderKeyDown, handleColumnHeaderKeyDown);
