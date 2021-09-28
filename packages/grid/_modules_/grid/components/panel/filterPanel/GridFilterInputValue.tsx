@@ -78,7 +78,7 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps & TextFieldPr
   }, []);
 
   React.useEffect(() => {
-    const itemValue = item.value || '';
+    const itemValue = item.value ?? '';
     setFilterValueState(String(itemValue));
   }, [item.value]);
 
