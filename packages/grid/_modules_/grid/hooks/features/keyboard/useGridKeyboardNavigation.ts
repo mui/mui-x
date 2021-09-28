@@ -193,7 +193,7 @@ export const useGridKeyboardNavigation = (
 
       if (!nextColumnHeaderIndexes) {
         const field = apiRef.current.getVisibleColumns()[colIndex].field;
-        const id = apiRef.current.getRowIdFromRowIndex(0);
+        const [id] = visibleSortedRowsAsArray[0];
         apiRef.current.setCellFocus(id, field);
         return;
       }
@@ -209,7 +209,7 @@ export const useGridKeyboardNavigation = (
       const field = apiRef.current.getVisibleColumns()[nextColumnHeaderIndexes.colIndex].field;
       apiRef.current.setColumnHeaderFocus(field, event);
     },
-    [apiRef, colCount, containerSizes, logger],
+    [apiRef, colCount, containerSizes, logger, visibleSortedRowsAsArray],
   );
 
   useGridApiEventHandler(apiRef, GridEvents.cellNavigationKeyDown, navigateCells);
