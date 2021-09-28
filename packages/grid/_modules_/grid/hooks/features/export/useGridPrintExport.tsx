@@ -10,6 +10,10 @@ import { useGridState } from '../core/useGridState';
 import { GridComponentProps } from '../../../GridComponentProps';
 import { GridPrintExportOptions } from '../../../models/gridExport';
 import { allGridColumnsSelector } from '../columns/gridColumnsSelector';
+import {
+  gridDensityRowHeightSelector,
+  gridDensityHeaderHeightSelector,
+} from '../density/densitySelector';
 
 type PrintWindowOnLoad = (
   printWindow: HTMLIFrameElement,
@@ -28,10 +32,12 @@ type PrintWindowOnLoad = (
  */
 export const useGridPrintExport = (
   apiRef: GridApiRef,
-  props: Pick<GridComponentProps, 'rowHeight' | 'pagination' | 'headerHeight'>,
+  props: Pick<GridComponentProps, 'pagination'>,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridPrintExport');
   const [gridState, setGridState] = useGridState(apiRef);
+  const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
+  const headerHeight = useGridSelector(apiRef, gridDensityHeaderHeightSelector);
   const visibleRowCount = useGridSelector(apiRef, visibleGridRowCountSelector);
   const columns = useGridSelector(apiRef, allGridColumnsSelector);
   const doc = React.useRef<Document | null>(null);
@@ -79,6 +85,8 @@ export const useGridPrintExport = (
     const iframeEl = document.createElement('iframe');
 
     iframeEl.id = 'grid-print-window';
+    // Without this 'onload' event won't fire in some browsers
+    iframeEl.src = window.location.href;
     iframeEl.style.position = 'absolute';
     iframeEl.style.width = '0px';
     iframeEl.style.height = '0px';
@@ -108,26 +116,38 @@ export const useGridPrintExport = (
 
       const gridRootElement = apiRef.current.rootElementRef!.current;
       const gridClone = gridRootElement!.cloneNode(true) as HTMLElement;
-      const gridToolbarElementHeight =
+      const gridCloneViewport: HTMLElement | null =
+        gridClone.querySelector('.MuiDataGrid-viewport');
+
+      // Expand the viewport window to prevent clipping
+      gridCloneViewport!.style.minWidth = '100%';
+      gridCloneViewport!.style.maxWidth = '100%';
+
+      let gridToolbarElementHeight =
         gridRootElement!.querySelector('.MuiDataGrid-toolbarContainer')?.clientHeight || 0;
-      const gridFooterElementHeight =
+      let gridFooterElementHeight =
         gridRootElement!.querySelector('.MuiDataGrid-footerContainer')?.clientHeight || 0;
 
       if (normalizeOptions.hideToolbar) {
         gridClone.querySelector('.MuiDataGrid-toolbarContainer')?.remove();
+        gridToolbarElementHeight = 0;
       }
 
       if (normalizeOptions.hideFooter) {
         gridClone.querySelector('.MuiDataGrid-footerContainer')?.remove();
+        gridFooterElementHeight = 0;
       }
 
       // Expand container height to accommodate all rows
       gridClone.style.height = `${
-        visibleRowCount * props.rowHeight +
-        props.headerHeight +
+        visibleRowCount * rowHeight +
+        headerHeight +
         gridToolbarElementHeight +
         gridFooterElementHeight
       }px`;
+
+      // Remove all loaded elements from the current host
+      printDoc.body.innerHTML = '';
       printDoc.body.appendChild(gridClone);
 
       const defaultPageStyle =
@@ -184,7 +204,7 @@ export const useGridPrintExport = (
       // Trigger print
       printWindow.contentWindow!.print();
     },
-    [apiRef, doc, visibleRowCount, props.rowHeight, props.headerHeight],
+    [apiRef, doc, visibleRowCount, rowHeight, headerHeight],
   );
 
   const handlePrintWindowAfterPrint = React.useCallback(

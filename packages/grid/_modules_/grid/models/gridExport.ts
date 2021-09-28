@@ -35,8 +35,8 @@ export interface GridCsvExportOptions {
  */
 export interface GridPrintExportOptions {
   /**
-   * The string used as the print window title.
-   * @default 'Print Window'
+   * The value to be used as the print window title.
+   * @default The title of the page.
    */
   fileName?: string;
   /**

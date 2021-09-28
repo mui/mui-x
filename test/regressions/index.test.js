@@ -118,11 +118,6 @@ async function main() {
           await page.$eval(`li[role="menuitem"]:last-child`, (printButton) => {
             printButton.click();
           });
-          // Because by default the iframe doesn't have a src the `onload` won't be fired in Chromium
-          // uncess there src value matches the current window location.
-          await page.$eval(`#grid-print-window`, (printWindow) => {
-            printWindow.src = window.location.href;
-          });
           // Delay the main thread with some time to alow the iframe content to be loaded.
           await sleep(2000);
           // Grab the content of the print iframe.
