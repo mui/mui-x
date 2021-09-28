@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-use-before-define */
 import * as React from 'react';
 import { createTheme } from '@material-ui/core/styles';
 import { makeStyles } from '@material-ui/styles';

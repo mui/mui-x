@@ -62,9 +62,7 @@ module.exports = {
 
     if (config.externals) {
       config.externals = config.externals.map((external) => {
-        if (typeof external !== 'function') {
-          return external;
-        }
+        if (typeof external !== 'function') return external;
         return (ctx, req, cb) => {
           return includesMonorepo.find((include) =>
             req.startsWith('.') ? include.test(path.resolve(ctx, req)) : include.test(req),

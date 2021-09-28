@@ -61,7 +61,7 @@
     "@material-ui/core": "^4.9.12",
     "@material-ui/icons": "^4.11.2",
     "@material-ui/lab": "^4.0.0-alpha.54",
-    "@material-ui/monorepo": "https://github.com/mui-org/material-ui.git#0bab71409bcc0865ab3e0fcbfa14fa824ddc5495",
+    "@material-ui/monorepo": "https://github.com/mui-org/material-ui.git#5314e4247502b786b7993ff8bd813ee2db6e8682",
     "@material-ui/unstyled": "next",
     "@rollup/plugin-node-resolve": "^13.0.4",
     "@rollup/plugin-replace": "^3.0.0",

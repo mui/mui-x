@@ -389,9 +389,7 @@ export const useGridVirtualRows = (
   const scrollingTimeout = React.useRef<any>(null);
   const handleScroll = React.useCallback(() => {
     // On iOS the inertia scrolling allows to return negative values.
-    if (windowRef.current!.scrollLeft < 0 || windowRef.current!.scrollTop < 0) {
-      return;
-    }
+    if (windowRef.current!.scrollLeft < 0 || windowRef.current!.scrollTop < 0) return;
 
     if (!scrollingTimeout.current) {
       setGridState((state) => ({ ...state, isScrolling: true }));
@@ -425,13 +423,15 @@ export const useGridVirtualRows = (
     [windowRef, colRef, logger],
   );
 
-  const getScrollPosition = React.useCallback(() => scrollStateSelector(apiRef.current.state), [
-    apiRef,
-  ]);
+  const getScrollPosition = React.useCallback(
+    () => scrollStateSelector(apiRef.current.state),
+    [apiRef],
+  );
 
-  const getContainerPropsState = React.useCallback(() => gridState.containerSizes, [
-    gridState.containerSizes,
-  ]);
+  const getContainerPropsState = React.useCallback(
+    () => gridState.containerSizes,
+    [gridState.containerSizes],
+  );
 
   const getRenderContextState = React.useCallback(() => {
     return gridState.rendering.renderContext || undefined;
