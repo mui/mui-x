@@ -168,7 +168,8 @@
         "name": "arrayOf",
         "description": "Array&lt;{ field: string, sort?: 'asc'<br>&#124;&nbsp;'desc' }&gt;"
       }
-    }
+    },
+    "throttleRowsMs": { "type": { "name": "number" }, "default": "0" }
   },
   "slots": {
     "BooleanCellFalseIcon": { "default": "GridCloseIcon", "type": { "name": "elementType" } },
