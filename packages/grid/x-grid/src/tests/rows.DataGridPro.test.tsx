@@ -6,7 +6,7 @@ import {
 } from 'test/utils';
 import { useFakeTimers, spy } from 'sinon';
 import { expect } from 'chai';
-import { getCell, getColumnValues } from 'test/utils/helperFn';
+import {getCell, getColumnValues, raf, sleep} from 'test/utils/helperFn';
 import {
   GridApiRef,
   GridComponentProps,
@@ -218,7 +218,7 @@ describe('<DataGridPro /> - Rows', () => {
       expect(getColumnValues()).to.deep.equal(['Pata', 'Fila', 'Pum']);
     });
 
-    it('update row data can also add rows', () => {
+    it.only('update row data can also add rows', () => {
       render(<TestCase />);
       apiRef.current.updateRows([{ id: 1, brand: 'Fila' }]);
       apiRef.current.updateRows([{ id: 0, brand: 'Pata' }]);
@@ -805,7 +805,7 @@ describe('<DataGridPro /> - Rows', () => {
       expect(handleCellFocusOut.args[0][0].field).to.equal(baselineProps.columns[0].field);
     });
 
-    it.only('should not crash when the row is removed during the click', () => {
+    it('should not crash when the row is removed during the click', () => {
       expect(() => {
         render(<TestCase rows={baselineProps.rows} />);
         const cell = getCell(0, 0);

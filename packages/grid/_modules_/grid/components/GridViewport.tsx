@@ -69,7 +69,6 @@ export const GridViewport: ViewportType = React.forwardRef<HTMLDivElement, {}>(
         renderState.renderContext.lastRowIdx!,
       );
 
-      // TODO: Add tree children
       return renderedRows.map((row, idx) => (
         <GridRow
           key={row.id}

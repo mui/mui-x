@@ -2,7 +2,6 @@ import { createSelector } from 'reselect';
 import { GridFilterItem } from '../../../models/gridFilterItem';
 import { GridRowId, GridRowModel } from '../../../models/gridRows';
 import { GridState } from '../core/gridState';
-import { gridRowCountSelector } from '../rows/gridRowsSelector';
 import { gridSortedRowsSelector } from '../sorting/gridSortingSelector';
 import { gridColumnLookupSelector } from '../columns/gridColumnsSelector';
 import { GridSortedRowsTreeNode } from '../sorting';
@@ -22,6 +21,11 @@ export const gridVisibleRowsSelector = createSelector(
 export const gridVisibleRowsLookupSelector = createSelector(
   gridFilterStateSelector,
   (filterState) => filterState.visibleRowsLookup,
+);
+
+export const gridVisibleRowCountSelector = createSelector(
+  gridFilterStateSelector,
+  (filterState) => filterState.visibleRowCount,
 );
 
 export const gridSortedVisibleRowsSelector = createSelector(
@@ -65,18 +69,6 @@ export const gridSortedVisibleRowsFlatSelector = createSelector(
 export const visibleSortedGridRowIdsSelector = createSelector(
   gridSortedVisibleRowsSelector,
   (visibleSortedRows) => [...visibleSortedRows.keys()],
-);
-
-export const gridVisibleRowCountSelector = createSelector(
-  gridVisibleRowsSelector,
-  gridRowCountSelector,
-  (visibleRows, totalRowsCount) => {
-    if (visibleRows == null) {
-      return totalRowsCount;
-    }
-
-    return visibleRows.length;
-  },
 );
 
 export const activeGridFilterItemsSelector = createSelector(

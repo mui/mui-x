@@ -101,6 +101,7 @@ export const useGridVirtualization = (
         const currentRenderingState = { ...state.rendering, ...newState };
         if (!isDeepEqual(state.rendering, currentRenderingState)) {
           stateChanged = true;
+
           return { ...state, rendering: currentRenderingState };
         }
         return state;

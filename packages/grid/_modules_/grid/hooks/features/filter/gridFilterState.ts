@@ -10,5 +10,6 @@ export const getDefaultGridFilterModel: () => GridFilterModel = () => ({
 export interface GridFilterState {
   filterModel: GridFilterModel;
   visibleRowsLookup: Record<GridRowId, boolean>;
-  visibleRows: GridRowId[] | null;
+  visibleRows: GridRowId[];
+  visibleRowCount: number;
 }
