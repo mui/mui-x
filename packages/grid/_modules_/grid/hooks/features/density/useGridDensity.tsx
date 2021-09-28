@@ -61,14 +61,7 @@ export const useGridDensity = (
       }));
       forceUpdate();
     },
-    [
-      logger,
-      setGridState,
-      forceUpdate,
-      getUpdatedDensityState,
-      props.headerHeight,
-      props.rowHeight,
-    ],
+    [logger, setGridState, forceUpdate, props.headerHeight, props.rowHeight],
   );
 
   React.useEffect(() => {
