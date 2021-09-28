@@ -114,7 +114,7 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
 
   const setSelectionModel = React.useCallback<GridSelectionApi['setSelectionModel']>(
     (model) => {
-      const currentModel = apiRef.current.state.selection;
+      const currentModel = gridSelectionStateSelector(apiRef.current.state);
       if (currentModel !== model) {
         setGridState((state) => ({ ...state, selection: model }));
         forceUpdate();
