@@ -197,7 +197,7 @@ export const useGridKeyboardNavigation = (
         }
         return;
       } else {
-        throw new Error('MUI. Key not mapped to navigation behavior.');
+        throw new Error('MUI: Key not mapped to navigation behavior.');
       }
 
       if (!nextColumnHeaderIndexes) {
