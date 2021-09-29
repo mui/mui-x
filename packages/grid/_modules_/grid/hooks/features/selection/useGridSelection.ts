@@ -224,7 +224,6 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
   );
 
   useGridApiEventHandler(apiRef, GridEvents.rowClick, handleRowClick);
-  useGridApiEventHandler(apiRef, GridEvents.cellClick, () => console.log('CELL CLICK'));
   useGridApiEventHandler(apiRef, GridEvents.cellMouseDown, preventSelectionOnShift);
 
   const selectionApi: GridSelectionApi = {
