@@ -7,7 +7,9 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 _Sep 29, 2021_
 
-This version includes bugfixes and features already released in v5.x.
+This version backports bug fixes and some of the features from the v5.x active release line.
+As the development of v5 evolves, newer fixes might not be cherry-picked to the legacy version.
+To have access to the latest features it is encouraged to upgrade to MUI X v5 and MUI Core v5.
 
 Big thanks to the 3 contributors who made this release possible. Here are some highlights ✨:
 
