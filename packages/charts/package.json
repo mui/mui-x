@@ -38,6 +38,9 @@
   "peerDependencies": {
     "react": "^17.0.2"
   },
+  "devDependencies": {
+    "@types/d3": "^6.7.0"
+  },
   "setupFiles": [
     "<rootDir>/src/setupTests.js"
   ],
