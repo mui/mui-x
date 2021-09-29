@@ -32,7 +32,7 @@ const baselineProps: DataGridProProps = {
   getRowId: (row) => row.name,
 };
 
-describe.only('<DataGridPro /> - Pagination', () => {
+describe.only('<DataGridPro /> - Tree Data', () => {
   // TODO v5: replace with createClientRender
   const render = createClientRenderStrictMode();
 
@@ -68,14 +68,15 @@ describe.only('<DataGridPro /> - Pagination', () => {
       expect(getColumnValues(1)).to.deep.equal(['A', 'A.A', 'B.A', 'B', 'C']);
     });
 
-    // it('should support new getTreeDataPath', () => {
-    //   const { setProps } = render(<Test />);
-    //   expect(getColumnValues(1)).to.deep.equal(['A', 'B', 'C']);
-    //   fireEvent.click(getCell(0, 0).querySelector('button'));
-    //   expect(getColumnValues(1)).to.deep.equal(['A', 'A.A', 'A.B', 'B', 'C']);
-    //   setProps({ getTreeDataPath: (row) => [...row.name.split('.').reverse()] });
-    //   expect(getColumnValues(1)).to.deep.equal(['A', 'A.A', 'B.A', 'B', 'C']);
-    // });
+    it('should support new getTreeDataPath', () => {
+      const { setProps } = render(<Test />);
+      expect(getColumnValues(1)).to.deep.equal(['A', 'B', 'C']);
+      fireEvent.click(getCell(0, 0).querySelector('button'));
+      expect(getColumnValues(1)).to.deep.equal(['A', 'A.A', 'A.B', 'B', 'C']);
+      setProps({ getTreeDataPath: (row) => [...row.name.split('.').reverse()] });
+      fireEvent.click(getCell(0, 0).querySelector('button'));
+      expect(getColumnValues(1)).to.deep.equal(['A', 'A.A', 'B.A', 'B', 'C']);
+    });
   });
 
   describe('grouping column', () => {

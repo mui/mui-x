@@ -16,6 +16,7 @@ import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
 import { GridEvents } from '../../../constants';
 import { GridCellParams, GridColDef, MuiEvent } from '../../../models';
 import { isSpaceKey } from '../../../utils/keyboardUtils';
+import {useFirstRender} from "../../utils/useFirstRender";
 
 const insertRowInTree = (
   tree: GridRowConfigTree,
@@ -110,7 +111,8 @@ export const useGridTreeData = (
 
   useGridApiMethod(apiRef, treeDataApi, 'GridTreeDataApi');
 
-  React.useEffect(() => {
+
+  const updateColumnsPreProcessing = React.useCallback(() => {
     if (!props.treeData) {
       apiRef.current.registerColumnPreProcessing('treeData', null);
     } else {
@@ -127,7 +129,32 @@ export const useGridTreeData = (
 
       apiRef.current.registerColumnPreProcessing('treeData', addGroupingColumn);
     }
-  }, [apiRef, props.treeData, props.groupingColDef]);
+  }, [apiRef, props.treeData, props.groupingColDef])
+
+  useFirstRender(() => {
+    updateColumnsPreProcessing()
+  })
+
+  const isFirstRender = React.useRef(true);
+  React.useEffect(() => {
+    if (isFirstRender.current) {
+      return;
+    }
+
+    updateColumnsPreProcessing()
+  }, [updateColumnsPreProcessing]);
+
+  // The treeData options have changed, we want to regenerate the tree
+  // We do not want to run that update on the first render
+  // TODO: This update is throttle is throttleRowsMs is defined, it should not
+  React.useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+
+    apiRef.current.setRows([...props.rows]);
+  }, [apiRef, props.treeData, props.getTreeDataPath]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleCellKeyDown = React.useCallback(
     (params: GridCellParams, event: MuiEvent<React.KeyboardEvent>) => {
@@ -141,17 +168,4 @@ export const useGridTreeData = (
   );
 
   useGridApiEventHandler(apiRef, GridEvents.cellKeyDown, handleCellKeyDown);
-
-  // The treeData options have changed, we want to regenerate the tree
-  // We do not want to run that update on the first render
-  // TODO: This update is throttle is throttleRowsMs is defined, it should not
-  const isFirstRender = React.useRef(true);
-  React.useEffect(() => {
-    if (isFirstRender.current) {
-      isFirstRender.current = false;
-      return;
-    }
-
-    apiRef.current.setRows([...props.rows]);
-  }, [apiRef, props.treeData, props.getTreeDataPath]); // eslint-disable-line react-hooks/exhaustive-deps
 };

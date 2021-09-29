@@ -128,8 +128,8 @@ export function useGridColumns(
 
   useGridStateInit(apiRef, (state) => {
     const hydratedColumns = hydrateColumnsType(props.columns, props.columnTypes);
-
-    const columns = upsertColumnsState(hydratedColumns);
+    const preProcessedColumns = apiRef.current.applyAllColumnPreProcessing(hydratedColumns);
+    const columns = upsertColumnsState(preProcessedColumns);
     let newColumns: GridColumns = columns.all.map((field) => columns.lookup[field]);
     newColumns = hydrateColumnsWidth(newColumns, 0);
 
@@ -350,7 +350,6 @@ export function useGridColumns(
     logger.info(`Columns pre-processing have changed, regenerating the columns`);
 
     const hydratedColumns = hydrateColumnsType(props.columns, props.columnTypes);
-
     const preProcessedColumns = apiRef.current.applyAllColumnPreProcessing(hydratedColumns);
     const columnState = upsertColumnsState(preProcessedColumns);
     setColumnsState(columnState);
