@@ -11,6 +11,7 @@ import {
 import { isEnterKey, isNavigationKey, isSpaceKey } from '../../../utils/keyboardUtils';
 import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
 import { GridCellModes } from '../../../models/gridEditRowModel';
+import { visibleSortedGridRowIdsSelector } from '../filter';
 
 /**
  * @requires useGridSelection (method)
@@ -36,7 +37,7 @@ export const useGridKeyboard = (apiRef: GridApiRef): void => {
       )! as HTMLElement;
 
       const startRowIndex = Number(rowEl.getAttribute('data-rowindex'));
-      const startId = apiRef.current.getRowIdFromRowIndex(startRowIndex);
+      const startId = visibleSortedGridRowIdsSelector(apiRef.current.state)[startRowIndex];
 
       if (startId === focusCell.id) {
         return;

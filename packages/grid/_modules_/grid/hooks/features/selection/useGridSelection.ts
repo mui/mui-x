@@ -17,6 +17,7 @@ import {
   selectedIdsLookupSelector,
 } from './gridSelectionSelector';
 import { visibleSortedGridRowIdsSelector } from '../filter';
+import { GridCellParams } from '../../../models';
 
 /**
  * @requires useGridRows (state, method)
@@ -214,7 +215,7 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
   );
 
   const preventSelectionOnShift = React.useCallback(
-    (_, event: React.MouseEvent) => {
+    (params: GridCellParams, event: React.MouseEvent) => {
       if (canHaveMultipleSelection && event.shiftKey) {
         window.getSelection()?.removeAllRanges();
       }
@@ -223,6 +224,7 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
   );
 
   useGridApiEventHandler(apiRef, GridEvents.rowClick, handleRowClick);
+  useGridApiEventHandler(apiRef, GridEvents.cellClick, () => console.log('CELL CLICK'));
   useGridApiEventHandler(apiRef, GridEvents.cellMouseDown, preventSelectionOnShift);
 
   const selectionApi: GridSelectionApi = {
