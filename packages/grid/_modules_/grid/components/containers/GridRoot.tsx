@@ -1,9 +1,10 @@
 import * as React from 'react';
 import clsx from 'clsx';
+import useThemeProps from '@mui/system/useThemeProps';
 import { useForkRef } from '@mui/material/utils';
 import NoSsr from '@mui/material/NoSsr';
 import { GridRootContainerRef } from '../../models/gridRootContainerRef';
-import { useStyles } from './GridRootStyles';
+import { GridRootStyles } from './GridRootStyles';
 import { visibleGridColumnsLengthSelector } from '../../hooks/features/columns/gridColumnsSelector';
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
 import { useGridState } from '../../hooks/features/core/useGridState';
@@ -14,13 +15,13 @@ import { gridClasses } from '../../gridClasses';
 export type GridRootProps = React.HTMLAttributes<HTMLDivElement>;
 
 export const GridRoot = React.forwardRef<HTMLDivElement, GridRootProps>(function GridRoot(
-  props,
+  inProps,
   ref,
 ) {
-  const stylesClasses = useStyles();
-  const apiRef = useGridApiContext();
+  const props = useThemeProps({ props: inProps, name: 'MuiDataGrid' });
   const rootProps = useGridRootProps();
-  const { children, className: classNameProp, ...other } = props;
+  const { children, className, ...other } = props;
+  const apiRef = useGridApiContext();
   const visibleColumnsLength = useGridSelector(apiRef, visibleGridColumnsLengthSelector);
   const [gridState] = useGridState(apiRef);
   const rootContainerRef: GridRootContainerRef = React.useRef<HTMLDivElement>(null);
@@ -30,18 +31,11 @@ export const GridRoot = React.forwardRef<HTMLDivElement, GridRootProps>(function
 
   return (
     <NoSsr>
-      <div
+      <GridRootStyles
         ref={handleRef}
-        className={clsx(
-          stylesClasses.root,
-          rootProps.classes?.root,
-          rootProps.className,
-          classNameProp,
-          gridClasses.root,
-          {
-            [gridClasses.autoHeight]: rootProps.autoHeight,
-          },
-        )}
+        className={clsx(className, rootProps.classes?.root, rootProps.className, gridClasses.root, {
+          [gridClasses.autoHeight]: rootProps.autoHeight,
+        })}
         role="grid"
         aria-colcount={visibleColumnsLength}
         aria-rowcount={gridState.rows.totalRowCount}
@@ -52,7 +46,7 @@ export const GridRoot = React.forwardRef<HTMLDivElement, GridRootProps>(function
         {...other}
       >
         {children}
-      </div>
+      </GridRootStyles>
     </NoSsr>
   );
 });

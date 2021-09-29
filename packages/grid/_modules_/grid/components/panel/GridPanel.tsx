@@ -1,13 +1,13 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { Theme } from '@mui/material/styles';
+import { Theme, createTheme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
 import ClickAwayListener from '@mui/material/ClickAwayListener';
 import Paper from '@mui/material/Paper';
 import Popper, { PopperProps } from '@mui/material/Popper';
 import { useGridApiContext } from '../../hooks/root/useGridApiContext';
-import { getMuiVersion, createTheme } from '../../utils/utils';
+import { getMuiVersion } from '../../utils/utils';
 import { isEscapeKey } from '../../utils/keyboardUtils';
 import {
   InternalStandardProps as StandardProps,

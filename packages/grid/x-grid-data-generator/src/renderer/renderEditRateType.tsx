@@ -4,8 +4,7 @@ import Select, { SelectProps } from '@mui/material/Select';
 import { MenuProps } from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import { createStyles, makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import { createTheme } from '../../../_modules_/grid/utils/utils';
+import { Theme, createTheme } from '@mui/material/styles';
 import { RATE_TYPE_OPTIONS } from '../services/static-data';
 
 const defaultTheme = createTheme();

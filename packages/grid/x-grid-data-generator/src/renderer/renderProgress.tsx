@@ -1,9 +1,8 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { GridCellParams } from '@mui/x-data-grid-pro';
-import { Theme } from '@mui/material/styles';
+import { Theme, createTheme } from '@mui/material/styles';
 import { createStyles, makeStyles } from '@mui/styles';
-import { createTheme } from '../../../_modules_/grid/utils/utils';
 
 const defaultTheme = createTheme();
 const useStyles = makeStyles(

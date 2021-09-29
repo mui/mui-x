@@ -3,8 +3,7 @@ import { GridRenderEditCellParams } from '@mui/x-data-grid';
 import Autocomplete from '@mui/material/Autocomplete';
 import InputBase from '@mui/material/InputBase';
 import { createStyles, makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import { createTheme } from '../../../_modules_/grid/utils/utils';
+import { Theme, createTheme } from '@mui/material/styles';
 import { COUNTRY_ISO_OPTIONS } from '../services/static-data';
 
 // ISO 3166-1 alpha-2

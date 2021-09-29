@@ -1,8 +1,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import { Theme } from '@mui/material/styles';
+import { Theme, createTheme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
-import { createTheme } from '../../utils/utils';
 
 const defaultTheme = createTheme();
 const useStyles = makeStyles(

@@ -6,8 +6,7 @@ import MenuItem from '@mui/material/MenuItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import { createStyles, makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
-import { createTheme } from '../../../_modules_/grid/utils/utils';
+import { Theme, createTheme } from '@mui/material/styles';
 import { INCOTERM_OPTIONS } from '../services/static-data';
 
 const defaultTheme = createTheme();
