@@ -23,7 +23,7 @@ export function showInvalidLicenseError() {
 
 export function showNotFoundLicenseError() {
   showError([
-    'MUI X: License key not found.',
+    'MUI: License key not found.',
     '',
     'This is a trial-only version of MUI X.',
     'While all the features are unlocked, it is not licensed for',
@@ -36,7 +36,7 @@ export function showNotFoundLicenseError() {
 
 export function showExpiredLicenseError() {
   showError([
-    'MUI X: License key expired.',
+    'MUI: License key expired.',
     '',
     'Please visit https://mui.com/r/x-license to renew',
     'your subscription and get the latest version of MUI X.',
