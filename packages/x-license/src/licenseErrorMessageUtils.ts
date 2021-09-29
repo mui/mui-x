@@ -14,7 +14,7 @@ function showError(message: string[]) {
 
 export function showInvalidLicenseError() {
   showError([
-    'MUI X: Invalid license.',
+    'MUI: Invalid license.',
     '',
     'Your license for MUI X is not valid, please visit',
     'https://mui.com/r/x-license to get a valid license.',
