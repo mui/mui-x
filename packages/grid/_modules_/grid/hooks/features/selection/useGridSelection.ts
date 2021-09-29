@@ -18,13 +18,29 @@ import {
 } from './gridSelectionSelector';
 import { visibleSortedGridRowIdsSelector } from '../filter';
 import { GridCellParams } from '../../../models';
+import { GridRowSelectionCheckboxParams } from '../../../models/params/gridRowSelectionCheckboxParams';
+import { gridPaginatedVisibleSortedGridRowIdsSelector } from '../pagination';
+import { GridHeaderSelectionCheckboxParams } from '../../../models/params/gridHeaderSelectionCheckboxParams';
 
 /**
  * @requires useGridRows (state, method)
  * @requires useGridParamsApi (method)
  * @requires useGridControlState (method)
  */
-export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps): void => {
+export const useGridSelection = (
+  apiRef: GridApiRef,
+  props: Pick<
+    GridComponentProps,
+    | 'checkboxSelection'
+    | 'selectionModel'
+    | 'onSelectionModelChange'
+    | 'disableMultipleSelection'
+    | 'disableSelectionOnClick'
+    | 'isRowSelectable'
+    | 'checkboxSelectionVisibleOnly'
+    | 'pagination'
+  >,
+): void => {
   const logger = useGridLogger(apiRef, 'useGridSelection');
   const [, setGridState, forceUpdate] = useGridState(apiRef);
   const rowsLookup = useGridSelector(apiRef, gridRowsLookupSelector);
@@ -146,8 +162,8 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
     [apiRef, logger],
   );
 
-  const expandRowRangeSelection = React.useCallback<GridSelectionApi['expandRowRangeSelection']>(
-    (id, resetSelection) => {
+  const expandRowRangeSelection = React.useCallback(
+    (id: GridRowId, resetSelection?: boolean) => {
       let endId = id;
       const startId = lastRowToggled.current ?? id;
       const isSelected = apiRef.current.isRowSelected(id);
@@ -194,7 +210,7 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
       const hasCtrlKey = event.metaKey || event.ctrlKey;
 
       if (event.shiftKey && (canHaveMultipleSelection || checkboxSelection)) {
-        apiRef.current.expandRowRangeSelection(params.id);
+        expandRowRangeSelection(params.id);
       } else {
         // Without checkboxSelection, multiple selection is only allowed if CTRL is pressed
         const isMultipleSelectionDisabled = !checkboxSelection && !hasCtrlKey;
@@ -211,7 +227,47 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
         }
       }
     },
-    [apiRef, canHaveMultipleSelection, disableSelectionOnClick, checkboxSelection],
+    [
+      apiRef,
+      expandRowRangeSelection,
+      canHaveMultipleSelection,
+      disableSelectionOnClick,
+      checkboxSelection,
+    ],
+  );
+
+  const shiftRef = React.useRef(false);
+  React.useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Shift') {
+        shiftRef.current = true;
+      }
+    };
+
+    const handleKeyUp = (event: KeyboardEvent) => {
+      if (event.key === 'Shift') {
+        shiftRef.current = false;
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    document.addEventListener('keyup', handleKeyUp);
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+      document.removeEventListener('keyup', handleKeyUp);
+    };
+  }, []);
+
+  const handleRowSelectionCheckboxChange = React.useCallback(
+    (params: GridRowSelectionCheckboxParams) => {
+      if (shiftRef.current) {
+        expandRowRangeSelection(params.id);
+      } else {
+        apiRef.current.selectRow(params.id, params.value);
+      }
+    },
+    [apiRef, expandRowRangeSelection],
   );
 
   const preventSelectionOnShift = React.useCallback(
@@ -223,14 +279,37 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
     [canHaveMultipleSelection],
   );
 
+  const handleHeaderSelectionCheckboxChange = React.useCallback(
+    (params: GridHeaderSelectionCheckboxParams) => {
+      const shouldLimitSelectionToCurrentPage =
+        props.checkboxSelectionVisibleOnly && props.pagination;
+
+      const rowsToBeSelected = shouldLimitSelectionToCurrentPage
+        ? gridPaginatedVisibleSortedGridRowIdsSelector(apiRef.current.state)
+        : visibleSortedGridRowIdsSelector(apiRef.current.state);
+
+      apiRef.current.selectRows(rowsToBeSelected, params.value, !params.indeterminate);
+    },
+    [apiRef, props.checkboxSelectionVisibleOnly, props.pagination],
+  );
+
   useGridApiEventHandler(apiRef, GridEvents.rowClick, handleRowClick);
+  useGridApiEventHandler(
+    apiRef,
+    GridEvents.rowSelectionCheckboxChange,
+    handleRowSelectionCheckboxChange,
+  );
+  useGridApiEventHandler(
+    apiRef,
+    GridEvents.headerSelectionCheckboxChange,
+    handleHeaderSelectionCheckboxChange,
+  );
   useGridApiEventHandler(apiRef, GridEvents.cellMouseDown, preventSelectionOnShift);
 
   const selectionApi: GridSelectionApi = {
     selectRow,
     selectRows,
     selectRowRange,
-    expandRowRangeSelection,
     setSelectionModel,
     getSelectedRows,
     isRowSelected,

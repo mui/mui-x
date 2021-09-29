@@ -117,6 +117,10 @@
     "name": "filterModelChange",
     "description": "Fired when the filter model changes.\nCalled with a GridFilterModel object."
   },
+  {
+    "name": "headerSelectionCheckboxChange",
+    "description": "Fired when the value of the selection checkbox of the header is changed\nCalled with a GridHeaderSelectionCheckboxParams object"
+  },
   { "name": "pageChange", "description": "Fired when the page changes." },
   { "name": "pageSizeChange", "description": "Fired when the page size changes." },
   {
@@ -158,6 +162,10 @@
   {
     "name": "rowOver",
     "description": "Fired when a <code>mouseover</code> event happens in a row.  Called with a <a href=\"/api/data-grid/grid-row-params/\">GridRowParams</a> object."
+  },
+  {
+    "name": "rowSelectionCheckboxChange",
+    "description": "Fired when the value of the selection checkbox of a row is changed\nCalled with a GridRowSelectionCheckboxParams object"
   },
   {
     "name": "rowsScroll",

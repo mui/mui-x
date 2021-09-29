@@ -9,6 +9,7 @@ import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { getDataGridUtilityClass } from '../../gridClasses';
 import { composeClasses } from '../../utils/material-ui-utils';
 import { GridComponentProps } from '../../GridComponentProps';
+import { GridRowSelectionCheckboxParams } from '../../models/params/gridRowSelectionCheckboxParams';
 
 type OwnerState = { classes: GridComponentProps['classes'] };
 
@@ -33,18 +34,13 @@ const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridCellPa
 
     const handleRef = useForkRef(checkboxElement, ref);
     const element = apiRef.current.getCellElement(id, field);
-    const shiftRef = React.useRef(false);
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-      if (shiftRef.current) {
-        apiRef.current.expandRowRangeSelection(id);
-      } else {
-        apiRef.current.selectRow(id, event.target.checked);
-      }
+      const params: GridRowSelectionCheckboxParams = { value: event.target.checked, id };
+      apiRef.current.publishEvent(GridEvents.rowSelectionCheckboxChange, params, event);
     };
 
     const handleClick = (event: React.MouseEvent<HTMLInputElement>) => {
-      shiftRef.current = event.shiftKey;
       event.stopPropagation();
     };
 

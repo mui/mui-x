@@ -3,11 +3,6 @@
   "description": "The selection API interface that is available in the grid apiRef.",
   "properties": [
     {
-      "name": "expandRowRangeSelection",
-      "description": "Change the selection state of all the selectable rows in the range between the current row and the last row called on selectRow or expandRowRangeSelection.",
-      "type": "(id: GridRowId, resetSelection?: boolean) => void"
-    },
-    {
       "name": "getSelectedRows",
       "description": "Returns an array of the selected rows.",
       "type": "() => Map<GridRowId, GridRowData>"

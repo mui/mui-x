@@ -2,8 +2,6 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { GridEvents } from '../../constants/eventsConstants';
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
-import { gridPaginatedVisibleSortedGridRowIdsSelector } from '../../hooks/features/pagination/gridPaginationSelector';
-import { visibleSortedGridRowIdsSelector } from '../../hooks/features/filter/gridFilterSelector';
 import { gridTabIndexColumnHeaderSelector } from '../../hooks/features/focus/gridFocusStateSelector';
 import { gridRowCountSelector } from '../../hooks/features/rows/gridRowsSelector';
 import { gridSelectionStateSelector } from '../../hooks/features/selection/gridSelectionSelector';
@@ -14,6 +12,7 @@ import { getDataGridUtilityClass } from '../../gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { composeClasses } from '../../utils/material-ui-utils';
 import { GridComponentProps } from '../../GridComponentProps';
+import { GridHeaderSelectionCheckboxParams } from '../../models/params/gridHeaderSelectionCheckboxParams';
 
 type OwnerState = { classes: GridComponentProps['classes'] };
 
@@ -52,15 +51,11 @@ const GridHeaderCheckbox = React.forwardRef<HTMLInputElement, GridColumnHeaderPa
     const isChecked = (totalSelectedRows > 0 && totalSelectedRows === totalRows) || isIndeterminate;
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-      const checked = event.target.checked;
-
-      const shouldLimitSelectionToCurrentPage =
-        rootProps.checkboxSelectionVisibleOnly && rootProps.pagination;
-
-      const rowsToBeSelected = shouldLimitSelectionToCurrentPage
-        ? gridPaginatedVisibleSortedGridRowIdsSelector(apiRef.current.state)
-        : visibleSortedGridRowIdsSelector(apiRef.current.state);
-      apiRef.current.selectRows(rowsToBeSelected, checked, !event.target.indeterminate);
+      const params: GridHeaderSelectionCheckboxParams = {
+        value: event.target.checked,
+        indeterminate: event.target.indeterminate,
+      };
+      apiRef.current.publishEvent(GridEvents.headerSelectionCheckboxChange, params);
     };
 
     const tabIndex = tabIndexState !== null && tabIndexState.field === props.field ? 0 : -1;
