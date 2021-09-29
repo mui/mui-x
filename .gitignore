@@ -11,6 +11,7 @@ __diff_output__
 /coverage
 /docs/.next
 /docs/export
+/docs/pages/playground.js
 /test/regressions/screenshots
 build
 dist

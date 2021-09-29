@@ -154,4 +154,15 @@ module.exports = {
       { source: '/api/:rest*', destination: '/api-docs/:rest*' },
     ];
   },
+  async redirects() {
+    return process.env.PULL_REQUEST === 'true' || process.env.NODE_ENV !== 'production'
+      ? [
+          {
+            source: '/',
+            destination: '/components/data-grid/',
+            permanent: false,
+          },
+        ]
+      : [];
+  },
 };
