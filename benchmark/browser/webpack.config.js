@@ -1,4 +1,5 @@
 const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const workspaceRoot = path.resolve(__dirname, '../..');
 
@@ -42,4 +43,11 @@ module.exports = {
   resolve: {
     extensions: ['.js', '.ts', '.tsx'],
   },
+  target: 'web',
+  plugins: [
+    new HtmlWebpackPlugin({
+      hash: true, // Avoid doing benchmark with cached files
+      template: path.resolve(__dirname, './index.html'),
+    }),
+  ],
 };

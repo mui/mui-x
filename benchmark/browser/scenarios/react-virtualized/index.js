@@ -1,4 +1,5 @@
 import * as React from 'react';
+import Paper from '@mui/material/Paper';
 import { AutoSizer, Grid } from 'react-virtualized';
 
 const ROWS = 100000;
@@ -19,7 +20,7 @@ for (let rowIdx = 0; rowIdx < ROWS; rowIdx += 1) {
 
 export default function ReactVirtualized() {
   return (
-    <div style={{ height: 'calc(100vh - 16px)', width: '100%' }}>
+    <Paper sx={{ height: 'calc(100vh - 16px)', width: '100%' }}>
       <AutoSizer>
         {({ height, width }) => (
           <Grid
@@ -40,6 +41,6 @@ export default function ReactVirtualized() {
           />
         )}
       </AutoSizer>
-    </div>
+    </Paper>
   );
 }

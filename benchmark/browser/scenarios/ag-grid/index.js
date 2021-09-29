@@ -1,4 +1,5 @@
 import * as React from 'react';
+import Paper from '@mui/material/Paper';
 import { AgGridColumn, AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
@@ -22,7 +23,7 @@ for (let rowIdx = 0; rowIdx < ROWS; rowIdx += 1) {
 
 export default function AgGrid() {
   return (
-    <div className="ag-theme-alpine" style={{ height: 'calc(100vh - 16px)', width: '100%' }}>
+    <Paper className="ag-theme-alpine" sx={{ height: 'calc(100vh - 16px)', width: '100%' }}>
       <AgGridReact rowData={rows} rowHeight={32}>
         {columns.map((column) => (
           <AgGridColumn
@@ -33,6 +34,6 @@ export default function AgGrid() {
           />
         ))}
       </AgGridReact>
-    </div>
+    </Paper>
   );
 }
