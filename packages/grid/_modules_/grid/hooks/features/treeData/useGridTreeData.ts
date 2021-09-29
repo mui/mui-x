@@ -16,7 +16,7 @@ import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
 import { GridEvents } from '../../../constants';
 import { GridCellParams, GridColDef, MuiEvent } from '../../../models';
 import { isSpaceKey } from '../../../utils/keyboardUtils';
-import {useFirstRender} from "../../utils/useFirstRender";
+import { useFirstRender } from '../../utils/useFirstRender';
 
 const insertRowInTree = (
   tree: GridRowConfigTree,
@@ -111,7 +111,6 @@ export const useGridTreeData = (
 
   useGridApiMethod(apiRef, treeDataApi, 'GridTreeDataApi');
 
-
   const updateColumnsPreProcessing = React.useCallback(() => {
     if (!props.treeData) {
       apiRef.current.registerColumnPreProcessing('treeData', null);
@@ -129,11 +128,11 @@ export const useGridTreeData = (
 
       apiRef.current.registerColumnPreProcessing('treeData', addGroupingColumn);
     }
-  }, [apiRef, props.treeData, props.groupingColDef])
+  }, [apiRef, props.treeData, props.groupingColDef]);
 
   useFirstRender(() => {
-    updateColumnsPreProcessing()
-  })
+    updateColumnsPreProcessing();
+  });
 
   const isFirstRender = React.useRef(true);
   React.useEffect(() => {
@@ -141,7 +140,7 @@ export const useGridTreeData = (
       return;
     }
 
-    updateColumnsPreProcessing()
+    updateColumnsPreProcessing();
   }, [updateColumnsPreProcessing]);
 
   // The treeData options have changed, we want to regenerate the tree

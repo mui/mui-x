@@ -20,7 +20,7 @@ import { gridCheckboxSelectionColDef, GridColDef } from '../../../models';
 import { composeClasses } from '../../../utils/material-ui-utils';
 import { getDataGridUtilityClass } from '../../../gridClasses';
 import { useGridStateInit } from '../../utils/useGridStateInit';
-import {useFirstRender} from "../../utils/useFirstRender";
+import { useFirstRender } from '../../utils/useFirstRender';
 
 type OwnerState = { classes: GridComponentProps['classes'] };
 
@@ -42,7 +42,19 @@ const useUtilityClasses = (ownerState: OwnerState) => {
  * @requires useGridParamsApi (method)
  * @requires useGridControlStateManager (method)
  */
-export const useGridSelection = (apiRef: GridApiRef, props: Pick<GridComponentProps, 'checkboxSelection' | 'selectionModel' | 'onSelectionModelChange' | 'classes' | 'disableMultipleSelection' | 'disableSelectionOnClick' | 'isRowSelectable'>): void => {
+export const useGridSelection = (
+  apiRef: GridApiRef,
+  props: Pick<
+    GridComponentProps,
+    | 'checkboxSelection'
+    | 'selectionModel'
+    | 'onSelectionModelChange'
+    | 'classes'
+    | 'disableMultipleSelection'
+    | 'disableSelectionOnClick'
+    | 'isRowSelectable'
+  >,
+): void => {
   const logger = useGridLogger(apiRef, 'useGridSelection');
 
   const propSelectionModel = React.useMemo(() => {
@@ -242,20 +254,20 @@ export const useGridSelection = (apiRef: GridApiRef, props: Pick<GridComponentPr
 
       apiRef.current.registerColumnPreProcessing('selection', addCheckboxColumn);
     }
-  }, [apiRef, props.checkboxSelection, classes])
+  }, [apiRef, props.checkboxSelection, classes]);
 
   useFirstRender(() => {
-    updateColumnsPreProcessing()
-  })
+    updateColumnsPreProcessing();
+  });
 
   const isFirstRender = React.useRef(true);
   React.useEffect(() => {
     if (isFirstRender.current) {
-      isFirstRender.current = false
+      isFirstRender.current = false;
       return;
     }
 
-    updateColumnsPreProcessing()
+    updateColumnsPreProcessing();
   }, [updateColumnsPreProcessing]);
 
   const removeOutdatedSelection = React.useCallback(() => {
