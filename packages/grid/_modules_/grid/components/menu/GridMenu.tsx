@@ -51,16 +51,11 @@ const transformOrigin = {
 };
 
 const GridMenu = (props: GridMenuProps) => {
-  const { open, target, onClickAway, children, position, onTransitionEnd, ...other } = props;
+  const { open, target, onClickAway, children, position, ...other } = props;
 
-  const [stateTarget, setStateTarget] = React.useState(target);
   const prevTarget = React.useRef(target);
   const prevOpen = React.useRef(open);
   const classes = useStyles();
-
-  if (target && target !== stateTarget) {
-    setStateTarget(target);
-  }
 
   React.useEffect(() => {
     if (prevOpen.current && prevTarget.current) {
@@ -68,30 +63,15 @@ const GridMenu = (props: GridMenuProps) => {
     }
 
     prevOpen.current = open;
-
-    if (stateTarget) {
-      prevTarget.current = stateTarget;
-    }
-  }, [open, stateTarget]);
-
-  const handleTransitionEnd = React.useCallback<React.TransitionEventHandler<HTMLDivElement>>(
-    (event) => {
-      if (!target) {
-        setStateTarget(null);
-      }
-
-      onTransitionEnd?.(event);
-    },
-    [target, onTransitionEnd],
-  );
+    prevTarget.current = target;
+  }, [open, target]);
 
   return (
     <Popper
       className={classes.root}
       open={open}
-      anchorEl={stateTarget as any}
+      anchorEl={target as any}
       transition
-      onTransitionEnd={handleTransitionEnd}
       placement={position}
       {...other}
     >
