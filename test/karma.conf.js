@@ -55,7 +55,7 @@ module.exports = function setKarmaConfig(config) {
         timeout: (process.env.CIRCLECI === 'true' ? 5 : 2) * 1000,
       },
     },
-    frameworks: ['mocha'],
+    frameworks: ['mocha', 'webpack'],
     files: [
       {
         pattern: 'test/karma.tests.js',
@@ -82,6 +82,10 @@ module.exports = function setKarmaConfig(config) {
     webpack: {
       mode: 'development',
       devtool: CI ? 'inline-source-map' : 'eval-source-map',
+      target: 'web',
+      optimization: {
+        nodeEnv: false, // https://twitter.com/wsokra/status/1378643098893443072
+      },
       plugins: [
         new webpack.DefinePlugin({
           'process.env': {
@@ -100,12 +104,13 @@ module.exports = function setKarmaConfig(config) {
           },
         ],
       },
-      node: {
-        // Some tests import fs
-        fs: 'empty',
-      },
       resolve: {
         extensions: ['.js', '.ts', '.tsx'],
+        fallback: {
+          fs: false, // Some tests import fs,
+          stream: false,
+          path: false,
+        },
       },
     },
     webpackMiddleware: {

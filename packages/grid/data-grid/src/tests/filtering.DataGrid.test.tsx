@@ -1056,4 +1056,22 @@ describe('<DataGrid /> - Filter', () => {
     );
     expect(screen.queryByLabelText('1 active filter')).not.to.equal(null);
   });
+
+  describe('Filter preference panel', () => {
+    it('should show an empty string as the default filter input value', () => {
+      render(
+        <TestCase
+          field="brand"
+          operatorValue="contains"
+          state={{
+            preferencePanel: {
+              open: true,
+              openedPanelValue: GridPreferencePanelsValue.filters,
+            },
+          }}
+        />,
+      );
+      expect(screen.getByRole('textbox', { name: 'Value' }).value).to.equal('');
+    });
+  });
 });

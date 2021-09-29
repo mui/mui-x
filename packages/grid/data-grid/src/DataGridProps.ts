@@ -14,6 +14,7 @@ export type DataGridProps = Omit<
   | 'disableMultipleColumnsFiltering'
   | 'disableMultipleColumnsSorting'
   | 'disableMultipleSelection'
+  | 'throttleRowsMs'
   | 'hideFooterRowCount'
   | 'options'
   | 'onRowsScrollEnd'
