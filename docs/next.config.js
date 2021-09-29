@@ -155,14 +155,12 @@ module.exports = {
     ];
   },
   async redirects() {
-    return process.env.CIRCLE_BRANCH !== 'docs-v5' || process.env.NODE_ENV !== 'production'
-      ? [
-          {
-            source: '/',
-            destination: '/components/data-grid/',
-            permanent: false,
-          },
-        ]
-      : [];
+    return [
+      {
+        source: '/',
+        destination: '/components/data-grid/',
+        permanent: false,
+      },
+    ]
   },
 };
