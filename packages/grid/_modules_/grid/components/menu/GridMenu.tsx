@@ -51,7 +51,7 @@ const transformOrigin = {
 };
 
 const GridMenu = (props: GridMenuProps) => {
-  const { open, target, onClickAway, children, position, ...other } = props;
+  const { open, target, onClickAway, children, position, onTransitionEnd, ...other } = props;
 
   const [stateTarget, setStateTarget] = React.useState(target);
   const prevTarget = React.useRef(target);
@@ -74,11 +74,16 @@ const GridMenu = (props: GridMenuProps) => {
     }
   }, [open, stateTarget]);
 
-  const handleTransitionEnd = React.useCallback(() => {
-    if (!target) {
-      setStateTarget(null);
-    }
-  }, [target]);
+  const handleTransitionEnd = React.useCallback<React.TransitionEventHandler<HTMLDivElement>>(
+    (event) => {
+      if (!target) {
+        setStateTarget(null);
+      }
+
+      onTransitionEnd?.(event);
+    },
+    [target, onTransitionEnd],
+  );
 
   return (
     <Popper
