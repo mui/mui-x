@@ -3,13 +3,45 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 4.0.1
+
+_Sep 29, 2021_
+
+This version backports bug fixes and some of the features from the v5.x active release line.
+As the development of v5 evolves, newer fixes might not be cherry-picked to the legacy version.
+To have access to the latest features it is encouraged to upgrade to MUI X v5 and MUI Core v5.
+
+Big thanks to the 3 contributors who made this release possible. Here are some highlights ✨:
+
+- 👁 Allow to disable virtualization with the `disableVirtualization` prop (#2728) @m4theushw
+- 🕹 Fix navigation between column headers with rows filtered (#2730) @m4theushw
+- 🐞 Fix numeric filter operators not handling '0' correctly (#2732) @flaviendelangle
+
+### `@mui/x-data-grid@v4.0.1` / `@mui/x-data-grid-pro@v4.0.1`
+
+#### Changes
+
+- [DataGrid] Add `disableVirtualization` prop (#2728) @m4theushw
+- [DataGrid] Fix navigation between column headers with rows filtered (#2730) @m4theushw
+- [DataGrid] Fix numeric filter operators not handling '0' correctly (#2732) @flaviendelangle
+- [DataGridPro] Only apply `checkboxSelectionVisibleOnly` when pagination is enabled (#2731) @flaviendelangle
+
+### Docs
+
+- [docs] Improve SEO ranking (#2467) @oliviertassinari
+
+### Core
+
+- [core] Allow to create one logger per Grid instance (#2442) @flaviendelangle
+- [core] Update monorepo (#2726) @m4theushw
+
 ## 4.0.0
 
 _Aug 27, 2021_
 
 🎉 This is the first stable release of the data grid component 🎉!
 
-We have been iterating on the component for [18 months](https://github.com/mui-org/material-ui-x/commit/705cb0f387b5f3aa056bf40c4183a2342b317447). With the  introduction of the [row edit](https://material-ui.com/components/data-grid/editing/#row-editing) feature, many bug fixes, and polishing of the documentation, we believe the component is ready for a stable release.
+We have been iterating on the component for [18 months](https://github.com/mui-org/material-ui-x/commit/705cb0f387b5f3aa056bf40c4183a2342b317447). With the introduction of the [row edit](https://material-ui.com/components/data-grid/editing/#row-editing) feature, many bug fixes, and polishing of the documentation, we believe the component is ready for a stable release.
 
 The MUI X v4.0.0 release supports [MUI Core](https://github.com/mui-org/material-ui) v4 and has partial support for v5-beta. With the soon-to-be-released v5 version of the core components, we are moving ongoing work to the v5 release line (Core and X).
 The support for existing projects on MUI v4 won't be a priority going forward. We encourage you to migrate to MUI Core v5-beta and soon MUI X v5-beta. We don't patch, fix, or alter older versions. Using MUI Core v4 with MUI X v5 might lead to extra bundle size and configuration.
@@ -24,9 +56,11 @@ A big thanks to the 6 contributors who made this release possible. Here are some
 
   This should help clarify the products vs. plans separation. [MUI X](https://github.com/mui-org/material-ui-x) is a product line on its own. It contains MIT and Commercial software. Removing X from the name of the paid components should help remove a possible confusion: the MIT version of X is meant to be valuable enough for developers to use it, without feeling that it's crippled compared to other OSS alternatives.
   The Pro suffix should help make it clear what's MIT and what's not.
+
 - ✨ Rename the `@material-ui` npm scope to `@mui` (#2341) @oliviertassinari
 
   This is part of the ongoing rebranding of the project and company. Material-UI is our current official name, however, we are going to change it. It's too long to write, read, and pronounce; and it is too closely associated with Material Design. In the near future, the whole project/company is moving to MUI and https://mui.com/.
+
 - 💡 The `api` property was removed from the callback params. To access the API, use the `DataGridPro` (#2312) @DanailH
 
 ### `@mui/x-data-grid@v4.0.0` / `@mui/x-data-grid-pro@v4.0.0`
