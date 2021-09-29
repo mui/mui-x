@@ -36,7 +36,7 @@ const GridTreeDataGroupingCell = (props: GridRenderCellParams) => {
   const path = apiRef.current.getRowPath(id);
 
   if (!node || !path) {
-    throw new Error(`No row with id #${id} found`);
+    throw new Error(`MUI: No row with id #${id} found`);
   }
 
   return (

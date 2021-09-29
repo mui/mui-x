@@ -769,7 +769,7 @@ DataGridProRaw.propTypes = {
    */
   throttleRowsMs: PropTypes.number,
   /**
-   * If `true`, the rows will be gathered in a tree structure, following the `getDataPath` prop
+   * If `true`, the rows will be gathered in a tree structure, following the `getTreeDataPath` prop
    * @default false
    */
   treeData: PropTypes.bool,

@@ -113,7 +113,7 @@ const setRowExpansionInTree = (
   isExpanded: boolean,
 ) => {
   if (path.length === 0) {
-    throw new Error(`Material-UI: Invalid path for row #${id}.`);
+    throw new Error(`MUI: Invalid path for row #${id}.`);
   }
 
   const clonedMap = new Map(tree.entries());
@@ -121,14 +121,14 @@ const setRowExpansionInTree = (
   const nodeBefore = clonedMap.get(nodeName);
 
   if (!nodeBefore) {
-    throw new Error(`Material-UI: Invalid path for row #${id}.`);
+    throw new Error(`MUI: Invalid path for row #${id}.`);
   }
 
   if (restPath.length === 0) {
     clonedMap.set(nodeName, { ...nodeBefore, expanded: isExpanded });
   } else {
     if (!nodeBefore.children) {
-      throw new Error(`Material-UI: Invalid path for row #${id}.`);
+      throw new Error(`MUI: Invalid path for row #${id}.`);
     }
 
     clonedMap.set(nodeName, {
@@ -366,7 +366,7 @@ export const useGridRows = (
       const path = apiRef.current.getRowPath(id);
 
       if (!path) {
-        throw new Error(`Material-UI: No row with id #${id} found in row path list`);
+        throw new Error(`MUI: No row with id #${id} found in row path list`);
       }
 
       return getNodeFromTree(apiRef.current.getRowModels(), path);

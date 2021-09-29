@@ -24,7 +24,7 @@ const insertRowInTree = (
   depth: number = 0,
 ) => {
   if (path.length === 0) {
-    throw new Error(`Material-UI: Could not insert row #${id} in the tree structure.`);
+    throw new Error(`MUI: Could not insert row #${id} in the tree structure.`);
   }
 
   if (path.length === 1) {
@@ -37,7 +37,7 @@ const insertRowInTree = (
 
     const parent = tree.get(nodeName);
     if (!parent) {
-      throw new Error(`Material-UI: Could not insert row #${id} in the tree structure.`);
+      throw new Error(`MUI: Could not insert row #${id} in the tree structure.`);
     }
 
     if (!parent.children) {
@@ -58,7 +58,10 @@ function getGridRowId(rowData: GridRowData, getRowId?: GridRowIdGetter): GridRow
  */
 export const useGridTreeData = (
   apiRef: GridApiRef,
-  props: Pick<GridComponentProps, 'treeData' | 'getTreeDataPath' | 'getRowId' | 'groupingColDef'>,
+  props: Pick<
+    GridComponentProps,
+    'treeData' | 'getTreeDataPath' | 'getRowId' | 'groupingColDef' | 'rows'
+  >,
 ) => {
   const groupRows = React.useCallback<GridTreeDataApi['groupRows']>(
     (rowsLookup, rowIds) => {
@@ -72,7 +75,8 @@ export const useGridTreeData = (
       }
 
       if (!props.getTreeDataPath) {
-        throw new Error('Material-UI: No getTreeDataPath given.');
+        // return { tree: new Map(), paths: {} }
+        throw new Error('MUI: No getTreeDataPath given.');
       }
 
       const rows = Object.values(rowsLookup)
@@ -137,4 +141,17 @@ export const useGridTreeData = (
   );
 
   useGridApiEventHandler(apiRef, GridEvents.cellKeyDown, handleCellKeyDown);
+
+  // The treeData options have changed, we want to regenerate the tree
+  // We do not want to run that update on the first render
+  // TODO: This update is throttle is throttleRowsMs is defined, it should not
+  const isFirstRender = React.useRef(true);
+  React.useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+
+    apiRef.current.setRows([...props.rows]);
+  }, [apiRef, props.treeData, props.getTreeDataPath]); // eslint-disable-line react-hooks/exhaustive-deps
 };

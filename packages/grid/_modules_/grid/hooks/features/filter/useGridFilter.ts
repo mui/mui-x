@@ -222,8 +222,6 @@ export const useGridFilter = (
       });
     }
 
-    console.log(apiRef.current.state.filter.visibleRowCount);
-
     forceUpdate();
   }, [apiRef, setGridState, forceUpdate, props.filterMode]);
 
