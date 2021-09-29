@@ -149,7 +149,7 @@ If you have an enterprise grid running with an expired or missing license key, t
 
 The following table summarizes the features available in the community `DataGrid` and enterprise `DataGridPro` components.
 All the features of the community version are available in the enterprise one.
-The enterprise components come in two plans: Pro and Premium.https://www.twitch.tv/directory/game/Art
+The enterprise components come in two plans: Pro and Premium.
 
 | Features                                                                                  | Community | Pro <span class="pro"></span> | Premium <span class="premium"></span> |
 | :---------------------------------------------------------------------------------------- | :-------: | :---------------------------: | :-----------------------------------: |
