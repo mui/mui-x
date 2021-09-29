@@ -69,7 +69,7 @@ Use the arrow keys to move the focus.
 | -------------------------------------------------------------------------------------------------: | :--------------------------------------------------------- |
 |                                        <kbd class="key">Shift</kbd> + <kbd class="key">Space</kbd> | Select the current row                                     |
 | <kbd class="key">Shift</kbd> + <kbd class="key">Space</kbd> + <kbd class="key">Arrow Up/Down</kbd> | Select the current row and the row above or below          |
-|                                                       <kbd class="key">Shift</kbd> + Click on cell | Select the range of row between since the last clicked row |
+|                                                       <kbd class="key">Shift</kbd> + Click on cell | Select the range of rows between the first and the last clicked rows |
 |                                             <kbd class="key">CTRL</kbd> + <kbd class="key">A</kbd> | Select all rows                                            |
 |                                             <kbd class="key">CTRL</kbd> + <kbd class="key">C</kbd> | Copy the currently selected row(s)                         |
 |                                              <kbd class="key">ALT</kbd> + <kbd class="key">C</kbd> | Copy the currently selected row(s) including headers       |
