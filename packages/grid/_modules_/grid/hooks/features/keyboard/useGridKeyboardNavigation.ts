@@ -135,7 +135,7 @@ export const useGridKeyboardNavigation = (
             : -1 * containerSizes!.viewportPageSize);
         nextCellIndexes = { colIndex, rowIndex: nextRowIndex };
       } else {
-        throw new Error('MUI. Key not mapped to navigation behavior.');
+        throw new Error('MUI: Key not mapped to navigation behavior.');
       }
 
       if (nextCellIndexes.rowIndex < 0) {
