@@ -53,13 +53,13 @@ const transformOrigin = {
 const GridMenu = (props: GridMenuProps) => {
   const { open, target, onClickAway, children, position, ...other } = props;
 
-  const [stateTarget, setStateTarget] = React.useState(target)
+  const [stateTarget, setStateTarget] = React.useState(target);
   const prevTarget = React.useRef(target);
   const prevOpen = React.useRef(open);
   const classes = useStyles();
 
   if (target && target !== stateTarget) {
-    setStateTarget(target)
+    setStateTarget(target);
   }
 
   React.useEffect(() => {
@@ -76,9 +76,9 @@ const GridMenu = (props: GridMenuProps) => {
 
   const handleTransitionEnd = React.useCallback(() => {
     if (!target) {
-      setStateTarget(null)
+      setStateTarget(null);
     }
-  }, [target])
+  }, [target]);
 
   return (
     <Popper
