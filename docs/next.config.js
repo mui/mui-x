@@ -155,7 +155,7 @@ module.exports = {
     ];
   },
   async redirects() {
-    return process.env.PULL_REQUEST === 'true' || process.env.NODE_ENV !== 'production'
+    return process.env.CIRCLE_BRANCH !== 'docs-v5' || process.env.NODE_ENV !== 'production'
       ? [
           {
             source: '/',
