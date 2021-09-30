@@ -320,17 +320,15 @@ export const useGridRows = (
       }
 
       const state: GridRowsInternalCacheState = {
+        ...rowsCache.current.state,
         idRowsLookup,
         rowIds,
-        propRowCount: props.rowCount,
-        propGetRowId: props.getRowId,
-        // TODO: Test
         inputRows: rowIds.map((rowId) => idRowsLookup[rowId]),
       };
 
       throttledRowsChange(state, true);
     },
-    [apiRef, props.getRowId, props.rowCount, throttledRowsChange],
+    [apiRef, props.getRowId, throttledRowsChange],
   );
 
   const getRowModels = React.useCallback<GridRowApi['getRowModels']>(

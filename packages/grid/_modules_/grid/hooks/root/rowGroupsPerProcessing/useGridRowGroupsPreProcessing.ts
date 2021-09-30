@@ -6,12 +6,9 @@ import {
 } from './gridRowGroupsPreProcessingApi';
 import { GridEvents } from '../../../constants/eventsConstants';
 import { useGridApiMethod } from '../useGridApiMethod';
-import { GridRowConfigTreeNode } from '../../../models/gridRows';
 
 const getFlatRowTree: RowGroupingFunction = (params) => ({
-  tree: new Map<string, GridRowConfigTreeNode>(
-    params.ids.map((id) => [id.toString(), { id, depth: 0 }]),
-  ),
+  tree: new Map(params.ids.map((id) => [id.toString(), { id, depth: 0 }])),
   paths: Object.fromEntries(params.ids.map((id) => [id, [id.toString()]])),
 });
 

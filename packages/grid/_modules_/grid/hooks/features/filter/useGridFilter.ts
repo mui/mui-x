@@ -398,7 +398,12 @@ export const useGridFilter = (
   }, [apiRef, logger, props.filterModel]);
 
   // The filter options have changed
+  const isFirstRender = React.useRef(true);
   React.useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
     apiRef.current.applyFilters();
   }, [apiRef, props.disableChildrenFiltering]);
 

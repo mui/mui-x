@@ -47,6 +47,7 @@ export const useGridSorting = (
     | 'sortingOrder'
     | 'sortingMode'
     | 'disableMultipleColumnsSorting'
+    | 'disableChildrenSorting'
   >,
 ) => {
   const logger = useGridLogger(apiRef, 'useGridSorting');
@@ -183,7 +184,14 @@ export const useGridSorting = (
     const comparatorList = buildComparatorList(sortModel);
     const aggregatedComparator = comparatorListAggregate(comparatorList);
 
-    const sortRowTree = (tree: GridRowConfigTree): GridSortedRowsIdTreeNode[] => {
+    const sortRowTree = (tree: GridRowConfigTree, depth = 0): GridSortedRowsIdTreeNode[] => {
+      if (depth > 0 && props.disableChildrenSorting) {
+        return Array.from(tree.values()).map((value) => ({
+          id: value.id,
+          children: value.children ? sortRowTree(value.children, depth + 1) : undefined,
+        }));
+      }
+
       const rowsWithParams = Array.from(tree.entries()).map(([name, value]) => {
         const params = comparatorList.map((colComparator) =>
           getSortCellParams(value.id, colComparator.field),
@@ -198,7 +206,7 @@ export const useGridSorting = (
 
       return sortedRowsWithParams.map((node) => ({
         id: node.value.id,
-        children: node.value.children ? sortRowTree(node.value.children) : undefined,
+        children: node.value.children ? sortRowTree(node.value.children, depth + 1) : undefined,
       }));
     };
     const sortedRows = sortRowTree(unsortedRowTree);
@@ -217,6 +225,7 @@ export const useGridSorting = (
     buildComparatorList,
     comparatorListAggregate,
     props.sortingMode,
+    props.disableChildrenSorting,
   ]);
 
   const setSortModel = React.useCallback<GridSortApi['setSortModel']>(
@@ -285,6 +294,16 @@ export const useGridSorting = (
       apiRef.current.setSortModel(props.sortModel);
     }
   }, [apiRef, props.sortModel]);
+
+  // The filter options have changed
+  const isFirstRender = React.useRef(true);
+  React.useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+    apiRef.current.applySorting();
+  }, [apiRef, props.disableChildrenSorting]);
 
   useFirstRender(() => apiRef.current.applySorting());
 

@@ -124,15 +124,12 @@ describe.only('<DataGridPro /> - Tree Data', () => {
   describe('grouping column', () => {
     it('should add a grouping column', () => {
       render(<Test />);
-
       const columnsHeader = getColumnHeadersTextContent();
-      expect(columnsHeader).to.have.length(baselineProps.columns.length + 1);
-      expect(columnsHeader[0]).to.equal('Group');
+      expect(columnsHeader).to.deep.equal(['Group', 'name']);
     });
 
     it('should toggle expansion when clicking on grouping column icon', () => {
       render(<Test />);
-
       expect(getColumnValues(1)).to.deep.equal(['A', 'B', 'C']);
       fireEvent.click(getCell(0, 0).querySelector('button'));
       expect(getColumnValues(1)).to.deep.equal(['A', 'A.A', 'A.B', 'B', 'C']);
@@ -142,7 +139,6 @@ describe.only('<DataGridPro /> - Tree Data', () => {
 
     it('should toggle expansion when pressing Space while focusing grouping column', () => {
       render(<Test />);
-
       expect(getColumnValues(1)).to.deep.equal(['A', 'B', 'C']);
       getCell(0, 0).focus();
       expect(getColumnValues(1)).to.deep.equal(['A', 'B', 'C']);
@@ -204,11 +200,18 @@ describe.only('<DataGridPro /> - Tree Data', () => {
       expect(getColumnValues(1)).to.deep.equal(['D', 'A', 'A.B', 'A.A']);
     });
 
-    it('should apply the sortModel on every depth of the tree', () => {
+    it('should apply the sortModel on every depth of the tree if props.disableChildrenSorting = false', () => {
       render(<Test sortModel={[{ field: 'name', sort: 'desc' }]} />);
       expect(getColumnValues(1)).to.deep.equal(['C', 'B', 'A']);
       fireEvent.click(getCell(2, 0).querySelector('button'));
       expect(getColumnValues(1)).to.deep.equal(['C', 'B', 'A', 'A.B', 'A.A']);
+    });
+
+    it('should only apply the sortModel on top level rows if props.disableChildrenSorting = true', () => {
+      render(<Test sortModel={[{ field: 'name', sort: 'desc' }]} disableChildrenSorting />);
+      expect(getColumnValues(1)).to.deep.equal(['C', 'B', 'A']);
+      fireEvent.click(getCell(2, 0).querySelector('button'));
+      expect(getColumnValues(1)).to.deep.equal(['C', 'B', 'A', 'A.A', 'A.B']);
     });
   });
 });

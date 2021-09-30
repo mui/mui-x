@@ -35,7 +35,7 @@ const insertRowInTree = (
     }
 
     if (!parent.children) {
-      parent.children = new Map<string, GridRowConfigTreeNode>();
+      parent.children = new Map();
     }
 
     insertRowInTree(parent.children, id, restPath, depth + 1);
@@ -90,7 +90,7 @@ export const useGridTreeData = (
         .sort((a, b) => a.path.length - b.path.length);
 
       const paths = Object.fromEntries(rows.map((row) => [row.id, row.path]));
-      const tree = new Map<string, GridRowConfigTreeNode>();
+      const tree = new Map();
       rows.forEach((row) => {
         insertRowInTree(tree, row.id, row.path);
       });
