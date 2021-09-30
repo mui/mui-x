@@ -162,27 +162,28 @@ const getRowsStateFromCache = (
   return { ...rowState, tree, paths, totalRowCount, totalTopLevelRowCount };
 };
 
+// The cache is always redefined synchronously in `useGridStateInit` so this object don't need to be regenerated across DataGrid instances.
+const INITIAL_GRID_ROWS_INTERNAL_CACHE: GridRowsInternalCache = {
+  state: {
+    idRowsLookup: {},
+    propRowCount: undefined,
+    propGetRowId: undefined,
+    rowIds: [],
+    inputRows: [],
+  },
+  timeout: null,
+  lastUpdateMs: Date.now(),
+}
+
 /**
- * @requires useGridSorting (method)
- * TODO: Impossible priority - useGridSorting also needs to be after useGridRows (which causes all the existence check for apiRef.current.apiRef.current.getSortedRowIds)
+ * @requires useGridSorting (method) - can be after, async only (TODO: Remove after moving the 2 methods to useGridSorting)
  */
 export const useGridRows = (
   apiRef: GridApiRef,
   props: Pick<GridComponentProps, 'rows' | 'getRowId' | 'rowCount' | 'throttleRowsMs'>,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridRows');
-
-  const rowsCache = React.useRef<GridRowsInternalCache>({
-    state: {
-      idRowsLookup: {},
-      propRowCount: undefined,
-      propGetRowId: undefined,
-      rowIds: [],
-      inputRows: [],
-    },
-    timeout: null,
-    lastUpdateMs: Date.now(),
-  });
+  const rowsCache = React.useRef(INITIAL_GRID_ROWS_INTERNAL_CACHE);
 
   useGridStateInit(apiRef, (state) => {
     rowsCache.current.state = convertGridRowsPropToState(
@@ -196,18 +197,13 @@ export const useGridRows = (
 
   const [, setGridState, forceUpdate] = useGridState(apiRef);
 
+  // TODO: Move in useGridSorting
   const getRowIndex = React.useCallback<GridRowApi['getRowIndex']>(
-    (id) => {
-      if (apiRef.current.getFlatSortedRowIds) {
-        return apiRef.current.getFlatSortedRowIds().indexOf(id);
-      }
-
-      // TODO: Remove, getFlatSortedRowIds should always be defined
-      return gridRowIdsFlatSelector(apiRef.current.state).indexOf(id);
-    },
+    (id) => apiRef.current.getFlatSortedRowIds().indexOf(id),
     [apiRef],
   );
 
+  // TODO: Move in useGridSorting
   const getRowIdFromRowIndex = React.useCallback<GridRowApi['getRowIdFromRowIndex']>(
     (index) => apiRef.current.getFlatSortedRowIds()[index],
     [apiRef],

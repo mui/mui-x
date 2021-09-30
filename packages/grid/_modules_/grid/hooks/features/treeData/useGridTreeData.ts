@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridRowId, GridRowConfigTree, GridRowConfigTreeNode } from '../../../models/gridRows';
+import { GridRowId, GridRowConfigTree } from '../../../models/gridRows';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridComponentProps } from '../../../GridComponentProps';
 import { GridColumnsPreProcessing } from '../../root/columnsPreProcessing';

@@ -5,7 +5,6 @@ import {
   GridRowId,
 } from '../../../../models';
 import { GridExportCsvDelimiter } from '../../../../models/gridExport';
-import { FlatSortedVisibleRow } from '../../filter/gridFilterSelector';
 
 const serialiseCellValue = (value: any, delimiterCharacter: GridExportCsvDelimiter) => {
   if (typeof value === 'string') {

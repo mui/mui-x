@@ -36,13 +36,13 @@ export interface GridRowApi {
    */
   updateRows: (updates: GridRowModelUpdate[]) => void;
   /**
-   * Gets the `GridRowId` of a row at a specific index.
+   * Gets the id of a row for a given index in the list of the sorted unfiltered rows.
    * @param {number} index The index of the row
    * @returns {GridRowId} The `GridRowId` of the row.
    */
   getRowIdFromRowIndex: (index: number) => GridRowId;
   /**
-   * Gets the row index of a row with a given id.
+   * Gets the index of a row for a given id in the list of the sorted unfiltered rows.
    * @param {GridRowId} id The `GridRowId` of the row.
    * @returns {number} The index of the row.
    */
@@ -60,11 +60,13 @@ export interface GridRowApi {
    */
   getRowNode: (id: GridRowId) => GridRowConfigTreeNode | null;
   /**
-   * @param {GridRowId} id the ID of the row to toggle.
-   * @param {boolean} isExpanded A boolean indicating if the row must be expanded.
+   * Expand or collapse a row children.
+   * @param {GridRowId} id the ID of the row to expand or collapse.
+   * @param {boolean} isExpanded A boolean indicating if the row must be expanded or collapsed.
    */
   setRowExpansion: (id: GridRowId, isExpanded: boolean) => void;
   /**
+   * Gets the row path in the tree with a given id.
    * @param {GridRowId} id the ID of the row to toggle.
    * @returns {string[] | null} path The path of the row.
    */

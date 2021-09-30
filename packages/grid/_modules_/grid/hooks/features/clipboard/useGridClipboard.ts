@@ -7,8 +7,7 @@ import { gridCheckboxSelectionColDef } from '../../../models/colDef';
 import { GridClipboardApi } from '../../../models/api';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
 import { useNativeEventListener } from '../../root';
-import { FlatSortedVisibleRow } from '../filter';
-import { GridRowId } from '../../../models';
+import { GridRowId } from '../../../models/gridRows';
 
 function writeToClipboardPolyfill(data: string) {
   const span = document.createElement('span');
