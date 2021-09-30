@@ -173,7 +173,7 @@ const INITIAL_GRID_ROWS_INTERNAL_CACHE: GridRowsInternalCache = {
   },
   timeout: null,
   lastUpdateMs: Date.now(),
-}
+};
 
 /**
  * @requires useGridSorting (method) - can be after, async only (TODO: Remove after moving the 2 methods to useGridSorting)
