@@ -5,7 +5,7 @@ import {
   // @ts-expect-error need to migrate helpers to TypeScript
   screen,
 } from 'test/utils';
-import { getCell, getColumnHeadersTextContent, getColumnValues, sleep } from 'test/utils/helperFn';
+import { getCell, getColumnHeadersTextContent, getColumnValues } from 'test/utils/helperFn';
 import * as React from 'react';
 import { expect } from 'chai';
 import { DataGridPro, DataGridProProps, GridApiRef, useGridApiRef } from '@mui/x-data-grid-pro';

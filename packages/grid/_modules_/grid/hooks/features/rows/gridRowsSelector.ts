@@ -1,5 +1,5 @@
 import { createSelector } from 'reselect';
-import { GridRowId, GridRowConfigTree, GridRowModel } from '../../../models/gridRows';
+import { GridRowId, GridRowConfigTree } from '../../../models/gridRows';
 import { GridState } from '../core/gridState';
 
 export const gridRowsStateSelector = (state: GridState) => state.rows;

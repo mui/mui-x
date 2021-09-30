@@ -10,6 +10,7 @@ export default function BasicTreeData() {
         treeData
         getTreeDataPath={(row) => row.name.split('.')}
         getRowId={(row) => row.name}
+        disableSelectionOnClick
       />
     </div>
   );
