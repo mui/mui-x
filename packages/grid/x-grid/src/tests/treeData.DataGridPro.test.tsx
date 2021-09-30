@@ -5,7 +5,7 @@ import {
   // @ts-expect-error need to migrate helpers to TypeScript
   screen,
 } from 'test/utils';
-import { getCell, getColumnHeadersTextContent, getColumnValues } from 'test/utils/helperFn';
+import { getCell, getColumnHeadersTextContent, getColumnValues, sleep } from 'test/utils/helperFn';
 import * as React from 'react';
 import { expect } from 'chai';
 import { DataGridPro, DataGridProProps, GridApiRef, useGridApiRef } from '@mui/x-data-grid-pro';
@@ -42,22 +42,64 @@ describe.only('<DataGridPro /> - Tree Data', () => {
     apiRef = useGridApiRef();
 
     return (
-      <div style={{ width: 300, height: 500 }}>
+      <div style={{ width: 300, height: 800 }}>
         <DataGridPro {...baselineProps} apiRef={apiRef} {...props} />
       </div>
     );
   };
 
-  it('should support tree data toggling', () => {
-    const { setProps } = render(<Test treeData={false} />);
-    expect(getColumnHeadersTextContent()).to.deep.equal(['name']);
-    expect(getColumnValues(0)).to.deep.equal(['A', 'A.A', 'A.B', 'B', 'B.A', 'B.B', 'B.B.A', 'C']);
-    setProps({ treeData: true });
-    expect(getColumnHeadersTextContent()).to.deep.equal(['Group', 'name']);
-    // expect(getColumnValues(1)).to.deep.equal(['A', 'B', 'C']);
-    // setProps({ treeData: false });
-    // expect(getColumnHeadersTextContent()).to.deep.equal(['name']);
-    // expect(getColumnValues(0)).to.deep.equal(['A', 'A.A', 'A.B', 'B', 'B.A', 'B.B', 'B.B.A', 'C']);
+  describe('prop: treeData', () => {
+    it('should support tree data toggling', () => {
+      const { setProps } = render(<Test treeData={false} />);
+      expect(getColumnHeadersTextContent()).to.deep.equal(['name']);
+      expect(getColumnValues(0)).to.deep.equal([
+        'A',
+        'A.A',
+        'A.B',
+        'B',
+        'B.A',
+        'B.B',
+        'B.B.A',
+        'C',
+      ]);
+      setProps({ treeData: true });
+      expect(getColumnHeadersTextContent()).to.deep.equal(['Group', 'name']);
+      expect(getColumnValues(1)).to.deep.equal(['A', 'B', 'C']);
+      setProps({ treeData: false });
+      expect(getColumnHeadersTextContent()).to.deep.equal(['name']);
+      expect(getColumnValues(0)).to.deep.equal([
+        'A',
+        'A.A',
+        'A.B',
+        'B',
+        'B.A',
+        'B.B',
+        'B.B.A',
+        'C',
+      ]);
+    });
+
+    it('should support enabling treeData after apiRef.current.updateRows has modified the rows', async () => {
+      const { setProps } = render(<Test treeData={false} />);
+      expect(getColumnHeadersTextContent()).to.deep.equal(['name']);
+      expect(getColumnValues(0)).to.deep.equal([
+        'A',
+        'A.A',
+        'A.B',
+        'B',
+        'B.A',
+        'B.B',
+        'B.B.A',
+        'C',
+      ]);
+      apiRef.current.updateRows([{ name: 'A.A', _action: 'delete' }]);
+      expect(getColumnValues(0)).to.deep.equal(['A', 'A.B', 'B', 'B.A', 'B.B', 'B.B.A', 'C']);
+      setProps({ treeData: true });
+      expect(getColumnHeadersTextContent()).to.deep.equal(['Group', 'name']);
+      expect(getColumnValues(1)).to.deep.equal(['A', 'B', 'C']);
+      fireEvent.click(getCell(0, 0).querySelector('button'));
+      expect(getColumnValues(1)).to.deep.equal(['A', 'A.B', 'B', 'C']);
+    });
   });
 
   describe('prop: getTreeDataPath', () => {
@@ -123,7 +165,7 @@ describe.only('<DataGridPro /> - Tree Data', () => {
   });
 
   describe('filter', () => {
-    it('should filter every depth of the tree', () => {
+    it('should filter every depth of the tree if props.disableChildrenFiltering = false', () => {
       const { setProps } = render(<Test />);
       fireEvent.click(getCell(0, 0).querySelector('button'));
       expect(getColumnValues(1)).to.deep.equal(['A', 'A.A', 'A.B', 'B', 'C']);
@@ -131,6 +173,16 @@ describe.only('<DataGridPro /> - Tree Data', () => {
         filterModel: { items: [{ columnField: 'name', value: 'A', operatorValue: 'endsWith' }] },
       });
       expect(getColumnValues(1)).to.deep.equal(['A', 'A.A']);
+    });
+
+    it('should only filter to top level rows if props.disableChildrenFiltering = true', () => {
+      const { setProps } = render(<Test disableChildrenFiltering />);
+      fireEvent.click(getCell(0, 0).querySelector('button'));
+      expect(getColumnValues(1)).to.deep.equal(['A', 'A.A', 'A.B', 'B', 'C']);
+      setProps({
+        filterModel: { items: [{ columnField: 'name', value: 'A', operatorValue: 'endsWith' }] },
+      });
+      expect(getColumnValues(1)).to.deep.equal(['A', 'A.A', 'A.B']);
     });
 
     it('should not show children when its parent does not match the filters', () => {

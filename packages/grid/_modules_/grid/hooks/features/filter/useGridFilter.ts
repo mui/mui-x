@@ -50,7 +50,11 @@ export const useGridFilter = (
   apiRef: GridApiRef,
   props: Pick<
     GridComponentProps,
-    'filterModel' | 'onFilterModelChange' | 'filterMode' | 'disableMultipleColumnsFiltering'
+    | 'filterModel'
+    | 'onFilterModelChange'
+    | 'filterMode'
+    | 'disableMultipleColumnsFiltering'
+    | 'disableChildrenFiltering'
   >,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridFilter');
@@ -131,8 +135,15 @@ export const useGridFilter = (
 
         const filterRowTree = (tree: Map<GridRowId, GridSortedRowsTreeNode>, depth = 0) => {
           tree.forEach((node, id) => {
-            const params = apiRef.current.getCellParams(id, newFilterItem.columnField!);
-            const hasCurrentFilter = applyFilterOnRow(params);
+            let hasCurrentFilter: boolean;
+
+            if (depth > 0 && props.disableChildrenFiltering) {
+              hasCurrentFilter = true;
+            } else {
+              const params = apiRef.current.getCellParams(id, newFilterItem.columnField!);
+              hasCurrentFilter = applyFilterOnRow(params);
+            }
+
             const lookupElementBeforeCurrentFilter = visibleRowsLookup[id];
 
             let isVisible: boolean;
@@ -178,7 +189,7 @@ export const useGridFilter = (
 
       return true;
     },
-    [apiRef, forceUpdate, logger, setGridState],
+    [apiRef, forceUpdate, logger, setGridState, props.disableChildrenFiltering],
   );
 
   const applyFilters = React.useCallback<GridFilterApi['applyFilters']>(() => {
@@ -385,6 +396,11 @@ export const useGridFilter = (
       apiRef.current.setFilterModel(props.filterModel);
     }
   }, [apiRef, logger, props.filterModel]);
+
+  // The filter options have changed
+  React.useEffect(() => {
+    apiRef.current.applyFilters();
+  }, [apiRef, props.disableChildrenFiltering]);
 
   useFirstRender(() => apiRef.current.applyFilters());
 

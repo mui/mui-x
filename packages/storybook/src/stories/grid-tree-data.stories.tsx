@@ -47,9 +47,6 @@ const baselineProps: DataGridProProps = {
   ],
   columns: [
     {
-      field: 'id',
-    },
-    {
       field: 'name',
       width: 200,
     },

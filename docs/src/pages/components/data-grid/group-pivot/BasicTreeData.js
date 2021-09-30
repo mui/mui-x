@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataGridPro, GridColumns, GridRowsProp } from '@mui/x-data-grid-pro';
+import { DataGridPro } from '@mui/x-data-grid-pro';
 
 export default function BasicTreeData() {
   return (
@@ -10,15 +10,14 @@ export default function BasicTreeData() {
         treeData
         getTreeDataPath={(row) => row.name.split('.')}
         getRowId={(row) => row.name}
-        disableSelectionOnClick
       />
     </div>
   );
 }
 
-const columns: GridColumns = [{ field: 'name', headerName: 'Name' }];
+const columns = [{ field: 'name', headerName: 'Name' }];
 
-const rows: GridRowsProp = [
+const rows = [
   { name: 'A' },
   { name: 'A.A' },
   { name: 'B' },

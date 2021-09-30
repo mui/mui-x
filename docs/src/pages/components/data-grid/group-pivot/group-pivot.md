@@ -6,13 +6,16 @@ title: Data Grid - Group & Pivot
 
 <p class="description">Use grouping, pivoting and more to analyse the data in depth.</p>
 
-## 🚧 Tree data [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-pro/)
+## Tree data [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-pro/)
 
-> ⚠️ This feature isn't implemented yet. It's coming.
->
-> 👍 Upvote [issue #210](https://github.com/mui-org/material-ui-x/issues/210) if you want to see it land faster.
+Tree data allows to display data with parent / child relationships.
+To enable the Tree Data, you must use the `treeData` prop as well as provide a `getTreeDataPath` prop.
 
-Tree data allows to visualize self-referential hierarchical (tree-like structure) data.
+```jsx
+<DataGridPro treeData getTreeDataPath={(row) => row.path} />
+```
+
+{{"demo": "pages/components/data-grid/group-pivot/BasicTreeData.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## 🚧 Master detail [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-pro/)
 

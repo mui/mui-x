@@ -104,6 +104,11 @@ export interface GridSimpleOptions {
    */
   disableMultipleColumnsFiltering: boolean;
   /**
+   * If `true`, the filtering will only be applied to the top level rows
+   * @default false
+   */
+  disableChildrenFiltering: boolean;
+  /**
    * If `true`, multiple selection using the CTRL or CMD key is disabled.
    * @default false
    */
@@ -249,6 +254,7 @@ export const GRID_DEFAULT_SIMPLE_OPTIONS: GridSimpleOptions = {
   disableColumnSelector: false,
   disableDensitySelector: false,
   disableMultipleColumnsFiltering: false,
+  disableChildrenFiltering: false,
   disableMultipleSelection: false,
   disableMultipleColumnsSorting: false,
   disableSelectionOnClick: false,
