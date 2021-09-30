@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataGridPro, DataGridProProps } from '@mui/x-data-grid-pro';
+import { DataGridPro, GridToolbar, DataGridProProps } from '@mui/x-data-grid-pro';
 import { Meta } from '@storybook/react';
 import Button from '@mui/material/Button';
 
@@ -96,4 +96,9 @@ export function TreeDataPagination() {
       <DataGridPro {...baselineProps} pagination pageSize={5} rowsPerPageOptions={[5]} autoHeight />
     </div>
   );
+}
+
+export function TreeDataToolbar() {
+  return <DataGridPro {...baselineProps} components={{ Toolbar: GridToolbar }} />;
+
 }

@@ -3,9 +3,9 @@ import {
   gridCheckboxSelectionColDef,
   GridStateColDef,
   GridRowId,
-  GridRowModel,
 } from '../../../../models';
 import { GridExportCsvDelimiter } from '../../../../models/gridExport';
+import {FlatSortedVisibleRow} from "../../filter/gridFilterSelector";
 
 const serialiseCellValue = (value: any, delimiterCharacter: GridExportCsvDelimiter) => {
   if (typeof value === 'string') {
@@ -35,7 +35,7 @@ export function serialiseRow(
 
 interface BuildCSVOptions {
   columns: GridStateColDef[];
-  rows: Map<GridRowId, GridRowModel>;
+  rows: FlatSortedVisibleRow[];
   selectedRowIds: GridRowId[];
   getCellParams: (id: GridRowId, field: string) => GridCellParams;
   delimiterCharacter: GridExportCsvDelimiter;
@@ -51,7 +51,7 @@ export function buildCSV(options: BuildCSVOptions): string {
     delimiterCharacter,
     includeHeaders = true,
   } = options;
-  let rowIds = [...rows.keys()];
+  let rowIds = rows.map(row => row.id)
 
   if (selectedRowIds.length) {
     rowIds = rowIds.filter((id) => selectedRowIds.includes(id));
