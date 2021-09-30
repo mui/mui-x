@@ -35,7 +35,7 @@ const GridToolbarExport = React.forwardRef<HTMLButtonElement, GridToolbarExportP
 
     const [open, setOpen] = React.useState(false);
     const buttonRef = React.useRef<HTMLButtonElement>(null);
-    const forkedButtonRef = useForkRef(ref, buttonRef);
+    const handleRef = useForkRef(ref, buttonRef);
 
     const exportOptions: Array<GridExportOption> = [];
     exportOptions.push({
@@ -69,7 +69,7 @@ const GridToolbarExport = React.forwardRef<HTMLButtonElement, GridToolbarExportP
     return (
       <React.Fragment>
         <Button
-          ref={forkedButtonRef}
+          ref={handleRef}
           color="primary"
           size="small"
           startIcon={<rootProps.components.ExportIcon />}

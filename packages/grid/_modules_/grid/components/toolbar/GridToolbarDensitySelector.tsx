@@ -24,7 +24,7 @@ export const GridToolbarDensitySelector = React.forwardRef<HTMLButtonElement, Bu
 
     const [open, setOpen] = React.useState(false);
     const buttonRef = React.useRef<HTMLButtonElement>(null);
-    const forkedButtonRef = useForkRef(ref, buttonRef);
+    const handleRef = useForkRef(ref, buttonRef);
 
     const densityOptions: GridDensityOption[] = [
       {
@@ -93,7 +93,7 @@ export const GridToolbarDensitySelector = React.forwardRef<HTMLButtonElement, Bu
     return (
       <React.Fragment>
         <Button
-          ref={forkedButtonRef}
+          ref={handleRef}
           color="primary"
           size="small"
           startIcon={startIcon}
