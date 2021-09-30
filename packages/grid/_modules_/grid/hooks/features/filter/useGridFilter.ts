@@ -27,7 +27,10 @@ import {
 import { GridSortedRowsTree } from '../sorting';
 import { useGridStateInit } from '../../utils/useGridStateInit';
 import { useFirstRender } from '../../utils/useFirstRender';
-import { gridExpandedRowCountSelector, gridTopLevelRowCountSelector } from '../rows';
+import {
+  gridExpandedRowCountSelector,
+  gridTopLevelRowCountSelector,
+} from '../rows/gridRowsSelector';
 
 const checkFilterModelValidity = (model: GridFilterModel) => {
   if (model.items.length > 1) {

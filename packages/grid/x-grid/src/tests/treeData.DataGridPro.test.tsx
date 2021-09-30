@@ -32,7 +32,7 @@ const baselineProps: DataGridProProps = {
   getRowId: (row) => row.name,
 };
 
-describe.only('<DataGridPro /> - Tree Data', () => {
+describe('<DataGridPro /> - Tree Data', () => {
   // TODO v5: replace with createClientRender
   const render = createClientRenderStrictMode();
 

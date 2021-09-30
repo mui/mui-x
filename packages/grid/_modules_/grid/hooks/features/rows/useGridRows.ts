@@ -209,14 +209,7 @@ export const useGridRows = (
   );
 
   const getRowIdFromRowIndex = React.useCallback<GridRowApi['getRowIdFromRowIndex']>(
-    (index) => {
-      if (apiRef.current.getFlatSortedRowIds) {
-        return apiRef.current.getFlatSortedRowIds()[index];
-      }
-
-      // TODO: Remove, getFlatSortedRowIds should always be defined
-      return gridRowIdsFlatSelector(apiRef.current.state)[index];
-    },
+    (index) => apiRef.current.getFlatSortedRowIds()[index],
     [apiRef],
   );
 

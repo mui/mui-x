@@ -2,13 +2,12 @@ import { GridRowId, GridRowModel, GridRowConfigTree } from '../../../models/grid
 
 export interface GridRowsState {
   idRowsLookup: Record<GridRowId, GridRowModel>;
+  tree: GridRowConfigTree;
 
   /**
-   * Path in the tree to access to a given row
+   * Path in the tree to access a given row
    */
   paths: Record<GridRowId, string[]>;
-
-  tree: GridRowConfigTree;
 
   /**
    * Amount of rows before applying the filtering
