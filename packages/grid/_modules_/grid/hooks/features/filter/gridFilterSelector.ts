@@ -56,7 +56,11 @@ export const gridSortedVisibleRowsSelector = createSelector(
   },
 );
 
-export type TreeSortedVisibleRow = { id: GridRowId; node: GridRowModel; children?: TreeSortedVisibleRow[] };
+export type TreeSortedVisibleRow = {
+  id: GridRowId;
+  node: GridRowModel;
+  children?: TreeSortedVisibleRow[];
+};
 
 export const gridSortedVisibleRowsAsArraySelector = createSelector(
   gridSortedVisibleRowsSelector,
@@ -72,7 +76,7 @@ export const gridSortedVisibleRowsAsArraySelector = createSelector(
   },
 );
 
-export type FlatSortedVisibleRow = { id: GridRowId; node: GridRowModel }
+export type FlatSortedVisibleRow = { id: GridRowId; node: GridRowModel };
 
 export const gridSortedVisibleRowsAsArrayFlatSelector = createSelector(
   gridSortedVisibleRowsSelector,
@@ -92,7 +96,7 @@ export const gridSortedVisibleRowIdsSelector = createSelector(
   (visibleSortedRows) => [...visibleSortedRows.keys()],
 );
 
-export const    activeGridFilterItemsSelector = createSelector(
+export const activeGridFilterItemsSelector = createSelector(
   gridFilterModelSelector,
   gridColumnLookupSelector,
   (filterModel, columnLookup) =>

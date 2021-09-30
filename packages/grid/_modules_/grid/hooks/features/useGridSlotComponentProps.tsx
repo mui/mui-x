@@ -4,22 +4,19 @@ import { GridSlotComponentProps } from '../../models/params/gridSlotComponentPro
 import { visibleGridColumnsSelector } from './columns/gridColumnsSelector';
 import { useGridSelector } from './core/useGridSelector';
 import { useGridState } from './core/useGridState';
-import { gridRowTreeSelector } from './rows/gridRowsSelector';
 
 export const useGridSlotComponentProps = () => {
   const apiRef = useGridApiContext();
-  const rows = useGridSelector(apiRef, gridRowTreeSelector);
   const columns = useGridSelector(apiRef, visibleGridColumnsSelector);
   const [state] = useGridState(apiRef);
 
   return React.useMemo<GridSlotComponentProps>(
     () => ({
       state,
-      rows,
       columns,
       apiRef,
       rootElement: apiRef.current.rootElementRef!,
     }),
-    [state, rows, columns, apiRef],
+    [state, columns, apiRef],
   );
 };

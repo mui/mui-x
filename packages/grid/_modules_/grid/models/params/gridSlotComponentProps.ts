@@ -13,10 +13,6 @@ export interface GridSlotComponentProps {
    */
   state: GridState;
   /**
-   * The full set of rows.
-   */
-  rows: GridRowConfigTree;
-  /**
    * The full set of columns.
    */
   columns: GridColumns;
