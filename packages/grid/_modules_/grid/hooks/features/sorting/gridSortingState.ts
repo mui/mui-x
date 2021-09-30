@@ -1,9 +1,11 @@
 import { GridRowId, GridRowModel } from '../../../models/gridRows';
 import { GridSortModel } from '../../../models/gridSortModel';
 
+export type GridSortedRowsTree = Map<GridRowId, GridSortedRowsTreeNode>;
+
 export interface GridSortedRowsTreeNode {
   node: GridRowModel;
-  children?: Map<GridRowId, GridSortedRowsTreeNode>;
+  children?: GridSortedRowsTree;
 }
 
 export interface GridSortedRowsIdTreeNode {

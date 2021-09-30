@@ -3,7 +3,7 @@ import { GridRowId } from '../gridRows';
 import { GridSortDirection, GridSortModel } from '../gridSortModel';
 import {
   GridSortedRowsIdTreeNode,
-  GridSortedRowsTreeNode,
+  GridSortedRowsTree,
 } from '../../hooks/features/sorting/gridSortingState';
 
 /**
@@ -37,9 +37,9 @@ export interface GridSortApi {
   ) => void;
   /**
    * Returns all rows sorted according to the active sort model.
-   * @returns {Map<GridRowId, GridSortedRowsTreeNode>} The sorted [[GridRowModel]] objects.
+   * @returns {GridSortedRowsTree} The sorted [[GridRowModel]] objects.
    */
-  getSortedRows: () => Map<GridRowId, GridSortedRowsTreeNode>;
+  getSortedRows: () => GridSortedRowsTree;
   /**
    * Returns all row ids sorted according to the active sort model.
    * @returns {GridSortedRowsIdTreeNode[]} The sorted [[GridRowId]] values.

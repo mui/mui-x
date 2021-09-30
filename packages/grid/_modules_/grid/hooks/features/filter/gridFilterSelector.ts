@@ -4,7 +4,7 @@ import { GridRowId, GridRowModel } from '../../../models/gridRows';
 import { GridState } from '../core/gridState';
 import { gridSortedRowsSelector } from '../sorting/gridSortingSelector';
 import { gridColumnLookupSelector } from '../columns/gridColumnsSelector';
-import { GridSortedRowsTreeNode } from '../sorting';
+import { GridSortedRowsTree } from '../sorting';
 
 export const gridFilterStateSelector = (state: GridState) => state.filter;
 
@@ -37,10 +37,10 @@ export const gridSortedVisibleRowsSelector = createSelector(
   gridVisibleRowsLookupSelector,
   gridSortedRowsSelector,
   (visibleRowsLookup, sortedRowsTree) => {
-    const removeHiddenRows = (nodes: Map<GridRowId, GridSortedRowsTreeNode>) => {
-      const filteredRows = new Map<GridRowId, GridSortedRowsTreeNode>();
+    const removeHiddenRows = (tree: GridSortedRowsTree) => {
+      const filteredRows: GridSortedRowsTree = new Map();
 
-      nodes.forEach((row, id) => {
+      tree.forEach((row, id) => {
         if (visibleRowsLookup[id] !== false) {
           filteredRows.set(id, {
             node: row.node,
@@ -61,8 +61,8 @@ export type VisibleRow = { id: GridRowId; node: GridRowModel; children?: Visible
 export const gridSortedVisibleRowsAsArraySelector = createSelector(
   gridSortedVisibleRowsSelector,
   (rows) => {
-    const flattenRowIds = (nodes: Map<GridRowId, GridSortedRowsTreeNode>): VisibleRow[] =>
-      Array.from(nodes.entries()).map(([id, row]) => ({
+    const flattenRowIds = (tree: GridSortedRowsTree): VisibleRow[] =>
+      Array.from(tree.entries()).map(([id, row]) => ({
         id,
         node: row.node,
         children: row.children ? flattenRowIds(row.children) : undefined,
@@ -75,10 +75,8 @@ export const gridSortedVisibleRowsAsArraySelector = createSelector(
 export const gridSortedVisibleRowsAsArrayFlatSelector = createSelector(
   gridSortedVisibleRowsSelector,
   (rows) => {
-    const flattenRowIds = (
-      nodes: Map<GridRowId, GridSortedRowsTreeNode>,
-    ): { id: GridRowId; node: GridRowModel }[] =>
-      Array.from(nodes.entries()).flatMap(([id, row]) => [
+    const flattenRowIds = (tree: GridSortedRowsTree): { id: GridRowId; node: GridRowModel }[] =>
+      Array.from(tree.entries()).flatMap(([id, row]) => [
         { id, node: row.node },
         ...(row.children ? flattenRowIds(row.children) : []),
       ]);

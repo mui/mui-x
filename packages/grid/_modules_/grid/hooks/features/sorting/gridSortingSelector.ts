@@ -3,7 +3,7 @@ import { GridRowId } from '../../../models/gridRows';
 import { GridSortDirection, GridSortModel } from '../../../models/gridSortModel';
 import { GridState } from '../core/gridState';
 import { gridRowsLookupSelector } from '../rows/gridRowsSelector';
-import { GridSortedRowsIdTreeNode, GridSortedRowsTreeNode } from './gridSortingState';
+import { GridSortedRowsIdTreeNode, GridSortedRowsTree } from './gridSortingState';
 
 const gridSortingStateSelector = (state: GridState) => state.sorting;
 
@@ -27,7 +27,7 @@ export const gridSortedRowsSelector = createSelector(
   gridRowsLookupSelector,
   (sortedTree, idRowsLookup) => {
     const buildMap = (nodes: GridSortedRowsIdTreeNode[]) => {
-      const map = new Map<GridRowId, GridSortedRowsTreeNode>();
+      const map: GridSortedRowsTree = new Map();
 
       nodes.forEach((node) => {
         map.set(node.id, {

@@ -24,7 +24,7 @@ import {
   gridSortedVisibleRowsSelector,
   gridFilterModelSelector,
 } from './gridFilterSelector';
-import { GridSortedRowsTreeNode } from '../sorting';
+import { GridSortedRowsTree } from '../sorting';
 import { useGridStateInit } from '../../utils/useGridStateInit';
 import { useFirstRender } from '../../utils/useFirstRender';
 import { gridExpandedRowCountSelector, gridTopLevelRowCountSelector } from '../rows';
@@ -133,7 +133,7 @@ export const useGridFilter = (
         // This way we have latest rows on the first rendering
         const rowTree = gridSortedRowsSelector(state);
 
-        const filterRowTree = (tree: Map<GridRowId, GridSortedRowsTreeNode>, depth = 0) => {
+        const filterRowTree = (tree: GridSortedRowsTree, depth = 0) => {
           tree.forEach((node, id) => {
             let hasCurrentFilter: boolean;
 
