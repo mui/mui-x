@@ -47,7 +47,7 @@ const insertRowInTree = (
  */
 export const useGridTreeData = (
   apiRef: GridApiRef,
-  props: Pick<GridComponentProps, 'treeData' | 'getTreeDataPath' | 'groupingColDef' | 'rows'>,
+  props: Pick<GridComponentProps, 'treeData' | 'getTreeDataPath' | 'groupingColDef'>,
 ) => {
   const updateColumnsPreProcessing = React.useCallback(() => {
     if (!props.treeData) {
