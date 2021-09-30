@@ -9,15 +9,10 @@ import {
   randomUpdatedDate,
 } from '@mui/x-data-grid-generator';
 
-// TODO v5: remove
-function getThemePaletteMode(palette) {
-  return palette.type || palette.mode;
-}
-
 const defaultTheme = createTheme();
 const useStyles = makeStyles(
   (theme) => {
-    const isDark = getThemePaletteMode(theme.palette) === 'dark';
+    const isDark = theme.palette.mode === 'dark';
 
     return {
       root: {

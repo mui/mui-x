@@ -1,5 +1,4 @@
-// TODO v5: import from arSD
-import { enUS as enUSCore } from '@mui/material/locale';
+import { arSD as arSDCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -106,4 +105,4 @@ const arSDGrid: Partial<GridLocaleText> = {
   // actionsCellMore: 'more',
 };
 
-export const arSD: Localization = getGridLocalization(arSDGrid, enUSCore);
+export const arSD: Localization = getGridLocalization(arSDGrid, arSDCore);

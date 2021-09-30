@@ -4,15 +4,11 @@ import { makeStyles } from '@mui/styles';
 import { DataGrid } from '@mui/x-data-grid';
 import { randomPrice } from '@mui/x-data-grid-generator';
 
-function getThemePaletteMode(palette) {
-  return palette.type || palette.mode;
-}
-
 const defaultTheme = createTheme();
 
 const useStyles = makeStyles(
   (theme) => {
-    const isDark = getThemePaletteMode(theme.palette) === 'dark';
+    const isDark = theme.palette.mode === 'dark';
 
     return {
       root: {
