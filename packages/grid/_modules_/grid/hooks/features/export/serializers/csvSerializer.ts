@@ -5,7 +5,7 @@ import {
   GridRowId,
 } from '../../../../models';
 import { GridExportCsvDelimiter } from '../../../../models/gridExport';
-import {FlatSortedVisibleRow} from "../../filter/gridFilterSelector";
+import { FlatSortedVisibleRow } from '../../filter/gridFilterSelector';
 
 const serialiseCellValue = (value: any, delimiterCharacter: GridExportCsvDelimiter) => {
   if (typeof value === 'string') {
@@ -35,28 +35,14 @@ export function serialiseRow(
 
 interface BuildCSVOptions {
   columns: GridStateColDef[];
-  rows: FlatSortedVisibleRow[];
-  selectedRowIds: GridRowId[];
+  rowIds: GridRowId[];
   getCellParams: (id: GridRowId, field: string) => GridCellParams;
   delimiterCharacter: GridExportCsvDelimiter;
   includeHeaders?: boolean;
 }
 
 export function buildCSV(options: BuildCSVOptions): string {
-  const {
-    columns,
-    rows,
-    selectedRowIds,
-    getCellParams,
-    delimiterCharacter,
-    includeHeaders = true,
-  } = options;
-  let rowIds = rows.map(row => row.id)
-
-  if (selectedRowIds.length) {
-    rowIds = rowIds.filter((id) => selectedRowIds.includes(id));
-  }
-
+  const { columns, rowIds, getCellParams, delimiterCharacter, includeHeaders = true } = options;
   const CSVBody = rowIds
     .reduce<string>(
       (acc, id) =>

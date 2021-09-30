@@ -91,11 +91,6 @@ export const gridSortedVisibleRowsAsArrayFlatSelector = createSelector(
   },
 );
 
-export const gridSortedVisibleRowIdsSelector = createSelector(
-  gridSortedVisibleRowsSelector,
-  (visibleSortedRows) => [...visibleSortedRows.keys()],
-);
-
 export const activeGridFilterItemsSelector = createSelector(
   gridFilterModelSelector,
   gridColumnLookupSelector,

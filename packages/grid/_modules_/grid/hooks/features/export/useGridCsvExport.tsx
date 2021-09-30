@@ -3,7 +3,7 @@ import { GridApiRef } from '../../../models/api/gridApiRef';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
 import { useGridSelector } from '../core/useGridSelector';
 import { allGridColumnsSelector, visibleGridColumnsSelector } from '../columns';
-import {gridSortedVisibleRowsAsArrayFlatSelector, gridSortedVisibleRowsSelector} from '../filter';
+import { gridSortedVisibleRowsAsArrayFlatSelector } from '../filter';
 import { gridSelectionStateSelector } from '../selection';
 import { GridCsvExportApi } from '../../../models/api/gridCsvExportApi';
 import { GridExportCsvOptions } from '../../../models/gridExport';
@@ -42,10 +42,15 @@ export const useGridCsvExport = (apiRef: GridApiRef): void => {
         exportedColumns = validColumns.filter((column) => !column.disableExport);
       }
 
+      // TODO: Use a selector with only the ids
+      let exportedRowIds = visibleSortedRows.map((el) => el.id);
+      if (selection.length) {
+        exportedRowIds = exportedRowIds.filter((id) => selection.includes(id));
+      }
+
       return buildCSV({
         columns: exportedColumns,
-        rows: visibleSortedRows,
-        selectedRowIds: selection,
+        rowIds: exportedRowIds,
         getCellParams: apiRef.current.getCellParams,
         delimiterCharacter: options?.delimiter || ',',
       });

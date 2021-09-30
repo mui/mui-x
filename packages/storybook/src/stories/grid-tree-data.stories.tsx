@@ -100,5 +100,4 @@ export function TreeDataPagination() {
 
 export function TreeDataToolbar() {
   return <DataGridPro {...baselineProps} components={{ Toolbar: GridToolbar }} />;
-
 }
