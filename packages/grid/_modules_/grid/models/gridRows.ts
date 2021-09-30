@@ -26,6 +26,8 @@ export interface GridRowGroupingResult {
   paths: Record<GridRowId, string[]>;
 }
 
+export type GridRowsLookup = Record<GridRowId, GridRowModel>;
+
 /**
  * The type of Id supported by the grid.
  */

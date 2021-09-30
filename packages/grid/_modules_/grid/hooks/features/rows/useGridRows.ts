@@ -11,7 +11,6 @@ import {
   GridRowIdGetter,
   GridRowData,
   GridRowConfigTreeNode,
-  GridRowGroupingResult,
   GridRowConfigTree,
 } from '../../../models/gridRows';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
@@ -26,6 +25,7 @@ import {
   gridRowIdsFlatSelector,
   gridRowsPathSelector,
 } from './gridRowsSelector';
+import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
 
 export type GridRowsInternalCacheState = Omit<
   GridRowsState,
@@ -34,10 +34,18 @@ export type GridRowsInternalCacheState = Omit<
   rowIds: GridRowId[];
 
   /**
-   * The row count property when the internal cache was created
+   * The rowCount property when the internal cache was created
    * We are storing it instead of accessing it directly when storing the cache to avoid synchronization issues
    */
   propRowCount?: number;
+
+  /**
+   * The getRowId property when the internal cache was created
+   * We are storing it instead of accessing it directly when storing the cache to avoid synchronization issues
+   */
+  propGetRowId?: GridRowIdGetter;
+
+  inputRows: GridRowsProp;
 };
 
 export interface GridRowsInternalCache {
@@ -57,31 +65,26 @@ function getGridRowId(
 }
 
 export function convertGridRowsPropToState(
-  rows: GridRowsProp,
+  inputRows: GridRowsProp,
   propRowCount?: number,
-  rowIdGetter?: GridRowIdGetter,
+  propGetRowId?: GridRowIdGetter,
 ): GridRowsInternalCacheState {
   const state: GridRowsInternalCacheState = {
     idRowsLookup: {},
     rowIds: [],
     propRowCount,
+    propGetRowId,
+    inputRows,
   };
 
-  rows.forEach((rowData) => {
-    const id = getGridRowId(rowData, rowIdGetter);
+  inputRows.forEach((rowData) => {
+    const id = getGridRowId(rowData, propGetRowId);
     state.idRowsLookup[id] = rowData;
     state.rowIds.push(id);
   });
 
   return state;
 }
-
-const getFlatRowTree = (rowIds: GridRowId[]): GridRowGroupingResult => ({
-  tree: new Map<string, GridRowConfigTreeNode>(
-    rowIds.map((id) => [id.toString(), { id, depth: 0 }]),
-  ),
-  paths: Object.fromEntries(rowIds.map((id) => [id, [id.toString()]])),
-});
 
 const getNodeFromTree = (tree: GridRowConfigTree, path: string[]): GridRowConfigTreeNode | null => {
   if (path.length === 0) {
@@ -145,10 +148,13 @@ const getRowsStateFromCache = (
   rowsCache: GridRowsInternalCache,
   apiRef: GridApiRef,
 ): GridRowsState => {
-  const { rowIds, propRowCount = 0, ...rowState } = rowsCache.state;
-  const { tree, paths } = apiRef.current.groupRows
-    ? apiRef.current.groupRows(rowState.idRowsLookup, rowIds)
-    : getFlatRowTree(rowIds);
+  const { rowIds, propRowCount = 0, propGetRowId, ...rowState } = rowsCache.state;
+
+  const { tree, paths } = apiRef.current.groupRows({
+    lookup: rowState.idRowsLookup,
+    ids: rowIds,
+    gridRowId: (rowData: GridRowData) => getGridRowId(rowData, propGetRowId),
+  });
 
   const totalRowCount = propRowCount > rowIds.length ? propRowCount : rowIds.length;
   const totalTopLevelRowCount = propRowCount > tree.size ? propRowCount : tree.size;
@@ -170,7 +176,9 @@ export const useGridRows = (
     state: {
       idRowsLookup: {},
       propRowCount: undefined,
+      propGetRowId: undefined,
       rowIds: [],
+      inputRows: [],
     },
     timeout: null,
     lastUpdateMs: Date.now(),
@@ -315,6 +323,9 @@ export const useGridRows = (
         idRowsLookup,
         rowIds,
         propRowCount: props.rowCount,
+        propGetRowId: props.getRowId,
+        // TODO: Test
+        inputRows: rowIds.map((rowId) => idRowsLookup[rowId]),
       };
 
       throttledRowsChange(state, true);
@@ -398,6 +409,16 @@ export const useGridRows = (
       false,
     );
   }, [props.rows, props.rowCount, props.getRowId, logger, throttledRowsChange]);
+
+  const handleGroupRows = React.useCallback(() => {
+    logger.info(`Row grouping pre-processing have changed, regenerating the row tree`);
+    throttledRowsChange(
+      convertGridRowsPropToState(rowsCache.current.state.inputRows, props.rowCount, props.getRowId),
+      false,
+    );
+  }, [logger, throttledRowsChange, props.rowCount, props.getRowId]);
+
+  useGridApiEventHandler(apiRef, GridEvents.rowGroupsPreProcessingChange, handleGroupRows);
 
   const rowApi: GridRowApi = {
     getRowIndex,

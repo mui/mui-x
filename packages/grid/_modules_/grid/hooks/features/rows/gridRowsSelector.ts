@@ -2,8 +2,6 @@ import { createSelector } from 'reselect';
 import { GridRowId, GridRowConfigTree, GridRowModel } from '../../../models/gridRows';
 import { GridState } from '../core/gridState';
 
-export type GridRowsLookup = Record<GridRowId, GridRowModel>;
-
 export const gridRowsStateSelector = (state: GridState) => state.rows;
 
 export const gridRowCountSelector = createSelector(

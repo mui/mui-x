@@ -296,6 +296,11 @@ export enum GridEvents {
    */
   columnsPreProcessingChange = 'columnsPreProcessingChange',
   /**
+   * Fired when the row grouping function is changed
+   * @ignore - do not document
+   */
+  rowGroupsPreProcessingChange = 'rowGroupsPreProcessingChange',
+  /**
    * Fired when the sort model changes.
    * Called with a [[GridSortModelParams]] object.
    */
