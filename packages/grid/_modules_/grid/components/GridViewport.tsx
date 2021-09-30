@@ -4,7 +4,7 @@ import { useGridSelector } from '../hooks/features/core/useGridSelector';
 import { gridDensityRowHeightSelector } from '../hooks/features/density/densitySelector';
 import {
   gridSortedVisibleRowsAsArraySelector,
-  VisibleRow,
+  TreeSortedVisibleRow,
 } from '../hooks/features/filter/gridFilterSelector';
 import {
   gridFocusCellSelector,
@@ -27,10 +27,10 @@ import {
 } from '../hooks/root/gridContainerSizesSelector';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 
-const getRowsSlice = (rows: VisibleRow[], startIndex: number, endIndex: number) => {
+const getRowsSlice = (rows: TreeSortedVisibleRow[], startIndex: number, endIndex: number) => {
   const topLevelRows = rows.slice(startIndex, endIndex);
 
-  const flattenRows = (nodes: VisibleRow[]) =>
+  const flattenRows = (nodes: TreeSortedVisibleRow[]) =>
     nodes.flatMap((node) => [node, ...(node.children ? flattenRows(node.children) : [])]);
 
   return flattenRows(topLevelRows);
