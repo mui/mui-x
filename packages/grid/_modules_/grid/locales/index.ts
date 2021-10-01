@@ -6,6 +6,7 @@ export * from './deDE';
 export * from './elGR';
 export * from './enUS';
 export * from './esES';
+export * from './faIR';
 export * from './frFR';
 export * from './itIT';
 export * from './jaJP';

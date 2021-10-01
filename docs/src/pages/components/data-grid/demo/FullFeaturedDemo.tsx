@@ -3,7 +3,7 @@ import { DataGridPro, GridToolbar } from '@mui/x-data-grid-pro';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import { makeStyles } from '@mui/styles';
-import { createTheme, Theme } from '@mui/material/styles';
+import { createTheme } from '@mui/material/styles';
 import FormControl from '@mui/material/FormControl';
 import FormGroup from '@mui/material/FormGroup';
 import Button from '@mui/material/Button';
@@ -140,7 +140,7 @@ const useStylesAntDesign = makeStyles(
 );
 
 const useStyles = makeStyles(
-  (theme: Theme) => ({
+  (theme) => ({
     root: {
       display: 'flex',
       flexDirection: 'column',
