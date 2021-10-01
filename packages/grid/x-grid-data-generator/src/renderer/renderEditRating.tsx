@@ -1,21 +1,26 @@
 import * as React from 'react';
 import Rating from '@mui/material/Rating';
 import { GridRenderEditCellParams } from '@mui/x-data-grid';
-import { makeStyles } from '@mui/styles';
-import { Theme } from '@mui/material/styles';
+import { createStyles, makeStyles } from '@mui/styles';
+import { createTheme } from '@mui/material/styles';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    display: 'flex',
-    alignItems: 'center',
-    lineHeight: '24px',
-    color: theme.palette.text.secondary,
-    marginRight: theme.spacing(1),
-    '& .MuiRating-root': {
-      marginRight: theme.spacing(1),
-    },
-  },
-}));
+const defaultTheme = createTheme();
+const useStyles = makeStyles(
+  (theme) =>
+    createStyles({
+      root: {
+        display: 'flex',
+        alignItems: 'center',
+        lineHeight: '24px',
+        color: theme.palette.text.secondary,
+        marginRight: theme.spacing(1),
+        '& .MuiRating-root': {
+          marginRight: theme.spacing(1),
+        },
+      },
+    }),
+  { defaultTheme },
+);
 
 function EditRating(props: GridRenderEditCellParams) {
   const { id, value, api, field } = props;

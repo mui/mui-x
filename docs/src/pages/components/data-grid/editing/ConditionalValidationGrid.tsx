@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createTheme, Theme } from '@mui/material/styles';
+import { createTheme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
 import {
   DataGrid,
@@ -9,15 +9,11 @@ import {
 } from '@mui/x-data-grid';
 import { randomPrice } from '@mui/x-data-grid-generator';
 
-function getThemePaletteMode(palette: any): string {
-  return palette.type || palette.mode;
-}
-
 const defaultTheme = createTheme();
 
 const useStyles = makeStyles(
-  (theme: Theme) => {
-    const isDark = getThemePaletteMode(theme.palette) === 'dark';
+  (theme) => {
+    const isDark = theme.palette.mode === 'dark';
 
     return {
       root: {
