@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { makeStyles } from '@mui/styles';
-import { createTheme, Theme } from '@mui/material/styles';
+import { createTheme } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import {
   GridColumnMenu,
@@ -15,7 +15,7 @@ import StarOutlineIcon from '@mui/icons-material/StarOutline';
 
 const defaultTheme = createTheme();
 const useStyles = makeStyles(
-  (theme: Theme) => ({
+  (theme) => ({
     primary: {
       background: theme.palette.primary.main,
       color: theme.palette.primary.contrastText,

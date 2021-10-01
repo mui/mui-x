@@ -116,6 +116,7 @@ export function useGridParamsApi(apiRef: GridApiRef) {
       };
       if (colDef.valueFormatter) {
         params.formattedValue = colDef.valueFormatter({
+          id,
           field: params.field,
           value: params.value,
           api: apiRef.current,

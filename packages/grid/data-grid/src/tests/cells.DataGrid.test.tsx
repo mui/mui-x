@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { spy } from 'sinon';
 import { createClientRenderStrictMode } from 'test/utils';
 import { expect } from 'chai';
 import { DataGrid } from '@mui/x-data-grid';
@@ -75,5 +76,28 @@ describe('<DataGrid /> - Cells', () => {
       </div>,
     );
     expect(getCell(0, 0)).to.have.text('0');
+  });
+
+  it('should call the valueFormatter with the correct params', () => {
+    const valueFormatter = spy(({ value }) => (value ? 'Yes' : 'No'));
+    render(
+      <div style={{ width: 300, height: 300 }}>
+        <DataGrid
+          columns={[
+            {
+              field: 'isActive',
+              valueFormatter,
+              width: 200,
+            },
+          ]}
+          rows={[{ id: 0, isActive: true }]}
+        />
+      </div>,
+    );
+    expect(getCell(0, 0)).to.have.text('Yes');
+    expect(valueFormatter.lastCall.args[0]).to.have.keys('id', 'field', 'value', 'api');
+    expect(valueFormatter.lastCall.args[0].id).to.equal(0);
+    expect(valueFormatter.lastCall.args[0].field).to.equal('isActive');
+    expect(valueFormatter.lastCall.args[0].value).to.equal(true);
   });
 });
