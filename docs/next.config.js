@@ -154,13 +154,10 @@ module.exports = {
       { source: '/api/:rest*', destination: '/api-docs/:rest*' },
     ];
   },
-  async redirects() {
-    return [
-      {
-        source: '/',
-        destination: '/components/data-grid/',
-        permanent: false,
-      },
-    ]
-  },
+  redirects:
+    process.env.NODE_ENV !== 'production'
+      ? async () => {
+          return [{ source: `/:lang(${LANGUAGES.join('|')})?/:rest*`, destination: '/:rest*' }];
+        }
+      : undefined,
 };
