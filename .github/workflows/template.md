@@ -1,2 +1,2 @@
 Test
-${{github.event.issue.number}}
+{pull_id}
