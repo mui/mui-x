@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {
   DataGridPro,
+  DataGridProProps,
   GridApiRef,
   GridComponentProps,
   GridSortModel,
@@ -307,6 +308,41 @@ describe('<DataGridPro /> - Sorting', () => {
       fireEvent.click(getColumnHeaderCell(0));
       expect(getColumnValues()).to.deep.equal(['Adidas', 'Nike', 'Puma']);
       expect(expectedModel).to.deep.equal([{ field: 'brand', sort: 'asc' }]);
+    });
+
+    it('should not call onSortModelChange on initialization or on sortModel prop change', () => {
+      const onSortModelChange = spy();
+
+      const Test = (props: Partial<DataGridProProps>) => (
+        <div style={{ width: 300, height: 300 }}>
+          <DataGridPro
+            autoHeight={isJSDOM}
+            columns={baselineProps.columns}
+            rows={baselineProps.rows}
+            onSortModelChange={onSortModelChange}
+            {...props}
+          />
+        </div>
+      );
+
+      const { setProps } = render(
+        <Test
+          sortModel={[
+            { field: 'year', sort: 'desc' },
+            { field: 'brand', sort: 'asc' },
+          ]}
+        />,
+      );
+
+      expect(onSortModelChange.callCount).to.equal(0);
+      setProps({
+        sortModel: [
+          { field: 'year', sort: 'asc' },
+          { field: 'brand', sort: 'asc' },
+        ],
+      });
+
+      expect(onSortModelChange.callCount).to.equal(0);
     });
   });
 });

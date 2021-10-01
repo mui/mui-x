@@ -34,7 +34,7 @@ describe('<DataGridPro/> - Components', () => {
       expect(() => render(<TestCase />))
         // @ts-expect-error need to migrate helpers to TypeScript
         .toErrorDev(
-          'Material-UI: The `hideFooterRowCount` prop has no effect when the pagination is enabled.',
+          'MUI: The `hideFooterRowCount` prop has no effect when the pagination is enabled.',
         );
     });
   });

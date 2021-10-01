@@ -46,7 +46,7 @@ export function useGridResizeContainer(
             'The grid displays with a height of 0px.',
             '',
             'You can find a solution in the docs:',
-            'https://material-ui.com/components/data-grid/layout/',
+            'https://mui.com/components/data-grid/layout/',
           ].join('\n'),
         );
         warningShown.current = true;
@@ -59,7 +59,7 @@ export function useGridResizeContainer(
             'The grid displays with a width of 0px.',
             '',
             'You can find a solution in the docs:',
-            'https://material-ui.com/components/data-grid/layout/',
+            'https://mui.com/components/data-grid/layout/',
           ].join('\n'),
         );
         warningShown.current = true;

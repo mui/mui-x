@@ -1,7 +1,7 @@
-# [Material-UI X](https://material-ui.com/x/)
+# [MUI X](https://mui.com/x/)
 
 This is commercial software.
-To use it, you need to agree to the [**End User License Agreement for Material-UI X**](https://material-ui.com/x/license/).
+To use it, you need to agree to the [**End User License Agreement for MUI X**](https://mui.com/x/license/).
 If you do not own a commercial license, this file shall be governed by the trial license terms.
 
-All available Material-UI commercial licenses may be obtained at https://material-ui.com/store/items/material-ui-pro/.
+All available MUI commercial licenses may be obtained at https://mui.com/store/items/material-ui-pro/.

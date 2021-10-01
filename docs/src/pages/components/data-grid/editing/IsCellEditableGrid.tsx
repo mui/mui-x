@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createTheme, Theme } from '@mui/material/styles';
+import { createTheme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
 import { DataGrid, GridColumns, GridRowsProp } from '@mui/x-data-grid';
 import {
@@ -8,16 +8,11 @@ import {
   randomUpdatedDate,
 } from '@mui/x-data-grid-generator';
 
-// TODO v5: remove
-function getThemePaletteMode(palette: any): string {
-  return palette.type || palette.mode;
-}
-
 const defaultTheme = createTheme();
 const useStyles = makeStyles(
-  (theme: Theme) => {
+  (theme) => {
     const backgroundColor =
-      getThemePaletteMode(theme.palette) === 'dark' ? '#376331' : 'rgb(217 243 190)';
+      theme.palette.mode === 'dark' ? '#376331' : 'rgb(217 243 190)';
     return {
       root: {
         '& .MuiDataGrid-cell--editable': {

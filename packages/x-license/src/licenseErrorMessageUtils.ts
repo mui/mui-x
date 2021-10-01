@@ -14,31 +14,31 @@ function showError(message: string[]) {
 
 export function showInvalidLicenseError() {
   showError([
-    'Material-UI X: Invalid license.',
+    'MUI: Invalid license.',
     '',
-    'Your license for Material-UI X is not valid, please visit',
-    'https://material-ui.com/r/x-license to get a valid license.',
+    'Your license for MUI X is not valid, please visit',
+    'https://mui.com/r/x-license to get a valid license.',
   ]);
 }
 
 export function showNotFoundLicenseError() {
   showError([
-    'Material-UI X: License key not found.',
+    'MUI: License key not found.',
     '',
-    'This is a trial-only version of Material-UI X.',
+    'This is a trial-only version of MUI X.',
     'While all the features are unlocked, it is not licensed for',
     'development use on projects intended for production.',
     '',
     'To purchase a license, please visit',
-    'https://material-ui.com/r/x-license to get a valid license.',
+    'https://mui.com/r/x-license to get a valid license.',
   ]);
 }
 
 export function showExpiredLicenseError() {
   showError([
-    'Material-UI X: License key expired.',
+    'MUI: License key expired.',
     '',
-    'Please visit https://material-ui.com/r/x-license to renew',
-    'your subscription and get the latest version of Material-UI X.',
+    'Please visit https://mui.com/r/x-license to renew',
+    'your subscription and get the latest version of MUI X.',
   ]);
 }

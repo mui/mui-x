@@ -27,7 +27,7 @@ import { visibleSortedGridRowsAsArraySelector } from '../filter/gridFilterSelect
 
 const getNextCellIndexes = (key: string, indexes: GridCellIndexCoordinates) => {
   if (!isArrowKeys(key)) {
-    throw new Error('Material-UI: The first argument (key) should be an arrow key code.');
+    throw new Error('MUI: The first argument (key) should be an arrow key code.');
   }
 
   switch (key) {
@@ -45,7 +45,7 @@ const getNextCellIndexes = (key: string, indexes: GridCellIndexCoordinates) => {
 
 const getNextColumnHeaderIndexes = (key: string, indexes: GridColumnHeaderIndexCoordinates) => {
   if (!isArrowKeys(key)) {
-    throw new Error('Material-UI: The first argument (key) should be an arrow key code.');
+    throw new Error('MUI: The first argument (key) should be an arrow key code.');
   }
 
   switch (key) {
@@ -135,7 +135,7 @@ export const useGridKeyboardNavigation = (
             : -1 * containerSizes!.viewportPageSize);
         nextCellIndexes = { colIndex, rowIndex: nextRowIndex };
       } else {
-        throw new Error('Material-UI. Key not mapped to navigation behavior.');
+        throw new Error('MUI: Key not mapped to navigation behavior.');
       }
 
       if (nextCellIndexes.rowIndex < 0) {
@@ -197,7 +197,7 @@ export const useGridKeyboardNavigation = (
         }
         return;
       } else {
-        throw new Error('Material-UI. Key not mapped to navigation behavior.');
+        throw new Error('MUI: Key not mapped to navigation behavior.');
       }
 
       if (!nextColumnHeaderIndexes) {
