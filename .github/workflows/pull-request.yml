@@ -1,11 +1,11 @@
-name: Add preview comment on pull request
+name: Pull request
 on:
   pull_request:
-    types: [opened, reopened]
+    types: [opened]
 
 jobs:
   comment:
-    name: Add checkout commands
+    name: Add preview comments
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
