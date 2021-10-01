@@ -131,10 +131,8 @@ describe('<DataGrid /> - Selection', () => {
       render(<TestDataGridSelection checkboxSelection />);
       fireEvent.click(getCell(0, 0).querySelector('input'));
       expect(getSelectedRowIds()).to.deep.equal([0]);
-      fireEvent.keyDown(document.body, { key: 'Shift' });
-      fireEvent.click(getCell(2, 0).querySelector('input'));
+      fireEvent.click(getCell(2, 0).querySelector('input'), { shiftKey: true });
       expect(getSelectedRowIds()).to.deep.equal([0, 1, 2]);
-      fireEvent.keyUp(document.body, { key: 'Shift' });
     });
 
     it('should unselect from last clicked cell to cell after clicked cell if clicking inside a selected range', () => {

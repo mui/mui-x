@@ -17,9 +17,9 @@ import {
   selectedIdsLookupSelector,
 } from './gridSelectionSelector';
 import { visibleSortedGridRowIdsSelector } from '../filter';
-import { GridCellParams } from '../../../models';
+import { GridCellParams } from '../../../models/params/gridCellParams';
 import { GridRowSelectionCheckboxParams } from '../../../models/params/gridRowSelectionCheckboxParams';
-import { gridPaginatedVisibleSortedGridRowIdsSelector } from '../pagination';
+import { gridPaginatedVisibleSortedGridRowIdsSelector } from '../pagination/gridPaginationSelector';
 import { GridHeaderSelectionCheckboxParams } from '../../../models/params/gridHeaderSelectionCheckboxParams';
 
 /**
@@ -236,40 +236,6 @@ export const useGridSelection = (
     ],
   );
 
-  const shiftRef = React.useRef(false);
-  React.useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Shift') {
-        shiftRef.current = true;
-      }
-    };
-
-    const handleKeyUp = (event: KeyboardEvent) => {
-      if (event.key === 'Shift') {
-        shiftRef.current = false;
-      }
-    };
-
-    document.addEventListener('keydown', handleKeyDown);
-    document.addEventListener('keyup', handleKeyUp);
-
-    return () => {
-      document.removeEventListener('keydown', handleKeyDown);
-      document.removeEventListener('keyup', handleKeyUp);
-    };
-  }, []);
-
-  const handleRowSelectionCheckboxChange = React.useCallback(
-    (params: GridRowSelectionCheckboxParams) => {
-      if (shiftRef.current) {
-        expandRowRangeSelection(params.id);
-      } else {
-        apiRef.current.selectRow(params.id, params.value);
-      }
-    },
-    [apiRef, expandRowRangeSelection],
-  );
-
   const preventSelectionOnShift = React.useCallback(
     (params: GridCellParams, event: React.MouseEvent) => {
       if (canHaveMultipleSelection && event.shiftKey) {
@@ -277,6 +243,17 @@ export const useGridSelection = (
       }
     },
     [canHaveMultipleSelection],
+  );
+
+  const handleRowSelectionCheckboxChange = React.useCallback(
+    (params: GridRowSelectionCheckboxParams, event: React.ChangeEvent) => {
+      if ((event.nativeEvent as any).shiftKey) {
+        expandRowRangeSelection(params.id);
+      } else {
+        apiRef.current.selectRow(params.id, params.value);
+      }
+    },
+    [apiRef, expandRowRangeSelection],
   );
 
   const handleHeaderSelectionCheckboxChange = React.useCallback(
@@ -288,7 +265,7 @@ export const useGridSelection = (
         ? gridPaginatedVisibleSortedGridRowIdsSelector(apiRef.current.state)
         : visibleSortedGridRowIdsSelector(apiRef.current.state);
 
-      apiRef.current.selectRows(rowsToBeSelected, params.value, !params.indeterminate);
+      apiRef.current.selectRows(rowsToBeSelected, params.value);
     },
     [apiRef, props.checkboxSelectionVisibleOnly, props.pagination],
   );
