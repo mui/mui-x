@@ -1,19 +1,16 @@
-name: Creates and Updates PR
+name: Add preview comment on pull request
 on:
   pull_request:
-    types: [opened]
+    types: [opened, reopened]
 
 jobs:
-  pull-request:
+  comment:
+    name: Add checkout commands
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
-      - name: pull-request
-        uses: repo-sync/pull-request@v2
+      - uses: harupy/comment-on-pr@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-      - name: update-pull-request
-        uses: kt3k/update-pr-description@v1.0.1
-        with:
-          pr_body: "**some description**"
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          filename: template.md
