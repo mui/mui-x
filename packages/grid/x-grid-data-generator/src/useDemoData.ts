@@ -101,7 +101,7 @@ export const useDemoData = (options: DemoDataOptions): DemoDataReturnType => {
     return columns;
   }, [options.dataSet, options.editable, options.maxColumns]);
 
-  const [data, setData] = React.useState<GridData>({ columns: getColumns(), rows: [] });
+  const [data, setData] = React.useState<GridData>(() => ({ columns: getColumns(), rows: [] }));
 
   React.useEffect(() => {
     const cacheKey = `${options.dataSet}-${rowLength}-${index}-${options.maxColumns}`;
