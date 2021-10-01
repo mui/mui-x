@@ -40,7 +40,9 @@ export default function ColumnTypesGrid() {
 
   const deleteUser = React.useCallback(
     (id: GridRowId) => () => {
-      setRows((prevRows) => prevRows.filter((row) => row.id !== id));
+      setTimeout(() => {
+        setRows((prevRows) => prevRows.filter((row) => row.id !== id));
+      });
     },
     [],
   );
@@ -60,9 +62,7 @@ export default function ColumnTypesGrid() {
     (id: GridRowId) => () => {
       setRows((prevRows) => {
         const rowToDuplicate = prevRows.find((row) => row.id === id)!;
-        const newRows = [...prevRows, { ...rowToDuplicate, id: Date.now() }];
-        console.log(newRows);
-        return newRows;
+        return [...prevRows, { ...rowToDuplicate, id: Date.now() }];
       });
     },
     [],

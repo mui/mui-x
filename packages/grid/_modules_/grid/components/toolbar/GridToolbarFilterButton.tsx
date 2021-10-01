@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { Theme } from '@mui/material/styles';
+import { createTheme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
 import Badge from '@mui/material/Badge';
 import Button, { ButtonProps } from '@mui/material/Button';
@@ -16,13 +16,12 @@ import { gridPreferencePanelStateSelector } from '../../hooks/features/preferenc
 import { GridPreferencePanelsValue } from '../../hooks/features/preferencesPanel/gridPreferencePanelsValue';
 import { GridTranslationKeys } from '../../models/api/gridLocaleTextApi';
 import { GridFilterItem } from '../../models/gridFilterItem';
-import { createTheme } from '../../utils/utils';
 import { useGridApiContext } from '../../hooks/root/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
 const defaultTheme = createTheme();
 const useStyles = makeStyles(
-  (theme: Theme) => ({
+  (theme) => ({
     list: {
       margin: theme.spacing(1, 1, 0.5),
       padding: theme.spacing(0, 1),
