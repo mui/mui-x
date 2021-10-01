@@ -310,7 +310,7 @@ describe('<DataGridPro /> - Sorting', () => {
       expect(expectedModel).to.deep.equal([{ field: 'brand', sort: 'asc' }]);
     });
 
-    it('should not call onSortModelChange on initialisation or on sortModel prop change', () => {
+    it('should not call onSortModelChange on initialization or on sortModel prop change', () => {
       const onSortModelChange = spy();
 
       const Test = (props: Partial<DataGridProProps>) => (
