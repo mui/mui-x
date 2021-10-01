@@ -65,7 +65,7 @@ describe('<DataGrid /> - Components', () => {
       );
       // @ts-expect-error need to migrate helpers to TypeScript
     }).toErrorDev([
-      'Material-UI X: Could not find the data grid context.',
+      'MUI: Could not find the data grid context.',
       'The above error occurred in the <ForwardRef(GridOverlay)> component',
     ]);
   });

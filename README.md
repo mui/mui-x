@@ -1,12 +1,12 @@
 <p align="center">
-  <a href="https://material-ui.com/" rel="noopener" target="_blank"><img width="150" src="https://material-ui.com/static/logo.svg" alt="Material-UI logo"></a>
+  <a href="https://mui.com/" rel="noopener" target="_blank"><img width="150" src="https://mui.com/static/logo.svg" alt="MUI logo"></a>
 </p>
 
-<h1 align="center">Material-UI X</h1>
+<h1 align="center">MUI X</h1>
 
-The [main repository](https://github.com/mui-org/material-ui) of Material-UI focuses on providing a ready-to-use design system, as well as empowering developers to build their own.
+The [main repository](https://github.com/mui-org/material-ui) of MUI focuses on providing a ready-to-use design system, as well as empowering developers to build their own.
 
-This Material-UI X mono-repo gathers the advanced Material-UI components – it's an extension of the core. The fundamental features are MIT licensed, and the more advanced ones commercial.
+This MUI X mono-repo gathers the advanced MUI components – it's an extension of the core. The fundamental features are MIT licensed, and the more advanced ones commercial.
 
 ## How do we decide if a feature is MIT or commercial?
 
@@ -26,21 +26,21 @@ We provide three options:
 
 ## Components
 
-- [DataGrid](https://material-ui.com/components/data-grid/), published under `@mui/x-data-grid`, MIT licensed.
-- [DataGridPro](https://material-ui.com/components/data-grid/#commercial-version), published under `@mui/x-data-grid-pro`, commercially licensed.
+- [DataGrid](https://mui.com/components/data-grid/), published under `@mui/x-data-grid`, MIT licensed.
+- [DataGridPro](https://mui.com/components/data-grid/#commercial-version), published under `@mui/x-data-grid-pro`, commercially licensed.
 
 ## Questions
 
 For _how-to_ questions and other non-issues,
-please use [StackOverflow](https://stackoverflow.com/questions/tagged/material-ui) instead of GitHub issues.
-There is a StackOverflow tag called "material-ui" that you can use to tag your questions.
+please use [StackOverflow](https://stackoverflow.com/questions/tagged/mui) instead of GitHub issues.
+There is a StackOverflow tag called "mui" that you can use to tag your questions.
 
 ## Contributing
 
-Read the [contributing guide](/CONTRIBUTING.md) to learn about our development process, how to propose bugfixes and improvements, and how to build and test your changes to Material-UI X.
+Read the [contributing guide](/CONTRIBUTING.md) to learn about our development process, how to propose bugfixes and improvements, and how to build and test your changes to MUI X.
 
 Notice that contributions go far beyond pull requests and commits.
-Although we love giving you the opportunity to put your stamp on Material-UI, we also are thrilled to receive a variety of [other contributions](https://material-ui.com/getting-started/faq/#material-ui-is-awesome-how-can-i-support-the-project).
+Although we love giving you the opportunity to put your stamp on MUI, we also are thrilled to receive a variety of [other contributions](https://mui.com/getting-started/faq/#material-ui-is-awesome-how-can-i-support-the-project).
 
 ## Changelog
 
@@ -48,4 +48,4 @@ If you have recently updated, please read the [changelog](https://github.com/mui
 
 ## Roadmap
 
-The future plans and high priority features and enhancements can be found in the [roadmap](https://material-ui.com/discover-more/roadmap/) file.
+The future plans and high priority features and enhancements can be found in the [roadmap](https://mui.com/discover-more/roadmap/) file.

@@ -23,7 +23,7 @@ const GridActionsCell = (props: GridActionsCellProps) => {
   const { colDef, id, api, position = 'bottom-end' } = props;
 
   if (!hasActions(colDef)) {
-    throw new Error('Material-UI: Missing the `getActions` property in the `GridColDef`.');
+    throw new Error('MUI: Missing the `getActions` property in the `GridColDef`.');
   }
 
   const showMenu = () => setOpen(true);

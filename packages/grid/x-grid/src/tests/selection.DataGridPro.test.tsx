@@ -98,7 +98,7 @@ describe('<DataGridPro /> - Selection', () => {
       })
         // @ts-expect-error need to migrate helpers to TypeScript
         .toErrorDev(
-          'Material-UI: The `checkboxSelectionVisibleOnly` prop has no effect when the pagination is not enabled.',
+          'MUI: The `checkboxSelectionVisibleOnly` prop has no effect when the pagination is not enabled.',
         );
     });
   });

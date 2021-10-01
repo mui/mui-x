@@ -40,7 +40,7 @@ export function findGridCellElementsFromCol(col: HTMLElement): NodeListOf<Elemen
   const field = col.getAttribute('data-field');
   const root = findParentElementFromClassName(col, 'MuiDataGrid-root');
   if (!root) {
-    throw new Error('Material-UI: The root element is not found.');
+    throw new Error('MUI: The root element is not found.');
   }
   const cells = root.querySelectorAll(`.${gridClasses.cell}[data-field="${field}"]`);
   return cells;

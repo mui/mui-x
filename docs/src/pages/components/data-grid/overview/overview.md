@@ -10,22 +10,22 @@ The component leverages the power of React and TypeScript, to provide the best U
 
 ## Overview
 
-Data tables display information in a grid-like format of rows and columns. They organize information in a way that’s easy to scan so that users can look for patterns and insights. The data grid comes in 2 versions, both in Material-UI X:
+Data tables display information in a grid-like format of rows and columns. They organize information in a way that’s easy to scan so that users can look for patterns and insights. The data grid comes in 2 versions, both in MUI X:
 
 The data grid comes with two different licenses:
 
-- [DataGrid](https://material-ui.com/api/data-grid/data-grid/), it's [MIT licensed](https://tldrlegal.com/license/mit-license) and available on npm as `@mui/x-data-grid`.
-- [DataGridPro](https://material-ui.com/api/data-grid/data-grid-pro/), it's **Commercially licensed** and available on npm as `@mui/x-data-grid-pro`.
+- [DataGrid](https://mui.com/api/data-grid/data-grid/), it's [MIT licensed](https://tldrlegal.com/license/mit-license) and available on npm as `@mui/x-data-grid`.
+- [DataGridPro](https://mui.com/api/data-grid/data-grid-pro/), it's **Commercially licensed** and available on npm as `@mui/x-data-grid-pro`.
   The features only available in the commercial version are suffixed with a <span class="pro"></span> icon for the Pro plan or a <span class="premium"></span> icon for the Premium plan.
 
   <img src="/static/x/header-icon.png" style="width: 454px; margin-bottom: 2rem;" alt="">
 
   You can check the [feature comparison](/components/data-grid/getting-started/#feature-comparison) for more details.
-  See [Pricing](https://material-ui.com/store/items/material-ui-pro/) for details on purchasing licenses.
+  See [Pricing](https://mui.com/store/items/material-ui-pro/) for details on purchasing licenses.
 
 ### MIT version
 
-The first version is meant to simplify the [Table demo](https://material-ui.com/components/tables/#sorting-amp-selecting) with a clean abstraction.
+The first version is meant to simplify the [Table demo](https://mui.com/components/tables/#sorting-amp-selecting) with a clean abstraction.
 This abstraction also set constraints that allow the component to implement new features.
 
 ```js
@@ -34,7 +34,7 @@ import { DataGrid } from '@mui/x-data-grid';
 
 {{"demo": "pages/components/data-grid/overview/DataGridDemo.js", "defaultCodeOpen": false, "bg": "inline"}}
 
-### Commercial version [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-pro/)
+### Commercial version [<span class="pro"></span>](https://mui.com/store/items/material-ui-pro/)
 
 The following grid displays 31 columns and 100,000 rows - over 3 million cells in total.
 
@@ -45,7 +45,7 @@ import { DataGridPro } from '@mui/x-data-grid-pro';
 {{"demo": "pages/components/data-grid/overview/DataGridProDemo.js", "defaultCodeOpen": false, "disableAd": true, "bg": "inline"}}
 
 You can check the [feature comparison](/components/data-grid/getting-started/#feature-comparison) for more details.
-See [Pricing](https://material-ui.com/store/items/material-ui-pro/) for details on purchasing licenses.
+See [Pricing](https://mui.com/store/items/material-ui-pro/) for details on purchasing licenses.
 
 ### MIT vs. commercial
 
@@ -103,7 +103,7 @@ Here are some resources you might be interested in to learn more about the grid:
 - The [source on GitHub](https://github.com/mui-org/material-ui-x/tree/master/packages/grid)
 - The [Material Design specification](https://material.io/design/components/data-tables.html) specification
 - The accessibility [WAI-ARIA authoring practices](https://www.w3.org/TR/wai-aria-practices/#grid)
-- The [Sketch](https://material-ui.com/store/items/sketch-react/) and [Figma](https://material-ui.com/store/items/figma-react/) design assets
+- The [Sketch](https://mui.com/store/items/sketch-react/) and [Figma](https://mui.com/store/items/figma-react/) design assets
 
 ## API
 
