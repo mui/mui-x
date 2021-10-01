@@ -1,20 +1,19 @@
-import { GridColDef, GridRowId } from '@mui/x-data-grid-pro';
+import { GridRowData } from '@mui/x-data-grid-pro';
 import asyncWorker from '../asyncWorker';
+import { GridColDefGenerator } from './gridColDefGenerator';
 
-export interface DataRowModel {
-  id: GridRowId;
-  [field: string]: any;
+export interface GridDemoData {
+  rows: GridRowData[];
+  columns: GridColDefGenerator[];
 }
 
-export interface GridData {
-  columns: GridColDef[];
-  rows: DataRowModel[];
-}
-
-export function getRealData(rowLength: number, columns: any[]): Promise<GridData> {
-  return new Promise<GridData>((resolve) => {
+export function getRealData(
+  rowLength: number,
+  columns: GridColDefGenerator[],
+): Promise<GridDemoData> {
+  return new Promise<GridDemoData>((resolve) => {
     const tasks = { current: rowLength };
-    const data: DataRowModel[] = [];
+    const rows: GridDemoData['rows'] = [];
 
     function work() {
       const row: any = {};
@@ -26,13 +25,13 @@ export function getRealData(rowLength: number, columns: any[]): Promise<GridData
         }
       }
 
-      data.push(row);
+      rows.push(row);
       tasks.current -= 1;
     }
 
     asyncWorker({
       work,
-      done: () => resolve({ columns, rows: data }),
+      done: () => resolve({ columns, rows }),
       tasks,
     });
   });

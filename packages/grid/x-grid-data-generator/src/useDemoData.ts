@@ -1,18 +1,18 @@
 import * as React from 'react';
 import LRUCache from 'lru-cache';
-import { GridData, getRealData } from './services/real-data-service';
+import { GridDemoData, getRealData } from './services/real-data-service';
 import { getCommodityColumns } from './commodities.columns';
 import { getEmployeeColumns } from './employees.columns';
 import asyncWorker from './asyncWorker';
 import { GridColDefGenerator } from './services/gridColDefGenerator';
 
-const dataCache = new LRUCache<string, GridData>({
+const dataCache = new LRUCache<string, GridDemoData>({
   max: 10,
   maxAge: 60 * 5 * 1e3, // 5 minutes
 });
 
 export type DemoDataReturnType = {
-  data: GridData;
+  data: GridDemoData;
   loading: boolean;
   setRowLength: (count: number) => void;
   loadNewData: () => void;
@@ -32,8 +32,8 @@ export interface DemoDataOptions {
 async function extrapolateSeed(
   rowLength: number,
   columns: GridColDefGenerator[],
-  data: GridData,
-): Promise<GridData> {
+  data: GridDemoData,
+): Promise<GridDemoData> {
   return new Promise<any>((resolve) => {
     const seed = data.rows;
     const rows = data.rows.slice();
@@ -101,7 +101,7 @@ export const useDemoData = (options: DemoDataOptions): DemoDataReturnType => {
     return columns;
   }, [options.dataSet, options.editable, options.maxColumns]);
 
-  const [data, setData] = React.useState<GridData>({ columns: getColumns(), rows: [] });
+  const [data, setData] = React.useState<GridDemoData>({ columns: getColumns(), rows: [] });
 
   React.useEffect(() => {
     const cacheKey = `${options.dataSet}-${rowLength}-${index}-${options.maxColumns}`;
@@ -120,7 +120,7 @@ export const useDemoData = (options: DemoDataOptions): DemoDataReturnType => {
     (async () => {
       setLoading(true);
 
-      let newData: GridData;
+      let newData: GridDemoData;
       const columns = getColumns();
       if (rowLength > 1000) {
         newData = await getRealData(1000, columns);
