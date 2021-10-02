@@ -32,6 +32,18 @@ export interface PieChartProps {
    */
   innerRadius?: number;
   /**
+   * The label to display above the chart.
+   */
+  label?: string;
+  /**
+   * The color of the label.
+   */
+  labelColor?: string;
+  /**
+   * The font size of the label.
+   */
+  labelFontSize?: number;
+  /**
    * The margin to use around the chart.
    */
   margin?: Margin;
@@ -64,6 +76,9 @@ const PieChart = React.forwardRef<SVGSVGElement, PieChartProps>(function PieChar
     data,
     expandOnHover = false,
     innerRadius = 0,
+    label,
+    labelColor = 'currentColor',
+    labelFontSize = 18,
     margin: marginProp,
     radius: radiusProp,
     segmentLabelColor = 'currentColor',
@@ -108,7 +123,11 @@ const PieChart = React.forwardRef<SVGSVGElement, PieChartProps>(function PieChar
 
   return (
     <svg viewBox={`0 0 ${width} ${height}`} ref={handleRef} {...other}>
-      <g transform={`translate(${width / 2}, ${height / 2})`}>
+      <g
+        transform={`translate(${boundedWidth / 2 + margin.left}, ${
+          boundedHeight / 2 + margin.top
+        })`}
+      >
         {pie(data).map((d, i) => (
           <PieSegment
             data={d}
@@ -123,6 +142,16 @@ const PieChart = React.forwardRef<SVGSVGElement, PieChartProps>(function PieChar
           />
         ))}
       </g>
+      {label && (
+        <text
+          fill={labelColor}
+          transform={`translate(${width / 2}, ${50 - labelFontSize})`}
+          fontSize={labelFontSize}
+          textAnchor="middle"
+        >
+          {label}
+        </text>
+      )}
     </svg>
   );
 });
