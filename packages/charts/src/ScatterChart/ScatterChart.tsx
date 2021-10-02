@@ -49,10 +49,12 @@ export interface ScatterChartProps<X = unknown, Y = unknown> {
   label?: string;
   /**
    * The color of the label.
+   * @default 'currentColor'
    */
   labelColor?: string;
   /**
    * The font size of the label.
+   * @default 18
    */
   labelFontSize?: number;
   /**
@@ -88,10 +90,12 @@ export interface ScatterChartProps<X = unknown, Y = unknown> {
   xDomain?: string[];
   /**
    * The key to use for the x axis.
+   * @default 'x'
    */
   xKey?: string;
   /**
    * The scale type to use for the x axis.
+   * @default 'linear'
    */
   xScaleType?: 'linear' | 'time' | 'log' | 'point' | 'pow' | 'sqrt' | 'utc';
   /**
@@ -100,10 +104,12 @@ export interface ScatterChartProps<X = unknown, Y = unknown> {
   yDomain?: string[];
   /**
    * The key to use for the y axis.
+   * @default 'y'
    */
   yKey?: string;
   /**
    * The scale type to use for the y axis.
+   * @default 'linear'
    */
   yScaleType?: 'linear' | 'time' | 'log' | 'point' | 'pow' | 'sqrt' | 'utc';
   /**
@@ -113,6 +119,7 @@ export interface ScatterChartProps<X = unknown, Y = unknown> {
   /**
    * The key to use for the z axis.
    * If `null`, the z axis will not be displayed.
+   * @default 'z'
    */
   zKey?: string;
 }
@@ -131,7 +138,7 @@ const ScatterChart = React.forwardRef(function ScatterChart<X = unknown, Y = unk
     fill = 'none',
     invertMarkers = false,
     label,
-    labelColor = '#777',
+    labelColor = 'currentColor',
     labelFontSize = 18,
     margin: marginProp,
     markerShape = 'circle',

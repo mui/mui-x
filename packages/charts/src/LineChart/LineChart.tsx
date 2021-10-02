@@ -71,10 +71,12 @@ export interface LineChartProps<X = unknown, Y = unknown> {
   label?: string;
   /**
    * The color of the label.
+   * @default 'currentColor'
    */
   labelColor?: string;
   /**
    * The font size of the label.
+   * @default '18'
    */
   labelFontSize?: number;
   /**
@@ -148,7 +150,7 @@ const LineChart = React.forwardRef(function LineChart<X = unknown, Y = unknown>(
     id: idProp,
     invertMarkers = false,
     label,
-    labelColor = '#777',
+    labelColor = 'currentColor',
     labelFontSize = 18,
     margin: marginProp,
     markerShape = 'circle',

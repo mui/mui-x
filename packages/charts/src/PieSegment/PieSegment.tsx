@@ -22,6 +22,7 @@ export interface PieSegmentProps {
   expandOnHover: boolean;
   /**
    * The radius at which to start the inside of the segment.
+   * @default 0
    */
   innerRadius?: number;
   /**
@@ -35,15 +36,16 @@ export interface PieSegmentProps {
   labelColor?: string;
   /**
    * The font size of the label.
-   * @default '12px'
+   * @default 12
    */
-  labelFontSize?: string;
+  labelFontSize?: number;
   /**
    * The radius at which to place the label.
    */
   labelRadius?: number;
   /**
    * The radius of the pie chart.
+   * @default 100
    */
   radius?: number;
 }
