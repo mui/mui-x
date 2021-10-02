@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import * as d3 from 'd3';
 
-interface SliceData {
+interface SegmentData {
   data: { value: number; label?: string; fill: string; stroke?: string };
   endAngle: number;
   index: number;
@@ -10,22 +10,22 @@ interface SliceData {
   value: number;
 }
 
-export interface PieSliceProps {
+export interface PieSegmentProps {
   /**
-   * The data to use for the slice.
+   * The data to use for the segment.
    */
-  data: SliceData;
+  data: SegmentData;
   /**
-   * If true, the slice will expand when hovered
+   * If true, the segment will expand when hovered
    * @default false
    */
   expandOnHover: boolean;
   /**
-   * The radius at which to start the inside of the slice.
+   * The radius at which to start the inside of the segment.
    */
   innerRadius?: number;
   /**
-   * The label for the slice.
+   * The label for the segment.
    */
   label?: string;
   /**
@@ -48,7 +48,7 @@ export interface PieSliceProps {
   radius?: number;
 }
 
-function PieSlice(props: PieSliceProps) {
+function PieSegment(props: PieSegmentProps) {
   const {
     data,
     expandOnHover,
@@ -102,4 +102,4 @@ function PieSlice(props: PieSliceProps) {
   );
 }
 
-export default PieSlice;
+export default PieSegment;

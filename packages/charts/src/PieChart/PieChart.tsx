@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import * as d3 from 'd3';
 import { useForkRef } from '@mui/material/utils';
 import useChartDimensions from '../hooks/useChartDimensions';
-import PieSlice from '../PieSlice';
+import PieSegment from '../PieSegment';
 
 interface ChartData {
   value: number;
@@ -23,12 +23,12 @@ export interface PieChartProps {
    */
   data: ChartData[];
   /**
-   * If true, the slice will expand when hovered
+   * If true, the segment will expand when hovered
    * @default false
    */
   expandOnHover?: boolean;
   /**
-   * The radius at which to start the inside of the slice.
+   * The radius at which to start the inside of the segment.
    */
   innerRadius?: number;
   /**
@@ -54,7 +54,7 @@ export interface PieChartProps {
    */
   segmentLabelRadius?: number;
   /**
-   * The angle in degrees from which to start rendering the first slice.
+   * The angle in degrees from which to start rendering the first segment.
    */
   startAngle?: number;
 }
@@ -110,7 +110,7 @@ const PieChart = React.forwardRef<SVGSVGElement, PieChartProps>(function PieChar
     <svg viewBox={`0 0 ${width} ${height}`} ref={handleRef} {...other}>
       <g transform={`translate(${width / 2}, ${height / 2})`}>
         {pie(data).map((d, i) => (
-          <PieSlice
+          <PieSegment
             data={d}
             label={d.data.label}
             labelColor={segmentLabelColor}
