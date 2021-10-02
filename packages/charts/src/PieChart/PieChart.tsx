@@ -131,14 +131,14 @@ const PieChart = React.forwardRef<SVGSVGElement, PieChartProps>(function PieChar
         {pie(data).map((d, i) => (
           <PieSegment
             data={d}
+            expandOnHover={expandOnHover}
+            innerRadius={innerRadius}
             label={d.data.label}
             labelColor={segmentLabelColor}
             labelFontSize={segmentLabelFontSize}
             labelRadius={segmentLabelRadius}
             key={i}
             radius={radius}
-            innerRadius={innerRadius}
-            expandOnHover={expandOnHover}
           />
         ))}
       </g>

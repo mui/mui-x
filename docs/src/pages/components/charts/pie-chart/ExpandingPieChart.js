@@ -11,6 +11,7 @@ function generateData() {
   return d3.range(numSegments).map((i) => ({
     value: d3.randomNormal(numSegments, 2)(),
     fill: color[Object.keys(color)[i]],
+    stroke: 'white',
     label: labels[i],
   }));
 }

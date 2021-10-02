@@ -11,6 +11,7 @@ function generateData() {
   return d3.range(numSegments).map((i) => ({
     value: d3.randomNormal(numSegments, 2)(),
     fill: color[Object.keys(color)[i]],
+    stroke: 'white',
     label: labels[i],
   }));
 }
@@ -20,7 +21,12 @@ export default function BasicPieChart() {
 
   return (
     <div style={{ width: '100%', height: 300 }}>
-      <PieChart data={data} />
+      <PieChart
+        data={data}
+        margin={{ top: 50, bottom: 20 }}
+        segmentLabelRadius={70}
+        label="Car sales"
+      />
     </div>
   );
 }

@@ -76,7 +76,7 @@ function PieSegment(props: PieSegmentProps) {
 
   function mouseOver() {
     if (expandOnHover) {
-      setRadiusAdd(((radius - innerRadius) / 100) * 12);
+      setRadiusAdd(((radius - innerRadius) / 100) * 10);
     }
   }
 
@@ -87,7 +87,8 @@ function PieSegment(props: PieSegmentProps) {
   return (
     <React.Fragment>
       <path
-        style={{ fill: data.data.fill, stroke: data.data.stroke }}
+        fill={data.data.fill}
+        stroke={data.data.stroke}
         d={arc(data)}
         onMouseOver={mouseOver}
         onMouseOut={mouseOut}
