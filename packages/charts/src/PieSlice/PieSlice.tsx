@@ -25,22 +25,56 @@ export interface PieSliceProps {
    */
   innerRadius?: number;
   /**
+   * The label for the slice.
+   */
+  label?: string;
+  /**
+   * The color of the label.
+   * @default 'currentColor'
+   */
+  labelColor?: string;
+  /**
+   * The font size of the label.
+   * @default '12px'
+   */
+  labelFontSize?: string;
+  /**
+   * The radius at which to place the label.
+   */
+  labelRadius?: number;
+  /**
    * The radius of the pie chart.
    */
   radius?: number;
 }
 
 function PieSlice(props: PieSliceProps) {
-  const { data, expandOnHover, innerRadius = 0, radius = 100 } = props;
+  const {
+    data,
+    expandOnHover,
+    innerRadius = 0,
+    label,
+    labelColor = 'currentColor',
+    labelFontSize = '12px',
+    labelRadius: labelRadiusProp,
+    radius = 100,
+  } = props;
+
   const [radiusAdd, setRadiusAdd] = useState(0);
+  const labelRadius = labelRadiusProp ? labelRadiusProp * 2 + radiusAdd : radius + radiusAdd;
   const arc = d3
     .arc()
     .innerRadius(innerRadius + radiusAdd)
     .outerRadius(radius + radiusAdd);
 
+  const labelArc = d3
+    .arc()
+    .innerRadius(innerRadius + radiusAdd)
+    .outerRadius(labelRadius);
+
   function mouseOver() {
     if (expandOnHover) {
-      setRadiusAdd(((radius - innerRadius) / 100) * 10);
+      setRadiusAdd(((radius - innerRadius) / 100) * 12);
     }
   }
 
@@ -49,12 +83,22 @@ function PieSlice(props: PieSliceProps) {
   }
 
   return (
-    <path
-      style={{ fill: data.data.fill, stroke: data.data.stroke }}
-      d={arc(data)}
-      onMouseOver={mouseOver}
-      onMouseOut={mouseOut}
-    />
+    <React.Fragment>
+      <path
+        style={{ fill: data.data.fill, stroke: data.data.stroke }}
+        d={arc(data)}
+        onMouseOver={mouseOver}
+        onMouseOut={mouseOut}
+      />
+      <text
+        textAnchor="middle"
+        fill={labelColor}
+        fontSize={labelFontSize}
+        transform={`translate(${labelArc.centroid(data)})`}
+      >
+        {label}
+      </text>
+    </React.Fragment>
   );
 }
 

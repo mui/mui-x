@@ -40,6 +40,20 @@ export interface PieChartProps {
    */
   radius?: number;
   /**
+   * The color of the segment labels.
+   * @default 'currentColor'
+   */
+  segmentLabelColor?: string;
+  /**
+   * The font size of the segment labels.
+   * @default '12px'
+   */
+  segmentLabelFontSize?: string;
+  /**
+   * The radius at which to place the segment label.
+   */
+  segmentLabelRadius?: number;
+  /**
    * The angle in degrees from which to start rendering the first slice.
    */
   startAngle?: number;
@@ -52,6 +66,9 @@ const PieChart = React.forwardRef<SVGSVGElement, PieChartProps>(function PieChar
     innerRadius = 0,
     margin: marginProp,
     radius: radiusProp,
+    segmentLabelColor = 'currentColor',
+    segmentLabelFontSize = '12px',
+    segmentLabelRadius,
     startAngle = 0,
     ...other
   } = props;
@@ -95,6 +112,10 @@ const PieChart = React.forwardRef<SVGSVGElement, PieChartProps>(function PieChar
         {pie(data).map((d, i) => (
           <PieSlice
             data={d}
+            label={d.data.label}
+            labelColor={segmentLabelColor}
+            labelFontSize={segmentLabelFontSize}
+            labelRadius={segmentLabelRadius}
             key={i}
             radius={radius}
             innerRadius={innerRadius}

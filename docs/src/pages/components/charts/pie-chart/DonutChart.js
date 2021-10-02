@@ -1,13 +1,15 @@
 import React from 'react';
 import * as d3 from 'd3';
+import color from '@mui/material/colors/blue';
 import PieChart from '@mui/charts/PieChart';
 
+const labels = ['Ford', 'Tesla'];
+
 function generateData() {
-  const numSegments = d3.randomUniform(2, 2)();
-  return d3.range(numSegments).map((i) => ({
+  return [0, 1].map((i) => ({
     value: Math.abs(d3.randomNormal()()),
-    fill: d3.schemePaired[i],
-    label: i,
+    fill: color[Object.keys(color)[i + 1]],
+    label: labels[i],
   }));
 }
 
