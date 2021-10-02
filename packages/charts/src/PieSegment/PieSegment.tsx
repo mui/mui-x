@@ -57,7 +57,7 @@ function PieSegment(props: PieSegmentProps) {
     innerRadius = 0,
     label,
     labelColor = 'currentColor',
-    labelFontSize = '12px',
+    labelFontSize = 12,
     labelRadius: labelRadiusProp,
     radius = 100,
   } = props;

@@ -1,6 +1,6 @@
 import React from 'react';
 import * as d3 from 'd3';
-import color from '@mui/material/colors/pink';
+import { pink } from '@mui/material/colors';
 import PieChart from '@mui/charts/PieChart';
 
 const labels = 'Ford Tesla GM VW BMW Audi'.split(' ');
@@ -10,7 +10,7 @@ function generateData() {
 
   return d3.range(numSegments).map((i) => ({
     value: d3.randomNormal(numSegments, 2)(),
-    fill: color[Object.keys(color)[i]],
+    fill: pink[Object.keys(pink)[i]],
     stroke: 'white',
     label: labels[i],
   }));

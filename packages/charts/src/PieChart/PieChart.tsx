@@ -37,10 +37,12 @@ export interface PieChartProps {
   label?: string;
   /**
    * The color of the label.
+   * @default 'currentColor'
    */
   labelColor?: string;
   /**
    * The font size of the label.
+   * @default 18
    */
   labelFontSize?: number;
   /**
@@ -58,9 +60,9 @@ export interface PieChartProps {
   segmentLabelColor?: string;
   /**
    * The font size of the segment labels.
-   * @default '12px'
+   * @default '12'
    */
-  segmentLabelFontSize?: string;
+  segmentLabelFontSize?: number;
   /**
    * The radius at which to place the segment label.
    */
@@ -82,7 +84,7 @@ const PieChart = React.forwardRef<SVGSVGElement, PieChartProps>(function PieChar
     margin: marginProp,
     radius: radiusProp,
     segmentLabelColor = 'currentColor',
-    segmentLabelFontSize = '12px',
+    segmentLabelFontSize = 12,
     segmentLabelRadius,
     startAngle = 0,
     ...other

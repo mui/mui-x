@@ -1,16 +1,16 @@
 import React from 'react';
 import * as d3 from 'd3';
-import color from '@mui/material/colors/deepPurple';
+import { deepPurple } from '@mui/material/colors';
 import PieChart from '@mui/charts/PieChart';
 
 const labels = 'Ford Tesla GM VW BMW Audi'.split(' ');
 
 function generateData() {
   const numSegments = d3.randomInt(3, 7)();
-  console.log({ numSegments });
+
   return d3.range(numSegments).map((i) => ({
     value: d3.randomNormal(numSegments, 2)(),
-    fill: color[Object.keys(color)[i]],
+    fill: deepPurple[Object.keys(deepPurple)[i]],
     stroke: 'white',
     label: labels[i],
   }));

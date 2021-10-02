@@ -1,6 +1,6 @@
 import React from 'react';
 import * as d3 from 'd3';
-import color from '@mui/material/colors/blue';
+import { blue } from '@mui/material/colors';
 import PieChart from '@mui/charts/PieChart';
 
 const labels = ['Ford', 'Tesla'];
@@ -8,7 +8,7 @@ const labels = ['Ford', 'Tesla'];
 function generateData() {
   return [0, 1].map((i) => ({
     value: Math.abs(d3.randomNormal()()),
-    fill: color[Object.keys(color)[i + 1]],
+    fill: blue[Object.keys(blue)[i + 1]],
     stroke: 'white',
     label: labels[i],
   }));
