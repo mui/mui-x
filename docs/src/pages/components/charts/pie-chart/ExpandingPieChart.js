@@ -23,10 +23,11 @@ export default function ExpaindingPieChart() {
     <div style={{ width: '100%', height: 400 }}>
       <PieChart
         data={data}
-        margin={{ top: 70, bottom: 20 }}
         expandOnHover
-        segmentLabelRadius={170}
         label="Car sales"
+        margin={{ top: 70, bottom: 20 }}
+        segmentLabelRadius={170}
+        sort="ascending"
       />
     </div>
   );

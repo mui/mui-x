@@ -17,6 +17,13 @@ interface Margin {
   top?: number;
 }
 
+function ascending(a, b) {
+  return a.value - b.value;
+}
+
+function descending(a, b) {
+  return b.value - a.value;
+}
 export interface PieChartProps {
   /**
    * The data to use for the chart.
@@ -68,6 +75,10 @@ export interface PieChartProps {
    */
   segmentLabelRadius?: number;
   /**
+   * The sort order for the segments.
+   */
+  sort?: 'ascending' | 'descending';
+  /**
    * The angle in degrees from which to start rendering the first segment.
    */
   startAngle?: number;
@@ -86,11 +97,13 @@ const PieChart = React.forwardRef<SVGSVGElement, PieChartProps>(function PieChar
     segmentLabelColor = 'currentColor',
     segmentLabelFontSize = 12,
     segmentLabelRadius,
+    sort,
     startAngle = 0,
     ...other
   } = props;
 
   const margin = { top: 10, bottom: 10, left: 10, right: 10, ...marginProp };
+
   const chartSettings = {
     marginTop: margin.top,
     marginBottom: margin.bottom,
@@ -103,11 +116,20 @@ const PieChart = React.forwardRef<SVGSVGElement, PieChartProps>(function PieChar
   const handleRef = useForkRef(chartRef, ref);
   const [percentVisible, setPercentVisible] = useState(0);
 
+  let sortOrder;
+
+  if (sort === 'ascending') {
+    sortOrder = ascending;
+  } else if (sort === 'descending') {
+    sortOrder = descending;
+  }
+
   const pie = d3
     .pie()
     .startAngle((startAngle * Math.PI) / 180) // Degrees to radians
     .endAngle(startAngle + ((((360 - startAngle) * Math.PI) / 180) * percentVisible) / 100)
-    .value((d) => d.value);
+    .value((d) => d.value)
+    .sort(sortOrder);
 
   // From: https://codesandbox.io/s/drilldown-piechart-in-react-and-d3-d62y5
   useEffect(() => {
