@@ -52,6 +52,6 @@
     "<rootDir>/src/setupTests.js"
   ],
   "engines": {
-    "node": ">=12.0.0"
+    "node": ">=v14.18.0"
   }
 }
