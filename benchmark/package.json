@@ -15,7 +15,7 @@
     "@mui/x-data-grid": "^4.0.0",
     "@visx/xychart": "^2.1.1",
     "ag-grid-community": "^26.0.0",
-    "ag-grid-react": "^26.0.0",
+    "ag-grid-react": "^26.1.0",
     "css-loader": "^6.3.0",
     "html-webpack-plugin": "^5.3.2",
     "mui-plus": "^0.0.15",
