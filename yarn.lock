@@ -3841,10 +3841,10 @@
     lz-string "^1.4.4"
     pretty-format "^27.0.2"
 
-"@testing-library/react@^12.1.0":
-  version "12.1.0"
-  resolved "https://registry.yarnpkg.com/@testing-library/react/-/react-12.1.0.tgz#3e9a4002b0b8f986a738a2f88fc458b5af319f35"
-  integrity sha512-Ge3Ht3qXE82Yv9lyPpQ7ZWgzo/HgOcHu569Y4ZGWcZME38iOFiOg87qnu6hTEa8jTJVL7zYovnvD3GE2nsNIoQ==
+"@testing-library/react@^12.1.2":
+  version "12.1.2"
+  resolved "https://registry.yarnpkg.com/@testing-library/react/-/react-12.1.2.tgz#f1bc9a45943461fa2a598bb4597df1ae044cfc76"
+  integrity sha512-ihQiEOklNyHIpo2Y8FREkyD1QAea054U0MVbwH1m8N9TxeFz+KoJ9LkqoKqJlzx2JDm56DVwaJ1r36JYxZM05g==
   dependencies:
     "@babel/runtime" "^7.12.5"
     "@testing-library/dom" "^8.0.0"
@@ -6661,12 +6661,12 @@ class-utils@^0.3.5:
     isobject "^3.0.0"
     static-extend "^0.1.1"
 
-classnames@2.2.6, classnames@^2.2.5:
+classnames@2.2.6:
   version "2.2.6"
   resolved "https://registry.yarnpkg.com/classnames/-/classnames-2.2.6.tgz#43935bffdd291f326dad0a205309b38d00f650ce"
   integrity sha512-JR/iSQOSt+LQIWwrwEzJ9uk0xfN3mTVYMwt1Ir5mUcSN6pU+V4zQFFaJsclJbPuAUQH+yfWef6tm7l1quW3C8Q==
 
-classnames@^2.3.1:
+classnames@^2.2.5, classnames@^2.3.1:
   version "2.3.1"
   resolved "https://registry.yarnpkg.com/classnames/-/classnames-2.3.1.tgz#dfcfa3891e306ec1dad105d0e88f4417b8535e8e"
   integrity sha512-OlQdbZ7gLfGarSqxesMesDa5uz7KFbID8Kpq/SxIoNGDqY8lSYs0D+hhtBXhcdB3rcbXArFr7vlHheLk1voeNA==
