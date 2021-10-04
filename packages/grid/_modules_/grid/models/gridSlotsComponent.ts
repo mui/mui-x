@@ -61,7 +61,7 @@ export interface GridSlotsComponent extends GridIconSlotsComponent {
    * Pagination component rendered in the grid footer by default.
    * @default Pagination
    */
-  Pagination: React.JSXElementConstructor<any>;
+  Pagination: React.JSXElementConstructor<any> | null;
   /**
    * Filter panel component rendered when clicking the filter button.
    * @default GridFilterPanel
