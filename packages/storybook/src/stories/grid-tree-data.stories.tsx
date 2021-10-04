@@ -2,7 +2,7 @@ import * as React from 'react';
 import { DataGridPro, GridToolbar, DataGridProProps } from '@mui/x-data-grid-pro';
 import { Meta } from '@storybook/react';
 import Button from '@mui/material/Button';
-import { useDemoTreeData } from '@mui/x-data-grid-generator/useDemoTreeData';
+import { useDemoTreeData } from '@mui/x-data-grid-generator';
 
 export default {
   title: 'X-Grid Tests/Tree Data',
