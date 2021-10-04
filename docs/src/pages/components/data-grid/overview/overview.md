@@ -23,7 +23,7 @@ The data grid comes with two different licenses:
   You can check the [feature comparison](/components/data-grid/getting-started/#feature-comparison) for more details.
   See [Pricing](https://mui.com/store/items/material-ui-pro/) for details on purchasing licenses.
 
-> Visit the [install guide](/components/data-grid/getting-started/#installation) to learn how to install the correct package version and dependencies.
+> Visit the [installation guide](/components/data-grid/getting-started/#installation) to learn how to install the correct package version and dependencies.
 
 ### MIT version
 
