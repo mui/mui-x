@@ -640,7 +640,7 @@ async function buildDocs(options: {
       name: reactApi.styles.name,
     },
     spread: reactApi.spread,
-    forwardsRefTo: 'GridRoot', // TODO read from tests once we add describeConformaceV5
+    forwardsRefTo: 'GridRoot', // TODO read from tests once we add describeConformanceV5
     filename: toGithubPath(reactApi.filename, workspaceRoot),
     inheritance: reactApi.inheritance,
     demos: generateDemoList(reactApi.demos),
