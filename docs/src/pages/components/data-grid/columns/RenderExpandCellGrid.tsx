@@ -156,7 +156,7 @@ const rows: any = [
   },
   {
     id: 3,
-    col1: 'Material-UI',
+    col1: 'MUI',
     col2: 'is Amazing',
     col3: 'Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before final copy is available.',
   },
@@ -174,7 +174,7 @@ const rows: any = [
   },
   {
     id: 6,
-    col1: 'Material-UI',
+    col1: 'MUI',
     col2: 'is Amazing',
     col3: 'Lorem ipsum may be used as a placeholder before final copy is available.',
   },

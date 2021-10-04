@@ -53,7 +53,7 @@ export function checkGridRowIdIsValid(
   if (id == null) {
     throw new Error(
       [
-        'Material-UI: The data grid component requires all rows to have a unique id property.',
+        'MUI: The data grid component requires all rows to have a unique id property.',
         detailErrorMessage,
         JSON.stringify(row),
       ].join('\n'),

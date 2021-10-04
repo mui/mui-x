@@ -95,7 +95,7 @@ DataGridProRaw.propTypes = {
   checkboxSelectionVisibleOnly: chainPropTypes(PropTypes.bool, (props: any) => {
     if (!props.pagination && props.checkboxSelectionVisibleOnly) {
       return new Error(
-        'Material-UI: The `checkboxSelectionVisibleOnly` prop has no effect when the pagination is not enabled.',
+        'MUI: The `checkboxSelectionVisibleOnly` prop has no effect when the pagination is not enabled.',
       );
     }
     return null;
@@ -276,7 +276,7 @@ DataGridProRaw.propTypes = {
   hideFooterRowCount: chainPropTypes(PropTypes.bool, (props: any) => {
     if (props.pagination && props.hideFooterRowCount) {
       return new Error(
-        'Material-UI: The `hideFooterRowCount` prop has no effect when the pagination is enabled.',
+        'MUI: The `hideFooterRowCount` prop has no effect when the pagination is enabled.',
       );
     }
     return null;

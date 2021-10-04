@@ -6,7 +6,7 @@ title: Data Grid - Group & Pivot
 
 <p class="description">Use grouping, pivoting and more to analyse the data in depth.</p>
 
-## Tree data [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-pro/)
+## Tree data [<span class="pro"></span>](https://mui.com/store/items/material-ui-pro/)
 
 Tree data allows to display data with parent / child relationships.
 To enable the Tree Data, you must use the `treeData` prop as well as provide a `getTreeDataPath` prop.
@@ -17,7 +17,7 @@ To enable the Tree Data, you must use the `treeData` prop as well as provide a `
 
 {{"demo": "pages/components/data-grid/group-pivot/BasicTreeData.js", "bg": "inline", "defaultCodeOpen": false}}
 
-## 🚧 Master detail [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-pro/)
+## 🚧 Master detail [<span class="pro"></span>](https://mui.com/store/items/material-ui-pro/)
 
 > ⚠️ This feature isn't implemented yet. It's coming.
 >
@@ -25,7 +25,7 @@ To enable the Tree Data, you must use the `treeData` prop as well as provide a `
 
 The feature allows to display row details on an expandable pane.
 
-## 🚧 Grouping [<span class="premium"></span>](https://material-ui.com/store/items/material-ui-pro/)
+## 🚧 Grouping [<span class="premium"></span>](https://mui.com/store/items/material-ui-pro/)
 
 > ⚠️ This feature isn't implemented yet. It's coming.
 >
@@ -33,7 +33,7 @@ The feature allows to display row details on an expandable pane.
 
 Group rows together that share a column value, this creates a visible header for each group and allows the end-user to collapse groups that they don't want to see.
 
-## 🚧 Aggregation [<span class="premium"></span>](https://material-ui.com/store/items/material-ui-pro/)
+## 🚧 Aggregation [<span class="premium"></span>](https://mui.com/store/items/material-ui-pro/)
 
 > ⚠️ This feature isn't implemented yet. It's coming.
 >
@@ -41,7 +41,7 @@ Group rows together that share a column value, this creates a visible header for
 
 When grouping, you will be able to apply an aggregation function to populate the group row with values.
 
-## 🚧 Pivoting [<span class="premium"></span>](https://material-ui.com/store/items/material-ui-pro/)
+## 🚧 Pivoting [<span class="premium"></span>](https://mui.com/store/items/material-ui-pro/)
 
 > ⚠️ This feature isn't implemented yet. It's coming.
 >
