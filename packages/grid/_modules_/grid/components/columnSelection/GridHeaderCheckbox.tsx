@@ -50,24 +50,34 @@ const GridHeaderCheckbox = React.forwardRef<HTMLInputElement, GridColumnHeaderPa
       [apiRef, rootProps.isRowSelectable, selection],
     );
 
-    const currentPageIds = React.useMemo(() => {
-      if (!rootProps.pagination) {
+    // All the rows that could be selected / unselected by toggling this checkbox
+    const currentSelectionChunkRowIds = React.useMemo(() => {
+      if (!rootProps.pagination || !rootProps.checkboxSelectionVisibleOnly) {
         return visibleRows;
       }
       return paginatedVisibleRows;
-    }, [rootProps.pagination, paginatedVisibleRows, visibleRows]);
+    }, [
+      rootProps.pagination,
+      rootProps.checkboxSelectionVisibleOnly,
+      paginatedVisibleRows,
+      visibleRows,
+    ]);
 
-    const totalSelectedRows = React.useMemo(() => {
-      if (!rootProps.pagination) {
-        return filteredSelection.length;
-      }
-      return filteredSelection.filter((id) => currentPageIds.includes(id)).length;
-    }, [filteredSelection, rootProps.pagination, currentPageIds]);
+    // Amount of rows selected and that could be selected / unselected by toggling this checkbox
+    const currentSelectionChunkSelectedCount = React.useMemo(
+      () => filteredSelection.filter((id) => currentSelectionChunkRowIds.includes(id)).length,
+      [filteredSelection, currentSelectionChunkRowIds],
+    );
 
-    const isIndeterminate = totalSelectedRows > 0 && totalSelectedRows !== currentPageIds.length;
+    const isIndeterminate =
+      currentSelectionChunkSelectedCount > 0 &&
+      currentSelectionChunkSelectedCount < currentSelectionChunkRowIds.length;
+
     // TODO core v5 remove || isIndeterminate, no longer has any effect
     const isChecked =
-      (totalSelectedRows > 0 && totalSelectedRows === currentPageIds.length) || isIndeterminate;
+      (currentSelectionChunkSelectedCount > 0 &&
+        currentSelectionChunkSelectedCount === currentSelectionChunkRowIds.length) ||
+      isIndeterminate;
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
       const params: GridHeaderSelectionCheckboxParams = {
