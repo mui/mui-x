@@ -156,8 +156,12 @@ module.exports = {
   },
   redirects:
     process.env.NODE_ENV !== 'production'
-      ? async () => {
-          return [{ source: `/:lang(${LANGUAGES.join('|')})?/:rest*`, destination: '/:rest*' }];
-        }
+      ? async () => [
+          {
+            source: '/',
+            destination: '/components/data-grid/',
+            permanent: false,
+          },
+        ]
       : undefined,
 };
