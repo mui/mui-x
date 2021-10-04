@@ -135,6 +135,16 @@ DataGridProRaw.propTypes = {
    */
   density: PropTypes.oneOf(['comfortable', 'compact', 'standard']),
   /**
+   * If `true`, the filtering will only be applied to the top level rows
+   * @default false
+   */
+  disableChildrenFiltering: PropTypes.bool,
+  /**
+   * If `true`, the sorting will only be applied to the top level rows
+   * @default false
+   */
+  disableChildrenSorting: PropTypes.bool,
+  /**
    * If `true`, column filters are disabled.
    * @default false
    */
