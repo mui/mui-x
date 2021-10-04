@@ -1,13 +1,12 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import { Theme } from '@mui/material/styles';
+import { alpha, createTheme } from '@mui/material/styles';
 import { createStyles, makeStyles } from '@mui/styles';
 import { GridCellParams } from '../../../_modules_/grid';
-import { createTheme, muiStyleAlpha } from '../../../_modules_/grid/utils/utils';
 
 const defaultTheme = createTheme();
 const useStyles = makeStyles(
-  (theme: Theme) =>
+  (theme) =>
     createStyles({
       root: {
         width: '100%',
@@ -15,10 +14,10 @@ const useStyles = makeStyles(
         fontVariantNumeric: 'tabular-nums',
       },
       good: {
-        backgroundColor: muiStyleAlpha(theme.palette.success.main, 0.3),
+        backgroundColor: alpha(theme.palette.success.main, 0.3),
       },
       bad: {
-        backgroundColor: muiStyleAlpha(theme.palette.error.main, 0.3),
+        backgroundColor: alpha(theme.palette.error.main, 0.3),
       },
     }),
   { defaultTheme },

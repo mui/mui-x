@@ -1,3 +1,3 @@
-# Material-ui-x/license
+# @mui/x-license-pro
 
-Package used by all Material-UI X to validate license.
+Package used by all MUI X to validate license.
