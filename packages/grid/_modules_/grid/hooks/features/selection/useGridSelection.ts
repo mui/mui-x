@@ -19,8 +19,6 @@ import {
 import { visibleSortedGridRowIdsSelector } from '../filter';
 import { GridCellParams } from '../../../models/params/gridCellParams';
 import { GridRowSelectionCheckboxParams } from '../../../models/params/gridRowSelectionCheckboxParams';
-import { gridPaginatedVisibleSortedGridRowIdsSelector } from '../pagination/gridPaginationSelector';
-import { GridHeaderSelectionCheckboxParams } from '../../../models/params/gridHeaderSelectionCheckboxParams';
 
 /**
  * @requires useGridRows (state, method)
@@ -256,30 +254,11 @@ export const useGridSelection = (
     [apiRef, expandRowRangeSelection],
   );
 
-  const handleHeaderSelectionCheckboxChange = React.useCallback(
-    (params: GridHeaderSelectionCheckboxParams) => {
-      const shouldLimitSelectionToCurrentPage =
-        props.checkboxSelectionVisibleOnly && props.pagination;
-
-      const rowsToBeSelected = shouldLimitSelectionToCurrentPage
-        ? gridPaginatedVisibleSortedGridRowIdsSelector(apiRef.current.state)
-        : visibleSortedGridRowIdsSelector(apiRef.current.state);
-
-      apiRef.current.selectRows(rowsToBeSelected, params.value);
-    },
-    [apiRef, props.checkboxSelectionVisibleOnly, props.pagination],
-  );
-
   useGridApiEventHandler(apiRef, GridEvents.rowClick, handleRowClick);
   useGridApiEventHandler(
     apiRef,
     GridEvents.rowSelectionCheckboxChange,
     handleRowSelectionCheckboxChange,
-  );
-  useGridApiEventHandler(
-    apiRef,
-    GridEvents.headerSelectionCheckboxChange,
-    handleHeaderSelectionCheckboxChange,
   );
   useGridApiEventHandler(apiRef, GridEvents.cellMouseDown, preventSelectionOnShift);
 

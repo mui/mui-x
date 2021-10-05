@@ -2,7 +2,10 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { GridEvents } from '../../constants/eventsConstants';
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
+import { gridPaginatedVisibleSortedGridRowIdsSelector } from '../../hooks/features/pagination/gridPaginationSelector';
+import { visibleSortedGridRowIdsSelector } from '../../hooks/features/filter/gridFilterSelector';
 import { gridTabIndexColumnHeaderSelector } from '../../hooks/features/focus/gridFocusStateSelector';
+import { gridRowCountSelector } from '../../hooks/features/rows/gridRowsSelector';
 import { gridSelectionStateSelector } from '../../hooks/features/selection/gridSelectionSelector';
 import { GridColumnHeaderParams } from '../../models/params/gridColumnHeaderParams';
 import { isNavigationKey, isSpaceKey } from '../../utils/keyboardUtils';
@@ -11,9 +14,6 @@ import { getDataGridUtilityClass } from '../../gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { composeClasses } from '../../utils/material-ui-utils';
 import { GridComponentProps } from '../../GridComponentProps';
-import { GridHeaderSelectionCheckboxParams } from '../../models/params/gridHeaderSelectionCheckboxParams';
-import { visibleSortedGridRowIdsSelector } from '../../hooks/features/filter/gridFilterSelector';
-import { gridPaginatedVisibleSortedGridRowIdsSelector } from '../../hooks/features/pagination/gridPaginationSelector';
 
 type OwnerState = { classes: GridComponentProps['classes'] };
 
@@ -36,11 +36,7 @@ const GridHeaderCheckbox = React.forwardRef<HTMLInputElement, GridColumnHeaderPa
     const classes = useUtilityClasses(ownerState);
     const tabIndexState = useGridSelector(apiRef, gridTabIndexColumnHeaderSelector);
     const selection = useGridSelector(apiRef, gridSelectionStateSelector);
-    const visibleRows = useGridSelector(apiRef, visibleSortedGridRowIdsSelector);
-    const paginatedVisibleRows = useGridSelector(
-      apiRef,
-      gridPaginatedVisibleSortedGridRowIdsSelector,
-    );
+    const totalRows = useGridSelector(apiRef, gridRowCountSelector);
 
     const filteredSelection = React.useMemo(
       () =>
@@ -50,41 +46,21 @@ const GridHeaderCheckbox = React.forwardRef<HTMLInputElement, GridColumnHeaderPa
       [apiRef, rootProps.isRowSelectable, selection],
     );
 
-    // All the rows that could be selected / unselected by toggling this checkbox
-    const currentSelectionChunkRowIds = React.useMemo(() => {
-      if (!rootProps.pagination || !rootProps.checkboxSelectionVisibleOnly) {
-        return visibleRows;
-      }
-      return paginatedVisibleRows;
-    }, [
-      rootProps.pagination,
-      rootProps.checkboxSelectionVisibleOnly,
-      paginatedVisibleRows,
-      visibleRows,
-    ]);
-
-    // Amount of rows selected and that could be selected / unselected by toggling this checkbox
-    const currentSelectionChunkSelectedCount = React.useMemo(
-      () => filteredSelection.filter((id) => currentSelectionChunkRowIds.includes(id)).length,
-      [filteredSelection, currentSelectionChunkRowIds],
-    );
-
-    const isIndeterminate =
-      currentSelectionChunkSelectedCount > 0 &&
-      currentSelectionChunkSelectedCount < currentSelectionChunkRowIds.length;
-
+    const totalSelectedRows = filteredSelection.length;
+    const isIndeterminate = totalSelectedRows > 0 && totalSelectedRows !== totalRows;
     // TODO core v5 remove || isIndeterminate, no longer has any effect
-    const isChecked =
-      (currentSelectionChunkSelectedCount > 0 &&
-        currentSelectionChunkSelectedCount === currentSelectionChunkRowIds.length) ||
-      isIndeterminate;
+    const isChecked = (totalSelectedRows > 0 && totalSelectedRows === totalRows) || isIndeterminate;
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-      const params: GridHeaderSelectionCheckboxParams = {
-        value: event.target.checked,
-      };
+      const checked = event.target.checked;
 
-      apiRef.current.publishEvent(GridEvents.headerSelectionCheckboxChange, params);
+      const shouldLimitSelectionToCurrentPage =
+        rootProps.checkboxSelectionVisibleOnly && rootProps.pagination;
+
+      const rowsToBeSelected = shouldLimitSelectionToCurrentPage
+        ? gridPaginatedVisibleSortedGridRowIdsSelector(apiRef.current.state)
+        : visibleSortedGridRowIdsSelector(apiRef.current.state);
+      apiRef.current.selectRows(rowsToBeSelected, checked, !event.target.indeterminate);
     };
 
     const tabIndex = tabIndexState !== null && tabIndexState.field === props.field ? 0 : -1;
