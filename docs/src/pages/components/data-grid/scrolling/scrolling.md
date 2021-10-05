@@ -14,7 +14,7 @@ If the row or column index is not present, the grid will not do any movement in 
 
 The following demo explores the usage of this API:
 
-{{"demo": "pages/components/data-grid/scrolling/ScrollPlayground.js", "bg": "inline"}}
+{{"demo": "pages/components/data-grid/scrolling/ScrollPlayground.js", "bg": true}}
 
 ## apiRef [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-pro/)
 

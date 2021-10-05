@@ -1,5 +1,9 @@
 import * as React from 'react';
-import { Grid, Box, Button } from '@mui/material';
+import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
+import HomeIcon from '@mui/icons-material/Home';
 import {
   DataGridPro,
   useGridApiRef,
@@ -37,19 +41,18 @@ export default function ScrollPlayground() {
     const maxColIndex = visibleGridColumnsLengthSelector(apiRef.current.state) - 1;
 
     setCoordinates((coords) => {
-      if (position === 'top') {
-        return { ...coords, rowIndex: Math.max(0, coords.rowIndex - 1) };
+      switch (position) {
+        case 'top':
+          return { ...coords, rowIndex: Math.max(0, coords.rowIndex - 1) };
+        case 'bottom':
+          return { ...coords, rowIndex: Math.min(maxRowIndex, coords.rowIndex + 1) };
+        case 'left':
+          return { ...coords, colIndex: Math.max(0, coords.colIndex - 1) };
+        case 'right':
+          return { ...coords, colIndex: Math.min(maxColIndex, coords.colIndex + 1) };
+        default:
+          return { ...coords, rowIndex: 0, colIndex: 0 };
       }
-
-      if (position === 'bottom') {
-        return { ...coords, rowIndex: Math.min(maxRowIndex, coords.rowIndex + 1) };
-      }
-
-      if (position === 'left') {
-        return { ...coords, colIndex: Math.max(0, coords.colIndex - 1) };
-      }
-
-      return { ...coords, colIndex: Math.min(maxColIndex, coords.colIndex + 1) };
     });
   };
 
@@ -65,17 +68,26 @@ export default function ScrollPlayground() {
 
   return (
     <div style={{ width: '100%' }}>
-      <Box sx={{ width: 400, margin: '0 auto 16px' }}>
+      <Box sx={{ width: 300, margin: '0 auto 16px' }}>
         <Grid container justifyContent="center">
           <Grid item>
             <Button onClick={handleClick('top')}>top</Button>
           </Grid>
         </Grid>
         <Grid container textAlign="center">
-          <Grid item xs={6}>
+          <Grid item xs={4}>
             <Button onClick={handleClick('left')}>left</Button>
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={4}>
+            <IconButton
+              color="primary"
+              aria-label="home"
+              onClick={handleClick('home')}
+            >
+              <HomeIcon />
+            </IconButton>
+          </Grid>
+          <Grid item xs={4}>
             <Button onClick={handleClick('right')}>right</Button>
           </Grid>
         </Grid>
@@ -85,14 +97,14 @@ export default function ScrollPlayground() {
           </Grid>
         </Grid>
       </Box>
-      <div style={{ height: 400 }}>
+      <Box sx={{ height: 400, bgcolor: 'background.paper' }}>
         <DataGridPro
           apiRef={apiRef}
           onCellClick={handleCellClick}
           hideFooter
           {...data}
         />
-      </div>
+      </Box>
     </div>
   );
 }
