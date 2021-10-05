@@ -98,7 +98,7 @@ export const useGridFilter = (
 
       const filterOperators = column.filterOperators;
       if (!filterOperators?.length) {
-        throw new Error(`Material-UI: No filter operators found for column '${column.field}'.`);
+        throw new Error(`MUI: No filter operators found for column '${column.field}'.`);
       }
 
       const filterOperator = filterOperators.find(
@@ -106,7 +106,7 @@ export const useGridFilter = (
       )!;
       if (!filterOperator) {
         throw new Error(
-          `Material-UI: No filter operator found for column '${column.field}' and operator value '${newFilterItem.operatorValue}'.`,
+          `MUI: No filter operator found for column '${column.field}' and operator value '${newFilterItem.operatorValue}'.`,
         );
       }
 

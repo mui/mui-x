@@ -8,7 +8,7 @@ export default function RowsGrid() {
         columns={[{ field: 'name' }]}
         rows={[
           { id: 1, name: 'React' },
-          { id: 2, name: 'Material-UI' },
+          { id: 2, name: 'MUI' },
         ]}
       />
     </div>

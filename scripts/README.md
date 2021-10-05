@@ -1,4 +1,4 @@
-# Material-UI Scripts
+# MUI Scripts
 
 ## Release
 

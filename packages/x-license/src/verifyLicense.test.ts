@@ -15,7 +15,7 @@ describe('License: verifyLicense', () => {
 
   it('should log an error when ReleaseInfo is not valid', () => {
     expect(() => verifyLicense('__RELEASE_INFO__', validLicense)).to.throw(
-      'Material-UI: The release information is invalid. Not able to validate license.',
+      'MUI: The release information is invalid. Not able to validate license.',
     );
   });
 

@@ -112,7 +112,7 @@ export default function CustomColumnMenu() {
           rows={[
             {
               id: 1,
-              name: 'Material-UI',
+              name: 'MUI',
               stars: 28000,
               default: 'Open source',
             },
