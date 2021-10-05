@@ -41,7 +41,7 @@ export interface GridPrintExportOptions {
   fileName?: string;
   /**
    * The columns to be printed.
-   * This should only be used if you want to restrict the columns exports.
+   * This should only be used if you want to restrict the columns exported.
    */
   fields?: string[];
   /**
