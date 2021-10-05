@@ -161,7 +161,7 @@ export const useGridSelection = (
   );
 
   const expandRowRangeSelection = React.useCallback(
-    (id: GridRowId, resetSelection?: boolean) => {
+    (id: GridRowId) => {
       let endId = id;
       const startId = lastRowToggled.current ?? id;
       const isSelected = apiRef.current.isRowSelected(id);
@@ -178,7 +178,7 @@ export const useGridSelection = (
 
       lastRowToggled.current = id;
 
-      apiRef.current.selectRowRange({ startId, endId }, !isSelected, resetSelection);
+      apiRef.current.selectRowRange({ startId, endId }, !isSelected);
     },
     [apiRef],
   );
