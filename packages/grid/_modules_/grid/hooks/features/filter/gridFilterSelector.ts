@@ -43,10 +43,10 @@ export const visibleGridRowCountSelector = createSelector(
   },
 );
 
-export const filterGridStateSelector = (state: GridState) => state.filter;
+export const gridFilterModelSelector = (state: GridState) => state.filter;
 
 export const activeGridFilterItemsSelector = createSelector(
-  filterGridStateSelector,
+  gridFilterModelSelector,
   gridColumnLookupSelector,
   (filterModel, columnLookup) =>
     filterModel.items?.filter((item) => {

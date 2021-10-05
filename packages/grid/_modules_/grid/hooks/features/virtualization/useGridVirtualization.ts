@@ -22,7 +22,7 @@ import { useGridApiMethod } from '../../root/useGridApiMethod';
 import { useNativeEventListener } from '../../root/useNativeEventListener';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { useGridScrollFn } from '../../utils/useGridScrollFn';
-import { InternalRenderingState } from './renderingState';
+import { GridRenderingState } from './renderingState';
 import { GridComponentProps } from '../../../GridComponentProps';
 import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
 
@@ -82,7 +82,7 @@ export const useGridVirtualization = (
   const [scrollTo] = useGridScrollFn(apiRef, renderingZoneRef, colRef);
 
   const setRenderingState = React.useCallback(
-    (newState: Partial<InternalRenderingState>) => {
+    (newState: Partial<GridRenderingState>) => {
       let stateChanged = false;
       setGridState((state) => {
         const currentRenderingState = { ...state.rendering, ...newState };
