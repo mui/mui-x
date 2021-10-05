@@ -16,16 +16,33 @@ import {
   selectedGridRowsSelector,
   selectedIdsLookupSelector,
 } from './gridSelectionSelector';
+import { visibleSortedGridRowIdsSelector } from '../filter';
+import { GridCellParams } from '../../../models/params/gridCellParams';
+import { GridRowSelectionCheckboxParams } from '../../../models/params/gridRowSelectionCheckboxParams';
 
 /**
  * @requires useGridRows (state, method)
  * @requires useGridParamsApi (method)
  * @requires useGridControlState (method)
  */
-export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps): void => {
+export const useGridSelection = (
+  apiRef: GridApiRef,
+  props: Pick<
+    GridComponentProps,
+    | 'checkboxSelection'
+    | 'selectionModel'
+    | 'onSelectionModelChange'
+    | 'disableMultipleSelection'
+    | 'disableSelectionOnClick'
+    | 'isRowSelectable'
+    | 'checkboxSelectionVisibleOnly'
+    | 'pagination'
+  >,
+): void => {
   const logger = useGridLogger(apiRef, 'useGridSelection');
   const [, setGridState, forceUpdate] = useGridState(apiRef);
   const rowsLookup = useGridSelector(apiRef, gridRowsLookupSelector);
+  const lastRowToggled = React.useRef<GridRowId | null>(null);
 
   const propSelectionModel = React.useMemo(() => {
     if (props.selectionModel == null) {
@@ -54,6 +71,8 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
       if (isRowSelectable && !isRowSelectable(apiRef.current.getRowParams(id))) {
         return;
       }
+
+      lastRowToggled.current = id;
 
       if (resetSelection) {
         logger.debug(`Setting selection for row ${id}`);
@@ -112,6 +131,58 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
     [apiRef, isRowSelectable, logger, canHaveMultipleSelection],
   );
 
+  const selectRowRange = React.useCallback<GridSelectionApi['selectRowRange']>(
+    (
+      {
+        startId,
+        endId,
+      }: {
+        startId: GridRowId;
+        endId: GridRowId;
+      },
+      isSelected = true,
+      resetSelection,
+    ) => {
+      if (!apiRef.current.getRow(startId) || !apiRef.current.getRow(endId)) {
+        return;
+      }
+
+      logger.debug(`Expanding selection from row ${startId} to row ${endId}`);
+
+      const visibleRowIds = visibleSortedGridRowIdsSelector(apiRef.current.state);
+      const startIndex = visibleRowIds.indexOf(startId);
+      const endIndex = visibleRowIds.indexOf(endId);
+      const [start, end] = startIndex > endIndex ? [endIndex, startIndex] : [startIndex, endIndex];
+      const rowsBetweenStartAndEnd = visibleRowIds.slice(start, end + 1);
+
+      apiRef.current.selectRows(rowsBetweenStartAndEnd, isSelected, resetSelection);
+    },
+    [apiRef, logger],
+  );
+
+  const expandRowRangeSelection = React.useCallback(
+    (id: GridRowId) => {
+      let endId = id;
+      const startId = lastRowToggled.current ?? id;
+      const isSelected = apiRef.current.isRowSelected(id);
+      if (isSelected) {
+        const visibleRowIds = visibleSortedGridRowIdsSelector(apiRef.current.state);
+        const startIndex = visibleRowIds.findIndex((rowId) => rowId === startId);
+        const endIndex = visibleRowIds.findIndex((rowId) => rowId === endId);
+        if (startIndex > endIndex) {
+          endId = visibleRowIds[endIndex + 1];
+        } else {
+          endId = visibleRowIds[endIndex - 1];
+        }
+      }
+
+      lastRowToggled.current = id;
+
+      apiRef.current.selectRowRange({ startId, endId }, !isSelected);
+    },
+    [apiRef],
+  );
+
   const setSelectionModel = React.useCallback<GridSelectionApi['setSelectionModel']>(
     (model) => {
       const currentModel = gridSelectionStateSelector(apiRef.current.state);
@@ -136,29 +207,65 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
 
       const hasCtrlKey = event.metaKey || event.ctrlKey;
 
-      // Without checkboxSelection, multiple selection is only allowed if CTRL is pressed
-      const isMultipleSelectionDisabled = !checkboxSelection && !hasCtrlKey;
-      const resetSelection = !canHaveMultipleSelection || isMultipleSelectionDisabled;
-
-      if (resetSelection) {
-        apiRef.current.selectRow(
-          params.id,
-          hasCtrlKey || checkboxSelection ? !apiRef.current.isRowSelected(params.id) : true,
-          true,
-        );
+      if (event.shiftKey && (canHaveMultipleSelection || checkboxSelection)) {
+        expandRowRangeSelection(params.id);
       } else {
-        apiRef.current.selectRow(params.id, !apiRef.current.isRowSelected(params.id), false);
+        // Without checkboxSelection, multiple selection is only allowed if CTRL is pressed
+        const isMultipleSelectionDisabled = !checkboxSelection && !hasCtrlKey;
+        const resetSelection = !canHaveMultipleSelection || isMultipleSelectionDisabled;
+
+        if (resetSelection) {
+          apiRef.current.selectRow(
+            params.id,
+            hasCtrlKey || checkboxSelection ? !apiRef.current.isRowSelected(params.id) : true,
+            true,
+          );
+        } else {
+          apiRef.current.selectRow(params.id, !apiRef.current.isRowSelected(params.id), false);
+        }
       }
     },
-    [apiRef, canHaveMultipleSelection, disableSelectionOnClick, checkboxSelection],
+    [
+      apiRef,
+      expandRowRangeSelection,
+      canHaveMultipleSelection,
+      disableSelectionOnClick,
+      checkboxSelection,
+    ],
+  );
+
+  const preventSelectionOnShift = React.useCallback(
+    (params: GridCellParams, event: React.MouseEvent) => {
+      if (canHaveMultipleSelection && event.shiftKey) {
+        window.getSelection()?.removeAllRanges();
+      }
+    },
+    [canHaveMultipleSelection],
+  );
+
+  const handleRowSelectionCheckboxChange = React.useCallback(
+    (params: GridRowSelectionCheckboxParams, event: React.ChangeEvent) => {
+      if ((event.nativeEvent as any).shiftKey) {
+        expandRowRangeSelection(params.id);
+      } else {
+        apiRef.current.selectRow(params.id, params.value);
+      }
+    },
+    [apiRef, expandRowRangeSelection],
   );
 
   useGridApiEventHandler(apiRef, GridEvents.rowClick, handleRowClick);
+  useGridApiEventHandler(
+    apiRef,
+    GridEvents.rowSelectionCheckboxChange,
+    handleRowSelectionCheckboxChange,
+  );
+  useGridApiEventHandler(apiRef, GridEvents.cellMouseDown, preventSelectionOnShift);
 
-  // TODO handle Cell Click/range selection?
   const selectionApi: GridSelectionApi = {
     selectRow,
     selectRows,
+    selectRowRange,
     setSelectionModel,
     getSelectedRows,
     isRowSelected,
