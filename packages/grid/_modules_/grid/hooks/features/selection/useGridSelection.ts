@@ -16,8 +16,8 @@ import {
   selectedGridRowsSelector,
   selectedIdsLookupSelector,
 } from './gridSelectionSelector';
-import {gridPaginatedVisibleSortedGridRowIdsSelector} from "../pagination";
-import {visibleSortedGridRowIdsSelector} from "../filter";
+import { gridPaginatedVisibleSortedGridRowIdsSelector } from '../pagination';
+import { visibleSortedGridRowIdsSelector } from '../filter';
 import { GridHeaderSelectionCheckboxParams } from '../../../models/params/gridHeaderSelectionCheckboxParams';
 
 /**
@@ -157,24 +157,24 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
   );
 
   const handleHeaderSelectionCheckboxChange = React.useCallback(
-      (params: GridHeaderSelectionCheckboxParams) => {
-        const shouldLimitSelectionToCurrentPage =
-            props.checkboxSelectionVisibleOnly && props.pagination;
+    (params: GridHeaderSelectionCheckboxParams) => {
+      const shouldLimitSelectionToCurrentPage =
+        props.checkboxSelectionVisibleOnly && props.pagination;
 
-        const rowsToBeSelected = shouldLimitSelectionToCurrentPage
-            ? gridPaginatedVisibleSortedGridRowIdsSelector(apiRef.current.state)
-            : visibleSortedGridRowIdsSelector(apiRef.current.state);
+      const rowsToBeSelected = shouldLimitSelectionToCurrentPage
+        ? gridPaginatedVisibleSortedGridRowIdsSelector(apiRef.current.state)
+        : visibleSortedGridRowIdsSelector(apiRef.current.state);
 
-        apiRef.current.selectRows(rowsToBeSelected, params.value);
-      },
-      [apiRef, props.checkboxSelectionVisibleOnly, props.pagination],
+      apiRef.current.selectRows(rowsToBeSelected, params.value);
+    },
+    [apiRef, props.checkboxSelectionVisibleOnly, props.pagination],
   );
 
   useGridApiEventHandler(apiRef, GridEvents.rowClick, handleRowClick);
   useGridApiEventHandler(
-      apiRef,
-      GridEvents.headerSelectionCheckboxChange,
-      handleHeaderSelectionCheckboxChange,
+    apiRef,
+    GridEvents.headerSelectionCheckboxChange,
+    handleHeaderSelectionCheckboxChange,
   );
 
   // TODO handle Cell Click/range selection?

@@ -1,3 +1,3 @@
 export interface GridHeaderSelectionCheckboxParams {
-    value: boolean;
+  value: boolean;
 }

@@ -18,133 +18,133 @@ import { gridPaginatedVisibleSortedGridRowIdsSelector } from '../../hooks/featur
 type OwnerState = { classes: GridComponentProps['classes'] };
 
 const useUtilityClasses = (ownerState: OwnerState) => {
-    const { classes } = ownerState;
+  const { classes } = ownerState;
 
-    const slots = {
-        root: ['checkboxInput'],
-    };
+  const slots = {
+    root: ['checkboxInput'],
+  };
 
-    return composeClasses(slots, getDataGridUtilityClass, classes);
+  return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
 const GridHeaderCheckbox = React.forwardRef<HTMLInputElement, GridColumnHeaderParams>(
-    function GridHeaderCheckbox(props, ref) {
-        const [, forceUpdate] = React.useState(false);
-        const apiRef = useGridApiContext();
-        const rootProps = useGridRootProps();
-        const ownerState = { classes: rootProps.classes };
-        const classes = useUtilityClasses(ownerState);
-        const tabIndexState = useGridSelector(apiRef, gridTabIndexColumnHeaderSelector);
-        const selection = useGridSelector(apiRef, gridSelectionStateSelector);
-        const visibleRows = useGridSelector(apiRef, visibleSortedGridRowIdsSelector);
-        const paginatedVisibleRows = useGridSelector(
-            apiRef,
-            gridPaginatedVisibleSortedGridRowIdsSelector,
-        );
+  function GridHeaderCheckbox(props, ref) {
+    const [, forceUpdate] = React.useState(false);
+    const apiRef = useGridApiContext();
+    const rootProps = useGridRootProps();
+    const ownerState = { classes: rootProps.classes };
+    const classes = useUtilityClasses(ownerState);
+    const tabIndexState = useGridSelector(apiRef, gridTabIndexColumnHeaderSelector);
+    const selection = useGridSelector(apiRef, gridSelectionStateSelector);
+    const visibleRows = useGridSelector(apiRef, visibleSortedGridRowIdsSelector);
+    const paginatedVisibleRows = useGridSelector(
+      apiRef,
+      gridPaginatedVisibleSortedGridRowIdsSelector,
+    );
 
-        const filteredSelection = React.useMemo(
-            () =>
-                typeof rootProps.isRowSelectable === 'function'
-                    ? selection.filter((id) => rootProps.isRowSelectable!(apiRef.current.getRowParams(id)))
-                    : selection,
-            [apiRef, rootProps.isRowSelectable, selection],
-        );
+    const filteredSelection = React.useMemo(
+      () =>
+        typeof rootProps.isRowSelectable === 'function'
+          ? selection.filter((id) => rootProps.isRowSelectable!(apiRef.current.getRowParams(id)))
+          : selection,
+      [apiRef, rootProps.isRowSelectable, selection],
+    );
 
-        // All the rows that could be selected / unselected by toggling this checkbox
-        const currentSelectionChunkRowIds = React.useMemo(() => {
-            if (!rootProps.pagination || !rootProps.checkboxSelectionVisibleOnly) {
-                return visibleRows;
-            }
-            return paginatedVisibleRows;
-        }, [
-            rootProps.pagination,
-            rootProps.checkboxSelectionVisibleOnly,
-            paginatedVisibleRows,
-            visibleRows,
-        ]);
+    // All the rows that could be selected / unselected by toggling this checkbox
+    const currentSelectionChunkRowIds = React.useMemo(() => {
+      if (!rootProps.pagination || !rootProps.checkboxSelectionVisibleOnly) {
+        return visibleRows;
+      }
+      return paginatedVisibleRows;
+    }, [
+      rootProps.pagination,
+      rootProps.checkboxSelectionVisibleOnly,
+      paginatedVisibleRows,
+      visibleRows,
+    ]);
 
-        // Amount of rows selected and that could be selected / unselected by toggling this checkbox
-        const currentSelectionChunkSelectedCount = React.useMemo(
-            () => filteredSelection.filter((id) => currentSelectionChunkRowIds.includes(id)).length,
-            [filteredSelection, currentSelectionChunkRowIds],
-        );
+    // Amount of rows selected and that could be selected / unselected by toggling this checkbox
+    const currentSelectionChunkSelectedCount = React.useMemo(
+      () => filteredSelection.filter((id) => currentSelectionChunkRowIds.includes(id)).length,
+      [filteredSelection, currentSelectionChunkRowIds],
+    );
 
-        const isIndeterminate =
-            currentSelectionChunkSelectedCount > 0 &&
-            currentSelectionChunkSelectedCount < currentSelectionChunkRowIds.length;
+    const isIndeterminate =
+      currentSelectionChunkSelectedCount > 0 &&
+      currentSelectionChunkSelectedCount < currentSelectionChunkRowIds.length;
 
-        // TODO core v5 remove || isIndeterminate, no longer has any effect
-        const isChecked =
-            (currentSelectionChunkSelectedCount > 0 &&
-                currentSelectionChunkSelectedCount === currentSelectionChunkRowIds.length) ||
-            isIndeterminate;
+    // TODO core v5 remove || isIndeterminate, no longer has any effect
+    const isChecked =
+      (currentSelectionChunkSelectedCount > 0 &&
+        currentSelectionChunkSelectedCount === currentSelectionChunkRowIds.length) ||
+      isIndeterminate;
 
-        const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-            const params: GridHeaderSelectionCheckboxParams = {
-                value: event.target.checked,
-            };
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+      const params: GridHeaderSelectionCheckboxParams = {
+        value: event.target.checked,
+      };
 
-            apiRef.current.publishEvent(GridEvents.headerSelectionCheckboxChange, params);
-        };
+      apiRef.current.publishEvent(GridEvents.headerSelectionCheckboxChange, params);
+    };
 
-        const tabIndex = tabIndexState !== null && tabIndexState.field === props.field ? 0 : -1;
-        React.useLayoutEffect(() => {
-            const element = apiRef.current.getColumnHeaderElement(props.field);
-            if (tabIndex === 0 && element) {
-                element!.tabIndex = -1;
-            }
-        }, [tabIndex, apiRef, props.field]);
+    const tabIndex = tabIndexState !== null && tabIndexState.field === props.field ? 0 : -1;
+    React.useLayoutEffect(() => {
+      const element = apiRef.current.getColumnHeaderElement(props.field);
+      if (tabIndex === 0 && element) {
+        element!.tabIndex = -1;
+      }
+    }, [tabIndex, apiRef, props.field]);
 
-        const handleKeyDown = React.useCallback(
-            (event) => {
-                if (isSpaceKey(event.key)) {
-                    event.stopPropagation();
-                }
-                if (isNavigationKey(event.key) && !event.shiftKey) {
-                    apiRef.current.publishEvent(GridEvents.columnHeaderNavigationKeyDown, props, event);
-                }
-            },
-            [apiRef, props],
-        );
+    const handleKeyDown = React.useCallback(
+      (event) => {
+        if (isSpaceKey(event.key)) {
+          event.stopPropagation();
+        }
+        if (isNavigationKey(event.key) && !event.shiftKey) {
+          apiRef.current.publishEvent(GridEvents.columnHeaderNavigationKeyDown, props, event);
+        }
+      },
+      [apiRef, props],
+    );
 
-        const handleSelectionChange = React.useCallback(() => {
-            forceUpdate((p) => !p);
-        }, []);
+    const handleSelectionChange = React.useCallback(() => {
+      forceUpdate((p) => !p);
+    }, []);
 
-        React.useEffect(() => {
-            return apiRef.current.subscribeEvent(GridEvents.selectionChange, handleSelectionChange);
-        }, [apiRef, handleSelectionChange]);
+    React.useEffect(() => {
+      return apiRef.current.subscribeEvent(GridEvents.selectionChange, handleSelectionChange);
+    }, [apiRef, handleSelectionChange]);
 
-        return (
-            <rootProps.components.Checkbox
-                ref={ref}
-                indeterminate={isIndeterminate}
-                checked={isChecked}
-                onChange={handleChange}
-                className={classes.root}
-                color="primary"
-                inputProps={{ 'aria-label': 'Select All Rows checkbox' }}
-                tabIndex={tabIndex}
-                onKeyDown={handleKeyDown}
-                {...rootProps.componentsProps?.checkbox}
-            />
-        );
-    },
+    return (
+      <rootProps.components.Checkbox
+        ref={ref}
+        indeterminate={isIndeterminate}
+        checked={isChecked}
+        onChange={handleChange}
+        className={classes.root}
+        color="primary"
+        inputProps={{ 'aria-label': 'Select All Rows checkbox' }}
+        tabIndex={tabIndex}
+        onKeyDown={handleKeyDown}
+        {...rootProps.componentsProps?.checkbox}
+      />
+    );
+  },
 );
 
 GridHeaderCheckbox.propTypes = {
-    // ----------------------------- Warning --------------------------------
-    // | These PropTypes are generated from the TypeScript type definitions |
-    // | To update them edit the TypeScript types and run "yarn proptypes"  |
-    // ----------------------------------------------------------------------
-    /**
-     * The column of the current header component.
-     */
-    colDef: PropTypes.object.isRequired,
-    /**
-     * The column field of the column that triggered the event
-     */
-    field: PropTypes.string.isRequired,
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  /**
+   * The column of the current header component.
+   */
+  colDef: PropTypes.object.isRequired,
+  /**
+   * The column field of the column that triggered the event
+   */
+  field: PropTypes.string.isRequired,
 } as any;
 
 export { GridHeaderCheckbox };
