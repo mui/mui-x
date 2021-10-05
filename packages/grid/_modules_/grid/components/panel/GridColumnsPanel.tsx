@@ -4,7 +4,7 @@ import Switch from '@mui/material/Switch';
 import Button from '@mui/material/Button';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import TextField from '@mui/material/TextField';
-import { makeStyles } from '@mui/styles';
+import { styled } from '@mui/material/styles';
 import { allGridColumnsSelector } from '../../hooks/features/columns/gridColumnsSelector';
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
 import { useGridApiContext } from '../../hooks/root/useGridApiContext';
@@ -16,28 +16,27 @@ import { GridPanelWrapper } from './GridPanelWrapper';
 import { GRID_EXPERIMENTAL_ENABLED } from '../../constants';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
-const useStyles = makeStyles(
-  {
-    container: {
-      padding: '8px 0px 8px 8px',
-    },
-    column: {
-      display: 'flex',
-      justifyContent: 'space-between',
-      padding: '1px 8px 1px 7px',
-    },
-    switch: {
-      marginRight: 4,
-    },
-    dragIcon: {
-      justifyContent: 'flex-end',
-    },
-  },
-  { name: 'MuiDataGridColumnsPanel' }, // TODO rename to MuiGridColumnsPanel
-);
+const GridColumnsPanelRoot = styled('div', {
+  name: 'MuiGridColumnsPanel',
+  slot: 'Root',
+})(({ theme }) => ({
+  padding: theme.spacing(1),
+}));
+
+const GridColumnRoot = styled('div', {
+  name: 'MuiGridColumn',
+  slot: 'Root',
+})({
+  display: 'flex',
+  justifyContent: 'space-between',
+  padding: '1px 8px 1px 7px',
+});
+
+const StyledIconButton = styled(IconButton)({
+  justifyContent: 'flex-end',
+});
 
 export function GridColumnsPanel() {
-  const classes = useStyles();
   const apiRef = useGridApiContext();
   const searchInputRef = React.useRef<HTMLInputElement>(null);
   const columns = useGridSelector(apiRef, allGridColumnsSelector);
@@ -102,13 +101,13 @@ export function GridColumnsPanel() {
         />
       </GridPanelHeader>
       <GridPanelContent>
-        <div className={classes.container}>
+        <GridColumnsPanelRoot>
           {currentColumns.map((column) => (
-            <div key={column.field} className={classes.column}>
+            <GridColumnRoot key={column.field}>
               <FormControlLabel
                 control={
                   <Switch
-                    className={classes.switch}
+                    sx={{ marginRight: 1 }}
                     checked={!column.hide}
                     onClick={toggleColumn}
                     name={column.field}
@@ -119,20 +118,19 @@ export function GridColumnsPanel() {
                 label={column.headerName || column.field}
               />
               {!rootProps.disableColumnReorder && GRID_EXPERIMENTAL_ENABLED && (
-                <IconButton
+                <StyledIconButton
                   draggable
-                  className={classes.dragIcon}
                   aria-label={apiRef.current.getLocaleText('columnsPanelDragIconLabel')}
                   title={apiRef.current.getLocaleText('columnsPanelDragIconLabel')}
                   size="small"
                   disabled
                 >
                   <GridDragIcon />
-                </IconButton>
+                </StyledIconButton>
               )}
-            </div>
+            </GridColumnRoot>
           ))}
-        </div>
+        </GridColumnsPanelRoot>
       </GridPanelContent>
       <GridPanelFooter>
         <Button onClick={hideAllColumns} color="primary">

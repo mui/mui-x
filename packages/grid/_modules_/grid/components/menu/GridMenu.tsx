@@ -4,9 +4,9 @@ import ClickAwayListener, { ClickAwayListenerProps } from '@mui/material/ClickAw
 import Grow from '@mui/material/Grow';
 import Paper from '@mui/material/Paper';
 import Popper, { PopperProps } from '@mui/material/Popper';
-import { Theme, createTheme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { styled } from '@mui/material/styles';
 import { HTMLElementType } from '@mui/utils';
+import { gridClasses } from '../../gridClasses';
 
 type MenuPosition =
   | 'bottom-end'
@@ -23,19 +23,15 @@ type MenuPosition =
   | 'top'
   | undefined;
 
-const defaultTheme = createTheme();
-const useStyles = makeStyles(
-  (theme: Theme) => ({
-    root: {
-      zIndex: theme.zIndex.modal,
-      '& .MuiDataGrid-gridMenuList': {
-        // TODO: Rename to MuiGridMenu-menuList
-        outline: 0,
-      },
-    },
-  }),
-  { name: 'MuiGridMenu', defaultTheme },
-);
+const StyledPopper = styled(Popper, {
+  name: 'MuiGridMenu',
+  slot: 'Root',
+})(({ theme }) => ({
+  zIndex: theme.zIndex.modal,
+  [`& .${gridClasses.menuList}`]: {
+    outline: 0,
+  },
+}));
 
 export interface GridMenuProps extends Omit<PopperProps, 'onKeyDown'> {
   open: boolean;
@@ -53,7 +49,7 @@ const GridMenu = (props: GridMenuProps) => {
   const { open, target, onClickAway, children, position, ...other } = props;
   const prevTarget = React.useRef(target);
   const prevOpen = React.useRef(open);
-  const classes = useStyles();
+  // const classes = useStyles();
 
   React.useEffect(() => {
     if (prevOpen.current && prevTarget.current) {
@@ -65,14 +61,7 @@ const GridMenu = (props: GridMenuProps) => {
   }, [open, target]);
 
   return (
-    <Popper
-      className={classes.root}
-      open={open}
-      anchorEl={target as any}
-      transition
-      placement={position}
-      {...other}
-    >
+    <StyledPopper open={open} anchorEl={target as any} transition placement={position} {...other}>
       {({ TransitionProps, placement }) => (
         <ClickAwayListener onClickAway={onClickAway}>
           <Grow {...TransitionProps} style={{ transformOrigin: transformOrigin[placement] }}>
@@ -80,7 +69,7 @@ const GridMenu = (props: GridMenuProps) => {
           </Grow>
         </ClickAwayListener>
       )}
-    </Popper>
+    </StyledPopper>
   );
 };
 

@@ -1,22 +1,19 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import { makeStyles } from '@mui/styles';
+import { styled } from '@mui/material/styles';
 
-const useStyles = makeStyles(
-  () => ({
-    root: {
-      padding: 4,
-      display: 'flex',
-      justifyContent: 'space-between',
-    },
-  }),
-  { name: 'MuiGridPanelFooter' },
-);
+const GridPanelFooterRoot = styled('div', {
+  name: 'MuiGridPanelFooter',
+  slot: 'Root',
+})(({ theme }) => ({
+  padding: theme.spacing(0.5),
+  display: 'flex',
+  justifyContent: 'space-between',
+}));
 
 export function GridPanelFooter(
   props: React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>>,
 ) {
-  const classes = useStyles();
   const { className, ...other } = props;
-  return <div className={clsx(classes.root, className)} {...other} />;
+  return <GridPanelFooterRoot className={clsx('MuiGridPanelFooter-root', className)} {...other} />;
 }

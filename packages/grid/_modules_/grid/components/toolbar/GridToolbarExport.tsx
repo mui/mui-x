@@ -9,6 +9,7 @@ import { useGridApiContext } from '../../hooks/root/useGridApiContext';
 import { GridMenu } from '../menu/GridMenu';
 import { GridExportCsvOptions } from '../../models/gridExport';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
+import { gridClasses } from '../../gridClasses';
 
 interface GridExportFormatCsv {
   format: 'csv';
@@ -88,7 +89,7 @@ const GridToolbarExport = React.forwardRef<HTMLButtonElement, GridToolbarExportP
         >
           <MenuList
             id={menuId}
-            className="MuiDataGrid-gridMenuList"
+            className={gridClasses.menuList}
             aria-labelledby={buttonId}
             onKeyDown={handleListKeyDown}
             autoFocusItem={Boolean(anchorEl)}

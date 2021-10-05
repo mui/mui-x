@@ -1,8 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { Theme, createTheme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { styled } from '@mui/material/styles';
 import ClickAwayListener from '@mui/material/ClickAwayListener';
 import Paper from '@mui/material/Paper';
 import Popper, { PopperProps } from '@mui/material/Popper';
@@ -10,8 +9,8 @@ import { useGridApiContext } from '../../hooks/root/useGridApiContext';
 import { getMuiVersion } from '../../utils/utils';
 import { isEscapeKey } from '../../utils/keyboardUtils';
 import {
-  InternalStandardProps as StandardProps,
   generateUtilityClasses,
+  InternalStandardProps as StandardProps,
 } from '../../utils/material-ui-utils';
 
 export interface GridPanelClasses {
@@ -30,27 +29,27 @@ export interface GridPanelProps extends StandardProps<PopperProps, 'children'> {
   open: boolean;
 }
 
-const defaultTheme = createTheme();
-const useStyles = makeStyles(
-  (theme: Theme) => ({
-    root: {
-      zIndex: theme.zIndex.modal,
-    },
-    paper: {
-      backgroundColor: theme.palette.background.paper,
-      minWidth: 300,
-      maxHeight: 450,
-      display: 'flex',
-    },
-  }),
-  { name: 'MuiGridPanel', defaultTheme },
-);
+const StyledPopper = styled(Popper, {
+  name: 'MuiGridPanel',
+  slot: 'Root',
+})(({ theme }) => ({
+  zIndex: theme.zIndex.modal,
+}));
+
+const StyledPaper = styled(Paper, {
+  name: 'MuiGridPanel',
+  slot: 'Paper',
+})(({ theme }) => ({
+  backgroundColor: theme.palette.background.paper,
+  minWidth: 300,
+  maxHeight: 450,
+  display: 'flex',
+}));
 
 export const gridPanelClasses = generateUtilityClasses('MuiGridPanel', ['root', 'paper']);
 
 const GridPanel = React.forwardRef<HTMLDivElement, GridPanelProps>((props, ref) => {
   const { children, className, open, classes: classesProp, ...other } = props;
-  const classes = useStyles(props);
   const apiRef = useGridApiContext();
 
   const getPopperModifiers = (): any => {
@@ -90,21 +89,21 @@ const GridPanel = React.forwardRef<HTMLDivElement, GridPanelProps>((props, ref) 
   }
 
   return (
-    <Popper
+    <StyledPopper
       ref={ref}
       placement="bottom-start"
-      className={clsx(className, classes.root)}
+      className={clsx('MuiGridPanel-root', className)}
       open={open}
       anchorEl={anchorEl}
       modifiers={getPopperModifiers()}
       {...other}
     >
       <ClickAwayListener onClickAway={handleClickAway}>
-        <Paper className={classes.paper} elevation={8} onKeyDown={handleKeyDown}>
+        <StyledPaper className="MuiGridPanel-paper" elevation={8} onKeyDown={handleKeyDown}>
           {children}
-        </Paper>
+        </StyledPaper>
       </ClickAwayListener>
-    </Popper>
+    </StyledPopper>
   );
 });
 

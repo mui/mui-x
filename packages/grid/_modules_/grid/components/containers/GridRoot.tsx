@@ -1,6 +1,5 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import useThemeProps from '@mui/system/useThemeProps';
 import { useForkRef } from '@mui/material/utils';
 import NoSsr from '@mui/material/NoSsr';
 import { GridRootContainerRef } from '../../models/gridRootContainerRef';
@@ -15,10 +14,9 @@ import { gridClasses } from '../../gridClasses';
 export type GridRootProps = React.HTMLAttributes<HTMLDivElement>;
 
 export const GridRoot = React.forwardRef<HTMLDivElement, GridRootProps>(function GridRoot(
-  inProps,
+  props,
   ref,
 ) {
-  const props = useThemeProps({ props: inProps, name: 'MuiDataGrid' });
   const rootProps = useGridRootProps();
   const { children, className, ...other } = props;
   const apiRef = useGridApiContext();

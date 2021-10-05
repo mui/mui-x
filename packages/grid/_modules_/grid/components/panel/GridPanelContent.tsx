@@ -1,24 +1,20 @@
 import * as React from 'react';
-import clsx from 'clsx';
-import { makeStyles } from '@mui/styles';
+import { styled } from '@mui/material/styles';
 
-const useStyles = makeStyles(
-  () => ({
-    root: {
-      display: 'flex',
-      flexDirection: 'column',
-      overflow: 'auto',
-      flex: '1 1',
-      maxHeight: 400,
-    },
-  }),
-  { name: 'MuiGridPanelContent' },
-);
+const GridPanelContentRoot = styled('div', {
+  name: 'MuiGridPanelContent',
+  slot: 'Root',
+})({
+  display: 'flex',
+  flexDirection: 'column',
+  overflow: 'auto',
+  flex: '1 1',
+  maxHeight: 400,
+});
 
 export function GridPanelContent(
   props: React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>>,
 ) {
-  const classes = useStyles();
   const { className, ...other } = props;
-  return <div className={clsx(classes.root, className)} {...other} />;
+  return <GridPanelContentRoot className={className} {...other} />;
 }

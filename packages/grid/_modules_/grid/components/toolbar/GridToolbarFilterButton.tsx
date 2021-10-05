@@ -1,7 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { Theme, createTheme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { styled } from '@mui/material/styles';
 import Badge from '@mui/material/Badge';
 import Button, { ButtonProps } from '@mui/material/Button';
 import Tooltip, { TooltipProps } from '@mui/material/Tooltip';
@@ -19,16 +18,13 @@ import { GridFilterItem } from '../../models/gridFilterItem';
 import { useGridApiContext } from '../../hooks/root/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
-const defaultTheme = createTheme();
-const useStyles = makeStyles(
-  (theme: Theme) => ({
-    list: {
-      margin: theme.spacing(1, 1, 0.5),
-      padding: theme.spacing(0, 1),
-    },
-  }),
-  { name: 'MuiGridToolbarFilterButton', defaultTheme },
-);
+const GridToolbarFilterListRoot = styled('ul', {
+  name: 'MuiGridToolbarFilterList',
+  slot: 'Root',
+})(({ theme }) => ({
+  margin: theme.spacing(1, 1, 0.5),
+  padding: theme.spacing(0, 1),
+}));
 
 export interface GridToolbarFilterButtonProps extends Omit<TooltipProps, 'title' | 'children'> {
   /**
@@ -44,7 +40,6 @@ const GridToolbarFilterButton = React.forwardRef<HTMLButtonElement, GridToolbarF
   function GridToolbarFilterButton(props, ref) {
     const { componentsProps = {}, ...other } = props;
     const buttonProps = componentsProps.button || {};
-    const classes = useStyles();
     const apiRef = useGridApiContext();
     const rootProps = useGridRootProps();
     const counter = useGridSelector(apiRef, filterGridItemsCounterSelector);
@@ -71,7 +66,7 @@ const GridToolbarFilterButton = React.forwardRef<HTMLButtonElement, GridToolbarF
       return (
         <div>
           {apiRef.current.getLocaleText('toolbarFiltersTooltipActive')(counter)}
-          <ul className={classes.list}>
+          <GridToolbarFilterListRoot>
             {activeFilters.map((item, index) => ({
               ...(lookup[item.columnField!] && (
                 <li key={index}>
@@ -81,10 +76,10 @@ const GridToolbarFilterButton = React.forwardRef<HTMLButtonElement, GridToolbarF
                 </li>
               )),
             }))}
-          </ul>
+          </GridToolbarFilterListRoot>
         </div>
       );
-    }, [apiRef, preferencePanel.open, counter, activeFilters, lookup, classes]);
+    }, [apiRef, preferencePanel.open, counter, activeFilters, lookup]);
 
     const toggleFilter = (event) => {
       const { open, openedPanelValue } = preferencePanel;

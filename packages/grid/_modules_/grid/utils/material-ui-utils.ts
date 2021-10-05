@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useEventCallback as muiUseEventCallback } from '@mui/material/utils';
-import { getThemeProps } from '@mui/styles';
+import { getThemeProps } from '@mui/system';
 import { StyledComponentProps, useTheme } from '@mui/material/styles';
 
 /**

@@ -166,6 +166,10 @@ export interface GridClasses {
    */
   menuOpen: string;
   /**
+   * Styles applied to the menu list element.
+   */
+  menuList: string;
+  /**
    * Styles applied to the overlay element.
    */
   overlay: string;
@@ -284,6 +288,7 @@ export const gridClasses = generateUtilityClasses('MuiDataGrid', [
   'menuIcon',
   'menuIconButton',
   'menuOpen',
+  'menuList',
   'overlay',
   'renderingZone',
   'root',

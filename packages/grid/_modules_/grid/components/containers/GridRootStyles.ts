@@ -1,13 +1,10 @@
-import { darken, lighten, alpha, createTheme } from '@mui/material/styles';
-import { styled } from '@mui/system';
+import { darken, lighten, alpha, styled } from '@mui/material/styles';
 import { gridClasses } from '../../gridClasses';
-
-const theme = createTheme();
 
 export const GridRootStyles = styled('div', {
   name: 'MuiDataGrid',
   slot: 'Root',
-})(() => {
+})(({ theme }) => {
   const borderColor =
     theme.palette.mode === 'light'
       ? lighten(alpha(theme.palette.divider, 1), 0.88)
