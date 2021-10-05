@@ -161,7 +161,7 @@
   },
   {
     "name": "rowSelectionCheckboxChange",
-    "description": "Fired when the value of the selection checkbox of a row is changed\nCalled with a GridRowSelectionCheckboxParams object"
+    "description": "Fired when the value of the selection checkbox of a row is changed\nCalled with a GridRowSelectionCheckboxParams object."
   },
   {
     "name": "rowsScroll",
