@@ -164,7 +164,7 @@ jobs:
   test_browser:
     <<: *defaults
     docker:
-      - image: mcr.microsoft.com/playwright@sha256:776f868d63ff001fd8d17a7cfd4ff4fd5dfd6f3d07aec457232d0ced53e64ef6
+      - image: mcr.microsoft.com/playwright@sha256:9176daa609fd87e9d7556c454c0c516005706c17ea31599a8af1cdbc5f76ef11
         environment:
           NODE_ENV: development # Needed if playwright is in `devDependencies`
     steps:
@@ -195,7 +195,7 @@ jobs:
   test_e2e:
     <<: *defaults
     docker:
-      - image: mcr.microsoft.com/playwright@sha256:776f868d63ff001fd8d17a7cfd4ff4fd5dfd6f3d07aec457232d0ced53e64ef6
+      - image: mcr.microsoft.com/playwright@sha256:9176daa609fd87e9d7556c454c0c516005706c17ea31599a8af1cdbc5f76ef11
         environment:
           NODE_ENV: development # Needed if playwright is in `devDependencies`
     steps:
@@ -208,7 +208,7 @@ jobs:
   test_regressions:
     <<: *defaults
     docker:
-      - image: mcr.microsoft.com/playwright@sha256:776f868d63ff001fd8d17a7cfd4ff4fd5dfd6f3d07aec457232d0ced53e64ef6
+      - image: mcr.microsoft.com/playwright@sha256:9176daa609fd87e9d7556c454c0c516005706c17ea31599a8af1cdbc5f76ef11
         environment:
           NODE_ENV: development # Needed if playwright is in `devDependencies`
     steps:
