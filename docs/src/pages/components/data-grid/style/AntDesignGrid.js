@@ -4,7 +4,6 @@ import { useDemoData } from '@mui/x-data-grid-generator';
 import { createTheme } from '@mui/material/styles';
 import { createStyles, makeStyles } from '@mui/styles';
 import Pagination from '@mui/material/Pagination';
-import PaginationItem from '@mui/material/PaginationItem';
 
 function customCheckbox(theme) {
   return {
@@ -115,7 +114,6 @@ function CustomPagination() {
       shape="rounded"
       page={state.pagination.page + 1}
       count={state.pagination.pageCount}
-      renderItem={(props2) => <PaginationItem {...props2} />}
       onChange={(event, value) => apiRef.current.setPage(value - 1)}
     />
   );
