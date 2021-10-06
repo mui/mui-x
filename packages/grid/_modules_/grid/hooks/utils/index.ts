@@ -9,5 +9,5 @@ export * from './useGridScrollFn';
 export * from './useGridSelector';
 export * from './useGridSlotComponentProps';
 export * from './useGridState';
-export * from './useNativeEventListener';
-export * from './useProcessedProps';
+export * from './useGridNativeEventListener';
+export * from './useGridProcessedProps';
