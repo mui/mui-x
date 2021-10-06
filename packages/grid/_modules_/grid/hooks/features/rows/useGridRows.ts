@@ -51,7 +51,7 @@ export type GridRowsInternalCacheState = Omit<
 export interface GridRowsInternalCache {
   state: GridRowsInternalCacheState;
   timeout: NodeJS.Timeout | null;
-  lastUpdateMs: number | null;
+  lastUpdateMs: number;
 }
 
 function getGridRowId(
@@ -172,7 +172,7 @@ const INITIAL_GRID_ROWS_INTERNAL_CACHE: GridRowsInternalCache = {
     inputRows: [],
   },
   timeout: null,
-  lastUpdateMs: Date.now(),
+  lastUpdateMs: 0,
 };
 
 /**
@@ -191,6 +191,7 @@ export const useGridRows = (
       props.rowCount,
       props.getRowId,
     );
+    rowsCache.current.lastUpdateMs = Date.now();
 
     return { ...state, rows: getRowsStateFromCache(rowsCache.current, apiRef) };
   });
@@ -239,11 +240,7 @@ export const useGridRows = (
         return;
       }
 
-      const throttleRemainingTimeMs =
-        rowsCache.current.lastUpdateMs === null
-          ? 0
-          : props.throttleRowsMs - (Date.now() - rowsCache.current.lastUpdateMs);
-
+      const throttleRemainingTimeMs = props.throttleRowsMs - (Date.now() - rowsCache.current.lastUpdateMs)
       if (throttleRemainingTimeMs > 0) {
         rowsCache.current.timeout = setTimeout(run, throttleRemainingTimeMs);
         return;
