@@ -113,10 +113,12 @@ function CustomPagination() {
       color="primary"
       variant="outlined"
       shape="rounded"
-      page={state.pagination.page}
+      page={state.pagination.page + 1}
       count={state.pagination.pageCount}
       renderItem={(props2) => <PaginationItem {...props2} />}
-      onChange={(event, value) => apiRef.current.setPage(value)}
+      onChange={(event: React.ChangeEvent<unknown>, value: number) =>
+        apiRef.current.setPage(value - 1)
+      }
     />
   );
 }
