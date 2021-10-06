@@ -15,12 +15,7 @@ import {
   getCell,
   raf,
 } from 'test/utils/helperFn';
-import {
-  GridApiRef,
-  useGridApiRef,
-  DataGridPro,
-  gridClasses,
-} from '@mui/x-data-grid-pro';
+import { GridApiRef, useGridApiRef, DataGridPro, gridClasses } from '@mui/x-data-grid-pro';
 import { useData } from 'storybook/src/hooks/useData';
 import { spy } from 'sinon';
 
@@ -200,7 +195,7 @@ describe('<DataGridPro /> - Reorder', () => {
     const columnHeaderDraggableContainer = columnHeader.firstChild as HTMLElement;
     fireEvent.dragStart(columnHeaderDraggableContainer.firstChild);
     expect(
-      columnHeaderDraggableContainer.classList.contains(gridClasses["columnHeader--dragging"]),
+      columnHeaderDraggableContainer.classList.contains(gridClasses['columnHeader--dragging']),
     ).to.equal(false);
   });
 
@@ -289,7 +284,7 @@ describe('<DataGridPro /> - Reorder', () => {
       fireEvent.dragStart(dragCol);
 
       expect(dragCol).to.have.attribute('draggable', 'false');
-      expect(dragCol).not.to.have.class(gridClasses["columnHeader--dragging"]);
+      expect(dragCol).not.to.have.class(gridClasses['columnHeader--dragging']);
 
       fireEvent.dragEnter(targetCol);
       const dragOverEvent = createDragOverEvent(targetCol);

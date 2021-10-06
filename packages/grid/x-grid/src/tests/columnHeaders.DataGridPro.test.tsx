@@ -9,10 +9,7 @@ import {
   waitFor,
 } from 'test/utils';
 import { expect } from 'chai';
-import {
-  gridClasses,
-  DataGridPro,
-} from '@mui/x-data-grid-pro';
+import { gridClasses, DataGridPro } from '@mui/x-data-grid-pro';
 import { getColumnHeaderCell } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
@@ -107,9 +104,7 @@ describe('<DataGridPro /> - Column Headers', () => {
       fireEvent.click(menuIconButton);
       await waitFor(() => expect(screen.queryByRole('menu')).not.to.equal(null));
 
-      const separator = columnToResizeCell.querySelector(
-        `.${gridClasses.columnSeparator}`,
-      );
+      const separator = columnToResizeCell.querySelector(`.${gridClasses.columnSeparator}`);
       fireEvent.mouseDown(separator);
       await waitFor(() => expect(screen.queryByRole('menu')).to.equal(null));
     });
