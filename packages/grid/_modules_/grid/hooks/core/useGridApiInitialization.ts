@@ -12,7 +12,10 @@ const isSyntheticEvent = (event: any): event is React.SyntheticEvent => {
   return event.isPropagationStopped !== undefined;
 };
 
-export function useGridApiInitialization(apiRef: GridApiRef, props: Pick<GridComponentProps, 'signature'>): void {
+export function useGridApiInitialization(
+  apiRef: GridApiRef,
+  props: Pick<GridComponentProps, 'signature'>,
+): void {
   const logger = useGridLogger(apiRef, 'useApi');
 
   const publishEvent = React.useCallback(

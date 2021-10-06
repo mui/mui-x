@@ -3,8 +3,7 @@ import { GridApiRef } from '../../../models';
 import { GridComponentProps } from '../../../GridComponentProps';
 import { GridPageSizeApi } from '../../../models/api/gridPageSizeApi';
 import { GridEvents } from '../../../constants/eventsConstants';
-import { useGridLogger, useGridApiMethod } from '../../utils';
-import { useGridSelector, useGridState } from '../core';
+import { useGridLogger, useGridApiMethod, useGridSelector, useGridState } from '../../utils';
 import { visibleGridRowCountSelector } from '../filter';
 import { gridContainerSizesSelector } from '../container/gridContainerSizesSelector';
 

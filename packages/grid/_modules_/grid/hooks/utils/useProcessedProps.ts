@@ -52,7 +52,7 @@ const DEFAULT_GRID_ICON_SLOTS_COMPONENTS: GridIconSlotsComponent = {
   MoreActionsIcon: GridMoreVertIcon,
 };
 
-export const DEFAULT_GRID_SLOTS_COMPONENTS: GridSlotsComponent = {
+const DEFAULT_GRID_SLOTS_COMPONENTS: GridSlotsComponent = {
   ...DEFAULT_GRID_ICON_SLOTS_COMPONENTS,
   Checkbox: MUICheckbox,
   ColumnMenu: GridColumnMenu,

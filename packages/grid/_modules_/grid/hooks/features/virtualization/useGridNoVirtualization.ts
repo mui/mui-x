@@ -4,8 +4,7 @@ import { GridApiRef } from '../../../models/api/gridApiRef';
 import { useNativeEventListener } from '../../utils/useNativeEventListener';
 import { useGridScrollFn } from '../../utils/useGridScrollFn';
 import { visibleGridColumnsSelector } from '../columns/gridColumnsSelector';
-import { useGridSelector } from '../core';
-import { useGridState } from '../../utils/useGridState';
+import { useGridSelector, useGridState } from '../../utils';
 import { gridPaginationSelector } from '../pagination/gridPaginationSelector';
 import { gridContainerSizesSelector } from '../container/gridContainerSizesSelector';
 

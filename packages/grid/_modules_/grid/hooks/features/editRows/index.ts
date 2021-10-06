@@ -1,1 +1,1 @@
-export * from './gridEditRowsSelector'
+export * from './gridEditRowsSelector';

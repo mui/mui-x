@@ -27,7 +27,10 @@ import {
   isDeleteKeys,
   isKeyboardEvent,
 } from '../../../utils/keyboardUtils';
-import { useGridApiEventHandler, useGridApiOptionHandler } from '../../utils/useGridApiEventHandler';
+import {
+  useGridApiEventHandler,
+  useGridApiOptionHandler,
+} from '../../utils/useGridApiEventHandler';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { allGridColumnsSelector } from '../columns/gridColumnsSelector';
 import { useEventCallback } from '../../../utils/material-ui-utils';

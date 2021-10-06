@@ -12,7 +12,10 @@ import {
   findHeaderElementFromField,
 } from '../../../utils/domUtils';
 import { GridApiRef, CursorCoordinates, GridColumnHeaderParams } from '../../../models';
-import { useGridApiEventHandler, useGridApiOptionHandler } from '../../utils/useGridApiEventHandler';
+import {
+  useGridApiEventHandler,
+  useGridApiOptionHandler,
+} from '../../utils/useGridApiEventHandler';
 import { useGridState } from '../../utils/useGridState';
 import { useNativeEventListener } from '../../utils/useNativeEventListener';
 import { GridComponentProps } from '../../../GridComponentProps';

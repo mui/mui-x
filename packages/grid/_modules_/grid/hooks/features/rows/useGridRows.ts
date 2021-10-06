@@ -64,10 +64,10 @@ export const useGridRows = (
   apiRef: GridApiRef,
   props: Pick<GridComponentProps, 'rows' | 'getRowId' | 'rowCount' | 'throttleRowsMs'>,
 ): void => {
-    if (process.env.NODE_ENV !== 'production') {
-        // Freeze rows for immutability
-        Object.freeze(props.rows);
-    }
+  if (process.env.NODE_ENV !== 'production') {
+    // Freeze rows for immutability
+    Object.freeze(props.rows);
+  }
 
   const logger = useGridLogger(apiRef, 'useGridRows');
   const [, setGridState, forceUpdate] = useGridState(apiRef);

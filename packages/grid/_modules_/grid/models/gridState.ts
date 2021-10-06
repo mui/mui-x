@@ -7,16 +7,10 @@ import {
 import { GridFilterModel } from './gridFilterModel';
 import { GridEditRowsModel } from './gridEditRowModel';
 import { GridColumnMenuState } from '../hooks/features/columnMenu/columnMenuState';
-import {
-  GridColumnReorderState,
-} from '../hooks/features/columnReorder/columnReorderState';
-import {
-  GridColumnResizeState,
-} from '../hooks/features/columnResize/columnResizeState';
+import { GridColumnReorderState } from '../hooks/features/columnReorder/columnReorderState';
+import { GridColumnResizeState } from '../hooks/features/columnResize/columnResizeState';
 import { GridDensityState } from '../hooks/features/density/densityState';
-import {
-  VisibleGridRowsState,
-} from '../hooks/features/filter/visibleGridRowsState';
+import { VisibleGridRowsState } from '../hooks/features/filter/visibleGridRowsState';
 import { GridFocusState, GridTabIndexState } from '../hooks/features/focus/gridFocusState';
 import { GridPreferencePanelState } from '../hooks/features/preferencesPanel/gridPreferencePanelState';
 import { GridRowsState } from '../hooks/features/rows/gridRowsState';
@@ -47,4 +41,3 @@ export interface GridState {
   density: GridDensityState;
   error?: any;
 }
-

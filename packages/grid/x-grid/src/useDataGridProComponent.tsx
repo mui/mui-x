@@ -1,6 +1,6 @@
 import type { GridComponentProps, GridApiRef } from '../../_modules_';
 
-import { useGridInitialization } from "../../_modules_/grid/hooks/core";
+import { useGridInitialization } from '../../_modules_/grid/hooks/core';
 
 import { useGridClipboard } from '../../_modules_/grid/hooks/features/clipboard/useGridClipboard';
 import { useGridColumnMenu } from '../../_modules_/grid/hooks/features/columnMenu/useGridColumnMenu';
@@ -13,7 +13,7 @@ import { useGridFilter } from '../../_modules_/grid/hooks/features/filter/useGri
 import { useGridFocus } from '../../_modules_/grid/hooks/features/focus/useGridFocus';
 import { useGridInfiniteLoader } from '../../_modules_/grid/hooks/features/infiniteLoader/useGridInfiniteLoader';
 import { useGridKeyboard } from '../../_modules_/grid/hooks/features/keyboard/useGridKeyboard';
-import {  useGridKeyboardNavigation } from '../../_modules_/grid/hooks/features/keyboard/useGridKeyboardNavigation';
+import { useGridKeyboardNavigation } from '../../_modules_/grid/hooks/features/keyboard/useGridKeyboardNavigation';
 import { useGridPageSize } from '../../_modules_/grid/hooks/features/pagination/useGridPageSize';
 import { useGridPage } from '../../_modules_/grid/hooks/features/pagination/useGridPage';
 import { useGridPreferencesPanel } from '../../_modules_/grid/hooks/features/preferencesPanel/useGridPreferencesPanel';

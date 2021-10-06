@@ -2,7 +2,10 @@ import * as React from 'react';
 import { debounce } from '@mui/material/utils';
 import { GridEvents } from '../../../constants/eventsConstants';
 import { ElementSize, GridEventsApi } from '../../../models';
-import { useGridApiEventHandler, useGridApiOptionHandler } from '../../utils/useGridApiEventHandler';
+import {
+  useGridApiEventHandler,
+  useGridApiOptionHandler,
+} from '../../utils/useGridApiEventHandler';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { GridComponentProps } from '../../../GridComponentProps';

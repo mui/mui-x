@@ -1,1 +1,1 @@
-export { useGridInitialization } from './useGridInitialization'
+export { useGridInitialization } from './useGridInitialization';

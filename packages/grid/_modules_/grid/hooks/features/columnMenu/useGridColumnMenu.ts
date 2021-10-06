@@ -1,11 +1,13 @@
 import * as React from 'react';
 import { GridApiRef } from '../../../models/api/gridApiRef';
-import { useGridApiMethod } from '../../utils/useGridApiMethod';
-import { useGridLogger } from '../../utils/useGridLogger';
-import { useGridState } from '../../utils/useGridState';
-import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { GridEvents } from '../../../constants/eventsConstants';
-import { useGridSelector } from '../core';
+import {
+  useGridSelector,
+  useGridState,
+  useGridLogger,
+  useGridApiMethod,
+  useGridApiEventHandler,
+} from '../../utils';
 import { gridColumnMenuSelector } from './columnMenuSelector';
 
 /**

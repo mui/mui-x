@@ -1,2 +1,2 @@
 export * from './gridPaginationSelector';
-export * from './gridPaginationState'
+export * from './gridPaginationState';

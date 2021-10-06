@@ -3,7 +3,6 @@ import { Logger } from '../../models/logger';
 
 import { GridApiRef } from '../../models/api/gridApiRef';
 
-
 export function useGridLogger(apiRef: GridApiRef, name: string): Logger {
   const logger = React.useRef<Logger | null>(null);
 

@@ -3,8 +3,8 @@ export * from './columnMenu';
 export * from './columnReorder';
 export * from './columnResize';
 export * from './columns';
-export * from './density'
-export * from './editRows'
+export * from './density';
+export * from './editRows';
 export * from './filter';
 export * from './focus';
 export * from './pagination';
@@ -13,4 +13,3 @@ export * from './rows';
 export * from './selection';
 export * from './sorting';
 export * from './virtualization';
-
