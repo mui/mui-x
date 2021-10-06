@@ -19,7 +19,7 @@ import { useGridState } from '../../utils/useGridState';
 import { gridPaginationSelector } from '../pagination/gridPaginationSelector';
 import { gridRowCountSelector } from '../rows/gridRowsSelector';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
-import { useGridNativeEventListener } from '../../utils/useNativeEventListener';
+import { useGridNativeEventListener } from '../../utils/useGridNativeEventListener';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { useGridScrollFn } from '../../utils/useGridScrollFn';
 import { GridRenderingState } from './renderingState';

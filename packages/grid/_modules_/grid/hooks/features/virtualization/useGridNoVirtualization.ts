@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { GridComponentProps } from '../../../GridComponentProps';
 import { GridApiRef } from '../../../models/api/gridApiRef';
-import { useGridNativeEventListener } from '../../utils/useNativeEventListener';
+import { useGridNativeEventListener } from '../../utils/useGridNativeEventListener';
 import { useGridScrollFn } from '../../utils/useGridScrollFn';
 import { visibleGridColumnsSelector } from '../columns/gridColumnsSelector';
 import { useGridSelector, useGridState } from '../../utils';

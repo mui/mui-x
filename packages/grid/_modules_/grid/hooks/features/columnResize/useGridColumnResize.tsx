@@ -17,7 +17,7 @@ import {
   useGridApiOptionHandler,
 } from '../../utils/useGridApiEventHandler';
 import { useGridState } from '../../utils/useGridState';
-import { useGridNativeEventListener } from '../../utils/useNativeEventListener';
+import { useGridNativeEventListener } from '../../utils/useGridNativeEventListener';
 import { GridComponentProps } from '../../../GridComponentProps';
 
 // TODO: remove support for Safari < 13.

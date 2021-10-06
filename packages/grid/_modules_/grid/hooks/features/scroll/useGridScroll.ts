@@ -15,7 +15,7 @@ import { GridScrollParams } from '../../../models/params/gridScrollParams';
 import { GridScrollApi } from '../../../models/api/gridScrollApi';
 import { gridScrollSelector } from '../virtualization/renderingStateSelector';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
-import { useGridNativeEventListener } from '../../utils/useNativeEventListener';
+import { useGridNativeEventListener } from '../../utils/useGridNativeEventListener';
 
 // Logic copied from https://www.w3.org/TR/wai-aria-practices/examples/listbox/js/listbox.js
 // Similar to https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollIntoView
