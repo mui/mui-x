@@ -11,4 +11,5 @@ export * from './gridSlotComponentProps';
 export * from './gridSortModelParams';
 export * from './gridStateChangeParams';
 export * from './gridViewportRowsChangeParams';
+export * from './gridRowSelectionCheckboxParams';
 export * from './gridHeaderSelectionCheckboxParams';

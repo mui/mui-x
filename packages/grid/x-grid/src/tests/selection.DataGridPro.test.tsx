@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { getCell, getColumnValues, getRow, getSelectedRowIndexes } from 'test/utils/helperFn';
+import { getCell, getColumnValues, getRow, getRows } from 'test/utils/helperFn';
 import {
   // @ts-expect-error need to migrate helpers to TypeScript
   screen,
@@ -19,6 +19,17 @@ import {
 import { getData } from 'storybook/src/data/data-service';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
+
+function getSelectedRowIds() {
+  const hasCheckbox = !!document.querySelector('input[type="checkbox"]');
+  return [...getRows()]
+    .filter((row) => row.classList.contains('Mui-selected'))
+    .map((row) =>
+      Number(
+        row.querySelector(`[role="cell"][data-colindex="${hasCheckbox ? 1 : 0}"]`)!.textContent,
+      ),
+    );
+}
 
 describe('<DataGridPro /> - Selection', () => {
   // TODO v5: replace with createClientRender
@@ -270,12 +281,16 @@ describe('<DataGridPro /> - Selection', () => {
     it('should call onSelectionModelChange with the ids selected', () => {
       const handleSelectionModelChange = spy();
       render(<TestDataGridSelection onSelectionModelChange={handleSelectionModelChange} />);
+
       apiRef.current.selectRows([1, 2]);
       expect(handleSelectionModelChange.lastCall.args[0]).to.deep.equal([1, 2]);
+
       apiRef.current.selectRows([3]);
       expect(handleSelectionModelChange.lastCall.args[0]).to.deep.equal([1, 2, 3]);
+
       apiRef.current.selectRows([1, 2], false);
       expect(handleSelectionModelChange.lastCall.args[0]).to.deep.equal([3]);
+
       // Deselect others
       apiRef.current.selectRows([4, 5], true, true);
       expect(handleSelectionModelChange.lastCall.args[0]).to.deep.equal([4, 5]);
@@ -291,6 +306,79 @@ describe('<DataGridPro /> - Selection', () => {
       );
       apiRef.current.selectRows([0, 1, 2]);
       expect(handleSelectionModelChange.lastCall.args[0]).to.deep.equal([1, 2]);
+    });
+
+    it('should not select a range of several elements when disableMultipleSelection = true', () => {
+      render(<TestDataGridSelection disableMultipleSelection />);
+
+      apiRef.current.selectRows([0, 1, 2], true);
+      expect(getSelectedRowIds()).to.deep.equal([]);
+    });
+  });
+
+  describe('apiRef: selectRowRange', () => {
+    it('should select all the rows in the range', () => {
+      render(<TestDataGridSelection />);
+
+      apiRef.current.selectRowRange({ startId: 1, endId: 3 }, true);
+      expect(getSelectedRowIds()).to.deep.equal([1, 2, 3]);
+    });
+
+    it('should unselect all the rows in the range', () => {
+      render(<TestDataGridSelection />);
+
+      apiRef.current.setSelectionModel([2, 3]);
+      expect(getSelectedRowIds()).to.deep.equal([2, 3]);
+      apiRef.current.selectRowRange({ startId: 0, endId: 3 }, false);
+      expect(getSelectedRowIds()).to.deep.equal([]);
+    });
+
+    it('should not unselect the selected elements if the range is to be selected', () => {
+      render(<TestDataGridSelection />);
+
+      apiRef.current.setSelectionModel([2]);
+      apiRef.current.selectRowRange({ startId: 1, endId: 3 }, true);
+      expect(getSelectedRowIds()).to.deep.equal([1, 2, 3]);
+    });
+
+    it('should not reset the other selections when resetSelection = false', () => {
+      render(<TestDataGridSelection />);
+
+      apiRef.current.setSelectionModel([0]);
+      apiRef.current.selectRowRange({ startId: 2, endId: 3 }, true, false);
+      expect(getSelectedRowIds()).to.deep.equal([0, 2, 3]);
+    });
+
+    it('should reset the other selections when resetSelection = true', () => {
+      render(<TestDataGridSelection />);
+
+      apiRef.current.setSelectionModel([0]);
+      apiRef.current.selectRowRange({ startId: 2, endId: 3 }, true, true);
+      expect(getSelectedRowIds()).to.deep.equal([2, 3]);
+    });
+
+    it('should not select unselectable rows inside the range', () => {
+      render(<TestDataGridSelection isRowSelectable={(params) => Number(params.id) % 2 === 1} />);
+
+      apiRef.current.selectRowRange({ startId: 1, endId: 3 }, true);
+      expect(getSelectedRowIds()).to.deep.equal([1, 3]);
+    });
+
+    it('should not select a range of several elements when disableMultipleSelection = true', () => {
+      render(<TestDataGridSelection disableMultipleSelection />);
+
+      apiRef.current.selectRowRange({ startId: 1, endId: 3 }, true);
+      expect(getSelectedRowIds()).to.deep.equal([]);
+    });
+
+    it('should select only filtered rows selecting a range', () => {
+      render(
+        <TestDataGridSelection
+          filterModel={{ items: [{ columnField: 'id', value: 1, operatorValue: '!=' }] }}
+        />,
+      );
+      apiRef.current.selectRowRange({ startId: 0, endId: 2 }, true);
+      expect(getSelectedRowIds()).to.deep.equal([0, 2]);
     });
   });
 
@@ -310,13 +398,13 @@ describe('<DataGridPro /> - Selection', () => {
     });
     expect(getColumnValues(1)).to.deep.equal(['0', '1']);
     fireEvent.click(selectAll);
-    expect(getSelectedRowIndexes()).to.deep.equal([0, 1]);
+    expect(getSelectedRowIds()).to.deep.equal([0, 1]);
     fireEvent.click(selectAll);
-    expect(getSelectedRowIndexes()).to.deep.equal([]);
+    expect(getSelectedRowIds()).to.deep.equal([]);
     fireEvent.click(selectAll);
-    expect(getSelectedRowIndexes()).to.deep.equal([0, 1]);
+    expect(getSelectedRowIds()).to.deep.equal([0, 1]);
     fireEvent.click(selectAll);
-    expect(getSelectedRowIndexes()).to.deep.equal([]);
+    expect(getSelectedRowIds()).to.deep.equal([]);
   });
 
   describe('controlled selection', () => {

@@ -34,7 +34,10 @@ For the `DataGridPro`, you need to disable multiple row selection with `disableM
 
 ### Multiple row selection [<span class="pro"></span>](https://mui.com/store/items/material-ui-pro/)
 
-To select multiple rows on the `DataGridPro` component, hold the <kbd class="key">CTRL</kbd> key while selecting rows.
+On the `DataGridPro` component, you can select multiple rows in two ways:
+
+- To select multiple independent rows, hold the <kbd class="key">CTRL</kbd> key while selecting rows.
+- To select a range of rows, hold the <kbd class="key">SHIFT</kbd> key while selecting rows.
 
 {{"demo": "pages/components/data-grid/selection/MultipleRowSelectionGrid.js", "disableAd": true, "bg": "inline"}}
 

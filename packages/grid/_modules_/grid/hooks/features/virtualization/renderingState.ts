@@ -1,7 +1,7 @@
 import { GridScrollParams } from '../../../models/params/gridScrollParams';
 import { GridRenderContextProps } from '../../../models/gridRenderContextProps';
 
-export interface InternalRenderingState {
+export interface GridRenderingState {
   virtualPage: number;
   virtualRowsCount: number;
   renderContext: Partial<GridRenderContextProps> | null;
@@ -9,7 +9,7 @@ export interface InternalRenderingState {
   renderingZoneScroll: GridScrollParams;
 }
 
-export const getInitialGridRenderingState = (): InternalRenderingState => {
+export const getInitialGridRenderingState = (): GridRenderingState => {
   return {
     realScroll: { left: 0, top: 0 },
     renderContext: null,

@@ -164,6 +164,10 @@
     "description": "Fired when a <code>mouseover</code> event happens in a row.  Called with a <a href=\"/api/data-grid/grid-row-params/\">GridRowParams</a> object."
   },
   {
+    "name": "rowSelectionCheckboxChange",
+    "description": "Fired when the value of the selection checkbox of a row is changed\nCalled with a GridRowSelectionCheckboxParams object."
+  },
+  {
     "name": "rowsScroll",
     "description": "Fired during the scroll of the grid viewport. Called with a GridScrollParams object."
   },
