@@ -142,9 +142,10 @@ Below is a very simple demo on how you could achieve server-side filtering.
 
 `DataGridPro` supports filtering by multiple columns.
 The default operator that will be applied between filters is an And.
-The `id` field is required on `filterModel.items` when you use multiple filters.
 
 {{"demo": "pages/components/data-grid/filtering/MultiFilteringGrid.js", "bg": "inline", "disableAd": true}}
+
+**Note**: The `id` field is required on `filterModel.items` when multiple filters are used.
 
 To change the default operator, you should set the `linkOperator` property of the `filterModel` like below.
 
