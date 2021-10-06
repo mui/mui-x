@@ -10,7 +10,7 @@ import {
 } from 'test/utils';
 import { expect } from 'chai';
 import {
-  GRID_COLUMN_HEADER_SEPARATOR_RESIZABLE_CSS_CLASS,
+  gridClasses,
   DataGridPro,
 } from '@mui/x-data-grid-pro';
 import { getColumnHeaderCell } from 'test/utils/helperFn';
@@ -108,7 +108,7 @@ describe('<DataGridPro /> - Column Headers', () => {
       await waitFor(() => expect(screen.queryByRole('menu')).not.to.equal(null));
 
       const separator = columnToResizeCell.querySelector(
-        `.${GRID_COLUMN_HEADER_SEPARATOR_RESIZABLE_CSS_CLASS}`,
+        `.${gridClasses.columnSeparator}`,
       );
       fireEvent.mouseDown(separator);
       await waitFor(() => expect(screen.queryByRole('menu')).to.equal(null));

@@ -15,7 +15,7 @@ import {
   GridComponentProps,
   useGridApiRef,
   DataGridPro,
-  GRID_COLUMN_HEADER_SEPARATOR_RESIZABLE_CSS_CLASS,
+  gridClasses,
 } from '@mui/x-data-grid-pro';
 import { getColumnHeaderCell, getCell } from 'test/utils/helperFn';
 
@@ -102,7 +102,7 @@ describe('<DataGridPro /> - Columns', () => {
     it('should allow to resize columns with the mouse', () => {
       render(<Test columns={columns} />);
       const separator = document.querySelector(
-        `.${GRID_COLUMN_HEADER_SEPARATOR_RESIZABLE_CSS_CLASS}`,
+        `.${gridClasses.columnSeparator}`,
       );
       fireEvent.mouseDown(separator, { clientX: 100 });
       fireEvent.mouseMove(separator, { clientX: 110, buttons: 1 });
@@ -120,7 +120,7 @@ describe('<DataGridPro /> - Columns', () => {
       }
       render(<Test columns={columns} />);
       const separator = document.querySelector(
-        `.${GRID_COLUMN_HEADER_SEPARATOR_RESIZABLE_CSS_CLASS}`,
+        `.${gridClasses.columnSeparator}`,
       )!;
       const now = Date.now();
       fireEvent.touchStart(separator, {
@@ -142,7 +142,7 @@ describe('<DataGridPro /> - Columns', () => {
       const onColumnResize = spy();
       render(<Test onColumnResize={onColumnResize} columns={columns} />);
       const separator = document.querySelector(
-        `.${GRID_COLUMN_HEADER_SEPARATOR_RESIZABLE_CSS_CLASS}`,
+        `.${gridClasses.columnSeparator}`,
       );
       fireEvent.mouseDown(separator, { clientX: 100 });
       fireEvent.mouseMove(separator, { clientX: 110, buttons: 1 });
@@ -157,7 +157,7 @@ describe('<DataGridPro /> - Columns', () => {
       const onColumnWidthChange = spy();
       render(<Test onColumnWidthChange={onColumnWidthChange} columns={columns} />);
       const separator = document.querySelector(
-        `.${GRID_COLUMN_HEADER_SEPARATOR_RESIZABLE_CSS_CLASS}`,
+        `.${gridClasses.columnSeparator}`,
       );
       fireEvent.mouseDown(separator, { clientX: 100 });
       fireEvent.mouseMove(separator, { clientX: 110, buttons: 1 });
@@ -212,7 +212,7 @@ describe('<DataGridPro /> - Columns', () => {
         expect(getColumnHeaderCell(1)).toHaveInlineStyle({ width: '100px' });
 
         const separator = getColumnHeaderCell(1).querySelector(
-          `.${GRID_COLUMN_HEADER_SEPARATOR_RESIZABLE_CSS_CLASS}`,
+          `.${gridClasses.columnSeparator}`,
         );
 
         fireEvent.mouseDown(separator, { clientX: 100 });
@@ -260,7 +260,7 @@ describe('<DataGridPro /> - Columns', () => {
         expect(getColumnHeaderCell(1)).toHaveInlineStyle({ width: '100px' });
 
         const separator = getColumnHeaderCell(1).querySelector(
-          `.${GRID_COLUMN_HEADER_SEPARATOR_RESIZABLE_CSS_CLASS}`,
+          `.${gridClasses.columnSeparator}`,
         );
 
         fireEvent.mouseDown(separator, { clientX: 100 });
@@ -308,7 +308,7 @@ describe('<DataGridPro /> - Columns', () => {
         expect(getColumnHeaderCell(1)).toHaveInlineStyle({ width: '100px' });
 
         const separator = getColumnHeaderCell(1).querySelector(
-          `.${GRID_COLUMN_HEADER_SEPARATOR_RESIZABLE_CSS_CLASS}`,
+          `.${gridClasses.columnSeparator}`,
         );
 
         fireEvent.mouseDown(separator, { clientX: 100 });
@@ -333,7 +333,7 @@ describe('<DataGridPro /> - Columns', () => {
         expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '198px' });
 
         const separator = getColumnHeaderCell(0).querySelector(
-          `.${GRID_COLUMN_HEADER_SEPARATOR_RESIZABLE_CSS_CLASS}`,
+          `.${gridClasses.columnSeparator}`,
         );
 
         fireEvent.mouseDown(separator, { clientX: 200 });
