@@ -146,7 +146,7 @@ The `id` field is required on `filterModel.items` when you use multiple filters.
 
 {{"demo": "pages/components/data-grid/filtering/MultiFilteringGrid.js", "bg": "inline", "disableAd": true}}
 
-To change the default operator, you should set the 'linkOperator' property of the filterModel like below.
+To change the default operator, you should set the `linkOperator` property of the `filterModel` like below.
 
 ```ts
 const filterModel: GridFilterModel = {
