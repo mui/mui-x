@@ -49,7 +49,6 @@ const GridMenu = (props: GridMenuProps) => {
   const { open, target, onClickAway, children, position, ...other } = props;
   const prevTarget = React.useRef(target);
   const prevOpen = React.useRef(open);
-  // const classes = useStyles();
 
   React.useEffect(() => {
     if (prevOpen.current && prevTarget.current) {
