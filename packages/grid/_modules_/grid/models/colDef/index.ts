@@ -1,5 +1,5 @@
 // Operators
-export * from './gridBooleanOperators'
+export * from './gridBooleanOperators';
 export * from './gridDateOperators';
 export * from './gridNumericOperators';
 export * from './gridSingleSelectOperators';
@@ -8,7 +8,7 @@ export * from './gridStringOperators';
 // ColDef
 export * from './getGridColDef';
 export * from './gridActionsColDef';
-export * from './gridBooleanColDef'
+export * from './gridBooleanColDef';
 export * from './gridCheckboxSelectionColDef';
 export * from './gridColDef';
 export * from './gridDateColDef';
