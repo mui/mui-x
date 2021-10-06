@@ -2,7 +2,7 @@ import * as React from 'react';
 import { GridEvents } from '../../../constants/eventsConstants';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridColumnApi } from '../../../models/api/gridColumnApi';
-import { gridCheckboxSelectionColDef } from '../../../models/colDef/gridCheckboxSelection';
+import { GRID_CHECKBOX_SELECTION_COL_DEF } from '../../../models/colDef/gridCheckboxSelection';
 import {
   GridColDef,
   GridColumns,
@@ -98,7 +98,7 @@ function hydrateColumnsType(
   if (checkboxSelection) {
     return [
       {
-        ...gridCheckboxSelectionColDef,
+        ...GRID_CHECKBOX_SELECTION_COL_DEF,
         cellClassName: classes.cellCheckbox,
         columnHeaderCheckbox: classes.columnHeaderCheckbox,
         headerName: getLocaleText('checkboxSelectionHeaderName'),
