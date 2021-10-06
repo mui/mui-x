@@ -26,7 +26,7 @@ The filter applied to a column can be pre-configured using the `filterModel` pro
 ## Predefined filters
 
 A filter is composed of three parts: the column to filter, the value to look for, and an operator (e.g. _contains_, _is before_, _is after_, etc.).
-On the `DataGridPro` with multiple filters, the `id` field is required on `filterModel.items`.
+On the `DataGridPro`, the `id` field is required on `filterModel.items` when multiple filters are used.
 The operator determines if a candidate value should be considered as a result.
 The candidate value used by the operator is the one corresponding to the `field` attribute or the `valueGetter` of the `GridColDef`.
 As part of the predefined column types, a set of operators is available.
