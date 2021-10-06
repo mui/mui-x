@@ -102,13 +102,13 @@ The demo lets you edit the ratings by double-clicking the cell.
 
 {{"demo": "pages/components/data-grid/editing/RenderRatingEditCellGrid.js", "bg": "inline", "defaultCodeOpen": false}}
 
-### Edit using external button [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-pro/)
+### Edit using external button [<span class="pro"></span>](https://mui.com/store/items/material-ui-pro/)
 
 You can override the default [start editing](#start-editing) triggers using the [`event.defaultMuiPrevented`](/components/data-grid/events#disabling-the-default-behavior) on the synthetic React events.
 
 {{"demo": "pages/components/data-grid/editing/StartEditButtonGrid.js", "bg": "inline", "disableAd": true}}
 
-### Events [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-pro/)
+### Events [<span class="pro"></span>](https://mui.com/store/items/material-ui-pro/)
 
 The editing feature leverages the event capability of the grid and the apiRef.
 The following events can be imported and used to customize the edition:
@@ -181,7 +181,7 @@ The following demo only requires a value for the "Paid at" column if the "Is pai
 
 {{"demo": "pages/components/data-grid/editing/ConditionalValidationGrid.js", "bg": "inline", "defaultCodeOpen": false}}
 
-### Control with external buttons [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-pro/)
+### Control with external buttons [<span class="pro"></span>](https://mui.com/store/items/material-ui-pro/)
 
 You can [disable the default behavior](/components/data-grid/events/#disabling-the-default-behavior) of the grid and control the row edit using external buttons.
 
@@ -189,7 +189,7 @@ Here is shown how a full-featured CRUD can be created.
 
 {{"demo": "pages/components/data-grid/editing/FullFeaturedCrudGrid.js", "bg": "inline", "disableAd": true}}
 
-### Events [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-pro/)
+### Events [<span class="pro"></span>](https://mui.com/store/items/material-ui-pro/)
 
 The following events can be imported and used to customize the row edition:
 
@@ -198,7 +198,7 @@ The following events can be imported and used to customize the row edition:
 - `rowEditCommit`: emitted when the new row values are committed.
 - `editCellPropsChange`: emitted when the props passed to an edit cell component are changed.
 
-## apiRef [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-pro/)
+## apiRef [<span class="pro"></span>](https://mui.com/store/items/material-ui-pro/)
 
 {{"demo": "pages/components/data-grid/editing/EditApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
 

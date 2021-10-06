@@ -3,7 +3,7 @@ import { GridRenderEditCellParams } from '@mui/x-data-grid';
 import Autocomplete from '@mui/material/Autocomplete';
 import InputBase from '@mui/material/InputBase';
 import { createStyles, makeStyles } from '@mui/styles';
-import { Theme, createTheme } from '@mui/material/styles';
+import { createTheme } from '@mui/material/styles';
 import { CURRENCY_OPTIONS } from '../services/static-data';
 
 // ISO 3166-1 alpha-2
@@ -18,7 +18,7 @@ function countryToFlag(isoCode: string) {
 
 const defaultTheme = createTheme();
 const useStyles = makeStyles(
-  (theme: Theme) =>
+  (theme) =>
     createStyles({
       option: {
         '& > span': {

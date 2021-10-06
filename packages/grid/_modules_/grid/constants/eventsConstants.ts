@@ -28,7 +28,6 @@ export enum GridEvents {
    * Fired when a cell is double-clicked. Called with a [[GridCellParams]] object.
    */
   cellDoubleClick = 'cellDoubleClick',
-
   /**
    * Fired when a `mousedown` event happens in a cell. Called with a [[GridCellParams]] object.
    */
@@ -239,6 +238,11 @@ export enum GridEvents {
    */
   selectionChange = 'selectionChange',
   /**
+   * Fired when the value of the selection checkbox of a row is changed
+   * Called with a [[GridRowSelectionCheckboxParams]] object.
+   */
+  rowSelectionCheckboxChange = 'rowSelectionCheckboxChange',
+  /**
    * Fired when the page changes.
    */
   pageChange = 'pageChange',
@@ -272,7 +276,6 @@ export enum GridEvents {
    * Fired when the user starts resizing a column. Called with an object `{ field: string }`.
    */
   columnResizeStart = 'columnResizeStart',
-
   /**
    * Fired when the user stops resizing a column. Called with an object `{ field: string }`.
    */

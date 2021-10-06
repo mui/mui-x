@@ -6,7 +6,6 @@ import ClickAwayListener from '@mui/material/ClickAwayListener';
 import Paper from '@mui/material/Paper';
 import Popper, { PopperProps } from '@mui/material/Popper';
 import { useGridApiContext } from '../../hooks/root/useGridApiContext';
-import { getMuiVersion } from '../../utils/utils';
 import { isEscapeKey } from '../../utils/keyboardUtils';
 import {
   generateUtilityClasses,
@@ -52,23 +51,6 @@ const GridPanel = React.forwardRef<HTMLDivElement, GridPanelProps>((props, ref) 
   const { children, className, open, classes: classesProp, ...other } = props;
   const apiRef = useGridApiContext();
 
-  const getPopperModifiers = (): any => {
-    if (getMuiVersion() === 'v5') {
-      return [
-        {
-          name: 'flip',
-          enabled: false,
-        },
-      ];
-    }
-
-    return {
-      flip: {
-        enabled: false,
-      },
-    };
-  };
-
   const handleClickAway = React.useCallback(() => {
     apiRef.current.hidePreferences();
   }, [apiRef]);
@@ -95,7 +77,12 @@ const GridPanel = React.forwardRef<HTMLDivElement, GridPanelProps>((props, ref) 
       className={clsx('MuiGridPanel-root', className)}
       open={open}
       anchorEl={anchorEl}
-      modifiers={getPopperModifiers()}
+      modifiers={[
+        {
+          name: 'flip',
+          enabled: false,
+        },
+      ]}
       {...other}
     >
       <ClickAwayListener onClickAway={handleClickAway}>

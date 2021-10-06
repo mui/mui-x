@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createTheme, Theme } from '@mui/material/styles';
+import { createTheme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
 import {
   DataGrid,
@@ -16,7 +16,7 @@ import {
 
 const defaultTheme = createTheme();
 const useStyles = makeStyles(
-  (theme: Theme) => {
+  (theme) => {
     const isDark = theme.palette.mode === 'dark';
 
     return {

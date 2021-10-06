@@ -63,6 +63,7 @@ export function GridColumnsPanel() {
     },
     [apiRef, columns],
   );
+
   const showAllColumns = React.useCallback(() => toggleAllColumns(false), [toggleAllColumns]);
   const hideAllColumns = React.useCallback(() => toggleAllColumns(true), [toggleAllColumns]);
 

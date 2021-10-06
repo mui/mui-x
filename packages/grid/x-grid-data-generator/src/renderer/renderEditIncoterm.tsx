@@ -6,12 +6,12 @@ import MenuItem from '@mui/material/MenuItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import { createStyles, makeStyles } from '@mui/styles';
-import { Theme, createTheme } from '@mui/material/styles';
+import { createTheme } from '@mui/material/styles';
 import { INCOTERM_OPTIONS } from '../services/static-data';
 
 const defaultTheme = createTheme();
 const useStyles = makeStyles(
-  (theme: Theme) =>
+  (theme) =>
     createStyles({
       select: {
         display: 'flex',

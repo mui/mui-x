@@ -1,12 +1,12 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import { Theme, createTheme } from '@mui/material/styles';
+import { createTheme } from '@mui/material/styles';
 import { createStyles, makeStyles } from '@mui/styles';
 import { GridCellParams } from '../../../_modules_/grid';
 
 const defaultTheme = createTheme();
 const useStyles = makeStyles(
-  (theme: Theme) =>
+  (theme) =>
     createStyles({
       root: {
         width: '100%',

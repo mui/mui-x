@@ -32,9 +32,12 @@ For the `DataGridPro`, you need to disable multiple row selection with `disableM
 
 {{"demo": "pages/components/data-grid/selection/SingleRowSelectionGrid.js", "bg": "inline"}}
 
-### Multiple row selection [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-pro/)
+### Multiple row selection [<span class="pro"></span>](https://mui.com/store/items/material-ui-pro/)
 
-To select multiple rows on the `DataGridPro` component, hold the <kbd class="key">CTRL</kbd> key while selecting rows.
+On the `DataGridPro` component, you can select multiple rows in two ways:
+
+- To select multiple independent rows, hold the <kbd class="key">CTRL</kbd> key while selecting rows.
+- To select a range of rows, hold the <kbd class="key">SHIFT</kbd> key while selecting rows.
 
 {{"demo": "pages/components/data-grid/selection/MultipleRowSelectionGrid.js", "disableAd": true, "bg": "inline"}}
 
@@ -81,7 +84,7 @@ The following demo shows how to implement the first solution:
 
 {{"demo": "pages/components/data-grid/selection/ControlledSelectionServerPaginationGrid.js", "bg": "inline"}}
 
-## apiRef [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-pro/)
+## apiRef [<span class="pro"></span>](https://mui.com/store/items/material-ui-pro/)
 
 The grid exposes a set of methods that enables all of these features using the imperative apiRef.
 
@@ -89,7 +92,7 @@ The grid exposes a set of methods that enables all of these features using the i
 
 {{"demo": "pages/components/data-grid/selection/SelectionApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
 
-## 🚧 Range selection [<span class="premium"></span>](https://material-ui.com/store/items/material-ui-pro/)
+## 🚧 Range selection [<span class="premium"></span>](https://mui.com/store/items/material-ui-pro/)
 
 > ⚠️ This feature isn't implemented yet. It's coming.
 >

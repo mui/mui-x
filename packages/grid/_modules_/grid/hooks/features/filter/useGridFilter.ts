@@ -17,7 +17,7 @@ import { GridPreferencePanelsValue } from '../preferencesPanel/gridPreferencePan
 import { sortedGridRowsSelector } from '../sorting/gridSortingSelector';
 import { getInitialGridFilterState } from './gridFilterModelState';
 import { GridFilterModel } from '../../../models/gridFilterModel';
-import { visibleSortedGridRowsSelector } from './gridFilterSelector';
+import { gridFilterModelSelector, visibleSortedGridRowsSelector } from './gridFilterSelector';
 import { getInitialVisibleGridRowsState } from './visibleGridRowsState';
 
 /**
@@ -67,7 +67,7 @@ export const useGridFilter = (
 
       const filterOperators = column.filterOperators;
       if (!filterOperators?.length) {
-        throw new Error(`Material-UI: No filter operators found for column '${column.field}'.`);
+        throw new Error(`MUI: No filter operators found for column '${column.field}'.`);
       }
 
       const filterOperator = filterOperators.find(
@@ -75,7 +75,7 @@ export const useGridFilter = (
       )!;
       if (!filterOperator) {
         throw new Error(
-          `Material-UI: No filter operator found for column '${column.field}' and operator value '${newFilterItem.operatorValue}'.`,
+          `MUI: No filter operator found for column '${column.field}' and operator value '${newFilterItem.operatorValue}'.`,
         );
       }
 
@@ -278,11 +278,11 @@ export const useGridFilter = (
 
   const onColUpdated = React.useCallback(() => {
     logger.debug('onColUpdated - GridColumns changed, applying filters');
-    const filterState = apiRef.current.state.filter;
+    const filterModel = gridFilterModelSelector(apiRef.current.state);
     const columnsIds = filterableGridColumnsIdsSelector(apiRef.current.state);
     logger.debug('GridColumns changed, applying filters');
 
-    filterState.items.forEach((filter) => {
+    filterModel.items.forEach((filter) => {
       if (!columnsIds.find((field) => field === filter.columnField)) {
         apiRef.current.deleteFilter(filter);
       }

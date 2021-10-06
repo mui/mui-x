@@ -1,12 +1,12 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { GridCellParams } from '@mui/x-data-grid-pro';
-import { Theme, createTheme } from '@mui/material/styles';
+import { createTheme } from '@mui/material/styles';
 import { createStyles, makeStyles } from '@mui/styles';
 
 const defaultTheme = createTheme();
 const useStyles = makeStyles(
-  (theme: Theme) =>
+  (theme) =>
     createStyles({
       root: {
         border: `1px solid ${theme.palette.divider}`,

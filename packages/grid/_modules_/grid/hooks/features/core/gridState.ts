@@ -15,7 +15,7 @@ import {
   getInitialGridColumnResizeState,
   GridColumnResizeState,
 } from '../columnResize/columnResizeState';
-import { GridGridDensity, getInitialGridDensityState } from '../density/densityState';
+import { GridDensityState, getInitialGridDensityState } from '../density/densityState';
 import { getInitialGridFilterState } from '../filter/gridFilterModelState';
 import {
   getInitialVisibleGridRowsState,
@@ -26,10 +26,7 @@ import { GridPreferencePanelState } from '../preferencesPanel/gridPreferencePane
 import { getInitialGridRowState, GridRowsState } from '../rows/gridRowsState';
 import { GridSelectionModel } from '../../../models/gridSelectionModel';
 import { getInitialGridSortingState, GridSortingState } from '../sorting/gridSortingState';
-import {
-  getInitialGridRenderingState,
-  InternalRenderingState,
-} from '../virtualization/renderingState';
+import { getInitialGridRenderingState, GridRenderingState } from '../virtualization/renderingState';
 import { getInitialPaginationState, GridPaginationState } from '../pagination/gridPaginationState';
 
 export interface GridState {
@@ -40,7 +37,7 @@ export interface GridState {
   columnReorder: GridColumnReorderState;
   columnResize: GridColumnResizeState;
   columnMenu: GridColumnMenuState;
-  rendering: InternalRenderingState;
+  rendering: GridRenderingState;
   containerSizes: GridContainerProps | null;
   viewportSizes: GridViewportSizeState;
   scrollBar: GridScrollBarState;
@@ -51,7 +48,7 @@ export interface GridState {
   filter: GridFilterModel;
   visibleRows: VisibleGridRowsState;
   preferencePanel: GridPreferencePanelState;
-  density: GridGridDensity;
+  density: GridDensityState;
   error?: any;
 }
 

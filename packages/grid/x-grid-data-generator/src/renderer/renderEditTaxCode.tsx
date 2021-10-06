@@ -4,12 +4,12 @@ import Select, { SelectProps } from '@mui/material/Select';
 import { MenuProps } from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import { createStyles, makeStyles } from '@mui/styles';
-import { Theme, createTheme } from '@mui/material/styles';
+import { createTheme } from '@mui/material/styles';
 import { TAXCODE_OPTIONS } from '../services/static-data';
 
 const defaultTheme = createTheme();
 const useStyles = makeStyles(
-  (theme: Theme) =>
+  (theme) =>
     createStyles({
       select: {
         display: 'flex',

@@ -1,10 +1,12 @@
 import * as React from 'react';
-import TablePagination, { tablePaginationClasses } from '@mui/material/TablePagination';
+import TablePagination, {
+  tablePaginationClasses,
+  TablePaginationProps,
+} from '@mui/material/TablePagination';
 import { styled } from '@mui/material/styles';
 import { useGridSelector } from '../hooks/features/core/useGridSelector';
 import { gridPaginationSelector } from '../hooks/features/pagination/gridPaginationSelector';
 import { useGridApiContext } from '../hooks/root/useGridApiContext';
-import { getMuiVersion } from '../utils/utils';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 
 const StyledTablePagination = styled(TablePagination)(({ theme }) => ({
@@ -43,26 +45,12 @@ export const GridPagination = React.forwardRef<
     [apiRef],
   );
 
-  const handlePageChange = React.useCallback(
-    (event: any, page: number) => {
+  const handlePageChange = React.useCallback<TablePaginationProps['onPageChange']>(
+    (event, page) => {
       apiRef.current.setPage(page);
     },
     [apiRef],
   );
-
-  const getPaginationChangeHandlers = () => {
-    if (getMuiVersion() !== 'v4') {
-      return {
-        onPageChange: handlePageChange,
-        onRowsPerPageChange: handlePageSizeChange,
-      };
-    }
-
-    return {
-      onChangePage: handlePageChange,
-      onChangeRowsPerPage: handlePageSizeChange,
-    };
-  };
 
   if (process.env.NODE_ENV !== 'production') {
     // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -74,7 +62,7 @@ export const GridPagination = React.forwardRef<
     ) {
       console.warn(
         [
-          `Material-UI: The page size \`${
+          `MUI: The page size \`${
             rootProps.pageSize ?? paginationState.pageSize
           }\` is not preset in the \`rowsPerPageOptions\``,
           `Add it to show the pagination select.`,
@@ -98,8 +86,9 @@ export const GridPagination = React.forwardRef<
           : []
       }
       rowsPerPage={paginationState.pageSize}
+      onPageChange={handlePageChange}
+      onRowsPerPageChange={handlePageSizeChange}
       {...apiRef.current.getLocaleText('MuiTablePagination')}
-      {...getPaginationChangeHandlers()}
       {...props}
     />
   );

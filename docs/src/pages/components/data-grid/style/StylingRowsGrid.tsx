@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
-import { createTheme, darken, lighten, Theme } from '@mui/material/styles';
+import { createTheme, darken, lighten } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
 
 const defaultTheme = createTheme();
 const useStyles = makeStyles(
-  (theme: Theme) => {
+  (theme) => {
     const getBackgroundColor = (color) =>
       theme.palette.mode === 'dark' ? darken(color, 0.6) : lighten(color, 0.6);
 

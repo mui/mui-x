@@ -6,11 +6,11 @@ import { ValueLabelProps } from '@mui/core/SliderUnstyled';
 import Tooltip from '@mui/material/Tooltip';
 import { createStyles, makeStyles } from '@mui/styles';
 import { debounce } from '@mui/material/utils';
-import { Theme, createTheme, alpha } from '@mui/material/styles';
+import { alpha, createTheme } from '@mui/material/styles';
 
 const defaultTheme = createTheme();
 const useStyles = makeStyles(
-  (theme: Theme) =>
+  (theme) =>
     createStyles({
       root: {
         display: 'flex',

@@ -1,12 +1,12 @@
 import * as React from 'react';
-import { Theme, createTheme } from '@mui/material/styles';
+import { createTheme } from '@mui/material/styles';
 import { createStyles, makeStyles } from '@mui/styles';
 import { GridCellParams } from '@mui/x-data-grid-pro';
 import Rating from '@mui/material/Rating';
 
 const defaultTheme = createTheme();
 const useStyles = makeStyles(
-  (theme: Theme) =>
+  (theme) =>
     createStyles({
       root: {
         display: 'flex',

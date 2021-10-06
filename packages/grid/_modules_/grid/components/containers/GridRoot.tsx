@@ -6,10 +6,10 @@ import { GridRootContainerRef } from '../../models/gridRootContainerRef';
 import { GridRootStyles } from './GridRootStyles';
 import { visibleGridColumnsLengthSelector } from '../../hooks/features/columns/gridColumnsSelector';
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
-import { useGridState } from '../../hooks/features/core/useGridState';
 import { useGridApiContext } from '../../hooks/root/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { gridClasses } from '../../gridClasses';
+import { gridRowCountSelector } from '../../hooks/features/rows/gridRowsSelector';
 
 export type GridRootProps = React.HTMLAttributes<HTMLDivElement>;
 
@@ -21,7 +21,7 @@ export const GridRoot = React.forwardRef<HTMLDivElement, GridRootProps>(function
   const { children, className, ...other } = props;
   const apiRef = useGridApiContext();
   const visibleColumnsLength = useGridSelector(apiRef, visibleGridColumnsLengthSelector);
-  const [gridState] = useGridState(apiRef);
+  const totalRowCount = useGridSelector(apiRef, gridRowCountSelector);
   const rootContainerRef: GridRootContainerRef = React.useRef<HTMLDivElement>(null);
   const handleRef = useForkRef(rootContainerRef, ref);
 
@@ -36,7 +36,7 @@ export const GridRoot = React.forwardRef<HTMLDivElement, GridRootProps>(function
         })}
         role="grid"
         aria-colcount={visibleColumnsLength}
-        aria-rowcount={gridState.rows.totalRowCount}
+        aria-rowcount={totalRowCount}
         aria-multiselectable={!rootProps.disableMultipleSelection}
         aria-label={rootProps['aria-label']}
         aria-labelledby={rootProps['aria-labelledby']}

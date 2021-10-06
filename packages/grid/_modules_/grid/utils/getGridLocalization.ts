@@ -1,14 +1,7 @@
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { GridMergedOptions } from '../models/gridOptions';
-import { getMuiVersion } from './utils';
 
-interface LocalizationV4 {
-  props: {
-    MuiDataGrid: Pick<GridMergedOptions, 'localeText'>;
-  };
-}
-
-interface LocalizationV5 {
+export interface Localization {
   components: {
     MuiDataGrid: {
       defaultProps: Pick<GridMergedOptions, 'localeText'>;
@@ -16,36 +9,18 @@ interface LocalizationV5 {
   };
 }
 
-export type Localization = LocalizationV4 | LocalizationV5;
-
 export const getGridLocalization = (
   gridTranslations: Partial<GridLocaleText>,
   coreTranslations?,
-): Localization => {
-  if (getMuiVersion() === 'v5') {
-    return {
-      components: {
-        MuiDataGrid: {
-          defaultProps: {
-            localeText: {
-              ...gridTranslations,
-              MuiTablePagination:
-                coreTranslations?.components?.MuiTablePagination.defaultProps || {},
-            },
-          },
-        },
-      },
-    };
-  }
-
-  return {
-    props: {
-      MuiDataGrid: {
+): Localization => ({
+  components: {
+    MuiDataGrid: {
+      defaultProps: {
         localeText: {
           ...gridTranslations,
-          MuiTablePagination: coreTranslations?.props?.MuiTablePagination || {},
+          MuiTablePagination: coreTranslations?.components?.MuiTablePagination.defaultProps || {},
         },
       },
     },
-  };
-};
+  },
+});

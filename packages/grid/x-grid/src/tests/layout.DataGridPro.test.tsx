@@ -34,7 +34,7 @@ describe('<DataGridPro /> - Layout', () => {
   });
 
   // Adaptation of describeConformance()
-  describe('Material-UI component API', () => {
+  describe('MUI component API', () => {
     it(`attaches the ref`, () => {
       const ref = React.createRef<HTMLDivElement>();
       const { container } = render(

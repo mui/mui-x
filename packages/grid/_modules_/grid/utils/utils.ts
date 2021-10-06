@@ -1,4 +1,3 @@
-import * as styles from '@mui/material/styles';
 import isDeepEqual from '../lib/lodash/isDeepEqual';
 
 export { isDeepEqual };
@@ -13,18 +12,6 @@ export function isFunction(value: any): value is Function {
 
 export function isObject(value: any): value is Record<string, any> {
   return typeof value === 'object';
-}
-
-export function getMuiVersion(): string {
-  if (!('fade' in styles)) {
-    return 'v5';
-  }
-
-  if ('fade' in styles && 'alpha' in styles) {
-    return 'v4.12';
-  }
-
-  return 'v4';
 }
 
 export function localStorageAvailable() {

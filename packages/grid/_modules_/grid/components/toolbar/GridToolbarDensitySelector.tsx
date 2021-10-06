@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { unstable_useId as useId } from '@mui/material/utils';
+import { unstable_useId as useId, useForkRef } from '@mui/material/utils';
 import MenuList from '@mui/material/MenuList';
 import Button, { ButtonProps } from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
@@ -22,7 +22,10 @@ export const GridToolbarDensitySelector = React.forwardRef<HTMLButtonElement, Bu
     const densityValue = useGridSelector(apiRef, gridDensityValueSelector);
     const densityButtonId = useId();
     const densityMenuId = useId();
-    const [anchorEl, setAnchorEl] = React.useState(null);
+
+    const [open, setOpen] = React.useState(false);
+    const buttonRef = React.useRef<HTMLButtonElement>(null);
+    const handleRef = useForkRef(ref, buttonRef);
 
     const densityOptions: GridDensityOption[] = [
       {
@@ -54,13 +57,13 @@ export const GridToolbarDensitySelector = React.forwardRef<HTMLButtonElement, Bu
     }, [densityValue, rootProps]);
 
     const handleDensitySelectorOpen = (event) => {
-      setAnchorEl(event.currentTarget);
+      setOpen(true);
       onClick?.(event);
     };
-    const handleDensitySelectorClose = () => setAnchorEl(null);
+    const handleDensitySelectorClose = () => setOpen(false);
     const handleDensityUpdate = (newDensity: GridDensity) => {
       apiRef.current.setDensity(newDensity);
-      setAnchorEl(null);
+      setOpen(false);
     };
 
     const handleListKeyDown = (event: React.KeyboardEvent) => {
@@ -91,12 +94,12 @@ export const GridToolbarDensitySelector = React.forwardRef<HTMLButtonElement, Bu
     return (
       <React.Fragment>
         <Button
-          ref={ref}
+          ref={handleRef}
           color="primary"
           size="small"
           startIcon={startIcon}
           aria-label={apiRef.current.getLocaleText('toolbarDensityLabel')}
-          aria-expanded={anchorEl ? 'true' : undefined}
+          aria-expanded={open ? 'true' : undefined}
           aria-haspopup="menu"
           aria-labelledby={densityMenuId}
           id={densityButtonId}
@@ -106,8 +109,8 @@ export const GridToolbarDensitySelector = React.forwardRef<HTMLButtonElement, Bu
           {apiRef.current.getLocaleText('toolbarDensity')}
         </Button>
         <GridMenu
-          open={Boolean(anchorEl)}
-          target={anchorEl}
+          open={open}
+          target={buttonRef.current}
           onClickAway={handleDensitySelectorClose}
           position="bottom-start"
         >
@@ -116,7 +119,7 @@ export const GridToolbarDensitySelector = React.forwardRef<HTMLButtonElement, Bu
             className={gridClasses.menuList}
             aria-labelledby={densityButtonId}
             onKeyDown={handleListKeyDown}
-            autoFocusItem={Boolean(anchorEl)}
+            autoFocusItem={open}
           >
             {densityElements}
           </MenuList>
