@@ -1,24 +1,24 @@
 import * as React from 'react';
 import { ownerDocument } from '@mui/material/utils';
-import { GridEvents } from '../../constants/eventsConstants';
-import { GridApiRef } from '../../models/api/gridApiRef';
+import { GridEvents } from '../../../constants/eventsConstants';
+import { GridApiRef } from '../../../models/api/gridApiRef';
 import {
   GridContainerProps,
   GridScrollBarState,
   GridViewportSizeState,
-} from '../../models/gridContainerProps';
-import { ElementSize } from '../../models/elementSize';
-import { isDeepEqual } from '../../utils/utils';
-import { gridColumnsTotalWidthSelector } from '../features/columns/gridColumnsSelector';
-import { GridState } from '../features/core/gridState';
-import { useGridSelector } from '../features/core/useGridSelector';
-import { useGridState } from '../features/core/useGridState';
-import { gridDensityRowHeightSelector } from '../features/density/densitySelector';
-import { visibleGridRowCountSelector } from '../features/filter/gridFilterSelector';
-import { gridPaginationSelector } from '../features/pagination/gridPaginationSelector';
-import { useGridLogger } from '../utils/useGridLogger';
-import { useGridApiEventHandler } from './useGridApiEventHandler';
-import { GridComponentProps } from '../../GridComponentProps';
+} from '../../../models/gridContainerProps';
+import { ElementSize } from '../../../models/elementSize';
+import { isDeepEqual } from '../../../utils/utils';
+import { gridColumnsTotalWidthSelector } from '../columns/gridColumnsSelector';
+import { GridState } from '../../../models/gridState';
+import { useGridSelector } from '../../utils/useGridSelector';
+import { useGridState } from '../../utils/useGridState';
+import { gridDensityRowHeightSelector } from '../density/densitySelector';
+import { visibleGridRowCountSelector } from '../filter/gridFilterSelector';
+import { gridPaginationSelector } from '../pagination/gridPaginationSelector';
+import { useGridLogger } from '../../utils/useGridLogger';
+import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
+import { GridComponentProps } from '../../../GridComponentProps';
 
 function getScrollbarSize(doc: Document, element: HTMLElement): number {
   const scrollDiv = doc.createElement('div');
@@ -35,7 +35,6 @@ function getScrollbarSize(doc: Document, element: HTMLElement): number {
 }
 
 /**
- * @requires useOptionsProp (state)
  * @requires useGridDensity (state)
  * @requires useGridColumns (state)
  * @requires useGridFilter (state)

@@ -11,9 +11,9 @@ import {
   GridRowIdGetter,
   GridRowData,
 } from '../../../models/gridRows';
-import { useGridApiMethod } from '../../root/useGridApiMethod';
+import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
-import { useGridState } from '../core/useGridState';
+import { useGridState } from '../../utils/useGridState';
 import { getInitialGridRowState, GridRowsState } from './gridRowsState';
 import {
   gridRowCountSelector,
@@ -64,6 +64,11 @@ export const useGridRows = (
   apiRef: GridApiRef,
   props: Pick<GridComponentProps, 'rows' | 'getRowId' | 'rowCount' | 'throttleRowsMs'>,
 ): void => {
+    if (process.env.NODE_ENV !== 'production') {
+        // Freeze rows for immutability
+        Object.freeze(props.rows);
+    }
+
   const logger = useGridLogger(apiRef, 'useGridRows');
   const [, setGridState, forceUpdate] = useGridState(apiRef);
 

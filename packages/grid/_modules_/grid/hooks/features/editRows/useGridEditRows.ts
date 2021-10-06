@@ -27,13 +27,13 @@ import {
   isDeleteKeys,
   isKeyboardEvent,
 } from '../../../utils/keyboardUtils';
-import { useGridApiEventHandler, useGridApiOptionHandler } from '../../root/useGridApiEventHandler';
-import { useGridApiMethod } from '../../root/useGridApiMethod';
+import { useGridApiEventHandler, useGridApiOptionHandler } from '../../utils/useGridApiEventHandler';
+import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { allGridColumnsSelector } from '../columns/gridColumnsSelector';
 import { useEventCallback } from '../../../utils/material-ui-utils';
 import { useGridLogger } from '../../utils/useGridLogger';
-import { useGridState } from '../core/useGridState';
-import { useGridSelector } from '../core/useGridSelector';
+import { useGridState } from '../../utils/useGridState';
+import { useGridSelector } from '../../utils/useGridSelector';
 
 /**
  * @requires useGridFocus - can be after, async only

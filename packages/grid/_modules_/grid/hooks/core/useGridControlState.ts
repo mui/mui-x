@@ -1,10 +1,10 @@
 import React from 'react';
-import { GridComponentProps } from '../../../GridComponentProps';
-import { GridApiRef } from '../../../models/api/gridApiRef';
-import { GridControlStateApi } from '../../../models/api/gridControlStateApi';
-import { GridControlStateItem } from '../../../models/controlStateItem';
-import { GridSignature } from '../../root/useGridApiEventHandler';
-import { useGridApiMethod } from '../../root/useGridApiMethod';
+import { GridComponentProps } from '../../GridComponentProps';
+import { GridApiRef } from '../../models/api/gridApiRef';
+import { GridControlStateApi } from '../../models/api/gridControlStateApi';
+import { GridControlStateItem } from '../../models/controlStateItem';
+import { GridSignature } from '../utils/useGridApiEventHandler';
+import { useGridApiMethod } from '../utils/useGridApiMethod';
 
 export function useGridControlState(apiRef: GridApiRef, props: GridComponentProps) {
   const controlStateMapRef = React.useRef<Record<string, GridControlStateItem<any>>>({});

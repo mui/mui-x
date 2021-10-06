@@ -10,7 +10,7 @@ import {
   GridStateColDef,
 } from '../../models';
 import { GridCell, GridCellProps } from './GridCell';
-import { useGridApiContext } from '../../hooks/root/useGridApiContext';
+import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { isFunction } from '../../utils/utils';
 import { gridClasses } from '../../gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';

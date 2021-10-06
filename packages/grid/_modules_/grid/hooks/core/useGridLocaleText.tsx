@@ -1,13 +1,10 @@
 import * as React from 'react';
-import { GridApiRef } from '../../../models/api/gridApiRef';
-import { GridLocaleTextApi } from '../../../models/api/gridLocaleTextApi';
-import { useGridApiMethod } from '../../root/useGridApiMethod';
-import { GridComponentProps } from '../../../GridComponentProps';
+import { GridApiRef } from '../../models/api/gridApiRef';
+import { GridLocaleTextApi } from '../../models/api/gridLocaleTextApi';
+import { useGridApiMethod } from '../utils/useGridApiMethod';
+import { GridComponentProps } from '../../GridComponentProps';
 
-/**
- * @requires useOptionsProp
- */
-export const useLocaleText = (
+export const useGridLocaleText = (
   apiRef: GridApiRef,
   props: Pick<GridComponentProps, 'localeText'>,
 ): void => {

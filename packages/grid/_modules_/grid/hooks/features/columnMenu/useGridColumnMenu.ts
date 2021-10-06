@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { GridApiRef } from '../../../models/api/gridApiRef';
-import { useGridApiMethod } from '../../root/useGridApiMethod';
+import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
-import { useGridState } from '../core/useGridState';
-import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
+import { useGridState } from '../../utils/useGridState';
+import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { GridEvents } from '../../../constants/eventsConstants';
 import { useGridSelector } from '../core';
 import { gridColumnMenuSelector } from './columnMenuSelector';

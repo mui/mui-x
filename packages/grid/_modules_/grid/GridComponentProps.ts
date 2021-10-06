@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridState } from './hooks/features/core/gridState';
+import { GridState } from './models/gridState';
 import { GridApiRef } from './models/api/gridApiRef';
 import { GridColumns } from './models/colDef/gridColDef';
 import {

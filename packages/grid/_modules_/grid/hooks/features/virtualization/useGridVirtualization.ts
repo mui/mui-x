@@ -14,17 +14,17 @@ import {
   gridColumnsMetaSelector,
   visibleGridColumnsSelector,
 } from '../columns/gridColumnsSelector';
-import { useGridSelector } from '../core/useGridSelector';
-import { useGridState } from '../core/useGridState';
+import { useGridSelector } from '../../utils/useGridSelector';
+import { useGridState } from '../../utils/useGridState';
 import { gridPaginationSelector } from '../pagination/gridPaginationSelector';
 import { gridRowCountSelector } from '../rows/gridRowsSelector';
-import { useGridApiMethod } from '../../root/useGridApiMethod';
-import { useNativeEventListener } from '../../root/useNativeEventListener';
+import { useGridApiMethod } from '../../utils/useGridApiMethod';
+import { useNativeEventListener } from '../../utils/useNativeEventListener';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { useGridScrollFn } from '../../utils/useGridScrollFn';
 import { GridRenderingState } from './renderingState';
 import { GridComponentProps } from '../../../GridComponentProps';
-import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
+import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 
 // Uses binary search to avoid looping through all possible positions
 function getIdxFromScroll(

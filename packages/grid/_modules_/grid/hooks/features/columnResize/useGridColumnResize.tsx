@@ -12,9 +12,9 @@ import {
   findHeaderElementFromField,
 } from '../../../utils/domUtils';
 import { GridApiRef, CursorCoordinates, GridColumnHeaderParams } from '../../../models';
-import { useGridApiEventHandler, useGridApiOptionHandler } from '../../root/useGridApiEventHandler';
-import { useGridState } from '../core/useGridState';
-import { useNativeEventListener } from '../../root/useNativeEventListener';
+import { useGridApiEventHandler, useGridApiOptionHandler } from '../../utils/useGridApiEventHandler';
+import { useGridState } from '../../utils/useGridState';
+import { useNativeEventListener } from '../../utils/useNativeEventListener';
 import { GridComponentProps } from '../../../GridComponentProps';
 
 // TODO: remove support for Safari < 13.

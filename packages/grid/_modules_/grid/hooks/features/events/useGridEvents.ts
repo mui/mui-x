@@ -1,11 +1,11 @@
-import { GridApiRef } from '../../models/api/gridApiRef';
-import { GridEvents } from '../../constants/eventsConstants';
-import { useGridApiOptionHandler } from './useGridApiEventHandler';
-import { GridComponentProps } from '../../GridComponentProps';
+import { GridApiRef } from '../../../models/api/gridApiRef';
+import { GridEvents } from '../../../constants/eventsConstants';
+import { useGridApiOptionHandler } from '../../utils/useGridApiEventHandler';
+import { GridComponentProps } from '../../../GridComponentProps';
 
 /**
- * @requires useGridFocus (event)
- * @requires useGridColumns (event)
+ * @requires useGridFocus (event) - can be after, async only
+ * @requires useGridColumns (event) - can be after, async only
  */
 export function useGridEvents(
   apiRef: GridApiRef,

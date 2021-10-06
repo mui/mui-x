@@ -2,12 +2,11 @@ import * as React from 'react';
 import { GridApiRef } from '../../../models';
 import { GridComponentProps } from '../../../GridComponentProps';
 import { GridPageSizeApi } from '../../../models/api/gridPageSizeApi';
-import { useGridApiMethod } from '../../root';
 import { GridEvents } from '../../../constants/eventsConstants';
-import { useGridLogger } from '../../utils';
+import { useGridLogger, useGridApiMethod } from '../../utils';
 import { useGridSelector, useGridState } from '../core';
 import { visibleGridRowCountSelector } from '../filter';
-import { gridContainerSizesSelector } from '../../root/gridContainerSizesSelector';
+import { gridContainerSizesSelector } from '../container/gridContainerSizesSelector';
 
 /**
  * @requires useGridControlState (method)

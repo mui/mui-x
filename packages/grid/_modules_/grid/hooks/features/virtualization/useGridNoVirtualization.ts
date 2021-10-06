@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { GridComponentProps } from '../../../GridComponentProps';
 import { GridApiRef } from '../../../models/api/gridApiRef';
-import { useNativeEventListener } from '../../root/useNativeEventListener';
+import { useNativeEventListener } from '../../utils/useNativeEventListener';
 import { useGridScrollFn } from '../../utils/useGridScrollFn';
 import { visibleGridColumnsSelector } from '../columns/gridColumnsSelector';
 import { useGridSelector } from '../core';
-import { useGridState } from '../core/useGridState';
+import { useGridState } from '../../utils/useGridState';
 import { gridPaginationSelector } from '../pagination/gridPaginationSelector';
-import { gridContainerSizesSelector } from '../../root/gridContainerSizesSelector';
+import { gridContainerSizesSelector } from '../container/gridContainerSizesSelector';
 
 /**
  * @requires useGridPage (state)
