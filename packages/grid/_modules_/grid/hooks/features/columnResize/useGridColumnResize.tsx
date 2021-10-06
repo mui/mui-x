@@ -17,7 +17,7 @@ import {
   useGridApiOptionHandler,
 } from '../../utils/useGridApiEventHandler';
 import { useGridState } from '../../utils/useGridState';
-import { useNativeEventListener } from '../../utils/useNativeEventListener';
+import { useGridNativeEventListener } from '../../utils/useNativeEventListener';
 import { GridComponentProps } from '../../../GridComponentProps';
 
 // TODO: remove support for Safari < 13.
@@ -329,7 +329,7 @@ export const useGridColumnResize = (
     };
   }, [apiRef, handleTouchStart, stopListening]);
 
-  useNativeEventListener(
+  useGridNativeEventListener(
     apiRef,
     () => apiRef.current.columnHeadersElementRef?.current,
     'touchstart',

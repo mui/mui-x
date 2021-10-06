@@ -70,7 +70,7 @@ const DEFAULT_GRID_SLOTS_COMPONENTS: GridSlotsComponent = {
   Panel: GridPanel,
 };
 
-export const useProcessedProps = (inProps: GridInputComponentProps) => {
+export const useGridProcessedProps = (inProps: GridInputComponentProps) => {
   const localeText = React.useMemo(
     () => ({ ...GRID_DEFAULT_LOCALE_TEXT, ...inProps.localeText }),
     [inProps.localeText],

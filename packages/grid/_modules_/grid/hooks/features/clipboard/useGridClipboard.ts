@@ -4,7 +4,7 @@ import { buildCSV } from '../export/serializers/csvSerializer';
 import { visibleGridColumnsSelector } from '../columns/gridColumnsSelector';
 import { gridCheckboxSelectionColDef } from '../../../models/colDef';
 import { GridClipboardApi } from '../../../models/api';
-import { useGridApiMethod, useNativeEventListener, useGridSelector } from '../../utils';
+import { useGridApiMethod, useGridNativeEventListener, useGridSelector } from '../../utils';
 
 function writeToClipboardPolyfill(data: string) {
   const span = document.createElement('span');
@@ -84,7 +84,7 @@ export const useGridClipboard = (apiRef: GridApiRef): void => {
     [apiRef],
   );
 
-  useNativeEventListener(apiRef, apiRef.current.rootElementRef!, 'keydown', handleKeydown);
+  useGridNativeEventListener(apiRef, apiRef.current.rootElementRef!, 'keydown', handleKeydown);
 
   const clipboardApi: GridClipboardApi = {
     copySelectedRowsToClipboard,

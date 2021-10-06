@@ -19,7 +19,7 @@ import { useGridState } from '../../utils/useGridState';
 import { gridPaginationSelector } from '../pagination/gridPaginationSelector';
 import { gridRowCountSelector } from '../rows/gridRowsSelector';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
-import { useNativeEventListener } from '../../utils/useNativeEventListener';
+import { useGridNativeEventListener } from '../../utils/useNativeEventListener';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { useGridScrollFn } from '../../utils/useGridScrollFn';
 import { GridRenderingState } from './renderingState';
@@ -393,7 +393,7 @@ export const useGridVirtualization = (
     apiRef,
   ]);
 
-  useNativeEventListener(apiRef, windowRef, 'scroll', handleScroll, { passive: true });
+  useGridNativeEventListener(apiRef, windowRef, 'scroll', handleScroll, { passive: true });
 
   const resetRenderedColState = React.useCallback(() => {
     logger.debug('Clearing previous renderedColRef');
