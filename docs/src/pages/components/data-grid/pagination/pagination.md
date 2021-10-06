@@ -43,6 +43,8 @@ Finally, you need to handle the `onPageChange` callback to load the rows for the
 
 {{"demo": "pages/components/data-grid/pagination/ServerPaginationGrid.js", "bg": "inline"}}
 
+**Note**: For more information regarding server-side pagination in combination with controlled selection check [here](/components/data-grid/selection/#usage-with-server-side-pagination)
+
 ## Cursor-based pagination
 
 You can adapt the pagination for your cursor-based pagination.
@@ -54,7 +56,7 @@ To do so, you just have to keep track of the next cursor associated with each pa
 
 You can customize the rendering of the pagination in the footer following [the component section](/components/data-grid/components/#pagination) of the documentation.
 
-## Paginate > 100 rows [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-pro/)
+## Paginate > 100 rows [<span class="pro"></span>](https://mui.com/store/items/material-ui-pro/)
 
 The `DataGrid` component can display up to 100 rows per page.
 The `DataGridPro` component removes this limitation.
@@ -62,7 +64,7 @@ The following demo displays 200 rows per page:
 
 {{"demo": "pages/components/data-grid/pagination/200PaginationGrid.js", "disableAd": true, "bg": "inline"}}
 
-## apiRef [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-pro/)
+## apiRef [<span class="pro"></span>](https://mui.com/store/items/material-ui-pro/)
 
 The grid exposes a set of methods that enables all of these features using the imperative apiRef.
 

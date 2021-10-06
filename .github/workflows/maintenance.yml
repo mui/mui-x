@@ -1,0 +1,28 @@
+name: 'Maintenance'
+on:
+  # So that PRs touching the same files as the push are updated
+  push:
+    branches:
+      - master
+      - next
+  # So that the `dirtyLabel` is removed if conflicts are resolved
+  # Could put too much strain on rate limit
+  # If we hit the rate limit too often remove this event
+  pull_request_target:
+    branches:
+      - master
+      - next
+    types: [synchronize]
+
+jobs:
+  main:
+    runs-on: ubuntu-latest
+    steps:
+      - name: check if prs are dirty
+        uses: eps1lon/actions-label-merge-conflict@releases/2.x
+        with:
+          dirtyLabel: 'PR: out-of-date'
+          repoToken: '${{ secrets.GITHUB_TOKEN }}'
+          commentOnDirty: "This pull request has conflicts, please resolve those before we can evaluate the pull request."
+          retryAfter: 130
+          retryMax: 10

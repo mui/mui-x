@@ -58,7 +58,7 @@ function GridScrollAreaRaw(props: ScrollAreaProps) {
       } else if (scrollDirection === 'right') {
         offset = Math.max(1, event.clientX - rootRef.current!.getBoundingClientRect().left);
       } else {
-        throw new Error('wrong dir');
+        throw new Error('MUI: Wrong drag direction');
       }
 
       offset = (offset - CLIFF) * SLOP + CLIFF;

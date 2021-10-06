@@ -34,7 +34,7 @@ describe('<DataGridPro /> - Layout', () => {
   });
 
   // Adaptation of describeConformance()
-  describe('Material-UI component API', () => {
+  describe('MUI component API', () => {
     it(`attaches the ref`, () => {
       const ref = React.createRef<HTMLDivElement>();
       const { container } = render(
@@ -139,13 +139,13 @@ describe('<DataGridPro /> - Layout', () => {
   });
 
   it('should support translations in the theme', () => {
-    const { getByRole } = render(
+    render(
       <ThemeProvider theme={createTheme({}, ptBR)}>
         <div style={{ width: 300, height: 300 }}>
           <DataGridPro {...baselineProps} />
         </div>
       </ThemeProvider>,
     );
-    expect(getByRole('button', { name: 'Ordenar' })).not.to.equal(null);
+    expect(document.querySelector('[title="Ordenar"]')).not.to.equal(null);
   });
 });

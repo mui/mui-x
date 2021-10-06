@@ -350,11 +350,17 @@ describe('<DataGrid /> - Filter', () => {
       { operatorValue: '>=', value: 0, expected: [0, 1984, 1954, 1974] },
       { operatorValue: '<', value: 0, expected: [] },
       { operatorValue: '<=', value: 0, expected: [0] },
+      { operatorValue: '=', value: undefined, expected: [0, 1984, 1954, 1974] },
+      { operatorValue: '!=', value: undefined, expected: [0, 1984, 1954, 1974] },
+      { operatorValue: '>', value: undefined, expected: [0, 1984, 1954, 1974] },
+      { operatorValue: '>=', value: undefined, expected: [0, 1984, 1954, 1974] },
+      { operatorValue: '<', value: undefined, expected: [0, 1984, 1954, 1974] },
+      { operatorValue: '<=', value: undefined, expected: [0, 1984, 1954, 1974] },
     ].forEach(({ operatorValue, value, expected }) => {
-      it(`should allow object as value and work with valueGetter, operatorValue: ${operatorValue}, value: ${value}`, () => {
+      it(`should allow object as value and work with valueGetter, operatorValue: ${operatorValue}, value: '${value}'`, () => {
         render(
           <TestCase
-            value={value.toString()}
+            value={value?.toString()}
             operatorValue={operatorValue}
             rows={[
               { id: 2, brand: { year: 0 } },
@@ -1055,5 +1061,23 @@ describe('<DataGrid /> - Filter', () => {
       />,
     );
     expect(screen.queryByLabelText('1 active filter')).not.to.equal(null);
+  });
+
+  describe('Filter preference panel', () => {
+    it('should show an empty string as the default filter input value', () => {
+      render(
+        <TestCase
+          field="brand"
+          operatorValue="contains"
+          state={{
+            preferencePanel: {
+              open: true,
+              openedPanelValue: GridPreferencePanelsValue.filters,
+            },
+          }}
+        />,
+      );
+      expect(screen.getByRole('textbox', { name: 'Value' }).value).to.equal('');
+    });
   });
 });

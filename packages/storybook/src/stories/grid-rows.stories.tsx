@@ -4,7 +4,7 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import Popper from '@mui/material/Popper';
 import Paper from '@mui/material/Paper';
-import { createTheme, Theme } from '@mui/material/styles';
+import { createTheme } from '@mui/material/styles';
 import { createStyles, makeStyles } from '@mui/styles';
 import {
   GridCellValue,
@@ -197,7 +197,7 @@ interface GridCellExpandProps {
 
 const defaultTheme = createTheme();
 const useStyles = makeStyles(
-  (theme: Theme) =>
+  (theme) =>
     createStyles({
       root: {
         alignItems: 'center',
@@ -324,7 +324,7 @@ const rows: any = [
   },
   {
     id: 3,
-    col1: 'Material-UI',
+    col1: 'MUI',
     col2: 'is Amazing',
     col3: 'Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before final copy is available.',
   },
@@ -342,7 +342,7 @@ const rows: any = [
   },
   {
     id: 6,
-    col1: 'Material-UI',
+    col1: 'MUI',
     col2: 'is Amazing',
     col3: 'Lorem ipsum may be used as a placeholder before final copy is available.',
   },
@@ -377,7 +377,7 @@ const baselineEditProps = {
       id: 0,
       firstname: 'Damien',
       lastname: 'Tassone',
-      email: 'damien@material-ui.com',
+      email: 'damien@mui.com',
       username: 'Damo',
       lastLogin: new Date(),
       age: 25,
@@ -390,7 +390,7 @@ const baselineEditProps = {
       id: 1,
       firstname: 'Jon',
       lastname: 'Wood',
-      email: 'jon@material-ui.com',
+      email: 'jon@mui.com',
       username: 'jon',
       lastLogin: new Date(),
       age: 25,
@@ -403,7 +403,7 @@ const baselineEditProps = {
       id: 2,
       firstname: 'James',
       lastname: 'Smith',
-      email: 'james@material-ui.com',
+      email: 'james@mui.com',
       username: 'smithhhh',
       lastLogin: new Date(),
       age: 25,

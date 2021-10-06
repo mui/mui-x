@@ -1,5 +1,6 @@
 import { generateReleaseInfo } from '@mui/x-license-pro';
 import replace from '@rollup/plugin-replace';
+import babel from '@rollup/plugin-babel';
 import typescript from 'rollup-plugin-typescript2';
 import cleaner from 'rollup-plugin-cleaner';
 import sourceMaps from 'rollup-plugin-sourcemaps';
@@ -36,6 +37,18 @@ export default [
           targets: ['./x-grid/build/'],
         }),
       typescript({ tsconfig: 'tsconfig.build.json' }),
+      babel({
+        babelHelpers: 'bundled',
+        extensions: ['.tsx'],
+        plugins: [
+          [
+            'transform-react-remove-prop-types',
+            {
+              ignoreFilenames: ['DataGridPro.tsx'],
+            },
+          ],
+        ],
+      }),
       !production && sourceMaps(),
       production && terser(),
     ],

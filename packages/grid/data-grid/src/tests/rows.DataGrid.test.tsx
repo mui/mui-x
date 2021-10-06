@@ -9,15 +9,15 @@ import {
   waitFor,
 } from 'test/utils';
 import { expect } from 'chai';
-import { spy, stub } from 'sinon';
+import { spy, stub, SinonFakeTimers, useFakeTimers } from 'sinon';
 import Portal from '@mui/material/Portal';
-import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
+import { DataGrid, DataGridProps, GridActionsCellItem } from '@mui/x-data-grid';
 import { getColumnValues, getRow } from 'test/utils/helperFn';
+import { getData } from 'storybook/src/data/data-service';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<DataGrid /> - Rows', () => {
-  // TODO v5: replace with createClientRender
   const render = createClientRenderStrictMode();
 
   const baselineProps = {
@@ -42,7 +42,7 @@ describe('<DataGrid /> - Rows', () => {
     columns: [{ field: 'clientId' }, { field: 'first' }, { field: 'age' }],
   };
 
-  describe('getRowId', () => {
+  describe('props: getRowId', () => {
     it('should allow to select a field as id', () => {
       const getRowId = (row) => `${row.clientId}`;
       render(
@@ -51,6 +51,33 @@ describe('<DataGrid /> - Rows', () => {
         </div>,
       );
       expect(getColumnValues()).to.deep.equal(['c1', 'c2', 'c3']);
+    });
+  });
+
+  describe('props: rows', () => {
+    let clock: SinonFakeTimers;
+
+    beforeEach(() => {
+      clock = useFakeTimers();
+    });
+
+    afterEach(() => {
+      clock.restore();
+    });
+
+    it('should support new dataset', () => {
+      const { rows, columns } = getData(5, 2);
+
+      const Test = (props: Pick<DataGridProps, 'rows'>) => (
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid {...props} columns={columns} autoHeight={isJSDOM} />
+        </div>
+      );
+
+      const { setProps } = render(<Test rows={rows.slice(0, 2)} />);
+      expect(getColumnValues(0)).to.deep.equal(['0', '1']);
+      setProps({ rows });
+      expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3', '4']);
     });
   });
 
@@ -118,9 +145,9 @@ describe('<DataGrid /> - Rows', () => {
         );
       }) // @ts-expect-error need to migrate helpers to TypeScript
         .toErrorDev([
-          'Material-UI: Missing the `getActions` property in the `GridColDef`.',
+          'MUI: Missing the `getActions` property in the `GridColDef`.',
           'The above error occurred in the <GridActionsCell> component',
-          'Material-UI: GridErrorHandler - An unexpected error occurred.',
+          'MUI: GridErrorHandler - An unexpected error occurred.',
         ]);
     });
 

@@ -137,7 +137,7 @@ Below is a very simple demo on how you could achieve server-side filtering.
 
 <!-- WIP -->
 
-## Multi-column filtering [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-pro/)
+## Multi-column filtering [<span class="pro"></span>](https://mui.com/store/items/material-ui-pro/)
 
 `DataGridPro` supports filtering by multiple columns.
 The default operator that will be applied between filters is an And.
@@ -169,7 +169,7 @@ However, it can be implemented as in the demo below.
 >
 > 👍 Upvote [issue #202](https://github.com/mui-org/material-ui-x/issues/202) if you want to see it land faster.
 
-## apiRef [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-pro/)
+## apiRef [<span class="pro"></span>](https://mui.com/store/items/material-ui-pro/)
 
 {{"demo": "pages/components/data-grid/filtering/FilterApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
 

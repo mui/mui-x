@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createMuiTheme, Theme } from '@mui/material/styles';
+import { createMuiTheme } from '@mui/material/styles';
 import { createStyles, makeStyles } from '@mui/styles';
 import clsx from 'clsx';
 import Card from '@mui/material/Card';
@@ -19,7 +19,7 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 const defaultTheme = createMuiTheme();
 const useStyles = makeStyles(
-  (theme: Theme) =>
+  (theme) =>
     createStyles({
       root: {
         maxWidth: 345,
@@ -71,7 +71,7 @@ export default function RecipeReviewCard() {
       />
       <CardMedia
         className={classes.media}
-        image="http://material-ui.com/static/images/cards/paella.jpg"
+        image="http://mui.com/static/images/cards/paella.jpg"
         title="Paella dish"
       />
       <CardContent>

@@ -9,7 +9,7 @@ import {
 import { useDemoData } from '@mui/x-data-grid-generator';
 import ClearIcon from '@mui/icons-material/Clear';
 import SearchIcon from '@mui/icons-material/Search';
-import { createTheme, Theme } from '@mui/material/styles';
+import { createTheme } from '@mui/material/styles';
 import { createStyles, makeStyles } from '@mui/styles';
 
 function escapeRegExp(value: string): string {
@@ -18,7 +18,7 @@ function escapeRegExp(value: string): string {
 
 const defaultTheme = createTheme();
 const useStyles = makeStyles(
-  (theme: Theme) =>
+  (theme) =>
     createStyles({
       root: {
         padding: theme.spacing(0.5, 0.5, 0),
@@ -116,7 +116,8 @@ export default function QuickFilteringGrid() {
         componentsProps={{
           toolbar: {
             value: searchText,
-            onChange: (event) => requestSearch(event.target.value),
+            onChange: (event: React.ChangeEvent<HTMLInputElement>) =>
+              requestSearch(event.target.value),
             clearSearch: () => requestSearch(''),
           },
         }}

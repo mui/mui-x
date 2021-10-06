@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { unstable_useId as useId } from '@mui/material/utils';
+import { unstable_useId as useId, useForkRef } from '@mui/material/utils';
 import MenuList from '@mui/material/MenuList';
 import Button, { ButtonProps } from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
@@ -37,7 +37,10 @@ const GridToolbarExport = React.forwardRef<HTMLButtonElement, GridToolbarExportP
     const rootProps = useGridRootProps();
     const buttonId = useId();
     const menuId = useId();
-    const [anchorEl, setAnchorEl] = React.useState(null);
+
+    const [open, setOpen] = React.useState(false);
+    const buttonRef = React.useRef<HTMLButtonElement>(null);
+    const handleRef = useForkRef(ref, buttonRef);
 
     const exportOptions: Array<GridExportOption> = [
       {
@@ -53,10 +56,10 @@ const GridToolbarExport = React.forwardRef<HTMLButtonElement, GridToolbarExportP
     ];
 
     const handleMenuOpen = (event) => {
-      setAnchorEl(event.currentTarget);
+      setOpen(true);
       onClick?.(event);
     };
-    const handleMenuClose = () => setAnchorEl(null);
+    const handleMenuClose = () => setOpen(false);
     const handleExport = (option: GridExportOption) => () => {
       switch (option.format) {
         case 'csv':
@@ -69,7 +72,7 @@ const GridToolbarExport = React.forwardRef<HTMLButtonElement, GridToolbarExportP
           break;
       }
 
-      setAnchorEl(null);
+      setOpen(false);
     };
 
     const handleListKeyDown = (event: React.KeyboardEvent) => {
@@ -84,11 +87,11 @@ const GridToolbarExport = React.forwardRef<HTMLButtonElement, GridToolbarExportP
     return (
       <React.Fragment>
         <Button
-          ref={ref}
+          ref={handleRef}
           color="primary"
           size="small"
           startIcon={<rootProps.components.ExportIcon />}
-          aria-expanded={anchorEl ? 'true' : undefined}
+          aria-expanded={open ? 'true' : undefined}
           aria-label={apiRef.current.getLocaleText('toolbarExportLabel')}
           aria-haspopup="menu"
           aria-labelledby={menuId}
@@ -99,8 +102,8 @@ const GridToolbarExport = React.forwardRef<HTMLButtonElement, GridToolbarExportP
           {apiRef.current.getLocaleText('toolbarExport')}
         </Button>
         <GridMenu
-          open={Boolean(anchorEl)}
-          target={anchorEl}
+          open={open}
+          target={buttonRef.current}
           onClickAway={handleMenuClose}
           position="bottom-start"
         >
@@ -109,7 +112,7 @@ const GridToolbarExport = React.forwardRef<HTMLButtonElement, GridToolbarExportP
             className="MuiDataGrid-gridMenuList"
             aria-labelledby={buttonId}
             onKeyDown={handleListKeyDown}
-            autoFocusItem={Boolean(anchorEl)}
+            autoFocusItem={open}
           >
             {exportOptions.map((option, index) => (
               <MenuItem key={index} onClick={handleExport(option)}>

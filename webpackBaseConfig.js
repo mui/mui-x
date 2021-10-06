@@ -28,13 +28,14 @@ module.exports = {
     filename: 'bundle.js',
     publicPath: '/build/',
   },
+  target: 'web',
   module: {
     rules: [
       {
         test: /\.(js|ts|tsx)$/,
         exclude: /node_modules\/(?!@material-ui)/,
         loader: 'babel-loader',
-        query: {
+        options: {
           cacheDirectory: true,
         },
       },

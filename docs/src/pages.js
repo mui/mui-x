@@ -13,7 +13,7 @@ if (lab.subheader !== '/components/lab') {
   throw new Error('Integration not compatible.');
 }
 
-const dataGridComponent = components.children[6];
+const dataGridComponent = components.children[7];
 
 if (dataGridComponent.subheader !== '/components/data-grid') {
   throw new Error('Integration not compatible.');
@@ -44,6 +44,7 @@ dataGridComponent.children = [
   { pathname: '/components/data-grid/components' },
   { pathname: '/components/data-grid/style' },
   { pathname: '/components/data-grid/localization' },
+  { pathname: '/components/data-grid/scrolling' },
   { pathname: '/components/data-grid/virtualization' },
   { pathname: '/components/data-grid/accessibility' },
   { pathname: '/components/data-grid/group-pivot', title: '🚧 Group & Pivot' },
