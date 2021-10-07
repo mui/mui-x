@@ -53,7 +53,7 @@ A big thanks to the 9 contributors who made this release possible. Here are some
 - [docs] Add missing fonts (#2745) @m4theushw
 - [docs] Add page for scrolling API (#2634) @m4theushw
 - [docs] Add type to `onChange` event argument (#2669) @jayariglesias
-- [docs] Explain that `id` field is required for multiple filters in `DataGridPro` (#2783) @ZeeshanTamboli
+- [docs] Add explanation about the `id` usage in multiple filters in DataGridPro (#2783) @ZeeshanTamboli
 - [docs] Fix demo throwing error (#2719) @m4theushw
 - [docs] Fix index, improve playground (#2755) @oliviertassinari
 
