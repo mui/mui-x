@@ -11,6 +11,7 @@ A big thanks to the 9 contributors who made this release possible. Here are some
 
 - 🌎 Add Persian (faIR) locale (#2712) @devlifeX
 - 🎁 Allow to select range of rows with Shift + click (#2456) @flaviendelangle
+- 🚀 Allow to throttle the row updates with the `throttleRowsMs` prop on `DataGridPro` and remove the default 100ms row update throttle (#2561) @flaviendelangle
 - 💡 Enhance internal code structure
 - 📚 Documentation improvements
 - 🐞 Bugfixes
@@ -19,7 +20,7 @@ A big thanks to the 9 contributors who made this release possible. Here are some
 
 #### Breaking changes
 
-- [DataGridPro] Use selectors instead of direct state access in feature hooks and components (#2723) @flaviendelangle
+- [DataGrid] Rename some selectors and interfaces to follow the codebase naming conventions (#2723) @flaviendelangle
 
   The following selectors were renamed:
 
@@ -27,10 +28,12 @@ A big thanks to the 9 contributors who made this release possible. Here are some
   -const filterModel = filterGridStateSelector(state);
   +const filterModel = gridFilterModelSelector(state);
   ```
+
   ```diff
   -const density: GridGridDensity = densitySelector(state);
   +const density: GridDensityState = gridDensitySelector(state);
   ```
+
   ```diff
   -const rendering: InternalRenderingState = gridRenderingSelector(state);
   +const rendering: GridRenderingState = gridRenderingSelector(state);
@@ -44,7 +47,7 @@ A big thanks to the 9 contributors who made this release possible. Here are some
 - [DataGrid] Export `singleSelect` operators (#2666) @jeremyalan
 - [DataGrid] Fix Italian localization (#2717) @destegabry
 - [DataGrid] Fix `undefined` in filter panel (#2715) @DanailH
-- [DataGrid] Fix menu to not remove the anchor before the end of the transition (#2734) @flaviendelangle
+- [DataGrid] Fix the fade-out transition of the `GridMenu` (#2734) @flaviendelangle
 - [DataGrid] Pass row `id` to `valueFormatter` (#2738) @m4theushw
 - [DataGrid] Fix `onSortModelChange` to not be called during initialization (#2724) @flaviendelangle
 - [DataGridPro] Stop drag event propagation (#2802) @DanailH
