@@ -26,6 +26,7 @@ The filter applied to a column can be pre-configured using the `filterModel` pro
 ## Predefined filters
 
 A filter is composed of three parts: the column to filter, the value to look for, and an operator (e.g. _contains_, _is before_, _is after_, etc.).
+On the `DataGridPro`, the `id` field is required on `filterModel.items` when multiple filters are used.
 The operator determines if a candidate value should be considered as a result.
 The candidate value used by the operator is the one corresponding to the `field` attribute or the `valueGetter` of the `GridColDef`.
 As part of the predefined column types, a set of operators is available.
@@ -144,13 +145,15 @@ The default operator that will be applied between filters is an And.
 
 {{"demo": "pages/components/data-grid/filtering/MultiFilteringGrid.js", "bg": "inline", "disableAd": true}}
 
-To change the default operator, you should set the 'linkOperator' property of the filterModel like below.
+**Note**: The `id` field is required on `filterModel.items` when multiple filters are used.
+
+To change the default operator, you should set the `linkOperator` property of the `filterModel` like below.
 
 ```ts
 const filterModel: GridFilterModel = {
   items: [
-    { columnField: 'commodity', operatorValue: 'contains', value: 'rice' },
-    { columnField: 'commodity', operatorValue: 'startsWith', value: 'Soy' },
+    { id: 1, columnField: 'commodity', operatorValue: 'contains', value: 'rice' },
+    { id: 2, columnField: 'commodity', operatorValue: 'startsWith', value: 'Soy' },
   ],
   linkOperator: GridLinkOperator.Or,
 };
