@@ -3,6 +3,75 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 5.0.0-beta.3
+
+_Oct 7, 2021_
+
+A big thanks to the 9 contributors who made this release possible. Here are some highlights ✨:
+
+- 🌎 Add Persian (faIR) locale (#2712) @devlifeX
+- 🎁 Allow to select range of rows with shift key (#2456) @flaviendelangle
+- 📚 Internam documentation improvements
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@v5.0.0-beta.3` / `@mui/x-data-grid-pro@v5.0.0-beta.3`
+
+#### Breaking changes
+
+- [core] Use selectors instead of direct state access in feature hooks and components (#2723) @flaviendelangle
+
+  Use the `api` to get the missing params.
+  The `GridValueFormatterParams` interface has the following signature now:
+
+  ```diff
+  -const filterModel = filterGridStateSelector(state);
+  +const filterModel = gridFilterModelSelector(state);
+  ```
+  ```diff
+  -const density: GridGridDensity = densitySelector(state);
+  +const density: GridDensityState = gridDensitySelector(state);
+  ```
+  ```diff
+  -const rendering: InternalRenderingState = gridRenderingSelector(state);
+  +const rendering: GridRenderingState = gridRenderingSelector(state);
+  ```
+
+#### Changes
+
+- [DataGrid] Add Persian (faIR) locale (#2712) @devlifeX
+- [DataGrid] Allow to select range of rows using shift key (#2456) @flaviendelangle
+- [DataGrid] Don't filter numeric column when value is empty (#2780) @m4theushw
+- [DataGrid] Export `singleSelect` operators (#2666) @jeremyalan
+- [DataGrid] Fix Italian localization (#2717) @destegabry
+- [DataGrid] Fix `undefined` in filter panel (#2715) @DanailH
+- [DataGrid] `GridMenu` should not remove the anchor before the end of the closing transition (#2734) @flaviendelangle
+- [DataGrid] Pass row `id` to `valueFormatter` (#2738) @m4theushw
+- [DataGrid] Should not call `onSortModelChange` on initialization and on prop model change (#2724) @flaviendelangle
+- [DataGridPro] Stop drag event propagation (#2802) @DanailH
+- [DataGridPro] Keyboard navigation should work with filtered rows (#2800) @flaviendelangle
+
+### Docs
+
+- [docs] Add missing fonts (#2745) @m4theushw
+- [docs] Add page for scrolling API (#2634) @m4theushw
+- [docs] Add type to `onChange` event argument (#2669) @jayariglesias
+- [docs] Explain that `id` field is required for multiple filters in `DataGridPro` (#2783) @ZeeshanTamboli
+- [docs] Fix demo throwing error (#2719) @m4theushw
+- [docs] Fix index, improve playground (#2755) @oliviertassinari
+
+### Core
+
+- [core] Add benchmark script (#2683) @m4theushw
+- [core] Clean error messages prefix (#2676) @flaviendelangle
+- [core] Do not regenerate columns of `useDemoData` on each render (#2747) @flaviendelangle
+- [core] Don't run benchmark on cached files (#2786) @m4theushw
+- [core] Drop localization v4 format (#2792) @flaviendelangle
+- [core] Remove useless state update in `useGridColumnMenu` (#2722) @flaviendelangle
+- [core] Remove v4 conditional code (#2575) @flaviendelangle
+- [core] Rework `useGridRows` high frequency update (#2561) @flaviendelangle
+- [core] Set up `eps1lon/actions-label-merge-conflict` action (#2751) @m4theushw
+- [core] Stop using selector for pro features on React components (#2716) @flaviendelangle
+
 ## 5.0.0-beta.2
 
 _Sep 24, 2021_
