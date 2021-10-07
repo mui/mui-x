@@ -257,12 +257,15 @@ function run(argv: { outputDirectory?: string }) {
   });
   const project = app.convert()!;
 
-  const exports = (project.children ?? []).map(child => ({ name: child.name , kind: child?.kindString}))
+  const exports = (project.children ?? []).map((child) => ({
+    name: child.name,
+    kind: child?.kindString,
+  }));
 
   writePrettifiedFile(
-      path.resolve(workspaceRoot, 'scripts/exportsSnapshot.json'),
-      JSON.stringify(exports),
-      prettierConfigPath,
+    path.resolve(workspaceRoot, 'scripts/exportsSnapshot.json'),
+    JSON.stringify(exports),
+    prettierConfigPath,
   );
 
   const apisToGenerate = [
