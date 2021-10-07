@@ -55,7 +55,7 @@ A big thanks to the 9 contributors who made this release possible. Here are some
 - [docs] Add type to `onChange` event argument (#2669) @jayariglesias
 - [docs] Add explanation about the `id` usage in multiple filters in DataGridPro (#2783) @ZeeshanTamboli
 - [docs] Fix demo throwing error (#2719) @m4theushw
-- [docs] Fix index, improve playground (#2755) @oliviertassinari
+- [docs] Fix index and improve playground page (#2755) @oliviertassinari
 
 ### Core
 
