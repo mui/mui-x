@@ -68,7 +68,7 @@ A big thanks to the 9 contributors who made this release possible. Here are some
 - [core] Remove v4 conditional code (#2575) @flaviendelangle
 - [core] Rework `useGridRows` high frequency update (#2561) @flaviendelangle
 - [core] Set up `eps1lon/actions-label-merge-conflict` action (#2751) @m4theushw
-- [core] Stop using selector for pro features on React components (#2716) @flaviendelangle
+- [core] Stop using selectors for Pro features on React components (#2716) @flaviendelangle
 
 ## 5.0.0-beta.2
 
