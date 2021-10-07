@@ -46,7 +46,7 @@ A big thanks to the 9 contributors who made this release possible. Here are some
 - [DataGrid] Pass row `id` to `valueFormatter` (#2738) @m4theushw
 - [DataGrid] Fix `onSortModelChange` to not be called during initialization (#2724) @flaviendelangle
 - [DataGridPro] Stop drag event propagation (#2802) @DanailH
-- [DataGridPro] Keyboard navigation should work with filtered rows (#2800) @flaviendelangle
+- [DataGridPro] Fix keyboard navigation to work with filtered rows (#2800) @flaviendelangle
 
 ### Docs
 
