@@ -38,7 +38,7 @@ A big thanks to the 9 contributors who made this release possible. Here are some
 
 - [DataGrid] Add Persian (faIR) locale (#2712) @devlifeX
 - [DataGrid] Allow to select range of rows using shift key (#2456) @flaviendelangle
-- [DataGrid] Don't filter numeric column when value is empty (#2780) @m4theushw
+- [DataGrid] Fix numeric column filter to not run when value is empty (#2780) @m4theushw
 - [DataGrid] Export `singleSelect` operators (#2666) @jeremyalan
 - [DataGrid] Fix Italian localization (#2717) @destegabry
 - [DataGrid] Fix `undefined` in filter panel (#2715) @DanailH
