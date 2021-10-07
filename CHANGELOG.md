@@ -11,7 +11,8 @@ A big thanks to the 9 contributors who made this release possible. Here are some
 
 - 🌎 Add Persian (faIR) locale (#2712) @devlifeX
 - 🎁 Allow to select range of rows with shift key (#2456) @flaviendelangle
-- 📚 Internal documentation improvements
+- 💡 Internal code impromvements
+- 📚 Documentation improvements
 - 🐞 Bugfixes
 
 ### `@mui/x-data-grid@v5.0.0-beta.3` / `@mui/x-data-grid-pro@v5.0.0-beta.3`
