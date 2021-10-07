@@ -41,7 +41,7 @@ import { gridEditRowsStateSelector } from './gridEditRowsSelector';
  * @requires useGridFocus - can be after, async only
  * @requires useGridParamsApi (method)
  * @requires useGridColumns (state)
- * @requires useGridControlStateManager (method)
+ * @requires useGridControlState (method)
  */
 export function useGridEditRows(
   apiRef: GridApiRef,

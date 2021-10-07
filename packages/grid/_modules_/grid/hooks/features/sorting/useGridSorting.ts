@@ -35,7 +35,7 @@ import { useFirstRender } from '../../utils/useFirstRender';
 
 /**
  * @requires useGridRows (state, event)
- * @requires useGridControlStateManager (method)
+ * @requires useGridControlState (method)
  * @requires useGridColumns (event)
  */
 export const useGridSorting = (

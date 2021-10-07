@@ -51,7 +51,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 export const useGridColumnReorder = (
   apiRef: GridApiRef,
   props: Pick<GridComponentProps, 'disableColumnReorder' | 'classes'>,
-) => {
+): void => {
   const logger = useGridLogger(apiRef, 'useGridColumnReorder');
 
   useGridStateInit(apiRef, (state) => ({

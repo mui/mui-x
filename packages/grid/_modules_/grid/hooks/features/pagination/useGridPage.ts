@@ -32,7 +32,7 @@ const applyValidPage = (paginationState: GridPaginationState): GridPaginationSta
 };
 
 /**
- * @requires useGridControlStateManager (method)
+ * @requires useGridControlState (method)
  * @requires useGridPageSize (state, event)
  * @requires useGridFilter (state)
  */
