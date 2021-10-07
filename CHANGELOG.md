@@ -44,7 +44,7 @@ A big thanks to the 9 contributors who made this release possible. Here are some
 - [DataGrid] Fix `undefined` in filter panel (#2715) @DanailH
 - [DataGrid] Fix menu to not remove the anchor before the end of the transition (#2734) @flaviendelangle
 - [DataGrid] Pass row `id` to `valueFormatter` (#2738) @m4theushw
-- [DataGrid] Should not call `onSortModelChange` on initialization and on prop model change (#2724) @flaviendelangle
+- [DataGrid] Fix `onSortModelChange` to not be called during initialization (#2724) @flaviendelangle
 - [DataGridPro] Stop drag event propagation (#2802) @DanailH
 - [DataGridPro] Keyboard navigation should work with filtered rows (#2800) @flaviendelangle
 
