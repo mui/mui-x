@@ -6,7 +6,7 @@ import '../style/grid-stories.css';
 import { useData } from '../hooks/useData';
 
 export default {
-  title: 'X-Grid Tests/Toolbar',
+  title: 'DataGridPro Test/Toolbar',
   component: DataGridPro,
   parameters: {
     options: { selectedPanel: 'storybook/storysource/panel' },

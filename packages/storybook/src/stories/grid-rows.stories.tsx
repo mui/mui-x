@@ -29,7 +29,7 @@ function isOverflown(element: Element): boolean {
 }
 
 export default {
-  title: 'X-Grid Tests/Rows',
+  title: 'DataGridPro Test/Rows',
   component: DataGridPro,
   parameters: {
     options: { selectedPanel: 'storybook/storysource/panel' },

@@ -24,7 +24,7 @@ import { randomInt } from '../data/random-generator';
 import { useData } from '../hooks/useData';
 
 export default {
-  title: 'X-Grid Tests/Filter',
+  title: 'DataGridPro Test/Filter',
   component: DataGridPro,
   parameters: {
     options: { selectedPanel: 'storybook/storysource/panel' },

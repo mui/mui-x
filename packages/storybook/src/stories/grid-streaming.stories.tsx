@@ -7,7 +7,7 @@ import { FeedGrid } from '../components/feed-grid';
 import { PricingGrid } from '../components/pricing-grid';
 
 export default {
-  title: 'X-Grid Tests/Streaming',
+  title: 'DataGridPro Test/Streaming',
   component: DataGridPro,
   parameters: {
     options: { selectedPanel: 'storybook/storysource/panel' },

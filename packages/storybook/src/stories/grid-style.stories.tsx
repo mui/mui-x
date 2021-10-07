@@ -7,7 +7,7 @@ import { useData } from '../hooks/useData';
 import '../style/grid-stories.css';
 
 export default {
-  title: 'X-Grid Tests/Styling',
+  title: 'DataGridPro Test/Styling',
   component: DataGridPro,
   parameters: {
     options: { selectedPanel: 'storybook/storysource/panel' },

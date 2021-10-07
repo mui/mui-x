@@ -4,7 +4,7 @@ import { DataGridPro } from '@mui/x-data-grid-pro';
 import { useData } from '../hooks/useData';
 
 export default {
-  title: 'X-Grid Tests/Events',
+  title: 'DataGridPro Test/Events',
   component: DataGridPro,
   parameters: {
     options: { selectedPanel: 'storybook/storysource/panel' },
