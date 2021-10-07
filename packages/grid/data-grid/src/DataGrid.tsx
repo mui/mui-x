@@ -107,6 +107,11 @@ DataGridRaw.propTypes = {
    */
   componentsProps: PropTypes.object,
   /**
+   * If defined, the row children will be automatically expanded up to this depth
+   * @default 0
+   */
+  defaultGroupingExpansionDepth: PropTypes.number,
+  /**
    * Set the density of the grid.
    * @default "standard"
    */
