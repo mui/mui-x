@@ -2,7 +2,6 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@mui/styles';
 import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { useGridApiContext } from '../../hooks/root/useGridApiContext';
@@ -57,7 +56,7 @@ const GridTreeDataGroupingCell = (props: GridRenderCellParams) => {
           </IconButton>
         )}
       </div>
-      <Typography>{path[path.length - 1]}</Typography>
+      <span>{path[path.length - 1]}</span>
     </Box>
   );
 };

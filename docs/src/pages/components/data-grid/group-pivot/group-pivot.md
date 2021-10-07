@@ -11,11 +11,19 @@ title: Data Grid - Group & Pivot
 Tree data allows to display data with parent / child relationships.
 To enable the Tree Data, you must use the `treeData` prop as well as provide a `getTreeDataPath` prop.
 
+### Basic example
+
 ```jsx
 <DataGridPro treeData getTreeDataPath={(row) => row.path} />
 ```
 
 {{"demo": "pages/components/data-grid/group-pivot/BasicTreeData.js", "bg": "inline", "defaultCodeOpen": false}}
+
+### Custom grouping column
+
+Use the `groupingColDef` prop to customize the rendering of the grouping column.
+
+{{"demo": "pages/components/data-grid/group-pivot/CustomGroupingColumnTreeData.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## 🚧 Master detail [<span class="pro"></span>](https://mui.com/store/items/material-ui-pro/)
 
