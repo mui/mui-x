@@ -44,7 +44,7 @@ A big thanks to the 9 contributors who made this release possible. Here are some
 - [DataGrid] Export `singleSelect` operators (#2666) @jeremyalan
 - [DataGrid] Fix Italian localization (#2717) @destegabry
 - [DataGrid] Fix `undefined` in filter panel (#2715) @DanailH
-- [DataGrid] Fix menu to not remove the anchor before the end of the transition (#2734) @flaviendelangle
+- [DataGrid] Fix the fade-out transition of the `GridMenu` (#2734) @flaviendelangle
 - [DataGrid] Pass row `id` to `valueFormatter` (#2738) @m4theushw
 - [DataGrid] Fix `onSortModelChange` to not be called during initialization (#2724) @flaviendelangle
 - [DataGridPro] Stop drag event propagation (#2802) @DanailH
