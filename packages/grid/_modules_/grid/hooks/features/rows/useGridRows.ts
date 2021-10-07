@@ -240,7 +240,8 @@ export const useGridRows = (
         return;
       }
 
-      const throttleRemainingTimeMs = props.throttleRowsMs - (Date.now() - rowsCache.current.lastUpdateMs)
+      const throttleRemainingTimeMs =
+        props.throttleRowsMs - (Date.now() - rowsCache.current.lastUpdateMs);
       if (throttleRemainingTimeMs > 0) {
         rowsCache.current.timeout = setTimeout(run, throttleRemainingTimeMs);
         return;

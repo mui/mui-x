@@ -11,12 +11,19 @@ import { isSpaceKey } from '../../../utils/keyboardUtils';
 import { useFirstRender } from '../../utils/useFirstRender';
 import { RowGroupingFunction } from '../../root/rowGroupsPerProcessing';
 
-const insertRowInTree = (
-  tree: GridRowConfigTree,
-  id: GridRowId,
-  path: string[],
-  depth: number = 0,
-) => {
+const insertRowInTree = ({
+  tree,
+  id,
+  path,
+  depth,
+  defaultGroupingExpansionDepth,
+}: {
+  tree: GridRowConfigTree;
+  id: GridRowId;
+  path: string[];
+  depth: number;
+  defaultGroupingExpansionDepth: number;
+}) => {
   if (path.length === 0) {
     throw new Error(`MUI: Could not insert row #${id} in the tree structure.`);
   }
@@ -25,6 +32,7 @@ const insertRowInTree = (
     tree.set(path[0], {
       id,
       depth,
+      expanded: defaultGroupingExpansionDepth > depth,
     });
   } else {
     const [nodeName, ...restPath] = path;
@@ -38,7 +46,13 @@ const insertRowInTree = (
       parent.children = new Map();
     }
 
-    insertRowInTree(parent.children, id, restPath, depth + 1);
+    insertRowInTree({
+      tree: parent.children,
+      id,
+      path: restPath,
+      depth: depth + 1,
+      defaultGroupingExpansionDepth,
+    });
   }
 };
 
@@ -47,7 +61,10 @@ const insertRowInTree = (
  */
 export const useGridTreeData = (
   apiRef: GridApiRef,
-  props: Pick<GridComponentProps, 'treeData' | 'getTreeDataPath' | 'groupingColDef'>,
+  props: Pick<
+    GridComponentProps,
+    'treeData' | 'getTreeDataPath' | 'groupingColDef' | 'defaultGroupingExpansionDepth'
+  >,
 ) => {
   const updateColumnsPreProcessing = React.useCallback(() => {
     if (!props.treeData) {
@@ -92,7 +109,13 @@ export const useGridTreeData = (
       const paths = Object.fromEntries(rows.map((row) => [row.id, row.path]));
       const tree = new Map();
       rows.forEach((row) => {
-        insertRowInTree(tree, row.id, row.path);
+        insertRowInTree({
+          tree,
+          id: row.id,
+          path: row.path,
+          depth: 0,
+          defaultGroupingExpansionDepth: props.defaultGroupingExpansionDepth,
+        });
       });
 
       return {
@@ -102,7 +125,7 @@ export const useGridTreeData = (
     };
 
     return apiRef.current.registerRowGroupsBuilder(groupRows);
-  }, [apiRef, props.getTreeDataPath, props.treeData]);
+  }, [apiRef, props.getTreeDataPath, props.treeData, props.defaultGroupingExpansionDepth]);
 
   useFirstRender(() => {
     updateColumnsPreProcessing();

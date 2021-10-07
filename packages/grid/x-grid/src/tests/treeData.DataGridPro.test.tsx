@@ -121,6 +121,46 @@ describe('<DataGridPro /> - Tree Data', () => {
     });
   });
 
+  describe('prop: defaultGroupingExpansionDepth', () => {
+    it('should not expand any row if defaultGroupingExpansionDepth = 0', () => {
+      render(<Test defaultGroupingExpansionDepth={0} />);
+      expect(getColumnValues(1)).to.deep.equal(['A', 'B', 'C']);
+    });
+
+    it('should expand all top level rows if defaultGroupingExpansionDepth = 1', () => {
+      render(<Test defaultGroupingExpansionDepth={1} />);
+      expect(getColumnValues(1)).to.deep.equal(['A', 'A.A', 'A.B', 'B', 'B.A', 'B.B', 'C']);
+    });
+
+    it('should expand all rows up to depth of 2 if defaultGroupingExpansionDepth = 2', () => {
+      render(<Test defaultGroupingExpansionDepth={2} />);
+      expect(getColumnValues(1)).to.deep.equal([
+        'A',
+        'A.A',
+        'A.B',
+        'B',
+        'B.A',
+        'B.B',
+        'B.B.A',
+        'C',
+      ]);
+    });
+
+    it('should not re-apply default expansion on rerender after expansion manually toggled', () => {
+      const { setProps } = render(<Test defaultGroupingExpansionDepth={1} />);
+      expect(getColumnValues(1)).to.deep.equal(['A', 'A.A', 'A.B', 'B', 'B.A', 'B.B', 'C']);
+      setProps({ sortModel: [{ field: 'name', sort: 'desc' }] });
+      expect(getColumnValues(1)).to.deep.equal(['C', 'B', 'B.B', 'B.A', 'A', 'A.B', 'A.A']);
+    });
+  });
+
+  describe('prop: groupingColDef', () => {
+    it('should set the custom headerName', () => {
+      render(<Test groupingColDef={{ headerName: 'Custom header name' }} />);
+      expect(getColumnHeadersTextContent()).to.deep.equal(['Custom header name', 'name']);
+    });
+  });
+
   describe('grouping column', () => {
     it('should add a grouping column', () => {
       render(<Test />);

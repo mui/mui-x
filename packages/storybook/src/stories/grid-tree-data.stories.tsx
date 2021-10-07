@@ -44,6 +44,7 @@ export function CustomGroupingColumn() {
   return (
     <DataGridPro
       loading={loading}
+      treeData
       groupingColDef={groupingColDef}
       disableSelectionOnClick
       {...data}
@@ -54,7 +55,7 @@ export function CustomGroupingColumn() {
 export function TreeDataWithCheckboxSelection() {
   const { data, loading } = useDemoTreeData({ rowLength: [10, 5, 3] });
 
-  return <DataGridPro loading={loading} checkboxSelection {...data} />;
+  return <DataGridPro loading={loading} treeData checkboxSelection {...data} />;
 }
 
 export function TreeDataPagination() {
@@ -64,6 +65,7 @@ export function TreeDataPagination() {
     <div>
       <DataGridPro
         loading={loading}
+        treeData
         pagination
         pageSize={5}
         rowsPerPageOptions={[5]}
@@ -81,8 +83,23 @@ export function TreeDataToolbar() {
   return (
     <DataGridPro
       loading={loading}
+      treeData
       components={{ Toolbar: GridToolbar }}
       disableSelectionOnClick
+      {...data}
+    />
+  );
+}
+
+export function TreeDataAutoExpand() {
+  const { data, loading } = useDemoTreeData({ rowLength: [10, 5, 3] });
+
+  return (
+    <DataGridPro
+      loading={loading}
+      treeData
+      disableSelectionOnClick
+      defaultGroupingExpansionDepth={1}
       {...data}
     />
   );

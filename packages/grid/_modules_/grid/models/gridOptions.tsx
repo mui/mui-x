@@ -208,6 +208,11 @@ export interface GridSimpleOptions {
    */
   treeData: boolean;
   /**
+   * If defined, the row children will be automatically expanded up to this depth
+   * @default 0
+   */
+  defaultGroupingExpansionDepth: number;
+  /**
    * Set the area at the bottom of the grid viewport where onRowsScrollEnd is called.
    */
   scrollEndThreshold: number;
@@ -279,6 +284,7 @@ export const GRID_DEFAULT_SIMPLE_OPTIONS: GridSimpleOptions = {
   rowHeight: 52,
   rowsPerPageOptions: [25, 50, 100],
   treeData: false,
+  defaultGroupingExpansionDepth: 0,
   scrollEndThreshold: 80,
   showCellRightBorder: false,
   showColumnRightBorder: false,
