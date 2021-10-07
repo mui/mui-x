@@ -13,6 +13,8 @@ import { RowGroupingFunction } from '../../root/rowGroupsPerProcessing';
 
 /**
  * Only available in DataGridPro
+ * @requires useGridColumnsPreProcessing (method)
+ * @requires useGridRowGroupsPreProcessing (method)
  */
 export const useGridTreeData = (
   apiRef: GridApiRef,
