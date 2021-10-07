@@ -21,6 +21,8 @@ A big thanks to the 9 contributors who made this release possible. Here are some
 
 - [core] Use selectors instead of direct state access in feature hooks and components (#2723) @flaviendelangle
 
+  The following selectors were renamed:
+
   ```diff
   -const filterModel = filterGridStateSelector(state);
   +const filterModel = gridFilterModelSelector(state);
