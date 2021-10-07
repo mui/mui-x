@@ -39,7 +39,7 @@ const checkFilterModelValidity = (model: GridFilterModel) => {
  * @requires useGridColumns (state, method, event)
  * @requires useGridParamsApi (method)
  * @requires useGridRows (event)
- * @requires useGridControlStateManager (method)
+ * @requires useGridControlState (method)
  */
 export const useGridFilter = (
   apiRef: GridApiRef,

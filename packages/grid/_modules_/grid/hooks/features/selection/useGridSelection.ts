@@ -24,7 +24,7 @@ import { useGridStateInit } from '../../utils/useGridStateInit';
 /**
  * @requires useGridRows (state, method)
  * @requires useGridParamsApi (method)
- * @requires useGridControlStateManager (method)
+ * @requires useGridControlState (method)
  */
 export const useGridSelection = (
   apiRef: GridApiRef,

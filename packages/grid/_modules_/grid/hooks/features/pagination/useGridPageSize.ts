@@ -11,7 +11,7 @@ import { useGridStateInit } from '../../utils/useGridStateInit';
 import { gridPageSizeSelector } from './gridPaginationSelector';
 
 /**
- * @requires useGridControlStateManager (method)
+ * @requires useGridControlState (method)
  * @requires useGridContainerProps (state)
  * @requires useGridFilter (state)
  */

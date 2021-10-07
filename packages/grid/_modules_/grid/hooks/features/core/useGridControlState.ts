@@ -6,7 +6,7 @@ import { GridControlStateItem } from '../../../models/controlStateItem';
 import { GridSignature } from '../../root/useGridApiEventHandler';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
 
-export function useGridControlStateManager(apiRef: GridApiRef, props: GridComponentProps) {
+export function useGridControlState(apiRef: GridApiRef, props: GridComponentProps) {
   const controlStateMapRef = React.useRef<Record<string, GridControlStateItem<any>>>({});
 
   const updateControlState = React.useCallback<GridControlStateApi['updateControlState']>(
