@@ -11,7 +11,7 @@ A big thanks to the 9 contributors who made this release possible. Here are some
 
 - 🌎 Add Persian (faIR) locale (#2712) @devlifeX
 - 🎁 Allow to select range of rows with shift key (#2456) @flaviendelangle
-- 📚 Internam documentation improvements
+- 📚 Internal documentation improvements
 - 🐞 Bugfixes
 
 ### `@mui/x-data-grid@v5.0.0-beta.3` / `@mui/x-data-grid-pro@v5.0.0-beta.3`
@@ -19,9 +19,6 @@ A big thanks to the 9 contributors who made this release possible. Here are some
 #### Breaking changes
 
 - [core] Use selectors instead of direct state access in feature hooks and components (#2723) @flaviendelangle
-
-  Use the `api` to get the missing params.
-  The `GridValueFormatterParams` interface has the following signature now:
 
   ```diff
   -const filterModel = filterGridStateSelector(state);
