@@ -11,7 +11,7 @@ A big thanks to the 9 contributors who made this release possible. Here are some
 
 - 🌎 Add Persian (faIR) locale (#2712) @devlifeX
 - 🎁 Allow to select range of rows with Shift + click (#2456) @flaviendelangle
-- 🚀 Allow to throttle the row updates with the `throttleRowsMs` prop on `DataGridPro` and remove the default 100ms row update throttle (#2561) @flaviendelangle
+- 🚀 Allow to throttle the row updates with the `throttleRowsMs` prop on `DataGridPro` and remove the default 100ms row update delay (#2561) @flaviendelangle
 - 💡 Enhance internal code structure
 - 📚 Documentation improvements
 - 🐞 Bugfixes
