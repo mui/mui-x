@@ -10,7 +10,7 @@ _Oct 7, 2021_
 A big thanks to the 9 contributors who made this release possible. Here are some highlights ✨:
 
 - 🌎 Add Persian (faIR) locale (#2712) @devlifeX
-- 🎁 Allow to select range of rows with shift key (#2456) @flaviendelangle
+- 🎁 Allow to select range of rows with Shift + click (#2456) @flaviendelangle
 - 💡 Internal code impromvements
 - 📚 Documentation improvements
 - 🐞 Bugfixes
