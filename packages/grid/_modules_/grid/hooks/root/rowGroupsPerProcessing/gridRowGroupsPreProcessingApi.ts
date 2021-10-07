@@ -1,15 +1,21 @@
 import {
+  GridRowConfigTree,
   GridRowData,
-  GridRowGroupingResult,
   GridRowId,
   GridRowsLookup,
 } from '../../../models/gridRows';
 
 export type RwoGroupParams = {
-  lookup: GridRowsLookup;
   ids: GridRowId[];
   gridRowId: (rowData: GridRowData) => GridRowId;
+  idRowsLookup: GridRowsLookup;
 };
+
+export interface GridRowGroupingResult {
+  tree: GridRowConfigTree;
+  paths: Record<GridRowId, string[]>;
+  idRowsLookup: GridRowsLookup;
+}
 
 export type RowGroupingFunction = (params: RwoGroupParams) => GridRowGroupingResult;
 

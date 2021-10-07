@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridRowId, GridRowConfigTree } from '../../../models/gridRows';
+import { GridRowId, GridRowConfigTree, GridRowsLookup } from '../../../models/gridRows';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridComponentProps } from '../../../GridComponentProps';
 import { GridColumnsPreProcessing } from '../../root/columnsPreProcessing';
@@ -10,51 +10,6 @@ import { GridCellParams, GridColDef, MuiEvent } from '../../../models';
 import { isSpaceKey } from '../../../utils/keyboardUtils';
 import { useFirstRender } from '../../utils/useFirstRender';
 import { RowGroupingFunction } from '../../root/rowGroupsPerProcessing';
-
-const insertRowInTree = ({
-  tree,
-  id,
-  path,
-  depth,
-  defaultGroupingExpansionDepth,
-}: {
-  tree: GridRowConfigTree;
-  id: GridRowId;
-  path: string[];
-  depth: number;
-  defaultGroupingExpansionDepth: number;
-}) => {
-  if (path.length === 0) {
-    throw new Error(`MUI: Could not insert row #${id} in the tree structure.`);
-  }
-
-  if (path.length === 1) {
-    tree.set(path[0], {
-      id,
-      depth,
-      expanded: defaultGroupingExpansionDepth > depth,
-    });
-  } else {
-    const [nodeName, ...restPath] = path;
-
-    const parent = tree.get(nodeName);
-    if (!parent) {
-      throw new Error(`MUI: Could not insert row #${id} in the tree structure.`);
-    }
-
-    if (!parent.children) {
-      parent.children = new Map();
-    }
-
-    insertRowInTree({
-      tree: parent.children,
-      id,
-      path: restPath,
-      depth: depth + 1,
-      defaultGroupingExpansionDepth,
-    });
-  }
-};
 
 /**
  * Only available in DataGridPro
@@ -95,7 +50,7 @@ export const useGridTreeData = (
         throw new Error('MUI: No getTreeDataPath given.');
       }
 
-      const rows = Object.values(params.lookup)
+      const rows = Object.values(params.idRowsLookup)
         .map((row) => {
           const id = params.gridRowId(row);
 
@@ -107,20 +62,81 @@ export const useGridTreeData = (
         .sort((a, b) => a.path.length - b.path.length);
 
       const paths = Object.fromEntries(rows.map((row) => [row.id, row.path]));
-      const tree = new Map();
+      const fullTree = new Map();
+      const idRowsLookupFiller: GridRowsLookup = {};
+      const fillerPaths: Record<GridRowId, string[]> = {};
+
+      const insertRowInTree = ({
+        tree,
+        id,
+        path,
+        originalPath,
+        depth,
+      }: {
+        tree: GridRowConfigTree;
+        id: GridRowId;
+        path: string[];
+        originalPath: string[];
+        depth: number;
+      }) => {
+        if (path.length === 0) {
+          throw new Error(`MUI: Could not insert row #${id} in the tree structure.`);
+        }
+
+        if (path.length === 1) {
+          tree.set(path[0], {
+            id,
+            depth,
+            expanded: props.defaultGroupingExpansionDepth > depth,
+          });
+        } else {
+          const [nodeName, ...restPath] = path;
+
+          let parent = tree.get(nodeName);
+          if (!parent) {
+            const fillerPath = originalPath.slice(0, -1);
+            const fillerId = `filler-row-${fillerPath.join('-')}`;
+            parent = {
+              id: fillerId,
+              fillerNode: true,
+              depth,
+              expanded: props.defaultGroupingExpansionDepth > depth,
+            };
+
+            idRowsLookupFiller[fillerId] = {};
+            fillerPaths[fillerId] = fillerPath;
+
+            tree.set(nodeName, parent);
+          }
+
+          if (!parent.children) {
+            parent.children = new Map();
+          }
+
+          insertRowInTree({
+            tree: parent.children,
+            id,
+            originalPath,
+            path: restPath,
+            depth: depth + 1,
+          });
+        }
+      };
+
       rows.forEach((row) => {
         insertRowInTree({
-          tree,
+          tree: fullTree,
           id: row.id,
           path: row.path,
+          originalPath: row.path,
           depth: 0,
-          defaultGroupingExpansionDepth: props.defaultGroupingExpansionDepth,
         });
       });
 
       return {
-        tree,
-        paths,
+        tree: fullTree,
+        paths: { ...paths, ...fillerPaths },
+        idRowsLookup: { ...params.idRowsLookup, ...idRowsLookupFiller },
       };
     };
 

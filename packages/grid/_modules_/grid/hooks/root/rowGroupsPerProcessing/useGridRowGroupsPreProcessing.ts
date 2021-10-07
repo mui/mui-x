@@ -10,6 +10,7 @@ import { useGridApiMethod } from '../useGridApiMethod';
 const getFlatRowTree: RowGroupingFunction = (params) => ({
   tree: new Map(params.ids.map((id) => [id.toString(), { id, depth: 0 }])),
   paths: Object.fromEntries(params.ids.map((id) => [id, [id.toString()]])),
+  idRowsLookup: params.idRowsLookup,
 });
 
 /**

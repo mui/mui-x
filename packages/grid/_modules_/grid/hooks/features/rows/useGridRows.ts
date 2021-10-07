@@ -148,18 +148,19 @@ const getRowsStateFromCache = (
   rowsCache: GridRowsInternalCache,
   apiRef: GridApiRef,
 ): GridRowsState => {
-  const { rowIds, propRowCount = 0, propGetRowId, ...rowState } = rowsCache.state;
+  const { rowIds, idRowsLookup, propRowCount = 0, propGetRowId, ...rowState } = rowsCache.state;
 
-  const { tree, paths } = apiRef.current.groupRows({
-    lookup: rowState.idRowsLookup,
+  const groupingResponse = apiRef.current.groupRows({
+    idRowsLookup,
     ids: rowIds,
     gridRowId: (rowData: GridRowData) => getGridRowId(rowData, propGetRowId),
   });
 
   const totalRowCount = propRowCount > rowIds.length ? propRowCount : rowIds.length;
-  const totalTopLevelRowCount = propRowCount > tree.size ? propRowCount : tree.size;
+  const totalTopLevelRowCount =
+    propRowCount > groupingResponse.tree.size ? propRowCount : groupingResponse.tree.size;
 
-  return { ...rowState, tree, paths, totalRowCount, totalTopLevelRowCount };
+  return { ...rowState, ...groupingResponse, totalRowCount, totalTopLevelRowCount };
 };
 
 // The cache is always redefined synchronously in `useGridStateInit` so this object don't need to be regenerated across DataGrid instances.

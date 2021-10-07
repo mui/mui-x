@@ -17,14 +17,14 @@ export interface GridRowConfigTreeNode {
   children?: GridRowConfigTree;
   expanded?: boolean;
   depth: number;
+
+  /**
+   * If `true`, this node has been automatically added to fill a gap in the tree structure
+   */
+  fillerNode?: boolean;
 }
 
 export type GridRowConfigTree = Map<string, GridRowConfigTreeNode>;
-
-export interface GridRowGroupingResult {
-  tree: GridRowConfigTree;
-  paths: Record<GridRowId, string[]>;
-}
 
 export type GridRowsLookup = Record<GridRowId, GridRowModel>;
 
