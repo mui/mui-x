@@ -9,7 +9,7 @@ import { GridEvents } from '../../../constants';
 import { GridCellParams, GridColDef, MuiEvent } from '../../../models';
 import { isSpaceKey } from '../../../utils/keyboardUtils';
 import { useFirstRender } from '../../utils/useFirstRender';
-import { RowGroupingFunction } from '../../root/rowGroupsPerProcessing';
+import { GridRowGroupingPreProcessing } from '../../root/rowGroupsPerProcessing';
 
 /**
  * Only available in DataGridPro
@@ -44,27 +44,25 @@ export const useGridTreeData = (
 
   const updateRowGrouping = React.useCallback(() => {
     if (!props.treeData) {
-      return apiRef.current.registerRowGroupsBuilder(null);
+      return apiRef.current.registerRowGroupsBuilder('treeData', null);
     }
 
-    const groupRows: RowGroupingFunction = (params) => {
+    const groupRows: GridRowGroupingPreProcessing = (params) => {
       if (!props.getTreeDataPath) {
         throw new Error('MUI: No getTreeDataPath given.');
       }
 
-      const rows = Object.values(params.idRowsLookup)
-        .map((row) => {
-          const id = params.gridRowId(row);
-
+      const rows = params.ids
+        .map((rowId) => {
           return {
-            id,
-            path: props.getTreeDataPath!(row),
+            id: rowId,
+            path: props.getTreeDataPath!(params.idRowsLookup[rowId]),
           };
         })
         .sort((a, b) => a.path.length - b.path.length);
 
       const paths = Object.fromEntries(rows.map((row) => [row.id, row.path]));
-      const fullTree = new Map();
+      const fullTree: GridRowConfigTree = new Map();
       const idRowsLookupFiller: GridRowsLookup = {};
       const fillerPaths: Record<GridRowId, string[]> = {};
 
@@ -142,7 +140,7 @@ export const useGridTreeData = (
       };
     };
 
-    return apiRef.current.registerRowGroupsBuilder(groupRows);
+    return apiRef.current.registerRowGroupsBuilder('treeData', groupRows);
   }, [apiRef, props.getTreeDataPath, props.treeData, props.defaultGroupingExpansionDepth]);
 
   useFirstRender(() => {

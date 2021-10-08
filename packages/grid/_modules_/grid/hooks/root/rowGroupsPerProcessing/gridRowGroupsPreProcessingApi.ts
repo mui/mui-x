@@ -1,13 +1,7 @@
-import {
-  GridRowConfigTree,
-  GridRowData,
-  GridRowId,
-  GridRowsLookup,
-} from '../../../models/gridRows';
+import { GridRowConfigTree, GridRowId, GridRowsLookup } from '../../../models/gridRows';
 
 export type RwoGroupParams = {
   ids: GridRowId[];
-  gridRowId: (rowData: GridRowData) => GridRowId;
   idRowsLookup: GridRowsLookup;
 };
 
@@ -17,16 +11,22 @@ export interface GridRowGroupingResult {
   idRowsLookup: GridRowsLookup;
 }
 
-export type RowGroupingFunction = (params: RwoGroupParams) => GridRowGroupingResult;
+export type GridRowGroupingPreProcessing = (params: RwoGroupParams) => GridRowGroupingResult | null;
 
 export interface GridRowGroupsPreProcessingApi {
   /**
-   * @param {RowGroupingFunction} columnsPreProcessing Pre-processing to register.
+   * Register a column pre-processing and emit an event to re-apply the row grouping pre-processing
+   * @param {string} processingName Name of the pre-processing. Used to clean the previous version of the pre-processing.
+   * @param {GridRowGroupingPreProcessing} columnsPreProcessing Pre-processing to register.
    * @ignore - do not document
    */
-  registerRowGroupsBuilder: (groupingFunction: RowGroupingFunction | null) => void;
+  registerRowGroupsBuilder: (
+    processingName: string,
+    groupingFunction: GridRowGroupingPreProcessing | null,
+  ) => void;
 
   /**
+   * Apply the first row grouping pre-processing that does not return null
    * @param {GridRowsLookup} rowsLookup. Lookup of the rows to group
    * @param {GridRowId[]} List of the rows IDs
    * @returns {GridRowGroupingResult} The grouped rows
