@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable jsx-a11y/interactive-supports-focus */
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
@@ -73,18 +75,6 @@ function GridRow(props: GridRowProps) {
     [apiRef, id],
   );
 
-  const mouseEventsHandlers = React.useMemo<Partial<React.HTMLAttributes<HTMLDivElement>>>(
-    () => ({
-      onClick: publish(GridEvents.rowClick),
-      onDoubleClick: publish(GridEvents.rowDoubleClick),
-      onMouseOver: publish(GridEvents.rowOver),
-      onMouseOut: publish(GridEvents.rowOut),
-      onMouseEnter: publish(GridEvents.rowEnter),
-      onMouseLeave: publish(GridEvents.rowLeave),
-    }),
-    [publish],
-  );
-
   const style = {
     maxHeight: rowHeight,
     minHeight: rowHeight,
@@ -104,7 +94,8 @@ function GridRow(props: GridRowProps) {
       aria-rowindex={ariaRowIndex}
       aria-selected={selected}
       style={style}
-      {...mouseEventsHandlers}
+      onClick={publish(GridEvents.rowClick)}
+      onDoubleClick={publish(GridEvents.rowDoubleClick)}
       {...other}
     >
       {children}

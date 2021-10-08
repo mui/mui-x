@@ -1,9 +1,5 @@
 [
   {
-    "name": "cellBlur",
-    "description": "Fired when the <code>blur</code> event of a cell is triggered. Called with a <a href=\"/api/data-grid/grid-cell-params/\">GridCellParams</a> object."
-  },
-  {
     "name": "cellClick",
     "description": "Fired when a cell is clicked. Called with a <a href=\"/api/data-grid/grid-cell-params/\">GridCellParams</a> object."
   },
@@ -24,14 +20,6 @@
     "description": "Fired when the cell turns back to view mode. Called with a <a href=\"/api/data-grid/grid-cell-params/\">GridCellParams</a> object."
   },
   {
-    "name": "cellEnter",
-    "description": "Fired when a <code>mouseenter</code> event happens in a cell. Called with a <a href=\"/api/data-grid/grid-cell-params/\">GridCellParams</a> object."
-  },
-  {
-    "name": "cellFocus",
-    "description": "Fired when a cell gains focus. Called with a <a href=\"/api/data-grid/grid-cell-params/\">GridCellParams</a> object."
-  },
-  {
     "name": "cellFocusIn",
     "description": "Fired when a cell gains focus. Called with a <a href=\"/api/data-grid/grid-cell-params/\">GridCellParams</a> object."
   },
@@ -44,24 +32,12 @@
     "description": "Fired when a <code>keydown</code> event happens in a cell. Called with a <a href=\"/api/data-grid/grid-cell-params/\">GridCellParams</a> object."
   },
   {
-    "name": "cellLeave",
-    "description": "Fired when a <code>mouseleave</code> event happens in a cell. Called with a <a href=\"/api/data-grid/grid-cell-params/\">GridCellParams</a> object."
-  },
-  {
     "name": "cellMouseDown",
     "description": "Fired when a <code>mousedown</code> event happens in a cell. Called with a <a href=\"/api/data-grid/grid-cell-params/\">GridCellParams</a> object."
   },
   {
     "name": "cellMouseUp",
     "description": "Fired when a <code>mouseup</code> event happens in a cell. Called with a <a href=\"/api/data-grid/grid-cell-params/\">GridCellParams</a> object."
-  },
-  {
-    "name": "cellOut",
-    "description": "Fired when a <code>mouseout</code> event happens in a cell. Called with a <a href=\"/api/data-grid/grid-cell-params/\">GridCellParams</a> object."
-  },
-  {
-    "name": "cellOver",
-    "description": "Fired when a <code>mouseover</code> event happens in a cell. Called with a <a href=\"/api/data-grid/grid-cell-params/\">GridCellParams</a> object."
   },
   {
     "name": "columnHeaderClick",
@@ -142,22 +118,6 @@
   {
     "name": "rowEditStop",
     "description": "Fired when the row turns back to view mode. Called with a <a href=\"/api/data-grid/grid-cell-params/\">GridCellParams</a> object."
-  },
-  {
-    "name": "rowEnter",
-    "description": "Fired when a <code>mouseenter</code> event happens in a row.  Called with a <a href=\"/api/data-grid/grid-row-params/\">GridRowParams</a> object."
-  },
-  {
-    "name": "rowLeave",
-    "description": "Fired when a <code>mouseleave</code> event happens in a row.  Called with a <a href=\"/api/data-grid/grid-row-params/\">GridRowParams</a> object."
-  },
-  {
-    "name": "rowOut",
-    "description": "Fired when a <code>mouseout</code> event happens in a row.  Called with a <a href=\"/api/data-grid/grid-row-params/\">GridRowParams</a> object."
-  },
-  {
-    "name": "rowOver",
-    "description": "Fired when a <code>mouseover</code> event happens in a row.  Called with a <a href=\"/api/data-grid/grid-row-params/\">GridRowParams</a> object."
   },
   {
     "name": "rowSelectionCheckboxChange",
