@@ -335,7 +335,7 @@ export const useGridRows = (
     [apiRef],
   );
 
-  const setRowExpansion = React.useCallback<GridRowApi['setRowExpansion']>(
+  const setRowExpansion = React.useCallback<GridRowApi['UNSTABLE_setRowExpansion']>(
     (id, isExpanded) => {
       setGridState((state) => {
         const path = state.rows.paths[id];
@@ -354,14 +354,14 @@ export const useGridRows = (
     [apiRef, setGridState, forceUpdate],
   );
 
-  const getRowPath = React.useCallback<GridRowApi['getRowPath']>(
+  const getRowPath = React.useCallback<GridRowApi['UNSTABLE_getRowPath']>(
     (id) => gridRowsPathSelector(apiRef.current.state)[id] ?? null,
     [apiRef],
   );
 
-  const getRowNode = React.useCallback<GridRowApi['getRowNode']>(
+  const getRowNode = React.useCallback<GridRowApi['UNSTABLE_getRowNode']>(
     (id) => {
-      const path = apiRef.current.getRowPath(id);
+      const path = apiRef.current.UNSTABLE_getRowPath(id);
 
       if (!path) {
         throw new Error(`MUI: No row with id #${id} found in row path list`);
@@ -416,9 +416,9 @@ export const useGridRows = (
     getAllRowIds,
     setRows,
     updateRows,
-    getRowPath,
-    setRowExpansion,
-    getRowNode,
+    UNSTABLE_getRowPath: getRowPath,
+    UNSTABLE_setRowExpansion: setRowExpansion,
+    UNSTABLE_getRowNode: getRowNode,
   };
 
   useGridApiMethod(apiRef, rowApi, 'GridRowApi');

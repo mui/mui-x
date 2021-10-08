@@ -54,7 +54,7 @@ export function GridRowCells(props: RowCellsProps) {
   } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
-  const rowNode = apiRef.current.getRowNode(id);
+  const rowNode = apiRef.current.UNSTABLE_getRowNode(id);
 
   const cellsProps = columns.slice(firstColIdx, lastColIdx + 1).map((column, colIdx) => {
     const colIndex = firstColIdx + colIdx;

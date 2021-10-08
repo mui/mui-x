@@ -57,18 +57,21 @@ export interface GridRowApi {
    * Gets the row node from the internal tree structure.
    * @param {GridRowId} id The id of the row.
    * @returns {GridRowConfigTreeNode} The row data.
+   * @ignore - do not document.
    */
-  getRowNode: (id: GridRowId) => GridRowConfigTreeNode | null;
+  UNSTABLE_getRowNode: (id: GridRowId) => GridRowConfigTreeNode | null;
   /**
    * Expand or collapse a row children.
    * @param {GridRowId} id the ID of the row to expand or collapse.
    * @param {boolean} isExpanded A boolean indicating if the row must be expanded or collapsed.
+   * @ignore - do not document.
    */
-  setRowExpansion: (id: GridRowId, isExpanded: boolean) => void;
+  UNSTABLE_setRowExpansion: (id: GridRowId, isExpanded: boolean) => void;
   /**
    * Gets the row path in the tree with a given id.
    * @param {GridRowId} id the ID of the row to toggle.
    * @returns {string[] | null} path The path of the row.
+   * @ignore - do not document.
    */
-  getRowPath: (id: GridRowId) => string[] | null;
+  UNSTABLE_getRowPath: (id: GridRowId) => string[] | null;
 }

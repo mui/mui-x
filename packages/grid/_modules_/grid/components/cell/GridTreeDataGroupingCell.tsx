@@ -26,13 +26,13 @@ const GridTreeDataGroupingCell = (props: GridRenderCellParams) => {
   const rootProps = useGridRootProps();
   const apiRef = useGridApiContext();
   const classes = useStyles();
-  const node = apiRef.current.getRowNode(id);
+  const node = apiRef.current.UNSTABLE_getRowNode(id);
 
   const Icon = node?.expanded
     ? rootProps.components.TreeDataCollapseIcon
     : rootProps.components.TreeDataExpandIcon;
 
-  const path = apiRef.current.getRowPath(id);
+  const path = apiRef.current.UNSTABLE_getRowPath(id);
 
   if (!node || !path) {
     throw new Error(`MUI: No row with id #${id} found`);
@@ -44,7 +44,7 @@ const GridTreeDataGroupingCell = (props: GridRenderCellParams) => {
         {!!node.children?.size && (
           <IconButton
             size="small"
-            onClick={() => apiRef.current.setRowExpansion(id, !node?.expanded)}
+            onClick={() => apiRef.current.UNSTABLE_setRowExpansion(id, !node?.expanded)}
             tabIndex={-1}
             aria-label={
               node.expanded
