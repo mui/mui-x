@@ -4,7 +4,7 @@ import { GridSortModel } from '../../../models/gridSortModel';
 export type GridSortedRowsTree = Map<GridRowId, GridSortedRowsTreeNode>;
 
 export interface GridSortedRowsTreeNode {
-  node: GridRowModel;
+  model: GridRowModel;
   children?: GridSortedRowsTree;
 }
 

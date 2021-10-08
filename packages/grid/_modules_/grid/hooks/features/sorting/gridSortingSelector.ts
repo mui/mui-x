@@ -31,7 +31,7 @@ export const gridSortedRowsSelector = createSelector(
 
       nodes.forEach((node) => {
         map.set(node.id, {
-          node: idRowsLookup[node.id],
+          model: idRowsLookup[node.id],
           children: node.children ? buildMap(node.children) : undefined,
         });
       });

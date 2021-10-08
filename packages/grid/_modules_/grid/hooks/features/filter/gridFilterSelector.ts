@@ -58,7 +58,7 @@ export const gridSortedVisibleRowsSelector = createSelector(
 
 export type TreeSortedVisibleRow = {
   id: GridRowId;
-  node: GridRowModel;
+  model: GridRowModel;
   children?: TreeSortedVisibleRow[];
 };
 
@@ -68,7 +68,7 @@ export const gridSortedVisibleRowsAsArraySelector = createSelector(
     const flattenRowIds = (tree: GridSortedRowsTree): TreeSortedVisibleRow[] =>
       Array.from(tree.entries()).map(([id, row]) => ({
         id,
-        node: row.node,
+        model: row.model,
         children: row.children ? flattenRowIds(row.children) : undefined,
       }));
 
@@ -76,14 +76,14 @@ export const gridSortedVisibleRowsAsArraySelector = createSelector(
   },
 );
 
-export type FlatSortedVisibleRow = { id: GridRowId; node: GridRowModel };
+export type FlatSortedVisibleRow = { id: GridRowId; model: GridRowModel };
 
 export const gridSortedVisibleRowsAsArrayFlatSelector = createSelector(
   gridSortedVisibleRowsSelector,
   (rows) => {
     const flattenRowIds = (tree: GridSortedRowsTree): FlatSortedVisibleRow[] =>
       Array.from(tree.entries()).flatMap(([id, row]) => [
-        { id, node: row.node },
+        { id, model: row.model },
         ...(row.children ? flattenRowIds(row.children) : []),
       ]);
 

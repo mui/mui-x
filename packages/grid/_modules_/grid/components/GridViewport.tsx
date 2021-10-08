@@ -96,7 +96,7 @@ export const GridViewport: ViewportType = React.forwardRef<HTMLDivElement, {}>(
           <GridEmptyCell width={renderState.renderContext!.leftEmptyWidth} height={rowHeight} />
           <GridRowCells
             columns={visibleColumns}
-            row={row.node}
+            row={row.model}
             id={row.id}
             height={rowHeight}
             firstColIdx={renderState.renderContext!.firstColIdx!}
