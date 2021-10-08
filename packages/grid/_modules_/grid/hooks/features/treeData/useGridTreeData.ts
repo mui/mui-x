@@ -3,7 +3,7 @@ import { GridRowConfigTree, GridRowId, GridRowsLookup } from '../../../models/gr
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridComponentProps } from '../../../GridComponentProps';
 import { GridColumnsPreProcessing } from '../../root/columnsPreProcessing';
-import { GridTreeDataGroupColDef } from './gridTreeDataGroupColDef';
+import { GRID_TREE_DATA_GROUP_COL_DEF } from './gridTreeDataGroupColDef';
 import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
 import { GridEvents } from '../../../constants';
 import { GridCellParams, GridColDef, MuiEvent } from '../../../models';
@@ -31,7 +31,7 @@ export const useGridTreeData = (
       const addGroupingColumn: GridColumnsPreProcessing = (columns) => {
         const index = columns[0].type === 'checkboxSelection' ? 1 : 0;
         const groupingColumn: GridColDef = {
-          ...GridTreeDataGroupColDef,
+          ...GRID_TREE_DATA_GROUP_COL_DEF,
           headerName: apiRef.current.getLocaleText('treeDataGroupingHeaderName'),
           ...props.groupingColDef,
         };
