@@ -39,7 +39,11 @@ export const useGridRowGroupsPreProcessing = (apiRef: GridApiRef) => {
     const preProcessingList = Array.from(rowGroupsPreProcessingRef.current.values());
 
     while (!response && preProcessingList.length) {
-      response = preProcessingList.shift()!(...params);
+      const preProcessing = preProcessingList.shift();
+
+      if (preProcessing) {
+        response = preProcessing(...params);
+      }
     }
 
     if (!response) {

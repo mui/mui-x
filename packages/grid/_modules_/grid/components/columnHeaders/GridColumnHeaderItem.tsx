@@ -286,6 +286,7 @@ GridColumnHeaderItem.propTypes = {
     renderEditCell: PropTypes.func,
     renderHeader: PropTypes.func,
     resizable: PropTypes.bool,
+    shouldRenderFillerRows: PropTypes.bool,
     sortable: PropTypes.bool,
     sortComparator: PropTypes.func,
     type: PropTypes.string,
