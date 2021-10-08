@@ -105,6 +105,14 @@ export default function RowContextMenu() {
             ? { top: contextMenu.mouseY, left: contextMenu.mouseX }
             : undefined
         }
+        componentsProps={{
+          root: {
+            onContextMenu: (e) => {
+              e.preventDefault();
+              handleClose();
+            },
+          },
+        }}
       >
         <MenuItem onClick={convertToUppercase}>UPPERCASE</MenuItem>
         <MenuItem onClick={convertToLowercase}>lowercase</MenuItem>
