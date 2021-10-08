@@ -7,10 +7,10 @@ import HomeIcon from '@mui/icons-material/Home';
 import {
   DataGridPro,
   useGridApiRef,
-  visibleGridRowCountSelector,
+  gridVisibleRowCountSelector,
   visibleGridColumnsLengthSelector,
   visibleGridColumnsSelector,
-  visibleSortedGridRowIdsSelector,
+  gridSortedRowIdsFlatSelector,
 } from '@mui/x-data-grid-pro';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
@@ -30,13 +30,13 @@ export default function ScrollPlayground() {
   React.useEffect(() => {
     const { rowIndex, colIndex } = coordinates;
     apiRef.current.scrollToIndexes(coordinates);
-    const id = visibleSortedGridRowIdsSelector(apiRef.current.state)[rowIndex];
+    const id = gridSortedRowIdsFlatSelector(apiRef.current.state)[rowIndex];
     const column = visibleGridColumnsSelector(apiRef.current.state)[colIndex];
     apiRef.current.setCellFocus(id, column.field);
   }, [apiRef, coordinates]);
 
   const handleClick = (position) => () => {
-    const maxRowIndex = visibleGridRowCountSelector(apiRef.current.state) - 1;
+    const maxRowIndex = gridVisibleRowCountSelector(apiRef.current.state) - 1;
     const maxColIndex = visibleGridColumnsLengthSelector(apiRef.current.state) - 1;
 
     setCoordinates((coords) => {
@@ -56,7 +56,7 @@ export default function ScrollPlayground() {
   };
 
   const handleCellClick = (params) => {
-    const rowIndex = visibleSortedGridRowIdsSelector(apiRef.current.state).findIndex(
+    const rowIndex = gridSortedRowIdsFlatSelector(apiRef.current.state).findIndex(
       (id) => id === params.id,
     );
 

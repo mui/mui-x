@@ -18,7 +18,7 @@ const CustomGridTreeDataGroupingCell = (props) => {
   }
 
   return (
-    <Box sx={{ ml: node.depth * 4 }}>
+    <Box sx={{ ml: path.length * 4 }}>
       <div>
         {node.children?.size ? (
           <Button

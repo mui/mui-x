@@ -25,6 +25,12 @@ Use the `groupingColDef` prop to customize the rendering of the grouping column.
 
 {{"demo": "pages/components/data-grid/group-pivot/CustomGroupingColumnTreeData.js", "bg": "inline", "defaultCodeOpen": false}}
 
+### Filler rows
+
+If some entries are missing to build the full tree, the `DataGridPro` will automatically create filler rows to fill those gaps.
+
+{{"demo": "pages/components/data-grid/group-pivot/FillerTreeData.js", "bg": "inline", "defaultCodeOpen": false}}
+
 ## 🚧 Master detail [<span class="pro"></span>](https://mui.com/store/items/material-ui-pro/)
 
 > ⚠️ This feature isn't implemented yet. It's coming.
