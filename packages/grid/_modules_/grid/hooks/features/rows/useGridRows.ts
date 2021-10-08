@@ -153,7 +153,6 @@ const getRowsStateFromCache = (
   const groupingResponse = apiRef.current.groupRows({
     idRowsLookup,
     ids: rowIds,
-    gridRowId: (rowData: GridRowData) => getGridRowId(rowData, propGetRowId),
   });
 
   const totalRowCount = propRowCount > rowIds.length ? propRowCount : rowIds.length;
