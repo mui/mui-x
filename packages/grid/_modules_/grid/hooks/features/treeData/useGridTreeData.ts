@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridRowConfigTree, GridRowsLookup } from '../../../models/gridRows';
+import { GridRowConfigTree, GridRowId, GridRowsLookup } from '../../../models/gridRows';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridComponentProps } from '../../../GridComponentProps';
 import { GridColumnsPreProcessing } from '../../root/columnsPreProcessing';
@@ -10,6 +10,7 @@ import { GridCellParams, GridColDef, MuiEvent } from '../../../models';
 import { isSpaceKey } from '../../../utils/keyboardUtils';
 import { useFirstRender } from '../../utils/useFirstRender';
 import { GridRowGroupingPreProcessing } from '../../root/rowGroupsPerProcessing';
+import { insertLeafInTree } from '../rows/gridRowsUtils';
 
 /**
  * Only available in DataGridPro
@@ -53,61 +54,31 @@ export const useGridTreeData = (
       }
 
       const rows = params.ids
-        .map((rowId) => {
-          return {
-            id: rowId,
-            path: props.getTreeDataPath!(params.idRowsLookup[rowId]),
-          };
-        })
+        .map((rowId) => ({
+          id: rowId,
+          path: props.getTreeDataPath!(params.idRowsLookup[rowId]),
+        }))
         .sort((a, b) => a.path.length - b.path.length);
 
-      const paths = Object.fromEntries(rows.map((row) => [row.id, row.path]));
       const tree: GridRowConfigTree = new Map();
-      const idRowsLookupFiller: GridRowsLookup = {};
+      const paths: Record<GridRowId, string[]> = {};
+      const idRowsLookup: GridRowsLookup = { ...params.idRowsLookup };
 
       rows.forEach((row) => {
-        let subTree = tree;
-
-        row.path.forEach((nodeName, index) => {
-          if (index < row.path.length - 1) {
-            let parentNode = subTree.get(nodeName);
-
-            if (!parentNode) {
-              const path = row.path.slice(0, index + 1);
-              const fillerId = `filler-row-${path.join('-')}`;
-              const childrenTree: GridRowConfigTree = new Map();
-
-              idRowsLookupFiller[fillerId] = {};
-              paths[fillerId] = path;
-
-              parentNode = {
-                id: fillerId,
-                fillerNode: true,
-                expanded: props.defaultGroupingExpansionDepth > index,
-                children: childrenTree,
-              };
-
-              subTree.set(nodeName, parentNode);
-            }
-
-            if (!parentNode.children) {
-              parentNode.children = new Map();
-            }
-
-            subTree = parentNode!.children!;
-          } else {
-            subTree.set(nodeName, {
-              id: row.id,
-              expanded: props.defaultGroupingExpansionDepth > index,
-            });
-          }
+        insertLeafInTree({
+          tree,
+          path: row.path,
+          id: row.id,
+          defaultGroupingExpansionDepth: props.defaultGroupingExpansionDepth,
+          paths,
+          idRowsLookup,
         });
       });
 
       return {
         tree,
         paths,
-        idRowsLookup: { ...params.idRowsLookup, ...idRowsLookupFiller },
+        idRowsLookup,
       };
     };
 
