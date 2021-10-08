@@ -27,7 +27,11 @@ import {
 } from '../hooks/root/gridContainerSizesSelector';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 
-const getRowsSlice = (rows: TreeSortedVisibleRow[], startIndex: number, endIndex: number) => {
+const getRowsSlice = (
+  rows: TreeSortedVisibleRow[],
+  startIndex: number,
+  endIndex: number,
+): TreeSortedVisibleRow[] => {
   const topLevelRows = rows.slice(startIndex, endIndex);
 
   const flattenRows = (nodes: TreeSortedVisibleRow[]) =>

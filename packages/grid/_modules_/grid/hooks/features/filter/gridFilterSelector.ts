@@ -43,7 +43,7 @@ export const gridSortedVisibleRowsSelector = createSelector(
       tree.forEach((row, id) => {
         if (visibleRowsLookup[id] !== false) {
           filteredRows.set(id, {
-            node: row.node,
+            ...row,
             children: row.children ? removeHiddenRows(row.children) : undefined,
           });
         }

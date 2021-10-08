@@ -54,6 +54,7 @@ export function GridRowCells(props: RowCellsProps) {
   } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
+  const rowNode = apiRef.current.getRowNode(id);
 
   const cellsProps = columns.slice(firstColIdx, lastColIdx + 1).map((column, colIdx) => {
     const colIndex = firstColIdx + colIdx;
@@ -80,7 +81,9 @@ export function GridRowCells(props: RowCellsProps) {
     const editCellState = editRowState && editRowState[column.field];
     let cellComponent: React.ReactNode = null;
 
-    if (editCellState == null && column.renderCell) {
+    const skipRender = !column.shouldRenderFillerRows && rowNode?.fillerNode;
+
+    if (editCellState == null && column.renderCell && !skipRender) {
       cellComponent = column.renderCell({ ...cellParams, api: apiRef.current });
       // TODO move to GridCell
       classNames.push(
@@ -88,7 +91,7 @@ export function GridRowCells(props: RowCellsProps) {
       );
     }
 
-    if (editCellState != null && column.renderEditCell) {
+    if (editCellState != null && column.renderEditCell && !skipRender) {
       const params = { ...cellParams, ...editCellState, api: apiRef.current };
       cellComponent = column.renderEditCell(params);
       // TODO move to GridCell
@@ -101,13 +104,13 @@ export function GridRowCells(props: RowCellsProps) {
     }
 
     const cellProps: GridCellProps = {
-      value: cellParams.value,
+      value: skipRender ? null : cellParams.value,
       field: column.field,
       width: column.computedWidth,
       rowId: id,
       height,
       showRightBorder,
-      formattedValue: cellParams.formattedValue,
+      formattedValue: skipRender ? null : cellParams.formattedValue,
       align: column.align || 'left',
       rowIndex,
       cellMode: cellParams.cellMode,

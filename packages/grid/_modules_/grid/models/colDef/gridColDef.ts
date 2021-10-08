@@ -157,6 +157,10 @@ export interface GridColDef {
    */
   filterOperators?: GridFilterOperator[];
   /**
+   * If `true`, the `renderCell` / will be called for the filler rows
+   */
+  shouldRenderFillerRows?: boolean;
+  /**
    * If `true`, this column cannot be reordered.
    * @default false
    */
