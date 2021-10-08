@@ -39,7 +39,7 @@ const GridTreeDataGroupingCell = (props: GridRenderCellParams) => {
   }
 
   return (
-    <Box className={classes.root} sx={{ ml: node.depth * 4 }}>
+    <Box className={classes.root} sx={{ ml: (path.length - 1) * 4 }}>
       <div className={classes.toggle}>
         {!!node.children?.size && (
           <IconButton

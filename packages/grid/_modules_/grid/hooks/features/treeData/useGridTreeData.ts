@@ -86,7 +86,6 @@ export const useGridTreeData = (
         if (path.length === 1) {
           tree.set(path[0], {
             id,
-            depth,
             expanded: props.defaultGroupingExpansionDepth > depth,
           });
         } else {
@@ -99,7 +98,6 @@ export const useGridTreeData = (
             parent = {
               id: fillerId,
               fillerNode: true,
-              depth,
               expanded: props.defaultGroupingExpansionDepth > depth,
             };
 

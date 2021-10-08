@@ -16,7 +16,6 @@ export interface GridRowConfigTreeNode {
   id: GridRowId;
   children?: GridRowConfigTree;
   expanded?: boolean;
-  depth: number;
 
   /**
    * If `true`, this node has been automatically added to fill a gap in the tree structure
