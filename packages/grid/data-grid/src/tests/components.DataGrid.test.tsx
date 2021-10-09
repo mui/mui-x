@@ -106,7 +106,7 @@ describe('<DataGrid /> - Components', () => {
             {...baselineProps}
             hideFooter
             disableVirtualization
-            components={{ Row: ({ rowIndex }) => <span role="row" data-rowindex={rowIndex} /> }}
+            components={{ Row: ({ index }) => <span role="row" data-rowindex={index} /> }}
           />
         </div>,
       );
