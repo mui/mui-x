@@ -261,6 +261,48 @@ describe('<DataGridPro /> - Reorder', () => {
     ]);
   });
 
+  it('should prevent drag events propagation', () => {
+    const handleDragStart = spy();
+    const handleDragEnter = spy();
+    const handleDragOver = spy();
+    const handleDragEnd = spy();
+    let apiRef: GridApiRef;
+    const Test = () => {
+      apiRef = useGridApiRef();
+      const data = useData(1, 3);
+
+      return (
+        <div
+          draggable
+          onDragStart={handleDragStart}
+          onDragEnter={handleDragEnter}
+          onDragOver={handleDragOver}
+          onDragEnd={handleDragEnd}
+          style={{ width: 300, height: 300 }}
+        >
+          <DataGridPro apiRef={apiRef} {...data} />
+        </div>
+      );
+    };
+
+    render(<Test />);
+
+    const dragCol = getColumnHeaderCell(0).firstChild!;
+    const targetCell = getCell(0, 2)!;
+
+    fireEvent.dragStart(dragCol);
+    fireEvent.dragEnter(targetCell);
+    const dragOverEvent = createDragOverEvent(targetCell);
+    fireEvent(targetCell, dragOverEvent);
+    const dragEndEvent = createDragEndEvent(dragCol);
+    fireEvent(dragCol, dragEndEvent);
+
+    expect(handleDragStart.callCount).to.equal(0);
+    expect(handleDragEnter.callCount).to.equal(0);
+    expect(handleDragOver.callCount).to.equal(0);
+    expect(handleDragEnd.callCount).to.equal(0);
+  });
+
   describe('column disableReorder', () => {
     it('should not allow to start dragging a column with disableReorder=true', () => {
       let apiRef: GridApiRef;

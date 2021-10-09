@@ -14,7 +14,6 @@ import { useGridApiContext } from '../hooks/root/useGridApiContext';
 import { GridDataContainer } from './containers/GridDataContainer';
 import { GridEmptyCell } from './cell/GridEmptyCell';
 import { GridRenderingZone } from './GridRenderingZone';
-import { GridRow } from './GridRow';
 import { GridRowCells } from './cell/GridRowCells';
 import { GridStickyContainer } from './GridStickyContainer';
 import {
@@ -70,11 +69,12 @@ export const GridViewport: ViewportType = React.forwardRef<HTMLDivElement, {}>(
       );
 
       return renderedRows.map(([id, row], idx) => (
-        <GridRow
+        <rootProps.components.Row
           key={id}
           id={id}
           selected={selectionLookup[id] !== undefined}
           rowIndex={renderState.renderContext!.firstRowIdx! + idx}
+          {...rootProps.componentsProps?.row}
         >
           <GridEmptyCell width={renderState.renderContext!.leftEmptyWidth} height={rowHeight} />
           <GridRowCells
@@ -96,7 +96,7 @@ export const GridViewport: ViewportType = React.forwardRef<HTMLDivElement, {}>(
             getCellClassName={rootProps.getCellClassName}
           />
           <GridEmptyCell width={renderState.renderContext!.rightEmptyWidth} height={rowHeight} />
-        </GridRow>
+        </rootProps.components.Row>
       ));
     };
 

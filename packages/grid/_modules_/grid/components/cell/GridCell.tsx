@@ -34,6 +34,7 @@ export interface GridCellProps {
   cellMode?: GridCellMode;
   children: React.ReactNode;
   tabIndex: 0 | -1;
+  [x: string]: any; // TODO it should not accept unspecified props
 }
 
 // Based on https://stackoverflow.com/a/59518678
@@ -71,6 +72,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 
 function GridCellRaw(props: GridCellProps) {
   const {
+    align,
     children,
     colIndex,
     cellMode,
@@ -86,6 +88,10 @@ function GridCellRaw(props: GridCellProps) {
     value,
     width,
     className,
+    showRightBorder,
+    extendRowFullWidth,
+    row,
+    ...other
   } = props;
 
   const valueToRender = formattedValue == null ? value : formattedValue;
@@ -208,6 +214,7 @@ function GridCellRaw(props: GridCellProps) {
       style={style}
       tabIndex={cellMode === 'view' || !isEditable ? tabIndex : -1}
       {...eventsHandlers}
+      {...other}
     >
       {children != null ? children : valueToRender?.toString()}
     </div>
