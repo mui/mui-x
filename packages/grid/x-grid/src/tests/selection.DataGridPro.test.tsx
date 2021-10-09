@@ -121,12 +121,13 @@ describe('<DataGridPro /> - Selection', () => {
         />,
       );
 
-      fireEvent.click(getCell(0, 0));
-      fireEvent.click(getCell(1, 0));
-      fireEvent.click(screen.getByRole('button', { name: /next page/i }));
       const selectAllCheckbox = screen.getByRole('checkbox', {
         name: /select all rows checkbox/i,
       });
+
+      fireEvent.click(getCell(0, 0));
+      fireEvent.click(getCell(1, 0));
+      fireEvent.click(screen.getByRole('button', { name: /next page/i }));
       expect(selectAllCheckbox).to.have.attr('data-indeterminate', 'true');
     });
   });

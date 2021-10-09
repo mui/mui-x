@@ -51,7 +51,7 @@ const GridHeaderCheckbox = React.forwardRef<HTMLInputElement, GridColumnHeaderPa
     );
 
     // All the rows that could be selected / unselected by toggling this checkbox
-    const currentSelectionChunkRowIds = React.useMemo(() => {
+    const selectionCandidates = React.useMemo(() => {
       if (!rootProps.pagination || !rootProps.checkboxSelectionVisibleOnly) {
         return visibleRows;
       }
@@ -64,20 +64,16 @@ const GridHeaderCheckbox = React.forwardRef<HTMLInputElement, GridColumnHeaderPa
     ]);
 
     // Amount of rows selected and that could be selected / unselected by toggling this checkbox
-    const currentSelectionChunkSelectedCount = React.useMemo(
-      () => filteredSelection.filter((id) => currentSelectionChunkRowIds.includes(id)).length,
-      [filteredSelection, currentSelectionChunkRowIds],
+    const currentSelectionSize = React.useMemo(
+      () => filteredSelection.filter((id) => selectionCandidates.includes(id)).length,
+      [filteredSelection, selectionCandidates],
     );
 
     const isIndeterminate =
-      currentSelectionChunkSelectedCount > 0 &&
-      currentSelectionChunkSelectedCount < currentSelectionChunkRowIds.length;
+      currentSelectionSize > 0 && currentSelectionSize < selectionCandidates.length;
 
     // TODO core v5 remove || isIndeterminate, no longer has any effect
-    const isChecked =
-      (currentSelectionChunkSelectedCount > 0 &&
-        currentSelectionChunkSelectedCount === currentSelectionChunkRowIds.length) ||
-      isIndeterminate;
+    const isChecked = currentSelectionSize > 0;
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
       const params: GridHeaderSelectionCheckboxParams = {
