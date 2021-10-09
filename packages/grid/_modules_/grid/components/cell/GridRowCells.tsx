@@ -9,7 +9,7 @@ import {
   GridEditRowProps,
   GridStateColDef,
 } from '../../models';
-import { GridCell, GridCellProps } from './GridCell';
+import { GridCellProps } from './GridCell';
 import { useGridApiContext } from '../../hooks/root/useGridApiContext';
 import { isFunction } from '../../utils/utils';
 import { gridClasses } from '../../gridClasses';
@@ -136,7 +136,11 @@ export function GridRowCells(props: RowCellsProps) {
   return (
     <React.Fragment>
       {cellsProps.map((cellProps) => (
-        <GridCell key={cellProps.field} {...cellProps} />
+        <rootProps.components.Cell
+          key={cellProps.field}
+          {...cellProps}
+          {...rootProps.componentsProps?.cell}
+        />
       ))}
     </React.Fragment>
   );
