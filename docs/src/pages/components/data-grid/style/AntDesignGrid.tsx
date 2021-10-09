@@ -4,6 +4,7 @@ import { useDemoData } from '@mui/x-data-grid-generator';
 import { createTheme } from '@mui/material/styles';
 import { createStyles, makeStyles } from '@mui/styles';
 import Pagination from '@mui/material/Pagination';
+import PaginationItem from '@mui/material/PaginationItem';
 
 function customCheckbox(theme) {
   return {
@@ -114,6 +115,8 @@ function CustomPagination() {
       shape="rounded"
       page={state.pagination.page + 1}
       count={state.pagination.pageCount}
+      // @ts-expect-error
+      renderItem={(props2) => <PaginationItem {...props2} disableRipple />}
       onChange={(event: React.ChangeEvent<unknown>, value: number) =>
         apiRef.current.setPage(value - 1)
       }
