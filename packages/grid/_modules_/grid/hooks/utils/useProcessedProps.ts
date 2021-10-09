@@ -7,6 +7,7 @@ import { GridIconSlotsComponent, GridSlotsComponent } from '../../models';
 import {
   GridArrowDownwardIcon,
   GridArrowUpwardIcon,
+  GridCell,
   GridCheckIcon,
   GridCloseIcon,
   GridColumnIcon,
@@ -22,6 +23,7 @@ import {
   GridPagination,
   GridPanel,
   GridPreferencesPanel,
+  GridRow,
   GridSaveAltIcon,
   GridSeparatorIcon,
   GridTableRowsIcon,
@@ -54,6 +56,7 @@ const DEFAULT_GRID_ICON_SLOTS_COMPONENTS: GridIconSlotsComponent = {
 
 export const DEFAULT_GRID_SLOTS_COMPONENTS: GridSlotsComponent = {
   ...DEFAULT_GRID_ICON_SLOTS_COMPONENTS,
+  Cell: GridCell,
   Checkbox: MUICheckbox,
   ColumnMenu: GridColumnMenu,
   ErrorOverlay,
@@ -68,6 +71,7 @@ export const DEFAULT_GRID_SLOTS_COMPONENTS: GridSlotsComponent = {
   FilterPanel: GridFilterPanel,
   ColumnsPanel: GridColumnsPanel,
   Panel: GridPanel,
+  Row: GridRow,
 };
 
 export const useProcessedProps = (inProps: GridInputComponentProps) => {

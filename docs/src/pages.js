@@ -44,6 +44,7 @@ dataGridComponent.children = [
   { pathname: '/components/data-grid/components' },
   { pathname: '/components/data-grid/style' },
   { pathname: '/components/data-grid/localization' },
+  { pathname: '/components/data-grid/scrolling' },
   { pathname: '/components/data-grid/virtualization' },
   { pathname: '/components/data-grid/accessibility' },
   { pathname: '/components/data-grid/group-pivot', title: '🚧 Group & Pivot' },
