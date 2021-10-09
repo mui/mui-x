@@ -112,6 +112,7 @@ const upsertColumnsState = (columnUpdates: GridColDef[], prevColumnsState?: Grid
 };
 
 /**
+ * @requires useGridColumnsPreProcessing (method)
  * @requires useGridParamsApi (method)
  * @requires useGridContainerProps (state)
  * TODO: Impossible priority - useGridParamsApi also needs to be after useGridColumns

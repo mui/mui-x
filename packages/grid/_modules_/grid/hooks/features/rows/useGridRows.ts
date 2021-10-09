@@ -176,7 +176,6 @@ const INITIAL_GRID_ROWS_INTERNAL_CACHE: GridRowsInternalCache = {
 };
 
 /**
- * @requires useGridColumnsPreProcessing (method)
  * @requires useGridRowGroupsPreProcessing (method)
  * @requires useGridSorting (method) - can be after, async only (TODO: Remove after moving the 2 methods to useGridSorting)
  */
