@@ -78,7 +78,7 @@ When defining a [custom column type](/components/data-grid/columns/#custom-colum
 
 In this demo, a `price` column type (used by Total is USD) is defined extending the `number` column type.
 Instead of adding all numeric operators, only the operators `<` and `>` are kept.
-Furthermore, the "$" prefix is added to the input component with the `InputComponentProps` prop.
+Furthermore, the "\$" prefix is added to the input component with the `InputComponentProps` prop.
 
 {{"demo": "pages/components/data-grid/filtering/ColumnTypeFilteringGrid.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -170,7 +170,7 @@ However, it can be implemented as in the demo below.
 
 > ⚠️ This feature isn't natively implemented in the grid package. It's coming.
 >
-> 👍 Upvote [issue #202](https://github.com/mui-org/material-ui-x/issues/202) if you want to see it land faster.
+> 👍 Upvote [issue #202](https://github.com/mui/mui-x/issues/202) if you want to see it land faster.
 
 ## apiRef [<span class="pro"></span>](https://mui.com/store/items/material-ui-pro/)
 

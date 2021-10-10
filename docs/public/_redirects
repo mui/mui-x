@@ -13,4 +13,4 @@
 / /components/data-grid/
 
 ## Redirections have to be done in the core repository, it owns the domain name.
-## e.g. https://github.com/mui-org/material-ui/blob/HEAD/docs/public/_redirects#L31
+## e.g. https://github.com/mui/mui/blob/HEAD/docs/public/_redirects#L31

@@ -12,7 +12,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/mui-org/material-ui-x.git",
+    "url": "https://github.com/mui/mui-x.git",
     "directory": "packages/storybook"
   },
   "dependencies": {

@@ -344,7 +344,7 @@ In addition, column reordering emits the following events that can be imported:
 
 > ⚠️ This feature isn't implemented yet. It's coming.
 >
-> 👍 Upvote [issue #195](https://github.com/mui-org/material-ui-x/issues/195) if you want to see it land faster.
+> 👍 Upvote [issue #195](https://github.com/mui/mui-x/issues/195) if you want to see it land faster.
 
 Grouping columns allows you to have multiple levels of columns in your header and the ability, if needed, to 'open and close' column groups to show and hide additional columns.
 
@@ -352,7 +352,7 @@ Grouping columns allows you to have multiple levels of columns in your header an
 
 > ⚠️ This feature isn't implemented yet. It's coming.
 >
-> 👍 Upvote [issue #193](https://github.com/mui-org/material-ui-x/issues/193) if you want to see it land faster.
+> 👍 Upvote [issue #193](https://github.com/mui/mui-x/issues/193) if you want to see it land faster.
 
 Sticky (or frozen, locked, or pinned) columns are columns that are visible at all times while the user scrolls the grid horizontally.
 
@@ -360,7 +360,7 @@ Sticky (or frozen, locked, or pinned) columns are columns that are visible at al
 
 > ⚠️ This feature isn't implemented yet. It's coming.
 >
-> 👍 Upvote [issue #192](https://github.com/mui-org/material-ui-x/issues/192) if you want to see it land faster.
+> 👍 Upvote [issue #192](https://github.com/mui/mui-x/issues/192) if you want to see it land faster.
 
 Each cell takes up the width of one column.
 Column spanning allows to change this default behavior.

@@ -4,8 +4,8 @@
 
 MUI X is an extension of MUI Core.
 The repositories are part of the same codebase.
-`mui-org/material-ui-x` imports the code infrastructure from [`mui-org/material-ui`](https://github.com/mui-org/material-ui).
-You can find the "contributing" guide for the main repository in [mui-org/material-ui/CONTRIBUTING.md](https://github.com/mui-org/material-ui/blob/HEAD/CONTRIBUTING.md).
+`mui/mui-x` imports the code infrastructure from [`mui/mui`](https://github.com/mui/mui).
+You can find the "contributing" guide for the main repository in [mui/mui/CONTRIBUTING.md](https://github.com/mui/mui/blob/HEAD/CONTRIBUTING.md).
 
 Most of the content in the MUI "contributing" guide applies to this repository.
 There are, however, a few differences:

@@ -8,9 +8,9 @@ A typical release goes like this:
 
 The following steps must be proposed as a pull request.
 
-1. Generate the changelog. Compare the last version with `master`. For instance: [https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.9...master](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.9...master)
+1. Generate the changelog. Compare the last version with `master`. For instance: [https://github.com/mui/mui-x/compare/v4.0.0-alpha.9...master](https://github.com/mui/mui-x/compare/v4.0.0-alpha.9...master)
 2. Generate the changelog with this script: [https://trello.com/c/uspnIWkh/1566-release-note](https://trello.com/c/uspnIWkh/1566-release-note)
-3. Clean the generated changelog, to match the format of [https://github.com/mui-org/material-ui/releases](https://github.com/mui-org/material-ui/releases).
+3. Clean the generated changelog, to match the format of [https://github.com/mui/mui/releases](https://github.com/mui/mui/releases).
 4. Update the root /package.json's version
 5. `yarn release:version`
 6. Open PR with changes and wait for review and green CI
@@ -34,4 +34,4 @@ yarn docs:deploy
 
 ### Announce
 
-1. **GitHub**. Make a new release on GitHub (for people subscribing to updates). https://github.com/mui-org/material-ui-x/releases
+1. **GitHub**. Make a new release on GitHub (for people subscribing to updates). https://github.com/mui/mui-x/releases

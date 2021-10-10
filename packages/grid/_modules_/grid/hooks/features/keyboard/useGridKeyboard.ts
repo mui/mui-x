@@ -54,7 +54,7 @@ export const useGridKeyboard = (apiRef: GridApiRef): void => {
   const handleCellKeyDown = React.useCallback(
     (params: GridCellParams, event: React.KeyboardEvent) => {
       // The target is not an element when triggered by a Select inside the cell
-      // See https://github.com/mui-org/material-ui/issues/10534
+      // See https://github.com/mui/mui/issues/10534
       if ((event.target as any).nodeType === 1 && !isGridCellRoot(event.target as Element)) {
         return;
       }

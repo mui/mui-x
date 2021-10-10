@@ -130,7 +130,7 @@ function GridCellRaw(props: GridCellProps) {
     (eventName: string) => (event: React.SyntheticEvent) => {
       // Ignore portal
       // The target is not an element when triggered by a Select inside the cell
-      // See https://github.com/mui-org/material-ui/issues/10534
+      // See https://github.com/mui/mui/issues/10534
       if (
         (event.target as any).nodeType === 1 &&
         !event.currentTarget.contains(event.target as Element)

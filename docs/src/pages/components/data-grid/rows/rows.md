@@ -80,7 +80,7 @@ You can check the [styling rows](/components/data-grid/style/#styling-rows) sect
 
 > ⚠️ This feature isn't implemented yet. It's coming.
 >
-> 👍 Upvote [issue #207](https://github.com/mui-org/material-ui-x/issues/207) if you want to see it land faster.
+> 👍 Upvote [issue #207](https://github.com/mui/mui-x/issues/207) if you want to see it land faster.
 
 Each cell takes up the width of one row.
 Row spanning allows to change this default behavior.
@@ -91,7 +91,7 @@ This is very close to the "row spanning" in an HTML `<table>`.
 
 > ⚠️ This feature isn't implemented yet. It's coming.
 >
-> 👍 Upvote [issue #206](https://github.com/mui-org/material-ui-x/issues/206) if you want to see it land faster.
+> 👍 Upvote [issue #206](https://github.com/mui/mui-x/issues/206) if you want to see it land faster.
 
 Row reorder is used to rearrange rows by dragging the row with the mouse.
 
