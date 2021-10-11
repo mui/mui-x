@@ -2304,10 +2304,10 @@
     prop-types "^15.7.2"
     react-is "^17.0.2"
 
-"@mui/icons-material@^5.0.1":
-  version "5.0.1"
-  resolved "https://registry.yarnpkg.com/@mui/icons-material/-/icons-material-5.0.1.tgz#fb7ffeba0b3604aab4a9b91644d2fc1aabb3b4f1"
-  integrity sha512-AZehR/Uvi9VodsNPk9ae1lENKrf1evqx9suiP6VIqu7NxjZOlw/m/yA2gRAMmLEmIGr7EChfi/wcXuq6BpM9vw==
+"@mui/icons-material@^5.0.3":
+  version "5.0.3"
+  resolved "https://registry.yarnpkg.com/@mui/icons-material/-/icons-material-5.0.3.tgz#2a9d4f9078f375cef40f63a240b59cefa4a27eec"
+  integrity sha512-Lktn+4GNnXdVrOCUUvNNvOD9VyrGazWBsJy0BQeQgBe/+IjFMdlcNrDEUIlGlA5ZXOq7Mr/Mv9Os02mgF65jiw==
   dependencies:
     "@babel/runtime" "^7.15.4"
 
