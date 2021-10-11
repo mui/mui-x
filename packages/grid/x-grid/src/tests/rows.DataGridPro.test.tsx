@@ -805,7 +805,7 @@ describe('<DataGridPro /> - Rows', () => {
       expect(handleCellFocusOut.args[0][0].field).to.equal(baselineProps.columns[0].field);
     });
 
-    it.only('should not crash when the row is removed during the click', () => {
+    it('should not crash when the row is removed during the click', () => {
       expect(() => {
         render(<TestCase rows={baselineProps.rows} />);
         const cell = getCell(0, 0);
