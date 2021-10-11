@@ -49,6 +49,16 @@ Use the `groupingColDef` prop to customize the rendering of the grouping column.
 
 {{"demo": "pages/components/data-grid/group-pivot/CustomGroupingColumnTreeData.js", "bg": "inline", "defaultCodeOpen": false}}
 
+### Group expansion
+
+Use the `defaultGroupingExpansionDepth` prop to expand all the groups up to a given depth when loading the data.
+
+{{"demo": "pages/components/data-grid/group-pivot/DefaultGroupingExpansionDepthTreeData.js", "bg": "inline", "defaultCodeOpen": false}}
+
+Use the `UNSTABLE_setRowExpansion` method on `apiRef` to programmatically set the expansion of a row.
+
+{{"demo": "pages/components/data-grid/group-pivot/SetRowExpansionTreeData.js", "bg": "inline", "defaultCodeOpen": false}}
+
 ### Filler rows
 
 If some entries are missing to build the full tree, the `DataGridPro` will automatically create filler rows to fill those gaps.
