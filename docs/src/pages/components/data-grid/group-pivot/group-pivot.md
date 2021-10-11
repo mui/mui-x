@@ -13,9 +13,32 @@ Tree data allows to display data with parent / child relationships.
 ### Basic example
 
 To enable the Tree Data, you must use the `treeData` prop as well as provide a `getTreeDataPath` prop.
+The `getTreeDataPath` function returns an array of strings which represents the path to a given element of the tree.
 
-```jsx
-<DataGridPro treeData getTreeDataPath={(row) => row.path} />
+```tsx
+// Without transformation
+const rows: GridRows = [
+    { id: 0, path: ['A'] },
+    { id: 1, path: ['A', 'A'] },
+    { id: 2, path: ['A', 'B'] },
+    { id: 3, path: ['A', 'C'] },
+    { id: 4, path: ['A', 'B', 'A'] },
+    { id: 5, path: ['B'] }
+];
+
+<DataGridPro treeData getTreeDataPath={(row) => row.path} rows={rows} {/* ...other props */} />
+
+// With transformation
+const rows: GridRows = [
+    { id: 0, path: 'A' },
+    { id: 1, path: 'A.A' },
+    { id: 2, path: 'A.B' },
+    { id: 3, path: 'A.C' },
+    { id: 4, path: 'A.B.A' },
+    { id: 5, path: 'B' }
+];
+
+<DataGridPro treeData getTreeDataPath={(row) => row.path.split('.')} rows={rows} {/* ...other props */} />
 ```
 
 {{"demo": "pages/components/data-grid/group-pivot/BasicTreeData.js", "bg": "inline", "defaultCodeOpen": false}}
