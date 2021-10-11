@@ -319,10 +319,12 @@ export const useGridRows = (
     [apiRef, props.getRowId, throttledRowsChange],
   );
 
-  const getRowModels = React.useCallback<GridRowApi['getRowModels']>(
-    () => gridRowTreeSelector(apiRef.current.state),
-    [apiRef],
-  );
+  const getRowModels = React.useCallback<GridRowApi['getRowModels']>(() => {
+    const allRows = gridRowIdsFlatSelector(apiRef.current.state);
+    const idRowsLookup = gridRowsLookupSelector(apiRef.current.state);
+
+    return new Map(allRows.map((id) => [id, idRowsLookup[id]]));
+  }, [apiRef]);
 
   const getRowsCount = React.useCallback<GridRowApi['getRowsCount']>(
     () => gridRowCountSelector(apiRef.current.state),
@@ -366,7 +368,7 @@ export const useGridRows = (
         throw new Error(`MUI: No row with id #${id} found in row path list`);
       }
 
-      return getNodeFromTree(apiRef.current.getRowModels(), path);
+      return getNodeFromTree(gridRowTreeSelector(apiRef.current.state), path);
     },
     [apiRef],
   );
