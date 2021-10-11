@@ -33,6 +33,13 @@ export interface GridCellProps {
   cellMode?: GridCellMode;
   children: React.ReactNode;
   tabIndex: 0 | -1;
+  onClick?: React.MouseEventHandler<HTMLDivElement>;
+  onDoubleClick?: React.MouseEventHandler<HTMLDivElement>;
+  onMouseDown?: React.MouseEventHandler<HTMLDivElement>;
+  onMouseUp?: React.MouseEventHandler<HTMLDivElement>;
+  onKeyDown?: React.KeyboardEventHandler<HTMLDivElement>;
+  onDragEnter?: React.DragEventHandler<HTMLDivElement>;
+  onDragOver?: React.DragEventHandler<HTMLDivElement>;
   [x: string]: any; // TODO it should not accept unspecified props
 }
 
@@ -88,6 +95,13 @@ function GridCellRaw(props: GridCellProps) {
     showRightBorder,
     extendRowFullWidth,
     row,
+    onClick,
+    onDoubleClick,
+    onMouseDown,
+    onMouseUp,
+    onKeyDown,
+    onDragEnter,
+    onDragOver,
     ...other
   } = props;
 
@@ -100,15 +114,19 @@ function GridCellRaw(props: GridCellProps) {
   const classes = useUtilityClasses(ownerState);
 
   const publishMouseUp = React.useCallback(
-    (eventName: string) => (event: React.MouseEvent) => {
+    (eventName: string) => (event: React.MouseEvent<HTMLDivElement>) => {
       const params = apiRef.current.getCellParams(rowId, field || '');
       apiRef.current.publishEvent(eventName, params, event);
+
+      if (onMouseUp) {
+        onMouseUp(event);
+      }
     },
-    [apiRef, field, rowId],
+    [apiRef, field, onMouseUp, rowId],
   );
 
   const publish = React.useCallback(
-    (eventName: string) => (event: React.SyntheticEvent) => {
+    (eventName: string, propHandler: any) => (event: React.SyntheticEvent<HTMLDivElement>) => {
       // Ignore portal
       // The target is not an element when triggered by a Select inside the cell
       // See https://github.com/mui-org/material-ui/issues/10534
@@ -126,6 +144,10 @@ function GridCellRaw(props: GridCellProps) {
 
       const params = apiRef.current.getCellParams(rowId!, field || '');
       apiRef.current.publishEvent(eventName, params, event);
+
+      if (propHandler) {
+        propHandler(event);
+      }
     },
     [apiRef, field, rowId],
   );
@@ -169,13 +191,13 @@ function GridCellRaw(props: GridCellProps) {
       aria-colindex={colIndex + 1}
       style={style}
       tabIndex={cellMode === 'view' || !isEditable ? tabIndex : -1}
-      onClick={publish(GridEvents.cellClick)}
-      onDoubleClick={publish(GridEvents.cellDoubleClick)}
-      onMouseDown={publish(GridEvents.cellMouseDown)}
+      onClick={publish(GridEvents.cellClick, onClick)}
+      onDoubleClick={publish(GridEvents.cellDoubleClick, onDoubleClick)}
+      onMouseDown={publish(GridEvents.cellMouseDown, onMouseDown)}
       onMouseUp={publishMouseUp(GridEvents.cellMouseUp)}
-      onKeyDown={publish(GridEvents.cellKeyDown)}
-      onDragEnter={publish(GridEvents.cellDragEnter)}
-      onDragOver={publish(GridEvents.cellDragOver)}
+      onKeyDown={publish(GridEvents.cellKeyDown, onKeyDown)}
+      onDragEnter={publish(GridEvents.cellDragEnter, onDragEnter)}
+      onDragOver={publish(GridEvents.cellDragOver, onDragOver)}
       {...other}
     >
       {children != null ? children : valueToRender?.toString()}
@@ -206,6 +228,13 @@ GridCellRaw.propTypes = {
   hasFocus: PropTypes.bool,
   height: PropTypes.number.isRequired,
   isEditable: PropTypes.bool,
+  onClick: PropTypes.func,
+  onDoubleClick: PropTypes.func,
+  onDragEnter: PropTypes.func,
+  onDragOver: PropTypes.func,
+  onKeyDown: PropTypes.func,
+  onMouseDown: PropTypes.func,
+  onMouseUp: PropTypes.func,
   rowId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   showRightBorder: PropTypes.bool,
   tabIndex: PropTypes.oneOf([-1, 0]).isRequired,

@@ -19,6 +19,8 @@ export interface GridRowProps {
   selected: boolean;
   rowIndex: number;
   children: React.ReactNode;
+  onClick?: React.MouseEventHandler<HTMLDivElement>;
+  onDoubleClick?: React.MouseEventHandler<HTMLDivElement>;
 }
 
 type OwnerState = GridRowProps & {
@@ -38,7 +40,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 };
 
 function GridRow(props: GridRowProps) {
-  const { selected, id, rowIndex, children, ...other } = props;
+  const { selected, id, rowIndex, children, onClick, onDoubleClick, ...other } = props;
   const ariaRowIndex = rowIndex + 2; // 1 for the header row and 1 as it's 1 based
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
@@ -54,7 +56,7 @@ function GridRow(props: GridRowProps) {
   const classes = useUtilityClasses(ownerState);
 
   const publish = React.useCallback(
-    (eventName: string) => (event: React.MouseEvent) => {
+    (eventName: string, propHandler: any) => (event: React.MouseEvent) => {
       // Ignore portal
       // The target is not an element when triggered by a Select inside the cell
       // See https://github.com/mui-org/material-ui/issues/10534
@@ -71,6 +73,10 @@ function GridRow(props: GridRowProps) {
       }
 
       apiRef.current.publishEvent(eventName, apiRef.current.getRowParams(id), event);
+
+      if (propHandler) {
+        propHandler(event);
+      }
     },
     [apiRef, id],
   );
@@ -94,8 +100,8 @@ function GridRow(props: GridRowProps) {
       aria-rowindex={ariaRowIndex}
       aria-selected={selected}
       style={style}
-      onClick={publish(GridEvents.rowClick)}
-      onDoubleClick={publish(GridEvents.rowDoubleClick)}
+      onClick={publish(GridEvents.rowClick, onClick)}
+      onDoubleClick={publish(GridEvents.rowDoubleClick, onDoubleClick)}
       {...other}
     >
       {children}
@@ -110,6 +116,8 @@ GridRow.propTypes = {
   // ----------------------------------------------------------------------
   children: PropTypes.node,
   id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  onClick: PropTypes.func,
+  onDoubleClick: PropTypes.func,
   rowIndex: PropTypes.number.isRequired,
   selected: PropTypes.bool.isRequired,
 } as any;
