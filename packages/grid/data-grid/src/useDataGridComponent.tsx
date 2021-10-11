@@ -44,7 +44,6 @@ export const useDataGridComponent = (apiRef: GridApiRef, props: GridComponentPro
   useLocaleText(apiRef, props);
   useGridResizeContainer(apiRef, props);
   useGridSelection(apiRef, props);
-  useGridSelection(apiRef, props);
   useGridColumns(apiRef, props);
   useGridFreezeRows(apiRef, props);
   useGridRows(apiRef, props);
