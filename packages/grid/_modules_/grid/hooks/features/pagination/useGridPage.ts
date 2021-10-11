@@ -63,6 +63,14 @@ export const useGridPage = (
     changeEvent: GridEvents.pageChange,
   });
 
+  apiRef.current.updateControlState({
+    stateId: 'page',
+    propModel: props.page,
+    propOnChange: props.onPageChange,
+    stateSelector: gridPageSelector,
+    changeEvent: GridEvents.pageChange,
+  });
+
   const setPage = React.useCallback(
     (page: number) => {
       logger.debug(`Setting page to ${page}`);
