@@ -32,6 +32,7 @@ import { useGridResizeContainer } from '../../_modules_/grid/hooks/utils/useGrid
 import { useStateProp } from '../../_modules_/grid/hooks/utils/useStateProp';
 import { GridApiRef } from '../../_modules_/grid/models/api/gridApiRef';
 import { useGridColumnsPreProcessing } from '../../_modules_/grid/hooks/root/columnsPreProcessing';
+import { useGridRowGroupsPreProcessing } from '../../_modules_/grid/hooks/root/rowGroupsPerProcessing';
 
 export const useDataGridComponent = (apiRef: GridApiRef, props: GridComponentProps) => {
   useGridLoggerFactory(apiRef, props);
@@ -39,6 +40,7 @@ export const useDataGridComponent = (apiRef: GridApiRef, props: GridComponentPro
   useErrorHandler(apiRef, props);
   useGridControlState(apiRef, props);
   useGridColumnsPreProcessing(apiRef);
+  useGridRowGroupsPreProcessing(apiRef);
   useLocaleText(apiRef, props);
   useGridResizeContainer(apiRef, props);
   useGridFreezeRows(apiRef, props);
