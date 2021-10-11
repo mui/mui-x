@@ -285,10 +285,15 @@ export enum GridEvents {
    */
   columnOrderChange = 'columnOrderChange',
   /**
-   * Fired when all the rows are updated.
+   * Fired when the rows are updated.
    * @ignore - do not document.
    */
   rowsSet = 'rowsSet',
+  /**
+   * Fired when the visible rows are updated
+   * @ignore - do not document.
+   */
+  visibleRowsSet = 'visibleRowsSet',
   /**
    * Fired when the columns state is changed.
    * Called with an array of strings corresponding to the field names.

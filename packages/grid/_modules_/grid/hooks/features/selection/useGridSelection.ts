@@ -234,6 +234,26 @@ export const useGridSelection = (
     [apiRef],
   );
 
+  const removeOutdatedSelection = React.useCallback(() => {
+    const currentSelection = gridSelectionStateSelector(apiRef.current.state);
+    const rowsLookup = gridRowsLookupSelector(apiRef.current.state);
+
+    // We clone the existing object to avoid mutating the same object returned by the selector to others part of the project
+    const selectionLookup = { ...selectedIdsLookupSelector(apiRef.current.state) };
+
+    let hasChanged = false;
+    currentSelection.forEach((id: GridRowId) => {
+      if (!rowsLookup[id]) {
+        delete selectionLookup[id];
+        hasChanged = true;
+      }
+    });
+
+    if (hasChanged) {
+      apiRef.current.setSelectionModel(Object.values(selectionLookup));
+    }
+  }, [apiRef]);
+
   const handleRowClick = React.useCallback(
     (params: GridRowParams, event: React.MouseEvent) => {
       if (disableSelectionOnClick) {
@@ -289,6 +309,7 @@ export const useGridSelection = (
     [apiRef, expandRowRangeSelection],
   );
 
+  useGridApiEventHandler(apiRef, GridEvents.visibleRowsSet, removeOutdatedSelection);
   useGridApiEventHandler(apiRef, GridEvents.rowClick, handleRowClick);
   useGridApiEventHandler(
     apiRef,
@@ -365,26 +386,4 @@ export const useGridSelection = (
 
     updateColumnsPreProcessing();
   }, [updateColumnsPreProcessing]);
-
-  const removeOutdatedSelection = React.useCallback(() => {
-    const currentSelection = gridSelectionStateSelector(apiRef.current.state);
-    const rowsLookup = gridRowsLookupSelector(apiRef.current.state);
-
-    // We clone the existing object to avoid mutating the same object returned by the selector to others part of the project
-    const selectionLookup = { ...selectedIdsLookupSelector(apiRef.current.state) };
-
-    let hasChanged = false;
-    currentSelection.forEach((id: GridRowId) => {
-      if (!rowsLookup[id]) {
-        delete selectionLookup[id];
-        hasChanged = true;
-      }
-    });
-
-    if (hasChanged) {
-      apiRef.current.setSelectionModel(Object.values(selectionLookup));
-    }
-  }, [apiRef]);
-
-  useGridApiEventHandler(apiRef, GridEvents.rowsSet, removeOutdatedSelection);
 };

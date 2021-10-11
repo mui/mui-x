@@ -236,7 +236,8 @@ export const useGridFilter = (
       });
     }
 
-    forceUpdate();
+      apiRef.current.publishEvent(GridEvents.visibleRowsSet);
+      forceUpdate();
   }, [apiRef, setGridState, forceUpdate, props.filterMode]);
 
   const upsertFilter = React.useCallback<GridFilterApi['upsertFilter']>(
