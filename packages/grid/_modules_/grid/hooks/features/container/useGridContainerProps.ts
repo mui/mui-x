@@ -19,6 +19,7 @@ import { gridPaginationSelector } from '../pagination/gridPaginationSelector';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { GridComponentProps } from '../../../GridComponentProps';
+import { useGridStateInit } from '../../utils/useGridStateInit';
 
 function getScrollbarSize(doc: Document, element: HTMLElement): number {
   const scrollDiv = doc.createElement('div');
@@ -56,6 +57,16 @@ export const useGridContainerProps = (
   >,
 ) => {
   const logger = useGridLogger(apiRef, 'useGridContainerProps');
+
+  // TODO: Remove from the state an add direct computation method
+  // See https://github.com/mui-org/material-ui-x/issues/820#issuecomment-897906608
+  useGridStateInit(apiRef, (state) => ({
+    ...state,
+    containerSizes: null,
+    viewportSizes: { width: 0, height: 1 },
+    scrollBar: { hasScrollX: false, hasScrollY: false, sizes: { x: 0, y: 0 } },
+  }));
+
   const [gridState, setGridState, forceUpdate] = useGridState(apiRef);
   const windowSizesRef = React.useRef<ElementSize>({ width: 0, height: 0 });
   const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);

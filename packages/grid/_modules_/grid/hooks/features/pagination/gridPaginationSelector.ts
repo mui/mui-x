@@ -5,6 +5,16 @@ import { GridPaginationState } from './gridPaginationState';
 
 export const gridPaginationSelector = (state: GridState): GridPaginationState => state.pagination;
 
+export const gridPageSelector = createSelector(
+  gridPaginationSelector,
+  (pagination) => pagination.page,
+);
+
+export const gridPageSizeSelector = createSelector(
+  gridPaginationSelector,
+  (pagination) => pagination.pageSize,
+);
+
 export const gridPaginatedVisibleSortedGridRowIdsSelector = createSelector(
   gridPaginationSelector,
   visibleSortedGridRowIdsSelector,

@@ -8,13 +8,3 @@ export interface GridRenderingState {
   realScroll: GridScrollParams;
   renderingZoneScroll: GridScrollParams;
 }
-
-export const getInitialGridRenderingState = (): GridRenderingState => {
-  return {
-    realScroll: { left: 0, top: 0 },
-    renderContext: null,
-    renderingZoneScroll: { left: 0, top: 0 },
-    virtualPage: 0,
-    virtualRowsCount: 0,
-  };
-};

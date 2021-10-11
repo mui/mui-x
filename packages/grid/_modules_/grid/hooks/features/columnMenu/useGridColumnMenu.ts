@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridEvents } from '../../../constants/eventsConstants';
+import { useGridStateInit } from '../../utils/useGridStateInit';
 import {
   useGridSelector,
   useGridState,
@@ -17,6 +18,8 @@ import { gridColumnMenuSelector } from './columnMenuSelector';
  */
 export const useGridColumnMenu = (apiRef: GridApiRef): void => {
   const logger = useGridLogger(apiRef, 'useGridColumnMenu');
+
+  useGridStateInit(apiRef, (state) => ({ ...state, columnMenu: { open: false } }));
   const [, setGridState, forceUpdate] = useGridState(apiRef);
   const columnMenu = useGridSelector(apiRef, gridColumnMenuSelector);
 

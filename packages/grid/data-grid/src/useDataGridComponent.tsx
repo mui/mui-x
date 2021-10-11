@@ -39,9 +39,9 @@ export const useDataGridComponent = (apiRef: GridApiRef, props: GridComponentPro
   useGridPreferencesPanel(apiRef);
   useGridFilter(apiRef, props);
   useGridDensity(apiRef, props);
-  useGridContainerProps(apiRef, props);
   useGridPageSize(apiRef, props);
   useGridPage(apiRef, props);
+  useGridContainerProps(apiRef, props);
   useGridScroll(apiRef, props);
   useGridNoVirtualization(apiRef, props);
   useGridVirtualization(apiRef, props);

@@ -1,23 +1,22 @@
 import { GridColumnsState } from './colDef/gridColDef';
-import {
+import type {
   GridContainerProps,
   GridScrollBarState,
   GridViewportSizeState,
 } from './gridContainerProps';
-import { GridFilterModel } from './gridFilterModel';
-import { GridEditRowsModel } from './gridEditRowModel';
-import { GridColumnMenuState } from '../hooks/features/columnMenu/columnMenuState';
-import { GridColumnReorderState } from '../hooks/features/columnReorder/columnReorderState';
-import { GridColumnResizeState } from '../hooks/features/columnResize/columnResizeState';
-import { GridDensityState } from '../hooks/features/density/densityState';
-import { VisibleGridRowsState } from '../hooks/features/filter/visibleGridRowsState';
-import { GridFocusState, GridTabIndexState } from '../hooks/features/focus/gridFocusState';
-import { GridPreferencePanelState } from '../hooks/features/preferencesPanel/gridPreferencePanelState';
-import { GridRowsState } from '../hooks/features/rows/gridRowsState';
-import { GridSelectionModel } from './gridSelectionModel';
-import { GridSortingState } from '../hooks/features/sorting/gridSortingState';
-import { GridRenderingState } from '../hooks/features/virtualization/renderingState';
-import { GridPaginationState } from '../hooks/features/pagination/gridPaginationState';
+import type { GridEditRowsModel } from './gridEditRowModel';
+import type { GridColumnMenuState } from '../hooks/features/columnMenu/columnMenuState';
+import type { GridColumnReorderState } from '../hooks/features/columnReorder/columnReorderState';
+import type { GridColumnResizeState } from '../hooks/features/columnResize/columnResizeState';
+import type { GridDensityState } from '../hooks/features/density/densityState';
+import type { GridFocusState, GridTabIndexState } from '../hooks/features/focus/gridFocusState';
+import type { GridPreferencePanelState } from '../hooks/features/preferencesPanel/gridPreferencePanelState';
+import type { GridRowsState } from '../hooks/features/rows/gridRowsState';
+import type { GridSelectionModel } from './gridSelectionModel';
+import type { GridSortingState } from '../hooks/features/sorting/gridSortingState';
+import type { GridRenderingState } from '../hooks/features/virtualization/renderingState';
+import type { GridPaginationState } from '../hooks/features/pagination/gridPaginationState';
+import type { GridFilterState } from '../hooks/features/filter/gridFilterState';
 
 export interface GridState {
   rows: GridRowsState;
@@ -35,8 +34,7 @@ export interface GridState {
   focus: GridFocusState;
   tabIndex: GridTabIndexState;
   selection: GridSelectionModel;
-  filter: GridFilterModel;
-  visibleRows: VisibleGridRowsState;
+  filter: GridFilterState;
   preferencePanel: GridPreferencePanelState;
   density: GridDensityState;
   error?: any;

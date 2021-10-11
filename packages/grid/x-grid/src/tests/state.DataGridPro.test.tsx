@@ -57,6 +57,7 @@ describe('<DataGridPro /> - State', () => {
   it('should allow to control the state using apiRef', () => {
     function GridStateTest() {
       const apiRef = useGridApiRef();
+
       React.useEffect(() => {
         apiRef.current.setState((prev) => ({
           ...prev,
