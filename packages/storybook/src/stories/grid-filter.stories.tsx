@@ -15,7 +15,7 @@ import {
   GridRowModel,
   useGridApiRef,
   DataGridPro,
-  getInitialGridFilterState,
+  getDefaultGridFilterModel,
 } from '@mui/x-data-grid-pro';
 import { useDemoData, randomArrayItem } from '@mui/x-data-grid-generator';
 import { action } from '@storybook/addon-actions';
@@ -61,16 +61,14 @@ export function CommodityWithOpenFiltersAndState() {
       <DataGridPro
         rows={data.rows}
         columns={data.columns}
+        filterModel={{
+          items: [{ id: 123, columnField: 'commodity', value: 'soy', operatorValue: 'startsWith' }],
+          linkOperator: GridLinkOperator.And,
+        }}
         state={{
           preferencePanel: {
             open: true,
             openedPanelValue: GridPreferencePanelsValue.filters,
-          },
-          filter: {
-            items: [
-              { id: 123, columnField: 'commodity', value: 'soy', operatorValue: 'startsWith' },
-            ],
-            linkOperator: GridLinkOperator.And,
           },
         }}
       />
@@ -802,9 +800,7 @@ export function SimpleModelWithOnChangeControlFilter() {
     },
   ]);
 
-  const [simpleFilterModel, setFilterModel] = React.useState<GridFilterModel>(
-    getInitialGridFilterState(),
-  );
+  const [simpleFilterModel, setFilterModel] = React.useState(getDefaultGridFilterModel);
   const handleFilterChange = React.useCallback((model) => {
     setFilterModel(model);
   }, []);
