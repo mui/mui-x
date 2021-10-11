@@ -31,7 +31,7 @@
     "webpack": "^5.56.1"
   },
   "devDependencies": {
-    "@babel/core": "^7.15.5",
+    "@babel/core": "^7.15.8",
     "@storybook/addon-a11y": "^6.4.0-beta.3",
     "@storybook/addon-actions": "^6.4.0-beta.3",
     "@storybook/addon-console": "^1.2.3",

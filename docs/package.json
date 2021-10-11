@@ -17,7 +17,7 @@
     "typescript:transpile:dev": "node scripts/formattedTSDemos --watch"
   },
   "dependencies": {
-    "@babel/core": "^7.15.5",
+    "@babel/core": "^7.15.8",
     "@babel/plugin-transform-object-assign": "^7.14.5",
     "@babel/runtime-corejs2": "^7.15.4",
     "@emotion/cache": "^11.4.0",
