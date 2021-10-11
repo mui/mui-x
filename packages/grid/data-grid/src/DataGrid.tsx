@@ -542,8 +542,8 @@ DataGridRaw.propTypes = {
    */
   onStateChange: PropTypes.func,
   /**
-   * Set the current page.
-   * @default 1
+   * The zero-based index of the current page.
+   * @default 0
    */
   page: PropTypes.number,
   /**
