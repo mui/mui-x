@@ -19,6 +19,12 @@ const TREE_DATA_COLUMNS: GridColumns = [
     headerName: 'Name',
     width: 150,
   },
+  {
+    field: 'index',
+    headerName: 'Index',
+    width: 50,
+    type: 'number',
+  },
 ];
 
 const getTreeDataPath = (row: GridRowModel) => row.path.map((value) => `Element ${value}`);
@@ -41,7 +47,7 @@ const getTreeDataRows = ({ rowLength, parentPath = [], id = 0 }: GetTreeDataRows
   for (let index = 1; index < realCurrentDepthRowLength + 1; index += 1) {
     const path = [...parentPath, index.toString()];
     const name = `Element n°${path.join('-')}`;
-    rows.push({ name, path, id });
+    rows.push({ name, path, index, id });
 
     id += 1;
 

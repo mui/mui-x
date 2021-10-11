@@ -9,9 +9,10 @@ title: Data Grid - Group & Pivot
 ## Tree data [<span class="pro"></span>](https://mui.com/store/items/material-ui-pro/)
 
 Tree data allows to display data with parent / child relationships.
-To enable the Tree Data, you must use the `treeData` prop as well as provide a `getTreeDataPath` prop.
 
 ### Basic example
+
+To enable the Tree Data, you must use the `treeData` prop as well as provide a `getTreeDataPath` prop.
 
 ```jsx
 <DataGridPro treeData getTreeDataPath={(row) => row.path} />
@@ -30,6 +31,20 @@ Use the `groupingColDef` prop to customize the rendering of the grouping column.
 If some entries are missing to build the full tree, the `DataGridPro` will automatically create filler rows to fill those gaps.
 
 {{"demo": "pages/components/data-grid/group-pivot/FillerTreeData.js", "bg": "inline", "defaultCodeOpen": false}}
+
+### Filtering
+
+By default, the filtering is applied to every depth of the tree.
+You can limit the filtering to the top level rows by with the `disableChildrenFiltering`.
+
+{{"demo": "pages/components/data-grid/group-pivot/DisableChildrenFilteringTreeData.js", "bg": "inline", "defaultCodeOpen": false}}
+
+### Sorting
+
+By default, the sorting is applied to every depth of the tree.
+You can limit the filtering to the top level rows by with the `disableChildrenSorting`.
+
+{{"demo": "pages/components/data-grid/group-pivot/DisableChildrenSortingTreeData.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## 🚧 Master detail [<span class="pro"></span>](https://mui.com/store/items/material-ui-pro/)
 
