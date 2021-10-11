@@ -31,12 +31,14 @@ import { useRenderInfoLog } from '../../_modules_/grid/hooks/utils/useRenderInfo
 import { useGridResizeContainer } from '../../_modules_/grid/hooks/utils/useGridResizeContainer';
 import { useStateProp } from '../../_modules_/grid/hooks/utils/useStateProp';
 import { GridApiRef } from '../../_modules_/grid/models/api/gridApiRef';
+import { useGridRowGroupsPreProcessing } from '../../_modules_/grid/hooks/root/rowGroupsPerProcessing';
 
 export const useDataGridComponent = (apiRef: GridApiRef, props: GridComponentProps) => {
   useGridLoggerFactory(apiRef, props);
   useApi(apiRef, props);
   useErrorHandler(apiRef, props);
   useGridControlState(apiRef, props);
+  useGridRowGroupsPreProcessing(apiRef);
   useLocaleText(apiRef, props);
   useGridResizeContainer(apiRef, props);
   useGridFreezeRows(apiRef, props);
