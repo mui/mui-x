@@ -26,7 +26,12 @@ const rows: GridRows = [
     { id: 5, path: ['B'] }
 ];
 
-<DataGridPro treeData getTreeDataPath={(row) => row.path} rows={rows} {/* ...other props */} />
+<DataGridPro 
+    treeData 
+    getTreeDataPath={(row) => row.path} 
+    rows={rows} 
+    {/* ...other props */} 
+/>
 
 // With transformation
 const rows: GridRows = [
@@ -38,7 +43,12 @@ const rows: GridRows = [
     { id: 5, path: 'B' }
 ];
 
-<DataGridPro treeData getTreeDataPath={(row) => row.path.split('.')} rows={rows} {/* ...other props */} />
+<DataGridPro 
+    treeData 
+    getTreeDataPath={(row) => row.path.split('.')} 
+    rows={rows} 
+    {/* ...other props */} 
+/>
 ```
 
 {{"demo": "pages/components/data-grid/group-pivot/BasicTreeData.js", "bg": "inline", "defaultCodeOpen": false}}
