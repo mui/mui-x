@@ -592,7 +592,7 @@ interface GridComponentOtherProps {
    * The data in it will be set in the state on initialization but will not be controlled.
    * If one of the data in `initialState` is also being controlled, then the control state wins.
    */
-  initialState?: Partial<GridInitialState>;
+  initialState?: GridInitialState;
   /**
    * @ignore
    */
