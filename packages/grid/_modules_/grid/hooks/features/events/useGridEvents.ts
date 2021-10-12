@@ -20,19 +20,10 @@ export function useGridEvents(
     | 'onColumnOrderChange'
     | 'onCellClick'
     | 'onCellDoubleClick'
-    | 'onCellOver'
-    | 'onCellOut'
-    | 'onCellEnter'
-    | 'onCellLeave'
     | 'onCellKeyDown'
-    | 'onCellBlur'
     | 'onCellFocusOut'
     | 'onRowDoubleClick'
     | 'onRowClick'
-    | 'onRowOver'
-    | 'onRowOut'
-    | 'onRowEnter'
-    | 'onRowLeave'
     | 'onError'
     | 'onStateChange'
   >,
@@ -51,20 +42,11 @@ export function useGridEvents(
 
   useGridApiOptionHandler(apiRef, GridEvents.cellClick, props.onCellClick);
   useGridApiOptionHandler(apiRef, GridEvents.cellDoubleClick, props.onCellDoubleClick);
-  useGridApiOptionHandler(apiRef, GridEvents.cellOver, props.onCellOver);
-  useGridApiOptionHandler(apiRef, GridEvents.cellOut, props.onCellOut);
-  useGridApiOptionHandler(apiRef, GridEvents.cellEnter, props.onCellEnter);
-  useGridApiOptionHandler(apiRef, GridEvents.cellLeave, props.onCellLeave);
   useGridApiOptionHandler(apiRef, GridEvents.cellKeyDown, props.onCellKeyDown);
-  useGridApiOptionHandler(apiRef, GridEvents.cellBlur, props.onCellBlur);
   useGridApiOptionHandler(apiRef, GridEvents.cellFocusOut, props.onCellFocusOut);
 
   useGridApiOptionHandler(apiRef, GridEvents.rowDoubleClick, props.onRowDoubleClick);
   useGridApiOptionHandler(apiRef, GridEvents.rowClick, props.onRowClick);
-  useGridApiOptionHandler(apiRef, GridEvents.rowOver, props.onRowOver);
-  useGridApiOptionHandler(apiRef, GridEvents.rowOut, props.onRowOut);
-  useGridApiOptionHandler(apiRef, GridEvents.rowEnter, props.onRowEnter);
-  useGridApiOptionHandler(apiRef, GridEvents.rowLeave, props.onRowLeave);
 
   useGridApiOptionHandler(apiRef, GridEvents.componentError, props.onError);
   useGridApiOptionHandler(apiRef, GridEvents.stateChange, props.onStateChange);

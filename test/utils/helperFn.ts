@@ -25,9 +25,9 @@ export function getActiveCell(): string | null {
     return null;
   }
 
-  return `${activeElement.getAttribute('data-rowindex')}-${activeElement.getAttribute(
-    'data-colindex',
-  )}`;
+  return `${activeElement.parentElement!.getAttribute(
+    'data-rowindex',
+  )}-${activeElement.getAttribute('data-colindex')}`;
 }
 
 export function getActiveColumnHeader() {
@@ -78,7 +78,7 @@ export function getColumnHeadersTextContent() {
 
 export function getCell(rowIndex: number, colIndex: number): HTMLElement {
   const cell = document.querySelector(
-    `[role="cell"][data-rowindex="${rowIndex}"][data-colindex="${colIndex}"]`,
+    `[role="row"][data-rowindex="${rowIndex}"] [role="cell"][data-colindex="${colIndex}"]`,
   );
   if (cell == null) {
     throw new Error(`Cell ${rowIndex} ${colIndex} not found`);

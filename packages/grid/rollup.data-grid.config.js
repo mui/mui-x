@@ -25,7 +25,10 @@ export default [
         sourcemap: !production,
       },
     ],
-    external: [...Object.keys(pkg.peerDependencies || {})],
+    external: Object.keys({ ...pkg.peerDependencies, ...pkg.dependencies }).map((packageName) => {
+      // Make sure that e.g. `react` as well as `react/jsx-runtime` is considered an external
+      return new RegExp(`(${packageName}|${packageName}\\/.*)`);
+    }),
     plugins: [
       production &&
         cleaner({
