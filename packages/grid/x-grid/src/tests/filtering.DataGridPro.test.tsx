@@ -470,7 +470,6 @@ describe('<DataGridPro /> - Filter', () => {
           }}
         />,
       );
-      expect(onModelChange.callCount).to.equal(0);
       expect(onModelChange.callCount).to.equal(1);
       const addButton = screen.getByRole('button', { name: /Add Filter/i });
       fireEvent.click(addButton);
