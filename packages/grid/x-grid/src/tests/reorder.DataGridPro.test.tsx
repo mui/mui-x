@@ -15,12 +15,7 @@ import {
   getCell,
   raf,
 } from 'test/utils/helperFn';
-import {
-  GridApiRef,
-  useGridApiRef,
-  DataGridPro,
-  GRID_COLUMN_HEADER_DRAGGING_CSS_CLASS,
-} from '@mui/x-data-grid-pro';
+import { GridApiRef, useGridApiRef, DataGridPro, gridClasses } from '@mui/x-data-grid-pro';
 import { useData } from 'storybook/src/hooks/useData';
 import { spy } from 'sinon';
 
@@ -200,7 +195,7 @@ describe('<DataGridPro /> - Reorder', () => {
     const columnHeaderDraggableContainer = columnHeader.firstChild as HTMLElement;
     fireEvent.dragStart(columnHeaderDraggableContainer.firstChild);
     expect(
-      columnHeaderDraggableContainer.classList.contains(GRID_COLUMN_HEADER_DRAGGING_CSS_CLASS),
+      columnHeaderDraggableContainer.classList.contains(gridClasses['columnHeader--dragging']),
     ).to.equal(false);
   });
 
@@ -261,6 +256,48 @@ describe('<DataGridPro /> - Reorder', () => {
     ]);
   });
 
+  it('should prevent drag events propagation', () => {
+    const handleDragStart = spy();
+    const handleDragEnter = spy();
+    const handleDragOver = spy();
+    const handleDragEnd = spy();
+    let apiRef: GridApiRef;
+    const Test = () => {
+      apiRef = useGridApiRef();
+      const data = useData(1, 3);
+
+      return (
+        <div
+          draggable
+          onDragStart={handleDragStart}
+          onDragEnter={handleDragEnter}
+          onDragOver={handleDragOver}
+          onDragEnd={handleDragEnd}
+          style={{ width: 300, height: 300 }}
+        >
+          <DataGridPro apiRef={apiRef} {...data} />
+        </div>
+      );
+    };
+
+    render(<Test />);
+
+    const dragCol = getColumnHeaderCell(0).firstChild!;
+    const targetCell = getCell(0, 2)!;
+
+    fireEvent.dragStart(dragCol);
+    fireEvent.dragEnter(targetCell);
+    const dragOverEvent = createDragOverEvent(targetCell);
+    fireEvent(targetCell, dragOverEvent);
+    const dragEndEvent = createDragEndEvent(dragCol);
+    fireEvent(dragCol, dragEndEvent);
+
+    expect(handleDragStart.callCount).to.equal(0);
+    expect(handleDragEnter.callCount).to.equal(0);
+    expect(handleDragOver.callCount).to.equal(0);
+    expect(handleDragEnd.callCount).to.equal(0);
+  });
+
   describe('column disableReorder', () => {
     it('should not allow to start dragging a column with disableReorder=true', () => {
       let apiRef: GridApiRef;
@@ -289,7 +326,7 @@ describe('<DataGridPro /> - Reorder', () => {
       fireEvent.dragStart(dragCol);
 
       expect(dragCol).to.have.attribute('draggable', 'false');
-      expect(dragCol).not.to.have.class(GRID_COLUMN_HEADER_DRAGGING_CSS_CLASS);
+      expect(dragCol).not.to.have.class(gridClasses['columnHeader--dragging']);
 
       fireEvent.dragEnter(targetCol);
       const dragOverEvent = createDragOverEvent(targetCol);

@@ -54,11 +54,11 @@ export const useDataGridProComponent = (apiRef: GridApiRef, props: GridComponent
   useGridPreferencesPanel(apiRef);
   useGridFilter(apiRef, props);
   useGridDensity(apiRef, props);
-  useGridContainerProps(apiRef, props);
   useGridColumnReorder(apiRef, props);
   useGridColumnResize(apiRef, props);
   useGridPageSize(apiRef, props);
   useGridPage(apiRef, props);
+  useGridContainerProps(apiRef, props);
   useGridScroll(apiRef, props);
   useGridNoVirtualization(apiRef, props);
   useGridVirtualization(apiRef, props);

@@ -1,33 +1,22 @@
-import { getInitialGridColumnsState, GridColumnsState } from '../../../models/colDef/gridColDef';
+import { GridColumnsState } from '../../../models/colDef/gridColDef';
 import {
   GridContainerProps,
   GridScrollBarState,
   GridViewportSizeState,
 } from '../../../models/gridContainerProps';
-import { GridFilterModel } from '../../../models/gridFilterModel';
 import { GridEditRowsModel } from '../../../models/gridEditRowModel';
 import { GridColumnMenuState } from '../columnMenu/columnMenuState';
-import {
-  getInitialGridColumnReorderState,
-  GridColumnReorderState,
-} from '../columnReorder/columnReorderState';
-import {
-  getInitialGridColumnResizeState,
-  GridColumnResizeState,
-} from '../columnResize/columnResizeState';
-import { GridDensityState, getInitialGridDensityState } from '../density/densityState';
-import { getInitialGridFilterState } from '../filter/gridFilterModelState';
-import {
-  getInitialVisibleGridRowsState,
-  VisibleGridRowsState,
-} from '../filter/visibleGridRowsState';
+import { GridColumnReorderState } from '../columnReorder/columnReorderState';
+import { GridColumnResizeState } from '../columnResize/columnResizeState';
+import { GridDensityState } from '../density/densityState';
+import { GridFilterState } from '../filter/gridFilterState';
 import { GridFocusState, GridTabIndexState } from '../focus/gridFocusState';
 import { GridPreferencePanelState } from '../preferencesPanel/gridPreferencePanelState';
-import { getInitialGridRowState, GridRowsState } from '../rows/gridRowsState';
+import { GridRowsState } from '../rows/gridRowsState';
 import { GridSelectionModel } from '../../../models/gridSelectionModel';
-import { getInitialGridSortingState, GridSortingState } from '../sorting/gridSortingState';
-import { getInitialGridRenderingState, GridRenderingState } from '../virtualization/renderingState';
-import { getInitialPaginationState, GridPaginationState } from '../pagination/gridPaginationState';
+import { GridSortingState } from '../sorting/gridSortingState';
+import { GridRenderingState } from '../virtualization/renderingState';
+import { GridPaginationState } from '../pagination/gridPaginationState';
 
 export interface GridState {
   rows: GridRowsState;
@@ -45,31 +34,8 @@ export interface GridState {
   focus: GridFocusState;
   tabIndex: GridTabIndexState;
   selection: GridSelectionModel;
-  filter: GridFilterModel;
-  visibleRows: VisibleGridRowsState;
+  filter: GridFilterState;
   preferencePanel: GridPreferencePanelState;
   density: GridDensityState;
   error?: any;
 }
-
-export const getInitialGridState = (): GridState => ({
-  rows: getInitialGridRowState(),
-  editRows: {},
-  pagination: getInitialPaginationState(),
-  columns: getInitialGridColumnsState(),
-  columnReorder: getInitialGridColumnReorderState(),
-  columnResize: getInitialGridColumnResizeState(),
-  rendering: getInitialGridRenderingState(),
-  containerSizes: null,
-  scrollBar: { hasScrollX: false, hasScrollY: false, sizes: { x: 0, y: 0 } },
-  viewportSizes: { width: 0, height: 1 },
-  sorting: getInitialGridSortingState(),
-  focus: { cell: null, columnHeader: null },
-  tabIndex: { cell: null, columnHeader: null },
-  selection: [],
-  filter: getInitialGridFilterState(),
-  columnMenu: { open: false },
-  preferencePanel: { open: false },
-  visibleRows: getInitialVisibleGridRowsState(),
-  density: getInitialGridDensityState(),
-});

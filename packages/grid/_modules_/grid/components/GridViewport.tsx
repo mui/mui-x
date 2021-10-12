@@ -12,10 +12,7 @@ import { gridSelectionStateSelector } from '../hooks/features/selection/gridSele
 import { gridRenderingSelector } from '../hooks/features/virtualization/renderingStateSelector';
 import { useGridApiContext } from '../hooks/root/useGridApiContext';
 import { GridDataContainer } from './containers/GridDataContainer';
-import { GridEmptyCell } from './cell/GridEmptyCell';
 import { GridRenderingZone } from './GridRenderingZone';
-import { GridRow } from './GridRow';
-import { GridRowCells } from './cell/GridRowCells';
 import { GridStickyContainer } from './GridStickyContainer';
 import {
   gridContainerSizesSelector,
@@ -69,34 +66,28 @@ export const GridViewport: ViewportType = React.forwardRef<HTMLDivElement, {}>(
         renderState.renderContext.lastRowIdx!,
       );
 
+      const renderedColumns = visibleColumns.slice(
+        renderState.renderContext.firstColIdx!,
+        renderState.renderContext.lastColIdx! + 1,
+      );
+
       return renderedRows.map(([id, row], idx) => (
-        <GridRow
+        <rootProps.components.Row
           key={id}
           id={id}
+          row={row}
           selected={selectionLookup[id] !== undefined}
-          rowIndex={renderState.renderContext!.firstRowIdx! + idx}
-        >
-          <GridEmptyCell width={renderState.renderContext!.leftEmptyWidth} height={rowHeight} />
-          <GridRowCells
-            columns={visibleColumns}
-            row={row}
-            id={id}
-            height={rowHeight}
-            firstColIdx={renderState.renderContext!.firstColIdx!}
-            lastColIdx={renderState.renderContext!.lastColIdx!}
-            hasScrollX={scrollBarState.hasScrollX}
-            hasScrollY={scrollBarState.hasScrollY}
-            showCellRightBorder={rootProps.showCellRightBorder}
-            extendRowFullWidth={!rootProps.disableExtendRowFullWidth}
-            rowIndex={renderState.renderContext!.firstRowIdx! + idx}
-            cellFocus={cellFocus}
-            cellTabIndex={cellTabIndex}
-            isSelected={selectionLookup[id] !== undefined}
-            editRowState={editRowsState[id]}
-            getCellClassName={rootProps.getCellClassName}
-          />
-          <GridEmptyCell width={renderState.renderContext!.rightEmptyWidth} height={rowHeight} />
-        </GridRow>
+          index={renderState.renderContext!.firstRowIdx! + idx}
+          rowHeight={rowHeight}
+          renderedColumns={renderedColumns}
+          firstColumnToRender={renderState.renderContext!.firstColIdx!}
+          cellFocus={cellFocus}
+          cellTabIndex={cellTabIndex}
+          editRowsModel={editRowsState}
+          scrollBarState={scrollBarState}
+          renderState={renderState}
+          {...rootProps.componentsProps?.row}
+        />
       ));
     };
 
