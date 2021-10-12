@@ -203,7 +203,9 @@ describe('<DataGridPro /> - Columns', () => {
         // @ts-expect-error need to migrate helpers to TypeScript
         expect(getColumnHeaderCell(1)).toHaveInlineStyle({ width: '100px' });
 
-        const separator = getColumnHeaderCell(1).querySelector(`.${gridClasses['columnSeparator--resizable']}`);
+        const separator = getColumnHeaderCell(1).querySelector(
+          `.${gridClasses['columnSeparator--resizable']}`,
+        );
 
         fireEvent.mouseDown(separator, { clientX: 100 });
         fireEvent.mouseMove(separator, { clientX: 150, buttons: 1 });
@@ -249,7 +251,9 @@ describe('<DataGridPro /> - Columns', () => {
         // @ts-expect-error need to migrate helpers to TypeScript
         expect(getColumnHeaderCell(1)).toHaveInlineStyle({ width: '100px' });
 
-        const separator = getColumnHeaderCell(1).querySelector(`.${gridClasses['columnSeparator--resizable']}`);
+        const separator = getColumnHeaderCell(1).querySelector(
+          `.${gridClasses['columnSeparator--resizable']}`,
+        );
 
         fireEvent.mouseDown(separator, { clientX: 100 });
         fireEvent.mouseMove(separator, { clientX: 150, buttons: 1 });
@@ -295,7 +299,9 @@ describe('<DataGridPro /> - Columns', () => {
         // @ts-expect-error need to migrate helpers to TypeScript
         expect(getColumnHeaderCell(1)).toHaveInlineStyle({ width: '100px' });
 
-        const separator = getColumnHeaderCell(1).querySelector(`.${gridClasses['columnSeparator--resizable']}`);
+        const separator = getColumnHeaderCell(1).querySelector(
+          `.${gridClasses['columnSeparator--resizable']}`,
+        );
 
         fireEvent.mouseDown(separator, { clientX: 100 });
         fireEvent.mouseMove(separator, { clientX: 150, buttons: 1 });
@@ -318,7 +324,9 @@ describe('<DataGridPro /> - Columns', () => {
         // @ts-expect-error need to migrate helpers to TypeScript
         expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '198px' });
 
-        const separator = getColumnHeaderCell(0).querySelector(`.${gridClasses['columnSeparator--resizable']}`);
+        const separator = getColumnHeaderCell(0).querySelector(
+          `.${gridClasses['columnSeparator--resizable']}`,
+        );
 
         fireEvent.mouseDown(separator, { clientX: 200 });
         fireEvent.mouseMove(separator, { clientX: 100, buttons: 1 });
