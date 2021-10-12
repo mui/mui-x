@@ -14,5 +14,5 @@ export interface GridFilterState {
 }
 
 export interface GridFilterInitialState {
-  filterModel: GridFilterModel;
+  filterModel?: GridFilterModel;
 }
