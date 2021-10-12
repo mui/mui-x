@@ -7,7 +7,7 @@ import {
   screen,
 } from 'test/utils';
 import { expect } from 'chai';
-import { DataGrid, DataGridProps, GridPreferencePanelsValue } from '@mui/x-data-grid';
+import { DataGrid, DataGridProps } from '@mui/x-data-grid';
 import { getColumnValues, getColumnHeaderCell } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
@@ -326,14 +326,10 @@ describe('<DataGrid /> - Sorting', () => {
       expect(getColumnValues(0)).to.deep.equal(['Adidas', 'Nike', 'Puma']);
     });
 
-    it('should allow to update the filters when initialized with initialState', () => {
+    it('should allow to update the sorting when initialized with initialState', () => {
       render(
         <Test
           initialState={{
-            preferencePanel: {
-              open: true,
-              openedPanelValue: GridPreferencePanelsValue.filters,
-            },
             sorting: {
               sortModel: [
                 {
