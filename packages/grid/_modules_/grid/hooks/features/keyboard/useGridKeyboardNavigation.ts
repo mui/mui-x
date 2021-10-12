@@ -19,15 +19,17 @@ import { gridContainerSizesSelector } from '../../root/gridContainerSizesSelecto
 import { visibleGridColumnsLengthSelector } from '../columns/gridColumnsSelector';
 import { useGridSelector } from '../core/useGridSelector';
 import { gridPaginationSelector } from '../pagination/gridPaginationSelector';
-import { gridRowCountSelector } from '../rows/gridRowsSelector';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
 import { GridComponentProps } from '../../../GridComponentProps';
-import { visibleSortedGridRowsAsArraySelector } from '../filter/gridFilterSelector';
+import {
+  visibleGridRowCountSelector,
+  visibleSortedGridRowsAsArraySelector,
+} from '../filter/gridFilterSelector';
 
 const getNextCellIndexes = (key: string, indexes: GridCellIndexCoordinates) => {
   if (!isArrowKeys(key)) {
-    throw new Error('Material-UI: The first argument (key) should be an arrow key code.');
+    throw new Error('MUI: The first argument (key) should be an arrow key code.');
   }
 
   switch (key) {
@@ -45,7 +47,7 @@ const getNextCellIndexes = (key: string, indexes: GridCellIndexCoordinates) => {
 
 const getNextColumnHeaderIndexes = (key: string, indexes: GridColumnHeaderIndexCoordinates) => {
   if (!isArrowKeys(key)) {
-    throw new Error('Material-UI: The first argument (key) should be an arrow key code.');
+    throw new Error('MUI: The first argument (key) should be an arrow key code.');
   }
 
   switch (key) {
@@ -76,7 +78,7 @@ export const useGridKeyboardNavigation = (
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridKeyboardNavigation');
   const paginationState = useGridSelector(apiRef, gridPaginationSelector);
-  const totalRowCount = useGridSelector(apiRef, gridRowCountSelector);
+  const totalVisibleRowCount = useGridSelector(apiRef, visibleGridRowCountSelector);
   const colCount = useGridSelector(apiRef, visibleGridColumnsLengthSelector);
   const containerSizes = useGridSelector(apiRef, gridContainerSizesSelector);
   const visibleSortedRowsAsArray = useGridSelector(apiRef, visibleSortedGridRowsAsArraySelector);
@@ -99,9 +101,9 @@ export const useGridKeyboardNavigation = (
 
       const key = mapKey(event);
       const isCtrlPressed = event.ctrlKey || event.metaKey || event.shiftKey;
-      let rowCount = totalRowCount;
+      let rowCount = totalVisibleRowCount;
 
-      if (props.pagination && totalRowCount > paginationState.pageSize) {
+      if (props.pagination && totalVisibleRowCount > paginationState.pageSize) {
         rowCount = paginationState.pageSize * (paginationState.page + 1);
       }
 
@@ -135,7 +137,7 @@ export const useGridKeyboardNavigation = (
             : -1 * containerSizes!.viewportPageSize);
         nextCellIndexes = { colIndex, rowIndex: nextRowIndex };
       } else {
-        throw new Error('Material-UI. Key not mapped to navigation behavior.');
+        throw new Error('MUI: Key not mapped to navigation behavior.');
       }
 
       if (nextCellIndexes.rowIndex < 0) {
@@ -162,7 +164,7 @@ export const useGridKeyboardNavigation = (
     [
       apiRef,
       visibleSortedRowsAsArray,
-      totalRowCount,
+      totalVisibleRowCount,
       props.pagination,
       paginationState.pageSize,
       paginationState.page,
@@ -197,7 +199,7 @@ export const useGridKeyboardNavigation = (
         }
         return;
       } else {
-        throw new Error('Material-UI. Key not mapped to navigation behavior.');
+        throw new Error('MUI: Key not mapped to navigation behavior.');
       }
 
       if (!nextColumnHeaderIndexes) {

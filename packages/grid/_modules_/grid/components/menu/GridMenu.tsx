@@ -4,10 +4,9 @@ import ClickAwayListener, { ClickAwayListenerProps } from '@mui/material/ClickAw
 import Grow from '@mui/material/Grow';
 import Paper from '@mui/material/Paper';
 import Popper, { PopperProps } from '@mui/material/Popper';
-import { Theme } from '@mui/material/styles';
+import { createTheme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
 import { HTMLElementType } from '@mui/utils';
-import { createTheme } from '../../utils/utils';
 
 type MenuPosition =
   | 'bottom-end'
@@ -26,7 +25,7 @@ type MenuPosition =
 
 const defaultTheme = createTheme();
 const useStyles = makeStyles(
-  (theme: Theme) => ({
+  (theme) => ({
     root: {
       zIndex: theme.zIndex.modal,
       '& .MuiDataGrid-gridMenuList': {

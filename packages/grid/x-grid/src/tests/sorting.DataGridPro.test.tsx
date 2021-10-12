@@ -1,13 +1,14 @@
 import * as React from 'react';
 import {
   DataGridPro,
+  DataGridProProps,
   GridApiRef,
   GridComponentProps,
   GridSortModel,
   useGridApiRef,
 } from '@mui/x-data-grid-pro';
 import { expect } from 'chai';
-import { spy, useFakeTimers } from 'sinon';
+import { spy } from 'sinon';
 import { getColumnValues, getCell, getColumnHeaderCell } from 'test/utils/helperFn';
 import {
   createClientRenderStrictMode,
@@ -23,7 +24,6 @@ import { useData } from 'packages/storybook/src/hooks/useData';
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<DataGridPro /> - Sorting', () => {
-  let clock;
   const baselineProps = {
     autoHeight: isJSDOM,
     rows: [
@@ -45,14 +45,6 @@ describe('<DataGridPro /> - Sorting', () => {
     ],
     columns: [{ field: 'brand' }, { field: 'year', type: 'number' }],
   };
-
-  beforeEach(() => {
-    clock = useFakeTimers();
-  });
-
-  afterEach(() => {
-    clock.restore();
-  });
 
   // TODO v5: replace with createClientRender
   const render = createClientRenderStrictMode();
@@ -102,7 +94,6 @@ describe('<DataGridPro /> - Sorting', () => {
       },
     ];
     apiRef.current.setRows(newRows);
-    clock.tick(100);
     expect(getColumnValues()).to.deep.equal(['Asics', 'Hugo', 'RedBull']);
   });
 
@@ -110,7 +101,6 @@ describe('<DataGridPro /> - Sorting', () => {
     renderBrandSortedAsc();
     apiRef.current.updateRows([{ id: 1, brand: 'Fila' }]);
     apiRef.current.updateRows([{ id: 0, brand: 'Patagonia' }]);
-    clock.tick(100);
     expect(getColumnValues()).to.deep.equal(['Fila', 'Patagonia', 'Puma']);
   });
 
@@ -191,10 +181,6 @@ describe('<DataGridPro /> - Sorting', () => {
   });
 
   describe('performance', () => {
-    beforeEach(() => {
-      clock.restore();
-    });
-
     it('should sort 5,000 rows in less than 200 ms', async function test() {
       // It's simpler to only run the performance test in a single controlled environment.
       if (!/HeadlessChrome/.test(window.navigator.userAgent)) {
@@ -322,6 +308,41 @@ describe('<DataGridPro /> - Sorting', () => {
       fireEvent.click(getColumnHeaderCell(0));
       expect(getColumnValues()).to.deep.equal(['Adidas', 'Nike', 'Puma']);
       expect(expectedModel).to.deep.equal([{ field: 'brand', sort: 'asc' }]);
+    });
+
+    it('should not call onSortModelChange on initialization or on sortModel prop change', () => {
+      const onSortModelChange = spy();
+
+      const Test = (props: Partial<DataGridProProps>) => (
+        <div style={{ width: 300, height: 300 }}>
+          <DataGridPro
+            autoHeight={isJSDOM}
+            columns={baselineProps.columns}
+            rows={baselineProps.rows}
+            onSortModelChange={onSortModelChange}
+            {...props}
+          />
+        </div>
+      );
+
+      const { setProps } = render(
+        <Test
+          sortModel={[
+            { field: 'year', sort: 'desc' },
+            { field: 'brand', sort: 'asc' },
+          ]}
+        />,
+      );
+
+      expect(onSortModelChange.callCount).to.equal(0);
+      setProps({
+        sortModel: [
+          { field: 'year', sort: 'asc' },
+          { field: 'brand', sort: 'asc' },
+        ],
+      });
+
+      expect(onSortModelChange.callCount).to.equal(0);
     });
   });
 });

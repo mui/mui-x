@@ -1,6 +1,8 @@
+const path = require('path');
+
 let defaultPresets;
 
-// We release a ES version of Material-UI.
+// We release a ES version of MUI.
 // It's something that matches the latest official supported features of JavaScript.
 // Nothing more (stage-1, etc), nothing less (require, etc).
 if (process.env.BABEL_ENV === 'es') {
@@ -17,12 +19,17 @@ if (process.env.BABEL_ENV === 'es') {
   ];
 }
 
+function resolveAliasPath(relativeToBabelConf) {
+  const resolvedPath = path.relative(process.cwd(), path.resolve(__dirname, relativeToBabelConf));
+  return `./${resolvedPath.replace('\\', '/')}`;
+}
+
 const defaultAlias = {
-  '@mui/x-data-grid': './packages/grid/data-grid/src',
-  '@mui/x-data-grid-generator': './packages/grid/x-grid-data-generator/src',
-  '@mui/x-data-grid-pro': './packages/grid/x-grid/src',
-  '@mui/x-license-pro': './packages/x-license/src',
-  docs: './node_modules/@material-ui/monorepo/docs',
+  '@mui/x-data-grid': resolveAliasPath('./packages/grid/data-grid/src'),
+  '@mui/x-data-grid-generator': resolveAliasPath('./packages/grid/x-grid-data-generator/src'),
+  '@mui/x-data-grid-pro': resolveAliasPath('./packages/grid/x-grid/src'),
+  '@mui/x-license-pro': resolveAliasPath('./packages/x-license/src'),
+  docs: resolveAliasPath('./node_modules/@material-ui/monorepo/docs'),
 };
 
 module.exports = {
@@ -35,7 +42,6 @@ module.exports = {
     ['@babel/plugin-transform-runtime', { version: '^7.4.4' }],
     // for IE 11 support
     '@babel/plugin-transform-object-assign',
-    'babel-plugin-istanbul',
     [
       'babel-plugin-module-resolver',
       {
@@ -52,9 +58,21 @@ module.exports = {
     /prettier/,
   ],
   env: {
-    coverage: {},
+    coverage: {
+      plugins: ['babel-plugin-istanbul'],
+    },
     test: {
       sourceMaps: 'both',
+    },
+    benchmark: {
+      plugins: [
+        [
+          'babel-plugin-module-resolver',
+          {
+            alias: defaultAlias,
+          },
+        ],
+      ],
     },
   },
 };

@@ -22,7 +22,7 @@ function getAppender(name: string, logLevel: string, appender: Logger = console)
   const minLogLevelIdx = LOG_LEVELS.indexOf(logLevel);
 
   if (minLogLevelIdx === -1) {
-    throw new Error(`Material-UI: Log level ${logLevel} not recognized.`);
+    throw new Error(`MUI: Log level ${logLevel} not recognized.`);
   }
 
   const logger = LOG_LEVELS.reduce((loggerObj, method, idx) => {
@@ -30,7 +30,7 @@ function getAppender(name: string, logLevel: string, appender: Logger = console)
       loggerObj[method] = (...args: any[]) => {
         const [message, ...other] = args;
 
-        (appender as any)[method](`Material-UI: ${name} - ${message}`, ...other);
+        (appender as any)[method](`MUI: ${name} - ${message}`, ...other);
       };
     } else {
       loggerObj[method] = noop;

@@ -16,17 +16,19 @@ import { GridColumnOrderChangeParams } from '../../../models/params/gridColumnOr
 import { mergeGridColTypes } from '../../../utils/mergeUtils';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
-import { useGridSelector } from '../core/useGridSelector';
 import { GridLocaleText, GridTranslationKeys } from '../../../models/api/gridLocaleTextApi';
 import { useGridState } from '../core/useGridState';
 import {
+  allGridColumnsFieldsSelector,
   allGridColumnsSelector,
   gridColumnsMetaSelector,
+  gridColumnsSelector,
   visibleGridColumnsSelector,
 } from './gridColumnsSelector';
 import { useGridApiOptionHandler } from '../../root/useGridApiEventHandler';
 import { GRID_STRING_COL_DEF } from '../../../models/colDef/gridStringColDef';
 import { GridComponentProps } from '../../../GridComponentProps';
+import { useGridStateInit } from '../../utils/useGridStateInit';
 import { getDataGridUtilityClass } from '../../../gridClasses';
 import { composeClasses } from '../../../utils/material-ui-utils';
 
@@ -145,7 +147,9 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 
 /**
  * @requires useGridParamsApi (method)
+ * @requires useGridContainerProps (state)
  * TODO: Impossible priority - useGridParamsApi also needs to be after useGridColumns
+ * TODO: Impossible priority - useGridContainerProps also needs to be after useGridColumns
  */
 export function useGridColumns(
   apiRef: GridApiRef,
@@ -155,12 +159,42 @@ export function useGridColumns(
   >,
 ): void {
   const logger = useGridLogger(apiRef, 'useGridColumns');
-  const [gridState, setGridState, forceUpdate] = useGridState(apiRef);
-  const columnsMeta = useGridSelector(apiRef, gridColumnsMetaSelector);
-  const allColumns = useGridSelector(apiRef, allGridColumnsSelector);
-  const visibleColumns = useGridSelector(apiRef, visibleGridColumnsSelector);
+
   const ownerState = { classes: props.classes };
   const classes = useUtilityClasses(ownerState);
+
+  useGridStateInit(apiRef, (state) => {
+    const hydratedColumns = hydrateColumnsType(
+      props.columns,
+      props.columnTypes,
+      apiRef.current.getLocaleText,
+      props.checkboxSelection,
+      classes,
+    );
+
+    const columns = upsertColumnsState(hydratedColumns);
+    let newColumns: GridColumns = columns.all.map((field) => columns.lookup[field]);
+    newColumns = hydrateColumnsWidth(newColumns, 0);
+
+    const columnState: GridColumnsState = {
+      all: newColumns.map((col) => col.field),
+      lookup: newColumns.reduce((acc, col) => {
+        acc[col.field] = col;
+        return acc;
+      }, {}),
+    };
+
+    return {
+      ...state,
+      columns: columnState,
+    };
+  });
+  const [, setGridState, forceUpdate] = useGridState(apiRef);
+
+  // On the first render, `useGridContainerProps` has not yet initialized its state because it is called after `useGridColumns`
+  // But it viewport width would always be 0 on the 1st render since the DOM Node is not mounted yet, so we can provide a safe fallback here
+  // TODO: Fix when removing `viewportSizes` from the state
+  const viewportSizes = apiRef.current.state.viewportSizes?.width ?? 0;
 
   const setGridColumnsState = React.useCallback(
     (columnsState: GridColumnsState, emit = true) => {
@@ -182,32 +216,35 @@ export function useGridColumns(
   );
 
   const getAllColumns = React.useCallback<GridColumnApi['getAllColumns']>(
-    () => allColumns,
-    [allColumns],
+    () => allGridColumnsSelector(apiRef.current.state),
+    [apiRef],
   );
   const getVisibleColumns = React.useCallback<GridColumnApi['getVisibleColumns']>(
-    () => visibleColumns,
-    [visibleColumns],
+    () => visibleGridColumnsSelector(apiRef.current.state),
+    [apiRef],
   );
   const getColumnsMeta = React.useCallback<GridColumnApi['getColumnsMeta']>(
-    () => columnsMeta,
-    [columnsMeta],
+    () => gridColumnsMetaSelector(apiRef.current.state),
+    [apiRef],
   );
 
   const getColumnIndex = React.useCallback(
-    (field: string, useVisibleColumns: boolean = true): number =>
-      useVisibleColumns
-        ? visibleColumns.findIndex((col) => col.field === field)
-        : allColumns.findIndex((col) => col.field === field),
-    [allColumns, visibleColumns],
+    (field: string, useVisibleColumns: boolean = true): number => {
+      const columns = useVisibleColumns
+        ? visibleGridColumnsSelector(apiRef.current.state)
+        : allGridColumnsSelector(apiRef.current.state);
+
+      return columns.findIndex((col) => col.field === field);
+    },
+    [apiRef],
   );
 
   const getColumnPosition: (field: string) => number = React.useCallback(
     (field) => {
       const index = getColumnIndex(field);
-      return columnsMeta.positions[index];
+      return gridColumnsMetaSelector(apiRef.current.state).positions[index];
     },
-    [columnsMeta.positions, getColumnIndex],
+    [apiRef, getColumnIndex],
   );
 
   const setColumnsState = React.useCallback(
@@ -264,16 +301,17 @@ export function useGridColumns(
 
   const setColumnIndex = React.useCallback(
     (field: string, targetIndexPosition: number) => {
-      const oldIndexPosition = gridState.columns.all.findIndex((col) => col === field);
+      const allColumns = allGridColumnsFieldsSelector(apiRef.current.state);
+      const oldIndexPosition = allColumns.findIndex((col) => col === field);
       if (oldIndexPosition === targetIndexPosition) {
         return;
       }
 
       logger.debug(`Moving column ${field} to index ${targetIndexPosition}`);
 
-      const updatedColumns = [...gridState.columns.all];
+      const updatedColumns = [...allColumns];
       updatedColumns.splice(targetIndexPosition, 0, updatedColumns.splice(oldIndexPosition, 1)[0]);
-      setGridColumnsState({ ...gridState.columns, all: updatedColumns });
+      setGridColumnsState({ ...gridColumnsSelector(apiRef.current.state), all: updatedColumns });
 
       const params: GridColumnOrderChangeParams = {
         field,
@@ -284,7 +322,7 @@ export function useGridColumns(
       };
       apiRef.current.publishEvent(GridEvents.columnOrderChange, params);
     },
-    [apiRef, gridState.columns, logger, setGridColumnsState],
+    [apiRef, logger, setGridColumnsState],
   );
 
   const setColumnWidth = React.useCallback(
@@ -320,7 +358,15 @@ export function useGridColumns(
 
   useGridApiMethod(apiRef, colApi, 'ColApi');
 
+  // The effect do not track any value defined synchronously during the 1st render by hooks called after `useGridColumns`
+  // As a consequence, the state generated by the 1st run of this useEffect will always be equal to the initialization one
+  const isFirstRender = React.useRef(true);
   React.useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+
     logger.info(`GridColumns have changed, new length ${props.columns.length}`);
 
     const hydratedColumns = hydrateColumnsType(
@@ -344,19 +390,17 @@ export function useGridColumns(
   ]);
 
   React.useEffect(() => {
-    logger.debug(
-      `GridColumns gridState.viewportSizes.width, changed ${gridState.viewportSizes.width}`,
-    );
+    logger.debug(`GridColumns gridState.viewportSizes.width, changed ${viewportSizes}`);
 
     // This hook is meant to update the column's width when the viewport changes
     // We can skip the whole block if the width is missing
-    if (gridState.viewportSizes.width === 0) {
+    if (viewportSizes === 0) {
       return;
     }
 
     // Avoid dependency on gridState as I only want to update cols when viewport size changed.
     setColumnsState(apiRef.current.state.columns);
-  }, [apiRef, setColumnsState, gridState.viewportSizes.width, logger]);
+  }, [apiRef, setColumnsState, viewportSizes, logger]);
 
   // Grid Option Handlers
   useGridApiOptionHandler(

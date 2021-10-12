@@ -9,9 +9,9 @@ import {
   isGridHeaderCellRoot,
 } from '../../../utils/domUtils';
 import { isEnterKey, isNavigationKey, isSpaceKey } from '../../../utils/keyboardUtils';
-import { useGridLogger } from '../../utils/useGridLogger';
 import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
 import { GridCellModes } from '../../../models/gridEditRowModel';
+import { visibleSortedGridRowIdsSelector } from '../filter';
 
 /**
  * @requires useGridSelection (method)
@@ -21,44 +21,34 @@ import { GridCellModes } from '../../../models/gridEditRowModel';
  * @requires useGridColumnMenu (method)
  */
 export const useGridKeyboard = (apiRef: GridApiRef): void => {
-  const logger = useGridLogger(apiRef, 'useGridKeyboard');
-
   const expandSelection = React.useCallback(
     (params: GridCellParams, event: React.KeyboardEvent) => {
+      apiRef.current.publishEvent(GridEvents.cellNavigationKeyDown, params, event);
+
+      const focusCell = apiRef.current.state.focus.cell;
+
+      if (!focusCell) {
+        return;
+      }
+
       const rowEl = findParentElementFromClassName(
         event.target as HTMLDivElement,
         gridClasses.row,
       )! as HTMLElement;
 
-      const currentRowIndex = Number(rowEl.getAttribute('data-rowindex'));
-      let selectionFromRowIndex = currentRowIndex;
+      const startRowIndex = Number(rowEl.getAttribute('data-rowindex'));
+      const startId = visibleSortedGridRowIdsSelector(apiRef.current.state)[startRowIndex];
 
-      // TODO Refactor here to not use api call
-      const selectedRowsIds = [...apiRef.current.getSelectedRows().keys()];
-      if (selectedRowsIds.length > 0) {
-        const selectedRowsIndex = selectedRowsIds.map((id) => apiRef.current.getRowIndex(id));
-
-        const diffWithCurrentIndex: number[] = selectedRowsIndex.map((idx) =>
-          Math.abs(currentRowIndex - idx),
-        );
-        const minIndex = Math.max(...diffWithCurrentIndex);
-        selectionFromRowIndex = selectedRowsIndex[diffWithCurrentIndex.indexOf(minIndex)];
+      if (startId === focusCell.id) {
+        return;
       }
 
-      apiRef.current.publishEvent(GridEvents.cellNavigationKeyDown, params, event);
-
-      const focusCell = apiRef.current.state.focus.cell!;
-      const rowIndex = apiRef.current.getRowIndex(focusCell.id);
-      // We select the rows in between
-      const rowIds = Array(Math.abs(rowIndex - selectionFromRowIndex) + 1).fill(
-        rowIndex > selectionFromRowIndex ? selectionFromRowIndex : rowIndex,
+      apiRef.current.selectRowRange(
+        { startId, endId: focusCell.id },
+        !apiRef.current.isRowSelected(focusCell.id),
       );
-
-      logger.debug('Selecting rows ');
-
-      apiRef.current.selectRows(rowIds, true, true);
     },
-    [logger, apiRef],
+    [apiRef],
   );
 
   const handleCellKeyDown = React.useCallback(

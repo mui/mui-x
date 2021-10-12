@@ -5,7 +5,8 @@ import { useGridLogger } from '../../utils/useGridLogger';
 import { useGridState } from '../core/useGridState';
 import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
 import { GridEvents } from '../../../constants/eventsConstants';
-import { useGridSelector } from '../core';
+import { useGridStateInit } from '../../utils/useGridStateInit';
+import { useGridSelector } from '../core/useGridSelector';
 import { gridColumnMenuSelector } from './columnMenuSelector';
 
 /**
@@ -15,29 +16,49 @@ import { gridColumnMenuSelector } from './columnMenuSelector';
  */
 export const useGridColumnMenu = (apiRef: GridApiRef): void => {
   const logger = useGridLogger(apiRef, 'useGridColumnMenu');
+
+  useGridStateInit(apiRef, (state) => ({ ...state, columnMenu: { open: false } }));
   const [, setGridState, forceUpdate] = useGridState(apiRef);
   const columnMenu = useGridSelector(apiRef, gridColumnMenuSelector);
 
   const showColumnMenu = React.useCallback(
     (field: string) => {
-      logger.debug('Opening Column Menu');
-      setGridState((state) => ({
-        ...state,
-        columnMenu: { open: true, field },
-      }));
-      apiRef.current.hidePreferences();
-      forceUpdate();
+      const shouldUpdate = setGridState((state) => {
+        if (state.columnMenu.open && state.columnMenu.field === field) {
+          return state;
+        }
+
+        logger.debug('Opening Column Menu');
+        return {
+          ...state,
+          columnMenu: { open: true, field },
+        };
+      });
+
+      if (shouldUpdate) {
+        apiRef.current.hidePreferences();
+        forceUpdate();
+      }
     },
     [apiRef, forceUpdate, logger, setGridState],
   );
 
   const hideColumnMenu = React.useCallback(() => {
-    logger.debug('Hiding Column Menu');
-    setGridState((state) => ({
-      ...state,
-      columnMenu: { ...state.columnMenu, open: false, field: undefined },
-    }));
-    forceUpdate();
+    const shouldUpdate = setGridState((state) => {
+      if (!state.columnMenu.open && state.columnMenu.field === undefined) {
+        return state;
+      }
+
+      logger.debug('Hiding Column Menu');
+      return {
+        ...state,
+        columnMenu: { ...state.columnMenu, open: false, field: undefined },
+      };
+    });
+
+    if (shouldUpdate) {
+      forceUpdate();
+    }
   }, [forceUpdate, logger, setGridState]);
 
   const toggleColumnMenu = React.useCallback(

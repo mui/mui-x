@@ -1,7 +1,7 @@
 {
   "name": "@mui/x-data-grid",
-  "version": "5.0.0-beta.1",
-  "description": "The community edition of the data grid component (Material-UI X).",
+  "version": "5.0.0-beta.3",
+  "description": "The community edition of the data grid component (MUI X).",
   "author": "MUI Team",
   "main": "build/index-cjs.js",
   "module": "build/index-esm.js",
@@ -10,7 +10,7 @@
   "bugs": {
     "url": "https://github.com/mui-org/material-ui-x/issues"
   },
-  "homepage": "https://material-ui.com/components/data-grid/",
+  "homepage": "https://mui.com/components/data-grid/",
   "sideEffects": false,
   "publishConfig": {
     "access": "public"
@@ -37,14 +37,14 @@
     "directory": "packages/grid/data-grid"
   },
   "dependencies": {
-    "@mui/utils": "^5.0.0",
+    "@mui/utils": "^5.0.1",
     "clsx": "^1.1.1",
     "prop-types": "^15.7.2",
     "reselect": "^4.0.0"
   },
   "peerDependencies": {
-    "@mui/material": "^5.0.0",
-    "@mui/styles": "^5.0.0",
+    "@mui/material": "^5.0.2",
+    "@mui/styles": "^5.0.1",
     "react": "^17.0.2"
   },
   "setupFiles": [

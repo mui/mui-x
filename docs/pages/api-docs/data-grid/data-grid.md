@@ -98,7 +98,7 @@ The name <code>MuiDataGrid</code> can be used when providing [default props](/cu
 | <span class="prop-name">onRowLeave</span> | <span class="prop-type">(params: GridRowParams, event: MuiEvent<React.MouseEvent>, details: GridCallbackDetails) => void</span> |   | Callback fired when a mouse leave event comes from a row container element. |
 | <span class="prop-name">onSelectionModelChange</span> | <span class="prop-type">(model: GridSelectionModel) => void</span> |   | Callback fired when the selection state of one or multiple rows changes. |
 | <span class="prop-name">onSortModelChange</span> | <span class="prop-type">(model: GridSortModel) => void</span> |   | Callback fired when the sort model changes before a column is sorted. |
-| <span class="prop-name">page</span> | <span class="prop-type">number</span> | 1   |  Set the current page. |
+| <span class="prop-name">page</span> | <span class="prop-type">number</span> | 0   |  The zero-based index of the current page. |
 | <span class="prop-name">pageSize</span> | <span class="prop-type">number</span> | 100 | Set the number of rows in one page. |
 | <span class="prop-name">paginationMode</span> | <span class="prop-type">GridFeatureMode</span> | 'client' | Pagination can be processed on the server or client-side. Set it to 'client' if you would like to handle the pagination on the client-side. Set it to 'server' if you would like to handle the pagination on the server-side. |
 | <span class="prop-name">rowCount</span> | <span class="prop-type">number</span> |   |  Set the total number of rows, if it is different than the length of the value `rows` prop. |
@@ -120,7 +120,8 @@ You can use the [slots API](/components/data-grid/components/#overriding-compone
 
 | Name | Type | Default | Description |
 |:-----|:-----|:--------|:------------|
-| <span class="prop-name">Checkbox</span> | <span class="prop-type">elementType</span> | <span class="prop-type">Checkbox</span> | Checkbox component used in the grid for both header and cells. By default, it uses the Material-UI core Checkbox component. |
+| <span class="prop-name">Cell</span> | <span class="prop-type">elementType</span> | <span class="prop-type">Checkbox</span> | Component rendered for each cell. |
+| <span class="prop-name">Checkbox</span> | <span class="prop-type">elementType</span> | <span class="prop-type">Checkbox</span> | Checkbox component used in the grid for both header and cells. By default, it uses the MUI core Checkbox component. |
 | <span class="prop-name">ColumnFilteredIcon</span> | <span class="prop-type">elementType </span> | <span class="prop-type">FilterAltIcon</span> | Icon displayed on the column header menu to show that a filter has been applied to the column. |
 | <span class="prop-name">ColumnMenu</span> | <span class="prop-type">elementType&lt;GridColumnMenuProps></span> | <span class="prop-type">GridColumnMenu</span> | Column menu component rendered by clicking on the 3 dots "kebab" icon in column headers. |
 | <span class="prop-name">ColumnMenuIcon</span> | <span class="prop-type">elementType </span> | <span class="prop-type">TripleDotsVerticalIcon</span> | Icon displayed on the side of the column header title to display the filter input component. |
@@ -145,6 +146,7 @@ You can use the [slots API](/components/data-grid/components/#overriding-compone
 | <span class="prop-name">Pagination</span> | <span class="prop-type">elementType</span> | <span class="prop-type">Pagination</span> | Pagination component rendered in the grid footer by default.|
 | <span class="prop-name">Panel</span> | <span class="prop-type">elementType&lt;GridPanelProps></span> | <span class="prop-type">Panel</span> | Panel component wrapping the filters and columns panels. |
 | <span class="prop-name">PreferencesPanel</span> | <span class="prop-type">elementType</span> | <span class="prop-type">PreferencesPanel</span> | PreferencesPanel component that renders the ColumnSelector or FilterPanel within a Panel component.|
+| <span class="prop-name">Row</span> | <span class="prop-type">elementType</span> | <span class="prop-type">Component rendered for each row. |
 | <span class="prop-name">Toolbar</span> | <span class="prop-type">elementType</span> | <span class="prop-type">GridToolbar</span> | Toolbar component rendered above the grid column header bar.|
 
 ## CSS
@@ -216,7 +218,7 @@ You can override the style of the component thanks to one of these customization
 - With a [global class name](/customization/components/#overriding-styles-with-global-class-names).
 - With a theme and an [`overrides` property](/customization/globals/#css).
 
-If that's not sufficient, you can check the [implementation of the component style](https://github.com/mui-org/material-ui-x/blob/master/packages/grid/_modules_/grid/components/containers/GridRootStyles.ts) for more detail.
+If that's not sufficient, you can check the [implementation of the component style](https://github.com/mui-org/material-ui-x/blob/next/packages/grid/_modules_/grid/components/containers/GridRootStyles.ts) for more detail.
 
 ## Demos
 

@@ -15,23 +15,20 @@ const hasActions = (colDef: any): colDef is GridActionsColDef =>
 type GridActionsCellProps = GridRenderCellParams & Pick<GridMenuProps, 'position'>;
 
 const GridActionsCell = (props: GridActionsCellProps) => {
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [open, setOpen] = React.useState(false);
+  const buttonRef = React.useRef<HTMLButtonElement>(null);
   const menuId = useId();
   const buttonId = useId();
   const rootProps = useGridRootProps();
   const { colDef, id, api, position = 'bottom-end' } = props;
 
   if (!hasActions(colDef)) {
-    throw new Error('Material-UI: Missing the `getActions` property in the `GridColDef`.');
+    throw new Error('MUI: Missing the `getActions` property in the `GridColDef`.');
   }
 
-  const showMenu = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
+  const showMenu = () => setOpen(true);
 
-  const hideMenu = () => {
-    setAnchorEl(null);
-  };
+  const hideMenu = () => setOpen(false);
 
   const options = colDef.getActions(api.getRowParams(id));
   const iconButtons = options.filter((option) => !option.props.showInMenu);
@@ -42,10 +39,11 @@ const GridActionsCell = (props: GridActionsCellProps) => {
       {iconButtons.map((button, index) => React.cloneElement(button, { key: index }))}
       {menuButtons.length > 0 && (
         <IconButton
+          ref={buttonRef}
           id={buttonId}
           aria-label={api.getLocaleText('actionsCellMore')}
           aria-controls={menuId}
-          aria-expanded={anchorEl ? 'true' : undefined}
+          aria-expanded={open ? 'true' : undefined}
           aria-haspopup="true"
           size="small"
           onClick={showMenu}
@@ -59,8 +57,8 @@ const GridActionsCell = (props: GridActionsCellProps) => {
           id={menuId}
           onClickAway={hideMenu}
           onClick={hideMenu}
-          open={Boolean(anchorEl)}
-          target={anchorEl}
+          open={open}
+          target={buttonRef.current}
           position={position}
           aria-labelledby={buttonId}
         >

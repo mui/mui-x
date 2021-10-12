@@ -36,7 +36,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 };
 
 function GridRow(props: GridRowProps) {
-  const { selected, id, rowIndex, children } = props;
+  const { selected, id, rowIndex, children, ...other } = props;
   const ariaRowIndex = rowIndex + 2; // 1 for the header row and 1 as it's 1 based
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
@@ -73,7 +73,7 @@ function GridRow(props: GridRowProps) {
     [apiRef, id],
   );
 
-  const mouseEventsHandlers = React.useMemo(
+  const mouseEventsHandlers = React.useMemo<Partial<React.HTMLAttributes<HTMLDivElement>>>(
     () => ({
       onClick: publish(GridEvents.rowClick),
       onDoubleClick: publish(GridEvents.rowDoubleClick),
@@ -105,6 +105,7 @@ function GridRow(props: GridRowProps) {
       aria-selected={selected}
       style={style}
       {...mouseEventsHandlers}
+      {...other}
     >
       {children}
     </div>

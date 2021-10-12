@@ -12,14 +12,14 @@ Using your favorite package manager, install `@mui/x-data-grid-pro` for the full
 
 ```sh
 // with npm
-npm install @mui/x-data-grid
+npm install @mui/x-data-grid@next
 
 // with yarn
-yarn add @mui/x-data-grid
+yarn add @mui/x-data-grid@next
 ```
 
-The grid has two peer dependencies on Material-UI components.
-If you are not already using Material-UI in your project, you can install it with:
+The grid has two peer dependencies on MUI components.
+If you are not already using MUI in your project, you can install it with:
 
 ```sh
 // with npm
@@ -49,7 +49,7 @@ Here is an example
 const rows: GridRowsProp = [
   { id: 1, col1: 'Hello', col2: 'World' },
   { id: 2, col1: 'DataGridPro', col2: 'is Awesome' },
-  { id: 3, col1: 'Material-UI', col2: 'is Amazing' },
+  { id: 3, col1: 'MUI', col2: 'is Amazing' },
 ];
 ```
 
@@ -78,7 +78,7 @@ import { DataGrid, GridRowsProp, GridColDef } from '@mui/x-data-grid';
 const rows: GridRowsProp = [
   { id: 1, col1: 'Hello', col2: 'World' },
   { id: 2, col1: 'DataGridPro', col2: 'is Awesome' },
-  { id: 3, col1: 'Material-UI', col2: 'is Amazing' },
+  { id: 3, col1: 'MUI', col2: 'is Amazing' },
 ];
 
 const columns: GridColDef[] = [
@@ -109,7 +109,7 @@ import type {} from '@mui/x-data-grid-pro/themeAugmentation';
 
 const theme = createTheme({
   components: {
-    // Use `DataGrid` on both DataGrid and DataGridPro
+    // Use `MuiDataGrid` on both DataGrid and DataGridPro
     MuiDataGrid: {
       styleOverrides: {
         root: {
@@ -125,14 +125,14 @@ const theme = createTheme({
 
 The data grid comes with two different licenses:
 
-- [DataGrid](https://material-ui.com/api/data-grid/data-grid/), it's [MIT licensed](https://tldrlegal.com/license/mit-license) and available on npm as `@mui/x-data-grid`.
-- [DataGridPro](https://material-ui.com/api/data-grid/data-grid-pro/), it's **Commercially licensed** and available on npm as `@mui/x-data-grid-pro`.
+- [DataGrid](https://mui.com/api/data-grid/data-grid/), it's [MIT licensed](https://tldrlegal.com/license/mit-license) and available on npm as `@mui/x-data-grid`.
+- [DataGridPro](https://mui.com/api/data-grid/data-grid-pro/), it's **Commercially licensed** and available on npm as `@mui/x-data-grid-pro`.
   The features only available in the commercial version are suffixed with a <span class="pro"></span> icon for the Pro plan or a <span class="premium"></span> icon for the Premium plan.
 
   <img src="/static/x/header-icon.png" style="width: 431px; height: 123px; object-fit: contain; margin-bottom: 2rem;" alt="" loading="lazy">
 
   You can check the [feature comparison](#feature-comparison) for more details.
-  See [Pricing](https://material-ui.com/store/items/material-ui-pro/) for details on purchasing licenses.
+  See [Pricing](https://mui.com/store/items/material-ui-pro/) for details on purchasing licenses.
 
 ### Try DataGridPro for free
 
@@ -141,7 +141,7 @@ Please take the component for a test run, no need to contact us.
 
 ### Invalid license
 
-If you have an enterprise grid running with an expired or missing license key, the grid displays a watermark, and a warning is shown in the console (_Material-UI Unlicensed product_).
+If you have an enterprise grid running with an expired or missing license key, the grid displays a watermark, and a warning is shown in the console (_MUI Unlicensed product_).
 
 <img src="/static/x/watermark.png" style="width: 658px; height: 175px; object-fit: contain; margin-bottom: 3rem" alt="" loading="lazy">
 
@@ -165,9 +165,10 @@ The enterprise components come in two plans: Pro and Premium.
 | [Row spanning](/components/data-grid/rows/#row-spanning)                                  |    🚧     |              🚧               |                  🚧                   |
 | [Row reordering](/components/data-grid/rows/#row-reorder)                                 |    ❌     |              🚧               |                  🚧                   |
 | **Selection**                                                                             |           |                               |                                       |
-| [Row selection](/components/data-grid/selection/#single-row-selection)                    |    ✅     |              ✅               |                  ✅                   |
-| [Multi-row selection](/components/data-grid/selection/#multiple-row-selection)            |    ❌     |              ✅               |                  ✅                   |
-| [Range selection](/components/data-grid/selection/#range-selection)                       |    ❌     |              ❌               |                  🚧                   |
+| [Single row selection](/components/data-grid/selection/#single-row-selection)             |    ✅     |              ✅               |                  ✅                   |
+| [Checkbox selection](/components/data-grid/selection/#checkbox-selection)                 |    ✅     |              ✅               |                  ✅                   |
+| [Multiple row selection](/components/data-grid/selection/#multiple-row-selection)         |    ❌     |              ✅               |                  ✅                   |
+| [Cell range selection](/components/data-grid/selection/#range-selection)                  |    ❌     |              ❌               |                  🚧                   |
 | **Filtering**                                                                             |           |                               |                                       |
 | [Quick filter](/components/data-grid/filtering/#quick-filter)                             |    🚧     |              🚧               |                  🚧                   |
 | [Column filters](/components/data-grid/filtering/#column-filters)                         |    ✅     |              ✅               |                  ✅                   |
@@ -223,7 +224,7 @@ For instance, if you have a one-year license (default), you are not licensed to 
 
 ## Support
 
-For crowdsourced technical questions from expert Material-UI devs in our community. Also frequented by the Material-UI core team.
+For crowdsourced technical questions from expert MUI devs in our community. Also frequented by the MUI Core team.
 
 [Post a question](https://stackoverflow.com/questions/tagged/material-ui)
 
@@ -235,7 +236,7 @@ We use GitHub issues exclusively as a bug and feature request tracker. If you th
 
 ### StackOverflow <img src="/static/images/logos/stackoverflow.svg" width="24" height="24" alt="StackOverflow logo" loading="lazy" />
 
-For crowdsourced technical questions from expert Material-UI devs in our community. Also frequented by the Material-UI core team.
+For crowdsourced technical questions from expert MUI devs in our community. Also frequented by the MUI Core team.
 
 [Post a question](https://stackoverflow.com/questions/tagged/material-ui)
 
@@ -247,7 +248,7 @@ We provide a [private support channel](https://material-ui.zendesk.com/) for ent
 
 Here is [the public roadmap](https://github.com/mui-org/material-ui-x/projects/1). It's organized by quarter.
 
-> ⚠️ **Disclaimer**: We operate in a dynamic environment, and things are subject to change. The information provided is intended to outline the general framework direction, for informational purposes only. We may decide to add or remove new items at any time, depending on our capability to deliver while meeting our quality standards. The development, releases, and timing of any features or functionality remains at the sole discretion of Material-UI. The roadmap does not represent a commitment, obligation, or promise to deliver at any time.
+> ⚠️ **Disclaimer**: We operate in a dynamic environment, and things are subject to change. The information provided is intended to outline the general framework direction, for informational purposes only. We may decide to add or remove new items at any time, depending on our capability to deliver while meeting our quality standards. The development, releases, and timing of any features or functionality remains at the sole discretion of MUI. The roadmap does not represent a commitment, obligation, or promise to deliver at any time.
 
 ## API
 

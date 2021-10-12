@@ -6,7 +6,6 @@ import { GridRowApi } from '../../../models/api/gridRowApi';
 import {
   checkGridRowIdIsValid,
   GridRowModel,
-  GridRowModelUpdate,
   GridRowId,
   GridRowsProp,
   GridRowIdGetter,
@@ -15,9 +14,19 @@ import {
 import { useGridApiMethod } from '../../root/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { useGridState } from '../core/useGridState';
-import { getInitialGridRowState, InternalGridRowsState } from './gridRowsState';
-import { useGridSelector } from '../core/useGridSelector';
-import { gridRowsStateSelector } from './gridRowsSelector';
+import { useGridStateInit } from '../../utils/useGridStateInit';
+import { GridRowsState } from './gridRowsState';
+import {
+  gridRowCountSelector,
+  gridRowsLookupSelector,
+  unorderedGridRowIdsSelector,
+} from './gridRowsSelector';
+
+export interface GridRowsInternalCache {
+  state: GridRowsState;
+  timeout: NodeJS.Timeout | null;
+  lastUpdateMs: number | null;
+}
 
 function getGridRowId(
   rowData: GridRowData,
@@ -31,12 +40,13 @@ function getGridRowId(
 
 export function convertGridRowsPropToState(
   rows: GridRowsProp,
-  totalRowCount?: number,
+  propRowCount?: number,
   rowIdGetter?: GridRowIdGetter,
-): InternalGridRowsState {
-  const state: InternalGridRowsState = {
-    ...getInitialGridRowState(),
-    totalRowCount: totalRowCount && totalRowCount > rows.length ? totalRowCount : rows.length,
+): GridRowsState {
+  const state: GridRowsState = {
+    idRowsLookup: {},
+    allRows: [],
+    totalRowCount: propRowCount && propRowCount > rows.length ? propRowCount : rows.length,
   };
 
   rows.forEach((rowData) => {
@@ -54,33 +64,34 @@ export function convertGridRowsPropToState(
  */
 export const useGridRows = (
   apiRef: GridApiRef,
-  props: Pick<GridComponentProps, 'rows' | 'getRowId' | 'rowCount'>,
+  props: Pick<GridComponentProps, 'rows' | 'getRowId' | 'rowCount' | 'throttleRowsMs'>,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridRows');
-  const [, setGridState, forceUpdate] = useGridState(apiRef);
-  const stateRows = useGridSelector(apiRef, gridRowsStateSelector);
-  const updateTimeout = React.useRef<any>();
 
-  const delayedForceUpdate = React.useCallback(
-    (preUpdateCallback?: Function) => {
-      if (updateTimeout.current == null) {
-        updateTimeout.current = setTimeout(() => {
-          logger.debug(`Updating component`);
-          updateTimeout.current = null;
-          if (preUpdateCallback) {
-            preUpdateCallback();
-          }
-          forceUpdate();
-        }, 100);
-      }
+  const rowsCache = React.useRef<GridRowsInternalCache>({
+    state: {
+      idRowsLookup: {},
+      allRows: [],
+      totalRowCount: 0,
     },
-    [logger, forceUpdate],
-  );
+    timeout: null,
+    lastUpdateMs: Date.now(),
+  });
 
-  const internalRowsState = React.useRef<InternalGridRowsState>(stateRows);
+  useGridStateInit(apiRef, (state) => {
+    rowsCache.current.state = convertGridRowsPropToState(
+      props.rows,
+      props.rowCount,
+      props.getRowId,
+    );
 
-  const getRowIndexFromId = React.useCallback(
-    (id: GridRowId): number => {
+    return { ...state, rows: rowsCache.current.state };
+  });
+
+  const [, setGridState, forceUpdate] = useGridState(apiRef);
+
+  const getRowIndex = React.useCallback<GridRowApi['getRowIndex']>(
+    (id) => {
       if (apiRef.current.getSortedRowIds) {
         return apiRef.current.getSortedRowIds().indexOf(id);
       }
@@ -88,8 +99,9 @@ export const useGridRows = (
     },
     [apiRef],
   );
-  const getRowIdFromRowIndex = React.useCallback(
-    (index: number): GridRowId => {
+
+  const getRowIdFromRowIndex = React.useCallback<GridRowApi['getRowIdFromRowIndex']>(
+    (index) => {
       if (apiRef.current.getSortedRowIds) {
         return apiRef.current.getSortedRowIds()[index];
       }
@@ -97,125 +109,161 @@ export const useGridRows = (
     },
     [apiRef],
   );
-  const getRow = React.useCallback(
-    (id: GridRowId): GridRowModel | null => apiRef.current.state.rows.idRowsLookup[id] ?? null,
+
+  const getRow = React.useCallback<GridRowApi['getRow']>(
+    (id) => gridRowsLookupSelector(apiRef.current.state)[id] ?? null,
     [apiRef],
   );
 
-  const setRowsState = React.useCallback(
-    (
-      rows: GridRowModel[] | readonly GridRowModel[],
-      rowCount: GridComponentProps['rowCount'],
-      getRowId: GridComponentProps['getRowId'],
-      waitBeforeUpdate: boolean,
-    ) => {
-      logger.debug(`updating all rows, new length ${rows.length}`);
-
-      if (internalRowsState.current.allRows.length > 0) {
-        apiRef.current.publishEvent(GridEvents.rowsClear);
-      }
-
-      internalRowsState.current = convertGridRowsPropToState(rows, rowCount, getRowId);
-
-      setGridState((state) => ({ ...state, rows: internalRowsState.current }));
-
-      if (waitBeforeUpdate) {
-        delayedForceUpdate(() => apiRef.current.publishEvent(GridEvents.rowsSet));
-      } else {
-        forceUpdate();
+  const throttledRowsChange = React.useCallback(
+    (newState: GridRowsState, throttle: boolean) => {
+      const run = () => {
+        rowsCache.current.timeout = null;
+        rowsCache.current.lastUpdateMs = Date.now();
+        setGridState((state) => ({ ...state, rows: rowsCache.current.state }));
         apiRef.current.publishEvent(GridEvents.rowsSet);
+        forceUpdate();
+      };
+
+      if (rowsCache.current.timeout) {
+        clearTimeout(rowsCache.current.timeout);
       }
+
+      rowsCache.current.state = newState;
+      rowsCache.current.timeout = null;
+
+      if (!throttle) {
+        run();
+        return;
+      }
+
+      const throttleRemainingTimeMs =
+        rowsCache.current.lastUpdateMs === null
+          ? 0
+          : props.throttleRowsMs - (Date.now() - rowsCache.current.lastUpdateMs);
+
+      if (throttleRemainingTimeMs > 0) {
+        rowsCache.current.timeout = setTimeout(run, throttleRemainingTimeMs);
+        return;
+      }
+
+      run();
     },
-    [apiRef, logger, setGridState, forceUpdate, delayedForceUpdate],
+    [apiRef, forceUpdate, setGridState, rowsCache, props.throttleRowsMs],
   );
 
   const setRows = React.useCallback<GridRowApi['setRows']>(
-    (rows) => setRowsState(rows, props.rowCount, props.getRowId, true),
-    [setRowsState, props.rowCount, props.getRowId],
+    (rows) => {
+      logger.debug(`Updating all rows, new length ${rows.length}`);
+      throttledRowsChange(convertGridRowsPropToState(rows, props.rowCount, props.getRowId), true);
+    },
+    [logger, throttledRowsChange, props.rowCount, props.getRowId],
   );
 
-  const updateRows = React.useCallback(
-    (updates: GridRowModelUpdate[]) => {
+  const updateRows = React.useCallback<GridRowApi['updateRows']>(
+    (updates) => {
       // we removes duplicate updates. A server can batch updates, and send several updates for the same row in one fn call.
-      const uniqUpdates = updates.reduce((acc, update) => {
+      const uniqUpdates = new Map<GridRowId, GridRowModel>();
+
+      updates.forEach((update) => {
         const id = getGridRowId(
           update,
           props.getRowId,
           'A row was provided without id when calling updateRows():',
         );
-        acc[id] = acc[id] != null ? { ...acc[id!], ...update } : update;
-        return acc;
-      }, {} as { [id: string]: GridRowModel });
 
-      const addedRows: GridRowModel[] = [];
+        if (uniqUpdates.has(id)) {
+          uniqUpdates.set(id, { ...uniqUpdates.get(id), ...update });
+        } else {
+          uniqUpdates.set(id, update);
+        }
+      });
+
       const deletedRowIds: GridRowId[] = [];
 
-      let updatedLookup: null | {} = null;
-      Object.entries<GridRowModel>(uniqUpdates).forEach(([id, partialRow]) => {
+      const idRowsLookup = { ...rowsCache.current.state.idRowsLookup };
+      let allRows = [...rowsCache.current.state.allRows];
+
+      uniqUpdates.forEach((partialRow, id) => {
         // eslint-disable-next-line no-underscore-dangle
         if (partialRow._action === 'delete') {
+          delete idRowsLookup[id];
           deletedRowIds.push(id);
           return;
         }
 
-        const oldRow = getRow(id);
+        const oldRow = apiRef.current.getRow(id);
         if (!oldRow) {
-          addedRows.push(partialRow);
+          idRowsLookup[id] = partialRow;
+          allRows.push(id);
           return;
         }
 
-        if (!updatedLookup) {
-          updatedLookup = { ...internalRowsState.current.idRowsLookup };
-        }
-
-        updatedLookup[id] = {
-          ...oldRow,
-          ...partialRow,
-        };
+        idRowsLookup[id] = { ...apiRef.current.getRow(id), ...partialRow };
       });
-      if (updatedLookup) {
-        internalRowsState.current.idRowsLookup = updatedLookup;
-        setGridState((state) => ({ ...state, rows: { ...internalRowsState.current } }));
+
+      if (deletedRowIds.length > 0) {
+        allRows = allRows.filter((id) => !deletedRowIds.includes(id));
       }
 
-      if (deletedRowIds.length > 0 || addedRows.length > 0) {
-        deletedRowIds.forEach((id) => {
-          delete internalRowsState.current.idRowsLookup[id];
-        });
-        const newRows = [
-          ...Object.values<GridRowModel>(internalRowsState.current.idRowsLookup),
-          ...addedRows,
-        ];
-        setRows(newRows);
-      }
-      delayedForceUpdate(() => apiRef.current.publishEvent(GridEvents.rowsUpdate));
+      const totalRowCount =
+        props.rowCount && props.rowCount > allRows.length ? props.rowCount : allRows.length;
+
+      const state: GridRowsState = {
+        idRowsLookup,
+        allRows,
+        totalRowCount,
+      };
+
+      throttledRowsChange(state, true);
     },
-    [apiRef, delayedForceUpdate, getRow, props.getRowId, setGridState, setRows],
+    [apiRef, props.getRowId, props.rowCount, throttledRowsChange],
   );
 
-  const getRowModels = React.useCallback(
-    () =>
-      new Map(
-        apiRef.current.state.rows.allRows.map((id) => [
-          id,
-          apiRef.current.state.rows.idRowsLookup[id],
-        ]),
-      ),
+  const getRowModels = React.useCallback<GridRowApi['getRowModels']>(() => {
+    const allRows = unorderedGridRowIdsSelector(apiRef.current.state);
+    const idRowsLookup = gridRowsLookupSelector(apiRef.current.state);
+
+    return new Map(allRows.map((id) => [id, idRowsLookup[id]]));
+  }, [apiRef]);
+
+  const getRowsCount = React.useCallback<GridRowApi['getRowsCount']>(
+    () => gridRowCountSelector(apiRef.current.state),
     [apiRef],
   );
-  const getRowsCount = React.useCallback(() => apiRef.current.state.rows.totalRowCount, [apiRef]);
-  const getAllRowIds = React.useCallback(() => apiRef.current.state.rows.allRows, [apiRef]);
+
+  const getAllRowIds = React.useCallback<GridRowApi['getAllRowIds']>(
+    () => unorderedGridRowIdsSelector(apiRef.current.state),
+    [apiRef],
+  );
 
   React.useEffect(() => {
-    return () => clearTimeout(updateTimeout!.current);
+    return () => {
+      if (rowsCache.current.timeout !== null) {
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        clearTimeout(rowsCache.current.timeout);
+      }
+    };
   }, []);
 
+  // The effect do not track any value defined synchronously during the 1st render by hooks called after `useGridRows`
+  // As a consequence, the state generated by the 1st run of this useEffect will always be equal to the initialization one
+  const isFirstRender = React.useRef(true);
   React.useEffect(() => {
-    setRowsState(props.rows, props.rowCount, props.getRowId, false);
-  }, [setRowsState, props.rows, props.rowCount, props.getRowId]);
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+
+    logger.debug(`Updating all rows, new length ${props.rows.length}`);
+    throttledRowsChange(
+      convertGridRowsPropToState(props.rows, props.rowCount, props.getRowId),
+      false,
+    );
+  }, [props.rows, props.rowCount, props.getRowId, logger, throttledRowsChange]);
 
   const rowApi: GridRowApi = {
-    getRowIndex: getRowIndexFromId,
+    getRowIndex,
     getRowIdFromRowIndex,
     getRow,
     getRowModels,
@@ -224,5 +272,6 @@ export const useGridRows = (
     setRows,
     updateRows,
   };
+
   useGridApiMethod(apiRef, rowApi, 'GridRowApi');
 };

@@ -90,6 +90,24 @@ export interface GridRenderEditCellParams extends GridEditCellProps {
 export type GridValueGetterParams = Omit<GridRenderCellParams, 'formattedValue' | 'isEditable'>;
 
 /**
- * Alias of GridRenderCellParams.
+ * Object passed as parameter in the column [[GridColDef]] value formatter callback.
  */
-export type GridValueFormatterParams = Omit<GridRenderCellParams, 'formattedValue' | 'isEditable'>;
+export interface GridValueFormatterParams {
+  /**
+   * The grid row id.
+   * It is not available when the value formatter is called by the filter panel.
+   */
+  id?: GridRowId;
+  /**
+   * The column field of the cell that triggered the event
+   */
+  field: string;
+  /**
+   * The cell value, but if the column has valueGetter, use getValue.
+   */
+  value: GridCellValue;
+  /**
+   * GridApi that let you manipulate the grid.
+   */
+  api: any;
+}

@@ -85,7 +85,7 @@ DataGridRaw.propTypes = {
     if (props.columns && props.columns.some((column) => column.resizable)) {
       return new Error(
         [
-          `Material-UI: \`column.resizable = true\` is not a valid prop.`,
+          `MUI: \`column.resizable = true\` is not a valid prop.`,
           'Column resizing is not available in the MIT version.',
           '',
           'You need to upgrade to the DataGridPro component to unlock this feature.',
@@ -172,7 +172,7 @@ DataGridRaw.propTypes = {
     if (props.filterModel != null && props.filterModel.items.length > 1) {
       return new Error(
         [
-          `Material-UI: \`<DataGrid filterModel={model} />\` is not a valid prop. \`model.items\` has more than 1 item.`,
+          `MUI: \`<DataGrid filterModel={model} />\` is not a valid prop. \`model.items\` has more than 1 item.`,
           'Only single filter is available in the MIT version.',
           '',
           'You need to upgrade to the DataGridPro component to unlock this feature.',
@@ -542,8 +542,8 @@ DataGridRaw.propTypes = {
    */
   onStateChange: PropTypes.func,
   /**
-   * Set the current page.
-   * @default 1
+   * The zero-based index of the current page.
+   * @default 0
    */
   page: PropTypes.number,
   /**
@@ -554,7 +554,7 @@ DataGridRaw.propTypes = {
     if (props.pageSize && props.pageSize > MAX_PAGE_SIZE) {
       return new Error(
         [
-          `Material-UI: \`<DataGrid pageSize={${props.pageSize}} />\` is not a valid prop.`,
+          `MUI: \`<DataGrid pageSize={${props.pageSize}} />\` is not a valid prop.`,
           `Only page size below ${MAX_PAGE_SIZE} is available in the MIT version.`,
           '',
           'You need to upgrade to the DataGridPro component to unlock this feature.',
@@ -571,7 +571,7 @@ DataGridRaw.propTypes = {
     if (props.pagination === false) {
       return new Error(
         [
-          'Material-UI: `<DataGrid pagination={false} />` is not a valid prop.',
+          'MUI: `<DataGrid pagination={false} />` is not a valid prop.',
           'Infinite scrolling is not available in the MIT version.',
           '',
           'You need to upgrade to the DataGridPro component to disable the pagination.',
@@ -622,7 +622,7 @@ DataGridRaw.propTypes = {
       ) {
         return new Error(
           [
-            `Material-UI: \`<DataGrid selectionModel={${JSON.stringify(
+            `MUI: \`<DataGrid selectionModel={${JSON.stringify(
               props.selectionModel,
             )}} />\` is not a valid prop.`,
             'selectionModel can only be of 1 item in DataGrid.',
