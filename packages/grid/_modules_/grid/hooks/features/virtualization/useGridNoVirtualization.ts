@@ -115,7 +115,7 @@ export const useGridNoVirtualization = (
   useNativeEventListener(apiRef, windowRef!, 'scroll', handleScroll, { passive: true });
 
   const disableVirtualizationApi: GridDisableVirtualizationApi = {
-    disableVirtualization,
+    UNSTABLE_disableVirtualization: disableVirtualization,
   };
 
   useGridApiMethod(apiRef, disableVirtualizationApi, 'GridDisableVirtualization');

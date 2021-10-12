@@ -20,7 +20,7 @@ type PrintWindowOnLoad = (
   printWindow: HTMLIFrameElement,
   options?: Pick<
     GridPrintExportOptions,
-    'copyStyles' | 'bodyClass' | 'pageStyle' | 'hideToolbar' | 'hideFooter'
+    'copyStyles' | 'bodyClassName' | 'pageStyle' | 'hideToolbar' | 'hideFooter'
   >,
 ) => void;
 
@@ -160,8 +160,8 @@ export const useGridPrintExport = (
         printDoc.head.appendChild(styleElement);
       }
 
-      if (normalizeOptions.bodyClass) {
-        printDoc.body.classList.add(...normalizeOptions.bodyClass.split(' '));
+      if (normalizeOptions.bodyClassName) {
+        printDoc.body.classList.add(...normalizeOptions.bodyClassName.split(' '));
       }
 
       if (normalizeOptions.copyStyles) {
@@ -250,7 +250,7 @@ export const useGridPrintExport = (
       }
 
       await updateGridColumnsForPrint(options?.fields, options?.allColumns);
-      apiRef.current.disableVirtualization();
+      apiRef.current.UNSTABLE_disableVirtualization();
       const printWindow = buildPrintWindow(options?.fileName);
       doc.current!.body.appendChild(printWindow);
       printWindow.onload = () => handlePrintWindowLoad(printWindow, options);
