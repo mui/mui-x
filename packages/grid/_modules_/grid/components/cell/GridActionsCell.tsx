@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import IconButton from '@mui/material/IconButton';
 import MenuList from '@mui/material/MenuList';
 import { unstable_useId as useId } from '@mui/material/utils';
-import { GridRenderCellParams } from '../../models/params/gridCellParams';
+import { GridRenderCellParams, GridCellParams } from '../../models/params/gridCellParams';
 import { gridClasses } from '../../gridClasses';
 import { GridMenu, GridMenuProps } from '../menu/GridMenu';
 import { GridActionsColDef } from '../../models/colDef/gridColDef';
@@ -12,7 +12,8 @@ import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 const hasActions = (colDef: any): colDef is GridActionsColDef =>
   typeof colDef.getActions === 'function';
 
-type GridActionsCellProps = GridRenderCellParams & Pick<GridMenuProps, 'position'>;
+type GridActionsCellProps = Pick<GridRenderCellParams, 'colDef' | 'id' | 'api'> &
+  Pick<GridMenuProps, 'position'>;
 
 const GridActionsCell = (props: GridActionsCellProps) => {
   const [open, setOpen] = React.useState(false);
@@ -81,40 +82,13 @@ GridActionsCell.propTypes = {
    */
   api: PropTypes.any.isRequired,
   /**
-   * The mode of the cell.
-   */
-  cellMode: PropTypes.oneOf(['edit', 'view']).isRequired,
-  /**
    * The column of the row that the current cell belongs to.
    */
   colDef: PropTypes.object.isRequired,
   /**
-   * The column field of the cell that triggered the event
-   */
-  field: PropTypes.string.isRequired,
-  /**
-   * The cell value formatted with the column valueFormatter.
-   */
-  formattedValue: PropTypes.any.isRequired,
-  /**
-   * Get the cell value of a row and field.
-   * @param {GridRowId} id The row id.
-   * @param {string} field The field.
-   * @returns {GridCellValue} The cell value.
-   */
-  getValue: PropTypes.func.isRequired,
-  /**
-   * If true, the cell is the active element.
-   */
-  hasFocus: PropTypes.bool.isRequired,
-  /**
    * The grid row id.
    */
   id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-  /**
-   * If true, the cell is editable.
-   */
-  isEditable: PropTypes.bool,
   position: PropTypes.oneOf([
     'bottom-end',
     'bottom-start',
@@ -129,20 +103,8 @@ GridActionsCell.propTypes = {
     'top-start',
     'top',
   ]),
-  /**
-   * The row model of the row that the current cell belongs to.
-   */
-  row: PropTypes.object.isRequired,
-  /**
-   * the tabIndex value.
-   */
-  tabIndex: PropTypes.oneOf([-1, 0]).isRequired,
-  /**
-   * The cell value, but if the column has valueGetter, use getValue.
-   */
-  value: PropTypes.any.isRequired,
 } as any;
 
 export { GridActionsCell };
 
-export const renderActionsCell = (params) => <GridActionsCell {...params} />;
+export const renderActionsCell = (params: GridCellParams) => <GridActionsCell {...params} />;
