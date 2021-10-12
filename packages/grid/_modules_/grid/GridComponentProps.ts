@@ -491,10 +491,9 @@ interface GridComponentOtherProps {
     event: MuiEvent<{}>,
     details: GridCallbackDetails,
   ) => void;
-
   /**
-   * Set the current page.
-   * @default 1
+   * The zero-based index of the current page.
+   * @default 0
    */
   page?: number;
   /**
