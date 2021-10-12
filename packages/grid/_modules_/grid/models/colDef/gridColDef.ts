@@ -23,6 +23,7 @@ import { GridRowModel } from '../gridRows';
  */
 export type GridAlignment = 'left' | 'right' | 'center';
 
+type ValueOptionsArray = Array<string | number | { value: any; label: string }>;
 /**
  * Column Definition interface.
  */
@@ -85,7 +86,7 @@ export interface GridColDef {
   /**
    * To be used in combination with `type: 'singleSelect'`. This is an array of the possible cell values and labels.
    */
-  valueOptions?: Array<string | number | { value: any; label: string }>;
+  valueOptions?: ValueOptionsArray | ((params?: GridRowModel) => ValueOptionsArray);
   /**
    * Allows to align the column values in cells.
    */
