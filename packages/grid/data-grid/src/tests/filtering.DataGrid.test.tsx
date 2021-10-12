@@ -1,10 +1,21 @@
 import * as React from 'react';
 import {
-  createClientRenderStrictMode, // @ts-expect-error need to migrate helpers to TypeScript
+  createClientRenderStrictMode,
+  // @ts-expect-error need to migrate helpers to TypeScript
   screen,
+  // @ts-expect-error need to migrate helpers to TypeScript
+  fireEvent,
+  // @ts-expect-error need to migrate helpers to TypeScript
+  getByText,
 } from 'test/utils';
 import { expect } from 'chai';
-import { DataGrid, GridToolbar, GridPreferencePanelsValue } from '@mui/x-data-grid';
+import {
+  DataGrid,
+  GridToolbar,
+  GridPreferencePanelsValue,
+  GridInitialState,
+  DataGridProps,
+} from '@mui/x-data-grid';
 import { getColumnValues } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
@@ -64,7 +75,7 @@ describe('<DataGrid /> - Filter', () => {
     operatorValue?: string;
     value?: any;
     field?: string;
-    state?: any;
+    initialState?: GridInitialState;
     columnTypes?: any;
   }) => {
     const { operatorValue, value, rows, columns, field = 'brand', ...other } = props;
@@ -847,7 +858,7 @@ describe('<DataGrid /> - Filter', () => {
             ]}
             field="voltage"
             operatorValue="is"
-            state={{
+            initialState={{
               preferencePanel: {
                 open: true,
                 openedPanelValue: GridPreferencePanelsValue.filters,
@@ -871,7 +882,7 @@ describe('<DataGrid /> - Filter', () => {
             columns={[{ field: 'name' }, { field: 'voltage', type: 'singleSelect' }]}
             field="voltage"
             operatorValue="is"
-            state={{
+            initialState={{
               preferencePanel: {
                 open: true,
                 openedPanelValue: GridPreferencePanelsValue.filters,
@@ -935,7 +946,7 @@ describe('<DataGrid /> - Filter', () => {
           <TestCase
             field="status"
             operatorValue="is"
-            state={{
+            initialState={{
               preferencePanel: {
                 open: true,
                 openedPanelValue: GridPreferencePanelsValue.filters,
@@ -1069,7 +1080,7 @@ describe('<DataGrid /> - Filter', () => {
         <TestCase
           field="brand"
           operatorValue="contains"
-          state={{
+          initialState={{
             preferencePanel: {
               open: true,
               openedPanelValue: GridPreferencePanelsValue.filters,
@@ -1078,6 +1089,100 @@ describe('<DataGrid /> - Filter', () => {
         />,
       );
       expect(screen.getByRole('textbox', { name: 'Value' }).value).to.equal('');
+    });
+  });
+
+  describe('prop: initialState.filter', () => {
+    const Test = (props: Omit<DataGridProps, 'rows' | 'columns'>) => (
+      <div style={{ width: 300, height: 300 }}>
+        <DataGrid {...baselineProps} {...props} />
+      </div>
+    );
+
+    it('should allow to initialize the filterModel', () => {
+      render(
+        <Test
+          initialState={{
+            filter: {
+              filterModel: {
+                items: [{ columnField: 'isPublished', operatorValue: 'is', value: 'true' }],
+              },
+            },
+          }}
+        />,
+      );
+
+      expect(getColumnValues(0)).to.deep.equal(['Adidas', 'Puma']);
+    });
+
+    it('should use the control state upon the initialize state when both are defined', () => {
+      render(
+        <Test
+          filterModel={{
+            items: [{ columnField: 'isPublished', operatorValue: 'is', value: 'false' }],
+          }}
+          initialState={{
+            filter: {
+              filterModel: {
+                items: [{ columnField: 'isPublished', operatorValue: 'is', value: 'true' }],
+              },
+            },
+          }}
+        />,
+      );
+
+      expect(getColumnValues(0)).to.deep.equal(['Nike']);
+    });
+
+    it('should not update the filters when updating the initial state', () => {
+      const { setProps } = render(
+        <Test
+          initialState={{
+            filter: {
+              filterModel: {
+                items: [{ columnField: 'isPublished', operatorValue: 'is', value: 'true' }],
+              },
+            },
+          }}
+        />,
+      );
+
+      setProps({
+        initialState: {
+          filter: {
+            filterModel: {
+              items: [{ columnField: 'isPublished', operatorValue: 'is', value: 'false' }],
+            },
+          },
+        },
+      });
+
+      expect(getColumnValues(0)).to.deep.equal(['Adidas', 'Puma']);
+    });
+
+    it('should allow to update the filters when initialized with initialState', () => {
+      render(
+        <Test
+          initialState={{
+            preferencePanel: {
+              open: true,
+              openedPanelValue: GridPreferencePanelsValue.filters,
+            },
+            filter: {
+              filterModel: {
+                items: [{ columnField: 'isPublished', operatorValue: 'is', value: 'true' }],
+              },
+            },
+          }}
+        />,
+      );
+
+      expect(getColumnValues(0)).to.deep.equal(['Adidas', 'Puma']);
+
+      fireEvent.change(getByText(screen.getByRole('tooltip'), 'true').parentNode, {
+        target: { value: 'false' },
+      });
+      expect(getColumnValues(0)).to.deep.equal(['Nike']);
     });
   });
 });

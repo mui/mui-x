@@ -9,12 +9,15 @@ import { GridColumnMenuState } from '../columnMenu/columnMenuState';
 import { GridColumnReorderState } from '../columnReorder/columnReorderState';
 import { GridColumnResizeState } from '../columnResize/columnResizeState';
 import { GridDensityState } from '../density/densityState';
-import { GridFilterState } from '../filter/gridFilterState';
+import { GridFilterInitialState, GridFilterState } from '../filter/gridFilterState';
 import { GridFocusState, GridTabIndexState } from '../focus/gridFocusState';
-import { GridPreferencePanelState } from '../preferencesPanel/gridPreferencePanelState';
+import {
+  GridPreferencePanelInitialState,
+  GridPreferencePanelState,
+} from '../preferencesPanel/gridPreferencePanelState';
 import { GridRowsState } from '../rows/gridRowsState';
 import { GridSelectionModel } from '../../../models/gridSelectionModel';
-import { GridSortingState } from '../sorting/gridSortingState';
+import { GridSortingInitialState, GridSortingState } from '../sorting/gridSortingState';
 import { GridRenderingState } from '../virtualization/renderingState';
 import { GridPaginationState } from '../pagination/gridPaginationState';
 
@@ -38,4 +41,10 @@ export interface GridState {
   preferencePanel: GridPreferencePanelState;
   density: GridDensityState;
   error?: any;
+}
+
+export interface GridInitialState {
+  sorting?: GridSortingInitialState;
+  filter?: GridFilterInitialState;
+  preferencePanel?: GridPreferencePanelInitialState;
 }

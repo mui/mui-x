@@ -32,7 +32,6 @@ import { useErrorHandler } from '../../_modules_/grid/hooks/utils/useErrorHandle
 import { useGridLoggerFactory } from '../../_modules_/grid/hooks/utils/useGridLogger';
 import { useRenderInfoLog } from '../../_modules_/grid/hooks/utils/useRenderInfoLog';
 import { useGridResizeContainer } from '../../_modules_/grid/hooks/utils/useGridResizeContainer';
-import { useStateProp } from '../../_modules_/grid/hooks/utils/useStateProp';
 import { GridApiRef } from '../../_modules_/grid/models/api/gridApiRef';
 
 export const useDataGridProComponent = (apiRef: GridApiRef, props: GridComponentProps) => {
@@ -50,7 +49,7 @@ export const useDataGridProComponent = (apiRef: GridApiRef, props: GridComponent
   useGridFocus(apiRef, props);
   useGridSelection(apiRef, props);
   useGridSorting(apiRef, props);
-  useGridPreferencesPanel(apiRef);
+  useGridPreferencesPanel(apiRef, props);
   useGridFilter(apiRef, props);
   useGridDensity(apiRef, props);
   useGridColumnReorder(apiRef, props);
@@ -68,6 +67,5 @@ export const useDataGridProComponent = (apiRef: GridApiRef, props: GridComponent
   useGridCsvExport(apiRef);
   useGridClipboard(apiRef);
   useGridEvents(apiRef, props);
-  useStateProp(apiRef, props);
   useRenderInfoLog(apiRef);
 };

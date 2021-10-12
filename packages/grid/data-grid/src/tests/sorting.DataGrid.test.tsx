@@ -7,7 +7,7 @@ import {
   screen,
 } from 'test/utils';
 import { expect } from 'chai';
-import { DataGrid, DataGridProps } from '@mui/x-data-grid';
+import { DataGrid, DataGridProps, GridPreferencePanelsValue } from '@mui/x-data-grid';
 import { getColumnValues, getColumnHeaderCell } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
@@ -241,5 +241,114 @@ describe('<DataGrid /> - Sorting', () => {
     expect(getColumnValues()).to.deep.equal(['Adidas', 'Nike', 'Puma']);
     setProps({ sortModel: [] });
     expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
+  });
+
+  describe.only('prop: initialState.sorting', () => {
+    const Test = (props: Omit<DataGridProps, 'rows' | 'columns'>) => (
+      <div style={{ width: 300, height: 300 }}>
+        <DataGrid {...baselineProps} {...props} />
+      </div>
+    );
+
+    it('should allow to initialize the sortModel', () => {
+      render(
+        <Test
+          initialState={{
+            sorting: {
+              sortModel: [
+                {
+                  field: 'brand',
+                  sort: 'asc',
+                },
+              ],
+            },
+          }}
+        />,
+      );
+
+      expect(getColumnValues(0)).to.deep.equal(['Adidas', 'Nike', 'Puma']);
+    });
+
+    it('should use the control state upon the initialize state when both are defined', () => {
+      render(
+        <Test
+          sortModel={[
+            {
+              field: 'brand',
+              sort: 'desc',
+            },
+          ]}
+          initialState={{
+            sorting: {
+              sortModel: [
+                {
+                  field: 'brand',
+                  sort: 'asc',
+                },
+              ],
+            },
+          }}
+        />,
+      );
+
+      expect(getColumnValues(0)).to.deep.equal(['Puma', 'Nike', 'Adidas']);
+    });
+
+    it('should not update the sort order when updating the initial state', () => {
+      const { setProps } = render(
+        <Test
+          initialState={{
+            sorting: {
+              sortModel: [
+                {
+                  field: 'brand',
+                  sort: 'asc',
+                },
+              ],
+            },
+          }}
+        />,
+      );
+
+      setProps({
+        initialState: {
+          sorting: {
+            sortModel: [
+              {
+                field: 'brand',
+                sort: 'desc',
+              },
+            ],
+          },
+        },
+      });
+
+      expect(getColumnValues(0)).to.deep.equal(['Adidas', 'Nike', 'Puma']);
+    });
+
+    it('should allow to update the filters when initialized with initialState', () => {
+      render(
+        <Test
+          initialState={{
+            preferencePanel: {
+              open: true,
+              openedPanelValue: GridPreferencePanelsValue.filters,
+            },
+            sorting: {
+              sortModel: [
+                {
+                  field: 'brand',
+                  sort: 'asc',
+                },
+              ],
+            },
+          }}
+        />,
+      );
+
+      expect(getColumnValues(0)).to.deep.equal(['Adidas', 'Nike', 'Puma']);
+      fireEvent.click(screen.getAllByRole('columnheader')[0]);
+      expect(getColumnValues(0)).to.deep.equal(['Puma', 'Nike', 'Adidas']);
+    });
   });
 });

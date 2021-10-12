@@ -12,3 +12,7 @@ export interface GridFilterState {
   visibleRowsLookup: Record<GridRowId, boolean>;
   visibleRows: GridRowId[] | null;
 }
+
+export interface GridFilterInitialState {
+  filterModel: GridFilterModel;
+}

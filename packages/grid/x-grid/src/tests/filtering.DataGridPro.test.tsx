@@ -223,7 +223,7 @@ describe('<DataGridPro /> - Filter', () => {
       <TestCase
         filterModel={newModel}
         onFilterModelChange={onFilterModelChange}
-        state={{
+        initialState={{
           preferencePanel: { openedPanelValue: GridPreferencePanelsValue.filters, open: true },
         }}
       />,
@@ -273,7 +273,7 @@ describe('<DataGridPro /> - Filter', () => {
   it('should show the latest visibleRows', () => {
     render(
       <TestCase
-        state={{
+        initialState={{
           preferencePanel: {
             open: true,
             openedPanelValue: GridPreferencePanelsValue.filters,
@@ -394,7 +394,7 @@ describe('<DataGridPro /> - Filter', () => {
               columns={columns}
               filterMode="server"
               onFilterModelChange={handleFilterChange}
-              state={{
+              initialState={{
                 preferencePanel: {
                   open: true,
                   openedPanelValue: GridPreferencePanelsValue.filters,
@@ -424,7 +424,7 @@ describe('<DataGridPro /> - Filter', () => {
     it('should update the filter state when neither the model nor the onChange are set', () => {
       render(
         <TestCase
-          state={{
+          initialState={{
             preferencePanel: {
               open: true,
               openedPanelValue: GridPreferencePanelsValue.filters,
@@ -443,7 +443,7 @@ describe('<DataGridPro /> - Filter', () => {
       render(
         <TestCase
           filterModel={testFilterModel}
-          state={{
+          initialState={{
             preferencePanel: {
               open: true,
               openedPanelValue: GridPreferencePanelsValue.filters,
@@ -495,7 +495,7 @@ describe('<DataGridPro /> - Filter', () => {
               rows={rows || baselineProps.rows}
               filterModel={caseFilterModel}
               onFilterModelChange={handleFilterChange}
-              state={{
+              initialState={{
                 preferencePanel: {
                   open: true,
                   openedPanelValue: GridPreferencePanelsValue.filters,

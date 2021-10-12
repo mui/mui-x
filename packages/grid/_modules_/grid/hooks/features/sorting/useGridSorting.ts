@@ -39,6 +39,7 @@ export const useGridSorting = (
   apiRef: GridApiRef,
   props: Pick<
     GridComponentProps,
+    | 'initialState'
     | 'sortModel'
     | 'onSortModelChange'
     | 'sortingOrder'
@@ -51,7 +52,7 @@ export const useGridSorting = (
   useGridStateInit(apiRef, (state) => ({
     ...state,
     sorting: {
-      sortModel: props.sortModel ?? [],
+      sortModel: props.sortModel ?? props.initialState?.sorting?.sortModel ?? [],
       sortedRows: [],
     },
   }));
