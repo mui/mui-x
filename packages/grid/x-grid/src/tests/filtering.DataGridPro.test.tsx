@@ -459,16 +459,13 @@ describe('<DataGridPro /> - Filter', () => {
 
     it('should update the filter state when the model is not set, but the onChange is set', () => {
       const onModelChange = spy();
-      const { setProps } = render(<TestCase onFilterModelChange={onModelChange} />);
-      expect(onModelChange.callCount).to.equal(0);
-      setProps({
-        state: {
-          preferencePanel: {
-            open: true,
-            openedPanelValue: GridPreferencePanelsValue.filters,
-          },
+      render(<TestCase onFilterModelChange={onModelChange} initialState={{
+        preferencePanel: {
+          open: true,
+          openedPanelValue: GridPreferencePanelsValue.filters,
         },
-      });
+      }} />);
+      expect(onModelChange.callCount).to.equal(0);
       expect(onModelChange.callCount).to.equal(1);
       const addButton = screen.getByRole('button', { name: /Add Filter/i });
       fireEvent.click(addButton);
