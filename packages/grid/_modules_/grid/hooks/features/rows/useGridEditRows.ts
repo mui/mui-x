@@ -34,6 +34,8 @@ import { useEventCallback } from '../../../utils/material-ui-utils';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { useGridState } from '../core/useGridState';
 import { useGridSelector } from '../core/useGridSelector';
+import { useGridStateInit } from '../../utils/useGridStateInit';
+import { gridEditRowsStateSelector } from './gridEditRowsSelector';
 
 /**
  * @requires useGridFocus - can be after, async only
@@ -59,10 +61,20 @@ export function useGridEditRows(
   >,
 ) {
   const logger = useGridLogger(apiRef, 'useGridEditRows');
+
+  useGridStateInit(apiRef, (state) => ({ ...state, editRows: {} }));
   const [, setGridState, forceUpdate] = useGridState(apiRef);
   const focusTimeout = React.useRef<any>(null);
   const nextFocusedCell = React.useRef<GridCellParams | null>(null);
   const columns = useGridSelector(apiRef, allGridColumnsSelector);
+
+  apiRef.current.updateControlState({
+    stateId: 'editRows',
+    propModel: props.editRowsModel,
+    propOnChange: props.onEditRowsModelChange,
+    stateSelector: gridEditRowsStateSelector,
+    changeEvent: GridEvents.editRowsModelChange,
+  });
 
   const commitPropsAndExit = (params: GridCellParams, event: MouseEvent | React.SyntheticEvent) => {
     if (params.cellMode === GridCellModes.View) {
@@ -235,13 +247,15 @@ export function useGridEditRows(
   );
 
   const setEditRowsModel = React.useCallback<GridEditRowApi['setEditRowsModel']>(
-    (editRows: GridEditRowsModel): void => {
-      logger.debug(`Setting row model`);
-
-      setGridState((state) => ({ ...state, editRows }));
-      forceUpdate();
+    (model) => {
+      const currentModel = gridEditRowsStateSelector(apiRef.current.state);
+      if (currentModel !== model) {
+        logger.debug(`Setting editRows model`);
+        setGridState((state) => ({ ...state, editRows: model }));
+        forceUpdate();
+      }
     },
-    [forceUpdate, logger, setGridState],
+    [apiRef, forceUpdate, logger, setGridState],
   );
 
   const getEditRowsModel = React.useCallback<GridEditRowApi['getEditRowsModel']>(
@@ -502,20 +516,8 @@ export function useGridEditRows(
   );
 
   React.useEffect(() => {
-    apiRef.current.updateControlState<GridEditRowsModel>({
-      stateId: 'editRows',
-      propModel: props.editRowsModel,
-      propOnChange: props.onEditRowsModelChange,
-      stateSelector: (state) => state.editRows,
-      changeEvent: GridEvents.editRowsModelChange,
-    });
-  }, [apiRef, props.editRowsModel, props.onEditRowsModelChange]);
-
-  React.useEffect(() => {
-    const currentEditRowsModel = apiRef.current.state.editRows;
-
-    if (props.editRowsModel !== undefined && props.editRowsModel !== currentEditRowsModel) {
-      apiRef.current.setEditRowsModel(props.editRowsModel || {});
+    if (props.editRowsModel !== undefined) {
+      apiRef.current.setEditRowsModel(props.editRowsModel);
     }
   }, [apiRef, props.editRowsModel]);
 }

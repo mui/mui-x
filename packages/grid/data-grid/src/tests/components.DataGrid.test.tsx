@@ -5,6 +5,7 @@ import {
 } from 'test/utils';
 import { expect } from 'chai';
 import { DataGrid, GridOverlay } from '@mui/x-data-grid';
+import { getCell, getRow } from 'test/utils/helperFn';
 
 describe('<DataGrid /> - Components', () => {
   // TODO v5: replace with createClientRender
@@ -46,6 +47,70 @@ describe('<DataGrid /> - Components', () => {
         </div>,
       );
       expect(document.querySelectorAll('.customFooter').length).to.equal(0);
+    });
+  });
+
+  describe('componentsProps', () => {
+    it('should pass the props from componentsProps.cell to the cell', () => {
+      render(
+        <div style={{ width: 300, height: 500 }}>
+          <DataGrid
+            {...baselineProps}
+            hideFooter
+            disableVirtualization
+            componentsProps={{ cell: { 'data-name': 'foobar' } }}
+          />
+        </div>,
+      );
+      expect(getCell(0, 0)).to.have.attr('data-name', 'foobar');
+    });
+
+    it('should pass the props from componentsProps.row to the row', () => {
+      render(
+        <div style={{ width: 300, height: 500 }}>
+          <DataGrid
+            {...baselineProps}
+            hideFooter
+            disableVirtualization
+            componentsProps={{ row: { 'data-name': 'foobar' } }}
+          />
+        </div>,
+      );
+      expect(getRow(0)).to.have.attr('data-name', 'foobar');
+    });
+  });
+
+  describe('components', () => {
+    it('should render the cell with the component given in components.Cell', () => {
+      render(
+        <div style={{ width: 300, height: 500 }}>
+          <DataGrid
+            {...baselineProps}
+            hideFooter
+            disableVirtualization
+            components={{
+              Cell: ({ rowIndex, colIndex }) => (
+                <span role="cell" data-rowindex={rowIndex} data-colindex={colIndex} />
+              ),
+            }}
+          />
+        </div>,
+      );
+      expect(getCell(0, 0).tagName).to.equal('SPAN');
+    });
+
+    it('should render the row with the component given in components.Row', () => {
+      render(
+        <div style={{ width: 300, height: 500 }}>
+          <DataGrid
+            {...baselineProps}
+            hideFooter
+            disableVirtualization
+            components={{ Row: ({ rowIndex }) => <span role="row" data-rowindex={rowIndex} /> }}
+          />
+        </div>,
+      );
+      expect(getRow(0).tagName).to.equal('SPAN');
     });
   });
 

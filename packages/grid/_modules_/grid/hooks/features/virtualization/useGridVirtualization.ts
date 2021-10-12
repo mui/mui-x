@@ -25,6 +25,7 @@ import { useGridScrollFn } from '../../utils/useGridScrollFn';
 import { GridRenderingState } from './renderingState';
 import { GridComponentProps } from '../../../GridComponentProps';
 import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
+import { useGridStateInit } from '../../utils/useGridStateInit';
 
 // Uses binary search to avoid looping through all possible positions
 function getIdxFromScroll(
@@ -66,6 +67,18 @@ export const useGridVirtualization = (
   >,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridVirtualization');
+
+  useGridStateInit(apiRef, (state) => ({
+    ...state,
+    rendering: {
+      realScroll: { left: 0, top: 0 },
+      renderContext: null,
+      renderingZoneScroll: { left: 0, top: 0 },
+      virtualPage: 0,
+      virtualRowsCount: 0,
+    },
+  }));
+
   const colRef = apiRef.current.columnHeadersElementRef!;
   const windowRef = apiRef.current.windowRef!;
   const renderingZoneRef = apiRef.current.renderingZoneRef!;
