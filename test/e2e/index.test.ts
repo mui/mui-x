@@ -121,7 +121,7 @@ describe('e2e', () => {
       await page.click('"Gucci"');
       expect(
         await page.evaluate(() => {
-          const selector = '[role="cell"][data-rowindex="0"][data-colindex="0"]';
+          const selector = '[role="row"][data-rowindex="0"] [role="cell"][data-colindex="0"]';
           return document.querySelector(selector)!.textContent!;
         }),
       ).to.equal('Gucci');
@@ -163,7 +163,7 @@ describe('e2e', () => {
       ).to.equal('brandyear');
       const brand = await page.$('[role="columnheader"][aria-colindex="1"] > [draggable]');
       const brandBoundingBox = await brand?.boundingBox();
-      const cell = await page.$('[role="cell"][data-rowindex="0"][data-colindex="1"]');
+      const cell = await page.$('[role="row"][data-rowindex="0"] [role="cell"][data-colindex="1"]');
       const cellBoundingBox = await cell?.boundingBox();
       if (brandBoundingBox && cellBoundingBox) {
         // Based on https://stackoverflow.com/a/64746679/2801714
@@ -187,7 +187,7 @@ describe('e2e', () => {
 
     it('should select one row', async () => {
       await renderFixture('DataGrid/CheckboxSelection');
-      await page.click('[role="cell"][data-rowindex="0"] input');
+      await page.click('[role="row"][data-rowindex="0"] [role="cell"] input');
       expect(
         await page.evaluate(
           () => document.querySelector('[role="row"][data-rowindex="0"]')!.className!,
@@ -197,15 +197,15 @@ describe('e2e', () => {
 
     it('should not scroll when changing the selected row', async () => {
       await renderFixture('DataGrid/RowSelection');
-      await page.click('[role="cell"][data-rowindex="0"]');
+      await page.click('[role="row"][data-rowindex="0"] [role="cell"]');
       await page.evaluate(() =>
-        document.querySelector('[role="cell"][data-rowindex="3"]')!.scrollIntoView(),
+        document.querySelector('[role="row"][data-rowindex="3"] [role="cell"]')!.scrollIntoView(),
       );
       const scrollTop = await page.evaluate(
         () => document.querySelector('.MuiDataGrid-window')!.scrollTop!,
       );
       expect(scrollTop).not.to.equal(0);
-      await page.click('[role="cell"][data-rowindex="3"]');
+      await page.click('[role="row"][data-rowindex="3"] [role="cell"]');
       expect(
         await page.evaluate(() => document.querySelector('.MuiDataGrid-window')!.scrollTop!),
       ).to.equal(scrollTop);

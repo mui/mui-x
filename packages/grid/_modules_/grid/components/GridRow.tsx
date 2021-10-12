@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable jsx-a11y/interactive-supports-focus */
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
@@ -29,6 +31,8 @@ interface GridRowProps {
   cellTabIndex: GridCellIdentifier | null;
   editRowsModel: GridEditRowsModel;
   scrollBarState: GridScrollBarState;
+  onClick?: React.MouseEventHandler<HTMLDivElement>;
+  onDoubleClick?: React.MouseEventHandler<HTMLDivElement>;
 }
 
 type OwnerState = GridRowProps & {
@@ -62,6 +66,8 @@ function GridRow(props: GridRowProps) {
     editRowsModel,
     scrollBarState, // to be removed
     renderState, // to be removed
+    onClick,
+    onDoubleClick,
     ...other
   } = props;
   const ariaRowIndex = index + 2; // 1 for the header row and 1 as it's 1 based
@@ -78,7 +84,7 @@ function GridRow(props: GridRowProps) {
   const classes = useUtilityClasses(ownerState);
 
   const publish = React.useCallback(
-    (eventName: string) => (event: React.MouseEvent) => {
+    (eventName: string, propHandler: any) => (event: React.MouseEvent) => {
       // Ignore portal
       // The target is not an element when triggered by a Select inside the cell
       // See https://github.com/mui-org/material-ui/issues/10534
@@ -95,20 +101,12 @@ function GridRow(props: GridRowProps) {
       }
 
       apiRef.current.publishEvent(eventName, apiRef.current.getRowParams(id), event);
+
+      if (propHandler) {
+        propHandler(event);
+      }
     },
     [apiRef, id],
-  );
-
-  const mouseEventsHandlers = React.useMemo<Partial<React.HTMLAttributes<HTMLDivElement>>>(
-    () => ({
-      onClick: publish(GridEvents.rowClick),
-      onDoubleClick: publish(GridEvents.rowDoubleClick),
-      onMouseOver: publish(GridEvents.rowOver),
-      onMouseOut: publish(GridEvents.rowOut),
-      onMouseEnter: publish(GridEvents.rowEnter),
-      onMouseLeave: publish(GridEvents.rowLeave),
-    }),
-    [publish],
   );
 
   const style = {
@@ -216,7 +214,8 @@ function GridRow(props: GridRowProps) {
       aria-rowindex={ariaRowIndex}
       aria-selected={selected}
       style={style}
-      {...mouseEventsHandlers}
+      onClick={publish(GridEvents.rowClick, onClick)}
+      onDoubleClick={publish(GridEvents.rowDoubleClick, onDoubleClick)}
       {...other}
     >
       <GridEmptyCell width={renderState.renderContext!.leftEmptyWidth} height={rowHeight} />
@@ -238,6 +237,8 @@ GridRow.propTypes = {
   firstColumnToRender: PropTypes.number.isRequired,
   id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   index: PropTypes.number.isRequired,
+  onClick: PropTypes.func,
+  onDoubleClick: PropTypes.func,
   renderedColumns: PropTypes.arrayOf(PropTypes.object).isRequired,
   renderState: PropTypes.object.isRequired,
   row: PropTypes.object.isRequired,
