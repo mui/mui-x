@@ -109,12 +109,10 @@ export function GridRowCells(props: RowCellsProps) {
       showRightBorder,
       formattedValue: cellParams.formattedValue,
       align: column.align || 'left',
-      rowIndex,
       cellMode: cellParams.cellMode,
       colIndex,
       children: cellComponent,
       isEditable: cellParams.isEditable,
-      isSelected,
       hasFocus: cellFocus !== null && cellFocus.id === id && cellFocus.field === column.field,
       tabIndex:
         cellTabIndex !== null &&
