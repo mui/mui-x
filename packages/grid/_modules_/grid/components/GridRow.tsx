@@ -17,7 +17,7 @@ import { GridStateColDef } from '../models/colDef/gridColDef';
 import { GridEmptyCell } from './cell/GridEmptyCell';
 import { GridRenderingState } from '../hooks/features/virtualization/renderingState';
 
-interface GridRowProps {
+export interface GridRowProps {
   id: GridRowId;
   selected: boolean;
   index: number;
