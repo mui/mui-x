@@ -4,6 +4,7 @@ import { DataGridProProps, GridColumns, GridRowModel } from '@mui/x-data-grid-pr
 
 interface GridDemoTreeDataOptions {
   rowLength: number[];
+  randomLength: boolean;
 }
 
 interface GridDemoTreeData extends GridDemoData, Pick<DataGridProProps, 'getTreeDataPath'> {}
@@ -33,16 +34,24 @@ interface GetTreeDataRowsOptions {
   rowLength: number[];
   parentPath?: string[];
   id?: number;
+  randomLength: boolean;
 }
 
-const getTreeDataRows = ({ rowLength, parentPath = [], id = 0 }: GetTreeDataRowsOptions) => {
+const getTreeDataRows = ({
+  rowLength,
+  parentPath = [],
+  id = 0,
+  randomLength,
+}: GetTreeDataRowsOptions) => {
   const rows: GridRowModel[] = [];
 
   const [currentDepthRowLength, ...restRowLength] = rowLength;
 
-  // For top level rows we respect the exact length given, for deeper rows we add a random factor
+  // For top level rows we respect the exact length given, for deeper rows we add a random factor is randomLength = true
   const realCurrentDepthRowLength =
-    parentPath.length === 0 ? currentDepthRowLength : randomInt(0, currentDepthRowLength * 2);
+    parentPath.length === 0 || !randomLength
+      ? currentDepthRowLength
+      : randomInt(0, currentDepthRowLength * 2);
 
   for (let index = 1; index < realCurrentDepthRowLength + 1; index += 1) {
     const path = [...parentPath, index.toString()];
@@ -52,7 +61,12 @@ const getTreeDataRows = ({ rowLength, parentPath = [], id = 0 }: GetTreeDataRows
     id += 1;
 
     if (restRowLength.length) {
-      const childrenRows = getTreeDataRows({ rowLength: restRowLength, parentPath: path, id });
+      const childrenRows = getTreeDataRows({
+        rowLength: restRowLength,
+        parentPath: path,
+        id,
+        randomLength,
+      });
 
       rows.push(...childrenRows.rows);
       id = childrenRows.id;
@@ -74,10 +88,11 @@ export const useDemoTreeData = (options: GridDemoTreeDataOptions) => {
     setResponse((prev) => (prev.loading ? prev : { ...prev, loading: true }));
     const { rows } = getTreeDataRows({
       rowLength: rowLengthStr.split('-').map((el) => Number(el)),
+      randomLength: options.randomLength,
     });
 
     setResponse((prev) => ({ ...prev, loading: false, data: { ...prev.data, rows } }));
-  }, [rowLengthStr]);
+  }, [rowLengthStr, options.randomLength]);
 
   return response;
 };

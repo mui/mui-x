@@ -15,7 +15,7 @@ import {
   selectedGridRowsSelector,
   selectedIdsLookupSelector,
 } from './gridSelectionSelector';
-import { gridSortedVisibleRowsAsArrayFlatSelector } from '../filter/gridFilterSelector';
+import { gridSortedVisibleRowEntriesSelector } from '../filter/gridFilterSelector';
 import { GridCellParams } from '../../../models/params/gridCellParams';
 import { GridRowSelectionCheckboxParams } from '../../../models/params/gridRowSelectionCheckboxParams';
 import { GridColumnsPreProcessing } from '../../root/columnsPreProcessing';
@@ -183,7 +183,7 @@ export const useGridSelection = (
 
       logger.debug(`Expanding selection from row ${startId} to row ${endId}`);
 
-      const visibleRowIds = gridSortedVisibleRowsAsArrayFlatSelector(apiRef.current.state);
+      const visibleRowIds = gridSortedVisibleRowEntriesSelector(apiRef.current.state);
       const startIndex = visibleRowIds.findIndex((el) => el.id === startId);
       const endIndex = visibleRowIds.findIndex((el) => el.id === endId);
       const [start, end] = startIndex > endIndex ? [endIndex, startIndex] : [startIndex, endIndex];
@@ -200,7 +200,7 @@ export const useGridSelection = (
       const startId = lastRowToggled.current ?? id;
       const isSelected = apiRef.current.isRowSelected(id);
       if (isSelected) {
-        const visibleRowIds = gridSortedVisibleRowsAsArrayFlatSelector(apiRef.current.state);
+        const visibleRowIds = gridSortedVisibleRowEntriesSelector(apiRef.current.state);
         const startIndex = visibleRowIds.findIndex((row) => row.id === startId);
         const endIndex = visibleRowIds.findIndex((row) => row.id === endId);
         if (startIndex > endIndex) {

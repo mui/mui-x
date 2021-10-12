@@ -14,9 +14,11 @@ export interface GridRowModelUpdate extends GridRowData {
 
 export interface GridRowConfigTreeNode {
   id: GridRowId;
-  children?: GridRowConfigTree;
+  children?: GridRowId[];
+  parent: GridRowId | null;
   descendantsCount?: number;
   expanded?: boolean;
+  depth: number;
 
   /**
    * If `true`, this node has been automatically added to fill a gap in the tree structure
@@ -24,9 +26,11 @@ export interface GridRowConfigTreeNode {
   fillerNode?: boolean;
 }
 
-export type GridRowConfigTree = Map<string, GridRowConfigTreeNode>;
+export type GridRowConfigTree = Record<GridRowId, GridRowConfigTreeNode>;
 
 export type GridRowsLookup = Record<GridRowId, GridRowModel>;
+
+export type GridRowEntry = { id: GridRowId; model: GridRowModel };
 
 /**
  * The type of Id supported by the grid.

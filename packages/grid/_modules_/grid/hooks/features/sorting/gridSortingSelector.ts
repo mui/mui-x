@@ -1,9 +1,8 @@
 import { createSelector } from 'reselect';
-import { GridRowId } from '../../../models/gridRows';
 import { GridSortDirection, GridSortModel } from '../../../models/gridSortModel';
 import { GridState } from '../core/gridState';
 import { gridRowsLookupSelector } from '../rows/gridRowsSelector';
-import { GridSortedRowsIdTreeNode, GridSortedRowsTree } from './gridSortingState';
+import type { GridRowId, GridRowModel } from '../../../models';
 
 const gridSortingStateSelector = (state: GridState) => state.sorting;
 
@@ -12,35 +11,20 @@ export const gridSortedRowIdsSelector = createSelector(
   (sortingState) => sortingState.sortedRows,
 );
 
-export const gridSortedRowIdsFlatSelector = createSelector(
-  gridSortedRowIdsSelector,
-  (sortedRowIds) => {
-    const flattenRowIds = (nodes: GridSortedRowsIdTreeNode[]): GridRowId[] =>
-      nodes.flatMap((node) => [node.id, ...(node.children ? flattenRowIds(node.children) : [])]);
-
-    return flattenRowIds(sortedRowIds);
-  },
-);
-
-export const gridSortedRowsSelector = createSelector(
+export const gridSortedRowEntriesSelector = createSelector(
   gridSortedRowIdsSelector,
   gridRowsLookupSelector,
-  (sortedTree, idRowsLookup) => {
-    const buildMap = (nodes: GridSortedRowsIdTreeNode[]) => {
-      const map: GridSortedRowsTree = new Map();
+  (sortedIds, idRowsLookup) => sortedIds.map((id) => ({ id, model: idRowsLookup[id] })),
+);
 
-      nodes.forEach((node) => {
-        map.set(node.id, {
-          model: idRowsLookup[node.id],
-          children: node.children ? buildMap(node.children) : undefined,
-        });
-      });
+export const gridSortedRowsMapSelector = createSelector(
+  gridSortedRowEntriesSelector,
+  (sortedRows) => new Map<GridRowId, GridRowModel>(sortedRows.map((row) => [row.id, row.model])),
+);
 
-      return map;
-    };
-
-    return buildMap(sortedTree);
-  },
+export const gridSortedRowsAsArraySelector = createSelector(
+  gridSortedRowsMapSelector,
+  (sortedRows) => Array.from(sortedRows.values()),
 );
 
 export const gridSortModelSelector = createSelector(

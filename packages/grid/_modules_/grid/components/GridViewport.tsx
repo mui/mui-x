@@ -3,8 +3,8 @@ import { visibleGridColumnsSelector } from '../hooks/features/columns/gridColumn
 import { useGridSelector } from '../hooks/features/core/useGridSelector';
 import { gridDensityRowHeightSelector } from '../hooks/features/density/densitySelector';
 import {
-  gridSortedVisibleRowsAsArraySelector,
-  TreeSortedVisibleRow,
+  gridSortedVisibleRowEntriesSelector,
+  gridSortedVisibleTopLevelRowEntriesSelector,
 } from '../hooks/features/filter/gridFilterSelector';
 import {
   gridFocusCellSelector,
@@ -25,19 +25,7 @@ import {
   gridScrollBarSizeSelector,
 } from '../hooks/root/gridContainerSizesSelector';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
-
-const getRowsSlice = (
-  rows: TreeSortedVisibleRow[],
-  startIndex: number,
-  endIndex: number,
-): TreeSortedVisibleRow[] => {
-  const topLevelRows = rows.slice(startIndex, endIndex);
-
-  const flattenRows = (nodes: TreeSortedVisibleRow[]) =>
-    nodes.flatMap((node) => [node, ...(node.children ? flattenRows(node.children) : [])]);
-
-  return flattenRows(topLevelRows);
-};
+import {GridRowEntry, GridRowId} from '../models';
 
 type ViewportType = React.ForwardRefExoticComponent<React.RefAttributes<HTMLDivElement>>;
 
@@ -53,7 +41,11 @@ export const GridViewport: ViewportType = React.forwardRef<HTMLDivElement, {}>(
     const cellFocus = useGridSelector(apiRef, gridFocusCellSelector);
     const cellTabIndex = useGridSelector(apiRef, gridTabIndexCellSelector);
     const selection = useGridSelector(apiRef, gridSelectionStateSelector);
-    const visibleSortedRows = useGridSelector(apiRef, gridSortedVisibleRowsAsArraySelector);
+    const visibleSortedRows = useGridSelector(apiRef, gridSortedVisibleRowEntriesSelector);
+    const visibleSortedTopLevelRows = useGridSelector(
+      apiRef,
+      gridSortedVisibleTopLevelRowEntriesSelector,
+    );
     const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
     const editRowsState = useGridSelector(apiRef, gridEditRowsStateSelector);
 
@@ -79,11 +71,25 @@ export const GridViewport: ViewportType = React.forwardRef<HTMLDivElement, {}>(
         return null;
       }
 
-      const renderedRows = getRowsSlice(
-        visibleSortedRows,
-        renderState.renderContext.firstRowIdx!,
-        renderState.renderContext.lastRowIdx!,
-      );
+      // TODO: Improve with new virtualization
+        let renderedRows: GridRowEntry[]
+
+        if (visibleSortedRows.length === 0) {
+            renderedRows = []
+        } else {
+            const firstRowIdx = renderState.renderContext.firstRowIdx!
+            const lastRowIdx = renderState.renderContext.lastRowIdx!
+
+            const getRowIndex = (id: GridRowId) =>  visibleSortedRows.findIndex(row => row.id === id)
+
+            const startIndex = getRowIndex(visibleSortedTopLevelRows[firstRowIdx].id)
+            const endIndex = lastRowIdx >= visibleSortedTopLevelRows.length - 1 ? visibleSortedRows.length - 1 : getRowIndex(visibleSortedTopLevelRows[lastRowIdx + 1].id)
+
+            renderedRows = visibleSortedRows.slice(
+                startIndex,
+                endIndex + 1,
+            );
+        }
 
       return renderedRows.map((row, idx) => (
         <rootProps.components.Row

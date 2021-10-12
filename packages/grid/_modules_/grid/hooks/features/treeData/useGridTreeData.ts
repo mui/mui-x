@@ -10,7 +10,7 @@ import { GridCellParams, GridColDef, MuiEvent } from '../../../models';
 import { isSpaceKey } from '../../../utils/keyboardUtils';
 import { useFirstRender } from '../../utils/useFirstRender';
 import { GridRowGroupingPreProcessing } from '../../root/rowGroupsPerProcessing';
-import { insertLeafInTree } from '../rows/gridRowsUtils';
+import { GridNodeNameToIdTree, insertLeafInTree } from '../rows/gridRowsUtils';
 
 /**
  * Only available in DataGridPro
@@ -60,9 +60,10 @@ export const useGridTreeData = (
         }))
         .sort((a, b) => a.path.length - b.path.length);
 
-      const tree: GridRowConfigTree = new Map();
-      const paths: Record<GridRowId, string[]> = {};
+      const tree: GridRowConfigTree = {};
       const idRowsLookup: GridRowsLookup = { ...params.idRowsLookup };
+
+      const nodeNameToIdTree: GridNodeNameToIdTree = new Map();
 
       rows.forEach((row) => {
         insertLeafInTree({
@@ -70,14 +71,13 @@ export const useGridTreeData = (
           path: row.path,
           id: row.id,
           defaultGroupingExpansionDepth: props.defaultGroupingExpansionDepth,
-          paths,
           idRowsLookup,
+          nodeNameToIdTree,
         });
       });
 
       return {
         tree,
-        paths,
         idRowsLookup,
       };
     };

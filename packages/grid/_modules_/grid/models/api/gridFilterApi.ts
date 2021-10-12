@@ -24,9 +24,8 @@ export interface GridFilterApi {
    * Applies a [[GridFilterItem]] on all rows. If no `linkOperator` is given, the "and" operator is used.
    * @param {GridFilterItem} item The filter to be applied.
    * @param {GridLinkOperator} linkOperator The link operator to use.
-   * @returns {boolean} Returns `true` if the filter has been applied
    */
-  applyFilter: (item: GridFilterItem, linkOperator?: GridLinkOperator) => boolean;
+  applyFilter: (item: GridFilterItem, linkOperator?: GridLinkOperator) => void;
   /**
    * Applies all filters on all rows.
    */

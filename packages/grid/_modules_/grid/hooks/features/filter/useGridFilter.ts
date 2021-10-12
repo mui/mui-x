@@ -5,7 +5,6 @@ import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridFilterApi } from '../../../models/api/gridFilterApi';
 import { GridFeatureModeConstant } from '../../../models/gridFeatureMode';
 import { GridFilterItem, GridLinkOperator } from '../../../models/gridFilterItem';
-import { GridRowId } from '../../../models/gridRows';
 import { isDeepEqual } from '../../../utils/utils';
 import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
@@ -13,24 +12,17 @@ import { useGridLogger } from '../../utils/useGridLogger';
 import { filterableGridColumnsIdsSelector } from '../columns/gridColumnsSelector';
 import { useGridState } from '../core/useGridState';
 import { GridPreferencePanelsValue } from '../preferencesPanel/gridPreferencePanelsValue';
-import {
-  gridSortedRowIdsFlatSelector,
-  gridSortedRowsSelector,
-} from '../sorting/gridSortingSelector';
+import { gridSortedRowIdsSelector } from '../sorting/gridSortingSelector';
 import { getDefaultGridFilterModel, getEmptyVisibleRows } from './gridFilterState';
 import { GridFilterModel } from '../../../models/gridFilterModel';
 import {
   gridVisibleRowsLookupSelector,
-  gridSortedVisibleRowsSelector,
+  gridSortedVisibleRowsMapSelector,
   gridFilterModelSelector,
 } from './gridFilterSelector';
-import { GridSortedRowsTree } from '../sorting';
 import { useGridStateInit } from '../../utils/useGridStateInit';
 import { useFirstRender } from '../../utils/useFirstRender';
-import {
-  gridExpandedRowCountSelector,
-  gridTopLevelRowCountSelector,
-} from '../rows/gridRowsSelector';
+import { gridRowTreeSelector } from '../rows';
 
 const checkFilterModelValidity = (model: GridFilterModel) => {
   if (model.items.length > 1) {
@@ -86,16 +78,16 @@ export const useGridFilter = (
     changeEvent: GridEvents.filterModelChange,
   });
 
-  const applyFilter = React.useCallback<GridFilterApi['applyFilter']>(
+  const applyFilter = React.useCallback(
     (filterItem: GridFilterItem, linkOperator: GridLinkOperator = GridLinkOperator.And) => {
       if (!filterItem.columnField || !filterItem.operatorValue) {
-        return false;
+        return;
       }
 
       const column = apiRef.current.getColumn(filterItem.columnField);
 
       if (!column) {
-        return false;
+        return;
       }
 
       const parsedValue = column.valueParser
@@ -123,120 +115,71 @@ export const useGridFilter = (
 
       const applyFilterOnRow = filterOperator.getApplyFilterFn(newFilterItem, column)!;
       if (typeof applyFilterOnRow !== 'function') {
-        return false;
+        return;
       }
 
       setGridState((state) => {
         const visibleRowsLookup = { ...gridVisibleRowsLookupSelector(state) };
-        let visibleRowCount = 0;
-        let visibleTopLevelRowCount = 0;
-        const visibleRows: GridRowId[] = [];
 
         // We run the selector on the state here to avoid rendering the rows and then filtering again.
         // This way we have latest rows on the first rendering
-        const rowTree = gridSortedRowsSelector(state);
+        const rows = gridSortedRowIdsSelector(state);
+        const rowTree = gridRowTreeSelector(state);
 
-        const filterRowTree = (tree: GridSortedRowsTree, depth = 0) => {
-          tree.forEach((node, id) => {
-            let hasCurrentFilter: boolean;
+        rows.forEach((rowId) => {
+          const params = apiRef.current.getCellParams(rowId, newFilterItem.columnField!);
+          const depth = rowTree[rowId].depth;
 
-            if (depth > 0 && props.disableChildrenFiltering) {
-              hasCurrentFilter = true;
+          if (depth === 0 || !props.disableChildrenFiltering) {
+            const isShown = applyFilterOnRow(params);
+            if (visibleRowsLookup[rowId] == null) {
+              visibleRowsLookup[rowId] = isShown;
             } else {
-              const params = apiRef.current.getCellParams(id, newFilterItem.columnField!);
-              hasCurrentFilter = applyFilterOnRow(params);
+              visibleRowsLookup[rowId] =
+                linkOperator === GridLinkOperator.And
+                  ? visibleRowsLookup[rowId] && isShown
+                  : visibleRowsLookup[rowId] || isShown;
             }
-
-            const lookupElementBeforeCurrentFilter = visibleRowsLookup[id];
-
-            let isVisible: boolean;
-
-            if (lookupElementBeforeCurrentFilter == null) {
-              isVisible = hasCurrentFilter;
-            } else if (linkOperator === GridLinkOperator.And) {
-              isVisible = lookupElementBeforeCurrentFilter && hasCurrentFilter;
-            } else {
-              isVisible = lookupElementBeforeCurrentFilter || hasCurrentFilter;
-            }
-
-            visibleRowsLookup[id] = isVisible;
-
-            if (isVisible) {
-              visibleRows.push(id);
-              visibleRowCount += 1;
-              if (depth === 0) {
-                visibleTopLevelRowCount += 1;
-              }
-            }
-
-            if (node.children) {
-              filterRowTree(node.children, depth + 1);
-            }
-          });
-        };
-
-        filterRowTree(rowTree);
+          }
+        });
 
         return {
           ...state,
           filter: {
             ...state.filter,
             visibleRowsLookup,
-            visibleRows,
-            visibleRowCount,
-            visibleTopLevelRowCount,
+            visibleRows: Object.entries(visibleRowsLookup)
+              .filter(([, isVisible]) => isVisible)
+              .map(([id]) => id),
           },
         };
       });
       forceUpdate();
-
-      return true;
     },
     [apiRef, forceUpdate, logger, setGridState, props.disableChildrenFiltering],
   );
 
   const applyFilters = React.useCallback<GridFilterApi['applyFilters']>(() => {
+    if (props.filterMode === GridFeatureModeConstant.server) {
+      forceUpdate();
+      return;
+    }
+
+    // Clearing filtered rows
+    setGridState((state) => ({
+      ...state,
+      filter: {
+        ...state.filter,
+        visibleRowsLookup: {},
+        visibleRows: gridSortedRowIdsSelector(state),
+      },
+    }));
+
     const { items, linkOperator } = gridFilterModelSelector(apiRef.current.state);
 
-    let hasAppliedAtLeastOneFilter = false;
-
-    if (props.filterMode === GridFeatureModeConstant.client) {
-      // Clearing filtered rows
-      setGridState((state) => ({
-        ...state,
-        filter: {
-          ...state.filter,
-          ...getEmptyVisibleRows(),
-        },
-      }));
-
-      items.forEach((filterItem) => {
-        const hasAppliedFilter = apiRef.current.applyFilter(filterItem, linkOperator);
-        hasAppliedAtLeastOneFilter = hasAppliedAtLeastOneFilter || hasAppliedFilter;
-      });
-    }
-
-    //  If no filter has been applied, we set all rows to be visible
-    if (!hasAppliedAtLeastOneFilter) {
-      setGridState((state) => {
-        const rowIds = gridSortedRowIdsFlatSelector(state);
-        const visibleRowsLookup = Object.fromEntries(rowIds.map((rowId) => [rowId, true]));
-        const visibleRows = [...rowIds];
-
-        return {
-          ...state,
-          filter: {
-            ...state.filter,
-            visibleRowsLookup,
-            visibleRows,
-            visibleRowCount: gridExpandedRowCountSelector(state),
-            visibleTopLevelRowCount: gridTopLevelRowCountSelector(state),
-          },
-        };
-      });
-    }
-
-    apiRef.current.publishEvent(GridEvents.visibleRowsSet);
+    items.forEach((filterItem) => {
+      apiRef.current.applyFilter(filterItem, linkOperator);
+    });
     forceUpdate();
   }, [apiRef, setGridState, forceUpdate, props.filterMode]);
 
@@ -361,7 +304,7 @@ export const useGridFilter = (
   );
 
   const getVisibleRowModels = React.useCallback<GridFilterApi['getVisibleRowModels']>(
-    () => gridSortedVisibleRowsSelector(apiRef.current.state),
+    () => gridSortedVisibleRowsMapSelector(apiRef.current.state),
     [apiRef],
   );
 

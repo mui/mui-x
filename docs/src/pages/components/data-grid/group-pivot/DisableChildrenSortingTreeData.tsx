@@ -3,7 +3,10 @@ import { DataGridPro, GridSortModel } from '@mui/x-data-grid-pro';
 import { useDemoTreeData } from '@mui/x-data-grid-generator';
 
 export default function DisableChildrenSortingTreeData() {
-  const { data, loading } = useDemoTreeData({ rowLength: [10, 5, 3] });
+  const { data, loading } = useDemoTreeData({
+    rowLength: [10, 5, 3],
+    randomLength: true,
+  });
   const [sortModel, setSortingModel] = React.useState<GridSortModel>([
     { field: 'index', sort: 'desc' },
   ]);

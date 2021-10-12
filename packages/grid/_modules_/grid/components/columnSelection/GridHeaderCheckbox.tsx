@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { GridEvents } from '../../constants/eventsConstants';
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
 import { gridSortedVisiblePaginatedRowsAsArrayFlatSelector } from '../../hooks/features/pagination/gridPaginationSelector';
-import { gridSortedVisibleRowsAsArrayFlatSelector } from '../../hooks/features/filter/gridFilterSelector';
+import { gridSortedVisibleRowEntriesSelector } from '../../hooks/features/filter/gridFilterSelector';
 import { gridTabIndexColumnHeaderSelector } from '../../hooks/features/focus/gridFocusStateSelector';
 import { gridRowCountSelector } from '../../hooks/features/rows/gridRowsSelector';
 import { gridSelectionStateSelector } from '../../hooks/features/selection/gridSelectionSelector';
@@ -59,7 +59,7 @@ const GridHeaderCheckbox = React.forwardRef<HTMLInputElement, GridColumnHeaderPa
 
       const selector = shouldLimitSelectionToCurrentPage
         ? gridSortedVisiblePaginatedRowsAsArrayFlatSelector
-        : gridSortedVisibleRowsAsArrayFlatSelector;
+        : gridSortedVisibleRowEntriesSelector;
 
       const rowsToBeSelected = selector(apiRef.current.state).map((row) => row.id);
       apiRef.current.selectRows(rowsToBeSelected, checked, !event.target.indeterminate);

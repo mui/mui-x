@@ -5,7 +5,7 @@
     {
       "name": "applyFilter",
       "description": "Applies a GridFilterItem on all rows. If no <code>linkOperator</code> is given, the &quot;and&quot; operator is used.",
-      "type": "(item: GridFilterItem, linkOperator?: GridLinkOperator) => boolean"
+      "type": "(item: GridFilterItem, linkOperator?: GridLinkOperator) => void"
     },
     {
       "name": "applyFilterLinkOperator",

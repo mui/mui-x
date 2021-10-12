@@ -7,7 +7,6 @@ export type RwoGroupParams = {
 
 export interface GridRowGroupingResult {
   tree: GridRowConfigTree;
-  paths: Record<GridRowId, string[]>;
   idRowsLookup: GridRowsLookup;
 }
 

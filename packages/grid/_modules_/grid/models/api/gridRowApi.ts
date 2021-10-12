@@ -61,11 +61,4 @@ export interface GridRowApi {
    * @ignore - do not document.
    */
   UNSTABLE_setRowExpansion: (id: GridRowId, isExpanded: boolean) => void;
-  /**
-   * Gets the row path in the tree with a given id.
-   * @param {GridRowId} id the ID of the row to toggle.
-   * @returns {string[] | null} path The path of the row.
-   * @ignore - do not document.
-   */
-  UNSTABLE_getRowPath: (id: GridRowId) => string[] | null;
 }

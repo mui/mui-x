@@ -10,8 +10,6 @@ export const getDefaultGridFilterModel: () => GridFilterModel = () => ({
 export const getEmptyVisibleRows = (): Omit<GridFilterState, 'filterModel'> => ({
   visibleRowsLookup: {},
   visibleRows: [],
-  visibleRowCount: 0,
-  visibleTopLevelRowCount: 0,
 });
 
 export interface GridFilterState {
@@ -28,16 +26,4 @@ export interface GridFilterState {
    * It also contains the expanded children rows
    */
   visibleRows: GridRowId[];
-
-  /**
-   * Amount of rows after applying the filtering
-   * It also count the expanded children rows
-   */
-  visibleRowCount: number;
-
-  /**
-   * Amount of rows after applying the filtering
-   * It does not count the expanded children rows
-   */
-  visibleTopLevelRowCount: number;
 }

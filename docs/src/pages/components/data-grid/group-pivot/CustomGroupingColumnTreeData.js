@@ -50,7 +50,10 @@ const groupingColDef = {
 };
 
 export default function CustomGroupingColumnTreeData() {
-  const { data, loading } = useDemoTreeData({ rowLength: [10, 5, 3] });
+  const { data, loading } = useDemoTreeData({
+    rowLength: [10, 5, 3],
+    randomLength: true,
+  });
 
   return (
     <div style={{ height: 300, width: '100%' }}>

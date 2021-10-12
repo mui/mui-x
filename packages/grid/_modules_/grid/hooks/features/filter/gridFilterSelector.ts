@@ -2,9 +2,9 @@ import { createSelector } from 'reselect';
 import { GridFilterItem } from '../../../models/gridFilterItem';
 import { GridRowId, GridRowModel } from '../../../models/gridRows';
 import { GridState } from '../core/gridState';
-import { gridSortedRowsSelector } from '../sorting/gridSortingSelector';
+import { gridSortedRowEntriesSelector } from '../sorting/gridSortingSelector';
 import { gridColumnLookupSelector } from '../columns/gridColumnsSelector';
-import { GridSortedRowsTree } from '../sorting';
+import { gridRowTreeSelector } from '../rows';
 
 export const gridFilterStateSelector = (state: GridState) => state.filter;
 
@@ -23,72 +23,33 @@ export const gridVisibleRowsLookupSelector = createSelector(
   (filterState) => filterState.visibleRowsLookup,
 );
 
+export const gridSortedVisibleRowEntriesSelector = createSelector(
+  gridVisibleRowsLookupSelector,
+  gridSortedRowEntriesSelector,
+  (visibleRowsLookup, sortedRows) =>
+    sortedRows.filter((row) => visibleRowsLookup[row.id] !== false),
+);
+
+export const gridSortedVisibleRowsMapSelector = createSelector(
+  gridSortedVisibleRowEntriesSelector,
+  (visibleSortedRows) =>
+    new Map<GridRowId, GridRowModel>(visibleSortedRows.map((row) => [row.id, row.model])),
+);
+
+export const gridSortedVisibleTopLevelRowEntriesSelector = createSelector(
+  gridSortedVisibleRowEntriesSelector,
+  gridRowTreeSelector,
+  (sortedVisibleRows, rowTree) => sortedVisibleRows.filter((row) => rowTree[row.id]?.depth === 0),
+);
+
 export const gridVisibleRowCountSelector = createSelector(
-  gridFilterStateSelector,
-  (filterState) => filterState.visibleRowCount,
+  gridSortedVisibleRowEntriesSelector,
+  (sortedVisibleRows) => sortedVisibleRows.length,
 );
 
 export const gridVisibleTopLevelRowCountSelector = createSelector(
-  gridFilterStateSelector,
-  (filterState) => filterState.visibleTopLevelRowCount,
-);
-
-export const gridSortedVisibleRowsSelector = createSelector(
-  gridVisibleRowsLookupSelector,
-  gridSortedRowsSelector,
-  (visibleRowsLookup, sortedRowsTree) => {
-    const removeHiddenRows = (tree: GridSortedRowsTree) => {
-      const filteredRows: GridSortedRowsTree = new Map();
-
-      tree.forEach((row, id) => {
-        if (visibleRowsLookup[id] !== false) {
-          filteredRows.set(id, {
-            ...row,
-            children: row.children ? removeHiddenRows(row.children) : undefined,
-          });
-        }
-      });
-
-      return filteredRows;
-    };
-
-    return removeHiddenRows(sortedRowsTree);
-  },
-);
-
-export type TreeSortedVisibleRow = {
-  id: GridRowId;
-  model: GridRowModel;
-  children?: TreeSortedVisibleRow[];
-};
-
-export const gridSortedVisibleRowsAsArraySelector = createSelector(
-  gridSortedVisibleRowsSelector,
-  (rows) => {
-    const flattenRowIds = (tree: GridSortedRowsTree): TreeSortedVisibleRow[] =>
-      Array.from(tree.entries()).map(([id, row]) => ({
-        id,
-        model: row.model,
-        children: row.children ? flattenRowIds(row.children) : undefined,
-      }));
-
-    return flattenRowIds(rows);
-  },
-);
-
-export type FlatSortedVisibleRow = { id: GridRowId; model: GridRowModel };
-
-export const gridSortedVisibleRowsAsArrayFlatSelector = createSelector(
-  gridSortedVisibleRowsSelector,
-  (rows) => {
-    const flattenRowIds = (tree: GridSortedRowsTree): FlatSortedVisibleRow[] =>
-      Array.from(tree.entries()).flatMap(([id, row]) => [
-        { id, model: row.model },
-        ...(row.children ? flattenRowIds(row.children) : []),
-      ]);
-
-    return flattenRowIds(rows);
-  },
+  gridSortedVisibleTopLevelRowEntriesSelector,
+  (sortedVisibleTopLevelRows) => sortedVisibleTopLevelRows.length,
 );
 
 export const activeGridFilterItemsSelector = createSelector(

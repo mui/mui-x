@@ -5,7 +5,10 @@ import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 
 export default function SetRowExpansionTreeData() {
-  const { data, loading } = useDemoTreeData({ rowLength: [10, 5, 3] });
+  const { data, loading } = useDemoTreeData({
+    rowLength: [10, 5, 3],
+    randomLength: true,
+  });
   const apiRef = useGridApiRef();
 
   const toggleFirstRow = () => {

@@ -13,7 +13,7 @@ export default {
 } as Meta;
 
 export function BasicTreeData() {
-  const { data, loading } = useDemoTreeData({ rowLength: [10, 5, 3] });
+  const { data, loading } = useDemoTreeData({ rowLength: [10, 5, 3], randomLength: true });
   const [treeDataEnabled, setTreeDataEnabled] = React.useState(true);
 
   return (
@@ -32,7 +32,7 @@ export function BasicTreeData() {
 }
 
 export function CustomGroupingColumn() {
-  const { data, loading } = useDemoTreeData({ rowLength: [10, 5, 3] });
+  const { data, loading } = useDemoTreeData({ rowLength: [10, 5, 3], randomLength: true });
 
   const groupingColDef = React.useMemo<DataGridProProps['groupingColDef']>(
     () => ({
@@ -53,13 +53,13 @@ export function CustomGroupingColumn() {
 }
 
 export function TreeDataWithCheckboxSelection() {
-  const { data, loading } = useDemoTreeData({ rowLength: [10, 5, 3] });
+  const { data, loading } = useDemoTreeData({ rowLength: [10, 5, 3], randomLength: true });
 
   return <DataGridPro loading={loading} treeData checkboxSelection {...data} />;
 }
 
 export function TreeDataPagination() {
-  const { data, loading } = useDemoTreeData({ rowLength: [10, 5, 3] });
+  const { data, loading } = useDemoTreeData({ rowLength: [10, 5, 3], randomLength: true });
 
   return (
     <div>
@@ -78,7 +78,7 @@ export function TreeDataPagination() {
 }
 
 export function TreeDataToolbar() {
-  const { data, loading } = useDemoTreeData({ rowLength: [10, 5, 3] });
+  const { data, loading } = useDemoTreeData({ rowLength: [10, 5, 3], randomLength: true });
 
   return (
     <DataGridPro
@@ -92,7 +92,7 @@ export function TreeDataToolbar() {
 }
 
 export function TreeDataAutoExpand() {
-  const { data, loading } = useDemoTreeData({ rowLength: [10, 5, 3] });
+  const { data, loading } = useDemoTreeData({ rowLength: [10, 5, 3], randomLength: true });
 
   return (
     <DataGridPro
