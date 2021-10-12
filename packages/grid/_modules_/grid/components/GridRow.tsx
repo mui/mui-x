@@ -189,11 +189,9 @@ function GridRow(props: GridRowProps) {
         showRightBorder={showRightBorder}
         formattedValue={cellParams.formattedValue}
         align={column.align || 'left'}
-        rowIndex={index}
         cellMode={cellParams.cellMode}
         colIndex={indexRelativeToAllColumns}
         isEditable={cellParams.isEditable}
-        isSelected={selected}
         hasFocus={hasFocus}
         tabIndex={tabIndex}
         className={clsx(classNames)}
