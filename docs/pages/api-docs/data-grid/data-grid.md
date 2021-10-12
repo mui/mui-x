@@ -98,7 +98,7 @@ The name <code>MuiDataGrid</code> can be used when providing [default props](/cu
 | <span class="prop-name">onRowLeave</span> | <span class="prop-type">(params: GridRowParams, event: MuiEvent<React.MouseEvent>, details: GridCallbackDetails) => void</span> |   | Callback fired when a mouse leave event comes from a row container element. |
 | <span class="prop-name">onSelectionModelChange</span> | <span class="prop-type">(model: GridSelectionModel) => void</span> |   | Callback fired when the selection state of one or multiple rows changes. |
 | <span class="prop-name">onSortModelChange</span> | <span class="prop-type">(model: GridSortModel) => void</span> |   | Callback fired when the sort model changes before a column is sorted. |
-| <span class="prop-name">page</span> | <span class="prop-type">number</span> | 1   |  Set the current page. |
+| <span class="prop-name">page</span> | <span class="prop-type">number</span> | 0   |  The zero-based index of the current page. |
 | <span class="prop-name">pageSize</span> | <span class="prop-type">number</span> | 100 | Set the number of rows in one page. |
 | <span class="prop-name">paginationMode</span> | <span class="prop-type">GridFeatureMode</span> | 'client' | Pagination can be processed on the server or client-side. Set it to 'client' if you would like to handle the pagination on the client-side. Set it to 'server' if you would like to handle the pagination on the server-side. |
 | <span class="prop-name">rowCount</span> | <span class="prop-type">number</span> |   |  Set the total number of rows, if it is different than the length of the value `rows` prop. |
