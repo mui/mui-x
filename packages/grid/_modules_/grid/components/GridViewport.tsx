@@ -2,10 +2,7 @@ import * as React from 'react';
 import { visibleGridColumnsSelector } from '../hooks/features/columns/gridColumnsSelector';
 import { useGridSelector } from '../hooks/features/core/useGridSelector';
 import { gridDensityRowHeightSelector } from '../hooks/features/density/densitySelector';
-import {
-  gridSortedVisibleRowEntriesSelector,
-  gridSortedVisibleTopLevelRowEntriesSelector,
-} from '../hooks/features/filter/gridFilterSelector';
+import { gridSortedVisibleRowEntriesSelector } from '../hooks/features/filter/gridFilterSelector';
 import {
   gridFocusCellSelector,
   gridTabIndexCellSelector,
@@ -15,9 +12,7 @@ import { gridSelectionStateSelector } from '../hooks/features/selection/gridSele
 import { gridRenderingSelector } from '../hooks/features/virtualization/renderingStateSelector';
 import { useGridApiContext } from '../hooks/root/useGridApiContext';
 import { GridDataContainer } from './containers/GridDataContainer';
-import { GridEmptyCell } from './cell/GridEmptyCell';
 import { GridRenderingZone } from './GridRenderingZone';
-import { GridRowCells } from './cell/GridRowCells';
 import { GridStickyContainer } from './GridStickyContainer';
 import {
   gridContainerSizesSelector,
@@ -25,7 +20,6 @@ import {
   gridScrollBarSizeSelector,
 } from '../hooks/root/gridContainerSizesSelector';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
-import {GridRowEntry, GridRowId} from '../models';
 
 type ViewportType = React.ForwardRefExoticComponent<React.RefAttributes<HTMLDivElement>>;
 
@@ -42,10 +36,6 @@ export const GridViewport: ViewportType = React.forwardRef<HTMLDivElement, {}>(
     const cellTabIndex = useGridSelector(apiRef, gridTabIndexCellSelector);
     const selection = useGridSelector(apiRef, gridSelectionStateSelector);
     const visibleSortedRows = useGridSelector(apiRef, gridSortedVisibleRowEntriesSelector);
-    const visibleSortedTopLevelRows = useGridSelector(
-      apiRef,
-      gridSortedVisibleTopLevelRowEntriesSelector,
-    );
     const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
     const editRowsState = useGridSelector(apiRef, gridEditRowsStateSelector);
 
@@ -71,55 +61,33 @@ export const GridViewport: ViewportType = React.forwardRef<HTMLDivElement, {}>(
         return null;
       }
 
-      // TODO: Improve with new virtualization
-        let renderedRows: GridRowEntry[]
+      const renderedRows = visibleSortedRows.slice(
+        renderState.renderContext.firstRowIdx,
+        renderState.renderContext.lastRowIdx!,
+      );
 
-        if (visibleSortedRows.length === 0) {
-            renderedRows = []
-        } else {
-            const firstRowIdx = renderState.renderContext.firstRowIdx!
-            const lastRowIdx = renderState.renderContext.lastRowIdx!
-
-            const getRowIndex = (id: GridRowId) =>  visibleSortedRows.findIndex(row => row.id === id)
-
-            const startIndex = getRowIndex(visibleSortedTopLevelRows[firstRowIdx].id)
-            const endIndex = lastRowIdx >= visibleSortedTopLevelRows.length - 1 ? visibleSortedRows.length - 1 : getRowIndex(visibleSortedTopLevelRows[lastRowIdx + 1].id)
-
-            renderedRows = visibleSortedRows.slice(
-                startIndex,
-                endIndex + 1,
-            );
-        }
+      const renderedColumns = visibleColumns.slice(
+        renderState.renderContext.firstColIdx!,
+        renderState.renderContext.lastColIdx! + 1,
+      );
 
       return renderedRows.map((row, idx) => (
         <rootProps.components.Row
           key={row.id}
           id={row.id}
+          row={row.model}
           selected={selectionLookup[row.id] !== undefined}
-          rowIndex={renderState.renderContext!.firstRowIdx! + idx}
+          index={renderState.renderContext!.firstRowIdx! + idx}
+          rowHeight={rowHeight}
+          renderedColumns={renderedColumns}
+          firstColumnToRender={renderState.renderContext!.firstColIdx!}
+          cellFocus={cellFocus}
+          cellTabIndex={cellTabIndex}
+          editRowsModel={editRowsState}
+          scrollBarState={scrollBarState}
+          renderState={renderState}
           {...rootProps.componentsProps?.row}
-        >
-          <GridEmptyCell width={renderState.renderContext!.leftEmptyWidth} height={rowHeight} />
-          <GridRowCells
-            columns={visibleColumns}
-            row={row.model}
-            id={row.id}
-            height={rowHeight}
-            firstColIdx={renderState.renderContext!.firstColIdx!}
-            lastColIdx={renderState.renderContext!.lastColIdx!}
-            hasScrollX={scrollBarState.hasScrollX}
-            hasScrollY={scrollBarState.hasScrollY}
-            showCellRightBorder={rootProps.showCellRightBorder}
-            extendRowFullWidth={!rootProps.disableExtendRowFullWidth}
-            rowIndex={renderState.renderContext!.firstRowIdx! + idx}
-            cellFocus={cellFocus}
-            cellTabIndex={cellTabIndex}
-            isSelected={selectionLookup[row.id] !== undefined}
-            editRowState={editRowsState[row.id]}
-            getCellClassName={rootProps.getCellClassName}
-          />
-          <GridEmptyCell width={renderState.renderContext!.rightEmptyWidth} height={rowHeight} />
-        </rootProps.components.Row>
+        />
       ));
     };
 
