@@ -22,6 +22,7 @@ async function generateProptypes(program: ttp.ts.Program, sourceFile: string) {
         'columns',
         'currentColumn',
         'colDef',
+        'initialState',
       ];
       if (propsToNotResolve.includes(name)) {
         return false;

@@ -222,26 +222,7 @@ DataGridRaw.propTypes = {
    * The data in it will be set in the state on initialization but will not be controlled.
    * If one of the data in `initialState` is also being controlled, then the control state wins.
    */
-  initialState: PropTypes.shape({
-    filter: PropTypes.shape({
-      filterModel: PropTypes.shape({
-        items: PropTypes.arrayOf(PropTypes.object).isRequired,
-        linkOperator: PropTypes.oneOf(['and', 'or']),
-      }).isRequired,
-    }),
-    preferencePanel: PropTypes.shape({
-      open: PropTypes.bool.isRequired,
-      openedPanelValue: PropTypes.oneOf(['columns', 'filters']),
-    }),
-    sorting: PropTypes.shape({
-      sortModel: PropTypes.arrayOf(
-        PropTypes.shape({
-          field: PropTypes.string.isRequired,
-          sort: PropTypes.oneOf(['asc', 'desc']),
-        }),
-      ),
-    }),
-  }),
+  initialState: PropTypes.object,
   /**
    * Callback fired when a cell is rendered, returns true if the cell is editable.
    * @param {GridCellParams} params With all properties from [[GridCellParams]].
