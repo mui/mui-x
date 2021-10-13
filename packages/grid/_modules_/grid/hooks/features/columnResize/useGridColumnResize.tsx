@@ -12,9 +12,12 @@ import {
   findHeaderElementFromField,
 } from '../../../utils/domUtils';
 import { GridApiRef, CursorCoordinates, GridColumnHeaderParams } from '../../../models';
-import { useGridApiEventHandler, useGridApiOptionHandler } from '../../root/useGridApiEventHandler';
-import { useGridState } from '../core/useGridState';
-import { useNativeEventListener } from '../../root/useNativeEventListener';
+import {
+  useGridApiEventHandler,
+  useGridApiOptionHandler,
+} from '../../utils/useGridApiEventHandler';
+import { useGridState } from '../../utils/useGridState';
+import { useGridNativeEventListener } from '../../utils/useGridNativeEventListener';
 import { GridComponentProps } from '../../../GridComponentProps';
 import { useGridStateInit } from '../../utils/useGridStateInit';
 
@@ -332,7 +335,7 @@ export const useGridColumnResize = (
     };
   }, [apiRef, handleTouchStart, stopListening]);
 
-  useNativeEventListener(
+  useGridNativeEventListener(
     apiRef,
     () => apiRef.current.columnHeadersElementRef?.current,
     'touchstart',

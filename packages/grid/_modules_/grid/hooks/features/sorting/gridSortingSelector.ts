@@ -1,7 +1,7 @@
 import { createSelector } from 'reselect';
 import { GridRowId, GridRowModel, GridRowsLookup } from '../../../models/gridRows';
 import { GridSortDirection, GridSortModel } from '../../../models/gridSortModel';
-import { GridState } from '../core/gridState';
+import { GridState } from '../../../models/gridState';
 import { gridRowsLookupSelector, unorderedGridRowIdsSelector } from '../rows/gridRowsSelector';
 import { GridSortingState } from './gridSortingState';
 

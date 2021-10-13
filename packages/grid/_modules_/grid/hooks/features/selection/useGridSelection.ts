@@ -5,10 +5,10 @@ import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridSelectionApi } from '../../../models/api/gridSelectionApi';
 import { GridRowParams } from '../../../models/params/gridRowParams';
 import { GridRowId } from '../../../models/gridRows';
-import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
-import { useGridApiMethod } from '../../root/useGridApiMethod';
+import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
+import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
-import { useGridState } from '../core/useGridState';
+import { useGridState } from '../../utils/useGridState';
 import { gridRowsLookupSelector } from '../rows/gridRowsSelector';
 import {
   gridSelectionStateSelector,
@@ -18,8 +18,8 @@ import {
 import { visibleSortedGridRowIdsSelector } from '../filter/gridFilterSelector';
 import { GridCellParams } from '../../../models/params/gridCellParams';
 import { GridRowSelectionCheckboxParams } from '../../../models/params/gridRowSelectionCheckboxParams';
-import { GridColumnsPreProcessing } from '../../root/columnsPreProcessing';
-import { gridCheckboxSelectionColDef, GridColDef } from '../../../models';
+import { GridColumnsPreProcessing } from '../../core/columnsPreProcessing';
+import { GRID_CHECKBOX_SELECTION_COL_DEF, GridColDef } from '../../../models';
 import { composeClasses } from '../../../utils/material-ui-utils';
 import { getDataGridUtilityClass } from '../../../gridClasses';
 import { useGridStateInit } from '../../utils/useGridStateInit';
@@ -360,7 +360,7 @@ export const useGridSelection = (
     } else {
       const addCheckboxColumn: GridColumnsPreProcessing = (columns) => {
         const groupingColumn: GridColDef = {
-          ...gridCheckboxSelectionColDef,
+          ...GRID_CHECKBOX_SELECTION_COL_DEF,
           cellClassName: classes.cellCheckbox,
           headerClassName: classes.columnHeaderCheckbox,
           headerName: apiRef.current.getLocaleText('checkboxSelectionHeaderName'),
