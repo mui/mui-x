@@ -1,13 +1,13 @@
-# GridExportCsvOptions Interface
+# GridCsvExportOptions Interface
 
 <p class="description">The options to apply on the CSV export.</p>
 
 ## Import
 
 ```js
-import { GridExportCsvOptions } from '@mui/x-data-grid-pro';
+import { GridCsvExportOptions } from '@mui/x-data-grid-pro';
 // or
-import { GridExportCsvOptions } from '@mui/x-data-grid';
+import { GridCsvExportOptions } from '@mui/x-data-grid';
 ```
 
 ## Properties

@@ -9,6 +9,7 @@ import { useGridColumnResize } from '../../_modules_/grid/hooks/features/columnR
 import { useGridColumns } from '../../_modules_/grid/hooks/features/columns/useGridColumns';
 import { useGridDensity } from '../../_modules_/grid/hooks/features/density/useGridDensity';
 import { useGridCsvExport } from '../../_modules_/grid/hooks/features/export/useGridCsvExport';
+import { useGridPrintExport } from '../../_modules_/grid/hooks/features/export/useGridPrintExport';
 import { useGridFilter } from '../../_modules_/grid/hooks/features/filter/useGridFilter';
 import { useGridFocus } from '../../_modules_/grid/hooks/features/focus/useGridFocus';
 import { useGridInfiniteLoader } from '../../_modules_/grid/hooks/features/infiniteLoader/useGridInfiniteLoader';
@@ -51,6 +52,7 @@ export const useDataGridProComponent = (apiRef: GridApiRef, props: GridComponent
   useGridKeyboard(apiRef);
   useGridKeyboardNavigation(apiRef, props);
   useGridCsvExport(apiRef);
+  useGridPrintExport(apiRef, props);
   useGridClipboard(apiRef);
   useGridEvents(apiRef, props);
 };
