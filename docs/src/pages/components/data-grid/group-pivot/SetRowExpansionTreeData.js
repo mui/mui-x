@@ -9,6 +9,7 @@ export default function SetRowExpansionTreeData() {
     rowLength: [10, 5, 3],
     randomLength: true,
   });
+
   const apiRef = useGridApiRef();
 
   const toggleFirstRow = () => {

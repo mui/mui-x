@@ -7,6 +7,7 @@ export default function DisableChildrenSortingTreeData() {
     rowLength: [10, 5, 3],
     randomLength: true,
   });
+
   const [sortModel, setSortingModel] = React.useState([
     { field: 'index', sort: 'desc' },
   ]);

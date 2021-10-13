@@ -7,6 +7,7 @@ export default function DisableChildrenFilteringTreeData() {
     rowLength: [10, 5, 3],
     randomLength: true,
   });
+
   const [filterModel, setFilterModel] = React.useState({
     items: [{ columnField: 'index', operatorValue: '>', value: 2 }],
   });

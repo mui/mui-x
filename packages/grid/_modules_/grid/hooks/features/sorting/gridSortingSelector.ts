@@ -2,7 +2,6 @@ import { createSelector } from 'reselect';
 import { GridSortDirection, GridSortModel } from '../../../models/gridSortModel';
 import { GridState } from '../../../models/gridState';
 import { gridRowsLookupSelector } from '../rows/gridRowsSelector';
-import type { GridRowId, GridRowModel } from '../../../models';
 
 const gridSortingStateSelector = (state: GridState) => state.sorting;
 
@@ -15,16 +14,6 @@ export const gridSortedRowEntriesSelector = createSelector(
   gridSortedRowIdsSelector,
   gridRowsLookupSelector,
   (sortedIds, idRowsLookup) => sortedIds.map((id) => ({ id, model: idRowsLookup[id] })),
-);
-
-export const gridSortedRowsMapSelector = createSelector(
-  gridSortedRowEntriesSelector,
-  (sortedRows) => new Map<GridRowId, GridRowModel>(sortedRows.map((row) => [row.id, row.model])),
-);
-
-export const gridSortedRowsAsArraySelector = createSelector(
-  gridSortedRowsMapSelector,
-  (sortedRows) => Array.from(sortedRows.values()),
 );
 
 export const gridSortModelSelector = createSelector(

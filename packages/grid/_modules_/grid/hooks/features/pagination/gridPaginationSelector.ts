@@ -15,7 +15,7 @@ export const gridPageSizeSelector = createSelector(
   (pagination) => pagination.pageSize,
 );
 
-export const gridSortedVisiblePaginatedRowsAsArrayFlatSelector = createSelector(
+export const gridSortedVisiblePaginatedRowEntriesSelector = createSelector(
   gridPaginationSelector,
   gridSortedVisibleRowEntriesSelector,
   (pagination, visibleSortedRows) => {

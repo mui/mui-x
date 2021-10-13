@@ -30,8 +30,6 @@ export type GridRowConfigTree = Record<GridRowId, GridRowConfigTreeNode>;
 
 export type GridRowsLookup = Record<GridRowId, GridRowModel>;
 
-export type GridRowEntry = { id: GridRowId; model: GridRowModel };
-
 /**
  * The type of Id supported by the grid.
  */

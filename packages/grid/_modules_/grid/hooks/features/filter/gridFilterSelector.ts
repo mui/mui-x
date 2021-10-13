@@ -1,6 +1,5 @@
 import { createSelector } from 'reselect';
 import { GridFilterItem } from '../../../models/gridFilterItem';
-import { GridRowId, GridRowModel } from '../../../models/gridRows';
 import { GridState } from '../../../models/gridState';
 import { gridSortedRowEntriesSelector } from '../sorting/gridSortingSelector';
 import { gridColumnLookupSelector } from '../columns/gridColumnsSelector';
@@ -28,12 +27,6 @@ export const gridSortedVisibleRowEntriesSelector = createSelector(
   gridSortedRowEntriesSelector,
   (visibleRowsLookup, sortedRows) =>
     sortedRows.filter((row) => visibleRowsLookup[row.id] !== false),
-);
-
-export const gridSortedVisibleRowsMapSelector = createSelector(
-  gridSortedVisibleRowEntriesSelector,
-  (visibleSortedRows) =>
-    new Map<GridRowId, GridRowModel>(visibleSortedRows.map((row) => [row.id, row.model])),
 );
 
 export const gridSortedVisibleTopLevelRowEntriesSelector = createSelector(
