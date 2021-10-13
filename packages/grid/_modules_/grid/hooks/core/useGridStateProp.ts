@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { GridApiRef } from '../../models/api/gridApiRef';
-import { GridState } from '../features/core/gridState';
-import { useGridState } from '../features/core/useGridState';
-import { useGridLogger } from './useGridLogger';
+import { GridState } from '../../models/gridState';
+import { useGridState } from '../utils/useGridState';
+import { useGridLogger } from '../utils/useGridLogger';
 
-export function useStateProp(apiRef: GridApiRef, { state }: { state?: Partial<GridState> }) {
+export function useGridStateProp(apiRef: GridApiRef, { state }: { state?: Partial<GridState> }) {
   const [, setGridState, forceUpdate] = useGridState(apiRef);
   const logger = useGridLogger(apiRef, 'useStateProp');
 

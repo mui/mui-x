@@ -1,11 +1,14 @@
 import * as React from 'react';
 import { debounce } from '@mui/material/utils';
-import { GridEvents } from '../../constants/eventsConstants';
-import { ElementSize, GridEventsApi } from '../../models';
-import { useGridApiEventHandler, useGridApiOptionHandler } from '../root/useGridApiEventHandler';
-import { useGridApiMethod } from '../root/useGridApiMethod';
-import { useGridLogger } from './useGridLogger';
-import { GridComponentProps } from '../../GridComponentProps';
+import { GridEvents } from '../../../constants/eventsConstants';
+import { ElementSize, GridEventsApi } from '../../../models';
+import {
+  useGridApiEventHandler,
+  useGridApiOptionHandler,
+} from '../../utils/useGridApiEventHandler';
+import { useGridApiMethod } from '../../utils/useGridApiMethod';
+import { useGridLogger } from '../../utils/useGridLogger';
+import { GridComponentProps } from '../../../GridComponentProps';
 
 const isTestEnvironment = process.env.NODE_ENV === 'test';
 
