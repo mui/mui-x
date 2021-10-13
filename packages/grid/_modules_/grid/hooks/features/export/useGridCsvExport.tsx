@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { GridApiRef } from '../../../models/api/gridApiRef';
-import { useGridApiMethod } from '../../root/useGridApiMethod';
-import { useGridSelector } from '../core/useGridSelector';
+import { useGridApiMethod } from '../../utils/useGridApiMethod';
+import { useGridSelector } from '../../utils/useGridSelector';
 import { allGridColumnsSelector, visibleGridColumnsSelector } from '../columns';
 import { gridSortedVisibleRowEntriesSelector } from '../filter';
 import { gridSelectionStateSelector } from '../selection';

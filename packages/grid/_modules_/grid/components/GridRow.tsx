@@ -6,7 +6,7 @@ import clsx from 'clsx';
 import { GridEvents } from '../constants/eventsConstants';
 import { GridRowId, GridRowData } from '../models/gridRows';
 import { GridEditModes, GridRowModes, GridEditRowsModel } from '../models/gridEditRowModel';
-import { useGridApiContext } from '../hooks/root/useGridApiContext';
+import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { composeClasses } from '../utils/material-ui-utils';
 import { getDataGridUtilityClass, gridClasses } from '../gridClasses';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';

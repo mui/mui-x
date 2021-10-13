@@ -2,7 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import MenuItem from '@mui/material/MenuItem';
 import { GridFilterItemProps } from './GridFilterItemProps';
-import { useGridApiContext } from '../../../hooks/root/useGridApiContext';
+import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 
 const HideGridColMenuItem = (props: GridFilterItemProps) => {

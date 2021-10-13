@@ -1,4 +1,4 @@
-import { GridState } from '../../hooks/features/core/gridState';
+import { GridState } from '../gridState';
 import { GridApiRef } from '../api/gridApiRef';
 import { GridColumns } from '../colDef/gridColDef';
 import { GridRootContainerRef } from '../gridRootContainerRef';

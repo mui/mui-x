@@ -10,7 +10,7 @@ import {
   getGridColumnHeaderElement,
   getGridRowElement,
 } from '../../../utils/domUtils';
-import { useGridApiMethod } from '../../root/useGridApiMethod';
+import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { gridFocusCellSelector, gridTabIndexCellSelector } from '../focus/gridFocusStateSelector';
 
 let warnedOnce = false;

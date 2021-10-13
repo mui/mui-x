@@ -1,5 +1,5 @@
 import { createSelector } from 'reselect';
-import { GridState } from '../core/gridState';
+import { GridState } from '../../../models/gridState';
 import { gridSortedVisibleRowEntriesSelector } from '../filter/gridFilterSelector';
 import { GridPaginationState } from './gridPaginationState';
 

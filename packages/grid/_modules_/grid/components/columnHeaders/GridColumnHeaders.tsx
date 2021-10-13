@@ -1,20 +1,20 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { visibleGridColumnsSelector } from '../../hooks/features/columns/gridColumnsSelector';
-import { GridState } from '../../hooks/features/core/gridState';
-import { useGridSelector } from '../../hooks/features/core/useGridSelector';
+import { GridState } from '../../models/gridState';
+import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { gridRenderingSelector } from '../../hooks/features/virtualization/renderingStateSelector';
-import { useGridApiContext } from '../../hooks/root/useGridApiContext';
+import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { GridEmptyCell } from '../cell/GridEmptyCell';
 import { GridScrollArea } from '../GridScrollArea';
 import { GridColumnHeadersItemCollection } from './GridColumnHeadersItemCollection';
 import { gridDensityHeaderHeightSelector } from '../../hooks/features/density/densitySelector';
-import { gridContainerSizesSelector } from '../../hooks/root/gridContainerSizesSelector';
+import { gridContainerSizesSelector } from '../../hooks/features/container/gridContainerSizesSelector';
 import { getDataGridUtilityClass } from '../../gridClasses';
 import { composeClasses } from '../../utils/material-ui-utils';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { GridComponentProps } from '../../GridComponentProps';
-import { useGridApiEventHandler } from '../../hooks/root/useGridApiEventHandler';
+import { useGridApiEventHandler } from '../../hooks/utils/useGridApiEventHandler';
 import { GridEvents } from '../../constants/eventsConstants';
 import { GridColumnHeaderParams } from '../../models/params/gridColumnHeaderParams';
 

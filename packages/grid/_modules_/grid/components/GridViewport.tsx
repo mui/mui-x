@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { visibleGridColumnsSelector } from '../hooks/features/columns/gridColumnsSelector';
-import { useGridSelector } from '../hooks/features/core/useGridSelector';
+import { useGridSelector } from '../hooks/utils/useGridSelector';
 import { gridDensityRowHeightSelector } from '../hooks/features/density/densitySelector';
 import {
   gridSortedVisibleRowEntriesSelector,
@@ -10,10 +10,10 @@ import {
   gridFocusCellSelector,
   gridTabIndexCellSelector,
 } from '../hooks/features/focus/gridFocusStateSelector';
-import { gridEditRowsStateSelector } from '../hooks/features/rows/gridEditRowsSelector';
+import { gridEditRowsStateSelector } from '../hooks/features/editRows/gridEditRowsSelector';
 import { gridSelectionStateSelector } from '../hooks/features/selection/gridSelectionSelector';
 import { gridRenderingSelector } from '../hooks/features/virtualization/renderingStateSelector';
-import { useGridApiContext } from '../hooks/root/useGridApiContext';
+import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { GridDataContainer } from './containers/GridDataContainer';
 import { GridRenderingZone } from './GridRenderingZone';
 import { GridStickyContainer } from './GridStickyContainer';
@@ -21,7 +21,7 @@ import {
   gridContainerSizesSelector,
   gridViewportSizesSelector,
   gridScrollBarSizeSelector,
-} from '../hooks/root/gridContainerSizesSelector';
+} from '../hooks/features/container/gridContainerSizesSelector';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { GridRowId } from '../models';
 

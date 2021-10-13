@@ -1,11 +1,14 @@
 import * as React from 'react';
 import { GridApiRef } from '../../../models';
-import { useGridSelector, useGridState } from '../core';
-import { useGridLogger } from '../../utils';
+import {
+  useGridLogger,
+  useGridSelector,
+  useGridState,
+  useGridApiMethod,
+  useGridApiEventHandler,
+} from '../../utils';
 import { GridEvents } from '../../../constants/eventsConstants';
 import { GridComponentProps } from '../../../GridComponentProps';
-import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
-import { useGridApiMethod } from '../../root/useGridApiMethod';
 import { GridPageApi } from '../../../models/api/gridPageApi';
 import { GridPaginationState } from './gridPaginationState';
 import { gridVisibleTopLevelRowCountSelector } from '../filter';
