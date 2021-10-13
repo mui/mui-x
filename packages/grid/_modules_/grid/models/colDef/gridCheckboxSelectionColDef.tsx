@@ -5,7 +5,7 @@ import { selectedIdsLookupSelector } from '../../hooks/features/selection/gridSe
 import { GridColDef } from './gridColDef';
 import { GRID_BOOLEAN_COL_DEF } from './gridBooleanColDef';
 
-export const gridCheckboxSelectionColDef: GridColDef = {
+export const GRID_CHECKBOX_SELECTION_COL_DEF: GridColDef = {
   ...GRID_BOOLEAN_COL_DEF,
   field: '__check__',
   type: 'checkboxSelection',

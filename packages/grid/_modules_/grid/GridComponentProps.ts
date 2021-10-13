@@ -10,7 +10,7 @@ import {
 import { MuiEvent } from './models/muiEvent';
 import { GridRowId, GridRowIdGetter, GridRowsProp } from './models/gridRows';
 import { ElementSize } from './models/elementSize';
-import { GridColumnTypesRecord } from './models/colDef/gridColTypeDef';
+import { GridColumnTypesRecord } from './models/colDef/gridColumnTypesRecord';
 import { GridSortModel } from './models/gridSortModel';
 import { GridFilterModel } from './models/gridFilterModel';
 import { GridCellParams } from './models/params/gridCellParams';

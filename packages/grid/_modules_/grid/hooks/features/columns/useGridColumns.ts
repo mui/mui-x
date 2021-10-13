@@ -2,14 +2,14 @@ import * as React from 'react';
 import { GridEvents } from '../../../constants/eventsConstants';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridColumnApi } from '../../../models/api/gridColumnApi';
-import { gridCheckboxSelectionColDef } from '../../../models/colDef/gridCheckboxSelection';
+import { GRID_CHECKBOX_SELECTION_COL_DEF } from '../../../models/colDef/gridCheckboxSelectionColDef';
 import {
   GridColDef,
   GridColumns,
   GridColumnsState,
   GridStateColDef,
 } from '../../../models/colDef/gridColDef';
-import { GridColumnTypesRecord } from '../../../models/colDef/gridColTypeDef';
+import { GridColumnTypesRecord } from '../../../models/colDef/gridColumnTypesRecord';
 import { getGridDefaultColumnTypes } from '../../../models/colDef/gridDefaultColumnTypes';
 import { getGridColDef } from '../../../models/colDef/getGridColDef';
 import { GridColumnOrderChangeParams } from '../../../models/params/gridColumnOrderChangeParams';
@@ -99,7 +99,7 @@ function hydrateColumnsType(
   if (checkboxSelection) {
     return [
       {
-        ...gridCheckboxSelectionColDef,
+        ...GRID_CHECKBOX_SELECTION_COL_DEF,
         cellClassName: classes.cellCheckbox,
         columnHeaderCheckbox: classes.columnHeaderCheckbox,
         headerName: getLocaleText('checkboxSelectionHeaderName'),
