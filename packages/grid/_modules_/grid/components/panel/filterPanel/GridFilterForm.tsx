@@ -12,6 +12,10 @@ import { GridFilterItem, GridLinkOperator } from '../../../models/gridFilterItem
 import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
 import { GridCloseIcon } from '../../icons/index';
 import { GridTranslationKeys } from '../../../models/api/gridLocaleTextApi';
+import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
+import { GridComponentProps } from '../../../GridComponentProps';
+import { getDataGridUtilityClass } from '../../../gridClasses';
+import { composeClasses } from '../../../utils/material-ui-utils';
 
 export interface GridFilterFormProps {
   item: GridFilterItem;
@@ -24,9 +28,21 @@ export interface GridFilterFormProps {
   deleteFilter: (item: GridFilterItem) => void;
 }
 
+type OwnerState = { classes: GridComponentProps['classes'] };
+
+const useUtilityClasses = (ownerState: OwnerState) => {
+  const { classes } = ownerState;
+
+  const slots = {
+    root: ['filterForm'],
+  };
+
+  return composeClasses(slots, getDataGridUtilityClass, classes);
+};
+
 const GridFilterFormRoot = styled('div', {
-  name: 'MuiGridFilterForm',
-  slot: 'Root',
+  name: 'MuiDataGrid',
+  slot: 'FilterForm',
 })(({ theme }) => ({
   display: 'flex',
   justifyContent: 'space-around',
@@ -52,6 +68,9 @@ function GridFilterForm(props: GridFilterFormProps) {
   const columnSelectLabelId = useId();
   const operatorSelectId = useId();
   const operatorSelectLabelId = useId();
+  const rootProps = useGridRootProps();
+  const ownerState = { classes: rootProps.classes };
+  const classes = useUtilityClasses(ownerState);
 
   const getCurrentColumn = React.useCallback(() => {
     if (!item.columnField) {
@@ -113,7 +132,7 @@ function GridFilterForm(props: GridFilterFormProps) {
   const currentOperator = getCurrentOperator();
 
   return (
-    <GridFilterFormRoot className="MuiGridFilterForm-root">
+    <GridFilterFormRoot className={classes.root}>
       <FormControl
         variant="standard"
         sx={{ flexShrink: 0, justifyContent: 'flex-end', marginRight: 0.5, marginBottom: 0.2 }}

@@ -8,9 +8,12 @@ import Popper, { PopperProps } from '@mui/material/Popper';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { isEscapeKey } from '../../utils/keyboardUtils';
 import {
+  composeClasses,
   generateUtilityClasses,
   InternalStandardProps as StandardProps,
 } from '../../utils/material-ui-utils';
+import { getDataGridUtilityClass } from '../../gridClasses';
+import { GridComponentProps } from '../../GridComponentProps';
 
 export interface GridPanelClasses {
   /** Styles applied to the root element. */
@@ -28,15 +31,30 @@ export interface GridPanelProps extends StandardProps<PopperProps, 'children'> {
   open: boolean;
 }
 
+export const gridPanelClasses = generateUtilityClasses('MuiDataGrid', ['panel', 'paper']);
+
+type OwnerState = { classes: GridComponentProps['classes'] };
+
+const useUtilityClasses = (ownerState: OwnerState) => {
+  const { classes } = ownerState;
+
+  const slots = {
+    root: ['panel'],
+    paper: ['paper'],
+  };
+
+  return composeClasses(slots, getDataGridUtilityClass, classes);
+};
+
 const StyledPopper = styled(Popper, {
-  name: 'MuiGridPanel',
-  slot: 'Root',
+  name: 'MuiDataGrid',
+  slot: 'Panel',
 })(({ theme }) => ({
   zIndex: theme.zIndex.modal,
 }));
 
 const StyledPaper = styled(Paper, {
-  name: 'MuiGridPanel',
+  name: 'MuiDataGrid',
   slot: 'Paper',
 })(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,
@@ -45,11 +63,11 @@ const StyledPaper = styled(Paper, {
   display: 'flex',
 }));
 
-export const gridPanelClasses = generateUtilityClasses('MuiGridPanel', ['root', 'paper']);
-
 const GridPanel = React.forwardRef<HTMLDivElement, GridPanelProps>((props, ref) => {
   const { children, className, open, classes: classesProp, ...other } = props;
   const apiRef = useGridApiContext();
+  const ownerState = { classes: classesProp };
+  const classes = useUtilityClasses(ownerState);
 
   const handleClickAway = React.useCallback(() => {
     apiRef.current.hidePreferences();
@@ -74,7 +92,7 @@ const GridPanel = React.forwardRef<HTMLDivElement, GridPanelProps>((props, ref) 
     <StyledPopper
       ref={ref}
       placement="bottom-start"
-      className={clsx('MuiGridPanel-root', className)}
+      className={clsx(className, classes.root)}
       open={open}
       anchorEl={anchorEl}
       modifiers={[
@@ -86,7 +104,7 @@ const GridPanel = React.forwardRef<HTMLDivElement, GridPanelProps>((props, ref) 
       {...other}
     >
       <ClickAwayListener onClickAway={handleClickAway}>
-        <StyledPaper className="MuiGridPanel-paper" elevation={8} onKeyDown={handleKeyDown}>
+        <StyledPaper className={classes.paper} elevation={8} onKeyDown={handleKeyDown}>
           {children}
         </StyledPaper>
       </ClickAwayListener>

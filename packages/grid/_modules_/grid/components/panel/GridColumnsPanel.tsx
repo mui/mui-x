@@ -15,17 +15,33 @@ import { GridPanelHeader } from './GridPanelHeader';
 import { GridPanelWrapper } from './GridPanelWrapper';
 import { GRID_EXPERIMENTAL_ENABLED } from '../../constants';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
+import { GridComponentProps } from '../../GridComponentProps';
+import { getDataGridUtilityClass } from '../../gridClasses';
+import { composeClasses } from '../../utils/material-ui-utils';
+
+type OwnerState = { classes: GridComponentProps['classes'] };
+
+const useUtilityClasses = (ownerState: OwnerState) => {
+  const { classes } = ownerState;
+
+  const slots = {
+    root: ['columnsPanel'],
+    column: ['column'],
+  };
+
+  return composeClasses(slots, getDataGridUtilityClass, classes);
+};
 
 const GridColumnsPanelRoot = styled('div', {
-  name: 'MuiGridColumnsPanel',
-  slot: 'Root',
+  name: 'MuiDataGrid',
+  slot: 'ColumnsPanel',
 })(({ theme }) => ({
   padding: theme.spacing(1),
 }));
 
 const GridColumnRoot = styled('div', {
-  name: 'MuiGridColumn',
-  slot: 'Root',
+  name: 'MuiDataGrid',
+  slot: 'Column',
 })({
   display: 'flex',
   justifyContent: 'space-between',
@@ -42,6 +58,8 @@ export function GridColumnsPanel() {
   const columns = useGridSelector(apiRef, allGridColumnsSelector);
   const rootProps = useGridRootProps();
   const [searchValue, setSearchValue] = React.useState('');
+  const ownerState = { classes: rootProps.classes };
+  const classes = useUtilityClasses(ownerState);
 
   const toggleColumn = React.useCallback(
     (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -102,9 +120,9 @@ export function GridColumnsPanel() {
         />
       </GridPanelHeader>
       <GridPanelContent>
-        <GridColumnsPanelRoot>
+        <GridColumnsPanelRoot className={classes.root}>
           {currentColumns.map((column) => (
-            <GridColumnRoot key={column.field}>
+            <GridColumnRoot className={classes.column} key={column.field}>
               <FormControlLabel
                 control={
                   <Switch

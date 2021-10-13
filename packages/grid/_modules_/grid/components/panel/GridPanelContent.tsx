@@ -1,9 +1,26 @@
 import * as React from 'react';
+import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
+import { composeClasses } from '../../utils/material-ui-utils';
+import { getDataGridUtilityClass } from '../../gridClasses';
+import { GridComponentProps } from '../../GridComponentProps';
+import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
+
+type OwnerState = { classes: GridComponentProps['classes'] };
+
+const useUtilityClasses = (ownerState: OwnerState) => {
+  const { classes } = ownerState;
+
+  const slots = {
+    root: ['panelContent'],
+  };
+
+  return composeClasses(slots, getDataGridUtilityClass, classes);
+};
 
 const GridPanelContentRoot = styled('div', {
-  name: 'MuiGridPanelContent',
-  slot: 'Root',
+  name: 'MuiDataGrid',
+  slot: 'PanelContent',
 })({
   display: 'flex',
   flexDirection: 'column',
@@ -16,5 +33,9 @@ export function GridPanelContent(
   props: React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>>,
 ) {
   const { className, ...other } = props;
-  return <GridPanelContentRoot className={className} {...other} />;
+  const rootProps = useGridRootProps();
+  const ownerState = { classes: rootProps.classes };
+  const classes = useUtilityClasses(ownerState);
+
+  return <GridPanelContentRoot className={clsx(className, classes.root)} {...other} />;
 }
