@@ -44,6 +44,7 @@ export const GridViewport: ViewportType = React.forwardRef<HTMLDivElement, {}>(
       apiRef,
       gridSortedVisibleTopLevelRowEntriesSelector,
     );
+
     const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
     const editRowsState = useGridSelector(apiRef, gridEditRowsStateSelector);
 
@@ -75,6 +76,7 @@ export const GridViewport: ViewportType = React.forwardRef<HTMLDivElement, {}>(
       const startIndex = getVisibleRowIndex(
         visibleSortedTopLevelRows[renderState.renderContext.firstRowIdx!].id,
       );
+
       const isLastTopLevelRowVisible =
         renderState.renderContext.lastRowIdx! > visibleSortedTopLevelRows.length;
       const endIndex = isLastTopLevelRowVisible
