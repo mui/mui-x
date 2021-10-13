@@ -2,7 +2,7 @@ import { zhCN as zhCNCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
-export const zhCNGrid: Partial<GridLocaleText> = {
+const zhCNGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: '没有数据。',
   noResultsOverlayLabel: '未找到数据。',

@@ -7,7 +7,7 @@ import Button, { ButtonProps } from '@mui/material/Button';
 import Tooltip, { TooltipProps } from '@mui/material/Tooltip';
 import { capitalize } from '@mui/material/utils';
 import { gridColumnLookupSelector } from '../../hooks/features/columns/gridColumnsSelector';
-import { useGridSelector } from '../../hooks/features/core/useGridSelector';
+import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import {
   activeGridFilterItemsSelector,
   filterGridItemsCounterSelector,
@@ -16,7 +16,7 @@ import { gridPreferencePanelStateSelector } from '../../hooks/features/preferenc
 import { GridPreferencePanelsValue } from '../../hooks/features/preferencesPanel/gridPreferencePanelsValue';
 import { GridTranslationKeys } from '../../models/api/gridLocaleTextApi';
 import { GridFilterItem } from '../../models/gridFilterItem';
-import { useGridApiContext } from '../../hooks/root/useGridApiContext';
+import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
 const defaultTheme = createTheme();

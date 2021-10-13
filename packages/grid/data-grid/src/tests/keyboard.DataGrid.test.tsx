@@ -174,6 +174,21 @@ describe('<DataGrid /> - Keyboard', () => {
     expect(getActiveCell()).to.equal('0-1');
   });
 
+  it('should not crash when pressing ArrowDown after reaching last visible row', () => {
+    render(
+      <KeyboardTest
+        nbRows={10}
+        filterModel={{ items: [{ columnField: 'id', operatorValue: '<', value: '2' }] }}
+      />,
+    );
+    getCell(0, 0).focus();
+    expect(getActiveCell()).to.equal('0-0');
+    fireEvent.keyDown(document.activeElement!, { key: 'ArrowDown' });
+    expect(getActiveCell()).to.equal('1-0');
+    fireEvent.keyDown(document.activeElement!, { key: 'ArrowDown' });
+    expect(getActiveCell()).to.equal('1-0');
+  });
+
   it('should support cell navigation with arrows and checkboxSelection', () => {
     render(<KeyboardTest nbRows={10} checkboxSelection />);
     getCell(0, 0).querySelector('input')!.focus();

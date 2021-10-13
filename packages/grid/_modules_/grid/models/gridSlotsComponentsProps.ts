@@ -3,6 +3,7 @@
  */
 export interface GridSlotsComponentsProps {
   checkbox?: any;
+  cell?: any;
   columnMenu?: any;
   columnsPanel?: any;
   errorOverlay?: any;
@@ -15,5 +16,6 @@ export interface GridSlotsComponentsProps {
   pagination?: any;
   panel?: any;
   preferencesPanel?: any;
+  row?: any;
   toolbar?: any;
 }

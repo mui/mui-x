@@ -1,5 +1,5 @@
 import { createSelector } from 'reselect';
-import { GridState } from '../core/gridState';
+import { GridState } from '../../../models/gridState';
 
 export const gridColumnReorderSelector = (state: GridState) => state.columnReorder;
 

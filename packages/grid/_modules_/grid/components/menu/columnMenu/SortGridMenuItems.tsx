@@ -1,10 +1,10 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import MenuItem from '@mui/material/MenuItem';
-import { useGridSelector } from '../../../hooks/features/core/useGridSelector';
+import { useGridSelector } from '../../../hooks/utils/useGridSelector';
 import { gridSortModelSelector } from '../../../hooks/features/sorting/gridSortingSelector';
 import { GridSortDirection } from '../../../models/gridSortModel';
-import { useGridApiContext } from '../../../hooks/root/useGridApiContext';
+import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
 import { GridFilterItemProps } from './GridFilterItemProps';
 
 const SortGridMenuItems = (props: GridFilterItemProps) => {

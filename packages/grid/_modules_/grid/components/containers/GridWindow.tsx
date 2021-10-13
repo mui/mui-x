@@ -1,13 +1,13 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { useGridSelector } from '../../hooks/features/core/useGridSelector';
+import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import {
   gridDensityHeaderHeightSelector,
   gridDensityRowHeightSelector,
 } from '../../hooks/features/density/densitySelector';
-import { gridDataContainerHeightSelector } from '../../hooks/root/gridContainerSizesSelector';
-import { useGridApiContext } from '../../hooks/root/useGridApiContext';
+import { gridDataContainerHeightSelector } from '../../hooks/features/container/gridContainerSizesSelector';
+import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { getDataGridUtilityClass } from '../../gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { composeClasses } from '../../utils/material-ui-utils';

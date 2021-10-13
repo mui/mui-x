@@ -7,9 +7,9 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { capitalize, unstable_useId as useId } from '@mui/material/utils';
 import { makeStyles } from '@mui/styles';
 import { filterableGridColumnsSelector } from '../../../hooks/features/columns/gridColumnsSelector';
-import { useGridSelector } from '../../../hooks/features/core/useGridSelector';
+import { useGridSelector } from '../../../hooks/utils/useGridSelector';
 import { GridFilterItem, GridLinkOperator } from '../../../models/gridFilterItem';
-import { useGridApiContext } from '../../../hooks/root/useGridApiContext';
+import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
 import { GridCloseIcon } from '../../icons/index';
 import { GridTranslationKeys } from '../../../models/api/gridLocaleTextApi';
 

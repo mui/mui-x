@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridState } from '../../hooks/features/core/gridState';
+import { GridState } from '../gridState';
 
 export interface GridStateApi {
   /**

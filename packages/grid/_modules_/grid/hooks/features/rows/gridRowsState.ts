@@ -5,9 +5,3 @@ export interface GridRowsState {
   allRows: GridRowId[];
   totalRowCount: number;
 }
-
-export const getInitialGridRowState: () => GridRowsState = () => ({
-  idRowsLookup: {},
-  allRows: [],
-  totalRowCount: 0,
-});
