@@ -15,7 +15,7 @@ async function delay(ms) {
 function createServer(options) {
   const { port } = options;
   const server = http.createServer((request, response) => {
-    return handler(request, response, { public: path.resolve(__dirname, '../') });
+    return handler(request, response, { public: path.resolve(__dirname, '../dist') });
   });
 
   function close() {

@@ -4,10 +4,10 @@ import TablePagination, {
   TablePaginationProps,
 } from '@mui/material/TablePagination';
 import { styled } from '@mui/material/styles';
-import { useGridSelector } from '../hooks/features/core/useGridSelector';
-import { gridPaginationSelector } from '../hooks/features/pagination/gridPaginationSelector';
-import { useGridApiContext } from '../hooks/root/useGridApiContext';
+import { useGridSelector } from '../hooks/utils/useGridSelector';
+import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
+import { gridPaginationSelector } from '../hooks/features/pagination/gridPaginationSelector';
 
 const StyledTablePagination = styled(TablePagination)(({ theme }) => ({
   [`& .${tablePaginationClasses.selectLabel}`]: {
