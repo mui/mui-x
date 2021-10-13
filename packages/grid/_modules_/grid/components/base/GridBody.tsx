@@ -25,6 +25,26 @@ function GridBody(props: GridBodyProps) {
   const rootProps = useGridRootProps();
   const selection = useGridSelector(apiRef, gridSelectionStateSelector);
   const headerHeight = useGridSelector(apiRef, gridDensityHeaderHeightSelector);
+  const [isVirtualizationDisabled, setIsVirtualizationDisabled] = React.useState(
+    rootProps.disableVirtualization,
+  );
+
+  const disableVirtualization = React.useCallback(() => {
+    setIsVirtualizationDisabled(true);
+  }, []);
+
+  const enableVirtualization = React.useCallback(() => {
+    setIsVirtualizationDisabled(false);
+  }, []);
+
+  // The `useGridStateInit` hook can't be used here, because it only installs the
+  // method if it doesn't exist yet. Once installed, it's never updated again.
+  // This break the methods above, since their closure comes from the first time
+  // they were installed. Which means that calling `setIsVirtualizationDisabled`
+  // will trigger a re-render, but it won't update the state. That can be solved
+  // by migrating the virtualization status to the global state.
+  apiRef.current.UNSTABLE_disableVirtualization = disableVirtualization;
+  apiRef.current.UNSTABLE_enableVirtualization = enableVirtualization;
 
   const columnsHeaderRef = React.useRef<HTMLDivElement>(null);
   const columnsContainerRef = React.useRef<HTMLDivElement>(null);
@@ -85,6 +105,7 @@ function GridBody(props: GridBodyProps) {
               ref={windowRef}
               style={style}
               selectionLookup={selectionLookup} // TODO pass it directly to the row via componentsProps
+              disableVirtualization={isVirtualizationDisabled}
             />
           );
         }}

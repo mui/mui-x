@@ -33,7 +33,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   const slots = {
     root: ['virtualizedContainer'],
     renderingZone: ['renderingZone'],
-    content: ['virtualizedContainerContent'],
+    content: ['content'],
   };
 
   return composeClasses(slots, getDataGridUtilityClass, classes);
@@ -92,11 +92,12 @@ export interface RenderContext {
 
 interface GridVirtualizedContainerProps extends React.HTMLAttributes<HTMLDivElement> {
   selectionLookup: Record<string, GridRowId>;
+  disableVirtualization?: boolean;
 }
 
 const GridVirtualizedContainer = React.forwardRef<HTMLDivElement, GridVirtualizedContainerProps>(
   function GridVirtualizedContainer(props, ref) {
-    const { className, selectionLookup, ...other } = props;
+    const { className, selectionLookup, disableVirtualization, ...other } = props;
     const apiRef = useGridApiContext();
     const rootProps = useGridRootProps();
     const visibleColumns = useGridSelector(apiRef, visibleGridColumnsSelector);
@@ -127,7 +128,7 @@ const GridVirtualizedContainer = React.forwardRef<HTMLDivElement, GridVirtualize
     }, [paginationState, rootProps.pagination, rootProps.paginationMode, visibleSortedRowsAsArray]);
 
     const computeRenderContext = React.useCallback(() => {
-      if (rootProps.disableVirtualization) {
+      if (disableVirtualization) {
         return {
           firstRowIndex: 0,
           lastRowIndex: rowsInCurrentPage.length,
@@ -159,19 +160,23 @@ const GridVirtualizedContainer = React.forwardRef<HTMLDivElement, GridVirtualize
       apiRef,
       containerWidth,
       rootProps.autoHeight,
-      rootProps.disableVirtualization,
+      disableVirtualization,
       rowHeight,
       rowsInCurrentPage.length,
       visibleColumns.length,
     ]);
 
     React.useEffect(() => {
-      // Reset scroll
-      rootRef.current!.scrollLeft = 0;
-      rootRef.current!.scrollTop = 0;
+      if (disableVirtualization) {
+        renderingZoneRef.current!.style.transform = `translate3d(0px, 0px, 0px)`;
+      } else {
+        // TODO a scroll reset should not be necessary
+        rootRef.current!.scrollLeft = 0;
+        rootRef.current!.scrollTop = 0;
+      }
 
       setContainerWidth(rootRef.current!.clientWidth);
-    }, []);
+    }, [disableVirtualization]);
 
     React.useEffect(() => {
       if (containerWidth == null) {
@@ -201,18 +206,21 @@ const GridVirtualizedContainer = React.forwardRef<HTMLDivElement, GridVirtualize
       scrollPosition.current.left = scrollLeft;
 
       // On iOS and macOS, negative offsets are possible when swiping past the start
-      if (scrollLeft < 0 || scrollTop < 0) {
+      if (scrollLeft < 0 || scrollTop < 0 || !prevRenderContext.current) {
         return;
       }
 
-      const nextRenderContext = computeRenderContext();
+      // When virtualization is disabled, the context never changes during scroll
+      const nextRenderContext = disableVirtualization
+        ? prevRenderContext.current
+        : computeRenderContext();
 
       const rowsScrolledSincePreviousRender = Math.abs(
-        nextRenderContext.firstRowIndex - prevRenderContext.current!.firstRowIndex,
+        nextRenderContext.firstRowIndex - prevRenderContext.current.firstRowIndex,
       );
 
       const columnsScrolledSincePreviousRender = Math.abs(
-        nextRenderContext.firstColumnIndex - prevRenderContext.current!.firstColumnIndex,
+        nextRenderContext.firstColumnIndex - prevRenderContext.current.firstColumnIndex,
       );
 
       const shouldSetState =
@@ -246,8 +254,8 @@ const GridVirtualizedContainer = React.forwardRef<HTMLDivElement, GridVirtualize
         return null;
       }
 
-      const rowBuffer = !rootProps.disableVirtualization ? rootProps.rowBuffer : 0;
-      const columnBuffer = !rootProps.disableVirtualization ? rootProps.columnBuffer : 0;
+      const rowBuffer = !disableVirtualization ? rootProps.rowBuffer : 0;
+      const columnBuffer = !disableVirtualization ? rootProps.columnBuffer : 0;
 
       const firstRowToRender = Math.max(renderContext.firstRowIndex - rowBuffer, 0);
       const lastRowToRender = Math.min(

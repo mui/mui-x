@@ -118,16 +118,17 @@ export const useGridPrintExport = (
 
       const gridRootElement = apiRef.current.rootElementRef!.current;
       const gridClone = gridRootElement!.cloneNode(true) as HTMLElement;
-      const gridCloneViewport: HTMLElement | null = gridClone.querySelector(gridClasses.viewport);
+      const gridCloneViewport: HTMLElement | null = gridClone.querySelector(
+        `.${gridClasses.virtualizedContainer}`,
+      );
 
       // Expand the viewport window to prevent clipping
-      gridCloneViewport!.style.minWidth = '100%';
-      gridCloneViewport!.style.maxWidth = '100%';
+      gridCloneViewport!.style.height = 'auto';
 
       let gridToolbarElementHeight =
-        gridRootElement!.querySelector(gridClasses.toolbarContainer)?.clientHeight || 0;
+        gridRootElement!.querySelector(`.${gridClasses.toolbarContainer}`)?.clientHeight || 0;
       let gridFooterElementHeight =
-        gridRootElement!.querySelector(gridClasses.footerContainer)?.clientHeight || 0;
+        gridRootElement!.querySelector(`.${gridClasses.footerContainer}`)?.clientHeight || 0;
 
       if (normalizeOptions.hideToolbar) {
         gridClone.querySelector(gridClasses.toolbarContainer)?.remove();
@@ -135,7 +136,7 @@ export const useGridPrintExport = (
       }
 
       if (normalizeOptions.hideFooter) {
-        gridClone.querySelector(gridClasses.footerContainer)?.remove();
+        gridClone.querySelector(`.${gridClasses.footerContainer}`)?.remove();
         gridFooterElementHeight = 0;
       }
 
@@ -218,6 +219,8 @@ export const useGridPrintExport = (
         ...state,
         ...previousGridState.current,
       }));
+
+      apiRef.current.UNSTABLE_enableVirtualization();
 
       // Revert columns to their original state
       if (previousHiddenColumns.current.length) {
