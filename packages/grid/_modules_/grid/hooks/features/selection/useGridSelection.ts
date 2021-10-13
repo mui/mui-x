@@ -356,7 +356,7 @@ export const useGridSelection = (
 
   const updateColumnsPreProcessing = React.useCallback(() => {
     if (!props.checkboxSelection) {
-      apiRef.current.registerColumnPreProcessing('selection', null);
+      apiRef.current.UNSTABLE_registerColumnPreProcessing('selection', null);
     } else {
       const addCheckboxColumn: GridColumnsPreProcessing = (columns) => {
         const groupingColumn: GridColDef = {
@@ -369,7 +369,7 @@ export const useGridSelection = (
         return [groupingColumn, ...columns];
       };
 
-      apiRef.current.registerColumnPreProcessing('selection', addCheckboxColumn);
+      apiRef.current.UNSTABLE_registerColumnPreProcessing('selection', addCheckboxColumn);
     }
   }, [apiRef, props.checkboxSelection, classes]);
 
