@@ -5,24 +5,22 @@ import type {
   GridRowsLookup,
 } from '../../../models';
 
-export type GridNodeNameToIdTreeNode = { id: GridRowId; children: GridNodeNameToIdTree };
-export type GridNodeNameToIdTree = Map<string, GridNodeNameToIdTreeNode>;
+export type GridNodeNameToIdTree = {
+  [nodeName: string]: { id: GridRowId; children: GridNodeNameToIdTree };
+};
 
-export const insertLeafInTree = ({
-  tree,
-  path,
-  id,
-  defaultGroupingExpansionDepth,
-  idRowsLookup,
-  nodeNameToIdTree,
-}: {
+interface InsertRowInTreeParams {
   tree: GridRowConfigTree;
   path: string[];
   id: GridRowId;
   defaultGroupingExpansionDepth: number;
   idRowsLookup: GridRowsLookup;
   nodeNameToIdTree: GridNodeNameToIdTree;
-}) => {
+}
+
+export const insertRowInTree = (params: InsertRowInTreeParams) => {
+  const { tree, path, id, defaultGroupingExpansionDepth, idRowsLookup, nodeNameToIdTree } = params;
+
   let nodeNameToIdSubTree = nodeNameToIdTree;
   let parentNode: GridRowConfigTreeNode | null = null;
 
@@ -32,13 +30,13 @@ export const insertLeafInTree = ({
 
     const expanded = defaultGroupingExpansionDepth > depth;
 
-    let nodeNameConfig = nodeNameToIdSubTree.get(nodeName);
+    let nodeNameConfig = nodeNameToIdSubTree[nodeName];
 
     if (!nodeNameConfig) {
       nodeId = depth === path.length - 1 ? id : `filler-row-${path.slice(0, depth + 1).join('-')}`;
 
-      nodeNameConfig = { id: nodeId, children: new Map() };
-      nodeNameToIdSubTree.set(nodeName, nodeNameConfig);
+      nodeNameConfig = { id: nodeId, children: {} };
+      nodeNameToIdSubTree[nodeName] = nodeNameConfig;
     } else {
       nodeId = nodeNameConfig.id;
     }

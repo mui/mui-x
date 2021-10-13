@@ -87,7 +87,7 @@ const getRowsStateFromCache = (
   rowsCache: GridRowsInternalCache,
   apiRef: GridApiRef,
 ): GridRowsState => {
-  const { rowIds, idRowsLookup, propRowCount = 0, propGetRowId, ...rowState } = rowsCache.state;
+  const { rowIds, idRowsLookup, propRowCount = 0 } = rowsCache.state;
 
   const groupingResponse = apiRef.current.groupRows({
     idRowsLookup,
@@ -101,7 +101,7 @@ const getRowsStateFromCache = (
   const totalTopLevelRowCount =
     propRowCount > dataTopLevelRowCount ? propRowCount : dataTopLevelRowCount;
 
-  return { ...rowState, ...groupingResponse, totalRowCount, totalTopLevelRowCount };
+  return { ...groupingResponse, rowIds, totalRowCount, totalTopLevelRowCount };
 };
 
 // The cache is always redefined synchronously in `useGridStateInit` so this object don't need to be regenerated across DataGrid instances.
@@ -286,20 +286,16 @@ export const useGridRows = (
   const setRowExpansion = React.useCallback<GridRowApi['UNSTABLE_setRowExpansion']>(
     (id, isExpanded) => {
       setGridState((state) => {
-        const node = state.rows.tree[id];
-
+        const node = apiRef.current.UNSTABLE_getRowNode(id);
         if (!node) {
           throw new Error(`MUI: No row with id #${id} found`);
         }
-
-        const newTree = { ...state.rows.tree };
-        newTree[id] = { ...node, expanded: isExpanded };
 
         return {
           ...state,
           rows: {
             ...state.rows,
-            tree: newTree,
+            tree: { ...state.rows.tree, [id]: { ...node, expanded: isExpanded } },
           },
         };
       });

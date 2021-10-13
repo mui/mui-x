@@ -188,7 +188,7 @@ export const useGridSorting = (
     // Group the rows by parent
     const groupedByParentRows = new Map<GridRowId | null, GridRowConfigTreeNode[]>([[null, []]]);
     Object.values(rowTree).forEach((node) => {
-      const isExpanded = node.parent == null || rowTree[node.parent].expanded
+      const isExpanded = node.parent == null || rowTree[node.parent].expanded;
 
       if (isExpanded) {
         let group = groupedByParentRows.get(node.parent);
@@ -201,24 +201,27 @@ export const useGridSorting = (
     });
 
     // Apply the sorting to each list of children
-    const sortedGroupedByParentRows = new Map<GridRowId | null, GridRowId[]>()
+    const sortedGroupedByParentRows = new Map<GridRowId | null, GridRowId[]>();
     groupedByParentRows.forEach((rowList, parent) => {
       const depth = rowList[0].depth;
-      if (depth > 0 && props.disableChildrenSorting || comparatorList.length === 0) {
-        sortedGroupedByParentRows.set(parent, rowList.map(row => row.id));
+      if ((depth > 0 && props.disableChildrenSorting) || comparatorList.length === 0) {
+        sortedGroupedByParentRows.set(
+          parent,
+          rowList.map((row) => row.id),
+        );
       }
 
       const sortedRowList = rowList
-          .map((value) => ({
-            value,
-            params: comparatorList.map((colComparator) =>
-                getSortCellParams(value.id, colComparator.field),
-            ),
-          }))
-          .sort((a, b) => aggregatedComparator(a.params, b.params))
-          .map((row) => row.value.id);
+        .map((value) => ({
+          value,
+          params: comparatorList.map((colComparator) =>
+            getSortCellParams(value.id, colComparator.field),
+          ),
+        }))
+        .sort((a, b) => aggregatedComparator(a.params, b.params))
+        .map((row) => row.value.id);
 
-      sortedGroupedByParentRows.set(parent, sortedRowList)
+      sortedGroupedByParentRows.set(parent, sortedRowList);
     });
 
     // Flatten the sorted lists to have children just after their parent

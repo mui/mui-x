@@ -42,7 +42,6 @@ export const useGridCsvExport = (apiRef: GridApiRef): void => {
         exportedColumns = validColumns.filter((column) => !column.disableExport);
       }
 
-      // TODO: Use a selector with only the ids
       let exportedRowIds = visibleSortedRows.map((el) => el.id);
       if (selection.length) {
         exportedRowIds = exportedRowIds.filter((id) => selection.includes(id));
