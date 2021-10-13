@@ -1,15 +1,15 @@
 import * as React from 'react';
-import { GridRowConfigTree, GridRowId, GridRowsLookup } from '../../../models/gridRows';
+import { GridRowConfigTree, GridRowsLookup } from '../../../models/gridRows';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridComponentProps } from '../../../GridComponentProps';
-import { GridColumnsPreProcessing } from '../../root/columnsPreProcessing';
+import { GridColumnsPreProcessing } from '../../core/columnsPreProcessing';
 import { GRID_TREE_DATA_GROUP_COL_DEF } from './gridTreeDataGroupColDef';
-import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
+import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { GridEvents } from '../../../constants';
 import { GridCellParams, GridColDef, MuiEvent } from '../../../models';
 import { isSpaceKey } from '../../../utils/keyboardUtils';
 import { useFirstRender } from '../../utils/useFirstRender';
-import { GridRowGroupingPreProcessing } from '../../root/rowGroupsPerProcessing';
+import { GridRowGroupingPreProcessing } from '../../core/rowGroupsPerProcessing';
 import { GridNodeNameToIdTree, insertLeafInTree } from '../rows/gridRowsUtils';
 
 /**

@@ -22,7 +22,7 @@ import {
   gridRowTreeSelector,
   gridRowIdsSelector,
 } from './gridRowsSelector';
-import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
+import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 
 export type GridRowsInternalCacheState = Omit<
   GridRowsState,

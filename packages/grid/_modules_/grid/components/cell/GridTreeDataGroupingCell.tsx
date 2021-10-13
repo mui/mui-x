@@ -4,7 +4,7 @@ import { makeStyles } from '@mui/styles';
 import IconButton from '@mui/material/IconButton';
 import Box from '@mui/material/Box';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { useGridApiContext } from '../../hooks/root/useGridApiContext';
+import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { GridRenderCellParams } from '../../models/params/gridCellParams';
 
 const useStyles = makeStyles({
