@@ -2,7 +2,7 @@ import { ruRU as ruRUCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
-export const ruRUGrid: Partial<GridLocaleText> = {
+const ruRUGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Нет строк',
   errorOverlayDefaultLabel: 'Обнаружена ошибка.',

@@ -1,16 +1,15 @@
 import * as React from 'react';
 import { GridComponentProps } from '../../../GridComponentProps';
 import { GridApiRef } from '../../../models/api/gridApiRef';
-import { GridDisableVirtualizationApi } from '../../../models/api/gridDisableVirtualizationApi';
-import { useGridApiMethod } from '../../root/useGridApiMethod';
-import { useNativeEventListener } from '../../root/useNativeEventListener';
+import { useGridNativeEventListener } from '../../utils/useGridNativeEventListener';
 import { useGridScrollFn } from '../../utils/useGridScrollFn';
 import { visibleGridColumnsSelector } from '../columns/gridColumnsSelector';
-import { useGridSelector } from '../core';
-import { useGridState } from '../core/useGridState';
-import { visibleGridRowCountSelector } from '../filter/gridFilterSelector';
+import { useGridSelector, useGridState } from '../../utils';
 import { gridPaginationSelector } from '../pagination/gridPaginationSelector';
-import { gridContainerSizesSelector } from '../../root/gridContainerSizesSelector';
+import { gridContainerSizesSelector } from '../container/gridContainerSizesSelector';
+import { visibleGridRowCountSelector } from '../filter/gridFilterSelector';
+import { GridDisableVirtualizationApi } from '../../../models/api/gridDisableVirtualizationApi';
+import { useGridApiMethod } from '../../utils/useGridApiMethod';
 
 /**
  * @requires useGridPage (state)
@@ -112,7 +111,7 @@ export const useGridNoVirtualization = (
     syncState();
   }, [props.disableVirtualization, scrollTo, windowRef, syncState]);
 
-  useNativeEventListener(apiRef, windowRef!, 'scroll', handleScroll, { passive: true });
+  useGridNativeEventListener(apiRef, windowRef!, 'scroll', handleScroll, { passive: true });
 
   const disableVirtualizationApi: GridDisableVirtualizationApi = {
     UNSTABLE_disableVirtualization: disableVirtualization,

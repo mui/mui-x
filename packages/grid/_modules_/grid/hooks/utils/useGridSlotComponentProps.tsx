@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { useGridApiContext } from '../root/useGridApiContext';
+import { useGridApiContext } from './useGridApiContext';
 import { GridSlotComponentProps } from '../../models/params/gridSlotComponentProps';
-import { visibleGridColumnsSelector } from './columns/gridColumnsSelector';
-import { useGridSelector } from './core/useGridSelector';
-import { useGridState } from './core/useGridState';
-import { unorderedGridRowModelsSelector } from './rows/gridRowsSelector';
+import { visibleGridColumnsSelector } from '../features/columns/gridColumnsSelector';
+import { useGridSelector } from './useGridSelector';
+import { useGridState } from './useGridState';
+import { unorderedGridRowModelsSelector } from '../features/rows/gridRowsSelector';
 
 export const useGridSlotComponentProps = () => {
   const apiRef = useGridApiContext();

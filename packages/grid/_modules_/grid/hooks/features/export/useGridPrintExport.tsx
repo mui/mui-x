@@ -1,12 +1,10 @@
 import * as React from 'react';
 import { ownerDocument } from '@mui/material/utils';
 import { GridApiRef } from '../../../models/api/gridApiRef';
-import { useGridApiMethod } from '../../root/useGridApiMethod';
 import { GridPrintExportApi } from '../../../models/api/gridPrintExportApi';
 import { useGridLogger } from '../../utils/useGridLogger';
-import { useGridSelector } from '../core/useGridSelector';
 import { visibleGridRowCountSelector } from '../filter/gridFilterSelector';
-import { useGridState } from '../core/useGridState';
+
 import { GridComponentProps } from '../../../GridComponentProps';
 import { GridPrintExportOptions } from '../../../models/gridExport';
 import { allGridColumnsSelector } from '../columns/gridColumnsSelector';
@@ -15,6 +13,9 @@ import {
   gridDensityHeaderHeightSelector,
 } from '../density/densitySelector';
 import { gridClasses } from '../../../gridClasses';
+import { useGridState } from '../../utils/useGridState';
+import { useGridSelector } from '../../utils/useGridSelector';
+import { useGridApiMethod } from '../../utils/useGridApiMethod';
 
 type PrintWindowOnLoad = (
   printWindow: HTMLIFrameElement,

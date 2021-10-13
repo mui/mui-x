@@ -1,7 +1,7 @@
 import { createSelector } from 'reselect';
 import { GridFilterItem } from '../../../models/gridFilterItem';
 import { GridRowId, GridRowModel } from '../../../models/gridRows';
-import { GridState } from '../core/gridState';
+import { GridState } from '../../../models/gridState';
 import { gridRowCountSelector } from '../rows/gridRowsSelector';
 import { sortedGridRowsSelector } from '../sorting/gridSortingSelector';
 import { gridColumnLookupSelector } from '../columns/gridColumnsSelector';

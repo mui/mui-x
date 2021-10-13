@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { GridEvents } from '../../../constants/eventsConstants';
-import { GridApiRef } from '../../../models/api/gridApiRef';
-import { GridState } from './gridState';
+import { GridEvents } from '../../constants/eventsConstants';
+import { GridApiRef } from '../../models/api/gridApiRef';
+import { GridState } from '../../models/gridState';
 import { useGridApi } from './useGridApi';
 
 export const useGridState = (
