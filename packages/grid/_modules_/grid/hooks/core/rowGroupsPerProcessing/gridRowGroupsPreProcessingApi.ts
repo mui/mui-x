@@ -1,6 +1,6 @@
 import { GridRowConfigTree, GridRowId, GridRowsLookup } from '../../../models/gridRows';
 
-export type RwoGroupParams = {
+export type RowGroupParams = {
   ids: GridRowId[];
   idRowsLookup: GridRowsLookup;
 };
@@ -11,7 +11,7 @@ export interface GridRowGroupingResult {
   idRowsLookup: GridRowsLookup;
 }
 
-export type GridRowGroupingPreProcessing = (params: RwoGroupParams) => GridRowGroupingResult | null;
+export type GridRowGroupingPreProcessing = (params: RowGroupParams) => GridRowGroupingResult | null;
 
 export interface GridRowGroupsPreProcessingApi {
   /**
@@ -20,7 +20,7 @@ export interface GridRowGroupsPreProcessingApi {
    * @param {GridRowGroupingPreProcessing} columnsPreProcessing Pre-processing to register.
    * @ignore - do not document
    */
-  registerRowGroupsBuilder: (
+  UNSTABLE_registerRowGroupsBuilder: (
     processingName: string,
     groupingFunction: GridRowGroupingPreProcessing | null,
   ) => void;
@@ -32,5 +32,5 @@ export interface GridRowGroupsPreProcessingApi {
    * @returns {GridRowGroupingResult} The grouped rows
    * @ignore - do not document
    */
-  groupRows: (params: RwoGroupParams) => GridRowGroupingResult;
+  UNSTABLE_groupRows: (params: RowGroupParams) => GridRowGroupingResult;
 }
