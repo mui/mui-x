@@ -17,13 +17,13 @@ The DataGrid allows the data to be exported to CSV by composing a [toolbar](/com
 By default, the CSV will only contain the visible columns of the grid.
 There are two ways to include or hide other columns:
 
-1. Define the exact columns to be exported with the `fields` attribute in the [`csvOptions`](/api/data-grid/grid-export-csv-options/) prop of [`GridToolbarExport`](/components/data-grid/components/#toolbar).
+1. Define the exact columns to be exported with the `fields` attribute in the [`csvOptions`](/api/data-grid/grid-csv-export-options/) prop of [`GridToolbarExport`](/components/data-grid/components/#toolbar).
 
 ```jsx
 <GridToolbarExport csvOptions={{ fields: ['id', 'name'] }} />
 ```
 
-Set `allColumns` in [`csvOptions`](/api/data-grid/grid-export-csv-options/) to true to include hidden columns, instead of only the visible ones.
+Set `allColumns` in [`csvOptions`](/api/data-grid/grid-csv-export-options/) to true to include hidden columns, instead of only the visible ones.
 
 ```jsx
 <GridToolbarExport csvOptions={{ allColumns: true }} />
@@ -58,13 +58,59 @@ You can export data using the imperative API available in DataGridPro:
 
 {{"demo": "pages/components/data-grid/export/CsvExportApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
 
-## 🚧 Print
-
-> ⚠️ This feature isn't implemented yet. It's coming.
->
-> 👍 Upvote [issue #200](https://github.com/mui-org/material-ui-x/issues/200) if you want to see it land faster.
+## Print
 
 Optimization of the layout of the grid for print mode. It can also be used to export to PDF.
+
+The DataGrid provides the ability to optimize of the layout of the grid for print mode. It can also be used to export to PDF. You can print the grid by composing a [toolbar](/components/data-grid/components/#toolbar) with the `GridToolbarExport` component. Use the `components` prop to assign the custom toolbar.
+
+{{"demo": "pages/components/data-grid/export/ExportSelectorGrid.js", "bg": "inline"}}
+
+### Customize printed columns
+
+By default, when printing the grid will only contain the visible columns of the grid.
+There are two ways to include or hide other columns:
+
+1. Define the exact columns to be exported with the `fields` attribute in the [`printOptions`](/api/data-grid/grid-print-export-options/) prop of [`GridToolbarExport`](/components/data-grid/components/#toolbar).
+
+```jsx
+<GridToolbarExport printOptions={{ fields: ['id', 'name'] }} />
+```
+
+Set `allColumns` in [`printOptions`](/api/data-grid/grid-print-export-options/) to true to include hidden columns, instead of only the visible ones.
+
+```jsx
+<GridToolbarExport printOptions={{ allColumns: true }} />
+```
+
+2. Set the `disableExport` attribute to true in each `GridColDef`.
+
+```jsx
+<DataGrid columns={[{ field: 'id', disableExport: true }, { field: 'brand' }]} />
+```
+
+### Export custom rendered cells
+
+When the value of a field is an object or a `renderCell` is provided, printing might not display the value correctly.
+You can provide a [`valueFormatter`](/components/data-grid/columns/#value-formatter) with a string representation to be used.
+
+```jsx
+<DataGrid
+  columns={[
+    {
+      field: 'progress',
+      valueFormatter: ({ value }) => `${value * 100}%`,
+      renderCell: ({ value }) => <ProgressBar value={value} />,
+    },
+  ]}
+/>
+```
+
+### apiRef [<span class="pro"></span>](https://mui.com/store/items/material-ui-pro/)
+
+You can export data using the imperative API available in XGrid:
+
+{{"demo": "pages/components/data-grid/export/PrintExportApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
 
 ## 🚧 Excel export [<span class="premium"></span>](https://mui.com/store/items/material-ui-pro/)
 
