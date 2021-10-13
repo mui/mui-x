@@ -5,7 +5,7 @@ import {
   GridInputComponentProps,
 } from '../../_modules_/grid/GridComponentProps';
 import { useThemeProps } from '../../_modules_/grid/utils/material-ui-utils';
-import { useProcessedProps } from '../../_modules_/grid/hooks/utils/useProcessedProps';
+import { useGridProcessedProps } from '../../_modules_/grid/hooks/utils/useGridProcessedProps';
 
 type ForcedPropsKey = Exclude<keyof GridInputComponentProps, keyof DataGridProps> | 'pagination';
 
@@ -41,5 +41,5 @@ export const useDataGridProps = (inProps: DataGridProps): GridComponentProps => 
     [themedProps],
   );
 
-  return useProcessedProps(props);
+  return useGridProcessedProps(props);
 };

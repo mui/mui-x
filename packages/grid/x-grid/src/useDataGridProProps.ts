@@ -5,7 +5,7 @@ import {
 } from '../../_modules_/grid/GridComponentProps';
 import { useThemeProps } from '../../_modules_/grid/utils/material-ui-utils';
 import { DataGridProProps } from './DataGridProProps';
-import { useProcessedProps } from '../../_modules_/grid/hooks/utils/useProcessedProps';
+import { useGridProcessedProps } from '../../_modules_/grid/hooks/utils/useGridProcessedProps';
 
 export const useDataGridProProps = (inProps: DataGridProProps): GridComponentProps => {
   const themedProps = useThemeProps({ props: inProps, name: 'MuiDataGrid' });
@@ -19,5 +19,5 @@ export const useDataGridProProps = (inProps: DataGridProProps): GridComponentPro
     [themedProps],
   );
 
-  return useProcessedProps(props);
+  return useGridProcessedProps(props);
 };

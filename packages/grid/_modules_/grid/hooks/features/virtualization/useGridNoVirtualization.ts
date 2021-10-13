@@ -1,13 +1,12 @@
 import * as React from 'react';
 import { GridComponentProps } from '../../../GridComponentProps';
 import { GridApiRef } from '../../../models/api/gridApiRef';
-import { useNativeEventListener } from '../../root/useNativeEventListener';
+import { useGridNativeEventListener } from '../../utils/useGridNativeEventListener';
 import { useGridScrollFn } from '../../utils/useGridScrollFn';
 import { visibleGridColumnsSelector } from '../columns/gridColumnsSelector';
-import { useGridSelector } from '../core';
-import { useGridState } from '../core/useGridState';
+import { useGridSelector, useGridState } from '../../utils';
 import { gridPaginationSelector } from '../pagination/gridPaginationSelector';
-import { gridContainerSizesSelector } from '../../root/gridContainerSizesSelector';
+import { gridContainerSizesSelector } from '../container/gridContainerSizesSelector';
 
 /**
  * @requires useGridPage (state)
@@ -85,5 +84,5 @@ export const useGridNoVirtualization = (
     syncState();
   }, [props.disableVirtualization, scrollTo, windowRef, syncState]);
 
-  useNativeEventListener(apiRef, windowRef!, 'scroll', handleScroll, { passive: true });
+  useGridNativeEventListener(apiRef, windowRef!, 'scroll', handleScroll, { passive: true });
 };
