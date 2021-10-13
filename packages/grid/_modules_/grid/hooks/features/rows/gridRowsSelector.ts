@@ -20,4 +20,4 @@ export const gridRowsLookupSelector = createSelector(
 
 export const gridRowTreeSelector = createSelector(gridRowsStateSelector, (rows) => rows.tree);
 
-export const gridRowIdsSelector = createSelector(gridRowsStateSelector, rows => rows.rowIds)
+export const gridRowIdsSelector = createSelector(gridRowsStateSelector, (rows) => rows.rowIds);
