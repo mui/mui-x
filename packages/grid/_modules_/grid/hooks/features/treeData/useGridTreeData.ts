@@ -26,7 +26,7 @@ export const useGridTreeData = (
 ) => {
   const updateColumnsPreProcessing = React.useCallback(() => {
     if (!props.treeData) {
-      apiRef.current.registerColumnPreProcessing('treeData', null);
+      apiRef.current.UNSTABLE_registerColumnPreProcessing('treeData', null);
     } else {
       const addGroupingColumn: GridColumnsPreProcessing = (columns) => {
         const index = columns[0].type === 'checkboxSelection' ? 1 : 0;
@@ -39,7 +39,7 @@ export const useGridTreeData = (
         return [...columns.slice(0, index), groupingColumn, ...columns.slice(index)];
       };
 
-      apiRef.current.registerColumnPreProcessing('treeData', addGroupingColumn);
+      apiRef.current.UNSTABLE_registerColumnPreProcessing('treeData', addGroupingColumn);
     }
   }, [apiRef, props.treeData, props.groupingColDef]);
 
