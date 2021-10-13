@@ -21,7 +21,7 @@ import { GridStateApi } from './gridStateApi';
 import { GridVirtualizationApi } from './gridVirtualizationApi';
 import { GridLoggerApi } from './gridLoggerApi';
 import { GridScrollApi } from './gridScrollApi';
-import type { GridRowGroupsPreProcessingApi } from '../../hooks/root/rowGroupsPerProcessing';
+import type { GridRowGroupsPreProcessingApi } from '../../hooks/core/rowGroupsPerProcessing';
 
 /**
  * The full grid API.

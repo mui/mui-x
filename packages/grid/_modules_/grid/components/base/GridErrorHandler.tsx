@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { useGridState } from '../../hooks/features/core/useGridState';
-import { useGridApiContext } from '../../hooks/root/useGridApiContext';
+import { useGridState } from '../../hooks/utils/useGridState';
+import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridLogger } from '../../hooks/utils/useGridLogger';
 import { GridMainContainer } from '../containers/GridMainContainer';
 import { ErrorBoundary } from '../ErrorBoundary';
