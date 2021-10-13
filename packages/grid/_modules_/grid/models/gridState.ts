@@ -10,13 +10,22 @@ import type { GridColumnReorderState } from '../hooks/features/columnReorder/col
 import type { GridColumnResizeState } from '../hooks/features/columnResize/columnResizeState';
 import type { GridDensityState } from '../hooks/features/density/densityState';
 import type { GridFocusState, GridTabIndexState } from '../hooks/features/focus/gridFocusState';
-import type { GridPreferencePanelState, GridPreferencePanelInitialState } from '../hooks/features/preferencesPanel/gridPreferencePanelState';
+import type {
+  GridPreferencePanelState,
+  GridPreferencePanelInitialState,
+} from '../hooks/features/preferencesPanel/gridPreferencePanelState';
 import type { GridRowsState } from '../hooks/features/rows/gridRowsState';
 import type { GridSelectionModel } from './gridSelectionModel';
-import type { GridSortingState, GridSortingInitialState } from '../hooks/features/sorting/gridSortingState';
+import type {
+  GridSortingState,
+  GridSortingInitialState,
+} from '../hooks/features/sorting/gridSortingState';
 import type { GridRenderingState } from '../hooks/features/virtualization/renderingState';
 import type { GridPaginationState } from '../hooks/features/pagination/gridPaginationState';
-import type { GridFilterState, GridFilterInitialState } from '../hooks/features/filter/gridFilterState';
+import type {
+  GridFilterState,
+  GridFilterInitialState,
+} from '../hooks/features/filter/gridFilterState';
 
 export interface GridState {
   rows: GridRowsState;
