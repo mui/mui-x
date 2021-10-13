@@ -89,7 +89,7 @@ const getRowsStateFromCache = (
 ): GridRowsState => {
   const { rowIds, idRowsLookup, propRowCount = 0 } = rowsCache.state;
 
-  const groupingResponse = apiRef.current.groupRows({
+  const groupingResponse = apiRef.current.UNSTABLE_groupRows({
     idRowsLookup,
     ids: rowIds,
   });

@@ -45,7 +45,7 @@ export const useGridTreeData = (
 
   const updateRowGrouping = React.useCallback(() => {
     if (!props.treeData) {
-      return apiRef.current.registerRowGroupsBuilder('treeData', null);
+      return apiRef.current.UNSTABLE_registerRowGroupsBuilder('treeData', null);
     }
 
     const groupRows: GridRowGroupingPreProcessing = (params) => {
@@ -81,7 +81,7 @@ export const useGridTreeData = (
       };
     };
 
-    return apiRef.current.registerRowGroupsBuilder('treeData', groupRows);
+    return apiRef.current.UNSTABLE_registerRowGroupsBuilder('treeData', groupRows);
   }, [apiRef, props.getTreeDataPath, props.treeData, props.defaultGroupingExpansionDepth]);
 
   useFirstRender(() => {
