@@ -3,7 +3,7 @@ import { visibleGridColumnsSelector } from '../hooks/features/columns/gridColumn
 import { useGridSelector } from '../hooks/utils/useGridSelector';
 import { gridDensityRowHeightSelector } from '../hooks/features/density/densitySelector';
 import {
-  gridSortedVisibleRowEntriesSelector,
+  // gridSortedVisibleRowEntriesSelector,
   gridSortedVisibleTopLevelRowEntriesSelector,
 } from '../hooks/features/filter/gridFilterSelector';
 import {
@@ -23,7 +23,6 @@ import {
   gridScrollBarSizeSelector,
 } from '../hooks/features/container/gridContainerSizesSelector';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
-import { GridRowId } from '../models';
 
 type ViewportType = React.ForwardRefExoticComponent<React.RefAttributes<HTMLDivElement>>;
 
@@ -39,7 +38,7 @@ export const GridViewport: ViewportType = React.forwardRef<HTMLDivElement, {}>(
     const cellFocus = useGridSelector(apiRef, gridFocusCellSelector);
     const cellTabIndex = useGridSelector(apiRef, gridTabIndexCellSelector);
     const selection = useGridSelector(apiRef, gridSelectionStateSelector);
-    const visibleSortedRows = useGridSelector(apiRef, gridSortedVisibleRowEntriesSelector);
+    // const visibleSortedRows = useGridSelector(apiRef, gridSortedVisibleRowEntriesSelector);
     const visibleSortedTopLevelRows = useGridSelector(
       apiRef,
       gridSortedVisibleTopLevelRowEntriesSelector,
@@ -70,20 +69,10 @@ export const GridViewport: ViewportType = React.forwardRef<HTMLDivElement, {}>(
         return null;
       }
 
-      const getVisibleRowIndex = (id: GridRowId) =>
-        visibleSortedRows.findIndex((row) => row.id === id);
-
-      const startIndex = getVisibleRowIndex(
-        visibleSortedTopLevelRows[renderState.renderContext.firstRowIdx!].id,
+      const renderedRows = visibleSortedTopLevelRows.slice(
+        renderState.renderContext.firstRowIdx!,
+        renderState.renderContext.lastRowIdx! + 1,
       );
-
-      const isLastTopLevelRowVisible =
-        renderState.renderContext.lastRowIdx! > visibleSortedTopLevelRows.length;
-      const endIndex = isLastTopLevelRowVisible
-        ? visibleSortedRows.length - 1
-        : getVisibleRowIndex(visibleSortedTopLevelRows[renderState.renderContext.lastRowIdx!].id);
-
-      const renderedRows = visibleSortedRows.slice(startIndex, endIndex);
 
       const renderedColumns = visibleColumns.slice(
         renderState.renderContext.firstColIdx!,

@@ -203,9 +203,13 @@ export const useGridSorting = (
     // Apply the sorting to each list of children
     const sortedGroupedByParentRows = new Map<GridRowId | null, GridRowId[]>();
     groupedByParentRows.forEach((rowList, parent) => {
+      if (rowList.length === 0) {
+        return sortedGroupedByParentRows.set(parent, []);
+      }
+
       const depth = rowList[0].depth;
       if ((depth > 0 && props.disableChildrenSorting) || comparatorList.length === 0) {
-        sortedGroupedByParentRows.set(
+        return sortedGroupedByParentRows.set(
           parent,
           rowList.map((row) => row.id),
         );
@@ -221,7 +225,7 @@ export const useGridSorting = (
         .sort((a, b) => aggregatedComparator(a.params, b.params))
         .map((row) => row.value.id);
 
-      sortedGroupedByParentRows.set(parent, sortedRowList);
+      return sortedGroupedByParentRows.set(parent, sortedRowList);
     });
 
     // Flatten the sorted lists to have children just after their parent
