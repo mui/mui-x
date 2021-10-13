@@ -5,12 +5,13 @@ import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridFocusApi } from '../../../models/api/gridFocusApi';
 import { GridRowId } from '../../../models/gridRows';
 import { GridCellParams } from '../../../models/params/gridCellParams';
-import { useGridApiMethod } from '../../root/useGridApiMethod';
-import { useGridState } from '../core/useGridState';
+import { useGridApiMethod } from '../../utils/useGridApiMethod';
+import { useGridState } from '../../utils/useGridState';
 import { useGridLogger } from '../../utils/useGridLogger';
-import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
+import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { GridComponentProps } from '../../../GridComponentProps';
 import { isNavigationKey } from '../../../utils/keyboardUtils';
+import { useGridStateInit } from '../../utils/useGridStateInit';
 
 /**
  * @requires useGridParamsApi (method)
@@ -19,6 +20,12 @@ import { isNavigationKey } from '../../../utils/keyboardUtils';
  */
 export const useGridFocus = (apiRef: GridApiRef, props: Pick<GridComponentProps, 'rows'>): void => {
   const logger = useGridLogger(apiRef, 'useGridFocus');
+
+  useGridStateInit(apiRef, (state) => ({
+    ...state,
+    focus: { cell: null, columnHeader: null },
+    tabIndex: { cell: null, columnHeader: null },
+  }));
   const [, setGridState, forceUpdate] = useGridState(apiRef);
   const lastClickedCell = React.useRef<GridCellParams | null>(null);
 

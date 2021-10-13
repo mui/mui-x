@@ -1,6 +1,6 @@
 import { createSelector } from 'reselect';
 import { GridRowId, GridRowModel } from '../../../models/gridRows';
-import { GridState } from '../core/gridState';
+import { GridState } from '../../../models/gridState';
 import { GridRowsState } from './gridRowsState';
 
 export type GridRowsLookup = Record<GridRowId, GridRowModel>;

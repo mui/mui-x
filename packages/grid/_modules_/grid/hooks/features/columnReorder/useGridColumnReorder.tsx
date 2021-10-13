@@ -6,11 +6,12 @@ import { getDataGridUtilityClass } from '../../../gridClasses';
 import { GridColumnHeaderParams } from '../../../models/params/gridColumnHeaderParams';
 import { GridCellParams } from '../../../models/params/gridCellParams';
 import { CursorCoordinates } from '../../../models/cursorCoordinates';
-import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
-import { useGridSelector } from '../core/useGridSelector';
-import { useGridState } from '../core/useGridState';
+import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
+import { useGridSelector } from '../../utils/useGridSelector';
+import { useGridState } from '../../utils/useGridState';
 import { gridColumnReorderDragColSelector } from './columnReorderSelector';
 import { GridComponentProps } from '../../../GridComponentProps';
+import { useGridStateInit } from '../../utils/useGridStateInit';
 import { composeClasses } from '../../../utils/material-ui-utils';
 
 const CURSOR_MOVE_DIRECTION_LEFT = 'left';
@@ -52,6 +53,11 @@ export const useGridColumnReorder = (
   props: Pick<GridComponentProps, 'disableColumnReorder' | 'classes'>,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridColumnReorder');
+
+  useGridStateInit(apiRef, (state) => ({
+    ...state,
+    columnReorder: { dragCol: '' },
+  }));
 
   const [, setGridState, forceUpdate] = useGridState(apiRef);
   const dragColField = useGridSelector(apiRef, gridColumnReorderDragColSelector);
