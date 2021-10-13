@@ -13,7 +13,7 @@ import { filterableGridColumnsIdsSelector } from '../columns/gridColumnsSelector
 import { useGridState } from '../../utils/useGridState';
 import { GridPreferencePanelsValue } from '../preferencesPanel/gridPreferencePanelsValue';
 import { gridSortedRowIdsSelector } from '../sorting/gridSortingSelector';
-import { getDefaultGridFilterModel, getEmptyVisibleRows } from './gridFilterState';
+import { getDefaultGridFilterModel } from './gridFilterState';
 import { GridFilterModel } from '../../../models/gridFilterModel';
 import {
   gridVisibleRowsLookupSelector,
@@ -64,7 +64,8 @@ export const useGridFilter = (
       ...state,
       filter: {
         filterModel: props.filterModel ?? getDefaultGridFilterModel(),
-        ...getEmptyVisibleRows(),
+        visibleRowsLookup: {},
+        visibleRows: [],
       },
     };
   });
