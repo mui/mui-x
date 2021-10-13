@@ -6,7 +6,7 @@ import {
   GridRowGroupingResult,
 } from './gridRowGroupsPreProcessingApi';
 import { GridEvents } from '../../../constants/eventsConstants';
-import { useGridApiMethod } from '../useGridApiMethod';
+import { useGridApiMethod } from '../../utils/useGridApiMethod';
 
 const getFlatRowTree: GridRowGroupingPreProcessing = (params) => ({
   tree: new Map(params.ids.map((id) => [id.toString(), { id, depth: 0 }])),
