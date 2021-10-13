@@ -3,6 +3,12 @@ import { expect } from 'chai';
 import * as path from 'path';
 import * as playwright from 'playwright';
 
+function sleep(timeoutMS) {
+  return new Promise((resolve) => {
+    setTimeout(() => resolve(), timeoutMS);
+  });
+}
+
 async function main() {
   const baseUrl = 'http://localhost:5001';
   const screenshotDir = path.resolve(__dirname, './screenshots/chrome');
@@ -95,13 +101,47 @@ async function main() {
         // Move cursor offscreen to not trigger unwanted hover effects.
         page.mouse.move(0, 0);
 
-        const testcase = await page.waitForSelector(
-          '[data-testid="testcase"]:not([aria-busy="true"])',
-        );
-
         const screenshotPath = path.resolve(screenshotDir, `${route.replace(baseUrl, '.')}.png`);
         await fse.ensureDir(path.dirname(screenshotPath));
-        await testcase.screenshot({ path: screenshotPath, type: 'png' });
+
+        let testcase;
+        if (pathURL === '/stories-grid-toolbar/PrintExportSnap') {
+          // Capture the content of the print dialog. Because there is no easy way to navigate the.
+          // print window/dialog with playwrite a hacky aproach is needed.
+          this.timeout(6000);
+          let printGrid;
+          // Click the export button in the toolbar.
+          await page.$eval(`button[aria-label="Export"]`, (exportButton) => {
+            exportButton.click();
+          });
+          // Click the print export option from the export menu in the toolbar.
+          await page.$eval(`li[role="menuitem"]:last-child`, (printButton) => {
+            printButton.click();
+          });
+          // Delay the main thread with some time to alow the iframe content to be loaded.
+          await sleep(2000);
+          // Grab the content of the print iframe.
+          await page.$eval(`#grid-print-window`, (printWindow) => {
+            printGrid = printWindow.contentWindow.document.querySelector('[role="grid"]');
+          });
+          // Append the content of the print iframe to a element in the page.
+          await page.$eval(`#grid-print-container`, (printContainer) => {
+            printContainer.appendChild(printGrid);
+          });
+          // Because there is now other way of closing the iframe, set the src back to ''.
+          // This will close the print dialog/window. If not done the test will timeout.
+          await page.$eval(`#grid-print-window`, (printWindow) => {
+            printWindow.src = '';
+          });
+
+          // Select the element from the page that has the print iframe contant and
+          // make the screenshot.
+          testcase = await page.waitForSelector('#grid-print-container');
+          await testcase.screenshot({ path: screenshotPath, type: 'png' });
+        } else {
+          testcase = await page.waitForSelector('[data-testid="testcase"]:not([aria-busy="true"])');
+          await testcase.screenshot({ path: screenshotPath, type: 'png' });
+        }
       });
 
       it(`should have no errors rendering ${pathURL}`, () => {

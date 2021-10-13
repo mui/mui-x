@@ -27,6 +27,8 @@ async function generateProptypes(program: ttp.ts.Program, sourceFile: string) {
         'renderState',
         'cellFocus',
         'cellTabIndex',
+        'csvOptions',
+        'printOptions',
         'groupingColDef',
       ];
       if (propsToNotResolve.includes(name)) {

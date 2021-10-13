@@ -15,6 +15,7 @@ export default {
     },
   },
 };
+
 export const DensitySelectorCompact = () => {
   const data = useData(100, 50);
 
@@ -31,6 +32,7 @@ export const DensitySelectorCompact = () => {
     </div>
   );
 };
+
 export const DensitySelectorComfortable = () => {
   const data = useData(100, 50);
 
@@ -47,19 +49,46 @@ export const DensitySelectorComfortable = () => {
     </div>
   );
 };
-export const CsvExport = () => {
-  const data = useData(100, 50);
+
+export const Export = () => {
+  const { data } = useDemoData({
+    dataSet: 'Commodity',
+    rowLength: 100,
+    maxColumns: 60,
+  });
 
   return (
     <div style={{ height: 600 }}>
       <DataGridPro
-        columns={data.columns}
-        rows={data.rows}
+        {...data}
         checkboxSelection
         components={{
           Toolbar: GridToolbar,
         }}
       />
+    </div>
+  );
+};
+
+export const PrintExportSnap = () => {
+  const { data } = useDemoData({
+    dataSet: 'Commodity',
+    rowLength: 10,
+    maxColumns: 5,
+  });
+
+  return (
+    <div style={{ width: '100%' }}>
+      <div style={{ width: '100%', height: 600 }}>
+        <DataGrid
+          {...data}
+          checkboxSelection
+          components={{
+            Toolbar: GridToolbar,
+          }}
+        />
+      </div>
+      <div id="grid-print-container" />
     </div>
   );
 };

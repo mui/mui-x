@@ -4,9 +4,8 @@ import {
   GridStateColDef,
   GridRowId,
 } from '../../../../models';
-import { GridExportCsvDelimiter } from '../../../../models/gridExport';
 
-const serialiseCellValue = (value: any, delimiterCharacter: GridExportCsvDelimiter) => {
+const serialiseCellValue = (value: any, delimiterCharacter: string) => {
   if (typeof value === 'string') {
     const formattedValue = value.replace(/"/g, '""');
     return formattedValue.includes(delimiterCharacter) ? `"${formattedValue}"` : formattedValue;
@@ -19,7 +18,7 @@ export function serialiseRow(
   id: GridRowId,
   columns: GridStateColDef[],
   getCellParams: (id: GridRowId, field: string) => GridCellParams,
-  delimiterCharacter: GridExportCsvDelimiter,
+  delimiterCharacter: string,
 ): Array<string> {
   const mappedRow: string[] = [];
   columns.forEach(
@@ -36,7 +35,7 @@ interface BuildCSVOptions {
   columns: GridStateColDef[];
   rowIds: GridRowId[];
   getCellParams: (id: GridRowId, field: string) => GridCellParams;
-  delimiterCharacter: GridExportCsvDelimiter;
+  delimiterCharacter: string;
   includeHeaders?: boolean;
 }
 
