@@ -1,4 +1,4 @@
-import { GridState } from '../hooks/features/core/gridState';
+import { GridState } from './gridState';
 import { GridCallbackDetails } from './api/gridCallbackDetails';
 
 export interface GridControlStateItem<TModel> {

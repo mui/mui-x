@@ -1,11 +1,11 @@
 import * as React from 'react';
-import { GridEvents } from '../../../constants/eventsConstants';
-import { GridApiRef } from '../../../models/api/gridApiRef';
-import { GridApi } from '../../../models/api/gridApi';
-import { isFunction } from '../../../utils/utils';
-import { useGridApiMethod } from '../../root/useGridApiMethod';
-import { useGridLogger } from '../../utils/useGridLogger';
-import { GridState } from './gridState';
+import { GridEvents } from '../../constants/eventsConstants';
+import { GridApiRef } from '../../models/api/gridApiRef';
+import { GridApi } from '../../models/api/gridApi';
+import { isFunction } from '../../utils/utils';
+import { useGridApiMethod } from './useGridApiMethod';
+import { useGridLogger } from './useGridLogger';
+import { GridState } from '../../models/gridState';
 
 export const useGridApi = (apiRef: GridApiRef): GridApi => {
   const logger = useGridLogger(apiRef, 'useGridApi');

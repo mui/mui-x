@@ -1,12 +1,10 @@
 import * as React from 'react';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { buildCSV } from '../export/serializers/csvSerializer';
-import { useGridSelector } from '../core/useGridSelector';
 import { visibleGridColumnsSelector } from '../columns/gridColumnsSelector';
-import { gridCheckboxSelectionColDef } from '../../../models/colDef';
+import { GRID_CHECKBOX_SELECTION_COL_DEF } from '../../../models/colDef';
 import { GridClipboardApi } from '../../../models/api';
-import { useGridApiMethod } from '../../root/useGridApiMethod';
-import { useNativeEventListener } from '../../root';
+import { useGridApiMethod, useGridNativeEventListener, useGridSelector } from '../../utils';
 
 function writeToClipboardPolyfill(data: string) {
   const span = document.createElement('span');
@@ -42,7 +40,7 @@ export const useGridClipboard = (apiRef: GridApiRef): void => {
     (includeHeaders = false) => {
       const selectedRows = apiRef.current.getSelectedRows();
       const filteredColumns = visibleColumns.filter(
-        (column) => column.field !== gridCheckboxSelectionColDef.field,
+        (column) => column.field !== GRID_CHECKBOX_SELECTION_COL_DEF.field,
       );
 
       if (selectedRows.size === 0 || filteredColumns.length === 0) {
@@ -86,7 +84,7 @@ export const useGridClipboard = (apiRef: GridApiRef): void => {
     [apiRef],
   );
 
-  useNativeEventListener(apiRef, apiRef.current.rootElementRef!, 'keydown', handleKeydown);
+  useGridNativeEventListener(apiRef, apiRef.current.rootElementRef!, 'keydown', handleKeydown);
 
   const clipboardApi: GridClipboardApi = {
     copySelectedRowsToClipboard,
