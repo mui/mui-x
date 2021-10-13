@@ -19,7 +19,7 @@ export const useGridRowGroupsPreProcessing = (apiRef: GridApiRef) => {
   );
 
   const registerRowGroupsBuilder = React.useCallback<
-    GridRowGroupsPreProcessingApi['registerRowGroupsBuilder']
+    GridRowGroupsPreProcessingApi['UNSTABLE_registerRowGroupsBuilder']
   >(
     (processingName, rowGroupingPreProcessing) => {
       const rowGroupingPreProcessingBefore =
@@ -33,28 +33,31 @@ export const useGridRowGroupsPreProcessing = (apiRef: GridApiRef) => {
     [apiRef],
   );
 
-  const groupRows = React.useCallback<GridRowGroupsPreProcessingApi['groupRows']>((...params) => {
-    let response: GridRowGroupingResult | null = null;
-    const preProcessingList = Array.from(rowGroupsPreProcessingRef.current.values());
+  const groupRows = React.useCallback<GridRowGroupsPreProcessingApi['UNSTABLE_groupRows']>(
+    (...params) => {
+      let response: GridRowGroupingResult | null = null;
+      const preProcessingList = Array.from(rowGroupsPreProcessingRef.current.values());
 
-    while (!response && preProcessingList.length) {
-      const preProcessing = preProcessingList.shift();
+      while (!response && preProcessingList.length) {
+        const preProcessing = preProcessingList.shift();
 
-      if (preProcessing) {
-        response = preProcessing(...params);
+        if (preProcessing) {
+          response = preProcessing(...params);
+        }
       }
-    }
 
-    if (!response) {
-      return getFlatRowTree(...params)!;
-    }
+      if (!response) {
+        return getFlatRowTree(...params)!;
+      }
 
-    return response;
-  }, []);
+      return response;
+    },
+    [],
+  );
 
   const rowGroupsPreProcessingApi: GridRowGroupsPreProcessingApi = {
-    registerRowGroupsBuilder,
-    groupRows,
+    UNSTABLE_registerRowGroupsBuilder: registerRowGroupsBuilder,
+    UNSTABLE_groupRows: groupRows,
   };
 
   useGridApiMethod(apiRef, rowGroupsPreProcessingApi, 'GridRowGroupsPreProcessing');
