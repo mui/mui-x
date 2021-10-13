@@ -1,3 +1,4 @@
+import { CSSInterpolation } from '@mui/system';
 import { darken, lighten, alpha, styled } from '@mui/material/styles';
 import { gridClasses } from '../../gridClasses';
 
@@ -10,7 +11,7 @@ export const GridRootStyles = styled('div', {
       ? lighten(alpha(theme.palette.divider, 1), 0.88)
       : darken(alpha(theme.palette.divider, 1), 0.68);
 
-  let gridStyle: any = {
+  let gridStyle: CSSInterpolation = {
     flex: 1,
     boxSizing: 'border-box',
     position: 'relative',

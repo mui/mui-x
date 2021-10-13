@@ -108,7 +108,7 @@ export function GridColumnsPanel() {
               <FormControlLabel
                 control={
                   <Switch
-                    sx={{ marginRight: 1 }}
+                    sx={{ mr: 1 }}
                     checked={!column.hide}
                     onClick={toggleColumn}
                     name={column.field}
