@@ -289,6 +289,12 @@ export const useStyles = makeStyles(
             padding: '0 16px',
             height: '100%',
           },
+          '& ::-webkit-calendar-picker-indicator':
+            theme.palette.mode === 'dark'
+              ? {
+                  filter: 'invert(1)',
+                }
+              : {},
         },
         [`& .${gridClasses.editBooleanCell}`]: {
           display: 'flex',
