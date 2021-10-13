@@ -16,7 +16,6 @@ export interface GridRowConfigTreeNode {
   id: GridRowId;
   children?: GridRowId[];
   parent: GridRowId | null;
-  descendantsCount?: number;
   expanded?: boolean;
   depth: number;
 
