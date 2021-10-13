@@ -1,5 +1,5 @@
 import { createSelector } from 'reselect';
-import { GridState } from '../features/core/gridState';
+import { GridState } from '../../../models/gridState';
 
 export const gridContainerSizesSelector = (state: GridState) => state.containerSizes;
 

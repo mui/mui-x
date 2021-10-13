@@ -54,7 +54,7 @@ const DEFAULT_GRID_ICON_SLOTS_COMPONENTS: GridIconSlotsComponent = {
   MoreActionsIcon: GridMoreVertIcon,
 };
 
-export const DEFAULT_GRID_SLOTS_COMPONENTS: GridSlotsComponent = {
+const DEFAULT_GRID_SLOTS_COMPONENTS: GridSlotsComponent = {
   ...DEFAULT_GRID_ICON_SLOTS_COMPONENTS,
   Cell: GridCell,
   Checkbox: MUICheckbox,
@@ -74,7 +74,7 @@ export const DEFAULT_GRID_SLOTS_COMPONENTS: GridSlotsComponent = {
   Row: GridRow,
 };
 
-export const useProcessedProps = (inProps: GridInputComponentProps) => {
+export const useGridProcessedProps = (inProps: GridInputComponentProps) => {
   const localeText = React.useMemo(
     () => ({ ...GRID_DEFAULT_LOCALE_TEXT, ...inProps.localeText }),
     [inProps.localeText],

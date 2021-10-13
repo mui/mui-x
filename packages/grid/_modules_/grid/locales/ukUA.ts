@@ -2,7 +2,7 @@ import { ukUA as ukUACore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
-export const ukUAGrid: Partial<GridLocaleText> = {
+const ukUAGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Немає рядків',
   // noResultsOverlayLabel: 'No results found.',

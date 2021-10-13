@@ -2,9 +2,9 @@ import * as React from 'react';
 import TablePagination, { TablePaginationProps } from '@mui/material/TablePagination';
 import { createTheme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
-import { useGridSelector } from '../hooks/features/core/useGridSelector';
+import { useGridSelector } from '../hooks/utils/useGridSelector';
 import { gridPaginationSelector } from '../hooks/features/pagination/gridPaginationSelector';
-import { useGridApiContext } from '../hooks/root/useGridApiContext';
+import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 
 const defaultTheme = createTheme();

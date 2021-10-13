@@ -19,8 +19,8 @@ import {
   GridRowsProp,
   GridColumns,
   GridEvents,
-  GRID_CELL_CSS_CLASS,
   GridApiRef,
+  gridClasses,
 } from '@mui/x-data-grid-pro';
 import { getCell, getColumnHeaderCell, getRow } from 'test/utils/helperFn';
 import { spy } from 'sinon';
@@ -237,7 +237,7 @@ describe('<DataGridPro /> - Events Params', () => {
       const cell = getCell(1, 1);
       fireEvent.doubleClick(cell);
       expect(handleCellDoubleClick.callCount).to.equal(1);
-      expect(cell).not.to.have.class(`${GRID_CELL_CSS_CLASS}--editing`);
+      expect(cell).not.to.have.class(gridClasses['row--editing']);
     });
 
     it('should allow to prevent the default behavior while allowing the event to propagate', () => {

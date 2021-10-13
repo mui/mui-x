@@ -6,15 +6,15 @@ import {
   visibleGridColumnsSelector,
   gridColumnsMetaSelector,
 } from '../../hooks/features/columns/gridColumnsSelector';
-import { useGridSelector } from '../../hooks/features/core/useGridSelector';
-import { useGridApiContext } from '../../hooks/root/useGridApiContext';
+import { useGridSelector } from '../../hooks/utils/useGridSelector';
+import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { gridDensityHeaderHeightSelector } from '../../hooks/features/density/densitySelector';
-import { gridScrollBarSizeSelector } from '../../hooks/root/gridContainerSizesSelector';
+import { gridScrollBarSizeSelector } from '../../hooks/features/container/gridContainerSizesSelector';
 import { getDataGridUtilityClass } from '../../gridClasses';
 import { composeClasses } from '../../utils/material-ui-utils';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { GridComponentProps } from '../../GridComponentProps';
-import { useGridApiEventHandler } from '../../hooks/root/useGridApiEventHandler';
+import { useGridApiEventHandler } from '../../hooks/utils/useGridApiEventHandler';
 import { GridEvents } from '../../constants/eventsConstants';
 import { GridColumnHeaderParams } from '../../models/params/gridColumnHeaderParams';
 import { RenderContext } from '../GridVirtualizedContainer';

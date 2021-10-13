@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { useGridSelector } from '../../hooks/features/core/useGridSelector';
+import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { filterGridColumnLookupSelector } from '../../hooks/features/filter/gridFilterSelector';
 import {
   gridFocusColumnHeaderSelector,
@@ -12,10 +12,10 @@ import { gridRenderingSelector } from '../../hooks/features/virtualization/rende
 import { gridDensityHeaderHeightSelector } from '../../hooks/features/density/densitySelector';
 import { gridColumnMenuSelector } from '../../hooks/features/columnMenu/columnMenuSelector';
 import { GridStateColDef } from '../../models/colDef/gridColDef';
-import { useGridApiContext } from '../../hooks/root/useGridApiContext';
+import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { GridColumnHeaderItem } from './GridColumnHeaderItem';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { gridScrollBarSizeSelector } from '../../hooks/root/gridContainerSizesSelector';
+import { gridScrollBarSizeSelector } from '../../hooks/features/container/gridContainerSizesSelector';
 
 export interface GridColumnHeadersItemCollectionProps {
   columns: GridStateColDef[];

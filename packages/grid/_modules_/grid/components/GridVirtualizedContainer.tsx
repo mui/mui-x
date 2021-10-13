@@ -4,9 +4,9 @@ import { useForkRef } from '@mui/material/utils';
 import { styled } from '@mui/material/styles';
 import { composeClasses } from '../utils/material-ui-utils';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
-import { useGridApiContext } from '../hooks/root/useGridApiContext';
-import { useGridSelector } from '../hooks/features/core/useGridSelector';
-import { gridScrollBarSizeSelector } from '../hooks/root/gridContainerSizesSelector';
+import { useGridApiContext } from '../hooks/utils/useGridApiContext';
+import { useGridSelector } from '../hooks/utils/useGridSelector';
+import { gridScrollBarSizeSelector } from '../hooks/features/container/gridContainerSizesSelector';
 import {
   visibleGridColumnsSelector,
   gridColumnsMetaSelector,
@@ -17,10 +17,10 @@ import {
 } from '../hooks/features/focus/gridFocusStateSelector';
 import { visibleSortedGridRowsAsArraySelector } from '../hooks/features/filter/gridFilterSelector';
 import { gridDensityRowHeightSelector } from '../hooks/features/density/densitySelector';
-import { gridEditRowsStateSelector } from '../hooks/features/rows/gridEditRowsSelector';
+import { gridEditRowsStateSelector } from '../hooks/features/editRows/gridEditRowsSelector';
 import { GridEvents } from '../constants/eventsConstants';
 import { gridPaginationSelector } from '../hooks/features/pagination/gridPaginationSelector';
-import { useGridApiEventHandler } from '../hooks/root/useGridApiEventHandler';
+import { useGridApiEventHandler } from '../hooks/utils/useGridApiEventHandler';
 import { getDataGridUtilityClass } from '../gridClasses';
 import { GridComponentProps } from '../GridComponentProps';
 import { GridRowId } from '../models/gridRows';

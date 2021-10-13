@@ -1,7 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { GridEvents } from '../../constants/eventsConstants';
-import { useGridApiContext } from '../../hooks/root/useGridApiContext';
+import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { ElementSize } from '../../models/elementSize';
 import { GridColumnsHeader } from '../columnHeaders/GridColumnHeaders';
 import { GridColumnsContainer } from '../containers/GridColumnsContainer';
@@ -10,7 +10,7 @@ import { GridAutoSizer } from '../GridAutoSizer';
 import { GridOverlays } from './GridOverlays';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { GridVirtualizedContainer } from '../GridVirtualizedContainer';
-import { useGridSelector } from '../../hooks/features/core/useGridSelector';
+import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { gridSelectionStateSelector } from '../../hooks/features/selection/gridSelectionSelector';
 import { gridDensityHeaderHeightSelector } from '../../hooks/features/density/densitySelector';
 import { GridScrollArea } from '../GridScrollArea';

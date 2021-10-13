@@ -1,15 +1,15 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { GridEvents } from '../constants/eventsConstants';
-import { useGridApiEventHandler } from '../hooks/root/useGridApiEventHandler';
+import { useGridApiEventHandler } from '../hooks/utils/useGridApiEventHandler';
 import { GridScrollParams } from '../models/params/gridScrollParams';
-import { useGridApiContext } from '../hooks/root/useGridApiContext';
+import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { getDataGridUtilityClass } from '../gridClasses';
 import { composeClasses } from '../utils/material-ui-utils';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { GridComponentProps } from '../GridComponentProps';
 import { gridDensityHeaderHeightSelector } from '../hooks/features/density/densitySelector';
-import { useGridSelector } from '../hooks/features/core/useGridSelector';
+import { useGridSelector } from '../hooks/utils/useGridSelector';
 
 const CLIFF = 1;
 const SLOP = 1.5;

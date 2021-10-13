@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { unstable_useId as useId } from '@mui/material/utils';
 import { GridEvents } from '../../constants/eventsConstants';
-import { GridStateColDef, GRID_NUMBER_COLUMN_TYPE } from '../../models/colDef/index';
+import { GridStateColDef } from '../../models/colDef/index';
 import { GridSortDirection } from '../../models/gridSortModel';
-import { useGridApiContext } from '../../hooks/root/useGridApiContext';
+import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { GridColumnHeaderSortIcon } from './GridColumnHeaderSortIcon';
 import { GridColumnHeaderTitle } from './GridColumnHeaderTitle';
 import { GridColumnHeaderSeparator } from './GridColumnHeaderSeparator';
@@ -45,7 +45,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 
   const isColumnSorted = sortDirection != null;
   // todo refactor to a prop on col isNumeric or ?? ie: coltype===price wont work
-  const isColumnNumeric = column.type === GRID_NUMBER_COLUMN_TYPE;
+  const isColumnNumeric = column.type === 'number';
 
   const slots = {
     root: [
