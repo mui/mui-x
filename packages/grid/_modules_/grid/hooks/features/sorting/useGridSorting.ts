@@ -185,23 +185,7 @@ export const useGridSorting = (
     const comparatorList = buildComparatorList(sortModel);
     const aggregatedComparator = comparatorListAggregate(comparatorList);
 
-    const sortRowList = (rowList: GridRowConfigTreeNode[]): GridRowId[] => {
-      const depth = rowList[0].depth;
-      if (depth > 0 && props.disableChildrenSorting || comparatorList.length === 0) {
-        return rowList.map(row => row.id);
-      }
-
-      return rowList
-        .map((value) => ({
-          value,
-          params: comparatorList.map((colComparator) =>
-            getSortCellParams(value.id, colComparator.field),
-          ),
-        }))
-        .sort((a, b) => aggregatedComparator(a.params, b.params))
-        .map((row) => row.value.id);
-    };
-
+    // Group the rows by parent
     const groupedByParentRows = new Map<GridRowId | null, GridRowConfigTreeNode[]>([[null, []]]);
     Object.values(rowTree).forEach((node) => {
       const isExpanded = node.parent == null || rowTree[node.parent].expanded
@@ -216,11 +200,28 @@ export const useGridSorting = (
       }
     });
 
+    // Apply the sorting to each list of children
     const sortedGroupedByParentRows = new Map<GridRowId | null, GridRowId[]>()
     groupedByParentRows.forEach((rowList, parent) => {
-      sortedGroupedByParentRows.set(parent, sortRowList(rowList));
+      const depth = rowList[0].depth;
+      if (depth > 0 && props.disableChildrenSorting || comparatorList.length === 0) {
+        sortedGroupedByParentRows.set(parent, rowList.map(row => row.id));
+      }
+
+      const sortedRowList = rowList
+          .map((value) => ({
+            value,
+            params: comparatorList.map((colComparator) =>
+                getSortCellParams(value.id, colComparator.field),
+            ),
+          }))
+          .sort((a, b) => aggregatedComparator(a.params, b.params))
+          .map((row) => row.value.id);
+
+      sortedGroupedByParentRows.set(parent, sortedRowList)
     });
 
+    // Flatten the sorted lists to have children just after their parent
     let sortedRows: GridRowId[] = [];
     const insertRowListIntoSortedRows = (startIndex: number, rowList: GridRowId[]) => {
       sortedRows = [
