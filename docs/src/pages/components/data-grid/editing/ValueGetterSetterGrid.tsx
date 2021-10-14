@@ -1,43 +1,31 @@
 import * as React from 'react';
-import { DataGrid } from '@mui/x-data-grid';
+import {
+  DataGrid,
+  GridColDef,
+  GridValueGetterParams,
+  GridValueSetterParams,
+} from '@mui/x-data-grid';
 
-function getFullName(params) {
+function getFullName(params: GridValueGetterParams) {
   return `${params.getValue(params.id, 'firstName') || ''} ${
     params.getValue(params.id, 'lastName') || ''
   }`;
 }
 
-export default function ValueGetterGrid() {
-  const [rows, setRows] = React.useState(defaultRows);
+function setFullName(params: GridValueSetterParams) {
+  const [firstName, lastName] = params.value!.toString().split(' ');
+  return { ...params.row, firstName, lastName };
+}
 
-  const handleCellEditCommit = React.useCallback(
-    ({ id, field, value }) => {
-      if (field === 'fullName') {
-        const [firstName, lastName] = value.toString().split(' ');
-        const updatedRows = rows.map((row) => {
-          if (row.id === id) {
-            return { ...row, firstName, lastName };
-          }
-          return row;
-        });
-        setRows(updatedRows);
-      }
-    },
-    [rows],
-  );
-
+export default function ValueGetterSetterGrid() {
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <DataGrid
-        rows={rows}
-        columns={columns}
-        onCellEditCommit={handleCellEditCommit}
-      />
+      <DataGrid rows={defaultRows} columns={columns} />
     </div>
   );
 }
 
-const columns = [
+const columns: GridColDef[] = [
   { field: 'firstName', headerName: 'First name', width: 130, editable: true },
   { field: 'lastName', headerName: 'Last name', width: 130, editable: true },
   {
@@ -46,7 +34,8 @@ const columns = [
     width: 160,
     editable: true,
     valueGetter: getFullName,
-    sortComparator: (v1, v2) => v1.toString().localeCompare(v2.toString()),
+    valueSetter: setFullName,
+    sortComparator: (v1, v2) => v1!.toString().localeCompare(v2!.toString()),
   },
 ];
 
