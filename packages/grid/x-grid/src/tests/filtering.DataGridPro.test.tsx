@@ -115,7 +115,7 @@ describe('<DataGridPro /> - Filter', () => {
     expect(getColumnValues()).to.deep.equal(['Asics']);
   });
 
-  it.only('should apply the filterModel prop correctly on GridApiRef update row data', () => {
+  it('should apply the filterModel prop correctly on GridApiRef update row data', () => {
     render(<TestCase filterModel={filterModel} />);
     apiRef.current.updateRows([{ id: 1, brand: 'Fila' }]);
     apiRef.current.updateRows([{ id: 0, brand: 'Patagonia' }]);
