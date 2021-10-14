@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { GridApiRef } from '../../models/api/gridApiRef';
-import { GridState } from '../features/core/gridState';
+import { GridState } from '../../models/gridState';
 
 type DeepPartial<T> = {
   [P in keyof T]?: DeepPartial<T[P]>;

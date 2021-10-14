@@ -22,6 +22,13 @@ async function generateProptypes(program: ttp.ts.Program, sourceFile: string) {
         'columns',
         'currentColumn',
         'colDef',
+        'renderedColumns',
+        'scrollBarState',
+        'renderState',
+        'cellFocus',
+        'cellTabIndex',
+        'csvOptions',
+        'printOptions',
       ];
       if (propsToNotResolve.includes(name)) {
         return false;

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { HTMLElementType } from '@mui/utils';
-import { useGridApiContext } from '../../../hooks/root/useGridApiContext';
+import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
 import { GridMenu } from '../GridMenu';
 
 export interface GridColumnHeaderMenuProps {

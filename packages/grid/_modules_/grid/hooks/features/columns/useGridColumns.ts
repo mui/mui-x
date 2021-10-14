@@ -2,22 +2,22 @@ import * as React from 'react';
 import { GridEvents } from '../../../constants/eventsConstants';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridColumnApi } from '../../../models/api/gridColumnApi';
-import { gridCheckboxSelectionColDef } from '../../../models/colDef/gridCheckboxSelection';
+import { GRID_CHECKBOX_SELECTION_COL_DEF } from '../../../models/colDef/gridCheckboxSelectionColDef';
 import {
   GridColDef,
   GridColumns,
   GridColumnsState,
   GridStateColDef,
 } from '../../../models/colDef/gridColDef';
-import { GridColumnTypesRecord } from '../../../models/colDef/gridColTypeDef';
+import { GridColumnTypesRecord } from '../../../models/colDef/gridColumnTypesRecord';
 import { getGridDefaultColumnTypes } from '../../../models/colDef/gridDefaultColumnTypes';
 import { getGridColDef } from '../../../models/colDef/getGridColDef';
 import { GridColumnOrderChangeParams } from '../../../models/params/gridColumnOrderChangeParams';
 import { mergeGridColTypes } from '../../../utils/mergeUtils';
-import { useGridApiMethod } from '../../root/useGridApiMethod';
+import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { GridLocaleText, GridTranslationKeys } from '../../../models/api/gridLocaleTextApi';
-import { useGridState } from '../core/useGridState';
+import { useGridState } from '../../utils/useGridState';
 import {
   allGridColumnsFieldsSelector,
   allGridColumnsSelector,
@@ -25,7 +25,7 @@ import {
   gridColumnsSelector,
   visibleGridColumnsSelector,
 } from './gridColumnsSelector';
-import { useGridApiOptionHandler } from '../../root/useGridApiEventHandler';
+import { useGridApiOptionHandler } from '../../utils/useGridApiEventHandler';
 import { GRID_STRING_COL_DEF } from '../../../models/colDef/gridStringColDef';
 import { GridComponentProps } from '../../../GridComponentProps';
 import { useGridStateInit } from '../../utils/useGridStateInit';
@@ -99,7 +99,7 @@ function hydrateColumnsType(
   if (checkboxSelection) {
     return [
       {
-        ...gridCheckboxSelectionColDef,
+        ...GRID_CHECKBOX_SELECTION_COL_DEF,
         cellClassName: classes.cellCheckbox,
         columnHeaderCheckbox: classes.columnHeaderCheckbox,
         headerName: getLocaleText('checkboxSelectionHeaderName'),

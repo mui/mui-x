@@ -4,7 +4,7 @@ import { useForkRef } from '@mui/material/utils';
 import { GridEvents } from '../../constants/eventsConstants';
 import { GridCellParams } from '../../models/params/gridCellParams';
 import { isNavigationKey, isSpaceKey } from '../../utils/keyboardUtils';
-import { useGridApiContext } from '../../hooks/root/useGridApiContext';
+import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { getDataGridUtilityClass } from '../../gridClasses';
 import { composeClasses } from '../../utils/material-ui-utils';

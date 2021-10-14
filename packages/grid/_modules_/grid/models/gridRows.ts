@@ -16,6 +16,22 @@ export interface GridRowModelUpdate extends GridRowData {
   _action?: GridUpdateAction;
 }
 
+export interface GridRowTreeNodeConfig {
+  id: GridRowId;
+  children?: GridRowTreeConfig;
+  descendantsCount?: number;
+  expanded?: boolean;
+
+  /**
+   * If `true`, this node has been automatically added to fill a gap in the tree structure
+   */
+  fillerNode?: boolean;
+}
+
+export type GridRowTreeConfig = Map<string, GridRowTreeNodeConfig>;
+
+export type GridRowsLookup = Record<GridRowId, GridRowModel>;
+
 /**
  * The type of Id supported by the grid.
  */
