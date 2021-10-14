@@ -1,6 +1,8 @@
 export type GridRowsProp = Readonly<GridRowData[]>;
 type GridRowDefaultData = { [key: string]: any };
-export type GridRowData<RowType extends GridRowDefaultData = GridRowDefaultData> = RowType;
+/**
+ * @deprecated prefer GridRowModel.
+ */
 
 /**
  * The key value object representing the data of a row.
