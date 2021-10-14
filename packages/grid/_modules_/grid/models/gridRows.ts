@@ -1,14 +1,14 @@
 export type GridRowsProp = Readonly<GridRowData[]>;
-type GridRowDefaultData = { [key: string]: any };
+
 /**
  * @deprecated prefer GridRowModel.
  */
-export type GridRowData<T extends GridRowDefaultData = GridRowDefaultData> = T;
+export type GridRowData<T = { [key: string]: any }> = T;
 
 /**
  * The key value object representing the data of a row.
  */
-export type GridRowModel<T extends GridRowDefaultData = GridRowDefaultData> = T;
+export type GridRowModel<T = { [key: string]: any }> = T;
 
 export type GridUpdateAction = 'delete';
 
