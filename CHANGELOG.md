@@ -49,7 +49,7 @@ The `data-editable` attribute was removed from the cell element. Use the `.MuiDa
 
 The `data-mode` attribute was removed from the cell element. Use the `.MuiDataGrid-cell--editing` CSS class.
 
-- [DataGrid] Merge the `state.filter` and `state.visibleRows` into a single `state.filter` sub-state @flaviendelangle
+- [DataGrid] Merge the `state.filter` and `state.visibleRows` into a single `state.filter` sub-state (#2782) @flaviendelangle
 
 ```diff
 -const filterModel = state.filter
