@@ -288,7 +288,7 @@ describe('<DataGridPro /> - Filter', () => {
     expect(getColumnValues()).to.deep.equal(['Adidas']);
 
     expect(apiRef.current.getVisibleRowModels().size).to.equal(1);
-    expect(apiRef.current.getVisibleRowModels().get(1)!.node).to.deep.equal({
+    expect(apiRef.current.getVisibleRowModels().get(1)).to.deep.equal({
       id: 1,
       brand: 'Adidas',
     });

@@ -25,34 +25,42 @@ export const gridSortedVisiblePaginatedRowEntriesSelector = createSelector(
   gridSortedVisibleRowEntriesSelector,
   gridSortedVisibleTopLevelRowEntriesSelector,
   (pagination, rowTree, visibleSortedRowEntries, visibleSortedTopLevelRowEntries) => {
-    const topLevelRowStart = pagination.pageSize * pagination.page;
-    const topLevelRowsInCurrentPage = visibleSortedTopLevelRowEntries.slice(
-      topLevelRowStart,
-      topLevelRowStart + pagination.pageSize,
-    );
+    const topLevelFirstRowIndex = pagination.pageSize * pagination.page;
+    const topLevelFirstRow = visibleSortedTopLevelRowEntries[topLevelFirstRowIndex];
 
-    const rowStart = visibleSortedRowEntries.findIndex(
-      (row) => row.id === visibleSortedTopLevelRowEntries[topLevelRowStart].id,
+    if (!topLevelFirstRow) {
+      return [];
+    }
+
+    const topLevelInCurrentPageCount = visibleSortedTopLevelRowEntries.slice(
+      topLevelFirstRowIndex,
+      topLevelFirstRowIndex + pagination.pageSize,
+    ).length;
+
+    const firstRowIndex = visibleSortedRowEntries.findIndex(
+      (row) => row.id === topLevelFirstRow.id,
     );
-    let rowEnd = rowStart + 1;
-    let topLevelRowCount = 1;
+    let lastRowIndex = firstRowIndex;
+    let topLevelRowAdded = 0;
 
     while (
-      rowEnd < visibleSortedRowEntries.length &&
-      topLevelRowCount <= topLevelRowsInCurrentPage.length
+      lastRowIndex < visibleSortedRowEntries.length &&
+      topLevelRowAdded <= topLevelInCurrentPageCount
     ) {
-      rowEnd += 1;
+      const row = visibleSortedRowEntries[lastRowIndex];
+      const depth = rowTree[row.id].depth;
 
-      if (rowEnd < visibleSortedRowEntries.length) {
-        const row = visibleSortedRowEntries[rowEnd];
-        const depth = rowTree[row.id].depth;
+      if (topLevelRowAdded < topLevelInCurrentPageCount || depth > 0) {
+        lastRowIndex += 1;
+      }
 
-        if (depth === 0) {
-          topLevelRowCount += 1;
-        }
+      if (depth === 0) {
+        topLevelRowAdded += 1;
       }
     }
 
-    return visibleSortedRowEntries.slice(rowStart, rowEnd);
+    console.log(visibleSortedRowEntries.slice(firstRowIndex, lastRowIndex).map((el) => el.id));
+
+    return visibleSortedRowEntries.slice(firstRowIndex, lastRowIndex);
   },
 );

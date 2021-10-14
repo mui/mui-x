@@ -27,7 +27,7 @@ import {
   gridSortedRowEntriesSelector,
   gridSortModelSelector,
 } from './gridSortingSelector';
-import { gridRowTreeSelector } from '../rows';
+import { gridRowIdsSelector, gridRowTreeSelector } from '../rows';
 import { useGridStateInit } from '../../utils/useGridStateInit';
 import { useFirstRender } from '../../utils/useFirstRender';
 
@@ -181,13 +181,15 @@ export const useGridSorting = (
     }
 
     const rowTree = gridRowTreeSelector(apiRef.current.state);
+    const rowIds = gridRowIdsSelector(apiRef.current.state);
     const sortModel = gridSortModelSelector(apiRef.current.state);
     const comparatorList = buildComparatorList(sortModel);
     const aggregatedComparator = comparatorListAggregate(comparatorList);
 
     // Group the rows by parent
     const groupedByParentRows = new Map<GridRowId | null, GridRowTreeNodeConfig[]>([[null, []]]);
-    Object.values(rowTree).forEach((node) => {
+    rowIds.forEach((rowId) => {
+      const node = rowTree[rowId];
       const isExpanded = node.parent == null || rowTree[node.parent].expanded;
 
       if (isExpanded) {
