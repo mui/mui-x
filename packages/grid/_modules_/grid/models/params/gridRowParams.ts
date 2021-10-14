@@ -13,7 +13,7 @@ export interface GridRowParams<R extends GridRowModel = GridRowModel> {
   /**
    * The row model of the row that the current cell belongs to.
    */
-  row: GridRowModel<R>;
+  row: R;
   /**
    * All grid columns.
    */
