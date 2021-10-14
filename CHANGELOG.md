@@ -23,76 +23,77 @@ A big thanks to the 7 contributors who made this release possible. Here are some
 
   The following props were removed. If you depend on them, use `componentsProps.row` and `componentsProps.cell` to pass custom props to the row or cell.
 
-- `onCellBlur`
-- `onCellOver`
-- `onCellOut`
-- `onCellEnter`
-- `onCellLeave`
-- `onRowOver`
-- `onRowOut`
-- `onRowEnter`
-- `onRowLeave`
+  - `onCellBlur`
+  - `onCellOver`
+  - `onCellOut`
+  - `onCellEnter`
+  - `onCellLeave`
+  - `onRowOver`
+  - `onRowOut`
+  - `onRowEnter`
+  - `onRowLeave`
 
-For more information, check [this page](https://mui.com/components/data-grid/components/#row). Example:
+  For more information, check [this page](https://mui.com/components/data-grid/components/#row). Example:
 
-```diff
--<DataGrid onRowOver={handleRowOver} />;
-+<DataGrid
-+  componentsProps={{
-+    row: { onMouseOver: handleRowOver },
-+  }}
-+/>;
-
-The `data-rowindex` and `data-rowselected` attributes were removed from the cell element. Equivalent attributes can be found in the row element.
-
-The `data-editable` attribute was removed from the cell element. Use the `.MuiDataGrid-cell--editable` CSS class.
-
-The `data-mode` attribute was removed from the cell element. Use the `.MuiDataGrid-cell--editing` CSS class.
+  ```diff
+  -<DataGrid onRowOver={handleRowOver} />;
+  +<DataGrid
+  +  componentsProps={{
+  +    row: { onMouseOver: handleRowOver },
+  +  }}
+  +/>;
+  ```
+  
+  The `data-rowindex` and `data-rowselected` attributes were removed from the cell element. Equivalent attributes can be found in the row element.
+  
+  The `data-editable` attribute was removed from the cell element. Use the `.MuiDataGrid-cell--editable` CSS class.
+  
+  The `data-mode` attribute was removed from the cell element. Use the `.MuiDataGrid-cell--editing` CSS class.
 
 - [DataGrid] The `state.filter` and `state.visibleRows` were merged into a single `state.filter` sub-state (#2782) @flaviendelangle
 
   To still access this information, use `state.filter` or the selectors as below:
 
-```diff
--const filterModel = state.filter
--const filterModel = gridFilterStateSelector(state)
-+const filterModel = state.filter.filterModel
-+const filterModel = gridFilterModelSelector(state) // preferred method
-
--const visibleRowsLookup = state.visibleRows.visibleRowsLookup
--const visibleRowsLookup = visibleGridRowsStateSelector(state).visibleRowsLookup
-+const visibleRowsLookup = state.filter.visibleRowsLookup
-+const visibleRowsLookup = gridVisibleRowsLookupSelector(state).visibleRowsLookup // preferred method
-
--const visibleRows = state.visibleRows.visibleRows
-+const visibleRows = state.filter.visibleRows
-+const visibleRows = gridVisibleRowsLookupSelector(state).visibleRows // preferred method
-```
+  ```diff
+  -const filterModel = state.filter
+  -const filterModel = gridFilterStateSelector(state)
+  +const filterModel = state.filter.filterModel
+  +const filterModel = gridFilterModelSelector(state) // preferred method
+  
+  -const visibleRowsLookup = state.visibleRows.visibleRowsLookup
+  -const visibleRowsLookup = visibleGridRowsStateSelector(state).visibleRowsLookup
+  +const visibleRowsLookup = state.filter.visibleRowsLookup
+  +const visibleRowsLookup = gridVisibleRowsLookupSelector(state).visibleRowsLookup // preferred method
+  
+  -const visibleRows = state.visibleRows.visibleRows
+  +const visibleRows = state.filter.visibleRows
+  +const visibleRows = gridVisibleRowsLookupSelector(state).visibleRows // preferred method
+  ```
 
 - [DataGrid] The CSS classes constants are not exported anymore. Use `gridClasses` instead. (#2788) @flaviendelangle
 
-```diff
--const columnHeaderClass = GRID_COLUMN_HEADER_CSS_CLASS
-+const columnHeaderClass = gridClasses.columnHeader
-
--const rowClass = GRID_ROW_CSS_CLASS
-+const rowClass = gridClasses.row
-
--const cellClass = GRID_CELL_CSS_CLASS
-+const cellClass = gridClasses.cell
-
--const columnSeparatorClass = GRID_COLUMN_HEADER_SEPARATOR_RESIZABLE_CSS_CLASS
-+const columnSeparatorClass = gridClasses['columnSeparator--resizable']
-
--const columnHeaderTitleClass = GRID_COLUMN_HEADER_TITLE_CSS_CLASS
-+const columnHeaderTitleClass = gridClasses.columnHeaderTitle
-
--const columnHeaderDropZoneClass = GRID_COLUMN_HEADER_DROP_ZONE_CSS_CLASS
-+const columnHeaderDropZoneClass = gridClasses.columnHeaderDropZone
-
--const columnHeaderDraggingClass = GRID_COLUMN_HEADER_DRAGGING_CSS_CLASS
-+const columnHeaderDraggingClass = gridClasses["columnHeader--dragging"]
-```
+  ```diff
+  -const columnHeaderClass = GRID_COLUMN_HEADER_CSS_CLASS
+  +const columnHeaderClass = gridClasses.columnHeader
+  
+  -const rowClass = GRID_ROW_CSS_CLASS
+  +const rowClass = gridClasses.row
+  
+  -const cellClass = GRID_CELL_CSS_CLASS
+  +const cellClass = gridClasses.cell
+  
+  -const columnSeparatorClass = GRID_COLUMN_HEADER_SEPARATOR_RESIZABLE_CSS_CLASS
+  +const columnSeparatorClass = gridClasses['columnSeparator--resizable']
+  
+  -const columnHeaderTitleClass = GRID_COLUMN_HEADER_TITLE_CSS_CLASS
+  +const columnHeaderTitleClass = gridClasses.columnHeaderTitle
+  
+  -const columnHeaderDropZoneClass = GRID_COLUMN_HEADER_DROP_ZONE_CSS_CLASS
+  +const columnHeaderDropZoneClass = gridClasses.columnHeaderDropZone
+  
+  -const columnHeaderDraggingClass = GRID_COLUMN_HEADER_DRAGGING_CSS_CLASS
+  +const columnHeaderDraggingClass = gridClasses["columnHeader--dragging"]
+  ```
 
 - [DataGrid] Rename `gridCheckboxSelectionColDef` to `GRID_CHECKBOX_SELECTION_COL_DEF` (#2793) @flaviendelangle
 
@@ -103,90 +104,43 @@ The `data-mode` attribute was removed from the cell element. Use the `.MuiDataGr
 
 - [DataGrid] Stop exporting internal colType variables (#2791) @flaviendelangle
 
-```diff
--const isColumnString = column.type === GRID_STRING_COLUMN_TYPE;
-+const isColString = col.type === 'string';
-
--const isColNumber = col.type === GRID_NUMBER_COLUMN_TYPE;
-+const isColNumber = col.type === 'number';
-
--const isColDate = col.type === GRID_DATE_COLUMN_TYPE;
-+const isColDate = col.type === 'date';
-
--const isColDateTime = col.type === GRID_DATETIME_COLUMN_TYPE;
-+const isColDateTime = col.type === 'dateTime';
-
--const isColBoolean = col.type === GRID_BOOLEAN_COLUMN_TYPE;
-+const isColBoolean = col.type === 'boolean';
-```
-
-- [DataGrid] Stop exporting the localization object before the merge with the core values (#2791) @flaviendelangle
-
-```diff
-- plPLGrid
-- ruRUGrid
-- skSKGrid
-- ukUAGrid
-- zhCNGrid
-```
+  ```diff
+  -const isColumnString = column.type === GRID_STRING_COLUMN_TYPE;
+  +const isColString = col.type === 'string';
+  
+  -const isColNumber = col.type === GRID_NUMBER_COLUMN_TYPE;
+  +const isColNumber = col.type === 'number';
+  
+  -const isColDate = col.type === GRID_DATE_COLUMN_TYPE;
+  +const isColDate = col.type === 'date';
+  
+  -const isColDateTime = col.type === GRID_DATETIME_COLUMN_TYPE;
+  +const isColDateTime = col.type === 'dateTime';
+  
+  -const isColBoolean = col.type === GRID_BOOLEAN_COLUMN_TYPE;
+  +const isColBoolean = col.type === 'boolean';
+  ```
 
 - [DataGrid] Stop exporting internal state initializers (#2782) @flaviendelangle
 
-```diff
-// Use `getDefaultGridFilterModel` instead of `getInitialGridFilterState`
--const [filterModel, setFilterModel] = React.useState(getInitialGridFilterState);
-+const [filterModel, setFilterModel] = React.useState(getDefaultGridFilterModel);
-
-// For the other methods, you can hardcode the value you want to apply
--const [sortModel, setSortModel] = React.useState(() => getInitialGridSortingState().sortModel);
-+const [sortModel, setSortModel] React.useState([]);
-
--getInitialGridColumnReorderState
--getInitialGridColumnResizeState
--getInitialGridColumnsState
--getInitialGridRenderingState
--getInitialGridRowState
--getInitialGridState
--getInitialVisibleGridRowsState
--getInitialGridState
-```
-
-- [DataGrid] Stop exporting internal hooks (#2789) @flaviendelangle
-
-The following exports have been removed
-
-```diff
--convertGridRowsPropToState 
--useApi 
--useGridColumnMenu 
--useGridColumnReorder 
--useGridColumnResize 
--useGridColumns 
--useGridContainerProps 
--useGridControlState 
--useGridEditRows 
--useGridFilter 
--useGridFocus 
--useGridKeyboard
--useGridKeyboardNavigation 
--useGridLoggerFactory 
--useGridPage 
--useGridPageSize 
--useGridParamsApi 
--useGridPreferencesPanel 
--useGridRows 
--useGridScroll 
--useGridSelection 
--useGridSorting 
--useGridVirtualization
-```
-
-The following exports have been renamed
-
-```diff
--useNativeEventListener
-+useGridNativeEventListener
-```
+  ```diff
+  // Use `getDefaultGridFilterModel` instead of `getInitialGridFilterState`
+  -const [filterModel, setFilterModel] = React.useState(getInitialGridFilterState);
+  +const [filterModel, setFilterModel] = React.useState(getDefaultGridFilterModel);
+  
+  // For the other methods, you can hardcode the value you want to apply
+  -const [sortModel, setSortModel] = React.useState(() => getInitialGridSortingState().sortModel);
+  +const [sortModel, setSortModel] React.useState([]);
+  
+  -getInitialGridColumnReorderState
+  -getInitialGridColumnResizeState
+  -getInitialGridColumnsState
+  -getInitialGridRenderingState
+  -getInitialGridRowState
+  -getInitialGridState
+  -getInitialVisibleGridRowsState
+  -getInitialGridState
+  ```
 
 #### Changes
 
