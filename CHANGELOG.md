@@ -34,14 +34,13 @@ The following props were removed. If you depend on them, use `componentsProps.ro
 
 For more information, check [this page](https://mui.com/components/data-grid/components//#row). Example:
 
-  ```diff
-  -<DataGrid onRowOver={handleRowOver} />;
-  +<DataGrid
-  +  componentsProps={{
-  +    row: { onMouseOver: handleRowOver },
-  +  }}
-  +/>;
-  ```
+```diff
+-<DataGrid onRowOver={handleRowOver} />;
++<DataGrid
++  componentsProps={{
++    row: { onMouseOver: handleRowOver },
++  }}
++/>;
 
 The `data-rowindex` and `data-rowselected` attributes were removed from the cell element. Equivalent attributes can be found in the row element.
 
