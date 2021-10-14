@@ -93,6 +93,10 @@
     "name": "filterModelChange",
     "description": "Fired when the filter model changes.\nCalled with a GridFilterModel object."
   },
+  {
+    "name": "headerSelectionCheckboxChange",
+    "description": "Fired when the value of the selection checkbox of the header is changed\nCalled with a GridHeaderSelectionCheckboxParams object."
+  },
   { "name": "pageChange", "description": "Fired when the page changes." },
   { "name": "pageSizeChange", "description": "Fired when the page size changes." },
   {
