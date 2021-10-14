@@ -151,9 +151,9 @@ A big thanks to the 7 contributors who made this release possible. Here are some
 - [DataGrid] Rename `gridCheckboxSelectionColDef` to `GRID_CHECKBOX_SELECTION_COL_DEF` (#2793) @flaviendelangle
 - [DataGrid] Clean hook folder structure and stop exporting internal hooks (#2789) @flaviendelangle
 - [DataGrid] Add support for Print export (#2519) @DanailH
-- [DataGrid] Stop exporting internal localization and colType variables (#2791) @flaviendelangle
-- [DataGrid] Stop using the `GridRowCells` component (#2811) @m4theushw
-- [DataGrid] Stop using and exporting the old string class constants (#2788) @flaviendelangle
+- [DataGrid] Remove internal localization and column type constant exports (#2791) @flaviendelangle
+- [DataGrid] Remove `GridRowCells` component (#2811) @m4theushw
+- [DataGrid] Remove class constants exports (#2788) @flaviendelangle
 - [DataGrid] Remove unused event listeners on `GridCell` and `GridRow` (#2810) @m4theushw
 - [DataGrid] Fix the header selection checkbox to work with `prop.checkboxSelectionVisibleOnly` (#2781) @flaviendelangle
 
