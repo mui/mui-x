@@ -59,7 +59,7 @@ export const useStyles = makeStyles(
           right: 0,
           overflow: 'hidden',
           display: 'flex',
-          flexDirection: 'column',
+          alignItems: 'center',
           borderBottom: `1px solid ${borderColor}`,
         },
         [`& .${gridClasses.scrollArea}`]: {
@@ -211,27 +211,6 @@ export const useStyles = makeStyles(
         },
         [`& .${gridClasses.columnHeaderWrapper}.scroll .${gridClasses.columnHeader}:last-child`]: {
           borderRight: 'none',
-        },
-        [`& .${gridClasses.dataContainer}`]: {
-          position: 'relative',
-          flexGrow: 1,
-          display: 'flex',
-          flexDirection: 'column',
-        },
-        [`& .${gridClasses.window}`]: {
-          position: 'absolute',
-          bottom: 0,
-          left: 0,
-          right: 0,
-          overflowX: 'auto',
-        },
-        [`& .${gridClasses.viewport}`]: {
-          position: 'sticky',
-          top: 0,
-          left: 0,
-          display: 'flex',
-          flexDirection: 'column',
-          overflow: 'hidden',
         },
         [`& .${gridClasses.row}`]: {
           display: 'flex',

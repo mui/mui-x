@@ -258,10 +258,12 @@ describe('<DataGrid /> - Keyboard', () => {
     }
     render(<KeyboardTest width={60} nbRows={10} />);
     getColumnHeaderCell(0).focus();
-    const gridWindow = document.querySelector('.MuiDataGrid-window')! as HTMLElement;
-    expect(gridWindow.scrollLeft).to.equal(0);
+    const virtualizedContainer = document.querySelector(
+      '.MuiDataGrid-virtualizedContainer',
+    )! as HTMLElement;
+    expect(virtualizedContainer.scrollLeft).to.equal(0);
     fireEvent.keyDown(document.activeElement!, { key: 'ArrowRight' });
-    expect(gridWindow.scrollLeft).not.to.equal(0);
+    expect(virtualizedContainer.scrollLeft).not.to.equal(0);
   });
 
   it('Shift + Space should select a row', () => {

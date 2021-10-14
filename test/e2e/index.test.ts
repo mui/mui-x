@@ -202,12 +202,14 @@ describe('e2e', () => {
         document.querySelector('[role="row"][data-rowindex="3"] [role="cell"]')!.scrollIntoView(),
       );
       const scrollTop = await page.evaluate(
-        () => document.querySelector('.MuiDataGrid-window')!.scrollTop!,
+        () => document.querySelector('.MuiDataGrid-virtualizedContainer')!.scrollTop!,
       );
       expect(scrollTop).not.to.equal(0);
       await page.click('[role="row"][data-rowindex="3"] [role="cell"]');
       expect(
-        await page.evaluate(() => document.querySelector('.MuiDataGrid-window')!.scrollTop!),
+        await page.evaluate(
+          () => document.querySelector('.MuiDataGrid-virtualizedContainer')!.scrollTop!,
+        ),
       ).to.equal(scrollTop);
     });
   });

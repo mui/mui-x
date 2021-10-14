@@ -51,8 +51,8 @@ describe('<DataGridPro /> - Column Headers', () => {
       const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]');
       fireEvent.click(menuIconButton);
       await waitFor(() => expect(screen.queryByRole('menu')).not.to.equal(null));
-      const gridWindow = document.querySelector('.MuiDataGrid-window')!;
-      gridWindow.dispatchEvent(new Event('scroll'));
+      const virtualizedContainer = document.querySelector('.MuiDataGrid-virtualizedContainer')!;
+      virtualizedContainer.dispatchEvent(new Event('scroll'));
       await waitFor(() => expect(screen.queryByRole('menu')).to.equal(null));
     });
 

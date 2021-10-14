@@ -25,6 +25,7 @@ async function generateProptypes(program: ttp.ts.Program, sourceFile: string) {
         'renderedColumns',
         'scrollBarState',
         'renderState',
+        'visibleColumns',
         'cellFocus',
         'cellTabIndex',
         'csvOptions',

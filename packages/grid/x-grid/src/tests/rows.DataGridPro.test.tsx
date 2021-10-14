@@ -6,7 +6,7 @@ import {
 } from 'test/utils';
 import { useFakeTimers, spy } from 'sinon';
 import { expect } from 'chai';
-import { getCell, getColumnValues } from 'test/utils/helperFn';
+import { getCell, getRow, getColumnValues } from 'test/utils/helperFn';
 import {
   GridApiRef,
   GridComponentProps,
@@ -431,19 +431,34 @@ describe('<DataGridPro /> - Rows', () => {
     });
 
     it('should render last row when scrolling to the bottom', () => {
-      render(<TestCaseVirtualization nbRows={996} hideFooter height={600} />);
-      const totalHeight = apiRef.current.state.containerSizes?.totalSizes.height!;
+      const rowHeight = 50;
+      const rowBuffer = 4;
+      const nbRows = 996;
+      const height = 600;
+      render(
+        <TestCaseVirtualization
+          nbRows={nbRows}
+          headerHeight={0}
+          rowHeight={rowHeight}
+          rowBuffer={rowBuffer}
+          hideFooter
+          height={height}
+        />,
+      );
 
-      const gridWindow = document.querySelector('.MuiDataGrid-window')!;
+      const virtualizedContainer = document.querySelector('.MuiDataGrid-virtualizedContainer')!;
       const renderingZone = document.querySelector('.MuiDataGrid-renderingZone')! as HTMLElement;
-      gridWindow.scrollTop = 10e6; // scroll to the bottom
-      gridWindow.dispatchEvent(new Event('scroll'));
+      virtualizedContainer.scrollTop = 10e6; // scroll to the bottom
+      virtualizedContainer.dispatchEvent(new Event('scroll'));
 
       const lastCell = document.querySelector('[role="row"]:last-child [role="cell"]:first-child')!;
       expect(lastCell).to.have.text('995');
-      expect(renderingZone.children.length).to.equal(16);
-      expect(renderingZone.style.transform).to.equal('translate3d(0px, -312px, 0px)');
-      expect(gridWindow.scrollHeight).to.equal(totalHeight);
+      expect(renderingZone.children.length).to.equal(Math.floor(height / rowHeight) + rowBuffer);
+      const distanceToFirstRow = (nbRows - renderingZone.children.length) * rowHeight;
+      expect(renderingZone.style.transform).to.equal(
+        `translate3d(0px, ${distanceToFirstRow}px, 0px)`,
+      );
+      expect(virtualizedContainer.scrollHeight).to.equal(nbRows * rowHeight);
     });
 
     it('Rows should not be virtualized when the grid is in pagination autoPageSize', () => {
@@ -460,47 +475,74 @@ describe('<DataGridPro /> - Rows', () => {
       expect(isVirtualized).to.equal(false);
     });
 
-    it('should set the virtual page to 0 when resetting rows to a non virtualized length', () => {
-      const { setProps } = render(<TestCaseVirtualization nbRows={996} hideFooter height={600} />);
+    it('should render extra columns when the columnBuffer prop is present', () => {
+      const border = 1;
+      const width = 300 + border * 2;
+      const columnBuffer = 2;
+      const columnWidth = 100;
+      render(<TestCaseVirtualization width={width} nbRows={1} columnBuffer={2} />);
+      const firstRow = getRow(0);
+      expect(firstRow.children).to.have.length(Math.floor(width / columnWidth) + columnBuffer);
+      const virtualizedContainer = document.querySelector('.MuiDataGrid-virtualizedContainer')!;
+      virtualizedContainer.scrollLeft = 301;
+      virtualizedContainer.dispatchEvent(new Event('scroll'));
+      expect(firstRow.children).to.have.length(
+        columnBuffer + Math.floor(width / columnWidth) + columnBuffer,
+      );
+    });
 
-      const gridWindow = document.querySelector('.MuiDataGrid-window')!;
-      gridWindow.scrollTop = 10e6; // scroll to the bottom
-      gridWindow.dispatchEvent(new Event('scroll'));
+    it('should render new rows when scrolling past the rowThreshold value', () => {
+      const rowThreshold = 3;
+      const rowHeight = 50;
+      render(
+        <TestCaseVirtualization rowHeight={rowHeight} rowBuffer={0} rowThreshold={rowThreshold} />,
+      );
+      const virtualizedContainer = document.querySelector('.MuiDataGrid-virtualizedContainer')!;
+      const renderingZone = document.querySelector('.MuiDataGrid-renderingZone')!;
+      const firstRow = renderingZone.firstChild;
+      expect(firstRow).to.have.attr('data-rowindex', '0');
+      virtualizedContainer.scrollTop = rowThreshold * rowHeight;
+      virtualizedContainer.dispatchEvent(new Event('scroll'));
+      expect(firstRow).to.have.attr('data-rowindex', '3');
+    });
 
-      let lastCell = document.querySelector('[role="row"]:last-child [role="cell"]:first-child')!;
-      expect(lastCell).to.have.text('995');
-
-      let virtualPage = apiRef.current.state.rendering!.virtualPage;
-      expect(virtualPage).to.equal(98);
-
-      setProps({ nbRows: 9 });
-
-      lastCell = document.querySelector('[role="row"]:last-child [role="cell"]:first-child')!;
-      expect(lastCell).to.have.text('8');
-
-      const renderingZone = document.querySelector('.MuiDataGrid-renderingZone')! as HTMLElement;
-      expect(renderingZone.children.length).to.equal(9);
-
-      virtualPage = apiRef.current.state.rendering!.virtualPage;
-      expect(virtualPage).to.equal(0);
-
-      const isVirtualized = apiRef.current.state.containerSizes!.isVirtualized;
-      expect(isVirtualized).to.equal(false);
+    it('should render new columns when scrolling past the columnThreshold value', () => {
+      const columnThreshold = 3;
+      const columnWidth = 100;
+      render(
+        <TestCaseVirtualization nbRows={1} columnBuffer={0} columnThreshold={columnThreshold} />,
+      );
+      const virtualizedContainer = document.querySelector('.MuiDataGrid-virtualizedContainer')!;
+      const renderingZone = document.querySelector('.MuiDataGrid-renderingZone')!;
+      const firstRow = renderingZone.querySelector('[role="row"]:first-child')!;
+      const firstColumn = firstRow.firstChild!;
+      expect(firstColumn).to.have.attr('data-colindex', '0');
+      virtualizedContainer.scrollLeft = columnThreshold * columnWidth;
+      virtualizedContainer.dispatchEvent(new Event('scroll'));
+      expect(firstColumn).to.have.attr('data-colindex', '3');
     });
 
     describe('Pagination', () => {
       it('should render only the pageSize', () => {
-        render(<TestCaseVirtualization pagination pageSize={32} rowsPerPageOptions={[32]} />);
-        const gridWindow = document.querySelector('.MuiDataGrid-window')!;
-        gridWindow.scrollTop = 10e6; // scroll to the bottom
-        gridWindow.dispatchEvent(new Event('scroll'));
+        const rowHeight = 50;
+        const nbRows = 32;
+        render(
+          <TestCaseVirtualization
+            pagination
+            rowHeight={50}
+            pageSize={nbRows}
+            rowsPerPageOptions={[nbRows]}
+          />,
+        );
+        const virtualizedContainer = document.querySelector('.MuiDataGrid-virtualizedContainer')!;
+        virtualizedContainer.scrollTop = 10e6; // scroll to the bottom
+        virtualizedContainer.dispatchEvent(new Event('scroll'));
 
         const lastCell = document.querySelector(
           '[role="row"]:last-child [role="cell"]:first-child',
         )!;
         expect(lastCell).to.have.text('31');
-        const totalHeight = apiRef.current.state.containerSizes?.totalSizes.height!;
-        expect(gridWindow.scrollHeight).to.equal(totalHeight);
+        expect(virtualizedContainer.scrollHeight).to.equal(nbRows * rowHeight);
       });
 
       it('should not virtualized the last page if smaller than viewport', () => {
@@ -513,28 +555,24 @@ describe('<DataGridPro /> - Rows', () => {
             height={500}
           />,
         );
-        const gridWindow = document.querySelector('.MuiDataGrid-window')!;
-        gridWindow.scrollTop = 10e6; // scroll to the bottom
-        gridWindow.dispatchEvent(new Event('scroll'));
+        const virtualizedContainer = document.querySelector('.MuiDataGrid-virtualizedContainer')!;
+        virtualizedContainer.scrollTop = 10e6; // scroll to the bottom
+        virtualizedContainer.dispatchEvent(new Event('scroll'));
 
         const lastCell = document.querySelector(
           '[role="row"]:last-child [role="cell"]:first-child',
         )!;
         expect(lastCell).to.have.text('99');
-        expect(gridWindow.scrollTop).to.equal(0);
-        expect(gridWindow.scrollHeight).to.equal(gridWindow.clientHeight);
-
-        const isVirtualized = apiRef.current.state.containerSizes!.isVirtualized;
-        expect(isVirtualized).to.equal(false);
-        const virtualRowsCount = apiRef.current.state.containerSizes!.virtualRowsCount;
-        expect(virtualRowsCount).to.equal(4);
+        expect(virtualizedContainer.scrollTop).to.equal(0);
+        expect(virtualizedContainer.scrollHeight).to.equal(virtualizedContainer.clientHeight);
+        expect(document.querySelector('.MuiDataGrid-renderingZone')!.children).to.have.length(4);
       });
 
       it('should paginate small dataset in auto page-size #1492', () => {
         render(
           <TestCaseVirtualization pagination autoPageSize height={496} nbCols={1} nbRows={9} />,
         );
-        const gridWindow = document.querySelector('.MuiDataGrid-window')!;
+        const virtualizedContainer = document.querySelector('.MuiDataGrid-virtualizedContainer')!;
 
         const lastCell = document.querySelector(
           '[role="row"]:last-child [role="cell"]:first-child',
@@ -543,13 +581,9 @@ describe('<DataGridPro /> - Rows', () => {
         const rows = document.querySelectorAll('.MuiDataGrid-row[role="row"]')!;
         expect(rows.length).to.equal(7);
 
-        expect(gridWindow.scrollTop).to.equal(0);
-        expect(gridWindow.scrollHeight).to.equal(gridWindow.clientHeight);
-
-        const isVirtualized = apiRef.current.state.containerSizes!.isVirtualized;
-        expect(isVirtualized).to.equal(false);
-        const virtualRowsCount = apiRef.current.state.containerSizes!.virtualRowsCount;
-        expect(virtualRowsCount).to.equal(7);
+        expect(virtualizedContainer.scrollTop).to.equal(0);
+        expect(virtualizedContainer.scrollHeight).to.equal(virtualizedContainer.clientHeight);
+        expect(document.querySelector('.MuiDataGrid-renderingZone')!.children).to.have.length(7);
       });
     });
 
@@ -568,9 +602,9 @@ describe('<DataGridPro /> - Rows', () => {
             rowHeight={rowHeight}
           />,
         );
-        const gridWindow = document.querySelector('.MuiDataGrid-window')!;
+        const virtualizedContainer = document.querySelector('.MuiDataGrid-virtualizedContainer')!;
         apiRef.current.scrollToIndexes({ rowIndex: 4, colIndex: 0 });
-        expect(gridWindow.scrollTop).to.equal(rowHeight - offset);
+        expect(virtualizedContainer.scrollTop).to.equal(rowHeight - offset);
       });
 
       it('should scroll correctly when the given index is partially visible at the top', () => {
@@ -587,15 +621,15 @@ describe('<DataGridPro /> - Rows', () => {
             rowHeight={rowHeight}
           />,
         );
-        const gridWindow = document.querySelector('.MuiDataGrid-window')!;
-        gridWindow.scrollTop = offset;
-        gridWindow.dispatchEvent(new Event('scroll')); // Simulate browser behavior
+        const virtualizedContainer = document.querySelector('.MuiDataGrid-virtualizedContainer')!;
+        virtualizedContainer.scrollTop = offset;
+        virtualizedContainer.dispatchEvent(new Event('scroll')); // Simulate browser behavior
         apiRef.current.scrollToIndexes({ rowIndex: 2, colIndex: 0 });
-        expect(gridWindow.scrollTop).to.equal(offset);
+        expect(virtualizedContainer.scrollTop).to.equal(offset);
         apiRef.current.scrollToIndexes({ rowIndex: 1, colIndex: 0 });
-        expect(gridWindow.scrollTop).to.equal(offset);
+        expect(virtualizedContainer.scrollTop).to.equal(offset);
         apiRef.current.scrollToIndexes({ rowIndex: 0, colIndex: 0 });
-        expect(gridWindow.scrollTop).to.equal(0);
+        expect(virtualizedContainer.scrollTop).to.equal(0);
       });
 
       it('should scroll correctly when the given colIndex is partially visible at the right', () => {
@@ -610,10 +644,10 @@ describe('<DataGridPro /> - Rows', () => {
           { field: 'age', width: columnWidth },
         ];
         render(<TestCaseVirtualization width={width + border * 2} rows={rows} columns={columns} />);
-        const gridWindow = document.querySelector('.MuiDataGrid-window')!;
-        expect(gridWindow.scrollLeft).to.equal(0);
+        const virtualizedContainer = document.querySelector('.MuiDataGrid-virtualizedContainer')!;
+        expect(virtualizedContainer.scrollLeft).to.equal(0);
         apiRef.current.scrollToIndexes({ rowIndex: 0, colIndex: 2 });
-        expect(gridWindow.scrollLeft).to.equal(columnWidth * 3 - width);
+        expect(virtualizedContainer.scrollLeft).to.equal(columnWidth * 3 - width);
       });
 
       it('should not scroll when going back', () => {
@@ -628,13 +662,13 @@ describe('<DataGridPro /> - Rows', () => {
           { field: 'age', width: columnWidth },
         ];
         render(<TestCaseVirtualization width={width + border * 2} rows={rows} columns={columns} />);
-        const gridWindow = document.querySelector('.MuiDataGrid-window')!;
-        expect(gridWindow.scrollLeft).to.equal(0);
+        const virtualizedContainer = document.querySelector('.MuiDataGrid-virtualizedContainer')!;
+        expect(virtualizedContainer.scrollLeft).to.equal(0);
         apiRef.current.scrollToIndexes({ rowIndex: 0, colIndex: 2 });
-        gridWindow.dispatchEvent(new Event('scroll')); // Simulate browser behavior
-        expect(gridWindow.scrollLeft).to.equal(columnWidth * 3 - width);
+        virtualizedContainer.dispatchEvent(new Event('scroll')); // Simulate browser behavior
+        expect(virtualizedContainer.scrollLeft).to.equal(columnWidth * 3 - width);
         apiRef.current.scrollToIndexes({ rowIndex: 0, colIndex: 1 });
-        expect(gridWindow.scrollLeft).to.equal(columnWidth * 3 - width);
+        expect(virtualizedContainer.scrollLeft).to.equal(columnWidth * 3 - width);
       });
     });
   });
@@ -669,16 +703,6 @@ describe('<DataGridPro /> - Rows', () => {
       expect(document.querySelectorAll('[role="row"][data-rowindex]')).to.have.length(100);
       apiRef.current.setPage(1);
       expect(document.querySelectorAll('[role="row"][data-rowindex]')).to.have.length(50);
-    });
-
-    it('should translate to the correct position on scroll', () => {
-      render(<TestCase />);
-      const gridWindow = document.querySelector('.MuiDataGrid-window')!;
-      const renderingZone = document.querySelector('.MuiDataGrid-renderingZone')! as HTMLElement;
-      expect(renderingZone.style.transform).to.equal('translate3d(0px, 0px, 0px)');
-      gridWindow.scrollTop = 100;
-      gridWindow.dispatchEvent(new Event('scroll'));
-      expect(renderingZone.style.transform).to.equal('translate3d(0px, -100px, 0px)');
     });
   });
 

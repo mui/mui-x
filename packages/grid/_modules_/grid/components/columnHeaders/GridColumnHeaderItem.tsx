@@ -96,7 +96,7 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
   }
 
   const publish = React.useCallback(
-    (eventName: string) => (event: React.MouseEvent | React.DragEvent) =>
+    (eventName: string) => (event: React.SyntheticEvent) =>
       apiRef.current.publishEvent(
         eventName,
         apiRef.current.getColumnHeaderParams(column.field),
@@ -105,37 +105,24 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
     [apiRef, column.field],
   );
 
-  const mouseEventsHandlers = React.useMemo(
-    () => ({
-      onClick: publish(GridEvents.columnHeaderClick),
-      onDoubleClick: publish(GridEvents.columnHeaderDoubleClick),
-      onMouseOver: publish(GridEvents.columnHeaderOver),
-      onMouseOut: publish(GridEvents.columnHeaderOut),
-      onMouseEnter: publish(GridEvents.columnHeaderEnter),
-      onMouseLeave: publish(GridEvents.columnHeaderLeave),
-      onKeyDown: publish(GridEvents.columnHeaderKeyDown),
-      onFocus: publish(GridEvents.columnHeaderFocus),
-      onBlur: publish(GridEvents.columnHeaderBlur),
-    }),
-    [publish],
-  );
+  const mouseEventsHandlers = {
+    onClick: publish(GridEvents.columnHeaderClick),
+    onDoubleClick: publish(GridEvents.columnHeaderDoubleClick),
+    onMouseOver: publish(GridEvents.columnHeaderOver), // TODO remove as it's not used
+    onMouseOut: publish(GridEvents.columnHeaderOut), // TODO remove as it's not used
+    onMouseEnter: publish(GridEvents.columnHeaderEnter), // TODO remove as it's not used
+    onMouseLeave: publish(GridEvents.columnHeaderLeave), // TODO remove as it's not used
+    onKeyDown: publish(GridEvents.columnHeaderKeyDown),
+    onFocus: publish(GridEvents.columnHeaderFocus),
+    onBlur: publish(GridEvents.columnHeaderBlur),
+  };
 
-  const draggableEventHandlers = React.useMemo(
-    () => ({
-      onDragStart: publish(GridEvents.columnHeaderDragStart),
-      onDragEnter: publish(GridEvents.columnHeaderDragEnter),
-      onDragOver: publish(GridEvents.columnHeaderDragOver),
-      onDragEnd: publish(GridEvents.columnHeaderDragEnd),
-    }),
-    [publish],
-  );
-
-  const resizeEventHandlers = React.useMemo(
-    () => ({
-      onMouseDown: publish(GridEvents.columnSeparatorMouseDown),
-    }),
-    [publish],
-  );
+  const draggableEventHandlers = {
+    onDragStart: publish(GridEvents.columnHeaderDragStart),
+    onDragEnter: publish(GridEvents.columnHeaderDragEnter),
+    onDragOver: publish(GridEvents.columnHeaderDragOver),
+    onDragEnd: publish(GridEvents.columnHeaderDragEnd),
+  };
 
   const removeLastBorderRight = isLastColumn && hasScrollX && !hasScrollY;
   const showRightBorder = !isLastColumn
@@ -152,11 +139,9 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
 
   const width = column.computedWidth;
 
-  let ariaSort: any;
+  let ariaSort: 'ascending' | 'descending' | undefined;
   if (sortDirection != null) {
-    ariaSort = {
-      'aria-sort': sortDirection === 'asc' ? 'ascending' : 'descending',
-    };
+    ariaSort = sortDirection === 'asc' ? 'ascending' : 'descending';
   }
 
   const columnMenuIconButton = !rootProps.disableColumnMenu && !column.disableColumnMenu && (
@@ -199,7 +184,6 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
     <div
       ref={headerCellRef}
       className={clsx(classes.root, headerClassName)}
-      key={column.field}
       data-field={column.field}
       style={{
         width,
@@ -209,7 +193,7 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
       role="columnheader"
       tabIndex={tabIndex}
       aria-colindex={colIndex + 1}
-      {...ariaSort}
+      aria-sort={ariaSort}
       {...mouseEventsHandlers}
     >
       <div
@@ -234,7 +218,7 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
         resizable={!rootProps.disableColumnResize && !!column.resizable}
         resizing={isResizing}
         height={headerHeight}
-        {...resizeEventHandlers}
+        onMouseDown={publish(GridEvents.columnSeparatorMouseDown)}
       />
       <GridColumnHeaderMenu
         columnMenuId={columnMenuId!}

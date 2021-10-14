@@ -76,7 +76,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-function GridCellRaw(props: GridCellProps) {
+function GridCell(props: GridCellProps) {
   const {
     align,
     children,
@@ -205,9 +205,7 @@ function GridCellRaw(props: GridCellProps) {
   );
 }
 
-const GridCell = React.memo(GridCellRaw);
-
-GridCellRaw.propTypes = {
+GridCell.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
