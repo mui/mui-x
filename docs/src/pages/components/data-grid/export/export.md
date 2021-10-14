@@ -62,13 +62,13 @@ You can export data using the imperative API available in DataGridPro:
 
 Optimization of the layout of the grid for print mode. It can also be used to export to PDF.
 
-The DataGrid provides the ability to optimize of the layout of the grid for print mode. It can also be used to export to PDF. You can print the grid by composing a [toolbar](/components/data-grid/components/#toolbar) with the `GridToolbarExport` component. Use the `components` prop to assign the custom toolbar.
+The DataGrid provides the ability to optimize the layout of the grid for print mode. It can also be used to export to PDF. You can print the grid by composing a [toolbar](/components/data-grid/components/#toolbar) with the `GridToolbarExport` component. Use the `components` prop to assign the custom toolbar.
 
 {{"demo": "pages/components/data-grid/export/ExportSelectorGrid.js", "bg": "inline"}}
 
 ### Customize printed columns
 
-By default, when printing the grid will only contain the visible columns of the grid.
+By default, when printing the grid it will only contain the visible columns.
 There are two ways to include or hide other columns:
 
 1. Define the exact columns to be exported with the `fields` attribute in the [`printOptions`](/api/data-grid/grid-print-export-options/) prop of [`GridToolbarExport`](/components/data-grid/components/#toolbar).
@@ -83,7 +83,7 @@ Set `allColumns` in [`printOptions`](/api/data-grid/grid-print-export-options/) 
 <GridToolbarExport printOptions={{ allColumns: true }} />
 ```
 
-2. Set the `disableExport` attribute to true in each `GridColDef`.
+2. Set the `disableExport` attribute to `true` in each `GridColDef`.
 
 ```jsx
 <DataGrid columns={[{ field: 'id', disableExport: true }, { field: 'brand' }]} />
@@ -108,7 +108,7 @@ You can provide a [`valueFormatter`](/components/data-grid/columns/#value-format
 
 ### apiRef [<span class="pro"></span>](https://mui.com/store/items/material-ui-pro/)
 
-You can export data using the imperative API available in XGrid:
+You can export data using the imperative API available in DataGridPro:
 
 {{"demo": "pages/components/data-grid/export/PrintExportApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
 
