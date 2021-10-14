@@ -21,12 +21,6 @@ export interface GridFilterApi {
    */
   upsertFilter: (item: GridFilterItem) => void;
   /**
-   * Applies a [[GridFilterItem]] on all rows. If no `linkOperator` is given, the "and" operator is used.
-   * @param {GridFilterItem} item The filter to be applied.
-   * @param {GridLinkOperator} linkOperator The link operator to use.
-   */
-  applyFilter: (item: GridFilterItem, linkOperator?: GridLinkOperator) => void;
-  /**
    * Applies all filters on all rows.
    */
   applyFilters: () => void;
