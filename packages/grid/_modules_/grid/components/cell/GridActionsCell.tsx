@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import IconButton from '@mui/material/IconButton';
 import MenuList from '@mui/material/MenuList';
 import { unstable_useId as useId } from '@mui/material/utils';
-import { GridRenderCellParams, GridCellParams } from '../../models/params/gridCellParams';
+import { GridRenderCellParams } from '../../models/params/gridCellParams';
 import { gridClasses } from '../../gridClasses';
 import { GridMenu, GridMenuProps } from '../menu/GridMenu';
 import { GridActionsColDef } from '../../models/colDef/gridColDef';
@@ -21,7 +21,7 @@ const GridActionsCell = (props: GridActionsCellProps) => {
   const menuId = useId();
   const buttonId = useId();
   const rootProps = useGridRootProps();
-  const { colDef, id, api, position = 'bottom-end' } = props;
+  const { colDef, id, api, position = 'bottom-end' } = props; // TODO apply the rest to the root element
 
   if (!hasActions(colDef)) {
     throw new Error('MUI: Missing the `getActions` property in the `GridColDef`.');
@@ -107,4 +107,4 @@ GridActionsCell.propTypes = {
 
 export { GridActionsCell };
 
-export const renderActionsCell = (params: GridCellParams) => <GridActionsCell {...params} />;
+export const renderActionsCell = (params: GridRenderCellParams) => <GridActionsCell {...params} />;
