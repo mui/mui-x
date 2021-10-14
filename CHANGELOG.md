@@ -9,7 +9,10 @@ _Oct 14, 2021_
 
 A big thanks to the 7 contributors who made this release possible. Here are some highlights ✨:
 
-- 🎁  Add the ability to Print export (#2519) @DanailH 
+- 🎁 Add the ability to print the grid (#2519) @DanailH
+  
+  This new feature adds a button to the toolbar to generate a printer-friendly layout. Check the [documentation](https://mui.com/components/data-grid/export/#print) about it.
+
 - 💡 Enhance internal code structure
 - ✨ New slots for `row` and `cell` (#2753) @m4theushw
 - 📚 Documentation improvements
