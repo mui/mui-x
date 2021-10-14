@@ -170,7 +170,7 @@ A big thanks to the 7 contributors who made this release possible. Here are some
 - [docs] Fix pagination in Ant Design demo (#2787) @ZeeshanTamboli
 - [docs] Update the `page` prop docs (#2812) @m4theushw
 
-#### Core
+### Core
 
 - [core] Update hooks to initialize their state synchronously (#2782) @flaviendelangle
 - [core] Fix rollup external warnings (#2736) @eps1lon
