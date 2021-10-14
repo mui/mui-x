@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { unstable_useEnhancedEffect as useEnhancedEffect } from '@mui/material/utils';
 import { GridEvents } from '../../../constants/eventsConstants';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridVirtualizationApi } from '../../../models/api/gridVirtualizationApi';
@@ -9,7 +10,6 @@ import {
 } from '../../../models/gridRenderContextProps';
 import { GridContainerProps } from '../../../models/gridContainerProps';
 import { isDeepEqual } from '../../../utils/utils';
-import { useEnhancedEffect } from '../../../utils/material-ui-utils';
 import {
   gridColumnsMetaSelector,
   visibleGridColumnsSelector,

@@ -1,10 +1,10 @@
 import * as React from 'react';
+import { useThemeProps } from '@mui/material/styles';
 import { DataGridProps, MAX_PAGE_SIZE } from './DataGridProps';
 import {
   GridComponentProps,
   GridInputComponentProps,
 } from '../../_modules_/grid/GridComponentProps';
-import { useThemeProps } from '../../_modules_/grid/utils/material-ui-utils';
 import { useGridProcessedProps } from '../../_modules_/grid/hooks/utils/useGridProcessedProps';
 
 type ForcedPropsKey = Exclude<keyof GridInputComponentProps, keyof DataGridProps> | 'pagination';

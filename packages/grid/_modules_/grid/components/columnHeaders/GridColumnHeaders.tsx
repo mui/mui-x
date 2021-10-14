@@ -1,5 +1,6 @@
 import * as React from 'react';
 import clsx from 'clsx';
+import { unstable_composeClasses as composeClasses } from '@mui/core';
 import { visibleGridColumnsSelector } from '../../hooks/features/columns/gridColumnsSelector';
 import { GridState } from '../../models/gridState';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
@@ -11,7 +12,6 @@ import { GridColumnHeadersItemCollection } from './GridColumnHeadersItemCollecti
 import { gridDensityHeaderHeightSelector } from '../../hooks/features/density/densitySelector';
 import { gridContainerSizesSelector } from '../../hooks/features/container/gridContainerSizesSelector';
 import { getDataGridUtilityClass } from '../../gridClasses';
-import { composeClasses } from '../../utils/material-ui-utils';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { GridComponentProps } from '../../GridComponentProps';
 import { useGridApiEventHandler } from '../../hooks/utils/useGridApiEventHandler';

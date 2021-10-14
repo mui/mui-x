@@ -1,9 +1,9 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { unstable_composeClasses as composeClasses } from '@mui/core';
 import { getDataGridUtilityClass } from '../gridClasses';
 import { ElementSize } from '../models';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
-import { composeClasses } from '../utils/material-ui-utils';
 import { GridComponentProps } from '../GridComponentProps';
 
 interface GridStickyContainerProps extends ElementSize {

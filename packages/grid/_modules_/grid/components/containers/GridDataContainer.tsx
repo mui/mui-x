@@ -1,11 +1,11 @@
 import * as React from 'react';
 import clsx from 'clsx';
+import { unstable_composeClasses as composeClasses } from '@mui/core';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { gridDataContainerSizesSelector } from '../../hooks/features/container/gridContainerSizesSelector';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { getDataGridUtilityClass } from '../../gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { composeClasses } from '../../utils/material-ui-utils';
 import { GridComponentProps } from '../../GridComponentProps';
 
 type GridDataContainerProps = React.HTMLAttributes<HTMLDivElement>;

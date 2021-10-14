@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { unstable_composeClasses as composeClasses } from '@mui/core';
 import { GridEvents } from '../../../constants/eventsConstants';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridColumnApi } from '../../../models/api/gridColumnApi';
@@ -30,7 +31,6 @@ import { GRID_STRING_COL_DEF } from '../../../models/colDef/gridStringColDef';
 import { GridComponentProps } from '../../../GridComponentProps';
 import { useGridStateInit } from '../../utils/useGridStateInit';
 import { getDataGridUtilityClass } from '../../../gridClasses';
-import { composeClasses } from '../../../utils/material-ui-utils';
 
 type RawGridColumnsState = Omit<GridColumnsState, 'lookup'> & {
   lookup: { [field: string]: GridColDef | GridStateColDef };

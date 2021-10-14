@@ -1,6 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
+import { unstable_composeClasses as composeClasses } from '@mui/core';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import {
   gridDensityHeaderHeightSelector,
@@ -10,7 +11,6 @@ import { gridDataContainerHeightSelector } from '../../hooks/features/container/
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { getDataGridUtilityClass } from '../../gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { composeClasses } from '../../utils/material-ui-utils';
 import { GridComponentProps } from '../../GridComponentProps';
 
 export interface GridWindowProps extends React.HTMLAttributes<HTMLDivElement> {
