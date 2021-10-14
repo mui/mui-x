@@ -162,7 +162,7 @@ A big thanks to the 7 contributors who made this release possible. Here are some
 - [DataGrid] Remove unused event listeners on `GridCell` and `GridRow` (#2810) @m4theushw
 - [DataGrid] Fix the header selection checkbox to work with `prop.checkboxSelectionVisibleOnly` (#2781) @flaviendelangle
 
-#### Docs
+### Docs
 
 - [docs] Add link to installation page (#2778) @MostafaKMilly
 - [docs] Add redirect from docs home page to `DataGrid` home page (#2737) @flaviendelangle
