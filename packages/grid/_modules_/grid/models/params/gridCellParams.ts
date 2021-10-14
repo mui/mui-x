@@ -6,7 +6,7 @@ import { GridEditCellProps } from '../gridEditRowModel';
 /**
  * Object passed as parameter in the column [[GridColDef]] cell renderer.
  */
-export interface GridCellParams<V = GridCellValue, R extends GridRowModel = GridRowModel, F = V> {
+export interface GridCellParams<V = any, R = any, F = V> {
   /**
    * The grid row id.
    */
@@ -26,7 +26,7 @@ export interface GridCellParams<V = GridCellValue, R extends GridRowModel = Grid
   /**
    * The row model of the row that the current cell belongs to.
    */
-  row: R;
+  row: GridRowModel<R>;
   /**
    * The column of the row that the current cell belongs to.
    */
@@ -59,8 +59,7 @@ export interface GridCellParams<V = GridCellValue, R extends GridRowModel = Grid
 /**
  * GridCellParams containing api.
  */
-export interface GridRenderCellParams<V = any, R extends GridRowModel = GridRowModel, F = V>
-  extends GridCellParams<V, R, F> {
+export interface GridRenderCellParams<V = any, R = any, F = V> extends GridCellParams<V, R, F> {
   /**
    * GridApi that let you manipulate the grid.
    */
