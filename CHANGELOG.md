@@ -110,7 +110,7 @@ A big thanks to the 7 contributors who made this release possible. Here are some
 
   ```diff
   -const isColumnString = column.type === GRID_STRING_COLUMN_TYPE;
-  +const isColString = col.type === 'string';
+  +const isColumnString = col.type === 'string';
   
   -const isColNumber = col.type === GRID_NUMBER_COLUMN_TYPE;
   +const isColNumber = col.type === 'number';
