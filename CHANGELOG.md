@@ -68,7 +68,7 @@ The `data-mode` attribute was removed from the cell element. Use the `.MuiDataGr
 +const visibleRows = gridVisibleRowsLookupSelector(state).visibleRows // preferred method
 ```
 
-- [DataGrid] Stop exporting the old string class constants (#2788) @flaviendelangle
+- [DataGrid] The CSS classes constants are not exported anymore. Use `gridClasses` instead. (#2788) @flaviendelangle
 
 ```diff
 -const columnHeaderClass = GRID_COLUMN_HEADER_CSS_CLASS
