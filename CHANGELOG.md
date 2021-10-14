@@ -11,6 +11,7 @@ A big thanks to the 7 contributors who made this release possible. Here are some
 
 - 🎁  Add the ability to Print export (#2519) @DanailH 
 - 💡 Enhance internal code structure
+- ✨ New slots for `row` and `cell` (#2753) @m4theushw
 - 📚 Documentation improvements
 - 🐞 Bugfixes
 
