@@ -121,7 +121,7 @@ A big thanks to the 7 contributors who made this release possible. Here are some
   +const isColBoolean = col.type === 'boolean';
   ```
 
-- [DataGrid] Stop exporting internal state initializers (#2782) @flaviendelangle
+- [DataGrid] The state initializers were removed (#2782) @flaviendelangle
 
   ```diff
   // Use `getDefaultGridFilterModel` instead of `getInitialGridFilterState`
