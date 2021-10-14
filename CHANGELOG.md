@@ -155,7 +155,7 @@ A big thanks to the 7 contributors who made this release possible. Here are some
 - [DataGrid] Stop using the `GridRowCells` component (#2811) @m4theushw
 - [DataGrid] Stop using and exporting the old string class constants (#2788) @flaviendelangle
 - [DataGrid] Remove unused event listeners on `GridCell` and `GridRow` (#2810) @m4theushw
-- [DataGrid] The header selection checkbox should work with `prop.checkboxSelectionVisibleOnly` (#2781) @flaviendelangle
+- [DataGrid] Fix the header selection checkbox to work with `prop.checkboxSelectionVisibleOnly` (#2781) @flaviendelangle
 
 #### Docs
 
