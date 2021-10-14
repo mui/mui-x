@@ -18,14 +18,14 @@ import {
 import { gridContainerSizesSelector } from '../container/gridContainerSizesSelector';
 import { visibleGridColumnsLengthSelector } from '../columns/gridColumnsSelector';
 import { useGridSelector } from '../../utils/useGridSelector';
-import { gridPaginationSelector } from '../pagination/gridPaginationSelector';
+import {
+  gridPaginationSelector,
+  gridSortedVisiblePaginatedRowEntriesSelector,
+} from '../pagination/gridPaginationSelector';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { GridComponentProps } from '../../../GridComponentProps';
-import {
-  gridSortedVisibleRowEntriesSelector,
-  gridVisibleRowCountSelector,
-} from '../filter/gridFilterSelector';
+import { gridSortedVisibleRowEntriesSelector } from '../filter/gridFilterSelector';
 
 const getNextCellIndexes = (key: string, indexes: GridCellIndexCoordinates) => {
   if (!isArrowKeys(key)) {
@@ -78,7 +78,7 @@ export const useGridKeyboardNavigation = (
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridKeyboardNavigation');
   const paginationState = useGridSelector(apiRef, gridPaginationSelector);
-  const totalVisibleRowCount = useGridSelector(apiRef, gridVisibleRowCountSelector);
+  const paginatedRowEntries = useGridSelector(apiRef, gridSortedVisiblePaginatedRowEntriesSelector);
   const colCount = useGridSelector(apiRef, visibleGridColumnsLengthSelector);
   const containerSizes = useGridSelector(apiRef, gridContainerSizesSelector);
   const visibleSortedRows = useGridSelector(apiRef, gridSortedVisibleRowEntriesSelector);
@@ -101,11 +101,7 @@ export const useGridKeyboardNavigation = (
 
       const key = mapKey(event);
       const isCtrlPressed = event.ctrlKey || event.metaKey || event.shiftKey;
-      let rowCount = totalVisibleRowCount;
-
-      if (props.pagination && totalVisibleRowCount > paginationState.pageSize) {
-        rowCount = paginationState.pageSize * (paginationState.page + 1);
-      }
+      const rowCount = paginatedRowEntries.length;
 
       let nextCellIndexes: GridCellIndexCoordinates;
       if (isArrowKeys(key)) {
@@ -164,7 +160,7 @@ export const useGridKeyboardNavigation = (
     [
       apiRef,
       visibleSortedRows,
-      totalVisibleRowCount,
+      paginatedRowEntries,
       props.pagination,
       paginationState.pageSize,
       paginationState.page,

@@ -1,7 +1,11 @@
 import { createSelector } from 'reselect';
 import { GridState } from '../../../models/gridState';
-import { gridSortedVisibleRowEntriesSelector } from '../filter/gridFilterSelector';
+import {
+  gridSortedVisibleRowEntriesSelector,
+  gridSortedVisibleTopLevelRowEntriesSelector,
+} from '../filter/gridFilterSelector';
 import { GridPaginationState } from './gridPaginationState';
+import { gridRowTreeSelector } from '../rows/gridRowsSelector';
 
 export const gridPaginationSelector = (state: GridState): GridPaginationState => state.pagination;
 
@@ -17,11 +21,38 @@ export const gridPageSizeSelector = createSelector(
 
 export const gridSortedVisiblePaginatedRowEntriesSelector = createSelector(
   gridPaginationSelector,
+  gridRowTreeSelector,
   gridSortedVisibleRowEntriesSelector,
-  (pagination, visibleSortedRows) => {
-    const firstSelectedRowIndex = pagination.page * pagination.pageSize;
-    const lastSelectedRowIndex = firstSelectedRowIndex + pagination.pageSize;
+  gridSortedVisibleTopLevelRowEntriesSelector,
+  (pagination, rowTree, visibleSortedRowEntries, visibleSortedTopLevelRowEntries) => {
+    const topLevelRowStart = pagination.pageSize * pagination.page;
+    const topLevelRowsInCurrentPage = visibleSortedTopLevelRowEntries.slice(
+      topLevelRowStart,
+      topLevelRowStart + pagination.pageSize,
+    );
 
-    return visibleSortedRows.slice(firstSelectedRowIndex, lastSelectedRowIndex);
+    const rowStart = visibleSortedRowEntries.findIndex(
+      (row) => row.id === visibleSortedTopLevelRowEntries[topLevelRowStart].id,
+    );
+    let rowEnd = rowStart + 1;
+    let topLevelRowCount = 1;
+
+    while (
+      rowEnd < visibleSortedRowEntries.length &&
+      topLevelRowCount <= topLevelRowsInCurrentPage.length
+    ) {
+      rowEnd += 1;
+
+      if (rowEnd < visibleSortedRowEntries.length) {
+        const row = visibleSortedRowEntries[rowEnd];
+        const depth = rowTree[row.id].depth;
+
+        if (depth === 0) {
+          topLevelRowCount += 1;
+        }
+      }
+    }
+
+    return visibleSortedRowEntries.slice(rowStart, rowEnd);
   },
 );

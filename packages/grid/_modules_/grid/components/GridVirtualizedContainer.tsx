@@ -19,7 +19,7 @@ import { gridSortedVisibleRowEntriesSelector } from '../hooks/features/filter/gr
 import { gridDensityRowHeightSelector } from '../hooks/features/density/densitySelector';
 import { gridEditRowsStateSelector } from '../hooks/features/editRows/gridEditRowsSelector';
 import { GridEvents } from '../constants/eventsConstants';
-import { gridPaginationSelector } from '../hooks/features/pagination/gridPaginationSelector';
+import { gridSortedVisiblePaginatedRowEntriesSelector } from '../hooks/features/pagination/gridPaginationSelector';
 import { useGridApiEventHandler } from '../hooks/utils/useGridApiEventHandler';
 import { getDataGridUtilityClass } from '../gridClasses';
 import { GridComponentProps } from '../GridComponentProps';
@@ -103,12 +103,15 @@ const GridVirtualizedContainer = React.forwardRef<HTMLDivElement, GridVirtualize
     const visibleColumns = useGridSelector(apiRef, visibleGridColumnsSelector);
     const columnsMeta = useGridSelector(apiRef, gridColumnsMetaSelector);
     const visibleSortedRowEntries = useGridSelector(apiRef, gridSortedVisibleRowEntriesSelector);
+    const paginatedRowEntries = useGridSelector(
+      apiRef,
+      gridSortedVisiblePaginatedRowEntriesSelector,
+    );
     const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
     const cellFocus = useGridSelector(apiRef, gridFocusCellSelector);
     const cellTabIndex = useGridSelector(apiRef, gridTabIndexCellSelector);
     const editRowsState = useGridSelector(apiRef, gridEditRowsStateSelector);
     const scrollBarState = useGridSelector(apiRef, gridScrollBarSizeSelector);
-    const paginationState = useGridSelector(apiRef, gridPaginationSelector);
     const renderingZoneRef = React.useRef<HTMLDivElement>(null);
     const rootRef = React.useRef<HTMLDivElement>(null);
     const handleRef = useForkRef<HTMLDivElement>(ref, rootRef);
@@ -121,11 +124,16 @@ const GridVirtualizedContainer = React.forwardRef<HTMLDivElement, GridVirtualize
 
     const rowsInCurrentPage = React.useMemo(() => {
       if (rootProps.pagination && rootProps.paginationMode === 'client') {
-        const start = paginationState.pageSize * paginationState.page;
-        return visibleSortedRowEntries.slice(start, start + paginationState.pageSize);
+        return paginatedRowEntries;
       }
+
       return visibleSortedRowEntries;
-    }, [paginationState, rootProps.pagination, rootProps.paginationMode, visibleSortedRowEntries]);
+    }, [
+      rootProps.pagination,
+      rootProps.paginationMode,
+      visibleSortedRowEntries,
+      paginatedRowEntries,
+    ]);
 
     const computeRenderContext = React.useCallback(() => {
       if (disableVirtualization) {
