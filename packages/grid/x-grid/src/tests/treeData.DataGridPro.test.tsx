@@ -16,6 +16,8 @@ import {
   useGridApiRef,
 } from '@mui/x-data-grid-pro';
 
+const isJSDOM = /jsdom/.test(window.navigator.userAgent);
+
 const rowsWithoutFiller: GridRowsProp = [
   { name: 'A', value: 10 },
   { name: 'A.A', value: 4 },
@@ -36,6 +38,7 @@ const rowsWithFiller: GridRowsProp = [
 ];
 
 const baselineProps: DataGridProProps = {
+  autoHeight: isJSDOM,
   rows: rowsWithoutFiller,
   columns: [
     {
