@@ -100,10 +100,10 @@ A big thanks to the 7 contributors who made this release possible. Here are some
 
 - [DataGrid] Rename `gridCheckboxSelectionColDef` to `GRID_CHECKBOX_SELECTION_COL_DEF` (#2793) @flaviendelangle
 
-```diff
-- gridCheckboxSelectionColDef
-+ GRID_CHECKBOX_SELECTION_COL_DEF
-```
+  ```diff
+  - gridCheckboxSelectionColDef
+  + GRID_CHECKBOX_SELECTION_COL_DEF
+  ```
 
 - [DataGrid] The constants referring to the column types were removed. (#2791) @flaviendelangle
   Replace them as below:
@@ -112,27 +112,31 @@ A big thanks to the 7 contributors who made this release possible. Here are some
   -const isColumnString = column.type === GRID_STRING_COLUMN_TYPE;
   +const isColumnString = col.type === 'string';
   
-  -const isColNumber = col.type === GRID_NUMBER_COLUMN_TYPE;
-  +const isColNumber = col.type === 'number';
+  -const isColumnNumber = col.type === GRID_NUMBER_COLUMN_TYPE;
+  +const isColumnNumber = col.type === 'number';
   
-  -const isColDate = col.type === GRID_DATE_COLUMN_TYPE;
-  +const isColDate = col.type === 'date';
+  -const isColumnDate = col.type === GRID_DATE_COLUMN_TYPE;
+  +const isColumnDate = col.type === 'date';
   
-  -const isColDateTime = col.type === GRID_DATETIME_COLUMN_TYPE;
-  +const isColDateTime = col.type === 'dateTime';
+  -const isColumnDateTime = col.type === GRID_DATETIME_COLUMN_TYPE;
+  +const isColumnDateTime = col.type === 'dateTime';
   
-  -const isColBoolean = col.type === GRID_BOOLEAN_COLUMN_TYPE;
-  +const isColBoolean = col.type === 'boolean';
+  -const isColumnBoolean = col.type === GRID_BOOLEAN_COLUMN_TYPE;
+  +const isColumnBoolean = col.type === 'boolean';
   ```
 
 - [DataGrid] The state initializers were removed (#2782) @flaviendelangle
 
+  Use `getDefaultGridFilterModel` instead of `getInitialGridFilterState`
+
   ```diff
-  // Use `getDefaultGridFilterModel` instead of `getInitialGridFilterState`
   -const [filterModel, setFilterModel] = React.useState(getInitialGridFilterState);
   +const [filterModel, setFilterModel] = React.useState(getDefaultGridFilterModel);
+  ```
   
-  // For the other methods, you can hardcode the value you want to apply
+  For the other methods, you can hardcode the value you want to apply
+
+  ```diff
   -const [sortModel, setSortModel] = React.useState(() => getInitialGridSortingState().sortModel);
   +const [sortModel, setSortModel] React.useState([]);
   
