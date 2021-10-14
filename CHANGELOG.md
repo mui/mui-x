@@ -201,7 +201,7 @@ The following exports have been renamed
 #### Docs
 
 - [docs] Add link to installation page (#2778) @MostafaKMilly
-- [docs] Add redirection from doc home page to DataGrid home page (#2737) @flaviendelangle
+- [docs] Add redirect from docs home page to `DataGrid` home page (#2737) @flaviendelangle
 - [docs] Fix JSX closing tag in `getActions` example (#2847) @dstarner
 - [docs] Fix pagination in Ant Design demo (#2787) @ZeeshanTamboli
 - [docs] Update the `page` prop docs (#2812) @m4theushw
