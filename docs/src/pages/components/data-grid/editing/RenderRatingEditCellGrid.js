@@ -8,6 +8,13 @@ function renderRating(params) {
   return <Rating readOnly value={params.value} />;
 }
 
+renderRating.propTypes = {
+  /**
+   * The cell value, but if the column has valueGetter, use getValue.
+   */
+  value: PropTypes.number.isRequired,
+};
+
 const useStyles = makeStyles({
   root: {
     display: 'flex',
