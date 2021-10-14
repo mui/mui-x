@@ -18,7 +18,7 @@ A big thanks to the 7 contributors who made this release possible. Here are some
 
 #### Breaking changes
 
-- [DataGrid] Remove unused event listeners and redundant DOM attributes on `GridCell` and `GridRow` (#2810)
+- [DataGrid] Remove unused event listeners and redundant DOM attributes on `GridCell` and `GridRow` (#2810) @m4theushw
 
 The following props were removed. If you depend on them, use `componentsProps.row` and `componentsProps.cell` to pass custom props to the row or cell.
 
@@ -49,7 +49,7 @@ The `data-editable` attribute was removed from the cell element. Use the `.MuiDa
 
 The `data-mode` attribute was removed from the cell element. Use the `.MuiDataGrid-cell--editing` CSS class.
 
-- [DataGrid] Merge the `state.filter` and `state.visibleRows` into a single `state.filter` sub-state
+- [DataGrid] Merge the `state.filter` and `state.visibleRows` into a single `state.filter` sub-state @flaviendelangle
 
 ```diff
 -const filterModel = state.filter
