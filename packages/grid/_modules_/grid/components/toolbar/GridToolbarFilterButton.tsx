@@ -30,14 +30,15 @@ const useStyles = makeStyles(
   { name: 'MuiGridToolbarFilterButton', defaultTheme },
 );
 
-export interface GridToolbarFilterButtonProps extends Omit<TooltipProps, 'title' | 'children' | 'componentsProps'> {
+export interface GridToolbarFilterButtonProps
+  extends Omit<TooltipProps, 'title' | 'children' | 'componentsProps'> {
   /**
    * The props used for each slot inside.
    * @default {}
    */
-  componentsProps?: {
-    button?: ButtonProps;
-  };
+  componentsProps?: ('componentsProps' extends keyof TooltipProps
+    ? Pick<TooltipProps, 'componentsProps'>
+    : {}) & { button?: ButtonProps };
 }
 
 const GridToolbarFilterButton = React.forwardRef<HTMLButtonElement, GridToolbarFilterButtonProps>(
