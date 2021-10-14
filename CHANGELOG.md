@@ -103,7 +103,7 @@ The `data-mode` attribute was removed from the cell element. Use the `.MuiDataGr
 - [DataGrid] Stop exporting internal colType variables (#2791) @flaviendelangle
 
 ```diff
--const isColString = col.type === GRID_STRING_COLUMN_TYPE;
+-const isColumnString = column.type === GRID_STRING_COLUMN_TYPE;
 +const isColString = col.type === 'string';
 
 -const isColNumber = col.type === GRID_NUMBER_COLUMN_TYPE;
