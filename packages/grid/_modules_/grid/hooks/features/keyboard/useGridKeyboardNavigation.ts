@@ -18,10 +18,7 @@ import {
 import { gridContainerSizesSelector } from '../container/gridContainerSizesSelector';
 import { visibleGridColumnsLengthSelector } from '../columns/gridColumnsSelector';
 import { useGridSelector } from '../../utils/useGridSelector';
-import {
-  gridPaginationSelector,
-  gridSortedVisiblePaginatedRowEntriesSelector,
-} from '../pagination/gridPaginationSelector';
+import { gridPaginationRowRangeSelector } from '../pagination/gridPaginationSelector';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { GridComponentProps } from '../../../GridComponentProps';
@@ -77,8 +74,7 @@ export const useGridKeyboardNavigation = (
   props: Pick<GridComponentProps, 'pagination'>,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridKeyboardNavigation');
-  const paginationState = useGridSelector(apiRef, gridPaginationSelector);
-  const paginatedRowEntries = useGridSelector(apiRef, gridSortedVisiblePaginatedRowEntriesSelector);
+  const statePaginationRange = useGridSelector(apiRef, gridPaginationRowRangeSelector);
   const colCount = useGridSelector(apiRef, visibleGridColumnsLengthSelector);
   const containerSizes = useGridSelector(apiRef, gridContainerSizesSelector);
   const visibleSortedRows = useGridSelector(apiRef, gridSortedVisibleRowEntriesSelector);
@@ -101,7 +97,10 @@ export const useGridKeyboardNavigation = (
 
       const key = mapKey(event);
       const isCtrlPressed = event.ctrlKey || event.metaKey || event.shiftKey;
-      const rowCount = paginatedRowEntries.length;
+      const paginatedRowRange = props.pagination
+        ? statePaginationRange!
+        : { firstRowIndex: 0, lastRowIndex: visibleSortedRows.length };
+      const rowCount = paginatedRowRange.lastRowIndex - paginatedRowRange.firstRowIndex + 1;
 
       let nextCellIndexes: GridCellIndexCoordinates;
       if (isArrowKeys(key)) {
@@ -119,7 +118,7 @@ export const useGridKeyboardNavigation = (
           // In that case we go to first row, first col, or last row last col!
           let newRowIndex = 0;
           if (colIdx === 0) {
-            newRowIndex = props.pagination ? rowCount - paginationState.pageSize : 0;
+            newRowIndex = paginatedRowRange.firstRowIndex;
           } else {
             newRowIndex = rowCount - 1;
           }
@@ -160,10 +159,8 @@ export const useGridKeyboardNavigation = (
     [
       apiRef,
       visibleSortedRows,
-      paginatedRowEntries,
+      statePaginationRange,
       props.pagination,
-      paginationState.pageSize,
-      paginationState.page,
       colCount,
       logger,
       containerSizes,

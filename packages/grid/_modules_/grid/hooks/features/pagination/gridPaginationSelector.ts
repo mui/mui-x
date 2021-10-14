@@ -19,7 +19,7 @@ export const gridPageSizeSelector = createSelector(
   (pagination) => pagination.pageSize,
 );
 
-export const gridSortedVisiblePaginatedRowEntriesSelector = createSelector(
+export const gridPaginationRowRangeSelector = createSelector(
   gridPaginationSelector,
   gridRowTreeSelector,
   gridSortedVisibleRowEntriesSelector,
@@ -29,7 +29,7 @@ export const gridSortedVisiblePaginatedRowEntriesSelector = createSelector(
     const topLevelFirstRow = visibleSortedTopLevelRowEntries[topLevelFirstRowIndex];
 
     if (!topLevelFirstRow) {
-      return [];
+      return null;
     }
 
     const topLevelInCurrentPageCount = visibleSortedTopLevelRowEntries.slice(
@@ -59,6 +59,21 @@ export const gridSortedVisiblePaginatedRowEntriesSelector = createSelector(
       }
     }
 
-    return visibleSortedRowEntries.slice(firstRowIndex, lastRowIndex);
+    return { firstRowIndex, lastRowIndex: lastRowIndex - 1 };
+  },
+);
+
+export const gridSortedVisiblePaginatedRowEntriesSelector = createSelector(
+  gridSortedVisibleRowEntriesSelector,
+  gridPaginationRowRangeSelector,
+  (visibleSortedRowEntries, paginationRange) => {
+    if (!paginationRange) {
+      return [];
+    }
+
+    return visibleSortedRowEntries.slice(
+      paginationRange.firstRowIndex,
+      paginationRange.lastRowIndex + 1,
+    );
   },
 );
