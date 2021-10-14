@@ -9,7 +9,7 @@ _Oct 14, 2021_
 
 A big thanks to the 7 contributors who made this release possible. Here are some highlights ✨:
 
-- 🎁 Add support for CSV export (#2519) @DanailH.
+- 🎁  Add the ability to Print export (#2519) @DanailH 
 - 💡 Enhance internal code structure
 - 📚 Documentation improvements
 - 🐞 Bugfixes
