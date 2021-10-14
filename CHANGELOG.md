@@ -3,6 +3,211 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 5.0.0-beta.4
+
+_Oct 14, 2021_
+
+A big thanks to the 7 contributors who made this release possible. Here are some highlights ✨:
+
+- 🎁 Add support for CSV export (#2519) @DanailH.
+
+### `@mui/x-data-grid@v5.0.0-beta.4` / `@mui/x-data-grid-pro@v5.0.0-beta.4`
+
+#### Breaking changes
+
+- [DataGrid] Remove unused event listeners and redundant DOM attributes on `GridCell` and `GridRow` (#2810)
+
+The following props were removed. If you depend on them, use `componentsProps.row` and `componentsProps.cell` to pass custom props to the row or cell.
+
+- onCellBlur
+- onCellOver
+- onCellOut
+- onCellEnter
+- onCellLeave
+- onRowOver
+- onRowOut
+- onRowEnter
+- onRowLeave
+
+For more information, check [this page](https://next--material-ui-x.netlify.app/components/data-grid/components/#row). Example:
+
+  ```diff
+  -<DataGrid onRowOver={handleRowOver} />;
+  +<DataGrid
+  +  componentsProps={{
+  +    row: { onMouseOver: handleRowOver },
+  +  }}
+  +/>;
+  ```
+
+The `data-rowindex` and `data-rowselected` attributes were removed from the cell element. Equivalent attributes can be found in the row element.
+
+The `data-editable` attribute was removed from the cell element. Use the `.MuiDataGrid-cell--editable` CSS class.
+
+The `data-mode` attribute was removed from the cell element. Use the `.MuiDataGrid-cell--editing` CSS class.
+
+- [DataGrid] Merge the `state.filter` and `state.visibleRows` into a single `state.filter` sub-state
+
+```diff
+-const filterModel = state.filter
+-const filterModel = gridFilterStateSelector(state)
++const filterModel = state.filter.filterModel
++const filterModel = gridFilterModelSelector(state) // preferred method
+
+-const visibleRowsLookup = state.visibleRows.visibleRowsLookup
+-const visibleRowsLookup = visibleGridRowsStateSelector(state).visibleRowsLookup
++const visibleRowsLookup = state.filter.visibleRowsLookup
++const visibleRowsLookup = gridVisibleRowsLookupSelector(state).visibleRowsLookup // preferred method
+
+-const visibleRows = state.visibleRows.visibleRows
++const visibleRows = state.filter.visibleRows
++const visibleRows = gridVisibleRowsLookupSelector(state).visibleRows // preferred method
+```
+
+- [DataGrid] Stop exporting the old string class constants (#2788) @flaviendelangle
+
+```diff
+-const columnHeaderClass = GRID_COLUMN_HEADER_CSS_CLASS
++const columnHeaderClass = gridClasses.columnHeader
+
+-const rowClass = GRID_ROW_CSS_CLASS
++const rowClass = gridClasses.row
+
+-const cellClass = GRID_CELL_CSS_CLASS
++const cellClass = gridClasses.cell
+
+-const columnSeparatorClass = GRID_COLUMN_HEADER_SEPARATOR_RESIZABLE_CSS_CLASS
++const columnSeparatorClass = gridClasses['columnSeparator--resizable']
+
+-const columnHeaderTitleClass = GRID_COLUMN_HEADER_TITLE_CSS_CLASS
++const columnHeaderTitleClass = gridClasses.columnHeaderTitle
+
+-const columnHeaderDropZoneClass = GRID_COLUMN_HEADER_DROP_ZONE_CSS_CLASS
++const columnHeaderDropZoneClass = gridClasses.columnHeaderDropZone
+
+-const columnHeaderDraggingClass = GRID_COLUMN_HEADER_DRAGGING_CSS_CLASS
++const columnHeaderDraggingClass = gridClasses["columnHeader--dragging"]
+```
+
+- [DataGrid] Rename `gridCheckboxSelectionColDef` to `GRID_CHECKBOX_SELECTION_COL_DEF` (#2793) @flaviendelangle
+
+```diff
+- gridCheckboxSelectionColDef
++ GRID_CHECKBOX_SELECTION_COL_DEF
+```
+
+- [DataGrid] Stop exporting internal colType variables (#2791) @flaviendelangle
+
+```diff
+-const isColString = col.type === GRID_STRING_COLUMN_TYPE;
++const isColString = col.type === 'string';
+
+-const isColNumber = col.type === GRID_NUMBER_COLUMN_TYPE;
++const isColNumber = col.type === 'number';
+
+-const isColDate = col.type === GRID_DATE_COLUMN_TYPE;
++const isColDate = col.type === 'date';
+
+-const isColDateTime = col.type === GRID_DATETIME_COLUMN_TYPE;
++const isColDateTime = col.type === 'dateTime';
+
+-const isColBoolean = col.type === GRID_BOOLEAN_COLUMN_TYPE;
++const isColBoolean = col.type === 'boolean';
+```
+
+- [DataGrid] Stop exporting the localization object before the merge with the core values (#2791) @flaviendelangle
+
+```diff
+- plPLGrid
+- ruRUGrid
+- skSKGrid
+- ukUAGrid
+- zhCNGrid
+```
+
+- [DataGrid] Stop exporting internal state initializers (#2782) @flaviendelangle
+
+```diff
+// Use `getDefaultGridFilterModel` instead of `getInitialGridFilterState`
+-const [filterModel, setFilterModel] = React.useState(getInitialGridFilterState);
++const [filterModel, setFilterModel] = React.useState(getDefaultGridFilterModel);
+
+// For the other methods, you can hardcode the value you want to apply
+-const [sortModel, setSortModel] = React.useState(() => getInitialGridSortingState().sortModel);
++const [sortModel, setSortModel] React.useState([]);
+
+-getInitialGridColumnReorderState
+-getInitialGridColumnResizeState
+-getInitialGridColumnsState
+-getInitialGridRenderingState
+-getInitialGridRowState
+-getInitialGridState
+-getInitialVisibleGridRowsState
+-getInitialGridState
+```
+
+- [DataGrid] Stop exporting internal hooks (#2789) @flaviendelangle
+
+The following exports have been removed
+
+```diff
+-convertGridRowsPropToState 
+-useApi 
+-useGridColumnMenu 
+-useGridColumnReorder 
+-useGridColumnResize 
+-useGridColumns 
+-useGridContainerProps 
+-useGridControlState 
+-useGridEditRows 
+-useGridFilter 
+-useGridFocus 
+-useGridKeyboard
+-useGridKeyboardNavigation 
+-useGridLoggerFactory 
+-useGridPage 
+-useGridPageSize 
+-useGridParamsApi 
+-useGridPreferencesPanel 
+-useGridRows 
+-useGridScroll 
+-useGridSelection 
+-useGridSorting 
+-useGridVirtualization
+```
+
+The following exports have been renamed
+
+```diff
+-useNativeEventListener
++useGridNativeEventListener
+```
+
+#### Changes
+
+- [DataGrid] Add `row` and `cell` component slots (#2753) @m4theushw
+- [DataGrid] Rename `gridCheckboxSelectionColDef` to `GRID_CHECKBOX_SELECTION_COL_DEF` (#2793) @flaviendelangle
+- [DataGrid] Clean hook folder structure and stop exporting internal hooks (#2789) @flaviendelangle
+- [DataGrid] Add support for Print export (#2519) @DanailH
+- [DataGrid] Stop exporting internal localization and colType variables (#2791) @flaviendelangle
+- [DataGrid] Stop using the `GridRowCells` component (#2811) @m4theushw
+- [DataGrid] Stop using and exporting the old string class constants (#2788) @flaviendelangle
+- [DataGrid] Remove unused event listeners on `GridCell` and `GridRow` (#2810) @m4theushw
+- [DataGrid] The header selection checkbox should work with `prop.checkboxSelectionVisibleOnly` (#2781) @flaviendelangle
+
+#### Docs
+
+- [docs] Add link to installation page (#2778) @MostafaKMilly
+- [docs] Add redirection from doc home page to DataGrid home page (#2737) @flaviendelangle
+- [docs] Fix JSX closing tag in `getActions` example (#2847) @dstarner
+- [docs] Fix pagination in Ant Design demo (#2787) @ZeeshanTamboli
+- [docs] The `page` prop is zero-based (#2812) @m4theushw
+
+#### Core
+
+- [core] Each hook should initialize its state synchronously (#2782) @flaviendelangle
+- [core] Fix rollup external warnings (#2736) @eps1lon
+
 ## 5.0.0-beta.3
 
 _Oct 7, 2021_
@@ -119,14 +324,14 @@ A big thanks to the 5 contributors who made this release possible. Here are some
 - [DataGrid] Free up column header space when icons are not visible (#2606) @DanailH
 - [DataGrid] Improve Polish (plPL) locale (#2632) @michallukowski
 
-### Docs
+#### Docs
 
 - [docs] Add section for controlled selection and server-side pagination (#2602) @DanailH
 - [docs] Fix Algolia search (#2655) @oliviertassinari
 - [docs] Improve the seach results relevance (#2656) @oliviertassinari
 - [docs] Update installation instructions (#2663) @m4theushw
 
-### Core
+#### Core
 
 - [core] Upgrade JSS plugins to 10.8.0 (#2667) @m4theushw
 
