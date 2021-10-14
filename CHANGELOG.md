@@ -32,7 +32,7 @@ The following props were removed. If you depend on them, use `componentsProps.ro
 - `onRowEnter`
 - `onRowLeave`
 
-For more information, check [this page](https://mui.com/components/data-grid/components//#row). Example:
+For more information, check [this page](https://mui.com/components/data-grid/components/#row). Example:
 
 ```diff
 -<DataGrid onRowOver={handleRowOver} />;
