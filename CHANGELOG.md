@@ -21,7 +21,7 @@ A big thanks to the 7 contributors who made this release possible. Here are some
 
 - [DataGrid] Remove unused event listeners and redundant DOM attributes on `GridCell` and `GridRow` (#2810) @m4theushw
 
-The following props were removed. If you depend on them, use `componentsProps.row` and `componentsProps.cell` to pass custom props to the row or cell.
+  The following props were removed. If you depend on them, use `componentsProps.row` and `componentsProps.cell` to pass custom props to the row or cell.
 
 - `onCellBlur`
 - `onCellOver`
