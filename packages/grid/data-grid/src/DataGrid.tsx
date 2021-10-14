@@ -515,6 +515,7 @@ DataGridRaw.propTypes = {
   page: PropTypes.number,
   /**
    * Set the number of rows in one page.
+   * If some of the rows have children (for instance in the tree data), this number represents the amount of top level rows.
    * @default 100
    */
   pageSize: chainPropTypes(PropTypes.number, (props: any) => {
@@ -561,6 +562,7 @@ DataGridRaw.propTypes = {
   rowBuffer: PropTypes.number,
   /**
    * Set the total number of rows, if it is different than the length of the value `rows` prop.
+   * If some of the rows have children (for instance in the tree data), this number represents the amount of top level rows.
    */
   rowCount: PropTypes.number,
   /**
