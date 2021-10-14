@@ -127,7 +127,7 @@ A big thanks to the 7 contributors who made this release possible. Here are some
 
 - [DataGrid] The state initializers were removed (#2782) @flaviendelangle
 
-  Use `getDefaultGridFilterModel` instead of `getInitialGridFilterState`
+  Use `getDefaultGridFilterModel` instead of `getInitialGridFilterState`:
 
   ```diff
   -const [filterModel, setFilterModel] = React.useState(getInitialGridFilterState);
