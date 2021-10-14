@@ -1,9 +1,9 @@
-import { GridRowConfigTree, GridRowId, GridRowsLookup } from '../../../models/gridRows';
+import { GridRowTreeConfig, GridRowId, GridRowsLookup } from '../../../models/gridRows';
 
 export interface GridRowsState {
   idRowsLookup: GridRowsLookup;
   rowIds: GridRowId[];
-  tree: GridRowConfigTree;
+  tree: GridRowTreeConfig;
 
   /**
    * Amount of rows before applying the filtering

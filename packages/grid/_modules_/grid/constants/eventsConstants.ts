@@ -198,6 +198,11 @@ export enum GridEvents {
    */
   selectionChange = 'selectionChange',
   /**
+   * Fired when the value of the selection checkbox of the header is changed
+   * Called with a [[GridHeaderSelectionCheckboxParams]] object.
+   */
+  headerSelectionCheckboxChange = 'headerSelectionCheckboxChange',
+  /**
    * Fired when the value of the selection checkbox of a row is changed
    * Called with a [[GridRowSelectionCheckboxParams]] object.
    */

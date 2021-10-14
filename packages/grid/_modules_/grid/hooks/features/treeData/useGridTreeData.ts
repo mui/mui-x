@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridRowConfigTree, GridRowsLookup } from '../../../models/gridRows';
+import { GridRowTreeConfig, GridRowsLookup } from '../../../models/gridRows';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridComponentProps } from '../../../GridComponentProps';
 import { GridColumnsPreProcessing } from '../../core/columnsPreProcessing';
@@ -60,7 +60,7 @@ export const useGridTreeData = (
         }))
         .sort((a, b) => a.path.length - b.path.length);
 
-      const tree: GridRowConfigTree = {};
+      const tree: GridRowTreeConfig = {};
       const idRowsLookup: GridRowsLookup = { ...params.idRowsLookup };
       const nodeNameToIdTree: GridNodeNameToIdTree = {};
 

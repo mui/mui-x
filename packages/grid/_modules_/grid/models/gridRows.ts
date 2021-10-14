@@ -12,7 +12,7 @@ export interface GridRowModelUpdate extends GridRowData {
   _action?: GridUpdateAction;
 }
 
-export interface GridRowConfigTreeNode {
+export interface GridRowTreeNodeConfig {
   id: GridRowId;
   children?: GridRowId[];
   parent: GridRowId | null;
@@ -25,7 +25,7 @@ export interface GridRowConfigTreeNode {
   fillerNode?: boolean;
 }
 
-export type GridRowConfigTree = Record<GridRowId, GridRowConfigTreeNode>;
+export type GridRowTreeConfig = Record<GridRowId, GridRowTreeNodeConfig>;
 
 export type GridRowsLookup = Record<GridRowId, GridRowModel>;
 

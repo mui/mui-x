@@ -1,6 +1,6 @@
 import type {
-  GridRowConfigTree,
-  GridRowConfigTreeNode,
+  GridRowTreeConfig,
+  GridRowTreeNodeConfig,
   GridRowId,
   GridRowsLookup,
 } from '../../../models';
@@ -10,7 +10,7 @@ export type GridNodeNameToIdTree = {
 };
 
 interface InsertRowInTreeParams {
-  tree: GridRowConfigTree;
+  tree: GridRowTreeConfig;
   path: string[];
   id: GridRowId;
   defaultGroupingExpansionDepth: number;
@@ -22,7 +22,7 @@ export const insertRowInTree = (params: InsertRowInTreeParams) => {
   const { tree, path, id, defaultGroupingExpansionDepth, idRowsLookup, nodeNameToIdTree } = params;
 
   let nodeNameToIdSubTree = nodeNameToIdTree;
-  let parentNode: GridRowConfigTreeNode | null = null;
+  let parentNode: GridRowTreeNodeConfig | null = null;
 
   for (let depth = 0; depth < path.length; depth += 1) {
     const nodeName = path[depth];

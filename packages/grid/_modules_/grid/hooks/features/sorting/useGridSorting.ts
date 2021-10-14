@@ -7,7 +7,7 @@ import { GridCellValue } from '../../../models/gridCell';
 import { GridColDef } from '../../../models/colDef/gridColDef';
 import { GridFeatureModeConstant } from '../../../models/gridFeatureMode';
 import { GridColumnHeaderParams } from '../../../models/params/gridColumnHeaderParams';
-import { GridRowId, GridRowConfigTreeNode } from '../../../models/gridRows';
+import { GridRowId, GridRowTreeNodeConfig } from '../../../models/gridRows';
 import {
   GridFieldComparatorList,
   GridSortItem,
@@ -186,7 +186,7 @@ export const useGridSorting = (
     const aggregatedComparator = comparatorListAggregate(comparatorList);
 
     // Group the rows by parent
-    const groupedByParentRows = new Map<GridRowId | null, GridRowConfigTreeNode[]>([[null, []]]);
+    const groupedByParentRows = new Map<GridRowId | null, GridRowTreeNodeConfig[]>([[null, []]]);
     Object.values(rowTree).forEach((node) => {
       const isExpanded = node.parent == null || rowTree[node.parent].expanded;
 

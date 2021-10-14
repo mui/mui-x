@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { getColumnValues, getRow, getRows } from 'test/utils/helperFn';
+import { getCell, getColumnValues, getRow, getRows } from 'test/utils/helperFn';
 import {
   // @ts-expect-error need to migrate helpers to TypeScript
   screen,
@@ -53,37 +53,45 @@ describe('<DataGridPro /> - Selection', () => {
     );
   };
 
-  describe('prop: checkboxSelectionVisibleOnly', () => {
-    it('should select all visible rows of all pages if checkboxSelectionVisibleOnly = false', () => {
+  describe('prop: checkboxSelectionVisibleOnly = false', () => {
+    it('should select all rows of all pages if no row is selected', () => {
       render(
         <TestDataGridSelection
           checkboxSelection
-          pageSize={1}
+          pageSize={2}
           pagination
-          rowsPerPageOptions={[1]}
+          rowsPerPageOptions={[2]}
         />,
       );
-      const selectAllCheckbox = document.querySelector('input[type="checkbox"]');
+      const selectAllCheckbox = screen.getByRole('checkbox', {
+        name: /select all rows checkbox/i,
+      });
       fireEvent.click(selectAllCheckbox);
       expect(apiRef.current.getSelectedRows()).to.have.length(4);
+      expect(selectAllCheckbox.checked).to.equal(true);
     });
 
-    it('should select all visible rows of the current page if checkboxSelectionVisibleOnly = true and pagination is enabled', () => {
+    it('should unselect all rows of all the pages if 1 row of another page is selected', () => {
       render(
         <TestDataGridSelection
           checkboxSelection
-          checkboxSelectionVisibleOnly
-          pageSize={1}
+          pageSize={2}
           pagination
-          rowsPerPageOptions={[1]}
+          rowsPerPageOptions={[2]}
         />,
       );
-      const selectAllCheckbox = document.querySelector('input[type="checkbox"]');
-      fireEvent.click(selectAllCheckbox);
+      fireEvent.click(getCell(0, 0));
       expect(apiRef.current.getSelectedRows()).to.have.keys([0]);
+      fireEvent.click(screen.getByRole('button', { name: /next page/i }));
+      const selectAllCheckbox = screen.getByRole('checkbox', {
+        name: /select all rows checkbox/i,
+      });
+      fireEvent.click(selectAllCheckbox);
+      expect(apiRef.current.getSelectedRows()).to.have.length(0);
+      expect(selectAllCheckbox.checked).to.equal(false);
     });
 
-    it('should select all rows when if checkboxSelectionVisibleOnly = false and pagination is not enabled', () => {
+    it('should select all visible rows if pagination is not enabled', () => {
       const rowLength = 10;
 
       render(
@@ -94,14 +102,38 @@ describe('<DataGridPro /> - Selection', () => {
         />,
       );
 
-      const selectAll = screen.getByRole('checkbox', {
+      const selectAllCheckbox = screen.getByRole('checkbox', {
         name: /select all rows checkbox/i,
       });
-      fireEvent.click(selectAll);
+      fireEvent.click(selectAllCheckbox);
       expect(apiRef.current.getSelectedRows()).to.have.length(rowLength);
+      expect(selectAllCheckbox.checked).to.equal(true);
     });
 
-    it('should throw a console error if checkboxSelectionVisibleOnly is used without pagination', () => {
+    it('should set the header checkbox in a indeterminate state when some rows of other pages are not selected', () => {
+      render(
+        <TestDataGridSelection
+          checkboxSelection
+          checkboxSelectionVisibleOnly={false}
+          pageSize={2}
+          pagination
+          rowsPerPageOptions={[2]}
+        />,
+      );
+
+      const selectAllCheckbox = screen.getByRole('checkbox', {
+        name: /select all rows checkbox/i,
+      });
+
+      fireEvent.click(getCell(0, 0));
+      fireEvent.click(getCell(1, 0));
+      fireEvent.click(screen.getByRole('button', { name: /next page/i }));
+      expect(selectAllCheckbox).to.have.attr('data-indeterminate', 'true');
+    });
+  });
+
+  describe('prop: checkboxSelectionVisibleOnly = true', () => {
+    it('should throw a console error if used without pagination', () => {
       expect(() => {
         render(
           <TestDataGridSelection checkboxSelection checkboxSelectionVisibleOnly rowLength={100} />,
@@ -111,6 +143,70 @@ describe('<DataGridPro /> - Selection', () => {
         .toErrorDev(
           'MUI: The `checkboxSelectionVisibleOnly` prop has no effect when the pagination is not enabled.',
         );
+    });
+
+    it('should select all the rows of the current page if no row of the current page is selected', () => {
+      render(
+        <TestDataGridSelection
+          checkboxSelection
+          checkboxSelectionVisibleOnly
+          pageSize={2}
+          pagination
+          rowsPerPageOptions={[2]}
+        />,
+      );
+      fireEvent.click(getCell(0, 0));
+      expect(apiRef.current.getSelectedRows()).to.have.keys([0]);
+      fireEvent.click(screen.getByRole('button', { name: /next page/i }));
+      const selectAllCheckbox = screen.getByRole('checkbox', {
+        name: /select all rows checkbox/i,
+      });
+      fireEvent.click(selectAllCheckbox);
+      expect(apiRef.current.getSelectedRows()).to.have.keys([0, 2, 3]);
+      expect(selectAllCheckbox.checked).to.equal(true);
+    });
+
+    it('should unselect all the rows of the current page if 1 row of the current page is selected', () => {
+      render(
+        <TestDataGridSelection
+          checkboxSelection
+          checkboxSelectionVisibleOnly
+          pageSize={2}
+          pagination
+          rowsPerPageOptions={[2]}
+        />,
+      );
+      fireEvent.click(getCell(0, 0));
+      expect(apiRef.current.getSelectedRows()).to.have.keys([0]);
+      fireEvent.click(screen.getByRole('button', { name: /next page/i }));
+      fireEvent.click(getCell(2, 0));
+      expect(apiRef.current.getSelectedRows()).to.have.keys([0, 2]);
+      const selectAllCheckbox = screen.getByRole('checkbox', {
+        name: /select all rows checkbox/i,
+      });
+      fireEvent.click(selectAllCheckbox);
+      expect(apiRef.current.getSelectedRows()).to.have.keys([0]);
+      expect(selectAllCheckbox.checked).to.equal(false);
+    });
+
+    it('should not set the header checkbox in a indeterminate state when some rows of other pages are not selected', () => {
+      render(
+        <TestDataGridSelection
+          checkboxSelection
+          checkboxSelectionVisibleOnly
+          pageSize={2}
+          pagination
+          rowsPerPageOptions={[2]}
+        />,
+      );
+
+      fireEvent.click(getCell(0, 0));
+      fireEvent.click(getCell(1, 0));
+      fireEvent.click(screen.getByRole('button', { name: /next page/i }));
+      const selectAllCheckbox = screen.getByRole('checkbox', {
+        name: /select all rows checkbox/i,
+      });
+      expect(selectAllCheckbox).to.have.attr('data-indeterminate', 'false');
     });
   });
 

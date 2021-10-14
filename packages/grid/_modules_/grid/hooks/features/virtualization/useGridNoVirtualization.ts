@@ -7,7 +7,7 @@ import { visibleGridColumnsSelector } from '../columns/gridColumnsSelector';
 import { useGridSelector, useGridState } from '../../utils';
 import { gridPaginationSelector } from '../pagination/gridPaginationSelector';
 import { gridContainerSizesSelector } from '../container/gridContainerSizesSelector';
-import { visibleGridRowCountSelector } from '../filter/gridFilterSelector';
+import { gridVisibleRowCountSelector } from '../filter/gridFilterSelector';
 import { GridDisableVirtualizationApi } from '../../../models/api/gridDisableVirtualizationApi';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 
@@ -32,7 +32,7 @@ export const useGridNoVirtualization = (
   const [scrollTo] = useGridScrollFn(apiRef, renderingZoneRef!, columnsHeaderRef!);
   const paginationState = useGridSelector(apiRef, gridPaginationSelector);
   const visibleColumns = useGridSelector(apiRef, visibleGridColumnsSelector);
-  const visibleRowCount = useGridSelector(apiRef, visibleGridRowCountSelector);
+  const visibleRowCount = useGridSelector(apiRef, gridVisibleRowCountSelector);
   const containerSizes = useGridSelector(apiRef, gridContainerSizesSelector);
 
   const syncState = React.useCallback(() => {
