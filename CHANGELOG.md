@@ -105,7 +105,7 @@ A big thanks to the 7 contributors who made this release possible. Here are some
   + GRID_CHECKBOX_SELECTION_COL_DEF
   ```
 
-- [DataGrid] The constants referring to the column types were removed. (#2791) @flaviendelangle
+- [DataGrid] The constants referring to the column types were removed (#2791) @flaviendelangle
   Replace them as below:
 
   ```diff
