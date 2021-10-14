@@ -10,6 +10,9 @@ _Oct 14, 2021_
 A big thanks to the 7 contributors who made this release possible. Here are some highlights ✨:
 
 - 🎁 Add support for CSV export (#2519) @DanailH.
+- 💡 Enhance internal code structure
+- 📚 Documentation improvements
+- 🐞 Bugfixes
 
 ### `@mui/x-data-grid@v5.0.0-beta.4` / `@mui/x-data-grid-pro@v5.0.0-beta.4`
 
@@ -19,17 +22,17 @@ A big thanks to the 7 contributors who made this release possible. Here are some
 
 The following props were removed. If you depend on them, use `componentsProps.row` and `componentsProps.cell` to pass custom props to the row or cell.
 
-- onCellBlur
-- onCellOver
-- onCellOut
-- onCellEnter
-- onCellLeave
-- onRowOver
-- onRowOut
-- onRowEnter
-- onRowLeave
+- `onCellBlur`
+- `onCellOver`
+- `onCellOut`
+- `onCellEnter`
+- `onCellLeave`
+- `onRowOver`
+- `onRowOut`
+- `onRowEnter`
+- `onRowLeave`
 
-For more information, check [this page](https://next--material-ui-x.netlify.app/components/data-grid/components/#row). Example:
+For more information, check [this page](https://mui.com/components/data-grid/components//#row). Example:
 
   ```diff
   -<DataGrid onRowOver={handleRowOver} />;
