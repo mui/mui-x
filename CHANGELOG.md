@@ -204,7 +204,7 @@ The following exports have been renamed
 - [docs] Add redirection from doc home page to DataGrid home page (#2737) @flaviendelangle
 - [docs] Fix JSX closing tag in `getActions` example (#2847) @dstarner
 - [docs] Fix pagination in Ant Design demo (#2787) @ZeeshanTamboli
-- [docs] The `page` prop is zero-based (#2812) @m4theushw
+- [docs] Update the `page` prop docs (#2812) @m4theushw
 
 #### Core
 
