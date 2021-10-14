@@ -2,20 +2,19 @@ import * as React from 'react';
 import { DataGridPro, GridColumns, GridRowsProp } from '@mui/x-data-grid-pro';
 
 const rows: GridRowsProp = [
-  { path: ['A'] },
-  { path: ['A', 'A', 'A', 'A'] },
-  { path: ['A', 'A', 'A', 'B'] },
-  { path: ['B'] },
-  { path: ['C', 'A', 'A'] },
+  { id: 0, path: ['A'] },
+  { id: 1, path: ['A', 'A', 'A', 'A'] },
+  { id: 2, path: ['A', 'A', 'A', 'B'] },
+  { id: 3, path: ['B'] },
+  { id: 4, path: ['C', 'A', 'A'] },
 ];
 
 const columns: GridColumns = [
+  { field: 'id', type: 'number' },
   { field: 'path', renderCell: (params) => (params.value as string[]).join('-') },
 ];
 
 const getTreeDataPath = (row: any) => row.path;
-
-const getRowId = (row: any) => row.path.join('-');
 
 export default function FillerTreeData() {
   return (
@@ -26,7 +25,8 @@ export default function FillerTreeData() {
         rows={rows}
         columns={columns}
         getTreeDataPath={getTreeDataPath}
-        getRowId={getRowId}
+        filterModel={{ items: [{ columnField: 'id', operatorValue: '!=', value: 0 }] }}
+        defaultGroupingExpansionDepth={1}
       />
     </div>
   );
