@@ -20,8 +20,6 @@ import { useGridRows } from '../../_modules_/grid/hooks/features/rows/useGridRow
 import { useGridParamsApi } from '../../_modules_/grid/hooks/features/rows/useGridParamsApi';
 import { useGridSelection } from '../../_modules_/grid/hooks/features/selection/useGridSelection';
 import { useGridSorting } from '../../_modules_/grid/hooks/features/sorting/useGridSorting';
-import { useGridVirtualization } from '../../_modules_/grid/hooks/features/virtualization/useGridVirtualization';
-import { useGridNoVirtualization } from '../../_modules_/grid/hooks/features/virtualization/useGridNoVirtualization';
 import { useGridScroll } from '../../_modules_/grid/hooks/features/scroll/useGridScroll';
 import { useGridEvents } from '../../_modules_/grid/hooks/features/events/useGridEvents';
 import { useGridContainerProps } from '../../_modules_/grid/hooks/features/container/useGridContainerProps';
@@ -44,8 +42,6 @@ export const useDataGridComponent = (apiRef: GridApiRef, props: GridComponentPro
   useGridPage(apiRef, props);
   useGridContainerProps(apiRef, props);
   useGridScroll(apiRef, props);
-  useGridNoVirtualization(apiRef, props);
-  useGridVirtualization(apiRef, props);
   useGridColumnMenu(apiRef);
   useGridKeyboard(apiRef);
   useGridKeyboardNavigation(apiRef, props);

@@ -54,10 +54,25 @@ export interface GridSimpleOptions {
    */
   checkboxSelectionVisibleOnly: boolean;
   /**
-   * Number of columns rendered outside the grid viewport.
-   * @default 2
+   * Number of extra columns to be rendered before/after the visible slice.
+   * @default 3
    */
   columnBuffer: number;
+  /**
+   * Number of extra rows to be rendered before/after the visible slice.
+   * @default 3
+   */
+  rowBuffer: number;
+  /**
+   * Number of rows from the `rowBuffer` that can be visible before a new slice is rendered.
+   * @default 3
+   */
+  rowThreshold: number;
+  /**
+   * Number of rows from the `columnBuffer` that can be visible before a new slice is rendered.
+   * @default 3
+   */
+  columnThreshold: number;
   /**
    * Set the density of the grid.
    * @default "standard"
@@ -254,7 +269,10 @@ export const GRID_DEFAULT_SIMPLE_OPTIONS: GridSimpleOptions = {
   autoPageSize: false,
   checkboxSelection: false,
   checkboxSelectionVisibleOnly: false,
-  columnBuffer: 2,
+  columnBuffer: 3,
+  rowBuffer: 3,
+  columnThreshold: 3,
+  rowThreshold: 3,
   density: GridDensityTypes.Standard,
   disableExtendRowFullWidth: false,
   disableColumnFilter: false,

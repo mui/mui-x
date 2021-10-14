@@ -11,31 +11,32 @@ import { composeClasses } from '../utils/material-ui-utils';
 import { getDataGridUtilityClass, gridClasses } from '../gridClasses';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { GridComponentProps } from '../GridComponentProps';
+import { GridStateColDef } from '../models/colDef/gridColDef';
 import { GridCellIdentifier } from '../hooks/features/focus/gridFocusState';
 import { GridScrollBarState } from '../models/gridContainerProps';
-import { GridStateColDef } from '../models/colDef/gridColDef';
-import { GridEmptyCell } from './cell/GridEmptyCell';
-import { GridRenderingState } from '../hooks/features/virtualization/renderingState';
+import { gridColumnsMetaSelector } from '../hooks/features/columns/gridColumnsSelector';
+import { useGridSelector } from '../hooks/utils/useGridSelector';
 
 export interface GridRowProps {
-  id: GridRowId;
+  rowId: GridRowId;
   selected: boolean;
   index: number;
   rowHeight: number;
+  containerWidth: number;
   row: GridRowData;
-  renderState: GridRenderingState;
   firstColumnToRender: number;
+  lastColumnToRender: number;
+  visibleColumns: GridStateColDef[];
   renderedColumns: GridStateColDef[];
-  children: React.ReactNode;
   cellFocus: GridCellIdentifier | null;
   cellTabIndex: GridCellIdentifier | null;
-  editRowsModel: GridEditRowsModel;
+  editRowsState: GridEditRowsModel;
   scrollBarState: GridScrollBarState;
   onClick?: React.MouseEventHandler<HTMLDivElement>;
   onDoubleClick?: React.MouseEventHandler<HTMLDivElement>;
 }
 
-type OwnerState = GridRowProps & {
+type OwnerState = Pick<GridRowProps, 'selected'> & {
   editable: boolean;
   editing: boolean;
   classes?: GridComponentProps['classes'];
@@ -51,34 +52,48 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-function GridRow(props: GridRowProps) {
+const EmptyCell = ({ width, height }) => {
+  if (!width || !height) {
+    return null;
+  }
+
+  const style = { width, height };
+
+  return <div className="MuiDataGrid-cell" style={style} />; // TODO change to .MuiDataGrid-emptyCell or .MuiDataGrid-rowFiller
+};
+
+function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
   const {
     selected,
-    id,
+    rowId,
     row,
     index,
+    style: styleProp,
     rowHeight,
+    className,
+    visibleColumns,
     renderedColumns,
+    containerWidth,
     firstColumnToRender,
-    children,
+    lastColumnToRender,
     cellFocus,
     cellTabIndex,
-    editRowsModel,
+    editRowsState,
     scrollBarState, // to be removed
-    renderState, // to be removed
     onClick,
     onDoubleClick,
     ...other
   } = props;
-  const ariaRowIndex = index + 2; // 1 for the header row and 1 as it's 1 based
+  const ariaRowIndex = index + 2; // 1 for the header row and 1 as it's 1-based
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
-  const rowNode = apiRef.current.UNSTABLE_getRowNode(id);
+  const columnsMeta = useGridSelector(apiRef, gridColumnsMetaSelector);
+  const rowNode = apiRef.current.UNSTABLE_getRowNode(rowId);
 
   const ownerState = {
-    ...props,
+    selected,
     classes: rootProps.classes,
-    editing: apiRef.current.getRowMode(id) === GridRowModes.Edit,
+    editing: apiRef.current.getRowMode(rowId) === GridRowModes.Edit,
     editable: rootProps.editMode === GridEditModes.Row,
   };
 
@@ -97,27 +112,28 @@ function GridRow(props: GridRowProps) {
       }
 
       // The row might have been deleted
-      if (!apiRef.current.getRow(id)) {
+      if (!apiRef.current.getRow(rowId)) {
         return;
       }
 
-      apiRef.current.publishEvent(eventName, apiRef.current.getRowParams(id), event);
+      apiRef.current.publishEvent(eventName, apiRef.current.getRowParams(rowId), event);
 
       if (propHandler) {
         propHandler(event);
       }
     },
-    [apiRef, id],
+    [apiRef, rowId],
   );
 
   const style = {
     maxHeight: rowHeight,
     minHeight: rowHeight,
+    ...styleProp,
   };
 
   const rowClassName =
     typeof rootProps.getRowClassName === 'function' &&
-    rootProps.getRowClassName(apiRef.current.getRowParams(id));
+    rootProps.getRowClassName(apiRef.current.getRowParams(rowId));
 
   const cells: JSX.Element[] = [];
 
@@ -125,14 +141,14 @@ function GridRow(props: GridRowProps) {
     const column = renderedColumns[i];
     const indexRelativeToAllColumns = firstColumnToRender + i;
 
-    const isLastColumn = indexRelativeToAllColumns === renderedColumns.length - 1;
+    const isLastColumn = indexRelativeToAllColumns === visibleColumns.length - 1;
     const removeLastBorderRight =
       isLastColumn && scrollBarState.hasScrollX && !scrollBarState.hasScrollY;
     const showRightBorder = !isLastColumn
       ? rootProps.showCellRightBorder
       : !removeLastBorderRight && rootProps.disableExtendRowFullWidth;
 
-    const cellParams = apiRef.current.getCellParams(id, column.field);
+    const cellParams = apiRef.current.getCellParams(rowId, column.field);
 
     const classNames: string[] = [];
 
@@ -146,7 +162,7 @@ function GridRow(props: GridRowProps) {
       );
     }
 
-    const editCellState = editRowsModel[id] && editRowsModel[id][column.field];
+    const editCellState = editRowsState[rowId] ? editRowsState[rowId][column.field] : null;
     let content: React.ReactNode = null;
 
     const skipRender = !column.shouldRenderFillerRows && rowNode?.fillerNode;
@@ -171,11 +187,12 @@ function GridRow(props: GridRowProps) {
       classNames.push(rootProps.getCellClassName(cellParams));
     }
 
-    const hasFocus = cellFocus !== null && cellFocus.id === id && cellFocus.field === column.field;
+    const hasFocus =
+      cellFocus !== null && cellFocus.id === rowId && cellFocus.field === column.field;
 
     const tabIndex =
       cellTabIndex !== null &&
-      cellTabIndex.id === id &&
+      cellTabIndex.id === rowId &&
       cellTabIndex.field === column.field &&
       cellParams.cellMode === 'view'
         ? 0
@@ -183,11 +200,11 @@ function GridRow(props: GridRowProps) {
 
     cells.push(
       <rootProps.components.Cell
-        key={column.field} // This is wrong. The key should be the index so the cells can be recycled.
+        key={i}
         value={skipRender ? null : cellParams.value}
         field={column.field}
         width={column.computedWidth}
-        rowId={id}
+        rowId={rowId}
         height={rowHeight}
         showRightBorder={showRightBorder}
         formattedValue={skipRender ? null : cellParams.formattedValue}
@@ -205,13 +222,14 @@ function GridRow(props: GridRowProps) {
     );
   }
 
+  const emptyCellWidth = containerWidth - columnsMeta.totalWidth;
+
   return (
     <div
-      key={id}
-      data-id={id}
+      data-id={rowId}
       data-rowindex={index}
       role="row"
-      className={clsx(rowClassName, classes.root)}
+      className={clsx(rowClassName, classes.root, className)}
       aria-rowindex={ariaRowIndex}
       aria-selected={selected}
       style={style}
@@ -219,9 +237,8 @@ function GridRow(props: GridRowProps) {
       onDoubleClick={publish(GridEvents.rowDoubleClick, onDoubleClick)}
       {...other}
     >
-      <GridEmptyCell width={renderState.renderContext!.leftEmptyWidth} height={rowHeight} />
       {cells}
-      <GridEmptyCell width={renderState.renderContext!.rightEmptyWidth} height={rowHeight} />
+      {emptyCellWidth > 0 && <EmptyCell width={emptyCellWidth} height={rowHeight} />}
     </div>
   );
 }
@@ -233,19 +250,18 @@ GridRow.propTypes = {
   // ----------------------------------------------------------------------
   cellFocus: PropTypes.object,
   cellTabIndex: PropTypes.object,
-  children: PropTypes.node,
-  editRowsModel: PropTypes.object.isRequired,
+  containerWidth: PropTypes.number.isRequired,
+  editRowsState: PropTypes.object.isRequired,
   firstColumnToRender: PropTypes.number.isRequired,
-  id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   index: PropTypes.number.isRequired,
-  onClick: PropTypes.func,
-  onDoubleClick: PropTypes.func,
+  lastColumnToRender: PropTypes.number.isRequired,
   renderedColumns: PropTypes.arrayOf(PropTypes.object).isRequired,
-  renderState: PropTypes.object.isRequired,
   row: PropTypes.object.isRequired,
   rowHeight: PropTypes.number.isRequired,
+  rowId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   scrollBarState: PropTypes.object.isRequired,
   selected: PropTypes.bool.isRequired,
+  visibleColumns: PropTypes.arrayOf(PropTypes.object).isRequired,
 } as any;
 
 export { GridRow };

@@ -474,7 +474,7 @@ describe('<DataGrid /> - Pagination', () => {
         (heightAfter - headerHeight - footerHeight) / rowHeight,
       );
 
-      let rows = document.querySelectorAll('.MuiDataGrid-viewport [role="row"]');
+      let rows = document.querySelectorAll('.MuiDataGrid-renderingZone [role="row"]');
       expect(rows.length).to.equal(expectedViewportRowsLengthBefore);
 
       setProps({ height: heightAfter });
@@ -485,7 +485,7 @@ describe('<DataGrid /> - Pagination', () => {
         ),
       );
 
-      rows = document.querySelectorAll('.MuiDataGrid-viewport [role="row"]');
+      rows = document.querySelectorAll('.MuiDataGrid-renderingZone [role="row"]');
       expect(rows.length).to.equal(expectedViewportRowsLengthAfter);
 
       expect(onPageSizeChange.lastCall.args[0]).to.equal(expectedViewportRowsLengthAfter);
