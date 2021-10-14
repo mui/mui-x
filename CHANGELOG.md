@@ -168,7 +168,7 @@ A big thanks to the 7 contributors who made this release possible. Here are some
 
 #### Core
 
-- [core] Each hooks now initializes its state synchronously (#2782) @flaviendelangle
+- [core] Update hooks to initialize their state synchronously (#2782) @flaviendelangle
 - [core] Fix rollup external warnings (#2736) @eps1lon
 
 ## 5.0.0-beta.3
