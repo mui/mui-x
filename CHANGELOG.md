@@ -329,7 +329,7 @@ A big thanks to the 5 contributors who made this release possible. Here are some
 - [DataGrid] Free up column header space when icons are not visible (#2606) @DanailH
 - [DataGrid] Improve Polish (plPL) locale (#2632) @michallukowski
 
-#### Docs
+### Docs
 
 - [docs] Add section for controlled selection and server-side pagination (#2602) @DanailH
 - [docs] Fix Algolia search (#2655) @oliviertassinari
