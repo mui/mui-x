@@ -18,7 +18,7 @@ import {
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
-const rowsWithoutFiller: GridRowsProp = [
+const rowsWithoutGap: GridRowsProp = [
   { name: 'A', value: 10 },
   { name: 'A.A', value: 4 },
   { name: 'A.B', value: 6 },
@@ -29,7 +29,7 @@ const rowsWithoutFiller: GridRowsProp = [
   { name: 'C', value: 5 },
 ];
 
-const rowsWithFiller: GridRowsProp = [
+const rowsWithGap: GridRowsProp = [
   { name: 'A', value: 10 },
   { name: 'A.B', value: 6 },
   { name: 'A.A', value: 4 },
@@ -39,7 +39,7 @@ const rowsWithFiller: GridRowsProp = [
 
 const baselineProps: DataGridProProps = {
   autoHeight: isJSDOM,
-  rows: rowsWithoutFiller,
+  rows: rowsWithoutGap,
   columns: [
     {
       field: 'name',
@@ -211,8 +211,8 @@ describe('<DataGridPro /> - Tree Data', () => {
       expect(getColumnValues(1)).to.deep.equal(['A', 'B', 'C']);
     });
 
-    it('should add filler rows if some parents do not exist', () => {
-      render(<Test rows={rowsWithFiller} />);
+    it('should add auto generated rows if some parents do not exist', () => {
+      render(<Test rows={rowsWithGap} />);
       expect(getColumnValues(1)).to.deep.equal(['A', '']);
       expect(getColumnValues(0)).to.deep.equal(['A', 'B']);
       fireEvent.click(getCell(1, 0).querySelector('button'));

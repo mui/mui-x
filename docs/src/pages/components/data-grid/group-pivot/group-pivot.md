@@ -69,9 +69,9 @@ Use the `UNSTABLE_setRowExpansion` method on `apiRef` to programmatically set th
 
 {{"demo": "pages/components/data-grid/group-pivot/SetRowExpansionTreeData.js", "bg": "inline", "defaultCodeOpen": false}}
 
-### Filler rows
+### Gaps in the tree
 
-If some entries are missing to build the full tree, the `DataGridPro` will automatically create filler rows to fill those gaps.
+If some entries are missing to build the full tree, the `DataGridPro` will automatically create rows to fill those gaps.
 
 {{"demo": "pages/components/data-grid/group-pivot/FillerTreeData.js", "bg": "inline", "defaultCodeOpen": false}}
 
