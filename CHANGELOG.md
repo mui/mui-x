@@ -134,7 +134,7 @@ A big thanks to the 7 contributors who made this release possible. Here are some
   +const [filterModel, setFilterModel] = React.useState(getDefaultGridFilterModel);
   ```
   
-  For the other methods, you can hardcode the value you want to apply
+  For the other methods, you can hardcode the value you want to apply:
 
   ```diff
   -const [sortModel, setSortModel] = React.useState(() => getInitialGridSortingState().sortModel);
