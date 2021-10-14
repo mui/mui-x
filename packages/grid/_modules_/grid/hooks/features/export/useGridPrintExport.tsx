@@ -136,7 +136,7 @@ export const useGridPrintExport = (
       }
 
       if (normalizeOptions.hideFooter) {
-        gridClone.querySelector(`.${gridClasses.toolbarContainer}`)?.remove();
+        gridClone.querySelector(`.${gridClasses.footerContainer}`)?.remove();
         gridFooterElementHeight = 0;
       }
 
