@@ -35,7 +35,8 @@ export const insertRowInTree = (params: InsertRowInTreeParams) => {
     let nodeNameConfig = nodeNameToIdSubTree[nodeName];
 
     if (!nodeNameConfig) {
-      nodeId = depth === path.length - 1 ? id : `auto-generated-row-${path.slice(0, depth + 1).join('-')}`;
+      nodeId =
+        depth === path.length - 1 ? id : `auto-generated-row-${path.slice(0, depth + 1).join('-')}`;
 
       nodeNameConfig = { id: nodeId, children: {} };
       nodeNameToIdSubTree[nodeName] = nodeNameConfig;
