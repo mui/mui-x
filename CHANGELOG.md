@@ -336,7 +336,7 @@ A big thanks to the 5 contributors who made this release possible. Here are some
 - [docs] Improve the seach results relevance (#2656) @oliviertassinari
 - [docs] Update installation instructions (#2663) @m4theushw
 
-#### Core
+### Core
 
 - [core] Upgrade JSS plugins to 10.8.0 (#2667) @m4theushw
 
