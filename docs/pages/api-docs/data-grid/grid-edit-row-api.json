@@ -30,7 +30,7 @@
     {
       "name": "isCellEditable",
       "description": "Controls if a cell is editable.",
-      "type": "(params: GridCellParams<GridCellValue, GridRowDefaultData, GridCellValue>) => boolean"
+      "type": "(params: GridCellParams<any, any, any>) => boolean"
     },
     {
       "name": "setCellMode",
