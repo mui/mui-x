@@ -21,7 +21,7 @@ const useStyles = makeStyles({
 });
 
 const GridTreeDataGroupingCell = (props: GridRenderCellParams) => {
-  const { id, row } = props;
+  const { id } = props;
 
   const rootProps = useGridRootProps();
   const apiRef = useGridApiContext();
@@ -32,14 +32,12 @@ const GridTreeDataGroupingCell = (props: GridRenderCellParams) => {
     ? rootProps.components.TreeDataCollapseIcon
     : rootProps.components.TreeDataExpandIcon;
 
-  const path = rootProps.getTreeDataPath!(row);
-
   if (!node) {
     throw new Error(`MUI: No row with id #${id} found`);
   }
 
   return (
-    <Box className={classes.root} sx={{ ml: (path.length - 1) * 4 }}>
+    <Box className={classes.root} sx={{ ml: node.depth * 4 }}>
       <div className={classes.toggle}>
         {!!node.children?.length && (
           <IconButton
@@ -56,7 +54,7 @@ const GridTreeDataGroupingCell = (props: GridRenderCellParams) => {
           </IconButton>
         )}
       </div>
-      <span>{path[path.length - 1]}</span>
+      <span>{node.label}</span>
     </Box>
   );
 };

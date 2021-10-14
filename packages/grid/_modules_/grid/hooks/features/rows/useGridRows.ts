@@ -91,7 +91,7 @@ const getRowsStateFromCache = (
 
   const groupingResponse = apiRef.current.UNSTABLE_groupRows({
     idRowsLookup,
-    ids: rowIds,
+    rowIds,
   });
 
   const dataTopLevelRowCount = Object.values(groupingResponse.tree).filter(
@@ -101,7 +101,7 @@ const getRowsStateFromCache = (
   const totalTopLevelRowCount =
     propRowCount > dataTopLevelRowCount ? propRowCount : dataTopLevelRowCount;
 
-  return { ...groupingResponse, rowIds, totalRowCount, totalTopLevelRowCount };
+  return { ...groupingResponse, totalRowCount, totalTopLevelRowCount };
 };
 
 // The cache is always redefined synchronously in `useGridStateInit` so this object don't need to be regenerated across DataGrid instances.

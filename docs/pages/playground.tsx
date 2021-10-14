@@ -1,20 +1,33 @@
 import * as React from 'react';
-import { DataGridPro } from '@mui/x-data-grid-pro';
-import { useDemoTreeData } from '@mui/x-data-grid-generator';
+import { DataGridPro, GridColumns, GridRowsProp } from '@mui/x-data-grid-pro';
 
-export default function BasicTreeData() {
-  const { data, loading } = useDemoTreeData({ rowLength: [20, 20], randomLength: false });
+const rows: GridRowsProp = [
+    { path: ['A'] },
+    { path: ['A', 'A', 'A', 'A'] },
+    { path: ['A', 'A', 'A', 'B'] },
+    { path: ['B'] },
+    { path: ['C', 'A', 'A'] },
+];
 
-  return (
-    <div style={{ height: 600, width: '100%' }}>
-      <DataGridPro
-        loading={loading}
-        treeData
-        disableSelectionOnClick
-        defaultGroupingExpansionDepth={1}
-        sortModel={[{ field: 'index', sort: 'desc' }]}
-        {...data}
-      />
-    </div>
-  );
+const columns: GridColumns = [
+    { field: 'path', renderCell: (params) => (params.value as string[]).join('-') },
+];
+
+const getTreeDataPath = (row: any) => row.path;
+
+const getRowId = (row: any) => row.path.join('-');
+
+export default function FillerTreeData() {
+    return (
+        <div style={{ height: 300, width: '100%' }}>
+            <DataGridPro
+                treeData
+                disableSelectionOnClick
+                rows={rows}
+                columns={columns}
+                getTreeDataPath={getTreeDataPath}
+                getRowId={getRowId}
+            />
+        </div>
+    );
 }

@@ -53,7 +53,7 @@ export const useGridTreeData = (
         throw new Error('MUI: No getTreeDataPath given.');
       }
 
-      const rows = params.ids
+      const rows = params.rowIds
         .map((rowId) => ({
           id: rowId,
           path: props.getTreeDataPath!(params.idRowsLookup[rowId]),
@@ -62,6 +62,7 @@ export const useGridTreeData = (
 
       const tree: GridRowTreeConfig = {};
       const idRowsLookup: GridRowsLookup = { ...params.idRowsLookup };
+      const rowIds = [...params.rowIds]
       const nodeNameToIdTree: GridNodeNameToIdTree = {};
 
       rows.forEach((row) => {
@@ -71,6 +72,7 @@ export const useGridTreeData = (
           id: row.id,
           defaultGroupingExpansionDepth: props.defaultGroupingExpansionDepth,
           idRowsLookup,
+          rowIds,
           nodeNameToIdTree,
         });
       });
@@ -78,6 +80,7 @@ export const useGridTreeData = (
       return {
         tree,
         idRowsLookup,
+        rowIds,
       };
     };
 

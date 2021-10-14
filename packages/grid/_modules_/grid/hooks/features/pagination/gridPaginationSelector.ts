@@ -59,8 +59,6 @@ export const gridSortedVisiblePaginatedRowEntriesSelector = createSelector(
       }
     }
 
-    console.log(visibleSortedRowEntries.slice(firstRowIndex, lastRowIndex).map((el) => el.id));
-
     return visibleSortedRowEntries.slice(firstRowIndex, lastRowIndex);
   },
 );

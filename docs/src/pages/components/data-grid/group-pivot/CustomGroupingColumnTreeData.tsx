@@ -3,7 +3,6 @@ import {
   DataGridPro,
   DataGridProProps,
   GridRenderCellParams,
-  useGridRootProps,
   useGridSlotComponentProps,
 } from '@mui/x-data-grid-pro';
 import { useDemoTreeData } from '@mui/x-data-grid-generator';
@@ -11,20 +10,16 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 
 const CustomGridTreeDataGroupingCell = (props: GridRenderCellParams) => {
-  const { id, row } = props;
-
+  const { id } = props;
   const { apiRef } = useGridSlotComponentProps();
-  const rootProps = useGridRootProps();
   const node = apiRef.current.UNSTABLE_getRowNode(id);
-
-  const path = rootProps.getTreeDataPath!(row);
 
   if (!node) {
     throw new Error(`MUI: No row with id #${id} found`);
   }
 
   return (
-    <Box sx={{ ml: path.length * 4 }}>
+    <Box sx={{ ml: node.depth * 4 }}>
       <div>
         {node.children?.length ? (
           <Button
@@ -34,7 +29,7 @@ const CustomGridTreeDataGroupingCell = (props: GridRenderCellParams) => {
             tabIndex={-1}
             size="small"
           >
-            See {node.children.length} children
+            See children
           </Button>
         ) : (
           <span />
