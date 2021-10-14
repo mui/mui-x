@@ -72,7 +72,6 @@ const GridHeaderCheckbox = React.forwardRef<HTMLInputElement, GridColumnHeaderPa
     const isIndeterminate =
       currentSelectionSize > 0 && currentSelectionSize < selectionCandidates.length;
 
-    // TODO core v5 remove || isIndeterminate, no longer has any effect
     const isChecked = currentSelectionSize > 0;
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
