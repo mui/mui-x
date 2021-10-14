@@ -20,7 +20,8 @@ interface InsertRowInTreeParams {
 }
 
 export const insertRowInTree = (params: InsertRowInTreeParams) => {
-  const { tree, path, id, defaultGroupingExpansionDepth, idRowsLookup, rowIds, nodeNameToIdTree } = params;
+  const { tree, path, id, defaultGroupingExpansionDepth, idRowsLookup, rowIds, nodeNameToIdTree } =
+    params;
 
   let nodeNameToIdSubTree = nodeNameToIdTree;
   let parentNode: GridRowTreeNodeConfig | null = null;
@@ -58,7 +59,7 @@ export const insertRowInTree = (params: InsertRowInTreeParams) => {
 
         tree[nodeId] = node;
         idRowsLookup[nodeId] = {};
-        rowIds.push(nodeId)
+        rowIds.push(nodeId);
       }
     } else {
       tree[id] = {

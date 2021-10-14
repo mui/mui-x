@@ -9,7 +9,9 @@ import { GridEvents } from '../../../constants/eventsConstants';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 
 const getFlatRowTree: GridRowGroupingPreProcessing = (params) => ({
-  tree: Object.fromEntries(params.rowIds.map((id) => [id.toString(), { id, depth: 0, parent: null }])),
+  tree: Object.fromEntries(
+    params.rowIds.map((id) => [id.toString(), { id, depth: 0, parent: null, label: '' }]),
+  ),
   idRowsLookup: params.idRowsLookup,
   rowIds: params.rowIds,
 });

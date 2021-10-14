@@ -62,7 +62,7 @@ export const useGridTreeData = (
 
       const tree: GridRowTreeConfig = {};
       const idRowsLookup: GridRowsLookup = { ...params.idRowsLookup };
-      const rowIds = [...params.rowIds]
+      const rowIds = [...params.rowIds];
       const nodeNameToIdTree: GridNodeNameToIdTree = {};
 
       rows.forEach((row) => {
