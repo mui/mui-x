@@ -1,6 +1,6 @@
 import * as React from 'react';
 import IconButton from '@mui/material/IconButton';
-import Switch from '@mui/material/Switch';
+import Switch, { switchClasses } from '@mui/material/Switch';
 import Button from '@mui/material/Button';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import TextField from '@mui/material/TextField';
@@ -42,11 +42,14 @@ const GridColumnsPanelRoot = styled('div', {
 const GridColumnRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'Column',
-})({
+})(({ theme }) => ({
   display: 'flex',
   justifyContent: 'space-between',
   padding: '1px 8px 1px 7px',
-});
+  [`& .${switchClasses.root}`]: {
+    marginRight: theme.spacing(1),
+  },
+}));
 
 const StyledIconButton = styled(IconButton)({
   justifyContent: 'flex-end',
@@ -126,7 +129,6 @@ export function GridColumnsPanel() {
               <FormControlLabel
                 control={
                   <Switch
-                    sx={{ mr: 1 }}
                     checked={!column.hide}
                     onClick={toggleColumn}
                     name={column.field}
