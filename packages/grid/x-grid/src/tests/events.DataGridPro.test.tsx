@@ -323,10 +323,10 @@ describe('<DataGridPro /> - Events Params', () => {
         />
       </div>,
     );
-    const virtualizedContainer = container.querySelector('.MuiDataGrid-virtualizedContainer');
+    const virtualScroller = container.querySelector('.MuiDataGrid-virtualScroller');
     // arbitrary number to make sure that the bottom of the grid window is reached.
-    virtualizedContainer.scrollTop = 12345;
-    virtualizedContainer.dispatchEvent(new Event('scroll'));
+    virtualScroller.scrollTop = 12345;
+    virtualScroller.dispatchEvent(new Event('scroll'));
     expect(handleRowsScrollEnd.callCount).to.equal(1);
   });
 
@@ -343,11 +343,11 @@ describe('<DataGridPro /> - Events Params', () => {
       expect(handleViewportRowsChange.lastCall.args[0].firstRowIndex).to.equal(0);
       expect(handleViewportRowsChange.lastCall.args[0].lastRowIndex).to.equal(6); // should be pageSize + 1
     });
-    const virtualizedContainer = container.querySelector('.MuiDataGrid-virtualizedContainer');
+    const virtualScroller = container.querySelector('.MuiDataGrid-virtualScroller');
     // scroll 6 rows so that the renderContext is updated. To be changed to a scroll of 1 row.
     // TODO: set RowHeight directly. Currently 52 is used because the test fails under Windows.
-    virtualizedContainer.scrollTop = 52 * 6;
-    virtualizedContainer.dispatchEvent(new Event('scroll'));
+    virtualScroller.scrollTop = 52 * 6;
+    virtualScroller.dispatchEvent(new Event('scroll'));
     await waitFor(() => {
       expect(handleViewportRowsChange.lastCall.args[0].firstRowIndex).to.equal(6); // should be 1
       expect(handleViewportRowsChange.lastCall.args[0].lastRowIndex).to.equal(12); // should be pageSize + 1

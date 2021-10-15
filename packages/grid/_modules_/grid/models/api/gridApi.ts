@@ -20,7 +20,6 @@ import { GridRowApi } from './gridRowApi';
 import { GridSelectionApi } from './gridSelectionApi';
 import { GridSortApi } from './gridSortApi';
 import { GridStateApi } from './gridStateApi';
-import { GridVirtualizationApi } from './gridVirtualizationApi';
 import { GridLoggerApi } from './gridLoggerApi';
 import { GridScrollApi } from './gridScrollApi';
 import type { GridColumnsPreProcessingApi } from '../../hooks/core/columnsPreProcessing';
@@ -35,6 +34,7 @@ export interface GridApi
     GridLoggerApi,
     GridColumnsPreProcessingApi,
     GridRowGroupsPreProcessingApi,
+    GridRowGroupsPreProcessingApi,
     GridDensityApi,
     GridEventsApi,
     GridRowApi,
@@ -43,7 +43,6 @@ export interface GridApi
     GridColumnApi,
     GridSelectionApi,
     GridSortApi,
-    GridVirtualizationApi,
     GridPageApi,
     GridPageSizeApi,
     GridCsvExportApi,

@@ -9,7 +9,7 @@ import { GridMainContainer } from '../containers/GridMainContainer';
 import { GridAutoSizer } from '../GridAutoSizer';
 import { GridOverlays } from './GridOverlays';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { GridVirtualizedContainer } from '../GridVirtualizedContainer';
+import { GridVirtualScroller } from '../GridVirtualScroller';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { gridSelectionStateSelector } from '../../hooks/features/selection/gridSelectionSelector';
 import { gridDensityHeaderHeightSelector } from '../../hooks/features/density/densitySelector';
@@ -101,7 +101,7 @@ function GridBody(props: GridBodyProps) {
           };
 
           return (
-            <GridVirtualizedContainer
+            <GridVirtualScroller
               ref={windowRef}
               style={style}
               selectionLookup={selectionLookup} // TODO pass it directly to the row via componentsProps

@@ -283,6 +283,6 @@ export const gridClasses = generateUtilityClasses('MuiDataGrid', [
   'selectedRowCount',
   'sortIcon',
   'toolbarContainer',
-  'virtualizedContainer',
+  'virtualScroller',
   'withBorder',
 ]);
