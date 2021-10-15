@@ -5,7 +5,7 @@ import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridFilterApi } from '../../../models/api/gridFilterApi';
 import { GridFeatureModeConstant } from '../../../models/gridFeatureMode';
 import { GridFilterItem, GridLinkOperator } from '../../../models/gridFilterItem';
-import { GridRowId, GridRowModel } from '../../../models/gridRows';
+import { GridRowId } from '../../../models/gridRows';
 import { isDeepEqual } from '../../../utils/utils';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
@@ -13,16 +13,14 @@ import { useGridLogger } from '../../utils/useGridLogger';
 import { filterableGridColumnsIdsSelector } from '../columns/gridColumnsSelector';
 import { useGridState } from '../../utils/useGridState';
 import { GridPreferencePanelsValue } from '../preferencesPanel/gridPreferencePanelsValue';
-import { sortedGridRowsSelector } from '../sorting/gridSortingSelector';
+import { sortedGridRowIdsSelector } from '../sorting/gridSortingSelector';
 import { getDefaultGridFilterModel } from './gridFilterState';
 import { GridFilterModel } from '../../../models/gridFilterModel';
-import {
-  gridVisibleRowsLookupSelector,
-  visibleSortedGridRowsSelector,
-  gridFilterModelSelector,
-} from './gridFilterSelector';
+import { visibleSortedGridRowsSelector, gridFilterModelSelector } from './gridFilterSelector';
 import { useGridStateInit } from '../../utils/useGridStateInit';
 import { useFirstRender } from '../../utils/useFirstRender';
+
+type GridFilterItemApplier = (rowId: GridRowId) => boolean;
 
 const checkFilterModelValidity = (model: GridFilterModel) => {
   if (model.items.length > 1) {
@@ -75,107 +73,138 @@ export const useGridFilter = (
     changeEvent: GridEvents.filterModelChange,
   });
 
-  const applyFilter = React.useCallback(
-    (filterItem: GridFilterItem, linkOperator: GridLinkOperator = GridLinkOperator.And) => {
-      if (!filterItem.columnField || !filterItem.operatorValue) {
-        return;
+  const buildAggregatedFilterApplier = React.useCallback(
+    (filterModel: GridFilterModel): GridFilterItemApplier | null => {
+      const { items, linkOperator = GridLinkOperator.And } = filterModel;
+
+      const getFilterCallbackFromItem = (
+        filterItem: GridFilterItem,
+      ): GridFilterItemApplier | null => {
+        if (!filterItem.columnField || !filterItem.operatorValue) {
+          return null;
+        }
+
+        const column = apiRef.current.getColumn(filterItem.columnField);
+        if (!column) {
+          return null;
+        }
+
+        const parsedValue = column.valueParser
+          ? column.valueParser(filterItem.value)
+          : filterItem.value;
+        const newFilterItem: GridFilterItem = { ...filterItem, value: parsedValue };
+
+        const filterOperators = column.filterOperators;
+        if (!filterOperators?.length) {
+          throw new Error(`MUI: No filter operators found for column '${column.field}'.`);
+        }
+
+        const filterOperator = filterOperators.find(
+          (operator) => operator.value === newFilterItem.operatorValue,
+        )!;
+        if (!filterOperator) {
+          throw new Error(
+            `MUI: No filter operator found for column '${column.field}' and operator value '${newFilterItem.operatorValue}'.`,
+          );
+        }
+
+        const applyFilterOnRow = filterOperator.getApplyFilterFn(newFilterItem, column)!;
+        if (typeof applyFilterOnRow !== 'function') {
+          return null;
+        }
+
+        return (rowId: GridRowId) => {
+          const cellParams = apiRef.current.getCellParams(rowId, newFilterItem.columnField!);
+
+          return applyFilterOnRow(cellParams);
+        };
+      };
+
+      const appliers = items
+        .map(getFilterCallbackFromItem)
+        .filter((callback): callback is GridFilterItemApplier => !!callback);
+
+      if (appliers.length === 0) {
+        return null;
       }
 
-      const column = apiRef.current.getColumn(filterItem.columnField);
+      return (rowId: GridRowId) => {
+        // We return `false` as soon as we have a failing filter
+        if (linkOperator === GridLinkOperator.And) {
+          let isPassingFilters = true;
+          let filterIndex = 0;
 
-      if (!column) {
-        return;
-      }
-
-      const parsedValue = column.valueParser
-        ? column.valueParser(filterItem.value)
-        : filterItem.value;
-      const newFilterItem = { ...filterItem, value: parsedValue };
-
-      logger.debug(
-        `Filtering column: ${newFilterItem.columnField} ${newFilterItem.operatorValue} ${newFilterItem.value} `,
-      );
-
-      const filterOperators = column.filterOperators;
-      if (!filterOperators?.length) {
-        throw new Error(`MUI: No filter operators found for column '${column.field}'.`);
-      }
-
-      const filterOperator = filterOperators.find(
-        (operator) => operator.value === newFilterItem.operatorValue,
-      )!;
-      if (!filterOperator) {
-        throw new Error(
-          `MUI: No filter operator found for column '${column.field}' and operator value '${newFilterItem.operatorValue}'.`,
-        );
-      }
-
-      const applyFilterOnRow = filterOperator.getApplyFilterFn(newFilterItem, column)!;
-      if (typeof applyFilterOnRow !== 'function') {
-        return;
-      }
-
-      setGridState((state) => {
-        const visibleRowsLookup = { ...gridVisibleRowsLookupSelector(state) };
-
-        // We run the selector on the state here to avoid rendering the rows and then filtering again.
-        // This way we have latest rows on the first rendering
-        const rows = sortedGridRowsSelector(state);
-
-        rows.forEach((row: GridRowModel, id: GridRowId) => {
-          const params = apiRef.current.getCellParams(id, newFilterItem.columnField!);
-
-          const isShown = applyFilterOnRow(params);
-          if (visibleRowsLookup[id] == null) {
-            visibleRowsLookup[id] = isShown;
-          } else {
-            visibleRowsLookup[id] =
-              linkOperator === GridLinkOperator.And
-                ? visibleRowsLookup[id] && isShown
-                : visibleRowsLookup[id] || isShown;
+          while (isPassingFilters && filterIndex < appliers.length) {
+            isPassingFilters = appliers[filterIndex](rowId);
+            filterIndex += 1;
           }
-        });
 
+          return isPassingFilters;
+        }
+
+        // We return `true` as soon as we have a passing filter
+        let isPassingFilters = false;
+        let filterIndex = 0;
+
+        while (!isPassingFilters && filterIndex < appliers.length) {
+          isPassingFilters = appliers[filterIndex](rowId);
+          filterIndex += 1;
+        }
+
+        return isPassingFilters;
+      };
+    },
+    [apiRef],
+  );
+
+  const applyFilters = React.useCallback<GridFilterApi['applyFilters']>(() => {
+    setGridState((state) => {
+      const filterModel = gridFilterModelSelector(state);
+
+      if (props.filterMode === GridFeatureModeConstant.server) {
         return {
           ...state,
           filter: {
             ...state.filter,
-            visibleRowsLookup,
-            visibleRows: Object.entries(visibleRowsLookup)
-              .filter(([, isVisible]) => isVisible)
-              .map(([id]) => id),
+            visibleRowsLookup: {},
+            visibleRows: null,
           },
         };
+      }
+
+      // No filter to apply
+      const filteringMethod = buildAggregatedFilterApplier(filterModel);
+      if (!filteringMethod) {
+        return {
+          ...state,
+          filter: {
+            ...state.filter,
+            visibleRowsLookup: {},
+            visibleRows: null,
+          },
+        };
+      }
+
+      const rowIds = sortedGridRowIdsSelector(apiRef.current.state);
+      const visibleRowsLookup: Record<GridRowId, boolean> = {};
+      rowIds.forEach((rowId) => {
+        visibleRowsLookup[rowId] = filteringMethod(rowId);
       });
-      forceUpdate();
-    },
-    [apiRef, forceUpdate, logger, setGridState],
-  );
 
-  const applyFilters = React.useCallback<GridFilterApi['applyFilters']>(() => {
-    if (props.filterMode === GridFeatureModeConstant.server) {
-      forceUpdate();
-      return;
-    }
-
-    // Clearing filtered rows
-    setGridState((state) => ({
-      ...state,
-      filter: {
-        ...state.filter,
-        visibleRowsLookup: {},
-        visibleRows: null,
-      },
-    }));
-
-    const { items, linkOperator } = gridFilterModelSelector(apiRef.current.state);
-
-    items.forEach((filterItem) => {
-      apiRef.current.applyFilter(filterItem, linkOperator);
+      return {
+        ...state,
+        filter: {
+          ...state.filter,
+          visibleRowsLookup,
+          visibleRows: Object.entries(visibleRowsLookup)
+            .filter(([, isVisible]) => isVisible)
+            .map(([id]) => id),
+        },
+      };
     });
     apiRef.current.publishEvent(GridEvents.visibleRowsSet);
     forceUpdate();
-  }, [apiRef, setGridState, forceUpdate, props.filterMode]);
+  }, [apiRef, setGridState, forceUpdate, props.filterMode, buildAggregatedFilterApplier]);
 
   const upsertFilter = React.useCallback<GridFilterApi['upsertFilter']>(
     (item) => {
@@ -307,7 +336,6 @@ export const useGridFilter = (
     {
       applyFilterLinkOperator,
       applyFilters,
-      applyFilter,
       deleteFilter,
       upsertFilter,
       setFilterModel,

@@ -3,11 +3,6 @@
   "description": "The filter API interface that is available in the grid apiRef.",
   "properties": [
     {
-      "name": "applyFilter",
-      "description": "Applies a GridFilterItem on all rows. If no <code>linkOperator</code> is given, the &quot;and&quot; operator is used.",
-      "type": "(item: GridFilterItem, linkOperator?: GridLinkOperator) => void"
-    },
-    {
       "name": "applyFilterLinkOperator",
       "description": "Changes the GridLinkOperator used to connect the filters.",
       "type": "(operator: GridLinkOperator) => void"
