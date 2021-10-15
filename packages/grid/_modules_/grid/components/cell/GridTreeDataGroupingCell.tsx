@@ -58,7 +58,10 @@ const GridTreeDataGroupingCell = (props: GridRenderCellParams) => {
           </IconButton>
         )}
       </div>
-      <span>{node.label}</span>
+      <span>
+        {node.label}
+        {descendantCount > 0 ? ` (${descendantCount})` : ''}
+      </span>
     </Box>
   );
 };

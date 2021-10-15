@@ -62,6 +62,7 @@ Use the `groupingColDef` prop to customize the rendering of the grouping column.
 ### Group expansion
 
 Use the `defaultGroupingExpansionDepth` prop to expand all the groups up to a given depth when loading the data.
+If you want to expand the whole tree, set `defaultGroupingExpansionDepth = -1`
 
 {{"demo": "pages/components/data-grid/group-pivot/DefaultGroupingExpansionDepthTreeData.js", "bg": "inline", "defaultCodeOpen": false}}
 
