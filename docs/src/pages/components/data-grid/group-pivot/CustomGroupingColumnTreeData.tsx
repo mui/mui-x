@@ -3,7 +3,7 @@ import {
   DataGridPro,
   DataGridProProps,
   GridRenderCellParams,
-  useGridSlotComponentProps,
+  useGridApiContext,
 } from '@mui/x-data-grid-pro';
 import { useDemoTreeData } from '@mui/x-data-grid-generator';
 import Box from '@mui/material/Box';
@@ -11,7 +11,7 @@ import Button from '@mui/material/Button';
 
 const CustomGridTreeDataGroupingCell = (props: GridRenderCellParams) => {
   const { id } = props;
-  const { apiRef } = useGridSlotComponentProps();
+  const apiRef = useGridApiContext();
   const node = apiRef.current.UNSTABLE_getRowNode(id);
 
   if (!node) {
