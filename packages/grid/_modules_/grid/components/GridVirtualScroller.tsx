@@ -31,7 +31,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
 
   const slots = {
-    root: ['virtualizedContainer'],
+    root: ['virtualScroller'],
     renderingZone: ['renderingZone'],
     content: ['content'],
   };
@@ -39,14 +39,14 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-const VirtualizedContainerRoot = styled('div', {
+const VirtualScrollerRoot = styled('div', {
   name: 'MuiDataGrid',
-  slot: 'VirtualizedContainer',
+  slot: 'VirtualScroller',
 })({
   overflow: 'auto',
 });
 
-const VirtualizedContainerContent = styled('div', {
+const VirtualScrollerContent = styled('div', {
   name: 'MuiDataGrid',
   slot: 'Content',
 })({
@@ -54,7 +54,7 @@ const VirtualizedContainerContent = styled('div', {
   overflow: 'hidden',
 });
 
-const VirtualizedContainerRenderingZone = styled('div', {
+const VirtualScrollerRenderingZone = styled('div', {
   name: 'MuiDataGrid',
   slot: 'RenderingZone',
 })({
@@ -90,13 +90,13 @@ export interface RenderContext {
   lastColumnIndex: number;
 }
 
-interface GridVirtualizedContainerProps extends React.HTMLAttributes<HTMLDivElement> {
+interface GridVirtualScrollerProps extends React.HTMLAttributes<HTMLDivElement> {
   selectionLookup: Record<string, GridRowId>;
   disableVirtualization?: boolean;
 }
 
-const GridVirtualizedContainer = React.forwardRef<HTMLDivElement, GridVirtualizedContainerProps>(
-  function GridVirtualizedContainer(props, ref) {
+const GridVirtualScroller = React.forwardRef<HTMLDivElement, GridVirtualScrollerProps>(
+  function GridVirtualScroller(props, ref) {
     const { className, selectionLookup, disableVirtualization, ...other } = props;
     const apiRef = useGridApiContext();
     const rootProps = useGridRootProps();
@@ -318,23 +318,20 @@ const GridVirtualizedContainer = React.forwardRef<HTMLDivElement, GridVirtualize
     }
 
     return (
-      <VirtualizedContainerRoot
+      <VirtualScrollerRoot
         ref={handleRef}
         className={clsx(classes.root, className)}
         onScroll={handleScroll}
         {...other}
       >
-        <VirtualizedContainerContent className={classes.content} style={contentSize}>
-          <VirtualizedContainerRenderingZone
-            ref={renderingZoneRef}
-            className={classes.renderingZone}
-          >
+        <VirtualScrollerContent className={classes.content} style={contentSize}>
+          <VirtualScrollerRenderingZone ref={renderingZoneRef} className={classes.renderingZone}>
             {getRows()}
-          </VirtualizedContainerRenderingZone>
-        </VirtualizedContainerContent>
-      </VirtualizedContainerRoot>
+          </VirtualScrollerRenderingZone>
+        </VirtualScrollerContent>
+      </VirtualScrollerRoot>
     );
   },
 );
 
-export { GridVirtualizedContainer };
+export { GridVirtualScroller };

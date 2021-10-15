@@ -119,7 +119,7 @@ export const useGridPrintExport = (
       const gridRootElement = apiRef.current.rootElementRef!.current;
       const gridClone = gridRootElement!.cloneNode(true) as HTMLElement;
       const gridCloneViewport: HTMLElement | null = gridClone.querySelector(
-        `.${gridClasses.virtualizedContainer}`,
+        `.${gridClasses.virtualScroller}`,
       );
       // Expand the viewport window to prevent clipping
       gridCloneViewport!.style.height = 'auto';
