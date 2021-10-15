@@ -15,7 +15,7 @@ const useStyles = makeStyles({
   },
 });
 
-function RatingEditInputCell(props: GridRenderCellParams) {
+function RatingEditInputCell(props: GridRenderCellParams<number>) {
   const { id, value, api, field } = props;
   const classes = useStyles();
 
@@ -41,7 +41,7 @@ function RatingEditInputCell(props: GridRenderCellParams) {
         ref={handleRef}
         name="rating"
         precision={1}
-        value={Number(value)}
+        value={value}
         onChange={handleChange}
       />
     </div>

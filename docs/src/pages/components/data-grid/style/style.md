@@ -43,19 +43,16 @@ interface GridRowParams<R extends GridRowModel = GridRowModel> {
   /**
    * The row model of the row that the current cell belongs to.
    */
-  row: GridRowModel<R>;
+  row: R;
   /**
    * All grid columns.
    */
   columns: GridColumns;
   /**
-   * GridApiRef that let you manipulate the grid.
-   */
-  api: any;
-  /**
    * Get the cell value of a row and field.
-   * @param id
-   * @param field
+   * @param {GridRowId} id The row id.
+   * @param {string} field The field.
+   * @returns {GridCellValue} The cell value.
    */
   getValue: (id: GridRowId, field: string) => GridCellValue;
 }
@@ -81,10 +78,10 @@ const columns: GridColumns = [
   {
     field: 'score',
     type: 'number',
-    cellClassName: (params: GridCellParams) =>
+    cellClassName: (params: GridCellParams<number>) =>
       clsx('super-app', {
-        negative: (params.value as number) < 0,
-        positive: (params.value as number) > 0,
+        negative: params.value < 0,
+        positive: params.value > 0,
       }),
   },
 ];
