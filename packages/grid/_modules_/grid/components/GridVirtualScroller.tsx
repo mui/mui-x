@@ -20,7 +20,7 @@ import { gridDensityRowHeightSelector } from '../hooks/features/density/densityS
 import { gridEditRowsStateSelector } from '../hooks/features/editRows/gridEditRowsSelector';
 import { GridEvents } from '../constants/eventsConstants';
 import {
-  gridPaginationSelector,
+  gridPaginationRowRangeSelector,
   gridSortedVisiblePaginatedRowEntriesSelector,
 } from '../hooks/features/pagination/gridPaginationSelector';
 import { useGridApiEventHandler } from '../hooks/utils/useGridApiEventHandler';
@@ -106,6 +106,7 @@ const GridVirtualScroller = React.forwardRef<HTMLDivElement, GridVirtualScroller
     const visibleColumns = useGridSelector(apiRef, visibleGridColumnsSelector);
     const columnsMeta = useGridSelector(apiRef, gridColumnsMetaSelector);
     const visibleSortedRowEntries = useGridSelector(apiRef, gridSortedVisibleRowEntriesSelector);
+    const paginationRange = useGridSelector(apiRef, gridPaginationRowRangeSelector);
     const paginatedRowEntries = useGridSelector(
       apiRef,
       gridSortedVisiblePaginatedRowEntriesSelector,
@@ -115,7 +116,6 @@ const GridVirtualScroller = React.forwardRef<HTMLDivElement, GridVirtualScroller
     const cellTabIndex = useGridSelector(apiRef, gridTabIndexCellSelector);
     const editRowsState = useGridSelector(apiRef, gridEditRowsStateSelector);
     const scrollBarState = useGridSelector(apiRef, gridScrollBarSizeSelector);
-    const paginationState = useGridSelector(apiRef, gridPaginationSelector);
     const renderingZoneRef = React.useRef<HTMLDivElement>(null);
     const rootRef = React.useRef<HTMLDivElement>(null);
     const handleRef = useForkRef<HTMLDivElement>(ref, rootRef);
@@ -283,7 +283,7 @@ const GridVirtualScroller = React.forwardRef<HTMLDivElement, GridVirtualScroller
 
       const renderedRows = rowsInCurrentPage.slice(firstRowToRender, lastRowToRender);
       const renderedColumns = visibleColumns.slice(firstColumnToRender, lastColumnToRender);
-      const startIndex = paginationState.pageSize * paginationState.page;
+      const startIndex = paginationRange ? paginationRange.firstRowIndex : 0;
 
       const rows: JSX.Element[] = [];
 
