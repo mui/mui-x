@@ -44,6 +44,9 @@ const VirtualScrollerRoot = styled('div', {
   slot: 'VirtualScroller',
 })({
   overflow: 'auto',
+  '@media print': {
+    overflow: 'hidden',
+  },
 });
 
 const VirtualScrollerContent = styled('div', {

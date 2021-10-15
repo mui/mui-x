@@ -23,11 +23,6 @@ export const useStyles = makeStyles(
         height: '100%',
         display: 'flex',
         flexDirection: 'column',
-        '@media print': {
-          '& *::-webkit-scrollbar': {
-            display: 'none',
-          },
-        },
         [`&.${gridClasses.autoHeight}`]: {
           height: 'auto',
         },
