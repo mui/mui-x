@@ -8,8 +8,8 @@ import { GridEvents } from '../../../constants';
 import { GridCellParams, GridColDef, MuiEvent } from '../../../models';
 import { isSpaceKey } from '../../../utils/keyboardUtils';
 import { useFirstRender } from '../../utils/useFirstRender';
+import { buildRowTree } from '../../../utils/rowTreeUtils';
 import { GridRowGroupingPreProcessing } from '../../core/rowGroupsPerProcessing';
-import { buildRowTree } from '../rows/gridRowsUtils';
 
 /**
  * Only available in DataGridPro
