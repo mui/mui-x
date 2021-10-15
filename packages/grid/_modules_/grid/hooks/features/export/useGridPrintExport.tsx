@@ -121,7 +121,6 @@ export const useGridPrintExport = (
       const gridCloneViewport: HTMLElement | null = gridClone.querySelector(
         `.${gridClasses.virtualizedContainer}`,
       );
-
       // Expand the viewport window to prevent clipping
       gridCloneViewport!.style.height = 'auto';
 
@@ -131,7 +130,7 @@ export const useGridPrintExport = (
         gridRootElement!.querySelector(`.${gridClasses.footerContainer}`)?.clientHeight || 0;
 
       if (normalizeOptions.hideToolbar) {
-        gridClone.querySelector(gridClasses.toolbarContainer)?.remove();
+        gridClone.querySelector(`.${gridClasses.toolbarContainer}`)?.remove();
         gridToolbarElementHeight = 0;
       }
 

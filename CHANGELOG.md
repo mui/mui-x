@@ -3,6 +3,178 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 5.0.0-beta.4
+
+_Oct 14, 2021_
+
+A big thanks to the 7 contributors who made this release possible. Here are some highlights ✨:
+
+- 🎁 Add the ability to print the grid (#2519) @DanailH
+  
+  This new feature adds a button to the toolbar to generate a printer-friendly layout. Check the [documentation](https://mui.com/components/data-grid/export/#print) about it.
+
+- 💡 Enhance internal code structure
+- ✨ New slots for `row` and `cell` (#2753) @m4theushw
+- 📚 Documentation improvements
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@v5.0.0-beta.4` / `@mui/x-data-grid-pro@v5.0.0-beta.4`
+
+#### Breaking changes
+
+- [DataGrid] Remove unused event listeners and redundant DOM attributes on `GridCell` and `GridRow` (#2810) @m4theushw
+
+  The following props were removed. If you depend on them, use `componentsProps.row` and `componentsProps.cell` to pass custom props to the row or cell.
+
+  - `onCellBlur`
+  - `onCellOver`
+  - `onCellOut`
+  - `onCellEnter`
+  - `onCellLeave`
+  - `onRowOver`
+  - `onRowOut`
+  - `onRowEnter`
+  - `onRowLeave`
+
+  For more information, check [this page](https://mui.com/components/data-grid/components/#row). Example:
+
+  ```diff
+  -<DataGrid onRowOver={handleRowOver} />;
+  +<DataGrid
+  +  componentsProps={{
+  +    row: { onMouseOver: handleRowOver },
+  +  }}
+  +/>;
+  ```
+  
+  The `data-rowindex` and `data-rowselected` attributes were removed from the cell element. Equivalent attributes can be found in the row element.
+  
+  The `data-editable` attribute was removed from the cell element. Use the `.MuiDataGrid-cell--editable` CSS class.
+  
+  The `data-mode` attribute was removed from the cell element. Use the `.MuiDataGrid-cell--editing` CSS class.
+
+- [DataGrid] The `state.filter` and `state.visibleRows` were merged into a single `state.filter` sub-state (#2782) @flaviendelangle
+
+  To still access this information, use `state.filter` or the selectors as below:
+
+  ```diff
+  -const filterModel = state.filter
+  -const filterModel = gridFilterStateSelector(state)
+  +const filterModel = state.filter.filterModel
+  +const filterModel = gridFilterModelSelector(state) // preferred method
+  
+  -const visibleRowsLookup = state.visibleRows.visibleRowsLookup
+  -const visibleRowsLookup = visibleGridRowsStateSelector(state).visibleRowsLookup
+  +const visibleRowsLookup = state.filter.visibleRowsLookup
+  +const visibleRowsLookup = gridVisibleRowsLookupSelector(state).visibleRowsLookup // preferred method
+  
+  -const visibleRows = state.visibleRows.visibleRows
+  +const visibleRows = state.filter.visibleRows
+  +const visibleRows = gridVisibleRowsLookupSelector(state).visibleRows // preferred method
+  ```
+
+- [DataGrid] The CSS classes constants are not exported anymore. Use `gridClasses` instead. (#2788) @flaviendelangle
+
+  ```diff
+  -const columnHeaderClass = GRID_COLUMN_HEADER_CSS_CLASS
+  +const columnHeaderClass = gridClasses.columnHeader
+  
+  -const rowClass = GRID_ROW_CSS_CLASS
+  +const rowClass = gridClasses.row
+  
+  -const cellClass = GRID_CELL_CSS_CLASS
+  +const cellClass = gridClasses.cell
+  
+  -const columnSeparatorClass = GRID_COLUMN_HEADER_SEPARATOR_RESIZABLE_CSS_CLASS
+  +const columnSeparatorClass = gridClasses['columnSeparator--resizable']
+  
+  -const columnHeaderTitleClass = GRID_COLUMN_HEADER_TITLE_CSS_CLASS
+  +const columnHeaderTitleClass = gridClasses.columnHeaderTitle
+  
+  -const columnHeaderDropZoneClass = GRID_COLUMN_HEADER_DROP_ZONE_CSS_CLASS
+  +const columnHeaderDropZoneClass = gridClasses.columnHeaderDropZone
+  
+  -const columnHeaderDraggingClass = GRID_COLUMN_HEADER_DRAGGING_CSS_CLASS
+  +const columnHeaderDraggingClass = gridClasses["columnHeader--dragging"]
+  ```
+
+- [DataGrid] Rename `gridCheckboxSelectionColDef` to `GRID_CHECKBOX_SELECTION_COL_DEF` (#2793) @flaviendelangle
+
+  ```diff
+  - gridCheckboxSelectionColDef
+  + GRID_CHECKBOX_SELECTION_COL_DEF
+  ```
+
+- [DataGrid] The constants referring to the column types were removed (#2791) @flaviendelangle
+  Replace them as below:
+
+  ```diff
+  -const isColumnString = column.type === GRID_STRING_COLUMN_TYPE;
+  +const isColumnString = col.type === 'string';
+  
+  -const isColumnNumber = col.type === GRID_NUMBER_COLUMN_TYPE;
+  +const isColumnNumber = col.type === 'number';
+  
+  -const isColumnDate = col.type === GRID_DATE_COLUMN_TYPE;
+  +const isColumnDate = col.type === 'date';
+  
+  -const isColumnDateTime = col.type === GRID_DATETIME_COLUMN_TYPE;
+  +const isColumnDateTime = col.type === 'dateTime';
+  
+  -const isColumnBoolean = col.type === GRID_BOOLEAN_COLUMN_TYPE;
+  +const isColumnBoolean = col.type === 'boolean';
+  ```
+
+- [DataGrid] The state initializers were removed (#2782) @flaviendelangle
+
+  Use `getDefaultGridFilterModel` instead of `getInitialGridFilterState`:
+
+  ```diff
+  -const [filterModel, setFilterModel] = React.useState(getInitialGridFilterState);
+  +const [filterModel, setFilterModel] = React.useState(getDefaultGridFilterModel);
+  ```
+  
+  For the other methods, you can hardcode the value you want to apply:
+
+  ```diff
+  -const [sortModel, setSortModel] = React.useState(() => getInitialGridSortingState().sortModel);
+  +const [sortModel, setSortModel] React.useState([]);
+  
+  -getInitialGridColumnReorderState
+  -getInitialGridColumnResizeState
+  -getInitialGridColumnsState
+  -getInitialGridRenderingState
+  -getInitialGridRowState
+  -getInitialGridState
+  -getInitialVisibleGridRowsState
+  -getInitialGridState
+  ```
+
+#### Changes
+
+- [DataGrid] Add `row` and `cell` component slots (#2753) @m4theushw
+- [DataGrid] Rename `gridCheckboxSelectionColDef` to `GRID_CHECKBOX_SELECTION_COL_DEF` (#2793) @flaviendelangle
+- [DataGrid] Clean hook folder structure and stop exporting internal hooks (#2789) @flaviendelangle
+- [DataGrid] Add support for Print export (#2519) @DanailH
+- [DataGrid] Remove internal localization and column type constant exports (#2791) @flaviendelangle
+- [DataGrid] Remove `GridRowCells` component (#2811) @m4theushw
+- [DataGrid] Remove class constants exports (#2788) @flaviendelangle
+- [DataGrid] Remove unused event listeners on `GridCell` and `GridRow` (#2810) @m4theushw
+- [DataGrid] Fix the header selection checkbox to work with `prop.checkboxSelectionVisibleOnly` (#2781) @flaviendelangle
+
+### Docs
+
+- [docs] Add link to installation page (#2778) @MostafaKMilly
+- [docs] Add redirect from docs home page to `DataGrid` home page (#2737) @flaviendelangle
+- [docs] Fix JSX closing tag in `getActions` example (#2847) @dstarner
+- [docs] Fix pagination in Ant Design demo (#2787) @ZeeshanTamboli
+- [docs] Update the `page` prop docs (#2812) @m4theushw
+
+### Core
+
+- [core] Update hooks to initialize their state synchronously (#2782) @flaviendelangle
+- [core] Fix rollup external warnings (#2736) @eps1lon
+
 ## 5.0.0-beta.3
 
 _Oct 7, 2021_

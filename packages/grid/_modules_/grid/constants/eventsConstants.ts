@@ -198,6 +198,11 @@ export enum GridEvents {
    */
   selectionChange = 'selectionChange',
   /**
+   * Fired when the value of the selection checkbox of the header is changed
+   * Called with a [[GridHeaderSelectionCheckboxParams]] object.
+   */
+  headerSelectionCheckboxChange = 'headerSelectionCheckboxChange',
+  /**
    * Fired when the value of the selection checkbox of a row is changed
    * Called with a [[GridRowSelectionCheckboxParams]] object.
    */
@@ -254,6 +259,11 @@ export enum GridEvents {
    * Called with an array of strings corresponding to the field names.
    */
   columnsChange = 'columnsChange',
+  /**
+   * Fired when the row grouping function is changed
+   * @ignore - do not document
+   */
+  rowGroupsPreProcessingChange = 'rowGroupsPreProcessingChange',
   /**
    * Fired when the sort model changes.
    * Called with a [[GridSortModelParams]] object.
