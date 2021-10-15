@@ -241,10 +241,8 @@ describe('<DataGridPro /> - Tree Data', () => {
     it('should add auto generated rows if some parents do not exist', () => {
       render(<Test rows={rowsWithGap} />);
       expect(getColumnValues(1)).to.deep.equal(['A', '']);
-      expect(getColumnValues(0)).to.deep.equal(['A', 'B']);
       fireEvent.click(getCell(1, 0).querySelector('button'));
       expect(getColumnValues(1)).to.deep.equal(['A', '', 'B.A', 'B.B']);
-      expect(getColumnValues(0)).to.deep.equal(['A', 'B', 'A', 'B']);
     });
   });
 
