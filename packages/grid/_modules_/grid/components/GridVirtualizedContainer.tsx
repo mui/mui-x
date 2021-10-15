@@ -271,6 +271,7 @@ const GridVirtualizedContainer = React.forwardRef<HTMLDivElement, GridVirtualize
 
       const renderedRows = rowsInCurrentPage.slice(firstRowToRender, lastRowToRender);
       const renderedColumns = visibleColumns.slice(firstColumnToRender, lastColumnToRender);
+      const startIndex = paginationState.pageSize * paginationState.page;
 
       const rows: JSX.Element[] = [];
 
@@ -292,7 +293,7 @@ const GridVirtualizedContainer = React.forwardRef<HTMLDivElement, GridVirtualize
             firstColumnToRender={firstColumnToRender}
             lastColumnToRender={lastColumnToRender}
             selected={selectionLookup[id] !== undefined}
-            index={renderContext.firstRowIndex! + i}
+            index={startIndex + renderContext.firstRowIndex! + i}
             containerWidth={containerWidth}
             {...rootProps.componentsProps?.row}
           />,
