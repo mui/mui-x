@@ -67,7 +67,7 @@ export const generateRowTree = (params: GenerateRowTreeParams) => {
         node.descendantCount = (node.descendantCount ?? 0) + 1;
       } else {
         result.tree[row.id] = {
-          id,
+          id: row.id,
           expanded,
           parent: parentNode?.id ?? null,
           label: row.path[depth],
