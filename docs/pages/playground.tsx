@@ -1,11 +1,54 @@
 import * as React from 'react';
-import { DataGridPro } from '@mui/x-data-grid-pro';
+import {
+  DataGridPro,
+  DataGridProProps,
+  GridRenderCellParams,
+  useGridApiContext,
+  useGridSelector,
+  gridVisibleDescendantCountLookupSelector,
+} from '@mui/x-data-grid-pro';
 import { useDemoTreeData } from '@mui/x-data-grid-generator';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 
-export default function BasicTreeData() {
+const CustomGridTreeDataGroupingCell = (props: GridRenderCellParams) => {
+  const { id } = props;
+  const apiRef = useGridApiContext();
+  const descendantCountLookup = useGridSelector(apiRef, gridVisibleDescendantCountLookupSelector);
+  const node = apiRef.current.UNSTABLE_getRowNode(id);
+  const descendantCount = descendantCountLookup[id];
+
+  if (!node) {
+    throw new Error(`MUI: No row with id #${id} found`);
+  }
+
+  return (
+    <Box sx={{ ml: node.depth * 4 }}>
+      <div>
+        {descendantCount > 0 ? (
+          <Button
+            onClick={() => apiRef.current.UNSTABLE_setRowExpansion(id, !node?.expanded)}
+            tabIndex={-1}
+            size="small"
+          >
+            See {descendantCount} children
+          </Button>
+        ) : (
+          <span />
+        )}
+      </div>
+    </Box>
+  );
+};
+
+const groupingColDef: DataGridProProps['groupingColDef'] = {
+  renderCell: (params) => <CustomGridTreeDataGroupingCell {...params} />,
+};
+
+export default function CustomGroupingColumnTreeData() {
   const { data, loading } = useDemoTreeData({
-    rowLength: [10, 5],
-    randomLength: true,
+    rowLength: [2, 2, 2],
+    randomLength: false,
   });
 
   return (
@@ -14,7 +57,7 @@ export default function BasicTreeData() {
         loading={loading}
         treeData
         disableSelectionOnClick
-        filterModel={{ items: [{ columnField: 'id', operatorValue: '=', value: 6 }] }}
+        groupingColDef={groupingColDef}
         {...data}
       />
     </div>

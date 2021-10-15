@@ -1,6 +1,11 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { DataGridPro, useGridApiContext } from '@mui/x-data-grid-pro';
+import {
+  DataGridPro,
+  useGridApiContext,
+  useGridSelector,
+  gridVisibleDescendantCountLookupSelector,
+} from '@mui/x-data-grid-pro';
 import { useDemoTreeData } from '@mui/x-data-grid-generator';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -8,7 +13,12 @@ import Button from '@mui/material/Button';
 const CustomGridTreeDataGroupingCell = (props) => {
   const { id } = props;
   const apiRef = useGridApiContext();
+  const descendantCountLookup = useGridSelector(
+    apiRef,
+    gridVisibleDescendantCountLookupSelector,
+  );
   const node = apiRef.current.UNSTABLE_getRowNode(id);
+  const descendantCount = descendantCountLookup[id];
 
   if (!node) {
     throw new Error(`MUI: No row with id #${id} found`);
@@ -17,7 +27,7 @@ const CustomGridTreeDataGroupingCell = (props) => {
   return (
     <Box sx={{ ml: node.depth * 4 }}>
       <div>
-        {node.children?.length ? (
+        {descendantCount > 0 ? (
           <Button
             onClick={() =>
               apiRef.current.UNSTABLE_setRowExpansion(id, !node?.expanded)
@@ -25,7 +35,7 @@ const CustomGridTreeDataGroupingCell = (props) => {
             tabIndex={-1}
             size="small"
           >
-            See children
+            See {descendantCount} children
           </Button>
         ) : (
           <span />

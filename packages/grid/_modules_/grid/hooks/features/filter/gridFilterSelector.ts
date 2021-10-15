@@ -22,6 +22,11 @@ export const gridVisibleRowsLookupSelector = createSelector(
   (filterState) => filterState.visibleRowsLookup,
 );
 
+export const gridVisibleDescendantCountLookupSelector = createSelector(
+  gridFilterStateSelector,
+  (filterState) => filterState.visibleDescendantsCountLookup,
+);
+
 export const gridSortedVisibleRowEntriesSelector = createSelector(
   gridVisibleRowsLookupSelector,
   gridSortedRowEntriesSelector,

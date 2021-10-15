@@ -15,6 +15,7 @@ export interface GridRowModelUpdate extends GridRowData {
 export interface GridRowTreeNodeConfig {
   id: GridRowId;
   children?: GridRowId[];
+  descendantCount?: number;
   parent: GridRowId | null;
   expanded?: boolean;
   depth: number;

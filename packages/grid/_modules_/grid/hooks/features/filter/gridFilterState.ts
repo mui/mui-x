@@ -11,4 +11,5 @@ export interface GridFilterState {
   filterModel: GridFilterModel;
   visibleRowsLookup: Record<GridRowId, boolean>;
   visibleRows: GridRowId[];
+  visibleDescendantsCountLookup: Record<GridRowId, number>;
 }

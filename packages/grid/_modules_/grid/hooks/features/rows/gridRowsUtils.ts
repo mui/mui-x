@@ -55,6 +55,8 @@ export const insertRowInTree = (params: InsertRowInTreeParams) => {
         result.idRowsLookup[nodeId] = {};
         result.rowIds.push(nodeId);
       }
+
+      node.descendantCount = (node.descendantCount ?? 0) + 1;
     } else {
       result.tree[id] = {
         id,
@@ -70,7 +72,10 @@ export const insertRowInTree = (params: InsertRowInTreeParams) => {
         parentNode.children = [];
       }
 
-      parentNode.children.push(nodeId);
+      // TODO: Avoid linear complexity here
+      if (!parentNode.children.includes(nodeId)) {
+        parentNode.children.push(nodeId);
+      }
     }
 
     parentNode = result.tree[nodeId]!;
