@@ -79,7 +79,7 @@ export const useGridFilter = (
   });
 
   const buildAggregatedFilterApplier = React.useCallback(
-    (filterModel: GridFilterModel) => {
+    (filterModel: GridFilterModel): GridFilterItemApplier | null => {
       const { items, linkOperator = GridLinkOperator.And } = filterModel;
 
       const getFilterCallbackFromItem = (
