@@ -34,7 +34,6 @@ export interface GridApi
     GridLoggerApi,
     GridColumnsPreProcessingApi,
     GridRowGroupsPreProcessingApi,
-    GridRowGroupsPreProcessingApi,
     GridDensityApi,
     GridEventsApi,
     GridRowApi,

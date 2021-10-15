@@ -20,7 +20,6 @@ export const useGridInitialization = (apiRef: GridApiRef, props: GridComponentPr
   useGridControlState(apiRef, props);
   useGridColumnsPreProcessing(apiRef);
   useGridRowGroupsPreProcessing(apiRef);
-  useGridRowGroupsPreProcessing(apiRef);
   useGridLocaleText(apiRef, props);
   useGridStateProp(apiRef, props);
 };
