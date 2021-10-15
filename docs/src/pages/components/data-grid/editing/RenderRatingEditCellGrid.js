@@ -49,7 +49,7 @@ function RatingEditInputCell(props) {
         ref={handleRef}
         name="rating"
         precision={1}
-        value={Number(value)}
+        value={value}
         onChange={handleChange}
       />
     </div>
@@ -72,7 +72,7 @@ RatingEditInputCell.propTypes = {
   /**
    * The cell value, but if the column has valueGetter, use getValue.
    */
-  value: PropTypes.any.isRequired,
+  value: PropTypes.number.isRequired,
 };
 
 function renderRatingEditInputCell(params) {
