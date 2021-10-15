@@ -200,11 +200,12 @@ export const useGridFilter = (
         const rowTree = gridRowTreeSelector(state);
         const filterTreeNode = (node: GridRowTreeNodeConfig): boolean => {
           let hasChildrenMatchingFilters = false;
-          node.children?.forEach((childId) => {
-            const isNodeMatchingFilters = filterTreeNode(rowTree[childId]);
-            hasChildrenMatchingFilters ||= isNodeMatchingFilters;
-          });
-
+          if (node.expanded) {
+            node.children?.forEach((childId) => {
+              const isNodeMatchingFilters = filterTreeNode(rowTree[childId]);
+              hasChildrenMatchingFilters ||= isNodeMatchingFilters;
+            });
+          }
           let isNodeMatchingFilters = hasChildrenMatchingFilters;
 
           if (!isNodeMatchingFilters) {
