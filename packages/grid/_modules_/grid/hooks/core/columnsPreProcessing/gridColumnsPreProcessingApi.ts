@@ -11,7 +11,7 @@ export interface GridColumnsPreProcessingApi {
    */
   UNSTABLE_registerColumnPreProcessing: (
     processingName: string,
-    columnsPreProcessing: GridColumnsPreProcessing | null,
+    columnsPreProcessing: GridColumnsPreProcessing,
   ) => void;
   /**
    * Apply all the columns pre-processing

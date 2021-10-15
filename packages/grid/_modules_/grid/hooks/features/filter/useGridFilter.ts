@@ -5,6 +5,7 @@ import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridFilterApi } from '../../../models/api/gridFilterApi';
 import { GridFeatureModeConstant } from '../../../models/gridFeatureMode';
 import { GridFilterItem, GridLinkOperator } from '../../../models/gridFilterItem';
+import { GridRowId, GridRowModel } from '../../../models/gridRows';
 import { isDeepEqual } from '../../../utils/utils';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
@@ -12,14 +13,15 @@ import { useGridLogger } from '../../utils/useGridLogger';
 import { filterableGridColumnsIdsSelector } from '../columns/gridColumnsSelector';
 import { useGridState } from '../../utils/useGridState';
 import { GridPreferencePanelsValue } from '../preferencesPanel/gridPreferencePanelsValue';
-import { gridSortedRowIdsSelector } from '../sorting/gridSortingSelector';
+import {gridSortedRowIdsSelector } from '../sorting/gridSortingSelector';
 import { getDefaultGridFilterModel } from './gridFilterState';
 import { GridFilterModel } from '../../../models/gridFilterModel';
-import { gridFilterModelSelector, gridSortedVisibleRowEntriesSelector } from './gridFilterSelector';
+import {
+  gridFilterModelSelector, gridSortedVisibleRowEntriesSelector,
+} from './gridFilterSelector';
 import { useGridStateInit } from '../../utils/useGridStateInit';
 import { useFirstRender } from '../../utils/useFirstRender';
 import { gridRowTreeSelector } from '../rows';
-import { GridRowId, GridRowModel } from '../../../models/gridRows';
 
 type GridFilterItemApplier = (rowId: GridRowId) => boolean;
 
@@ -78,7 +80,63 @@ export const useGridFilter = (
     changeEvent: GridEvents.filterModelChange,
   });
 
-  const buildAggregatedFilter = React.useCallback(
+  /**
+   * Apply the following constraints:
+   * - A child passing the filter should not be visible if its parent is not
+   * - A parent passing the filter should not be visible if none of its descendant is passing the filter
+   */
+      // const applyTreeFilterConstraints = React.useCallback(() => {
+      //   setGridState((state) => {
+      //     const visibleRowsLookup = { ...gridVisibleRowsLookupSelector(state) };
+      //     const rowCount = gridRowCountSelector(state);
+      //     const topLevelRowCount = gridTopLevelRowCountSelector(state);
+      //
+      //     // The tree is flat
+      //     if (rowCount === topLevelRowCount) {
+      //       return state;
+      //     }
+      //
+      //     const rowTree = gridRowTreeSelector(state);
+      //
+      //     // No filter applied or no row has children
+      //     if (Object.keys(visibleRowsLookup).length === 0) {
+      //       return state;
+      //     }
+      //
+      //     const rowsGroupedByDepth: Record<number, GridRowTreeNodeConfig[]> = {};
+      //     Object.values(rowTree).forEach((node) => {
+      //       if (!rowsGroupedByDepth[node.depth]) {
+      //         rowsGroupedByDepth[node.depth] = [];
+      //       }
+      //
+      //       rowsGroupedByDepth[node.depth].push(node);
+      //     });
+      //     const depths = Object.keys(rowsGroupedByDepth)
+      //       .map((depth) => Number(depth))
+      //       .sort();
+      //
+      //     depths.forEach((depth) => {
+      //       rowsGroupedByDepth[depth].forEach((node) => {
+      //         if (node.parent != null && visibleRowsLookup[node.parent] === false) {
+      //           visibleRowsLookup[node.id] = false;
+      //         }
+      //       });
+      //     });
+      //
+      //     return {
+      //       ...state,
+      //       filter: {
+      //         ...state.filter,
+      //         visibleRowsLookup,
+      //         visibleRows: Object.entries(visibleRowsLookup)
+      //           .filter(([, isVisible]) => isVisible)
+      //           .map(([id]) => id),
+      //       },
+      //     };
+      //   });
+      // }, [setGridState]);
+
+  const buildAggregatedFilterApplier = React.useCallback(
     (filterModel: GridFilterModel) => {
       const rowTree = gridRowTreeSelector(apiRef.current.state);
 
@@ -170,87 +228,37 @@ export const useGridFilter = (
     [apiRef, props.disableChildrenFiltering],
   );
 
-  /**
-   * Apply the following constraints:
-   * - A child passing the filter should not be visible if its parent is not
-   * - A parent passing the filter should not be visible if none of its descendant is passing the filter
-   */
-  // const applyTreeFilterConstraints = React.useCallback(() => {
-  //   setGridState((state) => {
-  //     const visibleRowsLookup = { ...gridVisibleRowsLookupSelector(state) };
-  //     const rowCount = gridRowCountSelector(state);
-  //     const topLevelRowCount = gridTopLevelRowCountSelector(state);
-  //
-  //     // The tree is flat
-  //     if (rowCount === topLevelRowCount) {
-  //       return state;
-  //     }
-  //
-  //     const rowTree = gridRowTreeSelector(state);
-  //
-  //     // No filter applied or no row has children
-  //     if (Object.keys(visibleRowsLookup).length === 0) {
-  //       return state;
-  //     }
-  //
-  //     const rowsGroupedByDepth: Record<number, GridRowTreeNodeConfig[]> = {};
-  //     Object.values(rowTree).forEach((node) => {
-  //       if (!rowsGroupedByDepth[node.depth]) {
-  //         rowsGroupedByDepth[node.depth] = [];
-  //       }
-  //
-  //       rowsGroupedByDepth[node.depth].push(node);
-  //     });
-  //     const depths = Object.keys(rowsGroupedByDepth)
-  //       .map((depth) => Number(depth))
-  //       .sort();
-  //
-  //     depths.forEach((depth) => {
-  //       rowsGroupedByDepth[depth].forEach((node) => {
-  //         if (node.parent != null && visibleRowsLookup[node.parent] === false) {
-  //           visibleRowsLookup[node.id] = false;
-  //         }
-  //       });
-  //     });
-  //
-  //     return {
-  //       ...state,
-  //       filter: {
-  //         ...state.filter,
-  //         visibleRowsLookup,
-  //         visibleRows: Object.entries(visibleRowsLookup)
-  //           .filter(([, isVisible]) => isVisible)
-  //           .map(([id]) => id),
-  //       },
-  //     };
-  //   });
-  // }, [setGridState]);
-
   const applyFilters = React.useCallback<GridFilterApi['applyFilters']>(() => {
-    if (props.filterMode === GridFeatureModeConstant.server) {
-      forceUpdate();
-      return;
-    }
-
     setGridState((state) => {
       const filterModel = gridFilterModelSelector(state);
-      const filteringMethod = buildAggregatedFilter(filterModel);
+      const rowIds = gridSortedRowIdsSelector(apiRef.current.state);
 
+      if (props.filterMode === GridFeatureModeConstant.server) {
+        return {
+          ...state,
+          filter: {
+            ...state.filter,
+            visibleRowsLookup: {},
+            visibleRows: rowIds,
+          },
+        };
+      }
+
+      // No filter to apply
+      const filteringMethod = buildAggregatedFilterApplier(filterModel);
       if (!filteringMethod) {
         return {
           ...state,
           filter: {
             ...state.filter,
             visibleRowsLookup: {},
-            visibleRows: gridSortedRowIdsSelector(state),
+            visibleRows: rowIds,
           },
         };
       }
 
-      const rows = gridSortedRowIdsSelector(apiRef.current.state);
       const visibleRowsLookup: Record<GridRowId, boolean> = {};
-
-      rows.forEach((rowId) => {
+      rowIds.forEach((rowId) => {
         visibleRowsLookup[rowId] = filteringMethod(rowId);
       });
 
@@ -265,9 +273,9 @@ export const useGridFilter = (
         },
       };
     });
-
+    apiRef.current.publishEvent(GridEvents.visibleRowsSet);
     forceUpdate();
-  }, [apiRef, setGridState, forceUpdate, props.filterMode, buildAggregatedFilter]);
+  }, [apiRef, setGridState, forceUpdate, props.filterMode, buildAggregatedFilterApplier]);
 
   const upsertFilter = React.useCallback<GridFilterApi['upsertFilter']>(
     (item) => {

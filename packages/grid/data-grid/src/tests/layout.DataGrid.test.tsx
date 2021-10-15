@@ -605,11 +605,8 @@ describe('<DataGrid /> - Layout & Warnings', () => {
             />
           </div>,
         );
-        const virtualizedContainer = document.querySelector<HTMLElement>(
-          '.MuiDataGrid-virtualizedContainer',
-        );
-        const scrollBarSize =
-          virtualizedContainer!.offsetHeight - virtualizedContainer!.clientHeight;
+        const virtualScroller = document.querySelector<HTMLElement>('.MuiDataGrid-virtualScroller');
+        const scrollBarSize = virtualScroller!.offsetHeight - virtualScroller!.clientHeight;
         expect(scrollBarSize).not.to.equal(0);
         expect(document.querySelector('.MuiDataGrid-main')!.clientHeight).to.equal(
           scrollBarSize + headerHeight + rowHeight * baselineProps.rows.length,
@@ -628,9 +625,9 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         );
       };
       render(<TestCase />);
-      const virtualizedContainer = document.querySelector('.MuiDataGrid-virtualizedContainer');
+      const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller');
       // It should not have a horizontal scrollbar
-      expect(virtualizedContainer!.scrollWidth - virtualizedContainer!.clientWidth).to.equal(0);
+      expect(virtualScroller!.scrollWidth - virtualScroller!.clientWidth).to.equal(0);
     });
 
     it('should have a horizontal scrollbar when there are more columns to show and no rows', function test() {
@@ -643,8 +640,8 @@ describe('<DataGrid /> - Layout & Warnings', () => {
           <DataGrid columns={[{ field: 'brand' }, { field: 'year' }]} rows={[]} />
         </div>,
       );
-      const virtualizedContainer = document.querySelector('.MuiDataGrid-virtualizedContainer');
-      expect(virtualizedContainer!.scrollWidth - virtualizedContainer!.clientWidth).not.to.equal(0);
+      const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller');
+      expect(virtualScroller!.scrollWidth - virtualScroller!.clientWidth).not.to.equal(0);
     });
   });
 
