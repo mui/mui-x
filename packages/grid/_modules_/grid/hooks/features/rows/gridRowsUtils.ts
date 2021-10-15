@@ -23,7 +23,7 @@ export const insertRowInTree = (params: InsertRowInTreeParams) => {
     const nodeName = path[depth];
     let nodeId: GridRowId;
 
-    const expanded = defaultGroupingExpansionDepth > depth;
+    const expanded = defaultGroupingExpansionDepth === -1 || defaultGroupingExpansionDepth > depth;
 
     let nodeNameConfig = nodeNameToIdSubTree[nodeName];
 
@@ -58,7 +58,7 @@ export const insertRowInTree = (params: InsertRowInTreeParams) => {
     } else {
       result.tree[id] = {
         id,
-        expanded: defaultGroupingExpansionDepth > depth,
+        expanded,
         parent: parentNode?.id ?? null,
         label: path[depth],
         depth,

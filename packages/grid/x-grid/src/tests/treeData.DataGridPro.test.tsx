@@ -26,6 +26,7 @@ const rowsWithoutGap: GridRowsProp = [
   { name: 'B.A', value: 12 },
   { name: 'B.B', value: 8 },
   { name: 'B.B.A', value: 8 },
+  { name: 'B.B.A.A', value: 8 },
   { name: 'C', value: 5 },
 ];
 
@@ -83,6 +84,7 @@ describe('<DataGridPro /> - Tree Data', () => {
         'B.A',
         'B.B',
         'B.B.A',
+        'B.B.A.A',
         'C',
       ]);
       setProps({ treeData: true });
@@ -98,6 +100,7 @@ describe('<DataGridPro /> - Tree Data', () => {
         'B.A',
         'B.B',
         'B.B.A',
+        'B.B.A.A',
         'C',
       ]);
     });
@@ -113,10 +116,20 @@ describe('<DataGridPro /> - Tree Data', () => {
         'B.A',
         'B.B',
         'B.B.A',
+        'B.B.A.A',
         'C',
       ]);
       apiRef.current.updateRows([{ name: 'A.A', _action: 'delete' }]);
-      expect(getColumnValues(0)).to.deep.equal(['A', 'A.B', 'B', 'B.A', 'B.B', 'B.B.A', 'C']);
+      expect(getColumnValues(0)).to.deep.equal([
+        'A',
+        'A.B',
+        'B',
+        'B.A',
+        'B.B',
+        'B.B.A',
+        'B.B.A.A',
+        'C',
+      ]);
       setProps({ treeData: true });
       expect(getColumnHeadersTextContent()).to.deep.equal(['Group', 'name', 'value']);
       expect(getColumnValues(1)).to.deep.equal(['A', 'B', 'C']);
@@ -156,6 +169,20 @@ describe('<DataGridPro /> - Tree Data', () => {
     });
 
     it('should expand all rows up to depth of 2 if defaultGroupingExpansionDepth = 2', () => {
+      render(<Test defaultGroupingExpansionDepth={2} />);
+      expect(getColumnValues(1)).to.deep.equal([
+        'A',
+        'A.A',
+        'A.B',
+        'B',
+        'B.A',
+        'B.B',
+        'B.B.A',
+        'C',
+      ]);
+    });
+
+    it('should expand all rows if defaultGroupingExpansionDepth = -1', () => {
       render(<Test defaultGroupingExpansionDepth={2} />);
       expect(getColumnValues(1)).to.deep.equal([
         'A',
@@ -251,7 +278,12 @@ describe('<DataGridPro /> - Tree Data', () => {
 
       return (
         <div style={{ width: 300, height: 800 }}>
-          <DataGridPro {...filterBaselineProps} apiRef={apiRef} {...props} />
+          <DataGridPro
+            {...filterBaselineProps}
+            defaultGroupingExpansionDepth={-1}
+            apiRef={apiRef}
+            {...props}
+          />
         </div>
       );
     };
@@ -260,7 +292,6 @@ describe('<DataGridPro /> - Tree Data', () => {
       render(
         <TestFilter
           rows={[{ name: 'B' }, { name: 'B.B' }]}
-          defaultGroupingExpansionDepth={1}
           filterModel={{ items: [{ columnField: 'name', value: 'A', operatorValue: 'endsWith' }] }}
         />,
       );
@@ -272,7 +303,6 @@ describe('<DataGridPro /> - Tree Data', () => {
       render(
         <TestFilter
           rows={[{ name: 'B' }, { name: 'B.A' }, { name: 'B.B' }]}
-          defaultGroupingExpansionDepth={1}
           filterModel={{ items: [{ columnField: 'name', value: 'A', operatorValue: 'endsWith' }] }}
         />,
       );
@@ -284,7 +314,6 @@ describe('<DataGridPro /> - Tree Data', () => {
       render(
         <TestFilter
           rows={[{ name: 'A' }, { name: 'A.B' }]}
-          defaultGroupingExpansionDepth={1}
           filterModel={{ items: [{ columnField: 'name', value: 'A', operatorValue: 'endsWith' }] }}
         />,
       );
@@ -296,7 +325,6 @@ describe('<DataGridPro /> - Tree Data', () => {
       render(
         <TestFilter
           rows={[{ name: 'B' }, { name: 'B.A' }, { name: 'B.B' }]}
-          defaultGroupingExpansionDepth={1}
           filterModel={{ items: [{ columnField: 'name', value: 'A', operatorValue: 'endsWith' }] }}
           disableChildrenFiltering
         />,
