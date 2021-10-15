@@ -19,7 +19,10 @@ import { gridSortedVisibleRowEntriesSelector } from '../hooks/features/filter/gr
 import { gridDensityRowHeightSelector } from '../hooks/features/density/densitySelector';
 import { gridEditRowsStateSelector } from '../hooks/features/editRows/gridEditRowsSelector';
 import { GridEvents } from '../constants/eventsConstants';
-import { gridSortedVisiblePaginatedRowEntriesSelector } from '../hooks/features/pagination/gridPaginationSelector';
+import {
+  gridPaginationSelector,
+  gridSortedVisiblePaginatedRowEntriesSelector,
+} from '../hooks/features/pagination/gridPaginationSelector';
 import { useGridApiEventHandler } from '../hooks/utils/useGridApiEventHandler';
 import { getDataGridUtilityClass } from '../gridClasses';
 import { GridComponentProps } from '../GridComponentProps';
@@ -112,6 +115,7 @@ const GridVirtualScroller = React.forwardRef<HTMLDivElement, GridVirtualScroller
     const cellTabIndex = useGridSelector(apiRef, gridTabIndexCellSelector);
     const editRowsState = useGridSelector(apiRef, gridEditRowsStateSelector);
     const scrollBarState = useGridSelector(apiRef, gridScrollBarSizeSelector);
+    const paginationState = useGridSelector(apiRef, gridPaginationSelector);
     const renderingZoneRef = React.useRef<HTMLDivElement>(null);
     const rootRef = React.useRef<HTMLDivElement>(null);
     const handleRef = useForkRef<HTMLDivElement>(ref, rootRef);
