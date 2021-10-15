@@ -8,11 +8,8 @@ import { GridEvents } from '../../../constants';
 import { GridCellParams, GridColDef, MuiEvent } from '../../../models';
 import { isSpaceKey } from '../../../utils/keyboardUtils';
 import { useFirstRender } from '../../utils/useFirstRender';
-import {
-  GridRowGroupingPreProcessing,
-  GridRowGroupingResult,
-} from '../../core/rowGroupsPerProcessing';
-import { GridNodeNameToIdTree, insertRowInTree } from '../rows/gridRowsUtils';
+import { GridRowGroupingPreProcessing } from '../../core/rowGroupsPerProcessing';
+import { generateRowTree } from '../rows/gridRowsUtils';
 
 /**
  * Only available in DataGridPro
@@ -62,26 +59,11 @@ export const useGridTreeData = (
         }))
         .sort((a, b) => a.path.length - b.path.length);
 
-      const result: GridRowGroupingResult = {
-        tree: {},
-        treeDepth: 1,
-        idRowsLookup: { ...params.idRowsLookup },
-        rowIds: [...params.rowIds],
-      };
-
-      const nodeNameToIdTree: GridNodeNameToIdTree = {};
-
-      rows.forEach((row) => {
-        insertRowInTree({
-          result,
-          path: row.path,
-          id: row.id,
-          defaultGroupingExpansionDepth: props.defaultGroupingExpansionDepth,
-          nodeNameToIdTree,
-        });
+      return generateRowTree({
+        rows,
+        ...params,
+        defaultGroupingExpansionDepth: props.defaultGroupingExpansionDepth,
       });
-
-      return result;
     };
 
     return apiRef.current.UNSTABLE_registerRowGroupsBuilder('treeData', groupRows);

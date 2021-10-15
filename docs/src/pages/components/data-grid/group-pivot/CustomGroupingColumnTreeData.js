@@ -17,6 +17,7 @@ const CustomGridTreeDataGroupingCell = (props) => {
     apiRef,
     gridVisibleDescendantCountLookupSelector,
   );
+
   const node = apiRef.current.UNSTABLE_getRowNode(id);
   const descendantCount = descendantCountLookup[id];
 
