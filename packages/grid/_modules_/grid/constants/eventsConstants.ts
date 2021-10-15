@@ -265,10 +265,10 @@ export enum GridEvents {
    */
   columnsChange = 'columnsChange',
   /**
-   * Fired when a column pre-processing is changed
+   * Fired when the row grouping function is changed
    * @ignore - do not document
    */
-  columnsPreProcessingChange = 'columnsPreProcessingChange',
+  rowGroupsPreProcessingChange = 'rowGroupsPreProcessingChange',
   /**
    * Fired when the sort model changes.
    * Called with a [[GridSortModelParams]] object.

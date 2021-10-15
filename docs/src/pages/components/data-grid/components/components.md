@@ -31,24 +31,27 @@ As an example, you could override the column menu and pass additional props as b
 
 **Note**: The casing is different between the `components` (ColumnMenu) and `componentsProps` (columnMenu) props.
 
-### Getting props
+### Interacting with the Grid
 
-While overriding component slots, you might need to access the grid data.
-Therefore, the grid exposes a `useGridSlotComponentProps` hook which allows retrieving the following props.
+The grid exposes several hooks to help you to access the grid Data while overriding component slots.
 
-- `state`: the current grid state.
-- `rows`: the current rows in the grid.
-- `columns`: the current columns in the grid.
-- `apiRef`<span class="pro"></span>: the `GridApi` ref that allows manipulating the grid.
-- `rootElement`: the root DOM element.
-
-It can be used as below:
+- `useGridApiContext`: returns the `apiRef`.
+- `useGridSelector`: returns the result of a selector on the current state.
 
 ```tsx
-function CustomRowCounter() {
-  const { rows } = useGridSlotComponentProps();
+function CustomPagination() {
+  const apiRef = useGridApiContext();
+  const [state] = useGridState(apiRef);
+  const pageSize = useGridSelector(apIRef, gridPageSizeSelector);
+  const page = useGridSelector(apIRef, gridPageSelector);
 
-  return <div>Row count: {rows.length} </div>;
+  return (
+    <Pagination
+      count={state.pagination.pageCount}
+      page={state.pagination.page + 1}
+      onChange={(event, value) => apiRef.current.setPage(value - 1)}
+    />
+  );
 }
 ```
 
