@@ -9,7 +9,7 @@ import { GridCellParams, GridColDef, MuiEvent } from '../../../models';
 import { isSpaceKey } from '../../../utils/keyboardUtils';
 import { useFirstRender } from '../../utils/useFirstRender';
 import { GridRowGroupingPreProcessing } from '../../core/rowGroupsPerProcessing';
-import { generateRowTree } from '../rows/gridRowsUtils';
+import { buildRowTree } from '../rows/gridRowsUtils';
 
 /**
  * Only available in DataGridPro
@@ -59,7 +59,7 @@ export const useGridTreeData = (
         }))
         .sort((a, b) => a.path.length - b.path.length);
 
-      return generateRowTree({
+      return buildRowTree({
         rows,
         ...params,
         defaultGroupingExpansionDepth: props.defaultGroupingExpansionDepth,
