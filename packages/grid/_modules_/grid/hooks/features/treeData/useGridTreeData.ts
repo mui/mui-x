@@ -25,22 +25,22 @@ export const useGridTreeData = (
   >,
 ) => {
   const updateColumnsPreProcessing = React.useCallback(() => {
-    if (!props.treeData) {
-      apiRef.current.UNSTABLE_registerColumnPreProcessing('treeData', null);
-    } else {
-      const addGroupingColumn: GridColumnsPreProcessing = (columns) => {
-        const index = columns[0].type === 'checkboxSelection' ? 1 : 0;
-        const groupingColumn: GridColDef = {
-          ...GRID_TREE_DATA_GROUP_COL_DEF,
-          headerName: apiRef.current.getLocaleText('treeDataGroupingHeaderName'),
-          ...props.groupingColDef,
-        };
+    const addGroupingColumn: GridColumnsPreProcessing = (columns) => {
+      if (!props.treeData) {
+        return columns;
+      }
 
-        return [...columns.slice(0, index), groupingColumn, ...columns.slice(index)];
+      const index = columns[0].type === 'checkboxSelection' ? 1 : 0;
+      const groupingColumn: GridColDef = {
+        ...GRID_TREE_DATA_GROUP_COL_DEF,
+        headerName: apiRef.current.getLocaleText('treeDataGroupingHeaderName'),
+        ...props.groupingColDef,
       };
 
-      apiRef.current.UNSTABLE_registerColumnPreProcessing('treeData', addGroupingColumn);
-    }
+      return [...columns.slice(0, index), groupingColumn, ...columns.slice(index)];
+    };
+
+    apiRef.current.UNSTABLE_registerColumnPreProcessing('treeData', addGroupingColumn);
   }, [apiRef, props.treeData, props.groupingColDef]);
 
   const updateRowGrouping = React.useCallback(() => {
