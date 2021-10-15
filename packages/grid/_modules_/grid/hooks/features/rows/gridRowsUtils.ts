@@ -1,27 +1,20 @@
-import type {
-  GridRowTreeConfig,
-  GridRowTreeNodeConfig,
-  GridRowId,
-  GridRowsLookup,
-} from '../../../models';
+import type { GridRowTreeNodeConfig, GridRowId } from '../../../models';
+import { GridRowGroupingResult } from '../../core/rowGroupsPerProcessing';
 
 export type GridNodeNameToIdTree = {
   [nodeName: string]: { id: GridRowId; children: GridNodeNameToIdTree };
 };
 
 interface InsertRowInTreeParams {
-  tree: GridRowTreeConfig;
+  result: GridRowGroupingResult;
   path: string[];
   id: GridRowId;
   defaultGroupingExpansionDepth: number;
-  idRowsLookup: GridRowsLookup;
-  rowIds: GridRowId[];
   nodeNameToIdTree: GridNodeNameToIdTree;
 }
 
 export const insertRowInTree = (params: InsertRowInTreeParams) => {
-  const { tree, path, id, defaultGroupingExpansionDepth, idRowsLookup, rowIds, nodeNameToIdTree } =
-    params;
+  const { result, path, id, defaultGroupingExpansionDepth, nodeNameToIdTree } = params;
 
   let nodeNameToIdSubTree = nodeNameToIdTree;
   let parentNode: GridRowTreeNodeConfig | null = null;
@@ -46,7 +39,7 @@ export const insertRowInTree = (params: InsertRowInTreeParams) => {
     nodeNameToIdSubTree = nodeNameConfig.children;
 
     if (depth < path.length - 1) {
-      let node = tree[nodeId] ?? null;
+      let node = result.tree[nodeId] ?? null;
       if (!node) {
         node = {
           id: nodeId,
@@ -58,12 +51,12 @@ export const insertRowInTree = (params: InsertRowInTreeParams) => {
           depth,
         };
 
-        tree[nodeId] = node;
-        idRowsLookup[nodeId] = {};
-        rowIds.push(nodeId);
+        result.tree[nodeId] = node;
+        result.idRowsLookup[nodeId] = {};
+        result.rowIds.push(nodeId);
       }
     } else {
-      tree[id] = {
+      result.tree[id] = {
         id,
         expanded: defaultGroupingExpansionDepth > depth,
         parent: parentNode?.id ?? null,
@@ -80,6 +73,8 @@ export const insertRowInTree = (params: InsertRowInTreeParams) => {
       parentNode.children.push(nodeId);
     }
 
-    parentNode = tree[nodeId]!;
+    parentNode = result.tree[nodeId]!;
   }
+
+  result.treeDepth = Math.max(result.treeDepth, path.length);
 };

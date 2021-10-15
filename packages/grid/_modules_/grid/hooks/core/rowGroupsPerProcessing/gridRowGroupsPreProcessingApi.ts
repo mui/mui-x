@@ -7,6 +7,7 @@ export type RowGroupParams = {
 
 export interface GridRowGroupingResult {
   tree: GridRowTreeConfig;
+  treeDepth: number;
   rowIds: GridRowId[];
   idRowsLookup: GridRowsLookup;
 }

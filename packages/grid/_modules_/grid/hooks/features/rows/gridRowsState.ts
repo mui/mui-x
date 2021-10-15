@@ -1,10 +1,6 @@
-import { GridRowTreeConfig, GridRowId, GridRowsLookup } from '../../../models/gridRows';
+import { GridRowGroupingResult } from '../../core/rowGroupsPerProcessing';
 
-export interface GridRowsState {
-  idRowsLookup: GridRowsLookup;
-  rowIds: GridRowId[];
-  tree: GridRowTreeConfig;
-
+export interface GridRowsState extends GridRowGroupingResult {
   /**
    * Amount of rows before applying the filtering
    * It also count the expanded and collapsed children rows

@@ -12,6 +12,7 @@ const getFlatRowTree: GridRowGroupingPreProcessing = (params) => ({
   tree: Object.fromEntries(
     params.rowIds.map((id) => [id.toString(), { id, depth: 0, parent: null, label: '' }]),
   ),
+  treeDepth: 1,
   idRowsLookup: params.idRowsLookup,
   rowIds: params.rowIds,
 });

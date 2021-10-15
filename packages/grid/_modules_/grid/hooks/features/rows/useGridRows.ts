@@ -24,10 +24,7 @@ import {
 } from './gridRowsSelector';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 
-export type GridRowsInternalCacheState = Omit<
-  GridRowsState,
-  'tree' | 'totalRowCount' | 'totalTopLevelRowCount'
-> & {
+export type GridRowsInternalCacheState = Pick<GridRowsState, 'idRowsLookup' | 'rowIds'> & {
   rowIds: GridRowId[];
 
   /**

@@ -16,6 +16,11 @@ interface GridDemoTreeDataResponse {
 
 const TREE_DATA_COLUMNS: GridColumns = [
   {
+    field: 'id',
+    hide: true,
+    type: 'number',
+  },
+  {
     field: 'name',
     headerName: 'Name',
     width: 150,
