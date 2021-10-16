@@ -1,7 +1,13 @@
 import { DataGrid } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import * as React from 'react';
-import { DataGridPro, GridToolbar } from '@mui/x-data-grid-pro';
+import {
+  DataGridPro,
+  GridToolbar,
+  GridToolbarContainer,
+  GridToolbarExport,
+  gridClasses,
+} from '@mui/x-data-grid-pro';
 import '../style/grid-stories.css';
 import { useData } from '../hooks/useData';
 
@@ -70,6 +76,19 @@ export const Export = () => {
   );
 };
 
+function CustomToolbar() {
+  return (
+    <GridToolbarContainer className={gridClasses.toolbarContainer}>
+      <GridToolbarExport
+        printOptions={{
+          pageStyle: '@page { margin: 0; }', // Zero the margin to hide the header and footer
+        }}
+        disableRipple // Prevent printing the Export button with the ripple visible
+      />
+    </GridToolbarContainer>
+  );
+}
+
 export const PrintExportSnap = () => {
   const { data } = useDemoData({
     dataSet: 'Commodity',
@@ -84,7 +103,7 @@ export const PrintExportSnap = () => {
           {...data}
           checkboxSelection
           components={{
-            Toolbar: GridToolbar,
+            Toolbar: CustomToolbar,
           }}
         />
       </div>
