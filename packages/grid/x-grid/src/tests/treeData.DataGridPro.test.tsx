@@ -19,23 +19,23 @@ import {
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 const rowsWithoutGap: GridRowsProp = [
-  { name: 'A', value: 10 },
-  { name: 'A.A', value: 4 },
-  { name: 'A.B', value: 6 },
-  { name: 'B', value: 20 },
-  { name: 'B.A', value: 12 },
-  { name: 'B.B', value: 8 },
-  { name: 'B.B.A', value: 8 },
-  { name: 'B.B.A.A', value: 8 },
-  { name: 'C', value: 5 },
+  { name: 'A' },
+  { name: 'A.A' },
+  { name: 'A.B' },
+  { name: 'B' },
+  { name: 'B.A' },
+  { name: 'B.B' },
+  { name: 'B.B.A' },
+  { name: 'B.B.A.A' },
+  { name: 'C' },
 ];
 
 const rowsWithGap: GridRowsProp = [
-  { name: 'A', value: 10 },
-  { name: 'A.B', value: 6 },
-  { name: 'A.A', value: 4 },
-  { name: 'B.A', value: 3 },
-  { name: 'B.B', value: 7 },
+  { name: 'A' },
+  { name: 'A.B' },
+  { name: 'A.A' },
+  { name: 'B.A' },
+  { name: 'B.B' },
 ];
 
 const baselineProps: DataGridProProps = {
@@ -45,10 +45,6 @@ const baselineProps: DataGridProProps = {
     {
       field: 'name',
       width: 200,
-    },
-    {
-      field: 'value',
-      type: 'number',
     },
   ],
   treeData: true,
@@ -75,7 +71,7 @@ describe('<DataGridPro /> - Tree Data', () => {
   describe('prop: treeData', () => {
     it('should support tree data toggling', () => {
       const { setProps } = render(<Test treeData={false} />);
-      expect(getColumnHeadersTextContent()).to.deep.equal(['name', 'value']);
+      expect(getColumnHeadersTextContent()).to.deep.equal(['name']);
       expect(getColumnValues(0)).to.deep.equal([
         'A',
         'A.A',
@@ -88,10 +84,10 @@ describe('<DataGridPro /> - Tree Data', () => {
         'C',
       ]);
       setProps({ treeData: true });
-      expect(getColumnHeadersTextContent()).to.deep.equal(['Group', 'name', 'value']);
+      expect(getColumnHeadersTextContent()).to.deep.equal(['Group', 'name']);
       expect(getColumnValues(1)).to.deep.equal(['A', 'B', 'C']);
       setProps({ treeData: false });
-      expect(getColumnHeadersTextContent()).to.deep.equal(['name', 'value']);
+      expect(getColumnHeadersTextContent()).to.deep.equal(['name']);
       expect(getColumnValues(0)).to.deep.equal([
         'A',
         'A.A',
@@ -107,7 +103,7 @@ describe('<DataGridPro /> - Tree Data', () => {
 
     it('should support enabling treeData after apiRef.current.updateRows has modified the rows', async () => {
       const { setProps } = render(<Test treeData={false} />);
-      expect(getColumnHeadersTextContent()).to.deep.equal(['name', 'value']);
+      expect(getColumnHeadersTextContent()).to.deep.equal(['name']);
       expect(getColumnValues(0)).to.deep.equal([
         'A',
         'A.A',
@@ -131,10 +127,31 @@ describe('<DataGridPro /> - Tree Data', () => {
         'C',
       ]);
       setProps({ treeData: true });
-      expect(getColumnHeadersTextContent()).to.deep.equal(['Group', 'name', 'value']);
+      expect(getColumnHeadersTextContent()).to.deep.equal(['Group', 'name']);
       expect(getColumnValues(1)).to.deep.equal(['A', 'B', 'C']);
       fireEvent.click(getCell(0, 0).querySelector('button'));
       expect(getColumnValues(1)).to.deep.equal(['A', 'A.B', 'B', 'C']);
+    });
+
+    it('should support new dataset', () => {
+      const { setProps } = render(<Test />);
+      setProps({
+        rows: [
+          { nameBis: 'A' },
+          { nameBis: 'A.B' },
+          { nameBis: 'A.A' },
+          { nameBis: 'B.A' },
+          { nameBis: 'B.B' },
+        ],
+        columns: [
+          {
+            field: 'nameBis',
+            width: 200,
+          },
+        ],
+        getTreeDataPath: (row) => row.nameBis.split('.'),
+        getRowId: (row) => row.nameBis,
+      });
     });
   });
 
@@ -207,7 +224,7 @@ describe('<DataGridPro /> - Tree Data', () => {
   describe('prop: groupingColDef', () => {
     it('should set the custom headerName', () => {
       render(<Test groupingColDef={{ headerName: 'Custom header name' }} />);
-      expect(getColumnHeadersTextContent()).to.deep.equal(['Custom header name', 'name', 'value']);
+      expect(getColumnHeadersTextContent()).to.deep.equal(['Custom header name', 'name']);
     });
   });
 
@@ -215,7 +232,7 @@ describe('<DataGridPro /> - Tree Data', () => {
     it('should add a grouping column', () => {
       render(<Test />);
       const columnsHeader = getColumnHeadersTextContent();
-      expect(columnsHeader).to.deep.equal(['Group', 'name', 'value']);
+      expect(columnsHeader).to.deep.equal(['Group', 'name']);
     });
 
     it('should render a toggling icon only when a row has children', () => {
