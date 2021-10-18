@@ -126,4 +126,4 @@ export const GridToolbarDensitySelector = React.forwardRef<HTMLButtonElement, Bu
       </React.Fragment>
     );
   },
-) as (props: ButtonProps) => JSX.Element;
+);
