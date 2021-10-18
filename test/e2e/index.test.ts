@@ -63,7 +63,6 @@ describe('e2e', () => {
 
   describe('<DataGrid />', () => {
     it('should select the first column header when pressing tab key', async () => {
-      console.log('Start 1')
       await renderFixture('DataGrid/KeyboardNavigationFocus');
 
       expect(
@@ -75,7 +74,6 @@ describe('e2e', () => {
     });
 
     it('should implement the roving tabindex pattern', async () => {
-      console.log('Start 2')
       await renderFixture('DataGrid/KeyboardNavigationFocus');
 
       expect(
@@ -109,7 +107,6 @@ describe('e2e', () => {
     });
 
     it('should display the rows', async () => {
-      console.log('Start 3')
       await renderFixture('DataGrid/ConcurrentReactUpdate');
       expect(
         await page.evaluate(() =>
@@ -119,7 +116,6 @@ describe('e2e', () => {
     });
 
     it('should work with a select as the edit cell', async () => {
-      console.log('Start 4')
       await renderFixture('DataGrid/SelectEditCell');
       await page.dblclick('"Nike"');
       await page.click('"Gucci"');
@@ -132,7 +128,6 @@ describe('e2e', () => {
     });
 
     it('should reorder columns by dropping into the header', async () => {
-      console.log('Start 5')
       await renderFixture('DataGrid/ColumnReorder');
       expect(
         await page.evaluate(() => document.querySelector('[role="row"]')!.textContent!),
@@ -162,7 +157,6 @@ describe('e2e', () => {
     });
 
     it('should reorder columns by dropping into the body', async () => {
-      console.log('Start 6')
       await renderFixture('DataGrid/ColumnReorder');
       expect(
         await page.evaluate(() => document.querySelector('[role="row"]')!.textContent!),
@@ -192,7 +186,6 @@ describe('e2e', () => {
     });
 
     it('should select one row', async () => {
-      console.log('Start 7')
       await renderFixture('DataGrid/CheckboxSelection');
       await page.click('[role="row"][data-rowindex="0"] [role="cell"] input');
       expect(
@@ -203,7 +196,6 @@ describe('e2e', () => {
     });
 
     it('should not scroll when changing the selected row', async () => {
-      console.log('Start 8')
       await renderFixture('DataGrid/RowSelection');
       await page.click('[role="row"][data-rowindex="0"] [role="cell"]');
       await page.evaluate(() =>
