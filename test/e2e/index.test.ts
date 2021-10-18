@@ -91,7 +91,10 @@ describe('e2e', () => {
         'cell',
       );
       await page.keyboard.press('Tab');
-      expect(await page.evaluate(() => document.activeElement?.textContent)).to.equal('100');
+      console.log('Before')
+      const val = await page.evaluate(() => document.activeElement?.textContent)
+      console.log('After', val)
+      expect(val).to.equal('100');
       expect(await page.evaluate(() => document.activeElement?.getAttribute('role'))).to.equal(
         'button',
       );
@@ -105,15 +108,16 @@ describe('e2e', () => {
         await page.evaluate(() => document.activeElement?.getAttribute('data-testid')),
       ).to.equal('initial-focus');
     });
-    //
-    // it('should display the rows', async () => {
-    //   await renderFixture('DataGrid/ConcurrentReactUpdate');
-    //   expect(
-    //     await page.evaluate(() =>
-    //       Array.from(document.querySelectorAll('[role="cell"]')).map((node) => node.textContent),
-    //     ),
-    //   ).to.deep.equal(['1', '2']);
-    // });
+
+    it('should display the rows', async () => {
+      console.log('Next test')
+      await renderFixture('DataGrid/ConcurrentReactUpdate');
+      expect(
+        await page.evaluate(() =>
+          Array.from(document.querySelectorAll('[role="cell"]')).map((node) => node.textContent),
+        ),
+      ).to.deep.equal(['1', '2']);
+    });
     //
     // it('should work with a select as the edit cell', async () => {
     //   await renderFixture('DataGrid/SelectEditCell');
