@@ -98,7 +98,12 @@ export const useGridTreeData = (
       if (cellParams.field === '__tree_data_group__' && isSpaceKey(event.key)) {
         event.stopPropagation();
         event.preventDefault();
-        event.defaultMuiPrevented = true;
+
+        const node = apiRef.current.UNSTABLE_getRowNode(params.id);
+        if (!node || node.descendantCount === 0) {
+          return;
+        }
+
         apiRef.current.UNSTABLE_setRowExpansion(
           params.id,
           !apiRef.current.UNSTABLE_getRowNode(params.id)?.expanded,

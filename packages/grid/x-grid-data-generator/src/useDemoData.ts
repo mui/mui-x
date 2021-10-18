@@ -5,6 +5,8 @@ import { getCommodityColumns } from './commodities.columns';
 import { getEmployeeColumns } from './employees.columns';
 import asyncWorker from './asyncWorker';
 import { GridColDefGenerator } from './services/gridColDefGenerator';
+import { GridRowData } from '../../_modules_';
+import { randomArrayItem } from './services';
 
 const dataCache = new LRUCache<string, GridDemoData>({
   max: 10,
@@ -25,6 +27,25 @@ export interface DemoDataOptions {
   rowLength: number;
   maxColumns?: number;
   editable?: boolean;
+  treeData?: {
+    /**
+     * The field used to generate the path
+     * If not defined, the tree data will not be built
+     */
+    groupingField?: string;
+
+    /**
+     * The depth of the tree
+     * @default: 1
+     */
+    depth?: number;
+
+    /**
+     * The average amount of children in a node
+     * @default: 2
+     */
+    averageChildren?: number;
+  };
 }
 
 // Generate fake data from a seed.
@@ -101,7 +122,15 @@ export const useDemoData = (options: DemoDataOptions): DemoDataReturnType => {
     return columns;
   }, [options.dataSet, options.editable, options.maxColumns]);
 
-  const [data, setData] = React.useState<GridDemoData>(() => ({ columns: getColumns(), rows: [] }));
+  const treeDataDepth = options.treeData?.depth ?? 1;
+  const hasTreeData = treeDataDepth > 1 && options.treeData?.groupingField;
+
+  const [data, setData] = React.useState<GridDemoData>(() => ({
+    columns: getColumns(),
+    rows: [],
+    getTreeDataPath: hasTreeData ? (row) => row.path : undefined,
+    treeData: hasTreeData ? true : undefined,
+  }));
 
   React.useEffect(() => {
     const cacheKey = `${options.dataSet}-${rowLength}-${index}-${options.maxColumns}`;
@@ -129,6 +158,58 @@ export const useDemoData = (options: DemoDataOptions): DemoDataReturnType => {
         newData = await getRealData(rowLength, columns);
       }
 
+      const averageChildren = options.treeData?.averageChildren ?? 2;
+
+      if (hasTreeData) {
+        const rowsByTreeDepth: Record<
+          number,
+          { [index: number]: { value: GridRowData; parentIndex: number | null } }
+        > = {};
+        const rowsCount = newData.rows.length;
+
+        for (let i = 0; i < rowsCount; i += 1) {
+          const row = newData.rows[i];
+
+          const currentChunk =
+            Math.floor((i * (averageChildren ** treeDataDepth - 1)) / rowsCount) + 1;
+          const currentDepth = Math.floor(Math.log(currentChunk) / Math.log(averageChildren));
+
+          if (!rowsByTreeDepth[currentDepth]) {
+            rowsByTreeDepth[currentDepth] = {};
+          }
+
+          rowsByTreeDepth[currentDepth][i] = { value: row, parentIndex: null };
+        }
+
+        for (let i = 0; i < treeDataDepth; i += 1) {
+          Object.keys(rowsByTreeDepth[i]).forEach((rowIndex) => {
+            const row = rowsByTreeDepth[i][Number(rowIndex)];
+            const path: string[] = [];
+            let previousRow: { value: GridRowData; parentIndex: number | null } | null = null;
+            for (let k = i; k >= 0; k -= 1) {
+              let rowTemp: { value: GridRowData; parentIndex: number | null };
+              if (k === i) {
+                if (i > 0) {
+                  row.parentIndex = Number(randomArrayItem(Object.keys(rowsByTreeDepth[i - 1])));
+                }
+                rowTemp = row;
+              } else {
+                rowTemp = rowsByTreeDepth[k][previousRow!.parentIndex!];
+              }
+
+              path.unshift(rowTemp.value[options.treeData?.groupingField!]);
+
+              previousRow = rowTemp;
+            }
+
+            row.value.path = path;
+          });
+        }
+
+        newData.getTreeDataPath = (row) => row.path;
+        newData.treeData = true;
+      }
+
       if (!active) {
         return;
       }
@@ -146,7 +227,18 @@ export const useDemoData = (options: DemoDataOptions): DemoDataReturnType => {
     return () => {
       active = false;
     };
-  }, [rowLength, data.columns, options.dataSet, options.maxColumns, index, getColumns]);
+  }, [
+    rowLength,
+    data.columns,
+    options.dataSet,
+    options.maxColumns,
+    treeDataDepth,
+    options.treeData?.groupingField,
+    options.treeData?.averageChildren,
+    hasTreeData,
+    index,
+    getColumns,
+  ]);
 
   return {
     data,

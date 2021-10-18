@@ -211,11 +211,19 @@ describe('<DataGridPro /> - Tree Data', () => {
     });
   });
 
-  describe('row grouping', () => {
+  describe('row grouping column', () => {
     it('should add a grouping column', () => {
       render(<Test />);
       const columnsHeader = getColumnHeadersTextContent();
       expect(columnsHeader).to.deep.equal(['Group', 'name', 'value']);
+    });
+
+    it('should render a toggling icon only when a row has children', () => {
+      render(<Test />);
+      // No children
+      expect(getCell(2, 0).querySelectorAll('button')).to.have.length(0);
+      // Some children
+      expect(getCell(0, 0).querySelectorAll('button')).to.have.length(1);
     });
 
     it('should toggle expansion when clicking on grouping column icon', () => {
@@ -254,6 +262,23 @@ describe('<DataGridPro /> - Tree Data', () => {
       expect(getColumnValues(1)).to.deep.equal(['A', 'A.A', 'A.B', 'B']);
       fireEvent.click(screen.getByRole('button', { name: /next page/i }));
       expect(getColumnValues(1)).to.deep.equal(['C']);
+    });
+
+    it('should keep the row expansion when switching page', () => {
+      render(<Test pagination pageSize={1} rowsPerPageOptions={[1]} />);
+      expect(getColumnValues(1)).to.deep.equal(['A']);
+      fireEvent.click(getCell(0, 0).querySelector('button'));
+      expect(getColumnValues(1)).to.deep.equal(['A', 'A.A', 'A.B']);
+      fireEvent.click(screen.getByRole('button', { name: /next page/i }));
+      expect(getColumnValues(1)).to.deep.equal(['B']);
+      fireEvent.click(getCell(3, 0).querySelector('button'));
+      expect(getColumnValues(1)).to.deep.equal(['B', 'B.A', 'B.B']);
+      fireEvent.click(screen.getByRole('button', { name: /previous page/i }));
+      expect(getColumnValues(1)).to.deep.equal(['A', 'A.A', 'A.B']);
+      fireEvent.click(getCell(0, 0).querySelector('button'));
+      expect(getColumnValues(1)).to.deep.equal(['A']);
+      fireEvent.click(screen.getByRole('button', { name: /next page/i }));
+      expect(getColumnValues(1)).to.deep.equal(['B', 'B.A', 'B.B']);
     });
   });
 
