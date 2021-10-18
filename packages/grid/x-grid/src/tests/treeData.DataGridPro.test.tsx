@@ -137,11 +137,11 @@ describe('<DataGridPro /> - Tree Data', () => {
       const { setProps } = render(<Test />);
       setProps({
         rows: [
-          { nameBis: 'A' },
-          { nameBis: 'A.B' },
-          { nameBis: 'A.A' },
-          { nameBis: 'B.A' },
-          { nameBis: 'B.B' },
+          { nameBis: '1' },
+          { nameBis: '1.1' },
+          { nameBis: '1.2' },
+          { nameBis: '2' },
+          { nameBis: '2.1' },
         ],
         columns: [
           {
@@ -152,6 +152,8 @@ describe('<DataGridPro /> - Tree Data', () => {
         getTreeDataPath: (row) => row.nameBis.split('.'),
         getRowId: (row) => row.nameBis,
       });
+      expect(getColumnHeadersTextContent()).to.deep.equal(['Group', 'nameBis']);
+      expect(getColumnValues(1)).to.deep.equal(['1', '2']);
     });
   });
 
