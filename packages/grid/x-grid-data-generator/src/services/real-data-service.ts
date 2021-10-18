@@ -1,8 +1,8 @@
-import { DataGridProProps, GridRowData } from '@mui/x-data-grid-pro';
+import { GridRowData } from '@mui/x-data-grid-pro';
 import asyncWorker from '../asyncWorker';
 import { GridColDefGenerator, GridDataGeneratorContext } from './gridColDefGenerator';
 
-export interface GridDemoData extends Pick<DataGridProProps, 'getTreeDataPath' | 'treeData'> {
+export interface GeneratedDemoData {
   rows: GridRowData[];
   columns: GridColDefGenerator[];
 }
@@ -10,10 +10,10 @@ export interface GridDemoData extends Pick<DataGridProProps, 'getTreeDataPath' |
 export function getRealData(
   rowLength: number,
   columns: GridColDefGenerator[],
-): Promise<GridDemoData> {
-  return new Promise<GridDemoData>((resolve) => {
+): Promise<GeneratedDemoData> {
+  return new Promise<GeneratedDemoData>((resolve) => {
     const tasks = { current: rowLength };
-    const rows: GridDemoData['rows'] = [];
+    const rows: GeneratedDemoData['rows'] = [];
     const indexedValues: { [field: string]: { [value: string]: number } } = {};
 
     function work() {

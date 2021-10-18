@@ -1,6 +1,7 @@
 import * as React from 'react';
 import LRUCache from 'lru-cache';
-import { GridDemoData, getRealData } from './services/real-data-service';
+import { DataGridProProps } from '@mui/x-data-grid-pro';
+import { GeneratedDemoData, getRealData } from './services/real-data-service';
 import { getCommodityColumns } from './commodities.columns';
 import { getEmployeeColumns } from './employees.columns';
 import asyncWorker from './asyncWorker';
@@ -8,13 +9,13 @@ import { GridColDefGenerator } from './services/gridColDefGenerator';
 import { GridRowData } from '../../_modules_';
 import { randomArrayItem } from './services';
 
-const dataCache = new LRUCache<string, GridDemoData>({
+const dataCache = new LRUCache<string, DemoData>({
   max: 10,
   maxAge: 60 * 5 * 1e3, // 5 minutes
 });
 
 export type DemoDataReturnType = {
-  data: GridDemoData;
+  data: DemoData;
   loading: boolean;
   setRowLength: (count: number) => void;
   loadNewData: () => void;
@@ -48,13 +49,17 @@ export interface DemoDataOptions {
   };
 }
 
+export interface DemoData
+  extends Pick<DataGridProProps, 'getTreeDataPath' | 'treeData' | 'groupingColDef'>,
+    GeneratedDemoData {}
+
 // Generate fake data from a seed.
 // It's about x20 faster than getRealData.
 async function extrapolateSeed(
   rowLength: number,
   columns: GridColDefGenerator[],
-  data: GridDemoData,
-): Promise<GridDemoData> {
+  data: GeneratedDemoData,
+): Promise<GeneratedDemoData> {
   return new Promise<any>((resolve) => {
     const seed = data.rows;
     const rows = data.rows.slice();
@@ -125,7 +130,7 @@ export const useDemoData = (options: DemoDataOptions): DemoDataReturnType => {
   const treeDataDepth = options.treeData?.depth ?? 1;
   const hasTreeData = treeDataDepth > 1 && options.treeData?.groupingField;
 
-  const [data, setData] = React.useState<GridDemoData>(() => ({
+  const [data, setData] = React.useState<GeneratedDemoData>(() => ({
     columns: getColumns(),
     rows: [],
     getTreeDataPath: hasTreeData ? (row) => row.path : undefined,
@@ -149,7 +154,7 @@ export const useDemoData = (options: DemoDataOptions): DemoDataReturnType => {
     (async () => {
       setLoading(true);
 
-      let newData: GridDemoData;
+      let newData: DemoData;
       const columns = getColumns();
       if (rowLength > 1000) {
         newData = await getRealData(1000, columns);
@@ -166,6 +171,14 @@ export const useDemoData = (options: DemoDataOptions): DemoDataReturnType => {
           { [index: number]: { value: GridRowData; parentIndex: number | null } }
         > = {};
         const rowsCount = newData.rows.length;
+
+        const groupingCol = newData.columns.find(
+          (col) => col.field === options.treeData?.groupingField,
+        );
+
+        if (!groupingCol) {
+          throw new Error('MUI: The tree data grouping field does not exist');
+        }
 
         for (let i = 0; i < rowsCount; i += 1) {
           const row = newData.rows[i];
@@ -206,6 +219,10 @@ export const useDemoData = (options: DemoDataOptions): DemoDataReturnType => {
           });
         }
 
+        groupingCol.hide = true;
+        newData.groupingColDef = {
+          headerName: groupingCol.headerName ?? groupingCol.field,
+        };
         newData.getTreeDataPath = (row) => row.path;
         newData.treeData = true;
       }

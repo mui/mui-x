@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { GridRowsProp, DataGrid } from '@mui/x-data-grid';
-import { useDemoData, GridDemoData } from '@mui/x-data-grid-generator';
+import { useDemoData, GeneratedDemoData } from '@mui/x-data-grid-generator';
 
-function loadServerRows(page: number, data: GridDemoData): Promise<any> {
+function loadServerRows(page: number, data: GeneratedDemoData): Promise<any> {
   return new Promise<any>((resolve) => {
     setTimeout(() => {
       resolve(data.rows.slice(page * 5, (page + 1) * 5));

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridDemoData, randomInt } from '@mui/x-data-grid-generator/services';
+import { GeneratedDemoData, randomInt } from '@mui/x-data-grid-generator/services';
 import { DataGridProProps, GridColumns, GridRowModel } from '@mui/x-data-grid-pro';
 
 interface GridDemoTreeDataOptions {
@@ -7,7 +7,7 @@ interface GridDemoTreeDataOptions {
   randomLength: boolean;
 }
 
-interface GridDemoTreeData extends GridDemoData, Pick<DataGridProProps, 'getTreeDataPath'> {}
+interface GridDemoTreeData extends GeneratedDemoData, Pick<DataGridProProps, 'getTreeDataPath'> {}
 
 interface GridDemoTreeDataResponse {
   loading: boolean;
