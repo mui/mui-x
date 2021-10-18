@@ -264,8 +264,6 @@ function run(argv: { outputDirectory?: string }) {
   });
   const project = app.convert();
 
-  app.generateJson(project!, 'docs.json');
-
   const apisToGenerate = [
     'GridApi',
     'GridColDef',
