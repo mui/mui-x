@@ -101,7 +101,7 @@ function datePast(years?: number, refDate?: string) {
 
 export const random = (min: number, max: number): number => chance.floating({ min, max });
 export const randomInt = (min: number, max: number): number =>
-  Math.floor(Math.random() * (max - min + 1) + min);
+  Math.floor(random(0, 1) * (max - min + 1) + min);
 export const randomPrice = (min = 0, max = 100000): number => Number(random(min, max).toFixed(2));
 export const randomRate = (): number => random(0, 1);
 export const randomDate = (start: Date, end: Date) =>
