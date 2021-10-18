@@ -7,6 +7,7 @@ import { useGridErrorHandler } from './useGridErrorHandler';
 import { useGridControlState } from './useGridControlState';
 import { useGridLocaleText } from './useGridLocaleText';
 import { useGridStateProp } from './useGridStateProp';
+import { useGridColumnsPreProcessing } from './columnsPreProcessing';
 import { useGridRowGroupsPreProcessing } from './rowGroupsPerProcessing';
 
 /**
@@ -17,6 +18,7 @@ export const useGridInitialization = (apiRef: GridApiRef, props: GridComponentPr
   useGridApiInitialization(apiRef, props);
   useGridErrorHandler(apiRef, props);
   useGridControlState(apiRef, props);
+  useGridColumnsPreProcessing(apiRef);
   useGridRowGroupsPreProcessing(apiRef);
   useGridLocaleText(apiRef, props);
   useGridStateProp(apiRef, props);
