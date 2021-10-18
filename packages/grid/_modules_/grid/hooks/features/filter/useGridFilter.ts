@@ -202,7 +202,7 @@ export const useGridFilter = (
         },
       };
     });
-
+    apiRef.current.publishEvent(GridEvents.visibleRowsSet);
     forceUpdate();
   }, [apiRef, setGridState, forceUpdate, props.filterMode, buildAggregatedFilterApplier]);
 

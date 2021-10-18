@@ -23,6 +23,8 @@ import { GridStateApi } from './gridStateApi';
 import { GridVirtualizationApi } from './gridVirtualizationApi';
 import { GridLoggerApi } from './gridLoggerApi';
 import { GridScrollApi } from './gridScrollApi';
+import type { GridColumnsPreProcessingApi } from '../../hooks/core/columnsPreProcessing';
+import type { GridRowGroupsPreProcessingApi } from '../../hooks/core/rowGroupsPerProcessing';
 
 /**
  * The full grid API.
@@ -31,6 +33,8 @@ export interface GridApi
   extends GridCoreApi,
     GridStateApi,
     GridLoggerApi,
+    GridColumnsPreProcessingApi,
+    GridRowGroupsPreProcessingApi,
     GridDensityApi,
     GridEventsApi,
     GridRowApi,

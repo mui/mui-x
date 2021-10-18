@@ -7,7 +7,6 @@ export * from './useGridLogger';
 export * from './useGridRootProps';
 export * from './useGridScrollFn';
 export * from './useGridSelector';
-export * from './useGridSlotComponentProps';
 export * from './useGridState';
 export * from './useGridNativeEventListener';
 export * from './useGridProcessedProps';
