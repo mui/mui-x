@@ -93,10 +93,7 @@ describe('e2e', () => {
         'cell',
       );
       await page.keyboard.press('Tab');
-      console.log('Before')
-      const val = await page.evaluate(() => document.activeElement?.textContent)
-      console.log('After', val)
-      expect(val).to.equal('100');
+      expect(await page.evaluate(() => document.activeElement?.textContent)).to.equal('100');
       expect(await page.evaluate(() => document.activeElement?.getAttribute('role'))).to.equal(
         'button',
       );
