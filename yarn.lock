@@ -11852,7 +11852,7 @@ jss-plugin-rule-value-function@^10.8.0:
     jss "10.8.0"
     tiny-warning "^1.0.2"
 
-jss-plugin-template@^10.0.3:
+jss-plugin-template@^10.8.1:
   version "10.8.1"
   resolved "https://registry.yarnpkg.com/jss-plugin-template/-/jss-plugin-template-10.8.1.tgz#b12d74e3f4da4035fc28a921c5feda73d54313db"
   integrity sha512-mb3+tNo4hnh/hICY+pKl59gfl3nACyq7IbUIDNwhr+kub1dzGtO39u+9fadkXw5pkP3A/6L18Na55i9C7LetpA==
