@@ -33,12 +33,12 @@ import { useGridResizeContainer } from '../../_modules_/grid/hooks/features/resi
 export const useDataGridProComponent = (apiRef: GridApiRef, props: GridComponentProps) => {
   useGridInitialization(apiRef, props);
   useGridResizeContainer(apiRef, props);
+  useGridSelection(apiRef, props);
   useGridColumns(apiRef, props);
   useGridRows(apiRef, props);
   useGridParamsApi(apiRef);
   useGridEditRows(apiRef, props);
   useGridFocus(apiRef, props);
-  useGridSelection(apiRef, props);
   useGridSorting(apiRef, props);
   useGridPreferencesPanel(apiRef, props);
   useGridFilter(apiRef, props);
