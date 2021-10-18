@@ -63,6 +63,7 @@ describe('e2e', () => {
 
   describe('<DataGrid />', () => {
     it('should select the first column header when pressing tab key', async () => {
+      console.log('Start 1')
       await renderFixture('DataGrid/KeyboardNavigationFocus');
 
       expect(
@@ -74,6 +75,7 @@ describe('e2e', () => {
     });
 
     it('should implement the roving tabindex pattern', async () => {
+      console.log('Start 2')
       await renderFixture('DataGrid/KeyboardNavigationFocus');
 
       expect(
@@ -110,7 +112,7 @@ describe('e2e', () => {
     });
 
     it('should display the rows', async () => {
-      console.log('Next test')
+      console.log('Start 3')
       await renderFixture('DataGrid/ConcurrentReactUpdate');
       expect(
         await page.evaluate(() =>
@@ -118,103 +120,108 @@ describe('e2e', () => {
         ),
       ).to.deep.equal(['1', '2']);
     });
-    //
-    // it('should work with a select as the edit cell', async () => {
-    //   await renderFixture('DataGrid/SelectEditCell');
-    //   await page.dblclick('"Nike"');
-    //   await page.click('"Gucci"');
-    //   expect(
-    //     await page.evaluate(() => {
-    //       const selector = '[role="row"][data-rowindex="0"] [role="cell"][data-colindex="0"]';
-    //       return document.querySelector(selector)!.textContent!;
-    //     }),
-    //   ).to.equal('Gucci');
-    // });
-    //
-    // it('should reorder columns by dropping into the header', async () => {
-    //   await renderFixture('DataGrid/ColumnReorder');
-    //   expect(
-    //     await page.evaluate(() => document.querySelector('[role="row"]')!.textContent!),
-    //   ).to.equal('brandyear');
-    //   const brand = await page.$('[role="columnheader"][aria-colindex="1"] > [draggable]');
-    //   const brandBoundingBox = await brand?.boundingBox();
-    //   const year = await page.$('[role="columnheader"][aria-colindex="2"] > [draggable]');
-    //   const yearBoundingBox = await year?.boundingBox();
-    //   if (brandBoundingBox && yearBoundingBox) {
-    //     // Based on https://stackoverflow.com/a/64746679/2801714
-    //     await page.mouse.move(
-    //       brandBoundingBox.x + brandBoundingBox.width / 2,
-    //       brandBoundingBox.y + brandBoundingBox.height / 2,
-    //       { steps: 5 },
-    //     );
-    //     await page.mouse.down();
-    //     await page.mouse.move(
-    //       yearBoundingBox.x + yearBoundingBox.width / 2,
-    //       yearBoundingBox.y + yearBoundingBox.height / 2,
-    //       { steps: 5 },
-    //     );
-    //     await page.mouse.up();
-    //   }
-    //   expect(
-    //     await page.evaluate(() => document.querySelector('[role="row"]')!.textContent!),
-    //   ).to.equal('yearbrand');
-    // });
-    //
-    // it('should reorder columns by dropping into the body', async () => {
-    //   await renderFixture('DataGrid/ColumnReorder');
-    //   expect(
-    //     await page.evaluate(() => document.querySelector('[role="row"]')!.textContent!),
-    //   ).to.equal('brandyear');
-    //   const brand = await page.$('[role="columnheader"][aria-colindex="1"] > [draggable]');
-    //   const brandBoundingBox = await brand?.boundingBox();
-    //   const cell = await page.$('[role="row"][data-rowindex="0"] [role="cell"][data-colindex="1"]');
-    //   const cellBoundingBox = await cell?.boundingBox();
-    //   if (brandBoundingBox && cellBoundingBox) {
-    //     // Based on https://stackoverflow.com/a/64746679/2801714
-    //     await page.mouse.move(
-    //       brandBoundingBox.x + brandBoundingBox.width / 2,
-    //       brandBoundingBox.y + brandBoundingBox.height / 2,
-    //       { steps: 5 },
-    //     );
-    //     await page.mouse.down();
-    //     await page.mouse.move(
-    //       cellBoundingBox.x + cellBoundingBox.width / 2,
-    //       cellBoundingBox.y + cellBoundingBox.height / 2,
-    //       { steps: 5 },
-    //     );
-    //     await page.mouse.up();
-    //   }
-    //   expect(
-    //     await page.evaluate(() => document.querySelector('[role="row"]')!.textContent!),
-    //   ).to.equal('yearbrand');
-    // });
-    //
-    // it('should select one row', async () => {
-    //   await renderFixture('DataGrid/CheckboxSelection');
-    //   await page.click('[role="row"][data-rowindex="0"] [role="cell"] input');
-    //   expect(
-    //     await page.evaluate(
-    //       () => document.querySelector('[role="row"][data-rowindex="0"]')!.className!,
-    //     ),
-    //   ).to.contain('Mui-selected');
-    // });
-    //
-    // it('should not scroll when changing the selected row', async () => {
-    //   await renderFixture('DataGrid/RowSelection');
-    //   await page.click('[role="row"][data-rowindex="0"] [role="cell"]');
-    //   await page.evaluate(() =>
-    //     document.querySelector('[role="row"][data-rowindex="3"] [role="cell"]')!.scrollIntoView(),
-    //   );
-    //   const scrollTop = await page.evaluate(
-    //     () => document.querySelector('.MuiDataGrid-virtualScroller')!.scrollTop!,
-    //   );
-    //   expect(scrollTop).not.to.equal(0);
-    //   await page.click('[role="row"][data-rowindex="3"] [role="cell"]');
-    //   expect(
-    //     await page.evaluate(
-    //       () => document.querySelector('.MuiDataGrid-virtualScroller')!.scrollTop!,
-    //     ),
-    //   ).to.equal(scrollTop);
-    // });
+
+    it('should work with a select as the edit cell', async () => {
+      console.log('Start 4')
+      await renderFixture('DataGrid/SelectEditCell');
+      await page.dblclick('"Nike"');
+      await page.click('"Gucci"');
+      expect(
+        await page.evaluate(() => {
+          const selector = '[role="row"][data-rowindex="0"] [role="cell"][data-colindex="0"]';
+          return document.querySelector(selector)!.textContent!;
+        }),
+      ).to.equal('Gucci');
+    });
+
+    it('should reorder columns by dropping into the header', async () => {
+      console.log('Start 5')
+      await renderFixture('DataGrid/ColumnReorder');
+      expect(
+        await page.evaluate(() => document.querySelector('[role="row"]')!.textContent!),
+      ).to.equal('brandyear');
+      const brand = await page.$('[role="columnheader"][aria-colindex="1"] > [draggable]');
+      const brandBoundingBox = await brand?.boundingBox();
+      const year = await page.$('[role="columnheader"][aria-colindex="2"] > [draggable]');
+      const yearBoundingBox = await year?.boundingBox();
+      if (brandBoundingBox && yearBoundingBox) {
+        // Based on https://stackoverflow.com/a/64746679/2801714
+        await page.mouse.move(
+          brandBoundingBox.x + brandBoundingBox.width / 2,
+          brandBoundingBox.y + brandBoundingBox.height / 2,
+          { steps: 5 },
+        );
+        await page.mouse.down();
+        await page.mouse.move(
+          yearBoundingBox.x + yearBoundingBox.width / 2,
+          yearBoundingBox.y + yearBoundingBox.height / 2,
+          { steps: 5 },
+        );
+        await page.mouse.up();
+      }
+      expect(
+        await page.evaluate(() => document.querySelector('[role="row"]')!.textContent!),
+      ).to.equal('yearbrand');
+    });
+
+    it('should reorder columns by dropping into the body', async () => {
+      console.log('Start 6')
+      await renderFixture('DataGrid/ColumnReorder');
+      expect(
+        await page.evaluate(() => document.querySelector('[role="row"]')!.textContent!),
+      ).to.equal('brandyear');
+      const brand = await page.$('[role="columnheader"][aria-colindex="1"] > [draggable]');
+      const brandBoundingBox = await brand?.boundingBox();
+      const cell = await page.$('[role="row"][data-rowindex="0"] [role="cell"][data-colindex="1"]');
+      const cellBoundingBox = await cell?.boundingBox();
+      if (brandBoundingBox && cellBoundingBox) {
+        // Based on https://stackoverflow.com/a/64746679/2801714
+        await page.mouse.move(
+          brandBoundingBox.x + brandBoundingBox.width / 2,
+          brandBoundingBox.y + brandBoundingBox.height / 2,
+          { steps: 5 },
+        );
+        await page.mouse.down();
+        await page.mouse.move(
+          cellBoundingBox.x + cellBoundingBox.width / 2,
+          cellBoundingBox.y + cellBoundingBox.height / 2,
+          { steps: 5 },
+        );
+        await page.mouse.up();
+      }
+      expect(
+        await page.evaluate(() => document.querySelector('[role="row"]')!.textContent!),
+      ).to.equal('yearbrand');
+    });
+
+    it('should select one row', async () => {
+      console.log('Start 7')
+      await renderFixture('DataGrid/CheckboxSelection');
+      await page.click('[role="row"][data-rowindex="0"] [role="cell"] input');
+      expect(
+        await page.evaluate(
+          () => document.querySelector('[role="row"][data-rowindex="0"]')!.className!,
+        ),
+      ).to.contain('Mui-selected');
+    });
+
+    it('should not scroll when changing the selected row', async () => {
+      console.log('Start 8')
+      await renderFixture('DataGrid/RowSelection');
+      await page.click('[role="row"][data-rowindex="0"] [role="cell"]');
+      await page.evaluate(() =>
+        document.querySelector('[role="row"][data-rowindex="3"] [role="cell"]')!.scrollIntoView(),
+      );
+      const scrollTop = await page.evaluate(
+        () => document.querySelector('.MuiDataGrid-virtualScroller')!.scrollTop!,
+      );
+      expect(scrollTop).not.to.equal(0);
+      await page.click('[role="row"][data-rowindex="3"] [role="cell"]');
+      expect(
+        await page.evaluate(
+          () => document.querySelector('.MuiDataGrid-virtualScroller')!.scrollTop!,
+        ),
+      ).to.equal(scrollTop);
+    });
   });
 });
