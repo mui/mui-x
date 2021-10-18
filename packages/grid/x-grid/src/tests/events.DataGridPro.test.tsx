@@ -5,8 +5,6 @@ import {
   fireEvent,
   // @ts-ignore
   screen,
-  // @ts-expect-error need to migrate helpers to TypeScript
-  waitFor,
 } from 'test/utils';
 import { expect } from 'chai';
 import {
@@ -24,7 +22,6 @@ import {
 } from '@mui/x-data-grid-pro';
 import { getCell, getColumnHeaderCell, getRow } from 'test/utils/helperFn';
 import { spy } from 'sinon';
-import { useData } from 'packages/storybook/src/hooks/useData';
 
 describe('<DataGridPro /> - Events Params', () => {
   // TODO v5: replace with createClientRender
@@ -73,16 +70,6 @@ describe('<DataGridPro /> - Events Params', () => {
     return (
       <div style={{ width: 300, height: 300 }}>
         <DataGridPro apiRef={apiRef} {...baselineProps} {...props} />
-      </div>
-    );
-  };
-
-  const TestVirtualization = (props) => {
-    const { width, height, ...other } = props;
-    const data = useData(50, 5);
-    return (
-      <div style={{ width: width || 300, height: height || 300 }}>
-        <DataGridPro rows={data.rows} columns={data.columns} {...other} />
       </div>
     );
   };
@@ -328,30 +315,6 @@ describe('<DataGridPro /> - Events Params', () => {
     virtualScroller.scrollTop = 12345;
     virtualScroller.dispatchEvent(new Event('scroll'));
     expect(handleRowsScrollEnd.callCount).to.equal(1);
-  });
-
-  // TODO check if rowsScroll is not enough
-  // eslint-disable-next-line mocha/no-skipped-tests
-  it.skip('call onViewportRowsChange when the viewport rows change', async () => {
-    const handleViewportRowsChange = spy();
-    // TODO: Set the dimensions of the grid once the Windows test issues are resolved.
-    const { container } = render(
-      <TestVirtualization onViewportRowsChange={handleViewportRowsChange} />,
-    );
-
-    await waitFor(() => {
-      expect(handleViewportRowsChange.lastCall.args[0].firstRowIndex).to.equal(0);
-      expect(handleViewportRowsChange.lastCall.args[0].lastRowIndex).to.equal(6); // should be pageSize + 1
-    });
-    const virtualScroller = container.querySelector('.MuiDataGrid-virtualScroller');
-    // scroll 6 rows so that the renderContext is updated. To be changed to a scroll of 1 row.
-    // TODO: set RowHeight directly. Currently 52 is used because the test fails under Windows.
-    virtualScroller.scrollTop = 52 * 6;
-    virtualScroller.dispatchEvent(new Event('scroll'));
-    await waitFor(() => {
-      expect(handleViewportRowsChange.lastCall.args[0].firstRowIndex).to.equal(6); // should be 1
-      expect(handleViewportRowsChange.lastCall.args[0].lastRowIndex).to.equal(12); // should be pageSize + 1
-    });
   });
 
   it('should publish GridEvents.unmount when unmounting the Grid', () => {
