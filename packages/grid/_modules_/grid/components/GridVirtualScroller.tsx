@@ -32,8 +32,8 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 
   const slots = {
     root: ['virtualScroller'],
-    renderingZone: ['renderingZone'],
-    content: ['content'],
+    content: ['virtualScrollerContent'],
+    renderZone: ['virtualScrollerRenderZone'],
   };
 
   return composeClasses(slots, getDataGridUtilityClass, classes);
@@ -57,7 +57,7 @@ const VirtualScrollerContent = styled('div', {
   overflow: 'hidden',
 });
 
-const VirtualScrollerRenderingZone = styled('div', {
+const VirtualScrollerRenderZone = styled('div', {
   name: 'MuiDataGrid',
   slot: 'RenderingZone',
 })({
@@ -112,7 +112,7 @@ const GridVirtualScroller = React.forwardRef<HTMLDivElement, GridVirtualScroller
     const editRowsState = useGridSelector(apiRef, gridEditRowsStateSelector);
     const scrollBarState = useGridSelector(apiRef, gridScrollBarSizeSelector);
     const paginationState = useGridSelector(apiRef, gridPaginationSelector);
-    const renderingZoneRef = React.useRef<HTMLDivElement>(null);
+    const renderZoneRef = React.useRef<HTMLDivElement>(null);
     const rootRef = React.useRef<HTMLDivElement>(null);
     const handleRef = useForkRef<HTMLDivElement>(ref, rootRef);
     const [renderContext, setRenderContext] = React.useState<RenderContext | null>(null);
@@ -171,7 +171,7 @@ const GridVirtualScroller = React.forwardRef<HTMLDivElement, GridVirtualScroller
 
     React.useEffect(() => {
       if (disableVirtualization) {
-        renderingZoneRef.current!.style.transform = `translate3d(0px, 0px, 0px)`;
+        renderZoneRef.current!.style.transform = `translate3d(0px, 0px, 0px)`;
       } else {
         // TODO a scroll reset should not be necessary
         rootRef.current!.scrollLeft = 0;
@@ -248,7 +248,7 @@ const GridVirtualScroller = React.forwardRef<HTMLDivElement, GridVirtualScroller
           0,
         );
         const left = columnsMeta.positions[firstColumnToRender];
-        renderingZoneRef.current!.style.transform = `translate3d(${left}px, ${top}px, 0px)`;
+        renderZoneRef.current!.style.transform = `translate3d(${left}px, ${top}px, 0px)`;
       }
     };
 
@@ -328,9 +328,9 @@ const GridVirtualScroller = React.forwardRef<HTMLDivElement, GridVirtualScroller
         {...other}
       >
         <VirtualScrollerContent className={classes.content} style={contentSize}>
-          <VirtualScrollerRenderingZone ref={renderingZoneRef} className={classes.renderingZone}>
+          <VirtualScrollerRenderZone ref={renderZoneRef} className={classes.renderZone}>
             {getRows()}
-          </VirtualScrollerRenderingZone>
+          </VirtualScrollerRenderZone>
         </VirtualScrollerContent>
       </VirtualScrollerRoot>
     );

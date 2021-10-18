@@ -166,6 +166,18 @@ export interface GridClasses {
    */
   overlay: string;
   /**
+   * Styles applied to the virtualization container.
+   */
+  virtualScroller;
+  /**
+   * Styles applied to the virtualization content.
+   */
+  virtualScrollerContent;
+  /**
+   * Styles applied to the virtualization render zone.
+   */
+  virtualScrollerRenderZone;
+  /**
    * Styles applied to the root element.
    */
   root: string;
@@ -284,5 +296,7 @@ export const gridClasses = generateUtilityClasses('MuiDataGrid', [
   'sortIcon',
   'toolbarContainer',
   'virtualScroller',
+  'virtualScrollerContent',
+  'virtualScrollerRenderZone',
   'withBorder',
 ]);
