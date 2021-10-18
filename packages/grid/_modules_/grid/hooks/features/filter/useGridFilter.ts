@@ -90,16 +90,26 @@ export const useGridFilter = (
         if (!filterItem.columnField || !filterItem.operatorValue) {
           return null;
         }
-
         const column = apiRef.current.getColumn(filterItem.columnField);
+
         if (!column) {
           return null;
         }
+        let parsedValue;
 
-        const parsedValue = column.valueParser
-          ? column.valueParser(filterItem.value)
-          : filterItem.value;
+        if (column.valueParser) {
+          const parser = column.valueParser;
+          parsedValue = filterItem.isArrayValue
+            ? filterItem.value?.map((x) => parser(x))
+            : parser(filterItem.value);
+        } else {
+          parsedValue = filterItem.value;
+        }
+
         const newFilterItem: GridFilterItem = { ...filterItem, value: parsedValue };
+
+
+
 
         const filterOperators = column.filterOperators;
         if (!filterOperators?.length) {

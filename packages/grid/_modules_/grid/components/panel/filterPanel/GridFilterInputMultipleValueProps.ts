@@ -1,0 +1,8 @@
+import { GridFilterItem } from '../../../models/gridFilterItem';
+
+export interface GridFilterInputMultipleValueProps {
+  item: GridFilterItem;
+  applyValue: (value: GridFilterItem) => void;
+  // Is any because if typed as GridApiRef a dep cycle occurs. Same happens if ApiContext is used.
+  apiRef: any;
+}

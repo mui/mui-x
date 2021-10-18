@@ -107,12 +107,17 @@ function GridFilterForm(props: GridFilterFormProps) {
   const changeOperator = React.useCallback(
     (event: SelectChangeEvent) => {
       const operatorValue = event.target.value as string;
+      const isArrayValue = getCurrentColumn()?.filterOperators?.find(
+        ({ value }) => value === operatorValue,
+      )?.isArrayValue;
+
       applyFilterChanges({
         ...item,
         operatorValue,
+        isArrayValue,
       });
     },
-    [applyFilterChanges, item],
+    [applyFilterChanges, item, getCurrentColumn],
   );
 
   const changeLinkOperator = React.useCallback(

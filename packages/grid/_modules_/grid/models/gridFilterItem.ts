@@ -2,6 +2,7 @@ export interface GridFilterItem {
   id?: number | string;
   columnField?: string;
   value?: any;
+  isArrayValue?: boolean;
   operatorValue?: string;
 }
 
