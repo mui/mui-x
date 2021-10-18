@@ -8,7 +8,7 @@ export default function BasicTreeData() {
     rowLength: 1000,
     maxColumns: 6,
     treeData: {
-      depth: 3,
+      maxDepth: 3,
       averageChildren: 10,
       groupingField: 'name',
     },
