@@ -173,6 +173,7 @@ export const useGridFilter = (
     items.forEach((filterItem) => {
       apiRef.current.applyFilter(filterItem, linkOperator);
     });
+    apiRef.current.publishEvent(GridEvents.visibleRowsSet);
     forceUpdate();
   }, [apiRef, setGridState, forceUpdate, props.filterMode]);
 

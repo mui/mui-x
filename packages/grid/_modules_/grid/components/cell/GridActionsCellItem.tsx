@@ -13,18 +13,26 @@ export type GridActionsCellItemProps = {
 );
 
 const GridActionsCellItem = (props: GridActionsCellItemProps) => {
-  const { label, icon, showInMenu, ...other } = props;
+  const { label, icon, showInMenu, onClick, ...other } = props;
+
+  const handleClick = (event: any) => {
+    event.stopPropagation();
+
+    if (onClick) {
+      onClick(event);
+    }
+  };
 
   if (!showInMenu) {
     return (
-      <IconButton size="small" aria-label={label} {...(other as any)}>
+      <IconButton size="small" aria-label={label} {...(other as any)} onClick={handleClick}>
         {React.cloneElement(icon!, { fontSize: 'small' })}
       </IconButton>
     );
   }
 
   return (
-    <MenuItem {...(other as any)}>
+    <MenuItem {...(other as any)} onClick={onClick}>
       {icon && <ListItemIcon>{icon}</ListItemIcon>}
       {label}
     </MenuItem>
