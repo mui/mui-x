@@ -8,6 +8,8 @@ import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { GridRenderCellParams } from '../../models/params/gridCellParams';
 import { gridVisibleDescendantCountLookupSelector } from '../../hooks/features/filter/gridFilterSelector';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
+import { isNavigationKey, isSpaceKey } from '../../utils/keyboardUtils';
+import { GridEvents } from '../../constants';
 
 const useStyles = makeStyles({
   root: {
@@ -36,6 +38,15 @@ const GridTreeDataGroupingCell = (props: GridRenderCellParams) => {
     ? rootProps.components.TreeDataCollapseIcon
     : rootProps.components.TreeDataExpandIcon;
 
+  const handleKeyDown = (event) => {
+    if (isSpaceKey(event.key)) {
+      event.stopPropagation();
+    }
+    if (isNavigationKey(event.key) && !event.shiftKey) {
+      apiRef.current.publishEvent(GridEvents.cellNavigationKeyDown, props, event);
+    }
+  };
+
   if (!node) {
     throw new Error(`MUI: No row with id #${id} found`);
   }
@@ -47,6 +58,7 @@ const GridTreeDataGroupingCell = (props: GridRenderCellParams) => {
           <IconButton
             size="small"
             onClick={() => apiRef.current.UNSTABLE_setRowExpansion(id, !node?.expanded)}
+            onKeyDown={handleKeyDown}
             tabIndex={-1}
             aria-label={
               node.expanded

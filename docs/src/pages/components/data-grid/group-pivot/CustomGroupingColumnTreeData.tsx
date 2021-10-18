@@ -6,10 +6,18 @@ import {
   useGridApiContext,
   useGridSelector,
   gridVisibleDescendantCountLookupSelector,
+  GridEvents,
 } from '@mui/x-data-grid-pro';
 import { useDemoTreeData } from '@mui/x-data-grid-generator';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
+
+export const isNavigationKey = (key: string) =>
+  key === 'Home' ||
+  key === 'End' ||
+  key.indexOf('Arrow') === 0 ||
+  key.indexOf('Page') === 0 ||
+  key === ' ';
 
 const CustomGridTreeDataGroupingCell = (props: GridRenderCellParams) => {
   const { id } = props;
@@ -20,6 +28,15 @@ const CustomGridTreeDataGroupingCell = (props: GridRenderCellParams) => {
   );
   const node = apiRef.current.UNSTABLE_getRowNode(id);
   const descendantCount = descendantCountLookup[id];
+
+  const handleKeyDown = (event) => {
+    if (event.key === ' ') {
+      event.stopPropagation();
+    }
+    if (isNavigationKey(event.key) && !event.shiftKey) {
+      apiRef.current.publishEvent(GridEvents.cellNavigationKeyDown, props, event);
+    }
+  };
 
   if (!node) {
     throw new Error(`MUI: No row with id #${id} found`);
@@ -33,6 +50,7 @@ const CustomGridTreeDataGroupingCell = (props: GridRenderCellParams) => {
             onClick={() =>
               apiRef.current.UNSTABLE_setRowExpansion(id, !node?.expanded)
             }
+            onKeyDown={handleKeyDown}
             tabIndex={-1}
             size="small"
           >
