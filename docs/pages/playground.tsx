@@ -1,22 +1,33 @@
 import * as React from 'react';
-import { DataGridPro } from '@mui/x-data-grid-pro';
-import { useDemoData } from '@mui/x-data-grid-generator';
+import { DataGrid } from '@mui/x-data-grid';
 
-export default function BasicTreeData() {
-  const { data, loading } = useDemoData({
-    dataSet: 'Employee',
-    rowLength: 1000,
-    maxColumns: 6,
-    treeData: {
-      maxDepth: 3,
-      averageChildren: 10,
-      groupingField: 'name',
+const baselineProps = {
+  rows: [
+    {
+      id: 0,
+      brand: 'Nike',
     },
-  });
+    {
+      id: 1,
+      brand: 'Adidas',
+    },
+    {
+      id: 2,
+      brand: 'Puma',
+    },
+  ],
+  columns: [{ field: 'brand', width: 100 }],
+};
 
+export default function KeyboardNavigationFocus() {
   return (
-    <div style={{ height: 800, width: '100%' }}>
-      <DataGridPro loading={loading} disableSelectionOnClick {...data} />
-    </div>
+      <React.Fragment>
+        <button type="button" autoFocus data-testid="initial-focus">
+          initial focus
+        </button>
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid {...baselineProps} />
+        </div>
+      </React.Fragment>
   );
 }
