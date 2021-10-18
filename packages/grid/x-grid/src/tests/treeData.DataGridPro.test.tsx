@@ -12,6 +12,7 @@ import {
   DataGridPro,
   DataGridProProps,
   GridApiRef,
+  GridLinkOperator,
   GridRowsProp,
   useGridApiRef,
 } from '@mui/x-data-grid-pro';
@@ -238,11 +239,23 @@ describe('<DataGridPro /> - Tree Data', () => {
     });
 
     it('should render a toggling icon only when a row has children', () => {
-      render(<Test />);
-      // No children
-      expect(getCell(2, 0).querySelectorAll('button')).to.have.length(0);
-      // Some children
-      expect(getCell(0, 0).querySelectorAll('button')).to.have.length(1);
+      render(
+        <Test
+          rows={[{ name: 'A' }, { name: 'A.C' }, { name: 'B' }, { name: 'B.A' }]}
+          filterModel={{
+            linkOperator: GridLinkOperator.Or,
+            items: [
+              { columnField: 'name', operatorValue: 'endsWith', value: 'A', id: 0 },
+              { columnField: 'name', operatorValue: 'endsWith', value: 'B', id: 1 },
+            ],
+          }}
+        />,
+      );
+      expect(getColumnValues(1)).to.deep.equal(['A', 'B']);
+      // No children after filtering
+      expect(getCell(0, 0).querySelectorAll('button')).to.have.length(0);
+      // Some children after filtering
+      expect(getCell(1, 0).querySelectorAll('button')).to.have.length(1);
     });
 
     it('should toggle expansion when clicking on grouping column icon', () => {
