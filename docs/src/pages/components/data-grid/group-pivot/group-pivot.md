@@ -99,6 +99,10 @@ You can limit the filtering to the top level rows with the `disableChildrenSorti
 
 {{"demo": "pages/components/data-grid/group-pivot/DisableChildrenSortingTreeData.js", "bg": "inline", "defaultCodeOpen": false}}
 
+### Full Example
+
+{{"demo": "pages/components/data-grid/group-pivot/TreeDataFullExample.js", "bg": "inline", "defaultCodeOpen": false}}
+
 ## 🚧 Master detail [<span class="pro"></span>](https://mui.com/store/items/material-ui-pro/)
 
 > ⚠️ This feature isn't implemented yet. It's coming.
