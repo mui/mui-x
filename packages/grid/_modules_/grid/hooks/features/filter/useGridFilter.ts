@@ -441,7 +441,6 @@ export const useGridFilter = (
       isFirstRender.current = false;
       return;
     }
-    console.log('GO');
     apiRef.current.applyFilters();
   }, [apiRef, props.disableChildrenFiltering]);
 

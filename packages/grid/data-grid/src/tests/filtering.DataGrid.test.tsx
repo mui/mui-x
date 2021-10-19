@@ -113,7 +113,7 @@ describe('<DataGrid /> - Filter', () => {
       .toErrorDev('`model.items` has more than 1 item');
   });
 
-  it.only('should apply the filterModel prop correctly', () => {
+  it('should apply the filterModel prop correctly', () => {
     render(<TestCase value="a" operatorValue="contains" />);
     expect(getColumnValues()).to.deep.equal(['Adidas', 'Puma']);
   });
