@@ -25,16 +25,15 @@ const useStyles = makeStyles({
 });
 
 const GridTreeDataGroupingCell = (props: GridRenderCellParams) => {
-  const { id, field } = props;
+  const { id, field, rowNode } = props;
 
   const rootProps = useGridRootProps();
   const apiRef = useGridApiContext();
   const descendantCountLookup = useGridSelector(apiRef, gridVisibleDescendantCountLookupSelector);
   const classes = useStyles();
-  const node = apiRef.current.unstable_getRowNode(id);
   const descendantCount = descendantCountLookup[id];
 
-  const Icon = node?.expanded
+  const Icon = rowNode.expanded
     ? rootProps.components.TreeDataCollapseIcon
     : rootProps.components.TreeDataExpandIcon;
 
@@ -48,17 +47,13 @@ const GridTreeDataGroupingCell = (props: GridRenderCellParams) => {
   };
 
   const handleClick = (event) => {
-    apiRef.current.unstable_setRowExpansion(id, !node?.expanded);
+    apiRef.current.unstable_setRowExpansion(id, !rowNode.expanded);
     apiRef.current.setCellFocus(id, field);
     event.stopPropagation();
   };
 
-  if (!node) {
-    throw new Error(`MUI: No row with id #${id} found`);
-  }
-
   return (
-    <Box className={classes.root} sx={{ ml: node.depth * 4 }}>
+    <Box className={classes.root} sx={{ ml: rowNode.depth * 4 }}>
       <div className={classes.toggle}>
         {descendantCount > 0 && (
           <IconButton
@@ -67,7 +62,7 @@ const GridTreeDataGroupingCell = (props: GridRenderCellParams) => {
             onKeyDown={handleKeyDown}
             tabIndex={-1}
             aria-label={
-              node.expanded
+              rowNode.expanded
                 ? apiRef.current.getLocaleText('treeDataCollapse')
                 : apiRef.current.getLocaleText('treeDataExpand')
             }
@@ -77,7 +72,7 @@ const GridTreeDataGroupingCell = (props: GridRenderCellParams) => {
         )}
       </div>
       <span>
-        {node.label}
+        {rowNode.label}
         {descendantCount > 0 ? ` (${descendantCount})` : ''}
       </span>
     </Box>

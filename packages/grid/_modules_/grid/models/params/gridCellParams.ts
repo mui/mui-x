@@ -1,5 +1,5 @@
 import { GridCellMode, GridCellValue } from '../gridCell';
-import { GridRowId, GridRowModel } from '../gridRows';
+import { GridRowId, GridRowModel, GridRowTreeNodeConfig } from '../gridRows';
 import type { GridStateColDef } from '../colDef';
 import { GridEditCellProps } from '../gridEditRowModel';
 
@@ -27,6 +27,10 @@ export interface GridCellParams {
    * The row model of the row that the current cell belongs to.
    */
   row: GridRowModel;
+  /**
+   * The node of the row that the current cell belongs to
+   */
+  rowNode: GridRowTreeNodeConfig;
   /**
    * The column of the row that the current cell belongs to.
    */

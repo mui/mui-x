@@ -21,13 +21,12 @@ export const isNavigationKey = (key: string) =>
   key === ' ';
 
 const CustomGridTreeDataGroupingCell = (props: GridRenderCellParams) => {
-  const { id, field } = props;
+  const { id, field, rowNode } = props;
   const apiRef = useGridApiContext();
   const descendantCountLookup = useGridSelector(
     apiRef,
     gridVisibleDescendantCountLookupSelector,
   );
-  const node = apiRef.current.unstable_getRowNode(id);
   const descendantCount = descendantCountLookup[id];
 
   const handleKeyDown = (event) => {
@@ -40,17 +39,13 @@ const CustomGridTreeDataGroupingCell = (props: GridRenderCellParams) => {
   };
 
   const handleClick = (event) => {
-    apiRef.current.unstable_setRowExpansion(id, !node?.expanded);
+    apiRef.current.unstable_setRowExpansion(id, !rowNode.expanded);
     apiRef.current.setCellFocus(id, field);
     event.stopPropagation();
   };
 
-  if (!node) {
-    throw new Error(`MUI: No row with id #${id} found`);
-  }
-
   return (
-    <Box sx={{ ml: node.depth * 4 }}>
+    <Box sx={{ ml: rowNode.depth * 4 }}>
       <div>
         {descendantCount > 0 ? (
           <Button
