@@ -18,7 +18,7 @@ export const isNavigationKey = (key) =>
   key === ' ';
 
 const CustomGridTreeDataGroupingCell = (props) => {
-  const { id } = props;
+  const { id, field } = props;
   const apiRef = useGridApiContext();
   const descendantCountLookup = useGridSelector(
     apiRef,
@@ -37,6 +37,12 @@ const CustomGridTreeDataGroupingCell = (props) => {
     }
   };
 
+  const handleClick = (event) => {
+    apiRef.current.unstable_setRowExpansion(id, !node?.expanded);
+    apiRef.current.setCellFocus(id, field);
+    event.stopPropagation();
+  };
+
   if (!node) {
     throw new Error(`MUI: No row with id #${id} found`);
   }
@@ -46,9 +52,7 @@ const CustomGridTreeDataGroupingCell = (props) => {
       <div>
         {descendantCount > 0 ? (
           <Button
-            onClick={() =>
-              apiRef.current.unstable_setRowExpansion(id, !node?.expanded)
-            }
+            onClick={handleClick}
             onKeyDown={handleKeyDown}
             tabIndex={-1}
             size="small"
@@ -64,6 +68,10 @@ const CustomGridTreeDataGroupingCell = (props) => {
 };
 
 CustomGridTreeDataGroupingCell.propTypes = {
+  /**
+   * The column field of the cell that triggered the event
+   */
+  field: PropTypes.string.isRequired,
   /**
    * The grid row id.
    */
@@ -195,7 +203,6 @@ export default function CustomGroupingColumnTreeData() {
         treeData
         rows={rows}
         columns={columns}
-        disableSelectionOnClick
         getTreeDataPath={getTreeDataPath}
         groupingColDef={groupingColDef}
       />

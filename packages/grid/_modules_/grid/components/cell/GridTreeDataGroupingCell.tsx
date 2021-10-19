@@ -25,7 +25,7 @@ const useStyles = makeStyles({
 });
 
 const GridTreeDataGroupingCell = (props: GridRenderCellParams) => {
-  const { id } = props;
+  const { id, field } = props;
 
   const rootProps = useGridRootProps();
   const apiRef = useGridApiContext();
@@ -47,6 +47,12 @@ const GridTreeDataGroupingCell = (props: GridRenderCellParams) => {
     }
   };
 
+  const handleClick = (event) => {
+    apiRef.current.unstable_setRowExpansion(id, !node?.expanded);
+    apiRef.current.setCellFocus(id, field);
+    event.stopPropagation();
+  };
+
   if (!node) {
     throw new Error(`MUI: No row with id #${id} found`);
   }
@@ -57,7 +63,7 @@ const GridTreeDataGroupingCell = (props: GridRenderCellParams) => {
         {descendantCount > 0 && (
           <IconButton
             size="small"
-            onClick={() => apiRef.current.unstable_setRowExpansion(id, !node?.expanded)}
+            onClick={handleClick}
             onKeyDown={handleKeyDown}
             tabIndex={-1}
             aria-label={

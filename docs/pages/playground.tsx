@@ -1,9 +1,13 @@
 import * as React from 'react';
-import { DataGridPro, GridColumns, GridRowsProp, GridSortModel } from '@mui/x-data-grid-pro';
-import Stack from '@mui/material/Stack';
-import Button from '@mui/material/Button';
+import { DataGridPro, GridColumns, GridRowsProp } from '@mui/x-data-grid-pro';
 
 const rows: GridRowsProp = [
+  {
+    hierarchy: ['Sarah'],
+    jobTitle: 'CEO',
+    recruitmentDate: new Date(2014, 7, 22),
+    id: 0,
+  },
   {
     hierarchy: ['Sarah', 'Thomas'],
     jobTitle: 'Head of Sales',
@@ -92,39 +96,26 @@ const rows: GridRowsProp = [
 
 const columns: GridColumns = [
   { field: 'jobTitle', headerName: 'Job Title', width: 200 },
-  { field: 'recruitmentDate', headerName: 'Recruitment Date', type: 'date', width: 150 },
+  {
+    field: 'recruitmentDate',
+    headerName: 'Recruitment Date',
+    type: 'date',
+    width: 150,
+  },
 ];
 
 const getTreeDataPath = (row) => row.hierarchy;
 
-export default function DisableChildrenSortingTreeData() {
-  const [disableChildrenSorting, setDisableChildrenSorting] = React.useState(true);
-  const [sortModel, setSortModel] = React.useState<GridSortModel>([
-    { field: 'jobTitle', sort: 'desc' },
-  ]);
-
-  console.log(disableChildrenSorting);
-
+export default function BasicTreeData() {
   return (
-    <Stack style={{ width: '100%' }} alignItems="flex-start" spacing={2}>
-      <Button
-        onClick={() => setDisableChildrenSorting((prev) => !prev)}
-        sx={{ textTransform: 'unset' }}
-      >
-        {disableChildrenSorting ? 'Disable' : 'Enable'} `disableChildrenSorting`
-      </Button>
-      <div style={{ height: 400, width: '100%' }}>
-        <DataGridPro
-          treeData
-          rows={rows}
-          columns={columns}
-          disableChildrenSorting={disableChildrenSorting}
-          getTreeDataPath={getTreeDataPath}
-          sortModel={sortModel}
-          onSortModelChange={setSortModel}
-          defaultGroupingExpansionDepth={-1}
-        />
-      </div>
-    </Stack>
+    <div style={{ height: 400, width: '100%' }}>
+      <DataGridPro
+        treeData
+        rows={rows}
+        columns={columns}
+        disableSelectionOnClick
+        getTreeDataPath={getTreeDataPath}
+      />
+    </div>
   );
 }

@@ -96,7 +96,6 @@ export default function TreeDataWithGap() {
         treeData
         rows={rows}
         columns={columns}
-        disableSelectionOnClick
         getTreeDataPath={getTreeDataPath}
       />
     </div>

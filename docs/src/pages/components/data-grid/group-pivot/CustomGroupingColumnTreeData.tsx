@@ -21,7 +21,7 @@ export const isNavigationKey = (key: string) =>
   key === ' ';
 
 const CustomGridTreeDataGroupingCell = (props: GridRenderCellParams) => {
-  const { id } = props;
+  const { id, field } = props;
   const apiRef = useGridApiContext();
   const descendantCountLookup = useGridSelector(
     apiRef,
@@ -39,6 +39,12 @@ const CustomGridTreeDataGroupingCell = (props: GridRenderCellParams) => {
     }
   };
 
+  const handleClick = (event) => {
+    apiRef.current.unstable_setRowExpansion(id, !node?.expanded);
+    apiRef.current.setCellFocus(id, field);
+    event.stopPropagation();
+  };
+
   if (!node) {
     throw new Error(`MUI: No row with id #${id} found`);
   }
@@ -48,9 +54,7 @@ const CustomGridTreeDataGroupingCell = (props: GridRenderCellParams) => {
       <div>
         {descendantCount > 0 ? (
           <Button
-            onClick={() =>
-              apiRef.current.unstable_setRowExpansion(id, !node?.expanded)
-            }
+            onClick={handleClick}
             onKeyDown={handleKeyDown}
             tabIndex={-1}
             size="small"
@@ -190,7 +194,6 @@ export default function CustomGroupingColumnTreeData() {
         treeData
         rows={rows}
         columns={columns}
-        disableSelectionOnClick
         getTreeDataPath={getTreeDataPath}
         groupingColDef={groupingColDef}
       />

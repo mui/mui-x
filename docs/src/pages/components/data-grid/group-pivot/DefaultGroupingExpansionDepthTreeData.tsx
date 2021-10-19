@@ -113,7 +113,6 @@ export default function DefaultGroupingExpansionDepthTreeData() {
         treeData
         rows={rows}
         columns={columns}
-        disableSelectionOnClick
         getTreeDataPath={getTreeDataPath}
         defaultGroupingExpansionDepth={-1}
       />

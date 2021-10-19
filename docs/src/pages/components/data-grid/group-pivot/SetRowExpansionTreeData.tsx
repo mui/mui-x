@@ -23,13 +23,7 @@ export default function SetRowExpansionTreeData() {
     <Stack style={{ width: '100%' }} alignItems="flex-start" spacing={2}>
       <Button onClick={toggleFirstRow}>Toggle 1st row expansion</Button>
       <div style={{ height: 400, width: '100%' }}>
-        <DataGridPro
-          apiRef={apiRef}
-          loading={loading}
-          treeData
-          disableSelectionOnClick
-          {...data}
-        />
+        <DataGridPro apiRef={apiRef} loading={loading} treeData {...data} />
       </div>
     </Stack>
   );

@@ -3,6 +3,12 @@ import { DataGridPro } from '@mui/x-data-grid-pro';
 
 const rows = [
   {
+    hierarchy: ['Sarah'],
+    jobTitle: 'CEO',
+    recruitmentDate: new Date(2014, 7, 22),
+    id: 0,
+  },
+  {
     hierarchy: ['Sarah', 'Thomas'],
     jobTitle: 'Head of Sales',
     recruitmentDate: new Date(2017, 3, 4),
@@ -107,7 +113,6 @@ export default function BasicTreeData() {
         treeData
         rows={rows}
         columns={columns}
-        disableSelectionOnClick
         getTreeDataPath={getTreeDataPath}
       />
     </div>
