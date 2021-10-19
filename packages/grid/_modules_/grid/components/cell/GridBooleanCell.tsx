@@ -26,6 +26,7 @@ export const GridBooleanCell = React.memo((props: GridRenderCellParams & SvgIcon
     api,
     field,
     row,
+    rowNode,
     colDef,
     cellMode,
     isEditable,
