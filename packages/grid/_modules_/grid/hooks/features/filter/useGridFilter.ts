@@ -184,11 +184,11 @@ export const useGridFilter = (
       // No filter to apply
       const filteringMethod = buildAggregatedFilterApplier(filterModel);
       if (!filteringMethod) {
-        let visibleDescendantsCountLookup: Record<GridRowId, number> = {};
+        const visibleDescendantsCountLookup: Record<GridRowId, number> = {};
         if (shouldApplyTreeFiltering) {
-          visibleDescendantsCountLookup = Object.fromEntries(
-            rowIds.map((rowId) => [rowId, rowTree[rowId].descendantCount ?? 0]),
-          );
+          rowIds.forEach((rowId) => {
+            visibleDescendantsCountLookup[rowId] = rowTree[rowId].descendantCount ?? 0;
+          });
         }
 
         return {

@@ -46,7 +46,7 @@ export interface GridRowTreeNodeConfig {
   /**
    * The value used the group the children of the row
    */
-  treeGroupingValue: string;
+  groupingValue: string;
 
   /**
    * If `true`, this node has been automatically added to fill a gap in the tree structure
