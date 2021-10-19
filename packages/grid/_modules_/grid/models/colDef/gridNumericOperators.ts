@@ -115,7 +115,7 @@ export const getGridNumericColumnOperators = (): GridFilterOperator[] => [
     value: 'isOneOf',
     isArrayValue: true,
     getApplyFilterFn: (filterItem: GridFilterItem) => {
-      if (filterItem.value == null || Number.isNaN(filterItem.value)) {
+      if (filterItem.value == null || filterItem.value.length === 0) {
         return null;
       }
 
