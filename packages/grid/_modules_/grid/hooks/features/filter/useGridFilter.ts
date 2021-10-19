@@ -43,7 +43,11 @@ export const useGridFilter = (
   apiRef: GridApiRef,
   props: Pick<
     GridComponentProps,
-    'filterModel' | 'onFilterModelChange' | 'filterMode' | 'disableMultipleColumnsFiltering'
+    | 'initialState'
+    | 'filterModel'
+    | 'onFilterModelChange'
+    | 'filterMode'
+    | 'disableMultipleColumnsFiltering'
   >,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridFilter');
@@ -56,7 +60,10 @@ export const useGridFilter = (
     return {
       ...state,
       filter: {
-        filterModel: props.filterModel ?? getDefaultGridFilterModel(),
+        filterModel:
+          props.filterModel ??
+          props.initialState?.filter?.filterModel ??
+          getDefaultGridFilterModel(),
         visibleRowsLookup: {},
         visibleRows: null,
       },
