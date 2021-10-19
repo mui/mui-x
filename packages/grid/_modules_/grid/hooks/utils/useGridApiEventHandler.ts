@@ -40,10 +40,25 @@ export function useGridApiEventHandler<Params, Event extends MuiEvent>(
   }
 
   React.useEffect(() => {
+    if (!subscription.current && handlerRef.current) {
+      const enhancedHandler: GridListener<Params, Event> = (params, event, details) => {
+        if (!event.defaultMuiPrevented) {
+          handlerRef.current?.(params, event, details);
+        }
+      };
+
+      subscription.current = apiRef.current.subscribeEvent<Params, Event>(
+        eventName,
+        enhancedHandler,
+        options,
+      );
+    }
+
     return () => {
       subscription.current?.();
+      subscription.current = null;
     };
-  }, []);
+  }, [apiRef, eventName, options]);
 }
 
 const optionsSubscriberOptions: GridSubscribeEventOptions = { isFirst: true };
