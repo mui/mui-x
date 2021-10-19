@@ -26,7 +26,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 
   const slots = {
     root: ['columnsPanel'],
-    column: ['column'],
+    columnsPanelRow: ['columnsPanelRow'],
   };
 
   return composeClasses(slots, getDataGridUtilityClass, classes);
@@ -35,19 +35,19 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 const GridColumnsPanelRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'ColumnsPanel',
-})(({ theme }) => ({
-  padding: theme.spacing(1),
+})(() => ({
+  padding: '8px 0px 8px 8px',
 }));
 
-const GridColumnRoot = styled('div', {
+const GridColumnsPanelRowRoot = styled('div', {
   name: 'MuiDataGrid',
-  slot: 'Column',
+  slot: 'ColumnsPanelRow',
 })(({ theme }) => ({
   display: 'flex',
   justifyContent: 'space-between',
   padding: '1px 8px 1px 7px',
   [`& .${switchClasses.root}`]: {
-    marginRight: theme.spacing(1),
+    marginRight: theme.spacing(0.5),
   },
 }));
 
@@ -125,7 +125,7 @@ export function GridColumnsPanel() {
       <GridPanelContent>
         <GridColumnsPanelRoot className={classes.root}>
           {currentColumns.map((column) => (
-            <GridColumnRoot className={classes.column} key={column.field}>
+            <GridColumnsPanelRowRoot className={classes.columnsPanelRow} key={column.field}>
               <FormControlLabel
                 control={
                   <Switch
@@ -149,7 +149,7 @@ export function GridColumnsPanel() {
                   <GridDragIcon />
                 </StyledIconButton>
               )}
-            </GridColumnRoot>
+            </GridColumnsPanelRowRoot>
           ))}
         </GridColumnsPanelRoot>
       </GridPanelContent>

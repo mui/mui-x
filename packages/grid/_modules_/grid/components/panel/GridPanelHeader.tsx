@@ -18,7 +18,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-const DataGridPanelHeaderRoot = styled('div', {
+const GridPanelHeaderRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'PanelHeader',
 })(({ theme }) => ({
@@ -33,5 +33,5 @@ export function GridPanelHeader(
   const ownerState = { classes: rootProps.classes };
   const classes = useUtilityClasses(ownerState);
 
-  return <DataGridPanelHeaderRoot className={clsx(className, classes.root)} {...other} />;
+  return <GridPanelHeaderRoot className={clsx(className, classes.root)} {...other} />;
 }
