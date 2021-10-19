@@ -97,7 +97,7 @@ const frFRGrid: Partial<GridLocaleText> = {
   // Actions cell more text
   actionsCellMore: 'Plus',
 
-  // Tree data
+  // Tree Data
   treeDataGroupingHeaderName: 'Groupe',
 };
 

@@ -53,12 +53,12 @@ export interface GridRowApi {
    * @returns {GridRowTreeNodeConfig} The row data.
    * @ignore - do not document.
    */
-  UNSTABLE_getRowNode: (id: GridRowId) => GridRowTreeNodeConfig | null;
+  unstable_getRowNode: (id: GridRowId) => GridRowTreeNodeConfig | null;
   /**
    * Expand or collapse a row children.
    * @param {GridRowId} id the ID of the row to expand or collapse.
    * @param {boolean} isExpanded A boolean indicating if the row must be expanded or collapsed.
    * @ignore - do not document.
    */
-  UNSTABLE_setRowExpansion: (id: GridRowId, isExpanded: boolean) => void;
+  unstable_setRowExpansion: (id: GridRowId, isExpanded: boolean) => void;
 }

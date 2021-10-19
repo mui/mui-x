@@ -1,28 +1,143 @@
 import * as React from 'react';
 import { DataGridPro } from '@mui/x-data-grid-pro';
-import { useDemoTreeData } from '@mui/x-data-grid-generator';
+import Stack from '@mui/material/Stack';
+import Checkbox from '@mui/material/Checkbox';
+import FormGroup from '@mui/material/FormGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
 
-export default function DisableChildrenFilteringTreeData() {
-  const { data, loading } = useDemoTreeData({
-    rowLength: [10, 5, 3],
-    randomLength: true,
-  });
+const rows = [
+  {
+    hierarchy: ['Thomas'],
+    jobTitle: 'Head of Sales',
+    recruitmentDate: new Date(2017, 3, 4),
+    id: 1,
+  },
+  {
+    hierarchy: ['Thomas', 'Robert'],
+    jobTitle: 'Sales Person',
+    recruitmentDate: new Date(2020, 11, 20),
+    id: 2,
+  },
+  {
+    hierarchy: ['Thomas', 'Karen'],
+    jobTitle: 'Sales Person',
+    recruitmentDate: new Date(2020, 10, 14),
+    id: 3,
+  },
+  {
+    hierarchy: ['Thomas', 'Nancy'],
+    jobTitle: 'Sales Person',
+    recruitmentDate: new Date(2018, 3, 29),
+    id: 4,
+  },
+  {
+    hierarchy: ['Thomas', 'Daniel'],
+    jobTitle: 'Sales Person',
+    recruitmentDate: new Date(2020, 7, 21),
+    id: 5,
+  },
+  {
+    hierarchy: ['Thomas', 'Christopher'],
+    jobTitle: 'Sales Person',
+    recruitmentDate: new Date(2020, 7, 20),
+    id: 6,
+  },
+  {
+    hierarchy: ['Thomas', 'Donald'],
+    jobTitle: 'Sales Person',
+    recruitmentDate: new Date(2019, 6, 28),
+    id: 7,
+  },
+  {
+    hierarchy: ['Mary'],
+    jobTitle: 'Head of Engineering',
+    recruitmentDate: new Date(2016, 3, 14),
+    id: 8,
+  },
+  {
+    hierarchy: ['Mary', 'Jennifer'],
+    jobTitle: 'Tech lead front',
+    recruitmentDate: new Date(2016, 5, 17),
+    id: 9,
+  },
+  {
+    hierarchy: ['Mary', 'Jennifer', 'Anna'],
+    jobTitle: 'Front-end developer',
+    recruitmentDate: new Date(2019, 11, 7),
+    id: 10,
+  },
+  {
+    hierarchy: ['Mary', 'Michael'],
+    jobTitle: 'Tech lead devops',
+    recruitmentDate: new Date(2021, 7, 1),
+    id: 11,
+  },
+  {
+    hierarchy: ['Mary', 'Linda'],
+    jobTitle: 'Tech lead back',
+    recruitmentDate: new Date(2017, 0, 12),
+    id: 12,
+  },
+  {
+    hierarchy: ['Mary', 'Linda', 'Elizabeth'],
+    jobTitle: 'Back-end developer',
+    recruitmentDate: new Date(2019, 2, 22),
+    id: 13,
+  },
+  {
+    hierarchy: ['Mary', 'Linda', 'William'],
+    jobTitle: 'Back-end developer',
+    recruitmentDate: new Date(2018, 4, 19),
+    id: 14,
+  },
+];
 
+const columns = [
+  { field: 'jobTitle', headerName: 'Job Title', width: 200 },
+  {
+    field: 'recruitmentDate',
+    headerName: 'Recruitment Date',
+    type: 'date',
+    width: 150,
+  },
+];
+
+const getTreeDataPath = (row) => row.hierarchy;
+
+export default function DisableChildrenSortingTreeData() {
+  const [disableChildrenFiltering, setDisableChildrenFiltering] =
+    React.useState(true);
   const [filterModel, setFilterModel] = React.useState({
-    items: [{ columnField: 'index', operatorValue: '>', value: 2 }],
+    items: [
+      { columnField: 'jobTitle', operatorValue: 'contains', value: 'Head of Sales' },
+    ],
   });
 
   return (
-    <div style={{ height: 300, width: '100%' }}>
-      <DataGridPro
-        loading={loading}
-        treeData
-        disableSelectionOnClick
-        disableChildrenFiltering
-        filterModel={filterModel}
-        onFilterModelChange={setFilterModel}
-        {...data}
-      />
-    </div>
+    <Stack style={{ width: '100%' }} alignItems="flex-start" spacing={2}>
+      <FormGroup>
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={disableChildrenFiltering}
+              onChange={(event) => setDisableChildrenFiltering(event.target.checked)}
+            />
+          }
+          label="Enable `disableChildrenFiltering`"
+        />
+      </FormGroup>
+      <div style={{ height: 400, width: '100%' }}>
+        <DataGridPro
+          treeData
+          rows={rows}
+          columns={columns}
+          disableChildrenFiltering={disableChildrenFiltering}
+          getTreeDataPath={getTreeDataPath}
+          filterModel={filterModel}
+          onFilterModelChange={setFilterModel}
+          defaultGroupingExpansionDepth={-1}
+        />
+      </div>
+    </Stack>
   );
 }

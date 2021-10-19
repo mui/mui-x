@@ -99,14 +99,14 @@ export const useGridTreeData = (
         event.stopPropagation();
         event.preventDefault();
 
-        const node = apiRef.current.UNSTABLE_getRowNode(params.id);
+        const node = apiRef.current.unstable_getRowNode(params.id);
         if (!node || node.descendantCount === 0) {
           return;
         }
 
-        apiRef.current.UNSTABLE_setRowExpansion(
+        apiRef.current.unstable_setRowExpansion(
           params.id,
-          !apiRef.current.UNSTABLE_getRowNode(params.id)?.expanded,
+          !apiRef.current.unstable_getRowNode(params.id)?.expanded,
         );
       }
     },

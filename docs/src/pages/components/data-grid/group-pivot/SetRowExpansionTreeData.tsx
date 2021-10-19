@@ -13,16 +13,16 @@ export default function SetRowExpansionTreeData() {
 
   const toggleFirstRow = () => {
     const rowId = apiRef.current.getRowIdFromRowIndex(0);
-    apiRef.current.UNSTABLE_setRowExpansion(
+    apiRef.current.unstable_setRowExpansion(
       rowId,
-      !apiRef.current.UNSTABLE_getRowNode(rowId)?.expanded,
+      !apiRef.current.unstable_getRowNode(rowId)?.expanded,
     );
   };
 
   return (
     <Stack style={{ width: '100%' }} alignItems="flex-start" spacing={2}>
       <Button onClick={toggleFirstRow}>Toggle 1st row expansion</Button>
-      <div style={{ height: 300, width: '100%' }}>
+      <div style={{ height: 400, width: '100%' }}>
         <DataGridPro
           apiRef={apiRef}
           loading={loading}

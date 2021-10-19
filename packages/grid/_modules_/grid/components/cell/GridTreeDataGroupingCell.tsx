@@ -31,7 +31,7 @@ const GridTreeDataGroupingCell = (props: GridRenderCellParams) => {
   const apiRef = useGridApiContext();
   const descendantCountLookup = useGridSelector(apiRef, gridVisibleDescendantCountLookupSelector);
   const classes = useStyles();
-  const node = apiRef.current.UNSTABLE_getRowNode(id);
+  const node = apiRef.current.unstable_getRowNode(id);
   const descendantCount = descendantCountLookup[id];
 
   const Icon = node?.expanded
@@ -57,7 +57,7 @@ const GridTreeDataGroupingCell = (props: GridRenderCellParams) => {
         {descendantCount > 0 && (
           <IconButton
             size="small"
-            onClick={() => apiRef.current.UNSTABLE_setRowExpansion(id, !node?.expanded)}
+            onClick={() => apiRef.current.unstable_setRowExpansion(id, !node?.expanded)}
             onKeyDown={handleKeyDown}
             tabIndex={-1}
             aria-label={

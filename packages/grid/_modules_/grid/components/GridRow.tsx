@@ -88,7 +88,7 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
   const columnsMeta = useGridSelector(apiRef, gridColumnsMetaSelector);
-  const rowNode = apiRef.current.UNSTABLE_getRowNode(rowId);
+  const rowNode = apiRef.current.unstable_getRowNode(rowId);
 
   const ownerState = {
     selected,

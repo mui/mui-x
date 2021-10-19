@@ -102,7 +102,7 @@ export interface GridLocaleText {
   // Actions cell more text
   actionsCellMore: string;
 
-  // Tree data
+  // Tree Data
   treeDataGroupingHeaderName: string;
   treeDataExpand: string;
   treeDataCollapse: string;

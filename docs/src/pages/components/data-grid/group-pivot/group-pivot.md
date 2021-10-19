@@ -6,49 +6,53 @@ title: Data Grid - Group & Pivot
 
 <p class="description">Use grouping, pivoting and more to analyse the data in depth.</p>
 
-## Tree data [<span class="pro"></span>](https://mui.com/store/items/material-ui-pro/)
+## Tree Data [<span class="pro"></span>](https://mui.com/store/items/material-ui-pro/)
 
-Tree data allows to display data with parent / child relationships.
+Tree Data allows to display data with parent / child relationships.
 
-### Basic example
+### General behavior
 
-To enable the Tree Data, you must use the `treeData` prop as well as provide a `getTreeDataPath` prop.
-The `getTreeDataPath` function returns an array of strings which represents the path to a given element of the tree.
+To enable the Tree Data, you simply have to use the `treeData` prop as well as provide a `getTreeDataPath` prop.
+The `getTreeDataPath` function returns an array of strings which represents the path to a given row.
 
 ```tsx
+// The following examples will both render the same tree
+// - Sarah
+//     - Thomas
+//         - Robert
+//         - Karen
+
+const columns: GridColumns = [{ field: 'jobTitle', width: 250 }];
+
 // Without transformation
-const rows: GridRows = [
-    { id: 0, path: ['A'] },
-    { id: 1, path: ['A', 'A'] },
-    { id: 2, path: ['A', 'B'] },
-    { id: 3, path: ['A', 'C'] },
-    { id: 4, path: ['A', 'B', 'A'] },
-    { id: 5, path: ['B'] }
+const rows: GridRowsProp = [
+  { path: ['Sarah'], jobTitle: 'CEO', id: 0 },
+  { path: ['Sarah', 'Thomas'], jobTitle: 'Head of Sales', id: 1 },
+  { path: ['Sarah', 'Thomas', 'Robert'], jobTitle: 'Sales Person', id: 2 },
+  { path: ['Sarah', 'Thomas', 'Karen'], jobTitle: 'Sales Person', id: 3 },
 ];
 
 <DataGridPro
-    treeData
-    getTreeDataPath={(row) => row.path}
-    rows={rows}
-    {/* ...other props */}
-/>
+  treeData
+  getTreeDataPath={(row) => row.path}
+  rows={rows}
+  columns={columns}
+/>;
 
 // With transformation
-const rows: GridRows = [
-    { id: 0, path: 'A' },
-    { id: 1, path: 'A.A' },
-    { id: 2, path: 'A.B' },
-    { id: 3, path: 'A.C' },
-    { id: 4, path: 'A.B.A' },
-    { id: 5, path: 'B' }
+const rows: GridRowsProp = [
+  { path: 'Sarah', jobTitle: 'CEO', id: 0 },
+  { path: 'Sarah/Thomas', jobTitle: 'Head of Sales', id: 1 },
+  { path: 'Sarah/Thomas/Robert', jobTitle: 'Sales Person', id: 2 },
+  { path: 'Sarah/Thomas/Karen', jobTitle: 'Sales Person', id: 3 },
 ];
 
 <DataGridPro
-    treeData
-    getTreeDataPath={(row) => row.path.split('.')}
-    rows={rows}
-    {/* ...other props */}
-/>
+  treeData
+  getTreeDataPath={(row) => row.path.split('/')}
+  rows={rows}
+  columns={columns}
+/>;
 ```
 
 {{"demo": "pages/components/data-grid/group-pivot/BasicTreeData.js", "bg": "inline", "defaultCodeOpen": false}}
@@ -66,7 +70,7 @@ If you want to expand the whole tree, set `defaultGroupingExpansionDepth = -1`
 
 {{"demo": "pages/components/data-grid/group-pivot/DefaultGroupingExpansionDepthTreeData.js", "bg": "inline", "defaultCodeOpen": false}}
 
-Use the `UNSTABLE_setRowExpansion` method on `apiRef` to programmatically set the expansion of a row.
+Use the `unstable_setRowExpansion` method on `apiRef` to programmatically set the expansion of a row.
 
 {{"demo": "pages/components/data-grid/group-pivot/SetRowExpansionTreeData.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -74,7 +78,7 @@ Use the `UNSTABLE_setRowExpansion` method on `apiRef` to programmatically set th
 
 If some entries are missing to build the full tree, the `DataGridPro` will automatically create rows to fill those gaps.
 
-{{"demo": "pages/components/data-grid/group-pivot/FillerTreeData.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"demo": "pages/components/data-grid/group-pivot/TreeDataWithGap.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ### Filtering
 
@@ -84,14 +88,14 @@ A node is included if one of the following criteria is met:
 - it is passing the filters
 
 By default, the filtering is applied to every depth of the tree.
-You can limit the filtering to the top level rows by with the `disableChildrenFiltering`.
+You can limit the filtering to the top level rows with the `disableChildrenFiltering` prop.
 
 {{"demo": "pages/components/data-grid/group-pivot/DisableChildrenFilteringTreeData.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ### Sorting
 
 By default, the sorting is applied to every depth of the tree.
-You can limit the filtering to the top level rows by with the `disableChildrenSorting`.
+You can limit the filtering to the top level rows with the `disableChildrenSorting` prop.
 
 {{"demo": "pages/components/data-grid/group-pivot/DisableChildrenSortingTreeData.js", "bg": "inline", "defaultCodeOpen": false}}
 

@@ -225,7 +225,8 @@ export const useGridFilter = (
 
           const shouldSkipFilters = props.disableChildrenFiltering && node.depth > 0;
           const isMatchingFilters = shouldSkipFilters || filteringMethod(node.id);
-          const shouldBeVisible = visibleDescendantCount > 0 || isMatchingFilters;
+          const shouldBeVisible =
+            (!props.disableChildrenFiltering && visibleDescendantCount > 0) || isMatchingFilters;
           visibleRowsLookup[node.id] = shouldBeVisible;
 
           if (visibleDescendantCount > 0) {
@@ -436,6 +437,7 @@ export const useGridFilter = (
       isFirstRender.current = false;
       return;
     }
+    console.log('GO');
     apiRef.current.applyFilters();
   }, [apiRef, props.disableChildrenFiltering]);
 

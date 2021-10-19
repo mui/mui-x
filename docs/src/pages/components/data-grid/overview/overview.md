@@ -77,6 +77,7 @@ We provide three options:
 - [Sorting](/components/data-grid/sorting) and [multi-sort](/components/data-grid/sorting/#multi-column-sorting) <span class="pro"></span>
 - [Selection](/components/data-grid/selection/)
 - [Column virtualization](/components/data-grid/virtualization/#column-virtualization) and [rows virtualization](/components/data-grid/virtualization/#row-virtualization) <span class="pro"></span>
+- [Tree data](/components/data-grid/group-pivot/#tree-data) <span class="pro"></span>
 - [Resizable columns](/components/data-grid/columns/#column-resizing) <span class="pro"></span>
 - [100% customizable](/components/data-grid/style/)
 - Server-side data
@@ -90,7 +91,6 @@ While development of the data grid component is moving fast, there are still man
 
 - Headless (hooks only)
 - [Column pinning](/components/data-grid/columns/#column-pinning) <span class="pro"></span>
-- [Tree data](/components/data-grid/group-pivot/#tree-data) <span class="pro"></span>
 - [Excel export](/components/data-grid/export/) <span class="premium"></span>
 - [Range selection](/components/data-grid/selection/#range-selection) <span class="premium"></span>
 - [Group, Pivot, Aggregation](/components/data-grid/group-pivot/) <span class="premium"></span>
