@@ -15,30 +15,34 @@ You can use the following script to automatically navigate to the correct page.
 
 ```js
 (async () => {
-    const releaseBranch = 'next';
-    const tagResponse = await fetch('https://api.github.com/repos/mui-org/material-ui-x/tags?per_page=1');
-    const tagData = await tagResponse.json();
-    const lastTag = tagData[0].name
-    const diffPage = `https://github.com/mui-org/material-ui-x/compare/${lastTag}...${releaseBranch}`;
-    window.location.href = diffPage
-})()
+  const releaseBranch = 'next';
+  const tagResponse = await fetch(
+    'https://api.github.com/repos/mui-org/material-ui-x/tags?per_page=1',
+  );
+  const tagData = await tagResponse.json();
+  const lastTag = tagData[0].name;
+  const diffPage = `https://github.com/mui-org/material-ui-x/compare/${lastTag}...${releaseBranch}`;
+  window.location.href = diffPage;
+})();
 ```
 
-2. Generate the changelog with the following script: 
+2. Generate the changelog with the following script:
 
 ```js
 (() => {
-    const commits = Array.from(document.querySelectorAll('.TimelineItem--condensed'))
-    const message = commits
-        .map(node => {
-            return `- ${node.querySelector('code a').getAttribute('title').split('\n')[0]} ${node.querySelector('.AvatarStack-body img').getAttribute('alt')}`;
-        })
-        .filter(x => x.indexOf('- Bump') !== 0)
-        .sort()
-        .join('\n');
-    
-    copy(message);
-})()
+  const commits = Array.from(document.querySelectorAll('.TimelineItem--condensed'));
+  const message = commits
+    .map((node) => {
+      return `- ${node.querySelector('code a').getAttribute('title').split('\n')[0]} ${node
+        .querySelector('.AvatarStack-body img')
+        .getAttribute('alt')}`;
+    })
+    .filter((x) => x.indexOf('- Bump') !== 0)
+    .sort()
+    .join('\n');
+
+  copy(message);
+})();
 ```
 
 3. Clean the generated changelog, to match the format of [https://github.com/mui-org/material-ui-x/releases](https://github.com/mui-org/material-ui-x/releases).
