@@ -1,12 +1,8 @@
 import { createSelector } from 'reselect';
-import { GridRowId, GridRowModel } from '../../../models/gridRows';
+import { GridRowId, GridRowModel, GridRowsLookup } from '../../../models/gridRows';
 import { GridSortDirection, GridSortModel } from '../../../models/gridSortModel';
 import { GridState } from '../../../models/gridState';
-import {
-  GridRowsLookup,
-  gridRowsLookupSelector,
-  unorderedGridRowIdsSelector,
-} from '../rows/gridRowsSelector';
+import { gridRowsLookupSelector, unorderedGridRowIdsSelector } from '../rows/gridRowsSelector';
 import { GridSortingState } from './gridSortingState';
 
 const sortingGridStateSelector = (state: GridState) => state.sorting;
