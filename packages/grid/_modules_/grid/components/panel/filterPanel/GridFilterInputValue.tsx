@@ -126,6 +126,7 @@ GridFilterInputValue.propTypes = {
   item: PropTypes.shape({
     columnField: PropTypes.string,
     id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    isArrayValue: PropTypes.bool,
     operatorValue: PropTypes.string,
     value: PropTypes.any,
   }).isRequired,
