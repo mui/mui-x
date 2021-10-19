@@ -30,13 +30,13 @@ export interface GridRowApi {
    */
   updateRows: (updates: GridRowModelUpdate[]) => void;
   /**
-   * Gets the id of a row for a given index in the list of the sorted unfiltered rows.
+   * Gets the `GridRowId` of a row at a specific index.
    * @param {number} index The index of the row
    * @returns {GridRowId} The `GridRowId` of the row.
    */
   getRowIdFromRowIndex: (index: number) => GridRowId;
   /**
-   * Gets the index of a row for a given id in the list of the sorted unfiltered rows.
+   * Gets the row index of a row with a given id.
    * @param {GridRowId} id The `GridRowId` of the row.
    * @returns {number} The index of the row.
    */

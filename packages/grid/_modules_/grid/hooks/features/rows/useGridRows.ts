@@ -39,7 +39,15 @@ export type GridRowsInternalCacheState = Pick<GridRowsState, 'idRowsLookup' | 'r
    */
   propGetRowId?: GridRowIdGetter;
 
+  /**
+   * The rows as they were the last time all the rows have been updated at once
+   * It is used to avoid processing several time the same set of rows
+   */
   inputRowsBeforeUpdates: GridRowsProp;
+
+  /**
+   * The rows as they were the last time the tree structure has been generated
+   */
   inputRowsAfterUpdates: GridRowsProp;
 };
 
