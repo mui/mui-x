@@ -122,6 +122,38 @@ export interface GridClasses {
    */
   columnSeparator: string;
   /**
+   * Styles applied to the columns panel element.
+   */
+  columnsPanel: string;
+  /**
+   * Styles applied to the columns panel row element.
+   */
+  columnsPanelRow: string;
+  /**
+   * Styles applied to the panel element.
+   */
+  panel: string;
+  /**
+   * Styles applied to the panel header element.
+   */
+  panelHeader: string;
+  /**
+   * Styles applied to the panel wrapper element.
+   */
+  panelWrapper: string;
+  /**
+   * Styles applied to the panel content element.
+   */
+  panelContent: string;
+  /**
+   * Styles applied to the panel footer element.
+   */
+  panelFooter: string;
+  /**
+   * Styles applied to the paper element.
+   */
+  paper: string;
+  /**
    * Styles applied to the data container element.
    */
   dataContainer: string;
@@ -129,6 +161,10 @@ export interface GridClasses {
    * Styles applied to root of the boolean edit component.
    */
   editBooleanCell: string;
+  /**
+   * Styles applied to the root of the filter form component.
+   */
+  filterForm: string;
   /**
    * Styles applied to the root of the input component.
    */
@@ -153,6 +189,10 @@ export interface GridClasses {
    * Styles applied to the main container element.
    */
   main: string;
+  /**
+   * Styles applied to the menu element.
+   */
+  menu: string;
   /**
    * Styles applied to the menu icon element.
    */
@@ -222,6 +262,10 @@ export interface GridClasses {
    */
   toolbarContainer: string;
   /**
+   * Styles applied to the toolbar filter list element.
+   */
+  toolbarFilterList: string;
+  /**
    * Styles applied to the viewport element.
    */
   viewport: string;
@@ -277,14 +321,24 @@ export const gridClasses = generateUtilityClasses('MuiDataGrid', [
   'columnSeparator--resizable',
   'columnSeparator--resizing',
   'columnSeparator',
+  'columnsPanel',
+  'columnsPanelRow',
+  'panel',
+  'panelHeader',
+  'panelWrapper',
+  'panelContent',
+  'panelFooter',
+  'paper',
   'dataContainer',
   'editBooleanCell',
   'editInputCell',
+  'filterForm',
   'filterIcon',
   'footerContainer',
   'iconButtonContainer',
   'iconSeparator',
   'main',
+  'menu',
   'menuIcon',
   'menuIconButton',
   'menuOpen',
@@ -303,6 +357,7 @@ export const gridClasses = generateUtilityClasses('MuiDataGrid', [
   'selectedRowCount',
   'sortIcon',
   'toolbarContainer',
+  'toolbarFilterList',
   'viewport',
   'window',
   'windowContainer',
