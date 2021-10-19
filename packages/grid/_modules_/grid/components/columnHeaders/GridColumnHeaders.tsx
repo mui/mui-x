@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { useForkRef } from '@mui/material/utils';
-import styled from '@mui/styles/styled';
 import clsx from 'clsx';
 import {
   visibleGridColumnsSelector,
@@ -32,12 +31,6 @@ type OwnerState = {
   classes?: GridComponentProps['classes'];
   dragCol: string;
 };
-
-const Root = styled('div')({
-  // TODO give a slot name and replicate structure from main virtualization
-  display: 'flex',
-  position: 'absolute',
-});
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { dragCol, classes } = ownerState;
@@ -73,7 +66,6 @@ export const GridColumnsHeader = React.forwardRef<HTMLDivElement, any>(function 
   const [renderContext, setRenderContext] = React.useState<RenderContext | null>(null);
   const prevRenderContext = React.useRef<RenderContext | null>(renderContext);
   const prevScrollLeft = React.useRef(0);
-  const [width, setWidth] = React.useState<number>();
 
   const ownerState = { dragCol, classes: rootProps.classes };
   const classes = useUtilityClasses(ownerState);
@@ -116,18 +108,18 @@ export const GridColumnsHeader = React.forwardRef<HTMLDivElement, any>(function 
       if (nextRenderContext !== prevRenderContext.current || !prevRenderContext.current) {
         setRenderContext(nextRenderContext);
         prevRenderContext.current = nextRenderContext;
-
-        const firstColumnToRender = Math.max(
-          nextRenderContext!.firstColumnIndex - rootProps.columnBuffer,
-          0,
-        );
-        const offset = columnsMeta.positions[firstColumnToRender];
-        wrapperRef!.current!.style.transform = `translate3d(${offset}px, 0px, 0px)`;
       }
 
-      apiRef.current.columnHeadersContainerElementRef!.current!.scrollLeft = left;
+      const firstColumnToRender = Math.max(
+        nextRenderContext!.firstColumnIndex - rootProps.columnBuffer,
+        0,
+      );
+
+      const offset =
+        firstColumnToRender > 0 ? left % columnsMeta.positions[firstColumnToRender] : left;
+      wrapperRef!.current!.style.transform = `translate3d(${-offset}px, 0px, 0px)`;
     },
-    [apiRef, columnsMeta.positions, rootProps.columnBuffer],
+    [columnsMeta.positions, rootProps.columnBuffer],
   );
 
   const handleColumnResizeStart = React.useCallback(
@@ -200,30 +192,14 @@ export const GridColumnsHeader = React.forwardRef<HTMLDivElement, any>(function 
     return columns;
   };
 
-  const updateWidth = React.useCallback(() => {
-    const newWidth = Math.max(
-      apiRef.current.columnHeadersContainerElementRef?.current?.clientWidth || 0,
-      columnsMeta.totalWidth,
-    );
-    setWidth(newWidth);
-  }, [apiRef, columnsMeta.totalWidth]);
-
-  const handleResize = React.useCallback(() => {
-    updateWidth();
-  }, [updateWidth]);
-
-  useGridApiEventHandler(apiRef, GridEvents.resize, handleResize);
-
   return (
-    <Root style={{ width }}>
-      <div
-        ref={handleRef}
-        className={clsx(classes.wrapper, scrollBarState.hasScrollX && 'scroll')}
-        aria-rowindex={1}
-        role="row"
-      >
-        {getColumns()}
-      </div>
-    </Root>
+    <div
+      ref={handleRef}
+      className={clsx(classes.wrapper, scrollBarState.hasScrollX && 'scroll')}
+      aria-rowindex={1}
+      role="row"
+    >
+      {getColumns()}
+    </div>
   );
 });

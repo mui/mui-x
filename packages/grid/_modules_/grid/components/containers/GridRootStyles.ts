@@ -72,9 +72,7 @@ export const useStyles = makeStyles(
         },
         [`& .${gridClasses.columnHeaderWrapper}`]: {
           display: 'flex',
-          width: '100%',
           alignItems: 'center',
-          overflow: 'hidden',
         },
         [`& .${gridClasses.columnHeader}, & .${gridClasses.cell}`]: {
           WebkitTapHighlightColor: 'transparent',

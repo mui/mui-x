@@ -121,6 +121,7 @@ const GridVirtualScroller = React.forwardRef<HTMLDivElement, GridVirtualScroller
     const [containerWidth, setContainerWidth] = React.useState<number | null>(null);
     const ownerState = { classes: rootProps.classes };
     const classes = useUtilityClasses(ownerState);
+    const prevTotalWidth = React.useRef(columnsMeta.totalWidth);
 
     const rowsInCurrentPage = React.useMemo(() => {
       if (rootProps.pagination && rootProps.paginationMode === 'client') {
@@ -193,6 +194,7 @@ const GridVirtualScroller = React.forwardRef<HTMLDivElement, GridVirtualScroller
       const { top, left } = scrollPosition.current!;
       const params = { top, left, renderContext: initialRenderContext };
       apiRef.current.publishEvent(GridEvents.rowsScroll, params);
+      apiRef.current.publishEvent('teste', params);
     }, [apiRef, computeRenderContext, containerWidth]);
 
     const handleResize = React.useCallback(() => {
@@ -228,7 +230,8 @@ const GridVirtualScroller = React.forwardRef<HTMLDivElement, GridVirtualScroller
 
       const shouldSetState =
         rowsScrolledSincePreviousRender >= rootProps.rowThreshold ||
-        columnsScrolledSincePreviousRender >= rootProps.columnThreshold;
+        columnsScrolledSincePreviousRender >= rootProps.columnThreshold ||
+        prevTotalWidth.current !== columnsMeta.totalWidth;
 
       // TODO rename event to a wider name, it's not only fired for row scrolling
       // TODO create a interface to type correctly the params
@@ -241,6 +244,7 @@ const GridVirtualScroller = React.forwardRef<HTMLDivElement, GridVirtualScroller
       if (shouldSetState) {
         setRenderContext(nextRenderContext);
         prevRenderContext.current = nextRenderContext;
+        prevTotalWidth.current = columnsMeta.totalWidth;
 
         const top = Math.max(nextRenderContext.firstRowIndex - rootProps.rowBuffer, 0) * rowHeight;
         const firstColumnToRender = Math.max(
