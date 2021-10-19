@@ -12,6 +12,7 @@ import {
   GridApiRef,
   GridColumns,
   GridRowParams,
+  GridCellParams,
   MuiEvent,
   GridToolbarContainer,
   GridActionsCellItem,
@@ -124,6 +125,13 @@ export default function FullFeaturedCrudGrid() {
     event.defaultMuiPrevented = true;
   };
 
+  const handleCellFocusOut = (
+    params: GridCellParams,
+    event: MuiEvent<React.SyntheticEvent<Element, Event> | MouseEvent>,
+  ) => {
+    event.defaultMuiPrevented = true;
+  };
+
   const handleEditClick = (id) => (event) => {
     event.stopPropagation();
     apiRef.current.setRowMode(id, 'edit');
@@ -225,6 +233,7 @@ export default function FullFeaturedCrudGrid() {
         editMode="row"
         onRowEditStart={handleRowEditStart}
         onRowEditStop={handleRowEditStop}
+        onCellFocusOut={handleCellFocusOut}
         components={{
           Toolbar: EditToolbar,
         }}

@@ -155,7 +155,8 @@ export const useGridPrintExport = (
         typeof normalizeOptions.pageStyle === 'function'
           ? normalizeOptions.pageStyle()
           : normalizeOptions.pageStyle;
-      if (typeof defaultPageStyle !== 'string') {
+      if (typeof defaultPageStyle === 'string') {
+        // TODO custom styles should always win
         const styleElement = printDoc.createElement('style');
         styleElement.appendChild(printDoc.createTextNode(defaultPageStyle));
         printDoc.head.appendChild(styleElement);

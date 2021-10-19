@@ -8,7 +8,6 @@ import { GridRowId } from '../../../models/gridRows';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
-import { useGridSelector } from '../../utils/useGridSelector';
 import { useGridState } from '../../utils/useGridState';
 import { gridRowsLookupSelector } from '../rows/gridRowsSelector';
 import {
@@ -17,11 +16,31 @@ import {
   selectedIdsLookupSelector,
 } from './gridSelectionSelector';
 import { gridPaginatedVisibleSortedGridRowIdsSelector } from '../pagination';
-import { visibleSortedGridRowIdsSelector } from '../filter';
+import { visibleSortedGridRowIdsSelector } from '../filter/gridFilterSelector';
 import { GridHeaderSelectionCheckboxParams } from '../../../models/params/gridHeaderSelectionCheckboxParams';
 import { GridCellParams } from '../../../models/params/gridCellParams';
 import { GridRowSelectionCheckboxParams } from '../../../models/params/gridRowSelectionCheckboxParams';
+import { GridColumnsPreProcessing } from '../../core/columnsPreProcessing';
+import { GRID_CHECKBOX_SELECTION_COL_DEF, GridColDef } from '../../../models';
+import { composeClasses } from '../../../utils/material-ui-utils';
+import { getDataGridUtilityClass } from '../../../gridClasses';
 import { useGridStateInit } from '../../utils/useGridStateInit';
+import { useFirstRender } from '../../utils/useFirstRender';
+
+type OwnerState = { classes: GridComponentProps['classes'] };
+
+const useUtilityClasses = (ownerState: OwnerState) => {
+  const { classes } = ownerState;
+
+  return React.useMemo(() => {
+    const slots = {
+      cellCheckbox: ['cellCheckbox'],
+      columnHeaderCheckbox: ['columnHeaderCheckbox'],
+    };
+
+    return composeClasses(slots, getDataGridUtilityClass, classes);
+  }, [classes]);
+};
 
 /**
  * @requires useGridRows (state, method)
@@ -40,6 +59,7 @@ export const useGridSelection = (
     | 'isRowSelectable'
     | 'checkboxSelectionVisibleOnly'
     | 'pagination'
+    | 'classes'
   >,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridSelection');
@@ -59,7 +79,9 @@ export const useGridSelection = (
   useGridStateInit(apiRef, (state) => ({ ...state, selection: propSelectionModel ?? [] }));
 
   const [, setGridState, forceUpdate] = useGridState(apiRef);
-  const rowsLookup = useGridSelector(apiRef, gridRowsLookupSelector);
+
+  const ownerState = { classes: props.classes };
+  const classes = useUtilityClasses(ownerState);
   const lastRowToggled = React.useRef<GridRowId | null>(null);
 
   apiRef.current.updateControlState({
@@ -214,6 +236,26 @@ export const useGridSelection = (
     [apiRef],
   );
 
+  const removeOutdatedSelection = React.useCallback(() => {
+    const currentSelection = gridSelectionStateSelector(apiRef.current.state);
+    const rowsLookup = gridRowsLookupSelector(apiRef.current.state);
+
+    // We clone the existing object to avoid mutating the same object returned by the selector to others part of the project
+    const selectionLookup = { ...selectedIdsLookupSelector(apiRef.current.state) };
+
+    let hasChanged = false;
+    currentSelection.forEach((id: GridRowId) => {
+      if (!rowsLookup[id]) {
+        delete selectionLookup[id];
+        hasChanged = true;
+      }
+    });
+
+    if (hasChanged) {
+      apiRef.current.setSelectionModel(Object.values(selectionLookup));
+    }
+  }, [apiRef]);
+
   const handleRowClick = React.useCallback(
     (params: GridRowParams, event: React.MouseEvent) => {
       if (disableSelectionOnClick) {
@@ -283,6 +325,7 @@ export const useGridSelection = (
     [apiRef, props.checkboxSelectionVisibleOnly, props.pagination],
   );
 
+  useGridApiEventHandler(apiRef, GridEvents.visibleRowsSet, removeOutdatedSelection);
   useGridApiEventHandler(apiRef, GridEvents.rowClick, handleRowClick);
   useGridApiEventHandler(
     apiRef,
@@ -305,26 +348,6 @@ export const useGridSelection = (
     isRowSelected,
   };
   useGridApiMethod(apiRef, selectionApi, 'GridSelectionApi');
-
-  React.useEffect(() => {
-    // Rows changed
-    const currentSelection = gridSelectionStateSelector(apiRef.current.state);
-
-    // We clone the existing object to avoid mutating the same object returned by the selector to others part of the project
-    const selectionLookup = { ...selectedIdsLookupSelector(apiRef.current.state) };
-
-    let hasChanged = false;
-    currentSelection.forEach((id: GridRowId) => {
-      if (!rowsLookup[id]) {
-        delete selectionLookup[id];
-        hasChanged = true;
-      }
-    });
-
-    if (hasChanged) {
-      apiRef.current.setSelectionModel(Object.values(selectionLookup));
-    }
-  }, [rowsLookup, apiRef]);
 
   React.useEffect(() => {
     if (propSelectionModel !== undefined) {
@@ -351,4 +374,37 @@ export const useGridSelection = (
       }
     }
   }, [apiRef, isRowSelectable, isStateControlled]);
+
+  const updateColumnsPreProcessing = React.useCallback(() => {
+    const addCheckboxColumn: GridColumnsPreProcessing = (columns) => {
+      if (!props.checkboxSelection) {
+        return columns;
+      }
+
+      const groupingColumn: GridColDef = {
+        ...GRID_CHECKBOX_SELECTION_COL_DEF,
+        cellClassName: classes.cellCheckbox,
+        headerClassName: classes.columnHeaderCheckbox,
+        headerName: apiRef.current.getLocaleText('checkboxSelectionHeaderName'),
+      };
+
+      return [groupingColumn, ...columns];
+    };
+
+    apiRef.current.UNSTABLE_registerColumnPreProcessing('selection', addCheckboxColumn);
+  }, [apiRef, props.checkboxSelection, classes]);
+
+  useFirstRender(() => {
+    updateColumnsPreProcessing();
+  });
+
+  const isFirstRender = React.useRef(true);
+  React.useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+
+    updateColumnsPreProcessing();
+  }, [updateColumnsPreProcessing]);
 };
