@@ -380,8 +380,9 @@ describe('<DataGridPro /> - Tree Data', () => {
       render(
         <TestFilter
           rows={[{ name: 'B' }, { name: 'B.A' }, { name: 'B.B' }]}
-          filterModel={{ items: [{ columnField: 'name', value: 'A', operatorValue: 'endsWith' }] }}
+          filterModel={{ items: [{ columnField: 'name', value: 'B', operatorValue: 'endsWith' }] }}
           disableChildrenFiltering
+          defaultGroupingExpansionDepth={-1}
         />,
       );
 
