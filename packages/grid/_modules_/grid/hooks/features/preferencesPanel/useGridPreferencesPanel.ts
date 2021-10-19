@@ -5,11 +5,18 @@ import { useGridLogger } from '../../utils/useGridLogger';
 import { useGridState } from '../../utils/useGridState';
 import { GridPreferencePanelsValue } from './gridPreferencePanelsValue';
 import { useGridStateInit } from '../../utils/useGridStateInit';
+import { GridComponentProps } from '../../../GridComponentProps';
 
-export const useGridPreferencesPanel = (apiRef: GridApiRef): void => {
+export const useGridPreferencesPanel = (
+  apiRef: GridApiRef,
+  props: Pick<GridComponentProps, 'initialState'>,
+): void => {
   const logger = useGridLogger(apiRef, 'useGridPreferencesPanel');
 
-  useGridStateInit(apiRef, (state) => ({ ...state, preferencePanel: { open: false } }));
+  useGridStateInit(apiRef, (state) => ({
+    ...state,
+    preferencePanel: props.initialState?.preferencePanel ?? { open: false },
+  }));
   const [, setGridState, forceUpdate] = useGridState(apiRef);
   const hideTimeout = React.useRef<any>();
   const immediateTimeout = React.useRef<any>();
