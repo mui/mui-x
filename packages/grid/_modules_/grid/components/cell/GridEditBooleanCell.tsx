@@ -1,6 +1,6 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import { unstable_composeClasses as composeClasses } from '@mui/core';
+import { unstable_composeClasses as composeClasses } from '@mui/material';
 import {
   unstable_useId as useId,
   unstable_useEnhancedEffect as useEnhancedEffect,

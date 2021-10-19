@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { unstable_composeClasses as composeClasses } from '@mui/core';
+import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { GridEvents } from '../constants/eventsConstants';
 import { useGridApiEventHandler } from '../hooks/utils/useGridApiEventHandler';
 import { GridScrollParams } from '../models/params/gridScrollParams';
