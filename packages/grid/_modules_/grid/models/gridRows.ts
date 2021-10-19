@@ -13,13 +13,40 @@ export interface GridRowModelUpdate extends GridRowData {
 }
 
 export interface GridRowTreeNodeConfig {
+  /**
+   * The grid row id.
+   */
   id: GridRowId;
+
+  /**
+   * The id of the row children
+   */
   children?: GridRowId[];
+
+  /**
+   * Amount of descendants (children, children's children, ...) before the filtering
+   */
   descendantCount?: number;
+
+  /**
+   * The row id of the parent (null if this row is a top level row)
+   */
   parent: GridRowId | null;
+
+  /**
+   * Current expansion status of the row
+   */
   expanded?: boolean;
+
+  /**
+   * 0-based depth of the row in the tree
+   */
   depth: number;
-  label: string;
+
+  /**
+   * The value used the group the children of the row
+   */
+  treeGroupingValue: string;
 
   /**
    * If `true`, this node has been automatically added to fill a gap in the tree structure

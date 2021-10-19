@@ -72,7 +72,7 @@ const GridTreeDataGroupingCell = (props: GridRenderCellParams) => {
         )}
       </div>
       <span>
-        {rowNode.label}
+        {rowNode.treeGroupingValue}
         {descendantCount > 0 ? ` (${descendantCount})` : ''}
       </span>
     </Box>
