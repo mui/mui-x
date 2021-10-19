@@ -47,10 +47,14 @@ export default function ColumnTypeFilteringGrid() {
         rows={data.rows}
         columns={columns}
         columnTypes={{ price: priceColumnType }}
-        filterModel={{
-          items: [
-            { columnField: 'totalPrice', value: '3000000', operatorValue: '>' },
-          ],
+        initialState={{
+          filter: {
+            filterModel: {
+              items: [
+                { columnField: 'totalPrice', value: '3000000', operatorValue: '>' },
+              ],
+            },
+          },
         }}
       />
     </div>

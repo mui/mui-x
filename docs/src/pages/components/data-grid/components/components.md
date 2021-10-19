@@ -31,9 +31,11 @@ As an example, you could override the column menu and pass additional props as b
 
 **Note**: The casing is different between the `components` (ColumnMenu) and `componentsProps` (columnMenu) props.
 
-### Interacting with the Grid
+### Interacting with the grid
 
-The grid exposes several hooks to help you to access the grid Data while overriding component slots.
+The grid exposes two hooks to help you to access the grid data while overriding component slots.
+
+They can be used as below:
 
 - `useGridApiContext`: returns the `apiRef`.
 - `useGridSelector`: returns the result of a selector on the current state.
@@ -41,14 +43,12 @@ The grid exposes several hooks to help you to access the grid Data while overrid
 ```tsx
 function CustomPagination() {
   const apiRef = useGridApiContext();
-  const [state] = useGridState(apiRef);
-  const pageSize = useGridSelector(apIRef, gridPageSizeSelector);
-  const page = useGridSelector(apIRef, gridPageSelector);
+  const paginationState = useGridSelector(apiRef, gridPaginationSelector());
 
   return (
     <Pagination
       count={state.pagination.pageCount}
-      page={state.pagination.page + 1}
+      page={paginationState.page + 1}
       onChange={(event, value) => apiRef.current.setPage(value - 1)}
     />
   );
