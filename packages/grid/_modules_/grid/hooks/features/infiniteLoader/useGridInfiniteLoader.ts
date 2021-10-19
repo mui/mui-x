@@ -31,8 +31,7 @@ export const useGridInfiniteLoader = (
 
   const handleRowsScrollEnd = React.useCallback(
     (scrollPosition: GridScrollParams) => {
-      // Exiting if scrollPosition.top === 0 is because this callback is also called on the first render.
-      if (!containerSizes || scrollPosition.top === 0) {
+      if (!containerSizes) {
         return;
       }
 
