@@ -16,10 +16,18 @@ export default function BasicFilteringGrid() {
         components={{
           Toolbar: GridToolbar,
         }}
-        filterModel={{
-          items: [
-            { columnField: 'commodity', operatorValue: 'contains', value: 'rice' },
-          ],
+        initialState={{
+          filter: {
+            filterModel: {
+              items: [
+                {
+                  columnField: 'commodity',
+                  operatorValue: 'contains',
+                  value: 'rice',
+                },
+              ],
+            },
+          },
         }}
       />
     </div>

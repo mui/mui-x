@@ -242,4 +242,109 @@ describe('<DataGrid /> - Sorting', () => {
     setProps({ sortModel: [] });
     expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
   });
+
+  describe('prop: initialState.sorting', () => {
+    const Test = (props: Omit<DataGridProps, 'rows' | 'columns'>) => (
+      <div style={{ width: 300, height: 300 }}>
+        <DataGrid {...baselineProps} {...props} />
+      </div>
+    );
+
+    it('should allow to initialize the sortModel', () => {
+      render(
+        <Test
+          initialState={{
+            sorting: {
+              sortModel: [
+                {
+                  field: 'brand',
+                  sort: 'asc',
+                },
+              ],
+            },
+          }}
+        />,
+      );
+
+      expect(getColumnValues(0)).to.deep.equal(['Adidas', 'Nike', 'Puma']);
+    });
+
+    it('should use the control state upon the initialize state when both are defined', () => {
+      render(
+        <Test
+          sortModel={[
+            {
+              field: 'brand',
+              sort: 'desc',
+            },
+          ]}
+          initialState={{
+            sorting: {
+              sortModel: [
+                {
+                  field: 'brand',
+                  sort: 'asc',
+                },
+              ],
+            },
+          }}
+        />,
+      );
+
+      expect(getColumnValues(0)).to.deep.equal(['Puma', 'Nike', 'Adidas']);
+    });
+
+    it('should not update the sort order when updating the initial state', () => {
+      const { setProps } = render(
+        <Test
+          initialState={{
+            sorting: {
+              sortModel: [
+                {
+                  field: 'brand',
+                  sort: 'asc',
+                },
+              ],
+            },
+          }}
+        />,
+      );
+
+      setProps({
+        initialState: {
+          sorting: {
+            sortModel: [
+              {
+                field: 'brand',
+                sort: 'desc',
+              },
+            ],
+          },
+        },
+      });
+
+      expect(getColumnValues(0)).to.deep.equal(['Adidas', 'Nike', 'Puma']);
+    });
+
+    it('should allow to update the sorting when initialized with initialState', () => {
+      render(
+        <Test
+          initialState={{
+            sorting: {
+              sortModel: [
+                {
+                  field: 'brand',
+                  sort: 'asc',
+                },
+              ],
+            },
+          }}
+        />,
+      );
+
+      expect(getColumnValues(0)).to.deep.equal(['Adidas', 'Nike', 'Puma']);
+      fireEvent.click(screen.getAllByRole('columnheader')[0]);
+      expect(getColumnValues(0)).to.deep.equal(['Puma', 'Nike', 'Adidas']);
+    });
+  });
 });

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridState } from './models/gridState';
+import { GridInitialState, GridState } from './models/gridState';
 import { GridApiRef } from './models/api/gridApiRef';
 import { GridColDef, GridColumns } from './models/colDef/gridColDef';
 import {
@@ -497,9 +497,11 @@ interface GridComponentOtherProps {
    */
   rows: GridRowsProp;
   /**
-   * Set the whole state of the grid.
+   * The initial state of the DataGrid.
+   * The data in it will be set in the state on initialization but will not be controlled.
+   * If one of the data in `initialState` is also being controlled, then the control state wins.
    */
-  state?: Partial<GridState>;
+  initialState?: GridInitialState;
   /**
    * @ignore
    */

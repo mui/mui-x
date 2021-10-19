@@ -102,7 +102,7 @@ Demo.args = {
 
 export const ColumnSelector = DemoTemplate.bind({});
 ColumnSelector.args = {
-  state: {
+  initialState: {
     preferencePanel: {
       open: true,
       openedPanelValue: GridPreferencePanelsValue.columns,

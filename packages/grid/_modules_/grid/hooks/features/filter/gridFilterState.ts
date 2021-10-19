@@ -13,3 +13,7 @@ export interface GridFilterState {
   visibleRows: GridRowId[];
   visibleDescendantsCountLookup: Record<GridRowId, number>;
 }
+
+export interface GridFilterInitialState {
+  filterModel?: GridFilterModel;
+}

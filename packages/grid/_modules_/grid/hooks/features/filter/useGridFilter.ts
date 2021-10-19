@@ -43,6 +43,7 @@ export const useGridFilter = (
   apiRef: GridApiRef,
   props: Pick<
     GridComponentProps,
+    | 'initialState'
     | 'filterModel'
     | 'onFilterModelChange'
     | 'filterMode'
@@ -60,7 +61,10 @@ export const useGridFilter = (
     return {
       ...state,
       filter: {
-        filterModel: props.filterModel ?? getDefaultGridFilterModel(),
+        filterModel:
+          props.filterModel ??
+          props.initialState?.filter?.filterModel ??
+          getDefaultGridFilterModel(),
         visibleRowsLookup: {},
         visibleRows: [],
         visibleDescendantsCountLookup: {},
