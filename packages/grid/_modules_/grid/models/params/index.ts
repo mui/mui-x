@@ -7,7 +7,6 @@ export * from './gridEditCellParams';
 export * from './gridRowParams';
 export * from './gridRowScrollEndParams';
 export * from './gridScrollParams';
-export * from './gridSlotComponentProps';
 export * from './gridSortModelParams';
 export * from './gridStateChangeParams';
 export * from './gridViewportRowsChangeParams';
