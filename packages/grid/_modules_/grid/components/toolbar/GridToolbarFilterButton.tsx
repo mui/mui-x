@@ -36,9 +36,7 @@ export interface GridToolbarFilterButtonProps
    * The props used for each slot inside.
    * @default {}
    */
-  componentsProps?: ('componentsProps' extends keyof TooltipProps
-    ? Pick<TooltipProps, 'componentsProps'>
-    : {}) & { button?: ButtonProps };
+  componentsProps?: { button?: ButtonProps };
 }
 
 const GridToolbarFilterButton = React.forwardRef<HTMLButtonElement, GridToolbarFilterButtonProps>(
