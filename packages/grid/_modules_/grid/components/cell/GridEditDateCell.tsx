@@ -26,6 +26,7 @@ export function GridEditDateCell(props: GridRenderEditCellParams & InputBaseProp
     api,
     field,
     row,
+    rowNode,
     colDef,
     cellMode,
     isEditable,

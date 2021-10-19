@@ -31,6 +31,7 @@ export function GridEditBooleanCell(
     api,
     field,
     row,
+    rowNode,
     colDef,
     cellMode,
     isEditable,

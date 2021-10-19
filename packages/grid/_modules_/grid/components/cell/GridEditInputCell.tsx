@@ -27,6 +27,7 @@ function GridEditInputCell(props: GridRenderEditCellParams & InputBaseProps) {
     api,
     field,
     row,
+    rowNode,
     colDef,
     cellMode,
     isEditable,
