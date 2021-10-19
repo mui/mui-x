@@ -135,7 +135,8 @@ DataGridProRaw.propTypes = {
    */
   componentsProps: PropTypes.object,
   /**
-   * If defined, the row children will be automatically expanded up to this depth
+   * If above 0, the row children will be expanded up to this depth
+   * If equal to -1, all the row children will be expanded
    * @default 0
    */
   defaultGroupingExpansionDepth: PropTypes.number,
