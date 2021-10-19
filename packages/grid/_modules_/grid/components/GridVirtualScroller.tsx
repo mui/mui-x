@@ -194,7 +194,6 @@ const GridVirtualScroller = React.forwardRef<HTMLDivElement, GridVirtualScroller
       const { top, left } = scrollPosition.current!;
       const params = { top, left, renderContext: initialRenderContext };
       apiRef.current.publishEvent(GridEvents.rowsScroll, params);
-      apiRef.current.publishEvent('teste', params);
     }, [apiRef, computeRenderContext, containerWidth]);
 
     const handleResize = React.useCallback(() => {
