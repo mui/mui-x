@@ -54,7 +54,6 @@ You can use the following script to automatically navigate to the correct page.
 ### Release the packages
 
 1. Checkout the last version of the working branch
-
 2. Make sure you have the latest dependencies installed: `yarn`.
 3. Build the packages: `yarn release:build`.
 4. Release the versions on NPM: `yarn release:publish` (you need your 2FA device).
