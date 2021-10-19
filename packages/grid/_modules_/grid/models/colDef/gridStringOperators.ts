@@ -2,6 +2,7 @@ import { GridFilterInputValue } from '../../components/panel/filterPanel/GridFil
 import { escapeRegExp } from '../../utils/utils';
 import { GridFilterItem } from '../gridFilterItem';
 import { GridFilterOperator } from '../gridFilterOperator';
+import { GridFilterInputMultipleValue } from '../../components/panel/filterPanel/GridFilterInputMultipleValue';
 
 export const getGridStringOperators = (): GridFilterOperator[] => [
   {
@@ -74,5 +75,22 @@ export const getGridStringOperators = (): GridFilterOperator[] => [
         return value !== '' && value != null;
       };
     },
+  },
+  {
+    label: 'is one of',
+    value: 'isOneOf',
+    isArrayValue: true,
+    getApplyFilterFn: (filterItem: GridFilterItem) => {
+      if (!filterItem.value || filterItem.value.length === 0) {
+        return null;
+      }
+
+      return ({ value }): boolean =>
+        filterItem.value.some((filterValue) => {
+          const filterRegex = new RegExp(escapeRegExp(filterValue), 'i');
+          return filterRegex.test((value && value.toString()) || '');
+        });
+    },
+    InputComponent: GridFilterInputMultipleValue,
   },
 ];
