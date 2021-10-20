@@ -18,7 +18,6 @@ export type DataGridProps = Omit<
   | 'hideFooterRowCount'
   | 'options'
   | 'onRowsScrollEnd'
-  | 'onViewportRowsChange'
   | 'scrollEndThreshold'
   | 'signature'
 > & {

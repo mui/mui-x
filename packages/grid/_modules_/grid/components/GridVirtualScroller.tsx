@@ -35,8 +35,8 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 
   const slots = {
     root: ['virtualScroller'],
-    renderingZone: ['renderingZone'],
-    content: ['content'],
+    content: ['virtualScrollerContent'],
+    renderZone: ['virtualScrollerRenderZone'],
   };
 
   return composeClasses(slots, getDataGridUtilityClass, classes);
@@ -47,6 +47,9 @@ const VirtualScrollerRoot = styled('div', {
   slot: 'VirtualScroller',
 })({
   overflow: 'auto',
+  '@media print': {
+    overflow: 'hidden',
+  },
 });
 
 const VirtualScrollerContent = styled('div', {
@@ -57,7 +60,7 @@ const VirtualScrollerContent = styled('div', {
   overflow: 'hidden',
 });
 
-const VirtualScrollerRenderingZone = styled('div', {
+const VirtualScrollerRenderZone = styled('div', {
   name: 'MuiDataGrid',
   slot: 'RenderingZone',
 })({
@@ -116,7 +119,7 @@ const GridVirtualScroller = React.forwardRef<HTMLDivElement, GridVirtualScroller
     const cellTabIndex = useGridSelector(apiRef, gridTabIndexCellSelector);
     const editRowsState = useGridSelector(apiRef, gridEditRowsStateSelector);
     const scrollBarState = useGridSelector(apiRef, gridScrollBarSizeSelector);
-    const renderingZoneRef = React.useRef<HTMLDivElement>(null);
+    const renderZoneRef = React.useRef<HTMLDivElement>(null);
     const rootRef = React.useRef<HTMLDivElement>(null);
     const handleRef = useForkRef<HTMLDivElement>(ref, rootRef);
     const [renderContext, setRenderContext] = React.useState<RenderContext | null>(null);
@@ -125,6 +128,7 @@ const GridVirtualScroller = React.forwardRef<HTMLDivElement, GridVirtualScroller
     const [containerWidth, setContainerWidth] = React.useState<number | null>(null);
     const ownerState = { classes: rootProps.classes };
     const classes = useUtilityClasses(ownerState);
+    const prevTotalWidth = React.useRef(columnsMeta.totalWidth);
 
     const rowsInCurrentPage = React.useMemo(() => {
       if (rootProps.pagination && rootProps.paginationMode === 'client') {
@@ -180,7 +184,7 @@ const GridVirtualScroller = React.forwardRef<HTMLDivElement, GridVirtualScroller
 
     React.useEffect(() => {
       if (disableVirtualization) {
-        renderingZoneRef.current!.style.transform = `translate3d(0px, 0px, 0px)`;
+        renderZoneRef.current!.style.transform = `translate3d(0px, 0px, 0px)`;
       } else {
         // TODO a scroll reset should not be necessary
         rootRef.current!.scrollLeft = 0;
@@ -237,7 +241,8 @@ const GridVirtualScroller = React.forwardRef<HTMLDivElement, GridVirtualScroller
 
       const shouldSetState =
         rowsScrolledSincePreviousRender >= rootProps.rowThreshold ||
-        columnsScrolledSincePreviousRender >= rootProps.columnThreshold;
+        columnsScrolledSincePreviousRender >= rootProps.columnThreshold ||
+        prevTotalWidth.current !== columnsMeta.totalWidth;
 
       // TODO rename event to a wider name, it's not only fired for row scrolling
       // TODO create a interface to type correctly the params
@@ -250,6 +255,7 @@ const GridVirtualScroller = React.forwardRef<HTMLDivElement, GridVirtualScroller
       if (shouldSetState) {
         setRenderContext(nextRenderContext);
         prevRenderContext.current = nextRenderContext;
+        prevTotalWidth.current = columnsMeta.totalWidth;
 
         const top = Math.max(nextRenderContext.firstRowIndex - rootProps.rowBuffer, 0) * rowHeight;
         const firstColumnToRender = Math.max(
@@ -257,7 +263,7 @@ const GridVirtualScroller = React.forwardRef<HTMLDivElement, GridVirtualScroller
           0,
         );
         const left = columnsMeta.positions[firstColumnToRender];
-        renderingZoneRef.current!.style.transform = `translate3d(${left}px, ${top}px, 0px)`;
+        renderZoneRef.current!.style.transform = `translate3d(${left}px, ${top}px, 0px)`;
       }
     };
 
@@ -288,13 +294,13 @@ const GridVirtualScroller = React.forwardRef<HTMLDivElement, GridVirtualScroller
       const rows: JSX.Element[] = [];
 
       for (let i = 0; i < renderedRows.length; i += 1) {
-        const row = renderedRows[i];
+        const { model, id } = renderedRows[i];
 
         rows.push(
           <rootProps.components.Row
             key={i}
-            row={row.model}
-            rowId={row.id}
+            row={model}
+            rowId={id}
             rowHeight={rowHeight}
             cellFocus={cellFocus} // TODO move to inside the row
             cellTabIndex={cellTabIndex} // TODO move to inside the row
@@ -304,7 +310,7 @@ const GridVirtualScroller = React.forwardRef<HTMLDivElement, GridVirtualScroller
             visibleColumns={visibleColumns}
             firstColumnToRender={firstColumnToRender}
             lastColumnToRender={lastColumnToRender}
-            selected={selectionLookup[row.id] !== undefined}
+            selected={selectionLookup[id] !== undefined}
             index={startIndex + renderContext.firstRowIndex! + i}
             containerWidth={containerWidth}
             {...rootProps.componentsProps?.row}
@@ -337,9 +343,9 @@ const GridVirtualScroller = React.forwardRef<HTMLDivElement, GridVirtualScroller
         {...other}
       >
         <VirtualScrollerContent className={classes.content} style={contentSize}>
-          <VirtualScrollerRenderingZone ref={renderingZoneRef} className={classes.renderingZone}>
+          <VirtualScrollerRenderZone ref={renderZoneRef} className={classes.renderZone}>
             {getRows()}
-          </VirtualScrollerRenderingZone>
+          </VirtualScrollerRenderZone>
         </VirtualScrollerContent>
       </VirtualScrollerRoot>
     );

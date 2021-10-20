@@ -98,7 +98,6 @@ The name <code>MuiDataGrid</code> can be used when providing [default props](/cu
 | <span class="prop-name">onRowsScrollEnd</span> | <span class="prop-type">(params: GridRowScrollEndParams, event: MuiEvent<{}>, details: GridCallbackDetails) => void</span> |   | Callback fired when scrolling to the bottom of the grid viewport. |
 | <span class="prop-name">onSelectionModelChange</span> | <span class="prop-type">(model: GridSelectionModel) => void</span> |   | Callback fired when the selection state of one or multiple rows changes. |
 | <span class="prop-name">onSortModelChange</span> | <span class="prop-type">(model: GridSortModel) => void</span> |   | Callback fired when the sort model changes before a column is sorted. |
-| <span class="prop-name">onViewportRowsChange</span> | <span class="prop-type">(params: GridViewportRowsChangeParams) => void</span> |   | Callback fired when the rows in the viewport change. |
 | <span class="prop-name">page</span> | <span class="prop-type">number</span> | 0   |  The zero-based index of the current page. |
 | <span class="prop-name">pageSize</span> | <span class="prop-type">number</span> | 100 | Set the number of rows in one page. |
 | <span class="prop-name">pagination</span> | <span class="prop-type">boolean</span> | false | If `true`, pagination is enabled. |

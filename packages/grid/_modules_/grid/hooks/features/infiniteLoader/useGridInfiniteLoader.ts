@@ -10,8 +10,6 @@ import {
 import { GridRowScrollEndParams } from '../../../models/params/gridRowScrollEndParams';
 import { visibleGridColumnsSelector } from '../columns/gridColumnsSelector';
 import { GridComponentProps } from '../../../GridComponentProps';
-import { gridRenderingSelector } from '../virtualization/renderingStateSelector';
-import { GridViewportRowsChangeParams } from '../../../models/params/gridViewportRowsChangeParams';
 import { GridScrollParams } from '../../../models/params/gridScrollParams';
 
 /**
@@ -19,30 +17,19 @@ import { GridScrollParams } from '../../../models/params/gridScrollParams';
  * @requires useGridColumns (state)
  * @requires useGridContainerProps (state)
  * @requires useGridScroll (method
- * @requires useGridVirtualization (state)
- * @requires useGridNoVirtualization (state)
  */
 export const useGridInfiniteLoader = (
   apiRef: GridApiRef,
-  props: Pick<
-    GridComponentProps,
-    'onRowsScrollEnd' | 'onViewportRowsChange' | 'scrollEndThreshold'
-  >,
+  props: Pick<GridComponentProps, 'onRowsScrollEnd' | 'scrollEndThreshold'>,
 ): void => {
   const containerSizes = useGridSelector(apiRef, gridContainerSizesSelector);
   const visibleColumns = useGridSelector(apiRef, visibleGridColumnsSelector);
-  const renderState = useGridSelector(apiRef, gridRenderingSelector);
 
   const isInScrollBottomArea = React.useRef<boolean>(false);
-  const previousRenderContext = React.useRef<null | {
-    firstRowIndex: number;
-    lastRowIndex: number;
-  }>(null);
 
   const handleRowsScrollEnd = React.useCallback(
     (scrollPosition: GridScrollParams) => {
-      // Exiting if scrollPosition.top === 0 is because this callback is also called on the first render.
-      if (!containerSizes || scrollPosition.top === 0) {
+      if (!containerSizes) {
         return;
       }
 
@@ -76,33 +63,6 @@ export const useGridInfiniteLoader = (
     [handleRowsScrollEnd],
   );
 
-  // TODO: Check if onViewportRowsChange works as expected once virtualization is reworked
-  React.useEffect(() => {
-    const renderContext = renderState?.renderContext;
-
-    if (!renderContext) {
-      return;
-    }
-
-    if (
-      !previousRenderContext.current ||
-      renderContext.firstRowIdx !== previousRenderContext.current.firstRowIndex ||
-      renderContext.lastRowIdx !== previousRenderContext.current.lastRowIndex
-    ) {
-      const viewportRowsChangeParams: GridViewportRowsChangeParams = {
-        firstRowIndex: renderContext.firstRowIdx!,
-        lastRowIndex: renderContext.lastRowIdx!,
-      };
-      apiRef.current.publishEvent(GridEvents.viewportRowsChange, viewportRowsChangeParams);
-    }
-
-    previousRenderContext.current = {
-      firstRowIndex: renderContext.firstRowIdx!,
-      lastRowIndex: renderContext.lastRowIdx!,
-    };
-  }, [apiRef, props.onViewportRowsChange, renderState]);
-
   useGridApiEventHandler(apiRef, GridEvents.rowsScroll, handleGridScroll);
   useGridApiOptionHandler(apiRef, GridEvents.rowsScrollEnd, props.onRowsScrollEnd);
-  useGridApiOptionHandler(apiRef, GridEvents.viewportRowsChange, props.onViewportRowsChange);
 };

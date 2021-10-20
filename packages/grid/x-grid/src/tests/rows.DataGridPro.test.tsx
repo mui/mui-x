@@ -447,7 +447,9 @@ describe('<DataGridPro /> - Rows', () => {
       );
 
       const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
-      const renderingZone = document.querySelector('.MuiDataGrid-renderingZone')! as HTMLElement;
+      const renderingZone = document.querySelector(
+        '.MuiDataGrid-virtualScrollerRenderZone',
+      )! as HTMLElement;
       virtualScroller.scrollTop = 10e6; // scroll to the bottom
       virtualScroller.dispatchEvent(new Event('scroll'));
 
@@ -498,7 +500,7 @@ describe('<DataGridPro /> - Rows', () => {
         <TestCaseVirtualization rowHeight={rowHeight} rowBuffer={0} rowThreshold={rowThreshold} />,
       );
       const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
-      const renderingZone = document.querySelector('.MuiDataGrid-renderingZone')!;
+      const renderingZone = document.querySelector('.MuiDataGrid-virtualScrollerRenderZone')!;
       const firstRow = renderingZone.firstChild;
       expect(firstRow).to.have.attr('data-rowindex', '0');
       virtualScroller.scrollTop = rowThreshold * rowHeight;
@@ -513,7 +515,7 @@ describe('<DataGridPro /> - Rows', () => {
         <TestCaseVirtualization nbRows={1} columnBuffer={0} columnThreshold={columnThreshold} />,
       );
       const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
-      const renderingZone = document.querySelector('.MuiDataGrid-renderingZone')!;
+      const renderingZone = document.querySelector('.MuiDataGrid-virtualScrollerRenderZone')!;
       const firstRow = renderingZone.querySelector('[role="row"]:first-child')!;
       const firstColumn = firstRow.firstChild!;
       expect(firstColumn).to.have.attr('data-colindex', '0');
@@ -565,7 +567,9 @@ describe('<DataGridPro /> - Rows', () => {
         expect(lastCell).to.have.text('99');
         expect(virtualScroller.scrollTop).to.equal(0);
         expect(virtualScroller.scrollHeight).to.equal(virtualScroller.clientHeight);
-        expect(document.querySelector('.MuiDataGrid-renderingZone')!.children).to.have.length(4);
+        expect(
+          document.querySelector('.MuiDataGrid-virtualScrollerRenderZone')!.children,
+        ).to.have.length(4);
       });
 
       it('should paginate small dataset in auto page-size #1492', () => {
@@ -583,7 +587,9 @@ describe('<DataGridPro /> - Rows', () => {
 
         expect(virtualScroller.scrollTop).to.equal(0);
         expect(virtualScroller.scrollHeight).to.equal(virtualScroller.clientHeight);
-        expect(document.querySelector('.MuiDataGrid-renderingZone')!.children).to.have.length(7);
+        expect(
+          document.querySelector('.MuiDataGrid-virtualScrollerRenderZone')!.children,
+        ).to.have.length(7);
       });
     });
 

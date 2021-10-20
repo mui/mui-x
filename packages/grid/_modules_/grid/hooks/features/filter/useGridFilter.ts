@@ -138,29 +138,13 @@ export const useGridFilter = (
       }
 
       return (rowId: GridRowId) => {
-        // We return `false` as soon as we have a failing filter
+        // Return `false` as soon as we have a failing filter
         if (linkOperator === GridLinkOperator.And) {
-          let isPassingFilters = true;
-          let filterIndex = 0;
-
-          while (isPassingFilters && filterIndex < appliers.length) {
-            isPassingFilters = appliers[filterIndex](rowId);
-            filterIndex += 1;
-          }
-
-          return isPassingFilters;
+          return appliers.every((applier) => applier(rowId));
         }
 
-        // We return `true` as soon as we have a passing filter
-        let isPassingFilters = false;
-        let filterIndex = 0;
-
-        while (!isPassingFilters && filterIndex < appliers.length) {
-          isPassingFilters = appliers[filterIndex](rowId);
-          filterIndex += 1;
-        }
-
-        return isPassingFilters;
+        // Return `true` as soon as we have a passing filter
+        return appliers.some((applier) => applier(rowId));
       };
     },
     [apiRef],

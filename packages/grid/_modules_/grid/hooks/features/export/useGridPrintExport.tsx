@@ -29,7 +29,6 @@ type PrintWindowOnLoad = (
  * @requires useGridColumns (state)
  * @requires useGridFilter (state)
  * @requires useGridSorting (state)
- * @requires useGridNoVirtualization (method)
  * @requires useGridParamsApi (method)
  */
 export const useGridPrintExport = (
@@ -123,6 +122,13 @@ export const useGridPrintExport = (
       );
       // Expand the viewport window to prevent clipping
       gridCloneViewport!.style.height = 'auto';
+      gridCloneViewport!.style.width = 'auto';
+      gridCloneViewport!.parentElement!.style.width = 'auto';
+      gridCloneViewport!.parentElement!.style.height = 'auto';
+
+      const columnsContainer = gridClone.querySelector(`.${gridClasses.columnsContainer}`);
+      const columnHeaders = columnsContainer!.firstChild! as HTMLElement;
+      columnHeaders.style.width = '100%';
 
       let gridToolbarElementHeight =
         gridRootElement!.querySelector(`.${gridClasses.toolbarContainer}`)?.clientHeight || 0;
@@ -155,7 +161,8 @@ export const useGridPrintExport = (
         typeof normalizeOptions.pageStyle === 'function'
           ? normalizeOptions.pageStyle()
           : normalizeOptions.pageStyle;
-      if (typeof defaultPageStyle !== 'string') {
+      if (typeof defaultPageStyle === 'string') {
+        // TODO custom styles should always win
         const styleElement = printDoc.createElement('style');
         styleElement.appendChild(printDoc.createTextNode(defaultPageStyle));
         printDoc.head.appendChild(styleElement);

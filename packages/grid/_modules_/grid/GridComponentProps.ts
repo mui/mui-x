@@ -27,7 +27,6 @@ import { GridRowParams } from './models/params/gridRowParams';
 import { GridColumnOrderChangeParams } from './models/params/gridColumnOrderChangeParams';
 import { GridColumnResizeParams } from './models/params/gridColumnResizeParams';
 import { GridColumnVisibilityChangeParams } from './models/params/gridColumnVisibilityChangeParams';
-import { GridViewportRowsChangeParams } from './models/params/gridViewportRowsChangeParams';
 import { GridSlotsComponentsProps } from './models/gridSlotsComponentsProps';
 import { GridClasses } from './gridClasses';
 import { GridCallbackDetails } from './models/api/gridCallbackDetails';
@@ -382,17 +381,6 @@ interface GridComponentOtherProps {
    * @internal
    */
   onStateChange?: (state: GridState, event: MuiEvent<{}>, details: GridCallbackDetails) => void;
-  /**
-   * Callback fired when the rows in the viewport change.
-   * @param {GridViewportRowsChangeParams} params The viewport params.
-   * @param {MuiEvent<{}>} event The event object.
-   * @param {GridCallbackDetails} details Additional details for this callback.
-   */
-  onViewportRowsChange?: (
-    params: GridViewportRowsChangeParams,
-    event: MuiEvent<{}>,
-    details: GridCallbackDetails,
-  ) => void;
   /**
    * The zero-based index of the current page.
    * @default 0

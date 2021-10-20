@@ -582,13 +582,6 @@ DataGridProRaw.propTypes = {
    */
   onStateChange: PropTypes.func,
   /**
-   * Callback fired when the rows in the viewport change.
-   * @param {GridViewportRowsChangeParams} params The viewport params.
-   * @param {MuiEvent<{}>} event The event object.
-   * @param {GridCallbackDetails} details Additional details for this callback.
-   */
-  onViewportRowsChange: PropTypes.func,
-  /**
    * The zero-based index of the current page.
    * @default 0
    */
