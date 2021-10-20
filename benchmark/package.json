@@ -10,7 +10,7 @@
     "@emotion/styled": "^11.3.0",
     "@material-ui/core": "^5.0.0-beta.4",
     "@material-ui/icons": "^5.0.0-beta.4",
-    "@mui/material": "^5.0.2",
+    "@mui/material": "^5.0.4",
     "@mui/styles": "^5.0.1",
     "@mui/x-data-grid": "^4.0.0",
     "@visx/xychart": "^2.2.1",

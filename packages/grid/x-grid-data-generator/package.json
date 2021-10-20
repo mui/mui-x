@@ -41,7 +41,7 @@
   },
   "peerDependencies": {
     "@mui/icons-material": "^5.0.4",
-    "@mui/material": "^5.0.2",
+    "@mui/material": "^5.0.4",
     "react": "^17.0.2"
   },
   "setupFiles": [
