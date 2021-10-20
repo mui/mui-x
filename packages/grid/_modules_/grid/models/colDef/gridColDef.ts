@@ -15,8 +15,8 @@ import { GridColumnHeaderParams } from '../params/gridColumnHeaderParams';
 import { GridComparatorFn } from '../gridSortModel';
 import { GridColType, GridNativeColTypes } from './gridColType';
 import { GridRowParams } from '../params/gridRowParams';
+import { GridValueOptionsParams } from '../params/gridValueOptionsParams';
 import { GridActionsCellItemProps } from '../../components/cell/GridActionsCellItem';
-import { GridRowModel } from '../gridRows';
 
 /**
  * Alignment used in position elements in Cells.
@@ -88,7 +88,7 @@ export interface GridColDef {
    */
   valueOptions?:
     | Array<string | number | { value: any; label: string }>
-    | ((row?: GridRowModel) => Array<ValueOptions>);
+    | ((params: GridValueOptionsParams) => Array<ValueOptions>);
   /**
    * Allows to align the column values in cells.
    */

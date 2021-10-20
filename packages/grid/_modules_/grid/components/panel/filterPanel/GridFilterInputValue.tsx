@@ -8,7 +8,9 @@ import { GridColDef } from '../../../models/colDef/gridColDef';
 
 const renderSingleSelectOptions = ({ valueOptions, valueFormatter, field }: GridColDef, api) => {
   const iterableColumnValues =
-    typeof valueOptions === 'function' ? ['', ...valueOptions()] : ['', ...(valueOptions || [])];
+    typeof valueOptions === 'function'
+      ? ['', ...valueOptions({ field })]
+      : ['', ...(valueOptions || [])];
 
   return iterableColumnValues.map((option) =>
     typeof option === 'object' ? (
@@ -56,7 +58,9 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps & TextFieldPr
       if (type === 'singleSelect') {
         const column = apiRef.current.getColumn(item.columnField);
         const columnValueOptions =
-          typeof column.valueOptions === 'function' ? column.valueOptions() : column.valueOptions;
+          typeof column.valueOptions === 'function'
+            ? column.valueOptions({ field: column.field })
+            : column.valueOptions;
         value = columnValueOptions
           .map((option) => (typeof option === 'object' ? option.value : option))
           .find((optionValue) => String(optionValue) === value);
