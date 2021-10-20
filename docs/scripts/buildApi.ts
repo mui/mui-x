@@ -10,23 +10,28 @@ interface Api {
   name: string;
   description?: string;
   properties: TypeDoc.DeclarationReflection[];
-};
+}
 
-const isUnionType = (type: TypeDoc.Type): type is TypeDoc.UnionType => type.type === 'union'
+const isUnionType = (type: TypeDoc.Type): type is TypeDoc.UnionType => type.type === 'union';
 
-const isIntrinsicType = (type: TypeDoc.Type): type is TypeDoc.IntrinsicType => type.type === 'intrinsic'
+const isIntrinsicType = (type: TypeDoc.Type): type is TypeDoc.IntrinsicType =>
+  type.type === 'intrinsic';
 
-const isLiteralType = (type: TypeDoc.Type): type is TypeDoc.LiteralType => type.type === 'literal'
+const isLiteralType = (type: TypeDoc.Type): type is TypeDoc.LiteralType => type.type === 'literal';
 
-const isArrayType = (type: TypeDoc.Type): type is TypeDoc.ArrayType => type.type === 'array'
+const isArrayType = (type: TypeDoc.Type): type is TypeDoc.ArrayType => type.type === 'array';
 
-const isReflectionType = (type: TypeDoc.Type): type is TypeDoc.ReflectionType => type.type === 'reflection'
+const isReflectionType = (type: TypeDoc.Type): type is TypeDoc.ReflectionType =>
+  type.type === 'reflection';
 
-const isReferenceType = (type: TypeDoc.Type): type is TypeDoc.ReferenceType => type.type === 'reference'
+const isReferenceType = (type: TypeDoc.Type): type is TypeDoc.ReferenceType =>
+  type.type === 'reference';
 
-const isIndexedAccessType = (type: TypeDoc.Type): type is TypeDoc.IndexedAccessType => type.type === 'indexedAccess'
+const isIndexedAccessType = (type: TypeDoc.Type): type is TypeDoc.IndexedAccessType =>
+  type.type === 'indexedAccess';
 
-const isTypeOperatorType = (type: TypeDoc.Type): type is TypeDoc.TypeOperatorType => type.type === 'typeOperator'
+const isTypeOperatorType = (type: TypeDoc.Type): type is TypeDoc.TypeOperatorType =>
+  type.type === 'typeOperator';
 
 // Based on https://github.com/TypeStrong/typedoc-default-themes/blob/master/src/default/partials/type.hbs
 function generateTypeStr(type: TypeDoc.Type, needsParenthesis = false): string {
@@ -52,20 +57,20 @@ function generateTypeStr(type: TypeDoc.Type, needsParenthesis = false): string {
     if (type.declaration.children) {
       let text = '{ ';
       text += type.declaration.children
-          .map((child) => {
-            let memberText = child.name;
-            if (child.flags.isOptional) {
-              memberText += '?';
-            }
-            return `${memberText}: ${child.type ? generateTypeStr(child.type) : 'any'}`;
-          })
-          .join('; ');
+        .map((child) => {
+          let memberText = child.name;
+          if (child.flags.isOptional) {
+            memberText += '?';
+          }
+          return `${memberText}: ${child.type ? generateTypeStr(child.type) : 'any'}`;
+        })
+        .join('; ');
       text += ' }';
       return text;
     }
 
-    const param = type.declaration.indexSignature?.parameters?.[0]
-    const indexSignatureType = type.declaration.indexSignature?.type
+    const param = type.declaration.indexSignature?.parameters?.[0];
+    const indexSignatureType = type.declaration.indexSignature?.type;
 
     if (param) {
       const paramName = param.name;
@@ -74,7 +79,7 @@ function generateTypeStr(type: TypeDoc.Type, needsParenthesis = false): string {
       return `{ [${paramName}: ${paramType}]: ${valueType} }`;
     }
 
-    return ''
+    return '';
   }
   if (isReferenceType(type)) {
     let text = type.name;
@@ -101,38 +106,38 @@ function generateSignatureStr(signature: TypeDoc.SignatureReflection, needsParen
     // Handle function generic parameters
     text += '<';
     text += signature.typeParameters
-        .map((generic) => {
-          let genericLine = generic.name;
-          if (generic.type) {
-            genericLine += ` extends ${generateTypeStr(generic.type)}`;
-          }
-          if (generic.default) {
-            genericLine += ` = ${generateTypeStr(generic.default)}`;
-          }
-          return genericLine;
-        })
-        .join(', ');
+      .map((generic) => {
+        let genericLine = generic.name;
+        if (generic.type) {
+          genericLine += ` extends ${generateTypeStr(generic.type)}`;
+        }
+        if (generic.default) {
+          genericLine += ` = ${generateTypeStr(generic.default)}`;
+        }
+        return genericLine;
+      })
+      .join(', ');
     text += '>';
   }
   text += '(';
   text += signature
-      .parameters!.map((param) => {
-    let paramText = param.flags.isRest ? `...${param.name}` : param.name;
-    if (param.flags.isOptional) {
-      paramText += '?';
-    }
-    if (param.defaultValue) {
-      paramText += '?';
-    }
-    if (param.type) {
-      paramText += `: ${generateTypeStr(param.type)}`
-    } else {
-      paramText += ': any'
-    }
+    .parameters!.map((param) => {
+      let paramText = param.flags.isRest ? `...${param.name}` : param.name;
+      if (param.flags.isOptional) {
+        paramText += '?';
+      }
+      if (param.defaultValue) {
+        paramText += '?';
+      }
+      if (param.type) {
+        paramText += `: ${generateTypeStr(param.type)}`;
+      } else {
+        paramText += ': any';
+      }
 
-    return paramText
-  })
-      .join(', ');
+      return paramText;
+    })
+    .join(', ');
   text += ')';
   if (signature.type) {
     text += ` => ${generateTypeStr(signature.type)}`;
@@ -142,15 +147,15 @@ function generateSignatureStr(signature: TypeDoc.SignatureReflection, needsParen
 
 function escapeCell(value: string) {
   return value
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/\|/g, '\\|')
-      .replace(/\r?\n/g, '<br />');
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/\|/g, '\\|')
+    .replace(/\r?\n/g, '<br />');
 }
 
 function linkify(text: string | undefined, apisToGenerate: string[], format: 'markdown' | 'html') {
   if (text == null) {
-    return ''
+    return '';
   }
 
   const bracketsRegexp = /\[\[([^\]]+)\]\]/g;
@@ -169,10 +174,10 @@ function generateProperties(api: Api, apisToGenerate: string[]) {
   }, false);
 
   const headers = hasDefaultValue
-      ? `
+    ? `
 | Name | Type | Default | Description |
 |:-----|:-----|:--------|:------------|`
-      : `
+    : `
 | Name | Type | Description |
 |:-----|:-----|:------------|`;
 
@@ -197,13 +202,13 @@ function generateProperties(api: Api, apisToGenerate: string[]) {
       defaultValue = `<span class="prop-default">${escapeCell(defaultTag.text)}</span>`;
     }
 
-    let typeFormatted = '<span class="prop-type">'
+    let typeFormatted = '<span class="prop-type">';
     if (signature) {
-      typeFormatted += escapeCell(generateSignatureStr(signature))
+      typeFormatted += escapeCell(generateSignatureStr(signature));
     } else if (type) {
-      typeFormatted += escapeCell(generateTypeStr(type))
+      typeFormatted += escapeCell(generateTypeStr(type));
     }
-    typeFormatted += '</span>'
+    typeFormatted += '</span>';
 
     if (hasDefaultValue) {
       text += `| ${name} | ${typeFormatted} | ${defaultValue} | ${escapeCell(description)} |\n`;
@@ -250,7 +255,7 @@ function writePrettifiedFile(filename: string, data: string, prettierConfigPath:
   });
   if (prettierConfig === null) {
     throw new Error(
-        `Could not resolve config for '${filename}' using prettier config path '${prettierConfigPath}'.`,
+      `Could not resolve config for '${filename}' using prettier config path '${prettierConfigPath}'.`,
     );
   }
 
@@ -261,7 +266,7 @@ function writePrettifiedFile(filename: string, data: string, prettierConfigPath:
 
 function findProperties(reflection: TypeDoc.DeclarationReflection) {
   const properties = reflection.children!.filter((child) =>
-      child.kindOf([TypeDoc.ReflectionKind.Property, TypeDoc.ReflectionKind.Method]),
+    child.kindOf([TypeDoc.ReflectionKind.Property, TypeDoc.ReflectionKind.Method]),
   );
   return properties.sort((a, b) => a.name.localeCompare(b.name));
 }
@@ -340,11 +345,11 @@ function run(argv: { outputDirectory?: string }) {
           const comment = signature?.comment || propertyReflection.comment;
           const description = linkify(comment?.shortText, apisToGenerate, 'html');
 
-          let typeStr: string = ''
+          let typeStr: string = '';
           if (signature) {
-            typeStr = generateSignatureStr(signature)
+            typeStr = generateSignatureStr(signature);
           } else if (propertyReflection.type) {
-            typeStr = generateTypeStr(propertyReflection.type)
+            typeStr = generateTypeStr(propertyReflection.type);
           }
 
           return {
@@ -355,9 +360,9 @@ function run(argv: { outputDirectory?: string }) {
         }),
       };
       writePrettifiedFile(
-          path.resolve(outputDirectory, `${slug}.json`),
-          JSON.stringify(json),
-          prettierConfigPath,
+        path.resolve(outputDirectory, `${slug}.json`),
+        JSON.stringify(json),
+        prettierConfigPath,
       );
       // eslint-disable-next-line no-console
       console.log('Built JSON file for', api.name);
@@ -365,23 +370,23 @@ function run(argv: { outputDirectory?: string }) {
       const events = extractEvents(reflection, apisToGenerate);
 
       writePrettifiedFile(
-          path.resolve(workspaceRoot, 'docs/src/pages/components/data-grid/events/events.json'),
-          JSON.stringify(events),
-          prettierConfigPath,
+        path.resolve(workspaceRoot, 'docs/src/pages/components/data-grid/events/events.json'),
+        JSON.stringify(events),
+        prettierConfigPath,
       );
 
       // eslint-disable-next-line no-console
       console.log('Built events file');
     } else {
       writePrettifiedFile(
-          path.resolve(outputDirectory, `${slug}.md`),
-          markdown,
-          prettierConfigPath,
+        path.resolve(outputDirectory, `${slug}.md`),
+        markdown,
+        prettierConfigPath,
       );
 
       writePrettifiedFile(
-          path.resolve(outputDirectory, `${slug}.js`),
-          `import * as React from 'react';
+        path.resolve(outputDirectory, `${slug}.js`),
+        `import * as React from 'react';
 import MarkdownDocs from '@material-ui/monorepo/docs/src/modules/components/MarkdownDocs';
 import { demos, docs, demoComponents } from './${slug}.md?@mui/markdown';
 
@@ -389,7 +394,7 @@ export default function Page() {
   return <MarkdownDocs demos={demos} docs={docs} demoComponents={demoComponents} />;
 }        
     `,
-          prettierConfigPath,
+        prettierConfigPath,
       );
 
       // eslint-disable-next-line no-console
@@ -399,18 +404,18 @@ export default function Page() {
 }
 
 yargs
-    .command({
-      command: '$0 <outputDirectory>',
-      describe: 'generates API docs',
-      builder: (command) => {
-        return command.positional('outputDirectory', {
-          description: 'directory where the markdown is written to',
-          type: 'string',
-        });
-      },
-      handler: run,
-    })
-    .help()
-    .strict(true)
-    .version(false)
-    .parse();
+  .command({
+    command: '$0 <outputDirectory>',
+    describe: 'generates API docs',
+    builder: (command) => {
+      return command.positional('outputDirectory', {
+        description: 'directory where the markdown is written to',
+        type: 'string',
+      });
+    },
+    handler: run,
+  })
+  .help()
+  .strict(true)
+  .version(false)
+  .parse();
