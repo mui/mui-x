@@ -184,7 +184,8 @@ export const useGridColumnReorder = (
 
       // Check if the column was dropped outside the grid.
       if (event.dataTransfer.dropEffect === 'none') {
-        apiRef.current.setColumnIndex(params.field, originColumnIndex.current!);
+        // Accessing params.field may contain the wrong field as header elements are reused
+        apiRef.current.setColumnIndex(dragColField, originColumnIndex.current!);
         originColumnIndex.current = null;
       }
 

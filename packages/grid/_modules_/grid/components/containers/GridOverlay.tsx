@@ -33,11 +33,20 @@ export const GridOverlay = React.forwardRef<HTMLDivElement, GridOverlayProps>(fu
   const classes = useUtilityClasses(ownerState);
   const headerHeight = useGridSelector(apiRef, gridDensityHeaderHeightSelector);
 
+  const windowRef = apiRef.current.windowRef?.current;
+  const verticalScrollbarSize = windowRef ? windowRef.offsetWidth - windowRef.clientWidth : 0;
+  const horizontalScrollbarSize = windowRef ? windowRef.offsetHeight - windowRef.clientHeight : 0;
+
   return (
     <div
       ref={ref}
       className={clsx(classes.root, className)}
-      style={{ top: headerHeight, ...style }}
+      style={{
+        top: headerHeight,
+        right: verticalScrollbarSize,
+        bottom: horizontalScrollbarSize,
+        ...style,
+      }}
       {...other}
     />
   );

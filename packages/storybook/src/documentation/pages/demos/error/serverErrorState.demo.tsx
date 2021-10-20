@@ -25,7 +25,7 @@ export default function ServerErrorStateDemo() {
     setLoading(true);
     loadServerRows().catch((serverError) => {
       setLoading(false);
-      setError({ message: `An error occured! Details: ${serverError.message}` });
+      setError({ message: `An error occurred! Details: ${serverError.message}` });
     });
   }, []);
 

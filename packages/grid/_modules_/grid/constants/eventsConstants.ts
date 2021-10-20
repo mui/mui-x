@@ -292,8 +292,4 @@ export enum GridEvents {
    * Fired when a column visibility changes. Called with a [[GridColumnVisibilityChangeParams]] object.
    */
   columnVisibilityChange = 'columnVisibilityChange',
-  /**
-   * Fired when the rows in the viewport is changed. Called with a [[GridViewportRowsChange]] object.
-   */
-  viewportRowsChange = 'viewportRowsChange',
 }
