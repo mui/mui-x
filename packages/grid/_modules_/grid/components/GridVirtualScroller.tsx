@@ -246,7 +246,7 @@ const GridVirtualScroller = React.forwardRef<HTMLDivElement, GridVirtualScroller
     };
 
     const getRows = () => {
-      if (!renderContext || containerWidth == null) {
+      if (!rowsInCurrentPage.range || !renderContext || containerWidth == null) {
         return null;
       }
 
