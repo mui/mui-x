@@ -22,6 +22,7 @@ const FORCED_PROPS: { [key in ForcedPropsKey]-?: GridInputComponentProps[key] } 
   onRowsScrollEnd: undefined,
   checkboxSelectionVisibleOnly: false,
   scrollEndThreshold: undefined,
+  treeData: false,
   signature: 'DataGrid',
 };
 
