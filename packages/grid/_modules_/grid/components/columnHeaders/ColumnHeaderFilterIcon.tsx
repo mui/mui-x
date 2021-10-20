@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { unstable_composeClasses as composeClasses } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import Badge from '@mui/material/Badge';
 import Tooltip from '@mui/material/Tooltip';
@@ -7,7 +8,6 @@ import { GridPreferencePanelsValue } from '../../hooks/features/preferencesPanel
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { getDataGridUtilityClass } from '../../gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { composeClasses } from '../../utils/material-ui-utils';
 import { GridComponentProps } from '../../GridComponentProps';
 
 export interface ColumnHeaderFilterIconProps {

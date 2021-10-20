@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { useForkRef } from '@mui/material/utils';
 import clsx from 'clsx';
+import { unstable_composeClasses as composeClasses } from '@mui/material';
 import {
   visibleGridColumnsSelector,
   gridColumnsMetaSelector,
@@ -10,7 +11,6 @@ import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { gridDensityHeaderHeightSelector } from '../../hooks/features/density/densitySelector';
 import { gridScrollBarSizeSelector } from '../../hooks/features/container/gridContainerSizesSelector';
 import { getDataGridUtilityClass } from '../../gridClasses';
-import { composeClasses } from '../../utils/material-ui-utils';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { GridComponentProps } from '../../GridComponentProps';
 import { useGridApiEventHandler } from '../../hooks/utils/useGridApiEventHandler';
