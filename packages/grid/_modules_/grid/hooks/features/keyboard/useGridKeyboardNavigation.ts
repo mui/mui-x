@@ -18,11 +18,11 @@ import {
 import { gridContainerSizesSelector } from '../container/gridContainerSizesSelector';
 import { visibleGridColumnsLengthSelector } from '../columns/gridColumnsSelector';
 import { useGridSelector } from '../../utils/useGridSelector';
-import { gridPaginationRowRangeSelector } from '../pagination/gridPaginationSelector';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { GridComponentProps } from '../../../GridComponentProps';
 import { gridSortedVisibleRowEntriesSelector } from '../filter/gridFilterSelector';
+import { useRowsInCurrentPage } from '../../utils/useRowsInCurrentPage';
 
 const getNextCellIndexes = (key: string, indexes: GridCellIndexCoordinates) => {
   if (!isArrowKeys(key)) {
@@ -71,13 +71,13 @@ const getNextColumnHeaderIndexes = (key: string, indexes: GridColumnHeaderIndexC
  */
 export const useGridKeyboardNavigation = (
   apiRef: GridApiRef,
-  props: Pick<GridComponentProps, 'pagination'>,
+  props: Pick<GridComponentProps, 'pagination' | 'paginationMode'>,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridKeyboardNavigation');
-  const statePaginationRange = useGridSelector(apiRef, gridPaginationRowRangeSelector);
   const colCount = useGridSelector(apiRef, visibleGridColumnsLengthSelector);
   const containerSizes = useGridSelector(apiRef, gridContainerSizesSelector);
   const visibleSortedRows = useGridSelector(apiRef, gridSortedVisibleRowEntriesSelector);
+  const rowsInCurrentPage = useRowsInCurrentPage(apiRef, props);
 
   const mapKey = (event: React.KeyboardEvent) => {
     if (isEnterKey(event.key)) {
@@ -92,15 +92,18 @@ export const useGridKeyboardNavigation = (
   const navigateCells = React.useCallback(
     (params: GridCellParams, event: React.KeyboardEvent) => {
       event.preventDefault();
+
+      if (!rowsInCurrentPage.range) {
+        return;
+      }
+
       const colIndex = apiRef.current.getColumnIndex(params.field);
       const rowIndex = visibleSortedRows.findIndex((row) => row.id === params.id);
 
       const key = mapKey(event);
       const isCtrlPressed = event.ctrlKey || event.metaKey || event.shiftKey;
-      const paginatedRowRange = props.pagination
-        ? statePaginationRange!
-        : { firstRowIndex: 0, lastRowIndex: visibleSortedRows.length - 1 };
-      const rowCount = paginatedRowRange.lastRowIndex - paginatedRowRange.firstRowIndex + 1;
+      const rowCount =
+        rowsInCurrentPage.range.lastRowIndex - rowsInCurrentPage.range.firstRowIndex + 1;
 
       let nextCellIndexes: GridCellIndexCoordinates;
       if (isArrowKeys(key)) {
@@ -118,7 +121,7 @@ export const useGridKeyboardNavigation = (
           // In that case we go to first row, first col, or last row last col!
           let newRowIndex = 0;
           if (colIdx === 0) {
-            newRowIndex = paginatedRowRange.firstRowIndex;
+            newRowIndex = rowsInCurrentPage.range.firstRowIndex;
           } else {
             newRowIndex = rowCount - 1;
           }
@@ -156,15 +159,7 @@ export const useGridKeyboardNavigation = (
       const node = visibleSortedRows[nextCellIndexes.rowIndex];
       apiRef.current.setCellFocus(node.id, field);
     },
-    [
-      apiRef,
-      visibleSortedRows,
-      statePaginationRange,
-      props.pagination,
-      colCount,
-      logger,
-      containerSizes,
-    ],
+    [apiRef, visibleSortedRows, colCount, logger, containerSizes, rowsInCurrentPage],
   );
 
   const navigateColumnHeaders = React.useCallback(

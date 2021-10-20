@@ -5,7 +5,7 @@ import {
   gridSortedVisibleTopLevelRowEntriesSelector,
 } from '../filter/gridFilterSelector';
 import { GridPaginationState } from './gridPaginationState';
-import { gridRowTreeSelector } from '../rows/gridRowsSelector';
+import { gridRowTreeDepthSelector, gridRowTreeSelector } from '../rows/gridRowsSelector';
 
 export const gridPaginationSelector = (state: GridState): GridPaginationState => state.pagination;
 
@@ -22,21 +22,30 @@ export const gridPageSizeSelector = createSelector(
 export const gridPaginationRowRangeSelector = createSelector(
   gridPaginationSelector,
   gridRowTreeSelector,
+  gridRowTreeDepthSelector,
   gridSortedVisibleRowEntriesSelector,
   gridSortedVisibleTopLevelRowEntriesSelector,
-  (pagination, rowTree, visibleSortedRowEntries, visibleSortedTopLevelRowEntries) => {
-    const topLevelFirstRowIndex = pagination.pageSize * pagination.page;
-    const topLevelFirstRow = visibleSortedTopLevelRowEntries[topLevelFirstRowIndex];
+  (pagination, rowTree, rowTreeDepth, visibleSortedRowEntries, visibleSortedTopLevelRowEntries) => {
+    const visibleTopLevelRowCount = visibleSortedTopLevelRowEntries.length;
+    const topLevelFirstRowIndex = Math.min(
+      pagination.pageSize * pagination.page,
+      visibleTopLevelRowCount - 1,
+    );
+    const topLevelLastRowIndex = Math.min(
+      topLevelFirstRowIndex + pagination.pageSize - 1,
+      visibleTopLevelRowCount - 1,
+    );
 
-    if (!topLevelFirstRow) {
+    if (topLevelFirstRowIndex === -1 || topLevelLastRowIndex === -1) {
       return null;
     }
 
-    const topLevelInCurrentPageCount = visibleSortedTopLevelRowEntries.slice(
-      topLevelFirstRowIndex,
-      topLevelFirstRowIndex + pagination.pageSize,
-    ).length;
+    if (rowTreeDepth < 2) {
+      return { firstRowIndex: topLevelFirstRowIndex, lastRowIndex: topLevelLastRowIndex };
+    }
 
+    const topLevelFirstRow = visibleSortedTopLevelRowEntries[topLevelFirstRowIndex];
+    const topLevelRowsInCurrentPageCount = topLevelLastRowIndex - topLevelFirstRowIndex + 1;
     const firstRowIndex = visibleSortedRowEntries.findIndex(
       (row) => row.id === topLevelFirstRow.id,
     );
@@ -45,12 +54,12 @@ export const gridPaginationRowRangeSelector = createSelector(
 
     while (
       lastRowIndex < visibleSortedRowEntries.length &&
-      topLevelRowAdded <= topLevelInCurrentPageCount
+      topLevelRowAdded <= topLevelRowsInCurrentPageCount
     ) {
       const row = visibleSortedRowEntries[lastRowIndex];
       const depth = rowTree[row.id].depth;
 
-      if (topLevelRowAdded < topLevelInCurrentPageCount || depth > 0) {
+      if (topLevelRowAdded < topLevelRowsInCurrentPageCount || depth > 0) {
         lastRowIndex += 1;
       }
 

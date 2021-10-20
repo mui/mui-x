@@ -15,18 +15,14 @@ import {
   gridFocusCellSelector,
   gridTabIndexCellSelector,
 } from '../hooks/features/focus/gridFocusStateSelector';
-import { gridSortedVisibleRowEntriesSelector } from '../hooks/features/filter/gridFilterSelector';
 import { gridDensityRowHeightSelector } from '../hooks/features/density/densitySelector';
 import { gridEditRowsStateSelector } from '../hooks/features/editRows/gridEditRowsSelector';
 import { GridEvents } from '../constants/eventsConstants';
-import {
-  gridPaginationRowRangeSelector,
-  gridSortedVisiblePaginatedRowEntriesSelector,
-} from '../hooks/features/pagination/gridPaginationSelector';
 import { useGridApiEventHandler } from '../hooks/utils/useGridApiEventHandler';
 import { getDataGridUtilityClass } from '../gridClasses';
 import { GridComponentProps } from '../GridComponentProps';
 import { GridRowId } from '../models/gridRows';
+import { useRowsInCurrentPage } from '../hooks/utils/useRowsInCurrentPage';
 
 type OwnerState = { classes: GridComponentProps['classes'] };
 
@@ -108,17 +104,12 @@ const GridVirtualScroller = React.forwardRef<HTMLDivElement, GridVirtualScroller
     const rootProps = useGridRootProps();
     const visibleColumns = useGridSelector(apiRef, visibleGridColumnsSelector);
     const columnsMeta = useGridSelector(apiRef, gridColumnsMetaSelector);
-    const visibleSortedRowEntries = useGridSelector(apiRef, gridSortedVisibleRowEntriesSelector);
-    const paginationRange = useGridSelector(apiRef, gridPaginationRowRangeSelector);
-    const paginatedRowEntries = useGridSelector(
-      apiRef,
-      gridSortedVisiblePaginatedRowEntriesSelector,
-    );
     const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
     const cellFocus = useGridSelector(apiRef, gridFocusCellSelector);
     const cellTabIndex = useGridSelector(apiRef, gridTabIndexCellSelector);
     const editRowsState = useGridSelector(apiRef, gridEditRowsStateSelector);
     const scrollBarState = useGridSelector(apiRef, gridScrollBarSizeSelector);
+    const rowsInCurrentPage = useRowsInCurrentPage(apiRef, rootProps);
     const renderZoneRef = React.useRef<HTMLDivElement>(null);
     const rootRef = React.useRef<HTMLDivElement>(null);
     const handleRef = useForkRef<HTMLDivElement>(ref, rootRef);
@@ -130,24 +121,11 @@ const GridVirtualScroller = React.forwardRef<HTMLDivElement, GridVirtualScroller
     const classes = useUtilityClasses(ownerState);
     const prevTotalWidth = React.useRef(columnsMeta.totalWidth);
 
-    const rowsInCurrentPage = React.useMemo(() => {
-      if (rootProps.pagination && rootProps.paginationMode === 'client') {
-        return paginatedRowEntries;
-      }
-
-      return visibleSortedRowEntries;
-    }, [
-      rootProps.pagination,
-      rootProps.paginationMode,
-      visibleSortedRowEntries,
-      paginatedRowEntries,
-    ]);
-
     const computeRenderContext = React.useCallback(() => {
       if (disableVirtualization) {
         return {
           firstRowIndex: 0,
-          lastRowIndex: rowsInCurrentPage.length,
+          lastRowIndex: rowsInCurrentPage.rows.length,
           firstColumnIndex: 0,
           lastColumnIndex: visibleColumns.length,
         };
@@ -156,7 +134,7 @@ const GridVirtualScroller = React.forwardRef<HTMLDivElement, GridVirtualScroller
       const { top, left } = scrollPosition.current!;
 
       const numberOfRowsToRender = rootProps.autoHeight
-        ? rowsInCurrentPage.length
+        ? rowsInCurrentPage.rows.length
         : Math.floor(rootRef.current!.clientHeight / rowHeight);
 
       const firstRowIndex = Math.floor(top / rowHeight);
@@ -178,7 +156,7 @@ const GridVirtualScroller = React.forwardRef<HTMLDivElement, GridVirtualScroller
       rootProps.autoHeight,
       disableVirtualization,
       rowHeight,
-      rowsInCurrentPage.length,
+      rowsInCurrentPage.rows.length,
       visibleColumns.length,
     ]);
 
@@ -278,7 +256,7 @@ const GridVirtualScroller = React.forwardRef<HTMLDivElement, GridVirtualScroller
       const firstRowToRender = Math.max(renderContext.firstRowIndex - rowBuffer, 0);
       const lastRowToRender = Math.min(
         renderContext.lastRowIndex! + rowBuffer,
-        rowsInCurrentPage.length,
+        rowsInCurrentPage.rows.length,
       );
 
       const firstColumnToRender = Math.max(renderContext.firstColumnIndex - columnBuffer, 0);
@@ -287,9 +265,8 @@ const GridVirtualScroller = React.forwardRef<HTMLDivElement, GridVirtualScroller
         visibleColumns.length,
       );
 
-      const renderedRows = rowsInCurrentPage.slice(firstRowToRender, lastRowToRender);
+      const renderedRows = rowsInCurrentPage.rows.slice(firstRowToRender, lastRowToRender);
       const renderedColumns = visibleColumns.slice(firstColumnToRender, lastColumnToRender);
-      const startIndex = paginationRange ? paginationRange.firstRowIndex : 0;
 
       const rows: JSX.Element[] = [];
 
@@ -311,7 +288,7 @@ const GridVirtualScroller = React.forwardRef<HTMLDivElement, GridVirtualScroller
             firstColumnToRender={firstColumnToRender}
             lastColumnToRender={lastColumnToRender}
             selected={selectionLookup[id] !== undefined}
-            index={startIndex + renderContext.firstRowIndex! + i}
+            index={rowsInCurrentPage.range.firstRowIndex + renderContext.firstRowIndex! + i}
             containerWidth={containerWidth}
             {...rootProps.componentsProps?.row}
           />,
@@ -328,10 +305,10 @@ const GridVirtualScroller = React.forwardRef<HTMLDivElement, GridVirtualScroller
       // In cases where the columns exceed the available width,
       // the horizontal scrollbar should be shown even when there're no rows.
       // Keeping 1px as minimum height ensures that the scrollbar will visible if necessary.
-      height: Math.max(rowsInCurrentPage.length * rowHeight, 1),
+      height: Math.max(rowsInCurrentPage.rows.length * rowHeight, 1),
     };
 
-    if (rootProps.autoHeight && rowsInCurrentPage.length === 0) {
+    if (rootProps.autoHeight && rowsInCurrentPage.rows.length === 0) {
       contentSize.height = 2 * rowHeight; // Give room to show the overlay when there no rows.
     }
 

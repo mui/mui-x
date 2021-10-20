@@ -3,7 +3,7 @@ import { GridFilterItem } from '../../../models/gridFilterItem';
 import { GridState } from '../../../models/gridState';
 import { gridSortedRowEntriesSelector } from '../sorting/gridSortingSelector';
 import { gridColumnLookupSelector } from '../columns/gridColumnsSelector';
-import { gridRowTreeSelector } from '../rows';
+import { gridRowTreeDepthSelector, gridRowTreeSelector } from '../rows';
 
 export const gridFilterStateSelector = (state: GridState) => state.filter;
 
@@ -37,7 +37,14 @@ export const gridSortedVisibleRowEntriesSelector = createSelector(
 export const gridSortedVisibleTopLevelRowEntriesSelector = createSelector(
   gridSortedVisibleRowEntriesSelector,
   gridRowTreeSelector,
-  (sortedVisibleRows, rowTree) => sortedVisibleRows.filter((row) => rowTree[row.id]?.depth === 0),
+  gridRowTreeDepthSelector,
+  (sortedVisibleRows, rowTree, rowTreeDepth) => {
+    if (rowTreeDepth < 2) {
+      return sortedVisibleRows;
+    }
+
+    return sortedVisibleRows.filter((row) => rowTree[row.id]?.depth === 0);
+  },
 );
 
 export const gridVisibleRowCountSelector = createSelector(
