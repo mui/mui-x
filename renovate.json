@@ -86,7 +86,6 @@
     {
       "matchPackageNames": ["@material-ui/monorepo"],
       "matchDatasources": ["git-refs"],
-      "versioning": "git",
       "schedule": "every 2 weeks on sunday"
     }
   ],
