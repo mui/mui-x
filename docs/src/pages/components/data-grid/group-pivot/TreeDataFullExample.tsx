@@ -6,7 +6,7 @@ export default function TreeDataFullExample() {
   const { data, loading } = useDemoData({
     dataSet: 'Employee',
     rowLength: 1000,
-    treeData: { maxDepth: 3, groupingField: 'name', averageChildren: 10 },
+    treeData: { maxDepth: 2, groupingField: 'name', averageChildren: 200 },
   });
 
   return (
