@@ -1,8 +1,9 @@
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { ownerDocument, capitalize } from '@mui/material/utils';
 import clsx from 'clsx';
+import { unstable_composeClasses as composeClasses } from '@mui/material';
+import { ownerDocument, capitalize } from '@mui/material/utils';
 import { GridEvents } from '../../constants/eventsConstants';
 import { getDataGridUtilityClass } from '../../gridClasses';
 import {
@@ -13,7 +14,6 @@ import {
   GridRowId,
 } from '../../models/index';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
-import { composeClasses } from '../../utils/material-ui-utils';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { GridComponentProps } from '../../GridComponentProps';
 
@@ -76,7 +76,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-function GridCellRaw(props: GridCellProps) {
+function GridCell(props: GridCellProps) {
   const {
     align,
     children,
@@ -205,9 +205,7 @@ function GridCellRaw(props: GridCellProps) {
   );
 }
 
-const GridCell = React.memo(GridCellRaw);
-
-GridCellRaw.propTypes = {
+GridCell.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |

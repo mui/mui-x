@@ -7,4 +7,9 @@ export interface GridDisableVirtualizationApi {
    * @ignore - do not document. Remove before releasing v5 stable version.
    */
   UNSTABLE_disableVirtualization: () => void;
+  /**
+   * Enables grid's virtualization.
+   * @ignore - do not document. Remove before releasing v5 stable version.
+   */
+  UNSTABLE_enableVirtualization: () => void;
 }

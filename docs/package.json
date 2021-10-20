@@ -25,7 +25,7 @@
     "@emotion/server": "^11.4.0",
     "@emotion/styled": "^11.3.0",
     "@mui/icons-material": "^5.0.4",
-    "@mui/material": "^5.0.2",
+    "@mui/material": "^5.0.4",
     "@mui/styles": "^5.0.1",
     "@mui/utils": "^5.0.1",
     "@trendmicro/react-interpolate": "^0.5.5",
@@ -73,7 +73,6 @@
     "stylis": "^4.0.10",
     "stylis-plugin-rtl": "^2.1.0",
     "stylis-plugin-rtl-sc": "npm:stylis-plugin-rtl@^2.1.0",
-    "webfontloader": "^1.6.28",
     "webpack-bundle-analyzer": "^4.5.0"
   },
   "devDependencies": {

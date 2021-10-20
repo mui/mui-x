@@ -1,8 +1,11 @@
 import * as React from 'react';
 import clsx from 'clsx';
+import { unstable_composeClasses as composeClasses } from '@mui/material';
+import {
+  unstable_useId as useId,
+  unstable_useEnhancedEffect as useEnhancedEffect,
+} from '@mui/material/utils';
 import Checkbox from '@mui/material/Checkbox';
-import { unstable_useId as useId } from '@mui/material/utils';
-import { composeClasses, useEnhancedEffect } from '../../utils/material-ui-utils';
 import { getDataGridUtilityClass } from '../../gridClasses';
 import { GridRenderEditCellParams } from '../../models/params/gridCellParams';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';

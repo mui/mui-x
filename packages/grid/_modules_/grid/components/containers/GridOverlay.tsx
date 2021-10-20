@@ -1,11 +1,11 @@
 import * as React from 'react';
 import clsx from 'clsx';
+import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { gridDensityHeaderHeightSelector } from '../../hooks/features/density/densitySelector';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { getDataGridUtilityClass } from '../../gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { composeClasses } from '../../utils/material-ui-utils';
 import { GridComponentProps } from '../../GridComponentProps';
 
 export type GridOverlayProps = React.HTMLAttributes<HTMLDivElement>;
@@ -33,11 +33,20 @@ export const GridOverlay = React.forwardRef<HTMLDivElement, GridOverlayProps>(fu
   const classes = useUtilityClasses(ownerState);
   const headerHeight = useGridSelector(apiRef, gridDensityHeaderHeightSelector);
 
+  const windowRef = apiRef.current.windowRef?.current;
+  const verticalScrollbarSize = windowRef ? windowRef.offsetWidth - windowRef.clientWidth : 0;
+  const horizontalScrollbarSize = windowRef ? windowRef.offsetHeight - windowRef.clientHeight : 0;
+
   return (
     <div
       ref={ref}
       className={clsx(classes.root, className)}
-      style={{ top: headerHeight, ...style }}
+      style={{
+        top: headerHeight,
+        right: verticalScrollbarSize,
+        bottom: horizontalScrollbarSize,
+        ...style,
+      }}
       {...other}
     />
   );

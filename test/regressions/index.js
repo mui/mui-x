@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom';
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 import { LicenseInfo } from '@mui/x-data-grid-pro';
 import { withStyles } from '@mui/styles';
-import webfontloader from 'webfontloader';
 import TestViewer from 'test/regressions/TestViewer';
 import { useFakeTimers } from 'sinon';
 import addons, { mockChannel } from '@storybook/addons';
@@ -159,25 +158,6 @@ function App() {
     };
   }, []);
 
-  // Using <link rel="stylesheet" /> does not apply the google Roboto font in chromium headless/headfull.
-  const [fontState, setFontState] = React.useState('pending');
-  React.useEffect(() => {
-    webfontloader.load({
-      google: {
-        families: ['Roboto:300,400,500,700'],
-      },
-      timeout: 20000,
-      active: () => {
-        setFontState('active');
-      },
-      inactive: () => {
-        setFontState('inactive');
-      },
-    });
-  }, []);
-
-  const testPrepared = fontState !== 'pending';
-
   function computePath(test) {
     return `/${test.suite}/${test.name}`;
   }
@@ -201,17 +181,14 @@ function App() {
 
           return (
             <Route key={path} exact path={path}>
-              {testPrepared && (
-                <TestViewer dataGridContainer={dataGridContainer}>
-                  <TestCase />
-                </TestViewer>
-              )}
+              <TestViewer dataGridContainer={dataGridContainer}>
+                <TestCase />
+              </TestViewer>
             </Route>
           );
         })}
       </Switch>
       <div hidden={!isDev}>
-        <div data-webfontloader={fontState}>webfontloader: {fontState}</div>
         <p>
           Devtools can be enabled by appending <code>#dev</code> in the addressbar or disabled by
           appending <code>#no-dev</code>.
