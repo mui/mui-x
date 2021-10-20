@@ -2,7 +2,7 @@ import * as React from 'react';
 import clsx from 'clsx';
 import TrapFocus from '@mui/material/Unstable_TrapFocus';
 import { styled } from '@mui/material/styles';
-import { composeClasses } from '../../utils/material-ui-utils';
+import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { getDataGridUtilityClass } from '../../gridClasses';
 import { GridComponentProps } from '../../GridComponentProps';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';

@@ -1,6 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
+import { unstable_composeClasses as composeClasses } from '@mui/material';
 import Badge from '@mui/material/Badge';
 import Button, { ButtonProps } from '@mui/material/Button';
 import Tooltip, { TooltipProps } from '@mui/material/Tooltip';
@@ -19,7 +20,6 @@ import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { GridComponentProps } from '../../GridComponentProps';
 import { getDataGridUtilityClass } from '../../gridClasses';
-import { composeClasses } from '../../utils/material-ui-utils';
 
 type OwnerState = { classes: GridComponentProps['classes'] };
 

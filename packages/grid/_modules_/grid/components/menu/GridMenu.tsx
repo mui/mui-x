@@ -2,13 +2,13 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import ClickAwayListener, { ClickAwayListenerProps } from '@mui/material/ClickAwayListener';
+import { unstable_composeClasses as composeClasses } from '@mui/material';
 import Grow from '@mui/material/Grow';
 import Paper from '@mui/material/Paper';
 import Popper, { PopperProps } from '@mui/material/Popper';
 import { styled } from '@mui/material/styles';
 import { HTMLElementType } from '@mui/utils';
 import { getDataGridUtilityClass, gridClasses } from '../../gridClasses';
-import { composeClasses } from '../../utils/material-ui-utils';
 import { GridComponentProps } from '../../GridComponentProps';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 

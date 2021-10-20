@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { unstable_composeClasses as composeClasses } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import Switch, { switchClasses } from '@mui/material/Switch';
 import Button from '@mui/material/Button';
@@ -17,7 +18,6 @@ import { GRID_EXPERIMENTAL_ENABLED } from '../../constants';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { GridComponentProps } from '../../GridComponentProps';
 import { getDataGridUtilityClass } from '../../gridClasses';
-import { composeClasses } from '../../utils/material-ui-utils';
 
 type OwnerState = { classes: GridComponentProps['classes'] };
 

@@ -1,5 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { unstable_composeClasses as composeClasses } from '@mui/material';
 import FormControl from '@mui/material/FormControl';
 import IconButton from '@mui/material/IconButton';
 import InputLabel from '@mui/material/InputLabel';
@@ -15,7 +16,6 @@ import { GridTranslationKeys } from '../../../models/api/gridLocaleTextApi';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import { GridComponentProps } from '../../../GridComponentProps';
 import { getDataGridUtilityClass } from '../../../gridClasses';
-import { composeClasses } from '../../../utils/material-ui-utils';
 
 export interface GridFilterFormProps {
   item: GridFilterItem;

@@ -31,4 +31,4 @@ export const GridToolbar = React.forwardRef<HTMLDivElement, GridToolbarContainer
       </GridToolbarContainer>
     );
   },
-) as (props: GridToolbarContainerProps) => JSX.Element;
+);
