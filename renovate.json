@@ -82,6 +82,11 @@
     {
       "groupName": "storybook",
       "matchPackagePatterns": "@storybook/*"
+    },
+    {
+      "matchPackageNames": ["@material-ui/monorepo"],
+      "matchDatasources": ["git-refs"],
+      "schedule": "every 2 weeks on sunday"
     }
   ],
   "postUpdateOptions": ["yarnDedupeHighest"],
