@@ -5,7 +5,6 @@ import { composeClasses, useEnhancedEffect } from '../../utils/material-ui-utils
 import { getDataGridUtilityClass } from '../../gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { GridComponentProps } from '../../GridComponentProps';
-import { GridCellValue } from '../../models/gridCell';
 
 type OwnerState = { classes: GridComponentProps['classes'] };
 
@@ -17,25 +16,6 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   };
 
   return composeClasses(slots, getDataGridUtilityClass, classes);
-};
-
-const parseDate = (value: GridCellValue) => {
-  if (value == null) {
-    return null;
-  }
-  if (value instanceof Date) {
-    return value;
-  }
-  return new Date((value ?? '').toString());
-};
-
-const formatDate = (date: Date | null, isDateTime: boolean) => {
-  if (date == null || Number.isNaN(date.getTime())) {
-    return '';
-  }
-
-  const localeDate = new Date(date.getTime() - date.getTimezoneOffset() * 60 * 1000);
-  return localeDate.toISOString().substr(0, isDateTime ? 16 : 10);
 };
 
 export function GridEditDateCell(props: GridRenderEditCellParams & InputBaseProps) {
@@ -59,11 +39,29 @@ export function GridEditDateCell(props: GridRenderEditCellParams & InputBaseProp
   const inputRef = React.useRef<HTMLInputElement>();
 
   const valueProp = React.useMemo(() => {
-    const parsedDate = parseDate(value);
+    let parsedDate: Date | null;
+
+    if (value == null) {
+      parsedDate = null;
+    } else if (value instanceof Date) {
+      parsedDate = value;
+    } else {
+      parsedDate = new Date((value ?? '').toString());
+    }
+
+    let formattedDate: string;
+    if (parsedDate == null || Number.isNaN(parsedDate.getTime())) {
+      formattedDate = '';
+    } else {
+      const localeDate = new Date(
+        parsedDate.getTime() - parsedDate.getTimezoneOffset() * 60 * 1000,
+      );
+      formattedDate = localeDate.toISOString().substr(0, isDateTime ? 16 : 10);
+    }
 
     return {
       parsed: parsedDate,
-      formatted: formatDate(parsedDate, isDateTime),
+      formatted: formattedDate,
     };
   }, [value, isDateTime]);
 
