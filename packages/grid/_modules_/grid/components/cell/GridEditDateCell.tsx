@@ -70,30 +70,33 @@ export function GridEditDateCell(props: GridRenderEditCellParams & InputBaseProp
   const ownerState = { classes: rootProps.classes };
   const classes = useUtilityClasses(ownerState);
 
-  const handleChange: InputBaseProps['onChange'] = (event) => {
-    const newFormattedDate = event.target.value;
-    let newParsedDate: Date | null;
+  const handleChange = React.useCallback(
+    (event) => {
+      const newFormattedDate = event.target.value;
+      let newParsedDate: Date | null;
 
-    if (newFormattedDate === '') {
-      newParsedDate = null;
-    } else {
-      const [date, time] = newFormattedDate.split('T');
-      const [year, month, day] = date.split('-');
-      newParsedDate = new Date();
-      newParsedDate.setFullYear(Number(year));
-      newParsedDate.setMonth(Number(month) - 1);
-      newParsedDate.setDate(Number(day));
-      newParsedDate.setHours(0, 0, 0, 0);
+      if (newFormattedDate === '') {
+        newParsedDate = null;
+      } else {
+        const [date, time] = newFormattedDate.split('T');
+        const [year, month, day] = date.split('-');
+        newParsedDate = new Date();
+        newParsedDate.setFullYear(Number(year));
+        newParsedDate.setMonth(Number(month) - 1);
+        newParsedDate.setDate(Number(day));
+        newParsedDate.setHours(0, 0, 0, 0);
 
-      if (time) {
-        const [hours, minutes] = time.split(':');
-        newParsedDate.setHours(Number(hours), Number(minutes), 0, 0);
+        if (time) {
+          const [hours, minutes] = time.split(':');
+          newParsedDate.setHours(Number(hours), Number(minutes), 0, 0);
+        }
       }
-    }
 
-    setValueState({ parsed: newParsedDate, formatted: newFormattedDate });
-    api.setEditCellValue({ id, field, value: newParsedDate }, event);
-  };
+      setValueState({ parsed: newParsedDate, formatted: newFormattedDate });
+      api.setEditCellValue({ id, field, value: newParsedDate }, event);
+    },
+    [api, field, id],
+  );
 
   React.useEffect(() => {
     if (valueProp.parsed?.getTime() !== valueState.parsed?.getTime()) {
