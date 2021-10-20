@@ -1,6 +1,7 @@
 import * as fse from 'fs-extra';
 import { expect } from 'chai';
 import * as path from 'path';
+import * as childProcess from 'child_process';
 import * as playwright from 'playwright';
 
 function sleep(timeoutMS) {
@@ -45,8 +46,6 @@ async function main() {
   // Wait for all requests to finish.
   // This should load shared ressources such as fonts.
   await page.goto(`${baseUrl}#no-dev`, { waitUntil: 'networkidle0' });
-  // If we still get flaky fonts after awaiting this try `document.fonts.ready`
-  await page.waitForSelector('[data-webfontloader="active"]', { state: 'attached' });
 
   // Simulate portrait mode for date pickers.
   // See `useIsLandscape`.
@@ -104,50 +103,55 @@ async function main() {
         const screenshotPath = path.resolve(screenshotDir, `${route.replace(baseUrl, '.')}.png`);
         await fse.ensureDir(path.dirname(screenshotPath));
 
-        let testcase;
-        if (pathURL === '/stories-grid-toolbar/PrintExportSnap') {
-          // Capture the content of the print dialog. Because there is no easy way to navigate the.
-          // print window/dialog with playwrite a hacky aproach is needed.
-          this.timeout(6000);
-          let printGrid;
-          // Click the export button in the toolbar.
-          await page.$eval(`button[aria-label="Export"]`, (exportButton) => {
-            exportButton.click();
-          });
-          // Click the print export option from the export menu in the toolbar.
-          await page.$eval(`li[role="menuitem"]:last-child`, (printButton) => {
-            printButton.click();
-          });
-          // Delay the main thread with some time to alow the iframe content to be loaded.
-          await sleep(2000);
-          // Grab the content of the print iframe.
-          await page.$eval(`#grid-print-window`, (printWindow) => {
-            printGrid = printWindow.contentWindow.document.querySelector('[role="grid"]');
-          });
-          // Append the content of the print iframe to a element in the page.
-          await page.$eval(`#grid-print-container`, (printContainer) => {
-            printContainer.appendChild(printGrid);
-          });
-          // Because there is now other way of closing the iframe, set the src back to ''.
-          // This will close the print dialog/window. If not done the test will timeout.
-          await page.$eval(`#grid-print-window`, (printWindow) => {
-            printWindow.src = '';
-          });
-
-          // Select the element from the page that has the print iframe contant and
-          // make the screenshot.
-          testcase = await page.waitForSelector('#grid-print-container');
-          await testcase.screenshot({ path: screenshotPath, type: 'png' });
-        } else {
-          testcase = await page.waitForSelector('[data-testid="testcase"]:not([aria-busy="true"])');
-          await testcase.screenshot({ path: screenshotPath, type: 'png' });
-        }
+        const testcase = await page.waitForSelector(
+          '[data-testid="testcase"]:not([aria-busy="true"])',
+        );
+        await testcase.screenshot({ path: screenshotPath, type: 'png' });
       });
 
       it(`should have no errors rendering ${pathURL}`, () => {
         const msg = errorConsole;
         errorConsole = undefined;
         expect(msg).to.equal(undefined);
+      });
+    });
+
+    it('should take a screenshot of the print preview', async function test() {
+      this.timeout(10000);
+
+      const route = `${baseUrl}/stories-grid-toolbar/PrintExportSnap`;
+      const screenshotPath = path.resolve(screenshotDir, `${route.replace(baseUrl, '.')}Print.png`);
+      await fse.ensureDir(path.dirname(screenshotPath));
+
+      const testcaseIndex = routes.indexOf(route);
+      await page.$eval(`#tests li:nth-of-type(${testcaseIndex + 1}) a`, (link) => {
+        link.click();
+      });
+
+      // Click the export button in the toolbar.
+      await page.$eval(`button[aria-label="Export"]`, (exportButton) => {
+        exportButton.click();
+      });
+
+      // Click the print export option from the export menu in the toolbar.
+      await page.$eval(`li[role="menuitem"]:last-child`, (printButton) => {
+        printButton.click();
+      });
+
+      await sleep(2000);
+
+      return new Promise((resolve, reject) => {
+        // See https://ffmpeg.org/ffmpeg-devices.html#x11grab
+        const args = `-y -f x11grab -framerate 1 -video_size 460x400 -i :99.0+90,81 -vframes 1 ${screenshotPath}`;
+        const ffmpeg = childProcess.spawn('ffmpeg', args.split(' '));
+
+        ffmpeg.on('close', (code) => {
+          if (code === 0) {
+            resolve();
+          } else {
+            reject();
+          }
+        });
       });
     });
   });

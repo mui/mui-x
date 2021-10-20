@@ -119,11 +119,17 @@ export const useGridPrintExport = (
       const gridRootElement = apiRef.current.rootElementRef!.current;
       const gridClone = gridRootElement!.cloneNode(true) as HTMLElement;
       const gridCloneViewport: HTMLElement | null = gridClone.querySelector(
-        `.${gridClasses.viewport}`,
+        `.${gridClasses.virtualScroller}`,
       );
       // Expand the viewport window to prevent clipping
-      gridCloneViewport!.style.minWidth = '100%';
-      gridCloneViewport!.style.maxWidth = '100%';
+      gridCloneViewport!.style.height = 'auto';
+      gridCloneViewport!.style.width = 'auto';
+      gridCloneViewport!.parentElement!.style.width = 'auto';
+      gridCloneViewport!.parentElement!.style.height = 'auto';
+
+      const columnsContainer = gridClone.querySelector(`.${gridClasses.columnsContainer}`);
+      const columnHeaders = columnsContainer!.firstChild! as HTMLElement;
+      columnHeaders.style.width = '100%';
 
       let gridToolbarElementHeight =
         gridRootElement!.querySelector(`.${gridClasses.toolbarContainer}`)?.clientHeight || 0;
@@ -156,7 +162,8 @@ export const useGridPrintExport = (
         typeof normalizeOptions.pageStyle === 'function'
           ? normalizeOptions.pageStyle()
           : normalizeOptions.pageStyle;
-      if (typeof defaultPageStyle !== 'string') {
+      if (typeof defaultPageStyle === 'string') {
+        // TODO custom styles should always win
         const styleElement = printDoc.createElement('style');
         styleElement.appendChild(printDoc.createTextNode(defaultPageStyle));
         printDoc.head.appendChild(styleElement);
@@ -219,6 +226,8 @@ export const useGridPrintExport = (
         ...state,
         ...previousGridState.current,
       }));
+
+      apiRef.current.UNSTABLE_enableVirtualization();
 
       // Revert columns to their original state
       if (previousHiddenColumns.current.length) {
