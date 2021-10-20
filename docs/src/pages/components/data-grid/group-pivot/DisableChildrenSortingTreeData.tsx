@@ -12,6 +12,12 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 
 const rows: GridRowsProp = [
   {
+    hierarchy: ['Sarah'],
+    jobTitle: 'Head of Human Resources',
+    recruitmentDate: new Date(2020, 8, 12),
+    id: 0,
+  },
+  {
     hierarchy: ['Thomas'],
     jobTitle: 'Head of Sales',
     recruitmentDate: new Date(2017, 3, 4),
@@ -32,7 +38,7 @@ const rows: GridRowsProp = [
   {
     hierarchy: ['Thomas', 'Nancy'],
     jobTitle: 'Sales Person',
-    recruitmentDate: new Date(2018, 3, 29),
+    recruitmentDate: new Date(2017, 10, 29),
     id: 4,
   },
   {

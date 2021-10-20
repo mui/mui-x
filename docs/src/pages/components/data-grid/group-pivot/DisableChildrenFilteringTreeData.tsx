@@ -2,8 +2,9 @@ import * as React from 'react';
 import {
   DataGridPro,
   GridColumns,
-  GridRowsProp,
   GridFilterModel,
+  GridLinkOperator,
+  GridRowsProp,
 } from '@mui/x-data-grid-pro';
 import Stack from '@mui/material/Stack';
 import Checkbox from '@mui/material/Checkbox';
@@ -11,6 +12,12 @@ import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 
 const rows: GridRowsProp = [
+  {
+    hierarchy: ['Sarah'],
+    jobTitle: 'Head of Human Resources',
+    recruitmentDate: new Date(2020, 8, 12),
+    id: 0,
+  },
   {
     hierarchy: ['Thomas'],
     jobTitle: 'Head of Sales',
@@ -32,7 +39,7 @@ const rows: GridRowsProp = [
   {
     hierarchy: ['Thomas', 'Nancy'],
     jobTitle: 'Sales Person',
-    recruitmentDate: new Date(2018, 3, 29),
+    recruitmentDate: new Date(2017, 10, 29),
     id: 4,
   },
   {
@@ -113,8 +120,13 @@ export default function DisableChildrenSortingTreeData() {
   const [disableChildrenFiltering, setDisableChildrenFiltering] =
     React.useState(true);
   const [filterModel, setFilterModel] = React.useState<GridFilterModel>({
+    linkOperator: GridLinkOperator.Or,
     items: [
-      { columnField: 'jobTitle', operatorValue: 'contains', value: 'Head of Sales' },
+      {
+        columnField: 'recruitmentDate',
+        operatorValue: 'before',
+        value: '2018-01-01',
+      },
     ],
   });
 
@@ -140,7 +152,7 @@ export default function DisableChildrenSortingTreeData() {
           getTreeDataPath={getTreeDataPath}
           filterModel={filterModel}
           onFilterModelChange={setFilterModel}
-          defaultGroupingExpansionDepth={-1}
+          defaultGroupingExpansionDepth={1}
         />
       </div>
     </Stack>
