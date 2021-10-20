@@ -206,7 +206,7 @@ export const GridRootStyles = styled('div', {
           right: 0,
           overflow: 'hidden',
           display: 'flex',
-          flexDirection: 'column',
+          alignItems: 'center',
           borderBottom: `1px solid ${borderColor}`,
         },
         [`& .${gridClasses.scrollArea}`]: {
@@ -224,9 +224,7 @@ export const GridRootStyles = styled('div', {
         },
         [`& .${gridClasses.columnHeaderWrapper}`]: {
           display: 'flex',
-          width: '100%',
           alignItems: 'center',
-          overflow: 'hidden',
         },
         [`& .${gridClasses.columnHeader}, & .${gridClasses.cell}`]: {
           WebkitTapHighlightColor: 'transparent',
@@ -318,67 +316,46 @@ export const GridRootStyles = styled('div', {
           justifyContent: 'center',
           color: borderColor,
         },
-      },
-      [`&.${gridClasses['columnSeparator--resizing']}`]: {
-        color: theme.palette.text.primary,
-      },
-    },
-    [`& .${gridClasses.iconSeparator}`]: {
-      color: 'inherit',
-    },
-    [`& .${gridClasses.menuIcon}`]: {
-      width: 0,
-      visibility: 'hidden',
-      fontSize: 20,
-      marginRight: -6,
-      display: 'flex',
-      alignItems: 'center',
-    },
-    [`& .${gridClasses.columnHeader}:hover`]: {
-      [`& .${gridClasses.iconButtonContainer}`]: {
-        visibility: 'visible',
-        width: 'auto',
-      },
-      [`& .${gridClasses.menuIcon}`]: {
-        width: 'auto',
-        visibility: 'visible',
-      },
-    },
-    [`.${gridClasses.menuOpen}`]: {
-      visibility: 'visible',
-    },
-    [`& .${gridClasses.columnHeaderWrapper}.scroll .${gridClasses.columnHeader}:last-child`]: {
-      borderRight: 'none',
-    },
-    [`& .${gridClasses.dataContainer}`]: {
-      position: 'relative',
-      flexGrow: 1,
-      display: 'flex',
-      flexDirection: 'column',
-    },
-    [`& .${gridClasses.window}`]: {
-      position: 'absolute',
-      bottom: 0,
-      left: 0,
-      right: 0,
-      overflowX: 'auto',
-    },
-    [`& .${gridClasses.viewport}`]: {
-      position: 'sticky',
-      top: 0,
-      left: 0,
-      display: 'flex',
-      flexDirection: 'column',
-      overflow: 'hidden',
-    },
-    [`& .${gridClasses.row}`]: {
-      display: 'flex',
-      width: 'fit-content',
-      '&:hover': {
-        backgroundColor: theme.palette.action.hover,
-        // Reset on touch devices, it doesn't add specificity
-        '@media (hover: none)': {
-          backgroundColor: 'transparent',
+        [`& .${gridClasses['columnSeparator--resizable']}`]: {
+          cursor: 'col-resize',
+          touchAction: 'none',
+          '&:hover': {
+            color: theme.palette.text.primary,
+            // Reset on touch devices, it doesn't add specificity
+            '@media (hover: none)': {
+              color: borderColor,
+            },
+          },
+          [`&.${gridClasses['columnSeparator--resizing']}`]: {
+            color: theme.palette.text.primary,
+          },
+        },
+        [`& .${gridClasses.iconSeparator}`]: {
+          color: 'inherit',
+        },
+        [`& .${gridClasses.menuIcon}`]: {
+          width: 0,
+          visibility: 'hidden',
+          fontSize: 20,
+          marginRight: -6,
+          display: 'flex',
+          alignItems: 'center',
+        },
+        [`& .${gridClasses.columnHeader}:hover`]: {
+          [`& .${gridClasses.iconButtonContainer}`]: {
+            visibility: 'visible',
+            width: 'auto',
+          },
+          [`& .${gridClasses.menuIcon}`]: {
+            width: 'auto',
+            visibility: 'visible',
+          },
+        },
+        [`.${gridClasses.menuOpen}`]: {
+          visibility: 'visible',
+        },
+        [`& .${gridClasses.columnHeaderWrapper}.scroll .${gridClasses.columnHeader}:last-child`]: {
+          borderRight: 'none',
         },
         [`& .${gridClasses.row}`]: {
           display: 'flex',

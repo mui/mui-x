@@ -13,7 +13,6 @@ import { gridRowCountSelector } from '../rows/gridRowsSelector';
 import { gridDensityRowHeightSelector } from '../density/densitySelector';
 import { GridScrollParams } from '../../../models/params/gridScrollParams';
 import { GridScrollApi } from '../../../models/api/gridScrollApi';
-import { gridScrollSelector } from '../virtualization/renderingStateSelector';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridNativeEventListener } from '../../utils/useGridNativeEventListener';
 
@@ -125,10 +124,12 @@ export const useGridScroll = (
     [windowRef, colRef, logger],
   );
 
-  const getScrollPosition = React.useCallback<GridScrollApi['getScrollPosition']>(
-    () => gridScrollSelector(apiRef.current.state),
-    [apiRef],
-  );
+  const getScrollPosition = React.useCallback<GridScrollApi['getScrollPosition']>(() => {
+    if (!windowRef?.current) {
+      return { top: 0, left: 0 };
+    }
+    return { top: windowRef.current.scrollTop, left: windowRef.current.scrollLeft };
+  }, [windowRef]);
 
   const scrollApi: GridScrollApi = {
     scroll,
@@ -145,13 +146,6 @@ export const useGridScroll = (
   useGridNativeEventListener(
     apiRef,
     () => apiRef.current?.renderingZoneRef?.current?.parentElement,
-    'scroll',
-    preventScroll,
-  );
-
-  useGridNativeEventListener(
-    apiRef,
-    () => apiRef.current?.columnHeadersContainerElementRef?.current,
     'scroll',
     preventScroll,
   );

@@ -129,20 +129,30 @@ describe('<DataGrid /> - Rows', () => {
   });
 
   describe('columnType: actions', () => {
+    const TestCase = ({ getActions }: { getActions?: () => JSX.Element[] }) => {
+      return (
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid
+            {...baselineProps}
+            rows={[{ id: 1 }]}
+            columns={[
+              {
+                field: 'actions',
+                type: 'actions',
+                getActions,
+              },
+            ]}
+          />
+        </div>
+      );
+    };
+
     it('should throw an error if getActions is missing', function test() {
       if (!isJSDOM) {
         this.skip();
       }
       expect(() => {
-        render(
-          <div style={{ width: 300, height: 300 }}>
-            <DataGrid
-              {...baselineProps}
-              rows={[{ id: 1 }]}
-              columns={[{ field: 'actions', type: 'actions' }]}
-            />
-          </div>,
-        );
+        render(<TestCase />);
       }) // @ts-expect-error need to migrate helpers to TypeScript
         .toErrorDev([
           'MUI: Missing the `getActions` property in the `GridColDef`.',
@@ -153,61 +163,58 @@ describe('<DataGrid /> - Rows', () => {
 
     it('should call getActions with the row params', () => {
       const getActions = stub().returns([]);
-      render(
-        <div style={{ width: 300, height: 300 }}>
-          <DataGrid
-            {...baselineProps}
-            rows={[{ id: 1 }]}
-            columns={[{ field: 'actions', type: 'actions', getActions }]}
-          />
-        </div>,
-      );
+      render(<TestCase getActions={getActions} />);
       expect(getActions.args[0][0].id).to.equal(1);
       expect(getActions.args[0][0].row).to.deep.equal({ id: 1 });
     });
 
     it('should always show the actions not marked as showInMenu', () => {
       render(
-        <div style={{ width: 300, height: 300 }}>
-          <DataGrid
-            {...baselineProps}
-            rows={[{ id: 1 }]}
-            columns={[
-              {
-                field: 'actions',
-                type: 'actions',
-                getActions: () => [
-                  <GridActionsCellItem icon={<span />} label="delete" />,
-                  <GridActionsCellItem label="print" showInMenu />,
-                ],
-              },
-            ]}
-          />
-        </div>,
+        <TestCase
+          getActions={() => [
+            <GridActionsCellItem icon={<span />} label="delete" />,
+            <GridActionsCellItem label="print" showInMenu />,
+          ]}
+        />,
       );
       expect(screen.queryByRole('button', { name: 'delete' })).not.to.equal(null);
       expect(screen.queryByText('print')).to.equal(null);
     });
 
     it('should show in a menu the actions marked as showInMenu', async () => {
-      render(
-        <div style={{ width: 300, height: 300 }}>
-          <DataGrid
-            {...baselineProps}
-            rows={[{ id: 1 }]}
-            columns={[
-              {
-                field: 'actions',
-                type: 'actions',
-                getActions: () => [<GridActionsCellItem label="print" showInMenu />],
-              },
-            ]}
-          />
-        </div>,
-      );
+      render(<TestCase getActions={() => [<GridActionsCellItem label="print" showInMenu />]} />);
       expect(screen.queryByText('print')).to.equal(null);
       fireEvent.click(screen.getByRole('button', { name: 'more' }));
       await waitFor(() => expect(screen.queryByText('print')).not.to.equal(null));
+    });
+
+    it('should not select the row when clicking in an action', () => {
+      render(
+        <TestCase getActions={() => [<GridActionsCellItem icon={<span />} label="print" />]} />,
+      );
+      expect(getRow(0).className).not.to.contain('Mui-selected');
+      fireEvent.click(screen.getByRole('button', { name: 'print' }));
+      expect(getRow(0).className).not.to.contain('Mui-selected');
+    });
+
+    it('should not select the row when clicking in a menu action', async () => {
+      render(
+        <TestCase
+          getActions={() => [<GridActionsCellItem icon={<span />} label="print" showInMenu />]}
+        />,
+      );
+      expect(getRow(0).className).not.to.contain('Mui-selected');
+      fireEvent.click(screen.getByRole('button', { name: 'more' }));
+      await waitFor(() => expect(screen.queryByText('print')).not.to.equal(null));
+      fireEvent.click(screen.queryByText('print'));
+      expect(getRow(0).className).not.to.contain('Mui-selected');
+    });
+
+    it('should not select the row when opening the menu', () => {
+      render(<TestCase getActions={() => [<GridActionsCellItem label="print" showInMenu />]} />);
+      expect(getRow(0).className).not.to.contain('Mui-selected');
+      fireEvent.click(screen.getByRole('button', { name: 'more' }));
+      expect(getRow(0).className).not.to.contain('Mui-selected');
     });
   });
 });

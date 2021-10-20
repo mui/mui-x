@@ -8,6 +8,8 @@ import { getDataGridUtilityClass } from '../gridClasses';
 import { composeClasses } from '../utils/material-ui-utils';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { GridComponentProps } from '../GridComponentProps';
+import { gridDensityHeaderHeightSelector } from '../hooks/features/density/densitySelector';
+import { useGridSelector } from '../hooks/utils/useGridSelector';
 
 const CLIFF = 1;
 const SLOP = 1.5;
@@ -24,7 +26,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   const { scrollDirection, classes } = ownerState;
 
   const slots = {
-    root: ['scrollArea', `scrollArea__${scrollDirection}`],
+    root: ['scrollArea', `scrollArea--${scrollDirection}`],
   };
 
   return composeClasses(slots, getDataGridUtilityClass, classes);
@@ -36,6 +38,7 @@ function GridScrollAreaRaw(props: ScrollAreaProps) {
   const apiRef = useGridApiContext();
   const timeout = React.useRef<any>();
   const [dragging, setDragging] = React.useState<boolean>(false);
+  const height = useGridSelector(apiRef, gridDensityHeaderHeightSelector);
   const scrollPosition = React.useRef<GridScrollParams>({
     left: 0,
     top: 0,
@@ -90,7 +93,7 @@ function GridScrollAreaRaw(props: ScrollAreaProps) {
   useGridApiEventHandler(apiRef, GridEvents.columnHeaderDragEnd, toggleDragging);
 
   return dragging ? (
-    <div ref={rootRef} className={classes.root} onDragOver={handleDragOver} />
+    <div ref={rootRef} className={classes.root} onDragOver={handleDragOver} style={{ height }} />
   ) : null;
 }
 

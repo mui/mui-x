@@ -122,6 +122,7 @@ export interface GridClasses {
    */
   columnSeparator: string;
   /**
+<<<<<<< HEAD
    * Styles applied to the columns panel element.
    */
   columnsPanel: string;
@@ -158,6 +159,8 @@ export interface GridClasses {
    */
   dataContainer: string;
   /**
+=======
+>>>>>>> 6ce542ba7a3e04cb68eb281002630cd97b39795d
    * Styles applied to root of the boolean edit component.
    */
   editBooleanCell: string;
@@ -214,9 +217,17 @@ export interface GridClasses {
    */
   overlay: string;
   /**
-   * Styles applied to the rendering zone element.
+   * Styles applied to the virtualization container.
    */
-  renderingZone: string;
+  virtualScroller;
+  /**
+   * Styles applied to the virtualization content.
+   */
+  virtualScrollerContent;
+  /**
+   * Styles applied to the virtualization render zone.
+   */
+  virtualScrollerRenderZone;
   /**
    * Styles applied to the root element.
    */
@@ -274,10 +285,6 @@ export interface GridClasses {
    */
   window: string;
   /**
-   * Styles applied to the window container element.
-   */
-  windowContainer: string;
-  /**
    * Styles applied to both the cell and the column header if `showColumnRightBorder={true}`.
    */
   withBorder: string;
@@ -329,7 +336,6 @@ export const gridClasses = generateUtilityClasses('MuiDataGrid', [
   'panelContent',
   'panelFooter',
   'paper',
-  'dataContainer',
   'editBooleanCell',
   'editInputCell',
   'filterForm',
@@ -344,8 +350,6 @@ export const gridClasses = generateUtilityClasses('MuiDataGrid', [
   'menuOpen',
   'menuList',
   'overlay',
-  'renderingZone',
-  'root',
   'root',
   'row--editable',
   'row--editing',
@@ -358,8 +362,8 @@ export const gridClasses = generateUtilityClasses('MuiDataGrid', [
   'sortIcon',
   'toolbarContainer',
   'toolbarFilterList',
-  'viewport',
-  'window',
-  'windowContainer',
+  'virtualScroller',
+  'virtualScrollerContent',
+  'virtualScrollerRenderZone',
   'withBorder',
 ]);

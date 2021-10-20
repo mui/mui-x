@@ -174,7 +174,6 @@ You can use the [slots API](/components/data-grid/components/#overriding-compone
 | <span class="prop-name">columnSeparator--resizable</span> | <span class="prop-name">.MuiDataGrid-columnSeparator--resizable</span> | Styles applied to the column header separator if the column is resizable. |
 | <span class="prop-name">columnSeparator--resizing</span> | <span class="prop-name">.MuiDataGrid-columnSeparator--resizing</span> | Styles applied to the column header separator if the column is being resized. |
 | <span class="prop-name">columnSeparator</span> | <span class="prop-name">.MuiDataGrid-columnSeparator</span> | Styles applied to the column header separator element. |
-| <span class="prop-name">dataContainer</span> | <span class="prop-name">.MuiDataGrid-dataContainer</span> | Styles applied to the data container element. |
 | <span class="prop-name">editBooleanCell</span> | <span class="prop-name">.MuiDataGrid-editBooleanCell</span> | Styles applied to root of the boolean edit component. |
 | <span class="prop-name">editInputCell</span> | <span class="prop-name">.MuiDataGrid-editInputCell</span> | Styles applied to the root of the input component. |
 | <span class="prop-name">filterIcon</span> | <span class="prop-name">.MuiDataGrid-filterIcon</span> | Styles applied to the filter icon element. |
@@ -186,7 +185,6 @@ You can use the [slots API](/components/data-grid/components/#overriding-compone
 | <span class="prop-name">menuIconButton</span> | <span class="prop-name">.MuiDataGrid-menuIconButton</span> | Styles applied to the menu icon button element. |
 | <span class="prop-name">menuOpen</span> | <span class="prop-name">.MuiDataGrid-menuOpen</span> | Styles applied to the menu icon element if the menu is open. |
 | <span class="prop-name">overlay</span> | <span class="prop-name">.MuiDataGrid-overlay</span> | Styles applied to the overlay element. |
-| <span class="prop-name">renderingZone</span> | <span class="prop-name">.MuiDataGrid-renderingZone</span> | Styles applied to the rendering zone element. |
 | <span class="prop-name">root</span> | <span class="prop-name">.MuiDataGrid-root</span> | Styles applied to the root element. |
 | <span class="prop-name">row--editable</span> | <span class="prop-name">.MuiDataGrid-row--editable</span> | Styles applied to the row element if the row is editable. |
 | <span class="prop-name">row--editing</span> | <span class="prop-name">.MuiDataGrid-row--editing</span> | Styles applied to the row element if the row is in edit mode. |
@@ -198,9 +196,6 @@ You can use the [slots API](/components/data-grid/components/#overriding-compone
 | <span class="prop-name">selectedRowCount</span> | <span class="prop-name">.MuiDataGrid-selectedRowCount</span> | Styles applied to the footer selected row count element. |
 | <span class="prop-name">sortIcon</span> | <span class="prop-name">.MuiDataGrid-sortIcon</span> | Styles applied to the sort icon element. |
 | <span class="prop-name">toolbarContainer</span> | <span class="prop-name">.MuiDataGrid-toolbarContainer</span> | Styles applied to the toolbar container element. |
-| <span class="prop-name">viewport</span> | <span class="prop-name">.MuiDataGrid-viewport</span> | Styles applied to the viewport element. |
-| <span class="prop-name">window</span> | <span class="prop-name">.MuiDataGrid-window</span> | Styles applied to the window element. |
-| <span class="prop-name">windowContainer</span> | <span class="prop-name">.MuiDataGrid-windowContainer</span> | Styles applied to the window container element. |
 | <span class="prop-name">withBorder</span> | <span class="prop-name">.MuiDataGrid-withBorder</span> | Styles applied to both the cell and the column header if `showColumnRightBorder={true}`. |
 
 You can override the style of the component thanks to one of these customization points:

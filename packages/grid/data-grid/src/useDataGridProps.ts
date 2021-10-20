@@ -20,7 +20,6 @@ const FORCED_PROPS: { [key in ForcedPropsKey]-?: GridInputComponentProps[key] } 
   hideFooterRowCount: false,
   pagination: true,
   onRowsScrollEnd: undefined,
-  onViewportRowsChange: undefined,
   checkboxSelectionVisibleOnly: false,
   scrollEndThreshold: undefined,
   signature: 'DataGrid',

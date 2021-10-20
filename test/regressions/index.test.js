@@ -1,7 +1,14 @@
 import * as fse from 'fs-extra';
 import { expect } from 'chai';
 import * as path from 'path';
+import * as childProcess from 'child_process';
 import * as playwright from 'playwright';
+
+function sleep(timeoutMS) {
+  return new Promise((resolve) => {
+    setTimeout(() => resolve(), timeoutMS);
+  });
+}
 
 async function main() {
   const baseUrl = 'http://localhost:5001';
@@ -39,8 +46,6 @@ async function main() {
   // Wait for all requests to finish.
   // This should load shared ressources such as fonts.
   await page.goto(`${baseUrl}#no-dev`, { waitUntil: 'networkidle0' });
-  // If we still get flaky fonts after awaiting this try `document.fonts.ready`
-  await page.waitForSelector('[data-webfontloader="active"]', { state: 'attached' });
 
   // Simulate portrait mode for date pickers.
   // See `useIsLandscape`.
@@ -95,12 +100,12 @@ async function main() {
         // Move cursor offscreen to not trigger unwanted hover effects.
         page.mouse.move(0, 0);
 
+        const screenshotPath = path.resolve(screenshotDir, `${route.replace(baseUrl, '.')}.png`);
+        await fse.ensureDir(path.dirname(screenshotPath));
+
         const testcase = await page.waitForSelector(
           '[data-testid="testcase"]:not([aria-busy="true"])',
         );
-
-        const screenshotPath = path.resolve(screenshotDir, `${route.replace(baseUrl, '.')}.png`);
-        await fse.ensureDir(path.dirname(screenshotPath));
         await testcase.screenshot({ path: screenshotPath, type: 'png' });
       });
 
@@ -108,6 +113,45 @@ async function main() {
         const msg = errorConsole;
         errorConsole = undefined;
         expect(msg).to.equal(undefined);
+      });
+    });
+
+    it('should take a screenshot of the print preview', async function test() {
+      this.timeout(10000);
+
+      const route = `${baseUrl}/stories-grid-toolbar/PrintExportSnap`;
+      const screenshotPath = path.resolve(screenshotDir, `${route.replace(baseUrl, '.')}Print.png`);
+      await fse.ensureDir(path.dirname(screenshotPath));
+
+      const testcaseIndex = routes.indexOf(route);
+      await page.$eval(`#tests li:nth-of-type(${testcaseIndex + 1}) a`, (link) => {
+        link.click();
+      });
+
+      // Click the export button in the toolbar.
+      await page.$eval(`button[aria-label="Export"]`, (exportButton) => {
+        exportButton.click();
+      });
+
+      // Click the print export option from the export menu in the toolbar.
+      await page.$eval(`li[role="menuitem"]:last-child`, (printButton) => {
+        printButton.click();
+      });
+
+      await sleep(2000);
+
+      return new Promise((resolve, reject) => {
+        // See https://ffmpeg.org/ffmpeg-devices.html#x11grab
+        const args = `-y -f x11grab -framerate 1 -video_size 460x400 -i :99.0+90,81 -vframes 1 ${screenshotPath}`;
+        const ffmpeg = childProcess.spawn('ffmpeg', args.split(' '));
+
+        ffmpeg.on('close', (code) => {
+          if (code === 0) {
+            resolve();
+          } else {
+            reject();
+          }
+        });
       });
     });
   });

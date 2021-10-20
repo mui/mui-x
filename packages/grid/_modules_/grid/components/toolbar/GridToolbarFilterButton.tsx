@@ -41,14 +41,13 @@ const GridToolbarFilterListRoot = styled('ul', {
   padding: theme.spacing(0, 1),
 }));
 
-export interface GridToolbarFilterButtonProps extends Omit<TooltipProps, 'title' | 'children'> {
+export interface GridToolbarFilterButtonProps
+  extends Omit<TooltipProps, 'title' | 'children' | 'componentsProps'> {
   /**
    * The props used for each slot inside.
    * @default {}
    */
-  componentsProps?: {
-    button?: ButtonProps;
-  };
+  componentsProps?: { button?: ButtonProps };
 }
 
 const GridToolbarFilterButton = React.forwardRef<HTMLButtonElement, GridToolbarFilterButtonProps>(
