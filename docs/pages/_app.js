@@ -8,6 +8,8 @@ LicenseInfo.setLicenseKey(
 
 import 'docs/src/modules/components/bootstrap';
 // --- Post bootstrap -----
+import pages from 'docsx/src/pages'; // DO NOT REMOVE
+import XWrapper from 'docsx/src/modules/XWrapper'; // DO NOT REMOVE
 import * as React from 'react';
 import find from 'lodash/find';
 import { loadCSS } from 'fg-loadcss/src/loadCSS';
@@ -16,7 +18,6 @@ import PropTypes from 'prop-types';
 import acceptLanguage from 'accept-language';
 import { useRouter } from 'next/router';
 import { ponyfillGlobal } from '@mui/utils';
-import pages from 'docsx/src/pages';
 import PageContext from 'docs/src/modules/components/PageContext';
 import GoogleAnalytics from 'docs/src/modules/components/GoogleAnalytics';
 import loadScript from 'docs/src/modules/utils/loadScript';
@@ -374,7 +375,7 @@ function AppWrapper(props) {
           <PageContext.Provider value={{ activePage, pages }}>
             <ThemeProvider>
               <DocsStyledEngineProvider cacheLtr={emotionCache}>
-                {children}
+                <XWrapper>{children}</XWrapper>
               </DocsStyledEngineProvider>
             </ThemeProvider>
           </PageContext.Provider>
