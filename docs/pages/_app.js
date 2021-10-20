@@ -14,12 +14,9 @@ import { loadCSS } from 'fg-loadcss/src/loadCSS';
 import NextHead from 'next/head';
 import PropTypes from 'prop-types';
 import acceptLanguage from 'accept-language';
-import { create } from 'jss';
-import jssRtl from 'jss-rtl';
 import { useRouter } from 'next/router';
-import { jssPreset } from '@mui/styles';
 import { ponyfillGlobal } from '@mui/utils';
-import pages from 'docs/src/pages';
+import pages from 'docsx/src/pages';
 import PageContext from 'docs/src/modules/components/PageContext';
 import GoogleAnalytics from 'docs/src/modules/components/GoogleAnalytics';
 import loadScript from 'docs/src/modules/utils/loadScript';
@@ -76,11 +73,6 @@ ponyfillGlobal.muiDocConfig = {
 
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache();
-// Configure JSS
-const jss = create({
-  plugins: [...jssPreset().plugins, jssRtl()],
-  insertionPoint: process.browser ? document.querySelector('#insertion-point-jss') : null,
-});
 
 function useFirstRender() {
   const firstRenderRef = React.useRef(true);
