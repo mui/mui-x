@@ -226,7 +226,7 @@ export const useGridPrintExport = (
         ...previousGridState.current,
       }));
 
-      apiRef.current.UNSTABLE_enableVirtualization();
+      apiRef.current.unstable_enableVirtualization();
 
       // Revert columns to their original state
       if (previousHiddenColumns.current.length) {
@@ -260,7 +260,7 @@ export const useGridPrintExport = (
       }
 
       await updateGridColumnsForPrint(options?.fields, options?.allColumns);
-      apiRef.current.UNSTABLE_disableVirtualization();
+      apiRef.current.unstable_disableVirtualization();
       const printWindow = buildPrintWindow(options?.fileName);
       doc.current!.body.appendChild(printWindow);
       printWindow.onload = () => handlePrintWindowLoad(printWindow, options);

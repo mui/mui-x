@@ -411,7 +411,7 @@ describe('<DataGridPro /> - Filter', () => {
       render(<AddServerFilterGrid />);
       const addButton = screen.getByRole('button', { name: /Add Filter/i });
       fireEvent.click(addButton);
-      const filterForms = document.querySelectorAll(`.MuiGridFilterForm-root`);
+      const filterForms = document.querySelectorAll(`.MuiDataGrid-filterForm`);
       expect(filterForms).to.have.length(2);
     });
   });
@@ -437,7 +437,7 @@ describe('<DataGridPro /> - Filter', () => {
       );
       const addButton = screen.getByRole('button', { name: /Add Filter/i });
       fireEvent.click(addButton);
-      const filterForms = document.querySelectorAll(`.MuiGridFilterForm-root`);
+      const filterForms = document.querySelectorAll(`.MuiDataGrid-filterForm`);
       expect(filterForms).to.have.length(2);
     });
 
@@ -456,7 +456,7 @@ describe('<DataGridPro /> - Filter', () => {
       );
       const addButton = screen.getByRole('button', { name: /Add Filter/i });
       fireEvent.click(addButton);
-      const filterForms = document.querySelectorAll(`.MuiGridFilterForm-root`);
+      const filterForms = document.querySelectorAll(`.MuiDataGrid-filterForm`);
       expect(filterForms).to.have.length(0);
     });
 
@@ -476,7 +476,7 @@ describe('<DataGridPro /> - Filter', () => {
       expect(onModelChange.callCount).to.equal(1);
       const addButton = screen.getByRole('button', { name: /Add Filter/i });
       fireEvent.click(addButton);
-      const filterForms = document.querySelectorAll(`.MuiGridFilterForm-root`);
+      const filterForms = document.querySelectorAll(`.MuiDataGrid-filterForm`);
       expect(filterForms).to.have.length(2);
       expect(onModelChange.callCount).to.equal(2);
       expect(onModelChange.lastCall.firstArg.items.length).to.deep.equal(2);
@@ -515,7 +515,7 @@ describe('<DataGridPro /> - Filter', () => {
       const addButton = screen.getByRole('button', { name: /Add Filter/i });
       fireEvent.click(addButton);
 
-      const filterForms = document.querySelectorAll(`.MuiGridFilterForm-root`);
+      const filterForms = document.querySelectorAll(`.MuiDataGrid-filterForm`);
       expect(filterForms).to.have.length(2);
     });
   });

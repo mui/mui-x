@@ -393,7 +393,7 @@ export const useGridSelection = (
       return [groupingColumn, ...columns];
     };
 
-    apiRef.current.UNSTABLE_registerColumnPreProcessing('selection', addCheckboxColumn);
+    apiRef.current.unstable_registerColumnPreProcessing('selection', addCheckboxColumn);
   }, [apiRef, props.checkboxSelection, classes]);
 
   useFirstRender(() => {

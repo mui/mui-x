@@ -23,7 +23,7 @@ export interface GridRowGroupsPreProcessingApi {
    * @param {GridRowGroupingPreProcessing} columnsPreProcessing Pre-processing to register.
    * @ignore - do not document
    */
-  UNSTABLE_registerRowGroupsBuilder: (
+  unstable_registerRowGroupsBuilder: (
     processingName: string,
     groupingFunction: GridRowGroupingPreProcessing | null,
   ) => void;
@@ -35,5 +35,5 @@ export interface GridRowGroupsPreProcessingApi {
    * @returns {GridRowGroupingResult} The grouped rows
    * @ignore - do not document
    */
-  UNSTABLE_groupRows: (params: GridRowGroupParams) => GridRowGroupingResult;
+  unstable_groupRows: (params: GridRowGroupParams) => GridRowGroupingResult;
 }

@@ -43,8 +43,8 @@ function GridBody(props: GridBodyProps) {
   // they were installed. Which means that calling `setIsVirtualizationDisabled`
   // will trigger a re-render, but it won't update the state. That can be solved
   // by migrating the virtualization status to the global state.
-  apiRef.current.UNSTABLE_disableVirtualization = disableVirtualization;
-  apiRef.current.UNSTABLE_enableVirtualization = enableVirtualization;
+  apiRef.current.unstable_disableVirtualization = disableVirtualization;
+  apiRef.current.unstable_enableVirtualization = enableVirtualization;
 
   const columnsHeaderRef = React.useRef<HTMLDivElement>(null);
   const columnsContainerRef = React.useRef<HTMLDivElement>(null);
