@@ -103,13 +103,7 @@ GridTreeDataGroupingCell.propTypes = {
   /**
    * The cell value formatted with the column valueFormatter.
    */
-  formattedValue: PropTypes.oneOfType([
-    PropTypes.instanceOf(Date),
-    PropTypes.number,
-    PropTypes.object,
-    PropTypes.string,
-    PropTypes.bool,
-  ]),
+  formattedValue: PropTypes.any.isRequired,
   /**
    * Get the cell value of a row and field.
    * @param {GridRowId} id The row id.
@@ -132,7 +126,7 @@ GridTreeDataGroupingCell.propTypes = {
   /**
    * The row model of the row that the current cell belongs to.
    */
-  row: PropTypes.object.isRequired,
+  row: PropTypes.any.isRequired,
   /**
    * The node of the row that the current cell belongs to
    */
@@ -155,13 +149,7 @@ GridTreeDataGroupingCell.propTypes = {
   /**
    * The cell value, but if the column has valueGetter, use getValue.
    */
-  value: PropTypes.oneOfType([
-    PropTypes.instanceOf(Date),
-    PropTypes.number,
-    PropTypes.object,
-    PropTypes.string,
-    PropTypes.bool,
-  ]),
+  value: PropTypes.any.isRequired,
 } as any;
 
 export { GridTreeDataGroupingCell };

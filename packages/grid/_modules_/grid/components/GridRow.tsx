@@ -3,11 +3,11 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
+import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { GridEvents } from '../constants/eventsConstants';
 import { GridRowId, GridRowData } from '../models/gridRows';
 import { GridEditModes, GridRowModes, GridEditRowsModel } from '../models/gridEditRowModel';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
-import { composeClasses } from '../utils/material-ui-utils';
 import { getDataGridUtilityClass, gridClasses } from '../gridClasses';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { GridComponentProps } from '../GridComponentProps';

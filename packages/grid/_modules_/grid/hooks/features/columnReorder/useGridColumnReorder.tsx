@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridEvents } from '../../../constants/eventsConstants';
@@ -12,7 +13,6 @@ import { useGridState } from '../../utils/useGridState';
 import { gridColumnReorderDragColSelector } from './columnReorderSelector';
 import { GridComponentProps } from '../../../GridComponentProps';
 import { useGridStateInit } from '../../utils/useGridStateInit';
-import { composeClasses } from '../../../utils/material-ui-utils';
 
 const CURSOR_MOVE_DIRECTION_LEFT = 'left';
 const CURSOR_MOVE_DIRECTION_RIGHT = 'right';

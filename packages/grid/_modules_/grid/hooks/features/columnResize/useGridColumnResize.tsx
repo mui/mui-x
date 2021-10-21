@@ -1,8 +1,7 @@
 import * as React from 'react';
-import { ownerDocument } from '@mui/material/utils';
+import { ownerDocument, useEventCallback } from '@mui/material/utils';
 import { GridStateColDef } from '../../../models/colDef';
 import { useGridLogger } from '../../utils';
-import { useEventCallback } from '../../../utils/material-ui-utils';
 import { GridEvents } from '../../../constants/eventsConstants';
 import { gridClasses } from '../../../gridClasses';
 import {
@@ -106,7 +105,7 @@ export const useGridColumnResize = (
     });
   };
 
-  const handleResizeMouseUp = useEventCallback((nativeEvent) => {
+  const handleResizeMouseUp = useEventCallback((nativeEvent: any) => {
     // eslint-disable-next-line @typescript-eslint/no-use-before-define
     stopListening();
 
@@ -131,7 +130,7 @@ export const useGridColumnResize = (
     );
   });
 
-  const handleResizeMouseMove = useEventCallback((nativeEvent) => {
+  const handleResizeMouseMove = useEventCallback((nativeEvent: any) => {
     // Cancel move in case some other element consumed a mouseup event and it was not fired.
     if (nativeEvent.buttons === 0) {
       handleResizeMouseUp(nativeEvent);
@@ -200,7 +199,7 @@ export const useGridColumnResize = (
     },
   );
 
-  const handleTouchEnd = useEventCallback((nativeEvent) => {
+  const handleTouchEnd = useEventCallback((nativeEvent: any) => {
     const finger = trackFinger(nativeEvent, touchId.current);
 
     if (!finger) {
@@ -222,7 +221,7 @@ export const useGridColumnResize = (
     );
   });
 
-  const handleTouchMove = useEventCallback((nativeEvent) => {
+  const handleTouchMove = useEventCallback((nativeEvent: any) => {
     const finger = trackFinger(nativeEvent, touchId.current);
     if (!finger) {
       return;
@@ -252,7 +251,7 @@ export const useGridColumnResize = (
     );
   });
 
-  const handleTouchStart = useEventCallback((event) => {
+  const handleTouchStart = useEventCallback((event: any) => {
     const cellSeparator = findParentElementFromClassName(
       event.target,
       gridClasses['columnSeparator--resizable'],

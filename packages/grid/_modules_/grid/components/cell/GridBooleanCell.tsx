@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { SvgIconProps } from '@mui/material/SvgIcon';
+import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { getDataGridUtilityClass } from '../../gridClasses';
 import { GridRenderCellParams } from '../../models/params/gridCellParams';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { GridComponentProps } from '../../GridComponentProps';
-import { composeClasses } from '../../utils/material-ui-utils';
 
 type OwnerState = { classes: GridComponentProps['classes'] };
 

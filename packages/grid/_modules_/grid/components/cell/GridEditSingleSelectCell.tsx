@@ -1,5 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { unstable_useEnhancedEffect as useEnhancedEffect } from '@mui/material/utils';
 import Select, { SelectProps } from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import {
@@ -7,7 +8,6 @@ import {
   GridValueFormatterParams,
 } from '../../models/params/gridCellParams';
 import { isEscapeKey } from '../../utils/keyboardUtils';
-import { useEnhancedEffect } from '../../utils/material-ui-utils';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { GridEditModes } from '../../models/gridEditRowModel';
 

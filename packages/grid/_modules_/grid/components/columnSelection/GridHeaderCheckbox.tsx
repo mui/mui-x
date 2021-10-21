@@ -1,5 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { GridEvents } from '../../constants/eventsConstants';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { gridTabIndexColumnHeaderSelector } from '../../hooks/features/focus/gridFocusStateSelector';
@@ -9,7 +10,6 @@ import { isNavigationKey, isSpaceKey } from '../../utils/keyboardUtils';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { getDataGridUtilityClass } from '../../gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { composeClasses } from '../../utils/material-ui-utils';
 import { GridComponentProps } from '../../GridComponentProps';
 import { GridHeaderSelectionCheckboxParams } from '../../models/params/gridHeaderSelectionCheckboxParams';
 import { gridSortedVisibleRowEntriesSelector } from '../../hooks/features/filter/gridFilterSelector';

@@ -47,6 +47,13 @@ function generateType(type, needsParenthesis = false) {
       text += ' }';
       return text;
     }
+    if (type.declaration.indexSignature) {
+      const param = type.declaration.indexSignature.parameters[0];
+      const paramName = param.name;
+      const paramType = generateType(param.type);
+      const valueType = generateType(type.declaration.indexSignature.type);
+      return `{ [${paramName}: ${paramType}]: ${valueType} }`;
+    }
   }
   if (type.type === 'reference') {
     let text = type.name;
