@@ -122,7 +122,6 @@ export interface GridClasses {
    */
   columnSeparator: string;
   /**
-<<<<<<< HEAD
    * Styles applied to the columns panel element.
    */
   columnsPanel: string;
@@ -155,12 +154,6 @@ export interface GridClasses {
    */
   paper: string;
   /**
-   * Styles applied to the data container element.
-   */
-  dataContainer: string;
-  /**
-=======
->>>>>>> 6ce542ba7a3e04cb68eb281002630cd97b39795d
    * Styles applied to root of the boolean edit component.
    */
   editBooleanCell: string;
