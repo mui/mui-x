@@ -11,7 +11,7 @@ The following steps must be proposed as a pull request.
 1. Compare the last tag with the branch upon which you want to release (`next` for the alpha / beta releases and `master` for the current stable version).
 
 For instance: [https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.9...master](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.9...master) (if you want to release `master` and the last tag is `v4.0.0-alpha.9`)
-You can use the following script to automatically navigate to the correct page.
+You can use the following script in your browser console on any GitHub page to automatically navigate to the correct page.
 
 ```js
 (async () => {
@@ -46,8 +46,8 @@ You can use the following script to automatically navigate to the correct page.
 ```
 
 3. Clean the generated changelog, to match the format of [https://github.com/mui-org/material-ui-x/releases](https://github.com/mui-org/material-ui-x/releases).
-4. Edit the root `package.json` with the latest version for your X dependencies.
-5. Update the versions of the other `package.json` files: `yarn release:version`.
+4. Update the root `/package.json`'s version
+5. Update the versions of the other `package.json` files and of the dependencies with `yarn release:version`.
 6. Open PR with changes and wait for review and green CI.
 7. Merge PR once CI is green, and it has been approved.
 
