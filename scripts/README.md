@@ -69,7 +69,7 @@ git push upstream next:docs-v5 -f
 ```
 
 You can follow the deployment process [on the Netlify Dashboard](https://app.netlify.com/sites/material-ui-x/deploys?filter=docs-v5)
-Once deployed, it will be accessible at https://material-ui-x.netlify.app/ for the `branch-v5` deployment.
+Once deployed, it will be accessible at https://material-ui-x.netlify.app/ for the `docs-v5` deployment.
 
 ### Announce
 
