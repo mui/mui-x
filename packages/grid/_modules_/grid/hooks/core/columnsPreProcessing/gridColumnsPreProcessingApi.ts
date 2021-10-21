@@ -9,7 +9,7 @@ export interface GridColumnsPreProcessingApi {
    * @param {GridColumnsPreProcessing | null } columnsPreProcessing Pre-processing to register.
    * @ignore - do not document
    */
-  UNSTABLE_registerColumnPreProcessing: (
+  unstable_registerColumnPreProcessing: (
     processingName: string,
     columnsPreProcessing: GridColumnsPreProcessing,
   ) => void;
@@ -19,5 +19,5 @@ export interface GridColumnsPreProcessingApi {
    * @returns {GridColumns} The pre-processed columns
    * @ignore - do not document
    */
-  UNSTABLE_applyAllColumnPreProcessing: (columns: GridColumns) => GridColumns;
+  unstable_applyAllColumnPreProcessing: (columns: GridColumns) => GridColumns;
 }
