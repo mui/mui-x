@@ -11,7 +11,7 @@ export const useGridColumnsPreProcessing = (apiRef: GridApiRef) => {
   const columnsPreProcessingRef = React.useRef(new Map<string, GridColumnsPreProcessing | null>());
 
   const registerColumnPreProcessing = React.useCallback<
-    GridColumnsPreProcessingApi['UNSTABLE_registerColumnPreProcessing']
+    GridColumnsPreProcessingApi['unstable_registerColumnPreProcessing']
   >(
     (processingName, columnsPreProcessing) => {
       const columnPreProcessingBefore = columnsPreProcessingRef.current.get(processingName) ?? null;
@@ -25,7 +25,7 @@ export const useGridColumnsPreProcessing = (apiRef: GridApiRef) => {
   );
 
   const applyAllColumnPreProcessing = React.useCallback<
-    GridColumnsPreProcessingApi['UNSTABLE_applyAllColumnPreProcessing']
+    GridColumnsPreProcessingApi['unstable_applyAllColumnPreProcessing']
   >((columns) => {
     let preProcessedColumns = columns;
 
@@ -39,8 +39,8 @@ export const useGridColumnsPreProcessing = (apiRef: GridApiRef) => {
   }, []);
 
   const columnsPreProcessingApi: GridColumnsPreProcessingApi = {
-    UNSTABLE_registerColumnPreProcessing: registerColumnPreProcessing,
-    UNSTABLE_applyAllColumnPreProcessing: applyAllColumnPreProcessing,
+    unstable_registerColumnPreProcessing: registerColumnPreProcessing,
+    unstable_applyAllColumnPreProcessing: applyAllColumnPreProcessing,
   };
 
   useGridApiMethod(apiRef, columnsPreProcessingApi, 'GridColumnsPreProcessing');
