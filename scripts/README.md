@@ -73,4 +73,4 @@ Once deployed, it will be accessible at https://material-ui-x.netlify.app/ for t
 
 ### Announce
 
-1. **GitHub**. Make a new release on GitHub (for people subscribing to update). https://github.com/mui-org/material-ui-x/releases
+1. **GitHub**. Make a new release on GitHub (for people subscribing to releases). Mark it as "pre-release" if the version is not stable. https://github.com/mui-org/material-ui-x/releases
