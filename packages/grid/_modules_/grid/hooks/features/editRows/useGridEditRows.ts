@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useEventCallback } from '@mui/material/utils';
 import { GridEvents } from '../../../constants/eventsConstants';
 import { GridComponentProps } from '../../../GridComponentProps';
 import { GridApiRef } from '../../../models/api/gridApiRef';
@@ -33,7 +34,6 @@ import {
 } from '../../utils/useGridApiEventHandler';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { allGridColumnsSelector } from '../columns/gridColumnsSelector';
-import { useEventCallback } from '../../../utils/material-ui-utils';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { useGridState } from '../../utils/useGridState';
 import { useGridSelector } from '../../utils/useGridSelector';
@@ -108,7 +108,7 @@ export function useGridEditRows(
     },
   );
 
-  const handleColumnHeaderDragStart = useEventCallback((nativeEvent) => {
+  const handleColumnHeaderDragStart = useEventCallback((nativeEvent: any) => {
     const { cell } = apiRef.current.state.focus;
     if (!cell) {
       return;

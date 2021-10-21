@@ -250,15 +250,25 @@ export enum GridEvents {
    */
   columnOrderChange = 'columnOrderChange',
   /**
-   * Fired when all the rows are updated.
+   * Fired when the rows are updated.
    * @ignore - do not document.
    */
   rowsSet = 'rowsSet',
+  /**
+   * Fired when the visible rows are updated
+   * @ignore - do not document.
+   */
+  visibleRowsSet = 'visibleRowsSet',
   /**
    * Fired when the columns state is changed.
    * Called with an array of strings corresponding to the field names.
    */
   columnsChange = 'columnsChange',
+  /**
+   * Fired when a column pre-processing is changed
+   * @ignore - do not document
+   */
+  columnsPreProcessingChange = 'columnsPreProcessingChange',
   /**
    * Fired when the row grouping function is changed
    * @ignore - do not document
@@ -282,8 +292,4 @@ export enum GridEvents {
    * Fired when a column visibility changes. Called with a [[GridColumnVisibilityChangeParams]] object.
    */
   columnVisibilityChange = 'columnVisibilityChange',
-  /**
-   * Fired when the rows in the viewport is changed. Called with a [[GridViewportRowsChange]] object.
-   */
-  viewportRowsChange = 'viewportRowsChange',
 }

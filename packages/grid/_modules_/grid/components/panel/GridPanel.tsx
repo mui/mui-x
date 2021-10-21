@@ -1,17 +1,13 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { createTheme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { styled } from '@mui/material/styles';
+import { generateUtilityClasses, InternalStandardProps as StandardProps } from '@mui/material';
 import ClickAwayListener from '@mui/material/ClickAwayListener';
 import Paper from '@mui/material/Paper';
 import Popper, { PopperProps } from '@mui/material/Popper';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { isEscapeKey } from '../../utils/keyboardUtils';
-import {
-  InternalStandardProps as StandardProps,
-  generateUtilityClasses,
-} from '../../utils/material-ui-utils';
 
 export interface GridPanelClasses {
   /** Styles applied to the root element. */
@@ -29,28 +25,29 @@ export interface GridPanelProps extends StandardProps<PopperProps, 'children'> {
   open: boolean;
 }
 
-const defaultTheme = createTheme();
-const useStyles = makeStyles(
-  (theme) => ({
-    root: {
-      zIndex: theme.zIndex.modal,
-    },
-    paper: {
-      backgroundColor: theme.palette.background.paper,
-      minWidth: 300,
-      maxHeight: 450,
-      display: 'flex',
-    },
-  }),
-  { name: 'MuiGridPanel', defaultTheme },
-);
+export const gridPanelClasses = generateUtilityClasses('MuiDataGrid', ['panel', 'paper']);
 
-export const gridPanelClasses = generateUtilityClasses('MuiGridPanel', ['root', 'paper']);
+const StyledPopper = styled(Popper, {
+  name: 'MuiDataGrid',
+  slot: 'Panel',
+})(({ theme }) => ({
+  zIndex: theme.zIndex.modal,
+}));
+
+const StyledPaper = styled(Paper, {
+  name: 'MuiDataGrid',
+  slot: 'Paper',
+})(({ theme }) => ({
+  backgroundColor: theme.palette.background.paper,
+  minWidth: 300,
+  maxHeight: 450,
+  display: 'flex',
+}));
 
 const GridPanel = React.forwardRef<HTMLDivElement, GridPanelProps>((props, ref) => {
   const { children, className, open, classes: classesProp, ...other } = props;
-  const classes = useStyles(props);
   const apiRef = useGridApiContext();
+  const classes = gridPanelClasses;
 
   const handleClickAway = React.useCallback(() => {
     apiRef.current.hidePreferences();
@@ -72,10 +69,10 @@ const GridPanel = React.forwardRef<HTMLDivElement, GridPanelProps>((props, ref) 
   }
 
   return (
-    <Popper
+    <StyledPopper
       ref={ref}
       placement="bottom-start"
-      className={clsx(className, classes.root)}
+      className={clsx(className, classes.panel)}
       open={open}
       anchorEl={anchorEl}
       modifiers={[
@@ -87,11 +84,11 @@ const GridPanel = React.forwardRef<HTMLDivElement, GridPanelProps>((props, ref) 
       {...other}
     >
       <ClickAwayListener onClickAway={handleClickAway}>
-        <Paper className={classes.paper} elevation={8} onKeyDown={handleKeyDown}>
+        <StyledPaper className={classes.paper} elevation={8} onKeyDown={handleKeyDown}>
           {children}
-        </Paper>
+        </StyledPaper>
       </ClickAwayListener>
-    </Popper>
+    </StyledPopper>
   );
 });
 
