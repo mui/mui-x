@@ -1,9 +1,9 @@
 import * as React from 'react';
+import { useThemeProps } from '@mui/material/styles';
 import {
   GridComponentProps,
   GridInputComponentProps,
 } from '../../_modules_/grid/GridComponentProps';
-import { useThemeProps } from '../../_modules_/grid/utils/material-ui-utils';
 import { DataGridProProps } from './DataGridProProps';
 import { useGridProcessedProps } from '../../_modules_/grid/hooks/utils/useGridProcessedProps';
 
