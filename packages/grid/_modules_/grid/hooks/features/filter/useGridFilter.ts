@@ -225,7 +225,7 @@ export const useGridFilter = (
         } else {
           if (items[itemIndex].isArrayValue !== newItem.isArrayValue) {
             // if moving from array to single filter value, the value must be reset
-            newItem.value = newItem.isArrayValue ? [] : null
+            newItem.value = newItem.isArrayValue ? [] : null;
           }
           items[itemIndex] = newItem;
         }

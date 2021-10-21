@@ -11,7 +11,7 @@ import { GridFilterInputMultipleValueProps } from './GridFilterInputMultipleValu
 export const SUBMIT_FILTER_STROKE_TIME = 500;
 
 export interface GridTypeFilterInputMultipleValueProps extends GridFilterInputMultipleValueProps {
-  type?: 'text' | 'number'; // | 'date' | 'datetime-local' | 'singleSelect';
+  type?: 'text' | 'number' | 'singleSelect';
 }
 
 function GridFilterInputMultipleValue(
@@ -38,18 +38,17 @@ function GridFilterInputMultipleValue(
   const onFilterChange = React.useCallback(
     (e, value) => {
       // NativeSelect casts the value to a string.
+      if (type === 'singleSelect') {
+        const column = apiRef.current.getColumn(item.columnField);
+        value = column.valueOptions
+          .map((option) => (typeof option === 'object' ? option.value : option))
+          .filter((optionValue) => value.includes(String(optionValue)));
+      }
 
-      // if (type === 'singleSelect') {
-      //   const column = apiRef.current.getColumn(item.columnField);
-      //   value = column.valueOptions
-      //     .map((option) => (typeof option === 'object' ? option.value : option))
-      //     .find((optionValue) => String(optionValue) === value);
-      // }
       clearTimeout(filterTimeout.current);
       setFilterValueState(value.map((x) => String(x)));
 
-      // if (type !== 'singleSelect' && value === []) {
-      if (value === []) {
+      if (type !== 'singleSelect' && value === []) {
         setIsApplying(false);
         return;
       }
@@ -61,8 +60,7 @@ function GridFilterInputMultipleValue(
         setIsApplying(false);
       }, SUBMIT_FILTER_STROKE_TIME);
     },
-    // [apiRef, applyValue, item, type],
-    [applyValue, item],
+    [apiRef, applyValue, item, type],
   );
 
   const InputProps = applying ? { endAdornment: <GridLoadIcon /> } : {};
@@ -72,7 +70,9 @@ function GridFilterInputMultipleValue(
       {...others}
       multiple
       freeSolo
-      options={[]}
+      options={
+        type === 'singleSelect' ? apiRef.current.getColumn(item.columnField).valueOptions : []
+      }
       id={id}
       value={filterValueState}
       onChange={onFilterChange}
