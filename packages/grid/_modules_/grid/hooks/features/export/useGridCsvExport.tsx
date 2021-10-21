@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { GridApiRef } from '../../../models/api/gridApiRef';
-import { useGridApiMethod } from '../../root/useGridApiMethod';
-import { useGridSelector } from '../core/useGridSelector';
+import { useGridApiMethod } from '../../utils/useGridApiMethod';
+import { useGridSelector } from '../../utils/useGridSelector';
 import { allGridColumnsSelector, visibleGridColumnsSelector } from '../columns';
 import { visibleSortedGridRowsSelector } from '../filter';
 import { gridSelectionStateSelector } from '../selection';
 import { GridCsvExportApi } from '../../../models/api/gridCsvExportApi';
-import { GridExportCsvOptions } from '../../../models/gridExport';
+import { GridCsvExportOptions } from '../../../models/gridExport';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { exportAs } from '../../../utils/exportAs';
 import { buildCSV } from './serializers/csvSerializer';
@@ -27,7 +27,7 @@ export const useGridCsvExport = (apiRef: GridApiRef): void => {
   const selection = useGridSelector(apiRef, gridSelectionStateSelector);
 
   const getDataAsCsv = React.useCallback(
-    (options?: GridExportCsvOptions): string => {
+    (options?: GridCsvExportOptions): string => {
       logger.debug(`Get data as CSV`);
 
       let exportedColumns: GridStateColDef[];
@@ -54,7 +54,7 @@ export const useGridCsvExport = (apiRef: GridApiRef): void => {
   );
 
   const exportDataAsCsv = React.useCallback(
-    (options?: GridExportCsvOptions): void => {
+    (options?: GridCsvExportOptions): void => {
       logger.debug(`Export data as CSV`);
       const csv = getDataAsCsv(options);
 

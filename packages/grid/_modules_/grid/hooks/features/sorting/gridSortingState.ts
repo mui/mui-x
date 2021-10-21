@@ -6,6 +6,6 @@ export interface GridSortingState {
   sortModel: GridSortModel;
 }
 
-export function getInitialGridSortingState(): GridSortingState {
-  return { sortedRows: [], sortModel: [] };
+export interface GridSortingInitialState {
+  sortModel?: GridSortModel;
 }

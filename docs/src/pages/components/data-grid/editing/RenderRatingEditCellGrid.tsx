@@ -3,7 +3,7 @@ import { makeStyles } from '@mui/styles';
 import Rating from '@mui/material/Rating';
 import { DataGrid, GridRenderCellParams } from '@mui/x-data-grid';
 
-function renderRating(params) {
+function renderRating(params: GridRenderCellParams<number>) {
   return <Rating readOnly value={params.value} />;
 }
 
@@ -15,7 +15,7 @@ const useStyles = makeStyles({
   },
 });
 
-function RatingEditInputCell(props: GridRenderCellParams) {
+function RatingEditInputCell(props: GridRenderCellParams<number>) {
   const { id, value, api, field } = props;
   const classes = useStyles();
 
@@ -41,7 +41,7 @@ function RatingEditInputCell(props: GridRenderCellParams) {
         ref={handleRef}
         name="rating"
         precision={1}
-        value={Number(value)}
+        value={value}
         onChange={handleChange}
       />
     </div>

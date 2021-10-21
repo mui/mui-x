@@ -23,8 +23,6 @@ export function AllEvents() {
       columns={data.columns}
       onRowClick={(params) => action('onRowClick')(params)}
       onCellClick={(params) => action('onCellClick')(params)}
-      onCellOver={(params) => action('onCellOver')(params)}
-      onRowOver={(params) => action('onRowOver')(params)}
       onColumnHeaderClick={(params) => action('onColumnHeaderClick')(params)}
       onSelectionModelChange={(params) => action('onSelectionChange', { depth: 1 })(params)}
       onPageChange={(params) => action('onPageChange')(params)}
@@ -54,18 +52,6 @@ export const OnRowDoubleClick = () => {
       rows={data.rows}
       columns={data.columns}
       onRowDoubleClick={(params) => action('row double click')(params)}
-    />
-  );
-};
-
-export const OnRowHover = () => {
-  const data = useData(2000, 200);
-
-  return (
-    <DataGridPro
-      rows={data.rows}
-      columns={data.columns}
-      onRowOver={(params) => action('Row over')(params)}
     />
   );
 };
@@ -103,17 +89,6 @@ export const OnCellDoubleClick = () => {
       rows={data.rows}
       columns={data.columns}
       onCellDoubleClick={(params) => action('Cell double click')(params)}
-    />
-  );
-};
-export const OnCellOver = () => {
-  const data = useData(2000, 200);
-
-  return (
-    <DataGridPro
-      rows={data.rows}
-      columns={data.columns}
-      onCellOver={(params) => action('cell over')(params)}
     />
   );
 };

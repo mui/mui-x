@@ -66,15 +66,10 @@ The name <code>MuiDataGrid</code> can be used when providing [default props](/cu
 | <span class="prop-name">logger</span> | <span class="prop-type">Logger</span> | null | Pass a custom logger in the components that implements the 'Logger' interface. |
 | <span class="prop-name">logLevel</span> | <span class="prop-type">string \| false</span> | false | Allows to pass the logging level or false to turn off logging. |
 | <span class="prop-name">nonce</span> | <span class="prop-type">string</span> |   | Nonce of the inline styles for [Content Security Policy](https://www.w3.org/TR/2016/REC-CSP2-20161215/#script-src-the-nonce-attribute). |
-| <span class="prop-name">onCellBlur</span> | <span class="prop-type">(params: GridCellParams, event: MuiEvent<React.FocusEvent>, details: GridCallbackDetails) => void</span> |   | Callback fired when the active element leaves a cell. |
 | <span class="prop-name">onCellClick</span> | <span class="prop-type">(params: GridCellParams, event: MuiEvent<React.MouseEvent>, details: GridCallbackDetails) => void</span> |   | Callback fired when a click event comes from a cell element. |
 | <span class="prop-name">onCellDoubleClick</span> | <span class="prop-type">(params: GridCellParams, event: MuiEvent<React.MouseEvent>, details: GridCallbackDetails) => void</span> |   | Callback fired when a double click event comes from a cell element. |
 | <span class="prop-name">onCellFocusOut</span> | <span class="prop-type">(params: GridCellParams, event?: MuiEvent<MouseEvent>) => void</span> |   | Callback fired when a cell loses focus. |
 | <span class="prop-name">onCellKeyDown</span> | <span class="prop-type">(params: GridCellParams, event: MuiEvent<React.KeyboardEvent>, details: GridCallbackDetails) => void</span> |   |  Callback fired when a keydown event comes from a cell element. |
-| <span class="prop-name">onCellOver</span> | <span class="prop-type">(params: GridCellParams, event: MuiEvent<React.MouseEvent>, details: GridCallbackDetails) => void</span> |   | Callback fired when a mouse over event comes from a cell element. |
-| <span class="prop-name">onCellOut</span> | <span class="prop-type">(params: GridCellParams, event: MuiEvent<React.MouseEvent>, details: GridCallbackDetails) => void</span> |   | Callback fired when a mouse out comes from a cell element. |
-| <span class="prop-name">onCellEnter</span> | <span class="prop-type">(params: GridCellParams, event: MuiEvent<React.MouseEvent>, details: GridCallbackDetails) => void</span> |   | Callback fired when a mouse enter event comes from a cell element. |
-| <span class="prop-name">onCellLeave</span> | <span class="prop-type">(params: GridCellParams, event: MuiEvent<React.MouseEvent>, details: GridCallbackDetails) => void</span> |   | Callback fired when a mouse leave event comes from a cell element. |
 | <span class="prop-name">onColumnHeaderClick</span> | <span class="prop-type">(params: GridColumnHeaderParams, event: MuiEvent<React.MouseEvent>, details: GridCallbackDetails) => void</span> |   | Callback fired when a click event comes from a column header element. |
 | <span class="prop-name">onColumnHeaderDoubleClick</span> | <span class="prop-type">(params: GridColumnHeaderParams, event: MuiEvent<React.MouseEvent>, details: GridCallbackDetails) => void</span> |   | Callback fired when a double click event comes from a column header element. |
 | <span class="prop-name">onColumnHeaderOver</span> | <span class="prop-type">(params: GridColumnHeaderParams, event: MuiEvent<React.MouseEvent>, details: GridCallbackDetails) => void</span> |   | Callback fired when a mouseover event comes from a column header element. |
@@ -100,15 +95,10 @@ The name <code>MuiDataGrid</code> can be used when providing [default props](/cu
 | <span class="prop-name">onResize</span> | <span class="prop-type">(containerSize: ElementSize, event: MuiEvent<{}>, details: GridCallbackDetails) => void</span> |   | Callback fired when the grid is being resized. |
 | <span class="prop-name">onRowClick</span> | <span class="prop-type">(params: GridRowParams, event: MuiEvent<React.MouseEvent>, details: GridCallbackDetails) => void</span> |   | Callback fired when a click event comes from a row container element. |
 | <span class="prop-name">onRowDoubleClick</span> | <span class="prop-type">(params: GridRowParams, event: MuiEvent<React.MouseEvent>, details: GridCallbackDetails) => void</span> |   | Callback fired when a double click event comes from a row container element. |
-| <span class="prop-name">onRowOver</span> | <span class="prop-type">(params: GridRowParams, event: MuiEvent<React.MouseEvent>, details: GridCallbackDetails) => void</span> |   | Callback fired when a mouse over comes from a row container element. |
-| <span class="prop-name">onRowOut</span> | <span class="prop-type">(params: GridRowParams, event: MuiEvent<React.MouseEvent>, details: GridCallbackDetails) => void</span> |   | Callback fired when a mouse out comes from a row container element. |
-| <span class="prop-name">onRowEnter</span> | <span class="prop-type">(params: GridRowParams, event: MuiEvent<React.MouseEvent>, details: GridCallbackDetails) => void</span> |   | Callback fired when a mouse enter comes from a row container element. |
-| <span class="prop-name">onRowLeave</span> | <span class="prop-type">(params: GridRowParams, event: MuiEvent<React.MouseEvent>, details: GridCallbackDetails) => void</span> |   | Callback fired when a mouse leave event comes from a row container element. |
 | <span class="prop-name">onRowsScrollEnd</span> | <span class="prop-type">(params: GridRowScrollEndParams, event: MuiEvent<{}>, details: GridCallbackDetails) => void</span> |   | Callback fired when scrolling to the bottom of the grid viewport. |
 | <span class="prop-name">onSelectionModelChange</span> | <span class="prop-type">(model: GridSelectionModel) => void</span> |   | Callback fired when the selection state of one or multiple rows changes. |
 | <span class="prop-name">onSortModelChange</span> | <span class="prop-type">(model: GridSortModel) => void</span> |   | Callback fired when the sort model changes before a column is sorted. |
-| <span class="prop-name">onViewportRowsChange</span> | <span class="prop-type">(params: GridViewportRowsChangeParams) => void</span> |   | Callback fired when the rows in the viewport change. |
-| <span class="prop-name">page</span> | <span class="prop-type">number</span> | 1   |  Set the current page. |
+| <span class="prop-name">page</span> | <span class="prop-type">number</span> | 0   |  The zero-based index of the current page. |
 | <span class="prop-name">pageSize</span> | <span class="prop-type">number</span> | 100 | Set the number of rows in one page. |
 | <span class="prop-name">pagination</span> | <span class="prop-type">boolean</span> | false | If `true`, pagination is enabled. |
 | <span class="prop-name">paginationMode</span> | <span class="prop-type">GridFeatureMode</span> | 'client' | Pagination can be processed on the server or client-side. Set it to 'client' if you would like to handle the pagination on the client-side. Set it to 'server' if you would like to handle the pagination on the server-side. |
@@ -132,6 +122,7 @@ You can use the [slots API](/components/data-grid/components/#overriding-compone
 
 | Name | Type | Default | Description |
 |:-----|:-----|:--------|:------------|
+| <span class="prop-name">Cell</span> | <span class="prop-type">elementType</span> | <span class="prop-type">Checkbox</span> | Component rendered for each cell. |
 | <span class="prop-name">Checkbox</span> | <span class="prop-type">elementType</span> | <span class="prop-type">Checkbox</span> | Checkbox component used in the grid for both header and cells. By default, it uses the MUI Core Checkbox component. |
 | <span class="prop-name">ColumnFilteredIcon</span> | <span class="prop-type">elementType </span> | <span class="prop-type">FilterAltIcon</span> | Icon displayed on the column header menu to show that a filter has been applied to the column. |
 | <span class="prop-name">ColumnMenu</span> | <span class="prop-type">elementType&lt;GridColumnMenuProps></span> | <span class="prop-type">GridColumnMenu</span> | Column menu component rendered by clicking on the 3 dots "kebab" icon in column headers. |
@@ -157,6 +148,7 @@ You can use the [slots API](/components/data-grid/components/#overriding-compone
 | <span class="prop-name">Pagination</span> | <span class="prop-type">elementType</span> | <span class="prop-type">Pagination</span> | Pagination component rendered in the grid footer by default.|
 | <span class="prop-name">Panel</span> | <span class="prop-type">elementType&lt;GridPanelProps></span> | <span class="prop-type">Panel</span> | Panel component wrapping the filters and columns panels. |
 | <span class="prop-name">PreferencesPanel</span> | <span class="prop-type">elementType</span> | <span class="prop-type">PreferencesPanel</span> | PreferencesPanel component that renders the ColumnSelector or FilterPanel within a Panel component.|
+| <span class="prop-name">Row</span> | <span class="prop-type">elementType</span> | <span class="prop-type">Component rendered for each row. |
 | <span class="prop-name">Toolbar</span> | <span class="prop-type">elementType</span> | <span class="prop-type">GridToolbar</span> | Toolbar component rendered above the grid column header bar.|
 
 ## CSS
@@ -193,7 +185,6 @@ You can use the [slots API](/components/data-grid/components/#overriding-compone
 | <span class="prop-name">columnSeparator--resizable</span> | <span class="prop-name">.MuiDataGrid-columnSeparator--resizable</span> | Styles applied to the column header separator if the column is resizable. |
 | <span class="prop-name">columnSeparator--resizing</span> | <span class="prop-name">.MuiDataGrid-columnSeparator--resizing</span> | Styles applied to the column header separator if the column is being resized. |
 | <span class="prop-name">columnSeparator</span> | <span class="prop-name">.MuiDataGrid-columnSeparator</span> | Styles applied to the column header separator element. |
-| <span class="prop-name">dataContainer</span> | <span class="prop-name">.MuiDataGrid-dataContainer</span> | Styles applied to the data container element. |
 | <span class="prop-name">editBooleanCell</span> | <span class="prop-name">.MuiDataGrid-editBooleanCell</span> | Styles applied to root of the boolean edit component. |
 | <span class="prop-name">editInputCell</span> | <span class="prop-name">.MuiDataGrid-editInputCell</span> | Styles applied to the root of the input component. |
 | <span class="prop-name">filterIcon</span> | <span class="prop-name">.MuiDataGrid-filterIcon</span> | Styles applied to the filter icon element. |
@@ -205,7 +196,6 @@ You can use the [slots API](/components/data-grid/components/#overriding-compone
 | <span class="prop-name">menuIconButton</span> | <span class="prop-name">.MuiDataGrid-menuIconButton</span> | Styles applied to the menu icon button element. |
 | <span class="prop-name">menuOpen</span> | <span class="prop-name">.MuiDataGrid-menuOpen</span> | Styles applied to the menu icon element if the menu is open. |
 | <span class="prop-name">overlay</span> | <span class="prop-name">.MuiDataGrid-overlay</span> | Styles applied to the overlay element. |
-| <span class="prop-name">renderingZone</span> | <span class="prop-name">.MuiDataGrid-renderingZone</span> | Styles applied to the rendering zone element. |
 | <span class="prop-name">root</span> | <span class="prop-name">.MuiDataGrid-root</span> | Styles applied to the root element. |
 | <span class="prop-name">row--editable</span> | <span class="prop-name">.MuiDataGrid-row--editable</span> | Styles applied to the row element if the row is editable. |
 | <span class="prop-name">row--editing</span> | <span class="prop-name">.MuiDataGrid-row--editing</span> | Styles applied to the row element if the row is in edit mode. |
@@ -217,9 +207,6 @@ You can use the [slots API](/components/data-grid/components/#overriding-compone
 | <span class="prop-name">selectedRowCount</span> | <span class="prop-name">.MuiDataGrid-selectedRowCount</span> | Styles applied to the footer selected row count element. |
 | <span class="prop-name">sortIcon</span> | <span class="prop-name">.MuiDataGrid-sortIcon</span> | Styles applied to the sort icon element. |
 | <span class="prop-name">toolbarContainer</span> | <span class="prop-name">.MuiDataGrid-toolbarContainer</span> | Styles applied to the toolbar container element. |
-| <span class="prop-name">viewport</span> | <span class="prop-name">.MuiDataGrid-viewport</span> | Styles applied to the viewport element. |
-| <span class="prop-name">window</span> | <span class="prop-name">.MuiDataGrid-window</span> | Styles applied to the window element. |
-| <span class="prop-name">windowContainer</span> | <span class="prop-name">.MuiDataGrid-windowContainer</span> | Styles applied to the window container element. |
 | <span class="prop-name">withBorder</span> | <span class="prop-name">.MuiDataGrid-withBorder</span> | Styles applied to both the cell and the column header if `showColumnRightBorder={true}`. |
 
 You can override the style of the component thanks to one of these customization points:

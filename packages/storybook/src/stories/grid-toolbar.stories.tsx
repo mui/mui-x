@@ -1,7 +1,13 @@
 import { DataGrid } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import * as React from 'react';
-import { DataGridPro, GridToolbar } from '@mui/x-data-grid-pro';
+import {
+  DataGridPro,
+  GridToolbar,
+  GridToolbarContainer,
+  GridToolbarExport,
+  gridClasses,
+} from '@mui/x-data-grid-pro';
 import '../style/grid-stories.css';
 import { useData } from '../hooks/useData';
 
@@ -15,6 +21,7 @@ export default {
     },
   },
 };
+
 export const DensitySelectorCompact = () => {
   const data = useData(100, 50);
 
@@ -31,6 +38,7 @@ export const DensitySelectorCompact = () => {
     </div>
   );
 };
+
 export const DensitySelectorComfortable = () => {
   const data = useData(100, 50);
 
@@ -47,19 +55,59 @@ export const DensitySelectorComfortable = () => {
     </div>
   );
 };
-export const CsvExport = () => {
-  const data = useData(100, 50);
+
+export const Export = () => {
+  const { data } = useDemoData({
+    dataSet: 'Commodity',
+    rowLength: 100,
+    maxColumns: 60,
+  });
 
   return (
     <div style={{ height: 600 }}>
       <DataGridPro
-        columns={data.columns}
-        rows={data.rows}
+        {...data}
         checkboxSelection
         components={{
           Toolbar: GridToolbar,
         }}
       />
+    </div>
+  );
+};
+
+function CustomToolbar() {
+  return (
+    <GridToolbarContainer className={gridClasses.toolbarContainer}>
+      <GridToolbarExport
+        printOptions={{
+          pageStyle: '@page { margin: 0; }', // Zero the margin to hide the header and footer
+        }}
+        disableRipple // Prevent printing the Export button with the ripple visible
+      />
+    </GridToolbarContainer>
+  );
+}
+
+export const PrintExportSnap = () => {
+  const { data } = useDemoData({
+    dataSet: 'Commodity',
+    rowLength: 10,
+    maxColumns: 5,
+  });
+
+  return (
+    <div style={{ width: '100%' }}>
+      <div style={{ width: '100%', height: 600 }}>
+        <DataGrid
+          {...data}
+          checkboxSelection
+          components={{
+            Toolbar: CustomToolbar,
+          }}
+        />
+      </div>
+      <div id="grid-print-container" />
     </div>
   );
 };

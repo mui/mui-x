@@ -15,7 +15,7 @@ import {
   GridRowModel,
   useGridApiRef,
   DataGridPro,
-  getInitialGridFilterState,
+  getDefaultGridFilterModel,
 } from '@mui/x-data-grid-pro';
 import { useDemoData, randomArrayItem } from '@mui/x-data-grid-generator';
 import { action } from '@storybook/addon-actions';
@@ -43,7 +43,7 @@ export function CommodityWithOpenFilters() {
         rows={data.rows}
         columns={data.columns}
         checkboxSelection
-        state={{
+        initialState={{
           preferencePanel: {
             open: true,
             openedPanelValue: GridPreferencePanelsValue.filters,
@@ -61,16 +61,18 @@ export function CommodityWithOpenFiltersAndState() {
       <DataGridPro
         rows={data.rows}
         columns={data.columns}
-        state={{
+        initialState={{
           preferencePanel: {
             open: true,
             openedPanelValue: GridPreferencePanelsValue.filters,
           },
           filter: {
-            items: [
-              { id: 123, columnField: 'commodity', value: 'soy', operatorValue: 'startsWith' },
-            ],
-            linkOperator: GridLinkOperator.And,
+            filterModel: {
+              items: [
+                { id: 123, columnField: 'commodity', value: 'soy', operatorValue: 'startsWith' },
+              ],
+              linkOperator: GridLinkOperator.And,
+            },
           },
         }}
       />
@@ -91,14 +93,18 @@ export function WithNewOperator() {
         <DataGridPro
           rows={data.rows}
           columns={data.columns}
-          filterModel={{
-            items: [{ id: 123, columnField: 'commodity', value: 'co', operatorValue: operator }],
-            linkOperator: GridLinkOperator.And,
-          }}
-          state={{
+          initialState={{
             preferencePanel: {
               open: true,
               openedPanelValue: GridPreferencePanelsValue.filters,
+            },
+            filter: {
+              filterModel: {
+                items: [
+                  { id: 123, columnField: 'commodity', value: 'co', operatorValue: operator },
+                ],
+                linkOperator: GridLinkOperator.And,
+              },
             },
           }}
         />
@@ -123,16 +129,18 @@ export function CommodityWithNewRowsViaProps() {
         <DataGridPro
           rows={data.rows}
           columns={data.columns}
-          filterModel={{
-            items: [
-              { id: 123, columnField: 'commodity', value: 'soy', operatorValue: 'startsWith' },
-            ],
-            linkOperator: GridLinkOperator.And,
-          }}
-          state={{
+          initialState={{
             preferencePanel: {
               open: true,
               openedPanelValue: GridPreferencePanelsValue.filters,
+            },
+            filter: {
+              filterModel: {
+                items: [
+                  { id: 123, columnField: 'commodity', value: 'soy', operatorValue: 'startsWith' },
+                ],
+                linkOperator: GridLinkOperator.And,
+              },
             },
           }}
         />
@@ -167,15 +175,17 @@ export function CommodityWithNewColsViaProps() {
         <DataGridPro
           rows={data.rows}
           columns={cols}
-          filterModel={{
-            items: [
-              { id: 123, columnField: 'commodity', value: 'soy', operatorValue: 'startsWith' },
-            ],
-          }}
-          state={{
+          initialState={{
             preferencePanel: {
               open: true,
               openedPanelValue: GridPreferencePanelsValue.filters,
+            },
+            filter: {
+              filterModel: {
+                items: [
+                  { id: 123, columnField: 'commodity', value: 'soy', operatorValue: 'startsWith' },
+                ],
+              },
             },
           }}
         />
@@ -200,16 +210,18 @@ export function CommodityNoToolbar() {
         <DataGridPro
           rows={data.rows}
           columns={data.columns}
-          filterModel={{
-            items: [
-              { id: 123, columnField: 'commodity', value: 'soy', operatorValue: 'startsWith' },
-            ],
-            linkOperator: GridLinkOperator.And,
-          }}
-          state={{
+          initialState={{
             preferencePanel: {
               open: true,
               openedPanelValue: GridPreferencePanelsValue.filters,
+            },
+            filter: {
+              filterModel: {
+                items: [
+                  { id: 123, columnField: 'commodity', value: 'soy', operatorValue: 'startsWith' },
+                ],
+                linkOperator: GridLinkOperator.And,
+              },
             },
           }}
         />
@@ -241,9 +253,13 @@ export function CommodityWithEmptyCells() {
       <DataGridPro
         {...data}
         rows={rows}
-        filterModel={{
-          items: [{ columnField: 'commodity', operatorValue: 'isEmpty' }],
-          linkOperator: GridLinkOperator.Or,
+        initialState={{
+          filter: {
+            filterModel: {
+              items: [{ columnField: 'commodity', operatorValue: 'isEmpty' }],
+              linkOperator: GridLinkOperator.Or,
+            },
+          },
         }}
       />
     </div>
@@ -306,7 +322,7 @@ export function ServerFilterViaProps() {
         disableMultipleColumnsFiltering
         filterModel={filterModel}
         loading={loading}
-        state={{
+        initialState={{
           preferencePanel: {
             open: true,
             openedPanelValue: GridPreferencePanelsValue.filters,
@@ -395,16 +411,18 @@ export function CommodityWithNewRowsViaApi() {
           rows={data.rows}
           columns={data.columns}
           apiRef={apiRef}
-          filterModel={{
-            items: [
-              { id: 123, columnField: 'commodity', value: 'soy', operatorValue: 'startsWith' },
-            ],
-            linkOperator: GridLinkOperator.And,
-          }}
-          state={{
+          initialState={{
             preferencePanel: {
               open: true,
               openedPanelValue: GridPreferencePanelsValue.filters,
+            },
+            filter: {
+              filterModel: {
+                items: [
+                  { id: 123, columnField: 'commodity', value: 'soy', operatorValue: 'startsWith' },
+                ],
+                linkOperator: GridLinkOperator.And,
+              },
             },
           }}
         />
@@ -474,13 +492,15 @@ export function CustomFilterOperator() {
       <DataGridPro
         rows={data.rows}
         columns={columns}
-        filterModel={{
-          items: [{ columnField: 'rating', value: '3.5', operatorValue: '>=' }],
-        }}
-        state={{
+        initialState={{
           preferencePanel: {
             open: true,
             openedPanelValue: GridPreferencePanelsValue.filters,
+          },
+          filter: {
+            filterModel: {
+              items: [{ columnField: 'rating', value: '3.5', operatorValue: '>=' }],
+            },
           },
         }}
       />
@@ -527,13 +547,15 @@ export function RatingOperator() {
       <DataGridPro
         rows={data.rows}
         columns={columns}
-        filterModel={{
-          items: [{ columnField: 'rating', value: '3.5', operatorValue: 'from' }],
-        }}
-        state={{
+        initialState={{
           preferencePanel: {
             open: true,
             openedPanelValue: GridPreferencePanelsValue.filters,
+          },
+          filter: {
+            filterModel: {
+              items: [{ columnField: 'rating', value: '3.5', operatorValue: 'from' }],
+            },
           },
         }}
       />
@@ -610,11 +632,13 @@ export function NewColumnTypes() {
         rows={data.rows}
         columns={cols}
         columnTypes={{ price: priceColumnType }}
-        filterModel={{
-          items: [{ id: 1, columnField: 'totalPrice', operatorValue: '>', value: '1000000' }],
-        }}
-        state={{
+        initialState={{
           preferencePanel: { openedPanelValue: GridPreferencePanelsValue.filters, open: true },
+          filter: {
+            filterModel: {
+              items: [{ id: 1, columnField: 'totalPrice', operatorValue: '>', value: '1000000' }],
+            },
+          },
         }}
       />
     </div>
@@ -650,7 +674,7 @@ export function DemoCustomRatingFilterOperator() {
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <DataGrid rows={data.rows} columns={columns} filterModel={filterModel} />
+      <DataGrid rows={data.rows} columns={columns} initialState={{ filter: { filterModel } }} />
     </div>
   );
 }
@@ -671,7 +695,11 @@ export function DemoMultiFilteringGrid() {
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <DataGridPro filterModel={demoFilterModel} {...data} checkboxSelection />
+      <DataGridPro
+        initialState={{ filter: { filterModel: demoFilterModel } }}
+        {...data}
+        checkboxSelection
+      />
     </div>
   );
 }
@@ -686,11 +714,15 @@ export function NoResultsSnap() {
     <div style={{ height: 400, width: '100%' }}>
       <DataGridPro
         {...data}
-        filterModel={{
-          items: [
-            { id: 123, columnField: 'commodity', value: 'foobar', operatorValue: 'startsWith' },
-          ],
-          linkOperator: GridLinkOperator.And,
+        initialState={{
+          filter: {
+            filterModel: {
+              items: [
+                { id: 123, columnField: 'commodity', value: 'foobar', operatorValue: 'startsWith' },
+              ],
+              linkOperator: GridLinkOperator.And,
+            },
+          },
         }}
       />
     </div>
@@ -802,9 +834,7 @@ export function SimpleModelWithOnChangeControlFilter() {
     },
   ]);
 
-  const [simpleFilterModel, setFilterModel] = React.useState<GridFilterModel>(
-    getInitialGridFilterState(),
-  );
+  const [simpleFilterModel, setFilterModel] = React.useState(getDefaultGridFilterModel);
   const handleFilterChange = React.useCallback((model) => {
     setFilterModel(model);
   }, []);

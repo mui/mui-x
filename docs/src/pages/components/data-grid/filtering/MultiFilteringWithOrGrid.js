@@ -19,7 +19,7 @@ export default function MultiFilteringWithOrGrid() {
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <DataGridPro {...data} filterModel={filterModel} />
+      <DataGridPro {...data} initialState={{ filter: { filterModel } }} />
     </div>
   );
 }

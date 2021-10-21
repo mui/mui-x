@@ -7,7 +7,6 @@ import {
   GridRowsProp,
   GridSortModel,
   useGridApiRef,
-  getInitialGridSortingState,
 } from '@mui/x-data-grid-pro';
 import { action } from '@storybook/addon-actions';
 
@@ -559,9 +558,7 @@ export function SimpleModelWithOnChangeControlSort() {
     },
   ]);
 
-  const [simpleSortModel, setSortModel] = React.useState<GridSortModel>(
-    getInitialGridSortingState().sortModel,
-  );
+  const [simpleSortModel, setSortModel] = React.useState<GridSortModel>([]);
   const handleSortChange = React.useCallback((model) => {
     setSortModel(model);
   }, []);

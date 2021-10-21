@@ -2,22 +2,20 @@ import * as React from 'react';
 import { GridEvents } from '../../../constants/eventsConstants';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridColumnApi } from '../../../models/api/gridColumnApi';
-import { gridCheckboxSelectionColDef } from '../../../models/colDef/gridCheckboxSelection';
 import {
   GridColDef,
   GridColumns,
   GridColumnsState,
   GridStateColDef,
 } from '../../../models/colDef/gridColDef';
-import { GridColumnTypesRecord } from '../../../models/colDef/gridColTypeDef';
+import { GridColumnTypesRecord } from '../../../models/colDef/gridColumnTypesRecord';
 import { getGridDefaultColumnTypes } from '../../../models/colDef/gridDefaultColumnTypes';
 import { getGridColDef } from '../../../models/colDef/getGridColDef';
 import { GridColumnOrderChangeParams } from '../../../models/params/gridColumnOrderChangeParams';
 import { mergeGridColTypes } from '../../../utils/mergeUtils';
-import { useGridApiMethod } from '../../root/useGridApiMethod';
+import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
-import { GridLocaleText, GridTranslationKeys } from '../../../models/api/gridLocaleTextApi';
-import { useGridState } from '../core/useGridState';
+import { useGridState } from '../../utils/useGridState';
 import {
   allGridColumnsFieldsSelector,
   allGridColumnsSelector,
@@ -25,11 +23,13 @@ import {
   gridColumnsSelector,
   visibleGridColumnsSelector,
 } from './gridColumnsSelector';
-import { useGridApiOptionHandler } from '../../root/useGridApiEventHandler';
+import {
+  useGridApiEventHandler,
+  useGridApiOptionHandler,
+} from '../../utils/useGridApiEventHandler';
 import { GRID_STRING_COL_DEF } from '../../../models/colDef/gridStringColDef';
 import { GridComponentProps } from '../../../GridComponentProps';
-import { getDataGridUtilityClass } from '../../../gridClasses';
-import { composeClasses } from '../../../utils/material-ui-utils';
+import { useGridStateInit } from '../../utils/useGridStateInit';
 
 type RawGridColumnsState = Omit<GridColumnsState, 'lookup'> & {
   lookup: { [field: string]: GridColDef | GridStateColDef };
@@ -85,27 +85,12 @@ function hydrateColumnsWidth(
 function hydrateColumnsType(
   columns: GridColumns,
   columnTypes: GridColumnTypesRecord = {},
-  getLocaleText: <T extends GridTranslationKeys>(key: T) => GridLocaleText[T],
-  checkboxSelection: boolean,
-  classes: Record<'cellCheckbox' | 'columnHeaderCheckbox', string>,
 ): GridColumns {
   const mergedColTypes = mergeGridColTypes(getGridDefaultColumnTypes(), columnTypes);
   const extendedColumns = columns.map((column) => ({
     ...getGridColDef(mergedColTypes, column.type),
     ...column,
   }));
-
-  if (checkboxSelection) {
-    return [
-      {
-        ...gridCheckboxSelectionColDef,
-        cellClassName: classes.cellCheckbox,
-        columnHeaderCheckbox: classes.columnHeaderCheckbox,
-        headerName: getLocaleText('checkboxSelectionHeaderName'),
-      },
-      ...extendedColumns,
-    ];
-  }
 
   return extendedColumns;
 }
@@ -129,24 +114,12 @@ const upsertColumnsState = (columnUpdates: GridColDef[], prevColumnsState?: Grid
   return newState;
 };
 
-type OwnerState = { classes: GridComponentProps['classes'] };
-
-const useUtilityClasses = (ownerState: OwnerState) => {
-  const { classes } = ownerState;
-
-  return React.useMemo(() => {
-    const slots = {
-      cellCheckbox: ['cellCheckbox'],
-      columnHeaderCheckbox: ['columnHeaderCheckbox'],
-    };
-
-    return composeClasses(slots, getDataGridUtilityClass, classes);
-  }, [classes]);
-};
-
 /**
+ * @requires useGridColumnsPreProcessing (method)
  * @requires useGridParamsApi (method)
+ * @requires useGridContainerProps (state)
  * TODO: Impossible priority - useGridParamsApi also needs to be after useGridColumns
+ * TODO: Impossible priority - useGridContainerProps also needs to be after useGridColumns
  */
 export function useGridColumns(
   apiRef: GridApiRef,
@@ -156,9 +129,34 @@ export function useGridColumns(
   >,
 ): void {
   const logger = useGridLogger(apiRef, 'useGridColumns');
-  const [gridState, setGridState, forceUpdate] = useGridState(apiRef);
-  const ownerState = { classes: props.classes };
-  const classes = useUtilityClasses(ownerState);
+
+  useGridStateInit(apiRef, (state) => {
+    const hydratedColumns = hydrateColumnsType(props.columns, props.columnTypes);
+    const preProcessedColumns =
+      apiRef.current.UNSTABLE_applyAllColumnPreProcessing(hydratedColumns);
+    const columns = upsertColumnsState(preProcessedColumns);
+    let newColumns: GridColumns = columns.all.map((field) => columns.lookup[field]);
+    newColumns = hydrateColumnsWidth(newColumns, 0);
+
+    const columnState: GridColumnsState = {
+      all: newColumns.map((col) => col.field),
+      lookup: newColumns.reduce((acc, col) => {
+        acc[col.field] = col;
+        return acc;
+      }, {}),
+    };
+
+    return {
+      ...state,
+      columns: columnState,
+    };
+  });
+  const [, setGridState, forceUpdate] = useGridState(apiRef);
+
+  // On the first render, `useGridContainerProps` has not yet initialized its state because it is called after `useGridColumns`
+  // But it viewport width would always be 0 on the 1st render since the DOM Node is not mounted yet, so we can provide a safe fallback here
+  // TODO: Fix when removing `viewportSizes` from the state
+  const viewportSizes = apiRef.current.state.viewportSizes?.width ?? 0;
 
   const setGridColumnsState = React.useCallback(
     (columnsState: GridColumnsState, emit = true) => {
@@ -322,43 +320,49 @@ export function useGridColumns(
 
   useGridApiMethod(apiRef, colApi, 'ColApi');
 
+  // The effect do not track any value defined synchronously during the 1st render by hooks called after `useGridColumns`
+  // As a consequence, the state generated by the 1st run of this useEffect will always be equal to the initialization one
+  const isFirstRender = React.useRef(true);
   React.useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+
     logger.info(`GridColumns have changed, new length ${props.columns.length}`);
 
-    const hydratedColumns = hydrateColumnsType(
-      props.columns,
-      props.columnTypes,
-      apiRef.current.getLocaleText,
-      props.checkboxSelection,
-      classes,
-    );
+    const hydratedColumns = hydrateColumnsType(props.columns, props.columnTypes);
 
-    const columnState = upsertColumnsState(hydratedColumns);
+    const preProcessedColumns =
+      apiRef.current.UNSTABLE_applyAllColumnPreProcessing(hydratedColumns);
+    const columnState = upsertColumnsState(preProcessedColumns);
     setColumnsState(columnState);
-  }, [
-    logger,
-    apiRef,
-    setColumnsState,
-    props.columns,
-    props.columnTypes,
-    props.checkboxSelection,
-    classes,
-  ]);
+  }, [logger, apiRef, setColumnsState, props.columns, props.columnTypes]);
 
   React.useEffect(() => {
-    logger.debug(
-      `GridColumns gridState.viewportSizes.width, changed ${gridState.viewportSizes.width}`,
-    );
+    logger.debug(`GridColumns gridState.viewportSizes.width, changed ${viewportSizes}`);
 
     // This hook is meant to update the column's width when the viewport changes
     // We can skip the whole block if the width is missing
-    if (gridState.viewportSizes.width === 0) {
+    if (viewportSizes === 0) {
       return;
     }
 
     // Avoid dependency on gridState as I only want to update cols when viewport size changed.
     setColumnsState(apiRef.current.state.columns);
-  }, [apiRef, setColumnsState, gridState.viewportSizes.width, logger]);
+  }, [apiRef, setColumnsState, viewportSizes, logger]);
+
+  const handlePreProcessColumns = React.useCallback(() => {
+    logger.info(`Columns pre-processing have changed, regenerating the columns`);
+
+    const hydratedColumns = hydrateColumnsType(props.columns, props.columnTypes);
+    const preProcessedColumns =
+      apiRef.current.UNSTABLE_applyAllColumnPreProcessing(hydratedColumns);
+    const columnState = upsertColumnsState(preProcessedColumns);
+    setColumnsState(columnState);
+  }, [apiRef, logger, setColumnsState, props.columns, props.columnTypes]);
+
+  useGridApiEventHandler(apiRef, GridEvents.columnsPreProcessingChange, handlePreProcessColumns);
 
   // Grid Option Handlers
   useGridApiOptionHandler(

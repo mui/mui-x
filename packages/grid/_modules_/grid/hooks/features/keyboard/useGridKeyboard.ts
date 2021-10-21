@@ -9,7 +9,7 @@ import {
   isGridHeaderCellRoot,
 } from '../../../utils/domUtils';
 import { isEnterKey, isNavigationKey, isSpaceKey } from '../../../utils/keyboardUtils';
-import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
+import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { GridCellModes } from '../../../models/gridEditRowModel';
 import { visibleSortedGridRowIdsSelector } from '../filter';
 

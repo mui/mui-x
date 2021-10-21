@@ -1,4 +1,4 @@
-import { GridColumnTypesRecord } from '../models/colDef/gridColTypeDef';
+import { GridColumnTypesRecord } from '../models/colDef/gridColumnTypesRecord';
 import { DEFAULT_GRID_COL_TYPE_KEY } from '../models/colDef/gridDefaultColumnTypes';
 
 export function mergeGridColTypes(
