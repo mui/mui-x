@@ -1,6 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
+import { generateUtilityClasses, InternalStandardProps as StandardProps } from '@mui/material';
 import { createTheme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
 import ClickAwayListener from '@mui/material/ClickAwayListener';
@@ -8,10 +9,6 @@ import Paper from '@mui/material/Paper';
 import Popper, { PopperProps } from '@mui/material/Popper';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { isEscapeKey } from '../../utils/keyboardUtils';
-import {
-  InternalStandardProps as StandardProps,
-  generateUtilityClasses,
-} from '../../utils/material-ui-utils';
 
 export interface GridPanelClasses {
   /** Styles applied to the root element. */

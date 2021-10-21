@@ -3,9 +3,9 @@ import { GridRowId, GridRowModel } from '../gridRows';
 import type { GridColumns } from '../colDef';
 
 /**
- * Object passed as parameter in the column [[GridColDef]] cell renderer.
+ * Object passed as parameter in the row callbacks.
  */
-export interface GridRowParams {
+export interface GridRowParams<R extends GridRowModel = GridRowModel> {
   /**
    * The grid row id.
    */
@@ -13,7 +13,7 @@ export interface GridRowParams {
   /**
    * The row model of the row that the current cell belongs to.
    */
-  row: GridRowModel;
+  row: R;
   /**
    * All grid columns.
    */

@@ -2,7 +2,7 @@ import * as React from 'react';
 import clsx from 'clsx';
 import { useForkRef } from '@mui/material/utils';
 import { styled } from '@mui/material/styles';
-import { composeClasses } from '../utils/material-ui-utils';
+import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { useGridSelector } from '../hooks/utils/useGridSelector';

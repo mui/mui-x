@@ -5,7 +5,7 @@
     {
       "name": "getSelectedRows",
       "description": "Returns an array of the selected rows.",
-      "type": "() => Map<GridRowId, GridRowData>"
+      "type": "() => Map<GridRowId, { [key: string]: any }>"
     },
     {
       "name": "isRowSelected",
