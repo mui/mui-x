@@ -5,11 +5,12 @@ import { GridColumnsPreProcessing } from '../../core/columnsPreProcessing';
 import { GRID_TREE_DATA_GROUP_COL_DEF } from './gridTreeDataGroupColDef';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { GridEvents } from '../../../constants';
-import { GridCellParams, GridColDef, MuiEvent } from '../../../models';
+import { GridCellParams, GridColDef, GridColDefOverrideParams, MuiEvent } from '../../../models';
 import { isSpaceKey } from '../../../utils/keyboardUtils';
 import { useFirstRender } from '../../utils/useFirstRender';
 import { buildRowTree } from '../../../utils/rowTreeUtils';
 import { GridRowGroupingPreProcessing } from '../../core/rowGroupsPerProcessing';
+import { isFunction } from '../../../utils/utils';
 
 /**
  * Only available in DataGridPro
@@ -23,6 +24,31 @@ export const useGridTreeData = (
     'treeData' | 'getTreeDataPath' | 'groupingColDef' | 'defaultGroupingExpansionDepth'
   >,
 ) => {
+  const groupingColDef = React.useMemo<GridColDef>(() => {
+    const propGroupingColDef = props.groupingColDef;
+
+    const baseColDef: GridColDef = {
+      ...GRID_TREE_DATA_GROUP_COL_DEF,
+      headerName: apiRef.current.getLocaleText('treeDataGroupingHeaderName'),
+    };
+    let customGroupingColDef: Partial<GridColDef>;
+
+    if (isFunction(propGroupingColDef)) {
+      const params: GridColDefOverrideParams = {
+        colDef: baseColDef,
+      };
+
+      customGroupingColDef = propGroupingColDef(params);
+    } else {
+      customGroupingColDef = propGroupingColDef ?? {};
+    }
+
+    return {
+      ...baseColDef,
+      ...customGroupingColDef,
+    };
+  }, [apiRef, props.groupingColDef]);
+
   const updateColumnsPreProcessing = React.useCallback(() => {
     const addGroupingColumn: GridColumnsPreProcessing = (columns) => {
       if (!props.treeData) {
@@ -30,17 +56,12 @@ export const useGridTreeData = (
       }
 
       const index = columns[0].type === 'checkboxSelection' ? 1 : 0;
-      const groupingColumn: GridColDef = {
-        ...GRID_TREE_DATA_GROUP_COL_DEF,
-        headerName: apiRef.current.getLocaleText('treeDataGroupingHeaderName'),
-        ...props.groupingColDef,
-      };
 
-      return [...columns.slice(0, index), groupingColumn, ...columns.slice(index)];
+      return [...columns.slice(0, index), groupingColDef, ...columns.slice(index)];
     };
 
     apiRef.current.UNSTABLE_registerColumnPreProcessing('treeData', addGroupingColumn);
-  }, [apiRef, props.treeData, props.groupingColDef]);
+  }, [apiRef, props.treeData, groupingColDef]);
 
   const updateRowGrouping = React.useCallback(() => {
     if (!props.treeData) {

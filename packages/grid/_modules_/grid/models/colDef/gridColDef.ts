@@ -208,3 +208,7 @@ export interface GridColumnsState {
   all: string[];
   lookup: GridColumnLookup;
 }
+
+export interface GridColDefOverrideParams {
+  colDef: GridColDef;
+}
