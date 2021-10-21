@@ -116,7 +116,7 @@ export const useGridTreeData = (
   const handleCellKeyDown = React.useCallback(
     (params: GridCellParams, event: MuiEvent<React.KeyboardEvent>) => {
       const cellParams = apiRef.current.getCellParams(params.id, params.field);
-      if (cellParams.field === '__tree_data_group__' && isSpaceKey(event.key)) {
+      if (cellParams.colDef.type === 'treeDataGroup' && isSpaceKey(event.key)) {
         event.stopPropagation();
         event.preventDefault();
 

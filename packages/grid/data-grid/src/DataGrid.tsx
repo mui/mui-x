@@ -227,7 +227,7 @@ DataGridRaw.propTypes = {
   /**
    * The grouping column used by the tree data
    */
-  groupingColDef: PropTypes.object,
+  groupingColDef: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
   /**
    * Set the height in pixel of the column headers in the grid.
    * @default 56

@@ -6,8 +6,6 @@ import Box from '@mui/material/Box';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { GridRenderCellParams } from '../../models/params/gridCellParams';
-import { gridVisibleDescendantCountLookupSelector } from '../../hooks/features/filter/gridFilterSelector';
-import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { isNavigationKey, isSpaceKey } from '../../utils/keyboardUtils';
 import { GridEvents } from '../../constants';
 
@@ -24,16 +22,21 @@ const useStyles = makeStyles({
   },
 });
 
-const GridTreeDataGroupingCell = (props: GridRenderCellParams) => {
-  const { id, field, rowNode } = props;
+export interface GridTreeDataGroupingCellValue {
+  label: string;
+  visibleDescendantCount: number;
+  depth: number;
+  expanded: boolean;
+}
+
+const GridTreeDataGroupingCell = (props: GridRenderCellParams<GridTreeDataGroupingCellValue>) => {
+  const { id, field, value } = props;
 
   const rootProps = useGridRootProps();
   const apiRef = useGridApiContext();
-  const descendantCountLookup = useGridSelector(apiRef, gridVisibleDescendantCountLookupSelector);
   const classes = useStyles();
-  const descendantCount = descendantCountLookup[id];
 
-  const Icon = rowNode.expanded
+  const Icon = value.expanded
     ? rootProps.components.TreeDataCollapseIcon
     : rootProps.components.TreeDataExpandIcon;
 
@@ -47,22 +50,22 @@ const GridTreeDataGroupingCell = (props: GridRenderCellParams) => {
   };
 
   const handleClick = (event) => {
-    apiRef.current.unstable_setRowExpansion(id, !rowNode.expanded);
+    apiRef.current.unstable_setRowExpansion(id, !value.expanded);
     apiRef.current.setCellFocus(id, field);
     event.stopPropagation();
   };
 
   return (
-    <Box className={classes.root} sx={{ ml: rowNode.depth * 4 }}>
+    <Box className={classes.root} sx={{ ml: value.depth * 4 }}>
       <div className={classes.toggle}>
-        {descendantCount > 0 && (
+        {value.visibleDescendantCount > 0 && (
           <IconButton
             size="small"
             onClick={handleClick}
             onKeyDown={handleKeyDown}
             tabIndex={-1}
             aria-label={
-              rowNode.expanded
+              value.expanded
                 ? apiRef.current.getLocaleText('treeDataCollapse')
                 : apiRef.current.getLocaleText('treeDataExpand')
             }
@@ -72,8 +75,8 @@ const GridTreeDataGroupingCell = (props: GridRenderCellParams) => {
         )}
       </div>
       <span>
-        {rowNode.groupingValue}
-        {descendantCount > 0 ? ` (${descendantCount})` : ''}
+        {value.label}
+        {value.visibleDescendantCount > 0 ? ` (${value.visibleDescendantCount})` : ''}
       </span>
     </Box>
   );
@@ -103,7 +106,12 @@ GridTreeDataGroupingCell.propTypes = {
   /**
    * The cell value formatted with the column valueFormatter.
    */
-  formattedValue: PropTypes.any.isRequired,
+  formattedValue: PropTypes.shape({
+    depth: PropTypes.number.isRequired,
+    expanded: PropTypes.bool.isRequired,
+    label: PropTypes.string.isRequired,
+    visibleDescendantCount: PropTypes.number.isRequired,
+  }).isRequired,
   /**
    * Get the cell value of a row and field.
    * @param {GridRowId} id The row id.
@@ -149,7 +157,12 @@ GridTreeDataGroupingCell.propTypes = {
   /**
    * The cell value, but if the column has valueGetter, use getValue.
    */
-  value: PropTypes.any.isRequired,
+  value: PropTypes.shape({
+    depth: PropTypes.number.isRequired,
+    expanded: PropTypes.bool.isRequired,
+    label: PropTypes.string.isRequired,
+    visibleDescendantCount: PropTypes.number.isRequired,
+  }).isRequired,
 } as any;
 
 export { GridTreeDataGroupingCell };

@@ -3,12 +3,11 @@ import {
   DataGridPro,
   GridRenderCellParams,
   useGridApiContext,
-  useGridSelector,
-  gridVisibleDescendantCountLookupSelector,
   GridEvents,
   GridColumns,
   GridRowsProp,
   DataGridProProps,
+  GridTreeDataGroupingCellValue,
 } from '@mui/x-data-grid-pro';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -20,14 +19,11 @@ export const isNavigationKey = (key: string) =>
   key.indexOf('Page') === 0 ||
   key === ' ';
 
-const CustomGridTreeDataGroupingCell = (props: GridRenderCellParams) => {
-  const { id, field, rowNode } = props;
+const CustomGridTreeDataGroupingCell = (
+  props: GridRenderCellParams<GridTreeDataGroupingCellValue>,
+) => {
+  const { id, field, value } = props;
   const apiRef = useGridApiContext();
-  const descendantCountLookup = useGridSelector(
-    apiRef,
-    gridVisibleDescendantCountLookupSelector,
-  );
-  const descendantCount = descendantCountLookup[id];
 
   const handleKeyDown = (event) => {
     if (event.key === ' ') {
@@ -39,22 +35,22 @@ const CustomGridTreeDataGroupingCell = (props: GridRenderCellParams) => {
   };
 
   const handleClick = (event) => {
-    apiRef.current.unstable_setRowExpansion(id, !rowNode.expanded);
+    apiRef.current.unstable_setRowExpansion(id, !value.expanded);
     apiRef.current.setCellFocus(id, field);
     event.stopPropagation();
   };
 
   return (
-    <Box sx={{ ml: rowNode.depth * 4 }}>
+    <Box sx={{ ml: value.depth * 4 }}>
       <div>
-        {descendantCount > 0 ? (
+        {value.visibleDescendantCount > 0 ? (
           <Button
             onClick={handleClick}
             onKeyDown={handleKeyDown}
             tabIndex={-1}
             size="small"
           >
-            See {descendantCount} employees
+            See {value.visibleDescendantCount} employees
           </Button>
         ) : (
           <span />
