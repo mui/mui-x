@@ -223,6 +223,10 @@ export const useGridFilter = (
         } else if (itemIndex === -1) {
           items.push(newItem);
         } else {
+          if (items[itemIndex].isArrayValue !== newItem.isArrayValue) {
+            // if moving from array to single filter value, the value must be reset
+            newItem.value = newItem.isArrayValue ? [] : null
+          }
           items[itemIndex] = newItem;
         }
 
