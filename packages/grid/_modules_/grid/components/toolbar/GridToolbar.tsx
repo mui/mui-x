@@ -1,5 +1,6 @@
 import * as React from 'react';
 import clsx from 'clsx';
+import { unstable_composeClasses as composeClasses } from '@mui/material';
 import {
   GridToolbarContainer,
   GridToolbarContainerProps,
@@ -11,7 +12,6 @@ import { GridToolbarExport } from './GridToolbarExport';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { GridComponentProps } from '../../GridComponentProps';
 import { getDataGridUtilityClass } from '../../gridClasses';
-import { composeClasses } from '../../utils/material-ui-utils';
 
 type OwnerState = { classes: GridComponentProps['classes'] };
 
@@ -49,4 +49,4 @@ export const GridToolbar = React.forwardRef<HTMLDivElement, GridToolbarContainer
       </GridToolbarContainer>
     );
   },
-) as (props: GridToolbarContainerProps) => JSX.Element;
+);

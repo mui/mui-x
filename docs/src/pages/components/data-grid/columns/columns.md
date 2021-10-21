@@ -175,9 +175,9 @@ const columns: GridColDef[] = [
   {
     field: 'date',
     headerName: 'Year',
-    renderCell: (params: GridRenderCellParams) => (
+    renderCell: (params: GridRenderCellParams<Date>) => (
       <strong>
-        {(params.value as Date).getFullYear()}
+        {params.value.getFullYear()}
         <Button
           variant="contained"
           color="primary"
@@ -278,8 +278,8 @@ However, some types require additional properties to be set to make them work co
     field: 'actions',
     type: 'actions',
     getActions: (params: GridRowParams) => [
-      <GridActionsCellItem icon={...} onClick={...} label="Delete">,
-      <GridActionsCellItem icon={...} onClick={...} label="Print" showInMenu>,
+      <GridActionsCellItem icon={...} onClick={...} label="Delete" />,
+      <GridActionsCellItem icon={...} onClick={...} label="Print" showInMenu />,
     ]
   }
   ```

@@ -1,5 +1,4 @@
 /* eslint-disable import/first */
-
 import { LicenseInfo } from '@mui/x-data-grid-pro';
 
 // Remove the license warning from demonstration purposes
@@ -9,22 +8,18 @@ LicenseInfo.setLicenseKey(
 
 import 'docs/src/modules/components/bootstrap';
 // --- Post bootstrap -----
+import pages from 'docsx/src/pages'; // DO NOT REMOVE
+import XWrapper from 'docsx/src/modules/XWrapper'; // DO NOT REMOVE
 import * as React from 'react';
 import find from 'lodash/find';
 import { loadCSS } from 'fg-loadcss/src/loadCSS';
 import NextHead from 'next/head';
 import PropTypes from 'prop-types';
 import acceptLanguage from 'accept-language';
-import { create } from 'jss';
-import jssRtl from 'jss-rtl';
-import { CacheProvider } from '@emotion/react';
 import { useRouter } from 'next/router';
-import { StylesProvider, jssPreset } from '@mui/styles';
 import { ponyfillGlobal } from '@mui/utils';
-import pages from 'docsx/src/pages';
 import PageContext from 'docs/src/modules/components/PageContext';
 import GoogleAnalytics from 'docs/src/modules/components/GoogleAnalytics';
-import XWrapper from 'docsx/src/modules/XWrapper';
 import loadScript from 'docs/src/modules/utils/loadScript';
 import { ThemeProvider } from 'docs/src/modules/components/ThemeContext';
 import { pathnameToLanguage, getCookie } from 'docs/src/modules/utils/helpers';
@@ -79,12 +74,6 @@ ponyfillGlobal.muiDocConfig = {
 
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache();
-
-// Configure JSS
-const jss = create({
-  plugins: [...jssPreset().plugins, jssRtl()],
-  insertionPoint: process.browser ? document.querySelector('#insertion-point-jss') : null,
-});
 
 function useFirstRender() {
   const firstRenderRef = React.useRef(true);
@@ -307,12 +296,12 @@ if (process.browser && process.env.NODE_ENV === 'production') {
   console.log(
     `%c
 
-███╗   ███╗ █████╗ ████████╗███████╗██████╗ ██╗ █████╗ ██╗      ██╗   ██╗██╗
-████╗ ████║██╔══██╗╚══██╔══╝██╔════╝██╔══██╗██║██╔══██╗██║      ██║   ██║██║
-██╔████╔██║███████║   ██║   █████╗  ██████╔╝██║███████║██║█████╗██║   ██║██║
-██║╚██╔╝██║██╔══██║   ██║   ██╔══╝  ██╔══██╗██║██╔══██║██║╚════╝██║   ██║██║
-██║ ╚═╝ ██║██║  ██║   ██║   ███████╗██║  ██║██║██║  ██║███████╗ ╚██████╔╝██║
-╚═╝     ╚═╝╚═╝  ╚═╝   ╚═╝   ╚══════╝╚═╝  ╚═╝╚═╝╚═╝  ╚═╝╚══════╝  ╚═════╝ ╚═╝
+███╗   ███╗ ██╗   ██╗ ██████╗
+████╗ ████║ ██║   ██║   ██╔═╝
+██╔████╔██║ ██║   ██║   ██║
+██║╚██╔╝██║ ██║   ██║   ██║
+██║ ╚═╝ ██║ ╚██████╔╝ ██████╗
+╚═╝     ╚═╝  ╚═════╝  ╚═════╝
 
 Tip: you can access the documentation \`theme\` object directly in the console.
 `,
@@ -350,7 +339,7 @@ function findActivePage(currentPages, pathname) {
 }
 
 function AppWrapper(props) {
-  const { children, pageProps } = props;
+  const { children, emotionCache, pageProps } = props;
 
   const router = useRouter();
 
@@ -367,11 +356,7 @@ function AppWrapper(props) {
 
   const activePage = findActivePage(pages, router.pathname);
 
-  let fonts = [
-    // TODO: remove this values, they are considered blocking resources and slow all the pages on first render.
-    'https://fonts.googleapis.com/css?family=Roboto:300,400,400italic,500,700&display=swap',
-    'https://fonts.googleapis.com/css?family=Inter:400,600,700&display=swap',
-  ];
+  let fonts = [];
   if (router.pathname.match(/onepirate/)) {
     fonts = [
       'https://fonts.googleapis.com/css?family=Roboto+Condensed:700|Work+Sans:300,400&display=swap',
@@ -388,13 +373,11 @@ function AppWrapper(props) {
       <UserLanguageProvider defaultUserLanguage={pageProps.userLanguage}>
         <CodeVariantProvider>
           <PageContext.Provider value={{ activePage, pages }}>
-            <StylesProvider jss={jss}>
-              <ThemeProvider>
-                <DocsStyledEngineProvider>
-                  <XWrapper>{children}</XWrapper>
-                </DocsStyledEngineProvider>
-              </ThemeProvider>
-            </StylesProvider>
+            <ThemeProvider>
+              <DocsStyledEngineProvider cacheLtr={emotionCache}>
+                <XWrapper>{children}</XWrapper>
+              </DocsStyledEngineProvider>
+            </ThemeProvider>
           </PageContext.Provider>
           <LanguageNegotiation />
           <Analytics />
@@ -407,6 +390,7 @@ function AppWrapper(props) {
 
 AppWrapper.propTypes = {
   children: PropTypes.node.isRequired,
+  emotionCache: PropTypes.object.isRequired,
   pageProps: PropTypes.object.isRequired,
 };
 
@@ -414,11 +398,9 @@ export default function MyApp(props) {
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props;
 
   return (
-    <CacheProvider value={emotionCache}>
-      <AppWrapper pageProps={pageProps}>
-        <Component {...pageProps} />
-      </AppWrapper>
-    </CacheProvider>
+    <AppWrapper emotionCache={emotionCache} pageProps={pageProps}>
+      <Component {...pageProps} />
+    </AppWrapper>
   );
 }
 

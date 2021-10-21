@@ -1,16 +1,36 @@
 export type GridRowsProp = Readonly<GridRowData[]>;
-export type GridRowData = { [key: string]: any };
+
+/**
+ * @deprecated prefer GridRowModel.
+ */
+export type GridRowData<T = { [key: string]: any }> = T;
 
 /**
  * The key value object representing the data of a row.
  */
-export type GridRowModel = GridRowData;
+export type GridRowModel<T = { [key: string]: any }> = T;
 
 export type GridUpdateAction = 'delete';
 
 export interface GridRowModelUpdate extends GridRowData {
   _action?: GridUpdateAction;
 }
+
+export interface GridRowTreeNodeConfig {
+  id: GridRowId;
+  children?: GridRowTreeConfig;
+  descendantsCount?: number;
+  expanded?: boolean;
+
+  /**
+   * If `true`, this node has been automatically added to fill a gap in the tree structure
+   */
+  fillerNode?: boolean;
+}
+
+export type GridRowTreeConfig = Map<string, GridRowTreeNodeConfig>;
+
+export type GridRowsLookup = Record<GridRowId, GridRowModel>;
 
 /**
  * The type of Id supported by the grid.

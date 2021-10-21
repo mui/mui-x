@@ -14,13 +14,16 @@ import { GridPageApi } from './gridPageApi';
 import { GridPageSizeApi } from './gridPageSizeApi';
 import { GridParamsApi } from './gridParamsApi';
 import { GridPreferencesPanelApi } from './gridPreferencesPanelApi';
+import { GridPrintExportApi } from './gridPrintExportApi';
+import { GridDisableVirtualizationApi } from './gridDisableVirtualizationApi';
 import { GridRowApi } from './gridRowApi';
 import { GridSelectionApi } from './gridSelectionApi';
 import { GridSortApi } from './gridSortApi';
 import { GridStateApi } from './gridStateApi';
-import { GridVirtualizationApi } from './gridVirtualizationApi';
 import { GridLoggerApi } from './gridLoggerApi';
 import { GridScrollApi } from './gridScrollApi';
+import type { GridColumnsPreProcessingApi } from '../../hooks/core/columnsPreProcessing';
+import type { GridRowGroupsPreProcessingApi } from '../../hooks/core/rowGroupsPerProcessing';
 
 /**
  * The full grid API.
@@ -29,6 +32,8 @@ export interface GridApi
   extends GridCoreApi,
     GridStateApi,
     GridLoggerApi,
+    GridColumnsPreProcessingApi,
+    GridRowGroupsPreProcessingApi,
     GridDensityApi,
     GridEventsApi,
     GridRowApi,
@@ -37,7 +42,6 @@ export interface GridApi
     GridColumnApi,
     GridSelectionApi,
     GridSortApi,
-    GridVirtualizationApi,
     GridPageApi,
     GridPageSizeApi,
     GridCsvExportApi,
@@ -45,6 +49,8 @@ export interface GridApi
     GridFilterApi,
     GridColumnMenuApi,
     GridPreferencesPanelApi,
+    GridPrintExportApi,
+    GridDisableVirtualizationApi,
     GridLocaleTextApi,
     GridControlStateApi,
     GridClipboardApi,
