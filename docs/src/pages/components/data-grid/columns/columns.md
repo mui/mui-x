@@ -12,12 +12,12 @@ Grid columns are defined with the `columns` prop.
 `columns` expects an array of objects.
 The columns should have this type: `GridColDef[]`.
 
-`field` is the only required property since it's the column identifier. It's also used to match with `GridRowData` values.
+`field` is the only required property since it's the column identifier. It's also used to match with `GridRowModel` values.
 
 ```ts
 interface GridColDef {
   /**
-   * The column identifier. It's used to match with [[GridRowData]] values.
+   * The column identifier. It's used to match with [[GridRowModel]] values.
    */
   field: string;
   …
