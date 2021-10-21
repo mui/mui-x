@@ -46,7 +46,7 @@ You can use the following script in your browser console on any GitHub page to a
 ```
 
 3. Clean the generated changelog, to match the format of [https://github.com/mui-org/material-ui-x/releases](https://github.com/mui-org/material-ui-x/releases).
-4. Update the root `/package.json`'s version
+4. Update the root `package.json`'s version
 5. Update the versions of the other `package.json` files and of the dependencies with `yarn release:version`.
 6. Open PR with changes and wait for review and green CI.
 7. Merge PR once CI is green, and it has been approved.
