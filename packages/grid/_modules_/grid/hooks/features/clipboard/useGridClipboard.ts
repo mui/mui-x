@@ -5,7 +5,7 @@ import { visibleGridColumnsSelector } from '../columns/gridColumnsSelector';
 import { GRID_CHECKBOX_SELECTION_COL_DEF } from '../../../models/colDef';
 import { GridClipboardApi } from '../../../models/api';
 import { useGridApiMethod, useGridNativeEventListener, useGridSelector } from '../../utils';
-import { GridRowId } from '../../../models';
+import { GridRowId } from '../../../models/gridRows';
 
 function writeToClipboardPolyfill(data: string) {
   const span = document.createElement('span');
