@@ -86,6 +86,20 @@ export interface GridRenderEditCellParams extends GridEditCellProps {
 export type GridValueGetterParams = Omit<GridRenderCellParams, 'formattedValue' | 'isEditable'>;
 
 /**
+ * Object passed as parameter in the column [[GridColDef]] value setter callback.
+ */
+export interface GridValueSetterParams {
+  /**
+   * The new cell value.
+   */
+  value: GridCellValue;
+  /**
+   * The row that is being editted.
+   */
+  row: GridRowModel;
+}
+
+/**
  * Object passed as parameter in the column [[GridColDef]] value formatter callback.
  */
 export interface GridValueFormatterParams {

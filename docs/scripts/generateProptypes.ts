@@ -31,6 +31,7 @@ async function generateProptypes(program: ttp.ts.Program, sourceFile: string) {
         'cellTabIndex',
         'csvOptions',
         'printOptions',
+        'column',
         'groupingColDef',
       ];
       if (propsToNotResolve.includes(name)) {

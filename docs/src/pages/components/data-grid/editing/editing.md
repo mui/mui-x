@@ -62,12 +62,18 @@ You can handle the `onEditRowsModelChange` callback to control the `GridEditRows
 
 {{"demo": "pages/components/data-grid/editing/CellEditControlGrid.js", "bg": "inline", "defaultCodeOpen": false}}
 
-### Column with valueGetter
+### Saving nested structures
 
-You can control the committed value when the edit move stops with the `onCellEditCommit` prop.
-This is especially interesting when using the `valueGetter` on the column definition.
+If you are using a `valueGetter` to extract the value from a nested object, then a `valueSetter` also needs to be provided.
+The first one receives the row object and must return the value to be displayed in the cell.
+In the other side, the second one does the inverse, receiving the new value entered and returning the updated row.
 
-{{"demo": "pages/components/data-grid/editing/ValueGetterGrid.js", "bg": "inline"}}
+The following demo shows how these two functions can be used:
+
+{{"demo": "pages/components/data-grid/editing/ValueGetterSetterGrid.js", "bg": "inline"}}
+
+> Calling the `valueSetter` is the last step in the saving process.
+> The [validation](/components/data-grid/editing/#client-side-validation) will still be called with the values before they pass through the setter.
 
 ### Client-side validation
 
@@ -188,6 +194,12 @@ You can [disable the default behavior](/components/data-grid/events/#disabling-t
 Here is shown how a full-featured CRUD can be created.
 
 {{"demo": "pages/components/data-grid/editing/FullFeaturedCrudGrid.js", "bg": "inline", "disableAd": true}}
+
+### Saving rows with nested structures
+
+Saving columns that make use of `valueGetter` can be done adding a `valueSetter`.
+The same [approach](/components/data-grid/editing/#saving-nested-structures) from the cell editing mode can be used here.
+Note that the `valueSetter` will be called for each field.
 
 ### Events [<span class="pro"></span>](https://mui.com/store/items/material-ui-pro/)
 
