@@ -116,7 +116,7 @@ const GridToolbarFilterButton = React.forwardRef<HTMLButtonElement, GridToolbarF
           color="primary"
           aria-label={apiRef.current.getLocaleText('toolbarFiltersLabel')}
           startIcon={
-            <Badge badgeContent={counter} color="primary">
+            <Badge badgeContent={activeFilters.length} color="primary">
               <rootProps.components.OpenFilterButtonIcon />
             </Badge>
           }
