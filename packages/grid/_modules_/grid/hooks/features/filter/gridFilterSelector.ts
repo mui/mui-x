@@ -1,20 +1,30 @@
 import { createSelector } from 'reselect';
 import { GridFilterItem } from '../../../models/gridFilterItem';
 import { GridRowId, GridRowModel } from '../../../models/gridRows';
-import { GridState } from '../core/gridState';
+import { GridState } from '../../../models/gridState';
 import { gridRowCountSelector } from '../rows/gridRowsSelector';
 import { sortedGridRowsSelector } from '../sorting/gridSortingSelector';
 import { gridColumnLookupSelector } from '../columns/gridColumnsSelector';
 
-export const visibleGridRowsStateSelector = (state: GridState) => state.visibleRows;
+export const gridFilterStateSelector = (state: GridState) => state.filter;
+
+export const gridFilterModelSelector = createSelector(
+  gridFilterStateSelector,
+  (filterState) => filterState.filterModel,
+);
+
+export const gridVisibleRowsLookupSelector = createSelector(
+  gridFilterStateSelector,
+  (filterState) => filterState.visibleRowsLookup,
+);
 
 export const visibleSortedGridRowsSelector = createSelector(
-  visibleGridRowsStateSelector,
+  gridVisibleRowsLookupSelector,
   sortedGridRowsSelector,
-  (visibleRowsState, sortedRows) => {
+  (visibleRowsLookup, sortedRows) => {
     const map = new Map<GridRowId, GridRowModel>();
     sortedRows.forEach((row, id) => {
-      if (visibleRowsState.visibleRowsLookup[id] !== false) {
+      if (visibleRowsLookup[id] !== false) {
         map.set(id, row);
       }
     });
@@ -33,20 +43,18 @@ export const visibleSortedGridRowIdsSelector = createSelector(
 );
 
 export const visibleGridRowCountSelector = createSelector(
-  visibleGridRowsStateSelector,
+  gridFilterStateSelector,
   gridRowCountSelector,
-  (visibleRowsState, totalRowsCount) => {
-    if (visibleRowsState.visibleRows == null) {
+  (filterState, totalRowsCount) => {
+    if (filterState.visibleRows == null) {
       return totalRowsCount;
     }
-    return visibleRowsState.visibleRows.length;
+    return filterState.visibleRows.length;
   },
 );
 
-export const filterGridStateSelector = (state: GridState) => state.filter;
-
 export const activeGridFilterItemsSelector = createSelector(
-  filterGridStateSelector,
+  gridFilterModelSelector,
   gridColumnLookupSelector,
   (filterModel, columnLookup) =>
     filterModel.items?.filter((item) => {

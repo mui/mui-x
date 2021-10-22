@@ -174,6 +174,21 @@ describe('<DataGrid /> - Keyboard', () => {
     expect(getActiveCell()).to.equal('0-1');
   });
 
+  it('should not crash when pressing ArrowDown after reaching last visible row', () => {
+    render(
+      <KeyboardTest
+        nbRows={10}
+        filterModel={{ items: [{ columnField: 'id', operatorValue: '<', value: '2' }] }}
+      />,
+    );
+    getCell(0, 0).focus();
+    expect(getActiveCell()).to.equal('0-0');
+    fireEvent.keyDown(document.activeElement!, { key: 'ArrowDown' });
+    expect(getActiveCell()).to.equal('1-0');
+    fireEvent.keyDown(document.activeElement!, { key: 'ArrowDown' });
+    expect(getActiveCell()).to.equal('1-0');
+  });
+
   it('should support cell navigation with arrows and checkboxSelection', () => {
     render(<KeyboardTest nbRows={10} checkboxSelection />);
     getCell(0, 0).querySelector('input')!.focus();
@@ -243,10 +258,10 @@ describe('<DataGrid /> - Keyboard', () => {
     }
     render(<KeyboardTest width={60} nbRows={10} />);
     getColumnHeaderCell(0).focus();
-    const gridWindow = document.querySelector('.MuiDataGrid-window')! as HTMLElement;
-    expect(gridWindow.scrollLeft).to.equal(0);
+    const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')! as HTMLElement;
+    expect(virtualScroller.scrollLeft).to.equal(0);
     fireEvent.keyDown(document.activeElement!, { key: 'ArrowRight' });
-    expect(gridWindow.scrollLeft).not.to.equal(0);
+    expect(virtualScroller.scrollLeft).not.to.equal(0);
   });
 
   it('Shift + Space should select a row', () => {

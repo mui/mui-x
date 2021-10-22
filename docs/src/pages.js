@@ -44,6 +44,7 @@ dataGridComponent.children = [
   { pathname: '/components/data-grid/components' },
   { pathname: '/components/data-grid/style' },
   { pathname: '/components/data-grid/localization' },
+  { pathname: '/components/data-grid/scrolling' },
   { pathname: '/components/data-grid/virtualization' },
   { pathname: '/components/data-grid/accessibility' },
   { pathname: '/components/data-grid/group-pivot', title: '🚧 Group & Pivot' },
@@ -57,7 +58,8 @@ dataGridComponentAPI.children = [
   { pathname: '/api-docs/data-grid/grid-col-def', title: 'GridColDef' },
   { pathname: '/api-docs/data-grid/grid-cell-params', title: 'GridCellParams' },
   { pathname: '/api-docs/data-grid/grid-row-params', title: 'GridRowParams' },
-  { pathname: '/api-docs/data-grid/grid-export-csv-options', title: 'GridExportCSVOptions' },
+  { pathname: '/api-docs/data-grid/grid-csv-export-options', title: 'GridCSVExportOptions' },
+  { pathname: '/api-docs/data-grid/grid-print-export-options', title: 'GridPrintExportOptions' },
 ].map((page) => {
   return { ...page, linkProps: { as: page.pathname.replace(/^\/api-docs/, '/api') } };
 });

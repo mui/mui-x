@@ -18,15 +18,15 @@ npm install @mui/x-data-grid@next
 yarn add @mui/x-data-grid@next
 ```
 
-The grid has two peer dependencies on MUI components.
+The grid has a peer dependency on one MUI component.
 If you are not already using MUI in your project, you can install it with:
 
 ```sh
 // with npm
-npm install @mui/material @mui/styles
+npm install @mui/material
 
 // with yarn
-yarn add @mui/material @mui/styles
+yarn add @mui/material
 ```
 
 ## Quick start
@@ -165,9 +165,10 @@ The enterprise components come in two plans: Pro and Premium.
 | [Row spanning](/components/data-grid/rows/#row-spanning)                                  |    🚧     |              🚧               |                  🚧                   |
 | [Row reordering](/components/data-grid/rows/#row-reorder)                                 |    ❌     |              🚧               |                  🚧                   |
 | **Selection**                                                                             |           |                               |                                       |
-| [Row selection](/components/data-grid/selection/#single-row-selection)                    |    ✅     |              ✅               |                  ✅                   |
-| [Multi-row selection](/components/data-grid/selection/#multiple-row-selection)            |    ❌     |              ✅               |                  ✅                   |
-| [Range selection](/components/data-grid/selection/#range-selection)                       |    ❌     |              ❌               |                  🚧                   |
+| [Single row selection](/components/data-grid/selection/#single-row-selection)             |    ✅     |              ✅               |                  ✅                   |
+| [Checkbox selection](/components/data-grid/selection/#checkbox-selection)                 |    ✅     |              ✅               |                  ✅                   |
+| [Multiple row selection](/components/data-grid/selection/#multiple-row-selection)         |    ❌     |              ✅               |                  ✅                   |
+| [Cell range selection](/components/data-grid/selection/#range-selection)                  |    ❌     |              ❌               |                  🚧                   |
 | **Filtering**                                                                             |           |                               |                                       |
 | [Quick filter](/components/data-grid/filtering/#quick-filter)                             |    🚧     |              🚧               |                  🚧                   |
 | [Column filters](/components/data-grid/filtering/#column-filters)                         |    ✅     |              ✅               |                  ✅                   |
@@ -180,7 +181,7 @@ The enterprise components come in two plans: Pro and Premium.
 | [Cell editing](/components/data-grid/editing/#cell-editing)                               |    ✅     |              ✅               |                  ✅                   |
 | **Import & export**                                                                       |           |                               |                                       |
 | [CSV export](/components/data-grid/export/#csv-export)                                    |    ✅     |              ✅               |                  ✅                   |
-| [Print](/components/data-grid/export/#print)                                              |    🚧     |              🚧               |                  🚧                   |
+| [Print](/components/data-grid/export/#print)                                              |    ✅     |              ✅               |                  ✅                   |
 | [Clipboard](/components/data-grid/export/#clipboard)                                      |    ❌     |              🚧               |                  🚧                   |
 | [Excel export](/components/data-grid/export/#excel-export)                                |    ❌     |              ❌               |                  🚧                   |
 | **Rendering**                                                                             |           |                               |                                       |

@@ -9,10 +9,7 @@ import {
   waitFor,
 } from 'test/utils';
 import { expect } from 'chai';
-import {
-  GRID_COLUMN_HEADER_SEPARATOR_RESIZABLE_CSS_CLASS,
-  DataGridPro,
-} from '@mui/x-data-grid-pro';
+import { gridClasses, DataGridPro } from '@mui/x-data-grid-pro';
 import { getColumnHeaderCell } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
@@ -54,8 +51,8 @@ describe('<DataGridPro /> - Column Headers', () => {
       const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]');
       fireEvent.click(menuIconButton);
       await waitFor(() => expect(screen.queryByRole('menu')).not.to.equal(null));
-      const gridWindow = document.querySelector('.MuiDataGrid-window')!;
-      gridWindow.dispatchEvent(new Event('scroll'));
+      const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
+      virtualScroller.dispatchEvent(new Event('scroll'));
       await waitFor(() => expect(screen.queryByRole('menu')).to.equal(null));
     });
 
@@ -108,7 +105,7 @@ describe('<DataGridPro /> - Column Headers', () => {
       await waitFor(() => expect(screen.queryByRole('menu')).not.to.equal(null));
 
       const separator = columnToResizeCell.querySelector(
-        `.${GRID_COLUMN_HEADER_SEPARATOR_RESIZABLE_CSS_CLASS}`,
+        `.${gridClasses['columnSeparator--resizable']}`,
       );
       fireEvent.mouseDown(separator);
       await waitFor(() => expect(screen.queryByRole('menu')).to.equal(null));

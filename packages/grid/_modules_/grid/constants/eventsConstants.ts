@@ -28,7 +28,6 @@ export enum GridEvents {
    * Fired when a cell is double-clicked. Called with a [[GridCellParams]] object.
    */
   cellDoubleClick = 'cellDoubleClick',
-
   /**
    * Fired when a `mousedown` event happens in a cell. Called with a [[GridCellParams]] object.
    */
@@ -38,33 +37,9 @@ export enum GridEvents {
    */
   cellMouseUp = 'cellMouseUp',
   /**
-   * Fired when a `mouseover` event happens in a cell. Called with a [[GridCellParams]] object.
-   */
-  cellOver = 'cellOver',
-  /**
-   * Fired when a `mouseout` event happens in a cell. Called with a [[GridCellParams]] object.
-   */
-  cellOut = 'cellOut',
-  /**
-   * Fired when a `mouseenter` event happens in a cell. Called with a [[GridCellParams]] object.
-   */
-  cellEnter = 'cellEnter',
-  /**
-   * Fired when a `mouseleave` event happens in a cell. Called with a [[GridCellParams]] object.
-   */
-  cellLeave = 'cellLeave',
-  /**
    * Fired when a `keydown` event happens in a cell. Called with a [[GridCellParams]] object.
    */
   cellKeyDown = 'cellKeyDown',
-  /**
-   * Fired when the `blur` event of a cell is triggered. Called with a [[GridCellParams]] object.
-   */
-  cellBlur = 'cellBlur',
-  /**
-   * Fired when a cell gains focus. Called with a [[GridCellParams]] object.
-   */
-  cellFocus = 'cellFocus',
   /**
    * Fired when a cell gains focus. Called with a [[GridCellParams]] object.
    */
@@ -139,22 +114,6 @@ export enum GridEvents {
    * Fired when a row is double-clicked. Called with a [[GridRowParams]] object.
    */
   rowDoubleClick = 'rowDoubleClick',
-  /**
-   * Fired when a `mouseover` event happens in a row.  Called with a [[GridRowParams]] object.
-   */
-  rowOver = 'rowOver',
-  /**
-   * Fired when a `mouseout` event happens in a row.  Called with a [[GridRowParams]] object.
-   */
-  rowOut = 'rowOut',
-  /**
-   * Fired when a `mouseenter` event happens in a row.  Called with a [[GridRowParams]] object.
-   */
-  rowEnter = 'rowEnter',
-  /**
-   * Fired when a `mouseleave` event happens in a row.  Called with a [[GridRowParams]] object.
-   */
-  rowLeave = 'rowLeave',
   /**
    * Fired when the row editing model changes. Called with a [[GridEditRowModelParams]] object.
    */
@@ -239,6 +198,16 @@ export enum GridEvents {
    */
   selectionChange = 'selectionChange',
   /**
+   * Fired when the value of the selection checkbox of the header is changed
+   * Called with a [[GridHeaderSelectionCheckboxParams]] object.
+   */
+  headerSelectionCheckboxChange = 'headerSelectionCheckboxChange',
+  /**
+   * Fired when the value of the selection checkbox of a row is changed
+   * Called with a [[GridRowSelectionCheckboxParams]] object.
+   */
+  rowSelectionCheckboxChange = 'rowSelectionCheckboxChange',
+  /**
    * Fired when the page changes.
    */
   pageChange = 'pageChange',
@@ -281,15 +250,30 @@ export enum GridEvents {
    */
   columnOrderChange = 'columnOrderChange',
   /**
-   * Fired when all the rows are updated.
+   * Fired when the rows are updated.
    * @ignore - do not document.
    */
   rowsSet = 'rowsSet',
+  /**
+   * Fired when the visible rows are updated
+   * @ignore - do not document.
+   */
+  visibleRowsSet = 'visibleRowsSet',
   /**
    * Fired when the columns state is changed.
    * Called with an array of strings corresponding to the field names.
    */
   columnsChange = 'columnsChange',
+  /**
+   * Fired when a column pre-processing is changed
+   * @ignore - do not document
+   */
+  columnsPreProcessingChange = 'columnsPreProcessingChange',
+  /**
+   * Fired when the row grouping function is changed
+   * @ignore - do not document
+   */
+  rowGroupsPreProcessingChange = 'rowGroupsPreProcessingChange',
   /**
    * Fired when the sort model changes.
    * Called with a [[GridSortModelParams]] object.
@@ -308,8 +292,4 @@ export enum GridEvents {
    * Fired when a column visibility changes. Called with a [[GridColumnVisibilityChangeParams]] object.
    */
   columnVisibilityChange = 'columnVisibilityChange',
-  /**
-   * Fired when the rows in the viewport is changed. Called with a [[GridViewportRowsChange]] object.
-   */
-  viewportRowsChange = 'viewportRowsChange',
 }

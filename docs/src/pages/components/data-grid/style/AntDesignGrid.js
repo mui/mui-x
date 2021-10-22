@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataGrid, useGridSlotComponentProps } from '@mui/x-data-grid';
+import { DataGrid, useGridApiContext, useGridState } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import { createTheme } from '@mui/material/styles';
 import { createStyles, makeStyles } from '@mui/styles';
@@ -106,18 +106,19 @@ const useStyles = makeStyles(
 );
 
 function CustomPagination() {
-  const { state, apiRef } = useGridSlotComponentProps();
+  const apiRef = useGridApiContext();
+  const [state] = useGridState(apiRef);
 
   return (
     <Pagination
       color="primary"
       variant="outlined"
       shape="rounded"
-      page={state.pagination.page}
+      page={state.pagination.page + 1}
       count={state.pagination.pageCount}
       // @ts-expect-error
       renderItem={(props2) => <PaginationItem {...props2} disableRipple />}
-      onChange={(event, value) => apiRef.current.setPage(value)}
+      onChange={(event, value) => apiRef.current.setPage(value - 1)}
     />
   );
 }

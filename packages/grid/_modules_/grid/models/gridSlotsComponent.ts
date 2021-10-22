@@ -7,6 +7,10 @@ import { GridIconSlotsComponent } from './gridIconSlotsComponent';
  */
 export interface GridSlotsComponent extends GridIconSlotsComponent {
   /**
+   * Component rendered for each cell.
+   */
+  Cell: React.JSXElementConstructor<any>;
+  /**
    * The custom Checkbox component used in the grid for both header and cells.
    * @default Checkbox
    */
@@ -77,4 +81,8 @@ export interface GridSlotsComponent extends GridIconSlotsComponent {
    * @default GridPanel
    */
   Panel: React.JSXElementConstructor<any>;
+  /**
+   * Component rendered for each row.
+   */
+  Row: React.JSXElementConstructor<any>;
 }

@@ -1,16 +1,19 @@
 import { createSelector } from 'reselect';
-import { GridState } from '../core/gridState';
+import { GridState } from '../../../models/gridState';
 
-export const densitySelector = (state: GridState) => state.density;
+export const gridDensitySelector = (state: GridState) => state.density;
 
-export const gridDensityValueSelector = createSelector(densitySelector, (density) => density.value);
+export const gridDensityValueSelector = createSelector(
+  gridDensitySelector,
+  (density) => density.value,
+);
 
 export const gridDensityRowHeightSelector = createSelector(
-  densitySelector,
+  gridDensitySelector,
   (density) => density.rowHeight,
 );
 
 export const gridDensityHeaderHeightSelector = createSelector(
-  densitySelector,
+  gridDensitySelector,
   (density) => density.headerHeight,
 );

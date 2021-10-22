@@ -5,8 +5,6 @@ import {
   fireEvent,
   // @ts-ignore
   screen,
-  // @ts-expect-error need to migrate helpers to TypeScript
-  waitFor,
 } from 'test/utils';
 import { expect } from 'chai';
 import {
@@ -19,12 +17,11 @@ import {
   GridRowsProp,
   GridColumns,
   GridEvents,
-  GRID_CELL_CSS_CLASS,
   GridApiRef,
+  gridClasses,
 } from '@mui/x-data-grid-pro';
 import { getCell, getColumnHeaderCell, getRow } from 'test/utils/helperFn';
 import { spy } from 'sinon';
-import { useData } from 'packages/storybook/src/hooks/useData';
 
 describe('<DataGridPro /> - Events Params', () => {
   // TODO v5: replace with createClientRender
@@ -73,16 +70,6 @@ describe('<DataGridPro /> - Events Params', () => {
     return (
       <div style={{ width: 300, height: 300 }}>
         <DataGridPro apiRef={apiRef} {...baselineProps} {...props} />
-      </div>
-    );
-  };
-
-  const TestVirtualization = (props) => {
-    const { width, height, ...other } = props;
-    const data = useData(50, 5);
-    return (
-      <div style={{ width: width || 300, height: height || 300 }}>
-        <DataGridPro rows={data.rows} columns={data.columns} {...other} />
       </div>
     );
   };
@@ -237,7 +224,7 @@ describe('<DataGridPro /> - Events Params', () => {
       const cell = getCell(1, 1);
       fireEvent.doubleClick(cell);
       expect(handleCellDoubleClick.callCount).to.equal(1);
-      expect(cell).not.to.have.class(`${GRID_CELL_CSS_CLASS}--editing`);
+      expect(cell).not.to.have.class(gridClasses['row--editing']);
     });
 
     it('should allow to prevent the default behavior while allowing the event to propagate', () => {
@@ -278,78 +265,47 @@ describe('<DataGridPro /> - Events Params', () => {
     const handleRowsScrollEnd = spy();
 
     render(<TestEvents onRowsScrollEnd={handleRowsScrollEnd} />);
-    apiRef.current.publishEvent(GridEvents.rowsScroll);
+    apiRef.current.publishEvent(GridEvents.rowsScroll, { left: 0, top: 3 * 52 });
     expect(handleRowsScrollEnd.callCount).to.equal(1);
   });
 
   it('call onRowsScrollEnd when viewport scroll reaches the bottom', () => {
+    const baseRows = [
+      { id: 0, brand: 'Nike' },
+      { id: 1, brand: 'Adidas' },
+      { id: 2, brand: 'Puma' },
+      { id: 3, brand: 'Under Armor' },
+      { id: 4, brand: 'Jordan' },
+      { id: 5, brand: 'Reebok' },
+    ];
     const handleRowsScrollEnd = spy();
-    const data = {
-      rows: [
-        {
-          id: 0,
-          brand: 'Nike',
-        },
-        {
-          id: 1,
-          brand: 'Adidas',
-        },
-        {
-          id: 2,
-          brand: 'Puma',
-        },
-        {
-          id: 3,
-          brand: 'Under Armor',
-        },
-        {
-          id: 4,
-          brand: 'Jordan',
-        },
-        {
-          id: 5,
-          brand: 'Reebok',
-        },
-      ],
-      columns: [{ field: 'brand', width: 100 }],
+    const TestCase = ({ rows }) => {
+      return (
+        <div style={{ width: 300, height: 300 }}>
+          <DataGridPro
+            columns={[{ field: 'brand', width: 100 }]}
+            rows={rows}
+            onRowsScrollEnd={handleRowsScrollEnd}
+          />
+        </div>
+      );
     };
-
-    const { container } = render(
-      <div style={{ width: 300, height: 300 }}>
-        <DataGridPro
-          columns={data.columns}
-          rows={data.rows}
-          onRowsScrollEnd={handleRowsScrollEnd}
-        />
-      </div>,
-    );
-    const gridWindow = container.querySelector('.MuiDataGrid-window');
+    const { container, setProps } = render(<TestCase rows={baseRows} />);
+    const virtualScroller = container.querySelector('.MuiDataGrid-virtualScroller');
     // arbitrary number to make sure that the bottom of the grid window is reached.
-    gridWindow.scrollTop = 12345;
-    gridWindow.dispatchEvent(new Event('scroll'));
+    virtualScroller.scrollTop = 12345;
+    virtualScroller.dispatchEvent(new Event('scroll'));
     expect(handleRowsScrollEnd.callCount).to.equal(1);
-  });
-
-  it('call onViewportRowsChange when the viewport rows change', async () => {
-    const handleViewportRowsChange = spy();
-    // TODO: Set the dimensions of the grid once the Windows test issues are resolved.
-    const { container } = render(
-      <TestVirtualization onViewportRowsChange={handleViewportRowsChange} />,
-    );
-
-    await waitFor(() => {
-      expect(handleViewportRowsChange.lastCall.args[0].firstRowIndex).to.equal(0);
-      expect(handleViewportRowsChange.lastCall.args[0].lastRowIndex).to.equal(6); // should be pageSize + 1
+    setProps({
+      rows: baseRows.concat(
+        { id: 6, brand: 'Gucci' },
+        { id: 7, brand: "Levi's" },
+        { id: 8, brand: 'Ray-Ban' },
+      ),
     });
-    const gridWindow = container.querySelector('.MuiDataGrid-window');
-    // scroll 6 rows so that the renderContext is updated. To be changed to a scroll of 1 row.
-    // TODO: set RowHeight directly. Currently 52 is used because the test fails under Windows.
-    gridWindow.scrollTop = 52 * 6;
-    gridWindow.dispatchEvent(new Event('scroll'));
-    await waitFor(() => {
-      expect(handleViewportRowsChange.lastCall.args[0].firstRowIndex).to.equal(6); // should be 1
-      expect(handleViewportRowsChange.lastCall.args[0].lastRowIndex).to.equal(12); // should be pageSize + 1
-    });
+    virtualScroller.scrollTop = 12345;
+    virtualScroller.dispatchEvent(new Event('scroll'));
+    expect(handleRowsScrollEnd.callCount).to.equal(2);
   });
 
   it('should publish GridEvents.unmount when unmounting the Grid', () => {

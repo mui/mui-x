@@ -7,11 +7,12 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import { gridDensityValueSelector } from '../../hooks/features/density/densitySelector';
 import { GridDensity, GridDensityTypes } from '../../models/gridDensity';
 import { isHideMenuKey, isTabKey } from '../../utils/keyboardUtils';
-import { useGridApiContext } from '../../hooks/root/useGridApiContext';
-import { useGridSelector } from '../../hooks/features/core/useGridSelector';
+import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
+import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { GridDensityOption } from '../../models/api/gridDensityApi';
 import { GridMenu } from '../menu/GridMenu';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
+import { gridClasses } from '../../gridClasses';
 
 export const GridToolbarDensitySelector = React.forwardRef<HTMLButtonElement, ButtonProps>(
   function GridToolbarDensitySelector(props, ref) {
@@ -115,7 +116,7 @@ export const GridToolbarDensitySelector = React.forwardRef<HTMLButtonElement, Bu
         >
           <MenuList
             id={densityMenuId}
-            className="MuiDataGrid-gridMenuList"
+            className={gridClasses.menuList}
             aria-labelledby={densityButtonId}
             onKeyDown={handleListKeyDown}
             autoFocusItem={open}
@@ -126,4 +127,4 @@ export const GridToolbarDensitySelector = React.forwardRef<HTMLButtonElement, Bu
       </React.Fragment>
     );
   },
-) as (props: ButtonProps) => JSX.Element;
+);

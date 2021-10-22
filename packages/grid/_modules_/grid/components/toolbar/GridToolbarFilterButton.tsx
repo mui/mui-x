@@ -1,13 +1,13 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { createTheme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { styled } from '@mui/material/styles';
+import { unstable_composeClasses as composeClasses } from '@mui/material';
 import Badge from '@mui/material/Badge';
 import Button, { ButtonProps } from '@mui/material/Button';
 import Tooltip, { TooltipProps } from '@mui/material/Tooltip';
 import { capitalize } from '@mui/material/utils';
 import { gridColumnLookupSelector } from '../../hooks/features/columns/gridColumnsSelector';
-import { useGridSelector } from '../../hooks/features/core/useGridSelector';
+import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import {
   activeGridFilterItemsSelector,
   filterGridItemsCounterSelector,
@@ -16,41 +16,52 @@ import { gridPreferencePanelStateSelector } from '../../hooks/features/preferenc
 import { GridPreferencePanelsValue } from '../../hooks/features/preferencesPanel/gridPreferencePanelsValue';
 import { GridTranslationKeys } from '../../models/api/gridLocaleTextApi';
 import { GridFilterItem } from '../../models/gridFilterItem';
-import { useGridApiContext } from '../../hooks/root/useGridApiContext';
+import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
+import { GridComponentProps } from '../../GridComponentProps';
+import { getDataGridUtilityClass } from '../../gridClasses';
 
-const defaultTheme = createTheme();
-const useStyles = makeStyles(
-  (theme) => ({
-    list: {
-      margin: theme.spacing(1, 1, 0.5),
-      padding: theme.spacing(0, 1),
-    },
-  }),
-  { name: 'MuiGridToolbarFilterButton', defaultTheme },
-);
+type OwnerState = { classes: GridComponentProps['classes'] };
 
-export interface GridToolbarFilterButtonProps extends Omit<TooltipProps, 'title' | 'children'> {
+const useUtilityClasses = (ownerState: OwnerState) => {
+  const { classes } = ownerState;
+
+  const slots = {
+    root: ['toolbarFilterList'],
+  };
+
+  return composeClasses(slots, getDataGridUtilityClass, classes);
+};
+
+const GridToolbarFilterListRoot = styled('ul', {
+  name: 'MuiDataGrid',
+  slot: 'ToolbarFilterList',
+})(({ theme }) => ({
+  margin: theme.spacing(1, 1, 0.5),
+  padding: theme.spacing(0, 1),
+}));
+
+export interface GridToolbarFilterButtonProps
+  extends Omit<TooltipProps, 'title' | 'children' | 'componentsProps'> {
   /**
    * The props used for each slot inside.
    * @default {}
    */
-  componentsProps?: {
-    button?: ButtonProps;
-  };
+  componentsProps?: { button?: ButtonProps };
 }
 
 const GridToolbarFilterButton = React.forwardRef<HTMLButtonElement, GridToolbarFilterButtonProps>(
   function GridToolbarFilterButton(props, ref) {
     const { componentsProps = {}, ...other } = props;
     const buttonProps = componentsProps.button || {};
-    const classes = useStyles();
     const apiRef = useGridApiContext();
     const rootProps = useGridRootProps();
     const counter = useGridSelector(apiRef, filterGridItemsCounterSelector);
     const activeFilters = useGridSelector(apiRef, activeGridFilterItemsSelector);
     const lookup = useGridSelector(apiRef, gridColumnLookupSelector);
     const preferencePanel = useGridSelector(apiRef, gridPreferencePanelStateSelector);
+    const ownerState = { classes: rootProps.classes };
+    const classes = useUtilityClasses(ownerState);
 
     const tooltipContentNode = React.useMemo(() => {
       if (preferencePanel.open) {
@@ -71,7 +82,7 @@ const GridToolbarFilterButton = React.forwardRef<HTMLButtonElement, GridToolbarF
       return (
         <div>
           {apiRef.current.getLocaleText('toolbarFiltersTooltipActive')(counter)}
-          <ul className={classes.list}>
+          <GridToolbarFilterListRoot className={classes.root}>
             {activeFilters.map((item, index) => ({
               ...(lookup[item.columnField!] && (
                 <li key={index}>
@@ -81,7 +92,7 @@ const GridToolbarFilterButton = React.forwardRef<HTMLButtonElement, GridToolbarF
                 </li>
               )),
             }))}
-          </ul>
+          </GridToolbarFilterListRoot>
         </div>
       );
     }, [apiRef, preferencePanel.open, counter, activeFilters, lookup, classes]);

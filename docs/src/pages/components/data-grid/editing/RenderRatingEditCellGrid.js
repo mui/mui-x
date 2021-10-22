@@ -8,6 +8,13 @@ function renderRating(params) {
   return <Rating readOnly value={params.value} />;
 }
 
+renderRating.propTypes = {
+  /**
+   * The cell value, but if the column has valueGetter, use getValue.
+   */
+  value: PropTypes.number.isRequired,
+};
+
 const useStyles = makeStyles({
   root: {
     display: 'flex',
@@ -42,7 +49,7 @@ function RatingEditInputCell(props) {
         ref={handleRef}
         name="rating"
         precision={1}
-        value={Number(value)}
+        value={value}
         onChange={handleChange}
       />
     </div>
@@ -65,13 +72,7 @@ RatingEditInputCell.propTypes = {
   /**
    * The cell value, but if the column has valueGetter, use getValue.
    */
-  value: PropTypes.oneOfType([
-    PropTypes.instanceOf(Date),
-    PropTypes.number,
-    PropTypes.object,
-    PropTypes.string,
-    PropTypes.bool,
-  ]),
+  value: PropTypes.number.isRequired,
 };
 
 function renderRatingEditInputCell(params) {

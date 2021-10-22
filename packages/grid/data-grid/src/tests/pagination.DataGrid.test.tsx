@@ -9,7 +9,13 @@ import {
   waitFor,
 } from 'test/utils';
 import { expect } from 'chai';
-import { DataGrid, DataGridProps, GridLinkOperator, GridRowsProp } from '@mui/x-data-grid';
+import {
+  DataGrid,
+  DataGridProps,
+  GridFilterModel,
+  GridLinkOperator,
+  GridRowsProp,
+} from '@mui/x-data-grid';
 import { getColumnValues, getRows } from 'test/utils/helperFn';
 import { spy } from 'sinon';
 import { useData } from 'packages/storybook/src/hooks/useData';
@@ -165,6 +171,17 @@ describe('<DataGrid /> - Pagination', () => {
     it('should go to last page when page is controlled and the current page is greater than the last page', () => {
       const onPageChange = spy();
 
+      const filterModel: GridFilterModel = {
+        linkOperator: GridLinkOperator.And,
+        items: [
+          {
+            columnField: 'id',
+            operatorValue: '<=',
+            value: '3',
+          },
+        ],
+      };
+
       const TestCasePaginationFilteredData = () => {
         const [page, setPage] = React.useState(1);
 
@@ -179,16 +196,7 @@ describe('<DataGrid /> - Pagination', () => {
             onPageChange={handlePageChange}
             pageSize={5}
             rowsPerPageOptions={[5]}
-            filterModel={{
-              linkOperator: GridLinkOperator.And,
-              items: [
-                {
-                  columnField: 'id',
-                  operatorValue: '<=',
-                  value: '3',
-                },
-              ],
-            }}
+            filterModel={filterModel}
           />
         );
       };
@@ -466,7 +474,7 @@ describe('<DataGrid /> - Pagination', () => {
         (heightAfter - headerHeight - footerHeight) / rowHeight,
       );
 
-      let rows = document.querySelectorAll('.MuiDataGrid-viewport [role="row"]');
+      let rows = document.querySelectorAll('.MuiDataGrid-virtualScrollerRenderZone [role="row"]');
       expect(rows.length).to.equal(expectedViewportRowsLengthBefore);
 
       setProps({ height: heightAfter });
@@ -477,7 +485,7 @@ describe('<DataGrid /> - Pagination', () => {
         ),
       );
 
-      rows = document.querySelectorAll('.MuiDataGrid-viewport [role="row"]');
+      rows = document.querySelectorAll('.MuiDataGrid-virtualScrollerRenderZone [role="row"]');
       expect(rows.length).to.equal(expectedViewportRowsLengthAfter);
 
       expect(onPageSizeChange.lastCall.args[0]).to.equal(expectedViewportRowsLengthAfter);

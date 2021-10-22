@@ -43,7 +43,6 @@ module.exports = {
     ['@babel/plugin-transform-runtime', { version: '^7.4.4' }],
     // for IE 11 support
     '@babel/plugin-transform-object-assign',
-    'babel-plugin-istanbul',
     [
       'babel-plugin-module-resolver',
       {
@@ -60,7 +59,9 @@ module.exports = {
     /prettier/,
   ],
   env: {
-    coverage: {},
+    coverage: {
+      plugins: ['babel-plugin-istanbul'],
+    },
     test: {
       sourceMaps: 'both',
     },

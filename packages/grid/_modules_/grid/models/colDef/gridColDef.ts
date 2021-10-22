@@ -9,12 +9,14 @@ import {
   GridRenderEditCellParams,
   GridValueFormatterParams,
   GridValueGetterParams,
+  GridValueSetterParams,
 } from '../params/gridCellParams';
 import { GridColumnHeaderParams } from '../params/gridColumnHeaderParams';
 import { GridComparatorFn } from '../gridSortModel';
 import { GridColType, GridNativeColTypes } from './gridColType';
 import { GridRowParams } from '../params/gridRowParams';
 import { GridActionsCellItemProps } from '../../components/cell/GridActionsCellItem';
+import { GridRowModel } from '../gridRows';
 
 /**
  * Alignment used in position elements in Cells.
@@ -26,7 +28,7 @@ export type GridAlignment = 'left' | 'right' | 'center';
  */
 export interface GridColDef {
   /**
-   * The column identifier. It's used to map with [[GridRowData]] values.
+   * The column identifier. It's used to map with [[GridRowModel]] values.
    */
   field: string;
   /**
@@ -94,6 +96,13 @@ export interface GridColDef {
    * @returns {GridCellValue} The cell value.
    */
   valueGetter?: (params: GridValueGetterParams) => GridCellValue;
+  /**
+   * Function that allows to customize how the entered value is stored in the row.
+   * It only works with cell/row editing.
+   * @param {GridValueSetterParams} params Object containing parameters for the setter.
+   * @returns {GridRowModel} The row with the updated field.
+   */
+  valueSetter?: (params: GridValueSetterParams) => GridRowModel;
   /**
    * Function that allows to apply a formatter before rendering its value.
    * @param {GridValueFormatterParams} params Object containing parameters for the formatter.
@@ -204,8 +213,3 @@ export interface GridColumnsState {
   all: string[];
   lookup: GridColumnLookup;
 }
-
-export const getInitialGridColumnsState = (): GridColumnsState => ({
-  all: [],
-  lookup: {},
-});

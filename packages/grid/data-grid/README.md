@@ -20,7 +20,6 @@ This component has three peer dependencies that you will need to install as well
 ```json
 "peerDependencies": {
   "@mui/material": "^5.0.0",
-  "@mui/styles": "^5.0.0",
   "react": "^17.0.0"
 },
 ```

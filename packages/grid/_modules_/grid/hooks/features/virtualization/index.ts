@@ -1,2 +1,2 @@
-export * from './useGridVirtualization';
 export * from './renderingState';
+export * from './renderingStateSelector';

@@ -13,7 +13,8 @@ import {
   GridColumnMenu,
   HideGridColMenuItem,
   GridColumnMenuProps,
-  useGridSlotComponentProps,
+  useGridApiContext,
+  useGridState,
 } from '@mui/x-data-grid';
 import RecipeReviewCard from './RecipeReviewCard';
 
@@ -46,7 +47,9 @@ export function NoRowsComponent() {
 }
 
 export function PaginationComponent(props: { color?: 'primary' }) {
-  const { state, apiRef } = useGridSlotComponentProps();
+  const apiRef = useGridApiContext();
+  const [state] = useGridState(apiRef);
+
   return (
     <Pagination
       className="my-custom-pagination"
@@ -59,7 +62,8 @@ export function PaginationComponent(props: { color?: 'primary' }) {
 }
 
 export function CustomFooter(props) {
-  const { state, apiRef } = useGridSlotComponentProps();
+  const apiRef = useGridApiContext();
+  const [state] = useGridState(apiRef);
 
   return (
     <GridFooterContainer className="my-custom-footer">
@@ -77,7 +81,8 @@ export function CustomFooter(props) {
 }
 
 export function FooterComponent2() {
-  const { state } = useGridSlotComponentProps();
+  const apiRef = useGridApiContext();
+  const [state] = useGridState(apiRef);
 
   return (
     <div className="footer my-custom-footer"> I counted {state.pagination.rowCount} row(s) </div>
@@ -93,7 +98,7 @@ export function CustomHeader(props) {
 }
 
 export function ColumnMenuComponent(props: GridColumnMenuProps) {
-  const { apiRef } = useGridSlotComponentProps();
+  const apiRef = useGridApiContext();
 
   if (apiRef.current.getColumnIndex(props.currentColumn.field) === 1) {
     return <RecipeReviewCard />;

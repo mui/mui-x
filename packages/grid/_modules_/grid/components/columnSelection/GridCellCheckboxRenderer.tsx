@@ -1,14 +1,15 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { useForkRef } from '@mui/material/utils';
 import { GridEvents } from '../../constants/eventsConstants';
 import { GridCellParams } from '../../models/params/gridCellParams';
 import { isNavigationKey, isSpaceKey } from '../../utils/keyboardUtils';
-import { useGridApiContext } from '../../hooks/root/useGridApiContext';
+import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { getDataGridUtilityClass } from '../../gridClasses';
-import { composeClasses } from '../../utils/material-ui-utils';
 import { GridComponentProps } from '../../GridComponentProps';
+import { GridRowSelectionCheckboxParams } from '../../models/params/gridRowSelectionCheckboxParams';
 
 type OwnerState = { classes: GridComponentProps['classes'] };
 
@@ -35,7 +36,8 @@ const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridCellPa
     const element = apiRef.current.getCellElement(id, field);
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-      apiRef.current.selectRow(id, event.target.checked, false);
+      const params: GridRowSelectionCheckboxParams = { value: event.target.checked, id };
+      apiRef.current.publishEvent(GridEvents.rowSelectionCheckboxChange, params, event);
     };
 
     const handleClick = (event: React.MouseEvent<HTMLInputElement>) => {
@@ -108,13 +110,7 @@ GridCellCheckboxForwardRef.propTypes = {
   /**
    * The cell value formatted with the column valueFormatter.
    */
-  formattedValue: PropTypes.oneOfType([
-    PropTypes.instanceOf(Date),
-    PropTypes.number,
-    PropTypes.object,
-    PropTypes.string,
-    PropTypes.bool,
-  ]),
+  formattedValue: PropTypes.any.isRequired,
   /**
    * Get the cell value of a row and field.
    * @param {GridRowId} id The row id.
@@ -137,7 +133,7 @@ GridCellCheckboxForwardRef.propTypes = {
   /**
    * The row model of the row that the current cell belongs to.
    */
-  row: PropTypes.object.isRequired,
+  row: PropTypes.any.isRequired,
   /**
    * the tabIndex value.
    */
@@ -145,13 +141,7 @@ GridCellCheckboxForwardRef.propTypes = {
   /**
    * The cell value, but if the column has valueGetter, use getValue.
    */
-  value: PropTypes.oneOfType([
-    PropTypes.instanceOf(Date),
-    PropTypes.number,
-    PropTypes.object,
-    PropTypes.string,
-    PropTypes.bool,
-  ]),
+  value: PropTypes.any.isRequired,
 } as any;
 
 export { GridCellCheckboxForwardRef };

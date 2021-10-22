@@ -1,24 +1,22 @@
 import * as React from 'react';
 import Button from '@mui/material/Button';
-import { useGridState } from '../../../hooks/features/core/useGridState';
 import { GridFilterItem, GridLinkOperator } from '../../../models/gridFilterItem';
-import { useGridApiContext } from '../../../hooks/root/useGridApiContext';
-import { GridAddIcon } from '../../icons/index';
+import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
+import { GridAddIcon } from '../../icons';
 import { GridPanelContent } from '../GridPanelContent';
 import { GridPanelFooter } from '../GridPanelFooter';
 import { GridPanelWrapper } from '../GridPanelWrapper';
 import { GridFilterForm } from './GridFilterForm';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
+import { useGridSelector } from '../../../hooks/utils/useGridSelector';
+import { gridFilterModelSelector } from '../../../hooks/features/filter/gridFilterSelector';
 
 export function GridFilterPanel() {
   const apiRef = useGridApiContext();
-  const [gridState] = useGridState(apiRef);
   const rootProps = useGridRootProps();
+  const filterModel = useGridSelector(apiRef, gridFilterModelSelector);
 
-  const hasMultipleFilters = React.useMemo(
-    () => gridState.filter.items.length > 1,
-    [gridState.filter.items.length],
-  );
+  const hasMultipleFilters = filterModel.items.length > 1;
 
   const applyFilter = React.useCallback(
     (item: GridFilterItem) => {
@@ -46,15 +44,15 @@ export function GridFilterPanel() {
   );
 
   React.useEffect(() => {
-    if (gridState.filter.items.length === 0) {
+    if (filterModel.items.length === 0) {
       addNewFilter();
     }
-  }, [addNewFilter, gridState.filter.items.length]);
+  }, [addNewFilter, filterModel.items.length]);
 
   return (
     <GridPanelWrapper>
       <GridPanelContent>
-        {gridState.filter.items.map((item, index) => (
+        {filterModel.items.map((item, index) => (
           <GridFilterForm
             key={item.id == null ? index : item.id}
             item={item}
@@ -62,7 +60,7 @@ export function GridFilterPanel() {
             deleteFilter={deleteFilter}
             hasMultipleFilters={hasMultipleFilters}
             showMultiFilterOperators={index > 0}
-            multiFilterOperator={gridState.filter.linkOperator}
+            multiFilterOperator={filterModel.linkOperator}
             disableMultiFilterOperator={index !== 1}
             applyMultiFilterOperatorChanges={applyFilterLinkOperator}
           />
