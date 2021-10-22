@@ -1,4 +1,4 @@
-export type GridRowsProp = Readonly<GridRowData[]>;
+export type GridRowsProp = Readonly<GridRowModel[]>;
 
 /**
  * @deprecated prefer GridRowModel.
@@ -12,7 +12,7 @@ export type GridRowModel<T = { [key: string]: any }> = T;
 
 export type GridUpdateAction = 'delete';
 
-export interface GridRowModelUpdate extends GridRowData {
+export interface GridRowModelUpdate extends GridRowModel {
   _action?: GridUpdateAction;
 }
 
@@ -38,15 +38,15 @@ export type GridRowsLookup = Record<GridRowId, GridRowModel>;
 export type GridRowId = string | number;
 
 /**
- * The function to retrieve the id of a [[GridRowData]].
+ * The function to retrieve the id of a [[GridRowModel]].
  */
-export type GridRowIdGetter = (row: GridRowData) => GridRowId;
+export type GridRowIdGetter = (row: GridRowModel) => GridRowId;
 
 /**
  * An helper function to check if the id provided is valid.
  *
  * @param {GridRowId} id Id as [[GridRowId]].
- * @param {GridRowModel | Partial<GridRowModel>} row Row as [[GridRowData]].
+ * @param {GridRowModel | Partial<GridRowModel>} row Row as [[GridRowModel]].
  * @param {string} detailErrorMessage A custom error message to display for invalid IDs
  */
 export function checkGridRowIdIsValid(

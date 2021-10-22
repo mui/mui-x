@@ -26,7 +26,7 @@ export type GridAlignment = 'left' | 'right' | 'center';
  */
 export interface GridColDef {
   /**
-   * The column identifier. It's used to map with [[GridRowData]] values.
+   * The column identifier. It's used to map with [[GridRowModel]] values.
    */
   field: string;
   /**
