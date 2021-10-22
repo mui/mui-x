@@ -16,7 +16,7 @@ import {
   selectedGridRowsSelector,
   selectedIdsLookupSelector,
 } from './gridSelectionSelector';
-import { gridPaginatedVisibleSortedGridRowIdsSelector } from '../pagination/gridPaginationSelector';
+import { gridPaginatedVisibleSortedGridRowIdsSelector } from '../pagination';
 import { gridVisibleSortedRowIdsSelector } from '../filter/gridFilterSelector';
 import { GridHeaderSelectionCheckboxParams } from '../../../models/params/gridHeaderSelectionCheckboxParams';
 import { GridCellParams } from '../../../models/params/gridCellParams';
