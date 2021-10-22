@@ -24,7 +24,7 @@ import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { GridComponentProps } from '../../../GridComponentProps';
 import {
   gridVisibleRowCountSelector,
-  gridSortedVisibleRowEntriesSelector,
+  gridVisibleSortedRowEntriesSelector,
 } from '../filter/gridFilterSelector';
 
 const getNextCellIndexes = (key: string, indexes: GridCellIndexCoordinates) => {
@@ -81,7 +81,7 @@ export const useGridKeyboardNavigation = (
   const totalVisibleRowCount = useGridSelector(apiRef, gridVisibleRowCountSelector);
   const colCount = useGridSelector(apiRef, visibleGridColumnsLengthSelector);
   const containerSizes = useGridSelector(apiRef, gridContainerSizesSelector);
-  const visibleSortedRows = useGridSelector(apiRef, gridSortedVisibleRowEntriesSelector);
+  const visibleSortedRows = useGridSelector(apiRef, gridVisibleSortedRowEntriesSelector);
 
   const mapKey = (event: React.KeyboardEvent) => {
     if (isEnterKey(event.key)) {

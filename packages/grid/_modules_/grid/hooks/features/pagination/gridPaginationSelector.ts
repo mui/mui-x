@@ -1,6 +1,6 @@
 import { createSelector } from 'reselect';
 import { GridState } from '../../../models/gridState';
-import { gridSortedVisibleRowIdsSelector } from '../filter/gridFilterSelector';
+import { gridVisibleSortedRowIdsSelector } from '../filter/gridFilterSelector';
 import { GridPaginationState } from './gridPaginationState';
 
 export const gridPaginationSelector = (state: GridState): GridPaginationState => state.pagination;
@@ -17,7 +17,7 @@ export const gridPageSizeSelector = createSelector(
 
 export const gridPaginatedVisibleSortedGridRowIdsSelector = createSelector(
   gridPaginationSelector,
-  gridSortedVisibleRowIdsSelector,
+  gridVisibleSortedRowIdsSelector,
   (pagination, visibleSortedRows) => {
     const firstSelectedRowIndex = pagination.page * pagination.pageSize;
     const lastSelectedRowIndex = firstSelectedRowIndex + pagination.pageSize;
