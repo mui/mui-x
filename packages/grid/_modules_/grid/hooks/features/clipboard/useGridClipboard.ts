@@ -5,7 +5,7 @@ import { visibleGridColumnsSelector } from '../columns/gridColumnsSelector';
 import { GRID_CHECKBOX_SELECTION_COL_DEF } from '../../../models/colDef';
 import { GridClipboardApi } from '../../../models/api';
 import { useGridApiMethod, useGridNativeEventListener, useGridSelector } from '../../utils';
-import { GridRowId } from '../../../models/gridRows';
+import { visibleSortedGridRowIdsSelector } from '../filter';
 
 function writeToClipboardPolyfill(data: string) {
   const span = document.createElement('span');
@@ -36,21 +36,25 @@ function writeToClipboardPolyfill(data: string) {
  */
 export const useGridClipboard = (apiRef: GridApiRef): void => {
   const visibleColumns = useGridSelector(apiRef, visibleGridColumnsSelector);
+  const visibleSortedRowIds = useGridSelector(apiRef, visibleSortedGridRowIdsSelector);
 
   const copySelectedRowsToClipboard = React.useCallback(
     (includeHeaders = false) => {
-      const selectedRows: GridRowId[] = Array.from(apiRef.current.getSelectedRows().keys());
       const filteredColumns = visibleColumns.filter(
         (column) => column.field !== GRID_CHECKBOX_SELECTION_COL_DEF.field,
       );
 
-      if (selectedRows.length === 0 || filteredColumns.length === 0) {
+      const selectedRows = apiRef.current.getSelectedRows();
+      const exportedRowIds =
+        selectedRows.size > 0 ? visibleSortedRowIds.filter((id) => selectedRows.has(id)) : [];
+
+      if (exportedRowIds.length === 0 || filteredColumns.length === 0) {
         return;
       }
 
       const data = buildCSV({
         columns: visibleColumns,
-        rowIds: selectedRows,
+        rowIds: exportedRowIds,
         includeHeaders,
         getCellParams: apiRef.current.getCellParams,
         delimiterCharacter: '\t',
@@ -64,7 +68,7 @@ export const useGridClipboard = (apiRef: GridApiRef): void => {
         writeToClipboardPolyfill(data);
       }
     },
-    [apiRef, visibleColumns],
+    [apiRef, visibleColumns, visibleSortedRowIds],
   );
 
   const handleKeydown = React.useCallback(
