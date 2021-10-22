@@ -22,7 +22,7 @@ type TempRowTree = Record<GridRowId, TempRowTreeNode>;
 export const buildRowTree = (params: GenerateRowTreeParams): GridRowGroupingResult => {
   const tempTree: TempRowTree = {};
   let treeDepth = 1;
-  const rowIds = [...params.rowIds];
+  const ids = [...params.ids];
   const idRowsLookup = { ...params.idRowsLookup };
 
   const nodeNameToIdTree: GridNodeNameToIdTree = {};
@@ -67,7 +67,7 @@ export const buildRowTree = (params: GenerateRowTreeParams): GridRowGroupingResu
 
           tempTree[nodeId] = node;
           idRowsLookup[nodeId] = {};
-          rowIds.push(nodeId);
+          ids.push(nodeId);
         }
 
         node.descendantCount = (node.descendantCount ?? 0) + 1;
@@ -96,7 +96,7 @@ export const buildRowTree = (params: GenerateRowTreeParams): GridRowGroupingResu
   });
 
   const tree: GridRowTreeConfig = {};
-  rowIds.forEach((rowId) => {
+  ids.forEach((rowId) => {
     const tempNode = tempTree[rowId];
     tree[rowId] = {
       ...tempNode,
@@ -107,7 +107,7 @@ export const buildRowTree = (params: GenerateRowTreeParams): GridRowGroupingResu
   return {
     tree,
     treeDepth,
-    rowIds,
+    ids,
     idRowsLookup,
   };
 };

@@ -73,7 +73,7 @@ export const useGridTreeData = (
         throw new Error('MUI: No getTreeDataPath given.');
       }
 
-      const rows = params.rowIds
+      const rows = params.ids
         .map((rowId) => ({
           id: rowId,
           path: props.getTreeDataPath!(params.idRowsLookup[rowId]),

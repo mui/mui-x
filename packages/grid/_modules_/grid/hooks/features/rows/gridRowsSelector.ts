@@ -25,4 +25,4 @@ export const gridRowTreeDepthSelector = createSelector(
   (rows) => rows.treeDepth,
 );
 
-export const gridRowIdsSelector = createSelector(gridRowsStateSelector, (rows) => rows.rowIds);
+export const gridRowIdsSelector = createSelector(gridRowsStateSelector, (rows) => rows.ids);

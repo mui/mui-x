@@ -11,7 +11,7 @@ import { useGridApiMethod } from '../../utils/useGridApiMethod';
 
 const getFlatRowTree: GridRowGroupingPreProcessing = (params) => {
   const tree: GridRowTreeConfig = {};
-  params.rowIds.forEach((rowId) => {
+  params.ids.forEach((rowId) => {
     tree[rowId] = { id: rowId, depth: 0, parent: null, groupingValue: '' };
   });
 
@@ -19,7 +19,7 @@ const getFlatRowTree: GridRowGroupingPreProcessing = (params) => {
     tree,
     treeDepth: 1,
     idRowsLookup: params.idRowsLookup,
-    rowIds: params.rowIds,
+    ids: params.ids,
   };
 };
 
