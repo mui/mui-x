@@ -18,7 +18,7 @@ import { getDefaultGridFilterModel } from './gridFilterState';
 import { GridFilterModel } from '../../../models/gridFilterModel';
 import {
   gridVisibleRowsLookupSelector,
-  gridSortedVisibleRowEntriesSelector,
+  gridVisibleSortedRowEntriesSelector,
   gridFilterModelSelector,
 } from './gridFilterSelector';
 import { useGridStateInit } from '../../utils/useGridStateInit';
@@ -305,7 +305,7 @@ export const useGridFilter = (
   );
 
   const getVisibleRowModels = React.useCallback<GridFilterApi['getVisibleRowModels']>(() => {
-    const visibleSortedRows = gridSortedVisibleRowEntriesSelector(apiRef.current.state);
+    const visibleSortedRows = gridVisibleSortedRowEntriesSelector(apiRef.current.state);
     return new Map<GridRowId, GridRowModel>(visibleSortedRows.map((row) => [row.id, row.model]));
   }, [apiRef]);
 

@@ -17,15 +17,15 @@ export const gridVisibleRowsLookupSelector = createSelector(
   (filterState) => filterState.visibleRowsLookup,
 );
 
-export const gridSortedVisibleRowEntriesSelector = createSelector(
+export const gridVisibleSortedRowEntriesSelector = createSelector(
   gridVisibleRowsLookupSelector,
   gridSortedRowEntriesSelector,
   (visibleRowsLookup, sortedRows) =>
     sortedRows.filter((row) => visibleRowsLookup[row.id] !== false),
 );
 
-export const gridSortedVisibleRowIdsSelector = createSelector(
-  gridSortedVisibleRowEntriesSelector,
+export const gridVisibleSortedRowIdsSelector = createSelector(
+  gridVisibleSortedRowEntriesSelector,
   (visibleSortedRowEntries) => visibleSortedRowEntries.map((row) => row.id),
 );
 
