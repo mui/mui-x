@@ -266,6 +266,7 @@ export function useGridEditRows(
     [apiRef],
   );
 
+  // TODO v5.1 explode `params` to make consistent with `commitRowChange`
   const commitCellChange = React.useCallback<GridEditRowApi['commitCellChange']>(
     (params: GridCommitCellChangeParams, event?: MouseEvent | React.SyntheticEvent): boolean => {
       const { id, field } = params;
@@ -296,8 +297,14 @@ export function useGridEditRows(
       const { value } = model[id][field];
       logger.debug(`Setting cell id: ${id} field: ${field} to value: ${value?.toString()}`);
       const row = apiRef.current.getRow(id);
-      const rowUpdate = { ...row, [field]: value };
-      apiRef.current.updateRows([rowUpdate]);
+      if (row) {
+        const column = apiRef.current.getColumn(params.field);
+        let rowUpdate = { ...row, [field]: value };
+        if (column.valueSetter) {
+          rowUpdate = column.valueSetter({ row, value });
+        }
+        apiRef.current.updateRows([rowUpdate]);
+      }
     },
     [apiRef, logger, props.editMode],
   );
@@ -371,11 +378,19 @@ export function useGridEditRows(
       }
 
       const row = apiRef.current.getRow(id);
-      const rowUpdate = { ...row };
-      Object.keys(editRow).forEach((field) => {
-        rowUpdate[field] = editRow[field].value;
-      });
-      apiRef.current.updateRows([rowUpdate]);
+      if (row) {
+        let rowUpdate = { ...row };
+        Object.keys(editRow).forEach((field) => {
+          const column = apiRef.current.getColumn(field);
+          const value = editRow[field].value;
+          if (column.valueSetter) {
+            rowUpdate = column.valueSetter({ row: rowUpdate, value });
+          } else {
+            rowUpdate[field] = value;
+          }
+        });
+        apiRef.current.updateRows([rowUpdate]);
+      }
     },
     [apiRef],
   );
