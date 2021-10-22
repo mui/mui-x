@@ -17,10 +17,7 @@ import {
   selectedIdsLookupSelector,
 } from './gridSelectionSelector';
 import { gridPaginatedVisibleSortedGridRowIdsSelector } from '../pagination/gridPaginationSelector';
-import {
-  gridSortedVisibleRowEntriesSelector,
-  gridSortedVisibleRowIdsSelector,
-} from '../filter/gridFilterSelector';
+import { gridVisibleSortedRowIdsSelector } from '../filter/gridFilterSelector';
 import { GridHeaderSelectionCheckboxParams } from '../../../models/params/gridHeaderSelectionCheckboxParams';
 import { GridCellParams } from '../../../models/params/gridCellParams';
 import { GridRowSelectionCheckboxParams } from '../../../models/params/gridRowSelectionCheckboxParams';
@@ -188,11 +185,11 @@ export const useGridSelection = (
 
       logger.debug(`Expanding selection from row ${startId} to row ${endId}`);
 
-      const visibleRowIds = gridSortedVisibleRowEntriesSelector(apiRef.current.state);
-      const startIndex = visibleRowIds.findIndex((el) => el.id === startId);
-      const endIndex = visibleRowIds.findIndex((el) => el.id === endId);
+      const visibleRowIds = gridVisibleSortedRowIdsSelector(apiRef.current.state);
+      const startIndex = visibleRowIds.indexOf(startId);
+      const endIndex = visibleRowIds.indexOf(endId);
       const [start, end] = startIndex > endIndex ? [endIndex, startIndex] : [startIndex, endIndex];
-      const rowsBetweenStartAndEnd = visibleRowIds.slice(start, end + 1).map((el) => el.id);
+      const rowsBetweenStartAndEnd = visibleRowIds.slice(start, end + 1);
 
       apiRef.current.selectRows(rowsBetweenStartAndEnd, isSelected, resetSelection);
     },
@@ -205,13 +202,13 @@ export const useGridSelection = (
       const startId = lastRowToggled.current ?? id;
       const isSelected = apiRef.current.isRowSelected(id);
       if (isSelected) {
-        const visibleRowIds = gridSortedVisibleRowEntriesSelector(apiRef.current.state);
-        const startIndex = visibleRowIds.findIndex((row) => row.id === startId);
-        const endIndex = visibleRowIds.findIndex((row) => row.id === endId);
+        const visibleRowIds = gridVisibleSortedRowIdsSelector(apiRef.current.state);
+        const startIndex = visibleRowIds.findIndex((rowId) => rowId === startId);
+        const endIndex = visibleRowIds.findIndex((rowId) => rowId === endId);
         if (startIndex > endIndex) {
-          endId = visibleRowIds[endIndex + 1].id;
+          endId = visibleRowIds[endIndex + 1];
         } else {
-          endId = visibleRowIds[endIndex - 1].id;
+          endId = visibleRowIds[endIndex - 1];
         }
       }
 
@@ -319,11 +316,9 @@ export const useGridSelection = (
       const shouldLimitSelectionToCurrentPage =
         props.checkboxSelectionVisibleOnly && props.pagination;
 
-      const selector = shouldLimitSelectionToCurrentPage
-        ? gridPaginatedVisibleSortedGridRowIdsSelector
-        : gridSortedVisibleRowIdsSelector;
-
-      const rowsToBeSelected = selector(apiRef.current.state);
+      const rowsToBeSelected = shouldLimitSelectionToCurrentPage
+        ? gridPaginatedVisibleSortedGridRowIdsSelector(apiRef.current.state)
+        : gridVisibleSortedRowIdsSelector(apiRef.current.state);
 
       apiRef.current.selectRows(rowsToBeSelected, params.value);
     },

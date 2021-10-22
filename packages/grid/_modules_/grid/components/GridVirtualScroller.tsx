@@ -15,6 +15,7 @@ import {
   gridFocusCellSelector,
   gridTabIndexCellSelector,
 } from '../hooks/features/focus/gridFocusStateSelector';
+import { gridVisibleSortedRowEntriesSelector } from '../hooks/features/filter/gridFilterSelector';
 import { gridDensityRowHeightSelector } from '../hooks/features/density/densitySelector';
 import { gridEditRowsStateSelector } from '../hooks/features/editRows/gridEditRowsSelector';
 import { GridEvents } from '../constants/eventsConstants';

@@ -10,7 +10,7 @@ import {
   gridVisibleRowCountSelector,
   visibleGridColumnsLengthSelector,
   visibleGridColumnsSelector,
-  gridSortedRowIdsSelector,
+  gridVisibleSortedRowIdsSelector,
 } from '@mui/x-data-grid-pro';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
@@ -30,7 +30,7 @@ export default function ScrollPlayground() {
   React.useEffect(() => {
     const { rowIndex, colIndex } = coordinates;
     apiRef.current.scrollToIndexes(coordinates);
-    const id = gridSortedRowIdsSelector(apiRef.current.state)[rowIndex];
+    const id = gridVisibleSortedRowIdsSelector(apiRef.current.state)[rowIndex];
     const column = visibleGridColumnsSelector(apiRef.current.state)[colIndex];
     apiRef.current.setCellFocus(id, column.field);
   }, [apiRef, coordinates]);
@@ -56,7 +56,7 @@ export default function ScrollPlayground() {
   };
 
   const handleCellClick = (params) => {
-    const rowIndex = gridSortedRowIdsSelector(apiRef.current.state).findIndex(
+    const rowIndex = gridVisibleSortedRowIdsSelector(apiRef.current.state).findIndex(
       (id) => id === params.id,
     );
 

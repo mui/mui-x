@@ -3,7 +3,7 @@ import {
   gridPaginationRowRangeSelector,
   gridPaginatedVisibleSortedGridRowEntriesSelector,
 } from '../features/pagination/gridPaginationSelector';
-import { gridSortedVisibleRowEntriesSelector } from '../features/filter/gridFilterSelector';
+import { gridVisibleSortedRowEntriesSelector } from '../features/filter/gridFilterSelector';
 import type { GridApiRef, GridRowEntry } from '../../models';
 import { useGridState } from './useGridState';
 
@@ -26,7 +26,7 @@ export const useRowsInCurrentPage = (
     range = gridPaginationRowRangeSelector(state);
     rows = gridPaginatedVisibleSortedGridRowEntriesSelector(state);
   } else {
-    rows = gridSortedVisibleRowEntriesSelector(state);
+    rows = gridVisibleSortedRowEntriesSelector(state);
     if (rows.length === 0) {
       range = null;
     } else {
