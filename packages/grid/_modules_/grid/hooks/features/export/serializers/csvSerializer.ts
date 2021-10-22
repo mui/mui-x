@@ -34,27 +34,14 @@ export function serialiseRow(
 
 interface BuildCSVOptions {
   columns: GridStateColDef[];
-  rows: Map<GridRowId, GridRowModel>;
-  selectedRowIds: GridRowId[];
+  rowIds: GridRowId[];
   getCellParams: (id: GridRowId, field: string) => GridCellParams;
   delimiterCharacter: string;
   includeHeaders?: boolean;
 }
 
 export function buildCSV(options: BuildCSVOptions): string {
-  const {
-    columns,
-    rows,
-    selectedRowIds,
-    getCellParams,
-    delimiterCharacter,
-    includeHeaders = true,
-  } = options;
-  let rowIds = [...rows.keys()];
-
-  if (selectedRowIds.length) {
-    rowIds = rowIds.filter((id) => selectedRowIds.includes(id));
-  }
+  const { columns, rowIds, getCellParams, delimiterCharacter, includeHeaders = true } = options;
 
   const CSVBody = rowIds
     .reduce<string>(
