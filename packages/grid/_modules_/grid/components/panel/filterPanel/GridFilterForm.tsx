@@ -1,17 +1,21 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { unstable_composeClasses as composeClasses } from '@mui/material';
 import FormControl from '@mui/material/FormControl';
 import IconButton from '@mui/material/IconButton';
 import InputLabel from '@mui/material/InputLabel';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { capitalize, unstable_useId as useId } from '@mui/material/utils';
-import { makeStyles } from '@mui/styles';
+import { styled } from '@mui/material/styles';
 import { filterableGridColumnsSelector } from '../../../hooks/features/columns/gridColumnsSelector';
 import { useGridSelector } from '../../../hooks/utils/useGridSelector';
 import { GridFilterItem, GridLinkOperator } from '../../../models/gridFilterItem';
 import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
 import { GridCloseIcon } from '../../icons/index';
 import { GridTranslationKeys } from '../../../models/api/gridLocaleTextApi';
+import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
+import { GridComponentProps } from '../../../GridComponentProps';
+import { getDataGridUtilityClass } from '../../../gridClasses';
 
 export interface GridFilterFormProps {
   item: GridFilterItem;
@@ -24,34 +28,26 @@ export interface GridFilterFormProps {
   deleteFilter: (item: GridFilterItem) => void;
 }
 
-const useStyles = makeStyles(
-  {
-    root: {
-      display: 'flex',
-      justifyContent: 'space-around',
-      padding: 8,
-    },
-    linkOperatorSelect: {
-      minWidth: 60,
-    },
-    columnSelect: {
-      width: 150,
-    },
-    operatorSelect: {
-      width: 120,
-    },
-    filterValueInput: {
-      width: 190,
-    },
-    closeIcon: {
-      flexShrink: 0,
-      justifyContent: 'flex-end',
-      marginRight: 6,
-      marginBottom: 2,
-    },
-  },
-  { name: 'MuiGridFilterForm' },
-);
+type OwnerState = { classes: GridComponentProps['classes'] };
+
+const useUtilityClasses = (ownerState: OwnerState) => {
+  const { classes } = ownerState;
+
+  const slots = {
+    root: ['filterForm'],
+  };
+
+  return composeClasses(slots, getDataGridUtilityClass, classes);
+};
+
+const GridFilterFormRoot = styled('div', {
+  name: 'MuiDataGrid',
+  slot: 'FilterForm',
+})(({ theme }) => ({
+  display: 'flex',
+  justifyContent: 'space-around',
+  padding: theme.spacing(1),
+}));
 
 function GridFilterForm(props: GridFilterFormProps) {
   const {
@@ -64,7 +60,6 @@ function GridFilterForm(props: GridFilterFormProps) {
     disableMultiFilterOperator,
     applyMultiFilterOperatorChanges,
   } = props;
-  const classes = useStyles();
   const apiRef = useGridApiContext();
   const filterableColumns = useGridSelector(apiRef, filterableGridColumnsSelector);
   const linkOperatorSelectId = useId();
@@ -73,6 +68,9 @@ function GridFilterForm(props: GridFilterFormProps) {
   const columnSelectLabelId = useId();
   const operatorSelectId = useId();
   const operatorSelectLabelId = useId();
+  const rootProps = useGridRootProps();
+  const ownerState = { classes: rootProps.classes };
+  const classes = useUtilityClasses(ownerState);
 
   const getCurrentColumn = React.useCallback(() => {
     if (!item.columnField) {
@@ -134,8 +132,11 @@ function GridFilterForm(props: GridFilterFormProps) {
   const currentOperator = getCurrentOperator();
 
   return (
-    <div className={classes.root}>
-      <FormControl variant="standard" className={classes.closeIcon}>
+    <GridFilterFormRoot className={classes.root}>
+      <FormControl
+        variant="standard"
+        sx={{ flexShrink: 0, justifyContent: 'flex-end', marginRight: 0.5, marginBottom: 0.2 }}
+      >
         <IconButton
           aria-label={apiRef.current.getLocaleText('filterPanelDeleteIconLabel')}
           title={apiRef.current.getLocaleText('filterPanelDeleteIconLabel')}
@@ -147,8 +148,8 @@ function GridFilterForm(props: GridFilterFormProps) {
       </FormControl>
       <FormControl
         variant="standard"
-        className={classes.linkOperatorSelect}
-        style={{
+        sx={{
+          minWidth: 60,
           display: hasMultipleFilters ? 'block' : 'none',
           visibility: showMultiFilterOperators ? 'visible' : 'hidden',
         }}
@@ -172,7 +173,7 @@ function GridFilterForm(props: GridFilterFormProps) {
           </option>
         </Select>
       </FormControl>
-      <FormControl variant="standard" className={classes.columnSelect}>
+      <FormControl variant="standard" sx={{ width: 150 }}>
         <InputLabel htmlFor={columnSelectId} id={columnSelectLabelId}>
           {apiRef.current.getLocaleText('filterPanelColumns')}
         </InputLabel>
@@ -190,7 +191,7 @@ function GridFilterForm(props: GridFilterFormProps) {
           ))}
         </Select>
       </FormControl>
-      <FormControl variant="standard" className={classes.operatorSelect}>
+      <FormControl variant="standard" sx={{ width: 120 }}>
         <InputLabel htmlFor={operatorSelectId} id={operatorSelectLabelId}>
           {apiRef.current.getLocaleText('filterPanelOperators')}
         </InputLabel>
@@ -211,7 +212,7 @@ function GridFilterForm(props: GridFilterFormProps) {
           ))}
         </Select>
       </FormControl>
-      <FormControl variant="standard" className={classes.filterValueInput}>
+      <FormControl variant="standard" sx={{ width: 190 }}>
         {currentOperator?.InputComponent ? (
           <currentOperator.InputComponent
             apiRef={apiRef}
@@ -221,7 +222,7 @@ function GridFilterForm(props: GridFilterFormProps) {
           />
         ) : null}
       </FormControl>
-    </div>
+    </GridFilterFormRoot>
   );
 }
 

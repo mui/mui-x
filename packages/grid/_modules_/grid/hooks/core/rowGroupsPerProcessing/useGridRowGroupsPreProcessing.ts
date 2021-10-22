@@ -20,7 +20,7 @@ export const useGridRowGroupsPreProcessing = (apiRef: GridApiRef) => {
   );
 
   const registerRowGroupsBuilder = React.useCallback<
-    GridRowGroupsPreProcessingApi['UNSTABLE_registerRowGroupsBuilder']
+    GridRowGroupsPreProcessingApi['unstable_registerRowGroupsBuilder']
   >(
     (processingName, rowGroupingPreProcessing) => {
       const rowGroupingPreProcessingBefore =
@@ -34,7 +34,7 @@ export const useGridRowGroupsPreProcessing = (apiRef: GridApiRef) => {
     [apiRef],
   );
 
-  const groupRows = React.useCallback<GridRowGroupsPreProcessingApi['UNSTABLE_groupRows']>(
+  const groupRows = React.useCallback<GridRowGroupsPreProcessingApi['unstable_groupRows']>(
     (...params) => {
       let response: GridRowGroupingResult | null = null;
       const preProcessingList = Array.from(rowGroupsPreProcessingRef.current.values());
@@ -57,8 +57,8 @@ export const useGridRowGroupsPreProcessing = (apiRef: GridApiRef) => {
   );
 
   const rowGroupsPreProcessingApi: GridRowGroupsPreProcessingApi = {
-    UNSTABLE_registerRowGroupsBuilder: registerRowGroupsBuilder,
-    UNSTABLE_groupRows: groupRows,
+    unstable_registerRowGroupsBuilder: registerRowGroupsBuilder,
+    unstable_groupRows: groupRows,
   };
 
   useGridApiMethod(apiRef, rowGroupsPreProcessingApi, 'GridRowGroupsPreProcessing');

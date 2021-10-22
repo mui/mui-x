@@ -9,7 +9,6 @@ import {
   GridRowId,
   GridRowsProp,
   GridRowIdGetter,
-  GridRowData,
 } from '../../../models/gridRows';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
@@ -29,12 +28,12 @@ export interface GridRowsInternalCache {
 }
 
 function getGridRowId(
-  rowData: GridRowData,
+  rowModel: GridRowModel,
   getRowId?: GridRowIdGetter,
   detailErrorMessage?: string,
 ): GridRowId {
-  const id = getRowId ? getRowId(rowData) : rowData.id;
-  checkGridRowIdIsValid(id, rowData, detailErrorMessage);
+  const id = getRowId ? getRowId(rowModel) : rowModel.id;
+  checkGridRowIdIsValid(id, rowModel, detailErrorMessage);
   return id;
 }
 

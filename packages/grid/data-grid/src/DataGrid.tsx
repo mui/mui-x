@@ -199,7 +199,7 @@ DataGridRaw.propTypes = {
    */
   getRowClassName: PropTypes.func,
   /**
-   * Return the id of a given [[GridRowData]].
+   * Return the id of a given [[GridRowModel]].
    */
   getRowId: PropTypes.func,
   /**
