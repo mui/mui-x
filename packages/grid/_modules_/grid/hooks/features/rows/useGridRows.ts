@@ -23,11 +23,10 @@ import {
   gridRowIdsSelector,
 } from './gridRowsSelector';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
-
-type GridRowsInternalCacheStateValue = Pick<GridRowsState, 'idRowsLookup' | 'ids'>;
+import { GridRowGroupParams } from '../../core/rowGroupsPerProcessing';
 
 interface GridRowsInternalCacheState {
-  value: GridRowsInternalCacheStateValue;
+  value: GridRowGroupParams;
 
   /**
    * The value of the properties used by the grouping when the internal cache was created
@@ -71,7 +70,7 @@ export function convertGridRowsPropToState({
 }: ConvertGridRowsPropToStateParams): GridRowsInternalCacheState {
   const props = inputProps ?? prevState.props;
 
-  let value: GridRowsInternalCacheStateValue;
+  let value: GridRowGroupParams;
   if (inputRows) {
     value = {
       idRowsLookup: {},
@@ -100,18 +99,16 @@ const getRowsStateFromCache = (
 ): GridRowsState => {
   const {
     props: { rowCount: propRowCount = 0 },
-    value: { ids, idRowsLookup },
+    value,
   } = rowsCache.state;
 
-  const groupingResponse = apiRef.current.unstable_groupRows({
-    idRowsLookup,
-    ids,
-  });
+  const groupingResponse = apiRef.current.unstable_groupRows(value);
 
   const dataTopLevelRowCount = Object.values(groupingResponse.tree).filter(
     (node) => node.parent == null,
   ).length;
-  const totalRowCount = propRowCount > ids.length ? propRowCount : ids.length;
+  const totalRowCount =
+    propRowCount > groupingResponse.ids.length ? propRowCount : groupingResponse.ids.length;
   const totalTopLevelRowCount =
     propRowCount > dataTopLevelRowCount ? propRowCount : dataTopLevelRowCount;
 
@@ -253,7 +250,7 @@ export const useGridRows = (
 
       const deletedRowIds: GridRowId[] = [];
 
-      const newStateValue: GridRowsInternalCacheStateValue = {
+      const newStateValue: GridRowGroupParams = {
         idRowsLookup: { ...rowsCache.current.state.value.idRowsLookup },
         ids: [...rowsCache.current.state.value.ids],
       };
