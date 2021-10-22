@@ -460,7 +460,7 @@ async function buildDocs(options: {
   }
   reactApi.demos = demos;
 
-  reactApi.styles = parseStyles(reactApi, program);
+  reactApi.styles = await parseStyles(reactApi, program);
   reactApi.styles.name = 'MuiDataGrid'; // TODO it should not be hardcoded
   reactApi.styles.classes.forEach((key) => {
     reactApi.styles.globalClasses[key] = generateClassName(
