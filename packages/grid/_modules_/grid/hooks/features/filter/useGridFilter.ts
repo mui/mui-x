@@ -13,12 +13,12 @@ import { useGridLogger } from '../../utils/useGridLogger';
 import { filterableGridColumnsIdsSelector } from '../columns/gridColumnsSelector';
 import { useGridState } from '../../utils/useGridState';
 import { GridPreferencePanelsValue } from '../preferencesPanel/gridPreferencePanelsValue';
-import { sortedGridRowsSelector } from '../sorting/gridSortingSelector';
+import { gridSortedRowIdsSelector } from '../sorting/gridSortingSelector';
 import { getDefaultGridFilterModel } from './gridFilterState';
 import { GridFilterModel } from '../../../models/gridFilterModel';
 import {
   gridVisibleRowsLookupSelector,
-  visibleSortedGridRowsSelector,
+  gridSortedVisibleRowEntriesSelector,
   gridFilterModelSelector,
 } from './gridFilterSelector';
 import { useGridStateInit } from '../../utils/useGridStateInit';
@@ -127,9 +127,9 @@ export const useGridFilter = (
 
         // We run the selector on the state here to avoid rendering the rows and then filtering again.
         // This way we have latest rows on the first rendering
-        const rows = sortedGridRowsSelector(state);
+        const rows = gridSortedRowIdsSelector(state);
 
-        rows.forEach((row: GridRowModel, id: GridRowId) => {
+        rows.forEach((id) => {
           const params = apiRef.current.getCellParams(id, newFilterItem.columnField!);
 
           const isShown = applyFilterOnRow(params);
@@ -304,10 +304,10 @@ export const useGridFilter = (
     [apiRef, logger, setGridState],
   );
 
-  const getVisibleRowModels = React.useCallback<GridFilterApi['getVisibleRowModels']>(
-    () => visibleSortedGridRowsSelector(apiRef.current.state),
-    [apiRef],
-  );
+  const getVisibleRowModels = React.useCallback<GridFilterApi['getVisibleRowModels']>(() => {
+    const visibleSortedRows = gridSortedVisibleRowEntriesSelector(apiRef.current.state);
+    return new Map<GridRowId, GridRowModel>(visibleSortedRows.map((row) => [row.id, row.model]));
+  }, [apiRef]);
 
   useGridApiMethod<GridFilterApi>(
     apiRef,
