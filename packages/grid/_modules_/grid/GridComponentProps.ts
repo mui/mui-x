@@ -469,7 +469,7 @@ interface GridComponentOtherProps {
    */
   error?: any;
   /**
-   * Return the id of a given [[GridRowData]].
+   * Return the id of a given [[GridRowModel]].
    */
   getRowId?: GridRowIdGetter;
   /**

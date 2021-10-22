@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { GridEvents } from '../constants/eventsConstants';
-import { GridRowId, GridRowData } from '../models/gridRows';
+import { GridRowId, GridRowModel } from '../models/gridRows';
 import { GridEditModes, GridRowModes, GridEditRowsModel } from '../models/gridEditRowModel';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { getDataGridUtilityClass, gridClasses } from '../gridClasses';
@@ -23,7 +23,7 @@ export interface GridRowProps {
   index: number;
   rowHeight: number;
   containerWidth: number;
-  row: GridRowData;
+  row: GridRowModel;
   firstColumnToRender: number;
   lastColumnToRender: number;
   visibleColumns: GridStateColDef[];

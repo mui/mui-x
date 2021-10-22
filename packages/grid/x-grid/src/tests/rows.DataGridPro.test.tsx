@@ -10,7 +10,7 @@ import { getCell, getRow, getColumnValues } from 'test/utils/helperFn';
 import {
   GridApiRef,
   GridComponentProps,
-  GridRowData,
+  GridRowModel,
   useGridApiRef,
   DataGridPro,
   DataGridProProps,
@@ -261,7 +261,7 @@ describe('<DataGridPro /> - Rows', () => {
     it('update row data should process getRowId', () => {
       const TestCaseGetRowId = () => {
         apiRef = useGridApiRef();
-        const getRowId = React.useCallback((row: GridRowData) => row.idField, []);
+        const getRowId = React.useCallback((row: GridRowModel) => row.idField, []);
         return (
           <div style={{ width: 300, height: 300 }}>
             <DataGridPro
