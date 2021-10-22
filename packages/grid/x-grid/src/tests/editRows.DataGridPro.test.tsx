@@ -1040,5 +1040,77 @@ describe('<DataGridPro /> - Edit Rows', () => {
       // @ts-expect-error need to migrate helpers to TypeScript
       expect(getCell(1, 0).querySelector('input')).toHaveFocus();
     });
+
+    it('should call the valueSetter on each column', () => {
+      const valueSetter = spy(({ row }) => row);
+      render(
+        <TestCase
+          editMode="row"
+          rows={[{ id: 0, firstName: 'John', lastName: 'Doe' }]}
+          columns={[
+            {
+              field: 'id',
+              editable: true,
+              valueSetter,
+            },
+            {
+              field: 'fullName',
+              editable: true,
+              valueGetter: ({ row }) => `${row.firstName} ${row.lastName}`,
+              valueSetter: ({ value, row }) => {
+                const [firstName, lastName] = (value as string).split(' ');
+                return { ...row, firstName, lastName };
+              },
+            },
+          ]}
+        />,
+      );
+      const firstCell = getCell(0, 1);
+      firstCell.focus();
+      fireEvent.doubleClick(firstCell);
+      const input = firstCell.querySelector('input')!;
+      fireEvent.change(input, { target: { value: 'Peter Smith' } });
+      fireEvent.keyDown(input, { key: 'Enter' });
+      expect(valueSetter.callCount).to.equal(1);
+      expect(valueSetter.lastCall.args[0]).to.deep.equal({
+        row: { id: 0, firstName: 'John', lastName: 'Doe' },
+        value: 0,
+      });
+      expect(apiRef.current.getRowModels().get(0)).to.deep.equal({
+        id: 0,
+        firstName: 'Peter',
+        lastName: 'Smith',
+      });
+    });
+  });
+
+  it('should call valueSetter before committing the value', () => {
+    render(
+      <TestCase
+        columns={[
+          {
+            field: 'fullName',
+            editable: true,
+            valueGetter: ({ row }) => `${row.firstName} ${row.lastName}`,
+            valueSetter: ({ value, row }) => {
+              const [firstName, lastName] = (value as string).split(' ');
+              return { ...row, firstName, lastName };
+            },
+          },
+        ]}
+        rows={[{ id: 0, firstName: 'John', lastName: 'Doe' }]}
+      />,
+    );
+    const cell = getCell(0, 0);
+    cell.focus();
+    fireEvent.doubleClick(cell);
+    const input = cell.querySelector('input')!;
+    fireEvent.change(input, { target: { value: 'Peter Smith' } });
+    fireEvent.keyDown(input, { key: 'Enter' });
+    expect(apiRef.current.getRowModels().get(0)).to.deep.equal({
+      id: 0,
+      firstName: 'Peter',
+      lastName: 'Smith',
+    });
   });
 });
