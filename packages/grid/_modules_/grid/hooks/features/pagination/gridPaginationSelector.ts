@@ -2,6 +2,7 @@ import { createSelector } from 'reselect';
 import { GridState } from '../../../models/gridState';
 import {
   gridSortedVisibleRowEntriesSelector,
+  gridSortedVisibleRowIdsSelector,
   gridSortedVisibleTopLevelRowEntriesSelector,
 } from '../filter/gridFilterSelector';
 import { GridPaginationState } from './gridPaginationState';
@@ -81,6 +82,21 @@ export const gridSortedVisiblePaginatedRowEntriesSelector = createSelector(
     }
 
     return visibleSortedRowEntries.slice(
+      paginationRange.firstRowIndex,
+      paginationRange.lastRowIndex + 1,
+    );
+  },
+);
+
+export const gridSortedVisiblePaginatedRowIdsSelector = createSelector(
+  gridSortedVisibleRowIdsSelector,
+  gridPaginationRowRangeSelector,
+  (visibleSortedRowIds, paginationRange) => {
+    if (!paginationRange) {
+      return [];
+    }
+
+    return visibleSortedRowIds.slice(
       paginationRange.firstRowIndex,
       paginationRange.lastRowIndex + 1,
     );

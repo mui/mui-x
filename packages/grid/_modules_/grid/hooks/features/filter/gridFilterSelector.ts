@@ -34,6 +34,11 @@ export const gridSortedVisibleRowEntriesSelector = createSelector(
     sortedRows.filter((row) => visibleRowsLookup[row.id] !== false),
 );
 
+export const gridSortedVisibleRowIdsSelector = createSelector(
+  gridSortedVisibleRowEntriesSelector,
+  (visibleSortedRowEntries) => visibleSortedRowEntries.map((row) => row.id),
+);
+
 export const gridSortedVisibleTopLevelRowEntriesSelector = createSelector(
   gridSortedVisibleRowEntriesSelector,
   gridRowTreeSelector,

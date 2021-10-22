@@ -12,8 +12,8 @@ import { getDataGridUtilityClass } from '../../gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { GridComponentProps } from '../../GridComponentProps';
 import { GridHeaderSelectionCheckboxParams } from '../../models/params/gridHeaderSelectionCheckboxParams';
-import { gridSortedVisibleRowEntriesSelector } from '../../hooks/features/filter/gridFilterSelector';
-import { gridSortedVisiblePaginatedRowEntriesSelector } from '../../hooks/features/pagination/gridPaginationSelector';
+import { gridSortedVisibleRowIdsSelector } from '../../hooks/features/filter/gridFilterSelector';
+import { gridSortedVisiblePaginatedRowIdsSelector } from '../../hooks/features/pagination/gridPaginationSelector';
 
 type OwnerState = { classes: GridComponentProps['classes'] };
 
@@ -36,10 +36,10 @@ const GridHeaderCheckbox = React.forwardRef<HTMLInputElement, GridColumnHeaderPa
     const classes = useUtilityClasses(ownerState);
     const tabIndexState = useGridSelector(apiRef, gridTabIndexColumnHeaderSelector);
     const selection = useGridSelector(apiRef, gridSelectionStateSelector);
-    const visibleRows = useGridSelector(apiRef, gridSortedVisibleRowEntriesSelector);
-    const paginatedVisibleRows = useGridSelector(
+    const visibleRowIds = useGridSelector(apiRef, gridSortedVisibleRowIdsSelector);
+    const paginatedVisibleRowIds = useGridSelector(
       apiRef,
-      gridSortedVisiblePaginatedRowEntriesSelector,
+      gridSortedVisiblePaginatedRowIdsSelector,
     );
 
     const filteredSelection = React.useMemo(
@@ -53,14 +53,14 @@ const GridHeaderCheckbox = React.forwardRef<HTMLInputElement, GridColumnHeaderPa
     // All the rows that could be selected / unselected by toggling this checkbox
     const selectionCandidates = React.useMemo(() => {
       if (!rootProps.pagination || !rootProps.checkboxSelectionVisibleOnly) {
-        return visibleRows.map((row) => row.id);
+        return visibleRowIds;
       }
-      return paginatedVisibleRows.map((row) => row.id);
+      return paginatedVisibleRowIds;
     }, [
       rootProps.pagination,
       rootProps.checkboxSelectionVisibleOnly,
-      paginatedVisibleRows,
-      visibleRows,
+      paginatedVisibleRowIds,
+      visibleRowIds,
     ]);
 
     // Amount of rows selected and that could be selected / unselected by toggling this checkbox

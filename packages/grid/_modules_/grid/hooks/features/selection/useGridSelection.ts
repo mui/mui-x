@@ -16,8 +16,11 @@ import {
   selectedGridRowsSelector,
   selectedIdsLookupSelector,
 } from './gridSelectionSelector';
-import { gridSortedVisiblePaginatedRowEntriesSelector } from '../pagination';
-import { gridSortedVisibleRowEntriesSelector } from '../filter/gridFilterSelector';
+import { gridSortedVisiblePaginatedRowIdsSelector } from '../pagination/gridPaginationSelector';
+import {
+  gridSortedVisibleRowEntriesSelector,
+  gridSortedVisibleRowIdsSelector,
+} from '../filter/gridFilterSelector';
 import { GridHeaderSelectionCheckboxParams } from '../../../models/params/gridHeaderSelectionCheckboxParams';
 import { GridCellParams } from '../../../models/params/gridCellParams';
 import { GridRowSelectionCheckboxParams } from '../../../models/params/gridRowSelectionCheckboxParams';
@@ -317,10 +320,10 @@ export const useGridSelection = (
         props.checkboxSelectionVisibleOnly && props.pagination;
 
       const selector = shouldLimitSelectionToCurrentPage
-        ? gridSortedVisiblePaginatedRowEntriesSelector
-        : gridSortedVisibleRowEntriesSelector;
+        ? gridSortedVisiblePaginatedRowIdsSelector
+        : gridSortedVisibleRowIdsSelector;
 
-      const rowsToBeSelected = selector(apiRef.current.state).map((row) => row.id);
+      const rowsToBeSelected = selector(apiRef.current.state);
 
       apiRef.current.selectRows(rowsToBeSelected, params.value);
     },

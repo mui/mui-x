@@ -3,7 +3,7 @@ import { GridApiRef } from '../../../models/api/gridApiRef';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridSelector } from '../../utils/useGridSelector';
 import { allGridColumnsSelector, visibleGridColumnsSelector } from '../columns';
-import { gridSortedVisibleRowEntriesSelector } from '../filter';
+import { gridSortedVisibleRowIdsSelector } from '../filter';
 import { GridCsvExportApi } from '../../../models/api/gridCsvExportApi';
 import { GridCsvExportOptions } from '../../../models/gridExport';
 import { useGridLogger } from '../../utils/useGridLogger';
@@ -21,7 +21,7 @@ import { GridStateColDef } from '../../../models';
 export const useGridCsvExport = (apiRef: GridApiRef): void => {
   const logger = useGridLogger(apiRef, 'useGridCsvExport');
   const visibleColumns = useGridSelector(apiRef, visibleGridColumnsSelector);
-  const visibleSortedRowEntries = useGridSelector(apiRef, gridSortedVisibleRowEntriesSelector);
+  const visibleSortedRowIds = useGridSelector(apiRef, gridSortedVisibleRowIdsSelector);
   const columns = useGridSelector(apiRef, allGridColumnsSelector);
 
   const getDataAsCsv = React.useCallback(
@@ -39,7 +39,6 @@ export const useGridCsvExport = (apiRef: GridApiRef): void => {
         exportedColumns = validColumns.filter((column) => !column.disableExport);
       }
 
-      const visibleSortedRowIds = visibleSortedRowEntries.map((el) => el.id);
       const selectedRows = apiRef.current.getSelectedRows();
       const exportedRowIds =
         selectedRows.size > 0
@@ -54,7 +53,7 @@ export const useGridCsvExport = (apiRef: GridApiRef): void => {
         includeHeaders: options?.includeHeaders ?? true,
       });
     },
-    [logger, visibleColumns, columns, visibleSortedRowEntries, apiRef],
+    [logger, visibleColumns, columns, visibleSortedRowIds, apiRef],
   );
 
   const exportDataAsCsv = React.useCallback(
