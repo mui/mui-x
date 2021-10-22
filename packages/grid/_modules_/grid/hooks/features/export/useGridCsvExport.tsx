@@ -45,7 +45,7 @@ export const useGridCsvExport = (apiRef: GridApiRef): void => {
 
       let exportedRowIds = visibleSortedRowIds;
       if (selection.length) {
-        exportedRowIds = visibleSortedRowIds.filter((id) => selection.includes(id));
+        exportedRowIds = exportedRowIds.filter((id) => selection.includes(id));
       }
 
       return buildCSV({
