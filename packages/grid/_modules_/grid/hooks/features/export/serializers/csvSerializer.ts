@@ -3,9 +3,10 @@ import {
   GRID_CHECKBOX_SELECTION_COL_DEF,
   GridStateColDef,
   GridRowId,
+  GridCellValue,
 } from '../../../../models';
 
-const serialiseCellValue = (value: any, delimiterCharacter: string) => {
+const serialiseCellValue = (value: GridCellValue, delimiterCharacter: string) => {
   if (typeof value === 'string') {
     const formattedValue = value.replace(/"/g, '""');
     return formattedValue.includes(delimiterCharacter) ? `"${formattedValue}"` : formattedValue;
@@ -14,33 +15,27 @@ const serialiseCellValue = (value: any, delimiterCharacter: string) => {
   return value;
 };
 
-export function serialiseRow(
+const serialiseRow = (
   id: GridRowId,
   columns: GridStateColDef[],
   getCellParams: (id: GridRowId, field: string) => GridCellParams,
   delimiterCharacter: string,
-): Array<string> {
-  const mappedRow: string[] = [];
-  columns.forEach(
-    (column) =>
-      column.field !== GRID_CHECKBOX_SELECTION_COL_DEF.field &&
-      mappedRow.push(
-        serialiseCellValue(getCellParams(id, column.field).formattedValue, delimiterCharacter),
-      ),
+) =>
+  columns.map((column) =>
+    serialiseCellValue(getCellParams(id, column.field).formattedValue, delimiterCharacter),
   );
-  return mappedRow;
-}
 
 interface BuildCSVOptions {
   columns: GridStateColDef[];
   rowIds: GridRowId[];
   getCellParams: (id: GridRowId, field: string) => GridCellParams;
   delimiterCharacter: string;
-  includeHeaders?: boolean;
+  includeHeaders: boolean;
 }
 
 export function buildCSV(options: BuildCSVOptions): string {
-  const { columns, rowIds, getCellParams, delimiterCharacter, includeHeaders = true } = options;
+  const { columns, rowIds, getCellParams, delimiterCharacter, includeHeaders } = options;
+
   const CSVBody = rowIds
     .reduce<string>(
       (acc, id) =>
