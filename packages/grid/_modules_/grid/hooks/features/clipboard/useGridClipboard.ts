@@ -5,6 +5,7 @@ import { visibleGridColumnsSelector } from '../columns/gridColumnsSelector';
 import { GRID_CHECKBOX_SELECTION_COL_DEF } from '../../../models/colDef';
 import { GridClipboardApi } from '../../../models/api';
 import { useGridApiMethod, useGridNativeEventListener, useGridSelector } from '../../utils';
+import { GridRowId } from '../../../models';
 
 function writeToClipboardPolyfill(data: string) {
   const span = document.createElement('span');
@@ -38,19 +39,18 @@ export const useGridClipboard = (apiRef: GridApiRef): void => {
 
   const copySelectedRowsToClipboard = React.useCallback(
     (includeHeaders = false) => {
-      const selectedRows = apiRef.current.getSelectedRows();
+      const selectedRows: GridRowId[] = Array.from(apiRef.current.getSelectedRows().keys());
       const filteredColumns = visibleColumns.filter(
         (column) => column.field !== GRID_CHECKBOX_SELECTION_COL_DEF.field,
       );
 
-      if (selectedRows.size === 0 || filteredColumns.length === 0) {
+      if (selectedRows.length === 0 || filteredColumns.length === 0) {
         return;
       }
 
       const data = buildCSV({
         columns: visibleColumns,
-        rows: selectedRows,
-        selectedRowIds: [],
+        rowIds: selectedRows,
         includeHeaders,
         getCellParams: apiRef.current.getCellParams,
         delimiterCharacter: '\t',
