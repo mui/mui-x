@@ -73,7 +73,7 @@ export const gridPaginationRowRangeSelector = createSelector(
   },
 );
 
-export const gridSortedVisiblePaginatedRowEntriesSelector = createSelector(
+export const gridPaginatedVisibleSortedGridRowEntriesSelector = createSelector(
   gridSortedVisibleRowEntriesSelector,
   gridPaginationRowRangeSelector,
   (visibleSortedRowEntries, paginationRange) => {
@@ -88,7 +88,7 @@ export const gridSortedVisiblePaginatedRowEntriesSelector = createSelector(
   },
 );
 
-export const gridSortedVisiblePaginatedRowIdsSelector = createSelector(
+export const gridPaginatedVisibleSortedGridRowIdsSelector = createSelector(
   gridSortedVisibleRowIdsSelector,
   gridPaginationRowRangeSelector,
   (visibleSortedRowIds, paginationRange) => {

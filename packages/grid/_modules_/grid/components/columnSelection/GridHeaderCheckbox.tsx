@@ -13,7 +13,7 @@ import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { GridComponentProps } from '../../GridComponentProps';
 import { GridHeaderSelectionCheckboxParams } from '../../models/params/gridHeaderSelectionCheckboxParams';
 import { gridSortedVisibleRowIdsSelector } from '../../hooks/features/filter/gridFilterSelector';
-import { gridSortedVisiblePaginatedRowIdsSelector } from '../../hooks/features/pagination/gridPaginationSelector';
+import { gridPaginatedVisibleSortedGridRowIdsSelector } from '../../hooks/features/pagination/gridPaginationSelector';
 
 type OwnerState = { classes: GridComponentProps['classes'] };
 
@@ -39,7 +39,7 @@ const GridHeaderCheckbox = React.forwardRef<HTMLInputElement, GridColumnHeaderPa
     const visibleRowIds = useGridSelector(apiRef, gridSortedVisibleRowIdsSelector);
     const paginatedVisibleRowIds = useGridSelector(
       apiRef,
-      gridSortedVisiblePaginatedRowIdsSelector,
+      gridPaginatedVisibleSortedGridRowIdsSelector,
     );
 
     const filteredSelection = React.useMemo(

@@ -1,7 +1,7 @@
 import { GridComponentProps } from '../../GridComponentProps';
 import {
   gridPaginationRowRangeSelector,
-  gridSortedVisiblePaginatedRowEntriesSelector,
+  gridPaginatedVisibleSortedGridRowEntriesSelector,
 } from '../features/pagination/gridPaginationSelector';
 import { gridSortedVisibleRowEntriesSelector } from '../features/filter/gridFilterSelector';
 import type { GridApiRef, GridRowEntry } from '../../models';
@@ -24,7 +24,7 @@ export const useRowsInCurrentPage = (
 
   if (props.pagination && props.paginationMode === 'client') {
     range = gridPaginationRowRangeSelector(state);
-    rows = gridSortedVisiblePaginatedRowEntriesSelector(state);
+    rows = gridPaginatedVisibleSortedGridRowEntriesSelector(state);
   } else {
     rows = gridSortedVisibleRowEntriesSelector(state);
     if (rows.length === 0) {

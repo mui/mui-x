@@ -16,7 +16,7 @@ import {
   selectedGridRowsSelector,
   selectedIdsLookupSelector,
 } from './gridSelectionSelector';
-import { gridSortedVisiblePaginatedRowIdsSelector } from '../pagination/gridPaginationSelector';
+import { gridPaginatedVisibleSortedGridRowIdsSelector } from '../pagination/gridPaginationSelector';
 import {
   gridSortedVisibleRowEntriesSelector,
   gridSortedVisibleRowIdsSelector,
@@ -320,7 +320,7 @@ export const useGridSelection = (
         props.checkboxSelectionVisibleOnly && props.pagination;
 
       const selector = shouldLimitSelectionToCurrentPage
-        ? gridSortedVisiblePaginatedRowIdsSelector
+        ? gridPaginatedVisibleSortedGridRowIdsSelector
         : gridSortedVisibleRowIdsSelector;
 
       const rowsToBeSelected = selector(apiRef.current.state);
