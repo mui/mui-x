@@ -132,7 +132,32 @@ const columns: GridColDef[] = [
 
 {{"demo": "pages/components/data-grid/columns/ValueGetterGrid.js", "bg": "inline"}}
 
-The value generated is used for filtering, sorting, rendering, etc unless overridden by a more specific configuration.
+The value generated is used for filtering, sorting, rendering, etc. unless overridden by a more specific configuration.
+
+### Value setter
+
+The value setter is to be used when editing rows and it is the counterpart of the value getter.
+It allows to customize how the entered value is stored in the row.
+A common use case for it is when the data is a nested structure.
+Refer to the [cell editing](/components/data-grid/editing/#saving-nested-structures) documentation to see an example using it.
+
+```tsx
+function setFullName(params: GridValueSetterParams) {
+  const [firstName, lastName] = params.value!.toString().split(' ');
+  return { ...params.row, firstName, lastName };
+}
+
+const columns: GridColDef[] = [
+  { field: 'firstName', headerName: 'First name', width: 130 },
+  { field: 'lastName', headerName: 'Last name', width: 130 },
+  {
+    field: 'fullName',
+    headerName: 'Full name',
+    width: 160,
+    valueSetter: setFullName,
+  },
+];
+```
 
 ### Value formatter
 
