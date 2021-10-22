@@ -233,7 +233,14 @@ DataGridProRaw.propTypes = {
    * Set it to 'server' if you would like to handle filtering on the server-side.
    * @default "client"
    */
-  filterMode: PropTypes.oneOf(['client', 'server']),
+  filterMode: chainPropTypes(PropTypes.oneOf(['client', 'server']), (props: any) => {
+    if (props.treeData && props.filterMode === 'server') {
+      return new Error(
+        'MUI: The `filterMode="server"` prop is not available when the `treeData` is enabled.',
+      );
+    }
+    return null;
+  }),
   /**
    * Set the filter model of the grid.
    */

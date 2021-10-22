@@ -60,12 +60,12 @@ export const useGridTreeData = (
       return [...columns.slice(0, index), groupingColDef, ...columns.slice(index)];
     };
 
-    apiRef.current.UNSTABLE_registerColumnPreProcessing('treeData', addGroupingColumn);
+    apiRef.current.unstable_registerColumnPreProcessing('treeData', addGroupingColumn);
   }, [apiRef, props.treeData, groupingColDef]);
 
   const updateRowGrouping = React.useCallback(() => {
     if (!props.treeData) {
-      return apiRef.current.UNSTABLE_registerRowGroupsBuilder('treeData', null);
+      return apiRef.current.unstable_registerRowGroupsBuilder('treeData', null);
     }
 
     const groupRows: GridRowGroupingPreProcessing = (params) => {
@@ -87,7 +87,7 @@ export const useGridTreeData = (
       });
     };
 
-    return apiRef.current.UNSTABLE_registerRowGroupsBuilder('treeData', groupRows);
+    return apiRef.current.unstable_registerRowGroupsBuilder('treeData', groupRows);
   }, [apiRef, props.getTreeDataPath, props.treeData, props.defaultGroupingExpansionDepth]);
 
   useFirstRender(() => {

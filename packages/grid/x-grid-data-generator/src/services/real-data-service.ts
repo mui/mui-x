@@ -1,9 +1,9 @@
-import { GridRowData } from '@mui/x-data-grid-pro';
+import { GridRowModel } from '@mui/x-data-grid-pro';
 import asyncWorker from '../asyncWorker';
 import { GridColDefGenerator, GridDataGeneratorContext } from './gridColDefGenerator';
 
 export interface GeneratedDemoData {
-  rows: GridRowData[];
+  rows: GridRowModel[];
   columns: GridColDefGenerator[];
 }
 

@@ -1,5 +1,4 @@
-import { DataGridProProps } from '@mui/x-data-grid-pro';
-import { GridRowData } from '../../../_modules_';
+import { DataGridProProps, GridRowModel } from '@mui/x-data-grid-pro';
 import { GeneratedDemoData } from './real-data-service';
 import { randomArrayItem } from './random-generator';
 
@@ -28,7 +27,7 @@ export interface DemoTreeDataValue
     GeneratedDemoData {}
 
 interface RowWithParentIndex {
-  value: GridRowData;
+  value: GridRowModel;
   parentIndex: number | null;
 }
 

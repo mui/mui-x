@@ -388,6 +388,16 @@ describe('<DataGridPro /> - Tree Data', () => {
 
       expect(getColumnValues(1)).to.deep.equal(['B', 'B.A', 'B.B']);
     });
+
+    it('should throw an error when using filterMode="server" and treeData', () => {
+      expect(() => {
+        render(<Test filterMode="server" />);
+      })
+        // @ts-expect-error need to migrate helpers to TypeScript
+        .toErrorDev(
+          'MUI: The `filterMode="server"` prop is not available when the `treeData` is enabled.',
+        );
+    });
   });
 
   describe('sorting', () => {
