@@ -38,6 +38,7 @@ export const useGridClipboard = (apiRef: GridApiRef): void => {
 
       const data = apiRef.current.getDataAsCsv({
         includeHeaders,
+        delimiter: '\t',
       });
 
       if (navigator.clipboard) {
