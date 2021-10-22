@@ -7,6 +7,12 @@ import { gridSortedVisibleRowEntriesSelector } from '../features/filter/gridFilt
 import type { GridApiRef, GridRowEntry } from '../../models';
 import { useGridState } from './useGridState';
 
+/**
+ * Compute the list of the rows in the current page
+ * - If the pagination is disabled or in server mode, it equals all the visible rows
+ * - If the row tree has several layers, it contains up to `state.pageSize` top level rows and all their descendants
+ * - If the row tree is flat, it only contains up to `state.pageSize` rows
+ */
 export const useRowsInCurrentPage = (
   apiRef: GridApiRef,
   props: Pick<GridComponentProps, 'pagination' | 'paginationMode'>,
