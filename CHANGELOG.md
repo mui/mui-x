@@ -58,7 +58,10 @@ A big thanks to the 5 contributors who made this release possible. Here are some
   +const rootElement = apiRef.current.rootElementRef;
   ```
 
-- [DataGrid] If you only want to set the initial value of a state (enable for preferencePanel, filter.filterModel and sort.sortModel) (#2848) @flaviendelangle
+- [DataGrid] Remove the `state` prop and use the `initialState` prop (#2848) @flaviendelangle
+
+  Note that `initialState` only allows the `preferencePanel`, `filter.filterModel` and `sort.sortModel` keys.
+  To fully control the state, use the the feature's model prop and change callback (e.g. `filterModel` and `onFilterModelChange`).
 
   ```diff
   <DataGrid
@@ -71,8 +74,6 @@ A big thanks to the 5 contributors who made this release possible. Here are some
     }}
   />
   ```
-
-  To fully control the state, use the the feature's model prop and change callback (e.g. `filterModel` and `onFilterModelChange`).
 
 - [DataGridPro] Remove the `onViewportRowsChange` prop and the `viewportRowsChange` event (#2673) @m4theushw
 
