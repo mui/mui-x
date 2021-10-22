@@ -37,14 +37,6 @@ function GridFilterInputMultipleValue(
 
   const onFilterChange = React.useCallback(
     (e, value) => {
-      // NativeSelect casts the value to a string.
-      if (type === 'singleSelect') {
-        const column = apiRef.current.getColumn(item.columnField);
-        value = column.valueOptions
-          .map((option) => (typeof option === 'object' ? option.value : option))
-          .filter((optionValue) => value.includes(String(optionValue)));
-      }
-
       clearTimeout(filterTimeout.current);
       setFilterValueState(value.map((x) => String(x)));
 
@@ -60,7 +52,7 @@ function GridFilterInputMultipleValue(
         setIsApplying(false);
       }, SUBMIT_FILTER_STROKE_TIME);
     },
-    [apiRef, applyValue, item, type],
+    [applyValue, item, type],
   );
 
   const InputProps = applying ? { endAdornment: <GridLoadIcon /> } : {};
