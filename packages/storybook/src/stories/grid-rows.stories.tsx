@@ -12,7 +12,7 @@ import {
   GridEditRowsModel,
   GridLoadIcon,
   GridColDef,
-  GridRowData,
+  GridRowModel,
   useGridApiRef,
   DataGridPro,
   GridEvents,
@@ -93,7 +93,7 @@ export function NoId() {
 }
 export function CommodityNewRowId() {
   const { data } = useDemoData({ dataSet: 'Commodity', rowLength: 100 });
-  const getRowId = React.useCallback((row: GridRowData) => `${row.desk}-${row.commodity}`, []);
+  const getRowId = React.useCallback((row: GridRowModel) => `${row.desk}-${row.commodity}`, []);
   return (
     <div className="grid-container">
       <DataGridPro
