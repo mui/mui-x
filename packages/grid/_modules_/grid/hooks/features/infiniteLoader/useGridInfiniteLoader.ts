@@ -17,8 +17,6 @@ import { GridScrollParams } from '../../../models/params/gridScrollParams';
  * @requires useGridColumns (state)
  * @requires useGridContainerProps (state)
  * @requires useGridScroll (method
- * @requires useGridVirtualization (state)
- * @requires useGridNoVirtualization (state)
  */
 export const useGridInfiniteLoader = (
   apiRef: GridApiRef,
