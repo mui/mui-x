@@ -1,11 +1,7 @@
 import * as React from 'react';
 import { GridApiRef } from '../../../models/api/gridApiRef';
-import { buildCSV } from '../export/serializers/csvSerializer';
-import { visibleGridColumnsSelector } from '../columns/gridColumnsSelector';
-import { GRID_CHECKBOX_SELECTION_COL_DEF } from '../../../models/colDef';
 import { GridClipboardApi } from '../../../models/api';
-import { useGridApiMethod, useGridNativeEventListener, useGridSelector } from '../../utils';
-import { visibleSortedGridRowIdsSelector } from '../filter';
+import { useGridApiMethod, useGridNativeEventListener } from '../../utils';
 
 function writeToClipboardPolyfill(data: string) {
   const span = document.createElement('span');
