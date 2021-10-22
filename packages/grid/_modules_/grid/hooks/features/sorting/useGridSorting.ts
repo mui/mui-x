@@ -333,7 +333,7 @@ export const useGridSorting = (
     }
   }, [apiRef, props.sortModel]);
 
-  // The filter options have changed
+  // The sorting options have changed
   const isFirstRender = React.useRef(true);
   React.useEffect(() => {
     if (isFirstRender.current) {

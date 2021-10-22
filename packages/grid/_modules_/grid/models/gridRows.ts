@@ -48,7 +48,7 @@ export interface GridRowTreeNodeConfig {
   depth: number;
 
   /**
-   * The value used the group the children of the row
+   * The value used to group the children of this row
    */
   groupingValue: string;
 

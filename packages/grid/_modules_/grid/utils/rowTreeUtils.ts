@@ -17,10 +17,13 @@ interface TempRowTreeNode extends Omit<GridRowTreeNodeConfig, 'children'> {
   children?: Record<GridRowId, GridRowId>;
 }
 
-type TempRowTree = Record<GridRowId, TempRowTreeNode>;
-
+/**
+ * Transform a list of rows into a tree structure where each row references its parent and children.
+ * Add the auto generated row to the `ids` and `idRowsLookup`.
+ */
 export const buildRowTree = (params: GenerateRowTreeParams): GridRowGroupingResult => {
-  const tempTree: TempRowTree = {};
+  // During the build, we store the children as a Record to avoid linear complexity when checking if a children is already defined.
+  const tempTree: Record<GridRowId, TempRowTreeNode> = {};
   let treeDepth = 1;
   const ids = [...params.ids];
   const idRowsLookup = { ...params.idRowsLookup };

@@ -15,6 +15,7 @@ export interface GridColDefGenerator extends GridColDef {
 
   /**
    * If `true`, each row will have a distinct value
+   * If several rows are generated with the same value, then a suffix will be added to the 2nd, 3rd, ...
    * @default false
    */
   dataGeneratorUniquenessEnabled?: boolean;
