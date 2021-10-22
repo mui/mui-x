@@ -86,9 +86,7 @@ export interface GridColDef {
   /**
    * To be used in combination with `type: 'singleSelect'`. This is an array (or a function returning an array) of the possible cell values and labels.
    */
-  valueOptions?:
-  | Array<ValueOptions>
-  | ((params: GridValueOptionsParams) => Array<ValueOptions>);
+  valueOptions?: Array<ValueOptions> | ((params: GridValueOptionsParams) => Array<ValueOptions>);
   /**
    * Allows to align the column values in cells.
    */

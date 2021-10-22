@@ -881,7 +881,11 @@ describe('<DataGrid /> - Filter', () => {
             ]}
             columns={[
               { field: 'name' },
-              { field: 'voltage', type: 'singleSelect', valueOptions: ({ row }) => row && row.name === "Dishwasher" ? [110] : [220, 110] },
+              {
+                field: 'voltage',
+                type: 'singleSelect',
+                valueOptions: ({ row }) => (row && row.name === 'Dishwasher' ? [110] : [220, 110]),
+              },
             ]}
             field="voltage"
             operatorValue="is"

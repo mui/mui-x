@@ -96,9 +96,9 @@ export default function ColumnTypesGrid() {
         type: 'singleSelect',
         width: 120,
         editable: true,
-        valueOptions: (row) => {
+        valueOptions: ({ row }) => {
           if (row === undefined) {
-            return ['EU-resident', 'junior', 'senior'];
+            return ['EU-resident', 'junior'];
           }
           const options = [];
           if (!['United Kingdom', 'Brazil'].includes(row.country)) {
@@ -106,9 +106,6 @@ export default function ColumnTypesGrid() {
           }
           if (row.age < 27) {
             options.push('junior');
-          }
-          if (row.age > 70) {
-            options.push('senior');
           }
           return options;
         },
