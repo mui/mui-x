@@ -30,34 +30,18 @@ function writeToClipboardPolyfill(data: string) {
 }
 
 /**
- * @requires useGridColumns (state)
- * @requires useGridParamsApi (method)
+ * @requires useGridCsvExport (method)
  * @requires useGridSelection (method)
  */
 export const useGridClipboard = (apiRef: GridApiRef): void => {
-  const visibleColumns = useGridSelector(apiRef, visibleGridColumnsSelector);
-  const visibleSortedRowIds = useGridSelector(apiRef, visibleSortedGridRowIdsSelector);
-
   const copySelectedRowsToClipboard = React.useCallback(
     (includeHeaders = false) => {
-      const filteredColumns = visibleColumns.filter(
-        (column) => column.field !== GRID_CHECKBOX_SELECTION_COL_DEF.field,
-      );
-
-      const selectedRows = apiRef.current.getSelectedRows();
-      const exportedRowIds =
-        selectedRows.size > 0 ? visibleSortedRowIds.filter((id) => selectedRows.has(id)) : [];
-
-      if (exportedRowIds.length === 0 || filteredColumns.length === 0) {
+      if (apiRef.current.getSelectedRows().size === 0) {
         return;
       }
 
-      const data = buildCSV({
-        columns: visibleColumns,
-        rowIds: exportedRowIds,
+      const data = apiRef.current.getDataAsCsv({
         includeHeaders,
-        getCellParams: apiRef.current.getCellParams,
-        delimiterCharacter: '\t',
       });
 
       if (navigator.clipboard) {
@@ -68,7 +52,7 @@ export const useGridClipboard = (apiRef: GridApiRef): void => {
         writeToClipboardPolyfill(data);
       }
     },
-    [apiRef, visibleColumns, visibleSortedRowIds],
+    [apiRef],
   );
 
   const handleKeydown = React.useCallback(

@@ -37,11 +37,11 @@ interface BuildCSVOptions {
   rowIds: GridRowId[];
   getCellParams: (id: GridRowId, field: string) => GridCellParams;
   delimiterCharacter: string;
-  includeHeaders?: boolean;
+  includeHeaders: boolean;
 }
 
 export function buildCSV(options: BuildCSVOptions): string {
-  const { columns, rowIds, getCellParams, delimiterCharacter, includeHeaders = true } = options;
+  const { columns, rowIds, getCellParams, delimiterCharacter, includeHeaders } = options;
 
   const CSVBody = rowIds
     .reduce<string>(

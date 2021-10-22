@@ -36,7 +36,6 @@ export const useGridCsvExport = (apiRef: GridApiRef): void => {
           .filter((column): column is GridStateColDef => !!column);
       } else {
         const validColumns = options?.allColumns ? columns : visibleColumns;
-
         exportedColumns = validColumns.filter((column) => !column.disableExport);
       }
 
@@ -51,6 +50,7 @@ export const useGridCsvExport = (apiRef: GridApiRef): void => {
         rowIds: exportedRowIds,
         getCellParams: apiRef.current.getCellParams,
         delimiterCharacter: options?.delimiter || ',',
+        includeHeaders: options?.includeHeaders ?? true,
       });
     },
     [logger, visibleColumns, columns, visibleSortedRowIds, apiRef],
