@@ -7,7 +7,7 @@ import HomeIcon from '@mui/icons-material/Home';
 import {
   DataGridPro,
   useGridApiRef,
-  visibleGridRowCountSelector,
+  gridVisibleRowCountSelector,
   visibleGridColumnsLengthSelector,
   visibleGridColumnsSelector,
   visibleSortedGridRowIdsSelector,
@@ -36,7 +36,7 @@ export default function ScrollPlayground() {
   }, [apiRef, coordinates]);
 
   const handleClick = (position) => () => {
-    const maxRowIndex = visibleGridRowCountSelector(apiRef.current.state) - 1;
+    const maxRowIndex = gridVisibleRowCountSelector(apiRef.current.state) - 1;
     const maxColIndex = visibleGridColumnsLengthSelector(apiRef.current.state) - 1;
 
     setCoordinates((coords) => {

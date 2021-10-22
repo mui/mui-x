@@ -1,9 +1,8 @@
 import { createSelector } from 'reselect';
 import { GridFilterItem } from '../../../models/gridFilterItem';
-import { GridRowId, GridRowModel } from '../../../models/gridRows';
 import { GridState } from '../../../models/gridState';
 import { gridRowCountSelector } from '../rows/gridRowsSelector';
-import { sortedGridRowsSelector } from '../sorting/gridSortingSelector';
+import { gridSortedRowEntriesSelector } from '../sorting/gridSortingSelector';
 import { gridColumnLookupSelector } from '../columns/gridColumnsSelector';
 
 export const gridFilterStateSelector = (state: GridState) => state.filter;
@@ -18,31 +17,19 @@ export const gridVisibleRowsLookupSelector = createSelector(
   (filterState) => filterState.visibleRowsLookup,
 );
 
-export const visibleSortedGridRowsSelector = createSelector(
+export const gridSortedVisibleRowEntriesSelector = createSelector(
   gridVisibleRowsLookupSelector,
-  sortedGridRowsSelector,
-  (visibleRowsLookup, sortedRows) => {
-    const map = new Map<GridRowId, GridRowModel>();
-    sortedRows.forEach((row, id) => {
-      if (visibleRowsLookup[id] !== false) {
-        map.set(id, row);
-      }
-    });
-    return map;
-  },
+  gridSortedRowEntriesSelector,
+  (visibleRowsLookup, sortedRows) =>
+    sortedRows.filter((row) => visibleRowsLookup[row.id] !== false),
 );
 
-export const visibleSortedGridRowsAsArraySelector = createSelector(
-  visibleSortedGridRowsSelector,
-  (visibleSortedRows) => [...visibleSortedRows.entries()],
+export const gridSortedVisibleRowIdsSelector = createSelector(
+  gridSortedVisibleRowEntriesSelector,
+  (visibleSortedRowEntries) => visibleSortedRowEntries.map((row) => row.id),
 );
 
-export const visibleSortedGridRowIdsSelector = createSelector(
-  visibleSortedGridRowsSelector,
-  (visibleSortedRows) => [...visibleSortedRows.keys()],
-);
-
-export const visibleGridRowCountSelector = createSelector(
+export const gridVisibleRowCountSelector = createSelector(
   gridFilterStateSelector,
   gridRowCountSelector,
   (filterState, totalRowsCount) => {
