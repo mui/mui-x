@@ -77,7 +77,7 @@ A big thanks to the 5 contributors who made this release possible. Here are some
 
 - [DataGridPro] Remove the `onViewportRowsChange` prop and the `viewportRowsChange` event (#2673) @m4theushw
 
-  A listener on the `rowsScroll` event, as showned below, can be used as replacement:
+  A listener on the `rowsScroll` event, as shown below, can be used as replacement:
 
   ```tsx
   const apiRef = useGridApiRef();
