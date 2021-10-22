@@ -111,7 +111,6 @@ A big thanks to the 5 contributors who made this release possible. Here are some
 - [DataGrid] Rework virtualization (#2673) @m4theushw
 - [DataGrid] Remove `@mui/styles` dependency (#2784) @DanailH
 - [DataGrid] Remove `useGridSlotComponentProps` (#2856) @flaviendelangle
-- [DataGrid] Remove test event (#2912) @m4theushw
 - [DataGrid] Replace `prop.state` with `prop.initialState` (#2848) @flaviendelangle
 - [DataGrid] Use true content height to dispatch `rowsScrollEnd` (#2938) @m4theushw
 - [DataGrid] Fix the typing of `GridToolbarFilterButton` (#2841) @alexfauquette
@@ -131,6 +130,7 @@ A big thanks to the 5 contributors who made this release possible. Here are some
 - [core] Register events async if not registered (#2916) @m4theushw
 - [core] Remove `material-ui-utils.ts` (#2872) @DanailH
 - [core] Remove outdated hooks requirements (#2939) @flaviendelangle
+- [core] Remove test event (#2912) @m4theushw
 - [core] Remove unused `GridSlotComponentProps` interface (#2911) @flaviendelangle
 - [core] Rename 'UNSTABLE_' prefix to 'unstable_' (#2931) @flaviendelangle
 - [core] Replace usage of `GridRowData` with `GridRowModel` (#2936) @flaviendelangle
