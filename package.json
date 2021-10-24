@@ -80,7 +80,7 @@
     "@types/react": "^17.0.30",
     "@types/react-dom": "^17.0.9",
     "@types/requestidlecallback": "^0.3.4",
-    "@types/sinon": "^10.0.4",
+    "@types/sinon": "^10.0.5",
     "@types/yargs": "^17.0.4",
     "@typescript-eslint/eslint-plugin": "^5.0.0",
     "@typescript-eslint/parser": "^5.0.0",
