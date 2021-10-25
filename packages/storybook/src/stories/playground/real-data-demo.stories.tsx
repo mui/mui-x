@@ -2,7 +2,7 @@ import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import * as React from 'react';
 import { Story, Meta, DecoratorFn } from '@storybook/react';
 import { DataGridProProps, GridPreferencePanelsValue, DataGridPro } from '@mui/x-data-grid-pro';
-import { useDemoData, DemoDataOptions } from '@mui/x-data-grid-generator';
+import { useDemoData, UseDemoDataOptions } from '@mui/x-data-grid-generator';
 import { useData } from '../../hooks/useData';
 import {
   ColumnMenuComponent,
@@ -65,7 +65,7 @@ export default {
   },
 } as Meta;
 
-const DemoTemplate: Story<DataGridProProps & DemoDataOptions & PlaygroundProps> = ({
+const DemoTemplate: Story<DataGridProProps & UseDemoDataOptions & PlaygroundProps> = ({
   rows,
   columns,
   dataSet,

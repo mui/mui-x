@@ -3,10 +3,10 @@ import * as fs from 'fs';
 import * as yargs from 'yargs';
 import { getCommodityColumns } from './commodities.columns';
 import { getEmployeeColumns } from './employees.columns';
-import { getRealData } from './services';
+import { getRealGridData } from './services';
 
 const loadData = async (size: number, dataset: string): Promise<any> => {
-  const result = await getRealData(
+  const result = await getRealGridData(
     Number(size),
     dataset.toLowerCase() === 'commodity' ? getCommodityColumns() : getEmployeeColumns(),
   );
