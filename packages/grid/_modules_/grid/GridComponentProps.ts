@@ -1,7 +1,11 @@
 import * as React from 'react';
 import { GridInitialState, GridState } from './models/gridState';
 import { GridApiRef } from './models/api/gridApiRef';
-import { GridColDef, GridColDefOverrideParams, GridColumns } from './models/colDef/gridColDef';
+import {
+  GridColDefOverride,
+  GridColDefOverrideCallback,
+  GridColumns,
+} from './models/colDef/gridColDef';
 import {
   GridSimpleOptions,
   GridProcessedMergedOptions,
@@ -100,9 +104,11 @@ interface GridComponentOtherProps {
    */
   isRowSelectable?: (params: GridRowParams) => boolean;
   /**
-   * Determines the path of a row in the tree data
+   * Determines the path of a row in the tree data.
+   * For instance, a row with the path ["A", "B"] is the child of the row with the path ["A"]
+   * Note than all paths must contain at least one element.
    * @param {GridRowModel} row The row from which we want the path.
-   * @returns {string[]} the path to the row
+   * @returns {string[]} the path to the row.
    */
   getTreeDataPath?: (row: GridRowModel) => string[];
   /**
@@ -497,7 +503,5 @@ interface GridComponentOtherProps {
   /**
    * The grouping column used by the tree data
    */
-  groupingColDef?:
-    | Partial<GridColDef>
-    | ((params: GridColDefOverrideParams) => Partial<GridColDef>);
+  groupingColDef?: GridColDefOverride | GridColDefOverrideCallback;
 }

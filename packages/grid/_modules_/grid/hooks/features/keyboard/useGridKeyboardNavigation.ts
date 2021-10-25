@@ -22,7 +22,7 @@ import { useGridLogger } from '../../utils/useGridLogger';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { GridComponentProps } from '../../../GridComponentProps';
 import { gridVisibleSortedRowEntriesSelector } from '../filter/gridFilterSelector';
-import { useRowsInCurrentPage } from '../../utils/useRowsInCurrentPage';
+import { useCurrentPageRows } from '../../utils/useCurrentPageRows';
 
 const getNextCellIndexes = (key: string, indexes: GridCellIndexCoordinates) => {
   if (!isArrowKeys(key)) {
@@ -77,7 +77,7 @@ export const useGridKeyboardNavigation = (
   const colCount = useGridSelector(apiRef, visibleGridColumnsLengthSelector);
   const containerSizes = useGridSelector(apiRef, gridContainerSizesSelector);
   const visibleSortedRows = useGridSelector(apiRef, gridVisibleSortedRowEntriesSelector);
-  const rowsInCurrentPage = useRowsInCurrentPage(apiRef, props);
+  const currentPage = useCurrentPageRows(apiRef, props);
 
   const mapKey = (event: React.KeyboardEvent) => {
     if (isEnterKey(event.key)) {
@@ -93,7 +93,7 @@ export const useGridKeyboardNavigation = (
     (params: GridCellParams, event: React.KeyboardEvent) => {
       event.preventDefault();
 
-      if (!rowsInCurrentPage.range) {
+      if (!currentPage.range) {
         return;
       }
 
@@ -102,8 +102,7 @@ export const useGridKeyboardNavigation = (
 
       const key = mapKey(event);
       const isCtrlPressed = event.ctrlKey || event.metaKey || event.shiftKey;
-      const rowCount =
-        rowsInCurrentPage.range.lastRowIndex - rowsInCurrentPage.range.firstRowIndex + 1;
+      const rowCount = currentPage.range.lastRowIndex - currentPage.range.firstRowIndex + 1;
 
       let nextCellIndexes: GridCellIndexCoordinates;
       if (isArrowKeys(key)) {
@@ -121,7 +120,7 @@ export const useGridKeyboardNavigation = (
           // In that case we go to first row, first col, or last row last col!
           let newRowIndex = 0;
           if (colIdx === 0) {
-            newRowIndex = rowsInCurrentPage.range.firstRowIndex;
+            newRowIndex = currentPage.range.firstRowIndex;
           } else {
             newRowIndex = rowCount - 1;
           }
@@ -159,7 +158,7 @@ export const useGridKeyboardNavigation = (
       const node = visibleSortedRows[nextCellIndexes.rowIndex];
       apiRef.current.setCellFocus(node.id, field);
     },
-    [apiRef, visibleSortedRows, colCount, logger, containerSizes, rowsInCurrentPage],
+    [apiRef, visibleSortedRows, colCount, logger, containerSizes, currentPage],
   );
 
   const navigateColumnHeaders = React.useCallback(

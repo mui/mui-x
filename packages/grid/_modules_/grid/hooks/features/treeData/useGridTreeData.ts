@@ -31,21 +31,21 @@ export const useGridTreeData = (
       ...GRID_TREE_DATA_GROUP_COL_DEF,
       headerName: apiRef.current.getLocaleText('treeDataGroupingHeaderName'),
     };
-    let customGroupingColDef: Partial<GridColDef>;
+    let colDefOverride: Partial<GridColDef>;
 
     if (isFunction(propGroupingColDef)) {
       const params: GridColDefOverrideParams = {
         colDef: baseColDef,
       };
 
-      customGroupingColDef = propGroupingColDef(params);
+      colDefOverride = propGroupingColDef(params);
     } else {
-      customGroupingColDef = propGroupingColDef ?? {};
+      colDefOverride = propGroupingColDef ?? {};
     }
 
     return {
       ...baseColDef,
-      ...customGroupingColDef,
+      ...colDefOverride,
     };
   }, [apiRef, props.groupingColDef]);
 
@@ -121,14 +121,11 @@ export const useGridTreeData = (
         event.preventDefault();
 
         const node = apiRef.current.unstable_getRowNode(params.id);
-        if (!node || node.descendantCount === 0) {
+        if (!node?.descendantCount) {
           return;
         }
 
-        apiRef.current.unstable_setRowExpansion(
-          params.id,
-          !apiRef.current.unstable_getRowNode(params.id)?.expanded,
-        );
+        apiRef.current.unstable_setRowExpansion(params.id, !node.expanded);
       }
     },
     [apiRef],

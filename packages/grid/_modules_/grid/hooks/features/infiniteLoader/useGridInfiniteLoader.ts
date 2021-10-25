@@ -12,7 +12,7 @@ import { visibleGridColumnsSelector } from '../columns/gridColumnsSelector';
 import { GridComponentProps } from '../../../GridComponentProps';
 import { GridScrollParams } from '../../../models/params/gridScrollParams';
 import { gridDensityRowHeightSelector } from '../density/densitySelector';
-import { useRowsInCurrentPage } from '../../utils/useRowsInCurrentPage';
+import { useCurrentPageRows } from '../../utils/useCurrentPageRows';
 
 /**
  * Only available in DataGridPro
@@ -29,9 +29,9 @@ export const useGridInfiniteLoader = (
 ): void => {
   const containerSizes = useGridSelector(apiRef, gridContainerSizesSelector);
   const visibleColumns = useGridSelector(apiRef, visibleGridColumnsSelector);
-  const rowsInCurrentPage = useRowsInCurrentPage(apiRef, props);
+  const currentPage = useCurrentPageRows(apiRef, props);
   const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
-  const contentHeight = Math.max(rowsInCurrentPage.rows.length * rowHeight, 1);
+  const contentHeight = Math.max(currentPage.rows.length * rowHeight, 1);
 
   const isInScrollBottomArea = React.useRef<boolean>(false);
 

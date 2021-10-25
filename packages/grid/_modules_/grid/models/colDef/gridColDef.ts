@@ -218,6 +218,13 @@ export interface GridColumnsState {
   lookup: GridColumnLookup;
 }
 
+export type GridColDefOverride = Omit<Partial<GridColDef>, 'field'>;
+
+export type GridColDefOverrideCallback = (params: GridColDefOverrideParams) => GridColDefOverride;
+
 export interface GridColDefOverrideParams {
+  /**
+   * The column we are generating before the override.
+   */
   colDef: GridColDef;
 }
