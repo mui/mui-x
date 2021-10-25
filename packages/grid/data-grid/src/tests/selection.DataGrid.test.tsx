@@ -3,7 +3,13 @@ import * as React from 'react';
 import { fireEvent, screen, createClientRenderStrictMode } from 'test/utils';
 import { expect } from 'chai';
 import { DataGrid, DataGridProps, GridInputSelectionModel } from '@mui/x-data-grid';
-import { getCell, getRow, getColumnHeaderCell, getRows } from 'test/utils/helperFn';
+import {
+  getCell,
+  getRow,
+  getRows,
+  getColumnHeaderCell,
+  getColumnHeadersTextContent,
+} from 'test/utils/helperFn';
 import { getData } from 'storybook/src/data/data-service';
 import { spy } from 'sinon';
 
@@ -80,6 +86,15 @@ describe('<DataGrid /> - Selection', () => {
   });
 
   describe('prop: checkboxSelection = true (multi selection)', () => {
+    it('should allow to toggle prop.checkboxSelection', () => {
+      const { setProps } = render(<TestDataGridSelection />);
+      expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'Currency Pair']);
+      expect(getColumnHeaderCell(0).querySelectorAll('input')).to.have.length(0);
+      setProps({ checkboxSelection: true });
+      expect(getColumnHeadersTextContent()).to.deep.equal(['', 'id', 'Currency Pair']);
+      expect(getColumnHeaderCell(0).querySelectorAll('input')).to.have.length(1);
+    });
+
     it('should check and uncheck when double clicking the row', () => {
       render(<TestDataGridSelection checkboxSelection />);
       expect(getSelectedRowIds()).to.deep.equal([]);
