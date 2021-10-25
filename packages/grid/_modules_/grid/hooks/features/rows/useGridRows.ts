@@ -75,11 +75,12 @@ const convertGridRowsPropToState = ({
       idRowsLookup: {},
       ids: [],
     };
-    rows.forEach((rowData) => {
-      const id = getGridRowId(rowData, props.getRowId);
-      value.idRowsLookup[id] = rowData;
+    for (let i = 0; i < rows.length; i += 1) {
+      const row = rows[i];
+      const id = getGridRowId(row, props.getRowId);
+      value.idRowsLookup[id] = row;
       value.ids.push(id);
-    });
+    }
   } else {
     value = prevState.value;
   }

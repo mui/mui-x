@@ -243,15 +243,18 @@ export const useGridFilter = (
           return shouldBeVisible;
         };
 
-        Object.values(rowTree).forEach((node) => {
+        const nodes = Object.values(rowTree);
+        for (let i = 0; i < nodes.length; i += 1) {
+          const node = nodes[i];
           if (node.depth === 0) {
             filterTreeNode(node, true);
           }
-        });
+        }
       } else {
-        rowIds.forEach((rowId) => {
+        for (let i = 0; i < rowIds.length; i += 1) {
+          const rowId = rowIds[i];
           visibleRowsLookup[rowId] = filteringMethod(rowId);
-        });
+        }
       }
 
       return {
