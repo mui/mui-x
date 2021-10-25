@@ -735,12 +735,6 @@ async function run(argv: { outputDirectory?: string }) {
   //   }
   // })!;
 
-  writePrettifiedFile(
-    path.resolve(workspaceRoot, 'scripts/exportsSnapshot.json'),
-    JSON.stringify(exports),
-    prettierConfigPath,
-  );
-
   const apisToGenerate = [
     'GridApi',
     'GridColDef',
@@ -802,6 +796,12 @@ async function run(argv: { outputDirectory?: string }) {
     name: child.name,
     kind: child?.kindString,
   }));
+
+  writePrettifiedFile(
+    path.resolve(workspaceRoot, 'scripts/exportsSnapshot.json'),
+    JSON.stringify(exports),
+    prettierConfigPath,
+  );
 
   apisToGenerate.forEach((apiName) => {
     const reflection = project.findReflectionByName(apiName) as TypeDoc.DeclarationReflection;
