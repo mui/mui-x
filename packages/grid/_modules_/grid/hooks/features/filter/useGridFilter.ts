@@ -148,7 +148,7 @@ export const useGridFilter = (
     [apiRef],
   );
 
-  const applyFilters = React.useCallback<GridFilterApi['applyFilters']>(() => {
+  const applyFilters = React.useCallback<GridFilterApi['unsafe_applyFilters']>(() => {
     setGridState((state) => {
       const filterModel = gridFilterModelSelector(state);
 
@@ -197,7 +197,7 @@ export const useGridFilter = (
     forceUpdate();
   }, [apiRef, setGridState, forceUpdate, props.filterMode, buildAggregatedFilterApplier]);
 
-  const upsertFilter = React.useCallback<GridFilterApi['upsertFilter']>(
+  const upsertFilterItem = React.useCallback<GridFilterApi['upsertFilterItem']>(
     (item) => {
       logger.debug('Upserting filter');
 
@@ -237,12 +237,12 @@ export const useGridFilter = (
           filter: { ...state.filter, filterModel: { ...state.filter.filterModel, items } },
         };
       });
-      apiRef.current.applyFilters();
+      apiRef.current.unsafe_applyFilters();
     },
     [apiRef, logger, setGridState, props.disableMultipleColumnsFiltering],
   );
 
-  const deleteFilter = React.useCallback<GridFilterApi['deleteFilter']>(
+  const deleteFilterItem = React.useCallback<GridFilterApi['deleteFilterItem']>(
     (item) => {
       logger.debug(`Deleting filter on column ${item.columnField} with value ${item.value}`);
       setGridState((state) => {
@@ -256,9 +256,9 @@ export const useGridFilter = (
         };
       });
       if (gridFilterModelSelector(apiRef.current.state).items.length === 0) {
-        apiRef.current.upsertFilter({});
+        apiRef.current.upsertFilterItem({});
       }
-      apiRef.current.applyFilters();
+      apiRef.current.unsafe_applyFilters();
     },
     [apiRef, logger, setGridState],
   );
@@ -272,7 +272,7 @@ export const useGridFilter = (
         const lastFilter =
           filterModel.items.length > 0 ? filterModel.items[filterModel.items.length - 1] : null;
         if (!lastFilter || lastFilter.columnField !== targetColumnField) {
-          apiRef.current.upsertFilter({ columnField: targetColumnField });
+          apiRef.current.upsertFilterItem({ columnField: targetColumnField });
         }
       }
       apiRef.current.showPreferences(GridPreferencePanelsValue.filters);
@@ -285,14 +285,14 @@ export const useGridFilter = (
     apiRef.current.hidePreferences();
   }, [apiRef, logger]);
 
-  const applyFilterLinkOperator = React.useCallback<GridFilterApi['applyFilterLinkOperator']>(
+  const setFilterLinkOperator = React.useCallback<GridFilterApi['setFilterLinkOperator']>(
     (linkOperator) => {
       logger.debug('Applying filter link operator');
       setGridState((state) => ({
         ...state,
         filter: { ...state.filter, filterModel: { ...state.filter.filterModel, linkOperator } },
       }));
-      apiRef.current.applyFilters();
+      apiRef.current.unsafe_applyFilters();
     },
     [apiRef, logger, setGridState],
   );
@@ -311,7 +311,7 @@ export const useGridFilter = (
             filterModel: model,
           },
         }));
-        apiRef.current.applyFilters();
+        apiRef.current.unsafe_applyFilters();
       }
     },
     [apiRef, logger, setGridState],
@@ -325,10 +325,10 @@ export const useGridFilter = (
   useGridApiMethod<GridFilterApi>(
     apiRef,
     {
-      applyFilterLinkOperator,
-      applyFilters,
-      deleteFilter,
-      upsertFilter,
+      setFilterLinkOperator,
+      unsafe_applyFilters: applyFilters,
+      deleteFilterItem,
+      upsertFilterItem,
       setFilterModel,
       showFilterPanel,
       hideFilterPanel,
@@ -345,10 +345,10 @@ export const useGridFilter = (
 
     filterModel.items.forEach((filter) => {
       if (!columnsIds.find((field) => field === filter.columnField)) {
-        apiRef.current.deleteFilter(filter);
+        apiRef.current.deleteFilterItem(filter);
       }
     });
-    apiRef.current.applyFilters();
+    apiRef.current.unsafe_applyFilters();
   }, [apiRef, logger]);
 
   React.useEffect(() => {
@@ -357,8 +357,8 @@ export const useGridFilter = (
     }
   }, [apiRef, logger, props.filterModel]);
 
-  useFirstRender(() => apiRef.current.applyFilters());
+  useFirstRender(() => apiRef.current.unsafe_applyFilters());
 
-  useGridApiEventHandler(apiRef, GridEvents.rowsSet, apiRef.current.applyFilters);
+  useGridApiEventHandler(apiRef, GridEvents.rowsSet, apiRef.current.unsafe_applyFilters);
   useGridApiEventHandler(apiRef, GridEvents.columnsChange, onColUpdated);
 };
