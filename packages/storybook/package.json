@@ -41,7 +41,7 @@
     "@storybook/addon-viewport": "^6.4.0-beta.13",
     "@storybook/react": "^6.4.0-beta.13",
     "@storybook/theming": "^6.4.0-beta.13",
-    "babel-loader": "^8.2.2",
+    "babel-loader": "^8.2.3",
     "core-js": "^3.6.5",
     "react-docgen-typescript-loader": "^3.7.2",
     "source-map-loader": "^1.1.3",
