@@ -14,12 +14,17 @@ export type DataGridProps = Omit<
   | 'disableMultipleColumnsFiltering'
   | 'disableMultipleColumnsSorting'
   | 'disableMultipleSelection'
+  | 'disableChildrenFiltering'
+  | 'disableChildrenSorting'
   | 'throttleRowsMs'
   | 'hideFooterRowCount'
   | 'options'
   | 'onRowsScrollEnd'
   | 'scrollEndThreshold'
   | 'treeData'
+  | 'getTreeDataPath'
+  | 'groupingColDef'
+  | 'defaultGroupingExpansionDepth'
   | 'signature'
 > & {
   pagination?: true;

@@ -272,9 +272,11 @@ DataGridProRaw.propTypes = {
    */
   getRowId: PropTypes.func,
   /**
-   * Determines the path of a row in the tree data
+   * Determines the path of a row in the tree data.
+   * For instance, a row with the path ["A", "B"] is the child of the row with the path ["A"]
+   * Note than all paths must contain at least one element.
    * @param {GridRowModel} row The row from which we want the path.
-   * @returns {string[]} the path to the row
+   * @returns {string[]} the path to the row.
    */
   getTreeDataPath: PropTypes.func,
   /**

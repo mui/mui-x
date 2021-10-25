@@ -112,26 +112,10 @@ DataGridRaw.propTypes = {
    */
   componentsProps: PropTypes.object,
   /**
-   * If above 0, the row children will be expanded up to this depth
-   * If equal to -1, all the row children will be expanded
-   * @default 0
-   */
-  defaultGroupingExpansionDepth: PropTypes.number,
-  /**
    * Set the density of the grid.
    * @default "standard"
    */
   density: PropTypes.oneOf(['comfortable', 'compact', 'standard']),
-  /**
-   * If `true`, the filtering will only be applied to the top level rows
-   * @default false
-   */
-  disableChildrenFiltering: PropTypes.bool,
-  /**
-   * If `true`, the sorting will only be applied to the top level rows
-   * @default false
-   */
-  disableChildrenSorting: PropTypes.bool,
   /**
    * If `true`, column filters are disabled.
    * @default false
@@ -218,16 +202,6 @@ DataGridRaw.propTypes = {
    * Return the id of a given [[GridRowModel]].
    */
   getRowId: PropTypes.func,
-  /**
-   * Determines the path of a row in the tree data
-   * @param {GridRowModel} row The row from which we want the path.
-   * @returns {string[]} the path to the row
-   */
-  getTreeDataPath: PropTypes.func,
-  /**
-   * The grouping column used by the tree data
-   */
-  groupingColDef: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
   /**
    * Set the height in pixel of the column headers in the grid.
    * @default 56
