@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { GridComponentProps } from '../../GridComponentProps';
 import {
   gridPaginationRowRangeSelector,
@@ -34,8 +35,11 @@ export const useRowsInCurrentPage = (
     }
   }
 
-  return {
-    rows,
-    range,
-  };
+  return React.useMemo(
+    () => ({
+      rows,
+      range,
+    }),
+    [rows, range],
+  );
 };
