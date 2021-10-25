@@ -270,51 +270,42 @@ describe('<DataGridPro /> - Events Params', () => {
   });
 
   it('call onRowsScrollEnd when viewport scroll reaches the bottom', () => {
+    const baseRows = [
+      { id: 0, brand: 'Nike' },
+      { id: 1, brand: 'Adidas' },
+      { id: 2, brand: 'Puma' },
+      { id: 3, brand: 'Under Armor' },
+      { id: 4, brand: 'Jordan' },
+      { id: 5, brand: 'Reebok' },
+    ];
     const handleRowsScrollEnd = spy();
-    const data = {
-      rows: [
-        {
-          id: 0,
-          brand: 'Nike',
-        },
-        {
-          id: 1,
-          brand: 'Adidas',
-        },
-        {
-          id: 2,
-          brand: 'Puma',
-        },
-        {
-          id: 3,
-          brand: 'Under Armor',
-        },
-        {
-          id: 4,
-          brand: 'Jordan',
-        },
-        {
-          id: 5,
-          brand: 'Reebok',
-        },
-      ],
-      columns: [{ field: 'brand', width: 100 }],
+    const TestCase = ({ rows }) => {
+      return (
+        <div style={{ width: 300, height: 300 }}>
+          <DataGridPro
+            columns={[{ field: 'brand', width: 100 }]}
+            rows={rows}
+            onRowsScrollEnd={handleRowsScrollEnd}
+          />
+        </div>
+      );
     };
-
-    const { container } = render(
-      <div style={{ width: 300, height: 300 }}>
-        <DataGridPro
-          columns={data.columns}
-          rows={data.rows}
-          onRowsScrollEnd={handleRowsScrollEnd}
-        />
-      </div>,
-    );
+    const { container, setProps } = render(<TestCase rows={baseRows} />);
     const virtualScroller = container.querySelector('.MuiDataGrid-virtualScroller');
     // arbitrary number to make sure that the bottom of the grid window is reached.
     virtualScroller.scrollTop = 12345;
     virtualScroller.dispatchEvent(new Event('scroll'));
     expect(handleRowsScrollEnd.callCount).to.equal(1);
+    setProps({
+      rows: baseRows.concat(
+        { id: 6, brand: 'Gucci' },
+        { id: 7, brand: "Levi's" },
+        { id: 8, brand: 'Ray-Ban' },
+      ),
+    });
+    virtualScroller.scrollTop = 12345;
+    virtualScroller.dispatchEvent(new Event('scroll'));
+    expect(handleRowsScrollEnd.callCount).to.equal(2);
   });
 
   it('should publish GridEvents.unmount when unmounting the Grid', () => {

@@ -116,7 +116,7 @@ export const GridColumnsHeader = React.forwardRef<HTMLDivElement, any>(function 
       );
 
       const offset =
-        firstColumnToRender > 0 ? left % columnsMeta.positions[firstColumnToRender] : left;
+        firstColumnToRender > 0 ? left - columnsMeta.positions[firstColumnToRender] : left;
       wrapperRef!.current!.style.transform = `translate3d(${-offset}px, 0px, 0px)`;
     },
     [columnsMeta.positions, rootProps.columnBuffer],
