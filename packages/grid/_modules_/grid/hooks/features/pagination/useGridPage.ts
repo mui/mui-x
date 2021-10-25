@@ -58,7 +58,7 @@ export const useGridPage = (
 
   const visibleRowCount = useGridSelector(apiRef, visibleGridRowCountSelector);
 
-  apiRef.current.updateControlState({
+  apiRef.current.unsafe_updateControlState({
     stateId: 'page',
     propModel: props.page,
     propOnChange: props.onPageChange,

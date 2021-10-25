@@ -74,7 +74,7 @@ export const useGridFilter = (
 
   const [, setGridState, forceUpdate] = useGridState(apiRef);
 
-  apiRef.current.updateControlState({
+  apiRef.current.unsafe_updateControlState({
     stateId: 'filter',
     propModel: props.filterModel,
     propOnChange: props.onFilterModelChange,
