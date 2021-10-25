@@ -4,7 +4,7 @@ import * as fse from 'fs-extra';
 import path from 'path';
 import kebabCase from 'lodash/kebabCase';
 import fromPairs from 'lodash/fromPairs';
-import { parse as parseDoctrine } from 'doctrine';
+import { parse as parseDoctrine, Annotation } from 'doctrine';
 import { defaultHandlers, parse as docgenParse, ReactDocgenApi } from 'react-docgen';
 import * as prettier from 'prettier';
 import { findPagesMarkdown } from 'docs/src/modules/utils/find';
@@ -53,27 +53,26 @@ interface ReactApi extends ReactDocgenApi {
   slots: Record<string, { default: string | undefined; type: { name: string | undefined } }>;
 }
 
-
 const isUnionType = (type: TypeDoc.Type): type is TypeDoc.UnionType => type.type === 'union';
 
 const isIntrinsicType = (type: TypeDoc.Type): type is TypeDoc.IntrinsicType =>
-    type.type === 'intrinsic';
+  type.type === 'intrinsic';
 
 const isLiteralType = (type: TypeDoc.Type): type is TypeDoc.LiteralType => type.type === 'literal';
 
 const isArrayType = (type: TypeDoc.Type): type is TypeDoc.ArrayType => type.type === 'array';
 
 const isReflectionType = (type: TypeDoc.Type): type is TypeDoc.ReflectionType =>
-    type.type === 'reflection';
+  type.type === 'reflection';
 
 const isReferenceType = (type: TypeDoc.Type): type is TypeDoc.ReferenceType =>
-    type.type === 'reference';
+  type.type === 'reference';
 
 const isIndexedAccessType = (type: TypeDoc.Type): type is TypeDoc.IndexedAccessType =>
-    type.type === 'indexedAccess';
+  type.type === 'indexedAccess';
 
 const isTypeOperatorType = (type: TypeDoc.Type): type is TypeDoc.TypeOperatorType =>
-    type.type === 'typeOperator';
+  type.type === 'typeOperator';
 
 // Based on https://github.com/TypeStrong/typedoc-default-themes/blob/master/src/default/partials/type.hbs
 function generateTypeStr(type: TypeDoc.Type, needsParenthesis = false): string {
@@ -395,7 +394,7 @@ function parseComponentSource(src: string, componentObject: { filename: string }
   return reactAPI;
 }
 
-function getJsdocDefaultValue(jsdoc) {
+function getJsdocDefaultValue(jsdoc: Annotation) {
   const defaultTag = jsdoc.tags.find((tag) => tag.title === 'default');
   if (defaultTag === undefined) {
     return undefined;
@@ -440,7 +439,7 @@ function extractSlots(options: {
 
   const types = (propInterface as ttp.InterfaceType).types;
   types.forEach(([name, prop]) => {
-    const parsed = parseDoctrine(prop.jsDoc, { sloppy: true });
+    const parsed = parseDoctrine(prop.jsDoc || '', { sloppy: true });
     const description = renderMarkdownInline(parsed.description);
     const defaultValue = getJsdocDefaultValue(parsed);
 
@@ -556,7 +555,7 @@ async function buildDocs(options: {
       componentApi.propDescriptions[propName] = linkify(description, apisToGenerate, 'html');
 
       const jsdocDefaultValue = getJsdocDefaultValue(
-        parseDoctrine(propDescriptor.description, {
+        parseDoctrine(propDescriptor.description || '', {
           sloppy: true,
         }),
       );
