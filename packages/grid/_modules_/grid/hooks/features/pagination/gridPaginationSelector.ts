@@ -37,10 +37,12 @@ export const gridPaginationRowRangeSelector = createSelector(
       visibleTopLevelRowCount - 1,
     );
 
+    // The range contains no element
     if (topLevelFirstRowIndex === -1 || topLevelLastRowIndex === -1) {
       return null;
     }
 
+    // The tree is flat, their is no need to look for children
     if (rowTreeDepth < 2) {
       return { firstRowIndex: topLevelFirstRowIndex, lastRowIndex: topLevelLastRowIndex };
     }
