@@ -15,6 +15,7 @@ export const GRID_CHECKBOX_SELECTION_COL_DEF: GridColDef = {
   filterable: false,
   disableColumnMenu: true,
   disableReorder: true,
+  disableExport: true,
   valueGetter: (params) => {
     const selectionLookup = selectedIdsLookupSelector(params.api.state);
     return selectionLookup[params.id] !== undefined;

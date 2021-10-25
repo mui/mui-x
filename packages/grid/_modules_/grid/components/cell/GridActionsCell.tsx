@@ -66,7 +66,7 @@ const GridActionsCell = (props: GridActionsCellProps) => {
           position={position}
           aria-labelledby={buttonId}
         >
-          <MenuList className="MuiDataGrid-gridMenuList">
+          <MenuList className={gridClasses.menuList}>
             {menuButtons.map((button, index) => React.cloneElement(button, { key: index }))}
           </MenuList>
         </GridMenu>

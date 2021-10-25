@@ -1,46 +1,33 @@
 import * as React from 'react';
-import TablePagination, { TablePaginationProps } from '@mui/material/TablePagination';
-import { createTheme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import TablePagination, {
+  tablePaginationClasses,
+  TablePaginationProps,
+} from '@mui/material/TablePagination';
+import { styled } from '@mui/material/styles';
 import { useGridSelector } from '../hooks/utils/useGridSelector';
-import { gridPaginationSelector } from '../hooks/features/pagination/gridPaginationSelector';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
+import { gridPaginationSelector } from '../hooks/features/pagination/gridPaginationSelector';
 
-const defaultTheme = createTheme();
-// Used to hide the Rows per page selector on small devices
-const useStyles = makeStyles(
-  (theme) => ({
-    selectLabel: {
-      display: 'none',
-      [theme.breakpoints.up('sm')]: {
-        display: 'block',
-      },
+const StyledTablePagination = styled(TablePagination)(({ theme }) => ({
+  [`& .${tablePaginationClasses.selectLabel}`]: {
+    display: 'none',
+    [theme.breakpoints.up('sm')]: {
+      display: 'block',
     },
-    caption: {
-      // input label
-      '&[id]': {
-        display: 'none',
-        [theme.breakpoints.up('sm')]: {
-          display: 'block',
-        },
-      },
+  },
+  [`& .${tablePaginationClasses.input}`]: {
+    display: 'none',
+    [theme.breakpoints.up('sm')]: {
+      display: 'inline-flex',
     },
-    input: {
-      display: 'none',
-      [theme.breakpoints.up('sm')]: {
-        display: 'inline-flex',
-      },
-    },
-  }),
-  { defaultTheme },
-);
+  },
+}));
 
 export const GridPagination = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(function GridPagination(props, ref) {
-  const classes = useStyles();
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
   const paginationState = useGridSelector(apiRef, gridPaginationSelector);
@@ -87,12 +74,9 @@ export const GridPagination = React.forwardRef<
   }
 
   return (
-    <TablePagination
+    <StyledTablePagination
       ref={ref}
-      classes={{
-        selectLabel: classes.selectLabel,
-        input: classes.input,
-      }}
+      // @ts-ignore
       component="div"
       count={paginationState.rowCount}
       page={paginationState.page <= lastPage ? paginationState.page : lastPage}

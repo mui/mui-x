@@ -13,6 +13,7 @@ import {
   GridPrintExportOptions,
 } from '../../models/gridExport';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
+import { gridClasses } from '../../gridClasses';
 
 interface GridExportFormat {
   format: ExportTypes;
@@ -109,7 +110,7 @@ const GridToolbarExport = React.forwardRef<HTMLButtonElement, GridToolbarExportP
         >
           <MenuList
             id={menuId}
-            className="MuiDataGrid-gridMenuList"
+            className={gridClasses.menuList}
             aria-labelledby={buttonId}
             onKeyDown={handleListKeyDown}
             autoFocusItem={open}

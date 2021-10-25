@@ -1,6 +1,6 @@
 {
   "name": "docs",
-  "version": "5.0.0-beta.4",
+  "version": "5.0.0-beta.5",
   "private": true,
   "author": "MUI Team",
   "license": "MIT",
@@ -20,6 +20,7 @@
     "@babel/core": "^7.15.8",
     "@babel/plugin-transform-object-assign": "^7.14.5",
     "@babel/runtime-corejs2": "^7.15.4",
+    "@docsearch/react": "^3.0.0-alpha.40",
     "@emotion/cache": "^11.4.0",
     "@emotion/react": "^11.4.1",
     "@emotion/server": "^11.4.0",
@@ -29,6 +30,7 @@
     "@mui/styles": "^5.0.1",
     "@mui/utils": "^5.0.1",
     "@trendmicro/react-interpolate": "^0.5.5",
+    "@types/lodash": "^4.14.173",
     "@types/react-dom": "^17.0.9",
     "@types/react-router-dom": "^5.1.8",
     "accept-language": "^3.0.18",

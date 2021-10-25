@@ -11,21 +11,44 @@ import { GridRowScrollEndParams } from '../../../models/params/gridRowScrollEndP
 import { visibleGridColumnsSelector } from '../columns/gridColumnsSelector';
 import { GridComponentProps } from '../../../GridComponentProps';
 import { GridScrollParams } from '../../../models/params/gridScrollParams';
+import { visibleSortedGridRowsAsArraySelector } from '../filter/gridFilterSelector';
+import { gridPaginationSelector } from '../pagination/gridPaginationSelector';
+import { gridDensityRowHeightSelector } from '../density/densitySelector';
 
 /**
  * Only available in DataGridPro
  * @requires useGridColumns (state)
  * @requires useGridContainerProps (state)
  * @requires useGridScroll (method
- * @requires useGridVirtualization (state)
- * @requires useGridNoVirtualization (state)
  */
 export const useGridInfiniteLoader = (
   apiRef: GridApiRef,
-  props: Pick<GridComponentProps, 'onRowsScrollEnd' | 'scrollEndThreshold'>,
+  props: Pick<
+    GridComponentProps,
+    'onRowsScrollEnd' | 'scrollEndThreshold' | 'pagination' | 'paginationMode'
+  >,
 ): void => {
   const containerSizes = useGridSelector(apiRef, gridContainerSizesSelector);
   const visibleColumns = useGridSelector(apiRef, visibleGridColumnsSelector);
+  const visibleSortedRowsAsArray = useGridSelector(apiRef, visibleSortedGridRowsAsArraySelector);
+  const paginationState = useGridSelector(apiRef, gridPaginationSelector);
+  const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
+
+  const rowsInCurrentPage = React.useMemo(() => {
+    if (props.pagination && props.paginationMode === 'client') {
+      const start = paginationState.pageSize * paginationState.page;
+      return visibleSortedRowsAsArray.slice(start, start + paginationState.pageSize);
+    }
+    return visibleSortedRowsAsArray;
+  }, [
+    paginationState.page,
+    paginationState.pageSize,
+    props.pagination,
+    props.paginationMode,
+    visibleSortedRowsAsArray,
+  ]);
+
+  const contentHeight = Math.max(rowsInCurrentPage.length * rowHeight, 1);
 
   const isInScrollBottomArea = React.useRef<boolean>(false);
 
@@ -35,15 +58,14 @@ export const useGridInfiniteLoader = (
         return;
       }
 
-      const scrollPositionBottom =
-        scrollPosition.top + containerSizes.windowSizes.height + props.scrollEndThreshold;
+      const scrollPositionBottom = scrollPosition.top + containerSizes.windowSizes.height;
 
-      if (scrollPositionBottom < containerSizes.dataContainerSizes.height) {
+      if (scrollPositionBottom < contentHeight - props.scrollEndThreshold) {
         isInScrollBottomArea.current = false;
       }
 
       if (
-        scrollPositionBottom >= containerSizes.dataContainerSizes.height &&
+        scrollPositionBottom >= contentHeight - props.scrollEndThreshold &&
         !isInScrollBottomArea.current
       ) {
         const rowScrollEndParam: GridRowScrollEndParams = {
@@ -55,7 +77,7 @@ export const useGridInfiniteLoader = (
         isInScrollBottomArea.current = true;
       }
     },
-    [apiRef, props.scrollEndThreshold, visibleColumns, containerSizes],
+    [containerSizes, contentHeight, props.scrollEndThreshold, visibleColumns, apiRef],
   );
 
   const handleGridScroll = React.useCallback(
