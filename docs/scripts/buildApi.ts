@@ -735,11 +735,6 @@ async function run(argv: { outputDirectory?: string }) {
   //   }
   // })!;
 
-  const exports = (project.children ?? []).map((child) => ({
-    name: child.name,
-    kind: child?.kindString,
-  }));
-
   writePrettifiedFile(
     path.resolve(workspaceRoot, 'scripts/exportsSnapshot.json'),
     JSON.stringify(exports),
@@ -801,7 +796,12 @@ async function run(argv: { outputDirectory?: string }) {
     exclude: ['**/*.test.ts'],
     tsconfig: 'packages/grid/data-grid/tsconfig.json',
   });
-  const project = app.convert();
+  const project = app.convert()!;
+
+  const exports = (project.children ?? []).map((child) => ({
+    name: child.name,
+    kind: child?.kindString,
+  }));
 
   apisToGenerate.forEach((apiName) => {
     const reflection = project.findReflectionByName(apiName) as TypeDoc.DeclarationReflection;
