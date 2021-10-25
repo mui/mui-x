@@ -189,7 +189,8 @@ export const useGridSorting = (
 
     // Group the rows by parent
     const groupedByParentRows = new Map<GridRowId | null, GridRowTreeNodeConfig[]>([[null, []]]);
-    rowIds.forEach((rowId) => {
+    for (let i = 0; i < rowIds.length; i += 1) {
+      const rowId = rowIds[i];
       const node = rowTree[rowId];
       const isExpanded = node.parent == null || rowTree[node.parent].expanded;
 
@@ -201,7 +202,7 @@ export const useGridSorting = (
         }
         group.push(node);
       }
-    });
+    }
 
     // Apply the sorting to each list of children
     const sortedGroupedByParentRows = new Map<GridRowId | null, GridRowId[]>();

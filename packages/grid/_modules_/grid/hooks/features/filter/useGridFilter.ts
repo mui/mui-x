@@ -172,9 +172,10 @@ export const useGridFilter = (
       if (!filteringMethod) {
         const visibleDescendantsCountLookup: Record<GridRowId, number> = {};
         if (shouldApplyTreeFiltering) {
-          rowIds.forEach((rowId) => {
+          for (let i = 0; i < rowIds.length; i += 1) {
+            const rowId = rowIds[i];
             visibleDescendantsCountLookup[rowId] = rowTree[rowId].descendantCount ?? 0;
-          });
+          }
         }
 
         return {

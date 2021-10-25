@@ -37,10 +37,10 @@ interface GridRowsInternalCacheState {
    * The rows as they were the last time all the rows have been updated at once
    * It is used to avoid processing several time the same set of rows
    */
-  rowsBeforeUpdate: GridRowsProp;
+  rowsBeforePartialUpdates: GridRowsProp;
 }
 
-export interface GridRowsInternalCache {
+interface GridRowsInternalCache {
   state: GridRowsInternalCacheState;
   timeout: NodeJS.Timeout | null;
   lastUpdateMs: number;
@@ -62,21 +62,20 @@ interface ConvertGridRowsPropToStateParams {
   rows?: GridRowsProp;
 }
 
-export function convertGridRowsPropToState({
+const convertGridRowsPropToState = ({
   prevState,
-  rows: inputRows,
+  rows,
   props: inputProps,
-}: ConvertGridRowsPropToStateParams): GridRowsInternalCacheState {
+}: ConvertGridRowsPropToStateParams): GridRowsInternalCacheState => {
   const props = inputProps ?? prevState.props;
 
   let value: GridRowGroupParams;
-  if (inputRows) {
+  if (rows) {
     value = {
       idRowsLookup: {},
       ids: [],
     };
-
-    inputRows.forEach((rowData) => {
+    rows.forEach((rowData) => {
       const id = getGridRowId(rowData, props.getRowId);
       value.idRowsLookup[id] = rowData;
       value.ids.push(id);
@@ -88,9 +87,9 @@ export function convertGridRowsPropToState({
   return {
     value,
     props,
-    rowsBeforeUpdate: inputRows ?? prevState.rowsBeforeUpdate,
+    rowsBeforePartialUpdates: rows ?? prevState.rowsBeforePartialUpdates,
   };
-}
+};
 
 const getRowsStateFromCache = (
   rowsCache: GridRowsInternalCache,
@@ -125,7 +124,7 @@ const INITIAL_GRID_ROWS_INTERNAL_CACHE: GridRowsInternalCache = {
       rowCount: undefined,
       getRowId: undefined,
     },
-    rowsBeforeUpdate: [],
+    rowsBeforePartialUpdates: [],
   },
   timeout: null,
   lastUpdateMs: 0,
@@ -133,7 +132,7 @@ const INITIAL_GRID_ROWS_INTERNAL_CACHE: GridRowsInternalCache = {
 
 /**
  * @requires useGridRowGroupsPreProcessing (method)
- * @requires useGridSorting (method) - can be after, async only (TODO: Remove after moving the 2 methods to useGridSorting)
+ * @requires useGridSorting (method) - can be after, async only (TODO: Remove after moving the `getRowIndex` and `getRowIdFromIndex` to `useGridSorting`)
  */
 export const useGridRows = (
   apiRef: GridApiRef,
@@ -349,7 +348,7 @@ export const useGridRows = (
     }
 
     // The new rows have already been applied (most likely in the `GridEvents.rowGroupsPreProcessingChange` listener)
-    if (rowsCache.current.state.rowsBeforeUpdate === props.rows) {
+    if (rowsCache.current.state.rowsBeforePartialUpdates === props.rows) {
       return;
     }
 
@@ -368,7 +367,7 @@ export const useGridRows = (
     logger.info(`Row grouping pre-processing have changed, regenerating the row tree`);
 
     let rows: GridRowsProp | undefined;
-    if (rowsCache.current.state.rowsBeforeUpdate === props.rows) {
+    if (rowsCache.current.state.rowsBeforePartialUpdates === props.rows) {
       // The `props.rows` has not changed since the last row grouping
       // We can keep the potential updates stored in `inputRowsAfterUpdates` on the new grouping
       rows = undefined;

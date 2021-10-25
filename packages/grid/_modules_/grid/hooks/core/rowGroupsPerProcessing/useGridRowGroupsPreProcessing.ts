@@ -9,17 +9,18 @@ import {
 import { GridEvents } from '../../../constants/eventsConstants';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 
-const getFlatRowTree: GridRowGroupingPreProcessing = (params) => {
+const getFlatRowTree: GridRowGroupingPreProcessing = ({ ids, idRowsLookup }) => {
   const tree: GridRowTreeConfig = {};
-  params.ids.forEach((rowId) => {
+  for (let i = 0; i < ids.length; i += 1) {
+    const rowId = ids[i];
     tree[rowId] = { id: rowId, depth: 0, parent: null, groupingValue: '' };
-  });
+  }
 
   return {
     tree,
     treeDepth: 1,
-    idRowsLookup: params.idRowsLookup,
-    ids: params.ids,
+    idRowsLookup,
+    ids,
   };
 };
 
