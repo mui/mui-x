@@ -25,11 +25,10 @@ export interface AddPathToDemoDataOptions {
 /**
  * TODO: Use `Pick<DataGridProProps, 'getTreeDataPath' | 'treeData' | 'groupingColDef'>` once the tree data PR has been merged
  */
-export interface DemoTreeDataValue
-  extends GridDemoData {
-  getTreeDataPath?: any,
-  groupingColDef?: any
-  treeData?: boolean
+export interface DemoTreeDataValue extends GridDemoData {
+  getTreeDataPath?: any;
+  groupingColDef?: any;
+  treeData?: boolean;
 }
 
 interface RowWithParentIndex {
