@@ -77,7 +77,7 @@
     "@types/mocha": "^9.0.0",
     "@types/node": "^16.11.4",
     "@types/prettier": "^2.4.1",
-    "@types/react": "^17.0.30",
+    "@types/react": "^17.0.32",
     "@types/react-dom": "^17.0.9",
     "@types/requestidlecallback": "^0.3.4",
     "@types/sinon": "^10.0.5",
