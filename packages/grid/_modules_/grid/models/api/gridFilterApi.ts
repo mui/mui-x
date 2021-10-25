@@ -18,6 +18,7 @@ export interface GridFilterApi {
   /**
    * Updates or inserts a [[GridFilterItem]].
    * @param {GridFilterItem} item The filter to update.
+   * @ignore - do not document.
    */
   upsertFilterItem: (item: GridFilterItem) => void;
   /**
