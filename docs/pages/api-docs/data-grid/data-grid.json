@@ -16,7 +16,6 @@
     "columnTypes": { "type": { "name": "object" } },
     "components": { "type": { "name": "object" } },
     "componentsProps": { "type": { "name": "object" } },
-    "defaultGroupingExpansionDepth": { "type": { "name": "number" }, "default": "0" },
     "density": {
       "type": {
         "name": "enum",
@@ -24,8 +23,6 @@
       },
       "default": "\"standard\""
     },
-    "disableChildrenFiltering": { "type": { "name": "bool" } },
-    "disableChildrenSorting": { "type": { "name": "bool" } },
     "disableColumnFilter": { "type": { "name": "bool" } },
     "disableColumnMenu": { "type": { "name": "bool" } },
     "disableColumnSelector": { "type": { "name": "bool" } },
@@ -47,8 +44,6 @@
     "getCellClassName": { "type": { "name": "func" } },
     "getRowClassName": { "type": { "name": "func" } },
     "getRowId": { "type": { "name": "func" } },
-    "getTreeDataPath": { "type": { "name": "func" } },
-    "groupingColDef": { "type": { "name": "union", "description": "func<br>&#124;&nbsp;object" } },
     "headerHeight": { "type": { "name": "number" }, "default": "56" },
     "hideFooter": { "type": { "name": "bool" } },
     "hideFooterPagination": { "type": { "name": "bool" } },
