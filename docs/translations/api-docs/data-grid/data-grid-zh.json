@@ -13,7 +13,10 @@
     "columnTypes": "Extend native column types with your new column types.",
     "components": "Overrideable components.",
     "componentsProps": "Overrideable components props dynamically passed to the component at rendering.",
+    "defaultGroupingExpansionDepth": "If above 0, the row children will be expanded up to this depth If equal to -1, all the row children will be expanded",
     "density": "Set the density of the grid.",
+    "disableChildrenFiltering": "If <code>true</code>, the filtering will only be applied to the top level rows",
+    "disableChildrenSorting": "If <code>true</code>, the sorting will only be applied to the top level rows",
     "disableColumnFilter": "If <code>true</code>, column filters are disabled.",
     "disableColumnMenu": "If <code>true</code>, the column menu is disabled.",
     "disableColumnSelector": "If <code>true</code>, hiding/showing columns is disabled.",
@@ -29,6 +32,8 @@
     "getCellClassName": "Function that applies CSS classes dynamically on cells.<br><br><strong>Signature:</strong><br><code>function(params: GridCellParams) =&gt; string</code><br><em>params:</em> With all properties from <a href=\"/api/data-grid/grid-cell-params/\">GridCellParams</a>.<br> <em>returns</em> (string): The CSS class to apply to the cell.",
     "getRowClassName": "Function that applies CSS classes dynamically on rows.<br><br><strong>Signature:</strong><br><code>function(params: GridRowParams) =&gt; string</code><br><em>params:</em> With all properties from <a href=\"/api/data-grid/grid-row-params/\">GridRowParams</a>.<br> <em>returns</em> (string): The CSS class to apply to the row.",
     "getRowId": "Return the id of a given GridRowModel.",
+    "getTreeDataPath": "Determines the path of a row in the tree data<br><br><strong>Signature:</strong><br><code>function(row: GridRowModel) =&gt; Array&lt;string&gt;</code><br><em>row:</em> The row from which we want the path.<br> <em>returns</em> (Array<string>): the path to the row",
+    "groupingColDef": "The grouping column used by the tree data",
     "headerHeight": "Set the height in pixel of the column headers in the grid.",
     "hideFooter": "If <code>true</code>, the footer component is hidden.",
     "hideFooterPagination": "If <code>true</code>, the pagination component in the footer is hidden.",
@@ -75,10 +80,10 @@
     "onSortModelChange": "Callback fired when the sort model changes before a column is sorted.<br><br><strong>Signature:</strong><br><code>function(model: GridSortModel, details: GridCallbackDetails) =&gt; void</code><br><em>model:</em> With all properties from GridSortModel.<br><em>details:</em> Additional details for this callback.",
     "onStateChange": "Callback fired when the state of the grid is updated.<br><br><strong>Signature:</strong><br><code>function(state: GridState, event: MuiEvent, details: GridCallbackDetails) =&gt; void</code><br><em>state:</em> The new state.<br><em>event:</em> The event object.<br><em>details:</em> Additional details for this callback.",
     "page": "The zero-based index of the current page.",
-    "pageSize": "Set the number of rows in one page.",
+    "pageSize": "Set the number of rows in one page. If some of the rows have children (for instance in the tree data), this number represents the amount of top level rows wanted on each page.",
     "paginationMode": "Pagination can be processed on the server or client-side. Set it to &#39;client&#39; if you would like to handle the pagination on the client-side. Set it to &#39;server&#39; if you would like to handle the pagination on the server-side.",
     "rowBuffer": "Number of extra rows to be rendered before/after the visible slice.",
-    "rowCount": "Set the total number of rows, if it is different than the length of the value <code>rows</code> prop.",
+    "rowCount": "Set the total number of rows, if it is different than the length of the value <code>rows</code> prop. If some of the rows have children (for instance in the tree data), this number represents the amount of top level rows.",
     "rowHeight": "Set the height in pixel of a row in the grid.",
     "rows": "Set of rows of type GridRowsProp.",
     "rowsPerPageOptions": "Select the pageSize dynamically using the component UI.",
@@ -405,6 +410,8 @@
     "DensityStandardIcon": "Icon displayed on the standard density option in the toolbar.",
     "DensityComfortableIcon": "Icon displayed on the &quot;comfortable&quot; density option in the toolbar.",
     "ExportIcon": "Icon displayed on the open export button present in the toolbar by default.",
-    "MoreActionsIcon": "Icon displayed on the <code>actions</code> column type to open the menu."
+    "MoreActionsIcon": "Icon displayed on the <code>actions</code> column type to open the menu.",
+    "TreeDataExpandIcon": "Icon displayed on the tree data toggling column when the children are collapsed",
+    "TreeDataCollapseIcon": "Icon displayed on the tree data toggling column when the children are expanded"
   }
 }
