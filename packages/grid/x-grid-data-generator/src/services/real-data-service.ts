@@ -2,18 +2,18 @@ import { GridRowModel } from '@mui/x-data-grid-pro';
 import asyncWorker from '../asyncWorker';
 import { GridColDefGenerator, GridDataGeneratorContext } from './gridColDefGenerator';
 
-export interface GeneratedDemoData {
+export interface GridDemoData {
   rows: GridRowModel[];
   columns: GridColDefGenerator[];
 }
 
-export function getRealData(
+export function getRealGridData(
   rowLength: number,
   columns: GridColDefGenerator[],
-): Promise<GeneratedDemoData> {
-  return new Promise<GeneratedDemoData>((resolve) => {
+): Promise<GridDemoData> {
+  return new Promise<GridDemoData>((resolve) => {
     const tasks = { current: rowLength };
-    const rows: GeneratedDemoData['rows'] = [];
+    const rows: GridDemoData['rows'] = [];
     const indexedValues: { [field: string]: { [value: string]: number } } = {};
 
     function work() {

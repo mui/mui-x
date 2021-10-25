@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { GridRowsProp, DataGrid, GridRowId, GridRowModel } from '@mui/x-data-grid';
-import { useDemoData, GeneratedDemoData } from '@mui/x-data-grid-generator';
+import { useDemoData, GridDemoData } from '@mui/x-data-grid-generator';
 
 interface ServerBasedGridResponse {
   rows: GridRowModel[];
@@ -11,7 +11,7 @@ const PAGE_SIZE = 5;
 
 function loadServerRows(
   cursor: GridRowId | null | undefined,
-  data: GeneratedDemoData,
+  data: GridDemoData,
 ): Promise<ServerBasedGridResponse> {
   return new Promise<ServerBasedGridResponse>((resolve) => {
     setTimeout(() => {

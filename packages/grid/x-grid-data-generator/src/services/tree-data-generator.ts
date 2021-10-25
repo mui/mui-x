@@ -1,5 +1,5 @@
 import { DataGridProProps, GridRowModel } from '@mui/x-data-grid-pro';
-import { GeneratedDemoData } from './real-data-service';
+import { GridDemoData } from './real-data-service';
 import { randomArrayItem } from './random-generator';
 
 export interface AddPathToDemoDataOptions {
@@ -24,7 +24,7 @@ export interface AddPathToDemoDataOptions {
 
 export interface DemoTreeDataValue
   extends Pick<DataGridProProps, 'getTreeDataPath' | 'treeData' | 'groupingColDef'>,
-    GeneratedDemoData {}
+    GridDemoData {}
 
 interface RowWithParentIndex {
   value: GridRowModel;
@@ -32,7 +32,7 @@ interface RowWithParentIndex {
 }
 
 export const addTreeDataOptionsToDemoData = (
-  data: GeneratedDemoData,
+  data: GridDemoData,
   options: AddPathToDemoDataOptions = {},
 ): DemoTreeDataValue => {
   const { averageChildren = 2, maxDepth = 1, groupingField } = options;

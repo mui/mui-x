@@ -1,6 +1,6 @@
 import * as React from 'react';
 import LRUCache from 'lru-cache';
-import { GeneratedDemoData, getRealData } from './services/real-data-service';
+import { GridDemoData, getRealGridData } from './services/real-data-service';
 import { getCommodityColumns } from './commodities.columns';
 import { getEmployeeColumns } from './employees.columns';
 import asyncWorker from './asyncWorker';
@@ -38,8 +38,8 @@ export interface UseDemoDataOptions {
 async function extrapolateSeed(
   rowLength: number,
   columns: GridColDefGenerator[],
-  data: GeneratedDemoData,
-): Promise<GeneratedDemoData> {
+  data: GridDemoData,
+): Promise<GridDemoData> {
   return new Promise<any>((resolve) => {
     const seed = data.rows;
     const rows = data.rows.slice();
@@ -107,7 +107,7 @@ export const useDemoData = (options: UseDemoDataOptions): DemoDataReturnType => 
     return columns;
   }, [options.dataSet, options.editable, options.maxColumns]);
 
-  const [data, setData] = React.useState<GeneratedDemoData>(() =>
+  const [data, setData] = React.useState<GridDemoData>(() =>
     addTreeDataOptionsToDemoData(
       {
         columns: getColumns(),
@@ -137,10 +137,10 @@ export const useDemoData = (options: UseDemoDataOptions): DemoDataReturnType => 
       let newData: DemoTreeDataValue;
       const columns = getColumns();
       if (rowLength > 1000) {
-        newData = await getRealData(1000, columns);
+        newData = await getRealGridData(1000, columns);
         newData = await extrapolateSeed(rowLength, columns, newData);
       } else {
-        newData = await getRealData(rowLength, columns);
+        newData = await getRealGridData(rowLength, columns);
       }
 
       if (!active) {
