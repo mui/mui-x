@@ -3,6 +3,142 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 5.0.0-beta.5
+
+_Oct 22, 2021_
+
+A big thanks to the 5 contributors who made this release possible. Here are some highlights ✨:
+
+- 💅 Remove dependency on `@mui/styles` and use the same styling solution from MUI Core (#2784) @DanailH
+- ✨ Add support for generics in `GridRowParams`, `GridCellParams` and `GridRenderCellParams` (#2436) @ZeeshanTamboli
+- 👁 Rework the virtualization engine (#2673) @m4theushw
+- 💡 Enhance internal code structure
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@v5.0.0-beta.5` / `@mui/x-data-grid-pro@v5.0.0-beta.5`
+
+#### Breaking changes
+
+- The `DataGrid` and `DataGridPro` no longer depends on `@mui/styles`. Use `styled` to provide custom styling. (#2784) @DanailH
+
+  ```diff
+  -import { createTheme } from '@mui/material/styles';
+  -import { makeStyles } from '@mui/styles';
+  +import { styled } from '@mui/material/styles';
+  ```
+
+  The following CSS classes were renamed:
+
+  - `.MuiDataGrid-gridMenuList` was renamed to `.MuiDataGrid-menuList`
+  - `.MuiGridToolbarContainer-root` was renamed to `.MuiDataGrid-toolbarContainer`
+  - `.MuiGridMenu-root` was renamed to `.MuiDataGrid-menu`
+  - `.MuiDataGridColumnsPanel-root` was renamed to `.MuiDataGrid-columnsPanel`
+  - `.MuiGridPanel-root` was renamed to `.MuiDataGrid-panel`
+  - `.MuiGridPanelContent-root` was renamed to `.MuiDataGrid-panelContent`
+  - `.MuiGridPanelFooter-root` was renamed to `.MuiDataGrid-panelFooter`
+  - `.MuiDataGridPanelHeader-root` was renamed to `.MuiDataGrid-panelHeader`
+  - `.MuiGridPanelWrapper-root` was renamed to `.MuiDataGrid-panelWrapper`
+  - `.MuiGridFilterForm-root` was renamed to `.MuiDataGrid-filterForm`
+  - `.MuiGridToolbarFilterButton-root` was renamed to `.MuiDataGrid-toolbarFilterList`
+
+- [DataGrid] The CSS classes `.MuiDataGrid-window` and `.MuiDataGrid-windowContainer` were removed (#2673) @m4theushw
+
+  The following CSS classes were renamed:
+
+  - `.MuiDataGrid-viewport` was renamed to `.MuiDataGrid-virtualScroller`
+  - `.MuiDataGrid-dataContainer` was renamed to `.MuiDataGrid-virtualScrollerContent`
+  - `.MuiDataGrid-renderingZone` was renamed to `.MuiDataGrid-virtualScrollerRenderZone`
+
+- [DataGrid] Remove the `useGridSlotComponentProps` hook and replace it as below: (#2856) @flaviendelangle
+
+  ```diff
+  -const { apiRef, state, rootElement } = useGridSlotComponentProps();
+  +const apiRef = useGridApiContext();
+  +const [state] = useGridState(apiRef);
+  +const rootElement = apiRef.current.rootElementRef;
+  ```
+
+- [DataGrid] Remove the `state` prop and use the `initialState` prop (#2848) @flaviendelangle
+
+  Note that `initialState` only allows the `preferencePanel`, `filter.filterModel` and `sort.sortModel` keys.
+  To fully control the state, use the the feature's model prop and change callback (e.g. `filterModel` and `onFilterModelChange`).
+
+  ```diff
+  <DataGrid
+  -  state={{
+  +  initialState={{
+      preferencePanel: {
+        open: true,
+        openedPanelValue: GridPreferencePanelsValue.filters,
+      },
+    }}
+  />
+  ```
+
+- [DataGridPro] Remove the `onViewportRowsChange` prop and the `viewportRowsChange` event (#2673) @m4theushw
+
+  A listener on the `rowsScroll` event, as shown below, can be used to replace the prop:
+
+  ```tsx
+  const apiRef = useGridApiRef();
+  const prevRenderContext = React.useRef(null);
+
+  React.useEffect(() => {
+    return apiRef.current.subscribeEvent("rowsScroll", ({ renderContext }) => {
+      if (
+        !prevRenderContext.current ||
+        renderContext.firstRowIdx !== prevRenderContext.current.firstRowIndex ||
+        renderContext.lastRowIdx !== prevRenderContext.current.lastRowIndex
+      ) {
+        prevRenderContext.current = renderContext;
+        const params = {
+          firstRowIndex: renderContext.firstRowIndex,
+          lastRowIndex: renderContext.lastRowIndex
+        };
+      }
+    });
+  }, [apiRef]);
+
+  <DataGridPro apiRef={apiRef} />
+  ```
+
+#### Changes
+
+- [DataGrid] Add `valueSetter` (#2876) @m4theushw
+- [DataGrid] Add support for generic types in `GridRowParams`, `GridCellParams`, `GridRenderCellParams` (#2436) @ZeeshanTamboli
+- [DataGrid] Fix `actions` column type to not select the row when clicking on an item (#2862) @m4theushw
+- [DataGrid] Fix column headers misalignment when the render context changes (#2937) @m4theushw
+- [DataGrid] Rework virtualization (#2673) @m4theushw
+- [DataGrid] Remove `@mui/styles` dependency (#2784) @DanailH
+- [DataGrid] Remove `useGridSlotComponentProps` (#2856) @flaviendelangle
+- [DataGrid] Replace `prop.state` with `prop.initialState` (#2848) @flaviendelangle
+- [DataGrid] Use true content height to dispatch `rowsScrollEnd` (#2938) @m4theushw
+- [DataGrid] Fix the typing of `GridToolbarFilterButton` (#2841) @alexfauquette
+
+### Docs
+
+- [docs] Improve the README for releases (#2908) @flaviendelangle
+- [docs] Re-add Pro icon (#2928) @m4theushw
+- [docs] Fix to not commit changes when clicking outside the cell (#2906) @ZeeshanTamboli
+- [docs] Update link to Quick Filter issue (#2909) @m4theushw
+
+### Core
+
+- [core] Small fixes on the Components page (#2877) @flaviendelangle
+- [core] Make each feature hook responsible for its column pre-processing (#2839) @flaviendelangle
+- [core] Add `useGridRowGroupsPreProcessing` internal hook (#2840) @flaviendelangle
+- [core] Register events async if not registered (#2916) @m4theushw
+- [core] Remove `material-ui-utils.ts` (#2872) @DanailH
+- [core] Remove outdated hooks requirements (#2939) @flaviendelangle
+- [core] Remove test event (#2912) @m4theushw
+- [core] Remove unused `GridSlotComponentProps` interface (#2911) @flaviendelangle
+- [core] Rename 'UNSTABLE_' prefix to 'unstable_' (#2931) @flaviendelangle
+- [core] Replace usage of `GridRowData` with `GridRowModel` (#2936) @flaviendelangle
+- [core] Revert hardcoded typings (#2907) @DanailH
+- [core] Simplify the CSV export (#2941) @flaviendelangle
+- [core] Update monorepo version (#2927) @m4theushw
+- [test] Take screenshot of the print export (#2881) @m4theushw
+
 ## 5.0.0-beta.4
 
 _Oct 14, 2021_

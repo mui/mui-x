@@ -410,7 +410,7 @@ DataGridProRaw.propTypes = {
   /**
    * Callback fired when the cell value changed.
    * @param {GridEditCellValueParams} params With all properties from [[GridEditCellValueParams]].
-   * @param {MuiEvent<{}>} event The event object.
+   * @param {MuiEvent} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onCellValueChange: PropTypes.func,
@@ -459,28 +459,28 @@ DataGridProRaw.propTypes = {
   /**
    * Callback fired when a column is reordered.
    * @param {GridColumnOrderChangeParams} params With all properties from [[GridColumnOrderChangeParams]].
-   * @param {MuiEvent<{}>} event The event object.
+   * @param {MuiEvent} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onColumnOrderChange: PropTypes.func,
   /**
    * Callback fired while a column is being resized.
    * @param {GridColumnResizeParams} params With all properties from [[GridColumnResizeParams]].
-   * @param {MuiEvent<{}>} event The event object.
+   * @param {MuiEvent} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onColumnResize: PropTypes.func,
   /**
    * Callback fired when a column visibility changes.
    * @param {GridColumnVisibilityChangeParams} params With all properties from [[GridColumnVisibilityChangeParams]].
-   * @param {MuiEvent<{}>} event The event object.
+   * @param {MuiEvent} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onColumnVisibilityChange: PropTypes.func,
   /**
    * Callback fired when the width of a column is changed.
    * @param {GridCallbackDetails} params With all properties from [[GridColumnResizeParams]].
-   * @param {MuiEvent<{}>} event The event object.
+   * @param {MuiEvent} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onColumnWidthChange: PropTypes.func,
@@ -500,7 +500,7 @@ DataGridProRaw.propTypes = {
   /**
    * Callback fired when an exception is thrown in the grid.
    * @param {any} args The arguments passed to the `showError` call.
-   * @param {MuiEvent<{}>} event The event object.
+   * @param {MuiEvent} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onError: PropTypes.func,
@@ -525,7 +525,7 @@ DataGridProRaw.propTypes = {
   /**
    * Callback fired when the grid is resized.
    * @param {ElementSize} containerSize With all properties from [[ElementSize]].
-   * @param {MuiEvent<{}>} event The event object.
+   * @param {MuiEvent} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onResize: PropTypes.func,
@@ -564,7 +564,7 @@ DataGridProRaw.propTypes = {
   /**
    * Callback fired when scrolling to the bottom of the grid viewport.
    * @param {GridRowScrollEndParams} params With all properties from [[GridRowScrollEndParams]].
-   * @param {MuiEvent<{}>} event The event object.
+   * @param {MuiEvent} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onRowsScrollEnd: PropTypes.func,
@@ -583,7 +583,7 @@ DataGridProRaw.propTypes = {
   /**
    * Callback fired when the state of the grid is updated.
    * @param {GridState} state The new state.
-   * @param {MuiEvent<{}>} event The event object.
+   * @param {MuiEvent} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
    * @internal
    */
