@@ -66,7 +66,6 @@ export const useGridFilter = (
           props.initialState?.filter?.filterModel ??
           getDefaultGridFilterModel(),
         visibleRowsLookup: {},
-        visibleRows: [],
         visibleDescendantsCountLookup: {},
       },
     };
@@ -164,7 +163,6 @@ export const useGridFilter = (
             ...state.filter,
             visibleRowsLookup: {},
             visibleDescendantsCountLookup: {},
-            visibleRows: rowIds,
           },
         };
       }
@@ -185,7 +183,6 @@ export const useGridFilter = (
             ...state.filter,
             visibleRowsLookup: {},
             visibleDescendantsCountLookup,
-            visibleRows: rowIds,
           },
         };
       }
@@ -262,9 +259,6 @@ export const useGridFilter = (
           ...state.filter,
           visibleRowsLookup,
           visibleDescendantsCountLookup,
-          visibleRows: Object.entries(visibleRowsLookup)
-            .filter(([, isVisible]) => isVisible)
-            .map(([id]) => id),
         },
       };
     });

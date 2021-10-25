@@ -11,10 +11,10 @@ export interface GridFilterState {
   filterModel: GridFilterModel;
 
   /**
+   * Visibility status for each row
    * If a row is not registered in this lookup, it is supposed to be visible
    */
   visibleRowsLookup: Record<GridRowId, boolean>;
-  visibleRows: GridRowId[];
 
   /**
    * Amount of visible descendants for each row

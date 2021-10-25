@@ -12,11 +12,6 @@ export const gridFilterModelSelector = createSelector(
   (filterState) => filterState.filterModel,
 );
 
-export const gridVisibleRowsSelector = createSelector(
-  gridFilterStateSelector,
-  (filterState) => filterState.visibleRows,
-);
-
 export const gridVisibleRowsLookupSelector = createSelector(
   gridFilterStateSelector,
   (filterState) => filterState.visibleRowsLookup,
@@ -38,6 +33,11 @@ export const gridVisibleSortedRowIdsSelector = createSelector(
   gridVisibleSortedRowEntriesSelector,
   (visibleSortedRowEntries) => visibleSortedRowEntries.map((row) => row.id),
 );
+
+/**
+ * @deprecated Use `gridVisibleSortedRowIdsSelector` instead
+ */
+export const gridVisibleRowsSelector = gridVisibleSortedRowIdsSelector;
 
 export const gridVisibleSortedTopLevelRowEntriesSelector = createSelector(
   gridVisibleSortedRowEntriesSelector,
