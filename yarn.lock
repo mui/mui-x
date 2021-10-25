@@ -2302,9 +2302,9 @@
   dependencies:
     "@babel/runtime" "^7.14.8"
 
-"@material-ui/monorepo@https://github.com/mui-org/material-ui.git#master":
+"@material-ui/monorepo@https://github.com/m4theushw/material-ui.git#master":
   version "5.0.4"
-  resolved "https://github.com/mui-org/material-ui.git#0ff9cb54a9069be9514a520510576cd281ff8faa"
+  resolved "https://github.com/m4theushw/material-ui.git#d64da9b55436048475b9be41a39884dbd5e82bc1"
 
 "@material-ui/private-theming@5.0.0-beta.5":
   version "5.0.0-beta.5"
@@ -4233,6 +4233,11 @@
   version "4.14.173"
   resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.173.tgz#9d3b674c67a26cf673756f6aca7b429f237f91ed"
   integrity sha512-vv0CAYoaEjCw/mLy96GBTnRoZrSxkGE0BKzKimdR8P3OzrNYNvBgtW7p055A+E8C31vXNUhWKoFCbhq7gbyhFg==
+
+"@types/lodash@^4.14.173":
+  version "4.14.175"
+  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.175.tgz#b78dfa959192b01fae0ad90e166478769b215f45"
+  integrity sha512-XmdEOrKQ8a1Y/yxQFOMbC47G/V2VDO1GvMRnl4O75M4GW/abC5tnfzadQYkqEveqRM1dEJGFFegfPNA2vvx2iw==
 
 "@types/lru-cache@^5.1.1":
   version "5.1.1"
