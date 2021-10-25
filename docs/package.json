@@ -58,7 +58,7 @@
     "marked": "^3.0.7",
     "next": "^11.1.2",
     "nprogress": "^0.2.0",
-    "postcss": "^8.3.9",
+    "postcss": "^8.3.11",
     "prismjs": "^1.25.0",
     "prop-types": "^15.7.2",
     "raw-loader": "^1.0.0",
