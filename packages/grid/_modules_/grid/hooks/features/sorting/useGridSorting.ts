@@ -27,7 +27,7 @@ import {
   gridSortedRowEntriesSelector,
   gridSortModelSelector,
 } from './gridSortingSelector';
-import { gridRowIdsSelector, gridRowTreeSelector } from '../rows';
+import { gridRowTreeSelector } from '../rows';
 import { useGridStateInit } from '../../utils/useGridStateInit';
 import { useFirstRender } from '../../utils/useFirstRender';
 
@@ -172,17 +172,18 @@ export const useGridSorting = (
   );
 
   const applySorting = React.useCallback<GridSortApi['applySorting']>(() => {
+    const rowIds = apiRef.current.getAllRowIds();
+
     if (props.sortingMode === GridFeatureModeConstant.server) {
       logger.debug('Skipping sorting rows as sortingMode = server');
       setGridState((state) => ({
         ...state,
-        sorting: { ...state.sorting, sortedRows: apiRef.current.getAllRowIds() },
+        sorting: { ...state.sorting, sortedRows: rowIds },
       }));
       return;
     }
 
     const rowTree = gridRowTreeSelector(apiRef.current.state);
-    const rowIds = gridRowIdsSelector(apiRef.current.state);
     const sortModel = gridSortModelSelector(apiRef.current.state);
     const comparatorList = buildComparatorList(sortModel);
     const aggregatedComparator = comparatorListAggregate(comparatorList);
