@@ -19,18 +19,20 @@ interface TempRowTreeNode extends Omit<GridRowTreeNodeConfig, 'children'> {
 
 /**
  * Transform a list of rows into a tree structure where each row references its parent and children.
- * Add the auto generated row to the `ids` and `idRowsLookup`.
+ * Add the auto generated rows to `ids` and `idRowsLookup`.
  */
 export const buildRowTree = (params: GenerateRowTreeParams): GridRowGroupingResult => {
   // During the build, we store the children as a Record to avoid linear complexity when checking if a children is already defined.
   const tempTree: Record<GridRowId, TempRowTreeNode> = {};
   let treeDepth = 1;
+
   const ids = [...params.ids];
   const idRowsLookup = { ...params.idRowsLookup };
 
   const nodeNameToIdTree: GridNodeNameToIdTree = {};
 
-  params.rows.forEach((row) => {
+  for (let i = 0; i < params.rows.length; i += 1) {
+    const row = params.rows[i];
     let nodeNameToIdSubTree = nodeNameToIdTree;
     let parentNode: TempRowTreeNode | null = null;
 
@@ -39,15 +41,15 @@ export const buildRowTree = (params: GenerateRowTreeParams): GridRowGroupingResu
       let nodeId: GridRowId;
 
       const expanded =
-        params.defaultGroupingExpansionDepth === -1 || params.defaultGroupingExpansionDepth > depth;
+          params.defaultGroupingExpansionDepth === -1 || params.defaultGroupingExpansionDepth > depth;
 
       let nodeNameConfig = nodeNameToIdSubTree[nodeName];
 
       if (!nodeNameConfig) {
         nodeId =
-          depth === row.path.length - 1
-            ? row.id
-            : `auto-generated-row-${row.path.slice(0, depth + 1).join('-')}`;
+            depth === row.path.length - 1
+                ? row.id
+                : `auto-generated-row-${row.path.slice(0, depth + 1).join('-')}`;
 
         nodeNameConfig = { id: nodeId, children: {} };
         nodeNameToIdSubTree[nodeName] = nodeNameConfig;
@@ -96,16 +98,17 @@ export const buildRowTree = (params: GenerateRowTreeParams): GridRowGroupingResu
     }
 
     treeDepth = Math.max(treeDepth, row.path.length);
-  });
+  }
 
   const tree: GridRowTreeConfig = {};
-  ids.forEach((rowId) => {
+  for (let i = 0; i < ids.length; i += 1) {
+    const rowId = ids[i];
     const tempNode = tempTree[rowId];
     tree[rowId] = {
       ...tempNode,
       children: tempNode.children ? Object.values(tempNode.children) : undefined,
     };
-  });
+  }
 
   return {
     tree,
