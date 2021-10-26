@@ -109,8 +109,8 @@ GridTreeDataGroupingCell.propTypes = {
   formattedValue: PropTypes.shape({
     depth: PropTypes.number.isRequired,
     expanded: PropTypes.bool.isRequired,
-    label: PropTypes.string.isRequired,
     filteredDescendantCount: PropTypes.number.isRequired,
+    label: PropTypes.string.isRequired,
   }).isRequired,
   /**
    * Get the cell value of a row and field.
@@ -160,8 +160,8 @@ GridTreeDataGroupingCell.propTypes = {
   value: PropTypes.shape({
     depth: PropTypes.number.isRequired,
     expanded: PropTypes.bool.isRequired,
-    label: PropTypes.string.isRequired,
     filteredDescendantCount: PropTypes.number.isRequired,
+    label: PropTypes.string.isRequired,
   }).isRequired,
 } as any;
 
