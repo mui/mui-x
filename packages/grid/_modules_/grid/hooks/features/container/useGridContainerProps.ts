@@ -50,7 +50,6 @@ export const useGridContainerProps = (
     | 'pagination'
     | 'autoPageSize'
     | 'pageSize'
-    | 'paginationMode'
     | 'autoHeight'
     | 'hideFooter'
     | 'scrollbarSize'
@@ -96,11 +95,7 @@ export const useGridContainerProps = (
 
   const getVirtualRowCount = React.useCallback(() => {
     logger.debug('Calculating virtual row count.');
-    if (
-      props.pagination &&
-      props.paginationMode === 'client' &&
-      (!props.autoPageSize || props.pageSize)
-    ) {
+    if (props.pagination && (!props.autoPageSize || props.pageSize)) {
       const rowsLeft = visibleRowsCount - paginationState.page * paginationState.pageSize;
       return rowsLeft > paginationState.pageSize ? paginationState.pageSize : rowsLeft;
     }
@@ -110,7 +105,6 @@ export const useGridContainerProps = (
     props.autoPageSize,
     props.pagination,
     props.pageSize,
-    props.paginationMode,
     paginationState.page,
     paginationState.pageSize,
     visibleRowsCount,
