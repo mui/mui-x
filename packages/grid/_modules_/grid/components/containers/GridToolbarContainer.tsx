@@ -23,6 +23,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 const GridToolbarContainerRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'toolbarContainer',
+  overridesResolver: (props, styles) => styles.root,
 })(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',

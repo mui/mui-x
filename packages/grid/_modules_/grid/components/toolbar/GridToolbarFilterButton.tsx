@@ -36,6 +36,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 const GridToolbarFilterListRoot = styled('ul', {
   name: 'MuiDataGrid',
   slot: 'ToolbarFilterList',
+  overridesResolver: (props, styles) => styles.root,
 })(({ theme }) => ({
   margin: theme.spacing(1, 1, 0.5),
   padding: theme.spacing(0, 1),

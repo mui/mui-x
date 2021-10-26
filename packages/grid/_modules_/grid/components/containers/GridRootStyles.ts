@@ -5,6 +5,7 @@ import { gridClasses } from '../../gridClasses';
 export const GridRootStyles = styled('div', {
   name: 'MuiDataGrid',
   slot: 'Root',
+  overridesResolver: (props, styles) => styles.root,
 })(({ theme }) => {
   const borderColor =
     theme.palette.mode === 'light'

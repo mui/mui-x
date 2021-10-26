@@ -43,6 +43,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 const GridFilterFormRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'FilterForm',
+  overridesResolver: (props, styles) => styles.root,
 })(({ theme }) => ({
   display: 'flex',
   justifyContent: 'space-around',
