@@ -23,9 +23,9 @@ import { useGridLogger } from '../../utils/useGridLogger';
 import { allGridColumnsSelector } from '../columns/gridColumnsSelector';
 import { useGridState } from '../../utils/useGridState';
 import {
+  gridSortModelSelector,
   gridSortedRowIdsSelector,
   gridSortedRowEntriesSelector,
-  gridSortModelSelector,
 } from './gridSortingSelector';
 import { gridRowTreeSelector } from '../rows';
 import { useGridStateInit } from '../../utils/useGridStateInit';
