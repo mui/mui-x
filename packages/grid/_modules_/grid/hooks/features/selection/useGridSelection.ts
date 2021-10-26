@@ -17,7 +17,7 @@ import {
   selectedIdsLookupSelector,
 } from './gridSelectionSelector';
 import { gridPaginatedVisibleSortedGridRowIdsSelector } from '../pagination';
-import { visibleSortedGridRowIdsSelector } from '../filter/gridFilterSelector';
+import { gridVisibleSortedRowIdsSelector } from '../filter/gridFilterSelector';
 import { GridHeaderSelectionCheckboxParams } from '../../../models/params/gridHeaderSelectionCheckboxParams';
 import { GridCellParams } from '../../../models/params/gridCellParams';
 import { GridRowSelectionCheckboxParams } from '../../../models/params/gridRowSelectionCheckboxParams';
@@ -185,7 +185,7 @@ export const useGridSelection = (
 
       logger.debug(`Expanding selection from row ${startId} to row ${endId}`);
 
-      const visibleRowIds = visibleSortedGridRowIdsSelector(apiRef.current.state);
+      const visibleRowIds = gridVisibleSortedRowIdsSelector(apiRef.current.state);
       const startIndex = visibleRowIds.indexOf(startId);
       const endIndex = visibleRowIds.indexOf(endId);
       const [start, end] = startIndex > endIndex ? [endIndex, startIndex] : [startIndex, endIndex];
@@ -202,7 +202,7 @@ export const useGridSelection = (
       const startId = lastRowToggled.current ?? id;
       const isSelected = apiRef.current.isRowSelected(id);
       if (isSelected) {
-        const visibleRowIds = visibleSortedGridRowIdsSelector(apiRef.current.state);
+        const visibleRowIds = gridVisibleSortedRowIdsSelector(apiRef.current.state);
         const startIndex = visibleRowIds.findIndex((rowId) => rowId === startId);
         const endIndex = visibleRowIds.findIndex((rowId) => rowId === endId);
         if (startIndex > endIndex) {
@@ -318,7 +318,7 @@ export const useGridSelection = (
 
       const rowsToBeSelected = shouldLimitSelectionToCurrentPage
         ? gridPaginatedVisibleSortedGridRowIdsSelector(apiRef.current.state)
-        : visibleSortedGridRowIdsSelector(apiRef.current.state);
+        : gridVisibleSortedRowIdsSelector(apiRef.current.state);
 
       apiRef.current.selectRows(rowsToBeSelected, params.value);
     },

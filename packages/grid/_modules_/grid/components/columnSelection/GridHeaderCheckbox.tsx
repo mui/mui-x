@@ -12,7 +12,7 @@ import { getDataGridUtilityClass } from '../../gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { GridComponentProps } from '../../GridComponentProps';
 import { GridHeaderSelectionCheckboxParams } from '../../models/params/gridHeaderSelectionCheckboxParams';
-import { visibleSortedGridRowIdsSelector } from '../../hooks/features/filter/gridFilterSelector';
+import { gridVisibleSortedRowIdsSelector } from '../../hooks/features/filter/gridFilterSelector';
 import { gridPaginatedVisibleSortedGridRowIdsSelector } from '../../hooks/features/pagination/gridPaginationSelector';
 
 type OwnerState = { classes: GridComponentProps['classes'] };
@@ -36,8 +36,8 @@ const GridHeaderCheckbox = React.forwardRef<HTMLInputElement, GridColumnHeaderPa
     const classes = useUtilityClasses(ownerState);
     const tabIndexState = useGridSelector(apiRef, gridTabIndexColumnHeaderSelector);
     const selection = useGridSelector(apiRef, gridSelectionStateSelector);
-    const visibleRows = useGridSelector(apiRef, visibleSortedGridRowIdsSelector);
-    const paginatedVisibleRows = useGridSelector(
+    const visibleRowIds = useGridSelector(apiRef, gridVisibleSortedRowIdsSelector);
+    const paginatedVisibleRowIds = useGridSelector(
       apiRef,
       gridPaginatedVisibleSortedGridRowIdsSelector,
     );
@@ -53,14 +53,14 @@ const GridHeaderCheckbox = React.forwardRef<HTMLInputElement, GridColumnHeaderPa
     // All the rows that could be selected / unselected by toggling this checkbox
     const selectionCandidates = React.useMemo(() => {
       if (!rootProps.pagination || !rootProps.checkboxSelectionVisibleOnly) {
-        return visibleRows;
+        return visibleRowIds;
       }
-      return paginatedVisibleRows;
+      return paginatedVisibleRowIds;
     }, [
       rootProps.pagination,
       rootProps.checkboxSelectionVisibleOnly,
-      paginatedVisibleRows,
-      visibleRows,
+      paginatedVisibleRowIds,
+      visibleRowIds,
     ]);
 
     // Amount of rows selected and that could be selected / unselected by toggling this checkbox
