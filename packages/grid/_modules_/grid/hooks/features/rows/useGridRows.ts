@@ -9,6 +9,7 @@ import {
   GridRowId,
   GridRowsProp,
   GridRowIdGetter,
+  GridRowTreeNodeConfig,
 } from '../../../models/gridRows';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
@@ -305,22 +306,22 @@ export const useGridRows = (
 
   const setRowExpansion = React.useCallback<GridRowApi['unstable_setRowExpansion']>(
     (id, isExpanded) => {
+      const currentNode = apiRef.current.unstable_getRowNode(id);
+      if (!currentNode) {
+        throw new Error(`MUI: No row with id #${id} found`);
+      }
+      const newNode: GridRowTreeNodeConfig = { ...currentNode, expanded: isExpanded };
       setGridState((state) => {
-        const node = apiRef.current.unstable_getRowNode(id);
-        if (!node) {
-          throw new Error(`MUI: No row with id #${id} found`);
-        }
-
         return {
           ...state,
           rows: {
             ...state.rows,
-            tree: { ...state.rows.tree, [id]: { ...node, expanded: isExpanded } },
+            tree: { ...state.rows.tree, [id]: newNode },
           },
         };
       });
       forceUpdate();
-      apiRef.current.publishEvent(GridEvents.rowsSet);
+      apiRef.current.publishEvent(GridEvents.rowExpansionChange, newNode);
     },
     [apiRef, setGridState, forceUpdate],
   );

@@ -255,6 +255,11 @@ export enum GridEvents {
    */
   rowsSet = 'rowsSet',
   /**
+   * Fired when the expansion of a row is changed. Called with a [[GridRowTreeNodeConfig]] object.
+   * @ignore - do not document
+   */
+  rowExpansionChange = 'rowExpansionChange',
+  /**
    * Fired when the visible rows are updated
    * @ignore - do not document.
    */

@@ -400,6 +400,8 @@ export const useGridFilter = (
     'FilterApi',
   );
 
+  // TODO: Do not rerun applyFilters if no filterItem has been removed
+  // TODO: Use the column lookup to avoid linear complexity if `columnsIds.find`
   const onColUpdated = React.useCallback(() => {
     logger.debug('onColUpdated - GridColumns changed, applying filters');
     const filterModel = gridFilterModelSelector(apiRef.current.state);
@@ -433,5 +435,6 @@ export const useGridFilter = (
   useFirstRender(() => apiRef.current.unsafe_applyFilters());
 
   useGridApiEventHandler(apiRef, GridEvents.rowsSet, apiRef.current.unsafe_applyFilters);
+  useGridApiEventHandler(apiRef, GridEvents.rowExpansionChange, apiRef.current.unsafe_applyFilters);
   useGridApiEventHandler(apiRef, GridEvents.columnsChange, onColUpdated);
 };
