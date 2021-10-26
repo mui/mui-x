@@ -412,8 +412,22 @@ describe('<DataGridPro /> - Tree Data', () => {
     it('should update the order server side', () => {
       const { setProps } = render(<Test sortingMode="server" />);
       expect(getColumnValues(1)).to.deep.equal(['A', 'B', 'C']);
-      setProps({ rows: [...rowsWithoutGap].reverse() });
+      setProps({
+        rows: [
+          { name: 'C' },
+          { name: 'B' },
+          { name: 'B.B' },
+          { name: 'B.B.A' },
+          { name: 'B.B.A.A' },
+          { name: 'B.A' },
+          { name: 'A' },
+          { name: 'A.B' },
+          { name: 'A.A' },
+        ],
+      });
       expect(getColumnValues(1)).to.deep.equal(['C', 'B', 'A']);
+      fireEvent.click(getCell(2, 0).querySelector('button'));
+      expect(getColumnValues(1)).to.deep.equal(['C', 'B', 'A', 'A.B', 'A.A']);
     });
   });
 });
