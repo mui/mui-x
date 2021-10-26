@@ -8,7 +8,7 @@ import {
   GridMergedOptions,
 } from './models/gridOptions';
 import { MuiEvent } from './models/muiEvent';
-import { GridRowId, GridRowIdGetter, GridRowsProp } from './models/gridRows';
+import { GridRowId, GridRowIdGetter, GridRowModel, GridRowsProp } from './models/gridRows';
 import { ElementSize } from './models/elementSize';
 import { GridColumnTypesRecord } from './models/colDef/gridColumnTypesRecord';
 import { GridSortModel } from './models/gridSortModel';
@@ -68,6 +68,7 @@ interface GridComponentOtherProps {
   columnTypes?: GridColumnTypesRecord;
   /**
    * Set the total number of rows, if it is different than the length of the value `rows` prop.
+   * If some of the rows have children (for instance in the tree data), this number represents the amount of top level rows.
    */
   rowCount?: number;
   /**
@@ -383,6 +384,7 @@ interface GridComponentOtherProps {
   onPageChange?: (page: number, details: GridCallbackDetails) => void;
   /**
    * Set the number of rows in one page.
+   * If some of the rows have children (for instance in the tree data), this number represents the amount of top level rows wanted on each page.
    * @default 100
    */
   pageSize?: number;

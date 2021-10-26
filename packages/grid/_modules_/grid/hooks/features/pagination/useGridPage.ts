@@ -11,7 +11,7 @@ import { GridEvents } from '../../../constants/eventsConstants';
 import { GridComponentProps } from '../../../GridComponentProps';
 import { GridPageApi } from '../../../models/api/gridPageApi';
 import { GridPaginationState } from './gridPaginationState';
-import { gridVisibleRowCountSelector } from '../filter';
+import { gridVisibleTopLevelRowCountSelector } from '../filter';
 import { useGridStateInit } from '../../utils/useGridStateInit';
 import { gridPageSelector } from './gridPaginationSelector';
 
@@ -56,7 +56,7 @@ export const useGridPage = (
   }));
   const [, setGridState, forceUpdate] = useGridState(apiRef);
 
-  const visibleRowCount = useGridSelector(apiRef, gridVisibleRowCountSelector);
+  const visibleTopLevelRowCount = useGridSelector(apiRef, gridVisibleTopLevelRowCountSelector);
 
   apiRef.current.updateControlState({
     stateId: 'page',
@@ -84,7 +84,7 @@ export const useGridPage = (
 
   React.useEffect(() => {
     setGridState((state) => {
-      const rowCount = props.rowCount !== undefined ? props.rowCount : visibleRowCount;
+      const rowCount = props.rowCount !== undefined ? props.rowCount : visibleTopLevelRowCount;
       const pageCount = getPageCount(rowCount, state.pagination.pageSize);
       const page = props.page == null ? state.pagination.page : props.page;
 
@@ -99,7 +99,7 @@ export const useGridPage = (
       };
     });
     forceUpdate();
-  }, [setGridState, forceUpdate, visibleRowCount, props.rowCount, props.page, apiRef]);
+  }, [setGridState, forceUpdate, visibleTopLevelRowCount, props.rowCount, props.page, apiRef]);
 
   const handlePageSizeChange = React.useCallback(
     (pageSize: number) => {
