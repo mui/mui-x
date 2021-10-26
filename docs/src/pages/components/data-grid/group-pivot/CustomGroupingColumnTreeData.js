@@ -65,8 +65,8 @@ CustomGridTreeDataGroupingCell.propTypes = {
   value: PropTypes.shape({
     depth: PropTypes.number.isRequired,
     expanded: PropTypes.bool.isRequired,
-    label: PropTypes.string.isRequired,
     filteredDescendantCount: PropTypes.number.isRequired,
+    label: PropTypes.string.isRequired,
   }).isRequired,
 };
 
