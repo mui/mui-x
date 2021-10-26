@@ -17,11 +17,17 @@ import {
   fireEvent,
   // @ts-expect-error need to migrate helpers to TypeScript
   screen,
+  // @ts-expect-error need to migrate helpers to TypeScript
+  waitFor,
 } from 'test/utils';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
-const getDateTimeBefore1900 = (
+/**
+ * Creates a date that is compatible with years before 1901
+ * `new Date(0001)` creates a date for 1901, not 0001
+ */
+const generateDate = (
   year: number,
   month: number,
   date?: number,
@@ -756,7 +762,7 @@ describe('<DataGridPro /> - Edit Rows', () => {
       expect(screen.getByRole('cell').querySelector('input')).toHaveFocus();
     });
 
-    it('should allow external value updates as date', () => {
+    it('should allow external value updates as date', async () => {
       const onEditCellPropsChange = spy();
       render(
         <TestCase
@@ -771,7 +777,9 @@ describe('<DataGridPro /> - Edit Rows', () => {
       const newValue = new Date(2021, 6, 4);
       apiRef.current.setEditCellValue({ id: 0, field: 'date', value: newValue });
       const input = cell.querySelector('input')!;
-      expect(input.value).to.equal('2021-07-04');
+      await waitFor(() => {
+        expect(input.value).to.equal('2021-07-04');
+      });
     });
 
     it('should handle all the intermediate dates while editing the value', () => {
@@ -792,27 +800,27 @@ describe('<DataGridPro /> - Edit Rows', () => {
       expect(onEditCellPropsChange.lastCall.args[0].props.value).to.equal(null);
       fireEvent.change(input, { target: { value: '2021-01-05' } });
       expect(onEditCellPropsChange.lastCall.args[0].props.value.getTime()).to.equal(
-        getDateTimeBefore1900(2021, 0, 5),
+        generateDate(2021, 0, 5),
       );
       fireEvent.change(input, { target: { value: '2021-01-01' } });
       expect(onEditCellPropsChange.lastCall.args[0].props.value.getTime()).to.equal(
-        getDateTimeBefore1900(2021, 0, 1),
+        generateDate(2021, 0, 1),
       );
       fireEvent.change(input, { target: { value: '0001-01-01' } });
       expect(onEditCellPropsChange.lastCall.args[0].props.value.getTime()).to.equal(
-        getDateTimeBefore1900(1, 0, 1),
+        generateDate(1, 0, 1),
       );
       fireEvent.change(input, { target: { value: '0019-01-01' } });
       expect(onEditCellPropsChange.lastCall.args[0].props.value.getTime()).to.equal(
-        getDateTimeBefore1900(19, 0, 1),
+        generateDate(19, 0, 1),
       );
       fireEvent.change(input, { target: { value: '0199-01-01' } });
       expect(onEditCellPropsChange.lastCall.args[0].props.value.getTime()).to.equal(
-        getDateTimeBefore1900(199, 0, 1),
+        generateDate(199, 0, 1),
       );
       fireEvent.change(input, { target: { value: '1999-01-01' } });
       expect(onEditCellPropsChange.lastCall.args[0].props.value.getTime()).to.equal(
-        getDateTimeBefore1900(1999, 0, 1),
+        generateDate(1999, 0, 1),
       );
     });
   });
@@ -867,7 +875,7 @@ describe('<DataGridPro /> - Edit Rows', () => {
       expect(screen.getByRole('cell').querySelector('input')).toHaveFocus();
     });
 
-    it('should allow external value updates as date', () => {
+    it('should allow external value updates as date', async () => {
       const onEditCellPropsChange = spy();
       render(
         <TestCase
@@ -882,7 +890,9 @@ describe('<DataGridPro /> - Edit Rows', () => {
       const newValue = new Date(2021, 6, 4, 17, 30);
       apiRef.current.setEditCellValue({ id: 0, field: 'date', value: newValue });
       const input = cell.querySelector('input')!;
-      expect(input.value).to.equal('2021-07-04T17:30');
+      await waitFor(() => {
+        expect(input.value).to.equal('2021-07-04T17:30');
+      });
     });
 
     it('should handle all the intermediate dates while editing the value', () => {
@@ -903,39 +913,39 @@ describe('<DataGridPro /> - Edit Rows', () => {
       expect(onEditCellPropsChange.lastCall.args[0].props.value).to.equal(null);
       fireEvent.change(input, { target: { value: '2021-01-05T14:30' } });
       expect(onEditCellPropsChange.lastCall.args[0].props.value.getTime()).to.equal(
-        getDateTimeBefore1900(2021, 0, 5, 14, 30),
+        generateDate(2021, 0, 5, 14, 30),
       );
       fireEvent.change(input, { target: { value: '2021-01-01T14:30' } });
       expect(onEditCellPropsChange.lastCall.args[0].props.value.getTime()).to.equal(
-        getDateTimeBefore1900(2021, 0, 1, 14, 30),
+        generateDate(2021, 0, 1, 14, 30),
       );
       fireEvent.change(input, { target: { value: '0001-01-01T14:30' } });
       expect(onEditCellPropsChange.lastCall.args[0].props.value.getTime()).to.equal(
-        getDateTimeBefore1900(1, 0, 1, 14, 30),
+        generateDate(1, 0, 1, 14, 30),
       );
       fireEvent.change(input, { target: { value: '0019-01-01T14:30' } });
       expect(onEditCellPropsChange.lastCall.args[0].props.value.getTime()).to.equal(
-        getDateTimeBefore1900(19, 0, 1, 14, 30),
+        generateDate(19, 0, 1, 14, 30),
       );
       fireEvent.change(input, { target: { value: '0199-01-01T14:30' } });
       expect(onEditCellPropsChange.lastCall.args[0].props.value.getTime()).to.equal(
-        getDateTimeBefore1900(199, 0, 1, 14, 30),
+        generateDate(199, 0, 1, 14, 30),
       );
       fireEvent.change(input, { target: { value: '1999-01-01T14:30' } });
       expect(onEditCellPropsChange.lastCall.args[0].props.value.getTime()).to.equal(
-        getDateTimeBefore1900(1999, 0, 1, 14, 30),
+        generateDate(1999, 0, 1, 14, 30),
       );
       fireEvent.change(input, { target: { value: '1999-01-01T20:30' } });
       expect(onEditCellPropsChange.lastCall.args[0].props.value.getTime()).to.equal(
-        getDateTimeBefore1900(1999, 0, 1, 20, 30),
+        generateDate(1999, 0, 1, 20, 30),
       );
       fireEvent.change(input, { target: { value: '1999-01-01T20:02' } });
       expect(onEditCellPropsChange.lastCall.args[0].props.value.getTime()).to.equal(
-        getDateTimeBefore1900(1999, 0, 1, 20, 2),
+        generateDate(1999, 0, 1, 20, 2),
       );
       fireEvent.change(input, { target: { value: '1999-01-01T20:25' } });
       expect(onEditCellPropsChange.lastCall.args[0].props.value.getTime()).to.equal(
-        getDateTimeBefore1900(1999, 0, 1, 20, 25),
+        generateDate(1999, 0, 1, 20, 25),
       );
     });
   });

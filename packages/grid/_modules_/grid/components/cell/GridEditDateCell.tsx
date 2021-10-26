@@ -54,10 +54,8 @@ export function GridEditDateCell(props: GridRenderEditCellParams & InputBaseProp
     if (parsedDate == null || Number.isNaN(parsedDate.getTime())) {
       formattedDate = '';
     } else {
-      const localeDate = new Date(
-        parsedDate.getTime() - parsedDate.getTimezoneOffset() * 60 * 1000,
-      );
-      formattedDate = localeDate.toISOString().substr(0, isDateTime ? 16 : 10);
+      const localDate = new Date(parsedDate.getTime() - parsedDate.getTimezoneOffset() * 60 * 1000);
+      formattedDate = localDate.toISOString().substr(0, isDateTime ? 16 : 10);
     }
 
     return {
