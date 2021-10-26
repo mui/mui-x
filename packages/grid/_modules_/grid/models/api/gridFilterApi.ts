@@ -18,11 +18,11 @@ export interface GridFilterApi {
   /**
    * Updates or inserts a [[GridFilterItem]].
    * @param {GridFilterItem} item The filter to update.
-   * @ignore - do not document.
    */
   upsertFilterItem: (item: GridFilterItem) => void;
   /**
    * Applies all filters on all rows.
+   * @ignore - do not document.
    */
   unsafe_applyFilters: () => void;
   /**
