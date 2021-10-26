@@ -27,7 +27,7 @@ import {
   gridSortedRowIdsSelector,
   gridSortedRowEntriesSelector,
 } from './gridSortingSelector';
-import { gridRowTreeSelector } from '../rows';
+import { gridRowIdsSelector, gridRowTreeDepthSelector, gridRowTreeSelector } from '../rows';
 import { useGridStateInit } from '../../utils/useGridStateInit';
 import { useFirstRender } from '../../utils/useFirstRender';
 
@@ -172,94 +172,109 @@ export const useGridSorting = (
   );
 
   const applySorting = React.useCallback<GridSortApi['applySorting']>(() => {
-    const rowIds = apiRef.current.getAllRowIds();
-
     if (props.sortingMode === GridFeatureModeConstant.server) {
       logger.debug('Skipping sorting rows as sortingMode = server');
       setGridState((state) => ({
         ...state,
-        sorting: { ...state.sorting, sortedRows: rowIds },
+        sorting: { ...state.sorting, sortedRows: gridRowIdsSelector(state) },
       }));
       return;
     }
 
-    const rowTree = gridRowTreeSelector(apiRef.current.state);
-    const sortModel = gridSortModelSelector(apiRef.current.state);
-    const comparatorList = buildComparatorList(sortModel);
-    const aggregatedComparator = comparatorListAggregate(comparatorList);
+    setGridState((state) => {
+      const rowIds = gridRowIdsSelector(state);
+      const rowTree = gridRowTreeSelector(state);
+      const shouldApplyTreeSorting = gridRowTreeDepthSelector(state) > 1;
+      const sortModel = gridSortModelSelector(state);
+      const comparatorList = buildComparatorList(sortModel);
+      const aggregatedComparator = comparatorListAggregate(comparatorList);
 
-    // Group the rows by parent
-    const groupedByParentRows = new Map<GridRowId | null, GridRowTreeNodeConfig[]>([[null, []]]);
-    for (let i = 0; i < rowIds.length; i += 1) {
-      const rowId = rowIds[i];
-      const node = rowTree[rowId];
-      let group = groupedByParentRows.get(node.parent);
-      if (!group) {
-        group = [];
-        groupedByParentRows.set(node.parent, group);
-      }
-      group.push(node);
-    }
+      const sortRowList = (rowList: GridRowTreeNodeConfig[]) =>
+        rowList
+          .map((value) => ({
+            value,
+            params: comparatorList.map((colComparator) =>
+              getSortCellParams(value.id, colComparator.field),
+            ),
+          }))
+          .sort((a, b) => aggregatedComparator(a.params, b.params))
+          .map((row) => row.value.id);
 
-    // Apply the sorting to each list of children
-    const sortedGroupedByParentRows = new Map<GridRowId | null, GridRowId[]>();
-    groupedByParentRows.forEach((rowList, parent) => {
-      if (rowList.length === 0) {
-        return sortedGroupedByParentRows.set(parent, []);
-      }
-
-      const depth = rowList[0].depth;
-      if ((depth > 0 && props.disableChildrenSorting) || comparatorList.length === 0) {
-        return sortedGroupedByParentRows.set(
-          parent,
-          rowList.map((row) => row.id),
-        );
-      }
-
-      const sortedRowList = rowList
-        .map((value) => ({
-          value,
-          params: comparatorList.map((colComparator) =>
-            getSortCellParams(value.id, colComparator.field),
-          ),
-        }))
-        .sort((a, b) => aggregatedComparator(a.params, b.params))
-        .map((row) => row.value.id);
-
-      return sortedGroupedByParentRows.set(parent, sortedRowList);
-    });
-
-    // Flatten the sorted lists to have children just after their parent
-    let sortedRows: GridRowId[] = [];
-    const insertRowListIntoSortedRows = (startIndex: number, rowList: GridRowId[]) => {
-      sortedRows = [
-        ...sortedRows.slice(0, startIndex),
-        ...rowList,
-        ...sortedRows.slice(startIndex),
-      ];
-
-      let treeSize = 0;
-      rowList.forEach((rowId) => {
-        treeSize += 1;
-        const children = sortedGroupedByParentRows.get(rowId);
-        if (children?.length) {
-          const subTreeSize = insertRowListIntoSortedRows(startIndex + treeSize, children);
-          treeSize += subTreeSize;
+      let sortedRows: GridRowId[] = [];
+      if (shouldApplyTreeSorting) {
+        // Group the rows by parent
+        const groupedByParentRows = new Map<GridRowId | null, GridRowTreeNodeConfig[]>([
+          [null, []],
+        ]);
+        for (let i = 0; i < rowIds.length; i += 1) {
+          const rowId = rowIds[i];
+          const node = rowTree[rowId];
+          let group = groupedByParentRows.get(node.parent);
+          if (!group) {
+            group = [];
+            groupedByParentRows.set(node.parent, group);
+          }
+          group.push(node);
         }
-      });
 
-      return treeSize;
-    };
+        // Apply the sorting to each list of children
+        const sortedGroupedByParentRows = new Map<GridRowId | null, GridRowId[]>();
+        groupedByParentRows.forEach((rowList, parent) => {
+          if (rowList.length === 0) {
+            sortedGroupedByParentRows.set(parent, []);
+          } else {
+            const depth = rowList[0].depth;
+            if (depth > 0 && props.disableChildrenSorting) {
+              sortedGroupedByParentRows.set(
+                parent,
+                rowList.map((row) => row.id),
+              );
+            } else if (comparatorList.length === 0) {
+              sortedGroupedByParentRows.set(
+                parent,
+                rowList.map((row) => row.id),
+              );
+            } else {
+              sortedGroupedByParentRows.set(parent, sortRowList(rowList));
+            }
+          }
+        });
 
-    insertRowListIntoSortedRows(0, sortedGroupedByParentRows.get(null)!);
+        // Flatten the sorted lists to have children just after their parent
+        const insertRowListIntoSortedRows = (startIndex: number, rowList: GridRowId[]) => {
+          sortedRows = [
+            ...sortedRows.slice(0, startIndex),
+            ...rowList,
+            ...sortedRows.slice(startIndex),
+          ];
 
-    setGridState((state) => ({
-      ...state,
-      sorting: { ...state.sorting, sortedRows },
-    }));
+          let treeSize = 0;
+          rowList.forEach((rowId) => {
+            treeSize += 1;
+            const children = sortedGroupedByParentRows.get(rowId);
+            if (children?.length) {
+              const subTreeSize = insertRowListIntoSortedRows(startIndex + treeSize, children);
+              treeSize += subTreeSize;
+            }
+          });
+
+          return treeSize;
+        };
+
+        insertRowListIntoSortedRows(0, sortedGroupedByParentRows.get(null)!);
+      } else if (comparatorList.length === 0) {
+        sortedRows = rowIds;
+      } else {
+        sortedRows = sortRowList(Object.values(rowTree));
+      }
+
+      return {
+        ...state,
+        sorting: { ...state.sorting, sortedRows },
+      };
+    });
     forceUpdate();
   }, [
-    apiRef,
     logger,
     getSortCellParams,
     setGridState,
