@@ -3,17 +3,7 @@
   "description": "The filter API interface that is available in the grid apiRef.",
   "properties": [
     {
-      "name": "applyFilterLinkOperator",
-      "description": "Changes the GridLinkOperator used to connect the filters.",
-      "type": "(operator: GridLinkOperator) => void"
-    },
-    {
-      "name": "applyFilters",
-      "description": "Applies all filters on all rows.",
-      "type": "() => void"
-    },
-    {
-      "name": "deleteFilter",
+      "name": "deleteFilterItem",
       "description": "Deletes a GridFilterItem.",
       "type": "(item: GridFilterItem) => void"
     },
@@ -23,6 +13,11 @@
       "type": "() => Map<GridRowId, { [key: string]: any }>"
     },
     { "name": "hideFilterPanel", "description": "Hides the filter panel.", "type": "() => void" },
+    {
+      "name": "setFilterLinkOperator",
+      "description": "Changes the GridLinkOperator used to connect the filters.",
+      "type": "(operator: GridLinkOperator) => void"
+    },
     {
       "name": "setFilterModel",
       "description": "Sets the filter model to the one given by <code>model</code>.",
@@ -34,9 +29,9 @@
       "type": "(targetColumnField?: string) => void"
     },
     {
-      "name": "upsertFilter",
-      "description": "Updates or inserts a GridFilterItem.",
-      "type": "(item: GridFilterItem) => void"
+      "name": "unsafe_applyFilters",
+      "description": "Applies all filters on all rows.",
+      "type": "() => void"
     }
   ]
 }
