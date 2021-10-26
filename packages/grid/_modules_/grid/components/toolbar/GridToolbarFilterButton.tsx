@@ -8,10 +8,7 @@ import Tooltip, { TooltipProps } from '@mui/material/Tooltip';
 import { capitalize } from '@mui/material/utils';
 import { gridColumnLookupSelector } from '../../hooks/features/columns/gridColumnsSelector';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
-import {
-  activeGridFilterItemsSelector,
-  filterGridItemsCounterSelector,
-} from '../../hooks/features/filter/gridFilterSelector';
+import { gridFilterActiveItemsSelector } from '../../hooks/features/filter/gridFilterSelector';
 import { gridPreferencePanelStateSelector } from '../../hooks/features/preferencesPanel/gridPreferencePanelSelector';
 import { GridPreferencePanelsValue } from '../../hooks/features/preferencesPanel/gridPreferencePanelsValue';
 import { GridTranslationKeys } from '../../models/api/gridLocaleTextApi';
@@ -56,8 +53,7 @@ const GridToolbarFilterButton = React.forwardRef<HTMLButtonElement, GridToolbarF
     const buttonProps = componentsProps.button || {};
     const apiRef = useGridApiContext();
     const rootProps = useGridRootProps();
-    const counter = useGridSelector(apiRef, filterGridItemsCounterSelector);
-    const activeFilters = useGridSelector(apiRef, activeGridFilterItemsSelector);
+    const activeFilters = useGridSelector(apiRef, gridFilterActiveItemsSelector);
     const lookup = useGridSelector(apiRef, gridColumnLookupSelector);
     const preferencePanel = useGridSelector(apiRef, gridPreferencePanelStateSelector);
     const ownerState = { classes: rootProps.classes };
@@ -67,7 +63,7 @@ const GridToolbarFilterButton = React.forwardRef<HTMLButtonElement, GridToolbarF
       if (preferencePanel.open) {
         return apiRef.current.getLocaleText('toolbarFiltersTooltipHide') as React.ReactElement;
       }
-      if (counter === 0) {
+      if (activeFilters.length === 0) {
         return apiRef.current.getLocaleText('toolbarFiltersTooltipShow') as React.ReactElement;
       }
 
@@ -81,7 +77,7 @@ const GridToolbarFilterButton = React.forwardRef<HTMLButtonElement, GridToolbarF
 
       return (
         <div>
-          {apiRef.current.getLocaleText('toolbarFiltersTooltipActive')(counter)}
+          {apiRef.current.getLocaleText('toolbarFiltersTooltipActive')(activeFilters.length)}
           <GridToolbarFilterListRoot className={classes.root}>
             {activeFilters.map((item, index) => ({
               ...(lookup[item.columnField!] && (
@@ -95,7 +91,7 @@ const GridToolbarFilterButton = React.forwardRef<HTMLButtonElement, GridToolbarF
           </GridToolbarFilterListRoot>
         </div>
       );
-    }, [apiRef, preferencePanel.open, counter, activeFilters, lookup, classes]);
+    }, [apiRef, preferencePanel.open, activeFilters, lookup, classes]);
 
     const toggleFilter = (event) => {
       const { open, openedPanelValue } = preferencePanel;
@@ -120,7 +116,7 @@ const GridToolbarFilterButton = React.forwardRef<HTMLButtonElement, GridToolbarF
           color="primary"
           aria-label={apiRef.current.getLocaleText('toolbarFiltersLabel')}
           startIcon={
-            <Badge badgeContent={counter} color="primary">
+            <Badge badgeContent={activeFilters.length} color="primary">
               <rootProps.components.OpenFilterButtonIcon />
             </Badge>
           }

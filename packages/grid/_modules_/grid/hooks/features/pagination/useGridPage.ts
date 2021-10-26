@@ -11,7 +11,7 @@ import { GridEvents } from '../../../constants/eventsConstants';
 import { GridComponentProps } from '../../../GridComponentProps';
 import { GridPageApi } from '../../../models/api/gridPageApi';
 import { GridPaginationState } from './gridPaginationState';
-import { visibleGridRowCountSelector } from '../filter';
+import { gridVisibleRowCountSelector } from '../filter';
 import { useGridStateInit } from '../../utils/useGridStateInit';
 import { gridPageSelector } from './gridPaginationSelector';
 
@@ -56,7 +56,7 @@ export const useGridPage = (
   }));
   const [, setGridState, forceUpdate] = useGridState(apiRef);
 
-  const visibleRowCount = useGridSelector(apiRef, visibleGridRowCountSelector);
+  const visibleRowCount = useGridSelector(apiRef, gridVisibleRowCountSelector);
 
   apiRef.current.updateControlState({
     stateId: 'page',

@@ -20,25 +20,25 @@ export function GridFilterPanel() {
 
   const applyFilter = React.useCallback(
     (item: GridFilterItem) => {
-      apiRef.current.upsertFilter(item);
+      apiRef.current.upsertFilterItem(item);
     },
     [apiRef],
   );
 
   const applyFilterLinkOperator = React.useCallback(
     (operator: GridLinkOperator) => {
-      apiRef.current.applyFilterLinkOperator(operator);
+      apiRef.current.setFilterLinkOperator(operator);
     },
     [apiRef],
   );
 
   const addNewFilter = React.useCallback(() => {
-    apiRef.current.upsertFilter({});
+    apiRef.current.upsertFilterItem({});
   }, [apiRef]);
 
   const deleteFilter = React.useCallback(
     (item: GridFilterItem) => {
-      apiRef.current.deleteFilter(item);
+      apiRef.current.deleteFilterItem(item);
     },
     [apiRef],
   );
