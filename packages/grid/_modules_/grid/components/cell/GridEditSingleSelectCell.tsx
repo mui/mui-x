@@ -30,6 +30,7 @@ function GridEditSingleSelectCell(props: GridRenderEditCellParams & SelectProps)
     api,
     field,
     row,
+    rowNode,
     colDef,
     cellMode,
     isEditable,

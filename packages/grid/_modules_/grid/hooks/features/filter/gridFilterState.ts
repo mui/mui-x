@@ -9,8 +9,21 @@ export const getDefaultGridFilterModel: () => GridFilterModel = () => ({
 
 export interface GridFilterState {
   filterModel: GridFilterModel;
+
+  /**
+   * Visibility status for each row.
+   * A row is visible if it is passing the filters AND if its parent is expanded.
+   * If a row is not registered in this lookup, it is visible.
+   */
   visibleRowsLookup: Record<GridRowId, boolean>;
-  visibleRows: GridRowId[] | null;
+
+  /**
+   * Amount of descendants that are passing the filters.
+   * For the Tree Data, it includes all the intermediate depth levels (= amount of children + amount of grand children + ...).
+   * For the Row Grouping by Column, it does not include the intermediate depth levels (= amount of descendant of maximum depth).
+   * If a row is not registered in this lookup, it is supposed to have no descendant passing the filters..
+   */
+  filteredDescendantCountLookup: Record<GridRowId, number>;
 }
 
 export interface GridFilterInitialState {
