@@ -14,7 +14,6 @@ import { gridColumnMenuSelector } from './columnMenuSelector';
 /**
  * @requires useGridColumnResize (event)
  * @requires useGridInfiniteLoader (event)
- * @requires useGridVirtualization (event)
  */
 export const useGridColumnMenu = (apiRef: GridApiRef): void => {
   const logger = useGridLogger(apiRef, 'useGridColumnMenu');

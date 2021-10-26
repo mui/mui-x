@@ -116,6 +116,32 @@ async function main() {
       });
     });
 
+    it('should position the headers matching the columns', async function test() {
+      const route = `${baseUrl}/docs-components-data-grid-virtualization/ColumnVirtualizationGrid`;
+      const screenshotPath = path.resolve(
+        screenshotDir,
+        `${route.replace(baseUrl, '.')}ScrollLeft400px.png`,
+      );
+      await fse.ensureDir(path.dirname(screenshotPath));
+
+      const testcaseIndex = routes.indexOf(route);
+      await page.$eval(`#tests li:nth-of-type(${testcaseIndex + 1}) a`, (link) => {
+        link.click();
+      });
+
+      const testcase = await page.waitForSelector(
+        '[data-testid="testcase"]:not([aria-busy="true"])',
+      );
+
+      await page.evaluate(() => {
+        const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller');
+        virtualScroller.scrollLeft = 400;
+        virtualScroller.dispatchEvent(new Event('scroll'));
+      });
+
+      await testcase.screenshot({ path: screenshotPath, type: 'png' });
+    });
+
     it('should take a screenshot of the print preview', async function test() {
       this.timeout(10000);
 
