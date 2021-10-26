@@ -41,15 +41,15 @@ export const buildRowTree = (params: GenerateRowTreeParams): GridRowGroupingResu
       let nodeId: GridRowId;
 
       const expanded =
-          params.defaultGroupingExpansionDepth === -1 || params.defaultGroupingExpansionDepth > depth;
+        params.defaultGroupingExpansionDepth === -1 || params.defaultGroupingExpansionDepth > depth;
 
       let nodeNameConfig = nodeNameToIdSubTree[nodeName];
 
       if (!nodeNameConfig) {
         nodeId =
-            depth === row.path.length - 1
-                ? row.id
-                : `auto-generated-row-${row.path.slice(0, depth + 1).join('-')}`;
+          depth === row.path.length - 1
+            ? row.id
+            : `auto-generated-row-${row.path.slice(0, depth + 1).join('-')}`;
 
         nodeNameConfig = { id: nodeId, children: {} };
         nodeNameToIdSubTree[nodeName] = nodeNameConfig;
