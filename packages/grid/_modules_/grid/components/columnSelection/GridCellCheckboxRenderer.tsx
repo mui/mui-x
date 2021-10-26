@@ -135,7 +135,7 @@ GridCellCheckboxForwardRef.propTypes = {
    */
   row: PropTypes.any.isRequired,
   /**
-   * The node of the row that the current cell belongs to
+   * The node of the row that the current cell belongs to.
    */
   rowNode: PropTypes.shape({
     children: PropTypes.arrayOf(

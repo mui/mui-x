@@ -135,8 +135,8 @@ DataGridProRaw.propTypes = {
    */
   componentsProps: PropTypes.object,
   /**
-   * If above 0, the row children will be expanded up to this depth
-   * If equal to -1, all the row children will be expanded
+   * If above 0, the row children will be expanded up to this depth.
+   * If equal to -1, all the row children will be expanded.
    * @default 0
    */
   defaultGroupingExpansionDepth: PropTypes.number,
@@ -146,12 +146,12 @@ DataGridProRaw.propTypes = {
    */
   density: PropTypes.oneOf(['comfortable', 'compact', 'standard']),
   /**
-   * If `true`, the filtering will only be applied to the top level rows
+   * If `true`, the filtering will only be applied to the top level rows.
    * @default false
    */
   disableChildrenFiltering: PropTypes.bool,
   /**
-   * If `true`, the sorting will only be applied to the top level rows
+   * If `true`, the sorting will only be applied to the top level rows.
    * @default false
    */
   disableChildrenSorting: PropTypes.bool,
@@ -273,14 +273,14 @@ DataGridProRaw.propTypes = {
   getRowId: PropTypes.func,
   /**
    * Determines the path of a row in the tree data.
-   * For instance, a row with the path ["A", "B"] is the child of the row with the path ["A"]
+   * For instance, a row with the path ["A", "B"] is the child of the row with the path ["A"].
    * Note than all paths must contain at least one element.
    * @param {GridRowModel} row The row from which we want the path.
    * @returns {string[]} the path to the row.
    */
   getTreeDataPath: PropTypes.func,
   /**
-   * The grouping column used by the tree data
+   * The grouping column used by the tree data.
    */
   groupingColDef: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
   /**
@@ -700,7 +700,7 @@ DataGridProRaw.propTypes = {
    */
   throttleRowsMs: PropTypes.number,
   /**
-   * If `true`, the rows will be gathered in a tree structure, following the `getTreeDataPath` prop
+   * If `true`, the rows will be gathered in a tree structure according to the `getTreeDataPath` prop.
    * @default false
    */
   treeData: PropTypes.bool,

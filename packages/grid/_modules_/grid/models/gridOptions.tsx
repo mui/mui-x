@@ -119,7 +119,7 @@ export interface GridSimpleOptions {
    */
   disableMultipleColumnsFiltering: boolean;
   /**
-   * If `true`, the filtering will only be applied to the top level rows
+   * If `true`, the filtering will only be applied to the top level rows.
    * @default false
    */
   disableChildrenFiltering: boolean;
@@ -134,7 +134,7 @@ export interface GridSimpleOptions {
    */
   disableMultipleColumnsSorting: boolean;
   /**
-   * If `true`, the sorting will only be applied to the top level rows
+   * If `true`, the sorting will only be applied to the top level rows.
    * @default false
    */
   disableChildrenSorting: boolean;
@@ -218,13 +218,13 @@ export interface GridSimpleOptions {
    */
   rowsPerPageOptions: number[];
   /**
-   * If `true`, the rows will be gathered in a tree structure, following the `getTreeDataPath` prop
+   * If `true`, the rows will be gathered in a tree structure according to the `getTreeDataPath` prop.
    * @default false
    */
   treeData: boolean;
   /**
-   * If above 0, the row children will be expanded up to this depth
-   * If equal to -1, all the row children will be expanded
+   * If above 0, the row children will be expanded up to this depth.
+   * If equal to -1, all the row children will be expanded.
    * @default 0
    */
   defaultGroupingExpansionDepth: number;

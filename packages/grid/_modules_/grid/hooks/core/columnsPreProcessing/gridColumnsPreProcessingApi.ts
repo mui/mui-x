@@ -7,7 +7,7 @@ export interface GridColumnsPreProcessingApi {
    * Register a column pre-processing and emit an event to re-apply all the columns pre-processing
    * @param {string} processingName Name of the pre-processing. Used to clean the previous version of the pre-processing.
    * @param {GridColumnsPreProcessing | null } columnsPreProcessing Pre-processing to register.
-   * @ignore - do not document
+   * @ignore - do not document.
    */
   unstable_registerColumnPreProcessing: (
     processingName: string,
@@ -17,7 +17,7 @@ export interface GridColumnsPreProcessingApi {
    * Apply all the columns pre-processing
    * @param {GridColumns} columns. Columns to pre-process
    * @returns {GridColumns} The pre-processed columns
-   * @ignore - do not document
+   * @ignore - do not document.
    */
   unstable_applyAllColumnPreProcessing: (columns: GridColumns) => GridColumns;
 }
