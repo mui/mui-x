@@ -315,39 +315,12 @@ describe('<DataGridPro /> - Tree Data', () => {
   });
 
   describe('filter', () => {
-    const filterBaselineProps = {
-      autoHeight: isJSDOM,
-      columns: [
-        {
-          field: 'name',
-          width: 200,
-        },
-      ],
-      treeData: true,
-      getTreeDataPath: (row) => row.name.split('.'),
-      getRowId: (row) => row.name,
-    };
-
-    const TestFilter = (props: Omit<DataGridProProps, 'columns'>) => {
-      apiRef = useGridApiRef();
-
-      return (
-        <div style={{ width: 300, height: 800 }}>
-          <DataGridPro
-            {...filterBaselineProps}
-            defaultGroupingExpansionDepth={-1}
-            apiRef={apiRef}
-            {...props}
-          />
-        </div>
-      );
-    };
-
     it('should not show a node if none of its children match the filters and it does not match the filters', () => {
       render(
-        <TestFilter
+        <Test
           rows={[{ name: 'B' }, { name: 'B.B' }]}
           filterModel={{ items: [{ columnField: 'name', value: 'A', operatorValue: 'endsWith' }] }}
+          defaultGroupingExpansionDepth={-1}
         />,
       );
 
@@ -356,9 +329,10 @@ describe('<DataGridPro /> - Tree Data', () => {
 
     it('should show a node if some of its children match the filters even if it does not match the filters', () => {
       render(
-        <TestFilter
+        <Test
           rows={[{ name: 'B' }, { name: 'B.A' }, { name: 'B.B' }]}
           filterModel={{ items: [{ columnField: 'name', value: 'A', operatorValue: 'endsWith' }] }}
+          defaultGroupingExpansionDepth={-1}
         />,
       );
 
@@ -367,9 +341,10 @@ describe('<DataGridPro /> - Tree Data', () => {
 
     it('should show a node if none of its children match the filters but it does match the filters', () => {
       render(
-        <TestFilter
+        <Test
           rows={[{ name: 'A' }, { name: 'A.B' }]}
           filterModel={{ items: [{ columnField: 'name', value: 'A', operatorValue: 'endsWith' }] }}
+          defaultGroupingExpansionDepth={-1}
         />,
       );
 
@@ -378,7 +353,7 @@ describe('<DataGridPro /> - Tree Data', () => {
 
     it('should not filter the children if props.disableChildrenFiltering = true', () => {
       render(
-        <TestFilter
+        <Test
           rows={[{ name: 'B' }, { name: 'B.A' }, { name: 'B.B' }]}
           filterModel={{ items: [{ columnField: 'name', value: 'B', operatorValue: 'endsWith' }] }}
           disableChildrenFiltering
@@ -397,6 +372,18 @@ describe('<DataGridPro /> - Tree Data', () => {
         .toErrorDev(
           'MUI: The `filterMode="server"` prop is not available when the `treeData` is enabled.',
         );
+    });
+
+    it('should set the descendantCount on matching nodes even if the children are collapsed', () => {
+      render(
+        <Test
+          filterModel={{ items: [{ columnField: 'name', value: 'A', operatorValue: 'endsWith' }] }}
+        />,
+      );
+
+      // A has A.A but not A.B
+      // B has B.A (match filter), B.B (has matching children), B.B.A (match filters), B.B.A.A (match filters)
+      expect(getColumnValues(0)).to.deep.equal(['A (1)', 'B (4)']);
     });
   });
 

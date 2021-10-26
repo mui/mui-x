@@ -43,14 +43,14 @@ const CustomGridTreeDataGroupingCell = (
   return (
     <Box sx={{ ml: value.depth * 4 }}>
       <div>
-        {value.visibleDescendantCount > 0 ? (
+        {value.filteredDescendantCount > 0 ? (
           <Button
             onClick={handleClick}
             onKeyDown={handleKeyDown}
             tabIndex={-1}
             size="small"
           >
-            See {value.visibleDescendantCount} employees
+            See {value.filteredDescendantCount} employees
           </Button>
         ) : (
           <span />

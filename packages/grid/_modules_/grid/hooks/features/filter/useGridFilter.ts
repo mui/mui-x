@@ -66,7 +66,7 @@ export const useGridFilter = (
           props.initialState?.filter?.filterModel ??
           getDefaultGridFilterModel(),
         visibleRowsLookup: {},
-        visibleDescendantsCountLookup: {},
+        filteredDescendantCountLookup: {},
       },
     };
   });
@@ -165,7 +165,7 @@ export const useGridFilter = (
           : null;
 
       const visibleRowsLookup: Record<GridRowId, boolean> = {};
-      const visibleDescendantsCountLookup: Record<GridRowId, number> = {};
+      const filteredDescendantCountLookup: Record<GridRowId, number> = {};
       if (shouldApplyTreeFiltering) {
         // A node is visible if
         // - One of its children is passing the filter
@@ -173,7 +173,8 @@ export const useGridFilter = (
         const filterTreeNode = (
           node: GridRowTreeNodeConfig,
           isParentMatchingFilters: boolean,
-        ): boolean => {
+          isParentExpanded: boolean,
+        ): number => {
           const shouldSkipFilters = props.disableChildrenFiltering && node.depth > 0;
 
           let isMatchingFilters: boolean | null;
@@ -185,59 +186,57 @@ export const useGridFilter = (
             isMatchingFilters = filteringMethod(node.id);
           }
 
-          let visibleDescendantCount = 0;
+          let filteredDescendantCount = 0;
           node.children?.forEach((childId) => {
             const childNode = rowTree[childId];
-            const isNodeVisible = filterTreeNode(
+            const childSubTreeSize = filterTreeNode(
               childNode,
               isMatchingFilters ?? isParentMatchingFilters,
+              !!node.expanded,
             );
 
-            let childrenVisibleNodeCount = visibleDescendantsCountLookup[childId] ?? 0;
-            // TODO: For column grouping, we do not want to count the intermediate depth nodes in the visible descendant count
-            if (isNodeVisible) {
-              childrenVisibleNodeCount += 1;
-            }
-
-            visibleDescendantCount += childrenVisibleNodeCount;
+            filteredDescendantCount += childSubTreeSize;
           });
 
-          let shouldBeVisible: boolean;
+          let shouldPassFilters: boolean;
           switch (isMatchingFilters) {
             case true: {
-              shouldBeVisible = true;
+              shouldPassFilters = true;
               break;
             }
             case false: {
-              shouldBeVisible = visibleDescendantCount > 0;
+              shouldPassFilters = filteredDescendantCount > 0;
               break;
             }
             default: {
-              shouldBeVisible = isParentMatchingFilters;
+              shouldPassFilters = isParentMatchingFilters;
               break;
             }
           }
 
-          visibleRowsLookup[node.id] = shouldBeVisible;
+          visibleRowsLookup[node.id] = shouldPassFilters && isParentExpanded;
 
-          if (shouldBeVisible && visibleDescendantCount > 0) {
-            visibleDescendantsCountLookup[node.id] = visibleDescendantCount;
+          if (!shouldPassFilters) {
+            return 0;
           }
 
-          return shouldBeVisible;
+          filteredDescendantCountLookup[node.id] = filteredDescendantCount;
+
+          // TODO: For column grouping, we do not want to count the intermediate depth nodes in the visible descendant count
+          return filteredDescendantCount + 1;
         };
 
         const nodes = Object.values(rowTree);
         for (let i = 0; i < nodes.length; i += 1) {
           const node = nodes[i];
           if (node.depth === 0) {
-            filterTreeNode(node, true);
+            filterTreeNode(node, true, true);
           }
         }
-      } else if (props.filterMode === GridFeatureModeConstant.client) {
+      } else if (props.filterMode === GridFeatureModeConstant.client && filteringMethod) {
         for (let i = 0; i < rowIds.length; i += 1) {
           const rowId = rowIds[i];
-          visibleRowsLookup[rowId] = filteringMethod?.(rowId) ?? true;
+          visibleRowsLookup[rowId] = filteringMethod(rowId);
         }
       }
 
@@ -246,7 +245,7 @@ export const useGridFilter = (
         filter: {
           ...state.filter,
           visibleRowsLookup,
-          visibleDescendantsCountLookup,
+          filteredDescendantCountLookup,
         },
       };
     });

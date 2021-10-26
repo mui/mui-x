@@ -5,11 +5,11 @@ import {
   GridTreeDataGroupingCellValue,
 } from '../../../components/cell/GridTreeDataGroupingCell';
 import { GRID_STRING_COL_DEF } from '../../../models/colDef/gridStringColDef';
-import { gridVisibleDescendantCountLookupSelector } from '../filter/gridFilterSelector';
+import { gridFilteredDescendantCountLookupSelector } from '../filter/gridFilterSelector';
 import { GridRenderCellParams } from '../../../models';
 
 /**
- * TODO: Add sorting and filtering on the value and the visibleDescendantCount
+ * TODO: Add sorting and filtering on the value and the filteredDescendantCount
  */
 export const GRID_TREE_DATA_GROUP_COL_DEF: GridColDef = {
   ...GRID_STRING_COL_DEF,
@@ -26,7 +26,7 @@ export const GRID_TREE_DATA_GROUP_COL_DEF: GridColDef = {
     label: rowNode.groupingValue,
     depth: rowNode.depth,
     expanded: rowNode.expanded ?? false,
-    visibleDescendantCount: gridVisibleDescendantCountLookupSelector(api.state)[rowNode.id] ?? 0,
+    filteredDescendantCount: gridFilteredDescendantCountLookupSelector(api.state)[rowNode.id] ?? 0,
   }),
   renderCell: (params: GridRenderCellParams<GridTreeDataGroupingCellValue>) => (
     <GridTreeDataGroupingCell {...params} />

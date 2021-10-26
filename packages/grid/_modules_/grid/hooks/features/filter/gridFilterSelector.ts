@@ -17,9 +17,9 @@ export const gridVisibleRowsLookupSelector = createSelector(
   (filterState) => filterState.visibleRowsLookup,
 );
 
-export const gridVisibleDescendantCountLookupSelector = createSelector(
+export const gridFilteredDescendantCountLookupSelector = createSelector(
   gridFilterStateSelector,
-  (filterState) => filterState.visibleDescendantsCountLookup,
+  (filterState) => filterState.filteredDescendantCountLookup,
 );
 
 export const gridVisibleSortedRowEntriesSelector = createSelector(

@@ -172,29 +172,32 @@ export const useGridSorting = (
   );
 
   const applySorting = React.useCallback<GridSortApi['applySorting']>(() => {
+    if (props.sortingMode === GridFeatureModeConstant.server) {
+      logger.debug('Skipping sorting rows as sortingMode = server');
+      setGridState((state) => ({
+        ...state,
+        sorting: { ...state.sorting, sortedRows: apiRef.current.getAllRowIds() },
+      }));
+      return;
+    }
+
     const rowTree = gridRowTreeSelector(apiRef.current.state);
     const rowIds = gridRowIdsSelector(apiRef.current.state);
     const sortModel = gridSortModelSelector(apiRef.current.state);
-
-    const shouldApplySorting = props.sortingMode === GridFeatureModeConstant.client;
-    const comparatorList = shouldApplySorting ? buildComparatorList(sortModel) : [];
-    const aggregatedComparator = comparatorListAggregate(buildComparatorList(sortModel));
+    const comparatorList = buildComparatorList(sortModel);
+    const aggregatedComparator = comparatorListAggregate(comparatorList);
 
     // Group the rows by parent
     const groupedByParentRows = new Map<GridRowId | null, GridRowTreeNodeConfig[]>([[null, []]]);
     for (let i = 0; i < rowIds.length; i += 1) {
       const rowId = rowIds[i];
       const node = rowTree[rowId];
-      const isExpanded = node.parent == null || rowTree[node.parent].expanded;
-
-      if (isExpanded) {
-        let group = groupedByParentRows.get(node.parent);
-        if (!group) {
-          group = [];
-          groupedByParentRows.set(node.parent, group);
-        }
-        group.push(node);
+      let group = groupedByParentRows.get(node.parent);
+      if (!group) {
+        group = [];
+        groupedByParentRows.set(node.parent, group);
       }
+      group.push(node);
     }
 
     // Apply the sorting to each list of children
@@ -256,6 +259,7 @@ export const useGridSorting = (
     forceUpdate();
   }, [
     apiRef,
+    logger,
     getSortCellParams,
     setGridState,
     forceUpdate,
