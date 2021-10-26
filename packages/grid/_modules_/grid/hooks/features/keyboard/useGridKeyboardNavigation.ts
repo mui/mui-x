@@ -23,8 +23,8 @@ import { useGridLogger } from '../../utils/useGridLogger';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { GridComponentProps } from '../../../GridComponentProps';
 import {
-  visibleGridRowCountSelector,
-  visibleSortedGridRowsAsArraySelector,
+  gridVisibleRowCountSelector,
+  gridVisibleSortedRowEntriesSelector,
 } from '../filter/gridFilterSelector';
 
 const getNextCellIndexes = (key: string, indexes: GridCellIndexCoordinates) => {
@@ -78,10 +78,10 @@ export const useGridKeyboardNavigation = (
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridKeyboardNavigation');
   const paginationState = useGridSelector(apiRef, gridPaginationSelector);
-  const totalVisibleRowCount = useGridSelector(apiRef, visibleGridRowCountSelector);
+  const totalVisibleRowCount = useGridSelector(apiRef, gridVisibleRowCountSelector);
   const colCount = useGridSelector(apiRef, visibleGridColumnsLengthSelector);
   const containerSizes = useGridSelector(apiRef, gridContainerSizesSelector);
-  const visibleSortedRowsAsArray = useGridSelector(apiRef, visibleSortedGridRowsAsArraySelector);
+  const visibleSortedRows = useGridSelector(apiRef, gridVisibleSortedRowEntriesSelector);
 
   const mapKey = (event: React.KeyboardEvent) => {
     if (isEnterKey(event.key)) {
@@ -97,7 +97,7 @@ export const useGridKeyboardNavigation = (
     (params: GridCellParams, event: React.KeyboardEvent) => {
       event.preventDefault();
       const colIndex = apiRef.current.getColumnIndex(params.field);
-      const rowIndex = visibleSortedRowsAsArray.findIndex(([id]) => id === params.id);
+      const rowIndex = visibleSortedRows.findIndex((row) => row.id === params.id);
 
       const key = mapKey(event);
       const isCtrlPressed = event.ctrlKey || event.metaKey || event.shiftKey;
@@ -158,12 +158,12 @@ export const useGridKeyboardNavigation = (
       );
       apiRef.current.scrollToIndexes(nextCellIndexes);
       const field = apiRef.current.getVisibleColumns()[nextCellIndexes.colIndex].field;
-      const [id] = visibleSortedRowsAsArray[nextCellIndexes.rowIndex];
-      apiRef.current.setCellFocus(id, field);
+      const node = visibleSortedRows[nextCellIndexes.rowIndex];
+      apiRef.current.setCellFocus(node.id, field);
     },
     [
       apiRef,
-      visibleSortedRowsAsArray,
+      visibleSortedRows,
       totalVisibleRowCount,
       props.pagination,
       paginationState.pageSize,
@@ -204,8 +204,8 @@ export const useGridKeyboardNavigation = (
 
       if (!nextColumnHeaderIndexes) {
         const field = apiRef.current.getVisibleColumns()[colIndex].field;
-        const [id] = visibleSortedRowsAsArray[0];
-        apiRef.current.setCellFocus(id, field);
+        const node = visibleSortedRows[0];
+        apiRef.current.setCellFocus(node.id, field);
         return;
       }
 
@@ -220,7 +220,7 @@ export const useGridKeyboardNavigation = (
       const field = apiRef.current.getVisibleColumns()[nextColumnHeaderIndexes.colIndex].field;
       apiRef.current.setColumnHeaderFocus(field, event);
     },
-    [apiRef, colCount, containerSizes, logger, visibleSortedRowsAsArray],
+    [apiRef, colCount, containerSizes, logger, visibleSortedRows],
   );
 
   useGridApiEventHandler(apiRef, GridEvents.cellNavigationKeyDown, navigateCells);

@@ -24,8 +24,8 @@ import { allGridColumnsSelector } from '../columns/gridColumnsSelector';
 import { useGridState } from '../../utils/useGridState';
 import {
   gridSortModelSelector,
-  sortedGridRowIdsSelector,
-  sortedGridRowsSelector,
+  gridSortedRowIdsSelector,
+  gridSortedRowEntriesSelector,
 } from './gridSortingSelector';
 import { useGridStateInit } from '../../utils/useGridStateInit';
 import { useFirstRender } from '../../utils/useFirstRender';
@@ -247,13 +247,13 @@ export const useGridSorting = (
     [apiRef],
   );
 
-  const getSortedRows = React.useCallback<GridSortApi['getSortedRows']>(
-    () => Object.values(sortedGridRowsSelector(apiRef.current.state)),
-    [apiRef],
-  );
+  const getSortedRows = React.useCallback<GridSortApi['getSortedRows']>(() => {
+    const sortedRows = gridSortedRowEntriesSelector(apiRef.current.state);
+    return sortedRows.map((row) => row.model);
+  }, [apiRef]);
 
   const getSortedRowIds = React.useCallback<GridSortApi['getSortedRowIds']>(
-    () => sortedGridRowIdsSelector(apiRef.current.state),
+    () => gridSortedRowIdsSelector(apiRef.current.state),
     [apiRef],
   );
 

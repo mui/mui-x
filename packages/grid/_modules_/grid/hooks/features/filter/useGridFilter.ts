@@ -5,7 +5,7 @@ import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridFilterApi } from '../../../models/api/gridFilterApi';
 import { GridFeatureModeConstant } from '../../../models/gridFeatureMode';
 import { GridFilterItem, GridLinkOperator } from '../../../models/gridFilterItem';
-import { GridRowId } from '../../../models/gridRows';
+import { GridRowId, GridRowModel } from '../../../models/gridRows';
 import { isDeepEqual } from '../../../utils/utils';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
@@ -13,10 +13,10 @@ import { useGridLogger } from '../../utils/useGridLogger';
 import { filterableGridColumnsIdsSelector } from '../columns/gridColumnsSelector';
 import { useGridState } from '../../utils/useGridState';
 import { GridPreferencePanelsValue } from '../preferencesPanel/gridPreferencePanelsValue';
-import { sortedGridRowIdsSelector } from '../sorting/gridSortingSelector';
+import { gridSortedRowIdsSelector } from '../sorting/gridSortingSelector';
 import { getDefaultGridFilterModel } from './gridFilterState';
 import { GridFilterModel } from '../../../models/gridFilterModel';
-import { visibleSortedGridRowsSelector, gridFilterModelSelector } from './gridFilterSelector';
+import { gridVisibleSortedRowEntriesSelector, gridFilterModelSelector } from './gridFilterSelector';
 import { useGridStateInit } from '../../utils/useGridStateInit';
 import { useFirstRender } from '../../utils/useFirstRender';
 
@@ -176,7 +176,7 @@ export const useGridFilter = (
         };
       }
 
-      const rowIds = sortedGridRowIdsSelector(apiRef.current.state);
+      const rowIds = gridSortedRowIdsSelector(apiRef.current.state);
       const visibleRowsLookup: Record<GridRowId, boolean> = {};
       rowIds.forEach((rowId) => {
         visibleRowsLookup[rowId] = filteringMethod(rowId);
@@ -317,10 +317,10 @@ export const useGridFilter = (
     [apiRef, logger, setGridState],
   );
 
-  const getVisibleRowModels = React.useCallback<GridFilterApi['getVisibleRowModels']>(
-    () => visibleSortedGridRowsSelector(apiRef.current.state),
-    [apiRef],
-  );
+  const getVisibleRowModels = React.useCallback<GridFilterApi['getVisibleRowModels']>(() => {
+    const visibleSortedRows = gridVisibleSortedRowEntriesSelector(apiRef.current.state);
+    return new Map<GridRowId, GridRowModel>(visibleSortedRows.map((row) => [row.id, row.model]));
+  }, [apiRef]);
 
   useGridApiMethod<GridFilterApi>(
     apiRef,

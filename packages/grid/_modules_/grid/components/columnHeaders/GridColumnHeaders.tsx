@@ -18,7 +18,7 @@ import { GridEvents } from '../../constants/eventsConstants';
 import { GridColumnHeaderParams } from '../../models/params/gridColumnHeaderParams';
 import { RenderContext } from '../GridVirtualScroller';
 import { GridColumnHeaderItem } from './GridColumnHeaderItem';
-import { filterGridColumnLookupSelector } from '../../hooks/features/filter/gridFilterSelector';
+import { gridFilterActiveItemsLookupSelector } from '../../hooks/features/filter/gridFilterSelector';
 import { gridColumnMenuSelector } from '../../hooks/features/columnMenu/columnMenuSelector';
 import { gridSortColumnLookupSelector } from '../../hooks/features/sorting/gridSortingSelector';
 import {
@@ -57,7 +57,7 @@ export const GridColumnsHeader = React.forwardRef<HTMLDivElement, any>(function 
   const cellTabIndexState = useGridSelector(apiRef, gridTabIndexCellSelector);
   const columnHeaderFocus = useGridSelector(apiRef, gridFocusColumnHeaderSelector);
   const headerHeight = useGridSelector(apiRef, gridDensityHeaderHeightSelector);
-  const filterColumnLookup = useGridSelector(apiRef, filterGridColumnLookupSelector);
+  const filterColumnLookup = useGridSelector(apiRef, gridFilterActiveItemsLookupSelector);
   const sortColumnLookup = useGridSelector(apiRef, gridSortColumnLookupSelector);
   const columnMenuState = useGridSelector(apiRef, gridColumnMenuSelector);
   const rootProps = useGridRootProps();
