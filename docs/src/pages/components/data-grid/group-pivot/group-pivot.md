@@ -99,6 +99,17 @@ You can limit the filtering to the top level rows with the `disableChildrenSorti
 
 {{"demo": "pages/components/data-grid/group-pivot/DisableChildrenSortingTreeData.js", "bg": "inline", "defaultCodeOpen": false}}
 
+**Note**: If you are using `sortingMode="server"`, you need to always set the children of a row after this row.
+For instance:
+
+```ts
+// The row A.A is just after its parent
+const validRows = [{ path: ['A'] }, { path: ['A', 'A'] }, { path: ['B'] }];
+
+// The row A.A is not just after its parent
+const invalidRows = [{ path: ['A'] }, { path: ['B'] }, { path: ['A', 'A'] }];
+```
+
 ### Full Example
 
 {{"demo": "pages/components/data-grid/group-pivot/TreeDataFullExample.js", "bg": "inline", "defaultCodeOpen": false}}
