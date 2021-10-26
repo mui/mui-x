@@ -23,6 +23,7 @@ export interface GridFilterApi {
   upsertFilterItem: (item: GridFilterItem) => void;
   /**
    * Applies all filters on all rows.
+   * @ignore - do not document.
    */
   unsafe_applyFilters: () => void;
   /**
