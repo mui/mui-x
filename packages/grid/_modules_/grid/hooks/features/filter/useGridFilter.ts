@@ -149,57 +149,41 @@ export const useGridFilter = (
     [apiRef],
   );
 
+  /**
+   * Generate the `visibleRowsLookup` and `visibleDescendantsCountLookup` for the current `filterModel`
+   * If the tree is not flat, we have to create the lookups even with "server" filtering or 0 filter item to remove to collapsed rows.
+   */
   const applyFilters = React.useCallback<GridFilterApi['unsafe_applyFilters']>(() => {
     setGridState((state) => {
       const filterModel = gridFilterModelSelector(state);
       const rowIds = gridRowIdsSelector(state);
       const rowTree = gridRowTreeSelector(state);
       const shouldApplyTreeFiltering = gridRowTreeDepthSelector(state) > 1;
-
-      if (props.filterMode === GridFeatureModeConstant.server) {
-        return {
-          ...state,
-          filter: {
-            ...state.filter,
-            visibleRowsLookup: {},
-            visibleDescendantsCountLookup: {},
-          },
-        };
-      }
-
-      // No filter to apply
-      const filteringMethod = buildAggregatedFilterApplier(filterModel);
-      if (!filteringMethod) {
-        const visibleDescendantsCountLookup: Record<GridRowId, number> = {};
-        if (shouldApplyTreeFiltering) {
-          for (let i = 0; i < rowIds.length; i += 1) {
-            const rowId = rowIds[i];
-            visibleDescendantsCountLookup[rowId] = rowTree[rowId].descendantCount ?? 0;
-          }
-        }
-
-        return {
-          ...state,
-          filter: {
-            ...state.filter,
-            visibleRowsLookup: {},
-            visibleDescendantsCountLookup,
-          },
-        };
-      }
+      const filteringMethod =
+        props.filterMode === GridFeatureModeConstant.client
+          ? buildAggregatedFilterApplier(filterModel)
+          : null;
 
       const visibleRowsLookup: Record<GridRowId, boolean> = {};
       const visibleDescendantsCountLookup: Record<GridRowId, number> = {};
       if (shouldApplyTreeFiltering) {
         // A node is visible if
         // - One of its children is passing the filter
-        // - He is passing the filter
+        // - It is passing the filter
         const filterTreeNode = (
           node: GridRowTreeNodeConfig,
           isParentMatchingFilters: boolean,
         ): boolean => {
           const shouldSkipFilters = props.disableChildrenFiltering && node.depth > 0;
-          const isMatchingFilters = shouldSkipFilters ? null : filteringMethod(node.id);
+
+          let isMatchingFilters: boolean | null;
+          if (shouldSkipFilters) {
+            isMatchingFilters = null;
+          } else if (!filteringMethod) {
+            isMatchingFilters = true;
+          } else {
+            isMatchingFilters = filteringMethod(node.id);
+          }
 
           let visibleDescendantCount = 0;
           node.children?.forEach((childId) => {
@@ -250,10 +234,10 @@ export const useGridFilter = (
             filterTreeNode(node, true);
           }
         }
-      } else {
+      } else if (props.filterMode === GridFeatureModeConstant.client) {
         for (let i = 0; i < rowIds.length; i += 1) {
           const rowId = rowIds[i];
-          visibleRowsLookup[rowId] = filteringMethod(rowId);
+          visibleRowsLookup[rowId] = filteringMethod?.(rowId) ?? true;
         }
       }
 

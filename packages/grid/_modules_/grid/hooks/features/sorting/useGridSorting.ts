@@ -172,20 +172,13 @@ export const useGridSorting = (
   );
 
   const applySorting = React.useCallback<GridSortApi['applySorting']>(() => {
-    if (props.sortingMode === GridFeatureModeConstant.server) {
-      logger.debug('Skipping sorting rows as sortingMode = server');
-      setGridState((state) => ({
-        ...state,
-        sorting: { ...state.sorting, sortedRows: apiRef.current.getAllRowIds() },
-      }));
-      return;
-    }
-
     const rowTree = gridRowTreeSelector(apiRef.current.state);
     const rowIds = gridRowIdsSelector(apiRef.current.state);
     const sortModel = gridSortModelSelector(apiRef.current.state);
-    const comparatorList = buildComparatorList(sortModel);
-    const aggregatedComparator = comparatorListAggregate(comparatorList);
+
+    const shouldApplySorting = props.sortingMode === GridFeatureModeConstant.client;
+    const comparatorList = shouldApplySorting ? buildComparatorList(sortModel) : [];
+    const aggregatedComparator = comparatorListAggregate(buildComparatorList(sortModel));
 
     // Group the rows by parent
     const groupedByParentRows = new Map<GridRowId | null, GridRowTreeNodeConfig[]>([[null, []]]);
@@ -263,7 +256,6 @@ export const useGridSorting = (
     forceUpdate();
   }, [
     apiRef,
-    logger,
     getSortCellParams,
     setGridState,
     forceUpdate,

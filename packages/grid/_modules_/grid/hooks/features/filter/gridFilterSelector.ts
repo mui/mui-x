@@ -43,23 +43,23 @@ export const gridVisibleSortedTopLevelRowEntriesSelector = createSelector(
   gridVisibleSortedRowEntriesSelector,
   gridRowTreeSelector,
   gridRowTreeDepthSelector,
-  (sortedVisibleRows, rowTree, rowTreeDepth) => {
+  (visibleSortedRows, rowTree, rowTreeDepth) => {
     if (rowTreeDepth < 2) {
-      return sortedVisibleRows;
+      return visibleSortedRows;
     }
 
-    return sortedVisibleRows.filter((row) => rowTree[row.id]?.depth === 0);
+    return visibleSortedRows.filter((row) => rowTree[row.id]?.depth === 0);
   },
 );
 
 export const gridVisibleRowCountSelector = createSelector(
   gridVisibleSortedRowEntriesSelector,
-  (sortedVisibleRows) => sortedVisibleRows.length,
+  (visibleSortedRows) => visibleSortedRows.length,
 );
 
 export const gridVisibleTopLevelRowCountSelector = createSelector(
   gridVisibleSortedTopLevelRowEntriesSelector,
-  (sortedVisibleTopLevelRows) => sortedVisibleTopLevelRows.length,
+  (visibleSortedTopLevelRows) => visibleSortedTopLevelRows.length,
 );
 
 export const gridFilterActiveItemsSelector = createSelector(

@@ -421,5 +421,12 @@ describe('<DataGridPro /> - Tree Data', () => {
       fireEvent.click(getCell(2, 0).querySelector('button'));
       expect(getColumnValues(1)).to.deep.equal(['C', 'B', 'A', 'A.A', 'A.B']);
     });
+
+    it('should update the order server side', () => {
+      const { setProps } = render(<Test sortingMode="server" />);
+      expect(getColumnValues(1)).to.deep.equal(['A', 'B', 'C']);
+      setProps({ rows: [...rowsWithoutGap].reverse() });
+      expect(getColumnValues(1)).to.deep.equal(['C', 'B', 'A']);
+    });
   });
 });
