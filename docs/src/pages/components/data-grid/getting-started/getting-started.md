@@ -225,12 +225,12 @@ For instance, if you have a one-year license (default), you are not licensed to 
 ## Using MUI X v5 with MUI Core v4
 
 If you are using MUI X v4, it is highly recommended to upgrade to MUI X v5 to continue to receive updates.
-To make this migration, MUI Core has also to be upgraded to v5 as well.
-However, depending on the complexity of the application, such migration cannot be done globally.
-An alternative is to install MUI Core v4 aside to v5 and configure them to avoid conflicts.
+To complete this migration, MUI Core also has to be upgraded to v5.
+Depending on the complexity of the application however, such a migration might not be possible globally.
+An alternative is to install MUI Core v4 along side to v5, and to configure them to avoid conflicts.
 This can be achieved with the following steps:
 
-1. First, make sure to have MUI Core v5 installed. If not, install it with the [instructions](/components/data-grid/getting-started/#installation).
+1. First, make sure you have MUI Core v5 installed. If not, install it with these [instructions](/components/data-grid/getting-started/#installation).
 
 2. Add a custom [`createGenerateClassName`](/styles/api/#heading-creategenerateclassname-options-class-name-generator) to disable the generation of global class names in JSS.
 
@@ -238,16 +238,16 @@ This can be achieved with the following steps:
 import { createGenerateClassName } from '@material-ui/core/styles';
 
 const generateClassName = createGenerateClassName({
-  // By enabling this option, non-MUI elements (e.g. `<div />`)
-  // using MUI classes (e.g. `.MuiButton`) will lose their styles.
-  // Make sure to use `makeStyles()` or `<Box />`.
+  // By enabling this option, if you have non-MUI elements (e.g. `<div />`)
+  // using MUI classes (e.g. `.MuiButton`) they will lose styles.
+  // Make sure to convert them to use `styled()` or `<Box />` first.
   disableGlobal: true,
-  // Class names will be prefixed with this seed to avoid name collisions.
+  // Class names will receive this prefix to avoid name collisions.
   seed: 'mui-jss',
 });
 ```
 
-3. Create a v5 theme with the same customizations from the v4 theme. This has to be done as the theme is not shared between different MUI Core versions.
+3. Create a v5 theme with the same customizations as the v4 theme. This has to be done as the theme is not shared between different MUI Core versions.
 
 ```jsx
 import { createTheme as createThemeV4 } from '@material-ui/core/styles';
@@ -284,7 +284,7 @@ const themeV5 = createThemeV5({ ... });
 export default function DataGridDemo() {
   return (
     <StylesProvider generateClassName={generateClassName}>
-      <ThemeProviderV4 theme={theme}>
+      <ThemeProviderV4 theme={themeV4}>
         <ThemeProviderV5 theme={themeV5}>
           {/* Your component tree. */}
         </ThemeProviderV5>
