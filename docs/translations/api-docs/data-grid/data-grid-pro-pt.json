@@ -348,14 +348,6 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "both scroll area elements"
     },
-    "scrollAreaLeft": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the left scroll area element"
-    },
-    "scrollAreaRight": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the right scroll area element"
-    },
     "selectedRowCount": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the footer selected row count element"
@@ -371,14 +363,6 @@
     "toolbarFilterList": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the toolbar filter list element"
-    },
-    "viewport": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the viewport element"
-    },
-    "window": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the window element"
     },
     "withBorder": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
