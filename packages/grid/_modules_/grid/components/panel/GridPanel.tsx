@@ -30,6 +30,7 @@ export const gridPanelClasses = generateUtilityClasses('MuiDataGrid', ['panel', 
 const StyledPopper = styled(Popper, {
   name: 'MuiDataGrid',
   slot: 'Panel',
+  overridesResolver: (props, styles) => styles.panel,
 })(({ theme }) => ({
   zIndex: theme.zIndex.modal,
 }));
@@ -37,6 +38,7 @@ const StyledPopper = styled(Popper, {
 const StyledPaper = styled(Paper, {
   name: 'MuiDataGrid',
   slot: 'Paper',
+  overridesResolver: (props, styles) => styles.paper,
 })(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,
   minWidth: 300,
