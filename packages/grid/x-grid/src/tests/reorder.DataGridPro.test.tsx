@@ -21,6 +21,7 @@ import {
   DataGridPro,
   GRID_COLUMN_HEADER_DRAGGING_CSS_CLASS,
 } from '@mui/x-data-grid-pro';
+import { useData } from 'storybook/src/hooks/useData';
 import { spy } from 'sinon';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
