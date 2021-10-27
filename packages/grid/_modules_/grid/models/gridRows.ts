@@ -37,6 +37,8 @@ export type GridRowsLookup = Record<GridRowId, GridRowModel>;
  */
 export type GridRowId = string | number;
 
+export type GridRowEntry = { id: GridRowId; model: GridRowModel };
+
 /**
  * The function to retrieve the id of a [[GridRowModel]].
  */

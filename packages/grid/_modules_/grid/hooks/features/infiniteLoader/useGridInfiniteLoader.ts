@@ -11,7 +11,7 @@ import { GridRowScrollEndParams } from '../../../models/params/gridRowScrollEndP
 import { visibleGridColumnsSelector } from '../columns/gridColumnsSelector';
 import { GridComponentProps } from '../../../GridComponentProps';
 import { GridScrollParams } from '../../../models/params/gridScrollParams';
-import { visibleSortedGridRowsAsArraySelector } from '../filter/gridFilterSelector';
+import { gridVisibleSortedRowEntriesSelector } from '../filter/gridFilterSelector';
 import { gridPaginationSelector } from '../pagination/gridPaginationSelector';
 import { gridDensityRowHeightSelector } from '../density/densitySelector';
 
@@ -30,22 +30,22 @@ export const useGridInfiniteLoader = (
 ): void => {
   const containerSizes = useGridSelector(apiRef, gridContainerSizesSelector);
   const visibleColumns = useGridSelector(apiRef, visibleGridColumnsSelector);
-  const visibleSortedRowsAsArray = useGridSelector(apiRef, visibleSortedGridRowsAsArraySelector);
+  const visibleSortedRowEntries = useGridSelector(apiRef, gridVisibleSortedRowEntriesSelector);
   const paginationState = useGridSelector(apiRef, gridPaginationSelector);
   const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
 
   const rowsInCurrentPage = React.useMemo(() => {
     if (props.pagination && props.paginationMode === 'client') {
       const start = paginationState.pageSize * paginationState.page;
-      return visibleSortedRowsAsArray.slice(start, start + paginationState.pageSize);
+      return visibleSortedRowEntries.slice(start, start + paginationState.pageSize);
     }
-    return visibleSortedRowsAsArray;
+    return visibleSortedRowEntries;
   }, [
     paginationState.page,
     paginationState.pageSize,
     props.pagination,
     props.paginationMode,
-    visibleSortedRowsAsArray,
+    visibleSortedRowEntries,
   ]);
 
   const contentHeight = Math.max(rowsInCurrentPage.length * rowHeight, 1);

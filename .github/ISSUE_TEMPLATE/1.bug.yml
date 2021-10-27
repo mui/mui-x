@@ -37,7 +37,7 @@ body:
         Provide a link to a live example (you can use codesandbox.io) and an unambiguous set of steps to reproduce this bug.
         Include code to reproduce, if relevant (which it most likely is).
 
-        You can use the official codesandbox template as a starting point: https://mui.com/r/issue-template-latest.
+        You can use the official codesandbox template of the [DataGrid](https://codesandbox.io/s/datagrid-v5-quick-start-54iz1) or [DataGridPro](https://codesandbox.io/s/datagridpro-v5-quick-start-5pjhc) as a starting point.
 
         If you have an issue concerning TypeScript please start from this TypeScript playground: https://mui.com/r/ts-issue-template.
 
