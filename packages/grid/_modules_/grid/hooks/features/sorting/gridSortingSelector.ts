@@ -1,33 +1,27 @@
 import { createSelector } from 'reselect';
-import { GridRowId, GridRowModel, GridRowsLookup } from '../../../models/gridRows';
+import { GridRowId } from '../../../models/gridRows';
 import { GridSortDirection, GridSortModel } from '../../../models/gridSortModel';
 import { GridState } from '../../../models/gridState';
-import { gridRowsLookupSelector, unorderedGridRowIdsSelector } from '../rows/gridRowsSelector';
+import { gridRowsLookupSelector, gridRowIdsSelector } from '../rows/gridRowsSelector';
 import { GridSortingState } from './gridSortingState';
 
-const sortingGridStateSelector = (state: GridState) => state.sorting;
+const gridSortingStateSelector = (state: GridState) => state.sorting;
 
-export const sortedGridRowIdsSelector = createSelector(
-  sortingGridStateSelector,
-  unorderedGridRowIdsSelector,
+export const gridSortedRowIdsSelector = createSelector(
+  gridSortingStateSelector,
+  gridRowIdsSelector,
   (sortingState: GridSortingState, allRows: GridRowId[]) =>
     sortingState.sortedRows.length ? sortingState.sortedRows : allRows,
 );
 
-export const sortedGridRowsSelector = createSelector(
-  sortedGridRowIdsSelector,
+export const gridSortedRowEntriesSelector = createSelector(
+  gridSortedRowIdsSelector,
   gridRowsLookupSelector,
-  (sortedIds: GridRowId[], idRowsLookup: GridRowsLookup) => {
-    const map = new Map<GridRowId, GridRowModel>();
-    sortedIds.forEach((id) => {
-      map.set(id, idRowsLookup[id]);
-    });
-    return map;
-  },
+  (sortedIds, idRowsLookup) => sortedIds.map((id) => ({ id, model: idRowsLookup[id] })),
 );
 
 export const gridSortModelSelector = createSelector(
-  sortingGridStateSelector,
+  gridSortingStateSelector,
   (sorting) => sorting.sortModel,
 );
 
