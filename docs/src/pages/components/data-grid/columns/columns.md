@@ -282,6 +282,21 @@ The following are the native column types:
 - `'singleSelect'`
 - `'actions'`
 
+### Converting types
+
+Default methods such as filtering or sorting assume that `type` corresponds to the type of the stored values. For example, values of column with `type:'dateTime'` are expecting to be stored as a `Date()` objects. If for any reason, your data type is not the correct one, you can use `valueGetter` to parse the value to the correct type.
+
+```tsx
+{
+  field: 'lastLogin',
+  type: 'dateTime',
+  valueGetter: ({ value }) => value && new Date(value),
+  sortComparator: (v1, v2) => (new Date(v1) < new Date(v2) ? -1 : 1)
+}
+```
+
+### Special properties
+
 To use most of the column types, you only need to define the `type` property in your column definition.
 However, some types require additional properties to be set to make them work correctly:
 
@@ -308,17 +323,6 @@ However, some types require additional properties to be set to make them work co
     ]
   }
   ```
-
-Default methods such as filtering or sorting assume that `type` corresponds to the type of the stored values. For example, values of column with `type:'dateTime'` are expecting to be stored as a `Date()` objects. If for any reason, your data type is not the correct one, you can use `valueGetter` to parse the value to the correct type.
-
-```tsx
-{
-  field: 'lastLogin',
-  type: 'dateTime',
-  valueGetter: ({ value }) => value && new Date(value),
-  sortComparator: (v1, v2) => (new Date(v1) < new Date(v2) ? -1 : 1)
-}
-```
 
 {{"demo": "pages/components/data-grid/columns/ColumnTypesGrid.js", "bg": "inline"}}
 
