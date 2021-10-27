@@ -8,5 +8,5 @@ export interface GridClipboardApi {
    * @param {boolean} includeHeaders Whether to include the headers or not. Default is `false`.
    * @ignore - do not document.
    */
-  copySelectedRowsToClipboard: (includeHeaders?: boolean) => void;
+  unsafe_copySelectedRowsToClipboard: (includeHeaders?: boolean) => void;
 }

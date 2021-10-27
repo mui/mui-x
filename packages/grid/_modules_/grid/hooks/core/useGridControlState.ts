@@ -9,7 +9,7 @@ import { useGridApiMethod } from '../utils/useGridApiMethod';
 export function useGridControlState(apiRef: GridApiRef, props: GridComponentProps) {
   const controlStateMapRef = React.useRef<Record<string, GridControlStateItem<any>>>({});
 
-  const updateControlState = React.useCallback<GridControlStateApi['updateControlState']>(
+  const updateControlState = React.useCallback<GridControlStateApi['unsafe_updateControlState']>(
     (controlStateItem) => {
       const { stateId, ...others } = controlStateItem;
 
@@ -22,7 +22,7 @@ export function useGridControlState(apiRef: GridApiRef, props: GridComponentProp
   );
 
   const applyControlStateConstraint = React.useCallback<
-    GridControlStateApi['applyControlStateConstraint']
+    GridControlStateApi['unsafe_applyControlStateConstraint']
   >(
     (newState) => {
       let ignoreSetState = false;
@@ -83,8 +83,8 @@ export function useGridControlState(apiRef: GridApiRef, props: GridComponentProp
   );
 
   const controlStateApi: GridControlStateApi = {
-    updateControlState,
-    applyControlStateConstraint,
+    unsafe_updateControlState: updateControlState,
+    unsafe_applyControlStateConstraint: applyControlStateConstraint,
   };
   useGridApiMethod(apiRef, controlStateApi, 'controlStateApi');
 }
