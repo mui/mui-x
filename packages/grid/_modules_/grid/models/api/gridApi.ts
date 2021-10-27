@@ -6,7 +6,6 @@ import { GridClipboardApi } from './gridClipboardApi';
 import { GridCsvExportApi } from './gridCsvExportApi';
 import { GridDensityApi } from './gridDensityApi';
 import { GridEditRowApi } from './gridEditRowApi';
-import { GridEventsApi } from './gridEventsApi';
 import { GridFilterApi } from './gridFilterApi';
 import { GridFocusApi } from './gridFocusApi';
 import { GridLocaleTextApi } from './gridLocaleTextApi';
@@ -24,6 +23,7 @@ import { GridLoggerApi } from './gridLoggerApi';
 import { GridScrollApi } from './gridScrollApi';
 import type { GridColumnsPreProcessingApi } from '../../hooks/core/columnsPreProcessing';
 import type { GridRowGroupsPreProcessingApi } from '../../hooks/core/rowGroupsPerProcessing';
+import type { GridDimensionsApi } from '../../hooks/features/dimensions';
 
 /**
  * The full grid API.
@@ -35,7 +35,7 @@ export interface GridApi
     GridColumnsPreProcessingApi,
     GridRowGroupsPreProcessingApi,
     GridDensityApi,
-    GridEventsApi,
+    GridDimensionsApi,
     GridRowApi,
     GridEditRowApi,
     GridParamsApi,

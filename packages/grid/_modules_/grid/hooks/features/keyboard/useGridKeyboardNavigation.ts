@@ -15,7 +15,6 @@ import {
   isSpaceKey,
   isTabKey,
 } from '../../../utils/keyboardUtils';
-import { gridContainerSizesSelector } from '../container/gridContainerSizesSelector';
 import { visibleGridColumnsLengthSelector } from '../columns/gridColumnsSelector';
 import { useGridSelector } from '../../utils/useGridSelector';
 import { gridPaginationSelector } from '../pagination/gridPaginationSelector';
@@ -68,7 +67,7 @@ const getNextColumnHeaderIndexes = (key: string, indexes: GridColumnHeaderIndexC
  * @requires useGridPageSize (state)
  * @requires useGridColumns (state, method)
  * @requires useGridRows (state, method)
- * @requires useGridContainerProps (state)
+ * @requires useGridDimensions (method)
  * @requires useGridFocus (method)
  * @requires useGridScroll (method)
  */
@@ -80,7 +79,6 @@ export const useGridKeyboardNavigation = (
   const paginationState = useGridSelector(apiRef, gridPaginationSelector);
   const totalVisibleRowCount = useGridSelector(apiRef, gridVisibleRowCountSelector);
   const colCount = useGridSelector(apiRef, visibleGridColumnsLengthSelector);
-  const containerSizes = useGridSelector(apiRef, gridContainerSizesSelector);
   const visibleSortedRows = useGridSelector(apiRef, gridVisibleSortedRowEntriesSelector);
 
   const mapKey = (event: React.KeyboardEvent) => {
@@ -130,11 +128,12 @@ export const useGridKeyboardNavigation = (
           nextCellIndexes = { colIndex: colIdx, rowIndex: newRowIndex };
         }
       } else if (isPageKeys(key) || isSpaceKey(key)) {
+        const rowsInViewportCount = apiRef.current.getDimensions().rowsInViewportCount;
         const nextRowIndex =
           rowIndex +
           (key.indexOf('Down') > -1 || isSpaceKey(key)
-            ? containerSizes!.viewportPageSize
-            : -1 * containerSizes!.viewportPageSize);
+            ? rowsInViewportCount
+            : -1 * rowsInViewportCount);
         nextCellIndexes = { colIndex, rowIndex: nextRowIndex };
       } else {
         throw new Error('MUI: Key not mapped to navigation behavior.');
@@ -170,7 +169,6 @@ export const useGridKeyboardNavigation = (
       paginationState.page,
       colCount,
       logger,
-      containerSizes,
     ],
   );
 
@@ -192,8 +190,9 @@ export const useGridKeyboardNavigation = (
       } else if (isPageKeys(key)) {
         // Handle only Page Down key, Page Up should keep the current position
         if (key.indexOf('Down') > -1) {
+          const rowsInViewportCount = apiRef.current.getDimensions().rowsInViewportCount;
           const field = apiRef.current.getVisibleColumns()[colIndex].field;
-          const id = apiRef.current.getRowIdFromRowIndex(containerSizes!.viewportPageSize - 1);
+          const id = apiRef.current.getRowIdFromRowIndex(rowsInViewportCount - 1);
 
           apiRef.current.setCellFocus(id, field);
         }
@@ -220,7 +219,7 @@ export const useGridKeyboardNavigation = (
       const field = apiRef.current.getVisibleColumns()[nextColumnHeaderIndexes.colIndex].field;
       apiRef.current.setColumnHeaderFocus(field, event);
     },
-    [apiRef, colCount, containerSizes, logger, visibleSortedRows],
+    [apiRef, colCount, logger, visibleSortedRows],
   );
 
   useGridApiEventHandler(apiRef, GridEvents.cellNavigationKeyDown, navigateCells);

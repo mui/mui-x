@@ -48,8 +48,8 @@ function trackFinger(event, currentTouchId): CursorCoordinates | boolean {
       const touch = event.changedTouches[i];
       if (touch.identifier === currentTouchId) {
         return {
-          x: touch.clientX,
-          y: touch.clientY,
+          height: touch.clientX,
+          width: touch.clientY,
         };
       }
     }
@@ -58,8 +58,8 @@ function trackFinger(event, currentTouchId): CursorCoordinates | boolean {
   }
 
   return {
-    x: event.clientX,
-    y: event.clientY,
+    height: event.clientX,
+    width: event.clientY,
   };
 }
 

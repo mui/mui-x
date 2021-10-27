@@ -6,7 +6,6 @@ import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { useGridSelector } from '../hooks/utils/useGridSelector';
-import { gridScrollBarSizeSelector } from '../hooks/features/container/gridContainerSizesSelector';
 import {
   visibleGridColumnsSelector,
   gridColumnsMetaSelector,
@@ -113,7 +112,6 @@ const GridVirtualScroller = React.forwardRef<HTMLDivElement, GridVirtualScroller
     const cellFocus = useGridSelector(apiRef, gridFocusCellSelector);
     const cellTabIndex = useGridSelector(apiRef, gridTabIndexCellSelector);
     const editRowsState = useGridSelector(apiRef, gridEditRowsStateSelector);
-    const scrollBarState = useGridSelector(apiRef, gridScrollBarSizeSelector);
     const paginationState = useGridSelector(apiRef, gridPaginationSelector);
     const renderZoneRef = React.useRef<HTMLDivElement>(null);
     const rootRef = React.useRef<HTMLDivElement>(null);
@@ -296,7 +294,6 @@ const GridVirtualScroller = React.forwardRef<HTMLDivElement, GridVirtualScroller
             cellFocus={cellFocus} // TODO move to inside the row
             cellTabIndex={cellTabIndex} // TODO move to inside the row
             editRowsState={editRowsState} // TODO move to inside the row
-            scrollBarState={scrollBarState} // TODO remove once useGridContainerProps is deleted
             renderedColumns={renderedColumns}
             visibleColumns={visibleColumns}
             firstColumnToRender={firstColumnToRender}

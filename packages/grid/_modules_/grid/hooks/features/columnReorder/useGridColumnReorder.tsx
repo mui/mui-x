@@ -44,6 +44,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
+
 /**
  * Only available in DataGridPro
  * @requires useGridColumns (method)
@@ -63,8 +64,8 @@ export const useGridColumnReorder = (
   const dragColField = useGridSelector(apiRef, gridColumnReorderDragColSelector);
   const dragColNode = React.useRef<HTMLElement | null>(null);
   const cursorPosition = React.useRef<CursorCoordinates>({
-    x: 0,
-    y: 0,
+    height: 0,
+    width: 0,
   });
   const originColumnIndex = React.useRef<number | null>(null);
   const removeDnDStylesTimeout = React.useRef<any>();
