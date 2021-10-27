@@ -74,8 +74,6 @@ export const buildRowTree = (params: GenerateRowTreeParams): GridRowGroupingResu
           idRowsLookup[nodeId] = {};
           ids.push(nodeId);
         }
-
-        node.descendantCount = (node.descendantCount ?? 0) + 1;
       } else {
         tempTree[row.id] = {
           id: row.id,

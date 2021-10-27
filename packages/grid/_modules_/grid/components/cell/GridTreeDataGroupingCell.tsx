@@ -143,7 +143,6 @@ GridTreeDataGroupingCell.propTypes = {
       PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
     ),
     depth: PropTypes.number.isRequired,
-    descendantCount: PropTypes.number,
     expanded: PropTypes.bool,
     groupingValue: PropTypes.string.isRequired,
     id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,

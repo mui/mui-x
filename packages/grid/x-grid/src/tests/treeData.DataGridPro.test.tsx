@@ -374,7 +374,7 @@ describe('<DataGridPro /> - Tree Data', () => {
         );
     });
 
-    it('should set the descendantCount on matching nodes even if the children are collapsed', () => {
+    it('should set the filtered descendant count on matching nodes even if the children are collapsed', () => {
       render(
         <Test
           filterModel={{ items: [{ columnField: 'name', value: 'A', operatorValue: 'endsWith' }] }}

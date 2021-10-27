@@ -11,6 +11,7 @@ import { useFirstRender } from '../../utils/useFirstRender';
 import { buildRowTree } from '../../../utils/rowTreeUtils';
 import { GridRowGroupingPreProcessing } from '../../core/rowGroupsPerProcessing';
 import { isFunction } from '../../../utils/utils';
+import { gridFilteredDescendantCountLookupSelector } from '../filter';
 
 /**
  * Only available in DataGridPro
@@ -121,7 +122,10 @@ export const useGridTreeData = (
         event.preventDefault();
 
         const node = apiRef.current.unstable_getRowNode(params.id);
-        if (!node?.descendantCount) {
+        const filteredDescendantCount =
+          gridFilteredDescendantCountLookupSelector(apiRef.current.state)[params.id] ?? 0;
+
+        if (!node || filteredDescendantCount === 0) {
           return;
         }
 
