@@ -1,14 +1,14 @@
 import * as React from 'react';
 import Button from '@mui/material/Button';
 import { GridFilterItem, GridLinkOperator } from '../../../models/gridFilterItem';
-import { useGridApiContext } from '../../../hooks/root/useGridApiContext';
+import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
 import { GridAddIcon } from '../../icons';
 import { GridPanelContent } from '../GridPanelContent';
 import { GridPanelFooter } from '../GridPanelFooter';
 import { GridPanelWrapper } from '../GridPanelWrapper';
 import { GridFilterForm } from './GridFilterForm';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
-import { useGridSelector } from '../../../hooks/features/core/useGridSelector';
+import { useGridSelector } from '../../../hooks/utils/useGridSelector';
 import { gridFilterModelSelector } from '../../../hooks/features/filter/gridFilterSelector';
 
 export function GridFilterPanel() {
@@ -20,25 +20,25 @@ export function GridFilterPanel() {
 
   const applyFilter = React.useCallback(
     (item: GridFilterItem) => {
-      apiRef.current.upsertFilter(item);
+      apiRef.current.upsertFilterItem(item);
     },
     [apiRef],
   );
 
   const applyFilterLinkOperator = React.useCallback(
     (operator: GridLinkOperator) => {
-      apiRef.current.applyFilterLinkOperator(operator);
+      apiRef.current.setFilterLinkOperator(operator);
     },
     [apiRef],
   );
 
   const addNewFilter = React.useCallback(() => {
-    apiRef.current.upsertFilter({});
+    apiRef.current.upsertFilterItem({});
   }, [apiRef]);
 
   const deleteFilter = React.useCallback(
     (item: GridFilterItem) => {
-      apiRef.current.deleteFilter(item);
+      apiRef.current.deleteFilterItem(item);
     },
     [apiRef],
   );

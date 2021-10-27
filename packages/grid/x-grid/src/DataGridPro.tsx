@@ -105,18 +105,23 @@ DataGridProRaw.propTypes = {
    */
   classes: PropTypes.object,
   /**
-   * @ignore
+   * @ignore - do not document
    */
   className: PropTypes.string,
   /**
-   * Number of columns rendered outside the grid viewport.
-   * @default 2
+   * Number of extra columns to be rendered before/after the visible slice.
+   * @default 3
    */
   columnBuffer: PropTypes.number,
   /**
    * Set of columns of type [[GridColumns]].
    */
   columns: PropTypes.arrayOf(PropTypes.object).isRequired,
+  /**
+   * Number of rows from the `columnBuffer` that can be visible before a new slice is rendered.
+   * @default 3
+   */
+  columnThreshold: PropTypes.number,
   /**
    * Extend native column types with your new column types.
    */
@@ -240,7 +245,7 @@ DataGridProRaw.propTypes = {
    */
   getRowClassName: PropTypes.func,
   /**
-   * Return the id of a given [[GridRowData]].
+   * Return the id of a given [[GridRowModel]].
    */
   getRowId: PropTypes.func,
   /**
@@ -276,6 +281,12 @@ DataGridProRaw.propTypes = {
    * @default false
    */
   hideFooterSelectedRowCount: PropTypes.bool,
+  /**
+   * The initial state of the DataGrid.
+   * The data in it will be set in the state on initialization but will not be controlled.
+   * If one of the data in `initialState` is also being controlled, then the control state wins.
+   */
+  initialState: PropTypes.object,
   /**
    * Callback fired when a cell is rendered, returns true if the cell is editable.
    * @param {GridCellParams} params With all properties from [[GridCellParams]].
@@ -317,13 +328,6 @@ DataGridProRaw.propTypes = {
    */
   nonce: PropTypes.string,
   /**
-   * Callback fired when the active element leaves a cell.
-   * @param {GridCallbackDetails} params With all properties from [[GridCellParams]].
-   * @param {MuiEvent<React.SyntheticEvent>} event The event object.
-   * @param {GridCallbackDetails} details Additional details for this callback.
-   */
-  onCellBlur: PropTypes.func,
-  /**
    * Callback fired when a click event comes from a cell element.
    * @param {GridCellParams} params With all properties from [[GridCellParams]].
    * @param {MuiEvent<React.MouseEvent>} event The event object.
@@ -357,13 +361,6 @@ DataGridProRaw.propTypes = {
    */
   onCellEditStop: PropTypes.func,
   /**
-   * Callback fired when a mouse enter event comes from a cell element.
-   * @param {GridCellParams} params With all properties from [[GridCellParams]].
-   * @param {MuiEvent<React.MouseEvent>} event The event object.
-   * @param {GridCallbackDetails} details Additional details for this callback.
-   */
-  onCellEnter: PropTypes.func,
-  /**
    * Callback fired when a cell loses focus.
    * @param {GridCellParams} params With all properties from [[GridCellParams]].
    * @param {MuiEvent<React.SyntheticEvent | DocumentEventMap['click']>} event The event object.
@@ -378,30 +375,9 @@ DataGridProRaw.propTypes = {
    */
   onCellKeyDown: PropTypes.func,
   /**
-   * Callback fired when a mouse leave event comes from a cell element.
-   * @param {GridCellParams} params With all properties from [[GridCellParams]].
-   * @param {MuiEvent<React.MouseEvent>} event The event object.
-   * @param {GridCallbackDetails} details Additional details for this callback.
-   */
-  onCellLeave: PropTypes.func,
-  /**
-   * Callback fired when a mouseout event comes from a cell element.
-   * @param {GridCellParams} params With all properties from [[GridCellParams]].
-   * @param {MuiEvent<React.MouseEvent>} event The event object.
-   * @param {GridCallbackDetails} details Additional details for this callback.
-   */
-  onCellOut: PropTypes.func,
-  /**
-   * Callback fired when a mouseover event comes from a cell element.
-   * @param {GridCellParams} params With all properties from [[GridCellParams]].
-   * @param {MuiEvent<React.MouseEvent>} event The event object.
-   * @param {GridCallbackDetails} details Additional details for this callback.
-   */
-  onCellOver: PropTypes.func,
-  /**
    * Callback fired when the cell value changed.
    * @param {GridEditCellValueParams} params With all properties from [[GridEditCellValueParams]].
-   * @param {MuiEvent<{}>} event The event object.
+   * @param {MuiEvent} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onCellValueChange: PropTypes.func,
@@ -450,28 +426,28 @@ DataGridProRaw.propTypes = {
   /**
    * Callback fired when a column is reordered.
    * @param {GridColumnOrderChangeParams} params With all properties from [[GridColumnOrderChangeParams]].
-   * @param {MuiEvent<{}>} event The event object.
+   * @param {MuiEvent} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onColumnOrderChange: PropTypes.func,
   /**
    * Callback fired while a column is being resized.
    * @param {GridColumnResizeParams} params With all properties from [[GridColumnResizeParams]].
-   * @param {MuiEvent<{}>} event The event object.
+   * @param {MuiEvent} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onColumnResize: PropTypes.func,
   /**
    * Callback fired when a column visibility changes.
    * @param {GridColumnVisibilityChangeParams} params With all properties from [[GridColumnVisibilityChangeParams]].
-   * @param {MuiEvent<{}>} event The event object.
+   * @param {MuiEvent} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onColumnVisibilityChange: PropTypes.func,
   /**
    * Callback fired when the width of a column is changed.
    * @param {GridCallbackDetails} params With all properties from [[GridColumnResizeParams]].
-   * @param {MuiEvent<{}>} event The event object.
+   * @param {MuiEvent} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onColumnWidthChange: PropTypes.func,
@@ -491,7 +467,7 @@ DataGridProRaw.propTypes = {
   /**
    * Callback fired when an exception is thrown in the grid.
    * @param {any} args The arguments passed to the `showError` call.
-   * @param {MuiEvent<{}>} event The event object.
+   * @param {MuiEvent} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onError: PropTypes.func,
@@ -516,7 +492,7 @@ DataGridProRaw.propTypes = {
   /**
    * Callback fired when the grid is resized.
    * @param {ElementSize} containerSize With all properties from [[ElementSize]].
-   * @param {MuiEvent<{}>} event The event object.
+   * @param {MuiEvent} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onResize: PropTypes.func,
@@ -553,37 +529,9 @@ DataGridProRaw.propTypes = {
    */
   onRowEditStop: PropTypes.func,
   /**
-   * Callback fired when a mouse enter event comes from a row container element.
-   * @param {GridRowParams} params With all properties from [[GridRowParams]].
-   * @param {MuiEvent<React.SyntheticEvent>} event The event object.
-   * @param {GridCallbackDetails} details Additional details for this callback.
-   */
-  onRowEnter: PropTypes.func,
-  /**
-   * Callback fired when a mouse leave event comes from a row container element.
-   * @param {GridRowParams} params With all properties from [[GridRowParams]].
-   * @param {MuiEvent<React.SyntheticEvent>} event The event object.
-   * @param {GridCallbackDetails} details Additional details for this callback.
-   */
-  onRowLeave: PropTypes.func,
-  /**
-   * Callback fired when a mouseout event comes from a row container element.
-   * @param {GridRowParams} params With all properties from [[GridRowParams]].
-   * @param {MuiEvent<React.SyntheticEvent>} event The event object.
-   * @param {GridCallbackDetails} details Additional details for this callback.
-   */
-  onRowOut: PropTypes.func,
-  /**
-   * Callback fired when a mouseover event comes from a row container element.
-   * @param {GridRowParams} params With all properties from [[GridRowParams]].
-   * @param {MuiEvent<React.SyntheticEvent>} event The event object.
-   * @param {GridCallbackDetails} details Additional details for this callback.
-   */
-  onRowOver: PropTypes.func,
-  /**
    * Callback fired when scrolling to the bottom of the grid viewport.
    * @param {GridRowScrollEndParams} params With all properties from [[GridRowScrollEndParams]].
-   * @param {MuiEvent<{}>} event The event object.
+   * @param {MuiEvent} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onRowsScrollEnd: PropTypes.func,
@@ -602,18 +550,11 @@ DataGridProRaw.propTypes = {
   /**
    * Callback fired when the state of the grid is updated.
    * @param {GridState} state The new state.
-   * @param {MuiEvent<{}>} event The event object.
+   * @param {MuiEvent} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
    * @internal
    */
   onStateChange: PropTypes.func,
-  /**
-   * Callback fired when the rows in the viewport change.
-   * @param {GridViewportRowsChangeParams} params The viewport params.
-   * @param {MuiEvent<{}>} event The event object.
-   * @param {GridCallbackDetails} details Additional details for this callback.
-   */
-  onViewportRowsChange: PropTypes.func,
   /**
    * The zero-based index of the current page.
    * @default 0
@@ -637,6 +578,11 @@ DataGridProRaw.propTypes = {
    */
   paginationMode: PropTypes.oneOf(['client', 'server']),
   /**
+   * Number of extra rows to be rendered before/after the visible slice.
+   * @default 3
+   */
+  rowBuffer: PropTypes.number,
+  /**
    * Set the total number of rows, if it is different than the length of the value `rows` prop.
    */
   rowCount: PropTypes.number,
@@ -654,6 +600,11 @@ DataGridProRaw.propTypes = {
    * @default [25, 50, 100]
    */
   rowsPerPageOptions: PropTypes.arrayOf(PropTypes.number),
+  /**
+   * Number of rows from the `rowBuffer` that can be visible before a new slice is rendered.
+   * @default 3
+   */
+  rowThreshold: PropTypes.number,
   /**
    * Override the height/width of the grid inner scrollbar.
    */
@@ -702,7 +653,7 @@ DataGridProRaw.propTypes = {
     }),
   ),
   /**
-   * @ignore
+   * @ignore - do not document
    */
   style: PropTypes.object,
   /**

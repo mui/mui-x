@@ -170,7 +170,7 @@ However, it can be implemented as in the demo below.
 
 > ⚠️ This feature isn't natively implemented in the grid package. It's coming.
 >
-> 👍 Upvote [issue #202](https://github.com/mui-org/material-ui-x/issues/202) if you want to see it land faster.
+> 👍 Upvote [issue #2842](https://github.com/mui-org/material-ui-x/issues/2842) if you want to see it land faster.
 
 ## apiRef [<span class="pro"></span>](https://mui.com/store/items/material-ui-pro/)
 

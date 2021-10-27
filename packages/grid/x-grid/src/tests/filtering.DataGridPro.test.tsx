@@ -223,7 +223,7 @@ describe('<DataGridPro /> - Filter', () => {
       <TestCase
         filterModel={newModel}
         onFilterModelChange={onFilterModelChange}
-        state={{
+        initialState={{
           preferencePanel: { openedPanelValue: GridPreferencePanelsValue.filters, open: true },
         }}
       />,
@@ -273,7 +273,7 @@ describe('<DataGridPro /> - Filter', () => {
   it('should show the latest visibleRows', () => {
     render(
       <TestCase
-        state={{
+        initialState={{
           preferencePanel: {
             open: true,
             openedPanelValue: GridPreferencePanelsValue.filters,
@@ -394,7 +394,7 @@ describe('<DataGridPro /> - Filter', () => {
               columns={columns}
               filterMode="server"
               onFilterModelChange={handleFilterChange}
-              state={{
+              initialState={{
                 preferencePanel: {
                   open: true,
                   openedPanelValue: GridPreferencePanelsValue.filters,
@@ -408,7 +408,7 @@ describe('<DataGridPro /> - Filter', () => {
       render(<AddServerFilterGrid />);
       const addButton = screen.getByRole('button', { name: /Add Filter/i });
       fireEvent.click(addButton);
-      const filterForms = document.querySelectorAll(`.MuiGridFilterForm-root`);
+      const filterForms = document.querySelectorAll(`.MuiDataGrid-filterForm`);
       expect(filterForms).to.have.length(2);
     });
   });
@@ -424,7 +424,7 @@ describe('<DataGridPro /> - Filter', () => {
     it('should update the filter state when neither the model nor the onChange are set', () => {
       render(
         <TestCase
-          state={{
+          initialState={{
             preferencePanel: {
               open: true,
               openedPanelValue: GridPreferencePanelsValue.filters,
@@ -434,7 +434,7 @@ describe('<DataGridPro /> - Filter', () => {
       );
       const addButton = screen.getByRole('button', { name: /Add Filter/i });
       fireEvent.click(addButton);
-      const filterForms = document.querySelectorAll(`.MuiGridFilterForm-root`);
+      const filterForms = document.querySelectorAll(`.MuiDataGrid-filterForm`);
       expect(filterForms).to.have.length(2);
     });
 
@@ -443,7 +443,7 @@ describe('<DataGridPro /> - Filter', () => {
       render(
         <TestCase
           filterModel={testFilterModel}
-          state={{
+          initialState={{
             preferencePanel: {
               open: true,
               openedPanelValue: GridPreferencePanelsValue.filters,
@@ -453,26 +453,27 @@ describe('<DataGridPro /> - Filter', () => {
       );
       const addButton = screen.getByRole('button', { name: /Add Filter/i });
       fireEvent.click(addButton);
-      const filterForms = document.querySelectorAll(`.MuiGridFilterForm-root`);
+      const filterForms = document.querySelectorAll(`.MuiDataGrid-filterForm`);
       expect(filterForms).to.have.length(0);
     });
 
     it('should update the filter state when the model is not set, but the onChange is set', () => {
       const onModelChange = spy();
-      const { setProps } = render(<TestCase onFilterModelChange={onModelChange} />);
-      expect(onModelChange.callCount).to.equal(0);
-      setProps({
-        state: {
-          preferencePanel: {
-            open: true,
-            openedPanelValue: GridPreferencePanelsValue.filters,
-          },
-        },
-      });
+      render(
+        <TestCase
+          onFilterModelChange={onModelChange}
+          initialState={{
+            preferencePanel: {
+              open: true,
+              openedPanelValue: GridPreferencePanelsValue.filters,
+            },
+          }}
+        />,
+      );
       expect(onModelChange.callCount).to.equal(1);
       const addButton = screen.getByRole('button', { name: /Add Filter/i });
       fireEvent.click(addButton);
-      const filterForms = document.querySelectorAll(`.MuiGridFilterForm-root`);
+      const filterForms = document.querySelectorAll(`.MuiDataGrid-filterForm`);
       expect(filterForms).to.have.length(2);
       expect(onModelChange.callCount).to.equal(2);
       expect(onModelChange.lastCall.firstArg.items.length).to.deep.equal(2);
@@ -495,7 +496,7 @@ describe('<DataGridPro /> - Filter', () => {
               rows={rows || baselineProps.rows}
               filterModel={caseFilterModel}
               onFilterModelChange={handleFilterChange}
-              state={{
+              initialState={{
                 preferencePanel: {
                   open: true,
                   openedPanelValue: GridPreferencePanelsValue.filters,
@@ -511,7 +512,7 @@ describe('<DataGridPro /> - Filter', () => {
       const addButton = screen.getByRole('button', { name: /Add Filter/i });
       fireEvent.click(addButton);
 
-      const filterForms = document.querySelectorAll(`.MuiGridFilterForm-root`);
+      const filterForms = document.querySelectorAll(`.MuiDataGrid-filterForm`);
       expect(filterForms).to.have.length(2);
     });
   });

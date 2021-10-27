@@ -6,16 +6,15 @@ import {
   gridColumnsMetaSelector,
   visibleGridColumnsSelector,
 } from '../columns/gridColumnsSelector';
-import { useGridSelector } from '../core/useGridSelector';
+import { useGridSelector } from '../../utils/useGridSelector';
 import { GridComponentProps } from '../../../GridComponentProps';
 import { gridPaginationSelector } from '../pagination/gridPaginationSelector';
 import { gridRowCountSelector } from '../rows/gridRowsSelector';
 import { gridDensityRowHeightSelector } from '../density/densitySelector';
 import { GridScrollParams } from '../../../models/params/gridScrollParams';
 import { GridScrollApi } from '../../../models/api/gridScrollApi';
-import { gridScrollSelector } from '../virtualization/renderingStateSelector';
-import { useGridApiMethod } from '../../root/useGridApiMethod';
-import { useNativeEventListener } from '../../root/useNativeEventListener';
+import { useGridApiMethod } from '../../utils/useGridApiMethod';
+import { useGridNativeEventListener } from '../../utils/useGridNativeEventListener';
 
 // Logic copied from https://www.w3.org/TR/wai-aria-practices/examples/listbox/js/listbox.js
 // Similar to https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollIntoView
@@ -125,10 +124,12 @@ export const useGridScroll = (
     [windowRef, colRef, logger],
   );
 
-  const getScrollPosition = React.useCallback<GridScrollApi['getScrollPosition']>(
-    () => gridScrollSelector(apiRef.current.state),
-    [apiRef],
-  );
+  const getScrollPosition = React.useCallback<GridScrollApi['getScrollPosition']>(() => {
+    if (!windowRef?.current) {
+      return { top: 0, left: 0 };
+    }
+    return { top: windowRef.current.scrollTop, left: windowRef.current.scrollLeft };
+  }, [windowRef]);
 
   const scrollApi: GridScrollApi = {
     scroll,
@@ -142,16 +143,9 @@ export const useGridScroll = (
     event.target.scrollTop = 0;
   }, []);
 
-  useNativeEventListener(
+  useGridNativeEventListener(
     apiRef,
     () => apiRef.current?.renderingZoneRef?.current?.parentElement,
-    'scroll',
-    preventScroll,
-  );
-
-  useNativeEventListener(
-    apiRef,
-    () => apiRef.current?.columnHeadersContainerElementRef?.current,
     'scroll',
     preventScroll,
   );

@@ -6,7 +6,7 @@ import { GridEditCellProps } from '../gridEditRowModel';
 /**
  * Object passed as parameter in the column [[GridColDef]] cell renderer.
  */
-export interface GridCellParams {
+export interface GridCellParams<V = any, R = any, F = V> {
   /**
    * The grid row id.
    */
@@ -18,15 +18,15 @@ export interface GridCellParams {
   /**
    * The cell value, but if the column has valueGetter, use getValue.
    */
-  value: GridCellValue;
+  value: V;
   /**
    * The cell value formatted with the column valueFormatter.
    */
-  formattedValue: GridCellValue;
+  formattedValue: F;
   /**
    * The row model of the row that the current cell belongs to.
    */
-  row: GridRowModel;
+  row: GridRowModel<R>;
   /**
    * The column of the row that the current cell belongs to.
    */
@@ -59,7 +59,7 @@ export interface GridCellParams {
 /**
  * GridCellParams containing api.
  */
-export interface GridRenderCellParams extends GridCellParams {
+export interface GridRenderCellParams<V = any, R = any, F = V> extends GridCellParams<V, R, F> {
   /**
    * GridApi that let you manipulate the grid.
    */
@@ -80,6 +80,20 @@ export interface GridRenderEditCellParams extends GridEditCellProps {
  * Alias of GridRenderCellParams.
  */
 export type GridValueGetterParams = Omit<GridRenderCellParams, 'formattedValue' | 'isEditable'>;
+
+/**
+ * Object passed as parameter in the column [[GridColDef]] value setter callback.
+ */
+export interface GridValueSetterParams {
+  /**
+   * The new cell value.
+   */
+  value: GridCellValue;
+  /**
+   * The row that is being editted.
+   */
+  row: GridRowModel;
+}
 
 /**
  * Object passed as parameter in the column [[GridColDef]] value formatter callback.

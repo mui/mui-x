@@ -1,4 +1,4 @@
-import { generateUtilityClasses, generateUtilityClass } from './utils/material-ui-utils';
+import { generateUtilityClasses, generateUtilityClass } from '@mui/material';
 
 export interface GridClasses {
   /**
@@ -122,13 +122,45 @@ export interface GridClasses {
    */
   columnSeparator: string;
   /**
-   * Styles applied to the data container element.
+   * Styles applied to the columns panel element.
    */
-  dataContainer: string;
+  columnsPanel: string;
+  /**
+   * Styles applied to the columns panel row element.
+   */
+  columnsPanelRow: string;
+  /**
+   * Styles applied to the panel element.
+   */
+  panel: string;
+  /**
+   * Styles applied to the panel header element.
+   */
+  panelHeader: string;
+  /**
+   * Styles applied to the panel wrapper element.
+   */
+  panelWrapper: string;
+  /**
+   * Styles applied to the panel content element.
+   */
+  panelContent: string;
+  /**
+   * Styles applied to the panel footer element.
+   */
+  panelFooter: string;
+  /**
+   * Styles applied to the paper element.
+   */
+  paper: string;
   /**
    * Styles applied to root of the boolean edit component.
    */
   editBooleanCell: string;
+  /**
+   * Styles applied to the root of the filter form component.
+   */
+  filterForm: string;
   /**
    * Styles applied to the root of the input component.
    */
@@ -154,6 +186,10 @@ export interface GridClasses {
    */
   main: string;
   /**
+   * Styles applied to the menu element.
+   */
+  menu: string;
+  /**
    * Styles applied to the menu icon element.
    */
   menuIcon: string;
@@ -166,13 +202,25 @@ export interface GridClasses {
    */
   menuOpen: string;
   /**
+   * Styles applied to the menu list element.
+   */
+  menuList: string;
+  /**
    * Styles applied to the overlay element.
    */
   overlay: string;
   /**
-   * Styles applied to the rendering zone element.
+   * Styles applied to the virtualization container.
    */
-  renderingZone: string;
+  virtualScroller;
+  /**
+   * Styles applied to the virtualization content.
+   */
+  virtualScrollerContent;
+  /**
+   * Styles applied to the virtualization render zone.
+   */
+  virtualScrollerRenderZone;
   /**
    * Styles applied to the root element.
    */
@@ -200,11 +248,11 @@ export interface GridClasses {
   /**
    * Styles applied to the left scroll area element.
    */
-  scrollAreaLeft: string;
+  'scrollArea--left': string;
   /**
    * Styles applied to the right scroll area element.
    */
-  scrollAreaRight: string;
+  'scrollArea--right': string;
   /**
    * Styles applied to the footer selected row count element.
    */
@@ -218,17 +266,9 @@ export interface GridClasses {
    */
   toolbarContainer: string;
   /**
-   * Styles applied to the viewport element.
+   * Styles applied to the toolbar filter list element.
    */
-  viewport: string;
-  /**
-   * Styles applied to the window element.
-   */
-  window: string;
-  /**
-   * Styles applied to the window container element.
-   */
-  windowContainer: string;
+  toolbarFilterList: string;
   /**
    * Styles applied to both the cell and the column header if `showColumnRightBorder={true}`.
    */
@@ -273,20 +313,28 @@ export const gridClasses = generateUtilityClasses('MuiDataGrid', [
   'columnSeparator--resizable',
   'columnSeparator--resizing',
   'columnSeparator',
-  'dataContainer',
+  'columnsPanel',
+  'columnsPanelRow',
+  'panel',
+  'panelHeader',
+  'panelWrapper',
+  'panelContent',
+  'panelFooter',
+  'paper',
   'editBooleanCell',
   'editInputCell',
+  'filterForm',
   'filterIcon',
   'footerContainer',
   'iconButtonContainer',
   'iconSeparator',
   'main',
+  'menu',
   'menuIcon',
   'menuIconButton',
   'menuOpen',
+  'menuList',
   'overlay',
-  'renderingZone',
-  'root',
   'root',
   'row--editable',
   'row--editing',
@@ -298,8 +346,9 @@ export const gridClasses = generateUtilityClasses('MuiDataGrid', [
   'selectedRowCount',
   'sortIcon',
   'toolbarContainer',
-  'viewport',
-  'window',
-  'windowContainer',
+  'toolbarFilterList',
+  'virtualScroller',
+  'virtualScrollerContent',
+  'virtualScrollerRenderZone',
   'withBorder',
 ]);

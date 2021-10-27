@@ -2,11 +2,9 @@ import * as React from 'react';
 import { GridApiRef } from '../../../models';
 import { GridComponentProps } from '../../../GridComponentProps';
 import { GridPageSizeApi } from '../../../models/api/gridPageSizeApi';
-import { useGridApiMethod } from '../../root';
 import { GridEvents } from '../../../constants/eventsConstants';
-import { useGridLogger } from '../../utils';
-import { useGridSelector, useGridState } from '../core';
-import { gridContainerSizesSelector } from '../../root/gridContainerSizesSelector';
+import { useGridLogger, useGridApiMethod, useGridSelector, useGridState } from '../../utils';
+import { gridContainerSizesSelector } from '../container/gridContainerSizesSelector';
 import { useGridStateInit } from '../../utils/useGridStateInit';
 import { gridPageSizeSelector } from './gridPaginationSelector';
 
@@ -29,7 +27,7 @@ export const useGridPageSize = (
 
   const containerSizes = useGridSelector(apiRef, gridContainerSizesSelector);
 
-  apiRef.current.updateControlState({
+  apiRef.current.unsafe_updateControlState({
     stateId: 'pageSize',
     propModel: props.pageSize,
     propOnChange: props.onPageSizeChange,

@@ -9,17 +9,16 @@ import {
   GridRowId,
   GridRowsProp,
   GridRowIdGetter,
-  GridRowData,
 } from '../../../models/gridRows';
-import { useGridApiMethod } from '../../root/useGridApiMethod';
+import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
-import { useGridState } from '../core/useGridState';
+import { useGridState } from '../../utils/useGridState';
 import { useGridStateInit } from '../../utils/useGridStateInit';
 import { GridRowsState } from './gridRowsState';
 import {
   gridRowCountSelector,
   gridRowsLookupSelector,
-  unorderedGridRowIdsSelector,
+  gridRowIdsSelector,
 } from './gridRowsSelector';
 
 export interface GridRowsInternalCache {
@@ -29,12 +28,12 @@ export interface GridRowsInternalCache {
 }
 
 function getGridRowId(
-  rowData: GridRowData,
+  rowModel: GridRowModel,
   getRowId?: GridRowIdGetter,
   detailErrorMessage?: string,
 ): GridRowId {
-  const id = getRowId ? getRowId(rowData) : rowData.id;
-  checkGridRowIdIsValid(id, rowData, detailErrorMessage);
+  const id = getRowId ? getRowId(rowModel) : rowModel.id;
+  checkGridRowIdIsValid(id, rowModel, detailErrorMessage);
   return id;
 }
 
@@ -66,6 +65,11 @@ export const useGridRows = (
   apiRef: GridApiRef,
   props: Pick<GridComponentProps, 'rows' | 'getRowId' | 'rowCount' | 'throttleRowsMs'>,
 ): void => {
+  if (process.env.NODE_ENV !== 'production') {
+    // Freeze rows for immutability
+    Object.freeze(props.rows);
+  }
+
   const logger = useGridLogger(apiRef, 'useGridRows');
 
   const rowsCache = React.useRef<GridRowsInternalCache>({
@@ -221,7 +225,7 @@ export const useGridRows = (
   );
 
   const getRowModels = React.useCallback<GridRowApi['getRowModels']>(() => {
-    const allRows = unorderedGridRowIdsSelector(apiRef.current.state);
+    const allRows = gridRowIdsSelector(apiRef.current.state);
     const idRowsLookup = gridRowsLookupSelector(apiRef.current.state);
 
     return new Map(allRows.map((id) => [id, idRowsLookup[id]]));
@@ -233,7 +237,7 @@ export const useGridRows = (
   );
 
   const getAllRowIds = React.useCallback<GridRowApi['getAllRowIds']>(
-    () => unorderedGridRowIdsSelector(apiRef.current.state),
+    () => gridRowIdsSelector(apiRef.current.state),
     [apiRef],
   );
 

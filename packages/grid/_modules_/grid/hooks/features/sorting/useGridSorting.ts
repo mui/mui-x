@@ -17,15 +17,15 @@ import {
 } from '../../../models/gridSortModel';
 import { isDesc, nextGridSortDirection } from '../../../utils/sortingUtils';
 import { isEnterKey } from '../../../utils/keyboardUtils';
-import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
-import { useGridApiMethod } from '../../root/useGridApiMethod';
+import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
+import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { allGridColumnsSelector } from '../columns/gridColumnsSelector';
-import { useGridState } from '../core/useGridState';
+import { useGridState } from '../../utils/useGridState';
 import {
   gridSortModelSelector,
-  sortedGridRowIdsSelector,
-  sortedGridRowsSelector,
+  gridSortedRowIdsSelector,
+  gridSortedRowEntriesSelector,
 } from './gridSortingSelector';
 import { useGridStateInit } from '../../utils/useGridStateInit';
 import { useFirstRender } from '../../utils/useFirstRender';
@@ -39,6 +39,7 @@ export const useGridSorting = (
   apiRef: GridApiRef,
   props: Pick<
     GridComponentProps,
+    | 'initialState'
     | 'sortModel'
     | 'onSortModelChange'
     | 'sortingOrder'
@@ -51,14 +52,14 @@ export const useGridSorting = (
   useGridStateInit(apiRef, (state) => ({
     ...state,
     sorting: {
-      sortModel: props.sortModel ?? [],
+      sortModel: props.sortModel ?? props.initialState?.sorting?.sortModel ?? [],
       sortedRows: [],
     },
   }));
 
   const [, setGridState, forceUpdate] = useGridState(apiRef);
 
-  apiRef.current.updateControlState({
+  apiRef.current.unsafe_updateControlState({
     stateId: 'sortModel',
     propModel: props.sortModel,
     propOnChange: props.onSortModelChange,
@@ -246,13 +247,13 @@ export const useGridSorting = (
     [apiRef],
   );
 
-  const getSortedRows = React.useCallback<GridSortApi['getSortedRows']>(
-    () => Object.values(sortedGridRowsSelector(apiRef.current.state)),
-    [apiRef],
-  );
+  const getSortedRows = React.useCallback<GridSortApi['getSortedRows']>(() => {
+    const sortedRows = gridSortedRowEntriesSelector(apiRef.current.state);
+    return sortedRows.map((row) => row.model);
+  }, [apiRef]);
 
   const getSortedRowIds = React.useCallback<GridSortApi['getSortedRowIds']>(
-    () => sortedGridRowIdsSelector(apiRef.current.state),
+    () => gridSortedRowIdsSelector(apiRef.current.state),
     [apiRef],
   );
 

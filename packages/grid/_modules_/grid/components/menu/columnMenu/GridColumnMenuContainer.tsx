@@ -4,6 +4,7 @@ import * as React from 'react';
 import MenuList from '@mui/material/MenuList';
 import { isHideMenuKey, isTabKey } from '../../../utils/keyboardUtils';
 import { GridColumnMenuProps } from './GridColumnMenuProps';
+import { gridClasses } from '../../../gridClasses';
 
 const GridColumnMenuContainer = React.forwardRef<HTMLUListElement, GridColumnMenuProps>(
   function GridColumnMenuContainer(props: GridColumnMenuProps, ref) {
@@ -25,7 +26,7 @@ const GridColumnMenuContainer = React.forwardRef<HTMLUListElement, GridColumnMen
       <MenuList
         id={id}
         ref={ref}
-        className={clsx('MuiDataGrid-gridMenuList', className)}
+        className={clsx(gridClasses.menuList, className)}
         aria-labelledby={labelledby}
         onKeyDown={handleListKeyDown}
         autoFocus={open}

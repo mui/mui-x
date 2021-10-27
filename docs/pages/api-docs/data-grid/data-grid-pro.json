@@ -1,0 +1,294 @@
+{
+  "props": {
+    "columns": {
+      "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" },
+      "required": true
+    },
+    "rows": {
+      "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" },
+      "required": true
+    },
+    "apiRef": { "type": { "name": "shape", "description": "{ current: object }" } },
+    "aria-label": { "type": { "name": "string" } },
+    "aria-labelledby": { "type": { "name": "string" } },
+    "autoHeight": { "type": { "name": "bool" } },
+    "autoPageSize": { "type": { "name": "bool" } },
+    "checkboxSelection": { "type": { "name": "bool" } },
+    "checkboxSelectionVisibleOnly": {
+      "type": { "name": "custom", "description": "bool" },
+      "default": "false"
+    },
+    "classes": { "type": { "name": "object" } },
+    "columnBuffer": { "type": { "name": "number" }, "default": "3" },
+    "columnThreshold": { "type": { "name": "number" }, "default": "3" },
+    "columnTypes": { "type": { "name": "object" } },
+    "components": { "type": { "name": "object" } },
+    "componentsProps": { "type": { "name": "object" } },
+    "density": {
+      "type": {
+        "name": "enum",
+        "description": "'comfortable'<br>&#124;&nbsp;'compact'<br>&#124;&nbsp;'standard'"
+      },
+      "default": "\"standard\""
+    },
+    "disableColumnFilter": { "type": { "name": "bool" } },
+    "disableColumnMenu": { "type": { "name": "bool" } },
+    "disableColumnReorder": { "type": { "name": "bool" } },
+    "disableColumnResize": { "type": { "name": "bool" } },
+    "disableColumnSelector": { "type": { "name": "bool" } },
+    "disableDensitySelector": { "type": { "name": "bool" } },
+    "disableExtendRowFullWidth": { "type": { "name": "bool" } },
+    "disableMultipleColumnsFiltering": { "type": { "name": "bool" } },
+    "disableMultipleColumnsSorting": { "type": { "name": "bool" } },
+    "disableMultipleSelection": { "type": { "name": "bool" } },
+    "disableSelectionOnClick": { "type": { "name": "bool" } },
+    "disableVirtualization": { "type": { "name": "bool" } },
+    "editMode": {
+      "type": { "name": "enum", "description": "'cell'<br>&#124;&nbsp;'row'" },
+      "default": "\"cell\""
+    },
+    "editRowsModel": { "type": { "name": "object" } },
+    "error": { "type": { "name": "any" } },
+    "filterMode": {
+      "type": { "name": "enum", "description": "'client'<br>&#124;&nbsp;'server'" },
+      "default": "\"client\""
+    },
+    "filterModel": {
+      "type": {
+        "name": "shape",
+        "description": "{ items: Array&lt;{ columnField?: string, id?: number<br>&#124;&nbsp;string, operatorValue?: string, value?: any }&gt;, linkOperator?: 'and'<br>&#124;&nbsp;'or' }"
+      }
+    },
+    "getCellClassName": { "type": { "name": "func" } },
+    "getRowClassName": { "type": { "name": "func" } },
+    "getRowId": { "type": { "name": "func" } },
+    "headerHeight": { "type": { "name": "number" }, "default": "56" },
+    "hideFooter": { "type": { "name": "bool" } },
+    "hideFooterPagination": { "type": { "name": "bool" } },
+    "hideFooterRowCount": {
+      "type": { "name": "custom", "description": "bool" },
+      "default": "false"
+    },
+    "hideFooterSelectedRowCount": { "type": { "name": "bool" } },
+    "initialState": { "type": { "name": "object" } },
+    "isCellEditable": { "type": { "name": "func" } },
+    "isRowSelectable": { "type": { "name": "func" } },
+    "loading": { "type": { "name": "bool" } },
+    "localeText": { "type": { "name": "object" } },
+    "logger": {
+      "type": {
+        "name": "shape",
+        "description": "{ debug: func, error: func, info: func, warn: func }"
+      },
+      "default": "console"
+    },
+    "logLevel": {
+      "type": {
+        "name": "enum",
+        "description": "'debug'<br>&#124;&nbsp;'error'<br>&#124;&nbsp;'info'<br>&#124;&nbsp;'warn'<br>&#124;&nbsp;false"
+      },
+      "default": "\"debug\""
+    },
+    "nonce": { "type": { "name": "string" } },
+    "onCellClick": { "type": { "name": "func" } },
+    "onCellDoubleClick": { "type": { "name": "func" } },
+    "onCellEditCommit": { "type": { "name": "func" } },
+    "onCellEditStart": { "type": { "name": "func" } },
+    "onCellEditStop": { "type": { "name": "func" } },
+    "onCellFocusOut": { "type": { "name": "func" } },
+    "onCellKeyDown": { "type": { "name": "func" } },
+    "onCellValueChange": { "type": { "name": "func" } },
+    "onColumnHeaderClick": { "type": { "name": "func" } },
+    "onColumnHeaderDoubleClick": { "type": { "name": "func" } },
+    "onColumnHeaderEnter": { "type": { "name": "func" } },
+    "onColumnHeaderLeave": { "type": { "name": "func" } },
+    "onColumnHeaderOut": { "type": { "name": "func" } },
+    "onColumnHeaderOver": { "type": { "name": "func" } },
+    "onColumnOrderChange": { "type": { "name": "func" } },
+    "onColumnResize": { "type": { "name": "func" } },
+    "onColumnVisibilityChange": { "type": { "name": "func" } },
+    "onColumnWidthChange": { "type": { "name": "func" } },
+    "onEditCellPropsChange": { "type": { "name": "func" } },
+    "onEditRowsModelChange": { "type": { "name": "func" } },
+    "onError": { "type": { "name": "func" } },
+    "onFilterModelChange": { "type": { "name": "func" } },
+    "onPageChange": { "type": { "name": "func" } },
+    "onPageSizeChange": { "type": { "name": "func" } },
+    "onResize": { "type": { "name": "func" } },
+    "onRowClick": { "type": { "name": "func" } },
+    "onRowDoubleClick": { "type": { "name": "func" } },
+    "onRowEditCommit": { "type": { "name": "func" } },
+    "onRowEditStart": { "type": { "name": "func" } },
+    "onRowEditStop": { "type": { "name": "func" } },
+    "onRowsScrollEnd": { "type": { "name": "func" } },
+    "onSelectionModelChange": { "type": { "name": "func" } },
+    "onSortModelChange": { "type": { "name": "func" } },
+    "onStateChange": { "type": { "name": "func" } },
+    "page": { "type": { "name": "number" }, "default": "0" },
+    "pageSize": { "type": { "name": "number" }, "default": "100" },
+    "pagination": { "type": { "name": "bool" } },
+    "paginationMode": {
+      "type": { "name": "enum", "description": "'client'<br>&#124;&nbsp;'server'" },
+      "default": "\"client\""
+    },
+    "rowBuffer": { "type": { "name": "number" }, "default": "3" },
+    "rowCount": { "type": { "name": "number" } },
+    "rowHeight": { "type": { "name": "number" }, "default": "52" },
+    "rowsPerPageOptions": {
+      "type": { "name": "arrayOf", "description": "Array&lt;number&gt;" },
+      "default": "[25, 50, 100]"
+    },
+    "rowThreshold": { "type": { "name": "number" }, "default": "3" },
+    "scrollbarSize": { "type": { "name": "number" } },
+    "scrollEndThreshold": { "type": { "name": "number" } },
+    "selectionModel": {
+      "type": {
+        "name": "union",
+        "description": "Array&lt;number<br>&#124;&nbsp;string&gt;<br>&#124;&nbsp;number<br>&#124;&nbsp;string"
+      }
+    },
+    "showCellRightBorder": { "type": { "name": "bool" } },
+    "showColumnRightBorder": { "type": { "name": "bool" } },
+    "sortingMode": {
+      "type": { "name": "enum", "description": "'client'<br>&#124;&nbsp;'server'" },
+      "default": "\"client\""
+    },
+    "sortingOrder": {
+      "type": { "name": "arrayOf", "description": "Array&lt;'asc'<br>&#124;&nbsp;'desc'&gt;" },
+      "default": "['asc', 'desc', null]"
+    },
+    "sortModel": {
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;{ field: string, sort?: 'asc'<br>&#124;&nbsp;'desc' }&gt;"
+      }
+    },
+    "throttleRowsMs": { "type": { "name": "number" }, "default": "0" }
+  },
+  "slots": {
+    "BooleanCellFalseIcon": { "default": "GridCloseIcon", "type": { "name": "elementType" } },
+    "BooleanCellTrueIcon": { "default": "GridCheckIcon", "type": { "name": "elementType" } },
+    "Cell": { "type": { "name": "elementType" } },
+    "Checkbox": { "default": "Checkbox", "type": { "name": "elementType" } },
+    "ColumnFilteredIcon": { "default": "GridFilterAltIcon", "type": { "name": "elementType" } },
+    "ColumnMenu": { "default": "GridColumnMenu", "type": { "name": "elementType" } },
+    "ColumnMenuIcon": {
+      "default": "GridTripleDotsVerticalIcon",
+      "type": { "name": "elementType" }
+    },
+    "ColumnResizeIcon": { "default": "GridSeparatorIcon", "type": { "name": "elementType" } },
+    "ColumnSelectorIcon": { "default": "GridColumnIcon", "type": { "name": "elementType" } },
+    "ColumnSortedAscendingIcon": {
+      "default": "GridArrowUpwardIcon",
+      "type": { "name": "elementType | null" }
+    },
+    "ColumnSortedDescendingIcon": {
+      "default": "GridArrowDownwardIcon",
+      "type": { "name": "elementType | null" }
+    },
+    "ColumnsPanel": { "default": "GridColumnsPanel", "type": { "name": "elementType" } },
+    "ColumnUnsortedIcon": {
+      "default": "GridColumnUnsortedIcon",
+      "type": { "name": "elementType | null" }
+    },
+    "DensityComfortableIcon": {
+      "default": "GridViewStreamIcon",
+      "type": { "name": "elementType" }
+    },
+    "DensityCompactIcon": { "default": "GridViewHeadlineIcon", "type": { "name": "elementType" } },
+    "DensityStandardIcon": { "default": "GridTableRowsIcon", "type": { "name": "elementType" } },
+    "ErrorOverlay": { "default": "ErrorOverlay", "type": { "name": "elementType" } },
+    "ExportIcon": { "default": "GridSaveAltIcon", "type": { "name": "elementType" } },
+    "FilterPanel": { "default": "GridFilterPanel", "type": { "name": "elementType" } },
+    "Footer": { "default": "GridFooter", "type": { "name": "elementType" } },
+    "Header": { "default": "GridHeader", "type": { "name": "elementType" } },
+    "LoadingOverlay": { "default": "GridLoadingOverlay", "type": { "name": "elementType" } },
+    "MoreActionsIcon": { "default": "GridMoreVertIcon", "type": { "name": "elementType" } },
+    "NoResultsOverlay": { "default": "GridNoResultsOverlay", "type": { "name": "elementType" } },
+    "NoRowsOverlay": { "default": "GridNoRowsOverlay", "type": { "name": "elementType" } },
+    "OpenFilterButtonIcon": { "default": "GridFilterListIcon", "type": { "name": "elementType" } },
+    "Pagination": { "default": "Pagination", "type": { "name": "elementType | null" } },
+    "Panel": { "default": "GridPanel", "type": { "name": "elementType" } },
+    "PreferencesPanel": { "default": "GridPreferencesPanel", "type": { "name": "elementType" } },
+    "Row": { "type": { "name": "elementType" } },
+    "Toolbar": { "default": "null", "type": { "name": "elementType | null" } }
+  },
+  "name": "DataGridPro",
+  "styles": {
+    "classes": [
+      "autoHeight",
+      "booleanCell",
+      "cell--editable",
+      "cell--editing",
+      "cell--textCenter",
+      "cell--textLeft",
+      "cell--textRight",
+      "cell--withRenderer",
+      "cell",
+      "cellCheckbox",
+      "checkboxInput",
+      "columnHeader--alignCenter",
+      "columnHeader--alignLeft",
+      "columnHeader--alignRight",
+      "columnHeader--dragging",
+      "columnHeader--moving",
+      "columnHeader--numeric",
+      "columnHeader--sortable",
+      "columnHeader--sorted",
+      "columnHeader",
+      "columnHeaderCheckbox",
+      "columnHeaderDraggableContainer",
+      "columnHeaderDropZone",
+      "columnHeaderTitle",
+      "columnHeaderTitleContainer",
+      "columnHeaderWrapper",
+      "columnsContainer",
+      "columnSeparator--resizable",
+      "columnSeparator--resizing",
+      "columnSeparator",
+      "columnsPanel",
+      "columnsPanelRow",
+      "panel",
+      "panelHeader",
+      "panelWrapper",
+      "panelContent",
+      "panelFooter",
+      "paper",
+      "editBooleanCell",
+      "filterForm",
+      "editInputCell",
+      "filterIcon",
+      "footerContainer",
+      "iconButtonContainer",
+      "iconSeparator",
+      "main",
+      "menu",
+      "menuIcon",
+      "menuIconButton",
+      "menuOpen",
+      "menuList",
+      "overlay",
+      "virtualScroller",
+      "virtualScrollerContent",
+      "virtualScrollerRenderZone",
+      "root",
+      "row--editable",
+      "row--editing",
+      "row",
+      "rowCount",
+      "scrollArea",
+      "scrollArea--left",
+      "scrollArea--right",
+      "selectedRowCount",
+      "sortIcon",
+      "toolbarContainer",
+      "toolbarFilterList",
+      "withBorder"
+    ],
+    "globalClasses": {},
+    "name": "MuiDataGrid"
+  },
+  "forwardsRefTo": "GridRoot",
+  "filename": "/packages/grid/x-grid/src/DataGridPro.tsx",
+  "demos": "<ul><li><a href=\"/components/data-grid#commercial-version\">DataGridPro</a></li></ul>"
+}

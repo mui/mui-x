@@ -1,8 +1,7 @@
 import * as React from 'react';
-import { ownerDocument } from '@mui/material/utils';
+import { ownerDocument, useEventCallback } from '@mui/material/utils';
 import { GridStateColDef } from '../../../models/colDef';
 import { useGridLogger } from '../../utils';
-import { useEventCallback } from '../../../utils/material-ui-utils';
 import { GridEvents } from '../../../constants/eventsConstants';
 import { gridClasses } from '../../../gridClasses';
 import {
@@ -12,9 +11,12 @@ import {
   findHeaderElementFromField,
 } from '../../../utils/domUtils';
 import { GridApiRef, CursorCoordinates, GridColumnHeaderParams } from '../../../models';
-import { useGridApiEventHandler, useGridApiOptionHandler } from '../../root/useGridApiEventHandler';
-import { useGridState } from '../core/useGridState';
-import { useNativeEventListener } from '../../root/useNativeEventListener';
+import {
+  useGridApiEventHandler,
+  useGridApiOptionHandler,
+} from '../../utils/useGridApiEventHandler';
+import { useGridState } from '../../utils/useGridState';
+import { useGridNativeEventListener } from '../../utils/useGridNativeEventListener';
 import { GridComponentProps } from '../../../GridComponentProps';
 import { useGridStateInit } from '../../utils/useGridStateInit';
 
@@ -103,7 +105,7 @@ export const useGridColumnResize = (
     });
   };
 
-  const handleResizeMouseUp = useEventCallback((nativeEvent) => {
+  const handleResizeMouseUp = useEventCallback((nativeEvent: any) => {
     // eslint-disable-next-line @typescript-eslint/no-use-before-define
     stopListening();
 
@@ -128,7 +130,7 @@ export const useGridColumnResize = (
     );
   });
 
-  const handleResizeMouseMove = useEventCallback((nativeEvent) => {
+  const handleResizeMouseMove = useEventCallback((nativeEvent: any) => {
     // Cancel move in case some other element consumed a mouseup event and it was not fired.
     if (nativeEvent.buttons === 0) {
       handleResizeMouseUp(nativeEvent);
@@ -197,7 +199,7 @@ export const useGridColumnResize = (
     },
   );
 
-  const handleTouchEnd = useEventCallback((nativeEvent) => {
+  const handleTouchEnd = useEventCallback((nativeEvent: any) => {
     const finger = trackFinger(nativeEvent, touchId.current);
 
     if (!finger) {
@@ -219,7 +221,7 @@ export const useGridColumnResize = (
     );
   });
 
-  const handleTouchMove = useEventCallback((nativeEvent) => {
+  const handleTouchMove = useEventCallback((nativeEvent: any) => {
     const finger = trackFinger(nativeEvent, touchId.current);
     if (!finger) {
       return;
@@ -249,7 +251,7 @@ export const useGridColumnResize = (
     );
   });
 
-  const handleTouchStart = useEventCallback((event) => {
+  const handleTouchStart = useEventCallback((event: any) => {
     const cellSeparator = findParentElementFromClassName(
       event.target,
       gridClasses['columnSeparator--resizable'],
@@ -332,7 +334,7 @@ export const useGridColumnResize = (
     };
   }, [apiRef, handleTouchStart, stopListening]);
 
-  useNativeEventListener(
+  useGridNativeEventListener(
     apiRef,
     () => apiRef.current.columnHeadersElementRef?.current,
     'touchstart',
