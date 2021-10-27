@@ -387,15 +387,15 @@ export function CommodityAutoPageSizeSnap() {
   );
 }
 const xyRows = [
-  { id: 1, height: 1, width: 1 },
-  { id: 2, height: 1, width: 2 },
-  { id: 3, height: 1, width: 3 },
-  { id: 4, height: 1, width: 4 },
-  { id: 5, height: 1, width: 5 },
-  { id: 6, height: 1, width: 6 },
-  { id: 7, height: 1, width: 7 },
-  { id: 8, height: 1, width: 8 },
-  { id: 9, height: 1, width: 9 },
+  { id: 1, x: 1, y: 1 },
+  { id: 2, x: 1, y: 2 },
+  { id: 3, x: 1, y: 3 },
+  { id: 4, x: 1, y: 4 },
+  { id: 5, x: 1, y: 5 },
+  { id: 6, x: 1, y: 6 },
+  { id: 7, x: 1, y: 7 },
+  { id: 8, x: 1, y: 8 },
+  { id: 9, x: 1, y: 9 },
 ];
 
 const xyColumns = [
