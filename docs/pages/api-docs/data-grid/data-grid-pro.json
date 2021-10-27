@@ -277,6 +277,8 @@
       "row",
       "rowCount",
       "scrollArea",
+      "scrollArea--left",
+      "scrollArea--right",
       "selectedRowCount",
       "sortIcon",
       "toolbarContainer",

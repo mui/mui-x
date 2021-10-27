@@ -52,6 +52,8 @@ export const GridRootStyles = styled('div', {
     { [`& .${gridClasses.row}`]: styles.row },
     { [`& .${gridClasses.rowCount}`]: styles.rowCount },
     { [`& .${gridClasses.scrollArea}`]: styles.scrollArea },
+    { [`& .${gridClasses['scrollArea--left']}`]: styles['scrollArea--left'] },
+    { [`& .${gridClasses['scrollArea--right']}`]: styles['scrollArea--right'] },
     { [`& .${gridClasses.selectedRowCount}`]: styles.selectedRowCount },
     { [`& .${gridClasses.sortIcon}`]: styles.sortIcon },
     { [`& .${gridClasses.withBorder}`]: styles.withBorder },

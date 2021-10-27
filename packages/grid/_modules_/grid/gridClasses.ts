@@ -246,6 +246,14 @@ export interface GridClasses {
    */
   scrollArea: string;
   /**
+   * Styles applied to the left scroll area element.
+   */
+  'scrollArea--left': string;
+  /**
+   * Styles applied to the right scroll area element.
+   */
+  'scrollArea--right': string;
+  /**
    * Styles applied to the footer selected row count element.
    */
   selectedRowCount: string;
