@@ -94,7 +94,7 @@ export function useGridDimensions(
     const windowDimensions: ElementSize = {
       height: windowBoundingClientRect.height,
       width: windowBoundingClientRect.width,
-    }
+    };
 
     let scrollBarSize: number;
     if (props.scrollbarSize != null) {

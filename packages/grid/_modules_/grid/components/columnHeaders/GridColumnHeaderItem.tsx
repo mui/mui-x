@@ -242,8 +242,6 @@ GridColumnHeaderItem.propTypes = {
   extendRowFullWidth: PropTypes.bool.isRequired,
   filterItemsCounter: PropTypes.number,
   hasFocus: PropTypes.bool,
-  hasScrollX: PropTypes.bool.isRequired,
-  hasScrollY: PropTypes.bool.isRequired,
   headerHeight: PropTypes.number.isRequired,
   isDragging: PropTypes.bool.isRequired,
   isLastColumn: PropTypes.bool.isRequired,

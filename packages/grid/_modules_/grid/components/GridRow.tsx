@@ -254,7 +254,6 @@ GridRow.propTypes = {
   row: PropTypes.object.isRequired,
   rowHeight: PropTypes.number.isRequired,
   rowId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-  scrollBarState: PropTypes.object.isRequired,
   selected: PropTypes.bool.isRequired,
   visibleColumns: PropTypes.arrayOf(PropTypes.object).isRequired,
 } as any;
