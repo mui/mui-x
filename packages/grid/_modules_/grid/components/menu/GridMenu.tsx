@@ -42,7 +42,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 const StyledPopper = styled(Popper, {
   name: 'MuiDataGrid',
   slot: 'Menu',
-  overridesResolver: (props, styles) => styles.root,
+  overridesResolver: (props, styles) => styles.menu,
 })(({ theme }) => ({
   zIndex: theme.zIndex.modal,
   [`& .${gridClasses.menuList}`]: {

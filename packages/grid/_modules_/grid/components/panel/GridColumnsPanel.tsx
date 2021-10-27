@@ -35,7 +35,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 const GridColumnsPanelRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'ColumnsPanel',
-  overridesResolver: (props, styles) => styles.root,
+  overridesResolver: (props, styles) => styles.columnsPanel,
 })(() => ({
   padding: '8px 0px 8px 8px',
 }));
@@ -43,7 +43,7 @@ const GridColumnsPanelRoot = styled('div', {
 const GridColumnsPanelRowRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'ColumnsPanelRow',
-  overridesResolver: (props, styles) => styles.root,
+  overridesResolver: (props, styles) => styles.columnsPanelRow,
 })(({ theme }) => ({
   display: 'flex',
   justifyContent: 'space-between',
