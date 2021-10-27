@@ -5,4 +5,5 @@ export interface GridFilterInputValueProps {
   applyValue: (value: GridFilterItem) => void;
   // Is any because if typed as GridApiRef a dep cycle occurs. Same happens if ApiContext is used.
   apiRef: any;
+  autoFocus?: boolean;
 }

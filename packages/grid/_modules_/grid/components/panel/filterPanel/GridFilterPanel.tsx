@@ -63,6 +63,7 @@ export function GridFilterPanel() {
             multiFilterOperator={filterModel.linkOperator}
             disableMultiFilterOperator={index !== 1}
             applyMultiFilterOperatorChanges={applyFilterLinkOperator}
+            isLastFilter={index === filterModel.items.length - 1}
           />
         ))}
       </GridPanelContent>

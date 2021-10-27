@@ -23,6 +23,7 @@ export interface GridFilterFormProps {
   showMultiFilterOperators?: boolean;
   multiFilterOperator?: GridLinkOperator;
   disableMultiFilterOperator?: boolean;
+  isLastFilter?: boolean;
   applyFilterChanges: (item: GridFilterItem) => void;
   applyMultiFilterOperatorChanges: (operator: GridLinkOperator) => void;
   deleteFilter: (item: GridFilterItem) => void;
@@ -60,6 +61,7 @@ function GridFilterForm(props: GridFilterFormProps) {
     showMultiFilterOperators,
     disableMultiFilterOperator,
     applyMultiFilterOperatorChanges,
+    isLastFilter,
   } = props;
   const apiRef = useGridApiContext();
   const filterableColumns = useGridSelector(apiRef, filterableGridColumnsSelector);
@@ -219,6 +221,7 @@ function GridFilterForm(props: GridFilterFormProps) {
             apiRef={apiRef}
             item={item}
             applyValue={applyFilterChanges}
+            autoFocus={isLastFilter}
             {...currentOperator.InputComponentProps}
           />
         ) : null}

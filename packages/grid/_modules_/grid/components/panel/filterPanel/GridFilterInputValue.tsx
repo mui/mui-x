@@ -32,25 +32,30 @@ export interface GridTypeFilterInputValueProps extends GridFilterInputValueProps
 }
 
 function GridFilterInputValue(props: GridTypeFilterInputValueProps & TextFieldProps) {
-  const { item, applyValue, type, apiRef, ...others } = props;
+  const { item, applyValue, type, apiRef, autoFocus, ...others } = props;
   const filterTimeout = React.useRef<any>();
+  const inputRef = React.useRef<any>();
   const [filterValueState, setFilterValueState] = React.useState(item.value ?? '');
   const [applying, setIsApplying] = React.useState(false);
   const id = useId();
   const singleSelectProps: TextFieldProps =
     type === 'singleSelect'
       ? {
-          select: true,
-          SelectProps: {
-            native: true,
-          },
-          children: renderSingleSelectOptions(
-            apiRef.current.getColumn(item.columnField),
-            apiRef.current,
-          ),
-        }
+        select: true,
+        SelectProps: {
+          native: true,
+        },
+        children: renderSingleSelectOptions(
+          apiRef.current.getColumn(item.columnField),
+          apiRef.current,
+        ),
+      }
       : {};
-
+  React.useEffect(() => {
+    if (autoFocus) {
+      inputRef.current.focus();
+    }
+  }, [autoFocus]);
   const onFilterChange = React.useCallback(
     (event) => {
       let value = event.target.value;
@@ -110,6 +115,7 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps & TextFieldPr
       InputLabelProps={{
         shrink: true,
       }}
+      inputRef={inputRef}
       {...singleSelectProps}
       {...others}
     />
