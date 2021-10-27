@@ -246,14 +246,6 @@ export interface GridClasses {
    */
   scrollArea: string;
   /**
-   * Styles applied to the left scroll area element.
-   */
-  scrollAreaLeft: string;
-  /**
-   * Styles applied to the right scroll area element.
-   */
-  scrollAreaRight: string;
-  /**
    * Styles applied to the footer selected row count element.
    */
   selectedRowCount: string;
@@ -269,14 +261,6 @@ export interface GridClasses {
    * Styles applied to the toolbar filter list element.
    */
   toolbarFilterList: string;
-  /**
-   * Styles applied to the viewport element.
-   */
-  viewport: string;
-  /**
-   * Styles applied to the window element.
-   */
-  window: string;
   /**
    * Styles applied to both the cell and the column header if `showColumnRightBorder={true}`.
    */
