@@ -271,7 +271,7 @@ const GridVirtualScroller = React.forwardRef<HTMLDivElement, GridVirtualScroller
       const rows: JSX.Element[] = [];
 
       for (let i = 0; i < renderedRows.length; i += 1) {
-        const { model, id } = renderedRows[i];
+        const { id, model } = renderedRows[i];
 
         rows.push(
           <rootProps.components.Row

@@ -28,11 +28,6 @@ export interface GridRowTreeNodeConfig {
   children?: GridRowId[];
 
   /**
-   * Amount of descendants (children, children's children, ...) before the filtering.
-   */
-  descendantCount?: number;
-
-  /**
    * The row id of the parent (null if this row is a top level row).
    */
   parent: GridRowId | null;

@@ -4,7 +4,7 @@ import * as fse from 'fs-extra';
 import path from 'path';
 import kebabCase from 'lodash/kebabCase';
 import fromPairs from 'lodash/fromPairs';
-import { parse as parseDoctrine } from 'doctrine';
+import { parse as parseDoctrine, Annotation } from 'doctrine';
 import { defaultHandlers, parse as docgenParse, ReactDocgenApi } from 'react-docgen';
 import * as prettier from 'prettier';
 import { findPagesMarkdown } from 'docs/src/modules/utils/find';
@@ -53,26 +53,47 @@ interface ReactApi extends ReactDocgenApi {
   slots: Record<string, { default: string | undefined; type: { name: string | undefined } }>;
 }
 
+const isUnionType = (type: TypeDoc.Type): type is TypeDoc.UnionType => type.type === 'union';
+
+const isIntrinsicType = (type: TypeDoc.Type): type is TypeDoc.IntrinsicType =>
+  type.type === 'intrinsic';
+
+const isLiteralType = (type: TypeDoc.Type): type is TypeDoc.LiteralType => type.type === 'literal';
+
+const isArrayType = (type: TypeDoc.Type): type is TypeDoc.ArrayType => type.type === 'array';
+
+const isReflectionType = (type: TypeDoc.Type): type is TypeDoc.ReflectionType =>
+  type.type === 'reflection';
+
+const isReferenceType = (type: TypeDoc.Type): type is TypeDoc.ReferenceType =>
+  type.type === 'reference';
+
+const isIndexedAccessType = (type: TypeDoc.Type): type is TypeDoc.IndexedAccessType =>
+  type.type === 'indexedAccess';
+
+const isTypeOperatorType = (type: TypeDoc.Type): type is TypeDoc.TypeOperatorType =>
+  type.type === 'typeOperator';
+
 // Based on https://github.com/TypeStrong/typedoc-default-themes/blob/master/src/default/partials/type.hbs
-function generateType(type, needsParenthesis = false) {
-  if (type.type === 'union') {
+function generateTypeStr(type: TypeDoc.Type, needsParenthesis = false): string {
+  if (isUnionType(type)) {
     let text = needsParenthesis ? '(' : '';
-    text += type.types.map((childType) => generateType(childType, true)).join(' | ');
+    text += type.types.map((childType) => generateTypeStr(childType, true)).join(' | ');
     return needsParenthesis ? `${text})` : text;
   }
-  if (type.type === 'intrinsic') {
+  if (isIntrinsicType(type)) {
     return type.name;
   }
-  if (type.type === 'literal') {
+  if (isLiteralType(type)) {
     return `${type.value}`;
   }
-  if (type.type === 'array') {
-    return `${generateType(type.elementType, true)}[]`;
+  if (isArrayType(type)) {
+    return `${generateTypeStr(type.elementType, true)}[]`;
   }
-  if (type.type === 'reflection') {
+  if (isReflectionType(type)) {
     if (type.declaration.signatures && type.declaration.signatures.length === 1) {
       // eslint-disable-next-line @typescript-eslint/no-use-before-define
-      return generateSignature(type.declaration.signatures[0], needsParenthesis);
+      return generateSignatureStr(type.declaration.signatures[0], needsParenthesis);
     }
     if (type.declaration.children) {
       let text = '{ ';
@@ -82,40 +103,45 @@ function generateType(type, needsParenthesis = false) {
           if (child.flags.isOptional) {
             memberText += '?';
           }
-          return `${memberText}: ${child.type ? generateType(child.type) : 'any'}`;
+          return `${memberText}: ${child.type ? generateTypeStr(child.type) : 'any'}`;
         })
         .join('; ');
       text += ' }';
       return text;
     }
-    if (type.declaration.indexSignature) {
-      const param = type.declaration.indexSignature.parameters[0];
+
+    const param = type.declaration.indexSignature?.parameters?.[0];
+    const indexSignatureType = type.declaration.indexSignature?.type;
+
+    if (param) {
       const paramName = param.name;
-      const paramType = generateType(param.type);
-      const valueType = generateType(type.declaration.indexSignature.type);
+      const paramType = param.type ? generateTypeStr(param.type) : 'any';
+      const valueType = indexSignatureType ? generateTypeStr(indexSignatureType) : 'any';
       return `{ [${paramName}: ${paramType}]: ${valueType} }`;
     }
+
+    return '';
   }
-  if (type.type === 'reference') {
+  if (isReferenceType(type)) {
     let text = type.name;
     if (type.typeArguments) {
       text += `<`;
-      text += type.typeArguments.map((arg) => generateType(arg)).join(', ');
+      text += type.typeArguments.map((arg) => generateTypeStr(arg)).join(', ');
       text += `>`;
     }
     return text;
   }
-  if (type.type === 'indexedAccess') {
-    return `${generateType(type.objectType)}[${generateType(type.indexType)}]`;
+  if (isIndexedAccessType(type)) {
+    return `${generateTypeStr(type.objectType)}[${generateTypeStr(type.indexType)}]`;
   }
-  if (type.type === 'typeOperator') {
-    return `${type.operator} ${generateType(type.target)}`;
+  if (isTypeOperatorType(type)) {
+    return `${type.operator} ${generateTypeStr(type.target)}`;
   }
 
   return '';
 }
 
-function generateSignature(signature, needsParenthesis = false) {
+function generateSignatureStr(signature: TypeDoc.SignatureReflection, needsParenthesis = false) {
   let text = needsParenthesis ? '(' : '';
   if (signature.typeParameters?.length) {
     // Handle function generic parameters
@@ -124,10 +150,10 @@ function generateSignature(signature, needsParenthesis = false) {
       .map((generic) => {
         let genericLine = generic.name;
         if (generic.type) {
-          genericLine += ` extends ${generateType(generic.type)}`;
+          genericLine += ` extends ${generateTypeStr(generic.type)}`;
         }
         if (generic.default) {
-          genericLine += ` = ${generateType(generic.default)}`;
+          genericLine += ` = ${generateTypeStr(generic.default)}`;
         }
         return genericLine;
       })
@@ -144,17 +170,23 @@ function generateSignature(signature, needsParenthesis = false) {
       if (param.defaultValue) {
         paramText += '?';
       }
-      return `${paramText}: ${generateType(param.type)}`;
+      if (param.type) {
+        paramText += `: ${generateTypeStr(param.type)}`;
+      } else {
+        paramText += ': any';
+      }
+
+      return paramText;
     })
     .join(', ');
   text += ')';
   if (signature.type) {
-    text += ` => ${generateType(signature.type)}`;
+    text += ` => ${generateTypeStr(signature.type)}`;
   }
   return needsParenthesis ? `${text})` : text;
 }
 
-function escapeCell(value) {
+function escapeCell(value: string) {
   return value
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
@@ -162,7 +194,11 @@ function escapeCell(value) {
     .replace(/\r?\n/g, '<br />');
 }
 
-function linkify(text, apisToGenerate, format: 'markdown' | 'html') {
+function linkify(text: string | undefined, apisToGenerate: string[], format: 'markdown' | 'html') {
+  if (text == null) {
+    return '';
+  }
+
   const bracketsRegexp = /\[\[([^\]]+)\]\]/g;
   return text.replace(bracketsRegexp, (match: string, content: string) => {
     if (!apisToGenerate.includes(content)) {
@@ -173,7 +209,7 @@ function linkify(text, apisToGenerate, format: 'markdown' | 'html') {
   });
 }
 
-function generateProperties(api: Api, apisToGenerate) {
+function generateProperties(api: Api, apisToGenerate: string[]) {
   const hasDefaultValue = api.properties.reduce((acc, propertyReflection) => {
     return acc || !!propertyReflection.comment?.hasTag('default');
   }, false);
@@ -190,10 +226,10 @@ function generateProperties(api: Api, apisToGenerate) {
 
   api.properties.forEach((propertyReflection) => {
     let name = propertyReflection.name;
-    const type = propertyReflection!.type as any;
+    const type = propertyReflection!.type;
     const signature = propertyReflection.signatures ? propertyReflection.signatures[0] : null;
     const comment = signature?.comment || propertyReflection.comment;
-    const description = linkify(comment?.shortText || '', apisToGenerate, 'markdown');
+    const description = linkify(comment?.shortText, apisToGenerate, 'markdown');
 
     if (propertyReflection.flags.isOptional) {
       name = `<span class="prop-name optional">${name}<sup><abbr title="optional">?</abbr></sup></span>`;
@@ -207,9 +243,13 @@ function generateProperties(api: Api, apisToGenerate) {
       defaultValue = `<span class="prop-default">${escapeCell(defaultTag.text)}</span>`;
     }
 
-    const typeFormatted = `<span class="prop-type">${escapeCell(
-      signature ? generateSignature(signature) : generateType(type),
-    )}</span>`;
+    let typeFormatted = '<span class="prop-type">';
+    if (signature) {
+      typeFormatted += escapeCell(generateSignatureStr(signature));
+    } else if (type) {
+      typeFormatted += escapeCell(generateTypeStr(type));
+    }
+    typeFormatted += '</span>';
 
     if (hasDefaultValue) {
       text += `| ${name} | ${typeFormatted} | ${defaultValue} | ${escapeCell(description)} |\n`;
@@ -236,11 +276,11 @@ import { ${api.name} } from '@mui/x-data-grid';
 \`\`\``;
 }
 
-function generateMarkdown(api: Api, apisToGenerate) {
+function generateMarkdown(api: Api, apisToGenerate: string[]) {
   return [
     `# ${api.name} Interface`,
     '',
-    `<p class="description">${linkify(api.description || '', apisToGenerate, 'html')}</p>`,
+    `<p class="description">${linkify(api.description, apisToGenerate, 'html')}</p>`,
     '',
     '## Import',
     '',
@@ -277,7 +317,7 @@ function extractEvents(eventsObject: TypeDoc.DeclarationReflection, apisToGenera
   const allEvents = eventsObject.children!;
 
   allEvents.forEach((event) => {
-    const description = linkify(event.comment?.shortText || '', apisToGenerate, 'html');
+    const description = linkify(event.comment?.shortText, apisToGenerate, 'html');
 
     events.push({
       name: event.escapedName!,
@@ -354,7 +394,7 @@ function parseComponentSource(src: string, componentObject: { filename: string }
   return reactAPI;
 }
 
-function getJsdocDefaultValue(jsdoc) {
+function getJsdocDefaultValue(jsdoc: Annotation) {
   const defaultTag = jsdoc.tags.find((tag) => tag.title === 'default');
   if (defaultTag === undefined) {
     return undefined;
@@ -399,7 +439,7 @@ function extractSlots(options: {
 
   const types = (propInterface as ttp.InterfaceType).types;
   types.forEach(([name, prop]) => {
-    const parsed = parseDoctrine(prop.jsDoc, { sloppy: true });
+    const parsed = parseDoctrine(prop.jsDoc || '', { sloppy: true });
     const description = renderMarkdownInline(parsed.description);
     const defaultValue = getJsdocDefaultValue(parsed);
 
@@ -515,7 +555,7 @@ async function buildDocs(options: {
       componentApi.propDescriptions[propName] = linkify(description, apisToGenerate, 'html');
 
       const jsdocDefaultValue = getJsdocDefaultValue(
-        parseDoctrine(propDescriptor.description, {
+        parseDoctrine(propDescriptor.description || '', {
           sloppy: true,
         }),
       );
@@ -733,7 +773,7 @@ async function run(argv: { outputDirectory?: string }) {
   //   if (isExported) {
   //     componentsToGenerateDocs.push(component.filename);
   //   }
-  // });
+  // })!;
 
   const apisToGenerate = [
     'GridApi',
@@ -790,11 +830,22 @@ async function run(argv: { outputDirectory?: string }) {
     exclude: ['**/*.test.ts'],
     tsconfig: 'packages/grid/data-grid/tsconfig.json',
   });
-  const project = app.convert();
+  const project = app.convert()!;
+
+  const exports = (project.children ?? []).map((child) => ({
+    name: child.name,
+    kind: child?.kindString,
+  }));
+
+  writePrettifiedFile(
+    path.resolve(workspaceRoot, 'scripts/exportsSnapshot.json'),
+    JSON.stringify(exports),
+    prettierConfigPath,
+  );
 
   apisToGenerate.forEach((apiName) => {
-    const reflection = project!.findReflectionByName(apiName) as TypeDoc.DeclarationReflection;
-    if (!reflection) {
+    const reflection = project.findReflectionByName(apiName);
+    if (!reflection || !(reflection instanceof TypeDoc.DeclarationReflection)) {
       throw new Error(`Could not find reflection for "${apiName}".`);
     }
 
@@ -814,13 +865,20 @@ async function run(argv: { outputDirectory?: string }) {
         properties: api.properties.map((propertyReflection) => {
           const signature = propertyReflection.signatures ? propertyReflection.signatures[0] : null;
           const comment = signature?.comment || propertyReflection.comment;
-          const description = linkify(comment?.shortText || '', apisToGenerate, 'html');
-          const response: any = {
+          const description = linkify(comment?.shortText, apisToGenerate, 'html');
+
+          let typeStr: string = '';
+          if (signature) {
+            typeStr = generateSignatureStr(signature);
+          } else if (propertyReflection.type) {
+            typeStr = generateTypeStr(propertyReflection.type);
+          }
+
+          return {
             name: propertyReflection.name,
             description: renderMarkdownInline(description),
-            type: signature ? generateSignature(signature) : generateType(propertyReflection.type),
+            type: typeStr,
           };
-          return response;
         }),
       };
       writePrettifiedFile(
