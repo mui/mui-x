@@ -46,6 +46,7 @@ function GridBody(props: GridBodyProps) {
   apiRef.current.unstable_disableVirtualization = disableVirtualization;
   apiRef.current.unstable_enableVirtualization = enableVirtualization;
 
+  const isInit = React.useRef(false);
   const columnsHeaderRef = React.useRef<HTMLDivElement>(null);
   const columnsContainerRef = React.useRef<HTMLDivElement>(null);
   const windowRef = React.useRef<HTMLDivElement>(null);
@@ -102,7 +103,14 @@ function GridBody(props: GridBodyProps) {
 
           return (
             <GridVirtualScroller
-              ref={windowRef}
+              ref={(el) => {
+                (windowRef as any).current = el;
+
+                if (!isInit.current) {
+                  isInit.current = true;
+                  apiRef.current.publishEvent(GridEvents.windowReady);
+                }
+              }}
               style={style}
               selectionLookup={selectionLookup} // TODO pass it directly to the row via componentsProps
               disableVirtualization={isVirtualizationDisabled}

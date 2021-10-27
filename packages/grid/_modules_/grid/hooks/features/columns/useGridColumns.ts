@@ -348,6 +348,7 @@ export function useGridColumns(
   useGridApiEventHandler(apiRef, GridEvents.columnsPreProcessingChange, handlePreProcessColumns);
 
   useGridApiEventHandler(apiRef, GridEvents.debouncedResize, handleGridSizeChange);
+  useGridApiEventHandler(apiRef, GridEvents.windowReady, handleGridSizeChange);
 
   // Grid Option Handlers
   useGridApiOptionHandler(

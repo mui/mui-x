@@ -66,8 +66,11 @@ export const useGridPageSize = (
   useGridApiMethod(apiRef, pageSizeApi, 'GridPageSizeApi');
 
   const handleGridSizeChange = () => {
-    const windowElement = apiRef.current.windowRef?.current;
+    if (!props.autoPageSize) {
+      return;
+    }
 
+    const windowElement = apiRef.current.windowRef?.current;
     if (!windowElement) {
       return;
     }
@@ -79,4 +82,5 @@ export const useGridPageSize = (
   };
 
   useGridApiEventHandler(apiRef, GridEvents.debouncedResize, handleGridSizeChange);
+  useGridApiEventHandler(apiRef, GridEvents.windowReady, handleGridSizeChange);
 };

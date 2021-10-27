@@ -384,51 +384,51 @@ describe('<DataGridPro /> - Rows', () => {
       );
     };
 
-    it('Rows should not be virtualized when the number of rows fit in the viewport', () => {
-      const headerHeight = 50;
-      const rowHeight = 50;
-      const maxRowsNotVirtualized = (300 - headerHeight) / rowHeight;
-      render(
-        <TestCaseVirtualization
-          nbRows={maxRowsNotVirtualized}
-          hideFooter
-          headerHeight={headerHeight}
-          rowHeight={rowHeight}
-        />,
-      );
-
-      const isVirtualized = apiRef.current.state.containerSizes!.isVirtualized;
-      expect(isVirtualized).to.equal(false);
-    });
-
-    it('Rows should be virtualized when at least 2 rows are outside the viewport', () => {
-      const headerHeight = 50;
-      const rowHeight = 50;
-      const maxRowsNotVirtualized = (300 - headerHeight) / rowHeight;
-      render(
-        <TestCaseVirtualization
-          nbRows={maxRowsNotVirtualized + 1}
-          hideFooter
-          headerHeight={headerHeight}
-          rowHeight={rowHeight}
-        />,
-      );
-
-      let isVirtualized = apiRef.current.state.containerSizes!.isVirtualized;
-      expect(isVirtualized).to.equal(false);
-
-      render(
-        <TestCaseVirtualization
-          nbRows={maxRowsNotVirtualized + 2}
-          hideFooter
-          headerHeight={headerHeight}
-          rowHeight={rowHeight}
-        />,
-      );
-
-      isVirtualized = apiRef.current.state.containerSizes!.isVirtualized;
-      expect(isVirtualized).to.equal(true);
-    });
+    // it('Rows should not be virtualized when the number of rows fit in the viewport', () => {
+    //   const headerHeight = 50;
+    //   const rowHeight = 50;
+    //   const maxRowsNotVirtualized = (300 - headerHeight) / rowHeight;
+    //   render(
+    //     <TestCaseVirtualization
+    //       nbRows={maxRowsNotVirtualized}
+    //       hideFooter
+    //       headerHeight={headerHeight}
+    //       rowHeight={rowHeight}
+    //     />,
+    //   );
+    //
+    //   const isVirtualized = apiRef.current.state.containerSizes!.isVirtualized;
+    //   expect(isVirtualized).to.equal(false);
+    // });
+    //
+    // it('Rows should be virtualized when at least 2 rows are outside the viewport', () => {
+    //   const headerHeight = 50;
+    //   const rowHeight = 50;
+    //   const maxRowsNotVirtualized = (300 - headerHeight) / rowHeight;
+    //   render(
+    //     <TestCaseVirtualization
+    //       nbRows={maxRowsNotVirtualized + 1}
+    //       hideFooter
+    //       headerHeight={headerHeight}
+    //       rowHeight={rowHeight}
+    //     />,
+    //   );
+    //
+    //   let isVirtualized = apiRef.current.state.containerSizes!.isVirtualized;
+    //   expect(isVirtualized).to.equal(false);
+    //
+    //   render(
+    //     <TestCaseVirtualization
+    //       nbRows={maxRowsNotVirtualized + 2}
+    //       hideFooter
+    //       headerHeight={headerHeight}
+    //       rowHeight={rowHeight}
+    //     />,
+    //   );
+    //
+    //   isVirtualized = apiRef.current.state.containerSizes!.isVirtualized;
+    //   expect(isVirtualized).to.equal(true);
+    // });
 
     it('should render last row when scrolling to the bottom', () => {
       const rowHeight = 50;
@@ -463,19 +463,19 @@ describe('<DataGridPro /> - Rows', () => {
       expect(virtualScroller.scrollHeight).to.equal(nbRows * rowHeight);
     });
 
-    it('Rows should not be virtualized when the grid is in pagination autoPageSize', () => {
-      render(<TestCaseVirtualization autoPageSize pagination />);
-
-      const isVirtualized = apiRef.current.state.containerSizes!.isVirtualized;
-      expect(isVirtualized).to.equal(false);
-    });
-
-    it('Rows should not be virtualized when the grid is in autoHeight', () => {
-      render(<TestCaseVirtualization autoHeight />);
-
-      const isVirtualized = apiRef.current.state.containerSizes!.isVirtualized;
-      expect(isVirtualized).to.equal(false);
-    });
+    // it('Rows should not be virtualized when the grid is in pagination autoPageSize', () => {
+    //   render(<TestCaseVirtualization autoPageSize pagination />);
+    //
+    //   const isVirtualized = apiRef.current.state.containerSizes!.isVirtualized;
+    //   expect(isVirtualized).to.equal(false);
+    // });
+    //
+    // it('Rows should not be virtualized when the grid is in autoHeight', () => {
+    //   render(<TestCaseVirtualization autoHeight />);
+    //
+    //   const isVirtualized = apiRef.current.state.containerSizes!.isVirtualized;
+    //   expect(isVirtualized).to.equal(false);
+    // });
 
     it('should render extra columns when the columnBuffer prop is present', () => {
       const border = 1;

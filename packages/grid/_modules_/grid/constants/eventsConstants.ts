@@ -1,5 +1,9 @@
 export enum GridEvents {
   /**
+   * TODO: Document
+   */
+  windowReady = 'windowReady',
+  /**
    * Fired when the grid is resized. Called with a [[ElementSize]] object.
    */
   resize = 'resize',

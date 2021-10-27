@@ -144,13 +144,13 @@ export function useGridDimensions(
       scrollBarHeight = scrollBarSize;
     }
 
-    const viewportHeight = windowDimensions.width - scrollBarWidth;
+    const viewportHeight = windowDimensions.height - scrollBarHeight;
 
     return {
       window: windowDimensions,
       viewport: {
         height: viewportHeight,
-        width: windowDimensions.height - scrollBarHeight,
+        width: windowDimensions.width - scrollBarWidth,
       },
       rowsInViewportCount: Math.floor(viewportHeight / rowHeight),
       paginatedRowCount,
