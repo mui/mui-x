@@ -250,10 +250,10 @@ const generateClassName = createGenerateClassName({
 3. Create a v5 theme with the same customizations from the v4 theme. This has to be done as the theme is not shared between different MUI Core versions.
 
 ```jsx
-import { createTheme } from '@material-ui/core/styles';
+import { createTheme as createThemeV4 } from '@material-ui/core/styles';
 import { createTheme as createThemeV5 } from '@mui/material/styles';
 
-const theme = createTheme({
+const themeV4 = createThemeV4({
   palette: {
     primary: {
       main: '#2196f3',
@@ -275,20 +275,20 @@ const themeV5 = createThemeV5({
 ```jsx
 import * as React from 'react';
 import { ThemeProvider as ThemeProviderV5 } from '@mui/material/styles';
-import { ThemeProvider, StylesProvider } from '@material-ui/core/styles';
+import { ThemeProvider as ThemeProviderV4, StylesProvider } from '@material-ui/core/styles';
 
 const generateClassName = createGenerateClassName({ ... });
-const theme = createTheme({ ... });
+const themeV4 = createThemeV4({ ... });
 const themeV5 = createThemeV5({ ... });
 
 export default function DataGridDemo() {
   return (
     <StylesProvider generateClassName={generateClassName}>
-      <ThemeProvider theme={theme}>
+      <ThemeProviderV4 theme={theme}>
         <ThemeProviderV5 theme={themeV5}>
           {/* Your component tree. */}
         </ThemeProviderV5>
-      </ThemeProvider>
+      </ThemeProviderV4>
     </StylesProvider>
   );
 }
