@@ -15,7 +15,7 @@ import {
   isSpaceKey,
   isTabKey,
 } from '../../../utils/keyboardUtils';
-import { gridContainerSizesSelector } from '../container/gridContainerSizesSelector';
+import { unstable_gridContainerSizesSelector } from '../container/gridContainerSizesSelector';
 import { visibleGridColumnsLengthSelector } from '../columns/gridColumnsSelector';
 import { useGridSelector } from '../../utils/useGridSelector';
 import { gridPaginationSelector } from '../pagination/gridPaginationSelector';
@@ -80,7 +80,7 @@ export const useGridKeyboardNavigation = (
   const paginationState = useGridSelector(apiRef, gridPaginationSelector);
   const totalVisibleRowCount = useGridSelector(apiRef, gridVisibleRowCountSelector);
   const colCount = useGridSelector(apiRef, visibleGridColumnsLengthSelector);
-  const containerSizes = useGridSelector(apiRef, gridContainerSizesSelector);
+  const containerSizes = useGridSelector(apiRef, unstable_gridContainerSizesSelector);
   const visibleSortedRows = useGridSelector(apiRef, gridVisibleSortedRowEntriesSelector);
 
   const mapKey = (event: React.KeyboardEvent) => {
