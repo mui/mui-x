@@ -18,7 +18,7 @@ import { GridRowsState } from './gridRowsState';
 import {
   gridRowCountSelector,
   gridRowsLookupSelector,
-  unorderedGridRowIdsSelector,
+  gridRowIdsSelector,
 } from './gridRowsSelector';
 
 export interface GridRowsInternalCache {
@@ -225,7 +225,7 @@ export const useGridRows = (
   );
 
   const getRowModels = React.useCallback<GridRowApi['getRowModels']>(() => {
-    const allRows = unorderedGridRowIdsSelector(apiRef.current.state);
+    const allRows = gridRowIdsSelector(apiRef.current.state);
     const idRowsLookup = gridRowsLookupSelector(apiRef.current.state);
 
     return new Map(allRows.map((id) => [id, idRowsLookup[id]]));
@@ -237,7 +237,7 @@ export const useGridRows = (
   );
 
   const getAllRowIds = React.useCallback<GridRowApi['getAllRowIds']>(
-    () => unorderedGridRowIdsSelector(apiRef.current.state),
+    () => gridRowIdsSelector(apiRef.current.state),
     [apiRef],
   );
 

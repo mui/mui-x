@@ -14,7 +14,7 @@ import { GridState } from '../../../models/gridState';
 import { useGridSelector } from '../../utils/useGridSelector';
 import { useGridState } from '../../utils/useGridState';
 import { gridDensityRowHeightSelector } from '../density/densitySelector';
-import { visibleGridRowCountSelector } from '../filter/gridFilterSelector';
+import { gridVisibleRowCountSelector } from '../filter/gridFilterSelector';
 import { gridPaginationSelector } from '../pagination/gridPaginationSelector';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
@@ -71,7 +71,7 @@ export const useGridContainerProps = (
   const windowSizesRef = React.useRef<ElementSize>({ width: 0, height: 0 });
   const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
   const columnsTotalWidth = useGridSelector(apiRef, gridColumnsTotalWidthSelector);
-  const visibleRowsCount = useGridSelector(apiRef, visibleGridRowCountSelector);
+  const visibleRowsCount = useGridSelector(apiRef, gridVisibleRowCountSelector);
   const paginationState = useGridSelector(apiRef, gridPaginationSelector);
   const windowRef = apiRef.current.windowRef;
 

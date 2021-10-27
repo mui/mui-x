@@ -1,7 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
-import { filterGridColumnLookupSelector } from '../../hooks/features/filter/gridFilterSelector';
+import { gridFilterActiveItemsLookupSelector } from '../../hooks/features/filter/gridFilterSelector';
 import {
   gridFocusColumnHeaderSelector,
   gridTabIndexCellSelector,
@@ -27,7 +27,7 @@ function GridColumnHeadersItemCollection(props: GridColumnHeadersItemCollectionP
   const { columns, dragCol, resizeCol } = props;
   const apiRef = useGridApiContext();
   const sortColumnLookup = useGridSelector(apiRef, gridSortColumnLookupSelector);
-  const filterColumnLookup = useGridSelector(apiRef, filterGridColumnLookupSelector);
+  const filterColumnLookup = useGridSelector(apiRef, gridFilterActiveItemsLookupSelector);
   const columnHeaderFocus = useGridSelector(apiRef, gridFocusColumnHeaderSelector);
   const renderCtx = useGridSelector(apiRef, gridRenderingSelector).renderContext;
   const tabIndexState = useGridSelector(apiRef, gridTabIndexColumnHeaderSelector);
