@@ -1,4 +1,4 @@
-import { GridRowModel, GridRowId, GridRowModelUpdate } from '../gridRows';
+import { GridRowModel, GridRowId, GridRowModelUpdate, GridRowTreeNodeConfig } from '../gridRows';
 
 /**
  * The Row API interface that is available in the grid `apiRef`.
@@ -47,4 +47,18 @@ export interface GridRowApi {
    * @returns {GridRowModel} The row data.
    */
   getRow: (id: GridRowId) => GridRowModel | null;
+  /**
+   * Gets the row node from the internal tree structure.
+   * @param {GridRowId} id The id of the row.
+   * @returns {GridRowTreeNodeConfig} The row data.
+   * @ignore - do not document.
+   */
+  unstable_getRowNode: (id: GridRowId) => GridRowTreeNodeConfig | null;
+  /**
+   * Expand or collapse a row children.
+   * @param {GridRowId} id the ID of the row to expand or collapse.
+   * @param {boolean} isExpanded A boolean indicating if the row must be expanded or collapsed.
+   * @ignore - do not document.
+   */
+  unstable_setRowExpansion: (id: GridRowId, isExpanded: boolean) => void;
 }

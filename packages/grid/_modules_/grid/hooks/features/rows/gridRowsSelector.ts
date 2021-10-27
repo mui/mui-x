@@ -1,20 +1,28 @@
 import { createSelector } from 'reselect';
 import { GridState } from '../../../models/gridState';
-import { GridRowsState } from './gridRowsState';
 
 export const gridRowsStateSelector = (state: GridState) => state.rows;
 
 export const gridRowCountSelector = createSelector(
   gridRowsStateSelector,
-  (rows: GridRowsState) => rows.totalRowCount,
+  (rows) => rows.totalRowCount,
+);
+
+export const gridTopLevelRowCountSelector = createSelector(
+  gridRowsStateSelector,
+  (rows) => rows.totalTopLevelRowCount,
 );
 
 export const gridRowsLookupSelector = createSelector(
   gridRowsStateSelector,
-  (rows: GridRowsState) => rows.idRowsLookup,
+  (rows) => rows.idRowsLookup,
 );
 
-export const gridRowIdsSelector = createSelector(
+export const gridRowTreeSelector = createSelector(gridRowsStateSelector, (rows) => rows.tree);
+
+export const gridRowTreeDepthSelector = createSelector(
   gridRowsStateSelector,
-  (rows: GridRowsState) => rows.allRows,
+  (rows) => rows.treeDepth,
 );
+
+export const gridRowIdsSelector = createSelector(gridRowsStateSelector, (rows) => rows.ids);
