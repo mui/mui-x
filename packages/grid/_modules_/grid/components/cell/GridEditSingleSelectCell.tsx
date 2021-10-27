@@ -37,6 +37,7 @@ function GridEditSingleSelectCell(props: GridRenderEditCellParams & SelectProps)
     className,
     getValue,
     hasFocus,
+    error,
     ...other
   } = props;
 
@@ -60,12 +61,14 @@ function GridEditSingleSelectCell(props: GridRenderEditCellParams & SelectProps)
     });
   }
 
-  const handleChange = (event) => {
+  const handleChange = async (event) => {
     setOpen(false);
     api.setEditCellValue({ id, field, value: event.target.value }, event);
     if (!event.key && rootProps.editMode === 'cell') {
-      api.commitCellChange({ id, field }, event);
-      api.setCellMode(id, field, 'view');
+      const isValid = await Promise.resolve(api.commitCellChange({ id, field }, event));
+      if (isValid) {
+        api.setCellMode(id, field, 'view');
+      }
     }
   };
 
@@ -100,6 +103,7 @@ function GridEditSingleSelectCell(props: GridRenderEditCellParams & SelectProps)
       MenuProps={{
         onClose: handleClose,
       }}
+      error={error}
       fullWidth
       {...other}
     >

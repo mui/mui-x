@@ -456,6 +456,7 @@ DataGridProRaw.propTypes = {
    * @param {GridEditCellPropsParams} params With all properties from [[GridEditCellPropsParams]].
    * @param {MuiEvent} event The event that caused this prop to be called.
    * @param {GridCallbackDetails} details Additional details for this callback.
+   * @deprecated use `onEditCellPropsChange` from the [`GridColDef`](/api/data-grid/grid-col-def/)
    */
   onEditCellPropsChange: PropTypes.func,
   /**

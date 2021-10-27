@@ -19,12 +19,12 @@ function RatingEditInputCell(props: GridRenderCellParams<number>) {
   const { id, value, api, field } = props;
   const classes = useStyles();
 
-  const handleChange = (event) => {
+  const handleChange = async (event) => {
     api.setEditCellValue({ id, field, value: Number(event.target.value) }, event);
     // Check if the event is not from the keyboard
     // https://github.com/facebook/react/issues/7407
     if (event.nativeEvent.clientX !== 0 && event.nativeEvent.clientY !== 0) {
-      api.commitCellChange({ id, field });
+      await api.commitCellChange({ id, field });
       api.setCellMode(id, field, 'view');
     }
   };
