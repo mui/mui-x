@@ -240,6 +240,7 @@ GridFilterForm.propTypes = {
   deleteFilter: PropTypes.func.isRequired,
   disableMultiFilterOperator: PropTypes.bool,
   hasMultipleFilters: PropTypes.bool.isRequired,
+  isLastFilter: PropTypes.bool,
   item: PropTypes.shape({
     columnField: PropTypes.string,
     id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
