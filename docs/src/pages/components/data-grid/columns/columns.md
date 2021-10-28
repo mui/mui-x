@@ -284,7 +284,9 @@ The following are the native column types:
 
 ### Converting types
 
-Default methods such as filtering or sorting assume that `type` corresponds to the type of the stored values. For example, values of column with `type:'dateTime'` are expecting to be stored as a `Date()` objects. If for any reason, your data type is not the correct one, you can use `valueGetter` to parse the value to the correct type.
+Default methods such as filtering or sorting assume that `type` corresponds to the type of the stored values.
+For example, values of column with `type:'dateTime'` are expecting to be stored as a `Date()` objects.
+If for any reason, your data type is not the correct one, you can use `valueGetter` to parse the value to the correct type.
 
 ```tsx
 {
