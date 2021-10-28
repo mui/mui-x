@@ -49,7 +49,7 @@ export const useGridPage = (
     ...state,
     pagination: {
       ...state.pagination!,
-      page: 0,
+      page: props.page ?? 0,
       pageCount: getPageCount(props.rowCount ?? 0, state.pagination!.pageSize!),
       rowCount: props.rowCount ?? 0,
     },
