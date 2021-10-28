@@ -46,7 +46,6 @@ function GridBody(props: GridBodyProps) {
   apiRef.current.unstable_disableVirtualization = disableVirtualization;
   apiRef.current.unstable_enableVirtualization = enableVirtualization;
 
-  const isInit = React.useRef(false);
   const columnsHeaderRef = React.useRef<HTMLDivElement>(null);
   const columnsContainerRef = React.useRef<HTMLDivElement>(null);
   const windowRef = React.useRef<HTMLDivElement>(null);
