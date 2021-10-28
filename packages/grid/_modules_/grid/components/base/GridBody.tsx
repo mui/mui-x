@@ -78,8 +78,6 @@ function GridBody(props: GridBodyProps) {
     [filteredSelection],
   );
 
-  console.log(apiRef.current.state.pagination)
-
   return (
     <GridMainContainer>
       <GridOverlays />

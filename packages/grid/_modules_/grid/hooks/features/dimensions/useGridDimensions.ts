@@ -22,6 +22,8 @@ import { useGridSelector } from '../../utils';
 
 const isTestEnvironment = process.env.NODE_ENV === 'test';
 
+console.log(process.env.NODE_ENV)
+
 function getScrollbarSize(doc: Document, element: HTMLElement): number {
   const scrollDiv = doc.createElement('div');
   scrollDiv.style.width = '99px';
@@ -153,6 +155,7 @@ export function useGridDimensions(
   ]);
 
   const resize = React.useCallback<GridDimensionsApi['resize']>(() => {
+    console.log('HMMMM')
     updateGridDimensionsRef();
     apiRef.current.publishEvent(GridEvents.debouncedResize, rootDimensionsRef.current);
   }, [apiRef, updateGridDimensionsRef]);

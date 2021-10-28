@@ -405,7 +405,7 @@ const xyColumns = [
 
 export function SmallAutoPageSizeLastPageSnap() {
   return (
-    <div style={{ height: 400, width: 400, background: "green" }}>
+    <div style={{ height: 400, width: 400 }}>
       <DataGrid autoPageSize rows={xyRows} columns={xyColumns} page={1} />
     </div>
   );
