@@ -120,12 +120,13 @@ export function useGridDimensions(
     }
 
     const viewportHeight = viewportDimensionsWithoutScrollBar.height - scrollBarHeight;
+    const viewportWidth = viewportDimensionsWithoutScrollBar.width - scrollBarWidth;
 
     const newFullDimensions: GridDimensions = {
       window: viewportDimensionsWithoutScrollBar,
       viewport: {
         height: viewportHeight,
-        width: viewportDimensionsWithoutScrollBar.width - scrollBarWidth,
+        width: viewportWidth,
       },
       rowsInViewportCount: Math.floor(viewportHeight / rowHeight),
       currentPageRowCount,
@@ -153,7 +154,6 @@ export function useGridDimensions(
 
   const resize = React.useCallback<GridDimensionsApi['resize']>(() => {
     updateGridDimensionsRef();
-
     apiRef.current.publishEvent(GridEvents.debouncedResize, rootDimensionsRef.current);
   }, [apiRef, updateGridDimensionsRef]);
 
@@ -217,16 +217,9 @@ export function useGridDimensions(
   );
 
   React.useEffect(() => {
-    return () => {
-      logger.info('canceling resize...');
-      debounceResize.clear();
-    };
-  }, [logger, debounceResize]);
-
-  React.useEffect(() => {
     logger.info('canceling resize...');
     debounceResize.clear();
-  }, [props.rows, debounceResize, logger]);
+  }, [props.rows, logger]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEnhancedEffect(() => updateGridDimensionsRef(), [updateGridDimensionsRef]);
 

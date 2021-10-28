@@ -207,9 +207,9 @@ export function useGridColumns(
     (newState: RawGridColumnsState, emit?: boolean) => {
       logger.debug('updating GridColumns with new state');
 
-      const viewportWidth = apiRef.current.getDimensions().viewport.width;
+      const dimensions = apiRef.current.getDimensions();
       let newColumns: GridColumns = newState.all.map((field) => newState.lookup[field]);
-      newColumns = hydrateColumnsWidth(newColumns, viewportWidth);
+      newColumns = hydrateColumnsWidth(newColumns, dimensions.viewport.width);
 
       const columnState: GridColumnsState = {
         all: newColumns.map((col) => col.field),
