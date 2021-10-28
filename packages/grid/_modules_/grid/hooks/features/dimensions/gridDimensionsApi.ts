@@ -23,11 +23,6 @@ export interface GridDimensions {
   hasScrollY: boolean;
 }
 
-export interface ScrollBarSize extends ElementSize {
-  hasScrollX: boolean;
-  hasScrollY: boolean;
-}
-
 export interface GridDimensionsApi {
   /**
    * Triggers a resize of the component and recalculation of width and height.
