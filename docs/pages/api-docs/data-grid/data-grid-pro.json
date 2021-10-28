@@ -56,7 +56,7 @@
     "filterModel": {
       "type": {
         "name": "shape",
-        "description": "{ items: Array&lt;{ columnField?: string, id?: number<br>&#124;&nbsp;string, operatorValue?: string, value?: any }&gt;, linkOperator?: 'and'<br>&#124;&nbsp;'or' }"
+        "description": "{ items: Array&lt;{ columnField?: string, id?: number<br>&#124;&nbsp;string, isArrayValue?: bool, operatorValue?: string, value?: any }&gt;, linkOperator?: 'and'<br>&#124;&nbsp;'or' }"
       }
     },
     "getCellClassName": { "type": { "name": "func" } },

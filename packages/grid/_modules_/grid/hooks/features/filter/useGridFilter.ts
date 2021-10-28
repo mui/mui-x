@@ -108,9 +108,6 @@ export const useGridFilter = (
 
         const newFilterItem: GridFilterItem = { ...filterItem, value: parsedValue };
 
-
-
-
         const filterOperators = column.filterOperators;
         if (!filterOperators?.length) {
           throw new Error(`MUI: No filter operators found for column '${column.field}'.`);
