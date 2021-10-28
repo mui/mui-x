@@ -66,13 +66,12 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps & TextFieldPr
           .find((optionValue) => String(optionValue) === value);
       }
 
+      if (type === 'number' && value === '') {
+        value = NaN; // Prevents the value parser from converting '' to 0 (zero)
+      }
+
       clearTimeout(filterTimeout.current);
       setFilterValueState(String(value));
-
-      if (type !== 'singleSelect' && value === '') {
-        setIsApplying(false);
-        return;
-      }
 
       setIsApplying(true);
       // TODO singleSelect doesn't debounce
