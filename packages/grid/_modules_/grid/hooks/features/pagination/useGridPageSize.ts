@@ -28,7 +28,7 @@ export const useGridPageSize = (
 
   useGridStateInit(apiRef, (state) => ({
     ...state,
-    pagination: { pageSize: props.pageSize ?? 100 },
+    pagination: { pageSize: props.pageSize ?? (props.autoPageSize ? 0 : 100) },
   }));
   const [, setGridState, forceUpdate] = useGridState(apiRef);
 
