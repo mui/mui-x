@@ -106,81 +106,80 @@ async function main() {
         const testcase = await page.waitForSelector(
           '[data-testid="testcase"]:not([aria-busy="true"])',
         );
-
         await testcase.screenshot({ path: screenshotPath, type: 'png' });
       });
 
-      // it(`should have no errors rendering ${pathURL}`, () => {
-      //   const msg = errorConsole;
-      //   errorConsole = undefined;
-      //   expect(msg).to.equal(undefined);
-      // });
+      it(`should have no errors rendering ${pathURL}`, () => {
+        const msg = errorConsole;
+        errorConsole = undefined;
+        expect(msg).to.equal(undefined);
+      });
     });
 
-    // it('should position the headers matching the columns', async function test() {
-    //   const route = `${baseUrl}/docs-components-data-grid-virtualization/ColumnVirtualizationGrid`;
-    //   const screenshotPath = path.resolve(
-    //     screenshotDir,
-    //     `${route.replace(baseUrl, '.')}ScrollLeft400px.png`,
-    //   );
-    //   await fse.ensureDir(path.dirname(screenshotPath));
-    //
-    //   const testcaseIndex = routes.indexOf(route);
-    //   await page.$eval(`#tests li:nth-of-type(${testcaseIndex + 1}) a`, (link) => {
-    //     link.click();
-    //   });
-    //
-    //   const testcase = await page.waitForSelector(
-    //     '[data-testid="testcase"]:not([aria-busy="true"])',
-    //   );
-    //
-    //   await page.evaluate(() => {
-    //     const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller');
-    //     virtualScroller.scrollLeft = 400;
-    //     virtualScroller.dispatchEvent(new Event('scroll'));
-    //   });
-    //
-    //   await testcase.screenshot({ path: screenshotPath, type: 'png' });
-    // });
-    //
-    // it('should take a screenshot of the print preview', async function test() {
-    //   this.timeout(10000);
-    //
-    //   const route = `${baseUrl}/stories-grid-toolbar/PrintExportSnap`;
-    //   const screenshotPath = path.resolve(screenshotDir, `${route.replace(baseUrl, '.')}Print.png`);
-    //   await fse.ensureDir(path.dirname(screenshotPath));
-    //
-    //   const testcaseIndex = routes.indexOf(route);
-    //   await page.$eval(`#tests li:nth-of-type(${testcaseIndex + 1}) a`, (link) => {
-    //     link.click();
-    //   });
-    //
-    //   // Click the export button in the toolbar.
-    //   await page.$eval(`button[aria-label="Export"]`, (exportButton) => {
-    //     exportButton.click();
-    //   });
-    //
-    //   // Click the print export option from the export menu in the toolbar.
-    //   await page.$eval(`li[role="menuitem"]:last-child`, (printButton) => {
-    //     printButton.click();
-    //   });
-    //
-    //   await sleep(2000);
-    //
-    //   return new Promise((resolve, reject) => {
-    //     // See https://ffmpeg.org/ffmpeg-devices.html#x11grab
-    //     const args = `-y -f x11grab -framerate 1 -video_size 460x400 -i :99.0+90,81 -vframes 1 ${screenshotPath}`;
-    //     const ffmpeg = childProcess.spawn('ffmpeg', args.split(' '));
-    //
-    //     ffmpeg.on('close', (code) => {
-    //       if (code === 0) {
-    //         resolve();
-    //       } else {
-    //         reject();
-    //       }
-    //     });
-    //   });
-    // });
+    it('should position the headers matching the columns', async function test() {
+      const route = `${baseUrl}/docs-components-data-grid-virtualization/ColumnVirtualizationGrid`;
+      const screenshotPath = path.resolve(
+        screenshotDir,
+        `${route.replace(baseUrl, '.')}ScrollLeft400px.png`,
+      );
+      await fse.ensureDir(path.dirname(screenshotPath));
+
+      const testcaseIndex = routes.indexOf(route);
+      await page.$eval(`#tests li:nth-of-type(${testcaseIndex + 1}) a`, (link) => {
+        link.click();
+      });
+
+      const testcase = await page.waitForSelector(
+        '[data-testid="testcase"]:not([aria-busy="true"])',
+      );
+
+      await page.evaluate(() => {
+        const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller');
+        virtualScroller.scrollLeft = 400;
+        virtualScroller.dispatchEvent(new Event('scroll'));
+      });
+
+      await testcase.screenshot({ path: screenshotPath, type: 'png' });
+    });
+
+    it('should take a screenshot of the print preview', async function test() {
+      this.timeout(10000);
+
+      const route = `${baseUrl}/stories-grid-toolbar/PrintExportSnap`;
+      const screenshotPath = path.resolve(screenshotDir, `${route.replace(baseUrl, '.')}Print.png`);
+      await fse.ensureDir(path.dirname(screenshotPath));
+
+      const testcaseIndex = routes.indexOf(route);
+      await page.$eval(`#tests li:nth-of-type(${testcaseIndex + 1}) a`, (link) => {
+        link.click();
+      });
+
+      // Click the export button in the toolbar.
+      await page.$eval(`button[aria-label="Export"]`, (exportButton) => {
+        exportButton.click();
+      });
+
+      // Click the print export option from the export menu in the toolbar.
+      await page.$eval(`li[role="menuitem"]:last-child`, (printButton) => {
+        printButton.click();
+      });
+
+      await sleep(2000);
+
+      return new Promise((resolve, reject) => {
+        // See https://ffmpeg.org/ffmpeg-devices.html#x11grab
+        const args = `-y -f x11grab -framerate 1 -video_size 460x400 -i :99.0+90,81 -vframes 1 ${screenshotPath}`;
+        const ffmpeg = childProcess.spawn('ffmpeg', args.split(' '));
+
+        ffmpeg.on('close', (code) => {
+          if (code === 0) {
+            resolve();
+          } else {
+            reject();
+          }
+        });
+      });
+    });
   });
 
   run();
