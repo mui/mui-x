@@ -99,10 +99,12 @@ export const useGridKeyboardNavigation = (
 
       const key = mapKey(event);
       const isCtrlPressed = event.ctrlKey || event.metaKey || event.shiftKey;
-      let rowCount = totalVisibleRowCount;
+      const dimensions = apiRef.current.getDimensions();
 
-      if (props.pagination && totalVisibleRowCount > paginationState.pageSize) {
-        rowCount = paginationState.pageSize * (paginationState.page + 1);
+      let lastRowIndexInCurrentPage = totalVisibleRowCount;
+      if (props.pagination) {
+        lastRowIndexInCurrentPage =
+          paginationState.pageSize * paginationState.page + dimensions.currentPageRowCount;
       }
 
       let nextCellIndexes: GridCellIndexCoordinates;
@@ -121,19 +123,20 @@ export const useGridKeyboardNavigation = (
           // In that case we go to first row, first col, or last row last col!
           let newRowIndex = 0;
           if (colIdx === 0) {
-            newRowIndex = props.pagination ? rowCount - paginationState.pageSize : 0;
+            newRowIndex = props.pagination
+              ? lastRowIndexInCurrentPage - paginationState.pageSize
+              : 0;
           } else {
-            newRowIndex = rowCount - 1;
+            newRowIndex = lastRowIndexInCurrentPage - 1;
           }
           nextCellIndexes = { colIndex: colIdx, rowIndex: newRowIndex };
         }
       } else if (isPageKeys(key) || isSpaceKey(key)) {
-        const rowsInViewportCount = apiRef.current.getDimensions().rowsInViewportCount;
         const nextRowIndex =
           rowIndex +
           (key.indexOf('Down') > -1 || isSpaceKey(key)
-            ? rowsInViewportCount
-            : -1 * rowsInViewportCount);
+            ? dimensions.rowsInViewportCount
+            : -1 * dimensions.rowsInViewportCount);
         nextCellIndexes = { colIndex, rowIndex: nextRowIndex };
       } else {
         throw new Error('MUI: Key not mapped to navigation behavior.');
@@ -146,8 +149,8 @@ export const useGridKeyboardNavigation = (
       }
 
       nextCellIndexes.rowIndex =
-        nextCellIndexes.rowIndex >= rowCount && rowCount > 0
-          ? rowCount - 1
+        nextCellIndexes.rowIndex >= lastRowIndexInCurrentPage && lastRowIndexInCurrentPage > 0
+          ? lastRowIndexInCurrentPage - 1
           : nextCellIndexes.rowIndex;
       nextCellIndexes.colIndex = nextCellIndexes.colIndex <= 0 ? 0 : nextCellIndexes.colIndex;
       nextCellIndexes.colIndex =
