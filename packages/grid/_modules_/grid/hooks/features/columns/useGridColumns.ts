@@ -207,7 +207,6 @@ export function useGridColumns(
     (newState: RawGridColumnsState, emit?: boolean) => {
       logger.debug('updating GridColumns with new state');
 
-      // Avoid dependency on gridState to avoid infinite loop
       const viewportWidth = apiRef.current.getDimensions().viewport.width;
       let newColumns: GridColumns = newState.all.map((field) => newState.lookup[field]);
       newColumns = hydrateColumnsWidth(newColumns, viewportWidth);
@@ -346,9 +345,7 @@ export function useGridColumns(
   const handleGridSizeChange = () => setColumnsState(apiRef.current.state.columns);
 
   useGridApiEventHandler(apiRef, GridEvents.columnsPreProcessingChange, handlePreProcessColumns);
-
-  useGridApiEventHandler(apiRef, GridEvents.debouncedResize, handleGridSizeChange);
-  useGridApiEventHandler(apiRef, GridEvents.windowReady, handleGridSizeChange);
+  useGridApiEventHandler(apiRef, GridEvents.viewportWidthChange, handleGridSizeChange);
 
   // Grid Option Handlers
   useGridApiOptionHandler(

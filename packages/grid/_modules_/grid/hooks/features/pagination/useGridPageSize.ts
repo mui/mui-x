@@ -70,17 +70,11 @@ export const useGridPageSize = (
       return;
     }
 
-    const windowElement = apiRef.current.windowRef?.current;
-    if (!windowElement) {
-      return;
-    }
-
-    const windowDimensions = windowElement.getBoundingClientRect();
+    const height = apiRef.current.getDimensions().window.height;
     const rowHeight = gridDensityRowHeightSelector(apiRef.current.state);
-    const pageSize = Math.floor(windowDimensions.height / rowHeight);
+    const pageSize = Math.floor(height / rowHeight);
     apiRef.current.setPageSize(pageSize);
   };
 
   useGridApiEventHandler(apiRef, GridEvents.debouncedResize, handleGridSizeChange);
-  useGridApiEventHandler(apiRef, GridEvents.windowReady, handleGridSizeChange);
 };

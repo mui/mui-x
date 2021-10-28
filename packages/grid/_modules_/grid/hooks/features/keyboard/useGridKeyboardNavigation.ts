@@ -128,7 +128,7 @@ export const useGridKeyboardNavigation = (
           nextCellIndexes = { colIndex: colIdx, rowIndex: newRowIndex };
         }
       } else if (isPageKeys(key) || isSpaceKey(key)) {
-        const rowsInViewportCount = apiRef.current.getDimensions().paginatedRowCount;
+        const rowsInViewportCount = apiRef.current.getDimensions().currentPageRowCount;
         const nextRowIndex =
           rowIndex +
           (key.indexOf('Down') > -1 || isSpaceKey(key)
@@ -190,7 +190,7 @@ export const useGridKeyboardNavigation = (
       } else if (isPageKeys(key)) {
         // Handle only Page Down key, Page Up should keep the current position
         if (key.indexOf('Down') > -1) {
-          const rowsInViewportCount = apiRef.current.getDimensions().paginatedRowCount;
+          const rowsInViewportCount = apiRef.current.getDimensions().currentPageRowCount;
           const field = apiRef.current.getVisibleColumns()[colIndex].field;
           const id = apiRef.current.getRowIdFromRowIndex(rowsInViewportCount - 1);
 

@@ -26,7 +26,6 @@ import { useGridDimensions } from '../../_modules_/grid/hooks/features/dimension
 
 export const useDataGridComponent = (apiRef: GridApiRef, props: GridComponentProps) => {
   useGridInitialization(apiRef, props);
-  useGridDimensions(apiRef, props);
   useGridSelection(apiRef, props);
   useGridColumns(apiRef, props);
   useGridRows(apiRef, props);
@@ -46,5 +45,6 @@ export const useDataGridComponent = (apiRef: GridApiRef, props: GridComponentPro
   useGridCsvExport(apiRef);
   useGridPrintExport(apiRef, props);
   useGridClipboard(apiRef);
+  useGridDimensions(apiRef, props);
   useGridEvents(apiRef, props);
 };

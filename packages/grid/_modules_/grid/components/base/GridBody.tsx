@@ -103,14 +103,7 @@ function GridBody(props: GridBodyProps) {
 
           return (
             <GridVirtualScroller
-              ref={(el) => {
-                (windowRef as any).current = el;
-
-                if (!isInit.current) {
-                  isInit.current = true;
-                  apiRef.current.publishEvent(GridEvents.windowReady);
-                }
-              }}
+              ref={windowRef}
               style={style}
               selectionLookup={selectionLookup} // TODO pass it directly to the row via componentsProps
               disableVirtualization={isVirtualizationDisabled}

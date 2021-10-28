@@ -4,7 +4,7 @@ export interface GridDimensions {
   window: ElementSize;
   viewport: ElementSize;
   rowsInViewportCount: number;
-  paginatedRowCount: number;
+  currentPageRowCount: number;
   hasScrollX: boolean;
   hasScrollY: boolean;
 }

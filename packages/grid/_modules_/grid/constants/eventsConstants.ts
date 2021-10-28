@@ -1,9 +1,5 @@
 export enum GridEvents {
   /**
-   * TODO: Document
-   */
-  windowReady = 'windowReady',
-  /**
    * Fired when the grid is resized. Called with a [[ElementSize]] object.
    */
   resize = 'resize',
@@ -11,6 +7,10 @@ export enum GridEvents {
    * Fired when the grid is resized with a debounced time of 60ms. Called with a [[ElementSize]] object.
    */
   debouncedResize = 'debouncedResize',
+  /**
+   * Fired when the width of the viewport changes. Called with a {number} variable.
+   */
+  viewportWidthChange = 'viewportWidthChange',
   /**
    * Fired when an exception is thrown in the grid.
    */

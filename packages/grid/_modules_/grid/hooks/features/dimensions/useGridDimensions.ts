@@ -1,5 +1,9 @@
 import * as React from 'react';
-import { debounce, ownerDocument } from '@mui/material/utils';
+import {
+  debounce,
+  ownerDocument,
+  unstable_useEnhancedEffect as useEnhancedEffect,
+} from '@mui/material/utils';
 import { GridEvents } from '../../../constants/eventsConstants';
 import { ElementSize, GridApiRef } from '../../../models';
 import {
@@ -9,11 +13,12 @@ import {
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { GridComponentProps } from '../../../GridComponentProps';
-import { GridDimensionsApi } from './gridDimensionsApi';
+import { GridDimensions, GridDimensionsApi } from './gridDimensionsApi';
 import { gridColumnsTotalWidthSelector } from '../columns';
 import { gridPaginationSelector } from '../pagination';
 import { gridVisibleRowCountSelector } from '../filter';
 import { gridDensityRowHeightSelector } from '../density';
+import { useGridSelector } from '../../utils';
 
 const isTestEnvironment = process.env.NODE_ENV === 'test';
 
@@ -31,70 +36,48 @@ function getScrollbarSize(doc: Document, element: HTMLElement): number {
   return scrollbarSize;
 }
 
+const INITIAL_GRID_DIMENSIONS: GridDimensions = {
+  viewport: {
+    height: 0,
+    width: 0,
+  },
+  window: {
+    height: 0,
+    width: 0,
+  },
+  rowsInViewportCount: 0,
+  currentPageRowCount: 0,
+  hasScrollY: false,
+  hasScrollX: false,
+};
+
 export function useGridDimensions(
   apiRef: GridApiRef,
   props: Pick<
     GridComponentProps,
-    | 'autoHeight'
-    | 'rows'
-    | 'onResize'
-    | 'scrollbarSize'
-    | 'pagination'
-    | 'autoPageSize'
-    | 'pageSize'
+    'rows' | 'onResize' | 'scrollbarSize' | 'pagination' | 'headerHeight' | 'autoHeight'
   >,
 ) {
   const logger = useGridLogger(apiRef, 'useResizeContainer');
   const warningShown = React.useRef(false);
+  const rootDimensionsRef = React.useRef<ElementSize | null>(null);
+  const fullDimensionsRef = React.useRef<GridDimensions>(INITIAL_GRID_DIMENSIONS);
+  const columnsTotalWidth = useGridSelector(apiRef, gridColumnsTotalWidthSelector);
+  const paginationState = useGridSelector(apiRef, gridPaginationSelector);
+  const visibleRowsCount = useGridSelector(apiRef, gridVisibleRowCountSelector);
+  const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
 
-  const resize = React.useCallback<GridDimensionsApi['resize']>(() => {
-    logger.debug(`resizing...`);
-
-    apiRef.current.publishEvent(
-      GridEvents.debouncedResize,
-      apiRef.current.state.containerSizes?.windowSizes,
-    );
-  }, [apiRef, logger]);
-
-  const getDimensions = React.useCallback<GridDimensionsApi['getDimensions']>(() => {
-    const windowElement = apiRef.current.windowRef?.current;
+  const updateGridDimensionsRef = React.useCallback(() => {
     const rootElement = apiRef.current.rootElementRef?.current;
-    const columnsTotalWidth = gridColumnsTotalWidthSelector(apiRef.current.state);
 
-    if (!windowElement) {
-      return {
-        window: {
-          height: 0,
-          width: 0,
-        },
-        viewport: {
-          height: 0,
-          width: 0,
-        },
-        rowsInViewportCount: 0,
-        paginatedRowCount: 0,
-        hasScrollX: false,
-        hasScrollY: false,
-      };
-    }
-
-    const paginationState = gridPaginationSelector(apiRef.current.state);
-    const visibleRowsCount = gridVisibleRowCountSelector(apiRef.current.state);
-    const rowHeight = gridDensityRowHeightSelector(apiRef.current.state);
-
-    const paginatedRowCount = props.pagination
+    // TODO: Use `useCurrentPageRows`
+    const currentPageRowCount = props.pagination
       ? Math.min(
           visibleRowsCount - paginationState.page * paginationState.pageSize,
           paginationState.pageSize,
         )
       : visibleRowsCount;
-    const noScrollPageHeight = paginatedRowCount * rowHeight;
-
-    const windowBoundingClientRect = windowElement.getBoundingClientRect();
-    const windowDimensions: ElementSize = {
-      height: windowBoundingClientRect.height,
-      width: windowBoundingClientRect.width,
-    };
+    const noScrollPageHeight = currentPageRowCount * rowHeight;
 
     let scrollBarSize: number;
     if (props.scrollbarSize != null) {
@@ -106,58 +89,72 @@ export function useGridDimensions(
       scrollBarSize = getScrollbarSize(doc, rootElement);
     }
 
-    // The height of the grid will exactly match the height needed to display the current page
-    // They can be no scroll in the Y direction
-    if (props.autoHeight) {
-      const hasScrollX = columnsTotalWidth > windowDimensions.width;
-      const scrollBarHeight = hasScrollX ? scrollBarSize : 0;
-
-      return {
-        window: windowDimensions,
-        viewport: {
-          width: windowDimensions.width,
-          height: noScrollPageHeight + scrollBarHeight, // TODO: Fix for `props.autoPageSize`,
-        },
-        rowsInViewportCount: paginatedRowCount,
-        paginatedRowCount,
-        hasScrollX,
-        hasScrollY: false,
-      };
-    }
-
     let scrollBarWidth: number = 0;
     let scrollBarHeight: number = 0;
 
-    let hasScrollX = columnsTotalWidth > windowDimensions.width;
+    const viewportDimensionsWithoutScrollBar: ElementSize = {
+      width: rootDimensionsRef.current?.width ?? 0,
+      height: (rootDimensionsRef.current?.height ?? 0) - props.headerHeight,
+    };
+
+    let hasScrollX = columnsTotalWidth > viewportDimensionsWithoutScrollBar.width;
     if (hasScrollX) {
       scrollBarHeight = scrollBarSize;
     }
 
-    const hasScrollY = noScrollPageHeight + scrollBarHeight > windowDimensions.height;
+    const hasScrollY =
+      noScrollPageHeight + scrollBarHeight > viewportDimensionsWithoutScrollBar.height;
     if (hasScrollY) {
       scrollBarWidth = scrollBarSize;
     }
 
     // We recalculate the scroll x to consider the size of the y scrollbar.
-    hasScrollX = columnsTotalWidth + scrollBarWidth > windowDimensions.width;
+    hasScrollX = columnsTotalWidth + scrollBarWidth > viewportDimensionsWithoutScrollBar.width;
     if (hasScrollX) {
       scrollBarHeight = scrollBarSize;
     }
 
-    const viewportHeight = windowDimensions.height - scrollBarHeight;
+    const viewportHeight = viewportDimensionsWithoutScrollBar.height - scrollBarHeight;
 
-    return {
-      window: windowDimensions,
+    const newFullDimensions: GridDimensions = {
+      window: viewportDimensionsWithoutScrollBar,
       viewport: {
         height: viewportHeight,
-        width: windowDimensions.width - scrollBarWidth,
+        width: viewportDimensionsWithoutScrollBar.width - scrollBarWidth,
       },
       rowsInViewportCount: Math.floor(viewportHeight / rowHeight),
-      paginatedRowCount,
+      currentPageRowCount,
       hasScrollX,
       hasScrollY,
     };
-  }, [apiRef, props.autoHeight, props.pagination, props.scrollbarSize]);
+
+    const prevDimensions = fullDimensionsRef.current;
+    fullDimensionsRef.current = newFullDimensions;
+
+    if (newFullDimensions.viewport.width !== prevDimensions.viewport.width) {
+      apiRef.current.publishEvent(GridEvents.viewportWidthChange, newFullDimensions.viewport.width);
+    }
+  }, [
+    apiRef,
+    props.pagination,
+    props.headerHeight,
+    props.scrollbarSize,
+    rowHeight,
+    visibleRowsCount,
+    paginationState,
+    columnsTotalWidth,
+  ]);
+
+  const resize = React.useCallback<GridDimensionsApi['resize']>(() => {
+    updateGridDimensionsRef();
+
+    apiRef.current.publishEvent(GridEvents.debouncedResize, rootDimensionsRef.current);
+  }, [apiRef, updateGridDimensionsRef]);
+
+  const getDimensions = React.useCallback<GridDimensionsApi['getDimensions']>(
+    () => fullDimensionsRef.current,
+    [],
+  );
 
   const dimensionsApi: GridDimensionsApi = {
     resize,
@@ -170,6 +167,8 @@ export function useGridDimensions(
 
   const handleResize = React.useCallback(
     (size: ElementSize) => {
+      rootDimensionsRef.current = size;
+
       // jsdom has no layout capabilities
       const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -222,6 +221,8 @@ export function useGridDimensions(
     logger.info('canceling resize...');
     debounceResize.clear();
   }, [props.rows, debounceResize, logger]);
+
+  useEnhancedEffect(() => updateGridDimensionsRef(), [updateGridDimensionsRef]);
 
   useGridApiEventHandler(apiRef, GridEvents.resize, handleResize);
   useGridApiOptionHandler(apiRef, GridEvents.debouncedResize, props.onResize);
