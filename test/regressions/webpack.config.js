@@ -24,7 +24,6 @@ module.exports = {
     new webpack.DefinePlugin({
       'process.env': {
         DISABLE_CHANCE_RANDOM: JSON.stringify(true),
-        NODE_ENV: 'test',
       },
     }),
   ],
