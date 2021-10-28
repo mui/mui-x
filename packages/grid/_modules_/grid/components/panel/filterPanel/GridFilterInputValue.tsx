@@ -41,15 +41,15 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps & TextFieldPr
   const singleSelectProps: TextFieldProps =
     type === 'singleSelect'
       ? {
-        select: true,
-        SelectProps: {
-          native: true,
-        },
-        children: renderSingleSelectOptions(
-          apiRef.current.getColumn(item.columnField),
-          apiRef.current,
-        ),
-      }
+          select: true,
+          SelectProps: {
+            native: true,
+          },
+          children: renderSingleSelectOptions(
+            apiRef.current.getColumn(item.columnField),
+            apiRef.current,
+          ),
+        }
       : {};
   React.useEffect(() => {
     if (autoFocus) {
