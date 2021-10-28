@@ -9,7 +9,7 @@ import { gridPageSizeSelector } from './gridPaginationSelector';
 
 /**
  * @requires useGridControlState (method)
- * @requires useGridDimensions (method)
+ * @requires useGridDimensions (event) - can be after
  * @requires useGridFilter (state)
  */
 export const useGridPageSize = (

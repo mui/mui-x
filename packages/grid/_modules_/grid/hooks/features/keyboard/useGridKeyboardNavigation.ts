@@ -67,7 +67,7 @@ const getNextColumnHeaderIndexes = (key: string, indexes: GridColumnHeaderIndexC
  * @requires useGridPageSize (state)
  * @requires useGridColumns (state, method)
  * @requires useGridRows (state, method)
- * @requires useGridDimensions (method)
+ * @requires useGridDimensions (method) - can be after
  * @requires useGridFocus (method)
  * @requires useGridScroll (method)
  */

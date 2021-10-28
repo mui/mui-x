@@ -17,7 +17,7 @@ import { gridDensityRowHeightSelector } from '../density/densitySelector';
 /**
  * Only available in DataGridPro
  * @requires useGridColumns (state)
- * @requires useGridDimensions (method)
+ * @requires useGridDimensions (method) - can be after
  * @requires useGridScroll (method
  */
 export const useGridInfiniteLoader = (
