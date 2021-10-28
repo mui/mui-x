@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { unstable_useId as useId } from '@mui/material/utils';
+import { alpha, darken, lighten, styled } from '@mui/material/styles';
 import { GridEvents } from '../../constants/eventsConstants';
 import { GridStateColDef } from '../../models/colDef/index';
 import { GridSortDirection } from '../../models/gridSortModel';
@@ -13,7 +14,7 @@ import { GridColumnHeaderSeparator } from './GridColumnHeaderSeparator';
 import { ColumnHeaderMenuIcon } from './ColumnHeaderMenuIcon';
 import { ColumnHeaderFilterIcon } from './ColumnHeaderFilterIcon';
 import { GridColumnHeaderMenu } from '../menu/columnMenu/GridColumnHeaderMenu';
-import { getDataGridUtilityClass } from '../../gridClasses';
+import { getDataGridUtilityClass, gridClasses } from '../../gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { GridComponentProps } from '../../GridComponentProps';
 
@@ -65,6 +66,110 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
+
+const GridColumnHeaderItemRoot = styled('div', {
+  name: 'MuiDataGrid',
+  slot: 'ColumnHeader',
+  overridesResolver: (props, styles) => [
+    { [`&.${gridClasses['columnHeader--alignCenter']}`]: styles['columnHeader--alignCenter'] },
+    { [`&.${gridClasses['columnHeader--alignLeft']}`]: styles['columnHeader--alignLeft'] },
+    { [`&.${gridClasses['columnHeader--alignRight']}`]: styles['columnHeader--alignRight'] },
+    { [`&.${gridClasses['columnHeader--dragging']}`]: styles['columnHeader--dragging'] },
+    { [`&.${gridClasses['columnHeader--moving']}`]: styles['columnHeader--moving'] },
+    { [`&.${gridClasses['columnHeader--numeric']}`]: styles['columnHeader--numeric'] },
+    { [`&.${gridClasses['columnHeader--sortable']}`]: styles['columnHeader--sortable'] },
+    { [`&.${gridClasses['columnHeader--sorted']}`]: styles['columnHeader--sorted'] },
+    { [`&.${gridClasses.withBorder}`]: styles.withBorder },
+    { [`& .${gridClasses.columnHeaderDraggableContainer}`]: styles.columnHeaderDraggableContainer },
+    { [`& .${gridClasses.columnHeaderTitleContainer}`]: styles.columnHeaderTitleContainer },
+    styles.columnHeader,
+  ],
+})(({ theme }) => {
+  const borderColor =
+    theme.palette.mode === 'light'
+      ? lighten(alpha(theme.palette.divider, 1), 0.88)
+      : darken(alpha(theme.palette.divider, 1), 0.68);
+
+  return {
+    position: 'relative',
+    display: 'flex',
+    alignItems: 'center',
+    WebkitTapHighlightColor: 'transparent',
+    padding: '0 10px',
+    boxSizing: 'border-box',
+    [`&:hover`]: {
+      [`& .${gridClasses.iconButtonContainer}`]: {
+        visibility: 'visible',
+        width: 'auto',
+      },
+      [`& .${gridClasses.menuIcon}`]: {
+        width: 'auto',
+        visibility: 'visible',
+      },
+    },
+    [`&:focus-within`]: {
+      outline: `solid ${alpha(theme.palette.primary.main, 0.5)} 1px`,
+      outlineWidth: 1,
+      outlineOffset: -1,
+    },
+    [`&:focus`]: {
+      outline: `solid ${theme.palette.primary.main} 1px`,
+    },
+    [`&.${gridClasses['columnHeader--sorted']} .${gridClasses.iconButtonContainer}`]: {
+      visibility: 'visible',
+      width: 'auto',
+    },
+    [`&:not(.${gridClasses['columnHeader--sorted']}) .${gridClasses.sortIcon}`]: {
+      opacity: 0,
+      transition: theme.transitions.create(['opacity'], {
+        duration: theme.transitions.duration.shorter,
+      }),
+    },
+    [`&:not(.${gridClasses['columnHeader--sorted']}):hover .${gridClasses.sortIcon}`]: {
+      opacity: 0.5,
+    },
+    [`&.${gridClasses['columnHeader--sortable']}`]: {
+      cursor: 'pointer',
+    },
+    [`&.${gridClasses['columnHeader--alignCenter']} .${gridClasses.columnHeaderTitleContainer}`]: {
+      justifyContent: 'center',
+    },
+    [`&.${gridClasses['columnHeader--alignRight']} .${gridClasses.columnHeaderDraggableContainer}, &.${gridClasses['columnHeader--alignRight']} .${gridClasses.columnHeaderTitleContainer}`]:
+      {
+        flexDirection: 'row-reverse',
+      },
+    [`&.${gridClasses['columnHeader--alignCenter']} .${gridClasses.menuIcon}, &.${gridClasses['columnHeader--alignRight']} .${gridClasses.menuIcon}`]:
+      {
+        marginRight: 'auto',
+        marginLeft: -6,
+      },
+    [`& .${gridClasses['columnHeader--moving']}`]: {
+      backgroundColor: theme.palette.action.hover,
+    },
+    [`& .${gridClasses.columnHeaderTitleContainer}`]: {
+      display: 'flex',
+      alignItems: 'center',
+      minWidth: 0,
+      flex: 1,
+      whiteSpace: 'nowrap',
+      overflow: 'hidden',
+      padding: '0 6px',
+    },
+    [`& .${gridClasses.columnHeaderDraggableContainer}`]: {
+      display: 'flex',
+      width: '100%',
+    },
+    [`& .${gridClasses['columnHeader--dragging']}`]: {
+      background: theme.palette.background.paper,
+      padding: '0 12px',
+      borderRadius: theme.shape.borderRadius,
+      opacity: theme.palette.action.disabledOpacity,
+    },
+    [`&.${gridClasses.withBorder}`]: {
+      borderRight: `1px solid ${borderColor}`,
+    },
+  };
+});
 
 function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
   const {
@@ -181,7 +286,7 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
       : column.headerClassName;
 
   return (
-    <div
+    <GridColumnHeaderItemRoot
       ref={headerCellRef}
       className={clsx(classes.root, headerClassName)}
       data-field={column.field}
@@ -229,7 +334,7 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
         ContentComponent={rootProps.components.ColumnMenu}
         contentComponentProps={rootProps.componentsProps?.columnMenu}
       />
-    </div>
+    </GridColumnHeaderItemRoot>
   );
 }
 
