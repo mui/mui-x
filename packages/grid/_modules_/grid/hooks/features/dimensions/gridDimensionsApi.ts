@@ -2,13 +2,11 @@ import type { ElementSize } from '../../../models/elementSize';
 
 export interface GridDimensions {
   /**
-   * Dimensions of the element containing all the rows
-   * If their are scrollbars, this size includes the dimensions of those scrollbars
+   * The viewport size including scrollbars.
    */
   rowsContainer: ElementSize;
   /**
-   * Dimensions of the element containing all the rows
-   * If their are scrollbars, this size does not includes the dimensions of those scrollbars
+   * The viewport size not including scrollbars.
    */
   rowsContent: ElementSize;
   /**
