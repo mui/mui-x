@@ -22,20 +22,6 @@ import { useGridSelector } from '../../utils';
 
 const isTestEnvironment = process.env.NODE_ENV === 'test';
 
-function getScrollbarSize(doc: Document, element: HTMLElement): number {
-  const scrollDiv = doc.createElement('div');
-  scrollDiv.style.width = '99px';
-  scrollDiv.style.height = '99px';
-  scrollDiv.style.position = 'absolute';
-  scrollDiv.style.overflow = 'scroll';
-  scrollDiv.className = 'scrollDiv';
-  element.appendChild(scrollDiv);
-  const scrollbarSize = scrollDiv.offsetWidth - scrollDiv.clientWidth;
-  element.removeChild(scrollDiv);
-
-  return scrollbarSize;
-}
-
 export function useGridDimensions(
   apiRef: GridApiRef,
   props: Pick<
@@ -59,6 +45,29 @@ export function useGridDimensions(
       return;
     }
 
+    let scrollBarSize: number;
+    if (props.scrollbarSize != null) {
+      scrollBarSize = props.scrollbarSize;
+    } else if (!columnsTotalWidth || !rootElement) {
+      scrollBarSize = 0;
+    } else {
+      const doc = ownerDocument(rootElement);
+      const scrollDiv = doc.createElement('div');
+      scrollDiv.style.width = '99px';
+      scrollDiv.style.height = '99px';
+      scrollDiv.style.position = 'absolute';
+      scrollDiv.style.overflow = 'scroll';
+      scrollDiv.className = 'scrollDiv';
+      doc.appendChild(scrollDiv);
+      scrollBarSize = scrollDiv.offsetWidth - scrollDiv.clientWidth;
+      doc.removeChild(scrollDiv);
+    }
+
+    const viewportOuterSize: ElementSize = {
+      width: rootDimensionsRef.current.width,
+      height: rootDimensionsRef.current.height - props.headerHeight,
+    };
+
     // TODO: Use `useCurrentPageRows`
     const currentPageRowCount = props.pagination
       ? Math.min(
@@ -68,50 +77,29 @@ export function useGridDimensions(
       : visibleRowsCount;
     const noScrollPageHeight = currentPageRowCount * rowHeight;
 
-    let scrollBarSize: number;
-    if (props.scrollbarSize != null) {
-      scrollBarSize = props.scrollbarSize;
-    } else if (!columnsTotalWidth || !rootElement) {
-      scrollBarSize = 0;
-    } else {
-      const doc = ownerDocument(rootElement);
-      scrollBarSize = getScrollbarSize(doc, rootElement);
-    }
-
-    let scrollBarWidth: number = 0;
-    let scrollBarHeight: number = 0;
-
-    const containerDimensions: ElementSize = {
-      width: rootDimensionsRef.current.width,
-      height: rootDimensionsRef.current.height - props.headerHeight,
-    };
-
-    let hasScrollX = columnsTotalWidth > containerDimensions.width;
-    if (hasScrollX) {
-      scrollBarHeight = scrollBarSize;
-    }
-
-    const hasScrollY = noScrollPageHeight + scrollBarHeight > containerDimensions.height;
-    if (hasScrollY) {
-      scrollBarWidth = scrollBarSize;
-    }
+    let hasScrollX = columnsTotalWidth > viewportOuterSize.width;
+    const noScrollPageHeightWithScrollBar = noScrollPageHeight + (hasScrollX ? scrollBarSize : 0);
+    const hasScrollY = noScrollPageHeightWithScrollBar > viewportOuterSize.height;
 
     // We recalculate the scroll x to consider the size of the y scrollbar.
-    hasScrollX = columnsTotalWidth + scrollBarWidth > containerDimensions.width;
-    if (hasScrollX) {
-      scrollBarHeight = scrollBarSize;
+    if (hasScrollY) {
+      hasScrollX = columnsTotalWidth + scrollBarSize > viewportOuterSize.width;
     }
 
-    const viewportHeight = containerDimensions.height - scrollBarHeight;
-    const viewportWidth = containerDimensions.width - scrollBarWidth;
+    const viewportInnerSize: ElementSize = {
+      height: viewportOuterSize.height - (hasScrollX ? scrollBarSize : 0),
+      width: viewportOuterSize.width - (hasScrollY ? scrollBarSize : 0),
+    };
+
+    const rowsInViewportCount = Math.min(
+      currentPageRowCount,
+      Math.floor(viewportInnerSize.height / rowHeight),
+    );
 
     const newFullDimensions: GridDimensions = {
-      rowsContainer: containerDimensions,
-      rowsContent: {
-        height: viewportHeight,
-        width: viewportWidth,
-      },
-      rowsInViewportCount: Math.min(currentPageRowCount, Math.floor(viewportHeight / rowHeight)),
+      viewportOuterSize,
+      viewportInnerSize,
+      rowsInViewportCount,
       currentPageRowCount,
       hasScrollX,
       hasScrollY,
@@ -120,10 +108,10 @@ export function useGridDimensions(
     const prevDimensions = fullDimensionsRef.current;
     fullDimensionsRef.current = newFullDimensions;
 
-    if (newFullDimensions.rowsContent.width !== prevDimensions?.rowsContent.width) {
+    if (newFullDimensions.viewportInnerSize.width !== prevDimensions?.viewportInnerSize.width) {
       apiRef.current.publishEvent(
         GridEvents.viewportWidthChange,
-        newFullDimensions.rowsContent.width,
+        newFullDimensions.viewportInnerSize.width,
       );
     }
   }, [

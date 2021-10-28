@@ -4,11 +4,11 @@ export interface GridDimensions {
   /**
    * The viewport size including scrollbars.
    */
-  rowsContainer: ElementSize;
+  viewportOuterSize: ElementSize;
   /**
    * The viewport size not including scrollbars.
    */
-  rowsContent: ElementSize;
+  viewportInnerSize: ElementSize;
   /**
    * Amount of rows that are fully visible
    */
