@@ -15,6 +15,7 @@ import { GridColumnHeaderParams } from '../params/gridColumnHeaderParams';
 import { GridComparatorFn } from '../gridSortModel';
 import { GridColType, GridNativeColTypes } from './gridColType';
 import { GridRowParams } from '../params/gridRowParams';
+import { GridValueOptionsParams } from '../params/gridValueOptionsParams';
 import { GridActionsCellItemProps } from '../../components/cell/GridActionsCellItem';
 import { GridRowModel } from '../gridRows';
 
@@ -23,6 +24,7 @@ import { GridRowModel } from '../gridRows';
  */
 export type GridAlignment = 'left' | 'right' | 'center';
 
+type ValueOptions = string | number | { value: any; label: string };
 /**
  * Column Definition interface.
  */
@@ -83,9 +85,9 @@ export interface GridColDef {
    */
   type?: GridColType;
   /**
-   * To be used in combination with `type: 'singleSelect'`. This is an array of the possible cell values and labels.
+   * To be used in combination with `type: 'singleSelect'`. This is an array (or a function returning an array) of the possible cell values and labels.
    */
-  valueOptions?: Array<string | number | { value: any; label: string }>;
+  valueOptions?: Array<ValueOptions> | ((params: GridValueOptionsParams) => Array<ValueOptions>);
   /**
    * Allows to align the column values in cells.
    */

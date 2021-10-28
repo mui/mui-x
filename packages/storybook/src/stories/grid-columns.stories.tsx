@@ -11,7 +11,7 @@ import Button from '@mui/material/Button';
 import { useData } from '../hooks/useData';
 
 export default {
-  title: 'X-Grid Tests/Columns',
+  title: 'DataGridPro Test/Columns',
   component: DataGridPro,
   parameters: {
     options: { selectedPanel: 'storybook/storysource/panel' },
