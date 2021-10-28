@@ -106,6 +106,7 @@ async function main() {
         const testcase = await page.waitForSelector(
           '[data-testid="testcase"]:not([aria-busy="true"])',
         );
+
         await testcase.screenshot({ path: screenshotPath, type: 'png' });
       });
 

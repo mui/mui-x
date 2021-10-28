@@ -87,7 +87,7 @@ function LoadFont(props) {
   }, []);
 
   return (
-    <div aria-busy data-testid="testcase" {...other}>
+    <div aria-busy={!ready} data-testid="testcase" {...other}>
       {children}
     </div>
   );

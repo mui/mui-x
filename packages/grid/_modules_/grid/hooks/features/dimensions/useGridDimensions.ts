@@ -211,7 +211,7 @@ export function useGridDimensions(
         return;
       }
 
-      resize();
+      debounceResize();
     },
     [props.autoHeight, debounceResize, logger, resize],
   );
