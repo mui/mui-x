@@ -41,7 +41,7 @@ const INITIAL_GRID_DIMENSIONS: GridDimensions = {
     height: 0,
     width: 0,
   },
-  window: {
+  container: {
     height: 0,
     width: 0,
   },
@@ -97,38 +97,37 @@ export function useGridDimensions(
     let scrollBarWidth: number = 0;
     let scrollBarHeight: number = 0;
 
-    const viewportDimensionsWithoutScrollBar: ElementSize = {
+    const containerDimensions: ElementSize = {
       width: rootDimensionsRef.current.width,
       height: rootDimensionsRef.current.height - props.headerHeight,
     };
 
-    let hasScrollX = columnsTotalWidth > viewportDimensionsWithoutScrollBar.width;
+    let hasScrollX = columnsTotalWidth > containerDimensions.width;
     if (hasScrollX) {
       scrollBarHeight = scrollBarSize;
     }
 
-    const hasScrollY =
-      noScrollPageHeight + scrollBarHeight > viewportDimensionsWithoutScrollBar.height;
+    const hasScrollY = noScrollPageHeight + scrollBarHeight > containerDimensions.height;
     if (hasScrollY) {
       scrollBarWidth = scrollBarSize;
     }
 
     // We recalculate the scroll x to consider the size of the y scrollbar.
-    hasScrollX = columnsTotalWidth + scrollBarWidth > viewportDimensionsWithoutScrollBar.width;
+    hasScrollX = columnsTotalWidth + scrollBarWidth > containerDimensions.width;
     if (hasScrollX) {
       scrollBarHeight = scrollBarSize;
     }
 
-    const viewportHeight = viewportDimensionsWithoutScrollBar.height - scrollBarHeight;
-    const viewportWidth = viewportDimensionsWithoutScrollBar.width - scrollBarWidth;
+    const viewportHeight = containerDimensions.height - scrollBarHeight;
+    const viewportWidth = containerDimensions.width - scrollBarWidth;
 
     const newFullDimensions: GridDimensions = {
-      window: viewportDimensionsWithoutScrollBar,
+      container: containerDimensions,
       viewport: {
         height: viewportHeight,
         width: viewportWidth,
       },
-      rowsInViewportCount: Math.floor(viewportHeight / rowHeight),
+      rowsInViewportCount: Math.min(currentPageRowCount, Math.floor(viewportHeight / rowHeight)),
       currentPageRowCount,
       hasScrollX,
       hasScrollY,

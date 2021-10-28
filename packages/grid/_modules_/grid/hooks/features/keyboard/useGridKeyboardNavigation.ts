@@ -128,7 +128,7 @@ export const useGridKeyboardNavigation = (
           nextCellIndexes = { colIndex: colIdx, rowIndex: newRowIndex };
         }
       } else if (isPageKeys(key) || isSpaceKey(key)) {
-        const rowsInViewportCount = apiRef.current.getDimensions().currentPageRowCount;
+        const rowsInViewportCount = apiRef.current.getDimensions().rowsInViewportCount;
         const nextRowIndex =
           rowIndex +
           (key.indexOf('Down') > -1 || isSpaceKey(key)

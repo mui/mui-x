@@ -53,7 +53,7 @@ export const useGridInfiniteLoader = (
   const handleRowsScrollEnd = React.useCallback(
     (scrollPosition: GridScrollParams) => {
       const dimensions = apiRef.current.getDimensions();
-      const scrollPositionBottom = scrollPosition.top + dimensions.window.height;
+      const scrollPositionBottom = scrollPosition.top + dimensions.container.height;
 
       if (scrollPositionBottom < contentHeight - props.scrollEndThreshold) {
         isInScrollBottomArea.current = false;

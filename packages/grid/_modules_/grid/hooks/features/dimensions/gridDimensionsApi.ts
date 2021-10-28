@@ -1,7 +1,7 @@
 import type { ElementSize } from '../../../models/elementSize';
 
 export interface GridDimensions {
-  window: ElementSize;
+  container: ElementSize;
   viewport: ElementSize;
   rowsInViewportCount: number;
   currentPageRowCount: number;
