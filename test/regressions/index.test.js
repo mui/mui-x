@@ -102,7 +102,6 @@ async function main() {
 
         const screenshotPath = path.resolve(screenshotDir, `${route.replace(baseUrl, '.')}.png`);
         await fse.ensureDir(path.dirname(screenshotPath));
-
         const testcase = await page.waitForSelector(
           '[data-testid="testcase"]:not([aria-busy="true"])',
         );
