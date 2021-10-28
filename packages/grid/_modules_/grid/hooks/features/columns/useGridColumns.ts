@@ -349,7 +349,7 @@ export function useGridColumns(
   const handleGridSizeChange = () => setColumnsState(apiRef.current.state.columns);
 
   useGridApiEventHandler(apiRef, GridEvents.columnsPreProcessingChange, handlePreProcessColumns);
-  useGridApiEventHandler(apiRef, GridEvents.viewportWidthChange, handleGridSizeChange);
+  useGridApiEventHandler(apiRef, GridEvents.viewportInnerWidthChange, handleGridSizeChange);
 
   // Grid Option Handlers
   useGridApiOptionHandler(

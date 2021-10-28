@@ -58,9 +58,9 @@ export function useGridDimensions(
       scrollDiv.style.position = 'absolute';
       scrollDiv.style.overflow = 'scroll';
       scrollDiv.className = 'scrollDiv';
-      doc.appendChild(scrollDiv);
+      rootElement.appendChild(scrollDiv);
       scrollBarSize = scrollDiv.offsetWidth - scrollDiv.clientWidth;
-      doc.removeChild(scrollDiv);
+      rootElement.removeChild(scrollDiv);
     }
 
     const viewportOuterSize: ElementSize = {
@@ -108,9 +108,15 @@ export function useGridDimensions(
     const prevDimensions = fullDimensionsRef.current;
     fullDimensionsRef.current = newFullDimensions;
 
+    if (newFullDimensions.viewportOuterSize.height !== prevDimensions?.viewportOuterSize.height) {
+      apiRef.current.publishEvent(
+        GridEvents.viewportOuterHeightChange,
+        newFullDimensions.viewportOuterSize.height,
+      );
+    }
     if (newFullDimensions.viewportInnerSize.width !== prevDimensions?.viewportInnerSize.width) {
       apiRef.current.publishEvent(
-        GridEvents.viewportWidthChange,
+        GridEvents.viewportInnerWidthChange,
         newFullDimensions.viewportInnerSize.width,
       );
     }

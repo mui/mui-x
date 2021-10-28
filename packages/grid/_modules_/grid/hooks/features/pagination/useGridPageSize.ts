@@ -72,23 +72,17 @@ export const useGridPageSize = (
 
   useGridApiMethod(apiRef, pageSizeApi, 'GridPageSizeApi');
 
-  const handleUpdateAutoPageSize = React.useCallback(() => {
-    if (!props.autoPageSize) {
-      return;
-    }
+  const handleUpdateAutoPageSize = React.useCallback(
+    (outerHeight: number) => {
+      if (!props.autoPageSize) {
+        return;
+      }
 
-    const dimensions = apiRef.current.getDimensions();
-    if (!dimensions) {
-      return;
-    }
+      const pageSize = Math.floor(outerHeight / rowHeight);
+      apiRef.current.setPageSize(pageSize);
+    },
+    [apiRef, rowHeight, props.autoPageSize],
+  );
 
-    const pageSize = Math.floor(dimensions.viewportOuterSize.height / rowHeight);
-    apiRef.current.setPageSize(pageSize);
-  }, [apiRef, rowHeight, props.autoPageSize]);
-
-  useGridApiEventHandler(apiRef, GridEvents.debouncedResize, handleUpdateAutoPageSize);
-
-  React.useEffect(() => {
-    handleUpdateAutoPageSize();
-  }, [handleUpdateAutoPageSize]);
+  useGridApiEventHandler(apiRef, GridEvents.viewportOuterHeightChange, handleUpdateAutoPageSize);
 };
