@@ -19,27 +19,22 @@ export interface GridFilterApi {
    * Updates or inserts a [[GridFilterItem]].
    * @param {GridFilterItem} item The filter to update.
    */
-  upsertFilter: (item: GridFilterItem) => void;
-  /**
-   * Applies a [[GridFilterItem]] on all rows. If no `linkOperator` is given, the "and" operator is used.
-   * @param {GridFilterItem} item The filter to be applied.
-   * @param {GridLinkOperator} linkOperator The link operator to use.
-   */
-  applyFilter: (item: GridFilterItem, linkOperator?: GridLinkOperator) => void;
+  upsertFilterItem: (item: GridFilterItem) => void;
   /**
    * Applies all filters on all rows.
+   * @ignore - do not document.
    */
-  applyFilters: () => void;
+  unsafe_applyFilters: () => void;
   /**
    * Deletes a [[GridFilterItem]].
    * @param {GridFilterItem} item The filter to delete.
    */
-  deleteFilter: (item: GridFilterItem) => void;
+  deleteFilterItem: (item: GridFilterItem) => void;
   /**
    * Changes the [[GridLinkOperator]] used to connect the filters.
    * @param {GridLinkOperator} operator The new link operator. It can be: `"and"` or `"or`".
    */
-  applyFilterLinkOperator: (operator: GridLinkOperator) => void;
+  setFilterLinkOperator: (operator: GridLinkOperator) => void;
   /**
    * Sets the filter model to the one given by `model`.
    * @param {GridFilterModel} model The new filter model.

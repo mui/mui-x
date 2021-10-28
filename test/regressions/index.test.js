@@ -129,12 +129,16 @@ async function main() {
         link.click();
       });
 
-      await page.mouse.move(200, 200);
-      await page.mouse.wheel(400, 0);
-
       const testcase = await page.waitForSelector(
         '[data-testid="testcase"]:not([aria-busy="true"])',
       );
+
+      await page.evaluate(() => {
+        const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller');
+        virtualScroller.scrollLeft = 400;
+        virtualScroller.dispatchEvent(new Event('scroll'));
+      });
+
       await testcase.screenshot({ path: screenshotPath, type: 'png' });
     });
 

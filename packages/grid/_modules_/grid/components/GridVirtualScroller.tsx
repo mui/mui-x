@@ -15,7 +15,7 @@ import {
   gridFocusCellSelector,
   gridTabIndexCellSelector,
 } from '../hooks/features/focus/gridFocusStateSelector';
-import { visibleSortedGridRowsAsArraySelector } from '../hooks/features/filter/gridFilterSelector';
+import { gridVisibleSortedRowEntriesSelector } from '../hooks/features/filter/gridFilterSelector';
 import { gridDensityRowHeightSelector } from '../hooks/features/density/densitySelector';
 import { gridEditRowsStateSelector } from '../hooks/features/editRows/gridEditRowsSelector';
 import { GridEvents } from '../constants/eventsConstants';
@@ -42,6 +42,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 const VirtualScrollerRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'VirtualScroller',
+  overridesResolver: (props, styles) => styles.virtualScroller,
 })({
   overflow: 'auto',
   '@media print': {
@@ -52,6 +53,7 @@ const VirtualScrollerRoot = styled('div', {
 const VirtualScrollerContent = styled('div', {
   name: 'MuiDataGrid',
   slot: 'Content',
+  overridesResolver: (props, styles) => styles.content,
 })({
   position: 'relative',
   overflow: 'hidden',
@@ -60,6 +62,7 @@ const VirtualScrollerContent = styled('div', {
 const VirtualScrollerRenderZone = styled('div', {
   name: 'MuiDataGrid',
   slot: 'RenderingZone',
+  overridesResolver: (props, styles) => styles.renderingZone,
 })({
   position: 'absolute',
 });
@@ -105,7 +108,7 @@ const GridVirtualScroller = React.forwardRef<HTMLDivElement, GridVirtualScroller
     const rootProps = useGridRootProps();
     const visibleColumns = useGridSelector(apiRef, visibleGridColumnsSelector);
     const columnsMeta = useGridSelector(apiRef, gridColumnsMetaSelector);
-    const visibleSortedRowsAsArray = useGridSelector(apiRef, visibleSortedGridRowsAsArraySelector);
+    const visibleSortedRowEntries = useGridSelector(apiRef, gridVisibleSortedRowEntriesSelector);
     const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
     const cellFocus = useGridSelector(apiRef, gridFocusCellSelector);
     const cellTabIndex = useGridSelector(apiRef, gridTabIndexCellSelector);
@@ -126,10 +129,10 @@ const GridVirtualScroller = React.forwardRef<HTMLDivElement, GridVirtualScroller
     const rowsInCurrentPage = React.useMemo(() => {
       if (rootProps.pagination && rootProps.paginationMode === 'client') {
         const start = paginationState.pageSize * paginationState.page;
-        return visibleSortedRowsAsArray.slice(start, start + paginationState.pageSize);
+        return visibleSortedRowEntries.slice(start, start + paginationState.pageSize);
       }
-      return visibleSortedRowsAsArray;
-    }, [paginationState, rootProps.pagination, rootProps.paginationMode, visibleSortedRowsAsArray]);
+      return visibleSortedRowEntries;
+    }, [paginationState, rootProps.pagination, rootProps.paginationMode, visibleSortedRowEntries]);
 
     const computeRenderContext = React.useCallback(() => {
       if (disableVirtualization) {
@@ -282,12 +285,12 @@ const GridVirtualScroller = React.forwardRef<HTMLDivElement, GridVirtualScroller
       const rows: JSX.Element[] = [];
 
       for (let i = 0; i < renderedRows.length; i += 1) {
-        const [id, row] = renderedRows[i];
+        const { id, model } = renderedRows[i];
 
         rows.push(
           <rootProps.components.Row
             key={i}
-            row={row}
+            row={model}
             rowId={id}
             rowHeight={rowHeight}
             cellFocus={cellFocus} // TODO move to inside the row

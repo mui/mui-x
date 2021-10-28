@@ -153,10 +153,10 @@ interface GridComponentOtherProps {
   /**
    * Callback fired when an exception is thrown in the grid.
    * @param {any} args The arguments passed to the `showError` call.
-   * @param {MuiEvent<{}>} event The event object.
+   * @param {MuiEvent} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
-  onError?: (args: any, event: MuiEvent<{}>, details: GridCallbackDetails) => void;
+  onError?: (args: any, event: MuiEvent, details: GridCallbackDetails) => void;
   /**
    * Callback fired when a click event comes from a cell element.
    * @param {GridCellParams} params With all properties from [[GridCellParams]].
@@ -204,12 +204,12 @@ interface GridComponentOtherProps {
   /**
    * Callback fired when the cell value changed.
    * @param {GridEditCellValueParams} params With all properties from [[GridEditCellValueParams]].
-   * @param {MuiEvent<{}>} event The event object.
+   * @param {MuiEvent} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onCellValueChange?: (
     params: GridEditCellValueParams,
-    event: MuiEvent<{}>,
+    event: MuiEvent,
     details: GridCallbackDetails,
   ) => void;
   /**
@@ -281,45 +281,45 @@ interface GridComponentOtherProps {
   /**
    * Callback fired when a column is reordered.
    * @param {GridColumnOrderChangeParams} params With all properties from [[GridColumnOrderChangeParams]].
-   * @param {MuiEvent<{}>} event The event object.
+   * @param {MuiEvent} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onColumnOrderChange?: (
     params: GridColumnOrderChangeParams,
-    event: MuiEvent<{}>,
+    event: MuiEvent,
     details: GridCallbackDetails,
   ) => void;
   /**
    * Callback fired while a column is being resized.
    * @param {GridColumnResizeParams} params With all properties from [[GridColumnResizeParams]].
-   * @param {MuiEvent<{}>} event The event object.
+   * @param {MuiEvent} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onColumnResize?: (
     params: GridColumnResizeParams,
-    event: MuiEvent<{}>,
+    event: MuiEvent,
     details: GridCallbackDetails,
   ) => void;
   /**
    * Callback fired when the width of a column is changed.
    * @param {GridCallbackDetails} params With all properties from [[GridColumnResizeParams]].
-   * @param {MuiEvent<{}>} event The event object.
+   * @param {MuiEvent} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onColumnWidthChange?: (
     params: GridColumnResizeParams,
-    event: MuiEvent<{}>,
+    event: MuiEvent,
     details: GridCallbackDetails,
   ) => void;
   /**
    * Callback fired when a column visibility changes.
    * @param {GridColumnVisibilityChangeParams} params With all properties from [[GridColumnVisibilityChangeParams]].
-   * @param {MuiEvent<{}>} event The event object.
+   * @param {MuiEvent} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onColumnVisibilityChange?: (
     params: GridColumnVisibilityChangeParams,
-    event: MuiEvent<{}>,
+    event: MuiEvent,
     details: GridCallbackDetails,
   ) => void;
   /**
@@ -336,12 +336,12 @@ interface GridComponentOtherProps {
   /**
    * Callback fired when scrolling to the bottom of the grid viewport.
    * @param {GridRowScrollEndParams} params With all properties from [[GridRowScrollEndParams]].
-   * @param {MuiEvent<{}>} event The event object.
+   * @param {MuiEvent} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onRowsScrollEnd?: (
     params: GridRowScrollEndParams,
-    event: MuiEvent<{}>,
+    event: MuiEvent,
     details: GridCallbackDetails,
   ) => void;
   /**
@@ -358,22 +358,18 @@ interface GridComponentOtherProps {
   /**
    * Callback fired when the grid is resized.
    * @param {ElementSize} containerSize With all properties from [[ElementSize]].
-   * @param {MuiEvent<{}>} event The event object.
+   * @param {MuiEvent} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
-  onResize?: (
-    containerSize: ElementSize,
-    event: MuiEvent<{}>,
-    details: GridCallbackDetails,
-  ) => void;
+  onResize?: (containerSize: ElementSize, event: MuiEvent, details: GridCallbackDetails) => void;
   /**
    * Callback fired when the state of the grid is updated.
    * @param {GridState} state The new state.
-   * @param {MuiEvent<{}>} event The event object.
+   * @param {MuiEvent} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
    * @internal
    */
-  onStateChange?: (state: GridState, event: MuiEvent<{}>, details: GridCallbackDetails) => void;
+  onStateChange?: (state: GridState, event: MuiEvent, details: GridCallbackDetails) => void;
   /**
    * The zero-based index of the current page.
    * @default 0
@@ -449,7 +445,7 @@ interface GridComponentOtherProps {
    */
   'aria-labelledby'?: string;
   /**
-   * @ignore
+   * @ignore - do not document
    */
   className?: string;
   /**
@@ -483,7 +479,7 @@ interface GridComponentOtherProps {
    */
   initialState?: GridInitialState;
   /**
-   * @ignore
+   * @ignore - do not document
    */
   style?: React.CSSProperties;
   /**
