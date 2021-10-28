@@ -86,7 +86,7 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
   const columnMenuButtonId = useId();
   const iconButtonRef = React.useRef<HTMLButtonElement>(null);
 
-  const { hasScrollX, hasScrollY } = apiRef.current.getDimensions();
+  const { hasScrollX, hasScrollY } = apiRef.current.getDimensions()!;
 
   let headerComponent: React.ReactNode = null;
   if (column.renderHeader) {

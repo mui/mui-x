@@ -205,11 +205,15 @@ export function useGridColumns(
 
   const setColumnsState = React.useCallback(
     (newState: RawGridColumnsState, emit?: boolean) => {
+      const dimensions = apiRef.current.getDimensions();
+      if (!dimensions) {
+        return;
+      }
+
       logger.debug('updating GridColumns with new state');
 
-      const dimensions = apiRef.current.getDimensions();
       let newColumns: GridColumns = newState.all.map((field) => newState.lookup[field]);
-      newColumns = hydrateColumnsWidth(newColumns, dimensions.viewport.width);
+      newColumns = hydrateColumnsWidth(newColumns, dimensions.rowsContent.width);
 
       const columnState: GridColumnsState = {
         all: newColumns.map((col) => col.field),

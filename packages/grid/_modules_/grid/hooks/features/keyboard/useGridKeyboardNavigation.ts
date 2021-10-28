@@ -100,6 +100,9 @@ export const useGridKeyboardNavigation = (
       const key = mapKey(event);
       const isCtrlPressed = event.ctrlKey || event.metaKey || event.shiftKey;
       const dimensions = apiRef.current.getDimensions();
+      if (!dimensions) {
+        return;
+      }
 
       let lastRowIndexInCurrentPage = totalVisibleRowCount;
       if (props.pagination) {
@@ -135,8 +138,8 @@ export const useGridKeyboardNavigation = (
         const nextRowIndex =
           rowIndex +
           (key.indexOf('Down') > -1 || isSpaceKey(key)
-            ? dimensions.rowsInViewportCount
-            : -1 * dimensions.rowsInViewportCount);
+            ? dimensions.currentPageRowCount
+            : -1 * dimensions.currentPageRowCount);
         nextCellIndexes = { colIndex, rowIndex: nextRowIndex };
       } else {
         throw new Error('MUI: Key not mapped to navigation behavior.');
@@ -178,9 +181,14 @@ export const useGridKeyboardNavigation = (
   const navigateColumnHeaders = React.useCallback(
     (params: GridColumnHeaderParams, event: React.KeyboardEvent) => {
       event.preventDefault();
+
       let nextColumnHeaderIndexes: GridColumnHeaderIndexCoordinates | null;
       const colIndex = apiRef.current.getColumnIndex(params.field);
       const key = mapKey(event);
+      const dimensions = apiRef.current.getDimensions();
+      if (!dimensions) {
+        return;
+      }
 
       if (isArrowKeys(key)) {
         nextColumnHeaderIndexes = getNextColumnHeaderIndexes(key, {
@@ -193,7 +201,7 @@ export const useGridKeyboardNavigation = (
       } else if (isPageKeys(key)) {
         // Handle only Page Down key, Page Up should keep the current position
         if (key.indexOf('Down') > -1) {
-          const rowsInViewportCount = apiRef.current.getDimensions().currentPageRowCount;
+          const rowsInViewportCount = dimensions.currentPageRowCount;
           const field = apiRef.current.getVisibleColumns()[colIndex].field;
           const id = apiRef.current.getRowIdFromRowIndex(rowsInViewportCount - 1);
 

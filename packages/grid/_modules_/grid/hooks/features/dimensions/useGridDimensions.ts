@@ -36,22 +36,6 @@ function getScrollbarSize(doc: Document, element: HTMLElement): number {
   return scrollbarSize;
 }
 
-const INITIAL_GRID_DIMENSIONS: GridDimensions = {
-  viewport: {
-    height: 0,
-    width: 0,
-  },
-  container: {
-    height: 0,
-    width: 0,
-  },
-  rowsInViewportCount: 0,
-  currentPageRowCount: 0,
-  hasScrollY: false,
-  hasScrollX: false,
-  isReady: false,
-};
-
 export function useGridDimensions(
   apiRef: GridApiRef,
   props: Pick<
@@ -62,7 +46,7 @@ export function useGridDimensions(
   const logger = useGridLogger(apiRef, 'useResizeContainer');
   const warningShown = React.useRef(false);
   const rootDimensionsRef = React.useRef<ElementSize | null>(null);
-  const fullDimensionsRef = React.useRef<GridDimensions>(INITIAL_GRID_DIMENSIONS);
+  const fullDimensionsRef = React.useRef<GridDimensions | null>(null);
   const columnsTotalWidth = useGridSelector(apiRef, gridColumnsTotalWidthSelector);
   const paginationState = useGridSelector(apiRef, gridPaginationSelector);
   const visibleRowsCount = useGridSelector(apiRef, gridVisibleRowCountSelector);
@@ -122,8 +106,8 @@ export function useGridDimensions(
     const viewportWidth = containerDimensions.width - scrollBarWidth;
 
     const newFullDimensions: GridDimensions = {
-      container: containerDimensions,
-      viewport: {
+      rowsContainer: containerDimensions,
+      rowsContent: {
         height: viewportHeight,
         width: viewportWidth,
       },
@@ -131,14 +115,16 @@ export function useGridDimensions(
       currentPageRowCount,
       hasScrollX,
       hasScrollY,
-      isReady: true,
     };
 
     const prevDimensions = fullDimensionsRef.current;
     fullDimensionsRef.current = newFullDimensions;
 
-    if (newFullDimensions.viewport.width !== prevDimensions.viewport.width) {
-      apiRef.current.publishEvent(GridEvents.viewportWidthChange, newFullDimensions.viewport.width);
+    if (newFullDimensions.rowsContent.width !== prevDimensions?.rowsContent.width) {
+      apiRef.current.publishEvent(
+        GridEvents.viewportWidthChange,
+        newFullDimensions.rowsContent.width,
+      );
     }
   }, [
     apiRef,
