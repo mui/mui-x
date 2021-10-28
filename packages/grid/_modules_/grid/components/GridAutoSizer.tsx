@@ -97,10 +97,7 @@ const GridAutoSizer = React.forwardRef<HTMLDivElement, AutoSizerProps>(function 
       const newHeight = height - paddingTop - paddingBottom;
       const newWidth = width - paddingLeft - paddingRight;
 
-      if (
-        (!disableHeight && state.height !== newHeight) ||
-        (!disableWidth && state.width !== newWidth)
-      ) {
+      if (state.height !== newHeight || state.width !== newWidth) {
         setState({
           height: newHeight,
           width: newWidth,

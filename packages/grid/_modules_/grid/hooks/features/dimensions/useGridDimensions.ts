@@ -49,6 +49,7 @@ const INITIAL_GRID_DIMENSIONS: GridDimensions = {
   currentPageRowCount: 0,
   hasScrollY: false,
   hasScrollX: false,
+  isReady: false,
 };
 
 export function useGridDimensions(
@@ -69,6 +70,10 @@ export function useGridDimensions(
 
   const updateGridDimensionsRef = React.useCallback(() => {
     const rootElement = apiRef.current.rootElementRef?.current;
+
+    if (!rootDimensionsRef.current) {
+      return;
+    }
 
     // TODO: Use `useCurrentPageRows`
     const currentPageRowCount = props.pagination
@@ -93,8 +98,8 @@ export function useGridDimensions(
     let scrollBarHeight: number = 0;
 
     const viewportDimensionsWithoutScrollBar: ElementSize = {
-      width: rootDimensionsRef.current?.width ?? 0,
-      height: (rootDimensionsRef.current?.height ?? 0) - props.headerHeight,
+      width: rootDimensionsRef.current.width,
+      height: rootDimensionsRef.current.height - props.headerHeight,
     };
 
     let hasScrollX = columnsTotalWidth > viewportDimensionsWithoutScrollBar.width;
@@ -126,6 +131,7 @@ export function useGridDimensions(
       currentPageRowCount,
       hasScrollX,
       hasScrollY,
+      isReady: true,
     };
 
     const prevDimensions = fullDimensionsRef.current;

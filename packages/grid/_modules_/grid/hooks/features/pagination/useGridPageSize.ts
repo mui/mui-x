@@ -77,8 +77,14 @@ export const useGridPageSize = (
       return;
     }
 
-    const height = apiRef.current.getDimensions().window.height;
-    const pageSize = Math.floor(height / rowHeight);
+    const dimensions = apiRef.current.getDimensions();
+
+    if (!dimensions.isReady) {
+      return;
+    }
+
+    const pageSize = Math.floor(dimensions.window.height / rowHeight);
+
     apiRef.current.setPageSize(pageSize);
   }, [apiRef, rowHeight, props.autoPageSize]);
 

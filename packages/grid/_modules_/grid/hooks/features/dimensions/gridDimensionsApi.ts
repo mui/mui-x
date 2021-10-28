@@ -7,6 +7,7 @@ export interface GridDimensions {
   currentPageRowCount: number;
   hasScrollX: boolean;
   hasScrollY: boolean;
+  isReady: boolean;
 }
 
 export interface ScrollBarSize extends ElementSize {
