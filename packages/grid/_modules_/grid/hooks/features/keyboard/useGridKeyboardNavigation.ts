@@ -107,7 +107,7 @@ export const useGridKeyboardNavigation = (
       let lastRowIndexInCurrentPage = totalVisibleRowCount;
       if (props.pagination) {
         lastRowIndexInCurrentPage =
-          paginationState.pageSize * paginationState.page + dimensions.currentPageRowCount;
+          paginationState.pageSize * paginationState.page + dimensions.virtualRowsCount;
       }
 
       let nextCellIndexes: GridCellIndexCoordinates;
@@ -138,8 +138,8 @@ export const useGridKeyboardNavigation = (
         const nextRowIndex =
           rowIndex +
           (key.indexOf('Down') > -1 || isSpaceKey(key)
-            ? dimensions.currentPageRowCount
-            : -1 * dimensions.currentPageRowCount);
+            ? dimensions.virtualRowsCount
+            : -1 * dimensions.virtualRowsCount);
         nextCellIndexes = { colIndex, rowIndex: nextRowIndex };
       } else {
         throw new Error('MUI: Key not mapped to navigation behavior.');
@@ -201,7 +201,7 @@ export const useGridKeyboardNavigation = (
       } else if (isPageKeys(key)) {
         // Handle only Page Down key, Page Up should keep the current position
         if (key.indexOf('Down') > -1) {
-          const rowsInViewportCount = dimensions.currentPageRowCount;
+          const rowsInViewportCount = dimensions.virtualRowsCount;
           const field = apiRef.current.getVisibleColumns()[colIndex].field;
           const id = apiRef.current.getRowIdFromRowIndex(rowsInViewportCount - 1);
 

@@ -69,17 +69,17 @@ export function useGridDimensions(
     };
 
     // TODO: Use `useCurrentPageRows`
-    const currentPageRowCount = props.pagination
+    const virtualRowsCount = props.pagination
       ? Math.min(
           visibleRowsCount - paginationState.page * paginationState.pageSize,
           paginationState.pageSize,
         )
       : visibleRowsCount;
-    const noScrollPageHeight = currentPageRowCount * rowHeight;
+    const pageScrollHeight = virtualRowsCount * rowHeight;
 
     let hasScrollX = columnsTotalWidth > viewportOuterSize.width;
-    const noScrollPageHeightWithScrollBar = noScrollPageHeight + (hasScrollX ? scrollBarSize : 0);
-    const hasScrollY = noScrollPageHeightWithScrollBar > viewportOuterSize.height;
+    const hasScrollY =
+      pageScrollHeight + (hasScrollX ? scrollBarSize : 0) > viewportOuterSize.height;
 
     // We recalculate the scroll x to consider the size of the y scrollbar.
     if (hasScrollY) {
@@ -91,16 +91,15 @@ export function useGridDimensions(
       width: viewportOuterSize.width - (hasScrollY ? scrollBarSize : 0),
     };
 
-    const rowsInViewportCount = Math.min(
-      currentPageRowCount,
-      Math.floor(viewportInnerSize.height / rowHeight),
-    );
+    const maximumPageSizeWithoutScrollBar = Math.floor(viewportInnerSize.height / rowHeight);
+    const rowsInViewportCount = Math.min(virtualRowsCount, maximumPageSizeWithoutScrollBar);
 
     const newFullDimensions: GridDimensions = {
       viewportOuterSize,
       viewportInnerSize,
+      maximumPageSizeWithoutScrollBar,
       rowsInViewportCount,
-      currentPageRowCount,
+      virtualRowsCount,
       hasScrollX,
       hasScrollY,
     };
@@ -108,10 +107,13 @@ export function useGridDimensions(
     const prevDimensions = fullDimensionsRef.current;
     fullDimensionsRef.current = newFullDimensions;
 
-    if (newFullDimensions.viewportOuterSize.height !== prevDimensions?.viewportOuterSize.height) {
+    if (
+      newFullDimensions.maximumPageSizeWithoutScrollBar !==
+      prevDimensions?.maximumPageSizeWithoutScrollBar
+    ) {
       apiRef.current.publishEvent(
-        GridEvents.viewportOuterHeightChange,
-        newFullDimensions.viewportOuterSize.height,
+        GridEvents.maximumPageSizeWithoutScrollBarChange,
+        newFullDimensions.maximumPageSizeWithoutScrollBar,
       );
     }
     if (newFullDimensions.viewportInnerSize.width !== prevDimensions?.viewportInnerSize.width) {

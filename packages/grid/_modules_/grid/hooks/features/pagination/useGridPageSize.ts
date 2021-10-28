@@ -3,16 +3,9 @@ import { GridApiRef } from '../../../models';
 import { GridComponentProps } from '../../../GridComponentProps';
 import { GridPageSizeApi } from '../../../models/api/gridPageSizeApi';
 import { GridEvents } from '../../../constants/eventsConstants';
-import {
-  useGridLogger,
-  useGridApiMethod,
-  useGridState,
-  useGridApiEventHandler,
-  useGridSelector,
-} from '../../utils';
+import { useGridLogger, useGridApiMethod, useGridState, useGridApiEventHandler } from '../../utils';
 import { useGridStateInit } from '../../utils/useGridStateInit';
 import { gridPageSizeSelector } from './gridPaginationSelector';
-import { gridDensityRowHeightSelector } from '../density';
 
 /**
  * @requires useGridControlState (method)
@@ -24,7 +17,6 @@ export const useGridPageSize = (
   props: Pick<GridComponentProps, 'pageSize' | 'onPageSizeChange' | 'autoPageSize'>,
 ) => {
   const logger = useGridLogger(apiRef, 'useGridPageSize');
-  const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
 
   useGridStateInit(apiRef, (state) => ({
     ...state,
@@ -73,16 +65,19 @@ export const useGridPageSize = (
   useGridApiMethod(apiRef, pageSizeApi, 'GridPageSizeApi');
 
   const handleUpdateAutoPageSize = React.useCallback(
-    (outerHeight: number) => {
+    (rowsFittingInViewportCount: number) => {
       if (!props.autoPageSize) {
         return;
       }
 
-      const pageSize = Math.floor(outerHeight / rowHeight);
-      apiRef.current.setPageSize(pageSize);
+      apiRef.current.setPageSize(rowsFittingInViewportCount);
     },
-    [apiRef, rowHeight, props.autoPageSize],
+    [apiRef, props.autoPageSize],
   );
 
-  useGridApiEventHandler(apiRef, GridEvents.viewportOuterHeightChange, handleUpdateAutoPageSize);
+  useGridApiEventHandler(
+    apiRef,
+    GridEvents.maximumPageSizeWithoutScrollBarChange,
+    handleUpdateAutoPageSize,
+  );
 };
