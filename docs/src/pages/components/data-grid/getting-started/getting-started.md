@@ -250,7 +250,7 @@ const generateClassName = createGenerateClassName({
 3. Create a v5 theme with the same customizations as the v4 theme. This has to be done as the theme is not shared between different MUI Core versions.
 
 ```jsx
-import { createTheme as createThemeV4 } from '@material-ui/core/styles';
+import { createMuiTheme as createThemeV4 } from '@material-ui/core/styles';
 import { createTheme as createThemeV5 } from '@mui/material/styles';
 
 const themeV4 = createThemeV4({
