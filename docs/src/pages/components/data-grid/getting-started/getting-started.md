@@ -242,7 +242,7 @@ const generateClassName = createGenerateClassName({
   // using MUI classes (e.g. `.MuiButton`) they will lose styles.
   // Make sure to convert them to use `styled()` or `<Box />` first.
   disableGlobal: true,
-  // Class names will receive this prefix to avoid name collisions.
+  // Class names will receive this seed to avoid name collisions.
   seed: 'mui-jss',
 });
 ```
