@@ -10,7 +10,7 @@ import { useData } from '../hooks/useData';
 import { getData, GridData } from '../data/data-service';
 
 export default {
-  title: 'X-Grid Tests/Pagination',
+  title: 'DataGridPro Test/Pagination',
   component: DataGridPro,
   parameters: {
     options: { selectedPanel: 'storybook/storysource/panel' },

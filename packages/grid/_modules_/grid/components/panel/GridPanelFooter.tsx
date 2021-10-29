@@ -21,6 +21,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 const GridPanelFooterRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'PanelFooter',
+  overridesResolver: (props, styles) => styles.panelFooter,
 })(({ theme }) => ({
   padding: theme.spacing(0.5),
   display: 'flex',
