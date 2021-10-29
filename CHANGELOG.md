@@ -49,6 +49,8 @@ A big thanks to the 7 contributors who made this release possible. Here are some
   +gridRowIdsSelector
   ```
 
+  You can `apiRef.current.getRowModels` for the pro version,
+  or `gridRowIdsSelector` and `gridRowsLookupSelector` for the free version
   ```diff
   -unorderedGridRowModelsSelector: (state: GridState) => GridRowModel[];
   ```
@@ -57,65 +59,48 @@ A big thanks to the 7 contributors who made this release possible. Here are some
   ```diff
   -sortingGridStateSelector
   +gridSortingStateSelector
-  ```
 
-  ```diff
   -sortedGridRowIdsSelector
   +gridSortedRowIdsSelector
-  ```
 
-  ```diff
   -sortedGridRowsSelector: (state: GridState) => Map<GridRowId, GridRowModel>
   +gridSortedRowEntriesSelector: (state: GridState) => GridRowEntry[]
-  ```
 
-  ```diff
   -const map = sortedGridRowsSelector(state);
   +const map = new Map(gridSortedRowEntriesSelector(state).map(row => [row.id, row.model]));
   ```
 
   **Filter selectors**
-  ```diff
-  -visibleSortedGridRowsAsArraySelector: (state: GridState) => [GridRowId, GridRowData][];
-  +gridVisibleSortedRowEntriesSelector: (state: GridState) => GridRowEntry[]
-  ```
 
+  You can use `apiRef.current.getVisibleRowModels` for the pro version,
+  or you can rebuild the `Map` manually for the free version
   ```diff
   -visibleSortedGridRowsSelector: (state: GridState) => Map<GridRowId, GridRowModel>;
   +gridVisibleSortedRowEntriesSelector: (state: GridState) => GridRowEntry[]
   ```
 
   ```diff
+  -visibleSortedGridRowsAsArraySelector: (state: GridState) => [GridRowId, GridRowData][];
+  +gridVisibleSortedRowEntriesSelector: (state: GridState) => GridRowEntry[]
+
   -const map = visibleSortedGridRowsSelector(state);
   +const map = new Map(gridVisibleSortedRowEntriesSelector(state).map(row => [row.id, row.model]));
-  ```
 
-  ```diff
   -visibleSortedGridRowIdsSelector
   +gridVisibleSortedRowIdsSelector
-  ```
 
-  ```diff
   -visibleGridRowCountSelector
   +gridVisibleRowCountSelector
   +gridVisibleTopLevelRowCountSelector
-  ```
 
-  ```diff
   -filterGridColumnLookupSelector
   +gridFilterActiveItemsLookupSelector
-  ```
 
-  ```diff
   -activeGridFilterItemsSelector
   +gridFilterActiveItemsSelector
-  ```
 
-  ```diff
-  - filterGridItemsCounterSelector
-  ```
+  -filterGridItemsCounterSelector
 
-  ```diff
   -const filterCount = filterGridItemsCounterSelector(state);
   +const filterCount = gridFilterActiveItemsSelector(state).length;
   ```
