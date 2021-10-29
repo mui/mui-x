@@ -257,8 +257,9 @@ export const useGridFilter = (
       });
       if (gridFilterModelSelector(apiRef.current.state).items.length === 0) {
         apiRef.current.upsertFilterItem({});
+      } else {
+        apiRef.current.unsafe_applyFilters();
       }
-      apiRef.current.unsafe_applyFilters();
     },
     [apiRef, logger, setGridState],
   );
