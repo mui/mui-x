@@ -131,7 +131,7 @@ A big thanks to the 7 contributors who made this release possible. Here are some
 - [docs] Explain how to use MUI X v5 with MUI Core v4 (#2846) @m4theushw
 - [docs] Generate docs for components (#2465) @m4theushw
 - [docs] Improve `scrollEndThreshold` API docs (#3001) @ZeeshanTamboli
-- [docs] Update CodeSandbox bug or feature request templates (#2986) @flaviendelangle
+- [docs] Fix CodeSandbox and feature request templates (#2986) @flaviendelangle
 
 ### Core
 
