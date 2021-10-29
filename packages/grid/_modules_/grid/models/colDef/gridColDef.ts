@@ -10,7 +10,7 @@ import {
   GridValueFormatterParams,
   GridValueGetterParams,
   GridValueSetterParams,
-  GridEditCellPropsChangeParams,
+  GridPreProcessEditCellProps,
 } from '../params/gridCellParams';
 import { GridColumnHeaderParams } from '../params/gridColumnHeaderParams';
 import { GridComparatorFn } from '../gridSortModel';
@@ -137,12 +137,13 @@ export interface GridColDef {
    */
   renderEditCell?: (params: GridRenderEditCellParams) => React.ReactNode;
   /**
-   * Callback fired when the edit props of the column changes.
-   * @param {GridEditCellPropsChangeParams} params Object contaning parameters of the cell being editted.
+   * Callback fired when the edit props of the cell changes.
+   * It allows to process the props that saved into the state.
+   * @param {GridPreProcessEditCellProps} params Object contaning parameters of the cell being editted.
    * @returns {GridEditCellProps | Promise<GridEditCellProps>} The new edit cell props.
    */
-  onEditCellPropsChange?: (
-    params: GridEditCellPropsChangeParams,
+  preProcessEditCellProps?: (
+    params: GridPreProcessEditCellProps,
   ) => GridEditCellProps | Promise<GridEditCellProps>;
   /**
    * Class name that will be added in the column header cell.

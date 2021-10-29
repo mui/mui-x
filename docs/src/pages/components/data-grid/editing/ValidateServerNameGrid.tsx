@@ -6,8 +6,8 @@ import {
   GridRowsProp,
   useGridApiRef,
   DataGridPro,
-  GridEditCellPropsChangeParams,
   GridEditCellProps,
+  GridPreProcessEditCellProps,
 } from '@mui/x-data-grid-pro';
 
 const defaultTheme = createTheme();
@@ -47,7 +47,7 @@ export default function ValidateServerNameGrid() {
 
   const keyStrokeTimeoutRef = React.useRef<any>();
 
-  const handleNameEditPropsChange = (params: GridEditCellPropsChangeParams) =>
+  const preProcessEditCellProps = (params: GridPreProcessEditCellProps) =>
     new Promise<GridEditCellProps>((resolve) => {
       clearTimeout(promiseTimeout);
       clearTimeout(keyStrokeTimeoutRef.current);
@@ -65,7 +65,7 @@ export default function ValidateServerNameGrid() {
       headerName: 'MUI Contributor',
       width: 180,
       editable: true,
-      onEditCellPropsChange: handleNameEditPropsChange,
+      preProcessEditCellProps,
     },
   ];
 

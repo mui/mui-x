@@ -121,7 +121,7 @@ export interface GridValueFormatterParams {
 /**
  * Object passed as parameter in the column [[GridColDef]] edit cell props change callback.
  */
-export interface GridEditCellPropsChangeParams {
+export interface GridPreProcessEditCellProps {
   /**
    * The grid row id.
    */

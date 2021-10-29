@@ -53,7 +53,7 @@ const columns = [
     headerName: 'Email',
     width: 200,
     editable: true,
-    onEditCellPropsChange: (params) => {
+    preProcessEditCellProps: (params) => {
       const isValid = validateEmail(params.props.value);
       return { ...params.props, error: !isValid };
     },

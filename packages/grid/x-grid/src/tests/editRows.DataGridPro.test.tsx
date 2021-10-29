@@ -628,7 +628,7 @@ describe('<DataGridPro /> - Edit Rows', () => {
       });
     });
 
-    it('should change cell value correctly when the valueOptions is a function returning an array of strings', () => {
+    it('should change cell value correctly when the valueOptions is a function returning an array of strings', async () => {
       render(
         <div style={{ width: 300, height: 300 }}>
           <DataGridPro
@@ -654,11 +654,13 @@ describe('<DataGridPro /> - Edit Rows', () => {
       fireEvent.doubleClick(cell);
       fireEvent.click(screen.queryAllByRole('option')[1]);
 
-      expect(cell).not.to.have.class('MuiDataGrid-cell--editing');
-      expect(cell).to.have.text('Adidas');
+      await waitFor(() => {
+        expect(cell).not.to.have.class('MuiDataGrid-cell--editing');
+        expect(cell).to.have.text('Adidas');
+      });
     });
 
-    it('should change cell value correctly when the valueOptions is a function returning an array of objects', () => {
+    it('should change cell value correctly when the valueOptions is a function returning an array of objects', async () => {
       const countries = [
         {
           value: 'fr',
@@ -699,8 +701,10 @@ describe('<DataGridPro /> - Edit Rows', () => {
       fireEvent.doubleClick(cell);
       fireEvent.click(screen.queryAllByRole('option')[1]);
 
-      expect(cell).not.to.have.class('MuiDataGrid-cell--editing');
-      expect(cell).to.have.text('Italy');
+      await waitFor(() => {
+        expect(cell).not.to.have.class('MuiDataGrid-cell--editing');
+        expect(cell).to.have.text('Italy');
+      });
     });
 
     it('should apply valueFormatter to select options when valueOptions is of primitive types', () => {
@@ -774,7 +778,7 @@ describe('<DataGridPro /> - Edit Rows', () => {
                 type: 'singleSelect',
                 valueOptions: ['Nike', 'Adidas'],
                 editable: true,
-                onEditCellPropsChange: ({ props }) => ({ ...props, error: true }),
+                preProcessEditCellProps: ({ props }) => ({ ...props, error: true }),
               },
             ]}
             rows={[{ id: 0, brand: 'Nike' }]}
@@ -802,7 +806,7 @@ describe('<DataGridPro /> - Edit Rows', () => {
                 type: 'singleSelect',
                 valueOptions: ['Nike', 'Adidas'],
                 editable: true,
-                onEditCellPropsChange: ({ props }) => Promise.resolve({ ...props, error: true }),
+                preProcessEditCellProps: ({ props }) => Promise.resolve({ ...props, error: true }),
               },
             ]}
             rows={[{ id: 0, brand: 'Nike' }]}
@@ -1272,13 +1276,13 @@ describe('<DataGridPro /> - Edit Rows', () => {
     });
 
     it('should mark fields as invalid when an object with error is returned', async () => {
-      const onEditCellPropsChange = ({ props }) => ({ ...props, error: true });
+      const preProcessEditCellProps = ({ props }) => ({ ...props, error: true });
       render(
         <TestCase
           editMode="row"
           columns={[
-            { field: 'brand', editable: true, onEditCellPropsChange },
-            { field: 'year', editable: true, onEditCellPropsChange },
+            { field: 'brand', editable: true, preProcessEditCellProps },
+            { field: 'year', editable: true, preProcessEditCellProps },
           ]}
         />,
       );
@@ -1295,13 +1299,13 @@ describe('<DataGridPro /> - Edit Rows', () => {
     });
 
     it('should mark fields as invalid when a promise with error is returned', async () => {
-      const onEditCellPropsChange = ({ props }) => Promise.resolve({ ...props, error: true });
+      const preProcessEditCellProps = ({ props }) => Promise.resolve({ ...props, error: true });
       render(
         <TestCase
           editMode="row"
           columns={[
-            { field: 'brand', editable: true, onEditCellPropsChange },
-            { field: 'year', editable: true, onEditCellPropsChange },
+            { field: 'brand', editable: true, preProcessEditCellProps },
+            { field: 'year', editable: true, preProcessEditCellProps },
           ]}
         />,
       );
@@ -1350,15 +1354,15 @@ describe('<DataGridPro /> - Edit Rows', () => {
     });
   });
 
-  it('should call onEditCellPropsChange with the correct params', async () => {
-    const onEditCellPropsChange = spy(({ props }) => props);
+  it('should call preProcessEditCellProps with the correct params', async () => {
+    const preProcessEditCellProps = spy(({ props }) => props);
     render(
       <TestCase
         columns={[
           {
             field: 'brand',
             editable: true,
-            onEditCellPropsChange,
+            preProcessEditCellProps,
           },
         ]}
       />,
@@ -1370,7 +1374,7 @@ describe('<DataGridPro /> - Edit Rows', () => {
     fireEvent.change(input, { target: { value: 'n' } });
     fireEvent.keyDown(input, { key: 'Enter' });
     await waitFor(() => {
-      expect(onEditCellPropsChange.lastCall.args[0]).to.deep.equal({
+      expect(preProcessEditCellProps.lastCall.args[0]).to.deep.equal({
         id: baselineProps.rows[1].id,
         row: baselineProps.rows[1],
         props: { value: 'n' },
@@ -1385,7 +1389,7 @@ describe('<DataGridPro /> - Edit Rows', () => {
           {
             field: 'brand',
             editable: true,
-            onEditCellPropsChange: ({ props }) => ({ ...props, error: true }),
+            preProcessEditCellProps: ({ props }) => ({ ...props, error: true }),
           },
         ]}
       />,
@@ -1410,7 +1414,7 @@ describe('<DataGridPro /> - Edit Rows', () => {
           {
             field: 'brand',
             editable: true,
-            onEditCellPropsChange: ({ props }) => Promise.resolve({ ...props, error: true }),
+            preProcessEditCellProps: ({ props }) => Promise.resolve({ ...props, error: true }),
           },
         ]}
       />,

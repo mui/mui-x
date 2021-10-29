@@ -90,7 +90,7 @@ export default function ConditionalValidationGrid() {
       valueOptions: ['Credit card', 'Wire transfer', 'Cash'],
       width: 160,
       editable: true,
-      onEditCellPropsChange: (params) => {
+      preProcessEditCellProps: (params) => {
         const editRowsModel = apiRef.current.getEditRowsModel();
         const isPaidProps = editRowsModel[params.id].isPaid;
         const hasError = isPaidProps.value && !params.props.value;

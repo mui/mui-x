@@ -260,10 +260,10 @@ export function useGridEditRows(
 
         Object.keys(editRow).forEach(async (field) => {
           const column = apiRef.current.getColumn(field);
-          if (column.onEditCellPropsChange) {
+          if (column.preProcessEditCellProps) {
             const editCellProps = field === params.field ? params.props : editRow[field];
             const newEditCellProps = await Promise.resolve(
-              column.onEditCellPropsChange!({ id: params.id, row, props: editCellProps }),
+              column.preProcessEditCellProps!({ id: params.id, row, props: editCellProps }),
             );
             setEditCellProps({ id: params.id, field, props: newEditCellProps });
           } else if (field === params.field) {
@@ -272,8 +272,8 @@ export function useGridEditRows(
         });
       } else {
         const column = apiRef.current.getColumn(params.field);
-        const editCellProps = column.onEditCellPropsChange
-          ? column.onEditCellPropsChange({ id: params.id, row, props: params.props })
+        const editCellProps = column.preProcessEditCellProps
+          ? column.preProcessEditCellProps({ id: params.id, row, props: params.props })
           : params.props;
 
         if (isPromise(editCellProps)) {
@@ -328,8 +328,8 @@ export function useGridEditRows(
       };
 
       let hasError = !!editCellProps.error;
-      if (!hasError && typeof column.onEditCellPropsChange === 'function') {
-        const result = column.onEditCellPropsChange({ id, row, props: editCellProps });
+      if (!hasError && typeof column.preProcessEditCellProps === 'function') {
+        const result = column.preProcessEditCellProps({ id, row, props: editCellProps });
 
         if (isPromise(result)) {
           return result.then((newEditCellProps) => {
@@ -398,7 +398,7 @@ export function useGridEditRows(
 
       const fieldsWithValidator = Object.keys(editRowProps).filter((field) => {
         const column = apiRef.current.getColumn(field);
-        return typeof column.onEditCellPropsChange === 'function';
+        return typeof column.preProcessEditCellProps === 'function';
       });
 
       if (fieldsWithValidator.length > 0) {
@@ -407,7 +407,7 @@ export function useGridEditRows(
         const validatorErrors = fieldsWithValidator.map(async (field) => {
           const column = apiRef.current.getColumn(field);
           const newEditCellProps = await Promise.resolve(
-            column.onEditCellPropsChange!({ id, row, props: editRowProps[field] }),
+            column.preProcessEditCellProps!({ id, row, props: editRowProps[field] }),
           );
           setEditCellProps({ id, field, props: newEditCellProps });
           return newEditCellProps.error;

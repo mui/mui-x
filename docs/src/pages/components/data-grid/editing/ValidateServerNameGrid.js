@@ -40,7 +40,7 @@ export default function ValidateServerNameGrid() {
 
   const keyStrokeTimeoutRef = React.useRef();
 
-  const handleNameEditPropsChange = (params) =>
+  const preProcessEditCellProps = (params) =>
     new Promise((resolve) => {
       clearTimeout(promiseTimeout);
       clearTimeout(keyStrokeTimeoutRef.current);
@@ -58,7 +58,7 @@ export default function ValidateServerNameGrid() {
       headerName: 'MUI Contributor',
       width: 180,
       editable: true,
-      onEditCellPropsChange: handleNameEditPropsChange,
+      preProcessEditCellProps,
     },
   ];
 
