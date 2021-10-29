@@ -61,6 +61,7 @@
   { "name": "GridComponentProps", "kind": "Interface" },
   { "name": "GridContainerProps", "kind": "Interface" },
   { "name": "GridControlStateApi", "kind": "Interface" },
+  { "name": "GridControlledStateEventLookup", "kind": "Interface" },
   { "name": "GridCoreApi", "kind": "Interface" },
   { "name": "GridCsvExportApi", "kind": "Interface" },
   { "name": "GridCsvExportOptions", "kind": "Interface" },

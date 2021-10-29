@@ -13,15 +13,16 @@ export interface GridRowEventLookup {
   [GridEvents.rowDoubleClick]: { params: GridRowParams; event: React.MouseEvent<HTMLDivElement> };
 }
 
-export interface GridEventLookup extends GridRowEventLookup {
-  // Controlled states
+export interface GridControlledStateEventLookup {
   [GridEvents.pageSizeChange]: { params: number; event: {} };
   [GridEvents.pageChange]: { params: number; event: {} };
   [GridEvents.filterModelChange]: { params: GridFilterModel; event: {} };
   [GridEvents.sortModelChange]: { params: GridSortModel; event: {} };
   [GridEvents.editRowsModelChange]: { params: GridEditRowsModel; event: {} };
   [GridEvents.selectionChange]: { params: GridSelectionModel; event: {} };
+}
 
+export interface GridEventLookup extends GridRowEventLookup, GridControlledStateEventLookup {
   // Columns
   [GridEvents.columnWidthChange]: { params: GridColumnResizeParams; event: MouseEvent };
   [GridEvents.columnResizeStart]: {

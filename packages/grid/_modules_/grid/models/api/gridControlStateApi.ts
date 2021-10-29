@@ -1,6 +1,6 @@
 import { GridState } from '../gridState';
 import { GridControlStateItem } from '../controlStateItem';
-import { GridEventsWithFullTyping } from './gridEventListener';
+import { GridControlledStateEventLookup, GridEventsWithFullTyping } from './gridEventListener';
 
 /**
  * The control state API interface that is available in the grid `apiRef`.
@@ -11,7 +11,7 @@ export interface GridControlStateApi {
    * @param {GridControlStateItem<TModel>} controlState The [[GridControlStateItem]] to be registered.
    * @ignore - do not document.
    */
-  unsafe_updateControlState: <E extends GridEventsWithFullTyping>(
+  unsafe_updateControlState: <E extends keyof GridControlledStateEventLookup>(
     controlState: GridControlStateItem<E>,
   ) => void;
   /**
