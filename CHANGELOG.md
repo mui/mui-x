@@ -29,6 +29,7 @@ A big thanks to the 7 contributors who made this release possible. Here are some
 
   // Remove
   -apiRef.current.applyFilter
+  +apiRef.current.unsafe_applyFilters
 
   // Rename
   -apiRef.current.applyFilterLinkOperator
