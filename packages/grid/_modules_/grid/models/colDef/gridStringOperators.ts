@@ -77,8 +77,8 @@ export const getGridStringOperators = (): GridFilterOperator[] => [
     },
   },
   {
-    label: 'is one of',
-    value: 'isOneOf',
+    label: 'is any of',
+    value: 'isAnyOf',
     isArrayValue: true,
     getApplyFilterFn: (filterItem: GridFilterItem) => {
       if (!filterItem.value || filterItem.value.length === 0) {
