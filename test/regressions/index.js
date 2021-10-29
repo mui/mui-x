@@ -105,7 +105,7 @@ const docs = requireDocs.keys().reduce((res, path) => {
 
 clock.restore();
 
-const tests = stories.concat(docs);
+const tests = stories.concat(docs).filter(el => el.name === 'ServerFilterGrid');
 
 if (unusedBlacklistPatterns.size > 0) {
   console.warn(

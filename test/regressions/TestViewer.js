@@ -39,7 +39,6 @@ function MockTime(props) {
     // eslint-disable-next-line react-hooks/rules-of-hooks -- not a React hook
     clock = useFakeTimers({
       now: new Date('Mon Aug 18 14:11:54 2014 -0500').getTime(),
-      toFake: ['Date'],
     });
 
     setReady(true);
