@@ -56,7 +56,7 @@ A big thanks to the 7 contributors who made this release possible. Here are some
   +const map = new Map(gridSortedRowEntriesSelector(state).map(row => [row.id, row.model]));
   ```
 
-- [DataGridPro] The `visibleSortedGridRowsSelector` was renamed to `gridVisibleSortedRowEntriesSelector` (#2942) @flaviendelangle
+- [DataGridPro] The `visibleSortedGridRowsSelector` was replaced with `gridVisibleSortedRowEntriesSelector` (#2942) @flaviendelangle
   
   The return value was also changed as below:
 
