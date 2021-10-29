@@ -142,7 +142,7 @@ A big thanks to the 7 contributors who made this release possible. Here are some
 - [core] Generate list of all grid exports (#2801) @flaviendelangle
 - [core] Improve typing of buildApi.ts (#2922) @flaviendelangle
 - [core] Add additional test for `checkboxSelection` toggling (#2979) @flaviendelangle
-- [test] Fix flaky visual regression (#2981) @m4theushw
+- [test] Fix flaky visual regression test (#2981) @m4theushw
 
 ## 5.0.0-beta.5
 
