@@ -149,7 +149,7 @@ A big thanks to the 7 contributors who made this release possible. Here are some
 - [core] Change monorepo repository URL (#2983) @m4theushw
 - [core] Clean Storybook examples (#2805) @flaviendelangle
 - [core] Generate list of all grid exports (#2801) @flaviendelangle
-- [core] Improve typing of buildApi.ts (#2922) @flaviendelangle
+- [core] Improve typing of `buildApi.ts` (#2922) @flaviendelangle
 - [core] Add additional test for `checkboxSelection` toggling (#2979) @flaviendelangle
 - [test] Fix flaky visual regression test (#2981) @m4theushw
 
