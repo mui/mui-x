@@ -84,11 +84,11 @@ export const getGridStringOperators = (): GridFilterOperator[] => [
       if (!filterItem.value || filterItem.value.length === 0) {
         return null;
       }
+      const collator = new Intl.Collator(undefined, { sensitivity: 'base', usage: 'search' });
 
       return ({ value }): boolean =>
         filterItem.value.some((filterValue) => {
-          const filterRegex = new RegExp(escapeRegExp(filterValue), 'i');
-          return filterRegex.test((value && value.toString()) || '');
+          return collator.compare(filterValue, (value && value.toString()) || '') === 0;
         });
     },
     InputComponent: GridFilterInputMultipleValue,
