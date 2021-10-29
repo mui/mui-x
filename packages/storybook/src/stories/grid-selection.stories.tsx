@@ -6,7 +6,7 @@ import { getData, GridData } from '../data/data-service';
 import { useData } from '../hooks/useData';
 
 export default {
-  title: 'X-Grid Tests/Selection',
+  title: 'DataGridPro Test/Selection',
   component: DataGridPro,
   parameters: {
     options: { selectedPanel: 'storybook/storysource/panel' },

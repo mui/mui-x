@@ -3,6 +3,115 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 5.0.0-beta.6
+
+_Oct 29, 2021_
+
+A big thanks to the 7 contributors who made this release possible. Here are some highlights ✨:
+
+- ✨ Allow `valueOptions` from `GridColDef` to accept a function (#2850) @alexfauquette
+- 💅 Prefix undocumented `apiRef` methods with `unsafe_` (#2985) @flaviendelangle
+- 👁 Unify filtering, sorting, and rows selectors names (#2942) @flaviendelangle
+- 💡 Support style overrides added in the theme (#2995) @DanailH
+- 📚 Documentation improvements
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@v5.0.0-beta.6` / `@mui/x-data-grid-pro@v5.0.0-beta.6`
+
+#### Breaking changes
+
+- [DataGridPro] The following methods from `apiRef` were renamed. Use the provided alternatives. (#2870) @flaviendelangle
+
+  1. `apiRef.current.applyFilters` was renamed to `apiRef.current.unsafe_applyFilters`
+  2. `apiRef.current.applyFilterLinkOperator` was renamed to `apiRef.current.setFilterLinkOperator`
+  3. `apiRef.current.upsertFilter` was renamed to `apiRef.current.upsertFilterItem`
+  4. `apiRef.current.deleteFilter` was renamed to `apiRef.current.deleteFilterItem`
+
+- [DataGridPro] The `apiRef.current.applyFilter` method was removed. (#2870) @flaviendelangle
+  You should never have to call it directly since the filters are already applied when the `filterModel` prop changes.
+  To manually apply the filters, use `apiRef.current.unsafe_applyFilters`.
+
+  ```diff
+  -apiRef.current.applyFilter
+  +apiRef.current.unsafe_applyFilters
+  ```
+
+- [DataGridPro] Rename filtering, sorting, and rows selectors to match the naming convention (#2942) @flaviendelangle
+
+  1. `unorderedGridRowIdsSelector` was renamed to `gridRowIdsSelector`
+  2. `sortingGridStateSelector` was renamed to `gridSortingStateSelector`
+  3. `sortedGridRowIdsSelector` was renamed to `gridSortedRowIdsSelector`
+  4. `visibleSortedGridRowIdsSelector` was renamed to `gridVisibleSortedRowIdsSelector`
+  5. `visibleGridRowCountSelector` was renamed to `gridVisibleRowCountSelector`
+  6. `filterGridColumnLookupSelector` was renamed to `gridFilterActiveItemsSelector`
+ 
+- [DataGridPro] The `sortedGridRowsSelector` was renamed to `gridSortedRowEntriesSelector` (#2942) @flaviendelangle
+  
+  The return value was also changed as below:
+
+  ```diff
+  -sortedGridRowsSelector: (state: GridState) => Map<GridRowId, GridRowModel>
+  -const map = sortedGridRowsSelector(state);
+  +gridSortedRowEntriesSelector: (state: GridState) => GridRowEntry[]
+  +const map = new Map(gridSortedRowEntriesSelector(state).map(row => [row.id, row.model]));
+  ```
+
+- [DataGridPro] The `visibleSortedGridRowsSelector` was replaced with `gridVisibleSortedRowEntriesSelector` (#2942) @flaviendelangle
+  
+  The return value was also changed as below:
+
+  ```diff
+  -visibleSortedGridRowsSelector: (state: GridState) => Map<GridRowId, GridRowModel>;
+  -const map = visibleSortedGridRowsSelector(state);
+  +gridVisibleSortedRowEntriesSelector: (state: GridState) => GridRowEntry[]
+  +const map = new Map(gridVisibleSortedRowEntriesSelector(state).map(row => [row.id, row.model]));
+  ```
+
+- [DataGridPro] The `visibleSortedGridRowsAsArraySelector` was replaced with `gridVisibleSortedRowEntriesSelector` (#2942) @flaviendelangle
+  
+  The return value was also changed as below:
+
+  ```diff
+  -visibleSortedGridRowsAsArraySelector: (state: GridState) => [GridRowId, GridRowData][];
+  +gridVisibleSortedRowEntriesSelector: (state: GridState) => GridRowEntry[]
+  ```
+
+- [DataGridPro] The `filterGridItemsCounterSelector` selector was removed. (#2942) @flaviendelangle
+  Use `gridFilterActiveItemsSelector` as replacement.
+
+  ```diff
+  -const filterCount = filterGridItemsCounterSelector(state);
+  +const filterCount = gridFilterActiveItemsSelector(state).length;
+  ```
+
+- [DataGridPro] The `unorderedGridRowModelsSelector` selector was removed. (#2942) @flaviendelangle
+  Use `apiRef.current.getRowModels` or `gridRowIdsSelector` and `gridRowsLookupSelector`.
+
+#### Changes
+
+- [DataGrid] Allow `valueOptions` to accept a function (#2850) @alexfauquette
+- [DataGrid] Add `overridesResolver` (#2995) @DanailH
+- [DataGrid] Unify filtering, sorting, and rows selectors names (#2942) @flaviendelangle
+- [DataGridPro] Prefix undocumented `apiRef` methods with `unsafe_` (#2985) @flaviendelangle
+
+### Docs
+
+- [docs] Explain how to use MUI X v5 with MUI Core v4 (#2846) @m4theushw
+- [docs] Generate docs for components (#2465) @m4theushw
+- [docs] Improve `scrollEndThreshold` API docs (#3001) @ZeeshanTamboli
+- [docs] Fix CodeSandbox and feature request templates (#2986) @flaviendelangle
+
+### Core
+
+- [core] Add step for announcing the releases on Twitter (#2997) @DanailH
+- [core] Apply all filters to a row before moving to the next one (#2870) @flaviendelangle
+- [core] Change monorepo repository URL (#2983) @m4theushw
+- [core] Clean Storybook examples (#2805) @flaviendelangle
+- [core] Generate list of all grid exports (#2801) @flaviendelangle
+- [core] Improve typing of `buildApi.ts` (#2922) @flaviendelangle
+- [core] Add additional test for `checkboxSelection` toggling (#2979) @flaviendelangle
+- [test] Fix flaky visual regression test (#2981) @m4theushw
+
 ## 5.0.0-beta.5
 
 _Oct 22, 2021_
@@ -146,7 +255,7 @@ _Oct 14, 2021_
 A big thanks to the 7 contributors who made this release possible. Here are some highlights ✨:
 
 - 🎁 Add the ability to print the grid (#2519) @DanailH
-  
+
   This new feature adds a button to the toolbar to generate a printer-friendly layout. Check the [documentation](https://mui.com/components/data-grid/export/#print) about it.
 
 - 💡 Enhance internal code structure
@@ -182,11 +291,11 @@ A big thanks to the 7 contributors who made this release possible. Here are some
   +  }}
   +/>;
   ```
-  
+
   The `data-rowindex` and `data-rowselected` attributes were removed from the cell element. Equivalent attributes can be found in the row element.
-  
+
   The `data-editable` attribute was removed from the cell element. Use the `.MuiDataGrid-cell--editable` CSS class.
-  
+
   The `data-mode` attribute was removed from the cell element. Use the `.MuiDataGrid-cell--editing` CSS class.
 
 - [DataGrid] The `state.filter` and `state.visibleRows` were merged into a single `state.filter` sub-state (#2782) @flaviendelangle
@@ -198,12 +307,12 @@ A big thanks to the 7 contributors who made this release possible. Here are some
   -const filterModel = gridFilterStateSelector(state)
   +const filterModel = state.filter.filterModel
   +const filterModel = gridFilterModelSelector(state) // preferred method
-  
+
   -const visibleRowsLookup = state.visibleRows.visibleRowsLookup
   -const visibleRowsLookup = visibleGridRowsStateSelector(state).visibleRowsLookup
   +const visibleRowsLookup = state.filter.visibleRowsLookup
   +const visibleRowsLookup = gridVisibleRowsLookupSelector(state).visibleRowsLookup // preferred method
-  
+
   -const visibleRows = state.visibleRows.visibleRows
   +const visibleRows = state.filter.visibleRows
   +const visibleRows = gridVisibleRowsLookupSelector(state).visibleRows // preferred method
@@ -214,22 +323,22 @@ A big thanks to the 7 contributors who made this release possible. Here are some
   ```diff
   -const columnHeaderClass = GRID_COLUMN_HEADER_CSS_CLASS
   +const columnHeaderClass = gridClasses.columnHeader
-  
+
   -const rowClass = GRID_ROW_CSS_CLASS
   +const rowClass = gridClasses.row
-  
+
   -const cellClass = GRID_CELL_CSS_CLASS
   +const cellClass = gridClasses.cell
-  
+
   -const columnSeparatorClass = GRID_COLUMN_HEADER_SEPARATOR_RESIZABLE_CSS_CLASS
   +const columnSeparatorClass = gridClasses['columnSeparator--resizable']
-  
+
   -const columnHeaderTitleClass = GRID_COLUMN_HEADER_TITLE_CSS_CLASS
   +const columnHeaderTitleClass = gridClasses.columnHeaderTitle
-  
+
   -const columnHeaderDropZoneClass = GRID_COLUMN_HEADER_DROP_ZONE_CSS_CLASS
   +const columnHeaderDropZoneClass = gridClasses.columnHeaderDropZone
-  
+
   -const columnHeaderDraggingClass = GRID_COLUMN_HEADER_DRAGGING_CSS_CLASS
   +const columnHeaderDraggingClass = gridClasses["columnHeader--dragging"]
   ```
@@ -247,16 +356,16 @@ A big thanks to the 7 contributors who made this release possible. Here are some
   ```diff
   -const isColumnString = column.type === GRID_STRING_COLUMN_TYPE;
   +const isColumnString = col.type === 'string';
-  
+
   -const isColumnNumber = col.type === GRID_NUMBER_COLUMN_TYPE;
   +const isColumnNumber = col.type === 'number';
-  
+
   -const isColumnDate = col.type === GRID_DATE_COLUMN_TYPE;
   +const isColumnDate = col.type === 'date';
-  
+
   -const isColumnDateTime = col.type === GRID_DATETIME_COLUMN_TYPE;
   +const isColumnDateTime = col.type === 'dateTime';
-  
+
   -const isColumnBoolean = col.type === GRID_BOOLEAN_COLUMN_TYPE;
   +const isColumnBoolean = col.type === 'boolean';
   ```
@@ -269,13 +378,13 @@ A big thanks to the 7 contributors who made this release possible. Here are some
   -const [filterModel, setFilterModel] = React.useState(getInitialGridFilterState);
   +const [filterModel, setFilterModel] = React.useState(getDefaultGridFilterModel);
   ```
-  
+
   For the other methods, you can hardcode the value you want to apply:
 
   ```diff
   -const [sortModel, setSortModel] = React.useState(() => getInitialGridSortingState().sortModel);
   +const [sortModel, setSortModel] React.useState([]);
-  
+
   -getInitialGridColumnReorderState
   -getInitialGridColumnResizeState
   -getInitialGridColumnsState

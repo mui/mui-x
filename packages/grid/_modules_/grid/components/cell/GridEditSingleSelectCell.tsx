@@ -45,10 +45,16 @@ function GridEditSingleSelectCell(props: GridRenderEditCellParams & SelectProps)
   const inputRef = React.useRef<any>();
   const rootProps = useGridRootProps();
   const [open, setOpen] = React.useState(rootProps.editMode === 'cell');
-  let valueOptionsFormatted = colDef.valueOptions;
+
+  let valueOptionsFormatted;
+  if (typeof colDef.valueOptions === 'function') {
+    valueOptionsFormatted = colDef.valueOptions({ id, row, field });
+  } else {
+    valueOptionsFormatted = colDef.valueOptions;
+  }
 
   if (colDef.valueFormatter) {
-    valueOptionsFormatted = colDef.valueOptions.map((option) => {
+    valueOptionsFormatted = valueOptionsFormatted.map((option) => {
       if (typeof option === 'object') {
         return option;
       }

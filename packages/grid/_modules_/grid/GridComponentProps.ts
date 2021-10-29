@@ -446,7 +446,7 @@ interface GridComponentOtherProps {
    */
   'aria-labelledby'?: string;
   /**
-   * @ignore
+   * @ignore - do not document
    */
   className?: string;
   /**
@@ -480,7 +480,7 @@ interface GridComponentOtherProps {
    */
   initialState?: GridInitialState;
   /**
-   * @ignore
+   * @ignore - do not document
    */
   style?: React.CSSProperties;
   /**

@@ -285,7 +285,7 @@ The following are the native column types:
 To use most of the column types, you only need to define the `type` property in your column definition.
 However, some types require additional properties to be set to make them work correctly:
 
-- If the column type is `'singleSelect'`, you also need to set the `valueOptions` property in the respective column definition.
+- If the column type is `'singleSelect'`, you also need to set the `valueOptions` property in the respective column definition. These values are options used for filtering and editing.
 
   ```tsx
   {

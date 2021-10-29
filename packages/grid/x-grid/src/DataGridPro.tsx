@@ -105,7 +105,7 @@ DataGridProRaw.propTypes = {
    */
   classes: PropTypes.object,
   /**
-   * @ignore
+   * @ignore - do not document
    */
   className: PropTypes.string,
   /**
@@ -611,7 +611,8 @@ DataGridProRaw.propTypes = {
    */
   scrollbarSize: PropTypes.number,
   /**
-   * Set the area at the bottom of the grid viewport where onRowsScrollEnd is called.
+   * Set the area in `px` at the bottom of the grid viewport where onRowsScrollEnd is called.
+   * @default 80
    */
   scrollEndThreshold: PropTypes.number,
   /**
@@ -654,7 +655,7 @@ DataGridProRaw.propTypes = {
     }),
   ),
   /**
-   * @ignore
+   * @ignore - do not document
    */
   style: PropTypes.object,
   /**

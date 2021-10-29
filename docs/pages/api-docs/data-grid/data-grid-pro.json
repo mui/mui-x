@@ -144,7 +144,7 @@
     },
     "rowThreshold": { "type": { "name": "number" }, "default": "3" },
     "scrollbarSize": { "type": { "name": "number" } },
-    "scrollEndThreshold": { "type": { "name": "number" } },
+    "scrollEndThreshold": { "type": { "name": "number" }, "default": "80" },
     "selectionModel": {
       "type": {
         "name": "union",
@@ -281,14 +281,12 @@
       "row",
       "rowCount",
       "scrollArea",
-      "scrollAreaLeft",
-      "scrollAreaRight",
+      "scrollArea--left",
+      "scrollArea--right",
       "selectedRowCount",
       "sortIcon",
       "toolbarContainer",
       "toolbarFilterList",
-      "viewport",
-      "window",
       "withBorder"
     ],
     "globalClasses": {},
