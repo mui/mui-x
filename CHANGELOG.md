@@ -20,7 +20,7 @@ A big thanks to the 7 contributors who made this release possible. Here are some
 
 #### Breaking changes
 
-- Apply all filters sequentially to a row before moving to the next one. The updated behavior is very similar to how the sorting currently works. (#2870) @flaviendelangle
+- [DataGridPro] The following methods from `apiRef` were renamed. Use the provided alternatives. (#2870) @flaviendelangle
 
   ```diff
   // Rename + remove from public API
