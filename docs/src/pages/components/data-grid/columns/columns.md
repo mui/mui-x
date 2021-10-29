@@ -107,8 +107,6 @@ Sometimes a column might not have a corresponding value, or you might want to re
 
 To achieve that, set the `valueGetter` attribute of `GridColDef` as in the example below.
 
-**Note**: You need to set a `sortComparator` for the column sorting to work when setting the `valueGetter` attribute.
-
 ```tsx
 function getFullName(params) {
   return `${params.getValue(params.id, 'firstName') || ''} ${
@@ -124,8 +122,6 @@ const columns: GridColDef[] = [
     headerName: 'Full name',
     width: 160,
     valueGetter: getFullName,
-    sortComparator: (v1, v2, cellParams1, cellParams2) =>
-      getFullName(cellParams1).localeCompare(getFullName(cellParams2)),
   },
 ];
 ```
@@ -293,7 +289,6 @@ If for any reason, your data type is not the correct one, you can use `valueGett
   field: 'lastLogin',
   type: 'dateTime',
   valueGetter: ({ value }) => value && new Date(value),
-  sortComparator: (v1, v2) => (new Date(v1) < new Date(v2) ? -1 : 1)
 }
 ```
 
