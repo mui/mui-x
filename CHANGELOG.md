@@ -23,23 +23,26 @@ A big thanks to the 7 contributors who made this release possible. Here are some
 - [DataGridPro] The following methods from `apiRef` were renamed. Use the provided alternatives. (#2870) @flaviendelangle
 
   ```diff
-  // Rename + remove from public API
   -apiRef.current.applyFilters
   +apiRef.current.unsafe_applyFilters
+  ```
 
-  // Remove
+  ```diff
   -apiRef.current.applyFilter
   +apiRef.current.unsafe_applyFilters
+  ```
 
-  // Rename
+  ```diff
   -apiRef.current.applyFilterLinkOperator
   +apiRef.current.setFilterLinkOperator
+  ```
 
-  // Rename
+  ```diff
   -apiRef.current.upsertFilter
   +apiRef.current.upsertFilterItem
+  ```
 
-  // Rename
+  ```diff
   -apiRef.current.deleteFilter
   +apiRef.current.deleteFilterItem
   ```
@@ -50,72 +53,77 @@ A big thanks to the 7 contributors who made this release possible. Here are some
 
   **Rows selectors**
   ```diff
-  // Rename
   -unorderedGridRowIdsSelector
   +gridRowIdsSelector
+  ```
 
-  // Removed
-  // You can `apiRef.current.getRowModels` for the pro version
-  // Or `gridRowIdsSelector` and `gridRowsLookupSelector` for the free version
+  ```diff
   -unorderedGridRowModelsSelector: (state: GridState) => GridRowModel[];
   ```
 
   **Sorting selectors**
   ```diff
-  // Rename
   -sortingGridStateSelector
   +gridSortingStateSelector
+  ```
 
-  // Rename
+  ```diff
   -sortedGridRowIdsSelector
   +gridSortedRowIdsSelector
+  ```
 
-  // Rename + behavior change
-  // You can rebuild the Map yourself
+  ```diff
   -sortedGridRowsSelector: (state: GridState) => Map<GridRowId, GridRowModel>
   +gridSortedRowEntriesSelector: (state: GridState) => GridRowEntry[]
+  ```
 
+  ```diff
   -const map = sortedGridRowsSelector(state);
   +const map = new Map(gridSortedRowEntriesSelector(state).map(row => [row.id, row.model]));
   ```
 
   **Filter selectors**
   ```diff
-  // Rename + behavior change
-  // Migrating from the old format should be trivial
   -visibleSortedGridRowsAsArraySelector: (state: GridState) => [GridRowId, GridRowData][];
   +gridVisibleSortedRowEntriesSelector: (state: GridState) => GridRowEntry[]
+  ```
 
-  // Rename + behavior change
-  // You can use `apiRef.current.getVisibleRowModels` for the pro version
-  // Or you can rebuild the Map yourself for the free version
+  ```diff
   -visibleSortedGridRowsSelector: (state: GridState) => Map<GridRowId, GridRowModel>;
   +gridVisibleSortedRowEntriesSelector: (state: GridState) => GridRowEntry[]
+  ```
 
+  ```diff
   -const map = visibleSortedGridRowsSelector(state);
   +const map = new Map(gridVisibleSortedRowEntriesSelector(state).map(row => [row.id, row.model]));
+  ```
 
-  // Rename
+  ```diff
   -visibleSortedGridRowIdsSelector
   +gridVisibleSortedRowIdsSelector
+  ```
 
-  // Rename
+  ```diff
   -visibleGridRowCountSelector
   +gridVisibleRowCountSelector
   +gridVisibleTopLevelRowCountSelector
+  ```
 
-  // Rename
+  ```diff
   -filterGridColumnLookupSelector
   +gridFilterActiveItemsLookupSelector
+  ```
 
-  // Rename
+  ```diff
   -activeGridFilterItemsSelector
   +gridFilterActiveItemsSelector
+  ```
 
-  // Remove
-  // You can use gridFilterActiveItemsSelector instead
+  ```diff
   - filterGridItemsCounterSelector
+  ```
 
+  ```diff
   -const filterCount = filterGridItemsCounterSelector(state);
   +const filterCount = gridFilterActiveItemsSelector(state).length;
   ```
