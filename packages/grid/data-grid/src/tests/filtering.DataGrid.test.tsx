@@ -74,11 +74,20 @@ describe('<DataGrid /> - Filter', () => {
     columns?: any[];
     operatorValue?: string;
     value?: any;
+    isArrayValue?: boolean;
     field?: string;
     initialState?: GridInitialState;
     columnTypes?: any;
   }) => {
-    const { operatorValue, value, rows, columns, field = 'brand', ...other } = props;
+    const {
+      operatorValue,
+      value,
+      rows,
+      columns,
+      field = 'brand',
+      isArrayValue = false,
+      ...other
+    } = props;
     return (
       <div style={{ width: 300, height: 300 }}>
         <DataGrid
@@ -91,6 +100,7 @@ describe('<DataGrid /> - Filter', () => {
                 columnField: field,
                 value,
                 operatorValue,
+                isArrayValue,
               },
             ],
           }}
@@ -280,6 +290,13 @@ describe('<DataGrid /> - Filter', () => {
       expect(getColumnValues()).to.deep.equal(['Nike']);
     });
 
+    it('should allow operator isAnyOf', () => {
+      render(
+        <TestCase operatorValue="isAnyOf" field="brand" value={['nike', 'puma']} isArrayValue />,
+      );
+      expect(getColumnValues()).to.deep.equal(['Nike', 'Puma']);
+    });
+
     [
       { operatorValue: 'contains', value: 'a', expected: ['Asics'] },
       { operatorValue: 'startsWith', value: 'r', expected: ['RedBull'] },
@@ -444,6 +461,38 @@ describe('<DataGrid /> - Filter', () => {
           field="quantity"
           columns={[{ field: 'id' }, { field: 'quantity', type: 'number' }]}
           rows={rows}
+        />,
+      );
+      expect(getColumnValues(0)).to.deep.equal(['0', '2']);
+    });
+
+    it('should allow operator isAnyOf', () => {
+      const rows = [
+        {
+          id: 0,
+          quantity: 0,
+        },
+        {
+          id: 1,
+          quantity: null,
+        },
+        {
+          id: 2,
+          quantity: 100,
+        },
+        {
+          id: 3,
+          quantity: 110,
+        },
+      ];
+      render(
+        <TestCase
+          value={[0, 100]}
+          operatorValue="isAnyOf"
+          field="quantity"
+          isArrayValue
+          rows={rows}
+          columns={[{ field: 'id' }, { field: 'quantity', type: 'number' }]}
         />,
       );
       expect(getColumnValues(0)).to.deep.equal(['0', '2']);
@@ -840,6 +889,31 @@ describe('<DataGrid /> - Filter', () => {
           field: 'country',
           operatorValue: 'not',
           value: '',
+        });
+        expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
+      });
+
+      it('should allow operator isAnyOf', () => {
+        const { setProps } = render(<TestCase value={[]} operatorValue="isAnyOf" isArrayValue />);
+        setProps({
+          field: 'country',
+          operatorValue: 'isAnyOf',
+          isArrayValue: true,
+          value: ['Germany', 'United States'],
+        });
+        expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
+        setProps({
+          field: 'country',
+          operatorValue: 'isAnyOf',
+          isArrayValue: true,
+          value: ['Germany'],
+        });
+        expect(getColumnValues()).to.deep.equal(['Adidas', 'Puma']);
+        setProps({
+          field: 'country',
+          operatorValue: 'isAnyOf',
+          isArrayValue: true,
+          value: [],
         });
         expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
       });

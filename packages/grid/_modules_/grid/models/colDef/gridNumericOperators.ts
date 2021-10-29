@@ -120,7 +120,7 @@ export const getGridNumericColumnOperators = (): GridFilterOperator[] => [
       }
 
       return ({ value }): boolean => {
-        return filterItem.value.includes(Number(value));
+        return value !== null && filterItem.value.includes(Number(value));
       };
     },
     InputComponent: GridFilterInputMultipleValue,
