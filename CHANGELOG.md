@@ -25,24 +25,16 @@ A big thanks to the 7 contributors who made this release possible. Here are some
   ```diff
   -apiRef.current.applyFilters
   +apiRef.current.unsafe_applyFilters
-  ```
 
-  ```diff
   -apiRef.current.applyFilter
   +apiRef.current.unsafe_applyFilters
-  ```
 
-  ```diff
   -apiRef.current.applyFilterLinkOperator
   +apiRef.current.setFilterLinkOperator
-  ```
 
-  ```diff
   -apiRef.current.upsertFilter
   +apiRef.current.upsertFilterItem
-  ```
 
-  ```diff
   -apiRef.current.deleteFilter
   +apiRef.current.deleteFilterItem
   ```
