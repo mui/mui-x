@@ -12,7 +12,7 @@ A big thanks to the 7 contributors who made this release possible. Here are some
 - ✨ Allow `valueOptions` from `GridColDef` to accept a function (#2850) @alexfauquette
 - 💅 Prefix undocumented `apiRef` methods with `unsafe_` (#2985) @flaviendelangle
 - 👁 Unify filtering, sorting, and rows selectors names (#2942) @flaviendelangle
-- 💡 Enhance internal code structure
+- 💡 Support style overrides added in the theme (#2995) @DanailH
 - 📚 Documentation improvements
 - 🐞 Bugfixes
 
