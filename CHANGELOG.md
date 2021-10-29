@@ -45,7 +45,7 @@ A big thanks to the 7 contributors who made this release possible. Here are some
 
   For applyFilters, you should never have to call it directly since all the other method that update the rows or the filterModel are calling it directly or not.
 
-- Update filtering, sorting, and rows selectors names to match the current naming convention (#2942) @flaviendelangle
+- [DataGridPro] Update filtering, sorting, and rows selectors names to match the current naming convention (#2942) @flaviendelangle
 
   **Rows selectors**
   ```diff
