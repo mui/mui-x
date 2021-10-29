@@ -341,9 +341,11 @@ export const useGridFilter = (
     logger.debug('onColUpdated - GridColumns changed, applying filters');
     const filterModel = gridFilterModelSelector(apiRef.current.state);
     const columnsIds = filterableGridColumnsIdsSelector(apiRef.current.state);
-    const newFilterItems = filterModel.items.filter(item => item.columnField && columnsIds.includes(item.columnField))
+    const newFilterItems = filterModel.items.filter(
+      (item) => item.columnField && columnsIds.includes(item.columnField),
+    );
     if (newFilterItems.length < filterModel.items.length) {
-      apiRef.current.setFilterModel({ ...filterModel, items: newFilterItems })
+      apiRef.current.setFilterModel({ ...filterModel, items: newFilterItems });
     }
   }, [apiRef, logger]);
 
