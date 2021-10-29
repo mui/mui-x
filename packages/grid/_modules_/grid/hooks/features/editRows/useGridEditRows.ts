@@ -142,12 +142,7 @@ export function useGridEditRows(
         return { ...state, editRows: newEditRowsState };
       });
       forceUpdate();
-      apiRef.current.publishEvent(GridEvents.cellModeChange, {
-        id,
-        field,
-        mode,
-        api: apiRef.current,
-      });
+      apiRef.current.publishEvent(GridEvents.cellModeChange, apiRef.current.getCellParams(id, field));
     },
     [apiRef, forceUpdate, logger, setGridState],
   );
