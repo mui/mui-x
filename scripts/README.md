@@ -74,3 +74,6 @@ Once deployed, it will be accessible at https://material-ui-x.netlify.app/ for t
 ### Announce
 
 1. **GitHub**. Make a new release on GitHub (for people subscribing to releases). Mark it as "pre-release" if the version is not stable. https://github.com/mui-org/material-ui-x/releases
+2. **Twitter**. Make a release tweet from the main MUI account with the highlights from the release on GitHub and use this banner.
+   Add a link to the GitHub release. Don't forget to change the version before exporting it: https://www.figma.com/file/vOx7rzFQZ9e54W81NReDdU/Utilities?node-id=2%3A7.
+   You can check an example tweet here: https://twitter.com/MaterialUI/status/1446103164898381826
