@@ -4,7 +4,6 @@ import { GridEvents } from '../../../constants/eventsConstants';
 import { GridComponentProps } from '../../../GridComponentProps';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridSelectionApi } from '../../../models/api/gridSelectionApi';
-import { GridRowParams } from '../../../models/params/gridRowParams';
 import { GridRowId } from '../../../models/gridRows';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
@@ -22,7 +21,11 @@ import { GridHeaderSelectionCheckboxParams } from '../../../models/params/gridHe
 import { GridCellParams } from '../../../models/params/gridCellParams';
 import { GridRowSelectionCheckboxParams } from '../../../models/params/gridRowSelectionCheckboxParams';
 import { GridColumnsPreProcessing } from '../../core/columnsPreProcessing';
-import { GRID_CHECKBOX_SELECTION_COL_DEF, GridColDef } from '../../../models';
+import {
+  GRID_CHECKBOX_SELECTION_COL_DEF,
+  GridColDef,
+  GridEventTypedListener,
+} from '../../../models';
 import { getDataGridUtilityClass } from '../../../gridClasses';
 import { useGridStateInit } from '../../utils/useGridStateInit';
 import { useFirstRender } from '../../utils/useFirstRender';
@@ -256,8 +259,8 @@ export const useGridSelection = (
     }
   }, [apiRef]);
 
-  const handleRowClick = React.useCallback(
-    (params: GridRowParams, event: React.MouseEvent) => {
+  const handleRowClick: GridEventTypedListener<GridEvents.rowClick> = React.useCallback(
+    (params, event) => {
       if (disableSelectionOnClick) {
         return;
       }

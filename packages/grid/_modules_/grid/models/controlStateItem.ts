@@ -1,10 +1,11 @@
 import { GridState } from './gridState';
 import { GridCallbackDetails } from './api/gridCallbackDetails';
+import type { GridEventLookup, GridEventsWithFullTyping } from './api';
 
-export interface GridControlStateItem<TModel> {
+export interface GridControlStateItem<E extends GridEventsWithFullTyping> {
   stateId: string;
-  propModel?: TModel;
-  stateSelector: (state: GridState) => TModel;
-  propOnChange?: (model: TModel, details: GridCallbackDetails) => void;
-  changeEvent: string;
+  propModel?: GridEventLookup[E]['params'];
+  stateSelector: (state: GridState) => GridEventLookup[E]['params'];
+  propOnChange?: (model: GridEventLookup[E]['params'], details: GridCallbackDetails) => void;
+  changeEvent: E;
 }

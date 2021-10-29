@@ -24,3 +24,4 @@ export * from './gridControlStateApi';
 export * from './gridClipboardApi';
 export * from './gridCallbackDetails';
 export * from './gridScrollApi';
+export * from './gridEventListener';

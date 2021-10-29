@@ -65,7 +65,7 @@ export const useGridPageSize = (
 
     if (pageSize !== prevPageSize) {
       if (props.autoPageSize) {
-        apiRef.current.publishEvent(GridEvents.pageSizeChange, autoPageSize);
+        apiRef.current.publishEvent(GridEvents.pageSizeChange, autoPageSize!);
       }
 
       setGridState((state) => ({

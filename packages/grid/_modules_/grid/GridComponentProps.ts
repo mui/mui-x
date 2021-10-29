@@ -30,6 +30,8 @@ import { GridColumnVisibilityChangeParams } from './models/params/gridColumnVisi
 import { GridSlotsComponentsProps } from './models/gridSlotsComponentsProps';
 import { GridClasses } from './gridClasses';
 import { GridCallbackDetails } from './models/api/gridCallbackDetails';
+import { GridEventTypedListener } from './models/api/gridEventListener';
+import { GridEvents } from './constants';
 
 /**
  * The grid component react props before applying the default values.
@@ -306,11 +308,7 @@ interface GridComponentOtherProps {
    * @param {MuiEvent} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
-  onColumnWidthChange?: (
-    params: GridColumnResizeParams,
-    event: MuiEvent,
-    details: GridCallbackDetails,
-  ) => void;
+  onColumnWidthChange?: GridEventTypedListener<GridEvents.columnWidthChange>;
   /**
    * Callback fired when a column visibility changes.
    * @param {GridColumnVisibilityChangeParams} params With all properties from [[GridColumnVisibilityChangeParams]].
@@ -328,11 +326,7 @@ interface GridComponentOtherProps {
    * @param {MuiEvent<React.SyntheticEvent>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
-  onRowClick?: (
-    params: GridRowParams,
-    event: MuiEvent<React.SyntheticEvent>,
-    details: GridCallbackDetails,
-  ) => void;
+  onRowClick?: GridEventTypedListener<GridEvents.rowClick>;
   /**
    * Callback fired when scrolling to the bottom of the grid viewport.
    * @param {GridRowScrollEndParams} params With all properties from [[GridRowScrollEndParams]].

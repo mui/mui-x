@@ -114,9 +114,9 @@ function GridCell(props: GridCellProps) {
   const classes = useUtilityClasses(ownerState);
 
   const publishMouseUp = React.useCallback(
-    (eventName: string) => (event: React.MouseEvent<HTMLDivElement>) => {
+    (eventName: GridEvents) => (event: React.MouseEvent<HTMLDivElement>) => {
       const params = apiRef.current.getCellParams(rowId, field || '');
-      apiRef.current.publishEvent(eventName, params, event);
+      apiRef.current.publishEvent(eventName as any, params as any, event);
 
       if (onMouseUp) {
         onMouseUp(event);
@@ -126,7 +126,7 @@ function GridCell(props: GridCellProps) {
   );
 
   const publish = React.useCallback(
-    (eventName: string, propHandler: any) => (event: React.SyntheticEvent<HTMLDivElement>) => {
+    (eventName: GridEvents, propHandler: any) => (event: React.SyntheticEvent<HTMLDivElement>) => {
       // Ignore portal
       // The target is not an element when triggered by a Select inside the cell
       // See https://github.com/mui-org/material-ui/issues/10534
@@ -143,7 +143,7 @@ function GridCell(props: GridCellProps) {
       }
 
       const params = apiRef.current.getCellParams(rowId!, field || '');
-      apiRef.current.publishEvent(eventName, params, event);
+      apiRef.current.publishEvent(eventName as any, params as any, event); // TODO: Type correctly
 
       if (propHandler) {
         propHandler(event);

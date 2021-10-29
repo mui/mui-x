@@ -105,7 +105,7 @@ export const useGridColumnResize = (
     });
   };
 
-  const handleResizeMouseUp = useEventCallback((nativeEvent: any) => {
+  const handleResizeMouseUp = useEventCallback((nativeEvent: MouseEvent) => {
     // eslint-disable-next-line @typescript-eslint/no-use-before-define
     stopListening();
 
@@ -114,15 +114,17 @@ export const useGridColumnResize = (
     clearTimeout(stopResizeEventTimeout.current);
     stopResizeEventTimeout.current = setTimeout(() => {
       apiRef.current.publishEvent(GridEvents.columnResizeStop, null, nativeEvent);
-      apiRef.current.publishEvent(
-        GridEvents.columnWidthChange,
-        {
-          element: colElementRef.current,
-          colDef: colDefRef.current,
-          width: colDefRef.current?.computedWidth,
-        },
-        nativeEvent,
-      );
+      if (colDefRef.current) {
+        apiRef.current.publishEvent(
+          GridEvents.columnWidthChange,
+          {
+            element: colElementRef.current,
+            colDef: colDefRef.current,
+            width: colDefRef.current?.computedWidth,
+          },
+          nativeEvent,
+        );
+      }
     });
 
     logger.debug(
@@ -130,7 +132,7 @@ export const useGridColumnResize = (
     );
   });
 
-  const handleResizeMouseMove = useEventCallback((nativeEvent: any) => {
+  const handleResizeMouseMove = useEventCallback((nativeEvent: MouseEvent) => {
     // Cancel move in case some other element consumed a mouseup event and it was not fired.
     if (nativeEvent.buttons === 0) {
       handleResizeMouseUp(nativeEvent);
@@ -138,7 +140,7 @@ export const useGridColumnResize = (
     }
 
     let newWidth =
-      initialOffset.current +
+      initialOffset.current! +
       nativeEvent.clientX -
       colElementRef.current!.getBoundingClientRect().left;
     newWidth = Math.max(colDefRef.current?.minWidth!, newWidth);

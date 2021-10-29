@@ -96,10 +96,10 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
   }
 
   const publish = React.useCallback(
-    (eventName: string) => (event: React.SyntheticEvent) =>
+    (eventName: GridEvents) => (event: React.SyntheticEvent) =>
       apiRef.current.publishEvent(
-        eventName,
-        apiRef.current.getColumnHeaderParams(column.field),
+        eventName as any, // TODO: Type correctly
+        apiRef.current.getColumnHeaderParams(column.field) as any,
         event,
       ),
     [apiRef, column.field],

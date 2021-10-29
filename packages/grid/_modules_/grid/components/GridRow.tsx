@@ -16,6 +16,7 @@ import { GridCellIdentifier } from '../hooks/features/focus/gridFocusState';
 import { GridScrollBarState } from '../models/gridContainerProps';
 import { gridColumnsMetaSelector } from '../hooks/features/columns/gridColumnsSelector';
 import { useGridSelector } from '../hooks/utils/useGridSelector';
+import { GridRowEventLookup } from '../models';
 
 export interface GridRowProps {
   rowId: GridRowId;
@@ -99,28 +100,32 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
   const classes = useUtilityClasses(ownerState);
 
   const publish = React.useCallback(
-    (eventName: string, propHandler: any) => (event: React.MouseEvent) => {
-      // Ignore portal
-      // The target is not an element when triggered by a Select inside the cell
-      // See https://github.com/mui-org/material-ui/issues/10534
-      if (
-        (event.target as any).nodeType === 1 &&
-        !event.currentTarget.contains(event.target as Element)
-      ) {
-        return;
-      }
+    (
+        eventName: keyof GridRowEventLookup,
+        propHandler: React.MouseEventHandler<HTMLDivElement> | undefined,
+      ): React.MouseEventHandler<HTMLDivElement> =>
+      (event) => {
+        // Ignore portal
+        // The target is not an element when triggered by a Select inside the cell
+        // See https://github.com/mui-org/material-ui/issues/10534
+        if (
+          (event.target as any).nodeType === 1 &&
+          !event.currentTarget.contains(event.target as Element)
+        ) {
+          return;
+        }
 
-      // The row might have been deleted
-      if (!apiRef.current.getRow(rowId)) {
-        return;
-      }
+        // The row might have been deleted
+        if (!apiRef.current.getRow(rowId)) {
+          return;
+        }
 
-      apiRef.current.publishEvent(eventName, apiRef.current.getRowParams(rowId), event);
+        apiRef.current.publishEvent(eventName, apiRef.current.getRowParams(rowId), event);
 
-      if (propHandler) {
-        propHandler(event);
-      }
-    },
+        if (propHandler) {
+          propHandler(event);
+        }
+      },
     [apiRef, rowId],
   );
 
