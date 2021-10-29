@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { debounce } from '@mui/material/utils';
 import { GridEvents } from '../../../constants/eventsConstants';
-import { ElementSize, GridEventsApi } from '../../../models';
+import { ElementSize, GridEventsApi, GridEventTypedListener } from '../../../models';
 import {
   useGridApiEventHandler,
   useGridApiOptionHandler,
@@ -36,7 +36,7 @@ export function useGridResizeContainer(
 
   const debounceResize = React.useMemo(() => debounce(resizeFn, 60), [resizeFn]);
 
-  const handleResize = React.useCallback(
+  const handleResize: GridEventTypedListener<GridEvents.resize> = React.useCallback(
     (size: ElementSize) => {
       // jsdom has no layout capabilities
       const isJSDOM = /jsdom/.test(window.navigator.userAgent);

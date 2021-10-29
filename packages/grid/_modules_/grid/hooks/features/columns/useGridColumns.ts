@@ -30,6 +30,7 @@ import {
 import { GRID_STRING_COL_DEF } from '../../../models/colDef/gridStringColDef';
 import { GridComponentProps } from '../../../GridComponentProps';
 import { useGridStateInit } from '../../utils/useGridStateInit';
+import { GridColumnVisibilityChangeParams } from '../../../models';
 
 type RawGridColumnsState = Omit<GridColumnsState, 'lookup'> & {
   lookup: { [field: string]: GridColDef | GridStateColDef };
@@ -252,11 +253,13 @@ export function useGridColumns(
 
       updateColumns([newColumn]);
 
-      apiRef.current.publishEvent(GridEvents.columnVisibilityChange, {
+      const params: GridColumnVisibilityChangeParams = {
         field,
         colDef: newColumn,
         isVisible,
-      });
+      };
+
+      apiRef.current.publishEvent(GridEvents.columnVisibilityChange, params);
     },
     [apiRef, getColumn, updateColumns],
   );

@@ -12,6 +12,7 @@ import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { GridComponentProps } from '../../../GridComponentProps';
 import { isNavigationKey } from '../../../utils/keyboardUtils';
 import { useGridStateInit } from '../../utils/useGridStateInit';
+import { GridEventTypedListener } from '../../../models';
 
 /**
  * @requires useGridParamsApi (method)
@@ -165,7 +166,7 @@ export const useGridFocus = (apiRef: GridApiRef, props: Pick<GridComponentProps,
   );
 
   const handleCellModeChange = React.useCallback(
-    (params: GridCellParams) => {
+    (params) => {
       if (params.cellMode === 'view') {
         return;
       }

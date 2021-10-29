@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridInitialState, GridState } from './models/gridState';
+import { GridInitialState } from './models/gridState';
 import { GridApiRef } from './models/api/gridApiRef';
 import { GridColumns } from './models/colDef/gridColDef';
 import {
@@ -9,7 +9,6 @@ import {
 } from './models/gridOptions';
 import { MuiEvent } from './models/muiEvent';
 import { GridRowId, GridRowIdGetter, GridRowsProp } from './models/gridRows';
-import { ElementSize } from './models/elementSize';
 import { GridColumnTypesRecord } from './models/colDef/gridColumnTypesRecord';
 import { GridSortModel } from './models/gridSortModel';
 import { GridFilterModel } from './models/gridFilterModel';
@@ -25,8 +24,6 @@ import {
 import { GridRowScrollEndParams } from './models/params/gridRowScrollEndParams';
 import { GridRowParams } from './models/params/gridRowParams';
 import { GridColumnOrderChangeParams } from './models/params/gridColumnOrderChangeParams';
-import { GridColumnResizeParams } from './models/params/gridColumnResizeParams';
-import { GridColumnVisibilityChangeParams } from './models/params/gridColumnVisibilityChangeParams';
 import { GridSlotsComponentsProps } from './models/gridSlotsComponentsProps';
 import { GridClasses } from './gridClasses';
 import { GridCallbackDetails } from './models/api/gridCallbackDetails';
@@ -297,11 +294,7 @@ interface GridComponentOtherProps {
    * @param {MuiEvent} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
-  onColumnResize?: (
-    params: GridColumnResizeParams,
-    event: MuiEvent,
-    details: GridCallbackDetails,
-  ) => void;
+  onColumnResize?: GridEventTypedListener<GridEvents.columnResize>;
   /**
    * Callback fired when the width of a column is changed.
    * @param {GridCallbackDetails} params With all properties from [[GridColumnResizeParams]].
@@ -315,11 +308,7 @@ interface GridComponentOtherProps {
    * @param {MuiEvent} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
-  onColumnVisibilityChange?: (
-    params: GridColumnVisibilityChangeParams,
-    event: MuiEvent,
-    details: GridCallbackDetails,
-  ) => void;
+  onColumnVisibilityChange?: GridEventTypedListener<GridEvents.columnVisibilityChange>;
   /**
    * Callback fired when a click event comes from a row container element.
    * @param {GridRowParams} params With all properties from [[GridRowParams]].
@@ -344,18 +333,14 @@ interface GridComponentOtherProps {
    * @param {MuiEvent<React.SyntheticEvent>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
-  onRowDoubleClick?: (
-    params: GridRowParams,
-    event: MuiEvent<React.SyntheticEvent>,
-    details: GridCallbackDetails,
-  ) => void;
+  onRowDoubleClick?: GridEventTypedListener<GridEvents.rowDoubleClick>;
   /**
    * Callback fired when the grid is resized.
    * @param {ElementSize} containerSize With all properties from [[ElementSize]].
    * @param {MuiEvent} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
-  onResize?: (containerSize: ElementSize, event: MuiEvent, details: GridCallbackDetails) => void;
+  onResize?: GridEventTypedListener<GridEvents.resize>;
   /**
    * Callback fired when the state of the grid is updated.
    * @param {GridState} state The new state.
@@ -363,7 +348,7 @@ interface GridComponentOtherProps {
    * @param {GridCallbackDetails} details Additional details for this callback.
    * @internal
    */
-  onStateChange?: (state: GridState, event: MuiEvent, details: GridCallbackDetails) => void;
+  onStateChange?: GridEventTypedListener<GridEvents.stateChange>;
   /**
    * The zero-based index of the current page.
    * @default 0

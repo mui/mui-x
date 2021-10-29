@@ -10,7 +10,12 @@ import {
   getFieldFromHeaderElem,
   findHeaderElementFromField,
 } from '../../../utils/domUtils';
-import { GridApiRef, CursorCoordinates, GridColumnHeaderParams } from '../../../models';
+import {
+  GridApiRef,
+  CursorCoordinates,
+  GridColumnHeaderParams,
+  GridColumnResizeParams,
+} from '../../../models';
 import {
   useGridApiEventHandler,
   useGridApiOptionHandler,
@@ -146,15 +151,12 @@ export const useGridColumnResize = (
     newWidth = Math.max(colDefRef.current?.minWidth!, newWidth);
 
     updateWidth(newWidth);
-    apiRef.current.publishEvent(
-      GridEvents.columnResize,
-      {
-        element: colElementRef.current,
-        colDef: colDefRef.current,
-        width: newWidth,
-      },
-      nativeEvent,
-    );
+    const params: GridColumnResizeParams = {
+      element: colElementRef.current,
+      colDef: colDefRef.current!,
+      width: newWidth,
+    };
+    apiRef.current.publishEvent(GridEvents.columnResize, params, nativeEvent);
   });
 
   const handleColumnResizeMouseDown = useEventCallback(
@@ -242,15 +244,12 @@ export const useGridColumnResize = (
     newWidth = Math.max(colDefRef.current?.minWidth!, newWidth);
 
     updateWidth(newWidth);
-    apiRef.current.publishEvent(
-      GridEvents.columnResize,
-      {
-        element: colElementRef.current,
-        colDef: colDefRef.current,
-        width: newWidth,
-      },
-      nativeEvent,
-    );
+    const params: GridColumnResizeParams = {
+      element: colElementRef.current,
+      colDef: colDefRef.current!,
+      width: newWidth,
+    };
+    apiRef.current.publishEvent(GridEvents.columnResize, params, nativeEvent);
   });
 
   const handleTouchStart = useEventCallback((event: any) => {

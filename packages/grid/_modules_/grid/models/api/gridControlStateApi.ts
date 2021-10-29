@@ -1,6 +1,6 @@
 import { GridState } from '../gridState';
 import { GridControlStateItem } from '../controlStateItem';
-import { GridControlledStateEventLookup, GridEventsWithFullTyping } from './gridEventListener';
+import { GridControlledStateEventLookup } from './gridEventListener';
 
 /**
  * The control state API interface that is available in the grid `apiRef`.

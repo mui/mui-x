@@ -4,9 +4,15 @@ import { GridCallbackDetails } from './gridCallbackDetails';
 import { GridEvents } from '../../constants';
 import { GridFilterModel } from '../gridFilterModel';
 import { GridSortModel } from '../gridSortModel';
-import type { GridColumnResizeParams, GridRowParams } from '../params';
+import type {
+  GridColumnResizeParams,
+  GridColumnVisibilityChangeParams,
+  GridRowParams,
+} from '../params';
 import { GridEditRowsModel } from '../gridEditRowModel';
 import { GridSelectionModel } from '../gridSelectionModel';
+import { GridState } from '../gridState';
+import { ElementSize } from '../elementSize';
 
 export interface GridRowEventLookup {
   [GridEvents.rowClick]: { params: GridRowParams; event: React.MouseEvent<HTMLDivElement> };
@@ -14,41 +20,75 @@ export interface GridRowEventLookup {
 }
 
 export interface GridControlledStateEventLookup {
-  [GridEvents.pageSizeChange]: { params: number; event: {} };
-  [GridEvents.pageChange]: { params: number; event: {} };
-  [GridEvents.filterModelChange]: { params: GridFilterModel; event: {} };
-  [GridEvents.sortModelChange]: { params: GridSortModel; event: {} };
-  [GridEvents.editRowsModelChange]: { params: GridEditRowsModel; event: {} };
-  [GridEvents.selectionChange]: { params: GridSelectionModel; event: {} };
+  [GridEvents.pageSizeChange]: { params: number };
+  [GridEvents.pageChange]: { params: number };
+  [GridEvents.filterModelChange]: { params: GridFilterModel };
+  [GridEvents.sortModelChange]: { params: GridSortModel };
+  [GridEvents.editRowsModelChange]: { params: GridEditRowsModel };
+  [GridEvents.selectionChange]: { params: GridSelectionModel };
 }
 
 export interface GridEventLookup extends GridRowEventLookup, GridControlledStateEventLookup {
+  [GridEvents.unmount]: {};
+  [GridEvents.componentError]: { params: any };
+  [GridEvents.stateChange]: { params: GridState };
+  [GridEvents.resize]: { params: ElementSize };
+  [GridEvents.debouncedResize]: { params: ElementSize };
+  [GridEvents.rowGroupsPreProcessingChange]: {};
+  [GridEvents.columnsPreProcessingChange]: {};
+
   // Columns
-  [GridEvents.columnWidthChange]: { params: GridColumnResizeParams; event: MouseEvent };
+  // [GridEvents.columnsChange]
+  [GridEvents.columnWidthChange]: { params: GridColumnResizeParams; event: MouseEvent | {} };
   [GridEvents.columnResizeStart]: {
     params: { field: string };
     event: React.MouseEvent<HTMLDivElement>;
   };
   [GridEvents.columnResizeStop]: { params: null; event: MouseEvent };
+  [GridEvents.columnVisibilityChange]: { params: GridColumnVisibilityChangeParams };
+  [GridEvents.columnResize]: { params: GridColumnResizeParams; event: MouseEvent };
+
+  // Edit row
+  // [GridEvents.cellModeChange]: { params: GridCellParams }
 }
 
 export type GridEventsWithFullTyping = keyof GridEventLookup;
 
-type GridEventPublisherTypedArgWithEvent<E extends GridEventsWithFullTyping> = [
+export type GridEventsWithoutFullTyping = Exclude<GridEvents, GridEventsWithFullTyping>;
+
+type PublisherArgsNoEvent<E extends GridEventsWithFullTyping, T extends { params: any }> = [
   E,
-  GridEventLookup[E]['params'],
-  MuiEvent<GridEventLookup[E]['event']>,
+  T['params'],
+];
+type PublisherArgsRequiredEvent<
+  E extends GridEventsWithFullTyping,
+  T extends { params: any; event: MuiBaseEvent },
+> = [E, T['params'], T['event']];
+type PublisherArgsOptionalEvent<
+  E extends GridEventsWithFullTyping,
+  T extends { params: any; event: MuiBaseEvent },
+> = PublisherArgsRequiredEvent<E, T> | PublisherArgsNoEvent<E, T>;
+
+type PublisherArgsEvent<
+  E extends GridEventsWithFullTyping,
+  T extends { params: any; event: MuiBaseEvent },
+> = {} extends T['event'] ? PublisherArgsOptionalEvent<E, T> : PublisherArgsRequiredEvent<E, T>;
+
+type PublisherArgsParams<E extends GridEventsWithFullTyping, T extends { params: any }> = [
+  E,
+  T['params'],
 ];
 
-type GridEventPublisherTypedArgWithoutEvent<E extends GridEventsWithFullTyping> = [
-  E,
-  GridEventLookup[E]['params'],
-];
+type PublisherArgsNoParams<E extends GridEventsWithFullTyping> = [E];
 
-type GridEventPublisherTypedArg<E extends GridEventsWithFullTyping> =
-  GridEventLookup[E]['event'] extends Exclude<MuiBaseEvent, {}>
-    ? GridEventPublisherTypedArgWithEvent<E>
-    : GridEventPublisherTypedArgWithEvent<E> | GridEventPublisherTypedArgWithoutEvent<E>;
+type GridEventPublisherTypedArg<E extends GridEventsWithFullTyping> = GridEventLookup[E] extends {
+  params: any;
+  event: MuiBaseEvent;
+}
+  ? PublisherArgsEvent<E, GridEventLookup[E]>
+  : GridEventLookup[E] extends { params: any }
+  ? PublisherArgsParams<E, GridEventLookup[E]>
+  : PublisherArgsNoParams<E>;
 
 type GridEventPublisherArg<E extends GridEvents> = E extends GridEventsWithFullTyping
   ? GridEventPublisherTypedArg<E>
@@ -59,8 +99,10 @@ export type GridEventPublisher = <E extends GridEvents>(
 ) => void;
 
 export type GridEventTypedListener<E extends GridEventsWithFullTyping> = (
-  params: GridEventLookup[E]['params'],
-  event: MuiEvent<GridEventLookup[E]['event']>,
+  params: GridEventLookup[E] extends { params: any } ? GridEventLookup[E]['params'] : undefined,
+  event: GridEventLookup[E] extends { event: MuiBaseEvent }
+    ? MuiEvent<GridEventLookup[E]['event']>
+    : MuiEvent<{}>,
   details: GridCallbackDetails,
 ) => void;
 
