@@ -22,88 +22,70 @@ A big thanks to the 7 contributors who made this release possible. Here are some
 
 - [DataGridPro] The following methods from `apiRef` were renamed. Use the provided alternatives. (#2870) @flaviendelangle
 
-  ```diff
-  -apiRef.current.applyFilters
-  +apiRef.current.unsafe_applyFilters
+  1. `apiRef.current.applyFilters` was renamed to `apiRef.current.unsafe_applyFilters`
+  2. `apiRef.current.applyFilterLinkOperator` was renamed to `apiRef.current.setFilterLinkOperator`
+  3. `apiRef.current.upsertFilter` was renamed to `apiRef.current.upsertFilterItem`
+  4. `apiRef.current.deleteFilter` was renamed to `apiRef.current.deleteFilterItem`
 
+- [DataGridPro] The `apiRef.current.applyFilter` method was removed. (#2870) @flaviendelangle
+  You should never have to call it directly since the filters are already applied when the `filterModel` prop changes.
+  To manually apply the filters, use `apiRef.current.unsafe_applyFilters`.
+
+  ```diff
   -apiRef.current.applyFilter
   +apiRef.current.unsafe_applyFilters
-
-  -apiRef.current.applyFilterLinkOperator
-  +apiRef.current.setFilterLinkOperator
-
-  -apiRef.current.upsertFilter
-  +apiRef.current.upsertFilterItem
-
-  -apiRef.current.deleteFilter
-  +apiRef.current.deleteFilterItem
   ```
 
-  For applyFilters, you should never have to call it directly since all the other method that update the rows or the filterModel are calling it directly or not.
+- [DataGridPro] Rename filtering, sorting, and rows selectors to match the naming convention (#2942) @flaviendelangle
 
-- [DataGridPro] Update filtering, sorting, and rows selectors names to match the current naming convention (#2942) @flaviendelangle
+  1. `unorderedGridRowIdsSelector` was renamed to `gridRowIdsSelector`
+  2. `sortingGridStateSelector` was renamed to `gridSortingStateSelector`
+  3. `sortedGridRowIdsSelector` was renamed to `gridSortedRowIdsSelector`
+  4. `visibleSortedGridRowIdsSelector` was renamed to `gridVisibleSortedRowIdsSelector`
+  5. `visibleGridRowCountSelector` was renamed to `gridVisibleRowCountSelector`
+  6. `filterGridColumnLookupSelector` was renamed to `gridFilterActiveItemsSelector`
+ 
+- [DataGridPro] The `sortedGridRowsSelector` was renamed to `gridSortedRowEntriesSelector` (#2942) @flaviendelangle
+  
+  The return value was also changed as below:
 
-  **Rows selectors**
   ```diff
-  -unorderedGridRowIdsSelector
-  +gridRowIdsSelector
-  ```
-
-  You can `apiRef.current.getRowModels` for the pro version,
-  or `gridRowIdsSelector` and `gridRowsLookupSelector` for the free version
-  ```diff
-  -unorderedGridRowModelsSelector: (state: GridState) => GridRowModel[];
-  ```
-
-  **Sorting selectors**
-  ```diff
-  -sortingGridStateSelector
-  +gridSortingStateSelector
-
-  -sortedGridRowIdsSelector
-  +gridSortedRowIdsSelector
-
   -sortedGridRowsSelector: (state: GridState) => Map<GridRowId, GridRowModel>
-  +gridSortedRowEntriesSelector: (state: GridState) => GridRowEntry[]
-
   -const map = sortedGridRowsSelector(state);
+  +gridSortedRowEntriesSelector: (state: GridState) => GridRowEntry[]
   +const map = new Map(gridSortedRowEntriesSelector(state).map(row => [row.id, row.model]));
   ```
 
-  **Filter selectors**
+- [DataGridPro] The `visibleSortedGridRowsSelector` was renamed to `gridVisibleSortedRowEntriesSelector` (#2942) @flaviendelangle
+  
+  The return value was also changed as below:
 
-  You can use `apiRef.current.getVisibleRowModels` for the pro version,
-  or you can rebuild the `Map` manually for the free version
   ```diff
   -visibleSortedGridRowsSelector: (state: GridState) => Map<GridRowId, GridRowModel>;
+  -const map = visibleSortedGridRowsSelector(state);
   +gridVisibleSortedRowEntriesSelector: (state: GridState) => GridRowEntry[]
+  +const map = new Map(gridVisibleSortedRowEntriesSelector(state).map(row => [row.id, row.model]));
   ```
+
+- [DataGridPro] The `visibleSortedGridRowsAsArraySelector` was renamed to `gridVisibleSortedRowEntriesSelector` (#2942) @flaviendelangle
+  
+  The return value was also changed as below:
 
   ```diff
   -visibleSortedGridRowsAsArraySelector: (state: GridState) => [GridRowId, GridRowData][];
   +gridVisibleSortedRowEntriesSelector: (state: GridState) => GridRowEntry[]
+  ```
 
-  -const map = visibleSortedGridRowsSelector(state);
-  +const map = new Map(gridVisibleSortedRowEntriesSelector(state).map(row => [row.id, row.model]));
+- [DataGridPro] The `filterGridItemsCounterSelector` selector was removed. (#2942) @flaviendelangle
+  Use `gridFilterActiveItemsSelector` as replacement.
 
-  -visibleSortedGridRowIdsSelector
-  +gridVisibleSortedRowIdsSelector
-
-  -visibleGridRowCountSelector
-  +gridVisibleRowCountSelector
-  +gridVisibleTopLevelRowCountSelector
-
-  -filterGridColumnLookupSelector
-  +gridFilterActiveItemsLookupSelector
-
-  -activeGridFilterItemsSelector
-  +gridFilterActiveItemsSelector
-
-  -filterGridItemsCounterSelector
-
+  ```diff
   -const filterCount = filterGridItemsCounterSelector(state);
   +const filterCount = gridFilterActiveItemsSelector(state).length;
   ```
+
+- [DataGridPro] The `unorderedGridRowModelsSelector` selector was removed. (#2942) @flaviendelangle
+  Use `apiRef.current.getRowModels` or `gridRowIdsSelector` and `gridRowsLookupSelector`.
 
 #### Changes
 
