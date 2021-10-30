@@ -1,8 +1,10 @@
 /* eslint-disable react/no-danger */
 import * as React from 'react';
 import MarkdownElement from 'docs/src/modules/components/MarkdownElement';
+import Typography from '@mui/material/Typography';
 import { makeStyles } from '@mui/styles';
 import events from './events.json';
+import Box from '@mui/material/Box';
 
 const useStyles = makeStyles({
   root: {
@@ -28,11 +30,37 @@ export default function CatalogOfEventsNoSnap() {
               <td>
                 <code>{event.name}</code>
               </td>
-              <td
-                dangerouslySetInnerHTML={{
-                  __html: event.description,
-                }}
-              />
+              <td>
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html: event.description,
+                  }}
+                />
+                {!!event.params && (
+                  <div>
+                    <Typography variant="subtitle2" component="span">
+                      Params:{' '}
+                    </Typography>
+                    <span
+                      dangerouslySetInnerHTML={{
+                        __html: event.params,
+                      }}
+                    />
+                  </div>
+                )}
+                {!!event.event && (
+                  <div>
+                    <Typography variant="subtitle2" component="span">
+                      Event:{' '}
+                    </Typography>
+                    <span
+                      dangerouslySetInnerHTML={{
+                        __html: event.event,
+                      }}
+                    />
+                  </div>
+                )}
+              </td>
             </tr>
           ))}
         </tbody>

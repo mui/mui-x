@@ -312,16 +312,39 @@ function findProperties(reflection: TypeDoc.DeclarationReflection) {
   return properties.sort((a, b) => a.name.localeCompare(b.name));
 }
 
-function extractEvents(eventsObject: TypeDoc.DeclarationReflection, apisToGenerate) {
-  const events: { name: string; description: string }[] = [];
+function extractEvents(
+  project: TypeDoc.ProjectReflection,
+  eventsObject: TypeDoc.DeclarationReflection,
+  apisToGenerate,
+) {
+  const events: { name: string; description: string; params?: string; event?: string }[] = [];
+  const eventLookupType = project.findReflectionByName(
+    'GridEventLookup',
+  )! as TypeDoc.DeclarationReflection;
   const allEvents = eventsObject.children!;
+
+  const eventLookup: { [eventName: string]: any } = {};
+  eventLookupType.children?.forEach((event) => {
+    const eventParams = {};
+    if (event.type && isReflectionType(event.type)) {
+      event.type.declaration.children?.forEach((eventProperty) => {
+        if (eventProperty.type) {
+          eventParams[eventProperty.name] = generateTypeStr(eventProperty.type);
+        }
+      });
+    }
+
+    eventLookup[event.name] = eventParams;
+  });
 
   allEvents.forEach((event) => {
     const description = linkify(event.comment?.shortText, apisToGenerate, 'html');
-
+    const eventProperties = eventLookup[event.escapedName!];
     events.push({
       name: event.escapedName!,
       description: renderMarkdownInline(description),
+      params: eventProperties.params,
+      event: eventProperties.event,
     });
   });
 
@@ -889,7 +912,7 @@ async function run(argv: { outputDirectory?: string }) {
       // eslint-disable-next-line no-console
       console.log('Built JSON file for', api.name);
     } else if (reflection.name === 'GridEvents') {
-      const events = extractEvents(reflection, apisToGenerate);
+      const events = extractEvents(project, reflection, apisToGenerate);
 
       writePrettifiedFile(
         path.resolve(workspaceRoot, 'docs/src/pages/components/data-grid/events/events.json'),
