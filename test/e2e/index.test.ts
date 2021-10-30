@@ -119,7 +119,7 @@ describe('e2e', () => {
       });
       await page.keyboard.press('Tab');
       await waitFor(async () => {
-        expect(await page.evaluate(() => document.activeElement?.textContent)).to.equal('1000');
+        expect(await page.evaluate(() => document.activeElement?.textContent)).to.equal('100');
         expect(await page.evaluate(() => document.activeElement?.getAttribute('role'))).to.equal(
           'button',
         );
