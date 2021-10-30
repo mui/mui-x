@@ -16,6 +16,7 @@ import { GridColumnHeaderMenu } from '../menu/columnMenu/GridColumnHeaderMenu';
 import { getDataGridUtilityClass } from '../../gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { GridComponentProps } from '../../GridComponentProps';
+import { GridColumnHeaderEventLookup } from '../../models';
 
 interface GridColumnHeaderItemProps {
   colIndex: number;
@@ -96,11 +97,11 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
   }
 
   const publish = React.useCallback(
-    (eventName: GridEvents) => (event: React.SyntheticEvent) =>
+    (eventName: keyof GridColumnHeaderEventLookup) => (event: React.SyntheticEvent) =>
       apiRef.current.publishEvent(
-        eventName as any, // TODO: Type correctly
-        apiRef.current.getColumnHeaderParams(column.field) as any,
-        event,
+        eventName,
+        apiRef.current.getColumnHeaderParams(column.field),
+        event as any,
       ),
     [apiRef, column.field],
   );

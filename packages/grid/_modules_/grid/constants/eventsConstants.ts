@@ -49,12 +49,6 @@ export enum GridEvents {
    */
   cellFocusOut = 'cellFocusOut',
   /**
-   * Fired when the user starts dragging a cell. It's mapped to the `dragstart` DOM event.
-   * Called with a [[GridCellParams]] object.
-   * @ignore - do not document.
-   */
-  cellDragStart = 'cellDragStart',
-  /**
    * Fired when the dragged cell enters a valid drop target. It's mapped to the `dragend` DOM event.
    * Called with a [[GridCellParams]] object.
    * @ignore - do not document.
@@ -67,11 +61,6 @@ export enum GridEvents {
    * @ignore - do not document.
    */
   cellDragOver = 'cellDragOver',
-  /**
-   * Fired when the dragging of a cell ends. Called with a [[GridCellParams]] object.
-   * @ignore - do not document.
-   */
-  cellDragEnd = 'cellDragEnd',
   /**
    * Fired when the props of the edit cell changes. Called with a [[GridEditCellPropsParams]] object.
    */

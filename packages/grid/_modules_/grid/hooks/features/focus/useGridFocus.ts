@@ -12,7 +12,7 @@ import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { GridComponentProps } from '../../../GridComponentProps';
 import { isNavigationKey } from '../../../utils/keyboardUtils';
 import { useGridStateInit } from '../../utils/useGridStateInit';
-import { GridEventTypedListener } from '../../../models';
+import { GridEventTypedListener, MuiBaseEvent } from '../../../models';
 
 /**
  * @requires useGridParamsApi (method)
@@ -51,7 +51,7 @@ export const useGridFocus = (apiRef: GridApiRef, props: Pick<GridComponentProps,
   );
 
   const setColumnHeaderFocus = React.useCallback(
-    (field: string, event?: React.SyntheticEvent) => {
+    (field: string, event: MuiBaseEvent = {}) => {
       const { cell } = apiRef.current.state.focus;
       if (cell) {
         apiRef.current.publishEvent(
@@ -76,15 +76,17 @@ export const useGridFocus = (apiRef: GridApiRef, props: Pick<GridComponentProps,
     [apiRef, forceUpdate, logger, setGridState],
   );
 
-  const handleCellDoubleClick = React.useCallback(
-    ({ id, field }: GridCellParams) => {
+  const handleCellDoubleClick = React.useCallback<
+    GridEventTypedListener<GridEvents.cellDoubleClick>
+  >(
+    ({ id, field }) => {
       apiRef.current.setCellFocus(id, field);
     },
     [apiRef],
   );
 
-  const handleCellKeyDown = React.useCallback(
-    (params: GridCellParams, event: React.KeyboardEvent) => {
+  const handleCellKeyDown = React.useCallback<GridEventTypedListener<GridEvents.cellKeyDown>>(
+    (params, event) => {
       // GRID_CELL_NAVIGATION_KEY_DOWN handles the focus on Enter, Tab and navigation keys
       if (event.key === 'Enter' || event.key === 'Tab' || isNavigationKey(event.key)) {
         return;
@@ -94,8 +96,10 @@ export const useGridFocus = (apiRef: GridApiRef, props: Pick<GridComponentProps,
     [apiRef],
   );
 
-  const handleColumnHeaderFocus = React.useCallback(
-    ({ field }: GridCellParams, event: React.FocusEvent) => {
+  const handleColumnHeaderFocus = React.useCallback<
+    GridEventTypedListener<GridEvents.columnHeaderFocus>
+  >(
+    ({ field }, event) => {
       if (event.target !== event.currentTarget) {
         return;
       }
@@ -104,7 +108,7 @@ export const useGridFocus = (apiRef: GridApiRef, props: Pick<GridComponentProps,
     [apiRef],
   );
 
-  const handleBlur = React.useCallback(() => {
+  const handleBlur = React.useCallback<GridEventTypedListener<GridEvents.columnHeaderBlur>>(() => {
     logger.debug(`Clearing focus`);
     setGridState((state) => ({
       ...state,
@@ -112,9 +116,12 @@ export const useGridFocus = (apiRef: GridApiRef, props: Pick<GridComponentProps,
     }));
   }, [logger, setGridState]);
 
-  const handleCellMouseUp = React.useCallback((params: GridCellParams) => {
-    lastClickedCell.current = params;
-  }, []);
+  const handleCellMouseUp = React.useCallback<GridEventTypedListener<GridEvents.cellMouseUp>>(
+    (params) => {
+      lastClickedCell.current = params;
+    },
+    [],
+  );
 
   const handleDocumentClick = React.useCallback(
     (event: MouseEvent) => {
@@ -165,7 +172,7 @@ export const useGridFocus = (apiRef: GridApiRef, props: Pick<GridComponentProps,
     [apiRef, forceUpdate, setGridState],
   );
 
-  const handleCellModeChange = React.useCallback(
+  const handleCellModeChange = React.useCallback<GridEventTypedListener<GridEvents.cellModeChange>>(
     (params) => {
       if (params.cellMode === 'view') {
         return;

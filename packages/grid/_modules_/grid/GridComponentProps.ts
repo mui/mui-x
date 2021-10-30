@@ -16,11 +16,7 @@ import { GridCellParams } from './models/params/gridCellParams';
 import { GridColumnHeaderParams } from './models/params/gridColumnHeaderParams';
 import { GridEditRowsModel } from './models/gridEditRowModel';
 import { GridSelectionModel, GridInputSelectionModel } from './models/gridSelectionModel';
-import {
-  GridEditCellPropsParams,
-  GridEditCellValueParams,
-  GridCellEditCommitParams,
-} from './models/params/gridEditCellParams';
+import { GridEditCellValueParams } from './models/params/gridEditCellParams';
 import { GridRowScrollEndParams } from './models/params/gridRowScrollEndParams';
 import { GridRowParams } from './models/params/gridRowParams';
 import { GridColumnOrderChangeParams } from './models/params/gridColumnOrderChangeParams';
@@ -103,52 +99,44 @@ interface GridComponentOtherProps {
    * @param {MuiEvent} event The event that caused this prop to be called.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
-  onEditCellPropsChange?: (
-    params: GridEditCellPropsParams,
-    event: MuiEvent<React.SyntheticEvent>,
-    details: GridCallbackDetails,
-  ) => void;
+  onEditCellPropsChange?: GridEventTypedListener<GridEvents.editCellPropsChange>;
   /**
    * Callback fired when the cell changes are committed.
    * @param {GridCellEditCommitParams} params With all properties from [[GridCellEditCommitParams]].
    * @param {MuiEvent<React.SyntheticEvent>} event The event that caused this prop to be called.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
-  onCellEditCommit?: (
-    params: GridCellEditCommitParams,
-    event: MuiEvent<React.SyntheticEvent>,
-    details: GridCallbackDetails,
-  ) => void;
+  onCellEditCommit?: GridEventTypedListener<GridEvents.cellEditCommit>;
   /**
    * Callback fired when the cell turns to edit mode.
    * @param {GridCellParams} params With all properties from [[GridCellParams]].
    * @param {MuiEvent<React.SyntheticEvent>} event The event that caused this prop to be called.
    */
-  onCellEditStart?: (params: GridCellParams, event: MuiEvent<React.SyntheticEvent>) => void;
+  onCellEditStart?: GridEventTypedListener<GridEvents.cellEditStart>;
   /**
    * Callback fired when the cell turns to view mode.
    * @param {GridCellParams} params With all properties from [[GridCellParams]].
    * @param {MuiEvent<React.SyntheticEvent>} event The event that caused this prop to be called.
    */
-  onCellEditStop?: (params: GridCellParams, event: MuiEvent<React.SyntheticEvent>) => void;
+  onCellEditStop?: GridEventTypedListener<GridEvents.cellEditStop>;
   /**
    * Callback fired when the row changes are committed.
    * @param {GridRowId} id The row id.
    * @param {MuiEvent<React.SyntheticEvent>} event The event that caused this prop to be called.
    */
-  onRowEditCommit?: (id: GridRowId, event: MuiEvent<React.SyntheticEvent>) => void;
+  onRowEditCommit?: GridEventTypedListener<GridEvents.rowEditCommit>;
   /**
    * Callback fired when the row turns to edit mode.
    * @param {GridRowParams} params With all properties from [[GridRowParams]].
    * @param {MuiEvent<React.SyntheticEvent>} event The event that caused this prop to be called.
    */
-  onRowEditStart?: (params: GridRowParams, event: MuiEvent<React.SyntheticEvent>) => void;
+  onRowEditStart?: GridEventTypedListener<GridEvents.rowEditStart>;
   /**
    * Callback fired when the row turns to view mode.
    * @param {GridRowParams} params With all properties from [[GridRowParams]].
    * @param {MuiEvent<React.SyntheticEvent>} event The event that caused this prop to be called.
    */
-  onRowEditStop?: (params: GridRowParams, event: MuiEvent<React.SyntheticEvent>) => void;
+  onRowEditStop?: GridEventTypedListener<GridEvents.rowEditStop>;
   /**
    * Callback fired when an exception is thrown in the grid.
    * @param {any} args The arguments passed to the `showError` call.

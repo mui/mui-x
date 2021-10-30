@@ -8,6 +8,7 @@ import { GridEvents } from '../../constants/eventsConstants';
 import { getDataGridUtilityClass } from '../../gridClasses';
 import {
   GridAlignment,
+  GridCellEventLookup,
   GridCellMode,
   GridCellModes,
   GridCellValue,
@@ -126,29 +127,30 @@ function GridCell(props: GridCellProps) {
   );
 
   const publish = React.useCallback(
-    (eventName: GridEvents, propHandler: any) => (event: React.SyntheticEvent<HTMLDivElement>) => {
-      // Ignore portal
-      // The target is not an element when triggered by a Select inside the cell
-      // See https://github.com/mui-org/material-ui/issues/10534
-      if (
-        (event.target as any).nodeType === 1 &&
-        !event.currentTarget.contains(event.target as Element)
-      ) {
-        return;
-      }
+    (eventName: keyof GridCellEventLookup, propHandler: any) =>
+      (event: React.SyntheticEvent<HTMLDivElement>) => {
+        // Ignore portal
+        // The target is not an element when triggered by a Select inside the cell
+        // See https://github.com/mui-org/material-ui/issues/10534
+        if (
+          (event.target as any).nodeType === 1 &&
+          !event.currentTarget.contains(event.target as Element)
+        ) {
+          return;
+        }
 
-      // The row might have been deleted during the click
-      if (!apiRef.current.getRow(rowId)) {
-        return;
-      }
+        // The row might have been deleted during the click
+        if (!apiRef.current.getRow(rowId)) {
+          return;
+        }
 
-      const params = apiRef.current.getCellParams(rowId!, field || '');
-      apiRef.current.publishEvent(eventName as any, params as any, event); // TODO: Type correctly
+        const params = apiRef.current.getCellParams(rowId!, field || '');
+        apiRef.current.publishEvent(eventName, params, event as any);
 
-      if (propHandler) {
-        propHandler(event);
-      }
-    },
+        if (propHandler) {
+          propHandler(event);
+        }
+      },
     [apiRef, field, rowId],
   );
 

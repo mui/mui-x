@@ -204,5 +204,4 @@ export const useGridColumnReorder = (
   useGridApiEventHandler(apiRef, GridEvents.columnHeaderDragEnd, handleDragEnd);
   useGridApiEventHandler(apiRef, GridEvents.cellDragEnter, handleDragEnter);
   useGridApiEventHandler(apiRef, GridEvents.cellDragOver, handleDragOver);
-  useGridApiEventHandler(apiRef, GridEvents.cellDragEnd, handleDragEnd);
 };
