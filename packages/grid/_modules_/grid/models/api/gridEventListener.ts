@@ -7,16 +7,15 @@ import { GridSortModel } from '../gridSortModel';
 import type {
   GridCellEditCommitParams,
   GridCellParams,
-  GridColumnHeaderParams,
+  GridColumnHeaderParams, GridColumnOrderChangeParams,
   GridColumnResizeParams,
-  GridColumnVisibilityChangeParams,
-  GridRowParams,
+  GridColumnVisibilityChangeParams, GridHeaderSelectionCheckboxParams,
+  GridRowParams, GridRowScrollEndParams, GridRowSelectionCheckboxParams, GridScrollParams, GridEditCellPropsParams
 } from '../params';
 import { GridEditRowsModel } from '../gridEditRowModel';
 import { GridSelectionModel } from '../gridSelectionModel';
 import { GridState } from '../gridState';
 import { ElementSize } from '../elementSize';
-import { GridEditCellPropsParams } from '../params';
 import { GridRowId } from '../gridRows';
 
 export interface GridRowEventLookup {
@@ -77,6 +76,7 @@ export interface GridColumnHeaderEventLookup {
     params: GridColumnHeaderParams;
     event: React.DragEvent;
   };
+  [GridEvents.columnSeparatorMouseDown]: { params: GridColumnHeaderParams, event: React.MouseEvent };
 }
 
 export interface GridCellEventLookup {
@@ -133,7 +133,7 @@ export interface GridEventLookup
   [GridEvents.columnsPreProcessingChange]: {};
 
   // Columns
-  // [GridEvents.columnsChange]
+  [GridEvents.columnsChange]: { params: string[] }
   [GridEvents.columnWidthChange]: { params: GridColumnResizeParams; event: MouseEvent | {} };
   [GridEvents.columnResizeStart]: {
     params: { field: string };
@@ -142,6 +142,11 @@ export interface GridEventLookup
   [GridEvents.columnResizeStop]: { params: null; event: MouseEvent };
   [GridEvents.columnVisibilityChange]: { params: GridColumnVisibilityChangeParams };
   [GridEvents.columnResize]: { params: GridColumnResizeParams; event: MouseEvent };
+  [GridEvents.columnOrderChange]: { params: GridColumnOrderChangeParams  }
+
+  // Rows
+  [GridEvents.rowsSet]: {},
+  [GridEvents.visibleRowsSet]: {},
 
   // Edit
   [GridEvents.cellModeChange]: { params: GridCellParams };
@@ -175,11 +180,17 @@ export interface GridEventLookup
     params: GridColumnHeaderParams;
     event: React.KeyboardEvent;
   };
+
+  // Scroll
+  [GridEvents.rowsScroll]: { params: GridScrollParams }
+  [GridEvents.rowsScrollEnd]: { params: GridRowScrollEndParams }
+
+  // Selection
+  [GridEvents.headerSelectionCheckboxChange]: { params: GridHeaderSelectionCheckboxParams },
+  [GridEvents.rowSelectionCheckboxChange]: { params: GridRowSelectionCheckboxParams },
 }
 
 export type GridEventsWithFullTyping = keyof GridEventLookup;
-
-export type GridEventsWithoutFullTyping = Exclude<GridEvents, GridEventsWithFullTyping>;
 
 type PublisherArgsNoEvent<E extends GridEventsWithFullTyping, T extends { params: any }> = [
   E,
@@ -206,7 +217,7 @@ type PublisherArgsParams<E extends GridEventsWithFullTyping, T extends { params:
 
 type PublisherArgsNoParams<E extends GridEventsWithFullTyping> = [E];
 
-type GridEventPublisherTypedArg<E extends GridEventsWithFullTyping> = GridEventLookup[E] extends {
+type GridEventPublisherArg<E extends GridEventsWithFullTyping> = GridEventLookup[E] extends {
   params: any;
   event: MuiBaseEvent;
 }
@@ -214,10 +225,6 @@ type GridEventPublisherTypedArg<E extends GridEventsWithFullTyping> = GridEventL
   : GridEventLookup[E] extends { params: any }
   ? PublisherArgsParams<E, GridEventLookup[E]>
   : PublisherArgsNoParams<E>;
-
-type GridEventPublisherArg<E extends GridEvents> = E extends GridEventsWithFullTyping
-  ? GridEventPublisherTypedArg<E>
-  : [E] | [E, any] | [E, any, MuiEvent | undefined];
 
 export type GridEventPublisher = <E extends GridEvents>(
   ...params: GridEventPublisherArg<E>

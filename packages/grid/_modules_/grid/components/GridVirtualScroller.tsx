@@ -24,6 +24,7 @@ import { useGridApiEventHandler } from '../hooks/utils/useGridApiEventHandler';
 import { getDataGridUtilityClass } from '../gridClasses';
 import { GridComponentProps } from '../GridComponentProps';
 import { GridRowId } from '../models/gridRows';
+import {GridRenderContext, GridScrollParams} from "../models";
 
 type OwnerState = { classes: GridComponentProps['classes'] };
 
@@ -89,13 +90,6 @@ export function getIndexFromScroll(
     : getIndexFromScroll(offset, positions, pivot + 1, sliceEnd);
 }
 
-export interface RenderContext {
-  firstRowIndex: number;
-  lastRowIndex: number;
-  firstColumnIndex: number;
-  lastColumnIndex: number;
-}
-
 interface GridVirtualScrollerProps extends React.HTMLAttributes<HTMLDivElement> {
   selectionLookup: Record<string, GridRowId>;
   disableVirtualization?: boolean;
@@ -118,8 +112,8 @@ const GridVirtualScroller = React.forwardRef<HTMLDivElement, GridVirtualScroller
     const renderZoneRef = React.useRef<HTMLDivElement>(null);
     const rootRef = React.useRef<HTMLDivElement>(null);
     const handleRef = useForkRef<HTMLDivElement>(ref, rootRef);
-    const [renderContext, setRenderContext] = React.useState<RenderContext | null>(null);
-    const prevRenderContext = React.useRef<RenderContext | null>(renderContext);
+    const [renderContext, setRenderContext] = React.useState<GridRenderContext | null>(null);
+    const prevRenderContext = React.useRef<GridRenderContext | null>(renderContext);
     const scrollPosition = React.useRef({ top: 0, left: 0 });
     const [containerWidth, setContainerWidth] = React.useState<number | null>(null);
     const ownerState = { classes: rootProps.classes };
@@ -195,7 +189,7 @@ const GridVirtualScroller = React.forwardRef<HTMLDivElement, GridVirtualScroller
       setRenderContext(initialRenderContext);
 
       const { top, left } = scrollPosition.current!;
-      const params = { top, left, renderContext: initialRenderContext };
+      const params: GridScrollParams = { top, left, renderContext: initialRenderContext };
       apiRef.current.publishEvent(GridEvents.rowsScroll, params);
     }, [apiRef, computeRenderContext, containerWidth]);
 
