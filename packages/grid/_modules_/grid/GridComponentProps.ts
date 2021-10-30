@@ -19,7 +19,7 @@ import { GridRowParams } from './models/params/gridRowParams';
 import { GridSlotsComponentsProps } from './models/gridSlotsComponentsProps';
 import { GridClasses } from './gridClasses';
 import { GridCallbackDetails } from './models/api/gridCallbackDetails';
-import { GridEventTypedListener } from './models/api/gridEventListener';
+import { GridEventListener } from './models/api/gridEventListener';
 import { GridEvents } from './constants';
 
 /**
@@ -95,44 +95,44 @@ interface GridComponentOtherProps {
    * @param {MuiEvent} event The event that caused this prop to be called.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
-  onEditCellPropsChange?: GridEventTypedListener<GridEvents.editCellPropsChange>;
+  onEditCellPropsChange?: GridEventListener<GridEvents.editCellPropsChange>;
   /**
    * Callback fired when the cell changes are committed.
    * @param {GridCellEditCommitParams} params With all properties from [[GridCellEditCommitParams]].
    * @param {MuiEvent<React.SyntheticEvent>} event The event that caused this prop to be called.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
-  onCellEditCommit?: GridEventTypedListener<GridEvents.cellEditCommit>;
+  onCellEditCommit?: GridEventListener<GridEvents.cellEditCommit>;
   /**
    * Callback fired when the cell turns to edit mode.
    * @param {GridCellParams} params With all properties from [[GridCellParams]].
    * @param {MuiEvent<React.SyntheticEvent>} event The event that caused this prop to be called.
    */
-  onCellEditStart?: GridEventTypedListener<GridEvents.cellEditStart>;
+  onCellEditStart?: GridEventListener<GridEvents.cellEditStart>;
   /**
    * Callback fired when the cell turns to view mode.
    * @param {GridCellParams} params With all properties from [[GridCellParams]].
    * @param {MuiEvent<React.SyntheticEvent>} event The event that caused this prop to be called.
    */
-  onCellEditStop?: GridEventTypedListener<GridEvents.cellEditStop>;
+  onCellEditStop?: GridEventListener<GridEvents.cellEditStop>;
   /**
    * Callback fired when the row changes are committed.
    * @param {GridRowId} id The row id.
    * @param {MuiEvent<React.SyntheticEvent>} event The event that caused this prop to be called.
    */
-  onRowEditCommit?: GridEventTypedListener<GridEvents.rowEditCommit>;
+  onRowEditCommit?: GridEventListener<GridEvents.rowEditCommit>;
   /**
    * Callback fired when the row turns to edit mode.
    * @param {GridRowParams} params With all properties from [[GridRowParams]].
    * @param {MuiEvent<React.SyntheticEvent>} event The event that caused this prop to be called.
    */
-  onRowEditStart?: GridEventTypedListener<GridEvents.rowEditStart>;
+  onRowEditStart?: GridEventListener<GridEvents.rowEditStart>;
   /**
    * Callback fired when the row turns to view mode.
    * @param {GridRowParams} params With all properties from [[GridRowParams]].
    * @param {MuiEvent<React.SyntheticEvent>} event The event that caused this prop to be called.
    */
-  onRowEditStop?: GridEventTypedListener<GridEvents.rowEditStop>;
+  onRowEditStop?: GridEventListener<GridEvents.rowEditStop>;
   /**
    * Callback fired when an exception is thrown in the grid.
    * @param {any} args The arguments passed to the `showError` call.
@@ -146,126 +146,126 @@ interface GridComponentOtherProps {
    * @param {MuiEvent<React.MouseEvent>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
-  onCellClick?: GridEventTypedListener<GridEvents.cellClick>
+  onCellClick?: GridEventListener<GridEvents.cellClick>;
   /**
    * Callback fired when a double click event comes from a cell element.
    * @param {GridCellParams} params With all properties from [[GridCellParams]].
    * @param {MuiEvent<React.MouseEvent>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
-  onCellDoubleClick?: GridEventTypedListener<GridEvents.cellDoubleClick>
+  onCellDoubleClick?: GridEventListener<GridEvents.cellDoubleClick>;
   /**
    * Callback fired when a cell loses focus.
    * @param {GridCellParams} params With all properties from [[GridCellParams]].
    * @param {MuiEvent<React.SyntheticEvent | DocumentEventMap['click']>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
-  onCellFocusOut?: GridEventTypedListener<GridEvents.cellFocusOut>
+  onCellFocusOut?: GridEventListener<GridEvents.cellFocusOut>;
   /**
    * Callback fired when a keydown event comes from a cell element.
    * @param {GridCellParams} params With all properties from [[GridCellParams]].
    * @param {MuiEvent<React.KeyboardEvent>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
-  onCellKeyDown?: GridEventTypedListener<GridEvents.cellKeyDown>
+  onCellKeyDown?: GridEventListener<GridEvents.cellKeyDown>;
   /**
    * Callback fired when a click event comes from a column header element.
    * @param {GridColumnHeaderParams} params With all properties from [[GridColumnHeaderParams]].
    * @param {MuiEvent<React.SyntheticEvent>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
-  onColumnHeaderClick?: GridEventTypedListener<GridEvents.columnHeaderClick>
+  onColumnHeaderClick?: GridEventListener<GridEvents.columnHeaderClick>;
   /**
    * Callback fired when a double click event comes from a column header element.
    * @param {GridColumnHeaderParams} params With all properties from [[GridColumnHeaderParams]].
    * @param {MuiEvent<React.SyntheticEvent>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
-  onColumnHeaderDoubleClick?: GridEventTypedListener<GridEvents.columnHeaderDoubleClick>
+  onColumnHeaderDoubleClick?: GridEventListener<GridEvents.columnHeaderDoubleClick>;
   /**
    * Callback fired when a mouseover event comes from a column header element.
    * @param {GridColumnHeaderParams} params With all properties from [[GridColumnHeaderParams]].
    * @param {MuiEvent<React.SyntheticEvent>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
-  onColumnHeaderOver?: GridEventTypedListener<GridEvents.columnHeaderOver>
+  onColumnHeaderOver?: GridEventListener<GridEvents.columnHeaderOver>;
   /**
    * Callback fired when a mouseout event comes from a column header element.
    * @param {GridColumnHeaderParams} params With all properties from [[GridColumnHeaderParams]].
    * @param {MuiEvent<React.SyntheticEvent>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
-  onColumnHeaderOut?: GridEventTypedListener<GridEvents.columnHeaderOut>
+  onColumnHeaderOut?: GridEventListener<GridEvents.columnHeaderOut>;
   /**
    * Callback fired when a mouse enter event comes from a column header element.
    * @param {GridColumnHeaderParams} params With all properties from [[GridColumnHeaderParams]].
    * @param {MuiEvent<React.SyntheticEvent>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
-  onColumnHeaderEnter?: GridEventTypedListener<GridEvents.columnHeaderEnter>
+  onColumnHeaderEnter?: GridEventListener<GridEvents.columnHeaderEnter>;
   /**
    * Callback fired when a mouse leave event comes from a column header element.
    * @param {GridColumnHeaderParams} params With all properties from [[GridColumnHeaderParams]].
    * @param {MuiEvent<React.SyntheticEvent>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
-  onColumnHeaderLeave?: GridEventTypedListener<GridEvents.columnHeaderLeave>
+  onColumnHeaderLeave?: GridEventListener<GridEvents.columnHeaderLeave>;
   /**
    * Callback fired when a column is reordered.
    * @param {GridColumnOrderChangeParams} params With all properties from [[GridColumnOrderChangeParams]].
    * @param {MuiEvent} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
-  onColumnOrderChange?: GridEventTypedListener<GridEvents.columnOrderChange>
+  onColumnOrderChange?: GridEventListener<GridEvents.columnOrderChange>;
   /**
    * Callback fired while a column is being resized.
    * @param {GridColumnResizeParams} params With all properties from [[GridColumnResizeParams]].
    * @param {MuiEvent} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
-  onColumnResize?: GridEventTypedListener<GridEvents.columnResize>;
+  onColumnResize?: GridEventListener<GridEvents.columnResize>;
   /**
    * Callback fired when the width of a column is changed.
    * @param {GridCallbackDetails} params With all properties from [[GridColumnResizeParams]].
    * @param {MuiEvent} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
-  onColumnWidthChange?: GridEventTypedListener<GridEvents.columnWidthChange>;
+  onColumnWidthChange?: GridEventListener<GridEvents.columnWidthChange>;
   /**
    * Callback fired when a column visibility changes.
    * @param {GridColumnVisibilityChangeParams} params With all properties from [[GridColumnVisibilityChangeParams]].
    * @param {MuiEvent} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
-  onColumnVisibilityChange?: GridEventTypedListener<GridEvents.columnVisibilityChange>;
+  onColumnVisibilityChange?: GridEventListener<GridEvents.columnVisibilityChange>;
   /**
    * Callback fired when a click event comes from a row container element.
    * @param {GridRowParams} params With all properties from [[GridRowParams]].
    * @param {MuiEvent<React.SyntheticEvent>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
-  onRowClick?: GridEventTypedListener<GridEvents.rowClick>;
+  onRowClick?: GridEventListener<GridEvents.rowClick>;
   /**
    * Callback fired when scrolling to the bottom of the grid viewport.
    * @param {GridRowScrollEndParams} params With all properties from [[GridRowScrollEndParams]].
    * @param {MuiEvent} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
-  onRowsScrollEnd?: GridEventTypedListener<GridEvents.rowsScrollEnd>
+  onRowsScrollEnd?: GridEventListener<GridEvents.rowsScrollEnd>;
   /**
    * Callback fired when a double click event comes from a row container element.
    * @param {GridRowParams} params With all properties from [[RowParams]].
    * @param {MuiEvent<React.SyntheticEvent>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
-  onRowDoubleClick?: GridEventTypedListener<GridEvents.rowDoubleClick>;
+  onRowDoubleClick?: GridEventListener<GridEvents.rowDoubleClick>;
   /**
    * Callback fired when the grid is resized.
    * @param {ElementSize} containerSize With all properties from [[ElementSize]].
    * @param {MuiEvent} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
-  onResize?: GridEventTypedListener<GridEvents.resize>;
+  onResize?: GridEventListener<GridEvents.resize>;
   /**
    * Callback fired when the state of the grid is updated.
    * @param {GridState} state The new state.
@@ -273,7 +273,7 @@ interface GridComponentOtherProps {
    * @param {GridCallbackDetails} details Additional details for this callback.
    * @internal
    */
-  onStateChange?: GridEventTypedListener<GridEvents.stateChange>;
+  onStateChange?: GridEventListener<GridEvents.stateChange>;
   /**
    * The zero-based index of the current page.
    * @default 0

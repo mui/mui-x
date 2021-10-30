@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridApiRef, GridEventTypedListener } from '../../../models';
+import { GridApiRef, GridEventListener } from '../../../models';
 import {
   useGridLogger,
   useGridSelector,
@@ -101,7 +101,7 @@ export const useGridPage = (
     forceUpdate();
   }, [setGridState, forceUpdate, visibleRowCount, props.rowCount, props.page, apiRef]);
 
-  const handlePageSizeChange: GridEventTypedListener<GridEvents.pageSizeChange> = (pageSize) => {
+  const handlePageSizeChange: GridEventListener<GridEvents.pageSizeChange> = (pageSize) => {
     setGridState((state) => {
       const pageCount = getPageCount(state.pagination.rowCount, pageSize);
 

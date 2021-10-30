@@ -12,10 +12,11 @@ import {
   GridApiRef,
   GridColumns,
   GridRowParams,
-  GridCellParams,
   MuiEvent,
   GridToolbarContainer,
   GridActionsCellItem,
+  GridEventListener,
+  GridEvents,
 } from '@mui/x-data-grid-pro';
 import {
   randomCreatedDate,
@@ -118,16 +119,16 @@ export default function FullFeaturedCrudGrid() {
     event.defaultMuiPrevented = true;
   };
 
-  const handleRowEditStop = (
-    params: GridRowParams,
-    event: MuiEvent<React.SyntheticEvent>,
+  const handleRowEditStop: GridEventListener<GridEvents.rowEditStop> = (
+    params,
+    event,
   ) => {
     event.defaultMuiPrevented = true;
   };
 
-  const handleCellFocusOut = (
-    params: GridCellParams,
-    event: MuiEvent<React.SyntheticEvent<Element, Event> | MouseEvent>,
+  const handleCellFocusOut: GridEventListener<GridEvents.cellFocusOut> = (
+    params,
+    event,
   ) => {
     event.defaultMuiPrevented = true;
   };

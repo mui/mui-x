@@ -13,8 +13,8 @@ import {
 import {
   GridApiRef,
   CursorCoordinates,
-  GridColumnHeaderParams,
   GridColumnResizeParams,
+  GridEventListener,
 } from '../../../models';
 import {
   useGridApiEventHandler,
@@ -159,8 +159,8 @@ export const useGridColumnResize = (
     apiRef.current.publishEvent(GridEvents.columnResize, params, nativeEvent);
   });
 
-  const handleColumnResizeMouseDown = useEventCallback(
-    ({ colDef }: GridColumnHeaderParams, event: React.MouseEvent<HTMLDivElement>) => {
+  const handleColumnResizeMouseDown: GridEventListener<GridEvents.columnSeparatorMouseDown> =
+    useEventCallback(({ colDef }, event) => {
       // Only handle left clicks
       if (event.button !== 0) {
         return;
@@ -200,8 +200,7 @@ export const useGridColumnResize = (
 
       doc.addEventListener('mousemove', handleResizeMouseMove);
       doc.addEventListener('mouseup', handleResizeMouseUp);
-    },
-  );
+    });
 
   const handleTouchEnd = useEventCallback((nativeEvent: any) => {
     const finger = trackFinger(nativeEvent, touchId.current);

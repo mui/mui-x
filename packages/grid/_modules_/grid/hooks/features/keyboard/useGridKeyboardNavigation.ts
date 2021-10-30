@@ -5,8 +5,6 @@ import {
   GridCellIndexCoordinates,
   GridColumnHeaderIndexCoordinates,
 } from '../../../models/gridCell';
-import { GridCellParams } from '../../../models/params/gridCellParams';
-import { GridColumnHeaderParams } from '../../../models/params/gridColumnHeaderParams';
 import {
   isArrowKeys,
   isEnterKey,
@@ -26,7 +24,7 @@ import {
   gridVisibleRowCountSelector,
   gridVisibleSortedRowEntriesSelector,
 } from '../filter/gridFilterSelector';
-import { GridEventTypedListener } from '../../../models';
+import { GridCellParams, GridEventListener } from '../../../models';
 
 const getNextCellIndexes = (key: string, indexes: GridCellIndexCoordinates) => {
   if (!isArrowKeys(key)) {
@@ -94,10 +92,12 @@ export const useGridKeyboardNavigation = (
     return event.key;
   };
 
-  const navigateCells = React.useCallback<GridEventTypedListener<GridEvents.cellNavigationKeyDown>>(
+  const navigateCells = React.useCallback<GridEventListener<GridEvents.cellNavigationKeyDown>>(
     (params, event) => {
       event.preventDefault();
-      const colIndex = apiRef.current.getColumnIndex(params.field);
+      const colIndex = (params as GridCellParams).field
+        ? apiRef.current.getColumnIndex((params as any).field)
+        : 0;
       const rowIndex = visibleSortedRows.findIndex((row) => row.id === params.id);
 
       const key = mapKey(event);
@@ -176,7 +176,7 @@ export const useGridKeyboardNavigation = (
   );
 
   const navigateColumnHeaders = React.useCallback<
-    GridEventTypedListener<GridEvents.columnHeaderNavigationKeyDown>
+    GridEventListener<GridEvents.columnHeaderNavigationKeyDown>
   >(
     (params, event) => {
       event.preventDefault();

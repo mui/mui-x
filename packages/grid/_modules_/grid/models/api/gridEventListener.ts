@@ -7,10 +7,16 @@ import { GridSortModel } from '../gridSortModel';
 import type {
   GridCellEditCommitParams,
   GridCellParams,
-  GridColumnHeaderParams, GridColumnOrderChangeParams,
+  GridColumnHeaderParams,
+  GridColumnOrderChangeParams,
   GridColumnResizeParams,
-  GridColumnVisibilityChangeParams, GridHeaderSelectionCheckboxParams,
-  GridRowParams, GridRowScrollEndParams, GridRowSelectionCheckboxParams, GridScrollParams, GridEditCellPropsParams
+  GridColumnVisibilityChangeParams,
+  GridHeaderSelectionCheckboxParams,
+  GridRowParams,
+  GridRowScrollEndParams,
+  GridRowSelectionCheckboxParams,
+  GridScrollParams,
+  GridEditCellPropsParams,
 } from '../params';
 import { GridEditRowsModel } from '../gridEditRowModel';
 import { GridSelectionModel } from '../gridSelectionModel';
@@ -19,104 +25,107 @@ import { ElementSize } from '../elementSize';
 import { GridRowId } from '../gridRows';
 
 export interface GridRowEventLookup {
-  [GridEvents.rowClick]: { params: GridRowParams; event: React.MouseEvent };
-  [GridEvents.rowDoubleClick]: { params: GridRowParams; event: React.MouseEvent };
+  rowClick: { params: GridRowParams; event: React.MouseEvent<HTMLElement> };
+  rowDoubleClick: { params: GridRowParams; event: React.MouseEvent<HTMLElement> };
 }
 
 export interface GridColumnHeaderEventLookup {
-  [GridEvents.columnHeaderClick]: {
+  columnHeaderClick: {
     params: GridColumnHeaderParams;
-    event: React.MouseEvent;
+    event: React.MouseEvent<HTMLElement>;
   };
-  [GridEvents.columnHeaderDoubleClick]: {
+  columnHeaderDoubleClick: {
     params: GridColumnHeaderParams;
-    event: React.MouseEvent;
+    event: React.MouseEvent<HTMLElement>;
   };
-  [GridEvents.columnHeaderOver]: {
+  columnHeaderOver: {
     params: GridColumnHeaderParams;
-    event: React.MouseEvent;
+    event: React.MouseEvent<HTMLElement>;
   };
-  [GridEvents.columnHeaderOut]: {
+  columnHeaderOut: {
     params: GridColumnHeaderParams;
-    event: React.MouseEvent;
+    event: React.MouseEvent<HTMLElement>;
   };
-  [GridEvents.columnHeaderEnter]: {
+  columnHeaderEnter: {
     params: GridColumnHeaderParams;
-    event: React.MouseEvent;
+    event: React.MouseEvent<HTMLElement>;
   };
-  [GridEvents.columnHeaderLeave]: {
+  columnHeaderLeave: {
     params: GridColumnHeaderParams;
-    event: React.MouseEvent;
+    event: React.MouseEvent<HTMLElement>;
   };
-  [GridEvents.columnHeaderKeyDown]: {
+  columnHeaderKeyDown: {
     params: GridColumnHeaderParams;
-    event: React.KeyboardEvent;
+    event: React.KeyboardEvent<HTMLElement>;
   };
-  [GridEvents.columnHeaderFocus]: {
+  columnHeaderFocus: {
     params: GridColumnHeaderParams;
-    event: React.FocusEvent;
+    event: React.FocusEvent<HTMLElement>;
   };
-  [GridEvents.columnHeaderBlur]: {
+  columnHeaderBlur: {
     params: GridColumnHeaderParams;
-    event: React.FocusEvent;
+    event: React.FocusEvent<HTMLElement>;
   };
-  [GridEvents.columnHeaderDragStart]: {
+  columnHeaderDragStart: {
     params: GridColumnHeaderParams;
-    event: React.DragEvent;
+    event: React.DragEvent<HTMLElement>;
   };
-  [GridEvents.columnHeaderDragEnter]: {
+  columnHeaderDragEnter: {
     params: GridColumnHeaderParams;
-    event: React.DragEvent;
+    event: React.DragEvent<HTMLElement>;
   };
-  [GridEvents.columnHeaderDragOver]: {
+  columnHeaderDragOver: {
     params: GridColumnHeaderParams;
-    event: React.DragEvent;
+    event: React.DragEvent<HTMLElement>;
   };
-  [GridEvents.columnHeaderDragEnd]: {
+  columnHeaderDragEnd: {
     params: GridColumnHeaderParams;
-    event: React.DragEvent;
+    event: React.DragEvent<HTMLElement>;
   };
-  [GridEvents.columnSeparatorMouseDown]: { params: GridColumnHeaderParams, event: React.MouseEvent };
+  columnSeparatorMouseDown: {
+    params: GridColumnHeaderParams;
+    event: React.MouseEvent<HTMLElement>;
+  };
 }
 
 export interface GridCellEventLookup {
-  [GridEvents.cellClick]: {
+  cellClick: {
     params: GridCellParams;
-    event: React.MouseEvent;
+    event: React.MouseEvent<HTMLElement>;
   };
-  [GridEvents.cellDoubleClick]: {
+  cellDoubleClick: {
     params: GridCellParams;
-    event: React.MouseEvent;
+    event: React.MouseEvent<HTMLElement>;
   };
-  [GridEvents.cellMouseDown]: {
+  cellMouseDown: {
     params: GridCellParams;
-    event: React.MouseEvent;
+    event: React.MouseEvent<HTMLElement>;
   };
-  [GridEvents.cellMouseUp]: {
+  cellMouseUp: {
     params: GridCellParams;
-    event: React.MouseEvent;
+    event: React.MouseEvent<HTMLElement>;
   };
-  [GridEvents.cellKeyDown]: {
+  cellKeyDown: {
     params: GridCellParams;
-    event: React.KeyboardEvent;
+    event: React.KeyboardEvent<HTMLElement>;
   };
-  [GridEvents.cellDragEnter]: {
+  cellDragEnter: {
     params: GridCellParams;
-    event: React.DragEvent;
+    event: React.DragEvent<HTMLElement>;
   };
-  [GridEvents.cellDragOver]: {
+  cellDragOver: {
     params: GridCellParams;
-    event: React.DragEvent;
+    event: React.DragEvent<HTMLElement>;
   };
 }
 
 export interface GridControlledStateEventLookup {
-  [GridEvents.pageSizeChange]: { params: number };
-  [GridEvents.pageChange]: { params: number };
-  [GridEvents.filterModelChange]: { params: GridFilterModel };
-  [GridEvents.sortModelChange]: { params: GridSortModel };
-  [GridEvents.editRowsModelChange]: { params: GridEditRowsModel };
-  [GridEvents.selectionChange]: { params: GridSelectionModel };
+  pageSizeChange: { params: number };
+  pageChange: { params: number };
+  filterModelChange: { params: GridFilterModel };
+  sortModelChange: { params: GridSortModel };
+  editRowsModelChange: { params: GridEditRowsModel };
+  selectionChange: { params: GridSelectionModel };
 }
 
 export interface GridEventLookup
@@ -124,100 +133,101 @@ export interface GridEventLookup
     GridColumnHeaderEventLookup,
     GridCellEventLookup,
     GridControlledStateEventLookup {
-  [GridEvents.unmount]: {};
-  [GridEvents.componentError]: { params: any };
-  [GridEvents.stateChange]: { params: GridState };
-  [GridEvents.resize]: { params: ElementSize };
-  [GridEvents.debouncedResize]: { params: ElementSize };
-  [GridEvents.rowGroupsPreProcessingChange]: {};
-  [GridEvents.columnsPreProcessingChange]: {};
+  unmount: {};
+  componentError: { params: any };
+  stateChange: { params: GridState };
+  resize: { params: ElementSize };
+  debouncedResize: { params: ElementSize };
+  rowGroupsPreProcessingChange: {};
+  columnsPreProcessingChange: {};
 
   // Columns
-  [GridEvents.columnsChange]: { params: string[] }
-  [GridEvents.columnWidthChange]: { params: GridColumnResizeParams; event: MouseEvent | {} };
-  [GridEvents.columnResizeStart]: {
+  columnsChange: { params: string[] };
+  columnWidthChange: { params: GridColumnResizeParams; event: MouseEvent | {} };
+  columnResizeStart: {
     params: { field: string };
-    event: React.MouseEvent<HTMLDivElement>;
+    event: React.MouseEvent<HTMLElement>;
   };
-  [GridEvents.columnResizeStop]: { params: null; event: MouseEvent };
-  [GridEvents.columnVisibilityChange]: { params: GridColumnVisibilityChangeParams };
-  [GridEvents.columnResize]: { params: GridColumnResizeParams; event: MouseEvent };
-  [GridEvents.columnOrderChange]: { params: GridColumnOrderChangeParams  }
+  columnResizeStop: { params: null; event: MouseEvent };
+  columnVisibilityChange: { params: GridColumnVisibilityChangeParams };
+  columnResize: { params: GridColumnResizeParams; event: MouseEvent };
+  columnOrderChange: { params: GridColumnOrderChangeParams };
 
   // Rows
-  [GridEvents.rowsSet]: {},
-  [GridEvents.visibleRowsSet]: {},
+  rowsSet: {};
+  visibleRowsSet: {};
 
   // Edit
-  [GridEvents.cellModeChange]: { params: GridCellParams };
-  [GridEvents.cellEditStart]: {
+  cellModeChange: { params: GridCellParams };
+  cellEditStart: {
     params: GridCellParams;
-    event: React.MouseEvent | React.KeyboardEvent;
+    event: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>;
   };
-  [GridEvents.cellEditStop]: { params: GridCellParams; event: MuiBaseEvent };
-  [GridEvents.cellEditCommit]: { params: GridCellEditCommitParams; event: MuiBaseEvent };
-  [GridEvents.editCellPropsChange]: {
+  cellEditStop: { params: GridCellParams; event: MuiBaseEvent };
+  cellEditCommit: { params: GridCellEditCommitParams; event: MuiBaseEvent };
+  editCellPropsChange: {
     params: GridEditCellPropsParams;
-    event: React.SyntheticEvent | {};
+    event: React.SyntheticEvent<HTMLElement> | {};
   };
-  [GridEvents.rowEditStart]: {
+  rowEditStart: {
     params: GridRowParams;
-    event: React.MouseEvent | React.KeyboardEvent;
+    event: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>;
   };
-  [GridEvents.rowEditStop]: { params: GridRowParams; event: MuiBaseEvent };
-  [GridEvents.rowEditCommit]: { params: GridRowId; event: MuiBaseEvent };
+  rowEditStop: { params: GridRowParams; event: MuiBaseEvent };
+  rowEditCommit: { params: GridRowId; event: MuiBaseEvent };
 
   // Focus
-  [GridEvents.cellFocusIn]: { params: GridCellParams };
-  [GridEvents.cellFocusOut]: { params: GridCellParams; event: MuiBaseEvent };
+  cellFocusIn: { params: GridCellParams };
+  cellFocusOut: { params: GridCellParams; event: MuiBaseEvent };
 
   // Navigation
-  [GridEvents.cellNavigationKeyDown]: {
+  cellNavigationKeyDown: {
     params: GridCellParams | GridRowParams;
-    event: React.KeyboardEvent;
+    event: React.KeyboardEvent<HTMLElement>;
   };
-  [GridEvents.columnHeaderNavigationKeyDown]: {
+  columnHeaderNavigationKeyDown: {
     params: GridColumnHeaderParams;
-    event: React.KeyboardEvent;
+    event: React.KeyboardEvent<HTMLElement>;
   };
 
   // Scroll
-  [GridEvents.rowsScroll]: { params: GridScrollParams }
-  [GridEvents.rowsScrollEnd]: { params: GridRowScrollEndParams }
+  rowsScroll: { params: GridScrollParams };
+  rowsScrollEnd: { params: GridRowScrollEndParams };
 
   // Selection
-  [GridEvents.headerSelectionCheckboxChange]: { params: GridHeaderSelectionCheckboxParams },
-  [GridEvents.rowSelectionCheckboxChange]: { params: GridRowSelectionCheckboxParams },
+  headerSelectionCheckboxChange: { params: GridHeaderSelectionCheckboxParams };
+  rowSelectionCheckboxChange: {
+    params: GridRowSelectionCheckboxParams;
+    event: React.ChangeEvent<HTMLElement>;
+  };
 }
 
-export type GridEventsWithFullTyping = keyof GridEventLookup;
-
-type PublisherArgsNoEvent<E extends GridEventsWithFullTyping, T extends { params: any }> = [
+type PublisherArgsNoEvent<E extends keyof typeof GridEvents, T extends { params: any }> = [
   E,
   T['params'],
 ];
 type PublisherArgsRequiredEvent<
-  E extends GridEventsWithFullTyping,
+  E extends keyof typeof GridEvents,
   T extends { params: any; event: MuiBaseEvent },
 > = [E, T['params'], T['event']];
 type PublisherArgsOptionalEvent<
-  E extends GridEventsWithFullTyping,
+  E extends keyof typeof GridEvents,
   T extends { params: any; event: MuiBaseEvent },
 > = PublisherArgsRequiredEvent<E, T> | PublisherArgsNoEvent<E, T>;
 
 type PublisherArgsEvent<
-  E extends GridEventsWithFullTyping,
+  E extends keyof typeof GridEvents,
   T extends { params: any; event: MuiBaseEvent },
 > = {} extends T['event'] ? PublisherArgsOptionalEvent<E, T> : PublisherArgsRequiredEvent<E, T>;
 
-type PublisherArgsParams<E extends GridEventsWithFullTyping, T extends { params: any }> = [
+type PublisherArgsParams<E extends keyof typeof GridEvents, T extends { params: any }> = [
   E,
   T['params'],
 ];
 
-type PublisherArgsNoParams<E extends GridEventsWithFullTyping> = [E];
+type PublisherArgsNoParams<E extends keyof typeof GridEvents> = [E];
 
-type GridEventPublisherArg<E extends GridEventsWithFullTyping> = GridEventLookup[E] extends {
+type GridEventPublisherArg<E extends keyof typeof GridEvents> = GridEventLookup[E] extends {
   params: any;
   event: MuiBaseEvent;
 }
@@ -226,20 +236,14 @@ type GridEventPublisherArg<E extends GridEventsWithFullTyping> = GridEventLookup
   ? PublisherArgsParams<E, GridEventLookup[E]>
   : PublisherArgsNoParams<E>;
 
-export type GridEventPublisher = <E extends GridEvents>(
+export type GridEventPublisher = <E extends keyof typeof GridEvents>(
   ...params: GridEventPublisherArg<E>
 ) => void;
 
-export type GridEventTypedListener<E extends GridEventsWithFullTyping> = (
+export type GridEventListener<E extends keyof typeof GridEvents> = (
   params: GridEventLookup[E] extends { params: any } ? GridEventLookup[E]['params'] : undefined,
   event: GridEventLookup[E] extends { event: MuiBaseEvent }
     ? MuiEvent<GridEventLookup[E]['event']>
     : MuiEvent<{}>,
-  details: GridCallbackDetails,
-) => void;
-
-export type GridEventListener<Params, Event extends MuiEvent> = (
-  params: Params,
-  event: Event,
   details: GridCallbackDetails,
 ) => void;

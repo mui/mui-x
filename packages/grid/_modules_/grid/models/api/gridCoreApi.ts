@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { MuiEvent } from '../muiEvent';
 import { EventManager, EventListenerOptions } from '../../utils/EventManager';
-import { GridEventListener, GridEventPublisher } from './gridEventListener';
+import { GridEventPublisher, GridEventListener } from './gridEventListener';
+import { GridEvents } from '../../constants';
 
 /**
  * The core API interface that is available in the grid `apiRef`.
@@ -54,9 +54,9 @@ export interface GridCoreApi {
    * @param {object} options Additional options for this listener.
    * @returns {function} A function to unsubscribe from this event.
    */
-  subscribeEvent: <Params, Event extends MuiEvent>(
-    event: string,
-    handler: GridEventListener<Params, Event>,
+  subscribeEvent: <E extends keyof typeof GridEvents>(
+    event: E,
+    handler: GridEventListener<E>,
     options?: EventListenerOptions,
   ) => () => void;
   /**

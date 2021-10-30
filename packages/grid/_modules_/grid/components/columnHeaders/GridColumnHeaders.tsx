@@ -16,7 +16,6 @@ import { GridComponentProps } from '../../GridComponentProps';
 import { useGridApiEventHandler } from '../../hooks/utils/useGridApiEventHandler';
 import { GridEvents } from '../../constants/eventsConstants';
 import { GridColumnHeaderParams } from '../../models/params/gridColumnHeaderParams';
-import { RenderContext } from '../GridVirtualScroller';
 import { GridColumnHeaderItem } from './GridColumnHeaderItem';
 import { gridFilterActiveItemsLookupSelector } from '../../hooks/features/filter/gridFilterSelector';
 import { gridColumnMenuSelector } from '../../hooks/features/columnMenu/columnMenuSelector';
@@ -26,6 +25,7 @@ import {
   gridTabIndexCellSelector,
   gridFocusColumnHeaderSelector,
 } from '../../hooks/features/focus/gridFocusStateSelector';
+import { GridRenderContext } from '../../models';
 
 type OwnerState = {
   classes?: GridComponentProps['classes'];
@@ -63,8 +63,8 @@ export const GridColumnsHeader = React.forwardRef<HTMLDivElement, any>(function 
   const rootProps = useGridRootProps();
   const wrapperRef = React.useRef<HTMLDivElement>(null);
   const handleRef = useForkRef(ref, wrapperRef);
-  const [renderContext, setRenderContext] = React.useState<RenderContext | null>(null);
-  const prevRenderContext = React.useRef<RenderContext | null>(renderContext);
+  const [renderContext, setRenderContext] = React.useState<GridRenderContext | null>(null);
+  const prevRenderContext = React.useRef<GridRenderContext | null>(renderContext);
   const prevScrollLeft = React.useRef(0);
 
   const ownerState = { dragCol, classes: rootProps.classes };

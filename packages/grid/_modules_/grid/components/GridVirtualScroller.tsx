@@ -24,7 +24,7 @@ import { useGridApiEventHandler } from '../hooks/utils/useGridApiEventHandler';
 import { getDataGridUtilityClass } from '../gridClasses';
 import { GridComponentProps } from '../GridComponentProps';
 import { GridRowId } from '../models/gridRows';
-import {GridRenderContext, GridScrollParams} from "../models";
+import { GridRenderContext, GridScrollParams } from '../models';
 
 type OwnerState = { classes: GridComponentProps['classes'] };
 
