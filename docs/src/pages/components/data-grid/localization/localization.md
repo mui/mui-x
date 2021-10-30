@@ -84,7 +84,6 @@ import { DataGrid, nlNL } from '@mui/x-data-grid';
 | French                  | fr-FR               | `frFR`      |
 | German                  | de-DE               | `deDE`      |
 | Greek                   | el-GR               | `elGR`      |
-| Hebrew                  | he-IL               | `heIL`      |
 | Italian                 | it-IT               | `itIT`      |
 | Japanese                | ja-JP               | `jaJP`      |
 | Korean                  | ko-KR               | `koKR`      |
