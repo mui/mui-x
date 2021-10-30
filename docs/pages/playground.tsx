@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataGrid, GridColumns, GridRowsProp } from '@mui/x-data-grid';
+import { DataGridPro, GridColumns, GridRowsProp } from '@mui/x-data-grid-pro';
 import { randomCreatedDate, randomTraderName, randomUpdatedDate } from '@mui/x-data-grid-generator';
 
 const columns: GridColumns = [
@@ -62,7 +62,7 @@ const rows: GridRowsProp = [
 export default function BasicRowEditingGrid() {
   return (
     <div style={{ height: 300, width: '100%' }}>
-      <DataGrid editMode="row" rows={rows} columns={columns} />
+      <DataGridPro editMode="row" rows={rows} columns={columns} />
     </div>
   );
 }

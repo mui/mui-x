@@ -112,7 +112,7 @@ export function useGridEditRows(
   );
 
   const handleColumnHeaderDragStart: GridEventListener<GridEvents.columnHeaderDragEnter> =
-    useEventCallback((nativeEvent) => {
+    useEventCallback((headerParams, nativeEvent) => {
       const { cell } = apiRef.current.state.focus;
       if (!cell) {
         return;

@@ -13,7 +13,7 @@ export enum GridSignature {
   DataGridPro = 'DataGridPro',
 }
 
-export function useGridApiEventHandler<E extends GridEvents>(
+export function useGridApiEventHandler<E extends keyof typeof GridEvents>(
   apiRef: GridApiRef,
   eventName: E,
   handler?: GridEventListener<E>,
