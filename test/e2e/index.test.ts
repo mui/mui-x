@@ -1,5 +1,4 @@
 import { expect } from 'chai';
-import * as path from 'path';
 import * as playwright from 'playwright';
 
 function sleep(timeoutMS: number): Promise<void> {
@@ -63,11 +62,8 @@ describe('e2e', () => {
   before(async function beforeHook() {
     this.timeout(20000);
 
-    browser = await playwright.chromium.launchPersistentContext('', {
+    browser = await playwright.chromium.launch({
       headless: true,
-      recordVideo: {
-        dir: path.resolve(__dirname, '../../'),
-      },
     });
     page = await browser.newPage();
     const isServerRunning = await attemptGoto(page, `${baseUrl}#no-dev`);
