@@ -426,7 +426,7 @@ DataGridRaw.propTypes = {
   /**
    * Callback fired when the grid is resized.
    * @param {ElementSize} containerSize With all properties from [[ElementSize]].
-   * @param {MuiEvent<{}>} event The event object.
+   * @param {MuiEvent<{ test: number }>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onResize: PropTypes.func,

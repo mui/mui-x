@@ -170,6 +170,7 @@
   { "name": "GridEnrichedColDef", "kind": "Type alias" },
   { "name": "GridEventListener", "kind": "Type alias" },
   { "name": "GridEventPublisher", "kind": "Type alias" },
+  { "name": "GridEventsStr", "kind": "Type alias" },
   { "name": "GridExportFormat", "kind": "Type alias" },
   { "name": "GridFeatureMode", "kind": "Type alias" },
   { "name": "GridFieldComparatorList", "kind": "Type alias" },
