@@ -1,8 +1,7 @@
 import * as React from 'react';
 import { GridApiRef } from '../../models/api/gridApiRef';
+import { GridEventListener, GridEvents, GridEventsStr } from '../../models/events';
 import { EventListenerOptions } from '../../utils/EventManager';
-import { GridEventListener } from '../../models/api/gridEventListener';
-import { GridEvents } from '../../constants';
 
 /**
  * Signal to the underlying logic what version of the public component API
@@ -13,7 +12,7 @@ export enum GridSignature {
   DataGridPro = 'DataGridPro',
 }
 
-export function useGridApiEventHandler<E extends keyof typeof GridEvents>(
+export function useGridApiEventHandler<E extends GridEventsStr>(
   apiRef: GridApiRef,
   eventName: E,
   handler?: GridEventListener<E>,

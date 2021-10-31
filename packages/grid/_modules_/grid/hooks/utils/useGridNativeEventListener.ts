@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridEvents } from '../../constants/eventsConstants';
+import { GridEvents } from '../../models/events';
 import { GridApiRef } from '../../models/api/gridApiRef';
 import { isFunction } from '../../utils/utils';
 import { useGridLogger } from './useGridLogger';

@@ -1,9 +1,4 @@
 import * as React from 'react';
-import { MuiBaseEvent, MuiEvent } from '../muiEvent';
-import { GridCallbackDetails } from './gridCallbackDetails';
-import { GridEvents } from '../../constants';
-import { GridFilterModel } from '../gridFilterModel';
-import { GridSortModel } from '../gridSortModel';
 import type {
   GridCellEditCommitParams,
   GridCellParams,
@@ -11,18 +6,21 @@ import type {
   GridColumnOrderChangeParams,
   GridColumnResizeParams,
   GridColumnVisibilityChangeParams,
+  GridEditCellPropsParams,
   GridHeaderSelectionCheckboxParams,
   GridRowParams,
   GridRowScrollEndParams,
   GridRowSelectionCheckboxParams,
   GridScrollParams,
-  GridEditCellPropsParams,
 } from '../params';
-import { GridEditRowsModel } from '../gridEditRowModel';
-import { GridSelectionModel } from '../gridSelectionModel';
-import { GridState } from '../gridState';
-import { ElementSize } from '../elementSize';
-import { GridRowId } from '../gridRows';
+import type { GridFilterModel } from '../gridFilterModel';
+import type { GridSortModel } from '../gridSortModel';
+import type { GridEditRowsModel } from '../gridEditRowModel';
+import type { GridSelectionModel } from '../gridSelectionModel';
+import type { GridState } from '../gridState';
+import type { ElementSize } from '../elementSize';
+import type { MuiBaseEvent } from '../muiEvent';
+import type { GridRowId } from '../gridRows';
 
 export interface GridRowEventLookup {
   rowClick: { params: GridRowParams; event: React.MouseEvent<HTMLElement> };
@@ -201,49 +199,3 @@ export interface GridEventLookup
     event: React.ChangeEvent<HTMLElement>;
   };
 }
-
-type PublisherArgsNoEvent<E extends keyof typeof GridEvents, T extends { params: any }> = [
-  E,
-  T['params'],
-];
-type PublisherArgsRequiredEvent<
-  E extends keyof typeof GridEvents,
-  T extends { params: any; event: MuiBaseEvent },
-> = [E, T['params'], T['event']];
-type PublisherArgsOptionalEvent<
-  E extends keyof typeof GridEvents,
-  T extends { params: any; event: MuiBaseEvent },
-> = PublisherArgsRequiredEvent<E, T> | PublisherArgsNoEvent<E, T>;
-
-type PublisherArgsEvent<
-  E extends keyof typeof GridEvents,
-  T extends { params: any; event: MuiBaseEvent },
-> = {} extends T['event'] ? PublisherArgsOptionalEvent<E, T> : PublisherArgsRequiredEvent<E, T>;
-
-type PublisherArgsParams<E extends keyof typeof GridEvents, T extends { params: any }> = [
-  E,
-  T['params'],
-];
-
-type PublisherArgsNoParams<E extends keyof typeof GridEvents> = [E];
-
-type GridEventPublisherArg<E extends keyof typeof GridEvents> = GridEventLookup[E] extends {
-  params: any;
-  event: MuiBaseEvent;
-}
-  ? PublisherArgsEvent<E, GridEventLookup[E]>
-  : GridEventLookup[E] extends { params: any }
-  ? PublisherArgsParams<E, GridEventLookup[E]>
-  : PublisherArgsNoParams<E>;
-
-export type GridEventPublisher = <E extends keyof typeof GridEvents>(
-  ...params: GridEventPublisherArg<E>
-) => void;
-
-export type GridEventListener<E extends keyof typeof GridEvents> = (
-  params: GridEventLookup[E] extends { params: any } ? GridEventLookup[E]['params'] : undefined,
-  event: GridEventLookup[E] extends { event: MuiBaseEvent }
-    ? MuiEvent<GridEventLookup[E]['event']>
-    : MuiEvent<{}>,
-  details: GridCallbackDetails,
-) => void;

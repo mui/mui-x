@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
-import { GridEvents } from '../../../constants/eventsConstants';
+import { GridEvents } from '../../../models/events';
 import { GridComponentProps } from '../../../GridComponentProps';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridSelectionApi } from '../../../models/api/gridSelectionApi';

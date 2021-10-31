@@ -4,7 +4,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
-import { GridEvents } from '../constants/eventsConstants';
+import { GridRowEventLookup, GridEvents } from '../models/events';
 import { GridRowId, GridRowModel } from '../models/gridRows';
 import { GridEditModes, GridRowModes, GridEditRowsModel } from '../models/gridEditRowModel';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
@@ -16,7 +16,7 @@ import { GridCellIdentifier } from '../hooks/features/focus/gridFocusState';
 import { GridScrollBarState } from '../models/gridContainerProps';
 import { gridColumnsMetaSelector } from '../hooks/features/columns/gridColumnsSelector';
 import { useGridSelector } from '../hooks/utils/useGridSelector';
-import { GridRowEventLookup } from '../models';
+import {} from '../models';
 
 export interface GridRowProps {
   rowId: GridRowId;

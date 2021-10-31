@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { debounce } from '@mui/material/utils';
-import { GridEvents } from '../../../constants/eventsConstants';
+import { GridEvents } from '../../../models/events';
 import { ElementSize, GridEventsApi, GridEventListener } from '../../../models';
 import {
   useGridApiEventHandler,

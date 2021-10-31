@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { gridClasses } from '../../../gridClasses';
-import { GridEvents } from '../../../constants/eventsConstants';
+import { GridEvents } from '../../../models/events';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridCellParams } from '../../../models/params/gridCellParams';
 import {

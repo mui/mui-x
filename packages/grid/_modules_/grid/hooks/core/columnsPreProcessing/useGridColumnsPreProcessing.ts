@@ -5,7 +5,7 @@ import {
   GridColumnsPreProcessingApi,
 } from './gridColumnsPreProcessingApi';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
-import { GridEvents } from '../../../constants/eventsConstants';
+import { GridEvents } from '../../../models/events';
 
 export const useGridColumnsPreProcessing = (apiRef: GridApiRef) => {
   const columnsPreProcessingRef = React.useRef(new Map<string, GridColumnsPreProcessing | null>());

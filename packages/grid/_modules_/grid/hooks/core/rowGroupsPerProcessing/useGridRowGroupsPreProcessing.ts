@@ -5,7 +5,7 @@ import {
   GridRowGroupingPreProcessing,
   GridRowGroupingResult,
 } from './gridRowGroupsPreProcessingApi';
-import { GridEvents } from '../../../constants/eventsConstants';
+import { GridEvents } from '../../../models/events';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 
 const getFlatRowTree: GridRowGroupingPreProcessing = (params) => ({

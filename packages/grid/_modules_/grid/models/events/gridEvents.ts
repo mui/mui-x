@@ -267,3 +267,5 @@ export enum GridEvents {
    */
   columnVisibilityChange = 'columnVisibilityChange',
 }
+
+export type GridEventsStr = keyof typeof GridEvents;

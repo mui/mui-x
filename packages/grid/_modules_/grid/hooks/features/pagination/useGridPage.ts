@@ -7,7 +7,7 @@ import {
   useGridApiMethod,
   useGridApiEventHandler,
 } from '../../utils';
-import { GridEvents } from '../../../constants/eventsConstants';
+import { GridEvents } from '../../../models/events';
 import { GridComponentProps } from '../../../GridComponentProps';
 import { GridPageApi } from '../../../models/api/gridPageApi';
 import { GridPaginationState } from './gridPaginationState';

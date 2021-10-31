@@ -4,16 +4,16 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { ownerDocument, capitalize } from '@mui/material/utils';
-import { GridEvents } from '../../constants/eventsConstants';
 import { getDataGridUtilityClass } from '../../gridClasses';
 import {
   GridAlignment,
   GridCellEventLookup,
+  GridEvents,
   GridCellMode,
   GridCellModes,
   GridCellValue,
   GridRowId,
-} from '../../models/index';
+} from '../../models';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { GridComponentProps } from '../../GridComponentProps';

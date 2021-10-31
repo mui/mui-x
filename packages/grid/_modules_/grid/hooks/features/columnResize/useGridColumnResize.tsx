@@ -2,7 +2,7 @@ import * as React from 'react';
 import { ownerDocument, useEventCallback } from '@mui/material/utils';
 import { GridStateColDef } from '../../../models/colDef';
 import { useGridLogger } from '../../utils';
-import { GridEvents } from '../../../constants/eventsConstants';
+import { GridEvents } from '../../../models/events';
 import { gridClasses } from '../../../gridClasses';
 import {
   findGridCellElementsFromCol,

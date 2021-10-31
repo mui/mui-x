@@ -18,8 +18,7 @@ import { GridRowParams } from './models/params/gridRowParams';
 import { GridSlotsComponentsProps } from './models/gridSlotsComponentsProps';
 import { GridClasses } from './gridClasses';
 import { GridCallbackDetails } from './models/api/gridCallbackDetails';
-import { GridEventListener } from './models/api/gridEventListener';
-import { GridEvents } from './constants';
+import { GridEventListener, GridEvents } from './models/events';
 
 /**
  * The grid component react props before applying the default values.

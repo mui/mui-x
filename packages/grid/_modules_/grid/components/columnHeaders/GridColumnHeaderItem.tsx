@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { unstable_useId as useId } from '@mui/material/utils';
-import { GridEvents } from '../../constants/eventsConstants';
+import { GridEvents } from '../../models/events';
 import { GridStateColDef } from '../../models/colDef/index';
 import { GridSortDirection } from '../../models/gridSortModel';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';

@@ -1,6 +1,6 @@
 import { GridState } from './gridState';
 import { GridCallbackDetails } from './api/gridCallbackDetails';
-import type { GridEventLookup, GridControlledStateEventLookup } from './api';
+import type { GridEventLookup, GridControlledStateEventLookup } from './events';
 
 export interface GridControlStateItem<E extends keyof GridControlledStateEventLookup> {
   stateId: string;

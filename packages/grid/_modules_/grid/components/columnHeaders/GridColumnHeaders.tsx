@@ -14,7 +14,7 @@ import { getDataGridUtilityClass } from '../../gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { GridComponentProps } from '../../GridComponentProps';
 import { useGridApiEventHandler } from '../../hooks/utils/useGridApiEventHandler';
-import { GridEvents } from '../../constants/eventsConstants';
+import { GridEvents } from '../../models/events';
 import { GridColumnHeaderParams } from '../../models/params/gridColumnHeaderParams';
 import { GridColumnHeaderItem } from './GridColumnHeaderItem';
 import { gridFilterActiveItemsLookupSelector } from '../../hooks/features/filter/gridFilterSelector';

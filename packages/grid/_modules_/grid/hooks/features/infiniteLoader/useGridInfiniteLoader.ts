@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { useGridSelector } from '../../utils/useGridSelector';
-import { GridEvents } from '../../../constants/eventsConstants';
+import { GridEvents } from '../../../models/events';
 import { gridContainerSizesSelector } from '../container/gridContainerSizesSelector';
 import {
   useGridApiEventHandler,

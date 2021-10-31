@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { ownerDocument } from '@mui/material/utils';
-import { GridEvents } from '../../../constants/eventsConstants';
+import { GridEvents } from '../../../models/events';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import {
   GridContainerProps,
