@@ -37,6 +37,7 @@
     "directory": "packages/grid/x-grid"
   },
   "dependencies": {
+    "@mui/system": "^5.0.1",
     "@mui/utils": "^5.0.1",
     "@mui/x-license-pro": "5.0.0-beta.6",
     "clsx": "^1.0.4",
