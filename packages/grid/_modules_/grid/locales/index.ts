@@ -8,6 +8,7 @@ export * from './enUS';
 export * from './esES';
 export * from './faIR';
 export * from './frFR';
+export * from './heIL';
 export * from './itIT';
 export * from './jaJP';
 export * from './koKR';

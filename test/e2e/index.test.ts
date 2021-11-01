@@ -7,6 +7,23 @@ function sleep(timeoutMS: number): Promise<void> {
   });
 }
 
+// A simplified version of https://github.com/testing-library/dom-testing-library/blob/main/src/wait-for.js
+function waitFor(callback: () => Promise<void>): Promise<void> {
+  return new Promise((resolve, reject) => {
+    async function checkCallback(attemptsRemaining = 5, lastError: any = null) {
+      if (attemptsRemaining <= 0) {
+        throw lastError;
+      }
+      try {
+        await callback();
+      } catch (error) {
+        await checkCallback(attemptsRemaining - 1, error);
+      }
+    }
+    checkCallback().then(resolve, reject);
+  });
+}
+
 /**
  * Attempts page.goto with retries
  *
@@ -80,30 +97,46 @@ describe('e2e', () => {
         await page.evaluate(() => document.activeElement?.getAttribute('data-testid')),
       ).to.equal('initial-focus');
       await page.keyboard.press('Tab');
+      await waitFor(async () => {
+        expect(await page.evaluate(() => document.activeElement?.textContent)).to.equal('brand');
+        expect(await page.evaluate(() => document.activeElement?.getAttribute('role'))).to.equal(
+          'columnheader',
+        );
+      });
       await page.keyboard.press('ArrowDown');
-      expect(await page.evaluate(() => document.activeElement?.textContent)).to.equal('Nike');
-      expect(await page.evaluate(() => document.activeElement?.getAttribute('role'))).to.equal(
-        'cell',
-      );
+      await waitFor(async () => {
+        expect(await page.evaluate(() => document.activeElement?.textContent)).to.equal('Nike');
+        expect(await page.evaluate(() => document.activeElement?.getAttribute('role'))).to.equal(
+          'cell',
+        );
+      });
       await page.keyboard.press('ArrowDown');
-      expect(await page.evaluate(() => document.activeElement?.textContent)).to.equal('Adidas');
-      expect(await page.evaluate(() => document.activeElement?.getAttribute('role'))).to.equal(
-        'cell',
-      );
+      await waitFor(async () => {
+        expect(await page.evaluate(() => document.activeElement?.textContent)).to.equal('Adidas');
+        expect(await page.evaluate(() => document.activeElement?.getAttribute('role'))).to.equal(
+          'cell',
+        );
+      });
       await page.keyboard.press('Tab');
-      expect(await page.evaluate(() => document.activeElement?.textContent)).to.equal('100');
-      expect(await page.evaluate(() => document.activeElement?.getAttribute('role'))).to.equal(
-        'button',
-      );
+      await waitFor(async () => {
+        expect(await page.evaluate(() => document.activeElement?.textContent)).to.equal('100');
+        expect(await page.evaluate(() => document.activeElement?.getAttribute('role'))).to.equal(
+          'button',
+        );
+      });
       await page.keyboard.press('Shift+Tab');
-      expect(await page.evaluate(() => document.activeElement?.textContent)).to.equal('Adidas');
-      expect(await page.evaluate(() => document.activeElement?.getAttribute('role'))).to.equal(
-        'cell',
-      );
+      await waitFor(async () => {
+        expect(await page.evaluate(() => document.activeElement?.textContent)).to.equal('Adidas');
+        expect(await page.evaluate(() => document.activeElement?.getAttribute('role'))).to.equal(
+          'cell',
+        );
+      });
       await page.keyboard.press('Shift+Tab');
-      expect(
-        await page.evaluate(() => document.activeElement?.getAttribute('data-testid')),
-      ).to.equal('initial-focus');
+      await waitFor(async () => {
+        expect(
+          await page.evaluate(() => document.activeElement?.getAttribute('data-testid')),
+        ).to.equal('initial-focus');
+      });
     });
 
     it('should display the rows', async () => {

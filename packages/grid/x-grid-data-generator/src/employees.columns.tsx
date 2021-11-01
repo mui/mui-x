@@ -45,6 +45,7 @@ export const getEmployeeColumns = (): GridColDefGenerator[] => [
     field: 'name',
     headerName: 'Name',
     generateData: randomName,
+    dataGeneratorUniquenessEnabled: true,
     width: 120,
     editable: true,
   },
