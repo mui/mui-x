@@ -2,9 +2,9 @@ import { DataGrid } from '@mui/x-data-grid';
 import * as React from 'react';
 import { Story, Meta, DecoratorFn } from '@storybook/react';
 import { DataGridPro } from '@mui/x-data-grid-pro';
-import { useDemoData, DemoDataOptions } from '@mui/x-data-grid-generator';
+import { useDemoData, UseDemoDataOptions } from '@mui/x-data-grid-generator';
 
-export interface PlaygroundProps extends DemoDataOptions {
+export interface PlaygroundProps extends UseDemoDataOptions {
   multipleGrid: boolean;
   component: typeof DataGridPro | typeof DataGrid;
 }
