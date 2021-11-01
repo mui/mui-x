@@ -260,7 +260,7 @@ interface GridComponentOtherProps {
   /**
    * Callback fired when the grid is resized.
    * @param {ElementSize} containerSize With all properties from [[ElementSize]].
-   * @param {MuiEvent<{ test: number }>} event The event object.
+   * @param {MuiEvent<{}>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onResize?: GridEventListener<GridEvents.debouncedResize>;
