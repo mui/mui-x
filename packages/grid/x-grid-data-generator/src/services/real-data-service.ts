@@ -1,20 +1,20 @@
-import { GridColDef, GridRowId } from '@mui/x-data-grid-pro';
+import { GridRowModel } from '@mui/x-data-grid-pro';
 import asyncWorker from '../asyncWorker';
+import { GridColDefGenerator, GridDataGeneratorContext } from './gridColDefGenerator';
 
-export interface DataRowModel {
-  id: GridRowId;
-  [field: string]: any;
+export interface GridDemoData {
+  rows: GridRowModel[];
+  columns: GridColDefGenerator[];
 }
 
-export interface GridData {
-  columns: GridColDef[];
-  rows: DataRowModel[];
-}
-
-export function getRealData(rowLength: number, columns: any[]): Promise<GridData> {
-  return new Promise<GridData>((resolve) => {
+export function getRealGridData(
+  rowLength: number,
+  columns: GridColDefGenerator[],
+): Promise<GridDemoData> {
+  return new Promise<GridDemoData>((resolve) => {
     const tasks = { current: rowLength };
-    const data: DataRowModel[] = [];
+    const rows: GridDemoData['rows'] = [];
+    const indexedValues: { [field: string]: { [value: string]: number } } = {};
 
     function work() {
       const row: any = {};
@@ -22,17 +22,28 @@ export function getRealData(rowLength: number, columns: any[]): Promise<GridData
       for (let j = 0; j < columns.length; j += 1) {
         const column = columns[j];
         if (column.generateData) {
-          row[column.field] = column.generateData(row);
+          const context: GridDataGeneratorContext = {};
+          if (column.dataGeneratorUniquenessEnabled) {
+            let fieldValues = indexedValues[column.field];
+            if (!fieldValues) {
+              fieldValues = {};
+              indexedValues[column.field] = fieldValues;
+            }
+
+            context.values = fieldValues;
+          }
+
+          row[column.field] = column.generateData(row, context);
         }
       }
 
-      data.push(row);
+      rows.push(row);
       tasks.current -= 1;
     }
 
     asyncWorker({
       work,
-      done: () => resolve({ columns, rows: data }),
+      done: () => resolve({ columns, rows }),
       tasks,
     });
   });
