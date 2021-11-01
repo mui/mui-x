@@ -257,8 +257,9 @@ export const useGridFilter = (
       });
       if (gridFilterModelSelector(apiRef.current.state).items.length === 0) {
         apiRef.current.upsertFilterItem({});
+      } else {
+        apiRef.current.unsafe_applyFilters();
       }
-      apiRef.current.unsafe_applyFilters();
     },
     [apiRef, logger, setGridState],
   );
@@ -341,14 +342,12 @@ export const useGridFilter = (
     logger.debug('onColUpdated - GridColumns changed, applying filters');
     const filterModel = gridFilterModelSelector(apiRef.current.state);
     const columnsIds = filterableGridColumnsIdsSelector(apiRef.current.state);
-    logger.debug('GridColumns changed, applying filters');
-
-    filterModel.items.forEach((filter) => {
-      if (!columnsIds.find((field) => field === filter.columnField)) {
-        apiRef.current.deleteFilterItem(filter);
-      }
-    });
-    apiRef.current.unsafe_applyFilters();
+    const newFilterItems = filterModel.items.filter(
+      (item) => item.columnField && columnsIds.includes(item.columnField),
+    );
+    if (newFilterItems.length < filterModel.items.length) {
+      apiRef.current.setFilterModel({ ...filterModel, items: newFilterItems });
+    }
   }, [apiRef, logger]);
 
   React.useEffect(() => {
