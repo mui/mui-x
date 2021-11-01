@@ -70,7 +70,7 @@ describe('<DataGridPro /> - Column Headers', () => {
       const menuList = screen.queryByRole('menu');
       fireEvent.click(menuList);
 
-      await waitFor(() => expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']));
+      expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
     });
 
     it('should sort column when sort by Asc is clicked', async () => {
@@ -87,7 +87,7 @@ describe('<DataGridPro /> - Column Headers', () => {
       const ascSortButton = document.querySelector('[data-value="asc"]');
       fireEvent.click(ascSortButton);
 
-      await waitFor(() => expect(getColumnValues(0)).to.deep.equal(['Adidas', 'Nike', 'Puma']));
+      expect(getColumnValues(0)).to.deep.equal(['Adidas', 'Nike', 'Puma']);
     });
 
     it('should close the menu of a column when resizing this column', async () => {
