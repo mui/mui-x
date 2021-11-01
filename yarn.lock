@@ -2303,8 +2303,8 @@
     "@babel/runtime" "^7.14.8"
 
 "@material-ui/monorepo@https://github.com/m4theushw/material-ui-fork.git#master":
-  version "5.0.4"
-  resolved "https://github.com/m4theushw/material-ui-fork.git#d64da9b55436048475b9be41a39884dbd5e82bc1"
+  version "5.0.6"
+  resolved "https://github.com/m4theushw/material-ui-fork.git#7a24bc10f4fe0a2e9a07b391e2d4f649f266b06b"
 
 "@material-ui/private-theming@5.0.0-beta.5":
   version "5.0.0-beta.5"
