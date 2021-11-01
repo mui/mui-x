@@ -16,7 +16,7 @@ function CustomLoadingOverlay() {
 }
 
 export default {
-  title: 'X-Grid Tests/Rendering',
+  title: 'DataGridPro Test/Rendering',
   component: DataGridPro,
   parameters: {
     options: { selectedPanel: 'storybook/storysource/panel' },
