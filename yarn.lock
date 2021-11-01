@@ -2418,7 +2418,7 @@
     call-me-maybe "^1.0.1"
     glob-to-regexp "^0.3.0"
 
-"@mui/core@5.0.0-alpha.53", "@mui/core@^5.0.0-alpha.51":
+"@mui/core@5.0.0-alpha.53", "@mui/core@^5.0.0-alpha.53":
   version "5.0.0-alpha.53"
   resolved "https://registry.yarnpkg.com/@mui/core/-/core-5.0.0-alpha.53.tgz#ede1445be3bf5a93d25bdd8ead23afdfb1b68f8b"
   integrity sha512-dTwuhzE0puewJ+/Cw35iAiaBGVcZqVyqspheQHVJuhysSd+o58SONRAiM6MQgI/iFKiJ57HKh+En1MwuC7DMLw==
