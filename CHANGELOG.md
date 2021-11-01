@@ -9,7 +9,8 @@ _Nov 1, 2021_
 
 This version backports bug fixes and some of the features from the v5.x active release line.
 As the development of v5 evolves, newer fixes might not be cherry-picked to the legacy version.
-To have access to the latest features it is encouraged to upgrade to MUI X v5 and MUI Core v5.
+To have access to the latest features it is encouraged to upgrade to MUI X v5.
+Upgrading MUI Core to v5 is also recommended, however, v4 can still be used by following these [instructions](https://mui.com/components/data-grid/getting-started/#using-mui-x-v5-with-mui-core-v4).
 
 Big thanks to the 3 contributors who made this release possible. Here are some highlights ✨:
 
