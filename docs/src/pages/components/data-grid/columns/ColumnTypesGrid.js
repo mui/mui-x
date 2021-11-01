@@ -14,6 +14,7 @@ const initialRows = [
     lastLogin: randomUpdatedDate(),
     isAdmin: true,
     country: 'Spain',
+    discount: '',
   },
   {
     id: 2,
@@ -23,6 +24,7 @@ const initialRows = [
     lastLogin: randomUpdatedDate(),
     isAdmin: false,
     country: 'France',
+    discount: '',
   },
   {
     id: 3,
@@ -32,6 +34,7 @@ const initialRows = [
     lastLogin: randomUpdatedDate(),
     isAdmin: false,
     country: 'Brazil',
+    discount: 'junior',
   },
 ];
 
@@ -87,6 +90,25 @@ export default function ColumnTypesGrid() {
           'Spain',
           'Brazil',
         ],
+      },
+      {
+        field: 'discount',
+        type: 'singleSelect',
+        width: 120,
+        editable: true,
+        valueOptions: ({ row }) => {
+          if (row === undefined) {
+            return ['EU-resident', 'junior'];
+          }
+          const options = [];
+          if (!['United Kingdom', 'Brazil'].includes(row.country)) {
+            options.push('EU-resident');
+          }
+          if (row.age < 27) {
+            options.push('junior');
+          }
+          return options;
+        },
       },
       {
         field: 'actions',

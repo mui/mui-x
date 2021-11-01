@@ -99,7 +99,7 @@
     "rowsPerPageOptions": "Select the pageSize dynamically using the component UI.",
     "rowThreshold": "Number of rows from the <code>rowBuffer</code> that can be visible before a new slice is rendered.",
     "scrollbarSize": "Override the height/width of the grid inner scrollbar.",
-    "scrollEndThreshold": "Set the area at the bottom of the grid viewport where onRowsScrollEnd is called.",
+    "scrollEndThreshold": "Set the area in <code>px</code> at the bottom of the grid viewport where onRowsScrollEnd is called.",
     "selectionModel": "Set the selection model of the grid.",
     "showCellRightBorder": "If <code>true</code>, the right border of the cells are displayed.",
     "showColumnRightBorder": "If <code>true</code>, the right border of the column headers are displayed.",
@@ -354,11 +354,11 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "both scroll area elements"
     },
-    "scrollAreaLeft": {
+    "scrollArea--left": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the left scroll area element"
     },
-    "scrollAreaRight": {
+    "scrollArea--right": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the right scroll area element"
     },
@@ -377,14 +377,6 @@
     "toolbarFilterList": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the toolbar filter list element"
-    },
-    "viewport": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the viewport element"
-    },
-    "window": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the window element"
     },
     "withBorder": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",

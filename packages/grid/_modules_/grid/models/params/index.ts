@@ -11,3 +11,4 @@ export * from './gridSortModelParams';
 export * from './gridStateChangeParams';
 export * from './gridRowSelectionCheckboxParams';
 export * from './gridHeaderSelectionCheckboxParams';
+export * from './gridValueOptionsParams';

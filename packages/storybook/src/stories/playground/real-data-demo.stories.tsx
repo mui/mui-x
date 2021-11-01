@@ -1,49 +1,32 @@
-import { DataGrid, GridToolbar } from '@mui/x-data-grid';
+import { DataGrid } from '@mui/x-data-grid';
 import * as React from 'react';
 import { Story, Meta, DecoratorFn } from '@storybook/react';
-import { DataGridProProps, GridPreferencePanelsValue, DataGridPro } from '@mui/x-data-grid-pro';
+import { DataGridPro } from '@mui/x-data-grid-pro';
 import { useDemoData, UseDemoDataOptions } from '@mui/x-data-grid-generator';
-import { useData } from '../../hooks/useData';
-import {
-  ColumnMenuComponent,
-  CustomFooter,
-  LoadingComponent,
-  NoRowsComponent,
-  PaginationComponent,
-  SortedAscendingIcon,
-  SortedDescendingIcon,
-} from './customComponents';
 
-export interface PlaygroundProps {
+export interface PlaygroundProps extends UseDemoDataOptions {
   multipleGrid: boolean;
-  license: 'DataGridPro' | 'DataGrid';
+  component: typeof DataGridPro | typeof DataGrid;
 }
 
 const gridContainer: DecoratorFn = (storyFn) => <div className="grid-container">{storyFn()}</div>;
 
 export default {
-  title: 'X-Grid Demos/Playground',
-  component: DataGridPro,
+  title: 'Full DataGrid Demo',
   argTypes: {
-    dataSet: {
-      defaultValue: 'Commodity',
-      control: {
-        type: 'inline-radio',
-        options: ['Commodity', 'Employee', 'Raw'],
-      },
-    },
-    license: {
+    component: {
       defaultValue: 'DataGridPro',
+      mapping: { DataGrid, DataGridPro },
       control: {
-        type: 'inline-radio',
-        options: ['DataGridPro', 'DataGrid'],
+        type: 'select',
+        options: ['DataGrid', 'DataGridPro'],
       },
     },
     rowLength: {
       defaultValue: 500,
       control: {
         type: 'select',
-        options: [1, 9, 10, 50, 100, 500, 1000, 2000, 5000, 8000, 10000, 50000, 100000, 500000],
+        options: [1, 10, 50, 100, 500, 1_000, 5_000, 10_000, 50_000, 100_000, 500_000],
       },
     },
     multipleGrid: {
@@ -52,74 +35,31 @@ export default {
         type: 'boolean',
       },
     },
-    headerHeight: {
-      control: { type: 'range', min: 20, max: 150, step: 10 },
-    },
-    rowHeight: {
-      control: { type: 'range', min: 20, max: 150, step: 10 },
-    },
   },
   decorators: [gridContainer],
-  parameters: {
-    options: { selectedPanel: 'storybook/controls/panel' },
-  },
 } as Meta;
 
-const DemoTemplate: Story<DataGridProProps & UseDemoDataOptions & PlaygroundProps> = ({
-  rows,
-  columns,
-  dataSet,
-  license,
-  rowLength,
-  maxColumns,
+const DemoStory: Story<PlaygroundProps> = ({
+  component: Component,
   multipleGrid,
-  ...args
+  ...dataOptions
 }) => {
-  const isRaw = dataSet.toString() === 'Raw';
-  let data: any = useData(isRaw ? rowLength : 0, maxColumns || 20);
-  const demoData = useDemoData({ rowLength: !isRaw ? rowLength : 0, dataSet, maxColumns });
+  const { data } = useDemoData(dataOptions);
 
-  if (!isRaw) {
-    data = demoData.data;
-  }
-
-  const Grid = license === 'DataGridPro' ? DataGridPro : DataGrid;
-
-  return !multipleGrid ? (
-    <Grid rows={data.rows} columns={data.columns} {...(args as unknown)} />
-  ) : (
+  return (
     <React.Fragment>
-      <Grid rows={data.rows} columns={data.columns} {...(args as unknown)} />
-      <Grid rows={data.rows} columns={data.columns} {...(args as unknown)} />
+      <Component {...data} />
+      {multipleGrid && <Component {...data} />}
     </React.Fragment>
   );
 };
 
-export const Demo = DemoTemplate.bind({});
-Demo.args = {
-  checkboxSelection: true,
+export const Commodity = DemoStory.bind({});
+Commodity.args = {
+  dataSet: 'Commodity',
 };
 
-export const ColumnSelector = DemoTemplate.bind({});
-ColumnSelector.args = {
-  initialState: {
-    preferencePanel: {
-      open: true,
-      openedPanelValue: GridPreferencePanelsValue.columns,
-    },
-  },
-};
-
-export const Custom = DemoTemplate.bind({});
-Custom.args = {
-  components: {
-    Footer: CustomFooter,
-    ColumnSortedDescendingIcon: SortedDescendingIcon,
-    ColumnSortedAscendingIcon: SortedAscendingIcon,
-    NoRowsOverlay: NoRowsComponent,
-    LoadingOverlay: LoadingComponent,
-    Pagination: PaginationComponent,
-    ColumnMenu: ColumnMenuComponent,
-    Toolbar: GridToolbar,
-  },
+export const Employee = DemoStory.bind({});
+Employee.args = {
+  dataSet: 'Employee',
 };

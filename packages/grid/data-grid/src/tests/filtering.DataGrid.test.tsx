@@ -871,6 +871,37 @@ describe('<DataGrid /> - Filter', () => {
         expect(getColumnValues()).to.deep.equal(['Hair Dryer', 'Microwave']);
       });
 
+      it('should work with function', () => {
+        const { setProps } = render(
+          <TestCase
+            rows={[
+              { id: 1, name: 'Hair Dryer', voltage: 220 },
+              { id: 2, name: 'Dishwasher', voltage: 110 },
+              { id: 3, name: 'Microwave', voltage: 220 },
+            ]}
+            columns={[
+              { field: 'name' },
+              {
+                field: 'voltage',
+                type: 'singleSelect',
+                valueOptions: ({ row }) => (row && row.name === 'Dishwasher' ? [110] : [220, 110]),
+              },
+            ]}
+            field="voltage"
+            operatorValue="is"
+            initialState={{
+              preferencePanel: {
+                open: true,
+                openedPanelValue: GridPreferencePanelsValue.filters,
+              },
+            }}
+          />,
+        );
+        expect(getColumnValues()).to.deep.equal(['Hair Dryer', 'Dishwasher', 'Microwave']);
+        setProps({ value: 220 });
+        expect(getColumnValues()).to.deep.equal(['Hair Dryer', 'Microwave']);
+      });
+
       it('should work if valueOptions is not provided', () => {
         const { setProps } = render(
           <TestCase
