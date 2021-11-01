@@ -1,12 +1,12 @@
 {
-  "version": "5.0.0-beta.5",
+  "version": "5.0.0-beta.6",
   "private": true,
   "scripts": {
     "start": "yarn docs:dev",
     "benchmark:browser": "yarn workspace benchmark browser",
     "docs:dev": "yarn workspace docs dev",
     "docs:api": "yarn docs:api:build",
-    "docs:api:build": "cross-env BABEL_ENV=development babel-node -i '/node_modules/(?!@material-ui)/' -x .ts,.tsx,.js ./docs/scripts/buildApi.ts ./docs/pages/api-docs/data-grid",
+    "docs:api:build": "cross-env BABEL_ENV=development babel-node -i \"/node_modules/(?!@material-ui)/\" -x .ts,.tsx,.js ./docs/scripts/buildApi.ts ./docs/pages/api-docs/data-grid",
     "docs:build": "yarn workspace docs build",
     "docs:export": "yarn workspace docs export",
     "docs:typescript:formatted": "yarn workspace docs typescript:transpile",

@@ -218,7 +218,8 @@ export interface GridSimpleOptions {
    */
   rowsPerPageOptions: number[];
   /**
-   * Set the area at the bottom of the grid viewport where onRowsScrollEnd is called.
+   * Set the area in `px` at the bottom of the grid viewport where onRowsScrollEnd is called.
+   * @default 80
    */
   scrollEndThreshold: number;
   /**

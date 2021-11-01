@@ -96,7 +96,7 @@
     "rowsPerPageOptions": "Select the pageSize dynamically using the component UI.",
     "rowThreshold": "Number of rows from the <code>rowBuffer</code> that can be visible before a new slice is rendered.",
     "scrollbarSize": "Override the height/width of the grid inner scrollbar.",
-    "scrollEndThreshold": "Set the area at the bottom of the grid viewport where onRowsScrollEnd is called.",
+    "scrollEndThreshold": "Set the area in <code>px</code> at the bottom of the grid viewport where onRowsScrollEnd is called.",
     "selectionModel": "Set the selection model of the grid.",
     "showCellRightBorder": "If <code>true</code>, the right border of the cells are displayed.",
     "showColumnRightBorder": "If <code>true</code>, the right border of the column headers are displayed.",

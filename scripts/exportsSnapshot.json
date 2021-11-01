@@ -322,6 +322,7 @@
   { "name": "gridVisibleSortedRowIdsSelector", "kind": "Variable" },
   { "name": "gridVisibleSortedTopLevelRowEntriesSelector", "kind": "Variable" },
   { "name": "gridVisibleTopLevelRowCountSelector", "kind": "Variable" },
+  { "name": "heIL", "kind": "Variable" },
   { "name": "itIT", "kind": "Variable" },
   { "name": "jaJP", "kind": "Variable" },
   { "name": "koKR", "kind": "Variable" },
