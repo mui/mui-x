@@ -20,7 +20,7 @@ Big thanks to the 3 contributors who made this release possible. Here are some h
 
 #### Changes
 
-- [DataGrid] Prevent scroll when selecting rows (#2558) (#2999) @m4theushw
+- [DataGrid] Prevent scroll when selecting rows (#2999) @m4theushw
 - [DataGridPro] Stop drag event propagation (#2987) @chendoron
 
 ### Core
