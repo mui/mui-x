@@ -21,7 +21,8 @@ export const useGridState = (
         return false;
       }
 
-      const { ignoreSetState, postUpdate } = apiRef.current.applyControlStateConstraint(newState);
+      const { ignoreSetState, postUpdate } =
+        apiRef.current.unsafe_applyControlStateConstraint(newState);
 
       if (!ignoreSetState) {
         // We always assign it as we mutate rows for perf reason.

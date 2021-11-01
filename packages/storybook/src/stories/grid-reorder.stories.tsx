@@ -5,7 +5,7 @@ import '../style/grid-stories.css';
 import { useData } from '../hooks/useData';
 
 export default {
-  title: 'X-Grid Tests/Reorder',
+  title: 'DataGridPro Test/Reorder',
   component: DataGridPro,
   parameters: {
     options: { selectedPanel: 'storybook/storysource/panel' },

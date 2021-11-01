@@ -41,6 +41,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 const VirtualScrollerRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'VirtualScroller',
+  overridesResolver: (props, styles) => styles.virtualScroller,
 })({
   overflow: 'auto',
   '@media print': {
@@ -51,6 +52,7 @@ const VirtualScrollerRoot = styled('div', {
 const VirtualScrollerContent = styled('div', {
   name: 'MuiDataGrid',
   slot: 'Content',
+  overridesResolver: (props, styles) => styles.content,
 })({
   position: 'relative',
   overflow: 'hidden',
@@ -59,6 +61,7 @@ const VirtualScrollerContent = styled('div', {
 const VirtualScrollerRenderZone = styled('div', {
   name: 'MuiDataGrid',
   slot: 'RenderingZone',
+  overridesResolver: (props, styles) => styles.renderingZone,
 })({
   position: 'absolute',
 });

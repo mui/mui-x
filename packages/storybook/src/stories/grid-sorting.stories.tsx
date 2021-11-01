@@ -11,7 +11,7 @@ import {
 import { action } from '@storybook/addon-actions';
 
 export default {
-  title: 'X-Grid Tests/Sorting',
+  title: 'DataGridPro Test/Sorting',
   component: DataGridPro,
   parameters: {
     options: { selectedPanel: 'storybook/action/panel' },

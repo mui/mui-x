@@ -70,7 +70,7 @@ DataGridRaw.propTypes = {
    */
   classes: PropTypes.object,
   /**
-   * @ignore
+   * @ignore - do not document
    */
   className: PropTypes.string,
   /**
@@ -626,7 +626,7 @@ DataGridRaw.propTypes = {
     }),
   ),
   /**
-   * @ignore
+   * @ignore - do not document
    */
   style: PropTypes.object,
 } as any;
