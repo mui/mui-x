@@ -3,6 +3,30 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 4.0.2
+
+_Nov 1, 2021_
+
+This version backports bug fixes and some of the features from the v5.x active release line.
+As the development of v5 evolves, newer fixes might not be cherry-picked to the legacy version.
+To have access to the latest features it is encouraged to upgrade to MUI X v5 and MUI Core v5.
+
+Big thanks to the 3 contributors who made this release possible. Here are some highlights ✨:
+
+- ⚡️ Stop drag event propagation (#2987) @chendoron
+- 🐞 Prevent scroll when selecting rows (#2558) (#2999) @m4theushw
+
+### `@mui/x-data-grid@v4.0.2` / `@mui/x-data-grid-pro@v4.0.2`
+
+#### Changes
+
+- [DataGrid] Prevent scroll when selecting rows (#2558) (#2999) @m4theushw
+- [DataGridPro] Stop drag event propagation (#2987) @chendoron
+
+### Core
+
+- [core] Update deploy docs target for v4 (#2808) @oliviertassinari
+
 ## 4.0.1
 
 _Sep 29, 2021_
