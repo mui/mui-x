@@ -17,9 +17,9 @@
     "typescript:transpile:dev": "node scripts/formattedTSDemos --watch"
   },
   "dependencies": {
-    "@babel/core": "^7.15.8",
-    "@babel/plugin-transform-object-assign": "^7.14.5",
-    "@babel/runtime-corejs2": "^7.15.4",
+    "@babel/core": "^7.16.0",
+    "@babel/plugin-transform-object-assign": "^7.16.0",
+    "@babel/runtime-corejs2": "^7.16.0",
     "@docsearch/react": "^3.0.0-alpha.41",
     "@emotion/cache": "^11.5.0",
     "@emotion/react": "^11.5.0",
@@ -78,8 +78,8 @@
     "webpack-bundle-analyzer": "^4.5.0"
   },
   "devDependencies": {
-    "@babel/plugin-transform-react-constant-elements": "^7.14.5",
-    "@babel/preset-typescript": "^7.15.0",
+    "@babel/plugin-transform-react-constant-elements": "^7.16.0",
+    "@babel/preset-typescript": "^7.16.0",
     "@types/doctrine": "^0.0.5",
     "cpy-cli": "^3.1.1",
     "cross-fetch": "^3.1.4",
