@@ -9,7 +9,7 @@ import {
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { gridDensityHeaderHeightSelector } from '../../hooks/features/density/densitySelector';
-import { gridScrollBarSizeSelector } from '../../hooks/features/container/gridContainerSizesSelector';
+import { unstable_gridScrollBarSizeSelector } from '../../hooks/features/container/gridContainerSizesSelector';
 import { getDataGridUtilityClass } from '../../gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { GridComponentProps } from '../../GridComponentProps';
@@ -52,7 +52,7 @@ export const GridColumnsHeader = React.forwardRef<HTMLDivElement, any>(function 
   const apiRef = useGridApiContext();
   const visibleColumns = useGridSelector(apiRef, visibleGridColumnsSelector);
   const columnsMeta = useGridSelector(apiRef, gridColumnsMetaSelector);
-  const scrollBarState = useGridSelector(apiRef, gridScrollBarSizeSelector);
+  const scrollBarState = useGridSelector(apiRef, unstable_gridScrollBarSizeSelector);
   const tabIndexState = useGridSelector(apiRef, gridTabIndexColumnHeaderSelector);
   const cellTabIndexState = useGridSelector(apiRef, gridTabIndexCellSelector);
   const columnHeaderFocus = useGridSelector(apiRef, gridFocusColumnHeaderSelector);
