@@ -1,5 +1,5 @@
 import { MuiEvent } from './muiEvent';
-import { GridCallbackDetails } from './api';
+import { GridCallbackDetails } from './api/gridCallbackDetails';
 
 export type GridEventListener<Params, Event extends MuiEvent> = (
   params: Params,
