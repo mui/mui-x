@@ -107,8 +107,6 @@ Sometimes a column might not have a corresponding value, or you might want to re
 
 To achieve that, set the `valueGetter` attribute of `GridColDef` as in the example below.
 
-**Note**: You need to set a `sortComparator` for the column sorting to work when setting the `valueGetter` attribute.
-
 ```tsx
 function getFullName(params) {
   return `${params.getValue(params.id, 'firstName') || ''} ${
@@ -124,8 +122,6 @@ const columns: GridColDef[] = [
     headerName: 'Full name',
     width: 160,
     valueGetter: getFullName,
-    sortComparator: (v1, v2, cellParams1, cellParams2) =>
-      getFullName(cellParams1).localeCompare(getFullName(cellParams2)),
   },
 ];
 ```
@@ -281,6 +277,22 @@ The following are the native column types:
 - `'boolean'`
 - `'singleSelect'`
 - `'actions'`
+
+### Converting types
+
+Default methods, such as filtering and sorting, assume that the type of the values will match the type of the column specified in `type` (e.g. the values of a `number` column will be numbers).
+For example, values of column with `type: 'dateTime'` are expecting to be stored as a `Date()` objects.
+If for any reason, your data type is not the correct one, you can use `valueGetter` to parse the value to the correct type.
+
+```tsx
+{
+  field: 'lastLogin',
+  type: 'dateTime',
+  valueGetter: ({ value }) => value && new Date(value),
+}
+```
+
+### Special properties
 
 To use most of the column types, you only need to define the `type` property in your column definition.
 However, some types require additional properties to be set to make them work correctly:
