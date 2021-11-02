@@ -1,7 +1,5 @@
 import * as React from 'react';
-import {
-  GridEventListener,
-} from '../../models/gridEventListener';
+import { GridEventListener } from '../../models/gridEventListener';
 import { EventManager, EventListenerOptions } from '../../utils/EventManager';
 import { MuiEvent } from '../muiEvent';
 
