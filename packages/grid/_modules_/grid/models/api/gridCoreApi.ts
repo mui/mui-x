@@ -1,15 +1,14 @@
 import * as React from 'react';
-import { MuiEvent } from '../muiEvent';
 import {
-  GridEventEmitter,
-  GridListener,
-  GridSubscribeEventOptions,
-} from '../../utils/eventEmitter/GridEventEmitter';
+  GridEventListener,
+} from '../../models/gridEventListener';
+import { EventManager, EventListenerOptions } from '../../utils/EventManager';
+import { MuiEvent } from '../muiEvent';
 
 /**
  * The core API interface that is available in the grid `apiRef`.
  */
-export interface GridCoreApi extends GridEventEmitter {
+export interface GridCoreApi {
   /**
    * The react ref of the grid root container div element.
    * @ignore - do not document.
@@ -46,6 +45,11 @@ export interface GridCoreApi extends GridEventEmitter {
    */
   footerRef?: React.RefObject<HTMLDivElement>;
   /**
+   * The generic event emitter manager.
+   * @ignore - do not document
+   */
+  unstable_eventManager: EventManager;
+  /**
    * Registers a handler for an event.
    * @param {string} event The name of the event.
    * @param {function} handler The handler to be called.
@@ -54,8 +58,8 @@ export interface GridCoreApi extends GridEventEmitter {
    */
   subscribeEvent: <Params, Event extends MuiEvent>(
     event: string,
-    handler: GridListener<Params, Event>,
-    options?: GridSubscribeEventOptions,
+    handler: GridEventListener<Params, Event>,
+    options?: EventListenerOptions,
   ) => () => void;
   /**
    * Emits an event.
