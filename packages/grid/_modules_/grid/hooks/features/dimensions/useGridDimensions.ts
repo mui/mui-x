@@ -15,10 +15,9 @@ import { useGridLogger } from '../../utils/useGridLogger';
 import { GridComponentProps } from '../../../GridComponentProps';
 import { GridDimensions, GridDimensionsApi } from './gridDimensionsApi';
 import { gridColumnsTotalWidthSelector } from '../columns';
-import { gridPaginationSelector } from '../pagination';
-import { gridVisibleRowCountSelector } from '../filter';
 import { gridDensityHeaderHeightSelector, gridDensityRowHeightSelector } from '../density';
 import { useGridSelector } from '../../utils';
+import { useCurrentPageRows } from '../../utils/useCurrentPageRows';
 
 const isTestEnvironment = process.env.NODE_ENV === 'test';
 
@@ -26,7 +25,7 @@ export function useGridDimensions(
   apiRef: GridApiRef,
   props: Pick<
     GridComponentProps,
-    'rows' | 'onResize' | 'scrollbarSize' | 'pagination' | 'autoHeight'
+    'rows' | 'onResize' | 'scrollbarSize' | 'pagination' | 'paginationMode' | 'autoHeight'
   >,
 ) {
   const logger = useGridLogger(apiRef, 'useResizeContainer');
@@ -34,10 +33,9 @@ export function useGridDimensions(
   const rootDimensionsRef = React.useRef<ElementSize | null>(null);
   const fullDimensionsRef = React.useRef<GridDimensions | null>(null);
   const columnsTotalWidth = useGridSelector(apiRef, gridColumnsTotalWidthSelector);
-  const paginationState = useGridSelector(apiRef, gridPaginationSelector);
-  const visibleRowsCount = useGridSelector(apiRef, gridVisibleRowCountSelector);
   const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
   const headerHeight = useGridSelector(apiRef, gridDensityHeaderHeightSelector);
+  const currentPage = useCurrentPageRows(apiRef, props);
 
   const updateGridDimensionsRef = React.useCallback(() => {
     const rootElement = apiRef.current.rootElementRef?.current;
@@ -69,13 +67,9 @@ export function useGridDimensions(
       height: rootDimensionsRef.current.height - headerHeight,
     };
 
-    // TODO: Use `useCurrentPageRows`
-    const virtualRowsCount = props.pagination
-      ? Math.min(
-          visibleRowsCount - paginationState.page * paginationState.pageSize,
-          paginationState.pageSize,
-        )
-      : visibleRowsCount;
+    const virtualRowsCount = currentPage.range
+      ? currentPage.range.lastRowIndex - currentPage.range.firstRowIndex + 1
+      : 0;
     const pageScrollHeight = virtualRowsCount * rowHeight;
 
     const hasScrollXIfNoYScrollBar = Math.round(columnsTotalWidth) > viewportOuterSize.width;
@@ -132,16 +126,7 @@ export function useGridDimensions(
         newFullDimensions.viewportInnerSize.width,
       );
     }
-  }, [
-    apiRef,
-    props.pagination,
-    props.scrollbarSize,
-    headerHeight,
-    rowHeight,
-    visibleRowsCount,
-    paginationState,
-    columnsTotalWidth,
-  ]);
+  }, [apiRef, currentPage.range, props.scrollbarSize, headerHeight, rowHeight, columnsTotalWidth]);
 
   const resize = React.useCallback<GridDimensionsApi['resize']>(() => {
     updateGridDimensionsRef();
