@@ -1,7 +1,10 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import TextField, { TextFieldProps } from '@mui/material/TextField';
-import { unstable_useId as useId } from '@mui/material/utils';
+import {
+  unstable_useId as useId,
+  unstable_useEnhancedEffect as useEnhancedEffect,
+} from '@mui/material/utils';
 import { GridLoadIcon } from '../../icons/index';
 import { GridFilterInputValueProps } from './GridFilterInputValueProps';
 import { GridColDef } from '../../../models/colDef/gridColDef';
@@ -32,7 +35,7 @@ export interface GridTypeFilterInputValueProps extends GridFilterInputValueProps
 }
 
 function GridFilterInputValue(props: GridTypeFilterInputValueProps & TextFieldProps) {
-  const { item, applyValue, type, apiRef, autoFocus, ...others } = props;
+  const { item, applyValue, type, apiRef, hasFocus, ...others } = props;
   const filterTimeout = React.useRef<any>();
   const inputRef = React.useRef<any>();
   const [filterValueState, setFilterValueState] = React.useState(item.value ?? '');
@@ -51,11 +54,13 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps & TextFieldPr
           ),
         }
       : {};
-  React.useEffect(() => {
-    if (autoFocus) {
-      inputRef.current.focus();
+
+  useEnhancedEffect(() => {
+    if (hasFocus) {
+      inputRef.current!.focus();
     }
-  }, [autoFocus]);
+  }, [hasFocus]);
+
   const onFilterChange = React.useCallback(
     (event) => {
       let value = event.target.value;

@@ -221,7 +221,7 @@ function GridFilterForm(props: GridFilterFormProps) {
             apiRef={apiRef}
             item={item}
             applyValue={applyFilterChanges}
-            autoFocus={isLastFilter}
+            hasFocus={isLastFilter}
             {...currentOperator.InputComponentProps}
           />
         ) : null}
