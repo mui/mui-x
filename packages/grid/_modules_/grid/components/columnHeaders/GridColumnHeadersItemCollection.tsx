@@ -15,7 +15,7 @@ import { GridStateColDef } from '../../models/colDef/gridColDef';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { GridColumnHeaderItem } from './GridColumnHeaderItem';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { gridScrollBarSizeSelector } from '../../hooks/features/container/gridContainerSizesSelector';
+import { unstable_gridScrollBarSizeSelector } from '../../hooks/features/container/gridContainerSizesSelector';
 
 export interface GridColumnHeadersItemCollectionProps {
   columns: GridStateColDef[];
@@ -34,7 +34,7 @@ function GridColumnHeadersItemCollection(props: GridColumnHeadersItemCollectionP
   const cellTabIndexState = useGridSelector(apiRef, gridTabIndexCellSelector);
   const headerHeight = useGridSelector(apiRef, gridDensityHeaderHeightSelector);
   const columnMenuState = useGridSelector(apiRef, gridColumnMenuSelector);
-  const scrollBarState = useGridSelector(apiRef, gridScrollBarSizeSelector);
+  const scrollBarState = useGridSelector(apiRef, unstable_gridScrollBarSizeSelector);
   const rootProps = useGridRootProps();
 
   const getColIndex = (index) => {
