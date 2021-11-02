@@ -142,7 +142,7 @@ export const useGridKeyboardNavigation = (
         return;
       }
 
-      nextCellIndexes.rowIndex = Math.min(0, nextCellIndexes.rowIndex);
+      nextCellIndexes.rowIndex = Math.max(0, nextCellIndexes.rowIndex);
       nextCellIndexes.rowIndex = Math.min(currentPage.range.lastRowIndex, nextCellIndexes.rowIndex);
       nextCellIndexes.colIndex = Math.max(0, nextCellIndexes.colIndex);
       nextCellIndexes.colIndex = Math.min(colCount - 1, nextCellIndexes.colIndex);
