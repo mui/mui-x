@@ -3,7 +3,7 @@ import { DataGridPro, GridColDef, useGridApiRef, GridOverlay } from '@mui/x-data
 import '../style/grid-stories.css';
 
 export default {
-  title: 'X-Grid Tests/Error Handling',
+  title: 'DataGridPro Test/Error Handling',
   component: DataGridPro,
   parameters: {
     options: { selectedPanel: 'storybook/storysource/panel' },

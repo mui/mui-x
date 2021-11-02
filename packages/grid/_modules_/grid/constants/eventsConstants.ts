@@ -16,7 +16,7 @@ export enum GridEvents {
    */
   unmount = 'unmount',
   /**
-   * Fired when the mode of a cell changes. Called with a [[GridCellModeChangeParams]] object.
+   * Fired when the mode of a cell changes. Called with a [[GridCellParams]] object.
    * @ignore - do not document
    */
   cellModeChange = 'cellModeChange',

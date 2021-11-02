@@ -3,7 +3,7 @@ import { GridState, GridSortingState, useGridApiRef, DataGridPro } from '@mui/x-
 import { useData } from '../hooks/useData';
 
 export default {
-  title: 'X-Grid Tests/State',
+  title: 'DataGridPro Test/State',
   component: DataGridPro,
   parameters: {
     options: { selectedPanel: 'storybook/storysource/panel' },

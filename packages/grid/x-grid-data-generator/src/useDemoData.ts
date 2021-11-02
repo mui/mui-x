@@ -1,18 +1,23 @@
 import * as React from 'react';
 import LRUCache from 'lru-cache';
-import { GridData, getRealData } from './services/real-data-service';
+import { GridDemoData, getRealGridData } from './services/real-data-service';
 import { getCommodityColumns } from './commodities.columns';
 import { getEmployeeColumns } from './employees.columns';
 import asyncWorker from './asyncWorker';
 import { GridColDefGenerator } from './services/gridColDefGenerator';
+import {
+  AddPathToDemoDataOptions,
+  DemoTreeDataValue,
+  addTreeDataOptionsToDemoData,
+} from './services/tree-data-generator';
 
-const dataCache = new LRUCache<string, GridData>({
+const dataCache = new LRUCache<string, DemoTreeDataValue>({
   max: 10,
   maxAge: 60 * 5 * 1e3, // 5 minutes
 });
 
 export type DemoDataReturnType = {
-  data: GridData;
+  data: DemoTreeDataValue;
   loading: boolean;
   setRowLength: (count: number) => void;
   loadNewData: () => void;
@@ -20,11 +25,12 @@ export type DemoDataReturnType = {
 
 type DataSet = 'Commodity' | 'Employee';
 
-export interface DemoDataOptions {
+export interface UseDemoDataOptions {
   dataSet: DataSet;
   rowLength: number;
   maxColumns?: number;
   editable?: boolean;
+  treeData?: AddPathToDemoDataOptions;
 }
 
 // Generate fake data from a seed.
@@ -32,8 +38,8 @@ export interface DemoDataOptions {
 async function extrapolateSeed(
   rowLength: number,
   columns: GridColDefGenerator[],
-  data: GridData,
-): Promise<GridData> {
+  data: GridDemoData,
+): Promise<GridDemoData> {
   return new Promise<any>((resolve) => {
     const seed = data.rows;
     const rows = data.rows.slice();
@@ -84,7 +90,7 @@ const deepFreeze = <T>(object: T): T => {
   return Object.freeze(object);
 };
 
-export const useDemoData = (options: DemoDataOptions): DemoDataReturnType => {
+export const useDemoData = (options: UseDemoDataOptions): DemoDataReturnType => {
   const [rowLength, setRowLength] = React.useState(options.rowLength);
   const [index, setIndex] = React.useState(0);
   const [loading, setLoading] = React.useState(true);
@@ -101,7 +107,15 @@ export const useDemoData = (options: DemoDataOptions): DemoDataReturnType => {
     return columns;
   }, [options.dataSet, options.editable, options.maxColumns]);
 
-  const [data, setData] = React.useState<GridData>(() => ({ columns: getColumns(), rows: [] }));
+  const [data, setData] = React.useState<GridDemoData>(() =>
+    addTreeDataOptionsToDemoData(
+      {
+        columns: getColumns(),
+        rows: [],
+      },
+      options.treeData,
+    ),
+  );
 
   React.useEffect(() => {
     const cacheKey = `${options.dataSet}-${rowLength}-${index}-${options.maxColumns}`;
@@ -120,18 +134,24 @@ export const useDemoData = (options: DemoDataOptions): DemoDataReturnType => {
     (async () => {
       setLoading(true);
 
-      let newData: GridData;
+      let newData: DemoTreeDataValue;
       const columns = getColumns();
       if (rowLength > 1000) {
-        newData = await getRealData(1000, columns);
+        newData = await getRealGridData(1000, columns);
         newData = await extrapolateSeed(rowLength, columns, newData);
       } else {
-        newData = await getRealData(rowLength, columns);
+        newData = await getRealGridData(rowLength, columns);
       }
 
       if (!active) {
         return;
       }
+
+      newData = addTreeDataOptionsToDemoData(newData, {
+        maxDepth: options.treeData?.maxDepth,
+        groupingField: options.treeData?.groupingField,
+        averageChildren: options.treeData?.averageChildren,
+      });
 
       // It's quite slow. No need for it in production.
       if (process.env.NODE_ENV !== 'production') {
@@ -146,7 +166,17 @@ export const useDemoData = (options: DemoDataOptions): DemoDataReturnType => {
     return () => {
       active = false;
     };
-  }, [rowLength, data.columns, options.dataSet, options.maxColumns, index, getColumns]);
+  }, [
+    rowLength,
+    data.columns,
+    options.dataSet,
+    options.maxColumns,
+    options.treeData?.maxDepth,
+    options.treeData?.groupingField,
+    options.treeData?.averageChildren,
+    index,
+    getColumns,
+  ]);
 
   return {
     data,

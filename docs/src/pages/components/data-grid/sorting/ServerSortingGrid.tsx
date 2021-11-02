@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { GridRowsProp, DataGrid, GridSortModel } from '@mui/x-data-grid';
-import { useDemoData, GridData } from '@mui/x-data-grid-generator';
+import { useDemoData, GridDemoData } from '@mui/x-data-grid-generator';
 
-function loadServerRows(sortModel: GridSortModel, data: GridData): Promise<any> {
+function loadServerRows(sortModel: GridSortModel, data: GridDemoData): Promise<any> {
   return new Promise<any>((resolve) => {
     setTimeout(() => {
       if (sortModel.length === 0) {
