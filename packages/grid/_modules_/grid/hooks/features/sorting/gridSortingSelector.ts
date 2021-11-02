@@ -1,17 +1,13 @@
 import { createSelector } from 'reselect';
-import { GridRowId } from '../../../models/gridRows';
 import { GridSortDirection, GridSortModel } from '../../../models/gridSortModel';
 import { GridState } from '../../../models/gridState';
-import { gridRowsLookupSelector, gridRowIdsSelector } from '../rows/gridRowsSelector';
-import { GridSortingState } from './gridSortingState';
+import { gridRowsLookupSelector } from '../rows/gridRowsSelector';
 
 const gridSortingStateSelector = (state: GridState) => state.sorting;
 
 export const gridSortedRowIdsSelector = createSelector(
   gridSortingStateSelector,
-  gridRowIdsSelector,
-  (sortingState: GridSortingState, allRows: GridRowId[]) =>
-    sortingState.sortedRows.length ? sortingState.sortedRows : allRows,
+  (sortingState) => sortingState.sortedRows,
 );
 
 export const gridSortedRowEntriesSelector = createSelector(
