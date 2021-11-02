@@ -3,10 +3,12 @@ import { GridEventLookup } from './gridEventLookup';
 import { GridEventsStr } from './gridEvents';
 
 type PublisherArgsNoEvent<E extends GridEventsStr, T extends { params: any }> = [E, T['params']];
+
 type PublisherArgsRequiredEvent<
   E extends GridEventsStr,
   T extends { params: any; event: MuiBaseEvent },
 > = [E, T['params'], T['event']];
+
 type PublisherArgsOptionalEvent<
   E extends GridEventsStr,
   T extends { params: any; event: MuiBaseEvent },
@@ -21,15 +23,15 @@ type PublisherArgsParams<E extends GridEventsStr, T extends { params: any }> = [
 
 type PublisherArgsNoParams<E extends GridEventsStr> = [E];
 
-type GridEventPublisherArg<E extends GridEventsStr> = GridEventLookup[E] extends {
+type GridEventPublisherArg<E extends GridEventsStr, T> = T extends {
   params: any;
   event: MuiBaseEvent;
 }
-  ? PublisherArgsEvent<E, GridEventLookup[E]>
-  : GridEventLookup[E] extends { params: any }
-  ? PublisherArgsParams<E, GridEventLookup[E]>
+  ? PublisherArgsEvent<E, T>
+  : T extends { params: any }
+  ? PublisherArgsParams<E, T>
   : PublisherArgsNoParams<E>;
 
 export type GridEventPublisher = <E extends GridEventsStr>(
-  ...params: GridEventPublisherArg<E>
+  ...params: GridEventPublisherArg<E, GridEventLookup[E]>
 ) => void;
