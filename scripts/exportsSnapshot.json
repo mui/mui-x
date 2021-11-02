@@ -394,7 +394,6 @@
   { "name": "gridRowsStateSelector", "kind": "Function" },
   { "name": "gridSelectionStateSelector", "kind": "Function" },
   { "name": "gridTabIndexStateSelector", "kind": "Function" },
-  { "name": "gridViewportSizeStateSelector", "kind": "Function" },
   { "name": "renderActionsCell", "kind": "Function" },
   { "name": "renderEditInputCell", "kind": "Function" },
   { "name": "renderEditSingleSelectCell", "kind": "Function" },

@@ -6,6 +6,7 @@
 __diff_output__
 .DS_STORE
 *.log
+*.tsbuildinfo
 /.eslintcache
 /.nyc_output
 /coverage

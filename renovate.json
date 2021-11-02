@@ -27,21 +27,6 @@
       "allowedVersions": "< 2.0.0"
     },
     {
-      "groupName": "JSS",
-      "matchPackageNames": [
-        "jss",
-        "jss-plugin-camel-case",
-        "jss-plugin-default-unit",
-        "jss-plugin-global",
-        "jss-plugin-nested",
-        "jss-plugin-props-sort",
-        "jss-plugin-props-sort",
-        "jss-plugin-rule-value-function",
-        "jss-plugin-vendor-prefixer",
-        "react-jss"
-      ]
-    },
-    {
       "groupName": "raw-loader",
       "matchPackageNames": ["raw-loader"],
       "allowedVersions": "< 2.0.0"
@@ -82,6 +67,17 @@
     {
       "groupName": "storybook",
       "matchPackagePatterns": "@storybook/*"
+    },
+    {
+      "groupName": "MUI Core",
+      "matchPackageNames": [
+        "@mui/material",
+        "@mui/joy",
+        "@mui/icons-material",
+        "@mui/core",
+        "@mui/system",
+        "@mui/utils"
+      ]
     }
   ],
   "postUpdateOptions": ["yarnDedupeHighest"],
