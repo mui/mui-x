@@ -4,9 +4,8 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { ownerDocument, capitalize } from '@mui/material/utils';
-import { alpha, darken, lighten, styled } from '@mui/material/styles';
 import { GridEvents } from '../../constants/eventsConstants';
-import { getDataGridUtilityClass, gridClasses } from '../../gridClasses';
+import { getDataGridUtilityClass } from '../../gridClasses';
 import {
   GridAlignment,
   GridCellMode,
@@ -76,82 +75,6 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
-
-const GridCellRoot = styled('div', {
-  name: 'MuiDataGrid',
-  slot: 'Cell',
-  overridesResolver: (props, styles) => [
-    { [`&.${gridClasses['cell--editing']}`]: styles['cell--editing'] },
-    { [`&.${gridClasses['cell--textCenter']}`]: styles['cell--textCenter'] },
-    { [`&.${gridClasses['cell--textLeft']}`]: styles['cell--textLeft'] },
-    { [`&.${gridClasses['cell--textRight']}`]: styles['cell--textRight'] },
-    { [`&.${gridClasses['cell--withRenderer']}`]: styles['cell--withRenderer'] },
-    { [`&.${gridClasses.withBorder}`]: styles.withBorder },
-    styles.cell,
-  ],
-})(({ theme }) => {
-  const borderColor =
-    theme.palette.mode === 'light'
-      ? lighten(alpha(theme.palette.divider, 1), 0.88)
-      : darken(alpha(theme.palette.divider, 1), 0.68);
-
-  return {
-    WebkitTapHighlightColor: 'transparent',
-    padding: '0 10px',
-    boxSizing: 'border-box',
-    display: 'block',
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-    whiteSpace: 'nowrap',
-    borderBottom: `1px solid ${borderColor}`,
-    [`&:focus-within`]: {
-      outline: `solid ${alpha(theme.palette.primary.main, 0.5)} 1px`,
-      outlineWidth: 1,
-      outlineOffset: -1,
-    },
-    [`&:focus`]: {
-      outline: `solid ${theme.palette.primary.main} 1px`,
-    },
-    [`&.${gridClasses['cell--editing']}`]: {
-      padding: 1,
-      display: 'flex',
-      boxShadow: theme.shadows[2],
-      backgroundColor: theme.palette.background.paper,
-      '&:focus-within': {
-        outline: `solid ${theme.palette.primary.main} 1px`,
-        outlineOffset: '-1px',
-      },
-    },
-    [`&.${gridClasses.withBorder}`]: {
-      borderRight: `1px solid ${borderColor}`,
-    },
-    [`&.${gridClasses['cell--withRenderer']}`]: {
-      display: 'flex',
-      alignItems: 'center',
-    },
-    [`&.${gridClasses['cell--textLeft']}`]: {
-      textAlign: 'left',
-    },
-    [`&.${gridClasses['cell--textLeft']}.${gridClasses['cell--withRenderer']}, &.${gridClasses['cell--textLeft']}.${gridClasses['cell--editing']}`]:
-      {
-        justifyContent: 'flex-start',
-      },
-    [`&.${gridClasses['cell--textRight']}`]: {
-      textAlign: 'right',
-    },
-    [`&.${gridClasses['cell--textRight']}.${gridClasses['cell--withRenderer']}, &.${gridClasses['cell--textRight']}.${gridClasses['cell--editing']}`]:
-      {
-        justifyContent: 'flex-end',
-      },
-    [`&.${gridClasses['cell--textCenter']}`]: {
-      textAlign: 'center',
-    },
-    [`&.${gridClasses['cell--textCenter']}.${gridClasses['cell--withRenderer']}, &.${gridClasses['cell--textCenter']}.${gridClasses['cell--editing']}`]:
-      {
-        justifyContent: 'center',
-      },
-  };
-});
 
 function GridCell(props: GridCellProps) {
   const {
@@ -259,7 +182,7 @@ function GridCell(props: GridCellProps) {
   });
 
   return (
-    <GridCellRoot
+    <div
       ref={cellRef}
       className={clsx(className, classes.root)}
       role="cell"
@@ -278,7 +201,7 @@ function GridCell(props: GridCellProps) {
       {...other}
     >
       {children != null ? children : valueToRender?.toString()}
-    </GridCellRoot>
+    </div>
   );
 }
 
