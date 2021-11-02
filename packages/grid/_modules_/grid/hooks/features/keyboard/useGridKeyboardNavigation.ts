@@ -132,8 +132,8 @@ export const useGridKeyboardNavigation = (
         const nextRowIndex =
           rowIndex +
           (key.indexOf('Down') > -1 || isSpaceKey(key)
-            ? dimensions.virtualRowsCount
-            : -1 * dimensions.virtualRowsCount);
+            ? dimensions.rowsInViewportCount
+            : -1 * dimensions.rowsInViewportCount);
         nextCellIndexes = { colIndex, rowIndex: nextRowIndex };
       } else {
         throw new Error('MUI: Key not mapped to navigation behavior.');
@@ -185,10 +185,9 @@ export const useGridKeyboardNavigation = (
       } else if (isPageKeys(key)) {
         // Handle only Page Down key, Page Up should keep the current position
         if (key.indexOf('Down') > -1) {
-          const rowsInViewportCount = dimensions.virtualRowsCount;
+          const rowsInViewportCount = dimensions.rowsInViewportCount;
           const field = apiRef.current.getVisibleColumns()[colIndex].field;
           const id = apiRef.current.getRowIdFromRowIndex(rowsInViewportCount - 1);
-
           apiRef.current.setCellFocus(id, field);
         }
         return;

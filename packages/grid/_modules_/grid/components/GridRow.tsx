@@ -85,7 +85,10 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
   const columnsMeta = useGridSelector(apiRef, gridColumnsMetaSelector);
-  const { hasScrollX, hasScrollY } = apiRef.current.getGridDimensions()!;
+  const { hasScrollX, hasScrollY } = apiRef.current.getGridDimensions() ?? {
+    hasScrollX: false,
+    hasScrollY: false,
+  };
 
   const ownerState = {
     selected,
