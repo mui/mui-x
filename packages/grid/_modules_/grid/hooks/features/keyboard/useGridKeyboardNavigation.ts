@@ -142,10 +142,11 @@ export const useGridKeyboardNavigation = (
         return;
       }
 
-      nextCellIndexes.rowIndex = Math.max(0, nextCellIndexes.rowIndex);
-      nextCellIndexes.rowIndex = Math.min(currentPage.range.lastRowIndex, nextCellIndexes.rowIndex);
-      nextCellIndexes.colIndex = Math.max(0, nextCellIndexes.colIndex);
-      nextCellIndexes.colIndex = Math.min(colCount - 1, nextCellIndexes.colIndex);
+      nextCellIndexes.rowIndex = Math.max(
+        0,
+        Math.min(currentPage.range.lastRowIndex, nextCellIndexes.rowIndex),
+      );
+      nextCellIndexes.colIndex = Math.max(0, Math.min(colCount - 1, nextCellIndexes.colIndex));
       logger.debug(
         `Navigating to next cell row ${nextCellIndexes.rowIndex}, col ${nextCellIndexes.colIndex}`,
       );
