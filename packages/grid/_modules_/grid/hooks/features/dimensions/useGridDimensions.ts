@@ -77,13 +77,22 @@ export function useGridDimensions(
       : visibleRowsCount;
     const pageScrollHeight = virtualRowsCount * rowHeight;
 
-    let hasScrollX = columnsTotalWidth > viewportOuterSize.width;
-    const hasScrollY =
-      pageScrollHeight + (hasScrollX ? scrollBarSize : 0) > viewportOuterSize.height;
+    const hasScrollXIfNoYScrollBar = Math.round(columnsTotalWidth) > viewportOuterSize.width;
+    const hasScrollYIfNoXScrollBar = pageScrollHeight > viewportOuterSize.height;
 
-    // We recalculate the scroll x to consider the size of the y scrollbar.
-    if (hasScrollY) {
-      hasScrollX = columnsTotalWidth + scrollBarSize > viewportOuterSize.width;
+    let hasScrollX: boolean;
+    let hasScrollY: boolean;
+    if (!hasScrollXIfNoYScrollBar && !hasScrollYIfNoXScrollBar) {
+      hasScrollX = false;
+      hasScrollY = false;
+    } else {
+      hasScrollX = hasScrollXIfNoYScrollBar;
+      hasScrollY = pageScrollHeight + (hasScrollX ? scrollBarSize : 0) > viewportOuterSize.height;
+
+      // We recalculate the scroll x to consider the size of the y scrollbar.
+      if (hasScrollY) {
+        hasScrollX = columnsTotalWidth + scrollBarSize > viewportOuterSize.width;
+      }
     }
 
     const viewportInnerSize: ElementSize = {

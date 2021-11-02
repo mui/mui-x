@@ -22,11 +22,11 @@ export const gridColumnsMetaSelector = createSelector(
     const positions: number[] = [];
 
     const totalWidth = visibleColumns.reduce((acc, curCol) => {
-      positions.push(acc);
+      positions.push(Math.round(acc));
       return acc + curCol.computedWidth;
     }, 0);
 
-    return { totalWidth, positions };
+    return { totalWidth: Math.round(totalWidth), positions };
   },
 );
 
