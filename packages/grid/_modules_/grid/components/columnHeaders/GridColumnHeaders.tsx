@@ -191,7 +191,7 @@ export const GridColumnsHeader = React.forwardRef<HTMLDivElement, any>(function 
   return (
     <div
       ref={handleRef}
-      className={clsx(classes.wrapper, apiRef.current.getDimensions()?.hasScrollX && 'scroll')}
+      className={clsx(classes.wrapper, apiRef.current.getGridDimensions()?.hasScrollX && 'scroll')}
       aria-rowindex={1}
       role="row"
     >

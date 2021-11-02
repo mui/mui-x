@@ -99,7 +99,7 @@ export const useGridKeyboardNavigation = (
 
       const key = mapKey(event);
       const isCtrlPressed = event.ctrlKey || event.metaKey || event.shiftKey;
-      const dimensions = apiRef.current.getDimensions();
+      const dimensions = apiRef.current.getGridDimensions();
       if (!dimensions) {
         return;
       }
@@ -185,7 +185,7 @@ export const useGridKeyboardNavigation = (
       let nextColumnHeaderIndexes: GridColumnHeaderIndexCoordinates | null;
       const colIndex = apiRef.current.getColumnIndex(params.field);
       const key = mapKey(event);
-      const dimensions = apiRef.current.getDimensions();
+      const dimensions = apiRef.current.getGridDimensions();
       if (!dimensions) {
         return;
       }

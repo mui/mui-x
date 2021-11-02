@@ -205,7 +205,7 @@ export function useGridColumns(
 
   const setColumnsState = React.useCallback(
     (newState: RawGridColumnsState, emit?: boolean) => {
-      const dimensions = apiRef.current.getDimensions();
+      const dimensions = apiRef.current.getGridDimensions();
       if (!dimensions) {
         return;
       }
