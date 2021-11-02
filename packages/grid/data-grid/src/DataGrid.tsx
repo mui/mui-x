@@ -13,6 +13,7 @@ import { GridContextProvider } from '../../_modules_/grid/context/GridContextPro
 import { useDataGridComponent } from './useDataGridComponent';
 import { MAX_PAGE_SIZE, DataGridProps } from './DataGridProps';
 import { useDataGridProps } from './useDataGridProps';
+import { DataGridColumnHeaders } from './DataGridColumnHeaders';
 
 const DataGridRaw = React.forwardRef<HTMLDivElement, DataGridProps>(function DataGrid(
   inProps,
@@ -27,7 +28,7 @@ const DataGridRaw = React.forwardRef<HTMLDivElement, DataGridProps>(function Dat
       <GridRoot ref={ref}>
         <GridErrorHandler>
           <GridHeaderPlaceholder />
-          <GridBody />
+          <GridBody ColumnHeadersComponent={DataGridColumnHeaders} />
           <GridFooterPlaceholder />
         </GridErrorHandler>
       </GridRoot>

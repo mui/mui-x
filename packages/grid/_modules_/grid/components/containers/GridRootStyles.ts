@@ -30,8 +30,12 @@ export const GridRootStyles = styled('div', {
     { [`& .${gridClasses.columnHeaderDropZone}`]: styles.columnHeaderDropZone },
     { [`& .${gridClasses.columnHeaderTitle}`]: styles.columnHeaderTitle },
     { [`& .${gridClasses.columnHeaderTitleContainer}`]: styles.columnHeaderTitleContainer },
-    { [`& .${gridClasses.columnHeaderWrapper}`]: styles.columnHeaderWrapper },
-    { [`& .${gridClasses.columnsContainer}`]: styles.columnsContainer },
+    { [`& .${gridClasses.columnHeaders}`]: styles.columnHeaders },
+    { [`& .${gridClasses.columnHeadersInner}`]: styles.columnHeadersInner },
+    {
+      [`& .${gridClasses['columnHeadersInner--scrollable']}`]:
+        styles['columnHeadersInner--scrollable'],
+    },
     { [`& .${gridClasses['columnSeparator--resizable']}`]: styles['columnSeparator--resizable'] },
     { [`& .${gridClasses['columnSeparator--resizing']}`]: styles['columnSeparator--resizing'] },
     { [`& .${gridClasses.columnSeparator}`]: styles.columnSeparator },
@@ -101,16 +105,6 @@ export const GridRootStyles = styled('div', {
         theme.palette.action.disabledOpacity,
       ),
     },
-    [`& .${gridClasses.columnsContainer}`]: {
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      right: 0,
-      overflow: 'hidden',
-      display: 'flex',
-      alignItems: 'center',
-      borderBottom: `1px solid ${borderColor}`,
-    },
     [`& .${gridClasses.scrollArea}`]: {
       position: 'absolute',
       top: 0,
@@ -123,10 +117,6 @@ export const GridRootStyles = styled('div', {
     },
     [`& .${gridClasses['scrollArea--right']}`]: {
       right: 0,
-    },
-    [`& .${gridClasses.columnHeaderWrapper}`]: {
-      display: 'flex',
-      alignItems: 'center',
     },
     [`& .${gridClasses.columnHeader}, & .${gridClasses.cell}`]: {
       WebkitTapHighlightColor: 'transparent',
@@ -255,9 +245,6 @@ export const GridRootStyles = styled('div', {
     [`.${gridClasses.menuOpen}`]: {
       visibility: 'visible',
     },
-    [`& .${gridClasses.columnHeaderWrapper}.scroll .${gridClasses.columnHeader}:last-child`]: {
-      borderRight: 'none',
-    },
     [`& .${gridClasses.row}`]: {
       display: 'flex',
       width: 'fit-content',
@@ -334,10 +321,6 @@ export const GridRootStyles = styled('div', {
       display: 'inline-flex',
       alignItems: 'center',
       gridGap: theme.spacing(1),
-    },
-    // The very last cell
-    [`& .${gridClasses.columnHeaderWrapper} .${gridClasses.cell}`]: {
-      borderBottom: 'none',
     },
     [`& .${gridClasses['cell--withRenderer']}`]: {
       display: 'flex',
