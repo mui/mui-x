@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { EventManager, EventListenerOptions } from '../../utils/EventManager';
 import { GridEventPublisher, GridEventListener, GridEventsStr } from '../events';
+import { EventManager, EventListenerOptions } from '../../utils/EventManager';
 
 /**
  * The core API interface that is available in the grid `apiRef`.
