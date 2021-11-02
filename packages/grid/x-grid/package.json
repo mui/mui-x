@@ -41,10 +41,10 @@
     "@mui/x-license-pro": "5.0.0-beta.6",
     "clsx": "^1.0.4",
     "prop-types": "^15.7.2",
-    "reselect": "^4.0.0"
+    "reselect": "^4.1.1"
   },
   "peerDependencies": {
-    "@mui/material": "^5.0.4",
+    "@mui/material": "^5.0.6",
     "react": "^17.0.2"
   },
   "setupFiles": [

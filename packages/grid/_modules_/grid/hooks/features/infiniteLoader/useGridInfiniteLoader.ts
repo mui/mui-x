@@ -2,7 +2,7 @@ import * as React from 'react';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { useGridSelector } from '../../utils/useGridSelector';
 import { GridEvents } from '../../../constants/eventsConstants';
-import { gridContainerSizesSelector } from '../container/gridContainerSizesSelector';
+import { unstable_gridContainerSizesSelector } from '../container/gridContainerSizesSelector';
 import {
   useGridApiEventHandler,
   useGridApiOptionHandler,
@@ -27,7 +27,7 @@ export const useGridInfiniteLoader = (
     'onRowsScrollEnd' | 'scrollEndThreshold' | 'pagination' | 'paginationMode'
   >,
 ): void => {
-  const containerSizes = useGridSelector(apiRef, gridContainerSizesSelector);
+  const containerSizes = useGridSelector(apiRef, unstable_gridContainerSizesSelector);
   const visibleColumns = useGridSelector(apiRef, visibleGridColumnsSelector);
   const currentPage = useCurrentPageRows(apiRef, props);
   const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);

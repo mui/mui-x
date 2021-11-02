@@ -6,7 +6,7 @@ import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { useGridSelector } from '../hooks/utils/useGridSelector';
-import { gridScrollBarSizeSelector } from '../hooks/features/container/gridContainerSizesSelector';
+import { unstable_gridScrollBarSizeSelector } from '../hooks/features/container/gridContainerSizesSelector';
 import {
   visibleGridColumnsSelector,
   gridColumnsMetaSelector,
@@ -111,7 +111,7 @@ const GridVirtualScroller = React.forwardRef<HTMLDivElement, GridVirtualScroller
     const cellFocus = useGridSelector(apiRef, gridFocusCellSelector);
     const cellTabIndex = useGridSelector(apiRef, gridTabIndexCellSelector);
     const editRowsState = useGridSelector(apiRef, gridEditRowsStateSelector);
-    const scrollBarState = useGridSelector(apiRef, gridScrollBarSizeSelector);
+    const scrollBarState = useGridSelector(apiRef, unstable_gridScrollBarSizeSelector);
     const currentPage = useCurrentPageRows(apiRef, rootProps);
     const renderZoneRef = React.useRef<HTMLDivElement>(null);
     const rootRef = React.useRef<HTMLDivElement>(null);
