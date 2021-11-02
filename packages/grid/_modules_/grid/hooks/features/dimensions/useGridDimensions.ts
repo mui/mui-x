@@ -17,7 +17,7 @@ import { GridDimensions, GridDimensionsApi } from './gridDimensionsApi';
 import { gridColumnsTotalWidthSelector } from '../columns';
 import { gridPaginationSelector } from '../pagination';
 import { gridVisibleRowCountSelector } from '../filter';
-import { gridDensityRowHeightSelector } from '../density';
+import { gridDensityHeaderHeightSelector, gridDensityRowHeightSelector } from '../density';
 import { useGridSelector } from '../../utils';
 
 const isTestEnvironment = process.env.NODE_ENV === 'test';
@@ -26,7 +26,7 @@ export function useGridDimensions(
   apiRef: GridApiRef,
   props: Pick<
     GridComponentProps,
-    'rows' | 'onResize' | 'scrollbarSize' | 'pagination' | 'headerHeight' | 'autoHeight'
+    'rows' | 'onResize' | 'scrollbarSize' | 'pagination' | 'autoHeight'
   >,
 ) {
   const logger = useGridLogger(apiRef, 'useResizeContainer');
@@ -37,6 +37,7 @@ export function useGridDimensions(
   const paginationState = useGridSelector(apiRef, gridPaginationSelector);
   const visibleRowsCount = useGridSelector(apiRef, gridVisibleRowCountSelector);
   const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
+  const headerHeight = useGridSelector(apiRef, gridDensityHeaderHeightSelector);
 
   const updateGridDimensionsRef = React.useCallback(() => {
     const rootElement = apiRef.current.rootElementRef?.current;
@@ -65,7 +66,7 @@ export function useGridDimensions(
 
     const viewportOuterSize: ElementSize = {
       width: rootDimensionsRef.current.width,
-      height: rootDimensionsRef.current.height - props.headerHeight,
+      height: rootDimensionsRef.current.height - headerHeight,
     };
 
     // TODO: Use `useCurrentPageRows`
@@ -134,8 +135,8 @@ export function useGridDimensions(
   }, [
     apiRef,
     props.pagination,
-    props.headerHeight,
     props.scrollbarSize,
+    headerHeight,
     rowHeight,
     visibleRowsCount,
     paginationState,
