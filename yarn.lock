@@ -2302,9 +2302,9 @@
   dependencies:
     "@babel/runtime" "^7.14.8"
 
-"@material-ui/monorepo@https://github.com/m4theushw/material-ui-fork.git#master":
+"@material-ui/monorepo@https://github.com/flaviendelangle/material-ui.git#master":
   version "5.0.6"
-  resolved "https://github.com/m4theushw/material-ui-fork.git#7a24bc10f4fe0a2e9a07b391e2d4f649f266b06b"
+  resolved "https://github.com/flaviendelangle/material-ui.git#37ab548040e32e7cd1b083e9c1171ea6ce532031"
 
 "@material-ui/private-theming@5.0.0-beta.5":
   version "5.0.0-beta.5"
