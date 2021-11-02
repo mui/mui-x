@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridEvents } from '../../../models/events';
+import { GridEventListener, GridEvents } from '../../../models/events';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridColumnApi } from '../../../models/api/gridColumnApi';
 import {
@@ -355,7 +355,9 @@ export function useGridColumns(
     setColumnsState(apiRef.current.state.columns);
   }, [apiRef, setColumnsState, viewportSizes, logger]);
 
-  const handlePreProcessColumns = React.useCallback(() => {
+  const handlePreProcessColumns = React.useCallback<
+    GridEventListener<GridEvents.columnsPreProcessingChange>
+  >(() => {
     logger.info(`Columns pre-processing have changed, regenerating the columns`);
 
     const hydratedColumns = hydrateColumnsType(props.columns, props.columnTypes);

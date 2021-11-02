@@ -62,7 +62,7 @@
     "@emotion/react": "^11.5.0",
     "@emotion/styled": "^11.3.0",
     "@eps1lon/enzyme-adapter-react-17": "^0.1.0",
-    "@material-ui/monorepo": "https://github.com/flaviendelangle/material-ui.git#master",
+    "@material-ui/monorepo": "https://github.com/flaviendelangle/material-ui.git#generatePropDescription",
     "@mui/icons-material": "^5.0.5",
     "@mui/material": "^5.0.6",
     "@mui/styles": "^5.0.2",

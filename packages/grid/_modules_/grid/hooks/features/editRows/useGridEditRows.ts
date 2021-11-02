@@ -3,7 +3,6 @@ import { useEventCallback } from '@mui/material/utils';
 import { GridEvents } from '../../../models/events';
 import { GridComponentProps } from '../../../GridComponentProps';
 import { GridApiRef } from '../../../models/api/gridApiRef';
-import { GridRowId } from '../../../models/gridRows';
 import { GridEditRowApi } from '../../../models/api/gridEditRowApi';
 import { GridCellMode } from '../../../models/gridCell';
 import {
@@ -17,7 +16,6 @@ import {
   GridEditCellPropsParams,
   GridEditCellValueParams,
   GridCellEditCommitParams,
-  GridCommitCellChangeParams,
 } from '../../../models/params/gridEditCellParams';
 import {
   isPrintableKey,
@@ -244,8 +242,10 @@ export function useGridEditRows(
     [apiRef, forceUpdate, logger, setGridState],
   );
 
-  const handleEditCellPropsChange = React.useCallback(
-    (params: GridEditCellPropsParams) => {
+  const handleEditCellPropsChange = React.useCallback<
+    GridEventListener<GridEvents.editCellPropsChange>
+  >(
+    (params) => {
       setEditCellProps(params);
     },
     [setEditCellProps],
@@ -288,8 +288,8 @@ export function useGridEditRows(
     [apiRef],
   );
 
-  const handleCellEditCommit = React.useCallback(
-    (params: GridCommitCellChangeParams) => {
+  const handleCellEditCommit = React.useCallback<GridEventListener<GridEvents.cellEditCommit>>(
+    (params) => {
       if (props.editMode === GridEditModes.Row) {
         throw new Error(`MUI: You can't commit changes when the edit mode is 'row'.`);
       }
@@ -375,8 +375,8 @@ export function useGridEditRows(
     [apiRef],
   );
 
-  const handleRowEditCommit = React.useCallback(
-    (id: GridRowId) => {
+  const handleRowEditCommit = React.useCallback<GridEventListener<GridEvents.rowEditCommit>>(
+    (id) => {
       const model = apiRef.current.getEditRowsModel();
       const editRow = model[id];
       if (!editRow) {
