@@ -143,7 +143,7 @@ export function useGridDimensions(
     getGridDimensions,
   };
 
-  useGridApiMethod(apiRef, dimensionsApi, 'GridEventsApi');
+  useGridApiMethod(apiRef, dimensionsApi, 'GridDimensionsApi');
 
   const debounceResize = React.useMemo(() => debounce(resize, 60), [resize]);
 

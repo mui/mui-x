@@ -10,15 +10,15 @@ export interface GridDimensions {
    */
   viewportInnerSize: ElementSize;
   /**
-   * The maximum amount of rows that could fit into the viewport without needing a scrollBar
+   * The maximum amount of rows that could fit into the viewport without needing a scrollBar.
    */
   maximumPageSizeWithoutScrollBar: number;
   /**
-   * The amount of rows fully visible
+   * The amount of rows fully visible.
    */
   rowsInViewportCount: number;
   /**
-   * Amount of rows in the current page
+   * Amount of rows in the current page.
    */
   virtualRowsCount: number;
   hasScrollX: boolean;
