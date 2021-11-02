@@ -23,6 +23,7 @@ import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { GridComponentProps } from '../../../GridComponentProps';
 import { gridVisibleSortedRowEntriesSelector } from '../filter/gridFilterSelector';
 import { useCurrentPageRows } from '../../utils/useCurrentPageRows';
+import { setInInterval } from '../../../utils/utils';
 
 const getNextCellIndexes = (key: string, indexes: GridCellIndexCoordinates) => {
   if (!isArrowKeys(key)) {
@@ -142,11 +143,12 @@ export const useGridKeyboardNavigation = (
         return;
       }
 
-      nextCellIndexes.rowIndex = Math.max(
+      nextCellIndexes.rowIndex = setInInterval(
+        nextCellIndexes.rowIndex,
         0,
-        Math.min(currentPage.range.lastRowIndex, nextCellIndexes.rowIndex),
+        currentPage.range.lastRowIndex,
       );
-      nextCellIndexes.colIndex = Math.max(0, Math.min(colCount - 1, nextCellIndexes.colIndex));
+      nextCellIndexes.colIndex = setInInterval(nextCellIndexes.colIndex, 0, colCount - 1);
       logger.debug(
         `Navigating to next cell row ${nextCellIndexes.rowIndex}, col ${nextCellIndexes.colIndex}`,
       );
