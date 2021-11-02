@@ -102,7 +102,6 @@ export const useGridKeyboardNavigation = (
 
       const key = mapKey(event);
       const isCtrlPressed = event.ctrlKey || event.metaKey || event.shiftKey;
-      const rowCount = currentPage.range.lastRowIndex - currentPage.range.firstRowIndex + 1;
 
       let nextCellIndexes: GridCellIndexCoordinates;
       if (isArrowKeys(key)) {
@@ -122,7 +121,7 @@ export const useGridKeyboardNavigation = (
           if (colIdx === 0) {
             newRowIndex = currentPage.range.firstRowIndex;
           } else {
-            newRowIndex = rowCount - 1;
+            newRowIndex = currentPage.range.lastRowIndex;
           }
           nextCellIndexes = { colIndex: colIdx, rowIndex: newRowIndex };
         }
@@ -144,8 +143,9 @@ export const useGridKeyboardNavigation = (
       }
 
       nextCellIndexes.rowIndex =
-        nextCellIndexes.rowIndex >= rowCount && rowCount > 0
-          ? rowCount - 1
+        nextCellIndexes.rowIndex >= currentPage.range.lastRowIndex &&
+        currentPage.range.lastRowIndex > 0
+          ? currentPage.range.lastRowIndex
           : nextCellIndexes.rowIndex;
       nextCellIndexes.colIndex = nextCellIndexes.colIndex <= 0 ? 0 : nextCellIndexes.colIndex;
       nextCellIndexes.colIndex =
