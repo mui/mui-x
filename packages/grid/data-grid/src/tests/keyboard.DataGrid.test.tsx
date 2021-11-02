@@ -20,7 +20,7 @@ import {
   getColumnValues,
   getRow,
 } from 'test/utils/helperFn';
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGrid, DataGridProps } from '@mui/x-data-grid';
 import { useData } from 'packages/storybook/src/hooks/useData';
 import { GridColumns } from 'packages/grid/_modules_/grid/models/colDef/gridColDef';
 
@@ -128,26 +128,24 @@ describe('<DataGrid /> - Keyboard', () => {
     expect(handleKeyDown.returnValues).to.deep.equal([true]);
   });
 
-  const KeyboardTest = (props: {
-    nbRows?: number;
-    checkboxSelection?: boolean;
-    disableVirtualization?: boolean;
-    filterModel?: any;
-    width?: number;
-  }) => {
-    const data = useData(props.nbRows || 100, 20);
+  const KeyboardTest = (
+    props: Omit<DataGridProps, 'autoHeight' | 'rows' | 'columns'> & {
+      width?: number;
+      nbRows?: number;
+    },
+  ) => {
+    const { nbRows = 100, width = 300, ...other } = props;
+    const data = useData(nbRows, 20);
     const transformColSizes = (columns: GridColumns) =>
       columns.map((column) => ({ ...column, width: 60 }));
 
     return (
-      <div style={{ width: props.width || 300, height: 360 }}>
+      <div style={{ width, height: 360 }}>
         <DataGrid
           autoHeight={isJSDOM}
           rows={data.rows}
           columns={transformColSizes(data.columns)}
-          checkboxSelection={props.checkboxSelection}
-          disableVirtualization={props.disableVirtualization}
-          filterModel={props.filterModel}
+          {...other}
         />
       </div>
     );
@@ -201,6 +199,16 @@ describe('<DataGrid /> - Keyboard', () => {
     expect(getActiveCell()).to.equal('1-0');
     fireEvent.keyDown(document.activeElement!, { key: 'ArrowUp' });
     expect(getActiveCell()).to.equal('0-0');
+  });
+
+  it('should support cell navigation with arrows when page > 0', () => {
+    render(<KeyboardTest nbRows={10} page={1} pageSize={2} rowsPerPageOptions={[2]} />);
+    getCell(2, 0).focus();
+    expect(getActiveCell()).to.equal('2-0');
+    fireEvent.keyDown(document.activeElement!, { key: 'ArrowDown' });
+    expect(getActiveCell()).to.equal('3-0');
+    fireEvent.keyDown(document.activeElement!, { key: 'ArrowUp' });
+    expect(getActiveCell()).to.equal('2-0');
   });
 
   it('should support cell navigation with arrows when rows are filtered', () => {

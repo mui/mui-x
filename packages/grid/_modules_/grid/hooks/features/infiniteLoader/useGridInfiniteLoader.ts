@@ -10,9 +10,8 @@ import { GridRowScrollEndParams } from '../../../models/params/gridRowScrollEndP
 import { visibleGridColumnsSelector } from '../columns/gridColumnsSelector';
 import { GridComponentProps } from '../../../GridComponentProps';
 import { GridScrollParams } from '../../../models/params/gridScrollParams';
-import { gridVisibleSortedRowEntriesSelector } from '../filter/gridFilterSelector';
-import { gridPaginationSelector } from '../pagination/gridPaginationSelector';
 import { gridDensityRowHeightSelector } from '../density/densitySelector';
+import { useCurrentPageRows } from '../../utils/useCurrentPageRows';
 
 /**
  * Only available in DataGridPro
@@ -28,25 +27,9 @@ export const useGridInfiniteLoader = (
   >,
 ): void => {
   const visibleColumns = useGridSelector(apiRef, visibleGridColumnsSelector);
-  const visibleSortedRowEntries = useGridSelector(apiRef, gridVisibleSortedRowEntriesSelector);
-  const paginationState = useGridSelector(apiRef, gridPaginationSelector);
+  const currentPage = useCurrentPageRows(apiRef, props);
   const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
-
-  const rowsInCurrentPage = React.useMemo(() => {
-    if (props.pagination && props.paginationMode === 'client') {
-      const start = paginationState.pageSize * paginationState.page;
-      return visibleSortedRowEntries.slice(start, start + paginationState.pageSize);
-    }
-    return visibleSortedRowEntries;
-  }, [
-    paginationState.page,
-    paginationState.pageSize,
-    props.pagination,
-    props.paginationMode,
-    visibleSortedRowEntries,
-  ]);
-
-  const contentHeight = Math.max(rowsInCurrentPage.length * rowHeight, 1);
+  const contentHeight = Math.max(currentPage.rows.length * rowHeight, 1);
 
   const isInScrollBottomArea = React.useRef<boolean>(false);
 

@@ -263,6 +263,11 @@ export enum GridEvents {
    */
   rowsSet = 'rowsSet',
   /**
+   * Fired when the expansion of a row is changed. Called with a [[GridRowTreeNodeConfig]] object.
+   * @ignore - do not document.
+   */
+  rowExpansionChange = 'rowExpansionChange',
+  /**
    * Fired when the visible rows are updated
    * @ignore - do not document.
    */
@@ -274,12 +279,12 @@ export enum GridEvents {
   columnsChange = 'columnsChange',
   /**
    * Fired when a column pre-processing is changed
-   * @ignore - do not document
+   * @ignore - do not document.
    */
   columnsPreProcessingChange = 'columnsPreProcessingChange',
   /**
    * Fired when the row grouping function is changed
-   * @ignore - do not document
+   * @ignore - do not document.
    */
   rowGroupsPreProcessingChange = 'rowGroupsPreProcessingChange',
   /**
