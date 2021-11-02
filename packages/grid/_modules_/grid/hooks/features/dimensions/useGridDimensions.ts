@@ -133,14 +133,14 @@ export function useGridDimensions(
     apiRef.current.publishEvent(GridEvents.debouncedResize, rootDimensionsRef.current);
   }, [apiRef, updateGridDimensionsRef]);
 
-  const getGridDimensions = React.useCallback<GridDimensionsApi['getGridDimensions']>(
+  const getRootDimensions = React.useCallback<GridDimensionsApi['getRootDimensions']>(
     () => fullDimensionsRef.current,
     [],
   );
 
   const dimensionsApi: GridDimensionsApi = {
     resize,
-    getGridDimensions,
+    getRootDimensions,
   };
 
   useGridApiMethod(apiRef, dimensionsApi, 'GridDimensionsApi');

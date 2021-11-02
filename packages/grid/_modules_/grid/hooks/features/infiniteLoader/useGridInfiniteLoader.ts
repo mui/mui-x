@@ -35,7 +35,7 @@ export const useGridInfiniteLoader = (
 
   const handleRowsScrollEnd = React.useCallback(
     (scrollPosition: GridScrollParams) => {
-      const dimensions = apiRef.current.getGridDimensions();
+      const dimensions = apiRef.current.getRootDimensions();
       if (!dimensions) {
         return;
       }
