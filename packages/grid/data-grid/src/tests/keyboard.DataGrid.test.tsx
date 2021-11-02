@@ -128,7 +128,6 @@ describe('<DataGrid /> - Keyboard', () => {
     expect(handleKeyDown.returnValues).to.deep.equal([true]);
   });
 
-  // TODO: Clean to allow passing any ad
   const KeyboardTest = (
     props: Omit<DataGridProps, 'autoHeight' | 'rows' | 'columns'> & {
       width?: number;
