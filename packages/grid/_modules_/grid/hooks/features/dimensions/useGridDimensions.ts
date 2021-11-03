@@ -74,8 +74,6 @@ export function useGridDimensions(
         : rootDimensionsRef.current.height - headerHeight,
     };
 
-    console.log(viewportOuterSize);
-
     const hasScrollXIfNoYScrollBar = Math.round(columnsTotalWidth) > viewportOuterSize.width;
     const hasScrollYIfNoXScrollBar = pageScrollHeight > viewportOuterSize.height;
 
