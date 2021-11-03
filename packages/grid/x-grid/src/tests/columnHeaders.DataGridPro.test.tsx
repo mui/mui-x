@@ -83,10 +83,7 @@ describe('<DataGridPro /> - Column Headers', () => {
       const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]');
       fireEvent.click(menuIconButton);
       await waitFor(() => expect(screen.queryByRole('menu')).not.to.equal(null));
-
-      const ascSortButton = document.querySelector('[data-value="asc"]');
-      fireEvent.click(ascSortButton);
-
+      fireEvent.click(screen.getByRole('menuitem', { name: 'Sort by ASC' }));
       expect(getColumnValues(0)).to.deep.equal(['Adidas', 'Nike', 'Puma']);
     });
 
