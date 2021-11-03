@@ -134,6 +134,7 @@ GridFilterInputValue.propTypes = {
   // ----------------------------------------------------------------------
   apiRef: PropTypes.any.isRequired,
   applyValue: PropTypes.func.isRequired,
+  hasFocus: PropTypes.bool,
   item: PropTypes.shape({
     columnField: PropTypes.string,
     id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
