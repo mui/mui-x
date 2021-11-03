@@ -1,0 +1,7 @@
+<DataGrid
+  components={{
+    NoRowsOverlay: CustomNoRowsOverlay,
+  }}
+  rows={[]}
+  columns={data.columns}
+/>
