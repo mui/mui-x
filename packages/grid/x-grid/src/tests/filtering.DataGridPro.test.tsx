@@ -237,6 +237,32 @@ describe('<DataGridPro /> - Filter', () => {
     expect(getColumnValues()).to.deep.equal([]);
   });
 
+  it('should call onFilterModelChange when the value is emptied', () => {
+    const onFilterModelChange = spy();
+    render(
+      <TestCase
+        onFilterModelChange={onFilterModelChange}
+        filterModel={{
+          items: [
+            {
+              id: 1,
+              columnField: 'brand',
+              value: 'a',
+              operatorValue: 'contains',
+            },
+          ],
+        }}
+        initialState={{
+          preferencePanel: { openedPanelValue: GridPreferencePanelsValue.filters, open: true },
+        }}
+      />,
+    );
+    expect(onFilterModelChange.callCount).to.equal(0);
+    fireEvent.change(screen.queryByRole('textbox', { name: 'Value' }), { target: { value: '' } });
+    clock.tick(500);
+    expect(onFilterModelChange.callCount).to.equal(1);
+  });
+
   it('should only select visible rows', () => {
     const newModel: GridFilterModel = {
       items: [
