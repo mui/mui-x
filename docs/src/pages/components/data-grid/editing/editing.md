@@ -77,7 +77,7 @@ The following demo shows how these two functions can be used:
 
 ### Client-side validation
 
-To validate the value in the cells, first add an `onEditCellPropsChange` callback to the [column definition](/api/data-grid/grid-col-def/) of the respective field to validate.
+To validate the value in the cells, first add an `preProcessEditCellProps` callback to the [column definition](/api/data-grid/grid-col-def/) of the respective field to validate.
 Once it is called, validate the value provided in `params.props.value`.
 Then, return a new object contaning `params.props` and also the `error` attribute set to true or false.
 If the `error` attribute is true, the value will never be committed.
@@ -86,7 +86,7 @@ If the `error` attribute is true, the value will never be committed.
 const columns: GridColDef[] = [
   {
     field: 'firstName',
-    onEditCellPropsChange: (params: GridEditCellPropsChangeParams) => {
+    preProcessEditCellProps: (params: GridEditCellPropsChangeParams) => {
       const hasError = params.props.value.length < 3;
       return { ...params.props, error: hasError };
     },
@@ -104,7 +104,7 @@ Here is an example implementing an email validation:
 ### Server-side validation
 
 Server-side validation works like client-side [validation](#client-side-validation).
-The only difference is that when `onEditCellPropsChange` is called, a promise must be returned.
+The only difference is that when `preProcessEditCellProps` is called, a promise must be returned.
 Once the value is validated in the server, that promise should be resolved with a new object containing the `error` attribute set to true or false.
 The grid will wait for the promise to be resolved before exiting the edit mode.
 

@@ -378,7 +378,7 @@ export function useGridEditRows(
   );
 
   const commitRowChange = React.useCallback<GridEditRowApi['commitRowChange']>(
-    (id: GridRowId, event?: React.SyntheticEvent): boolean | Promise<Boolean> => {
+    (id: GridRowId, event?: React.SyntheticEvent): boolean | Promise<boolean> => {
       if (props.editMode === GridEditModes.Cell) {
         throw new Error(`MUI: You can't commit changes when the edit mode is 'cell'.`);
       }
