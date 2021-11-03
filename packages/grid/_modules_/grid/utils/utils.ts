@@ -32,5 +32,5 @@ export function escapeRegExp(value: string): string {
   return value.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
 }
 
-export const setInInterval = (value: number, min: number, max: number) =>
+export const clipNumber = (value: number, min: number, max: number) =>
   Math.min(max, Math.max(min, value));
