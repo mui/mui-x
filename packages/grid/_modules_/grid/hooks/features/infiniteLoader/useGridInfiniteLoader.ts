@@ -2,7 +2,7 @@ import * as React from 'react';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { useGridSelector } from '../../utils/useGridSelector';
 import { GridEvents } from '../../../constants/eventsConstants';
-import { gridContainerSizesSelector } from '../container/gridContainerSizesSelector';
+import { unstable_gridContainerSizesSelector } from '../container/gridContainerSizesSelector';
 import {
   useGridApiEventHandler,
   useGridApiOptionHandler,
@@ -11,9 +11,8 @@ import { GridRowScrollEndParams } from '../../../models/params/gridRowScrollEndP
 import { visibleGridColumnsSelector } from '../columns/gridColumnsSelector';
 import { GridComponentProps } from '../../../GridComponentProps';
 import { GridScrollParams } from '../../../models/params/gridScrollParams';
-import { gridVisibleSortedRowEntriesSelector } from '../filter/gridFilterSelector';
-import { gridPaginationSelector } from '../pagination/gridPaginationSelector';
 import { gridDensityRowHeightSelector } from '../density/densitySelector';
+import { useCurrentPageRows } from '../../utils/useCurrentPageRows';
 
 /**
  * Only available in DataGridPro
@@ -28,27 +27,11 @@ export const useGridInfiniteLoader = (
     'onRowsScrollEnd' | 'scrollEndThreshold' | 'pagination' | 'paginationMode'
   >,
 ): void => {
-  const containerSizes = useGridSelector(apiRef, gridContainerSizesSelector);
+  const containerSizes = useGridSelector(apiRef, unstable_gridContainerSizesSelector);
   const visibleColumns = useGridSelector(apiRef, visibleGridColumnsSelector);
-  const visibleSortedRowEntries = useGridSelector(apiRef, gridVisibleSortedRowEntriesSelector);
-  const paginationState = useGridSelector(apiRef, gridPaginationSelector);
+  const currentPage = useCurrentPageRows(apiRef, props);
   const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
-
-  const rowsInCurrentPage = React.useMemo(() => {
-    if (props.pagination && props.paginationMode === 'client') {
-      const start = paginationState.pageSize * paginationState.page;
-      return visibleSortedRowEntries.slice(start, start + paginationState.pageSize);
-    }
-    return visibleSortedRowEntries;
-  }, [
-    paginationState.page,
-    paginationState.pageSize,
-    props.pagination,
-    props.paginationMode,
-    visibleSortedRowEntries,
-  ]);
-
-  const contentHeight = Math.max(rowsInCurrentPage.length * rowHeight, 1);
+  const contentHeight = Math.max(currentPage.rows.length * rowHeight, 1);
 
   const isInScrollBottomArea = React.useRef<boolean>(false);
 

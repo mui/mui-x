@@ -31,6 +31,8 @@
       },
       "default": "\"standard\""
     },
+    "disableChildrenFiltering": { "type": { "name": "bool" } },
+    "disableChildrenSorting": { "type": { "name": "bool" } },
     "disableColumnFilter": { "type": { "name": "bool" } },
     "disableColumnMenu": { "type": { "name": "bool" } },
     "disableColumnReorder": { "type": { "name": "bool" } },
@@ -140,7 +142,7 @@
     },
     "rowThreshold": { "type": { "name": "number" }, "default": "3" },
     "scrollbarSize": { "type": { "name": "number" } },
-    "scrollEndThreshold": { "type": { "name": "number" } },
+    "scrollEndThreshold": { "type": { "name": "number" }, "default": "80" },
     "selectionModel": {
       "type": {
         "name": "union",
