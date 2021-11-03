@@ -81,6 +81,7 @@ async function main() {
       const pathURL = route.replace(baseUrl, '');
 
       it(`creates screenshots of ${pathURL}`, async function test() {
+        this.timeout(0);
         // With the playwright inspector we might want to call `page.pause` which would lead to a timeout.
         if (process.env.PWDEBUG) {
           this.timeout(0);
@@ -106,6 +107,7 @@ async function main() {
         const testcase = await page.waitForSelector(
           '[data-testid="testcase"]:not([aria-busy="true"])',
         );
+        await sleep(99999999);
         await testcase.screenshot({ path: screenshotPath, type: 'png' });
       });
 
