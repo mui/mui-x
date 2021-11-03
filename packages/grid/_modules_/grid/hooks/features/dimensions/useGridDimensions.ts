@@ -62,15 +62,17 @@ export function useGridDimensions(
       rootElement.removeChild(scrollDiv);
     }
 
-    const viewportOuterSize: ElementSize = {
-      width: rootDimensionsRef.current.width,
-      height: rootDimensionsRef.current.height - headerHeight,
-    };
-
     const virtualRowsCount = currentPage.range
       ? currentPage.range.lastRowIndex - currentPage.range.firstRowIndex + 1
       : 0;
     const pageScrollHeight = virtualRowsCount * rowHeight;
+
+    const viewportOuterSize: ElementSize = {
+      width: rootDimensionsRef.current.width,
+      height: props.autoHeight
+        ? virtualRowsCount * rowHeight
+        : rootDimensionsRef.current.height - headerHeight,
+    };
 
     const hasScrollXIfNoYScrollBar = Math.round(columnsTotalWidth) > viewportOuterSize.width;
     const hasScrollYIfNoXScrollBar = pageScrollHeight > viewportOuterSize.height;
@@ -126,7 +128,15 @@ export function useGridDimensions(
         newFullDimensions.viewportInnerSize.width,
       );
     }
-  }, [apiRef, currentPage.range, props.scrollbarSize, headerHeight, rowHeight, columnsTotalWidth]);
+  }, [
+    apiRef,
+    currentPage.range,
+    props.scrollbarSize,
+    props.autoHeight,
+    headerHeight,
+    rowHeight,
+    columnsTotalWidth,
+  ]);
 
   const resize = React.useCallback<GridDimensionsApi['resize']>(() => {
     updateGridDimensionsRef();
