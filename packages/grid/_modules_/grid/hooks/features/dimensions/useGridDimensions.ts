@@ -197,8 +197,6 @@ export function useGridDimensions(
         return;
       }
 
-      console.log('HEY');
-
       debounceResize();
     },
     [props.autoHeight, debounceResize, logger, resize],
