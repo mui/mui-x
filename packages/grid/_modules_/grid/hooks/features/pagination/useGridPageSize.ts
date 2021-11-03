@@ -4,7 +4,7 @@ import { GridComponentProps } from '../../../GridComponentProps';
 import { GridPageSizeApi } from '../../../models/api/gridPageSizeApi';
 import { GridEvents } from '../../../constants/eventsConstants';
 import { useGridLogger, useGridApiMethod, useGridSelector, useGridState } from '../../utils';
-import { gridContainerSizesSelector } from '../container/gridContainerSizesSelector';
+import { unstable_gridContainerSizesSelector } from '../container/gridContainerSizesSelector';
 import { useGridStateInit } from '../../utils/useGridStateInit';
 import { gridPageSizeSelector } from './gridPaginationSelector';
 
@@ -25,7 +25,7 @@ export const useGridPageSize = (
   }));
   const [, setGridState, forceUpdate] = useGridState(apiRef);
 
-  const containerSizes = useGridSelector(apiRef, gridContainerSizesSelector);
+  const containerSizes = useGridSelector(apiRef, unstable_gridContainerSizesSelector);
 
   apiRef.current.unsafe_updateControlState({
     stateId: 'pageSize',

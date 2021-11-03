@@ -15,7 +15,6 @@ const columns: GridColDef[] = [
     headerName: 'Full name',
     width: 160,
     valueGetter: getFullName,
-    sortComparator: (v1, v2) => v1!.toString().localeCompare(v2!.toString()),
   },
 ];
 

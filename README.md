@@ -40,8 +40,8 @@ There is a StackOverflow tag called "mui" that you can use to tag your questions
 You can create an [issue](https://github.com/mui-org/material-ui-x/issues) on this repository.
 Please always provide a reproduction case, the following templates can be a good start:
 
-- [DataGrid free version](https://codesandbox.io/s/datagridpro-v5-quick-start-5pjhc)
-- [DataGridPro paid version](https://codesandbox.io/s/datagrid-v5-quick-start-54iz1)
+- [DataGrid free version](https://codesandbox.io/s/datagrid-v5-quick-start-54iz1)
+- [DataGridPro paid version](https://codesandbox.io/s/datagridpro-v5-quick-start-5pjhc)
 
 ## Contributing
 
