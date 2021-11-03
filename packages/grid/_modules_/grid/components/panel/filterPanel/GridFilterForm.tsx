@@ -80,7 +80,7 @@ function GridFilterForm(props: GridFilterFormProps) {
     return apiRef.current.getColumn(item.columnField)!;
   }, [apiRef, item]);
 
-  const getCurrentOperator = React.useCallback(() => {
+  const currentOperator = React.useMemo(() => {
     const currentColumn = getCurrentColumn();
     if (!item.operatorValue || !currentColumn) {
       return null;
@@ -126,11 +126,13 @@ function GridFilterForm(props: GridFilterFormProps) {
     [applyMultiFilterOperatorChanges],
   );
 
-  const handleDeleteFilter = React.useCallback(() => {
-    deleteFilter(item);
-  }, [deleteFilter, item]);
-
-  const currentOperator = getCurrentOperator();
+  const handleDeleteFilter = () => {
+    if (rootProps.disableMultipleColumnsFiltering) {
+      applyFilterChanges({ ...item, value: undefined });
+    } else {
+      deleteFilter(item);
+    }
+  };
 
   return (
     <GridFilterFormRoot className={classes.root}>
@@ -238,7 +240,7 @@ GridFilterForm.propTypes = {
   disableMultiFilterOperator: PropTypes.bool,
   hasMultipleFilters: PropTypes.bool.isRequired,
   item: PropTypes.shape({
-    columnField: PropTypes.string,
+    columnField: PropTypes.string.isRequired,
     id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     operatorValue: PropTypes.string,
     value: PropTypes.any,
