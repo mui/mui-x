@@ -62,14 +62,12 @@ describe('<DataGridPro /> - Column Headers', () => {
           <DataGridPro {...baselineProps} columns={[{ field: 'brand' }]} />
         </div>,
       );
+      expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
       const columnCell = getColumnHeaderCell(0);
       const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]');
       fireEvent.click(menuIconButton);
       await waitFor(() => expect(screen.queryByRole('menu')).not.to.equal(null));
-
-      const menuList = screen.queryByRole('menu');
-      fireEvent.click(menuList);
-
+      fireEvent.click(screen.queryByRole('menu'));
       expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
     });
 
@@ -81,6 +79,7 @@ describe('<DataGridPro /> - Column Headers', () => {
       );
       const columnCell = getColumnHeaderCell(0);
       const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]');
+      expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
       fireEvent.click(menuIconButton);
       await waitFor(() => expect(screen.queryByRole('menu')).not.to.equal(null));
       fireEvent.click(screen.getByRole('menuitem', { name: 'Sort by ASC' }));
