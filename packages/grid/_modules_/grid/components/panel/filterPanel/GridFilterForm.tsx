@@ -5,7 +5,11 @@ import FormControl from '@mui/material/FormControl';
 import IconButton from '@mui/material/IconButton';
 import InputLabel from '@mui/material/InputLabel';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
-import { capitalize, unstable_useId as useId } from '@mui/material/utils';
+import {
+  capitalize,
+  unstable_useId as useId,
+  unstable_useEnhancedEffect as useEnhancedEffect,
+} from '@mui/material/utils';
 import { styled } from '@mui/material/styles';
 import { filterableGridColumnsSelector } from '../../../hooks/features/columns/gridColumnsSelector';
 import { useGridSelector } from '../../../hooks/utils/useGridSelector';
@@ -74,6 +78,7 @@ function GridFilterForm(props: GridFilterFormProps) {
   const rootProps = useGridRootProps();
   const ownerState = { classes: rootProps.classes };
   const classes = useUtilityClasses(ownerState);
+  const valueInputRef = React.useRef<HTMLInputElement>(null);
 
   const getCurrentColumn = React.useCallback(() => {
     if (!item.columnField) {
@@ -133,6 +138,12 @@ function GridFilterForm(props: GridFilterFormProps) {
   }, [deleteFilter, item]);
 
   const currentOperator = getCurrentOperator();
+
+  useEnhancedEffect(() => {
+    if (isLastFilter) {
+      valueInputRef.current!.focus();
+    }
+  }, [isLastFilter]);
 
   return (
     <GridFilterFormRoot className={classes.root}>
@@ -221,7 +232,7 @@ function GridFilterForm(props: GridFilterFormProps) {
             apiRef={apiRef}
             item={item}
             applyValue={applyFilterChanges}
-            hasFocus={isLastFilter}
+            inputRef={valueInputRef}
             {...currentOperator.InputComponentProps}
           />
         ) : null}
