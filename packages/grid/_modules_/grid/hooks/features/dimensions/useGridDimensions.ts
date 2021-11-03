@@ -139,6 +139,7 @@ export function useGridDimensions(
   ]);
 
   const resize = React.useCallback<GridDimensionsApi['resize']>(() => {
+    console.log('OH');
     updateGridDimensionsRef();
     apiRef.current.publishEvent(GridEvents.debouncedResize, rootDimensionsRef.current);
   }, [apiRef, updateGridDimensionsRef]);
@@ -196,6 +197,8 @@ export function useGridDimensions(
         resize();
         return;
       }
+
+      console.log('HEY');
 
       debounceResize();
     },
