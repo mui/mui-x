@@ -16,7 +16,7 @@ import { GridComponentProps } from '../../GridComponentProps';
 import { useGridApiEventHandler } from '../../hooks/utils/useGridApiEventHandler';
 import { GridEvents } from '../../constants/eventsConstants';
 import { GridColumnHeaderParams } from '../../models/params/gridColumnHeaderParams';
-import { RenderContext } from '../GridVirtualScroller';
+import { RenderContext } from '../../hooks/features/virtualization/useGridVirtualScroller';
 import { GridColumnHeaderItem } from './GridColumnHeaderItem';
 import { gridFilterActiveItemsLookupSelector } from '../../hooks/features/filter/gridFilterSelector';
 import { gridColumnMenuSelector } from '../../hooks/features/columnMenu/columnMenuSelector';
