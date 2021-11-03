@@ -29,13 +29,15 @@ const styles = (theme) => ({
   },
 });
 
+let clock;
+
 function MockTime(props) {
   const [ready, setReady] = React.useState(false);
 
   React.useEffect(() => {
     // Use a "real timestamp" so that we see a useful date instead of "00:00"
     // eslint-disable-next-line react-hooks/rules-of-hooks -- not a React hook
-    const clock = useFakeTimers({
+    clock = useFakeTimers({
       now: new Date('Mon Aug 18 14:11:54 2014 -0500').getTime(),
       toFake: ['Date'],
     });
@@ -71,6 +73,9 @@ function LoadFont(props) {
 
     document.fonts.addEventListener('loading', handleFontsEvent);
     document.fonts.addEventListener('loadingdone', handleFontsEvent);
+
+    // and wait `load-css` timeouts to be flushed
+    clock.runToLast();
 
     // In case the child triggered font fetching we're not ready yet.
     // The fonts event handler will mark the test as ready on `loadingdone`

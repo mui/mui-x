@@ -202,11 +202,6 @@ export function useGridDimensions(
     [props.autoHeight, debounceResize, logger, resize],
   );
 
-  React.useEffect(() => {
-    logger.info('canceling resize...');
-    debounceResize.clear();
-  }, [props.rows, logger]); // eslint-disable-line react-hooks/exhaustive-deps
-
   useEnhancedEffect(() => updateGridDimensionsRef(), [updateGridDimensionsRef]);
 
   useGridApiEventHandler(apiRef, GridEvents.resize, handleResize);
