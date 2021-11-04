@@ -13,7 +13,7 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/mui-org/material-ui-x.git",
-    "directory": "packages/x-license"
+    "directory": "packages/x-license-pro"
   },
   "bugs": {
     "url": "https://github.com/mui-org/material-ui-x/issues"

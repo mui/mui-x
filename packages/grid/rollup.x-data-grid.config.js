@@ -1,28 +1,26 @@
-import { generateReleaseInfo } from '@mui/x-license-pro';
-import replace from '@rollup/plugin-replace';
-import babel from '@rollup/plugin-babel';
 import typescript from 'rollup-plugin-typescript2';
 import cleaner from 'rollup-plugin-cleaner';
 import sourceMaps from 'rollup-plugin-sourcemaps';
 import { terser } from 'rollup-plugin-terser';
 import dts from 'rollup-plugin-dts';
 import command from 'rollup-plugin-command';
+import babel from '@rollup/plugin-babel';
 import copy from 'rollup-plugin-copy';
-import pkg from './x-grid/package.json';
+import pkg from './x-data-grid/package.json';
 
 // dev build if watching, prod build if not
 const production = !process.env.ROLLUP_WATCH;
 export default [
   {
-    input: './x-grid/src/index.ts',
+    input: './x-data-grid/src/index.ts',
     output: [
       {
-        file: './x-grid/build/index-esm.js',
+        file: './x-data-grid/build/index-esm.js',
         format: 'esm',
         sourcemap: !production,
       },
       {
-        file: './x-grid/build/index-cjs.js',
+        file: './x-data-grid/build/index-cjs.js',
         format: 'cjs',
         sourcemap: !production,
       },
@@ -32,12 +30,9 @@ export default [
       return new RegExp(`(${packageName}|${packageName}\\/.*)`);
     }),
     plugins: [
-      replace({
-        __RELEASE_INFO__: generateReleaseInfo(),
-      }),
       production &&
         cleaner({
-          targets: ['./x-grid/build/'],
+          targets: ['./x-data-grid/build/'],
         }),
       typescript({ tsconfig: 'tsconfig.build.json' }),
       babel({
@@ -47,7 +42,7 @@ export default [
           [
             'transform-react-remove-prop-types',
             {
-              ignoreFilenames: ['DataGridPro.tsx'],
+              ignoreFilenames: ['DataGrid.tsx'],
             },
           ],
         ],
@@ -57,8 +52,8 @@ export default [
     ],
   },
   {
-    input: './x-grid/build/x-grid/src/index.d.ts',
-    output: [{ file: './x-grid/build/x-grid.d.ts', format: 'es' }],
+    input: './x-data-grid/build/x-data-grid/src/index.d.ts',
+    output: [{ file: './x-data-grid/build/x-data-grid.d.ts', format: 'es' }],
     plugins: [
       dts(),
       !production && sourceMaps(),
@@ -66,33 +61,33 @@ export default [
         copy({
           targets: [
             {
-              src: ['./x-grid/README.md', './x-grid/LICENSE.md', '../../CHANGELOG.md'],
-              dest: './x-grid/build',
+              src: ['./x-data-grid/README.md', './x-data-grid/LICENSE', '../../CHANGELOG.md'],
+              dest: './x-data-grid/build',
             },
             {
-              src: './x-grid/package.json',
-              dest: './x-grid/build',
+              src: './x-data-grid/package.json',
+              dest: './x-data-grid/build',
               transform: () => {
                 const contents = { ...pkg };
                 contents.main = 'index-cjs.js';
                 contents.module = 'index-esm.js';
-                contents.types = 'x-grid.d.ts';
+                contents.types = 'data-grid.d.ts';
                 return JSON.stringify(contents, null, 2);
               },
             },
             {
-              src: './x-grid/build/x-grid/src/themeAugmentation',
-              dest: './x-grid/build',
+              src: './x-data-grid/build/x-data-grid/src/themeAugmentation',
+              dest: './x-data-grid/build',
             },
           ],
         }),
       production &&
         command(
           [
-            `rm -rf ./x-grid/build/x-grid`,
-            `rm -rf ./x-grid/build/_modules_`,
-            `rm -rf ./x-grid/build/data-grid`,
-            `rm -rf ./x-grid/build/x-grid-data-generator`,
+            `rm -rf ./x-data-grid/build/x-data-grid`,
+            `rm -rf ./x-data-grid/build/_modules_ `,
+            `rm -rf ./x-data-grid/build/x-data-grid-pro`,
+            `rm -rf ./x-data-grid/build/x-data-grid-generator`,
           ],
           {
             exitOnFail: true,

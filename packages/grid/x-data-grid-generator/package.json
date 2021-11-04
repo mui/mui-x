@@ -5,7 +5,7 @@
   "author": "MUI Team",
   "main": "cjs/index.js",
   "module": "esm/index.js",
-  "types": "esm/x-grid-data-generator.d.ts",
+  "types": "esm/x-data-grid-generator.d.ts",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/mui-org/material-ui-x/issues"
@@ -20,12 +20,12 @@
   },
   "scripts": {
     "typescript": "tsc -p tsconfig.json",
-    "build": "cd ../ && rollup --config rollup.x-grid-data-generator.config.js"
+    "build": "cd ../ && rollup --config rollup.x-data-grid-generator.config.js"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/mui-org/material-ui-x.git",
-    "directory": "packages/grid/x-grid-data-generator"
+    "directory": "packages/grid/x-data-grid-generator"
   },
   "dependencies": {
     "@mui/core": "^5.0.0-alpha.53",

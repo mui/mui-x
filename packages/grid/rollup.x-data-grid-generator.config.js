@@ -6,24 +6,24 @@ import commonjs from 'rollup-plugin-commonjs';
 import dts from 'rollup-plugin-dts';
 import command from 'rollup-plugin-command';
 import copy from 'rollup-plugin-copy';
-import pkg from './x-grid-data-generator/package.json';
+import pkg from './x-data-grid-generator/package.json';
 
 // dev build if watching, prod build if not
 const production = !process.env.ROLLUP_WATCH;
 export default [
   {
     input: {
-      index: './x-grid-data-generator/src/index.ts',
-      'datagen-cli': './x-grid-data-generator/src/datagen-cli.ts',
+      index: './x-data-grid-generator/src/index.ts',
+      'datagen-cli': './x-data-grid-generator/src/datagen-cli.ts',
     },
     output: [
       {
-        dir: './x-grid-data-generator/build/esm',
+        dir: './x-data-grid-generator/build/esm',
         format: 'esm',
         sourcemap: !production,
       },
       {
-        dir: './x-grid-data-generator/build/cjs',
+        dir: './x-data-grid-generator/build/cjs',
         format: 'cjs',
         sourcemap: !production,
       },
@@ -35,7 +35,7 @@ export default [
     plugins: [
       production &&
         cleaner({
-          targets: ['./x-grid-data-generator/build/'],
+          targets: ['./x-data-grid-generator/build/'],
         }),
       typescript({ tsconfig: 'tsconfig.build.json' }),
       commonjs(),
@@ -44,9 +44,9 @@ export default [
     ],
   },
   {
-    input: './x-grid-data-generator/build/esm/x-grid-data-generator/src/index.d.ts',
+    input: './x-data-grid-generator/build/esm/x-data-grid-generator/src/index.d.ts',
     output: [
-      { file: './x-grid-data-generator/build/esm/x-grid-data-generator.d.ts', format: 'es' },
+      { file: './x-data-grid-generator/build/esm/x-data-grid-generator.d.ts', format: 'es' },
     ],
     plugins: [
       dts(),
@@ -56,27 +56,27 @@ export default [
           targets: [
             {
               src: [
-                './x-grid-data-generator/package.json',
-                './x-grid-data-generator/README.md',
-                './x-grid-data-generator/LICENSE',
-                './x-grid-data-generator/bin',
+                './x-data-grid-generator/package.json',
+                './x-data-grid-generator/README.md',
+                './x-data-grid-generator/LICENSE',
+                './x-data-grid-generator/bin',
                 '../../CHANGELOG.md',
               ],
-              dest: './x-grid-data-generator/build',
+              dest: './x-data-grid-generator/build',
             },
           ],
         }),
       production &&
         command(
           [
-            `rm -rf ./x-grid-data-generator/build/cjs/data-grid/`,
-            `rm -rf ./x-grid-data-generator/build/cjs/_modules_ `,
-            `rm -rf ./x-grid-data-generator/build/cjs/x-grid`,
-            `rm -rf ./x-grid-data-generator/build/cjs/x-grid-data-generator`,
-            `rm -rf ./x-grid-data-generator/build/esm/data-grid/`,
-            `rm -rf ./x-grid-data-generator/build/esm/_modules_ `,
-            `rm -rf ./x-grid-data-generator/build/esm/x-grid`,
-            `rm -rf ./x-grid-data-generator/build/esm/x-grid-data-generator`,
+            `rm -rf ./x-data-grid-generator/build/cjs/x-data-grid/`,
+            `rm -rf ./x-data-grid-generator/build/cjs/_modules_ `,
+            `rm -rf ./x-data-grid-generator/build/cjs/x-data-grid-pro`,
+            `rm -rf ./x-data-grid-generator/build/cjs/x-data-grid-generator`,
+            `rm -rf ./x-data-grid-generator/build/esm/x-data-grid/`,
+            `rm -rf ./x-data-grid-generator/build/esm/_modules_ `,
+            `rm -rf ./x-data-grid-generator/build/esm/x-data-grid-pro`,
+            `rm -rf ./x-data-grid-generator/build/esm/x-data-grid-generator`,
           ],
           {
             exitOnFail: true,
