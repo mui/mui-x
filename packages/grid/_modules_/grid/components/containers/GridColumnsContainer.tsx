@@ -1,6 +1,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
+import { alpha, styled, lighten, darken } from '@mui/material/styles';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { gridDensityHeaderHeightSelector } from '../../hooks/features/density/densitySelector';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
@@ -22,6 +23,28 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
+const GridColumnsContainerRoot = styled('div', {
+  name: 'MuiDataGrid',
+  slot: 'ColumnsContainer',
+  overridesResolver: (props, styles) => styles.columnsContainer,
+})(({ theme }) => {
+  const borderColor =
+    theme.palette.mode === 'light'
+      ? lighten(alpha(theme.palette.divider, 1), 0.88)
+      : darken(alpha(theme.palette.divider, 1), 0.68);
+
+  return {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    overflow: 'hidden',
+    display: 'flex',
+    alignItems: 'center',
+    borderBottom: `1px solid ${borderColor}`,
+  };
+});
+
 export const GridColumnsContainer = React.forwardRef<HTMLDivElement, GridColumnsContainerProps>(
   function GridColumnsContainer(props, ref) {
     const { className, style, ...other } = props;
@@ -32,7 +55,7 @@ export const GridColumnsContainer = React.forwardRef<HTMLDivElement, GridColumns
     const height = useGridSelector(apiRef, gridDensityHeaderHeightSelector);
 
     return (
-      <div
+      <GridColumnsContainerRoot
         ref={ref}
         className={clsx(classes.root, className)}
         {...other}
