@@ -22,7 +22,7 @@ _Nov 4, 2021_
 - [DataGrid] Move virtualization logic to hook (#3079) @m4theushw
 - [DataGrid] Revert year change in the MIT license (#3059) @oliviertassinari
 - [DataGrid] Fix filtering of nullish numeric cells (#3070) @flaviendelangle
-- [DataGrid] Fix selecting 100k rows takes too long (#3077) @m4theushw
+- [DataGrid] Improve performance when selecting 100k rows (#3077) @m4theushw
 - [DataGrid] Fix `GridEditDateCell` does not handle timezone correctly (#2918) @flaviendelangle
 - [DataGrid] Fix keyboard navigation on page > 0 (#3074) @flaviendelangle
 - [DataGrid] Prevents bubbling in menu header (#3000) @alexfauquette
