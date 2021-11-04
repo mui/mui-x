@@ -16,6 +16,33 @@ _Nov 4, 2021_
 
 #### Breaking changes
 
+- [core] Prefix selectors from `useGridContainerProps` with `unsafe` (#3002) @flaviendelangle
+
+  We are temporarily making the dimension APIs of the grid private to be able to clean them in a future minor release. The current approach is causing a lot of useless re-renders.
+  Please reach to us if you are really using any of those selectors to help us understand what are the community needs around this subject.
+
+  The following selectors were prefixed by `unstable_`. Use the provided alternatives.
+
+  1. `gridContainerSizesSelector` was renamed to `unstable_gridContainerSizesSelector`
+  2. `gridViewportSizesSelector` was renamed to `unstable_gridViewportSizesSelector`
+  3. `gridScrollBarSizeSelector` was renamed to `unstable_gridScrollBarSizeSelector`
+
+  The following selectors were removed. You can hard-code their logic in your application if you really need them.
+
+  1. `gridDataContainerSizesSelector`
+
+  ```ts
+  const dataContainerSizes = gridContainerSizesSelector(state)?.dataContainerSizes ?? null;
+  ```
+
+  2. `gridDataContainerHeightSelector`
+
+  ```ts
+  const dataContainerHeight = gridContainerSizesSelector(state)?.dataContainerSizes.height ?? null;
+  ```
+
+  The selector `gridViewportSizeStateSelector` was a duplicate and has been removed, you can use the selector `unstable_gridViewportSizesSelector` instead.
+
 #### Changes
 
 - [DataGrid] Add Hebrew (heIL) locale (#3028) @ColdAtNight
@@ -37,6 +64,7 @@ _Nov 4, 2021_
 - [core] Invert Codesandbox examples on README (#3073) @flaviendelangle
 - [core] Prefix selectors from `useGridContainerProps` with `unsafe` (#3002) @flaviendelangle
 - [core] Reduce `setGridState` and `applyFilters` call when updating `filterModel` (#3023) @flaviendelangle
+- [core] Reduce styles complexity (#3012) @DanailH
 - [core] Upgrade monorepo (#3067) @m4theushw
 - [core] Use official MUI repo as monorepo (#3084) @m4theushw
 - [test] Retry each expect until success (#3027) @m4theushw
@@ -285,7 +313,7 @@ A big thanks to the 5 contributors who made this release possible. Here are some
 - [core] Remove outdated hooks requirements (#2939) @flaviendelangle
 - [core] Remove test event (#2912) @m4theushw
 - [core] Remove unused `GridSlotComponentProps` interface (#2911) @flaviendelangle
-- [core] Rename 'UNSTABLE_' prefix to 'unstable_' (#2931) @flaviendelangle
+- [core] Rename 'UNSTABLE*' prefix to 'unstable*' (#2931) @flaviendelangle
 - [core] Replace usage of `GridRowData` with `GridRowModel` (#2936) @flaviendelangle
 - [core] Revert hardcoded typings (#2907) @DanailH
 - [core] Simplify the CSV export (#2941) @flaviendelangle
