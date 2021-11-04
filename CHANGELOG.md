@@ -23,7 +23,7 @@ _Nov 4, 2021_
 - [DataGrid] Revert year change in the MIT license (#3059) @oliviertassinari
 - [DataGrid] Fix filtering of nullish numeric cells (#3070) @flaviendelangle
 - [DataGrid] Improve performance when selecting 100k rows (#3077) @m4theushw
-- [DataGrid] Fix `GridEditDateCell` does not handle timezone correctly (#2918) @flaviendelangle
+- [DataGrid] Fix `GridEditDateCell` to handle timezone correctly (#2918) @flaviendelangle
 - [DataGrid] Fix keyboard navigation on page > 0 (#3074) @flaviendelangle
 - [DataGrid] Prevents bubbling in menu header (#3000) @alexfauquette
 - [DataGrid] Fix wrong params provided to `cellModeChange` when `setCellMode` is called (#3025) @flaviendelangle
