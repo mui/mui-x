@@ -1,6 +1,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
+import { alpha, styled } from '@mui/material/styles';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { gridDensityHeaderHeightSelector } from '../../hooks/features/density/densitySelector';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
@@ -22,6 +23,23 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
+const GridOverlayRoot = styled('div', {
+  name: 'MuiDataGrid',
+  slot: 'Overlay',
+  overridesResolver: (props, styles) => styles.overlay,
+})(({ theme }) => ({
+  display: 'flex',
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  right: 0,
+  bottom: 0,
+  alignSelf: 'center',
+  alignItems: 'center',
+  justifyContent: 'center',
+  backgroundColor: alpha(theme.palette.background.default, theme.palette.action.disabledOpacity),
+}));
+
 export const GridOverlay = React.forwardRef<HTMLDivElement, GridOverlayProps>(function GridOverlay(
   props: GridOverlayProps,
   ref,
@@ -38,7 +56,7 @@ export const GridOverlay = React.forwardRef<HTMLDivElement, GridOverlayProps>(fu
   const horizontalScrollbarSize = windowRef ? windowRef.offsetHeight - windowRef.clientHeight : 0;
 
   return (
-    <div
+    <GridOverlayRoot
       ref={ref}
       className={clsx(classes.root, className)}
       style={{

@@ -4,3 +4,4 @@ export * from './GridColumnHeaderSortIcon';
 export * from './GridColumnHeaderTitle';
 export * from './GridColumnHeaders';
 export * from './GridColumnHeadersItemCollection';
+export * from './GridIconButtonContainer';

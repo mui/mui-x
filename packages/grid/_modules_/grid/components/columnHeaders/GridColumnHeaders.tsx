@@ -2,6 +2,7 @@ import * as React from 'react';
 import { useForkRef } from '@mui/material/utils';
 import clsx from 'clsx';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import {
   visibleGridColumnsSelector,
   gridColumnsMetaSelector,
@@ -9,14 +10,14 @@ import {
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { gridDensityHeaderHeightSelector } from '../../hooks/features/density/densitySelector';
-import { gridScrollBarSizeSelector } from '../../hooks/features/container/gridContainerSizesSelector';
-import { getDataGridUtilityClass } from '../../gridClasses';
+import { unstable_gridScrollBarSizeSelector } from '../../hooks/features/container/gridContainerSizesSelector';
+import { getDataGridUtilityClass, gridClasses } from '../../gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { GridComponentProps } from '../../GridComponentProps';
 import { useGridApiEventHandler } from '../../hooks/utils/useGridApiEventHandler';
 import { GridEvents } from '../../constants/eventsConstants';
 import { GridColumnHeaderParams } from '../../models/params/gridColumnHeaderParams';
-import { RenderContext } from '../GridVirtualScroller';
+import { RenderContext } from '../../hooks/features/virtualization/useGridVirtualScroller';
 import { GridColumnHeaderItem } from './GridColumnHeaderItem';
 import { gridFilterActiveItemsLookupSelector } from '../../hooks/features/filter/gridFilterSelector';
 import { gridColumnMenuSelector } from '../../hooks/features/columnMenu/columnMenuSelector';
@@ -42,6 +43,27 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
+const GridColumnsHeaderRoot = styled('div', {
+  name: 'MuiDataGrid',
+  slot: 'ColumnHeaderWrapper',
+  overridesResolver: (props, styles) => [
+    { [`&.${gridClasses.columnHeaderDropZone}`]: styles.columnHeaderDropZone },
+    styles.columnHeaderWrapper,
+  ],
+})(() => ({
+  display: 'flex',
+  alignItems: 'center',
+  [`&.${gridClasses.columnHeaderDropZone} .${gridClasses.columnHeaderDraggableContainer}`]: {
+    cursor: 'move',
+  },
+  [`&.scroll .${gridClasses.columnHeader}:last-child`]: {
+    borderRight: 'none',
+  },
+  [`& .${gridClasses.cell}`]: {
+    borderBottom: 'none',
+  },
+}));
+
 export const GridColumnsHeader = React.forwardRef<HTMLDivElement, any>(function GridColumnsHeader(
   props,
   ref,
@@ -52,7 +74,7 @@ export const GridColumnsHeader = React.forwardRef<HTMLDivElement, any>(function 
   const apiRef = useGridApiContext();
   const visibleColumns = useGridSelector(apiRef, visibleGridColumnsSelector);
   const columnsMeta = useGridSelector(apiRef, gridColumnsMetaSelector);
-  const scrollBarState = useGridSelector(apiRef, gridScrollBarSizeSelector);
+  const scrollBarState = useGridSelector(apiRef, unstable_gridScrollBarSizeSelector);
   const tabIndexState = useGridSelector(apiRef, gridTabIndexColumnHeaderSelector);
   const cellTabIndexState = useGridSelector(apiRef, gridTabIndexCellSelector);
   const columnHeaderFocus = useGridSelector(apiRef, gridFocusColumnHeaderSelector);
@@ -193,13 +215,13 @@ export const GridColumnsHeader = React.forwardRef<HTMLDivElement, any>(function 
   };
 
   return (
-    <div
+    <GridColumnsHeaderRoot
       ref={handleRef}
       className={clsx(classes.wrapper, scrollBarState.hasScrollX && 'scroll')}
       aria-rowindex={1}
       role="row"
     >
       {getColumns()}
-    </div>
+    </GridColumnsHeaderRoot>
   );
 });

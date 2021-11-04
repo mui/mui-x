@@ -1,0 +1,15 @@
+<DataGridPro
+  rows={rows}
+  columns={columns}
+  apiRef={apiRef}
+  editMode="row"
+  onRowEditStart={handleRowEditStart}
+  onRowEditStop={handleRowEditStop}
+  onCellFocusOut={handleCellFocusOut}
+  components={{
+    Toolbar: EditToolbar,
+  }}
+  componentsProps={{
+    toolbar: { apiRef },
+  }}
+/>
