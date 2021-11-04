@@ -27,7 +27,7 @@ export interface GridPanelProps extends StandardProps<PopperProps, 'children'> {
 
 export const gridPanelClasses = generateUtilityClasses('MuiDataGrid', ['panel', 'paper']);
 
-const StyledPopper = styled(Popper, {
+const GridPanelRoot = styled(Popper, {
   name: 'MuiDataGrid',
   slot: 'Panel',
   overridesResolver: (props, styles) => styles.panel,
@@ -35,7 +35,7 @@ const StyledPopper = styled(Popper, {
   zIndex: theme.zIndex.modal,
 }));
 
-const StyledPaper = styled(Paper, {
+const GridPaperRoot = styled(Paper, {
   name: 'MuiDataGrid',
   slot: 'Paper',
   overridesResolver: (props, styles) => styles.paper,
@@ -71,7 +71,7 @@ const GridPanel = React.forwardRef<HTMLDivElement, GridPanelProps>((props, ref) 
   }
 
   return (
-    <StyledPopper
+    <GridPanelRoot
       ref={ref}
       placement="bottom-start"
       className={clsx(className, classes.panel)}
@@ -86,11 +86,11 @@ const GridPanel = React.forwardRef<HTMLDivElement, GridPanelProps>((props, ref) 
       {...other}
     >
       <ClickAwayListener onClickAway={handleClickAway}>
-        <StyledPaper className={classes.paper} elevation={8} onKeyDown={handleKeyDown}>
+        <GridPaperRoot className={classes.paper} elevation={8} onKeyDown={handleKeyDown}>
           {children}
-        </StyledPaper>
+        </GridPaperRoot>
       </ClickAwayListener>
-    </StyledPopper>
+    </GridPanelRoot>
   );
 });
 

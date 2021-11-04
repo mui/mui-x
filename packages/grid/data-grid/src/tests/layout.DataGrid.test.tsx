@@ -2,6 +2,8 @@ import * as React from 'react';
 import {
   createClientRenderStrictMode,
   // @ts-expect-error need to migrate helpers to TypeScript
+  screen,
+  // @ts-expect-error need to migrate helpers to TypeScript
   ErrorBoundary,
 } from 'test/utils';
 import { useFakeTimers, stub } from 'sinon';
@@ -762,8 +764,9 @@ describe('<DataGrid /> - Layout & Warnings', () => {
       </ThemeProvider>,
     );
 
-    const gridRoot = document.querySelector('[role="grid"]');
-    expect(window.getComputedStyle(gridRoot as Element).backgroundColor).to.equal('rgb(255, 0, 0)');
+    expect(window.getComputedStyle(screen.getByRole('grid')).backgroundColor).to.equal(
+      'rgb(255, 0, 0)',
+    );
     expect(window.getComputedStyle(getColumnHeaderCell(0)).backgroundColor).to.equal(
       'rgb(255, 255, 0)',
     );

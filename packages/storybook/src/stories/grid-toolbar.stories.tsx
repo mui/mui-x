@@ -66,7 +66,6 @@ export const Export = () => {
   return (
     <div style={{ height: 600 }}>
       <DataGridPro
-        disableVirtualization
         {...data}
         checkboxSelection
         components={{

@@ -21,7 +21,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-const InputBaseStyled = styled(InputBase, {
+const GridEditInputCellRoot = styled(InputBase, {
   name: 'MuiDataGrid',
   slot: 'EditInputCell',
   overridesResolver: (props, styles) => styles.editInputCell,
@@ -77,7 +77,7 @@ function GridEditInputCell(props: GridRenderEditCellParams & InputBaseProps) {
   }, [hasFocus]);
 
   return (
-    <InputBaseStyled
+    <GridEditInputCellRoot
       inputRef={inputRef}
       className={classes.root}
       fullWidth
