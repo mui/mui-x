@@ -74,6 +74,7 @@ _Nov 4, 2021_
 
 - [docs] Explain how to use `valueGetter` to transform type (#3003) @alexfauquette
 - [docs] Fix the outdated demo of the docs (#3058) @oliviertassinari
+- [docs] Fix inline previews #3081) @DanailH
 
 ## 5.0.0-beta.6
 
@@ -313,7 +314,7 @@ A big thanks to the 5 contributors who made this release possible. Here are some
 - [core] Remove outdated hooks requirements (#2939) @flaviendelangle
 - [core] Remove test event (#2912) @m4theushw
 - [core] Remove unused `GridSlotComponentProps` interface (#2911) @flaviendelangle
-- [core] Rename 'UNSTABLE*' prefix to 'unstable*' (#2931) @flaviendelangle
+- [core] Rename 'UNSTABLE_' prefix to 'unstable_' (#2931) @flaviendelangle
 - [core] Replace usage of `GridRowData` with `GridRowModel` (#2936) @flaviendelangle
 - [core] Revert hardcoded typings (#2907) @DanailH
 - [core] Simplify the CSV export (#2941) @flaviendelangle
