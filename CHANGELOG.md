@@ -26,7 +26,7 @@ _Nov 4, 2021_
 - [DataGrid] Fix `GridEditDateCell` does not handle timezone correctly (#2918) @flaviendelangle
 - [DataGrid] Fix Keyboard navigation broken on page > 0 (#3074) @flaviendelangle
 - [DataGrid] Prevents bubbling in menu header (#3000) @alexfauquette
-- [DataGrid] `setCellMode` is providing the wrong params to `cellModeChange` event (#3025) @flaviendelangle
+- [DataGrid] Fix wrong params provided to `cellModeChange` when `setCellMode` is called (#3025) @flaviendelangle
 
 ### Core
 
