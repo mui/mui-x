@@ -21,11 +21,12 @@ import { gridVisibleSortedRowIdsSelector } from '../filter/gridFilterSelector';
 import { GridHeaderSelectionCheckboxParams } from '../../../models/params/gridHeaderSelectionCheckboxParams';
 import { GridCellParams } from '../../../models/params/gridCellParams';
 import { GridRowSelectionCheckboxParams } from '../../../models/params/gridRowSelectionCheckboxParams';
-import { GridColumnsPreProcessing } from '../../core/columnsPreProcessing';
 import { GRID_CHECKBOX_SELECTION_COL_DEF, GridColDef } from '../../../models';
 import { getDataGridUtilityClass } from '../../../gridClasses';
 import { useGridStateInit } from '../../utils/useGridStateInit';
 import { useFirstRender } from '../../utils/useFirstRender';
+import { GridColumns } from '../../../models/colDef/gridColDef';
+import { GridPreProcessingGroup } from '../../core/preProcessing';
 
 type OwnerState = { classes: GridComponentProps['classes'] };
 
@@ -83,6 +84,7 @@ export const useGridSelection = (
   const ownerState = { classes: props.classes };
   const classes = useUtilityClasses(ownerState);
   const lastRowToggled = React.useRef<GridRowId | null>(null);
+  const unregisterPreProcessorRef = React.useRef<(() => void) | null>(null);
 
   apiRef.current.unsafe_updateControlState({
     stateId: 'selection',
@@ -376,7 +378,7 @@ export const useGridSelection = (
   }, [apiRef, isRowSelectable, isStateControlled]);
 
   const updateColumnsPreProcessing = React.useCallback(() => {
-    const addCheckboxColumn: GridColumnsPreProcessing = (columns) => {
+    const addCheckboxColumn = (columns: GridColumns) => {
       if (!props.checkboxSelection) {
         return columns;
       }
@@ -391,7 +393,10 @@ export const useGridSelection = (
       return [groupingColumn, ...columns];
     };
 
-    apiRef.current.unstable_registerColumnPreProcessing('selection', addCheckboxColumn);
+    unregisterPreProcessorRef.current = apiRef.current.unstable_registerPreProcessor(
+      GridPreProcessingGroup.hydrateColumns,
+      addCheckboxColumn,
+    );
   }, [apiRef, props.checkboxSelection, classes]);
 
   useFirstRender(() => {
@@ -402,9 +407,17 @@ export const useGridSelection = (
   React.useEffect(() => {
     if (isFirstRender.current) {
       isFirstRender.current = false;
-      return;
+    } else {
+      // Only register here if we're not in the first render.
+      // During the first render, useFirstRender takes care of registering the pre-processor.
+      updateColumnsPreProcessing();
     }
 
-    updateColumnsPreProcessing();
+    return () => {
+      if (unregisterPreProcessorRef.current) {
+        unregisterPreProcessorRef.current();
+        unregisterPreProcessorRef.current = null;
+      }
+    };
   }, [updateColumnsPreProcessing]);
 };
