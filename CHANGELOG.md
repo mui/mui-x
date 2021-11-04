@@ -18,7 +18,7 @@ _Nov 4, 2021_
 
 #### Changes
 
-- [DataGrid] Add hebrew localization (he-IL) (#3028) @ColdAtNight
+- [DataGrid] Add Hebrew (heIL) locale (#3028) @ColdAtNight
 - [DataGrid] Move virtualization logic to hook (#3079) @m4theushw
 - [DataGrid] Revert year change in the MIT license (#3059) @oliviertassinari
 - [DataGrid] Fix filtering of nullish numeric cells (#3070) @flaviendelangle
