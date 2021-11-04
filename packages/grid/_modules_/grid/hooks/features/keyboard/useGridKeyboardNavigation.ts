@@ -137,7 +137,7 @@ export const useGridKeyboardNavigation = (
         throw new Error('MUI: Key not mapped to navigation behavior.');
       }
 
-      if (nextCellIndexes.rowIndex < 0) {
+      if (nextCellIndexes.rowIndex < currentPage.range.firstRowIndex) {
         const field = apiRef.current.getVisibleColumns()[nextCellIndexes.colIndex].field;
         apiRef.current.setColumnHeaderFocus(field, event);
         return;
@@ -186,8 +186,9 @@ export const useGridKeyboardNavigation = (
 
       if (!nextColumnHeaderIndexes) {
         const field = apiRef.current.getVisibleColumns()[colIndex].field;
-        const node = visibleSortedRows[0];
-        apiRef.current.setCellFocus(node.id, field);
+        if (currentPage.rows.length) {
+          apiRef.current.setCellFocus(currentPage.rows[0].id, field);
+        }
         return;
       }
 
