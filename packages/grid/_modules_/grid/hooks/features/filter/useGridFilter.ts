@@ -73,7 +73,7 @@ export const useGridFilter = (
 
   const [, setGridState, forceUpdate] = useGridState(apiRef);
 
-  apiRef.current.unsafe_updateControlState({
+  apiRef.current.unstable_updateControlState({
     stateId: 'filter',
     propModel: props.filterModel,
     propOnChange: props.onFilterModelChange,
@@ -153,7 +153,7 @@ export const useGridFilter = (
    * Generate the `visibleRowsLookup` and `visibleDescendantsCountLookup` for the current `filterModel`
    * If the tree is not flat, we have to create the lookups even with "server" filtering or 0 filter item to remove to collapsed rows.
    */
-  const applyFilters = React.useCallback<GridFilterApi['unsafe_applyFilters']>(() => {
+  const applyFilters = React.useCallback<GridFilterApi['unstable_applyFilters']>(() => {
     setGridState((state) => {
       const filterModel = gridFilterModelSelector(state);
       const rowIds = gridRowIdsSelector(state);
@@ -300,7 +300,7 @@ export const useGridFilter = (
           filter: { ...state.filter, filterModel: { ...state.filter.filterModel, items } },
         };
       });
-      apiRef.current.unsafe_applyFilters();
+      apiRef.current.unstable_applyFilters();
     },
     [apiRef, logger, setGridState, props.disableMultipleColumnsFiltering],
   );
@@ -321,7 +321,7 @@ export const useGridFilter = (
       if (gridFilterModelSelector(apiRef.current.state).items.length === 0) {
         apiRef.current.upsertFilterItem({});
       } else {
-        apiRef.current.unsafe_applyFilters();
+        apiRef.current.unstable_applyFilters();
       }
     },
     [apiRef, logger, setGridState],
@@ -356,7 +356,7 @@ export const useGridFilter = (
         ...state,
         filter: { ...state.filter, filterModel: { ...state.filter.filterModel, linkOperator } },
       }));
-      apiRef.current.unsafe_applyFilters();
+      apiRef.current.unstable_applyFilters();
     },
     [apiRef, logger, setGridState],
   );
@@ -375,7 +375,7 @@ export const useGridFilter = (
             filterModel: model,
           },
         }));
-        apiRef.current.unsafe_applyFilters();
+        apiRef.current.unstable_applyFilters();
       }
     },
     [apiRef, logger, setGridState],
@@ -390,7 +390,7 @@ export const useGridFilter = (
     apiRef,
     {
       setFilterLinkOperator,
-      unsafe_applyFilters: applyFilters,
+      unstable_applyFilters: applyFilters,
       deleteFilterItem,
       upsertFilterItem,
       setFilterModel,
@@ -426,12 +426,16 @@ export const useGridFilter = (
       isFirstRender.current = false;
       return;
     }
-    apiRef.current.unsafe_applyFilters();
+    apiRef.current.unstable_applyFilters();
   }, [apiRef, props.disableChildrenFiltering]);
 
-  useFirstRender(() => apiRef.current.unsafe_applyFilters());
+  useFirstRender(() => apiRef.current.unstable_applyFilters());
 
-  useGridApiEventHandler(apiRef, GridEvents.rowsSet, apiRef.current.unsafe_applyFilters);
-  useGridApiEventHandler(apiRef, GridEvents.rowExpansionChange, apiRef.current.unsafe_applyFilters);
+  useGridApiEventHandler(apiRef, GridEvents.rowsSet, apiRef.current.unstable_applyFilters);
+  useGridApiEventHandler(
+    apiRef,
+    GridEvents.rowExpansionChange,
+    apiRef.current.unstable_applyFilters,
+  );
   useGridApiEventHandler(apiRef, GridEvents.columnsChange, onColUpdated);
 };

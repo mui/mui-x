@@ -61,7 +61,7 @@ export const useGridSorting = (
 
   const [, setGridState, forceUpdate] = useGridState(apiRef);
 
-  apiRef.current.unsafe_updateControlState({
+  apiRef.current.unstable_updateControlState({
     stateId: 'sortModel',
     propModel: props.sortModel,
     propOnChange: props.onSortModelChange,
