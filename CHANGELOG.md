@@ -40,7 +40,7 @@ _Nov 4, 2021_
 - [core] Upgrade monorepo (#3067) @m4theushw
 - [core] Use official MUI repo as monorepo (#3084) @m4theushw
 - [test] Retry each expect until success (#3027) @m4theushw
-- [scripts] Adapt change-log script to github dom modification (#3087) @alexfauquette
+- [core] Adapt changelog script to new GitHub DOM (#3087) @alexfauquette
 
 ### Docs
 
