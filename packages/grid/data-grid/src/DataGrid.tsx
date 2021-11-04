@@ -13,6 +13,7 @@ import { GridContextProvider } from '../../_modules_/grid/context/GridContextPro
 import { useDataGridComponent } from './useDataGridComponent';
 import { MAX_PAGE_SIZE, DataGridProps } from './DataGridProps';
 import { useDataGridProps } from './useDataGridProps';
+import { DataGridVirtualScroller } from './DataGridVirtualScroller';
 
 const DataGridRaw = React.forwardRef<HTMLDivElement, DataGridProps>(function DataGrid(
   inProps,
@@ -27,7 +28,7 @@ const DataGridRaw = React.forwardRef<HTMLDivElement, DataGridProps>(function Dat
       <GridRoot ref={ref}>
         <GridErrorHandler>
           <GridHeaderPlaceholder />
-          <GridBody />
+          <GridBody VirtualScrollerComponent={DataGridVirtualScroller} />
           <GridFooterPlaceholder />
         </GridErrorHandler>
       </GridRoot>
@@ -489,6 +490,7 @@ DataGridRaw.propTypes = {
   page: PropTypes.number,
   /**
    * Set the number of rows in one page.
+   * If some of the rows have children (for instance in the tree data), this number represents the amount of top level rows wanted on each page.
    * @default 100
    */
   pageSize: chainPropTypes(PropTypes.number, (props: any) => {
@@ -535,6 +537,7 @@ DataGridRaw.propTypes = {
   rowBuffer: PropTypes.number,
   /**
    * Set the total number of rows, if it is different than the length of the value `rows` prop.
+   * If some of the rows have children (for instance in the tree data), this number represents the amount of top level rows.
    */
   rowCount: PropTypes.number,
   /**

@@ -97,12 +97,18 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
   }
 
   const publish = React.useCallback(
-    (eventName: keyof GridColumnHeaderEventLookup) => (event: React.SyntheticEvent) =>
+    (eventName: keyof GridColumnHeaderEventLookup) => (event: React.SyntheticEvent) => {
+      // Ignore portal
+      // See https://github.com/mui-org/material-ui-x/issues/1721
+      if (!event.currentTarget.contains(event.target as Element)) {
+        return;
+      }
       apiRef.current.publishEvent(
         eventName,
         apiRef.current.getColumnHeaderParams(column.field),
         event as any,
-      ),
+      );
+    },
     [apiRef, column.field],
   );
 

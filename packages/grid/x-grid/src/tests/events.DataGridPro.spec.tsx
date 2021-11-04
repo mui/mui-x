@@ -16,17 +16,17 @@ const TestEvents = () => {
   // @ts-expect-error Argument of type '(params: GridRowParams) => void' is not assignable to parameter of type 'GridEventListener<GridEvents.cellClick>'.
   useGridApiEventHandler(apiRef, 'cellClick', (params: GridRowParams) => {});
 
-  // @ts-expect-error Argument of type '(params: GridCellParams, event: React.KeyboardEvent<HTMLEvent>) => void' is not assignable to parameter of type 'GridEventListener<GridEvents.cellClick>'.
   useGridApiEventHandler(
     apiRef,
     GridEvents.cellClick,
+    // @ts-expect-error Argument of type '(params: GridCellParams, event: React.KeyboardEvent<HTMLEvent>) => void' is not assignable to parameter of type 'GridEventListener<GridEvents.cellClick>'.
     (params: GridCellParams, event: React.KeyboardEvent<HTMLElement>) => {},
   );
 
-  // @ts-expect-error Argument of type '(params: GridCellParams, event: React.KeyboardEvent<HTMLEvent>) => void' is not assignable to parameter of type 'GridEventListener<GridEvents.cellClick>'.
   useGridApiEventHandler(
     apiRef,
     'cellClick',
+    // @ts-expect-error Argument of type '(params: GridCellParams, event: React.KeyboardEvent<HTMLEvent>) => void' is not assignable to parameter of type 'GridEventListener<GridEvents.cellClick>'.
     (params: GridCellParams, event: React.KeyboardEvent<HTMLElement>) => {},
   );
 

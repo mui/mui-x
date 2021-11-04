@@ -20,7 +20,7 @@ import type { GridSelectionModel } from '../gridSelectionModel';
 import type { GridState } from '../gridState';
 import type { ElementSize } from '../elementSize';
 import type { MuiBaseEvent } from '../muiEvent';
-import type { GridRowId } from '../gridRows';
+import type {GridRowId, GridRowTreeNodeConfig} from '../gridRows';
 
 export interface GridRowEventLookup {
   rowClick: { params: GridRowParams; event: React.MouseEvent<HTMLElement> };
@@ -154,6 +154,7 @@ export interface GridEventLookup
   // Rows
   rowsSet: {};
   visibleRowsSet: {};
+  rowExpansionChange: { params: GridRowTreeNodeConfig },
 
   // Edit
   cellModeChange: { params: GridCellParams };

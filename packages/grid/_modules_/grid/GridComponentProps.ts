@@ -57,6 +57,7 @@ interface GridComponentOtherProps {
   columnTypes?: GridColumnTypesRecord;
   /**
    * Set the total number of rows, if it is different than the length of the value `rows` prop.
+   * If some of the rows have children (for instance in the tree data), this number represents the amount of top level rows.
    */
   rowCount?: number;
   /**
@@ -285,6 +286,7 @@ interface GridComponentOtherProps {
   onPageChange?: (page: number, details: GridCallbackDetails) => void;
   /**
    * Set the number of rows in one page.
+   * If some of the rows have children (for instance in the tree data), this number represents the amount of top level rows wanted on each page.
    * @default 100
    */
   pageSize?: number;

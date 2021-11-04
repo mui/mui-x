@@ -15,6 +15,7 @@ import { useDataGridProComponent } from './useDataGridProComponent';
 import { Watermark } from '../../_modules_/grid/components/Watermark';
 import { DataGridProProps } from './DataGridProProps';
 import { useDataGridProProps } from './useDataGridProProps';
+import { DataGridProVirtualScroller } from './DataGridProVirtualScroller';
 
 // This is the package release date. Each package version should update this const
 // automatically when a new version is published on npm.
@@ -41,7 +42,7 @@ const DataGridProRaw = React.forwardRef<HTMLDivElement, DataGridProProps>(functi
       <GridRoot ref={ref}>
         <GridErrorHandler>
           <GridHeaderPlaceholder />
-          <GridBody>
+          <GridBody VirtualScrollerComponent={DataGridProVirtualScroller}>
             <Watermark />
           </GridBody>
           <GridFooterPlaceholder />
@@ -139,6 +140,16 @@ DataGridProRaw.propTypes = {
    * @default "standard"
    */
   density: PropTypes.oneOf(['comfortable', 'compact', 'standard']),
+  /**
+   * If `true`, the filtering will only be applied to the top level rows.
+   * @default false
+   */
+  disableChildrenFiltering: PropTypes.bool,
+  /**
+   * If `true`, the sorting will only be applied to the top level rows.
+   * @default false
+   */
+  disableChildrenSorting: PropTypes.bool,
   /**
    * If `true`, column filters are disabled.
    * @default false
@@ -555,6 +566,7 @@ DataGridProRaw.propTypes = {
   page: PropTypes.number,
   /**
    * Set the number of rows in one page.
+   * If some of the rows have children (for instance in the tree data), this number represents the amount of top level rows wanted on each page.
    * @default 100
    */
   pageSize: PropTypes.number,
@@ -577,6 +589,7 @@ DataGridProRaw.propTypes = {
   rowBuffer: PropTypes.number,
   /**
    * Set the total number of rows, if it is different than the length of the value `rows` prop.
+   * If some of the rows have children (for instance in the tree data), this number represents the amount of top level rows.
    */
   rowCount: PropTypes.number,
   /**

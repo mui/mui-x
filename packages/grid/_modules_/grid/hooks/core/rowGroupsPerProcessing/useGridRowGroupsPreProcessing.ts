@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { GridApiRef } from '../../../models/api/gridApiRef';
+import { GridRowTreeConfig } from '../../../models/gridRows';
 import {
   GridRowGroupsPreProcessingApi,
   GridRowGroupingPreProcessing,
@@ -8,11 +9,20 @@ import {
 import { GridEvents } from '../../../models/events';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 
-const getFlatRowTree: GridRowGroupingPreProcessing = (params) => ({
-  tree: new Map(params.ids.map((id) => [id.toString(), { id, depth: 0 }])),
-  paths: Object.fromEntries(params.ids.map((id) => [id, [id.toString()]])),
-  idRowsLookup: params.idRowsLookup,
-});
+const getFlatRowTree: GridRowGroupingPreProcessing = ({ ids, idRowsLookup }) => {
+  const tree: GridRowTreeConfig = {};
+  for (let i = 0; i < ids.length; i += 1) {
+    const rowId = ids[i];
+    tree[rowId] = { id: rowId, depth: 0, parent: null, groupingValue: '' };
+  }
+
+  return {
+    tree,
+    treeDepth: 1,
+    idRowsLookup,
+    ids,
+  };
+};
 
 export const useGridRowGroupsPreProcessing = (apiRef: GridApiRef) => {
   const rowGroupsPreProcessingRef = React.useRef(

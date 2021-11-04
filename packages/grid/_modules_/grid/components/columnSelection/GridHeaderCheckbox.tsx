@@ -52,10 +52,17 @@ const GridHeaderCheckbox = React.forwardRef<HTMLInputElement, GridColumnHeaderPa
 
     // All the rows that could be selected / unselected by toggling this checkbox
     const selectionCandidates = React.useMemo(() => {
-      if (!rootProps.pagination || !rootProps.checkboxSelectionVisibleOnly) {
-        return visibleRowIds;
-      }
-      return paginatedVisibleRowIds;
+      const rowIds =
+        !rootProps.pagination || !rootProps.checkboxSelectionVisibleOnly
+          ? visibleRowIds
+          : paginatedVisibleRowIds;
+
+      // Convert to an object to make O(1) checking if a row exists or not
+      // TODO create selector that returns visibleRowIds/paginatedVisibleRowIds as an object
+      return rowIds.reduce((acc, id) => {
+        acc[id] = true;
+        return acc;
+      }, {});
     }, [
       rootProps.pagination,
       rootProps.checkboxSelectionVisibleOnly,
@@ -63,14 +70,14 @@ const GridHeaderCheckbox = React.forwardRef<HTMLInputElement, GridColumnHeaderPa
       visibleRowIds,
     ]);
 
-    // Amount of rows selected and that could be selected / unselected by toggling this checkbox
+    // Amount of rows selected and that are visible in the current page
     const currentSelectionSize = React.useMemo(
-      () => filteredSelection.filter((id) => selectionCandidates.includes(id)).length,
+      () => filteredSelection.filter((id) => selectionCandidates[id]).length,
       [filteredSelection, selectionCandidates],
     );
 
     const isIndeterminate =
-      currentSelectionSize > 0 && currentSelectionSize < selectionCandidates.length;
+      currentSelectionSize > 0 && currentSelectionSize < Object.keys(selectionCandidates).length;
 
     const isChecked = currentSelectionSize > 0;
 
