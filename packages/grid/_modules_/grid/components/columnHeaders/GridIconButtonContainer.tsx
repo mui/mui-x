@@ -1,9 +1,12 @@
 import * as React from 'react';
+import clsx from 'clsx';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { getDataGridUtilityClass } from '../../gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { GridComponentProps } from '../../GridComponentProps';
+
+export type GridIconButtonContainerProps = React.HTMLAttributes<HTMLDivElement>;
 
 type OwnerState = { classes: GridComponentProps['classes'] };
 
@@ -11,26 +14,32 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
 
   const slots = {
-    root: ['main'],
+    root: ['iconButtonContainer'],
   };
 
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-const GridMainContainerRoot = styled('div', {
+const GridIconButtonContainerRoot = styled('div', {
   name: 'MuiDataGrid',
-  slot: 'Main',
-  overridesResolver: (props, styles) => styles.main,
+  slot: 'IconButtonContainer',
+  overridesResolver: (props, styles) => styles.iconButtonContainer,
 })(() => ({
-  position: 'relative',
-  flexGrow: 1,
   display: 'flex',
-  flexDirection: 'column',
+  visibility: 'hidden',
+  width: 0,
 }));
 
-export function GridMainContainer(props: React.PropsWithChildren<{}>) {
+export const GridIconButtonContainer = React.forwardRef<
+  HTMLDivElement,
+  GridIconButtonContainerProps
+>(function GridIconButtonContainer(props: GridIconButtonContainerProps, ref) {
+  const { className, ...other } = props;
   const rootProps = useGridRootProps();
   const ownerState = { classes: rootProps.classes };
   const classes = useUtilityClasses(ownerState);
-  return <GridMainContainerRoot className={classes.root}>{props.children}</GridMainContainerRoot>;
-}
+
+  return (
+    <GridIconButtonContainerRoot ref={ref} className={clsx(classes.root, className)} {...other} />
+  );
+});

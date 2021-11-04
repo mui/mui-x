@@ -9,6 +9,7 @@ import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { getDataGridUtilityClass } from '../../gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { GridComponentProps } from '../../GridComponentProps';
+import { GridIconButtonContainer } from './GridIconButtonContainer';
 
 export interface ColumnHeaderFilterIconProps {
   counter?: number;
@@ -22,7 +23,6 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
 
   const slots = {
-    container: ['iconButtonContainer'],
     icon: ['filterIcon'],
   };
 
@@ -77,14 +77,14 @@ export function ColumnHeaderFilterIcon(props: ColumnHeaderFilterIconProps) {
       }
       enterDelay={1000}
     >
-      <div className={classes.container}>
+      <GridIconButtonContainer>
         {counter > 1 && (
           <Badge badgeContent={counter} color="default">
             {iconButton}
           </Badge>
         )}
         {counter === 1 && iconButton}
-      </div>
+      </GridIconButtonContainer>
     </Tooltip>
   );
 }
