@@ -39,7 +39,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-const StyledPopper = styled(Popper, {
+const GridMenuRoot = styled(Popper, {
   name: 'MuiDataGrid',
   slot: 'Menu',
   overridesResolver: (props, styles) => styles.menu,
@@ -80,7 +80,7 @@ const GridMenu = (props: GridMenuProps) => {
   }, [open, target]);
 
   return (
-    <StyledPopper
+    <GridMenuRoot
       className={clsx(className, classes.root)}
       open={open}
       anchorEl={target as any}
@@ -95,7 +95,7 @@ const GridMenu = (props: GridMenuProps) => {
           </Grow>
         </ClickAwayListener>
       )}
-    </StyledPopper>
+    </GridMenuRoot>
   );
 };
 

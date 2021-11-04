@@ -53,7 +53,7 @@ const GridColumnsPanelRowRoot = styled('div', {
   },
 }));
 
-const StyledIconButton = styled(IconButton)({
+const GridIconButtonRoot = styled(IconButton)({
   justifyContent: 'flex-end',
 });
 
@@ -141,7 +141,7 @@ export function GridColumnsPanel() {
                 label={column.headerName || column.field}
               />
               {!rootProps.disableColumnReorder && GRID_EXPERIMENTAL_ENABLED && (
-                <StyledIconButton
+                <GridIconButtonRoot
                   draggable
                   aria-label={apiRef.current.getLocaleText('columnsPanelDragIconLabel')}
                   title={apiRef.current.getLocaleText('columnsPanelDragIconLabel')}
@@ -149,7 +149,7 @@ export function GridColumnsPanel() {
                   disabled
                 >
                   <GridDragIcon />
-                </StyledIconButton>
+                </GridIconButtonRoot>
               )}
             </GridColumnsPanelRowRoot>
           ))}
