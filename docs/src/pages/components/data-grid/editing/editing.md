@@ -77,7 +77,7 @@ The following demo shows how these two functions can be used:
 
 ### Client-side validation
 
-To validate the value in the cells, first add an `preProcessEditCellProps` callback to the [column definition](/api/data-grid/grid-col-def/) of the respective field to validate.
+To validate the value in the cells, first add a `preProcessEditCellProps` callback to the [column definition](/api/data-grid/grid-col-def/) of the field to validate.
 Once it is called, validate the value provided in `params.props.value`.
 Then, return a new object contaning `params.props` and also the `error` attribute set to true or false.
 If the `error` attribute is true, the value will never be committed.
@@ -190,7 +190,7 @@ You can handle the `onEditRowsModelChange` callback to control the `GridEditRows
 ### Conditional validation [<span class="pro"></span>](https://mui.com/store/items/material-ui-pro/)
 
 Having all cells of a row in edit mode allows validating a field based on the value of another one.
-To accomplish that, start by adding the `onEditCellPropsChange` as explained in the [cell editing](#client-side-validation).
+To accomplish that, start by adding the `preProcessEditCellProps` as explained in the [cell editing](#client-side-validation).
 When the callback is called, use the API to check the value of the other field and decide if the current value is valid or not.
 Return a new object contaning `params.props` and the `error` attribute with the validation status.
 Once at the least one field has the `error` attribute equals to true no new value will be committed.
