@@ -7,8 +7,8 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 _Nov 4, 2021_
 
-- 👁 Move virtualization logic to hook (#3079) @m4theushw
-- 🌍 Add hebrew localization (he-IL) (#3028) @ColdAtNight
+- 💅 Reduce styles specificity to make simpler to override (#3012) @DanailH
+- 🌍 Add Hebrew (heIL) locale (#3028) @ColdAtNight
 - 📚 Documentation improvements
 - 🐞 Bugfixes
 
@@ -18,8 +18,8 @@ _Nov 4, 2021_
 
 - [core] Prefix selectors from `useGridContainerProps` with `unsafe` (#3002) @flaviendelangle
 
-  We are temporarily making the dimension APIs of the grid private to be able to clean them in a future minor release. The current approach is causing a lot of useless re-renders.
-  Please reach to us if you are really using any of those selectors to help us understand what are the community needs around this subject.
+  The dimension API is being temporarily made private to allow to clean it in future minor releases. The current approach causes useless re-renders.
+  If you relay on any of these selectors, open an issue explaining the use case so that will be taken into account when refactoring them.
 
   The following selectors were prefixed by `unstable_`. Use the provided alternatives.
 
