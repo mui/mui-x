@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-data-grid",
-  "version": "5.0.0-beta.6",
+  "version": "5.0.0-beta.7",
   "description": "The community edition of the data grid component (MUI X).",
   "author": "MUI Team",
   "main": "build/index-cjs.js",

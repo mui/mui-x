@@ -1,0 +1,1 @@
+<DataGridPro {...data} pagination pageSize={10} />

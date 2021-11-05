@@ -250,10 +250,6 @@ export const GridRootStyles = styled('div', {
       alignItems: 'center',
       gridGap: theme.spacing(1),
     },
-    // The very last cell
-    [`& .${gridClasses.columnHeaderWrapper} .${gridClasses.cell}`]: {
-      borderBottom: 'none',
-    },
     [`& .${gridClasses['cell--withRenderer']}`]: {
       display: 'flex',
       alignItems: 'center',

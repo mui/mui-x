@@ -1,0 +1,1 @@
+<DataGrid rows={data.rows} columns={columns} />
