@@ -5,27 +5,29 @@ import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { GridEvents } from '../../../constants/eventsConstants';
 
 export const useGridPreProcessing = (apiRef: GridApiRef) => {
-  const preProcessorsRef = React.useRef(new Map<string, PreProcessorCallback[]>());
+  const preProcessorsRef = React.useRef<
+    Partial<Record<string, Record<string, PreProcessorCallback>>>
+  >({});
 
   const registerPreProcessor = React.useCallback<
     GridPreProcessingApi['unstable_registerPreProcessor']
   >(
-    (name, callback) => {
-      if (!preProcessorsRef.current.has(name)) {
-        preProcessorsRef.current.set(name, []);
+    (group, id, callback) => {
+      if (!preProcessorsRef.current[group]) {
+        preProcessorsRef.current[group] = {};
       }
 
-      const preProcessors = preProcessorsRef.current.get(name)!;
-      preProcessorsRef.current.set(name, [...preProcessors, callback]);
-      apiRef.current.publishEvent(GridEvents.preProcessorRegister, name);
+      const preProcessors = preProcessorsRef.current[group]!;
+      const oldCallback = preProcessors[id];
+      if (!oldCallback || oldCallback !== callback) {
+        preProcessorsRef.current[group] = { ...preProcessors, [id]: callback };
+        apiRef.current.publishEvent(GridEvents.preProcessorRegister, group);
+      }
 
       return () => {
-        // The registered pre-processors might have changed since this function was first called
-        const latestPreProcessors = preProcessorsRef.current.get(name)!;
-        const index = latestPreProcessors.findIndex((preProcessor) => preProcessor === callback);
-        const newProcessors = [...latestPreProcessors];
-        newProcessors.splice(index, 1);
-        preProcessorsRef.current.set(name, newProcessors);
+        const { [id]: removedPreProcessor, ...otherProcessors } = preProcessorsRef.current[group]!;
+        preProcessorsRef.current[group] = otherProcessors;
+        apiRef.current.publishEvent(GridEvents.preProcessorUnregister, group);
       };
     },
     [apiRef],
@@ -33,11 +35,11 @@ export const useGridPreProcessing = (apiRef: GridApiRef) => {
 
   const applyPreProcessors = React.useCallback<GridPreProcessingApi['unstable_applyPreProcessors']>(
     (name, value, params) => {
-      if (!preProcessorsRef.current.has(name)) {
+      if (!preProcessorsRef.current[name]) {
         return value;
       }
 
-      const preProcessors = preProcessorsRef.current.get(name)!;
+      const preProcessors = Object.values(preProcessorsRef.current[name]!);
       return preProcessors.reduce((acc, preProcessor) => {
         return preProcessor(acc, params);
       }, value);

@@ -84,7 +84,6 @@ export const useGridSelection = (
   const ownerState = { classes: props.classes };
   const classes = useUtilityClasses(ownerState);
   const lastRowToggled = React.useRef<GridRowId | null>(null);
-  const unregisterPreProcessorRef = React.useRef<(() => void) | null>(null);
 
   apiRef.current.unsafe_updateControlState({
     stateId: 'selection',
@@ -393,8 +392,9 @@ export const useGridSelection = (
       return [groupingColumn, ...columns];
     };
 
-    unregisterPreProcessorRef.current = apiRef.current.unstable_registerPreProcessor(
+    apiRef.current.unstable_registerPreProcessor(
       GridPreProcessingGroup.hydrateColumns,
+      'selection',
       addCheckboxColumn,
     );
   }, [apiRef, props.checkboxSelection, classes]);
@@ -408,16 +408,7 @@ export const useGridSelection = (
     if (isFirstRender.current) {
       isFirstRender.current = false;
     } else {
-      // Only register here if we're not in the first render.
-      // During the first render, useFirstRender takes care of registering the pre-processor.
       updateColumnsPreProcessing();
     }
-
-    return () => {
-      if (unregisterPreProcessorRef.current) {
-        unregisterPreProcessorRef.current();
-        unregisterPreProcessorRef.current = null;
-      }
-    };
   }, [updateColumnsPreProcessing]);
 };
