@@ -102,13 +102,17 @@ export interface GridClasses {
    */
   columnHeaderTitleContainer: string;
   /**
-   * Styles applied to the column header's wrapper element.
+   * Styles applied to the column headers.
    */
-  columnHeaderWrapper: string;
+  columnHeaders: string;
   /**
-   * Styles applied to the outer columns container element.
+   * Styles applied to the column headers's inner element.
    */
-  columnsContainer: string;
+  columnHeadersInner: string;
+  /**
+   * Styles applied to the column headers's inner element if there is a horizontal scrollbar.
+   */
+  'columnHeadersInner--scrollable': string;
   /**
    * Styles applied to the column header separator if the column is resizable.
    */
@@ -308,8 +312,9 @@ export const gridClasses = generateUtilityClasses('MuiDataGrid', [
   'columnHeaderDropZone',
   'columnHeaderTitle',
   'columnHeaderTitleContainer',
-  'columnHeaderWrapper',
-  'columnsContainer',
+  'columnHeaders',
+  'columnHeadersInner',
+  'columnHeadersInner--scrollable',
   'columnSeparator--resizable',
   'columnSeparator--resizing',
   'columnSeparator',
