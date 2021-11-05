@@ -238,7 +238,7 @@ export const useGridRows = (
         // TODO: Add test with direct call to `apiRef.current.updateRows` in DataGrid after enabling the `apiRef` on the free plan.
         throw new Error(
           [
-            "MUI: You can't update several rows at once in `apiRef.current.updateRows` on the free plan",
+            "MUI: You can't update several rows at once in `apiRef.current.updateRows` on the DataGrid.",
             'You need to upgrade to the DataGridPro component to unlock this feature.',
           ].join('\n'),
         );
