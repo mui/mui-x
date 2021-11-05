@@ -1,4 +1,4 @@
-import { generateUtilityClasses, generateUtilityClass } from '@mui/material';
+import { generateUtilityClasses, generateUtilityClass } from '@mui/material/utils';
 
 export interface GridClasses {
   /**
