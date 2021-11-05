@@ -1,0 +1,10 @@
+<DataGridPro
+  {...data}
+  rows={data.rows.concat(loadedRows)}
+  loading={loading}
+  hideFooterPagination
+  onRowsScrollEnd={handleOnRowsScrollEnd}
+  components={{
+    LoadingOverlay: CustomLoadingOverlay,
+  }}
+/>

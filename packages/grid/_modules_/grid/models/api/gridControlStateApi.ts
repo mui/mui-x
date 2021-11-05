@@ -11,7 +11,7 @@ export interface GridControlStateApi {
    * @param {GridControlStateItem<TModel>} controlState The [[GridControlStateItem]] to be registered.
    * @ignore - do not document.
    */
-  unsafe_updateControlState: <E extends keyof GridControlledStateEventLookup>(
+  unstable_updateControlState: <E extends keyof GridControlledStateEventLookup>(
     controlState: GridControlStateItem<E>,
   ) => void;
   /**
@@ -20,7 +20,7 @@ export interface GridControlStateApi {
    * @returns {{ ignoreSetState: boolean, postUpdate: () => void }} ignoreSetState let the state know if it should update, and postUpdate is a callback function triggered if the state has updated.
    * @ignore - do not document.
    */
-  unsafe_applyControlStateConstraint: (state: GridState) => {
+  unstable_applyControlStateConstraint: (state: GridState) => {
     ignoreSetState: boolean;
     postUpdate: () => void;
   };

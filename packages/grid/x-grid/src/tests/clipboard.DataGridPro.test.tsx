@@ -76,14 +76,14 @@ describe('<DataGridPro /> - Clipboard', () => {
     it('should copy the selected rows to the clipboard', () => {
       render(<Test />);
       apiRef.current.selectRows([0, 1]);
-      apiRef.current.unsafe_copySelectedRowsToClipboard();
+      apiRef.current.unstable_copySelectedRowsToClipboard();
       expect(writeText.firstCall.args[0]).to.equal(['0\tNike', '1\tAdidas'].join('\r\n'));
     });
 
     it('should include the headers when includeHeaders=true', () => {
       render(<Test />);
       apiRef.current.selectRows([0, 1]);
-      apiRef.current.unsafe_copySelectedRowsToClipboard(true);
+      apiRef.current.unstable_copySelectedRowsToClipboard(true);
       expect(writeText.firstCall.args[0]).to.equal(
         ['id\tBrand', '0\tNike', '1\tAdidas'].join('\r\n'),
       );

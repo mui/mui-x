@@ -1,0 +1,5 @@
+<DataGridPro
+  {...data}
+  filterModel={filterModel}
+  onFilterModelChange={(model) => setFilterModel(model)}
+/>

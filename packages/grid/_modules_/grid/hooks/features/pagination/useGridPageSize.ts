@@ -27,7 +27,7 @@ export const useGridPageSize = (
 
   const containerSizes = useGridSelector(apiRef, unstable_gridContainerSizesSelector);
 
-  apiRef.current.unsafe_updateControlState({
+  apiRef.current.unstable_updateControlState({
     stateId: 'pageSize',
     propModel: props.pageSize,
     propOnChange: props.onPageSizeChange,
