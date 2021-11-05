@@ -2,6 +2,8 @@ import * as React from 'react';
 import {
   createClientRenderStrictMode,
   // @ts-expect-error need to migrate helpers to TypeScript
+  screen,
+  // @ts-expect-error need to migrate helpers to TypeScript
   ErrorBoundary,
 } from 'test/utils';
 import { useFakeTimers, stub } from 'sinon';
@@ -15,7 +17,7 @@ import {
 } from '@mui/x-data-grid';
 import { useData } from 'packages/storybook/src/hooks/useData';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { getColumnHeaderCell, getColumnValues, raf } from 'test/utils/helperFn';
+import { getColumnHeaderCell, getColumnValues, raf, getCell, getRow } from 'test/utils/helperFn';
 
 describe('<DataGrid /> - Layout & Warnings', () => {
   // TODO v5: replace with createClientRender
@@ -730,5 +732,45 @@ describe('<DataGrid /> - Layout & Warnings', () => {
       );
       expect(document.querySelectorAll('.MuiDataGrid-overlay')[0].textContent).to.equal(message);
     });
+  });
+
+  it('should allow style customization using the theme', () => {
+    const theme = createTheme({
+      components: {
+        MuiDataGrid: {
+          styleOverrides: {
+            root: {
+              backgroundColor: 'rgb(255, 0, 0)',
+            },
+            columnHeader: {
+              backgroundColor: 'rgb(255, 255, 0)',
+            },
+            row: {
+              backgroundColor: 'rgb(128, 0, 128)',
+            },
+            cell: {
+              backgroundColor: 'rgb(0, 128, 0)',
+            },
+          },
+        },
+      },
+    });
+
+    render(
+      <ThemeProvider theme={theme}>
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid {...baselineProps} />
+        </div>
+      </ThemeProvider>,
+    );
+
+    expect(window.getComputedStyle(screen.getByRole('grid')).backgroundColor).to.equal(
+      'rgb(255, 0, 0)',
+    );
+    expect(window.getComputedStyle(getColumnHeaderCell(0)).backgroundColor).to.equal(
+      'rgb(255, 255, 0)',
+    );
+    expect(window.getComputedStyle(getRow(0)).backgroundColor).to.equal('rgb(128, 0, 128)');
+    expect(window.getComputedStyle(getCell(0, 0)).backgroundColor).to.equal('rgb(0, 128, 0)');
   });
 });

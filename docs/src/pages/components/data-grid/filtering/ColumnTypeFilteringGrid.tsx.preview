@@ -1,0 +1,14 @@
+<DataGrid
+  rows={data.rows}
+  columns={columns}
+  columnTypes={{ price: priceColumnType }}
+  initialState={{
+    filter: {
+      filterModel: {
+        items: [
+          { columnField: 'totalPrice', value: '3000000', operatorValue: '>' },
+        ],
+      },
+    },
+  }}
+/>

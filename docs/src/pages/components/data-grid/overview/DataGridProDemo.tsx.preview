@@ -1,0 +1,7 @@
+<DataGridPro
+  {...data}
+  loading={data.rows.length === 0}
+  rowHeight={38}
+  checkboxSelection
+  disableSelectionOnClick
+/>

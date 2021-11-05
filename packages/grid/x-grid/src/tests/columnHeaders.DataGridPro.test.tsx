@@ -10,7 +10,7 @@ import {
 } from 'test/utils';
 import { expect } from 'chai';
 import { gridClasses, DataGridPro } from '@mui/x-data-grid-pro';
-import { getColumnHeaderCell } from 'test/utils/helperFn';
+import { getColumnHeaderCell, getColumnValues } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -54,6 +54,36 @@ describe('<DataGridPro /> - Column Headers', () => {
       const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
       virtualScroller.dispatchEvent(new Event('scroll'));
       await waitFor(() => expect(screen.queryByRole('menu')).to.equal(null));
+    });
+
+    it('should not modify column order when menu is clicked', async () => {
+      render(
+        <div style={{ width: 300, height: 500 }}>
+          <DataGridPro {...baselineProps} columns={[{ field: 'brand' }]} />
+        </div>,
+      );
+      expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
+      const columnCell = getColumnHeaderCell(0);
+      const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]');
+      fireEvent.click(menuIconButton);
+      await waitFor(() => expect(screen.queryByRole('menu')).not.to.equal(null));
+      fireEvent.click(screen.queryByRole('menu'));
+      expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
+    });
+
+    it('should sort column when sort by Asc is clicked', async () => {
+      render(
+        <div style={{ width: 300, height: 500 }}>
+          <DataGridPro {...baselineProps} columns={[{ field: 'brand' }]} />
+        </div>,
+      );
+      const columnCell = getColumnHeaderCell(0);
+      const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]');
+      expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
+      fireEvent.click(menuIconButton);
+      await waitFor(() => expect(screen.queryByRole('menu')).not.to.equal(null));
+      fireEvent.click(screen.getByRole('menuitem', { name: 'Sort by ASC' }));
+      expect(getColumnValues(0)).to.deep.equal(['Adidas', 'Nike', 'Puma']);
     });
 
     it('should close the menu of a column when resizing this column', async () => {
