@@ -57,6 +57,8 @@ export function GridFilterPanel() {
     return defaultItem ? [defaultItem] : [];
   }, [filterModel.items, getDefaultItem]);
 
+  const hasMultipleFilters = items.length > 1;
+
   const addNewFilter = () => {
     const defaultItem = getDefaultItem();
     if (!defaultItem) {
@@ -71,8 +73,6 @@ export function GridFilterPanel() {
     },
     [apiRef],
   );
-
-  const hasMultipleFilters = items.length > 1;
 
   return (
     <GridPanelWrapper>
