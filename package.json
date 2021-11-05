@@ -162,6 +162,6 @@
     ]
   },
   "dependencies": {
-    "html-webpack-plugin": "^5.4.0"
+    "html-webpack-plugin": "^5.5.0"
   }
 }
