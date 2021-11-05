@@ -62,11 +62,7 @@ export function GridFilterPanel() {
     if (!defaultItem) {
       return;
     }
-
-    apiRef.current.setFilterModel({
-      ...filterModel,
-      items: [...items, defaultItem],
-    });
+    apiRef.current.upsertFilterItem(defaultItem);
   };
 
   const deleteFilter = React.useCallback(
