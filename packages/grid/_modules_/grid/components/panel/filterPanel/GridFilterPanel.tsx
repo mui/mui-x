@@ -33,13 +33,16 @@ export function GridFilterPanel() {
   );
 
   const getDefaultItem = React.useCallback((): GridFilterItem | null => {
-    if (filterableColumns.length === 0 || !filterableColumns[0].filterOperators?.length) {
+    const firstColumnWithOperator = filterableColumns.find(
+      (colDef) => colDef.filterOperators?.length,
+    );
+    if (!firstColumnWithOperator) {
       return null;
     }
 
     return {
-      columnField: filterableColumns[0].field,
-      operatorValue: filterableColumns[0].filterOperators[0].value,
+      columnField: firstColumnWithOperator.field,
+      operatorValue: firstColumnWithOperator.filterOperators![0].value,
       id: Math.round(Math.random() * 1e5),
     };
   }, [filterableColumns]);
@@ -73,6 +76,8 @@ export function GridFilterPanel() {
     [apiRef],
   );
 
+  const hasMultipleFilters = items.length > 1;
+
   return (
     <GridPanelWrapper>
       <GridPanelContent>
@@ -82,7 +87,7 @@ export function GridFilterPanel() {
             item={item}
             applyFilterChanges={applyFilter}
             deleteFilter={deleteFilter}
-            hasMultipleFilters={items.length > 1}
+            hasMultipleFilters={hasMultipleFilters}
             showMultiFilterOperators={index > 0}
             multiFilterOperator={filterModel.linkOperator}
             disableMultiFilterOperator={index !== 1}
