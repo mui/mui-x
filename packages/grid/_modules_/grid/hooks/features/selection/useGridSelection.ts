@@ -407,8 +407,8 @@ export const useGridSelection = (
   React.useEffect(() => {
     if (isFirstRender.current) {
       isFirstRender.current = false;
-    } else {
-      updateColumnsPreProcessing();
+      return;
     }
+    updateColumnsPreProcessing();
   }, [updateColumnsPreProcessing]);
 };
