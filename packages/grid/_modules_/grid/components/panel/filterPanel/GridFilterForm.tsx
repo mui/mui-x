@@ -16,6 +16,7 @@ import { GridTranslationKeys } from '../../../models/api/gridLocaleTextApi';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import { GridComponentProps } from '../../../GridComponentProps';
 import { getDataGridUtilityClass } from '../../../gridClasses';
+import {GridStateColDef} from "../../../models";
 
 export interface GridFilterFormProps {
   item: GridFilterItem;
@@ -73,7 +74,7 @@ function GridFilterForm(props: GridFilterFormProps) {
   const ownerState = { classes: rootProps.classes };
   const classes = useUtilityClasses(ownerState);
 
-  const getCurrentColumn = React.useCallback(() => {
+  const currentColumn = React.useMemo<GridStateColDef | null>(() => {
     if (!item.columnField) {
       return null;
     }
@@ -81,12 +82,12 @@ function GridFilterForm(props: GridFilterFormProps) {
   }, [apiRef, item]);
 
   const currentOperator = React.useMemo(() => {
-    const currentColumn = getCurrentColumn();
     if (!item.operatorValue || !currentColumn) {
       return null;
     }
+
     return currentColumn.filterOperators?.find((operator) => operator.value === item.operatorValue);
-  }, [item, getCurrentColumn]);
+  }, [item, currentColumn]);
 
   const changeColumn = React.useCallback(
     (event: SelectChangeEvent) => {
@@ -205,7 +206,7 @@ function GridFilterForm(props: GridFilterFormProps) {
           onChange={changeOperator}
           native
         >
-          {getCurrentColumn()?.filterOperators?.map((operator) => (
+          {currentColumn?.filterOperators?.map((operator) => (
             <option key={operator.value} value={operator.value}>
               {operator.label ||
                 apiRef.current.getLocaleText(
