@@ -20,6 +20,7 @@ interface GridBodyProps {
       disableVirtualization: boolean;
     }
   >;
+
   ColumnHeadersComponent: React.JSXElementConstructor<
     React.HTMLAttributes<HTMLDivElement> & {
       ref: React.Ref<HTMLDivElement>;
