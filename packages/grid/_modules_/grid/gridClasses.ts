@@ -242,7 +242,8 @@ export interface GridClasses {
    */
   row: string;
   /**
-   * Styles applied to the footer row count element.
+   * Styles applied to the footer row count element to show the total number of rows.
+   * Only works when pagination is disabled.
    */
   rowCount: string;
   /**

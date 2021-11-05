@@ -348,8 +348,8 @@
     },
     "row": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the row element" },
     "rowCount": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the footer row count element"
+      "description": "Styles applied to {{nodeName}}.\nOnly works when pagination is disabled.",
+      "nodeName": "the footer row count element to show the total number of rows"
     },
     "scrollArea": {
       "description": "Styles applied to {{nodeName}}.",
