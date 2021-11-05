@@ -71,7 +71,7 @@ export function useGridEditRows(
   const nextFocusedCell = React.useRef<GridCellParams | null>(null);
   const columns = useGridSelector(apiRef, allGridColumnsSelector);
 
-  apiRef.current.unsafe_updateControlState({
+  apiRef.current.unstable_updateControlState({
     stateId: 'editRows',
     propModel: props.editRowsModel,
     propOnChange: props.onEditRowsModelChange,
