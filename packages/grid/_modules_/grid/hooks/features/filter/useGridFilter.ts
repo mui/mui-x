@@ -21,9 +21,7 @@ import { gridRowIdsSelector, gridRowTreeDepthSelector, gridRowTreeSelector } fro
 
 type GridFilterItemApplier = (rowId: GridRowId) => boolean;
 
-const checkFilterModelValidity = (
-  model: GridFilterModel,
-) => {
+const checkFilterModelValidity = (model: GridFilterModel) => {
   if (model.items.length > 1) {
     const hasItemsWithoutIds = model.items.find((item) => item.id == null);
     if (hasItemsWithoutIds) {
@@ -283,17 +281,14 @@ export const useGridFilter = (
   const upsertFilterItem = React.useCallback<GridFilterApi['upsertFilterItem']>(
     (item) => {
       const filterModel = gridFilterModelSelector(apiRef.current.state);
-
       const items = [...filterModel.items];
+      const itemIndex = items.findIndex((filterItem) => filterItem.id === item.id);
       const newItem = cleanFilterItem(item);
-      const itemIndex = items.findIndex((filterItem) => filterItem.id === newItem.id);
-
       if (itemIndex === -1) {
         items.push(newItem);
       } else {
         items[itemIndex] = newItem;
       }
-
       apiRef.current.setFilterModel({ ...filterModel, items });
     },
     [apiRef, cleanFilterItem],
@@ -372,7 +367,7 @@ export const useGridFilter = (
         checkFilterModelValidity(model);
 
         if (model.items.length > 1 && props.disableMultipleColumnsFiltering) {
-          model.items = [model.items[0]]
+          model.items = [model.items[0]];
         }
 
         logger.debug('Setting filter model');
