@@ -49,15 +49,16 @@ function hydrateColumnsWidth(
       newColumn.computedWidth = 0;
     } else {
       const minWidth = newColumn.minWidth ?? GRID_STRING_COL_DEF.minWidth!;
-
+      let computedWidth: number;
       if (newColumn.flex && newColumn.flex > 0) {
         totalFlexUnits += newColumn.flex;
-        newColumn.computedWidth = minWidth;
+        computedWidth = minWidth;
       } else {
-        const computedWidth = Math.max(newColumn.width ?? GRID_STRING_COL_DEF.width!, minWidth);
-        widthToAllocateInFlex -= computedWidth;
-        newColumn.computedWidth = computedWidth;
+        computedWidth = Math.max(newColumn.width ?? GRID_STRING_COL_DEF.width!, minWidth);
       }
+
+      widthToAllocateInFlex -= computedWidth;
+      newColumn.computedWidth = computedWidth;
     }
 
     return newColumn;
@@ -66,15 +67,11 @@ function hydrateColumnsWidth(
   // Compute the width of flex columns
   if (totalFlexUnits > 0 && widthToAllocateInFlex > 0) {
     const widthPerFlexUnit = widthToAllocateInFlex / totalFlexUnits;
-
     for (let i = 0; i < stateColumns.length; i += 1) {
       const column = stateColumns[i];
 
       if (!column.hide && column.flex && column.flex > 0) {
-        stateColumns[i].computedWidth = Math.max(
-          widthPerFlexUnit * column.flex,
-          column.computedWidth,
-        );
+        stateColumns[i].computedWidth += widthPerFlexUnit * column.flex;
       }
     }
   }
