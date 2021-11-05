@@ -5,7 +5,7 @@
   "author": "MUI Team",
   "main": "build/cjs/index.js",
   "module": "build/esm/index.js",
-  "types": "build/x-license.d.ts",
+  "types": "build/x-license-pro.d.ts",
   "scripts": {
     "typescript": "tsc -p tsconfig.json",
     "build": "rollup -c"
