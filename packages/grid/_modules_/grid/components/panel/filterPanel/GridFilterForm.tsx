@@ -16,7 +16,7 @@ import { GridTranslationKeys } from '../../../models/api/gridLocaleTextApi';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import { GridComponentProps } from '../../../GridComponentProps';
 import { getDataGridUtilityClass } from '../../../gridClasses';
-import {GridStateColDef} from "../../../models";
+import { GridStateColDef } from '../../../models';
 
 export interface GridFilterFormProps {
   item: GridFilterItem;
