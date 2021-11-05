@@ -1,0 +1,10 @@
+<DataGrid
+  rows={rows}
+  columns={columns}
+  getCellClassName={(params: GridCellParams<number>) => {
+    if (params.field === 'city') {
+      return '';
+    }
+    return params.value >= 15 ? 'hot' : 'cold';
+  }}
+/>

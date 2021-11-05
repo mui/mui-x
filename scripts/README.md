@@ -32,10 +32,14 @@ You can use the following script in your browser console on any GitHub page to a
 (() => {
   const commits = Array.from(document.querySelectorAll('.TimelineItem--condensed'));
   const message = commits
+    .flatMap((day) => Array.from(day.querySelectorAll('li')))
     .map((node) => {
-      return `- ${node.querySelector('code a').getAttribute('title').split('\n')[0]} ${node
-        .querySelector('.AvatarStack-body img')
-        .getAttribute('alt')}`;
+      return `- ${
+        Array.from(node.querySelectorAll('a'))
+          .map((a) => a.text)
+          .join('')
+          .split('\n')[0]
+      } ${node.querySelector('.AvatarStack-body img').getAttribute('alt')}`;
     })
     .filter((x) => x.indexOf('- Bump') !== 0)
     .sort()

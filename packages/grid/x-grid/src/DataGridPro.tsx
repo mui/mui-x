@@ -15,6 +15,8 @@ import { useDataGridProComponent } from './useDataGridProComponent';
 import { Watermark } from '../../_modules_/grid/components/Watermark';
 import { DataGridProProps } from './DataGridProProps';
 import { useDataGridProProps } from './useDataGridProProps';
+import { DataGridProColumnHeaders } from './DataGridProColumnHeaders';
+import { DataGridProVirtualScroller } from './DataGridProVirtualScroller';
 
 // This is the package release date. Each package version should update this const
 // automatically when a new version is published on npm.
@@ -41,7 +43,10 @@ const DataGridProRaw = React.forwardRef<HTMLDivElement, DataGridProProps>(functi
       <GridRoot ref={ref}>
         <GridErrorHandler>
           <GridHeaderPlaceholder />
-          <GridBody>
+          <GridBody
+            ColumnHeadersComponent={DataGridProColumnHeaders}
+            VirtualScrollerComponent={DataGridProVirtualScroller}
+          >
             <Watermark />
           </GridBody>
           <GridFooterPlaceholder />

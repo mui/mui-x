@@ -1,11 +1,13 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import clsx from 'clsx';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import { GridEvents } from '../constants/eventsConstants';
 import { useGridApiEventHandler } from '../hooks/utils/useGridApiEventHandler';
 import { GridScrollParams } from '../models/params/gridScrollParams';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
-import { getDataGridUtilityClass } from '../gridClasses';
+import { getDataGridUtilityClass, gridClasses } from '../gridClasses';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { GridComponentProps } from '../GridComponentProps';
 import { gridDensityHeaderHeightSelector } from '../hooks/features/density/densitySelector';
@@ -31,6 +33,28 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
+
+const GridScrollAreaRawRoot = styled('div', {
+  name: 'MuiDataGrid',
+  slot: 'ScrollArea',
+  overridesResolver: (props, styles) => [
+    { [`&.${gridClasses['scrollArea--left']}`]: styles['scrollArea--left'] },
+    { [`&.${gridClasses['scrollArea--right']}`]: styles['scrollArea--right'] },
+    styles.scrollArea,
+  ],
+})(() => ({
+  position: 'absolute',
+  top: 0,
+  zIndex: 101,
+  width: 20,
+  bottom: 0,
+  [`&.${gridClasses['scrollArea--left']}`]: {
+    left: 0,
+  },
+  [`&.${gridClasses['scrollArea--right']}`]: {
+    right: 0,
+  },
+}));
 
 function GridScrollAreaRaw(props: ScrollAreaProps) {
   const { scrollDirection } = props;
@@ -93,7 +117,12 @@ function GridScrollAreaRaw(props: ScrollAreaProps) {
   useGridApiEventHandler(apiRef, GridEvents.columnHeaderDragEnd, toggleDragging);
 
   return dragging ? (
-    <div ref={rootRef} className={classes.root} onDragOver={handleDragOver} style={{ height }} />
+    <GridScrollAreaRawRoot
+      ref={rootRef}
+      className={clsx(classes.root)}
+      onDragOver={handleDragOver}
+      style={{ height }}
+    />
   ) : null;
 }
 

@@ -126,9 +126,9 @@ export const useGridPrintExport = (
       gridCloneViewport!.parentElement!.style.width = 'auto';
       gridCloneViewport!.parentElement!.style.height = 'auto';
 
-      const columnsContainer = gridClone.querySelector(`.${gridClasses.columnsContainer}`);
-      const columnHeaders = columnsContainer!.firstChild! as HTMLElement;
-      columnHeaders.style.width = '100%';
+      const columnHeaders = gridClone.querySelector(`.${gridClasses.columnHeaders}`);
+      const columnHeadersInner = columnHeaders!.firstChild! as HTMLElement;
+      columnHeadersInner.style.width = '100%';
 
       let gridToolbarElementHeight =
         gridRootElement!.querySelector(`.${gridClasses.toolbarContainer}`)?.clientHeight || 0;
