@@ -297,7 +297,7 @@ export const useGridRows = (
 
       throttledRowsChange(state, true);
     },
-    [apiRef, props.getRowId, throttledRowsChange],
+    [apiRef, props.getRowId, throttledRowsChange, props.signature],
   );
 
   const getRowModels = React.useCallback<GridRowApi['getRowModels']>(() => {
