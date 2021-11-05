@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import { getDataGridUtilityClass } from '../../gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { GridComponentProps } from '../../GridComponentProps';
@@ -16,9 +17,20 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
+const GridMainContainerRoot = styled('div', {
+  name: 'MuiDataGrid',
+  slot: 'Main',
+  overridesResolver: (props, styles) => styles.main,
+})(() => ({
+  position: 'relative',
+  flexGrow: 1,
+  display: 'flex',
+  flexDirection: 'column',
+}));
+
 export function GridMainContainer(props: React.PropsWithChildren<{}>) {
   const rootProps = useGridRootProps();
   const ownerState = { classes: rootProps.classes };
   const classes = useUtilityClasses(ownerState);
-  return <div className={classes.root}>{props.children}</div>;
+  return <GridMainContainerRoot className={classes.root}>{props.children}</GridMainContainerRoot>;
 }

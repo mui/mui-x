@@ -221,8 +221,6 @@
   { "name": "GridColumnIcon", "kind": "Variable" },
   { "name": "GridColumnMenu", "kind": "Variable" },
   { "name": "GridColumnMenuContainer", "kind": "Variable" },
-  { "name": "GridColumnsContainer", "kind": "Variable" },
-  { "name": "GridColumnsHeader", "kind": "Variable" },
   { "name": "GridColumnsMenuItem", "kind": "Variable" },
   { "name": "GridDragIcon", "kind": "Variable" },
   { "name": "GridFeatureModeConstant", "kind": "Variable" },

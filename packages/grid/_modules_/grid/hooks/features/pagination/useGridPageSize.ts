@@ -24,7 +24,7 @@ export const useGridPageSize = (
   }));
   const [, setGridState, forceUpdate] = useGridState(apiRef);
 
-  apiRef.current.unsafe_updateControlState({
+  apiRef.current.unstable_updateControlState({
     stateId: 'pageSize',
     propModel: props.pageSize,
     propOnChange: props.onPageSizeChange,
