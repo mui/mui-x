@@ -16,7 +16,6 @@ import { GridTranslationKeys } from '../../../models/api/gridLocaleTextApi';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import { GridComponentProps } from '../../../GridComponentProps';
 import { getDataGridUtilityClass } from '../../../gridClasses';
-import { GridStateColDef } from '../../../models';
 
 export interface GridFilterFormProps {
   item: GridFilterItem;
@@ -74,12 +73,7 @@ function GridFilterForm(props: GridFilterFormProps) {
   const ownerState = { classes: rootProps.classes };
   const classes = useUtilityClasses(ownerState);
 
-  const currentColumn = React.useMemo<GridStateColDef | null>(() => {
-    if (!item.columnField) {
-      return null;
-    }
-    return apiRef.current.getColumn(item.columnField)!;
-  }, [apiRef, item]);
+  const currentColumn = item.columnField ? apiRef.current.getColumn(item.columnField) : null;
 
   const currentOperator = React.useMemo(() => {
     if (!item.operatorValue || !currentColumn) {
