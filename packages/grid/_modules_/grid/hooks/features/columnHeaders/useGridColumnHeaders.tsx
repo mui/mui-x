@@ -17,7 +17,7 @@ import { gridFilterActiveItemsLookupSelector } from '../filter/gridFilterSelecto
 import { gridSortColumnLookupSelector } from '../sorting/gridSortingSelector';
 import { gridColumnMenuSelector } from '../columnMenu/columnMenuSelector';
 import { useGridRootProps } from '../../utils/useGridRootProps';
-import { RenderContext } from '../../../components/GridVirtualScroller';
+import { RenderContext } from "../virtualization/useGridVirtualScroller";
 import { GridColumnHeaderParams } from '../../../models/params/gridColumnHeaderParams';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { GridEvents } from '../../../constants/eventsConstants';

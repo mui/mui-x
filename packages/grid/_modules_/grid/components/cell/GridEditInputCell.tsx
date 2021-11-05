@@ -2,6 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { unstable_useEnhancedEffect as useEnhancedEffect } from '@mui/material/utils';
+import { styled } from '@mui/material/styles';
 import InputBase, { InputBaseProps } from '@mui/material/InputBase';
 import { GridRenderEditCellParams } from '../../models/params/gridCellParams';
 import { getDataGridUtilityClass } from '../../gridClasses';
@@ -19,6 +20,19 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
+
+const GridEditInputCellRoot = styled(InputBase, {
+  name: 'MuiDataGrid',
+  slot: 'EditInputCell',
+  overridesResolver: (props, styles) => styles.editInputCell,
+})(({ theme }) => ({
+  ...theme.typography.body2,
+  padding: '1px 0',
+  '& input': {
+    padding: '0 16px',
+    height: '100%',
+  },
+}));
 
 function GridEditInputCell(props: GridRenderEditCellParams & InputBaseProps) {
   const {
@@ -64,7 +78,7 @@ function GridEditInputCell(props: GridRenderEditCellParams & InputBaseProps) {
   }, [hasFocus]);
 
   return (
-    <InputBase
+    <GridEditInputCellRoot
       inputRef={inputRef}
       className={classes.root}
       fullWidth

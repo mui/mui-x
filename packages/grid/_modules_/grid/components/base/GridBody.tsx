@@ -7,21 +7,29 @@ import { GridMainContainer } from '../containers/GridMainContainer';
 import { GridAutoSizer } from '../GridAutoSizer';
 import { GridOverlays } from './GridOverlays';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { GridVirtualScroller } from '../GridVirtualScroller';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { gridSelectionStateSelector } from '../../hooks/features/selection/gridSelectionSelector';
 import { gridDensityHeaderHeightSelector } from '../../hooks/features/density/densitySelector';
 
 interface GridBodyProps {
   children?: React.ReactNode;
-  ColumnHeadersComponent: React.JSXElementConstructor<{
-    ref: React.Ref<HTMLDivElement>;
-    innerRef: React.Ref<HTMLDivElement>;
-  }>;
+  VirtualScrollerComponent: React.JSXElementConstructor<
+    React.HTMLAttributes<HTMLDivElement> & {
+      ref: React.Ref<HTMLDivElement>;
+      selectionLookup: {};
+      disableVirtualization: boolean;
+    }
+  >;
+  ColumnHeadersComponent: React.JSXElementConstructor<
+    React.HTMLAttributes<HTMLDivElement> & {
+      ref: React.Ref<HTMLDivElement>;
+      innerRef: React.Ref<HTMLDivElement>;
+    }
+  >;
 }
 
 function GridBody(props: GridBodyProps) {
-  const { children, ColumnHeadersComponent } = props;
+  const { children, VirtualScrollerComponent, ColumnHeadersComponent } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
   const selection = useGridSelector(apiRef, gridSelectionStateSelector);
@@ -95,10 +103,10 @@ function GridBody(props: GridBodyProps) {
             // In this case, let the container to grow whatever it needs.
             height: size.height ? size.height - headerHeight : 'auto',
             marginTop: headerHeight,
-          };
+          } as React.CSSProperties;
 
           return (
-            <GridVirtualScroller
+            <VirtualScrollerComponent
               ref={windowRef}
               style={style}
               selectionLookup={selectionLookup} // TODO pass it directly to the row via componentsProps
@@ -119,6 +127,7 @@ GridBody.propTypes = {
   // ----------------------------------------------------------------------
   children: PropTypes.node,
   ColumnHeadersComponent: PropTypes.elementType.isRequired,
+  VirtualScrollerComponent: PropTypes.elementType.isRequired,
 } as any;
 
 export { GridBody };

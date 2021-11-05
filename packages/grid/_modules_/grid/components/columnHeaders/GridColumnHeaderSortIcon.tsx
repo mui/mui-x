@@ -9,6 +9,7 @@ import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { getDataGridUtilityClass } from '../../gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { GridComponentProps } from '../../GridComponentProps';
+import { GridIconButtonContainer } from './GridIconButtonContainer';
 
 export interface GridColumnHeaderSortIconProps {
   direction: GridSortDirection;
@@ -23,7 +24,6 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
 
   const slots = {
-    root: ['iconButtonContainer'],
     icon: ['sortIcon'],
   };
 
@@ -64,7 +64,7 @@ function GridColumnHeaderSortIconRaw(props: GridColumnHeaderSortIconProps) {
   );
 
   return (
-    <div className={classes.root}>
+    <GridIconButtonContainer>
       {index != null && (
         <Badge badgeContent={index} color="default">
           {iconButton}
@@ -72,7 +72,7 @@ function GridColumnHeaderSortIconRaw(props: GridColumnHeaderSortIconProps) {
       )}
 
       {index == null && iconButton}
-    </div>
+    </GridIconButtonContainer>
   );
 }
 

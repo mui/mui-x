@@ -9,7 +9,7 @@ import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { gridPaginationSelector } from '../hooks/features/pagination/gridPaginationSelector';
 
-const StyledTablePagination = styled(TablePagination)(({ theme }) => ({
+const GridPaginationRoot = styled(TablePagination)(({ theme }) => ({
   [`& .${tablePaginationClasses.selectLabel}`]: {
     display: 'none',
     [theme.breakpoints.up('sm')]: {
@@ -74,7 +74,7 @@ export const GridPagination = React.forwardRef<
   }
 
   return (
-    <StyledTablePagination
+    <GridPaginationRoot
       ref={ref}
       // @ts-ignore
       component="div"

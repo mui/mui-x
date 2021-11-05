@@ -30,20 +30,23 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-const ColumnHeadersInnerRoot = styled('div', {
+const GridColumnHeadersInnerRoot = styled('div', {
   name: 'MuiDataGrid',
-  slot: 'ColumnHeadersInner',
-  overridesResolver: (props, styles) => styles.columnHeadersInner,
-})({
+  slot: 'columnHeadersInner',
+  overridesResolver: (props, styles) => [
+    { [`&.${gridClasses.columnHeaderDropZone}`]: styles.columnHeaderDropZone },
+    styles.columnHeadersInner,
+  ],
+})(() => ({
   display: 'flex',
   alignItems: 'center',
   [`&.${gridClasses.columnHeaderDropZone} .${gridClasses.columnHeaderDraggableContainer}`]: {
     cursor: 'move',
   },
-  [`&.${gridClasses['columnsHeadersInner--scrollable']} .${gridClasses.columnHeader}:last-child`]: {
+  [`&.${gridClasses['columnHeadersInner--scrollable']} .${gridClasses.columnHeader}:last-child`]: {
     borderRight: 'none',
   },
-});
+}));
 
 interface GridColumnHeadersInnerProps extends React.HTMLAttributes<HTMLDivElement> {
   isDragging: boolean;
@@ -64,7 +67,7 @@ export const GridColumnHeadersInner = React.forwardRef<HTMLDivElement, GridColum
     const classes = useUtilityClasses(ownerState);
 
     return (
-      <ColumnHeadersInnerRoot ref={ref} className={clsx(className, classes.root)} {...other} />
+      <GridColumnHeadersInnerRoot ref={ref} className={clsx(className, classes.root)} {...other} />
     );
   },
 );

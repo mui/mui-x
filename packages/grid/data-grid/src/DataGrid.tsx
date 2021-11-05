@@ -14,6 +14,7 @@ import { useDataGridComponent } from './useDataGridComponent';
 import { MAX_PAGE_SIZE, DataGridProps } from './DataGridProps';
 import { useDataGridProps } from './useDataGridProps';
 import { DataGridColumnHeaders } from './DataGridColumnHeaders';
+import { DataGridVirtualScroller } from './DataGridVirtualScroller';
 
 const DataGridRaw = React.forwardRef<HTMLDivElement, DataGridProps>(function DataGrid(
   inProps,
@@ -28,7 +29,10 @@ const DataGridRaw = React.forwardRef<HTMLDivElement, DataGridProps>(function Dat
       <GridRoot ref={ref}>
         <GridErrorHandler>
           <GridHeaderPlaceholder />
-          <GridBody ColumnHeadersComponent={DataGridColumnHeaders} />
+          <GridBody
+            ColumnHeadersComponent={DataGridColumnHeaders}
+            VirtualScrollerComponent={DataGridVirtualScroller}
+          />
           <GridFooterPlaceholder />
         </GridErrorHandler>
       </GridRoot>

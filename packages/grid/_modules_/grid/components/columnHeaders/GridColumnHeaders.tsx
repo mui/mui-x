@@ -20,7 +20,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-const ColumnHeadersRoot = styled('div', {
+const GridColumnHeadersRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'ColumnHeaders',
   overridesResolver: (props, styles) => styles.columnHeaders,
@@ -54,6 +54,6 @@ export const GridColumnHeaders = React.forwardRef<HTMLDivElement, GridColumnHead
     const ownerState = { classes: rootProps.classes };
     const classes = useUtilityClasses(ownerState);
 
-    return <ColumnHeadersRoot ref={ref} className={clsx(className, classes.root)} {...other} />;
+    return <GridColumnHeadersRoot ref={ref} className={clsx(className, classes.root)} {...other} />;
   },
 );
