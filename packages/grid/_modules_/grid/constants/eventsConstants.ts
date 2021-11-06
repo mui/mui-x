@@ -270,10 +270,15 @@ export enum GridEvents {
    */
   columnsChange = 'columnsChange',
   /**
-   * Fired when a column pre-processing is changed
+   * Fired when a pre-processor is registered.
    * @ignore - do not document.
    */
-  columnsPreProcessingChange = 'columnsPreProcessingChange',
+  preProcessorRegister = 'preProcessorRegister',
+  /**
+   * Fired when a pre-processor is unregistered.
+   * @ignore - do not document.
+   */
+  preProcessorUnregister = 'preProcessorUnregister',
   /**
    * Fired when the row grouping function is changed
    * @ignore - do not document.
