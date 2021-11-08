@@ -298,6 +298,6 @@
     "name": "MuiDataGrid"
   },
   "forwardsRefTo": "GridRoot",
-  "filename": "/packages/grid/x-grid/src/DataGridPro.tsx",
+  "filename": "/packages/grid/x-data-grid-pro/src/DataGridPro.tsx",
   "demos": "<ul><li><a href=\"/components/data-grid#commercial-version\">DataGridPro</a></li></ul>"
 }

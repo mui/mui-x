@@ -1,12 +1,12 @@
 {
-  "name": "@mui/x-data-grid-pro",
+  "name": "@mui/x-data-grid",
   "version": "5.0.0-beta.7",
-  "description": "The commercial edition of the data grid component (MUI X).",
+  "description": "The community edition of the data grid component (MUI X).",
   "author": "MUI Team",
   "main": "build/index-cjs.js",
   "module": "build/index-esm.js",
-  "types": "build/x-grid.d.ts",
-  "license": "See LICENSE file",
+  "types": "build/x-data-grid.d.ts",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/mui-org/material-ui-x/issues"
   },
@@ -29,17 +29,16 @@
   ],
   "scripts": {
     "typescript": "tsc -p tsconfig.json",
-    "build": "cd ../ && rollup --config rollup.x-grid.config.js"
+    "build": "cd ../ && rollup --config rollup.x-data-grid.config.js"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/mui-org/material-ui-x.git",
-    "directory": "packages/grid/x-grid"
+    "directory": "packages/grid/x-data-grid"
   },
   "dependencies": {
     "@mui/utils": "^5.0.1",
-    "@mui/x-license-pro": "5.0.0-beta.7",
-    "clsx": "^1.0.4",
+    "clsx": "^1.1.1",
     "prop-types": "^15.7.2",
     "reselect": "^4.1.1"
   },

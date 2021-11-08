@@ -104,8 +104,8 @@ function findComponents(folderPath) {
 
 async function run() {
   const componentsToAddPropTypes = [
-    path.resolve(__dirname, '../../packages/grid/data-grid/src/DataGrid.tsx'),
-    path.resolve(__dirname, '../../packages/grid/x-grid/src/DataGridPro.tsx'),
+    path.resolve(__dirname, '../../packages/grid/x-data-grid/src/DataGrid.tsx'),
+    path.resolve(__dirname, '../../packages/grid/x-data-grid-pro/src/DataGridPro.tsx'),
   ];
 
   const indexPath = path.resolve(__dirname, '../../packages/grid/_modules_/index.ts');
