@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { AutocompleteProps } from '@mui/material/Autocomplete';
 import { GridFilterInputValueProps } from '../components/panel/filterPanel/GridFilterInputValueProps';
-import { GridFilterInputMultipleValueProps } from '../components/panel/filterPanel/GridFilterInputMultipleValueProps';
+import { GridFilterInputMultipleValueProps } from '../components/panel/filterPanel/GridFilterInputMultipleValue';
 import { GridFilterItem } from './gridFilterItem';
 import { GridCellParams } from './params/gridCellParams';
 import type { GridStateColDef } from './colDef';

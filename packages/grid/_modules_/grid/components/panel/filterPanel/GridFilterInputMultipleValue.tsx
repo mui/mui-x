@@ -6,9 +6,14 @@ import Chip from '@mui/material/Chip';
 import TextField from '@mui/material/TextField';
 import { unstable_useId as useId } from '@mui/material/utils';
 import { GridLoadIcon } from '../../icons/index';
-import { GridFilterInputMultipleValueProps } from './GridFilterInputMultipleValueProps';
+import { GridFilterItem } from '../../../models/gridFilterItem';
 
-export const SUBMIT_FILTER_STROKE_TIME = 500;
+export interface GridFilterInputMultipleValueProps {
+  item: GridFilterItem;
+  applyValue: (value: GridFilterItem) => void;
+  // Is any because if typed as GridApiRef a dep cycle occurs. Same happens if ApiContext is used.
+  apiRef: any;
+}
 
 export interface GridTypeFilterInputMultipleValueProps extends GridFilterInputMultipleValueProps {
   type?: 'text' | 'number' | 'singleSelect';
