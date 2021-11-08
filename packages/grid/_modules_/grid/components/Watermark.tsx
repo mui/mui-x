@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { useLicenseVerifier, LicenseStatus } from '@mui/x-license-pro';
 
-function getLicenseErrorMessage(licenseStatus: string) {
+function getLicenseErrorMessage(licenseStatus: LicenseStatus) {
   switch (licenseStatus) {
-    case LicenseStatus.Expired.toString():
+    case LicenseStatus.Expired:
       return 'MUI X License Expired';
-    case LicenseStatus.Invalid.toString():
+    case LicenseStatus.Invalid:
       return 'MUI X Invalid License';
-    case LicenseStatus.NotFound.toString():
+    case LicenseStatus.NotFound:
       return 'MUI X Unlicensed product';
     default:
       throw new Error('MUI: Unhandled license status.');
