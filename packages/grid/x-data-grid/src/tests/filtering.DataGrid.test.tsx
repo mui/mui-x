@@ -1,13 +1,5 @@
 import * as React from 'react';
-import {
-  createClientRenderStrictMode,
-  // @ts-expect-error need to migrate helpers to TypeScript
-  screen,
-  // @ts-expect-error need to migrate helpers to TypeScript
-  fireEvent,
-  // @ts-expect-error need to migrate helpers to TypeScript
-  getByText,
-} from 'test/utils';
+import { createRenderer, fireEvent, screen, getByText } from '@material-ui/monorepo/test/utils';
 import { expect } from 'chai';
 import {
   DataGrid,
@@ -21,8 +13,7 @@ import { getColumnValues } from 'test/utils/helperFn';
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<DataGrid /> - Filter', () => {
-  // TODO v5: replace with createClientRender
-  const render = createClientRenderStrictMode();
+  const { render } = createRenderer();
 
   const baselineProps = {
     autoHeight: isJSDOM,

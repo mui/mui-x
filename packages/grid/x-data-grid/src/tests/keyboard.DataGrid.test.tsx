@@ -1,15 +1,11 @@
 import * as React from 'react';
 import {
-  createClientRenderStrictMode,
-  // @ts-expect-error need to migrate helpers to TypeScript
+  createRenderer,
   fireEvent,
-  // @ts-expect-error need to migrate helpers to TypeScript
   screen,
-  // @ts-expect-error need to migrate helpers to TypeScript
-  createEvent,
-  // @ts-expect-error need to migrate helpers to TypeScript
   waitFor,
-} from 'test/utils';
+  createEvent,
+} from '@material-ui/monorepo/test/utils';
 import { spy } from 'sinon';
 import { expect } from 'chai';
 import {
@@ -29,8 +25,7 @@ const SHIFT_SPACE_KEY = { ...SPACE_KEY, shiftKey: true };
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<DataGrid /> - Keyboard', () => {
-  // TODO v5: replace with createClientRender
-  const render = createClientRenderStrictMode();
+  const { render } = createRenderer();
 
   it('should be able to type in an child input', () => {
     const handleInputKeyDown = spy((event) => event.defaultPrevented);

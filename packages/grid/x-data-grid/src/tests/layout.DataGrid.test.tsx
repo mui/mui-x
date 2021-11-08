@@ -1,11 +1,5 @@
 import * as React from 'react';
-import {
-  createClientRenderStrictMode,
-  // @ts-expect-error need to migrate helpers to TypeScript
-  screen,
-  // @ts-expect-error need to migrate helpers to TypeScript
-  ErrorBoundary,
-} from 'test/utils';
+import { createRenderer, screen } from '@material-ui/monorepo/test/utils';
 import { useFakeTimers, stub } from 'sinon';
 import { expect } from 'chai';
 import {
@@ -20,8 +14,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { getColumnHeaderCell, getColumnValues, raf, getCell, getRow } from 'test/utils/helperFn';
 
 describe('<DataGrid /> - Layout & Warnings', () => {
-  // TODO v5: replace with createClientRender
-  const render = createClientRenderStrictMode();
+  const { render } = createRenderer();
 
   const baselineProps = {
     rows: [
