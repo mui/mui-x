@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRenderer, screen } from '@material-ui/monorepo/test/utils';
+import { createRenderer, screen, ErrorBoundary } from '@material-ui/monorepo/test/utils';
 import { useFakeTimers, stub } from 'sinon';
 import { expect } from 'chai';
 import {
