@@ -17,6 +17,14 @@ Set the `editable` property in the `GridColDef` object to `true` to allow editin
 
 {{"demo": "pages/components/data-grid/editing/BasicEditingGrid.js", "bg": "inline", "defaultCodeOpen": false}}
 
+### Service-side persistence [<span class="pro"></span>](https://mui.com/store/items/material-ui-pro/)
+
+If you want to send the edited data to your server, you can use the `onCellEditCommit` which is fired just before committing the new row value to the grid.
+
+You can then decide if you want to send the whole row or manually check the modified fields and only send those.
+
+{{"demo": "pages/components/data-grid/editing/CellEditServerSidePersistence.js", "bg": "inline", "defaultCodeOpen": false}}
+
 ### Start editing
 
 If a cell is editable and has focus, any of the following interactions will start the edit mode:
@@ -141,6 +149,14 @@ To enable it, change the edit mode to `"row"` using the `editMode` prop, then se
 ```
 
 {{"demo": "pages/components/data-grid/editing/BasicRowEditingGrid.js", "bg": "inline", "defaultCodeOpen": false}}
+
+### Service-side persistence [<span class="pro"></span>](https://mui.com/store/items/material-ui-pro/)
+
+If you want to send the edited data to your server, you can use the `onRowEditCommit` which is fired just before committing the new row value to the grid.
+
+You can then decide if you want to send the whole row or manually check the modified fields and only send those.
+
+{{"demo": "pages/components/data-grid/editing/RowEditServerSidePersistence.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ### Start editing
 

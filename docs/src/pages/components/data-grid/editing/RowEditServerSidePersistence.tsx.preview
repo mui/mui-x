@@ -1,0 +1,12 @@
+<DataGridPro
+  apiRef={apiRef}
+  rows={rows}
+  columns={columns}
+  editMode="row"
+  onRowEditCommit={handleRowEditCommit}
+/>
+{!!snackbar && (
+  <Snackbar open onClose={handleCloseSnackbar} autoHideDuration={6000}>
+    <Alert {...snackbar} onClose={handleCloseSnackbar} />
+  </Snackbar>
+)}
