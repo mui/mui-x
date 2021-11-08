@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import Autocomplete, { AutocompleteProps } from '@mui/material/Autocomplete';
+import Autocomplete, { AutocompleteProps, createFilterOptions } from '@mui/material/Autocomplete';
 import Chip from '@mui/material/Chip';
 
 import TextField from '@mui/material/TextField';
@@ -18,6 +18,8 @@ export interface GridFilterInputMultipleValueProps {
 export interface GridTypeFilterInputMultipleValueProps extends GridFilterInputMultipleValueProps {
   type?: 'text' | 'number' | 'singleSelect';
 }
+
+const filter = createFilterOptions<any>();
 
 function GridFilterInputMultipleValue(
   props: GridTypeFilterInputMultipleValueProps &
@@ -52,6 +54,15 @@ function GridFilterInputMultipleValue(
       options={
         type === 'singleSelect' ? apiRef.current.getColumn(item.columnField).valueOptions : []
       }
+      filterOptions={(options, params) => {
+        const filtered = filter(options, params);
+        if (type === 'singleSelect') {
+          return filtered;
+        }
+
+        const { inputValue } = params;
+        return inputValue == null || inputValue === '' ? [] : [inputValue];
+      }}
       id={id}
       value={filterValueState}
       onChange={onFilterChange}
