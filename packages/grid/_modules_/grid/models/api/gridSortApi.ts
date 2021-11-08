@@ -41,4 +41,18 @@ export interface GridSortApi {
    * @returns {GridRowId[]} The sorted [[GridRowId]] values.
    */
   getSortedRowIds: () => GridRowId[];
+  /**
+   * Gets the `GridRowId` of a row at a specific index.
+   * The index is based on the sorted but unfiltered row list.
+   * @param {number} index The index of the row
+   * @returns {GridRowId} The `GridRowId` of the row.
+   */
+  getRowIdFromRowIndex: (index: number) => GridRowId;
+  /**
+   * Gets the row index of a row with a given id.
+   * The index is based on the sorted but unfiltered row list.
+   * @param {GridRowId} id The `GridRowId` of the row.
+   * @returns {number} The index of the row.
+   */
+  getRowIndex: (id: GridRowId) => number;
 }
