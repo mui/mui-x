@@ -4,7 +4,6 @@ import { createRenderer } from '@material-ui/monorepo/test/utils';
 
 export * from '@material-ui/monorepo/test/utils';
 
-
 export const createClientRenderStrictMode = () => {
   const { render } = createRenderer();
   const strictTheme = unstable_createMuiStrictModeTheme();
