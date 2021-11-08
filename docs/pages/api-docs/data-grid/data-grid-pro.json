@@ -292,7 +292,9 @@
       "sortIcon",
       "toolbarContainer",
       "toolbarFilterList",
-      "withBorder"
+      "withBorder",
+      "treeDataGroupingCell",
+      "treeDataGroupingCellToggle"
     ],
     "globalClasses": {},
     "name": "MuiDataGrid"

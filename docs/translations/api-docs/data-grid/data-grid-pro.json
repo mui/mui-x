@@ -387,6 +387,12 @@
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "both the cell and the column header",
       "conditions": "<code>showColumnRightBorder={true}</code>"
+    },
+    "treeDataGroupingCell": {
+      "description": "Styled applied to the root of the grouping column of the tree data."
+    },
+    "treeDataGroupingCellToggle": {
+      "description": "Styled applied to the toggle of the grouping column of the tree data."
     }
   },
   "slotDescriptions": {
