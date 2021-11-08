@@ -1,0 +1,8 @@
+<DataGrid
+  columns={[
+    { field: 'status', width: 130 },
+    { field: 'subTotal', ...usdPrice },
+    { field: 'total', ...usdPrice },
+  ]}
+  rows={rows}
+/>

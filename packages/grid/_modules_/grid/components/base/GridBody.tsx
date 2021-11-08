@@ -3,8 +3,6 @@ import PropTypes from 'prop-types';
 import { GridEvents } from '../../constants/eventsConstants';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { ElementSize } from '../../models/elementSize';
-import { GridColumnsHeader } from '../columnHeaders/GridColumnHeaders';
-import { GridColumnsContainer } from '../containers/GridColumnsContainer';
 import { GridMainContainer } from '../containers/GridMainContainer';
 import { GridAutoSizer } from '../GridAutoSizer';
 import { GridOverlays } from './GridOverlays';
@@ -12,7 +10,6 @@ import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { gridSelectionStateSelector } from '../../hooks/features/selection/gridSelectionSelector';
 import { gridDensityHeaderHeightSelector } from '../../hooks/features/density/densitySelector';
-import { GridScrollArea } from '../GridScrollArea';
 
 interface GridBodyProps {
   children?: React.ReactNode;
@@ -23,10 +20,17 @@ interface GridBodyProps {
       disableVirtualization: boolean;
     }
   >;
+
+  ColumnHeadersComponent: React.JSXElementConstructor<
+    React.HTMLAttributes<HTMLDivElement> & {
+      ref: React.Ref<HTMLDivElement>;
+      innerRef: React.Ref<HTMLDivElement>;
+    }
+  >;
 }
 
 function GridBody(props: GridBodyProps) {
-  const { children, VirtualScrollerComponent } = props;
+  const { children, VirtualScrollerComponent, ColumnHeadersComponent } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
   const selection = useGridSelector(apiRef, gridSelectionStateSelector);
@@ -87,11 +91,7 @@ function GridBody(props: GridBodyProps) {
   return (
     <GridMainContainer>
       <GridOverlays />
-      <GridScrollArea scrollDirection="left" />
-      <GridColumnsContainer ref={columnsContainerRef}>
-        <GridColumnsHeader ref={columnsHeaderRef} />
-      </GridColumnsContainer>
-      <GridScrollArea scrollDirection="right" />
+      <ColumnHeadersComponent ref={columnsContainerRef} innerRef={columnsHeaderRef} />
       <GridAutoSizer
         nonce={rootProps.nonce}
         disableHeight={rootProps.autoHeight}
@@ -127,6 +127,7 @@ GridBody.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   children: PropTypes.node,
+  ColumnHeadersComponent: PropTypes.elementType.isRequired,
   VirtualScrollerComponent: PropTypes.elementType.isRequired,
 } as any;
 
