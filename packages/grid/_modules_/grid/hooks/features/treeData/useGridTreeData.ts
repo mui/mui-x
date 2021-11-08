@@ -1,21 +1,27 @@
 import * as React from 'react';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridComponentProps } from '../../../GridComponentProps';
-import { GridColumnsPreProcessing } from '../../core/columnsPreProcessing';
 import { GRID_TREE_DATA_GROUP_COL_DEF } from './gridTreeDataGroupColDef';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { GridEvents } from '../../../constants';
-import { GridCellParams, GridColDef, GridColDefOverrideParams, MuiEvent } from '../../../models';
+import {
+  GridCellParams,
+  GridColDef,
+  GridColDefOverrideParams,
+  GridColumns,
+  MuiEvent,
+} from '../../../models';
 import { isSpaceKey } from '../../../utils/keyboardUtils';
 import { useFirstRender } from '../../utils/useFirstRender';
 import { buildRowTree } from '../../../utils/rowTreeUtils';
 import { GridRowGroupingPreProcessing } from '../../core/rowGroupsPerProcessing';
 import { isFunction } from '../../../utils/utils';
 import { gridFilteredDescendantCountLookupSelector } from '../filter';
+import { GridPreProcessingGroup } from '../../core/preProcessing';
 
 /**
  * Only available in DataGridPro
- * @requires useGridColumnsPreProcessing (method)
+ * @requires useGridPreProcessing (method)
  * @requires useGridRowGroupsPreProcessing (method)
  */
 export const useGridTreeData = (
@@ -51,7 +57,7 @@ export const useGridTreeData = (
   }, [apiRef, props.groupingColDef]);
 
   const updateColumnsPreProcessing = React.useCallback(() => {
-    const addGroupingColumn: GridColumnsPreProcessing = (columns) => {
+    const addGroupingColumn = (columns: GridColumns) => {
       if (!props.treeData) {
         return columns;
       }
@@ -61,7 +67,11 @@ export const useGridTreeData = (
       return [...columns.slice(0, index), groupingColDef, ...columns.slice(index)];
     };
 
-    apiRef.current.unstable_registerColumnPreProcessing('treeData', addGroupingColumn);
+    apiRef.current.unstable_registerPreProcessor(
+      GridPreProcessingGroup.hydrateColumns,
+      'treeData',
+      addGroupingColumn,
+    );
   }, [apiRef, props.treeData, groupingColDef]);
 
   const updateRowGrouping = React.useCallback(() => {
