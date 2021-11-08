@@ -54,7 +54,7 @@ export default [
                 const contents = { ...pkg };
                 contents.main = 'cjs/index.js';
                 contents.module = 'esm/index.js';
-                contents.types = 'x-license.d.ts';
+                contents.types = 'x-license-pro.d.ts';
                 return JSON.stringify(contents, null, 2);
               },
             },
@@ -64,7 +64,7 @@ export default [
   },
   {
     input: './build/esm/index.d.ts',
-    output: [{ file: 'build/x-license.d.ts', format: 'es' }],
+    output: [{ file: 'build/x-license-pro.d.ts', format: 'es' }],
     plugins: [dts(), !production && sourceMaps()],
   },
 ];

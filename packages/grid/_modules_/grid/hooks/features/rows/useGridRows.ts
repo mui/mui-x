@@ -22,7 +22,7 @@ import {
   gridRowTreeSelector,
   gridRowIdsSelector,
 } from './gridRowsSelector';
-import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
+import { GridSignature, useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { GridRowGroupParams } from '../../core/rowGroupsPerProcessing';
 
 interface GridRowsInternalCacheState {
@@ -138,7 +138,10 @@ const INITIAL_GRID_ROWS_INTERNAL_CACHE: GridRowsInternalCache = {
  */
 export const useGridRows = (
   apiRef: GridApiRef,
-  props: Pick<GridComponentProps, 'rows' | 'getRowId' | 'rowCount' | 'throttleRowsMs'>,
+  props: Pick<
+    GridComponentProps,
+    'rows' | 'getRowId' | 'rowCount' | 'throttleRowsMs' | 'signature'
+  >,
 ): void => {
   if (process.env.NODE_ENV !== 'production') {
     // Freeze rows for immutability
@@ -231,6 +234,16 @@ export const useGridRows = (
 
   const updateRows = React.useCallback<GridRowApi['updateRows']>(
     (updates) => {
+      if (props.signature === GridSignature.DataGrid && updates.length > 1) {
+        // TODO: Add test with direct call to `apiRef.current.updateRows` in DataGrid after enabling the `apiRef` on the free plan.
+        throw new Error(
+          [
+            "MUI: You can't update several rows at once in `apiRef.current.updateRows` on the DataGrid.",
+            'You need to upgrade to the DataGridPro component to unlock this feature.',
+          ].join('\n'),
+        );
+      }
+
       // we removes duplicate updates. A server can batch updates, and send several updates for the same row in one fn call.
       const uniqUpdates = new Map<GridRowId, GridRowModel>();
 
@@ -284,7 +297,7 @@ export const useGridRows = (
 
       throttledRowsChange(state, true);
     },
-    [apiRef, props.getRowId, throttledRowsChange],
+    [apiRef, props.getRowId, throttledRowsChange, props.signature],
   );
 
   const getRowModels = React.useCallback<GridRowApi['getRowModels']>(() => {
