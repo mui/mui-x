@@ -25,10 +25,10 @@ function resolveAliasPath(relativeToBabelConf) {
 }
 
 const defaultAlias = {
-  '@mui/x-data-grid': resolveAliasPath('./packages/grid/data-grid/src'),
-  '@mui/x-data-grid-generator': resolveAliasPath('./packages/grid/x-grid-data-generator/src'),
-  '@mui/x-data-grid-pro': resolveAliasPath('./packages/grid/x-grid/src'),
-  '@mui/x-license-pro': resolveAliasPath('./packages/x-license/src'),
+  '@mui/x-data-grid': resolveAliasPath('./packages/grid/x-data-grid/src'),
+  '@mui/x-data-grid-generator': resolveAliasPath('./packages/grid/x-data-grid-generator/src'),
+  '@mui/x-data-grid-pro': resolveAliasPath('./packages/grid/x-data-grid-pro/src'),
+  '@mui/x-license-pro': resolveAliasPath('./packages/x-license-pro/src'),
   'typescript-to-proptypes': '@material-ui/monorepo/packages/typescript-to-proptypes/src',
   docs: resolveAliasPath('./node_modules/@material-ui/monorepo/docs'),
 };
