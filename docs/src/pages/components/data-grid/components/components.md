@@ -43,6 +43,7 @@ They can be used as below:
 ```tsx
 function CustomPagination() {
   const apiRef = useGridApiContext();
+  const [state] = useGridState(apiRef);
   const paginationState = useGridSelector(apiRef, gridPaginationSelector());
 
   return (
