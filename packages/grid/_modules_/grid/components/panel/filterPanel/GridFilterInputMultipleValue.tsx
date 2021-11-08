@@ -23,17 +23,10 @@ function GridFilterInputMultipleValue(
   props: GridTypeFilterInputMultipleValueProps &
     Omit<AutocompleteProps<any[], true, false, true>, 'options' | 'renderInput'>,
 ) {
-  const { item, applyValue, type, apiRef, ...others } = props;
-  const filterTimeout = React.useRef<any>();
+  const { item, applyValue, type, apiRef, ...other } = props;
   const [filterValueState, setFilterValueState] = React.useState(item.value || []);
   const [applying, setIsApplying] = React.useState(false);
   const id = useId();
-
-  React.useEffect(() => {
-    return () => {
-      clearTimeout(filterTimeout.current);
-    };
-  }, []);
 
   React.useEffect(() => {
     const itemValue = item.value ?? [];
@@ -41,30 +34,19 @@ function GridFilterInputMultipleValue(
   }, [item.value]);
 
   const onFilterChange = React.useCallback(
-    (e, value) => {
-      clearTimeout(filterTimeout.current);
+    (event, value) => {
       setFilterValueState(value.map((x) => String(x)));
-
-      if (type !== 'singleSelect' && value === []) {
-        setIsApplying(false);
-        return;
-      }
-
       setIsApplying(true);
-      // TODO singleSelect doesn't a debounce
-      filterTimeout.current = setTimeout(() => {
-        applyValue({ ...item, value: [...value] });
-        setIsApplying(false);
-      }, SUBMIT_FILTER_STROKE_TIME);
+      applyValue({ ...item, value: [...value] });
+      setIsApplying(false);
     },
-    [applyValue, item, type],
+    [applyValue, item],
   );
 
   const InputProps = applying ? { endAdornment: <GridLoadIcon /> } : {};
 
   return (
     <Autocomplete
-      {...others}
       multiple
       freeSolo
       options={
@@ -92,6 +74,7 @@ function GridFilterInputMultipleValue(
           variant="standard"
         />
       )}
+      {...other}
     />
   );
 }
