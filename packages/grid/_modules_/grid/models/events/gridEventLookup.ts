@@ -21,6 +21,7 @@ import type { GridState } from '../gridState';
 import type { ElementSize } from '../elementSize';
 import type { MuiBaseEvent } from '../muiEvent';
 import type { GridRowId, GridRowTreeNodeConfig } from '../gridRows';
+import type { GridPreProcessingGroup } from '../../hooks/core/preProcessing';
 
 export interface GridRowEventLookup {
   rowClick: { params: GridRowParams; event: React.MouseEvent<HTMLElement> };
@@ -137,7 +138,8 @@ export interface GridEventLookup
   resize: { params: ElementSize };
   debouncedResize: { params: ElementSize };
   rowGroupsPreProcessingChange: {};
-  columnsPreProcessingChange: {};
+  preProcessorRegister: { params: GridPreProcessingGroup };
+  preProcessorUnregister: { params: GridPreProcessingGroup };
 
   // Columns
   columnsChange: { params: string[] };

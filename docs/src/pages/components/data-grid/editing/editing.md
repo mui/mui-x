@@ -87,7 +87,7 @@ Alternatively, you can use the `GridEditRowsModel` state mentioned in the [Contr
 
 ### Server-side validation
 
-Server-side validation works like client-side [validation](#client-side-validation).
+Server-side validation works like [client-side validation](#client-side-validation).
 
 - Use `onEditCellPropsChange` to set the `error` attribute to true of the respective field which will be validated.
 - Validate the value in the server.
