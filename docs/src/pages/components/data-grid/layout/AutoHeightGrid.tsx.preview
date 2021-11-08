@@ -1,0 +1,2 @@
+<DataGrid autoHeight {...data} />
+<p>more content</p>
