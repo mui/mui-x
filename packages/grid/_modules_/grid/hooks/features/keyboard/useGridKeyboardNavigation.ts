@@ -129,11 +129,13 @@ export const useGridKeyboardNavigation = (
           nextCellIndexes = { colIndex: colIdx, rowIndex: newRowIndex };
         }
       } else if (isPageKeys(key) || isSpaceKey(key)) {
+        const viewportPageSize = Math.min(
+          dimensions.virtualScrollerRowCount,
+          dimensions.maximumPageSizeWithoutScrollBar,
+        );
         const nextRowIndex =
           rowIndex +
-          (key.indexOf('Down') > -1 || isSpaceKey(key)
-            ? dimensions.rowsInViewportCount
-            : -1 * dimensions.rowsInViewportCount);
+          (key.indexOf('Down') > -1 || isSpaceKey(key) ? viewportPageSize : -1 * viewportPageSize);
         nextCellIndexes = { colIndex, rowIndex: nextRowIndex };
       } else {
         throw new Error('MUI: Key not mapped to navigation behavior.');
@@ -181,9 +183,12 @@ export const useGridKeyboardNavigation = (
       } else if (isPageKeys(key)) {
         // Handle only Page Down key, Page Up should keep the current position
         if (key.indexOf('Down') > -1) {
-          const rowsInViewportCount = dimensions.rowsInViewportCount;
+          const viewportPageSize = Math.min(
+            dimensions.virtualScrollerRowCount,
+            dimensions.maximumPageSizeWithoutScrollBar,
+          );
           const field = apiRef.current.getVisibleColumns()[colIndex].field;
-          const id = apiRef.current.getRowIdFromRowIndex(rowsInViewportCount - 1);
+          const id = apiRef.current.getRowIdFromRowIndex(viewportPageSize - 1);
           apiRef.current.setCellFocus(id, field);
         }
         return;

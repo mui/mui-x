@@ -14,13 +14,9 @@ export interface GridDimensions {
    */
   maximumPageSizeWithoutScrollBar: number;
   /**
-   * The amount of rows fully visible.
+   * Amount of rows passed to the virtual scroller.
    */
-  rowsInViewportCount: number;
-  /**
-   * Amount of rows in the current page.
-   */
-  virtualRowsCount: number;
+  virtualScrollerRowCount: number;
   hasScrollX: boolean;
   hasScrollY: boolean;
 }

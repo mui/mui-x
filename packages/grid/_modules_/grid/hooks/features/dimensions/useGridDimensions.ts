@@ -62,15 +62,13 @@ export function useGridDimensions(
       rootElement.removeChild(scrollDiv);
     }
 
-    const virtualRowsCount = currentPage.range
-      ? currentPage.range.lastRowIndex - currentPage.range.firstRowIndex + 1
-      : 0;
-    const pageScrollHeight = virtualRowsCount * rowHeight;
+    const virtualScrollerRowCount = currentPage.rows.length;
+    const pageScrollHeight = virtualScrollerRowCount * rowHeight;
 
     const viewportOuterSize: ElementSize = {
       width: rootDimensionsRef.current.width,
       height: props.autoHeight
-        ? virtualRowsCount * rowHeight
+        ? virtualScrollerRowCount * rowHeight
         : rootDimensionsRef.current.height - headerHeight,
     };
 
@@ -98,14 +96,12 @@ export function useGridDimensions(
     };
 
     const maximumPageSizeWithoutScrollBar = Math.floor(viewportInnerSize.height / rowHeight);
-    const rowsInViewportCount = Math.min(virtualRowsCount, maximumPageSizeWithoutScrollBar);
 
     const newFullDimensions: GridDimensions = {
       viewportOuterSize,
       viewportInnerSize,
       maximumPageSizeWithoutScrollBar,
-      rowsInViewportCount,
-      virtualRowsCount,
+      virtualScrollerRowCount,
       hasScrollX,
       hasScrollY,
     };
@@ -130,7 +126,7 @@ export function useGridDimensions(
     }
   }, [
     apiRef,
-    currentPage.range,
+    currentPage.rows,
     props.scrollbarSize,
     props.autoHeight,
     headerHeight,

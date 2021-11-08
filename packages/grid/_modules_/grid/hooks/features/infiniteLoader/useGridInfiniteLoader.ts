@@ -41,6 +41,10 @@ export const useGridInfiniteLoader = (
       }
 
       const scrollPositionBottom = scrollPosition.top + dimensions.viewportOuterSize.height;
+      const viewportPageSize = Math.min(
+        dimensions.virtualScrollerRowCount,
+        dimensions.maximumPageSizeWithoutScrollBar,
+      );
 
       if (scrollPositionBottom < contentHeight - props.scrollEndThreshold) {
         isInScrollBottomArea.current = false;
@@ -52,14 +56,14 @@ export const useGridInfiniteLoader = (
       ) {
         const rowScrollEndParam: GridRowScrollEndParams = {
           visibleColumns,
-          viewportPageSize: dimensions.rowsInViewportCount,
-          virtualRowsCount: dimensions.virtualRowsCount,
+          viewportPageSize,
+          virtualRowsCount: currentPage.rows.length,
         };
         apiRef.current.publishEvent(GridEvents.rowsScrollEnd, rowScrollEndParam);
         isInScrollBottomArea.current = true;
       }
     },
-    [contentHeight, props.scrollEndThreshold, visibleColumns, apiRef],
+    [contentHeight, props.scrollEndThreshold, visibleColumns, apiRef, currentPage.rows.length],
   );
 
   const handleGridScroll = React.useCallback(
