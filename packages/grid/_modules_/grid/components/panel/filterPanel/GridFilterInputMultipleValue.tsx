@@ -51,6 +51,7 @@ function GridFilterInputMultipleValue(
     <Autocomplete
       multiple
       freeSolo
+      limitTags={1}
       options={
         type === 'singleSelect' ? apiRef.current.getColumn(item.columnField).valueOptions : []
       }
@@ -68,7 +69,7 @@ function GridFilterInputMultipleValue(
       onChange={onFilterChange}
       renderTags={(value: any[], getTagProps) =>
         value.map((option: string, index: number) => (
-          <Chip variant="outlined" label={option} {...getTagProps({ index })} />
+          <Chip variant="outlined" size="small" label={option} {...getTagProps({ index })} />
         ))
       }
       renderInput={(params) => (
