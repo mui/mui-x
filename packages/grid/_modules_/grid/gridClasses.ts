@@ -366,4 +366,5 @@ export const gridClasses = generateUtilityClasses('MuiDataGrid', [
   'virtualScrollerRenderZone',
   'withBorder',
   'treeDataGroupingCell',
+  'treeDataGroupingCellToggle',
 ]);
