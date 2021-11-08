@@ -278,6 +278,14 @@ export interface GridClasses {
    * Styles applied to both the cell and the column header if `showColumnRightBorder={true}`.
    */
   withBorder: string;
+  /**
+   * Styled applied to the root of the grouping column of the tree data.
+   */
+  treeDataGroupingCell: string;
+  /**
+   * Styled applied to the toggle of the grouping column of the tree data.
+   */
+  treeDataGroupingCellToggle: string;
 }
 
 export type GridClassKey = keyof GridClasses;
@@ -357,4 +365,5 @@ export const gridClasses = generateUtilityClasses('MuiDataGrid', [
   'virtualScrollerContent',
   'virtualScrollerRenderZone',
   'withBorder',
+  'treeDataGroupingCell',
 ]);
