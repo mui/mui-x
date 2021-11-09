@@ -15,6 +15,7 @@ export function GridFilterPanel() {
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
   const filterModel = useGridSelector(apiRef, gridFilterModelSelector);
+  const [hasFocus, setHasFocus] = React.useState({ value: true });
 
   const hasMultipleFilters = filterModel.items.length > 1;
 
@@ -49,6 +50,11 @@ export function GridFilterPanel() {
     }
   }, [addNewFilter, filterModel.items.length]);
 
+  React.useEffect(() => {
+    // use an object instead of a boolean to trigger the focus of GridFilterForm by modifying the object.
+    setHasFocus({ value: true });
+  }, [filterModel.items.length]);
+
   return (
     <GridPanelWrapper>
       <GridPanelContent>
@@ -64,6 +70,7 @@ export function GridFilterPanel() {
             disableMultiFilterOperator={index !== 1}
             applyMultiFilterOperatorChanges={applyFilterLinkOperator}
             isLastFilter={index === filterModel.items.length - 1}
+            toFocus={index === filterModel.items.length - 1 ? hasFocus : undefined}
           />
         ))}
       </GridPanelContent>
