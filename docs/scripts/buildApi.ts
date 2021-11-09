@@ -8,7 +8,7 @@ import { parse as parseDoctrine, Annotation } from 'doctrine';
 import { defaultHandlers, parse as docgenParse, ReactDocgenApi } from 'react-docgen';
 import * as prettier from 'prettier';
 import { findPagesMarkdown } from 'docs/src/modules/utils/find';
-import { LANGUAGES } from '@material-ui/monorepo/docs/src/modules/constants';
+import { LANGUAGES } from 'docs/src/modules/constants';
 import * as ttp from '@material-ui/monorepo/packages/typescript-to-proptypes/src';
 import createGenerateClassName from '@mui/styles/createGenerateClassName';
 import createDescribeableProp, {
