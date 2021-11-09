@@ -2303,8 +2303,8 @@
     "@babel/runtime" "^7.14.8"
 
 "@material-ui/monorepo@https://github.com/mui-org/material-ui.git#master":
-  version "5.0.6"
-  resolved "https://github.com/mui-org/material-ui.git#a53ce4656cc55b1d03655eba0f1ba2e83611ee35"
+  version "5.1.0"
+  resolved "https://github.com/mui-org/material-ui.git#dd08d6a996b2bfc2d7d52f62609bd3acdebdeff6"
 
 "@material-ui/private-theming@5.0.0-beta.5":
   version "5.0.0-beta.5"
