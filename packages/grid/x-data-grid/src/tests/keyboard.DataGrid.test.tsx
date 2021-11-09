@@ -235,6 +235,20 @@ describe('<DataGrid /> - Keyboard', () => {
     expect(getActiveCell()).to.equal('0-0');
   });
 
+  it('should navigate between column headers with arrows when page > 0', () => {
+    render(<KeyboardTest nbRows={10} page={1} pageSize={2} rowsPerPageOptions={[2]} />);
+    getCell(2, 0).focus();
+    expect(getActiveCell()).to.equal('2-0');
+    fireEvent.keyDown(document.activeElement!, { key: 'ArrowUp' });
+    expect(getActiveColumnHeader()).to.equal('1');
+    fireEvent.keyDown(document.activeElement!, { key: 'ArrowRight' });
+    expect(getActiveColumnHeader()).to.equal('2');
+    fireEvent.keyDown(document.activeElement!, { key: 'ArrowLeft' });
+    expect(getActiveColumnHeader()).to.equal('1');
+    fireEvent.keyDown(document.activeElement!, { key: 'ArrowDown' });
+    expect(getActiveCell()).to.equal('2-0');
+  });
+
   it('should navigate between column headers with arrows when rows are filtered', () => {
     render(
       <KeyboardTest
