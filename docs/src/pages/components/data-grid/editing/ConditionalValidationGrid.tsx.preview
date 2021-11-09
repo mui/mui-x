@@ -1,8 +1,7 @@
-<DataGrid
+<DataGridPro
+  apiRef={apiRef}
   className={classes.root}
   rows={rows}
   columns={columns}
   editMode="row"
-  editRowsModel={editRowsModel}
-  onEditRowsModelChange={handleEditRowsModelChange}
 />
