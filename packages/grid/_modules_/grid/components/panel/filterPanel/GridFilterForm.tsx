@@ -79,6 +79,7 @@ function GridFilterForm(props: GridFilterFormProps) {
   const ownerState = { classes: rootProps.classes };
   const classes = useUtilityClasses(ownerState);
   const valueInputRef = React.useRef<HTMLInputElement>(null);
+  const filterSelectorRef = React.useRef<HTMLInputElement>(null);
 
   const getCurrentColumn = React.useCallback(() => {
     if (!item.columnField) {
@@ -140,9 +141,11 @@ function GridFilterForm(props: GridFilterFormProps) {
   const currentOperator = getCurrentOperator();
 
   useEnhancedEffect(() => {
-    if (isLastFilter) {
-      valueInputRef.current!.focus();
-    }
+      if (valueInputRef.current) {
+        valueInputRef.current!.focus();
+      } else {
+        filterSelectorRef.current!.focus();
+      }
   }, [isLastFilter]);
 
   return (
@@ -215,6 +218,7 @@ function GridFilterForm(props: GridFilterFormProps) {
           value={item.operatorValue}
           onChange={changeOperator}
           native
+          inputRef={filterSelectorRef}
         >
           {getCurrentColumn()?.filterOperators?.map((operator) => (
             <option key={operator.value} value={operator.value}>
