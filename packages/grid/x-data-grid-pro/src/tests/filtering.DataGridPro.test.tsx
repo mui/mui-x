@@ -10,19 +10,11 @@ import {
   useGridApiRef,
   DataGridPro,
 } from '@mui/x-data-grid-pro';
+import { createRenderer, fireEvent, screen, waitFor } from '@material-ui/monorepo/test/utils';
 import { expect } from 'chai';
 import { useData } from 'packages/storybook/src/hooks/useData';
 import * as React from 'react';
 import { spy, useFakeTimers } from 'sinon';
-import {
-  createClientRenderStrictMode,
-  // @ts-expect-error need to migrate helpers to TypeScript
-  fireEvent,
-  // @ts-expect-error need to migrate helpers to TypeScript
-  screen,
-  // @ts-expect-error need to migrate helpers to TypeScript
-  waitFor,
-} from 'test/utils';
 import { getColumnHeaderCell, getColumnValues } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
@@ -38,8 +30,7 @@ describe('<DataGridPro /> - Filter', () => {
     clock.restore();
   });
 
-  // TODO v5: replace with createClientRender
-  const render = createClientRenderStrictMode();
+  const { render } = createRenderer();
 
   let apiRef: GridApiRef;
 

@@ -7,18 +7,10 @@ import {
   GridSortModel,
   useGridApiRef,
 } from '@mui/x-data-grid-pro';
+import { createRenderer, fireEvent, screen, waitFor } from '@material-ui/monorepo/test/utils';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { getColumnValues, getCell, getColumnHeaderCell } from 'test/utils/helperFn';
-import {
-  createClientRenderStrictMode,
-  // @ts-expect-error need to migrate helpers to TypeScript
-  fireEvent,
-  // @ts-expect-error need to migrate helpers to TypeScript
-  screen,
-  // @ts-expect-error need to migrate helpers to TypeScript
-  waitFor,
-} from 'test/utils';
 import { useData } from 'packages/storybook/src/hooks/useData';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
@@ -46,8 +38,7 @@ describe('<DataGridPro /> - Sorting', () => {
     columns: [{ field: 'brand' }, { field: 'year', type: 'number' }],
   };
 
-  // TODO v5: replace with createClientRender
-  const render = createClientRenderStrictMode();
+  const { render } = createRenderer();
 
   let apiRef: GridApiRef;
 
