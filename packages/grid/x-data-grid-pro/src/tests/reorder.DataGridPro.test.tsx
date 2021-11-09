@@ -1,14 +1,6 @@
 import * as React from 'react';
 import { expect } from 'chai';
-import {
-  createClientRenderStrictMode,
-  // @ts-expect-error need to migrate helpers to TypeScript
-  act,
-  // @ts-expect-error need to migrate helpers to TypeScript
-  fireEvent,
-  // @ts-expect-error need to migrate helpers to TypeScript
-  createEvent,
-} from 'test/utils';
+import { createRenderer, fireEvent, createEvent, act } from '@material-ui/monorepo/test/utils';
 import {
   getColumnHeadersTextContent,
   getColumnHeaderCell,
@@ -41,8 +33,7 @@ function createDragEndEvent(target: ChildNode, isOutsideTheGrid: boolean = false
 }
 
 describe('<DataGridPro /> - Reorder', () => {
-  // TODO v5: replace with createClientRender
-  const render = createClientRenderStrictMode();
+  const { render } = createRenderer();
 
   const baselineProps = {
     autoHeight: isJSDOM,

@@ -1,15 +1,11 @@
 import * as React from 'react';
 import {
-  createClientRenderStrictMode,
-  // @ts-expect-error need to migrate helpers to TypeScript
+  createRenderer,
   fireEvent,
-  // @ts-expect-error need to migrate helpers to TypeScript
   screen,
-  // @ts-expect-error need to migrate helpers to TypeScript
-  createEvent,
-  // @ts-expect-error need to migrate helpers to TypeScript
   waitFor,
-} from 'test/utils';
+  createEvent,
+} from '@material-ui/monorepo/test/utils';
 import { spy } from 'sinon';
 import { expect } from 'chai';
 import {
@@ -29,8 +25,7 @@ const SHIFT_SPACE_KEY = { ...SPACE_KEY, shiftKey: true };
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<DataGrid /> - Keyboard', () => {
-  // TODO v5: replace with createClientRender
-  const render = createClientRenderStrictMode();
+  const { render } = createRenderer();
 
   it('should be able to type in an child input', () => {
     const handleInputKeyDown = spy((event) => event.defaultPrevented);
@@ -238,6 +233,20 @@ describe('<DataGrid /> - Keyboard', () => {
     expect(getActiveColumnHeader()).to.equal('1');
     fireEvent.keyDown(document.activeElement!, { key: 'ArrowDown' });
     expect(getActiveCell()).to.equal('0-0');
+  });
+
+  it('should navigate between column headers with arrows when page > 0', () => {
+    render(<KeyboardTest nbRows={10} page={1} pageSize={2} rowsPerPageOptions={[2]} />);
+    getCell(2, 0).focus();
+    expect(getActiveCell()).to.equal('2-0');
+    fireEvent.keyDown(document.activeElement!, { key: 'ArrowUp' });
+    expect(getActiveColumnHeader()).to.equal('1');
+    fireEvent.keyDown(document.activeElement!, { key: 'ArrowRight' });
+    expect(getActiveColumnHeader()).to.equal('2');
+    fireEvent.keyDown(document.activeElement!, { key: 'ArrowLeft' });
+    expect(getActiveColumnHeader()).to.equal('1');
+    fireEvent.keyDown(document.activeElement!, { key: 'ArrowDown' });
+    expect(getActiveCell()).to.equal('2-0');
   });
 
   it('should navigate between column headers with arrows when rows are filtered', () => {

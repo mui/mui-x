@@ -1,19 +1,14 @@
 import * as React from 'react';
 import { GridApiRef, useGridApiRef, DataGridPro } from '@mui/x-data-grid-pro';
+import { createRenderer, fireEvent } from '@material-ui/monorepo/test/utils';
 import { expect } from 'chai';
 import { stub } from 'sinon';
-import {
-  createClientRenderStrictMode,
-  // @ts-expect-error need to migrate helpers to TypeScript
-  fireEvent,
-} from 'test/utils';
 import { getCell } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<DataGridPro /> - Clipboard', () => {
-  // TODO v5: replace with createClientRender
-  const render = createClientRenderStrictMode();
+  const { render } = createRenderer();
 
   const baselineProps = {
     autoHeight: isJSDOM,
