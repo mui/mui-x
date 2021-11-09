@@ -1,12 +1,11 @@
 import * as React from 'react';
-import { createClientRenderStrictMode } from 'test/utils';
+import { createRenderer } from '@material-ui/monorepo/test/utils';
 import { expect } from 'chai';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { GridApiRef, useGridApiRef, DataGridPro, ptBR } from '@mui/x-data-grid-pro';
 
 describe('<DataGridPro /> - Layout', () => {
-  // TODO v5: replace with createClientRender
-  const render = createClientRenderStrictMode();
+  const { render } = createRenderer();
 
   const baselineProps = {
     rows: [

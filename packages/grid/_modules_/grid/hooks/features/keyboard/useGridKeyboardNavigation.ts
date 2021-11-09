@@ -138,7 +138,7 @@ export const useGridKeyboardNavigation = (
         throw new Error('MUI: Key not mapped to navigation behavior.');
       }
 
-      if (nextCellIndexes.rowIndex < 0) {
+      if (nextCellIndexes.rowIndex < currentPage.range.firstRowIndex) {
         const field = apiRef.current.getVisibleColumns()[nextCellIndexes.colIndex].field;
         apiRef.current.setColumnHeaderFocus(field, event);
         return;
@@ -176,10 +176,12 @@ export const useGridKeyboardNavigation = (
         nextColumnHeaderIndexes = { colIndex: colIdx };
       } else if (isPageKeys(key)) {
         // Handle only Page Down key, Page Up should keep the current position
-        if (key.indexOf('Down') > -1) {
+        if (key.indexOf('Down') > -1 && currentPage.rows.length) {
           const field = apiRef.current.getVisibleColumns()[colIndex].field;
-          const id = apiRef.current.getRowIdFromRowIndex(containerSizes!.viewportPageSize - 1);
-
+          const id =
+            currentPage.rows[
+              Math.min(containerSizes?.viewportPageSize!, currentPage.rows.length - 1)
+            ].id;
           apiRef.current.setCellFocus(id, field);
         }
         return;
@@ -189,8 +191,9 @@ export const useGridKeyboardNavigation = (
 
       if (!nextColumnHeaderIndexes) {
         const field = apiRef.current.getVisibleColumns()[colIndex].field;
-        const node = visibleSortedRows[0];
-        apiRef.current.setCellFocus(node.id, field);
+        if (currentPage.rows.length) {
+          apiRef.current.setCellFocus(currentPage.rows[0].id, field);
+        }
         return;
       }
 
@@ -205,7 +208,7 @@ export const useGridKeyboardNavigation = (
       const field = apiRef.current.getVisibleColumns()[nextColumnHeaderIndexes.colIndex].field;
       apiRef.current.setColumnHeaderFocus(field, event);
     },
-    [apiRef, colCount, containerSizes, logger, visibleSortedRows],
+    [apiRef, colCount, containerSizes, logger, currentPage.rows],
   );
 
   useGridApiEventHandler(apiRef, GridEvents.cellNavigationKeyDown, navigateCells);

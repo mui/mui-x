@@ -1,6 +1,5 @@
 import * as React from 'react';
-// @ts-expect-error need to migrate helpers to TypeScript
-import { fireEvent, screen, createClientRenderStrictMode } from 'test/utils';
+import { createRenderer, fireEvent, screen } from '@material-ui/monorepo/test/utils';
 import { expect } from 'chai';
 import { DataGrid, DataGridProps, GridInputSelectionModel } from '@mui/x-data-grid';
 import {
@@ -27,8 +26,7 @@ function getSelectedRowIds() {
 }
 
 describe('<DataGrid /> - Selection', () => {
-  // TODO v5: replace with createClientRender
-  const render = createClientRenderStrictMode();
+  const { render } = createRenderer();
 
   const defaultData = getData(4, 2);
 
