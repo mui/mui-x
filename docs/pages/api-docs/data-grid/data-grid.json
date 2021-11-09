@@ -140,10 +140,10 @@
     }
   },
   "slots": {
+    "BaseCheckbox": { "default": "Checkbox", "type": { "name": "elementType" } },
     "BooleanCellFalseIcon": { "default": "GridCloseIcon", "type": { "name": "elementType" } },
     "BooleanCellTrueIcon": { "default": "GridCheckIcon", "type": { "name": "elementType" } },
     "Cell": { "type": { "name": "elementType" } },
-    "Checkbox": { "default": "Checkbox", "type": { "name": "elementType" } },
     "ColumnFilteredIcon": { "default": "GridFilterAltIcon", "type": { "name": "elementType" } },
     "ColumnMenu": { "default": "GridColumnMenu", "type": { "name": "elementType" } },
     "ColumnMenuIcon": {

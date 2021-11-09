@@ -387,7 +387,7 @@
   },
   "slotDescriptions": {
     "Cell": "Component rendered for each cell.",
-    "Checkbox": "The custom Checkbox component used in the grid for both header and cells.",
+    "BaseCheckbox": "The custom Checkbox component used in the grid for both header and cells.",
     "ColumnMenu": "Column menu component rendered by clicking on the 3 dots &quot;kebab&quot; icon in column headers.",
     "ErrorOverlay": "Error overlay component rendered above the grid when an error is caught.",
     "Footer": "Footer component rendered at the bottom of the grid viewport.",
