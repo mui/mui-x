@@ -7,19 +7,11 @@ import {
   GridEditSingleSelectCell,
 } from '@mui/x-data-grid-pro';
 import Portal from '@mui/core/Portal';
+import { createRenderer, fireEvent, screen, waitFor } from '@material-ui/monorepo/test/utils';
 import { expect } from 'chai';
 import * as React from 'react';
 import { getActiveCell, getCell, getRow, getColumnHeaderCell } from 'test/utils/helperFn';
 import { stub, spy, useFakeTimers } from 'sinon';
-import {
-  createClientRenderStrictMode,
-  // @ts-expect-error need to migrate helpers to TypeScript
-  fireEvent,
-  // @ts-expect-error need to migrate helpers to TypeScript
-  screen,
-  // @ts-expect-error need to migrate helpers to TypeScript
-  waitFor,
-} from 'test/utils';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -84,8 +76,7 @@ describe('<DataGridPro /> - Edit Rows', () => {
     clock.restore();
   });
 
-  // TODO v5: replace with createClientRender
-  const render = createClientRenderStrictMode();
+  const { render } = createRenderer();
 
   let apiRef: GridApiRef;
 

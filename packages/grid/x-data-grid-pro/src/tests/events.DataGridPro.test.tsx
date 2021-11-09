@@ -1,11 +1,5 @@
 import * as React from 'react';
-import {
-  createClientRenderStrictMode,
-  // @ts-ignore
-  fireEvent,
-  // @ts-ignore
-  screen,
-} from 'test/utils';
+import { createRenderer, fireEvent, screen } from '@material-ui/monorepo/test/utils';
 import { expect } from 'chai';
 import {
   DataGridPro,
@@ -24,8 +18,7 @@ import { getCell, getColumnHeaderCell, getRow } from 'test/utils/helperFn';
 import { spy } from 'sinon';
 
 describe('<DataGridPro /> - Events Params', () => {
-  // TODO v5: replace with createClientRender
-  const render = createClientRenderStrictMode();
+  const { render } = createRenderer();
 
   const baselineProps: { rows: GridRowsProp; columns: GridColumns } = {
     rows: [

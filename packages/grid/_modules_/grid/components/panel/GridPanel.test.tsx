@@ -1,9 +1,5 @@
 import * as React from 'react';
-import {
-  createClientRenderStrictMode,
-  // @ts-expect-error JS
-  describeConformance,
-} from 'test/utils';
+import { createRenderer, describeConformance } from '@material-ui/monorepo/test/utils';
 import {
   GridPanel,
   gridPanelClasses as classes,
@@ -13,8 +9,7 @@ import {
 import Popper from '@mui/material/Popper';
 
 describe('<GridPanel />', () => {
-  // TODO v5: replace with createClientRender
-  const render = createClientRenderStrictMode();
+  const { render } = createRenderer();
 
   function Wrapper(props) {
     const apiRef = useGridApiRef();

@@ -1,15 +1,11 @@
 import * as React from 'react';
-import {
-  createClientRenderStrictMode, // @ts-expect-error need to migrate helpers to TypeScript
-  ErrorBoundary,
-} from 'test/utils';
+import { createRenderer, ErrorBoundary } from '@material-ui/monorepo/test/utils';
 import { expect } from 'chai';
 import { DataGrid, GridOverlay } from '@mui/x-data-grid';
 import { getCell, getRow } from 'test/utils/helperFn';
 
 describe('<DataGrid /> - Components', () => {
-  // TODO v5: replace with createClientRender
-  const render = createClientRenderStrictMode();
+  const { render } = createRenderer();
 
   const baselineProps = {
     rows: [
