@@ -16,7 +16,7 @@ Depending on the complexity of the application however, this might not be possib
 An alternative is to install MUI Core v4 alongside to v5, and to configure them to avoid conflicts.
 This can be achieved with the following steps:
 
-1. First, make sure you have MUI Core v5 installed. If not, install it with these [instructions](/components/data-grid/getting-started/#installation).
+1. First, make sure you have MUI X v5 installed. If not, install it with these [instructions](/components/data-grid/getting-started/#installation).
 
 2. Add a custom [`createGenerateClassName`](/styles/api/#heading-creategenerateclassname-options-class-name-generator) to disable the generation of global class names in JSS.
 
@@ -88,27 +88,26 @@ The following interactive demo shows how these steps tie together:
 
 ### CSS classes
 
-- Some CSS classes were removed
+- Some CSS classes were removed or renamed
 
-  1. `.MuiDataGrid-window` was removed
-  2. `.MuiDataGrid-windowContainer` was removed
-
-- Some CSS classes were renamed
-
-  1. `.MuiDataGrid-viewport` was renamed `.MuiDataGrid-virtualScroller`
-  2. `.MuiDataGrid-dataContainer` was renamed `.MuiDataGrid-virtualScrollerContent`
-  3. `.MuiDataGrid-renderingZone` was renamed `.MuiDataGrid-virtualScrollerRenderZone`
-  4. `.MuiDataGrid-gridMenuList` was renamed `.MuiDataGrid-menuList`
-  5. `.MuiGridToolbarContainer-root` was renamed `.MuiDataGrid-toolbarContainer`
-  6. `.MuiGridMenu-root` was renamed `.MuiDataGrid-menu`
-  7. `.MuiDataGridColumnsPanel-root` was renamed `.MuiDataGrid-columnsPanel`
-  8. `.MuiGridPanel-root` was renamed `.MuiDataGrid-panel`
-  9. `.MuiGridPanelContent-root` was renamed `.MuiDataGrid-panelContent`
-  10. `.MuiGridPanelFooter-root` was renamed `.MuiDataGrid-panelFooter`
-  11. `.MuiDataGridPanelHeader-root` was renamed `.MuiDataGrid-panelHeader`
-  12. `.MuiGridPanelWrapper-root` was renamed `.MuiDataGrid-panelWrapper`
-  13. `.MuiGridFilterForm-root` was renamed `.MuiDataGrid-filterForm`
-  14. `.MuiGridToolbarFilterButton-root` was renamed `.MuiDataGrid-toolbarFilterList`
+  | MUI X v4 classes                   | MUI X v5 classes                         |
+  | ---------------------------------- | ---------------------------------------- |
+  | `.MuiDataGrid-window`              | removed                                  |
+  | `.MuiDataGrid-windowContainer`     | removed                                  |
+  | `.MuiDataGrid-viewport`            | `.MuiDataGrid-virtualScroller`           |
+  | `.MuiDataGrid-dataContainer`       | `.MuiDataGrid-virtualScrollerContent`    |
+  | `.MuiDataGrid-renderingZone`       | `.MuiDataGrid-virtualScrollerRenderZone` |
+  | `.MuiDataGrid-gridMenuList`        | `.MuiDataGrid-menuList`                  |
+  | `.MuiGridToolbarContainer-root`    | `.MuiDataGrid-toolbarContainer`          |
+  | `.MuiGridMenu-root`                | `.MuiDataGrid-menu`                      |
+  | `.MuiDataGridColumnsPanel-root`    | `.MuiDataGrid-columnsPanel`              |
+  | `.MuiGridPanel-root`               | `.MuiDataGrid-panel`                     |
+  | `.MuiGridPanelContent-root`        | `.MuiDataGrid-panelContent`              |
+  | `.MuiGridPanelFooter-root`         | `.MuiDataGrid-panelFooter`               |
+  | `.MuiDataGridPanelHeader-root`     | `.MuiDataGrid-panelHeader`               |
+  | `.MuiGridPanelWrapper-root`        | `.MuiDataGrid-panelWrapper`              |
+  | `.MuiGridFilterForm-root`          | `.MuiDataGrid-filterForm`                |
+  | `.MuiGridToolbarFilterButton-root` | `.MuiDataGrid-toolbarFilterList`         |
 
 ### Module augmentation
 
@@ -236,14 +235,16 @@ The following interactive demo shows how these steps tie together:
 
 - Some selectors have been renamed to match with our naming convention
 
-  1. `unorderedGridRowIdsSelector` was renamed to `gridRowIdsSelector`
-  2. `sortingGridStateSelector` was renamed to `gridSortingStateSelector`
-  3. `sortedGridRowIdsSelector` was renamed to `gridSortedRowIdsSelector`
-  4. `filterGridStateSelector` was renamed to `gridFilterModelSelector`
-  5. `visibleSortedGridRowIdsSelector` was renamed to `gridVisibleSortedRowIdsSelector`
-  6. `visibleGridRowCountSelector` was renamed to `gridVisibleRowCountSelector`
-  7. `filterGridColumnLookupSelector` was renamed to `gridFilterActiveItemsLookupSelector`
-  8. `densitySelector` was renamed to `gridDensitySelector`
+  | MUI X v4 selectors                | MUI X v5 selectors                    |
+  | --------------------------------- | ------------------------------------- |
+  | `unorderedGridRowIdsSelector`     | `gridRowIdsSelector`                  |
+  | `sortingGridStateSelector`        | `gridSortingStateSelector`            |
+  | `sortedGridRowIdsSelector`        | `gridSortedRowIdsSelector`            |
+  | `filterGridStateSelector`         | `gridFilterModelSelector`             |
+  | `visibleSortedGridRowIdsSelector` | `gridVisibleSortedRowIdsSelector`     |
+  | `visibleGridRowCountSelector`     | `gridVisibleRowCountSelector`         |
+  | `filterGridColumnLookupSelector`  | `gridFilterActiveItemsLookupSelector` |
+  | `densitySelector`                 | `gridDensitySelector`                 |
 
 - Some selectors have been removed / reworked
 
@@ -316,7 +317,7 @@ The following interactive demo shows how these steps tie together:
   +const rows = gridVisibleSortedRowEntriesSelector(state).map(row => [row.id, row.model])
   ```
 
-### `apiRef`
+### The `apiRef` methods
 
 - The `apiRef` methods to partially update the filter model have been renamed
 
