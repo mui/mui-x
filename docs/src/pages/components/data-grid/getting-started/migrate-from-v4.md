@@ -2,226 +2,91 @@
 title: Data Grid - Migrate from v4
 ---
 
-Introduction
+<p class="description">MUI X v5 is now stable!</p>
 
-<p class="description">This is a reference for upgrading your site from MUI Core v4 to v5. While there's a lot covered here, you probably won't need to do everything. We'll do our best to keep things easy to follow, and as sequential as possible, so you can quickly get rocking on v5!</p>
+## Introduction
 
-## State
+This a reference for upgrading your site from MUI X v4 to v5. MUI X v5 is fully compatible with MUI Core v5 and can be used with MUI Core v4 with some additional steps.
+Most breaking changes are renaming of CSS classes or variables to improve the consistency of the grid.
 
-- The `apiRef.current.getState` method was removed. You can directly access the state through `apiRef.current.state`
+## Using MUI X v5 with MUI Core v4
 
-  ```diff
-  -const state = apiRef.current.getState();
-  +const state = apiRef.current.state
-  ```
+We strongly recommend you to migrate both MUI X and MUI Core to v5.
+Depending on the complexity of the application however, this might not be possible.
+An alternative is to install MUI Core v4 alongside to v5, and to configure them to avoid conflicts.
+This can be achieved with the following steps:
 
-- The state direct access is not considered part of the public API anymore. We only guarantee that the selectors continue to work between minor releases.
-  You can replace the following state access by there matching selectors:
+1. First, make sure you have MUI Core v5 installed. If not, install it with these [instructions](/components/data-grid/getting-started/#installation).
 
-| Direct state access     | Selector                           |
-| ----------------------- | ---------------------------------- |
-| `state.rows`            | `gridRowsStateSelector`            |
-| `state.filter`          | `gridFilterStateSelector`          |
-| `state.sorting`         | `gridSortingStateSelector`         |
-| `state.editRows`        | `gridEditRowsStateSelector`        |
-| `state.pagination`      | `gridPaginationSelector`           |
-| `state.columns`         | `gridColumnsSelector`              |
-| `state.columnMenu`      | `gridColumnMenuSelector`           |
-| `state.focus`           | `gridFocusStateSelector`           |
-| `state.tabIndex`        | `gridTabIndexStateSelector`        |
-| `state.selection`       | `gridSelectionStateSelector`       |
-| `state.preferencePanel` | `gridPreferencePanelStateSelector` |
-| `state.density`         | `gridDensitySelector`              |
-| `state.columnReorder`   | `gridColumnReorderSelector`        |
-| `state.columnResize`    | `gridColumnResizeSelector`         |
+2. Add a custom [`createGenerateClassName`](/styles/api/#heading-creategenerateclassname-options-class-name-generator) to disable the generation of global class names in JSS.
 
-- The `state` prop has been removed. You can use the new `initialState` prop instead.
+```jsx
+import { createGenerateClassName } from '@material-ui/core/styles';
 
-  Note that `initialState` only allows the `preferencePanel`, `filter.filterModel` and `sort.sortModel` keys.
-  To fully control the state, use the feature's model prop and change callback (e.g. `filterModel` and `onFilterModelChange`).
+const generateClassName = createGenerateClassName({
+  // By enabling this option, if you have non-MUI elements (e.g. `<div />`)
+  // using MUI classes (e.g. `.MuiButton`) they will lose styles.
+  // Make sure to convert them to use `styled()` or `<Box />` first.
+  disableGlobal: true,
+  // Class names will receive this seed to avoid name collisions.
+  seed: 'mui-jss',
+});
+```
 
-  ```diff
-  <DataGrid
-  -  state={{
-  +  initialState={{
-      preferencePanel: {
-        open: true,
-        openedPanelValue: GridPreferencePanelsValue.filters,
-      },
-    }}
-  />
-  ```
+3. Create a v5 theme with the same customizations as the v4 theme. This has to be done as the theme is not shared between different MUI Core versions.
 
-## Columns
+```jsx
+import { createMuiTheme as createThemeV4 } from '@material-ui/core/styles';
+import { createTheme as createThemeV5 } from '@mui/material/styles';
 
-- The `gridCheckboxSelectionColDef` was renamed `GRID_CHECKBOX_SELECTION_COL_DEF`
+const themeV4 = createThemeV4({
+  palette: {
+    primary: {
+      main: '#2196f3',
+    },
+  },
+});
 
-- The params passed to the `valueFormatter` were changed.
+const themeV5 = createThemeV5({
+  palette: {
+    primary: {
+      main: theme.palette.primary.main,
+    },
+  },
+});
+```
 
-  You can use the `api` to get the missing params.
-  The `GridValueFormatterParams` interface has the following signature now:
+4. Apply the class name generator and v5 theme to the application.
 
-  ```diff
-  -export type GridValueFormatterParams = Omit<GridRenderCellParams, 'formattedValue' | 'isEditable'>;
-  +export interface GridValueFormatterParams {
-  +  /**
-  +   * The column field of the cell that triggered the event
-  +   */
-  +  field: string;
-  +  /**
-  +   * The cell value, but if the column has valueGetter, use getValue.
-  +   */
-  +  value: GridCellValue;
-  +  /**
-  +   * GridApi that let you manipulate the grid.
-  +   */
-  +  api: any;
-  +}
-  ```
+```jsx
+import * as React from 'react';
+import { ThemeProvider as ThemeProviderV5 } from '@mui/material/styles';
+import { ThemeProvider as ThemeProviderV4, StylesProvider } from '@material-ui/core/styles';
 
-## Unsorted / unfiltered rows
+const generateClassName = createGenerateClassName({ ... });
+const themeV4 = createThemeV4({ ... });
+const themeV5 = createThemeV5({ ... });
 
-- The selectors have been renamed to match with our naming convention
+export default function DataGridDemo() {
+  return (
+    <StylesProvider generateClassName={generateClassName}>
+      <ThemeProviderV4 theme={themeV4}>
+        <ThemeProviderV5 theme={themeV5}>
+          {/* Your component tree. */}
+        </ThemeProviderV5>
+      </ThemeProviderV4>
+    </StylesProvider>
+  );
+}
+```
 
-  1. `unorderedGridRowIdsSelector` was renamed to `gridRowIdsSelector`
+The following interactive demo shows how these steps tie together:
 
-## Sorting
+{{"demo": "pages/components/data-grid/getting-started/DataGridV5WithCoreV4.js", "hideToolbar": true, "bg": true}}
 
-- The selectors have been renamed to match with our naming convention
+## Migrating MUI X from v4
 
-  1. `sortingGridStateSelector` was renamed to `gridSortingStateSelector`
-  2. `sortedGridRowIdsSelector` was renamed to `gridSortedRowIdsSelector`
-
-- Some selectors have been removed / reworked
-
-  1. `sortedGridRowsSelector` was remove. You can use `gridSortedRowEntriesSelector` instead.
-
-  The return value is not the same, as shown below:
-
-  ```diff
-  -sortedGridRowsSelector: (state: GridState) => Map<GridRowId, GridRowModel>
-  -const map = sortedGridRowsSelector(state);
-  +gridSortedRowEntriesSelector: (state: GridState) => GridRowEntry[]
-  +const map = new Map(gridSortedRowEntriesSelector(state).map(row => [row.id, row.model]));
-  ```
-
-## Filter
-
-- The `apiRef` methods to partially update the filter model have been renamed
-
-  1. `apiRef.current.applyFilterLinkOperator` was renamed `apiRef.current.setFilterLinkOperator`
-  2. `apiRef.current.upsertFilter` was renamed `apiRef.current.upsertFilterItem`
-  3. `apiRef.current.deleteFilter` was renamed `apiRef.current.deleteFilterItem`
-
-- The selectors have been renamed to match with our naming convention
-
-  1. `filterGridStateSelector` was renamed to `gridFilterModelSelector`
-  2. `visibleSortedGridRowIdsSelector` was renamed to `gridVisibleSortedRowIdsSelector`
-  3. `visibleGridRowCountSelector` was renamed to `gridVisibleRowCountSelector`
-  4. `filterGridColumnLookupSelector` was renamed to `gridFilterActiveItemsLookupSelector`
-
-- Some selectors have been removed / reworked
-
-  1. `filterGridItemsCounterSelector` was removed. You can use `gridFilterActiveItemsSelector`
-
-  ```diff
-  -const filterCount = filterGridItemsCounterSelector(state);
-  +const filterCount = gridFilterActiveItemsSelector(state).length;
-  ```
-
-  2. `unorderedGridRowModelsSelector` was removed. You can use `apiRef.current.getRowModels` or `gridRowIdsSelector` and `gridRowsLookupSelector`
-
-  ```diff
-  -const rowModels = unorderedGridRowModelsSelector(apiRef.current.state);
-
-  +const rowModels = apiRef.current.getRowModels();
-
-  // or if you only want to use selectors
-  +const allRows = gridRowIdsSelector(apiRef.current.state);
-  +const idRowsLookup = gridRowsLookupSelector(apiRef.current.state);
-  +const rowModels = new Map(allRows.map((id) => [id, idRowsLookup[id]]));
-  ```
-
-  3. The `visibleSortedGridRowsSelector` was removed. You can use `gridVisibleSortedRowEntriesSelector`
-
-  The return value is not the same, as shown below:
-
-  ```diff
-  -visibleSortedGridRowsSelector: (state: GridState) => Map<GridRowId, GridRowModel>;
-  -const map = visibleSortedGridRowsSelector(state);
-  +gridVisibleSortedRowEntriesSelector: (state: GridState) => GridRowEntry[]
-  +const map = new Map(gridVisibleSortedRowEntriesSelector(state).map(row => [row.id, row.model]));
-  ```
-
-  4. The `visibleSortedGridRowsAsArraySelector` was removed. You can use `gridVisibleSortedRowEntriesSelector`
-
-  The return value is not the same, as shown below:
-
-  ```diff
-  -visibleSortedGridRowsAsArraySelector: (state: GridState) => [GridRowId, GridRowData][];
-  +gridVisibleSortedRowEntriesSelector: (state: GridState) => GridRowEntry[]
-  ```
-
-## Density
-
-- The selector was renamed to match with our naming convention
-
-  1. `densitySelector` was renamed to `gridDensitySelector`
-
-## Selection
-
-- The third argument in `apiRef.current.selectRow` is now inverted to keep consistency with other selection APIs.
-  If you were passing `allowMultiple: true`, you should now pass `resetSelection: false` or stop passing anything
-  If you were passing `allowMultiple: false` or not passing anything on `allowMultiple, you should not pass `resetSelection: true`
-
-  ```diff
-  -selectRow: (id: GridRowId, isSelected?: boolean, allowMultiple?: boolean = false) => void;
-  +selectRow: (id: GridRowId, isSelected?: boolean, resetSelection?: boolean = false) => void;
-  ```
-
-## Event listeners
-
-- Some event listeners and DOM attributes were removed from `GridCell` and `GridRow` for performances reasons.
-
-  The following props were removed. If you depend on them, use `componentsProps.row` and `componentsProps.cell` to pass custom props to the row or cell.
-
-  - `onCellBlur`
-  - `onCellOver`
-  - `onCellOut`
-  - `onCellEnter`
-  - `onCellLeave`
-  - `onRowOver`
-  - `onRowOut`
-  - `onRowEnter`
-  - `onRowLeave`
-
-  For more information, check [this page](https://mui.com/components/data-grid/components/#row). Example:
-
-  ```diff
-  -<DataGrid onRowOver={handleRowOver} />;
-  +<DataGrid
-  +  componentsProps={{
-  +    row: { onMouseOver: handleRowOver },
-  +  }}
-  +/>;
-  ```
-
-  The `data-rowindex` and `data-rowselected` attributes were removed from the cell element. Equivalent attributes can be found in the row element.
-
-  The `data-editable` attribute was removed from the cell element. Use the `.MuiDataGrid-cell--editable` CSS class.
-
-  The `data-mode` attribute was removed from the cell element. Use the `.MuiDataGrid-cell--editing` CSS class.
-
-## Classes and styling
-
-- The module augmentation is no longer enabled by default. This change was done to prevent conflicts with projects using `DataGrid` and `DataGridPro` together.
-
-  In order to still be able to do overrides at the theme level, add the following imports to your project:
-
-  ```diff
-  +import type {} from '@mui/x-data-grid/themeAugmentation';
-  +import type {} from '@mui/x-data-grid-pro/themeAugmentation';
-  ```
+### CSS classes
 
 - Some CSS classes were removed
 
@@ -233,7 +98,7 @@ Introduction
   1. `.MuiDataGrid-viewport` was renamed `.MuiDataGrid-virtualScroller`
   2. `.MuiDataGrid-dataContainer` was renamed `.MuiDataGrid-virtualScrollerContent`
   3. `.MuiDataGrid-renderingZone` was renamed `.MuiDataGrid-virtualScrollerRenderZone`
-  4. `.MuiDataGrid-gridMenuList` was renamed to `.MuiDataGrid-menuList`
+  4. `.MuiDataGrid-gridMenuList` was renamed `.MuiDataGrid-menuList`
   5. `.MuiGridToolbarContainer-root` was renamed `.MuiDataGrid-toolbarContainer`
   6. `.MuiGridMenu-root` was renamed `.MuiDataGrid-menu`
   7. `.MuiDataGridColumnsPanel-root` was renamed `.MuiDataGrid-columnsPanel`
@@ -245,11 +110,22 @@ Introduction
   13. `.MuiGridFilterForm-root` was renamed `.MuiDataGrid-filterForm`
   14. `.MuiGridToolbarFilterButton-root` was renamed `.MuiDataGrid-toolbarFilterList`
 
-## Virtualization
+### Module augmentation
+
+- The module augmentation is no longer enabled by default. This change was done to prevent conflicts with projects using `DataGrid` and `DataGridPro` together.
+
+  In order to still be able to do overrides at the theme level, add the following imports to your project:
+
+  ```diff
+  +import type {} from '@mui/x-data-grid/themeAugmentation';
+  +import type {} from '@mui/x-data-grid-pro/themeAugmentation';
+  ```
+
+### Virtualization
 
 - The `onViewportRowsChange` prop and the `viewportRowsChange` event have been removed
 
-  A listener on the `rowsScroll` event, as shown below, can be used to replace the prop:
+  You can replace them with a listener on the `rowsScroll` event:
 
   ```tsx
   const apiRef = useGridApiRef();
@@ -274,7 +150,219 @@ Introduction
   <DataGridPro apiRef={apiRef} />;
   ```
 
-## Export cleaning
+### Properties of the Grid
+
+- Some event listeners and DOM attributes were removed from `GridCell` and `GridRow` to improve performances.
+
+  The following props were removed.
+
+  - `onCellBlur`
+  - `onCellOver`
+  - `onCellOut`
+  - `onCellEnter`
+  - `onCellLeave`
+  - `onRowOver`
+  - `onRowOut`
+  - `onRowEnter`
+  - `onRowLeave`
+
+  If you depend on them, you can use `componentsProps.row` and `componentsProps.cell` to pass custom props to the row or cell.
+  For more information, check [this page](https://mui.com/components/data-grid/components/#row). Example:
+
+  ```diff
+  -<DataGrid onRowOver={handleRowOver} />;
+  +<DataGrid
+  +  componentsProps={{
+  +    row: { onMouseOver: handleRowOver },
+  +  }}
+  +/>;
+  ```
+
+  The `data-rowindex` and `data-rowselected` attributes were removed from the cell element. Equivalent attributes can be found in the row element.
+
+  The `data-editable` attribute was removed from the cell element. Use the `.MuiDataGrid-cell--editable` CSS class.
+
+  The `data-mode` attribute was removed from the cell element. Use the `.MuiDataGrid-cell--editing` CSS class.
+
+### State access
+
+- The state direct access is not considered part of the public API anymore. We only guarantee that the selectors continue to work between minor releases.
+  We advise you to avoid accessing directly a state sub-key and to use selectors or `apiRef` methods whenever possible.
+  You can replace the following state access by there matching selectors:
+
+  | Direct state access     | Selector                           |
+  | ----------------------- | ---------------------------------- |
+  | `state.rows`            | `gridRowsStateSelector`            |
+  | `state.filter`          | `gridFilterStateSelector`          |
+  | `state.sorting`         | `gridSortingStateSelector`         |
+  | `state.editRows`        | `gridEditRowsStateSelector`        |
+  | `state.pagination`      | `gridPaginationSelector`           |
+  | `state.columns`         | `gridColumnsSelector`              |
+  | `state.columnMenu`      | `gridColumnMenuSelector`           |
+  | `state.focus`           | `gridFocusStateSelector`           |
+  | `state.tabIndex`        | `gridTabIndexStateSelector`        |
+  | `state.selection`       | `gridSelectionStateSelector`       |
+  | `state.preferencePanel` | `gridPreferencePanelStateSelector` |
+  | `state.density`         | `gridDensitySelector`              |
+  | `state.columnReorder`   | `gridColumnReorderSelector`        |
+  | `state.columnResize`    | `gridColumnResizeSelector`         |
+
+- The `apiRef.current.getState` method was removed. You can directly access the state through `apiRef.current.state`
+
+  ```diff
+  -const state = apiRef.current.getState();
+  +const state = apiRef.current.state
+
+  const filterModel = gridFilterModelSelector(state);
+  ```
+
+- The `state` prop was not working correctly and was removed.
+  You can use the new `initialState` prop instead.
+
+  Note that `initialState` only allows the `preferencePanel`, `filter.filterModel` and `sort.sortModel` keys.
+  To fully control the state, use the feature's model prop and change callback (e.g. `filterModel` and `onFilterModelChange`).
+
+  ```diff
+  <DataGrid
+  -  state={{
+  +  initialState={{
+      preferencePanel: {
+        open: true,
+        openedPanelValue: GridPreferencePanelsValue.filters,
+      },
+    }}
+  />
+  ```
+
+- Some selectors have been renamed to match with our naming convention
+
+  1. `unorderedGridRowIdsSelector` was renamed to `gridRowIdsSelector`
+  2. `sortingGridStateSelector` was renamed to `gridSortingStateSelector`
+  3. `sortedGridRowIdsSelector` was renamed to `gridSortedRowIdsSelector`
+  4. `filterGridStateSelector` was renamed to `gridFilterModelSelector`
+  5. `visibleSortedGridRowIdsSelector` was renamed to `gridVisibleSortedRowIdsSelector`
+  6. `visibleGridRowCountSelector` was renamed to `gridVisibleRowCountSelector`
+  7. `filterGridColumnLookupSelector` was renamed to `gridFilterActiveItemsLookupSelector`
+  8. `densitySelector` was renamed to `gridDensitySelector`
+
+- Some selectors have been removed / reworked
+
+  1. `sortedGridRowsSelector` was removed. You can use `gridSortedRowEntriesSelector` instead.
+
+  The return format has changed:
+
+  ```diff
+  -sortedGridRowsSelector: (state: GridState) => Map<GridRowId, GridRowModel>
+  +gridSortedRowEntriesSelector: (state: GridState) => GridRowEntry[]
+  ```
+
+  If you need the old format, you can convert the selector return value as follows:
+
+  ```diff
+  -const map = sortedGridRowsSelector(state);
+  +const map = new Map(gridSortedRowEntriesSelector(state).map(row => [row.id, row.model]));
+  ```
+
+  2. `filterGridItemsCounterSelector` was removed. You can use `gridFilterActiveItemsSelector`
+
+  ```diff
+  -const filterCount = filterGridItemsCounterSelector(state);
+  +const filterCount = gridFilterActiveItemsSelector(state).length;
+  ```
+
+  3. `unorderedGridRowModelsSelector` was removed. You can use `apiRef.current.getRowModels` or `gridRowIdsSelector` and `gridRowsLookupSelector`
+
+  ```diff
+  -const rowModels = unorderedGridRowModelsSelector(apiRef.current.state);
+
+  // using the `apiRef`
+  +const rowModels = apiRef.current.getRowModels();
+
+  // using selectors
+  +const allRows = gridRowIdsSelector(apiRef.current.state);
+  +const idRowsLookup = gridRowsLookupSelector(apiRef.current.state);
+  +const rowModels = new Map(allRows.map((id) => [id, idRowsLookup[id]]));
+  ```
+
+  4. The `visibleSortedGridRowsSelector` was removed. You can use `gridVisibleSortedRowEntriesSelector`
+
+  The return format has changed:
+
+  ```diff
+  -visibleSortedGridRowsSelector: (state: GridState) => Map<GridRowId, GridRowModel>;
+  +gridVisibleSortedRowEntriesSelector: (state: GridState) => GridRowEntry[]
+  ```
+
+  If you need the old format, you can convert the selector return value as follows:
+
+  ```diff
+  -const map = visibleSortedGridRowsSelector(state);
+  +const map = new Map(gridVisibleSortedRowEntriesSelector(state).map(row => [row.id, row.model]));
+  ```
+
+  5. The `visibleSortedGridRowsAsArraySelector` was removed. You can use `gridVisibleSortedRowEntriesSelector`
+
+  The return format has changed:
+
+  ```diff
+  -visibleSortedGridRowsAsArraySelector: (state: GridState) => [GridRowId, GridRowData][];
+  +gridVisibleSortedRowEntriesSelector: (state: GridState) => GridRowEntry[]
+  ```
+
+  If you need the old format, you can convert the selector return value as follows:
+
+  ```diff
+  -const rows = visibleSortedGridRowsAsArraySelector(state);
+  +const rows = gridVisibleSortedRowEntriesSelector(state).map(row => [row.id, row.model])
+  ```
+
+### `apiRef`
+
+- The `apiRef` methods to partially update the filter model have been renamed
+
+  1. `apiRef.current.applyFilterLinkOperator` was renamed `apiRef.current.setFilterLinkOperator`
+  2. `apiRef.current.upsertFilter` was renamed `apiRef.current.upsertFilterItem`
+  3. `apiRef.current.deleteFilter` was renamed `apiRef.current.deleteFilterItem`
+
+- The third argument in `apiRef.current.selectRow` is now inverted to keep consistency with other selection APIs.
+
+  If you were passing `allowMultiple: true`, you should now pass `resetSelection: false` or stop passing anything
+
+  If you were passing `allowMultiple: false` or not passing anything on `allowMultiple`, you should now pass `resetSelection: true`
+
+  ```diff
+  -selectRow: (id: GridRowId, isSelected?: boolean, allowMultiple?: boolean = false) => void;
+  +selectRow: (id: GridRowId, isSelected?: boolean, resetSelection?: boolean = false) => void;
+  ```
+
+### Columns
+
+- The params passed to the `valueFormatter` were changed.
+
+  You can use the `api` to get the missing params.
+  The `GridValueFormatterParams` interface has the following signature now:
+
+  ```diff
+  -export type GridValueFormatterParams = Omit<GridRenderCellParams, 'formattedValue' | 'isEditable'>;
+  +export interface GridValueFormatterParams {
+  +  /**
+  +   * The column field of the cell that triggered the event
+  +   */
+  +  field: string;
+  +  /**
+  +   * The cell value, but if the column has valueGetter, use getValue.
+  +   */
+  +  value: GridCellValue;
+  +  /**
+  +   * GridApi that let you manipulate the grid.
+  +   */
+  +  api: any;
+  +}
+  ```
+
+### Other exports
+
+- The `gridCheckboxSelectionColDef` was renamed `GRID_CHECKBOX_SELECTION_COL_DEF`
 
 - The individual string constant have been removed in favor of a single `gridClasses` object
 
@@ -332,7 +420,7 @@ Introduction
   +const rootProps = useGridRootProps(); // equivalent of `options`
   ```
 
-## Removal from public API
+### Removal from public API
 
 We removed some API methods / selectors from what we consider public by adding the `unstable_` prefix on them.
 You can continue to use those methods if you really need to, but they may be removed / changed drastically on minor versions.
