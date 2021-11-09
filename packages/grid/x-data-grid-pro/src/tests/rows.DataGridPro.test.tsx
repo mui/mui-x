@@ -1,9 +1,5 @@
 import * as React from 'react';
-import {
-  createClientRenderStrictMode,
-  // @ts-expect-error need to migrate helpers to TypeScript
-  fireEvent,
-} from 'test/utils';
+import { createRenderer, fireEvent } from '@material-ui/monorepo/test/utils';
 import { useFakeTimers, spy } from 'sinon';
 import { expect } from 'chai';
 import { getCell, getRow, getColumnValues } from 'test/utils/helperFn';
@@ -25,8 +21,7 @@ describe('<DataGridPro /> - Rows', () => {
   let clock;
   let baselineProps;
 
-  // TODO v5: replace with createClientRender
-  const render = createClientRenderStrictMode();
+  const { render } = createRenderer();
 
   describe('getRowId', () => {
     beforeEach(() => {

@@ -1,13 +1,5 @@
 import * as React from 'react';
-import {
-  createClientRenderStrictMode,
-  // @ts-expect-error need to migrate helpers to TypeScript
-  fireEvent,
-  // @ts-expect-error need to migrate helpers to TypeScript
-  screen,
-  // @ts-expect-error need to migrate helpers to TypeScript
-  waitFor,
-} from 'test/utils';
+import { createRenderer, fireEvent, screen, waitFor } from '@material-ui/monorepo/test/utils';
 import { expect } from 'chai';
 import { useFakeTimers, spy } from 'sinon';
 import {
@@ -22,8 +14,7 @@ import { getColumnHeaderCell, getCell } from 'test/utils/helperFn';
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<DataGridPro /> - Columns', () => {
-  // TODO v5: replace with createClientRender
-  const render = createClientRenderStrictMode();
+  const { render } = createRenderer();
 
   let apiRef: GridApiRef;
 

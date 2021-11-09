@@ -1,13 +1,5 @@
 import * as React from 'react';
-import {
-  createClientRenderStrictMode,
-  // @ts-expect-error need to migrate helpers to TypeScript
-  fireEvent,
-  // @ts-expect-error need to migrate helpers to TypeScript
-  screen,
-  // @ts-expect-error need to migrate helpers to TypeScript
-  waitFor,
-} from 'test/utils';
+import { createRenderer, fireEvent, screen, waitFor } from '@material-ui/monorepo/test/utils';
 import { expect } from 'chai';
 import { gridClasses, DataGridPro } from '@mui/x-data-grid-pro';
 import { getColumnHeaderCell, getColumnValues } from 'test/utils/helperFn';
@@ -15,8 +7,7 @@ import { getColumnHeaderCell, getColumnValues } from 'test/utils/helperFn';
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<DataGridPro /> - Column Headers', () => {
-  // TODO v5: replace with createClientRender
-  const render = createClientRenderStrictMode();
+  const { render } = createRenderer();
 
   const baselineProps = {
     autoHeight: isJSDOM,
