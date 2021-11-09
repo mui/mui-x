@@ -46,10 +46,13 @@ const StyledPaper = styled(Paper, {
   display: 'flex',
 }));
 
+const GRID_PANEL_POSITION = 'bottom-start';
+
 const GridPanel = React.forwardRef<HTMLDivElement, GridPanelProps>((props, ref) => {
   const { children, className, open, classes: classesProp, ...other } = props;
   const apiRef = useGridApiContext();
   const classes = gridPanelClasses;
+  const [isPlaced, setIsPlaced] = React.useState(false);
 
   const handleClickAway = React.useCallback(() => {
     apiRef.current.hidePreferences();
@@ -73,7 +76,7 @@ const GridPanel = React.forwardRef<HTMLDivElement, GridPanelProps>((props, ref) 
   return (
     <StyledPopper
       ref={ref}
-      placement="bottom-start"
+      placement={GRID_PANEL_POSITION}
       className={clsx(className, classes.panel)}
       open={open}
       anchorEl={anchorEl}
@@ -82,12 +85,22 @@ const GridPanel = React.forwardRef<HTMLDivElement, GridPanelProps>((props, ref) 
           name: 'flip',
           enabled: false,
         },
+        {
+          name: 'isPlaced',
+          enabled: true,
+          phase: 'main',
+          fn: ({ state }) => {
+            if (state.placement === GRID_PANEL_POSITION) {
+              setIsPlaced(true);
+            }
+          },
+        },
       ]}
       {...other}
     >
       <ClickAwayListener onClickAway={handleClickAway}>
         <StyledPaper className={classes.paper} elevation={8} onKeyDown={handleKeyDown}>
-          {children}
+          {isPlaced && children}
         </StyledPaper>
       </ClickAwayListener>
     </StyledPopper>
