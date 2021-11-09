@@ -1,5 +1,5 @@
 ---
-title: Data Grid - Migrate from v4
+title: Data Grid - Migration from v4 to v5
 ---
 
 <p class="description">MUI X v5 is now stable!</p>
