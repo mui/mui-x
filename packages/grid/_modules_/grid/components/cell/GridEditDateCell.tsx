@@ -37,45 +37,73 @@ export function GridEditDateCell(props: GridRenderEditCellParams & InputBaseProp
     ...other
   } = props;
 
+  const isDateTime = colDef.type === 'dateTime';
   const inputRef = React.useRef<HTMLInputElement>();
-  const [valueState, setValueState] = React.useState(value);
+
+  const valueProp = React.useMemo(() => {
+    let parsedDate: Date | null;
+
+    if (value == null) {
+      parsedDate = null;
+    } else if (value instanceof Date) {
+      parsedDate = value;
+    } else {
+      parsedDate = new Date((value ?? '').toString());
+    }
+
+    let formattedDate: string;
+    if (parsedDate == null || Number.isNaN(parsedDate.getTime())) {
+      formattedDate = '';
+    } else {
+      const localDate = new Date(parsedDate.getTime() - parsedDate.getTimezoneOffset() * 60 * 1000);
+      formattedDate = localDate.toISOString().substr(0, isDateTime ? 16 : 10);
+    }
+
+    return {
+      parsed: parsedDate,
+      formatted: formattedDate,
+    };
+  }, [value, isDateTime]);
+
+  const [valueState, setValueState] = React.useState(valueProp);
   const rootProps = useGridRootProps();
   const ownerState = { classes: rootProps.classes };
   const classes = useUtilityClasses(ownerState);
 
   const handleChange = React.useCallback(
     (event) => {
-      const newValue = event.target.value;
-      setValueState(newValue);
+      const newFormattedDate = event.target.value;
+      let newParsedDate: Date | null;
 
-      if (newValue === '') {
-        api.setEditCellValue({ id, field, value: null }, event);
-        return;
+      if (newFormattedDate === '') {
+        newParsedDate = null;
+      } else {
+        const [date, time] = newFormattedDate.split('T');
+        const [year, month, day] = date.split('-');
+        newParsedDate = new Date();
+        newParsedDate.setFullYear(Number(year));
+        newParsedDate.setMonth(Number(month) - 1);
+        newParsedDate.setDate(Number(day));
+        newParsedDate.setHours(0, 0, 0, 0);
+
+        if (time) {
+          const [hours, minutes] = time.split(':');
+          newParsedDate.setHours(Number(hours), Number(minutes), 0, 0);
+        }
       }
 
-      const [date, time] = newValue.split('T');
-      const [year, month, day] = date.split('-');
-      const dateObj = new Date();
-      dateObj.setFullYear(Number(year));
-      dateObj.setMonth(Number(month) - 1);
-      dateObj.setDate(Number(day));
-      dateObj.setHours(0, 0, 0, 0);
-
-      if (time) {
-        const [hours, minutes] = time.split(':');
-        dateObj.setHours(Number(hours), Number(minutes), 0, 0);
-      }
-
-      api.setEditCellValue({ id, field, value: dateObj }, event);
+      setValueState({ parsed: newParsedDate, formatted: newFormattedDate });
+      api.setEditCellValue({ id, field, value: newParsedDate }, event);
     },
     [api, field, id],
   );
 
-  const isDateTime = colDef.type === 'dateTime';
-
-  React.useEffect(() => {
-    setValueState(value);
-  }, [value]);
+  if (
+    valueProp.parsed !== valueState.parsed &&
+    valueProp.parsed?.getTime() !== valueState.parsed?.getTime()
+  ) {
+    setValueState(valueProp);
+  }
 
   useEnhancedEffect(() => {
     if (hasFocus) {
@@ -83,20 +111,13 @@ export function GridEditDateCell(props: GridRenderEditCellParams & InputBaseProp
     }
   }, [hasFocus]);
 
-  let valueToDisplay = valueState || '';
-  if (valueState instanceof Date) {
-    const offset = valueState.getTimezoneOffset();
-    const localDate = new Date(valueState.getTime() - offset * 60 * 1000);
-    valueToDisplay = localDate.toISOString().substr(0, isDateTime ? 16 : 10);
-  }
-
   return (
     <InputBase
       inputRef={inputRef}
       fullWidth
       className={classes.root}
       type={isDateTime ? 'datetime-local' : 'date'}
-      value={valueToDisplay}
+      value={valueState.formatted}
       onChange={handleChange}
       {...other}
     />

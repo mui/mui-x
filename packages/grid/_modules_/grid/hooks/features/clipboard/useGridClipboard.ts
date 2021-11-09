@@ -64,7 +64,7 @@ export const useGridClipboard = (apiRef: GridApiRef): void => {
         return;
       }
 
-      apiRef.current.unsafe_copySelectedRowsToClipboard(event.altKey);
+      apiRef.current.unstable_copySelectedRowsToClipboard(event.altKey);
     },
     [apiRef],
   );
@@ -72,7 +72,7 @@ export const useGridClipboard = (apiRef: GridApiRef): void => {
   useGridNativeEventListener(apiRef, apiRef.current.rootElementRef!, 'keydown', handleKeydown);
 
   const clipboardApi: GridClipboardApi = {
-    unsafe_copySelectedRowsToClipboard: copySelectedRowsToClipboard,
+    unstable_copySelectedRowsToClipboard: copySelectedRowsToClipboard,
   };
 
   useGridApiMethod(apiRef, clipboardApi, 'GridClipboardApi');

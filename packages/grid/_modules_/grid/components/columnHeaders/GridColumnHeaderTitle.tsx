@@ -2,6 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import Tooltip from '@mui/material/Tooltip';
 import { isOverflown } from '../../utils/domUtils';
 import { getDataGridUtilityClass } from '../../gridClasses';
@@ -20,6 +21,17 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
+const GridColumnHeaderTitleRoot = styled('div', {
+  name: 'MuiDataGrid',
+  slot: 'ColumnHeaderTitle',
+  overridesResolver: (props, styles) => styles.columnHeaderTitle,
+})(({ theme }) => ({
+  textOverflow: 'ellipsis',
+  overflow: 'hidden',
+  whiteSpace: 'nowrap',
+  fontWeight: theme.typography.fontWeightMedium,
+}));
+
 const ColumnHeaderInnerTitle = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
@@ -29,7 +41,9 @@ const ColumnHeaderInnerTitle = React.forwardRef<
   const ownerState = { classes: rootProps.classes };
   const classes = useUtilityClasses(ownerState);
 
-  return <div ref={ref} className={clsx(classes.root, className)} {...other} />;
+  return (
+    <GridColumnHeaderTitleRoot ref={ref} className={clsx(classes.root, className)} {...other} />
+  );
 });
 
 export interface GridColumnHeaderTitleProps {

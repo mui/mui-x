@@ -24,7 +24,7 @@ export interface GridFilterApi {
    * Applies all filters on all rows.
    * @ignore - do not document.
    */
-  unsafe_applyFilters: () => void;
+  unstable_applyFilters: () => void;
   /**
    * Deletes a [[GridFilterItem]].
    * @param {GridFilterItem} item The filter to delete.
