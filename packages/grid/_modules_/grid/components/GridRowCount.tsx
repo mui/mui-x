@@ -2,6 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { getDataGridUtilityClass } from '../gridClasses';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
@@ -26,6 +27,16 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
+const GridRowCountRoot = styled('div', {
+  name: 'MuiDataGrid',
+  slot: 'RowCount',
+  overridesResolver: (props, styles) => styles.rowCount,
+})(({ theme }) => ({
+  alignItems: 'center',
+  display: 'flex',
+  margin: theme.spacing(0, 2),
+}));
+
 const GridRowCount = React.forwardRef<HTMLDivElement, GridRowCountProps>(function GridRowCount(
   props,
   ref,
@@ -46,9 +57,9 @@ const GridRowCount = React.forwardRef<HTMLDivElement, GridRowCountProps>(functio
       : rowCount.toLocaleString();
 
   return (
-    <div ref={ref} className={clsx(classes.root, className)} {...other}>
+    <GridRowCountRoot ref={ref} className={clsx(classes.root, className)} {...other}>
       {apiRef.current.getLocaleText('footerTotalRows')} {text}
-    </div>
+    </GridRowCountRoot>
   );
 });
 

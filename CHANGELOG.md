@@ -3,6 +3,79 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 5.0.0-beta.7
+
+_Nov 4, 2021_
+
+- 💅 Reduce styles specificity to make simpler to override (#3012) @DanailH
+- 🌍 Add Hebrew (heIL) locale (#3028) @ColdAtNight
+- 📚 Documentation improvements
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@v5.0.0-beta.7` / `@mui/x-data-grid-pro@v5.0.0-beta.7`
+
+#### Breaking changes
+
+- [core] Prefix selectors from `useGridContainerProps` with `unsafe` (#3002) @flaviendelangle
+
+  The dimension API is being temporarily made private to allow to clean it in future minor releases. The current approach causes useless re-renders.
+  If you relay on any of these selectors, open an issue explaining the use case so that will be taken into account when refactoring them.
+
+  The following selectors were prefixed by `unstable_`. Use the provided alternatives.
+
+  1. `gridContainerSizesSelector` was renamed to `unstable_gridContainerSizesSelector`
+  2. `gridViewportSizesSelector` was renamed to `unstable_gridViewportSizesSelector`
+  3. `gridScrollBarSizeSelector` was renamed to `unstable_gridScrollBarSizeSelector`
+
+  The following selectors were removed. You can hard-code their logic in your application if you really need them.
+
+  1. `gridDataContainerSizesSelector`
+
+  ```ts
+  const dataContainerSizes = gridContainerSizesSelector(state)?.dataContainerSizes ?? null;
+  ```
+
+  2. `gridDataContainerHeightSelector`
+
+  ```ts
+  const dataContainerHeight = gridContainerSizesSelector(state)?.dataContainerSizes.height ?? null;
+  ```
+
+  The selector `gridViewportSizeStateSelector` was a duplicate and has been removed, you can use the selector `unstable_gridViewportSizesSelector` instead.
+
+#### Changes
+
+- [DataGrid] Add Hebrew (heIL) locale (#3028) @ColdAtNight
+- [DataGrid] Move virtualization logic to hook (#3079) @m4theushw
+- [DataGrid] Revert year change in the MIT license (#3059) @oliviertassinari
+- [DataGrid] Fix filtering of nullish numeric cells (#3070) @flaviendelangle
+- [DataGrid] Improve performance when selecting 100k rows (#3077) @m4theushw
+- [DataGrid] Fix `GridEditDateCell` to handle timezone correctly (#2918) @flaviendelangle
+- [DataGrid] Fix keyboard navigation on page > 0 (#3074) @flaviendelangle
+- [DataGrid] Prevents bubbling in menu header (#3000) @alexfauquette
+- [DataGrid] Fix wrong params provided to `cellModeChange` when `setCellMode` is called (#3025) @flaviendelangle
+
+### Core
+
+- [core] Adapt `useDemoData` for Tree Data (#2978) @flaviendelangle
+- [core] Group update of MUI Core (#3055) @oliviertassinari
+- [core] Ignore `*.tsbuildinfo` files (#3068) @m4theushw
+- [core] Implement tree-based row management (#2996) @flaviendelangle
+- [core] Invert Codesandbox examples on README (#3073) @flaviendelangle
+- [core] Prefix selectors from `useGridContainerProps` with `unsafe` (#3002) @flaviendelangle
+- [core] Reduce `setGridState` and `applyFilters` call when updating `filterModel` (#3023) @flaviendelangle
+- [core] Reduce styles complexity (#3012) @DanailH
+- [core] Upgrade monorepo (#3067) @m4theushw
+- [core] Use official MUI repo as monorepo (#3084) @m4theushw
+- [test] Retry each expect until success (#3027) @m4theushw
+- [core] Adapt changelog script to new GitHub DOM (#3087) @alexfauquette
+
+### Docs
+
+- [docs] Explain how to use `valueGetter` to transform type (#3003) @alexfauquette
+- [docs] Fix the outdated demo of the docs (#3058) @oliviertassinari
+- [docs] Fix inline previews #3081) @DanailH
+
 ## 5.0.0-beta.6
 
 _Oct 29, 2021_
@@ -44,9 +117,9 @@ A big thanks to the 7 contributors who made this release possible. Here are some
   4. `visibleSortedGridRowIdsSelector` was renamed to `gridVisibleSortedRowIdsSelector`
   5. `visibleGridRowCountSelector` was renamed to `gridVisibleRowCountSelector`
   6. `filterGridColumnLookupSelector` was renamed to `gridFilterActiveItemsSelector`
- 
+
 - [DataGridPro] The `sortedGridRowsSelector` was renamed to `gridSortedRowEntriesSelector` (#2942) @flaviendelangle
-  
+
   The return value was also changed as below:
 
   ```diff
@@ -57,7 +130,7 @@ A big thanks to the 7 contributors who made this release possible. Here are some
   ```
 
 - [DataGridPro] The `visibleSortedGridRowsSelector` was replaced with `gridVisibleSortedRowEntriesSelector` (#2942) @flaviendelangle
-  
+
   The return value was also changed as below:
 
   ```diff
@@ -68,7 +141,7 @@ A big thanks to the 7 contributors who made this release possible. Here are some
   ```
 
 - [DataGridPro] The `visibleSortedGridRowsAsArraySelector` was replaced with `gridVisibleSortedRowEntriesSelector` (#2942) @flaviendelangle
-  
+
   The return value was also changed as below:
 
   ```diff
@@ -193,7 +266,7 @@ A big thanks to the 5 contributors who made this release possible. Here are some
   const prevRenderContext = React.useRef(null);
 
   React.useEffect(() => {
-    return apiRef.current.subscribeEvent("rowsScroll", ({ renderContext }) => {
+    return apiRef.current.subscribeEvent('rowsScroll', ({ renderContext }) => {
       if (
         !prevRenderContext.current ||
         renderContext.firstRowIdx !== prevRenderContext.current.firstRowIndex ||
@@ -202,13 +275,13 @@ A big thanks to the 5 contributors who made this release possible. Here are some
         prevRenderContext.current = renderContext;
         const params = {
           firstRowIndex: renderContext.firstRowIndex,
-          lastRowIndex: renderContext.lastRowIndex
+          lastRowIndex: renderContext.lastRowIndex,
         };
       }
     });
   }, [apiRef]);
 
-  <DataGridPro apiRef={apiRef} />
+  <DataGridPro apiRef={apiRef} />;
   ```
 
 #### Changes

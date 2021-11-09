@@ -103,7 +103,7 @@ Here is an example implementing an email validation:
 
 ### Server-side validation
 
-Server-side validation works like client-side [validation](#client-side-validation).
+Server-side validation works like [client-side validation](#client-side-validation).
 The only difference is that when `preProcessEditCellProps` is called, a promise must be returned.
 Once the value is validated in the server, that promise should be resolved with a new object containing the `error` attribute set to true or false.
 The grid will wait for the promise to be resolved before exiting the edit mode.

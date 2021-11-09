@@ -202,13 +202,18 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the column header's title container element"
     },
-    "columnHeaderWrapper": {
+    "columnHeaders": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the column header's wrapper element"
+      "nodeName": "the column headers"
     },
-    "columnsContainer": {
+    "columnHeadersInner": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the outer columns container element"
+      "nodeName": "the column headers's inner element"
+    },
+    "columnHeadersInner--scrollable": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the column headers's inner element",
+      "conditions": "there is a horizontal scrollbar"
     },
     "columnSeparator--resizable": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
@@ -329,8 +334,8 @@
     },
     "row": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the row element" },
     "rowCount": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the footer row count element"
+      "description": "Styles applied to {{nodeName}}.\nOnly works when pagination is disabled.",
+      "nodeName": "the footer row count element to show the total number of rows"
     },
     "scrollArea": {
       "description": "Styles applied to {{nodeName}}.",

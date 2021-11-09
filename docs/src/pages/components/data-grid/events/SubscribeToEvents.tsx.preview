@@ -1,0 +1,8 @@
+<div style={{ height: 180, width: '100%' }}>
+  <DataGridPro apiRef={apiRef} {...data} />
+</div>
+{message && (
+  <Alert severity="info" style={{ marginTop: 8 }}>
+    {message}
+  </Alert>
+)}

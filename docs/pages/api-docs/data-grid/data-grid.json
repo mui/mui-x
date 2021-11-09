@@ -219,8 +219,9 @@
       "columnHeaderDropZone",
       "columnHeaderTitle",
       "columnHeaderTitleContainer",
-      "columnHeaderWrapper",
-      "columnsContainer",
+      "columnHeaders",
+      "columnHeadersInner",
+      "columnHeadersInner--scrollable",
       "columnSeparator--resizable",
       "columnSeparator--resizing",
       "columnSeparator",
@@ -267,6 +268,6 @@
     "name": "MuiDataGrid"
   },
   "forwardsRefTo": "GridRoot",
-  "filename": "/packages/grid/data-grid/src/DataGrid.tsx",
+  "filename": "/packages/grid/x-data-grid/src/DataGrid.tsx",
   "demos": "<ul><li><a href=\"/components/data-grid#mit-version\">DataGrid</a></li></ul>"
 }
