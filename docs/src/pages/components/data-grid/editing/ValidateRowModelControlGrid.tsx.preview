@@ -1,0 +1,7 @@
+<DataGrid
+  className={classes.root}
+  rows={rows}
+  columns={columns}
+  editRowsModel={editRowsModel}
+  onEditRowsModelChange={handleEditRowsModelChange}
+/>

@@ -7,7 +7,7 @@ import { GridCellValue } from '../../../models/gridCell';
 import { GridColDef } from '../../../models/colDef/gridColDef';
 import { GridFeatureModeConstant } from '../../../models/gridFeatureMode';
 import { GridColumnHeaderParams } from '../../../models/params/gridColumnHeaderParams';
-import { GridRowId } from '../../../models/gridRows';
+import { GridRowId, GridRowTreeNodeConfig } from '../../../models/gridRows';
 import {
   GridFieldComparatorList,
   GridSortItem,
@@ -27,6 +27,7 @@ import {
   gridSortedRowIdsSelector,
   gridSortedRowEntriesSelector,
 } from './gridSortingSelector';
+import { gridRowIdsSelector, gridRowTreeDepthSelector, gridRowTreeSelector } from '../rows';
 import { useGridStateInit } from '../../utils/useGridStateInit';
 import { useFirstRender } from '../../utils/useFirstRender';
 
@@ -45,6 +46,7 @@ export const useGridSorting = (
     | 'sortingOrder'
     | 'sortingMode'
     | 'disableMultipleColumnsSorting'
+    | 'disableChildrenSorting'
   >,
 ) => {
   const logger = useGridLogger(apiRef, 'useGridSorting');
@@ -59,7 +61,7 @@ export const useGridSorting = (
 
   const [, setGridState, forceUpdate] = useGridState(apiRef);
 
-  apiRef.current.unsafe_updateControlState({
+  apiRef.current.unstable_updateControlState({
     stateId: 'sortModel',
     propModel: props.sortModel,
     propOnChange: props.onSortModelChange,
@@ -170,39 +172,109 @@ export const useGridSorting = (
   );
 
   const applySorting = React.useCallback<GridSortApi['applySorting']>(() => {
-    let sortedRows = apiRef.current.getAllRowIds();
-
     if (props.sortingMode === GridFeatureModeConstant.server) {
       logger.debug('Skipping sorting rows as sortingMode = server');
       setGridState((state) => ({
         ...state,
-        sorting: { ...state.sorting, sortedRows },
+        sorting: { ...state.sorting, sortedRows: gridRowIdsSelector(state) },
       }));
       return;
     }
 
-    const sortModel = gridSortModelSelector(apiRef.current.state);
-
-    if (sortModel.length > 0) {
+    setGridState((state) => {
+      const rowIds = gridRowIdsSelector(state);
+      const rowTree = gridRowTreeSelector(state);
+      const shouldApplyTreeSorting = gridRowTreeDepthSelector(state) > 1;
+      const sortModel = gridSortModelSelector(state);
       const comparatorList = buildComparatorList(sortModel);
-      logger.debug('Sorting rows with ', sortModel);
-      sortedRows = sortedRows
-        .map((id) => {
-          return comparatorList.map((colComparator) => {
-            return getSortCellParams(id, colComparator.field);
-          });
-        })
-        .sort(comparatorListAggregate(comparatorList))
-        .map((field) => field[0].id);
-    }
+      const aggregatedComparator = comparatorListAggregate(comparatorList);
 
-    setGridState((state) => ({
-      ...state,
-      sorting: { ...state.sorting, sortedRows },
-    }));
+      const sortRowList = (rowList: GridRowTreeNodeConfig[]) =>
+        rowList
+          .map((value) => ({
+            value,
+            params: comparatorList.map((colComparator) =>
+              getSortCellParams(value.id, colComparator.field),
+            ),
+          }))
+          .sort((a, b) => aggregatedComparator(a.params, b.params))
+          .map((row) => row.value.id);
+
+      let sortedRows: GridRowId[] = [];
+      if (shouldApplyTreeSorting) {
+        // Group the rows by parent
+        const groupedByParentRows = new Map<GridRowId | null, GridRowTreeNodeConfig[]>([
+          [null, []],
+        ]);
+        for (let i = 0; i < rowIds.length; i += 1) {
+          const rowId = rowIds[i];
+          const node = rowTree[rowId];
+          let group = groupedByParentRows.get(node.parent);
+          if (!group) {
+            group = [];
+            groupedByParentRows.set(node.parent, group);
+          }
+          group.push(node);
+        }
+
+        // Apply the sorting to each list of children
+        const sortedGroupedByParentRows = new Map<GridRowId | null, GridRowId[]>();
+        groupedByParentRows.forEach((rowList, parent) => {
+          if (rowList.length === 0) {
+            sortedGroupedByParentRows.set(parent, []);
+          } else {
+            const depth = rowList[0].depth;
+            if (depth > 0 && props.disableChildrenSorting) {
+              sortedGroupedByParentRows.set(
+                parent,
+                rowList.map((row) => row.id),
+              );
+            } else if (comparatorList.length === 0) {
+              sortedGroupedByParentRows.set(
+                parent,
+                rowList.map((row) => row.id),
+              );
+            } else {
+              sortedGroupedByParentRows.set(parent, sortRowList(rowList));
+            }
+          }
+        });
+
+        // Flatten the sorted lists to have children just after their parent
+        const insertRowListIntoSortedRows = (startIndex: number, rowList: GridRowId[]) => {
+          sortedRows = [
+            ...sortedRows.slice(0, startIndex),
+            ...rowList,
+            ...sortedRows.slice(startIndex),
+          ];
+
+          let treeSize = 0;
+          rowList.forEach((rowId) => {
+            treeSize += 1;
+            const children = sortedGroupedByParentRows.get(rowId);
+            if (children?.length) {
+              const subTreeSize = insertRowListIntoSortedRows(startIndex + treeSize, children);
+              treeSize += subTreeSize;
+            }
+          });
+
+          return treeSize;
+        };
+
+        insertRowListIntoSortedRows(0, sortedGroupedByParentRows.get(null)!);
+      } else if (comparatorList.length === 0) {
+        sortedRows = rowIds;
+      } else {
+        sortedRows = sortRowList(Object.values(rowTree));
+      }
+
+      return {
+        ...state,
+        sorting: { ...state.sorting, sortedRows },
+      };
+    });
     forceUpdate();
   }, [
-    apiRef,
     logger,
     getSortCellParams,
     setGridState,
@@ -210,6 +282,7 @@ export const useGridSorting = (
     buildComparatorList,
     comparatorListAggregate,
     props.sortingMode,
+    props.disableChildrenSorting,
   ]);
 
   const setSortModel = React.useCallback<GridSortApi['setSortModel']>(
@@ -272,6 +345,16 @@ export const useGridSorting = (
       apiRef.current.setSortModel(props.sortModel);
     }
   }, [apiRef, props.sortModel]);
+
+  // The sorting options have changed
+  const isFirstRender = React.useRef(true);
+  React.useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+    apiRef.current.applySorting();
+  }, [apiRef, props.disableChildrenSorting]);
 
   useFirstRender(() => apiRef.current.applySorting());
 

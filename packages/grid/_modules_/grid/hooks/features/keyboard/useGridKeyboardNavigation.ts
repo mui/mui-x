@@ -15,17 +15,15 @@ import {
   isSpaceKey,
   isTabKey,
 } from '../../../utils/keyboardUtils';
-import { gridContainerSizesSelector } from '../container/gridContainerSizesSelector';
+import { unstable_gridContainerSizesSelector } from '../container/gridContainerSizesSelector';
 import { visibleGridColumnsLengthSelector } from '../columns/gridColumnsSelector';
 import { useGridSelector } from '../../utils/useGridSelector';
-import { gridPaginationSelector } from '../pagination/gridPaginationSelector';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { GridComponentProps } from '../../../GridComponentProps';
-import {
-  gridVisibleRowCountSelector,
-  gridVisibleSortedRowEntriesSelector,
-} from '../filter/gridFilterSelector';
+import { gridVisibleSortedRowEntriesSelector } from '../filter/gridFilterSelector';
+import { useCurrentPageRows } from '../../utils/useCurrentPageRows';
+import { clamp } from '../../../utils/utils';
 
 const getNextCellIndexes = (key: string, indexes: GridCellIndexCoordinates) => {
   if (!isArrowKeys(key)) {
@@ -74,14 +72,13 @@ const getNextColumnHeaderIndexes = (key: string, indexes: GridColumnHeaderIndexC
  */
 export const useGridKeyboardNavigation = (
   apiRef: GridApiRef,
-  props: Pick<GridComponentProps, 'pagination'>,
+  props: Pick<GridComponentProps, 'pagination' | 'paginationMode'>,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridKeyboardNavigation');
-  const paginationState = useGridSelector(apiRef, gridPaginationSelector);
-  const totalVisibleRowCount = useGridSelector(apiRef, gridVisibleRowCountSelector);
   const colCount = useGridSelector(apiRef, visibleGridColumnsLengthSelector);
-  const containerSizes = useGridSelector(apiRef, gridContainerSizesSelector);
+  const containerSizes = useGridSelector(apiRef, unstable_gridContainerSizesSelector);
   const visibleSortedRows = useGridSelector(apiRef, gridVisibleSortedRowEntriesSelector);
+  const currentPage = useCurrentPageRows(apiRef, props);
 
   const mapKey = (event: React.KeyboardEvent) => {
     if (isEnterKey(event.key)) {
@@ -96,16 +93,16 @@ export const useGridKeyboardNavigation = (
   const navigateCells = React.useCallback(
     (params: GridCellParams, event: React.KeyboardEvent) => {
       event.preventDefault();
+
+      if (!currentPage.range) {
+        return;
+      }
+
       const colIndex = apiRef.current.getColumnIndex(params.field);
       const rowIndex = visibleSortedRows.findIndex((row) => row.id === params.id);
 
       const key = mapKey(event);
       const isCtrlPressed = event.ctrlKey || event.metaKey || event.shiftKey;
-      let rowCount = totalVisibleRowCount;
-
-      if (props.pagination && totalVisibleRowCount > paginationState.pageSize) {
-        rowCount = paginationState.pageSize * (paginationState.page + 1);
-      }
 
       let nextCellIndexes: GridCellIndexCoordinates;
       if (isArrowKeys(key)) {
@@ -123,9 +120,9 @@ export const useGridKeyboardNavigation = (
           // In that case we go to first row, first col, or last row last col!
           let newRowIndex = 0;
           if (colIdx === 0) {
-            newRowIndex = props.pagination ? rowCount - paginationState.pageSize : 0;
+            newRowIndex = currentPage.range.firstRowIndex;
           } else {
-            newRowIndex = rowCount - 1;
+            newRowIndex = currentPage.range.lastRowIndex;
           }
           nextCellIndexes = { colIndex: colIdx, rowIndex: newRowIndex };
         }
@@ -140,19 +137,14 @@ export const useGridKeyboardNavigation = (
         throw new Error('MUI: Key not mapped to navigation behavior.');
       }
 
-      if (nextCellIndexes.rowIndex < 0) {
+      if (nextCellIndexes.rowIndex < currentPage.range.firstRowIndex) {
         const field = apiRef.current.getVisibleColumns()[nextCellIndexes.colIndex].field;
         apiRef.current.setColumnHeaderFocus(field, event);
         return;
       }
 
-      nextCellIndexes.rowIndex =
-        nextCellIndexes.rowIndex >= rowCount && rowCount > 0
-          ? rowCount - 1
-          : nextCellIndexes.rowIndex;
-      nextCellIndexes.colIndex = nextCellIndexes.colIndex <= 0 ? 0 : nextCellIndexes.colIndex;
-      nextCellIndexes.colIndex =
-        nextCellIndexes.colIndex >= colCount ? colCount - 1 : nextCellIndexes.colIndex;
+      nextCellIndexes.rowIndex = clamp(nextCellIndexes.rowIndex, 0, currentPage.range.lastRowIndex);
+      nextCellIndexes.colIndex = clamp(nextCellIndexes.colIndex, 0, colCount - 1);
       logger.debug(
         `Navigating to next cell row ${nextCellIndexes.rowIndex}, col ${nextCellIndexes.colIndex}`,
       );
@@ -161,17 +153,7 @@ export const useGridKeyboardNavigation = (
       const node = visibleSortedRows[nextCellIndexes.rowIndex];
       apiRef.current.setCellFocus(node.id, field);
     },
-    [
-      apiRef,
-      visibleSortedRows,
-      totalVisibleRowCount,
-      props.pagination,
-      paginationState.pageSize,
-      paginationState.page,
-      colCount,
-      logger,
-      containerSizes,
-    ],
+    [apiRef, visibleSortedRows, colCount, logger, containerSizes, currentPage],
   );
 
   const navigateColumnHeaders = React.useCallback(
@@ -191,10 +173,12 @@ export const useGridKeyboardNavigation = (
         nextColumnHeaderIndexes = { colIndex: colIdx };
       } else if (isPageKeys(key)) {
         // Handle only Page Down key, Page Up should keep the current position
-        if (key.indexOf('Down') > -1) {
+        if (key.indexOf('Down') > -1 && currentPage.rows.length) {
           const field = apiRef.current.getVisibleColumns()[colIndex].field;
-          const id = apiRef.current.getRowIdFromRowIndex(containerSizes!.viewportPageSize - 1);
-
+          const id =
+            currentPage.rows[
+              Math.min(containerSizes?.viewportPageSize!, currentPage.rows.length - 1)
+            ].id;
           apiRef.current.setCellFocus(id, field);
         }
         return;
@@ -204,8 +188,9 @@ export const useGridKeyboardNavigation = (
 
       if (!nextColumnHeaderIndexes) {
         const field = apiRef.current.getVisibleColumns()[colIndex].field;
-        const node = visibleSortedRows[0];
-        apiRef.current.setCellFocus(node.id, field);
+        if (currentPage.rows.length) {
+          apiRef.current.setCellFocus(currentPage.rows[0].id, field);
+        }
         return;
       }
 
@@ -220,7 +205,7 @@ export const useGridKeyboardNavigation = (
       const field = apiRef.current.getVisibleColumns()[nextColumnHeaderIndexes.colIndex].field;
       apiRef.current.setColumnHeaderFocus(field, event);
     },
-    [apiRef, colCount, containerSizes, logger, visibleSortedRows],
+    [apiRef, colCount, containerSizes, logger, currentPage.rows],
   );
 
   useGridApiEventHandler(apiRef, GridEvents.cellNavigationKeyDown, navigateCells);

@@ -1,0 +1,8 @@
+<DataGridPro
+  className={classes.root}
+  apiRef={apiRef}
+  rows={rows}
+  columns={columns}
+  onEditCellPropsChange={handleCellEditPropsChange}
+  isCellEditable={(params) => params.row.id === 5}
+/>

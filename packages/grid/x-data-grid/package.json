@@ -1,0 +1,55 @@
+{
+  "name": "@mui/x-data-grid",
+  "version": "5.0.0-beta.7",
+  "description": "The community edition of the data grid component (MUI X).",
+  "author": "MUI Team",
+  "main": "build/index-cjs.js",
+  "module": "build/index-esm.js",
+  "types": "build/x-data-grid.d.ts",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mui-org/material-ui-x/issues"
+  },
+  "homepage": "https://mui.com/components/data-grid/",
+  "sideEffects": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [
+    "react",
+    "react-component",
+    "material-ui",
+    "mui",
+    "react-table",
+    "table",
+    "datatable",
+    "data-table",
+    "datagrid",
+    "data-grid"
+  ],
+  "scripts": {
+    "typescript": "tsc -p tsconfig.json",
+    "build": "cd ../ && rollup --config rollup.x-data-grid.config.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mui-org/material-ui-x.git",
+    "directory": "packages/grid/x-data-grid"
+  },
+  "dependencies": {
+    "@mui/utils": "^5.1.0",
+    "clsx": "^1.1.1",
+    "prop-types": "^15.7.2",
+    "reselect": "^4.1.1"
+  },
+  "peerDependencies": {
+    "@mui/material": "^5.1.0",
+    "react": "^17.0.2"
+  },
+  "setupFiles": [
+    "<rootDir>/src/setupTests.js"
+  ],
+  "engines": {
+    "node": ">=12.0.0"
+  }
+}

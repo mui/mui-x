@@ -119,6 +119,11 @@ export interface GridSimpleOptions {
    */
   disableMultipleColumnsFiltering: boolean;
   /**
+   * If `true`, the filtering will only be applied to the top level rows.
+   * @default false
+   */
+  disableChildrenFiltering: boolean;
+  /**
    * If `true`, multiple selection using the CTRL or CMD key is disabled.
    * @default false
    */
@@ -128,6 +133,11 @@ export interface GridSimpleOptions {
    * @default false
    */
   disableMultipleColumnsSorting: boolean;
+  /**
+   * If `true`, the sorting will only be applied to the top level rows.
+   * @default false
+   */
+  disableChildrenSorting: boolean;
   /**
    * If `true`, the selection on click on a row or cell is disabled.
    * @default false
@@ -208,7 +218,8 @@ export interface GridSimpleOptions {
    */
   rowsPerPageOptions: number[];
   /**
-   * Set the area at the bottom of the grid viewport where onRowsScrollEnd is called.
+   * Set the area in `px` at the bottom of the grid viewport where onRowsScrollEnd is called.
+   * @default 80
    */
   scrollEndThreshold: number;
   /**
@@ -262,8 +273,10 @@ export const GRID_DEFAULT_SIMPLE_OPTIONS: GridSimpleOptions = {
   disableColumnSelector: false,
   disableDensitySelector: false,
   disableMultipleColumnsFiltering: false,
+  disableChildrenFiltering: false,
   disableMultipleSelection: false,
   disableMultipleColumnsSorting: false,
+  disableChildrenSorting: false,
   disableSelectionOnClick: false,
   disableVirtualization: false,
   editMode: GridEditModes.Cell,

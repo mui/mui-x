@@ -1,0 +1,5 @@
+<div style={{ display: 'flex', height: '100%' }}>
+  <div style={{ flexGrow: 1 }}>
+    <DataGrid {...data} />
+  </div>
+</div>

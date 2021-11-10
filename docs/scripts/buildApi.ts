@@ -753,8 +753,8 @@ async function run(argv: { outputDirectory?: string }) {
   const tsconfig = ttp.loadConfig(path.resolve(__dirname, '../../tsconfig.json'));
 
   const componentsToGenerateDocs = [
-    path.resolve(__dirname, '../../packages/grid/data-grid/src/DataGrid.tsx'),
-    path.resolve(__dirname, '../../packages/grid/x-grid/src/DataGridPro.tsx'),
+    path.resolve(__dirname, '../../packages/grid/x-data-grid/src/DataGrid.tsx'),
+    path.resolve(__dirname, '../../packages/grid/x-data-grid-pro/src/DataGridPro.tsx'),
   ];
 
   const indexPath = path.resolve(__dirname, '../../packages/grid/_modules_/index.ts');
@@ -773,7 +773,7 @@ async function run(argv: { outputDirectory?: string }) {
   //   if (isExported) {
   //     componentsToGenerateDocs.push(component.filename);
   //   }
-  // });
+  // })!;
 
   const apisToGenerate = [
     'GridApi',
@@ -826,14 +826,25 @@ async function run(argv: { outputDirectory?: string }) {
   app.options.addReader(new TypeDoc.TSConfigReader());
   app.options.addReader(new TypeDoc.TypeDocReader());
   app.bootstrap({
-    entryPoints: ['packages/grid/data-grid/src/index.ts'],
+    entryPoints: ['packages/grid/x-data-grid/src/index.ts'],
     exclude: ['**/*.test.ts'],
-    tsconfig: 'packages/grid/data-grid/tsconfig.json',
+    tsconfig: 'packages/grid/x-data-grid/tsconfig.json',
   });
-  const project = app.convert();
+  const project = app.convert()!;
+
+  const exports = (project.children ?? []).map((child) => ({
+    name: child.name,
+    kind: child?.kindString,
+  }));
+
+  writePrettifiedFile(
+    path.resolve(workspaceRoot, 'scripts/exportsSnapshot.json'),
+    JSON.stringify(exports),
+    prettierConfigPath,
+  );
 
   apisToGenerate.forEach((apiName) => {
-    const reflection = project!.findReflectionByName(apiName);
+    const reflection = project.findReflectionByName(apiName);
     if (!reflection || !(reflection instanceof TypeDoc.DeclarationReflection)) {
       throw new Error(`Could not find reflection for "${apiName}".`);
     }

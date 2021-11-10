@@ -9,6 +9,11 @@
     "types": ["node", "requestidlecallback"],
     "rootDir": "./"
   },
-  "include": ["./data-grid/src", "./x-grid/src", "./x-grid-data-generator/src", "./_modules_/**/*"],
+  "include": [
+    "./x-data-grid/src",
+    "./x-data-grid-pro/src",
+    "./x-data-grid-generator/src",
+    "./_modules_/**/*"
+  ],
   "exclude": ["__tests__", "**/*.test.*", "node_modules"]
 }

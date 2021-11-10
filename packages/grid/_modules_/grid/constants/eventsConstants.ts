@@ -16,7 +16,7 @@ export enum GridEvents {
    */
   unmount = 'unmount',
   /**
-   * Fired when the mode of a cell changes. Called with a [[GridCellModeChangeParams]] object.
+   * Fired when the mode of a cell changes. Called with a [[GridCellParams]] object.
    * @ignore - do not document
    */
   cellModeChange = 'cellModeChange',
@@ -255,6 +255,11 @@ export enum GridEvents {
    */
   rowsSet = 'rowsSet',
   /**
+   * Fired when the expansion of a row is changed. Called with a [[GridRowTreeNodeConfig]] object.
+   * @ignore - do not document.
+   */
+  rowExpansionChange = 'rowExpansionChange',
+  /**
    * Fired when the visible rows are updated
    * @ignore - do not document.
    */
@@ -265,13 +270,18 @@ export enum GridEvents {
    */
   columnsChange = 'columnsChange',
   /**
-   * Fired when a column pre-processing is changed
-   * @ignore - do not document
+   * Fired when a pre-processor is registered.
+   * @ignore - do not document.
    */
-  columnsPreProcessingChange = 'columnsPreProcessingChange',
+  preProcessorRegister = 'preProcessorRegister',
+  /**
+   * Fired when a pre-processor is unregistered.
+   * @ignore - do not document.
+   */
+  preProcessorUnregister = 'preProcessorUnregister',
   /**
    * Fired when the row grouping function is changed
-   * @ignore - do not document
+   * @ignore - do not document.
    */
   rowGroupsPreProcessingChange = 'rowGroupsPreProcessingChange',
   /**

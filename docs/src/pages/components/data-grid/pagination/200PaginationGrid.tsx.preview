@@ -1,0 +1,1 @@
+<DataGridPro pagination pageSize={200} rowsPerPageOptions={[200]} {...data} />

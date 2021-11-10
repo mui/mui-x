@@ -3,6 +3,14 @@ import { GridFilterInputMultipleValue } from '../../components/panel/filterPanel
 import { GridFilterItem } from '../gridFilterItem';
 import { GridFilterOperator } from '../gridFilterOperator';
 
+const parseNumericValue = (value: string | number | null) => {
+  if (value == null) {
+    return null;
+  }
+
+  return Number(value);
+};
+
 export const getGridNumericColumnOperators = (): GridFilterOperator[] => [
   {
     label: '=',
@@ -13,7 +21,7 @@ export const getGridNumericColumnOperators = (): GridFilterOperator[] => [
       }
 
       return ({ value }): boolean => {
-        return Number(value) === filterItem.value;
+        return parseNumericValue(value) === filterItem.value;
       };
     },
     InputComponent: GridFilterInputValue,
@@ -28,7 +36,7 @@ export const getGridNumericColumnOperators = (): GridFilterOperator[] => [
       }
 
       return ({ value }): boolean => {
-        return Number(value) !== filterItem.value;
+        return parseNumericValue(value) !== filterItem.value;
       };
     },
     InputComponent: GridFilterInputValue,
@@ -43,7 +51,11 @@ export const getGridNumericColumnOperators = (): GridFilterOperator[] => [
       }
 
       return ({ value }): boolean => {
-        return Number(value) > filterItem.value;
+        if (value == null) {
+          return false;
+        }
+
+        return parseNumericValue(value)! > filterItem.value;
       };
     },
     InputComponent: GridFilterInputValue,
@@ -58,7 +70,11 @@ export const getGridNumericColumnOperators = (): GridFilterOperator[] => [
       }
 
       return ({ value }): boolean => {
-        return Number(value) >= filterItem.value;
+        if (value == null) {
+          return false;
+        }
+
+        return parseNumericValue(value)! >= filterItem.value;
       };
     },
     InputComponent: GridFilterInputValue,
@@ -73,7 +89,11 @@ export const getGridNumericColumnOperators = (): GridFilterOperator[] => [
       }
 
       return ({ value }): boolean => {
-        return Number(value) < filterItem.value;
+        if (value == null) {
+          return false;
+        }
+
+        return parseNumericValue(value)! < filterItem.value;
       };
     },
     InputComponent: GridFilterInputValue,
@@ -88,7 +108,11 @@ export const getGridNumericColumnOperators = (): GridFilterOperator[] => [
       }
 
       return ({ value }): boolean => {
-        return Number(value) <= filterItem.value;
+        if (value == null) {
+          return false;
+        }
+
+        return parseNumericValue(value)! <= filterItem.value;
       };
     },
     InputComponent: GridFilterInputValue,
