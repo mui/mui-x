@@ -41,9 +41,12 @@ export const useGridInfiniteLoader = (
       }
 
       const scrollPositionBottom = scrollPosition.top + dimensions.viewportOuterSize.height;
+
       const viewportPageSize = Math.min(
         dimensions.virtualScrollerRowCount,
-        dimensions.maximumPageSizeWithoutScrollBar,
+        Math.floor(
+          dimensions.viewportInnerSize.height / gridDensityRowHeightSelector(apiRef.current.state),
+        ),
       );
 
       if (scrollPositionBottom < contentHeight - props.scrollEndThreshold) {

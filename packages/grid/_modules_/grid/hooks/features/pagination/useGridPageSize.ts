@@ -1,11 +1,12 @@
 import * as React from 'react';
-import { GridApiRef } from '../../../models';
+import { ElementSize, GridApiRef } from '../../../models';
 import { GridComponentProps } from '../../../GridComponentProps';
 import { GridPageSizeApi } from '../../../models/api/gridPageSizeApi';
 import { GridEvents } from '../../../constants/eventsConstants';
 import { useGridLogger, useGridApiMethod, useGridState, useGridApiEventHandler } from '../../utils';
 import { useGridStateInit } from '../../utils/useGridStateInit';
 import { gridPageSizeSelector } from './gridPaginationSelector';
+import { gridDensityRowHeightSelector } from '../density';
 
 /**
  * @requires useGridControlState (method)
@@ -64,20 +65,20 @@ export const useGridPageSize = (
 
   useGridApiMethod(apiRef, pageSizeApi, 'GridPageSizeApi');
 
+  const prevInnerHeight = React.useRef<number | null>(null);
   const handleUpdateAutoPageSize = React.useCallback(
-    (rowsFittingInViewportCount: number) => {
-      if (!props.autoPageSize) {
+    (viewportInnerSize: ElementSize) => {
+      if (!props.autoPageSize || prevInnerHeight.current === viewportInnerSize.height) {
         return;
       }
 
-      apiRef.current.setPageSize(rowsFittingInViewportCount);
+      prevInnerHeight.current = viewportInnerSize.height;
+      const rowHeight = gridDensityRowHeightSelector(apiRef.current.state);
+      const maximumPageSizeWithoutScrollBar = Math.floor(viewportInnerSize.height / rowHeight);
+      apiRef.current.setPageSize(maximumPageSizeWithoutScrollBar);
     },
     [apiRef, props.autoPageSize],
   );
 
-  useGridApiEventHandler(
-    apiRef,
-    GridEvents.maximumPageSizeWithoutScrollBarChange,
-    handleUpdateAutoPageSize,
-  );
+  useGridApiEventHandler(apiRef, GridEvents.viewportInnerSizeChange, handleUpdateAutoPageSize);
 };

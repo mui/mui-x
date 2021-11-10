@@ -353,10 +353,16 @@ export function useGridColumns(
     [apiRef, logger, setColumnsState, props.columns, props.columnTypes],
   );
 
-  const handleGridSizeChange = () => setColumnsState(apiRef.current.state.columns);
+  const prevInnerWidth = React.useRef<number | null>(null);
+  const handleGridSizeChange = (viewportInnerSize) => {
+    if (prevInnerWidth.current !== viewportInnerSize.width) {
+      prevInnerWidth.current = viewportInnerSize.width;
+      setColumnsState(apiRef.current.state.columns);
+    }
+  };
 
   useGridApiEventHandler(apiRef, GridEvents.preProcessorRegister, handlePreProcessorRegister);
-  useGridApiEventHandler(apiRef, GridEvents.viewportInnerWidthChange, handleGridSizeChange);
+  useGridApiEventHandler(apiRef, GridEvents.viewportInnerSizeChange, handleGridSizeChange);
 
   // Grid Option Handlers
   useGridApiOptionHandler(

@@ -97,10 +97,6 @@
     "name": "headerSelectionCheckboxChange",
     "description": "Fired when the value of the selection checkbox of the header is changed\nCalled with a GridHeaderSelectionCheckboxParams object."
   },
-  {
-    "name": "maximumPageSizeWithoutScrollBarChange",
-    "description": "Fired when the amount of rows that could fit into the viewport changes. Called with a {number} variable."
-  },
   { "name": "pageChange", "description": "Fired when the page changes." },
   { "name": "pageSizeChange", "description": "Fired when the page size changes." },
   {
@@ -153,7 +149,7 @@
   },
   { "name": "unmount", "description": "Fired when the grid is unmounted." },
   {
-    "name": "viewportInnerWidthChange",
-    "description": "Fired when the inner width of the viewport changes. Called with a {number} variable."
+    "name": "viewportInnerSizeChange",
+    "description": "Fired when the inner size of the viewport changes. Called with a {number} variable."
   }
 ]

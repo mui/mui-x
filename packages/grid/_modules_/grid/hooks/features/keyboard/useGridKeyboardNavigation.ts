@@ -23,6 +23,7 @@ import { GridComponentProps } from '../../../GridComponentProps';
 import { gridVisibleSortedRowEntriesSelector } from '../filter/gridFilterSelector';
 import { useCurrentPageRows } from '../../utils/useCurrentPageRows';
 import { clamp } from '../../../utils/utils';
+import { gridDensityRowHeightSelector } from '../density';
 
 const getNextCellIndexes = (key: string, indexes: GridCellIndexCoordinates) => {
   if (!isArrowKeys(key)) {
@@ -128,7 +129,10 @@ export const useGridKeyboardNavigation = (
       } else if (isPageKeys(key) || isSpaceKey(key)) {
         const viewportPageSize = Math.min(
           dimensions.virtualScrollerRowCount,
-          dimensions.maximumPageSizeWithoutScrollBar,
+          Math.floor(
+            dimensions.viewportInnerSize.height /
+              gridDensityRowHeightSelector(apiRef.current.state),
+          ),
         );
         const nextRowIndex =
           rowIndex +
@@ -182,7 +186,10 @@ export const useGridKeyboardNavigation = (
         if (key.indexOf('Down') > -1 && currentPage.rows.length) {
           const viewportPageSize = Math.min(
             dimensions.virtualScrollerRowCount,
-            dimensions.maximumPageSizeWithoutScrollBar,
+            Math.floor(
+              dimensions.viewportInnerSize.height /
+                gridDensityRowHeightSelector(apiRef.current.state),
+            ),
           );
           const field = apiRef.current.getVisibleColumns()[colIndex].field;
           const id = currentPage.rows[Math.min(viewportPageSize, currentPage.rows.length - 1)].id;

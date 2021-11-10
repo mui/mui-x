@@ -8,13 +8,9 @@ export enum GridEvents {
    */
   debouncedResize = 'debouncedResize',
   /**
-   * Fired when the inner width of the viewport changes. Called with a {number} variable.
+   * Fired when the inner size of the viewport changes. Called with a {number} variable.
    */
-  viewportInnerWidthChange = 'viewportInnerWidthChange',
-  /**
-   * Fired when the amount of rows that could fit into the viewport changes. Called with a {number} variable.
-   */
-  maximumPageSizeWithoutScrollBarChange = 'maximumPageSizeWithoutScrollBarChange',
+  viewportInnerSizeChange = 'viewportInnerSizeChange',
   /**
    * Fired when an exception is thrown in the grid.
    */

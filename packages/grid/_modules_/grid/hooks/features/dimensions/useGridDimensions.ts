@@ -21,6 +21,33 @@ import { useCurrentPageRows } from '../../utils/useCurrentPageRows';
 
 const isTestEnvironment = process.env.NODE_ENV === 'test';
 
+const hasScroll = ({
+  content,
+  container,
+  scrollBarSize,
+}: {
+  content: ElementSize;
+  container: ElementSize;
+  scrollBarSize: number;
+}) => {
+  const hasScrollXIfNoYScrollBar = content.width > container.width;
+  const hasScrollYIfNoXScrollBar = content.height > container.height;
+
+  let hasScrollX = false;
+  let hasScrollY = false;
+  if (hasScrollXIfNoYScrollBar || hasScrollYIfNoXScrollBar) {
+    hasScrollX = hasScrollXIfNoYScrollBar;
+    hasScrollY = content.height + (hasScrollX ? scrollBarSize : 0) > container.height;
+
+    // We recalculate the scroll x to consider the size of the y scrollbar.
+    if (hasScrollY) {
+      hasScrollX = content.width + scrollBarSize > container.width;
+    }
+  }
+
+  return { hasScrollX, hasScrollY };
+};
+
 export function useGridDimensions(
   apiRef: GridApiRef,
   props: Pick<
@@ -72,35 +99,20 @@ export function useGridDimensions(
         : rootDimensionsRef.current.height - headerHeight,
     };
 
-    const hasScrollXIfNoYScrollBar = Math.round(columnsTotalWidth) > viewportOuterSize.width;
-    const hasScrollYIfNoXScrollBar = pageScrollHeight > viewportOuterSize.height;
-
-    let hasScrollX: boolean;
-    let hasScrollY: boolean;
-    if (!hasScrollXIfNoYScrollBar && !hasScrollYIfNoXScrollBar) {
-      hasScrollX = false;
-      hasScrollY = false;
-    } else {
-      hasScrollX = hasScrollXIfNoYScrollBar;
-      hasScrollY = pageScrollHeight + (hasScrollX ? scrollBarSize : 0) > viewportOuterSize.height;
-
-      // We recalculate the scroll x to consider the size of the y scrollbar.
-      if (hasScrollY) {
-        hasScrollX = columnsTotalWidth + scrollBarSize > viewportOuterSize.width;
-      }
-    }
+    const { hasScrollX, hasScrollY } = hasScroll({
+      content: { width: Math.round(columnsTotalWidth), height: pageScrollHeight },
+      container: viewportOuterSize,
+      scrollBarSize,
+    });
 
     const viewportInnerSize: ElementSize = {
       height: viewportOuterSize.height - (hasScrollX ? scrollBarSize : 0),
       width: viewportOuterSize.width - (hasScrollY ? scrollBarSize : 0),
     };
 
-    const maximumPageSizeWithoutScrollBar = Math.floor(viewportInnerSize.height / rowHeight);
-
     const newFullDimensions: GridDimensions = {
       viewportOuterSize,
       viewportInnerSize,
-      maximumPageSizeWithoutScrollBar,
       virtualScrollerRowCount,
       hasScrollX,
       hasScrollY,
@@ -110,18 +122,12 @@ export function useGridDimensions(
     fullDimensionsRef.current = newFullDimensions;
 
     if (
-      newFullDimensions.maximumPageSizeWithoutScrollBar !==
-      prevDimensions?.maximumPageSizeWithoutScrollBar
+      newFullDimensions.viewportInnerSize.width !== prevDimensions?.viewportInnerSize.width ||
+      newFullDimensions.viewportInnerSize.height !== prevDimensions?.viewportInnerSize.height
     ) {
       apiRef.current.publishEvent(
-        GridEvents.maximumPageSizeWithoutScrollBarChange,
-        newFullDimensions.maximumPageSizeWithoutScrollBar,
-      );
-    }
-    if (newFullDimensions.viewportInnerSize.width !== prevDimensions?.viewportInnerSize.width) {
-      apiRef.current.publishEvent(
-        GridEvents.viewportInnerWidthChange,
-        newFullDimensions.viewportInnerSize.width,
+        GridEvents.viewportInnerSizeChange,
+        newFullDimensions.viewportInnerSize,
       );
     }
   }, [
