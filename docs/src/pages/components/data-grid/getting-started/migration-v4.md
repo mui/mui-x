@@ -153,7 +153,7 @@ The following interactive demo shows how these steps tie together:
 
 ### Removed props
 
-- Some event listeners and DOM attributes were removed from `GridCell` and `GridRow` to improve performances.
+- Some event listeners and DOM attributes were removed from `GridCell` and `GridRow` to improve performance.
 
   The following props were removed.
 
