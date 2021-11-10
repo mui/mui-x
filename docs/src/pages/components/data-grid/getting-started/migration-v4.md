@@ -392,7 +392,7 @@ The following interactive demo shows how these steps tie together:
   +const columnHeaderDraggingClass = gridClasses["columnHeader--dragging"]
   ```
 
-- The constants referring to the column types were removed
+- The constants referring to the column types were removed.
   Their values can be hardcoded.
 
   ```diff
