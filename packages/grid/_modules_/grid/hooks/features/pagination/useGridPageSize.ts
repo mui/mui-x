@@ -1,9 +1,15 @@
 import * as React from 'react';
-import { ElementSize, GridApiRef } from '../../../models';
+import { GridApiRef } from '../../../models';
 import { GridComponentProps } from '../../../GridComponentProps';
 import { GridPageSizeApi } from '../../../models/api/gridPageSizeApi';
 import { GridEvents } from '../../../constants/eventsConstants';
-import { useGridLogger, useGridApiMethod, useGridState, useGridApiEventHandler } from '../../utils';
+import {
+  useGridLogger,
+  useGridApiMethod,
+  useGridState,
+  useGridApiEventHandler,
+  useGridSelector,
+} from '../../utils';
 import { useGridStateInit } from '../../utils/useGridStateInit';
 import { gridPageSizeSelector } from './gridPaginationSelector';
 import { gridDensityRowHeightSelector } from '../density';
@@ -18,6 +24,7 @@ export const useGridPageSize = (
   props: Pick<GridComponentProps, 'pageSize' | 'onPageSizeChange' | 'autoPageSize'>,
 ) => {
   const logger = useGridLogger(apiRef, 'useGridPageSize');
+  const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
 
   useGridStateInit(apiRef, (state) => ({
     ...state,
@@ -65,20 +72,21 @@ export const useGridPageSize = (
 
   useGridApiMethod(apiRef, pageSizeApi, 'GridPageSizeApi');
 
-  const prevInnerHeight = React.useRef<number | null>(null);
-  const handleUpdateAutoPageSize = React.useCallback(
-    (viewportInnerSize: ElementSize) => {
-      if (!props.autoPageSize || prevInnerHeight.current === viewportInnerSize.height) {
-        return;
-      }
+  const handleUpdateAutoPageSize = React.useCallback(() => {
+    const dimensions = apiRef.current.getRootDimensions();
+    if (!props.autoPageSize || !dimensions) {
+      return;
+    }
 
-      prevInnerHeight.current = viewportInnerSize.height;
-      const rowHeight = gridDensityRowHeightSelector(apiRef.current.state);
-      const maximumPageSizeWithoutScrollBar = Math.floor(viewportInnerSize.height / rowHeight);
-      apiRef.current.setPageSize(maximumPageSizeWithoutScrollBar);
-    },
-    [apiRef, props.autoPageSize],
-  );
+    const maximumPageSizeWithoutScrollBar = Math.floor(
+      dimensions.viewportInnerSize.height / rowHeight,
+    );
+    apiRef.current.setPageSize(maximumPageSizeWithoutScrollBar);
+  }, [apiRef, props.autoPageSize, rowHeight]);
+
+  React.useEffect(() => {
+    handleUpdateAutoPageSize();
+  }, [handleUpdateAutoPageSize]);
 
   useGridApiEventHandler(apiRef, GridEvents.viewportInnerSizeChange, handleUpdateAutoPageSize);
 };
