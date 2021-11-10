@@ -62,7 +62,6 @@ export const GridRootStyles = styled('div', {
     height: '100%',
     display: 'flex',
     flexDirection: 'column',
-    colorScheme: theme.palette.mode,
     [`&.${gridClasses.autoHeight}`]: {
       height: 'auto',
     },
