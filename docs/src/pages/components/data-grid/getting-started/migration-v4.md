@@ -321,7 +321,7 @@ The following interactive demo shows how these steps tie together:
 
 ### `apiRef` methods
 
-- The `apiRef` methods to partially update the filter model have been renamed
+- The `apiRef` methods to partially update the filter model have been renamed:
 
   1. `apiRef.current.applyFilterLinkOperator` was renamed `apiRef.current.setFilterLinkOperator`
   2. `apiRef.current.upsertFilter` was renamed `apiRef.current.upsertFilterItem`
