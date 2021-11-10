@@ -189,7 +189,7 @@ The following interactive demo shows how these steps tie together:
 
 - The state direct access is not considered part of the public API anymore. We only guarantee that the selectors continue to work between minor releases.
   We advise you to avoid accessing directly a state sub-key, instead use the available selectors or `apiRef` methods whenever possible.
-  You can replace the following state access by there matching selectors:
+  You can replace the following state access by their matching selectors:
 
   | Direct state access     | Selector                           |
   | ----------------------- | ---------------------------------- |
