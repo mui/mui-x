@@ -1,18 +1,23 @@
 import * as React from 'react';
 import { createRenderer, fireEvent, screen, getByText } from '@material-ui/monorepo/test/utils';
 import { expect } from 'chai';
-import {
-  DataGrid,
-  GridToolbar,
-  GridPreferencePanelsValue,
-  GridInitialState,
-  DataGridProps,
-} from '@mui/x-data-grid';
+import { useFakeTimers } from 'sinon';
+import { DataGrid, GridToolbar, GridPreferencePanelsValue, DataGridProps } from '@mui/x-data-grid';
 import { getColumnValues } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<DataGrid /> - Filter', () => {
+  let clock;
+
+  beforeEach(() => {
+    clock = useFakeTimers();
+  });
+
+  afterEach(() => {
+    clock.restore();
+  });
+
   const { render } = createRenderer();
 
   const baselineProps = {
@@ -60,15 +65,14 @@ describe('<DataGrid /> - Filter', () => {
     ],
   };
 
-  const TestCase = (props: {
-    rows?: any[];
-    columns?: any[];
-    operatorValue?: string;
-    value?: any;
-    field?: string;
-    initialState?: GridInitialState;
-    columnTypes?: any;
-  }) => {
+  const TestCase = (
+    props: {
+      columns?: any[];
+      operatorValue?: string;
+      value?: any;
+      field?: string;
+    } & Partial<Omit<DataGridProps, 'columns'>>,
+  ) => {
     const { operatorValue, value, rows, columns, field = 'brand', ...other } = props;
     return (
       <div style={{ width: 300, height: 300 }}>
@@ -86,6 +90,12 @@ describe('<DataGrid /> - Filter', () => {
             ],
           }}
           disableColumnFilter={false}
+          initialState={{
+            preferencePanel: {
+              open: true,
+              openedPanelValue: GridPreferencePanelsValue.filters,
+            },
+          }}
           {...other}
         />
       </div>
@@ -96,7 +106,16 @@ describe('<DataGrid /> - Filter', () => {
     expect(() => {
       render(
         <div style={{ width: 300, height: 300 }}>
-          <DataGrid rows={[]} columns={[]} filterModel={{ items: [{ id: 0 }, { id: 1 }] }} />
+          <DataGrid
+            rows={[]}
+            columns={[]}
+            filterModel={{
+              items: [
+                { id: 0, columnField: 'id' },
+                { id: 1, columnField: 'id' },
+              ],
+            }}
+          />
         </div>,
       );
     })
@@ -303,6 +322,42 @@ describe('<DataGrid /> - Filter', () => {
       });
     });
 
+    ['contains', 'startsWith', 'equals', 'endsWith'].forEach((operatorValue) => {
+      it(`should show all rows when the value is '' and operator='${operatorValue}'`, () => {
+        render(
+          <TestCase
+            filterModel={undefined}
+            columns={[{ field: 'brand' }]}
+            rows={[
+              {
+                id: 3,
+                brand: 'Asics',
+              },
+              {
+                id: 4,
+                brand: 'RedBull',
+              },
+              {
+                id: 5,
+                brand: 'Hugo',
+              },
+            ]}
+          />,
+        );
+        expect(getColumnValues()).to.deep.equal(['Asics', 'RedBull', 'Hugo']);
+        fireEvent.change(screen.getByRole('combobox', { name: 'Operators' }), {
+          target: { value: operatorValue },
+        });
+        const input = screen.getByRole('textbox', { name: 'Value' });
+        fireEvent.change(input, { target: { value: 'abc' } });
+        clock.tick(500);
+        expect(getColumnValues()).to.deep.equal([]);
+        fireEvent.change(input, { target: { value: '' } });
+        clock.tick(500);
+        expect(getColumnValues()).to.deep.equal(['Asics', 'RedBull', 'Hugo']);
+      });
+    });
+
     describe('RegExp', () => {
       ['contains', 'startsWith', 'endsWith'].forEach((operatorValue) => {
         it('should escape RegExp characters if applied as filter values', () => {
@@ -440,6 +495,31 @@ describe('<DataGrid /> - Filter', () => {
         />,
       );
       expect(getColumnValues(0)).to.deep.equal(['0', '2']);
+    });
+
+    it('should show all rows when the value is empty', () => {
+      render(
+        <TestCase
+          filterModel={undefined}
+          columns={[
+            { field: 'brand', type: 'number', valueFormatter: ({ value }) => String(value) },
+          ]}
+          rows={[
+            { id: 2, brand: 0 },
+            { id: 3, brand: 1984 },
+            { id: 4, brand: 1954 },
+            { id: 5, brand: 1974 },
+          ]}
+        />,
+      );
+      expect(getColumnValues()).to.deep.equal(['0', '1984', '1954', '1974']);
+      const input = screen.getByRole('spinbutton', { name: 'Value' });
+      fireEvent.change(input, { target: { value: 999999 } });
+      clock.tick(500);
+      expect(getColumnValues()).to.deep.equal([]);
+      fireEvent.change(input, { target: { value: '' } });
+      clock.tick(500);
+      expect(getColumnValues()).to.deep.equal(['0', '1984', '1954', '1974']);
     });
   });
 
@@ -851,12 +931,6 @@ describe('<DataGrid /> - Filter', () => {
             ]}
             field="voltage"
             operatorValue="is"
-            initialState={{
-              preferencePanel: {
-                open: true,
-                openedPanelValue: GridPreferencePanelsValue.filters,
-              },
-            }}
           />,
         );
         expect(getColumnValues()).to.deep.equal(['Hair Dryer', 'Dishwasher', 'Microwave']);
@@ -882,12 +956,6 @@ describe('<DataGrid /> - Filter', () => {
             ]}
             field="voltage"
             operatorValue="is"
-            initialState={{
-              preferencePanel: {
-                open: true,
-                openedPanelValue: GridPreferencePanelsValue.filters,
-              },
-            }}
           />,
         );
         expect(getColumnValues()).to.deep.equal(['Hair Dryer', 'Dishwasher', 'Microwave']);
@@ -906,12 +974,6 @@ describe('<DataGrid /> - Filter', () => {
             columns={[{ field: 'name' }, { field: 'voltage', type: 'singleSelect' }]}
             field="voltage"
             operatorValue="is"
-            initialState={{
-              preferencePanel: {
-                open: true,
-                openedPanelValue: GridPreferencePanelsValue.filters,
-              },
-            }}
           />,
         );
         expect(getColumnValues()).to.deep.equal(['Hair Dryer', 'Dishwasher', 'Microwave']);
@@ -966,18 +1028,7 @@ describe('<DataGrid /> - Filter', () => {
       });
 
       it('should work with numeric values', () => {
-        const { setProps } = render(
-          <TestCase
-            field="status"
-            operatorValue="is"
-            initialState={{
-              preferencePanel: {
-                open: true,
-                openedPanelValue: GridPreferencePanelsValue.filters,
-              },
-            }}
-          />,
-        );
+        const { setProps } = render(<TestCase field="status" operatorValue="is" />);
         expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
         setProps({ value: 2 });
         expect(getColumnValues()).to.deep.equal(['Puma']);
@@ -1100,18 +1151,7 @@ describe('<DataGrid /> - Filter', () => {
 
   describe('Filter preference panel', () => {
     it('should show an empty string as the default filter input value', () => {
-      render(
-        <TestCase
-          field="brand"
-          operatorValue="contains"
-          initialState={{
-            preferencePanel: {
-              open: true,
-              openedPanelValue: GridPreferencePanelsValue.filters,
-            },
-          }}
-        />,
-      );
+      render(<TestCase field="brand" operatorValue="contains" />);
       expect(screen.getByRole('textbox', { name: 'Value' }).value).to.equal('');
     });
   });

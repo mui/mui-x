@@ -1,6 +1,6 @@
 export interface GridFilterItem {
   id?: number | string;
-  columnField?: string;
+  columnField: string;
   value?: any;
   operatorValue?: string;
 }
