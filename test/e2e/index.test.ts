@@ -10,17 +10,29 @@ function sleep(timeoutMS: number): Promise<void> {
 // A simplified version of https://github.com/testing-library/dom-testing-library/blob/main/src/wait-for.js
 function waitFor(callback: () => Promise<void>): Promise<void> {
   return new Promise((resolve, reject) => {
-    async function checkCallback(attemptsRemaining = 5, lastError: any = null) {
-      if (attemptsRemaining <= 0) {
-        throw lastError;
-      }
+    let intervalId: NodeJS.Timer | null = null;
+    let timeoutId: NodeJS.Timer | null = null;
+    let lastError: any = null;
+
+    function handleTimeout() {
+      clearTimeout(timeoutId!);
+      clearInterval(intervalId!);
+      reject(lastError);
+    }
+
+    async function checkCallback() {
       try {
         await callback();
+        clearTimeout(timeoutId!);
+        clearInterval(intervalId!);
+        resolve();
       } catch (error) {
-        await checkCallback(attemptsRemaining - 1, error);
+        lastError = error;
       }
     }
-    checkCallback().then(resolve, reject);
+
+    timeoutId = setTimeout(handleTimeout, 1000);
+    intervalId = setTimeout(checkCallback, 50);
   });
 }
 
