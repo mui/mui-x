@@ -91,20 +91,16 @@ export const useGridKeyboardNavigation = (
   const navigateCells = React.useCallback(
     (params: GridCellParams, event: React.KeyboardEvent) => {
       event.preventDefault();
+      const dimensions = apiRef.current.getRootDimensions();
 
-      if (!currentPage.range) {
+      if (!currentPage.range || !dimensions) {
         return;
       }
 
       const colIndex = apiRef.current.getColumnIndex(params.field);
       const rowIndex = visibleSortedRows.findIndex((row) => row.id === params.id);
-
       const key = mapKey(event);
       const isCtrlPressed = event.ctrlKey || event.metaKey || event.shiftKey;
-      const dimensions = apiRef.current.getRootDimensions();
-      if (!dimensions) {
-        return;
-      }
 
       let nextCellIndexes: GridCellIndexCoordinates;
       if (isArrowKeys(key)) {
