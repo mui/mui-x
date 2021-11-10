@@ -73,7 +73,7 @@ const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridCellPa
       !rootProps.isRowSelectable || rootProps.isRowSelectable(apiRef.current.getRowParams(id));
 
     return (
-      <rootProps.components.Checkbox
+      <rootProps.components.BaseCheckbox
         ref={handleRef}
         tabIndex={tabIndex}
         checked={!!value}
@@ -84,7 +84,7 @@ const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridCellPa
         inputProps={{ 'aria-label': 'Select Row checkbox' }}
         onKeyDown={handleKeyDown}
         disabled={!isSelectable}
-        {...rootProps.componentsProps?.checkbox}
+        {...rootProps.componentsProps?.baseCheckbox}
       />
     );
   },
