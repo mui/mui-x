@@ -329,9 +329,9 @@ The following interactive demo shows how these steps tie together:
 
 - The third argument in `apiRef.current.selectRow` is now inverted to keep consistency with other selection APIs.
 
-  If you were passing `allowMultiple: true`, you should now pass `resetSelection: false` or stop passing anything
+  If you were passing `allowMultiple: true`, you should now pass `resetSelection: false` or stop passing anything.
 
-  If you were passing `allowMultiple: false` or not passing anything on `allowMultiple`, you should now pass `resetSelection: true`
+  If you were passing `allowMultiple: false` or not passing anything on `allowMultiple`, you should now pass `resetSelection: true`.
 
   ```diff
   -selectRow: (id: GridRowId, isSelected?: boolean, allowMultiple?: boolean = false) => void;
