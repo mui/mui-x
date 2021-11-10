@@ -10,13 +10,13 @@ import { GridFilterForm } from './GridFilterForm';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import { useGridSelector } from '../../../hooks/utils/useGridSelector';
 import { gridFilterModelSelector } from '../../../hooks/features/filter/gridFilterSelector';
+import { filterableGridColumnsSelector } from '../../../hooks/features/columns/gridColumnsSelector';
 
 export function GridFilterPanel() {
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
   const filterModel = useGridSelector(apiRef, gridFilterModelSelector);
-
-  const hasMultipleFilters = filterModel.items.length > 1;
+  const filterableColumns = useGridSelector(apiRef, filterableGridColumnsSelector);
 
   const applyFilter = React.useCallback(
     (item: GridFilterItem) => {
@@ -32,9 +32,40 @@ export function GridFilterPanel() {
     [apiRef],
   );
 
-  const addNewFilter = React.useCallback(() => {
-    apiRef.current.upsertFilterItem({});
-  }, [apiRef]);
+  const getDefaultItem = React.useCallback((): GridFilterItem | null => {
+    const firstColumnWithOperator = filterableColumns.find(
+      (colDef) => colDef.filterOperators?.length,
+    );
+    if (!firstColumnWithOperator) {
+      return null;
+    }
+
+    return {
+      columnField: firstColumnWithOperator.field,
+      operatorValue: firstColumnWithOperator.filterOperators![0].value,
+      id: Math.round(Math.random() * 1e5),
+    };
+  }, [filterableColumns]);
+
+  const items = React.useMemo<GridFilterItem[]>(() => {
+    if (filterModel.items.length) {
+      return filterModel.items;
+    }
+
+    const defaultItem = getDefaultItem();
+
+    return defaultItem ? [defaultItem] : [];
+  }, [filterModel.items, getDefaultItem]);
+
+  const hasMultipleFilters = items.length > 1;
+
+  const addNewFilter = () => {
+    const defaultItem = getDefaultItem();
+    if (!defaultItem) {
+      return;
+    }
+    apiRef.current.setFilterModel({ ...filterModel, items: [...items, defaultItem] });
+  };
 
   const deleteFilter = React.useCallback(
     (item: GridFilterItem) => {
@@ -43,16 +74,10 @@ export function GridFilterPanel() {
     [apiRef],
   );
 
-  React.useEffect(() => {
-    if (filterModel.items.length === 0) {
-      addNewFilter();
-    }
-  }, [addNewFilter, filterModel.items.length]);
-
   return (
     <GridPanelWrapper>
       <GridPanelContent>
-        {filterModel.items.map((item, index) => (
+        {items.map((item, index) => (
           <GridFilterForm
             key={item.id == null ? index : item.id}
             item={item}
