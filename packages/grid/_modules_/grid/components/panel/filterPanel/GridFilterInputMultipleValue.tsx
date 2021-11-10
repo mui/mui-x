@@ -38,7 +38,8 @@ function GridFilterInputMultipleValue(
   const [filterValueState, setFilterValueState] = React.useState(item.value || []);
   const [applying, setIsApplying] = React.useState(false);
   const id = useId();
-  const filterValueFormater =
+
+  const filterValueOptionFormater =
     type === 'singleSelect'
       ? getSingleSelectOptionFormatter(apiRef.current.getColumn(item.columnField), apiRef.current)
       : (x) => x;
@@ -96,7 +97,7 @@ function GridFilterInputMultipleValue(
           <Chip
             variant="outlined"
             size="small"
-            label={filterValueFormater(option)}
+            label={filterValueOptionFormater(option)}
             {...getTagProps({ index })}
           />
         ))
