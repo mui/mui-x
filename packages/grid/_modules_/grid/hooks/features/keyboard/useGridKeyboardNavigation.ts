@@ -99,6 +99,7 @@ export const useGridKeyboardNavigation = (
 
       const colIndex = apiRef.current.getColumnIndex(params.field);
       const rowIndex = visibleSortedRows.findIndex((row) => row.id === params.id);
+
       const key = mapKey(event);
       const isCtrlPressed = event.ctrlKey || event.metaKey || event.shiftKey;
 
