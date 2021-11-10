@@ -151,7 +151,7 @@ The following interactive demo shows how these steps tie together:
   <DataGridPro apiRef={apiRef} />;
   ```
 
-### Properties of the Grid
+### Removed props
 
 - Some event listeners and DOM attributes were removed from `GridCell` and `GridRow` to improve performances.
 
