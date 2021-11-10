@@ -918,6 +918,32 @@ describe('<DataGrid /> - Filter', () => {
         expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
       });
 
+      it('should allow operator isAnyOf with object valueOptions', () => {
+        const { setProps } = render(<TestCase />);
+
+        setProps({
+          field: 'status',
+          operatorValue: 'isAnyOf',
+          isArrayValue: true,
+          value: ['0', '1'],
+        });
+        expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas']);
+        setProps({
+          field: 'status',
+          operatorValue: 'isAnyOf',
+          isArrayValue: true,
+          value: ['2'],
+        });
+        expect(getColumnValues()).to.deep.equal(['Puma']);
+        setProps({
+          field: 'status',
+          operatorValue: 'isAnyOf',
+          isArrayValue: true,
+          value: [],
+        });
+        expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
+      });
+
       it('should work with numeric values', () => {
         const { setProps } = render(
           <TestCase

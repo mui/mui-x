@@ -41,15 +41,17 @@ export const getGridSingleSelectOperators: () => GridFilterOperator[] = () => [
     value: 'isAnyOf',
     isArrayValue: true,
     getApplyFilterFn: (filterItem: GridFilterItem) => {
-      if (!filterItem.value || filterItem.value.length === 0) {
+      if (!Array.isArray(filterItem.value) || filterItem.value.length === 0) {
         return null;
       }
+      const filterItemValues = filterItem.value;
 
       return ({ value }): boolean => {
         if (typeof value === 'object') {
-          return filterItem.value.includes(value);
+          return filterItemValues.includes(String((value as { value: any; label: string }).value));
         }
-        return filterItem.value.includes(value);
+
+        return filterItemValues.includes(String(value));
       };
     },
     InputComponent: GridFilterInputMultipleValue,

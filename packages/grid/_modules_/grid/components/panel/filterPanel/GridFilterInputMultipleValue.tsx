@@ -19,6 +19,15 @@ export interface GridTypeFilterInputMultipleValueProps extends GridFilterInputMu
   type?: 'text' | 'number' | 'singleSelect';
 }
 
+const getSingleSelectOptionFormatter =
+  ({ valueFormatter, field }, api) =>
+  (option) => {
+    if (typeof option === 'object') {
+      return option.label;
+    }
+    return valueFormatter && option !== '' ? valueFormatter({ value: option, field, api }) : option;
+  };
+
 const filter = createFilterOptions<any>();
 
 function GridFilterInputMultipleValue(
@@ -29,20 +38,35 @@ function GridFilterInputMultipleValue(
   const [filterValueState, setFilterValueState] = React.useState(item.value || []);
   const [applying, setIsApplying] = React.useState(false);
   const id = useId();
+  const filterValueFormater =
+    type === 'singleSelect'
+      ? getSingleSelectOptionFormatter(apiRef.current.getColumn(item.columnField), apiRef.current)
+      : (x) => x;
+
+  const filterValueParser = React.useCallback(
+    (value) => {
+      if (type === 'singleSelect') {
+        return String(typeof value === 'object' ? value.value : value);
+      }
+      return String(value);
+    },
+    [type],
+  );
 
   React.useEffect(() => {
     const itemValue = item.value ?? [];
-    setFilterValueState(itemValue.map((x) => String(x)));
-  }, [item.value]);
+    setFilterValueState(itemValue.map(filterValueParser));
+  }, [item.value, filterValueParser]);
 
   const onFilterChange = React.useCallback(
     (event, value) => {
-      setFilterValueState(value.map((x) => String(x)));
+      const parsedValue = value.map(filterValueParser);
+      setFilterValueState(parsedValue);
       setIsApplying(true);
-      applyValue({ ...item, value: [...value] });
+      applyValue({ ...item, value: [...parsedValue] });
       setIsApplying(false);
     },
-    [applyValue, item],
+    [applyValue, item, filterValueParser],
   );
 
   const InputProps = applying ? { endAdornment: <GridLoadIcon /> } : {};
@@ -50,7 +74,7 @@ function GridFilterInputMultipleValue(
   return (
     <Autocomplete
       multiple
-      freeSolo
+      freeSolo={type !== 'singleSelect'}
       limitTags={1}
       options={
         type === 'singleSelect' ? apiRef.current.getColumn(item.columnField).valueOptions : []
@@ -69,7 +93,12 @@ function GridFilterInputMultipleValue(
       onChange={onFilterChange}
       renderTags={(value: any[], getTagProps) =>
         value.map((option: string, index: number) => (
-          <Chip variant="outlined" size="small" label={option} {...getTagProps({ index })} />
+          <Chip
+            variant="outlined"
+            size="small"
+            label={filterValueFormater(option)}
+            {...getTagProps({ index })}
+          />
         ))
       }
       renderInput={(params) => (
