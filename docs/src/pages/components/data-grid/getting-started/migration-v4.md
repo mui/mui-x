@@ -423,7 +423,7 @@ The following interactive demo shows how these steps tie together:
   +const rootProps = useGridRootProps(); // equivalent of `options`
   ```
 
-### Removal from public API
+### Removals from the public API
 
 We removed some API methods / selectors from what we consider public by adding the `unstable_` prefix on them.
 You can continue to use these methods if you desire, but they may be subject to breaking changes in the future without prior notice..
