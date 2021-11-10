@@ -9,10 +9,6 @@ export interface GridDimensions {
    * The viewport size not including scrollbars.
    */
   viewportInnerSize: ElementSize;
-  /**
-   * Amount of rows passed to the virtual scroller.
-   */
-  virtualScrollerRowCount: number;
   hasScrollX: boolean;
   hasScrollY: boolean;
 }

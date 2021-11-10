@@ -89,14 +89,10 @@ export function useGridDimensions(
       rootElement.removeChild(scrollDiv);
     }
 
-    const virtualScrollerRowCount = currentPage.rows.length;
-    const pageScrollHeight = virtualScrollerRowCount * rowHeight;
-
+    const pageScrollHeight = currentPage.rows.length * rowHeight;
     const viewportOuterSize: ElementSize = {
       width: rootDimensionsRef.current.width,
-      height: props.autoHeight
-        ? virtualScrollerRowCount * rowHeight
-        : rootDimensionsRef.current.height - headerHeight,
+      height: props.autoHeight ? pageScrollHeight : rootDimensionsRef.current.height - headerHeight,
     };
 
     const { hasScrollX, hasScrollY } = hasScroll({
@@ -113,7 +109,6 @@ export function useGridDimensions(
     const newFullDimensions: GridDimensions = {
       viewportOuterSize,
       viewportInnerSize,
-      virtualScrollerRowCount,
       hasScrollX,
       hasScrollY,
     };

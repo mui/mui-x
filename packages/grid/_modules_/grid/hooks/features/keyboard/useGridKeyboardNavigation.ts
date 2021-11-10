@@ -128,7 +128,7 @@ export const useGridKeyboardNavigation = (
         }
       } else if (isPageKeys(key) || isSpaceKey(key)) {
         const viewportPageSize = Math.min(
-          dimensions.virtualScrollerRowCount,
+          currentPage.rows.length,
           Math.floor(
             dimensions.viewportInnerSize.height /
               gridDensityRowHeightSelector(apiRef.current.state),
@@ -185,7 +185,7 @@ export const useGridKeyboardNavigation = (
         // Handle only Page Down key, Page Up should keep the current position
         if (key.indexOf('Down') > -1 && currentPage.rows.length) {
           const viewportPageSize = Math.min(
-            dimensions.virtualScrollerRowCount,
+            currentPage.rows.length,
             Math.floor(
               dimensions.viewportInnerSize.height /
                 gridDensityRowHeightSelector(apiRef.current.state),
