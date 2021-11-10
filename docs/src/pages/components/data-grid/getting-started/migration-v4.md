@@ -393,7 +393,7 @@ The following interactive demo shows how these steps tie together:
   ```
 
 - The constants referring to the column types were removed
-  Their value can be hardcoded.
+  Their values can be hardcoded.
 
   ```diff
   -const isColumnString = column.type === GRID_STRING_COLUMN_TYPE;
