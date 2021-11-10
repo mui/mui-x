@@ -8,7 +8,7 @@ export enum GridEvents {
    */
   debouncedResize = 'debouncedResize',
   /**
-   * Fired when the inner size of the viewport changes. Called with a {number} variable.
+   * Fired when the inner size of the viewport changes. Called with an [[ElementSize]] object.
    */
   viewportInnerSizeChange = 'viewportInnerSizeChange',
   /**

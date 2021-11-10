@@ -150,6 +150,6 @@
   { "name": "unmount", "description": "Fired when the grid is unmounted." },
   {
     "name": "viewportInnerSizeChange",
-    "description": "Fired when the inner size of the viewport changes. Called with a {number} variable."
+    "description": "Fired when the inner size of the viewport changes. Called with an ElementSize object."
   }
 ]
