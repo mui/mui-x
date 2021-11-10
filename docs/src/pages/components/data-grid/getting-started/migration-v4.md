@@ -235,7 +235,7 @@ The following interactive demo shows how these steps tie together:
   />
   ```
 
-- Some selectors have been renamed to match with our naming convention
+- Some selectors have been renamed to match with our naming convention:
 
   | MUI X v4 selectors                | MUI X v5 selectors                    |
   | --------------------------------- | ------------------------------------- |
