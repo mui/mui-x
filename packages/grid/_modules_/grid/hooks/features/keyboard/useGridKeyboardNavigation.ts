@@ -127,13 +127,7 @@ export const useGridKeyboardNavigation = (
           nextCellIndexes = { colIndex: colIdx, rowIndex: newRowIndex };
         }
       } else if (isPageKeys(key) || isSpaceKey(key)) {
-        const viewportPageSize = Math.min(
-          currentPage.rows.length,
-          Math.floor(
-            dimensions.viewportInnerSize.height /
-              gridDensityRowHeightSelector(apiRef.current.state),
-          ),
-        );
+        const viewportPageSize = apiRef.current.unstable_getViewportPageSize();
         const nextRowIndex =
           rowIndex +
           (key.indexOf('Down') > -1 || isSpaceKey(key) ? viewportPageSize : -1 * viewportPageSize);
@@ -184,13 +178,7 @@ export const useGridKeyboardNavigation = (
       } else if (isPageKeys(key)) {
         // Handle only Page Down key, Page Up should keep the current position
         if (key.indexOf('Down') > -1 && currentPage.rows.length) {
-          const viewportPageSize = Math.min(
-            currentPage.rows.length,
-            Math.floor(
-              dimensions.viewportInnerSize.height /
-                gridDensityRowHeightSelector(apiRef.current.state),
-            ),
-          );
+          const viewportPageSize = apiRef.current.unstable_getViewportPageSize();
           const field = apiRef.current.getVisibleColumns()[colIndex].field;
           const id = currentPage.rows[Math.min(viewportPageSize, currentPage.rows.length - 1)].id;
           apiRef.current.setCellFocus(id, field);

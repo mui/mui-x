@@ -145,9 +145,24 @@ export function useGridDimensions(
     [],
   );
 
+  const getViewportPageSize = React.useCallback(() => {
+    const dimensions = apiRef.current.getRootDimensions();
+
+    if (!dimensions) {
+      return 0;
+    }
+
+    const maximumPageSizeWithoutScrollBar = Math.floor(
+      dimensions.viewportInnerSize.height / gridDensityRowHeightSelector(apiRef.current.state),
+    );
+
+    return Math.min(maximumPageSizeWithoutScrollBar, currentPage.rows.length);
+  }, [apiRef, currentPage.rows.length]);
+
   const dimensionsApi: GridDimensionsApi = {
     resize,
     getRootDimensions,
+    unstable_getViewportPageSize: getViewportPageSize,
   };
 
   useGridApiMethod(apiRef, dimensionsApi, 'GridDimensionsApi');

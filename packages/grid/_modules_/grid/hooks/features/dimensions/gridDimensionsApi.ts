@@ -24,4 +24,10 @@ export interface GridDimensionsApi {
    * @returns {GridDimensions | null} The dimension information of the grid. If `null`, the grid is not ready yet.
    */
   getRootDimensions: () => GridDimensions | null;
+
+  /**
+   * Returns the amount of rows that are currently visible in the viewport
+   * @returns {number} The amount of rows visible in the viewport
+   */
+  unstable_getViewportPageSize: () => number;
 }
