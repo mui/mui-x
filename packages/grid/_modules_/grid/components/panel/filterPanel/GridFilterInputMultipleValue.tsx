@@ -43,8 +43,8 @@ function GridFilterInputMultipleValue(
     type === 'singleSelect'
       ? getSingleSelectOptionFormatter(apiRef.current.getColumn(item.columnField), apiRef.current)
       : (x) => x;
-
   const filterValueParser = React.useCallback(
+    // Whatever is the input, we convert its value to a string
     (value) => {
       if (type === 'singleSelect') {
         return String(typeof value === 'object' ? value.value : value);
@@ -58,6 +58,11 @@ function GridFilterInputMultipleValue(
     const itemValue = item.value ?? [];
     setFilterValueState(itemValue.map(filterValueParser));
   }, [item.value, filterValueParser]);
+
+  const isOptionEqualToValue = React.useCallback(
+    (option, value) => filterValueParser(option) === String(value),
+    [filterValueParser],
+  );
 
   const onFilterChange = React.useCallback(
     (event, value) => {
@@ -80,6 +85,7 @@ function GridFilterInputMultipleValue(
       options={
         type === 'singleSelect' ? apiRef.current.getColumn(item.columnField).valueOptions : []
       }
+      isOptionEqualToValue={isOptionEqualToValue}
       filterOptions={(options, params) => {
         const filtered = filter(options, params);
         if (type === 'singleSelect') {
