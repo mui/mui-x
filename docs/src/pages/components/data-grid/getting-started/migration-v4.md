@@ -186,7 +186,7 @@ The following interactive demo shows how these steps tie together:
 ### State access
 
 - The state direct access is not considered part of the public API anymore. We only guarantee that the selectors continue to work between minor releases.
-  We advise you to avoid accessing directly a state sub-key and to use selectors or `apiRef` methods whenever possible.
+  We advise you to avoid accessing directly a state sub-key, instead use the available selectors or `apiRef` methods whenever possible.
   You can replace the following state access by there matching selectors:
 
   | Direct state access     | Selector                           |
@@ -317,7 +317,7 @@ The following interactive demo shows how these steps tie together:
   +const rows = gridVisibleSortedRowEntriesSelector(state).map(row => [row.id, row.model])
   ```
 
-### The `apiRef` methods
+### `apiRef` methods
 
 - The `apiRef` methods to partially update the filter model have been renamed
 
@@ -424,8 +424,7 @@ The following interactive demo shows how these steps tie together:
 ### Removal from public API
 
 We removed some API methods / selectors from what we consider public by adding the `unstable_` prefix on them.
-You can continue to use those methods if you really need to, but they may be removed / changed drastically on minor versions.
-Most of the time, you should be able to avoid using them.
+You can continue to use those methods if you, but they may be subject to breaking changes in the future.
 
 1. `apiRef.current.applyFilters` was renamed `apiRef.current.unstable_applyFilters`
 2. `gridContainerSizesSelector` was renamed `unstable_gridContainerSizesSelector`
