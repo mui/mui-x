@@ -367,7 +367,7 @@ The following interactive demo shows how these steps tie together:
 
 - The `gridCheckboxSelectionColDef` was renamed `GRID_CHECKBOX_SELECTION_COL_DEF`
 
-- The individual string constant have been removed in favor of a single `gridClasses` object
+- The individual string constants have been removed in favor of a single `gridClasses` object
 
   ```diff
   -const columnHeaderClass = GRID_COLUMN_HEADER_CSS_CLASS
