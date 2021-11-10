@@ -323,9 +323,9 @@ The following interactive demo shows how these steps tie together:
 
 - The `apiRef` methods to partially update the filter model have been renamed:
 
-  1. `apiRef.current.applyFilterLinkOperator` was renamed `apiRef.current.setFilterLinkOperator`
-  2. `apiRef.current.upsertFilter` was renamed `apiRef.current.upsertFilterItem`
-  3. `apiRef.current.deleteFilter` was renamed `apiRef.current.deleteFilterItem`
+  1. `apiRef.current.applyFilterLinkOperator` was renamed to `apiRef.current.setFilterLinkOperator`
+  2. `apiRef.current.upsertFilter` was renamed to `apiRef.current.upsertFilterItem`
+  3. `apiRef.current.deleteFilter` was renamed to `apiRef.current.deleteFilterItem`
 
 - The third argument in `apiRef.current.selectRow` is now inverted to keep consistency with other selection APIs.
 
