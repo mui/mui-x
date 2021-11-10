@@ -12,10 +12,10 @@ Using your favorite package manager, install `@mui/x-data-grid-pro` for the full
 
 ```sh
 // with npm
-npm install @mui/x-data-grid@next
+npm install @mui/x-data-grid
 
 // with yarn
-yarn add @mui/x-data-grid@next
+yarn add @mui/x-data-grid
 ```
 
 The grid has a peer dependency on one MUI component.
