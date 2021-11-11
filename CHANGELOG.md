@@ -3,6 +3,93 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 5.0.0
+
+_Nov 12, 2021_
+
+🎉 This is the new stable release of the data grid component 🎉!
+
+If you want to migrate your DataGrid or DataGridPro from v4 to v5, take a look at our [Migration Guide](https://mui.com/components/data-grid/migration-v4/).
+This version is fully compatible with `@mui/material@5.X` and can be used with `@material-ui/core@4.x` with some additional steps [described here](https://mui.com/components/data-grid/migration-v4/#using-mui-x-v5-with-mui-core-v4)
+
+A big thanks to the 7 contributors who made this release possible. Here are some highlights ✨:
+
+- ???
+- 📚 Documentation improvements
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@v5.0.0` / `@mui/x-data-grid-pro@v5.0.0`
+
+#### Breaking changes
+
+- [DataGrid] The following CSS classes were renamed to follow the internal convention
+
+  - `MuiDataGrid-columnsContainer` was renamed to `MuiDataGrid-columnHeaders`
+  - `MuiDataGrid-columnHeaderWrapper` was renamed to `MuiDataGrid-columnHeadersInner`
+  - The `scroll` class applied to `MuiDataGrid-columnHeaderWrapper` was renamed to `MuiDataGrid-columnHeadersInner--scrollable`
+
+- [DataGrid] `props.components.Checkbox` and `props.componentsProps.checkbox` were renamed `props.components.BaseCheckbox` and `props.componentsProps.baseCheckbox`
+
+  As a start of the effort for #3066, we renamed the slots for the checkbox to clearly indicate that it is a slot for a core component.
+
+  `components` prop change:
+  ```diff
+  <DataGrid
+    components={{
+  -    checkbox: MyCustomCheckbox,
+  +    BaseCheckbox: MyCustomCheckbox,
+    }}
+  />;
+  ```
+  
+  `componentsProp` prop change:
+  ```diff
+  <DataGrid
+    componentsProps={{
+  -    checkbox: {},
+  +    baseCheckbox: {},
+    }}
+  />;
+  ```
+
+**Note**: these changes apply to both the `DataGrid` and `DataGridPro` components.
+
+#### Changes
+
+- [DataGrid] Block multi-rows updates in `apiRef.current.updateRows` on the free plan #3095 @flaviendelangle
+- [DataGrid] Fix filter not working after deleting the value (#3018) @m4theushw
+- [DataGrid] Fix selecting 100k rows takes too long (#3077) @m4theushw
+- [DataGrid] Fix `apiRef.current.updateRows` to not share rows from other instances (#3127) @m4theushw
+- [DataGrid] Flex space allocation should never cause horizontal scroll when there is enough space (#3099) @flaviendelangle
+- [DataGrid] Improve the filter panel behaviors (#3080) @flaviendelangle
+- [DataGrid] Keyboard navigation between header and rows is broken whe not on the first page (#3086) @flaviendelangle
+- [DataGrid] Keyboard navigation between rows is broken when not on the first page (#3074) @flaviendelangle
+- [DataGrid] Prevents bubbling in menu header (#3000) @alexfauquette
+- [DataGrid] Remove unused rendering state and selectors (#3133) @flaviendelangle
+- [DataGrid] Rename `Checkbox` component and props slots to `BaseCheckbox` (#3142) @DanailH
+
+### Core
+
+- [core] Automatically close issues that are incomplete and inactive (#3029) @oliviertassinari
+- [core] Improve the typing of `LicenseStatus` (#3141) @Himself65
+- [core] Make `useGridColumnsPreProcessing` generic (#3092) @m4theushw
+- [core] Move column headers virtualization to hook (#3078) @m4theushw
+- [core] Move virtualization logic to hook (#3079) @m4theushw
+- [core] Rename directories to match new packages new names (#3088) @flaviendelangle
+- [core] Replace `createClientRender` with new `createRenderer` API (#3125) @flaviendelangle
+- [core] Store the event manager in a key of `GridApi` instead of making the whole `GridApi` extend it (#3069) @flaviendelangle
+- [core] Update monorepo (#3139) @m4theushw
+- [core] Use `unstable_` prefix instead of `unsafe_` for private apis (#3090) @flaviendelangle
+- [core] Use official MUI repo as monorepo (#3084) @m4theushw
+
+### Docs
+- [docs] Fix broken example in the component slot example (#3123) @Himself65
+- [docs] Fix inline previews (#3081) @DanailH
+- [docs] Fix the client-side validation link clarity (#3100) @oliviertassinari
+- [docs] Improve `rowCount` CSS class description (#3072) @ZeeshanTamboli
+- [docs] Use core repo constants for doc internationalization (#3143) @flaviendelangle
+- [core] Adapt changelog script to Github dom modification (#3087) @alexfauquette
+
 ## 5.0.0-beta.7
 
 _Nov 4, 2021_
