@@ -60,7 +60,7 @@ A big thanks to the 7 contributors who made this release possible. Here are some
 - [DataGrid] Fix filter not working after deleting the value (#3018) @m4theushw
 - [DataGrid] Fix performance regression when selecting 100k rows (#3077) @m4theushw
 - [DataGrid] Fix `apiRef.current.updateRows` to not share rows from other instances (#3127) @m4theushw
-- [DataGrid] Flex space allocation should never cause horizontal scroll when there is enough space (#3099) @flaviendelangle
+- [DataGrid] Fix flex space allocation to not cause a horizontal scroll when there is enough space (#3099) @flaviendelangle
 - [DataGrid] Improve the filter panel behaviors (#3080) @flaviendelangle
 - [DataGrid] Keyboard navigation between header and rows is broken whe not on the first page (#3086) @flaviendelangle
 - [DataGrid] Keyboard navigation between rows is broken when not on the first page (#3074) @flaviendelangle
