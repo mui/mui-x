@@ -12,10 +12,10 @@ Using your favorite package manager, install `@mui/x-data-grid-pro` for the full
 
 ```sh
 // with npm
-npm install @mui/x-data-grid@next
+npm install @mui/x-data-grid
 
 // with yarn
-yarn add @mui/x-data-grid@next
+yarn add @mui/x-data-grid
 ```
 
 The grid has a peer dependency on one MUI component.
@@ -221,82 +221,6 @@ The licenses are perpetual, the license key will work forever.
 However, access to updates is not.
 If you install a new version of the component for which the license key has expired, you will trigger a [watermark and console message](#invalid-license).
 For instance, if you have a one-year license (default), you are not licensed to install a version that is two years in the future.
-
-## Using MUI X v5 with MUI Core v4
-
-If you are using MUI X v4, it is highly recommended to upgrade to MUI X v5 to continue to receive updates.
-To complete this migration, MUI Core also has to be upgraded to v5.
-Depending on the complexity of the application however, such a migration might not be possible globally.
-An alternative is to install MUI Core v4 along side to v5, and to configure them to avoid conflicts.
-This can be achieved with the following steps:
-
-1. First, make sure you have MUI Core v5 installed. If not, install it with these [instructions](/components/data-grid/getting-started/#installation).
-
-2. Add a custom [`createGenerateClassName`](/styles/api/#heading-creategenerateclassname-options-class-name-generator) to disable the generation of global class names in JSS.
-
-```jsx
-import { createGenerateClassName } from '@material-ui/core/styles';
-
-const generateClassName = createGenerateClassName({
-  // By enabling this option, if you have non-MUI elements (e.g. `<div />`)
-  // using MUI classes (e.g. `.MuiButton`) they will lose styles.
-  // Make sure to convert them to use `styled()` or `<Box />` first.
-  disableGlobal: true,
-  // Class names will receive this seed to avoid name collisions.
-  seed: 'mui-jss',
-});
-```
-
-3. Create a v5 theme with the same customizations as the v4 theme. This has to be done as the theme is not shared between different MUI Core versions.
-
-```jsx
-import { createMuiTheme as createThemeV4 } from '@material-ui/core/styles';
-import { createTheme as createThemeV5 } from '@mui/material/styles';
-
-const themeV4 = createThemeV4({
-  palette: {
-    primary: {
-      main: '#2196f3',
-    },
-  },
-});
-
-const themeV5 = createThemeV5({
-  palette: {
-    primary: {
-      main: theme.palette.primary.main,
-    },
-  },
-});
-```
-
-4. Apply the class name generator and v5 theme to the application.
-
-```jsx
-import * as React from 'react';
-import { ThemeProvider as ThemeProviderV5 } from '@mui/material/styles';
-import { ThemeProvider as ThemeProviderV4, StylesProvider } from '@material-ui/core/styles';
-
-const generateClassName = createGenerateClassName({ ... });
-const themeV4 = createThemeV4({ ... });
-const themeV5 = createThemeV5({ ... });
-
-export default function DataGridDemo() {
-  return (
-    <StylesProvider generateClassName={generateClassName}>
-      <ThemeProviderV4 theme={themeV4}>
-        <ThemeProviderV5 theme={themeV5}>
-          {/* Your component tree. */}
-        </ThemeProviderV5>
-      </ThemeProviderV4>
-    </StylesProvider>
-  );
-}
-```
-
-The following interactive demo shows how these steps tie together:
-
-{{"demo": "pages/components/data-grid/getting-started/DataGridV5WithCoreV4.js", "hideToolbar": true, "bg": true}}
 
 ## Support
 
