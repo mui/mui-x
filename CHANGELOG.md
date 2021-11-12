@@ -77,6 +77,7 @@ A big thanks to the 7 contributors who made this release possible. Here are some
 - [core] Use official MUI repo as monorepo (#3084) @m4theushw
 
 ### Docs
+
 - [docs] Fix broken example in the component slot example (#3123) @Himself65
 - [docs] Fix inline previews (#3081) @DanailH
 - [docs] Fix the client-side validation link clarity (#3100) @oliviertassinari
