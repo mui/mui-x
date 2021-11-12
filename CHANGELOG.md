@@ -28,7 +28,7 @@ A big thanks to the 7 contributors who made this release possible. Here are some
   - `MuiDataGrid-columnHeaderWrapper` was renamed to `MuiDataGrid-columnHeadersInner`
   - The `scroll` class applied to `MuiDataGrid-columnHeaderWrapper` was renamed to `MuiDataGrid-columnHeadersInner--scrollable`
 
-- [DataGrid] `props.components.Checkbox` and `props.componentsProps.checkbox` were renamed `props.components.BaseCheckbox` and `props.componentsProps.baseCheckbox`
+- [DataGrid] The `props.components.Checkbox` and `props.componentsProps.checkbox` props were renamed to `props.components.BaseCheckbox` and `props.componentsProps.baseCheckbox` respectively.
 
   As a start of the effort for #3066, we renamed the slots for the checkbox to clearly indicate that it is a slot for a core component.
 
