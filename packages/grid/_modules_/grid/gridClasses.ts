@@ -279,11 +279,11 @@ export interface GridClasses {
    */
   withBorder: string;
   /**
-   * Styled applied to the root of the grouping column of the tree data.
+   * Styles applied to the root of the grouping column of the tree data.
    */
   treeDataGroupingCell: string;
   /**
-   * Styled applied to the toggle of the grouping column of the tree data.
+   * Styles applied to the toggle of the grouping column of the tree data.
    */
   treeDataGroupingCellToggle: string;
 }

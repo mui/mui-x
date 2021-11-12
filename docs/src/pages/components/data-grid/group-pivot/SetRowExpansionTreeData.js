@@ -113,6 +113,7 @@ export default function SetRowExpansionTreeData() {
 
   const toggleFirstRow = () => {
     const rowId = apiRef.current.getRowIdFromRowIndex(0);
+    console.log(rowId);
     apiRef.current.unstable_setRowExpansion(
       rowId,
       !apiRef.current.unstable_getRowNode(rowId)?.expanded,

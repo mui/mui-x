@@ -371,10 +371,12 @@
       "conditions": "<code>showColumnRightBorder={true}</code>"
     },
     "treeDataGroupingCell": {
-      "description": "Styled applied to the root of the grouping column of the tree data."
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the root of the grouping column of the tree data"
     },
     "treeDataGroupingCellToggle": {
-      "description": "Styled applied to the toggle of the grouping column of the tree data."
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the toggle of the grouping column of the tree data"
     }
   },
   "slotDescriptions": {

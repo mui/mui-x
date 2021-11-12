@@ -15,9 +15,8 @@ import { isSpaceKey } from '../../../utils/keyboardUtils';
 import { useFirstRender } from '../../utils/useFirstRender';
 import { buildRowTree } from '../../../utils/rowTreeUtils';
 import { GridRowGroupingPreProcessing } from '../../core/rowGroupsPerProcessing';
-import { isFunction } from '../../../utils/utils';
 import { gridFilteredDescendantCountLookupSelector } from '../filter';
-import { GridPreProcessingGroup } from '../../core/preProcessing';
+import { GridPreProcessingGroup, useGridRegisterPreProcessor } from '../../core/preProcessing';
 
 /**
  * Only available in DataGridPro
@@ -40,7 +39,7 @@ export const useGridTreeData = (
     };
     let colDefOverride: Partial<GridColDef>;
 
-    if (isFunction(propGroupingColDef)) {
+    if (typeof propGroupingColDef === 'function') {
       const params: GridColDefOverrideParams = {
         colDef: baseColDef,
       };
@@ -56,8 +55,8 @@ export const useGridTreeData = (
     };
   }, [apiRef, props.groupingColDef]);
 
-  const updateColumnsPreProcessing = React.useCallback(() => {
-    const addGroupingColumn = (columns: GridColumns) => {
+  const addGroupingColumn = React.useCallback(
+    (columns: GridColumns) => {
       if (!props.treeData) {
         return columns;
       }
@@ -65,14 +64,9 @@ export const useGridTreeData = (
       const index = columns[0].type === 'checkboxSelection' ? 1 : 0;
 
       return [...columns.slice(0, index), groupingColDef, ...columns.slice(index)];
-    };
-
-    apiRef.current.unstable_registerPreProcessor(
-      GridPreProcessingGroup.hydrateColumns,
-      'treeData',
-      addGroupingColumn,
-    );
-  }, [apiRef, props.treeData, groupingColDef]);
+    },
+    [props.treeData, groupingColDef],
+  );
 
   const updateRowGrouping = React.useCallback(() => {
     if (!props.treeData) {
@@ -102,19 +96,10 @@ export const useGridTreeData = (
   }, [apiRef, props.getTreeDataPath, props.treeData, props.defaultGroupingExpansionDepth]);
 
   useFirstRender(() => {
-    updateColumnsPreProcessing();
     updateRowGrouping();
   });
 
   const isFirstRender = React.useRef(true);
-  React.useEffect(() => {
-    if (isFirstRender.current) {
-      return;
-    }
-
-    updateColumnsPreProcessing();
-  }, [updateColumnsPreProcessing]);
-
   React.useEffect(() => {
     if (isFirstRender.current) {
       isFirstRender.current = false;
@@ -123,6 +108,8 @@ export const useGridTreeData = (
 
     updateRowGrouping();
   }, [updateRowGrouping]);
+
+  useGridRegisterPreProcessor(apiRef, GridPreProcessingGroup.hydrateColumns, addGroupingColumn);
 
   const handleCellKeyDown = React.useCallback(
     (params: GridCellParams, event: MuiEvent<React.KeyboardEvent>) => {
