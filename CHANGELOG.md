@@ -5,7 +5,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## 5.0.0
 
-_Nov 12, 2021_
+_Nov 15, 2021_
 
 🎉 This is the new stable release of the data grid component 🎉!
 
@@ -64,6 +64,7 @@ A big thanks to the 7 contributors who made this release possible. Here are some
 
 ### Core
 
+- [core] Adapt changelog script to GitHub DOM modification (#3087) @alexfauquette
 - [core] Automatically close issues that are incomplete and inactive (#3029) @oliviertassinari
 - [core] Improve the typing of `LicenseStatus` (#3141) @Himself65
 - [core] Make `useGridColumnsPreProcessing` generic (#3092) @m4theushw
@@ -83,7 +84,6 @@ A big thanks to the 7 contributors who made this release possible. Here are some
 - [docs] Fix the client-side validation link clarity (#3100) @oliviertassinari
 - [docs] Improve `rowCount` CSS class description (#3072) @ZeeshanTamboli
 - [docs] Use core repo constants for doc internationalization (#3143) @flaviendelangle
-- [core] Adapt changelog script to GitHub DOM modification (#3087) @alexfauquette
 
 ## 5.0.0-beta.7
 
