@@ -14,7 +14,8 @@ This version is fully compatible with `@mui/material@5.X` and can be used with `
 
 A big thanks to the 7 contributors who made this release possible. Here are some highlights ✨:
 
-- ???
+- ⌨️ Enhance keyboard navigation when pagination is enabled
+- 👁 Better support for flex columns
 - 📚 Documentation improvements
 - 🐞 Bugfixes
 
