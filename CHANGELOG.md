@@ -33,23 +33,16 @@ A big thanks to the 7 contributors who made this release possible. Here are some
 
   As a start of the effort for #3066, we renamed the slots for the checkbox to clearly indicate that it is a slot for a core component.
 
-  `components` prop change:
   ```diff
   <DataGrid
     components={{
   -    checkbox: MyCustomCheckbox,
   +    BaseCheckbox: MyCustomCheckbox,
     }}
-  />;
-  ```
-  
-  `componentsProp` prop change:
-  ```diff
-  <DataGrid
     componentsProps={{
   -    checkbox: {},
   +    baseCheckbox: {},
-    }}
+    }}  
   />;
   ```
 
