@@ -10,7 +10,7 @@ _Nov 12, 2021_
 🎉 This is the new stable release of the data grid component 🎉!
 
 If you want to migrate your DataGrid or DataGridPro from v4 to v5, take a look at our [Migration Guide](https://mui.com/components/data-grid/migration-v4/).
-This version is fully compatible with `@mui/material@5.X` and can be used with `@material-ui/core@4.x` with some additional steps [described here](https://mui.com/components/data-grid/migration-v4/#using-mui-x-v5-with-mui-core-v4)
+This version is fully compatible with `@mui/material@5.X` and can be used with `@material-ui/core@4.x` with some additional steps as described [here](https://mui.com/components/data-grid/migration-v4/#using-mui-x-v5-with-mui-core-v4)
 
 A big thanks to the 7 contributors who made this release possible. Here are some highlights ✨:
 
