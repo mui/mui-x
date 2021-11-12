@@ -5,11 +5,7 @@ import FormControl from '@mui/material/FormControl';
 import IconButton from '@mui/material/IconButton';
 import InputLabel from '@mui/material/InputLabel';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
-import {
-  capitalize,
-  unstable_useId as useId,
-  unstable_useEnhancedEffect as useEnhancedEffect,
-} from '@mui/material/utils';
+import { capitalize, unstable_useId as useId } from '@mui/material/utils';
 import { styled } from '@mui/material/styles';
 import { filterableGridColumnsSelector } from '../../../hooks/features/columns/gridColumnsSelector';
 import { useGridSelector } from '../../../hooks/utils/useGridSelector';
@@ -55,7 +51,10 @@ const GridFilterFormRoot = styled('div', {
   padding: theme.spacing(1),
 }));
 
-function GridFilterForm(props: GridFilterFormProps) {
+const GridFilterForm = React.forwardRef(function GridFilterForm(
+  props: GridFilterFormProps,
+  ref: React.Ref<any>,
+) {
   const {
     item,
     hasMultipleFilters,
@@ -65,7 +64,6 @@ function GridFilterForm(props: GridFilterFormProps) {
     showMultiFilterOperators,
     disableMultiFilterOperator,
     applyMultiFilterOperatorChanges,
-    toFocus,
   } = props;
   const apiRef = useGridApiContext();
   const filterableColumns = useGridSelector(apiRef, filterableGridColumnsSelector);
@@ -140,15 +138,15 @@ function GridFilterForm(props: GridFilterFormProps) {
 
   const currentOperator = getCurrentOperator();
 
-  useEnhancedEffect(() => {
-    if (toFocus && toFocus.value) {
+  React.useImperativeHandle(ref, () => ({
+    focus: () => {
       if (valueInputRef.current) {
         valueInputRef.current!.focus();
       } else {
         filterSelectorRef.current!.focus();
       }
-    }
-  }, [toFocus]);
+    },
+  }));
 
   return (
     <GridFilterFormRoot className={classes.root}>
@@ -245,7 +243,7 @@ function GridFilterForm(props: GridFilterFormProps) {
       </FormControl>
     </GridFilterFormRoot>
   );
-}
+});
 
 GridFilterForm.propTypes = {
   // ----------------------------- Warning --------------------------------
