@@ -46,7 +46,7 @@ A big thanks to the 7 contributors who made this release possible. Here are some
   />;
   ```
 
-**Note**: these changes apply to both the `DataGrid` and `DataGridPro` components.
+  **Note**: these changes apply to both the `DataGrid` and `DataGridPro` components.
 
 #### Changes
 
