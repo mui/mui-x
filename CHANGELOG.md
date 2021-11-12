@@ -31,7 +31,7 @@ A big thanks to the 7 contributors who made this release possible. Here are some
 
 - [DataGrid] The `props.components.Checkbox` and `props.componentsProps.checkbox` props were renamed to `props.components.BaseCheckbox` and `props.componentsProps.baseCheckbox` respectively.
 
-  As a start of the effort for #3066, we renamed the slots for the checkbox to clearly indicate that it is a slot for a core component.
+  As a first step for [#3066](https://github.com/mui-org/material-ui-x/issues/3066), these slots were renamed to clearly indicate that they are meant to replace a core component.
 
   ```diff
   <DataGrid
