@@ -80,7 +80,7 @@ A big thanks to the 7 contributors who made this release possible. Here are some
 - [core] Replace `createClientRender` with new `createRenderer` API (#3125) @flaviendelangle
 - [core] Store the event manager in a key of `GridApi` instead of making the whole `GridApi` extend it (#3069) @flaviendelangle
 - [core] Update monorepo (#3139) @m4theushw
-- [core] Use `unstable_` prefix instead of `unsafe_` for private apis (#3090) @flaviendelangle
+- [core] Use `unstable_` prefix instead of `unsafe_` for private APIs (#3090) @flaviendelangle
 - [core] Use official MUI repo as monorepo (#3084) @m4theushw
 
 ### Docs
