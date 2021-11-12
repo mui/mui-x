@@ -58,7 +58,7 @@ A big thanks to the 7 contributors who made this release possible. Here are some
 
 - [DataGrid] Block multi-rows updates in `apiRef.current.updateRows` on the free plan #3095 @flaviendelangle
 - [DataGrid] Fix filter not working after deleting the value (#3018) @m4theushw
-- [DataGrid] Fix selecting 100k rows takes too long (#3077) @m4theushw
+- [DataGrid] Fix performance regression when selecting 100k rows (#3077) @m4theushw
 - [DataGrid] Fix `apiRef.current.updateRows` to not share rows from other instances (#3127) @m4theushw
 - [DataGrid] Flex space allocation should never cause horizontal scroll when there is enough space (#3099) @flaviendelangle
 - [DataGrid] Improve the filter panel behaviors (#3080) @flaviendelangle
