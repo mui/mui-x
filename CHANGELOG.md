@@ -50,7 +50,7 @@ A big thanks to the 7 contributors who made this release possible. Here are some
 
 #### Changes
 
-- [DataGrid] Block multi-rows updates in `apiRef.current.updateRows` on the free plan (#3095) @flaviendelangle
+- [DataGrid] Block multi-rows updates in `apiRef.current.updateRows` on the Community plan (#3095) @flaviendelangle
 - [DataGrid] Fix filter not working after deleting the value (#3018) @m4theushw
 - [DataGrid] Fix performance regression when selecting 100k rows (#3077) @m4theushw
 - [DataGrid] Fix `apiRef.current.updateRows` to not share rows from other instances (#3127) @m4theushw
