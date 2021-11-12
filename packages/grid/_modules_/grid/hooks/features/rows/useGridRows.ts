@@ -115,23 +115,6 @@ const getRowsStateFromCache = (
   return { ...groupingResponse, totalRowCount, totalTopLevelRowCount };
 };
 
-// The cache is always redefined synchronously in `useGridStateInit` so this object don't need to be regenerated across DataGrid instances.
-const INITIAL_GRID_ROWS_INTERNAL_CACHE: GridRowsInternalCache = {
-  state: {
-    value: {
-      idRowsLookup: {},
-      ids: [],
-    },
-    props: {
-      rowCount: undefined,
-      getRowId: undefined,
-    },
-    rowsBeforePartialUpdates: [],
-  },
-  timeout: null,
-  lastUpdateMs: 0,
-};
-
 /**
  * @requires useGridRowGroupsPreProcessing (method)
  * @requires useGridSorting (method) - can be after, async only (TODO: Remove after moving the `getRowIndex` and `getRowIdFromIndex` to `useGridSorting`)
@@ -149,7 +132,21 @@ export const useGridRows = (
   }
 
   const logger = useGridLogger(apiRef, 'useGridRows');
-  const rowsCache = React.useRef(INITIAL_GRID_ROWS_INTERNAL_CACHE);
+  const rowsCache = React.useRef<GridRowsInternalCache>({
+    state: {
+      value: {
+        idRowsLookup: {},
+        ids: [],
+      },
+      props: {
+        rowCount: undefined,
+        getRowId: undefined,
+      },
+      rowsBeforePartialUpdates: [],
+    },
+    timeout: null,
+    lastUpdateMs: 0,
+  });
 
   useGridStateInit(apiRef, (state) => {
     rowsCache.current.state = convertGridRowsPropToState({

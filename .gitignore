@@ -11,6 +11,7 @@ __diff_output__
 /.nyc_output
 /coverage
 /docs/.next
+/docs/pages/playground.tsx
 /docs/export
 /test/regressions/screenshots
 build

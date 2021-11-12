@@ -79,20 +79,15 @@ const GridFilterForm = React.forwardRef(function GridFilterForm(
   const valueInputRef = React.useRef<HTMLInputElement>(null);
   const filterSelectorRef = React.useRef<HTMLInputElement>(null);
 
-  const getCurrentColumn = React.useCallback(() => {
-    if (!item.columnField) {
-      return null;
-    }
-    return apiRef.current.getColumn(item.columnField)!;
-  }, [apiRef, item]);
+  const currentColumn = item.columnField ? apiRef.current.getColumn(item.columnField) : null;
 
-  const getCurrentOperator = React.useCallback(() => {
-    const currentColumn = getCurrentColumn();
+  const currentOperator = React.useMemo(() => {
     if (!item.operatorValue || !currentColumn) {
       return null;
     }
+
     return currentColumn.filterOperators?.find((operator) => operator.value === item.operatorValue);
-  }, [item, getCurrentColumn]);
+  }, [item, currentColumn]);
 
   const changeColumn = React.useCallback(
     (event: SelectChangeEvent) => {
@@ -132,11 +127,13 @@ const GridFilterForm = React.forwardRef(function GridFilterForm(
     [applyMultiFilterOperatorChanges],
   );
 
-  const handleDeleteFilter = React.useCallback(() => {
-    deleteFilter(item);
-  }, [deleteFilter, item]);
-
-  const currentOperator = getCurrentOperator();
+  const handleDeleteFilter = () => {
+    if (rootProps.disableMultipleColumnsFiltering) {
+      applyFilterChanges({ ...item, value: undefined });
+    } else {
+      deleteFilter(item);
+    }
+  };
 
   React.useImperativeHandle(ref, () => ({
     focus: () => {
@@ -220,7 +217,7 @@ const GridFilterForm = React.forwardRef(function GridFilterForm(
           native
           inputRef={filterSelectorRef}
         >
-          {getCurrentColumn()?.filterOperators?.map((operator) => (
+          {currentColumn?.filterOperators?.map((operator) => (
             <option key={operator.value} value={operator.value}>
               {operator.label ||
                 apiRef.current.getLocaleText(
@@ -257,7 +254,7 @@ GridFilterForm.propTypes = {
   hasMultipleFilters: PropTypes.bool.isRequired,
   isLastFilter: PropTypes.bool,
   item: PropTypes.shape({
-    columnField: PropTypes.string,
+    columnField: PropTypes.string.isRequired,
     id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     operatorValue: PropTypes.string,
     value: PropTypes.any,
