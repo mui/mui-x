@@ -23,7 +23,6 @@ export interface GridFilterFormProps {
   showMultiFilterOperators?: boolean;
   multiFilterOperator?: GridLinkOperator;
   disableMultiFilterOperator?: boolean;
-  toFocus?: { value: boolean };
   applyFilterChanges: (item: GridFilterItem) => void;
   applyMultiFilterOperatorChanges: (operator: GridLinkOperator) => void;
   deleteFilter: (item: GridFilterItem) => void;
@@ -252,7 +251,6 @@ GridFilterForm.propTypes = {
   deleteFilter: PropTypes.func.isRequired,
   disableMultiFilterOperator: PropTypes.bool,
   hasMultipleFilters: PropTypes.bool.isRequired,
-  isLastFilter: PropTypes.bool,
   item: PropTypes.shape({
     columnField: PropTypes.string.isRequired,
     id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
