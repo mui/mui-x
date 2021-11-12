@@ -34,7 +34,7 @@ A big thanks to the 7 contributors who made this release possible. Here are some
   As a first step for [#3066](https://github.com/mui-org/material-ui-x/issues/3066), these slots were renamed to clearly indicate that they are meant to replace a core component.
 
   ```diff
-  <DataGrid
+   <DataGrid
     components={{
   -    checkbox: MyCustomCheckbox,
   +    BaseCheckbox: MyCustomCheckbox,
