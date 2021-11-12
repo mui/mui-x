@@ -23,7 +23,6 @@ import { GridComponentProps } from '../../../GridComponentProps';
 import { gridVisibleSortedRowEntriesSelector } from '../filter/gridFilterSelector';
 import { useCurrentPageRows } from '../../utils/useCurrentPageRows';
 import { clamp } from '../../../utils/utils';
-import { gridDensityRowHeightSelector } from '../density';
 
 const getNextCellIndexes = (key: string, indexes: GridCellIndexCoordinates) => {
   if (!isArrowKeys(key)) {
