@@ -63,7 +63,7 @@ A big thanks to the 7 contributors who made this release possible. Here are some
 - [DataGrid] Fix `apiRef.current.updateRows` to not share rows from other instances (#3127) @m4theushw
 - [DataGrid] Fix flex space allocation to not cause a horizontal scroll when there is enough space (#3099) @flaviendelangle
 - [DataGrid] Improve the filter panel behaviors (#3080) @flaviendelangle
-- [DataGrid] Keyboard navigation between header and rows is broken whe not on the first page (#3086) @flaviendelangle
+- [DataGrid] Fix keyboard navigation between column headers and rows when not on the first page (#3086) @flaviendelangle
 - [DataGrid] Fix keyboard navigation between rows when not on the first page (#3074) @flaviendelangle
 - [DataGrid] Prevents bubbling in menu header (#3000) @alexfauquette
 - [DataGrid] Remove unused rendering state and selectors (#3133) @flaviendelangle
