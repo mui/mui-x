@@ -46,8 +46,6 @@ const GridPaperRoot = styled(Paper, {
   display: 'flex',
 }));
 
-const GRID_PANEL_POSITION = 'bottom-start';
-
 const GridPanel = React.forwardRef<HTMLDivElement, GridPanelProps>((props, ref) => {
   const { children, className, open, classes: classesProp, ...other } = props;
   const apiRef = useGridApiContext();
@@ -76,7 +74,7 @@ const GridPanel = React.forwardRef<HTMLDivElement, GridPanelProps>((props, ref) 
   return (
     <GridPanelRoot
       ref={ref}
-      placement={GRID_PANEL_POSITION}
+      placement="bottom-start"
       className={clsx(className, classes.panel)}
       open={open}
       anchorEl={anchorEl}
@@ -89,10 +87,8 @@ const GridPanel = React.forwardRef<HTMLDivElement, GridPanelProps>((props, ref) 
           name: 'isPlaced',
           enabled: true,
           phase: 'main',
-          fn: ({ state }) => {
-            if (state.placement === GRID_PANEL_POSITION) {
-              setIsPlaced(true);
-            }
+          fn: () => {
+            setIsPlaced(true);
           },
         },
       ]}
