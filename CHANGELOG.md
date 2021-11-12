@@ -89,7 +89,7 @@ A big thanks to the 7 contributors who made this release possible. Here are some
 - [docs] Fix the client-side validation link clarity (#3100) @oliviertassinari
 - [docs] Improve `rowCount` CSS class description (#3072) @ZeeshanTamboli
 - [docs] Use core repo constants for doc internationalization (#3143) @flaviendelangle
-- [core] Adapt changelog script to Github dom modification (#3087) @alexfauquette
+- [core] Adapt changelog script to GitHub DOM modification (#3087) @alexfauquette
 
 ## 5.0.0-beta.7
 
