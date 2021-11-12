@@ -1,4 +1,4 @@
-<Button onClick={toggleFirstRow}>Toggle 1st row expansion</Button>
+<Button onClick={toggleFirstRow}>Toggle 2nd row expansion</Button>
 <div style={{ height: 400, width: '100%' }}>
   <DataGridPro
     treeData
