@@ -1,8 +1,4 @@
-import {
-  createClientRenderStrictMode,
-  // @ts-expect-error need to migrate helpers to TypeScript
-  act,
-} from 'test/utils';
+import { createRenderer, act } from '@material-ui/monorepo/test/utils';
 import { getColumnValues } from 'test/utils/helperFn';
 import * as React from 'react';
 import { expect } from 'chai';
@@ -12,8 +8,7 @@ import { useData } from 'packages/storybook/src/hooks/useData';
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<DataGridPro /> - Pagination', () => {
-  // TODO v5: replace with createClientRender
-  const render = createClientRenderStrictMode();
+  const { render } = createRenderer();
 
   describe('setPage', () => {
     it('should apply valid value', () => {

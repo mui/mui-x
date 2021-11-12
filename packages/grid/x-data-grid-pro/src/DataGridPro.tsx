@@ -252,7 +252,7 @@ DataGridProRaw.propTypes = {
   filterModel: PropTypes.shape({
     items: PropTypes.arrayOf(
       PropTypes.shape({
-        columnField: PropTypes.string,
+        columnField: PropTypes.string.isRequired,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         operatorValue: PropTypes.string,
         value: PropTypes.any,

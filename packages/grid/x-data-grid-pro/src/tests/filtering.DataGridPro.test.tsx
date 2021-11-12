@@ -10,19 +10,11 @@ import {
   useGridApiRef,
   DataGridPro,
 } from '@mui/x-data-grid-pro';
+import { createRenderer, fireEvent, screen, waitFor } from '@material-ui/monorepo/test/utils';
 import { expect } from 'chai';
 import { useData } from 'packages/storybook/src/hooks/useData';
 import * as React from 'react';
 import { spy, useFakeTimers } from 'sinon';
-import {
-  createClientRenderStrictMode,
-  // @ts-expect-error need to migrate helpers to TypeScript
-  fireEvent,
-  // @ts-expect-error need to migrate helpers to TypeScript
-  screen,
-  // @ts-expect-error need to migrate helpers to TypeScript
-  waitFor,
-} from 'test/utils';
 import { getColumnHeaderCell, getColumnValues } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
@@ -38,8 +30,7 @@ describe('<DataGridPro /> - Filter', () => {
     clock.restore();
   });
 
-  // TODO v5: replace with createClientRender
-  const render = createClientRenderStrictMode();
+  const { render } = createRenderer();
 
   let apiRef: GridApiRef;
 
@@ -235,6 +226,32 @@ describe('<DataGridPro /> - Filter', () => {
     fireEvent.change(select, { target: { value: 'or' } });
     expect(onFilterModelChange.callCount).to.equal(1);
     expect(getColumnValues()).to.deep.equal([]);
+  });
+
+  it('should call onFilterModelChange when the value is emptied', () => {
+    const onFilterModelChange = spy();
+    render(
+      <TestCase
+        onFilterModelChange={onFilterModelChange}
+        filterModel={{
+          items: [
+            {
+              id: 1,
+              columnField: 'brand',
+              value: 'a',
+              operatorValue: 'contains',
+            },
+          ],
+        }}
+        initialState={{
+          preferencePanel: { openedPanelValue: GridPreferencePanelsValue.filters, open: true },
+        }}
+      />,
+    );
+    expect(onFilterModelChange.callCount).to.equal(0);
+    fireEvent.change(screen.queryByRole('textbox', { name: 'Value' }), { target: { value: '' } });
+    clock.tick(500);
+    expect(onFilterModelChange.callCount).to.equal(1);
   });
 
   it('should only select visible rows', () => {
@@ -453,8 +470,7 @@ describe('<DataGridPro /> - Filter', () => {
       );
       const addButton = screen.getByRole('button', { name: /Add Filter/i });
       fireEvent.click(addButton);
-      const filterForms = document.querySelectorAll(`.MuiDataGrid-filterForm`);
-      expect(filterForms).to.have.length(0);
+      expect(apiRef.current.state.filter.filterModel.items).to.have.length(0);
     });
 
     it('should update the filter state when the model is not set, but the onChange is set', () => {
@@ -470,12 +486,12 @@ describe('<DataGridPro /> - Filter', () => {
           }}
         />,
       );
-      expect(onModelChange.callCount).to.equal(1);
+      expect(onModelChange.callCount).to.equal(0);
       const addButton = screen.getByRole('button', { name: /Add Filter/i });
       fireEvent.click(addButton);
       const filterForms = document.querySelectorAll(`.MuiDataGrid-filterForm`);
       expect(filterForms).to.have.length(2);
-      expect(onModelChange.callCount).to.equal(2);
+      expect(onModelChange.callCount).to.equal(1);
       expect(onModelChange.lastCall.firstArg.items.length).to.deep.equal(2);
       expect(onModelChange.lastCall.firstArg.linkOperator).to.deep.equal(GridLinkOperator.And);
     });

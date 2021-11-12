@@ -1,13 +1,12 @@
 import { GridApiRef, GridColumns, useGridApiRef, DataGridPro } from '@mui/x-data-grid-pro';
+import { createRenderer } from '@material-ui/monorepo/test/utils';
 import { expect } from 'chai';
 import * as React from 'react';
-import { createClientRenderStrictMode } from 'test/utils';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<DataGridPro /> - Export', () => {
-  // TODO v5: replace with createClientRender
-  const render = createClientRenderStrictMode();
+  const { render } = createRenderer();
 
   const baselineProps = {
     autoHeight: isJSDOM,

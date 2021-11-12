@@ -20,7 +20,6 @@ import type {
   GridSortingState,
   GridSortingInitialState,
 } from '../hooks/features/sorting/gridSortingState';
-import type { GridRenderingState } from '../hooks/features/virtualization/renderingState';
 import type { GridPaginationState } from '../hooks/features/pagination/gridPaginationState';
 import type {
   GridFilterState,
@@ -35,7 +34,6 @@ export interface GridState {
   columnReorder: GridColumnReorderState;
   columnResize: GridColumnResizeState;
   columnMenu: GridColumnMenuState;
-  rendering: GridRenderingState;
   containerSizes: GridContainerProps | null;
   viewportSizes: GridViewportSizeState;
   scrollBar: GridScrollBarState;

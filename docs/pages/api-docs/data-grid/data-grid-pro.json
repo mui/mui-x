@@ -59,7 +59,7 @@
     "filterModel": {
       "type": {
         "name": "shape",
-        "description": "{ items: Array&lt;{ columnField?: string, id?: number<br>&#124;&nbsp;string, operatorValue?: string, value?: any }&gt;, linkOperator?: 'and'<br>&#124;&nbsp;'or' }"
+        "description": "{ items: Array&lt;{ columnField: string, id?: number<br>&#124;&nbsp;string, operatorValue?: string, value?: any }&gt;, linkOperator?: 'and'<br>&#124;&nbsp;'or' }"
       }
     },
     "getCellClassName": { "type": { "name": "func" } },
@@ -172,10 +172,10 @@
     "treeData": { "type": { "name": "bool" } }
   },
   "slots": {
+    "BaseCheckbox": { "default": "Checkbox", "type": { "name": "elementType" } },
     "BooleanCellFalseIcon": { "default": "GridCloseIcon", "type": { "name": "elementType" } },
     "BooleanCellTrueIcon": { "default": "GridCheckIcon", "type": { "name": "elementType" } },
     "Cell": { "type": { "name": "elementType" } },
-    "Checkbox": { "default": "Checkbox", "type": { "name": "elementType" } },
     "ColumnFilteredIcon": { "default": "GridFilterAltIcon", "type": { "name": "elementType" } },
     "ColumnMenu": { "default": "GridColumnMenu", "type": { "name": "elementType" } },
     "ColumnMenuIcon": {

@@ -61,7 +61,7 @@ const DEFAULT_GRID_ICON_SLOTS_COMPONENTS: GridIconSlotsComponent = {
 const DEFAULT_GRID_SLOTS_COMPONENTS: GridSlotsComponent = {
   ...DEFAULT_GRID_ICON_SLOTS_COMPONENTS,
   Cell: GridCell,
-  Checkbox: MUICheckbox,
+  BaseCheckbox: MUICheckbox,
   ColumnMenu: GridColumnMenu,
   ErrorOverlay,
   Footer: GridFooter,
