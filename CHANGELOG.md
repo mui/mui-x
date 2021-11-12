@@ -22,7 +22,7 @@ A big thanks to the 7 contributors who made this release possible. Here are some
 
 #### Breaking changes
 
-- [DataGrid] The following CSS classes were renamed to follow the internal convention
+- [DataGrid] The following CSS classes were renamed to follow the internal convention:
 
   - `MuiDataGrid-columnsContainer` was renamed to `MuiDataGrid-columnHeaders`
   - `MuiDataGrid-columnHeaderWrapper` was renamed to `MuiDataGrid-columnHeadersInner`
