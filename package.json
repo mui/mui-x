@@ -108,7 +108,7 @@
     "eslint-plugin-react-hooks": "^4.3.0",
     "format-util": "^1.0.5",
     "glob-gitignore": "^1.0.14",
-    "jsdom": "^18.0.1",
+    "jsdom": "^18.1.0",
     "jss": "^10.8.2",
     "jss-plugin-template": "^10.8.2",
     "jss-rtl": "^0.3.0",
