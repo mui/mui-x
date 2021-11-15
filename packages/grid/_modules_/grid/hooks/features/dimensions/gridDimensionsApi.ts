@@ -9,7 +9,15 @@ export interface GridDimensions {
    * The viewport size not including scrollbars.
    */
   viewportInnerSize: ElementSize;
+
+  /**
+   * Indicates if a scroll is currently needed to go from the beginning of the first column to the end of the last column.
+   */
   hasScrollX: boolean;
+
+  /**
+   * Indicates if a scroll is currently needed to go from the beginning of the first row to the end of the last row.
+   */
   hasScrollY: boolean;
 }
 
