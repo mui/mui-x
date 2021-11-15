@@ -28,6 +28,7 @@ export interface GridDimensionsApi {
   /**
    * Returns the amount of rows that are currently visible in the viewport
    * @returns {number} The amount of rows visible in the viewport
+   * @ignore - do not document.
    */
   unstable_getViewportPageSize: () => number;
 }
