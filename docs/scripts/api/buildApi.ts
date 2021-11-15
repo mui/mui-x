@@ -3,14 +3,12 @@ import * as fse from 'fs-extra';
 import path from 'path';
 import { findPagesMarkdown } from 'docs/src/modules/utils/find';
 import * as ttp from '@material-ui/monorepo/packages/typescript-to-proptypes/src';
-import {
-  getHeaders,
-} from '@material-ui/monorepo/docs/packages/markdown';
-import * as TypeDoc from "typedoc";
-import buildComponentDocumentation from './buildComponentDocumentation'
-import buildInterfaceDocumentation from './buildInterfaceDocumentation'
-import buildExportsDocumentation from './buildExportsDocumentation'
-import { isDeclarationReflection } from './utils'
+import { getHeaders } from '@material-ui/monorepo/docs/packages/markdown';
+import * as TypeDoc from 'typedoc';
+import buildComponentDocumentation from './buildComponentDocumentation';
+import buildInterfaceDocumentation from './buildInterfaceDocumentation';
+import buildExportsDocumentation from './buildExportsDocumentation';
+import { isDeclarationReflection } from './utils';
 
 const workspaceRoot = path.resolve(__dirname, '../../../');
 const prettierConfigPath = path.join(workspaceRoot, 'prettier.config.js');
@@ -28,7 +26,6 @@ async function run(argv: { outputDirectory?: string }) {
       };
     })
     .filter((markdown) => markdown.components.length > 0);
-
 
   const tsconfig = ttp.loadConfig(path.resolve(__dirname, '../../../tsconfig.json'));
 
@@ -117,12 +114,21 @@ async function run(argv: { outputDirectory?: string }) {
     if (!reflection || !isDeclarationReflection(reflection)) {
       throw new Error(`Could not find reflection for "${apiName}".`);
     } else {
-      buildInterfaceDocumentation({ reflection, apisToGenerate, prettierConfigPath, workspaceRoot, outputDirectory })
+      buildInterfaceDocumentation({
+        reflection,
+        apisToGenerate,
+        prettierConfigPath,
+        workspaceRoot,
+        outputDirectory,
+      });
     }
   });
 
-
-  buildExportsDocumentation({ reflections: project.children ?? [], workspaceRoot, prettierConfigPath })
+  buildExportsDocumentation({
+    reflections: project.children ?? [],
+    workspaceRoot,
+    prettierConfigPath,
+  });
 }
 
 yargs
