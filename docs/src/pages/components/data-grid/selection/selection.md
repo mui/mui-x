@@ -37,7 +37,7 @@ On the `DataGridPro` component, you can select multiple rows in two ways:
 
 - To select multiple independent rows, hold the <kbd class="key">CTRL</kbd> key while selecting rows.
 - To select a range of rows, hold the <kbd class="key">SHIFT</kbd> key while selecting rows.
-- To disable multiple row selection use `disableMultipleSelection={true}`.
+- To disable multiple row selection, use `disableMultipleSelection={true}`.
 
 {{"demo": "pages/components/data-grid/selection/MultipleRowSelectionGrid.js", "disableAd": true, "bg": "inline"}}
 
