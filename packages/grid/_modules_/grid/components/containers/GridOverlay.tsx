@@ -64,17 +64,13 @@ export const GridOverlay = React.forwardRef<HTMLDivElement, GridOverlayProps>(fu
 
   useGridApiEventHandler(apiRef, GridEvents.viewportInnerSizeChange, handleViewportSizeChange);
 
-  if (!viewportInnerSize) {
-    return null;
-  }
-
   return (
     <GridOverlayRoot
       ref={ref}
       className={clsx(classes.root, className)}
       style={{
-        height: viewportInnerSize.height,
-        width: viewportInnerSize.width,
+        height: viewportInnerSize?.height ?? 0,
+        width: viewportInnerSize?.width ?? 0,
         top: headerHeight,
         position: 'absolute',
         left: 0,
