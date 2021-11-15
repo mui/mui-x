@@ -19,7 +19,34 @@ interface TempRowTreeNode extends Omit<GridRowTreeNodeConfig, 'children'> {
 
 /**
  * Transform a list of rows into a tree structure where each row references its parent and children.
- * Add the auto generated rows to `ids` and `idRowsLookup`.
+ * If a row have a parent which does not exist in the input rows, creates an auto generated row
+ *
+ ```
+ params = {
+   ids: [0, 1, 2],
+   idRowsLookup: { 0: {...}, 1: {...}, 2: {...} },
+   rows: [
+     { id: 0, path: ['A'] },
+     { id: 1, path: ['B', 'A'] },
+     { id: 2, path: ['B', 'A', 'A'] }
+   ],
+   defaultGroupingExpansionDepth: 0,
+ }
+
+ Returns:
+
+ {
+   ids: [0, 1, 2, 'auto-generated-row-B'],
+   idRowsLookup: { 0: {...}, 1: {...}, 2: {...}, 'auto-generated-row-B': {} },
+   tree: {
+     '0': { id: 0, parent: null, expanded: false, depth: 0, groupingValue: 'A' },
+     'auto-generated-row-B': { id: 'auto-generated-row-B', parent: null, expanded: false, depth: 0, groupingValue: 'B' },
+     '1': { id: 1, parent: 'auto-generated-row-B', expanded: false, depth: 1, groupingValue: 'A' },
+     '2': { id: 2, parent: 1, expanded: false, depth: 2, groupingValue: 'A' },
+   },
+   treeDepth: 3,
+ }
+ ```
  */
 export const buildRowTree = (params: GenerateRowTreeParams): GridRowGroupingResult => {
   // During the build, we store the children as a Record to avoid linear complexity when checking if a children is already defined.
