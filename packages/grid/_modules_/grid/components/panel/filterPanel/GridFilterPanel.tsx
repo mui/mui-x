@@ -79,7 +79,7 @@ export function GridFilterPanel() {
     if (items.length > 0) {
       lastFilterRef.current!.focus();
     }
-  }, [items.length, lastFilterRef]);
+  }, [items.length]);
 
   return (
     <GridPanelWrapper>

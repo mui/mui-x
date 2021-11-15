@@ -15,7 +15,7 @@ const useStyles = makeStyles({
   },
 });
 
-function RatingInputValue(props) {
+const RatingInputValue = React.forwardRef(function RatingInputValue(props, ref) {
   const classes = useStyles();
   const { item, applyValue } = props;
 
@@ -31,10 +31,11 @@ function RatingInputValue(props) {
         value={Number(item.value)}
         onChange={handleFilterChange}
         precision={0.5}
+        ref={ref}
       />
     </div>
   );
-}
+});
 
 RatingInputValue.propTypes = {
   applyValue: PropTypes.func.isRequired,

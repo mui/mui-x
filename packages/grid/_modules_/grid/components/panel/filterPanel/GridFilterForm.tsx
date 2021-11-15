@@ -75,7 +75,7 @@ const GridFilterForm = React.forwardRef(function GridFilterForm(
   const rootProps = useGridRootProps();
   const ownerState = { classes: rootProps.classes };
   const classes = useUtilityClasses(ownerState);
-  const valueInputRef = React.useRef<HTMLInputElement>(null);
+  const valueRef = React.useRef<any>(null);
   const filterSelectorRef = React.useRef<HTMLInputElement>(null);
 
   const currentColumn = item.columnField ? apiRef.current.getColumn(item.columnField) : null;
@@ -134,15 +134,19 @@ const GridFilterForm = React.forwardRef(function GridFilterForm(
     }
   };
 
-  React.useImperativeHandle(ref, () => ({
-    focus: () => {
-      if (valueInputRef.current) {
-        valueInputRef.current!.focus();
-      } else {
-        filterSelectorRef.current!.focus();
-      }
-    },
-  }));
+  React.useImperativeHandle(
+    ref,
+    () => ({
+      focus: () => {
+        if (currentOperator?.InputComponent) {
+          valueRef?.current?.focus();
+        } else {
+          filterSelectorRef.current!.focus();
+        }
+      },
+    }),
+    [currentOperator],
+  );
 
   return (
     <GridFilterFormRoot className={classes.root}>
@@ -232,7 +236,7 @@ const GridFilterForm = React.forwardRef(function GridFilterForm(
             apiRef={apiRef}
             item={item}
             applyValue={applyFilterChanges}
-            inputRef={valueInputRef}
+            ref={valueRef}
             {...currentOperator.InputComponentProps}
           />
         ) : null}

@@ -19,7 +19,10 @@ const useStyles = makeStyles({
   },
 });
 
-function RatingInputValue(props: GridFilterInputValueProps) {
+const RatingInputValue = React.forwardRef(function RatingInputValue(
+  props: GridFilterInputValueProps,
+  ref: React.Ref<any>,
+) {
   const classes = useStyles();
   const { item, applyValue } = props;
 
@@ -35,10 +38,11 @@ function RatingInputValue(props: GridFilterInputValueProps) {
         value={Number(item.value)}
         onChange={handleFilterChange}
         precision={0.5}
+        ref={ref}
       />
     </div>
   );
-}
+});
 
 const ratingOnlyOperators = [
   {

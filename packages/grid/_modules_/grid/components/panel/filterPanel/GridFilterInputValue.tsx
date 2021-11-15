@@ -31,7 +31,10 @@ export interface GridTypeFilterInputValueProps extends GridFilterInputValueProps
   type?: 'text' | 'number' | 'date' | 'datetime-local' | 'singleSelect';
 }
 
-function GridFilterInputValue(props: GridTypeFilterInputValueProps & TextFieldProps) {
+const GridFilterInputValue = React.forwardRef(function GridFilterInputValue(
+  props: GridTypeFilterInputValueProps & TextFieldProps,
+  ref: React.Ref<any>,
+) {
   const { item, applyValue, type, apiRef, ...others } = props;
   const filterTimeout = React.useRef<any>();
   const [filterValueState, setFilterValueState] = React.useState(item.value ?? '');
@@ -105,11 +108,12 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps & TextFieldPr
       InputLabelProps={{
         shrink: true,
       }}
+      inputRef={ref}
       {...singleSelectProps}
       {...others}
     />
   );
-}
+});
 
 GridFilterInputValue.propTypes = {
   // ----------------------------- Warning --------------------------------
