@@ -27,31 +27,31 @@ describe('<DataGrid /> - Keyboard', () => {
   const { render } = createRenderer();
 
   const NavigationTestCaseNoScrollX = (
-      props: Omit<
-          DataGridProps,
-          'autoHeight' | 'rows' | 'columns' | 'pageSize' | 'rowsPerPageOptions'
-          > & {},
+    props: Omit<
+      DataGridProps,
+      'autoHeight' | 'rows' | 'columns' | 'pageSize' | 'rowsPerPageOptions'
+    > & {},
   ) => {
     const data = useData(100, 3);
     const transformColSizes = (columns: GridColumns) =>
-        columns.map((column) => ({ ...column, width: 60 }));
+      columns.map((column) => ({ ...column, width: 60 }));
 
     return (
-        <div style={{ width: 300, height: HEIGHT }}>
-          <DataGrid
-              autoHeight={isJSDOM}
-              rows={data.rows}
-              columns={transformColSizes(data.columns)}
-              pageSize={PAGE_SIZE}
-              rowsPerPageOptions={[PAGE_SIZE]}
-              rowBuffer={PAGE_SIZE}
-              rowHeight={ROW_HEIGHT}
-              headerHeight={HEADER_HEIGHT}
-              hideFooter
-              filterModel={{ items: [{ columnField: 'id', operatorValue: '>', value: 10 }] }}
-              {...props}
-          />
-        </div>
+      <div style={{ width: 300, height: HEIGHT }}>
+        <DataGrid
+          autoHeight={isJSDOM}
+          rows={data.rows}
+          columns={transformColSizes(data.columns)}
+          pageSize={PAGE_SIZE}
+          rowsPerPageOptions={[PAGE_SIZE]}
+          rowBuffer={PAGE_SIZE}
+          rowHeight={ROW_HEIGHT}
+          headerHeight={HEADER_HEIGHT}
+          hideFooter
+          filterModel={{ items: [{ columnField: 'id', operatorValue: '>', value: 10 }] }}
+          {...props}
+        />
+      </div>
     );
   };
 
@@ -244,13 +244,13 @@ describe('<DataGrid /> - Keyboard', () => {
         this.skip();
       }
       render(
-          <div style={{ width: 60, height: 300 }}>
-            <DataGrid autoHeight={isJSDOM} {...getData(10, 10)} />
-          </div>,
+        <div style={{ width: 60, height: 300 }}>
+          <DataGrid autoHeight={isJSDOM} {...getData(10, 10)} />
+        </div>,
       );
       getColumnHeaderCell(0).focus();
       const virtualScroller = document.querySelector(
-          '.MuiDataGrid-virtualScroller',
+        '.MuiDataGrid-virtualScroller',
       )! as HTMLElement;
       expect(virtualScroller.scrollLeft).to.equal(0);
       fireEvent.keyDown(document.activeElement!, { key: 'ArrowRight' });
@@ -317,7 +317,7 @@ describe('<DataGrid /> - Keyboard', () => {
         headerName: 'Name',
         width: 200,
         renderCell: () => (
-            <input type="text" data-testid="custom-input" onKeyDown={handleInputKeyDown} />
+          <input type="text" data-testid="custom-input" onKeyDown={handleInputKeyDown} />
         ),
       },
     ];
@@ -330,9 +330,9 @@ describe('<DataGrid /> - Keyboard', () => {
     ];
 
     render(
-        <div style={{ width: 300, height: 300 }}>
-          <DataGrid rows={rows} columns={columns} />
-        </div>,
+      <div style={{ width: 300, height: 300 }}>
+        <DataGrid rows={rows} columns={columns} />
+      </div>,
     );
     const input = screen.getByTestId('custom-input');
     input.focus();
@@ -362,9 +362,9 @@ describe('<DataGrid /> - Keyboard', () => {
     ];
 
     render(
-        <div style={{ width: 300, height: 300 }}>
-          <DataGrid rows={rows} columns={columns} />
-        </div>,
+      <div style={{ width: 300, height: 300 }}>
+        <DataGrid rows={rows} columns={columns} />
+      </div>,
     );
     const input = screen.getByTestId('custom-input');
     input.focus();
@@ -394,9 +394,9 @@ describe('<DataGrid /> - Keyboard', () => {
     ];
 
     render(
-        <div style={{ width: 300, height: 300 }} onKeyDown={handleKeyDown}>
-          <DataGrid rows={rows} columns={columns} />
-        </div>,
+      <div style={{ width: 300, height: 300 }} onKeyDown={handleKeyDown}>
+        <DataGrid rows={rows} columns={columns} />
+      </div>,
     );
     const firstCell = getCell(0, 0);
     firstCell.focus();
@@ -426,9 +426,9 @@ describe('<DataGrid /> - Keyboard', () => {
     ];
 
     render(
-        <div style={{ width: 300, height: 300 }}>
-          <DataGrid rows={rows} columns={columns} />
-        </div>,
+      <div style={{ width: 300, height: 300 }}>
+        <DataGrid rows={rows} columns={columns} />
+      </div>,
     );
 
     getColumnHeaderCell(0).focus();
