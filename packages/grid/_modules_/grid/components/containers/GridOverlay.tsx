@@ -2,6 +2,8 @@ import * as React from 'react';
 import clsx from 'clsx';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { alpha, styled } from '@mui/material/styles';
+import { useGridSelector } from '../../hooks/utils/useGridSelector';
+import { gridDensityHeaderHeightSelector } from '../../hooks/features/density/densitySelector';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { getDataGridUtilityClass } from '../../gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
@@ -49,36 +51,33 @@ export const GridOverlay = React.forwardRef<HTMLDivElement, GridOverlayProps>(fu
   const rootProps = useGridRootProps();
   const ownerState = { classes: rootProps.classes };
   const classes = useUtilityClasses(ownerState);
+  const headerHeight = useGridSelector(apiRef, gridDensityHeaderHeightSelector);
 
-  const getOverlayPosition = React.useCallback((): React.CSSProperties | null => {
-    const dimensions = apiRef.current.getRootDimensions();
-    if (!dimensions) {
-      return null;
-    }
-
-    return {
-      height: dimensions.viewportInnerSize.height,
-      width: dimensions.viewportInnerSize.width,
-      bottom: 0,
-      left: 0,
-    };
-  }, [apiRef]);
-
-  const [position, setPosition] = React.useState(() => getOverlayPosition());
+  const [viewportInnerSize, setViewportInnerSize] = React.useState(
+    () => apiRef.current.getRootDimensions()?.viewportInnerSize ?? null,
+  );
 
   const handleViewportSizeChange = React.useCallback(
-    () => setPosition(getOverlayPosition()),
-    [getOverlayPosition],
+    () => setViewportInnerSize(apiRef.current.getRootDimensions()?.viewportInnerSize ?? null),
+    [apiRef],
   );
 
   useGridApiEventHandler(apiRef, GridEvents.viewportInnerSizeChange, handleViewportSizeChange);
+
+  if (!viewportInnerSize) {
+    return null;
+  }
 
   return (
     <GridOverlayRoot
       ref={ref}
       className={clsx(classes.root, className)}
       style={{
-        ...position,
+        height: viewportInnerSize.height,
+        width: viewportInnerSize.width,
+        top: headerHeight,
+        position: 'absolute',
+        left: 0,
         ...style,
       }}
       {...other}
