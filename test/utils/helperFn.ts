@@ -11,8 +11,9 @@ export async function raf() {
   });
 }
 
-export const CLOCK_SYNC_FACTOR = 10;
-
+/**
+ * Returns the 0-based row and column index of the active cell
+ */
 export function getActiveCell(): string | null {
   let activeElement: Element | null;
   if (document.activeElement && document.activeElement.getAttribute('role') === 'cell') {
@@ -30,6 +31,9 @@ export function getActiveCell(): string | null {
   )}-${activeElement.getAttribute('data-colindex')}`;
 }
 
+/**
+ * Returns the 0-based column index of the active column header
+ */
 export function getActiveColumnHeader() {
   let activeElement: Element | null;
   if (document.activeElement && document.activeElement.getAttribute('role') === 'columnheader') {
@@ -43,7 +47,7 @@ export function getActiveColumnHeader() {
     return null;
   }
 
-  return `${activeElement.getAttribute('aria-colindex')}`;
+  return `${Number(activeElement.getAttribute('aria-colindex')) - 1}`;
 }
 
 export async function sleep(duration: number) {
