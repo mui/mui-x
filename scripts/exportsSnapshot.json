@@ -96,6 +96,7 @@
   { "name": "GridPanelClasses", "kind": "Interface" },
   { "name": "GridPanelProps", "kind": "Interface" },
   { "name": "GridParamsApi", "kind": "Interface" },
+  { "name": "GridPreProcessEditCellProps", "kind": "Interface" },
   { "name": "GridPreferencePanelState", "kind": "Interface" },
   { "name": "GridPreferencesPanelApi", "kind": "Interface" },
   { "name": "GridPrintExportApi", "kind": "Interface" },
