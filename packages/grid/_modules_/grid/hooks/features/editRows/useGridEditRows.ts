@@ -9,6 +9,7 @@ import {
   GridCellModes,
   GridEditModes,
   GridEditRowsModel,
+  GridEditCellProps,
   GridRowModes,
 } from '../../../models/gridEditRowModel';
 import { GridCellParams } from '../../../models/params/gridCellParams';
@@ -37,6 +38,10 @@ import { useGridSelector } from '../../utils/useGridSelector';
 import { useGridStateInit } from '../../utils/useGridStateInit';
 import { gridEditRowsStateSelector } from './gridEditRowsSelector';
 import { GridEventListener, MuiBaseEvent } from '../../../models';
+
+function isPromise(promise: any): promise is Promise<GridEditCellProps> {
+  return typeof promise.then === 'function';
+}
 
 /**
  * @requires useGridFocus - can be after, async only
@@ -77,21 +82,21 @@ export function useGridEditRows(
     changeEvent: GridEvents.editRowsModelChange,
   });
 
-  const commitPropsAndExit = (params: GridCellParams, event: MuiBaseEvent) => {
+  const commitPropsAndExit = async (params: GridCellParams, event: MuiBaseEvent) => {
     if (params.cellMode === GridCellModes.View) {
       return;
     }
     if (props.editMode === GridEditModes.Row) {
       nextFocusedCell.current = null;
-      focusTimeout.current = setTimeout(() => {
+      focusTimeout.current = setTimeout(async () => {
         if (nextFocusedCell.current?.id !== params.id) {
-          apiRef.current.commitRowChange(params.id, event);
+          await apiRef.current.commitRowChange(params.id, event);
           const rowParams = apiRef.current.getRowParams(params.id);
           apiRef.current.publishEvent(GridEvents.rowEditStop, rowParams, event);
         }
       });
     } else {
-      apiRef.current.commitCellChange(params, event);
+      await apiRef.current.commitCellChange(params, event);
       apiRef.current.publishEvent(GridEvents.cellEditStop, params, event);
     }
   };
@@ -246,9 +251,40 @@ export function useGridEditRows(
     GridEventListener<GridEvents.editCellPropsChange>
   >(
     (params) => {
-      setEditCellProps(params);
+      const row = apiRef.current.getRow(params.id)!;
+
+      if (props.editMode === 'row') {
+        const model = apiRef.current.getEditRowsModel();
+        const editRow = model[params.id];
+
+        Object.keys(editRow).forEach(async (field) => {
+          const column = apiRef.current.getColumn(field);
+          if (column.preProcessEditCellProps) {
+            const editCellProps = field === params.field ? params.props : editRow[field];
+            const newEditCellProps = await Promise.resolve(
+              column.preProcessEditCellProps!({ id: params.id, row, props: editCellProps }),
+            );
+            setEditCellProps({ id: params.id, field, props: newEditCellProps });
+          } else if (field === params.field) {
+            setEditCellProps(params);
+          }
+        });
+      } else {
+        const column = apiRef.current.getColumn(params.field);
+        const editCellProps = column.preProcessEditCellProps
+          ? column.preProcessEditCellProps({ id: params.id, row, props: params.props })
+          : params.props;
+
+        if (isPromise(editCellProps)) {
+          editCellProps.then((newEditCellProps) => {
+            setEditCellProps({ ...params, props: newEditCellProps });
+          });
+        } else {
+          setEditCellProps({ ...params, props: editCellProps });
+        }
+      }
     },
-    [setEditCellProps],
+    [apiRef, props.editMode, setEditCellProps],
   );
 
   const setEditRowsModel = React.useCallback<GridEditRowApi['setEditRowsModel']>(
@@ -268,24 +304,52 @@ export function useGridEditRows(
     [apiRef],
   );
 
-  // TODO v5.1 explode `params` to make consistent with `commitRowChange`
+  // TODO v6: explode `params` to make consistent with `commitRowChange`
+  // TODO v6: it should always return a promise
   const commitCellChange = React.useCallback<GridEditRowApi['commitCellChange']>(
-    (params, event = {}): boolean => {
+    (params, event = {}) => {
       const { id, field } = params;
       const model = apiRef.current.getEditRowsModel();
       if (!model[id] || !model[id][field]) {
         throw new Error(`MUI: Cell at id: ${id} and field: ${field} is not in edit mode.`);
       }
 
-      const { error, value } = model[id][field];
-      if (!error) {
-        const commitParams: GridCellEditCommitParams = { ...params, value };
+      const editCellProps = model[id][field];
+      const column = apiRef.current.getColumn(field);
+      const row = apiRef.current.getRow(id)!;
+
+      const commitParams: GridCellEditCommitParams = {
+        ...params,
+        value: editCellProps.value,
+      };
+
+      let hasError = !!editCellProps.error;
+      if (!hasError && typeof column.preProcessEditCellProps === 'function') {
+        const result = column.preProcessEditCellProps({ id, row, props: editCellProps });
+
+        if (isPromise(result)) {
+          return result.then((newEditCellProps) => {
+            setEditCellProps({ id, field, props: newEditCellProps });
+            if (newEditCellProps.error) {
+              return false;
+            }
+            apiRef.current.publishEvent(GridEvents.cellEditCommit, commitParams, event);
+            return true;
+          });
+        }
+
+        setEditCellProps({ id, field, props: result });
+        hasError = !!result.error;
+      }
+
+      if (!hasError) {
         apiRef.current.publishEvent(GridEvents.cellEditCommit, commitParams, event);
         return true;
       }
+
       return false;
     },
-    [apiRef],
+    [apiRef, setEditCellProps],
   );
 
   const handleCellEditCommit = React.useCallback<GridEventListener<GridEvents.cellEditCommit>>(
@@ -312,26 +376,52 @@ export function useGridEditRows(
   );
 
   const commitRowChange = React.useCallback<GridEditRowApi['commitRowChange']>(
-    (id, event = {}): boolean => {
+    (id, event = {}): boolean | Promise<boolean> => {
       if (props.editMode === GridEditModes.Cell) {
         throw new Error(`MUI: You can't commit changes when the edit mode is 'cell'.`);
       }
 
       const model = apiRef.current.getEditRowsModel();
-      const row = model[id];
-      if (!row) {
+      const editRowProps = model[id];
+      if (!editRowProps) {
         throw new Error(`MUI: Row at id: ${id} is not being edited.`);
       }
 
-      const hasFieldWithError = Object.values(row).some((value) => !!value.error);
-      if (!hasFieldWithError) {
-        apiRef.current.publishEvent(GridEvents.rowEditCommit, id, event);
-        return true;
+      const hasFieldWithError = Object.values(editRowProps).some((value) => !!value.error);
+      if (hasFieldWithError) {
+        return false;
       }
 
-      return false;
+      const fieldsWithValidator = Object.keys(editRowProps).filter((field) => {
+        const column = apiRef.current.getColumn(field);
+        return typeof column.preProcessEditCellProps === 'function';
+      });
+
+      if (fieldsWithValidator.length > 0) {
+        const row = apiRef.current.getRow(id)!;
+
+        const validatorErrors = fieldsWithValidator.map(async (field) => {
+          const column = apiRef.current.getColumn(field);
+          const newEditCellProps = await Promise.resolve(
+            column.preProcessEditCellProps!({ id, row, props: editRowProps[field] }),
+          );
+          setEditCellProps({ id, field, props: newEditCellProps });
+          return newEditCellProps.error;
+        });
+
+        return Promise.all(validatorErrors).then((errors) => {
+          if (errors.some((error) => !!error)) {
+            return false;
+          }
+          apiRef.current.publishEvent(GridEvents.rowEditCommit, id, event);
+          return true;
+        });
+      }
+
+      apiRef.current.publishEvent(GridEvents.rowEditCommit, id, event);
+      return true;
     },
-    [apiRef, props.editMode],
+    [apiRef, props.editMode, setEditCellProps],
   );
 
   const handleCellEditStart = React.useCallback<GridEventListener<GridEvents.cellEditStart>>(
@@ -413,7 +503,7 @@ export function useGridEditRows(
   );
 
   const handleCellKeyDown = React.useCallback<GridEventListener<GridEvents.cellKeyDown>>(
-    (params: GridCellParams, event) => {
+    async (params: GridCellParams, event) => {
       const { id, field, cellMode, isEditable } = params;
       if (!isEditable) {
         return;
@@ -425,6 +515,8 @@ export function useGridEditRows(
         const rowParams = apiRef.current.getRowParams(params.id);
         if (isEditMode) {
           if (event.key === 'Enter') {
+            // TODO: check the return before firing GridEvents.rowEditStop
+            // On cell editing, it won't exits the edit mode with error
             apiRef.current.commitRowChange(params.id);
             apiRef.current.publishEvent(GridEvents.rowEditStop, rowParams, event);
           } else if (event.key === 'Escape') {
@@ -448,7 +540,8 @@ export function useGridEditRows(
       }
       if (isEditMode && isCellEditCommitKeys(event.key)) {
         const commitParams = { id, field };
-        if (!apiRef.current.commitCellChange(commitParams, event)) {
+        const isValid = await apiRef.current.commitCellChange(commitParams, event);
+        if (!isValid) {
           return;
         }
       }
@@ -514,7 +607,7 @@ export function useGridEditRows(
   useGridApiEventHandler(apiRef, GridEvents.rowEditStop, handleRowEditStop);
   useGridApiEventHandler(apiRef, GridEvents.rowEditCommit, handleRowEditCommit);
 
-  useGridApiOptionHandler(apiRef, GridEvents.editCellPropsChange, props.onEditCellPropsChange);
+  useGridApiOptionHandler(apiRef, GridEvents.editCellPropsChange, props.onEditCellPropsChange); // TODO v6: remove - `onEditCellPropsChange` from the column definition can be used
   useGridApiOptionHandler(apiRef, GridEvents.cellEditCommit, props.onCellEditCommit);
   useGridApiOptionHandler(apiRef, GridEvents.cellEditStart, props.onCellEditStart);
   useGridApiOptionHandler(apiRef, GridEvents.cellEditStop, props.onCellEditStop);

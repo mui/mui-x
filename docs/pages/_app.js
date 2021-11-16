@@ -39,7 +39,7 @@ import createEmotionCache from 'docs/src/createEmotionCache';
 
 function getMuiPackageVersion(packageName, commitRef) {
   if (commitRef === undefined) {
-    return 'next';
+    return 'latest';
   }
   const shortSha = commitRef.slice(0, 8);
   return `https://pkg.csb.dev/mui-org/material-ui-x/commit/${shortSha}/@mui/${packageName}`;
@@ -84,7 +84,7 @@ function useFirstRender() {
   return firstRenderRef.current;
 }
 
-acceptLanguage.languages(['en', 'zh', 'pt', 'ru']);
+acceptLanguage.languages(LANGUAGES);
 
 function LanguageNegotiation() {
   const setUserLanguage = useSetUserLanguage();

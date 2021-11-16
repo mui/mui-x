@@ -331,10 +331,12 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         const columns = [
           {
             field: 'id',
+            minWidth: 0,
             flex: 1,
           },
           {
             field: 'name',
+            minWidth: 0,
             flex: 0.5,
           },
         ];
@@ -352,6 +354,38 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         expect(firstColumn).toHaveInlineStyle({
           width: `${2 * Number(secondColumnWidthVal)}px`,
         });
+      });
+
+      it('should set the first column close to its minWidth and the second one to the remaining space', () => {
+        const rows = [
+          {
+            id: 1,
+            username: 'John Doe',
+          },
+        ];
+
+        const columns = [
+          {
+            field: 'id',
+            flex: 1,
+            minWidth: 100,
+          },
+          {
+            field: 'name',
+            flex: 1000,
+          },
+        ];
+
+        render(
+          <div style={{ width: 400, height: 300 }}>
+            <DataGrid columns={columns} rows={rows} />
+          </div>,
+        );
+
+        const firstColumnWidth = Number(getColumnHeaderCell(0).style.width.split('px')[0]);
+        const secondColumnWidth = Number(getColumnHeaderCell(1).style.width.split('px')[0]);
+        expect(Math.round(firstColumnWidth)).to.equal(100);
+        expect(Math.round(secondColumnWidth)).to.equal(298);
       });
 
       it('should respect minWidth when a column is fluid', () => {

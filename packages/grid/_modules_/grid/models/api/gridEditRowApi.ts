@@ -64,12 +64,15 @@ export interface GridEditRowApi {
    * @param {React.SyntheticEvent} event The event to pass forward.
    * @returns {boolean} A boolean indicating if there is an error.
    */
-  commitCellChange: (params: GridCommitCellChangeParams, event?: MuiBaseEvent) => boolean;
+  commitCellChange: (
+    params: GridCommitCellChangeParams,
+    event?: MuiBaseEvent,
+  ) => boolean | Promise<boolean>;
   /**
    * Updates the row at the given id with the values stored in the edit row model.
    * @param {GridRowId} id The id to commit to.
    * @param {React.SyntheticEvent} event The event to pass forward.
    * @returns {boolean} A boolean indicating if there is an error.
    */
-  commitRowChange: (id: GridRowId, event?: MuiBaseEvent) => boolean;
+  commitRowChange: (id: GridRowId, event?: MuiBaseEvent) => boolean | Promise<boolean>;
 }

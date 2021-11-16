@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRenderer, fireEvent, screen } from '@material-ui/monorepo/test/utils';
+import { createRenderer, fireEvent, screen, waitFor } from '@material-ui/monorepo/test/utils';
 import { expect } from 'chai';
 import {
   DataGridPro,
@@ -220,7 +220,7 @@ describe('<DataGridPro /> - Events Params', () => {
       expect(cell).not.to.have.class(gridClasses['row--editing']);
     });
 
-    it('should allow to prevent the default behavior while allowing the event to propagate', () => {
+    it('should allow to prevent the default behavior while allowing the event to propagate', async () => {
       const handleEditCellPropsChange = spy((params, event) => {
         event.defaultMuiPrevented = true;
       });
@@ -232,7 +232,9 @@ describe('<DataGridPro /> - Events Params', () => {
       fireEvent.change(input, { target: { value: 'Lisa' } });
       expect(handleEditCellPropsChange.callCount).to.equal(1);
       fireEvent.keyDown(input, { key: 'Enter' });
-      expect(cell).to.have.text('Jack');
+      await waitFor(() => {
+        expect(cell).to.have.text('Jack');
+      });
     });
 
     it('should select a row by default', () => {

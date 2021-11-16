@@ -619,7 +619,7 @@ export function EditCellSnap() {
 
   React.useEffect(() => {
     const handleClick = () => {
-      apiRef.current.setCellMode(1, 'brand', 'edit');
+      apiRef.current.setCellFocus(1, 'brand');
     };
 
     // Prevents from exiting the edit mode when there's a click to switch between regression tests
@@ -632,7 +632,14 @@ export function EditCellSnap() {
 
   return (
     <div className="grid-container">
-      <DataGridPro {...baselineProps} apiRef={apiRef} />
+      <DataGridPro
+        {...baselineProps}
+        apiRef={apiRef}
+        onCellFocusOut={(params, event) => {
+          // Avoids to wait for the commit promise
+          event.defaultMuiPrevented = true;
+        }}
+      />
     </div>
   );
 }
@@ -646,7 +653,7 @@ export function EditBooleanCellSnap() {
 
   React.useEffect(() => {
     const handleClick = () => {
-      apiRef.current.setCellMode(1, 'isPublished', 'edit');
+      apiRef.current.setCellFocus(1, 'isPublished');
     };
 
     // Prevents from exiting the edit mode when there's a click to switch between regression tests
@@ -659,7 +666,14 @@ export function EditBooleanCellSnap() {
 
   return (
     <div className="grid-container">
-      <DataGridPro {...baselineProps} apiRef={apiRef} />
+      <DataGridPro
+        {...baselineProps}
+        apiRef={apiRef}
+        onCellFocusOut={(params, event) => {
+          // Avoids to wait for the commit promise
+          event.defaultMuiPrevented = true;
+        }}
+      />
     </div>
   );
 }

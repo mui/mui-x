@@ -115,26 +115,8 @@ const getRowsStateFromCache = (
   return { ...groupingResponse, totalRowCount, totalTopLevelRowCount };
 };
 
-// The cache is always redefined synchronously in `useGridStateInit` so this object don't need to be regenerated across DataGrid instances.
-const INITIAL_GRID_ROWS_INTERNAL_CACHE: GridRowsInternalCache = {
-  state: {
-    value: {
-      idRowsLookup: {},
-      ids: [],
-    },
-    props: {
-      rowCount: undefined,
-      getRowId: undefined,
-    },
-    rowsBeforePartialUpdates: [],
-  },
-  timeout: null,
-  lastUpdateMs: 0,
-};
-
 /**
  * @requires useGridRowGroupsPreProcessing (method)
- * @requires useGridSorting (method) - can be after, async only (TODO: Remove after moving the `getRowIndex` and `getRowIdFromIndex` to `useGridSorting`)
  */
 export const useGridRows = (
   apiRef: GridApiRef,
@@ -149,7 +131,21 @@ export const useGridRows = (
   }
 
   const logger = useGridLogger(apiRef, 'useGridRows');
-  const rowsCache = React.useRef(INITIAL_GRID_ROWS_INTERNAL_CACHE);
+  const rowsCache = React.useRef<GridRowsInternalCache>({
+    state: {
+      value: {
+        idRowsLookup: {},
+        ids: [],
+      },
+      props: {
+        rowCount: undefined,
+        getRowId: undefined,
+      },
+      rowsBeforePartialUpdates: [],
+    },
+    timeout: null,
+    lastUpdateMs: 0,
+  });
 
   useGridStateInit(apiRef, (state) => {
     rowsCache.current.state = convertGridRowsPropToState({
@@ -166,18 +162,6 @@ export const useGridRows = (
   });
 
   const [, setGridState, forceUpdate] = useGridState(apiRef);
-
-  // TODO: Move in useGridSorting
-  const getRowIndex = React.useCallback<GridRowApi['getRowIndex']>(
-    (id) => apiRef.current.getSortedRowIds().indexOf(id),
-    [apiRef],
-  );
-
-  // TODO: Move in useGridSorting
-  const getRowIdFromRowIndex = React.useCallback<GridRowApi['getRowIdFromRowIndex']>(
-    (index) => apiRef.current.getSortedRowIds()[index],
-    [apiRef],
-  );
 
   const getRow = React.useCallback<GridRowApi['getRow']>(
     (id) => gridRowsLookupSelector(apiRef.current.state)[id] ?? null,
@@ -405,8 +389,6 @@ export const useGridRows = (
   useGridApiEventHandler(apiRef, GridEvents.rowGroupsPreProcessingChange, handleGroupRows);
 
   const rowApi: GridRowApi = {
-    getRowIndex,
-    getRowIdFromRowIndex,
     getRow,
     getRowModels,
     getRowsCount,
