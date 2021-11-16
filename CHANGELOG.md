@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 5.0.1
+
+_Nov 16, 2021_
+
+A big thanks to the 3 contributors who made this release possible.
+
+### `@mui/x-data-grid@v5.0.0-beta.1` / `@mui/x-data-grid-pro@v5.0.0-beta.1`
+
+This is a hotfix to fix a regression in the typing introduced in `@mui/x-data-grid@5.0.0`.
+
+#### Changes
+
+- [DataGrid] Fix the `@mui/x-data-grid` type entrypoint (#3196) @flaviendelangle
+
 ## 5.0.0
 
 _Nov 15, 2021_
