@@ -65,6 +65,8 @@
   { "name": "GridDensityApi", "kind": "Interface" },
   { "name": "GridDensityOption", "kind": "Interface" },
   { "name": "GridDensityState", "kind": "Interface" },
+  { "name": "GridDimensions", "kind": "Interface" },
+  { "name": "GridDimensionsApi", "kind": "Interface" },
   { "name": "GridDisableVirtualizationApi", "kind": "Interface" },
   { "name": "GridEditCellProps", "kind": "Interface" },
   { "name": "GridEditCellPropsParams", "kind": "Interface" },
