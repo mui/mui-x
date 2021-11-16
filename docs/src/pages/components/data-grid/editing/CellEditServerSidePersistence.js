@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataGridPro, useGridApiRef } from '@mui/x-data-grid-pro';
+import { DataGridPro } from '@mui/x-data-grid-pro';
 import {
   randomCreatedDate,
   randomTraderName,
@@ -20,38 +20,40 @@ const useFakeMutation = () => {
   );
 };
 
-export default function CellEditServiceSidePersistence() {
+export default function CellEditServerSidePersistence() {
   const mutateRow = useFakeMutation();
-  const apiRef = useGridApiRef();
+  const [rows, setRows] = React.useState(INITIAL_ROWS);
+
   const [snackbar, setSnackbar] = React.useState(null);
 
   const handleCloseSnackbar = () => setSnackbar(null);
 
   const handleCellEditCommit = React.useCallback(
     async (params) => {
-      // Get the row old value before committing
-      const oldRow = apiRef.current.getRow(params.id);
-
       try {
         // Make the HTTP request to save in the backend
-        await mutateRow({ id: params.id, [params.field]: params.value });
+        const response = await mutateRow({
+          id: params.id,
+          [params.field]: params.value,
+        });
         setSnackbar({ children: 'User successfully saved', severity: 'success' });
+        setRows((prev) =>
+          prev.map((row) => (row.id === params.id ? { ...row, ...response } : row)),
+        );
       } catch (error) {
         setSnackbar({ children: 'Error while saving user', severity: 'error' });
         // Restore the row in case of error
-        apiRef.current.updateRows([oldRow]);
+        setRows((prev) => [...prev]);
       }
     },
-    [apiRef, mutateRow],
+    [mutateRow],
   );
 
   return (
     <div style={{ height: 400, width: '100%' }}>
       <DataGridPro
-        apiRef={apiRef}
         rows={rows}
         columns={columns}
-        editMode="row"
         onCellEditCommit={handleCellEditCommit}
       />
       {!!snackbar && (
@@ -82,7 +84,7 @@ const columns = [
   },
 ];
 
-const rows = [
+const INITIAL_ROWS = [
   {
     id: 1,
     name: randomTraderName(),

@@ -5,7 +5,6 @@ import {
   GridColumns,
   GridRowId,
   GridRowsProp,
-  useGridApiRef,
 } from '@mui/x-data-grid-pro';
 import {
   randomCreatedDate,
@@ -26,7 +25,7 @@ interface User {
 const useFakeMutation = () => {
   return React.useCallback(
     (user: Partial<User>) =>
-      new Promise((resolve) =>
+      new Promise<Partial<User>>((resolve) =>
         setTimeout(() => {
           resolve(user);
         }, 200),
@@ -35,9 +34,10 @@ const useFakeMutation = () => {
   );
 };
 
-export default function CellEditServiceSidePersistence() {
+export default function CellEditServerSidePersistence() {
   const mutateRow = useFakeMutation();
-  const apiRef = useGridApiRef();
+  const [rows, setRows] = React.useState(INITIAL_ROWS);
+
   const [snackbar, setSnackbar] = React.useState<Pick<
     AlertProps,
     'children' | 'severity'
@@ -47,29 +47,30 @@ export default function CellEditServiceSidePersistence() {
 
   const handleCellEditCommit = React.useCallback(
     async (params: GridCellEditCommitParams) => {
-      // Get the row old value before committing
-      const oldRow = apiRef.current.getRow(params.id)!;
-
       try {
         // Make the HTTP request to save in the backend
-        await mutateRow({ id: params.id, [params.field]: params.value });
+        const response = await mutateRow({
+          id: params.id,
+          [params.field]: params.value,
+        });
         setSnackbar({ children: 'User successfully saved', severity: 'success' });
+        setRows((prev) =>
+          prev.map((row) => (row.id === params.id ? { ...row, ...response } : row)),
+        );
       } catch (error) {
         setSnackbar({ children: 'Error while saving user', severity: 'error' });
         // Restore the row in case of error
-        apiRef.current.updateRows([oldRow]);
+        setRows((prev) => [...prev]);
       }
     },
-    [apiRef, mutateRow],
+    [mutateRow],
   );
 
   return (
     <div style={{ height: 400, width: '100%' }}>
       <DataGridPro
-        apiRef={apiRef}
         rows={rows}
         columns={columns}
-        editMode="row"
         onCellEditCommit={handleCellEditCommit}
       />
       {!!snackbar && (
@@ -100,7 +101,7 @@ const columns: GridColumns = [
   },
 ];
 
-const rows: GridRowsProp = [
+const INITIAL_ROWS: GridRowsProp = [
   {
     id: 1,
     name: randomTraderName(),

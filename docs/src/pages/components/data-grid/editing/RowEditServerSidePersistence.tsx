@@ -34,7 +34,7 @@ const useFakeMutation = () => {
   );
 };
 
-export default function RowEditServiceSidePersistence() {
+export default function RowEditServerSidePersistence() {
   const mutateRow = useFakeMutation();
   const apiRef = useGridApiRef();
   const [snackbar, setSnackbar] = React.useState<Pick<
@@ -52,8 +52,8 @@ export default function RowEditServiceSidePersistence() {
       // The new value entered
       const name = newRow.name.value as string;
       const age = newRow.age.value as number;
-      const lastLogin = newRow.age.lastLogin as Date;
-      const dateCreated = newRow.age.dateCreated as Date;
+      const lastLogin = newRow.lastLogin.value as Date;
+      const dateCreated = newRow.dateCreated.value as Date;
 
       // Get the row old value before committing
       const oldRow = apiRef.current.getRow(id)!;

@@ -17,11 +17,11 @@ Set the `editable` property in the `GridColDef` object to `true` to allow editin
 
 {{"demo": "pages/components/data-grid/editing/BasicEditingGrid.js", "bg": "inline", "defaultCodeOpen": false}}
 
-### Service-side persistence [<span class="pro"></span>](https://mui.com/store/items/material-ui-pro/)
+### Server-side persistence
 
-If you want to send the edited data to your server, you can use the `onCellEditCommit` which is fired just before committing the new row value to the grid.
+If you want to send the updated data to your server, you can use the `onCellEditCommit` which is fired just before committing the new cell value to the grid.
 
-You can then decide if you want to send the whole row or manually check the modified fields and only send those.
+You can then decide if you want to send the whole row or only the modified fields.
 
 {{"demo": "pages/components/data-grid/editing/CellEditServerSidePersistence.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -163,11 +163,13 @@ To enable it, change the edit mode to `"row"` using the `editMode` prop, then se
 
 {{"demo": "pages/components/data-grid/editing/BasicRowEditingGrid.js", "bg": "inline", "defaultCodeOpen": false}}
 
-### Service-side persistence [<span class="pro"></span>](https://mui.com/store/items/material-ui-pro/)
+### Server-side persistence [<span class="pro"></span>](https://mui.com/store/items/material-ui-pro/)
 
-If you want to send the edited data to your server, you can use the `onRowEditCommit` which is fired just before committing the new row value to the grid.
+If you want to send the updated data to your server, you can use the `onRowEditCommit` which is fired just before committing the new cell value to the grid.
 
-You can then decide if you want to send the whole row or manually check the modified fields and only send those.
+To access the new values for the row, use `apiRef.current.getEditRowsModel` to get all rows in edit mode, then use the id provided to get only the values for the row that was committed.
+
+You can then decide if you want to send the whole row or only the modified fields.
 
 {{"demo": "pages/components/data-grid/editing/RowEditServerSidePersistence.js", "bg": "inline", "defaultCodeOpen": false}}
 
