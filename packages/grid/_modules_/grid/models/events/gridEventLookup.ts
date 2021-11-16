@@ -136,6 +136,7 @@ export interface GridEventLookup
   componentError: { params: any };
   stateChange: { params: GridState };
   resize: { params: ElementSize };
+  viewportInnerSizeChange: { params: ElementSize };
   debouncedResize: { params: ElementSize };
   rowGroupsPreProcessingChange: {};
   preProcessorRegister: { params: GridPreProcessingGroup };

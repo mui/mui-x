@@ -214,5 +214,9 @@
     "description": "Fired when the state of the grid is updated.",
     "params": "GridState"
   },
-  { "name": "unmount", "description": "Fired when the grid is unmounted." }
+  { "name": "unmount", "description": "Fired when the grid is unmounted." },
+  {
+    "name": "viewportInnerSizeChange",
+    "description": "Fired when the inner size of the viewport changes. Called with an ElementSize object."
+  }
 ]

@@ -8,6 +8,10 @@ export enum GridEvents {
    */
   debouncedResize = 'debouncedResize',
   /**
+   * Fired when the inner size of the viewport changes. Called with an [[ElementSize]] object.
+   */
+  viewportInnerSizeChange = 'viewportInnerSizeChange',
+  /**
    * Fired when an exception is thrown in the grid.
    */
   componentError = 'componentError',

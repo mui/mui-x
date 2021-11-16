@@ -30,8 +30,6 @@ interface GridColumnHeaderItemProps {
   sortIndex?: number;
   filterItemsCounter?: number;
   hasFocus?: boolean;
-  hasScrollX: boolean;
-  hasScrollY: boolean;
   tabIndex: 0 | -1;
 }
 
@@ -79,8 +77,6 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
     filterItemsCounter,
     hasFocus,
     tabIndex,
-    hasScrollX,
-    hasScrollY,
     extendRowFullWidth,
   } = props;
   const apiRef = useGridApiContext();
@@ -89,6 +85,10 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
   const columnMenuId = useId();
   const columnMenuButtonId = useId();
   const iconButtonRef = React.useRef<HTMLButtonElement>(null);
+  const { hasScrollX, hasScrollY } = apiRef.current.getRootDimensions() ?? {
+    hasScrollX: false,
+    hasScrollY: false,
+  };
 
   let headerComponent: React.ReactNode = null;
   if (column.renderHeader) {
@@ -250,8 +250,6 @@ GridColumnHeaderItem.propTypes = {
   extendRowFullWidth: PropTypes.bool.isRequired,
   filterItemsCounter: PropTypes.number,
   hasFocus: PropTypes.bool,
-  hasScrollX: PropTypes.bool.isRequired,
-  hasScrollY: PropTypes.bool.isRequired,
   headerHeight: PropTypes.number.isRequired,
   isDragging: PropTypes.bool.isRequired,
   isLastColumn: PropTypes.bool.isRequired,
