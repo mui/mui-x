@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridEvents } from '../../../models/events';
+import { GridEvents, GridEventListener } from '../../../models/events';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import {
   GridCellIndexCoordinates,
@@ -22,7 +22,7 @@ import { GridComponentProps } from '../../../GridComponentProps';
 import { gridVisibleSortedRowEntriesSelector } from '../filter/gridFilterSelector';
 import { useCurrentPageRows } from '../../utils/useCurrentPageRows';
 import { clamp } from '../../../utils/utils';
-import { GridCellParams, GridEventListener } from '../../../models';
+import { GridCellParams } from '../../../models';
 
 const getNextCellIndexes = (key: string, indexes: GridCellIndexCoordinates) => {
   if (!isArrowKeys(key)) {

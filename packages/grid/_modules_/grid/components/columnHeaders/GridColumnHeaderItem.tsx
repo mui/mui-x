@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { unstable_useId as useId } from '@mui/material/utils';
-import { GridEvents } from '../../models/events';
+import { GridEvents, GridColumnHeaderEventLookup } from '../../models/events';
 import { GridStateColDef } from '../../models/colDef/index';
 import { GridSortDirection } from '../../models/gridSortModel';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
@@ -16,7 +16,6 @@ import { GridColumnHeaderMenu } from '../menu/columnMenu/GridColumnHeaderMenu';
 import { getDataGridUtilityClass } from '../../gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { GridComponentProps } from '../../GridComponentProps';
-import { GridColumnHeaderEventLookup } from '../../models';
 
 interface GridColumnHeaderItemProps {
   colIndex: number;

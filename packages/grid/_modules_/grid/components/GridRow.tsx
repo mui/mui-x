@@ -16,7 +16,6 @@ import { GridCellIdentifier } from '../hooks/features/focus/gridFocusState';
 import { GridScrollBarState } from '../models/gridContainerProps';
 import { gridColumnsMetaSelector } from '../hooks/features/columns/gridColumnsSelector';
 import { useGridSelector } from '../hooks/utils/useGridSelector';
-import '../models';
 
 export interface GridRowProps {
   rowId: GridRowId;

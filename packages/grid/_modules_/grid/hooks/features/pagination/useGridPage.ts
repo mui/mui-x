@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridApiRef, GridEventListener } from '../../../models';
+import { GridApiRef } from '../../../models';
 import {
   useGridLogger,
   useGridSelector,
@@ -7,7 +7,7 @@ import {
   useGridApiMethod,
   useGridApiEventHandler,
 } from '../../utils';
-import { GridEvents } from '../../../models/events';
+import { GridEvents, GridEventListener } from '../../../models/events';
 import { GridComponentProps } from '../../../GridComponentProps';
 import { GridPageApi } from '../../../models/api/gridPageApi';
 import { GridPaginationState } from './gridPaginationState';

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { ownerDocument, useEventCallback } from '@mui/material/utils';
 import { GridStateColDef } from '../../../models/colDef';
 import { useGridLogger } from '../../utils';
-import { GridEvents } from '../../../models/events';
+import { GridEvents, GridEventListener } from '../../../models/events';
 import { gridClasses } from '../../../gridClasses';
 import {
   findGridCellElementsFromCol,
@@ -10,12 +10,7 @@ import {
   getFieldFromHeaderElem,
   findHeaderElementFromField,
 } from '../../../utils/domUtils';
-import {
-  GridApiRef,
-  CursorCoordinates,
-  GridColumnResizeParams,
-  GridEventListener,
-} from '../../../models';
+import { GridApiRef, CursorCoordinates, GridColumnResizeParams } from '../../../models';
 import {
   useGridApiEventHandler,
   useGridApiOptionHandler,

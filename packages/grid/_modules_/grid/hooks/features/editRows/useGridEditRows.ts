@@ -216,7 +216,7 @@ export function useGridEditRows(
   );
 
   const setEditCellValue = React.useCallback<GridEditRowApi['setEditCellValue']>(
-    (params: GridEditCellValueParams, event: React.SyntheticEvent | {} = {}) => {
+    (params, event = {}) => {
       const newParams: GridEditCellPropsParams = {
         id: params.id,
         field: params.field,
@@ -376,7 +376,7 @@ export function useGridEditRows(
   );
 
   const commitRowChange = React.useCallback<GridEditRowApi['commitRowChange']>(
-    (id, event = {}): boolean | Promise<boolean> => {
+    (id, event = {}) => {
       if (props.editMode === GridEditModes.Cell) {
         throw new Error(`MUI: You can't commit changes when the edit mode is 'cell'.`);
       }
@@ -492,7 +492,7 @@ export function useGridEditRows(
   );
 
   const preventTextSelection = React.useCallback<GridEventListener<GridEvents.cellMouseDown>>(
-    (params: GridCellParams, event: React.MouseEvent) => {
+    (params, event) => {
       const isMoreThanOneClick = event.detail > 1;
       if (params.isEditable && params.cellMode === GridCellModes.View && isMoreThanOneClick) {
         // If we click more than one time, then we prevent the default behavior of selecting the text cell.
@@ -503,7 +503,7 @@ export function useGridEditRows(
   );
 
   const handleCellKeyDown = React.useCallback<GridEventListener<GridEvents.cellKeyDown>>(
-    async (params: GridCellParams, event) => {
+    async (params, event) => {
       const { id, field, cellMode, isEditable } = params;
       if (!isEditable) {
         return;

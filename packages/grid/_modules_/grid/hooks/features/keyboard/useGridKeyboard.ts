@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { gridClasses } from '../../../gridClasses';
-import { GridEvents } from '../../../models/events';
+import { GridEvents, GridEventListener } from '../../../models/events';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridCellParams } from '../../../models/params/gridCellParams';
 import {
@@ -12,7 +12,6 @@ import { isEnterKey, isNavigationKey, isSpaceKey } from '../../../utils/keyboard
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { GridCellModes } from '../../../models/gridEditRowModel';
 import { gridVisibleSortedRowIdsSelector } from '../filter/gridFilterSelector';
-import { GridEventListener } from '../../../models';
 
 /**
  * @requires useGridSelection (method)

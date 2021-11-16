@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
-import { GridEvents } from '../../../models/events';
+import { GridEvents, GridEventListener } from '../../../models/events';
 import { GridComponentProps } from '../../../GridComponentProps';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridSelectionApi } from '../../../models/api/gridSelectionApi';
@@ -17,7 +17,7 @@ import {
 } from './gridSelectionSelector';
 import { gridPaginatedVisibleSortedGridRowIdsSelector } from '../pagination';
 import { gridVisibleSortedRowIdsSelector } from '../filter/gridFilterSelector';
-import { GRID_CHECKBOX_SELECTION_COL_DEF, GridColDef, GridEventListener } from '../../../models';
+import { GRID_CHECKBOX_SELECTION_COL_DEF, GridColDef } from '../../../models';
 import { getDataGridUtilityClass } from '../../../gridClasses';
 import { useGridStateInit } from '../../utils/useGridStateInit';
 import { useFirstRender } from '../../utils/useFirstRender';

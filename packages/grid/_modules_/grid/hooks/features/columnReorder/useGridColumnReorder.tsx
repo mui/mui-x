@@ -2,7 +2,7 @@ import * as React from 'react';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { GridApiRef } from '../../../models/api/gridApiRef';
-import { GridEvents } from '../../../models/events';
+import { GridEvents, GridEventListener } from '../../../models/events';
 import { getDataGridUtilityClass } from '../../../gridClasses';
 import { CursorCoordinates } from '../../../models/cursorCoordinates';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
@@ -11,7 +11,6 @@ import { useGridState } from '../../utils/useGridState';
 import { gridColumnReorderDragColSelector } from './columnReorderSelector';
 import { GridComponentProps } from '../../../GridComponentProps';
 import { useGridStateInit } from '../../utils/useGridStateInit';
-import { GridEventListener } from '../../../models';
 
 const CURSOR_MOVE_DIRECTION_LEFT = 'left';
 const CURSOR_MOVE_DIRECTION_RIGHT = 'right';

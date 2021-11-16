@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { ownerDocument } from '@mui/material/utils';
-import { GridEvents } from '../../../models/events';
+import { GridEvents, GridEventListener } from '../../../models/events';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridFocusApi } from '../../../models/api/gridFocusApi';
 import { GridRowId } from '../../../models/gridRows';
@@ -12,7 +12,7 @@ import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { GridComponentProps } from '../../../GridComponentProps';
 import { isNavigationKey } from '../../../utils/keyboardUtils';
 import { useGridStateInit } from '../../utils/useGridStateInit';
-import { GridEventListener, MuiBaseEvent } from '../../../models';
+import { MuiBaseEvent } from '../../../models';
 
 /**
  * @requires useGridParamsApi (method)
@@ -50,8 +50,8 @@ export const useGridFocus = (apiRef: GridApiRef, props: Pick<GridComponentProps,
     [apiRef, forceUpdate, logger, setGridState],
   );
 
-  const setColumnHeaderFocus = React.useCallback(
-    (field: string, event: MuiBaseEvent = {}) => {
+  const setColumnHeaderFocus = React.useCallback<GridFocusApi['setColumnHeaderFocus']>(
+    (field, event = {}) => {
       const { cell } = apiRef.current.state.focus;
       if (cell) {
         apiRef.current.publishEvent(
