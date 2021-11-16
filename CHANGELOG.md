@@ -5,7 +5,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## 5.0.0
 
-_Nov 18, 2021_
+_Nov 15, 2021_
 
 🎉 We are execited to introduce [MUI X v5.0.0](https://mui.com/blog/mui-x-v5/) 🎉!
 
