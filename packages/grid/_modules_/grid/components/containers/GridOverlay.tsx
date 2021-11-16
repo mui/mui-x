@@ -57,10 +57,10 @@ export const GridOverlay = React.forwardRef<HTMLDivElement, GridOverlayProps>(fu
     () => apiRef.current.getRootDimensions()?.viewportInnerSize ?? null,
   );
 
-  const handleViewportSizeChange = React.useCallback(
-    () => setViewportInnerSize(apiRef.current.getRootDimensions()?.viewportInnerSize ?? null),
-    [apiRef],
-  );
+  const handleViewportSizeChange = React.useCallback(() => {
+    console.log('Set overlay dimensions');
+    setViewportInnerSize(apiRef.current.getRootDimensions()?.viewportInnerSize ?? null);
+  }, [apiRef]);
 
   useGridApiEventHandler(apiRef, GridEvents.viewportInnerSizeChange, handleViewportSizeChange);
 

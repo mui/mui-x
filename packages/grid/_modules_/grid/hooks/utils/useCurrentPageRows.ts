@@ -5,23 +5,15 @@ import {
   gridPaginatedVisibleSortedGridRowEntriesSelector,
 } from '../features/pagination/gridPaginationSelector';
 import { gridVisibleSortedRowEntriesSelector } from '../features/filter/gridFilterSelector';
-import type { GridApiRef, GridRowEntry } from '../../models';
+import type { GridApiRef, GridRowEntry, GridState } from '../../models';
 import { useGridState } from './useGridState';
 
-/**
- * Compute the list of the rows in the current page
- * - If the pagination is disabled or in server mode, it equals all the visible rows
- * - If the row tree has several layers, it contains up to `state.pageSize` top level rows and all their descendants
- * - If the row tree is flat, it only contains up to `state.pageSize` rows
- */
-export const useCurrentPageRows = (
-  apiRef: GridApiRef,
+export const getCurrentPageRows = (
+  state: GridState,
   props: Pick<GridComponentProps, 'pagination' | 'paginationMode'>,
 ) => {
-  const [state] = useGridState(apiRef);
-
-  let range: { firstRowIndex: number; lastRowIndex: number } | null;
   let rows: GridRowEntry[];
+  let range: { firstRowIndex: number; lastRowIndex: number } | null;
 
   if (props.pagination && props.paginationMode === 'client') {
     range = gridPaginationRowRangeSelector(state);
@@ -35,11 +27,27 @@ export const useCurrentPageRows = (
     }
   }
 
+  return { rows, range };
+};
+
+/**
+ * Compute the list of the rows in the current page
+ * - If the pagination is disabled or in server mode, it equals all the visible rows
+ * - If the row tree has several layers, it contains up to `state.pageSize` top level rows and all their descendants
+ * - If the row tree is flat, it only contains up to `state.pageSize` rows
+ */
+export const useCurrentPageRows = (
+  apiRef: GridApiRef,
+  props: Pick<GridComponentProps, 'pagination' | 'paginationMode'>,
+) => {
+  const [state] = useGridState(apiRef);
+  const response = getCurrentPageRows(state, props);
+
   return React.useMemo(
     () => ({
-      rows,
-      range,
+      rows: response.rows,
+      range: response.range,
     }),
-    [rows, range],
+    [response.rows, response.range],
   );
 };

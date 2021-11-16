@@ -17,7 +17,7 @@ import { GridDimensions, GridDimensionsApi } from './gridDimensionsApi';
 import { gridColumnsTotalWidthSelector } from '../columns';
 import { gridDensityHeaderHeightSelector, gridDensityRowHeightSelector } from '../density';
 import { useGridSelector } from '../../utils';
-import { useCurrentPageRows } from '../../utils/useCurrentPageRows';
+import { getCurrentPageRows } from '../../utils/useCurrentPageRows';
 
 const isTestEnvironment = process.env.NODE_ENV === 'test';
 
@@ -62,7 +62,6 @@ export function useGridDimensions(
   const columnsTotalWidth = useGridSelector(apiRef, gridColumnsTotalWidthSelector);
   const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
   const headerHeight = useGridSelector(apiRef, gridDensityHeaderHeightSelector);
-  const currentPage = useCurrentPageRows(apiRef, props);
 
   const updateGridDimensionsRef = React.useCallback(() => {
     const rootElement = apiRef.current.rootElementRef?.current;
@@ -89,6 +88,10 @@ export function useGridDimensions(
       rootElement.removeChild(scrollDiv);
     }
 
+    const currentPage = getCurrentPageRows(apiRef.current.state, {
+      pagination: props.pagination,
+      paginationMode: props.paginationMode,
+    });
     const pageScrollHeight = currentPage.rows.length * rowHeight;
     const viewportOuterSize: ElementSize = {
       width: rootDimensionsRef.current.width,
@@ -127,9 +130,10 @@ export function useGridDimensions(
     }
   }, [
     apiRef,
-    currentPage.rows,
     props.scrollbarSize,
     props.autoHeight,
+    props.pagination,
+    props.paginationMode,
     headerHeight,
     rowHeight,
     columnsTotalWidth,
@@ -152,12 +156,16 @@ export function useGridDimensions(
       return 0;
     }
 
+    const currentPage = getCurrentPageRows(apiRef.current.state, {
+      pagination: props.pagination,
+      paginationMode: props.paginationMode,
+    });
     const maximumPageSizeWithoutScrollBar = Math.floor(
       dimensions.viewportInnerSize.height / gridDensityRowHeightSelector(apiRef.current.state),
     );
 
     return Math.min(maximumPageSizeWithoutScrollBar, currentPage.rows.length);
-  }, [apiRef, currentPage.rows.length]);
+  }, [apiRef, props.pagination, props.paginationMode]);
 
   const dimensionsApi: GridDimensionsApi = {
     resize,
@@ -216,6 +224,9 @@ export function useGridDimensions(
 
   useEnhancedEffect(() => updateGridDimensionsRef(), [updateGridDimensionsRef]);
 
+  useGridApiOptionHandler(apiRef, GridEvents.visibleRowsSet, updateGridDimensionsRef);
+  useGridApiOptionHandler(apiRef, GridEvents.pageChange, updateGridDimensionsRef);
+  useGridApiOptionHandler(apiRef, GridEvents.pageSizeChange, updateGridDimensionsRef);
   useGridApiEventHandler(apiRef, GridEvents.resize, handleResize);
   useGridApiOptionHandler(apiRef, GridEvents.debouncedResize, props.onResize);
 }
