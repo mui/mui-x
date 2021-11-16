@@ -36,6 +36,7 @@ export default function CellEditServerSidePersistence() {
           id: params.id,
           [params.field]: params.value,
         });
+
         setSnackbar({ children: 'User successfully saved', severity: 'success' });
         setRows((prev) =>
           prev.map((row) => (row.id === params.id ? { ...row, ...response } : row)),
