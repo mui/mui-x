@@ -3,14 +3,20 @@ import { GridApiRef } from '../../../models';
 import { GridComponentProps } from '../../../GridComponentProps';
 import { GridPageSizeApi } from '../../../models/api/gridPageSizeApi';
 import { GridEvents } from '../../../constants/eventsConstants';
-import { useGridLogger, useGridApiMethod, useGridSelector, useGridState } from '../../utils';
-import { unstable_gridContainerSizesSelector } from '../container/gridContainerSizesSelector';
+import {
+  useGridLogger,
+  useGridApiMethod,
+  useGridState,
+  useGridApiEventHandler,
+  useGridSelector,
+} from '../../utils';
 import { useGridStateInit } from '../../utils/useGridStateInit';
 import { gridPageSizeSelector } from './gridPaginationSelector';
+import { gridDensityRowHeightSelector } from '../density';
 
 /**
  * @requires useGridControlState (method)
- * @requires useGridContainerProps (state)
+ * @requires useGridDimensions (event) - can be after
  * @requires useGridFilter (state)
  */
 export const useGridPageSize = (
@@ -18,14 +24,13 @@ export const useGridPageSize = (
   props: Pick<GridComponentProps, 'pageSize' | 'onPageSizeChange' | 'autoPageSize'>,
 ) => {
   const logger = useGridLogger(apiRef, 'useGridPageSize');
+  const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
 
   useGridStateInit(apiRef, (state) => ({
     ...state,
-    pagination: { pageSize: props.pageSize ?? 100 },
+    pagination: { pageSize: props.pageSize ?? (props.autoPageSize ? 0 : 100) },
   }));
   const [, setGridState, forceUpdate] = useGridState(apiRef);
-
-  const containerSizes = useGridSelector(apiRef, unstable_gridContainerSizesSelector);
 
   apiRef.current.unstable_updateControlState({
     stateId: 'pageSize',
@@ -37,6 +42,10 @@ export const useGridPageSize = (
 
   const setPageSize = React.useCallback(
     (pageSize: number) => {
+      if (pageSize === gridPageSizeSelector(apiRef.current.state)) {
+        return;
+      }
+
       logger.debug(`Setting page size to ${pageSize}`);
 
       setGridState((state) => ({
@@ -48,47 +57,36 @@ export const useGridPageSize = (
       }));
       forceUpdate();
     },
-    [setGridState, forceUpdate, logger],
+    [apiRef, setGridState, forceUpdate, logger],
   );
 
   React.useEffect(() => {
-    const autoPageSize = containerSizes?.viewportPageSize;
-    const prevPageSize = apiRef.current.state.pagination.pageSize;
-
-    let pageSize = prevPageSize;
-
-    if (props.pageSize != null) {
-      pageSize = props.pageSize;
-    } else if (props.autoPageSize) {
-      pageSize = autoPageSize ?? 0;
+    if (props.pageSize != null && !props.autoPageSize) {
+      apiRef.current.setPageSize(props.pageSize);
     }
-
-    if (pageSize !== prevPageSize) {
-      if (props.autoPageSize) {
-        apiRef.current.publishEvent(GridEvents.pageSizeChange, autoPageSize);
-      }
-
-      setGridState((state) => ({
-        ...state,
-        pagination: {
-          ...state.pagination,
-          pageSize,
-        },
-      }));
-      forceUpdate();
-    }
-  }, [
-    apiRef,
-    setGridState,
-    forceUpdate,
-    props.autoPageSize,
-    props.pageSize,
-    containerSizes?.viewportPageSize,
-  ]);
+  }, [apiRef, props.autoPageSize, props.pageSize]);
 
   const pageSizeApi: GridPageSizeApi = {
     setPageSize,
   };
 
   useGridApiMethod(apiRef, pageSizeApi, 'GridPageSizeApi');
+
+  const handleUpdateAutoPageSize = React.useCallback(() => {
+    const dimensions = apiRef.current.getRootDimensions();
+    if (!props.autoPageSize || !dimensions) {
+      return;
+    }
+
+    const maximumPageSizeWithoutScrollBar = Math.floor(
+      dimensions.viewportInnerSize.height / rowHeight,
+    );
+    apiRef.current.setPageSize(maximumPageSizeWithoutScrollBar);
+  }, [apiRef, props.autoPageSize, rowHeight]);
+
+  React.useEffect(() => {
+    handleUpdateAutoPageSize();
+  }, [handleUpdateAutoPageSize]);
+
+  useGridApiEventHandler(apiRef, GridEvents.viewportInnerSizeChange, handleUpdateAutoPageSize);
 };

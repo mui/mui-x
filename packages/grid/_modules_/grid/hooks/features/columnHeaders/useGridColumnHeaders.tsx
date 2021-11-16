@@ -6,7 +6,6 @@ import {
   visibleGridColumnsSelector,
   gridColumnsMetaSelector,
 } from '../columns/gridColumnsSelector';
-import { unstable_gridScrollBarSizeSelector } from '../container/gridContainerSizesSelector';
 import {
   gridTabIndexColumnHeaderSelector,
   gridTabIndexCellSelector,
@@ -36,7 +35,6 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
   const apiRef = useGridApiContext();
   const visibleColumns = useGridSelector(apiRef, visibleGridColumnsSelector);
   const columnsMeta = useGridSelector(apiRef, gridColumnsMetaSelector);
-  const scrollBarState = useGridSelector(apiRef, unstable_gridScrollBarSizeSelector);
   const tabIndexState = useGridSelector(apiRef, gridTabIndexColumnHeaderSelector);
   const cellTabIndexState = useGridSelector(apiRef, gridTabIndexCellSelector);
   const columnHeaderFocus = useGridSelector(apiRef, gridFocusColumnHeaderSelector);
@@ -173,8 +171,6 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
           isResizing={resizeCol === column.field}
           isLastColumn={columnIndex === columns.length - 1}
           extendRowFullWidth={!rootProps.disableExtendRowFullWidth}
-          hasScrollX={scrollBarState.hasScrollX}
-          hasScrollY={scrollBarState.hasScrollY}
           hasFocus={hasFocus}
           tabIndex={tabIndex}
         />,

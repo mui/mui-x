@@ -1,6 +1,5 @@
 export * from './colDef';
 export * from './cursorCoordinates';
-export * from './gridContainerProps';
 export * from './elementSize';
 export * from './gridEditRowModel';
 export * from './gridFeatureMode';

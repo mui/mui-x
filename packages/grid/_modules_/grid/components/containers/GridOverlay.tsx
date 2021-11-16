@@ -8,6 +8,8 @@ import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { getDataGridUtilityClass } from '../../gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { GridComponentProps } from '../../GridComponentProps';
+import { useGridApiEventHandler } from '../../hooks/utils/useGridApiEventHandler';
+import { GridEvents } from '../../constants';
 
 export type GridOverlayProps = React.HTMLAttributes<HTMLDivElement>;
 
@@ -50,19 +52,39 @@ export const GridOverlay = React.forwardRef<HTMLDivElement, GridOverlayProps>(fu
   const ownerState = { classes: rootProps.classes };
   const classes = useUtilityClasses(ownerState);
   const headerHeight = useGridSelector(apiRef, gridDensityHeaderHeightSelector);
+  const isMounted = React.useRef(true);
 
-  const windowRef = apiRef.current.windowRef?.current;
-  const verticalScrollbarSize = windowRef ? windowRef.offsetWidth - windowRef.clientWidth : 0;
-  const horizontalScrollbarSize = windowRef ? windowRef.offsetHeight - windowRef.clientHeight : 0;
+  const [viewportInnerSize, setViewportInnerSize] = React.useState(
+    () => apiRef.current.getRootDimensions()?.viewportInnerSize ?? null,
+  );
+
+  // TODO: Remove the `isMounted` check
+  // It is here because our event system does not handle correctly the removal of an event listener during the emit phase.
+  // If you have an event that is listen by 2 listeners, and the 1st one causes the removal of the 2nd one, then the 2nd one will be ran.
+  const handleViewportSizeChangeTest = () => {
+    if (isMounted.current) {
+      setViewportInnerSize(apiRef.current.getRootDimensions()?.viewportInnerSize ?? null);
+    }
+  };
+
+  useGridApiEventHandler(apiRef, GridEvents.viewportInnerSizeChange, handleViewportSizeChangeTest);
+
+  React.useEffect(() => {
+    return () => {
+      isMounted.current = false;
+    };
+  }, []);
 
   return (
     <GridOverlayRoot
       ref={ref}
       className={clsx(classes.root, className)}
       style={{
+        height: viewportInnerSize?.height ?? 0,
+        width: viewportInnerSize?.width ?? 0,
         top: headerHeight,
-        right: verticalScrollbarSize,
-        bottom: horizontalScrollbarSize,
+        position: 'absolute',
+        left: 0,
         ...style,
       }}
       {...other}
