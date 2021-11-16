@@ -7,7 +7,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 _Nov 16, 2021_
 
-A big thanks to the 3 contributors who made this release possible.
+A big thanks to the 1 contributor who made this release possible.
 
 ### `@mui/x-data-grid@v5.0.0-beta.1` / `@mui/x-data-grid-pro@v5.0.0-beta.1`
 
