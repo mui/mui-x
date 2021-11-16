@@ -194,6 +194,10 @@ function escapeCell(value: string) {
     .replace(/\r?\n/g, '<br />');
 }
 
+function escapeHTML(value: string) {
+  return value.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
 function linkify(text: string | undefined, apisToGenerate: string[], format: 'markdown' | 'html') {
   if (text == null) {
     return '';
@@ -340,11 +344,12 @@ function extractEvents(
   allEvents.forEach((event) => {
     const description = linkify(event.comment?.shortText, apisToGenerate, 'html');
     const eventProperties = eventLookup[event.escapedName!];
+
     events.push({
       name: event.escapedName!,
       description: renderMarkdownInline(description),
-      params: eventProperties.params,
-      event: eventProperties.event,
+      params: escapeHTML(linkify(eventProperties.params, apisToGenerate, 'html')),
+      event: escapeHTML(`MuiEvent<${eventProperties.event ?? '{}'}>`),
     });
   });
 

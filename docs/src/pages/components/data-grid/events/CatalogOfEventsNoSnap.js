@@ -9,6 +9,7 @@ import TableHead from '@mui/material/TableHead';
 import TableBody from '@mui/material/TableBody';
 import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
+import Box from '@mui/material/Box';
 import { makeStyles } from '@mui/styles';
 import IconButton from '@mui/material/IconButton';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
@@ -52,9 +53,9 @@ useGridApiEventHandler(GridEvents.${event.name}, onEvent);
   }, [event]);
 
   return (
-    <React.Fragment>
-      <TableRow key={event.name}>
-        <TableCell>
+    <React.Fragment key={event.name}>
+      <TableRow>
+        <TableCell style={{ borderBottom: 'unset' }}>
           <IconButton
             aria-label="expand row"
             size="small"
@@ -63,10 +64,10 @@ useGridApiEventHandler(GridEvents.${event.name}, onEvent);
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
         </TableCell>
-        <TableCell>
+        <TableCell style={{ borderBottom: 'unset' }}>
           <code>{event.name}</code>
         </TableCell>
-        <TableCell>
+        <TableCell style={{ borderBottom: 'unset' }}>
           <div
             dangerouslySetInnerHTML={{
               __html: event.description,
@@ -77,7 +78,7 @@ useGridApiEventHandler(GridEvents.${event.name}, onEvent);
               <Typography variant="subtitle2" component="span">
                 Params:{' '}
               </Typography>
-              <span
+              <code
                 dangerouslySetInnerHTML={{
                   __html: event.params,
                 }}
@@ -89,7 +90,7 @@ useGridApiEventHandler(GridEvents.${event.name}, onEvent);
               <Typography variant="subtitle2" component="span">
                 Event:{' '}
               </Typography>
-              <span
+              <code
                 dangerouslySetInnerHTML={{
                   __html: event.event,
                 }}
@@ -99,9 +100,11 @@ useGridApiEventHandler(GridEvents.${event.name}, onEvent);
         </TableCell>
       </TableRow>
       <TableRow>
-        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={3}>
           <Collapse in={open} timeout="auto" unmountOnExit>
-            <HighlightedCode code={example} language="tsx" />
+            <Box sx={{ margin: 1 }}>
+              <HighlightedCode code={example} language="tsx" />
+            </Box>
           </Collapse>
         </TableCell>
       </TableRow>
