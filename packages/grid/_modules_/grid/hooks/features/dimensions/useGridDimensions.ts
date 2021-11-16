@@ -59,12 +59,12 @@ export function useGridDimensions(
   const warningShown = React.useRef(false);
   const rootDimensionsRef = React.useRef<ElementSize | null>(null);
   const fullDimensionsRef = React.useRef<GridDimensions | null>(null);
-  const columnsTotalWidth = useGridSelector(apiRef, gridColumnsTotalWidthSelector);
   const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
   const headerHeight = useGridSelector(apiRef, gridDensityHeaderHeightSelector);
 
   const updateGridDimensionsRef = React.useCallback(() => {
     const rootElement = apiRef.current.rootElementRef?.current;
+    const columnsTotalWidth = gridColumnsTotalWidthSelector(apiRef.current.state);
 
     if (!rootDimensionsRef.current) {
       return;
@@ -136,7 +136,6 @@ export function useGridDimensions(
     props.paginationMode,
     headerHeight,
     rowHeight,
-    columnsTotalWidth,
   ]);
 
   const resize = React.useCallback<GridDimensionsApi['resize']>(() => {
@@ -227,6 +226,7 @@ export function useGridDimensions(
   useGridApiOptionHandler(apiRef, GridEvents.visibleRowsSet, updateGridDimensionsRef);
   useGridApiOptionHandler(apiRef, GridEvents.pageChange, updateGridDimensionsRef);
   useGridApiOptionHandler(apiRef, GridEvents.pageSizeChange, updateGridDimensionsRef);
+  useGridApiOptionHandler(apiRef, GridEvents.columnsChange, updateGridDimensionsRef);
   useGridApiEventHandler(apiRef, GridEvents.resize, handleResize);
   useGridApiOptionHandler(apiRef, GridEvents.debouncedResize, props.onResize);
 }
