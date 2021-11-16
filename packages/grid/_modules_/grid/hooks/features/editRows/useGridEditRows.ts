@@ -114,13 +114,13 @@ export function useGridEditRows(
   );
 
   const handleColumnHeaderDragStart: GridEventListener<GridEvents.columnHeaderDragEnter> =
-    useEventCallback((headerParams, nativeEvent) => {
+    useEventCallback(() => {
       const { cell } = apiRef.current.state.focus;
-        if (!cell) {
+      if (!cell) {
         return;
       }
       const params = apiRef.current.getCellParams(cell.id, cell.field);
-      commitPropsAndExit(params, nativeEvent);
+      commitPropsAndExit(params, {});
     });
 
   const setCellMode = React.useCallback<GridEditRowApi['setCellMode']>(
