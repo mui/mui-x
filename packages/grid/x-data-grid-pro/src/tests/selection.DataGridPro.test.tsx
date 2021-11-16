@@ -2,13 +2,7 @@ import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { getCell, getColumnValues, getRow, getRows } from 'test/utils/helperFn';
-import {
-  // @ts-expect-error need to migrate helpers to TypeScript
-  screen,
-  createClientRenderStrictMode,
-  // @ts-expect-error need to migrate helpers to TypeScript
-  fireEvent,
-} from 'test/utils';
+import { createRenderer, fireEvent, screen } from '@material-ui/monorepo/test/utils';
 import {
   GridApiRef,
   useGridApiRef,
@@ -32,8 +26,7 @@ function getSelectedRowIds() {
 }
 
 describe('<DataGridPro /> - Selection', () => {
-  // TODO v5: replace with createClientRender
-  const render = createClientRenderStrictMode();
+  const { render } = createRenderer();
 
   let apiRef: GridApiRef;
 

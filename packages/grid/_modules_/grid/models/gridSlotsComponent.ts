@@ -14,7 +14,7 @@ export interface GridSlotsComponent extends GridIconSlotsComponent {
    * The custom Checkbox component used in the grid for both header and cells.
    * @default Checkbox
    */
-  Checkbox: React.JSXElementConstructor<any>;
+  BaseCheckbox: React.JSXElementConstructor<any>;
   /**
    * Column menu component rendered by clicking on the 3 dots "kebab" icon in column headers.
    * @default GridColumnMenu

@@ -10,7 +10,7 @@ export const GRID_NUMERIC_COL_DEF: GridColTypeDef = {
   align: 'right',
   headerAlign: 'right',
   sortComparator: gridNumberComparer,
-  valueParser: (value) => Number(value),
+  valueParser: (value) => (value === '' ? null : Number(value)),
   valueFormatter: ({ value }) => (value && isNumber(value) && value.toLocaleString()) || value,
   filterOperators: getGridNumericColumnOperators(),
 };

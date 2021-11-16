@@ -1,11 +1,5 @@
 import * as React from 'react';
-import {
-  createClientRenderStrictMode,
-  // @ts-ignore
-  fireEvent,
-  // @ts-ignore
-  screen,
-} from 'test/utils';
+import { createRenderer, fireEvent, screen, waitFor } from '@material-ui/monorepo/test/utils';
 import { expect } from 'chai';
 import {
   DataGridPro,
@@ -24,8 +18,7 @@ import { getCell, getColumnHeaderCell, getRow } from 'test/utils/helperFn';
 import { spy } from 'sinon';
 
 describe('<DataGridPro /> - Events Params', () => {
-  // TODO v5: replace with createClientRender
-  const render = createClientRenderStrictMode();
+  const { render } = createRenderer();
 
   const baselineProps: { rows: GridRowsProp; columns: GridColumns } = {
     rows: [
@@ -227,7 +220,7 @@ describe('<DataGridPro /> - Events Params', () => {
       expect(cell).not.to.have.class(gridClasses['row--editing']);
     });
 
-    it('should allow to prevent the default behavior while allowing the event to propagate', () => {
+    it('should allow to prevent the default behavior while allowing the event to propagate', async () => {
       const handleEditCellPropsChange = spy((params, event) => {
         event.defaultMuiPrevented = true;
       });
@@ -239,7 +232,9 @@ describe('<DataGridPro /> - Events Params', () => {
       fireEvent.change(input, { target: { value: 'Lisa' } });
       expect(handleEditCellPropsChange.callCount).to.equal(1);
       fireEvent.keyDown(input, { key: 'Enter' });
-      expect(cell).to.have.text('Jack');
+      await waitFor(() => {
+        expect(cell).to.have.text('Jack');
+      });
     });
 
     it('should select a row by default', () => {

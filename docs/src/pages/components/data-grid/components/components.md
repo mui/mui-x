@@ -43,11 +43,11 @@ They can be used as below:
 ```tsx
 function CustomPagination() {
   const apiRef = useGridApiContext();
-  const paginationState = useGridSelector(apiRef, gridPaginationSelector());
+  const paginationState = useGridSelector(apiRef, gridPaginationSelector);
 
   return (
     <Pagination
-      count={state.pagination.pageCount}
+      count={paginationState.pageCount}
       page={paginationState.page + 1}
       onChange={(event, value) => apiRef.current.setPage(value - 1)}
     />

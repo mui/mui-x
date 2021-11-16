@@ -1,12 +1,11 @@
 import * as React from 'react';
 import { GridApiRef } from '../../models/api/gridApiRef';
-import { GridListener, GridSubscribeEventOptions } from '../../utils/eventEmitter/GridEventEmitter';
 import { useGridLogger } from '../utils/useGridLogger';
 import { GridEvents } from '../../constants/eventsConstants';
 import { useGridApiMethod } from '../utils/useGridApiMethod';
 import { GridSignature } from '../utils/useGridApiEventHandler';
 import { GridComponentProps } from '../../GridComponentProps';
-import { MuiEvent } from '../../models/muiEvent';
+import { GridCoreApi } from '../../models';
 
 const isSyntheticEvent = (event: any): event is React.SyntheticEvent => {
   return event.isPropagationStopped !== undefined;
@@ -18,41 +17,41 @@ export function useGridApiInitialization(
 ): void {
   const logger = useGridLogger(apiRef, 'useApi');
 
-  const publishEvent = React.useCallback(
-    (name: string, params: any, event: MuiEvent = {}) => {
+  const publishEvent = React.useCallback<GridCoreApi['publishEvent']>(
+    (...args: any[]) => {
+      const [name, params, event = {}] = args;
       event.defaultMuiPrevented = false;
-      if (event && isSyntheticEvent(event) && event.isPropagationStopped()) {
+
+      if (isSyntheticEvent(event) && event.isPropagationStopped()) {
         return;
       }
       const details = props.signature === GridSignature.DataGridPro ? { api: apiRef.current } : {};
-      apiRef.current.emit(name, params, event, details);
+      apiRef.current.unstable_eventManager.emit(name, params, event, details);
     },
     [apiRef, props.signature],
   );
 
-  const subscribeEvent = React.useCallback(
-    <Params, Event extends MuiEvent>(
-      event: string,
-      handler: GridListener<Params, Event>,
-      options?: GridSubscribeEventOptions,
-    ): (() => void) => {
+  const subscribeEvent = React.useCallback<GridCoreApi['subscribeEvent']>(
+    (event, handler, options?) => {
       logger.debug(`Binding ${event} event`);
-      apiRef.current.on(event, handler, options);
+      apiRef.current.unstable_eventManager.on(event, handler, options);
       const api = apiRef.current;
       return () => {
         logger.debug(`Clearing ${event} event`);
-        api.removeListener(event, handler);
+        api.unstable_eventManager.removeListener(event, handler);
       };
     },
     [apiRef, logger],
   );
 
-  const showError = React.useCallback(
+  const showError = React.useCallback<GridCoreApi['showError']>(
     (args) => {
       apiRef.current.publishEvent(GridEvents.componentError, args);
     },
     [apiRef],
   );
+
+  useGridApiMethod(apiRef, { subscribeEvent, publishEvent, showError }, 'GridCoreApi');
 
   React.useEffect(() => {
     logger.debug('Initializing grid api.');
@@ -61,9 +60,7 @@ export function useGridApiInitialization(
     return () => {
       logger.info('Unmounting Grid component. Clearing all events listeners.');
       api.publishEvent(GridEvents.unmount);
-      api.removeAllListeners();
+      api.unstable_eventManager.removeAllListeners();
     };
   }, [logger, apiRef]);
-
-  useGridApiMethod(apiRef, { subscribeEvent, publishEvent, showError }, 'GridCoreApi');
 }

@@ -1,12 +1,7 @@
 import * as React from 'react';
 import { createTheme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
-import {
-  DataGrid,
-  GridColumns,
-  GridEditRowsModel,
-  GridRowsProp,
-} from '@mui/x-data-grid';
+import { DataGrid, GridColumns, GridRowsProp } from '@mui/x-data-grid';
 import {
   randomCreatedDate,
   randomEmail,
@@ -42,39 +37,27 @@ function validateEmail(email) {
 }
 
 export default function ValidateRowModelControlGrid() {
-  const [editRowsModel, setEditRowsModel] = React.useState<GridEditRowsModel>({});
   const classes = useStyles();
-
-  const handleEditRowsModelChange = React.useCallback(
-    (newModel: GridEditRowsModel) => {
-      const updatedModel = { ...newModel };
-      Object.keys(updatedModel).forEach((id) => {
-        if (updatedModel[id].email) {
-          const isValid = validateEmail(updatedModel[id].email.value);
-          updatedModel[id].email = { ...updatedModel[id].email, error: !isValid };
-        }
-      });
-      setEditRowsModel(updatedModel);
-    },
-    [],
-  );
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <DataGrid
-        className={classes.root}
-        rows={rows}
-        columns={columns}
-        editRowsModel={editRowsModel}
-        onEditRowsModelChange={handleEditRowsModelChange}
-      />
+      <DataGrid className={classes.root} rows={rows} columns={columns} />
     </div>
   );
 }
 
 const columns: GridColumns = [
   { field: 'name', headerName: 'Name', width: 180, editable: true },
-  { field: 'email', headerName: 'Email', width: 200, editable: true },
+  {
+    field: 'email',
+    headerName: 'Email',
+    width: 200,
+    editable: true,
+    preProcessEditCellProps: (params) => {
+      const isValid = validateEmail(params.props.value);
+      return { ...params.props, error: !isValid };
+    },
+  },
   {
     field: 'dateCreated',
     headerName: 'Date Created',

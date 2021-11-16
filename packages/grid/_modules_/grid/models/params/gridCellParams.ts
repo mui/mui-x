@@ -121,3 +121,21 @@ export interface GridValueFormatterParams {
    */
   api: any;
 }
+
+/**
+ * Object passed as parameter in the column [[GridColDef]] edit cell props change callback.
+ */
+export interface GridPreProcessEditCellProps {
+  /**
+   * The grid row id.
+   */
+  id: GridRowId;
+  /**
+   * The row that is being editted.
+   */
+  row: GridRowModel;
+  /**
+   * The edit cell props.
+   */
+  props: GridEditCellProps;
+}

@@ -25,7 +25,7 @@ You can subscribe to one of the [events emitted](/components/data-grid/events/#c
 subscribeEvent: (
   event: string,
   handler: (params: any, event: MuiEvent, details: GridCallbackDetails) => void,
-  options?: GridSubscribeEventOptions,
+  options?: EventListenerOptions,
 ) => () => void;
 ```
 

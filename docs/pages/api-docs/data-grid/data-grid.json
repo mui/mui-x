@@ -86,7 +86,11 @@
     "onColumnResize": { "type": { "name": "func" } },
     "onColumnVisibilityChange": { "type": { "name": "func" } },
     "onColumnWidthChange": { "type": { "name": "func" } },
-    "onEditCellPropsChange": { "type": { "name": "func" } },
+    "onEditCellPropsChange": {
+      "type": { "name": "func" },
+      "deprecated": true,
+      "deprecationInfo": "use <code>preProcessEditCellProps</code> from the <a href=\"/api/data-grid/grid-col-def/\"><code>GridColDef</code></a>"
+    },
     "onEditRowsModelChange": { "type": { "name": "func" } },
     "onError": { "type": { "name": "func" } },
     "onFilterModelChange": { "type": { "name": "func" } },
@@ -140,10 +144,10 @@
     }
   },
   "slots": {
+    "BaseCheckbox": { "default": "Checkbox", "type": { "name": "elementType" } },
     "BooleanCellFalseIcon": { "default": "GridCloseIcon", "type": { "name": "elementType" } },
     "BooleanCellTrueIcon": { "default": "GridCheckIcon", "type": { "name": "elementType" } },
     "Cell": { "type": { "name": "elementType" } },
-    "Checkbox": { "default": "Checkbox", "type": { "name": "elementType" } },
     "ColumnFilteredIcon": { "default": "GridFilterAltIcon", "type": { "name": "elementType" } },
     "ColumnMenu": { "default": "GridColumnMenu", "type": { "name": "elementType" } },
     "ColumnMenuIcon": {

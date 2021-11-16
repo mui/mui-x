@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { GridApiRef } from '../../models/api/gridApiRef';
 import { GridApi } from '../../models/api/gridApi';
-import { GridEventEmitter } from '../../utils/eventEmitter/GridEventEmitter';
+import { EventManager } from '../../utils/EventManager';
 
 // Public developers facing overload
 export function useGridApiRef(): GridApiRef;
@@ -18,7 +18,9 @@ export function useGridApiRef(...args): any {
   const apiRef = React.useRef<GridApi>();
 
   if (!apiRef.current) {
-    apiRef.current = new GridEventEmitter() as GridApi;
+    apiRef.current = {
+      unstable_eventManager: new EventManager(),
+    } as GridApi;
   }
 
   React.useImperativeHandle(apiRefProp, () => apiRef.current, [apiRef]);

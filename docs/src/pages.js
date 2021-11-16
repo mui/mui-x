@@ -31,6 +31,7 @@ dataGridComponent.children = [
   },
   { pathname: '/components/data-grid/demo' },
   { pathname: '/components/data-grid/getting-started' },
+  { pathname: '/components/data-grid/migration-v4', title: 'Migration From v4' },
   { pathname: '/components/data-grid/layout' },
   { pathname: '/components/data-grid/columns' },
   { pathname: '/components/data-grid/rows' },

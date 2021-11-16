@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataGrid, GridRenderCellParams, useGridApiRef } from '@mui/x-data-grid';
+import { DataGrid, GridRenderCellParams } from '@mui/x-data-grid';
 import { GridCellParams } from '../../../_modules_/grid/models/params/gridCellParams';
 
 const TestRenderCellParams = () => {

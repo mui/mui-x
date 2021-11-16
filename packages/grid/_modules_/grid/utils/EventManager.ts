@@ -1,33 +1,28 @@
-export type Listener = (...args: any[]) => void;
+export type EventListener = (...args: any[]) => void;
+export interface EventListenerOptions {
+  isFirst?: boolean;
+}
 
 // Used https://gist.github.com/mudge/5830382 as a starting point.
 // See https://github.com/browserify/events/blob/master/events.js for
 // the Node.js (https://nodejs.org/api/events.html) polyfill used by webpack.
-export class EventEmitter {
-  /**
-   * @ignore - do not document.
-   */
+export class EventManager {
   maxListeners = 10;
 
-  /**
-   * @ignore - do not document.
-   */
   warnOnce = false;
 
-  /**
-   * @ignore - do not document.
-   */
-  events: { [key: string]: Listener[] } = {};
+  events: { [key: string]: EventListener[] } = {};
 
-  /**
-   * @ignore - do not document.
-   */
-  on(eventName: string, listener: Listener): void {
+  on(eventName: string, listener: EventListener, options: EventListenerOptions = {}): void {
     if (!Array.isArray(this.events[eventName])) {
       this.events[eventName] = [];
     }
 
-    this.events[eventName].push(listener);
+    if (options.isFirst) {
+      this.events[eventName].splice(0, 0, listener);
+    } else {
+      this.events[eventName].push(listener);
+    }
 
     if (process.env.NODE_ENV !== 'production') {
       if (this.events[eventName].length > this.maxListeners && this.warnOnce === false) {
@@ -42,10 +37,7 @@ export class EventEmitter {
     }
   }
 
-  /**
-   * @ignore - do not document.
-   */
-  removeListener(eventName: string, listener: Listener): void {
+  removeListener(eventName: string, listener: EventListener): void {
     if (Array.isArray(this.events[eventName])) {
       const idx = this.events[eventName].indexOf(listener);
 
@@ -55,9 +47,6 @@ export class EventEmitter {
     }
   }
 
-  /**
-   * @ignore - do not document.
-   */
   removeAllListeners(eventName?: string): void {
     if (!eventName) {
       this.events = {};
@@ -66,9 +55,6 @@ export class EventEmitter {
     }
   }
 
-  /**
-   * @ignore - do not document.
-   */
   emit(eventName: string, ...args: any[]): void {
     if (Array.isArray(this.events[eventName])) {
       const listeners = this.events[eventName].slice();
@@ -80,10 +66,7 @@ export class EventEmitter {
     }
   }
 
-  /**
-   * @ignore - do not document.
-   */
-  once(eventName: string, listener: Listener): void {
+  once(eventName: string, listener: EventListener): void {
     // eslint-disable-next-line consistent-this
     const that = this;
     this.on(eventName, function oneTimeListener(...args) {

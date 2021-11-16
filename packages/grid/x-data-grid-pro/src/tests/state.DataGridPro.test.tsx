@@ -1,6 +1,5 @@
 import * as React from 'react';
-// @ts-expect-error need to migrate helpers to TypeScript
-import { fireEvent, screen, createClientRenderStrictMode } from 'test/utils';
+import { createRenderer, fireEvent, screen } from '@material-ui/monorepo/test/utils';
 import { getColumnValues } from 'test/utils/helperFn';
 import { expect } from 'chai';
 import { DataGridPro, useGridApiRef } from '@mui/x-data-grid-pro';
@@ -8,8 +7,7 @@ import { DataGridPro, useGridApiRef } from '@mui/x-data-grid-pro';
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<DataGridPro /> - State', () => {
-  // TODO v5: replace with createClientRender
-  const render = createClientRenderStrictMode();
+  const { render } = createRenderer();
 
   const baselineProps = {
     autoHeight: isJSDOM,
