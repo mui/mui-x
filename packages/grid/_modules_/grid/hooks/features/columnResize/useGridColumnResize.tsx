@@ -308,7 +308,7 @@ export const useGridColumnResize = (
     doc.removeEventListener('touchend', handleTouchEnd);
   }, [apiRef, handleResizeMouseMove, handleResizeMouseUp, handleTouchMove, handleTouchEnd]);
 
-  const handleResizeStart = React.useCallback(
+  const handleResizeStart = React.useCallback<GridEventListener<GridEvents.columnResizeStart>>(
     ({ field }) => {
       setGridState((state) => ({
         ...state,
@@ -319,7 +319,7 @@ export const useGridColumnResize = (
     [setGridState, forceUpdate],
   );
 
-  const handleResizeStop = React.useCallback(() => {
+  const handleResizeStop = React.useCallback<GridEventListener<GridEvents.columnResizeStop>>(() => {
     setGridState((state) => ({
       ...state,
       columnResize: { ...state.columnResize, resizingColumnField: '' },

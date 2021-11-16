@@ -89,8 +89,8 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
     [columnsMeta.positions, rootProps.columnBuffer],
   );
 
-  const handleScroll = React.useCallback(
-    ({ left, renderContext: nextRenderContext }) => {
+  const handleScroll = React.useCallback<GridEventListener<GridEvents.rowsScroll>>(
+    ({ left, renderContext: nextRenderContext = null }) => {
       if (!innerRef.current) {
         return;
       }
@@ -108,7 +108,9 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
       }
 
       // Pass directly the render context to avoid waiting for the next render
-      updateInnerPosition(nextRenderContext);
+      if (nextRenderContext) {
+        updateInnerPosition(nextRenderContext);
+      }
     },
     [updateInnerPosition],
   );

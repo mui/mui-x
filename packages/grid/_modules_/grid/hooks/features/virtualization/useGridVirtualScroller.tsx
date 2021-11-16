@@ -13,7 +13,7 @@ import { gridFocusCellSelector, gridTabIndexCellSelector } from '../focus/gridFo
 import { gridEditRowsStateSelector } from '../editRows/gridEditRowsSelector';
 import { unstable_gridScrollBarSizeSelector } from '../container/gridContainerSizesSelector';
 import { useCurrentPageRows } from '../../utils/useCurrentPageRows';
-import { GridEvents } from '../../../models/events';
+import { GridEventListener, GridEvents } from '../../../models/events';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { GridRenderContext } from '../../../models';
 
@@ -131,7 +131,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     apiRef.current.publishEvent(GridEvents.rowsScroll, params);
   }, [apiRef, computeRenderContext, containerWidth]);
 
-  const handleResize = React.useCallback(() => {
+  const handleResize = React.useCallback<GridEventListener<GridEvents.resize>>(() => {
     if (rootRef.current) {
       setContainerWidth(rootRef.current.clientWidth);
     }
