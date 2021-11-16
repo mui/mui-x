@@ -321,6 +321,18 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the virtualization render zone"
     },
+    "pinnedColumns": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the pinned columns"
+    },
+    "pinnedColumns--left": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the left pinned columns"
+    },
+    "pinnedColumns--right": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the right pinned columns"
+    },
     "root": { "description": "Styles applied to the root element." },
     "row--editable": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",

@@ -100,6 +100,11 @@ const ptBRGrid: Partial<GridLocaleText> = {
 
   // Actions cell more text
   actionsCellMore: 'mais',
+
+  // Column pinning text
+  pinToLeft: 'Fixar à esquerda',
+  pinToRight: 'Fixar à direita',
+  unpin: 'Desafixar',
 };
 
 export const ptBR: Localization = getGridLocalization(ptBRGrid, ptBRCore);

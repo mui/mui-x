@@ -794,6 +794,7 @@ async function run(argv: { outputDirectory?: string }) {
     'GridPrintExportOptions',
     'GridScrollApi',
     'GridEditRowApi',
+    'GridColumnPinningApi',
     'GridEvents',
   ];
 

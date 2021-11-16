@@ -124,6 +124,14 @@
     "description": "Fired when the row turns back to view mode. Called with a <a href=\"/api/data-grid/grid-cell-params/\">GridCellParams</a> object."
   },
   {
+    "name": "rowMouseEnter",
+    "description": "Fired when the mouse enters the row. Called with a <a href=\"/api/data-grid/grid-row-params/\">GridRowParams</a> object."
+  },
+  {
+    "name": "rowMouseLeave",
+    "description": "Fired when the mouse leaves the row. Called with a <a href=\"/api/data-grid/grid-row-params/\">GridRowParams</a> object."
+  },
+  {
     "name": "rowSelectionCheckboxChange",
     "description": "Fired when the value of the selection checkbox of a row is changed\nCalled with a GridRowSelectionCheckboxParams object."
   },

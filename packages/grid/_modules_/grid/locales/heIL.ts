@@ -103,6 +103,11 @@ const heILGrid: Partial<GridLocaleText> = {
 
   // Actions cell more text
   actionsCellMore: 'עוד',
+
+  // Column pinning text
+  // pinToLeft: 'Pin to left',
+  // pinToRight: 'Pin to right',
+  // unpin: 'Unpin',
 };
 
 export const heIL: Localization = getGridLocalization(heILGrid, heILCore);

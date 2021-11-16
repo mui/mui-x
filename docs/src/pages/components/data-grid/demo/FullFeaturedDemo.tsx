@@ -344,6 +344,7 @@ export default function FullFeaturedDemo() {
         loading={loading}
         checkboxSelection
         disableSelectionOnClick
+        initialState={{ pinnedColumns: { left: ['__check__', 'desk'] } }}
         {...pagination}
       />
     </div>

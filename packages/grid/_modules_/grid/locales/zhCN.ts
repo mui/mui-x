@@ -101,6 +101,11 @@ const zhCNGrid: Partial<GridLocaleText> = {
 
   // Used core components translation keys
   MuiTablePagination: {},
+
+  // Column pinning text
+  // pinToLeft: 'Pin to left',
+  // pinToRight: 'Pin to right',
+  // unpin: 'Unpin',
 };
 
 export const zhCN: Localization = getGridLocalization(zhCNGrid, zhCNCore);

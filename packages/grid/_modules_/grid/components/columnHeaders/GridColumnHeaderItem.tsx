@@ -31,6 +31,7 @@ interface GridColumnHeaderItemProps {
   filterItemsCounter?: number;
   hasFocus?: boolean;
   tabIndex: 0 | -1;
+  disableReorder?: false;
 }
 
 type OwnerState = GridColumnHeaderItemProps & {
@@ -78,6 +79,7 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
     hasFocus,
     tabIndex,
     extendRowFullWidth,
+    disableReorder,
   } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
@@ -204,7 +206,7 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
     >
       <div
         className={classes.draggableContainer}
-        draggable={!rootProps.disableColumnReorder && !column.disableReorder}
+        draggable={!rootProps.disableColumnReorder && !disableReorder && !column.disableReorder}
         {...draggableEventHandlers}
       >
         <div className={classes.titleContainer}>

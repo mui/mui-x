@@ -94,6 +94,11 @@ const koKRGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: '참',
   booleanCellFalseLabel: '거짓',
+
+  // Column pinning text
+  // pinToLeft: 'Pin to left',
+  // pinToRight: 'Pin to right',
+  // unpin: 'Unpin',
 };
 
 export const koKR: Localization = getGridLocalization(koKRGrid, koKRCore);

@@ -1,7 +1,6 @@
 export * from './base';
 export * from './cell';
 export * from './containers';
-export * from './columnHeaders';
 export * from './columnSelection';
 export * from './icons';
 export * from './menu';

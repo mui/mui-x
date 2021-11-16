@@ -92,6 +92,11 @@ const jaJPGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: '真',
   booleanCellFalseLabel: '偽',
+
+  // Column pinning text
+  // pinToLeft: 'Pin to left',
+  // pinToRight: 'Pin to right',
+  // unpin: 'Unpin',
 };
 
 export const jaJP: Localization = getGridLocalization(jaJPGrid, jaJPCore);

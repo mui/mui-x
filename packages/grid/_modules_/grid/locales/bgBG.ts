@@ -83,6 +83,11 @@ const bgBGGrid: Partial<GridLocaleText> = {
   // Total visible rows footer text
   // footerTotalVisibleRows: (visibleCount, totalCount) =>
   //   `${visibleCount.toLocaleString()} of ${totalCount.toLocaleString()}`,
+
+  // Column pinning text
+  // pinToLeft: 'Pin to left',
+  // pinToRight: 'Pin to right',
+  // unpin: 'Unpin',
 };
 
 export const bgBG: Localization = getGridLocalization(bgBGGrid, bgBGCore);

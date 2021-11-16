@@ -20,6 +20,7 @@ import type {
   GridFilterState,
   GridFilterInitialState,
 } from '../hooks/features/filter/gridFilterState';
+import { GridColumnPinningState } from '../hooks/features/columnPinning/gridColumnPinningState';
 
 export interface GridState {
   rows: GridRowsState;
@@ -37,10 +38,12 @@ export interface GridState {
   preferencePanel: GridPreferencePanelState;
   density: GridDensityState;
   error?: any;
+  pinnedColumns: GridColumnPinningState;
 }
 
 export interface GridInitialState {
   sorting?: GridSortingInitialState;
   filter?: GridFilterInitialState;
   preferencePanel?: GridPreferencePanelInitialState;
+  pinnedColumns?: GridColumnPinningState;
 }

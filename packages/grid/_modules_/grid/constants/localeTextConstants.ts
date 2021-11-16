@@ -105,6 +105,11 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
   // Actions cell more text
   actionsCellMore: 'more',
 
+  // Column pinning text
+  pinToLeft: 'Pin to left',
+  pinToRight: 'Pin to right',
+  unpin: 'Unpin',
+
   // Used core components translation keys
   MuiTablePagination: {},
 };

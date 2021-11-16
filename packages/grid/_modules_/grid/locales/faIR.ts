@@ -108,6 +108,11 @@ const faIRGrid: Partial<GridLocaleText> = {
 
   // Used core components translation keys
   MuiTablePagination: {},
+
+  // Column pinning text
+  // pinToLeft: 'Pin to left',
+  // pinToRight: 'Pin to right',
+  // unpin: 'Unpin',
 };
 
 export const faIR: Localization = getGridLocalization(faIRGrid, faIRCore);

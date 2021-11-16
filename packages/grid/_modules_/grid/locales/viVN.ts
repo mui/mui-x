@@ -91,6 +91,11 @@ const viVNGrid: Partial<GridLocaleText> = {
 
   // Actions cell more text
   actionsCellMore: 'Thêm',
+
+  // Column pinning text
+  // pinToLeft: 'Pin to left',
+  // pinToRight: 'Pin to right',
+  // unpin: 'Unpin',
 };
 
 export const viVN: Localization = getGridLocalization(viVNGrid, viVNCore);

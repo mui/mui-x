@@ -26,6 +26,7 @@ import { useGridSorting } from '../../_modules_/grid/hooks/features/sorting/useG
 import { useGridScroll } from '../../_modules_/grid/hooks/features/scroll/useGridScroll';
 import { useGridEvents } from '../../_modules_/grid/hooks/features/events/useGridEvents';
 import { useGridDimensions } from '../../_modules_/grid/hooks/features/dimensions/useGridDimensions';
+import { useGridColumnPinning } from '../../_modules_/grid/hooks/features/columnPinning/useGridColumnPinning';
 
 export const useDataGridProComponent = (apiRef: GridApiRef, props: GridComponentProps) => {
   useGridInitialization(apiRef, props);
@@ -52,5 +53,6 @@ export const useDataGridProComponent = (apiRef: GridApiRef, props: GridComponent
   useGridPrintExport(apiRef, props);
   useGridClipboard(apiRef);
   useGridDimensions(apiRef, props);
+  useGridColumnPinning(apiRef, props);
   useGridEvents(apiRef, props);
 };

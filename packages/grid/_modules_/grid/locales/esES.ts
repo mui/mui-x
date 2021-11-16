@@ -93,6 +93,11 @@ const esESGrid: Partial<GridLocaleText> = {
 
   // Actions cell more text
   actionsCellMore: 'más',
+
+  // Column pinning text
+  // pinToLeft: 'Pin to left',
+  // pinToRight: 'Pin to right',
+  // unpin: 'Unpin',
 };
 
 export const esES: Localization = getGridLocalization(esESGrid, esESCore);

@@ -30,6 +30,7 @@ import { GridColumnVisibilityChangeParams } from './models/params/gridColumnVisi
 import { GridSlotsComponentsProps } from './models/gridSlotsComponentsProps';
 import { GridClasses } from './gridClasses';
 import { GridCallbackDetails } from './models/api/gridCallbackDetails';
+import { GridPinnedColumns } from './models/api/gridColumnPinningApi';
 
 /**
  * The grid component react props before applying the default values.
@@ -395,7 +396,6 @@ interface GridComponentOtherProps {
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onPageSizeChange?: (pageSize: number, details: GridCallbackDetails) => void;
-
   /**
    * Set the edit rows model of the grid.
    */
@@ -439,6 +439,16 @@ interface GridComponentOtherProps {
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onSortModelChange?: (model: GridSortModel, details: GridCallbackDetails) => void;
+  /**
+   * The column fields to display pinned to left or right.
+   */
+  pinnedColumns?: GridPinnedColumns;
+  /**
+   * Callback fired when the pinned columns are changed.
+   * @param {GridPinnedColumns} pinnedColumns The changed pinned columns.
+   * @param {GridCallbackDetails} details Additional details for this callback.
+   */
+  onPinnedColumnsChange?: (pinnedColumns: GridPinnedColumns, details: GridCallbackDetails) => void;
   /**
    * The label of the grid.
    */

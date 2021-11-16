@@ -47,7 +47,7 @@ function GridBody(props: GridBodyProps) {
     setIsVirtualizationDisabled(false);
   }, []);
 
-  // The `useGridStateInit` hook can't be used here, because it only installs the
+  // The `useGridApiMethod` hook can't be used here, because it only installs the
   // method if it doesn't exist yet. Once installed, it's never updated again.
   // This break the methods above, since their closure comes from the first time
   // they were installed. Which means that calling `setIsVirtualizationDisabled`
@@ -56,13 +56,13 @@ function GridBody(props: GridBodyProps) {
   apiRef.current.unstable_disableVirtualization = disableVirtualization;
   apiRef.current.unstable_enableVirtualization = enableVirtualization;
 
-  const columnsHeaderRef = React.useRef<HTMLDivElement>(null);
+  const columnHeadersRef = React.useRef<HTMLDivElement>(null);
   const columnsContainerRef = React.useRef<HTMLDivElement>(null);
   const windowRef = React.useRef<HTMLDivElement>(null);
   const renderingZoneRef = React.useRef<HTMLDivElement>(null);
 
   apiRef.current.columnHeadersContainerElementRef = columnsContainerRef;
-  apiRef.current.columnHeadersElementRef = columnsHeaderRef;
+  apiRef.current.columnHeadersElementRef = columnHeadersRef;
   apiRef.current.windowRef = windowRef; // TODO rename, it's not attached to the window anymore
   apiRef.current.renderingZoneRef = renderingZoneRef; // TODO remove, nobody should have access to internal parts of the virtualization
 
@@ -91,7 +91,7 @@ function GridBody(props: GridBodyProps) {
   return (
     <GridMainContainer>
       <GridOverlays />
-      <ColumnHeadersComponent ref={columnsContainerRef} innerRef={columnsHeaderRef} />
+      <ColumnHeadersComponent ref={columnsContainerRef} innerRef={columnHeadersRef} />
       <GridAutoSizer
         nonce={rootProps.nonce}
         disableHeight={rootProps.autoHeight}
