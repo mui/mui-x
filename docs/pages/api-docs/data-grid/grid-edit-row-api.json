@@ -5,12 +5,12 @@
     {
       "name": "commitCellChange",
       "description": "Updates the field at the given id with the value stored in the edit row model.",
-      "type": "(params: GridCommitCellChangeParams, event?: any) => boolean"
+      "type": "(params: GridCommitCellChangeParams, event?: any) => boolean | Promise<boolean>"
     },
     {
       "name": "commitRowChange",
       "description": "Updates the row at the given id with the values stored in the edit row model.",
-      "type": "(id: GridRowId, event?: any) => boolean"
+      "type": "(id: GridRowId, event?: any) => boolean | Promise<boolean>"
     },
     {
       "name": "getCellMode",

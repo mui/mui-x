@@ -86,7 +86,11 @@
     "onColumnResize": { "type": { "name": "func" } },
     "onColumnVisibilityChange": { "type": { "name": "func" } },
     "onColumnWidthChange": { "type": { "name": "func" } },
-    "onEditCellPropsChange": { "type": { "name": "func" } },
+    "onEditCellPropsChange": {
+      "type": { "name": "func" },
+      "deprecated": true,
+      "deprecationInfo": "use <code>preProcessEditCellProps</code> from the <a href=\"/api/data-grid/grid-col-def/\"><code>GridColDef</code></a>"
+    },
     "onEditRowsModelChange": { "type": { "name": "func" } },
     "onError": { "type": { "name": "func" } },
     "onFilterModelChange": { "type": { "name": "func" } },

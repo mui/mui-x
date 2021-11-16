@@ -65,18 +65,16 @@ Use the arrow keys to move the focus.
 
 ### Selection
 
-|                                                                                               Keys | Description                                                          |
-| -------------------------------------------------------------------------------------------------: | :------------------------------------------------------------------- |
-|                                        <kbd class="key">Shift</kbd> + <kbd class="key">Space</kbd> | Select the current row                                               |
-| <kbd class="key">Shift</kbd> + <kbd class="key">Space</kbd> + <kbd class="key">Arrow Up/Down</kbd> | Select the current row and the row above or below                    |
-|                                                       <kbd class="key">Shift</kbd> + Click on cell | Select the range of rows between the first and the last clicked rows |
-|                                             <kbd class="key">CTRL</kbd> + <kbd class="key">A</kbd> | Select all rows                                                      |
-|                                             <kbd class="key">CTRL</kbd> + <kbd class="key">C</kbd> | Copy the currently selected row(s)                                   |
-|                                              <kbd class="key">ALT</kbd> + <kbd class="key">C</kbd> | Copy the currently selected row(s) including headers                 |
-|                                                        <kbd class="key">CTRL</kbd> + Click on cell | Enable multi-selection                                               |
-|                                              <kbd class="key">CTRL</kbd> + Click on a selected row | Deselect the row                                                     |
-|                                                                       <kbd class="key">Enter</kbd> | Sort column when column header is focused                            |
-|                                         <kbd class="key">CTRL</kbd> + <kbd class="key">Enter</kbd> | Open column menu when column header is focused                       |
+|                                                                Keys | Description                                                          |
+| ------------------------------------------------------------------: | :------------------------------------------------------------------- |
+|         <kbd class="key">Shift</kbd> + <kbd class="key">Space</kbd> | Select the current row                                               |
+| <kbd class="key">Shift</kbd> + <kbd class="key">Arrow Up/Down</kbd> | Select the current row and the row above or below                    |
+|                        <kbd class="key">Shift</kbd> + Click on cell | Select the range of rows between the first and the last clicked rows |
+|              <kbd class="key">CTRL</kbd> + <kbd class="key">A</kbd> | Select all rows                                                      |
+|              <kbd class="key">CTRL</kbd> + <kbd class="key">C</kbd> | Copy the currently selected row(s)                                   |
+|               <kbd class="key">ALT</kbd> + <kbd class="key">C</kbd> | Copy the currently selected row(s) including headers                 |
+|                         <kbd class="key">CTRL</kbd> + Click on cell | Enable multi-selection                                               |
+|               <kbd class="key">CTRL</kbd> + Click on a selected row | Deselect the row                                                     |
 
 ### Sorting
 
@@ -85,6 +83,8 @@ Use the arrow keys to move the focus.
 |               <kbd class="key">CTRL</kbd> + Click on header | Enable multi-sorting                               |
 |              <kbd class="key">Shift</kbd> + Click on header | Enable multi-sorting                               |
 | <kbd class="key">Shift</kbd> + <kbd class="key">Enter</kbd> | Enable multi-sorting when column header is focused |
+|                                <kbd class="key">Enter</kbd> | Sort column when column header is focused          |
+|  <kbd class="key">CTRL</kbd> + <kbd class="key">Enter</kbd> | Open column menu when column header is focused     |
 
 ### Key assignment conventions
 

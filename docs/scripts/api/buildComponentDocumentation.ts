@@ -286,6 +286,8 @@ export default async function buildComponentDocumentation(
         /\.isRequired/.test(prop.type.raw) ||
         (chainedPropType !== false && chainedPropType.required);
 
+      const deprecation = (propDescriptor.description || '').match(/@deprecated(\s+(?<info>.*))?/);
+
       return [
         propName,
         {
@@ -297,6 +299,9 @@ export default async function buildComponentDocumentation(
           default: defaultValue,
           // undefined values are not serialized => saving some bytes
           required: requiredProp || undefined,
+          deprecated: !!deprecation || undefined,
+          deprecationInfo:
+            renderMarkdownInline(deprecation?.groups?.info || '').trim() || undefined,
         },
       ];
     }),
