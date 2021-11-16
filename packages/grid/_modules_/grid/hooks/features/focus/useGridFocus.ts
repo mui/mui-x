@@ -12,7 +12,6 @@ import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { GridComponentProps } from '../../../GridComponentProps';
 import { isNavigationKey } from '../../../utils/keyboardUtils';
 import { useGridStateInit } from '../../utils/useGridStateInit';
-import { MuiBaseEvent } from '../../../models';
 
 /**
  * @requires useGridParamsApi (method)
