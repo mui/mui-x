@@ -115,9 +115,8 @@ const upsertColumnsState = (columnUpdates: GridColDef[], prevColumnsState?: Grid
 /**
  * @requires useGridColumnsPreProcessing (method)
  * @requires useGridParamsApi (method)
- * @requires useGridContainerProps (state)
+ * @requires useGridDimensions (method, event) - can be after
  * TODO: Impossible priority - useGridParamsApi also needs to be after useGridColumns
- * TODO: Impossible priority - useGridContainerProps also needs to be after useGridColumns
  */
 export function useGridColumns(
   apiRef: GridApiRef,
@@ -152,11 +151,6 @@ export function useGridColumns(
     };
   });
   const [, setGridState, forceUpdate] = useGridState(apiRef);
-
-  // On the first render, `useGridContainerProps` has not yet initialized its state because it is called after `useGridColumns`
-  // But it viewport width would always be 0 on the 1st render since the DOM Node is not mounted yet, so we can provide a safe fallback here
-  // TODO: Fix when removing `viewportSizes` from the state
-  const viewportSizes = apiRef.current.state.viewportSizes?.width ?? 0;
 
   const setGridColumnsState = React.useCallback(
     (columnsState: GridColumnsState, emit = true) => {
@@ -211,12 +205,11 @@ export function useGridColumns(
 
   const setColumnsState = React.useCallback(
     (newState: RawGridColumnsState, emit?: boolean) => {
+      const dimensions = apiRef.current.getRootDimensions();
       logger.debug('updating GridColumns with new state');
 
-      // Avoid dependency on gridState to avoid infinite loop
-      const viewportWidth = apiRef.current.state.viewportSizes.width;
       let newColumns: GridColumns = newState.all.map((field) => newState.lookup[field]);
-      newColumns = hydrateColumnsWidth(newColumns, viewportWidth);
+      newColumns = hydrateColumnsWidth(newColumns, dimensions?.viewportInnerSize.width ?? 0);
 
       const columnState: GridColumnsState = {
         all: newColumns.map((col) => col.field),
@@ -341,19 +334,6 @@ export function useGridColumns(
     setColumnsState(columnState);
   }, [logger, apiRef, setColumnsState, props.columns, props.columnTypes]);
 
-  React.useEffect(() => {
-    logger.debug(`GridColumns gridState.viewportSizes.width, changed ${viewportSizes}`);
-
-    // This hook is meant to update the column's width when the viewport changes
-    // We can skip the whole block if the width is missing
-    if (viewportSizes === 0) {
-      return;
-    }
-
-    // Avoid dependency on gridState as I only want to update cols when viewport size changed.
-    setColumnsState(apiRef.current.state.columns);
-  }, [apiRef, setColumnsState, viewportSizes, logger]);
-
   const handlePreProcessorRegister = React.useCallback(
     (name) => {
       if (name !== GridPreProcessingGroup.hydrateColumns) {
@@ -373,7 +353,16 @@ export function useGridColumns(
     [apiRef, logger, setColumnsState, props.columns, props.columnTypes],
   );
 
+  const prevInnerWidth = React.useRef<number | null>(null);
+  const handleGridSizeChange = (viewportInnerSize) => {
+    if (prevInnerWidth.current !== viewportInnerSize.width) {
+      prevInnerWidth.current = viewportInnerSize.width;
+      setColumnsState(apiRef.current.state.columns);
+    }
+  };
+
   useGridApiEventHandler(apiRef, GridEvents.preProcessorRegister, handlePreProcessorRegister);
+  useGridApiEventHandler(apiRef, GridEvents.viewportInnerSizeChange, handleGridSizeChange);
 
   // Grid Option Handlers
   useGridApiOptionHandler(

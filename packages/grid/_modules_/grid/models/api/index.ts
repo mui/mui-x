@@ -3,7 +3,6 @@ export * from './gridParamsApi';
 export * from './gridCoreApi';
 export * from './gridColumnApi';
 export * from './gridDensityApi';
-export * from './gridEventsApi';
 export * from './gridEditRowApi';
 export * from './gridApi';
 export * from './gridPageSizeApi';

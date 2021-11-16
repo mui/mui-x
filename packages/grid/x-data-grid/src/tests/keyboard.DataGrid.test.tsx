@@ -291,12 +291,21 @@ describe('<DataGrid /> - Keyboard', () => {
     expect(isSelected).to.equal(true);
   });
 
-  it('Space only should go to the bottom of the page', function test() {
-    render(<KeyboardTest disableVirtualization />);
+  it('Space only should jump down by the amount of rows visible on screen', function test() {
+    const rowHeight = 52;
+    const rowCount = 100;
+    render(<KeyboardTest disableVirtualization rowHeight={rowHeight} rowCount={rowCount} />);
     getCell(0, 0).focus();
+    const rowsInViewport = isJSDOM
+      ? rowCount
+      : Math.floor(
+          document.querySelector('.MuiDataGrid-virtualScroller')!.clientHeight / rowHeight,
+        );
     expect(getActiveCell()).to.equal('0-0');
     fireEvent.keyDown(document.activeElement!, { key: ' ' });
-    expect(getActiveCell()).to.equal('99-0');
+    expect(getActiveCell()).to.equal(`${Math.min(rowsInViewport, rowCount - 1)}-0`);
+    fireEvent.keyDown(document.activeElement!, { key: ' ' });
+    expect(getActiveCell()).to.equal(`${Math.min(rowsInViewport * 2, rowCount - 1)}-0`);
   });
 
   it('Space only should go to the bottom of the page even with small number of rows', () => {
