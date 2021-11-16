@@ -38,7 +38,7 @@ const generateDate = (
   return rawDate.getTime();
 };
 
-describe('<DataGridPro /> - Edit Rows', () => {
+describe.only('<DataGridPro /> - Edit Rows', () => {
   let clock;
   let baselineProps;
 
@@ -345,7 +345,7 @@ describe('<DataGridPro /> - Edit Rows', () => {
     });
   });
 
-  it('should save changes when a column header is dragged', async () => {
+  it.only('should save changes when a column header is dragged', async () => {
     render(<TestCase />);
     const cell = getCell(1, 1);
     cell.focus();

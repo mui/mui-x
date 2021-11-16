@@ -15,7 +15,6 @@ import {
 import { GridCellParams } from '../../../models/params/gridCellParams';
 import {
   GridEditCellPropsParams,
-  GridEditCellValueParams,
   GridCellEditCommitParams,
 } from '../../../models/params/gridEditCellParams';
 import {
@@ -117,7 +116,7 @@ export function useGridEditRows(
   const handleColumnHeaderDragStart: GridEventListener<GridEvents.columnHeaderDragEnter> =
     useEventCallback((headerParams, nativeEvent) => {
       const { cell } = apiRef.current.state.focus;
-      if (!cell) {
+        if (!cell) {
         return;
       }
       const params = apiRef.current.getCellParams(cell.id, cell.field);
