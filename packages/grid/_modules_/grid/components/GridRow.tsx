@@ -13,7 +13,6 @@ import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { GridComponentProps } from '../GridComponentProps';
 import { GridStateColDef } from '../models/colDef/gridColDef';
 import { GridCellIdentifier } from '../hooks/features/focus/gridFocusState';
-import { GridScrollBarState } from '../models/gridContainerProps';
 import { gridColumnsMetaSelector } from '../hooks/features/columns/gridColumnsSelector';
 import { useGridSelector } from '../hooks/utils/useGridSelector';
 
@@ -31,7 +30,6 @@ export interface GridRowProps {
   cellFocus: GridCellIdentifier | null;
   cellTabIndex: GridCellIdentifier | null;
   editRowsState: GridEditRowsModel;
-  scrollBarState: GridScrollBarState;
   onClick?: React.MouseEventHandler<HTMLDivElement>;
   onDoubleClick?: React.MouseEventHandler<HTMLDivElement>;
 }
@@ -79,7 +77,6 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
     cellFocus,
     cellTabIndex,
     editRowsState,
-    scrollBarState, // to be removed
     onClick,
     onDoubleClick,
     ...other
@@ -88,6 +85,10 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
   const columnsMeta = useGridSelector(apiRef, gridColumnsMetaSelector);
+  const { hasScrollX, hasScrollY } = apiRef.current.getRootDimensions() ?? {
+    hasScrollX: false,
+    hasScrollY: false,
+  };
 
   const ownerState = {
     selected,
@@ -141,8 +142,7 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
     const indexRelativeToAllColumns = firstColumnToRender + i;
 
     const isLastColumn = indexRelativeToAllColumns === visibleColumns.length - 1;
-    const removeLastBorderRight =
-      isLastColumn && scrollBarState.hasScrollX && !scrollBarState.hasScrollY;
+    const removeLastBorderRight = isLastColumn && hasScrollX && !hasScrollY;
     const showRightBorder = !isLastColumn
       ? rootProps.showCellRightBorder
       : !removeLastBorderRight && rootProps.disableExtendRowFullWidth;
@@ -256,7 +256,6 @@ GridRow.propTypes = {
   row: PropTypes.object.isRequired,
   rowHeight: PropTypes.number.isRequired,
   rowId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-  scrollBarState: PropTypes.object.isRequired,
   selected: PropTypes.bool.isRequired,
   visibleColumns: PropTypes.arrayOf(PropTypes.object).isRequired,
 } as any;

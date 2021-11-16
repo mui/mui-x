@@ -12,3 +12,4 @@ export * from './preferencesPanel';
 export * from './rows';
 export * from './selection';
 export * from './sorting';
+export * from './dimensions';
