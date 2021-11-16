@@ -161,6 +161,9 @@ jobs:
       - run:
           name: '`yarn docs:api` changes committed?'
           command: git diff --exit-code
+      - run:
+          name: '`yarn i18n` changes committed?'
+          command: yarn i18n check-changed
   test_browser:
     <<: *defaults
     docker:
