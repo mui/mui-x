@@ -5,17 +5,58 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## 5.0.1
 
-_Nov 16, 2021_
+_Nov 17, 2021_
 
-A big thanks to the 1 contributor who made this release possible.
+A big thanks to the 3 contributors who made this release possible. Here are some highlights ✨:
 
-### `@mui/x-data-grid@v5.0.0-beta.1` / `@mui/x-data-grid-pro@v5.0.0-beta.1`
+- ✨ New method `getRootDimensions` to access the size of the grid #3007 @flaviendelangle
 
-This is a hotfix to fix a regression in the typing introduced in `@mui/x-data-grid@5.0.0`.
+  ```ts
+  const dimensions = apiRef.current.getRootDimensions();
+  ```
+
+- 🎁 New API to validate the editing values (#3006) @m4theushw
+ 
+  You can now use the `preProcessEditCellProps` key in `GridColDef` to synchronously or asynchronously validate the values committed.
+
+  ```ts
+  const columns: GridColDef[] = [
+    {
+      field: 'firstName',
+      preProcessEditCellProps: (params: GridEditCellPropsChangeParams) => {
+        const hasError = params.props.value.length < 3;
+        return { ...params.props, error: hasError };
+      },
+    },
+    {
+      field: 'email',
+      preProcessEditCellProps: async (params: GridEditCellPropsChangeParams) => {
+        const userWithEmail = await fetchUserByEmail(params.value);
+        const hasError = !!userWithEmail;
+        return { ...params.props, error: hasError };
+      }
+    }
+  ];
+  ```
+
+### `@mui/x-data-grid@v5.0.1` / `@mui/x-data-grid-pro@v5.0.1`
 
 #### Changes
 
+- [DataGrid] New API to validate the editing values (#3006) @m4theushw
+- [DataGrid] Use color-scheme to set dark mode on native components (#3146 @alexfauquette
 - [DataGrid] Fix the `@mui/x-data-grid` type entrypoint (#3196) @flaviendelangle
+
+### Core
+
+- [core] Drop `useGridContainerProps` (#3007) @flaviendelangle
+- [core] Move `getRowIdFromRowIndex` and `getRowIndex` to the sorting API (#3126) @flaviendelangle
+- [core] Remove the `index.ts` of the export hooks (#3165) @flaviendelangle
+- 
+### Docs
+
+- [docs] move sentence about disabling multi rows selection (#3167) @alexfauquette
+
 
 ## 5.0.0
 
