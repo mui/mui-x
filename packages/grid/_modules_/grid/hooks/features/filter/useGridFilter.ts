@@ -99,7 +99,7 @@ export const useGridFilter = (
 
         if (column.valueParser) {
           const parser = column.valueParser;
-          parsedValue = filterItem.isArrayValue
+          parsedValue = Array.isArray(filterItem.value)
             ? filterItem.value?.map((x) => parser(x))
             : parser(filterItem.value);
         } else {

@@ -102,17 +102,13 @@ function GridFilterForm(props: GridFilterFormProps) {
   const changeOperator = React.useCallback(
     (event: SelectChangeEvent) => {
       const operatorValue = event.target.value as string;
-      const isArrayValue = currentColumn?.filterOperators?.find(
-        ({ value }) => value === operatorValue,
-      )?.isArrayValue;
 
       applyFilterChanges({
         ...item,
         operatorValue,
-        isArrayValue,
       });
     },
-    [applyFilterChanges, item, currentColumn],
+    [applyFilterChanges, item],
   );
 
   const changeLinkOperator = React.useCallback(
@@ -242,7 +238,6 @@ GridFilterForm.propTypes = {
   item: PropTypes.shape({
     columnField: PropTypes.string.isRequired,
     id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-    isArrayValue: PropTypes.bool,
     operatorValue: PropTypes.string,
     value: PropTypes.any,
   }).isRequired,

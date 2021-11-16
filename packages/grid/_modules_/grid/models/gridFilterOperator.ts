@@ -9,7 +9,6 @@ import type { GridStateColDef } from './colDef';
 export interface GridFilterOperator {
   label?: string;
   value: string;
-  isArrayValue?: boolean;
   getApplyFilterFn: (
     filterItem: GridFilterItem,
     column: GridStateColDef,

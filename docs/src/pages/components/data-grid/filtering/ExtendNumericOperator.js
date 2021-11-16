@@ -41,7 +41,6 @@ RatingInputValue.propTypes = {
   item: PropTypes.shape({
     columnField: PropTypes.string.isRequired,
     id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-    isArrayValue: PropTypes.bool,
     operatorValue: PropTypes.string,
     value: PropTypes.any,
   }).isRequired,
