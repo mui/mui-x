@@ -9,12 +9,6 @@ _Nov 17, 2021_
 
 A big thanks to the 3 contributors who made this release possible. Here are some highlights ✨:
 
-- ✨ New method `getRootDimensions` to access the size of the grid #3007 @flaviendelangle
-
-  ```ts
-  const dimensions = apiRef.current.getRootDimensions();
-  ```
-
 - 🎁 New API to validate the editing values (#3006) @m4theushw
  
   You can now use the `preProcessEditCellProps` key in `GridColDef` to synchronously or asynchronously validate the values committed.
@@ -39,6 +33,12 @@ A big thanks to the 3 contributors who made this release possible. Here are some
   ];
   ```
 
+- ✨ New method `getRootDimensions` to access the size of the grid #3007 @flaviendelangle
+
+  ```ts
+  const dimensions = apiRef.current.getRootDimensions();
+  ```
+
 ### `@mui/x-data-grid@v5.0.1` / `@mui/x-data-grid-pro@v5.0.1`
 
 #### Changes
@@ -56,7 +56,6 @@ A big thanks to the 3 contributors who made this release possible. Here are some
 ### Docs
 
 - [docs] move sentence about disabling multi rows selection (#3167) @alexfauquette
-
 
 ## 5.0.0
 
