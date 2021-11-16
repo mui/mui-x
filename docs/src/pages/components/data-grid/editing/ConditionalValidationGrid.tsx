@@ -2,11 +2,11 @@ import * as React from 'react';
 import { createTheme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
 import {
-  DataGrid,
+  DataGridPro,
   GridColumns,
-  GridEditRowsModel,
   GridRowsProp,
-} from '@mui/x-data-grid';
+  useGridApiRef,
+} from '@mui/x-data-grid-pro';
 import { randomPrice } from '@mui/x-data-grid-generator';
 
 const defaultTheme = createTheme();
@@ -31,32 +31,6 @@ const useStyles = makeStyles(
   { defaultTheme },
 );
 
-const columns: GridColumns = [
-  { field: 'expense', headerName: 'Expense', width: 160, editable: true },
-  {
-    field: 'price',
-    headerName: 'Price',
-    type: 'number',
-    width: 120,
-    editable: true,
-  },
-  { field: 'dueAt', headerName: 'Due at', type: 'date', width: 160, editable: true },
-  {
-    field: 'isPaid',
-    headerName: 'Is paid?',
-    type: 'boolean',
-    width: 140,
-    editable: true,
-  },
-  {
-    field: 'paidAt',
-    headerName: 'Paid at',
-    type: 'date',
-    width: 160,
-    editable: true,
-  },
-];
-
 const rows: GridRowsProp = [
   {
     id: 1,
@@ -78,36 +52,61 @@ const rows: GridRowsProp = [
     price: randomPrice(0, 1000),
     dueAt: new Date(2021, 7, 4),
     isPaid: true,
-    paidAt: new Date(2021, 7, 2),
+    paymentMethod: 'Wire transfer',
   },
 ];
 
 export default function ConditionalValidationGrid() {
   const classes = useStyles();
-  const [editRowsModel, setEditRowsModel] = React.useState<GridEditRowsModel>({});
+  const apiRef = useGridApiRef();
 
-  const handleEditRowsModelChange = React.useCallback(
-    (newModel: GridEditRowsModel) => {
-      const updatedModel = { ...newModel };
-      Object.keys(updatedModel).forEach((id) => {
-        const hasError =
-          updatedModel[id].isPaid.value && !updatedModel[id].paidAt.value;
-        updatedModel[id].paidAt = { ...updatedModel[id].paidAt, error: hasError };
-      });
-      setEditRowsModel(updatedModel);
+  const columns: GridColumns = [
+    { field: 'expense', headerName: 'Expense', width: 160, editable: true },
+    {
+      field: 'price',
+      headerName: 'Price',
+      type: 'number',
+      width: 120,
+      editable: true,
     },
-    [],
-  );
+    {
+      field: 'dueAt',
+      headerName: 'Due at',
+      type: 'date',
+      width: 120,
+      editable: true,
+    },
+    {
+      field: 'isPaid',
+      headerName: 'Is paid?',
+      type: 'boolean',
+      width: 140,
+      editable: true,
+    },
+    {
+      field: 'paymentMethod',
+      headerName: 'Payment method',
+      type: 'singleSelect',
+      valueOptions: ['Credit card', 'Wire transfer', 'Cash'],
+      width: 160,
+      editable: true,
+      preProcessEditCellProps: (params) => {
+        const editRowsModel = apiRef.current.getEditRowsModel();
+        const isPaidProps = editRowsModel[params.id].isPaid;
+        const hasError = isPaidProps.value && !params.props.value;
+        return { ...params.props, error: hasError };
+      },
+    },
+  ];
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <DataGrid
+      <DataGridPro
+        apiRef={apiRef}
         className={classes.root}
         rows={rows}
         columns={columns}
         editMode="row"
-        editRowsModel={editRowsModel}
-        onEditRowsModelChange={handleEditRowsModelChange}
       />
     </div>
   );
