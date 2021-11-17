@@ -2,11 +2,8 @@ import * as React from 'react';
 import TextField, { TextFieldProps } from '@mui/material/TextField';
 import { GridFilterInputValueProps } from './GridFilterInputValueProps';
 
-export const GridFilterInputBoolean = React.forwardRef(function GridFilterInputBoolean(
-  props: GridFilterInputValueProps & TextFieldProps,
-  ref: React.Ref<any>,
-) {
-  const { item, applyValue, apiRef, ...others } = props;
+export function GridFilterInputBoolean(props: GridFilterInputValueProps & TextFieldProps) {
+  const { item, applyValue, apiRef, focusElementRef, ...others } = props;
   const [filterValueState, setFilterValueState] = React.useState(item.value || '');
 
   const onFilterChange = React.useCallback(
@@ -35,7 +32,7 @@ export const GridFilterInputBoolean = React.forwardRef(function GridFilterInputB
       InputLabelProps={{
         shrink: true,
       }}
-      inputRef={ref}
+      inputRef={focusElementRef}
       {...others}
     >
       <option value="">{apiRef.current.getLocaleText('filterValueAny')}</option>
@@ -43,4 +40,4 @@ export const GridFilterInputBoolean = React.forwardRef(function GridFilterInputB
       <option value="false">{apiRef.current.getLocaleText('filterValueFalse')}</option>
     </TextField>
   );
-});
+}

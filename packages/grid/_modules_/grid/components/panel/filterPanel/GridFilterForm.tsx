@@ -236,7 +236,7 @@ const GridFilterForm = React.forwardRef(function GridFilterForm(
             apiRef={apiRef}
             item={item}
             applyValue={applyFilterChanges}
-            ref={valueRef}
+            focusElementRef={valueRef}
             {...currentOperator.InputComponentProps}
           />
         ) : null}

@@ -31,11 +31,8 @@ export interface GridTypeFilterInputValueProps extends GridFilterInputValueProps
   type?: 'text' | 'number' | 'date' | 'datetime-local' | 'singleSelect';
 }
 
-const GridFilterInputValue = React.forwardRef(function GridFilterInputValue(
-  props: GridTypeFilterInputValueProps & TextFieldProps,
-  ref: React.Ref<any>,
-) {
-  const { item, applyValue, type, apiRef, ...others } = props;
+function GridFilterInputValue(props: GridTypeFilterInputValueProps & TextFieldProps) {
+  const { item, applyValue, type, apiRef, focusElementRef, ...others } = props;
   const filterTimeout = React.useRef<any>();
   const [filterValueState, setFilterValueState] = React.useState(item.value ?? '');
   const [applying, setIsApplying] = React.useState(false);
@@ -108,12 +105,12 @@ const GridFilterInputValue = React.forwardRef(function GridFilterInputValue(
       InputLabelProps={{
         shrink: true,
       }}
-      inputRef={ref}
+      inputRef={focusElementRef}
       {...singleSelectProps}
       {...others}
     />
   );
-});
+}
 
 GridFilterInputValue.propTypes = {
   // ----------------------------- Warning --------------------------------
@@ -122,6 +119,12 @@ GridFilterInputValue.propTypes = {
   // ----------------------------------------------------------------------
   apiRef: PropTypes.any.isRequired,
   applyValue: PropTypes.func.isRequired,
+  focusElementRef: PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.shape({
+      current: PropTypes.any.isRequired,
+    }),
+  ]),
   item: PropTypes.shape({
     columnField: PropTypes.string.isRequired,
     id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
