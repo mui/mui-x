@@ -111,7 +111,9 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
       }
 
       // Pass directly the render context to avoid waiting for the next render
-      updateInnerPosition(nextRenderContext);
+      if (nextRenderContext) {
+        updateInnerPosition(nextRenderContext);
+      }
     },
     [updateInnerPosition],
   );
