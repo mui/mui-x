@@ -33,7 +33,7 @@ A big thanks to the 3 contributors who made this release possible. Here are some
   ];
   ```
 
-- ✨ New method `getRootDimensions` to access the size of the grid #3007 @flaviendelangle
+- ✨ New method `getRootDimensions` to access the size of the grid (#3007) @flaviendelangle
 
   It contains the size of the viewport (which is the scrollable container containing the rows and columns) considering scrollbars or not.
 
