@@ -119,11 +119,9 @@ GridFilterInputValue.propTypes = {
   // ----------------------------------------------------------------------
   apiRef: PropTypes.any.isRequired,
   applyValue: PropTypes.func.isRequired,
-  focusElementRef: PropTypes.oneOfType([
+  focusElementRef: PropTypes /* @typescript-to-proptypes-ignore */.oneOfType([
     PropTypes.func,
-    PropTypes.shape({
-      current: PropTypes.any.isRequired,
-    }),
+    PropTypes.object,
   ]),
   item: PropTypes.shape({
     columnField: PropTypes.string.isRequired,

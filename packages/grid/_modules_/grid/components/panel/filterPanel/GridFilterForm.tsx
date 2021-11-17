@@ -253,11 +253,9 @@ GridFilterForm.propTypes = {
   applyMultiFilterOperatorChanges: PropTypes.func.isRequired,
   deleteFilter: PropTypes.func.isRequired,
   disableMultiFilterOperator: PropTypes.bool,
-  focusElementRef: PropTypes.oneOfType([
+  focusElementRef: PropTypes /* @typescript-to-proptypes-ignore */.oneOfType([
     PropTypes.func,
-    PropTypes.shape({
-      current: PropTypes.any.isRequired,
-    }),
+    PropTypes.object,
   ]),
   hasMultipleFilters: PropTypes.bool.isRequired,
   item: PropTypes.shape({
