@@ -91,27 +91,89 @@ function GridFilterForm(props: GridFilterFormProps) {
     (event: SelectChangeEvent) => {
       const columnField = event.target.value as string;
       const column = apiRef.current.getColumn(columnField)!;
-      const newOperator = column.filterOperators![0];
 
-      applyFilterChanges({
-        ...item,
-        value: undefined,
-        columnField,
-        operatorValue: newOperator.value,
-      });
+      // try to keep the same operator when column change
+      const newOperator =
+        column.filterOperators!.find((operator) => operator.value === item.operatorValue) ||
+        column.filterOperators![0];
+
+      if (column.type === 'singleSelect') {
+        if (currentColumn?.type === 'singleSelect') {
+          // try to find same value in the new valueOptions
+          const columnValueOptions =
+            typeof column.valueOptions === 'function'
+              ? column.valueOptions({ field: column.field })
+              : column.valueOptions;
+          const newValue = columnValueOptions
+            ?.map((option) => (typeof option === 'object' ? option.value : option))
+            .find((optionValue) => String(optionValue) === item.value);
+
+          applyFilterChanges({
+            ...item,
+            columnField,
+            operatorValue: newOperator.value,
+            value: newValue,
+          });
+        } else {
+          // move to singleSelect column erase filter value
+          applyFilterChanges({
+            ...item,
+            columnField,
+            operatorValue: newOperator.value,
+            value: undefined,
+          });
+        }
+      } else if (currentColumn?.type !== column.type) {
+        const prevOperator = currentColumn?.filterOperators!.find(
+          (operator) => operator.value === item.value,
+        );
+
+        // Erase filter value is the input component is modified
+        const eraseItemValue =
+          !newOperator?.InputComponent ||
+          !prevOperator?.InputComponent ||
+          newOperator?.InputComponent !== prevOperator?.InputComponent;
+
+        applyFilterChanges({
+          ...item,
+          columnField,
+          operatorValue: newOperator.value,
+          value: eraseItemValue ? undefined : item.value,
+        });
+      } else {
+        applyFilterChanges({
+          ...item,
+          columnField,
+        });
+      }
     },
-    [apiRef, applyFilterChanges, item],
+    [apiRef, applyFilterChanges, item, currentColumn],
   );
 
   const changeOperator = React.useCallback(
     (event: SelectChangeEvent) => {
       const operatorValue = event.target.value as string;
+
+      const newOperator = currentColumn?.filterOperators!.find(
+        (operator) => operator.value === operatorValue,
+      );
+
+      const prevOperator = currentColumn?.filterOperators!.find(
+        (operator) => operator.value === item.value,
+      );
+
+      const eraseItemValue =
+        !newOperator?.InputComponent ||
+        !prevOperator?.InputComponent ||
+        newOperator?.InputComponent !== prevOperator?.InputComponent;
+
       applyFilterChanges({
         ...item,
         operatorValue,
+        value: eraseItemValue ? undefined : item.value,
       });
     },
-    [applyFilterChanges, item],
+    [applyFilterChanges, item, currentColumn],
   );
 
   const changeLinkOperator = React.useCallback(
