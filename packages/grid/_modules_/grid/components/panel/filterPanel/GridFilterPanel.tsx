@@ -17,7 +17,7 @@ export function GridFilterPanel() {
   const rootProps = useGridRootProps();
   const filterModel = useGridSelector(apiRef, gridFilterModelSelector);
   const filterableColumns = useGridSelector(apiRef, filterableGridColumnsSelector);
-  const lastFilterRef = React.useRef<React.ElementRef<typeof GridFilterForm>>(null);
+  const lastFilterRef = React.useRef<any>(null);
 
   const applyFilter = React.useCallback(
     (item: GridFilterItem) => {
@@ -95,7 +95,7 @@ export function GridFilterPanel() {
             multiFilterOperator={filterModel.linkOperator}
             disableMultiFilterOperator={index !== 1}
             applyMultiFilterOperatorChanges={applyFilterLinkOperator}
-            ref={index === items.length - 1 ? lastFilterRef : null}
+            focusElementRef={index === items.length - 1 ? lastFilterRef : null}
           />
         ))}
       </GridPanelContent>

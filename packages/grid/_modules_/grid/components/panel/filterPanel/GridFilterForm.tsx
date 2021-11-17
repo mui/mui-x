@@ -23,6 +23,7 @@ export interface GridFilterFormProps {
   showMultiFilterOperators?: boolean;
   multiFilterOperator?: GridLinkOperator;
   disableMultiFilterOperator?: boolean;
+  focusElementRef?: React.Ref<any>;
   applyFilterChanges: (item: GridFilterItem) => void;
   applyMultiFilterOperatorChanges: (operator: GridLinkOperator) => void;
   deleteFilter: (item: GridFilterItem) => void;
@@ -50,10 +51,7 @@ const GridFilterFormRoot = styled('div', {
   padding: theme.spacing(1),
 }));
 
-const GridFilterForm = React.forwardRef(function GridFilterForm(
-  props: GridFilterFormProps,
-  ref: React.Ref<any>,
-) {
+function GridFilterForm(props: GridFilterFormProps) {
   const {
     item,
     hasMultipleFilters,
@@ -63,6 +61,7 @@ const GridFilterForm = React.forwardRef(function GridFilterForm(
     showMultiFilterOperators,
     disableMultiFilterOperator,
     applyMultiFilterOperatorChanges,
+    focusElementRef,
   } = props;
   const apiRef = useGridApiContext();
   const filterableColumns = useGridSelector(apiRef, filterableGridColumnsSelector);
@@ -135,7 +134,7 @@ const GridFilterForm = React.forwardRef(function GridFilterForm(
   };
 
   React.useImperativeHandle(
-    ref,
+    focusElementRef,
     () => ({
       focus: () => {
         if (currentOperator?.InputComponent) {
@@ -243,7 +242,7 @@ const GridFilterForm = React.forwardRef(function GridFilterForm(
       </FormControl>
     </GridFilterFormRoot>
   );
-});
+}
 
 GridFilterForm.propTypes = {
   // ----------------------------- Warning --------------------------------
@@ -254,6 +253,12 @@ GridFilterForm.propTypes = {
   applyMultiFilterOperatorChanges: PropTypes.func.isRequired,
   deleteFilter: PropTypes.func.isRequired,
   disableMultiFilterOperator: PropTypes.bool,
+  focusElementRef: PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.shape({
+      current: PropTypes.any.isRequired,
+    }),
+  ]),
   hasMultipleFilters: PropTypes.bool.isRequired,
   item: PropTypes.shape({
     columnField: PropTypes.string.isRequired,
