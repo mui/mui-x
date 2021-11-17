@@ -59,7 +59,7 @@ A big thanks to the 3 contributors who made this release possible. Here are some
 
 ### Docs
 
-- [docs] move sentence about disabling multi rows selection (#3167) @alexfauquette
+- [docs] Move sentence about disabling multi rows selection (#3167) @alexfauquette
 
 ## 5.0.0
 
