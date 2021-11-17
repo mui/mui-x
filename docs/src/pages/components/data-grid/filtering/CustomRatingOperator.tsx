@@ -19,12 +19,18 @@ const useStyles = makeStyles({
   },
 });
 
-const RatingInputValue = React.forwardRef(function RatingInputValue(
-  props: GridFilterInputValueProps,
-  ref: React.Ref<any>,
-) {
+function RatingInputValue(props: GridFilterInputValueProps) {
   const classes = useStyles();
-  const { item, applyValue } = props;
+  const { item, applyValue, focusElementRef } = props;
+
+  const ratingRef: React.Ref<any> = React.useRef(null);
+  React.useImperativeHandle(focusElementRef, () => ({
+    focus: () => {
+      ratingRef.current
+        .querySelector(`input[value="${Number(item.value) || ''}"]`)
+        .focus();
+    },
+  }));
 
   const handleFilterChange = (event) => {
     applyValue({ ...item, value: event.target.value });
@@ -38,11 +44,11 @@ const RatingInputValue = React.forwardRef(function RatingInputValue(
         value={Number(item.value)}
         onChange={handleFilterChange}
         precision={0.5}
-        ref={ref}
+        ref={ratingRef}
       />
     </div>
   );
-});
+}
 
 const ratingOnlyOperators = [
   {
@@ -70,7 +76,7 @@ export default function CustomRatingOperator() {
   const { data } = useDemoData({ dataSet: 'Employee', rowLength: 100 });
   const columns = [...data.columns];
   const [filterModel, setFilterModel] = React.useState<GridFilterModel>({
-    items: [{ columnField: 'rating', value: '3.5', operatorValue: 'from' }],
+    items: [{ id: 1, columnField: 'rating', value: '3.5', operatorValue: 'from' }],
   });
 
   if (columns.length > 0) {
