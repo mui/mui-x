@@ -35,7 +35,7 @@ A big thanks to the 3 contributors who made this release possible. Here are some
 
 - ✨ New method `getRootDimensions` to access the size of the grid #3007 @flaviendelangle
 
-  It contains the size of the viewport (which is the scrollable `div` containing the rows) both with and without the scrollbars.
+  It contains the size of the viewport (which is the scrollable container containing the rows and columns) considering scrollbars or not.
 
   ```ts
   const dimensions = apiRef.current.getRootDimensions();
