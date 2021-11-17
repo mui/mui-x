@@ -166,7 +166,6 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
       prevTotalWidth.current !== columnsMeta.totalWidth;
 
     // TODO rename event to a wider name, it's not only fired for row scrolling
-    // TODO create a interface to type correctly the params
     apiRef.current.publishEvent(GridEvents.rowsScroll, {
       top: scrollTop,
       left: scrollLeft,
