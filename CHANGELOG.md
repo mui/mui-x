@@ -46,7 +46,7 @@ A big thanks to the 3 contributors who made this release possible. Here are some
 #### Changes
 
 - [DataGrid] New API to validate the editing values (#3006) @m4theushw
-- [DataGrid] Use color-scheme to set dark mode on native components (#3146 @alexfauquette
+- [DataGrid] Use color-scheme to set dark mode on native components (#3146) @alexfauquette
 - [DataGrid] Fix the `@mui/x-data-grid` type entrypoint (#3196) @flaviendelangle
 
 ### Core
