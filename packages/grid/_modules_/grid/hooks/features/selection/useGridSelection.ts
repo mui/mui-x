@@ -2,7 +2,7 @@ import * as React from 'react';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { GridEvents } from '../../../constants/eventsConstants';
 import { GridComponentProps } from '../../../GridComponentProps';
-import { GridApiRef } from '../../../models/api/gridApiRef';
+import { GridPrivateApiRef } from '../../../models/api/gridApiRef';
 import { GridSelectionApi } from '../../../models/api/gridSelectionApi';
 import { GridRowParams } from '../../../models/params/gridRowParams';
 import { GridRowId } from '../../../models/gridRows';
@@ -49,7 +49,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
  * @requires useGridControlState (method)
  */
 export const useGridSelection = (
-  apiRef: GridApiRef,
+  apiRef: GridPrivateApiRef,
   props: Pick<
     GridComponentProps,
     | 'checkboxSelection'
@@ -392,7 +392,7 @@ export const useGridSelection = (
       return [groupingColumn, ...columns];
     };
 
-    apiRef.current.unstable_registerPreProcessor(
+    apiRef.current.registerPreProcessor(
       GridPreProcessingGroup.hydrateColumns,
       'selection',
       addCheckboxColumn,

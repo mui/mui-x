@@ -1,16 +1,15 @@
 import * as React from 'react';
-import { GridApiRef } from '../../../models/api/gridApiRef';
-import { GridPreProcessingApi, PreProcessorCallback } from './gridPreProcessingApi';
-import { useGridApiMethod } from '../../utils/useGridApiMethod';
+import { GridPrivateApiRef } from '../../../models/api/gridApiRef';
+import { GridPreProcessingPrivateApi, PreProcessorCallback } from './gridPreProcessingApi';
 import { GridEvents } from '../../../constants/eventsConstants';
 
-export const useGridPreProcessing = (apiRef: GridApiRef) => {
+export const useGridPreProcessing = (apiRef: GridPrivateApiRef) => {
   const preProcessorsRef = React.useRef<
     Partial<Record<string, Record<string, PreProcessorCallback>>>
   >({});
 
   const registerPreProcessor = React.useCallback<
-    GridPreProcessingApi['unstable_registerPreProcessor']
+    GridPreProcessingPrivateApi['registerPreProcessor']
   >(
     (group, id, callback) => {
       if (!preProcessorsRef.current[group]) {
@@ -33,7 +32,7 @@ export const useGridPreProcessing = (apiRef: GridApiRef) => {
     [apiRef],
   );
 
-  const applyPreProcessors = React.useCallback<GridPreProcessingApi['unstable_applyPreProcessors']>(
+  const applyPreProcessors = React.useCallback<GridPreProcessingPrivateApi['applyPreProcessors']>(
     (group, value, params) => {
       if (!preProcessorsRef.current[group]) {
         return value;
@@ -47,10 +46,6 @@ export const useGridPreProcessing = (apiRef: GridApiRef) => {
     [],
   );
 
-  const preProcessingApi: GridPreProcessingApi = {
-    unstable_registerPreProcessor: registerPreProcessor,
-    unstable_applyPreProcessors: applyPreProcessors,
-  };
-
-  useGridApiMethod(apiRef, preProcessingApi, 'GridPreProcessing');
+  apiRef.current.registerMethod('registerPreProcessor', false, registerPreProcessor);
+  apiRef.current.registerMethod('applyPreProcessors', false, applyPreProcessors);
 };

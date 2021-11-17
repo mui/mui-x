@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { GridEvents } from '../../../constants/eventsConstants';
-import { GridApiRef } from '../../../models/api/gridApiRef';
+import { GridPrivateApiRef } from '../../../models/api/gridApiRef';
 import { GridColumnApi } from '../../../models/api/gridColumnApi';
 import {
   GridColDef,
@@ -119,7 +119,7 @@ const upsertColumnsState = (columnUpdates: GridColDef[], prevColumnsState?: Grid
  * TODO: Impossible priority - useGridParamsApi also needs to be after useGridColumns
  */
 export function useGridColumns(
-  apiRef: GridApiRef,
+  apiRef: GridPrivateApiRef,
   props: Pick<
     GridComponentProps,
     'columns' | 'onColumnVisibilityChange' | 'columnTypes' | 'checkboxSelection' | 'classes'
@@ -129,7 +129,7 @@ export function useGridColumns(
 
   useGridStateInit(apiRef, (state) => {
     const hydratedColumns = hydrateColumnsType(props.columns, props.columnTypes);
-    const preProcessedColumns = apiRef.current.unstable_applyPreProcessors(
+    const preProcessedColumns = apiRef.current.applyPreProcessors(
       GridPreProcessingGroup.hydrateColumns,
       hydratedColumns,
     );
@@ -326,7 +326,7 @@ export function useGridColumns(
 
     const hydratedColumns = hydrateColumnsType(props.columns, props.columnTypes);
 
-    const preProcessedColumns = apiRef.current.unstable_applyPreProcessors(
+    const preProcessedColumns = apiRef.current.applyPreProcessors(
       GridPreProcessingGroup.hydrateColumns,
       hydratedColumns,
     );
@@ -343,7 +343,7 @@ export function useGridColumns(
       logger.info(`Columns pre-processing have changed, regenerating the columns`);
 
       const hydratedColumns = hydrateColumnsType(props.columns, props.columnTypes);
-      const preProcessedColumns = apiRef.current.unstable_applyPreProcessors(
+      const preProcessedColumns = apiRef.current.applyPreProcessors(
         GridPreProcessingGroup.hydrateColumns,
         hydratedColumns,
       );

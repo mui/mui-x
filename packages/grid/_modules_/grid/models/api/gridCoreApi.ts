@@ -2,6 +2,7 @@ import * as React from 'react';
 import { GridEventListener } from '../gridEventListener';
 import { EventManager, EventListenerOptions } from '../../utils/EventManager';
 import { MuiEvent } from '../muiEvent';
+import type { GridPrivateApi } from './gridApi';
 
 /**
  * The core API interface that is available in the grid `apiRef`.
@@ -75,4 +76,8 @@ export interface GridCoreApi {
    * @param {any} props Props to be passed to the `ErrorOverlay` component.
    */
   showError: (props: any) => void;
+}
+
+export interface GridCorePrivateApi {
+  registerMethod: (methodName: keyof GridPrivateApi, isPublic: boolean, method: Function) => void;
 }

@@ -4,7 +4,7 @@ export enum GridPreProcessingGroup {
   hydrateColumns = 'hydrateColumns',
 }
 
-export interface GridPreProcessingApi {
+export interface GridPreProcessingPrivateApi {
   /**
    * Register a pre-processor and emit an event to notify the agents to re-apply the pre-processors.
    * @param {GridPreProcessingGroup} group The name of the group to bind this pre-processor to.
@@ -13,7 +13,7 @@ export interface GridPreProcessingApi {
    * @returns {() => void} A function to unregister the pre-processor.
    * @ignore - do not document.
    */
-  unstable_registerPreProcessor: (
+  registerPreProcessor: (
     group: GridPreProcessingGroup,
     id: string,
     callback: PreProcessorCallback,
@@ -26,5 +26,5 @@ export interface GridPreProcessingApi {
    * @returns {any} The value after passing through all pre-processors.
    * @ignore - do not document.
    */
-  unstable_applyPreProcessors: (group: GridPreProcessingGroup, value: any, params?: any) => any;
+  applyPreProcessors: (group: GridPreProcessingGroup, value: any, params?: any) => any;
 }

@@ -14,10 +14,12 @@ import { useGridRowGroupsPreProcessing } from './rowGroupsPerProcessing';
  */
 export const useGridInitialization = (apiRef: GridApiRef, props: GridComponentProps) => {
   useGridLoggerFactory(apiRef, props);
-  useGridApiInitialization(apiRef, props);
-  useGridErrorHandler(apiRef, props);
-  useGridControlState(apiRef, props);
-  useGridPreProcessing(apiRef);
-  useGridRowGroupsPreProcessing(apiRef);
-  useGridLocaleText(apiRef, props);
+  const privateApiRef = useGridApiInitialization(apiRef, props);
+  useGridErrorHandler(privateApiRef, props);
+  useGridControlState(privateApiRef, props);
+  useGridPreProcessing(privateApiRef);
+  useGridRowGroupsPreProcessing(privateApiRef);
+  useGridLocaleText(privateApiRef, props);
+
+  return privateApiRef;
 };

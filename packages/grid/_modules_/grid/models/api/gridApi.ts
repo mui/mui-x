@@ -1,7 +1,7 @@
 import { GridColumnApi } from './gridColumnApi';
 import { GridColumnMenuApi } from './gridColumnMenuApi';
 import { GridControlStateApi } from './gridControlStateApi';
-import { GridCoreApi } from './gridCoreApi';
+import { GridCoreApi, GridCorePrivateApi } from './gridCoreApi';
 import { GridClipboardApi } from './gridClipboardApi';
 import { GridCsvExportApi } from './gridCsvExportApi';
 import { GridDensityApi } from './gridDensityApi';
@@ -21,7 +21,7 @@ import { GridSortApi } from './gridSortApi';
 import { GridStateApi } from './gridStateApi';
 import { GridLoggerApi } from './gridLoggerApi';
 import { GridScrollApi } from './gridScrollApi';
-import type { GridPreProcessingApi } from '../../hooks/core/preProcessing';
+import type { GridPreProcessingPrivateApi } from '../../hooks/core/preProcessing';
 import type { GridRowGroupsPreProcessingApi } from '../../hooks/core/rowGroupsPerProcessing';
 import type { GridDimensionsApi } from '../../hooks/features/dimensions';
 
@@ -32,7 +32,6 @@ export interface GridApi
   extends GridCoreApi,
     GridStateApi,
     GridLoggerApi,
-    GridPreProcessingApi,
     GridRowGroupsPreProcessingApi,
     GridDensityApi,
     GridDimensionsApi,
@@ -55,3 +54,5 @@ export interface GridApi
     GridControlStateApi,
     GridClipboardApi,
     GridScrollApi {}
+
+export interface GridPrivateApi extends GridApi, GridCorePrivateApi, GridPreProcessingPrivateApi {}
