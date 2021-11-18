@@ -52,7 +52,7 @@ export const useGridKeyboardNavigation = (
     [apiRef, logger],
   );
 
-  const navigateCells = React.useCallback(
+  const handleCellNavigationKeyDown = React.useCallback(
     (params: GridCellParams, event: React.KeyboardEvent) => {
       event.preventDefault();
       const dimensions = apiRef.current.getRootDimensions();
@@ -154,7 +154,7 @@ export const useGridKeyboardNavigation = (
     [apiRef, visibleSortedRows, colCount, currentPage, goToCell, goToHeader],
   );
 
-  const navigateColumnHeaders = React.useCallback(
+  const handleColumnHeaderNavigationKeyDown = React.useCallback(
     (params: GridColumnHeaderParams, event: React.KeyboardEvent) => {
       event.preventDefault();
       const dimensions = apiRef.current.getRootDimensions();
@@ -217,6 +217,10 @@ export const useGridKeyboardNavigation = (
     [apiRef, colCount, currentPage, goToCell, goToHeader],
   );
 
-  useGridApiEventHandler(apiRef, GridEvents.cellNavigationKeyDown, navigateCells);
-  useGridApiEventHandler(apiRef, GridEvents.columnHeaderNavigationKeyDown, navigateColumnHeaders);
+  useGridApiEventHandler(apiRef, GridEvents.cellNavigationKeyDown, handleCellNavigationKeyDown);
+  useGridApiEventHandler(
+    apiRef,
+    GridEvents.columnHeaderNavigationKeyDown,
+    handleColumnHeaderNavigationKeyDown,
+  );
 };
