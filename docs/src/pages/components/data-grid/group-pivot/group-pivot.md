@@ -95,7 +95,7 @@ You can limit the filtering to the top level rows with the `disableChildrenFilte
 ### Sorting
 
 By default, the sorting is applied to every depth of the tree.
-You can limit the filtering to the top level rows with the `disableChildrenSorting` prop.
+You can limit the sorting to the top level rows with the `disableChildrenSorting` prop.
 
 {{"demo": "pages/components/data-grid/group-pivot/DisableChildrenSortingTreeData.js", "bg": "inline", "defaultCodeOpen": false}}
 
