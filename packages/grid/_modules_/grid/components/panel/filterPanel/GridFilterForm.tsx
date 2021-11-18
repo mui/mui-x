@@ -123,16 +123,12 @@ function GridFilterForm(props: GridFilterFormProps) {
             value: undefined,
           });
         }
-      } else if (currentColumn?.type !== column.type) {
-        const prevOperator = currentColumn?.filterOperators!.find(
-          (operator) => operator.value === item.value,
-        );
-
-        // Erase filter value is the input component is modified
+      } else {
+        // Erase filter value if the input component is modified
         const eraseItemValue =
+          newOperator.value !== currentOperator?.value ||
           !newOperator?.InputComponent ||
-          !prevOperator?.InputComponent ||
-          newOperator?.InputComponent !== prevOperator?.InputComponent;
+          newOperator?.InputComponent !== currentOperator?.InputComponent;
 
         applyFilterChanges({
           ...item,
@@ -140,14 +136,9 @@ function GridFilterForm(props: GridFilterFormProps) {
           operatorValue: newOperator.value,
           value: eraseItemValue ? undefined : item.value,
         });
-      } else {
-        applyFilterChanges({
-          ...item,
-          columnField,
-        });
       }
     },
-    [apiRef, applyFilterChanges, item, currentColumn],
+    [apiRef, applyFilterChanges, item, currentColumn, currentOperator],
   );
 
   const changeOperator = React.useCallback(
