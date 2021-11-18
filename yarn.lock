@@ -1353,6 +1353,13 @@
   dependencies:
     "@emotion/memoize" "^0.7.4"
 
+"@emotion/is-prop-valid@^1.1.1":
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/@emotion/is-prop-valid/-/is-prop-valid-1.1.1.tgz#cbd843d409dfaad90f9404e7c0404c55eae8c134"
+  integrity sha512-bW1Tos67CZkOURLc0OalnfxtSXQJMrAMV0jZTVGJUPSOd4qgjF3+tTD5CwJM13PHA8cltGW1WGbbvV9NpvUZPw==
+  dependencies:
+    "@emotion/memoize" "^0.7.4"
+
 "@emotion/memoize@0.7.4":
   version "0.7.4"
   resolved "https://registry.yarnpkg.com/@emotion/memoize/-/memoize-0.7.4.tgz#19bf0f5af19149111c40d98bb0cf82119f5d9eeb"
@@ -2418,7 +2425,20 @@
     call-me-maybe "^1.0.1"
     glob-to-regexp "^0.3.0"
 
-"@mui/core@5.0.0-alpha.54", "@mui/core@^5.0.0-alpha.54":
+"@mui/base@^5.0.0-alpha.55":
+  version "5.0.0-alpha.55"
+  resolved "https://registry.yarnpkg.com/@mui/base/-/base-5.0.0-alpha.55.tgz#564d6c9374b4cfe86a4493512356047636076d4f"
+  integrity sha512-caPa04xwZF5Gv7qkto32xRBwubNgkjbXQngqp8PN10DQ/XcLtoe4PqrSPjwWBH0iNUZSRDf2HPP71tIU7bdR7Q==
+  dependencies:
+    "@babel/runtime" "^7.16.3"
+    "@emotion/is-prop-valid" "^1.1.1"
+    "@mui/utils" "^5.1.1"
+    "@popperjs/core" "^2.4.4"
+    clsx "^1.1.1"
+    prop-types "^15.7.2"
+    react-is "^17.0.2"
+
+"@mui/core@5.0.0-alpha.54":
   version "5.0.0-alpha.54"
   resolved "https://registry.yarnpkg.com/@mui/core/-/core-5.0.0-alpha.54.tgz#2c04163552ac536e2026778cc7f7435ce004ba1b"
   integrity sha512-8TxdHqDdSb6wjhsnpE5n7qtkFKDG3PUSlVY0gR3VcdsHXscUY13l3VbMQW1brI4D/R9zx5VYmxIHWaHFgw4RtA==
@@ -2522,6 +2542,17 @@
   integrity sha512-TbAa3DZBGE6xjrVsQ6e0Iw0jwgGZqPg/48aZJJWXJJjU8NU5OhBRutYhrk/kbdDRmsIArHNdpJayBSi7yETYvg==
   dependencies:
     "@babel/runtime" "^7.16.0"
+    "@types/prop-types" "^15.7.4"
+    "@types/react-is" "^16.7.1 || ^17.0.0"
+    prop-types "^15.7.2"
+    react-is "^17.0.2"
+
+"@mui/utils@^5.1.1":
+  version "5.1.1"
+  resolved "https://registry.yarnpkg.com/@mui/utils/-/utils-5.1.1.tgz#3cb2c049731dacb3830336bc8011141e84434aad"
+  integrity sha512-rqakHf0IMaasDo1EcYqkx13VTxeoQoGf/3RxQuazQFKzF7d2uylFwNyb6bnUJGNe2/akiIMk/qiub58sYrwxVQ==
+  dependencies:
+    "@babel/runtime" "^7.16.3"
     "@types/prop-types" "^15.7.4"
     "@types/react-is" "^16.7.1 || ^17.0.0"
     prop-types "^15.7.2"
