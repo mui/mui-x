@@ -1,2 +1,7 @@
-<DataGrid autoHeight {...data} />
-<p>more content</p>
+<Button variant="outlined" onClick={removeRow}>
+  Remove a row
+</Button>
+<Button variant="outlined" onClick={addRow}>
+  Add a row
+</Button>
+<DataGrid autoHeight {...data} rows={data.rows.slice(0, nbRows)} />
