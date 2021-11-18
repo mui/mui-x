@@ -15,7 +15,6 @@ import {
   isSpaceKey,
   isTabKey,
 } from '../../../utils/keyboardUtils';
-import { unstable_gridContainerSizesSelector } from '../container/gridContainerSizesSelector';
 import { visibleGridColumnsLengthSelector } from '../columns/gridColumnsSelector';
 import { useGridSelector } from '../../utils/useGridSelector';
 import { useGridLogger } from '../../utils/useGridLogger';
@@ -66,7 +65,7 @@ const getNextColumnHeaderIndexes = (key: string, indexes: GridColumnHeaderIndexC
  * @requires useGridPageSize (state)
  * @requires useGridColumns (state, method)
  * @requires useGridRows (state, method)
- * @requires useGridContainerProps (state)
+ * @requires useGridDimensions (method) - can be after
  * @requires useGridFocus (method)
  * @requires useGridScroll (method)
  */
@@ -76,7 +75,6 @@ export const useGridKeyboardNavigation = (
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridKeyboardNavigation');
   const colCount = useGridSelector(apiRef, visibleGridColumnsLengthSelector);
-  const containerSizes = useGridSelector(apiRef, unstable_gridContainerSizesSelector);
   const visibleSortedRows = useGridSelector(apiRef, gridVisibleSortedRowEntriesSelector);
   const currentPage = useCurrentPageRows(apiRef, props);
 
@@ -93,8 +91,9 @@ export const useGridKeyboardNavigation = (
   const navigateCells = React.useCallback(
     (params: GridCellParams, event: React.KeyboardEvent) => {
       event.preventDefault();
+      const dimensions = apiRef.current.getRootDimensions();
 
-      if (!currentPage.range) {
+      if (!currentPage.range || !dimensions) {
         return;
       }
 
@@ -127,11 +126,10 @@ export const useGridKeyboardNavigation = (
           nextCellIndexes = { colIndex: colIdx, rowIndex: newRowIndex };
         }
       } else if (isPageKeys(key) || isSpaceKey(key)) {
+        const viewportPageSize = apiRef.current.unstable_getViewportPageSize();
         const nextRowIndex =
           rowIndex +
-          (key.indexOf('Down') > -1 || isSpaceKey(key)
-            ? containerSizes!.viewportPageSize
-            : -1 * containerSizes!.viewportPageSize);
+          (key.indexOf('Down') > -1 || isSpaceKey(key) ? viewportPageSize : -1 * viewportPageSize);
         nextCellIndexes = { colIndex, rowIndex: nextRowIndex };
       } else {
         throw new Error('MUI: Key not mapped to navigation behavior.');
@@ -153,15 +151,20 @@ export const useGridKeyboardNavigation = (
       const node = visibleSortedRows[nextCellIndexes.rowIndex];
       apiRef.current.setCellFocus(node.id, field);
     },
-    [apiRef, visibleSortedRows, colCount, logger, containerSizes, currentPage],
+    [apiRef, visibleSortedRows, colCount, logger, currentPage],
   );
 
   const navigateColumnHeaders = React.useCallback(
     (params: GridColumnHeaderParams, event: React.KeyboardEvent) => {
       event.preventDefault();
+
       let nextColumnHeaderIndexes: GridColumnHeaderIndexCoordinates | null;
       const colIndex = apiRef.current.getColumnIndex(params.field);
       const key = mapKey(event);
+      const dimensions = apiRef.current.getRootDimensions();
+      if (!dimensions) {
+        return;
+      }
 
       if (isArrowKeys(key)) {
         nextColumnHeaderIndexes = getNextColumnHeaderIndexes(key, {
@@ -174,11 +177,9 @@ export const useGridKeyboardNavigation = (
       } else if (isPageKeys(key)) {
         // Handle only Page Down key, Page Up should keep the current position
         if (key.indexOf('Down') > -1 && currentPage.rows.length) {
+          const viewportPageSize = apiRef.current.unstable_getViewportPageSize();
           const field = apiRef.current.getVisibleColumns()[colIndex].field;
-          const id =
-            currentPage.rows[
-              Math.min(containerSizes?.viewportPageSize!, currentPage.rows.length - 1)
-            ].id;
+          const id = currentPage.rows[Math.min(viewportPageSize, currentPage.rows.length - 1)].id;
           apiRef.current.setCellFocus(id, field);
         }
         return;
@@ -205,7 +206,7 @@ export const useGridKeyboardNavigation = (
       const field = apiRef.current.getVisibleColumns()[nextColumnHeaderIndexes.colIndex].field;
       apiRef.current.setColumnHeaderFocus(field, event);
     },
-    [apiRef, colCount, containerSizes, logger, currentPage.rows],
+    [apiRef, colCount, logger, currentPage.rows],
   );
 
   useGridApiEventHandler(apiRef, GridEvents.cellNavigationKeyDown, navigateCells);

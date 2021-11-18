@@ -1,9 +1,4 @@
 import { GridColumnsState } from './colDef/gridColDef';
-import type {
-  GridContainerProps,
-  GridScrollBarState,
-  GridViewportSizeState,
-} from './gridContainerProps';
 import type { GridEditRowsModel } from './gridEditRowModel';
 import type { GridColumnMenuState } from '../hooks/features/columnMenu/columnMenuState';
 import type { GridColumnReorderState } from '../hooks/features/columnReorder/columnReorderState';
@@ -34,9 +29,6 @@ export interface GridState {
   columnReorder: GridColumnReorderState;
   columnResize: GridColumnResizeState;
   columnMenu: GridColumnMenuState;
-  containerSizes: GridContainerProps | null;
-  viewportSizes: GridViewportSizeState;
-  scrollBar: GridScrollBarState;
   sorting: GridSortingState;
   focus: GridFocusState;
   tabIndex: GridTabIndexState;

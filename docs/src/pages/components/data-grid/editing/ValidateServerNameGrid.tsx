@@ -3,10 +3,11 @@ import { createTheme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
 import {
   GridColumns,
-  GridEditCellPropsParams,
   GridRowsProp,
   useGridApiRef,
   DataGridPro,
+  GridEditCellProps,
+  GridPreProcessEditCellProps,
 } from '@mui/x-data-grid-pro';
 
 const defaultTheme = createTheme();
@@ -46,40 +47,27 @@ export default function ValidateServerNameGrid() {
 
   const keyStrokeTimeoutRef = React.useRef<any>();
 
-  const handleCellEditPropsChange = React.useCallback(
-    async ({ id, field, props }: GridEditCellPropsParams, event) => {
-      if (field === 'name') {
-        clearTimeout(promiseTimeout);
-        clearTimeout(keyStrokeTimeoutRef.current);
+  const preProcessEditCellProps = (params: GridPreProcessEditCellProps) =>
+    new Promise<GridEditCellProps>((resolve) => {
+      clearTimeout(promiseTimeout);
+      clearTimeout(keyStrokeTimeoutRef.current);
 
-        let newModel = apiRef.current.getEditRowsModel();
-        apiRef.current.setEditRowsModel({
-          ...newModel,
-          [id]: {
-            ...newModel[id],
-            [field]: { ...newModel[id][field], error: true },
-          },
-        });
+      // basic debouncing here
+      keyStrokeTimeoutRef.current = setTimeout(async () => {
+        const isValid = await validateName(params.props.value!.toString());
+        resolve({ ...params.props, error: !isValid });
+      }, 100);
+    });
 
-        // basic debouncing here
-        keyStrokeTimeoutRef.current = setTimeout(async () => {
-          const data = props; // Fix eslint value is missing in prop-types for JS files
-          const isValid = await validateName(data.value!.toString());
-          newModel = apiRef.current.getEditRowsModel();
-          apiRef.current.setEditRowsModel({
-            ...newModel,
-            [id]: {
-              ...newModel[id],
-              [field]: { ...newModel[id][field], error: !isValid },
-            },
-          });
-        }, 100);
-
-        event.defaultMuiPrevented = true;
-      }
+  const columns: GridColumns = [
+    {
+      field: 'name',
+      headerName: 'MUI Contributor',
+      width: 180,
+      editable: true,
+      preProcessEditCellProps,
     },
-    [apiRef],
-  );
+  ];
 
   React.useEffect(() => {
     return () => {
@@ -95,16 +83,11 @@ export default function ValidateServerNameGrid() {
         apiRef={apiRef}
         rows={rows}
         columns={columns}
-        onEditCellPropsChange={handleCellEditPropsChange}
         isCellEditable={(params) => params.row.id === 5}
       />
     </div>
   );
 }
-
-const columns: GridColumns = [
-  { field: 'name', headerName: 'MUI Contributor', width: 180, editable: true },
-];
 
 const rows: GridRowsProp = [
   {

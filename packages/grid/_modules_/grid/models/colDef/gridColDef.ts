@@ -10,6 +10,7 @@ import {
   GridValueFormatterParams,
   GridValueGetterParams,
   GridValueSetterParams,
+  GridPreProcessEditCellProps,
 } from '../params/gridCellParams';
 import { GridColumnHeaderParams } from '../params/gridColumnHeaderParams';
 import { GridComparatorFn } from '../gridSortModel';
@@ -18,6 +19,7 @@ import { GridRowParams } from '../params/gridRowParams';
 import { GridValueOptionsParams } from '../params/gridValueOptionsParams';
 import { GridActionsCellItemProps } from '../../components/cell/GridActionsCellItem';
 import { GridRowModel } from '../gridRows';
+import { GridEditCellProps } from '../gridEditRowModel';
 
 /**
  * Alignment used in position elements in Cells.
@@ -134,6 +136,15 @@ export interface GridColDef {
    * @returns {React.ReactNode} The element to be rendered.
    */
   renderEditCell?: (params: GridRenderEditCellParams) => React.ReactNode;
+  /**
+   * Callback fired when the edit props of the cell changes.
+   * It allows to process the props that saved into the state.
+   * @param {GridPreProcessEditCellProps} params Object contaning parameters of the cell being editted.
+   * @returns {GridEditCellProps | Promise<GridEditCellProps>} The new edit cell props.
+   */
+  preProcessEditCellProps?: (
+    params: GridPreProcessEditCellProps,
+  ) => GridEditCellProps | Promise<GridEditCellProps>;
   /**
    * Class name that will be added in the column header cell.
    */

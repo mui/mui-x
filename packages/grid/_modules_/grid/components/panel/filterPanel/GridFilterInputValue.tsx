@@ -32,7 +32,7 @@ export interface GridTypeFilterInputValueProps extends GridFilterInputValueProps
 }
 
 function GridFilterInputValue(props: GridTypeFilterInputValueProps & TextFieldProps) {
-  const { item, applyValue, type, apiRef, ...others } = props;
+  const { item, applyValue, type, apiRef, focusElementRef, ...others } = props;
   const filterTimeout = React.useRef<any>();
   const [filterValueState, setFilterValueState] = React.useState(item.value ?? '');
   const [applying, setIsApplying] = React.useState(false);
@@ -105,6 +105,7 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps & TextFieldPr
       InputLabelProps={{
         shrink: true,
       }}
+      inputRef={focusElementRef}
       {...singleSelectProps}
       {...others}
     />
@@ -118,6 +119,10 @@ GridFilterInputValue.propTypes = {
   // ----------------------------------------------------------------------
   apiRef: PropTypes.any.isRequired,
   applyValue: PropTypes.func.isRequired,
+  focusElementRef: PropTypes /* @typescript-to-proptypes-ignore */.oneOfType([
+    PropTypes.func,
+    PropTypes.object,
+  ]),
   item: PropTypes.shape({
     columnField: PropTypes.string.isRequired,
     id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),

@@ -118,7 +118,6 @@ const getRowsStateFromCache = (
 
 /**
  * @requires useGridRowGroupsPreProcessing (method)
- * @requires useGridSorting (method) - can be after, async only (TODO: Remove after moving the `getRowIndex` and `getRowIdFromIndex` to `useGridSorting`)
  */
 export const useGridRows = (
   apiRef: GridApiRef,
@@ -165,18 +164,6 @@ export const useGridRows = (
   });
 
   const [gridState, setGridState, forceUpdate] = useGridState(apiRef);
-
-  // TODO: Move in useGridSorting
-  const getRowIndex = React.useCallback<GridRowApi['getRowIndex']>(
-    (id) => apiRef.current.getSortedRowIds().indexOf(id),
-    [apiRef],
-  );
-
-  // TODO: Move in useGridSorting
-  const getRowIdFromRowIndex = React.useCallback<GridRowApi['getRowIdFromRowIndex']>(
-    (index) => apiRef.current.getSortedRowIds()[index],
-    [apiRef],
-  );
 
   const getRow = React.useCallback<GridRowApi['getRow']>(
     (id) => gridRowsLookupSelector(apiRef.current.state)[id] ?? null,
@@ -432,8 +419,6 @@ export const useGridRows = (
   useGridApiEventHandler(apiRef, GridEvents.rowGroupsPreProcessingChange, handleGroupRows);
 
   const rowApi: GridRowApi = {
-    getRowIndex,
-    getRowIdFromRowIndex,
     getRow,
     getRowModels,
     getRowsCount,
