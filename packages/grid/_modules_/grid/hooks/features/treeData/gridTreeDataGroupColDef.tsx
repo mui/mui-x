@@ -24,7 +24,7 @@ export const GRID_TREE_DATA_GROUP_COL_DEF: GridColDef = {
   valueGetter: ({ rowNode, api }): GridTreeDataGroupingCellValue => ({
     label: rowNode.groupingValue,
     depth: rowNode.depth,
-    expanded: rowNode.expanded ?? false,
+    expanded: rowNode.childrenExpanded ?? false,
     filteredDescendantCount: gridFilteredDescendantCountLookupSelector(api.state)[rowNode.id] ?? 0,
   }),
   renderCell: (params: GridRenderCellParams<GridTreeDataGroupingCellValue>) => (

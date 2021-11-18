@@ -4,6 +4,7 @@ import {
   GridColumns,
   GridRowsProp,
   useGridApiRef,
+  gridVisibleSortedRowIdsSelector,
 } from '@mui/x-data-grid-pro';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
@@ -116,17 +117,21 @@ const getTreeDataPath = (row) => row.hierarchy;
 export default function SetRowExpansionTreeData() {
   const apiRef = useGridApiRef();
 
-  const toggleFirstRow = () => {
-    const rowId = apiRef.current.getRowIdFromRowIndex(1);
-    apiRef.current.unstable_setRowExpansion(
-      rowId,
-      !apiRef.current.unstable_getRowNode(rowId)?.expanded,
-    );
+  const toggleSecondRow = () => {
+    const rowIds = gridVisibleSortedRowIdsSelector(apiRef.current.state);
+
+    if (rows.length > 1) {
+      const rowId = rowIds[1];
+      apiRef.current.setRowChildrenExpansion(
+        rowId,
+        !apiRef.current.getRowNode(rowId)?.childrenExpanded,
+      );
+    }
   };
 
   return (
     <Stack style={{ width: '100%' }} alignItems="flex-start" spacing={2}>
-      <Button onClick={toggleFirstRow}>Toggle 2nd row expansion</Button>
+      <Button onClick={toggleSecondRow}>Toggle 2nd row expansion</Button>
       <div style={{ height: 400, width: '100%' }}>
         <DataGridPro
           treeData
@@ -134,6 +139,7 @@ export default function SetRowExpansionTreeData() {
           rows={rows}
           columns={columns}
           getTreeDataPath={getTreeDataPath}
+          disableColumnFilter
         />
       </div>
     </Stack>

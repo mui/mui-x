@@ -4,6 +4,7 @@ import Stack from '@mui/material/Stack';
 import Checkbox from '@mui/material/Checkbox';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
+import Typography from '@mui/material/Typography';
 
 const rows = [
   {
@@ -110,13 +111,14 @@ const columns = [
 
 const getTreeDataPath = (row) => row.hierarchy;
 
-export default function DisableChildrenSortingTreeData() {
+export default function DisableChildrenFilteringTreeData() {
   const [disableChildrenFiltering, setDisableChildrenFiltering] =
     React.useState(true);
   const [filterModel, setFilterModel] = React.useState({
     linkOperator: GridLinkOperator.Or,
     items: [
       {
+        id: 0,
         columnField: 'recruitmentDate',
         operatorValue: 'before',
         value: '2018-01-01',
@@ -134,7 +136,11 @@ export default function DisableChildrenSortingTreeData() {
               onChange={(event) => setDisableChildrenFiltering(event.target.checked)}
             />
           }
-          label="Enable `disableChildrenFiltering`"
+          label={
+            <Typography component="span">
+              Enable <code>disableChildrenFiltering</code>
+            </Typography>
+          }
         />
       </FormGroup>
       <div style={{ height: 400, width: '100%' }}>

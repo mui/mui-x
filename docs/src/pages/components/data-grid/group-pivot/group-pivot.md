@@ -10,8 +10,6 @@ title: Data Grid - Group & Pivot
 
 Tree Data allows to display data with parent / child relationships.
 
-### General behavior
-
 To enable the Tree Data, you simply have to use the `treeData` prop as well as provide a `getTreeDataPath` prop.
 The `getTreeDataPath` function returns an array of strings which represents the path to a given row.
 
@@ -70,7 +68,7 @@ If you want to expand the whole tree, set `defaultGroupingExpansionDepth = -1`
 
 {{"demo": "pages/components/data-grid/group-pivot/DefaultGroupingExpansionDepthTreeData.js", "bg": "inline", "defaultCodeOpen": false}}
 
-Use the `unstable_setRowExpansion` method on `apiRef` to programmatically set the expansion of a row.
+Use the `setRowChildrenExpansion` method on `apiRef` to programmatically set the expansion of a row.
 
 {{"demo": "pages/components/data-grid/group-pivot/SetRowExpansionTreeData.js", "bg": "inline", "defaultCodeOpen": false}}
 

@@ -118,7 +118,7 @@ export const useGridTreeData = (
         event.stopPropagation();
         event.preventDefault();
 
-        const node = apiRef.current.unstable_getRowNode(params.id);
+        const node = apiRef.current.getRowNode(params.id);
         const filteredDescendantCount =
           gridFilteredDescendantCountLookupSelector(apiRef.current.state)[params.id] ?? 0;
 
@@ -126,7 +126,7 @@ export const useGridTreeData = (
           return;
         }
 
-        apiRef.current.unstable_setRowExpansion(params.id, !node.expanded);
+        apiRef.current.setRowChildrenExpansion(params.id, !node.childrenExpanded);
       }
     },
     [apiRef],

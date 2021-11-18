@@ -191,7 +191,7 @@ export const useGridFilter = (
             const childSubTreeSize = filterTreeNode(
               childNode,
               isMatchingFilters ?? isParentMatchingFilters,
-              areAncestorsExpanded && !!node.expanded,
+              areAncestorsExpanded && !!node.childrenExpanded,
             );
 
             filteredDescendantCount += childSubTreeSize;

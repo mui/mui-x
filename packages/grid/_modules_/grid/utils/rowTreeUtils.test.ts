@@ -19,7 +19,10 @@ describe('buildRowTree', () => {
     });
 
     expect(
-      Object.values(response.tree).map((node) => ({ id: node.id, expanded: node.expanded })),
+      Object.values(response.tree).map((node) => ({
+        id: node.id,
+        expanded: node.childrenExpanded,
+      })),
     ).to.deep.equal([
       { id: 0, expanded: false },
       { id: 1, expanded: false },
@@ -44,7 +47,10 @@ describe('buildRowTree', () => {
     });
 
     expect(
-      Object.values(response.tree).map((node) => ({ id: node.id, expanded: node.expanded })),
+      Object.values(response.tree).map((node) => ({
+        id: node.id,
+        expanded: node.childrenExpanded,
+      })),
     ).to.deep.equal([
       { id: 0, expanded: true },
       { id: 1, expanded: true },
@@ -69,7 +75,10 @@ describe('buildRowTree', () => {
     });
 
     expect(
-      Object.values(response.tree).map((node) => ({ id: node.id, expanded: node.expanded })),
+      Object.values(response.tree).map((node) => ({
+        id: node.id,
+        expanded: node.childrenExpanded,
+      })),
     ).to.deep.equal([
       { id: 0, expanded: true },
       { id: 1, expanded: true },
