@@ -65,11 +65,11 @@ The following demo updates the rows every 10ms, but they are only applied every 
 By default, the rows have a height of 52 pixels.
 This matches the normal height in the [Material Design guidelines](https://material.io/components/data-tables).
 
+If you want to create a more / less compact grid and not only set the row height, take a look at our [Density documentation](/components/data-grid/accessibility/#density-selector)
+
 To change the row height for the whole grid, set the `rowHeight` prop:
 
 {{"demo": "pages/components/data-grid/rows/DenseHeightGrid.js", "bg": "inline"}}
-
-If you want to create a more / less compact grid and not only set the row height, take a look at our [Density documentation](/components/data-grid/accessibility/#density-selector)
 
 ## Styling rows
 
