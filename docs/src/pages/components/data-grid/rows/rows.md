@@ -46,7 +46,7 @@ apiRef.current.updateRows([{ id: 1, _action: 'delete' }]);
 
 The grid provides a `onRowsScrollEnd` prop that can be used to load additional rows when the scroll reaches the bottom of the viewport area.
 
-In addition, the area in which the callback provided to the `onRowsScrollEnd` is called can be changed using `scrollEndThreshold`.
+In addition, the area in which `onRowsScrollEnd` is called can be changed using `scrollEndThreshold`.
 
 {{"demo": "pages/components/data-grid/rows/InfiniteLoadingGrid.js", "bg": "inline", "disableAd": true}}
 
