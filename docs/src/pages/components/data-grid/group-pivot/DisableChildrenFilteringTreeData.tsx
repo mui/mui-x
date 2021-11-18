@@ -116,7 +116,7 @@ const columns: GridColumns = [
 
 const getTreeDataPath = (row) => row.hierarchy;
 
-export default function DisableChildrenSortingTreeData() {
+export default function DisableChildrenFilteringTreeData() {
   const [disableChildrenFiltering, setDisableChildrenFiltering] =
     React.useState(true);
   const [filterModel, setFilterModel] = React.useState<GridFilterModel>({
