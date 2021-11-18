@@ -71,7 +71,7 @@ export default [
                 const contents = { ...pkg };
                 contents.main = 'index-cjs.js';
                 contents.module = 'index-esm.js';
-                contents.types = 'data-grid.d.ts';
+                contents.types = 'x-data-grid.d.ts';
                 return JSON.stringify(contents, null, 2);
               },
             },
