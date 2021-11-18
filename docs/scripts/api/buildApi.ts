@@ -6,14 +6,23 @@ import * as ttp from '@material-ui/monorepo/packages/typescript-to-proptypes/src
 import { getHeaders } from '@material-ui/monorepo/docs/packages/markdown';
 import * as TypeDoc from 'typedoc';
 import buildComponentDocumentation from './buildComponentDocumentation';
-import buildInterfaceDocumentation from './buildInterfaceDocumentation';
+import buildInterfacesDocumentation from './buildInterfacesDocumentation';
 import buildExportsDocumentation from './buildExportsDocumentation';
-import { isDeclarationReflection } from './utils';
 
 const workspaceRoot = path.resolve(__dirname, '../../../');
 const prettierConfigPath = path.join(workspaceRoot, 'prettier.config.js');
 
 async function run(argv: { outputDirectory?: string }) {
+  const app = new TypeDoc.Application();
+  app.options.addReader(new TypeDoc.TSConfigReader());
+  app.options.addReader(new TypeDoc.TypeDocReader());
+  app.bootstrap({
+    entryPoints: ['packages/grid/x-data-grid/src/index.ts'],
+    exclude: ['**/*.test.ts'],
+    tsconfig: 'packages/grid/x-data-grid/tsconfig.json',
+  });
+  const project = app.convert()!;
+
   const outputDirectory = path.resolve(argv.outputDirectory!);
   fse.mkdirSync(outputDirectory, { mode: 0o777, recursive: true });
 
@@ -37,6 +46,13 @@ async function run(argv: { outputDirectory?: string }) {
   const indexPath = path.resolve(__dirname, '../../packages/grid/_modules_/index.ts');
   const program = ttp.createTSProgram([...componentsToGenerateDocs, indexPath], tsconfig);
 
+  const documentedInterfaces = buildInterfacesDocumentation({
+    project,
+    prettierConfigPath,
+    workspaceRoot,
+    outputDirectory,
+  });
+
   // Uncomment below to generate documentation for all exported components
   // const checker = program.getTypeChecker();
   // const indexFile = program.getSourceFile(indexPath)!;
@@ -52,23 +68,6 @@ async function run(argv: { outputDirectory?: string }) {
   //   }
   // })!;
 
-  const apisToGenerate = [
-    'GridApi',
-    'GridColDef',
-    'GridCellParams',
-    'GridRowParams',
-    'GridSelectionApi',
-    'GridFilterApi',
-    'GridCsvExportApi',
-    'GridCsvExportOptions',
-    'GridPrintExportApi',
-    'GridDisableVirtualizationApi',
-    'GridPrintExportOptions',
-    'GridScrollApi',
-    'GridEditRowApi',
-    'GridEvents',
-  ];
-
   const componentBuilds = componentsToGenerateDocs.map(async (filename) => {
     try {
       return await buildComponentDocumentation({
@@ -78,7 +77,7 @@ async function run(argv: { outputDirectory?: string }) {
         prettierConfigPath,
         workspaceRoot,
         pagesMarkdown,
-        apisToGenerate,
+        documentedInterfaces,
       });
     } catch (error: any) {
       error.message = `${path.relative(process.cwd(), filename)}: ${error.message}`;
@@ -98,31 +97,6 @@ async function run(argv: { outputDirectory?: string }) {
   if (fails.length > 0) {
     process.exit(1);
   }
-
-  const app = new TypeDoc.Application();
-  app.options.addReader(new TypeDoc.TSConfigReader());
-  app.options.addReader(new TypeDoc.TypeDocReader());
-  app.bootstrap({
-    entryPoints: ['packages/grid/x-data-grid/src/index.ts'],
-    exclude: ['**/*.test.ts'],
-    tsconfig: 'packages/grid/x-data-grid/tsconfig.json',
-  });
-  const project = app.convert()!;
-
-  apisToGenerate.forEach((apiName) => {
-    const reflection = project.findReflectionByName(apiName);
-    if (!reflection || !isDeclarationReflection(reflection)) {
-      throw new Error(`Could not find reflection for "${apiName}".`);
-    } else {
-      buildInterfaceDocumentation({
-        reflection,
-        apisToGenerate,
-        prettierConfigPath,
-        workspaceRoot,
-        outputDirectory,
-      });
-    }
-  });
 
   buildExportsDocumentation({
     reflections: project.children ?? [],

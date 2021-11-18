@@ -20,9 +20,15 @@ export function escapeCell(value: string) {
     .replace(/\r?\n/g, '<br />');
 }
 
+export interface DeclarationContext {
+  name: string;
+  description?: string;
+  properties: TypeDoc.DeclarationReflection[];
+}
+
 export function linkify(
   text: string | undefined,
-  apisToGenerate: string[],
+  documentedInterfaces: Map<string, boolean>,
   format: 'markdown' | 'html',
 ) {
   if (text == null) {
@@ -31,7 +37,7 @@ export function linkify(
 
   const bracketsRegexp = /\[\[([^\]]+)\]\]/g;
   return text.replace(bracketsRegexp, (match: string, content: string) => {
-    if (!apisToGenerate.includes(content)) {
+    if (!documentedInterfaces.get(content)) {
       return content;
     }
     const url = `/api/data-grid/${kebabCase(content)}/`;

@@ -177,7 +177,7 @@ interface BuildComponentDocumentationOptions {
   outputDirectory: string;
   prettierConfigPath: string;
   workspaceRoot: string;
-  apisToGenerate: string[];
+  documentedInterfaces: Map<string, boolean>;
   pagesMarkdown: ReadonlyArray<{
     components: readonly string[];
     filename: string;
@@ -188,8 +188,14 @@ interface BuildComponentDocumentationOptions {
 export default async function buildComponentDocumentation(
   options: BuildComponentDocumentationOptions,
 ) {
-  const { filename, program, outputDirectory, prettierConfigPath, workspaceRoot, apisToGenerate } =
-    options;
+  const {
+    filename,
+    program,
+    outputDirectory,
+    prettierConfigPath,
+    workspaceRoot,
+    documentedInterfaces,
+  } = options;
 
   const src = fse.readFileSync(filename, 'utf8');
   const reactApi = parseComponentSource(src, { filename });
@@ -259,7 +265,7 @@ export default async function buildComponentDocumentation(
       if (propName === 'classes') {
         description += ' See <a href="#css">CSS API</a> below for more details.';
       }
-      componentApi.propDescriptions[propName] = linkify(description, apisToGenerate, 'html');
+      componentApi.propDescriptions[propName] = linkify(description, documentedInterfaces, 'html');
 
       const jsdocDefaultValue = getJsdocDefaultValue(
         parseDoctrine(propDescriptor.description || '', {
