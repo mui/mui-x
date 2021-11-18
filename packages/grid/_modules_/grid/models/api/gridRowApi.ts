@@ -1,4 +1,10 @@
-import { GridRowModel, GridRowId, GridRowModelUpdate, GridRowTreeNodeConfig } from '../gridRows';
+import {
+  GridRowModel,
+  GridRowId,
+  GridRowModelUpdate,
+  GridRowTreeNodeConfig,
+  GridRowsMeta,
+} from '../gridRows';
 
 /**
  * The Row API interface that is available in the grid `apiRef`.
@@ -61,4 +67,15 @@ export interface GridRowApi {
    * @ignore - do not document.
    */
   unstable_setRowExpansion: (id: GridRowId, isExpanded: boolean) => void;
+  /**
+   * Get grid rows meta data.
+   * @returns {GridRowsMeta} The grid row meta data.
+   */
+  unstable_getRowsMeta: () => GridRowsMeta;
+  /**
+   * Get grid rows meta data.
+   * @param {GridRowId} id The id of the row.
+   * @returns {number} The target row height.
+   */
+  unstable_hydrateRowHeight: (id: GridRowId) => number;
 }

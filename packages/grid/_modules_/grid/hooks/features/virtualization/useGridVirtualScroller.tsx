@@ -15,6 +15,7 @@ import { unstable_gridScrollBarSizeSelector } from '../container/gridContainerSi
 import { useCurrentPageRows } from '../../utils/useCurrentPageRows';
 import { GridEvents } from '../../../constants/eventsConstants';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
+import { useGridState } from '../../utils/useGridState';
 
 // Uses binary search to avoid looping through all possible positions
 export function getIndexFromScroll(
@@ -71,6 +72,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
   const scrollPosition = React.useRef({ top: 0, left: 0 });
   const [containerWidth, setContainerWidth] = React.useState<number | null>(null);
   const prevTotalWidth = React.useRef(columnsMeta.totalWidth);
+  const [gridState] = useGridState(apiRef);
 
   const computeRenderContext = React.useCallback(() => {
     if (disableVirtualization) {
@@ -83,17 +85,13 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     }
 
     const { top, left } = scrollPosition.current!;
+    const { positions: rowPositions } = apiRef.current.unstable_getRowsMeta();
+    const firstRowIndex = getIndexFromScroll(top, rowPositions);
+    const lastRowIndex = getIndexFromScroll(top + rootRef.current!.clientHeight!, rowPositions);
 
-    const numberOfRowsToRender = rootProps.autoHeight
-      ? currentPage.rows.length
-      : Math.floor(rootRef.current!.clientHeight / rowHeight);
-
-    const firstRowIndex = Math.floor(top / rowHeight);
-    const lastRowIndex = firstRowIndex + numberOfRowsToRender;
-
-    const { positions } = gridColumnsMetaSelector(apiRef.current.state); // To avoid infinite loop
-    const firstColumnIndex = getIndexFromScroll(left, positions);
-    const lastColumnIndex = getIndexFromScroll(left + containerWidth!, positions);
+    const { positions: columnPositions } = gridColumnsMetaSelector(gridState); // To avoid infinite loop
+    const firstColumnIndex = getIndexFromScroll(left, columnPositions);
+    const lastColumnIndex = getIndexFromScroll(left + containerWidth!, columnPositions);
 
     return {
       firstRowIndex,
@@ -103,10 +101,9 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     };
   }, [
     apiRef,
+    gridState,
     containerWidth,
-    rootProps.autoHeight,
     disableVirtualization,
-    rowHeight,
     currentPage.rows.length,
     visibleColumns.length,
   ]);
@@ -186,7 +183,8 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
       prevRenderContext.current = nextRenderContext;
       prevTotalWidth.current = columnsMeta.totalWidth;
 
-      const top = Math.max(nextRenderContext.firstRowIndex - rootProps.rowBuffer, 0) * rowHeight;
+      const firstRowToRender = Math.max(nextRenderContext.firstRowIndex - rootProps.rowBuffer, 0);
+      const top = apiRef.current.unstable_getRowsMeta().positions[firstRowToRender];
       const firstColumnToRender = Math.max(
         nextRenderContext.firstColumnIndex - rootProps.columnBuffer,
         0,
@@ -223,13 +221,14 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
 
     for (let i = 0; i < renderedRows.length; i += 1) {
       const { id, model } = renderedRows[i];
+      const targetRowHeight = apiRef.current.unstable_hydrateRowHeight(id);
 
       rows.push(
         <rootProps.components.Row
           key={i}
           row={model}
           rowId={id}
-          rowHeight={rowHeight}
+          rowHeight={targetRowHeight}
           cellFocus={cellFocus} // TODO move to inside the row
           cellTabIndex={cellTabIndex} // TODO move to inside the row
           editRowsState={editRowsState} // TODO move to inside the row
@@ -256,7 +255,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     // In cases where the columns exceed the available width,
     // the horizontal scrollbar should be shown even when there're no rows.
     // Keeping 1px as minimum height ensures that the scrollbar will visible if necessary.
-    height: Math.max(currentPage.rows.length * rowHeight, 1),
+    height: Math.max(apiRef.current.unstable_getRowsMeta().totalHeight, 1),
   };
 
   if (rootProps.autoHeight && currentPage.rows.length === 0) {

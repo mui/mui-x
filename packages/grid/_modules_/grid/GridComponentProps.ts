@@ -88,6 +88,12 @@ interface GridComponentOtherProps {
    */
   getRowClassName?: (params: GridRowParams) => string;
   /**
+   * Function that applies CSS classes dynamically on rows.
+   * @param {GridRowParams} params With all properties from [[GridRowParams]].
+   * @returns {number | null | undefined} The number of pixels used to set the target row height. Null or Undefined will use the default row height.
+   */
+  getRowHeight?: (params: any) => number | null | undefined;
+  /**
    * Callback fired when a cell is rendered, returns true if the cell is editable.
    * @param {GridCellParams} params With all properties from [[GridCellParams]].
    * @returns {boolean} A boolean indicating if the cell is editable.

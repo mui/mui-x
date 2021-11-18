@@ -10,6 +10,7 @@ import {
   GridRowsProp,
   GridRowIdGetter,
   GridRowTreeNodeConfig,
+  GridRowsMeta,
 } from '../../../models/gridRows';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
@@ -47,6 +48,12 @@ interface GridRowsInternalCache {
   lastUpdateMs: number;
 }
 
+interface ConvertGridRowsPropToStateParams {
+  prevState: GridRowsInternalCacheState;
+  props?: Pick<GridComponentProps, 'rowCount' | 'getRowId'>;
+  rows?: GridRowsProp;
+}
+
 function getGridRowId(
   rowModel: GridRowModel,
   getRowId?: GridRowIdGetter,
@@ -55,12 +62,6 @@ function getGridRowId(
   const id = getRowId ? getRowId(rowModel) : rowModel.id;
   checkGridRowIdIsValid(id, rowModel, detailErrorMessage);
   return id;
-}
-
-interface ConvertGridRowsPropToStateParams {
-  prevState: GridRowsInternalCacheState;
-  props?: Pick<GridComponentProps, 'rowCount' | 'getRowId'>;
-  rows?: GridRowsProp;
 }
 
 const convertGridRowsPropToState = ({
@@ -123,7 +124,7 @@ export const useGridRows = (
   apiRef: GridApiRef,
   props: Pick<
     GridComponentProps,
-    'rows' | 'getRowId' | 'rowCount' | 'throttleRowsMs' | 'signature'
+    'rows' | 'getRowId' | 'rowCount' | 'throttleRowsMs' | 'signature' | 'getRowHeight'
   >,
 ): void => {
   if (process.env.NODE_ENV !== 'production') {
@@ -132,6 +133,7 @@ export const useGridRows = (
   }
 
   const logger = useGridLogger(apiRef, 'useGridRows');
+  const rowsHeightCollection = React.useRef(new Map());
   const rowsCache = React.useRef<GridRowsInternalCache>({
     state: {
       value: {
@@ -162,7 +164,7 @@ export const useGridRows = (
     return { ...state, rows: getRowsStateFromCache(rowsCache.current, apiRef) };
   });
 
-  const [, setGridState, forceUpdate] = useGridState(apiRef);
+  const [gridState, setGridState, forceUpdate] = useGridState(apiRef);
 
   // TODO: Move in useGridSorting
   const getRowIndex = React.useCallback<GridRowApi['getRowIndex']>(
@@ -399,6 +401,34 @@ export const useGridRows = (
     );
   }, [logger, throttledRowsChange, props.rowCount, props.getRowId, props.rows]);
 
+  const rowsMeta = React.useRef<GridRowsMeta>({
+    totalHeight: 0,
+    positions: [],
+  });
+
+  // The effect is used to build the rows meta data - totalRowHeight and positions.
+  // Because of variable row height this is needed for the virtualization
+  React.useEffect(() => {
+    const allRows = gridRowIdsSelector(apiRef.current.state);
+    const positions: number[] = [];
+
+    const totalHeight = allRows.reduce((acc: number, currentRow) => {
+      positions.push(acc);
+      const targetRowHeight =
+        (props.getRowHeight && props.getRowHeight(apiRef.current.getRow(currentRow))) ||
+        gridState.density.rowHeight;
+
+      rowsHeightCollection.current.set(currentRow, targetRowHeight);
+      return acc + targetRowHeight;
+    }, 0);
+
+    rowsMeta.current = { totalHeight, positions };
+  }, [apiRef, props, rowsHeightCollection, gridState]);
+
+  const getRowsMeta = (): GridRowsMeta => rowsMeta.current;
+
+  const hydrateRowHeight = (rowId: GridRowId): number => rowsHeightCollection.current.get(rowId);
+
   useGridApiEventHandler(apiRef, GridEvents.rowGroupsPreProcessingChange, handleGroupRows);
 
   const rowApi: GridRowApi = {
@@ -412,6 +442,8 @@ export const useGridRows = (
     updateRows,
     unstable_setRowExpansion: setRowExpansion,
     unstable_getRowNode: getRowNode,
+    unstable_getRowsMeta: getRowsMeta,
+    unstable_hydrateRowHeight: hydrateRowHeight,
   };
 
   useGridApiMethod(apiRef, rowApi, 'GridRowApi');
