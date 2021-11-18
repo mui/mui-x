@@ -30,7 +30,6 @@ It replaces the previous values. This approach has some drawbacks:
 ### The `updateRows` method [<span class="pro"></span>](https://mui.com/store/items/material-ui-pro/)
 
 If you want to only update part of the rows, you can use the `apiRef.current.updateRows` method.
-The following demo updates the rows every 200ms.
 
 {{"demo": "pages/components/data-grid/rows/UpdateRowsApiRef.js", "bg": "inline", "disableAd": true}}
 
