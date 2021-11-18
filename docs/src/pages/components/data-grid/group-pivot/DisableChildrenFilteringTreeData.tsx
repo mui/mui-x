@@ -140,7 +140,11 @@ export default function DisableChildrenFilteringTreeData() {
               onChange={(event) => setDisableChildrenFiltering(event.target.checked)}
             />
           }
-          label="Enable `disableChildrenFiltering`"
+          label={
+            <Typography component="span">
+              Enable <code>disableChildrenFiltering</code>
+            </Typography>
+          }
         />
       </FormGroup>
       <div style={{ height: 400, width: '100%' }}>
