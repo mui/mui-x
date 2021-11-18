@@ -298,7 +298,7 @@ export const GridRootStyles = styled('div', {
     [`& .${gridClasses.treeDataGroupingCellToggle}`]: {
       flex: '0 0 28px',
       alignSelf: 'stretch',
-      marginRight: 16,
+      marginRight: theme.spacing(2),
     },
   };
 
