@@ -220,7 +220,7 @@ describe('<DataGrid /> - Sorting', () => {
     expect(getColumnValues()).to.deep.equal(['France', 'UK', 'US']);
   });
 
-  it.only('should support new dataset in control mode', () => {
+  it('should support new dataset in control mode', () => {
     const TestCase = (props: DataGridProps) => {
       const { rows, columns } = props;
       const [sortModel, setSortModel] = React.useState<GridSortModel>();
