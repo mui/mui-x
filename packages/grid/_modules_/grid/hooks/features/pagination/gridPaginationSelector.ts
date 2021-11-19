@@ -8,18 +8,30 @@ import {
 import { GridPaginationState } from './gridPaginationState';
 import { gridRowTreeDepthSelector, gridRowTreeSelector } from '../rows/gridRowsSelector';
 
+/**
+ * @feature Pagination
+ */
 export const gridPaginationSelector = (state: GridState): GridPaginationState => state.pagination;
 
+/**
+ * @feature Pagination
+ */
 export const gridPageSelector = createSelector(
   gridPaginationSelector,
   (pagination) => pagination.page,
 );
 
+/**
+ * @feature Pagination
+ */
 export const gridPageSizeSelector = createSelector(
   gridPaginationSelector,
   (pagination) => pagination.pageSize,
 );
 
+/**
+ * @feature Pagination
+ */
 export const gridPaginationRowRangeSelector = createSelector(
   gridPaginationSelector,
   gridRowTreeSelector,
@@ -75,6 +87,9 @@ export const gridPaginationRowRangeSelector = createSelector(
   },
 );
 
+/**
+ * @category Pagination
+ */
 export const gridPaginatedVisibleSortedGridRowEntriesSelector = createSelector(
   gridVisibleSortedRowEntriesSelector,
   gridPaginationRowRangeSelector,
@@ -90,6 +105,9 @@ export const gridPaginatedVisibleSortedGridRowEntriesSelector = createSelector(
   },
 );
 
+/**
+ * @category Pagination
+ */
 export const gridPaginatedVisibleSortedGridRowIdsSelector = createSelector(
   gridVisibleSortedRowIdsSelector,
   gridPaginationRowRangeSelector,

@@ -176,6 +176,10 @@ However, it can be implemented as in the demo below.
 
 {{"demo": "pages/components/data-grid/filtering/FilterApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
 
+## Selectors [<span class="pro"></span>](https://mui.com/store/items/material-ui-pro/)
+
+{{"demo": "pages/components/data-grid/filtering/FilterSelectorsNoSnap.js", "bg": "inline", "hideToolbar": true}}
+
 ## API
 
 - [DataGrid](/api/data-grid/data-grid/)

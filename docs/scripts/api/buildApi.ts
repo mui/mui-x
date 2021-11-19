@@ -8,6 +8,7 @@ import * as TypeDoc from 'typedoc';
 import buildComponentDocumentation from './buildComponentDocumentation';
 import buildInterfacesDocumentation from './buildInterfacesDocumentation';
 import buildExportsDocumentation from './buildExportsDocumentation';
+import buildSelectorsDocumentation from './buildSelectorsDocumentation';
 
 const workspaceRoot = path.resolve(__dirname, '../../../');
 const prettierConfigPath = path.join(workspaceRoot, 'prettier.config.js');
@@ -97,6 +98,12 @@ async function run(argv: { outputDirectory?: string }) {
   if (fails.length > 0) {
     process.exit(1);
   }
+
+  buildSelectorsDocumentation({
+    project,
+    outputDirectory,
+    prettierConfigPath,
+  });
 
   buildExportsDocumentation({
     reflections: project.children ?? [],

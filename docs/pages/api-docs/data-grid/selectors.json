@@ -1,0 +1,104 @@
+[
+  { "name": "allGridColumnsSelector", "returnType": "GridStateColDef[]" },
+  { "name": "filterableGridColumnsIdsSelector", "returnType": "string[]" },
+  { "name": "filterableGridColumnsSelector", "returnType": "GridStateColDef[]" },
+  { "name": "gridColumnReorderDragColSelector", "returnType": "string" },
+  {
+    "name": "gridColumnsMetaSelector",
+    "returnType": "{ positions: number[]; totalWidth: number }"
+  },
+  { "name": "gridColumnsTotalWidthSelector", "returnType": "number" },
+  { "name": "gridDensityHeaderHeightSelector", "returnType": "number" },
+  { "name": "gridDensityRowHeightSelector", "returnType": "number" },
+  { "name": "gridDensityValueSelector", "returnType": "GridDensity" },
+  {
+    "name": "gridFilterActiveItemsLookupSelector",
+    "returnType": "GridFilterActiveItemsLookup",
+    "feature": "Filter"
+  },
+  {
+    "name": "gridFilterActiveItemsSelector",
+    "returnType": "GridFilterItem[]",
+    "feature": "Filter"
+  },
+  { "name": "gridFilterModelSelector", "returnType": "GridFilterModel", "feature": "Filter" },
+  {
+    "name": "gridFilteredDescendantCountLookupSelector",
+    "returnType": "Record<GridRowId, number>",
+    "feature": "Filter"
+  },
+  { "name": "gridFocusCellSelector", "returnType": "null | GridCellIdentifier" },
+  { "name": "gridFocusColumnHeaderSelector", "returnType": "null | GridColumnIdentifier" },
+  { "name": "gridPageSelector", "returnType": "number", "feature": "Pagination" },
+  { "name": "gridPageSizeSelector", "returnType": "number", "feature": "Pagination" },
+  {
+    "name": "gridPaginatedVisibleSortedGridRowEntriesSelector",
+    "returnType": "{ id: GridRowId; model: { [key: string]: any } }[]"
+  },
+  { "name": "gridPaginatedVisibleSortedGridRowIdsSelector", "returnType": "GridRowId[]" },
+  {
+    "name": "gridPaginationRowRangeSelector",
+    "returnType": "null | { firstRowIndex: number; lastRowIndex: number }",
+    "feature": "Pagination"
+  },
+  { "name": "gridResizingColumnFieldSelector", "returnType": "string" },
+  { "name": "gridRowCountSelector", "returnType": "number" },
+  { "name": "gridRowIdsSelector", "returnType": "GridRowId[]" },
+  { "name": "gridRowTreeDepthSelector", "returnType": "number" },
+  { "name": "gridRowTreeSelector", "returnType": "GridRowTreeConfig" },
+  { "name": "gridRowsLookupSelector", "returnType": "GridRowsLookup" },
+  { "name": "gridSortColumnLookupSelector", "returnType": "GridSortColumnLookup" },
+  { "name": "gridSortModelSelector", "returnType": "GridSortModel" },
+  {
+    "name": "gridSortedRowEntriesSelector",
+    "returnType": "{ id: GridRowId; model: { [key: string]: any } }[]"
+  },
+  { "name": "gridSortedRowIdsSelector", "returnType": "GridRowId[]" },
+  { "name": "gridTabIndexCellSelector", "returnType": "null | GridCellIdentifier" },
+  { "name": "gridTabIndexColumnHeaderSelector", "returnType": "null | GridColumnIdentifier" },
+  { "name": "gridTopLevelRowCountSelector", "returnType": "number" },
+  { "name": "gridVisibleRowCountSelector", "returnType": "number", "feature": "Filter" },
+  {
+    "name": "gridVisibleRowsLookupSelector",
+    "returnType": "Record<GridRowId, boolean>",
+    "feature": "Filter"
+  },
+  {
+    "name": "gridVisibleRowsSelector",
+    "returnType": "GridRowId[]",
+    "deprecated": "Use `gridVisibleSortedRowIdsSelector` instead",
+    "feature": "Filter"
+  },
+  {
+    "name": "gridVisibleSortedRowEntriesSelector",
+    "returnType": "{ id: GridRowId; model: { [key: string]: any } }[]",
+    "feature": "Filter"
+  },
+  { "name": "gridVisibleSortedRowIdsSelector", "returnType": "GridRowId[]", "feature": "Filter" },
+  {
+    "name": "gridVisibleSortedTopLevelRowEntriesSelector",
+    "returnType": "{ id: GridRowId; model: { [key: string]: any } }[]",
+    "feature": "Filter"
+  },
+  { "name": "gridVisibleTopLevelRowCountSelector", "returnType": "number", "feature": "Filter" },
+  { "name": "selectedGridRowsCountSelector", "returnType": "number" },
+  { "name": "selectedGridRowsSelector", "returnType": "Map<GridRowId, { [key: string]: any }>" },
+  { "name": "selectedIdsLookupSelector", "returnType": "" },
+  { "name": "visibleGridColumnsLengthSelector", "returnType": "number" },
+  { "name": "visibleGridColumnsSelector", "returnType": "GridStateColDef[]" },
+  { "name": "allGridColumnsFieldsSelector", "returnType": "string[]" },
+  { "name": "gridColumnLookupSelector", "returnType": "GridColumnLookup" },
+  { "name": "gridColumnMenuSelector", "returnType": "GridColumnMenuState" },
+  { "name": "gridColumnReorderSelector", "returnType": "GridColumnReorderState" },
+  { "name": "gridColumnResizeSelector", "returnType": "GridColumnResizeState" },
+  { "name": "gridColumnsSelector", "returnType": "GridColumnsState" },
+  { "name": "gridDensitySelector", "returnType": "GridDensityState" },
+  { "name": "gridEditRowsStateSelector", "returnType": "GridEditRowsModel" },
+  { "name": "gridFilterStateSelector", "returnType": "GridFilterState" },
+  { "name": "gridFocusStateSelector", "returnType": "GridFocusState" },
+  { "name": "gridPaginationSelector", "returnType": "GridPaginationState" },
+  { "name": "gridPreferencePanelStateSelector", "returnType": "GridPreferencePanelState" },
+  { "name": "gridRowsStateSelector", "returnType": "GridRowsState" },
+  { "name": "gridSelectionStateSelector", "returnType": "GridSelectionModel" },
+  { "name": "gridTabIndexStateSelector", "returnType": "GridTabIndexState" }
+]

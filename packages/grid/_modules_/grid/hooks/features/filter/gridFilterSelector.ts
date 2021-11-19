@@ -5,23 +5,38 @@ import { gridSortedRowEntriesSelector } from '../sorting/gridSortingSelector';
 import { gridColumnLookupSelector } from '../columns/gridColumnsSelector';
 import { gridRowTreeDepthSelector, gridRowTreeSelector } from '../rows';
 
+/**
+ * @feature Filter
+ */
 export const gridFilterStateSelector = (state: GridState) => state.filter;
 
+/**
+ * @feature Filter
+ */
 export const gridFilterModelSelector = createSelector(
   gridFilterStateSelector,
   (filterState) => filterState.filterModel,
 );
 
+/**
+ * @feature Filter
+ */
 export const gridVisibleRowsLookupSelector = createSelector(
   gridFilterStateSelector,
   (filterState) => filterState.visibleRowsLookup,
 );
 
+/**
+ * @feature Filter
+ */
 export const gridFilteredDescendantCountLookupSelector = createSelector(
   gridFilterStateSelector,
   (filterState) => filterState.filteredDescendantCountLookup,
 );
 
+/**
+ * @feature Filter
+ */
 export const gridVisibleSortedRowEntriesSelector = createSelector(
   gridVisibleRowsLookupSelector,
   gridSortedRowEntriesSelector,
@@ -29,16 +44,23 @@ export const gridVisibleSortedRowEntriesSelector = createSelector(
     sortedRows.filter((row) => visibleRowsLookup[row.id] !== false),
 );
 
+/**
+ * @feature Filter
+ */
 export const gridVisibleSortedRowIdsSelector = createSelector(
   gridVisibleSortedRowEntriesSelector,
   (visibleSortedRowEntries) => visibleSortedRowEntries.map((row) => row.id),
 );
 
 /**
+ * @feature Filter
  * @deprecated Use `gridVisibleSortedRowIdsSelector` instead
  */
 export const gridVisibleRowsSelector = gridVisibleSortedRowIdsSelector;
 
+/**
+ * @feature Filter
+ */
 export const gridVisibleSortedTopLevelRowEntriesSelector = createSelector(
   gridVisibleSortedRowEntriesSelector,
   gridRowTreeSelector,
@@ -52,16 +74,25 @@ export const gridVisibleSortedTopLevelRowEntriesSelector = createSelector(
   },
 );
 
+/**
+ * @feature Filter
+ */
 export const gridVisibleRowCountSelector = createSelector(
   gridVisibleSortedRowEntriesSelector,
   (visibleSortedRows) => visibleSortedRows.length,
 );
 
+/**
+ * @feature Filter
+ */
 export const gridVisibleTopLevelRowCountSelector = createSelector(
   gridVisibleSortedTopLevelRowEntriesSelector,
   (visibleSortedTopLevelRows) => visibleSortedTopLevelRows.length,
 );
 
+/**
+ * @feature Filter
+ */
 export const gridFilterActiveItemsSelector = createSelector(
   gridFilterModelSelector,
   gridColumnLookupSelector,
@@ -87,6 +118,10 @@ export const gridFilterActiveItemsSelector = createSelector(
 );
 
 export type GridFilterActiveItemsLookup = { [columnField: string]: GridFilterItem[] };
+
+/**
+ * @feature Filter
+ */
 export const gridFilterActiveItemsLookupSelector = createSelector(
   gridFilterActiveItemsSelector,
   (activeFilters) => {
