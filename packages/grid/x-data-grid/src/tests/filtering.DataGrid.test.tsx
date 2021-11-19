@@ -160,14 +160,14 @@ describe('<DataGrid /> - Filter', () => {
           filterModel={
             imperativeFilterModel
               ? {
-                items: [
-                  {
-                    columnField: field,
-                    value,
-                    operatorValue,
-                  },
-                ],
-              }
+                  items: [
+                    {
+                      columnField: field,
+                      value,
+                      operatorValue,
+                    },
+                  ],
+                }
               : undefined
           }
           disableColumnFilter={false}
@@ -179,18 +179,18 @@ describe('<DataGrid /> - Filter', () => {
             ...(imperativeFilterModel
               ? {}
               : {
-                filter: {
-                  filterModel: {
-                    items: [
-                      {
-                        columnField: field,
-                        value,
-                        operatorValue,
-                      },
-                    ],
+                  filter: {
+                    filterModel: {
+                      items: [
+                        {
+                          columnField: field,
+                          value,
+                          operatorValue,
+                        },
+                      ],
+                    },
                   },
-                },
-              }),
+                }),
           }}
           {...other}
         />
