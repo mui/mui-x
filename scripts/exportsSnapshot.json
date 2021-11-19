@@ -164,7 +164,6 @@
   { "name": "GridEnrichedColDef", "kind": "Type alias" },
   { "name": "GridExportFormat", "kind": "Type alias" },
   { "name": "GridFeatureMode", "kind": "Type alias" },
-  { "name": "GridFieldComparatorList", "kind": "Type alias" },
   { "name": "GridFilterActiveItemsLookup", "kind": "Type alias" },
   { "name": "GridFooterContainerProps", "kind": "Type alias" },
   { "name": "GridInputSelectionModel", "kind": "Type alias" },

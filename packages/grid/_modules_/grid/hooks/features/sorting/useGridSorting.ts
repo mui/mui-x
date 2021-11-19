@@ -9,11 +9,11 @@ import { GridFeatureModeConstant } from '../../../models/gridFeatureMode';
 import { GridColumnHeaderParams } from '../../../models/params/gridColumnHeaderParams';
 import { GridRowId, GridRowTreeNodeConfig } from '../../../models/gridRows';
 import {
-  GridFieldComparator,
   GridSortItem,
   GridSortModel,
   GridSortDirection,
   GridSortCellParams,
+  GridComparatorFn,
 } from '../../../models/gridSortModel';
 import { isDesc, nextGridSortDirection } from '../../../utils/sortingUtils';
 import { isEnterKey } from '../../../utils/keyboardUtils';
@@ -30,6 +30,8 @@ import {
 import { gridRowIdsSelector, gridRowTreeDepthSelector, gridRowTreeSelector } from '../rows';
 import { useGridStateInit } from '../../utils/useGridStateInit';
 import { useFirstRender } from '../../utils/useFirstRender';
+
+type GridFieldComparator = { field: string; comparator: GridComparatorFn };
 
 /**
  * @requires useGridRows (state, event)

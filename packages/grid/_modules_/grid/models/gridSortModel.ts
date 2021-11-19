@@ -3,8 +3,6 @@ import { GridRowId } from './gridRows';
 
 export type GridSortDirection = 'asc' | 'desc' | null | undefined;
 
-export type GridFieldComparator = { field: string; comparator: GridComparatorFn };
-
 export interface GridSortCellParams {
   id: GridRowId;
   field: string;
