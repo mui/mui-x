@@ -2,8 +2,44 @@ import * as React from 'react';
 import { createRenderer, fireEvent, screen, getByText } from '@material-ui/monorepo/test/utils';
 import { expect } from 'chai';
 import { useFakeTimers } from 'sinon';
-import { DataGrid, GridToolbar, GridPreferencePanelsValue, DataGridProps } from '@mui/x-data-grid';
+import {
+  DataGrid,
+  GridToolbar,
+  GridPreferencePanelsValue,
+  DataGridProps,
+  GridFilterInputValueProps,
+  GridFilterInputValue,
+} from '@mui/x-data-grid';
 import { getColumnValues } from 'test/utils/helperFn';
+
+function setColumnValue(columnValue) {
+  fireEvent.change(screen.getByRole('combobox', { name: 'Columns' }), {
+    target: { value: columnValue },
+  });
+}
+function setOperatorValue(operatorValue) {
+  fireEvent.change(screen.getByRole('combobox', { name: 'Operators' }), {
+    target: { value: operatorValue },
+  });
+}
+
+function CustomInputValue(props: GridFilterInputValueProps) {
+  const { item, applyValue } = props;
+
+  const handleFilterChange = (event) => {
+    applyValue({ ...item, value: event.target.value });
+  };
+
+  return (
+    <input
+      name="custom-filter-operator"
+      placeholder="Filter value"
+      value={item.value}
+      onChange={handleFilterChange}
+      data-testid="customInput"
+    />
+  );
+}
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -26,6 +62,7 @@ describe('<DataGrid /> - Filter', () => {
       {
         id: 0,
         brand: 'Nike',
+        slogan: 'just do it',
         isPublished: false,
         country: 'United States',
         status: 0,
@@ -33,6 +70,7 @@ describe('<DataGrid /> - Filter', () => {
       {
         id: 1,
         brand: 'Adidas',
+        slogan: 'is all in',
         isPublished: true,
         country: 'Germany',
         status: 0,
@@ -40,6 +78,7 @@ describe('<DataGrid /> - Filter', () => {
       {
         id: 2,
         brand: 'Puma',
+        slogan: 'Forever Faster',
         isPublished: true,
         country: 'Germany',
         status: 2,
@@ -47,6 +86,35 @@ describe('<DataGrid /> - Filter', () => {
     ],
     columns: [
       { field: 'brand' },
+      {
+        field: 'slogan',
+        filterOperators: [
+          {
+            label: 'From',
+            value: 'from',
+            getApplyFilterFn: () => {
+              return () => false;
+            },
+            InputComponent: CustomInputValue,
+          },
+          {
+            value: 'equals',
+            getApplyFilterFn: (filterItem) => {
+              if (!filterItem.value) {
+                return null;
+              }
+              const collator = new Intl.Collator(undefined, {
+                sensitivity: 'base',
+                usage: 'search',
+              });
+              return ({ value }): boolean => {
+                return collator.compare(filterItem.value, (value && value.toString()) || '') === 0;
+              };
+            },
+            InputComponent: GridFilterInputValue,
+          },
+        ],
+      },
       { field: 'isPublished', type: 'boolean' },
       {
         field: 'country',
@@ -71,30 +139,58 @@ describe('<DataGrid /> - Filter', () => {
       operatorValue?: string;
       value?: any;
       field?: string;
+      imperativeFilterModel?: boolean;
     } & Partial<Omit<DataGridProps, 'columns'>>,
   ) => {
-    const { operatorValue, value, rows, columns, field = 'brand', ...other } = props;
+    const {
+      operatorValue,
+      value,
+      rows,
+      columns,
+      field = 'brand',
+      imperativeFilterModel = true,
+      ...other
+    } = props;
     return (
       <div style={{ width: 300, height: 300 }}>
         <DataGrid
           autoHeight={isJSDOM}
           columns={columns || baselineProps.columns}
           rows={rows || baselineProps.rows}
-          filterModel={{
-            items: [
-              {
-                columnField: field,
-                value,
-                operatorValue,
-              },
-            ],
-          }}
+          filterModel={
+            imperativeFilterModel
+              ? {
+                items: [
+                  {
+                    columnField: field,
+                    value,
+                    operatorValue,
+                  },
+                ],
+              }
+              : undefined
+          }
           disableColumnFilter={false}
           initialState={{
             preferencePanel: {
               open: true,
               openedPanelValue: GridPreferencePanelsValue.filters,
             },
+            ...(imperativeFilterModel
+              ? {}
+              : {
+                filter: {
+                  filterModel: {
+                    items: [
+                      {
+                        columnField: field,
+                        value,
+                        operatorValue,
+                      },
+                    ],
+                  },
+                },
+              }),
           }}
           {...other}
         />
@@ -1153,6 +1249,64 @@ describe('<DataGrid /> - Filter', () => {
   describe('Filter preference panel', () => {
     it('should show an empty string as the default filter input value', () => {
       render(<TestCase field="brand" operatorValue="contains" />);
+      expect(screen.getByRole('textbox', { name: 'Value' }).value).to.equal('');
+    });
+    it('should keep filter operator and value if available', async () => {
+      render(
+        <TestCase
+          field="brand"
+          operatorValue="equals"
+          value="Puma"
+          imperativeFilterModel={false}
+        />,
+      );
+      expect(screen.getByRole('textbox', { name: 'Value' }).value).to.equal('Puma');
+      expect(screen.getByRole('combobox', { name: 'Operators' }).value).to.equal('equals');
+      expect(getColumnValues()).to.deep.equal(['Puma']);
+
+      setColumnValue('slogan');
+
+      expect(getColumnValues()).to.deep.equal([]);
+      expect(screen.getByRole('combobox', { name: 'Operators' }).value).to.equal('equals');
+      expect(screen.getByRole('textbox', { name: 'Value' }).value).to.equal('Puma');
+    });
+    it('should reset value if operator is not available for the new column', async () => {
+      render(
+        <TestCase
+          field="brand"
+          operatorValue="contains"
+          value="Pu"
+          imperativeFilterModel={false}
+        />,
+      );
+      expect(screen.getByRole('textbox', { name: 'Value' }).value).to.equal('Pu');
+      expect(screen.getByRole('combobox', { name: 'Operators' }).value).to.equal('contains');
+      expect(getColumnValues()).to.deep.equal(['Puma']);
+
+      setColumnValue('slogan');
+
+      expect(getColumnValues()).to.deep.equal([]);
+      expect(screen.getByRole('combobox', { name: 'Operators' }).value).to.equal('from');
+      expect(screen.getByTestId('customInput').value).to.equal('');
+    });
+    it('should reset value if the new operator has no input component', async () => {
+      render(
+        <TestCase
+          field="brand"
+          operatorValue="contains"
+          value="Pu"
+          imperativeFilterModel={false}
+        />,
+      );
+      expect(screen.getByRole('textbox', { name: 'Value' }).value).to.equal('Pu');
+      expect(screen.getByRole('combobox', { name: 'Operators' }).value).to.equal('contains');
+      expect(getColumnValues()).to.deep.equal(['Puma']);
+
+      setOperatorValue('isEmpty');
+      setOperatorValue('contains');
+
+      expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
+      expect(screen.getByRole('combobox', { name: 'Operators' }).value).to.equal('contains');
       expect(screen.getByRole('textbox', { name: 'Value' }).value).to.equal('');
     });
   });
