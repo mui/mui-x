@@ -45,15 +45,18 @@ export const useGridPage = (
 ) => {
   const logger = useGridLogger(apiRef, 'useGridPage');
 
-  useGridStateInit(apiRef, (state) => ({
-    ...state,
-    pagination: {
-      ...state.pagination!,
-      page: props.page ?? 0,
-      pageCount: getPageCount(props.rowCount ?? 0, state.pagination!.pageSize!),
-      rowCount: props.rowCount ?? 0,
-    },
-  }));
+  useGridStateInit(apiRef, (state) => {
+    console.log(React.version)
+    return {
+      ...state,
+      pagination: {
+        ...state.pagination!,
+        page: props.page ?? 0,
+        pageCount: getPageCount(props.rowCount ?? 0, state.pagination!.pageSize!),
+        rowCount: props.rowCount ?? 0,
+      },
+    };
+  });
   const [, setGridState, forceUpdate] = useGridState(apiRef);
 
   const visibleTopLevelRowCount = useGridSelector(apiRef, gridVisibleTopLevelRowCountSelector);

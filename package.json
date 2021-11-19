@@ -146,6 +146,14 @@
     "yargs": "^17.2.1",
     "yarn-deduplicate": "^3.1.0"
   },
+  "resolutions": {
+    "eslint-plugin-react-hooks": "4.2.1-beta-fdc1d617a-20211118",
+    "react-is": "18.0.0-beta-fdc1d617a-20211118",
+    "react-test-renderer": "18.0.0-beta-fdc1d617a-20211118",
+    "scheduler": "0.21.0-beta-fdc1d617a-20211118",
+    "react-dom": "18.0.0-beta-fdc1d617a-20211118",
+    "react": "18.0.0-beta-fdc1d617a-20211118"
+  },
   "setupFiles": [
     "<rootDir>/src/setupTests.js"
   ],
