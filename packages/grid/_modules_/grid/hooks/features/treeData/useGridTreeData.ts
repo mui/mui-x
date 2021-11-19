@@ -1,7 +1,10 @@
 import * as React from 'react';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridComponentProps } from '../../../GridComponentProps';
-import { GRID_TREE_DATA_GROUP_COL_DEF } from './gridTreeDataGroupColDef';
+import {
+  GRID_TREE_DATA_GROUP_COL_DEF,
+  GRID_TREE_DATA_GROUP_COL_DEF_FORCED_FIELDS,
+} from './gridTreeDataGroupColDef';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { GridEvents } from '../../../constants';
 import {
@@ -36,6 +39,7 @@ export const useGridTreeData = (
     const baseColDef: GridColDef = {
       ...GRID_TREE_DATA_GROUP_COL_DEF,
       headerName: apiRef.current.getLocaleText('treeDataGroupingHeaderName'),
+      ...GRID_TREE_DATA_GROUP_COL_DEF_FORCED_FIELDS,
     };
     let colDefOverride: Partial<GridColDef>;
 

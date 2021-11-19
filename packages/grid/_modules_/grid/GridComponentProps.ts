@@ -504,5 +504,7 @@ interface GridComponentOtherProps {
   /**
    * The grouping column used by the tree data.
    */
-  groupingColDef?: GridColDefOverride | GridColDefOverrideCallback;
+  groupingColDef?:
+    | GridColDefOverride<'field' | 'editable'>
+    | GridColDefOverrideCallback<'field' | 'editable'>;
 }
