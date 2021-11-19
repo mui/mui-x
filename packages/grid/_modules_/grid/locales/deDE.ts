@@ -92,7 +92,7 @@ const deDEGrid: Partial<GridLocaleText> = {
     `${visibleCount.toLocaleString()} von ${totalCount.toLocaleString()}`,
 
   // Actions cell more text
-  // actionsCellMore: 'more',
+  actionsCellMore: 'Mehr',
 };
 
 export const deDE: Localization = getGridLocalization(deDEGrid, deDECore);
