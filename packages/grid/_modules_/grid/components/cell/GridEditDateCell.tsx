@@ -117,6 +117,9 @@ export function GridEditDateCell(props: GridRenderEditCellParams & InputBaseProp
       fullWidth
       className={classes.root}
       type={isDateTime ? 'datetime-local' : 'date'}
+      inputProps={{
+        max: isDateTime ? '9999-12-31T23:59' : '9999-12-31',
+      }}
       value={valueState.formatted}
       onChange={handleChange}
       {...other}
