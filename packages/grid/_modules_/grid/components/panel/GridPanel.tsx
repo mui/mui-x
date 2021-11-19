@@ -50,6 +50,7 @@ const GridPanel = React.forwardRef<HTMLDivElement, GridPanelProps>((props, ref) 
   const { children, className, open, classes: classesProp, ...other } = props;
   const apiRef = useGridApiContext();
   const classes = gridPanelClasses;
+  const [isPlaced, setIsPlaced] = React.useState(false);
 
   const handleClickAway = React.useCallback(() => {
     apiRef.current.hidePreferences();
@@ -82,12 +83,20 @@ const GridPanel = React.forwardRef<HTMLDivElement, GridPanelProps>((props, ref) 
           name: 'flip',
           enabled: false,
         },
+        {
+          name: 'isPlaced',
+          enabled: true,
+          phase: 'main',
+          fn: () => {
+            setIsPlaced(true);
+          },
+        },
       ]}
       {...other}
     >
       <ClickAwayListener onClickAway={handleClickAway}>
         <GridPaperRoot className={classes.paper} elevation={8} onKeyDown={handleKeyDown}>
-          {children}
+          {isPlaced && children}
         </GridPaperRoot>
       </ClickAwayListener>
     </GridPanelRoot>
