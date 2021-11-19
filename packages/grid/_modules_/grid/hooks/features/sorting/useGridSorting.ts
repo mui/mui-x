@@ -9,7 +9,7 @@ import { GridFeatureModeConstant } from '../../../models/gridFeatureMode';
 import { GridColumnHeaderParams } from '../../../models/params/gridColumnHeaderParams';
 import { GridRowId, GridRowTreeNodeConfig } from '../../../models/gridRows';
 import {
-  GridFieldComparatorList,
+  GridFieldComparator,
   GridSortItem,
   GridSortModel,
   GridSortDirection,
@@ -127,7 +127,7 @@ export const useGridSorting = (
   );
 
   const comparatorListAggregate = React.useCallback(
-    (comparatorList: GridFieldComparatorList) =>
+    (comparatorList: GridFieldComparator[]) =>
       (row1: GridSortCellParams[], row2: GridSortCellParams[]) => {
         return comparatorList.reduce((res, colComparator, index) => {
           if (res !== 0) {
@@ -150,22 +150,26 @@ export const useGridSorting = (
   );
 
   const buildComparatorList = React.useCallback(
-    (sortModel: GridSortModel): GridFieldComparatorList => {
-      const comparators = sortModel.map((item) => {
-        const column = apiRef.current.getColumn(item.field);
-        if (!column) {
-          throw new Error(`Error sorting: column with field '${item.field}' not found. `);
-        }
-        const comparator = isDesc(item.sort)
-          ? (
-              v1: GridCellValue,
-              v2: GridCellValue,
-              cellParams1: GridSortCellParams,
-              cellParams2: GridSortCellParams,
-            ) => -1 * column.sortComparator!(v1, v2, cellParams1, cellParams2)
-          : column.sortComparator!;
-        return { field: column.field, comparator };
-      });
+    (sortModel: GridSortModel): GridFieldComparator[] => {
+      const comparators = sortModel
+        .map((item) => {
+          const column = apiRef.current.getColumn(item.field);
+          if (!column) {
+            return null;
+          }
+
+          const comparator = isDesc(item.sort)
+            ? (
+                v1: GridCellValue,
+                v2: GridCellValue,
+                cellParams1: GridSortCellParams,
+                cellParams2: GridSortCellParams,
+              ) => -1 * column.sortComparator!(v1, v2, cellParams1, cellParams2)
+            : column.sortComparator!;
+          return { field: column.field, comparator };
+        })
+        .filter((comparator): comparator is GridFieldComparator => !!comparator);
+
       return comparators;
     },
     [apiRef],
