@@ -126,7 +126,6 @@ function GridFilterForm(props: GridFilterFormProps) {
       } else {
         // Erase filter value if the input component is modified
         const eraseItemValue =
-          newOperator.value !== currentOperator?.value ||
           !newOperator?.InputComponent ||
           newOperator?.InputComponent !== currentOperator?.InputComponent;
 
@@ -149,14 +148,9 @@ function GridFilterForm(props: GridFilterFormProps) {
         (operator) => operator.value === operatorValue,
       );
 
-      const prevOperator = currentColumn?.filterOperators!.find(
-        (operator) => operator.value === item.value,
-      );
-
       const eraseItemValue =
         !newOperator?.InputComponent ||
-        !prevOperator?.InputComponent ||
-        newOperator?.InputComponent !== prevOperator?.InputComponent;
+        newOperator?.InputComponent !== currentOperator?.InputComponent;
 
       applyFilterChanges({
         ...item,
@@ -164,7 +158,7 @@ function GridFilterForm(props: GridFilterFormProps) {
         value: eraseItemValue ? undefined : item.value,
       });
     },
-    [applyFilterChanges, item, currentColumn],
+    [applyFilterChanges, item, currentColumn, currentOperator],
   );
 
   const changeLinkOperator = React.useCallback(
