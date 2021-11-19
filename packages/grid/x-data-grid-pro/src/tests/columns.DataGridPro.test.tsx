@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRenderer, fireEvent, screen, waitFor } from '@material-ui/monorepo/test/utils';
+import { createRenderer, fireEvent, screen, waitFor, act } from '@material-ui/monorepo/test/utils';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import {
@@ -13,7 +13,7 @@ import { getColumnHeaderCell, getCell } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
-describe.only('<DataGridPro /> - Columns', () => {
+describe('<DataGridPro /> - Columns', () => {
   const { clock, render } = createRenderer();
 
   let apiRef: GridApiRef;
@@ -116,14 +116,14 @@ describe.only('<DataGridPro /> - Columns', () => {
       expect(getCell(1, 0)).toHaveInlineStyle({ width: '110px' });
     });
 
-    it.only('should call onColumnResize during resizing', () => {
-      // const onColumnResize = spy();
+    it('should call onColumnResize during resizing', () => {
+      const onColumnResize = spy();
       render(<Test columns={columns} />);
-      // const separator = document.querySelector(`.${gridClasses['columnSeparator--resizable']}`);
-      // fireEvent.mouseDown(separator, { clientX: 100 });
-      // fireEvent.mouseMove(separator, { clientX: 110, buttons: 1 });
-      // fireEvent.mouseMove(separator, { clientX: 120, buttons: 1 });
-      // fireEvent.mouseUp(separator);
+      const separator = document.querySelector(`.${gridClasses['columnSeparator--resizable']}`);
+      fireEvent.mouseDown(separator, { clientX: 100 });
+      fireEvent.mouseMove(separator, { clientX: 110, buttons: 1 });
+      fireEvent.mouseMove(separator, { clientX: 120, buttons: 1 });
+      fireEvent.mouseUp(separator);
       // expect(onColumnResize.callCount).to.equal(2);
       // expect(onColumnResize.args[0][0].width).to.equal(110);
       // expect(onColumnResize.args[1][0].width).to.equal(120);

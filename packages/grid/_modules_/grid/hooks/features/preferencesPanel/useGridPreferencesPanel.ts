@@ -47,6 +47,7 @@ export const useGridPreferencesPanel = (
         ...state,
         preferencePanel: { ...state.preferencePanel, open: true, openedPanelValue: newValue },
       }));
+      console.log(apiRef.current.state.preferencePanel)
       forceUpdate();
     },
     [doNotHidePanel, forceUpdate, logger, setGridState],

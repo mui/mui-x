@@ -125,7 +125,11 @@ module.exports = function getBabelConfig(api) {
             'babel-plugin-module-resolver',
             {
               root: ['./'],
-              alias: defaultAlias,
+              alias: {
+                ...defaultAlias,
+                'packages': './packages',
+                'test': './test',
+              },
             },
           ],
         ],

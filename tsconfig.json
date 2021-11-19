@@ -26,7 +26,8 @@
       "@mui/x-data-grid-pro": ["./packages/grid/x-data-grid-pro/src"],
       "@mui/x-data-grid-pro/*": ["./packages/grid/x-data-grid-pro/src/*"],
       "@mui/x-license-pro": ["./packages/x-license-pro/src"],
-      "@mui/x-license-pro/*": ["./packages/x-license-pro/src/*"]
+      "@mui/x-license-pro/*": ["./packages/x-license-pro/src/*"],
+      "test/*": ["./test/*"],
     }
   }
 }

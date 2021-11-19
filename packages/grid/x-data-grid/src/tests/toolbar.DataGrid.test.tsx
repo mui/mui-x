@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRenderer, fireEvent, screen } from '@material-ui/monorepo/test/utils';
+import { createRenderer, fireEvent, screen, act } from '@material-ui/monorepo/test/utils';
 import { getColumnHeadersTextContent } from 'test/utils/helperFn';
 import { expect } from 'chai';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
@@ -206,7 +206,7 @@ describe('<DataGrid /> - Toolbar', () => {
       expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'brand']);
     });
 
-    it('should keep the focus on the switch after toggling a column', () => {
+    it.only('should keep the focus on the switch after toggling a column', () => {
       render(
         <div style={{ width: 300, height: 300 }}>
           <DataGrid
@@ -219,11 +219,16 @@ describe('<DataGrid /> - Toolbar', () => {
       );
 
       const button = screen.getByRole('button', { name: 'Select columns' });
-      button.focus();
+      act(() => {
+        button.focus();
+      })
       fireEvent.click(button);
 
-      const column: HTMLElement | null = document.querySelector('[role="tooltip"] [name="id"]');
-      column!.focus();
+      const column = document.querySelector<HTMLElement>('[role="tooltip"] [name="id"]');
+      console.log(column)
+      act(() => {
+        column!.focus();
+      })
       fireEvent.click(column);
 
       // @ts-expect-error need to migrate helpers to TypeScript
