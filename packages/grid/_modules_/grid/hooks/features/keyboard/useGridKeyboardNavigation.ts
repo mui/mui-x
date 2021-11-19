@@ -1,20 +1,8 @@
 import * as React from 'react';
 import { GridEvents } from '../../../constants/eventsConstants';
 import { GridApiRef } from '../../../models/api/gridApiRef';
-import {
-  GridCellIndexCoordinates,
-  GridColumnHeaderIndexCoordinates,
-} from '../../../models/gridCell';
 import { GridCellParams } from '../../../models/params/gridCellParams';
 import { GridColumnHeaderParams } from '../../../models/params/gridColumnHeaderParams';
-import {
-  isArrowKeys,
-  isEnterKey,
-  isHomeOrEndKeys,
-  isPageKeys,
-  isSpaceKey,
-  isTabKey,
-} from '../../../utils/keyboardUtils';
 import { visibleGridColumnsLengthSelector } from '../columns/gridColumnsSelector';
 import { useGridSelector } from '../../utils/useGridSelector';
 import { useGridLogger } from '../../utils/useGridLogger';
@@ -22,52 +10,17 @@ import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { GridComponentProps } from '../../../GridComponentProps';
 import { gridVisibleSortedRowEntriesSelector } from '../filter/gridFilterSelector';
 import { useCurrentPageRows } from '../../utils/useCurrentPageRows';
-import { clamp } from '../../../utils/utils';
-
-const getNextCellIndexes = (key: string, indexes: GridCellIndexCoordinates) => {
-  if (!isArrowKeys(key)) {
-    throw new Error('MUI: The first argument (key) should be an arrow key code.');
-  }
-
-  switch (key) {
-    case 'ArrowLeft':
-      return { ...indexes, colIndex: indexes.colIndex - 1 };
-    case 'ArrowRight':
-      return { ...indexes, colIndex: indexes.colIndex + 1 };
-    case 'ArrowUp':
-      return { ...indexes, rowIndex: indexes.rowIndex - 1 };
-    default:
-      // Last option key === 'ArrowDown'
-      return { ...indexes, rowIndex: indexes.rowIndex + 1 };
-  }
-};
-
-const getNextColumnHeaderIndexes = (key: string, indexes: GridColumnHeaderIndexCoordinates) => {
-  if (!isArrowKeys(key)) {
-    throw new Error('MUI: The first argument (key) should be an arrow key code.');
-  }
-
-  switch (key) {
-    case 'ArrowLeft':
-      return { colIndex: indexes.colIndex - 1 };
-    case 'ArrowRight':
-      return { colIndex: indexes.colIndex + 1 };
-    case 'ArrowDown':
-      return null;
-    default:
-      // Last option key === 'ArrowUp'
-      return { ...indexes };
-  }
-};
 
 /**
  * @requires useGridPage (state)
  * @requires useGridPageSize (state)
+ * @requires useGridFilter (state)
  * @requires useGridColumns (state, method)
  * @requires useGridRows (state, method)
+ * @requires useGridSorting (method) - can be after
  * @requires useGridDimensions (method) - can be after
- * @requires useGridFocus (method)
- * @requires useGridScroll (method)
+ * @requires useGridFocus (method) - can be after
+ * @requires useGridScroll (method) - can be after
  */
 export const useGridKeyboardNavigation = (
   apiRef: GridApiRef,
@@ -78,137 +31,196 @@ export const useGridKeyboardNavigation = (
   const visibleSortedRows = useGridSelector(apiRef, gridVisibleSortedRowEntriesSelector);
   const currentPage = useCurrentPageRows(apiRef, props);
 
-  const mapKey = (event: React.KeyboardEvent) => {
-    if (isEnterKey(event.key)) {
-      return 'ArrowDown';
-    }
-    if (isTabKey(event.key)) {
-      return event.shiftKey ? 'ArrowLeft' : 'ArrowRight';
-    }
-    return event.key;
-  };
+  const goToCell = React.useCallback(
+    (colIndex: number, rowIndex: number) => {
+      logger.debug(`Navigating to cell row ${rowIndex}, col ${colIndex}`);
+      apiRef.current.scrollToIndexes({ colIndex, rowIndex });
+      const field = apiRef.current.getVisibleColumns()[colIndex].field;
+      const node = visibleSortedRows[rowIndex];
+      apiRef.current.setCellFocus(node.id, field);
+    },
+    [apiRef, logger, visibleSortedRows],
+  );
 
-  const navigateCells = React.useCallback(
+  const goToHeader = React.useCallback(
+    (colIndex: number, event: React.SyntheticEvent<Element>) => {
+      logger.debug(`Navigating to header col ${colIndex}`);
+      apiRef.current.scrollToIndexes({ colIndex });
+      const field = apiRef.current.getVisibleColumns()[colIndex].field;
+      apiRef.current.setColumnHeaderFocus(field, event);
+    },
+    [apiRef, logger],
+  );
+
+  const handleCellNavigationKeyDown = React.useCallback(
     (params: GridCellParams, event: React.KeyboardEvent) => {
       event.preventDefault();
       const dimensions = apiRef.current.getRootDimensions();
-
       if (!currentPage.range || !dimensions) {
         return;
       }
 
-      const colIndex = apiRef.current.getColumnIndex(params.field);
-      const rowIndex = visibleSortedRows.findIndex((row) => row.id === params.id);
+      const viewportPageSize = apiRef.current.unstable_getViewportPageSize();
+      const colIndexBefore = params.field ? apiRef.current.getColumnIndex(params.field) : 0;
+      const rowIndexBefore = visibleSortedRows.findIndex((row) => row.id === params.id);
+      const firstRowIndexInPage = currentPage.range.firstRowIndex;
+      const lastRowIndexInPage = currentPage.range.lastRowIndex;
+      const firstColIndex = 0;
+      const lastColIndex = colCount - 1;
 
-      const key = mapKey(event);
-      const isCtrlPressed = event.ctrlKey || event.metaKey || event.shiftKey;
-
-      let nextCellIndexes: GridCellIndexCoordinates;
-      if (isArrowKeys(key)) {
-        nextCellIndexes = getNextCellIndexes(key, {
-          colIndex,
-          rowIndex,
-        });
-      } else if (isHomeOrEndKeys(key)) {
-        const colIdx = key === 'Home' ? 0 : colCount - 1;
-
-        if (!isCtrlPressed) {
-          // we go to the current row, first col, or last col!
-          nextCellIndexes = { colIndex: colIdx, rowIndex };
-        } else {
-          // In that case we go to first row, first col, or last row last col!
-          let newRowIndex = 0;
-          if (colIdx === 0) {
-            newRowIndex = currentPage.range.firstRowIndex;
-          } else {
-            newRowIndex = currentPage.range.lastRowIndex;
+      // eslint-disable-next-line default-case
+      switch (event.key) {
+        case 'ArrowDown':
+        case 'Enter': {
+          // "Enter" is only triggered by the row / cell editing feature
+          if (rowIndexBefore < lastRowIndexInPage) {
+            goToCell(colIndexBefore, rowIndexBefore + 1);
           }
-          nextCellIndexes = { colIndex: colIdx, rowIndex: newRowIndex };
+          break;
         }
-      } else if (isPageKeys(key) || isSpaceKey(key)) {
-        const viewportPageSize = apiRef.current.unstable_getViewportPageSize();
-        const nextRowIndex =
-          rowIndex +
-          (key.indexOf('Down') > -1 || isSpaceKey(key) ? viewportPageSize : -1 * viewportPageSize);
-        nextCellIndexes = { colIndex, rowIndex: nextRowIndex };
-      } else {
-        throw new Error('MUI: Key not mapped to navigation behavior.');
-      }
 
-      if (nextCellIndexes.rowIndex < currentPage.range.firstRowIndex) {
-        const field = apiRef.current.getVisibleColumns()[nextCellIndexes.colIndex].field;
-        apiRef.current.setColumnHeaderFocus(field, event);
-        return;
-      }
+        case 'ArrowUp': {
+          if (rowIndexBefore > firstRowIndexInPage) {
+            goToCell(colIndexBefore, rowIndexBefore - 1);
+          } else {
+            goToHeader(colIndexBefore, event);
+          }
+          break;
+        }
 
-      nextCellIndexes.rowIndex = clamp(nextCellIndexes.rowIndex, 0, currentPage.range.lastRowIndex);
-      nextCellIndexes.colIndex = clamp(nextCellIndexes.colIndex, 0, colCount - 1);
-      logger.debug(
-        `Navigating to next cell row ${nextCellIndexes.rowIndex}, col ${nextCellIndexes.colIndex}`,
-      );
-      apiRef.current.scrollToIndexes(nextCellIndexes);
-      const field = apiRef.current.getVisibleColumns()[nextCellIndexes.colIndex].field;
-      const node = visibleSortedRows[nextCellIndexes.rowIndex];
-      apiRef.current.setCellFocus(node.id, field);
+        case 'ArrowRight': {
+          if (colIndexBefore < lastColIndex) {
+            goToCell(colIndexBefore + 1, rowIndexBefore);
+          }
+          break;
+        }
+
+        case 'ArrowLeft': {
+          if (colIndexBefore > firstColIndex) {
+            goToCell(colIndexBefore - 1, rowIndexBefore);
+          }
+          break;
+        }
+
+        case 'Tab': {
+          // "Tab" is only triggered by the row / cell editing feature
+          if (event.shiftKey && colIndexBefore > firstColIndex) {
+            goToCell(colIndexBefore - 1, rowIndexBefore);
+          } else if (!event.shiftKey && colIndexBefore < lastColIndex) {
+            goToCell(colIndexBefore + 1, rowIndexBefore);
+          }
+          break;
+        }
+
+        case 'PageDown':
+        case ' ': {
+          if (rowIndexBefore < lastRowIndexInPage) {
+            goToCell(
+              colIndexBefore,
+              Math.min(rowIndexBefore + viewportPageSize, lastRowIndexInPage),
+            );
+          }
+          break;
+        }
+
+        case 'PageUp': {
+          if (rowIndexBefore - viewportPageSize >= firstRowIndexInPage) {
+            goToCell(colIndexBefore, rowIndexBefore - viewportPageSize);
+          } else {
+            goToHeader(colIndexBefore, event);
+          }
+          break;
+        }
+
+        case 'Home': {
+          if (event.ctrlKey || event.metaKey || event.shiftKey) {
+            goToCell(firstColIndex, firstRowIndexInPage);
+          } else {
+            goToCell(firstColIndex, rowIndexBefore);
+          }
+          break;
+        }
+
+        case 'End': {
+          if (event.ctrlKey || event.metaKey || event.shiftKey) {
+            goToCell(lastColIndex, lastRowIndexInPage);
+          } else {
+            goToCell(lastColIndex, rowIndexBefore);
+          }
+          break;
+        }
+      }
     },
-    [apiRef, visibleSortedRows, colCount, logger, currentPage],
+    [apiRef, visibleSortedRows, colCount, currentPage, goToCell, goToHeader],
   );
 
-  const navigateColumnHeaders = React.useCallback(
+  const handleColumnHeaderNavigationKeyDown = React.useCallback(
     (params: GridColumnHeaderParams, event: React.KeyboardEvent) => {
       event.preventDefault();
-
-      let nextColumnHeaderIndexes: GridColumnHeaderIndexCoordinates | null;
-      const colIndex = apiRef.current.getColumnIndex(params.field);
-      const key = mapKey(event);
       const dimensions = apiRef.current.getRootDimensions();
       if (!dimensions) {
         return;
       }
 
-      if (isArrowKeys(key)) {
-        nextColumnHeaderIndexes = getNextColumnHeaderIndexes(key, {
-          colIndex,
-        });
-      } else if (isHomeOrEndKeys(key)) {
-        const colIdx = key === 'Home' ? 0 : colCount - 1;
+      const viewportPageSize = apiRef.current.unstable_getViewportPageSize();
+      const colIndexBefore = params.field ? apiRef.current.getColumnIndex(params.field) : 0;
+      const firstRowIndexInPage = currentPage.range?.firstRowIndex ?? null;
+      const lastRowIndexInPage = currentPage.range?.lastRowIndex ?? null;
+      const firstColIndex = 0;
+      const lastColIndex = colCount - 1;
 
-        nextColumnHeaderIndexes = { colIndex: colIdx };
-      } else if (isPageKeys(key)) {
-        // Handle only Page Down key, Page Up should keep the current position
-        if (key.indexOf('Down') > -1 && currentPage.rows.length) {
-          const viewportPageSize = apiRef.current.unstable_getViewportPageSize();
-          const field = apiRef.current.getVisibleColumns()[colIndex].field;
-          const id = currentPage.rows[Math.min(viewportPageSize, currentPage.rows.length - 1)].id;
-          apiRef.current.setCellFocus(id, field);
+      // eslint-disable-next-line default-case
+      switch (event.key) {
+        case 'ArrowDown':
+        case 'Enter': {
+          if (firstRowIndexInPage !== null) {
+            goToCell(colIndexBefore, firstRowIndexInPage);
+          }
+          break;
         }
-        return;
-      } else {
-        throw new Error('MUI: Key not mapped to navigation behavior.');
-      }
 
-      if (!nextColumnHeaderIndexes) {
-        const field = apiRef.current.getVisibleColumns()[colIndex].field;
-        if (currentPage.rows.length) {
-          apiRef.current.setCellFocus(currentPage.rows[0].id, field);
+        case 'ArrowRight': {
+          if (colIndexBefore < lastColIndex) {
+            goToHeader(colIndexBefore + 1, event);
+          }
+          break;
         }
-        return;
+
+        case 'ArrowLeft': {
+          if (colIndexBefore > firstColIndex) {
+            goToHeader(colIndexBefore - 1, event);
+          }
+          break;
+        }
+
+        case 'PageDown': {
+          if (firstRowIndexInPage !== null && lastRowIndexInPage !== null) {
+            goToCell(
+              colIndexBefore,
+              Math.min(firstRowIndexInPage + viewportPageSize, lastRowIndexInPage),
+            );
+          }
+          break;
+        }
+
+        case 'Home': {
+          goToHeader(firstColIndex, event);
+          break;
+        }
+
+        case 'End': {
+          goToHeader(lastColIndex, event);
+          break;
+        }
       }
-
-      nextColumnHeaderIndexes!.colIndex = Math.max(0, nextColumnHeaderIndexes!.colIndex);
-      nextColumnHeaderIndexes!.colIndex =
-        nextColumnHeaderIndexes!.colIndex >= colCount
-          ? colCount - 1
-          : nextColumnHeaderIndexes!.colIndex;
-
-      logger.debug(`Navigating to next column row ${nextColumnHeaderIndexes.colIndex}`);
-      apiRef.current.scrollToIndexes(nextColumnHeaderIndexes);
-      const field = apiRef.current.getVisibleColumns()[nextColumnHeaderIndexes.colIndex].field;
-      apiRef.current.setColumnHeaderFocus(field, event);
     },
-    [apiRef, colCount, logger, currentPage.rows],
+    [apiRef, colCount, currentPage, goToCell, goToHeader],
   );
 
-  useGridApiEventHandler(apiRef, GridEvents.cellNavigationKeyDown, navigateCells);
-  useGridApiEventHandler(apiRef, GridEvents.columnHeaderNavigationKeyDown, navigateColumnHeaders);
+  useGridApiEventHandler(apiRef, GridEvents.cellNavigationKeyDown, handleCellNavigationKeyDown);
+  useGridApiEventHandler(
+    apiRef,
+    GridEvents.columnHeaderNavigationKeyDown,
+    handleColumnHeaderNavigationKeyDown,
+  );
 };
