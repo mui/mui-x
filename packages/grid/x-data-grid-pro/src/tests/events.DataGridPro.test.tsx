@@ -298,6 +298,9 @@ describe('<DataGridPro /> - Events Params', () => {
         { id: 8, brand: 'Ray-Ban' },
       ),
     });
+    // Trigger a scroll again to notify the grid that we're not in the bottom area anymore
+    virtualScroller.dispatchEvent(new Event('scroll'));
+    expect(handleRowsScrollEnd.callCount).to.equal(1);
     virtualScroller.scrollTop = 12345;
     virtualScroller.dispatchEvent(new Event('scroll'));
     expect(handleRowsScrollEnd.callCount).to.equal(2);
