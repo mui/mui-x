@@ -25,7 +25,7 @@ export function useGridApiEventHandler<Params, Event extends MuiEvent>(
     if (handler) {
       const enhancedHandler: GridEventListener<Params, Event> = (params, event, details) => {
         if (!event.defaultMuiPrevented) {
-          handler?.(params, event, details);
+          handler(params, event, details);
         }
       };
 
