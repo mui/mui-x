@@ -136,7 +136,7 @@
     "rollup-plugin-typescript2": "^0.30.0",
     "serve": "^13.0.2",
     "sinon": "^12.0.1",
-    "stylelint": "^13.13.1",
+    "stylelint": "^14.1.0",
     "stylelint-config-standard": "^22.0.0",
     "stylelint-processor-styled-components": "^1.10.0",
     "typedoc": "^0.22.8",
