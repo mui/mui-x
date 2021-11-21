@@ -91,7 +91,7 @@
     "babel-plugin-transform-rename-import": "^2.3.0",
     "chai": "^4.3.4",
     "chai-dom": "^1.10.0",
-    "compression-webpack-plugin": "^9.0.0",
+    "compression-webpack-plugin": "^9.0.1",
     "concurrently": "^6.4.0",
     "cross-env": "^7.0.3",
     "enzyme": "^3.11.0",
