@@ -5283,10 +5283,10 @@ ag-grid-community@^26.1.0:
   resolved "https://registry.yarnpkg.com/ag-grid-community/-/ag-grid-community-26.1.0.tgz#d4ee3e9591b351a5ae477a21dd3dc44491ccd7fa"
   integrity sha512-vGnbiaxN6TxsDGcC2uIOrgjx+zwXlBK99aYiWcuiyzSPvNpz1fG29nSNx/fMeVRzc3FOru8h8vvk41vszh5AMg==
 
-ag-grid-react@^26.1.0:
-  version "26.1.0"
-  resolved "https://registry.yarnpkg.com/ag-grid-react/-/ag-grid-react-26.1.0.tgz#113f5da813e756561e7b74176b346680f5a56eb8"
-  integrity sha512-W+NTwpbCbMUCYadqn7GFPi+zWzU5UBklVPoKxjx3BkFIa/63Mb0dLm/ynr/hLIRVQCZriUBlHPFU7QrZJXptLg==
+ag-grid-react@^26.2.0:
+  version "26.2.0"
+  resolved "https://registry.yarnpkg.com/ag-grid-react/-/ag-grid-react-26.2.0.tgz#79e851130a1806a5d3d3ba004ca0eecc7f344a63"
+  integrity sha512-sFU1C3OFWun/V5l5+93b4XQegT+RA21AUY1TqUcHActDY0myeEllPJkR0xKj82EZuKihNuH52WQjOrrhzAjoHA==
   dependencies:
     prop-types "^15.6.2"
 
