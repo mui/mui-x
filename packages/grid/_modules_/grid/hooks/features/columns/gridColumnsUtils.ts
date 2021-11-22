@@ -75,7 +75,7 @@ export const computeColumnTypes = (customColumnTypes: GridColumnTypesRecord = {}
   return mergedColumnTypes;
 };
 
-interface CreateColumnsState {
+interface CreateColumnsStateOptions {
   columnsToUpsert: GridColDef[];
   columnsTypes: GridColumnTypesRecord;
   apiRef: GridApiRef;
@@ -89,7 +89,7 @@ export const createColumnsState = ({
   viewportInnerWidth,
   apiRef,
   reset,
-}: CreateColumnsState) => {
+}: CreateColumnsStateOptions) => {
   const columnsWithTypes = columnsToUpsert.map((column) => ({
     ...getGridColDef(columnsTypes, column.type),
     ...column,
