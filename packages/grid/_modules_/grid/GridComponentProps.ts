@@ -318,7 +318,6 @@ interface GridComponentOtherProps {
    * @param {GridColumnVisibilityChangeParams} params With all properties from [[GridColumnVisibilityChangeParams]].
    * @param {MuiEvent} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
-   * @deprecated Use `onVisibleColumnsChange` instead.
    */
   onColumnVisibilityChange?: (
     params: GridColumnVisibilityChangeParams,
