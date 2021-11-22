@@ -33,7 +33,10 @@ export interface GridTypeFilterInputValueProps extends GridFilterInputValueProps
 
 function GridFilterInputValue(props: GridTypeFilterInputValueProps & TextFieldProps) {
   const { item, applyValue, type, apiRef, focusElementRef, ...others } = props;
-  if (process.env.NODE_ENV !== 'production' && type === 'singleSelect') {
+  if (
+    process.env.NODE_ENV !== 'production' &&
+    ['date', 'datetime-local', 'singleSelect'].includes(type as string)
+  ) {
     console.warn(
       [
         'MUI: the use of GridFilterInputValue is deprecated for singleSelect column',
