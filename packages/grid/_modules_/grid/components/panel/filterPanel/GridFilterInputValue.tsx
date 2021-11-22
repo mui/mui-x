@@ -33,6 +33,14 @@ export interface GridTypeFilterInputValueProps extends GridFilterInputValueProps
 
 function GridFilterInputValue(props: GridTypeFilterInputValueProps & TextFieldProps) {
   const { item, applyValue, type, apiRef, focusElementRef, ...others } = props;
+  if (process.env.NODE_ENV !== 'production' && type === 'singleSelect') {
+    console.warn(
+      [
+        'MUI: the use of GridFilterInputValue is deprecated for singleSelect column',
+        'Use GridFilterInputSingleSelect instead.',
+      ].join('\n'),
+    );
+  }
   const filterTimeout = React.useRef<any>();
   const [filterValueState, setFilterValueState] = React.useState(item.value ?? '');
   const [applying, setIsApplying] = React.useState(false);
