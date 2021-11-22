@@ -135,8 +135,8 @@ describe('<DataGrid /> - Filter', () => {
           { id: 0, price: 0 },
           { id: 1, price: 1 },
         ]}
-        columnTypes={{ aaa: { extendType: 'number' } }}
-        columns={[{ field: 'price', type: 'aaa' }]}
+        columnTypes={{ price: { extendType: 'number' } }}
+        columns={[{ field: 'price', type: 'price' }]}
         field="price"
         value={1}
         operatorValue="="
