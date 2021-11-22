@@ -236,7 +236,6 @@ export function useGridColumns(
         columnsToUpsert: props.columns,
         reset: true,
       });
-
       setGridColumnsState(columnsState);
     },
     [apiRef, logger, setGridColumnsState, props.columns, columnsTypes],
