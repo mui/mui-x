@@ -242,10 +242,10 @@ export function useGridColumns(
     [apiRef, logger, setGridColumnsState, props.columns, columnsTypes],
   );
 
-  const prevViewportInnerWidth = React.useRef(0);
+  const prevInnerWidth = React.useRef<number | null>(null);
   const handleGridSizeChange = (viewportInnerSize) => {
-    if (prevViewportInnerWidth.current !== viewportInnerSize.width) {
-      prevViewportInnerWidth.current = viewportInnerSize.width;
+    if (prevInnerWidth.current !== viewportInnerSize.width) {
+      prevInnerWidth.current = viewportInnerSize.width;
       setGridColumnsState(
         hydrateColumnsWidth(apiRef.current.state.columns, viewportInnerSize.width),
       );
