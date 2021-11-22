@@ -40,7 +40,11 @@ function GridFilterInputDate(props: GridTypeFilterInputDateProps & TextFieldProp
     setFilterValueState(String(itemValue));
   }, [item.value]);
 
-  const InputProps = applying ? { endAdornment: <GridLoadIcon /> } : others.InputProps;
+  const InputProps = {
+    ...(applying ? { endAdornment: <GridLoadIcon /> } : {}),
+    max: type === 'datetime-local' ? '9999-12-31T23:59' : '9999-12-31',
+    ...others.InputProps,
+  };
 
   return (
     <TextField
@@ -51,12 +55,12 @@ function GridFilterInputDate(props: GridTypeFilterInputDateProps & TextFieldProp
       onChange={onFilterChange}
       type={type || 'text'}
       variant="standard"
-      InputProps={InputProps}
       InputLabelProps={{
         shrink: true,
       }}
       inputRef={focusElementRef}
       {...others}
+      InputProps={InputProps}
     />
   );
 }
