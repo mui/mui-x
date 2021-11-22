@@ -3,17 +3,13 @@ import clsx from 'clsx';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { alpha, styled } from '@mui/material/styles';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
-import {
-  gridDensityHeaderHeightSelector,
-  gridDensityRowHeightSelector,
-} from '../../hooks/features/density/densitySelector';
+import { gridDensityHeaderHeightSelector } from '../../hooks/features/density/densitySelector';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { getDataGridUtilityClass } from '../../gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { GridComponentProps } from '../../GridComponentProps';
 import { useGridApiEventHandler } from '../../hooks/utils/useGridApiEventHandler';
 import { GridEvents } from '../../constants';
-import { useCurrentPageRows } from '../../hooks/utils/useCurrentPageRows';
 
 export type GridOverlayProps = React.HTMLAttributes<HTMLDivElement>;
 
@@ -56,9 +52,7 @@ export const GridOverlay = React.forwardRef<HTMLDivElement, GridOverlayProps>(fu
   const ownerState = { classes: rootProps.classes };
   const classes = useUtilityClasses(ownerState);
   const headerHeight = useGridSelector(apiRef, gridDensityHeaderHeightSelector);
-  const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
   const isMounted = React.useRef(true);
-  const currentPage = useCurrentPageRows(apiRef, rootProps);
 
   const [viewportInnerSize, setViewportInnerSize] = React.useState(
     () => apiRef.current.getRootDimensions()?.viewportInnerSize ?? null,
