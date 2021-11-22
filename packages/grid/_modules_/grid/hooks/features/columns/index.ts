@@ -1,2 +1,2 @@
 export * from './gridColumnsSelector';
-export * from './gridColumnsState';
+export type { GridColumnLookup, GridColumnsState } from './gridColumnsState';
