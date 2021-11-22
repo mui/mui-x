@@ -81,9 +81,9 @@ export const GridOverlay = React.forwardRef<HTMLDivElement, GridOverlayProps>(fu
     };
   }, []);
 
-  let height = Math.max(currentPage.rows.length * rowHeight, 1);
-  if (rootProps.autoHeight && currentPage.rows.length === 0) {
-    height = 2 * rowHeight; // Give room to show the overlay when there no rows.
+  let height: React.CSSProperties['height'] = viewportInnerSize?.height ?? 0;
+  if (rootProps.autoHeight && height === 0) {
+    height = 'auto';
   }
 
   return (
