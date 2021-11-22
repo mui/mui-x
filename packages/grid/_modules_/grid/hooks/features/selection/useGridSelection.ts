@@ -25,8 +25,8 @@ import { GRID_CHECKBOX_SELECTION_COL_DEF, GridColDef } from '../../../models';
 import { getDataGridUtilityClass } from '../../../gridClasses';
 import { useGridStateInit } from '../../utils/useGridStateInit';
 import { useFirstRender } from '../../utils/useFirstRender';
-import { GridColumns } from '../../../models/colDef/gridColDef';
 import { GridPreProcessingGroup } from '../../core/preProcessing';
+import { GridColumnsRawState } from '../columns/gridColumnsState';
 
 type OwnerState = { classes: GridComponentProps['classes'] };
 
@@ -377,19 +377,26 @@ export const useGridSelection = (
   }, [apiRef, isRowSelectable, isStateControlled]);
 
   const updateColumnsPreProcessing = React.useCallback(() => {
-    const addCheckboxColumn = (columns: GridColumns) => {
-      if (!props.checkboxSelection) {
-        return columns;
-      }
-
-      const groupingColumn: GridColDef = {
+    const addCheckboxColumn = (columnsState: GridColumnsRawState) => {
+      const selectionColumn: GridColDef = {
         ...GRID_CHECKBOX_SELECTION_COL_DEF,
         cellClassName: classes.cellCheckbox,
         headerClassName: classes.columnHeaderCheckbox,
         headerName: apiRef.current.getLocaleText('checkboxSelectionHeaderName'),
       };
 
-      return [groupingColumn, ...columns];
+      const shouldHaveSelectionColumn = props.checkboxSelection;
+      const haveSelectionColumn = columnsState.lookup[selectionColumn.field] != null;
+
+      if (shouldHaveSelectionColumn && !haveSelectionColumn) {
+        columnsState.lookup[selectionColumn.field] = selectionColumn;
+        columnsState.all = [selectionColumn.field, ...columnsState.all];
+      } else if (!shouldHaveSelectionColumn && haveSelectionColumn) {
+        delete columnsState.lookup[selectionColumn.field];
+        columnsState.all = columnsState.all.filter((field) => field !== selectionColumn.field);
+      }
+
+      return columnsState;
     };
 
     apiRef.current.unstable_registerPreProcessor(

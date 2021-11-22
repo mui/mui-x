@@ -318,6 +318,7 @@ interface GridComponentOtherProps {
    * @param {GridColumnVisibilityChangeParams} params With all properties from [[GridColumnVisibilityChangeParams]].
    * @param {MuiEvent} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
+   * @deprecated Use `onVisibleColumnsChange` instead.
    */
   onColumnVisibilityChange?: (
     params: GridColumnVisibilityChangeParams,
@@ -395,7 +396,6 @@ interface GridComponentOtherProps {
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onPageSizeChange?: (pageSize: number, details: GridCallbackDetails) => void;
-
   /**
    * Set the edit rows model of the grid.
    */

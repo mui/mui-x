@@ -2,17 +2,7 @@ import * as React from 'react';
 import { GridEvents } from '../../../constants/eventsConstants';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridColumnApi } from '../../../models/api/gridColumnApi';
-import {
-  GridColDef,
-  GridColumns,
-  GridColumnsState,
-  GridStateColDef,
-} from '../../../models/colDef/gridColDef';
-import { GridColumnTypesRecord } from '../../../models/colDef/gridColumnTypesRecord';
-import { getGridDefaultColumnTypes } from '../../../models/colDef/gridDefaultColumnTypes';
-import { getGridColDef } from '../../../models/colDef/getGridColDef';
 import { GridColumnOrderChangeParams } from '../../../models/params/gridColumnOrderChangeParams';
-import { mergeGridColTypes } from '../../../utils/mergeUtils';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { useGridState } from '../../utils/useGridState';
@@ -27,93 +17,13 @@ import {
   useGridApiEventHandler,
   useGridApiOptionHandler,
 } from '../../utils/useGridApiEventHandler';
-import { GRID_STRING_COL_DEF } from '../../../models/colDef/gridStringColDef';
 import { GridComponentProps } from '../../../GridComponentProps';
 import { useGridStateInit } from '../../utils/useGridStateInit';
 import { GridPreProcessingGroup } from '../../core/preProcessing';
-
-type RawGridColumnsState = Omit<GridColumnsState, 'lookup'> & {
-  lookup: { [field: string]: GridColDef | GridStateColDef };
-};
-
-function hydrateColumnsWidth(
-  columns: (GridColDef | GridStateColDef)[],
-  viewportWidth: number,
-): GridStateColDef[] {
-  let totalFlexUnits = 0;
-  let widthToAllocateInFlex = viewportWidth;
-
-  // Compute the width of non-flex columns and how much width must be allocated between the flex columns
-  const stateColumns = columns.map((column) => {
-    const newColumn = { ...column } as GridStateColDef;
-    if (column.hide) {
-      newColumn.computedWidth = 0;
-    } else {
-      const minWidth = newColumn.minWidth ?? GRID_STRING_COL_DEF.minWidth!;
-      let computedWidth: number;
-      if (newColumn.flex && newColumn.flex > 0) {
-        totalFlexUnits += newColumn.flex;
-        computedWidth = minWidth;
-      } else {
-        computedWidth = Math.max(newColumn.width ?? GRID_STRING_COL_DEF.width!, minWidth);
-      }
-
-      widthToAllocateInFlex -= computedWidth;
-      newColumn.computedWidth = computedWidth;
-    }
-
-    return newColumn;
-  });
-
-  // Compute the width of flex columns
-  if (totalFlexUnits > 0 && widthToAllocateInFlex > 0) {
-    const widthPerFlexUnit = widthToAllocateInFlex / totalFlexUnits;
-    for (let i = 0; i < stateColumns.length; i += 1) {
-      const column = stateColumns[i];
-
-      if (!column.hide && column.flex && column.flex > 0) {
-        stateColumns[i].computedWidth += widthPerFlexUnit * column.flex;
-      }
-    }
-  }
-
-  return stateColumns;
-}
-
-function hydrateColumnsType(
-  columns: GridColumns,
-  columnTypes: GridColumnTypesRecord = {},
-): GridColumns {
-  const mergedColTypes = mergeGridColTypes(getGridDefaultColumnTypes(), columnTypes);
-  const extendedColumns = columns.map((column) => ({
-    ...getGridColDef(mergedColTypes, column.type),
-    ...column,
-  }));
-
-  return extendedColumns;
-}
-
-const upsertColumnsState = (columnUpdates: GridColDef[], prevColumnsState?: GridColumnsState) => {
-  const newState: RawGridColumnsState = {
-    all: [...(prevColumnsState?.all ?? [])],
-    lookup: { ...(prevColumnsState?.lookup ?? {}) },
-  };
-
-  columnUpdates.forEach((newColumn) => {
-    if (newState.lookup[newColumn.field] == null) {
-      // New Column
-      newState.lookup[newColumn.field] = newColumn;
-      newState.all.push(newColumn.field);
-    } else {
-      newState.lookup[newColumn.field] = { ...newState.lookup[newColumn.field], ...newColumn };
-    }
-  });
-
-  return newState;
-};
+import { GridColumnsState } from './gridColumnsState';
+import { hydrateColumnsWidth, computeColumnTypes, createColumnsState } from './gridColumnsUtils';
 
 /**
- * @requires useGridColumnsPreProcessing (method)
  * @requires useGridParamsApi (method)
  * @requires useGridDimensions (method, event) - can be after
  * TODO: Impossible priority - useGridParamsApi also needs to be after useGridColumns
@@ -126,30 +36,28 @@ export function useGridColumns(
   >,
 ): void {
   const logger = useGridLogger(apiRef, 'useGridColumns');
+  const viewportInnerWidth = React.useRef(0);
+
+  const columnsTypes = React.useMemo(
+    () => computeColumnTypes(props.columnTypes),
+    [props.columnTypes],
+  );
 
   useGridStateInit(apiRef, (state) => {
-    const hydratedColumns = hydrateColumnsType(props.columns, props.columnTypes);
-    const preProcessedColumns = apiRef.current.unstable_applyPreProcessors(
-      GridPreProcessingGroup.hydrateColumns,
-      hydratedColumns,
-    );
-    const columns = upsertColumnsState(preProcessedColumns);
-    let newColumns: GridColumns = columns.all.map((field) => columns.lookup[field]);
-    newColumns = hydrateColumnsWidth(newColumns, 0);
-
-    const columnState: GridColumnsState = {
-      all: newColumns.map((col) => col.field),
-      lookup: newColumns.reduce((acc, col) => {
-        acc[col.field] = col;
-        return acc;
-      }, {}),
-    };
+    const columnsState = createColumnsState({
+      apiRef,
+      columnsTypes,
+      columnsToUpsert: props.columns,
+      viewportInnerWidth: viewportInnerWidth.current,
+      reset: true,
+    });
 
     return {
       ...state,
-      columns: columnState,
+      columns: columnsState,
     };
   });
+
   const [, setGridState, forceUpdate] = useGridState(apiRef);
 
   const setGridColumnsState = React.useCallback(
@@ -203,38 +111,22 @@ export function useGridColumns(
     [apiRef, getColumnIndex],
   );
 
-  const setColumnsState = React.useCallback(
-    (newState: RawGridColumnsState, emit?: boolean) => {
-      const dimensions = apiRef.current.getRootDimensions();
-      logger.debug('updating GridColumns with new state');
-
-      let newColumns: GridColumns = newState.all.map((field) => newState.lookup[field]);
-      newColumns = hydrateColumnsWidth(newColumns, dimensions?.viewportInnerSize.width ?? 0);
-
-      const columnState: GridColumnsState = {
-        all: newColumns.map((col) => col.field),
-        lookup: newColumns.reduce((acc, col) => {
-          acc[col.field] = col;
-          return acc;
-        }, {}),
-      };
-
-      setGridColumnsState(columnState, emit);
+  const updateColumns = React.useCallback<GridColumnApi['updateColumns']>(
+    (columns) => {
+      const columnsState = createColumnsState({
+        apiRef,
+        columnsTypes,
+        columnsToUpsert: columns,
+        viewportInnerWidth: viewportInnerWidth.current,
+        reset: false,
+      });
+      setGridColumnsState(columnsState, false);
     },
-    [apiRef, logger, setGridColumnsState],
+    [apiRef, setGridColumnsState, columnsTypes],
   );
 
-  const updateColumns = React.useCallback(
-    (columns: GridColDef[]) => {
-      // Avoid dependency on gridState to avoid infinite loop
-      const columnsState = upsertColumnsState(columns, apiRef.current.state.columns);
-      setColumnsState(columnsState, false);
-    },
-    [apiRef, setColumnsState],
-  );
-
-  const updateColumn = React.useCallback(
-    (column: GridColDef) => updateColumns([column]),
+  const updateColumn = React.useCallback<GridColumnApi['updateColumn']>(
+    (column) => updateColumns([column]),
     [updateColumns],
   );
 
@@ -324,15 +216,15 @@ export function useGridColumns(
 
     logger.info(`GridColumns have changed, new length ${props.columns.length}`);
 
-    const hydratedColumns = hydrateColumnsType(props.columns, props.columnTypes);
-
-    const preProcessedColumns = apiRef.current.unstable_applyPreProcessors(
-      GridPreProcessingGroup.hydrateColumns,
-      hydratedColumns,
-    );
-    const columnState = upsertColumnsState(preProcessedColumns);
-    setColumnsState(columnState);
-  }, [logger, apiRef, setColumnsState, props.columns, props.columnTypes]);
+    const columnsState = createColumnsState({
+      apiRef,
+      columnsTypes,
+      columnsToUpsert: props.columns,
+      viewportInnerWidth: viewportInnerWidth.current,
+      reset: true,
+    });
+    setGridColumnsState(columnsState);
+  }, [logger, apiRef, setGridColumnsState, props.columns, columnsTypes]);
 
   const handlePreProcessorRegister = React.useCallback(
     (name) => {
@@ -342,22 +234,25 @@ export function useGridColumns(
 
       logger.info(`Columns pre-processing have changed, regenerating the columns`);
 
-      const hydratedColumns = hydrateColumnsType(props.columns, props.columnTypes);
-      const preProcessedColumns = apiRef.current.unstable_applyPreProcessors(
-        GridPreProcessingGroup.hydrateColumns,
-        hydratedColumns,
-      );
-      const columnState = upsertColumnsState(preProcessedColumns);
-      setColumnsState(columnState);
+      const columnsState = createColumnsState({
+        apiRef,
+        columnsTypes,
+        columnsToUpsert: props.columns,
+        viewportInnerWidth: viewportInnerWidth.current,
+        reset: true,
+      });
+
+      setGridColumnsState(columnsState);
     },
-    [apiRef, logger, setColumnsState, props.columns, props.columnTypes],
+    [apiRef, logger, setGridColumnsState, props.columns, columnsTypes],
   );
 
-  const prevInnerWidth = React.useRef<number | null>(null);
   const handleGridSizeChange = (viewportInnerSize) => {
-    if (prevInnerWidth.current !== viewportInnerSize.width) {
-      prevInnerWidth.current = viewportInnerSize.width;
-      setColumnsState(apiRef.current.state.columns);
+    if (viewportInnerWidth.current !== viewportInnerSize.width) {
+      viewportInnerWidth.current = viewportInnerSize.width;
+      setGridColumnsState(
+        hydrateColumnsWidth(apiRef.current.state.columns, viewportInnerSize.width),
+      );
     }
   };
 
