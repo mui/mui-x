@@ -36,7 +36,6 @@ export function useGridColumns(
   >,
 ): void {
   const logger = useGridLogger(apiRef, 'useGridColumns');
-  const viewportInnerWidth = React.useRef(0);
 
   const columnsTypes = React.useMemo(
     () => computeColumnTypes(props.columnTypes),
@@ -48,7 +47,6 @@ export function useGridColumns(
       apiRef,
       columnsTypes,
       columnsToUpsert: props.columns,
-      viewportInnerWidth: viewportInnerWidth.current,
       reset: true,
     });
 
@@ -117,7 +115,6 @@ export function useGridColumns(
         apiRef,
         columnsTypes,
         columnsToUpsert: columns,
-        viewportInnerWidth: viewportInnerWidth.current,
         reset: false,
       });
       setGridColumnsState(columnsState, false);
@@ -220,7 +217,6 @@ export function useGridColumns(
       apiRef,
       columnsTypes,
       columnsToUpsert: props.columns,
-      viewportInnerWidth: viewportInnerWidth.current,
       reset: true,
     });
     setGridColumnsState(columnsState);
@@ -238,7 +234,6 @@ export function useGridColumns(
         apiRef,
         columnsTypes,
         columnsToUpsert: props.columns,
-        viewportInnerWidth: viewportInnerWidth.current,
         reset: true,
       });
 
@@ -247,9 +242,10 @@ export function useGridColumns(
     [apiRef, logger, setGridColumnsState, props.columns, columnsTypes],
   );
 
+  const prevViewportInnerWidth = React.useRef(0);
   const handleGridSizeChange = (viewportInnerSize) => {
-    if (viewportInnerWidth.current !== viewportInnerSize.width) {
-      viewportInnerWidth.current = viewportInnerSize.width;
+    if (prevViewportInnerWidth.current !== viewportInnerSize.width) {
+      prevViewportInnerWidth.current = viewportInnerSize.width;
       setGridColumnsState(
         hydrateColumnsWidth(apiRef.current.state.columns, viewportInnerSize.width),
       );

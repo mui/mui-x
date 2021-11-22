@@ -28,12 +28,12 @@ export const computeColumnTypes = (customColumnTypes: GridColumnTypesRecord = {}
 
 export const hydrateColumnsWidth = (
   rawState: GridColumnsRawState,
-  viewportWidth: number,
+  viewportInnerWidth: number,
 ): GridColumnsState => {
   const columnsLookup: GridColumnLookup = {};
 
   let totalFlexUnits = 0;
-  let widthToAllocateInFlex = viewportWidth;
+  let widthToAllocateInFlex = viewportInnerWidth;
 
   // Compute the width of non-flex columns and how much width must be allocated between the flex columns
   rawState.all.forEach((columnField) => {
@@ -79,14 +79,12 @@ interface CreateColumnsStateOptions {
   columnsToUpsert: GridColDef[];
   columnsTypes: GridColumnTypesRecord;
   apiRef: GridApiRef;
-  viewportInnerWidth: number;
   reset: boolean;
 }
 
 export const createColumnsState = ({
   columnsToUpsert,
   columnsTypes,
-  viewportInnerWidth,
   apiRef,
   reset,
 }: CreateColumnsStateOptions) => {
@@ -127,5 +125,8 @@ export const createColumnsState = ({
     columnsState,
   );
 
-  return hydrateColumnsWidth(columnsStateWithPreProcessing, viewportInnerWidth);
+  return hydrateColumnsWidth(
+    columnsStateWithPreProcessing,
+    apiRef.current.getRootDimensions?.()?.viewportInnerSize.width ?? 0,
+  );
 };
