@@ -11,6 +11,21 @@ import {
 } from '../../../models';
 import { GridPreProcessingGroup } from '../../core/preProcessing';
 
+export const computeColumnTypes = (customColumnTypes: GridColumnTypesRecord = {}) => {
+  const allColumnTypes = { ...getGridDefaultColumnTypes(), ...customColumnTypes };
+  const mergedColumnTypes: GridColumnTypesRecord = {};
+
+  Object.entries(allColumnTypes).forEach(([colType, colTypeDef]) => {
+    colTypeDef = {
+      ...allColumnTypes[colTypeDef.extendType || DEFAULT_GRID_COL_TYPE_KEY],
+      ...colTypeDef,
+    };
+    mergedColumnTypes[colType] = colTypeDef;
+  });
+
+  return mergedColumnTypes;
+};
+
 export const hydrateColumnsWidth = (
   rawState: GridColumnsRawState,
   viewportWidth: number,
@@ -58,21 +73,6 @@ export const hydrateColumnsWidth = (
     ...rawState,
     lookup: columnsLookup,
   };
-};
-
-export const computeColumnTypes = (customColumnTypes: GridColumnTypesRecord = {}) => {
-  const allColumnTypes = { ...getGridDefaultColumnTypes(), ...customColumnTypes };
-  const mergedColumnTypes: GridColumnTypesRecord = {};
-
-  Object.entries(allColumnTypes).forEach(([colType, colTypeDef]) => {
-    colTypeDef = {
-      ...allColumnTypes[colTypeDef.extendType || DEFAULT_GRID_COL_TYPE_KEY],
-      ...colTypeDef,
-    };
-    mergedColumnTypes[colType] = colTypeDef;
-  });
-
-  return mergedColumnTypes;
 };
 
 interface CreateColumnsStateOptions {
