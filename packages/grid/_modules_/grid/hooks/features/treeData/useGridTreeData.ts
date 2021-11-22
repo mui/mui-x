@@ -65,7 +65,7 @@ export const useGridTreeData = (
         return columns;
       }
 
-      const index = columns[0].type === 'checkboxSelection' ? 1 : 0;
+      const index = columns[0]?.field === '__check__' ? 1 : 0;
 
       return [...columns.slice(0, index), groupingColDef, ...columns.slice(index)];
     },
