@@ -1,6 +1,6 @@
 import * as React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import { LicenseInfo } from '@mui/x-data-grid-pro';
 import { withStyles } from '@mui/styles';
 import TestViewer from 'test/regressions/TestViewer';
@@ -165,7 +165,7 @@ function App() {
   return (
     <Router>
       <GlobalStyles />
-      <Switch>
+      <Routes>
         {tests.map((test) => {
           const path = computePath(test);
           const TestCase = test.case;
@@ -180,14 +180,19 @@ function App() {
           }
 
           return (
-            <Route key={path} exact path={path}>
-              <TestViewer dataGridContainer={dataGridContainer}>
-                <TestCase />
-              </TestViewer>
-            </Route>
+            <Route
+              key={path}
+              exact
+              path={path}
+              element={
+                <TestViewer dataGridContainer={dataGridContainer}>
+                  <TestCase />
+                </TestViewer>
+              }
+            />
           );
         })}
-      </Switch>
+      </Routes>
       <div hidden={!isDev}>
         <p>
           Devtools can be enabled by appending <code>#dev</code> in the addressbar or disabled by
