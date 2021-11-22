@@ -41,7 +41,7 @@
     "@mui/x-license-pro": "5.0.1",
     "clsx": "^1.0.4",
     "prop-types": "^15.7.2",
-    "reselect": "^4.1.1"
+    "reselect": "^4.1.4"
   },
   "peerDependencies": {
     "@mui/material": "^5.1.1",
