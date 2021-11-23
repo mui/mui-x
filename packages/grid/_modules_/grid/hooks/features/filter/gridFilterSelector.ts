@@ -6,12 +6,14 @@ import { gridColumnLookupSelector } from '../columns/gridColumnsSelector';
 import { gridRowTreeDepthSelector, gridRowTreeSelector } from '../rows';
 
 /**
- * @feature Filter
+ * @feature Filtering
+ * @ignore - do not document.
  */
 export const gridFilterStateSelector = (state: GridState) => state.filter;
 
 /**
- * @feature Filter
+ * Get the current filter model.
+ * @feature Filtering
  */
 export const gridFilterModelSelector = createSelector(
   gridFilterStateSelector,
@@ -19,7 +21,8 @@ export const gridFilterModelSelector = createSelector(
 );
 
 /**
- * @feature Filter
+ * @feature Filtering
+ * @ignore - do not document.
  */
 export const gridVisibleRowsLookupSelector = createSelector(
   gridFilterStateSelector,
@@ -27,7 +30,8 @@ export const gridVisibleRowsLookupSelector = createSelector(
 );
 
 /**
- * @feature Filter
+ * @feature Filtering
+ * @ignore - do not document.
  */
 export const gridFilteredDescendantCountLookupSelector = createSelector(
   gridFilterStateSelector,
@@ -35,7 +39,8 @@ export const gridFilteredDescendantCountLookupSelector = createSelector(
 );
 
 /**
- * @feature Filter
+ * Get the id and the model of the rows accessible after the filtering process.
+ * @feature Filtering
  */
 export const gridVisibleSortedRowEntriesSelector = createSelector(
   gridVisibleRowsLookupSelector,
@@ -45,7 +50,8 @@ export const gridVisibleSortedRowEntriesSelector = createSelector(
 );
 
 /**
- * @feature Filter
+ * Get the id of the rows accessible after the filtering process.
+ * @feature Filtering
  */
 export const gridVisibleSortedRowIdsSelector = createSelector(
   gridVisibleSortedRowEntriesSelector,
@@ -53,13 +59,15 @@ export const gridVisibleSortedRowIdsSelector = createSelector(
 );
 
 /**
- * @feature Filter
+ * @feature Filtering
  * @deprecated Use `gridVisibleSortedRowIdsSelector` instead
+ * @ignore - do not document.
  */
 export const gridVisibleRowsSelector = gridVisibleSortedRowIdsSelector;
 
 /**
- * @feature Filter
+ * Get the id and the model of the top level rows accessible after the filtering process.
+ * @feature Filtering
  */
 export const gridVisibleSortedTopLevelRowEntriesSelector = createSelector(
   gridVisibleSortedRowEntriesSelector,
@@ -75,7 +83,8 @@ export const gridVisibleSortedTopLevelRowEntriesSelector = createSelector(
 );
 
 /**
- * @feature Filter
+ * Get the amount of rows accessible after the filtering process.
+ * @feature Filtering
  */
 export const gridVisibleRowCountSelector = createSelector(
   gridVisibleSortedRowEntriesSelector,
@@ -83,7 +92,8 @@ export const gridVisibleRowCountSelector = createSelector(
 );
 
 /**
- * @feature Filter
+ * Get the amount of top level rows accessible after the filtering process.
+ * @feature Filtering
  */
 export const gridVisibleTopLevelRowCountSelector = createSelector(
   gridVisibleSortedTopLevelRowEntriesSelector,
@@ -91,7 +101,8 @@ export const gridVisibleTopLevelRowCountSelector = createSelector(
 );
 
 /**
- * @feature Filter
+ * @feature Filtering
+ * @ignore - do not document.
  */
 export const gridFilterActiveItemsSelector = createSelector(
   gridFilterModelSelector,
@@ -120,7 +131,8 @@ export const gridFilterActiveItemsSelector = createSelector(
 export type GridFilterActiveItemsLookup = { [columnField: string]: GridFilterItem[] };
 
 /**
- * @feature Filter
+ * @feature Filtering
+ * @ignore - do not document.
  */
 export const gridFilterActiveItemsLookupSelector = createSelector(
   gridFilterActiveItemsSelector,

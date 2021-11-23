@@ -5,15 +5,16 @@ import {
   gridVisibleSortedRowIdsSelector,
   gridVisibleSortedTopLevelRowEntriesSelector,
 } from '../filter/gridFilterSelector';
-import { GridPaginationState } from './gridPaginationState';
 import { gridRowTreeDepthSelector, gridRowTreeSelector } from '../rows/gridRowsSelector';
 
 /**
  * @feature Pagination
+ * @ignore - do not document.
  */
-export const gridPaginationSelector = (state: GridState): GridPaginationState => state.pagination;
+export const gridPaginationSelector = (state: GridState) => state.pagination;
 
 /**
+ * Get the index of the page to render if the pagination is enabled
  * @feature Pagination
  */
 export const gridPageSelector = createSelector(
@@ -22,6 +23,7 @@ export const gridPageSelector = createSelector(
 );
 
 /**
+ * Get the maximum amount of rows to display on a single page if the pagination is enabled
  * @feature Pagination
  */
 export const gridPageSizeSelector = createSelector(
@@ -30,6 +32,7 @@ export const gridPageSizeSelector = createSelector(
 );
 
 /**
+ * Get the index of the first and the last row to include in the current page if the pagination is enabled.
  * @feature Pagination
  */
 export const gridPaginationRowRangeSelector = createSelector(
@@ -88,7 +91,8 @@ export const gridPaginationRowRangeSelector = createSelector(
 );
 
 /**
- * @category Pagination
+ * Get the id and the model of each row to include in the current page if the pagination is enabled.
+ * @feature Pagination
  */
 export const gridPaginatedVisibleSortedGridRowEntriesSelector = createSelector(
   gridVisibleSortedRowEntriesSelector,
@@ -106,7 +110,8 @@ export const gridPaginatedVisibleSortedGridRowEntriesSelector = createSelector(
 );
 
 /**
- * @category Pagination
+ * Get the id of each row to include in the current page if the pagination is enabled.
+ * @feature Pagination
  */
 export const gridPaginatedVisibleSortedGridRowIdsSelector = createSelector(
   gridVisibleSortedRowIdsSelector,

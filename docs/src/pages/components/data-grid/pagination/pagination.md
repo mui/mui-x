@@ -79,6 +79,10 @@ Below is an example of how you can reset the page using the imperative `setPage`
 
 {{"demo": "pages/components/data-grid/pagination/ApiRefPaginationGrid.js", "bg": "inline", "disableAd": true}}
 
+## Selectors [<span class="pro"></span>](https://mui.com/store/items/material-ui-pro/)
+
+{{"demo": "pages/components/data-grid/pagination/PaginationSelectorsNoSnap.js", "bg": "inline", "hideToolbar": true}}
+
 ## API
 
 - [DataGrid](/api/data-grid/data-grid/)

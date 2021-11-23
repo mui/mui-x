@@ -83,6 +83,10 @@ The grid exposes a set of methods that enables all of these features using the i
 - `setSortModel`: Set the sort model and trigger the sorting of rows.
 - `onSortModelChange`: Callback fired when the column sorting changed before the grid has sorted its rows.
 
+## Selectors [<span class="pro"></span>](https://mui.com/store/items/material-ui-pro/)
+
+{{"demo": "pages/components/data-grid/sorting/SortingSelectorsNoSnap.js", "bg": "inline", "hideToolbar": true}}
+
 ## API
 
 - [DataGrid](/api/data-grid/data-grid/)
