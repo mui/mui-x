@@ -34,6 +34,12 @@ export interface GridCsvExportOptions {
    * @default true
    */
   includeHeaders?: boolean;
+
+  /**
+   *  If `true`, the CSV export option will be removed from the GridToolbarExport menu.
+   * @default false
+   */
+  disable?: boolean;
 }
 
 /**
@@ -79,6 +85,11 @@ export interface GridPrintExportOptions {
    * Provide Print specific styles to the print window.
    */
   pageStyle?: string | Function;
+  /**
+   * If `true`, the Print export option will be removed from the GridToolbarExport menu.
+   * @default false
+   */
+  disable?: boolean;
 }
 
 /**

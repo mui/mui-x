@@ -85,6 +85,10 @@ const GridToolbarExport = React.forwardRef<HTMLButtonElement, GridToolbarExportP
       }
     };
 
+    if (csvOptions?.disable && printOptions?.disable) {
+      return null;
+    }
+
     return (
       <React.Fragment>
         <Button
@@ -115,11 +119,13 @@ const GridToolbarExport = React.forwardRef<HTMLButtonElement, GridToolbarExportP
             onKeyDown={handleListKeyDown}
             autoFocusItem={open}
           >
-            {exportOptions.map((option, index) => (
-              <MenuItem key={index} onClick={handleExport(option)}>
-                {option.label}
-              </MenuItem>
-            ))}
+            {exportOptions.map((option, index) =>
+              option.formatOptions?.disable ? null : (
+                <MenuItem key={index} onClick={handleExport(option)}>
+                  {option.label}
+                </MenuItem>
+              ),
+            )}
           </MenuList>
         </GridMenu>
       </React.Fragment>
