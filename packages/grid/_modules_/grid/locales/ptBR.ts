@@ -65,9 +65,9 @@ const ptBRGrid: Partial<GridLocaleText> = {
   filterOperatorIsNotEmpty: 'não está vazio',
 
   // Filter values text
-  filterValueAny: 'any',
-  filterValueTrue: 'true',
-  filterValueFalse: 'false',
+  filterValueAny: 'qualquer',
+  filterValueTrue: 'verdadeiro',
+  filterValueFalse: 'falso',
 
   // Column menu text
   columnMenuLabel: 'Menu',
