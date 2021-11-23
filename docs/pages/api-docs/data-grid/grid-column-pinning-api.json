@@ -10,12 +10,12 @@
     {
       "name": "isColumnPinned",
       "description": "Returns which side a column is pinned to.",
-      "type": "(field: string) => string | false"
+      "type": "(field: string) => false | GridPinnedPosition"
     },
     {
       "name": "pinColumn",
       "description": "Pins a column to the left or right side of the grid.",
-      "type": "(field: string, side: left | right) => void"
+      "type": "(field: string, side: GridPinnedPosition) => void"
     },
     {
       "name": "setPinnedColumns",

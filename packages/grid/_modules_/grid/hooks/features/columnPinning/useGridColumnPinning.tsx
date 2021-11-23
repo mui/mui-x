@@ -16,7 +16,7 @@ import { useGridRegisterPreProcessor } from '../../core/preProcessing/useGridReg
 import { GridColumnPinningMenuItems } from '../../../components/menu/columnMenu/GridColumnPinningMenuItems';
 import { GridColumns } from '../../../models/colDef/gridColDef';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
-import { GridColumnPinningApi } from '../../../models/api/gridColumnPinningApi';
+import { GridColumnPinningApi, GridPinnedPosition } from '../../../models/api/gridColumnPinningApi';
 import { gridPinnedColumnsSelector } from './columnPinningSelector';
 import { useGridStateInit } from '../../utils/useGridStateInit';
 import { useGridState } from '../../utils/useGridState';
@@ -35,13 +35,18 @@ export const useGridColumnPinning = (
   useGridStateInit(apiRef, (state) => ({
     ...state,
     pinnedColumns: {
-      left: (!props.disableColumnPinning && props.initialState?.pinnedColumns?.left) || [],
-      right: (!props.disableColumnPinning && props.initialState?.pinnedColumns?.right) || [],
+      left: !props.disableColumnPinning ? props.initialState?.pinnedColumns?.left : undefined,
+      right: !props.disableColumnPinning ? props.initialState?.pinnedColumns?.right : undefined,
     },
   }));
   const [, setGridState, forceUpdate] = useGridState(apiRef);
   const pinnedColumns = useGridSelector(apiRef, gridPinnedColumnsSelector);
 
+  // Each visible row (not to be confused with a filter result) is composed of a central .MuiDataGrid-row element
+  // and up to two additional .MuiDataGrid-row's, one for the columns pinned to the left and another
+  // for those on the right side. When hovering any of these elements, the :hover styles are applied only to
+  // the row element that was actually hovered, not its additional siblings. To make it look like a contiguous row,
+  // this method adds/removes the .Mui-hovered class to all of the row elements inside one visible row.
   const updateHoveredClassOnSiblingRows = React.useCallback(
     (event: React.MouseEvent<HTMLDivElement>) => {
       if (!Array.isArray(pinnedColumns.left) && !Array.isArray(pinnedColumns.right)) {
@@ -53,10 +58,10 @@ export const useGridColumnPinning = (
       }
 
       const index = event.currentTarget.dataset.rowindex;
-      const rows = apiRef.current.windowRef!.current!.querySelectorAll(
+      const rowElements = apiRef.current.windowRef!.current!.querySelectorAll(
         `.${gridClasses.row}[data-rowindex="${index}"]`,
       );
-      rows.forEach((row) => {
+      rowElements.forEach((row) => {
         if (event.type === 'mouseenter') {
           row.classList.add('Mui-hovered');
         } else {
@@ -99,23 +104,23 @@ export const useGridColumnPinning = (
       }
 
       const columnsMeta = gridColumnsMetaSelector(apiRef.current.state);
-      const clientHeight = apiRef.current.windowRef!.current!.clientWidth;
-      const scrollTop = apiRef.current.windowRef!.current!.scrollLeft;
-      const offsetHeight = visibleColumns[params.colIndex].computedWidth;
-      const offsetTop = columnsMeta.positions[params.colIndex];
+      const clientWidth = apiRef.current.windowRef!.current!.clientWidth;
+      const scrollLeft = apiRef.current.windowRef!.current!.scrollLeft;
+      const offsetWidth = visibleColumns[params.colIndex].computedWidth;
+      const offsetLeft = columnsMeta.positions[params.colIndex];
 
       const leftPinnedColumnsWidth = columnsMeta.positions[leftPinnedColumns];
       const rightPinnedColumnsWidth =
         columnsMeta.totalWidth -
         columnsMeta.positions[columnsMeta.positions.length - rightPinnedColumns];
 
-      const elementBottom = offsetTop + offsetHeight;
-      if (elementBottom - (clientHeight - rightPinnedColumnsWidth) > scrollTop) {
-        const left = elementBottom - (clientHeight - rightPinnedColumnsWidth);
+      const elementBottom = offsetLeft + offsetWidth;
+      if (elementBottom - (clientWidth - rightPinnedColumnsWidth) > scrollLeft) {
+        const left = elementBottom - (clientWidth - rightPinnedColumnsWidth);
         return { ...initialValue, left };
       }
-      if (offsetTop < scrollTop + leftPinnedColumnsWidth) {
-        const left = offsetTop - leftPinnedColumnsWidth;
+      if (offsetLeft < scrollLeft + leftPinnedColumnsWidth) {
+        const left = offsetLeft - leftPinnedColumnsWidth;
         return { ...initialValue, left };
       }
       return initialValue;
@@ -190,7 +195,7 @@ export const useGridColumnPinning = (
   );
 
   const pinColumn = React.useCallback<GridColumnPinningApi['pinColumn']>(
-    (field: string, side: 'left' | 'right') => {
+    (field: string, side: GridPinnedPosition) => {
       checkIfEnabled('pinColumn');
 
       if (apiRef.current.isColumnPinned(field) === side) {
@@ -198,7 +203,8 @@ export const useGridColumnPinning = (
       }
 
       setGridState((state) => {
-        const otherSide = side === 'right' ? 'left' : 'right';
+        const otherSide =
+          side === GridPinnedPosition.right ? GridPinnedPosition.left : GridPinnedPosition.right;
         const newPinnedColumns = {
           ...state.pinnedColumns,
           [side]: [...(state.pinnedColumns[side] || []), field],
@@ -229,7 +235,7 @@ export const useGridColumnPinning = (
 
   const getPinnedColumns = React.useCallback<GridColumnPinningApi['getPinnedColumns']>(() => {
     checkIfEnabled('getPinnedColumns');
-    return apiRef.current.state.pinnedColumns;
+    return gridPinnedColumnsSelector(apiRef.current.state);
   }, [apiRef, checkIfEnabled]);
 
   const setPinnedColumns = React.useCallback<GridColumnPinningApi['setPinnedColumns']>(
@@ -246,11 +252,11 @@ export const useGridColumnPinning = (
       checkIfEnabled('isColumnPinned');
       const leftPinnedColumns = pinnedColumns.left || [];
       if (leftPinnedColumns.includes(field)) {
-        return 'left';
+        return GridPinnedPosition.left;
       }
       const rightPinnedColumns = pinnedColumns.right || [];
       if (rightPinnedColumns.includes(field)) {
-        return 'right';
+        return GridPinnedPosition.right;
       }
       return false;
     },

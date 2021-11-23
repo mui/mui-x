@@ -1,7 +1,11 @@
 import * as React from 'react';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-import { DataGridPro, GridActionsCellItem } from '@mui/x-data-grid-pro';
+import {
+  DataGridPro,
+  GridActionsCellItem,
+  GRID_CHECKBOX_SELECTION_COL_DEF,
+} from '@mui/x-data-grid-pro';
 import {
   randomCreatedDate,
   randomTraderName,
@@ -16,7 +20,12 @@ export default function ColumnPinningWithCheckboxSelection() {
         rows={rows}
         columns={columns}
         checkboxSelection
-        initialState={{ pinnedColumns: { left: ['__check__'], right: ['actions'] } }}
+        initialState={{
+          pinnedColumns: {
+            left: [GRID_CHECKBOX_SELECTION_COL_DEF.field],
+            right: ['actions'],
+          },
+        }}
       />
     </div>
   );

@@ -3,6 +3,11 @@ export interface GridPinnedColumns {
   right?: string[];
 }
 
+export enum GridPinnedPosition {
+  left = 'left',
+  right = 'right',
+}
+
 /**
  * The column pinning API interface that is available in the grid [[apiRef]].
  */
@@ -10,9 +15,9 @@ export interface GridColumnPinningApi {
   /**
    * Pins a column to the left or right side of the grid.
    * @param {string} field The column field to pin.
-   * @param {'left' | 'right'} side Which side to pin the column.
+   * @param {GridPinnedPosition} side Which side to pin the column.
    */
-  pinColumn: (field: string, side: 'left' | 'right') => void;
+  pinColumn: (field: string, side: GridPinnedPosition) => void;
   /**
    * Unpins a column.
    * @param {string} field The column field to unpin.
@@ -33,5 +38,5 @@ export interface GridColumnPinningApi {
    * @param {string} field The column field to check.
    * @returns {string | false} Which side the column is pinned or `false` if not pinned.
    */
-  isColumnPinned: (field: string) => string | false;
+  isColumnPinned: (field: string) => GridPinnedPosition | false;
 }

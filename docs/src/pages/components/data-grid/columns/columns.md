@@ -428,7 +428,7 @@ This can be done by providing a custom menu, as demonstrated below:
 
 ### Pinning the checkbox selection column
 
-To pin the checkbox column added when using `checkboxSelection`, add `"__check__"` to the list of pinned columns.
+To pin the checkbox column added when using `checkboxSelection`, add `GRID_CHECKBOX_SELECTION_COL_DEF.field` to the list of pinned columns.
 
 {{"demo": "pages/components/data-grid/columns/ColumnPinningWithCheckboxSelection.js", "disableAd": true, "bg": "inline"}}
 

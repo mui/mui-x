@@ -14,6 +14,7 @@ import { GridColumnHeaders } from '../../_modules_/grid/components/columnHeaders
 import { gridPinnedColumnsSelector } from '../../_modules_/grid/hooks/features/columnPinning/columnPinningSelector';
 import { GridEvents } from '../../_modules_/grid/constants/eventsConstants';
 import { filterColumns } from './DataGridProVirtualScroller';
+import { GridPinnedPosition } from '../../_modules_/grid/models/api/gridColumnPinningApi';
 
 type OwnerState = {
   classes?: GridComponentProps['classes'];
@@ -39,7 +40,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 };
 
 interface GridColumnHeadersPinnedColumnHeadersProps {
-  side: 'left' | 'right';
+  side: GridPinnedPosition;
 }
 
 // Inspired by https://github.com/material-components/material-components-ios/blob/bca36107405594d5b7b16265a5b0ed698f85a5ee/components/Elevation/src/UIColor%2BMaterialElevation.m#L61
@@ -71,8 +72,8 @@ const GridColumnHeadersPinnedColumnHeaders = styled('div', {
       getOverlayAlpha(2),
     )})`,
   }),
-  ...(ownerState.side === 'left' && { left: 0 }),
-  ...(ownerState.side === 'right' && { right: 0 }),
+  ...(ownerState.side === GridPinnedPosition.left && { left: 0 }),
+  ...(ownerState.side === GridPinnedPosition.right && { right: 0 }),
 }));
 
 interface DataGridProColumnHeadersProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -153,7 +154,7 @@ export const DataGridProColumnHeaders = React.forwardRef<
       {leftRenderContext && (
         <GridColumnHeadersPinnedColumnHeaders
           className={classes.leftPinnedColumns}
-          ownerState={{ side: 'left' }}
+          ownerState={{ side: GridPinnedPosition.left }}
         >
           {getColumns(
             {
@@ -167,7 +168,7 @@ export const DataGridProColumnHeaders = React.forwardRef<
       )}
       {rightRenderContext && (
         <GridColumnHeadersPinnedColumnHeaders
-          ownerState={{ side: 'right' }}
+          ownerState={{ side: GridPinnedPosition.right }}
           className={classes.rightPinnedColumns}
           style={{ paddingRight: scrollbarSize }}
         >

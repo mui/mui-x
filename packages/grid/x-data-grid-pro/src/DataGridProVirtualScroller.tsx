@@ -16,12 +16,13 @@ import { GridComponentProps } from '../../_modules_/grid/GridComponentProps';
 import { getDataGridUtilityClass } from '../../_modules_/grid/gridClasses';
 import { gridPinnedColumnsSelector } from '../../_modules_/grid/hooks/features/columnPinning/columnPinningSelector';
 import { GridColumns } from '../../_modules_/grid/models/colDef/gridColDef';
+import { GridPinnedPosition } from '../../_modules_/grid/models/api/gridColumnPinningApi';
 
 export const filterColumns = (newPinnedColumns: string[] | undefined, columns: GridColumns) => {
   if (!Array.isArray(newPinnedColumns)) {
     return [];
   }
-  return newPinnedColumns.filter((field) => !!columns.find((column) => column.field === field));
+  return newPinnedColumns.filter((field) => columns.some((column) => column.field === field));
 };
 
 type OwnerState = {
@@ -42,12 +43,12 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 };
 
 interface VirtualScrollerPinnedColumnsProps {
-  side: 'left' | 'right';
+  side: GridPinnedPosition;
 }
 
 // Inspired by https://github.com/material-components/material-components-ios/blob/bca36107405594d5b7b16265a5b0ed698f85a5ee/components/Elevation/src/UIColor%2BMaterialElevation.m#L61
-const getOverlayAlpha = (elevation) => {
-  let alphaValue;
+const getOverlayAlpha = (elevation: number) => {
+  let alphaValue: number;
   if (elevation < 1) {
     alphaValue = 5.11916 * elevation ** 2;
   } else {
@@ -71,8 +72,8 @@ const VirtualScrollerPinnedColumns = styled('div', {
       getOverlayAlpha(2),
     )})`,
   }),
-  ...(ownerState.side === 'left' && { left: 0, float: 'left' }),
-  ...(ownerState.side === 'right' && { right: 0, float: 'right' }),
+  ...(ownerState.side === GridPinnedPosition.left && { left: 0, float: 'left' }),
+  ...(ownerState.side === GridPinnedPosition.right && { right: 0, float: 'right' }),
 }));
 
 interface DataGridProVirtualScrollerProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -185,7 +186,7 @@ const DataGridProVirtualScroller = React.forwardRef<
           <VirtualScrollerPinnedColumns
             ref={leftColumns}
             className={classes.leftPinnedColumns}
-            ownerState={{ side: 'left' }}
+            ownerState={{ side: GridPinnedPosition.left }}
             style={pinnedColumnsStyle}
           >
             {getRows({
@@ -199,7 +200,7 @@ const DataGridProVirtualScroller = React.forwardRef<
         {rightRenderContext && (
           <VirtualScrollerPinnedColumns
             ref={rightColumns}
-            ownerState={{ side: 'right' }}
+            ownerState={{ side: GridPinnedPosition.right }}
             className={classes.rightPinnedColumns}
             style={pinnedColumnsStyle}
           >

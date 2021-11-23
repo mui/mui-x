@@ -6,6 +6,7 @@ import {
   GridColumns,
   GridRowsProp,
   GridActionsCellItem,
+  GRID_CHECKBOX_SELECTION_COL_DEF,
 } from '@mui/x-data-grid-pro';
 import {
   randomCreatedDate,
@@ -21,7 +22,12 @@ export default function ColumnPinningWithCheckboxSelection() {
         rows={rows}
         columns={columns}
         checkboxSelection
-        initialState={{ pinnedColumns: { left: ['__check__'], right: ['actions'] } }}
+        initialState={{
+          pinnedColumns: {
+            left: [GRID_CHECKBOX_SELECTION_COL_DEF.field],
+            right: ['actions'],
+          },
+        }}
       />
     </div>
   );

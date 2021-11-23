@@ -444,7 +444,7 @@ interface GridComponentOtherProps {
    */
   pinnedColumns?: GridPinnedColumns;
   /**
-   * Callback fired when the pinned columns are changed.
+   * Callback fired when the pinned columns have changed.
    * @param {GridPinnedColumns} pinnedColumns The changed pinned columns.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
