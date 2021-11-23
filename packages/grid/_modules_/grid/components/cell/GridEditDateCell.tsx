@@ -98,12 +98,17 @@ export function GridEditDateCell(props: GridRenderEditCellParams & InputBaseProp
     [api, field, id],
   );
 
-  if (
-    valueProp.parsed !== valueState.parsed &&
-    valueProp.parsed?.getTime() !== valueState.parsed?.getTime()
-  ) {
-    setValueState(valueProp);
-  }
+  React.useEffect(() => {
+    setValueState((state) => {
+      if (
+        valueProp.parsed !== state.parsed &&
+        valueProp.parsed?.getTime() !== state.parsed?.getTime()
+      ) {
+        return valueProp;
+      }
+      return state;
+    });
+  }, [valueProp]);
 
   useEnhancedEffect(() => {
     if (hasFocus) {
