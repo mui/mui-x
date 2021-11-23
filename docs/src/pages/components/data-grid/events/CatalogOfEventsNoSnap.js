@@ -51,7 +51,7 @@ apiRef.current.subscribeEvent(
   onEvent,
 );
 
-// Hook subscription (only available inside the scope of the Grid)
+// Hook subscription (only available inside the scope of the grid)
 useGridApiEventHandler(GridEvents.${event.name}, onEvent);    
 `;
   }, [event]);
