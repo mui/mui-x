@@ -95,6 +95,14 @@ This is very close to the "row spanning" in an HTML `<table>`.
 
 Row reorder is used to rearrange rows by dragging the row with the mouse.
 
+## 🚧 Row pinning [<span class="pro"></span>](https://mui.com/store/items/material-ui-pro/)
+
+> ⚠️ This feature isn't implemented yet. It's coming.
+>
+> 👍 Upvote [issue #1251](https://github.com/mui-org/material-ui-x/issues/1251) if you want to see it land faster.
+
+Pinned (or frozen, locked, or sticky) rows are rows that are visible at all times while the user scrolls the grid vertically.
+
 ## API
 
 - [DataGrid](/api/data-grid/data-grid/)
