@@ -4,6 +4,7 @@ import Stack from '@mui/material/Stack';
 import Checkbox from '@mui/material/Checkbox';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
+import Typography from '@mui/material/Typography';
 
 const rows = [
   {
@@ -126,7 +127,11 @@ export default function DisableChildrenSortingTreeData() {
               onChange={(event) => setDisableChildrenSorting(event.target.checked)}
             />
           }
-          label="Enable `disableChildrenSorting`"
+          label={
+            <Typography component="span">
+              Enable <code>disableChildrenSorting</code>
+            </Typography>
+          }
         />
       </FormGroup>
       <div style={{ height: 400, width: '100%' }}>
