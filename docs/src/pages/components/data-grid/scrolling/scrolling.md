@@ -18,6 +18,8 @@ The following demo explores the usage of this API:
 
 ## apiRef [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-pro/)
 
+> ⚠️ Only use this API when you have no alternative. Always start from the declarative API that the grid exposes.
+
 {{"demo": "pages/components/data-grid/scrolling/ScrollApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
 
 ## API

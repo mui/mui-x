@@ -54,7 +54,7 @@ You can provide a [`valueFormatter`](/components/data-grid/columns/#value-format
 
 ### apiRef [<span class="pro"></span>](https://mui.com/store/items/material-ui-pro/)
 
-You can export data using the imperative API available in DataGridPro:
+> ⚠️ Only use this API when you have no alternative. Always start from the declarative API that the grid exposes.
 
 {{"demo": "pages/components/data-grid/export/CsvExportApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
 
@@ -108,7 +108,7 @@ You can provide a [`valueFormatter`](/components/data-grid/columns/#value-format
 
 ### apiRef [<span class="pro"></span>](https://mui.com/store/items/material-ui-pro/)
 
-You can export data using the imperative API available in DataGridPro:
+> ⚠️ Only use this API when you have no alternative. Always start from the declarative API that the grid exposes.
 
 {{"demo": "pages/components/data-grid/export/PrintExportApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
 

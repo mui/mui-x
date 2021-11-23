@@ -230,6 +230,8 @@ The following events can be imported and used to customize the row edition:
 
 ## apiRef [<span class="pro"></span>](https://mui.com/store/items/material-ui-pro/)
 
+> ⚠️ Only use this API when you have no alternative. Always start from the declarative API that the grid exposes.
+
 {{"demo": "pages/components/data-grid/editing/EditApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
 
 ## API
