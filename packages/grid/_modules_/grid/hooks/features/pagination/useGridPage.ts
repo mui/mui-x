@@ -9,8 +9,7 @@ import {
 } from '../../utils';
 import { GridEvents } from '../../../constants/eventsConstants';
 import { GridComponentProps } from '../../../GridComponentProps';
-import { GridPageApi } from '../../../models/api/gridPageApi';
-import { GridPaginationState } from './gridPaginationState';
+import { GridPageApi, GridPaginationState } from './gridPaginationInterfaces';
 import { gridVisibleTopLevelRowCountSelector } from '../filter';
 import { useGridStateInit } from '../../utils/useGridStateInit';
 import { gridPageSelector } from './gridPaginationSelector';

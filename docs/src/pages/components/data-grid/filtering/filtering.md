@@ -174,6 +174,8 @@ However, it can be implemented as in the demo below.
 
 ## apiRef [<span class="pro"></span>](https://mui.com/store/items/material-ui-pro/)
 
+> ⚠️ Only use this API when you have no alternative. Always start from the declarative API that the grid exposes.
+
 {{"demo": "pages/components/data-grid/filtering/FilterApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
 
 ## API

@@ -1,0 +1,46 @@
+{
+  "name": "GridSortApi",
+  "description": "The sort API interface that is available in the grid apiRef.",
+  "properties": [
+    {
+      "name": "applySorting",
+      "description": "Applies the current sort model to the rows.",
+      "type": "() => void"
+    },
+    {
+      "name": "getRowIdFromRowIndex",
+      "description": "Gets the <code>GridRowId</code> of a row at a specific index.\nThe index is based on the sorted but unfiltered row list.",
+      "type": "(index: number) => GridRowId"
+    },
+    {
+      "name": "getRowIndex",
+      "description": "Gets the row index of a row with a given id.\nThe index is based on the sorted but unfiltered row list.",
+      "type": "(id: GridRowId) => number"
+    },
+    {
+      "name": "getSortedRowIds",
+      "description": "Returns all row ids sorted according to the active sort model.",
+      "type": "() => GridRowId[]"
+    },
+    {
+      "name": "getSortedRows",
+      "description": "Returns all rows sorted according to the active sort model.",
+      "type": "() => { [key: string]: any }[]"
+    },
+    {
+      "name": "getSortModel",
+      "description": "Returns the sort model currently applied to the grid.",
+      "type": "() => GridSortModel"
+    },
+    {
+      "name": "setSortModel",
+      "description": "Updates the sort model and triggers the sorting of rows.",
+      "type": "(model: GridSortModel) => void"
+    },
+    {
+      "name": "sortColumn",
+      "description": "Sorts a column.",
+      "type": "(column: GridColDef, direction?: GridSortDirection, allowMultipleSorting?: boolean) => void"
+    }
+  ]
+}
