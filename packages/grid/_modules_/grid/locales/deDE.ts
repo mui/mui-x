@@ -57,10 +57,10 @@ const deDEGrid: Partial<GridLocaleText> = {
   filterOperatorEndsWith: 'endet mit',
   filterOperatorIs: 'ist',
   filterOperatorNot: 'ist nicht',
-  filterOperatorAfter: 'ist nach',
-  filterOperatorOnOrAfter: 'ist an oder nach',
+  filterOperatorOnOrAfter: 'ist am oder nach',
   filterOperatorBefore: 'ist vor',
-  filterOperatorOnOrBefore: 'ist an oder vor',
+  filterOperatorOnOrBefore: 'ist am oder vor',
+  filterOperatorAfter: 'ist nach',
   filterOperatorIsEmpty: 'ist leer',
   filterOperatorIsNotEmpty: 'ist nicht leer',
 
@@ -105,7 +105,7 @@ const deDEGrid: Partial<GridLocaleText> = {
   // booleanCellFalseLabel: 'false',
 
   // Actions cell more text
-  // actionsCellMore: 'more',
+  actionsCellMore: 'Mehr',
 };
 
 export const deDE: Localization = getGridLocalization(deDEGrid, deDECore);
