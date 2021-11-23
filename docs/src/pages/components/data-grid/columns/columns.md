@@ -379,7 +379,7 @@ In addition, column reordering emits the following events that can be imported:
 
 ## Column pinning [<span class="pro"></span>](https://mui.com/store/items/material-ui-pro/)
 
-Pinned (or frozen, locked, or sticky) columns are columns that are visible at all time while scrolling the grid horizontally.
+Pinned (or frozen, locked, or sticky) columns are columns that are visible at all of the time while the user scrolls the grid horizontally.
 They can be pinned either to the left or right side and cannot be reordered.
 
 To pin a column, there are a few ways:

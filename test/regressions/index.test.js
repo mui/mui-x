@@ -106,6 +106,13 @@ async function main() {
         const testcase = await page.waitForSelector(
           '[data-testid="testcase"]:not([aria-busy="true"])',
         );
+
+        // Added during the migration from react-router-dom v5 to v6
+        // Without it, the screenshot is taken while the loading indicator is still visible
+        if (pathURL === '/docs-components-data-grid-filtering/ServerFilterGrid') {
+          await sleep(500); // TODO Investigate how to remove it
+        }
+
         await testcase.screenshot({ path: screenshotPath, type: 'png' });
       });
 

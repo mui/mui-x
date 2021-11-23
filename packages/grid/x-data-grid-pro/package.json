@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-data-grid-pro",
-  "version": "5.0.0",
+  "version": "5.0.1",
   "description": "The commercial edition of the data grid component (MUI X).",
   "author": "MUI Team",
   "main": "build/index-cjs.js",
@@ -37,14 +37,14 @@
     "directory": "packages/grid/x-data-grid-pro"
   },
   "dependencies": {
-    "@mui/utils": "^5.1.0",
-    "@mui/x-license-pro": "5.0.0",
+    "@mui/utils": "^5.1.1",
+    "@mui/x-license-pro": "5.0.1",
     "clsx": "^1.0.4",
     "prop-types": "^15.7.2",
-    "reselect": "^4.1.1"
+    "reselect": "^4.1.4"
   },
   "peerDependencies": {
-    "@mui/material": "^5.1.0",
+    "@mui/material": "^5.1.1",
     "react": "^17.0.2"
   },
   "setupFiles": [

@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-license-pro",
-  "version": "5.0.0",
+  "version": "5.0.1",
   "description": "MUI X License verification",
   "author": "MUI Team",
   "main": "build/cjs/index.js",
@@ -28,7 +28,7 @@
     "licensegen": "./bin/license-gen-script.js"
   },
   "dependencies": {
-    "@mui/utils": "^5.1.0",
+    "@mui/utils": "^5.1.1",
     "esm": "^3.2.25",
     "yargs": "^17.2.1"
   },
