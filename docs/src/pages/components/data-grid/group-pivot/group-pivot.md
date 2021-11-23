@@ -97,14 +97,14 @@ You can limit the sorting to the top level rows with the `disableChildrenSorting
 
 {{"demo": "pages/components/data-grid/group-pivot/DisableChildrenSortingTreeData.js", "bg": "inline", "defaultCodeOpen": false}}
 
-**Note**: If you are using `sortingMode="server"`, you need to always set the children of a row after this row.
-For instance:
+> If you are using `sortingMode="server"`, you need to always set the children of a row after this row.
+> For instance:
 
 ```ts
-// The row A.A is just after its parent
+// The row A.A is immediately after its parent
 const validRows = [{ path: ['A'] }, { path: ['A', 'A'] }, { path: ['B'] }];
 
-// The row A.A is not just after its parent
+// The row A.A is not immediately after its parent
 const invalidRows = [{ path: ['A'] }, { path: ['B'] }, { path: ['A', 'A'] }];
 ```
 
