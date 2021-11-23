@@ -6,6 +6,18 @@ import { GridLoadIcon } from '../../icons/index';
 import { GridFilterInputValueProps } from './GridFilterInputValueProps';
 import { GridColDef } from '../../../models/colDef/gridColDef';
 
+const warnedOnce = {};
+function warnDeprecatedTypeSupport(type) {
+  console.warn(
+    [
+      `MUI: Using GridFilterInputValue with a "${type}" column is deprecated.`,
+      'Use GridFilterInputSingleSelect instead.',
+    ].join('\n'),
+  );
+
+  warnedOnce[type] = true;
+}
+
 const renderSingleSelectOptions = ({ valueOptions, valueFormatter, field }: GridColDef, api) => {
   const iterableColumnValues =
     typeof valueOptions === 'function'
@@ -35,14 +47,10 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps & TextFieldPr
   const { item, applyValue, type, apiRef, focusElementRef, ...others } = props;
   if (
     process.env.NODE_ENV !== 'production' &&
-    ['date', 'datetime-local', 'singleSelect'].includes(type as string)
+    ['date', 'datetime-local', 'singleSelect'].includes(type as string) &&
+    !warnedOnce[type as string]
   ) {
-    console.warn(
-      [
-        'MUI: the use of GridFilterInputValue is deprecated for singleSelect column',
-        'Use GridFilterInputSingleSelect instead.',
-      ].join('\n'),
-    );
+    warnDeprecatedTypeSupport(type);
   }
   const filterTimeout = React.useRef<any>();
   const [filterValueState, setFilterValueState] = React.useState(item.value ?? '');

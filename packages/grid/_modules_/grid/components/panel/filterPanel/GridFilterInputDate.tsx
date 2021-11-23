@@ -5,14 +5,14 @@ import { unstable_useId as useId } from '@mui/material/utils';
 import { GridLoadIcon } from '../../icons/index';
 import { GridFilterInputValueProps } from './GridFilterInputValueProps';
 
-export interface GridTypeFilterInputDateProps extends GridFilterInputValueProps {
+export interface GridFilterInputDateProps extends GridFilterInputValueProps {
   type?: 'date' | 'datetime-local';
 }
 
 export const SUBMIT_FILTER_STROKE_TIME = 500;
 
-function GridFilterInputDate(props: GridTypeFilterInputDateProps & TextFieldProps) {
-  const { item, applyValue, type, apiRef, focusElementRef, ...others } = props;
+function GridFilterInputDate(props: GridFilterInputDateProps & TextFieldProps) {
+  const { item, applyValue, type, apiRef, focusElementRef, ...other } = props;
 
   const filterTimeout = React.useRef<any>();
   const [filterValueState, setFilterValueState] = React.useState(item.value ?? '');
@@ -36,6 +36,12 @@ function GridFilterInputDate(props: GridTypeFilterInputDateProps & TextFieldProp
   );
 
   React.useEffect(() => {
+    return () => {
+      clearTimeout(filterTimeout.current);
+    };
+  }, []);
+
+  React.useEffect(() => {
     const itemValue = item.value ?? '';
     setFilterValueState(String(itemValue));
   }, [item.value]);
@@ -43,7 +49,7 @@ function GridFilterInputDate(props: GridTypeFilterInputDateProps & TextFieldProp
   const InputProps = {
     ...(applying ? { endAdornment: <GridLoadIcon /> } : {}),
     max: type === 'datetime-local' ? '9999-12-31T23:59' : '9999-12-31',
-    ...others.InputProps,
+    ...other.InputProps,
   };
 
   return (
@@ -59,7 +65,7 @@ function GridFilterInputDate(props: GridTypeFilterInputDateProps & TextFieldProp
         shrink: true,
       }}
       inputRef={focusElementRef}
-      {...others}
+      {...other}
       InputProps={InputProps}
     />
   );
