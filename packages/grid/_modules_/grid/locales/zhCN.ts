@@ -30,6 +30,7 @@ const zhCNGrid: Partial<GridLocaleText> = {
   toolbarExport: '导出',
   toolbarExportLabel: '导出',
   toolbarExportCSV: '导出至CSV',
+  // toolbarExportPrint: 'Print',
 
   // Columns panel text
   columnsPanelTextFieldLabel: '搜索列',
@@ -99,8 +100,8 @@ const zhCNGrid: Partial<GridLocaleText> = {
   booleanCellTrueLabel: '真',
   booleanCellFalseLabel: '假',
 
-  // Used core components translation keys
-  MuiTablePagination: {},
+  // Actions cell more text
+  // actionsCellMore: 'more',
 };
 
 export const zhCN: Localization = getGridLocalization(zhCNGrid, zhCNCore);

@@ -49,11 +49,6 @@ const heILGrid: Partial<GridLocaleText> = {
   filterPanelInputLabel: 'ערך',
   filterPanelInputPlaceholder: 'ערך מסנן',
 
-  // Filter values text
-  filterValueAny: 'כל ערך',
-  filterValueTrue: 'כן',
-  filterValueFalse: 'לא',
-
   // Filter operators text
   filterOperatorContains: 'מכיל',
   filterOperatorEquals: 'שווה ל-',
@@ -61,12 +56,17 @@ const heILGrid: Partial<GridLocaleText> = {
   filterOperatorEndsWith: 'נגמר ב-',
   filterOperatorIs: 'הינו',
   filterOperatorNot: 'אינו',
-  filterOperatorOnOrAfter: 'אחרי',
   filterOperatorAfter: 'ב- או אחרי',
+  filterOperatorOnOrAfter: 'אחרי',
   filterOperatorBefore: 'לפני',
   filterOperatorOnOrBefore: 'ב- או לפני',
   filterOperatorIsEmpty: 'ריק',
   filterOperatorIsNotEmpty: 'אינו ריק',
+
+  // Filter values text
+  filterValueAny: 'כל ערך',
+  filterValueTrue: 'כן',
+  filterValueFalse: 'לא',
 
   // Column menu text
   columnMenuLabel: 'תפריט',
