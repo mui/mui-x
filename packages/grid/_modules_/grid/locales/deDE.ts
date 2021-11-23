@@ -31,7 +31,7 @@ const deDEGrid: Partial<GridLocaleText> = {
   toolbarExport: 'Exportieren',
   toolbarExportLabel: 'Exportieren',
   toolbarExportCSV: 'Download als CSV',
-  // toolbarExportPrint: 'Print',
+  toolbarExportPrint: 'Drucken',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'Finde Spalte',
@@ -51,7 +51,7 @@ const deDEGrid: Partial<GridLocaleText> = {
   filterPanelInputPlaceholder: 'Wert filtern',
 
   // Filter operators text
-  filterOperatorContains: 'beinhaltet',
+  filterOperatorContains: 'enthält',
   filterOperatorEquals: 'ist gleich',
   filterOperatorStartsWith: 'beginnt mit',
   filterOperatorEndsWith: 'endet mit',
@@ -65,9 +65,9 @@ const deDEGrid: Partial<GridLocaleText> = {
   filterOperatorIsNotEmpty: 'ist nicht leer',
 
   // Filter values text
-  // filterValueAny: 'any',
-  // filterValueTrue: 'true',
-  // filterValueFalse: 'false',
+  filterValueAny: 'Beliebig',
+  filterValueTrue: 'Ja',
+  filterValueFalse: 'Nein',
 
   // Column menu text
   columnMenuLabel: 'Menü',
@@ -98,11 +98,11 @@ const deDEGrid: Partial<GridLocaleText> = {
     `${visibleCount.toLocaleString()} von ${totalCount.toLocaleString()}`,
 
   // Checkbox selection text
-  // checkboxSelectionHeaderName: 'Checkbox selection',
+  checkboxSelectionHeaderName: 'Checkbox Auswahl',
 
   // Boolean cell text
-  // booleanCellTrueLabel: 'true',
-  // booleanCellFalseLabel: 'false',
+  booleanCellTrueLabel: 'Ja',
+  booleanCellFalseLabel: 'Nein',
 
   // Actions cell more text
   actionsCellMore: 'Mehr',
