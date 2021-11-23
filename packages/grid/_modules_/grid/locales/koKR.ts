@@ -92,6 +92,9 @@ const koKRGrid: Partial<GridLocaleText> = {
   footerTotalVisibleRows: (visibleCount, totalCount) =>
     `${visibleCount.toLocaleString()} / ${totalCount.toLocaleString()}`,
 
+  // Checkbox selection text
+  // checkboxSelectionHeaderName: 'Checkbox selection',
+
   // Boolean cell text
   booleanCellTrueLabel: '참',
   booleanCellFalseLabel: '거짓',

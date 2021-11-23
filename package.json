@@ -17,7 +17,7 @@
     "storybook:build": "yarn workspace storybook build",
     "storybook:export": "yarn workspace storybook export",
     "deduplicate": "node scripts/deduplicate.js",
-    "i18n": "babel-node -x .ts ./scripts/i18n.ts",
+    "l10n": "babel-node -x .ts ./scripts/l10n.ts",
     "stylelint": "stylelint '**/*.js' '**/*.ts' '**/*.tsx'",
     "prettier": "node ./scripts/prettier.js --branch next",
     "prettier:all": "node ./scripts/prettier.js write",
