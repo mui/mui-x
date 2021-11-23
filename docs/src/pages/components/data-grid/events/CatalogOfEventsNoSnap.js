@@ -23,6 +23,10 @@ const useStyles = makeStyles({
   },
 });
 
+function escapeHTML(value) {
+  return value.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
 const EventRow = ({ event }) => {
   const [open, setOpen] = React.useState(false);
 
@@ -70,7 +74,7 @@ useGridApiEventHandler(GridEvents.${event.name}, onEvent);
         <TableCell style={{ borderBottom: 'unset' }}>
           <div
             dangerouslySetInnerHTML={{
-              __html: event.description,
+              __html: escapeHTML(event.description),
             }}
           />
           {!!event.params && (
@@ -80,7 +84,7 @@ useGridApiEventHandler(GridEvents.${event.name}, onEvent);
               </Typography>
               <code
                 dangerouslySetInnerHTML={{
-                  __html: event.params,
+                  __html: escapeHTML(event.params),
                 }}
               />
             </div>
@@ -92,7 +96,7 @@ useGridApiEventHandler(GridEvents.${event.name}, onEvent);
               </Typography>
               <code
                 dangerouslySetInnerHTML={{
-                  __html: event.event,
+                  __html: escapeHTML(event.event),
                 }}
               />
             </div>

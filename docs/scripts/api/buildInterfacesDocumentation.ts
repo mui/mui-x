@@ -5,7 +5,6 @@ import { renderInline as renderMarkdownInline } from '@material-ui/monorepo/docs
 import {
   DeclarationContext,
   escapeCell,
-  escapeHTML,
   generateSignatureStr,
   generateTypeStr,
   isDeclarationReflection,
@@ -157,8 +156,8 @@ function extractEvents(
     events.push({
       name: event.escapedName!,
       description: renderMarkdownInline(description),
-      params: escapeHTML(linkify(eventProperties.params, documentedInterfaces, 'html')),
-      event: escapeHTML(`MuiEvent<${eventProperties.event ?? '{}'}>`),
+      params: linkify(eventProperties.params, documentedInterfaces, 'html'),
+      event: `MuiEvent<${eventProperties.event ?? '{}'}>`,
     });
   });
 

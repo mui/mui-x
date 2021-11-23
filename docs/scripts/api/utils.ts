@@ -20,10 +20,6 @@ export function escapeCell(value: string) {
     .replace(/\r?\n/g, '<br />');
 }
 
-export function escapeHTML(value: string) {
-  return value.replace(/</g, '&lt;').replace(/>/g, '&gt;');
-}
-
 export interface DeclarationContext {
   name: string;
   description?: string;
@@ -136,7 +132,7 @@ export function generateTypeStr(type: TypeDoc.Type, needsParenthesis = false): s
       return `{ [${paramName}: ${paramType}]: ${valueType} }`;
     }
 
-    return '';
+    return '{}';
   }
   if (isReferenceType(type)) {
     let text = type.name;
