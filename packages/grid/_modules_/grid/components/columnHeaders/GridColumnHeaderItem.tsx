@@ -31,7 +31,7 @@ interface GridColumnHeaderItemProps {
   filterItemsCounter?: number;
   hasFocus?: boolean;
   tabIndex: 0 | -1;
-  disableReorder?: false;
+  disableReorder?: boolean;
 }
 
 type OwnerState = GridColumnHeaderItemProps & {
@@ -249,7 +249,7 @@ GridColumnHeaderItem.propTypes = {
   colIndex: PropTypes.number.isRequired,
   column: PropTypes.object.isRequired,
   columnMenuOpen: PropTypes.bool.isRequired,
-  disableReorder: PropTypes.oneOf([false]),
+  disableReorder: PropTypes.bool,
   extendRowFullWidth: PropTypes.bool.isRequired,
   filterItemsCounter: PropTypes.number,
   hasFocus: PropTypes.bool,

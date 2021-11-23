@@ -9,9 +9,21 @@ import {
 } from '@mui/x-data-grid-pro';
 import { spy, useFakeTimers } from 'sinon';
 import { expect } from 'chai';
-import { createRenderer, fireEvent, screen } from '@material-ui/monorepo/test/utils';
+import { createRenderer, fireEvent, screen, createEvent } from '@material-ui/monorepo/test/utils';
 import { getCell, getColumnHeaderCell } from 'test/utils/helperFn';
 import { useData } from 'storybook/src/hooks/useData';
+
+// TODO Move to utils
+// Fix https://github.com/mui-org/material-ui-x/pull/2085/files/058f56ac3c729b2142a9a28b79b5b13535cdb819#diff-db85480a519a5286d7341e9b8957844762cf04cdacd946331ebaaaff287482ec
+function createDragOverEvent(target: ChildNode) {
+  const dragOverEvent = createEvent.dragOver(target);
+  // Safari 13 doesn't have DragEvent.
+  // RTL fallbacks to Event which doesn't allow to set these fields during initialization.
+  Object.defineProperty(dragOverEvent, 'clientX', { value: 1 });
+  Object.defineProperty(dragOverEvent, 'clientY', { value: 1 });
+
+  return dragOverEvent;
+}
 
 describe('<DataGridPro /> - Column pinning', () => {
   let clock;
@@ -140,6 +152,22 @@ describe('<DataGridPro /> - Column pinning', () => {
     );
     expect(getColumnHeaderCell(0).firstChild).to.have.attribute('draggable', 'false');
     expect(getColumnHeaderCell(2).firstChild).to.have.attribute('draggable', 'false');
+  });
+
+  it('should not allow to drop a column on top of a pinned column', () => {
+    render(<TestCase nbCols={3} initialState={{ pinnedColumns: { right: ['price1M'] } }} />);
+    expect(
+      document.querySelector('.MuiDataGrid-pinnedColumnHeaders--right')?.textContent,
+    ).to.deep.equal('1M');
+    const dragCol = getColumnHeaderCell(1).firstChild!;
+    const targetCell = getCell(0, 2)!;
+    fireEvent.dragStart(dragCol);
+    fireEvent.dragEnter(targetCell);
+    const dragOverEvent = createDragOverEvent(targetCell);
+    fireEvent(targetCell, dragOverEvent);
+    expect(
+      document.querySelector('.MuiDataGrid-pinnedColumnHeaders--right')?.textContent,
+    ).to.deep.equal('1M');
   });
 
   describe('props: onPinnedColumnsChange', () => {

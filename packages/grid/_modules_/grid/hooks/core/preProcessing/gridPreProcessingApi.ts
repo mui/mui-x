@@ -4,6 +4,7 @@ export enum GridPreProcessingGroup {
   hydrateColumns = 'hydrateColumns',
   scrollToIndexes = 'scrollToIndexes',
   columnMenu = 'columnMenu',
+  canBeReordered = 'canBeReordered',
 }
 
 export interface GridPreProcessingApi {

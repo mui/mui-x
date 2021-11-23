@@ -171,9 +171,33 @@ export const useGridColumnPinning = (
     [pinnedColumns.left, pinnedColumns.right, props.disableColumnPinning],
   );
 
+  const checkIfCanBeReordered = React.useCallback(
+    (initialValue, { targetIndex }: { targetIndex: number }) => {
+      if (pinnedColumns.left?.length === 0 && pinnedColumns.right?.length === 0) {
+        return initialValue;
+      }
+
+      const leftPinnedColumns = pinnedColumns.left?.length || 0;
+      if (leftPinnedColumns > 0 && targetIndex < leftPinnedColumns) {
+        return false;
+      }
+
+      const rightPinnedColumns = pinnedColumns.right?.length || 0;
+      if (rightPinnedColumns > 0) {
+        const visibleColumnsAmount = visibleGridColumnsSelector(apiRef.current.state).length;
+        const firstRightPinnedColumnIndex = visibleColumnsAmount - rightPinnedColumns;
+        return targetIndex >= firstRightPinnedColumnIndex ? false : initialValue;
+      }
+
+      return initialValue;
+    },
+    [apiRef, pinnedColumns.left?.length, pinnedColumns.right?.length],
+  );
+
   useGridRegisterPreProcessor(apiRef, GridPreProcessingGroup.scrollToIndexes, calculateScrollLeft);
   useGridRegisterPreProcessor(apiRef, GridPreProcessingGroup.columnMenu, addColumnMenuButtons);
   useGridRegisterPreProcessor(apiRef, GridPreProcessingGroup.hydrateColumns, reorderPinnedColumns);
+  useGridRegisterPreProcessor(apiRef, GridPreProcessingGroup.canBeReordered, checkIfCanBeReordered);
 
   apiRef.current.unstable_updateControlState({
     stateId: 'pinnedColumns',
