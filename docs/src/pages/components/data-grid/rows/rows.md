@@ -8,41 +8,30 @@ title: Data Grid - Rows
 
 ## Feeding data
 
-Grid rows can be defined with the `rows` prop.
-`rows` expects an array of objects.
-Rows should have this type: `GridRowModel[]`.
-The columns' "field" property should match a key of the row object (`GridRowModel`).
+The rows can be defined with the `rows` prop, which expects an array of objects.
+
+> ⚠️ The `rows` prop should keep the same reference between two renders except when you want to apply new rows.
+> Otherwise, the grid will re-apply heavy work like sorting and filtering.
 
 {{"demo": "pages/components/data-grid/rows/RowsGrid.js", "bg": "inline"}}
 
 ## Updating rows
 
-Rows can be updated in two ways:
-
 ### The `rows` prop
 
-The simplest way is to provide the new rows using the `rows` prop.
+The simplest way to update the rows is to provide the new rows using the `rows` prop.
 It replaces the previous values. This approach has some drawbacks:
 
 - You need to provide all the rows.
 - You might create a performance bottleneck when preparing the rows array to provide to the grid.
 
-### Infinite loading [<span class="pro"></span>](https://mui.com/store/items/material-ui-pro/)
+{{"demo": "pages/components/data-grid/rows/UpdateRowsProp.js", "bg": "inline", "disableAd": true}}
 
-The grid provides a `onRowsScrollEnd` prop that can be used to load additional rows when the scroll reaches the bottom of the viewport area.
+### The `updateRows` method [<span class="pro"></span>](https://mui.com/store/items/material-ui-pro/)
 
-In addition, the area in which the callback provided to the `onRowsScrollEnd` is called can be changed using `scrollEndThreshold`.
+If you want to only update part of the rows, you can use the `apiRef.current.updateRows` method.
 
-{{"demo": "pages/components/data-grid/rows/InfiniteLoadingGrid.js", "bg": "inline", "disableAd": true}}
-
-### apiRef [<span class="pro"></span>](https://mui.com/store/items/material-ui-pro/)
-
-The second way to update rows is to use the apiRef.
-This is an imperative API that is designed to solve the previous two limitations of the declarative `rows` prop. `apiRef.current.updateRows()`, updates the rows to the grid. It **merges** the new rows with the previous ones.
-
-The following demo updates the rows every 200ms.
-
-{{"demo": "pages/components/data-grid/rows/ApiRefRowsGrid.js", "bg": "inline", "disableAd": true}}
+{{"demo": "pages/components/data-grid/rows/UpdateRowsApiRef.js", "bg": "inline", "disableAd": true}}
 
 The default behavior of `updateRows` API is to upsert rows.
 So if a row has an id that is not in the current list of rows then it will be added to the grid.
@@ -52,6 +41,14 @@ Alternatively, if you would like to delete a row, you would need to pass an extr
 ```ts
 apiRef.current.updateRows([{ id: 1, _action: 'delete' }]);
 ```
+
+### Infinite loading [<span class="pro"></span>](https://mui.com/store/items/material-ui-pro/)
+
+The grid provides a `onRowsScrollEnd` prop that can be used to load additional rows when the scroll reaches the bottom of the viewport area.
+
+In addition, the area in which `onRowsScrollEnd` is called can be changed using `scrollEndThreshold`.
+
+{{"demo": "pages/components/data-grid/rows/InfiniteLoadingGrid.js", "bg": "inline", "disableAd": true}}
 
 ### High frequency [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-pro/)
 
@@ -67,6 +64,8 @@ The following demo updates the rows every 10ms, but they are only applied every 
 
 By default, the rows have a height of 52 pixels.
 This matches the normal height in the [Material Design guidelines](https://material.io/components/data-tables).
+
+If you want to create a more / less compact grid and not only set the row height, take a look at our [Density documentation](/components/data-grid/accessibility/#density-selector)
 
 To change the row height for the whole grid, set the `rowHeight` prop:
 

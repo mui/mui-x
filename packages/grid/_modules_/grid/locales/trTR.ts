@@ -5,6 +5,7 @@ import { getGridLocalization, Localization } from '../utils/getGridLocalization'
 const trTRGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Satır yok',
+  // noResultsOverlayLabel: 'No results found.',
   errorOverlayDefaultLabel: 'Bir hata oluştu.',
 
   // Density selector toolbar button text
@@ -29,6 +30,7 @@ const trTRGrid: Partial<GridLocaleText> = {
   toolbarExport: 'Dışa aktar',
   toolbarExportLabel: 'Dışa aktar',
   toolbarExportCSV: 'CSV olarak aktar',
+  // toolbarExportPrint: 'Print',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'Sütun ara',
@@ -61,6 +63,11 @@ const trTRGrid: Partial<GridLocaleText> = {
   filterOperatorIsEmpty: 'boş',
   filterOperatorIsNotEmpty: 'dolu',
 
+  // Filter values text
+  // filterValueAny: 'any',
+  // filterValueTrue: 'true',
+  // filterValueFalse: 'false',
+
   // Column menu text
   columnMenuLabel: 'Menü',
   columnMenuShowColumns: 'Sütunları göster',
@@ -84,6 +91,13 @@ const trTRGrid: Partial<GridLocaleText> = {
   // Total visible rows footer text
   footerTotalVisibleRows: (visibleCount, totalCount) =>
     `${visibleCount.toLocaleString()} / ${totalCount.toLocaleString()}`,
+
+  // Checkbox selection text
+  // checkboxSelectionHeaderName: 'Checkbox selection',
+
+  // Boolean cell text
+  // booleanCellTrueLabel: 'true',
+  // booleanCellFalseLabel: 'false',
 
   // Actions cell more text
   // actionsCellMore: 'more',

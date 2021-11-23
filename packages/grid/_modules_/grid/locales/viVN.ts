@@ -31,6 +31,7 @@ const viVNGrid: Partial<GridLocaleText> = {
   toolbarExport: 'Xuất',
   toolbarExportLabel: 'Xuất',
   toolbarExportCSV: 'Xuất CSV',
+  // toolbarExportPrint: 'Print',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'Tìm kiếm',
@@ -63,6 +64,11 @@ const viVNGrid: Partial<GridLocaleText> = {
   filterOperatorIsEmpty: 'Rỗng',
   filterOperatorIsNotEmpty: 'Khác rỗng',
 
+  // Filter values text
+  // filterValueAny: 'any',
+  // filterValueTrue: 'true',
+  // filterValueFalse: 'false',
+
   // Column menu text
   columnMenuLabel: 'Danh mục',
   columnMenuShowColumns: 'Danh sách cột',
@@ -88,6 +94,13 @@ const viVNGrid: Partial<GridLocaleText> = {
   // Total visible rows footer text
   footerTotalVisibleRows: (visibleCount, totalCount) =>
     `${visibleCount.toLocaleString()} / ${totalCount.toLocaleString()}`,
+
+  // Checkbox selection text
+  // checkboxSelectionHeaderName: 'Checkbox selection',
+
+  // Boolean cell text
+  // booleanCellTrueLabel: 'true',
+  // booleanCellFalseLabel: 'false',
 
   // Actions cell more text
   actionsCellMore: 'Thêm',
