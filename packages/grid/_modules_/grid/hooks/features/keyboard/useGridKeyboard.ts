@@ -68,7 +68,7 @@ export const useGridKeyboard = (apiRef: GridApiRef): void => {
 
       if (isSpaceKey(event.key) && event.shiftKey) {
         // This is a select event
-        return
+        return;
       }
 
       if (isNavigationKey(event.key) && !event.shiftKey) {
