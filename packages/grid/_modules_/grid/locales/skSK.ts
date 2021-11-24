@@ -130,6 +130,11 @@ const skSKGrid: Partial<GridLocaleText> = {
 
   // Actions cell more text
   // actionsCellMore: 'more',
+
+  // Tree Data
+  // treeDataGroupingHeaderName: 'Group',
+  // treeDataExpand: 'see children',
+  // treeDataCollapse: 'hide children',
 };
 
 export const skSK: Localization = getGridLocalization(skSKGrid, skSKCore);

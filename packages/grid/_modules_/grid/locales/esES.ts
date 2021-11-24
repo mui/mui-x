@@ -106,6 +106,11 @@ const esESGrid: Partial<GridLocaleText> = {
 
   // Actions cell more text
   actionsCellMore: 'más',
+
+  // Tree Data
+  // treeDataGroupingHeaderName: 'Group',
+  // treeDataExpand: 'see children',
+  // treeDataCollapse: 'hide children',
 };
 
 export const esES: Localization = getGridLocalization(esESGrid, esESCore);
