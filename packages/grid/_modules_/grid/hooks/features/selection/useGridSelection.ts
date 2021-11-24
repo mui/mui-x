@@ -253,35 +253,40 @@ export const useGridSelection = (
     }
   }, [apiRef]);
 
+  const handleSingleRowSelection = React.useCallback(
+    (id: GridRowId, event: React.MouseEvent) => {
+      const hasCtrlKey = event.metaKey || event.ctrlKey;
+
+      // Without checkboxSelection, multiple selection is only allowed if CTRL is pressed
+      const isMultipleSelectionDisabled = !checkboxSelection && !hasCtrlKey;
+      const resetSelection = !canHaveMultipleSelection || isMultipleSelectionDisabled;
+
+      const isSelected = apiRef.current.isRowSelected(id);
+
+      if (resetSelection) {
+        apiRef.current.selectRow(id, hasCtrlKey || checkboxSelection ? !isSelected : true, true);
+      } else {
+        apiRef.current.selectRow(id, !isSelected, false);
+      }
+    },
+    [apiRef, canHaveMultipleSelection, checkboxSelection],
+  );
+
   const handleRowClick = React.useCallback<GridEventListener<GridEvents.rowClick>>(
     (params, event) => {
       if (disableSelectionOnClick) {
         return;
       }
 
-      const hasCtrlKey = event.metaKey || event.ctrlKey;
-
       if (event.shiftKey && (canHaveMultipleSelection || checkboxSelection)) {
         expandRowRangeSelection(params.id);
       } else {
-        // Without checkboxSelection, multiple selection is only allowed if CTRL is pressed
-        const isMultipleSelectionDisabled = !checkboxSelection && !hasCtrlKey;
-        const resetSelection = !canHaveMultipleSelection || isMultipleSelectionDisabled;
-
-        if (resetSelection) {
-          apiRef.current.selectRow(
-            params.id,
-            hasCtrlKey || checkboxSelection ? !apiRef.current.isRowSelected(params.id) : true,
-            true,
-          );
-        } else {
-          apiRef.current.selectRow(params.id, !apiRef.current.isRowSelected(params.id), false);
-        }
+        handleSingleRowSelection(params.id, event);
       }
     },
     [
-      apiRef,
       expandRowRangeSelection,
+      handleSingleRowSelection,
       canHaveMultipleSelection,
       disableSelectionOnClick,
       checkboxSelection,

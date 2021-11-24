@@ -87,7 +87,6 @@ export const useGridKeyboard = (apiRef: GridApiRef): void => {
         return;
       }
 
-
       if (event.key.toLowerCase() === 'a' && (event.ctrlKey || event.metaKey)) {
         event.preventDefault();
         apiRef.current.selectRows(apiRef.current.getAllRowIds(), true);
