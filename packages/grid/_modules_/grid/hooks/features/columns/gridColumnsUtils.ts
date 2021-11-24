@@ -76,13 +76,6 @@ export const hydrateColumnsWidth = (
   };
 };
 
-interface CreateColumnsStateOptions {
-  columnsToUpsert: GridColDef[];
-  columnsTypes: GridColumnTypesRecord;
-  apiRef: GridApiRef;
-  reset: boolean;
-}
-
 /**
  * @deprecated Should have been internal only, you can inline the logic.
  */
@@ -101,7 +94,12 @@ export const createColumnsState = ({
   columnsTypes,
   apiRef,
   reset,
-}: CreateColumnsStateOptions) => {
+}: {
+  columnsToUpsert: GridColDef[];
+  columnsTypes: GridColumnTypesRecord;
+  apiRef: GridApiRef;
+  reset: boolean;
+}) => {
   const columnsWithTypes = columnsToUpsert.map((column) => ({
     ...getGridColDef(columnsTypes, column.type), // TODO v6: Inline `getGridColDef`
     ...column,

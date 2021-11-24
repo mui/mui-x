@@ -82,10 +82,12 @@ export function useGridColumns(
     () => allGridColumnsSelector(apiRef.current.state),
     [apiRef],
   );
+
   const getVisibleColumns = React.useCallback<GridColumnApi['getVisibleColumns']>(
     () => visibleGridColumnsSelector(apiRef.current.state),
     [apiRef],
   );
+
   const getColumnsMeta = React.useCallback<GridColumnApi['getColumnsMeta']>(
     () => gridColumnsMetaSelector(apiRef.current.state),
     [apiRef],
