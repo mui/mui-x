@@ -1,30 +1,7 @@
 import * as React from 'react';
-import { createTheme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import Box from '@mui/material/Box';
 import { DataGridPro, useGridApiRef } from '@mui/x-data-grid-pro';
 import { randomPrice } from '@mui/x-data-grid-generator';
-
-const defaultTheme = createTheme();
-
-const useStyles = makeStyles(
-  (theme) => {
-    const isDark = theme.palette.mode === 'dark';
-
-    return {
-      root: {
-        '& .MuiDataGrid-cell--editing': {
-          backgroundColor: 'rgb(255,215,115, 0.19)',
-          color: '#1a3e72',
-        },
-        '& .Mui-error': {
-          backgroundColor: `rgb(126,10,15, ${isDark ? 0 : 0.1})`,
-          color: theme.palette.error.main,
-        },
-      },
-    };
-  },
-  { defaultTheme },
-);
 
 const rows = [
   {
@@ -52,7 +29,6 @@ const rows = [
 ];
 
 export default function ConditionalValidationGrid() {
-  const classes = useStyles();
   const apiRef = useGridApiRef();
 
   const columns = [
@@ -95,14 +71,22 @@ export default function ConditionalValidationGrid() {
   ];
 
   return (
-    <div style={{ height: 400, width: '100%' }}>
-      <DataGridPro
-        apiRef={apiRef}
-        className={classes.root}
-        rows={rows}
-        columns={columns}
-        editMode="row"
-      />
-    </div>
+    <Box
+      sx={{
+        height: 400,
+        width: 1,
+        '& .MuiDataGrid-cell--editing': {
+          bgcolor: 'rgb(255,215,115, 0.19)',
+          color: '#1a3e72',
+        },
+        '& .Mui-error': {
+          bgcolor: (theme) =>
+            `rgb(126,10,15, ${theme.palette.mode === 'dark' ? 0 : 0.1})`,
+          color: (theme) => theme.palette.error.main,
+        },
+      }}
+    >
+      <DataGridPro apiRef={apiRef} rows={rows} columns={columns} editMode="row" />
+    </Box>
   );
 }

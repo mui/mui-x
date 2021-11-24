@@ -1,5 +1,4 @@
 <DataGridPro
-  className={classes.root}
   apiRef={apiRef}
   rows={rows}
   columns={columns}

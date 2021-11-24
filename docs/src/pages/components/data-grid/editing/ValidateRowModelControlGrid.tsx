@@ -1,6 +1,5 @@
 import * as React from 'react';
-import { createTheme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import Box from '@mui/material/Box';
 import { DataGrid, GridColumns, GridRowsProp } from '@mui/x-data-grid';
 import {
   randomCreatedDate,
@@ -9,27 +8,6 @@ import {
   randomUpdatedDate,
 } from '@mui/x-data-grid-generator';
 
-const defaultTheme = createTheme();
-const useStyles = makeStyles(
-  (theme) => {
-    const isDark = theme.palette.mode === 'dark';
-
-    return {
-      root: {
-        '& .MuiDataGrid-cell--editing': {
-          backgroundColor: 'rgb(255,215,115, 0.19)',
-          color: '#1a3e72',
-        },
-        '& .Mui-error': {
-          backgroundColor: `rgb(126,10,15, ${isDark ? 0 : 0.1})`,
-          color: isDark ? '#ff4343' : '#750f0f',
-        },
-      },
-    };
-  },
-  { defaultTheme },
-);
-
 function validateEmail(email) {
   const re =
     /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -37,12 +15,24 @@ function validateEmail(email) {
 }
 
 export default function ValidateRowModelControlGrid() {
-  const classes = useStyles();
-
   return (
-    <div style={{ height: 400, width: '100%' }}>
-      <DataGrid className={classes.root} rows={rows} columns={columns} />
-    </div>
+    <Box
+      sx={{
+        height: 400,
+        width: 1,
+        '& .MuiDataGrid-cell--editing': {
+          bgcolor: 'rgb(255,215,115, 0.19)',
+          color: '#1a3e72',
+        },
+        '& .Mui-error': {
+          bgcolor: (theme) =>
+            `rgb(126,10,15, ${theme.palette.mode === 'dark' ? 0 : 0.1})`,
+          color: (theme) => (theme.palette.mode === 'dark' ? '#ff4343' : '#750f0f'),
+        },
+      }}
+    >
+      <DataGrid rows={rows} columns={columns} />
+    </Box>
   );
 }
 

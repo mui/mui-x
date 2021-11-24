@@ -1,0 +1,16 @@
+<SettingsPanel
+  onApply={handleApplyClick}
+  size={size}
+  type={type}
+  theme={getActiveTheme()}
+/>
+<DataGridComponent
+  {...data}
+  components={{
+    Toolbar: GridToolbar,
+  }}
+  loading={loading}
+  checkboxSelection
+  disableSelectionOnClick
+  {...pagination}
+/>
