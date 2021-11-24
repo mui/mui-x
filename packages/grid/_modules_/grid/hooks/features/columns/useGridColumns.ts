@@ -91,8 +91,8 @@ export function useGridColumns(
     [apiRef],
   );
 
-  const getColumnIndex = React.useCallback(
-    (field: string, useVisibleColumns: boolean = true): number => {
+  const getColumnIndex = React.useCallback<GridColumnApi['getColumnIndex']>(
+    (field, useVisibleColumns = true) => {
       const columns = useVisibleColumns
         ? visibleGridColumnsSelector(apiRef.current.state)
         : allGridColumnsSelector(apiRef.current.state);
@@ -102,7 +102,7 @@ export function useGridColumns(
     [apiRef],
   );
 
-  const getColumnPosition: (field: string) => number = React.useCallback(
+  const getColumnPosition = React.useCallback<GridColumnApi['getColumnPosition']>(
     (field) => {
       const index = getColumnIndex(field);
       return gridColumnsMetaSelector(apiRef.current.state).positions[index];
@@ -128,8 +128,8 @@ export function useGridColumns(
     [updateColumns],
   );
 
-  const setColumnVisibility = React.useCallback(
-    (field: string, isVisible: boolean) => {
+  const setColumnVisibility = React.useCallback<GridColumnApi['setColumnVisibility']>(
+    (field, isVisible) => {
       const column = getColumn(field);
       const newColumn = { ...column, hide: !isVisible };
 
@@ -144,8 +144,8 @@ export function useGridColumns(
     [apiRef, getColumn, updateColumns],
   );
 
-  const setColumnIndex = React.useCallback(
-    (field: string, targetIndexPosition: number) => {
+  const setColumnIndex = React.useCallback<GridColumnApi['setColumnIndex']>(
+    (field, targetIndexPosition) => {
       const allColumns = allGridColumnsFieldsSelector(apiRef.current.state);
       const oldIndexPosition = allColumns.findIndex((col) => col === field);
       if (oldIndexPosition === targetIndexPosition) {
@@ -170,8 +170,8 @@ export function useGridColumns(
     [apiRef, logger, setGridColumnsState],
   );
 
-  const setColumnWidth = React.useCallback(
-    (field: string, width: number) => {
+  const setColumnWidth = React.useCallback<GridColumnApi['setColumnWidth']>(
+    (field, width) => {
       logger.debug(`Updating column ${field} width to ${width}`);
 
       const column = apiRef.current.getColumn(field);
