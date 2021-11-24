@@ -30,7 +30,7 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
   },
 }));
 
-// See https://github.com/mui-org/material-ui/issues/29874
+// See https://github.com/mui-org/material-ui/issues/28844
 
 function QuickSearchToolbar(props) {
   return (

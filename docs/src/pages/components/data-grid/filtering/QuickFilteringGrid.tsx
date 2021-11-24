@@ -27,7 +27,7 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
   '& .MuiInput-underline:before': {
     borderBottom: `1px solid ${theme.palette.divider}`,
   },
-})) as any; // See https://github.com/mui-org/material-ui/issues/29874
+})) as any; // See https://github.com/mui-org/material-ui/issues/28844
 
 interface QuickSearchToolbarProps {
   clearSearch: () => void;
