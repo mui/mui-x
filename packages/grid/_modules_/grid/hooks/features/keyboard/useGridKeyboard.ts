@@ -66,16 +66,6 @@ export const useGridKeyboard = (apiRef: GridApiRef): void => {
         return;
       }
 
-      if (isSpaceKey(event.key) && event.shiftKey) {
-        event.preventDefault();
-        apiRef.current.selectRow(
-          cellParams.id,
-          !apiRef.current.isRowSelected(cellParams.id),
-          false,
-        );
-        return;
-      }
-
       if (isNavigationKey(event.key) && !event.shiftKey) {
         apiRef.current.publishEvent(GridEvents.cellNavigationKeyDown, cellParams, event);
         return;
@@ -84,12 +74,6 @@ export const useGridKeyboard = (apiRef: GridApiRef): void => {
       if (isNavigationKey(event.key) && event.shiftKey) {
         event.preventDefault();
         expandSelection(cellParams, event);
-        return;
-      }
-
-      if (event.key.toLowerCase() === 'a' && (event.ctrlKey || event.metaKey)) {
-        event.preventDefault();
-        apiRef.current.selectRows(apiRef.current.getAllRowIds(), true);
       }
     },
     [apiRef, expandSelection],
