@@ -1,0 +1,11 @@
+<Button onClick={toggleSecondRow}>Toggle 2nd row expansion</Button>
+<div style={{ height: 400, width: '100%' }}>
+  <DataGridPro
+    treeData
+    apiRef={apiRef}
+    rows={rows}
+    columns={columns}
+    getTreeDataPath={getTreeDataPath}
+    disableColumnFilter
+  />
+</div>

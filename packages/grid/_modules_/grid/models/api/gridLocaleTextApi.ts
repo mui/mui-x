@@ -102,6 +102,11 @@ export interface GridLocaleText {
   // Actions cell more text
   actionsCellMore: string;
 
+  // Tree Data
+  treeDataGroupingHeaderName: string;
+  treeDataExpand: string;
+  treeDataCollapse: string;
+
   // Used core components translation keys
   MuiTablePagination: Omit<
     ComponentsPropsList['MuiTablePagination'],

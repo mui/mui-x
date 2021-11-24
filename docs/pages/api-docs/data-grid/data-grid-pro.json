@@ -24,6 +24,7 @@
     "columnTypes": { "type": { "name": "object" } },
     "components": { "type": { "name": "object" } },
     "componentsProps": { "type": { "name": "object" } },
+    "defaultGroupingExpansionDepth": { "type": { "name": "number" }, "default": "0" },
     "density": {
       "type": {
         "name": "enum",
@@ -52,7 +53,7 @@
     "editRowsModel": { "type": { "name": "object" } },
     "error": { "type": { "name": "any" } },
     "filterMode": {
-      "type": { "name": "enum", "description": "'client'<br>&#124;&nbsp;'server'" },
+      "type": { "name": "custom", "description": "'client'<br>&#124;&nbsp;'server'" },
       "default": "\"client\""
     },
     "filterModel": {
@@ -64,6 +65,8 @@
     "getCellClassName": { "type": { "name": "func" } },
     "getRowClassName": { "type": { "name": "func" } },
     "getRowId": { "type": { "name": "func" } },
+    "getTreeDataPath": { "type": { "name": "func" } },
+    "groupingColDef": { "type": { "name": "union", "description": "func<br>&#124;&nbsp;object" } },
     "headerHeight": { "type": { "name": "number" }, "default": "56" },
     "hideFooter": { "type": { "name": "bool" } },
     "hideFooterPagination": { "type": { "name": "bool" } },
@@ -169,7 +172,8 @@
         "description": "Array&lt;{ field: string, sort?: 'asc'<br>&#124;&nbsp;'desc' }&gt;"
       }
     },
-    "throttleRowsMs": { "type": { "name": "number" }, "default": "0" }
+    "throttleRowsMs": { "type": { "name": "number" }, "default": "0" },
+    "treeData": { "type": { "name": "bool" } }
   },
   "slots": {
     "BaseCheckbox": { "default": "Checkbox", "type": { "name": "elementType" } },
@@ -217,7 +221,9 @@
     "Panel": { "default": "GridPanel", "type": { "name": "elementType" } },
     "PreferencesPanel": { "default": "GridPreferencesPanel", "type": { "name": "elementType" } },
     "Row": { "type": { "name": "elementType" } },
-    "Toolbar": { "default": "null", "type": { "name": "elementType | null" } }
+    "Toolbar": { "default": "null", "type": { "name": "elementType | null" } },
+    "TreeDataCollapseIcon": { "type": { "name": "elementType" } },
+    "TreeDataExpandIcon": { "type": { "name": "elementType" } }
   },
   "name": "DataGridPro",
   "styles": {
@@ -290,7 +296,9 @@
       "sortIcon",
       "toolbarContainer",
       "toolbarFilterList",
-      "withBorder"
+      "withBorder",
+      "treeDataGroupingCell",
+      "treeDataGroupingCellToggle"
     ],
     "globalClasses": {},
     "name": "MuiDataGrid"

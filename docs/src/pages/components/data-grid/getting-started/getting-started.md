@@ -164,6 +164,7 @@ The enterprise components come in two plans: Pro and Premium.
 | [Row height](/components/data-grid/rows/#row-height)                                      |    ✅     |              ✅               |                  ✅                   |
 | [Row spanning](/components/data-grid/rows/#row-spanning)                                  |    🚧     |              🚧               |                  🚧                   |
 | [Row reordering](/components/data-grid/rows/#row-reorder)                                 |    ❌     |              🚧               |                  🚧                   |
+| [Row pinning](/components/data-grid/rows/#row-pinning)                                    |    ❌     |              🚧               |                  🚧                   |
 | **Selection**                                                                             |           |                               |                                       |
 | [Single row selection](/components/data-grid/selection/#single-row-selection)             |    ✅     |              ✅               |                  ✅                   |
 | [Checkbox selection](/components/data-grid/selection/#checkbox-selection)                 |    ✅     |              ✅               |                  ✅                   |
@@ -189,7 +190,7 @@ The enterprise components come in two plans: Pro and Premium.
 | [Column virtualization](/components/data-grid/virtualization/#column-virtualization)      |    ✅     |              ✅               |                  ✅                   |
 | [Row virtualization > 100 rows](/components/data-grid/virtualization/#row-virtualization) |    ❌     |              ✅               |                  ✅                   |
 | **Group & Pivot**                                                                         |           |                               |                                       |
-| [Tree data](/components/data-grid/group-pivot/#tree-data)                                 |    ❌     |              🚧               |                  🚧                   |
+| [Tree data](/components/data-grid/group-pivot/#tree-data)                                 |    ❌     |              ✅               |                  ✅                   |
 | [Master detail](/components/data-grid/group-pivot/#master-detail)                         |    ❌     |              🚧               |                  🚧                   |
 | [Grouping](/components/data-grid/group-pivot/#grouping)                                   |    ❌     |              ❌               |                  🚧                   |
 | [Aggregation](/components/data-grid/group-pivot/#aggregation)                             |    ❌     |              ❌               |                  🚧                   |

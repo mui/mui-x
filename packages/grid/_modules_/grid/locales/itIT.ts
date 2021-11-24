@@ -31,6 +31,7 @@ const itITGrid: Partial<GridLocaleText> = {
   toolbarExport: 'Esporta',
   toolbarExportLabel: 'Esporta',
   toolbarExportCSV: 'Esporta in CSV',
+  // toolbarExportPrint: 'Print',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'Cerca colonna',
@@ -56,12 +57,17 @@ const itITGrid: Partial<GridLocaleText> = {
   filterOperatorEndsWith: 'termina per',
   filterOperatorIs: 'uguale a',
   filterOperatorNot: 'diversa da',
-  filterOperatorOnOrAfter: 'a partire dal',
   filterOperatorAfter: 'dopo il',
-  filterOperatorOnOrBefore: 'fino al',
+  filterOperatorOnOrAfter: 'a partire dal',
   filterOperatorBefore: 'prima del',
+  filterOperatorOnOrBefore: 'fino al',
   filterOperatorIsEmpty: 'è vuoto',
   filterOperatorIsNotEmpty: 'non è vuoto',
+
+  // Filter values text
+  // filterValueAny: 'any',
+  // filterValueTrue: 'true',
+  // filterValueFalse: 'false',
 
   // Column menu text
   columnMenuLabel: 'Menu',
@@ -94,8 +100,17 @@ const itITGrid: Partial<GridLocaleText> = {
   // Checkbox selection text
   checkboxSelectionHeaderName: 'Seleziona',
 
+  // Boolean cell text
+  // booleanCellTrueLabel: 'true',
+  // booleanCellFalseLabel: 'false',
+
   // Actions cell more text
   actionsCellMore: 'più',
+
+  // Tree Data
+  // treeDataGroupingHeaderName: 'Group',
+  // treeDataExpand: 'see children',
+  // treeDataCollapse: 'hide children',
 };
 
 export const itIT: Localization = getGridLocalization(itITGrid, itITCore);
