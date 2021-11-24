@@ -31,6 +31,7 @@ const ptBRGrid: Partial<GridLocaleText> = {
   toolbarExport: 'Exportar',
   toolbarExportLabel: 'Exportar',
   toolbarExportCSV: 'Baixar como CSV',
+  toolbarExportPrint: 'Print',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'Localizar coluna',
@@ -56,12 +57,17 @@ const ptBRGrid: Partial<GridLocaleText> = {
   filterOperatorEndsWith: 'termina com',
   filterOperatorIs: 'é',
   filterOperatorNot: 'não é',
+  filterOperatorAfter: 'após',
   filterOperatorOnOrAfter: 'em ou após',
   filterOperatorBefore: 'antes de',
   filterOperatorOnOrBefore: 'em ou antes de',
-  filterOperatorAfter: 'após',
   filterOperatorIsEmpty: 'está vazio',
   filterOperatorIsNotEmpty: 'não está vazio',
+
+  // Filter values text
+  filterValueAny: 'qualquer',
+  filterValueTrue: 'verdadeiro',
+  filterValueFalse: 'falso',
 
   // Column menu text
   columnMenuLabel: 'Menu',
