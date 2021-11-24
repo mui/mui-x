@@ -106,6 +106,11 @@ const deDEGrid: Partial<GridLocaleText> = {
 
   // Actions cell more text
   actionsCellMore: 'Mehr',
+
+  // Tree Data
+  // treeDataGroupingHeaderName: 'Group',
+  // treeDataExpand: 'see children',
+  // treeDataCollapse: 'hide children',
 };
 
 export const deDE: Localization = getGridLocalization(deDEGrid, deDECore);

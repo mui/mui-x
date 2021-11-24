@@ -106,6 +106,11 @@ const itITGrid: Partial<GridLocaleText> = {
 
   // Actions cell more text
   actionsCellMore: 'più',
+
+  // Tree Data
+  // treeDataGroupingHeaderName: 'Group',
+  // treeDataExpand: 'see children',
+  // treeDataCollapse: 'hide children',
 };
 
 export const itIT: Localization = getGridLocalization(itITGrid, itITCore);

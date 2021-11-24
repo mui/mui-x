@@ -101,6 +101,11 @@ const koKRGrid: Partial<GridLocaleText> = {
 
   // Actions cell more text
   actionsCellMore: '더보기',
+
+  // Tree Data
+  treeDataGroupingHeaderName: '그룹',
+  treeDataExpand: '하위노드 펼치기',
+  treeDataCollapse: '하위노드 접기',
 };
 
 export const koKR: Localization = getGridLocalization(koKRGrid, koKRCore);

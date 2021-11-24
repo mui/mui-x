@@ -103,6 +103,11 @@ const heILGrid: Partial<GridLocaleText> = {
 
   // Actions cell more text
   actionsCellMore: 'עוד',
+
+  // Tree Data
+  // treeDataGroupingHeaderName: 'Group',
+  // treeDataExpand: 'see children',
+  // treeDataCollapse: 'hide children',
 };
 
 export const heIL: Localization = getGridLocalization(heILGrid, heILCore);

@@ -106,6 +106,11 @@ const faIRGrid: Partial<GridLocaleText> = {
 
   // Actions cell more text
   actionsCellMore: 'بیشتر',
+
+  // Tree Data
+  // treeDataGroupingHeaderName: 'Group',
+  // treeDataExpand: 'see children',
+  // treeDataCollapse: 'hide children',
 };
 
 export const faIR: Localization = getGridLocalization(faIRGrid, faIRCore);

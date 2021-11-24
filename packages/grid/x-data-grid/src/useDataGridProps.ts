@@ -18,12 +18,16 @@ const FORCED_PROPS: { [key in ForcedPropsKey]-?: GridInputComponentProps[key] } 
   disableMultipleSelection: true,
   disableChildrenFiltering: undefined,
   disableChildrenSorting: undefined,
+  getTreeDataPath: undefined,
+  groupingColDef: undefined,
   throttleRowsMs: undefined,
   hideFooterRowCount: false,
   pagination: true,
   onRowsScrollEnd: undefined,
   checkboxSelectionVisibleOnly: false,
   scrollEndThreshold: undefined,
+  defaultGroupingExpansionDepth: undefined,
+  treeData: undefined,
   signature: 'DataGrid',
 };
 

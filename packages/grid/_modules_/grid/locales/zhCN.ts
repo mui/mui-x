@@ -102,6 +102,11 @@ const zhCNGrid: Partial<GridLocaleText> = {
 
   // Actions cell more text
   // actionsCellMore: 'more',
+
+  // Tree Data
+  // treeDataGroupingHeaderName: 'Group',
+  // treeDataExpand: 'see children',
+  // treeDataCollapse: 'hide children',
 };
 
 export const zhCN: Localization = getGridLocalization(zhCNGrid, zhCNCore);
