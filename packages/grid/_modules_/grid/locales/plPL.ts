@@ -101,6 +101,11 @@ const plPLGrid: Partial<GridLocaleText> = {
 
   // Actions cell more text
   actionsCellMore: 'więcej',
+
+  // Tree Data
+  // treeDataGroupingHeaderName: 'Group',
+  // treeDataExpand: 'see children',
+  // treeDataCollapse: 'hide children',
 };
 
 export const plPL: Localization = getGridLocalization(plPLGrid, plPLCore);

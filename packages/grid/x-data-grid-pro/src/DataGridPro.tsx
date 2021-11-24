@@ -140,6 +140,12 @@ DataGridProRaw.propTypes = {
    */
   componentsProps: PropTypes.object,
   /**
+   * If above 0, the row children will be expanded up to this depth.
+   * If equal to -1, all the row children will be expanded.
+   * @default 0
+   */
+  defaultGroupingExpansionDepth: PropTypes.number,
+  /**
    * Set the density of the grid.
    * @default "standard"
    */
@@ -232,7 +238,14 @@ DataGridProRaw.propTypes = {
    * Set it to 'server' if you would like to handle filtering on the server-side.
    * @default "client"
    */
-  filterMode: PropTypes.oneOf(['client', 'server']),
+  filterMode: chainPropTypes(PropTypes.oneOf(['client', 'server']), (props: any) => {
+    if (props.treeData && props.filterMode === 'server') {
+      return new Error(
+        'MUI: The `filterMode="server"` prop is not available when the `treeData` is enabled.',
+      );
+    }
+    return null;
+  }),
   /**
    * Set the filter model of the grid.
    */
@@ -263,6 +276,18 @@ DataGridProRaw.propTypes = {
    * Return the id of a given [[GridRowModel]].
    */
   getRowId: PropTypes.func,
+  /**
+   * Determines the path of a row in the tree data.
+   * For instance, a row with the path ["A", "B"] is the child of the row with the path ["A"].
+   * Note that all paths must contain at least one element.
+   * @param {GridRowModel} row The row from which we want the path.
+   * @returns {string[]} The path to the row.
+   */
+  getTreeDataPath: PropTypes.func,
+  /**
+   * The grouping column used by the tree data.
+   */
+  groupingColDef: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
   /**
    * Set the height in pixel of the column headers in the grid.
    * @default 56
@@ -681,4 +706,9 @@ DataGridProRaw.propTypes = {
    * @default 0
    */
   throttleRowsMs: PropTypes.number,
+  /**
+   * If `true`, the rows will be gathered in a tree structure according to the `getTreeDataPath` prop.
+   * @default false
+   */
+  treeData: PropTypes.bool,
 } as any;

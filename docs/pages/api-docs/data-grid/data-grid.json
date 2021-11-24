@@ -189,7 +189,9 @@
     "Panel": { "default": "GridPanel", "type": { "name": "elementType" } },
     "PreferencesPanel": { "default": "GridPreferencesPanel", "type": { "name": "elementType" } },
     "Row": { "type": { "name": "elementType" } },
-    "Toolbar": { "default": "null", "type": { "name": "elementType | null" } }
+    "Toolbar": { "default": "null", "type": { "name": "elementType | null" } },
+    "TreeDataCollapseIcon": { "type": { "name": "elementType" } },
+    "TreeDataExpandIcon": { "type": { "name": "elementType" } }
   },
   "name": "DataGrid",
   "styles": {
@@ -262,7 +264,9 @@
       "sortIcon",
       "toolbarContainer",
       "toolbarFilterList",
-      "withBorder"
+      "withBorder",
+      "treeDataGroupingCell",
+      "treeDataGroupingCellToggle"
     ],
     "globalClasses": {},
     "name": "MuiDataGrid"

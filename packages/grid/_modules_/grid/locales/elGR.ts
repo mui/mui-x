@@ -105,6 +105,11 @@ const elGRGrid: Partial<GridLocaleText> = {
 
   // Actions cell more text
   actionsCellMore: 'περισσότερα',
+
+  // Tree Data
+  // treeDataGroupingHeaderName: 'Group',
+  // treeDataExpand: 'see children',
+  // treeDataCollapse: 'hide children',
 };
 
 export const elGR: Localization = getGridLocalization(elGRGrid);

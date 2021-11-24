@@ -104,6 +104,11 @@ const viVNGrid: Partial<GridLocaleText> = {
 
   // Actions cell more text
   actionsCellMore: 'Thêm',
+
+  // Tree Data
+  // treeDataGroupingHeaderName: 'Group',
+  // treeDataExpand: 'see children',
+  // treeDataCollapse: 'hide children',
 };
 
 export const viVN: Localization = getGridLocalization(viVNGrid, viVNCore);
