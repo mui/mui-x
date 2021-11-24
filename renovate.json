@@ -69,6 +69,10 @@
       "matchPackagePatterns": "@storybook/*"
     },
     {
+      "groupName": "ag-grid",
+      "matchPackagePatterns": "ag-grid-*"
+    },
+    {
       "groupName": "MUI Core",
       "matchPackageNames": [
         "@mui/material",

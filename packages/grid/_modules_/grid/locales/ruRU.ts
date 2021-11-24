@@ -5,6 +5,7 @@ import { getGridLocalization, Localization } from '../utils/getGridLocalization'
 const ruRUGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Нет строк',
+  // noResultsOverlayLabel: 'No results found.',
   errorOverlayDefaultLabel: 'Обнаружена ошибка.',
 
   // Density selector toolbar button text
@@ -40,6 +41,7 @@ const ruRUGrid: Partial<GridLocaleText> = {
   toolbarExport: 'Экспорт',
   toolbarExportLabel: 'Экспорт',
   toolbarExportCSV: 'Скачать в формате CSV',
+  // toolbarExportPrint: 'Print',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'Найти столбец',
@@ -120,8 +122,7 @@ const ruRUGrid: Partial<GridLocaleText> = {
   footerTotalRows: 'Всего строк:',
 
   // Total visible rows footer text
-  // footerTotalVisibleRows: (visibleCount, totalCount) =>
-  //   `${visibleCount.toLocaleString()} of ${totalCount.toLocaleString()}`,
+  // footerTotalVisibleRows: (visibleCount, totalCount) => `${visibleCount.toLocaleString()} of ${totalCount.toLocaleString()}`,
 
   // Checkbox selection text
   checkboxSelectionHeaderName: 'Выбор флажка',
@@ -132,6 +133,11 @@ const ruRUGrid: Partial<GridLocaleText> = {
 
   // Actions cell more text
   // actionsCellMore: 'more',
+
+  // Tree Data
+  // treeDataGroupingHeaderName: 'Group',
+  // treeDataExpand: 'see children',
+  // treeDataCollapse: 'hide children',
 };
 
 export const ruRU: Localization = getGridLocalization(ruRUGrid, ruRUCore);
