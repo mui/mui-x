@@ -8,6 +8,7 @@ import {
   useGridApiRef,
   DataGridPro,
   gridClasses,
+  GridEvents, gridColumnLookupSelector,
 } from '@mui/x-data-grid-pro';
 import { getColumnHeaderCell, getCell } from 'test/utils/helperFn';
 
@@ -335,4 +336,13 @@ describe('<DataGridPro /> - Columns', () => {
       });
     });
   });
+
+  describe('column pre-processing', () => {
+    it.only('should not loose column width when re-applying pre-processing', () => {
+      render(<Test />);
+      apiRef.current.setColumnWidth('brand', 300)
+      apiRef.current.publishEvent(GridEvents.preProcessorRegister, 'hydrateColumns')
+      expect(gridColumnLookupSelector(apiRef.current.state).brand.computedWidth).to.equal(300)
+    })
+  })
 });
