@@ -236,12 +236,12 @@ export function useGridColumns(
       const columnsState = createColumnsState({
         apiRef,
         columnsTypes,
-        columnsToUpsert: props.columns,
-        reset: true,
+        columnsToUpsert: [],
+        reset: false,
       });
       setGridColumnsState(columnsState);
     },
-    [apiRef, logger, setGridColumnsState, props.columns, columnsTypes],
+    [apiRef, logger, setGridColumnsState, columnsTypes],
   );
 
   const prevInnerWidth = React.useRef<number | null>(null);
