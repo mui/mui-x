@@ -10,7 +10,6 @@ import {
   gridClasses,
   GridEvents,
   gridColumnLookupSelector,
-  allGridColumnsSelector,
   allGridColumnsFieldsSelector,
 } from '@mui/x-data-grid-pro';
 import { getColumnHeaderCell, getCell } from 'test/utils/helperFn';
