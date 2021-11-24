@@ -172,7 +172,7 @@ export const useGridFilter = (
         const filterTreeNode = (
           node: GridRowTreeNodeConfig,
           isParentMatchingFilters: boolean,
-          isParentExpanded: boolean,
+          areAncestorsExpanded: boolean,
         ): number => {
           const shouldSkipFilters = props.disableChildrenFiltering && node.depth > 0;
 
@@ -191,7 +191,7 @@ export const useGridFilter = (
             const childSubTreeSize = filterTreeNode(
               childNode,
               isMatchingFilters ?? isParentMatchingFilters,
-              !!node.expanded,
+              areAncestorsExpanded && !!node.childrenExpanded,
             );
 
             filteredDescendantCount += childSubTreeSize;
@@ -213,7 +213,7 @@ export const useGridFilter = (
             }
           }
 
-          visibleRowsLookup[node.id] = shouldPassFilters && isParentExpanded;
+          visibleRowsLookup[node.id] = shouldPassFilters && areAncestorsExpanded;
 
           if (!shouldPassFilters) {
             return 0;

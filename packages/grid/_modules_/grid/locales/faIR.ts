@@ -31,6 +31,7 @@ const faIRGrid: Partial<GridLocaleText> = {
   toolbarExport: 'خروجی',
   toolbarExportLabel: 'خروجی',
   toolbarExportCSV: 'دانلود به‌صورت CSV',
+  // toolbarExportPrint: 'Print',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'پیداکردن ستون',
@@ -106,8 +107,10 @@ const faIRGrid: Partial<GridLocaleText> = {
   // Actions cell more text
   actionsCellMore: 'بیشتر',
 
-  // Used core components translation keys
-  MuiTablePagination: {},
+  // Tree Data
+  // treeDataGroupingHeaderName: 'Group',
+  // treeDataExpand: 'see children',
+  // treeDataCollapse: 'hide children',
 };
 
 export const faIR: Localization = getGridLocalization(faIRGrid, faIRCore);
