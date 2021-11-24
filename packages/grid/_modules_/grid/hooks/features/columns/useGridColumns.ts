@@ -60,15 +60,12 @@ export function useGridColumns(
   const [, setGridState, forceUpdate] = useGridState(apiRef);
 
   const setGridColumnsState = React.useCallback(
-    (columnsState: GridColumnsState, emit = true) => {
+    (columnsState: GridColumnsState) => {
       logger.debug('Updating columns state.');
 
       setGridState((state) => ({ ...state, columns: columnsState }));
       forceUpdate();
-
-      if (emit) {
-        apiRef.current.publishEvent(GridEvents.columnsChange, columnsState.all);
-      }
+      apiRef.current.publishEvent(GridEvents.columnsChange, columnsState.all);
     },
     [logger, setGridState, forceUpdate, apiRef],
   );
@@ -120,7 +117,7 @@ export function useGridColumns(
         columnsToUpsert: columns,
         reset: false,
       });
-      setGridColumnsState(columnsState, false);
+      setGridColumnsState(columnsState);
     },
     [apiRef, setGridColumnsState, columnsTypes],
   );

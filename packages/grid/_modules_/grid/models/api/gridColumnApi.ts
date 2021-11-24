@@ -42,6 +42,7 @@ export interface GridColumnApi {
   /**
    * Updates the definition of a column.
    * @param {GridColDef} col The new [[GridColDef]] object.
+   * @deprecated Use `apiRef.current.updateColumns` instead.
    */
   updateColumn: (col: GridColDef) => void;
   /**
