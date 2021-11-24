@@ -9,6 +9,7 @@ import { useGridState } from '../../utils/useGridState';
 import {
   allGridColumnsFieldsSelector,
   allGridColumnsSelector,
+  gridColumnLookupSelector,
   gridColumnsMetaSelector,
   gridColumnsSelector,
   visibleGridColumnsSelector,
@@ -73,7 +74,7 @@ export function useGridColumns(
   );
 
   const getColumn = React.useCallback<GridColumnApi['getColumn']>(
-    (field) => apiRef.current.state.columns.lookup[field],
+    (field) => gridColumnLookupSelector(apiRef.current.state)[field],
     [apiRef],
   );
 
@@ -246,7 +247,7 @@ export function useGridColumns(
     if (prevInnerWidth.current !== viewportInnerSize.width) {
       prevInnerWidth.current = viewportInnerSize.width;
       setGridColumnsState(
-        hydrateColumnsWidth(apiRef.current.state.columns, viewportInnerSize.width),
+        hydrateColumnsWidth(gridColumnsSelector(apiRef.current.state), viewportInnerSize.width),
       );
     }
   };
