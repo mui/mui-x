@@ -1,6 +1,6 @@
 {
   "name": "eslint-plugin-material-ui",
-  "version": "5.0.0",
+  "version": "5.0.1",
   "private": true,
   "description": "Custom eslint rules for MUI.",
   "main": "src/index.js",
@@ -8,8 +8,8 @@
     "emoji-regex": "^9.2.2"
   },
   "devDependencies": {
-    "@types/eslint": "^7.28.2",
-    "@typescript-eslint/parser": "^5.3.1"
+    "@types/eslint": "^7.29.0",
+    "@typescript-eslint/parser": "^5.4.0"
   },
   "scripts": {},
   "repository": {

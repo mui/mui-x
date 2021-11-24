@@ -11,7 +11,6 @@ import {
 import { gridDensityRowHeightSelector } from '../density/densitySelector';
 import { gridFocusCellSelector, gridTabIndexCellSelector } from '../focus/gridFocusStateSelector';
 import { gridEditRowsStateSelector } from '../editRows/gridEditRowsSelector';
-import { unstable_gridScrollBarSizeSelector } from '../container/gridContainerSizesSelector';
 import { useCurrentPageRows } from '../../utils/useCurrentPageRows';
 import { GridEvents } from '../../../constants/eventsConstants';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
@@ -61,7 +60,6 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
   const cellFocus = useGridSelector(apiRef, gridFocusCellSelector);
   const cellTabIndex = useGridSelector(apiRef, gridTabIndexCellSelector);
   const editRowsState = useGridSelector(apiRef, gridEditRowsStateSelector);
-  const scrollBarState = useGridSelector(apiRef, unstable_gridScrollBarSizeSelector);
   const currentPage = useCurrentPageRows(apiRef, rootProps);
   const renderZoneRef = React.useRef<HTMLDivElement>(null);
   const rootRef = React.useRef<HTMLDivElement>(null);
@@ -233,7 +231,6 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
           cellFocus={cellFocus} // TODO move to inside the row
           cellTabIndex={cellTabIndex} // TODO move to inside the row
           editRowsState={editRowsState} // TODO move to inside the row
-          scrollBarState={scrollBarState} // TODO remove once useGridContainerProps is deleted
           renderedColumns={renderedColumns}
           visibleColumns={visibleColumns}
           firstColumnToRender={firstColumnToRender}

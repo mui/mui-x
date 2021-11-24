@@ -31,6 +31,7 @@ const deDEGrid: Partial<GridLocaleText> = {
   toolbarExport: 'Exportieren',
   toolbarExportLabel: 'Exportieren',
   toolbarExportCSV: 'Download als CSV',
+  // toolbarExportPrint: 'Print',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'Finde Spalte',
@@ -56,12 +57,17 @@ const deDEGrid: Partial<GridLocaleText> = {
   filterOperatorEndsWith: 'endet mit',
   filterOperatorIs: 'ist',
   filterOperatorNot: 'ist nicht',
-  filterOperatorOnOrAfter: 'ist an oder nach',
-  filterOperatorBefore: 'ist vor',
-  filterOperatorOnOrBefore: 'ist an oder vor',
   filterOperatorAfter: 'ist nach',
+  filterOperatorOnOrAfter: 'ist am oder nach',
+  filterOperatorBefore: 'ist vor',
+  filterOperatorOnOrBefore: 'ist am oder vor',
   filterOperatorIsEmpty: 'ist leer',
   filterOperatorIsNotEmpty: 'ist nicht leer',
+
+  // Filter values text
+  // filterValueAny: 'any',
+  // filterValueTrue: 'true',
+  // filterValueFalse: 'false',
 
   // Column menu text
   columnMenuLabel: 'Menü',
@@ -91,8 +97,15 @@ const deDEGrid: Partial<GridLocaleText> = {
   footerTotalVisibleRows: (visibleCount, totalCount) =>
     `${visibleCount.toLocaleString()} von ${totalCount.toLocaleString()}`,
 
+  // Checkbox selection text
+  // checkboxSelectionHeaderName: 'Checkbox selection',
+
+  // Boolean cell text
+  // booleanCellTrueLabel: 'true',
+  // booleanCellFalseLabel: 'false',
+
   // Actions cell more text
-  // actionsCellMore: 'more',
+  actionsCellMore: 'Mehr',
 };
 
 export const deDE: Localization = getGridLocalization(deDEGrid, deDECore);

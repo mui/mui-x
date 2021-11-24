@@ -31,6 +31,7 @@ const frFRGrid: Partial<GridLocaleText> = {
   toolbarExport: 'Exporter',
   toolbarExportLabel: 'Exporter',
   toolbarExportCSV: 'Télécharger en CSV',
+  // toolbarExportPrint: 'Print',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'Chercher colonne',
@@ -56,12 +57,17 @@ const frFRGrid: Partial<GridLocaleText> = {
   filterOperatorEndsWith: 'se termine par',
   filterOperatorIs: 'est',
   filterOperatorNot: "n'est pas",
-  filterOperatorOnOrAfter: 'égal ou postérieur',
   filterOperatorAfter: 'postérieur',
-  filterOperatorOnOrBefore: 'égal ou antérieur',
+  filterOperatorOnOrAfter: 'égal ou postérieur',
   filterOperatorBefore: 'antérieur',
+  filterOperatorOnOrBefore: 'égal ou antérieur',
   filterOperatorIsEmpty: 'est vide',
   filterOperatorIsNotEmpty: "n'est pas vide",
+
+  // Filter values text
+  // filterValueAny: 'any',
+  // filterValueTrue: 'true',
+  // filterValueFalse: 'false',
 
   // Column menu text
   columnMenuLabel: 'Menu',
@@ -93,6 +99,10 @@ const frFRGrid: Partial<GridLocaleText> = {
 
   // Checkbox selection text
   checkboxSelectionHeaderName: 'Sélection',
+
+  // Boolean cell text
+  // booleanCellTrueLabel: 'true',
+  // booleanCellFalseLabel: 'false',
 
   // Actions cell more text
   actionsCellMore: 'Plus',

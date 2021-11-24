@@ -2,7 +2,7 @@ import * as React from 'react';
 import { createRenderer, fireEvent } from '@material-ui/monorepo/test/utils';
 import { useFakeTimers, spy } from 'sinon';
 import { expect } from 'chai';
-import { getCell, getRow, getColumnValues } from 'test/utils/helperFn';
+import { getCell, getRow, getColumnValues, getRows } from 'test/utils/helperFn';
 import {
   GridApiRef,
   GridComponentProps,
@@ -379,52 +379,6 @@ describe('<DataGridPro /> - Rows', () => {
       );
     };
 
-    it('Rows should not be virtualized when the number of rows fit in the viewport', () => {
-      const headerHeight = 50;
-      const rowHeight = 50;
-      const maxRowsNotVirtualized = (300 - headerHeight) / rowHeight;
-      render(
-        <TestCaseVirtualization
-          nbRows={maxRowsNotVirtualized}
-          hideFooter
-          headerHeight={headerHeight}
-          rowHeight={rowHeight}
-        />,
-      );
-
-      const isVirtualized = apiRef.current.state.containerSizes!.isVirtualized;
-      expect(isVirtualized).to.equal(false);
-    });
-
-    it('Rows should be virtualized when at least 2 rows are outside the viewport', () => {
-      const headerHeight = 50;
-      const rowHeight = 50;
-      const maxRowsNotVirtualized = (300 - headerHeight) / rowHeight;
-      render(
-        <TestCaseVirtualization
-          nbRows={maxRowsNotVirtualized + 1}
-          hideFooter
-          headerHeight={headerHeight}
-          rowHeight={rowHeight}
-        />,
-      );
-
-      let isVirtualized = apiRef.current.state.containerSizes!.isVirtualized;
-      expect(isVirtualized).to.equal(false);
-
-      render(
-        <TestCaseVirtualization
-          nbRows={maxRowsNotVirtualized + 2}
-          hideFooter
-          headerHeight={headerHeight}
-          rowHeight={rowHeight}
-        />,
-      );
-
-      isVirtualized = apiRef.current.state.containerSizes!.isVirtualized;
-      expect(isVirtualized).to.equal(true);
-    });
-
     it('should render last row when scrolling to the bottom', () => {
       const rowHeight = 50;
       const rowBuffer = 4;
@@ -458,18 +412,14 @@ describe('<DataGridPro /> - Rows', () => {
       expect(virtualScroller.scrollHeight).to.equal(nbRows * rowHeight);
     });
 
-    it('Rows should not be virtualized when the grid is in pagination autoPageSize', () => {
+    it('should have all the rows rendered of the page in the DOM when autoPageSize: true', () => {
       render(<TestCaseVirtualization autoPageSize pagination />);
-
-      const isVirtualized = apiRef.current.state.containerSizes!.isVirtualized;
-      expect(isVirtualized).to.equal(false);
+      expect(getRows()).to.have.length(apiRef.current.state.pagination.pageSize);
     });
 
-    it('Rows should not be virtualized when the grid is in autoHeight', () => {
+    it('should have all the rows rendered in the DOM when autoPageSize: true', () => {
       render(<TestCaseVirtualization autoHeight />);
-
-      const isVirtualized = apiRef.current.state.containerSizes!.isVirtualized;
-      expect(isVirtualized).to.equal(false);
+      expect(getRows()).to.have.length(apiRef.current.state.pagination.pageSize);
     });
 
     it('should render extra columns when the columnBuffer prop is present', () => {
