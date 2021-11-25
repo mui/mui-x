@@ -2,7 +2,6 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import TextField, { TextFieldProps } from '@mui/material/TextField';
 import { unstable_useId as useId } from '@mui/material/utils';
-import { GridLoadIcon } from '../../icons/index';
 import { GridFilterInputValueProps } from './GridFilterInputValueProps';
 import { GridColDef } from '../../../models/colDef/gridColDef';
 
@@ -32,7 +31,6 @@ export interface GridFilterInputSingleSelectProps extends GridFilterInputValuePr
 function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps & TextFieldProps) {
   const { item, applyValue, type, apiRef, focusElementRef, ...others } = props;
   const [filterValueState, setFilterValueState] = React.useState(item.value ?? '');
-  const [applying, setIsApplying] = React.useState(false);
   const id = useId();
 
   const onFilterChange = React.useCallback(
@@ -49,10 +47,7 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps & T
         .find((optionValue) => String(optionValue) === value);
 
       setFilterValueState(String(value));
-
-      setIsApplying(true);
       applyValue({ ...item, value });
-      setIsApplying(false);
     },
     [apiRef, applyValue, item],
   );
@@ -61,8 +56,6 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps & T
     const itemValue = item.value ?? '';
     setFilterValueState(String(itemValue));
   }, [item.value]);
-
-  const InputProps = applying ? { endAdornment: <GridLoadIcon /> } : others.InputProps;
 
   return (
     <TextField
@@ -73,7 +66,6 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps & T
       onChange={onFilterChange}
       type={type || 'text'}
       variant="standard"
-      InputProps={InputProps}
       InputLabelProps={{
         shrink: true,
       }}
