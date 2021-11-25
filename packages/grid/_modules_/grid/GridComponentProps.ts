@@ -1,14 +1,18 @@
 import * as React from 'react';
 import { GridInitialState, GridState } from './models/gridState';
 import { GridApiRef } from './models/api/gridApiRef';
-import { GridColumns } from './models/colDef/gridColDef';
+import {
+  GridColDefOverride,
+  GridColDefOverrideCallback,
+  GridColumns,
+} from './models/colDef/gridColDef';
 import {
   GridSimpleOptions,
   GridProcessedMergedOptions,
   GridMergedOptions,
 } from './models/gridOptions';
 import { MuiEvent } from './models/muiEvent';
-import { GridRowId, GridRowIdGetter, GridRowsProp } from './models/gridRows';
+import { GridRowId, GridRowIdGetter, GridRowModel, GridRowsProp } from './models/gridRows';
 import { ElementSize } from './models/elementSize';
 import { GridColumnTypesRecord } from './models/colDef/gridColumnTypesRecord';
 import { GridSortModel } from './models/gridSortModel';
@@ -99,6 +103,14 @@ interface GridComponentOtherProps {
    * @returns {boolean} A boolean indicating if the cell is selectable.
    */
   isRowSelectable?: (params: GridRowParams) => boolean;
+  /**
+   * Determines the path of a row in the tree data.
+   * For instance, a row with the path ["A", "B"] is the child of the row with the path ["A"].
+   * Note that all paths must contain at least one element.
+   * @param {GridRowModel} row The row from which we want the path.
+   * @returns {string[]} The path to the row.
+   */
+  getTreeDataPath?: (row: GridRowModel) => string[];
   /**
    * Callback fired when the edit cell value changes.
    * @param {GridEditCellPropsParams} params With all properties from [[GridEditCellPropsParams]].
@@ -489,4 +501,10 @@ interface GridComponentOtherProps {
    * Overrideable components props dynamically passed to the component at rendering.
    */
   componentsProps?: GridSlotsComponentsProps;
+  /**
+   * The grouping column used by the tree data.
+   */
+  groupingColDef?:
+    | GridColDefOverride<'field' | 'editable'>
+    | GridColDefOverrideCallback<'field' | 'editable'>;
 }

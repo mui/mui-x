@@ -176,6 +176,8 @@ export function useGridDimensions(
 
   const debounceResize = React.useMemo(() => debounce(resize, 60), [resize]);
 
+  const isFirstSizing = React.useRef(true);
+
   const handleResize = React.useCallback(
     (size: ElementSize) => {
       rootDimensionsRef.current = size;
@@ -213,6 +215,14 @@ export function useGridDimensions(
       if (isTestEnvironment) {
         // We don't need to debounce the resize for tests.
         resize();
+        isFirstSizing.current = false;
+        return;
+      }
+
+      if (isFirstSizing.current) {
+        // We want to initialize the grid dimensions as soon as possible to avoid flickering
+        resize();
+        isFirstSizing.current = false;
         return;
       }
 

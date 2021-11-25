@@ -369,6 +369,14 @@
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "both the cell and the column header",
       "conditions": "<code>showColumnRightBorder={true}</code>"
+    },
+    "treeDataGroupingCell": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the root of the grouping column of the tree data"
+    },
+    "treeDataGroupingCellToggle": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the toggle of the grouping column of the tree data"
     }
   },
   "slotDescriptions": {
@@ -402,6 +410,8 @@
     "DensityStandardIcon": "Icon displayed on the standard density option in the toolbar.",
     "DensityComfortableIcon": "Icon displayed on the &quot;comfortable&quot; density option in the toolbar.",
     "ExportIcon": "Icon displayed on the open export button present in the toolbar by default.",
-    "MoreActionsIcon": "Icon displayed on the <code>actions</code> column type to open the menu."
+    "MoreActionsIcon": "Icon displayed on the <code>actions</code> column type to open the menu.",
+    "TreeDataExpandIcon": "Icon displayed on the tree data toggling column when the children are collapsed",
+    "TreeDataCollapseIcon": "Icon displayed on the tree data toggling column when the children are expanded"
   }
 }
