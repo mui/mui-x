@@ -1,6 +1,5 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import { styled } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
 import TextField from '@mui/material/TextField';
 import {
@@ -15,19 +14,6 @@ import SearchIcon from '@mui/icons-material/Search';
 function escapeRegExp(value: string): string {
   return value.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
 }
-
-const StyledTextField = styled(TextField)(({ theme }) => ({
-  [theme.breakpoints.down('xs')]: {
-    width: '100%',
-  },
-  margin: theme.spacing(1, 0.5, 1.5),
-  '& .MuiSvgIcon-root': {
-    marginRight: theme.spacing(0.5),
-  },
-  '& .MuiInput-underline:before': {
-    borderBottom: `1px solid ${theme.palette.divider}`,
-  },
-})) as any; // See https://github.com/mui-org/material-ui/issues/28844
 
 interface QuickSearchToolbarProps {
   clearSearch: () => void;
@@ -51,7 +37,7 @@ function QuickSearchToolbar(props: QuickSearchToolbarProps) {
         <GridToolbarFilterButton />
         <GridToolbarDensitySelector />
       </div>
-      <StyledTextField
+      <TextField
         variant="standard"
         value={props.value}
         onChange={props.onChange}
@@ -69,6 +55,20 @@ function QuickSearchToolbar(props: QuickSearchToolbarProps) {
               <ClearIcon fontSize="small" />
             </IconButton>
           ),
+        }}
+        sx={{
+          width: {
+            xs: 1,
+            sm: 'auto',
+          },
+          m: (theme) => theme.spacing(1, 0.5, 1.5),
+          '& .MuiSvgIcon-root': {
+            mr: 0.5,
+          },
+          '& .MuiInput-underline:before': {
+            borderBottom: 1,
+            borderColor: 'divider',
+          },
         }}
       />
     </Box>
