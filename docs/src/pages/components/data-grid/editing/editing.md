@@ -233,7 +233,7 @@ If you want to send the updated data to your server, you can use the `onRowEditC
 
 To access the new values for the row, use `apiRef.current.getEditRowsModel` to get all rows in edit mode, then use the id provided to get only the values for the row that was committed.
 
-You can then decide if you want to send the whole row or only the modified fields, by checking it against the previous row values.
+You can then decide if you want to send the whole row or only the modified fields, by checking them against the previous row values.
 
 {{"demo": "pages/components/data-grid/editing/RowEditServerSidePersistence.js", "bg": "inline", "defaultCodeOpen": false}}
 
