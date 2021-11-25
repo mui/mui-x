@@ -15,15 +15,10 @@ import {
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { gridClasses } from '../../gridClasses';
 
-interface GridExportFormat {
-  format: ExportTypes;
-  formatOptions?: GridCsvExportOptions;
-}
-
-type GridExportFormatOption = GridExportFormat;
-
-type GridExportOption = GridExportFormatOption & {
+type GridExportOption = {
   label: React.ReactNode;
+  format: ExportTypes;
+  formatOptions?: GridCsvExportOptions | GridPrintExportOptions;
 };
 
 export interface GridToolbarExportProps extends ButtonProps {
