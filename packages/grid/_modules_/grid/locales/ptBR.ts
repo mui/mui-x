@@ -111,6 +111,11 @@ const ptBRGrid: Partial<GridLocaleText> = {
   pinToLeft: 'Fixar à esquerda',
   pinToRight: 'Fixar à direita',
   unpin: 'Desafixar',
+
+  // Tree Data
+  // treeDataGroupingHeaderName: 'Group',
+  // treeDataExpand: 'see children',
+  // treeDataCollapse: 'hide children',
 };
 
 export const ptBR: Localization = getGridLocalization(ptBRGrid, ptBRCore);

@@ -19,6 +19,8 @@ const FORCED_PROPS: { [key in ForcedPropsKey]-?: GridInputComponentProps[key] } 
   disableChildrenFiltering: undefined,
   disableChildrenSorting: undefined,
   disableColumnPinning: undefined,
+  getTreeDataPath: undefined,
+  groupingColDef: undefined,
   throttleRowsMs: undefined,
   hideFooterRowCount: false,
   pagination: true,
@@ -27,6 +29,8 @@ const FORCED_PROPS: { [key in ForcedPropsKey]-?: GridInputComponentProps[key] } 
   scrollEndThreshold: undefined,
   pinnedColumns: undefined,
   onPinnedColumnsChange: undefined,
+  defaultGroupingExpansionDepth: undefined,
+  treeData: undefined,
   signature: 'DataGrid',
 };
 

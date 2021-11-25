@@ -106,6 +106,11 @@ const jaJPGrid: Partial<GridLocaleText> = {
   // pinToLeft: 'Pin to left',
   // pinToRight: 'Pin to right',
   // unpin: 'Unpin',
+
+  // Tree Data
+  // treeDataGroupingHeaderName: 'Group',
+  // treeDataExpand: 'see children',
+  // treeDataCollapse: 'hide children',
 };
 
 export const jaJP: Localization = getGridLocalization(jaJPGrid, jaJPCore);

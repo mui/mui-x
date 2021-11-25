@@ -107,6 +107,11 @@ export interface GridLocaleText {
   pinToRight: string;
   unpin: string;
 
+  // Tree Data
+  treeDataGroupingHeaderName: string;
+  treeDataExpand: string;
+  treeDataCollapse: string;
+
   // Used core components translation keys
   MuiTablePagination: Omit<
     ComponentsPropsList['MuiTablePagination'],

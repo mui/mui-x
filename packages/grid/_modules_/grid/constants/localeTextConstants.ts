@@ -110,6 +110,11 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
   pinToRight: 'Pin to right',
   unpin: 'Unpin',
 
+  // Tree Data
+  treeDataGroupingHeaderName: 'Group',
+  treeDataExpand: 'see children',
+  treeDataCollapse: 'hide children',
+
   // Used core components translation keys
   MuiTablePagination: {},
 };

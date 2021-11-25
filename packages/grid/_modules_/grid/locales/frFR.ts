@@ -111,6 +111,11 @@ const frFRGrid: Partial<GridLocaleText> = {
   // pinToLeft: 'Pin to left',
   // pinToRight: 'Pin to right',
   // unpin: 'Unpin',
+
+  // Tree Data
+  treeDataGroupingHeaderName: 'Groupe',
+  treeDataExpand: 'afficher les enfants',
+  treeDataCollapse: 'masquer les enfants',
 };
 
 export const frFR: Localization = getGridLocalization(frFRGrid, frFRCore);

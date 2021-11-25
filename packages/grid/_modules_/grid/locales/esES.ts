@@ -111,6 +111,11 @@ const esESGrid: Partial<GridLocaleText> = {
   // pinToLeft: 'Pin to left',
   // pinToRight: 'Pin to right',
   // unpin: 'Unpin',
+
+  // Tree Data
+  // treeDataGroupingHeaderName: 'Group',
+  // treeDataExpand: 'see children',
+  // treeDataCollapse: 'hide children',
 };
 
 export const esES: Localization = getGridLocalization(esESGrid, esESCore);
