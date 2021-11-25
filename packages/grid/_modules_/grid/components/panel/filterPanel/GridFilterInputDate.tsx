@@ -9,7 +9,7 @@ export interface GridFilterInputDateProps extends GridFilterInputValueProps {
   type?: 'date' | 'datetime-local';
 }
 
-export const SUBMIT_FILTER_STROKE_TIME = 500;
+export const SUBMIT_FILTER_DATE_STROKE_TIME = 500;
 
 function GridFilterInputDate(props: GridFilterInputDateProps & TextFieldProps) {
   const { item, applyValue, type, apiRef, focusElementRef, ...other } = props;
@@ -30,7 +30,7 @@ function GridFilterInputDate(props: GridFilterInputDateProps & TextFieldProps) {
       filterTimeout.current = setTimeout(() => {
         applyValue({ ...item, value });
         setIsApplying(false);
-      }, SUBMIT_FILTER_STROKE_TIME);
+      }, SUBMIT_FILTER_DATE_STROKE_TIME);
     },
     [applyValue, item],
   );
