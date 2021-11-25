@@ -96,7 +96,11 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
 
       // Ignore vertical scroll.
       // Excepts the first event which sets the previous render context.
-      if (prevScrollLeft.current === left && prevRenderContext.current) {
+      if (
+        prevScrollLeft.current === left &&
+        prevRenderContext.current?.firstColumnIndex === nextRenderContext?.firstColumnIndex &&
+        prevRenderContext.current?.lastColumnIndex === nextRenderContext?.lastColumnIndex
+      ) {
         return;
       }
       prevScrollLeft.current = left;
@@ -107,7 +111,9 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
       }
 
       // Pass directly the render context to avoid waiting for the next render
-      updateInnerPosition(nextRenderContext);
+      if (nextRenderContext) {
+        updateInnerPosition(nextRenderContext);
+      }
     },
     [updateInnerPosition],
   );

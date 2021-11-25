@@ -31,6 +31,7 @@ const arSDGrid: Partial<GridLocaleText> = {
   toolbarExport: 'تصدير',
   toolbarExportLabel: 'تصدير',
   toolbarExportCSV: 'تنزيل كملف CSV',
+  // toolbarExportPrint: 'Print',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'ايجاد عمود',
@@ -103,6 +104,11 @@ const arSDGrid: Partial<GridLocaleText> = {
 
   // Actions cell more text
   // actionsCellMore: 'more',
+
+  // Tree Data
+  // treeDataGroupingHeaderName: 'Group',
+  // treeDataExpand: 'see children',
+  // treeDataCollapse: 'hide children',
 };
 
 export const arSD: Localization = getGridLocalization(arSDGrid, arSDCore);

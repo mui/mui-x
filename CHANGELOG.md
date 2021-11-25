@@ -3,11 +3,69 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 5.0.1
+
+_Nov 17, 2021_
+
+A big thanks to the 3 contributors who made this release possible. Here are some highlights ✨:
+
+- 🎁 New API to validate the editing values (#3006) @m4theushw
+ 
+  You can now use the `preProcessEditCellProps` key in `GridColDef` to synchronously or asynchronously validate the values committed.
+
+  ```ts
+  const columns: GridColDef[] = [
+    {
+      field: 'firstName',
+      preProcessEditCellProps: (params: GridEditCellPropsChangeParams) => {
+        const hasError = params.props.value.length < 3;
+        return { ...params.props, error: hasError };
+      },
+    },
+    {
+      field: 'email',
+      preProcessEditCellProps: async (params: GridEditCellPropsChangeParams) => {
+        const userWithEmail = await fetchUserByEmail(params.value);
+        const hasError = !!userWithEmail;
+        return { ...params.props, error: hasError };
+      }
+    }
+  ];
+  ```
+
+- ✨ New method `getRootDimensions` to access the size of the grid (#3007) @flaviendelangle
+
+  It contains the size of the viewport (which is the scrollable container containing the rows and columns) considering scrollbars or not.
+
+  ```ts
+  const dimensions = apiRef.current.getRootDimensions();
+  ```
+
+### `@mui/x-data-grid@v5.0.1` / `@mui/x-data-grid-pro@v5.0.1`
+
+#### Changes
+
+- [DataGrid] New API to validate the editing values (#3006) @m4theushw
+- [DataGrid] Use color-scheme to set dark mode on native components (#3146) @alexfauquette
+- [DataGrid] Fix the `@mui/x-data-grid` type entrypoint (#3196) @flaviendelangle
+
+### Core
+
+- [core] Drop `useGridContainerProps` (#3007) @flaviendelangle
+- [core] Move `getRowIdFromRowIndex` and `getRowIndex` to the sorting API (#3126) @flaviendelangle
+- [core] Polish v5 CHANGELOG (#3194) @oliviertassinari
+- [core] Remove the `index.ts` of the export hooks (#3165) @flaviendelangle
+- [core] Set the correct release date for v5.0.0 in the CHANGELOG.md (#3192) @flaviendelangle
+
+### Docs
+
+- [docs] Move sentence about disabling multi rows selection (#3167) @alexfauquette
+
 ## 5.0.0
 
 _Nov 16, 2021_
 
-🎉 We are execited to introduce [MUI X v5.0.0](https://mui.com/blog/mui-x-v5/) 🎉!
+🎉 We are excited to introduce [MUI X v5.0.0](https://mui.com/blog/mui-x-v5/) 🎉!
 
 If you want to migrate the DataGrid or DataGridPro from v4 to v5, take a look at the [migration guide](https://mui.com/components/data-grid/migration-v4/).
 This version is fully compatible with `@mui/material@5.X` and can be used with `@material-ui/core@4.x` with some [additional steps](https://mui.com/components/data-grid/migration-v4/#using-mui-x-v5-with-mui-core-v4).

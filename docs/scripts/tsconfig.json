@@ -2,7 +2,7 @@
   "extends": "../../tsconfig.json",
   "include": [
     "../../node_modules/@material-ui/monorepo/docs/types/react-docgen.d.ts",
-    "buildApi.ts",
+    "api/buildApi.ts",
     "i18n.js"
   ],
   "compilerOptions": {

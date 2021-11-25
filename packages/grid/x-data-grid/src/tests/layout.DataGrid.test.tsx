@@ -641,6 +641,18 @@ describe('<DataGrid /> - Layout & Warnings', () => {
           scrollBarSize + headerHeight + rowHeight * baselineProps.rows.length,
         );
       });
+
+      it('should give some space to the noRows overlay', () => {
+        const rowHeight = 30;
+        render(
+          <div style={{ width: 300 }}>
+            <DataGrid {...baselineProps} rows={[]} rowHeight={rowHeight} autoHeight />
+          </div>,
+        );
+        expect(document.querySelectorAll('.MuiDataGrid-overlay')[0].clientHeight).to.equal(
+          rowHeight * 2,
+        );
+      });
     });
 
     // A function test counterpart of ScrollbarOverflowVerticalSnap.

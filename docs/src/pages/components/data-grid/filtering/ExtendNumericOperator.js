@@ -17,7 +17,16 @@ const useStyles = makeStyles({
 
 function RatingInputValue(props) {
   const classes = useStyles();
-  const { item, applyValue } = props;
+  const { item, applyValue, focusElementRef } = props;
+
+  const ratingRef = React.useRef(null);
+  React.useImperativeHandle(focusElementRef, () => ({
+    focus: () => {
+      ratingRef.current
+        .querySelector(`input[value="${Number(item.value) || ''}"]`)
+        .focus();
+    },
+  }));
 
   const handleFilterChange = (event) => {
     applyValue({ ...item, value: event.target.value });
@@ -31,6 +40,7 @@ function RatingInputValue(props) {
         value={Number(item.value)}
         onChange={handleFilterChange}
         precision={0.5}
+        ref={ratingRef}
       />
     </div>
   );
@@ -38,6 +48,12 @@ function RatingInputValue(props) {
 
 RatingInputValue.propTypes = {
   applyValue: PropTypes.func.isRequired,
+  focusElementRef: PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.shape({
+      current: PropTypes.any.isRequired,
+    }),
+  ]),
   item: PropTypes.shape({
     columnField: PropTypes.string.isRequired,
     id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
@@ -51,7 +67,7 @@ export default function ExtendNumericOperator() {
   const columns = [...data.columns];
 
   const [filterModel, setFilterModel] = React.useState({
-    items: [{ columnField: 'rating', value: '3.5', operatorValue: '>=' }],
+    items: [{ id: 1, columnField: 'rating', value: '3.5', operatorValue: '>=' }],
   });
 
   if (columns.length > 0) {
