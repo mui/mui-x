@@ -100,11 +100,6 @@ export const createColumnsState = ({
   apiRef: GridApiRef;
   reset: boolean;
 }) => {
-  const columnsWithTypes = columnsToUpsert.map((column) => ({
-    ...getGridColDef(columnsTypes, column.type), // TODO v6: Inline `getGridColDef`
-    ...column,
-  }));
-
   let columnsState: GridColumnsRawState;
   if (reset) {
     columnsState = {
@@ -119,10 +114,13 @@ export const createColumnsState = ({
     };
   }
 
-  columnsWithTypes.forEach((newColumn) => {
+  columnsToUpsert.forEach((newColumn) => {
     if (columnsState.lookup[newColumn.field] == null) {
       // New Column
-      columnsState.lookup[newColumn.field] = newColumn;
+      columnsState.lookup[newColumn.field] = {
+        ...getGridColDef(columnsTypes, newColumn.type), // TODO v6: Inline `getGridColDef`
+        ...newColumn,
+      };
       columnsState.all.push(newColumn.field);
     } else {
       columnsState.lookup[newColumn.field] = {
