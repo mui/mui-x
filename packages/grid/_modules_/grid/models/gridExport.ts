@@ -34,7 +34,6 @@ export interface GridCsvExportOptions {
    * @default true
    */
   includeHeaders?: boolean;
-
   /**
    *  If `true`, the CSV export option will be removed from the GridToolbarExport menu.
    * @default false

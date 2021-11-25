@@ -54,7 +54,7 @@ You can provide a [`valueFormatter`](/components/data-grid/columns/#value-format
 
 ### Disable export
 
-You can remove the CSV export option from the toolbar by setting `disable` option to `true`
+You can remove the CSV export option from the toolbar by setting `disable` option to `true`.
 
 ```jsx
 <GridToolbarExport csvOptions={{ disable: true }} />
@@ -116,7 +116,7 @@ You can provide a [`valueFormatter`](/components/data-grid/columns/#value-format
 
 ### Disable export
 
-You can remove the Print export button from the toolbar by setting `disable` option to `true`
+You can remove the Print export button from the toolbar by setting `disable` option to `true`.
 
 ```jsx
 <GridToolbarExport printOptions={{ disable: true }} />
