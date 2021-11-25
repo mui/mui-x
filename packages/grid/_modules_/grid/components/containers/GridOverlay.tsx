@@ -75,12 +75,17 @@ export const GridOverlay = React.forwardRef<HTMLDivElement, GridOverlayProps>(fu
     };
   }, []);
 
+  let height: React.CSSProperties['height'] = viewportInnerSize?.height ?? 0;
+  if (rootProps.autoHeight && height === 0) {
+    height = 'auto';
+  }
+
   return (
     <GridOverlayRoot
       ref={ref}
       className={clsx(classes.root, className)}
       style={{
-        height: viewportInnerSize?.height ?? 0,
+        height,
         width: viewportInnerSize?.width ?? 0,
         top: headerHeight,
         position: 'absolute',
