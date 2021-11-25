@@ -20,7 +20,7 @@ function GridFilterInputDate(props: GridFilterInputDateProps & TextFieldProps) {
   const id = useId();
 
   const onFilterChange = React.useCallback(
-    (event) => {
+    (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
       const value = event.target.value;
 
       clearTimeout(filterTimeout.current);

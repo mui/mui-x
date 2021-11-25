@@ -5,6 +5,7 @@ import { unstable_useId as useId } from '@mui/material/utils';
 import { GridLoadIcon } from '../../icons/index';
 import { GridFilterInputValueProps } from './GridFilterInputValueProps';
 import { GridColDef } from '../../../models/colDef/gridColDef';
+import { GridApi } from '../../../models/api/gridApi'
 
 const warnedOnce = {};
 function warnDeprecatedTypeSupport(type) {
@@ -18,7 +19,7 @@ function warnDeprecatedTypeSupport(type) {
   warnedOnce[type] = true;
 }
 
-const renderSingleSelectOptions = ({ valueOptions, valueFormatter, field }: GridColDef, api) => {
+const renderSingleSelectOptions = ({ valueOptions, valueFormatter, field }: GridColDef, api: GridApi) => {
   const iterableColumnValues =
     typeof valueOptions === 'function'
       ? ['', ...valueOptions({ field })]
