@@ -173,16 +173,18 @@ export const useGridColumnPinning = (
 
   const checkIfCanBeReordered = React.useCallback(
     (initialValue, { targetIndex }: { targetIndex: number }) => {
-      if (pinnedColumns.left?.length === 0 && pinnedColumns.right?.length === 0) {
+      const visibleColumns = visibleGridColumnsSelector(apiRef.current.state);
+      const leftPinnedColumns = filterColumns(pinnedColumns.left, visibleColumns).length;
+      const rightPinnedColumns = filterColumns(pinnedColumns.right, visibleColumns).length;
+
+      if (leftPinnedColumns === 0 && rightPinnedColumns === 0) {
         return initialValue;
       }
 
-      const leftPinnedColumns = pinnedColumns.left?.length || 0;
       if (leftPinnedColumns > 0 && targetIndex < leftPinnedColumns) {
         return false;
       }
 
-      const rightPinnedColumns = pinnedColumns.right?.length || 0;
       if (rightPinnedColumns > 0) {
         const visibleColumnsAmount = visibleGridColumnsSelector(apiRef.current.state).length;
         const firstRightPinnedColumnIndex = visibleColumnsAmount - rightPinnedColumns;
@@ -191,7 +193,7 @@ export const useGridColumnPinning = (
 
       return initialValue;
     },
-    [apiRef, pinnedColumns.left?.length, pinnedColumns.right?.length],
+    [apiRef, pinnedColumns.left, pinnedColumns.right],
   );
 
   useGridRegisterPreProcessor(apiRef, GridPreProcessingGroup.scrollToIndexes, calculateScrollLeft);

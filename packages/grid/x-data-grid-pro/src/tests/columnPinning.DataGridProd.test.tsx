@@ -10,7 +10,7 @@ import {
 import { spy, useFakeTimers } from 'sinon';
 import { expect } from 'chai';
 import { createRenderer, fireEvent, screen, createEvent } from '@material-ui/monorepo/test/utils';
-import { getCell, getColumnHeaderCell } from 'test/utils/helperFn';
+import { getCell, getColumnHeaderCell, getColumnHeadersTextContent } from 'test/utils/helperFn';
 import { useData } from 'storybook/src/hooks/useData';
 
 // TODO Move to utils
@@ -168,6 +168,18 @@ describe('<DataGridPro /> - Column pinning', () => {
     expect(
       document.querySelector('.MuiDataGrid-pinnedColumnHeaders--right')?.textContent,
     ).to.deep.equal('1M');
+  });
+
+  it('should filter out invalid columns when blocking a column from being dropped', () => {
+    render(<TestCase nbCols={3} initialState={{ pinnedColumns: { left: ['foo', 'bar'] } }} />);
+    expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'Currency Pair', '1M']);
+    const dragCol = getColumnHeaderCell(0).firstChild!;
+    const targetCell = getCell(0, 1)!;
+    fireEvent.dragStart(dragCol);
+    fireEvent.dragEnter(targetCell);
+    const dragOverEvent = createDragOverEvent(targetCell);
+    fireEvent(targetCell, dragOverEvent);
+    expect(getColumnHeadersTextContent()).to.deep.equal(['Currency Pair', 'id', '1M']);
   });
 
   describe('props: onPinnedColumnsChange', () => {
