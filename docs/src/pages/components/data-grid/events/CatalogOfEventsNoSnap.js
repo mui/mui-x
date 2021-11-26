@@ -31,7 +31,7 @@ const EventRow = ({ event }) => {
   const [open, setOpen] = React.useState(false);
 
   const example = React.useMemo(() => {
-    const args = ['details // GridCallbackDetails'];
+    const args = ['details, // GridCallbackDetails'];
     if (event.event) {
       args.unshift(`event,  // ${event.event}`);
     }
