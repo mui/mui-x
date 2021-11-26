@@ -6,7 +6,10 @@ import { GridFilterInputValueProps } from './GridFilterInputValueProps';
 import { GridColDef } from '../../../models/colDef/gridColDef';
 import { GridApi } from '../../../models/api/gridApi';
 
-const renderSingleSelectOptions = ({ valueOptions, valueFormatter, field }: GridColDef, api: GridApi) => {
+const renderSingleSelectOptions = (
+  { valueOptions, valueFormatter, field }: GridColDef,
+  api: GridApi,
+) => {
   const iterableColumnValues =
     typeof valueOptions === 'function'
       ? ['', ...valueOptions({ field })]
