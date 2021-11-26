@@ -52,6 +52,7 @@ export const GridOverlay = React.forwardRef<HTMLDivElement, GridOverlayProps>(fu
   const ownerState = { classes: rootProps.classes };
   const classes = useUtilityClasses(ownerState);
   const headerHeight = useGridSelector(apiRef, gridDensityHeaderHeightSelector);
+  const isMounted = React.useRef(true);
 
   const [viewportInnerSize, setViewportInnerSize] = React.useState(
     () => apiRef.current.getRootDimensions()?.viewportInnerSize ?? null,
@@ -61,10 +62,18 @@ export const GridOverlay = React.forwardRef<HTMLDivElement, GridOverlayProps>(fu
   // It is here because our event system does not handle correctly the removal of an event listener during the emit phase.
   // If you have an event that is listen by 2 listeners, and the 1st one causes the removal of the 2nd one, then the 2nd one will be ran.
   const handleViewportSizeChangeTest = () => {
-    setViewportInnerSize(apiRef.current.getRootDimensions()?.viewportInnerSize ?? null);
+    if (isMounted.current) {
+      setViewportInnerSize(apiRef.current.getRootDimensions()?.viewportInnerSize ?? null);
+    }
   };
 
   useGridApiEventHandler(apiRef, GridEvents.viewportInnerSizeChange, handleViewportSizeChangeTest);
+
+  React.useEffect(() => {
+    return () => {
+      isMounted.current = false;
+    };
+  }, []);
 
   let height: React.CSSProperties['height'] = viewportInnerSize?.height ?? 0;
   if (rootProps.autoHeight && height === 0) {
