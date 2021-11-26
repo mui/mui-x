@@ -53,7 +53,9 @@ export const useGridColumnPinning = (
         return;
       }
 
-      if (pinnedColumns.left!.length === 0 && pinnedColumns.right!.length === 0) {
+      const nbLeftPinnedColumns = pinnedColumns.left?.length ?? 0;
+      const nbRightPinnedColumns = pinnedColumns.right?.length ?? 0;
+      if (nbLeftPinnedColumns + nbRightPinnedColumns === 0) {
         return;
       }
 
