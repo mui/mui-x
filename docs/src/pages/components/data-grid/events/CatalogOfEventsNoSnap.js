@@ -40,10 +40,9 @@ const EventRow = ({ event }) => {
     }
 
     return `
-const onEvent: GridEventListener<GridEvents.${event.name}> =
- (
-    ${args.join('\n    ')}
-  ) => {...}    
+const onEvent: GridEventListener<GridEvents.${event.name}> = (
+  ${args.join('\n  ')}
+) => {...}    
   
 // Imperative subscription    
 apiRef.current.subscribeEvent(
@@ -74,7 +73,7 @@ useGridApiEventHandler(GridEvents.${event.name}, onEvent);
         <TableCell style={{ borderBottom: 'unset' }}>
           <div
             dangerouslySetInnerHTML={{
-              __html: escapeHTML(event.description),
+              __html: event.description,
             }}
           />
           {!!event.params && (
