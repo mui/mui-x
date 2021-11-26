@@ -408,6 +408,9 @@ The following demos illustrates how this approach works:
 <DataGridPro disableColumnPinning />
 ```
 
+> You may encounter issues if the sum of the widths of the pinned columns is larger than the width of the grid.
+> Make sure that the grid can accommodate properly, at least, these columns.
+
 ### Controlling the pinned columns
 
 While the `initialState` prop only works for setting pinned columns during the initialization, the `pinnedColumns` prop allows to change at anytime which columns to pin.
