@@ -227,9 +227,14 @@ export interface GridColumnsState {
   lookup: GridColumnLookup;
 }
 
-export type GridColDefOverride = Omit<Partial<GridColDef>, 'field'>;
+export type GridColDefOverride<ForcedFields extends keyof GridColDef> = Omit<
+  Partial<GridColDef>,
+  ForcedFields
+>;
 
-export type GridColDefOverrideCallback = (params: GridColDefOverrideParams) => GridColDefOverride;
+export type GridColDefOverrideCallback<ForcedFields extends keyof GridColDef> = (
+  params: GridColDefOverrideParams,
+) => GridColDefOverride<ForcedFields>;
 
 export interface GridColDefOverrideParams {
   /**
