@@ -103,7 +103,7 @@ const GridHeaderCheckbox = React.forwardRef<HTMLInputElement, GridColumnHeaderPa
           event.stopPropagation();
         }
         if (isNavigationKey(event.key) && !event.shiftKey) {
-          apiRef.current.publishEvent(GridEvents.columnHeaderNavigationKeyDown, props, event);
+          apiRef.current.publishEvent(GridEvents.columnHeaderKeyDown, props, event);
         }
       },
       [apiRef, props],

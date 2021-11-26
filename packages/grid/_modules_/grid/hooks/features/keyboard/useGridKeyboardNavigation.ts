@@ -9,6 +9,7 @@ import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { GridComponentProps } from '../../../GridComponentProps';
 import { gridVisibleSortedRowEntriesSelector } from '../filter/gridFilterSelector';
 import { useCurrentPageRows } from '../../utils/useCurrentPageRows';
+import { isGridHeaderCellRoot, isGridHeaderSelectAllCheckBox } from '../../../utils/domUtils';
 
 /**
  * @requires useGridPage (state)
@@ -157,11 +158,17 @@ export const useGridKeyboardNavigation = (
     [apiRef, visibleSortedRows, colCount, currentPage, goToCell, goToHeader],
   );
 
-  const handleColumnHeaderNavigationKeyDown = React.useCallback<
+  const handleColumnHeaderKeyDown = React.useCallback<
     GridEventListener<GridEvents.columnHeaderNavigationKeyDown>
   >(
     (params, event) => {
       event.preventDefault();
+      if (
+        !isGridHeaderCellRoot(event.target as HTMLElement) &&
+        !isGridHeaderSelectAllCheckBox(event.target as HTMLElement)
+      ) {
+        return;
+      }
       const dimensions = apiRef.current.getRootDimensions();
       if (!dimensions) {
         return;
@@ -176,8 +183,7 @@ export const useGridKeyboardNavigation = (
 
       // eslint-disable-next-line default-case
       switch (event.key) {
-        case 'ArrowDown':
-        case 'Enter': {
+        case 'ArrowDown': {
           if (firstRowIndexInPage !== null) {
             goToCell(colIndexBefore, firstRowIndexInPage);
           }
@@ -217,15 +223,23 @@ export const useGridKeyboardNavigation = (
           goToHeader(lastColIndex, event);
           break;
         }
+
+        case 'Enter': {
+          if (event.ctrlKey || event.metaKey) {
+            apiRef.current.toggleColumnMenu(params.field);
+          }
+          break;
+        }
+
+        case ' ': {
+          event.preventDefault(); // prevent Space event from scrolling
+          break;
+        }
       }
     },
     [apiRef, colCount, currentPage, goToCell, goToHeader],
   );
 
   useGridApiEventHandler(apiRef, GridEvents.cellNavigationKeyDown, handleCellNavigationKeyDown);
-  useGridApiEventHandler(
-    apiRef,
-    GridEvents.columnHeaderNavigationKeyDown,
-    handleColumnHeaderNavigationKeyDown,
-  );
+  useGridApiEventHandler(apiRef, GridEvents.columnHeaderKeyDown, handleColumnHeaderKeyDown);
 };
