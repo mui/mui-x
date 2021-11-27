@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { gridClasses } from '../../../gridClasses';
-import { GridEvents } from '../../../constants/eventsConstants';
+import { GridEvents, GridEventListener } from '../../../models/events';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridCellParams } from '../../../models/params/gridCellParams';
 import {
@@ -22,7 +22,7 @@ import { gridVisibleSortedRowIdsSelector } from '../filter/gridFilterSelector';
  */
 export const useGridKeyboard = (apiRef: GridApiRef): void => {
   const expandSelection = React.useCallback(
-    (params: GridCellParams, event: React.KeyboardEvent) => {
+    (params: GridCellParams, event: React.KeyboardEvent<HTMLElement>) => {
       apiRef.current.publishEvent(GridEvents.cellNavigationKeyDown, params, event);
 
       const focusCell = apiRef.current.state.focus.cell;
@@ -51,8 +51,8 @@ export const useGridKeyboard = (apiRef: GridApiRef): void => {
     [apiRef],
   );
 
-  const handleCellKeyDown = React.useCallback(
-    (params: GridCellParams, event: React.KeyboardEvent) => {
+  const handleCellKeyDown = React.useCallback<GridEventListener<GridEvents.cellKeyDown>>(
+    (params, event) => {
       // The target is not an element when triggered by a Select inside the cell
       // See https://github.com/mui-org/material-ui/issues/10534
       if ((event.target as any).nodeType === 1 && !isGridCellRoot(event.target as Element)) {
@@ -99,8 +99,10 @@ export const useGridKeyboard = (apiRef: GridApiRef): void => {
     [apiRef, expandSelection],
   );
 
-  const handleColumnHeaderKeyDown = React.useCallback(
-    (params: GridCellParams, event: React.KeyboardEvent) => {
+  const handleColumnHeaderKeyDown = React.useCallback<
+    GridEventListener<GridEvents.columnHeaderKeyDown>
+  >(
+    (params, event) => {
       if (!isGridHeaderCellRoot(event.target as HTMLElement)) {
         return;
       }

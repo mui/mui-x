@@ -2,7 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { useForkRef } from '@mui/material/utils';
-import { GridEvents } from '../../constants/eventsConstants';
+import { GridEvents } from '../../models/events';
 import { GridCellParams } from '../../models/params/gridCellParams';
 import { isNavigationKey, isSpaceKey } from '../../utils/keyboardUtils';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';

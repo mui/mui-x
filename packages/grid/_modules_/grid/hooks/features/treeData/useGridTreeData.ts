@@ -6,8 +6,8 @@ import {
   GRID_TREE_DATA_GROUP_COL_DEF_FORCED_FIELDS,
 } from './gridTreeDataGroupColDef';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
-import { GridEvents } from '../../../constants';
-import { GridCellParams, GridColDef, GridColDefOverrideParams, MuiEvent } from '../../../models';
+import { GridEvents, GridEventListener } from '../../../models/events';
+import { GridColDef, GridColDefOverrideParams } from '../../../models';
 import { isSpaceKey } from '../../../utils/keyboardUtils';
 import { useFirstRender } from '../../utils/useFirstRender';
 import { buildRowTree } from '../../../utils/rowTreeUtils';
@@ -120,8 +120,8 @@ export const useGridTreeData = (
 
   useGridRegisterPreProcessor(apiRef, GridPreProcessingGroup.hydrateColumns, updateGroupingColumn);
 
-  const handleCellKeyDown = React.useCallback(
-    (params: GridCellParams, event: MuiEvent<React.KeyboardEvent>) => {
+  const handleCellKeyDown = React.useCallback<GridEventListener<GridEvents.cellKeyDown>>(
+    (params, event) => {
       const cellParams = apiRef.current.getCellParams(params.id, params.field);
       if (cellParams.colDef.type === 'treeDataGroup' && isSpaceKey(event.key)) {
         event.stopPropagation();

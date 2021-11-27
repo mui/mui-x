@@ -42,14 +42,16 @@ describe('<DataGridPro/> - Components', () => {
   });
 
   describe('components', () => {
-    [
-      ['onClick', 'cellClick'],
-      ['onDoubleClick', 'cellDoubleClick'],
-      ['onMouseDown', 'cellMouseDown'],
-      ['onMouseUp', 'cellMouseUp'],
-      ['onDragEnter', 'cellDragEnter'],
-      ['onDragOver', 'cellDragOver'],
-    ].forEach(([prop, event]) => {
+    (
+      [
+        ['onClick', 'cellClick'],
+        ['onDoubleClick', 'cellDoubleClick'],
+        ['onMouseDown', 'cellMouseDown'],
+        ['onMouseUp', 'cellMouseUp'],
+        ['onDragEnter', 'cellDragEnter'],
+        ['onDragOver', 'cellDragOver'],
+      ] as const
+    ).forEach(([prop, event]) => {
       it(`should still publish the '${event}' event when overriding the '${prop}' prop in components.cell`, () => {
         const propHandler = spy();
         const eventHandler = spy();
@@ -86,10 +88,12 @@ describe('<DataGridPro/> - Components', () => {
       expect(eventHandler.callCount).to.equal(1);
     });
 
-    [
-      ['onClick', 'rowClick'],
-      ['onDoubleClick', 'rowDoubleClick'],
-    ].forEach(([prop, event]) => {
+    (
+      [
+        ['onClick', 'rowClick'],
+        ['onDoubleClick', 'rowDoubleClick'],
+      ] as const
+    ).forEach(([prop, event]) => {
       it(`should still publish the '${event}' event when overriding the '${prop}' prop in components.row`, () => {
         const propHandler = spy();
         const eventHandler = spy();

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridEvents } from '../../../constants/eventsConstants';
+import { GridEventListener, GridEvents } from '../../../models/events';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridColumnApi } from '../../../models/api/gridColumnApi';
 import { GridColumnOrderChangeParams } from '../../../models/params/gridColumnOrderChangeParams';
@@ -20,6 +20,7 @@ import {
 } from '../../utils/useGridApiEventHandler';
 import { GridComponentProps } from '../../../GridComponentProps';
 import { useGridStateInit } from '../../utils/useGridStateInit';
+import { GridColumnVisibilityChangeParams } from '../../../models';
 import { GridPreProcessingGroup } from '../../core/preProcessing';
 import { GridColumnsState } from './gridColumnsState';
 import { hydrateColumnsWidth, computeColumnTypes, createColumnsState } from './gridColumnsUtils';
@@ -134,11 +135,13 @@ export function useGridColumns(
 
       updateColumns([newColumn]);
 
-      apiRef.current.publishEvent(GridEvents.columnVisibilityChange, {
+      const params: GridColumnVisibilityChangeParams = {
         field,
         colDef: newColumn,
         isVisible,
-      });
+      };
+
+      apiRef.current.publishEvent(GridEvents.columnVisibilityChange, params);
     },
     [apiRef, getColumn, updateColumns],
   );
@@ -222,7 +225,9 @@ export function useGridColumns(
     setGridColumnsState(columnsState);
   }, [logger, apiRef, setGridColumnsState, props.columns, columnsTypes]);
 
-  const handlePreProcessorRegister = React.useCallback(
+  const handlePreProcessorRegister = React.useCallback<
+    GridEventListener<GridEvents.preProcessorRegister>
+  >(
     (name) => {
       if (name !== GridPreProcessingGroup.hydrateColumns) {
         return;

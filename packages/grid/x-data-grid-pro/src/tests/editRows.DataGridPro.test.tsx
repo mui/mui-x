@@ -6,7 +6,7 @@ import {
   DataGridPro,
   GridEditSingleSelectCell,
 } from '@mui/x-data-grid-pro';
-import Portal from '@mui/core/Portal';
+import Portal from '@mui/base/Portal';
 import { createRenderer, fireEvent, screen, waitFor } from '@material-ui/monorepo/test/utils';
 import { expect } from 'chai';
 import * as React from 'react';
