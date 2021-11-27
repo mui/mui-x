@@ -19,7 +19,7 @@
     "deduplicate": "node scripts/deduplicate.js",
     "l10n": "babel-node -x .ts ./scripts/l10n.ts",
     "stylelint": "stylelint '**/*.js' '**/*.ts' '**/*.tsx'",
-    "prettier": "node ./scripts/prettier.js --branch next",
+    "prettier": "node ./scripts/prettier.js --branch master",
     "prettier:all": "node ./scripts/prettier.js write",
     "proptypes": "cross-env BABEL_ENV=development babel-node -i \"/node_modules/(?!@material-ui)/\" -x .ts,.tsx,.js ./docs/scripts/generateProptypes.ts",
     "size:snapshot": "node --max-old-space-size=2048 ./scripts/sizeSnapshot/create",
