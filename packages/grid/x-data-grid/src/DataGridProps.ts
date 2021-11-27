@@ -21,6 +21,10 @@ export type DataGridProps = Omit<
   | 'options'
   | 'onRowsScrollEnd'
   | 'scrollEndThreshold'
+  | 'treeData'
+  | 'getTreeDataPath'
+  | 'groupingColDef'
+  | 'defaultGroupingExpansionDepth'
   | 'signature'
 > & {
   pagination?: true;

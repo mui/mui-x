@@ -105,6 +105,11 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
   // Actions cell more text
   actionsCellMore: 'more',
 
+  // Tree Data
+  treeDataGroupingHeaderName: 'Group',
+  treeDataExpand: 'see children',
+  treeDataCollapse: 'hide children',
+
   // Used core components translation keys
   MuiTablePagination: {},
 };

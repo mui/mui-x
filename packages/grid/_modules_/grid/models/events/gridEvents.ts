@@ -1,10 +1,10 @@
 export enum GridEvents {
   /**
-   * Fired when the grid is resized. Called with a [[ElementSize]] object.
+   * Fired when the grid is resized.
    */
   resize = 'resize',
   /**
-   * Fired when the grid is resized with a debounced time of 60ms. Called with a [[ElementSize]] object.
+   * Fired when the grid is resized with a debounced time of 60ms.
    */
   debouncedResize = 'debouncedResize',
   /**
@@ -20,195 +20,173 @@ export enum GridEvents {
    */
   unmount = 'unmount',
   /**
-   * Fired when the mode of a cell changes. Called with a [[GridCellParams]] object.
+   * Fired when the mode of a cell changes.
    * @ignore - do not document
    */
   cellModeChange = 'cellModeChange',
   /**
-   * Fired when a cell is clicked. Called with a [[GridCellParams]] object.
+   * Fired when a cell is clicked.
    */
   cellClick = 'cellClick',
   /**
-   * Fired when a cell is double-clicked. Called with a [[GridCellParams]] object.
+   * Fired when a cell is double-clicked.
    */
   cellDoubleClick = 'cellDoubleClick',
   /**
-   * Fired when a `mousedown` event happens in a cell. Called with a [[GridCellParams]] object.
+   * Fired when a `mousedown` event happens in a cell..
    */
   cellMouseDown = 'cellMouseDown',
   /**
-   * Fired when a `mouseup` event happens in a cell. Called with a [[GridCellParams]] object.
+   * Fired when a `mouseup` event happens in a cell..
    */
   cellMouseUp = 'cellMouseUp',
   /**
-   * Fired when a `keydown` event happens in a cell. Called with a [[GridCellParams]] object.
+   * Fired when a `keydown` event happens in a cell.
    */
   cellKeyDown = 'cellKeyDown',
   /**
-   * Fired when a cell gains focus. Called with a [[GridCellParams]] object.
+   * Fired when a cell gains focus.
    */
   cellFocusIn = 'cellFocusIn',
   /**
-   * Fired when a cell loses focus. Called with a [[GridCellParams]] object.
+   * Fired when a cell loses focus.
    */
   cellFocusOut = 'cellFocusOut',
   /**
-   * Fired when the user starts dragging a cell. It's mapped to the `dragstart` DOM event.
-   * Called with a [[GridCellParams]] object.
-   * @ignore - do not document.
-   */
-  cellDragStart = 'cellDragStart',
-  /**
    * Fired when the dragged cell enters a valid drop target. It's mapped to the `dragend` DOM event.
-   * Called with a [[GridCellParams]] object.
    * @ignore - do not document.
    */
   cellDragEnter = 'cellDragEnter',
   /**
    * Fired while an element or text selection is dragged over the cell.
    * It's mapped to the `dragover` DOM event.
-   * Called with a [[GridCellParams]] object.
    * @ignore - do not document.
    */
   cellDragOver = 'cellDragOver',
   /**
-   * Fired when the dragging of a cell ends. Called with a [[GridCellParams]] object.
-   * @ignore - do not document.
-   */
-  cellDragEnd = 'cellDragEnd',
-  /**
-   * Fired when the props of the edit cell changes. Called with a [[GridEditCellPropsParams]] object.
+   * Fired when the props of the edit cell changes.
    */
   editCellPropsChange = 'editCellPropsChange',
   /**
-   * Fired when the props of the edit input are committed. Called with a [[GridEditCellPropsParams]] object.
+   * Fired when the props of the edit input are committed.
    */
   cellEditCommit = 'cellEditCommit',
   /**
-   * Fired when the cell turns to edit mode. Called with a [[GridCellParams]] object.
+   * Fired when the cell turns to edit mode.
    */
   cellEditStart = 'cellEditStart',
   /**
-   * Fired when the cell turns back to view mode. Called with a [[GridCellParams]] object.
+   * Fired when the cell turns back to view mode.
    */
   cellEditStop = 'cellEditStop',
   /**
-   * Fired when the row turns to edit mode. Called with a [[GridCellParams]] object.
+   * Fired when the row turns to edit mode.
    */
   rowEditStart = 'rowEditStart',
   /**
-   * Fired when the row turns back to view mode. Called with a [[GridCellParams]] object.
+   * Fired when the row turns back to view mode.
    */
   rowEditStop = 'rowEditStop',
   /**
-   * Fired when the props of the edit input are committed. Called with the [[GridRowId]] of the row.
+   * Fired when the props of the edit input are committed.
    */
   rowEditCommit = 'rowEditCommit',
   /**
    * Fired when a [navigation key](/components/data-grid/accessibility#keyboard-navigation) is pressed in a cell.
-   * Called with a [[GridCellParams]] object.
    * @ignore - do not document.
    */
   cellNavigationKeyDown = 'cellNavigationKeyDown',
   /**
-   * Fired when a row is clicked. Called with a [[GridRowParams]] object.
+   * Fired when a row is clicked.
    */
   rowClick = 'rowClick',
   /**
-   * Fired when a row is double-clicked. Called with a [[GridRowParams]] object.
+   * Fired when a row is double-clicked.
    */
   rowDoubleClick = 'rowDoubleClick',
   /**
-   * Fired when the row editing model changes. Called with a [[GridEditRowModelParams]] object.
+   * Fired when the row editing model changes.
    */
   editRowsModelChange = 'editRowsModelChange',
   /**
-   * Fired when a column header loses focus. Called with a [[GridColumnHeaderParams]] object.
+   * Fired when a column header loses focus.
    * @ignore - do not document.
    */
   columnHeaderBlur = 'columnHeaderBlur',
   /**
-   * Fired when a column header gains focus. Called with a [[GridColumnHeaderParams]] object.
+   * Fired when a column header gains focus.
    * @ignore - do not document.
    */
   columnHeaderFocus = 'columnHeaderFocus',
   /**
    * Fired when a [navigation key](/components/data-grid/accessibility#keyboard-navigation) is pressed in a column header.
-   * Called with a [[GridColumnHeaderParams]] object.
    * @ignore - do not document.
    */
   columnHeaderNavigationKeyDown = 'columnHeaderNavigationKeyDown',
   /**
    * Fired when a key is pressed in a column header. It's mapped do the `keydown` DOM event.
-   * Called with a [[GridColumnHeaderParams]] object.
    */
   columnHeaderKeyDown = 'columnHeaderKeyDown',
   /**
-   * Fired when a column header is clicked. Called with a [[GridColumnHeaderParams]] object.
+   * Fired when a column header is clicked
    */
   columnHeaderClick = 'columnHeaderClick',
   /**
-   * Fired when a column header is double-clicked. Called with a [[GridColumnHeaderParams]] object.
+   * Fired when a column header is double-clicked.
    */
   columnHeaderDoubleClick = 'columnHeaderDoubleClick',
   /**
-   * Fired when a `mouseover` event happens in a column header. Called with a [[GridColumnHeaderParams]] object.
+   * Fired when a `mouseover` event happens in a column header.
    * @ignore - do not document.
    */
   columnHeaderOver = 'columnHeaderOver',
   /**
-   * Fired when a `mouseout` event happens in a column header. Called with a [[GridColumnHeaderParams]] object.
+   * Fired when a `mouseout` event happens in a column header.
    * @ignore - do not document.
    */
   columnHeaderOut = 'columnHeaderOut',
   /**
-   * Fired when a `mouseenter` event happens in a column header. Called with a [[GridColumnHeaderParams]] object.
+   * Fired when a `mouseenter` event happens in a column header.
    * @ignore - do not document.
    */
   columnHeaderEnter = 'columnHeaderEnter',
   /**
-   * Fired when a `mouseleave` event happens in a column header. Called with a [[GridColumnHeaderParams]] object.
+   * Fired when a `mouseleave` event happens in a column header.
    * @ignore - do not document.*
    */
   columnHeaderLeave = 'columnHeaderLeave',
   /**
    * Fired when the user starts dragging a column header. It's mapped to the `dragstart` DOM event.
-   * Called with a [[GridColumnHeaderParams]] object.
    * @ignore - do not document.
    */
   columnHeaderDragStart = 'columnHeaderDragStart',
   /**
    * Fired while an element or text selection is dragged over the column header.
    * It's mapped to the `dragover` DOM event.
-   * Called with a [[GridColumnHeaderParams]] object.
    * @ignore - do not document.
    */
   columnHeaderDragOver = 'columnHeaderDragOver',
   /**
    * Fired when the dragged column header enters a valid drop target.
    * It's mapped to the `dragend` DOM event.
-   * Called with a [[GridColumnHeaderParams]] object.
    * @ignore - do not document.
    */
   columnHeaderDragEnter = 'columnHeaderDragEnter',
   /**
-   * Fired when the dragging of a column header ends. Called with a [[GridColumnHeaderParams]] object.
+   * Fired when the dragging of a column header ends.
    * @ignore - do not document.
    */
   columnHeaderDragEnd = 'columnHeaderDragEnd',
   /**
    * Fired when the selection state of one or multiple rows changes.
-   * Called with a [[GridSelectionModelChangeParams]] object.
    */
   selectionChange = 'selectionChange',
   /**
    * Fired when the value of the selection checkbox of the header is changed
-   * Called with a [[GridHeaderSelectionCheckboxParams]] object.
    */
   headerSelectionCheckboxChange = 'headerSelectionCheckboxChange',
   /**
    * Fired when the value of the selection checkbox of a row is changed
-   * Called with a [[GridRowSelectionCheckboxParams]] object.
    */
   rowSelectionCheckboxChange = 'rowSelectionCheckboxChange',
   /**
@@ -220,33 +198,32 @@ export enum GridEvents {
    */
   pageSizeChange = 'pageSizeChange',
   /**
-   * Fired during the scroll of the grid viewport. Called with a [[GridScrollParams]] object.
+   * Fired during the scroll of the grid viewport.
    */
   rowsScroll = 'rowsScroll',
   /**
-   * Fired when scrolling to the bottom of the grid viewport. Called with a [[GridRowScrollEndParams]] object.
+   * Fired when scrolling to the bottom of the grid viewport.
    */
   rowsScrollEnd = 'rowsScrollEnd',
   /**
    * Fired when a `mousedown` DOM event happens in the column header separator.
-   * Called with a [[GridColumnHeaderParams]] object.
    * @ignore - do not document.
    */
   columnSeparatorMouseDown = 'columnSeparatorMouseDown',
   /**
-   * Fired during the resizing of a column. Called with a [[GridColumnResizeParams]] object.
+   * Fired during the resizing of a column.
    */
   columnResize = 'columnResize',
   /**
-   * Fired when the width of a column is changed. Called with a [[GridColumnResizeParams]] object.
+   * Fired when the width of a column is changed.
    */
   columnWidthChange = 'columnWidthChange',
   /**
-   * Fired when the user starts resizing a column. Called with an object `{ field: string }`.
+   * Fired when the user starts resizing a column.
    */
   columnResizeStart = 'columnResizeStart',
   /**
-   * Fired when the user stops resizing a column. Called with an object `{ field: string }`.
+   * Fired when the user stops resizing a column.
    */
   columnResizeStop = 'columnResizeStop',
   /**
@@ -270,7 +247,6 @@ export enum GridEvents {
   visibleRowsSet = 'visibleRowsSet',
   /**
    * Fired when the columns state is changed.
-   * Called with an array of strings corresponding to the field names.
    */
   columnsChange = 'columnsChange',
   /**
@@ -290,20 +266,20 @@ export enum GridEvents {
   rowGroupsPreProcessingChange = 'rowGroupsPreProcessingChange',
   /**
    * Fired when the sort model changes.
-   * Called with a [[GridSortModelParams]] object.
    */
   sortModelChange = 'sortModelChange',
   /**
    * Fired when the filter model changes.
-   * Called with a [[GridFilterModel]] object.
    */
   filterModelChange = 'filterModelChange',
   /**
-   * Fired when the state of the grid is updated. Called with a [[GridState]] object.
+   * Fired when the state of the grid is updated.
    */
   stateChange = 'stateChange',
   /**
-   * Fired when a column visibility changes. Called with a [[GridColumnVisibilityChangeParams]] object.
+   * Fired when a column visibility changes.
    */
   columnVisibilityChange = 'columnVisibilityChange',
 }
+
+export type GridEventsStr = keyof typeof GridEvents;

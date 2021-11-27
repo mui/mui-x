@@ -113,6 +113,14 @@ It's using `DataGridPro` but the same approach can be used with `DataGrid`.
 
 {{"demo": "pages/components/data-grid/editing/ValidateServerNameGrid.js", "bg": "inline", "defaultCodeOpen": false}}
 
+### Server-side persistence
+
+If you want to send the updated data to your server, you can use the `onCellEditCommit` which is fired just before committing the new cell value to the grid.
+
+You can then decide if you want to send the whole row or only the modified fields.
+
+{{"demo": "pages/components/data-grid/editing/CellEditServerSidePersistence.js", "bg": "inline", "defaultCodeOpen": false}}
+
 ### Custom edit component
 
 To customize the edit component of a column, use the `renderEditCell` attribute available in the `GridColDef`.
@@ -218,6 +226,16 @@ Here is shown how a full-featured CRUD can be created.
 Saving columns that make use of `valueGetter` can be done adding a `valueSetter`.
 The same [approach](/components/data-grid/editing/#saving-nested-structures) from the cell editing mode can be used here.
 Note that the `valueSetter` will be called for each field.
+
+### Server-side persistence [<span class="pro"></span>](https://mui.com/store/items/material-ui-pro/)
+
+If you want to send the updated data to your server, you can use the `onRowEditCommit` which is fired just before committing the new cell value to the grid.
+
+To access the new values for the row, use `apiRef.current.getEditRowsModel` to get all rows in edit mode, then use the id provided to get only the values for the row that was committed.
+
+You can then decide if you want to send the whole row or only the modified fields, by checking them against the previous row values.
+
+{{"demo": "pages/components/data-grid/editing/RowEditServerSidePersistence.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ### Events [<span class="pro"></span>](https://mui.com/store/items/material-ui-pro/)
 

@@ -190,7 +190,7 @@ The enterprise components come in two plans: Pro and Premium.
 | [Column virtualization](/components/data-grid/virtualization/#column-virtualization)      |    ✅     |              ✅               |                  ✅                   |
 | [Row virtualization > 100 rows](/components/data-grid/virtualization/#row-virtualization) |    ❌     |              ✅               |                  ✅                   |
 | **Group & Pivot**                                                                         |           |                               |                                       |
-| [Tree data](/components/data-grid/group-pivot/#tree-data)                                 |    ❌     |              🚧               |                  🚧                   |
+| [Tree data](/components/data-grid/group-pivot/#tree-data)                                 |    ❌     |              ✅               |                  ✅                   |
 | [Master detail](/components/data-grid/group-pivot/#master-detail)                         |    ❌     |              🚧               |                  🚧                   |
 | [Grouping](/components/data-grid/group-pivot/#grouping)                                   |    ❌     |              ❌               |                  🚧                   |
 | [Aggregation](/components/data-grid/group-pivot/#aggregation)                             |    ❌     |              ❌               |                  🚧                   |
