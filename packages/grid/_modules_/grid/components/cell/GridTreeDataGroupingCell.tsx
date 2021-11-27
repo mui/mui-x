@@ -7,7 +7,7 @@ import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { GridRenderCellParams } from '../../models/params/gridCellParams';
 import { isNavigationKey, isSpaceKey } from '../../utils/keyboardUtils';
-import { GridEvents } from '../../constants';
+import { GridEvents } from '../../models/events';
 import { getDataGridUtilityClass } from '../../gridClasses';
 import { GridComponentProps } from '../../GridComponentProps';
 

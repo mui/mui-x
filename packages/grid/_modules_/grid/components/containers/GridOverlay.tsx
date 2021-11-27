@@ -9,7 +9,7 @@ import { getDataGridUtilityClass } from '../../gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { GridComponentProps } from '../../GridComponentProps';
 import { useGridApiEventHandler } from '../../hooks/utils/useGridApiEventHandler';
-import { GridEvents } from '../../constants';
+import { GridEvents } from '../../models/events';
 
 export type GridOverlayProps = React.HTMLAttributes<HTMLDivElement>;
 
