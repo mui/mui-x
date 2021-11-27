@@ -85,6 +85,7 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
   const columnMenuId = useId();
   const columnMenuButtonId = useId();
   const iconButtonRef = React.useRef<HTMLButtonElement>(null);
+  const [showColumnMenuIcon, setShowColumnMenuIcon] = React.useState(columnMenuOpen);
   const { hasScrollX, hasScrollY } = apiRef.current.getRootDimensions() ?? {
     hasScrollX: false,
     hasScrollY: false,
@@ -150,12 +151,22 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
     ariaSort = sortDirection === 'asc' ? 'ascending' : 'descending';
   }
 
+  React.useEffect(() => {
+    if (!showColumnMenuIcon) {
+      setShowColumnMenuIcon(columnMenuOpen);
+    }
+  }, [showColumnMenuIcon, columnMenuOpen]);
+
+  const handleExited = React.useCallback(() => {
+    setShowColumnMenuIcon(false);
+  }, []);
+
   const columnMenuIconButton = !rootProps.disableColumnMenu && !column.disableColumnMenu && (
     <ColumnHeaderMenuIcon
       column={column}
       columnMenuId={columnMenuId!}
       columnMenuButtonId={columnMenuButtonId!}
-      open={columnMenuOpen}
+      open={showColumnMenuIcon}
       iconButtonRef={iconButtonRef}
     />
   );
@@ -234,6 +245,7 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
         target={iconButtonRef.current}
         ContentComponent={rootProps.components.ColumnMenu}
         contentComponentProps={rootProps.componentsProps?.columnMenu}
+        onExited={handleExited}
       />
     </div>
   );
