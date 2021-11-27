@@ -50,11 +50,6 @@ const heILGrid: Partial<GridLocaleText> = {
   filterPanelInputLabel: 'ערך',
   filterPanelInputPlaceholder: 'ערך מסנן',
 
-  // Filter values text
-  filterValueAny: 'כל ערך',
-  filterValueTrue: 'כן',
-  filterValueFalse: 'לא',
-
   // Filter operators text
   filterOperatorContains: 'מכיל',
   filterOperatorEquals: 'שווה',
@@ -68,6 +63,11 @@ const heILGrid: Partial<GridLocaleText> = {
   filterOperatorOnOrBefore: 'ב- או לפני',
   filterOperatorIsEmpty: 'ריק',
   filterOperatorIsNotEmpty: 'אינו ריק',
+
+  // Filter values text
+  filterValueAny: 'כל ערך',
+  filterValueTrue: 'כן',
+  filterValueFalse: 'לא',
 
   // Column menu text
   columnMenuLabel: 'תפריט',
@@ -104,6 +104,11 @@ const heILGrid: Partial<GridLocaleText> = {
 
   // Actions cell more text
   actionsCellMore: 'עוד',
+
+  // Tree Data
+  treeDataGroupingHeaderName: 'קבץ',
+  treeDataExpand: '',
+  treeDataCollapse: '',
 };
 
 export const heIL: Localization = getGridLocalization(heILGrid, heILCore);

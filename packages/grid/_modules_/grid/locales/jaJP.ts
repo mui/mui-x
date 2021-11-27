@@ -30,6 +30,7 @@ const jaJPGrid: Partial<GridLocaleText> = {
   toolbarExport: 'エクスポート',
   toolbarExportLabel: 'エクスポート',
   toolbarExportCSV: 'CSVダウンロード',
+  // toolbarExportPrint: 'Print',
 
   // Columns panel text
   columnsPanelTextFieldLabel: '列検索',
@@ -62,6 +63,11 @@ const jaJPGrid: Partial<GridLocaleText> = {
   filterOperatorIsEmpty: '...空である',
   filterOperatorIsNotEmpty: '...空でない',
 
+  // Filter values text
+  // filterValueAny: 'any',
+  // filterValueTrue: 'true',
+  // filterValueFalse: 'false',
+
   // Column menu text
   columnMenuLabel: 'メニュー',
   columnMenuShowColumns: '列表示',
@@ -92,6 +98,14 @@ const jaJPGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: '真',
   booleanCellFalseLabel: '偽',
+
+  // Actions cell more text
+  // actionsCellMore: 'more',
+
+  // Tree Data
+  // treeDataGroupingHeaderName: 'Group',
+  // treeDataExpand: 'see children',
+  // treeDataCollapse: 'hide children',
 };
 
 export const jaJP: Localization = getGridLocalization(jaJPGrid, jaJPCore);

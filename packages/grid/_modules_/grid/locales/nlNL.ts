@@ -31,6 +31,7 @@ const nlNLGrid: Partial<GridLocaleText> = {
   // toolbarExport: 'Export',
   // toolbarExportLabel: 'Export',
   // toolbarExportCSV: 'Download as CSV',
+  // toolbarExportPrint: 'Print',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'Zoek kolom',
@@ -56,12 +57,17 @@ const nlNLGrid: Partial<GridLocaleText> = {
   filterOperatorEndsWith: 'eindigt met',
   filterOperatorIs: 'is',
   filterOperatorNot: 'is niet',
-  filterOperatorOnOrAfter: 'is gelijk of er voor',
   filterOperatorAfter: 'is voor',
-  filterOperatorOnOrBefore: 'is gelijk of er na',
+  filterOperatorOnOrAfter: 'is gelijk of er voor',
   filterOperatorBefore: 'is na',
+  filterOperatorOnOrBefore: 'is gelijk of er na',
   // filterOperatorIsEmpty: 'is empty',
   // filterOperatorIsNotEmpty: 'is not empty',
+
+  // Filter values text
+  // filterValueAny: 'any',
+  // filterValueTrue: 'true',
+  // filterValueFalse: 'false',
 
   // Column menu text
   columnMenuLabel: 'Menu',
@@ -88,11 +94,22 @@ const nlNLGrid: Partial<GridLocaleText> = {
   footerTotalRows: 'Totaal:',
 
   // Total visible rows footer text
-  // footerTotalVisibleRows: (visibleCount, totalCount) =>
-  //   `${visibleCount.toLocaleString()} of ${totalCount.toLocaleString()}`,
+  // footerTotalVisibleRows: (visibleCount, totalCount) => `${visibleCount.toLocaleString()} of ${totalCount.toLocaleString()}`,
+
+  // Checkbox selection text
+  // checkboxSelectionHeaderName: 'Checkbox selection',
+
+  // Boolean cell text
+  // booleanCellTrueLabel: 'true',
+  // booleanCellFalseLabel: 'false',
 
   // Actions cell more text
   // actionsCellMore: 'more',
+
+  // Tree Data
+  // treeDataGroupingHeaderName: 'Group',
+  // treeDataExpand: 'see children',
+  // treeDataCollapse: 'hide children',
 };
 
 export const nlNL: Localization = getGridLocalization(nlNLGrid, nlNLCore);
