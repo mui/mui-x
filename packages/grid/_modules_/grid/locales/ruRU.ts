@@ -122,7 +122,8 @@ const ruRUGrid: Partial<GridLocaleText> = {
   footerTotalRows: 'Всего строк:',
 
   // Total visible rows footer text
-  footerTotalVisibleRows: (visibleCount, totalCount) => `${visibleCount.toLocaleString()} из ${totalCount.toLocaleString()}`,
+  footerTotalVisibleRows: (visibleCount, totalCount) =>
+    `${visibleCount.toLocaleString()} из ${totalCount.toLocaleString()}`,
 
   // Checkbox selection text
   checkboxSelectionHeaderName: 'Выбор флажка',
