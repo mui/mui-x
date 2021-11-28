@@ -101,9 +101,7 @@ import { DataGrid, nlNL } from '@mui/x-data-grid';
 You can [find the source](https://github.com/mui-org/material-ui-x/blob/HEAD/packages/grid/_modules_/grid/locales) in the GitHub repository.
 
 To create your own translation or to customize the English text, copy this file to your project, make any changes needed and import the locale from there.
-
-Please do consider contributing new translations back to MUI by opening a pull request. However, MUI aims to support the 100 most popular locales. We might not accept contributions for locales that are not frequently used, for instance, `gl-ES` that has "only" 2.5 million native speakers.
-See the [Docs](https://mui.com/components/data-grid/localization/) for more details.
+Note that these translations of the Data grid component depend on the [Localization strategy](/guides/localization/) of the whole library.
 
 ## API
 
