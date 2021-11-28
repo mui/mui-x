@@ -127,7 +127,7 @@ The data grid comes with two different licenses:
 
 - [DataGrid](https://mui.com/api/data-grid/data-grid/), it's [MIT licensed](https://tldrlegal.com/license/mit-license) and available on npm as `@mui/x-data-grid`.
 - [DataGridPro](https://mui.com/api/data-grid/data-grid-pro/), it's **Commercially licensed** and available on npm as `@mui/x-data-grid-pro`.
-  The features only available in the commercial version are suffixed with a <span class="pro"></span> icon for the Pro plan or a <span class="premium"></span> icon for the Premium plan.
+  The features only available in the commercial version are suffixed with a <span class="plan-pro"></span> icon for the Pro plan or a <span class="plan-premium"></span> icon for the Premium plan.
 
   <img src="/static/x/header-icon.png" style="width: 431px; height: 123px; object-fit: contain; margin-bottom: 2rem;" alt="" loading="lazy">
 
@@ -151,7 +151,7 @@ The following table summarizes the features available in the community `DataGrid
 All the features of the community version are available in the enterprise one.
 The enterprise components come in two plans: Pro and Premium.
 
-| Features                                                                                  | Community | Pro <span class="pro"></span> | Premium <span class="premium"></span> |
+| Features                                                                                  | Community | Pro <span class="plan-pro"></span> | Premium <span class="plan-premium"></span> |
 | :---------------------------------------------------------------------------------------- | :-------: | :---------------------------: | :-----------------------------------: |
 | **Column**                                                                                |           |                               |
 | [Column groups](/components/data-grid/columns/#column-groups)                             |    🚧     |              🚧               |                  🚧                   |
