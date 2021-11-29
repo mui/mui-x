@@ -229,13 +229,13 @@ For crowdsourced technical questions from expert MUI devs in our community. Also
 
 [Post a question](https://stackoverflow.com/questions/tagged/material-ui)
 
-### GitHub <img src="/static/images/logos/github.svg" width="24" height="24" alt="GitHub logo" loading="lazy" />
+### GitHub
 
 We use GitHub issues exclusively as a bug and feature request tracker. If you think you have found a bug, or have a new feature idea, please start by making sure it hasn't already been [reported or fixed](https://github.com/mui-org/material-ui-x/issues?utf8=%E2%9C%93&q=is%3Aopen+is%3Aclosed). You can search through existing issues and pull requests to see if someone has reported one similar to yours.
 
 [Open an issue](https://github.com/mui-org/material-ui-x/issues/new/choose)
 
-### StackOverflow <img src="/static/images/logos/stackoverflow.svg" width="24" height="24" alt="StackOverflow logo" loading="lazy" />
+### StackOverflow
 
 For crowdsourced technical questions from expert MUI devs in our community. Also frequented by the MUI Core team.
 
