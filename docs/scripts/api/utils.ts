@@ -69,7 +69,7 @@ const isLiteralType = (type: TypeDoc.Type): type is TypeDoc.LiteralType => type.
 
 const isArrayType = (type: TypeDoc.Type): type is TypeDoc.ArrayType => type.type === 'array';
 
-const isReflectionType = (type: TypeDoc.Type): type is TypeDoc.ReflectionType =>
+export const isReflectionType = (type: TypeDoc.Type): type is TypeDoc.ReflectionType =>
   type.type === 'reflection';
 
 const isReferenceType = (type: TypeDoc.Type): type is TypeDoc.ReferenceType =>
@@ -132,7 +132,7 @@ export function generateTypeStr(type: TypeDoc.Type, needsParenthesis = false): s
       return `{ [${paramName}: ${paramType}]: ${valueType} }`;
     }
 
-    return '';
+    return '{}';
   }
   if (isReferenceType(type)) {
     let text = type.name;

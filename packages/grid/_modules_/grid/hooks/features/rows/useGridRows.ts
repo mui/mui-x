@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridEvents } from '../../../constants/eventsConstants';
+import { GridEventListener, GridEvents } from '../../../models/events';
 import { GridComponentProps } from '../../../GridComponentProps';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridRowApi } from '../../../models/api/gridRowApi';
@@ -362,7 +362,9 @@ export const useGridRows = (
     );
   }, [props.rows, props.rowCount, props.getRowId, logger, throttledRowsChange]);
 
-  const handleGroupRows = React.useCallback(() => {
+  const handleGroupRows = React.useCallback<
+    GridEventListener<GridEvents.rowGroupsPreProcessingChange>
+  >(() => {
     logger.info(`Row grouping pre-processing have changed, regenerating the row tree`);
 
     let rows: GridRowsProp | undefined;

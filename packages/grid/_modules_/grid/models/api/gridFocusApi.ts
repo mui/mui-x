@@ -1,4 +1,5 @@
 import { GridRowId } from '../gridRows';
+import { MuiBaseEvent } from '../muiEvent';
 
 export interface GridFocusApi {
   /**
@@ -12,5 +13,5 @@ export interface GridFocusApi {
    * @param {string} field The column field.
    * @param {string} event The event that triggers the action.
    */
-  setColumnHeaderFocus: (field: string, event?: React.SyntheticEvent) => void;
+  setColumnHeaderFocus: (field: string, event?: MuiBaseEvent) => void;
 }

@@ -1,8 +1,7 @@
 import * as React from 'react';
-import { GridEvents } from '../../../constants/eventsConstants';
+import { GridEvents, GridEventListener } from '../../../models/events';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridCellParams } from '../../../models/params/gridCellParams';
-import { GridColumnHeaderParams } from '../../../models/params/gridColumnHeaderParams';
 import { visibleGridColumnsLengthSelector } from '../columns/gridColumnsSelector';
 import { useGridSelector } from '../../utils/useGridSelector';
 import { useGridLogger } from '../../utils/useGridLogger';
@@ -52,8 +51,10 @@ export const useGridKeyboardNavigation = (
     [apiRef, logger],
   );
 
-  const handleCellNavigationKeyDown = React.useCallback(
-    (params: GridCellParams, event: React.KeyboardEvent) => {
+  const handleCellNavigationKeyDown = React.useCallback<
+    GridEventListener<GridEvents.cellNavigationKeyDown>
+  >(
+    (params, event) => {
       event.preventDefault();
       const dimensions = apiRef.current.getRootDimensions();
       if (!currentPage.range || !dimensions) {
@@ -61,7 +62,9 @@ export const useGridKeyboardNavigation = (
       }
 
       const viewportPageSize = apiRef.current.unstable_getViewportPageSize();
-      const colIndexBefore = params.field ? apiRef.current.getColumnIndex(params.field) : 0;
+      const colIndexBefore = (params as GridCellParams).field
+        ? apiRef.current.getColumnIndex((params as GridCellParams).field)
+        : 0;
       const rowIndexBefore = visibleSortedRows.findIndex((row) => row.id === params.id);
       const firstRowIndexInPage = currentPage.range.firstRowIndex;
       const lastRowIndexInPage = currentPage.range.lastRowIndex;
@@ -154,8 +157,10 @@ export const useGridKeyboardNavigation = (
     [apiRef, visibleSortedRows, colCount, currentPage, goToCell, goToHeader],
   );
 
-  const handleColumnHeaderNavigationKeyDown = React.useCallback(
-    (params: GridColumnHeaderParams, event: React.KeyboardEvent) => {
+  const handleColumnHeaderNavigationKeyDown = React.useCallback<
+    GridEventListener<GridEvents.columnHeaderNavigationKeyDown>
+  >(
+    (params, event) => {
       event.preventDefault();
       const dimensions = apiRef.current.getRootDimensions();
       if (!dimensions) {

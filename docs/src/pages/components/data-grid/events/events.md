@@ -2,7 +2,7 @@
 title: Data Grid - Events
 ---
 
-# Data Grid - Events [<span class="pro"></span>](https://mui.com/store/items/material-ui-pro/)
+# Data Grid - Events [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
 
 <p class="description">The data grid emits events that can be subscribed to attach custom behavior.</p>
 
@@ -23,9 +23,9 @@ You can subscribe to one of the [events emitted](/components/data-grid/events/#c
  * @returns A function to unsubscribe from this event
  */
 subscribeEvent: (
-  event: string,
-  handler: (params: any, event: MuiEvent, details: GridCallbackDetails) => void,
-  options?: EventListenerOptions,
+    event: GridEventsStr,
+    handler: (params: any, event: MuiEvent, details: GridCallbackDetails) => void,
+    options?: EventListenerOptions,
 ) => () => void;
 ```
 

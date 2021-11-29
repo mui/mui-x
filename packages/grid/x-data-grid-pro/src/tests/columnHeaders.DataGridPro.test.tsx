@@ -55,7 +55,7 @@ describe('<DataGridPro /> - Column Headers', () => {
       clock.runToLast();
       expect(screen.queryByRole('menu')).not.to.equal(null);
       const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
-      virtualScroller.dispatchEvent(new Event('scroll'));
+      fireEvent.scroll(virtualScroller);
       clock.runToLast();
       expect(screen.queryByRole('menu')).to.equal(null);
     });
