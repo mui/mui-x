@@ -186,6 +186,7 @@ export const GridRootStyles = styled('div', {
     [`& .${gridClasses.row}`]: {
       display: 'flex',
       width: 'fit-content',
+      breakInside: 'avoid',
       '&:hover': {
         backgroundColor: theme.palette.action.hover,
         // Reset on touch devices, it doesn't add specificity
