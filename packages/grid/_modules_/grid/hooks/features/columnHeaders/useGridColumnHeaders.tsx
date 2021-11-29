@@ -16,10 +16,9 @@ import { gridFilterActiveItemsLookupSelector } from '../filter/gridFilterSelecto
 import { gridSortColumnLookupSelector } from '../sorting/gridSortingSelector';
 import { gridColumnMenuSelector } from '../columnMenu/columnMenuSelector';
 import { useGridRootProps } from '../../utils/useGridRootProps';
-import { RenderContext } from '../virtualization/useGridVirtualScroller';
-import { GridColumnHeaderParams } from '../../../models/params/gridColumnHeaderParams';
+import { GridRenderContext } from '../../../models/params/gridScrollParams';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
-import { GridEvents } from '../../../constants/eventsConstants';
+import { GridEventListener, GridEvents } from '../../../models/events';
 import { GridColumnHeaderItem } from '../../../components/columnHeaders/GridColumnHeaderItem';
 
 interface UseGridColumnHeadersProps {
@@ -46,8 +45,8 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
   const rootProps = useGridRootProps();
   const innerRef = React.useRef<HTMLDivElement>(null);
   const handleInnerRef = useForkRef(innerRefProp, innerRef);
-  const [renderContext, setRenderContext] = React.useState<RenderContext | null>(null);
-  const prevRenderContext = React.useRef<RenderContext | null>(renderContext);
+  const [renderContext, setRenderContext] = React.useState<GridRenderContext | null>(null);
+  const prevRenderContext = React.useRef<GridRenderContext | null>(renderContext);
   const prevScrollLeft = React.useRef(0);
 
   React.useEffect(() => {
@@ -55,7 +54,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
   }, [apiRef]);
 
   const updateInnerPosition = React.useCallback(
-    (nextRenderContext: RenderContext) => {
+    (nextRenderContext: GridRenderContext) => {
       const firstColumnToRender = Math.max(
         nextRenderContext!.firstColumnIndex - rootProps.columnBuffer,
         minColumnIndex,
@@ -71,8 +70,8 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
     [columnsMeta.positions, minColumnIndex, rootProps.columnBuffer],
   );
 
-  const handleScroll = React.useCallback(
-    ({ left, renderContext: nextRenderContext }) => {
+  const handleScroll = React.useCallback<GridEventListener<GridEvents.rowsScroll>>(
+    ({ left, renderContext: nextRenderContext = null }) => {
       if (!innerRef.current) {
         return;
       }
@@ -101,16 +100,21 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
     [updateInnerPosition],
   );
 
-  const handleColumnResizeStart = React.useCallback(
-    (params: { field: string }) => setResizeCol(params.field),
+  const handleColumnResizeStart = React.useCallback<
+    GridEventListener<GridEvents.columnResizeStart>
+  >((params) => setResizeCol(params.field), []);
+  const handleColumnResizeStop = React.useCallback<GridEventListener<GridEvents.columnResizeStop>>(
+    () => setResizeCol(''),
     [],
   );
-  const handleColumnResizeStop = React.useCallback(() => setResizeCol(''), []);
-  const handleColumnReorderStart = React.useCallback(
-    (params: GridColumnHeaderParams) => setDragCol(params.field),
-    [],
-  );
-  const handleColumnReorderStop = React.useCallback(() => setDragCol(''), []);
+
+  const handleColumnReorderStart = React.useCallback<
+    GridEventListener<GridEvents.columnHeaderDragStart>
+  >((params) => setDragCol(params.field), []);
+
+  const handleColumnReorderStop = React.useCallback<
+    GridEventListener<GridEvents.columnHeaderDragEnd>
+  >(() => setDragCol(''), []);
 
   useGridApiEventHandler(apiRef, GridEvents.columnResizeStart, handleColumnResizeStart);
   useGridApiEventHandler(apiRef, GridEvents.columnResizeStop, handleColumnResizeStop);
@@ -121,7 +125,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
 
   const getColumns = (
     params?: {
-      renderContext: RenderContext | null;
+      renderContext: GridRenderContext | null;
       minFirstColumn?: number;
       maxLastColumn?: number;
     },

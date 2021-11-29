@@ -1,5 +1,5 @@
 import { GridApiRef } from '../../../models/api/gridApiRef';
-import { GridEvents } from '../../../constants/eventsConstants';
+import { GridEvents } from '../../../models/events';
 import { useGridApiOptionHandler } from '../../utils/useGridApiEventHandler';
 import { GridComponentProps } from '../../../GridComponentProps';
 

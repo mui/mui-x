@@ -168,7 +168,7 @@ The following interactive demo shows how these steps tie together:
   - `onRowLeave`
 
   If you depend on them, you can use `componentsProps.row` and `componentsProps.cell` to pass custom props to the row or cell.
-  For more information, check [this page](https://mui.com/components/data-grid/components/#row). Example:
+  For more information, check [this page](/components/data-grid/components/#row). Example:
 
   ```diff
   -<DataGrid onRowOver={handleRowOver} />;

@@ -12,7 +12,7 @@ import { useGridApiEventHandler } from '../../_modules_/grid/hooks/utils/useGrid
 import { GridColumnHeadersInner } from '../../_modules_/grid/components/columnHeaders/GridColumnHeadersInner';
 import { GridColumnHeaders } from '../../_modules_/grid/components/columnHeaders/GridColumnHeaders';
 import { gridPinnedColumnsSelector } from '../../_modules_/grid/hooks/features/columnPinning/columnPinningSelector';
-import { GridEvents } from '../../_modules_/grid/constants/eventsConstants';
+import { GridEvents } from '../../_modules_/grid/models/events';
 import { filterColumns } from './DataGridProVirtualScroller';
 import { GridPinnedPosition } from '../../_modules_/grid/models/api/gridColumnPinningApi';
 

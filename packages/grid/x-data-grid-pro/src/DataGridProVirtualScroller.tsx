@@ -10,7 +10,7 @@ import { useGridApiContext } from '../../_modules_/grid/hooks/utils/useGridApiCo
 import { useGridRootProps } from '../../_modules_/grid/hooks/utils/useGridRootProps';
 import { visibleGridColumnsSelector } from '../../_modules_/grid/hooks/features/columns/gridColumnsSelector';
 import { useGridApiEventHandler } from '../../_modules_/grid/hooks/utils/useGridApiEventHandler';
-import { GridEvents } from '../../_modules_/grid/constants/eventsConstants';
+import { GridEvents } from '../../_modules_/grid/models/events';
 import { useGridSelector } from '../../_modules_/grid/hooks/utils/useGridSelector';
 import { GridComponentProps } from '../../_modules_/grid/GridComponentProps';
 import { getDataGridUtilityClass } from '../../_modules_/grid/gridClasses';

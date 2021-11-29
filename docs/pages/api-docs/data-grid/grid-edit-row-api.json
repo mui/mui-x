@@ -5,12 +5,12 @@
     {
       "name": "commitCellChange",
       "description": "Updates the field at the given id with the value stored in the edit row model.",
-      "type": "(params: GridCommitCellChangeParams, event?: any) => boolean | Promise<boolean>"
+      "type": "(params: GridCommitCellChangeParams, event?: MuiBaseEvent) => boolean | Promise<boolean>"
     },
     {
       "name": "commitRowChange",
       "description": "Updates the row at the given id with the values stored in the edit row model.",
-      "type": "(id: GridRowId, event?: any) => boolean | Promise<boolean>"
+      "type": "(id: GridRowId, event?: MuiBaseEvent) => boolean | Promise<boolean>"
     },
     {
       "name": "getCellMode",
@@ -40,7 +40,7 @@
     {
       "name": "setEditCellValue",
       "description": "Sets the value of the edit cell.\nCommonly used inside the edit cell component.",
-      "type": "(params: GridEditCellValueParams, event?: SyntheticEvent<Element, Event>) => void"
+      "type": "(params: GridEditCellValueParams, event?: MuiBaseEvent) => void"
     },
     {
       "name": "setEditRowsModel",

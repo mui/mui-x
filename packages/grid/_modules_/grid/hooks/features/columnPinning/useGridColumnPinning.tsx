@@ -9,8 +9,7 @@ import {
 import { GridCellIndexCoordinates } from '../../../models/gridCell';
 import { GridPreProcessingGroup } from '../../core/preProcessing';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
-import { GridEvents } from '../../../constants/eventsConstants';
-import { GridCellParams } from '../../../models/params/gridCellParams';
+import { GridEvents } from '../../../models/events';
 import { gridClasses } from '../../../gridClasses';
 import { useGridRegisterPreProcessor } from '../../core/preProcessing/useGridRegisterPreProcessor';
 import { GridColumnPinningMenuItems } from '../../../components/menu/columnMenu/GridColumnPinningMenuItems';
@@ -22,6 +21,8 @@ import { useGridStateInit } from '../../utils/useGridStateInit';
 import { useGridState } from '../../utils/useGridState';
 import { useGridSelector } from '../../utils/useGridSelector';
 import { filterColumns } from '../../../../../x-data-grid-pro/src/DataGridProVirtualScroller';
+import { GridRowParams } from '../../../models/params/gridRowParams';
+import { MuiEvent } from '../../../models/muiEvent';
 
 const Divider = () => <MuiDivider onClick={(event) => event.stopPropagation()} />;
 
@@ -48,7 +49,7 @@ export const useGridColumnPinning = (
   // the row element that was actually hovered, not its additional siblings. To make it look like a contiguous row,
   // this method adds/removes the .Mui-hovered class to all of the row elements inside one visible row.
   const updateHoveredClassOnSiblingRows = React.useCallback(
-    (event: React.MouseEvent<HTMLDivElement>) => {
+    (event: React.MouseEvent<HTMLElement>) => {
       if (!Array.isArray(pinnedColumns.left) && !Array.isArray(pinnedColumns.right)) {
         return;
       }
@@ -75,14 +76,14 @@ export const useGridColumnPinning = (
   );
 
   const handleMouseEnter = React.useCallback(
-    (params: GridCellParams, event: React.MouseEvent<HTMLDivElement>) => {
+    (params: GridRowParams, event: MuiEvent<React.MouseEvent<HTMLElement>>) => {
       updateHoveredClassOnSiblingRows(event);
     },
     [updateHoveredClassOnSiblingRows],
   );
 
   const handleMouseLeave = React.useCallback(
-    (params: GridCellParams, event: React.MouseEvent<HTMLDivElement>) => {
+    (params: GridRowParams, event: MuiEvent<React.MouseEvent<HTMLElement>>) => {
       updateHoveredClassOnSiblingRows(event);
     },
     [updateHoveredClassOnSiblingRows],
