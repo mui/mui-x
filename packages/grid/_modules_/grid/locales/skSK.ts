@@ -26,11 +26,13 @@ const skSKGrid: Partial<GridLocaleText> = {
   toolbarFiltersTooltipShow: 'Zobraziť filtre',
   toolbarFiltersTooltipActive: (count) => {
     let pluralForm = 'aktívnych filtrov';
+
     if (count > 1 && count < 5) {
       pluralForm = 'aktívne filtre';
     } else if (count === 1) {
       pluralForm = 'aktívny filter';
     }
+
     return `${count} ${pluralForm}`;
   },
 
@@ -38,6 +40,7 @@ const skSKGrid: Partial<GridLocaleText> = {
   toolbarExport: 'Export',
   toolbarExportLabel: 'Export',
   toolbarExportCSV: 'Stiahnuť ako CSV',
+  // toolbarExportPrint: 'Print',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'Nájsť stĺpec',
@@ -87,11 +90,13 @@ const skSKGrid: Partial<GridLocaleText> = {
   // Column header text
   columnHeaderFiltersTooltipActive: (count) => {
     let pluralForm = 'aktívnych filtrov';
+
     if (count > 1 && count < 5) {
       pluralForm = 'aktívne filtre';
     } else if (count === 1) {
       pluralForm = 'aktívny filter';
     }
+
     return `${count} ${pluralForm}`;
   },
   columnHeaderFiltersLabel: 'Zobraziť filtre',
@@ -100,11 +105,13 @@ const skSKGrid: Partial<GridLocaleText> = {
   // Rows selected footer text
   footerRowSelected: (count) => {
     let pluralForm = 'vybraných záznamov';
+
     if (count > 1 && count < 5) {
       pluralForm = 'vybrané záznamy';
     } else if (count === 1) {
       pluralForm = 'vybraný záznam';
     }
+
     return `${count} ${pluralForm}`;
   },
 
@@ -112,8 +119,7 @@ const skSKGrid: Partial<GridLocaleText> = {
   footerTotalRows: 'Riadkov spolu:',
 
   // Total visible rows footer text
-  // footerTotalVisibleRows: (visibleCount, totalCount) =>
-  //   `${visibleCount.toLocaleString()} of ${totalCount.toLocaleString()}`,
+  // footerTotalVisibleRows: (visibleCount, totalCount) => `${visibleCount.toLocaleString()} of ${totalCount.toLocaleString()}`,
 
   // Checkbox selection text
   checkboxSelectionHeaderName: 'Výber riadku',
@@ -124,6 +130,11 @@ const skSKGrid: Partial<GridLocaleText> = {
 
   // Actions cell more text
   // actionsCellMore: 'more',
+
+  // Tree Data
+  // treeDataGroupingHeaderName: 'Group',
+  // treeDataExpand: 'see children',
+  // treeDataCollapse: 'hide children',
 };
 
 export const skSK: Localization = getGridLocalization(skSKGrid, skSKCore);

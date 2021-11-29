@@ -511,6 +511,7 @@ describe('<DataGrid /> - Filter', () => {
             { id: 5, brand: 1974 },
           ]}
         />,
+        { strict: false, strictEffects: false },
       );
       expect(getColumnValues()).to.deep.equal(['0', '1984', '1954', '1974']);
       const input = screen.getByRole('spinbutton', { name: 'Value' });
