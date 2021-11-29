@@ -24,7 +24,8 @@ const heILGrid: Partial<GridLocaleText> = {
   toolbarFiltersLabel: 'הצג מסננים',
   toolbarFiltersTooltipHide: 'הסתר מסננים',
   toolbarFiltersTooltipShow: 'הצג מסננים',
-  toolbarFiltersTooltipActive: (count) => (count > 1 ? `${count} מסננים פעילים` : `מסנן אחד פעיל`),
+  toolbarFiltersTooltipActive: (count) =>
+    count !== 1 ? `${count} מסננים פעילים` : `מסנן אחד פעיל`,
 
   // Export selector toolbar button text
   toolbarExport: 'ייצוא',
@@ -49,24 +50,24 @@ const heILGrid: Partial<GridLocaleText> = {
   filterPanelInputLabel: 'ערך',
   filterPanelInputPlaceholder: 'ערך מסנן',
 
-  // Filter values text
-  filterValueAny: 'כל ערך',
-  filterValueTrue: 'כן',
-  filterValueFalse: 'לא',
-
   // Filter operators text
   filterOperatorContains: 'מכיל',
-  filterOperatorEquals: 'שווה ל-',
+  filterOperatorEquals: 'שווה',
   filterOperatorStartsWith: 'מתחיל ב-',
   filterOperatorEndsWith: 'נגמר ב-',
   filterOperatorIs: 'הינו',
   filterOperatorNot: 'אינו',
-  filterOperatorOnOrAfter: 'אחרי',
-  filterOperatorAfter: 'ב- או אחרי',
+  filterOperatorAfter: 'אחרי',
+  filterOperatorOnOrAfter: 'ב- או אחרי',
   filterOperatorBefore: 'לפני',
   filterOperatorOnOrBefore: 'ב- או לפני',
   filterOperatorIsEmpty: 'ריק',
   filterOperatorIsNotEmpty: 'אינו ריק',
+
+  // Filter values text
+  filterValueAny: 'כל ערך',
+  filterValueTrue: 'כן',
+  filterValueFalse: 'לא',
 
   // Column menu text
   columnMenuLabel: 'תפריט',
@@ -79,13 +80,13 @@ const heILGrid: Partial<GridLocaleText> = {
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>
-    count > 1 ? `${count} מסננים פעילים` : `מסנן אחד פעיל`,
+    count !== 1 ? `${count} מסננים פעילים` : `מסנן אחד פעיל`,
   columnHeaderFiltersLabel: 'הצג מסננים',
   columnHeaderSortIconLabel: 'מיין',
 
   // Rows selected footer text
   footerRowSelected: (count) =>
-    count > 1 ? `${count.toLocaleString()} שורות נבחרו` : `שורה אחת נבחרה`,
+    count !== 1 ? `${count.toLocaleString()} שורות נבחרו` : `שורה אחת נבחרה`,
 
   // Total rows footer text
   footerTotalRows: 'סך הכל שורות: ',
@@ -103,6 +104,11 @@ const heILGrid: Partial<GridLocaleText> = {
 
   // Actions cell more text
   actionsCellMore: 'עוד',
+
+  // Tree Data
+  treeDataGroupingHeaderName: 'קבץ',
+  treeDataExpand: 'הרחב',
+  treeDataCollapse: 'הסתר',
 };
 
 export const heIL: Localization = getGridLocalization(heILGrid, heILCore);

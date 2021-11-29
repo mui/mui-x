@@ -391,7 +391,7 @@ Grouping columns allows you to have multiple levels of columns in your header an
 >
 > 👍 Upvote [issue #193](https://github.com/mui-org/material-ui-x/issues/193) if you want to see it land faster.
 
-Sticky (or frozen, locked, or pinned) columns are columns that are visible at all times while the user scrolls the grid horizontally.
+Pinned (or frozen, locked, or sticky) columns are columns that are visible at all times while the user scrolls the grid horizontally.
 
 ## 🚧 Column spanning
 

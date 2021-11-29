@@ -35,7 +35,7 @@ export interface GridRowTreeNodeConfig {
   /**
    * Current expansion status of the row.
    */
-  expanded?: boolean;
+  childrenExpanded?: boolean;
 
   /**
    * 0-based depth of the row in the tree.
