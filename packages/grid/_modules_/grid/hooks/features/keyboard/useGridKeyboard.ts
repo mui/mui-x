@@ -54,6 +54,8 @@ export const useGridKeyboard = (apiRef: GridApiRef): void => {
   const handleCellKeyDown = React.useCallback(
     (params: GridCellParams, event: React.KeyboardEvent) => {
       // Ignore portal
+      // Do not apply shortcuts if the focus is not on the cell root component
+      // TODO replace with !event.currentTarget.contains(event.target as Element)
       if (!isGridCellRoot(event.target as Element)) {
         return;
       }

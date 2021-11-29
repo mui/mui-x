@@ -46,8 +46,10 @@ function EditCountry(props: GridRenderEditCellParams) {
   const handleChange = React.useCallback(
     (event, newValue) => {
       api.setEditCellValue({ id, field, value: newValue }, event);
-      api.commitCellChange({ id, field });
-      api.setCellMode(id, field, 'view');
+      if (!event.key) {
+        api.commitCellChange({ id, field });
+        api.setCellMode(id, field, 'view');
+      }
     },
     [api, field, id],
   );
