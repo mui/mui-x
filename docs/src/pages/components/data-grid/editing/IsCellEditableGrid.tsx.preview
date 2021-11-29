@@ -1,5 +1,4 @@
 <DataGrid
-  className={classes.root}
   rows={rows}
   columns={columns}
   isCellEditable={(params) => params.row.age % 2 === 0}

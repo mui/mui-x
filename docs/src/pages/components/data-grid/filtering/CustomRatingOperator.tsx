@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { makeStyles } from '@mui/styles';
+import Box from '@mui/material/Box';
 import Rating from '@mui/material/Rating';
 import {
   GridFilterInputValueProps,
@@ -9,18 +9,7 @@ import {
 } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
-const useStyles = makeStyles({
-  root: {
-    display: 'inline-flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    height: 48,
-    paddingLeft: 20,
-  },
-});
-
 function RatingInputValue(props: GridFilterInputValueProps) {
-  const classes = useStyles();
   const { item, applyValue, focusElementRef } = props;
 
   const ratingRef: React.Ref<any> = React.useRef(null);
@@ -37,7 +26,15 @@ function RatingInputValue(props: GridFilterInputValueProps) {
   };
 
   return (
-    <div className={classes.root}>
+    <Box
+      sx={{
+        display: 'inline-flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        height: 48,
+        pl: '20px',
+      }}
+    >
       <Rating
         name="custom-rating-filter-operator"
         placeholder="Filter value"
@@ -46,7 +43,7 @@ function RatingInputValue(props: GridFilterInputValueProps) {
         precision={0.5}
         ref={ratingRef}
       />
-    </div>
+    </Box>
   );
 }
 
