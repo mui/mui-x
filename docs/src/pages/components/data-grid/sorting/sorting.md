@@ -66,14 +66,14 @@ Then you need to handle the `onSortModelChange` callback, sort the rows on the s
 
 {{"demo": "pages/components/data-grid/sorting/ServerSortingGrid.js", "bg": "inline"}}
 
-## Multi-column sorting [<span class="pro"></span>](https://mui.com/store/items/material-ui-pro/)
+## Multi-column sorting [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
 
 You can sort by multiple columns at the same time using `DataGridPro`.
 Hold down the <kbd class="key">CTRL</kbd> or <kbd class="key">Shift</kbd> (use <kbd class="key">⌘ Command</kbd> on macOS) key while clicking the column header.
 
 {{"demo": "pages/components/data-grid/sorting/MultiSortingGrid.js", "disableAd": true, "bg": "inline"}}
 
-## apiRef [<span class="pro"></span>](https://mui.com/store/items/material-ui-pro/)
+## apiRef [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
 
 The grid exposes a set of methods that enables all of these features using the imperative apiRef.
 

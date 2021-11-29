@@ -16,7 +16,7 @@ The data grid comes with two different licenses:
 
 - [DataGrid](/api/data-grid/data-grid/), it's [MIT licensed](https://tldrlegal.com/license/mit-license) and available on npm as `@mui/x-data-grid`.
 - [DataGridPro](/data-grid/data-grid-pro/), it's **Commercially licensed** and available on npm as `@mui/x-data-grid-pro`.
-  The features only available in the commercial version are suffixed with a <span class="pro"></span> icon for the Pro plan or a <span class="premium"></span> icon for the Premium plan.
+  The features only available in the commercial version are suffixed with a <span class="plan-pro"></span> icon for the Pro plan or a <span class="plan-premium"></span> icon for the Premium plan.
 
   <img src="/static/x/header-icon.png" style="width: 454px; margin-bottom: 2rem;" alt="">
 
@@ -36,7 +36,7 @@ import { DataGrid } from '@mui/x-data-grid';
 
 {{"demo": "pages/components/data-grid/overview/DataGridDemo.js", "defaultCodeOpen": false, "bg": "inline"}}
 
-### Commercial version [<span class="pro"></span>](https://mui.com/store/items/material-ui-pro/)
+### Commercial version [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
 
 The following grid displays 31 columns and 100,000 rows - over 3 million cells in total.
 
@@ -71,14 +71,14 @@ We provide three options:
 
 - Built with and exclusively for React ⚛️
 - High performance 🚀
-- [Filtering](/components/data-grid/filtering/) and [multi-filtering](/components/data-grid/filtering/#multi-column-filtering) <span class="pro"></span>
+- [Filtering](/components/data-grid/filtering/) and [multi-filtering](/components/data-grid/filtering/#multi-column-filtering) <span class="plan-pro"></span>
 - [Pagination](/components/data-grid/pagination/)
 - [Row & Cell editing](/components/data-grid/editing/)
-- [Sorting](/components/data-grid/sorting) and [multi-sort](/components/data-grid/sorting/#multi-column-sorting) <span class="pro"></span>
+- [Sorting](/components/data-grid/sorting) and [multi-sort](/components/data-grid/sorting/#multi-column-sorting) <span class="plan-pro"></span>
 - [Selection](/components/data-grid/selection/)
-- [Column virtualization](/components/data-grid/virtualization/#column-virtualization) and [rows virtualization](/components/data-grid/virtualization/#row-virtualization) <span class="pro"></span>
-- [Tree data](/components/data-grid/group-pivot/#tree-data) <span class="pro"></span>
-- [Resizable columns](/components/data-grid/columns/#column-resizing) <span class="pro"></span>
+- [Column virtualization](/components/data-grid/virtualization/#column-virtualization) and [rows virtualization](/components/data-grid/virtualization/#row-virtualization) <span class="plan-pro"></span>
+- [Tree data](/components/data-grid/group-pivot/#tree-data) <span class="plan-pro"></span>
+- [Resizable columns](/components/data-grid/columns/#column-resizing) <span class="plan-pro"></span>
 - [100% customizable](/components/data-grid/style/)
 - Server-side data
 - [Column hiding](/components/data-grid/columns/#hiding)
@@ -90,10 +90,10 @@ We provide three options:
 While development of the data grid component is moving fast, there are still many additional features that we plan to implement. Some of them:
 
 - Headless (hooks only)
-- [Column pinning](/components/data-grid/columns/#column-pinning) <span class="pro"></span>
-- [Excel export](/components/data-grid/export/) <span class="premium"></span>
-- [Range selection](/components/data-grid/selection/#range-selection) <span class="premium"></span>
-- [Group, Pivot, Aggregation](/components/data-grid/group-pivot/) <span class="premium"></span>
+- [Column pinning](/components/data-grid/columns/#column-pinning) <span class="plan-pro"></span>
+- [Excel export](/components/data-grid/export/) <span class="plan-premium"></span>
+- [Range selection](/components/data-grid/selection/#range-selection) <span class="plan-premium"></span>
+- [Group, Pivot, Aggregation](/components/data-grid/group-pivot/) <span class="plan-premium"></span>
 
 You can find more details on, the [feature comparison](/components/data-grid/getting-started/#feature-comparison), our living quarterly [roadmap](https://github.com/mui-org/material-ui-x/projects/1) as well as on the open [GitHub issues](https://github.com/mui-org/material-ui-x/issues?q=is%3Aopen+label%3A%22component%3A+DataGrid%22+label%3Aenhancement).
 
