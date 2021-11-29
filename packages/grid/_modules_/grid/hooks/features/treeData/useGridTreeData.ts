@@ -10,7 +10,7 @@ import { GridEvents, GridEventListener } from '../../../models/events';
 import { GridColDef, GridColDefOverrideParams, GridColumns } from '../../../models';
 import { isSpaceKey } from '../../../utils/keyboardUtils';
 import { useFirstRender } from '../../utils/useFirstRender';
-import { buildRowTree } from '../../../utils/rowTreeUtils';
+import { buildRowTree, BuildRowTreeGroupingCriteria } from '../../../utils/tree/buildRowTree';
 import { GridRowGroupingPreProcessing } from '../../core/rowGroupsPerProcessing';
 import { gridFilteredDescendantCountLookupSelector } from '../filter';
 import { GridPreProcessingGroup, useGridRegisterPreProcessor } from '../../core/preProcessing';
@@ -79,7 +79,9 @@ export const useGridTreeData = (
       const rows = params.ids
         .map((rowId) => ({
           id: rowId,
-          path: props.getTreeDataPath!(params.idRowsLookup[rowId]),
+          path: props.getTreeDataPath!(params.idRowsLookup[rowId]).map(
+            (key): BuildRowTreeGroupingCriteria => ({ key, field: null }),
+          ),
         }))
         .sort((a, b) => a.path.length - b.path.length);
 
