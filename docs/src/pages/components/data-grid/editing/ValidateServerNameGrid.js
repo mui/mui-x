@@ -1,6 +1,19 @@
 import * as React from 'react';
+import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import { useGridApiRef, DataGridPro } from '@mui/x-data-grid-pro';
+
+const StyledBox = styled(Box)(({ theme }) => ({
+  height: 400,
+  width: '100%',
+  '& .MuiDataGrid-cell--editable': {
+    backgroundColor: theme.palette.mode === 'dark' ? '#376331' : 'rgb(217 243 190)',
+  },
+  '& .Mui-error': {
+    backgroundColor: `rgb(126,10,15, ${theme.palette.mode === 'dark' ? 0 : 0.1})`,
+    color: theme.palette.mode === 'dark' ? '#ff4343' : '#750f0f',
+  },
+}));
 
 let promiseTimeout;
 function validateName(username) {
@@ -48,28 +61,14 @@ export default function ValidateServerNameGrid() {
   }, []);
 
   return (
-    <Box
-      sx={{
-        height: 400,
-        width: 1,
-        '& .MuiDataGrid-cell--editable': {
-          bgcolor: (theme) =>
-            theme.palette.mode === 'dark' ? '#376331' : 'rgb(217 243 190)',
-        },
-        '& .Mui-error': {
-          bgcolor: (theme) =>
-            `rgb(126,10,15, ${theme.palette.mode === 'dark' ? 0 : 0.1})`,
-          color: (theme) => (theme.palette.mode === 'dark' ? '#ff4343' : '#750f0f'),
-        },
-      }}
-    >
+    <StyledBox>
       <DataGridPro
         apiRef={apiRef}
         rows={rows}
         columns={columns}
         isCellEditable={(params) => params.row.id === 5}
       />
-    </Box>
+    </StyledBox>
   );
 }
 

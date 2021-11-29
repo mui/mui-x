@@ -1,7 +1,21 @@
 import * as React from 'react';
+import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import { DataGridPro, useGridApiRef } from '@mui/x-data-grid-pro';
 import { randomPrice } from '@mui/x-data-grid-generator';
+
+const StyledBox = styled(Box)(({ theme }) => ({
+  height: 400,
+  width: '100%',
+  '& .MuiDataGrid-cell--editing': {
+    backgroundColor: 'rgb(255,215,115, 0.19)',
+    color: '#1a3e72',
+  },
+  '& .Mui-error': {
+    backgroundColor: `rgb(126,10,15, ${theme.palette.mode === 'dark' ? 0 : 0.1})`,
+    color: theme.palette.error.main,
+  },
+}));
 
 const rows = [
   {
@@ -71,22 +85,8 @@ export default function ConditionalValidationGrid() {
   ];
 
   return (
-    <Box
-      sx={{
-        height: 400,
-        width: 1,
-        '& .MuiDataGrid-cell--editing': {
-          bgcolor: 'rgb(255,215,115, 0.19)',
-          color: '#1a3e72',
-        },
-        '& .Mui-error': {
-          bgcolor: (theme) =>
-            `rgb(126,10,15, ${theme.palette.mode === 'dark' ? 0 : 0.1})`,
-          color: (theme) => theme.palette.error.main,
-        },
-      }}
-    >
+    <StyledBox>
       <DataGridPro apiRef={apiRef} rows={rows} columns={columns} editMode="row" />
-    </Box>
+    </StyledBox>
   );
 }
