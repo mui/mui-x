@@ -4,7 +4,7 @@ import {
   ownerDocument,
   unstable_useEnhancedEffect as useEnhancedEffect,
 } from '@mui/material/utils';
-import { GridEvents } from '../../../constants/eventsConstants';
+import { GridEvents, GridEventListener } from '../../../models/events';
 import { ElementSize, GridApiRef } from '../../../models';
 import {
   useGridApiEventHandler,
@@ -140,7 +140,7 @@ export function useGridDimensions(
 
   const resize = React.useCallback<GridDimensionsApi['resize']>(() => {
     updateGridDimensionsRef();
-    apiRef.current.publishEvent(GridEvents.debouncedResize, rootDimensionsRef.current);
+    apiRef.current.publishEvent(GridEvents.debouncedResize, rootDimensionsRef.current!);
   }, [apiRef, updateGridDimensionsRef]);
 
   const getRootDimensions = React.useCallback<GridDimensionsApi['getRootDimensions']>(
@@ -178,8 +178,8 @@ export function useGridDimensions(
 
   const isFirstSizing = React.useRef(true);
 
-  const handleResize = React.useCallback(
-    (size: ElementSize) => {
+  const handleResize = React.useCallback<GridEventListener<GridEvents.resize>>(
+    (size) => {
       rootDimensionsRef.current = size;
 
       // jsdom has no layout capabilities

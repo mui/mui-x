@@ -5,12 +5,12 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## 5.0.1
 
-_Nov 17, 2021_
+_Nov 23, 2021_
 
 A big thanks to the 3 contributors who made this release possible. Here are some highlights ✨:
 
 - 🎁 New API to validate the editing values (#3006) @m4theushw
- 
+
   You can now use the `preProcessEditCellProps` key in `GridColDef` to synchronously or asynchronously validate the values committed.
 
   ```ts
@@ -63,7 +63,7 @@ A big thanks to the 3 contributors who made this release possible. Here are some
 
 ## 5.0.0
 
-_Nov 16, 2021_
+_Nov 23, 2021_
 
 🎉 We are excited to introduce [MUI X v5.0.0](https://mui.com/blog/mui-x-v5/) 🎉!
 

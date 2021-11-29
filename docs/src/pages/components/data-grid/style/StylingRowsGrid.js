@@ -1,66 +1,72 @@
 import * as React from 'react';
+import Box from '@mui/material/Box';
 import { DataGrid } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
-import { createTheme, darken, lighten } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { darken, lighten } from '@mui/material/styles';
 
-const defaultTheme = createTheme();
-const useStyles = makeStyles(
-  (theme) => {
-    const getBackgroundColor = (color) =>
-      theme.palette.mode === 'dark' ? darken(color, 0.6) : lighten(color, 0.6);
+const getBackgroundColor = (color, mode) =>
+  mode === 'dark' ? darken(color, 0.6) : lighten(color, 0.6);
 
-    const getHoverBackgroundColor = (color) =>
-      theme.palette.mode === 'dark' ? darken(color, 0.5) : lighten(color, 0.5);
-
-    return {
-      root: {
-        '& .super-app-theme--Open': {
-          backgroundColor: getBackgroundColor(theme.palette.info.main),
-          '&:hover': {
-            backgroundColor: getHoverBackgroundColor(theme.palette.info.main),
-          },
-        },
-        '& .super-app-theme--Filled': {
-          backgroundColor: getBackgroundColor(theme.palette.success.main),
-          '&:hover': {
-            backgroundColor: getHoverBackgroundColor(theme.palette.success.main),
-          },
-        },
-        '& .super-app-theme--PartiallyFilled': {
-          backgroundColor: getBackgroundColor(theme.palette.warning.main),
-          '&:hover': {
-            backgroundColor: getHoverBackgroundColor(theme.palette.warning.main),
-          },
-        },
-        '& .super-app-theme--Rejected': {
-          backgroundColor: getBackgroundColor(theme.palette.error.main),
-          '&:hover': {
-            backgroundColor: getHoverBackgroundColor(theme.palette.error.main),
-          },
-        },
-      },
-    };
-  },
-  { defaultTheme },
-);
+const getHoverBackgroundColor = (color, mode) =>
+  mode === 'dark' ? darken(color, 0.5) : lighten(color, 0.5);
 
 export default function StylingRowsGrid() {
-  const classes = useStyles();
-
   const { data } = useDemoData({
     dataSet: 'Commodity',
     rowLength: 100,
   });
 
   return (
-    <div style={{ height: 400, width: '100%' }} className={classes.root}>
+    <Box
+      sx={{
+        height: 400,
+        width: 1,
+        '& .super-app-theme--Open': {
+          bgcolor: (theme) =>
+            getBackgroundColor(theme.palette.info.main, theme.palette.mode),
+          '&:hover': {
+            bgcolor: (theme) =>
+              getHoverBackgroundColor(theme.palette.info.main, theme.palette.mode),
+          },
+        },
+        '& .super-app-theme--Filled': {
+          bgcolor: (theme) =>
+            getBackgroundColor(theme.palette.success.main, theme.palette.mode),
+          '&:hover': {
+            bgcolor: (theme) =>
+              getHoverBackgroundColor(
+                theme.palette.success.main,
+                theme.palette.mode,
+              ),
+          },
+        },
+        '& .super-app-theme--PartiallyFilled': {
+          bgcolor: (theme) =>
+            getBackgroundColor(theme.palette.warning.main, theme.palette.mode),
+          '&:hover': {
+            bgcolor: (theme) =>
+              getHoverBackgroundColor(
+                theme.palette.warning.main,
+                theme.palette.mode,
+              ),
+          },
+        },
+        '& .super-app-theme--Rejected': {
+          bgcolor: (theme) =>
+            getBackgroundColor(theme.palette.error.main, theme.palette.mode),
+          '&:hover': {
+            bgcolor: (theme) =>
+              getHoverBackgroundColor(theme.palette.error.main, theme.palette.mode),
+          },
+        },
+      }}
+    >
       <DataGrid
         {...data}
         getRowClassName={(params) =>
           `super-app-theme--${params.getValue(params.id, 'status')}`
         }
       />
-    </div>
+    </Box>
   );
 }
