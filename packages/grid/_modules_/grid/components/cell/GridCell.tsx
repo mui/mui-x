@@ -4,15 +4,16 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { ownerDocument, capitalize } from '@mui/material/utils';
-import { GridEvents } from '../../constants/eventsConstants';
 import { getDataGridUtilityClass } from '../../gridClasses';
 import {
   GridAlignment,
+  GridCellEventLookup,
+  GridEvents,
   GridCellMode,
   GridCellModes,
   GridCellValue,
   GridRowId,
-} from '../../models/index';
+} from '../../models';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { GridComponentProps } from '../../GridComponentProps';
@@ -114,9 +115,9 @@ function GridCell(props: GridCellProps) {
   const classes = useUtilityClasses(ownerState);
 
   const publishMouseUp = React.useCallback(
-    (eventName: string) => (event: React.MouseEvent<HTMLDivElement>) => {
+    (eventName: GridEvents) => (event: React.MouseEvent<HTMLDivElement>) => {
       const params = apiRef.current.getCellParams(rowId, field || '');
-      apiRef.current.publishEvent(eventName, params, event);
+      apiRef.current.publishEvent(eventName as any, params as any, event);
 
       if (onMouseUp) {
         onMouseUp(event);
@@ -126,29 +127,30 @@ function GridCell(props: GridCellProps) {
   );
 
   const publish = React.useCallback(
-    (eventName: string, propHandler: any) => (event: React.SyntheticEvent<HTMLDivElement>) => {
-      // Ignore portal
-      // The target is not an element when triggered by a Select inside the cell
-      // See https://github.com/mui-org/material-ui/issues/10534
-      if (
-        (event.target as any).nodeType === 1 &&
-        !event.currentTarget.contains(event.target as Element)
-      ) {
-        return;
-      }
+    (eventName: keyof GridCellEventLookup, propHandler: any) =>
+      (event: React.SyntheticEvent<HTMLDivElement>) => {
+        // Ignore portal
+        // The target is not an element when triggered by a Select inside the cell
+        // See https://github.com/mui-org/material-ui/issues/10534
+        if (
+          (event.target as any).nodeType === 1 &&
+          !event.currentTarget.contains(event.target as Element)
+        ) {
+          return;
+        }
 
-      // The row might have been deleted during the click
-      if (!apiRef.current.getRow(rowId)) {
-        return;
-      }
+        // The row might have been deleted during the click
+        if (!apiRef.current.getRow(rowId)) {
+          return;
+        }
 
-      const params = apiRef.current.getCellParams(rowId!, field || '');
-      apiRef.current.publishEvent(eventName, params, event);
+        const params = apiRef.current.getCellParams(rowId!, field || '');
+        apiRef.current.publishEvent(eventName, params, event as any);
 
-      if (propHandler) {
-        propHandler(event);
-      }
-    },
+        if (propHandler) {
+          propHandler(event);
+        }
+      },
     [apiRef, field, rowId],
   );
 

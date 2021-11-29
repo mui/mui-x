@@ -1,155 +1,254 @@
 [
   {
     "name": "cellClick",
-    "description": "Fired when a cell is clicked. Called with a <a href=\"/api/data-grid/grid-cell-params/\">GridCellParams</a> object."
+    "description": "Fired when a cell is clicked.",
+    "params": "GridCellParams<any, any, any>",
+    "event": "MuiEvent<MouseEvent<HTMLElement, MouseEvent>>"
   },
   {
     "name": "cellDoubleClick",
-    "description": "Fired when a cell is double-clicked. Called with a <a href=\"/api/data-grid/grid-cell-params/\">GridCellParams</a> object."
+    "description": "Fired when a cell is double-clicked.",
+    "params": "GridCellParams<any, any, any>",
+    "event": "MuiEvent<MouseEvent<HTMLElement, MouseEvent>>"
   },
   {
     "name": "cellEditCommit",
-    "description": "Fired when the props of the edit input are committed. Called with a GridEditCellPropsParams object."
+    "description": "Fired when the props of the edit input are committed.",
+    "params": "GridCellEditCommitParams",
+    "event": "MuiEvent<MuiBaseEvent>"
   },
   {
     "name": "cellEditStart",
-    "description": "Fired when the cell turns to edit mode. Called with a <a href=\"/api/data-grid/grid-cell-params/\">GridCellParams</a> object."
+    "description": "Fired when the cell turns to edit mode.",
+    "params": "GridCellParams<any, any, any>",
+    "event": "MuiEvent<KeyboardEvent<HTMLElement> | MouseEvent<HTMLElement, MouseEvent>>"
   },
   {
     "name": "cellEditStop",
-    "description": "Fired when the cell turns back to view mode. Called with a <a href=\"/api/data-grid/grid-cell-params/\">GridCellParams</a> object."
+    "description": "Fired when the cell turns back to view mode.",
+    "params": "GridCellParams<any, any, any>",
+    "event": "MuiEvent<MuiBaseEvent>"
   },
   {
     "name": "cellFocusIn",
-    "description": "Fired when a cell gains focus. Called with a <a href=\"/api/data-grid/grid-cell-params/\">GridCellParams</a> object."
+    "description": "Fired when a cell gains focus.",
+    "params": "GridCellParams<any, any, any>",
+    "event": "MuiEvent<{}>"
   },
   {
     "name": "cellFocusOut",
-    "description": "Fired when a cell loses focus. Called with a <a href=\"/api/data-grid/grid-cell-params/\">GridCellParams</a> object."
+    "description": "Fired when a cell loses focus.",
+    "params": "GridCellParams<any, any, any>",
+    "event": "MuiEvent<MuiBaseEvent>"
   },
   {
     "name": "cellKeyDown",
-    "description": "Fired when a <code>keydown</code> event happens in a cell. Called with a <a href=\"/api/data-grid/grid-cell-params/\">GridCellParams</a> object."
+    "description": "Fired when a <code>keydown</code> event happens in a cell.",
+    "params": "GridCellParams<any, any, any>",
+    "event": "MuiEvent<KeyboardEvent<HTMLElement>>"
   },
   {
     "name": "cellMouseDown",
-    "description": "Fired when a <code>mousedown</code> event happens in a cell. Called with a <a href=\"/api/data-grid/grid-cell-params/\">GridCellParams</a> object."
+    "description": "Fired when a <code>mousedown</code> event happens in a cell..",
+    "params": "GridCellParams<any, any, any>",
+    "event": "MuiEvent<MouseEvent<HTMLElement, MouseEvent>>"
   },
   {
     "name": "cellMouseUp",
-    "description": "Fired when a <code>mouseup</code> event happens in a cell. Called with a <a href=\"/api/data-grid/grid-cell-params/\">GridCellParams</a> object."
+    "description": "Fired when a <code>mouseup</code> event happens in a cell..",
+    "params": "GridCellParams<any, any, any>",
+    "event": "MuiEvent<MouseEvent<HTMLElement, MouseEvent>>"
   },
   {
     "name": "columnHeaderClick",
-    "description": "Fired when a column header is clicked. Called with a GridColumnHeaderParams object."
+    "description": "Fired when a column header is clicked",
+    "params": "GridColumnHeaderParams",
+    "event": "MuiEvent<MouseEvent<HTMLElement, MouseEvent>>"
   },
   {
     "name": "columnHeaderDoubleClick",
-    "description": "Fired when a column header is double-clicked. Called with a GridColumnHeaderParams object."
+    "description": "Fired when a column header is double-clicked.",
+    "params": "GridColumnHeaderParams",
+    "event": "MuiEvent<MouseEvent<HTMLElement, MouseEvent>>"
   },
   {
     "name": "columnHeaderKeyDown",
-    "description": "Fired when a key is pressed in a column header. It&#39;s mapped do the <code>keydown</code> DOM event.\nCalled with a GridColumnHeaderParams object."
+    "description": "Fired when a key is pressed in a column header. It&#39;s mapped do the <code>keydown</code> DOM event.",
+    "params": "GridColumnHeaderParams",
+    "event": "MuiEvent<KeyboardEvent<HTMLElement>>"
   },
-  { "name": "columnOrderChange", "description": "Fired when the user ends reordering a column." },
+  {
+    "name": "columnOrderChange",
+    "description": "Fired when the user ends reordering a column.",
+    "params": "GridColumnOrderChangeParams",
+    "event": "MuiEvent<{}>"
+  },
   {
     "name": "columnResize",
-    "description": "Fired during the resizing of a column. Called with a GridColumnResizeParams object."
+    "description": "Fired during the resizing of a column.",
+    "params": "GridColumnResizeParams",
+    "event": "MuiEvent<MouseEvent>"
   },
   {
     "name": "columnResizeStart",
-    "description": "Fired when the user starts resizing a column. Called with an object <code>{ field: string }</code>."
+    "description": "Fired when the user starts resizing a column.",
+    "params": "{ field: string }",
+    "event": "MuiEvent<MouseEvent<HTMLElement, MouseEvent>>"
   },
   {
     "name": "columnResizeStop",
-    "description": "Fired when the user stops resizing a column. Called with an object <code>{ field: string }</code>."
+    "description": "Fired when the user stops resizing a column.",
+    "params": "null",
+    "event": "MuiEvent<MouseEvent>"
   },
   {
     "name": "columnsChange",
-    "description": "Fired when the columns state is changed.\nCalled with an array of strings corresponding to the field names."
+    "description": "Fired when the columns state is changed.",
+    "params": "string[]",
+    "event": "MuiEvent<{}>"
   },
   {
     "name": "columnVisibilityChange",
-    "description": "Fired when a column visibility changes. Called with a GridColumnVisibilityChangeParams object."
+    "description": "Fired when a column visibility changes.",
+    "params": "GridColumnVisibilityChangeParams",
+    "event": "MuiEvent<{}>"
   },
   {
     "name": "columnWidthChange",
-    "description": "Fired when the width of a column is changed. Called with a GridColumnResizeParams object."
+    "description": "Fired when the width of a column is changed.",
+    "params": "GridColumnResizeParams",
+    "event": "MuiEvent<{} | MouseEvent>"
   },
-  { "name": "componentError", "description": "Fired when an exception is thrown in the grid." },
+  {
+    "name": "componentError",
+    "description": "Fired when an exception is thrown in the grid.",
+    "params": "any",
+    "event": "MuiEvent<{}>"
+  },
   {
     "name": "debouncedResize",
-    "description": "Fired when the grid is resized with a debounced time of 60ms. Called with a ElementSize object."
+    "description": "Fired when the grid is resized with a debounced time of 60ms.",
+    "params": "ElementSize",
+    "event": "MuiEvent<{}>"
   },
   {
     "name": "editCellPropsChange",
-    "description": "Fired when the props of the edit cell changes. Called with a GridEditCellPropsParams object."
+    "description": "Fired when the props of the edit cell changes.",
+    "params": "GridEditCellPropsParams",
+    "event": "MuiEvent<{} | SyntheticEvent<HTMLElement, Event>>"
   },
   {
     "name": "editRowsModelChange",
-    "description": "Fired when the row editing model changes. Called with a GridEditRowModelParams object."
+    "description": "Fired when the row editing model changes.",
+    "params": "GridEditRowsModel",
+    "event": "MuiEvent<{}>"
   },
   {
     "name": "filterModelChange",
-    "description": "Fired when the filter model changes.\nCalled with a GridFilterModel object."
+    "description": "Fired when the filter model changes.",
+    "params": "GridFilterModel",
+    "event": "MuiEvent<{}>"
   },
   {
     "name": "headerSelectionCheckboxChange",
-    "description": "Fired when the value of the selection checkbox of the header is changed\nCalled with a GridHeaderSelectionCheckboxParams object."
+    "description": "Fired when the value of the selection checkbox of the header is changed",
+    "params": "GridHeaderSelectionCheckboxParams",
+    "event": "MuiEvent<{}>"
   },
-  { "name": "pageChange", "description": "Fired when the page changes." },
-  { "name": "pageSizeChange", "description": "Fired when the page size changes." },
+  {
+    "name": "pageChange",
+    "description": "Fired when the page changes.",
+    "params": "number",
+    "event": "MuiEvent<{}>"
+  },
+  {
+    "name": "pageSizeChange",
+    "description": "Fired when the page size changes.",
+    "params": "number",
+    "event": "MuiEvent<{}>"
+  },
   {
     "name": "resize",
-    "description": "Fired when the grid is resized. Called with a ElementSize object."
+    "description": "Fired when the grid is resized.",
+    "params": "ElementSize",
+    "event": "MuiEvent<{}>"
   },
   {
     "name": "rowClick",
-    "description": "Fired when a row is clicked. Called with a <a href=\"/api/data-grid/grid-row-params/\">GridRowParams</a> object."
+    "description": "Fired when a row is clicked.",
+    "params": "GridRowParams<{ [key: string]: any }>",
+    "event": "MuiEvent<MouseEvent<HTMLElement, MouseEvent>>"
   },
   {
     "name": "rowDoubleClick",
-    "description": "Fired when a row is double-clicked. Called with a <a href=\"/api/data-grid/grid-row-params/\">GridRowParams</a> object."
+    "description": "Fired when a row is double-clicked.",
+    "params": "GridRowParams<{ [key: string]: any }>",
+    "event": "MuiEvent<MouseEvent<HTMLElement, MouseEvent>>"
   },
   {
     "name": "rowEditCommit",
-    "description": "Fired when the props of the edit input are committed. Called with the GridRowId of the row."
+    "description": "Fired when the props of the edit input are committed.",
+    "params": "GridRowId",
+    "event": "MuiEvent<MuiBaseEvent>"
   },
   {
     "name": "rowEditStart",
-    "description": "Fired when the row turns to edit mode. Called with a <a href=\"/api/data-grid/grid-cell-params/\">GridCellParams</a> object."
+    "description": "Fired when the row turns to edit mode.",
+    "params": "GridRowParams<{ [key: string]: any }>",
+    "event": "MuiEvent<KeyboardEvent<HTMLElement> | MouseEvent<HTMLElement, MouseEvent>>"
   },
   {
     "name": "rowEditStop",
-    "description": "Fired when the row turns back to view mode. Called with a <a href=\"/api/data-grid/grid-cell-params/\">GridCellParams</a> object."
+    "description": "Fired when the row turns back to view mode.",
+    "params": "GridRowParams<{ [key: string]: any }>",
+    "event": "MuiEvent<MuiBaseEvent>"
   },
   {
     "name": "rowSelectionCheckboxChange",
-    "description": "Fired when the value of the selection checkbox of a row is changed\nCalled with a GridRowSelectionCheckboxParams object."
+    "description": "Fired when the value of the selection checkbox of a row is changed",
+    "params": "GridRowSelectionCheckboxParams",
+    "event": "MuiEvent<ChangeEvent<HTMLElement>>"
   },
   {
     "name": "rowsScroll",
-    "description": "Fired during the scroll of the grid viewport. Called with a GridScrollParams object."
+    "description": "Fired during the scroll of the grid viewport.",
+    "params": "GridScrollParams",
+    "event": "MuiEvent<{}>"
   },
   {
     "name": "rowsScrollEnd",
-    "description": "Fired when scrolling to the bottom of the grid viewport. Called with a GridRowScrollEndParams object."
+    "description": "Fired when scrolling to the bottom of the grid viewport.",
+    "params": "GridRowScrollEndParams",
+    "event": "MuiEvent<{}>"
   },
   {
     "name": "selectionChange",
-    "description": "Fired when the selection state of one or multiple rows changes.\nCalled with a GridSelectionModelChangeParams object."
+    "description": "Fired when the selection state of one or multiple rows changes.",
+    "params": "GridSelectionModel",
+    "event": "MuiEvent<{}>"
   },
   {
     "name": "sortModelChange",
-    "description": "Fired when the sort model changes.\nCalled with a GridSortModelParams object."
+    "description": "Fired when the sort model changes.",
+    "params": "GridSortModel",
+    "event": "MuiEvent<{}>"
   },
   {
     "name": "stateChange",
-    "description": "Fired when the state of the grid is updated. Called with a GridState object."
+    "description": "Fired when the state of the grid is updated.",
+    "params": "GridState",
+    "event": "MuiEvent<{}>"
   },
-  { "name": "unmount", "description": "Fired when the grid is unmounted." },
+  {
+    "name": "unmount",
+    "description": "Fired when the grid is unmounted.",
+    "params": "",
+    "event": "MuiEvent<{}>"
+  },
   {
     "name": "viewportInnerSizeChange",
-    "description": "Fired when the inner size of the viewport changes. Called with an ElementSize object."
+    "description": "Fired when the inner size of the viewport changes. Called with an ElementSize object.",
+    "params": "ElementSize",
+    "event": "MuiEvent<{}>"
   }
 ]

@@ -1,12 +1,11 @@
 import * as React from 'react';
-import { GridEvents } from '../../../constants/eventsConstants';
+import { GridEventListener, GridEvents } from '../../../models/events';
 import { GridComponentProps } from '../../../GridComponentProps';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridSortApi } from '../../../models/api/gridSortApi';
 import { GridCellValue } from '../../../models/gridCell';
 import { GridColDef } from '../../../models/colDef/gridColDef';
 import { GridFeatureModeConstant } from '../../../models/gridFeatureMode';
-import { GridColumnHeaderParams } from '../../../models/params/gridColumnHeaderParams';
 import { GridRowId, GridRowTreeNodeConfig } from '../../../models/gridRows';
 import {
   GridFieldComparatorList,
@@ -370,16 +369,20 @@ export const useGridSorting = (
 
   useFirstRender(() => apiRef.current.applySorting());
 
-  const handleColumnHeaderClick = React.useCallback(
-    ({ colDef }: GridColumnHeaderParams, event: React.MouseEvent) => {
+  const handleColumnHeaderClick = React.useCallback<
+    GridEventListener<GridEvents.columnHeaderClick>
+  >(
+    ({ colDef }, event) => {
       const allowMultipleSorting = event.shiftKey || event.metaKey || event.ctrlKey;
       sortColumn(colDef, undefined, allowMultipleSorting);
     },
     [sortColumn],
   );
 
-  const handleColumnHeaderKeyDown = React.useCallback(
-    ({ colDef }: GridColumnHeaderParams, event: React.KeyboardEvent) => {
+  const handleColumnHeaderKeyDown = React.useCallback<
+    GridEventListener<GridEvents.columnHeaderKeyDown>
+  >(
+    ({ colDef }, event) => {
       // CTRL + Enter opens the column menu
       if (isEnterKey(event.key) && !event.ctrlKey && !event.metaKey) {
         sortColumn(colDef, undefined, event.shiftKey);
@@ -388,7 +391,7 @@ export const useGridSorting = (
     [sortColumn],
   );
 
-  const onColUpdated = React.useCallback(() => {
+  const handleColumnsChange = React.useCallback<GridEventListener<GridEvents.columnsChange>>(() => {
     // When the columns change we check that the sorted columns are still part of the dataset
     const sortModel = gridSortModelSelector(apiRef.current.state);
     const latestColumns = allGridColumnsSelector(apiRef.current.state);
@@ -407,5 +410,5 @@ export const useGridSorting = (
   useGridApiEventHandler(apiRef, GridEvents.columnHeaderClick, handleColumnHeaderClick);
   useGridApiEventHandler(apiRef, GridEvents.columnHeaderKeyDown, handleColumnHeaderKeyDown);
   useGridApiEventHandler(apiRef, GridEvents.rowsSet, apiRef.current.applySorting);
-  useGridApiEventHandler(apiRef, GridEvents.columnsChange, onColUpdated);
+  useGridApiEventHandler(apiRef, GridEvents.columnsChange, handleColumnsChange);
 };

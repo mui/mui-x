@@ -1,6 +1,7 @@
 import { expect } from 'chai';
-import { buildRowTree } from './rowTreeUtils';
+import { buildRowTree } from './buildRowTree';
 
+// TODO: Add tests for multi-field grouping
 describe('buildRowTree', () => {
   it('should not expand the rows when defaultGroupingExpansionDepth === 0', () => {
     const response = buildRowTree({
@@ -11,9 +12,9 @@ describe('buildRowTree', () => {
       },
       ids: [0, 1, 2],
       rows: [
-        { id: 0, path: ['A'] },
-        { id: 1, path: ['A', 'A'] },
-        { id: 2, path: ['A', 'A', 'A'] },
+        { id: 0, path: [{ key: 'A', field: null }] },
+        { id: 1, path: [{ key: 'A', field: null }] },
+        { id: 2, path: [{ key: 'A', field: null }] },
       ],
       defaultGroupingExpansionDepth: 0,
     });
@@ -39,9 +40,22 @@ describe('buildRowTree', () => {
       },
       ids: [0, 1, 2],
       rows: [
-        { id: 0, path: ['A'] },
-        { id: 1, path: ['A', 'A'] },
-        { id: 2, path: ['A', 'A', 'A'] },
+        { id: 0, path: [{ key: 'A', field: null }] },
+        {
+          id: 1,
+          path: [
+            { key: 'A', field: null },
+            { key: 'A', field: null },
+          ],
+        },
+        {
+          id: 2,
+          path: [
+            { key: 'A', field: null },
+            { key: 'A', field: null },
+            { key: 'A', field: null },
+          ],
+        },
       ],
       defaultGroupingExpansionDepth: 2,
     });
@@ -67,9 +81,22 @@ describe('buildRowTree', () => {
       },
       ids: [0, 1, 2],
       rows: [
-        { id: 0, path: ['A'] },
-        { id: 1, path: ['A', 'A'] },
-        { id: 2, path: ['A', 'A', 'A'] },
+        { id: 0, path: [{ key: 'A', field: null }] },
+        {
+          id: 1,
+          path: [
+            { key: 'A', field: null },
+            { key: 'A', field: null },
+          ],
+        },
+        {
+          id: 2,
+          path: [
+            { key: 'A', field: null },
+            { key: 'A', field: null },
+            { key: 'A', field: null },
+          ],
+        },
       ],
       defaultGroupingExpansionDepth: -1,
     });
@@ -96,10 +123,30 @@ describe('buildRowTree', () => {
       },
       ids: [0, 1, 2, 3],
       rows: [
-        { id: 0, path: ['A'] },
-        { id: 1, path: ['A', 'A'] },
-        { id: 2, path: ['A', 'A', 'A'] },
-        { id: 3, path: ['A', 'A', 'B'] },
+        { id: 0, path: [{ key: 'A', field: null }] },
+        {
+          id: 1,
+          path: [
+            { key: 'A', field: null },
+            { key: 'A', field: null },
+          ],
+        },
+        {
+          id: 2,
+          path: [
+            { key: 'A', field: null },
+            { key: 'A', field: null },
+            { key: 'A', field: null },
+          ],
+        },
+        {
+          id: 3,
+          path: [
+            { key: 'A', field: null },
+            { key: 'A', field: null },
+            { key: 'B', field: null },
+          ],
+        },
       ],
       defaultGroupingExpansionDepth: 0,
     });
@@ -128,10 +175,30 @@ describe('buildRowTree', () => {
       },
       ids: [0, 1, 2, 3],
       rows: [
-        { id: 0, path: ['A'] },
-        { id: 1, path: ['A', 'A'] },
-        { id: 2, path: ['A', 'A', 'A'] },
-        { id: 3, path: ['A', 'A', 'B'] },
+        { id: 0, path: [{ key: 'A', field: null }] },
+        {
+          id: 1,
+          path: [
+            { key: 'A', field: null },
+            { key: 'A', field: null },
+          ],
+        },
+        {
+          id: 2,
+          path: [
+            { key: 'A', field: null },
+            { key: 'A', field: null },
+            { key: 'A', field: null },
+          ],
+        },
+        {
+          id: 3,
+          path: [
+            { key: 'A', field: null },
+            { key: 'A', field: null },
+            { key: 'B', field: null },
+          ],
+        },
       ],
       defaultGroupingExpansionDepth: 0,
     });
@@ -147,8 +214,15 @@ describe('buildRowTree', () => {
       },
       ids: [0, 1],
       rows: [
-        { id: 0, path: ['A'] },
-        { id: 1, path: ['A', 'A', 'A'] },
+        { id: 0, path: [{ key: 'A', field: null }] },
+        {
+          id: 1,
+          path: [
+            { key: 'A', field: null },
+            { key: 'A', field: null },
+            { key: 'A', field: null },
+          ],
+        },
       ],
       defaultGroupingExpansionDepth: 0,
     });
@@ -157,25 +231,27 @@ describe('buildRowTree', () => {
       idRowsLookup: {
         0: {},
         1: {},
-        'auto-generated-row-A-A': {},
+        'auto-generated-row-null/A-null/A': {},
       },
-      ids: [0, 1, 'auto-generated-row-A-A'],
+      ids: [0, 1, 'auto-generated-row-null/A-null/A'],
       treeDepth: 3,
       tree: {
         0: {
-          children: ['auto-generated-row-A-A'],
+          children: ['auto-generated-row-null/A-null/A'],
           depth: 0,
           childrenExpanded: false,
-          groupingValue: 'A',
+          groupingField: null,
+          groupingKey: 'A',
           id: 0,
           parent: null,
         },
-        'auto-generated-row-A-A': {
+        'auto-generated-row-null/A-null/A': {
           children: [1],
           depth: 1,
           childrenExpanded: false,
-          groupingValue: 'A',
-          id: 'auto-generated-row-A-A',
+          groupingField: null,
+          groupingKey: 'A',
+          id: 'auto-generated-row-null/A-null/A',
           isAutoGenerated: true,
           parent: 0,
         },
@@ -183,9 +259,10 @@ describe('buildRowTree', () => {
           children: undefined,
           depth: 2,
           childrenExpanded: false,
-          groupingValue: 'A',
+          groupingField: null,
+          groupingKey: 'A',
           id: 1,
-          parent: 'auto-generated-row-A-A',
+          parent: 'auto-generated-row-null/A-null/A',
         },
       },
     });

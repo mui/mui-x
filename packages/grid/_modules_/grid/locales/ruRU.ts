@@ -5,7 +5,7 @@ import { getGridLocalization, Localization } from '../utils/getGridLocalization'
 const ruRUGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Нет строк',
-  // noResultsOverlayLabel: 'No results found.',
+  noResultsOverlayLabel: 'Данные не найдены.',
   errorOverlayDefaultLabel: 'Обнаружена ошибка.',
 
   // Density selector toolbar button text
@@ -41,7 +41,7 @@ const ruRUGrid: Partial<GridLocaleText> = {
   toolbarExport: 'Экспорт',
   toolbarExportLabel: 'Экспорт',
   toolbarExportCSV: 'Скачать в формате CSV',
-  // toolbarExportPrint: 'Print',
+  toolbarExportPrint: 'Печать',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'Найти столбец',
@@ -71,8 +71,8 @@ const ruRUGrid: Partial<GridLocaleText> = {
   filterOperatorOnOrAfter: 'больше или равно',
   filterOperatorBefore: 'меньше чем',
   filterOperatorOnOrBefore: 'меньше или равно',
-  // filterOperatorIsEmpty: 'is empty',
-  // filterOperatorIsNotEmpty: 'is not empty',
+  filterOperatorIsEmpty: 'пустой',
+  filterOperatorIsNotEmpty: 'не пустой',
 
   // Filter values text
   filterValueAny: 'любой',
@@ -122,7 +122,8 @@ const ruRUGrid: Partial<GridLocaleText> = {
   footerTotalRows: 'Всего строк:',
 
   // Total visible rows footer text
-  // footerTotalVisibleRows: (visibleCount, totalCount) => `${visibleCount.toLocaleString()} of ${totalCount.toLocaleString()}`,
+  footerTotalVisibleRows: (visibleCount, totalCount) =>
+    `${visibleCount.toLocaleString()} из ${totalCount.toLocaleString()}`,
 
   // Checkbox selection text
   checkboxSelectionHeaderName: 'Выбор флажка',
@@ -132,12 +133,12 @@ const ruRUGrid: Partial<GridLocaleText> = {
   booleanCellFalseLabel: 'ложь',
 
   // Actions cell more text
-  // actionsCellMore: 'more',
+  actionsCellMore: 'ещё',
 
   // Tree Data
-  // treeDataGroupingHeaderName: 'Group',
-  // treeDataExpand: 'see children',
-  // treeDataCollapse: 'hide children',
+  treeDataGroupingHeaderName: 'Группа',
+  treeDataExpand: 'показать дочерние элементы',
+  treeDataCollapse: 'скрыть дочерние элементы',
 };
 
 export const ruRU: Localization = getGridLocalization(ruRUGrid, ruRUCore);

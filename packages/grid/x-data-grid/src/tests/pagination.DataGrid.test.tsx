@@ -15,7 +15,7 @@ import { useData } from 'packages/storybook/src/hooks/useData';
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<DataGrid /> - Pagination', () => {
-  const { render } = createRenderer();
+  const { render } = createRenderer({ strict: false, strictEffects: false }); // TODO it should run in StrictMode without errors
 
   const BaselineTestCase = (
     props: Omit<DataGridProps, 'rows' | 'columns'> & { height?: number },

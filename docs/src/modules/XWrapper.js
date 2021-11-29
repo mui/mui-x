@@ -2,20 +2,20 @@ import { makeStyles } from '@mui/styles';
 
 const useStyles = makeStyles({
   '@global': {
-    '.pro, .premium': {
+    '.plan-pro, .plan-premium': {
       display: 'inline-block',
       height: '1em',
       width: '1em',
       verticalAlign: 'middle',
-      marginLeft: 2,
-      marginRight: 2,
+      marginLeft: '0.13em',
+      marginBottom: '0.13em',
       backgroundSize: 'contain',
       backgroundRepeat: 'no-repeat',
     },
-    '.pro': {
+    '.plan-pro': {
       backgroundImage: 'url(/static/x/pro.svg)',
     },
-    '.premium': {
+    '.plan-premium': {
       backgroundImage: 'url(/static/x/premium.svg)',
     },
   },

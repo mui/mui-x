@@ -2,10 +2,8 @@ import * as React from 'react';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { GridApiRef } from '../../../models/api/gridApiRef';
-import { GridEvents } from '../../../constants/eventsConstants';
+import { GridEvents, GridEventListener } from '../../../models/events';
 import { getDataGridUtilityClass } from '../../../gridClasses';
-import { GridColumnHeaderParams } from '../../../models/params/gridColumnHeaderParams';
-import { GridCellParams } from '../../../models/params/gridCellParams';
 import { CursorCoordinates } from '../../../models/cursorCoordinates';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { useGridSelector } from '../../utils/useGridSelector';
@@ -77,8 +75,10 @@ export const useGridColumnReorder = (
     };
   }, []);
 
-  const handleColumnHeaderDragStart = React.useCallback(
-    (params: GridColumnHeaderParams, event: React.MouseEvent<HTMLElement>) => {
+  const handleColumnHeaderDragStart = React.useCallback<
+    GridEventListener<GridEvents.columnHeaderDragStart>
+  >(
+    (params, event) => {
       if (props.disableColumnReorder || params.colDef.disableReorder) {
         return;
       }
@@ -113,18 +113,19 @@ export const useGridColumnReorder = (
     ],
   );
 
-  const handleDragEnter = React.useCallback(
-    (params: GridColumnHeaderParams | GridCellParams, event: React.DragEvent<HTMLElement>) => {
-      event.preventDefault();
-      // Prevent drag events propagation.
-      // For more information check here https://github.com/mui-org/material-ui-x/issues/2680.
-      event.stopPropagation();
-    },
-    [],
-  );
+  const handleDragEnter = React.useCallback<
+    GridEventListener<GridEvents.cellDragEnter | GridEvents.columnHeaderDragEnter>
+  >((params, event) => {
+    event.preventDefault();
+    // Prevent drag events propagation.
+    // For more information check here https://github.com/mui-org/material-ui-x/issues/2680.
+    event.stopPropagation();
+  }, []);
 
-  const handleDragOver = React.useCallback(
-    (params: GridColumnHeaderParams | GridCellParams, event: React.DragEvent) => {
+  const handleDragOver = React.useCallback<
+    GridEventListener<GridEvents.cellDragOver | GridEvents.columnHeaderDragOver>
+  >(
+    (params, event) => {
       if (!dragColField) {
         return;
       }
@@ -167,8 +168,8 @@ export const useGridColumnReorder = (
     [apiRef, dragColField, logger],
   );
 
-  const handleDragEnd = React.useCallback(
-    (params: GridColumnHeaderParams | GridCellParams, event: React.DragEvent): void => {
+  const handleDragEnd = React.useCallback<GridEventListener<GridEvents.columnHeaderDragEnd>>(
+    (params, event): void => {
       if (props.disableColumnReorder || !dragColField) {
         return;
       }
@@ -204,5 +205,4 @@ export const useGridColumnReorder = (
   useGridApiEventHandler(apiRef, GridEvents.columnHeaderDragEnd, handleDragEnd);
   useGridApiEventHandler(apiRef, GridEvents.cellDragEnter, handleDragEnter);
   useGridApiEventHandler(apiRef, GridEvents.cellDragOver, handleDragOver);
-  useGridApiEventHandler(apiRef, GridEvents.cellDragEnd, handleDragEnd);
 };
