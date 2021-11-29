@@ -1,22 +1,11 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@mui/styles';
+import Box from '@mui/material/Box';
 import Rating from '@mui/material/Rating';
 import { DataGrid } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
-const useStyles = makeStyles({
-  root: {
-    display: 'inline-flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    height: 48,
-    paddingLeft: 20,
-  },
-});
-
 function RatingInputValue(props) {
-  const classes = useStyles();
   const { item, applyValue, focusElementRef } = props;
 
   const ratingRef = React.useRef(null);
@@ -33,7 +22,15 @@ function RatingInputValue(props) {
   };
 
   return (
-    <div className={classes.root}>
+    <Box
+      sx={{
+        display: 'inline-flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        height: 48,
+        pl: '20px',
+      }}
+    >
       <Rating
         name="custom-rating-filter-operator"
         placeholder="Filter value"
@@ -42,7 +39,7 @@ function RatingInputValue(props) {
         precision={0.5}
         ref={ratingRef}
       />
-    </div>
+    </Box>
   );
 }
 
