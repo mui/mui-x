@@ -28,11 +28,10 @@ const renderSingleSelectOptions = (
   );
 };
 
-export interface GridFilterInputSingleSelectProps extends GridFilterInputValueProps {
-  type?: 'singleSelect';
-}
+export type GridFilterInputSingleSelectProps = GridFilterInputValueProps &
+  TextFieldProps & { type?: 'singleSelect' };
 
-function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps & TextFieldProps) {
+function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
   const { item, applyValue, type, apiRef, focusElementRef, ...others } = props;
   const [filterValueState, setFilterValueState] = React.useState(item.value ?? '');
   const id = useId();

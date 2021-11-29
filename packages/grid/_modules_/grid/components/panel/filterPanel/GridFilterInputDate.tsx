@@ -5,13 +5,12 @@ import { unstable_useId as useId } from '@mui/material/utils';
 import { GridLoadIcon } from '../../icons/index';
 import { GridFilterInputValueProps } from './GridFilterInputValueProps';
 
-export interface GridFilterInputDateProps extends GridFilterInputValueProps {
-  type?: 'date' | 'datetime-local';
-}
+export type GridFilterInputDateProps = GridFilterInputValueProps &
+  TextFieldProps & { type?: 'date' | 'datetime-local' };
 
 export const SUBMIT_FILTER_DATE_STROKE_TIME = 500;
 
-function GridFilterInputDate(props: GridFilterInputDateProps & TextFieldProps) {
+function GridFilterInputDate(props: GridFilterInputDateProps) {
   const { item, applyValue, type, apiRef, focusElementRef, ...other } = props;
 
   const filterTimeout = React.useRef<any>();
