@@ -334,8 +334,8 @@ export const useGridSelection = (
     [apiRef, props.checkboxSelectionVisibleOnly, props.pagination],
   );
 
-  const handleCellKeyDown = React.useCallback(
-    (params: GridCellParams, event: React.KeyboardEvent) => {
+  const handleCellKeyDown = React.useCallback<GridEventListener<GridEvents.cellKeyDown>>(
+    (params, event) => {
       // The target is not an element when triggered by a Select inside the cell
       // See https://github.com/mui-org/material-ui/issues/10534
       if ((event.target as any).nodeType === 1 && !isGridCellRoot(event.target as Element)) {
