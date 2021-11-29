@@ -1,24 +1,13 @@
 import * as React from 'react';
 import { createRenderer, fireEvent, screen } from '@material-ui/monorepo/test/utils';
 import { expect } from 'chai';
-import { useFakeTimers } from 'sinon';
 import { gridClasses, DataGridPro } from '@mui/x-data-grid-pro';
 import { getColumnHeaderCell, getColumnValues } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<DataGridPro /> - Column Headers', () => {
-  let clock;
-
-  beforeEach(() => {
-    clock = useFakeTimers();
-  });
-
-  afterEach(() => {
-    clock.restore();
-  });
-
-  const { render } = createRenderer();
+  const { render, clock } = createRenderer({ clock: 'fake' });
 
   const baselineProps = {
     autoHeight: isJSDOM,
