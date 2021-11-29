@@ -13,7 +13,7 @@ const getFlatRowTree: GridRowGroupingPreProcessing = ({ ids, idRowsLookup }) => 
   const tree: GridRowTreeConfig = {};
   for (let i = 0; i < ids.length; i += 1) {
     const rowId = ids[i];
-    tree[rowId] = { id: rowId, depth: 0, parent: null, groupingValue: '' };
+    tree[rowId] = { id: rowId, depth: 0, parent: null, groupingKey: '', groupingField: null };
   }
 
   return {
