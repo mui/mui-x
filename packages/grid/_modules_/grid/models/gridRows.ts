@@ -1,3 +1,5 @@
+import type { GridKeyValue } from './colDef';
+
 export type GridRowsProp = Readonly<GridRowModel[]>;
 
 /**
@@ -43,9 +45,15 @@ export interface GridRowTreeNodeConfig {
   depth: number;
 
   /**
-   * The value used to group the children of this row.
+   * The key used to group the children of this row.
    */
-  groupingValue: string;
+  groupingKey: GridKeyValue;
+
+  /**
+   * The field used to group the children of this row.
+   * Is `null` if no field has been used to group the children of this row.
+   */
+  groupingField: string | null;
 
   /**
    * If `true`, this node has been automatically added to fill a gap in the tree structure.
