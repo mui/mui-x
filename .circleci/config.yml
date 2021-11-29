@@ -114,8 +114,8 @@ jobs:
       - save_cache:
           key: v6-yarn-sha-{{ checksum "yarn.lock" }}
           paths:
-          # Keep path in sync with "Set yarn cache folder"
-          # Can't use environment variables for `save_cache` paths (tested in https://app.circleci.com/pipelines/github/mui-org/material-ui/37813/workflows/5b1e207f-ac8b-44e7-9ba4-d0f9a01f5c55/jobs/223370)
+            # Keep path in sync with "Set yarn cache folder"
+            # Can't use environment variables for `save_cache` paths (tested in https://app.circleci.com/pipelines/github/mui-org/material-ui/37813/workflows/5b1e207f-ac8b-44e7-9ba4-d0f9a01f5c55/jobs/223370)
             - ~/.cache/yarn
   test_unit:
     <<: *defaults
@@ -161,10 +161,16 @@ jobs:
       - run:
           name: '`yarn docs:api` changes committed?'
           command: git diff --exit-code
+      - run:
+          name: Sync locale files
+          command: yarn l10n
+      - run:
+          name: '`yarn l10n` changes committed?'
+          command: git diff --exit-code
   test_browser:
     <<: *defaults
     docker:
-      - image: mcr.microsoft.com/playwright@sha256:a0de6ebd61b878821914fe58bfd3f8fb3e6bcc8cfb06e3815ff387290e6e0b4a
+      - image: mcr.microsoft.com/playwright@sha256:e1d21147143af988f339ade2afd9ab6fc549f6e5ae998a6b4e1b9180a83d35f1
         environment:
           NODE_ENV: development # Needed if playwright is in `devDependencies`
     steps:
@@ -195,7 +201,7 @@ jobs:
   test_e2e:
     <<: *defaults
     docker:
-      - image: mcr.microsoft.com/playwright@sha256:a0de6ebd61b878821914fe58bfd3f8fb3e6bcc8cfb06e3815ff387290e6e0b4a
+      - image: mcr.microsoft.com/playwright@sha256:e1d21147143af988f339ade2afd9ab6fc549f6e5ae998a6b4e1b9180a83d35f1
         environment:
           NODE_ENV: development # Needed if playwright is in `devDependencies`
     steps:
@@ -208,7 +214,7 @@ jobs:
   test_regressions:
     <<: *defaults
     docker:
-      - image: mcr.microsoft.com/playwright@sha256:a0de6ebd61b878821914fe58bfd3f8fb3e6bcc8cfb06e3815ff387290e6e0b4a
+      - image: mcr.microsoft.com/playwright@sha256:e1d21147143af988f339ade2afd9ab6fc549f6e5ae998a6b4e1b9180a83d35f1
         environment:
           NODE_ENV: development # Needed if playwright is in `devDependencies`
     steps:

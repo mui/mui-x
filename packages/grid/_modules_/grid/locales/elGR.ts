@@ -30,6 +30,7 @@ const elGRGrid: Partial<GridLocaleText> = {
   toolbarExport: 'Εξαγωγή',
   toolbarExportLabel: 'Εξαγωγή',
   toolbarExportCSV: 'Λήψη ως CSV',
+  // toolbarExportPrint: 'Print',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'Εύρεση στήλης',
@@ -62,6 +63,11 @@ const elGRGrid: Partial<GridLocaleText> = {
   filterOperatorIsEmpty: 'είναι κενό',
   filterOperatorIsNotEmpty: 'δεν είναι κενό',
 
+  // Filter values text
+  // filterValueAny: 'any',
+  // filterValueTrue: 'true',
+  // filterValueFalse: 'false',
+
   // Column menu text
   columnMenuLabel: 'Μενού',
   columnMenuShowColumns: 'Εμφάνιση στηλών',
@@ -90,8 +96,20 @@ const elGRGrid: Partial<GridLocaleText> = {
   footerTotalVisibleRows: (visibleCount, totalCount) =>
     `${visibleCount.toLocaleString()} από ${totalCount.toLocaleString()}`,
 
+  // Checkbox selection text
+  // checkboxSelectionHeaderName: 'Checkbox selection',
+
+  // Boolean cell text
+  // booleanCellTrueLabel: 'true',
+  // booleanCellFalseLabel: 'false',
+
   // Actions cell more text
   actionsCellMore: 'περισσότερα',
+
+  // Tree Data
+  // treeDataGroupingHeaderName: 'Group',
+  // treeDataExpand: 'see children',
+  // treeDataCollapse: 'hide children',
 };
 
 export const elGR: Localization = getGridLocalization(elGRGrid);
