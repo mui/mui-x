@@ -1251,6 +1251,7 @@ describe('<DataGrid /> - Filter', () => {
       render(<TestCase field="brand" operatorValue="contains" />);
       expect(screen.getByRole('textbox', { name: 'Value' }).value).to.equal('');
     });
+
     it('should keep filter operator and value if available', async () => {
       render(
         <TestCase
@@ -1270,6 +1271,7 @@ describe('<DataGrid /> - Filter', () => {
       expect(screen.getByRole('combobox', { name: 'Operators' }).value).to.equal('equals');
       expect(screen.getByRole('textbox', { name: 'Value' }).value).to.equal('Puma');
     });
+
     it('should reset value if operator is not available for the new column', async () => {
       render(
         <TestCase
@@ -1289,6 +1291,7 @@ describe('<DataGrid /> - Filter', () => {
       expect(screen.getByRole('combobox', { name: 'Operators' }).value).to.equal('from');
       expect(screen.getByTestId('customInput').value).to.equal('');
     });
+
     it('should reset value if the new operator has no input component', async () => {
       render(
         <TestCase
