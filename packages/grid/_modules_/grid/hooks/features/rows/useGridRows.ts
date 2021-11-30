@@ -25,6 +25,7 @@ import {
 } from './gridRowsSelector';
 import { GridSignature, useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { GridRowGroupParams } from '../../core/rowGroupsPerProcessing';
+import { gridPaginatedVisibleSortedGridRowIdsSelector } from '../pagination/gridPaginationSelector';
 
 interface GridRowsInternalCacheState {
   value: GridRowGroupParams;
@@ -397,10 +398,13 @@ export const useGridRows = (
   // The effect is used to build the rows meta data - totalHeight and positions.
   // Because of variable row height this is needed for the virtualization
   React.useEffect(() => {
-    const allRows = gridRowIdsSelector(apiRef.current.state);
+    // TODO: get only visible rows
+    const paginatedVisibleRowIds = gridPaginatedVisibleSortedGridRowIdsSelector(
+      apiRef.current.state,
+    );
     const positions: number[] = [];
 
-    const totalHeight = allRows.reduce((acc: number, currentRow: GridRowId) => {
+    const totalHeight = paginatedVisibleRowIds.reduce((acc: number, currentRow: GridRowId) => {
       positions.push(acc);
       let targetRowHeight = gridState.density.rowHeight;
       const targetRowModel = apiRef.current.getRow(currentRow);
@@ -417,7 +421,7 @@ export const useGridRows = (
     }, 0);
 
     rowsMeta.current = { totalHeight, positions };
-  }, [apiRef, props, rowsHeightCollection, gridState]);
+  }, [apiRef, props, gridState]);
 
   const getRowsMeta = (): GridRowsMeta => rowsMeta.current;
 
