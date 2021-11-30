@@ -79,12 +79,7 @@ export function GridEditDateCell(props: GridRenderEditCellParams & InputBaseProp
         newParsedDate = null;
       } else {
         const [date, time] = newFormattedDate.split('T');
-        const [year, month, day] = date.split('-');
-        newParsedDate = new Date();
-        newParsedDate.setFullYear(Number(year));
-        newParsedDate.setMonth(Number(month) - 1);
-        newParsedDate.setDate(Number(day));
-        newParsedDate.setHours(0, 0, 0, 0);
+        newParsedDate = new Date(`${date}T00:00:00`);
 
         if (time) {
           const [hours, minutes] = time.split(':');
