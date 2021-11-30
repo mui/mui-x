@@ -99,10 +99,9 @@ export const useGridColumnPinning = (
       }
 
       const visibleColumns = visibleGridColumnsSelector(apiRef.current.state);
-      const leftPinnedColumns = filterColumns(pinnedColumns.left, visibleColumns).length;
-      const rightPinnedColumns = filterColumns(pinnedColumns.right, visibleColumns).length;
+      const [leftPinnedColumns, rightPinnedColumns] = filterColumns(pinnedColumns, visibleColumns);
 
-      if (!params.colIndex || (leftPinnedColumns === 0 && rightPinnedColumns === 0)) {
+      if (!params.colIndex || (leftPinnedColumns.length === 0 && rightPinnedColumns.length === 0)) {
         return initialValue;
       }
 
@@ -112,10 +111,10 @@ export const useGridColumnPinning = (
       const offsetWidth = visibleColumns[params.colIndex].computedWidth;
       const offsetLeft = columnsMeta.positions[params.colIndex];
 
-      const leftPinnedColumnsWidth = columnsMeta.positions[leftPinnedColumns];
+      const leftPinnedColumnsWidth = columnsMeta.positions[leftPinnedColumns.length];
       const rightPinnedColumnsWidth =
         columnsMeta.totalWidth -
-        columnsMeta.positions[columnsMeta.positions.length - rightPinnedColumns];
+        columnsMeta.positions[columnsMeta.positions.length - rightPinnedColumns.length];
 
       const elementBottom = offsetLeft + offsetWidth;
       if (elementBottom - (clientWidth - rightPinnedColumnsWidth) > scrollLeft) {
@@ -128,7 +127,7 @@ export const useGridColumnPinning = (
       }
       return initialValue;
     },
-    [apiRef, pinnedColumns.left, pinnedColumns.right, props.disableColumnPinning],
+    [apiRef, pinnedColumns, props.disableColumnPinning],
   );
 
   const addColumnMenuButtons = React.useCallback(
@@ -148,8 +147,7 @@ export const useGridColumnPinning = (
         return columns;
       }
 
-      const leftPinnedColumns = filterColumns(pinnedColumns.left, columns);
-      const rightPinnedColumns = filterColumns(pinnedColumns.right, columns);
+      const [leftPinnedColumns, rightPinnedColumns] = filterColumns(pinnedColumns, columns);
 
       if (leftPinnedColumns.length === 0 && rightPinnedColumns.length === 0) {
         return columns;
@@ -171,32 +169,31 @@ export const useGridColumnPinning = (
 
       return [...leftColumns, ...centerColumns, ...rightColumns];
     },
-    [pinnedColumns.left, pinnedColumns.right, props.disableColumnPinning],
+    [pinnedColumns, props.disableColumnPinning],
   );
 
   const checkIfCanBeReordered = React.useCallback(
     (initialValue, { targetIndex }: { targetIndex: number }) => {
       const visibleColumns = visibleGridColumnsSelector(apiRef.current.state);
-      const leftPinnedColumns = filterColumns(pinnedColumns.left, visibleColumns).length;
-      const rightPinnedColumns = filterColumns(pinnedColumns.right, visibleColumns).length;
+      const [leftPinnedColumns, rightPinnedColumns] = filterColumns(pinnedColumns, visibleColumns);
 
-      if (leftPinnedColumns === 0 && rightPinnedColumns === 0) {
+      if (leftPinnedColumns.length === 0 && rightPinnedColumns.length === 0) {
         return initialValue;
       }
 
-      if (leftPinnedColumns > 0 && targetIndex < leftPinnedColumns) {
+      if (leftPinnedColumns.length > 0 && targetIndex < leftPinnedColumns.length) {
         return false;
       }
 
-      if (rightPinnedColumns > 0) {
+      if (rightPinnedColumns.length > 0) {
         const visibleColumnsAmount = visibleGridColumnsSelector(apiRef.current.state).length;
-        const firstRightPinnedColumnIndex = visibleColumnsAmount - rightPinnedColumns;
+        const firstRightPinnedColumnIndex = visibleColumnsAmount - rightPinnedColumns.length;
         return targetIndex >= firstRightPinnedColumnIndex ? false : initialValue;
       }
 
       return initialValue;
     },
-    [apiRef, pinnedColumns.left, pinnedColumns.right],
+    [apiRef, pinnedColumns],
   );
 
   useGridRegisterPreProcessor(apiRef, GridPreProcessingGroup.scrollToIndexes, calculateScrollLeft);

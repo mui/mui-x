@@ -243,6 +243,15 @@ describe('<DataGridPro /> - Column pinning', () => {
         ),
       ).not.to.equal(null);
     });
+
+    it('shoull filter our duplicated columns', () => {
+      render(<TestCase pinnedColumns={{ left: ['currencyPair'], right: ['currencyPair'] }} />);
+      const leftColumns = document.querySelector(
+        `.${gridClasses['pinnedColumns--left']}`,
+      ) as HTMLDivElement;
+      expect(leftColumns.querySelector('[data-field="currencyPair"]')).not.to.equal(null);
+      expect(document.querySelector(`.${gridClasses['pinnedColumns--right']}`)).to.equal(null);
+    });
   });
 
   describe('props: disableColumnPinning', () => {

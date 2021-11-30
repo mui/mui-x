@@ -16,27 +16,47 @@ import { GridComponentProps } from '../../_modules_/grid/GridComponentProps';
 import { getDataGridUtilityClass } from '../../_modules_/grid/gridClasses';
 import { gridPinnedColumnsSelector } from '../../_modules_/grid/hooks/features/columnPinning/columnPinningSelector';
 import { GridColumns } from '../../_modules_/grid/models/colDef/gridColDef';
-import { GridPinnedPosition } from '../../_modules_/grid/models/api/gridColumnPinningApi';
+import {
+  GridPinnedColumns,
+  GridPinnedPosition,
+} from '../../_modules_/grid/models/api/gridColumnPinningApi';
 
-export const filterColumns = (newPinnedColumns: string[] | undefined, columns: GridColumns) => {
-  if (!Array.isArray(newPinnedColumns)) {
-    return [];
-  }
-  return newPinnedColumns.filter((field) => columns.some((column) => column.field === field));
+export const filterColumns = (pinnedColumns: GridPinnedColumns, columns: GridColumns) => {
+  const filter = (newPinnedColumns: any[] | undefined, remaningColumns: GridColumns) => {
+    if (!Array.isArray(newPinnedColumns)) {
+      return [];
+    }
+    return newPinnedColumns.filter((field) =>
+      remaningColumns.some((column) => column.field === field),
+    );
+  };
+
+  const leftPinnedColumns = filter(pinnedColumns.left, columns);
+  const columnsWithoutLeftPinnedColumns = columns.filter(
+    (column) => !leftPinnedColumns.includes(column.field),
+  );
+  const rightPinnedColumns = filter(pinnedColumns.right, columnsWithoutLeftPinnedColumns);
+  return [leftPinnedColumns, rightPinnedColumns];
 };
 
 type OwnerState = {
   classes: GridComponentProps['classes'];
-  leftPinnedColumns: number;
-  rightPinnedColumns: number;
+  leftPinnedColumns: GridPinnedColumns['left'];
+  rightPinnedColumns: GridPinnedColumns['right'];
 };
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes, leftPinnedColumns, rightPinnedColumns } = ownerState;
 
   const slots = {
-    leftPinnedColumns: ['pinnedColumns', leftPinnedColumns > 0 && 'pinnedColumns--left'],
-    rightPinnedColumns: ['pinnedColumns', rightPinnedColumns > 0 && 'pinnedColumns--right'],
+    leftPinnedColumns: [
+      'pinnedColumns',
+      leftPinnedColumns && leftPinnedColumns.length > 0 && 'pinnedColumns--left',
+    ],
+    rightPinnedColumns: [
+      'pinnedColumns',
+      rightPinnedColumns && rightPinnedColumns.length > 0 && 'pinnedColumns--right',
+    ],
   };
 
   return composeClasses(slots, getDataGridUtilityClass, classes);
@@ -103,8 +123,7 @@ const DataGridProVirtualScroller = React.forwardRef<
   };
 
   const pinnedColumns = useGridSelector(apiRef, gridPinnedColumnsSelector);
-  const leftPinnedColumns = filterColumns(pinnedColumns.left, visibleColumns).length;
-  const rightPinnedColumns = filterColumns(pinnedColumns.right, visibleColumns).length;
+  const [leftPinnedColumns, rightPinnedColumns] = filterColumns(pinnedColumns, visibleColumns);
 
   const ownerState = { classes: rootProps.classes, leftPinnedColumns, rightPinnedColumns };
   const classes = useUtilityClasses(ownerState);
@@ -118,8 +137,8 @@ const DataGridProVirtualScroller = React.forwardRef<
     updateRenderZonePosition,
   } = useGridVirtualScroller({
     ref,
-    renderZoneMinColumnIndex: leftPinnedColumns,
-    renderZoneMaxColumnIndex: visibleColumns.length - rightPinnedColumns,
+    renderZoneMinColumnIndex: leftPinnedColumns.length,
+    renderZoneMaxColumnIndex: visibleColumns.length - rightPinnedColumns.length,
     onRenderZonePositioning: handleRenderZonePositioning,
     ...props,
   });
@@ -158,7 +177,7 @@ const DataGridProVirtualScroller = React.forwardRef<
       ? {
           ...renderContext,
           firstColumnIndex: 0,
-          lastColumnIndex: leftPinnedColumns,
+          lastColumnIndex: leftPinnedColumns.length,
         }
       : null;
 
@@ -166,7 +185,7 @@ const DataGridProVirtualScroller = React.forwardRef<
     renderContext && rightPinnedColumns
       ? {
           ...renderContext,
-          firstColumnIndex: visibleColumns.length - rightPinnedColumns,
+          firstColumnIndex: visibleColumns.length - rightPinnedColumns.length,
           lastColumnIndex: visibleColumns.length,
         }
       : null;

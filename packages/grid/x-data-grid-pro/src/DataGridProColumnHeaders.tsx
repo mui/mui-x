@@ -14,12 +14,15 @@ import { GridColumnHeaders } from '../../_modules_/grid/components/columnHeaders
 import { gridPinnedColumnsSelector } from '../../_modules_/grid/hooks/features/columnPinning/columnPinningSelector';
 import { GridEvents } from '../../_modules_/grid/models/events';
 import { filterColumns } from './DataGridProVirtualScroller';
-import { GridPinnedPosition } from '../../_modules_/grid/models/api/gridColumnPinningApi';
+import {
+  GridPinnedPosition,
+  GridPinnedColumns,
+} from '../../_modules_/grid/models/api/gridColumnPinningApi';
 
 type OwnerState = {
   classes?: GridComponentProps['classes'];
-  leftPinnedColumns: number;
-  rightPinnedColumns: number;
+  leftPinnedColumns: GridPinnedColumns['left'];
+  rightPinnedColumns: GridPinnedColumns['right'];
 };
 
 const useUtilityClasses = (ownerState: OwnerState) => {
@@ -28,11 +31,11 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   const slots = {
     leftPinnedColumns: [
       'pinnedColumnHeaders',
-      leftPinnedColumns > 0 && `pinnedColumnHeaders--left`,
+      leftPinnedColumns && leftPinnedColumns.length > 0 && `pinnedColumnHeaders--left`,
     ],
     rightPinnedColumns: [
       'pinnedColumnHeaders',
-      rightPinnedColumns > 0 && `pinnedColumnHeaders--right`,
+      rightPinnedColumns && rightPinnedColumns.length > 0 && `pinnedColumnHeaders--right`,
     ],
   };
 
@@ -107,8 +110,7 @@ export const DataGridProColumnHeaders = React.forwardRef<
   );
 
   const pinnedColumns = useGridSelector(apiRef, gridPinnedColumnsSelector);
-  const leftPinnedColumns = filterColumns(pinnedColumns.left, visibleColumns).length;
-  const rightPinnedColumns = filterColumns(pinnedColumns.right, visibleColumns).length;
+  const [leftPinnedColumns, rightPinnedColumns] = filterColumns(pinnedColumns, visibleColumns);
 
   const {
     isDragging,
@@ -119,7 +121,7 @@ export const DataGridProColumnHeaders = React.forwardRef<
     getColumns,
   } = useGridColumnHeaders({
     innerRef,
-    minColumnIndex: leftPinnedColumns,
+    minColumnIndex: leftPinnedColumns.length,
   });
 
   const ownerState = { leftPinnedColumns, rightPinnedColumns, classes: rootProps.classes };
@@ -132,19 +134,19 @@ export const DataGridProColumnHeaders = React.forwardRef<
   }, [renderContext, updateInnerPosition]);
 
   const leftRenderContext =
-    renderContext && leftPinnedColumns
+    renderContext && leftPinnedColumns.length
       ? {
           ...renderContext,
           firstColumnIndex: 0,
-          lastColumnIndex: leftPinnedColumns,
+          lastColumnIndex: leftPinnedColumns.length,
         }
       : null;
 
   const rightRenderContext =
-    renderContext && rightPinnedColumns
+    renderContext && rightPinnedColumns.length
       ? {
           ...renderContext,
-          firstColumnIndex: visibleColumns.length - rightPinnedColumns,
+          firstColumnIndex: visibleColumns.length - rightPinnedColumns.length,
           lastColumnIndex: visibleColumns.length,
         }
       : null;
@@ -185,8 +187,8 @@ export const DataGridProColumnHeaders = React.forwardRef<
       <GridColumnHeadersInner isDragging={isDragging} {...getInnerProps()}>
         {getColumns({
           renderContext,
-          minFirstColumn: leftPinnedColumns,
-          maxLastColumn: visibleColumns.length - rightPinnedColumns,
+          minFirstColumn: leftPinnedColumns.length,
+          maxLastColumn: visibleColumns.length - rightPinnedColumns.length,
         })}
       </GridColumnHeadersInner>
     </GridColumnHeaders>
