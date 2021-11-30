@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { createRenderer, fireEvent, screen, getByText } from '@material-ui/monorepo/test/utils';
 import { expect } from 'chai';
-import { useFakeTimers } from 'sinon';
+import { useFakeTimers, spy } from 'sinon';
 import {
   DataGrid,
   GridToolbar,
@@ -1293,6 +1293,8 @@ describe('<DataGrid /> - Filter', () => {
     });
 
     it('should reset value if the new operator has no input component', async () => {
+      const onFilterModelChange = spy();
+
       render(
         <TestCase
           field="brand"
@@ -1305,12 +1307,14 @@ describe('<DataGrid /> - Filter', () => {
       expect(screen.getByRole('combobox', { name: 'Operators' }).value).to.equal('contains');
       expect(getColumnValues()).to.deep.equal(['Puma']);
 
-      setOperatorValue('isEmpty');
-      setOperatorValue('contains');
+      expect(onFilterModelChange.callCount).to.equal(0);
 
-      expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
-      expect(screen.getByRole('combobox', { name: 'Operators' }).value).to.equal('contains');
-      expect(screen.getByRole('textbox', { name: 'Value' }).value).to.equal('');
+      setOperatorValue('isEmpty');
+
+      expect(onFilterModelChange.callCount).to.equal(1);
+      expect(onFilterModelChange.lastCall.args[0].items[0].value).to.equal(undefined);
+
+      expect(screen.getByRole('combobox', { name: 'Operators' }).value).to.equal('isEmpty');
     });
   });
 
