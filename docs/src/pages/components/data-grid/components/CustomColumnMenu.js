@@ -1,7 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@mui/styles';
-import { createTheme } from '@mui/material/styles';
+import Box from '@mui/material/Box';
+import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import {
   GridColumnMenu,
@@ -13,48 +13,44 @@ import {
 } from '@mui/x-data-grid-pro';
 import StarOutlineIcon from '@mui/icons-material/StarOutline';
 
-const defaultTheme = createTheme();
-const useStyles = makeStyles(
-  (theme) => ({
-    primary: {
-      background: theme.palette.primary.main,
-      color: theme.palette.primary.contrastText,
-    },
-    secondary: {
-      background: theme.palette.secondary.main,
-      color: theme.palette.secondary.contrastText,
-    },
+const StyledGridColumnMenuContainer = styled(GridColumnMenuContainer)(
+  ({ theme, ownerState }) => ({
+    background: theme.palette[ownerState.color].main,
+    color: theme.palette[ownerState.color].contrastText,
   }),
-  { defaultTheme },
 );
 
+const StyledGridColumnMenu = styled(GridColumnMenu)(({ theme, ownerState }) => ({
+  background: theme.palette[ownerState.color].main,
+  color: theme.palette[ownerState.color].contrastText,
+}));
+
 function CustomColumnMenuComponent(props) {
-  const classes = useStyles();
   const { hideMenu, currentColumn, color, ...other } = props;
 
   if (currentColumn.field === 'name') {
     return (
-      <GridColumnMenuContainer
+      <StyledGridColumnMenuContainer
         hideMenu={hideMenu}
         currentColumn={currentColumn}
-        className={classes[color]}
+        ownerState={{ color }}
         {...other}
       >
         <SortGridMenuItems onClick={hideMenu} column={currentColumn} />
         <GridFilterMenuItem onClick={hideMenu} column={currentColumn} />
-      </GridColumnMenuContainer>
+      </StyledGridColumnMenuContainer>
     );
   }
   if (currentColumn.field === 'stars') {
     return (
-      <GridColumnMenuContainer
+      <StyledGridColumnMenuContainer
         hideMenu={hideMenu}
         currentColumn={currentColumn}
-        className={classes[color]}
+        ownerState={{ color }}
         {...other}
       >
-        <div
-          style={{
+        <Box
+          sx={{
             width: 127,
             height: 160,
             display: 'flex',
@@ -63,16 +59,16 @@ function CustomColumnMenuComponent(props) {
             alignItems: 'center',
           }}
         >
-          <StarOutlineIcon style={{ fontSize: 80 }} />
-        </div>
-      </GridColumnMenuContainer>
+          <StarOutlineIcon sx={{ fontSize: 80 }} />
+        </Box>
+      </StyledGridColumnMenuContainer>
     );
   }
   return (
-    <GridColumnMenu
+    <StyledGridColumnMenu
       hideMenu={hideMenu}
       currentColumn={currentColumn}
-      className={classes[color]}
+      ownerState={{ color }}
       {...other}
     />
   );

@@ -1,6 +1,6 @@
 import * as React from 'react';
+import Box from '@mui/material/Box';
 import { GridColumns, DataGrid, GridCellParams } from '@mui/x-data-grid';
-import { makeStyles } from '@mui/styles';
 
 const columns: GridColumns = [
   { field: 'city' },
@@ -16,24 +16,22 @@ const rows = [
   { id: 4, city: 'São Paulo', oct: 20.2, nov: 21.1, dec: 19.2 },
 ];
 
-const useStyles = makeStyles({
-  root: {
-    '& .cold': {
-      backgroundColor: '#b9d5ff91',
-      color: '#1a3e72',
-    },
-    '& .hot': {
-      backgroundColor: '#ff943975',
-      color: '#1a3e72',
-    },
-  },
-});
-
 export default function StylingAllCells() {
-  const classes = useStyles();
-
   return (
-    <div style={{ height: 300, width: '100%' }} className={classes.root}>
+    <Box
+      sx={{
+        height: 300,
+        width: 1,
+        '& .cold': {
+          backgroundColor: '#b9d5ff91',
+          color: '#1a3e72',
+        },
+        '& .hot': {
+          backgroundColor: '#ff943975',
+          color: '#1a3e72',
+        },
+      }}
+    >
       <DataGrid
         rows={rows}
         columns={columns}
@@ -44,6 +42,6 @@ export default function StylingAllCells() {
           return params.value >= 15 ? 'hot' : 'cold';
         }}
       />
-    </div>
+    </Box>
   );
 }

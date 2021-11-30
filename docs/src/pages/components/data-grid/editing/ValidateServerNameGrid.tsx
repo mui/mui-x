@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { createTheme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { styled } from '@mui/material/styles';
+import Box from '@mui/material/Box';
 import {
   GridColumns,
   GridRowsProp,
@@ -10,25 +10,17 @@ import {
   GridPreProcessEditCellProps,
 } from '@mui/x-data-grid-pro';
 
-const defaultTheme = createTheme();
-const useStyles = makeStyles(
-  (theme) => {
-    const isDark = theme.palette.mode === 'dark';
-
-    return {
-      root: {
-        '& .MuiDataGrid-cell--editable': {
-          backgroundColor: isDark ? '#376331' : 'rgb(217 243 190)',
-        },
-        '& .Mui-error': {
-          backgroundColor: `rgb(126,10,15, ${isDark ? 0 : 0.1})`,
-          color: isDark ? '#ff4343' : '#750f0f',
-        },
-      },
-    };
+const StyledBox = styled(Box)(({ theme }) => ({
+  height: 400,
+  width: '100%',
+  '& .MuiDataGrid-cell--editable': {
+    backgroundColor: theme.palette.mode === 'dark' ? '#376331' : 'rgb(217 243 190)',
   },
-  { defaultTheme },
-);
+  '& .Mui-error': {
+    backgroundColor: `rgb(126,10,15, ${theme.palette.mode === 'dark' ? 0 : 0.1})`,
+    color: theme.palette.mode === 'dark' ? '#ff4343' : '#750f0f',
+  },
+}));
 
 let promiseTimeout: any;
 function validateName(username: string): Promise<boolean> {
@@ -43,7 +35,6 @@ function validateName(username: string): Promise<boolean> {
 
 export default function ValidateServerNameGrid() {
   const apiRef = useGridApiRef();
-  const classes = useStyles();
 
   const keyStrokeTimeoutRef = React.useRef<any>();
 
@@ -77,15 +68,14 @@ export default function ValidateServerNameGrid() {
   }, []);
 
   return (
-    <div style={{ height: 400, width: '100%' }}>
+    <StyledBox>
       <DataGridPro
-        className={classes.root}
         apiRef={apiRef}
         rows={rows}
         columns={columns}
         isCellEditable={(params) => params.row.id === 5}
       />
-    </div>
+    </StyledBox>
   );
 }
 

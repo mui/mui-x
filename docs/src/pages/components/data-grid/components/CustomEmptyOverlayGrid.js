@@ -1,44 +1,32 @@
 import * as React from 'react';
+import Box from '@mui/material/Box';
 import { GridOverlay, DataGrid } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
-import { createTheme } from '@mui/material/styles';
-import { createStyles, makeStyles } from '@mui/styles';
+import { styled } from '@mui/material/styles';
 
-const defaultTheme = createTheme();
-const useStyles = makeStyles(
-  (theme) =>
-    createStyles({
-      root: {
-        flexDirection: 'column',
-        '& .ant-empty-img-1': {
-          fill: theme.palette.mode === 'light' ? '#aeb8c2' : '#262626',
-        },
-        '& .ant-empty-img-2': {
-          fill: theme.palette.mode === 'light' ? '#f5f5f7' : '#595959',
-        },
-        '& .ant-empty-img-3': {
-          fill: theme.palette.mode === 'light' ? '#dce0e6' : '#434343',
-        },
-        '& .ant-empty-img-4': {
-          fill: theme.palette.mode === 'light' ? '#fff' : '#1c1c1c',
-        },
-        '& .ant-empty-img-5': {
-          fillOpacity: theme.palette.mode === 'light' ? '0.8' : '0.08',
-          fill: theme.palette.mode === 'light' ? '#f5f5f5' : '#fff',
-        },
-      },
-      label: {
-        marginTop: theme.spacing(1),
-      },
-    }),
-  { defaultTheme },
-);
+const StyledGridOverlay = styled(GridOverlay)(({ theme }) => ({
+  flexDirection: 'column',
+  '& .ant-empty-img-1': {
+    fill: theme.palette.mode === 'light' ? '#aeb8c2' : '#262626',
+  },
+  '& .ant-empty-img-2': {
+    fill: theme.palette.mode === 'light' ? '#f5f5f7' : '#595959',
+  },
+  '& .ant-empty-img-3': {
+    fill: theme.palette.mode === 'light' ? '#dce0e6' : '#434343',
+  },
+  '& .ant-empty-img-4': {
+    fill: theme.palette.mode === 'light' ? '#fff' : '#1c1c1c',
+  },
+  '& .ant-empty-img-5': {
+    fillOpacity: theme.palette.mode === 'light' ? '0.8' : '0.08',
+    fill: theme.palette.mode === 'light' ? '#f5f5f5' : '#fff',
+  },
+}));
 
 function CustomNoRowsOverlay() {
-  const classes = useStyles();
-
   return (
-    <GridOverlay className={classes.root}>
+    <StyledGridOverlay>
       <svg
         width="120"
         height="100"
@@ -78,8 +66,8 @@ function CustomNoRowsOverlay() {
           </g>
         </g>
       </svg>
-      <div className={classes.label}>No Rows</div>
-    </GridOverlay>
+      <Box sx={{ mt: 1 }}>No Rows</Box>
+    </StyledGridOverlay>
   );
 }
 
