@@ -173,7 +173,7 @@ const DataGridProVirtualScroller = React.forwardRef<
   );
 
   const leftRenderContext =
-    renderContext && leftPinnedColumns
+    renderContext && leftPinnedColumns.length > 0
       ? {
           ...renderContext,
           firstColumnIndex: 0,
@@ -182,7 +182,7 @@ const DataGridProVirtualScroller = React.forwardRef<
       : null;
 
   const rightRenderContext =
-    renderContext && rightPinnedColumns
+    renderContext && rightPinnedColumns.length > 0
       ? {
           ...renderContext,
           firstColumnIndex: visibleColumns.length - rightPinnedColumns.length,

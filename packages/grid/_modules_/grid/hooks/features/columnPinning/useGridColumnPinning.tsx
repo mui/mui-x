@@ -50,6 +50,10 @@ export const useGridColumnPinning = (
   // this method adds/removes the .Mui-hovered class to all of the row elements inside one visible row.
   const updateHoveredClassOnSiblingRows = React.useCallback(
     (event: React.MouseEvent<HTMLElement>) => {
+      if (props.disableColumnPinning) {
+        return;
+      }
+
       if (!Array.isArray(pinnedColumns.left) && !Array.isArray(pinnedColumns.right)) {
         return;
       }
@@ -72,7 +76,7 @@ export const useGridColumnPinning = (
         }
       });
     },
-    [apiRef, pinnedColumns.left, pinnedColumns.right],
+    [apiRef, pinnedColumns.left, pinnedColumns.right, props.disableColumnPinning],
   );
 
   const handleMouseEnter = React.useCallback(
