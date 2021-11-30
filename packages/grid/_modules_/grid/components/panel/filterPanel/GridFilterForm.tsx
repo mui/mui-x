@@ -92,50 +92,27 @@ function GridFilterForm(props: GridFilterFormProps) {
       const columnField = event.target.value as string;
       const column = apiRef.current.getColumn(columnField)!;
 
+      if (column.field === currentColumn!.field) {
+        // column do no change
+        return;
+      }
+
       // try to keep the same operator when column change
       const newOperator =
         column.filterOperators!.find((operator) => operator.value === item.operatorValue) ||
         column.filterOperators![0];
 
-      if (column.type === 'singleSelect') {
-        if (currentColumn?.type === 'singleSelect') {
-          // try to find same value in the new valueOptions
-          const columnValueOptions =
-            typeof column.valueOptions === 'function'
-              ? column.valueOptions({ field: column.field })
-              : column.valueOptions;
-          const newValue = columnValueOptions
-            ?.map((option) => (typeof option === 'object' ? option.value : option))
-            .find((optionValue) => String(optionValue) === item.value);
+      // Erase filter value if the input component is modified
+      const eraseItemValue =
+        !newOperator?.InputComponent ||
+        newOperator?.InputComponent !== currentOperator?.InputComponent;
 
-          applyFilterChanges({
-            ...item,
-            columnField,
-            operatorValue: newOperator.value,
-            value: newValue,
-          });
-        } else {
-          // move to singleSelect column erase filter value
-          applyFilterChanges({
-            ...item,
-            columnField,
-            operatorValue: newOperator.value,
-            value: undefined,
-          });
-        }
-      } else {
-        // Erase filter value if the input component is modified
-        const eraseItemValue =
-          !newOperator?.InputComponent ||
-          newOperator?.InputComponent !== currentOperator?.InputComponent;
-
-        applyFilterChanges({
-          ...item,
-          columnField,
-          operatorValue: newOperator.value,
-          value: eraseItemValue ? undefined : item.value,
-        });
-      }
+      applyFilterChanges({
+        ...item,
+        columnField,
+        operatorValue: newOperator.value,
+        value: eraseItemValue ? undefined : item.value,
+      });
     },
     [apiRef, applyFilterChanges, item, currentColumn, currentOperator],
   );
