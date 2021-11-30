@@ -2,7 +2,7 @@ import * as React from 'react';
 import clsx from 'clsx';
 import { GridRenderEditCellParams } from '@mui/x-data-grid';
 import Slider, { SliderProps } from '@mui/material/Slider';
-import { ValueLabelProps } from '@mui/core/SliderUnstyled';
+import { ValueLabelProps } from '@mui/base/SliderUnstyled';
 import Tooltip from '@mui/material/Tooltip';
 import { createStyles, makeStyles } from '@mui/styles';
 import { debounce } from '@mui/material/utils';

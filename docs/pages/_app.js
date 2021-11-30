@@ -2,9 +2,7 @@
 import { LicenseInfo } from '@mui/x-data-grid-pro';
 
 // Remove the license warning from demonstration purposes
-LicenseInfo.setLicenseKey(
-  '0f94d8b65161817ca5d7f7af8ac2f042T1JERVI6TVVJLVN0b3J5Ym9vayxFWFBJUlk9MTY1NDg1ODc1MzU1MCxLRVlWRVJTSU9OPTE=',
-);
+LicenseInfo.setLicenseKey(process.env.NEXT_PUBLIC_MUI_LICENSE);
 
 import 'docs/src/modules/components/bootstrap';
 // --- Post bootstrap -----
@@ -20,15 +18,10 @@ import { useRouter } from 'next/router';
 import { ponyfillGlobal } from '@mui/utils';
 import PageContext from 'docs/src/modules/components/PageContext';
 import GoogleAnalytics from 'docs/src/modules/components/GoogleAnalytics';
-import loadScript from 'docs/src/modules/utils/loadScript';
 import { ThemeProvider } from 'docs/src/modules/components/ThemeContext';
 import { pathnameToLanguage, getCookie } from 'docs/src/modules/utils/helpers';
-import { CODE_VARIANTS, LANGUAGES } from 'docs/src/modules/constants';
-import {
-  CodeVariantProvider,
-  useCodeVariant,
-  useSetCodeVariant,
-} from 'docs/src/modules/utils/codeVariant';
+import { LANGUAGES } from 'docs/src/modules/constants';
+import { CodeVariantProvider } from 'docs/src/modules/utils/codeVariant';
 import {
   UserLanguageProvider,
   useSetUserLanguage,
@@ -75,15 +68,7 @@ ponyfillGlobal.muiDocConfig = {
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache();
 
-function useFirstRender() {
-  const firstRenderRef = React.useRef(true);
-  React.useEffect(() => {
-    firstRenderRef.current = false;
-  }, []);
-
-  return firstRenderRef.current;
-}
-
+// Set the locales that the documentation automatically redirects to.
 acceptLanguage.languages(LANGUAGES);
 
 function LanguageNegotiation() {
@@ -92,119 +77,19 @@ function LanguageNegotiation() {
   const userLanguage = useUserLanguage();
 
   React.useEffect(() => {
-    const { userLanguage: userLanguageUrl, canonical } = pathnameToLanguage(router.asPath);
+    const { userLanguage: userLanguageUrl, canonicalAs } = pathnameToLanguage(router.asPath);
     const preferedLanguage =
       LANGUAGES.find((lang) => lang === getCookie('userLanguage')) ||
       acceptLanguage.get(navigator.language) ||
       userLanguage;
 
     if (userLanguageUrl === 'en' && userLanguage !== preferedLanguage) {
-      window.location = preferedLanguage === 'en' ? canonical : `/${preferedLanguage}${canonical}`;
+      window.location =
+        preferedLanguage === 'en' ? canonicalAs : `/${preferedLanguage}${canonicalAs}`;
     } else if (userLanguage !== userLanguageUrl) {
       setUserLanguage(userLanguageUrl);
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
-
-  return null;
-}
-
-/**
- * Priority: on first render: navigated value, persisted value; otherwise initial value, 'JS'
- * @returns {string} - The persisted variant if the initial value is undefined
- */
-function usePersistCodeVariant() {
-  const initialCodeVariant = useCodeVariant();
-  const setCodeVariant = useSetCodeVariant();
-
-  const isFirstRender = useFirstRender();
-
-  const navigatedCodeVariant = React.useMemo(() => {
-    const navigatedCodeVariantMatch =
-      typeof window !== 'undefined' ? window.location.hash.match(/\.(js|tsx)$/) : null;
-
-    if (navigatedCodeVariantMatch === null) {
-      return undefined;
-    }
-
-    return navigatedCodeVariantMatch[1] === 'tsx' ? CODE_VARIANTS.TS : CODE_VARIANTS.JS;
-  }, []);
-
-  const persistedCodeVariant = React.useMemo(() => {
-    if (typeof window === 'undefined') {
-      return undefined;
-    }
-    return getCookie('codeVariant');
-  }, []);
-
-  /**
-   * we initialize from navigation or cookies. on subsequent renders the store is the
-   * truth
-   */
-  const codeVariant =
-    isFirstRender === true
-      ? navigatedCodeVariant || persistedCodeVariant || initialCodeVariant
-      : initialCodeVariant;
-
-  React.useEffect(() => {
-    if (codeVariant !== initialCodeVariant) {
-      setCodeVariant(codeVariant);
-    }
-  });
-
-  React.useEffect(() => {
-    document.cookie = `codeVariant=${codeVariant};path=/;max-age=31536000`;
-  }, [codeVariant]);
-
-  return codeVariant;
-}
-
-/**
- * basically just a `useAnalytics` hook.
- * However, it needs the redux store which is created
- * in the same component this "hook" is used.
- */
-function Analytics() {
-  React.useEffect(() => {
-    loadScript('https://www.google-analytics.com/analytics.js', document.querySelector('head'));
-  }, []);
-
-  const userLanguage = useUserLanguage();
-
-  const codeVariant = usePersistCodeVariant();
-  React.useEffect(() => {
-    window.ga('set', 'dimension1', codeVariant);
-  }, [codeVariant]);
-
-  React.useEffect(() => {
-    window.ga('set', 'dimension2', userLanguage);
-  }, [userLanguage]);
-
-  React.useEffect(() => {
-    /**
-     * @type {null | MediaQueryList}
-     */
-    let matchMedia = null;
-
-    /**
-     * Based on https://developer.mozilla.org/en-US/docs/Web/API/Window/devicePixelRatio#Monitoring_screen_resolution_or_zoom_level_changes
-     * Adjusted to track 3 or more different ratios
-     */
-    function trackDevicePixelRation() {
-      window.ga('set', 'dimension3', Math.round(window.devicePixelRatio * 10) / 10);
-
-      matchMedia = window.matchMedia(`(resolution: ${window.devicePixelRatio}dppx)`);
-      // Need to setup again.
-      // Otherwise we track only changes from the initial ratio to another.
-      // It would not track 3 or more different monitors/zoom stages
-      matchMedia.addListener(trackDevicePixelRation);
-    }
-
-    trackDevicePixelRation();
-
-    return () => {
-      matchMedia = null;
-    };
-  }, []);
 
   return null;
 }
@@ -291,7 +176,7 @@ function loadDependencies() {
   );
 }
 
-if (process.browser && process.env.NODE_ENV === 'production') {
+if (typeof window !== 'undefined' && process.env.NODE_ENV === 'production') {
   // eslint-disable-next-line no-console
   console.log(
     `%c
@@ -309,6 +194,7 @@ Tip: you can access the documentation \`theme\` object directly in the console.
   );
 }
 
+// DO NOT REPLACE THIS FUNCTION WITH THE ONE FROM THE MONOREPO
 function findActivePage(currentPages, pathname) {
   const activePage = find(currentPages, (page) => {
     if (page.children && pathname.indexOf(`${page.pathname}/`) === 0) {
@@ -376,14 +262,13 @@ function AppWrapper(props) {
             <ThemeProvider>
               <DocsStyledEngineProvider cacheLtr={emotionCache}>
                 <XWrapper>{children}</XWrapper>
+                <GoogleAnalytics />
               </DocsStyledEngineProvider>
             </ThemeProvider>
           </PageContext.Provider>
           <LanguageNegotiation />
-          <Analytics />
         </CodeVariantProvider>
       </UserLanguageProvider>
-      <GoogleAnalytics key={router.route} />
     </React.Fragment>
   );
 }

@@ -1,6 +1,5 @@
 import * as React from 'react';
-import { createTheme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import Box from '@mui/material/Box';
 import { DataGrid } from '@mui/x-data-grid';
 import {
   randomCreatedDate,
@@ -8,33 +7,24 @@ import {
   randomUpdatedDate,
 } from '@mui/x-data-grid-generator';
 
-const defaultTheme = createTheme();
-const useStyles = makeStyles(
-  (theme) => {
-    const backgroundColor =
-      theme.palette.mode === 'dark' ? '#376331' : 'rgb(217 243 190)';
-    return {
-      root: {
-        '& .MuiDataGrid-cell--editable': {
-          backgroundColor,
-        },
-      },
-    };
-  },
-  { defaultTheme },
-);
-
 export default function IsCellEditableGrid() {
-  const classes = useStyles();
   return (
-    <div style={{ height: 400, width: '100%' }}>
+    <Box
+      sx={{
+        height: 400,
+        width: 1,
+        '& .MuiDataGrid-cell--editable': {
+          bgcolor: (theme) =>
+            theme.palette.mode === 'dark' ? '#376331' : 'rgb(217 243 190)',
+        },
+      }}
+    >
       <DataGrid
-        className={classes.root}
         rows={rows}
         columns={columns}
         isCellEditable={(params) => params.row.age % 2 === 0}
       />
-    </div>
+    </Box>
   );
 }
 

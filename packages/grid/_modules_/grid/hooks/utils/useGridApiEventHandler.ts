@@ -1,8 +1,7 @@
 import * as React from 'react';
 import { GridApiRef } from '../../models/api/gridApiRef';
+import { GridEventListener, GridEvents, GridEventsStr } from '../../models/events';
 import { EventListenerOptions } from '../../utils/EventManager';
-import { MuiEvent } from '../../models/muiEvent';
-import { GridEventListener } from '../../models/gridEventListener';
 
 /**
  * Signal to the underlying logic what version of the public component API
@@ -13,28 +12,24 @@ export enum GridSignature {
   DataGridPro = 'DataGridPro',
 }
 
-export function useGridApiEventHandler<Params, Event extends MuiEvent>(
+export function useGridApiEventHandler<E extends GridEventsStr>(
   apiRef: GridApiRef,
-  eventName: string,
-  handler?: GridEventListener<Params, Event>,
+  eventName: E,
+  handler?: GridEventListener<E>,
   options?: EventListenerOptions,
 ) {
   const subscription = React.useRef<(() => void) | null>(null);
-  const handlerRef = React.useRef<GridEventListener<Params, Event> | undefined>();
+  const handlerRef = React.useRef<GridEventListener<E> | undefined>();
   handlerRef.current = handler;
 
   if (!subscription.current && handlerRef.current) {
-    const enhancedHandler: GridEventListener<Params, Event> = (params, event, details) => {
+    const enhancedHandler: GridEventListener<E> = (params, event, details) => {
       if (!event.defaultMuiPrevented) {
         handlerRef.current?.(params, event, details);
       }
     };
 
-    subscription.current = apiRef.current.subscribeEvent<Params, Event>(
-      eventName,
-      enhancedHandler,
-      options,
-    );
+    subscription.current = apiRef.current.subscribeEvent(eventName, enhancedHandler, options);
   } else if (!handlerRef.current && subscription.current) {
     subscription.current();
     subscription.current = null;
@@ -42,17 +37,13 @@ export function useGridApiEventHandler<Params, Event extends MuiEvent>(
 
   React.useEffect(() => {
     if (!subscription.current && handlerRef.current) {
-      const enhancedHandler: GridEventListener<Params, Event> = (params, event, details) => {
+      const enhancedHandler: GridEventListener<E> = (params, event, details) => {
         if (!event.defaultMuiPrevented) {
           handlerRef.current?.(params, event, details);
         }
       };
 
-      subscription.current = apiRef.current.subscribeEvent<Params, Event>(
-        eventName,
-        enhancedHandler,
-        options,
-      );
+      subscription.current = apiRef.current.subscribeEvent(eventName, enhancedHandler, options);
     }
 
     return () => {
@@ -64,11 +55,11 @@ export function useGridApiEventHandler<Params, Event extends MuiEvent>(
 
 const optionsSubscriberOptions: EventListenerOptions = { isFirst: true };
 
-export function useGridApiOptionHandler<Params, Event extends MuiEvent>(
+export function useGridApiOptionHandler<E extends GridEvents>(
   apiRef: GridApiRef,
-  eventName: string,
-  handler?: GridEventListener<Params, Event>,
+  eventName: E,
+  handler?: GridEventListener<E>,
 ) {
   // Validate that only one per event name?
-  useGridApiEventHandler<Params, Event>(apiRef, eventName, handler, optionsSubscriberOptions);
+  useGridApiEventHandler(apiRef, eventName, handler, optionsSubscriberOptions);
 }

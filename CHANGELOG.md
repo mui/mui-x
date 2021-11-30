@@ -5,12 +5,12 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## 5.0.1
 
-_Nov 17, 2021_
+_Nov 23, 2021_
 
 A big thanks to the 3 contributors who made this release possible. Here are some highlights ✨:
 
 - 🎁 New API to validate the editing values (#3006) @m4theushw
- 
+
   You can now use the `preProcessEditCellProps` key in `GridColDef` to synchronously or asynchronously validate the values committed.
 
   ```ts
@@ -63,9 +63,9 @@ A big thanks to the 3 contributors who made this release possible. Here are some
 
 ## 5.0.0
 
-_Nov 16, 2021_
+_Nov 23, 2021_
 
-🎉 We are execited to introduce [MUI X v5.0.0](https://mui.com/blog/mui-x-v5/) 🎉!
+🎉 We are excited to introduce [MUI X v5.0.0](https://mui.com/blog/mui-x-v5/) 🎉!
 
 If you want to migrate the DataGrid or DataGridPro from v4 to v5, take a look at the [migration guide](https://mui.com/components/data-grid/migration-v4/).
 This version is fully compatible with `@mui/material@5.X` and can be used with `@material-ui/core@4.x` with some [additional steps](https://mui.com/components/data-grid/migration-v4/#using-mui-x-v5-with-mui-core-v4).

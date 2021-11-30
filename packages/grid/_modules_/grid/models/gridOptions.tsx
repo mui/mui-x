@@ -218,6 +218,17 @@ export interface GridSimpleOptions {
    */
   rowsPerPageOptions: number[];
   /**
+   * If `true`, the rows will be gathered in a tree structure according to the `getTreeDataPath` prop.
+   * @default false
+   */
+  treeData: boolean;
+  /**
+   * If above 0, the row children will be expanded up to this depth.
+   * If equal to -1, all the row children will be expanded.
+   * @default 0
+   */
+  defaultGroupingExpansionDepth: number;
+  /**
    * Set the area in `px` at the bottom of the grid viewport where onRowsScrollEnd is called.
    * @default 80
    */
@@ -292,6 +303,8 @@ export const GRID_DEFAULT_SIMPLE_OPTIONS: GridSimpleOptions = {
   paginationMode: GridFeatureModeConstant.client,
   rowHeight: 52,
   rowsPerPageOptions: [25, 50, 100],
+  treeData: false,
+  defaultGroupingExpansionDepth: 0,
   scrollEndThreshold: 80,
   showCellRightBorder: false,
   showColumnRightBorder: false,

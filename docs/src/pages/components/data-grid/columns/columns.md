@@ -85,7 +85,7 @@ Set the column definition attribute `hide` to `true` to hide the column.
 <DataGrid columns={[{ field: 'id', hide: true }]} />
 ```
 
-### Resizing [<span class="pro"></span>](https://mui.com/store/items/material-ui-pro/)
+### Resizing [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
 
 By default, `DataGridPro` allows all columns to be resized by dragging the right portion of the column separator.
 
@@ -358,7 +358,7 @@ To disable the column selector, set the prop `disableColumnSelector={true}`.
 
 {{"demo": "pages/components/data-grid/columns/ColumnSelectorGrid.js", "bg": "inline"}}
 
-## Column reorder [<span class="pro"></span>](https://mui.com/store/items/material-ui-pro/)
+## Column reorder [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
 
 By default, `DataGridPro` allows all column reordering by dragging the header cells and moving them left or right.
 
@@ -385,13 +385,13 @@ In addition, column reordering emits the following events that can be imported:
 
 Grouping columns allows you to have multiple levels of columns in your header and the ability, if needed, to 'open and close' column groups to show and hide additional columns.
 
-## 🚧 Column pinning [<span class="pro"></span>](https://mui.com/store/items/material-ui-pro/)
+## 🚧 Column pinning [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
 
 > ⚠️ This feature isn't implemented yet. It's coming.
 >
 > 👍 Upvote [issue #193](https://github.com/mui-org/material-ui-x/issues/193) if you want to see it land faster.
 
-Sticky (or frozen, locked, or pinned) columns are columns that are visible at all times while the user scrolls the grid horizontally.
+Pinned (or frozen, locked, or sticky) columns are columns that are visible at all times while the user scrolls the grid horizontally.
 
 ## 🚧 Column spanning
 

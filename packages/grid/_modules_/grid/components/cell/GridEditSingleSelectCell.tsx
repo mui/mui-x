@@ -10,7 +10,7 @@ import {
 import { isEscapeKey } from '../../utils/keyboardUtils';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { GridEditModes } from '../../models/gridEditRowModel';
-import { GridEvents } from '../../constants/eventsConstants';
+import { GridEvents } from '../../models/events/gridEvents';
 
 const renderSingleSelectOptions = (option) =>
   typeof option === 'object' ? (
