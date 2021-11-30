@@ -237,7 +237,8 @@ We use GitHub issues exclusively as a bug and feature request tracker. If you th
 
 ### StackOverflow
 
-For crowdsourced technical questions from expert MUI devs in our community. Also frequented by the MUI Core team.
+For crowdsourced answers from expert MUI developers in our community.
+StackOverflow is also visited from time to time by the maintainers of MUI.
 
 [Post a question](https://stackoverflow.com/questions/tagged/mui)
 
