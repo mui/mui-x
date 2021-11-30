@@ -142,15 +142,7 @@ describe('<DataGrid /> - Filter', () => {
       imperativeFilterModel?: boolean;
     } & Partial<Omit<DataGridProps, 'columns'>>,
   ) => {
-    const {
-      operatorValue,
-      value,
-      rows,
-      columns,
-      field = 'brand',
-      imperativeFilterModel = true,
-      ...other
-    } = props;
+    const { operatorValue, value, rows, columns, field = 'brand', initialState, ...other } = props;
     return (
       <div style={{ width: 300, height: 300 }}>
         <DataGrid
@@ -158,8 +150,9 @@ describe('<DataGrid /> - Filter', () => {
           columns={columns || baselineProps.columns}
           rows={rows || baselineProps.rows}
           filterModel={
-            imperativeFilterModel
-              ? {
+            initialState
+              ? undefined
+              : {
                   items: [
                     {
                       columnField: field,
@@ -168,7 +161,6 @@ describe('<DataGrid /> - Filter', () => {
                     },
                   ],
                 }
-              : undefined
           }
           disableColumnFilter={false}
           initialState={{
@@ -176,21 +168,7 @@ describe('<DataGrid /> - Filter', () => {
               open: true,
               openedPanelValue: GridPreferencePanelsValue.filters,
             },
-            ...(imperativeFilterModel
-              ? {}
-              : {
-                  filter: {
-                    filterModel: {
-                      items: [
-                        {
-                          columnField: field,
-                          value,
-                          operatorValue,
-                        },
-                      ],
-                    },
-                  },
-                }),
+            ...initialState,
           }}
           {...other}
         />
@@ -1255,10 +1233,19 @@ describe('<DataGrid /> - Filter', () => {
     it('should keep filter operator and value if available', async () => {
       render(
         <TestCase
-          field="brand"
-          operatorValue="equals"
-          value="Puma"
-          imperativeFilterModel={false}
+          initialState={{
+            filter: {
+              filterModel: {
+                items: [
+                  {
+                    columnField: 'brand',
+                    value: 'Puma',
+                    operatorValue: 'equals',
+                  },
+                ],
+              },
+            },
+          }}
         />,
       );
       expect(screen.getByRole('textbox', { name: 'Value' }).value).to.equal('Puma');
@@ -1275,10 +1262,19 @@ describe('<DataGrid /> - Filter', () => {
     it('should reset value if operator is not available for the new column', async () => {
       render(
         <TestCase
-          field="brand"
-          operatorValue="contains"
-          value="Pu"
-          imperativeFilterModel={false}
+          initialState={{
+            filter: {
+              filterModel: {
+                items: [
+                  {
+                    columnField: 'brand',
+                    operatorValue: 'contains',
+                    value: 'Pu',
+                  },
+                ],
+              },
+            },
+          }}
         />,
       );
       expect(screen.getByRole('textbox', { name: 'Value' }).value).to.equal('Pu');
@@ -1297,10 +1293,20 @@ describe('<DataGrid /> - Filter', () => {
 
       render(
         <TestCase
-          field="brand"
-          operatorValue="contains"
-          value="Pu"
-          imperativeFilterModel={false}
+          initialState={{
+            filter: {
+              filterModel: {
+                items: [
+                  {
+                    columnField: 'brand',
+                    operatorValue: 'contains',
+                    value: 'Pu',
+                  },
+                ],
+              },
+            },
+          }}
+          onFilterModelChange={onFilterModelChange}
         />,
       );
       expect(screen.getByRole('textbox', { name: 'Value' }).value).to.equal('Pu');
