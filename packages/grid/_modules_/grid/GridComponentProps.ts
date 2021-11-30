@@ -18,7 +18,11 @@ import { GridFilterModel } from './models/gridFilterModel';
 import { GridCellParams } from './models/params/gridCellParams';
 import { GridEditRowsModel } from './models/gridEditRowModel';
 import { GridSelectionModel, GridInputSelectionModel } from './models/gridSelectionModel';
-import { GridRowHeightParams, GridRowHeightReturnValue, GridRowParams } from './models/params/gridRowParams';
+import {
+  GridRowHeightParams,
+  GridRowHeightReturnValue,
+  GridRowParams,
+} from './models/params/gridRowParams';
 import { GridSlotsComponentsProps } from './models/gridSlotsComponentsProps';
 import { GridClasses } from './gridClasses';
 import { GridCallbackDetails } from './models/api/gridCallbackDetails';
