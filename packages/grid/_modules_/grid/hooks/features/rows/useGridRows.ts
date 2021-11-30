@@ -132,7 +132,11 @@ export const useGridRows = (
   }
 
   const logger = useGridLogger(apiRef, 'useGridRows');
-  const rowsHeightCollection = React.useRef(new Map());
+  const rowsHeightCollection = React.useRef(new Map<GridRowId, number>());
+  const rowsMeta = React.useRef<GridRowsMeta>({
+    totalHeight: 0,
+    positions: [],
+  });
   const rowsCache = React.useRef<GridRowsInternalCache>({
     state: {
       value: {
@@ -390,32 +394,26 @@ export const useGridRows = (
     );
   }, [logger, throttledRowsChange, props.rowCount, props.getRowId, props.rows]);
 
-  const rowsMeta = React.useRef<GridRowsMeta>({
-    totalHeight: 0,
-    positions: [],
-  });
-
-  // The effect is used to build the rows meta data - totalRowHeight and positions.
+  // The effect is used to build the rows meta data - totalHeight and positions.
   // Because of variable row height this is needed for the virtualization
   React.useEffect(() => {
     const allRows = gridRowIdsSelector(apiRef.current.state);
     const positions: number[] = [];
 
-    const totalHeight = allRows.reduce((acc: number, currentRow) => {
+    const totalHeight = allRows.reduce((acc: number, currentRow: GridRowId) => {
+      positions.push(acc);
+      let targetRowHeight = gridState.density.rowHeight;
       const targetRowModel = apiRef.current.getRow(currentRow);
 
-      if (targetRowModel) {
-        positions.push(acc);
-        const targetRowHeight =
-          (props.getRowHeight &&
-            props.getRowHeight({ ...targetRowModel, densityFactor: gridState.density.factor })) ||
+      if (targetRowModel && props.getRowHeight) {
+        // Default back to base rowHeight if getRowHeight returns null or undefined.
+        targetRowHeight =
+          props.getRowHeight({ ...targetRowModel, densityFactor: gridState.density.factor }) ||
           gridState.density.rowHeight;
-
-        rowsHeightCollection.current.set(currentRow, targetRowHeight);
-        return acc + targetRowHeight;
       }
 
-      return acc;
+      rowsHeightCollection.current.set(currentRow, targetRowHeight);
+      return acc + targetRowHeight;
     }, 0);
 
     rowsMeta.current = { totalHeight, positions };
@@ -423,7 +421,8 @@ export const useGridRows = (
 
   const getRowsMeta = (): GridRowsMeta => rowsMeta.current;
 
-  const getTargetRowHeight = (rowId: GridRowId): number => rowsHeightCollection.current.get(rowId);
+  const getTargetRowHeight = (rowId: GridRowId): number =>
+    rowsHeightCollection.current.get(rowId) || gridState.density.rowHeight;
 
   useGridApiEventHandler(apiRef, GridEvents.rowGroupsPreProcessingChange, handleGroupRows);
 
