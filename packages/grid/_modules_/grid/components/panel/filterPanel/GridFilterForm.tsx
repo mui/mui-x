@@ -93,7 +93,7 @@ function GridFilterForm(props: GridFilterFormProps) {
       const column = apiRef.current.getColumn(columnField)!;
 
       if (column.field === currentColumn!.field) {
-        // column do no change
+        // column did not change
         return;
       }
 
@@ -104,8 +104,8 @@ function GridFilterForm(props: GridFilterFormProps) {
 
       // Erase filter value if the input component is modified
       const eraseItemValue =
-        !newOperator?.InputComponent ||
-        newOperator?.InputComponent !== currentOperator?.InputComponent;
+        !newOperator.InputComponent ||
+        newOperator.InputComponent !== currentOperator?.InputComponent;
 
       applyFilterChanges({
         ...item,
