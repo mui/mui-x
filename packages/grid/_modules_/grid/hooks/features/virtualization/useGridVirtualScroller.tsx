@@ -212,7 +212,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
 
     for (let i = 0; i < renderedRows.length; i += 1) {
       const { id, model } = renderedRows[i];
-      const targetRowHeight = apiRef.current.unstable_getRowHeight(id);
+      const targetRowHeight = apiRef.current.unstable_getTargetRowHeight(id);
 
       rows.push(
         <rootProps.components.Row

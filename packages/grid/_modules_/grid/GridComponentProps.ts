@@ -18,7 +18,7 @@ import { GridFilterModel } from './models/gridFilterModel';
 import { GridCellParams } from './models/params/gridCellParams';
 import { GridEditRowsModel } from './models/gridEditRowModel';
 import { GridSelectionModel, GridInputSelectionModel } from './models/gridSelectionModel';
-import { GridRowParams } from './models/params/gridRowParams';
+import { GridRowHeightParams, GridRowParams } from './models/params/gridRowParams';
 import { GridSlotsComponentsProps } from './models/gridSlotsComponentsProps';
 import { GridClasses } from './gridClasses';
 import { GridCallbackDetails } from './models/api/gridCallbackDetails';
@@ -81,11 +81,11 @@ interface GridComponentOtherProps {
    */
   getRowClassName?: (params: GridRowParams) => string;
   /**
-   * Function that applies CSS classes dynamically on rows.
-   * @param {GridRowParams} params With all properties from [[GridRowParams]].
-   * @returns {number | null | undefined} The number of pixels used to set the target row height. Null or Undefined will use the default row height.
+   * Function that sets the row height per row.
+   * @param {GridRowHeightParams} params With all properties from [[GridRowHeightParams]].
+   * @returns {number | null | undefined} The row height value. If null or undefined then the default row height is applied.
    */
-  getRowHeight?: (params: any) => number | null | undefined;
+  getRowHeight?: (params: GridRowHeightParams) => number | null | undefined;
   /**
    * Callback fired when a cell is rendered, returns true if the cell is editable.
    * @param {GridCellParams} params With all properties from [[GridCellParams]].

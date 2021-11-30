@@ -63,5 +63,5 @@ export interface GridRowApi {
    * @param {GridRowId} id The id of the row.
    * @returns {number} The target row height.
    */
-  unstable_getRowHeight: (id: GridRowId) => number;
+  unstable_getTargetRowHeight: (id: GridRowId) => number;
 }

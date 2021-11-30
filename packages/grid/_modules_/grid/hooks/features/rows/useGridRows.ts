@@ -402,13 +402,20 @@ export const useGridRows = (
     const positions: number[] = [];
 
     const totalHeight = allRows.reduce((acc: number, currentRow) => {
-      positions.push(acc);
-      const targetRowHeight =
-        (props.getRowHeight && props.getRowHeight(apiRef.current.getRow(currentRow))) ||
-        gridState.density.rowHeight;
+      const targetRowModel = apiRef.current.getRow(currentRow);
 
-      rowsHeightCollection.current.set(currentRow, targetRowHeight);
-      return acc + targetRowHeight;
+      if (targetRowModel) {
+        positions.push(acc);
+        const targetRowHeight =
+          (props.getRowHeight &&
+            props.getRowHeight({ ...targetRowModel, densityFactor: gridState.density.factor })) ||
+          gridState.density.rowHeight;
+
+        rowsHeightCollection.current.set(currentRow, targetRowHeight);
+        return acc + targetRowHeight;
+      }
+
+      return acc;
     }, 0);
 
     rowsMeta.current = { totalHeight, positions };
@@ -416,7 +423,7 @@ export const useGridRows = (
 
   const getRowsMeta = (): GridRowsMeta => rowsMeta.current;
 
-  const getRowHeight = (rowId: GridRowId): number => rowsHeightCollection.current.get(rowId);
+  const getTargetRowHeight = (rowId: GridRowId): number => rowsHeightCollection.current.get(rowId);
 
   useGridApiEventHandler(apiRef, GridEvents.rowGroupsPreProcessingChange, handleGroupRows);
 
@@ -430,7 +437,7 @@ export const useGridRows = (
     setRowChildrenExpansion,
     getRowNode,
     unstable_getRowsMeta: getRowsMeta,
-    unstable_getRowHeight: getRowHeight,
+    unstable_getTargetRowHeight: getTargetRowHeight,
   };
 
   useGridApiMethod(apiRef, rowApi, 'GridRowApi');
