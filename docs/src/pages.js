@@ -62,7 +62,7 @@ dataGridComponentAPI.children = [
   { pathname: '/api-docs/data-grid/grid-csv-export-options', title: 'GridCSVExportOptions' },
   { pathname: '/api-docs/data-grid/grid-print-export-options', title: 'GridPrintExportOptions' },
 ].map((page) => {
-  return { ...page, linkProps: { as: page.pathname.replace(/^\/api-docs/, '/api') } };
+  return { ...page, linkProps: { linkAs: `${page.pathname.replace(/^\/api-docs/, '/api')}/` } };
 });
 
 export default pages;
