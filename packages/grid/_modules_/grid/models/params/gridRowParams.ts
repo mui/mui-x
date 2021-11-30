@@ -36,3 +36,8 @@ export interface GridRowHeightParams extends GridRowModel {
    */
   densityFactor: number;
 }
+
+/**
+ * The getRowHeight return value.
+ */
+export type GridRowHeightReturnValue = number | null | undefined;

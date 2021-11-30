@@ -273,9 +273,9 @@ DataGridProRaw.propTypes = {
    */
   getRowClassName: PropTypes.func,
   /**
-   * Function that applies CSS classes dynamically on rows.
-   * @param {GridRowParams} params With all properties from [[GridRowParams]].
-   * @returns {number | null | undefined} The number of pixels used to set the target row height. Null or Undefined will use the default row height.
+   * Function that sets the row height per row.
+   * @param {GridRowHeightParams} params With all properties from [[GridRowHeightParams]].
+   * @returns {GridRowHeightReturnValue} The row height value. If null or undefined then the default row height is applied.
    */
   getRowHeight: PropTypes.func,
   /**
