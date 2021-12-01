@@ -40,7 +40,7 @@ const DataGridProRaw = React.forwardRef<HTMLDivElement, DataGridProProps>(functi
 
   return (
     <GridContextProvider apiRef={apiRef} props={props}>
-      <GridRoot ref={ref}>
+      <GridRoot className={props.className} style={props.style} sx={props.sx} ref={ref}>
         <GridErrorHandler>
           <GridHeaderPlaceholder />
           <GridBody
@@ -109,10 +109,6 @@ DataGridProRaw.propTypes = {
    * Override or extend the styles applied to the component.
    */
   classes: PropTypes.object,
-  /**
-   * @ignore - do not document
-   */
-  className: PropTypes.string,
   /**
    * Number of extra columns to be rendered before/after the visible slice.
    * @default 3
@@ -690,9 +686,13 @@ DataGridProRaw.propTypes = {
     }),
   ),
   /**
-   * @ignore - do not document
+   * The system prop that allows defining system overrides as well as additional CSS styles.
    */
-  style: PropTypes.object,
+  sx: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object])),
+    PropTypes.func,
+    PropTypes.object,
+  ]),
   /**
    * If positive, the Grid will throttle updates coming from `apiRef.current.updateRows` and `apiRef.current.setRows`.
    * It can be useful if you have a high update rate but do not want to do heavy work like filtering / sorting or rendering on each  individual update.

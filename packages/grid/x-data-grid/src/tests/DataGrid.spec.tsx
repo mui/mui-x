@@ -33,3 +33,7 @@ function EnterpriseTest() {
     </div>
   );
 }
+
+function SxTest() {
+  <DataGrid rows={[]} columns={[]} sx={{ color: 'primary.main' }} />;
+}
