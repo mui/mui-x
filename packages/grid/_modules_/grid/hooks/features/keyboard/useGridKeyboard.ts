@@ -53,9 +53,10 @@ export const useGridKeyboard = (apiRef: GridApiRef): void => {
 
   const handleCellKeyDown = React.useCallback<GridEventListener<GridEvents.cellKeyDown>>(
     (params, event) => {
-      // The target is not an element when triggered by a Select inside the cell
-      // See https://github.com/mui-org/material-ui/issues/10534
-      if ((event.target as any).nodeType === 1 && !isGridCellRoot(event.target as Element)) {
+      // Ignore portal
+      // Do not apply shortcuts if the focus is not on the cell root component
+      // TODO replace with !event.currentTarget.contains(event.target as Element)
+      if (!isGridCellRoot(event.target as Element)) {
         return;
       }
 
