@@ -10,6 +10,7 @@ import {
 import { isEscapeKey } from '../../utils/keyboardUtils';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { GridEditModes } from '../../models/gridEditRowModel';
+import { GridEvents } from '../../models/events/gridEvents';
 
 const renderSingleSelectOptions = (option) =>
   typeof option === 'object' ? (
@@ -71,10 +72,19 @@ function GridEditSingleSelectCell(props: GridRenderEditCellParams & SelectProps)
   const handleChange = async (event) => {
     setOpen(false);
     api.setEditCellValue({ id, field, value: event.target.value }, event);
-    if (!event.key && rootProps.editMode === 'cell') {
-      const isValid = await Promise.resolve(api.commitCellChange({ id, field }, event));
-      if (isValid) {
-        api.setCellMode(id, field, 'view');
+
+    if (rootProps.editMode === GridEditModes.Row) {
+      return;
+    }
+
+    const isValid = await Promise.resolve(api.commitCellChange({ id, field }, event));
+    if (isValid) {
+      api.setCellMode(id, field, 'view');
+
+      if (event.key) {
+        // TODO v6: remove once we stop ignoring events fired from portals
+        const params = api.getCellParams(id, field);
+        api.publishEvent(GridEvents.cellNavigationKeyDown, params, event);
       }
     }
   };
