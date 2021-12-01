@@ -36,17 +36,18 @@ export const useGridTreeData = (
       headerName: apiRef.current.getLocaleText('treeDataGroupingHeaderName'),
       ...GRID_TREE_DATA_GROUP_COL_DEF_FORCED_FIELDS,
     };
-    let colDefOverride: Partial<GridColDef>;
-
-    if (typeof propGroupingColDef === 'function') {
-      const params: GridColDefOverrideParams = {
-        colDef: baseColDef,
-      };
-
-      colDefOverride = propGroupingColDef(params);
-    } else {
-      colDefOverride = propGroupingColDef ?? {};
-    }
+    const colDefOverride: Partial<GridColDef> = propGroupingColDef ?? {};
+    // let colDefOverride: Partial<GridColDef>;
+    //
+    // if (typeof propGroupingColDef === 'function') {
+    //   const params: GridColDefOverrideParams = {
+    //     colDef: baseColDef,
+    //   };
+    //
+    //   colDefOverride = propGroupingColDef(params);
+    // } else {
+    //   colDefOverride = propGroupingColDef ?? {};
+    // }
 
     return {
       ...baseColDef,
