@@ -1,7 +1,8 @@
-<DataGridPro
-  className={classes.root}
-  apiRef={apiRef}
-  rows={rows}
-  columns={columns}
-  isCellEditable={(params) => params.row.id === 5}
-/>
+<StyledBox>
+  <DataGridPro
+    apiRef={apiRef}
+    rows={rows}
+    columns={columns}
+    isCellEditable={(params) => params.row.id === 5}
+  />
+</StyledBox>

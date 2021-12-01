@@ -8,6 +8,7 @@ import {
   generateSignatureStr,
   generateTypeStr,
   isDeclarationReflection,
+  isReflectionType,
   linkify,
   writePrettifiedFile,
 } from './utils';
@@ -124,18 +125,39 @@ function findProperties(reflection: TypeDoc.DeclarationReflection) {
 }
 
 function extractEvents(
+  project: TypeDoc.ProjectReflection,
   eventsObject: TypeDoc.DeclarationReflection,
   documentedInterfaces: Map<string, boolean>,
 ) {
-  const events: { name: string; description: string }[] = [];
+  const events: { name: string; description: string; params?: string; event?: string }[] = [];
+  const eventLookupType = project.findReflectionByName(
+    'GridEventLookup',
+  )! as TypeDoc.DeclarationReflection;
   const allEvents = eventsObject.children!;
+
+  const eventLookup: { [eventName: string]: any } = {};
+  eventLookupType.children?.forEach((event) => {
+    const eventParams = {};
+    if (event.type && isReflectionType(event.type)) {
+      event.type.declaration.children?.forEach((eventProperty) => {
+        if (eventProperty.type) {
+          eventParams[eventProperty.name] = generateTypeStr(eventProperty.type);
+        }
+      });
+    }
+
+    eventLookup[event.name] = eventParams;
+  });
 
   allEvents.forEach((event) => {
     const description = linkify(event.comment?.shortText, documentedInterfaces, 'html');
+    const eventProperties = eventLookup[event.escapedName!];
 
     events.push({
       name: event.escapedName!,
       description: renderMarkdownInline(description),
+      params: linkify(eventProperties.params, documentedInterfaces, 'html'),
+      event: `MuiEvent<${eventProperties.event ?? '{}'}>`,
     });
   });
 
@@ -212,7 +234,7 @@ export default function buildInterfacesDocumentation(options: BuildInterfacesDoc
       // eslint-disable-next-line no-console
       console.log('Built JSON file for', context.name);
     } else if (reflection.name === 'GridEvents') {
-      const events = extractEvents(reflection, documentedInterfaces);
+      const events = extractEvents(project, reflection, documentedInterfaces);
 
       writePrettifiedFile(
         path.resolve(workspaceRoot, 'docs/src/pages/components/data-grid/events/events.json'),

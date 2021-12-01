@@ -78,7 +78,7 @@
         "@mui/material",
         "@mui/joy",
         "@mui/icons-material",
-        "@mui/core",
+        "@mui/base",
         "@mui/system",
         "@mui/utils"
       ]

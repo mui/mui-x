@@ -1,4 +1,5 @@
 import * as React from 'react';
+import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
@@ -12,10 +13,11 @@ import {
   GridApiRef,
   GridColumns,
   GridRowParams,
-  GridCellParams,
   MuiEvent,
   GridToolbarContainer,
   GridActionsCellItem,
+  GridEventListener,
+  GridEvents,
 } from '@mui/x-data-grid-pro';
 import {
   randomCreatedDate,
@@ -23,22 +25,6 @@ import {
   randomUpdatedDate,
   randomId,
 } from '@mui/x-data-grid-generator';
-import { createTheme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
-
-const defaultTheme = createTheme();
-
-const useStyles = makeStyles(
-  (theme) => ({
-    actions: {
-      color: theme.palette.text.secondary,
-    },
-    textPrimary: {
-      color: theme.palette.text.primary,
-    },
-  }),
-  { defaultTheme },
-);
 
 const rows: GridRowsProp = [
   {
@@ -108,7 +94,6 @@ function EditToolbar(props: EditToolbarProps) {
 }
 
 export default function FullFeaturedCrudGrid() {
-  const classes = useStyles();
   const apiRef = useGridApiRef();
 
   const handleRowEditStart = (
@@ -118,16 +103,16 @@ export default function FullFeaturedCrudGrid() {
     event.defaultMuiPrevented = true;
   };
 
-  const handleRowEditStop = (
-    params: GridRowParams,
-    event: MuiEvent<React.SyntheticEvent>,
+  const handleRowEditStop: GridEventListener<GridEvents.rowEditStop> = (
+    params,
+    event,
   ) => {
     event.defaultMuiPrevented = true;
   };
 
-  const handleCellFocusOut = (
-    params: GridCellParams,
-    event: MuiEvent<React.SyntheticEvent<Element, Event> | MouseEvent>,
+  const handleCellFocusOut: GridEventListener<GridEvents.cellFocusOut> = (
+    params,
+    event,
   ) => {
     event.defaultMuiPrevented = true;
   };
@@ -183,7 +168,7 @@ export default function FullFeaturedCrudGrid() {
       type: 'actions',
       headerName: 'Actions',
       width: 100,
-      cellClassName: classes.actions,
+      cellClassName: 'actions',
       getActions: ({ id }) => {
         const isInEditMode = apiRef.current.getRowMode(id) === 'edit';
 
@@ -198,7 +183,7 @@ export default function FullFeaturedCrudGrid() {
             <GridActionsCellItem
               icon={<CancelIcon />}
               label="Cancel"
-              className={classes.textPrimary}
+              className="textPrimary"
               onClick={handleCancelClick(id)}
               color="inherit"
             />,
@@ -209,7 +194,7 @@ export default function FullFeaturedCrudGrid() {
           <GridActionsCellItem
             icon={<EditIcon />}
             label="Edit"
-            className={classes.textPrimary}
+            className="textPrimary"
             onClick={handleEditClick(id)}
             color="inherit"
           />,
@@ -225,7 +210,18 @@ export default function FullFeaturedCrudGrid() {
   ];
 
   return (
-    <div style={{ height: 500, width: '100%' }}>
+    <Box
+      sx={{
+        height: 500,
+        width: '100%',
+        '& .actions': {
+          color: 'text.secondary',
+        },
+        '& .textPrimary': {
+          color: 'text.primary',
+        },
+      }}
+    >
       <DataGridPro
         rows={rows}
         columns={columns}
@@ -241,6 +237,6 @@ export default function FullFeaturedCrudGrid() {
           toolbar: { apiRef },
         }}
       />
-    </div>
+    </Box>
   );
 }
