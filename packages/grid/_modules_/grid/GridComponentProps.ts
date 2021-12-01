@@ -4,9 +4,9 @@ import { Theme } from '@mui/material/styles';
 import { GridInitialState } from './models/gridState';
 import { GridApiRef } from './models/api/gridApiRef';
 import {
-  GridColDefOverride,
-  GridColDefOverrideCallback,
+  GridColDefOverrideParams,
   GridColumns,
+  GridGroupingColDefOverride,
 } from './models/colDef/gridColDef';
 import {
   GridSimpleOptions,
@@ -400,8 +400,8 @@ interface GridComponentOtherProps extends CommonProps {
    * The grouping column used by the tree data.
    */
   groupingColDef?:
-    | GridColDefOverride<'field' | 'editable'>
-    | GridColDefOverrideCallback<'field' | 'editable'>;
+      | GridGroupingColDefOverride
+      | ((params: GridColDefOverrideParams) => GridGroupingColDefOverride);
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
