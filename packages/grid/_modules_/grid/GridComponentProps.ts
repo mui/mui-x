@@ -400,8 +400,8 @@ interface GridComponentOtherProps extends CommonProps {
    * The grouping column used by the tree data.
    */
   groupingColDef?:
-      | GridGroupingColDefOverride
-      | ((params: GridColDefOverrideParams) => GridGroupingColDefOverride);
+    | GridGroupingColDefOverride
+    | ((params: GridColDefOverrideParams) => GridGroupingColDefOverride);
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

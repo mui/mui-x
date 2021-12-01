@@ -227,14 +227,18 @@ export interface GridColumnsMeta {
 }
 
 export interface GridGroupingColDefOverride
-    extends Omit<
-        GridColDef,
-        'editable' | 'valueSetter' | 'field' | 'preProcessEditCellProps' | 'renderEditCell'
-        > {}
+  extends Omit<
+    GridColDef,
+    'editable' | 'valueSetter' | 'field' | 'preProcessEditCellProps' | 'renderEditCell'
+  > {}
 
 export interface GridColDefOverrideParams {
   /**
-   * The base columns this column is grouping
+   * The grouping column definition before the application of the overrides.
+   */
+  colDef: GridColDef;
+  /**
+   * The base columns this column is grouping.
    */
   sources: GridColDef[];
 }
