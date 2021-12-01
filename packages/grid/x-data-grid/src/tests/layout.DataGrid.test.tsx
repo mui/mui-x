@@ -8,6 +8,8 @@ import {
   GridToolbar,
   DataGridProps,
   ptBR,
+  GridColumns,
+  GridValueGetterFullParams,
 } from '@mui/x-data-grid';
 import { useData } from 'packages/storybook/src/hooks/useData';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
@@ -145,7 +147,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         expect(document.querySelector(`.${className}`)).to.equal(container.firstChild.firstChild);
       });
 
-      it('should support columns.valueGetter', () => {
+      it('should support columns.valueGetter using `getValue` (deprecated)', () => {
         const columns = [
           { field: 'id', hide: true },
           { field: 'firstName', hide: true },
@@ -156,6 +158,29 @@ describe('<DataGrid /> - Layout & Warnings', () => {
               `${params.getValue(params.id, 'firstName') || ''} ${
                 params.getValue(params.id, 'lastName') || ''
               }`,
+          },
+        ];
+
+        const rows = [
+          { id: 1, lastName: 'Snow', firstName: 'Jon' },
+          { id: 2, lastName: 'Lannister', firstName: 'Cersei' },
+        ];
+        render(
+          <div style={{ width: 300, height: 300 }}>
+            <DataGrid rows={rows} columns={columns} />
+          </div>,
+        );
+        expect(getColumnValues()).to.deep.equal(['Jon Snow', 'Cersei Lannister']);
+      });
+
+      it('should support columns.valueGetter using direct row access', () => {
+        const columns: GridColumns = [
+          { field: 'id', hide: true },
+          { field: 'firstName', hide: true },
+          { field: 'lastName', hide: true },
+          {
+            field: 'fullName',
+            valueGetter: (params) => `${params.row.firstName || ''} ${params.row.lastName || ''}`,
           },
         ];
 
@@ -210,7 +235,8 @@ describe('<DataGrid /> - Layout & Warnings', () => {
           { field: 'id', hide: true },
           {
             field: 'fullName',
-            valueGetter: (params: GridValueGetterParams) => params.getValue(params.id, 'age'),
+            valueGetter: (params: GridValueGetterParams) =>
+              (params as GridValueGetterFullParams).getValue(params.id, 'age'),
           },
         ];
         expect(() => {
