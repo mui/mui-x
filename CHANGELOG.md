@@ -49,11 +49,11 @@ A big thanks to the 11 contributors who made this release possible. Here are som
 - [core] Create dedicated `InputComponent` for `singleSelect` and `date` columns #3227 @alexfauquette
 - [core] Fix `EventManager` to not run listeners removed after registration #3206 @flaviendelangle
 - [core] Group Renovate updates (#3263) @flaviendelangle
-- [test] Improve testing of the keyboard navigation (#3187) @flaviendelangle
 - [core] Reflect the change of default branch (#3235) @oliviertassinari
 - [core] Replace @mui/core with @mui/base (#3217) @m4theushw
 - [core] Split docs generation script (#3189) @flaviendelangle
 - [core] Update monorepo (#3303) @m4theushw
+- [test] Improve testing of the keyboard navigation (#3187) @flaviendelangle
 - [test] Force effect to run on location change (#3283) @m4theushw
 
 ### Docs
