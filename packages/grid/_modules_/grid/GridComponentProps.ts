@@ -311,7 +311,6 @@ interface GridComponentOtherProps extends CommonProps {
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onPageSizeChange?: (pageSize: number, details: GridCallbackDetails) => void;
-
   /**
    * Set the edit rows model of the grid.
    */
