@@ -83,7 +83,7 @@ GridActionsCell.propTypes = {
   /**
    * GridApi that let you manipulate the grid.
    */
-  api: PropTypes.any.isRequired,
+  api: PropTypes.object.isRequired,
   /**
    * The column of the row that the current cell belongs to.
    */
