@@ -234,10 +234,6 @@ export interface GridGroupingColDefOverride
 
 export interface GridColDefOverrideParams {
   /**
-   * The grouping column definition before the application of the overrides.
-   */
-  colDef: GridColDef;
-  /**
    * The base columns this column is grouping.
    */
   sources: GridColDef[];
