@@ -17,6 +17,28 @@ A big thanks to the 11 contributors who made this release possible. Here are som
 
 - 💅 Add support for `sx` prop in the DataGrid and DataGridPro (#3281) @m4theushw
 - 🔦 Improve focus management in the filter panel (#3004) @alexfauquette
+- 🎁 Add strict typing to the event publisher and listener (#3022) (@flaviendelangle)
+
+  The `apiRef.current.subscribeEvent`, `apiRef.current.publishEvent` and `useGridApiEventHandler` are now fully typed and gives you the correct arguments based on the event you are listening to or emitting.
+
+  ```ts
+  const handleRowClick: GridEventListener<'rowClick'> = (
+    params, // has type `GridRowParams`
+    event, // has type `MuiEvent<React.MouseEvent<HTMLElement>>
+    details, // has type `GridCallbackDetails
+  ) => {
+    /* ... */
+  };
+
+  // with string event name
+  apiRef.current.subscribeEvent('rowClick', handleRowClick);
+  useGridApiEventHandler(apiRef, 'rowClick', handleRowClick);
+
+  // or with enum event name
+  apiRef.current.subscribeEvent(GridEvents.rowClick, handleRowClick);
+  useGridApiEventHandler(apiRef, GridEvents.rowClick, handleRowClick);
+  ```
+
 - 🌎 Translation updates for many locales
 
   If you are using DataGrid or DataGridPro in another language, check [this issue](https://github.com/mui-org/material-ui-x/issues/3211) to discover which translations are missing.
