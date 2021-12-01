@@ -80,18 +80,15 @@ const GridMenu = (props: GridMenuProps) => {
     prevTarget.current = target;
   }, [open, target]);
 
-  const handleExited = React.useCallback(
-    (popperOnExited) => (node: HTMLElement) => {
-      if (popperOnExited) {
-        popperOnExited();
-      }
+  const handleExited = (popperOnExited) => (node: HTMLElement) => {
+    if (popperOnExited) {
+      popperOnExited();
+    }
 
-      if (onExited) {
-        onExited(node);
-      }
-    },
-    [onExited],
-  );
+    if (onExited) {
+      onExited(node);
+    }
+  };
 
   return (
     <GridMenuRoot
