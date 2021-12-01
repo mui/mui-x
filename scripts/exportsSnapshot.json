@@ -377,6 +377,7 @@
   { "name": "GridRow", "kind": "Function" },
   { "name": "allGridColumnsFieldsSelector", "kind": "Function" },
   { "name": "checkGridRowIdIsValid", "kind": "Function" },
+  { "name": "createUseGridApiEventHandler", "kind": "Function" },
   { "name": "getDataGridUtilityClass", "kind": "Function" },
   { "name": "getDefaultGridFilterModel", "kind": "Function" },
   { "name": "getGridBooleanOperators", "kind": "Function" },

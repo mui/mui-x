@@ -121,6 +121,7 @@ describe('<DataGrid /> - Filter', () => {
     })
       // @ts-expect-error need to migrate helpers to TypeScript
       .toErrorDev('`model.items` has more than 1 item');
+    clock.runToLast();
   });
 
   it('should apply the filterModel prop correctly', () => {
@@ -511,15 +512,14 @@ describe('<DataGrid /> - Filter', () => {
             { id: 5, brand: 1974 },
           ]}
         />,
-        { strict: false, strictEffects: false },
       );
       expect(getColumnValues()).to.deep.equal(['0', '1984', '1954', '1974']);
       const input = screen.getByRole('spinbutton', { name: 'Value' });
       fireEvent.change(input, { target: { value: 999999 } });
-      clock.tick(500);
+      clock.runToLast();
       expect(getColumnValues()).to.deep.equal([]);
       fireEvent.change(input, { target: { value: '' } });
-      clock.tick(500);
+      clock.runToLast();
       expect(getColumnValues()).to.deep.equal(['0', '1984', '1954', '1974']);
     });
   });
