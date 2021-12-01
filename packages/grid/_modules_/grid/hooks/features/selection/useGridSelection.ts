@@ -377,7 +377,7 @@ export const useGridSelection = (
   }, [apiRef, isRowSelectable, isStateControlled]);
 
   const updateColumnsPreProcessing = React.useCallback(() => {
-    const addCheckboxColumn = (columnsState: GridColumnsRawState) => {
+    const updateCheckboxColumn = (columnsState: GridColumnsRawState) => {
       const selectionColumn: GridColDef = {
         ...GRID_CHECKBOX_SELECTION_COL_DEF,
         cellClassName: classes.cellCheckbox,
@@ -402,7 +402,7 @@ export const useGridSelection = (
     apiRef.current.unstable_registerPreProcessor(
       GridPreProcessingGroup.hydrateColumns,
       'selection',
-      addCheckboxColumn,
+      updateCheckboxColumn,
     );
   }, [apiRef, props.checkboxSelection, classes]);
 
