@@ -11,8 +11,7 @@ export type GridFilterInputDateProps = GridFilterInputValueProps &
 export const SUBMIT_FILTER_DATE_STROKE_TIME = 500;
 
 function GridFilterInputDate(props: GridFilterInputDateProps) {
-  const { item, applyValue, type, apiRef, focusElementRef, inputProps, InputProps, ...other } =
-    props;
+  const { item, applyValue, type, apiRef, focusElementRef, InputProps, ...other } = props;
 
   const filterTimeout = React.useRef<any>();
   const [filterValueState, setFilterValueState] = React.useState(item.value ?? '');
@@ -61,11 +60,11 @@ function GridFilterInputDate(props: GridFilterInputDateProps) {
       inputRef={focusElementRef}
       InputProps={{
         ...(applying ? { endAdornment: <GridLoadIcon /> } : {}),
+        ...InputProps,
         inputProps: {
           max: type === 'datetime-local' ? '9999-12-31T23:59' : '9999-12-31',
-          ...inputProps,
+          ...InputProps?.inputProps,
         },
-        ...InputProps,
       }}
       {...other}
     />
