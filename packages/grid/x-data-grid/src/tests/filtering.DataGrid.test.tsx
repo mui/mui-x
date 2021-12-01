@@ -1230,7 +1230,7 @@ describe('<DataGrid /> - Filter', () => {
       expect(screen.getByRole('textbox', { name: 'Value' }).value).to.equal('');
     });
 
-    it('should keep filter operator and value if available', async () => {
+    it('should keep filter operator and value if available', () => {
       render(
         <TestCase
           initialState={{
@@ -1259,7 +1259,7 @@ describe('<DataGrid /> - Filter', () => {
       expect(screen.getByRole('textbox', { name: 'Value' }).value).to.equal('Puma');
     });
 
-    it('should reset value if operator is not available for the new column', async () => {
+    it('should reset value if operator is not available for the new column', () => {
       render(
         <TestCase
           initialState={{
@@ -1288,7 +1288,7 @@ describe('<DataGrid /> - Filter', () => {
       expect(screen.getByTestId('customInput').value).to.equal('');
     });
 
-    it('should reset value if the new operator has no input component', async () => {
+    it('should reset value if the new operator has no input component', () => {
       const onFilterModelChange = spy();
 
       render(
