@@ -92,7 +92,7 @@ export const useGridTreeData = (
   /**
    * PRE-PROCESSING
    */
-  const getGroupingColDef = React.useCallback((): GridColDef => {
+  const groupingColDef = React.useMemo<GridColDef>(() => {
     const propGroupingColDef = props.groupingColDef;
 
     const baseColDef: GridColDef = {
@@ -127,7 +127,7 @@ export const useGridTreeData = (
       const haveGroupingColumn = columnsState.lookup[groupingColDefField] != null;
 
       if (shouldHaveGroupingColumn) {
-        columnsState.lookup[groupingColDefField] = getGroupingColDef();
+        columnsState.lookup[groupingColDefField] = groupingColDef;
         if (!haveGroupingColumn) {
           const index = columnsState.all[0] === '__check__' ? 1 : 0;
           columnsState.all = [
@@ -143,7 +143,7 @@ export const useGridTreeData = (
 
       return columnsState;
     },
-    [props.treeData, getGroupingColDef],
+    [props.treeData, groupingColDef],
   );
 
   const filteringMethod = React.useCallback<GridFilteringMethod>(
@@ -185,18 +185,19 @@ export const useGridTreeData = (
   const handleCellKeyDown = React.useCallback<GridEventListener<GridEvents.cellKeyDown>>(
     (params, event) => {
       const cellParams = apiRef.current.getCellParams(params.id, params.field);
-      if (cellParams.colDef.type === 'treeDataGroup' && isSpaceKey(event.key) && !event.shiftKey) {
+      if (cellParams.colDef.type === 'treeDataGroup' && isSpaceKey(event.key)) {
         event.stopPropagation();
         event.preventDefault();
 
+        const node = apiRef.current.getRowNode(params.id);
         const filteredDescendantCount =
           gridFilteredDescendantCountLookupSelector(apiRef.current.state)[params.id] ?? 0;
 
-        if (filteredDescendantCount === 0) {
+        if (!node || filteredDescendantCount === 0) {
           return;
         }
 
-        apiRef.current.setRowChildrenExpansion(params.id, !params.rowNode.childrenExpanded);
+        apiRef.current.setRowChildrenExpansion(params.id, !node.childrenExpanded);
       }
     },
     [apiRef],
