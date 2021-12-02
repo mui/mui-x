@@ -226,13 +226,6 @@ export interface GridColumnsMeta {
   positions: number[];
 }
 
-export type GridColumnLookup = { [field: string]: GridStateColDef };
-
-export interface GridColumnsState {
-  all: string[];
-  lookup: GridColumnLookup;
-}
-
 export type GridColDefOverride<ForcedFields extends keyof GridColDef> = Omit<
   Partial<GridColDef>,
   ForcedFields
