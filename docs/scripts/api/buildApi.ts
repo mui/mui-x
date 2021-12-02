@@ -64,7 +64,7 @@ async function run(argv: { outputDirectory?: string }) {
   });
 
   const documentedInterfaces = buildInterfacesDocumentation({
-    project: dataGridProProject,
+    project: dataGridProject,
     prettierConfigPath,
     outputDirectory,
   });
@@ -79,14 +79,14 @@ async function run(argv: { outputDirectory?: string }) {
   });
 
   buildEventsDocumentation({
-    project: dataGridProProject,
+    project: dataGridProject,
     documentedInterfaces,
     workspaceRoot,
     prettierConfigPath,
   });
 
   buildExportsDocumentation({
-    project: dataGridProProject,
+    project: dataGridProject,
     workspaceRoot,
     prettierConfigPath,
   });

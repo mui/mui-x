@@ -23,7 +23,7 @@ export default function buildExportsDocumentation(options: BuildExportsDocumenta
         kind: syntaxKindToSyntaxName[symbol.declarations?.[0].kind!],
       };
     })
-    .sort((a, b) => a.name.toLocaleUpperCase().localeCompare(b.name.toLocaleUpperCase()));
+    .sort((a, b) => a.name.localeCompare(b.name));
 
   writePrettifiedFile(
     path.resolve(workspaceRoot, 'scripts/exportsSnapshot.json'),
