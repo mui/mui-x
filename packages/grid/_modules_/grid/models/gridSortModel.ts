@@ -1,6 +1,5 @@
 import { GridCellValue } from './gridCell';
 import { GridRowId, GridRowTreeNodeConfig } from './gridRows';
-import type { GridApi } from './api';
 
 export type GridSortDirection = 'asc' | 'desc' | null | undefined;
 
@@ -11,7 +10,7 @@ export interface GridSortCellParams {
   field: string;
   value: GridCellValue;
   rowNode: GridRowTreeNodeConfig;
-  api: GridApi;
+  api: any;
 }
 
 /**
