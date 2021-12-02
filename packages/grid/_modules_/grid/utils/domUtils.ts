@@ -24,10 +24,6 @@ export function isGridHeaderCellRoot(elem: Element | null): boolean {
   return elem != null && elem.classList.contains(gridClasses.columnHeader);
 }
 
-export function isGridHeaderSelectAllCheckBox(elem: Element | null): boolean {
-  return elem != null && elem.ariaLabel === 'Select All Rows checkbox';
-}
-
 export function getIdFromRowElem(rowEl: Element): string {
   return rowEl.getAttribute('data-id')!;
 }

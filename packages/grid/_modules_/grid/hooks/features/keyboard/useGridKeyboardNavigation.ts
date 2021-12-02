@@ -9,7 +9,6 @@ import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { GridComponentProps } from '../../../GridComponentProps';
 import { gridVisibleSortedRowEntriesSelector } from '../filter/gridFilterSelector';
 import { useCurrentPageRows } from '../../utils/useCurrentPageRows';
-import { isGridHeaderCellRoot, isGridHeaderSelectAllCheckBox } from '../../../utils/domUtils';
 
 /**
  * @requires useGridPage (state)
@@ -163,10 +162,7 @@ export const useGridKeyboardNavigation = (
   >(
     (params, event) => {
       event.preventDefault();
-      if (
-        !isGridHeaderCellRoot(event.target as HTMLElement) &&
-        !isGridHeaderSelectAllCheckBox(event.target as HTMLElement)
-      ) {
+      if (!params.field) {
         return;
       }
       const dimensions = apiRef.current.getRootDimensions();
