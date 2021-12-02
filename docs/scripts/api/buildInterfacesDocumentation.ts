@@ -80,7 +80,7 @@ function generateMarkdownFromProperties(
       ? `<span class="prop-name optional">${property.name}<sup><abbr title="optional">?</abbr></sup></span>`
       : `<span class="prop-name">${property.name}</span>`;
 
-    const formattedType = `<span class="prop-type">${property.typeStr}</span>`;
+    const formattedType = `<span class="prop-type">${escapeCell(property.typeStr)}</span>`;
 
     const formattedDefaultValue =
       defaultValue == null ? '' : `<span class="prop-default">${escapeCell(defaultValue)}</span>`;
