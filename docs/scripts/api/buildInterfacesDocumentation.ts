@@ -180,7 +180,7 @@ export default function buildInterfacesDocumentation(options: BuildInterfacesDoc
         ),
         properties: properties.map((property) => ({
           name: property.name,
-          description: renderMarkdownInline(property.description),
+          description: renderMarkdownInline(linkify(property.description, documentedInterfaces, 'html')),
           type: property.typeStr,
         })),
       };
