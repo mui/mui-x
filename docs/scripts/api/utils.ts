@@ -16,6 +16,9 @@ export const getSymbolDescription = (symbol: ts.Symbol, project: Project) =>
     .map((comment) => comment.text)
     .join('\n');
 
+export const getSymbolJSDocTags = (symbol: ts.Symbol) =>
+  Object.fromEntries(symbol.getJsDocTags().map((tag) => [tag.name, tag]));
+
 export function getJsdocDefaultValue(jsdoc: Annotation) {
   const defaultTag = jsdoc.tags.find((tag) => tag.title === 'default');
   if (defaultTag === undefined) {

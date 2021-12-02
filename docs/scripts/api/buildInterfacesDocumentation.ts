@@ -2,7 +2,14 @@ import * as ts from 'typescript';
 import kebabCase from 'lodash/kebabCase';
 import path from 'path';
 import { renderInline as renderMarkdownInline } from '@material-ui/monorepo/docs/packages/markdown';
-import { escapeCell, getSymbolDescription, linkify, Project, writePrettifiedFile } from './utils';
+import {
+  escapeCell,
+  getSymbolDescription,
+  getSymbolJSDocTags,
+  linkify,
+  Project,
+  writePrettifiedFile,
+} from './utils';
 
 interface ParsedObject {
   name: string;
@@ -39,7 +46,7 @@ const parseProperty = (propertySymbol: ts.Symbol, project: Project): ParsedPrope
   return {
     name: propertySymbol.name,
     description: getSymbolDescription(propertySymbol, project),
-    tags: Object.fromEntries(propertySymbol.getJsDocTags().map((tag) => [tag.name, tag])),
+    tags: getSymbolJSDocTags(propertySymbol),
     symbol: propertySymbol,
     isOptional: !!propertySymbol.declarations?.find(ts.isPropertySignature)?.questionToken,
     typeStr: project.checker.typeToString(

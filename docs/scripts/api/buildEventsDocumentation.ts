@@ -2,7 +2,13 @@ import * as ts from 'typescript';
 import path from 'path';
 import { renderInline as renderMarkdownInline } from '@material-ui/monorepo/docs/packages/markdown';
 
-import { getSymbolDescription, linkify, Project, writePrettifiedFile } from './utils';
+import {
+  getSymbolDescription,
+  getSymbolJSDocTags,
+  linkify,
+  Project,
+  writePrettifiedFile,
+} from './utils';
 
 interface BuildEventsDocumentationOptions {
   project: Project;
@@ -40,9 +46,16 @@ export default function buildEventsDocumentation(options: BuildEventsDocumentati
   });
 
   gridEventsDeclaration.members.forEach((member) => {
+    const eventSymbol = project.checker.getTypeAtLocation(member).symbol;
+    const tags = getSymbolJSDocTags(eventSymbol);
+
+    if (tags.ignore) {
+      return;
+    }
+
     const name = member.name.getText();
     const description = linkify(
-      getSymbolDescription(project.checker.getTypeAtLocation(member).symbol, project),
+      getSymbolDescription(eventSymbol, project),
       documentedInterfaces,
       'html',
     );
