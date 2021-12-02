@@ -10,7 +10,6 @@ import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { useGridState } from '../../utils/useGridState';
 import { gridRowsLookupSelector } from '../rows/gridRowsSelector';
-import { isSpaceKey } from '../../../utils/keyboardUtils';
 import { isGridCellRoot } from '../../../utils/domUtils';
 import {
   gridSelectionStateSelector,
@@ -349,7 +348,7 @@ export const useGridSelection = (
         return;
       }
 
-      if (isSpaceKey(event.key) && event.shiftKey) {
+      if (event.key === ' ' && event.shiftKey) {
         event.preventDefault();
         handleSingleRowSelection(cellParams.id, event);
       }
