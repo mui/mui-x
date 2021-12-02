@@ -17,6 +17,7 @@ const getFlatRowTree: GridRowGroupingPreProcessing = ({ ids, idRowsLookup }) => 
   }
 
   return {
+    treeGroupingName: 'none',
     tree,
     treeDepth: 1,
     idRowsLookup,

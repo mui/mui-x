@@ -23,6 +23,7 @@ export interface BuildRowTreeGroupingCriteria {
 interface BuildRowTreeParams extends GridRowGroupParams {
   rows: { id: GridRowId; path: BuildRowTreeGroupingCriteria[] }[];
   defaultGroupingExpansionDepth: number;
+  treeGroupingName: string;
 }
 
 interface TempRowTreeNode extends Omit<GridRowTreeNodeConfig, 'children'> {
@@ -162,5 +163,6 @@ export const buildRowTree = (params: BuildRowTreeParams): GridRowGroupingResult 
     treeDepth,
     ids,
     idRowsLookup,
+    treeGroupingName: params.treeGroupingName,
   };
 };

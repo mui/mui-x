@@ -2,6 +2,8 @@ export type PreProcessorCallback = (value: any, params?: any) => any;
 
 export enum GridPreProcessingGroup {
   hydrateColumns = 'hydrateColumns',
+  registerFiltering = 'registerFiltering',
+  registerSorting = 'registerSorting',
 }
 
 export interface GridPreProcessingApi {
