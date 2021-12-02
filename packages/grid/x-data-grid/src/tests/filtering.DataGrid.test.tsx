@@ -17,6 +17,7 @@ function setColumnValue(columnValue) {
     target: { value: columnValue },
   });
 }
+
 function setOperatorValue(operatorValue) {
   fireEvent.change(screen.getByRole('combobox', { name: 'Operators' }), {
     target: { value: operatorValue },
@@ -139,7 +140,6 @@ describe('<DataGrid /> - Filter', () => {
       operatorValue?: string;
       value?: any;
       field?: string;
-      imperativeFilterModel?: boolean;
     } & Partial<Omit<DataGridProps, 'columns'>>,
   ) => {
     const { operatorValue, value, rows, columns, field = 'brand', initialState, ...other } = props;
@@ -153,14 +153,14 @@ describe('<DataGrid /> - Filter', () => {
             initialState
               ? undefined
               : {
-                  items: [
-                    {
-                      columnField: field,
-                      value,
-                      operatorValue,
-                    },
-                  ],
-                }
+                items: [
+                  {
+                    columnField: field,
+                    value,
+                    operatorValue,
+                  },
+                ],
+              }
           }
           disableColumnFilter={false}
           initialState={{
@@ -1321,6 +1321,72 @@ describe('<DataGrid /> - Filter', () => {
       expect(onFilterModelChange.lastCall.args[0].items[0].value).to.equal(undefined);
 
       expect(screen.getByRole('combobox', { name: 'Operators' }).value).to.equal('isEmpty');
+    });
+
+    it('should reset filter value if not available in the new valueOptions', () => {
+      render(
+        <TestCase
+          rows={[
+            { id: 1, reference: 'REF_1', origin: 'Italy', destination: 'Germany' },
+            { id: 2, reference: 'REF_2', origin: 'Germany', destination: 'UK' },
+            { id: 3, reference: 'REF_3', origin: 'Germany', destination: 'Italy' },
+          ]}
+          columns={[
+            { field: 'reference' },
+            { field: 'origin', type: 'singleSelect', valueOptions: ['Italy', 'Germany'] },
+            {
+              field: 'destination',
+              type: 'singleSelect',
+              valueOptions: ['Italy', 'Germany', 'UK'],
+            },
+          ]}
+          initialState={{
+            filter: {
+              filterModel: {
+                items: [{ columnField: 'destination', operatorValue: 'is', value: 'UK' }],
+              },
+            },
+          }}
+        />,
+      );
+      expect(getColumnValues()).to.deep.equal(['REF_2']);
+
+      setColumnValue('origin');
+
+      expect(getColumnValues()).to.deep.equal(['REF_1', 'REF_2', 'REF_3']);
+    });
+
+    it('should keep the value if available in the new valueOptions', () => {
+      const IT = { value: 'IT', label: 'Italy' };
+      const GE = { value: 'GE', label: 'Germany' };
+
+      render(
+        <TestCase
+          rows={[
+            { id: 1, reference: 'REF_1', origin: 'IT', destination: 'GE' },
+            { id: 2, reference: 'REF_2', origin: 'GE', destination: 'UK' },
+            { id: 3, reference: 'REF_3', origin: 'GE', destination: 'IT' },
+          ]}
+          columns={[
+            { field: 'reference' },
+            { field: 'origin', type: 'singleSelect', valueOptions: [IT, GE] },
+            { field: 'destination', type: 'singleSelect', valueOptions: ['IT', 'GE', 'UK'] },
+          ]}
+          initialState={{
+            filter: {
+              filterModel: {
+                items: [{ columnField: 'destination', operatorValue: 'is', value: 'GE' }],
+              },
+            },
+          }}
+        />,
+      );
+
+      expect(getColumnValues()).to.deep.equal(['REF_1']);
+
+      setColumnValue('origin');
+
+      expect(getColumnValues()).to.deep.equal(['REF_2', 'REF_3']);
     });
   });
 
