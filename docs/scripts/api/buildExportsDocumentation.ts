@@ -1,20 +1,29 @@
-import * as TypeDoc from 'typedoc';
 import path from 'path';
-import { writePrettifiedFile } from './utils';
+import * as ts from 'typescript'
+import {Project, writePrettifiedFile} from './utils';
 
 interface BuildExportsDocumentationOptions {
-  reflections: TypeDoc.Reflection[];
+  project: Project;
   workspaceRoot: string;
   prettierConfigPath: string;
 }
 
 export default function buildExportsDocumentation(options: BuildExportsDocumentationOptions) {
-  const { reflections, workspaceRoot, prettierConfigPath } = options;
+  const { project, workspaceRoot, prettierConfigPath } = options;
 
-  const exports = reflections.map((child) => ({
-    name: child.name,
-    kind: child?.kindString,
-  }));
+  const syntaxKindToSyntaxName = {}
+  Object.entries(ts.SyntaxKind).forEach(([syntaxName, syntaxKind]) => {
+      syntaxKindToSyntaxName[syntaxKind] = syntaxName.replace('Declaration', '')
+  })
+
+  const exports = Object.entries(project.exports)
+    .map(([name, symbol]) => {
+      return {
+        name,
+        kind: syntaxKindToSyntaxName[symbol.declarations?.[0].kind!]
+      };
+    })
+    .sort((a, b) => (a.name > b.name ? 1 : -1));
 
   writePrettifiedFile(
     path.resolve(workspaceRoot, 'scripts/exportsSnapshot.json'),

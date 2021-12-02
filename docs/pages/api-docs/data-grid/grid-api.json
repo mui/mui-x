@@ -1,0 +1,504 @@
+{
+  "name": "GridApi",
+  "description": "The full grid API.",
+  "properties": [
+    {
+      "name": "rootElementRef",
+      "description": "The react ref of the grid root container div element.",
+      "type": "RefObject<HTMLDivElement> | undefined"
+    },
+    {
+      "name": "columnHeadersContainerElementRef",
+      "description": "The react ref of the grid column container virtualized div element.",
+      "type": "RefObject<HTMLDivElement> | undefined"
+    },
+    {
+      "name": "columnHeadersElementRef",
+      "description": "The react ref of the grid column headers container element.",
+      "type": "RefObject<HTMLDivElement> | undefined"
+    },
+    {
+      "name": "windowRef",
+      "description": "The react ref of the grid window container element.",
+      "type": "RefObject<HTMLDivElement> | undefined"
+    },
+    {
+      "name": "renderingZoneRef",
+      "description": "The react ref of the grid data rendering zone.",
+      "type": "RefObject<HTMLDivElement> | undefined"
+    },
+    {
+      "name": "headerRef",
+      "description": "The react ref of the grid header element.",
+      "type": "RefObject<HTMLDivElement> | undefined"
+    },
+    {
+      "name": "footerRef",
+      "description": "The react ref of the grid footer element.",
+      "type": "RefObject<HTMLDivElement> | undefined"
+    },
+    {
+      "name": "unstable_eventManager",
+      "description": "The generic event emitter manager.",
+      "type": "EventManager"
+    },
+    {
+      "name": "subscribeEvent",
+      "description": "Registers a handler for an event.",
+      "type": "<E extends \"resize\" | \"debouncedResize\" | \"viewportInnerSizeChange\" | \"componentError\" | \"unmount\" | \"cellModeChange\" | \"cellClick\" | \"cellDoubleClick\" | \"cellMouseDown\" | \"cellMouseUp\" | ... 53 more ... | \"columnVisibilityChange\">(event: E, handler: GridEventListener<...>, options?: EventListenerOptions | undefined..."
+    },
+    { "name": "publishEvent", "description": "Emits an event.", "type": "GridEventPublisher" },
+    {
+      "name": "showError",
+      "description": "Displays the error overlay component.",
+      "type": "(props: any) => void"
+    },
+    {
+      "name": "state",
+      "description": "Property that contains the whole state of the grid.",
+      "type": "GridState"
+    },
+    {
+      "name": "setState",
+      "description": "Sets the whole state of the grid.",
+      "type": "(state: GridState | ((previousState: GridState) => GridState)) => void"
+    },
+    {
+      "name": "forceUpdate",
+      "description": "Forces the grid to rerender. It&#39;s often used after a state update.",
+      "type": "Dispatch<any>"
+    },
+    { "name": "getLogger", "description": "", "type": "(name: string) => Logger" },
+    {
+      "name": "unstable_registerPreProcessor",
+      "description": "Register a pre-processor and emit an event to notify the agents to re-apply the pre-processors.",
+      "type": "(group: GridPreProcessingGroup, id: string, callback: PreProcessorCallback) => () => void"
+    },
+    {
+      "name": "unstable_applyPreProcessors",
+      "description": "Apply on the value the pre-processors registered on the given group.",
+      "type": "(group: GridPreProcessingGroup, value: any, params?: any) => any"
+    },
+    {
+      "name": "unstable_registerRowGroupsBuilder",
+      "description": "Register a column pre-processing and emit an event to re-apply the row grouping pre-processing.",
+      "type": "(processingName: string, groupingFunction: GridRowGroupingPreProcessing | null) => void"
+    },
+    {
+      "name": "unstable_groupRows",
+      "description": "Apply the first row grouping pre-processing that does not return null.",
+      "type": "(params: GridRowGroupParams) => GridRowGroupingResult"
+    },
+    {
+      "name": "setDensity",
+      "description": "Sets the density of the grid.",
+      "type": "(density: GridDensity, headerHeight?: number | undefined, rowHeight?: number | undefined) => void"
+    },
+    {
+      "name": "resize",
+      "description": "Triggers a resize of the component and recalculation of width and height.",
+      "type": "() => void"
+    },
+    {
+      "name": "getRootDimensions",
+      "description": "Returns the dimensions of the grid",
+      "type": "() => GridDimensions | null"
+    },
+    {
+      "name": "unstable_getViewportPageSize",
+      "description": "Returns the amount of rows that are currently visible in the viewport",
+      "type": "() => number"
+    },
+    {
+      "name": "getRowModels",
+      "description": "Gets the full set of rows as [[Map&lt;GridRowId, GridRowModel&gt;]].",
+      "type": "() => Map<GridRowId, { [key: string]: any; }>"
+    },
+    {
+      "name": "getRowsCount",
+      "description": "Gets the total number of rows in the grid.",
+      "type": "() => number"
+    },
+    {
+      "name": "getAllRowIds",
+      "description": "Gets the list of row ids.",
+      "type": "() => GridRowId[]"
+    },
+    {
+      "name": "setRows",
+      "description": "Sets a new set of rows.",
+      "type": "(rows: { [key: string]: any; }[]) => void"
+    },
+    {
+      "name": "updateRows",
+      "description": "Allows to updates, insert and delete rows in a single call.",
+      "type": "(updates: GridRowModelUpdate[]) => void"
+    },
+    {
+      "name": "getRow",
+      "description": "Gets the row data with a given id.",
+      "type": "(id: GridRowId) => { [key: string]: any; } | null"
+    },
+    {
+      "name": "getRowNode",
+      "description": "Gets the row node from the internal tree structure.",
+      "type": "(id: GridRowId) => GridRowTreeNodeConfig | null"
+    },
+    {
+      "name": "setRowChildrenExpansion",
+      "description": "Expand or collapse a row children.",
+      "type": "(id: GridRowId, isExpanded: boolean) => void"
+    },
+    {
+      "name": "setEditRowsModel",
+      "description": "Set the edit rows model of the grid.",
+      "type": "(model: GridEditRowsModel) => void"
+    },
+    {
+      "name": "getEditRowsModel",
+      "description": "Gets the edit rows model of the grid.",
+      "type": "() => GridEditRowsModel"
+    },
+    {
+      "name": "setCellMode",
+      "description": "Sets the mode of a cell.",
+      "type": "(id: GridRowId, field: string, mode: GridCellMode) => void"
+    },
+    {
+      "name": "getCellMode",
+      "description": "Gets the mode of a cell.",
+      "type": "(id: GridRowId, field: string) => GridCellMode"
+    },
+    {
+      "name": "setRowMode",
+      "description": "Sets the mode of a row.",
+      "type": "(id: GridRowId, mode: GridRowMode) => void"
+    },
+    {
+      "name": "getRowMode",
+      "description": "Gets the mode of a row.",
+      "type": "(id: GridRowId) => GridRowMode"
+    },
+    {
+      "name": "isCellEditable",
+      "description": "Controls if a cell is editable.",
+      "type": "(params: GridCellParams<any, any, any>) => boolean"
+    },
+    {
+      "name": "setEditCellValue",
+      "description": "Sets the value of the edit cell.\nCommonly used inside the edit cell component.",
+      "type": "(params: GridEditCellValueParams, event?: MuiBaseEvent | undefined) => void"
+    },
+    {
+      "name": "commitCellChange",
+      "description": "Updates the field at the given id with the value stored in the edit row model.",
+      "type": "(params: GridCommitCellChangeParams, event?: MuiBaseEvent | undefined) => boolean | Promise<boolean>"
+    },
+    {
+      "name": "commitRowChange",
+      "description": "Updates the row at the given id with the values stored in the edit row model.",
+      "type": "(id: GridRowId, event?: MuiBaseEvent | undefined) => boolean | Promise<boolean>"
+    },
+    {
+      "name": "getCellValue",
+      "description": "Gets the value of a cell at the given <code>id</code> and <code>field</code>.",
+      "type": "(id: GridRowId, field: string) => GridCellValue"
+    },
+    {
+      "name": "getCellElement",
+      "description": "Gets the underlying DOM element for a cell at the given <code>id</code> and <code>field</code>.",
+      "type": "(id: GridRowId, field: string) => HTMLDivElement | null"
+    },
+    {
+      "name": "getCellParams",
+      "description": "Gets the [[GridCellParams]] object that is passed as argument in events.",
+      "type": "(id: GridRowId, field: string) => GridCellParams<any, any, any>"
+    },
+    {
+      "name": "getRowParams",
+      "description": "Gets the [[GridRowParams]] object that is passed as argument in events.",
+      "type": "(id: GridRowId) => GridRowParams<{ [key: string]: any; }>"
+    },
+    {
+      "name": "getRowElement",
+      "description": "Gets the underlying DOM element for a row at the given <code>id</code>.",
+      "type": "(id: GridRowId) => HTMLDivElement | null"
+    },
+    {
+      "name": "getColumnHeaderElement",
+      "description": "Gets the underlying DOM element for the column header with the given <code>field</code>.",
+      "type": "(field: string) => HTMLDivElement | null"
+    },
+    {
+      "name": "getColumnHeaderParams",
+      "description": "Gets the [[GridColumnHeaderParams]] object that is passed as argument in events.",
+      "type": "(field: string) => GridColumnHeaderParams"
+    },
+    {
+      "name": "getColumn",
+      "description": "Returns the [[GridColDef]] for the given <code>field</code>.",
+      "type": "(field: string) => GridStateColDef"
+    },
+    {
+      "name": "getAllColumns",
+      "description": "Returns an array of [[GridColDef]] containing all the column definitions.",
+      "type": "() => GridStateColDef[]"
+    },
+    {
+      "name": "getVisibleColumns",
+      "description": "Returns the currently visible columns.",
+      "type": "() => GridStateColDef[]"
+    },
+    {
+      "name": "getColumnsMeta",
+      "description": "Returns the [[GridColumnsMeta]] for each column.",
+      "type": "() => GridColumnsMeta"
+    },
+    {
+      "name": "getColumnIndex",
+      "description": "Returns the index position of a column. By default, only the visible columns are considered.\nPass <code>false</code> to <code>useVisibleColumns</code> to consider all columns.",
+      "type": "(field: string, useVisibleColumns?: boolean | undefined) => number"
+    },
+    {
+      "name": "getColumnPosition",
+      "description": "Returns the left-position of a column relative to the inner border of the grid.",
+      "type": "(field: string) => number"
+    },
+    {
+      "name": "updateColumn",
+      "description": "Updates the definition of a column.",
+      "type": "(col: GridColDef) => void"
+    },
+    {
+      "name": "updateColumns",
+      "description": "Updates the definition of multiple columns at the same time.",
+      "type": "(cols: GridColDef[]) => void"
+    },
+    {
+      "name": "setColumnVisibility",
+      "description": "Changes the visibility of the column referred by <code>field</code>.",
+      "type": "(field: string, isVisible: boolean) => void"
+    },
+    {
+      "name": "setColumnIndex",
+      "description": "Moves a column from its original position to the position given by <code>targetIndexPosition</code>.",
+      "type": "(field: string, targetIndexPosition: number) => void"
+    },
+    {
+      "name": "setColumnWidth",
+      "description": "Updates the width of a column.",
+      "type": "(field: string, width: number) => void"
+    },
+    {
+      "name": "selectRow",
+      "description": "Change the selection state of a row.",
+      "type": "(id: GridRowId, isSelected?: boolean | undefined, resetSelection?: boolean | undefined) => void"
+    },
+    {
+      "name": "selectRows",
+      "description": "Change the selection state of multiple rows.",
+      "type": "(ids: GridRowId[], isSelected?: boolean | undefined, resetSelection?: boolean | undefined) => void"
+    },
+    {
+      "name": "selectRowRange",
+      "description": "Change the selection state of all the selectable rows in a range.",
+      "type": "(range: { startId: GridRowId; endId: GridRowId; }, isSelected?: boolean | undefined, resetSelection?: boolean | undefined) => void"
+    },
+    {
+      "name": "isRowSelected",
+      "description": "Determines if a row is selected or not.",
+      "type": "(id: GridRowId) => boolean"
+    },
+    {
+      "name": "getSelectedRows",
+      "description": "Returns an array of the selected rows.",
+      "type": "() => Map<GridRowId, { [key: string]: any; }>"
+    },
+    {
+      "name": "setSelectionModel",
+      "description": "Updates the selected rows to be those passed to the <code>rowIds</code> argument.\nAny row already selected will be unselected.",
+      "type": "(rowIds: GridRowId[]) => void"
+    },
+    {
+      "name": "getSortModel",
+      "description": "Returns the sort model currently applied to the grid.",
+      "type": "() => GridSortModel"
+    },
+    {
+      "name": "applySorting",
+      "description": "Applies the current sort model to the rows.",
+      "type": "() => void"
+    },
+    {
+      "name": "setSortModel",
+      "description": "Updates the sort model and triggers the sorting of rows.",
+      "type": "(model: GridSortModel) => void"
+    },
+    {
+      "name": "sortColumn",
+      "description": "Sorts a column.",
+      "type": "(column: GridColDef, direction?: GridSortDirection, allowMultipleSorting?: boolean | undefined) => void"
+    },
+    {
+      "name": "getSortedRows",
+      "description": "Returns all rows sorted according to the active sort model.",
+      "type": "() => { [key: string]: any; }[]"
+    },
+    {
+      "name": "getSortedRowIds",
+      "description": "Returns all row ids sorted according to the active sort model.",
+      "type": "() => GridRowId[]"
+    },
+    {
+      "name": "getRowIdFromRowIndex",
+      "description": "Gets the <code>GridRowId</code> of a row at a specific index.\nThe index is based on the sorted but unfiltered row list.",
+      "type": "(index: number) => GridRowId"
+    },
+    {
+      "name": "getRowIndex",
+      "description": "Gets the row index of a row with a given id.\nThe index is based on the sorted but unfiltered row list.",
+      "type": "(id: GridRowId) => number"
+    },
+    {
+      "name": "setPage",
+      "description": "Sets the displayed page to the value given by <code>page</code>.",
+      "type": "(page: number) => void"
+    },
+    {
+      "name": "setPageSize",
+      "description": "Sets the number of displayed rows to the value given by <code>pageSize</code>.",
+      "type": "(pageSize: number) => void"
+    },
+    {
+      "name": "getDataAsCsv",
+      "description": "Returns the grid data as a CSV string.\nThis method is used internally by <code>exportDataAsCsv</code>.",
+      "type": "(options?: GridCsvExportOptions | undefined) => string"
+    },
+    {
+      "name": "exportDataAsCsv",
+      "description": "Downloads and exports a CSV of the grid&#39;s data.",
+      "type": "(options?: GridCsvExportOptions | undefined) => void"
+    },
+    {
+      "name": "setCellFocus",
+      "description": "Sets the focus to the cell at the given <code>id</code> and <code>field</code>.",
+      "type": "(id: GridRowId, field: string) => void"
+    },
+    {
+      "name": "setColumnHeaderFocus",
+      "description": "Sets the focus to the column header at the given <code>field</code>.",
+      "type": "(field: string, event?: MuiBaseEvent | undefined) => void"
+    },
+    {
+      "name": "showFilterPanel",
+      "description": "Shows the filter panel. If <code>targetColumnField</code> is given, a filter for this field is also added.",
+      "type": "(targetColumnField?: string | undefined) => void"
+    },
+    { "name": "hideFilterPanel", "description": "Hides the filter panel.", "type": "() => void" },
+    {
+      "name": "upsertFilterItem",
+      "description": "Updates or inserts a [[GridFilterItem]].",
+      "type": "(item: GridFilterItem) => void"
+    },
+    {
+      "name": "unstable_applyFilters",
+      "description": "Applies all filters on all rows.",
+      "type": "() => void"
+    },
+    {
+      "name": "deleteFilterItem",
+      "description": "Deletes a [[GridFilterItem]].",
+      "type": "(item: GridFilterItem) => void"
+    },
+    {
+      "name": "setFilterLinkOperator",
+      "description": "Changes the [[GridLinkOperator]] used to connect the filters.",
+      "type": "(operator: GridLinkOperator) => void"
+    },
+    {
+      "name": "setFilterModel",
+      "description": "Sets the filter model to the one given by <code>model</code>.",
+      "type": "(model: GridFilterModel) => void"
+    },
+    {
+      "name": "getVisibleRowModels",
+      "description": "Returns a sorted <code>Map</code> containing only the visible rows.",
+      "type": "() => Map<GridRowId, { [key: string]: any; }>"
+    },
+    {
+      "name": "showColumnMenu",
+      "description": "Display the column menu under the <code>field</code> column.",
+      "type": "(field: string) => void"
+    },
+    {
+      "name": "hideColumnMenu",
+      "description": "Hides the column menu that is open.",
+      "type": "() => void"
+    },
+    {
+      "name": "toggleColumnMenu",
+      "description": "Toggles the column menu under the <code>field</code> column.",
+      "type": "(field: string) => void"
+    },
+    {
+      "name": "showPreferences",
+      "description": "Displays the preferences panel. The <code>newValue</code> argument controls the content of the panel.",
+      "type": "(newValue: GridPreferencePanelsValue) => void"
+    },
+    {
+      "name": "hidePreferences",
+      "description": "Hides the preferences panel.",
+      "type": "() => void"
+    },
+    {
+      "name": "exportDataAsPrint",
+      "description": "Print the grid&#39;s data.",
+      "type": "(options?: GridPrintExportOptions | undefined) => void"
+    },
+    {
+      "name": "unstable_disableVirtualization",
+      "description": "Disables grid&#39;s virtualization.",
+      "type": "() => void"
+    },
+    {
+      "name": "unstable_enableVirtualization",
+      "description": "Enables grid&#39;s virtualization.",
+      "type": "() => void"
+    },
+    {
+      "name": "getLocaleText",
+      "description": "Returns the translation for the <code>key</code>.",
+      "type": "<T extends keyof GridLocaleText>(key: T) => GridLocaleText[T]"
+    },
+    {
+      "name": "unstable_updateControlState",
+      "description": "Updates a control state that binds the model, the onChange prop, and the grid state together.",
+      "type": "<E extends keyof GridControlledStateEventLookup>(controlState: GridControlStateItem<E>) => void"
+    },
+    {
+      "name": "unstable_applyControlStateConstraint",
+      "description": "Allows the internal grid state to apply the registered control state constraint.",
+      "type": "(state: GridState) => { ignoreSetState: boolean; postUpdate: () => void; }"
+    },
+    {
+      "name": "unstable_copySelectedRowsToClipboard",
+      "description": "Copies the selected rows to the clipboard.\nThe fields will separated by the TAB character.",
+      "type": "(includeHeaders?: boolean | undefined) => void"
+    },
+    {
+      "name": "scroll",
+      "description": "Triggers the viewport to scroll to the given positions (in pixels).",
+      "type": "(params: Partial<GridScrollParams>) => void"
+    },
+    {
+      "name": "getScrollPosition",
+      "description": "Returns the current scroll position.",
+      "type": "() => GridScrollParams"
+    },
+    {
+      "name": "scrollToIndexes",
+      "description": "Triggers the viewport to scroll to the cell at indexes given by <code>params</code>.\nReturns <code>true</code> if the grid had to scroll to reach the target.",
+      "type": "(params: Partial<GridCellIndexCoordinates>) => boolean"
+    }
+  ]
+}

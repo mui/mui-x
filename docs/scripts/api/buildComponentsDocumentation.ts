@@ -13,11 +13,12 @@ import generatePropTypeDescription, {
 } from '@material-ui/monorepo/docs/src/modules/utils/generatePropTypeDescription';
 import kebabCase from 'lodash/kebabCase';
 import { LANGUAGES } from 'docs/src/modules/constants';
+import { findPagesMarkdown } from 'docs/src/modules/utils/find';
 import { defaultHandlers, parse as docgenParse, ReactDocgenApi } from 'react-docgen';
-import { renderInline as renderMarkdownInline } from '@material-ui/monorepo/docs/packages/markdown';
+import { renderInline as renderMarkdownInline, getHeaders } from '@material-ui/monorepo/docs/packages/markdown';
 import { getLineFeed } from '@material-ui/monorepo/docs/scripts/helpers';
 import createGenerateClassName from '@mui/styles/createGenerateClassName';
-import { getJsdocDefaultValue, linkify, writePrettifiedFile } from './utils';
+import {getJsdocDefaultValue, linkify, Project, writePrettifiedFile} from './utils';
 
 const generateClassName = createGenerateClassName();
 
@@ -76,12 +77,12 @@ function extractSlots(options: {
   filename: string;
   name: string;
   displayName: string;
-  program: ttp.Program;
+  project: Project;
 }) {
-  const { filename, name: componentName, displayName, program } = options;
+  const { filename, name: componentName, displayName, project } = options;
   const slots: Record<string, { type: string; default?: string; description: string }> = {};
 
-  const proptypes = ttp.parseFromProgram(filename, program, {
+  const proptypes = ttp.parseFromProgram(filename, project.program, {
     shouldResolveObject: ({ name }) => {
       return name === 'components';
     },
@@ -171,26 +172,24 @@ function parseComponentSource(src: string, componentObject: { filename: string }
   return reactAPI;
 }
 
-interface BuildComponentDocumentationOptions {
-  filename: string;
-  program: ttp.ts.Program;
-  outputDirectory: string;
-  prettierConfigPath: string;
-  workspaceRoot: string;
-  documentedInterfaces: Map<string, boolean>;
-  pagesMarkdown: ReadonlyArray<{
-    components: readonly string[];
+const buildComponentDocumentation = async (
+  options: {
     filename: string;
-    pathname: string;
-  }>;
-}
-
-export default async function buildComponentDocumentation(
-  options: BuildComponentDocumentationOptions,
-) {
+    project: Project;
+    outputDirectory: string;
+    prettierConfigPath: string;
+    workspaceRoot: string;
+    documentedInterfaces: Map<string, boolean>;
+    pagesMarkdown: ReadonlyArray<{
+      components: readonly string[];
+      filename: string;
+      pathname: string;
+    }>;
+  },
+) => {
   const {
     filename,
-    program,
+    project,
     outputDirectory,
     prettierConfigPath,
     workspaceRoot,
@@ -213,7 +212,7 @@ export default async function buildComponentDocumentation(
   }
   reactApi.demos = demos;
 
-  reactApi.styles = await parseStyles(reactApi, program);
+  reactApi.styles = await parseStyles(reactApi, project.program as any);
   reactApi.styles.name = 'MuiDataGrid'; // TODO it should not be hardcoded
   reactApi.styles.classes.forEach((key) => {
     reactApi.styles.globalClasses[key] = generateClassName(
@@ -340,7 +339,7 @@ export default async function buildComponentDocumentation(
       filename,
       name: reactApi.name, // e.g. DataGrid
       displayName: reactApi.displayName, // e.g. DataGridRaw
-      program,
+      project,
     });
 
     Object.entries(slots).forEach(([slot, descriptor]) => {
@@ -460,4 +459,83 @@ Page.getInitialProps = () => {
 
   // eslint-disable-next-line no-console
   console.log('Built API docs for', reactApi.name);
+}
+
+interface BuildComponentsDocumentationOptions {
+  dataGridProject: Project;
+  dataGridProProject: Project;
+  workspaceRoot: string;
+  outputDirectory: string;
+  prettierConfigPath: string;
+  documentedInterfaces: Map<string, boolean>
+}
+
+export default async function buildComponentsDocumentation(options: BuildComponentsDocumentationOptions) {
+  const { workspaceRoot, outputDirectory, prettierConfigPath, documentedInterfaces, dataGridProject, dataGridProProject } = options
+
+  const componentsToGenerateDocs = [
+    path.resolve(workspaceRoot, 'packages/grid/x-data-grid/src/DataGrid.tsx'),
+    path.resolve(workspaceRoot, 'packages/grid/x-data-grid-pro/src/DataGridPro.tsx'),
+  ];
+
+  // Uncomment below to generate documentation for all exported components
+  // const componentsFolder = path.resolve(workspaceRoot, 'packages/grid/_modules_/grid/components');
+  // const components = findComponents(componentsFolder);
+  // components.forEach((component) => {
+  //   const componentName = path.basename(component.filename).replace('.tsx', '');
+  //   if (exports[componentName]) {
+  //     componentsToGenerateDocs.push(component.filename);
+  //   }
+  // });
+
+  const pagesMarkdown = findPagesMarkdown()
+    .map((markdown) => {
+      const markdownSource = fse.readFileSync(markdown.filename, 'utf8');
+      return {
+        ...markdown,
+        components: getHeaders(markdownSource).components,
+      };
+    })
+    .filter((markdown) => markdown.components.length > 0);
+
+  const componentBuilds = componentsToGenerateDocs.map(async (filename) => {
+    const componentName = path.basename(filename).replace('.tsx', '');
+
+    let project: Project
+    if (dataGridProject.exports[componentName]) {
+      project = dataGridProject
+    } else if (dataGridProProject.exports[componentName]) {
+      project = dataGridProProject
+    } else {
+      throw new Error(`Could not find component ${componentName} in any package`)
+    }
+
+    try {
+      return await buildComponentDocumentation({
+        filename,
+        project,
+        outputDirectory,
+        prettierConfigPath,
+        workspaceRoot,
+        pagesMarkdown,
+        documentedInterfaces,
+      });
+    } catch (error: any) {
+      error.message = `${path.relative(process.cwd(), filename)}: ${error.message}`;
+      throw error;
+    }
+  });
+
+  const builds = await Promise.allSettled(componentBuilds);
+
+  const fails = builds.filter(
+      (promise): promise is PromiseRejectedResult => promise.status === 'rejected',
+  );
+
+  fails.forEach((build) => {
+    console.error(build.reason);
+  });
+  if (fails.length > 0) {
+    process.exit(1);
+  }
 }

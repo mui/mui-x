@@ -1,5 +1,16 @@
 {
   "name": "GridDisableVirtualizationApi",
   "description": "The disable virtualization API interface that is available in the grid apiRef.",
-  "properties": []
+  "properties": [
+    {
+      "name": "unstable_disableVirtualization",
+      "description": "Disables grid&#39;s virtualization.",
+      "type": "() => void"
+    },
+    {
+      "name": "unstable_enableVirtualization",
+      "description": "Enables grid&#39;s virtualization.",
+      "type": "() => void"
+    }
+  ]
 }

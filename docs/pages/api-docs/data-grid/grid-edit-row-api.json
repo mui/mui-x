@@ -3,14 +3,19 @@
   "description": "The editing API interface that is available in the grid `apiRef`.",
   "properties": [
     {
-      "name": "commitCellChange",
-      "description": "Updates the field at the given id with the value stored in the edit row model.",
-      "type": "(params: GridCommitCellChangeParams, event?: MuiBaseEvent) => boolean | Promise<boolean>"
+      "name": "setEditRowsModel",
+      "description": "Set the edit rows model of the grid.",
+      "type": "(model: GridEditRowsModel) => void"
     },
     {
-      "name": "commitRowChange",
-      "description": "Updates the row at the given id with the values stored in the edit row model.",
-      "type": "(id: GridRowId, event?: MuiBaseEvent) => boolean | Promise<boolean>"
+      "name": "getEditRowsModel",
+      "description": "Gets the edit rows model of the grid.",
+      "type": "() => GridEditRowsModel"
+    },
+    {
+      "name": "setCellMode",
+      "description": "Sets the mode of a cell.",
+      "type": "(id: GridRowId, field: string, mode: GridCellMode) => void"
     },
     {
       "name": "getCellMode",
@@ -18,9 +23,9 @@
       "type": "(id: GridRowId, field: string) => GridCellMode"
     },
     {
-      "name": "getEditRowsModel",
-      "description": "Gets the edit rows model of the grid.",
-      "type": "() => GridEditRowsModel"
+      "name": "setRowMode",
+      "description": "Sets the mode of a row.",
+      "type": "(id: GridRowId, mode: GridRowMode) => void"
     },
     {
       "name": "getRowMode",
@@ -33,24 +38,19 @@
       "type": "(params: GridCellParams<any, any, any>) => boolean"
     },
     {
-      "name": "setCellMode",
-      "description": "Sets the mode of a cell.",
-      "type": "(id: GridRowId, field: string, mode: GridCellMode) => void"
-    },
-    {
       "name": "setEditCellValue",
       "description": "Sets the value of the edit cell.\nCommonly used inside the edit cell component.",
-      "type": "(params: GridEditCellValueParams, event?: MuiBaseEvent) => void"
+      "type": "(params: GridEditCellValueParams, event?: MuiBaseEvent | undefined) => void"
     },
     {
-      "name": "setEditRowsModel",
-      "description": "Set the edit rows model of the grid.",
-      "type": "(model: GridEditRowsModel) => void"
+      "name": "commitCellChange",
+      "description": "Updates the field at the given id with the value stored in the edit row model.",
+      "type": "(params: GridCommitCellChangeParams, event?: MuiBaseEvent | undefined) => boolean | Promise<boolean>"
     },
     {
-      "name": "setRowMode",
-      "description": "Sets the mode of a row.",
-      "type": "(id: GridRowId, mode: GridRowMode) => void"
+      "name": "commitRowChange",
+      "description": "Updates the row at the given id with the values stored in the edit row model.",
+      "type": "(id: GridRowId, event?: MuiBaseEvent | undefined) => boolean | Promise<boolean>"
     }
   ]
 }

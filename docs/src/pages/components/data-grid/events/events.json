@@ -12,6 +12,18 @@
     "event": "MuiEvent<MouseEvent<HTMLElement, MouseEvent>>"
   },
   {
+    "name": "cellDragEnter",
+    "description": "Fired when the dragged cell enters a valid drop target. It&#39;s mapped to the <code>dragend</code> DOM event.",
+    "params": "GridCellParams<any, any, any>",
+    "event": "MuiEvent<DragEvent<HTMLElement>>"
+  },
+  {
+    "name": "cellDragOver",
+    "description": "Fired while an element or text selection is dragged over the cell.\nIt&#39;s mapped to the <code>dragover</code> DOM event.",
+    "params": "GridCellParams<any, any, any>",
+    "event": "MuiEvent<DragEvent<HTMLElement>>"
+  },
+  {
     "name": "cellEditCommit",
     "description": "Fired when the props of the edit input are committed.",
     "params": "GridCellEditCommitParams",
@@ -21,7 +33,7 @@
     "name": "cellEditStart",
     "description": "Fired when the cell turns to edit mode.",
     "params": "GridCellParams<any, any, any>",
-    "event": "MuiEvent<KeyboardEvent<HTMLElement> | MouseEvent<HTMLElement, MouseEvent>>"
+    "event": "MuiEvent<MouseEvent<HTMLElement, MouseEvent> | KeyboardEvent<HTMLElement>>"
   },
   {
     "name": "cellEditStop",
@@ -48,6 +60,12 @@
     "event": "MuiEvent<KeyboardEvent<HTMLElement>>"
   },
   {
+    "name": "cellModeChange",
+    "description": "Fired when the mode of a cell changes.",
+    "params": "GridCellParams<any, any, any>",
+    "event": "MuiEvent<{}>"
+  },
+  {
     "name": "cellMouseDown",
     "description": "Fired when a <code>mousedown</code> event happens in a cell..",
     "params": "GridCellParams<any, any, any>",
@@ -58,6 +76,18 @@
     "description": "Fired when a <code>mouseup</code> event happens in a cell..",
     "params": "GridCellParams<any, any, any>",
     "event": "MuiEvent<MouseEvent<HTMLElement, MouseEvent>>"
+  },
+  {
+    "name": "cellNavigationKeyDown",
+    "description": "Fired when a <a href=\"/components/data-grid/accessibility#keyboard-navigation\">navigation key</a> is pressed in a cell.",
+    "params": "GridCellParams<any, any, any> | GridRowParams<{ [key: string]: any; }>",
+    "event": "MuiEvent<KeyboardEvent<HTMLElement>>"
+  },
+  {
+    "name": "columnHeaderBlur",
+    "description": "Fired when a column header loses focus.",
+    "params": "GridColumnHeaderParams",
+    "event": "MuiEvent<FocusEvent<HTMLElement, Element>>"
   },
   {
     "name": "columnHeaderClick",
@@ -72,10 +102,70 @@
     "event": "MuiEvent<MouseEvent<HTMLElement, MouseEvent>>"
   },
   {
+    "name": "columnHeaderDragEnd",
+    "description": "Fired when the dragging of a column header ends.",
+    "params": "GridColumnHeaderParams",
+    "event": "MuiEvent<DragEvent<HTMLElement>>"
+  },
+  {
+    "name": "columnHeaderDragEnter",
+    "description": "Fired when the dragged column header enters a valid drop target.\nIt&#39;s mapped to the <code>dragend</code> DOM event.",
+    "params": "GridColumnHeaderParams",
+    "event": "MuiEvent<DragEvent<HTMLElement>>"
+  },
+  {
+    "name": "columnHeaderDragOver",
+    "description": "Fired while an element or text selection is dragged over the column header.\nIt&#39;s mapped to the <code>dragover</code> DOM event.",
+    "params": "GridColumnHeaderParams",
+    "event": "MuiEvent<DragEvent<HTMLElement>>"
+  },
+  {
+    "name": "columnHeaderDragStart",
+    "description": "Fired when the user starts dragging a column header. It&#39;s mapped to the <code>dragstart</code> DOM event.",
+    "params": "GridColumnHeaderParams",
+    "event": "MuiEvent<DragEvent<HTMLElement>>"
+  },
+  {
+    "name": "columnHeaderEnter",
+    "description": "Fired when a <code>mouseenter</code> event happens in a column header.",
+    "params": "GridColumnHeaderParams",
+    "event": "MuiEvent<MouseEvent<HTMLElement, MouseEvent>>"
+  },
+  {
+    "name": "columnHeaderFocus",
+    "description": "Fired when a column header gains focus.",
+    "params": "GridColumnHeaderParams",
+    "event": "MuiEvent<FocusEvent<HTMLElement, Element>>"
+  },
+  {
     "name": "columnHeaderKeyDown",
     "description": "Fired when a key is pressed in a column header. It&#39;s mapped do the <code>keydown</code> DOM event.",
     "params": "GridColumnHeaderParams",
     "event": "MuiEvent<KeyboardEvent<HTMLElement>>"
+  },
+  {
+    "name": "columnHeaderLeave",
+    "description": "Fired when a <code>mouseleave</code> event happens in a column header.",
+    "params": "GridColumnHeaderParams",
+    "event": "MuiEvent<MouseEvent<HTMLElement, MouseEvent>>"
+  },
+  {
+    "name": "columnHeaderNavigationKeyDown",
+    "description": "Fired when a <a href=\"/components/data-grid/accessibility#keyboard-navigation\">navigation key</a> is pressed in a column header.",
+    "params": "GridColumnHeaderParams",
+    "event": "MuiEvent<KeyboardEvent<HTMLElement>>"
+  },
+  {
+    "name": "columnHeaderOut",
+    "description": "Fired when a <code>mouseout</code> event happens in a column header.",
+    "params": "GridColumnHeaderParams",
+    "event": "MuiEvent<MouseEvent<HTMLElement, MouseEvent>>"
+  },
+  {
+    "name": "columnHeaderOver",
+    "description": "Fired when a <code>mouseover</code> event happens in a column header.",
+    "params": "GridColumnHeaderParams",
+    "event": "MuiEvent<MouseEvent<HTMLElement, MouseEvent>>"
   },
   {
     "name": "columnOrderChange",
@@ -92,7 +182,7 @@
   {
     "name": "columnResizeStart",
     "description": "Fired when the user starts resizing a column.",
-    "params": "{ field: string }",
+    "params": "{ field: string; }",
     "event": "MuiEvent<MouseEvent<HTMLElement, MouseEvent>>"
   },
   {
@@ -106,6 +196,12 @@
     "description": "Fired when the columns state is changed.",
     "params": "string[]",
     "event": "MuiEvent<{}>"
+  },
+  {
+    "name": "columnSeparatorMouseDown",
+    "description": "Fired when a <code>mousedown</code> DOM event happens in the column header separator.",
+    "params": "GridColumnHeaderParams",
+    "event": "MuiEvent<MouseEvent<HTMLElement, MouseEvent>>"
   },
   {
     "name": "columnVisibilityChange",
@@ -168,6 +264,18 @@
     "event": "MuiEvent<{}>"
   },
   {
+    "name": "preProcessorRegister",
+    "description": "Fired when a pre-processor is registered.",
+    "params": "GridPreProcessingGroup",
+    "event": "MuiEvent<{}>"
+  },
+  {
+    "name": "preProcessorUnregister",
+    "description": "Fired when a pre-processor is unregistered.",
+    "params": "GridPreProcessingGroup",
+    "event": "MuiEvent<{}>"
+  },
+  {
     "name": "resize",
     "description": "Fired when the grid is resized.",
     "params": "ElementSize",
@@ -176,13 +284,13 @@
   {
     "name": "rowClick",
     "description": "Fired when a row is clicked.",
-    "params": "GridRowParams<{ [key: string]: any }>",
+    "params": "GridRowParams<{ [key: string]: any; }>",
     "event": "MuiEvent<MouseEvent<HTMLElement, MouseEvent>>"
   },
   {
     "name": "rowDoubleClick",
     "description": "Fired when a row is double-clicked.",
-    "params": "GridRowParams<{ [key: string]: any }>",
+    "params": "GridRowParams<{ [key: string]: any; }>",
     "event": "MuiEvent<MouseEvent<HTMLElement, MouseEvent>>"
   },
   {
@@ -194,14 +302,26 @@
   {
     "name": "rowEditStart",
     "description": "Fired when the row turns to edit mode.",
-    "params": "GridRowParams<{ [key: string]: any }>",
-    "event": "MuiEvent<KeyboardEvent<HTMLElement> | MouseEvent<HTMLElement, MouseEvent>>"
+    "params": "GridRowParams<{ [key: string]: any; }>",
+    "event": "MuiEvent<MouseEvent<HTMLElement, MouseEvent> | KeyboardEvent<HTMLElement>>"
   },
   {
     "name": "rowEditStop",
     "description": "Fired when the row turns back to view mode.",
-    "params": "GridRowParams<{ [key: string]: any }>",
+    "params": "GridRowParams<{ [key: string]: any; }>",
     "event": "MuiEvent<MuiBaseEvent>"
+  },
+  {
+    "name": "rowExpansionChange",
+    "description": "Fired when the expansion of a row is changed. Called with a GridRowTreeNodeConfig object.",
+    "params": "GridRowTreeNodeConfig",
+    "event": "MuiEvent<{}>"
+  },
+  {
+    "name": "rowGroupsPreProcessingChange",
+    "description": "Fired when the row grouping function is changed",
+    "params": "",
+    "event": "MuiEvent<{}>"
   },
   {
     "name": "rowSelectionCheckboxChange",
@@ -219,6 +339,12 @@
     "name": "rowsScrollEnd",
     "description": "Fired when scrolling to the bottom of the grid viewport.",
     "params": "GridRowScrollEndParams",
+    "event": "MuiEvent<{}>"
+  },
+  {
+    "name": "rowsSet",
+    "description": "Fired when the rows are updated.",
+    "params": "",
     "event": "MuiEvent<{}>"
   },
   {
@@ -249,6 +375,12 @@
     "name": "viewportInnerSizeChange",
     "description": "Fired when the inner size of the viewport changes. Called with an ElementSize object.",
     "params": "ElementSize",
+    "event": "MuiEvent<{}>"
+  },
+  {
+    "name": "visibleRowsSet",
+    "description": "Fired when the visible rows are updated",
+    "params": "",
     "event": "MuiEvent<{}>"
   }
 ]

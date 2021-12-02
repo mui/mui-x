@@ -3,9 +3,19 @@
   "description": "The selection API interface that is available in the grid apiRef.",
   "properties": [
     {
-      "name": "getSelectedRows",
-      "description": "Returns an array of the selected rows.",
-      "type": "() => Map<GridRowId, { [key: string]: any }>"
+      "name": "selectRow",
+      "description": "Change the selection state of a row.",
+      "type": "(id: GridRowId, isSelected?: boolean | undefined, resetSelection?: boolean | undefined) => void"
+    },
+    {
+      "name": "selectRows",
+      "description": "Change the selection state of multiple rows.",
+      "type": "(ids: GridRowId[], isSelected?: boolean | undefined, resetSelection?: boolean | undefined) => void"
+    },
+    {
+      "name": "selectRowRange",
+      "description": "Change the selection state of all the selectable rows in a range.",
+      "type": "(range: { startId: GridRowId; endId: GridRowId; }, isSelected?: boolean | undefined, resetSelection?: boolean | undefined) => void"
     },
     {
       "name": "isRowSelected",
@@ -13,19 +23,9 @@
       "type": "(id: GridRowId) => boolean"
     },
     {
-      "name": "selectRow",
-      "description": "Change the selection state of a row.",
-      "type": "(id: GridRowId, isSelected?: boolean, resetSelection?: boolean) => void"
-    },
-    {
-      "name": "selectRowRange",
-      "description": "Change the selection state of all the selectable rows in a range.",
-      "type": "(range: { endId: GridRowId; startId: GridRowId }, isSelected?: boolean, resetSelection?: boolean) => void"
-    },
-    {
-      "name": "selectRows",
-      "description": "Change the selection state of multiple rows.",
-      "type": "(ids: GridRowId[], isSelected?: boolean, resetSelection?: boolean) => void"
+      "name": "getSelectedRows",
+      "description": "Returns an array of the selected rows.",
+      "type": "() => Map<GridRowId, { [key: string]: any; }>"
     },
     {
       "name": "setSelectionModel",
