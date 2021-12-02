@@ -16,6 +16,8 @@ import { gridFilteredDescendantCountLookupSelector } from '../filter';
 import { GridPreProcessingGroup, useGridRegisterPreProcessor } from '../../core/preProcessing';
 import { GridColumnsRawState } from '../columns/gridColumnsState';
 
+const TREE_DATA_GROUPING_NAME = 'tree-data';
+
 /**
  * Only available in DataGridPro
  * @requires useGridPreProcessing (method)
@@ -40,6 +42,7 @@ export const useGridTreeData = (
 
     if (typeof propGroupingColDef === 'function') {
       const params: GridColDefOverrideParams = {
+        treeGroupingName: TREE_DATA_GROUPING_NAME,
         sources: [],
       };
 
