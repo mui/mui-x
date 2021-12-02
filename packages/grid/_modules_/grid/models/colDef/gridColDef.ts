@@ -232,7 +232,7 @@ export interface GridGroupingColDefOverride
     'editable' | 'valueSetter' | 'field' | 'preProcessEditCellProps' | 'renderEditCell'
   > {}
 
-export interface GridColDefOverrideParams {
+export interface GridGroupingColDefOverrideParams {
   /**
    * The name of the grouping algorithm currently building the grouping column.
    */

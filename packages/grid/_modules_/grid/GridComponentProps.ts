@@ -4,7 +4,7 @@ import { Theme } from '@mui/material/styles';
 import { GridInitialState } from './models/gridState';
 import { GridApiRef } from './models/api/gridApiRef';
 import {
-  GridColDefOverrideParams,
+  GridGroupingColDefOverrideParams,
   GridColumns,
   GridGroupingColDefOverride,
 } from './models/colDef/gridColDef';
@@ -401,7 +401,7 @@ interface GridComponentOtherProps extends CommonProps {
    */
   groupingColDef?:
     | GridGroupingColDefOverride
-    | ((params: GridColDefOverrideParams) => GridGroupingColDefOverride);
+    | ((params: GridGroupingColDefOverrideParams) => GridGroupingColDefOverride);
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

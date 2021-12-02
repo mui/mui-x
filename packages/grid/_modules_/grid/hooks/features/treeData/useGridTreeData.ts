@@ -7,7 +7,7 @@ import {
 } from './gridTreeDataGroupColDef';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { GridEvents, GridEventListener } from '../../../models/events';
-import { GridColDef, GridColDefOverrideParams } from '../../../models';
+import { GridColDef, GridGroupingColDefOverrideParams } from '../../../models';
 import { isSpaceKey } from '../../../utils/keyboardUtils';
 import { useFirstRender } from '../../utils/useFirstRender';
 import { buildRowTree, BuildRowTreeGroupingCriteria } from '../../../utils/tree/buildRowTree';
@@ -41,7 +41,7 @@ export const useGridTreeData = (
     let colDefOverride: Partial<GridColDef>;
 
     if (typeof propGroupingColDef === 'function') {
-      const params: GridColDefOverrideParams = {
+      const params: GridGroupingColDefOverrideParams = {
         treeGroupingName: TREE_DATA_GROUPING_NAME,
         sources: [],
       };
