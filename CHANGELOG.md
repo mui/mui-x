@@ -49,6 +49,7 @@ A big thanks to the 11 contributors who made this release possible. Here are som
 #### Changes
 
 - [DataGridPro] Add tree data (#2725) @flaviendelangle
+- [DataGridPro] Remove the callback version of the `groupigColDef` prop (#3317) @flaviendelangle
 - [DataGridPro] Improve license file (#3278) @oliviertassinari
 - [DataGridPro] Add types for event publishers and listeners (#3022) @flaviendelangle
 - [DataGrid] Add support for `sx` prop (#3281) @m4theushw
@@ -77,6 +78,7 @@ A big thanks to the 11 contributors who made this release possible. Here are som
 - [core] Update monorepo (#3303) @m4theushw
 - [test] Improve testing of the keyboard navigation (#3187) @flaviendelangle
 - [test] Force effect to run on location change (#3283) @m4theushw
+- [core] Rework columns state management (#3264) @flaviendelangle
 
 ### Docs
 
