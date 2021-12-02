@@ -228,5 +228,5 @@ export default function buildInterfacesDocumentation(options: BuildInterfacesDoc
     }
   });
 
-  return new Map();
+  return documentedInterfaces;
 }
