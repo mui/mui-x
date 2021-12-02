@@ -161,6 +161,7 @@ export default function buildInterfacesDocumentation(options: BuildInterfacesDoc
     const properties = interfaceType
       .getProperties()
       .map((property) => parseProperty(property, project))
+      .filter((property) => !property.tags.ignore)
       .sort((a, b) => a.name.localeCompare(b.name));
 
     const object: ParsedObject = {

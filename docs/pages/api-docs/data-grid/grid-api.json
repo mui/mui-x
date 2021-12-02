@@ -8,16 +8,6 @@
       "type": "() => void"
     },
     {
-      "name": "columnHeadersContainerElementRef",
-      "description": "The react ref of the grid column container virtualized div element.",
-      "type": "RefObject<HTMLDivElement> | undefined"
-    },
-    {
-      "name": "columnHeadersElementRef",
-      "description": "The react ref of the grid column headers container element.",
-      "type": "RefObject<HTMLDivElement> | undefined"
-    },
-    {
       "name": "commitCellChange",
       "description": "Updates the field at the given id with the value stored in the edit row model.",
       "type": "(params: GridCommitCellChangeParams, event?: MuiBaseEvent | undefined) => boolean | Promise<boolean>"
@@ -41,11 +31,6 @@
       "name": "exportDataAsPrint",
       "description": "Print the grid&#39;s data.",
       "type": "(options?: GridPrintExportOptions | undefined) => void"
-    },
-    {
-      "name": "footerRef",
-      "description": "The react ref of the grid footer element.",
-      "type": "RefObject<HTMLDivElement> | undefined"
     },
     {
       "name": "forceUpdate",
@@ -127,7 +112,6 @@
       "description": "Returns the translation for the <code>key</code>.",
       "type": "<T extends keyof GridLocaleText>(key: T) => GridLocaleText[T]"
     },
-    { "name": "getLogger", "description": "", "type": "(name: string) => Logger" },
     {
       "name": "getRootDimensions",
       "description": "Returns the dimensions of the grid",
@@ -214,11 +198,6 @@
       "type": "() => Map<GridRowId, { [key: string]: any; }>"
     },
     {
-      "name": "headerRef",
-      "description": "The react ref of the grid header element.",
-      "type": "RefObject<HTMLDivElement> | undefined"
-    },
-    {
       "name": "hideColumnMenu",
       "description": "Hides the column menu that is open.",
       "type": "() => void"
@@ -241,19 +220,9 @@
     },
     { "name": "publishEvent", "description": "Emits an event.", "type": "GridEventPublisher" },
     {
-      "name": "renderingZoneRef",
-      "description": "The react ref of the grid data rendering zone.",
-      "type": "RefObject<HTMLDivElement> | undefined"
-    },
-    {
       "name": "resize",
       "description": "Triggers a resize of the component and recalculation of width and height.",
       "type": "() => void"
-    },
-    {
-      "name": "rootElementRef",
-      "description": "The react ref of the grid root container div element.",
-      "type": "RefObject<HTMLDivElement> | undefined"
     },
     {
       "name": "scroll",
@@ -416,66 +385,6 @@
       "type": "(field: string) => void"
     },
     {
-      "name": "unstable_applyControlStateConstraint",
-      "description": "Allows the internal grid state to apply the registered control state constraint.",
-      "type": "(state: GridState) => { ignoreSetState: boolean; postUpdate: () => void; }"
-    },
-    {
-      "name": "unstable_applyFilters",
-      "description": "Applies all filters on all rows.",
-      "type": "() => void"
-    },
-    {
-      "name": "unstable_applyPreProcessors",
-      "description": "Apply on the value the pre-processors registered on the given group.",
-      "type": "(group: GridPreProcessingGroup, value: any, params?: any) => any"
-    },
-    {
-      "name": "unstable_copySelectedRowsToClipboard",
-      "description": "Copies the selected rows to the clipboard.\nThe fields will separated by the TAB character.",
-      "type": "(includeHeaders?: boolean | undefined) => void"
-    },
-    {
-      "name": "unstable_disableVirtualization",
-      "description": "Disables grid&#39;s virtualization.",
-      "type": "() => void"
-    },
-    {
-      "name": "unstable_enableVirtualization",
-      "description": "Enables grid&#39;s virtualization.",
-      "type": "() => void"
-    },
-    {
-      "name": "unstable_eventManager",
-      "description": "The generic event emitter manager.",
-      "type": "EventManager"
-    },
-    {
-      "name": "unstable_getViewportPageSize",
-      "description": "Returns the amount of rows that are currently visible in the viewport",
-      "type": "() => number"
-    },
-    {
-      "name": "unstable_groupRows",
-      "description": "Apply the first row grouping pre-processing that does not return null.",
-      "type": "(params: GridRowGroupParams) => GridRowGroupingResult"
-    },
-    {
-      "name": "unstable_registerPreProcessor",
-      "description": "Register a pre-processor and emit an event to notify the agents to re-apply the pre-processors.",
-      "type": "(group: GridPreProcessingGroup, id: string, callback: PreProcessorCallback) => () => void"
-    },
-    {
-      "name": "unstable_registerRowGroupsBuilder",
-      "description": "Register a column pre-processing and emit an event to re-apply the row grouping pre-processing.",
-      "type": "(processingName: string, groupingFunction: GridRowGroupingPreProcessing | null) => void"
-    },
-    {
-      "name": "unstable_updateControlState",
-      "description": "Updates a control state that binds the model, the onChange prop, and the grid state together.",
-      "type": "<E extends keyof GridControlledStateEventLookup>(controlState: GridControlStateItem<E>) => void"
-    },
-    {
       "name": "updateColumn",
       "description": "Updates the definition of a column.",
       "type": "(col: GridColDef) => void"
@@ -494,11 +403,6 @@
       "name": "upsertFilterItem",
       "description": "Updates or inserts a GridFilterItem.",
       "type": "(item: GridFilterItem) => void"
-    },
-    {
-      "name": "windowRef",
-      "description": "The react ref of the grid window container element.",
-      "type": "RefObject<HTMLDivElement> | undefined"
     }
   ]
 }
