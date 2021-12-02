@@ -45,6 +45,7 @@
   },
   "peerDependencies": {
     "@mui/material": "^5.1.1",
+    "@mui/system": "^5.1.1",
     "react": "^17.0.2"
   },
   "setupFiles": [

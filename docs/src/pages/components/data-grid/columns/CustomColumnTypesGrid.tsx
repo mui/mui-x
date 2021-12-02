@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { makeStyles } from '@mui/styles';
+import Box from '@mui/material/Box';
 import { DataGrid, GridColTypeDef } from '@mui/x-data-grid';
 import { randomStatusOptions, randomPrice } from '@mui/x-data-grid-generator';
 
@@ -36,19 +36,17 @@ const usdPrice: GridColTypeDef = {
   cellClassName: 'font-tabular-nums',
 };
 
-const useStyles = makeStyles({
-  root: {
-    '& .font-tabular-nums': {
-      fontVariantNumeric: 'tabular-nums',
-    },
-  },
-});
-
 export default function CustomColumnTypesGrid() {
-  const classes = useStyles();
-
   return (
-    <div style={{ height: 300, width: '100%' }} className={classes.root}>
+    <Box
+      sx={{
+        height: 300,
+        width: '100%',
+        '& .font-tabular-nums': {
+          fontVariantNumeric: 'tabular-nums',
+        },
+      }}
+    >
       <DataGrid
         columns={[
           { field: 'status', width: 130 },
@@ -57,6 +55,6 @@ export default function CustomColumnTypesGrid() {
         ]}
         rows={rows}
       />
-    </div>
+    </Box>
   );
 }

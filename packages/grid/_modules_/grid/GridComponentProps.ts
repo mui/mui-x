@@ -1,11 +1,9 @@
-import * as React from 'react';
+import { CommonProps } from '@mui/material/OverridableComponent';
+import { SxProps } from '@mui/system';
+import { Theme } from '@mui/material/styles';
 import { GridInitialState } from './models/gridState';
 import { GridApiRef } from './models/api/gridApiRef';
-import {
-  GridColDefOverride,
-  GridColDefOverrideCallback,
-  GridColumns,
-} from './models/colDef/gridColDef';
+import { GridColDefOverride, GridColumns } from './models/colDef/gridColDef';
 import {
   GridSimpleOptions,
   GridProcessedMergedOptions,
@@ -40,7 +38,7 @@ export interface GridComponentProps
     GridProcessedMergedOptions,
     GridComponentOtherProps {}
 
-interface GridComponentOtherProps {
+interface GridComponentOtherProps extends CommonProps {
   /**
    * The ref object that allows grid manipulation. Can be instantiated with [[useGridApiRef()]].
    */
@@ -309,7 +307,6 @@ interface GridComponentOtherProps {
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onPageSizeChange?: (pageSize: number, details: GridCallbackDetails) => void;
-
   /**
    * Set the edit rows model of the grid.
    */
@@ -362,10 +359,6 @@ interface GridComponentOtherProps {
    */
   'aria-labelledby'?: string;
   /**
-   * @ignore - do not document
-   */
-  className?: string;
-  /**
    * Set of columns of type [[GridColumns]].
    */
   columns: GridColumns;
@@ -396,17 +389,16 @@ interface GridComponentOtherProps {
    */
   initialState?: GridInitialState;
   /**
-   * @ignore - do not document
-   */
-  style?: React.CSSProperties;
-  /**
    * Overrideable components props dynamically passed to the component at rendering.
    */
   componentsProps?: GridSlotsComponentsProps;
   /**
    * The grouping column used by the tree data.
    */
-  groupingColDef?:
-    | GridColDefOverride<'field' | 'editable'>
-    | GridColDefOverrideCallback<'field' | 'editable'>;
+  groupingColDef?: GridColDefOverride<'field' | 'editable'>;
+
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
+  sx?: SxProps<Theme>;
 }

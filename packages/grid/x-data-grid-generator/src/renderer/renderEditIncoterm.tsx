@@ -8,6 +8,7 @@ import ListItemText from '@mui/material/ListItemText';
 import { createStyles, makeStyles } from '@mui/styles';
 import { createTheme } from '@mui/material/styles';
 import { INCOTERM_OPTIONS } from '../services/static-data';
+import { GridEvents } from '../../../_modules_/grid/models/events/gridEvents';
 
 const defaultTheme = createTheme();
 const useStyles = makeStyles(
@@ -34,9 +35,13 @@ function EditIncoterm(props: GridRenderEditCellParams) {
 
   const handleChange: SelectProps['onChange'] = (event) => {
     api.setEditCellValue({ id, field, value: event.target.value }, event);
-    if (!(event as any).key) {
-      api.commitCellChange({ id, field });
-      api.setCellMode(id, field, 'view');
+    api.commitCellChange({ id, field });
+    api.setCellMode(id, field, 'view');
+
+    if ((event as any).key) {
+      // TODO v6: remove once we stop ignoring events fired from portals
+      const params = api.getCellParams(id, field);
+      api.publishEvent(GridEvents.cellNavigationKeyDown, params, event);
     }
   };
 

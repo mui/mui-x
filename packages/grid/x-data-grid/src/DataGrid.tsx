@@ -26,7 +26,7 @@ const DataGridRaw = React.forwardRef<HTMLDivElement, DataGridProps>(function Dat
 
   return (
     <GridContextProvider apiRef={apiRef} props={props}>
-      <GridRoot ref={ref}>
+      <GridRoot className={props.className} style={props.style} sx={props.sx} ref={ref}>
         <GridErrorHandler>
           <GridHeaderPlaceholder />
           <GridBody
@@ -74,10 +74,6 @@ DataGridRaw.propTypes = {
    * Override or extend the styles applied to the component.
    */
   classes: PropTypes.object,
-  /**
-   * @ignore - do not document
-   */
-  className: PropTypes.string,
   /**
    * Number of extra columns to be rendered before/after the visible slice.
    * @default 3
@@ -625,7 +621,11 @@ DataGridRaw.propTypes = {
     }),
   ),
   /**
-   * @ignore - do not document
+   * The system prop that allows defining system overrides as well as additional CSS styles.
    */
-  style: PropTypes.object,
+  sx: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object])),
+    PropTypes.func,
+    PropTypes.object,
+  ]),
 } as any;

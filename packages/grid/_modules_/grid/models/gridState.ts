@@ -1,4 +1,4 @@
-import { GridColumnsState } from './colDef/gridColDef';
+import type { GridColumnsState } from '../hooks/features/columns/gridColumnsState';
 import type { GridEditRowsModel } from './gridEditRowModel';
 import type { GridColumnMenuState } from '../hooks/features/columnMenu/columnMenuState';
 import type { GridColumnReorderState } from '../hooks/features/columnReorder/columnReorderState';
