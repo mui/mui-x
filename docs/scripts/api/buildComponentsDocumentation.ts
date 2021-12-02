@@ -15,10 +15,13 @@ import kebabCase from 'lodash/kebabCase';
 import { LANGUAGES } from 'docs/src/modules/constants';
 import { findPagesMarkdown } from 'docs/src/modules/utils/find';
 import { defaultHandlers, parse as docgenParse, ReactDocgenApi } from 'react-docgen';
-import { renderInline as renderMarkdownInline, getHeaders } from '@material-ui/monorepo/docs/packages/markdown';
+import {
+  renderInline as renderMarkdownInline,
+  getHeaders,
+} from '@material-ui/monorepo/docs/packages/markdown';
 import { getLineFeed } from '@material-ui/monorepo/docs/scripts/helpers';
 import createGenerateClassName from '@mui/styles/createGenerateClassName';
-import {getJsdocDefaultValue, linkify, Project, writePrettifiedFile} from './utils';
+import { getJsdocDefaultValue, linkify, Project, writePrettifiedFile } from './utils';
 
 const generateClassName = createGenerateClassName();
 
@@ -172,21 +175,19 @@ function parseComponentSource(src: string, componentObject: { filename: string }
   return reactAPI;
 }
 
-const buildComponentDocumentation = async (
-  options: {
+const buildComponentDocumentation = async (options: {
+  filename: string;
+  project: Project;
+  outputDirectory: string;
+  prettierConfigPath: string;
+  workspaceRoot: string;
+  documentedInterfaces: Map<string, boolean>;
+  pagesMarkdown: ReadonlyArray<{
+    components: readonly string[];
     filename: string;
-    project: Project;
-    outputDirectory: string;
-    prettierConfigPath: string;
-    workspaceRoot: string;
-    documentedInterfaces: Map<string, boolean>;
-    pagesMarkdown: ReadonlyArray<{
-      components: readonly string[];
-      filename: string;
-      pathname: string;
-    }>;
-  },
-) => {
+    pathname: string;
+  }>;
+}) => {
   const {
     filename,
     project,
@@ -459,7 +460,7 @@ Page.getInitialProps = () => {
 
   // eslint-disable-next-line no-console
   console.log('Built API docs for', reactApi.name);
-}
+};
 
 interface BuildComponentsDocumentationOptions {
   dataGridProject: Project;
@@ -467,11 +468,20 @@ interface BuildComponentsDocumentationOptions {
   workspaceRoot: string;
   outputDirectory: string;
   prettierConfigPath: string;
-  documentedInterfaces: Map<string, boolean>
+  documentedInterfaces: Map<string, boolean>;
 }
 
-export default async function buildComponentsDocumentation(options: BuildComponentsDocumentationOptions) {
-  const { workspaceRoot, outputDirectory, prettierConfigPath, documentedInterfaces, dataGridProject, dataGridProProject } = options
+export default async function buildComponentsDocumentation(
+  options: BuildComponentsDocumentationOptions,
+) {
+  const {
+    workspaceRoot,
+    outputDirectory,
+    prettierConfigPath,
+    documentedInterfaces,
+    dataGridProject,
+    dataGridProProject,
+  } = options;
 
   const componentsToGenerateDocs = [
     path.resolve(workspaceRoot, 'packages/grid/x-data-grid/src/DataGrid.tsx'),
@@ -501,13 +511,13 @@ export default async function buildComponentsDocumentation(options: BuildCompone
   const componentBuilds = componentsToGenerateDocs.map(async (filename) => {
     const componentName = path.basename(filename).replace('.tsx', '');
 
-    let project: Project
+    let project: Project;
     if (dataGridProject.exports[componentName]) {
-      project = dataGridProject
+      project = dataGridProject;
     } else if (dataGridProProject.exports[componentName]) {
-      project = dataGridProProject
+      project = dataGridProProject;
     } else {
-      throw new Error(`Could not find component ${componentName} in any package`)
+      throw new Error(`Could not find component ${componentName} in any package`);
     }
 
     try {
@@ -529,7 +539,7 @@ export default async function buildComponentsDocumentation(options: BuildCompone
   const builds = await Promise.allSettled(componentBuilds);
 
   const fails = builds.filter(
-      (promise): promise is PromiseRejectedResult => promise.status === 'rejected',
+    (promise): promise is PromiseRejectedResult => promise.status === 'rejected',
   );
 
   fails.forEach((build) => {

@@ -3,14 +3,14 @@
   "description": "The scroll API interface that is available in the grid apiRef.",
   "properties": [
     {
-      "name": "scroll",
-      "description": "Triggers the viewport to scroll to the given positions (in pixels).",
-      "type": "(params: Partial<GridScrollParams>) => void"
-    },
-    {
       "name": "getScrollPosition",
       "description": "Returns the current scroll position.",
       "type": "() => GridScrollParams"
+    },
+    {
+      "name": "scroll",
+      "description": "Triggers the viewport to scroll to the given positions (in pixels).",
+      "type": "(params: Partial<GridScrollParams>) => void"
     },
     {
       "name": "scrollToIndexes",

@@ -160,7 +160,8 @@ export default function buildInterfacesDocumentation(options: BuildInterfacesDoc
     const interfaceType = project.checker.getTypeAtLocation(interfaceDeclaration.name);
     const properties = interfaceType
       .getProperties()
-      .map((property) => parseProperty(property, project));
+      .map((property) => parseProperty(property, project))
+      .sort((a, b) => a.name.localeCompare(b.name));
 
     const object: ParsedObject = {
       name: interfaceSymbol.name,
@@ -180,7 +181,9 @@ export default function buildInterfacesDocumentation(options: BuildInterfacesDoc
         ),
         properties: properties.map((property) => ({
           name: property.name,
-          description: renderMarkdownInline(linkify(property.description, documentedInterfaces, 'html')),
+          description: renderMarkdownInline(
+            linkify(property.description, documentedInterfaces, 'html'),
+          ),
           type: property.typeStr,
         })),
       };

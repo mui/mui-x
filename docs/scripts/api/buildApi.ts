@@ -2,7 +2,7 @@ import * as yargs from 'yargs';
 import * as fse from 'fs-extra';
 import path from 'path';
 import * as ts from 'typescript';
-import buildComponentsDocumentation from "./buildComponentsDocumentation";
+import buildComponentsDocumentation from './buildComponentsDocumentation';
 import buildInterfacesDocumentation from './buildInterfacesDocumentation';
 import buildExportsDocumentation from './buildExportsDocumentation';
 import buildEventsDocumentation from './buildEventsDocumentation';
@@ -12,28 +12,27 @@ const workspaceRoot = path.resolve(__dirname, '../../../');
 const prettierConfigPath = path.join(workspaceRoot, 'prettier.config.js');
 
 interface CreateProgramOptions {
-  rootPath: string,
-  tsConfigPath: string,
-  entryPointPath: string,
+  rootPath: string;
+  tsConfigPath: string;
+  entryPointPath: string;
 }
 
 const createProject = (options: CreateProgramOptions): Project => {
-  const { tsConfigPath, rootPath, entryPointPath } = options
+  const { tsConfigPath, rootPath, entryPointPath } = options;
 
   const compilerOptions = ts.parseJsonConfigFileContent(
-      ts.readConfigFile(tsConfigPath, ts.sys.readFile).config,
-      ts.sys,
-      rootPath,
+    ts.readConfigFile(tsConfigPath, ts.sys.readFile).config,
+    ts.sys,
+    rootPath,
   );
 
   const program = ts.createProgram({
     rootNames: [entryPointPath],
     options: compilerOptions.options,
-  })
+  });
 
   const checker = program.getTypeChecker();
   const sourceFile = program.getSourceFile(entryPointPath);
-
 
   const exports = Object.fromEntries(
     checker.getExportsOfModule(checker.getSymbolAtLocation(sourceFile!)!).map((symbol) => {
@@ -45,8 +44,8 @@ const createProject = (options: CreateProgramOptions): Project => {
     exports,
     program,
     checker,
-  }
-}
+  };
+};
 
 async function run(argv: { outputDirectory?: string }) {
   const outputDirectory = path.resolve(argv.outputDirectory!);
@@ -56,14 +55,14 @@ async function run(argv: { outputDirectory?: string }) {
     rootPath: path.join(workspaceRoot, 'packages/grid/x-data-grid'),
     tsConfigPath: path.join(workspaceRoot, 'packages/grid/x-data-grid/tsconfig.json'),
     entryPointPath: path.join(workspaceRoot, 'packages/grid/x-data-grid/src/index.ts'),
-  })
+  });
 
   const dataGridProProject = createProject({
     rootPath: path.join(workspaceRoot, 'packages/grid/x-data-grid-pro'),
     tsConfigPath: path.join(workspaceRoot, 'packages/grid/x-data-grid-pro/tsconfig.json'),
     entryPointPath: path.join(workspaceRoot, 'packages/grid/x-data-grid-pro/src/index.ts'),
-  })
-  
+  });
+
   const documentedInterfaces = buildInterfacesDocumentation({
     project: dataGridProProject,
     prettierConfigPath,
@@ -77,7 +76,7 @@ async function run(argv: { outputDirectory?: string }) {
     documentedInterfaces,
     dataGridProject,
     dataGridProProject,
-  })
+  });
 
   buildEventsDocumentation({
     project: dataGridProProject,

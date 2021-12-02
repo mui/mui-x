@@ -57,11 +57,11 @@ export function writePrettifiedFile(filename: string, data: string, prettierConf
   });
   if (prettierConfig === null) {
     throw new Error(
-        `Could not resolve config for '${filename}' using prettier config path '${prettierConfigPath}'.`,
+      `Could not resolve config for '${filename}' using prettier config path '${prettierConfigPath}'.`,
     );
   }
 
-  fse.writeFileSync(filename, prettier.format(data, {...prettierConfig, filepath: filename}), {
+  fse.writeFileSync(filename, prettier.format(data, { ...prettierConfig, filepath: filename }), {
     encoding: 'utf8',
   });
 }
