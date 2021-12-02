@@ -147,7 +147,7 @@ export default function buildInterfacesDocumentation(options: BuildInterfacesDoc
     documentedInterfaces.set(name, true);
   });
 
-  const gridApiParts: string[] = (
+  const gridApiExtendsFrom: string[] = (
     (project.exports.GridApi.declarations![0] as ts.InterfaceDeclaration).heritageClauses ?? []
   ).flatMap((clause) =>
     clause.types
@@ -179,7 +179,7 @@ export default function buildInterfacesDocumentation(options: BuildInterfacesDoc
 
     const slug = kebabCase(object.name);
 
-    if (object.name === 'GridApi' || gridApiParts.includes(object.name)) {
+    if (gridApiExtendsFrom.includes(object.name)) {
       const json = {
         name: object.name,
         description: linkify(
