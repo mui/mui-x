@@ -12,7 +12,6 @@ import {
   GridSortModel,
   GridSortDirection,
   GridSortCellParams,
-  GridComparatorFn,
 } from '../../../models/gridSortModel';
 import { isDesc, nextGridSortDirection } from '../../../utils/sortingUtils';
 import { isEnterKey } from '../../../utils/keyboardUtils';
@@ -29,11 +28,13 @@ import {
 import { gridRowIdsSelector, gridRowTreeGroupingNameSelector, gridRowTreeSelector } from '../rows';
 import { useGridStateInit } from '../../utils/useGridStateInit';
 import { useFirstRender } from '../../utils/useFirstRender';
-import { GridSortingMethod, GridSortingMethodCollection } from './gridSortingState';
+import {
+  GridSortingMethod,
+  GridSortingMethodCollection,
+  GridSortingFieldComparator,
+} from './gridSortingState';
 import { GridPreProcessingGroup } from '../../core/preProcessing';
 import { useGridRegisterSortingMethod } from './useGridRegisterSortingMethod';
-
-type GridFieldComparator = { field: string; comparator: GridComparatorFn };
 
 /**
  * @requires useGridRows (state, event)
@@ -132,7 +133,7 @@ export const useGridSorting = (
   );
 
   const comparatorListAggregate = React.useCallback(
-    (comparatorList: GridFieldComparator[]) =>
+    (comparatorList: GridSortingFieldComparator[]) =>
       (row1: GridSortCellParams[], row2: GridSortCellParams[]) => {
         return comparatorList.reduce((res, colComparator, index) => {
           if (res !== 0) {
@@ -155,7 +156,7 @@ export const useGridSorting = (
   );
 
   const buildComparatorList = React.useCallback(
-    (sortModel: GridSortModel): GridFieldComparator[] => {
+    (sortModel: GridSortModel): GridSortingFieldComparator[] => {
       const comparators = sortModel
         .map((item) => {
           const column = apiRef.current.getColumn(item.field);
@@ -173,7 +174,7 @@ export const useGridSorting = (
             : column.sortComparator!;
           return { field: column.field, comparator };
         })
-        .filter((comparator): comparator is GridFieldComparator => !!comparator);
+        .filter((comparator): comparator is GridSortingFieldComparator => !!comparator);
 
       return comparators;
     },

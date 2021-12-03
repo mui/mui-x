@@ -1,5 +1,5 @@
 import { GridRowId, GridRowTreeNodeConfig } from '../../../models/gridRows';
-import { GridFieldComparatorList, GridSortModel } from '../../../models/gridSortModel';
+import { GridComparatorFn, GridSortModel } from '../../../models/gridSortModel';
 
 export interface GridSortingState {
   sortedRows: GridRowId[];
@@ -11,9 +11,11 @@ export interface GridSortingInitialState {
 }
 
 export interface GridSortingParams {
-  comparatorList: GridFieldComparatorList;
+  comparatorList: GridSortingFieldComparator[];
   sortRowList: (rowList: GridRowTreeNodeConfig[]) => GridRowId[];
 }
+
+export type GridSortingFieldComparator = { field: string; comparator: GridComparatorFn };
 
 export type GridSortingMethod = (params: GridSortingParams) => GridRowId[];
 

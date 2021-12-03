@@ -1,15 +1,11 @@
-import {
-  GridFieldComparatorList,
-  GridRowId,
-  GridRowTreeConfig,
-  GridRowTreeNodeConfig,
-} from '../../models';
+import { GridRowId, GridRowTreeConfig, GridRowTreeNodeConfig } from '../../models';
+import { GridSortingFieldComparator } from '../../hooks/features/sorting/gridSortingState';
 
 interface SortRowTreeParams {
   rowIds: GridRowId[];
   rowTree: GridRowTreeConfig;
   disableChildrenSorting: boolean;
-  comparatorList: GridFieldComparatorList;
+  comparatorList: GridSortingFieldComparator[];
   sortRowList: (rowList: GridRowTreeNodeConfig[]) => GridRowId[];
 }
 
