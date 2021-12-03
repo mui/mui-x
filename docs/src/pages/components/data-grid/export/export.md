@@ -52,12 +52,12 @@ You can provide a [`valueFormatter`](/components/data-grid/columns/#value-format
 />
 ```
 
-### Disable export
+### Remove export button
 
-You can remove the CSV export option from the toolbar by setting `disable` option to `true`.
+You can remove the CSV export option from the toolbar by setting `disableToolbarButton` option to `true`.
 
 ```jsx
-<GridToolbarExport csvOptions={{ disable: true }} />
+<GridToolbarExport csvOptions={{ disableToolbarButton: true }} />
 ```
 
 ### apiRef [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
@@ -114,12 +114,12 @@ You can provide a [`valueFormatter`](/components/data-grid/columns/#value-format
 />
 ```
 
-### Disable export
+### Remove print button
 
-You can remove the Print export button from the toolbar by setting `disable` option to `true`.
+You can remove the Print export button from the toolbar by setting `disableToolbarButton` option to `true`.
 
 ```jsx
-<GridToolbarExport printOptions={{ disable: true }} />
+<GridToolbarExport printOptions={{ disableToolbarButton: true }} />
 ```
 
 ### apiRef [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
