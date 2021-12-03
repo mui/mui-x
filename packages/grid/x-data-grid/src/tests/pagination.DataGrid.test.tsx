@@ -265,7 +265,7 @@ describe('<DataGrid /> - Pagination', () => {
           rowsPerPageOptions={[1, 2, 3, 100]}
         />,
       );
-      clock.runAll(); // Run the timer to cleanup the listeners registered by StrictMode
+      clock.runToLast(); // Run the timer to cleanup the listeners registered by StrictMode
       fireEvent.mouseDown(screen.queryByLabelText('Rows per page:'));
       expect(screen.queryAllByRole('option').length).to.equal(4);
 
@@ -440,6 +440,8 @@ describe('<DataGrid /> - Pagination', () => {
     });
 
     it('should update the amount of rows rendered and call onPageSizeChange when changing the table height', async () => {
+      // Using a fake clock also affects `requestAnimationFrame`
+      // Calling clock.tick() should call the callback passed, but it doesn't work
       stub(window, 'requestAnimationFrame').callsFake((fn: any) => fn());
       stub(window, 'cancelAnimationFrame');
 
