@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { createRenderer, fireEvent, screen } from '@material-ui/monorepo/test/utils';
 import { expect } from 'chai';
-import { DataGrid, DataGridProps } from '@mui/x-data-grid';
+import { DataGrid, DataGridProps, GridSortModel } from '@mui/x-data-grid';
 import { getColumnValues, getColumnHeaderCell } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
@@ -182,11 +182,58 @@ describe('<DataGrid /> - Sorting', () => {
   });
 
   it('should support new dataset', () => {
-    const TestCase = (props: { rows: any[]; columns: any[] }) => {
+    const TestCase = (props: DataGridProps) => {
       const { rows, columns } = props;
       return (
         <div style={{ width: 300, height: 300 }}>
           <DataGrid autoHeight={isJSDOM} rows={rows} columns={columns} />
+        </div>
+      );
+    };
+
+    const { setProps } = render(<TestCase {...baselineProps} />);
+
+    const header = screen
+      .getByRole('columnheader', { name: 'brand' })
+      .querySelector('.MuiDataGrid-columnHeaderTitleContainer');
+    expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
+    fireEvent.click(header);
+    expect(getColumnValues()).to.deep.equal(['Adidas', 'Nike', 'Puma']);
+    const newData = {
+      rows: [
+        {
+          id: 0,
+          country: 'France',
+        },
+        {
+          id: 1,
+          country: 'UK',
+        },
+        {
+          id: 12,
+          country: 'US',
+        },
+      ],
+      columns: [{ field: 'country' }],
+    };
+    setProps(newData);
+    expect(getColumnValues()).to.deep.equal(['France', 'UK', 'US']);
+  });
+
+  it('should support new dataset in control mode', () => {
+    const TestCase = (props: DataGridProps) => {
+      const { rows, columns } = props;
+      const [sortModel, setSortModel] = React.useState<GridSortModel>();
+
+      return (
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid
+            autoHeight={isJSDOM}
+            rows={rows}
+            columns={columns}
+            sortModel={sortModel}
+            onSortModelChange={(newSortModel) => setSortModel(newSortModel)}
+          />
         </div>
       );
     };
