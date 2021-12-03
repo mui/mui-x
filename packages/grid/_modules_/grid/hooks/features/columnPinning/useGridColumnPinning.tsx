@@ -140,7 +140,7 @@ export const useGridColumnPinning = (
   );
 
   const addColumnMenuButtons = React.useCallback(
-    (initialValue) => {
+    (initialValue: JSX.Element[]) => {
       if (props.disableColumnPinning) {
         return initialValue;
       }
