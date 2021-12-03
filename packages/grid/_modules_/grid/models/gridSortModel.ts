@@ -4,8 +4,6 @@ import type { GridApi } from './api';
 
 export type GridSortDirection = 'asc' | 'desc' | null | undefined;
 
-export type GridFieldComparatorList = { field: string; comparator: GridComparatorFn }[];
-
 export interface GridSortCellParams {
   id: GridRowId;
   field: string;

@@ -177,7 +177,6 @@
   { "name": "GridEventsStr", "kind": "Type alias" },
   { "name": "GridExportFormat", "kind": "Type alias" },
   { "name": "GridFeatureMode", "kind": "Type alias" },
-  { "name": "GridFieldComparatorList", "kind": "Type alias" },
   { "name": "GridFilterActiveItemsLookup", "kind": "Type alias" },
   { "name": "GridFilterInputDateProps", "kind": "Type alias" },
   { "name": "GridFilterInputSingleSelectProps", "kind": "Type alias" },
