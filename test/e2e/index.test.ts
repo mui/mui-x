@@ -257,5 +257,65 @@ describe('e2e', () => {
         ),
       ).to.equal(scrollTop);
     });
+
+    it('should edit date cells', async () => {
+      await renderFixture('DataGrid/KeyboardEditDate');
+
+      // Edit date column
+      expect(
+        await page.evaluate(
+          () => document.querySelector('[role="cell"][data-field="birthday"]')!.textContent!,
+        ),
+      ).to.equal('2/29/1984');
+
+      // set 06/25/1986
+      await page.dblclick('[role="cell"][data-field="birthday"]');
+      await page.keyboard.press('0');
+      await page.keyboard.press('6');
+      await page.keyboard.press('2');
+      await page.keyboard.press('5');
+      await page.keyboard.press('1');
+      await page.keyboard.press('9');
+      await page.keyboard.press('8');
+      await page.keyboard.press('6');
+      await page.keyboard.press('Enter');
+
+      expect(
+        await page.evaluate(
+          () => document.querySelector('[role="cell"][data-field="birthday"]')!.textContent!,
+        ),
+      ).to.equal('6/25/1986');
+
+      await page.keyboard.press('ArrowRight');
+
+      // Edit dateTime column
+      expect(
+        await page.evaluate(
+          () => document.querySelector('[role="cell"][data-field="lastConnexion"]')!.textContent!,
+        ),
+      ).to.equal('2/20/2022, 6:50:00 AM');
+
+      // set 01/31/2025 16:05
+      await page.keyboard.press('0');
+      await page.keyboard.press('1');
+      await page.keyboard.press('3');
+      await page.keyboard.press('1');
+      await page.keyboard.press('2');
+      await page.keyboard.press('0');
+      await page.keyboard.press('2');
+      await page.keyboard.press('5');
+      await page.keyboard.press('ArrowRight'); // needed as long as years ar not limited to 4 digits
+      await page.keyboard.press('1');
+      await page.keyboard.press('6');
+      await page.keyboard.press('5');
+      await page.keyboard.press('Enter');
+
+      expect(
+        await page.evaluate(
+          () => document.querySelector('[role="cell"][data-field="lastConnexion"]')!.textContent!,
+        ),
+      ).to.equal('1/31/2025, 4:05:00 PM');
+
+    });
   });
 });
