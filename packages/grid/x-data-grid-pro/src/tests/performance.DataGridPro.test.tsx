@@ -5,7 +5,7 @@ import { useData } from 'packages/storybook/src/hooks/useData';
 import { expect } from 'chai';
 
 // These tests are here because they need the real clock.
-// TODO move to test/performance and use the average time based on several samples 
+// TODO move to test/performance and use the average time based on several samples
 describe('<DataGridPro /> - Performance', () => {
   const { render } = createRenderer({ clock: 'fake' });
 
