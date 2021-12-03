@@ -158,7 +158,7 @@ The enterprise components come in two plans: Pro and Premium.
 | [Column spanning](/components/data-grid/columns/#column-spanning)                         |    🚧     |                 🚧                 |                     🚧                     |
 | [Column resizing](/components/data-grid/columns/#column-resizing)                         |    ❌     |                 ✅                 |                     ✅                     |
 | [Column reorder](/components/data-grid/columns/#column-reorder)                           |    ❌     |                 ✅                 |                     ✅                     |
-| [Column pinning](/components/data-grid/columns/#column-pinning)                           |    ❌     |                 🚧                 |                     🚧                     |
+| [Column pinning](/components/data-grid/columns/#column-pinning)                           |    ❌     |                 ✅                 |                     ✅                     |
 | **Row**                                                                                   |           |                                    |                                            |
 | [Row sorting](/components/data-grid/rows/#row-sorting)                                    |    ✅     |                 ✅                 |                     ✅                     |
 | [Row height](/components/data-grid/rows/#row-height)                                      |    ✅     |                 ✅                 |                     ✅                     |

@@ -149,6 +149,11 @@ export interface GridSimpleOptions {
    */
   disableVirtualization: boolean;
   /**
+   * If `true`, the column pinning is disabled.
+   * @default false
+   */
+  disableColumnPinning: boolean;
+  /**
    * Controls whether to use the cell or row editing.
    * @default "cell"
    */
@@ -279,6 +284,7 @@ export const GRID_DEFAULT_SIMPLE_OPTIONS: GridSimpleOptions = {
   disableExtendRowFullWidth: false,
   disableColumnFilter: false,
   disableColumnMenu: false,
+  disableColumnPinning: false,
   disableColumnReorder: false,
   disableColumnResize: false,
   disableColumnSelector: false,

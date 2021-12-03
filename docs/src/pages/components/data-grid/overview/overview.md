@@ -82,6 +82,7 @@ We provide three options:
 - [100% customizable](/components/data-grid/style/)
 - Server-side data
 - [Column hiding](/components/data-grid/columns/#hiding)
+- [Column pinning](/components/data-grid/columns/#column-pinning) <span class="pro"></span>
 - [Accessible](/components/data-grid/accessibility/)
 - [Localization](/components/data-grid/localization/)
 

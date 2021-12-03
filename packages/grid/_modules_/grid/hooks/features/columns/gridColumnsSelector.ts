@@ -3,6 +3,7 @@ import { GridState } from '../../../models/gridState';
 
 export const gridColumnsSelector = (state: GridState) => state.columns;
 
+// It includes even the hidden columns
 export const allGridColumnsFieldsSelector = (state: GridState) => state.columns.all;
 
 export const gridColumnLookupSelector = (state: GridState) => state.columns.lookup;
@@ -12,8 +13,14 @@ export const allGridColumnsSelector = createSelector(
   gridColumnLookupSelector,
   (allFields, lookup) => allFields.map((field) => lookup[field]),
 );
+
 export const visibleGridColumnsSelector = createSelector(allGridColumnsSelector, (columns) =>
   columns.filter((c) => c.field != null && !c.hide),
+);
+
+export const gridVisibleColumnFieldsSelector = createSelector(
+  visibleGridColumnsSelector,
+  (visibleColumns) => visibleColumns.map((column) => column.field),
 );
 
 export const gridColumnsMetaSelector = createSelector(

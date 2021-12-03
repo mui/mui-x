@@ -135,6 +135,11 @@ const ruRUGrid: Partial<GridLocaleText> = {
   // Actions cell more text
   actionsCellMore: 'ещё',
 
+  // Column pinning text
+  // pinToLeft: 'Pin to left',
+  // pinToRight: 'Pin to right',
+  // unpin: 'Unpin',
+
   // Tree Data
   treeDataGroupingHeaderName: 'Группа',
   treeDataExpand: 'показать дочерние элементы',
