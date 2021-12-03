@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { makeStyles } from '@mui/styles';
+import Box from '@mui/material/Box';
 import Rating from '@mui/material/Rating';
 import { DataGrid, GridRenderCellParams } from '@mui/x-data-grid';
 
@@ -7,17 +7,8 @@ function renderRating(params: GridRenderCellParams<number>) {
   return <Rating readOnly value={params.value} />;
 }
 
-const useStyles = makeStyles({
-  root: {
-    display: 'flex',
-    alignItems: 'center',
-    paddingRight: 16,
-  },
-});
-
 function RatingEditInputCell(props: GridRenderCellParams<number>) {
   const { id, value, api, field } = props;
-  const classes = useStyles();
 
   const handleChange = async (event) => {
     api.setEditCellValue({ id, field, value: Number(event.target.value) }, event);
@@ -36,7 +27,7 @@ function RatingEditInputCell(props: GridRenderCellParams<number>) {
   };
 
   return (
-    <div className={classes.root}>
+    <Box sx={{ display: 'flex', alignItems: 'center', pr: 2 }}>
       <Rating
         ref={handleRef}
         name="rating"
@@ -44,7 +35,7 @@ function RatingEditInputCell(props: GridRenderCellParams<number>) {
         value={value}
         onChange={handleChange}
       />
-    </div>
+    </Box>
   );
 }
 

@@ -1,23 +1,15 @@
 import * as React from 'react';
-import { makeStyles } from '@mui/styles';
+import Box from '@mui/material/Box';
 import { DataGrid, useGridApiContext, useGridState } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import Pagination from '@mui/material/Pagination';
 
-const useStyles = makeStyles({
-  root: {
-    display: 'flex',
-  },
-});
-
 function CustomPagination() {
   const apiRef = useGridApiContext();
   const [state] = useGridState(apiRef);
-  const classes = useStyles();
 
   return (
     <Pagination
-      className={classes.root}
       color="primary"
       count={state.pagination.pageCount}
       page={state.pagination.page + 1}
@@ -34,7 +26,7 @@ export default function CustomPaginationGrid() {
   });
 
   return (
-    <div style={{ height: 400, width: '100%' }}>
+    <Box sx={{ height: 400, width: '100%' }}>
       <DataGrid
         pagination
         pageSize={5}
@@ -44,6 +36,6 @@ export default function CustomPaginationGrid() {
         }}
         {...data}
       />
-    </div>
+    </Box>
   );
 }
