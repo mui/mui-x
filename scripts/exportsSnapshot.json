@@ -168,7 +168,6 @@
   { "name": "GridExportFormat", "kind": "TypeAlias" },
   { "name": "GridFeatureMode", "kind": "TypeAlias" },
   { "name": "GridFeatureModeConstant", "kind": "Variable" },
-  { "name": "GridFieldComparatorList", "kind": "TypeAlias" },
   { "name": "GridFilterActiveItemsLookup", "kind": "TypeAlias" },
   { "name": "gridFilterActiveItemsLookupSelector", "kind": "Variable" },
   { "name": "gridFilterActiveItemsSelector", "kind": "Variable" },
