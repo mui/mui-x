@@ -15,6 +15,7 @@ import { GridScrollParams } from '../../../models/params/gridScrollParams';
 import { GridScrollApi } from '../../../models/api/gridScrollApi';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridNativeEventListener } from '../../utils/useGridNativeEventListener';
+import { GridPreProcessingGroup } from '../../core/preProcessing';
 
 // Logic copied from https://www.w3.org/TR/wai-aria-practices/examples/listbox/js/listbox.js
 // Similar to https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollIntoView
@@ -60,7 +61,7 @@ export const useGridScroll = (
 
       logger.debug(`Scrolling to cell at row ${params.rowIndex}, col: ${params.colIndex} `);
 
-      const scrollCoordinates: any = {};
+      let scrollCoordinates: any = {};
 
       if (params.colIndex != null) {
         scrollCoordinates.left = scrollIntoView({
@@ -83,6 +84,12 @@ export const useGridScroll = (
           offsetTop: rowHeight * elementIndex,
         });
       }
+
+      scrollCoordinates = apiRef.current.unstable_applyPreProcessors(
+        GridPreProcessingGroup.scrollToIndexes,
+        scrollCoordinates,
+        params,
+      );
 
       if (
         typeof scrollCoordinates.left !== undefined ||

@@ -1,6 +1,9 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { useForkRef } from '@mui/material/utils';
+import { SxProps } from '@mui/system';
+import { Theme } from '@mui/material/styles';
 import NoSsr from '@mui/material/NoSsr';
 import { GridRootContainerRef } from '../../models/gridRootContainerRef';
 import { GridRootStyles } from './GridRootStyles';
@@ -11,12 +14,14 @@ import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { gridClasses } from '../../gridClasses';
 import { gridRowCountSelector } from '../../hooks/features/rows/gridRowsSelector';
 
-export type GridRootProps = React.HTMLAttributes<HTMLDivElement>;
+export interface GridRootProps extends React.HTMLAttributes<HTMLDivElement> {
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
+  sx?: SxProps<Theme>;
+}
 
-export const GridRoot = React.forwardRef<HTMLDivElement, GridRootProps>(function GridRoot(
-  props,
-  ref,
-) {
+const GridRoot = React.forwardRef<HTMLDivElement, GridRootProps>(function GridRoot(props, ref) {
   const rootProps = useGridRootProps();
   const { children, className, ...other } = props;
   const apiRef = useGridApiContext();
@@ -31,7 +36,7 @@ export const GridRoot = React.forwardRef<HTMLDivElement, GridRootProps>(function
     <NoSsr>
       <GridRootStyles
         ref={handleRef}
-        className={clsx(className, rootProps.classes?.root, rootProps.className, gridClasses.root, {
+        className={clsx(className, rootProps.classes?.root, gridClasses.root, {
           [gridClasses.autoHeight]: rootProps.autoHeight,
         })}
         role="grid"
@@ -40,7 +45,6 @@ export const GridRoot = React.forwardRef<HTMLDivElement, GridRootProps>(function
         aria-multiselectable={!rootProps.disableMultipleSelection}
         aria-label={rootProps['aria-label']}
         aria-labelledby={rootProps['aria-labelledby']}
-        style={rootProps.style}
         {...other}
       >
         {children}
@@ -48,3 +52,20 @@ export const GridRoot = React.forwardRef<HTMLDivElement, GridRootProps>(function
     </NoSsr>
   );
 });
+
+GridRoot.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
+  sx: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object])),
+    PropTypes.func,
+    PropTypes.object,
+  ]),
+} as any;
+
+export { GridRoot };

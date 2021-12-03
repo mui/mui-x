@@ -812,4 +812,27 @@ describe('<DataGrid /> - Layout & Warnings', () => {
     expect(window.getComputedStyle(getRow(0)).backgroundColor).to.equal('rgb(128, 0, 128)');
     expect(window.getComputedStyle(getCell(0, 0)).backgroundColor).to.equal('rgb(0, 128, 0)');
   });
+
+  it('should support the sx prop', () => {
+    const theme = createTheme({
+      palette: {
+        primary: {
+          main: 'rgb(0, 0, 255)',
+        },
+      },
+    });
+
+    render(
+      <ThemeProvider theme={theme}>
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid columns={[]} rows={[]} sx={{ color: 'primary.main' }} />
+        </div>
+      </ThemeProvider>,
+    );
+
+    // @ts-expect-error need to migrate helpers to TypeScript
+    expect(screen.getByRole('grid')).toHaveComputedStyle({
+      color: 'rgb(0, 0, 255)',
+    });
+  });
 });

@@ -24,7 +24,6 @@ const VirtualScrollerContentRoot = styled('div', {
   overridesResolver: (props, styles) => styles.virtualScrollerContent,
 })({
   position: 'relative',
-  overflow: 'hidden',
 });
 
 const GridVirtualScrollerContent = React.forwardRef<
