@@ -15,15 +15,25 @@ import {
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { gridClasses } from '../../gridClasses';
 
+type GridExportDisplayOptions = {
+  /**
+   * If `true`, this export option will be removed from the GridToolbarExport menu.
+   * @default false
+   */
+  disableToolbarButton?: boolean;
+};
+
 type GridExportOption = {
   label: React.ReactNode;
   format: ExportTypes;
-  formatOptions?: GridCsvExportOptions | GridPrintExportOptions;
+  formatOptions?:
+    | (GridCsvExportOptions & GridExportDisplayOptions)
+    | (GridPrintExportOptions & GridExportDisplayOptions);
 };
 
 export interface GridToolbarExportProps extends ButtonProps {
-  csvOptions?: GridCsvExportOptions;
-  printOptions?: GridPrintExportOptions;
+  csvOptions?: GridCsvExportOptions & GridExportDisplayOptions;
+  printOptions?: GridPrintExportOptions & GridExportDisplayOptions;
 }
 
 const GridToolbarExport = React.forwardRef<HTMLButtonElement, GridToolbarExportProps>(
@@ -80,7 +90,7 @@ const GridToolbarExport = React.forwardRef<HTMLButtonElement, GridToolbarExportP
       }
     };
 
-    if (csvOptions?.disable && printOptions?.disable) {
+    if (csvOptions?.disableToolbarButton && printOptions?.disableToolbarButton) {
       return null;
     }
 
@@ -115,7 +125,7 @@ const GridToolbarExport = React.forwardRef<HTMLButtonElement, GridToolbarExportP
             autoFocusItem={open}
           >
             {exportOptions.map((option, index) =>
-              option.formatOptions?.disable ? null : (
+              option.formatOptions?.disableToolbarButton ? null : (
                 <MenuItem key={index} onClick={handleExport(option)}>
                   {option.label}
                 </MenuItem>

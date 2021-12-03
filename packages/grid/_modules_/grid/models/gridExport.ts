@@ -12,11 +12,6 @@ export interface GridExportOptions {
    * @default false
    */
   allColumns?: boolean;
-  /**
-   * If `true`, this export option will be removed from the GridToolbarExport menu.
-   * @default false
-   */
-  disable?: boolean;
 }
 
 /**
