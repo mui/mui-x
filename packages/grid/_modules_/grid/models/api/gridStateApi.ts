@@ -1,6 +1,6 @@
 import { GridState } from '../gridState';
-import {GridControlledStateEventLookup} from "../events";
-import {GridControlStateItem} from "../controlStateItem";
+import { GridControlledStateEventLookup } from '../events';
+import { GridControlStateItem } from '../controlStateItem';
 
 export interface GridStateApi {
   /**
@@ -23,6 +23,6 @@ export interface GridStateApi {
    * @ignore - do not document.
    */
   unstable_updateControlState: <E extends keyof GridControlledStateEventLookup>(
-      controlState: GridControlStateItem<E>,
+    controlState: GridControlStateItem<E>,
   ) => void;
 }
