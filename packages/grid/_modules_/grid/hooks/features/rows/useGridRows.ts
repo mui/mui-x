@@ -429,7 +429,9 @@ export const useGridRows = (
 
   // The effect is used to build the rows meta data - totalHeight and positions.
   // Because of variable row height this is needed for the virtualization
-  React.useEffect(hydrateRowsMeta, [
+  React.useEffect(() => {
+    hydrateRowsMeta();
+  }, [
     apiRef,
     props,
     gridState.density,
