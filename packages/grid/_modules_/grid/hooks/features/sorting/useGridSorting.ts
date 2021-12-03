@@ -34,7 +34,6 @@ type GridFieldComparator = { field: string; comparator: GridComparatorFn };
 
 /**
  * @requires useGridRows (state, event)
- * @requires useGridControlState (method)
  * @requires useGridColumns (event)
  */
 export const useGridSorting = (
