@@ -354,6 +354,7 @@
   { "name": "trTR", "kind": "Variable" },
   { "name": "ukUA", "kind": "Variable" },
   { "name": "viVN", "kind": "Variable" },
+  { "name": "visibleGridColumnFieldsSelector", "kind": "Variable" },
   { "name": "visibleGridColumnsLengthSelector", "kind": "Variable" },
   { "name": "visibleGridColumnsSelector", "kind": "Variable" },
   { "name": "zhCN", "kind": "Variable" },
