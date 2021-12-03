@@ -7,7 +7,7 @@ import { GridComponentProps } from '../../_modules_/grid/GridComponentProps';
 import { useGridColumnHeaders } from '../../_modules_/grid/hooks/features/columnHeaders/useGridColumnHeaders';
 import { useGridApiContext } from '../../_modules_/grid/hooks/utils/useGridApiContext';
 import { useGridSelector } from '../../_modules_/grid/hooks/utils/useGridSelector';
-import { visibleGridColumnsSelector } from '../../_modules_/grid/hooks/features/columns/gridColumnsSelector';
+import { visibleGridColumnFieldsSelector } from '../../_modules_/grid/hooks/features/columns/gridColumnsSelector';
 import { useGridApiEventHandler } from '../../_modules_/grid/hooks/utils/useGridApiEventHandler';
 import { GridColumnHeadersInner } from '../../_modules_/grid/components/columnHeaders/GridColumnHeadersInner';
 import { GridColumnHeaders } from '../../_modules_/grid/components/columnHeaders/GridColumnHeaders';
@@ -90,7 +90,7 @@ export const DataGridProColumnHeaders = React.forwardRef<
   const { style, className, innerRef, ...other } = props;
   const rootProps = useGridRootProps();
   const apiRef = useGridApiContext();
-  const visibleColumns = useGridSelector(apiRef, visibleGridColumnsSelector);
+  const visibleColumnFields = useGridSelector(apiRef, visibleGridColumnFieldsSelector);
   const [scrollbarSize, setScrollbarSize] = React.useState(0);
 
   const handleContentSizeChange = React.useCallback(() => {
@@ -110,7 +110,7 @@ export const DataGridProColumnHeaders = React.forwardRef<
   );
 
   const pinnedColumns = useGridSelector(apiRef, gridPinnedColumnsSelector);
-  const [leftPinnedColumns, rightPinnedColumns] = filterColumns(pinnedColumns, visibleColumns);
+  const [leftPinnedColumns, rightPinnedColumns] = filterColumns(pinnedColumns, visibleColumnFields);
 
   const {
     isDragging,
@@ -146,8 +146,8 @@ export const DataGridProColumnHeaders = React.forwardRef<
     renderContext && rightPinnedColumns.length
       ? {
           ...renderContext,
-          firstColumnIndex: visibleColumns.length - rightPinnedColumns.length,
-          lastColumnIndex: visibleColumns.length,
+          firstColumnIndex: visibleColumnFields.length - rightPinnedColumns.length,
+          lastColumnIndex: visibleColumnFields.length,
         }
       : null;
 
@@ -188,7 +188,7 @@ export const DataGridProColumnHeaders = React.forwardRef<
         {getColumns({
           renderContext,
           minFirstColumn: leftPinnedColumns.length,
-          maxLastColumn: visibleColumns.length - rightPinnedColumns.length,
+          maxLastColumn: visibleColumnFields.length - rightPinnedColumns.length,
         })}
       </GridColumnHeadersInner>
     </GridColumnHeaders>

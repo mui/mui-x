@@ -8,32 +8,30 @@ import { GridVirtualScrollerRenderZone } from '../../_modules_/grid/components/v
 import { useGridVirtualScroller } from '../../_modules_/grid/hooks/features/virtualization/useGridVirtualScroller';
 import { useGridApiContext } from '../../_modules_/grid/hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../_modules_/grid/hooks/utils/useGridRootProps';
-import { visibleGridColumnsSelector } from '../../_modules_/grid/hooks/features/columns/gridColumnsSelector';
+import { visibleGridColumnFieldsSelector } from '../../_modules_/grid/hooks/features/columns/gridColumnsSelector';
 import { useGridApiEventHandler } from '../../_modules_/grid/hooks/utils/useGridApiEventHandler';
 import { GridEvents } from '../../_modules_/grid/models/events';
 import { useGridSelector } from '../../_modules_/grid/hooks/utils/useGridSelector';
 import { GridComponentProps } from '../../_modules_/grid/GridComponentProps';
 import { getDataGridUtilityClass } from '../../_modules_/grid/gridClasses';
 import { gridPinnedColumnsSelector } from '../../_modules_/grid/hooks/features/columnPinning/columnPinningSelector';
-import { GridColumns } from '../../_modules_/grid/models/colDef/gridColDef';
 import {
   GridPinnedColumns,
   GridPinnedPosition,
 } from '../../_modules_/grid/models/api/gridColumnPinningApi';
 
-export const filterColumns = (pinnedColumns: GridPinnedColumns, columns: GridColumns) => {
-  const filter = (newPinnedColumns: any[] | undefined, remaningColumns: GridColumns) => {
+export const filterColumns = (pinnedColumns: GridPinnedColumns, columns: string[]) => {
+  const filter = (newPinnedColumns: any[] | undefined, remaningColumns: string[]) => {
     if (!Array.isArray(newPinnedColumns)) {
       return [];
     }
-    return newPinnedColumns.filter((field) =>
-      remaningColumns.some((column) => column.field === field),
-    );
+    return newPinnedColumns.filter((field) => remaningColumns.includes(field));
   };
 
   const leftPinnedColumns = filter(pinnedColumns.left, columns);
   const columnsWithoutLeftPinnedColumns = columns.filter(
-    (column) => !leftPinnedColumns.includes(column.field),
+    // Filter out from the remaning columns those columns already pinned to the left
+    (field) => !leftPinnedColumns.includes(field),
   );
   const rightPinnedColumns = filter(pinnedColumns.right, columnsWithoutLeftPinnedColumns);
   return [leftPinnedColumns, rightPinnedColumns];
@@ -108,7 +106,7 @@ const DataGridProVirtualScroller = React.forwardRef<
   const { className, disableVirtualization, selectionLookup, ...other } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
-  const visibleColumns = useGridSelector(apiRef, visibleGridColumnsSelector);
+  const visibleColumnFields = useGridSelector(apiRef, visibleGridColumnFieldsSelector);
   const leftColumns = React.useRef<HTMLDivElement>(null);
   const rightColumns = React.useRef<HTMLDivElement>(null);
   const [shouldExtendContent, setShouldExtendContent] = React.useState(false);
@@ -123,7 +121,7 @@ const DataGridProVirtualScroller = React.forwardRef<
   };
 
   const pinnedColumns = useGridSelector(apiRef, gridPinnedColumnsSelector);
-  const [leftPinnedColumns, rightPinnedColumns] = filterColumns(pinnedColumns, visibleColumns);
+  const [leftPinnedColumns, rightPinnedColumns] = filterColumns(pinnedColumns, visibleColumnFields);
 
   const ownerState = { classes: rootProps.classes, leftPinnedColumns, rightPinnedColumns };
   const classes = useUtilityClasses(ownerState);
@@ -138,7 +136,7 @@ const DataGridProVirtualScroller = React.forwardRef<
   } = useGridVirtualScroller({
     ref,
     renderZoneMinColumnIndex: leftPinnedColumns.length,
-    renderZoneMaxColumnIndex: visibleColumns.length - rightPinnedColumns.length,
+    renderZoneMaxColumnIndex: visibleColumnFields.length - rightPinnedColumns.length,
     onRenderZonePositioning: handleRenderZonePositioning,
     ...props,
   });
@@ -185,8 +183,8 @@ const DataGridProVirtualScroller = React.forwardRef<
     renderContext && rightPinnedColumns.length > 0
       ? {
           ...renderContext,
-          firstColumnIndex: visibleColumns.length - rightPinnedColumns.length,
-          lastColumnIndex: visibleColumns.length,
+          firstColumnIndex: visibleColumnFields.length - rightPinnedColumns.length,
+          lastColumnIndex: visibleColumnFields.length,
         }
       : null;
 
