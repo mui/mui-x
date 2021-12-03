@@ -23,7 +23,7 @@ describe('useGridApiEventHandler', () => {
         !/jsdom/.test(window.navigator.userAgent) ||
         typeof FinalizationRegistry === 'undefined'
       ) {
-        // Needs ability to trigger GC and FinalizationRegistry support (added in node 14)
+        // Needs ability to trigger the garbage collector and support for FinalizationRegistry (added in node 14)
         this.skip();
       }
 
@@ -32,10 +32,7 @@ describe('useGridApiEventHandler', () => {
       );
       const unsubscribe = spy();
       const apiRef = {
-        current: {
-          unstable_cleanupTracking: new FinalizationRegistryBasedCleanupTracking(),
-          subscribeEvent: spy(() => unsubscribe),
-        },
+        current: { subscribeEvent: spy(() => unsubscribe) },
       };
 
       const Test = () => {
@@ -48,11 +45,11 @@ describe('useGridApiEventHandler', () => {
       // StrictMode calls the component twice. However, on the second time it trashes all refs,
       // which makes 2 event listeners to be registered. Since the second render is never
       // committed (to simulate a trashed render in React 18), the effects also don't run, so we're
-      // unable to unsubscribe the last listener.
+      // unable to unsubscribe the last listener using the cleanup function.
       expect(apiRef.current.subscribeEvent.callCount).to.equal(2);
 
       unmount();
-      global.gc!(); // Triggers garbage collection
+      global.gc!(); // Triggers garbage collector
       await sleep(50);
 
       // Ensure that both event listeners were unsubscribed
@@ -78,7 +75,7 @@ describe('useGridApiEventHandler', () => {
       // StrictMode calls the component twice. However, on the second time it trashes all refs,
       // which makes 2 event listeners to be registered. Since the second render is never
       // committed (to simulate a trashed render in React 18), the effects also don't run, so we're
-      // unable to unsubscribe the last listener.
+      // unable to unsubscribe the last listener using the cleanup function.
       expect(apiRef.current.subscribeEvent.callCount).to.equal(2);
 
       unmount();
