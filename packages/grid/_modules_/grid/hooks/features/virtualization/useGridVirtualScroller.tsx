@@ -81,7 +81,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     const firstRowIndex = getIndexFromScroll(top, rowPositions);
     const lastRowIndex = getIndexFromScroll(top + rootRef.current!.clientHeight!, rowPositions);
 
-    const { positions: columnPositions } = gridColumnsMetaSelector(gridState); // To avoid infinite loop
+    const { positions: columnPositions } = gridColumnsMetaSelector(apiRef.current.state); // To avoid infinite loop
     const firstColumnIndex = getIndexFromScroll(left, columnPositions);
     const lastColumnIndex = getIndexFromScroll(left + containerWidth!, columnPositions);
 
@@ -93,7 +93,6 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     };
   }, [
     apiRef,
-    gridState,
     containerWidth,
     disableVirtualization,
     currentPage.rows.length,
@@ -124,7 +123,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     const { top, left } = scrollPosition.current!;
     const params = { top, left, renderContext: initialRenderContext };
     apiRef.current.publishEvent(GridEvents.rowsScroll, params);
-  }, [apiRef, computeRenderContext, containerWidth]);
+  }, [apiRef, computeRenderContext, containerWidth, gridState.density]);
 
   const handleResize = React.useCallback<GridEventListener<GridEvents.resize>>(() => {
     if (rootRef.current) {
