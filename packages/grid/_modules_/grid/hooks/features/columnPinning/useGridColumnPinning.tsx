@@ -5,7 +5,7 @@ import { GridComponentProps } from '../../../GridComponentProps';
 import {
   visibleGridColumnsSelector,
   gridColumnsMetaSelector,
-  visibleGridColumnFieldsSelector,
+  gridVisibleColumnFieldsSelector,
 } from '../columns/gridColumnsSelector';
 import { GridCellIndexCoordinates } from '../../../models/gridCell';
 import { GridPreProcessingGroup } from '../../core/preProcessing';
@@ -103,7 +103,7 @@ export const useGridColumnPinning = (
         return initialValue;
       }
 
-      const visibleColumnFields = visibleGridColumnFieldsSelector(apiRef.current.state);
+      const visibleColumnFields = gridVisibleColumnFieldsSelector(apiRef.current.state);
       const [leftPinnedColumns, rightPinnedColumns] = filterColumns(
         pinnedColumns,
         visibleColumnFields,
@@ -179,7 +179,7 @@ export const useGridColumnPinning = (
 
   const checkIfCanBeReordered = React.useCallback(
     (initialValue, { targetIndex }: { targetIndex: number }) => {
-      const visibleColumnFields = visibleGridColumnFieldsSelector(apiRef.current.state);
+      const visibleColumnFields = gridVisibleColumnFieldsSelector(apiRef.current.state);
       const [leftPinnedColumns, rightPinnedColumns] = filterColumns(
         pinnedColumns,
         visibleColumnFields,

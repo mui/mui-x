@@ -18,7 +18,7 @@ export const visibleGridColumnsSelector = createSelector(allGridColumnsSelector,
   columns.filter((c) => c.field != null && !c.hide),
 );
 
-export const visibleGridColumnFieldsSelector = createSelector(
+export const gridVisibleColumnFieldsSelector = createSelector(
   visibleGridColumnsSelector,
   (visibleColumns) => visibleColumns.map((column) => column.field),
 );

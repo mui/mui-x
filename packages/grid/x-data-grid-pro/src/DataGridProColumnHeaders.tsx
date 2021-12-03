@@ -7,7 +7,7 @@ import { GridComponentProps } from '../../_modules_/grid/GridComponentProps';
 import { useGridColumnHeaders } from '../../_modules_/grid/hooks/features/columnHeaders/useGridColumnHeaders';
 import { useGridApiContext } from '../../_modules_/grid/hooks/utils/useGridApiContext';
 import { useGridSelector } from '../../_modules_/grid/hooks/utils/useGridSelector';
-import { visibleGridColumnFieldsSelector } from '../../_modules_/grid/hooks/features/columns/gridColumnsSelector';
+import { gridVisibleColumnFieldsSelector } from '../../_modules_/grid/hooks/features/columns/gridColumnsSelector';
 import { useGridApiEventHandler } from '../../_modules_/grid/hooks/utils/useGridApiEventHandler';
 import { GridColumnHeadersInner } from '../../_modules_/grid/components/columnHeaders/GridColumnHeadersInner';
 import { GridColumnHeaders } from '../../_modules_/grid/components/columnHeaders/GridColumnHeaders';
@@ -90,7 +90,7 @@ export const DataGridProColumnHeaders = React.forwardRef<
   const { style, className, innerRef, ...other } = props;
   const rootProps = useGridRootProps();
   const apiRef = useGridApiContext();
-  const visibleColumnFields = useGridSelector(apiRef, visibleGridColumnFieldsSelector);
+  const visibleColumnFields = useGridSelector(apiRef, gridVisibleColumnFieldsSelector);
   const [scrollbarSize, setScrollbarSize] = React.useState(0);
 
   const handleContentSizeChange = React.useCallback(() => {

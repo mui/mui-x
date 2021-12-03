@@ -8,7 +8,7 @@ import { GridVirtualScrollerRenderZone } from '../../_modules_/grid/components/v
 import { useGridVirtualScroller } from '../../_modules_/grid/hooks/features/virtualization/useGridVirtualScroller';
 import { useGridApiContext } from '../../_modules_/grid/hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../_modules_/grid/hooks/utils/useGridRootProps';
-import { visibleGridColumnFieldsSelector } from '../../_modules_/grid/hooks/features/columns/gridColumnsSelector';
+import { gridVisibleColumnFieldsSelector } from '../../_modules_/grid/hooks/features/columns/gridColumnsSelector';
 import { useGridApiEventHandler } from '../../_modules_/grid/hooks/utils/useGridApiEventHandler';
 import { GridEvents } from '../../_modules_/grid/models/events';
 import { useGridSelector } from '../../_modules_/grid/hooks/utils/useGridSelector';
@@ -106,7 +106,7 @@ const DataGridProVirtualScroller = React.forwardRef<
   const { className, disableVirtualization, selectionLookup, ...other } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
-  const visibleColumnFields = useGridSelector(apiRef, visibleGridColumnFieldsSelector);
+  const visibleColumnFields = useGridSelector(apiRef, gridVisibleColumnFieldsSelector);
   const leftColumns = React.useRef<HTMLDivElement>(null);
   const rightColumns = React.useRef<HTMLDivElement>(null);
   const [shouldExtendContent, setShouldExtendContent] = React.useState(false);
