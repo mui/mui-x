@@ -225,7 +225,7 @@ For instance, if you have a one-year license (default), you are not licensed to 
 
 ## Support
 
-For crowdsourced technical questions from expert MUI devs in our community. Also frequented by the MUI Core team.
+For crowdsourced technical questions from expert MUI devs in our community. Also visited by the MUI Core team.
 
 [Post a question](https://stackoverflow.com/questions/tagged/mui)
 
