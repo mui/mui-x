@@ -244,7 +244,7 @@ StackOverflow is also visited from time to time by the maintainers of MUI.
 
 ### Enterprise support
 
-We provide a [private support channel](https://material-ui.zendesk.com/) for enterprise customers.
+We provide a [private support channel](https://support.mui.com/hc/en-us) for enterprise customers.
 
 ## Roadmap
 
