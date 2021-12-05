@@ -18,7 +18,7 @@
   "dependencies": {
     "@mui/icons-material": "^5.1.1",
     "@mui/material": "^5.1.1",
-    "@mui/styles": "^5.1.1",
+    "@mui/styles": "^5.2.2",
     "@mui/x-data-grid": "5.1.0",
     "@mui/x-data-grid-generator": "5.1.0",
     "@mui/x-data-grid-pro": "5.1.0",
