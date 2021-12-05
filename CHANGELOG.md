@@ -474,7 +474,7 @@ A big thanks to the 5 contributors who made this release possible. Here are some
 - [DataGrid] Remove the `state` prop and use the `initialState` prop (#2848) @flaviendelangle
 
   Note that `initialState` only allows the `preferencePanel`, `filter.filterModel` and `sort.sortModel` keys.
-  To fully control the state, use the the feature's model prop and change callback (e.g. `filterModel` and `onFilterModelChange`).
+  To fully control the state, use the feature's model prop and change callback (e.g. `filterModel` and `onFilterModelChange`).
 
   ```diff
   <DataGrid
