@@ -66,7 +66,7 @@ The following demo displays 200 rows per page:
 
 ## apiRef [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
 
-> ⚠️ Only use this API when you have no alternative. Always start from the declarative API that the grid exposes.
+> ⚠️ Only use this API as the last option. Give preference to the props to control the grid.
 
 {{"demo": "pages/components/data-grid/pagination/PaginationApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
 
