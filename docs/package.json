@@ -27,7 +27,7 @@
     "@emotion/styled": "^11.6.0",
     "@mui/icons-material": "^5.1.1",
     "@mui/material": "^5.1.1",
-    "@mui/styles": "^5.1.1",
+    "@mui/styles": "^5.2.2",
     "@mui/utils": "^5.1.1",
     "@trendmicro/react-interpolate": "^0.5.5",
     "@types/lodash": "^4.14.177",
