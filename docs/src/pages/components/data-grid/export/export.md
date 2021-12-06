@@ -52,7 +52,7 @@ You can provide a [`valueFormatter`](/components/data-grid/columns/#value-format
 />
 ```
 
-### Remove export button
+### Remove the export button
 
 You can remove the CSV export option from the toolbar by setting `disableToolbarButton` option to `true`.
 
@@ -114,7 +114,7 @@ You can provide a [`valueFormatter`](/components/data-grid/columns/#value-format
 />
 ```
 
-### Remove print button
+### Remove the print button
 
 You can remove the Print export button from the toolbar by setting `disableToolbarButton` option to `true`.
 

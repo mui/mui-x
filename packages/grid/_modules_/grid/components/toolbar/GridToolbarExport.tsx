@@ -15,21 +15,19 @@ import {
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { gridClasses } from '../../gridClasses';
 
-type GridExportDisplayOptions = {
+interface GridExportDisplayOptions {
   /**
    * If `true`, this export option will be removed from the GridToolbarExport menu.
    * @default false
    */
   disableToolbarButton?: boolean;
-};
+}
 
-type GridExportOption = {
+interface GridExportOption {
   label: React.ReactNode;
   format: ExportTypes;
-  formatOptions?:
-    | (GridCsvExportOptions & GridExportDisplayOptions)
-    | (GridPrintExportOptions & GridExportDisplayOptions);
-};
+  formatOptions?: (GridCsvExportOptions | GridPrintExportOptions) & GridExportDisplayOptions;
+}
 
 export interface GridToolbarExportProps extends ButtonProps {
   csvOptions?: GridCsvExportOptions & GridExportDisplayOptions;
