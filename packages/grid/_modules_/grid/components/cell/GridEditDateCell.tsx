@@ -22,7 +22,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 export function GridEditDateCell(props: GridRenderEditCellParams & InputBaseProps) {
   const {
     id,
-    value,
+    value: valueProp,
     formattedValue,
     api,
     field,
@@ -40,15 +40,15 @@ export function GridEditDateCell(props: GridRenderEditCellParams & InputBaseProp
   const isDateTime = colDef.type === 'dateTime';
   const inputRef = React.useRef<HTMLInputElement>();
 
-  const valueProp = React.useMemo(() => {
+  const valueTransformed = React.useMemo(() => {
     let parsedDate: Date | null;
 
-    if (value == null) {
+    if (valueProp == null) {
       parsedDate = null;
-    } else if (value instanceof Date) {
-      parsedDate = value;
+    } else if (valueProp instanceof Date) {
+      parsedDate = valueProp;
     } else {
-      parsedDate = new Date((value ?? '').toString());
+      parsedDate = new Date((valueProp ?? '').toString());
     }
 
     let formattedDate: string;
@@ -63,9 +63,9 @@ export function GridEditDateCell(props: GridRenderEditCellParams & InputBaseProp
       parsed: parsedDate,
       formatted: formattedDate,
     };
-  }, [value, isDateTime]);
+  }, [valueProp, isDateTime]);
 
-  const [valueState, setValueState] = React.useState(valueProp);
+  const [valueState, setValueState] = React.useState(valueTransformed);
   const rootProps = useGridRootProps();
   const ownerState = { classes: rootProps.classes };
   const classes = useUtilityClasses(ownerState);
@@ -101,14 +101,14 @@ export function GridEditDateCell(props: GridRenderEditCellParams & InputBaseProp
   React.useEffect(() => {
     setValueState((state) => {
       if (
-        valueProp.parsed !== state.parsed &&
-        valueProp.parsed?.getTime() !== state.parsed?.getTime()
+        valueTransformed.parsed !== state.parsed &&
+        valueTransformed.parsed?.getTime() !== state.parsed?.getTime()
       ) {
-        return valueProp;
+        return valueTransformed;
       }
       return state;
     });
-  }, [valueProp]);
+  }, [valueTransformed]);
 
   useEnhancedEffect(() => {
     if (hasFocus) {
