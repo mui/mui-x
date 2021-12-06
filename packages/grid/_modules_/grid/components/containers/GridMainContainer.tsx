@@ -26,6 +26,7 @@ const GridMainContainerRoot = styled('div', {
   flexGrow: 1,
   display: 'flex',
   flexDirection: 'column',
+  overflow: 'hidden',
 }));
 
 export function GridMainContainer(props: React.PropsWithChildren<{}>) {

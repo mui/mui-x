@@ -1,0 +1,5 @@
+<DataGridPro
+  rows={rows}
+  columns={columns}
+  initialState={{ pinnedColumns: { left: ['name'], right: ['actions'] } }}
+/>
