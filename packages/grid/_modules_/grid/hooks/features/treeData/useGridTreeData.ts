@@ -42,8 +42,8 @@ export const useGridTreeData = (
 
     if (typeof propGroupingColDef === 'function') {
       const params: GridGroupingColDefOverrideParams = {
-        treeGroupingName: TREE_DATA_GROUPING_NAME,
-        sources: [],
+        groupingName: TREE_DATA_GROUPING_NAME,
+        fields: [],
       };
 
       colDefOverride = propGroupingColDef(params);

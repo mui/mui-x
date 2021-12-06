@@ -236,10 +236,10 @@ export interface GridGroupingColDefOverrideParams {
   /**
    * The name of the grouping algorithm currently building the grouping column.
    */
-  treeGroupingName: string;
+  groupingName: string;
 
   /**
-   * The base columns this column is grouping.
+   * The fields of the columns from which we want to group the values on this new grouping column.
    */
-  sources: GridColDef[];
+  fields: GridColDef[];
 }
