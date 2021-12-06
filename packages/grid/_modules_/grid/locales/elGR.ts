@@ -106,6 +106,11 @@ const elGRGrid: Partial<GridLocaleText> = {
   // Actions cell more text
   actionsCellMore: 'περισσότερα',
 
+  // Column pinning text
+  // pinToLeft: 'Pin to left',
+  // pinToRight: 'Pin to right',
+  // unpin: 'Unpin',
+
   // Tree Data
   // treeDataGroupingHeaderName: 'Group',
   // treeDataExpand: 'see children',
