@@ -241,5 +241,5 @@ export interface GridGroupingColDefOverrideParams {
   /**
    * The fields of the columns from which we want to group the values on this new grouping column.
    */
-  fields: GridColDef[];
+  fields: string[];
 }
