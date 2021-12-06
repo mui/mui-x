@@ -40,6 +40,7 @@ const INTERFACES_WITH_DEDICATED_PAGES = [
   'GridPrintExportOptions',
   'GridScrollApi',
   'GridEditRowApi',
+  'GridColumnPinningApi',
 ];
 
 const parseProperty = (propertySymbol: ts.Symbol, project: Project): ParsedProperty => {

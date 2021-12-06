@@ -11,6 +11,10 @@
     "url": "https://github.com/mui-org/material-ui-x/issues"
   },
   "homepage": "https://mui.com/components/data-grid/",
+  "funding": {
+    "type": "opencollective",
+    "url": "https://opencollective.com/mui"
+  },
   "sideEffects": false,
   "publishConfig": {
     "access": "public"
