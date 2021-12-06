@@ -6,7 +6,7 @@
     "browser": "webpack --config browser/webpack.config.js && node browser/scripts/benchmark.js"
   },
   "dependencies": {
-    "@emotion/react": "^11.6.0",
+    "@emotion/react": "^11.7.0",
     "@emotion/styled": "^11.6.0",
     "@material-ui/core": "^5.0.0-beta.4",
     "@material-ui/icons": "^5.0.0-beta.4",
