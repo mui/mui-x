@@ -2,6 +2,7 @@ import { GridCellMode, GridCellValue } from '../gridCell';
 import { GridRowId, GridRowModel, GridRowTreeNodeConfig } from '../gridRows';
 import type { GridStateColDef } from '../colDef';
 import { GridEditCellProps } from '../gridEditRowModel';
+import type { GridApi } from '../api';
 
 /**
  * Object passed as parameter in the column [[GridColDef]] cell renderer.
@@ -12,7 +13,7 @@ export interface GridCellParams<V = any, R = any, F = V> {
    */
   id: GridRowId;
   /**
-   * The column field of the cell that triggered the event
+   * The column field of the cell that triggered the event.
    */
   field: string;
   /**
@@ -67,7 +68,7 @@ export interface GridRenderCellParams<V = any, R = any, F = V> extends GridCellP
   /**
    * GridApi that let you manipulate the grid.
    */
-  api: any;
+  api: GridApi;
 }
 
 /**
@@ -77,7 +78,7 @@ export interface GridRenderEditCellParams extends GridEditCellProps {
   /**
    * GridApi that let you manipulate the grid.
    */
-  api: any;
+  api: GridApi;
 }
 
 /**
@@ -119,7 +120,7 @@ export interface GridValueFormatterParams {
   /**
    * GridApi that let you manipulate the grid.
    */
-  api: any;
+  api: GridApi;
 }
 
 /**

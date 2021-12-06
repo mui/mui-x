@@ -130,12 +130,7 @@ function GridCell(props: GridCellProps) {
     (eventName: keyof GridCellEventLookup, propHandler: any) =>
       (event: React.SyntheticEvent<HTMLDivElement>) => {
         // Ignore portal
-        // The target is not an element when triggered by a Select inside the cell
-        // See https://github.com/mui-org/material-ui/issues/10534
-        if (
-          (event.target as any).nodeType === 1 &&
-          !event.currentTarget.contains(event.target as Element)
-        ) {
+        if (!event.currentTarget.contains(event.target as Element)) {
           return;
         }
 

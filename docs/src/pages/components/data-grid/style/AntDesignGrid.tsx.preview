@@ -1,5 +1,4 @@
-<DataGrid
-  className={classes.root}
+<StyledDataGrid
   checkboxSelection
   pageSize={5}
   rowsPerPageOptions={[5]}
