@@ -5,7 +5,7 @@ import { buildRowTree } from './buildRowTree';
 describe('buildRowTree', () => {
   it('should not expand the rows when defaultGroupingExpansionDepth === 0', () => {
     const response = buildRowTree({
-      treeGroupingName: '',
+      groupingName: '',
       idRowsLookup: {
         0: {},
         1: {},
@@ -34,7 +34,7 @@ describe('buildRowTree', () => {
 
   it('should expand the rows up to defaultGroupingExpansionDepth', () => {
     const response = buildRowTree({
-      treeGroupingName: '',
+      groupingName: '',
       idRowsLookup: {
         0: {},
         1: {},
@@ -76,7 +76,7 @@ describe('buildRowTree', () => {
 
   it('should expanded all the rows when defaultGroupingExpansionDepth === -1', () => {
     const response = buildRowTree({
-      treeGroupingName: '',
+      groupingName: '',
       idRowsLookup: {
         0: {},
         1: {},
@@ -118,7 +118,7 @@ describe('buildRowTree', () => {
 
   it('should link parent and children in the tree', () => {
     const response = buildRowTree({
-      treeGroupingName: '',
+      groupingName: '',
       idRowsLookup: {
         0: {},
         1: {},
@@ -171,7 +171,7 @@ describe('buildRowTree', () => {
 
   it('should calculate the depth of the tree', () => {
     const response = buildRowTree({
-      treeGroupingName: '',
+      groupingName: '',
       idRowsLookup: {
         0: {},
         1: {},
@@ -213,7 +213,7 @@ describe('buildRowTree', () => {
 
   it('should add auto generated row when missing parent', () => {
     const response = buildRowTree({
-      treeGroupingName: '',
+      groupingName: '',
       idRowsLookup: {
         0: {},
         1: {},
@@ -234,7 +234,7 @@ describe('buildRowTree', () => {
     });
 
     expect(response).to.deep.equal({
-      treeGroupingName: '',
+      groupingName: '',
       idRowsLookup: {
         0: {},
         1: {},

@@ -10,7 +10,7 @@ export interface GridRowGroupingResult {
    * Name of the algorithm used to group the rows
    * It is useful to decide which filtering / sorting algorithm to apply, to avoid applying tree-data filtering on a grouping-by-column dataset for instance.
    */
-  treeGroupingName: string;
+  groupingName: string;
   tree: GridRowTreeConfig;
   treeDepth: number;
   ids: GridRowId[];

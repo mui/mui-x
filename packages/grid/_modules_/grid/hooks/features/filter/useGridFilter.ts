@@ -21,7 +21,7 @@ import { GridFilterModel } from '../../../models/gridFilterModel';
 import { gridFilterModelSelector, gridVisibleSortedRowEntriesSelector } from './gridFilterSelector';
 import { useGridStateInit } from '../../utils/useGridStateInit';
 import { useFirstRender } from '../../utils/useFirstRender';
-import { gridRowIdsSelector, gridRowTreeGroupingNameSelector } from '../rows';
+import { gridRowIdsSelector, gridRowGroupingNameSelector } from '../rows';
 import { GridPreProcessingGroup } from '../../core/preProcessing';
 import { useGridRegisterFilteringMethod } from './useGridRegisterFilteringMethod';
 
@@ -161,7 +161,7 @@ export const useGridFilter = (
    */
   const applyFilters = React.useCallback<GridFilterApi['unstable_applyFilters']>(() => {
     setGridState((state) => {
-      const rowGroupingName = gridRowTreeGroupingNameSelector(state);
+      const rowGroupingName = gridRowGroupingNameSelector(state);
       const filteringMethod = filteringMethodCollectionRef.current[rowGroupingName];
       if (!filteringMethod) {
         throw new Error('MUI: Invalid filtering method');
@@ -391,7 +391,7 @@ export const useGridFilter = (
         {},
       );
 
-      const rowGroupingName = gridRowTreeGroupingNameSelector(apiRef.current.state);
+      const rowGroupingName = gridRowGroupingNameSelector(apiRef.current.state);
       if (
         lastFilteringMethodApplied.current !== filteringMethodCollectionRef.current[rowGroupingName]
       ) {

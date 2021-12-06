@@ -25,7 +25,7 @@ import {
   gridSortedRowIdsSelector,
   gridSortModelSelector,
 } from './gridSortingSelector';
-import { gridRowIdsSelector, gridRowTreeGroupingNameSelector, gridRowTreeSelector } from '../rows';
+import { gridRowIdsSelector, gridRowGroupingNameSelector, gridRowTreeSelector } from '../rows';
 import { useGridStateInit } from '../../utils/useGridStateInit';
 import { useFirstRender } from '../../utils/useFirstRender';
 import {
@@ -192,7 +192,7 @@ export const useGridSorting = (
     }
 
     setGridState((state) => {
-      const rowGroupingName = gridRowTreeGroupingNameSelector(state);
+      const rowGroupingName = gridRowGroupingNameSelector(state);
       const sortingMethod = sortingMethodCollectionRef.current[rowGroupingName];
       if (!sortingMethod) {
         throw new Error('MUI: Invalid sorting method');
@@ -372,7 +372,7 @@ export const useGridSorting = (
         {},
       );
 
-      const rowGroupingName = gridRowTreeGroupingNameSelector(apiRef.current.state);
+      const rowGroupingName = gridRowGroupingNameSelector(apiRef.current.state);
       if (
         lastSortingMethodApplied.current !== sortingMethodCollectionRef.current[rowGroupingName]
       ) {
