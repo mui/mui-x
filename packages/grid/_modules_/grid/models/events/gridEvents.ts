@@ -105,6 +105,14 @@ export enum GridEvents {
    */
   rowDoubleClick = 'rowDoubleClick',
   /**
+   * Fired when the mouse enters the row. Called with a [[GridRowParams]] object.
+   */
+  rowMouseEnter = 'rowMouseEnter',
+  /**
+   * Fired when the mouse leaves the row. Called with a [[GridRowParams]] object.
+   */
+  rowMouseLeave = 'rowMouseLeave',
+  /**
    * Fired when the row editing model changes.
    */
   editRowsModelChange = 'editRowsModelChange',
@@ -250,6 +258,11 @@ export enum GridEvents {
    */
   columnsChange = 'columnsChange',
   /**
+   * Fired when the pinned columns is changed.
+   * @ignore - do not document.
+   */
+  pinnedColumnsChange = 'pinnedColumnsChange',
+  /**
    * Fired when a pre-processor is registered.
    * @ignore - do not document.
    */
@@ -280,6 +293,11 @@ export enum GridEvents {
    * Fired when a column visibility changes.
    */
   columnVisibilityChange = 'columnVisibilityChange',
+  /**
+   * Fired when the content size used by the `GridVirtualScroller` changes.
+   * @ignore - do not document.
+   */
+  virtualScrollerContentSizeChange = 'virtualScrollerContentSizeChange',
 }
 
 export type GridEventsStr = keyof typeof GridEvents;

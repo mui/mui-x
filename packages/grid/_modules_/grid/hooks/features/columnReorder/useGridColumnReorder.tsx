@@ -11,6 +11,7 @@ import { useGridState } from '../../utils/useGridState';
 import { gridColumnReorderDragColSelector } from './columnReorderSelector';
 import { GridComponentProps } from '../../../GridComponentProps';
 import { useGridStateInit } from '../../utils/useGridStateInit';
+import { GridPreProcessingGroup } from '../../core/preProcessing';
 
 const CURSOR_MOVE_DIRECTION_LEFT = 'left';
 const CURSOR_MOVE_DIRECTION_RIGHT = 'right';
@@ -152,13 +153,19 @@ export const useGridColumnReorder = (
           !targetCol.disableReorder ||
           (targetColVisibleIndex > 0 && targetColVisibleIndex < visibleColumnAmount - 1);
 
+        const canBeReorderedProcessed = apiRef.current.unstable_applyPreProcessors(
+          GridPreProcessingGroup.canBeReordered,
+          canBeReordered,
+          { targetIndex: targetColVisibleIndex },
+        );
+
         const cursorMoveDirectionX = getCursorMoveDirectionX(cursorPosition.current, coordinates);
         const hasMovedLeft =
           cursorMoveDirectionX === CURSOR_MOVE_DIRECTION_LEFT && targetColIndex < dragColIndex;
         const hasMovedRight =
           cursorMoveDirectionX === CURSOR_MOVE_DIRECTION_RIGHT && dragColIndex < targetColIndex;
 
-        if (canBeReordered && (hasMovedLeft || hasMovedRight)) {
+        if (canBeReorderedProcessed && (hasMovedLeft || hasMovedRight)) {
           apiRef.current.setColumnIndex(dragColField, targetColIndex);
         }
 

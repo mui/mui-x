@@ -14,7 +14,7 @@ const DataGridVirtualScroller = React.forwardRef<HTMLDivElement, DataGridVirtual
   function DataGridVirtualScroller(props, ref) {
     const { className, selectionLookup, disableVirtualization, ...other } = props;
 
-    const { getRootProps, getContentProps, getRenderZone, getRows } = useGridVirtualScroller({
+    const { getRootProps, getContentProps, getRenderZoneProps, getRows } = useGridVirtualScroller({
       ref,
       selectionLookup,
       disableVirtualization,
@@ -23,7 +23,7 @@ const DataGridVirtualScroller = React.forwardRef<HTMLDivElement, DataGridVirtual
     return (
       <GridVirtualScroller className={className} {...getRootProps(other)}>
         <GridVirtualScrollerContent {...getContentProps()}>
-          <GridVirtualScrollerRenderZone {...getRenderZone()}>
+          <GridVirtualScrollerRenderZone {...getRenderZoneProps()}>
             {getRows()}
           </GridVirtualScrollerRenderZone>
         </GridVirtualScrollerContent>

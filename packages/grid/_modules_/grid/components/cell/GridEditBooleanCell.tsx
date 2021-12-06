@@ -25,7 +25,10 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 
 export function GridEditBooleanCell(
   props: GridRenderEditCellParams &
-    React.DetailedHTMLProps<React.LabelHTMLAttributes<HTMLLabelElement>, HTMLLabelElement>,
+    Omit<
+      React.DetailedHTMLProps<React.LabelHTMLAttributes<HTMLLabelElement>, HTMLLabelElement>,
+      'id'
+    >,
 ) {
   const {
     id: idProp,

@@ -1,15 +1,14 @@
 import { GridCellValue } from './gridCell';
 import { GridRowId } from './gridRows';
+import type { GridApi } from './api';
 
 export type GridSortDirection = 'asc' | 'desc' | null | undefined;
-
-export type GridFieldComparatorList = { field: string; comparator: GridComparatorFn }[];
 
 export interface GridSortCellParams {
   id: GridRowId;
   field: string;
   value: GridCellValue;
-  api: any;
+  api: GridApi;
 }
 
 /**
