@@ -11,7 +11,7 @@ export type GridMergedOptions = {
 };
 
 /**
- * The grid options with a default in value which is merged with the the value given through props
+ * The grid options with a default in value which is merged with the value given through props.
  */
 export interface GridProcessedMergedOptions {
   /**
