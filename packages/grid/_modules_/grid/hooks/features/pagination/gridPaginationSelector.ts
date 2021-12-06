@@ -5,10 +5,9 @@ import {
   gridVisibleSortedRowIdsSelector,
   gridVisibleSortedTopLevelRowEntriesSelector,
 } from '../filter/gridFilterSelector';
-import { GridPaginationState } from './gridPaginationState';
 import { gridRowTreeDepthSelector, gridRowTreeSelector } from '../rows/gridRowsSelector';
 
-export const gridPaginationSelector = (state: GridState): GridPaginationState => state.pagination;
+export const gridPaginationSelector = (state: GridState) => state.pagination;
 
 export const gridPageSelector = createSelector(
   gridPaginationSelector,
