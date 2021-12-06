@@ -147,6 +147,8 @@
   { "name": "GridToolbarFilterButtonProps", "kind": "Interface" },
   { "name": "GridTypeFilterInputValueProps", "kind": "Interface" },
   { "name": "GridValueFormatterParams", "kind": "Interface" },
+  { "name": "GridValueGetterFullParams", "kind": "Interface" },
+  { "name": "GridValueGetterSimpleParams", "kind": "Interface" },
   { "name": "GridValueOptionsParams", "kind": "Interface" },
   { "name": "GridValueSetterParams", "kind": "Interface" },
   { "name": "Logger", "kind": "Interface" },
