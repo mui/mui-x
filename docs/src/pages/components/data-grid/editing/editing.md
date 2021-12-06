@@ -248,6 +248,8 @@ The following events can be imported and used to customize the row edition:
 
 ## apiRef [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
 
+> ⚠️ Only use this API as the last option. Give preference to the props to control the grid.
+
 {{"demo": "pages/components/data-grid/editing/EditApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
 
 ## API

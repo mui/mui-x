@@ -20,6 +20,8 @@ const INTERFACES_WITH_DEDICATED_PAGES = [
   'GridRowParams',
   'GridSelectionApi',
   'GridFilterApi',
+  'GridSortApi',
+  'GridPaginationApi',
   'GridCsvExportApi',
   'GridCsvExportOptions',
   'GridPrintExportApi',
