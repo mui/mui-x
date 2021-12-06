@@ -1,3 +1,7 @@
+/**
+ * TODO replace file with:
+ * import ApiPage from 'docs/src/modules/components/ApiPage';
+ */
 /* eslint-disable react/no-danger */
 import * as React from 'react';
 import PropTypes from 'prop-types';
@@ -270,7 +274,7 @@ import { ${componentName} } from '@mui/x-data-grid-pro';`;
       disableAd={false}
       disableToc={false}
       location={apiSourceLocation}
-      title={`${componentName} API – MUI`}
+      title={`${componentName} API`}
       toc={toc}
     >
       <MarkdownElement>
