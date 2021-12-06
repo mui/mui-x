@@ -4,7 +4,7 @@ import { GridEvents, GridEventListener } from '../../../models/events';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridCellParams } from '../../../models/params/gridCellParams';
 import { findParentElementFromClassName, isGridCellRoot } from '../../../utils/domUtils';
-import { isNavigationKey, isSpaceKey } from '../../../utils/keyboardUtils';
+import { isNavigationKey } from '../../../utils/keyboardUtils';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { GridCellModes } from '../../../models/gridEditRowModel';
 import { gridVisibleSortedRowIdsSelector } from '../filter/gridFilterSelector';
@@ -63,8 +63,8 @@ export const useGridKeyboard = (apiRef: GridApiRef): void => {
         return;
       }
 
-      if (isSpaceKey(event.key) && event.shiftKey) {
-        // This is a select event
+      if (event.key === ' ' && event.shiftKey) {
+        // This is a select event, so it's handled by the selection hook
         return;
       }
 

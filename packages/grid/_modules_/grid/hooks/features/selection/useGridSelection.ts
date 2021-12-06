@@ -25,6 +25,7 @@ import { useFirstRender } from '../../utils/useFirstRender';
 import { GridPreProcessingGroup } from '../../core/preProcessing';
 import { GridCellModes } from '../../../models/gridEditRowModel';
 import { GridColumnsRawState } from '../columns/gridColumnsState';
+import { isKeyboardEvent } from '../../../utils/keyboardUtils';
 
 type OwnerState = { classes: GridComponentProps['classes'] };
 
@@ -259,8 +260,13 @@ export const useGridSelection = (
     (id: GridRowId, event: React.MouseEvent | React.KeyboardEvent) => {
       const hasCtrlKey = event.metaKey || event.ctrlKey;
 
-      // Without checkboxSelection, multiple selection is only allowed if CTRL is pressed
-      const isMultipleSelectionDisabled = !checkboxSelection && !hasCtrlKey;
+      // multiple selection is only allowed if:
+      // - it is a checkboxSelection
+      // - it is a keyboard selection
+      // - CTRL is pressed
+
+      const isMultipleSelectionDisabled =
+        !checkboxSelection && !hasCtrlKey && !isKeyboardEvent(event);
       const resetSelection = !canHaveMultipleSelection || isMultipleSelectionDisabled;
 
       const isSelected = apiRef.current.isRowSelected(id);
@@ -351,6 +357,7 @@ export const useGridSelection = (
       if (event.key === ' ' && event.shiftKey) {
         event.preventDefault();
         handleSingleRowSelection(cellParams.id, event);
+        return;
       }
 
       if (event.key.toLowerCase() === 'a' && (event.ctrlKey || event.metaKey)) {
