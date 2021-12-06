@@ -15,7 +15,7 @@ Data tables display information in a grid-like format of rows and columns. They 
 The data grid comes with two different licenses:
 
 - [DataGrid](/api/data-grid/data-grid/), it's [MIT licensed](https://tldrlegal.com/license/mit-license) and available on npm as `@mui/x-data-grid`.
-- [DataGridPro](/data-grid/data-grid-pro/), it's **Commercially licensed** and available on npm as `@mui/x-data-grid-pro`.
+- [DataGridPro](/api/data-grid/data-grid-pro/), it's **Commercially licensed** and available on npm as `@mui/x-data-grid-pro`.
   The features only available in the commercial version are suffixed with a <span class="plan-pro"></span> icon for the Pro plan or a <span class="plan-premium"></span> icon for the Premium plan.
 
   <img src="/static/x/header-icon.png" style="width: 454px; margin-bottom: 2rem;" alt="">
@@ -82,6 +82,7 @@ We provide three options:
 - [100% customizable](/components/data-grid/style/)
 - Server-side data
 - [Column hiding](/components/data-grid/columns/#hiding)
+- [Column pinning](/components/data-grid/columns/#column-pinning) <span class="pro"></span>
 - [Accessible](/components/data-grid/accessibility/)
 - [Localization](/components/data-grid/localization/)
 

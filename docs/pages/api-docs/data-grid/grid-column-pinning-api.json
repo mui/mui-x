@@ -1,0 +1,27 @@
+{
+  "name": "GridColumnPinningApi",
+  "description": "The column pinning API interface that is available in the grid apiRef.",
+  "properties": [
+    {
+      "name": "getPinnedColumns",
+      "description": "Returns which columns are pinned.",
+      "type": "() => GridPinnedColumns"
+    },
+    {
+      "name": "isColumnPinned",
+      "description": "Returns which side a column is pinned to.",
+      "type": "(field: string) => false | GridPinnedPosition"
+    },
+    {
+      "name": "pinColumn",
+      "description": "Pins a column to the left or right side of the grid.",
+      "type": "(field: string, side: GridPinnedPosition) => void"
+    },
+    {
+      "name": "setPinnedColumns",
+      "description": "Changes the pinned columns.",
+      "type": "(pinnedColumns: GridPinnedColumns) => void"
+    },
+    { "name": "unpinColumn", "description": "Unpins a column.", "type": "(field: string) => void" }
+  ]
+}
