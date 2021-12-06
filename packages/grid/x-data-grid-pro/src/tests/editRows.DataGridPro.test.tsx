@@ -754,7 +754,7 @@ describe('<DataGridPro /> - Edit Rows', () => {
       expect(secondOption).to.have.text('Admin');
     });
 
-    it('should set the focus correctly', () => {
+    it('should set the focus correctly when entering the edit mode with a double click', () => {
       render(
         <TestCase
           columns={[
@@ -780,6 +780,34 @@ describe('<DataGridPro /> - Edit Rows', () => {
       fireEvent.doubleClick(cell);
       // @ts-expect-error need to migrate helpers to TypeScript
       expect(screen.getByRole('button', { name: 'Nike' })).toHaveFocus();
+    });
+
+    it('should move the focus to the cell below when selecting a value with Enter', async () => {
+      render(
+        <TestCase
+          columns={[
+            {
+              field: 'brand',
+              type: 'singleSelect',
+              valueOptions: ['Nike', 'Adidas'],
+              editable: true,
+            },
+          ]}
+          rows={[
+            { id: 0, brand: 'Nike' },
+            { id: 1, brand: 'Adidas' },
+          ]}
+        />,
+      );
+      const cell = getCell(0, 0);
+      cell.focus();
+      fireEvent.keyDown(cell, { key: 'Enter' });
+      fireEvent.keyDown(screen.queryByRole('option', { name: 'Nike' }), { key: 'ArrowDown' });
+      fireEvent.keyDown(screen.queryByRole('option', { name: 'Adidas' }), { key: 'Enter' });
+      await waitFor(() => {
+        // @ts-expect-error need to migrate helpers to TypeScript
+        expect(getCell(1, 0)).toHaveFocus();
+      });
     });
 
     it('should not exit the edit mode when validateCell returns an object with error', async () => {

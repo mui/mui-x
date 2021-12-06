@@ -107,6 +107,11 @@ const frFRGrid: Partial<GridLocaleText> = {
   // Actions cell more text
   actionsCellMore: 'Plus',
 
+  // Column pinning text
+  // pinToLeft: 'Pin to left',
+  // pinToRight: 'Pin to right',
+  // unpin: 'Unpin',
+
   // Tree Data
   treeDataGroupingHeaderName: 'Groupe',
   treeDataExpand: 'afficher les enfants',

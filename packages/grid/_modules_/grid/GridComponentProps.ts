@@ -1,11 +1,9 @@
-import * as React from 'react';
+import { CommonProps } from '@mui/material/OverridableComponent';
+import { SxProps } from '@mui/system';
+import { Theme } from '@mui/material/styles';
 import { GridInitialState } from './models/gridState';
 import { GridApiRef } from './models/api/gridApiRef';
-import {
-  GridColDefOverride,
-  GridColDefOverrideCallback,
-  GridColumns,
-} from './models/colDef/gridColDef';
+import { GridColDefOverride, GridColumns } from './models/colDef/gridColDef';
 import {
   GridSimpleOptions,
   GridProcessedMergedOptions,
@@ -26,6 +24,7 @@ import {
 import { GridSlotsComponentsProps } from './models/gridSlotsComponentsProps';
 import { GridClasses } from './gridClasses';
 import { GridCallbackDetails } from './models/api/gridCallbackDetails';
+import { GridPinnedColumns } from './models/api/gridColumnPinningApi';
 import { GridEventListener, GridEvents } from './models/events';
 
 /**
@@ -44,7 +43,7 @@ export interface GridComponentProps
     GridProcessedMergedOptions,
     GridComponentOtherProps {}
 
-interface GridComponentOtherProps {
+interface GridComponentOtherProps extends CommonProps {
   /**
    * The ref object that allows grid manipulation. Can be instantiated with [[useGridApiRef()]].
    */
@@ -319,7 +318,6 @@ interface GridComponentOtherProps {
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onPageSizeChange?: (pageSize: number, details: GridCallbackDetails) => void;
-
   /**
    * Set the edit rows model of the grid.
    */
@@ -364,6 +362,16 @@ interface GridComponentOtherProps {
    */
   onSortModelChange?: (model: GridSortModel, details: GridCallbackDetails) => void;
   /**
+   * The column fields to display pinned to left or right.
+   */
+  pinnedColumns?: GridPinnedColumns;
+  /**
+   * Callback fired when the pinned columns have changed.
+   * @param {GridPinnedColumns} pinnedColumns The changed pinned columns.
+   * @param {GridCallbackDetails} details Additional details for this callback.
+   */
+  onPinnedColumnsChange?: (pinnedColumns: GridPinnedColumns, details: GridCallbackDetails) => void;
+  /**
    * The label of the grid.
    */
   'aria-label'?: string;
@@ -371,10 +379,6 @@ interface GridComponentOtherProps {
    * The id of the element containing a label for the grid.
    */
   'aria-labelledby'?: string;
-  /**
-   * @ignore - do not document
-   */
-  className?: string;
   /**
    * Set of columns of type [[GridColumns]].
    */
@@ -406,17 +410,16 @@ interface GridComponentOtherProps {
    */
   initialState?: GridInitialState;
   /**
-   * @ignore - do not document
-   */
-  style?: React.CSSProperties;
-  /**
    * Overrideable components props dynamically passed to the component at rendering.
    */
   componentsProps?: GridSlotsComponentsProps;
   /**
    * The grouping column used by the tree data.
    */
-  groupingColDef?:
-    | GridColDefOverride<'field' | 'editable'>
-    | GridColDefOverrideCallback<'field' | 'editable'>;
+  groupingColDef?: GridColDefOverride<'field' | 'editable'>;
+
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
+  sx?: SxProps<Theme>;
 }

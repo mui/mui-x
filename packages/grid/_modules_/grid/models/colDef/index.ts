@@ -6,7 +6,6 @@ export * from './gridSingleSelectOperators';
 export * from './gridStringOperators';
 
 // ColDef
-export * from './getGridColDef';
 export * from './gridActionsColDef';
 export * from './gridBooleanColDef';
 export * from './gridCheckboxSelectionColDef';

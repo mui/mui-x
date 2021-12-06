@@ -28,7 +28,6 @@ export interface GridCsvExportOptions {
    * @default false
    */
   allColumns?: boolean;
-
   /**
    * If `true, the first row of the CSV will include the headers of the grid.
    * @default true
