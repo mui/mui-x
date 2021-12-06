@@ -82,6 +82,7 @@
   { "name": "GridEditCellValueParams", "kind": "Interface" },
   { "name": "GridEditRowApi", "kind": "Interface" },
   { "name": "GridEventLookup", "kind": "Interface" },
+  { "name": "GridExportOptions", "kind": "Interface" },
   { "name": "GridFilterApi", "kind": "Interface" },
   { "name": "GridFilterFormProps", "kind": "Interface" },
   { "name": "GridFilterInitialState", "kind": "Interface" },

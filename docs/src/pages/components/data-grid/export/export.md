@@ -52,6 +52,14 @@ You can provide a [`valueFormatter`](/components/data-grid/columns/#value-format
 />
 ```
 
+### Remove the export button
+
+You can remove the CSV export option from the toolbar by setting `disableToolbarButton` option to `true`.
+
+```jsx
+<GridToolbarExport csvOptions={{ disableToolbarButton: true }} />
+```
+
 ### apiRef [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
 
 You can export data using the imperative API available in DataGridPro:
@@ -104,6 +112,14 @@ You can provide a [`valueFormatter`](/components/data-grid/columns/#value-format
     },
   ]}
 />
+```
+
+### Remove the print button
+
+You can remove the Print export button from the toolbar by setting `disableToolbarButton` option to `true`.
+
+```jsx
+<GridToolbarExport printOptions={{ disableToolbarButton: true }} />
 ```
 
 ### apiRef [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)

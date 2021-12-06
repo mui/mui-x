@@ -1,7 +1,23 @@
 /**
+ * The options to apply an export.
+ */
+export interface GridExportOptions {
+  /**
+   * The columns exported.
+   * This should only be used if you want to restrict the columns exports.
+   */
+  fields?: string[];
+  /**
+   * If `true`, the hidden columns will also be exported.
+   * @default false
+   */
+  allColumns?: boolean;
+}
+
+/**
  * The options to apply on the CSV export.
  */
-export interface GridCsvExportOptions {
+export interface GridCsvExportOptions extends GridExportOptions {
   /**
    * The character used to separate fields.
    * @default ','
@@ -19,16 +35,6 @@ export interface GridCsvExportOptions {
    */
   utf8WithBom?: boolean;
   /**
-   * The columns exported in the CSV.
-   * This should only be used if you want to restrict the columns exports.
-   */
-  fields?: string[];
-  /**
-   * If `true`, the hidden columns will also be exported.
-   * @default false
-   */
-  allColumns?: boolean;
-  /**
    * If `true, the first row of the CSV will include the headers of the grid.
    * @default true
    */
@@ -38,22 +44,12 @@ export interface GridCsvExportOptions {
 /**
  * The options to apply on the Print export.
  */
-export interface GridPrintExportOptions {
+export interface GridPrintExportOptions extends GridExportOptions {
   /**
    * The value to be used as the print window title.
    * @default The title of the page.
    */
   fileName?: string;
-  /**
-   * The columns to be printed.
-   * This should only be used if you want to restrict the columns exported.
-   */
-  fields?: string[];
-  /**
-   * If `true`, the hidden columns will also be printed.
-   * @default false
-   */
-  allColumns?: boolean;
   /**
    * If `true`, the toolbar is removed for when printing.
    * @default false
