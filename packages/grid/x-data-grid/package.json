@@ -41,14 +41,14 @@
     "directory": "packages/grid/x-data-grid"
   },
   "dependencies": {
-    "@mui/utils": "^5.1.1",
+    "@mui/utils": "^5.2.2",
     "clsx": "^1.1.1",
     "prop-types": "^15.7.2",
-    "reselect": "^4.1.4"
+    "reselect": "^4.1.5"
   },
   "peerDependencies": {
-    "@mui/material": "^5.1.1",
-    "@mui/system": "^5.1.1",
+    "@mui/material": "^5.2.2",
+    "@mui/system": "^5.2.2",
     "react": "^17.0.2"
   },
   "setupFiles": [

@@ -66,18 +66,9 @@ The following demo displays 200 rows per page:
 
 ## apiRef [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
 
-The grid exposes a set of methods that enables all of these features using the imperative apiRef.
+> ⚠️ Only use this API as the last option. Give preference to the props to control the grid.
 
-> ⚠️ Only use this API when you have no alternative. Always start from the declarative API that the grid exposes.
-
-- `setPageSize`: Set the number of rows in one page.
-- `setPage`: Set the displayed page.
-- `onPageChange`: Callback fired after a new page has been displayed.
-- `onPageSizeChange`: Callback fired after the page size was changed.
-
-Below is an example of how you can reset the page using the imperative `setPage` method.
-
-{{"demo": "pages/components/data-grid/pagination/ApiRefPaginationGrid.js", "bg": "inline", "disableAd": true}}
+{{"demo": "pages/components/data-grid/pagination/PaginationApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
 
 ## API
 
