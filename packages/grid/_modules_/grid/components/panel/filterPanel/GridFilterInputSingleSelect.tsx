@@ -74,6 +74,7 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
       itemValue = getValueFromValueOptions(item.value, currentValueOptions);
       if (itemValue !== item.value) {
         applyValue({ ...item, value: itemValue });
+        return;
       }
     } else {
       itemValue = item.value;
