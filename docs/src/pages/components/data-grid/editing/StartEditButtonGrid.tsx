@@ -1,4 +1,5 @@
 import * as React from 'react';
+import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import {
   GridColumns,
@@ -13,20 +14,6 @@ import {
   randomTraderName,
   randomUpdatedDate,
 } from '@mui/x-data-grid-generator';
-import { createTheme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
-
-const defaultTheme = createTheme();
-const useStyles = makeStyles(
-  (theme) => ({
-    root: {
-      justifyContent: 'center',
-      display: 'flex',
-      borderBottom: `1px solid ${theme.palette.divider}`,
-    },
-  }),
-  { defaultTheme },
-);
 
 interface EditToolbarProps {
   apiRef: GridApiRef;
@@ -36,7 +23,6 @@ interface EditToolbarProps {
 
 function EditToolbar(props: EditToolbarProps) {
   const { selectedCellParams, apiRef, setSelectedCellParams } = props;
-  const classes = useStyles();
 
   const handleClick = () => {
     if (!selectedCellParams) {
@@ -59,7 +45,14 @@ function EditToolbar(props: EditToolbarProps) {
   };
 
   return (
-    <div className={classes.root}>
+    <Box
+      sx={{
+        justifyContent: 'center',
+        display: 'flex',
+        borderBottom: 1,
+        borderColor: 'divider',
+      }}
+    >
       <Button
         onClick={handleClick}
         onMouseDown={handleMouseDown}
@@ -68,7 +61,7 @@ function EditToolbar(props: EditToolbarProps) {
       >
         {selectedCellParams?.cellMode === 'edit' ? 'Save' : 'Edit'}
       </Button>
-    </div>
+    </Box>
   );
 }
 

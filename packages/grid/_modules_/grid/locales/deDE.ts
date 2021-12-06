@@ -107,10 +107,15 @@ const deDEGrid: Partial<GridLocaleText> = {
   // Actions cell more text
   actionsCellMore: 'Mehr',
 
+  // Column pinning text
+  // pinToLeft: 'Pin to left',
+  // pinToRight: 'Pin to right',
+  // unpin: 'Unpin',
+
   // Tree Data
-  // treeDataGroupingHeaderName: 'Group',
-  // treeDataExpand: 'see children',
-  // treeDataCollapse: 'hide children',
+  treeDataGroupingHeaderName: 'Gruppe',
+  treeDataExpand: 'Kinder einblenden',
+  treeDataCollapse: 'Kinder ausblenden',
 };
 
 export const deDE: Localization = getGridLocalization(deDEGrid, deDECore);

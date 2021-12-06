@@ -1,6 +1,21 @@
 export type EventListener = (...args: any[]) => void;
+
 export interface EventListenerOptions {
   isFirst?: boolean;
+}
+
+interface EventListenerCollection {
+  /**
+   * List of listeners to run before the others
+   * They are ran in the opposite order of the registration order
+   */
+  highPriority: Map<EventListener, true>;
+
+  /**
+   * List of events to run after the high priority listeners
+   * They are ran in the registration order
+   */
+  regular: Map<EventListener, true>;
 }
 
 // Used https://gist.github.com/mudge/5830382 as a starting point.
@@ -11,25 +26,32 @@ export class EventManager {
 
   warnOnce = false;
 
-  events: { [key: string]: EventListener[] } = {};
+  events: { [eventName: string]: EventListenerCollection } = {};
 
   on(eventName: string, listener: EventListener, options: EventListenerOptions = {}): void {
-    if (!Array.isArray(this.events[eventName])) {
-      this.events[eventName] = [];
+    let collection = this.events[eventName];
+
+    if (!collection) {
+      collection = {
+        highPriority: new Map(),
+        regular: new Map(),
+      };
+      this.events[eventName] = collection;
     }
 
     if (options.isFirst) {
-      this.events[eventName].splice(0, 0, listener);
+      collection.highPriority.set(listener, true);
     } else {
-      this.events[eventName].push(listener);
+      collection.regular.set(listener, true);
     }
 
     if (process.env.NODE_ENV !== 'production') {
-      if (this.events[eventName].length > this.maxListeners && this.warnOnce === false) {
+      const collectionSize = collection.highPriority.size + collection.regular.size;
+      if (collectionSize > this.maxListeners && !this.warnOnce) {
         this.warnOnce = true;
         console.warn(
           [
-            `Possible EventEmitter memory leak detected. ${this.events[eventName].length} ${eventName} listeners added.`,
+            `Possible EventEmitter memory leak detected. ${collectionSize} ${eventName} listeners added.`,
             `Use emitter.setMaxListeners() to increase limit.`,
           ].join('\n'),
         );
@@ -38,30 +60,36 @@ export class EventManager {
   }
 
   removeListener(eventName: string, listener: EventListener): void {
-    if (Array.isArray(this.events[eventName])) {
-      const idx = this.events[eventName].indexOf(listener);
-
-      if (idx > -1) {
-        this.events[eventName].splice(idx, 1);
-      }
+    if (this.events[eventName]) {
+      this.events[eventName].regular.delete(listener);
+      this.events[eventName].highPriority.delete(listener);
     }
   }
 
-  removeAllListeners(eventName?: string): void {
-    if (!eventName) {
-      this.events = {};
-    } else if (Array.isArray(this.events[eventName])) {
-      this.events[eventName] = [];
-    }
+  removeAllListeners(): void {
+    this.events = {};
   }
 
   emit(eventName: string, ...args: any[]): void {
-    if (Array.isArray(this.events[eventName])) {
-      const listeners = this.events[eventName].slice();
-      const length = listeners.length;
+    const collection = this.events[eventName];
+    if (!collection) {
+      return;
+    }
 
-      for (let i = 0; i < length; i += 1) {
-        listeners[i].apply(this, args);
+    const highPriorityListeners = Array.from(collection.highPriority.keys());
+    const regularListeners = Array.from(collection.regular.keys());
+
+    for (let i = highPriorityListeners.length - 1; i >= 0; i -= 1) {
+      const listener = highPriorityListeners[i];
+      if (collection.highPriority.has(listener)) {
+        listener.apply(this, args);
+      }
+    }
+
+    for (let i = 0; i < regularListeners.length; i += 1) {
+      const listener = regularListeners[i];
+      if (collection.regular.has(listener)) {
+        listener.apply(this, args);
       }
     }
   }

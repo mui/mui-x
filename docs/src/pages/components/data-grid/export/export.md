@@ -52,7 +52,7 @@ You can provide a [`valueFormatter`](/components/data-grid/columns/#value-format
 />
 ```
 
-### apiRef [<span class="pro"></span>](https://mui.com/store/items/material-ui-pro/)
+### apiRef [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
 
 > ⚠️ Only use this API when you have no alternative. Always start from the declarative API that the grid exposes.
 
@@ -106,13 +106,13 @@ You can provide a [`valueFormatter`](/components/data-grid/columns/#value-format
 />
 ```
 
-### apiRef [<span class="pro"></span>](https://mui.com/store/items/material-ui-pro/)
+### apiRef [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
 
 > ⚠️ Only use this API when you have no alternative. Always start from the declarative API that the grid exposes.
 
 {{"demo": "pages/components/data-grid/export/PrintExportApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
 
-## 🚧 Excel export [<span class="premium"></span>](https://mui.com/store/items/material-ui-pro/)
+## 🚧 Excel export [<span class="plan-premium"></span>](https://mui.com/store/items/material-ui-pro/)
 
 > ⚠️ This feature isn't implemented yet. It's coming.
 >
@@ -120,7 +120,7 @@ You can provide a [`valueFormatter`](/components/data-grid/columns/#value-format
 
 You will be able to export the displayed data to Excel with an API call, or using the grid UI.
 
-## 🚧 Clipboard [<span class="premium"></span>](https://mui.com/store/items/material-ui-pro/)
+## 🚧 Clipboard [<span class="plan-premium"></span>](https://mui.com/store/items/material-ui-pro/)
 
 > ⚠️ This feature isn't implemented yet. It's coming.
 >

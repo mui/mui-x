@@ -169,18 +169,14 @@ export const useGridColumnResize = (
       // Avoid text selection
       event.preventDefault();
 
-      colElementRef.current = findParentElementFromClassName(
-        event.currentTarget,
-        gridClasses.columnHeader,
-      ) as HTMLDivElement;
-
       logger.debug(`Start Resize on col ${colDef.field}`);
       apiRef.current.publishEvent(GridEvents.columnResizeStart, { field: colDef.field }, event);
 
       colDefRef.current = colDef;
-      colElementRef.current = apiRef.current.columnHeadersElementRef?.current!.querySelector(
-        `[data-field="${colDef.field}"]`,
-      ) as HTMLDivElement;
+      colElementRef.current =
+        apiRef.current.columnHeadersContainerElementRef?.current!.querySelector(
+          `[data-field="${colDef.field}"]`,
+        ) as HTMLDivElement;
 
       colCellElementsRef.current = findGridCellElementsFromCol(
         colElementRef.current,

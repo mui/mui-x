@@ -6,6 +6,19 @@ title: Data Grid - Styling
 
 <p class="description">The grid CSS can be easily overwritten.</p>
 
+## Using the `sx` prop
+
+For one-off styles, the `sx` prop can be used.
+It allows to apply simple to complex customizations directly onto the `DataGrid` element.
+The keys accepted can be any CSS property as well as the custom properties provided by MUI.
+For more details, visit the [`sx` prop page](/system/the-sx-prop/).
+
+```tsx
+<DataGrid sx={{ m: 2 }} /> // Sets the margin to 2 times the spacing unit = 16px
+```
+
+{{"demo": "pages/components/data-grid/style/SxProp.js", "bg": "inline"}}
+
 ## Styling column headers
 
 The `GridColDef` type has properties to apply class names and custom CSS on the header.

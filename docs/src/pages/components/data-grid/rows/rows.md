@@ -27,7 +27,7 @@ It replaces the previous values. This approach has some drawbacks:
 
 {{"demo": "pages/components/data-grid/rows/UpdateRowsProp.js", "bg": "inline", "disableAd": true}}
 
-### The `updateRows` method [<span class="pro"></span>](https://mui.com/store/items/material-ui-pro/)
+### The `updateRows` method [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
 
 If you want to only update part of the rows, you can use the `apiRef.current.updateRows` method.
 
@@ -42,7 +42,7 @@ Alternatively, if you would like to delete a row, you would need to pass an extr
 apiRef.current.updateRows([{ id: 1, _action: 'delete' }]);
 ```
 
-### Infinite loading [<span class="pro"></span>](https://mui.com/store/items/material-ui-pro/)
+### Infinite loading [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
 
 The grid provides a `onRowsScrollEnd` prop that can be used to load additional rows when the scroll reaches the bottom of the viewport area.
 
@@ -50,7 +50,7 @@ In addition, the area in which `onRowsScrollEnd` is called can be changed using 
 
 {{"demo": "pages/components/data-grid/rows/InfiniteLoadingGrid.js", "bg": "inline", "disableAd": true}}
 
-### High frequency [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-pro/)
+### High frequency [<span class="plan-pro"></span>](https://material-ui.com/store/items/material-ui-pro/)
 
 Whenever the rows are updated, the grid has to apply the sorting and filters. This can be a problem if you have high frequency updates. To maintain good performances, the grid allows to batch the updates and only apply them after a period of time. The `throttleRowsMs` prop can be used to define the frequency (in milliseconds) at which rows updates are applied.
 
@@ -86,7 +86,7 @@ Row spanning allows to change this default behavior.
 It allows cells to span multiple rows.
 This is very close to the "row spanning" in an HTML `<table>`.
 
-## 🚧 Row reorder [<span class="pro"></span>](https://mui.com/store/items/material-ui-pro/)
+## 🚧 Row reorder [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
 
 > ⚠️ This feature isn't implemented yet. It's coming.
 >
@@ -94,7 +94,7 @@ This is very close to the "row spanning" in an HTML `<table>`.
 
 Row reorder is used to rearrange rows by dragging the row with the mouse.
 
-## 🚧 Row pinning [<span class="pro"></span>](https://mui.com/store/items/material-ui-pro/)
+## 🚧 Row pinning [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
 
 > ⚠️ This feature isn't implemented yet. It's coming.
 >

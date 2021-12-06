@@ -19,7 +19,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-export function GridEditDateCell(props: GridRenderEditCellParams & InputBaseProps) {
+export function GridEditDateCell(props: GridRenderEditCellParams & Omit<InputBaseProps, 'id'>) {
   const {
     id,
     value,

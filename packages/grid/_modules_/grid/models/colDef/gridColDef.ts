@@ -27,6 +27,12 @@ import { GridEditCellProps } from '../gridEditRowModel';
 export type GridAlignment = 'left' | 'right' | 'center';
 
 type ValueOptions = string | number | { value: any; label: string };
+
+/**
+ * Value that can be used as a key for grouping rows
+ */
+export type GridKeyValue = string | number | boolean;
+
 /**
  * Column Definition interface.
  */
@@ -218,13 +224,6 @@ export type GridStateColDef = GridEnrichedColDef & { computedWidth: number };
 export interface GridColumnsMeta {
   totalWidth: number;
   positions: number[];
-}
-
-export type GridColumnLookup = { [field: string]: GridStateColDef };
-
-export interface GridColumnsState {
-  all: string[];
-  lookup: GridColumnLookup;
 }
 
 export type GridColDefOverride<ForcedFields extends keyof GridColDef> = Omit<
