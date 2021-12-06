@@ -4,6 +4,7 @@ import { GridHeaderCheckbox } from '../../components/columnSelection/GridHeaderC
 import { selectedIdsLookupSelector } from '../../hooks/features/selection/gridSelectionSelector';
 import { GridColDef } from './gridColDef';
 import { GRID_BOOLEAN_COL_DEF } from './gridBooleanColDef';
+import { GridValueGetterFullParams } from '../params';
 
 export const GRID_CHECKBOX_SELECTION_COL_DEF: GridColDef = {
   ...GRID_BOOLEAN_COL_DEF,
@@ -17,7 +18,9 @@ export const GRID_CHECKBOX_SELECTION_COL_DEF: GridColDef = {
   disableReorder: true,
   disableExport: true,
   valueGetter: (params) => {
-    const selectionLookup = selectedIdsLookupSelector(params.api.state);
+    const selectionLookup = selectedIdsLookupSelector(
+      (params as GridValueGetterFullParams).api.state,
+    );
     return selectionLookup[params.id] !== undefined;
   },
   renderHeader: (params) => <GridHeaderCheckbox {...params} />,

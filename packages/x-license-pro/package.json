@@ -28,9 +28,9 @@
     "licensegen": "./bin/license-gen-script.js"
   },
   "dependencies": {
-    "@mui/utils": "^5.1.1",
+    "@mui/utils": "^5.2.2",
     "esm": "^3.2.25",
-    "yargs": "^17.2.1"
+    "yargs": "^17.3.0"
   },
   "peerDependencies": {
     "react": "^17.0.2"

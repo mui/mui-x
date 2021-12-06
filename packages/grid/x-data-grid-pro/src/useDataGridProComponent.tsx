@@ -27,6 +27,7 @@ import { useGridScroll } from '../../_modules_/grid/hooks/features/scroll/useGri
 import { useGridEvents } from '../../_modules_/grid/hooks/features/events/useGridEvents';
 import { useGridDimensions } from '../../_modules_/grid/hooks/features/dimensions/useGridDimensions';
 import { useGridTreeData } from '../../_modules_/grid/hooks/features/treeData/useGridTreeData';
+import { useGridColumnPinning } from '../../_modules_/grid/hooks/features/columnPinning/useGridColumnPinning';
 
 export const useDataGridProComponent = (apiRef: GridApiRef, props: GridComponentProps) => {
   useGridInitialization(apiRef, props);
@@ -54,5 +55,6 @@ export const useDataGridProComponent = (apiRef: GridApiRef, props: GridComponent
   useGridPrintExport(apiRef, props);
   useGridClipboard(apiRef);
   useGridDimensions(apiRef, props);
+  useGridColumnPinning(apiRef, props);
   useGridEvents(apiRef, props);
 };

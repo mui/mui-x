@@ -88,7 +88,7 @@ The following demo shows how to implement the first solution:
 
 The grid exposes a set of methods that enables all of these features using the imperative apiRef.
 
-> ⚠️ Only use this API when you have no alternative. Always start from the declarative API that the grid exposes.
+> ⚠️ Only use this API as the last option. Give preference to the props to control the grid.
 
 {{"demo": "pages/components/data-grid/selection/SelectionApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
 

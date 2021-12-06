@@ -21,6 +21,7 @@
     "disableChildrenSorting": "If <code>true</code>, the sorting will only be applied to the top level rows.",
     "disableColumnFilter": "If <code>true</code>, column filters are disabled.",
     "disableColumnMenu": "If <code>true</code>, the column menu is disabled.",
+    "disableColumnPinning": "If <code>true</code>, the column pinning is disabled.",
     "disableColumnReorder": "If <code>true</code>, reordering columns is disabled.",
     "disableColumnResize": "If <code>true</code>, resizing columns is disabled.",
     "disableColumnSelector": "If <code>true</code>, hiding/showing columns is disabled.",
@@ -77,6 +78,7 @@
     "onFilterModelChange": "Callback fired when the Filter model changes before the filters are applied.<br><br><strong>Signature:</strong><br><code>function(model: GridFilterModel, details: GridCallbackDetails) =&gt; void</code><br><em>model:</em> With all properties from GridFilterModel.<br><em>details:</em> Additional details for this callback.",
     "onPageChange": "Callback fired when the current page has changed.<br><br><strong>Signature:</strong><br><code>function(page: number, details: GridCallbackDetails) =&gt; void</code><br><em>page:</em> Index of the page displayed on the Grid.<br><em>details:</em> Additional details for this callback.",
     "onPageSizeChange": "Callback fired when the page size has changed.<br><br><strong>Signature:</strong><br><code>function(pageSize: number, details: GridCallbackDetails) =&gt; void</code><br><em>pageSize:</em> Size of the page displayed on the Grid.<br><em>details:</em> Additional details for this callback.",
+    "onPinnedColumnsChange": "Callback fired when the pinned columns have changed.<br><br><strong>Signature:</strong><br><code>function(pinnedColumns: GridPinnedColumns, details: GridCallbackDetails) =&gt; void</code><br><em>pinnedColumns:</em> The changed pinned columns.<br><em>details:</em> Additional details for this callback.",
     "onResize": "Callback fired when the grid is resized.<br><br><strong>Signature:</strong><br><code>function(containerSize: ElementSize, event: MuiEvent&lt;{}&gt;, details: GridCallbackDetails) =&gt; void</code><br><em>containerSize:</em> With all properties from ElementSize.<br><em>event:</em> The event object.<br><em>details:</em> Additional details for this callback.",
     "onRowClick": "Callback fired when a click event comes from a row container element.<br><br><strong>Signature:</strong><br><code>function(params: GridRowParams, event: MuiEvent&lt;React.MouseEvent&gt;, details: GridCallbackDetails) =&gt; void</code><br><em>params:</em> With all properties from <a href=\"/api/data-grid/grid-row-params/\">GridRowParams</a>.<br><em>event:</em> The event object.<br><em>details:</em> Additional details for this callback.",
     "onRowDoubleClick": "Callback fired when a double click event comes from a row container element.<br><br><strong>Signature:</strong><br><code>function(params: GridRowParams, event: MuiEvent&lt;React.MouseEvent&gt;, details: GridCallbackDetails) =&gt; void</code><br><em>params:</em> With all properties from RowParams.<br><em>event:</em> The event object.<br><em>details:</em> Additional details for this callback.",
@@ -91,6 +93,7 @@
     "pageSize": "Set the number of rows in one page. If some of the rows have children (for instance in the tree data), this number represents the amount of top level rows wanted on each page.",
     "pagination": "If <code>true</code>, pagination is enabled.",
     "paginationMode": "Pagination can be processed on the server or client-side. Set it to &#39;client&#39; if you would like to handle the pagination on the client-side. Set it to &#39;server&#39; if you would like to handle the pagination on the server-side.",
+    "pinnedColumns": "The column fields to display pinned to left or right.",
     "rowBuffer": "Number of extra rows to be rendered before/after the visible slice.",
     "rowCount": "Set the total number of rows, if it is different than the length of the value <code>rows</code> prop. If some of the rows have children (for instance in the tree data), this number represents the amount of top level rows.",
     "rowHeight": "Set the height in pixel of a row in the grid.",
@@ -338,6 +341,18 @@
     "virtualScrollerRenderZone": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the virtualization render zone"
+    },
+    "pinnedColumns": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the pinned columns"
+    },
+    "pinnedColumns--left": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the left pinned columns"
+    },
+    "pinnedColumns--right": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the right pinned columns"
     },
     "root": { "description": "Styles applied to the root element." },
     "row--editable": {

@@ -32,6 +32,8 @@ export interface GridRowProps {
   editRowsState: GridEditRowsModel;
   onClick?: React.MouseEventHandler<HTMLDivElement>;
   onDoubleClick?: React.MouseEventHandler<HTMLDivElement>;
+  onMouseEnter?: React.MouseEventHandler<HTMLDivElement>;
+  onMouseLeave?: React.MouseEventHandler<HTMLDivElement>;
 }
 
 type OwnerState = Pick<GridRowProps, 'selected'> & {
@@ -79,6 +81,8 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
     editRowsState,
     onClick,
     onDoubleClick,
+    onMouseEnter,
+    onMouseLeave,
     ...other
   } = props;
   const ariaRowIndex = index + 2; // 1 for the header row and 1 as it's 1-based
@@ -236,6 +240,8 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
       style={style}
       onClick={publish(GridEvents.rowClick, onClick)}
       onDoubleClick={publish(GridEvents.rowDoubleClick, onDoubleClick)}
+      onMouseEnter={publish(GridEvents.rowMouseEnter, onMouseEnter)}
+      onMouseLeave={publish(GridEvents.rowMouseLeave, onMouseLeave)}
       {...other}
     >
       {cells}

@@ -236,10 +236,7 @@ export const UnsortableLastCol = () => {
   columns[columns.length] = {
     field: 'username',
     sortable: false,
-    valueGetter: (params) =>
-      `${params.getValue(params.id, 'name') || 'unknown'}_${
-        params.getValue(params.id, 'age') || 'x'
-      }`,
+    valueGetter: (params) => `${params.row.name || 'unknown'}_${params.row.age || 'x'}`,
     width: 150,
   };
 
@@ -254,10 +251,7 @@ export const CustomComparator = () => {
   const columns = getColumns();
   columns[columns.length] = {
     field: 'username',
-    valueGetter: (params) =>
-      `${params.getValue(params.id, 'name') || 'unknown'}_${
-        params.getValue(params.id, 'age') || 'x'
-      }`,
+    valueGetter: (params) => `${params.row.name || 'unknown'}_${params.row.age || 'x'}`,
     sortComparator: (v1, v2, cellParams1, cellParams2) =>
       (cellParams1.api.getCellValue(cellParams1.id, 'age') as number) -
       (cellParams2.api.getCellValue(cellParams2.id, 'age') as number),
