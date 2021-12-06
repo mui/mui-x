@@ -38,7 +38,7 @@ export const useGridTreeData = (
       headerName: apiRef.current.getLocaleText('treeDataGroupingHeaderName'),
       ...GRID_TREE_DATA_GROUP_COL_DEF_FORCED_FIELDS,
     };
-    let colDefOverride: Partial<GridColDef>;
+    let colDefOverride: Partial<GridColDef> | null | undefined;
 
     if (typeof propGroupingColDef === 'function') {
       const params: GridGroupingColDefOverrideParams = {
@@ -48,7 +48,7 @@ export const useGridTreeData = (
 
       colDefOverride = propGroupingColDef(params);
     } else {
-      colDefOverride = propGroupingColDef ?? {};
+      colDefOverride = propGroupingColDef;
     }
 
     return {

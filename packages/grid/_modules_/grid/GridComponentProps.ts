@@ -401,7 +401,7 @@ interface GridComponentOtherProps extends CommonProps {
    */
   groupingColDef?:
     | GridGroupingColDefOverride
-    | ((params: GridGroupingColDefOverrideParams) => GridGroupingColDefOverride);
+    | ((params: GridGroupingColDefOverrideParams) => GridGroupingColDefOverride | undefined | null);
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
