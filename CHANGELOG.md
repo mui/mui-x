@@ -5,7 +5,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## 5.1.0
 
-_Nov 2, 2021_
+_Dec 2, 2021_
 
 A big thanks to the 11 contributors who made this release possible. Here are some highlights ✨:
 
