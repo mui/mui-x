@@ -15,9 +15,7 @@ const columns: GridColumns = [
   {
     field: 'username',
     valueGetter: (params: GridValueGetterParams) =>
-      `${params.getValue(params.id, 'name') || 'unknown'} - ${
-        params.getValue(params.id, 'age') || 'x'
-      }`,
+      `${params.row.name || 'unknown'} - ${params.row.age || 'x'}`,
     sortComparator: (v1, v2, param1, param2) =>
       (param1.api.getCellValue(param1.id, 'age') as number) -
       (param2.api.getCellValue(param2.id, 'age') as number),

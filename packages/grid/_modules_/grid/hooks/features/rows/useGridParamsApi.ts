@@ -2,7 +2,7 @@ import * as React from 'react';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridParamsApi } from '../../../models/api/gridParamsApi';
 import { GridRowId } from '../../../models/gridRows';
-import { GridCellParams, GridValueGetterParams } from '../../../models/params/gridCellParams';
+import { GridCellParams, GridValueGetterFullParams } from '../../../models/params/gridCellParams';
 import { GridColumnHeaderParams } from '../../../models/params/gridColumnHeaderParams';
 import { GridRowParams } from '../../../models/params/gridRowParams';
 import {
@@ -72,7 +72,7 @@ export function useGridParamsApi(apiRef: GridApiRef) {
       const cellFocus = gridFocusCellSelector(apiRef.current.state);
       const cellTabIndex = gridTabIndexCellSelector(apiRef.current.state);
 
-      const params: GridValueGetterParams = {
+      const params: GridValueGetterFullParams = {
         id,
         field,
         row,
