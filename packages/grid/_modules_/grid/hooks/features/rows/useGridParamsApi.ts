@@ -80,6 +80,7 @@ export function useGridParamsApi(apiRef: GridApiRef) {
         id,
         columns: apiRef.current.getAllColumns(),
         row,
+        // TODO v6: remove
         getValue: getCellValueWithDeprecationWarning,
       };
       return params;
@@ -107,6 +108,7 @@ export function useGridParamsApi(apiRef: GridApiRef) {
         value: row[field],
         colDef: apiRef.current.getColumn(field),
         cellMode: apiRef.current.getCellMode(id, field),
+        // TODO v6: remove
         getValue: getCellValueWithDeprecationWarning,
         api: apiRef.current,
         hasFocus: cellFocus !== null && cellFocus.field === field && cellFocus.id === id,
@@ -139,6 +141,7 @@ export function useGridParamsApi(apiRef: GridApiRef) {
         rowNode,
         colDef,
         cellMode: apiRef.current.getCellMode(id, field),
+        // TODO v6: remove
         getValue: getCellValueWithDeprecationWarning,
         hasFocus: cellFocus !== null && cellFocus.field === field && cellFocus.id === id,
         tabIndex: cellTabIndex && cellTabIndex.field === field && cellTabIndex.id === id ? 0 : -1,
