@@ -222,6 +222,30 @@ describe('<DataGridPro /> - Tree Data', () => {
       render(<Test groupingColDef={{ headerName: 'Custom header name' }} />);
       expect(getColumnHeadersTextContent()).to.deep.equal(['Custom header name', 'name']);
     });
+
+    it('should render descendant count when hideDescendantCount = false', () => {
+      render(
+        <Test groupingColDef={{ hideDescendantCount: false }} defaultGroupingExpansionDepth={-1} />,
+      );
+      expect(getColumnValues(0)).to.deep.equal([
+        'A (2)',
+        'A',
+        'B',
+        'B (4)',
+        'A',
+        'B (2)',
+        'A (1)',
+        'A',
+        'C',
+      ]);
+    });
+
+    it('should not render descendant count when hideDescendantCount = true', () => {
+      render(
+        <Test groupingColDef={{ hideDescendantCount: true }} defaultGroupingExpansionDepth={-1} />,
+      );
+      expect(getColumnValues(0)).to.deep.equal(['A', 'A', 'B', 'B', 'A', 'B', 'A', 'A', 'C']);
+    });
   });
 
   describe('row grouping column', () => {
