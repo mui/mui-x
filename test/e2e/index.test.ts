@@ -315,7 +315,6 @@ describe('e2e', () => {
           () => document.querySelector('[role="cell"][data-field="lastConnexion"]')!.textContent!,
         ),
       ).to.equal('1/31/2025, 4:05:00 PM');
-
     });
   });
 });
