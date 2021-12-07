@@ -304,7 +304,6 @@ describe('e2e', () => {
       await page.keyboard.press('0');
       await page.keyboard.press('2');
       await page.keyboard.press('5');
-      await page.keyboard.press('ArrowRight'); // needed as long as years ar not limited to 4 digits
       await page.keyboard.press('1');
       await page.keyboard.press('6');
       await page.keyboard.press('5');
