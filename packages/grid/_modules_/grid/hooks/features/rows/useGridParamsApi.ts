@@ -13,7 +13,7 @@ import {
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { gridFocusCellSelector, gridTabIndexCellSelector } from '../focus/gridFocusStateSelector';
 
-let warnedOnce = false;
+let warnedOnceMissingColumn = false;
 function warnMissingColumn(field) {
   console.warn(
     [
@@ -21,8 +21,20 @@ function warnMissingColumn(field) {
       `Instead, you can access the data from \`params.row.${field}\`.`,
     ].join('\n'),
   );
-  warnedOnce = true;
+    warnedOnceMissingColumn = true;
 }
+
+let warnedOnceGetValue = false;
+function warnGetValue() {
+    console.warn(
+        [
+            `MUI: You are calling getValue. This method is deprecated and will be removed in the next major version.`,
+            `Instead, you can access the data from \`params.row}\`.`,
+        ].join('\n'),
+    );
+    warnedOnceGetValue = true;
+}
+
 
 /**
  * @requires useGridColumns (method)
@@ -41,6 +53,20 @@ export function useGridParamsApi(apiRef: GridApiRef) {
     [apiRef],
   );
 
+    /**
+     * We want to remove the `getValue` param from `getRowParams`, `getCellParams` and `getBaseCellParams`
+     */
+    const getCellValueWithDeprecationWarning = React.useCallback<GridParamsApi['getCellValue']>((...args) => {
+        if (process.env.NODE_ENV !== 'production') {
+            if (!warnedOnceGetValue) {
+                warnGetValue();
+            }
+        }
+
+        return apiRef.current.getCellValue(...args)
+
+    }, [apiRef])
+
   const getRowParams = React.useCallback(
     (id: GridRowId) => {
       const row = apiRef.current.getRow(id);
@@ -53,11 +79,11 @@ export function useGridParamsApi(apiRef: GridApiRef) {
         id,
         columns: apiRef.current.getAllColumns(),
         row,
-        getValue: apiRef.current.getCellValue,
+        getValue: getCellValueWithDeprecationWarning,
       };
       return params;
     },
-    [apiRef],
+    [apiRef, getCellValueWithDeprecationWarning],
   );
 
   const getBaseCellParams = React.useCallback(
@@ -80,7 +106,7 @@ export function useGridParamsApi(apiRef: GridApiRef) {
         value: row[field],
         colDef: apiRef.current.getColumn(field),
         cellMode: apiRef.current.getCellMode(id, field),
-        getValue: apiRef.current.getCellValue,
+        getValue: getCellValueWithDeprecationWarning,
         api: apiRef.current,
         hasFocus: cellFocus !== null && cellFocus.field === field && cellFocus.id === id,
         tabIndex: cellTabIndex && cellTabIndex.field === field && cellTabIndex.id === id ? 0 : -1,
@@ -88,7 +114,7 @@ export function useGridParamsApi(apiRef: GridApiRef) {
 
       return params;
     },
-    [apiRef],
+    [apiRef, getCellValueWithDeprecationWarning],
   );
 
   const getCellParams = React.useCallback(
@@ -112,7 +138,7 @@ export function useGridParamsApi(apiRef: GridApiRef) {
         rowNode,
         colDef,
         cellMode: apiRef.current.getCellMode(id, field),
-        getValue: apiRef.current.getCellValue,
+        getValue: getCellValueWithDeprecationWarning,
         hasFocus: cellFocus !== null && cellFocus.field === field && cellFocus.id === id,
         tabIndex: cellTabIndex && cellTabIndex.field === field && cellTabIndex.id === id ? 0 : -1,
         value,
@@ -138,7 +164,7 @@ export function useGridParamsApi(apiRef: GridApiRef) {
       const colDef = apiRef.current.getColumn(field);
 
       if (process.env.NODE_ENV !== 'production') {
-        if (!colDef && !warnedOnce) {
+        if (!colDef && !warnedOnceMissingColumn) {
           warnMissingColumn(field);
         }
       }
