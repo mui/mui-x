@@ -1,9 +1,46 @@
 import * as React from 'react';
 import { createRenderer, fireEvent, screen, getByText } from '@material-ui/monorepo/test/utils';
 import { expect } from 'chai';
-import { useFakeTimers } from 'sinon';
-import { DataGrid, GridToolbar, GridPreferencePanelsValue, DataGridProps } from '@mui/x-data-grid';
+import { useFakeTimers, spy } from 'sinon';
+import {
+  DataGrid,
+  GridToolbar,
+  GridPreferencePanelsValue,
+  DataGridProps,
+  GridFilterInputValueProps,
+  GridFilterInputValue,
+} from '@mui/x-data-grid';
 import { getColumnValues } from 'test/utils/helperFn';
+
+function setColumnValue(columnValue) {
+  fireEvent.change(screen.getByRole('combobox', { name: 'Columns' }), {
+    target: { value: columnValue },
+  });
+}
+
+function setOperatorValue(operatorValue) {
+  fireEvent.change(screen.getByRole('combobox', { name: 'Operators' }), {
+    target: { value: operatorValue },
+  });
+}
+
+function CustomInputValue(props: GridFilterInputValueProps) {
+  const { item, applyValue } = props;
+
+  const handleFilterChange = (event) => {
+    applyValue({ ...item, value: event.target.value });
+  };
+
+  return (
+    <input
+      name="custom-filter-operator"
+      placeholder="Filter value"
+      value={item.value}
+      onChange={handleFilterChange}
+      data-testid="customInput"
+    />
+  );
+}
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -26,6 +63,7 @@ describe('<DataGrid /> - Filter', () => {
       {
         id: 0,
         brand: 'Nike',
+        slogan: 'just do it',
         isPublished: false,
         country: 'United States',
         status: 0,
@@ -33,6 +71,7 @@ describe('<DataGrid /> - Filter', () => {
       {
         id: 1,
         brand: 'Adidas',
+        slogan: 'is all in',
         isPublished: true,
         country: 'Germany',
         status: 0,
@@ -40,6 +79,7 @@ describe('<DataGrid /> - Filter', () => {
       {
         id: 2,
         brand: 'Puma',
+        slogan: 'Forever Faster',
         isPublished: true,
         country: 'Germany',
         status: 2,
@@ -47,6 +87,35 @@ describe('<DataGrid /> - Filter', () => {
     ],
     columns: [
       { field: 'brand' },
+      {
+        field: 'slogan',
+        filterOperators: [
+          {
+            label: 'From',
+            value: 'from',
+            getApplyFilterFn: () => {
+              return () => false;
+            },
+            InputComponent: CustomInputValue,
+          },
+          {
+            value: 'equals',
+            getApplyFilterFn: (filterItem) => {
+              if (!filterItem.value) {
+                return null;
+              }
+              const collator = new Intl.Collator(undefined, {
+                sensitivity: 'base',
+                usage: 'search',
+              });
+              return ({ value }): boolean => {
+                return collator.compare(filterItem.value, (value && value.toString()) || '') === 0;
+              };
+            },
+            InputComponent: GridFilterInputValue,
+          },
+        ],
+      },
       { field: 'isPublished', type: 'boolean' },
       {
         field: 'country',
@@ -73,28 +142,33 @@ describe('<DataGrid /> - Filter', () => {
       field?: string;
     } & Partial<Omit<DataGridProps, 'columns'>>,
   ) => {
-    const { operatorValue, value, rows, columns, field = 'brand', ...other } = props;
+    const { operatorValue, value, rows, columns, field = 'brand', initialState, ...other } = props;
     return (
       <div style={{ width: 300, height: 300 }}>
         <DataGrid
           autoHeight={isJSDOM}
           columns={columns || baselineProps.columns}
           rows={rows || baselineProps.rows}
-          filterModel={{
-            items: [
-              {
-                columnField: field,
-                value,
-                operatorValue,
-              },
-            ],
-          }}
+          filterModel={
+            initialState
+              ? undefined
+              : {
+                  items: [
+                    {
+                      columnField: field,
+                      value,
+                      operatorValue,
+                    },
+                  ],
+                }
+          }
           disableColumnFilter={false}
           initialState={{
             preferencePanel: {
               open: true,
               openedPanelValue: GridPreferencePanelsValue.filters,
             },
+            ...initialState,
           }}
           {...other}
         />
@@ -1154,6 +1228,165 @@ describe('<DataGrid /> - Filter', () => {
     it('should show an empty string as the default filter input value', () => {
       render(<TestCase field="brand" operatorValue="contains" />);
       expect(screen.getByRole('textbox', { name: 'Value' }).value).to.equal('');
+    });
+
+    it('should keep filter operator and value if available', () => {
+      render(
+        <TestCase
+          initialState={{
+            filter: {
+              filterModel: {
+                items: [
+                  {
+                    columnField: 'brand',
+                    value: 'Puma',
+                    operatorValue: 'equals',
+                  },
+                ],
+              },
+            },
+          }}
+        />,
+      );
+      expect(screen.getByRole('textbox', { name: 'Value' }).value).to.equal('Puma');
+      expect(screen.getByRole('combobox', { name: 'Operators' }).value).to.equal('equals');
+      expect(getColumnValues()).to.deep.equal(['Puma']);
+
+      setColumnValue('slogan');
+
+      expect(getColumnValues()).to.deep.equal([]);
+      expect(screen.getByRole('combobox', { name: 'Operators' }).value).to.equal('equals');
+      expect(screen.getByRole('textbox', { name: 'Value' }).value).to.equal('Puma');
+    });
+
+    it('should reset value if operator is not available for the new column', () => {
+      render(
+        <TestCase
+          initialState={{
+            filter: {
+              filterModel: {
+                items: [
+                  {
+                    columnField: 'brand',
+                    operatorValue: 'contains',
+                    value: 'Pu',
+                  },
+                ],
+              },
+            },
+          }}
+        />,
+      );
+      expect(screen.getByRole('textbox', { name: 'Value' }).value).to.equal('Pu');
+      expect(screen.getByRole('combobox', { name: 'Operators' }).value).to.equal('contains');
+      expect(getColumnValues()).to.deep.equal(['Puma']);
+
+      setColumnValue('slogan');
+
+      expect(getColumnValues()).to.deep.equal([]);
+      expect(screen.getByRole('combobox', { name: 'Operators' }).value).to.equal('from');
+      expect(screen.getByTestId('customInput').value).to.equal('');
+    });
+
+    it('should reset value if the new operator has no input component', () => {
+      const onFilterModelChange = spy();
+
+      render(
+        <TestCase
+          initialState={{
+            filter: {
+              filterModel: {
+                items: [
+                  {
+                    columnField: 'brand',
+                    operatorValue: 'contains',
+                    value: 'Pu',
+                  },
+                ],
+              },
+            },
+          }}
+          onFilterModelChange={onFilterModelChange}
+        />,
+      );
+      expect(screen.getByRole('textbox', { name: 'Value' }).value).to.equal('Pu');
+      expect(screen.getByRole('combobox', { name: 'Operators' }).value).to.equal('contains');
+      expect(getColumnValues()).to.deep.equal(['Puma']);
+
+      expect(onFilterModelChange.callCount).to.equal(0);
+
+      setOperatorValue('isEmpty');
+
+      expect(onFilterModelChange.callCount).to.equal(1);
+      expect(onFilterModelChange.lastCall.args[0].items[0].value).to.equal(undefined);
+
+      expect(screen.getByRole('combobox', { name: 'Operators' }).value).to.equal('isEmpty');
+    });
+
+    it('should reset filter value if not available in the new valueOptions', () => {
+      render(
+        <TestCase
+          rows={[
+            { id: 1, reference: 'REF_1', origin: 'Italy', destination: 'Germany' },
+            { id: 2, reference: 'REF_2', origin: 'Germany', destination: 'UK' },
+            { id: 3, reference: 'REF_3', origin: 'Germany', destination: 'Italy' },
+          ]}
+          columns={[
+            { field: 'reference' },
+            { field: 'origin', type: 'singleSelect', valueOptions: ['Italy', 'Germany'] },
+            {
+              field: 'destination',
+              type: 'singleSelect',
+              valueOptions: ['Italy', 'Germany', 'UK'],
+            },
+          ]}
+          initialState={{
+            filter: {
+              filterModel: {
+                items: [{ columnField: 'destination', operatorValue: 'is', value: 'UK' }],
+              },
+            },
+          }}
+        />,
+      );
+      expect(getColumnValues()).to.deep.equal(['REF_2']);
+
+      setColumnValue('origin');
+
+      expect(getColumnValues()).to.deep.equal(['REF_1', 'REF_2', 'REF_3']);
+    });
+
+    it('should keep the value if available in the new valueOptions', () => {
+      const IT = { value: 'IT', label: 'Italy' };
+      const GE = { value: 'GE', label: 'Germany' };
+
+      render(
+        <TestCase
+          rows={[
+            { id: 1, reference: 'REF_1', origin: 'IT', destination: 'GE' },
+            { id: 2, reference: 'REF_2', origin: 'GE', destination: 'UK' },
+            { id: 3, reference: 'REF_3', origin: 'GE', destination: 'IT' },
+          ]}
+          columns={[
+            { field: 'reference' },
+            { field: 'origin', type: 'singleSelect', valueOptions: [IT, GE] },
+            { field: 'destination', type: 'singleSelect', valueOptions: ['IT', 'GE', 'UK'] },
+          ]}
+          initialState={{
+            filter: {
+              filterModel: {
+                items: [{ columnField: 'destination', operatorValue: 'is', value: 'GE' }],
+              },
+            },
+          }}
+        />,
+      );
+
+      expect(getColumnValues()).to.deep.equal(['REF_1']);
+
+      setColumnValue('origin');
+
+      expect(getColumnValues()).to.deep.equal(['REF_2', 'REF_3']);
     });
   });
 
