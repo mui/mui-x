@@ -174,9 +174,8 @@ describe('<DataGridPro /> - Edit Rows', () => {
     const otherCell = getCell(2, 1);
     fireEvent.click(otherCell);
     fireEvent.focus(otherCell);
-    await waitFor(() => {
-      expect(cell).to.have.class('MuiDataGrid-cell--editing');
-    });
+
+    expect(cell).to.have.class('MuiDataGrid-cell--editing');
   });
 
   it('should allow to switch between cell mode using enter key', () => {
@@ -190,31 +189,29 @@ describe('<DataGridPro /> - Edit Rows', () => {
     expect(cell.querySelector('input')!.value).to.equal('Adidas');
   });
 
-  it('should allow to delete a cell directly if editable using delete key', async () => {
+  it('should allow to delete a cell directly if editable using delete key', () => {
     render(<TestCase />);
     const cell = getCell(1, 0);
     cell.focus();
 
     expect(cell).to.have.text('Adidas');
     fireEvent.keyDown(cell, { key: 'Delete' });
-    await waitFor(() => {
-      expect(cell).to.have.class('MuiDataGrid-cell--editable');
-      expect(cell).not.to.have.class('MuiDataGrid-cell--editing');
-      expect(cell).to.have.text('');
-    });
+
+    expect(cell).to.have.class('MuiDataGrid-cell--editable');
+    expect(cell).not.to.have.class('MuiDataGrid-cell--editing');
+    expect(cell).to.have.text('');
   });
 
-  it('should not allow to delete a cell directly if it is not editable', async () => {
+  it('should not allow to delete a cell directly if it is not editable', () => {
     render(<TestCase isCellEditable={() => false} />);
     const cell = getCell(1, 0);
     cell.focus();
 
     expect(cell).to.have.text('Adidas');
     fireEvent.keyDown(cell, { key: 'Delete' });
-    await waitFor(() => {
-      expect(cell).not.to.have.class('MuiDataGrid-cell--editable');
-      expect(cell).to.have.text('Adidas');
-    });
+
+    expect(cell).not.to.have.class('MuiDataGrid-cell--editable');
+    expect(cell).to.have.text('Adidas');
   });
 
   // Due to an issue with the keyDown event in test library, this test uses the apiRef to publish an event
@@ -401,7 +398,7 @@ describe('<DataGridPro /> - Edit Rows', () => {
   });
 
   // TODO add one test for each column type because what really sets the focus is the autoFocus prop
-  it('should move the focus to the new field', async () => {
+  it('should move the focus to the new field', () => {
     render(<TestCase />);
     // Turn first cell into edit mode
     apiRef.current.setCellMode(0, 'brand', 'edit');
@@ -415,9 +412,8 @@ describe('<DataGridPro /> - Edit Rows', () => {
     const input0 = getCell(0, 0).querySelector('input');
     input0!.focus();
     fireEvent.click(input0);
-    await waitFor(() => {
-      expect(document.activeElement).to.have.property('value', 'Nike');
-    });
+
+    expect(document.activeElement).to.have.property('value', 'Nike');
   });
 
   it('should apply the valueParser before saving the value', async () => {
@@ -803,7 +799,7 @@ describe('<DataGridPro /> - Edit Rows', () => {
       });
     });
 
-    it('should not exit the edit mode when validateCell returns an object with error', async () => {
+    it('should not exit the edit mode when validateCell returns an object with error', () => {
       render(
         <div style={{ width: 300, height: 300 }}>
           <DataGridPro
@@ -826,9 +822,8 @@ describe('<DataGridPro /> - Edit Rows', () => {
       const option = screen.queryAllByRole('option')[1];
       fireEvent.mouseUp(option);
       fireEvent.click(option);
-      await waitFor(() => {
-        expect(cell.firstChild).to.have.class('Mui-error');
-      });
+
+      expect(cell.firstChild).to.have.class('Mui-error');
     });
 
     it('should not exit the edit mode when validateCell returns a promise with error', async () => {
@@ -941,7 +936,7 @@ describe('<DataGridPro /> - Edit Rows', () => {
       expect(screen.getByRole('cell').querySelector('input')).toHaveFocus();
     });
 
-    it('should allow external value updates as date', async () => {
+    it('should allow external value updates as date', () => {
       const onEditCellPropsChange = spy();
       render(
         <TestCase
@@ -956,9 +951,8 @@ describe('<DataGridPro /> - Edit Rows', () => {
       const newValue = new Date(2021, 6, 4);
       apiRef.current.setEditCellValue({ id: 0, field: 'date', value: newValue });
       const input = cell.querySelector('input')!;
-      await waitFor(() => {
-        expect(input.value).to.equal('2021-07-04');
-      });
+
+      expect(input.value).to.equal('2021-07-04');
     });
 
     it('should handle all the intermediate dates while editing the value', () => {
@@ -1054,7 +1048,7 @@ describe('<DataGridPro /> - Edit Rows', () => {
       expect(screen.getByRole('cell').querySelector('input')).toHaveFocus();
     });
 
-    it('should allow external value updates as date', async () => {
+    it('should allow external value updates as date', () => {
       const onEditCellPropsChange = spy();
       render(
         <TestCase
@@ -1069,9 +1063,8 @@ describe('<DataGridPro /> - Edit Rows', () => {
       const newValue = new Date(2021, 6, 4, 17, 30);
       apiRef.current.setEditCellValue({ id: 0, field: 'date', value: newValue });
       const input = cell.querySelector('input')!;
-      await waitFor(() => {
-        expect(input.value).to.equal('2021-07-04T17:30');
-      });
+
+      expect(input.value).to.equal('2021-07-04T17:30');
     });
 
     it('should handle all the intermediate dates while editing the value', () => {
@@ -1129,7 +1122,7 @@ describe('<DataGridPro /> - Edit Rows', () => {
     });
   });
 
-  it('should call onCellEditCommit with the correct params', async () => {
+  it('should call onCellEditCommit with the correct params', () => {
     const onCellEditCommit = spy();
     render(<TestCase onCellEditCommit={onCellEditCommit} />);
     const cell = getCell(1, 0);
@@ -1138,13 +1131,12 @@ describe('<DataGridPro /> - Edit Rows', () => {
     const input = cell.querySelector('input')!;
     fireEvent.change(input, { target: { value: 'n' } });
     fireEvent.keyDown(input, { key: 'Enter' });
-    await waitFor(() => {
-      expect(onCellEditCommit.callCount).to.equal(1);
-      expect(onCellEditCommit.lastCall.args[0]).to.deep.equal({
-        id: 1,
-        field: 'brand',
-        value: 'n',
-      });
+
+    expect(onCellEditCommit.callCount).to.equal(1);
+    expect(onCellEditCommit.lastCall.args[0]).to.deep.equal({
+      id: 1,
+      field: 'brand',
+      value: 'n',
     });
   });
 
@@ -1185,7 +1177,7 @@ describe('<DataGridPro /> - Edit Rows', () => {
   });
 
   describe('validation', () => {
-    it('should not allow to save an invalid value with Enter', async () => {
+    it('should not allow to save an invalid value with Enter', () => {
       render(<TestCase />);
       const cell = getCell(1, 0);
       cell.focus();
@@ -1195,10 +1187,9 @@ describe('<DataGridPro /> - Edit Rows', () => {
       fireEvent.change(input, { target: { value: 'n' } });
       apiRef.current.setEditRowsModel({ 1: { brand: { error: true, value: 'n' } } });
       fireEvent.keyDown(input, { key: 'Enter' });
-      await waitFor(() => {
-        expect(input).to.have.attribute('aria-invalid', 'true');
-        expect(cell).to.have.class('MuiDataGrid-cell--editing');
-      });
+
+      expect(input).to.have.attribute('aria-invalid', 'true');
+      expect(cell).to.have.class('MuiDataGrid-cell--editing');
     });
 
     it('should not allow to save an invalid value with commitCellChange', () => {
@@ -1247,7 +1238,7 @@ describe('<DataGridPro /> - Edit Rows', () => {
       });
     });
 
-    it('should not update the state when the editRowsModel prop is set', async () => {
+    it('should not update the state when the editRowsModel prop is set', () => {
       render(<TestCase editRowsModel={{ 1: { year: { value: 1961 } } }} />);
       const cell = getCell(1, 1);
       const input = cell.querySelector('input')!;
@@ -1255,9 +1246,8 @@ describe('<DataGridPro /> - Edit Rows', () => {
       expect(input.value).to.equal('1961');
       fireEvent.change(input, { target: { value: '1970' } });
       fireEvent.keyDown(input, { key: 'Enter' });
-      await waitFor(() => {
-        expect(cell.querySelector('input')).not.to.equal(null);
-      });
+
+      expect(cell.querySelector('input')).not.to.equal(null);
     });
 
     it('should update the state when the model is not set, but the onChange is set', async () => {
@@ -1353,7 +1343,7 @@ describe('<DataGridPro /> - Edit Rows', () => {
       expect(cell).to.have.text('Adidas');
     });
 
-    it('should allow to commit changes with Enter', async () => {
+    it('should allow to commit changes with Enter', () => {
       render(<TestCase editMode="row" />);
       const cell = getCell(1, 0);
       fireEvent.doubleClick(cell);
@@ -1361,12 +1351,12 @@ describe('<DataGridPro /> - Edit Rows', () => {
       fireEvent.change(input, { target: { value: 'ADIDAS' } });
       expect(input!.value).to.equal('ADIDAS');
       fireEvent.keyDown(input, { key: 'Enter' });
-      await waitFor(() => {
-        expect(cell).to.have.text('ADIDAS');
-      });
+
+      clock.runToLast();
+      expect(cell).to.have.text('ADIDAS');
     });
 
-    it('should move the focus to the right cell after committing changes with Enter', async () => {
+    it('should move the focus to the right cell after committing changes with Enter', () => {
       render(<TestCase editMode="row" />);
       const cell = getCell(1, 0);
       fireEvent.doubleClick(cell);
@@ -1374,10 +1364,9 @@ describe('<DataGridPro /> - Edit Rows', () => {
       fireEvent.change(input, { target: { value: 'ADIDAS' } });
       expect(input!.value).to.equal('ADIDAS');
       fireEvent.keyDown(input, { key: 'Enter' });
-      await waitFor(() => {
-        // @ts-expect-error need to migrate helpers to TypeScript
-        expect(getCell(2, 0)).toHaveFocus();
-      });
+
+      // @ts-expect-error need to migrate helpers to TypeScript
+      expect(getCell(2, 0)).toHaveFocus();
     });
 
     it('should allow to commit changes clicking outside the row', async () => {
@@ -1494,7 +1483,7 @@ describe('<DataGridPro /> - Edit Rows', () => {
     });
   });
 
-  it('should call valueSetter before committing the value', async () => {
+  it('should call valueSetter before committing the value', () => {
     render(
       <TestCase
         columns={[
@@ -1517,16 +1506,15 @@ describe('<DataGridPro /> - Edit Rows', () => {
     const input = cell.querySelector('input')!;
     fireEvent.change(input, { target: { value: 'Peter Smith' } });
     fireEvent.keyDown(input, { key: 'Enter' });
-    await waitFor(() => {
-      expect(apiRef.current.getRowModels().get(0)).to.deep.equal({
-        id: 0,
-        firstName: 'Peter',
-        lastName: 'Smith',
-      });
+
+    expect(apiRef.current.getRowModels().get(0)).to.deep.equal({
+      id: 0,
+      firstName: 'Peter',
+      lastName: 'Smith',
     });
   });
 
-  it('should call preProcessEditCellProps with the correct params', async () => {
+  it('should call preProcessEditCellProps with the correct params', () => {
     const preProcessEditCellProps = spy(({ props }) => props);
     render(
       <TestCase
@@ -1545,16 +1533,15 @@ describe('<DataGridPro /> - Edit Rows', () => {
     const input = cell.querySelector('input')!;
     fireEvent.change(input, { target: { value: 'n' } });
     fireEvent.keyDown(input, { key: 'Enter' });
-    await waitFor(() => {
-      expect(preProcessEditCellProps.lastCall.args[0]).to.deep.equal({
-        id: baselineProps.rows[1].id,
-        row: baselineProps.rows[1],
-        props: { value: 'n' },
-      });
+
+    expect(preProcessEditCellProps.lastCall.args[0]).to.deep.equal({
+      id: baselineProps.rows[1].id,
+      row: baselineProps.rows[1],
+      props: { value: 'n' },
     });
   });
 
-  it('should not save the cell when an object with error is returned', async () => {
+  it('should not save the cell when an object with error is returned', () => {
     render(
       <TestCase
         columns={[
@@ -1573,10 +1560,9 @@ describe('<DataGridPro /> - Edit Rows', () => {
     expect(input).not.to.have.attribute('aria-invalid');
     fireEvent.change(input, { target: { value: 'n' } });
     fireEvent.keyDown(input, { key: 'Enter' });
-    await waitFor(() => {
-      expect(input).to.have.attribute('aria-invalid', 'true');
-      expect(cell).to.have.class('MuiDataGrid-cell--editing');
-    });
+
+    expect(input).to.have.attribute('aria-invalid', 'true');
+    expect(cell).to.have.class('MuiDataGrid-cell--editing');
   });
 
   it('should not save the cell when a promise with error is returned', async () => {
