@@ -14,6 +14,7 @@ import { gridEditRowsStateSelector } from '../editRows/gridEditRowsSelector';
 import { useCurrentPageRows } from '../../utils/useCurrentPageRows';
 import { GridEventListener, GridEvents } from '../../../models/events';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
+import { clamp } from '../../../utils/utils';
 import { GridRenderContext } from '../../../models';
 
 // Uses binary search to avoid looping through all possible positions
@@ -42,13 +43,25 @@ interface UseGridVirtualScrollerProps {
   ref: React.Ref<HTMLDivElement>;
   selectionLookup: Record<string, GridRowId>;
   disableVirtualization?: boolean;
+  renderZoneMinColumnIndex?: number;
+  renderZoneMaxColumnIndex?: number;
+  onRenderZonePositioning?: (params: { top: number; left: number }) => void;
 }
 
 export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
-  const { ref, selectionLookup, disableVirtualization } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
   const visibleColumns = useGridSelector(apiRef, visibleGridColumnsSelector);
+
+  const {
+    ref,
+    selectionLookup,
+    disableVirtualization,
+    onRenderZonePositioning,
+    renderZoneMinColumnIndex = 0,
+    renderZoneMaxColumnIndex = visibleColumns.length,
+  } = props;
+
   const columnsMeta = useGridSelector(apiRef, gridColumnsMetaSelector);
   const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
   const cellFocus = useGridSelector(apiRef, gridFocusCellSelector);
@@ -137,6 +150,39 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
 
   useGridApiEventHandler(apiRef, GridEvents.resize, handleResize);
 
+  const getRenderableIndexes = ({ firstIndex, lastIndex, buffer, minFirstIndex, maxLastIndex }) => {
+    return [
+      clamp(firstIndex - buffer, minFirstIndex, maxLastIndex),
+      clamp(lastIndex + buffer, minFirstIndex, maxLastIndex),
+    ];
+  };
+
+  const updateRenderZonePosition = (nextRenderContext: GridRenderContext) => {
+    const [firstRowToRender] = getRenderableIndexes({
+      firstIndex: nextRenderContext.firstRowIndex,
+      lastIndex: nextRenderContext.lastRowIndex,
+      minFirstIndex: 0,
+      maxLastIndex: currentPage.range?.lastRowIndex,
+      buffer: rootProps.rowBuffer,
+    });
+
+    const [firstColumnToRender] = getRenderableIndexes({
+      firstIndex: nextRenderContext.firstColumnIndex,
+      lastIndex: nextRenderContext.lastColumnIndex,
+      minFirstIndex: renderZoneMinColumnIndex,
+      maxLastIndex: renderZoneMaxColumnIndex,
+      buffer: rootProps.columnBuffer,
+    });
+
+    const top = firstRowToRender * rowHeight;
+    const left = gridColumnsMetaSelector(apiRef.current.state).positions[firstColumnToRender]; // Call directly the selector because it might be outdated when this method is called
+    renderZoneRef.current!.style.transform = `translate3d(${left}px, ${top}px, 0px)`;
+
+    if (typeof onRenderZonePositioning === 'function') {
+      onRenderZonePositioning({ top, left });
+    }
+  };
+
   const handleScroll = (event: React.UIEvent) => {
     const { scrollTop, scrollLeft } = event.currentTarget;
     scrollPosition.current.top = scrollTop;
@@ -165,7 +211,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
       columnsScrolledSincePreviousRender >= rootProps.columnThreshold ||
       prevTotalWidth.current !== columnsMeta.totalWidth;
 
-    // TODO rename event to a wider name, it's not only fired for row scrolling
+    // TODO v6: rename event to a wider name, it's not only fired for row scrolling
     apiRef.current.publishEvent(GridEvents.rowsScroll, {
       top: scrollTop,
       left: scrollLeft,
@@ -176,36 +222,47 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
       setRenderContext(nextRenderContext);
       prevRenderContext.current = nextRenderContext;
       prevTotalWidth.current = columnsMeta.totalWidth;
-
-      const top = Math.max(nextRenderContext.firstRowIndex - rootProps.rowBuffer, 0) * rowHeight;
-      const firstColumnToRender = Math.max(
-        nextRenderContext.firstColumnIndex - rootProps.columnBuffer,
-        0,
-      );
-      const left = columnsMeta.positions[firstColumnToRender];
-      renderZoneRef.current!.style.transform = `translate3d(${left}px, ${top}px, 0px)`;
+      updateRenderZonePosition(nextRenderContext);
     }
   };
 
-  const getRows = () => {
-    if (!currentPage.range || !renderContext || containerWidth == null) {
+  const getRows = (
+    params: {
+      renderContext: GridRenderContext | null;
+      minFirstColumn?: number;
+      maxLastColumn?: number;
+      availableSpace?: number | null;
+    } = { renderContext },
+  ) => {
+    const {
+      renderContext: nextRenderContext,
+      minFirstColumn = renderZoneMinColumnIndex,
+      maxLastColumn = renderZoneMaxColumnIndex,
+      availableSpace = containerWidth,
+    } = params;
+
+    if (!currentPage.range || !nextRenderContext || availableSpace == null) {
       return null;
     }
 
     const rowBuffer = !disableVirtualization ? rootProps.rowBuffer : 0;
     const columnBuffer = !disableVirtualization ? rootProps.columnBuffer : 0;
 
-    const firstRowToRender = Math.max(renderContext.firstRowIndex - rowBuffer, 0);
-    const lastRowToRender = Math.min(
-      renderContext.lastRowIndex! + rowBuffer,
-      currentPage.rows.length,
-    );
+    const [firstRowToRender, lastRowToRender] = getRenderableIndexes({
+      firstIndex: nextRenderContext.firstRowIndex,
+      lastIndex: nextRenderContext.lastRowIndex,
+      minFirstIndex: 0,
+      maxLastIndex: currentPage.rows.length,
+      buffer: rowBuffer,
+    });
 
-    const firstColumnToRender = Math.max(renderContext.firstColumnIndex - columnBuffer, 0);
-    const lastColumnToRender = Math.min(
-      renderContext.lastColumnIndex + columnBuffer,
-      visibleColumns.length,
-    );
+    const [firstColumnToRender, lastColumnToRender] = getRenderableIndexes({
+      firstIndex: nextRenderContext.firstColumnIndex,
+      lastIndex: nextRenderContext.lastColumnIndex,
+      minFirstIndex: minFirstColumn,
+      maxLastIndex: maxLastColumn,
+      buffer: columnBuffer,
+    });
 
     const renderedRows = currentPage.rows.slice(firstRowToRender, lastRowToRender);
     const renderedColumns = visibleColumns.slice(firstColumnToRender, lastColumnToRender);
@@ -229,8 +286,8 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
           firstColumnToRender={firstColumnToRender}
           lastColumnToRender={lastColumnToRender}
           selected={selectionLookup[id] !== undefined}
-          index={currentPage.range.firstRowIndex + renderContext.firstRowIndex! + i}
-          containerWidth={containerWidth}
+          index={currentPage.range.firstRowIndex + nextRenderContext.firstRowIndex! + i}
+          containerWidth={availableSpace}
           {...rootProps.componentsProps?.row}
         />,
       );
@@ -241,22 +298,52 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
 
   const needsHorizontalScrollbar = containerWidth && columnsMeta.totalWidth > containerWidth;
 
-  const contentSize = {
-    width: needsHorizontalScrollbar ? columnsMeta.totalWidth : 'auto',
-    // In cases where the columns exceed the available width,
-    // the horizontal scrollbar should be shown even when there're no rows.
-    // Keeping 1px as minimum height ensures that the scrollbar will visible if necessary.
-    height: Math.max(currentPage.rows.length * rowHeight, 1),
-  };
+  const contentSize = React.useMemo(() => {
+    const size = {
+      width: needsHorizontalScrollbar ? columnsMeta.totalWidth : 'auto',
+      // In cases where the columns exceed the available width,
+      // the horizontal scrollbar should be shown even when there're no rows.
+      // Keeping 1px as minimum height ensures that the scrollbar will visible if necessary.
+      height: Math.max(currentPage.rows.length * rowHeight, 1),
+    };
+
+    if (rootProps.autoHeight && currentPage.rows.length === 0) {
+      size.height = 2 * rowHeight; // Give room to show the overlay when there no rows.
+    }
+
+    return size;
+  }, [
+    columnsMeta.totalWidth,
+    currentPage.rows.length,
+    needsHorizontalScrollbar,
+    rootProps.autoHeight,
+    rowHeight,
+  ]);
+
+  React.useEffect(() => {
+    apiRef.current.publishEvent(GridEvents.virtualScrollerContentSizeChange);
+  }, [apiRef, contentSize]);
 
   if (rootProps.autoHeight && currentPage.rows.length === 0) {
     contentSize.height = 2 * rowHeight; // Give room to show the overlay when there no rows.
   }
 
+  const rootStyle = {} as React.CSSProperties;
+  if (!needsHorizontalScrollbar) {
+    rootStyle.overflowX = 'hidden';
+  }
+
   return {
+    renderContext,
+    updateRenderZonePosition,
     getRows,
-    getRootProps: (other = {}) => ({ ref: handleRef, onScroll: handleScroll, ...other }),
-    getContentProps: () => ({ style: contentSize }),
-    getRenderZone: () => ({ ref: renderZoneRef }),
+    getRootProps: ({ style = {}, ...other } = {}) => ({
+      ref: handleRef,
+      onScroll: handleScroll,
+      style: { ...style, ...rootStyle },
+      ...other,
+    }),
+    getContentProps: ({ style = {} } = {}) => ({ style: { ...style, ...contentSize } }),
+    getRenderZoneProps: () => ({ ref: renderZoneRef }),
   };
 };

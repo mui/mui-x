@@ -1,4 +1,4 @@
-import { GridColumnsState } from './colDef/gridColDef';
+import type { GridColumnsState } from '../hooks/features/columns/gridColumnsState';
 import type { GridEditRowsModel } from './gridEditRowModel';
 import type { GridColumnMenuState } from '../hooks/features/columnMenu/columnMenuState';
 import type { GridColumnReorderState } from '../hooks/features/columnReorder/columnReorderState';
@@ -15,11 +15,12 @@ import type {
   GridSortingState,
   GridSortingInitialState,
 } from '../hooks/features/sorting/gridSortingState';
-import type { GridPaginationState } from '../hooks/features/pagination/gridPaginationState';
+import type { GridPaginationState } from '../hooks/features/pagination';
 import type {
   GridFilterState,
   GridFilterInitialState,
 } from '../hooks/features/filter/gridFilterState';
+import { GridColumnPinningState } from '../hooks/features/columnPinning/gridColumnPinningState';
 
 export interface GridState {
   rows: GridRowsState;
@@ -37,10 +38,12 @@ export interface GridState {
   preferencePanel: GridPreferencePanelState;
   density: GridDensityState;
   error?: any;
+  pinnedColumns: GridColumnPinningState;
 }
 
 export interface GridInitialState {
   sorting?: GridSortingInitialState;
   filter?: GridFilterInitialState;
   preferencePanel?: GridPreferencePanelInitialState;
+  pinnedColumns?: GridColumnPinningState;
 }

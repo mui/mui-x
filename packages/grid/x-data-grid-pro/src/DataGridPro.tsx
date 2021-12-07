@@ -15,8 +15,8 @@ import { useDataGridProComponent } from './useDataGridProComponent';
 import { Watermark } from '../../_modules_/grid/components/Watermark';
 import { DataGridProProps } from './DataGridProProps';
 import { useDataGridProProps } from './useDataGridProProps';
-import { DataGridProColumnHeaders } from './DataGridProColumnHeaders';
 import { DataGridProVirtualScroller } from './DataGridProVirtualScroller';
+import { DataGridProColumnHeaders } from './DataGridProColumnHeaders';
 
 // This is the package release date. Each package version should update this const
 // automatically when a new version is published on npm.
@@ -40,7 +40,7 @@ const DataGridProRaw = React.forwardRef<HTMLDivElement, DataGridProProps>(functi
 
   return (
     <GridContextProvider apiRef={apiRef} props={props}>
-      <GridRoot ref={ref}>
+      <GridRoot className={props.className} style={props.style} sx={props.sx} ref={ref}>
         <GridErrorHandler>
           <GridHeaderPlaceholder />
           <GridBody
@@ -110,10 +110,6 @@ DataGridProRaw.propTypes = {
    */
   classes: PropTypes.object,
   /**
-   * @ignore - do not document
-   */
-  className: PropTypes.string,
-  /**
    * Number of extra columns to be rendered before/after the visible slice.
    * @default 3
    */
@@ -170,6 +166,11 @@ DataGridProRaw.propTypes = {
    * @default false
    */
   disableColumnMenu: PropTypes.bool,
+  /**
+   * If `true`, the column pinning is disabled.
+   * @default false
+   */
+  disableColumnPinning: PropTypes.bool,
   /**
    * If `true`, reordering columns is disabled.
    * @default false
@@ -524,6 +525,12 @@ DataGridProRaw.propTypes = {
    */
   onPageSizeChange: PropTypes.func,
   /**
+   * Callback fired when the pinned columns have changed.
+   * @param {GridPinnedColumns} pinnedColumns The changed pinned columns.
+   * @param {GridCallbackDetails} details Additional details for this callback.
+   */
+  onPinnedColumnsChange: PropTypes.func,
+  /**
    * Callback fired when the grid is resized.
    * @param {ElementSize} containerSize With all properties from [[ElementSize]].
    * @param {MuiEvent<{}>} event The event object.
@@ -613,6 +620,13 @@ DataGridProRaw.propTypes = {
    */
   paginationMode: PropTypes.oneOf(['client', 'server']),
   /**
+   * The column fields to display pinned to left or right.
+   */
+  pinnedColumns: PropTypes.shape({
+    left: PropTypes.arrayOf(PropTypes.string),
+    right: PropTypes.arrayOf(PropTypes.string),
+  }),
+  /**
    * Number of extra rows to be rendered before/after the visible slice.
    * @default 3
    */
@@ -690,9 +704,13 @@ DataGridProRaw.propTypes = {
     }),
   ),
   /**
-   * @ignore - do not document
+   * The system prop that allows defining system overrides as well as additional CSS styles.
    */
-  style: PropTypes.object,
+  sx: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object])),
+    PropTypes.func,
+    PropTypes.object,
+  ]),
   /**
    * If positive, the Grid will throttle updates coming from `apiRef.current.updateRows` and `apiRef.current.setRows`.
    * It can be useful if you have a high update rate but do not want to do heavy work like filtering / sorting or rendering on each  individual update.

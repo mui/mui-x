@@ -126,8 +126,14 @@ export const useGridPrintExport = (
       gridCloneViewport!.parentElement!.style.width = 'auto';
       gridCloneViewport!.parentElement!.style.height = 'auto';
 
+      // Allow to overflow to not hide the border of the last row
+      const gridMain: HTMLElement | null = gridClone.querySelector(`.${gridClasses.main}`);
+      gridMain!.style.overflow = 'visible';
+
       const columnHeaders = gridClone.querySelector(`.${gridClasses.columnHeaders}`);
-      const columnHeadersInner = columnHeaders!.firstChild! as HTMLElement;
+      const columnHeadersInner = columnHeaders!.querySelector(
+        `.${gridClasses.columnHeadersInner}`,
+      ) as HTMLElement;
       columnHeadersInner.style.width = '100%';
 
       let gridToolbarElementHeight =
