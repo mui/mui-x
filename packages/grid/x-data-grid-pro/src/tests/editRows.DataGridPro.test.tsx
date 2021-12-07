@@ -11,7 +11,7 @@ import { createRenderer, fireEvent, screen, waitFor } from '@material-ui/monorep
 import { expect } from 'chai';
 import * as React from 'react';
 import { getActiveCell, getCell, getRow, getColumnHeaderCell } from 'test/utils/helperFn';
-import { stub, spy, useFakeTimers } from 'sinon';
+import { stub, spy } from 'sinon';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -39,12 +39,9 @@ const generateDate = (
 };
 
 describe('<DataGridPro /> - Edit Rows', () => {
-  let clock;
   let baselineProps;
 
   beforeEach(() => {
-    clock = useFakeTimers();
-
     baselineProps = {
       autoHeight: isJSDOM,
       rows: [
@@ -72,11 +69,7 @@ describe('<DataGridPro /> - Edit Rows', () => {
     };
   });
 
-  afterEach(() => {
-    clock.restore();
-  });
-
-  const { render } = createRenderer();
+  const { clock, render } = createRenderer({ clock: 'fake' });
 
   let apiRef: GridApiRef;
 
@@ -1398,6 +1391,7 @@ describe('<DataGridPro /> - Edit Rows', () => {
       fireEvent.click(getCell(2, 0));
       clock.tick(0);
       await waitFor(() => {
+        // Wait for promise
         expect(cell).not.to.have.class('MuiDataGrid-cell--editing');
         expect(cell).to.have.text('ADIDAS');
       });

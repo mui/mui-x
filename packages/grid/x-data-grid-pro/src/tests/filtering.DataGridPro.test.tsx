@@ -10,27 +10,16 @@ import {
   useGridApiRef,
   DataGridPro,
 } from '@mui/x-data-grid-pro';
-import { createRenderer, fireEvent, screen, waitFor } from '@material-ui/monorepo/test/utils';
+import { createRenderer, fireEvent, screen } from '@material-ui/monorepo/test/utils';
 import { expect } from 'chai';
-import { useData } from 'packages/storybook/src/hooks/useData';
 import * as React from 'react';
-import { spy, useFakeTimers } from 'sinon';
+import { spy } from 'sinon';
 import { getColumnHeaderCell, getColumnValues } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<DataGridPro /> - Filter', () => {
-  let clock;
-
-  beforeEach(() => {
-    clock = useFakeTimers();
-  });
-
-  afterEach(() => {
-    clock.restore();
-  });
-
-  const { render } = createRenderer();
+  const { clock, render } = createRenderer({ clock: 'fake' });
 
   let apiRef: GridApiRef;
 
@@ -306,50 +295,6 @@ describe('<DataGridPro /> - Filter', () => {
 
     expect(apiRef.current.getVisibleRowModels().size).to.equal(1);
     expect(apiRef.current.getVisibleRowModels().get(1)).to.deep.equal({ id: 1, brand: 'Adidas' });
-  });
-
-  describe('performance', () => {
-    beforeEach(() => {
-      clock.restore();
-    });
-
-    it('should filter 5,000 rows in less than 100 ms', async function test() {
-      // It's simpler to only run the performance test in a single controlled environment.
-      if (!/HeadlessChrome/.test(window.navigator.userAgent)) {
-        this.skip();
-        return;
-      }
-
-      const TestCasePerf = () => {
-        const data = useData(5000, 10);
-        apiRef = useGridApiRef();
-        return (
-          <div style={{ width: 300, height: 300 }}>
-            <DataGridPro apiRef={apiRef} columns={data.columns} rows={data.rows} />
-          </div>
-        );
-      };
-
-      render(<TestCasePerf />);
-      const newModel = {
-        items: [
-          {
-            columnField: 'currencyPair',
-            value: 'usd',
-            operatorValue: 'startsWith',
-          },
-        ],
-      };
-      const t0 = performance.now();
-      apiRef.current.setFilterModel(newModel);
-
-      await waitFor(() =>
-        expect(document.querySelector('.MuiDataGrid-filterIcon')).not.to.equal(null),
-      );
-      const t1 = performance.now();
-      const time = Math.round(t1 - t0);
-      expect(time).to.be.lessThan(150);
-    });
   });
 
   describe('Server', () => {
