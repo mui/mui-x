@@ -3,7 +3,11 @@ import { SxProps } from '@mui/system';
 import { Theme } from '@mui/material/styles';
 import { GridInitialState } from './models/gridState';
 import { GridApiRef } from './models/api/gridApiRef';
-import { GridColDefOverride, GridColumns } from './models/colDef/gridColDef';
+import {
+  GridGroupingColDefOverrideParams,
+  GridColumns,
+  GridGroupingColDefOverride,
+} from './models/colDef/gridColDef';
 import {
   GridSimpleOptions,
   GridProcessedMergedOptions,
@@ -406,8 +410,9 @@ interface GridComponentOtherProps extends CommonProps {
   /**
    * The grouping column used by the tree data.
    */
-  groupingColDef?: GridColDefOverride<'field' | 'editable'>;
-
+  groupingColDef?:
+    | GridGroupingColDefOverride
+    | ((params: GridGroupingColDefOverrideParams) => GridGroupingColDefOverride | undefined | null);
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

@@ -7,5 +7,5 @@ import {
 } from 'docsx/src/pages/components/data-grid/events/events.md?@mui/markdown';
 
 export default function Page() {
-  return <MarkdownDocs demos={demos} docs={docs} demoComponents={demoComponents} />;
+  return <MarkdownDocs demos={demos} docs={docs} demoComponents={demoComponents} disableAd />;
 }

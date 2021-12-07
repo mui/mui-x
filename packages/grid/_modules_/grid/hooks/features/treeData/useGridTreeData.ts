@@ -7,7 +7,7 @@ import {
 } from './gridTreeDataGroupColDef';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { GridEvents, GridEventListener } from '../../../models/events';
-import { GridColDef } from '../../../models';
+import { GridColDef, GridGroupingColDefOverrideParams } from '../../../models';
 import { isSpaceKey } from '../../../utils/keyboardUtils';
 import { useFirstRender } from '../../utils/useFirstRender';
 import { buildRowTree, BuildRowTreeGroupingCriteria } from '../../../utils/tree/buildRowTree';
@@ -15,6 +15,8 @@ import { GridRowGroupingPreProcessing } from '../../core/rowGroupsPerProcessing'
 import { gridFilteredDescendantCountLookupSelector } from '../filter';
 import { GridPreProcessingGroup, useGridRegisterPreProcessor } from '../../core/preProcessing';
 import { GridColumnsRawState } from '../columns/gridColumnsState';
+
+const TREE_DATA_GROUPING_NAME = 'tree-data';
 
 /**
  * Only available in DataGridPro
@@ -36,18 +38,18 @@ export const useGridTreeData = (
       headerName: apiRef.current.getLocaleText('treeDataGroupingHeaderName'),
       ...GRID_TREE_DATA_GROUP_COL_DEF_FORCED_FIELDS,
     };
-    const colDefOverride: Partial<GridColDef> = propGroupingColDef ?? {};
-    // let colDefOverride: Partial<GridColDef>;
-    //
-    // if (typeof propGroupingColDef === 'function') {
-    //   const params: GridColDefOverrideParams = {
-    //     colDef: baseColDef,
-    //   };
-    //
-    //   colDefOverride = propGroupingColDef(params);
-    // } else {
-    //   colDefOverride = propGroupingColDef ?? {};
-    // }
+    let colDefOverride: Partial<GridColDef> | null | undefined;
+
+    if (typeof propGroupingColDef === 'function') {
+      const params: GridGroupingColDefOverrideParams = {
+        groupingName: TREE_DATA_GROUPING_NAME,
+        fields: [],
+      };
+
+      colDefOverride = propGroupingColDef(params);
+    } else {
+      colDefOverride = propGroupingColDef;
+    }
 
     return {
       ...baseColDef,

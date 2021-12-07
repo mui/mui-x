@@ -226,18 +226,20 @@ export interface GridColumnsMeta {
   positions: number[];
 }
 
-export type GridColDefOverride<ForcedFields extends keyof GridColDef> = Omit<
-  Partial<GridColDef>,
-  ForcedFields
->;
+export interface GridGroupingColDefOverride
+  extends Omit<
+    GridColDef,
+    'editable' | 'valueSetter' | 'field' | 'preProcessEditCellProps' | 'renderEditCell'
+  > {}
 
-export type GridColDefOverrideCallback<ForcedFields extends keyof GridColDef> = (
-  params: GridColDefOverrideParams,
-) => GridColDefOverride<ForcedFields>;
-
-export interface GridColDefOverrideParams {
+export interface GridGroupingColDefOverrideParams {
   /**
-   * The column we are generating before the override.
+   * The name of the grouping algorithm currently building the grouping column.
    */
-  colDef: GridColDef;
+  groupingName: string;
+
+  /**
+   * The fields of the columns from which we want to group the values on this new grouping column.
+   */
+  fields: string[];
 }
