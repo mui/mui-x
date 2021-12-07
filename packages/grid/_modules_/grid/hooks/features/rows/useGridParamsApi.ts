@@ -21,20 +21,19 @@ function warnMissingColumn(field) {
       `Instead, you can access the data from \`params.row.${field}\`.`,
     ].join('\n'),
   );
-    warnedOnceMissingColumn = true;
+  warnedOnceMissingColumn = true;
 }
 
 let warnedOnceGetValue = false;
 function warnGetValue() {
-    console.warn(
-        [
-            `MUI: You are calling getValue. This method is deprecated and will be removed in the next major version.`,
-            `Instead, you can access the data from \`params.row}\`.`,
-        ].join('\n'),
-    );
-    warnedOnceGetValue = true;
+  console.warn(
+    [
+      `MUI: You are calling getValue. This method is deprecated and will be removed in the next major version.`,
+      `Instead, you can access the data from \`params.row}\`.`,
+    ].join('\n'),
+  );
+  warnedOnceGetValue = true;
 }
-
 
 /**
  * @requires useGridColumns (method)
@@ -53,19 +52,21 @@ export function useGridParamsApi(apiRef: GridApiRef) {
     [apiRef],
   );
 
-    /**
-     * We want to remove the `getValue` param from `getRowParams`, `getCellParams` and `getBaseCellParams`
-     */
-    const getCellValueWithDeprecationWarning = React.useCallback<GridParamsApi['getCellValue']>((...args) => {
-        if (process.env.NODE_ENV !== 'production') {
-            if (!warnedOnceGetValue) {
-                warnGetValue();
-            }
+  /**
+   * We want to remove the `getValue` param from `getRowParams`, `getCellParams` and `getBaseCellParams`
+   */
+  const getCellValueWithDeprecationWarning = React.useCallback<GridParamsApi['getCellValue']>(
+    (...args) => {
+      if (process.env.NODE_ENV !== 'production') {
+        if (!warnedOnceGetValue) {
+          warnGetValue();
         }
+      }
 
-        return apiRef.current.getCellValue(...args)
-
-    }, [apiRef])
+      return apiRef.current.getCellValue(...args);
+    },
+    [apiRef],
+  );
 
   const getRowParams = React.useCallback(
     (id: GridRowId) => {
