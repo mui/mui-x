@@ -7,9 +7,7 @@ import {
 } from '@mui/x-data-grid';
 
 function getFullName(params: GridValueGetterParams) {
-  return `${params.getValue(params.id, 'firstName') || ''} ${
-    params.getValue(params.id, 'lastName') || ''
-  }`;
+  return `${params.row.firstName || ''} ${params.row.lastName || ''}`;
 }
 
 function setFullName(params: GridValueSetterParams) {
