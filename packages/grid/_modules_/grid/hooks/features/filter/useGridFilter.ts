@@ -164,7 +164,7 @@ export const useGridFilter = (
       const rowGroupingName = gridRowGroupingNameSelector(state);
       const filteringMethod = filteringMethodCollectionRef.current[rowGroupingName];
       if (!filteringMethod) {
-        throw new Error('MUI: Invalid filtering method');
+        throw new Error('MUI: Invalid filtering method.');
       }
 
       const filterModel = gridFilterModelSelector(state);

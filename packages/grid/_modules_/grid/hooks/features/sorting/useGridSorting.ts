@@ -195,7 +195,7 @@ export const useGridSorting = (
       const rowGroupingName = gridRowGroupingNameSelector(state);
       const sortingMethod = sortingMethodCollectionRef.current[rowGroupingName];
       if (!sortingMethod) {
-        throw new Error('MUI: Invalid sorting method');
+        throw new Error('MUI: Invalid sorting method.');
       }
 
       const sortModel = gridSortModelSelector(state);
