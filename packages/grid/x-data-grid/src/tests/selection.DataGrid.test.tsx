@@ -96,6 +96,36 @@ describe('<DataGrid /> - Selection', () => {
       expect(getSelectedRowIds()).to.deep.equal([1]);
     });
 
+    it('should select row on Shift + Space without starting editing the cell', () => {
+      const onCellEditStart = spy();
+      render(
+        <TestDataGridSelection
+          columns={[
+            { field: 'id', type: 'number' },
+            { field: 'name', editable: true },
+          ]}
+          rows={[
+            { id: 0, name: 'React' },
+            { id: 1, name: 'Vue' },
+          ]}
+          onCellEditStart={onCellEditStart}
+        />,
+      );
+      expect(onCellEditStart.callCount).to.equal(0);
+
+      getCell(0, 1).focus();
+      fireEvent.keyDown(document.activeElement || document.body, { key: ' ', shiftKey: true });
+
+      expect(onCellEditStart.callCount).to.equal(0);
+      expect(getSelectedRowIds()).to.deep.equal([0]);
+
+      fireEvent.keyDown(document.activeElement || document.body, { key: 'ArrowDown' });
+      fireEvent.keyDown(document.activeElement || document.body, { key: ' ', shiftKey: true });
+
+      expect(onCellEditStart.callCount).to.equal(0);
+      expect(getSelectedRowIds()).to.deep.equal([1]);
+    });
+
     it(`should deselect the selected row on Shift + Space`, () => {
       render(<TestDataGridSelection />);
       getCell(0, 0).focus();
