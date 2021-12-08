@@ -45,30 +45,18 @@ const INTERFACES_WITH_DEDICATED_PAGES = [
   'GridColumnPinningApi',
 ];
 
-const parseProperty = (propertySymbol: ts.Symbol, project: Project): ParsedProperty => {
-  const str = project.checker.typeToString(
+const parseProperty = (propertySymbol: ts.Symbol, project: Project): ParsedProperty => ({
+  name: propertySymbol.name,
+  description: getSymbolDescription(propertySymbol, project),
+  tags: getSymbolJSDocTags(propertySymbol),
+  symbol: propertySymbol,
+  isOptional: !!propertySymbol.declarations?.find(ts.isPropertySignature)?.questionToken,
+  typeStr: project.checker.typeToString(
     project.checker.getTypeOfSymbolAtLocation(propertySymbol, propertySymbol.valueDeclaration!),
-    undefined,
+    propertySymbol.valueDeclaration,
     ts.TypeFormatFlags.NoTruncation,
-  );
-
-  if (propertySymbol.name === 'subscribeEvent') {
-    console.log(str);
-  }
-
-  return {
-    name: propertySymbol.name,
-    description: getSymbolDescription(propertySymbol, project),
-    tags: getSymbolJSDocTags(propertySymbol),
-    symbol: propertySymbol,
-    isOptional: !!propertySymbol.declarations?.find(ts.isPropertySignature)?.questionToken,
-    typeStr: project.checker.typeToString(
-      project.checker.getTypeOfSymbolAtLocation(propertySymbol, propertySymbol.valueDeclaration!),
-      propertySymbol.valueDeclaration,
-      ts.TypeFormatFlags.NoTruncation,
-    ),
-  };
-};
+  ),
+});
 
 function generateMarkdownFromProperties(
   object: ParsedObject,
