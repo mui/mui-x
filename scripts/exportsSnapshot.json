@@ -307,6 +307,7 @@
   { "name": "gridColumnReorderDragColSelector", "kind": "Variable" },
   { "name": "gridColumnsMetaSelector", "kind": "Variable" },
   { "name": "gridColumnsTotalWidthSelector", "kind": "Variable" },
+  { "name": "gridCurrentRowsMetaSelector", "kind": "Variable" },
   { "name": "gridDensityFactorSelector", "kind": "Variable" },
   { "name": "gridDensityHeaderHeightSelector", "kind": "Variable" },
   { "name": "gridDensityRowHeightSelector", "kind": "Variable" },

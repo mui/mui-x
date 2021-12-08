@@ -17,6 +17,7 @@ import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { useGridState } from '../../utils/useGridState';
 import { clamp } from '../../../utils/utils';
 import { GridRenderContext } from '../../../models';
+import { gridCurrentRowsMetaSelector } from '../rows/gridRowsSelector';
 
 // Uses binary search to avoid looping through all possible positions
 export function getIndexFromScroll(
@@ -67,6 +68,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
   const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
   const cellFocus = useGridSelector(apiRef, gridFocusCellSelector);
   const cellTabIndex = useGridSelector(apiRef, gridTabIndexCellSelector);
+  const currentRowsMeta = useGridSelector(apiRef, gridCurrentRowsMetaSelector);
   const editRowsState = useGridSelector(apiRef, gridEditRowsStateSelector);
   const currentPage = useCurrentPageRows(apiRef, rootProps);
   const renderZoneRef = React.useRef<HTMLDivElement>(null);
@@ -90,7 +92,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     }
 
     const { top, left } = scrollPosition.current!;
-    const { positions: rowPositions } = apiRef.current.unstable_getRowsMeta();
+    const { positions: rowPositions } = gridCurrentRowsMetaSelector(apiRef.current.state);
     const firstRowIndex = getIndexFromScroll(top, rowPositions);
     const lastRowIndex = getIndexFromScroll(top + rootRef.current!.clientHeight!, rowPositions);
 
@@ -136,7 +138,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     const { top, left } = scrollPosition.current!;
     const params = { top, left, renderContext: initialRenderContext };
     apiRef.current.publishEvent(GridEvents.rowsScroll, params);
-  }, [apiRef, computeRenderContext, containerWidth, gridState.density]);
+  }, [apiRef, computeRenderContext, containerWidth, gridState.rows]);
 
   const handleResize = React.useCallback<GridEventListener<GridEvents.resize>>(() => {
     if (rootRef.current) {
@@ -170,7 +172,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
       buffer: rootProps.columnBuffer,
     });
 
-    const top = apiRef.current.unstable_getRowsMeta().positions[firstRowToRender];
+    const top = gridCurrentRowsMetaSelector(apiRef.current.state).positions[firstRowToRender];
     const left = gridColumnsMetaSelector(apiRef.current.state).positions[firstColumnToRender]; // Call directly the selector because it might be outdated when this method is called
     renderZoneRef.current!.style.transform = `translate3d(${left}px, ${top}px, 0px)`;
 
@@ -295,20 +297,13 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
 
   const needsHorizontalScrollbar = containerWidth && columnsMeta.totalWidth > containerWidth;
 
-  // const contentSize = {
-  //   width: needsHorizontalScrollbar ? columnsMeta.totalWidth : 'auto',
-  //   // In cases where the columns exceed the available width,
-  //   // the horizontal scrollbar should be shown even when there're no rows.
-  //   // Keeping 1px as minimum height ensures that the scrollbar will visible if necessary.
-  //   height: Math.max(apiRef.current.unstable_getRowsMeta().totalHeight, 1),
-  // };
   const contentSize = React.useMemo(() => {
     const size = {
       width: needsHorizontalScrollbar ? columnsMeta.totalWidth : 'auto',
       // In cases where the columns exceed the available width,
       // the horizontal scrollbar should be shown even when there're no rows.
       // Keeping 1px as minimum height ensures that the scrollbar will visible if necessary.
-      height: Math.max(apiRef.current.unstable_getRowsMeta().totalHeight, 1),
+      height: Math.max(currentRowsMeta.totalHeight, 1),
     };
 
     if (rootProps.autoHeight && currentPage.rows.length === 0) {
@@ -317,12 +312,12 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
 
     return size;
   }, [
-    apiRef,
     columnsMeta.totalWidth,
     currentPage.rows.length,
     needsHorizontalScrollbar,
     rootProps.autoHeight,
     rowHeight,
+    currentRowsMeta,
   ]);
 
   React.useEffect(() => {

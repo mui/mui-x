@@ -41,6 +41,11 @@ interface GridRowsInternalCacheState {
    * It is used to avoid processing several time the same set of rows
    */
   rowsBeforePartialUpdates: GridRowsProp;
+
+  /**
+   * The last visible rows total height and row possitions.
+   */
+  currentRowsMeta: GridRowsMeta;
 }
 
 interface GridRowsInternalCache {
@@ -53,6 +58,7 @@ interface ConvertGridRowsPropToStateParams {
   prevState: GridRowsInternalCacheState;
   props?: Pick<GridComponentProps, 'rowCount' | 'getRowId'>;
   rows?: GridRowsProp;
+  rowsMeta?: GridRowsMeta;
 }
 
 function getGridRowId(
@@ -69,8 +75,10 @@ const convertGridRowsPropToState = ({
   prevState,
   rows,
   props: inputProps,
+  rowsMeta,
 }: ConvertGridRowsPropToStateParams): GridRowsInternalCacheState => {
   const props = inputProps ?? prevState.props;
+  const currentRowsMeta = rowsMeta ?? prevState.currentRowsMeta;
 
   let value: GridRowGroupParams;
   if (rows) {
@@ -91,6 +99,7 @@ const convertGridRowsPropToState = ({
   return {
     value,
     props,
+    currentRowsMeta,
     rowsBeforePartialUpdates: rows ?? prevState.rowsBeforePartialUpdates,
   };
 };
@@ -102,6 +111,7 @@ const getRowsStateFromCache = (
   const {
     props: { rowCount: propRowCount = 0 },
     value,
+    currentRowsMeta,
   } = rowsCache.state;
 
   const groupingResponse = apiRef.current.unstable_groupRows(value);
@@ -114,7 +124,7 @@ const getRowsStateFromCache = (
   const totalTopLevelRowCount =
     propRowCount > dataTopLevelRowCount ? propRowCount : dataTopLevelRowCount;
 
-  return { ...groupingResponse, totalRowCount, totalTopLevelRowCount };
+  return { ...groupingResponse, totalRowCount, totalTopLevelRowCount, currentRowsMeta };
 };
 
 /**
@@ -141,10 +151,6 @@ export const useGridRows = (
 
   const logger = useGridLogger(apiRef, 'useGridRows');
   const rowsHeightCollection = React.useRef(new Map<GridRowId, number>());
-  const rowsMeta = React.useRef<GridRowsMeta>({
-    totalHeight: 0,
-    positions: [],
-  });
   const rowsCache = React.useRef<GridRowsInternalCache>({
     state: {
       value: {
@@ -156,6 +162,10 @@ export const useGridRows = (
         getRowId: undefined,
       },
       rowsBeforePartialUpdates: [],
+      currentRowsMeta: {
+        totalHeight: 0,
+        positions: [],
+      },
     },
     timeout: null,
     lastUpdateMs: 0,
@@ -403,46 +413,57 @@ export const useGridRows = (
   }, [logger, throttledRowsChange, props.rowCount, props.getRowId, props.rows]);
 
   const hydrateRowsMeta = React.useCallback(() => {
+    // console.log('Hydrating rows...')
     if (!gridState.pagination) {
       return;
     }
 
     const { rows } = getCurrentPageRows(apiRef.current.state, props);
-    const positions: number[] = [];
-    const totalHeight = rows.reduce((acc: number, currentRow) => {
-      positions.push(acc);
-      let targetRowHeight = gridState.density?.rowHeight;
 
-      if (props.getRowHeight) {
-        // Default back to base rowHeight if getRowHeight returns null or undefined.
-        targetRowHeight =
-          props.getRowHeight({ ...currentRow.model, densityFactor: gridState.density?.factor }) ||
-          gridState.density?.rowHeight;
-      }
+    setGridState((state) => {
+      const positions: number[] = [];
+      const totalHeight = rows.reduce((acc: number, currentRow) => {
+        positions.push(acc);
+        let targetRowHeight = state.density?.rowHeight;
 
-      rowsHeightCollection.current.set(currentRow.id, targetRowHeight);
-      return acc + targetRowHeight;
-    }, 0);
+        if (props.getRowHeight) {
+          // Default back to base rowHeight if getRowHeight returns null or undefined.
+          targetRowHeight =
+            props.getRowHeight({ ...currentRow.model, densityFactor: state.density?.factor }) ||
+            state.density?.rowHeight;
+        }
 
-    rowsMeta.current = { totalHeight, positions };
-  }, [apiRef, props, gridState]);
+        rowsHeightCollection.current.set(currentRow.id, targetRowHeight);
+        return acc + targetRowHeight;
+      }, 0);
+
+      rowsCache.current.state = {
+        ...rowsCache.current.state,
+        currentRowsMeta: { totalHeight, positions },
+      };
+
+      return {
+        ...state,
+        rows: {
+          ...state.rows,
+          currentRowsMeta: { totalHeight, positions },
+        },
+      };
+    });
+    forceUpdate();
+  }, [apiRef, props, gridState.pagination, setGridState, forceUpdate]);
 
   // The effect is used to build the rows meta data - totalHeight and positions.
   // Because of variable row height this is needed for the virtualization
   React.useEffect(() => {
     hydrateRowsMeta();
   }, [
-    apiRef,
-    props,
     gridState.density,
     gridState.filter,
     gridState.pagination,
-    gridState.rows,
     gridState.sorting,
     hydrateRowsMeta,
   ]);
-
-  const getRowsMeta = (): GridRowsMeta => rowsMeta.current;
 
   const getTargetRowHeight = (rowId: GridRowId): number =>
     rowsHeightCollection.current.get(rowId) || gridState.density.rowHeight;
@@ -459,7 +480,6 @@ export const useGridRows = (
     updateRows,
     setRowChildrenExpansion,
     getRowNode,
-    unstable_getRowsMeta: getRowsMeta,
     unstable_getTargetRowHeight: getTargetRowHeight,
   };
 
