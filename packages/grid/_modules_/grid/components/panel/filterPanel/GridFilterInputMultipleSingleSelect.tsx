@@ -13,7 +13,7 @@ export type GridFilterInputMultipleSingleSelectProps = {
   // Is any because if typed as GridApiRef a dep cycle occurs. Same happens if ApiContext is used.
   apiRef: any;
   focusElementRef?: React.Ref<any>;
-  type: 'singleSelect';
+  type?: 'singleSelect';
 } & Omit<AutocompleteProps<any[], true, false, true>, 'options' | 'renderInput'>;
 
 const getSingleSelectOptionFormatter =
@@ -43,6 +43,7 @@ function GridFilterInputMultipleSingleSelect(props: GridFilterInputMultipleSingl
     apiRef.current.getColumn(item.columnField),
     apiRef.current,
   );
+
   const filterValueParser = React.useCallback(
     (value) => String(typeof value === 'object' ? value.value : value),
     [],
@@ -131,12 +132,17 @@ GridFilterInputMultipleSingleSelect.propTypes = {
   // ----------------------------------------------------------------------
   apiRef: PropTypes.any.isRequired,
   applyValue: PropTypes.func.isRequired,
+  focusElementRef: PropTypes /* @typescript-to-proptypes-ignore */.oneOfType([
+    PropTypes.func,
+    PropTypes.object,
+  ]),
   item: PropTypes.shape({
-    columnField: PropTypes.string,
+    columnField: PropTypes.string.isRequired,
     id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     operatorValue: PropTypes.string,
     value: PropTypes.any,
   }).isRequired,
+  type: PropTypes.oneOf(['singleSelect']),
 } as any;
 
 export { GridFilterInputMultipleSingleSelect };

@@ -79,12 +79,17 @@ GridFilterInputMultipleValue.propTypes = {
   // ----------------------------------------------------------------------
   apiRef: PropTypes.any.isRequired,
   applyValue: PropTypes.func.isRequired,
+  focusElementRef: PropTypes /* @typescript-to-proptypes-ignore */.oneOfType([
+    PropTypes.func,
+    PropTypes.object,
+  ]),
   item: PropTypes.shape({
-    columnField: PropTypes.string,
+    columnField: PropTypes.string.isRequired,
     id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     operatorValue: PropTypes.string,
     value: PropTypes.any,
   }).isRequired,
+  type: PropTypes.oneOf(['number', 'text']),
 } as any;
 
 export { GridFilterInputMultipleValue };
