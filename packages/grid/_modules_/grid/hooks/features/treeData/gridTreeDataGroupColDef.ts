@@ -1,6 +1,4 @@
-import * as React from 'react';
 import { GridColDef } from '../../../models/colDef/gridColDef';
-import { GridTreeDataGroupingCell } from '../../../components/cell/GridTreeDataGroupingCell';
 import { GRID_STRING_COL_DEF } from '../../../models/colDef/gridStringColDef';
 import { GridValueGetterFullParams } from '../../../models';
 
@@ -17,7 +15,6 @@ export const GRID_TREE_DATA_GROUP_COL_DEF: Omit<GridColDef, 'field' | 'editable'
   align: 'left',
   width: 200,
   valueGetter: (params) => (params as GridValueGetterFullParams).rowNode.groupingKey,
-  renderCell: (params) => <GridTreeDataGroupingCell {...params} />,
 };
 
 export const GRID_TREE_DATA_GROUP_COL_DEF_FORCED_PROPERTIES: Pick<
