@@ -16,9 +16,8 @@ import {
   useGridApiRef,
   DataGridPro,
   GridEvents,
-  GridEditCellPropsParams,
-  GridCellEditCommitParams,
   MuiEvent,
+  GridEventListener,
 } from '@mui/x-data-grid-pro';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import { action } from '@storybook/addon-actions';
@@ -497,10 +496,10 @@ export function EditRowsControl() {
     setEditRowsModel(updatedModel);
   }, []);
 
-  const onCellEditCommit = React.useCallback(
-    (params: GridCellEditCommitParams, event: MuiEvent<React.SyntheticEvent>) => {
+  const onCellEditCommit = React.useCallback<GridEventListener<GridEvents.cellEditCommit>>(
+    (params, event) => {
       const { id, field, value } = params;
-      event.persist();
+      (event as React.SyntheticEvent)?.persist();
       // we stop propagation as we want to switch back to view mode after we updated the value on the server
       event.defaultMuiPrevented = true;
 
@@ -519,7 +518,11 @@ export function EditRowsControl() {
 
       setTimeout(() => {
         apiRef.current.updateRows([cellUpdate]);
-        apiRef.current.publishEvent(GridEvents.cellEditStop, params, event);
+        apiRef.current.publishEvent(
+          GridEvents.cellEditStop,
+          apiRef.current.getCellParams(id, field),
+          event,
+        );
       }, randomInt(300, 2000));
     },
     [apiRef],
@@ -616,7 +619,7 @@ export function EditCellSnap() {
 
   React.useEffect(() => {
     const handleClick = () => {
-      apiRef.current.setCellMode(1, 'brand', 'edit');
+      apiRef.current.setCellFocus(1, 'brand');
     };
 
     // Prevents from exiting the edit mode when there's a click to switch between regression tests
@@ -629,7 +632,14 @@ export function EditCellSnap() {
 
   return (
     <div className="grid-container">
-      <DataGridPro {...baselineProps} apiRef={apiRef} />
+      <DataGridPro
+        {...baselineProps}
+        apiRef={apiRef}
+        onCellFocusOut={(params, event) => {
+          // Avoids to wait for the commit promise
+          event.defaultMuiPrevented = true;
+        }}
+      />
     </div>
   );
 }
@@ -643,7 +653,7 @@ export function EditBooleanCellSnap() {
 
   React.useEffect(() => {
     const handleClick = () => {
-      apiRef.current.setCellMode(1, 'isPublished', 'edit');
+      apiRef.current.setCellFocus(1, 'isPublished');
     };
 
     // Prevents from exiting the edit mode when there's a click to switch between regression tests
@@ -656,7 +666,14 @@ export function EditBooleanCellSnap() {
 
   return (
     <div className="grid-container">
-      <DataGridPro {...baselineProps} apiRef={apiRef} />
+      <DataGridPro
+        {...baselineProps}
+        apiRef={apiRef}
+        onCellFocusOut={(params, event) => {
+          // Avoids to wait for the commit promise
+          event.defaultMuiPrevented = true;
+        }}
+      />
     </div>
   );
 }
@@ -666,8 +683,10 @@ export function ValidateEditValueWithApiRefGrid() {
   const apiRef = useGridApiRef();
   const classes = useEditCellStyles();
 
-  const onEditCellPropsChange = React.useCallback(
-    ({ id, field, props }: GridEditCellPropsParams, event: MuiEvent<React.SyntheticEvent>) => {
+  const onEditCellPropsChange = React.useCallback<
+    GridEventListener<GridEvents.editCellPropsChange>
+  >(
+    ({ id, field, props }, event) => {
       if (field === 'email') {
         const isValid = validateEmail(props.value);
         const newModel = apiRef.current.getEditRowsModel();
@@ -745,11 +764,10 @@ export function ValidateEditValueServerSide() {
   const classes = useEditCellStyles();
   const keyStrokeTimeoutRef = React.useRef<any>();
 
-  const handleCellEditPropChange = React.useCallback(
-    async (
-      { id, field, props }: GridEditCellPropsParams,
-      event: MuiEvent<React.SyntheticEvent>,
-    ) => {
+  const handleCellEditPropChange = React.useCallback<
+    GridEventListener<GridEvents.editCellPropsChange>
+  >(
+    async ({ id, field, props }, event) => {
       if (field === 'username') {
         // TODO refactor this block
         clearTimeout(promiseTimeout);
@@ -850,8 +868,8 @@ export function EditCellUsingExternalButtonGrid() {
   }, []);
 
   // Prevent from committing on focus out
-  const handleCellFocusOut = React.useCallback(
-    (params, event: MuiEvent<React.SyntheticEvent | DocumentEventMap['click']>) => {
+  const handleCellFocusOut = React.useCallback<GridEventListener<GridEvents.cellFocusOut>>(
+    (params, event) => {
       if (params.cellMode === 'edit' && event) {
         event.defaultMuiPrevented = true;
       }
@@ -903,8 +921,8 @@ export function EditCellWithModelGrid() {
 export function EditCellWithCellClickGrid() {
   const apiRef = useGridApiRef();
 
-  const handleCellClick = React.useCallback(
-    (params: GridCellParams, event: MuiEvent<React.MouseEvent>) => {
+  const handleCellClick = React.useCallback<GridEventListener<GridEvents.cellClick>>(
+    (params, event) => {
       // Or you can use the editRowModel prop, but I find it easier
       // apiRef.current.setCellMode(params.id, params.field, 'edit');
       apiRef.current.publishEvent(GridEvents.cellEditStart, params, event);
@@ -947,7 +965,7 @@ export function EditCellWithMessageGrid() {
   }, [apiRef]);
 
   React.useEffect(() => {
-    return apiRef.current.subscribeEvent('cellExitEdit', () => {
+    return apiRef.current.subscribeEvent('cellEditStop', () => {
       setMessage('');
     });
   }, [apiRef]);

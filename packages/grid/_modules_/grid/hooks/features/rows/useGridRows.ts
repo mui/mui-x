@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridEvents } from '../../../constants/eventsConstants';
+import { GridEventListener, GridEvents } from '../../../models/events';
 import { GridComponentProps } from '../../../GridComponentProps';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridRowApi } from '../../../models/api/gridRowApi';
@@ -117,7 +117,6 @@ const getRowsStateFromCache = (
 
 /**
  * @requires useGridRowGroupsPreProcessing (method)
- * @requires useGridSorting (method) - can be after, async only (TODO: Remove after moving the `getRowIndex` and `getRowIdFromIndex` to `useGridSorting`)
  */
 export const useGridRows = (
   apiRef: GridApiRef,
@@ -163,18 +162,6 @@ export const useGridRows = (
   });
 
   const [, setGridState, forceUpdate] = useGridState(apiRef);
-
-  // TODO: Move in useGridSorting
-  const getRowIndex = React.useCallback<GridRowApi['getRowIndex']>(
-    (id) => apiRef.current.getSortedRowIds().indexOf(id),
-    [apiRef],
-  );
-
-  // TODO: Move in useGridSorting
-  const getRowIdFromRowIndex = React.useCallback<GridRowApi['getRowIdFromRowIndex']>(
-    (index) => apiRef.current.getSortedRowIds()[index],
-    [apiRef],
-  );
 
   const getRow = React.useCallback<GridRowApi['getRow']>(
     (id) => gridRowsLookupSelector(apiRef.current.state)[id] ?? null,
@@ -314,13 +301,13 @@ export const useGridRows = (
     [apiRef],
   );
 
-  const setRowExpansion = React.useCallback<GridRowApi['unstable_setRowExpansion']>(
+  const setRowChildrenExpansion = React.useCallback<GridRowApi['setRowChildrenExpansion']>(
     (id, isExpanded) => {
-      const currentNode = apiRef.current.unstable_getRowNode(id);
+      const currentNode = apiRef.current.getRowNode(id);
       if (!currentNode) {
         throw new Error(`MUI: No row with id #${id} found`);
       }
-      const newNode: GridRowTreeNodeConfig = { ...currentNode, expanded: isExpanded };
+      const newNode: GridRowTreeNodeConfig = { ...currentNode, childrenExpanded: isExpanded };
       setGridState((state) => {
         return {
           ...state,
@@ -336,7 +323,7 @@ export const useGridRows = (
     [apiRef, setGridState, forceUpdate],
   );
 
-  const getRowNode = React.useCallback<GridRowApi['unstable_getRowNode']>(
+  const getRowNode = React.useCallback<GridRowApi['getRowNode']>(
     (id) => gridRowTreeSelector(apiRef.current.state)[id] ?? null,
     [apiRef],
   );
@@ -375,7 +362,9 @@ export const useGridRows = (
     );
   }, [props.rows, props.rowCount, props.getRowId, logger, throttledRowsChange]);
 
-  const handleGroupRows = React.useCallback(() => {
+  const handleGroupRows = React.useCallback<
+    GridEventListener<GridEvents.rowGroupsPreProcessingChange>
+  >(() => {
     logger.info(`Row grouping pre-processing have changed, regenerating the row tree`);
 
     let rows: GridRowsProp | undefined;
@@ -402,16 +391,14 @@ export const useGridRows = (
   useGridApiEventHandler(apiRef, GridEvents.rowGroupsPreProcessingChange, handleGroupRows);
 
   const rowApi: GridRowApi = {
-    getRowIndex,
-    getRowIdFromRowIndex,
     getRow,
     getRowModels,
     getRowsCount,
     getAllRowIds,
     setRows,
     updateRows,
-    unstable_setRowExpansion: setRowExpansion,
-    unstable_getRowNode: getRowNode,
+    setRowChildrenExpansion,
+    getRowNode,
   };
 
   useGridApiMethod(apiRef, rowApi, 'GridRowApi');

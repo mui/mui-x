@@ -2,7 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { HTMLElementType } from '@mui/utils';
 import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
-import { GridMenu } from '../GridMenu';
+import { GridMenu, GridMenuProps } from '../GridMenu';
 
 export interface GridColumnHeaderMenuProps {
   columnMenuId?: string;
@@ -12,6 +12,7 @@ export interface GridColumnHeaderMenuProps {
   field: string;
   open: boolean;
   target: Element | null;
+  onExited?: GridMenuProps['onExited'];
 }
 
 function GridColumnHeaderMenu({
@@ -22,6 +23,7 @@ function GridColumnHeaderMenu({
   field,
   open,
   target,
+  onExited,
 }: GridColumnHeaderMenuProps) {
   const apiRef = useGridApiContext();
   const currentColumn = apiRef.current.getColumn(field);
@@ -45,6 +47,7 @@ function GridColumnHeaderMenu({
       open={open}
       target={target}
       onClickAway={hideMenu}
+      onExited={onExited}
     >
       <ContentComponent
         currentColumn={currentColumn}
@@ -68,6 +71,7 @@ GridColumnHeaderMenu.propTypes = {
   ContentComponent: PropTypes.elementType.isRequired,
   contentComponentProps: PropTypes.any,
   field: PropTypes.string.isRequired,
+  onExited: PropTypes.func,
   open: PropTypes.bool.isRequired,
   target: HTMLElementType,
 } as any;

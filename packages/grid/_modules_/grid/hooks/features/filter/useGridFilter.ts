@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridEvents } from '../../../constants/eventsConstants';
+import { GridEventListener, GridEvents } from '../../../models/events';
 import { GridComponentProps } from '../../../GridComponentProps';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridFilterApi } from '../../../models/api/gridFilterApi';
@@ -179,7 +179,7 @@ export const useGridFilter = (
         const filterTreeNode = (
           node: GridRowTreeNodeConfig,
           isParentMatchingFilters: boolean,
-          isParentExpanded: boolean,
+          areAncestorsExpanded: boolean,
         ): number => {
           const shouldSkipFilters = props.disableChildrenFiltering && node.depth > 0;
 
@@ -198,7 +198,7 @@ export const useGridFilter = (
             const childSubTreeSize = filterTreeNode(
               childNode,
               isMatchingFilters ?? isParentMatchingFilters,
-              !!node.expanded,
+              areAncestorsExpanded && !!node.childrenExpanded,
             );
 
             filteredDescendantCount += childSubTreeSize;
@@ -220,7 +220,7 @@ export const useGridFilter = (
             }
           }
 
-          visibleRowsLookup[node.id] = shouldPassFilters && isParentExpanded;
+          visibleRowsLookup[node.id] = shouldPassFilters && areAncestorsExpanded;
 
           if (!shouldPassFilters) {
             return 0;
@@ -411,7 +411,7 @@ export const useGridFilter = (
     'FilterApi',
   );
 
-  const onColUpdated = React.useCallback(() => {
+  const handleColumnsChange = React.useCallback<GridEventListener<GridEvents.columnsChange>>(() => {
     logger.debug('onColUpdated - GridColumns changed, applying filters');
     const filterModel = gridFilterModelSelector(apiRef.current.state);
     const columnsIds = filterableGridColumnsIdsSelector(apiRef.current.state);
@@ -447,5 +447,5 @@ export const useGridFilter = (
     GridEvents.rowExpansionChange,
     apiRef.current.unstable_applyFilters,
   );
-  useGridApiEventHandler(apiRef, GridEvents.columnsChange, onColUpdated);
+  useGridApiEventHandler(apiRef, GridEvents.columnsChange, handleColumnsChange);
 };

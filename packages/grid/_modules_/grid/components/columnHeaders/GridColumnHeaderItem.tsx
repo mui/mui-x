@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { unstable_useId as useId } from '@mui/material/utils';
-import { GridEvents } from '../../constants/eventsConstants';
+import { GridEvents, GridColumnHeaderEventLookup } from '../../models/events';
 import { GridStateColDef } from '../../models/colDef/index';
 import { GridSortDirection } from '../../models/gridSortModel';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
@@ -30,9 +30,8 @@ interface GridColumnHeaderItemProps {
   sortIndex?: number;
   filterItemsCounter?: number;
   hasFocus?: boolean;
-  hasScrollX: boolean;
-  hasScrollY: boolean;
   tabIndex: 0 | -1;
+  disableReorder?: boolean;
 }
 
 type OwnerState = GridColumnHeaderItemProps & {
@@ -79,9 +78,8 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
     filterItemsCounter,
     hasFocus,
     tabIndex,
-    hasScrollX,
-    hasScrollY,
     extendRowFullWidth,
+    disableReorder,
   } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
@@ -89,6 +87,11 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
   const columnMenuId = useId();
   const columnMenuButtonId = useId();
   const iconButtonRef = React.useRef<HTMLButtonElement>(null);
+  const [showColumnMenuIcon, setShowColumnMenuIcon] = React.useState(columnMenuOpen);
+  const { hasScrollX, hasScrollY } = apiRef.current.getRootDimensions() ?? {
+    hasScrollX: false,
+    hasScrollY: false,
+  };
 
   let headerComponent: React.ReactNode = null;
   if (column.renderHeader) {
@@ -96,7 +99,7 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
   }
 
   const publish = React.useCallback(
-    (eventName: string) => (event: React.SyntheticEvent) => {
+    (eventName: keyof GridColumnHeaderEventLookup) => (event: React.SyntheticEvent) => {
       // Ignore portal
       // See https://github.com/mui-org/material-ui-x/issues/1721
       if (!event.currentTarget.contains(event.target as Element)) {
@@ -105,7 +108,7 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
       apiRef.current.publishEvent(
         eventName,
         apiRef.current.getColumnHeaderParams(column.field),
-        event,
+        event as any,
       );
     },
     [apiRef, column.field],
@@ -150,12 +153,22 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
     ariaSort = sortDirection === 'asc' ? 'ascending' : 'descending';
   }
 
+  React.useEffect(() => {
+    if (!showColumnMenuIcon) {
+      setShowColumnMenuIcon(columnMenuOpen);
+    }
+  }, [showColumnMenuIcon, columnMenuOpen]);
+
+  const handleExited = React.useCallback(() => {
+    setShowColumnMenuIcon(false);
+  }, []);
+
   const columnMenuIconButton = !rootProps.disableColumnMenu && !column.disableColumnMenu && (
     <ColumnHeaderMenuIcon
       column={column}
       columnMenuId={columnMenuId!}
       columnMenuButtonId={columnMenuButtonId!}
-      open={columnMenuOpen}
+      open={showColumnMenuIcon}
       iconButtonRef={iconButtonRef}
     />
   );
@@ -204,7 +217,7 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
     >
       <div
         className={classes.draggableContainer}
-        draggable={!rootProps.disableColumnReorder && !column.disableReorder}
+        draggable={!rootProps.disableColumnReorder && !disableReorder && !column.disableReorder}
         {...draggableEventHandlers}
       >
         <div className={classes.titleContainer}>
@@ -234,6 +247,7 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
         target={iconButtonRef.current}
         ContentComponent={rootProps.components.ColumnMenu}
         contentComponentProps={rootProps.componentsProps?.columnMenu}
+        onExited={handleExited}
       />
     </div>
   );
@@ -247,11 +261,10 @@ GridColumnHeaderItem.propTypes = {
   colIndex: PropTypes.number.isRequired,
   column: PropTypes.object.isRequired,
   columnMenuOpen: PropTypes.bool.isRequired,
+  disableReorder: PropTypes.bool,
   extendRowFullWidth: PropTypes.bool.isRequired,
   filterItemsCounter: PropTypes.number,
   hasFocus: PropTypes.bool,
-  hasScrollX: PropTypes.bool.isRequired,
-  hasScrollY: PropTypes.bool.isRequired,
   headerHeight: PropTypes.number.isRequired,
   isDragging: PropTypes.bool.isRequired,
   isLastColumn: PropTypes.bool.isRequired,

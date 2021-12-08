@@ -5,8 +5,24 @@ import { unstable_useId as useId } from '@mui/material/utils';
 import { GridLoadIcon } from '../../icons/index';
 import { GridFilterInputValueProps } from './GridFilterInputValueProps';
 import { GridColDef } from '../../../models/colDef/gridColDef';
+import { GridApi } from '../../../models/api/gridApi';
 
-const renderSingleSelectOptions = ({ valueOptions, valueFormatter, field }: GridColDef, api) => {
+const warnedOnce = {};
+function warnDeprecatedTypeSupport(type) {
+  console.warn(
+    [
+      `MUI: Using GridFilterInputValue with a "${type}" column is deprecated.`,
+      'Use GridFilterInputSingleSelect instead.',
+    ].join('\n'),
+  );
+
+  warnedOnce[type] = true;
+}
+
+const renderSingleSelectOptions = (
+  { valueOptions, valueFormatter, field }: GridColDef,
+  api: GridApi,
+) => {
   const iterableColumnValues =
     typeof valueOptions === 'function'
       ? ['', ...valueOptions({ field })]
@@ -32,7 +48,14 @@ export interface GridTypeFilterInputValueProps extends GridFilterInputValueProps
 }
 
 function GridFilterInputValue(props: GridTypeFilterInputValueProps & TextFieldProps) {
-  const { item, applyValue, type, apiRef, ...others } = props;
+  const { item, applyValue, type, apiRef, focusElementRef, ...others } = props;
+  if (
+    process.env.NODE_ENV !== 'production' &&
+    ['date', 'datetime-local', 'singleSelect'].includes(type as string) &&
+    !warnedOnce[type as string]
+  ) {
+    warnDeprecatedTypeSupport(type);
+  }
   const filterTimeout = React.useRef<any>();
   const [filterValueState, setFilterValueState] = React.useState(item.value ?? '');
   const [applying, setIsApplying] = React.useState(false);
@@ -105,6 +128,7 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps & TextFieldPr
       InputLabelProps={{
         shrink: true,
       }}
+      inputRef={focusElementRef}
       {...singleSelectProps}
       {...others}
     />
@@ -118,6 +142,10 @@ GridFilterInputValue.propTypes = {
   // ----------------------------------------------------------------------
   apiRef: PropTypes.any.isRequired,
   applyValue: PropTypes.func.isRequired,
+  focusElementRef: PropTypes /* @typescript-to-proptypes-ignore */.oneOfType([
+    PropTypes.func,
+    PropTypes.object,
+  ]),
   item: PropTypes.shape({
     columnField: PropTypes.string.isRequired,
     id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),

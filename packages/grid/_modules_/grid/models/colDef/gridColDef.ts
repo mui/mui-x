@@ -10,6 +10,7 @@ import {
   GridValueFormatterParams,
   GridValueGetterParams,
   GridValueSetterParams,
+  GridPreProcessEditCellProps,
 } from '../params/gridCellParams';
 import { GridColumnHeaderParams } from '../params/gridColumnHeaderParams';
 import { GridComparatorFn } from '../gridSortModel';
@@ -18,6 +19,7 @@ import { GridRowParams } from '../params/gridRowParams';
 import { GridValueOptionsParams } from '../params/gridValueOptionsParams';
 import { GridActionsCellItemProps } from '../../components/cell/GridActionsCellItem';
 import { GridRowModel } from '../gridRows';
+import { GridEditCellProps } from '../gridEditRowModel';
 
 /**
  * Alignment used in position elements in Cells.
@@ -25,6 +27,12 @@ import { GridRowModel } from '../gridRows';
 export type GridAlignment = 'left' | 'right' | 'center';
 
 type ValueOptions = string | number | { value: any; label: string };
+
+/**
+ * Value that can be used as a key for grouping rows
+ */
+export type GridKeyValue = string | number | boolean;
+
 /**
  * Column Definition interface.
  */
@@ -135,6 +143,15 @@ export interface GridColDef {
    */
   renderEditCell?: (params: GridRenderEditCellParams) => React.ReactNode;
   /**
+   * Callback fired when the edit props of the cell changes.
+   * It allows to process the props that saved into the state.
+   * @param {GridPreProcessEditCellProps} params Object contaning parameters of the cell being editted.
+   * @returns {GridEditCellProps | Promise<GridEditCellProps>} The new edit cell props.
+   */
+  preProcessEditCellProps?: (
+    params: GridPreProcessEditCellProps,
+  ) => GridEditCellProps | Promise<GridEditCellProps>;
+  /**
    * Class name that will be added in the column header cell.
    */
   headerClassName?: GridColumnHeaderClassNamePropType;
@@ -209,20 +226,26 @@ export interface GridColumnsMeta {
   positions: number[];
 }
 
-export type GridColumnLookup = { [field: string]: GridStateColDef };
-
-export interface GridColumnsState {
-  all: string[];
-  lookup: GridColumnLookup;
+export interface GridGroupingColDefOverride
+  extends Omit<
+    GridColDef,
+    'editable' | 'valueSetter' | 'field' | 'preProcessEditCellProps' | 'renderEditCell'
+  > {
+  /**
+   * If `true`, the grouping cells will not render the amount of descendants.
+   * @default: false
+   */
+  hideDescendantCount?: boolean;
 }
 
-export type GridColDefOverride = Omit<Partial<GridColDef>, 'field'>;
-
-export type GridColDefOverrideCallback = (params: GridColDefOverrideParams) => GridColDefOverride;
-
-export interface GridColDefOverrideParams {
+export interface GridGroupingColDefOverrideParams {
   /**
-   * The column we are generating before the override.
+   * The name of the grouping algorithm currently building the grouping column.
    */
-  colDef: GridColDef;
+  groupingName: string;
+
+  /**
+   * The fields of the columns from which we want to group the values on this new grouping column.
+   */
+  fields: string[];
 }

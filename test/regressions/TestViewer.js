@@ -1,5 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { useLocation } from 'react-router-dom';
 import clsx from 'clsx';
 import { useFakeTimers } from 'sinon';
 import { withStyles } from '@mui/styles';
@@ -37,7 +38,10 @@ function MockTime(props) {
   React.useEffect(() => {
     // Use a "real timestamp" so that we see a useful date instead of "00:00"
     // eslint-disable-next-line react-hooks/rules-of-hooks -- not a React hook
-    clock = useFakeTimers(new Date('Mon Aug 18 14:11:54 2014 -0500'));
+    clock = useFakeTimers({
+      now: new Date('Mon Aug 18 14:11:54 2014 -0500').getTime(),
+      shouldAdvanceTime: true,
+    });
 
     setReady(true);
 
@@ -51,10 +55,13 @@ function MockTime(props) {
 
 function LoadFont(props) {
   const { children, ...other } = props;
+  const location = useLocation();
   // We're simulating `act(() => ReactDOM.render(children))`
   // In the end children passive effects should've been flushed.
   // React doesn't have any such guarantee outside of `act()` so we're approximating it.
   const [ready, setReady] = React.useState(false);
+  // In react-router v6, with multiple routes sharing the same element,
+  // this effect will only run once if no dependency is passed.
   React.useEffect(() => {
     function handleFontsEvent(event) {
       if (event.type === 'loading') {
@@ -84,7 +91,7 @@ function LoadFont(props) {
       document.fonts.removeEventListener('loading', handleFontsEvent);
       document.fonts.removeEventListener('loadingdone', handleFontsEvent);
     };
-  }, []);
+  }, [location]);
 
   return (
     <div aria-busy={!ready} data-testid="testcase" {...other}>

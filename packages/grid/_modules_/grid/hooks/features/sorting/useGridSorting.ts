@@ -1,19 +1,18 @@
 import * as React from 'react';
-import { GridEvents } from '../../../constants/eventsConstants';
+import { GridEventListener, GridEvents } from '../../../models/events';
 import { GridComponentProps } from '../../../GridComponentProps';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridSortApi } from '../../../models/api/gridSortApi';
 import { GridCellValue } from '../../../models/gridCell';
 import { GridColDef } from '../../../models/colDef/gridColDef';
 import { GridFeatureModeConstant } from '../../../models/gridFeatureMode';
-import { GridColumnHeaderParams } from '../../../models/params/gridColumnHeaderParams';
 import { GridRowId, GridRowTreeNodeConfig } from '../../../models/gridRows';
 import {
-  GridFieldComparatorList,
   GridSortItem,
   GridSortModel,
   GridSortDirection,
   GridSortCellParams,
+  GridComparatorFn,
 } from '../../../models/gridSortModel';
 import { isDesc, nextGridSortDirection } from '../../../utils/sortingUtils';
 import { isEnterKey } from '../../../utils/keyboardUtils';
@@ -30,6 +29,8 @@ import {
 import { gridRowIdsSelector, gridRowTreeDepthSelector, gridRowTreeSelector } from '../rows';
 import { useGridStateInit } from '../../utils/useGridStateInit';
 import { useFirstRender } from '../../utils/useFirstRender';
+
+type GridFieldComparator = { field: string; comparator: GridComparatorFn };
 
 /**
  * @requires useGridRows (state, event)
@@ -127,7 +128,7 @@ export const useGridSorting = (
   );
 
   const comparatorListAggregate = React.useCallback(
-    (comparatorList: GridFieldComparatorList) =>
+    (comparatorList: GridFieldComparator[]) =>
       (row1: GridSortCellParams[], row2: GridSortCellParams[]) => {
         return comparatorList.reduce((res, colComparator, index) => {
           if (res !== 0) {
@@ -150,22 +151,26 @@ export const useGridSorting = (
   );
 
   const buildComparatorList = React.useCallback(
-    (sortModel: GridSortModel): GridFieldComparatorList => {
-      const comparators = sortModel.map((item) => {
-        const column = apiRef.current.getColumn(item.field);
-        if (!column) {
-          throw new Error(`Error sorting: column with field '${item.field}' not found. `);
-        }
-        const comparator = isDesc(item.sort)
-          ? (
-              v1: GridCellValue,
-              v2: GridCellValue,
-              cellParams1: GridSortCellParams,
-              cellParams2: GridSortCellParams,
-            ) => -1 * column.sortComparator!(v1, v2, cellParams1, cellParams2)
-          : column.sortComparator!;
-        return { field: column.field, comparator };
-      });
+    (sortModel: GridSortModel): GridFieldComparator[] => {
+      const comparators = sortModel
+        .map((item) => {
+          const column = apiRef.current.getColumn(item.field);
+          if (!column) {
+            return null;
+          }
+
+          const comparator = isDesc(item.sort)
+            ? (
+                v1: GridCellValue,
+                v2: GridCellValue,
+                cellParams1: GridSortCellParams,
+                cellParams2: GridSortCellParams,
+              ) => -1 * column.sortComparator!(v1, v2, cellParams1, cellParams2)
+            : column.sortComparator!;
+          return { field: column.field, comparator };
+        })
+        .filter((comparator): comparator is GridFieldComparator => !!comparator);
+
       return comparators;
     },
     [apiRef],
@@ -330,10 +335,22 @@ export const useGridSorting = (
     [apiRef],
   );
 
+  const getRowIndex = React.useCallback<GridSortApi['getRowIndex']>(
+    (id) => apiRef.current.getSortedRowIds().indexOf(id),
+    [apiRef],
+  );
+
+  const getRowIdFromRowIndex = React.useCallback<GridSortApi['getRowIdFromRowIndex']>(
+    (index) => apiRef.current.getSortedRowIds()[index],
+    [apiRef],
+  );
+
   const sortApi: GridSortApi = {
     getSortModel,
     getSortedRows,
     getSortedRowIds,
+    getRowIndex,
+    getRowIdFromRowIndex,
     setSortModel,
     sortColumn,
     applySorting,
@@ -358,16 +375,20 @@ export const useGridSorting = (
 
   useFirstRender(() => apiRef.current.applySorting());
 
-  const handleColumnHeaderClick = React.useCallback(
-    ({ colDef }: GridColumnHeaderParams, event: React.MouseEvent) => {
+  const handleColumnHeaderClick = React.useCallback<
+    GridEventListener<GridEvents.columnHeaderClick>
+  >(
+    ({ colDef }, event) => {
       const allowMultipleSorting = event.shiftKey || event.metaKey || event.ctrlKey;
       sortColumn(colDef, undefined, allowMultipleSorting);
     },
     [sortColumn],
   );
 
-  const handleColumnHeaderKeyDown = React.useCallback(
-    ({ colDef }: GridColumnHeaderParams, event: React.KeyboardEvent) => {
+  const handleColumnHeaderKeyDown = React.useCallback<
+    GridEventListener<GridEvents.columnHeaderKeyDown>
+  >(
+    ({ colDef }, event) => {
       // CTRL + Enter opens the column menu
       if (isEnterKey(event.key) && !event.ctrlKey && !event.metaKey) {
         sortColumn(colDef, undefined, event.shiftKey);
@@ -376,7 +397,7 @@ export const useGridSorting = (
     [sortColumn],
   );
 
-  const onColUpdated = React.useCallback(() => {
+  const handleColumnsChange = React.useCallback<GridEventListener<GridEvents.columnsChange>>(() => {
     // When the columns change we check that the sorted columns are still part of the dataset
     const sortModel = gridSortModelSelector(apiRef.current.state);
     const latestColumns = allGridColumnsSelector(apiRef.current.state);
@@ -395,5 +416,5 @@ export const useGridSorting = (
   useGridApiEventHandler(apiRef, GridEvents.columnHeaderClick, handleColumnHeaderClick);
   useGridApiEventHandler(apiRef, GridEvents.columnHeaderKeyDown, handleColumnHeaderKeyDown);
   useGridApiEventHandler(apiRef, GridEvents.rowsSet, apiRef.current.applySorting);
-  useGridApiEventHandler(apiRef, GridEvents.columnsChange, onColUpdated);
+  useGridApiEventHandler(apiRef, GridEvents.columnsChange, handleColumnsChange);
 };

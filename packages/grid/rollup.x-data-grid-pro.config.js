@@ -68,7 +68,7 @@ export default [
             {
               src: [
                 './x-data-grid-pro/README.md',
-                './x-data-grid-pro/LICENSE.md',
+                './x-data-grid-pro/LICENSE',
                 '../../CHANGELOG.md',
               ],
               dest: './x-data-grid-pro/build',

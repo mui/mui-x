@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import ClickAwayListener, { ClickAwayListenerProps } from '@mui/material/ClickAwayListener';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
-import Grow from '@mui/material/Grow';
+import Grow, { GrowProps } from '@mui/material/Grow';
 import Paper from '@mui/material/Paper';
 import Popper, { PopperProps } from '@mui/material/Popper';
 import { styled } from '@mui/material/styles';
@@ -55,6 +55,7 @@ export interface GridMenuProps extends Omit<PopperProps, 'onKeyDown'> {
   target: React.ReactNode;
   onClickAway: ClickAwayListenerProps['onClickAway'];
   position?: MenuPosition;
+  onExited?: GrowProps['onExited'];
 }
 
 const transformOrigin = {
@@ -63,7 +64,7 @@ const transformOrigin = {
 };
 
 const GridMenu = (props: GridMenuProps) => {
-  const { open, target, onClickAway, children, position, className, ...other } = props;
+  const { open, target, onClickAway, children, position, className, onExited, ...other } = props;
   const prevTarget = React.useRef(target);
   const prevOpen = React.useRef(open);
   const rootProps = useGridRootProps();
@@ -79,6 +80,16 @@ const GridMenu = (props: GridMenuProps) => {
     prevTarget.current = target;
   }, [open, target]);
 
+  const handleExited = (popperOnExited) => (node: HTMLElement) => {
+    if (popperOnExited) {
+      popperOnExited();
+    }
+
+    if (onExited) {
+      onExited(node);
+    }
+  };
+
   return (
     <GridMenuRoot
       className={clsx(className, classes.root)}
@@ -90,7 +101,11 @@ const GridMenu = (props: GridMenuProps) => {
     >
       {({ TransitionProps, placement }) => (
         <ClickAwayListener onClickAway={onClickAway}>
-          <Grow {...TransitionProps} style={{ transformOrigin: transformOrigin[placement] }}>
+          <Grow
+            {...TransitionProps}
+            style={{ transformOrigin: transformOrigin[placement] }}
+            onExited={handleExited(TransitionProps?.onExited)}
+          >
             <Paper>{children}</Paper>
           </Grow>
         </ClickAwayListener>
@@ -105,6 +120,7 @@ GridMenu.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   onClickAway: PropTypes.func.isRequired,
+  onExited: PropTypes.func,
   /**
    * If `true`, the component is shown.
    */

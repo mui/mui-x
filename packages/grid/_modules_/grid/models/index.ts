@@ -1,6 +1,5 @@
 export * from './colDef';
 export * from './cursorCoordinates';
-export * from './gridContainerProps';
 export * from './elementSize';
 export * from './gridEditRowModel';
 export * from './gridFeatureMode';
@@ -25,3 +24,4 @@ export * from './gridExport';
 export * from './logger';
 export * from './muiEvent';
 export * from './gridState';
+export * from './events';

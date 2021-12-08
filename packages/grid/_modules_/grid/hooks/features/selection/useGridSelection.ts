@@ -1,10 +1,9 @@
 import * as React from 'react';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
-import { GridEvents } from '../../../constants/eventsConstants';
+import { GridEvents, GridEventListener } from '../../../models/events';
 import { GridComponentProps } from '../../../GridComponentProps';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridSelectionApi } from '../../../models/api/gridSelectionApi';
-import { GridRowParams } from '../../../models/params/gridRowParams';
 import { GridRowId } from '../../../models/gridRows';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
@@ -18,15 +17,12 @@ import {
 } from './gridSelectionSelector';
 import { gridPaginatedVisibleSortedGridRowIdsSelector } from '../pagination';
 import { gridVisibleSortedRowIdsSelector } from '../filter/gridFilterSelector';
-import { GridHeaderSelectionCheckboxParams } from '../../../models/params/gridHeaderSelectionCheckboxParams';
-import { GridCellParams } from '../../../models/params/gridCellParams';
-import { GridRowSelectionCheckboxParams } from '../../../models/params/gridRowSelectionCheckboxParams';
 import { GRID_CHECKBOX_SELECTION_COL_DEF, GridColDef } from '../../../models';
 import { getDataGridUtilityClass } from '../../../gridClasses';
 import { useGridStateInit } from '../../utils/useGridStateInit';
 import { useFirstRender } from '../../utils/useFirstRender';
-import { GridColumns } from '../../../models/colDef/gridColDef';
 import { GridPreProcessingGroup } from '../../core/preProcessing';
+import { GridColumnsRawState } from '../columns/gridColumnsState';
 
 type OwnerState = { classes: GridComponentProps['classes'] };
 
@@ -257,8 +253,8 @@ export const useGridSelection = (
     }
   }, [apiRef]);
 
-  const handleRowClick = React.useCallback(
-    (params: GridRowParams, event: React.MouseEvent) => {
+  const handleRowClick = React.useCallback<GridEventListener<GridEvents.rowClick>>(
+    (params, event) => {
       if (disableSelectionOnClick) {
         return;
       }
@@ -292,8 +288,8 @@ export const useGridSelection = (
     ],
   );
 
-  const preventSelectionOnShift = React.useCallback(
-    (params: GridCellParams, event: React.MouseEvent) => {
+  const preventSelectionOnShift = React.useCallback<GridEventListener<GridEvents.cellMouseDown>>(
+    (params, event) => {
       if (canHaveMultipleSelection && event.shiftKey) {
         window.getSelection()?.removeAllRanges();
       }
@@ -301,8 +297,10 @@ export const useGridSelection = (
     [canHaveMultipleSelection],
   );
 
-  const handleRowSelectionCheckboxChange = React.useCallback(
-    (params: GridRowSelectionCheckboxParams, event: React.ChangeEvent) => {
+  const handleRowSelectionCheckboxChange = React.useCallback<
+    GridEventListener<GridEvents.rowSelectionCheckboxChange>
+  >(
+    (params, event) => {
       if ((event.nativeEvent as any).shiftKey) {
         expandRowRangeSelection(params.id);
       } else {
@@ -312,8 +310,10 @@ export const useGridSelection = (
     [apiRef, expandRowRangeSelection],
   );
 
-  const handleHeaderSelectionCheckboxChange = React.useCallback(
-    (params: GridHeaderSelectionCheckboxParams) => {
+  const handleHeaderSelectionCheckboxChange = React.useCallback<
+    GridEventListener<GridEvents.headerSelectionCheckboxChange>
+  >(
+    (params) => {
       const shouldLimitSelectionToCurrentPage =
         props.checkboxSelectionVisibleOnly && props.pagination;
 
@@ -377,25 +377,32 @@ export const useGridSelection = (
   }, [apiRef, isRowSelectable, isStateControlled]);
 
   const updateColumnsPreProcessing = React.useCallback(() => {
-    const addCheckboxColumn = (columns: GridColumns) => {
-      if (!props.checkboxSelection) {
-        return columns;
-      }
-
-      const groupingColumn: GridColDef = {
+    const updateCheckboxColumn = (columnsState: GridColumnsRawState) => {
+      const selectionColumn: GridColDef = {
         ...GRID_CHECKBOX_SELECTION_COL_DEF,
         cellClassName: classes.cellCheckbox,
         headerClassName: classes.columnHeaderCheckbox,
         headerName: apiRef.current.getLocaleText('checkboxSelectionHeaderName'),
       };
 
-      return [groupingColumn, ...columns];
+      const shouldHaveSelectionColumn = props.checkboxSelection;
+      const haveSelectionColumn = columnsState.lookup[selectionColumn.field] != null;
+
+      if (shouldHaveSelectionColumn && !haveSelectionColumn) {
+        columnsState.lookup[selectionColumn.field] = selectionColumn;
+        columnsState.all = [selectionColumn.field, ...columnsState.all];
+      } else if (!shouldHaveSelectionColumn && haveSelectionColumn) {
+        delete columnsState.lookup[selectionColumn.field];
+        columnsState.all = columnsState.all.filter((field) => field !== selectionColumn.field);
+      }
+
+      return columnsState;
     };
 
     apiRef.current.unstable_registerPreProcessor(
       GridPreProcessingGroup.hydrateColumns,
       'selection',
-      addCheckboxColumn,
+      updateCheckboxColumn,
     );
   }, [apiRef, props.checkboxSelection, classes]);
 

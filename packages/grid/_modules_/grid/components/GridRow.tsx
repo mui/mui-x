@@ -4,7 +4,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
-import { GridEvents } from '../constants/eventsConstants';
+import { GridRowEventLookup, GridEvents } from '../models/events';
 import { GridRowId, GridRowModel } from '../models/gridRows';
 import { GridEditModes, GridRowModes, GridEditRowsModel } from '../models/gridEditRowModel';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
@@ -13,7 +13,6 @@ import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { GridComponentProps } from '../GridComponentProps';
 import { GridStateColDef } from '../models/colDef/gridColDef';
 import { GridCellIdentifier } from '../hooks/features/focus/gridFocusState';
-import { GridScrollBarState } from '../models/gridContainerProps';
 import { gridColumnsMetaSelector } from '../hooks/features/columns/gridColumnsSelector';
 import { useGridSelector } from '../hooks/utils/useGridSelector';
 
@@ -31,9 +30,10 @@ export interface GridRowProps {
   cellFocus: GridCellIdentifier | null;
   cellTabIndex: GridCellIdentifier | null;
   editRowsState: GridEditRowsModel;
-  scrollBarState: GridScrollBarState;
   onClick?: React.MouseEventHandler<HTMLDivElement>;
   onDoubleClick?: React.MouseEventHandler<HTMLDivElement>;
+  onMouseEnter?: React.MouseEventHandler<HTMLDivElement>;
+  onMouseLeave?: React.MouseEventHandler<HTMLDivElement>;
 }
 
 type OwnerState = Pick<GridRowProps, 'selected'> & {
@@ -79,15 +79,20 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
     cellFocus,
     cellTabIndex,
     editRowsState,
-    scrollBarState, // to be removed
     onClick,
     onDoubleClick,
+    onMouseEnter,
+    onMouseLeave,
     ...other
   } = props;
   const ariaRowIndex = index + 2; // 1 for the header row and 1 as it's 1-based
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
   const columnsMeta = useGridSelector(apiRef, gridColumnsMetaSelector);
+  const { hasScrollX, hasScrollY } = apiRef.current.getRootDimensions() ?? {
+    hasScrollX: false,
+    hasScrollY: false,
+  };
 
   const ownerState = {
     selected,
@@ -99,28 +104,32 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
   const classes = useUtilityClasses(ownerState);
 
   const publish = React.useCallback(
-    (eventName: string, propHandler: any) => (event: React.MouseEvent) => {
-      // Ignore portal
-      // The target is not an element when triggered by a Select inside the cell
-      // See https://github.com/mui-org/material-ui/issues/10534
-      if (
-        (event.target as any).nodeType === 1 &&
-        !event.currentTarget.contains(event.target as Element)
-      ) {
-        return;
-      }
+    (
+        eventName: keyof GridRowEventLookup,
+        propHandler: React.MouseEventHandler<HTMLDivElement> | undefined,
+      ): React.MouseEventHandler<HTMLDivElement> =>
+      (event) => {
+        // Ignore portal
+        // The target is not an element when triggered by a Select inside the cell
+        // See https://github.com/mui-org/material-ui/issues/10534
+        if (
+          (event.target as any).nodeType === 1 &&
+          !event.currentTarget.contains(event.target as Element)
+        ) {
+          return;
+        }
 
-      // The row might have been deleted
-      if (!apiRef.current.getRow(rowId)) {
-        return;
-      }
+        // The row might have been deleted
+        if (!apiRef.current.getRow(rowId)) {
+          return;
+        }
 
-      apiRef.current.publishEvent(eventName, apiRef.current.getRowParams(rowId), event);
+        apiRef.current.publishEvent(eventName, apiRef.current.getRowParams(rowId), event);
 
-      if (propHandler) {
-        propHandler(event);
-      }
-    },
+        if (propHandler) {
+          propHandler(event);
+        }
+      },
     [apiRef, rowId],
   );
 
@@ -141,8 +150,7 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
     const indexRelativeToAllColumns = firstColumnToRender + i;
 
     const isLastColumn = indexRelativeToAllColumns === visibleColumns.length - 1;
-    const removeLastBorderRight =
-      isLastColumn && scrollBarState.hasScrollX && !scrollBarState.hasScrollY;
+    const removeLastBorderRight = isLastColumn && hasScrollX && !hasScrollY;
     const showRightBorder = !isLastColumn
       ? rootProps.showCellRightBorder
       : !removeLastBorderRight && rootProps.disableExtendRowFullWidth;
@@ -232,6 +240,8 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
       style={style}
       onClick={publish(GridEvents.rowClick, onClick)}
       onDoubleClick={publish(GridEvents.rowDoubleClick, onDoubleClick)}
+      onMouseEnter={publish(GridEvents.rowMouseEnter, onMouseEnter)}
+      onMouseLeave={publish(GridEvents.rowMouseLeave, onMouseLeave)}
       {...other}
     >
       {cells}
@@ -256,7 +266,6 @@ GridRow.propTypes = {
   row: PropTypes.object.isRequired,
   rowHeight: PropTypes.number.isRequired,
   rowId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-  scrollBarState: PropTypes.object.isRequired,
   selected: PropTypes.bool.isRequired,
   visibleColumns: PropTypes.arrayOf(PropTypes.object).isRequired,
 } as any;

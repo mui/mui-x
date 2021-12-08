@@ -8,6 +8,8 @@ import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { getDataGridUtilityClass } from '../../gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { GridComponentProps } from '../../GridComponentProps';
+import { useGridApiEventHandler } from '../../hooks/utils/useGridApiEventHandler';
+import { GridEvents } from '../../models/events';
 
 export type GridOverlayProps = React.HTMLAttributes<HTMLDivElement>;
 
@@ -51,18 +53,30 @@ export const GridOverlay = React.forwardRef<HTMLDivElement, GridOverlayProps>(fu
   const classes = useUtilityClasses(ownerState);
   const headerHeight = useGridSelector(apiRef, gridDensityHeaderHeightSelector);
 
-  const windowRef = apiRef.current.windowRef?.current;
-  const verticalScrollbarSize = windowRef ? windowRef.offsetWidth - windowRef.clientWidth : 0;
-  const horizontalScrollbarSize = windowRef ? windowRef.offsetHeight - windowRef.clientHeight : 0;
+  const [viewportInnerSize, setViewportInnerSize] = React.useState(
+    () => apiRef.current.getRootDimensions()?.viewportInnerSize ?? null,
+  );
+
+  const handleViewportSizeChangeTest = () =>
+    setViewportInnerSize(apiRef.current.getRootDimensions()?.viewportInnerSize ?? null);
+
+  useGridApiEventHandler(apiRef, GridEvents.viewportInnerSizeChange, handleViewportSizeChangeTest);
+
+  let height: React.CSSProperties['height'] = viewportInnerSize?.height ?? 0;
+  if (rootProps.autoHeight && height === 0) {
+    height = 'auto';
+  }
 
   return (
     <GridOverlayRoot
       ref={ref}
       className={clsx(classes.root, className)}
       style={{
+        height,
+        width: viewportInnerSize?.width ?? 0,
         top: headerHeight,
-        right: verticalScrollbarSize,
-        bottom: horizontalScrollbarSize,
+        position: 'absolute',
+        left: 0,
         ...style,
       }}
       {...other}

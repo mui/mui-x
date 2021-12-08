@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { makeStyles } from '@mui/styles';
+import Box from '@mui/material/Box';
 import Rating from '@mui/material/Rating';
 import { DataGrid, GridRenderCellParams } from '@mui/x-data-grid';
 
@@ -7,24 +7,15 @@ function renderRating(params: GridRenderCellParams<number>) {
   return <Rating readOnly value={params.value} />;
 }
 
-const useStyles = makeStyles({
-  root: {
-    display: 'flex',
-    alignItems: 'center',
-    paddingRight: 16,
-  },
-});
-
 function RatingEditInputCell(props: GridRenderCellParams<number>) {
   const { id, value, api, field } = props;
-  const classes = useStyles();
 
-  const handleChange = (event) => {
+  const handleChange = async (event) => {
     api.setEditCellValue({ id, field, value: Number(event.target.value) }, event);
     // Check if the event is not from the keyboard
     // https://github.com/facebook/react/issues/7407
     if (event.nativeEvent.clientX !== 0 && event.nativeEvent.clientY !== 0) {
-      api.commitCellChange({ id, field });
+      await api.commitCellChange({ id, field });
       api.setCellMode(id, field, 'view');
     }
   };
@@ -36,7 +27,7 @@ function RatingEditInputCell(props: GridRenderCellParams<number>) {
   };
 
   return (
-    <div className={classes.root}>
+    <Box sx={{ display: 'flex', alignItems: 'center', pr: 2 }}>
       <Rating
         ref={handleRef}
         name="rating"
@@ -44,7 +35,7 @@ function RatingEditInputCell(props: GridRenderCellParams<number>) {
         value={value}
         onChange={handleChange}
       />
-    </div>
+    </Box>
   );
 }
 

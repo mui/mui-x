@@ -30,18 +30,6 @@ export interface GridRowApi {
    */
   updateRows: (updates: GridRowModelUpdate[]) => void;
   /**
-   * Gets the `GridRowId` of a row at a specific index.
-   * @param {number} index The index of the row
-   * @returns {GridRowId} The `GridRowId` of the row.
-   */
-  getRowIdFromRowIndex: (index: number) => GridRowId;
-  /**
-   * Gets the row index of a row with a given id.
-   * @param {GridRowId} id The `GridRowId` of the row.
-   * @returns {number} The index of the row.
-   */
-  getRowIndex: (id: GridRowId) => number;
-  /**
    * Gets the row data with a given id.
    * @param {GridRowId} id The id of the row.
    * @returns {GridRowModel} The row data.
@@ -51,14 +39,12 @@ export interface GridRowApi {
    * Gets the row node from the internal tree structure.
    * @param {GridRowId} id The id of the row.
    * @returns {GridRowTreeNodeConfig} The row data.
-   * @ignore - do not document.
    */
-  unstable_getRowNode: (id: GridRowId) => GridRowTreeNodeConfig | null;
+  getRowNode: (id: GridRowId) => GridRowTreeNodeConfig | null;
   /**
    * Expand or collapse a row children.
    * @param {GridRowId} id the ID of the row to expand or collapse.
    * @param {boolean} isExpanded A boolean indicating if the row must be expanded or collapsed.
-   * @ignore - do not document.
    */
-  unstable_setRowExpansion: (id: GridRowId, isExpanded: boolean) => void;
+  setRowChildrenExpansion: (id: GridRowId, isExpanded: boolean) => void;
 }

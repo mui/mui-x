@@ -1,39 +1,12 @@
 import * as React from 'react';
-import { createTheme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
-import {
-  DataGrid,
-  GridColumns,
-  GridEditRowsModel,
-  GridRowsProp,
-} from '@mui/x-data-grid';
+import Box from '@mui/material/Box';
+import { DataGrid, GridColumns, GridRowsProp } from '@mui/x-data-grid';
 import {
   randomCreatedDate,
   randomEmail,
   randomTraderName,
   randomUpdatedDate,
 } from '@mui/x-data-grid-generator';
-
-const defaultTheme = createTheme();
-const useStyles = makeStyles(
-  (theme) => {
-    const isDark = theme.palette.mode === 'dark';
-
-    return {
-      root: {
-        '& .MuiDataGrid-cell--editing': {
-          backgroundColor: 'rgb(255,215,115, 0.19)',
-          color: '#1a3e72',
-        },
-        '& .Mui-error': {
-          backgroundColor: `rgb(126,10,15, ${isDark ? 0 : 0.1})`,
-          color: isDark ? '#ff4343' : '#750f0f',
-        },
-      },
-    };
-  },
-  { defaultTheme },
-);
 
 function validateEmail(email) {
   const re =
@@ -42,39 +15,39 @@ function validateEmail(email) {
 }
 
 export default function ValidateRowModelControlGrid() {
-  const [editRowsModel, setEditRowsModel] = React.useState<GridEditRowsModel>({});
-  const classes = useStyles();
-
-  const handleEditRowsModelChange = React.useCallback(
-    (newModel: GridEditRowsModel) => {
-      const updatedModel = { ...newModel };
-      Object.keys(updatedModel).forEach((id) => {
-        if (updatedModel[id].email) {
-          const isValid = validateEmail(updatedModel[id].email.value);
-          updatedModel[id].email = { ...updatedModel[id].email, error: !isValid };
-        }
-      });
-      setEditRowsModel(updatedModel);
-    },
-    [],
-  );
-
   return (
-    <div style={{ height: 400, width: '100%' }}>
-      <DataGrid
-        className={classes.root}
-        rows={rows}
-        columns={columns}
-        editRowsModel={editRowsModel}
-        onEditRowsModelChange={handleEditRowsModelChange}
-      />
-    </div>
+    <Box
+      sx={{
+        height: 400,
+        width: 1,
+        '& .MuiDataGrid-cell--editing': {
+          bgcolor: 'rgb(255,215,115, 0.19)',
+          color: '#1a3e72',
+        },
+        '& .Mui-error': {
+          bgcolor: (theme) =>
+            `rgb(126,10,15, ${theme.palette.mode === 'dark' ? 0 : 0.1})`,
+          color: (theme) => (theme.palette.mode === 'dark' ? '#ff4343' : '#750f0f'),
+        },
+      }}
+    >
+      <DataGrid rows={rows} columns={columns} />
+    </Box>
   );
 }
 
 const columns: GridColumns = [
   { field: 'name', headerName: 'Name', width: 180, editable: true },
-  { field: 'email', headerName: 'Email', width: 200, editable: true },
+  {
+    field: 'email',
+    headerName: 'Email',
+    width: 200,
+    editable: true,
+    preProcessEditCellProps: (params) => {
+      const isValid = validateEmail(params.props.value);
+      return { ...params.props, error: !isValid };
+    },
+  },
   {
     field: 'dateCreated',
     headerName: 'Date Created',

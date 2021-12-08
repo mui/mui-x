@@ -30,6 +30,7 @@ const koKRGrid: Partial<GridLocaleText> = {
   toolbarExport: '내보내기',
   toolbarExportLabel: '내보내기',
   toolbarExportCSV: 'CSV다운로드',
+  toolbarExportPrint: '프린트',
 
   // Columns panel text
   columnsPanelTextFieldLabel: '열 검색',
@@ -88,12 +89,28 @@ const koKRGrid: Partial<GridLocaleText> = {
   footerTotalRows: '총 행수:',
 
   // Total visible rows footer text
-  // footerTotalVisibleRows: (visibleCount, totalCount) =>
-  //   `${visibleCount.toLocaleString()} of ${totalCount.toLocaleString()}`,
+  footerTotalVisibleRows: (visibleCount, totalCount) =>
+    `${visibleCount.toLocaleString()} / ${totalCount.toLocaleString()}`,
+
+  // Checkbox selection text
+  checkboxSelectionHeaderName: '선택',
 
   // Boolean cell text
   booleanCellTrueLabel: '참',
   booleanCellFalseLabel: '거짓',
+
+  // Actions cell more text
+  actionsCellMore: '더보기',
+
+  // Column pinning text
+  // pinToLeft: 'Pin to left',
+  // pinToRight: 'Pin to right',
+  // unpin: 'Unpin',
+
+  // Tree Data
+  treeDataGroupingHeaderName: '그룹',
+  treeDataExpand: '하위노드 펼치기',
+  treeDataCollapse: '하위노드 접기',
 };
 
 export const koKR: Localization = getGridLocalization(koKRGrid, koKRCore);

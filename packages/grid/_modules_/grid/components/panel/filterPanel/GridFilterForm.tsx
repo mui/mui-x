@@ -23,6 +23,7 @@ export interface GridFilterFormProps {
   showMultiFilterOperators?: boolean;
   multiFilterOperator?: GridLinkOperator;
   disableMultiFilterOperator?: boolean;
+  focusElementRef?: React.Ref<any>;
   applyFilterChanges: (item: GridFilterItem) => void;
   applyMultiFilterOperatorChanges: (operator: GridLinkOperator) => void;
   deleteFilter: (item: GridFilterItem) => void;
@@ -60,6 +61,7 @@ function GridFilterForm(props: GridFilterFormProps) {
     showMultiFilterOperators,
     disableMultiFilterOperator,
     applyMultiFilterOperatorChanges,
+    focusElementRef,
   } = props;
   const apiRef = useGridApiContext();
   const filterableColumns = useGridSelector(apiRef, filterableGridColumnsSelector);
@@ -72,6 +74,8 @@ function GridFilterForm(props: GridFilterFormProps) {
   const rootProps = useGridRootProps();
   const ownerState = { classes: rootProps.classes };
   const classes = useUtilityClasses(ownerState);
+  const valueRef = React.useRef<any>(null);
+  const filterSelectorRef = React.useRef<HTMLInputElement>(null);
 
   const currentColumn = item.columnField ? apiRef.current.getColumn(item.columnField) : null;
 
@@ -87,28 +91,51 @@ function GridFilterForm(props: GridFilterFormProps) {
     (event: SelectChangeEvent) => {
       const columnField = event.target.value as string;
       const column = apiRef.current.getColumn(columnField)!;
-      const newOperator = column.filterOperators![0];
+
+      if (column.field === currentColumn!.field) {
+        // column did not change
+        return;
+      }
+
+      // try to keep the same operator when column change
+      const newOperator =
+        column.filterOperators!.find((operator) => operator.value === item.operatorValue) ||
+        column.filterOperators![0];
+
+      // Erase filter value if the input component is modified
+      const eraseItemValue =
+        !newOperator.InputComponent ||
+        newOperator.InputComponent !== currentOperator?.InputComponent;
 
       applyFilterChanges({
         ...item,
-        value: undefined,
         columnField,
         operatorValue: newOperator.value,
+        value: eraseItemValue ? undefined : item.value,
       });
     },
-    [apiRef, applyFilterChanges, item],
+    [apiRef, applyFilterChanges, item, currentColumn, currentOperator],
   );
 
   const changeOperator = React.useCallback(
     (event: SelectChangeEvent) => {
       const operatorValue = event.target.value as string;
 
+      const newOperator = currentColumn?.filterOperators!.find(
+        (operator) => operator.value === operatorValue,
+      );
+
+      const eraseItemValue =
+        !newOperator?.InputComponent ||
+        newOperator?.InputComponent !== currentOperator?.InputComponent;
+
       applyFilterChanges({
         ...item,
         operatorValue,
+        value: eraseItemValue ? undefined : item.value,
       });
     },
-    [applyFilterChanges, item],
+    [applyFilterChanges, item, currentColumn, currentOperator],
   );
 
   const changeLinkOperator = React.useCallback(
@@ -129,6 +156,20 @@ function GridFilterForm(props: GridFilterFormProps) {
       deleteFilter(item);
     }
   };
+
+  React.useImperativeHandle(
+    focusElementRef,
+    () => ({
+      focus: () => {
+        if (currentOperator?.InputComponent) {
+          valueRef?.current?.focus();
+        } else {
+          filterSelectorRef.current!.focus();
+        }
+      },
+    }),
+    [currentOperator],
+  );
 
   return (
     <GridFilterFormRoot className={classes.root}>
@@ -200,6 +241,7 @@ function GridFilterForm(props: GridFilterFormProps) {
           value={item.operatorValue}
           onChange={changeOperator}
           native
+          inputRef={filterSelectorRef}
         >
           {currentColumn?.filterOperators?.map((operator) => (
             <option key={operator.value} value={operator.value}>
@@ -217,6 +259,7 @@ function GridFilterForm(props: GridFilterFormProps) {
             apiRef={apiRef}
             item={item}
             applyValue={applyFilterChanges}
+            focusElementRef={valueRef}
             {...currentOperator.InputComponentProps}
           />
         ) : null}
@@ -234,6 +277,10 @@ GridFilterForm.propTypes = {
   applyMultiFilterOperatorChanges: PropTypes.func.isRequired,
   deleteFilter: PropTypes.func.isRequired,
   disableMultiFilterOperator: PropTypes.bool,
+  focusElementRef: PropTypes /* @typescript-to-proptypes-ignore */.oneOfType([
+    PropTypes.func,
+    PropTypes.object,
+  ]),
   hasMultipleFilters: PropTypes.bool.isRequired,
   item: PropTypes.shape({
     columnField: PropTypes.string.isRequired,

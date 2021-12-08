@@ -1,43 +1,56 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@mui/styles';
+import Box from '@mui/material/Box';
 import Rating from '@mui/material/Rating';
 import { DataGrid, getGridNumericColumnOperators } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
-const useStyles = makeStyles({
-  root: {
-    display: 'inline-flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    height: 48,
-    paddingLeft: 20,
-  },
-});
-
 function RatingInputValue(props) {
-  const classes = useStyles();
-  const { item, applyValue } = props;
+  const { item, applyValue, focusElementRef } = props;
+
+  const ratingRef = React.useRef(null);
+  React.useImperativeHandle(focusElementRef, () => ({
+    focus: () => {
+      ratingRef.current
+        .querySelector(`input[value="${Number(item.value) || ''}"]`)
+        .focus();
+    },
+  }));
 
   const handleFilterChange = (event) => {
     applyValue({ ...item, value: event.target.value });
   };
 
   return (
-    <div className={classes.root}>
+    <Box
+      sx={{
+        display: 'inline-flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        height: 48,
+        pl: '20px',
+      }}
+    >
       <Rating
         name="custom-rating-filter-operator"
         placeholder="Filter value"
         value={Number(item.value)}
         onChange={handleFilterChange}
         precision={0.5}
+        ref={ratingRef}
       />
-    </div>
+    </Box>
   );
 }
 
 RatingInputValue.propTypes = {
   applyValue: PropTypes.func.isRequired,
+  focusElementRef: PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.shape({
+      current: PropTypes.any.isRequired,
+    }),
+  ]),
   item: PropTypes.shape({
     columnField: PropTypes.string.isRequired,
     id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
@@ -51,7 +64,7 @@ export default function ExtendNumericOperator() {
   const columns = [...data.columns];
 
   const [filterModel, setFilterModel] = React.useState({
-    items: [{ columnField: 'rating', value: '3.5', operatorValue: '>=' }],
+    items: [{ id: 1, columnField: 'rating', value: '3.5', operatorValue: '>=' }],
   });
 
   if (columns.length > 0) {
