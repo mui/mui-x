@@ -46,6 +46,16 @@ const INTERFACES_WITH_DEDICATED_PAGES = [
 ];
 
 const parseProperty = (propertySymbol: ts.Symbol, project: Project): ParsedProperty => {
+  const str = project.checker.typeToString(
+    project.checker.getTypeOfSymbolAtLocation(propertySymbol, propertySymbol.valueDeclaration!),
+    undefined,
+    ts.TypeFormatFlags.NoTruncation,
+  );
+
+  if (propertySymbol.name === 'subscribeEvent') {
+    console.log(str);
+  }
+
   return {
     name: propertySymbol.name,
     description: getSymbolDescription(propertySymbol, project),
@@ -54,6 +64,8 @@ const parseProperty = (propertySymbol: ts.Symbol, project: Project): ParsedPrope
     isOptional: !!propertySymbol.declarations?.find(ts.isPropertySignature)?.questionToken,
     typeStr: project.checker.typeToString(
       project.checker.getTypeOfSymbolAtLocation(propertySymbol, propertySymbol.valueDeclaration!),
+      propertySymbol.valueDeclaration,
+      ts.TypeFormatFlags.NoTruncation,
     ),
   };
 };
