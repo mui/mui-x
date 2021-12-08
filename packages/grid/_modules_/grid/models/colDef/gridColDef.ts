@@ -230,7 +230,13 @@ export interface GridGroupingColDefOverride
   extends Omit<
     GridColDef,
     'editable' | 'valueSetter' | 'field' | 'preProcessEditCellProps' | 'renderEditCell'
-  > {}
+  > {
+  /**
+   * If `true`, the grouping cells will not render the amount of descendants.
+   * @default: false
+   */
+  hideDescendantCount?: boolean;
+}
 
 export interface GridGroupingColDefOverrideParams {
   /**
