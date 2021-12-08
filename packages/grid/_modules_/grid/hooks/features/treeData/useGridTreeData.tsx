@@ -3,11 +3,15 @@ import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridComponentProps } from '../../../GridComponentProps';
 import {
   GRID_TREE_DATA_GROUP_COL_DEF,
-  GRID_TREE_DATA_GROUP_COL_DEF_FORCED_FIELDS,
+  GRID_TREE_DATA_GROUP_COL_DEF_FORCED_PROPERTIES,
 } from './gridTreeDataGroupColDef';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { GridEvents, GridEventListener } from '../../../models/events';
-import { GridColDef, GridGroupingColDefOverrideParams } from '../../../models';
+import {
+  GridColDef,
+  GridGroupingColDefOverride,
+  GridGroupingColDefOverrideParams,
+} from '../../../models';
 import { isSpaceKey } from '../../../utils/keyboardUtils';
 import { useFirstRender } from '../../utils/useFirstRender';
 import { buildRowTree, BuildRowTreeGroupingCriteria } from '../../../utils/tree/buildRowTree';
@@ -15,6 +19,7 @@ import { GridRowGroupingPreProcessing } from '../../core/rowGroupsPerProcessing'
 import { gridFilteredDescendantCountLookupSelector } from '../filter';
 import { GridPreProcessingGroup, useGridRegisterPreProcessor } from '../../core/preProcessing';
 import { GridColumnsRawState } from '../columns/gridColumnsState';
+import { GridTreeDataGroupingCell } from '../../../components';
 
 const TREE_DATA_GROUPING_NAME = 'tree-data';
 
@@ -33,12 +38,7 @@ export const useGridTreeData = (
   const groupingColDef = React.useMemo<GridColDef>(() => {
     const propGroupingColDef = props.groupingColDef;
 
-    const baseColDef: GridColDef = {
-      ...GRID_TREE_DATA_GROUP_COL_DEF,
-      headerName: apiRef.current.getLocaleText('treeDataGroupingHeaderName'),
-      ...GRID_TREE_DATA_GROUP_COL_DEF_FORCED_FIELDS,
-    };
-    let colDefOverride: Partial<GridColDef> | null | undefined;
+    let colDefOverride: GridGroupingColDefOverride | null | undefined;
 
     if (typeof propGroupingColDef === 'function') {
       const params: GridGroupingColDefOverrideParams = {
@@ -51,9 +51,20 @@ export const useGridTreeData = (
       colDefOverride = propGroupingColDef;
     }
 
+    const { hideDescendantCount, ...colDefOverrideProperties } = colDefOverride ?? {};
+
+    const commonProperties: Omit<GridColDef, 'field' | 'editable'> = {
+      ...GRID_TREE_DATA_GROUP_COL_DEF,
+      renderCell: (params) => (
+        <GridTreeDataGroupingCell {...params} hideDescendantCount={hideDescendantCount} />
+      ),
+      headerName: apiRef.current.getLocaleText('treeDataGroupingHeaderName'),
+    };
+
     return {
-      ...baseColDef,
-      ...colDefOverride,
+      ...commonProperties,
+      ...colDefOverrideProperties,
+      ...GRID_TREE_DATA_GROUP_COL_DEF_FORCED_PROPERTIES,
     };
   }, [apiRef, props.groupingColDef]);
 

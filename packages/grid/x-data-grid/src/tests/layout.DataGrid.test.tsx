@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { createRenderer, screen, ErrorBoundary } from '@material-ui/monorepo/test/utils';
-import { useFakeTimers, stub } from 'sinon';
+import { createRenderer, screen, ErrorBoundary, waitFor } from '@material-ui/monorepo/test/utils';
+import { SinonStub, stub } from 'sinon';
 import { expect } from 'chai';
 import {
   DataGrid,
@@ -13,10 +13,10 @@ import {
 } from '@mui/x-data-grid';
 import { useData } from 'packages/storybook/src/hooks/useData';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { getColumnHeaderCell, getColumnValues, raf, getCell, getRow } from 'test/utils/helperFn';
+import { getColumnHeaderCell, getColumnValues, getCell, getRow } from 'test/utils/helperFn';
 
 describe('<DataGrid /> - Layout & Warnings', () => {
-  const { render } = createRenderer();
+  const { clock, render } = createRenderer({ clock: 'fake' });
 
   const baselineProps = {
     rows: [
@@ -50,16 +50,6 @@ describe('<DataGrid /> - Layout & Warnings', () => {
   });
 
   describe('Layout', () => {
-    let clock;
-
-    beforeEach(() => {
-      clock = useFakeTimers();
-    });
-
-    afterEach(() => {
-      clock.restore();
-    });
-
     before(function beforeHook() {
       if (/jsdom/.test(window.navigator.userAgent)) {
         // Need layouting
@@ -68,7 +58,11 @@ describe('<DataGrid /> - Layout & Warnings', () => {
     });
 
     it('should resize the width of the columns', async () => {
-      clock.restore();
+      // Using a fake clock also affects `requestAnimationFrame`.
+      // Calling clock.tick() should call the callback passed, but it doesn't work.
+      stub(window, 'requestAnimationFrame').callsFake((fn: any) => fn());
+      stub(window, 'cancelAnimationFrame');
+
       interface TestCaseProps {
         width?: number;
       }
@@ -87,10 +81,14 @@ describe('<DataGrid /> - Layout & Warnings', () => {
       expect(rect.width).to.equal(300 - 2);
 
       setProps({ width: 400 });
-      await raf();
 
-      rect = container.querySelector('[role="row"][data-rowindex="0"]').getBoundingClientRect();
-      expect(rect.width).to.equal(400 - 2);
+      await waitFor(() => {
+        rect = container.querySelector('[role="row"][data-rowindex="0"]').getBoundingClientRect();
+        expect(rect.width).to.equal(400 - 2);
+      });
+
+      (window.requestAnimationFrame as SinonStub).restore();
+      (window.cancelAnimationFrame as SinonStub).restore();
     });
 
     // Adaptation of describeConformance()
