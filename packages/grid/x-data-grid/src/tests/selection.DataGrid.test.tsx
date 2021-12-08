@@ -267,6 +267,26 @@ describe('<DataGrid /> - Selection', () => {
       });
       expect(getSelectedRowIds()).to.deep.equal([0, 1, 2]);
     });
+
+    it('should add new row to the selection when pressing Shift+Space', () => {
+      render(<TestDataGridSelection checkboxSelection />);
+      getCell(2, 1).focus();
+      expect(getSelectedRowIds()).to.deep.equal([]);
+
+      fireEvent.keyDown(document.activeElement || document.body, {
+        key: ' ',
+        shiftKey: true,
+      });
+
+      expect(getSelectedRowIds()).to.deep.equal([2]);
+
+      getCell(1, 1).focus();
+      fireEvent.keyDown(document.activeElement || document.body, {
+        key: ' ',
+        shiftKey: true,
+      });
+      expect(getSelectedRowIds()).to.deep.equal([1, 2]);
+    });
   });
 
   describe('props: isRowSelectable', () => {
