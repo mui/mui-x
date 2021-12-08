@@ -5,7 +5,6 @@ import Chip from '@mui/material/Chip';
 
 import TextField from '@mui/material/TextField';
 import { unstable_useId as useId } from '@mui/material/utils';
-import { GridLoadIcon } from '../../icons/index';
 import { GridFilterItem } from '../../../models/gridFilterItem';
 
 export interface GridFilterInputMultipleValueProps {
@@ -37,7 +36,6 @@ function GridFilterInputMultipleValue(
 ) {
   const { item, applyValue, type, apiRef, focusElementRef, ...other } = props;
   const [filterValueState, setFilterValueState] = React.useState(item.value || []);
-  const [applying, setIsApplying] = React.useState(false);
   const id = useId();
 
   const filterValueOptionFormater =
@@ -69,14 +67,10 @@ function GridFilterInputMultipleValue(
     (event, value) => {
       const parsedValue = value.map(filterValueParser);
       setFilterValueState(parsedValue);
-      setIsApplying(true);
       applyValue({ ...item, value: [...parsedValue] });
-      setIsApplying(false);
     },
     [applyValue, item, filterValueParser],
   );
-
-  const InputProps = applying ? { endAdornment: <GridLoadIcon /> } : {};
 
   return (
     <Autocomplete
@@ -119,7 +113,6 @@ function GridFilterInputMultipleValue(
             shrink: true,
           }}
           inputRef={focusElementRef}
-          InputProps={{ ...params.InputProps, ...InputProps }}
           type={type || 'text'}
           variant="standard"
         />
