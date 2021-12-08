@@ -272,7 +272,7 @@ export const useGridSelection = (
       const isSelected = apiRef.current.isRowSelected(id);
 
       if (resetSelection) {
-        apiRef.current.selectRow(id, hasCtrlKey || checkboxSelection ? !isSelected : true, true);
+        apiRef.current.selectRow(id, !isMultipleSelectionDisabled ? !isSelected : true, true);
       } else {
         apiRef.current.selectRow(id, !isSelected, false);
       }

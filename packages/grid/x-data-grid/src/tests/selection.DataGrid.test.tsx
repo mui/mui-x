@@ -96,14 +96,14 @@ describe('<DataGrid /> - Selection', () => {
       expect(getSelectedRowIds()).to.deep.equal([1]);
     });
 
-    it(`should not deselect the selected row on Shift + Space`, () => {
+    it(`should deselect the selected row on Shift + Space`, () => {
       render(<TestDataGridSelection />);
       getCell(0, 0).focus();
       fireEvent.keyDown(document.activeElement || document.body, { key: ' ', shiftKey: true });
       expect(getSelectedRowIds()).to.deep.equal([0]);
 
       fireEvent.keyDown(document.activeElement || document.body, { key: ' ', shiftKey: true });
-      expect(getSelectedRowIds()).to.deep.equal([0]);
+      expect(getSelectedRowIds()).to.deep.equal([]);
     });
 
     it('should not select a range with shift pressed', () => {
