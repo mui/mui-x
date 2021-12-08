@@ -13,6 +13,7 @@ export interface GridFilterInputMultipleValueProps {
   applyValue: (value: GridFilterItem) => void;
   // Is any because if typed as GridApiRef a dep cycle occurs. Same happens if ApiContext is used.
   apiRef: any;
+  focusElementRef?: React.Ref<any>;
 }
 
 export interface GridTypeFilterInputMultipleValueProps extends GridFilterInputMultipleValueProps {
@@ -34,7 +35,7 @@ function GridFilterInputMultipleValue(
   props: GridTypeFilterInputMultipleValueProps &
     Omit<AutocompleteProps<any[], true, false, true>, 'options' | 'renderInput'>,
 ) {
-  const { item, applyValue, type, apiRef, ...other } = props;
+  const { item, applyValue, type, apiRef, focusElementRef, ...other } = props;
   const [filterValueState, setFilterValueState] = React.useState(item.value || []);
   const [applying, setIsApplying] = React.useState(false);
   const id = useId();
@@ -117,6 +118,7 @@ function GridFilterInputMultipleValue(
             ...params.InputLabelProps,
             shrink: true,
           }}
+          inputRef={focusElementRef}
           InputProps={{ ...params.InputProps, ...InputProps }}
           type={type || 'text'}
           variant="standard"
