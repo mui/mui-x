@@ -16,5 +16,5 @@ export const useGridRegisterFilteringMethod = (
     [groupingName, filteringMethod],
   );
 
-  useGridRegisterPreProcessor(apiRef, GridPreProcessingGroup.registerFiltering, updateRegistration);
+  useGridRegisterPreProcessor(apiRef, GridPreProcessingGroup.filteringMethod, updateRegistration);
 };

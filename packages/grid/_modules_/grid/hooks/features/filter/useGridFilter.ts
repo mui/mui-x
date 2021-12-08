@@ -174,7 +174,7 @@ export const useGridFilter = (
           : null;
 
       lastFilteringMethodApplied.current = filteringMethod;
-      const filteringResult = filteringMethodCollectionRef.current[rowGroupingName]({
+      const filteringResult = filteringMethod({
         isRowMatchingFilters,
       });
 
@@ -382,12 +382,12 @@ export const useGridFilter = (
     GridEventListener<GridEvents.preProcessorRegister>
   >(
     (name) => {
-      if (name !== GridPreProcessingGroup.registerFiltering) {
+      if (name !== GridPreProcessingGroup.filteringMethod) {
         return;
       }
 
       filteringMethodCollectionRef.current = apiRef.current.unstable_applyPreProcessors(
-        GridPreProcessingGroup.registerFiltering,
+        GridPreProcessingGroup.filteringMethod,
         {},
       );
 
@@ -411,16 +411,21 @@ export const useGridFilter = (
   useGridApiEventHandler(apiRef, GridEvents.preProcessorRegister, handlePreProcessorRegister);
 
   /**
-   * EFFECTS
+   * 1ST RENDER
    */
   useFirstRender(() => {
+    // This line of pre-processor initialization should always come after the registration of `flatFilteringMethod`
+    // Otherwise on the 1st render there would be no filtering method registered
     filteringMethodCollectionRef.current = apiRef.current.unstable_applyPreProcessors(
-      GridPreProcessingGroup.registerFiltering,
+      GridPreProcessingGroup.filteringMethod,
       {},
     );
     apiRef.current.unstable_applyFilters();
   });
 
+  /**
+   * EFFECTS
+   */
   React.useEffect(() => {
     if (props.filterModel !== undefined) {
       apiRef.current.setFilterModel(props.filterModel);

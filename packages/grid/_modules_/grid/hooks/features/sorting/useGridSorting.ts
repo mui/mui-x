@@ -363,12 +363,12 @@ export const useGridSorting = (
     GridEventListener<GridEvents.preProcessorRegister>
   >(
     (name) => {
-      if (name !== GridPreProcessingGroup.registerSorting) {
+      if (name !== GridPreProcessingGroup.sortingMethod) {
         return;
       }
 
       sortingMethodCollectionRef.current = apiRef.current.unstable_applyPreProcessors(
-        GridPreProcessingGroup.registerSorting,
+        GridPreProcessingGroup.sortingMethod,
         {},
       );
 
@@ -389,16 +389,21 @@ export const useGridSorting = (
   useGridApiEventHandler(apiRef, GridEvents.preProcessorRegister, handlePreProcessorRegister);
 
   /**
-   * UPDATES
+   * 1ST RENDER
    */
   useFirstRender(() => {
+    // This line of pre-processor initialization should always come after the registration of `flatSortingMethod`
+    // Otherwise on the 1st render there would be no sorting method registered
     sortingMethodCollectionRef.current = apiRef.current.unstable_applyPreProcessors(
-      GridPreProcessingGroup.registerSorting,
+      GridPreProcessingGroup.sortingMethod,
       {},
     );
     apiRef.current.applySorting();
   });
 
+  /**
+   * EFFECTS
+   */
   React.useEffect(() => {
     if (props.sortModel !== undefined) {
       apiRef.current.setSortModel(props.sortModel);

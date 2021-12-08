@@ -16,5 +16,5 @@ export const useGridRegisterSortingMethod = (
     [groupingName, filteringMethod],
   );
 
-  useGridRegisterPreProcessor(apiRef, GridPreProcessingGroup.registerSorting, updateRegistration);
+  useGridRegisterPreProcessor(apiRef, GridPreProcessingGroup.sortingMethod, updateRegistration);
 };
