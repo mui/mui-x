@@ -32,6 +32,13 @@ function GridFilterInputMultipleSingleSelect(props: GridFilterInputMultipleSingl
   const [filterValueState, setFilterValueState] = React.useState(item.value || []);
   const id = useId();
 
+  const currentColumn = item.columnField ? apiRef.current.getColumn(item.columnField) : null;
+  const currentValueOptions = React.useMemo(() => {
+    return typeof currentColumn.valueOptions === 'function'
+      ? currentColumn.valueOptions({ field: currentColumn.field })
+      : currentColumn.valueOptions;
+  }, [currentColumn]);
+
   const filterValueOptionFormater = getSingleSelectOptionFormatter(
     apiRef.current.getColumn(item.columnField),
     apiRef.current,
@@ -42,9 +49,26 @@ function GridFilterInputMultipleSingleSelect(props: GridFilterInputMultipleSingl
   );
 
   React.useEffect(() => {
-    const itemValue = item.value ?? [];
-    setFilterValueState(itemValue.map(filterValueParser));
-  }, [item.value, filterValueParser]);
+    let itemValue;
+
+    if (currentValueOptions !== undefined) {
+      // sanitize if valueOptions are provided
+      const parsedCurrentValueOptions = currentValueOptions.map(filterValueParser);
+      itemValue = item.value
+        .map(filterValueParser)
+        .filter((element) => parsedCurrentValueOptions.includes(element));
+      if (itemValue !== item.value) {
+        applyValue({ ...item, value: itemValue });
+        return;
+      }
+    } else {
+      itemValue = item.value.map(filterValueParser);
+    }
+
+    itemValue = itemValue ?? [];
+
+    setFilterValueState(itemValue);
+  }, [item, currentValueOptions, applyValue, filterValueParser]);
 
   const isOptionEqualToValue = React.useCallback(
     (option, value) => filterValueParser(option) === String(value),
@@ -65,7 +89,7 @@ function GridFilterInputMultipleSingleSelect(props: GridFilterInputMultipleSingl
       multiple
       freeSolo={false}
       limitTags={1}
-      options={apiRef.current.getColumn(item.columnField).valueOptions}
+      options={currentValueOptions}
       isOptionEqualToValue={isOptionEqualToValue}
       filterOptions={filter}
       id={id}
