@@ -26,7 +26,7 @@
     {
       "name": "showFilterPanel",
       "description": "Shows the filter panel. If <code>targetColumnField</code> is given, a filter for this field is also added.",
-      "type": "(targetColumnField?: string | undefined) => void"
+      "type": "(targetColumnField?: string) => void"
     },
     {
       "name": "upsertFilterItem",

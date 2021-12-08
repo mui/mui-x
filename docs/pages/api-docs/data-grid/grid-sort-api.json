@@ -40,7 +40,7 @@
     {
       "name": "sortColumn",
       "description": "Sorts a column.",
-      "type": "(column: GridColDef, direction?: GridSortDirection, allowMultipleSorting?: boolean | undefined) => void"
+      "type": "(\n    column: GridColDef,\n    direction?: GridSortDirection,\n    allowMultipleSorting?: boolean,\n  ) => void"
     }
   ]
 }

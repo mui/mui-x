@@ -45,18 +45,27 @@ const INTERFACES_WITH_DEDICATED_PAGES = [
   'GridColumnPinningApi',
 ];
 
-const parseProperty = (propertySymbol: ts.Symbol, project: Project): ParsedProperty => ({
-  name: propertySymbol.name,
-  description: getSymbolDescription(propertySymbol, project),
-  tags: getSymbolJSDocTags(propertySymbol),
-  symbol: propertySymbol,
-  isOptional: !!propertySymbol.declarations?.find(ts.isPropertySignature)?.questionToken,
-  typeStr: project.checker.typeToString(
-    project.checker.getTypeOfSymbolAtLocation(propertySymbol, propertySymbol.valueDeclaration!),
-    propertySymbol.valueDeclaration,
-    ts.TypeFormatFlags.NoTruncation,
-  ),
-});
+const parseProperty = (propertySymbol: ts.Symbol, project: Project): ParsedProperty => {
+  let typeStr: string;
+  if (propertySymbol.valueDeclaration && ts.isPropertySignature(propertySymbol.valueDeclaration)) {
+    typeStr = propertySymbol.valueDeclaration.type?.getText() ?? '';
+  } else {
+    typeStr = project.checker.typeToString(
+      project.checker.getTypeOfSymbolAtLocation(propertySymbol, propertySymbol.valueDeclaration!),
+      propertySymbol.valueDeclaration,
+      ts.TypeFormatFlags.NoTruncation,
+    );
+  }
+
+  return {
+    name: propertySymbol.name,
+    description: getSymbolDescription(propertySymbol, project),
+    tags: getSymbolJSDocTags(propertySymbol),
+    symbol: propertySymbol,
+    isOptional: !!propertySymbol.declarations?.find(ts.isPropertySignature)?.questionToken,
+    typeStr,
+  };
+};
 
 function generateMarkdownFromProperties(
   object: ParsedObject,
