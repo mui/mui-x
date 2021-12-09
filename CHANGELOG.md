@@ -57,7 +57,7 @@ A big thanks to the 5 contributors who made this release possible. Here are some
 - [core] Type the `api` param in callback interfaces (#3315) @flaviendelangle
 - [core] Update monorepo (#3370) @flaviendelangle
 - [core] Use pre-processors for sorting and filtering (#3318) @flaviendelangle
-- [test] ReplaceuseFakeTimers (#3323) @m4theushw
+- [test] Replace `useFakeTimers` (#3323) @m4theushw
 
 ### Docs
 
