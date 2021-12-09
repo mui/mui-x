@@ -102,6 +102,11 @@ const koKRGrid: Partial<GridLocaleText> = {
   // Actions cell more text
   actionsCellMore: '더보기',
 
+  // Column pinning text
+  // pinToLeft: 'Pin to left',
+  // pinToRight: 'Pin to right',
+  // unpin: 'Unpin',
+
   // Tree Data
   treeDataGroupingHeaderName: '그룹',
   treeDataExpand: '하위노드 펼치기',

@@ -11,7 +11,7 @@ import { createRenderer, fireEvent, screen, waitFor, act } from '@material-ui/mo
 import { expect } from 'chai';
 import * as React from 'react';
 import { getActiveCell, getCell, getRow, getColumnHeaderCell } from 'test/utils/helperFn';
-import { stub, spy, useFakeTimers } from 'sinon';
+import { stub, spy } from 'sinon';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -39,12 +39,9 @@ const generateDate = (
 };
 
 describe('<DataGridPro /> - Edit Rows', () => {
-  let clock;
   let baselineProps;
 
   beforeEach(() => {
-    clock = useFakeTimers();
-
     baselineProps = {
       autoHeight: isJSDOM,
       rows: [
@@ -72,11 +69,7 @@ describe('<DataGridPro /> - Edit Rows', () => {
     };
   });
 
-  afterEach(() => {
-    clock.restore();
-  });
-
-  const { render } = createRenderer();
+  const { clock, render } = createRenderer({ clock: 'fake' });
 
   let apiRef: GridApiRef;
 
@@ -754,7 +747,7 @@ describe('<DataGridPro /> - Edit Rows', () => {
       expect(secondOption).to.have.text('Admin');
     });
 
-    it('should set the focus correctly', () => {
+    it('should set the focus correctly when entering the edit mode with a double click', () => {
       render(
         <TestCase
           columns={[
@@ -780,6 +773,34 @@ describe('<DataGridPro /> - Edit Rows', () => {
       fireEvent.doubleClick(cell);
       // @ts-expect-error need to migrate helpers to TypeScript
       expect(screen.getByRole('button', { name: 'Nike' })).toHaveFocus();
+    });
+
+    it('should move the focus to the cell below when selecting a value with Enter', async () => {
+      render(
+        <TestCase
+          columns={[
+            {
+              field: 'brand',
+              type: 'singleSelect',
+              valueOptions: ['Nike', 'Adidas'],
+              editable: true,
+            },
+          ]}
+          rows={[
+            { id: 0, brand: 'Nike' },
+            { id: 1, brand: 'Adidas' },
+          ]}
+        />,
+      );
+      const cell = getCell(0, 0);
+      cell.focus();
+      fireEvent.keyDown(cell, { key: 'Enter' });
+      fireEvent.keyDown(screen.queryByRole('option', { name: 'Nike' }), { key: 'ArrowDown' });
+      fireEvent.keyDown(screen.queryByRole('option', { name: 'Adidas' }), { key: 'Enter' });
+      await waitFor(() => {
+        // @ts-expect-error need to migrate helpers to TypeScript
+        expect(getCell(1, 0)).toHaveFocus();
+      });
     });
 
     it('should not exit the edit mode when validateCell returns an object with error', async () => {
@@ -1374,6 +1395,7 @@ describe('<DataGridPro /> - Edit Rows', () => {
       fireEvent.click(getCell(2, 0));
       clock.tick(0);
       await waitFor(() => {
+        // Wait for promise
         expect(cell).not.to.have.class('MuiDataGrid-cell--editing');
         expect(cell).to.have.text('ADIDAS');
       });

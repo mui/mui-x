@@ -36,6 +36,7 @@
     "disableChildrenSorting": { "type": { "name": "bool" } },
     "disableColumnFilter": { "type": { "name": "bool" } },
     "disableColumnMenu": { "type": { "name": "bool" } },
+    "disableColumnPinning": { "type": { "name": "bool" } },
     "disableColumnReorder": { "type": { "name": "bool" } },
     "disableColumnResize": { "type": { "name": "bool" } },
     "disableColumnSelector": { "type": { "name": "bool" } },
@@ -122,6 +123,7 @@
     "onFilterModelChange": { "type": { "name": "func" } },
     "onPageChange": { "type": { "name": "func" } },
     "onPageSizeChange": { "type": { "name": "func" } },
+    "onPinnedColumnsChange": { "type": { "name": "func" } },
     "onResize": { "type": { "name": "func" } },
     "onRowClick": { "type": { "name": "func" } },
     "onRowDoubleClick": { "type": { "name": "func" } },
@@ -138,6 +140,12 @@
     "paginationMode": {
       "type": { "name": "enum", "description": "'client'<br>&#124;&nbsp;'server'" },
       "default": "\"client\""
+    },
+    "pinnedColumns": {
+      "type": {
+        "name": "shape",
+        "description": "{ left?: Array&lt;string&gt;, right?: Array&lt;string&gt; }"
+      }
     },
     "rowBuffer": { "type": { "name": "number" }, "default": "3" },
     "rowCount": { "type": { "name": "number" } },
@@ -289,6 +297,9 @@
       "virtualScroller",
       "virtualScrollerContent",
       "virtualScrollerRenderZone",
+      "pinnedColumns",
+      "pinnedColumns--left",
+      "pinnedColumns--right",
       "root",
       "row--editable",
       "row--editing",

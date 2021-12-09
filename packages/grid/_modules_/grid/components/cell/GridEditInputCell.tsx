@@ -34,7 +34,7 @@ const GridEditInputCellRoot = styled(InputBase, {
   },
 }));
 
-function GridEditInputCell(props: GridRenderEditCellParams & InputBaseProps) {
+function GridEditInputCell(props: GridRenderEditCellParams & Omit<InputBaseProps, 'id'>) {
   const {
     id,
     value,
@@ -98,7 +98,7 @@ GridEditInputCell.propTypes = {
   /**
    * GridApi that let you manipulate the grid.
    */
-  api: PropTypes.any.isRequired,
+  api: PropTypes.object.isRequired,
 } as any;
 
 export { GridEditInputCell };

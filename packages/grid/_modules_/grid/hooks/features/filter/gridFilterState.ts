@@ -29,3 +29,13 @@ export interface GridFilterState {
 export interface GridFilterInitialState {
   filterModel?: GridFilterModel;
 }
+
+export interface GridFilteringParams {
+  isRowMatchingFilters: ((rowId: GridRowId) => boolean) | null;
+}
+
+export type GridFilteringMethod = (
+  params: GridFilteringParams,
+) => Pick<GridFilterState, 'visibleRowsLookup' | 'filteredDescendantCountLookup'>;
+
+export type GridFilteringMethodCollection = { [methodName: string]: GridFilteringMethod };

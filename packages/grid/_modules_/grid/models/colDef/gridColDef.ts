@@ -226,25 +226,26 @@ export interface GridColumnsMeta {
   positions: number[];
 }
 
-export type GridColumnLookup = { [field: string]: GridStateColDef };
-
-export interface GridColumnsState {
-  all: string[];
-  lookup: GridColumnLookup;
+export interface GridGroupingColDefOverride
+  extends Omit<
+    GridColDef,
+    'editable' | 'valueSetter' | 'field' | 'preProcessEditCellProps' | 'renderEditCell'
+  > {
+  /**
+   * If `true`, the grouping cells will not render the amount of descendants.
+   * @default: false
+   */
+  hideDescendantCount?: boolean;
 }
 
-export type GridColDefOverride<ForcedFields extends keyof GridColDef> = Omit<
-  Partial<GridColDef>,
-  ForcedFields
->;
-
-export type GridColDefOverrideCallback<ForcedFields extends keyof GridColDef> = (
-  params: GridColDefOverrideParams,
-) => GridColDefOverride<ForcedFields>;
-
-export interface GridColDefOverrideParams {
+export interface GridGroupingColDefOverrideParams {
   /**
-   * The column we are generating before the override.
+   * The name of the grouping algorithm currently building the grouping column.
    */
-  colDef: GridColDef;
+  groupingName: string;
+
+  /**
+   * The fields of the columns from which we want to group the values on this new grouping column.
+   */
+  fields: string[];
 }

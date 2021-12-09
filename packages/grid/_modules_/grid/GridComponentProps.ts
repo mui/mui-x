@@ -4,9 +4,9 @@ import { Theme } from '@mui/material/styles';
 import { GridInitialState } from './models/gridState';
 import { GridApiRef } from './models/api/gridApiRef';
 import {
-  GridColDefOverride,
-  GridColDefOverrideCallback,
+  GridGroupingColDefOverrideParams,
   GridColumns,
+  GridGroupingColDefOverride,
 } from './models/colDef/gridColDef';
 import {
   GridSimpleOptions,
@@ -24,6 +24,7 @@ import { GridRowParams } from './models/params/gridRowParams';
 import { GridSlotsComponentsProps } from './models/gridSlotsComponentsProps';
 import { GridClasses } from './gridClasses';
 import { GridCallbackDetails } from './models/api/gridCallbackDetails';
+import { GridPinnedColumns } from './models/api/gridColumnPinningApi';
 import { GridEventListener, GridEvents } from './models/events';
 
 /**
@@ -311,7 +312,6 @@ interface GridComponentOtherProps extends CommonProps {
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onPageSizeChange?: (pageSize: number, details: GridCallbackDetails) => void;
-
   /**
    * Set the edit rows model of the grid.
    */
@@ -355,6 +355,16 @@ interface GridComponentOtherProps extends CommonProps {
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onSortModelChange?: (model: GridSortModel, details: GridCallbackDetails) => void;
+  /**
+   * The column fields to display pinned to left or right.
+   */
+  pinnedColumns?: GridPinnedColumns;
+  /**
+   * Callback fired when the pinned columns have changed.
+   * @param {GridPinnedColumns} pinnedColumns The changed pinned columns.
+   * @param {GridCallbackDetails} details Additional details for this callback.
+   */
+  onPinnedColumnsChange?: (pinnedColumns: GridPinnedColumns, details: GridCallbackDetails) => void;
   /**
    * The label of the grid.
    */
@@ -401,8 +411,8 @@ interface GridComponentOtherProps extends CommonProps {
    * The grouping column used by the tree data.
    */
   groupingColDef?:
-    | GridColDefOverride<'field' | 'editable'>
-    | GridColDefOverrideCallback<'field' | 'editable'>;
+    | GridGroupingColDefOverride
+    | ((params: GridGroupingColDefOverrideParams) => GridGroupingColDefOverride | undefined | null);
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
