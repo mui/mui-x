@@ -27,7 +27,15 @@ A big thanks to the 5 contributors who made this release possible. Here are some
   <GridToolbarExport printOptions={{ disableToolbarButton: true }} />
   ```
 
-- 🙈 Add `hideDescendantCount` option to Tree Data (#3368) @flaviendelangle
+- 🙈 Add a new option to hide the amount of descendant on the grouping cells of the Tree Data (#3368) @flaviendelangle
+  
+  ```tsx
+  <DataGridPro
+    treeData
+    rows={rows}
+    columns={columns}
+    groupingColDef={{ hideDescendantCount }}
+  />
 - ⚠️ Deprecate the `getValue` param for the `valueGetter` callback (#3314) @flaviendelangle
 - 📚 Documentation improvements
 - 🐞 Bugfixes
