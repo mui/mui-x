@@ -13,7 +13,7 @@ A big thanks to the 5 contributors who made this release possible. Here are some
 
 - 🚀 Introduce the [column pinning](https://mui.com/components/data-grid/columns/#column-pinning) feature (#2946) @m4theushw
 
-  <img src="https://user-images.githubusercontent.com/5858539/145423491-bf550b77-7744-46e1-8fdb-8be1a9f5b9f5.gif" width="854" height="453" />
+  <img src="https://user-images.githubusercontent.com/42154031/145425635-b6314fbe-2f1e-4b73-908f-33ee1fda20c7.gif" width="964" height="657">
 
 - 🔥 Add ability to disable export options (#3270) @alexfauquette
 
