@@ -43,7 +43,7 @@ A big thanks to the 5 contributors who made this release possible. Here are some
 - [DataGrid] Filter value are conserved when possible (#3198) @alexfauquette
 - [DataGrid] Fix `DatePicker` bug by limiting years to 4 digits (#3222) @alexfauquette
 - [DataGrid] Fix column menu position when closing (#3289) @m4theushw
-- [DataGrid] Should not crash when a sort item uses a non-existing column (#3224) @flaviendelangle
+- [DataGrid] Fix to not crash when a sort item uses a non-existing column (#3224) @flaviendelangle
 
 ### Core
 
