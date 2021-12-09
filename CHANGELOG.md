@@ -28,7 +28,7 @@ A big thanks to the 5 contributors who made this release possible. Here are some
   ```
 
 - 🙈 Add a new option to hide the amount of descendant on the grouping cells of the Tree Data (#3368) @flaviendelangle
-  
+
   ```tsx
   <DataGridPro
     treeData
@@ -36,7 +36,17 @@ A big thanks to the 5 contributors who made this release possible. Here are some
     columns={columns}
     groupingColDef={{ hideDescendantCount }}
   />
+  ```
+
 - ⚠️ Deprecate the `getValue` param for the `valueGetter` callback (#3314) @flaviendelangle
+
+  Instead, you can access directly the row in the params
+
+  ```diff
+  -valueGetter: (params) => `${params.getValue(params.id, 'firstName') || ''} ${params.getValue(params.id, 'lastName') || ''}`
+  +valueGetter: (params) => `${params.row.firstName || ''} ${params.row.lastName || ''}`
+  ```
+
 - 📚 Documentation improvements
 - 🐞 Bugfixes
 
