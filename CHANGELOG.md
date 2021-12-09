@@ -54,7 +54,7 @@ A big thanks to the 5 contributors who made this release possible. Here are some
 - [core] Improve tests for Tree Data (#3366) @flaviendelangle
 - [core] Never import directly from the `__modules__` folder in the `x-data-grid-generator` package (#3379) @flaviendelangle
 - [core] Transition to a new StackOverflow tag (#3308) @oliviertassinari
-- [core] Type the api param in callback interfaces (#3315) @flaviendelangle
+- [core] Type the `api` param in callback interfaces (#3315) @flaviendelangle
 - [core] Update monorepo (#3370) @flaviendelangle
 - [core] Use pre-processors for sorting and filtering (#3318) @flaviendelangle
 - [test] ReplaceuseFakeTimers (#3323) @m4theushw
