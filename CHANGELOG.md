@@ -3,6 +3,73 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 5.2.0
+
+_Dec 9, 2021_
+
+A big thanks to the 5 contributors who made this release possible. Here are some highlights ✨:
+
+### `@mui/x-data-grid@v5.2.0` / `@mui/x-data-grid-pro@v5.2.0`
+
+- 🚀 Introduce the [column pinning](https://mui.com/components/data-grid/columns/#column-pinning) feature (#2946) @m4theushw
+
+  <img src="https://user-images.githubusercontent.com/5858539/145423491-bf550b77-7744-46e1-8fdb-8be1a9f5b9f5.gif" width="854" height="453" />
+
+- 🔥 Add ability to disable export options (#3270) @alexfauquette
+
+  You can disable either export options by setting `disableToolbarButton` to `true`.
+
+  ```tsx
+  <GridToolbarExport csvOptions={{ disableToolbarButton: true }} />
+  ```
+
+  ```tsx
+  <GridToolbarExport printOptions={{ disableToolbarButton: true }} />
+  ```
+
+- 🙈 Add `hideDescendantCount` option to Tree Data (#3368) @flaviendelangle
+- ⚠️ Deprecate the `getValue` param for the `valueGetter` callback (#3314) @flaviendelangle
+- 📚 Documentation improvements
+- 🐞 Bugfixes
+
+#### Changes
+
+- [DataGridPro] Add column pinning (#2946) @m4theushw
+- [DataGridPro] Add `hideDescendantCount` option to Tree Data (#3368) @flaviendelangle
+- [DataGridPro] Do not expand row children with Shift + Space (#3380) @flaviendelangle
+- [DataGridPro] Pass a list of `fields` to the callback version of `groupingColDef` (#3316) @flaviendelangle
+- [DataGrid] Deprecate the `getValue` param for the `valueGetter` callback (#3314) @flaviendelangle
+- [DataGrid] Add ability to disable export options (#3270) @alexfauquette
+- [DataGrid] Filter value are conserved when possible (#3198) @alexfauquette
+- [DataGrid] Fix `DatePicker` bug by limiting years to 4 digits (#3222) @alexfauquette
+- [DataGrid] Fix column menu position when closing (#3289) @m4theushw
+- [DataGrid] Should not crash when a sort item uses a non-existing column (#3224) @flaviendelangle
+
+### Core
+
+- [core] Add funding field (#3331) @oliviertassinari
+- [core] Fix missing LICENSE file (#3330) @oliviertassinari
+- [core] Fix release month in CHANGELOG (#3367) @m4theushw
+- [core] Fix `yarn prettier` script (#3292) @oliviertassinari
+- [core] Improve tests for Tree Data (#3366) @flaviendelangle
+- [core] Never import directly from the `__modules__` folder in the `x-data-grid-generator` package (#3379) @flaviendelangle
+- [core] Transition to a new StackOverflow tag (#3308) @oliviertassinari
+- [core] Type the api param in callback interfaces (#3315) @flaviendelangle
+- [core] Update monorepo (#3370) @flaviendelangle
+- [core] Use pre-processors for sorting and filtering (#3318) @flaviendelangle
+- [test] ReplaceuseFakeTimers (#3323) @m4theushw
+
+### Docs
+
+- [docs] Always use auto-generated `apiRef` documentation (#3266) @flaviendelangle
+- [docs] Avoid 301 links (#3329) @oliviertassinari
+- [docs] Disable the ad when not MIT (#3334) @oliviertassinari
+- [docs] Fix 404 link to Zendesk @oliviertassinari
+- [docs] Fix dead link on the overview page (#3326) @flaviendelangle
+- [docs] Fix double MUI in the title (#3332) @oliviertassinari
+- [docs] Fix duplicate "the" (#3365) @noam-honig
+- [docs] Update branch to deploy docs (#3321) @m4theushw
+
 ## 5.1.0
 
 _Dec 2, 2021_
