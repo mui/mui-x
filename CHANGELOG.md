@@ -44,7 +44,7 @@ A big thanks to the 5 contributors who made this release possible. Here are some
 
 - [DataGridPro] Add column pinning (#2946) @m4theushw
 - [DataGridPro] Add `hideDescendantCount` option to Tree Data (#3368) @flaviendelangle
-- [DataGridPro] Do not expand row children with Shift + Space (#3380) @flaviendelangle
+- [DataGridPro] Do not expand row children with <kbd>Shift</kbd> + Space (#3380) @flaviendelangle
 - [DataGridPro] Pass a list of `fields` to the callback version of `groupingColDef` (#3316) @flaviendelangle
 - [DataGrid] Deprecate the `getValue` param for the `valueGetter` callback (#3314) @flaviendelangle
 - [DataGrid] Add ability to disable export options (#3270) @alexfauquette
