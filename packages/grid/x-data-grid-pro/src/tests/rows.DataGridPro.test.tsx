@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { createRenderer, fireEvent } from '@material-ui/monorepo/test/utils';
-import { useFakeTimers, spy } from 'sinon';
+import { spy } from 'sinon';
 import { expect } from 'chai';
 import { getCell, getRow, getColumnValues, getRows } from 'test/utils/helperFn';
 import {
@@ -18,15 +18,12 @@ import { getData } from 'storybook/src/data/data-service';
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<DataGridPro /> - Rows', () => {
-  let clock;
   let baselineProps;
 
-  const { render } = createRenderer();
+  const { clock, render } = createRenderer({ clock: 'fake' });
 
   describe('getRowId', () => {
     beforeEach(() => {
-      clock = useFakeTimers();
-
       baselineProps = {
         autoHeight: isJSDOM,
         rows: [
@@ -48,10 +45,6 @@ describe('<DataGridPro /> - Rows', () => {
         ],
         columns: [{ field: 'clientId' }, { field: 'first' }, { field: 'age' }],
       };
-    });
-
-    afterEach(() => {
-      clock.restore();
     });
 
     it('should not crash with weird id', () => {
@@ -151,8 +144,6 @@ describe('<DataGridPro /> - Rows', () => {
 
   describe('apiRef: updateRows', () => {
     beforeEach(() => {
-      clock = useFakeTimers();
-
       baselineProps = {
         autoHeight: isJSDOM,
         rows: [
@@ -171,10 +162,6 @@ describe('<DataGridPro /> - Rows', () => {
         ],
         columns: [{ field: 'brand', headerName: 'Brand' }],
       };
-    });
-
-    afterEach(() => {
-      clock.restore();
     });
 
     let apiRef: GridApiRef;
@@ -283,8 +270,6 @@ describe('<DataGridPro /> - Rows', () => {
 
   describe('apiRef: setRows', () => {
     beforeEach(() => {
-      clock = useFakeTimers();
-
       baselineProps = {
         autoHeight: isJSDOM,
         rows: [
@@ -303,10 +288,6 @@ describe('<DataGridPro /> - Rows', () => {
         ],
         columns: [{ field: 'brand', headerName: 'Brand' }],
       };
-    });
-
-    afterEach(() => {
-      clock.restore();
     });
 
     let apiRef: GridApiRef;

@@ -7,7 +7,7 @@ import {
   gridClasses,
   GridPinnedPosition,
 } from '@mui/x-data-grid-pro';
-import { spy, useFakeTimers } from 'sinon';
+import { spy } from 'sinon';
 import { expect } from 'chai';
 import { createRenderer, fireEvent, screen, createEvent } from '@material-ui/monorepo/test/utils';
 import { getCell, getColumnHeaderCell, getColumnHeadersTextContent } from 'test/utils/helperFn';
@@ -26,17 +26,7 @@ function createDragOverEvent(target: ChildNode) {
 }
 
 describe('<DataGridPro /> - Column pinning', () => {
-  let clock;
-
-  beforeEach(() => {
-    clock = useFakeTimers();
-  });
-
-  afterEach(() => {
-    clock.restore();
-  });
-
-  const { render } = createRenderer();
+  const { render } = createRenderer({ clock: 'fake' });
 
   let apiRef: GridApiRef;
 

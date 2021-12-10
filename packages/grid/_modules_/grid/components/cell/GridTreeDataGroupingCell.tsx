@@ -26,8 +26,12 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-const GridTreeDataGroupingCell = (props: GridRenderCellParams) => {
-  const { id, field, rowNode } = props;
+interface GridTreeDataGroupingCellProps extends GridRenderCellParams {
+  hideDescendantCount?: boolean;
+}
+
+const GridTreeDataGroupingCell = (props: GridTreeDataGroupingCellProps) => {
+  const { id, field, rowNode, hideDescendantCount } = props;
 
   const rootProps = useGridRootProps();
   const apiRef = useGridApiContext();
@@ -80,7 +84,7 @@ const GridTreeDataGroupingCell = (props: GridRenderCellParams) => {
       </div>
       <span>
         {rowNode.groupingKey}
-        {filteredDescendantCount > 0 ? ` (${filteredDescendantCount})` : ''}
+        {!hideDescendantCount && filteredDescendantCount > 0 ? ` (${filteredDescendantCount})` : ''}
       </span>
     </Box>
   );
@@ -122,6 +126,7 @@ GridTreeDataGroupingCell.propTypes = {
    * If true, the cell is the active element.
    */
   hasFocus: PropTypes.bool.isRequired,
+  hideDescendantCount: PropTypes.bool,
   /**
    * The grid row id.
    */

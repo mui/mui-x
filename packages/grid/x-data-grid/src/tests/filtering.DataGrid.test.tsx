@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { createRenderer, fireEvent, screen, getByText } from '@material-ui/monorepo/test/utils';
 import { expect } from 'chai';
-import { useFakeTimers, spy } from 'sinon';
+import { spy } from 'sinon';
 import {
   DataGrid,
   GridToolbar,
@@ -45,17 +45,7 @@ function CustomInputValue(props: GridFilterInputValueProps) {
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<DataGrid /> - Filter', () => {
-  let clock;
-
-  beforeEach(() => {
-    clock = useFakeTimers();
-  });
-
-  afterEach(() => {
-    clock.restore();
-  });
-
-  const { render } = createRenderer();
+  const { clock, render } = createRenderer({ clock: 'fake' });
 
   const baselineProps = {
     autoHeight: isJSDOM,
