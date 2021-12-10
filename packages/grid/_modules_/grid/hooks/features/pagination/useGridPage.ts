@@ -65,8 +65,11 @@ export const useGridPage = (
     changeEvent: GridEvents.pageChange,
   });
 
+  /**
+   * API METHODS
+   */
   const setPage = React.useCallback(
-    (page: number) => {
+    (page) => {
       logger.debug(`Setting page to ${page}`);
 
       setGridState((state) => ({
@@ -81,6 +84,15 @@ export const useGridPage = (
     [setGridState, forceUpdate, logger],
   );
 
+  const pageApi: GridPageApi = {
+    setPage,
+  };
+
+  useGridApiMethod(apiRef, pageApi, 'GridPageApi');
+
+  /**
+   * EFFECTS
+   */
   React.useEffect(() => {
     setGridState((state) => {
       const rowCount = props.rowCount !== undefined ? props.rowCount : visibleTopLevelRowCount;
@@ -100,6 +112,9 @@ export const useGridPage = (
     forceUpdate();
   }, [setGridState, forceUpdate, visibleTopLevelRowCount, props.rowCount, props.page, apiRef]);
 
+  /**
+   * EVENTS
+   */
   const handlePageSizeChange: GridEventListener<GridEvents.pageSizeChange> = (pageSize) => {
     setGridState((state) => {
       const pageCount = getPageCount(state.pagination.rowCount, pageSize);
@@ -118,10 +133,4 @@ export const useGridPage = (
   };
 
   useGridApiEventHandler(apiRef, GridEvents.pageSizeChange, handlePageSizeChange);
-
-  const pageApi: GridPageApi = {
-    setPage,
-  };
-
-  useGridApiMethod(apiRef, pageApi, 'GridPageApi');
 };
