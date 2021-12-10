@@ -9,7 +9,6 @@ import buildEventsDocumentation from './buildEventsDocumentation';
 import { Project } from './utils';
 
 const workspaceRoot = path.resolve(__dirname, '../../../');
-const prettierConfigPath = path.join(workspaceRoot, 'prettier.config.js');
 
 interface CreateProgramOptions {
   rootPath: string;
