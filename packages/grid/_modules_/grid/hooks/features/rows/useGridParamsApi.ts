@@ -160,7 +160,7 @@ export function useGridParamsApi(apiRef: GridApiRef) {
 
       return params;
     },
-    [apiRef],
+    [apiRef, getCellValueWithDeprecationWarning],
   );
 
   const getCellValue = React.useCallback(
