@@ -14,7 +14,7 @@ import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
 import { GridCloseIcon } from '../../icons/index';
 import { GridTranslationKeys } from '../../../models/api/gridLocaleTextApi';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
-import { GridComponentProps } from '../../../GridComponentProps';
+import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { getDataGridUtilityClass } from '../../../gridClasses';
 
 export interface GridFilterFormProps {
@@ -29,7 +29,7 @@ export interface GridFilterFormProps {
   deleteFilter: (item: GridFilterItem) => void;
 }
 
-type OwnerState = { classes: GridComponentProps['classes'] };
+type OwnerState = { classes: DataGridProcessedProps['classes'] };
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;

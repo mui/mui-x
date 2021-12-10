@@ -11,9 +11,9 @@ import { gridFilteredDescendantCountLookupSelector } from '../../hooks/features/
 import { isNavigationKey, isSpaceKey } from '../../utils/keyboardUtils';
 import { GridEvents } from '../../models/events';
 import { getDataGridUtilityClass } from '../../gridClasses';
-import { GridComponentProps } from '../../GridComponentProps';
+import { DataGridProProcessedProps } from '../../models/props/DataGridProProps';
 
-type OwnerState = { classes: GridComponentProps['classes'] };
+type OwnerState = { classes: DataGridProProcessedProps['classes'] };
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;

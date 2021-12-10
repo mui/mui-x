@@ -1,7 +1,7 @@
 import * as React from 'react';
 import MuiDivider from '@mui/material/Divider';
 import { GridApiRef } from '../../../models/api/gridApiRef';
-import { GridComponentProps } from '../../../GridComponentProps';
+import { DataGridProProcessedProps } from '../../../models/props/DataGridProProps';
 import {
   visibleGridColumnsSelector,
   gridColumnsMetaSelector,
@@ -30,7 +30,7 @@ const Divider = () => <MuiDivider onClick={(event) => event.stopPropagation()} /
 export const useGridColumnPinning = (
   apiRef: GridApiRef,
   props: Pick<
-    GridComponentProps,
+    DataGridProProcessedProps,
     'initialState' | 'disableColumnPinning' | 'pinnedColumns' | 'onPinnedColumnsChange'
   >,
 ): void => {

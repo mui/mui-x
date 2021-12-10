@@ -1,4 +1,5 @@
-import type { GridComponentProps, GridApiRef } from '../../_modules_';
+import type { GridApiRef } from '../../_modules_';
+import { DataGridProProcessedProps } from '../../_modules_/grid/models/props/DataGridProProps';
 
 import { useGridInitialization } from '../../_modules_/grid/hooks/core';
 
@@ -29,7 +30,7 @@ import { useGridDimensions } from '../../_modules_/grid/hooks/features/dimension
 import { useGridTreeData } from '../../_modules_/grid/hooks/features/treeData/useGridTreeData';
 import { useGridColumnPinning } from '../../_modules_/grid/hooks/features/columnPinning/useGridColumnPinning';
 
-export const useDataGridProComponent = (apiRef: GridApiRef, props: GridComponentProps) => {
+export const useDataGridProComponent = (apiRef: GridApiRef, props: DataGridProProcessedProps) => {
   useGridInitialization(apiRef, props);
   useGridTreeData(apiRef, props);
   useGridSelection(apiRef, props);

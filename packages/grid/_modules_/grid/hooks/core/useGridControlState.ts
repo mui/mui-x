@@ -1,12 +1,12 @@
 import React from 'react';
-import { GridComponentProps } from '../../GridComponentProps';
+import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { GridApiRef } from '../../models/api/gridApiRef';
 import { GridControlStateApi } from '../../models/api/gridControlStateApi';
 import { GridControlStateItem } from '../../models/controlStateItem';
 import { GridSignature } from '../utils/useGridApiEventHandler';
 import { useGridApiMethod } from '../utils/useGridApiMethod';
 
-export function useGridControlState(apiRef: GridApiRef, props: GridComponentProps) {
+export function useGridControlState(apiRef: GridApiRef, props: DataGridProcessedProps) {
   const controlStateMapRef = React.useRef<Record<string, GridControlStateItem<any>>>({});
 
   const updateControlState = React.useCallback<GridControlStateApi['unstable_updateControlState']>(

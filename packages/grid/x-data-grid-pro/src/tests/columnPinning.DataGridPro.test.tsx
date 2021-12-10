@@ -3,7 +3,7 @@ import {
   DataGridPro,
   GridApiRef,
   useGridApiRef,
-  GridComponentProps,
+  DataGridProProps,
   gridClasses,
   GridPinnedPosition,
 } from '@mui/x-data-grid-pro';
@@ -30,10 +30,7 @@ describe('<DataGridPro /> - Column pinning', () => {
 
   let apiRef: GridApiRef;
 
-  const TestCase = ({
-    nbCols = 20,
-    ...other
-  }: Partial<GridComponentProps> & { nbCols?: number }) => {
+  const TestCase = ({ nbCols = 20, ...other }: Partial<DataGridProProps> & { nbCols?: number }) => {
     apiRef = useGridApiRef();
     const data = useData(1, nbCols);
     return (

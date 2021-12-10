@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { GridApiRef } from '../../../models/api/gridApiRef';
-import { GridComponentProps } from '../../../GridComponentProps';
+import { DataGridProProcessedProps } from '../../../models/props/DataGridProProps';
 import {
   GRID_TREE_DATA_GROUP_COL_DEF,
   GRID_TREE_DATA_GROUP_COL_DEF_FORCED_PROPERTIES,
@@ -38,7 +38,7 @@ const TREE_DATA_GROUPING_NAME = 'tree-data';
 export const useGridTreeData = (
   apiRef: GridApiRef,
   props: Pick<
-    GridComponentProps,
+    DataGridProProcessedProps,
     | 'treeData'
     | 'getTreeDataPath'
     | 'groupingColDef'

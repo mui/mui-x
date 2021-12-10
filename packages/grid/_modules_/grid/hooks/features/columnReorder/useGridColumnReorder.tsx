@@ -9,7 +9,7 @@ import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { useGridSelector } from '../../utils/useGridSelector';
 import { useGridState } from '../../utils/useGridState';
 import { gridColumnReorderDragColSelector } from './columnReorderSelector';
-import { GridComponentProps } from '../../../GridComponentProps';
+import { DataGridProProcessedProps } from '../../../models/props/DataGridProProps';
 import { useGridStateInit } from '../../utils/useGridStateInit';
 import { GridPreProcessingGroup } from '../../core/preProcessing';
 
@@ -31,7 +31,7 @@ const hasCursorPositionChanged = (
 ): boolean =>
   currentCoordinates.x !== nextCoordinates.x || currentCoordinates.y !== nextCoordinates.y;
 
-type OwnerState = { classes: GridComponentProps['classes'] };
+type OwnerState = { classes: DataGridProProcessedProps['classes'] };
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -49,7 +49,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
  */
 export const useGridColumnReorder = (
   apiRef: GridApiRef,
-  props: Pick<GridComponentProps, 'disableColumnReorder' | 'classes'>,
+  props: Pick<DataGridProProcessedProps, 'disableColumnReorder' | 'classes'>,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridColumnReorder');
 

@@ -9,10 +9,10 @@ import {
   GridRoot,
   useGridApiRef,
 } from '../../_modules_/grid';
+import { DataGridProps } from '../../_modules_/grid/models/props/DataGridProps';
 import { GridContextProvider } from '../../_modules_/grid/context/GridContextProvider';
 import { useDataGridComponent } from './useDataGridComponent';
-import { MAX_PAGE_SIZE, DataGridProps } from './DataGridProps';
-import { useDataGridProps } from './useDataGridProps';
+import { useDataGridProps, MAX_PAGE_SIZE } from './useDataGridProps';
 import { DataGridVirtualScroller } from './DataGridVirtualScroller';
 import { DataGridColumnHeaders } from './DataGridColumnHeaders';
 
