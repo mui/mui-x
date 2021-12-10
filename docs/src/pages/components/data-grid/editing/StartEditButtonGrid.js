@@ -1,5 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import { useGridApiRef, DataGridPro } from '@mui/x-data-grid-pro';
 import {
@@ -7,24 +8,9 @@ import {
   randomTraderName,
   randomUpdatedDate,
 } from '@mui/x-data-grid-generator';
-import { createTheme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
-
-const defaultTheme = createTheme();
-const useStyles = makeStyles(
-  (theme) => ({
-    root: {
-      justifyContent: 'center',
-      display: 'flex',
-      borderBottom: `1px solid ${theme.palette.divider}`,
-    },
-  }),
-  { defaultTheme },
-);
 
 function EditToolbar(props) {
   const { selectedCellParams, apiRef, setSelectedCellParams } = props;
-  const classes = useStyles();
 
   const handleClick = () => {
     if (!selectedCellParams) {
@@ -47,7 +33,14 @@ function EditToolbar(props) {
   };
 
   return (
-    <div className={classes.root}>
+    <Box
+      sx={{
+        justifyContent: 'center',
+        display: 'flex',
+        borderBottom: 1,
+        borderColor: 'divider',
+      }}
+    >
       <Button
         onClick={handleClick}
         onMouseDown={handleMouseDown}
@@ -56,7 +49,7 @@ function EditToolbar(props) {
       >
         {selectedCellParams?.cellMode === 'edit' ? 'Save' : 'Edit'}
       </Button>
-    </div>
+    </Box>
   );
 }
 

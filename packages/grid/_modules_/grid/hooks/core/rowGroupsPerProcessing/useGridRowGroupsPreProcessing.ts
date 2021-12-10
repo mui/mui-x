@@ -6,17 +6,18 @@ import {
   GridRowGroupingPreProcessing,
   GridRowGroupingResult,
 } from './gridRowGroupsPreProcessingApi';
-import { GridEvents } from '../../../constants/eventsConstants';
+import { GridEvents } from '../../../models/events';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 
 const getFlatRowTree: GridRowGroupingPreProcessing = ({ ids, idRowsLookup }) => {
   const tree: GridRowTreeConfig = {};
   for (let i = 0; i < ids.length; i += 1) {
     const rowId = ids[i];
-    tree[rowId] = { id: rowId, depth: 0, parent: null, groupingValue: '' };
+    tree[rowId] = { id: rowId, depth: 0, parent: null, groupingKey: '', groupingField: null };
   }
 
   return {
+    groupingName: 'none',
     tree,
     treeDepth: 1,
     idRowsLookup,

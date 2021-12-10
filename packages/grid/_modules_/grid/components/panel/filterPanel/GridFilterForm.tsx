@@ -91,27 +91,51 @@ function GridFilterForm(props: GridFilterFormProps) {
     (event: SelectChangeEvent) => {
       const columnField = event.target.value as string;
       const column = apiRef.current.getColumn(columnField)!;
-      const newOperator = column.filterOperators![0];
+
+      if (column.field === currentColumn!.field) {
+        // column did not change
+        return;
+      }
+
+      // try to keep the same operator when column change
+      const newOperator =
+        column.filterOperators!.find((operator) => operator.value === item.operatorValue) ||
+        column.filterOperators![0];
+
+      // Erase filter value if the input component is modified
+      const eraseItemValue =
+        !newOperator.InputComponent ||
+        newOperator.InputComponent !== currentOperator?.InputComponent;
 
       applyFilterChanges({
         ...item,
-        value: undefined,
         columnField,
         operatorValue: newOperator.value,
+        value: eraseItemValue ? undefined : item.value,
       });
     },
-    [apiRef, applyFilterChanges, item],
+    [apiRef, applyFilterChanges, item, currentColumn, currentOperator],
   );
 
   const changeOperator = React.useCallback(
     (event: SelectChangeEvent) => {
       const operatorValue = event.target.value as string;
+
+      const newOperator = currentColumn?.filterOperators!.find(
+        (operator) => operator.value === operatorValue,
+      );
+
+      const eraseItemValue =
+        !newOperator?.InputComponent ||
+        newOperator?.InputComponent !== currentOperator?.InputComponent;
+
       applyFilterChanges({
         ...item,
         operatorValue,
+        value: eraseItemValue ? undefined : item.value,
       });
     },
-    [applyFilterChanges, item],
+    [applyFilterChanges, item, currentColumn, currentOperator],
   );
 
   const changeLinkOperator = React.useCallback(

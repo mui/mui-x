@@ -2,9 +2,7 @@ import * as React from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 
 function getFullName(params) {
-  return `${params.getValue(params.id, 'firstName') || ''} ${
-    params.getValue(params.id, 'lastName') || ''
-  }`;
+  return `${params.row.firstName || ''} ${params.row.lastName || ''}`;
 }
 
 function setFullName(params) {

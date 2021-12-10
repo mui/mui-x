@@ -2,7 +2,7 @@ import * as React from 'react';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridParamsApi } from '../../../models/api/gridParamsApi';
 import { GridRowId } from '../../../models/gridRows';
-import { GridCellParams, GridValueGetterParams } from '../../../models/params/gridCellParams';
+import { GridCellParams, GridValueGetterFullParams } from '../../../models/params/gridCellParams';
 import { GridColumnHeaderParams } from '../../../models/params/gridColumnHeaderParams';
 import { GridRowParams } from '../../../models/params/gridRowParams';
 import {
@@ -63,7 +63,7 @@ export function useGridParamsApi(apiRef: GridApiRef) {
   const getBaseCellParams = React.useCallback(
     (id: GridRowId, field: string) => {
       const row = apiRef.current.getRow(id);
-      const rowNode = apiRef.current.unstable_getRowNode(id);
+      const rowNode = apiRef.current.getRowNode(id);
 
       if (!row || !rowNode) {
         throw new Error(`No row with id #${id} found`);
@@ -72,7 +72,7 @@ export function useGridParamsApi(apiRef: GridApiRef) {
       const cellFocus = gridFocusCellSelector(apiRef.current.state);
       const cellTabIndex = gridTabIndexCellSelector(apiRef.current.state);
 
-      const params: GridValueGetterParams = {
+      const params: GridValueGetterFullParams = {
         id,
         field,
         row,
@@ -96,7 +96,7 @@ export function useGridParamsApi(apiRef: GridApiRef) {
       const colDef = apiRef.current.getColumn(field);
       const value = apiRef.current.getCellValue(id, field);
       const row = apiRef.current.getRow(id);
-      const rowNode = apiRef.current.unstable_getRowNode(id);
+      const rowNode = apiRef.current.getRowNode(id);
 
       if (!row || !rowNode) {
         throw new Error(`No row with id #${id} found`);

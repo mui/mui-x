@@ -1,6 +1,6 @@
 import * as React from 'react';
+import Box from '@mui/material/Box';
 import { DataGrid } from '@mui/x-data-grid';
-import { makeStyles } from '@mui/styles';
 
 const columns = [
   {
@@ -35,20 +35,18 @@ const rows = [
   },
 ];
 
-const useStyles = makeStyles({
-  root: {
-    '& .super-app-theme--header': {
-      backgroundColor: 'rgba(255, 7, 0, 0.55)',
-    },
-  },
-});
-
 export default function StylingHeaderGrid() {
-  const classes = useStyles();
-
   return (
-    <div style={{ height: 300, width: '100%' }} className={classes.root}>
+    <Box
+      sx={{
+        height: 300,
+        width: 1,
+        '& .super-app-theme--header': {
+          backgroundColor: 'rgba(255, 7, 0, 0.55)',
+        },
+      }}
+    >
       <DataGrid rows={rows} columns={columns} />
-    </div>
+    </Box>
   );
 }

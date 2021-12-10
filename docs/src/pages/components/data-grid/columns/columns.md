@@ -85,7 +85,7 @@ Set the column definition attribute `hide` to `true` to hide the column.
 <DataGrid columns={[{ field: 'id', hide: true }]} />
 ```
 
-### Resizing [<span class="pro"></span>](https://mui.com/store/items/material-ui-pro/)
+### Resizing [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
 
 By default, `DataGridPro` allows all columns to be resized by dragging the right portion of the column separator.
 
@@ -109,9 +109,7 @@ To achieve that, set the `valueGetter` attribute of `GridColDef` as in the examp
 
 ```tsx
 function getFullName(params) {
-  return `${params.getValue(params.id, 'firstName') || ''} ${
-    params.getValue(params.id, 'lastName') || ''
-  }`;
+  return `${params.row.firstName || ''} ${params.row.lastName || ''}`;
 }
 
 const columns: GridColDef[] = [
@@ -348,7 +346,7 @@ By default, each column header displays a column menu. The column menu allows ac
 
 ## Column selector
 
-To enable the the toolbar you need to add `Toolbar: GridToolbar` to the grid `components` prop.
+To enable the toolbar you need to add `Toolbar: GridToolbar` to the grid `components` prop.
 
 In addition, the column selector can be shown by using the "Show columns" menu item in the column menu.
 
@@ -358,7 +356,7 @@ To disable the column selector, set the prop `disableColumnSelector={true}`.
 
 {{"demo": "pages/components/data-grid/columns/ColumnSelectorGrid.js", "bg": "inline"}}
 
-## Column reorder [<span class="pro"></span>](https://mui.com/store/items/material-ui-pro/)
+## Column reorder [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
 
 By default, `DataGridPro` allows all column reordering by dragging the header cells and moving them left or right.
 
@@ -377,6 +375,68 @@ In addition, column reordering emits the following events that can be imported:
 - `columnHeaderDragOver`: emitted when dragging a header cell over another header cell.
 - `columnHeaderDragEnd`: emitted when dragging of a header cell stops.
 
+## Column pinning [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
+
+Pinned (or frozen, locked, or sticky) columns are columns that are visible at all of the time while the user scrolls the grid horizontally.
+They can be pinned either to the left or right side and cannot be reordered.
+
+To pin a column, there are a few ways:
+
+- Using the `initialState` prop
+- [Controlling](/components/data-grid/columns/#controlling-the-pinned-columns) the `pinnedColumns` and `onPinnedColumnsChange` props
+- Dedicated buttons in the column menu
+- Accessing the [imperative](/components/data-grid/columns/#apiref) API
+
+To set pinned columns via `initialState`, pass an object with the following shape to this prop:
+
+```ts
+interface GridPinnedColumns {
+  left?: string[]; // Optional field names to pin to the left
+  right?: string[]; // Optional field names to pin to the right
+}
+```
+
+The following demos illustrates how this approach works:
+
+{{"demo": "pages/components/data-grid/columns/BasicColumnPinning.js", "disableAd": true, "bg": "inline"}}
+
+**Note:** The column pinning feature can be completely disabled with `disableColumnPinning`.
+
+```tsx
+<DataGridPro disableColumnPinning />
+```
+
+> You may encounter issues if the sum of the widths of the pinned columns is larger than the width of the grid.
+> Make sure that the grid can accommodate properly, at least, these columns.
+
+### Controlling the pinned columns
+
+While the `initialState` prop only works for setting pinned columns during the initialization, the `pinnedColumns` prop allows to change at anytime which columns to pin.
+The value passed to it follows the same shape from the previous approach.
+Use it together with `onPinnedColumnsChange` to know when a column is pinned or unpinned.
+
+{{"demo": "pages/components/data-grid/columns/ControlPinnedColumns.js", "disableAd": true, "bg": "inline"}}
+
+### Blocking column unpinning
+
+It may be desirable to not allow a column to be unpinned.
+The only thing required to achieve that is to hide the buttons added to the column menu.
+This can be done by providing a custom menu, as demonstrated below:
+
+{{"demo": "pages/components/data-grid/columns/DisableColumnPinningButtons.js", "disableAd": true, "bg": "inline"}}
+
+**Note:** Using the `disableColumnMenu` prop also works, however, you disable completely the column menu with this approach.
+
+### Pinning the checkbox selection column
+
+To pin the checkbox column added when using `checkboxSelection`, add `GRID_CHECKBOX_SELECTION_COL_DEF.field` to the list of pinned columns.
+
+{{"demo": "pages/components/data-grid/columns/ColumnPinningWithCheckboxSelection.js", "disableAd": true, "bg": "inline"}}
+
+### apiRef
+
+{{"demo": "pages/components/data-grid/columns/ColumnPinningApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
+
 ## 🚧 Column groups
 
 > ⚠️ This feature isn't implemented yet. It's coming.
@@ -384,14 +444,6 @@ In addition, column reordering emits the following events that can be imported:
 > 👍 Upvote [issue #195](https://github.com/mui-org/material-ui-x/issues/195) if you want to see it land faster.
 
 Grouping columns allows you to have multiple levels of columns in your header and the ability, if needed, to 'open and close' column groups to show and hide additional columns.
-
-## 🚧 Column pinning [<span class="pro"></span>](https://mui.com/store/items/material-ui-pro/)
-
-> ⚠️ This feature isn't implemented yet. It's coming.
->
-> 👍 Upvote [issue #193](https://github.com/mui-org/material-ui-x/issues/193) if you want to see it land faster.
-
-Sticky (or frozen, locked, or pinned) columns are columns that are visible at all times while the user scrolls the grid horizontally.
 
 ## 🚧 Column spanning
 

@@ -1,2 +1,2 @@
 export * from './gridSortingSelector';
-export * from './gridSortingState';
+export type { GridSortingState, GridSortingInitialState } from './gridSortingState';

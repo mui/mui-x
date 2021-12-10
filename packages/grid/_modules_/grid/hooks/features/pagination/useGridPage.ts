@@ -7,10 +7,9 @@ import {
   useGridApiMethod,
   useGridApiEventHandler,
 } from '../../utils';
-import { GridEvents } from '../../../constants/eventsConstants';
+import { GridEvents, GridEventListener } from '../../../models/events';
 import { GridComponentProps } from '../../../GridComponentProps';
-import { GridPageApi } from '../../../models/api/gridPageApi';
-import { GridPaginationState } from './gridPaginationState';
+import { GridPageApi, GridPaginationState } from './gridPaginationInterfaces';
 import { gridVisibleTopLevelRowCountSelector } from '../filter';
 import { useGridStateInit } from '../../utils/useGridStateInit';
 import { gridPageSelector } from './gridPaginationSelector';
@@ -101,25 +100,22 @@ export const useGridPage = (
     forceUpdate();
   }, [setGridState, forceUpdate, visibleTopLevelRowCount, props.rowCount, props.page, apiRef]);
 
-  const handlePageSizeChange = React.useCallback(
-    (pageSize: number) => {
-      setGridState((state) => {
-        const pageCount = getPageCount(state.pagination.rowCount, pageSize);
+  const handlePageSizeChange: GridEventListener<GridEvents.pageSizeChange> = (pageSize) => {
+    setGridState((state) => {
+      const pageCount = getPageCount(state.pagination.rowCount, pageSize);
 
-        return {
-          ...state,
-          pagination: applyValidPage({
-            ...state.pagination,
-            pageCount,
-            page: state.pagination.page,
-          }),
-        };
-      });
+      return {
+        ...state,
+        pagination: applyValidPage({
+          ...state.pagination,
+          pageCount,
+          page: state.pagination.page,
+        }),
+      };
+    });
 
-      forceUpdate();
-    },
-    [setGridState, forceUpdate],
-  );
+    forceUpdate();
+  };
 
   useGridApiEventHandler(apiRef, GridEvents.pageSizeChange, handlePageSizeChange);
 

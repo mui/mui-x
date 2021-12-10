@@ -4,7 +4,7 @@ import {
   ownerDocument,
   unstable_useEnhancedEffect as useEnhancedEffect,
 } from '@mui/material/utils';
-import { GridEvents } from '../../../constants/eventsConstants';
+import { GridEvents, GridEventListener } from '../../../models/events';
 import { ElementSize, GridApiRef } from '../../../models';
 import {
   useGridApiEventHandler,
@@ -140,7 +140,7 @@ export function useGridDimensions(
 
   const resize = React.useCallback<GridDimensionsApi['resize']>(() => {
     updateGridDimensionsRef();
-    apiRef.current.publishEvent(GridEvents.debouncedResize, rootDimensionsRef.current);
+    apiRef.current.publishEvent(GridEvents.debouncedResize, rootDimensionsRef.current!);
   }, [apiRef, updateGridDimensionsRef]);
 
   const getRootDimensions = React.useCallback<GridDimensionsApi['getRootDimensions']>(
@@ -176,8 +176,10 @@ export function useGridDimensions(
 
   const debounceResize = React.useMemo(() => debounce(resize, 60), [resize]);
 
-  const handleResize = React.useCallback(
-    (size: ElementSize) => {
+  const isFirstSizing = React.useRef(true);
+
+  const handleResize = React.useCallback<GridEventListener<GridEvents.resize>>(
+    (size) => {
       rootDimensionsRef.current = size;
 
       // jsdom has no layout capabilities
@@ -213,6 +215,14 @@ export function useGridDimensions(
       if (isTestEnvironment) {
         // We don't need to debounce the resize for tests.
         resize();
+        isFirstSizing.current = false;
+        return;
+      }
+
+      if (isFirstSizing.current) {
+        // We want to initialize the grid dimensions as soon as possible to avoid flickering
+        resize();
+        isFirstSizing.current = false;
         return;
       }
 

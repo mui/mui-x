@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRenderer } from '@material-ui/monorepo/test/utils';
+import { createRenderer, screen } from '@material-ui/monorepo/test/utils';
 import { expect } from 'chai';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { GridApiRef, useGridApiRef, DataGridPro, ptBR } from '@mui/x-data-grid-pro';
@@ -146,5 +146,28 @@ describe('<DataGridPro /> - Layout', () => {
       </ThemeProvider>,
     );
     expect(document.querySelector('[title="Ordenar"]')).not.to.equal(null);
+  });
+
+  it('should support the sx prop', () => {
+    const theme = createTheme({
+      palette: {
+        primary: {
+          main: 'rgb(0, 0, 255)',
+        },
+      },
+    });
+
+    render(
+      <ThemeProvider theme={theme}>
+        <div style={{ width: 300, height: 300 }}>
+          <DataGridPro columns={[]} rows={[]} sx={{ color: 'primary.main' }} />
+        </div>
+      </ThemeProvider>,
+    );
+
+    // @ts-expect-error need to migrate helpers to TypeScript
+    expect(screen.getByRole('grid')).toHaveComputedStyle({
+      color: 'rgb(0, 0, 255)',
+    });
   });
 });

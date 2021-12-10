@@ -15,7 +15,7 @@ import { useData } from 'packages/storybook/src/hooks/useData';
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<DataGrid /> - Pagination', () => {
-  const { render } = createRenderer();
+  const { render } = createRenderer({ strict: false, strictEffects: false }); // TODO it should run in StrictMode without errors
 
   const BaselineTestCase = (
     props: Omit<DataGridProps, 'rows' | 'columns'> & { height?: number },
@@ -472,7 +472,7 @@ describe('<DataGrid /> - Pagination', () => {
 
       await waitFor(() =>
         expect(document.querySelector('.MuiTablePagination-displayedRows')!.innerHTML).to.equal(
-          `1-${expectedViewportRowsLengthAfter} of ${nbRows}`,
+          `1–${expectedViewportRowsLengthAfter} of ${nbRows}`, // "–" is not a hyphen, it's an "en dash"
         ),
       );
 
@@ -487,9 +487,9 @@ describe('<DataGrid /> - Pagination', () => {
     const { setProps } = render(
       <BaselineTestCase rowCount={5} pageSize={1} page={0} rowsPerPageOptions={[1]} />,
     );
-    expect(document.querySelector('.MuiTablePagination-root')).to.have.text('1-1 of 5');
+    expect(document.querySelector('.MuiTablePagination-root')).to.have.text('1–1 of 5'); // "–" is not a hyphen, it's an "en dash"
     setProps({ rowCount: 21 });
-    expect(document.querySelector('.MuiTablePagination-root')).to.have.text('1-1 of 21');
+    expect(document.querySelector('.MuiTablePagination-root')).to.have.text('1–1 of 21');
   });
 
   it('should support server side pagination', () => {

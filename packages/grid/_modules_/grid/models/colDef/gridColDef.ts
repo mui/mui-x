@@ -27,6 +27,12 @@ import { GridEditCellProps } from '../gridEditRowModel';
 export type GridAlignment = 'left' | 'right' | 'center';
 
 type ValueOptions = string | number | { value: any; label: string };
+
+/**
+ * Value that can be used as a key for grouping rows
+ */
+export type GridKeyValue = string | number | boolean;
+
 /**
  * Column Definition interface.
  */
@@ -220,20 +226,26 @@ export interface GridColumnsMeta {
   positions: number[];
 }
 
-export type GridColumnLookup = { [field: string]: GridStateColDef };
-
-export interface GridColumnsState {
-  all: string[];
-  lookup: GridColumnLookup;
+export interface GridGroupingColDefOverride
+  extends Omit<
+    GridColDef,
+    'editable' | 'valueSetter' | 'field' | 'preProcessEditCellProps' | 'renderEditCell'
+  > {
+  /**
+   * If `true`, the grouping cells will not render the amount of descendants.
+   * @default: false
+   */
+  hideDescendantCount?: boolean;
 }
 
-export type GridColDefOverride = Omit<Partial<GridColDef>, 'field'>;
-
-export type GridColDefOverrideCallback = (params: GridColDefOverrideParams) => GridColDefOverride;
-
-export interface GridColDefOverrideParams {
+export interface GridGroupingColDefOverrideParams {
   /**
-   * The column we are generating before the override.
+   * The name of the grouping algorithm currently building the grouping column.
    */
-  colDef: GridColDef;
+  groupingName: string;
+
+  /**
+   * The fields of the columns from which we want to group the values on this new grouping column.
+   */
+  fields: string[];
 }

@@ -7,11 +7,10 @@ import {
   GridSortModel,
   useGridApiRef,
 } from '@mui/x-data-grid-pro';
-import { createRenderer, fireEvent, screen, waitFor } from '@material-ui/monorepo/test/utils';
+import { createRenderer, fireEvent } from '@material-ui/monorepo/test/utils';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { getColumnValues, getCell, getColumnHeaderCell } from 'test/utils/helperFn';
-import { useData } from 'packages/storybook/src/hooks/useData';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -168,38 +167,6 @@ describe('<DataGridPro /> - Sorting', () => {
       expect(getColumnValues()).to.deep.equal(['Puma', 'Nike', 'Adidas']);
       fireEvent.click(getColumnHeaderCell(0), { shiftKey: true });
       expect(getColumnValues()).to.deep.equal(['Adidas', 'Nike', 'Puma']);
-    });
-  });
-
-  describe('performance', () => {
-    it('should sort 5,000 rows in less than 200 ms', async function test() {
-      // It's simpler to only run the performance test in a single controlled environment.
-      if (!/HeadlessChrome/.test(window.navigator.userAgent)) {
-        this.skip();
-        return;
-      }
-
-      const TestCasePerf = () => {
-        const data = useData(5000, 10);
-
-        return (
-          <div style={{ width: 300, height: 300 }}>
-            <DataGridPro columns={data.columns} rows={data.rows} />
-          </div>
-        );
-      };
-
-      render(<TestCasePerf />);
-      const header = screen
-        .getByRole('columnheader', { name: 'Currency Pair' })
-        .querySelector('.MuiDataGrid-columnHeaderTitleContainer');
-
-      const t0 = performance.now();
-      fireEvent.click(header);
-      await waitFor(() => expect(document.querySelector('.MuiDataGrid-sortIcon')).to.not.be.null);
-      const t1 = performance.now();
-      const time = Math.round(t1 - t0);
-      expect(time).to.be.lessThan(300);
     });
   });
 

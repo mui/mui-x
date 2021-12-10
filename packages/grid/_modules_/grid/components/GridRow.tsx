@@ -4,7 +4,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
-import { GridEvents } from '../constants/eventsConstants';
+import { GridRowEventLookup, GridEvents } from '../models/events';
 import { GridRowId, GridRowModel } from '../models/gridRows';
 import { GridEditModes, GridRowModes, GridEditRowsModel } from '../models/gridEditRowModel';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
@@ -32,6 +32,8 @@ export interface GridRowProps {
   editRowsState: GridEditRowsModel;
   onClick?: React.MouseEventHandler<HTMLDivElement>;
   onDoubleClick?: React.MouseEventHandler<HTMLDivElement>;
+  onMouseEnter?: React.MouseEventHandler<HTMLDivElement>;
+  onMouseLeave?: React.MouseEventHandler<HTMLDivElement>;
 }
 
 type OwnerState = Pick<GridRowProps, 'selected'> & {
@@ -79,6 +81,8 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
     editRowsState,
     onClick,
     onDoubleClick,
+    onMouseEnter,
+    onMouseLeave,
     ...other
   } = props;
   const ariaRowIndex = index + 2; // 1 for the header row and 1 as it's 1-based
@@ -100,28 +104,32 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
   const classes = useUtilityClasses(ownerState);
 
   const publish = React.useCallback(
-    (eventName: string, propHandler: any) => (event: React.MouseEvent) => {
-      // Ignore portal
-      // The target is not an element when triggered by a Select inside the cell
-      // See https://github.com/mui-org/material-ui/issues/10534
-      if (
-        (event.target as any).nodeType === 1 &&
-        !event.currentTarget.contains(event.target as Element)
-      ) {
-        return;
-      }
+    (
+        eventName: keyof GridRowEventLookup,
+        propHandler: React.MouseEventHandler<HTMLDivElement> | undefined,
+      ): React.MouseEventHandler<HTMLDivElement> =>
+      (event) => {
+        // Ignore portal
+        // The target is not an element when triggered by a Select inside the cell
+        // See https://github.com/mui-org/material-ui/issues/10534
+        if (
+          (event.target as any).nodeType === 1 &&
+          !event.currentTarget.contains(event.target as Element)
+        ) {
+          return;
+        }
 
-      // The row might have been deleted
-      if (!apiRef.current.getRow(rowId)) {
-        return;
-      }
+        // The row might have been deleted
+        if (!apiRef.current.getRow(rowId)) {
+          return;
+        }
 
-      apiRef.current.publishEvent(eventName, apiRef.current.getRowParams(rowId), event);
+        apiRef.current.publishEvent(eventName, apiRef.current.getRowParams(rowId), event);
 
-      if (propHandler) {
-        propHandler(event);
-      }
-    },
+        if (propHandler) {
+          propHandler(event);
+        }
+      },
     [apiRef, rowId],
   );
 
@@ -232,6 +240,8 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
       style={style}
       onClick={publish(GridEvents.rowClick, onClick)}
       onDoubleClick={publish(GridEvents.rowDoubleClick, onDoubleClick)}
+      onMouseEnter={publish(GridEvents.rowMouseEnter, onMouseEnter)}
+      onMouseLeave={publish(GridEvents.rowMouseLeave, onMouseLeave)}
       {...other}
     >
       {cells}

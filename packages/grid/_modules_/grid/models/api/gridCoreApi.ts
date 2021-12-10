@@ -1,7 +1,6 @@
 import * as React from 'react';
-import { GridEventListener } from '../gridEventListener';
+import { GridEventPublisher, GridEventListener, GridEventsStr } from '../events';
 import { EventManager, EventListenerOptions } from '../../utils/EventManager';
-import { MuiEvent } from '../muiEvent';
 
 /**
  * The core API interface that is available in the grid `apiRef`.
@@ -54,22 +53,18 @@ export interface GridCoreApi {
    * @param {object} options Additional options for this listener.
    * @returns {function} A function to unsubscribe from this event.
    */
-  subscribeEvent: <Params, Event extends MuiEvent>(
-    event: string,
-    handler: GridEventListener<Params, Event>,
+  subscribeEvent: <E extends GridEventsStr>(
+    event: E,
+    handler: GridEventListener<E>,
     options?: EventListenerOptions,
   ) => () => void;
   /**
    * Emits an event.
-   * @param {string} name The name of the event.
+   * @param {GridEvents} name The name of the event.
    * @param {any} params Arguments to be passed to the handlers.
-   * @param {MuiEvent<React.SyntheticEvent | DocumentEventMap[keyof DocumentEventMap]>} event The event object to pass forward.
+   * @param {MuiEvent<MuiBaseEvent>} event The event object to pass forward.
    */
-  publishEvent: (
-    name: string,
-    params?: any,
-    event?: MuiEvent<React.SyntheticEvent | DocumentEventMap[keyof DocumentEventMap]>,
-  ) => void;
+  publishEvent: GridEventPublisher;
   /**
    * Displays the error overlay component.
    * @param {any} props Props to be passed to the `ErrorOverlay` component.
