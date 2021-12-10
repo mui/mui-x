@@ -7,7 +7,7 @@ import {
   GridEditSingleSelectCell,
 } from '@mui/x-data-grid-pro';
 import Portal from '@mui/base/Portal';
-import { createRenderer, fireEvent, screen, waitFor } from '@material-ui/monorepo/test/utils';
+import { createRenderer, fireEvent, screen, waitFor, act } from '@material-ui/monorepo/test/utils';
 import { expect } from 'chai';
 import * as React from 'react';
 import { getActiveCell, getCell, getRow, getColumnHeaderCell } from 'test/utils/helperFn';
@@ -954,7 +954,9 @@ describe('<DataGridPro /> - Edit Rows', () => {
       cell.focus();
       fireEvent.doubleClick(cell);
       const newValue = new Date(2021, 6, 4);
-      apiRef.current.setEditCellValue({ id: 0, field: 'date', value: newValue });
+      act(() => {
+        apiRef.current.setEditCellValue({ id: 0, field: 'date', value: newValue });
+      });
       const input = cell.querySelector('input')!;
       await waitFor(() => {
         expect(input.value).to.equal('2021-07-04');
@@ -1067,7 +1069,9 @@ describe('<DataGridPro /> - Edit Rows', () => {
       cell.focus();
       fireEvent.doubleClick(cell);
       const newValue = new Date(2021, 6, 4, 17, 30);
-      apiRef.current.setEditCellValue({ id: 0, field: 'date', value: newValue });
+      act(() => {
+        apiRef.current.setEditCellValue({ id: 0, field: 'date', value: newValue });
+      });
       const input = cell.querySelector('input')!;
       await waitFor(() => {
         expect(input.value).to.equal('2021-07-04T17:30');

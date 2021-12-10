@@ -322,6 +322,7 @@
   { "name": "gridPanelClasses", "kind": "Variable" },
   { "name": "gridResizingColumnFieldSelector", "kind": "Variable" },
   { "name": "gridRowCountSelector", "kind": "Variable" },
+  { "name": "gridRowGroupingNameSelector", "kind": "Variable" },
   { "name": "gridRowIdsSelector", "kind": "Variable" },
   { "name": "gridRowTreeDepthSelector", "kind": "Variable" },
   { "name": "gridRowTreeSelector", "kind": "Variable" },
