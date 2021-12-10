@@ -44,6 +44,8 @@ const createProject = (options: CreateProgramOptions): Project => {
     exports,
     program,
     checker,
+    workspaceRoot,
+    prettierConfigPath: path.join(workspaceRoot, 'prettier.config.js'),
   };
 };
 
@@ -65,14 +67,11 @@ async function run(argv: { outputDirectory?: string }) {
 
   const documentedInterfaces = buildInterfacesDocumentation({
     project: dataGridProject,
-    prettierConfigPath,
     outputDirectory,
   });
 
   await buildComponentsDocumentation({
-    workspaceRoot,
     outputDirectory,
-    prettierConfigPath,
     documentedInterfaces,
     dataGridProject,
     dataGridProProject,
@@ -81,14 +80,10 @@ async function run(argv: { outputDirectory?: string }) {
   buildEventsDocumentation({
     project: dataGridProject,
     documentedInterfaces,
-    workspaceRoot,
-    prettierConfigPath,
   });
 
   buildExportsDocumentation({
     project: dataGridProject,
-    workspaceRoot,
-    prettierConfigPath,
   });
 }
 

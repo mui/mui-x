@@ -5,7 +5,7 @@
     {
       "name": "commitCellChange",
       "description": "Updates the field at the given id with the value stored in the edit row model.",
-      "type": "(\n    params: GridCommitCellChangeParams,\n    event?: MuiBaseEvent,\n  ) => boolean | Promise<boolean>"
+      "type": "(params: GridCommitCellChangeParams, event?: MuiBaseEvent) => boolean | Promise<boolean>"
     },
     {
       "name": "commitRowChange",

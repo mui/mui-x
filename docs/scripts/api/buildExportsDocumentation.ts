@@ -4,12 +4,10 @@ import { Project, writePrettifiedFile } from './utils';
 
 interface BuildExportsDocumentationOptions {
   project: Project;
-  workspaceRoot: string;
-  prettierConfigPath: string;
 }
 
 export default function buildExportsDocumentation(options: BuildExportsDocumentationOptions) {
-  const { project, workspaceRoot, prettierConfigPath } = options;
+  const { project } = options;
 
   const syntaxKindToSyntaxName = {};
   Object.entries(ts.SyntaxKind).forEach(([syntaxName, syntaxKind]) => {
@@ -26,8 +24,8 @@ export default function buildExportsDocumentation(options: BuildExportsDocumenta
     .sort((a, b) => a.name.localeCompare(b.name));
 
   writePrettifiedFile(
-    path.resolve(workspaceRoot, 'scripts/exportsSnapshot.json'),
+    path.resolve(project.workspaceRoot, 'scripts/exportsSnapshot.json'),
     JSON.stringify(exports),
-    prettierConfigPath,
+    project,
   );
 }

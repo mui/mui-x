@@ -8,6 +8,8 @@ export interface Project {
   exports: Record<string, ts.Symbol>;
   program: ts.Program;
   checker: ts.TypeChecker;
+  workspaceRoot: string;
+  prettierConfigPath: string;
 }
 
 export const getSymbolDescription = (symbol: ts.Symbol, project: Project) =>
@@ -35,6 +37,30 @@ export function escapeCell(value: string) {
     .replace(/\r?\n/g, '<br />');
 }
 
+export const stringifySymbol = (symbol: ts.Symbol, project: Project) => {
+  if (symbol.valueDeclaration && ts.isPropertySignature(symbol.valueDeclaration)) {
+    const signature = symbol.valueDeclaration.type?.getText() ?? '';
+    const prefix = 'type FakeType = ';
+    const signatureWithTypeName = `${prefix}${signature}`;
+
+    const prettifiedSignatureWithTypeName = prettier.format(signatureWithTypeName, {
+      printWidth: 999,
+      singleQuote: true,
+      semi: false,
+      trailingComma: 'none',
+      parser: 'typescript',
+    });
+
+    return prettifiedSignatureWithTypeName.slice(prefix.length).replace(/\n$/, '');
+  }
+
+  return project.checker.typeToString(
+    project.checker.getTypeOfSymbolAtLocation(symbol, symbol.valueDeclaration!),
+    symbol.valueDeclaration,
+    ts.TypeFormatFlags.NoTruncation,
+  );
+};
+
 export function linkify(
   text: string | undefined,
   documentedInterfaces: Map<string, boolean>,
@@ -54,13 +80,13 @@ export function linkify(
   });
 }
 
-export function writePrettifiedFile(filename: string, data: string, prettierConfigPath: string) {
+export function writePrettifiedFile(filename: string, data: string, project: Project) {
   const prettierConfig = prettier.resolveConfig.sync(filename, {
-    config: prettierConfigPath,
+    config: project.prettierConfigPath,
   });
   if (prettierConfig === null) {
     throw new Error(
-      `Could not resolve config for '${filename}' using prettier config path '${prettierConfigPath}'.`,
+      `Could not resolve config for '${filename}' using prettier config path '${project.prettierConfigPath}'.`,
     );
   }
 

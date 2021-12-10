@@ -8,6 +8,7 @@ import {
   getSymbolJSDocTags,
   linkify,
   Project,
+  stringifySymbol,
   writePrettifiedFile,
 } from './utils';
 
@@ -45,27 +46,14 @@ const INTERFACES_WITH_DEDICATED_PAGES = [
   'GridColumnPinningApi',
 ];
 
-const parseProperty = (propertySymbol: ts.Symbol, project: Project): ParsedProperty => {
-  let typeStr: string;
-  if (propertySymbol.valueDeclaration && ts.isPropertySignature(propertySymbol.valueDeclaration)) {
-    typeStr = propertySymbol.valueDeclaration.type?.getText() ?? '';
-  } else {
-    typeStr = project.checker.typeToString(
-      project.checker.getTypeOfSymbolAtLocation(propertySymbol, propertySymbol.valueDeclaration!),
-      propertySymbol.valueDeclaration,
-      ts.TypeFormatFlags.NoTruncation,
-    );
-  }
-
-  return {
-    name: propertySymbol.name,
-    description: getSymbolDescription(propertySymbol, project),
-    tags: getSymbolJSDocTags(propertySymbol),
-    symbol: propertySymbol,
-    isOptional: !!propertySymbol.declarations?.find(ts.isPropertySignature)?.questionToken,
-    typeStr,
-  };
-};
+const parseProperty = (propertySymbol: ts.Symbol, project: Project): ParsedProperty => ({
+  name: propertySymbol.name,
+  description: getSymbolDescription(propertySymbol, project),
+  tags: getSymbolJSDocTags(propertySymbol),
+  symbol: propertySymbol,
+  isOptional: !!propertySymbol.declarations?.find(ts.isPropertySignature)?.questionToken,
+  typeStr: stringifySymbol(propertySymbol, project),
+});
 
 function generateMarkdownFromProperties(
   object: ParsedObject,
@@ -142,12 +130,11 @@ function generateMarkdown(object: ParsedObject, documentedInterfaces: Map<string
 
 interface BuildInterfacesDocumentationOptions {
   project: Project;
-  prettierConfigPath: string;
   outputDirectory: string;
 }
 
 export default function buildInterfacesDocumentation(options: BuildInterfacesDocumentationOptions) {
-  const { project, prettierConfigPath, outputDirectory } = options;
+  const { project, outputDirectory } = options;
 
   const documentedInterfaces = new Map<string, true>();
   INTERFACES_WITH_DEDICATED_PAGES.forEach((name) => {
@@ -210,17 +197,13 @@ export default function buildInterfacesDocumentation(options: BuildInterfacesDoc
       writePrettifiedFile(
         path.resolve(outputDirectory, `${slug}.json`),
         JSON.stringify(json),
-        prettierConfigPath,
+        project,
       );
       // eslint-disable-next-line no-console
       console.log('Built JSON file for', object.name);
     } else {
       const markdown = generateMarkdown(object, documentedInterfaces);
-      writePrettifiedFile(
-        path.resolve(outputDirectory, `${slug}.md`),
-        markdown,
-        prettierConfigPath,
-      );
+      writePrettifiedFile(path.resolve(outputDirectory, `${slug}.md`), markdown, project);
 
       writePrettifiedFile(
         path.resolve(outputDirectory, `${slug}.js`),
@@ -232,7 +215,7 @@ export default function buildInterfacesDocumentation(options: BuildInterfacesDoc
       return <MarkdownDocs demos={demos} docs={docs} demoComponents={demoComponents} />;
     }
         `,
-        prettierConfigPath,
+        project,
       );
 
       // eslint-disable-next-line no-console

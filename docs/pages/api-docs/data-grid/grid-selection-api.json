@@ -20,7 +20,7 @@
     {
       "name": "selectRowRange",
       "description": "Change the selection state of all the selectable rows in a range.",
-      "type": "(\n    range: { startId: GridRowId; endId: GridRowId },\n    isSelected?: boolean,\n    resetSelection?: boolean,\n  ) => void"
+      "type": "(range: { startId: GridRowId; endId: GridRowId }, isSelected?: boolean, resetSelection?: boolean) => void"
     },
     {
       "name": "selectRows",

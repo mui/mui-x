@@ -7,18 +7,17 @@ import {
   getSymbolJSDocTags,
   linkify,
   Project,
+  stringifySymbol,
   writePrettifiedFile,
 } from './utils';
 
 interface BuildEventsDocumentationOptions {
   project: Project;
   documentedInterfaces: Map<string, boolean>;
-  workspaceRoot: string;
-  prettierConfigPath: string;
 }
 
 export default function buildEventsDocumentation(options: BuildEventsDocumentationOptions) {
-  const { project, documentedInterfaces, workspaceRoot, prettierConfigPath } = options;
+  const { project, documentedInterfaces } = options;
 
   const gridEventsSymbol = project.exports.GridEvents;
   const gridEventsDeclaration = gridEventsSymbol.declarations![0] as ts.EnumDeclaration;
@@ -37,9 +36,7 @@ export default function buildEventsDocumentation(options: BuildEventsDocumentati
     if (declaration) {
       const symbol = project.checker.getTypeAtLocation(declaration.name).symbol;
       symbol.members?.forEach((member, memberName) => {
-        eventParams[memberName.toString()] = project.checker.typeToString(
-          project.checker.getTypeOfSymbolAtLocation(member, member.valueDeclaration!),
-        );
+        eventParams[memberName.toString()] = stringifySymbol(member, project);
       });
     }
     eventLookup[event.name] = eventParams;
@@ -71,9 +68,9 @@ export default function buildEventsDocumentation(options: BuildEventsDocumentati
 
   const sortedEvents = events.sort((a, b) => a.name.localeCompare(b.name));
   writePrettifiedFile(
-    path.resolve(workspaceRoot, 'docs/src/pages/components/data-grid/events/events.json'),
+    path.resolve(project.workspaceRoot, 'docs/src/pages/components/data-grid/events/events.json'),
     JSON.stringify(sortedEvents),
-    prettierConfigPath,
+    project,
   );
 
   // eslint-disable-next-line no-console

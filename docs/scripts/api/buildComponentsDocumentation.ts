@@ -179,8 +179,6 @@ const buildComponentDocumentation = async (options: {
   filename: string;
   project: Project;
   outputDirectory: string;
-  prettierConfigPath: string;
-  workspaceRoot: string;
   documentedInterfaces: Map<string, boolean>;
   pagesMarkdown: ReadonlyArray<{
     components: readonly string[];
@@ -188,14 +186,7 @@ const buildComponentDocumentation = async (options: {
     pathname: string;
   }>;
 }) => {
-  const {
-    filename,
-    project,
-    outputDirectory,
-    prettierConfigPath,
-    workspaceRoot,
-    documentedInterfaces,
-  } = options;
+  const { filename, project, outputDirectory, documentedInterfaces } = options;
 
   const src = fse.readFileSync(filename, 'utf8');
   const reactApi = parseComponentSource(src, { filename });
@@ -350,7 +341,7 @@ const buildComponentDocumentation = async (options: {
   }
 
   const apiDocsTranslationDirectory = path.resolve(
-    workspaceRoot,
+    project.workspaceRoot,
     'docs',
     'translations',
     'api-docs',
@@ -365,7 +356,7 @@ const buildComponentDocumentation = async (options: {
   writePrettifiedFile(
     path.join(apiDocsTranslationDirectory, `${kebabCase(reactApi.name)}.json`),
     JSON.stringify(componentApi),
-    prettierConfigPath,
+    project,
   );
 
   LANGUAGES.forEach((language) => {
@@ -374,7 +365,7 @@ const buildComponentDocumentation = async (options: {
         writePrettifiedFile(
           path.join(apiDocsTranslationDirectory, `${kebabCase(reactApi.name)}-${language}.json`),
           JSON.stringify(componentApi),
-          prettierConfigPath,
+          project,
         );
       } catch (error) {
         // File exists
@@ -416,7 +407,7 @@ const buildComponentDocumentation = async (options: {
     },
     spread: reactApi.spread,
     forwardsRefTo: 'GridRoot', // TODO read from tests once we add describeConformanceV5
-    filename: toGithubPath(reactApi.filename, workspaceRoot),
+    filename: toGithubPath(reactApi.filename, project.workspaceRoot),
     inheritance: reactApi.inheritance,
     demos: generateDemoList(reactApi.demos),
   };
@@ -425,7 +416,7 @@ const buildComponentDocumentation = async (options: {
   writePrettifiedFile(
     path.resolve(outputDirectory, `${kebabCase(reactApi.name)}.json`),
     JSON.stringify(pageContent),
-    prettierConfigPath,
+    project,
   );
 
   // docs/pages/component-name.js
@@ -455,7 +446,7 @@ Page.getInitialProps = () => {
   };
 };
   `.replace(/\r?\n/g, reactApi.EOL),
-    prettierConfigPath,
+    project,
   );
 
   // eslint-disable-next-line no-console
@@ -465,27 +456,21 @@ Page.getInitialProps = () => {
 interface BuildComponentsDocumentationOptions {
   dataGridProject: Project;
   dataGridProProject: Project;
-  workspaceRoot: string;
   outputDirectory: string;
-  prettierConfigPath: string;
   documentedInterfaces: Map<string, boolean>;
 }
 
 export default async function buildComponentsDocumentation(
   options: BuildComponentsDocumentationOptions,
 ) {
-  const {
-    workspaceRoot,
-    outputDirectory,
-    prettierConfigPath,
-    documentedInterfaces,
-    dataGridProject,
-    dataGridProProject,
-  } = options;
+  const { outputDirectory, documentedInterfaces, dataGridProject, dataGridProProject } = options;
 
   const componentsToGenerateDocs = [
-    path.resolve(workspaceRoot, 'packages/grid/x-data-grid/src/DataGrid.tsx'),
-    path.resolve(workspaceRoot, 'packages/grid/x-data-grid-pro/src/DataGridPro.tsx'),
+    path.resolve(dataGridProject.workspaceRoot, 'packages/grid/x-data-grid/src/DataGrid.tsx'),
+    path.resolve(
+      dataGridProject.workspaceRoot,
+      'packages/grid/x-data-grid-pro/src/DataGridPro.tsx',
+    ),
   ];
 
   // Uncomment below to generate documentation for all exported components
@@ -525,8 +510,6 @@ export default async function buildComponentsDocumentation(
         filename,
         project,
         outputDirectory,
-        prettierConfigPath,
-        workspaceRoot,
         pagesMarkdown,
         documentedInterfaces,
       });
