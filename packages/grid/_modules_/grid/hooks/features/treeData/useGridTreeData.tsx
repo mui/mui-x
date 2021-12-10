@@ -178,7 +178,6 @@ export const useGridTreeData = (
         rowTree,
         rowIds,
         sortRowList: params.sortRowList,
-        comparatorList: params.comparatorList,
         disableChildrenSorting: props.disableChildrenSorting,
       });
     },
