@@ -270,14 +270,8 @@ describe('e2e', () => {
 
       // set 06/25/1986
       await page.dblclick('[role="cell"][data-field="birthday"]');
-      await page.keyboard.press('0');
-      await page.keyboard.press('6');
-      await page.keyboard.press('2');
-      await page.keyboard.press('5');
-      await page.keyboard.press('1');
-      await page.keyboard.press('9');
-      await page.keyboard.press('8');
-      await page.keyboard.press('6');
+      await page.type('[role="cell"][data-field="birthday"] input', '06251986');
+
       await page.keyboard.press('Enter');
 
       expect(
@@ -286,8 +280,6 @@ describe('e2e', () => {
         ),
       ).to.equal('6/25/1986');
 
-      await page.keyboard.press('ArrowRight');
-
       // Edit dateTime column
       expect(
         await page.evaluate(
@@ -295,18 +287,12 @@ describe('e2e', () => {
         ),
       ).to.equal('2/20/2022, 6:50:00 AM');
 
+      // start editing lastConnexion
+      await page.keyboard.press('ArrowRight');
+      await page.keyboard.press('Enter');
+
       // set 01/31/2025 16:05
-      await page.keyboard.press('0');
-      await page.keyboard.press('1');
-      await page.keyboard.press('3');
-      await page.keyboard.press('1');
-      await page.keyboard.press('2');
-      await page.keyboard.press('0');
-      await page.keyboard.press('2');
-      await page.keyboard.press('5');
-      await page.keyboard.press('1');
-      await page.keyboard.press('6');
-      await page.keyboard.press('5');
+      await page.type('[role="cell"][data-field="lastConnexion"] input', '01312025165');
       await page.keyboard.press('Enter');
 
       expect(
