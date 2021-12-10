@@ -27,7 +27,4 @@ export const gridRowTreeDepthSelector = createSelector(
 
 export const gridRowIdsSelector = createSelector(gridRowsStateSelector, (rows) => rows.ids);
 
-export const gridCurrentRowsMetaSelector = createSelector(
-  gridRowsStateSelector,
-  (rows) => rows.currentRowsMeta,
-);
+export const gridRowsMetaSelector = createSelector(gridRowsStateSelector, (rows) => rows.meta);
