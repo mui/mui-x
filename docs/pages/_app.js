@@ -50,6 +50,7 @@ ponyfillGlobal.muiDocConfig = {
     if (newDeps['@mui/x-data-grid-generator']) {
       newDeps['@mui/material'] = versions['@mui/material'];
       newDeps['@mui/icons-material'] = versions['@mui/icons-material'];
+      newDeps['@mui/x-data-grid'] = versions['@mui/x-data-grid'];
     }
 
     return newDeps;
