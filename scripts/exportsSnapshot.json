@@ -283,6 +283,7 @@
   { "name": "GridViewHeadlineIcon", "kind": "Variable" },
   { "name": "GridViewStreamIcon", "kind": "Variable" },
   { "name": "HideGridColMenuItem", "kind": "Variable" },
+  { "name": "MAX_PAGE_SIZE", "kind": "Variable" },
   { "name": "SUBMIT_FILTER_DATE_STROKE_TIME", "kind": "Variable" },
   { "name": "SUBMIT_FILTER_STROKE_TIME", "kind": "Variable" },
   { "name": "SortGridMenuItems", "kind": "Variable" },
