@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridRenderEditCellParams } from '@mui/x-data-grid';
+import { GridRenderEditCellParams, GridEvents } from '@mui/x-data-grid';
 import Select, { SelectProps } from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import { MenuProps } from '@mui/material/Menu';
@@ -12,7 +12,6 @@ import DoneIcon from '@mui/icons-material/Done';
 import { createStyles, makeStyles } from '@mui/styles';
 import { createTheme } from '@mui/material/styles';
 import { STATUS_OPTIONS } from '../services/static-data';
-import { GridEvents } from '../../../_modules_/grid/models/events/gridEvents';
 
 const defaultTheme = createTheme();
 const useStyles = makeStyles(
