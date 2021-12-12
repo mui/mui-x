@@ -75,7 +75,7 @@
     "@rollup/plugin-replace": "^3.0.0",
     "@testing-library/react": "^12.1.2",
     "@types/babel__core": "^7.1.16",
-    "@types/chai": "^4.2.22",
+    "@types/chai": "^4.3.0",
     "@types/chai-dom": "^0.0.12",
     "@types/enzyme": "^3.10.10",
     "@types/mocha": "^9.0.0",
