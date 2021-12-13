@@ -15599,7 +15599,7 @@ react-router-dom@^6.0.0, react-router-dom@^6.1.1:
     history "^5.1.0"
     react-router "6.1.1"
 
-react-router@6.1.1, react-router@^6.0.0, react-router@^6.0.2:
+react-router@6.1.1, react-router@^6.0.0, react-router@^6.1.1:
   version "6.1.1"
   resolved "https://registry.yarnpkg.com/react-router/-/react-router-6.1.1.tgz#16f41bf54e87d995bcd4d447720a693f77d8fcb9"
   integrity sha512-55o96RiDZmC0uD17DPqVmzzfdNd2Dc+EjkYvMAmHl43du/GItaTdFr5WwjTryNWPXZ+OOVQxQhwAX25UwxpHtw==
