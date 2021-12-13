@@ -11,7 +11,7 @@
     "@material-ui/core": "^5.0.0-beta.4",
     "@material-ui/icons": "^5.0.0-beta.4",
     "@mui/material": "^5.2.2",
-    "@mui/styles": "^5.2.2",
+    "@mui/styles": "^5.2.3",
     "@mui/x-data-grid": "^4.0.0",
     "@visx/xychart": "^2.5.0",
     "ag-grid-community": "^26.2.0",
