@@ -12,12 +12,12 @@ export const useDataGridProProps = (inProps: DataGridProProps) => {
   const themedProps = useThemeProps({ props: inProps, name: 'MuiDataGrid' });
 
   const localeText = React.useMemo(
-    () => ({ ...GRID_DEFAULT_LOCALE_TEXT, ...inProps.localeText }),
-    [inProps.localeText],
+    () => ({ ...GRID_DEFAULT_LOCALE_TEXT, ...themedProps.localeText }),
+    [themedProps.localeText],
   );
 
   const components = React.useMemo<GridSlotsComponent>(() => {
-    const overrides = inProps.components;
+    const overrides = themedProps.components;
 
     if (!overrides) {
       return { ...DEFAULT_GRID_SLOTS_COMPONENTS };
@@ -31,7 +31,7 @@ export const useDataGridProProps = (inProps: DataGridProProps) => {
     });
 
     return mergedComponents;
-  }, [inProps.components]);
+  }, [themedProps.components]);
 
   return React.useMemo<DataGridProProcessedProps>(
     () => ({
