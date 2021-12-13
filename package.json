@@ -114,7 +114,7 @@
     "glob-gitignore": "^1.0.14",
     "jsdom": "^18.1.1",
     "jss": "^10.9.0",
-    "jss-plugin-template": "^10.8.2",
+    "jss-plugin-template": "^10.9.0",
     "jss-rtl": "^0.3.0",
     "karma": "^6.3.9",
     "karma-browserstack-launcher": "^1.6.0",
