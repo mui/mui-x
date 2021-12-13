@@ -12103,13 +12103,13 @@ jss-plugin-rule-value-function@^10.8.2:
     jss "10.8.2"
     tiny-warning "^1.0.2"
 
-jss-plugin-template@^10.8.2:
-  version "10.8.2"
-  resolved "https://registry.yarnpkg.com/jss-plugin-template/-/jss-plugin-template-10.8.2.tgz#e3951a9fc8a6fb54dd0601483e237e6769789a37"
-  integrity sha512-oTVwYRUCuCLslHxuH73F15kFmDxc4YEJIn8kHBnNpGr99ZbQdRIgPabosVTfkgE8czuyTx0KM5u8zEeuL+v66A==
+jss-plugin-template@^10.9.0:
+  version "10.9.0"
+  resolved "https://registry.yarnpkg.com/jss-plugin-template/-/jss-plugin-template-10.9.0.tgz#27547e093e04b9dc9e900f35146e874bb196f575"
+  integrity sha512-lxThUvdt0drCi7xhuJWxADWTgLLy1IWCeFO5k+dtba900xJsNg0IGZplpP9w9UpaJsYS3WUwWMXw8Sxn1dobfQ==
   dependencies:
     "@babel/runtime" "^7.3.1"
-    jss "10.8.2"
+    jss "10.9.0"
     tiny-warning "^1.0.2"
 
 jss-plugin-vendor-prefixer@^10.8.2:
@@ -12138,7 +12138,7 @@ jss@10.8.2:
     is-in-browser "^1.1.3"
     tiny-warning "^1.0.2"
 
-jss@^10.8.2, jss@^10.9.0:
+jss@10.9.0, jss@^10.8.2, jss@^10.9.0:
   version "10.9.0"
   resolved "https://registry.yarnpkg.com/jss/-/jss-10.9.0.tgz#7583ee2cdc904a83c872ba695d1baab4b59c141b"
   integrity sha512-YpzpreB6kUunQBbrlArlsMpXYyndt9JATbt95tajx0t4MTJJcCJdd4hdNpHmOIDiUJrF/oX5wtVFrS3uofWfGw==
