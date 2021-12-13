@@ -116,6 +116,35 @@ In this demo, you can see how to create a completely new operator for the Rating
 
 {{"demo": "pages/components/data-grid/filtering/CustomRatingOperator.js", "bg": "inline", "defaultCodeOpen": false}}
 
+### Multiple values operator
+
+To create a custom operator which require multiple value, you can provide an array of values to the `value` property of `filterItem`.
+In this case, the `valueParser` of the `GridColDef` will be applied to each item of the array.
+
+The filtering function `getApplyFilterFn` must be adapted to handle `filterItem.value` has an array.
+Here is an example for a "between" operator, applied on the quantity column.
+
+```ts
+{
+    label: 'Between',
+    value: 'between',
+    getApplyFilterFn: (filterItem: GridFilterItem) => {
+        if (!Array.isArray(filterItem.value) || filterItem.value.length !== 2) {
+            return null;
+        }
+        if (filterItem.value[0] == null || filterItem.value[1] == null) {
+            return null;
+        }
+        return ({ value }): boolean => {
+            return value !== null && filterItem.value[0] <= value && value <= filterItem.value[1];
+        };
+    },
+    InputComponent: InputNumberInterval,
+}
+```
+
+{{"demo": "pages/components/data-grid/filtering/CustomMultiValueOperator.js", "bg": "inline", "defaultCodeOpen": false}}
+
 ## Server-side filter
 
 Filtering can be run server-side by setting the `filterMode` prop to `server`, and implementing the `onFilterModelChange` handler.
