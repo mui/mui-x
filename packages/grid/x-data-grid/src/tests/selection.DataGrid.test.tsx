@@ -83,6 +83,82 @@ describe('<DataGrid /> - Selection', () => {
     });
   });
 
+  describe('props: checkboxSelection = false (single selection), with keyboard events', () => {
+    it('should select one row at a time on Shift + Space', () => {
+      render(<TestDataGridSelection />);
+
+      const cell0 = getCell(0, 0);
+      cell0.focus();
+      fireEvent.keyDown(cell0, { key: ' ', shiftKey: true });
+      expect(getSelectedRowIds()).to.deep.equal([0]);
+
+      const cell1 = getCell(1, 0);
+      cell1.focus();
+      fireEvent.keyDown(cell1, { key: ' ', shiftKey: true });
+      expect(getSelectedRowIds()).to.deep.equal([1]);
+    });
+
+    it('should select row on Shift + Space without starting editing the cell', () => {
+      const onCellEditStart = spy();
+      render(
+        <TestDataGridSelection
+          columns={[
+            { field: 'id', type: 'number' },
+            { field: 'name', editable: true },
+          ]}
+          rows={[
+            { id: 0, name: 'React' },
+            { id: 1, name: 'Vue' },
+          ]}
+          onCellEditStart={onCellEditStart}
+        />,
+      );
+      expect(onCellEditStart.callCount).to.equal(0);
+
+      const cell01 = getCell(0, 1);
+      cell01.focus();
+      fireEvent.keyDown(cell01, { key: ' ', shiftKey: true });
+
+      expect(onCellEditStart.callCount).to.equal(0);
+      expect(getSelectedRowIds()).to.deep.equal([0]);
+
+      const cell11 = getCell(1, 1);
+      cell11.focus();
+      fireEvent.keyDown(cell11, { key: ' ', shiftKey: true });
+
+      expect(onCellEditStart.callCount).to.equal(0);
+      expect(getSelectedRowIds()).to.deep.equal([1]);
+    });
+
+    it(`should deselect the selected row on Shift + Space`, () => {
+      render(<TestDataGridSelection />);
+      const cell00 = getCell(0, 0);
+      cell00.focus();
+
+      fireEvent.keyDown(cell00, { key: ' ', shiftKey: true });
+      expect(getSelectedRowIds()).to.deep.equal([0]);
+
+      fireEvent.keyDown(cell00, { key: ' ', shiftKey: true });
+      expect(getSelectedRowIds()).to.deep.equal([]);
+    });
+
+    it('should not select a range with shift pressed', () => {
+      render(<TestDataGridSelection />);
+      const cell00 = getCell(0, 0);
+      cell00.focus();
+
+      fireEvent.keyDown(cell00, { key: ' ', shiftKey: true });
+      expect(getSelectedRowIds()).to.deep.equal([0]);
+
+      fireEvent.keyDown(cell00, {
+        key: 'ArrowDown',
+        shiftKey: true,
+      });
+
+      expect(getSelectedRowIds()).to.deep.equal([0]);
+    });
+  });
+
   describe('prop: checkboxSelection = true (multi selection)', () => {
     it('should allow to toggle prop.checkboxSelection', () => {
       const { setProps } = render(<TestDataGridSelection />);
@@ -156,6 +232,74 @@ describe('<DataGrid /> - Selection', () => {
       expect(getSelectedRowIds()).to.deep.equal([0, 1, 2, 3]);
       fireEvent.click(getCell(1, 0), { shiftKey: true });
       expect(getSelectedRowIds()).to.deep.equal([0, 1]);
+    });
+  });
+
+  describe('prop: checkboxSelection = true (multi selection), with keyboard events', () => {
+    it('should select a range with shift pressed when pressing ArrowDown', () => {
+      render(<TestDataGridSelection checkboxSelection />);
+
+      expect(getSelectedRowIds()).to.deep.equal([]);
+
+      const cell01 = getCell(0, 1);
+      cell01.focus();
+      fireEvent.keyDown(cell01, {
+        key: 'ArrowDown',
+        shiftKey: true,
+      });
+
+      expect(getSelectedRowIds()).to.deep.equal([0, 1]);
+
+      const cell11 = getCell(1, 1);
+      fireEvent.keyDown(cell11, {
+        key: 'ArrowDown',
+        shiftKey: true,
+      });
+
+      expect(getSelectedRowIds()).to.deep.equal([0, 1, 2]);
+    });
+
+    it('should select a range with shift pressed when pressing ArrowUp', () => {
+      render(<TestDataGridSelection checkboxSelection />);
+      expect(getSelectedRowIds()).to.deep.equal([]);
+
+      const cell21 = getCell(2, 1);
+      cell21.focus();
+      fireEvent.keyDown(cell21, {
+        key: 'ArrowUp',
+        shiftKey: true,
+      });
+      expect(getSelectedRowIds()).to.deep.equal([1, 2]);
+
+      const cell11 = getCell(1, 1);
+      fireEvent.keyDown(cell11, {
+        key: 'ArrowUp',
+        shiftKey: true,
+      });
+      expect(getSelectedRowIds()).to.deep.equal([0, 1, 2]);
+    });
+
+    it('should add new row to the selection when pressing Shift+Space', () => {
+      render(<TestDataGridSelection checkboxSelection />);
+
+      expect(getSelectedRowIds()).to.deep.equal([]);
+
+      const cell21 = getCell(2, 1);
+      cell21.focus();
+      fireEvent.keyDown(cell21, {
+        key: ' ',
+        shiftKey: true,
+      });
+
+      expect(getSelectedRowIds()).to.deep.equal([2]);
+
+      const cell11 = getCell(1, 1);
+      cell11.focus();
+      fireEvent.keyDown(cell11, {
+        key: ' ',
+        shiftKey: true,
+      });
+      expect(getSelectedRowIds()).to.deep.equal([1, 2]);
     });
   });
 

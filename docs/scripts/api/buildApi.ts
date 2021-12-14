@@ -12,13 +12,14 @@ import { Project } from './utils';
 const workspaceRoot = path.resolve(__dirname, '../../../');
 
 interface CreateProgramOptions {
+  name: string;
   rootPath: string;
   tsConfigPath: string;
   entryPointPath: string;
 }
 
 const createProject = (options: CreateProgramOptions): Project => {
-  const { tsConfigPath, rootPath, entryPointPath } = options;
+  const { name, tsConfigPath, rootPath, entryPointPath } = options;
 
   const compilerOptions = ts.parseJsonConfigFileContent(
     ts.readConfigFile(tsConfigPath, ts.sys.readFile).config,
@@ -41,6 +42,7 @@ const createProject = (options: CreateProgramOptions): Project => {
   );
 
   return {
+    name,
     exports,
     program,
     checker,
@@ -54,12 +56,14 @@ async function run(argv: { outputDirectory?: string }) {
   fse.mkdirSync(outputDirectory, { mode: 0o777, recursive: true });
 
   const dataGridProject = createProject({
+    name: 'x-data-grid',
     rootPath: path.join(workspaceRoot, 'packages/grid/x-data-grid'),
     tsConfigPath: path.join(workspaceRoot, 'packages/grid/x-data-grid/tsconfig.json'),
     entryPointPath: path.join(workspaceRoot, 'packages/grid/x-data-grid/src/index.ts'),
   });
 
   const dataGridProProject = createProject({
+    name: 'x-data-grid-pro',
     rootPath: path.join(workspaceRoot, 'packages/grid/x-data-grid-pro'),
     tsConfigPath: path.join(workspaceRoot, 'packages/grid/x-data-grid-pro/tsconfig.json'),
     entryPointPath: path.join(workspaceRoot, 'packages/grid/x-data-grid-pro/src/index.ts'),
@@ -88,7 +92,8 @@ async function run(argv: { outputDirectory?: string }) {
   });
 
   buildExportsDocumentation({
-    project: dataGridProject,
+    dataGridProject,
+    dataGridProProject,
   });
 }
 

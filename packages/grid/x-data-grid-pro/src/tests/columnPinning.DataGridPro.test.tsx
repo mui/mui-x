@@ -26,7 +26,7 @@ function createDragOverEvent(target: ChildNode) {
 }
 
 describe('<DataGridPro /> - Column pinning', () => {
-  const { render } = createRenderer({ clock: 'fake' });
+  const { render, clock } = createRenderer({ clock: 'fake' });
 
   let apiRef: GridApiRef;
 
@@ -439,6 +439,31 @@ describe('<DataGridPro /> - Column pinning', () => {
       expect(
         document.querySelector(`.${gridClasses['pinnedColumns--left']} [data-field="id"]`),
       ).to.equal(null);
+    });
+
+    it('should not render menu items if the column has `pinnable` equals to false', () => {
+      render(
+        <TestCase
+          columns={[
+            { field: 'brand', pinnable: true },
+            { field: 'year', pinnable: false },
+          ]}
+          rows={[{ id: 0, brand: 'Nike', year: 1941 }]}
+        />,
+      );
+
+      const brandHeader = document.querySelector('[role="columnheader"][data-field="brand"]')!;
+      fireEvent.click(brandHeader.querySelector('button[aria-label="Menu"]'));
+      expect(screen.queryByRole('menuitem', { name: 'Pin to left' })).not.to.equal(null);
+      fireEvent.keyDown(screen.getByRole('menu'), { key: 'Escape' });
+
+      clock.runToLast();
+      // Ensure that the first menu was closed
+      expect(screen.queryByRole('menuitem', { name: 'Pin to left' })).to.equal(null);
+
+      const yearHeader = document.querySelector('[role="columnheader"][data-field="year"]')!;
+      fireEvent.click(yearHeader.querySelector('button[aria-label="Menu"]'));
+      expect(screen.queryByRole('menuitem', { name: 'Pin to left' })).to.equal(null);
     });
   });
 });
