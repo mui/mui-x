@@ -19,8 +19,9 @@ export const GRID_TREE_DATA_GROUP_COL_DEF: Omit<GridColDef, 'field' | 'editable'
 
 export const GRID_TREE_DATA_GROUP_COL_DEF_FORCED_PROPERTIES: Pick<
   GridColDef,
-  'field' | 'editable'
+  'field' | 'editable' | 'canBeGrouped'
 > = {
   field: '__tree_data_group__',
   editable: false,
+  canBeGrouped: false,
 };

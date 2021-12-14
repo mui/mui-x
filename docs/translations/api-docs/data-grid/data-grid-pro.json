@@ -17,8 +17,8 @@
     "componentsProps": "Overrideable components props dynamically passed to the component at rendering.",
     "defaultGroupingExpansionDepth": "If above 0, the row children will be expanded up to this depth. If equal to -1, all the row children will be expanded.",
     "density": "Set the density of the grid.",
-    "disableChildrenFiltering": "If <code>true</code>, the filtering will only be applied to the top level rows.",
-    "disableChildrenSorting": "If <code>true</code>, the sorting will only be applied to the top level rows.",
+    "disableChildrenFiltering": "If <code>true</code>, the filtering will only be applied to the top level rows when grouping rows with the <code>treeData</code> prop.",
+    "disableChildrenSorting": "If <code>true</code>, the sorting will only be applied to the top level rows when grouping rows with the <code>treeData</code> prop.",
     "disableColumnFilter": "If <code>true</code>, column filters are disabled.",
     "disableColumnMenu": "If <code>true</code>, the column menu is disabled.",
     "disableColumnPinning": "If <code>true</code>, the column pinning is disabled.",
@@ -27,6 +27,7 @@
     "disableColumnSelector": "If <code>true</code>, hiding/showing columns is disabled.",
     "disableDensitySelector": "If <code>true</code>, the density selector is disabled.",
     "disableExtendRowFullWidth": "If <code>true</code>, rows will not be extended to fill the full width of the grid container.",
+    "disableGroupingColumns": "If <code>true</code>, the grouping columns are disabled.",
     "disableMultipleColumnsFiltering": "If <code>true</code>, filtering with multiple columns is disabled.",
     "disableMultipleColumnsSorting": "If <code>true</code>, sorting with multiple columns is disabled.",
     "disableMultipleSelection": "If <code>true</code>, multiple selection using the CTRL or CMD key is disabled.",
@@ -35,6 +36,7 @@
     "editMode": "Controls whether to use the cell or row editing.",
     "editRowsModel": "Set the edit rows model of the grid.",
     "error": "An error that will turn the grid into its error state and display the error component.",
+    "experimentalFeatures": "Features under development. For each feature, if the flag is not explicitly set to <code>true</code>, the feature will be fully disabled and any property / method call will not have any effect.",
     "filterMode": "Filtering can be processed on the server or client-side. Set it to &#39;server&#39; if you would like to handle filtering on the server-side.",
     "filterModel": "Set the filter model of the grid.",
     "getCellClassName": "Function that applies CSS classes dynamically on cells.<br><br><strong>Signature:</strong><br><code>function(params: GridCellParams) =&gt; string</code><br><em>params:</em> With all properties from <a href=\"/api/data-grid/grid-cell-params/\">GridCellParams</a>.<br> <em>returns</em> (string): The CSS class to apply to the cell.",
@@ -42,6 +44,8 @@
     "getRowId": "Return the id of a given GridRowModel.",
     "getTreeDataPath": "Determines the path of a row in the tree data. For instance, a row with the path [&quot;A&quot;, &quot;B&quot;] is the child of the row with the path [&quot;A&quot;]. Note that all paths must contain at least one element.<br><br><strong>Signature:</strong><br><code>function(row: GridRowModel) =&gt; Array&lt;string&gt;</code><br><em>row:</em> The row from which we want the path.<br> <em>returns</em> (Array<string>): The path to the row.",
     "groupingColDef": "The grouping column used by the tree data.",
+    "groupingColumnMode": "If <code>single</code>, all column we are grouping by will be represented in the same grouping the same column. If <code>multiple</code>, each column we are grouping by will be represented in its own column.",
+    "groupingColumnsModel": "Set the grouping columns of the grid.",
     "headerHeight": "Set the height in pixel of the column headers in the grid.",
     "hideFooter": "If <code>true</code>, the footer component is hidden.",
     "hideFooterPagination": "If <code>true</code>, the pagination component in the footer is hidden.",
@@ -76,6 +80,7 @@
     "onEditRowsModelChange": "Callback fired when the <code>editRowsModel</code> changes.<br><br><strong>Signature:</strong><br><code>function(editRowsModel: GridEditRowsModel, details: GridCallbackDetails) =&gt; void</code><br><em>editRowsModel:</em> With all properties from GridEditRowsModel.<br><em>details:</em> Additional details for this callback.",
     "onError": "Callback fired when an exception is thrown in the grid.<br><br><strong>Signature:</strong><br><code>function(args: any, event: MuiEvent&lt;{}&gt;, details: GridCallbackDetails) =&gt; void</code><br><em>args:</em> The arguments passed to the <code>showError</code> call.<br><em>event:</em> The event object.<br><em>details:</em> Additional details for this callback.",
     "onFilterModelChange": "Callback fired when the Filter model changes before the filters are applied.<br><br><strong>Signature:</strong><br><code>function(model: GridFilterModel, details: GridCallbackDetails) =&gt; void</code><br><em>model:</em> With all properties from GridFilterModel.<br><em>details:</em> Additional details for this callback.",
+    "onGroupingColumnsModelChange": "Callback fired when the grouping columns model changes.<br><br><strong>Signature:</strong><br><code>function(model: GridGroupingColumnsModel, details: GridCallbackDetails) =&gt; void</code><br><em>model:</em> Columns used as grouping criteria.<br><em>details:</em> Additional details for this callback.",
     "onPageChange": "Callback fired when the current page has changed.<br><br><strong>Signature:</strong><br><code>function(page: number, details: GridCallbackDetails) =&gt; void</code><br><em>page:</em> Index of the page displayed on the Grid.<br><em>details:</em> Additional details for this callback.",
     "onPageSizeChange": "Callback fired when the page size has changed.<br><br><strong>Signature:</strong><br><code>function(pageSize: number, details: GridCallbackDetails) =&gt; void</code><br><em>pageSize:</em> Size of the page displayed on the Grid.<br><em>details:</em> Additional details for this callback.",
     "onPinnedColumnsChange": "Callback fired when the pinned columns have changed.<br><br><strong>Signature:</strong><br><code>function(pinnedColumns: GridPinnedColumns, details: GridCallbackDetails) =&gt; void</code><br><em>pinnedColumns:</em> The changed pinned columns.<br><em>details:</em> Additional details for this callback.",
@@ -445,6 +450,8 @@
     "ExportIcon": "Icon displayed on the open export button present in the toolbar by default.",
     "MoreActionsIcon": "Icon displayed on the <code>actions</code> column type to open the menu.",
     "TreeDataExpandIcon": "Icon displayed on the tree data toggling column when the children are collapsed",
-    "TreeDataCollapseIcon": "Icon displayed on the tree data toggling column when the children are expanded"
+    "TreeDataCollapseIcon": "Icon displayed on the tree data toggling column when the children are expanded",
+    "GroupingCriteriaExpandIcon": "Icon displayed on the grouping column when the children are collapsed",
+    "GroupingCriteriaCollapseIcon": "Icon displayed on the grouping column when the children are expanded"
   }
 }

@@ -10,6 +10,7 @@ export const GRID_STRING_COL_DEF: GridColTypeDef = {
   sortable: true,
   resizable: true,
   filterable: true,
+  canBeGrouped: true,
   sortComparator: gridStringNumberComparer,
   type: 'string',
   align: 'left',

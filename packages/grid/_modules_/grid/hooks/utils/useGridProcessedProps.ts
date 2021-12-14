@@ -56,6 +56,8 @@ const DEFAULT_GRID_ICON_SLOTS_COMPONENTS: GridIconSlotsComponent = {
   MoreActionsIcon: GridMoreVertIcon,
   TreeDataCollapseIcon: GridExpandLessIcon,
   TreeDataExpandIcon: GridExpandMoreIcon,
+  GroupingCriteriaCollapseIcon: GridExpandLessIcon,
+  GroupingCriteriaExpandIcon: GridExpandMoreIcon,
 };
 
 const DEFAULT_GRID_SLOTS_COMPONENTS: GridSlotsComponent = {
@@ -105,6 +107,8 @@ export const useGridProcessedProps = (inProps: GridInputComponentProps) => {
     () => ({
       ...GRID_DEFAULT_SIMPLE_OPTIONS,
       ...inProps,
+      disableGroupingColumns:
+        inProps.disableGroupingColumns || !inProps.experimentalFeatures?.groupingColumns,
       localeText,
       components,
     }),

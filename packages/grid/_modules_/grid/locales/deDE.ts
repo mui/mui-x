@@ -116,6 +116,11 @@ const deDEGrid: Partial<GridLocaleText> = {
   treeDataGroupingHeaderName: 'Gruppe',
   treeDataExpand: 'Kinder einblenden',
   treeDataCollapse: 'Kinder ausblenden',
+
+  // Grouping columns
+  // groupingColumnHeaderName: 'Group',
+  // groupColumn: name => `Group by ${name}`,
+  // unGroupColumn: name => `Stop grouping by ${name}`,
 };
 
 export const deDE: Localization = getGridLocalization(deDEGrid, deDECore);

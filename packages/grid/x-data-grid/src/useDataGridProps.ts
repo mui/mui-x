@@ -19,6 +19,7 @@ const FORCED_PROPS: { [key in ForcedPropsKey]-?: GridInputComponentProps[key] } 
   disableChildrenFiltering: undefined,
   disableChildrenSorting: undefined,
   disableColumnPinning: undefined,
+  disableGroupingColumns: undefined,
   getTreeDataPath: undefined,
   groupingColDef: undefined,
   throttleRowsMs: undefined,
@@ -31,6 +32,10 @@ const FORCED_PROPS: { [key in ForcedPropsKey]-?: GridInputComponentProps[key] } 
   onPinnedColumnsChange: undefined,
   defaultGroupingExpansionDepth: undefined,
   treeData: undefined,
+  groupingColumnMode: undefined,
+  groupingColumnsModel: undefined,
+  onGroupingColumnsModelChange: undefined,
+  experimentalFeatures: undefined,
   signature: 'DataGrid',
 };
 

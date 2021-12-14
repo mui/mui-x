@@ -150,6 +150,12 @@
     "event": "MuiEvent<{}>"
   },
   {
+    "name": "groupingColumnsModelChange",
+    "description": "Fired when the grouping columns model changes.",
+    "params": "GridGroupingColumnsModel",
+    "event": "MuiEvent<{}>"
+  },
+  {
     "name": "headerSelectionCheckboxChange",
     "description": "Fired when the value of the selection checkbox of the header is changed",
     "params": "GridHeaderSelectionCheckboxParams",

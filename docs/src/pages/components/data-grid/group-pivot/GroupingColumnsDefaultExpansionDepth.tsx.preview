@@ -1,0 +1,15 @@
+<DataGridPro
+  {...data}
+  apiRef={apiRef}
+  columns={columns}
+  defaultGroupingExpansionDepth={-1}
+  disableSelectionOnClick
+  initialState={{
+    groupingColumns: {
+      model: INITIAL_GROUPING_COLUMN_MODEL,
+    },
+  }}
+  experimentalFeatures={{
+    groupingColumns: true,
+  }}
+/>

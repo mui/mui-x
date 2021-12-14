@@ -43,6 +43,7 @@ const INTERFACES_WITH_DEDICATED_PAGES = [
   'GridPrintExportOptions',
   'GridScrollApi',
   'GridEditRowApi',
+  'GridGroupingColumnsApi',
   'GridColumnPinningApi',
 ];
 

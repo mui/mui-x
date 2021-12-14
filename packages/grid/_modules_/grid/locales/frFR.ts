@@ -116,6 +116,11 @@ const frFRGrid: Partial<GridLocaleText> = {
   treeDataGroupingHeaderName: 'Groupe',
   treeDataExpand: 'afficher les enfants',
   treeDataCollapse: 'masquer les enfants',
+
+  // Grouping columns
+  // groupingColumnHeaderName: 'Group',
+  // groupColumn: name => `Group by ${name}`,
+  // unGroupColumn: name => `Stop grouping by ${name}`,
 };
 
 export const frFR: Localization = getGridLocalization(frFRGrid, frFRCore);

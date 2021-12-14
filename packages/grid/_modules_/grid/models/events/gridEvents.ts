@@ -206,6 +206,10 @@ export enum GridEvents {
    */
   pageSizeChange = 'pageSizeChange',
   /**
+   * Fired when the grouping columns model changes.
+   */
+  groupingColumnsModelChange = 'groupingColumnsModelChange',
+  /**
    * Fired during the scroll of the grid viewport.
    */
   rowsScroll = 'rowsScroll',

@@ -109,7 +109,7 @@ export interface GridValueGetterSimpleParams<R = any> {
    */
   id: GridRowId;
   /**
-   * The column field of the cell that triggered the event
+   * The column field of the cell that triggered the event.
    */
   field: string;
   /**
@@ -155,7 +155,7 @@ export interface GridValueFormatterParams {
    */
   id?: GridRowId;
   /**
-   * The column field of the cell that triggered the event
+   * The column field of the cell that triggered the event.
    */
   field: string;
   /**
@@ -184,4 +184,22 @@ export interface GridPreProcessEditCellProps {
    * The edit cell props.
    */
   props: GridEditCellProps;
+}
+
+/**
+ * Object passed as parameter in the column [[GridColDef]] key getter callback.
+ */
+export interface GridKeyGetterParams<V = any> {
+  /**
+   * The grid row id.
+   */
+  id: GridRowId;
+  /**
+   * The column field of the cell that triggered the event.
+   */
+  field: string;
+  /**
+   * The cell value (if the column has valueGetter, this is the value returned by it).
+   */
+  value: V;
 }

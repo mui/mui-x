@@ -10,6 +10,14 @@ export type GridMergedOptions = {
   [key in keyof GridProcessedMergedOptions]: Partial<GridProcessedMergedOptions[key]>;
 };
 
+export enum GridExperimentalFeatures {
+  /**
+   * Only available on the Pro plan.
+   * Will be part of the premium-plan when fully ready.
+   */
+  groupingColumns = 'groupingColumns',
+}
+
 /**
  * The grid options with a default in value which is merged with the value given through props.
  */
@@ -119,7 +127,7 @@ export interface GridSimpleOptions {
    */
   disableMultipleColumnsFiltering: boolean;
   /**
-   * If `true`, the filtering will only be applied to the top level rows.
+   * If `true`, the filtering will only be applied to the top level rows when grouping rows with the `treeData` prop.
    * @default false
    */
   disableChildrenFiltering: boolean;
@@ -134,7 +142,7 @@ export interface GridSimpleOptions {
    */
   disableMultipleColumnsSorting: boolean;
   /**
-   * If `true`, the sorting will only be applied to the top level rows.
+   * If `true`, the sorting will only be applied to the top level rows when grouping rows with the `treeData` prop.
    * @default false
    */
   disableChildrenSorting: boolean;
@@ -153,6 +161,11 @@ export interface GridSimpleOptions {
    * @default false
    */
   disableColumnPinning: boolean;
+  /**
+   * If `true`, the grouping columns are disabled.
+   * @default false
+   */
+  disableGroupingColumns: boolean;
   /**
    * Controls whether to use the cell or row editing.
    * @default "cell"
@@ -228,6 +241,12 @@ export interface GridSimpleOptions {
    */
   treeData: boolean;
   /**
+   * If `single`, all column we are grouping by will be represented in the same grouping the same column.
+   * If `multiple`, each column we are grouping by will be represented in its own column.
+   * @default 'single'
+   */
+  groupingColumnMode: 'single' | 'multiple';
+  /**
    * If above 0, the row children will be expanded up to this depth.
    * If equal to -1, all the row children will be expanded.
    * @default 0
@@ -296,6 +315,7 @@ export const GRID_DEFAULT_SIMPLE_OPTIONS: GridSimpleOptions = {
   disableChildrenSorting: false,
   disableSelectionOnClick: false,
   disableVirtualization: false,
+  disableGroupingColumns: false,
   editMode: GridEditModes.Cell,
   filterMode: GridFeatureModeConstant.client,
   headerHeight: 56,
@@ -310,6 +330,7 @@ export const GRID_DEFAULT_SIMPLE_OPTIONS: GridSimpleOptions = {
   rowHeight: 52,
   rowsPerPageOptions: [25, 50, 100],
   treeData: false,
+  groupingColumnMode: 'single',
   defaultGroupingExpansionDepth: 0,
   scrollEndThreshold: 80,
   showCellRightBorder: false,

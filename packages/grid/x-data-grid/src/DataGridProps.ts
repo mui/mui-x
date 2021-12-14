@@ -17,6 +17,7 @@ export type DataGridProps = Omit<
   | 'disableChildrenFiltering'
   | 'disableChildrenSorting'
   | 'disableColumnPinning'
+  | 'disableGroupingColumns'
   | 'throttleRowsMs'
   | 'hideFooterRowCount'
   | 'options'
@@ -28,7 +29,12 @@ export type DataGridProps = Omit<
   | 'getTreeDataPath'
   | 'groupingColDef'
   | 'defaultGroupingExpansionDepth'
+  | 'groupingColumnMode'
+  | 'groupingColumnsModel'
+  | 'onGroupingColumnsModelChange'
   | 'signature'
+  // TODO: Remove if we have an experimental feature concerning the DataGrid and override the property to only expose the experimental features of the DataGrid.
+  | 'experimentalFeatures'
 > & {
   pagination?: true;
 };

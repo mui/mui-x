@@ -12,6 +12,7 @@ import {
   GridSimpleOptions,
   GridProcessedMergedOptions,
   GridMergedOptions,
+  GridExperimentalFeatures,
 } from './models/gridOptions';
 import { GridRowIdGetter, GridRowModel, GridRowsProp } from './models/gridRows';
 import { GridColumnTypesRecord } from './models/colDef/gridColumnTypesRecord';
@@ -26,6 +27,7 @@ import { GridClasses } from './gridClasses';
 import { GridCallbackDetails } from './models/api/gridCallbackDetails';
 import { GridPinnedColumns } from './models/api/gridColumnPinningApi';
 import { GridEventListener, GridEvents } from './models/events';
+import type { GridGroupingColumnsModel } from './hooks/features/groupingColumns';
 
 /**
  * The grid component react props before applying the default values.
@@ -33,7 +35,13 @@ import { GridEventListener, GridEvents } from './models/events';
 export interface GridInputComponentProps
   extends Partial<GridSimpleOptions>,
     Partial<GridMergedOptions>,
-    GridComponentOtherProps {}
+    GridComponentOtherProps {
+  /**
+   * Features under development.
+   * For each feature, if the flag is not explicitly set to `true`, the feature will be fully disabled and any property / method call will not have any effect.
+   */
+  experimentalFeatures?: { [key in GridExperimentalFeatures]?: boolean };
+}
 
 /**
  * The grid component react props after applying the default values.
@@ -355,6 +363,19 @@ interface GridComponentOtherProps extends CommonProps {
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onSortModelChange?: (model: GridSortModel, details: GridCallbackDetails) => void;
+  /**
+   * Set the grouping columns of the grid.
+   */
+  groupingColumnsModel?: GridGroupingColumnsModel;
+  /**
+   * Callback fired when the grouping columns model changes.
+   * @param {GridGroupingColumnsModel} model Columns used as grouping criteria.
+   * @param {GridCallbackDetails} details Additional details for this callback.
+   */
+  onGroupingColumnsModelChange?: (
+    model: GridGroupingColumnsModel,
+    details: GridCallbackDetails,
+  ) => void;
   /**
    * The column fields to display pinned to left or right.
    */

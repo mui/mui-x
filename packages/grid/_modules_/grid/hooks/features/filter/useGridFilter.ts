@@ -16,6 +16,7 @@ import {
   getDefaultGridFilterModel,
   GridFilteringMethod,
   GridFilteringMethodCollection,
+  GridAggregatedFilterItemApplier,
 } from './gridFilterState';
 import { GridFilterModel } from '../../../models/gridFilterModel';
 import { gridFilterModelSelector, gridVisibleSortedRowEntriesSelector } from './gridFilterSelector';
@@ -25,7 +26,10 @@ import { gridRowIdsSelector, gridRowGroupingNameSelector } from '../rows';
 import { GridPreProcessingGroup } from '../../core/preProcessing';
 import { useGridRegisterFilteringMethod } from './useGridRegisterFilteringMethod';
 
-type GridFilterItemApplier = (rowId: GridRowId) => boolean;
+type GridFilterItemApplier = {
+  fn: (rowId: GridRowId) => boolean;
+  item: GridFilterItem;
+};
 
 const checkFilterModelValidity = (model: GridFilterModel) => {
   if (model.items.length > 1) {
@@ -88,7 +92,7 @@ export const useGridFilter = (
   });
 
   const buildAggregatedFilterApplier = React.useCallback(
-    (filterModel: GridFilterModel): GridFilterItemApplier | null => {
+    (filterModel: GridFilterModel): GridAggregatedFilterItemApplier | null => {
       const { items, linkOperator = GridLinkOperator.And } = filterModel;
 
       const getFilterCallbackFromItem = (
@@ -127,10 +131,15 @@ export const useGridFilter = (
           return null;
         }
 
-        return (rowId: GridRowId) => {
+        const fn = (rowId: GridRowId) => {
           const cellParams = apiRef.current.getCellParams(rowId, newFilterItem.columnField!);
 
           return applyFilterOnRow(cellParams);
+        };
+
+        return {
+          fn,
+          item: newFilterItem,
         };
       };
 
@@ -142,14 +151,18 @@ export const useGridFilter = (
         return null;
       }
 
-      return (rowId: GridRowId) => {
+      return (rowId, shouldApplyFilter) => {
+        const filteredAppliers = shouldApplyFilter
+          ? appliers.filter((applier) => shouldApplyFilter(applier.item))
+          : appliers;
+
         // Return `false` as soon as we have a failing filter
         if (linkOperator === GridLinkOperator.And) {
-          return appliers.every((applier) => applier(rowId));
+          return filteredAppliers.every((applier) => applier.fn(rowId));
         }
 
         // Return `true` as soon as we have a passing filter
-        return appliers.some((applier) => applier(rowId));
+        return filteredAppliers.some((applier) => applier.fn(rowId));
       };
     },
     [apiRef],

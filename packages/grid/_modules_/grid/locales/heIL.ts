@@ -114,6 +114,11 @@ const heILGrid: Partial<GridLocaleText> = {
   treeDataGroupingHeaderName: 'קבץ',
   treeDataExpand: 'הרחב',
   treeDataCollapse: 'הסתר',
+
+  // Grouping columns
+  // groupingColumnHeaderName: 'Group',
+  // groupColumn: name => `Group by ${name}`,
+  // unGroupColumn: name => `Stop grouping by ${name}`,
 };
 
 export const heIL: Localization = getGridLocalization(heILGrid, heILCore);
