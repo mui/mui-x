@@ -21,8 +21,7 @@ import { gridVisibleSortedRowIdsSelector } from '../filter/gridFilterSelector';
 import { GRID_CHECKBOX_SELECTION_COL_DEF, GridColDef } from '../../../models';
 import { getDataGridUtilityClass } from '../../../gridClasses';
 import { useGridStateInit } from '../../utils/useGridStateInit';
-import { useFirstRender } from '../../utils/useFirstRender';
-import { GridPreProcessingGroup } from '../../core/preProcessing';
+import { GridPreProcessingGroup, useGridRegisterPreProcessor } from '../../core/preProcessing';
 import { GridCellModes } from '../../../models/gridEditRowModel';
 import { GridColumnsRawState } from '../columns/gridColumnsState';
 import { isKeyboardEvent } from '../../../utils/keyboardUtils';
@@ -96,6 +95,79 @@ export const useGridSelection = (
     props;
 
   const canHaveMultipleSelection = !disableMultipleSelection || checkboxSelection;
+
+  const expandRowRangeSelection = React.useCallback(
+    (id: GridRowId) => {
+      let endId = id;
+      const startId = lastRowToggled.current ?? id;
+      const isSelected = apiRef.current.isRowSelected(id);
+      if (isSelected) {
+        const visibleRowIds = gridVisibleSortedRowIdsSelector(apiRef.current.state);
+        const startIndex = visibleRowIds.findIndex((rowId) => rowId === startId);
+        const endIndex = visibleRowIds.findIndex((rowId) => rowId === endId);
+        if (startIndex > endIndex) {
+          endId = visibleRowIds[endIndex + 1];
+        } else {
+          endId = visibleRowIds[endIndex - 1];
+        }
+      }
+
+      lastRowToggled.current = id;
+
+      apiRef.current.selectRowRange({ startId, endId }, !isSelected);
+    },
+    [apiRef],
+  );
+
+  /**
+   * PRE-PROCESSING
+   */
+  const updateSelectionColumn = React.useCallback(
+    (columnsState: GridColumnsRawState) => {
+      const selectionColumn: GridColDef = {
+        ...GRID_CHECKBOX_SELECTION_COL_DEF,
+        cellClassName: classes.cellCheckbox,
+        headerClassName: classes.columnHeaderCheckbox,
+        headerName: apiRef.current.getLocaleText('checkboxSelectionHeaderName'),
+      };
+
+      const shouldHaveSelectionColumn = props.checkboxSelection;
+      const haveSelectionColumn = columnsState.lookup[selectionColumn.field] != null;
+
+      if (shouldHaveSelectionColumn && !haveSelectionColumn) {
+        columnsState.lookup[selectionColumn.field] = selectionColumn;
+        columnsState.all = [selectionColumn.field, ...columnsState.all];
+      } else if (!shouldHaveSelectionColumn && haveSelectionColumn) {
+        delete columnsState.lookup[selectionColumn.field];
+        columnsState.all = columnsState.all.filter((field) => field !== selectionColumn.field);
+      }
+
+      return columnsState;
+    },
+    [apiRef, classes, props.checkboxSelection],
+  );
+
+  useGridRegisterPreProcessor(apiRef, GridPreProcessingGroup.hydrateColumns, updateSelectionColumn);
+
+  /**
+   * API METHODS
+   */
+  const setSelectionModel = React.useCallback<GridSelectionApi['setSelectionModel']>(
+    (model) => {
+      const currentModel = gridSelectionStateSelector(apiRef.current.state);
+      if (currentModel !== model) {
+        logger.debug(`Setting selection model`);
+        setGridState((state) => ({ ...state, selection: model }));
+        forceUpdate();
+      }
+    },
+    [apiRef, setGridState, forceUpdate, logger],
+  );
+
+  const isRowSelected = React.useCallback<GridSelectionApi['isRowSelected']>(
+    (id) => gridSelectionStateSelector(apiRef.current.state).includes(id),
+    [apiRef],
+  );
 
   const getSelectedRows = React.useCallback<GridSelectionApi['getSelectedRows']>(
     () => selectedGridRowsSelector(apiRef.current.state),
@@ -196,46 +268,20 @@ export const useGridSelection = (
     [apiRef, logger],
   );
 
-  const expandRowRangeSelection = React.useCallback(
-    (id: GridRowId) => {
-      let endId = id;
-      const startId = lastRowToggled.current ?? id;
-      const isSelected = apiRef.current.isRowSelected(id);
-      if (isSelected) {
-        const visibleRowIds = gridVisibleSortedRowIdsSelector(apiRef.current.state);
-        const startIndex = visibleRowIds.findIndex((rowId) => rowId === startId);
-        const endIndex = visibleRowIds.findIndex((rowId) => rowId === endId);
-        if (startIndex > endIndex) {
-          endId = visibleRowIds[endIndex + 1];
-        } else {
-          endId = visibleRowIds[endIndex - 1];
-        }
-      }
+  const selectionApi: GridSelectionApi = {
+    selectRow,
+    selectRows,
+    selectRowRange,
+    setSelectionModel,
+    getSelectedRows,
+    isRowSelected,
+  };
 
-      lastRowToggled.current = id;
+  useGridApiMethod(apiRef, selectionApi, 'GridSelectionApi');
 
-      apiRef.current.selectRowRange({ startId, endId }, !isSelected);
-    },
-    [apiRef],
-  );
-
-  const setSelectionModel = React.useCallback<GridSelectionApi['setSelectionModel']>(
-    (model) => {
-      const currentModel = gridSelectionStateSelector(apiRef.current.state);
-      if (currentModel !== model) {
-        logger.debug(`Setting selection model`);
-        setGridState((state) => ({ ...state, selection: model }));
-        forceUpdate();
-      }
-    },
-    [apiRef, setGridState, forceUpdate, logger],
-  );
-
-  const isRowSelected = React.useCallback<GridSelectionApi['isRowSelected']>(
-    (id) => gridSelectionStateSelector(apiRef.current.state).includes(id),
-    [apiRef],
-  );
-
+  /**
+   * EVENTS
+   */
   const removeOutdatedSelection = React.useCallback(() => {
     const currentSelection = gridSelectionStateSelector(apiRef.current.state);
     const rowsLookup = gridRowsLookupSelector(apiRef.current.state);
@@ -384,16 +430,9 @@ export const useGridSelection = (
   useGridApiEventHandler(apiRef, GridEvents.cellMouseDown, preventSelectionOnShift);
   useGridApiEventHandler(apiRef, GridEvents.cellKeyDown, handleCellKeyDown);
 
-  const selectionApi: GridSelectionApi = {
-    selectRow,
-    selectRows,
-    selectRowRange,
-    setSelectionModel,
-    getSelectedRows,
-    isRowSelected,
-  };
-  useGridApiMethod(apiRef, selectionApi, 'GridSelectionApi');
-
+  /**
+   * EFFECTS
+   */
   React.useEffect(() => {
     if (propSelectionModel !== undefined) {
       apiRef.current.setSelectionModel(propSelectionModel);
@@ -419,47 +458,4 @@ export const useGridSelection = (
       }
     }
   }, [apiRef, isRowSelectable, isStateControlled]);
-
-  const updateColumnsPreProcessing = React.useCallback(() => {
-    const updateCheckboxColumn = (columnsState: GridColumnsRawState) => {
-      const selectionColumn: GridColDef = {
-        ...GRID_CHECKBOX_SELECTION_COL_DEF,
-        cellClassName: classes.cellCheckbox,
-        headerClassName: classes.columnHeaderCheckbox,
-        headerName: apiRef.current.getLocaleText('checkboxSelectionHeaderName'),
-      };
-
-      const shouldHaveSelectionColumn = props.checkboxSelection;
-      const haveSelectionColumn = columnsState.lookup[selectionColumn.field] != null;
-
-      if (shouldHaveSelectionColumn && !haveSelectionColumn) {
-        columnsState.lookup[selectionColumn.field] = selectionColumn;
-        columnsState.all = [selectionColumn.field, ...columnsState.all];
-      } else if (!shouldHaveSelectionColumn && haveSelectionColumn) {
-        delete columnsState.lookup[selectionColumn.field];
-        columnsState.all = columnsState.all.filter((field) => field !== selectionColumn.field);
-      }
-
-      return columnsState;
-    };
-
-    apiRef.current.unstable_registerPreProcessor(
-      GridPreProcessingGroup.hydrateColumns,
-      'selection',
-      updateCheckboxColumn,
-    );
-  }, [apiRef, props.checkboxSelection, classes]);
-
-  useFirstRender(() => {
-    updateColumnsPreProcessing();
-  });
-
-  const isFirstRender = React.useRef(true);
-  React.useEffect(() => {
-    if (isFirstRender.current) {
-      isFirstRender.current = false;
-      return;
-    }
-    updateColumnsPreProcessing();
-  }, [updateColumnsPreProcessing]);
 };
