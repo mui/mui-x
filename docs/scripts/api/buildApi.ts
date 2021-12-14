@@ -11,7 +11,7 @@ import { Project } from './utils';
 const workspaceRoot = path.resolve(__dirname, '../../../');
 
 interface CreateProgramOptions {
-  name: string,
+  name: string;
   rootPath: string;
   tsConfigPath: string;
   entryPointPath: string;
