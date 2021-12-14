@@ -529,7 +529,12 @@ export function useGridEditRows(
 
       const isModifierKeyPressed = event.ctrlKey || event.metaKey || event.altKey;
 
-      if (!isEditMode && isCellEnterEditModeKeys(event.key) && !isModifierKeyPressed) {
+      if (
+        !isEditMode &&
+        isCellEnterEditModeKeys(event.key) &&
+        !isModifierKeyPressed &&
+        !(event.key === ' ' && event.shiftKey)
+      ) {
         apiRef.current.publishEvent(GridEvents.cellEditStart, params, event);
       }
       if (!isEditMode && isDeleteKeys(event.key)) {
