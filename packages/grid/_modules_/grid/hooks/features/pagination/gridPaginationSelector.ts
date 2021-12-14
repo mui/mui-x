@@ -8,14 +8,14 @@ import {
 import { gridRowTreeDepthSelector, gridRowTreeSelector } from '../rows/gridRowsSelector';
 
 /**
- * @feature Pagination
+ * @category Pagination
  * @ignore - do not document.
  */
 export const gridPaginationSelector = (state: GridState) => state.pagination;
 
 /**
  * Get the index of the page to render if the pagination is enabled
- * @feature Pagination
+ * @category Pagination
  */
 export const gridPageSelector = createSelector(
   gridPaginationSelector,
@@ -24,7 +24,7 @@ export const gridPageSelector = createSelector(
 
 /**
  * Get the maximum amount of rows to display on a single page if the pagination is enabled
- * @feature Pagination
+ * @category Pagination
  */
 export const gridPageSizeSelector = createSelector(
   gridPaginationSelector,
@@ -32,8 +32,17 @@ export const gridPageSizeSelector = createSelector(
 );
 
 /**
+ * Get the amount of pages needed to display all the rows if the pagination is enabled
+ * @category Pagination
+ */
+export const gridPageCountSelector = createSelector(
+  gridPaginationSelector,
+  (pagination) => pagination.pageCount,
+);
+
+/**
  * Get the index of the first and the last row to include in the current page if the pagination is enabled.
- * @feature Pagination
+ * @category Pagination
  */
 export const gridPaginationRowRangeSelector = createSelector(
   gridPaginationSelector,
@@ -92,7 +101,7 @@ export const gridPaginationRowRangeSelector = createSelector(
 
 /**
  * Get the id and the model of each row to include in the current page if the pagination is enabled.
- * @feature Pagination
+ * @category Pagination
  */
 export const gridPaginatedVisibleSortedGridRowEntriesSelector = createSelector(
   gridVisibleSortedRowEntriesSelector,
@@ -111,7 +120,7 @@ export const gridPaginatedVisibleSortedGridRowEntriesSelector = createSelector(
 
 /**
  * Get the id of each row to include in the current page if the pagination is enabled.
- * @feature Pagination
+ * @category Pagination
  */
 export const gridPaginatedVisibleSortedGridRowIdsSelector = createSelector(
   gridVisibleSortedRowIdsSelector,

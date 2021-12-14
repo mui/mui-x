@@ -31,7 +31,7 @@ To unselect a row, hold the <kbd class="key">CTRL</kbd> key and click on it.
 
 {{"demo": "pages/components/data-grid/selection/SingleRowSelectionGrid.js", "bg": "inline"}}
 
-### Multiple row selection [<span class="pro"></span>](https://mui.com/store/items/material-ui-pro/)
+### Multiple row selection [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
 
 On the `DataGridPro` component, you can select multiple rows in two ways:
 
@@ -84,15 +84,15 @@ The following demo shows how to implement the first solution:
 
 {{"demo": "pages/components/data-grid/selection/ControlledSelectionServerPaginationGrid.js", "bg": "inline"}}
 
-## apiRef [<span class="pro"></span>](https://mui.com/store/items/material-ui-pro/)
+## apiRef [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
 
 The grid exposes a set of methods that enables all of these features using the imperative apiRef.
 
-> ⚠️ Only use this API when you have no alternative. Always start from the declarative API that the grid exposes.
+> ⚠️ Only use this API as the last option. Give preference to the props to control the grid.
 
 {{"demo": "pages/components/data-grid/selection/SelectionApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
 
-## 🚧 Range selection [<span class="premium"></span>](https://mui.com/store/items/material-ui-pro/)
+## 🚧 Range selection [<span class="plan-premium"></span>](https://mui.com/store/items/material-ui-pro/)
 
 > ⚠️ This feature isn't implemented yet. It's coming.
 >

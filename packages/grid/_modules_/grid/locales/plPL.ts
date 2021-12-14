@@ -30,6 +30,7 @@ const plPLGrid: Partial<GridLocaleText> = {
   toolbarExport: 'Eksportuj',
   toolbarExportLabel: 'Eksportuj',
   toolbarExportCSV: 'Pobierz jako plik CSV',
+  // toolbarExportPrint: 'Print',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'Znajdź kolumnę',
@@ -62,6 +63,11 @@ const plPLGrid: Partial<GridLocaleText> = {
   filterOperatorIsEmpty: 'jest pusty',
   filterOperatorIsNotEmpty: 'nie jest pusty',
 
+  // Filter values text
+  // filterValueAny: 'any',
+  // filterValueTrue: 'true',
+  // filterValueFalse: 'false',
+
   // Column menu text
   columnMenuLabel: 'Menu',
   columnMenuShowColumns: 'Pokaż wszystkie kolumny',
@@ -86,8 +92,25 @@ const plPLGrid: Partial<GridLocaleText> = {
   footerTotalVisibleRows: (visibleCount, totalCount) =>
     `${visibleCount.toLocaleString()} z ${totalCount.toLocaleString()}`,
 
+  // Checkbox selection text
+  // checkboxSelectionHeaderName: 'Checkbox selection',
+
+  // Boolean cell text
+  // booleanCellTrueLabel: 'true',
+  // booleanCellFalseLabel: 'false',
+
   // Actions cell more text
   actionsCellMore: 'więcej',
+
+  // Column pinning text
+  // pinToLeft: 'Pin to left',
+  // pinToRight: 'Pin to right',
+  // unpin: 'Unpin',
+
+  // Tree Data
+  // treeDataGroupingHeaderName: 'Group',
+  // treeDataExpand: 'see children',
+  // treeDataCollapse: 'hide children',
 };
 
 export const plPL: Localization = getGridLocalization(plPLGrid, plPLCore);

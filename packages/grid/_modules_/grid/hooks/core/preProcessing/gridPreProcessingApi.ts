@@ -2,6 +2,11 @@ export type PreProcessorCallback = (value: any, params?: any) => any;
 
 export enum GridPreProcessingGroup {
   hydrateColumns = 'hydrateColumns',
+  scrollToIndexes = 'scrollToIndexes',
+  columnMenu = 'columnMenu',
+  canBeReordered = 'canBeReordered',
+  filteringMethod = 'filteringMethod',
+  sortingMethod = 'sortingMethod',
 }
 
 export interface GridPreProcessingApi {
@@ -22,7 +27,7 @@ export interface GridPreProcessingApi {
    * Apply on the value the pre-processors registered on the given group.
    * @param {GridPreProcessingGroup} group The name of the processing group.
    * @param {any} value The value to pass to the first pre-processor.
-   * @param {any} params Additional paramas to pass to the pre-processors.
+   * @param {any} params Additional params to pass to the pre-processors.
    * @returns {any} The value after passing through all pre-processors.
    * @ignore - do not document.
    */

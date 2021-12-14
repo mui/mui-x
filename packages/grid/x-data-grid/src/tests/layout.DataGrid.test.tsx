@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { createRenderer, screen, ErrorBoundary } from '@material-ui/monorepo/test/utils';
-import { useFakeTimers, stub } from 'sinon';
+import { createRenderer, screen, ErrorBoundary, waitFor } from '@material-ui/monorepo/test/utils';
+import { SinonStub, stub } from 'sinon';
 import { expect } from 'chai';
 import {
   DataGrid,
@@ -8,13 +8,15 @@ import {
   GridToolbar,
   DataGridProps,
   ptBR,
+  GridColumns,
+  GridValueGetterFullParams,
 } from '@mui/x-data-grid';
 import { useData } from 'packages/storybook/src/hooks/useData';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { getColumnHeaderCell, getColumnValues, raf, getCell, getRow } from 'test/utils/helperFn';
+import { getColumnHeaderCell, getColumnValues, getCell, getRow } from 'test/utils/helperFn';
 
 describe('<DataGrid /> - Layout & Warnings', () => {
-  const { render } = createRenderer();
+  const { clock, render } = createRenderer({ clock: 'fake' });
 
   const baselineProps = {
     rows: [
@@ -48,16 +50,6 @@ describe('<DataGrid /> - Layout & Warnings', () => {
   });
 
   describe('Layout', () => {
-    let clock;
-
-    beforeEach(() => {
-      clock = useFakeTimers();
-    });
-
-    afterEach(() => {
-      clock.restore();
-    });
-
     before(function beforeHook() {
       if (/jsdom/.test(window.navigator.userAgent)) {
         // Need layouting
@@ -66,7 +58,11 @@ describe('<DataGrid /> - Layout & Warnings', () => {
     });
 
     it('should resize the width of the columns', async () => {
-      clock.restore();
+      // Using a fake clock also affects `requestAnimationFrame`.
+      // Calling clock.tick() should call the callback passed, but it doesn't work.
+      stub(window, 'requestAnimationFrame').callsFake((fn: any) => fn());
+      stub(window, 'cancelAnimationFrame');
+
       interface TestCaseProps {
         width?: number;
       }
@@ -85,10 +81,14 @@ describe('<DataGrid /> - Layout & Warnings', () => {
       expect(rect.width).to.equal(300 - 2);
 
       setProps({ width: 400 });
-      await raf();
 
-      rect = container.querySelector('[role="row"][data-rowindex="0"]').getBoundingClientRect();
-      expect(rect.width).to.equal(400 - 2);
+      await waitFor(() => {
+        rect = container.querySelector('[role="row"][data-rowindex="0"]').getBoundingClientRect();
+        expect(rect.width).to.equal(400 - 2);
+      });
+
+      (window.requestAnimationFrame as SinonStub).restore();
+      (window.cancelAnimationFrame as SinonStub).restore();
     });
 
     // Adaptation of describeConformance()
@@ -145,7 +145,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         expect(document.querySelector(`.${className}`)).to.equal(container.firstChild.firstChild);
       });
 
-      it('should support columns.valueGetter', () => {
+      it('should support columns.valueGetter using `getValue` (deprecated)', () => {
         const columns = [
           { field: 'id', hide: true },
           { field: 'firstName', hide: true },
@@ -156,6 +156,29 @@ describe('<DataGrid /> - Layout & Warnings', () => {
               `${params.getValue(params.id, 'firstName') || ''} ${
                 params.getValue(params.id, 'lastName') || ''
               }`,
+          },
+        ];
+
+        const rows = [
+          { id: 1, lastName: 'Snow', firstName: 'Jon' },
+          { id: 2, lastName: 'Lannister', firstName: 'Cersei' },
+        ];
+        render(
+          <div style={{ width: 300, height: 300 }}>
+            <DataGrid rows={rows} columns={columns} />
+          </div>,
+        );
+        expect(getColumnValues()).to.deep.equal(['Jon Snow', 'Cersei Lannister']);
+      });
+
+      it('should support columns.valueGetter using direct row access', () => {
+        const columns: GridColumns = [
+          { field: 'id', hide: true },
+          { field: 'firstName', hide: true },
+          { field: 'lastName', hide: true },
+          {
+            field: 'fullName',
+            valueGetter: (params) => `${params.row.firstName || ''} ${params.row.lastName || ''}`,
           },
         ];
 
@@ -210,7 +233,8 @@ describe('<DataGrid /> - Layout & Warnings', () => {
           { field: 'id', hide: true },
           {
             field: 'fullName',
-            valueGetter: (params: GridValueGetterParams) => params.getValue(params.id, 'age'),
+            valueGetter: (params: GridValueGetterParams) =>
+              (params as GridValueGetterFullParams).getValue(params.id, 'age'),
           },
         ];
         expect(() => {
@@ -641,6 +665,18 @@ describe('<DataGrid /> - Layout & Warnings', () => {
           scrollBarSize + headerHeight + rowHeight * baselineProps.rows.length,
         );
       });
+
+      it('should give some space to the noRows overlay', () => {
+        const rowHeight = 30;
+        render(
+          <div style={{ width: 300 }}>
+            <DataGrid {...baselineProps} rows={[]} rowHeight={rowHeight} autoHeight />
+          </div>,
+        );
+        expect(document.querySelectorAll('.MuiDataGrid-overlay')[0].clientHeight).to.equal(
+          rowHeight * 2,
+        );
+      });
     });
 
     // A function test counterpart of ScrollbarOverflowVerticalSnap.
@@ -799,5 +835,28 @@ describe('<DataGrid /> - Layout & Warnings', () => {
     );
     expect(window.getComputedStyle(getRow(0)).backgroundColor).to.equal('rgb(128, 0, 128)');
     expect(window.getComputedStyle(getCell(0, 0)).backgroundColor).to.equal('rgb(0, 128, 0)');
+  });
+
+  it('should support the sx prop', () => {
+    const theme = createTheme({
+      palette: {
+        primary: {
+          main: 'rgb(0, 0, 255)',
+        },
+      },
+    });
+
+    render(
+      <ThemeProvider theme={theme}>
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid columns={[]} rows={[]} sx={{ color: 'primary.main' }} />
+        </div>
+      </ThemeProvider>,
+    );
+
+    // @ts-expect-error need to migrate helpers to TypeScript
+    expect(screen.getByRole('grid')).toHaveComputedStyle({
+      color: 'rgb(0, 0, 255)',
+    });
   });
 });

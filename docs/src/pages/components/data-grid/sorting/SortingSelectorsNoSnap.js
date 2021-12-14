@@ -5,7 +5,7 @@ import selectors from 'docsx/pages/api-docs/data-grid/selectors.json';
 export default function SortingSelectorsNoSnap() {
   return (
     <SelectorsDocs
-      selectors={selectors.filter((selector) => selector.feature === 'Sorting')}
+      selectors={selectors.filter((selector) => selector.category === 'Sorting')}
     />
   );
 }

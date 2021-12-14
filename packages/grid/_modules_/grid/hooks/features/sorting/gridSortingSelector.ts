@@ -4,14 +4,14 @@ import { GridState } from '../../../models/gridState';
 import { gridRowsLookupSelector } from '../rows/gridRowsSelector';
 
 /**
- * @feature Sorting
+ * @category Sorting
  * @ignore - do not document.
  */
 const gridSortingStateSelector = (state: GridState) => state.sorting;
 
 /**
  * Get the id of the rows after the sorting process.
- * @feature Sorting
+ * @category Sorting
  */
 export const gridSortedRowIdsSelector = createSelector(
   gridSortingStateSelector,
@@ -20,7 +20,7 @@ export const gridSortedRowIdsSelector = createSelector(
 
 /**
  * Get the id and the model of the rows after the sorting process.
- * @feature Sorting
+ * @category Sorting
  */
 export const gridSortedRowEntriesSelector = createSelector(
   gridSortedRowIdsSelector,
@@ -30,7 +30,7 @@ export const gridSortedRowEntriesSelector = createSelector(
 
 /**
  * Get the current sorting model.
- * @feature Sorting
+ * @category Sorting
  */
 export const gridSortModelSelector = createSelector(
   gridSortingStateSelector,
@@ -43,7 +43,7 @@ export type GridSortColumnLookup = Record<
 >;
 
 /**
- * @feature Sorting
+ * @category Sorting
  * @ignore - do not document.
  */
 export const gridSortColumnLookupSelector = createSelector(

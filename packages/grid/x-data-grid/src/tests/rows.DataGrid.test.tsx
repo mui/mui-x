@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { createRenderer, fireEvent, screen, waitFor } from '@material-ui/monorepo/test/utils';
 import { expect } from 'chai';
-import { spy, stub, SinonFakeTimers, useFakeTimers } from 'sinon';
+import { spy, stub } from 'sinon';
 import Portal from '@mui/material/Portal';
 import { DataGrid, DataGridProps, GridActionsCellItem } from '@mui/x-data-grid';
 import { getColumnValues, getRow } from 'test/utils/helperFn';
@@ -47,16 +47,6 @@ describe('<DataGrid /> - Rows', () => {
   });
 
   describe('props: rows', () => {
-    let clock: SinonFakeTimers;
-
-    beforeEach(() => {
-      clock = useFakeTimers();
-    });
-
-    afterEach(() => {
-      clock.restore();
-    });
-
     it('should support new dataset', () => {
       const { rows, columns } = getData(5, 2);
 
@@ -177,7 +167,7 @@ describe('<DataGrid /> - Rows', () => {
       render(<TestCase getActions={() => [<GridActionsCellItem label="print" showInMenu />]} />);
       expect(screen.queryByText('print')).to.equal(null);
       fireEvent.click(screen.getByRole('button', { name: 'more' }));
-      await waitFor(() => expect(screen.queryByText('print')).not.to.equal(null));
+      expect(screen.queryByText('print')).not.to.equal(null);
     });
 
     it('should not select the row when clicking in an action', () => {

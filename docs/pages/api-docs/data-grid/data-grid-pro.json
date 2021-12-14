@@ -24,6 +24,7 @@
     "columnTypes": { "type": { "name": "object" } },
     "components": { "type": { "name": "object" } },
     "componentsProps": { "type": { "name": "object" } },
+    "defaultGroupingExpansionDepth": { "type": { "name": "number" }, "default": "0" },
     "density": {
       "type": {
         "name": "enum",
@@ -35,6 +36,7 @@
     "disableChildrenSorting": { "type": { "name": "bool" } },
     "disableColumnFilter": { "type": { "name": "bool" } },
     "disableColumnMenu": { "type": { "name": "bool" } },
+    "disableColumnPinning": { "type": { "name": "bool" } },
     "disableColumnReorder": { "type": { "name": "bool" } },
     "disableColumnResize": { "type": { "name": "bool" } },
     "disableColumnSelector": { "type": { "name": "bool" } },
@@ -52,7 +54,7 @@
     "editRowsModel": { "type": { "name": "object" } },
     "error": { "type": { "name": "any" } },
     "filterMode": {
-      "type": { "name": "enum", "description": "'client'<br>&#124;&nbsp;'server'" },
+      "type": { "name": "custom", "description": "'client'<br>&#124;&nbsp;'server'" },
       "default": "\"client\""
     },
     "filterModel": {
@@ -64,6 +66,8 @@
     "getCellClassName": { "type": { "name": "func" } },
     "getRowClassName": { "type": { "name": "func" } },
     "getRowId": { "type": { "name": "func" } },
+    "getTreeDataPath": { "type": { "name": "func" } },
+    "groupingColDef": { "type": { "name": "union", "description": "func<br>&#124;&nbsp;object" } },
     "headerHeight": { "type": { "name": "number" }, "default": "56" },
     "hideFooter": { "type": { "name": "bool" } },
     "hideFooterPagination": { "type": { "name": "bool" } },
@@ -99,7 +103,6 @@
     "onCellEditStop": { "type": { "name": "func" } },
     "onCellFocusOut": { "type": { "name": "func" } },
     "onCellKeyDown": { "type": { "name": "func" } },
-    "onCellValueChange": { "type": { "name": "func" } },
     "onColumnHeaderClick": { "type": { "name": "func" } },
     "onColumnHeaderDoubleClick": { "type": { "name": "func" } },
     "onColumnHeaderEnter": { "type": { "name": "func" } },
@@ -120,6 +123,7 @@
     "onFilterModelChange": { "type": { "name": "func" } },
     "onPageChange": { "type": { "name": "func" } },
     "onPageSizeChange": { "type": { "name": "func" } },
+    "onPinnedColumnsChange": { "type": { "name": "func" } },
     "onResize": { "type": { "name": "func" } },
     "onRowClick": { "type": { "name": "func" } },
     "onRowDoubleClick": { "type": { "name": "func" } },
@@ -136,6 +140,12 @@
     "paginationMode": {
       "type": { "name": "enum", "description": "'client'<br>&#124;&nbsp;'server'" },
       "default": "\"client\""
+    },
+    "pinnedColumns": {
+      "type": {
+        "name": "shape",
+        "description": "{ left?: Array&lt;string&gt;, right?: Array&lt;string&gt; }"
+      }
     },
     "rowBuffer": { "type": { "name": "number" }, "default": "3" },
     "rowCount": { "type": { "name": "number" } },
@@ -169,7 +179,14 @@
         "description": "Array&lt;{ field: string, sort?: 'asc'<br>&#124;&nbsp;'desc' }&gt;"
       }
     },
-    "throttleRowsMs": { "type": { "name": "number" }, "default": "0" }
+    "sx": {
+      "type": {
+        "name": "union",
+        "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
+      }
+    },
+    "throttleRowsMs": { "type": { "name": "number" }, "default": "0" },
+    "treeData": { "type": { "name": "bool" } }
   },
   "slots": {
     "BaseCheckbox": { "default": "Checkbox", "type": { "name": "elementType" } },
@@ -217,7 +234,9 @@
     "Panel": { "default": "GridPanel", "type": { "name": "elementType" } },
     "PreferencesPanel": { "default": "GridPreferencesPanel", "type": { "name": "elementType" } },
     "Row": { "type": { "name": "elementType" } },
-    "Toolbar": { "default": "null", "type": { "name": "elementType | null" } }
+    "Toolbar": { "default": "null", "type": { "name": "elementType | null" } },
+    "TreeDataCollapseIcon": { "type": { "name": "elementType" } },
+    "TreeDataExpandIcon": { "type": { "name": "elementType" } }
   },
   "name": "DataGridPro",
   "styles": {
@@ -278,6 +297,9 @@
       "virtualScroller",
       "virtualScrollerContent",
       "virtualScrollerRenderZone",
+      "pinnedColumns",
+      "pinnedColumns--left",
+      "pinnedColumns--right",
       "root",
       "row--editable",
       "row--editing",
@@ -290,7 +312,9 @@
       "sortIcon",
       "toolbarContainer",
       "toolbarFilterList",
-      "withBorder"
+      "withBorder",
+      "treeDataGroupingCell",
+      "treeDataGroupingCellToggle"
     ],
     "globalClasses": {},
     "name": "MuiDataGrid"

@@ -216,15 +216,27 @@ export interface GridClasses {
   /**
    * Styles applied to the virtualization container.
    */
-  virtualScroller;
+  virtualScroller: string;
   /**
    * Styles applied to the virtualization content.
    */
-  virtualScrollerContent;
+  virtualScrollerContent: string;
   /**
    * Styles applied to the virtualization render zone.
    */
-  virtualScrollerRenderZone;
+  virtualScrollerRenderZone: string;
+  /**
+   * Styles applied to the pinned columns.
+   */
+  pinnedColumns: string;
+  /**
+   * Styles applied to the left pinned columns.
+   */
+  'pinnedColumns--left': string;
+  /**
+   * Styles applied to the right pinned columns.
+   */
+  'pinnedColumns--right': string;
   /**
    * Styles applied to the root element.
    */
@@ -278,6 +290,14 @@ export interface GridClasses {
    * Styles applied to both the cell and the column header if `showColumnRightBorder={true}`.
    */
   withBorder: string;
+  /**
+   * Styles applied to the root of the grouping column of the tree data.
+   */
+  treeDataGroupingCell: string;
+  /**
+   * Styles applied to the toggle of the grouping column of the tree data.
+   */
+  treeDataGroupingCellToggle: string;
 }
 
 export type GridClassKey = keyof GridClasses;
@@ -356,5 +376,10 @@ export const gridClasses = generateUtilityClasses('MuiDataGrid', [
   'virtualScroller',
   'virtualScrollerContent',
   'virtualScrollerRenderZone',
+  'pinnedColumns',
+  'pinnedColumns--left',
+  'pinnedColumns--right',
   'withBorder',
+  'treeDataGroupingCell',
+  'treeDataGroupingCellToggle',
 ]);

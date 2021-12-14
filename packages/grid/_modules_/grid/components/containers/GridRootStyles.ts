@@ -42,6 +42,8 @@ export const GridRootStyles = styled('div', {
     { [`& .${gridClasses.row}`]: styles.row },
     { [`& .${gridClasses.sortIcon}`]: styles.sortIcon },
     { [`& .${gridClasses.withBorder}`]: styles.withBorder },
+    { [`& .${gridClasses.treeDataGroupingCell}`]: styles.treeDataGroupingCell },
+    { [`& .${gridClasses.treeDataGroupingCellToggle}`]: styles.treeDataGroupingCellToggle },
     styles.root,
   ],
 })(({ theme }) => {
@@ -180,11 +182,13 @@ export const GridRootStyles = styled('div', {
     },
     [`.${gridClasses.menuOpen}`]: {
       visibility: 'visible',
+      width: 'auto',
     },
     [`& .${gridClasses.row}`]: {
       display: 'flex',
       width: 'fit-content',
-      '&:hover': {
+      breakInside: 'avoid', // Avoid the row to be broken in two different print pages.
+      '&:hover, &.Mui-hovered': {
         backgroundColor: theme.palette.action.hover,
         // Reset on touch devices, it doesn't add specificity
         '@media (hover: none)': {
@@ -193,7 +197,7 @@ export const GridRootStyles = styled('div', {
       },
       '&.Mui-selected': {
         backgroundColor: alpha(theme.palette.primary.main, theme.palette.action.selectedOpacity),
-        '&:hover': {
+        '&:hover, &.Mui-hovered': {
           backgroundColor: alpha(
             theme.palette.primary.main,
             theme.palette.action.selectedOpacity + theme.palette.action.hoverOpacity,
@@ -287,6 +291,16 @@ export const GridRootStyles = styled('div', {
       padding: '0 12px',
       borderRadius: theme.shape.borderRadius,
       opacity: theme.palette.action.disabledOpacity,
+    },
+    [`& .${gridClasses.treeDataGroupingCell}`]: {
+      display: 'flex',
+      alignItems: 'center',
+      width: '100%',
+    },
+    [`& .${gridClasses.treeDataGroupingCellToggle}`]: {
+      flex: '0 0 28px',
+      alignSelf: 'stretch',
+      marginRight: theme.spacing(2),
     },
   };
 

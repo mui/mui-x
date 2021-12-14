@@ -9,7 +9,7 @@ import { getDataGridUtilityClass } from '../../gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { GridComponentProps } from '../../GridComponentProps';
 import { useGridApiEventHandler } from '../../hooks/utils/useGridApiEventHandler';
-import { GridEvents } from '../../constants';
+import { GridEvents } from '../../models/events';
 
 export type GridOverlayProps = React.HTMLAttributes<HTMLDivElement>;
 
@@ -52,35 +52,27 @@ export const GridOverlay = React.forwardRef<HTMLDivElement, GridOverlayProps>(fu
   const ownerState = { classes: rootProps.classes };
   const classes = useUtilityClasses(ownerState);
   const headerHeight = useGridSelector(apiRef, gridDensityHeaderHeightSelector);
-  const isMounted = React.useRef(true);
 
   const [viewportInnerSize, setViewportInnerSize] = React.useState(
     () => apiRef.current.getRootDimensions()?.viewportInnerSize ?? null,
   );
 
-  // TODO: Remove the `isMounted` check
-  // It is here because our event system does not handle correctly the removal of an event listener during the emit phase.
-  // If you have an event that is listen by 2 listeners, and the 1st one causes the removal of the 2nd one, then the 2nd one will be ran.
-  const handleViewportSizeChangeTest = () => {
-    if (isMounted.current) {
-      setViewportInnerSize(apiRef.current.getRootDimensions()?.viewportInnerSize ?? null);
-    }
-  };
+  const handleViewportSizeChangeTest = () =>
+    setViewportInnerSize(apiRef.current.getRootDimensions()?.viewportInnerSize ?? null);
 
   useGridApiEventHandler(apiRef, GridEvents.viewportInnerSizeChange, handleViewportSizeChangeTest);
 
-  React.useEffect(() => {
-    return () => {
-      isMounted.current = false;
-    };
-  }, []);
+  let height: React.CSSProperties['height'] = viewportInnerSize?.height ?? 0;
+  if (rootProps.autoHeight && height === 0) {
+    height = 'auto';
+  }
 
   return (
     <GridOverlayRoot
       ref={ref}
       className={clsx(classes.root, className)}
       style={{
-        height: viewportInnerSize?.height ?? 0,
+        height,
         width: viewportInnerSize?.width ?? 0,
         top: headerHeight,
         position: 'absolute',

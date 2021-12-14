@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { useGridSelector } from '../../utils/useGridSelector';
-import { GridEvents } from '../../../constants/eventsConstants';
+import { GridEvents, GridEventListener } from '../../../models/events';
 import {
   useGridApiEventHandler,
   useGridApiOptionHandler,
@@ -63,7 +63,7 @@ export const useGridInfiniteLoader = (
     [contentHeight, props.scrollEndThreshold, visibleColumns, apiRef, currentPage.rows.length],
   );
 
-  const handleGridScroll = React.useCallback(
+  const handleGridScroll = React.useCallback<GridEventListener<GridEvents.rowsScroll>>(
     ({ left, top }) => {
       handleRowsScrollEnd({ left, top });
     },

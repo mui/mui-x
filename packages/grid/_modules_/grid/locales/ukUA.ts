@@ -31,6 +31,7 @@ const ukUAGrid: Partial<GridLocaleText> = {
   toolbarExport: 'Експорт',
   toolbarExportLabel: 'Експорт',
   toolbarExportCSV: 'Завантажити у форматі CSV',
+  // toolbarExportPrint: 'Print',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'Знайти стовпець',
@@ -93,8 +94,7 @@ const ukUAGrid: Partial<GridLocaleText> = {
   footerTotalRows: 'Всього рядків:',
 
   // Total visible rows footer text
-  // footerTotalVisibleRows: (visibleCount, totalCount) =>
-  //   `${visibleCount.toLocaleString()} of ${totalCount.toLocaleString()}`,
+  // footerTotalVisibleRows: (visibleCount, totalCount) => `${visibleCount.toLocaleString()} of ${totalCount.toLocaleString()}`,
 
   // Checkbox selection text
   checkboxSelectionHeaderName: 'Вибір прапорця',
@@ -105,6 +105,16 @@ const ukUAGrid: Partial<GridLocaleText> = {
 
   // Actions cell more text
   // actionsCellMore: 'more',
+
+  // Column pinning text
+  // pinToLeft: 'Pin to left',
+  // pinToRight: 'Pin to right',
+  // unpin: 'Unpin',
+
+  // Tree Data
+  // treeDataGroupingHeaderName: 'Group',
+  // treeDataExpand: 'see children',
+  // treeDataCollapse: 'hide children',
 };
 
 export const ukUA: Localization = getGridLocalization(ukUAGrid, ukUACore);

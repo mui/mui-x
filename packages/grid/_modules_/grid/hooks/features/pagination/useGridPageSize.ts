@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { GridApiRef } from '../../../models';
 import { GridComponentProps } from '../../../GridComponentProps';
-import { GridPageSizeApi } from '../../../models/api/gridPageSizeApi';
-import { GridEvents } from '../../../constants/eventsConstants';
+import { GridPageSizeApi } from './gridPaginationInterfaces';
+import { GridEvents } from '../../../models/events';
 import {
   useGridLogger,
   useGridApiMethod,

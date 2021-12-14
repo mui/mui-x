@@ -16,11 +16,18 @@ export type DataGridProps = Omit<
   | 'disableMultipleSelection'
   | 'disableChildrenFiltering'
   | 'disableChildrenSorting'
+  | 'disableColumnPinning'
   | 'throttleRowsMs'
   | 'hideFooterRowCount'
   | 'options'
   | 'onRowsScrollEnd'
   | 'scrollEndThreshold'
+  | 'pinnedColumns'
+  | 'onPinnedColumnsChange'
+  | 'treeData'
+  | 'getTreeDataPath'
+  | 'groupingColDef'
+  | 'defaultGroupingExpansionDepth'
   | 'signature'
 > & {
   pagination?: true;

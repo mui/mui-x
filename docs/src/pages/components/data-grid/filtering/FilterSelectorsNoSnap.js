@@ -5,7 +5,7 @@ import selectors from 'docsx/pages/api-docs/data-grid/selectors.json';
 export default function FilterSelectorsNoSnap() {
   return (
     <SelectorsDocs
-      selectors={selectors.filter((selector) => selector.feature === 'Filtering')}
+      selectors={selectors.filter((selector) => selector.category === 'Filtering')}
     />
   );
 }

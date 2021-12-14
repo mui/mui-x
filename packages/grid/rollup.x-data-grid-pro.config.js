@@ -68,7 +68,7 @@ export default [
             {
               src: [
                 './x-data-grid-pro/README.md',
-                './x-data-grid-pro/LICENSE.md',
+                './x-data-grid-pro/LICENSE',
                 '../../CHANGELOG.md',
               ],
               dest: './x-data-grid-pro/build',
@@ -93,9 +93,9 @@ export default [
       production &&
         command(
           [
-            `rm -rf ./x-data-grid-pro/build/x-data-grid-pro`,
             `rm -rf ./x-data-grid-pro/build/_modules_`,
-            `rm -rf ./x-data-grid-pro/build/data-grid`,
+            `rm -rf ./x-data-grid-pro/build/x-data-grid`,
+            `rm -rf ./x-data-grid-pro/build/x-data-grid-pro`,
             `rm -rf ./x-data-grid-pro/build/x-data-grid-generator`,
           ],
           {

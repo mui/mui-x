@@ -1,84 +1,95 @@
-import * as TypeDoc from 'typedoc';
-import { ReferenceType } from 'typedoc';
-import path from 'path';
+import * as path from 'path';
+import * as ts from 'typescript';
 import {
-  generateTypeStr,
-  isDeclarationReflection,
-  isReferenceType,
+  formatType,
+  getSymbolDescription,
+  getSymbolJSDocTags,
+  Project,
   writePrettifiedFile,
 } from './utils';
 
 interface BuildSelectorsDocumentationOptions {
-  project: TypeDoc.ProjectReflection;
-  prettierConfigPath: string;
+  project: Project;
   outputDirectory: string;
 }
 
-/**
- * The selector has been created using `createSelector`
- */
-const isWrappedInCreateSelector = (reflection: TypeDoc.DeclarationReflection) =>
-  reflection.type && isReferenceType(reflection.type) && reflection.type.name === 'OutputSelector';
+interface Selector {
+  name: string;
+  returnType: string;
+  category?: string;
+  deprecated?: string;
+  description?: string;
+}
 
 export default function buildSelectorsDocumentation(options: BuildSelectorsDocumentationOptions) {
-  const { project, outputDirectory, prettierConfigPath } = options;
+  const { project, outputDirectory } = options;
 
-  const selectors = project
-    .children!.filter((reflection) => {
+  const selectors = Object.values(project.exports)
+    .map((symbol): Selector | null => {
+      if (!symbol.name.endsWith('Selector')) {
+        return null;
+      }
+
+      const tags = getSymbolJSDocTags(symbol);
+      if (tags.ignore) {
+        return null;
+      }
+
+      const type = project.checker.getTypeOfSymbolAtLocation(symbol, symbol.valueDeclaration!);
+      const signature = project.checker.getSignaturesOfType(type, ts.SignatureKind.Call)?.[0];
+
+      if (!signature) {
+        return null;
+      }
+
+      const parameterSymbol = signature.getParameters()[0];
+
+      let isSelector = false;
+
       if (
-        !isDeclarationReflection(reflection) ||
-        ![TypeDoc.ReflectionKind.Function, TypeDoc.ReflectionKind.Variable].includes(
-          reflection.kind,
-        ) ||
-        !reflection.name.endsWith('Selector')
+        project.checker.getTypeOfSymbolAtLocation(
+          parameterSymbol,
+          parameterSymbol.valueDeclaration!,
+        ).symbol?.name === 'GridState'
       ) {
-        return false;
+        // Selector not wrapped in `createSelector`
+        isSelector = true;
+      } else if (
+        // Selector wrapped in `createSelector`
+        type.getProperties().some((property) => property.escapedName === 'memoizedResultFunc')
+      ) {
+        isSelector = true;
       }
 
-      if (isWrappedInCreateSelector(reflection)) {
-        return true;
+      if (!isSelector) {
+        return null;
       }
 
-      const parameters = reflection.signatures?.[0]?.parameters ?? [];
-
-      // Selector not wrapped in `createSelector`
-      return (
-        parameters.length === 1 &&
-        parameters[0].type &&
-        isReferenceType(parameters[0].type) &&
-        parameters[0].type.name === 'GridState'
+      const returnType = formatType(
+        project.checker.typeToString(
+          signature.getReturnType(),
+          undefined,
+          ts.TypeFormatFlags.NoTruncation,
+        ),
       );
-    })
-    .map((selectorReflection) => {
-      let returnType: TypeDoc.Type | undefined;
-      let comment: TypeDoc.Comment | undefined;
-      if (isWrappedInCreateSelector(selectorReflection)) {
-        returnType = (selectorReflection.type as ReferenceType).typeArguments?.[1];
-        comment = selectorReflection.comment;
-      } else {
-        returnType = selectorReflection.signatures?.[0].type;
-        comment = selectorReflection.signatures?.[0].comment;
-      }
-
-      if (!returnType) {
-        throw new Error('Failed to parse selector');
-      }
-
-      const tags = new Map(comment?.tags?.map((tag) => [tag.tagName, tag]));
+      const category = tags.category?.text?.[0].text;
+      const deprecated = tags.deprecated?.text?.[0].text;
+      const description = getSymbolDescription(symbol, project);
 
       return {
-        name: selectorReflection.name,
-        returnType: generateTypeStr(returnType, true),
-        deprecated: tags.get('deprecated')?.text?.trim(),
-        feature: tags.get('feature')?.text?.trim(),
-        description: comment?.shortText,
+        name: symbol.name,
+        returnType,
+        category,
+        deprecated,
+        description,
       };
     })
+    .filter((el): el is Selector => !!el)
     .sort((a, b) => (a.name > b.name ? 1 : -1));
 
   writePrettifiedFile(
     path.resolve(outputDirectory, `selectors.json`),
     JSON.stringify(selectors),
-    prettierConfigPath,
+    project,
   );
 }
