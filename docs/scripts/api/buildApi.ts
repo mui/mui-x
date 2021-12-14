@@ -1,107 +1,88 @@
 import * as yargs from 'yargs';
 import * as fse from 'fs-extra';
 import path from 'path';
-import { findPagesMarkdown } from 'docs/src/modules/utils/find';
-import * as ttp from '@material-ui/monorepo/packages/typescript-to-proptypes/src';
-import { getHeaders } from '@material-ui/monorepo/docs/packages/markdown';
-import * as TypeDoc from 'typedoc';
-import buildComponentDocumentation from './buildComponentDocumentation';
+import * as ts from 'typescript';
+import buildComponentsDocumentation from './buildComponentsDocumentation';
 import buildInterfacesDocumentation from './buildInterfacesDocumentation';
 import buildExportsDocumentation from './buildExportsDocumentation';
+import buildEventsDocumentation from './buildEventsDocumentation';
+import { Project } from './utils';
 
 const workspaceRoot = path.resolve(__dirname, '../../../');
-const prettierConfigPath = path.join(workspaceRoot, 'prettier.config.js');
+
+interface CreateProgramOptions {
+  rootPath: string;
+  tsConfigPath: string;
+  entryPointPath: string;
+}
+
+const createProject = (options: CreateProgramOptions): Project => {
+  const { tsConfigPath, rootPath, entryPointPath } = options;
+
+  const compilerOptions = ts.parseJsonConfigFileContent(
+    ts.readConfigFile(tsConfigPath, ts.sys.readFile).config,
+    ts.sys,
+    rootPath,
+  );
+
+  const program = ts.createProgram({
+    rootNames: [entryPointPath],
+    options: compilerOptions.options,
+  });
+
+  const checker = program.getTypeChecker();
+  const sourceFile = program.getSourceFile(entryPointPath);
+
+  const exports = Object.fromEntries(
+    checker.getExportsOfModule(checker.getSymbolAtLocation(sourceFile!)!).map((symbol) => {
+      return [symbol.name, symbol];
+    }),
+  );
+
+  return {
+    exports,
+    program,
+    checker,
+    workspaceRoot,
+    prettierConfigPath: path.join(workspaceRoot, 'prettier.config.js'),
+  };
+};
 
 async function run(argv: { outputDirectory?: string }) {
-  const app = new TypeDoc.Application();
-  app.options.addReader(new TypeDoc.TSConfigReader());
-  app.options.addReader(new TypeDoc.TypeDocReader());
-  app.bootstrap({
-    entryPoints: ['packages/grid/x-data-grid/src/index.ts'],
-    exclude: ['**/*.test.ts'],
-    tsconfig: 'packages/grid/x-data-grid/tsconfig.json',
-  });
-  const project = app.convert()!;
-
   const outputDirectory = path.resolve(argv.outputDirectory!);
   fse.mkdirSync(outputDirectory, { mode: 0o777, recursive: true });
 
-  const pagesMarkdown = findPagesMarkdown()
-    .map((markdown) => {
-      const markdownSource = fse.readFileSync(markdown.filename, 'utf8');
-      return {
-        ...markdown,
-        components: getHeaders(markdownSource).components,
-      };
-    })
-    .filter((markdown) => markdown.components.length > 0);
+  const dataGridProject = createProject({
+    rootPath: path.join(workspaceRoot, 'packages/grid/x-data-grid'),
+    tsConfigPath: path.join(workspaceRoot, 'packages/grid/x-data-grid/tsconfig.json'),
+    entryPointPath: path.join(workspaceRoot, 'packages/grid/x-data-grid/src/index.ts'),
+  });
 
-  const tsconfig = ttp.loadConfig(path.resolve(__dirname, '../../../tsconfig.json'));
-
-  const componentsToGenerateDocs = [
-    path.resolve(__dirname, '../../../packages/grid/x-data-grid/src/DataGrid.tsx'),
-    path.resolve(__dirname, '../../../packages/grid/x-data-grid-pro/src/DataGridPro.tsx'),
-  ];
-
-  const indexPath = path.resolve(__dirname, '../../packages/grid/_modules_/index.ts');
-  const program = ttp.createTSProgram([...componentsToGenerateDocs, indexPath], tsconfig);
+  const dataGridProProject = createProject({
+    rootPath: path.join(workspaceRoot, 'packages/grid/x-data-grid-pro'),
+    tsConfigPath: path.join(workspaceRoot, 'packages/grid/x-data-grid-pro/tsconfig.json'),
+    entryPointPath: path.join(workspaceRoot, 'packages/grid/x-data-grid-pro/src/index.ts'),
+  });
 
   const documentedInterfaces = buildInterfacesDocumentation({
-    project,
-    prettierConfigPath,
-    workspaceRoot,
+    project: dataGridProject,
     outputDirectory,
   });
 
-  // Uncomment below to generate documentation for all exported components
-  // const checker = program.getTypeChecker();
-  // const indexFile = program.getSourceFile(indexPath)!;
-  // const symbol = checker.getSymbolAtLocation(indexFile);
-  // const exports = checker.getExportsOfModule(symbol!);
-  // const componentsFolder = path.resolve(__dirname, '../../packages/grid/_modules_/grid/components');
-  // const components = findComponents(componentsFolder);
-  // components.forEach((component) => {
-  //   const componentName = path.basename(component.filename).replace('.tsx', '');
-  //   const isExported = exports.find((e) => e.name === componentName);
-  //   if (isExported) {
-  //     componentsToGenerateDocs.push(component.filename);
-  //   }
-  // })!;
-
-  const componentBuilds = componentsToGenerateDocs.map(async (filename) => {
-    try {
-      return await buildComponentDocumentation({
-        filename,
-        program,
-        outputDirectory,
-        prettierConfigPath,
-        workspaceRoot,
-        pagesMarkdown,
-        documentedInterfaces,
-      });
-    } catch (error: any) {
-      error.message = `${path.relative(process.cwd(), filename)}: ${error.message}`;
-      throw error;
-    }
+  await buildComponentsDocumentation({
+    outputDirectory,
+    documentedInterfaces,
+    dataGridProject,
+    dataGridProProject,
   });
 
-  const builds = await Promise.allSettled(componentBuilds);
-
-  const fails = builds.filter(
-    (promise): promise is PromiseRejectedResult => promise.status === 'rejected',
-  );
-
-  fails.forEach((build) => {
-    console.error(build.reason);
+  buildEventsDocumentation({
+    project: dataGridProject,
+    documentedInterfaces,
   });
-  if (fails.length > 0) {
-    process.exit(1);
-  }
 
   buildExportsDocumentation({
-    reflections: project.children ?? [],
-    workspaceRoot,
-    prettierConfigPath,
+    project: dataGridProject,
   });
 }
 

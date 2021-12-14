@@ -10,7 +10,7 @@
     {
       "name": "getVisibleRowModels",
       "description": "Returns a sorted <code>Map</code> containing only the visible rows.",
-      "type": "() => Map<GridRowId, { [key: string]: any }>"
+      "type": "() => Map<GridRowId, GridRowModel>"
     },
     { "name": "hideFilterPanel", "description": "Hides the filter panel.", "type": "() => void" },
     {
