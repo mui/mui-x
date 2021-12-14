@@ -12,8 +12,6 @@ import {
 } from '@mui/x-data-grid-pro';
 import { getData } from 'storybook/src/data/data-service';
 
-const isJSDOM = /jsdom/.test(window.navigator.userAgent);
-
 function getSelectedRowIds() {
   const hasCheckbox = !!document.querySelector('input[type="checkbox"]');
   return [...getRows()]
