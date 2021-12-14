@@ -5,6 +5,7 @@ import * as fse from 'fs-extra';
 import * as ts from 'typescript';
 
 export interface Project {
+  name: string;
   exports: Record<string, ts.Symbol>;
   program: ts.Program;
   checker: ts.TypeChecker;
