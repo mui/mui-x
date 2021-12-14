@@ -16,7 +16,7 @@ const rows = [
   },
 ];
 
-export default function ColumnMinWidthGrid() {
+export default function ColumnHiding() {
   return (
     <div style={{ height: 250, width: '100%' }}>
       <DataGrid
