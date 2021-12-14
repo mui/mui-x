@@ -66,8 +66,8 @@ const nlNLGrid: Partial<GridLocaleText> = {
 
   // Filter values text
   filterValueAny: 'alles',
-  filterValueFalse: 'onwaar',
   filterValueTrue: 'waar',
+  filterValueFalse: 'onwaar',
 
   // Column menu text
   columnMenuLabel: 'Menu',
@@ -116,9 +116,6 @@ const nlNLGrid: Partial<GridLocaleText> = {
   treeDataGroupingHeaderName: 'Groep',
   treeDataExpand: 'Uitvouwen',
   treeDataCollapse: 'Inklappen',
-
-  // Used core components translation keys
-  MuiTablePagination: {},
 };
 
 export const nlNL: Localization = getGridLocalization(nlNLGrid, nlNLCore);
