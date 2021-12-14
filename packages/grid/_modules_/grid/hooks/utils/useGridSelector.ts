@@ -6,7 +6,7 @@ let warnedOnceStateNotInitialized = false;
 
 export const useGridSelector = <T>(apiRef: GridApiRef, selector: (state: GridState) => T) => {
   if (process.env.NODE_ENV !== 'production') {
-    if (!warnedOnceStateNotInitialized) {
+    if (!warnedOnceStateNotInitialized && !apiRef.current.state) {
       warnedOnceStateNotInitialized = true;
       console.warn(
         [

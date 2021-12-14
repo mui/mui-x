@@ -182,6 +182,8 @@ However, it can be implemented as in the demo below.
 
 {{"demo": "pages/components/data-grid/filtering/FilterSelectorsNoSnap.js", "bg": "inline", "hideToolbar": true}}
 
+More information about the selectors and how to use them on the [dedicated page](/components/data-grid/state#access-the-state)
+
 ## API
 
 - [DataGrid](/api/data-grid/data-grid/)

@@ -74,6 +74,8 @@ The following demo displays 200 rows per page:
 
 {{"demo": "pages/components/data-grid/pagination/PaginationSelectorsNoSnap.js", "bg": "inline", "hideToolbar": true}}
 
+More information about the selectors and how to use them on the [dedicated page](/components/data-grid/state#access-the-state)
+
 ## API
 
 - [DataGrid](/api/data-grid/data-grid/)

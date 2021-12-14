@@ -9,7 +9,7 @@ import {
 } from '@mui/x-data-grid-pro';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
-export default function ScrollPlayground() {
+export default function DirectSelector() {
   const { data } = useDemoData({
     dataSet: 'Commodity',
     rowLength: 100,
@@ -22,6 +22,7 @@ export default function ScrollPlayground() {
     const visibleRows = gridPaginatedVisibleSortedGridRowIdsSelector(
       apiRef.current.state,
     );
+
     if (visibleRows.length === 0) {
       return;
     }

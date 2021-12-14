@@ -20,10 +20,14 @@ Some state keys can be initialized with the `initialState` prop.
 ## Access the state [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
 
 The state is exposed on the `apiRef` object.
-We strongly advise you to only access it through selectors which are functions which takes the whole state as an argument and return some value.
-The structure of the state can change, but we guarantee that all the selectors will keep working between minor releases.
+It is strongly advised not to access the state values manually because the structure of the state can change if needs be.
+
+The `x-data-grid-pro` package exposes a set of selectors, which are functions taking the whole state as an argument and returning some value.
+You can use those to gather data from the state without worrying about the internal structure of the state.
 
 ### Direct selector access
+
+The simplest way to use a selector is to call it as a function with the state as its first argument.
 
 ```tsx
 const pageSize = gridPageSizeSelector(apiRef.current.state);
@@ -33,7 +37,7 @@ const pageSize = gridPageSizeSelector(apiRef.current.state);
 
 ### With `useGridSelector`
 
-If you want to render something depending on some state value, you can use the `useGridSelector` hook.
+If you want to access sole state value in the render of your components, you can use the `useGridSelector` hook.
 
 ```tsx
 const pageSize = useGridSelector(apiRef, gridPageSizeSelector);
