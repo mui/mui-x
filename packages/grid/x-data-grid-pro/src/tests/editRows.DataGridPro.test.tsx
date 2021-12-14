@@ -7,11 +7,11 @@ import {
   GridEditSingleSelectCell,
 } from '@mui/x-data-grid-pro';
 import Portal from '@mui/base/Portal';
-import { createRenderer, fireEvent, screen, waitFor } from '@material-ui/monorepo/test/utils';
+import { createRenderer, fireEvent, screen, waitFor, act } from '@material-ui/monorepo/test/utils';
 import { expect } from 'chai';
 import * as React from 'react';
 import { getActiveCell, getCell, getRow, getColumnHeaderCell } from 'test/utils/helperFn';
-import { stub, spy, useFakeTimers } from 'sinon';
+import { stub, spy } from 'sinon';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -39,12 +39,9 @@ const generateDate = (
 };
 
 describe('<DataGridPro /> - Edit Rows', () => {
-  let clock;
   let baselineProps;
 
   beforeEach(() => {
-    clock = useFakeTimers();
-
     baselineProps = {
       autoHeight: isJSDOM,
       rows: [
@@ -72,11 +69,7 @@ describe('<DataGridPro /> - Edit Rows', () => {
     };
   });
 
-  afterEach(() => {
-    clock.restore();
-  });
-
-  const { render } = createRenderer();
+  const { clock, render } = createRenderer({ clock: 'fake' });
 
   let apiRef: GridApiRef;
 
@@ -961,7 +954,9 @@ describe('<DataGridPro /> - Edit Rows', () => {
       cell.focus();
       fireEvent.doubleClick(cell);
       const newValue = new Date(2021, 6, 4);
-      apiRef.current.setEditCellValue({ id: 0, field: 'date', value: newValue });
+      act(() => {
+        apiRef.current.setEditCellValue({ id: 0, field: 'date', value: newValue });
+      });
       const input = cell.querySelector('input')!;
       await waitFor(() => {
         expect(input.value).to.equal('2021-07-04');
@@ -1074,7 +1069,9 @@ describe('<DataGridPro /> - Edit Rows', () => {
       cell.focus();
       fireEvent.doubleClick(cell);
       const newValue = new Date(2021, 6, 4, 17, 30);
-      apiRef.current.setEditCellValue({ id: 0, field: 'date', value: newValue });
+      act(() => {
+        apiRef.current.setEditCellValue({ id: 0, field: 'date', value: newValue });
+      });
       const input = cell.querySelector('input')!;
       await waitFor(() => {
         expect(input.value).to.equal('2021-07-04T17:30');
@@ -1398,6 +1395,7 @@ describe('<DataGridPro /> - Edit Rows', () => {
       fireEvent.click(getCell(2, 0));
       clock.tick(0);
       await waitFor(() => {
+        // Wait for promise
         expect(cell).not.to.have.class('MuiDataGrid-cell--editing');
         expect(cell).to.have.text('ADIDAS');
       });

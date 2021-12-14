@@ -52,9 +52,17 @@ You can provide a [`valueFormatter`](/components/data-grid/columns/#value-format
 />
 ```
 
+### Remove the export button
+
+You can remove the CSV export option from the toolbar by setting `disableToolbarButton` option to `true`.
+
+```jsx
+<GridToolbarExport csvOptions={{ disableToolbarButton: true }} />
+```
+
 ### apiRef [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
 
-You can export data using the imperative API available in DataGridPro:
+> ⚠️ Only use this API as the last option. Give preference to the props to control the grid.
 
 {{"demo": "pages/components/data-grid/export/CsvExportApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
 
@@ -106,9 +114,17 @@ You can provide a [`valueFormatter`](/components/data-grid/columns/#value-format
 />
 ```
 
+### Remove the print button
+
+You can remove the Print export button from the toolbar by setting `disableToolbarButton` option to `true`.
+
+```jsx
+<GridToolbarExport printOptions={{ disableToolbarButton: true }} />
+```
+
 ### apiRef [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
 
-You can export data using the imperative API available in DataGridPro:
+> ⚠️ Only use this API as the last option. Give preference to the props to control the grid.
 
 {{"demo": "pages/components/data-grid/export/PrintExportApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
 

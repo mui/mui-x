@@ -109,9 +109,7 @@ To achieve that, set the `valueGetter` attribute of `GridColDef` as in the examp
 
 ```tsx
 function getFullName(params) {
-  return `${params.getValue(params.id, 'firstName') || ''} ${
-    params.getValue(params.id, 'lastName') || ''
-  }`;
+  return `${params.row.firstName || ''} ${params.row.lastName || ''}`;
 }
 
 const columns: GridColDef[] = [

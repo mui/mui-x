@@ -5,6 +5,8 @@ export enum GridPreProcessingGroup {
   scrollToIndexes = 'scrollToIndexes',
   columnMenu = 'columnMenu',
   canBeReordered = 'canBeReordered',
+  filteringMethod = 'filteringMethod',
+  sortingMethod = 'sortingMethod',
 }
 
 export interface GridPreProcessingApi {
