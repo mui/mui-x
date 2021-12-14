@@ -25,7 +25,7 @@
     {
       "name": "getSortedRows",
       "description": "Returns all rows sorted according to the active sort model.",
-      "type": "() => { [key: string]: any }[]"
+      "type": "() => GridRowModel[]"
     },
     {
       "name": "getSortModel",
