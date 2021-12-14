@@ -80,10 +80,11 @@ To set a minimum width for a `flex` column set the `minWidth` property in `GridC
 ### Hiding
 
 Set the column definition attribute `hide` to `true` to hide the column.
+The attribute `hidable` prevent the end user from modifying the column visibility.
 
-```tsx
-<DataGrid columns={[{ field: 'id', hide: true }]} />
-```
+In this example, you can not hide "username" column, and by default the "age" column is hidden.
+
+{{"demo": "pages/components/data-grid/columns/ColumnHiding.js", "bg": "inline"}}
 
 ### Resizing [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
 

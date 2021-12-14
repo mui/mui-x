@@ -69,6 +69,11 @@ export interface GridColDef {
    */
   hide?: boolean;
   /**
+   * If `false`, removes user interfaces for toggling column visibility.
+   * @default true
+   */
+  hidable?: boolean;
+  /**
    * If `true`, the column is sortable.
    * @default true
    */

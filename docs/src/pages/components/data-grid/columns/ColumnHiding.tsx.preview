@@ -1,0 +1,8 @@
+<DataGrid
+  columns={[
+    { field: 'username', hidable: false },
+    { field: 'age', hide: true },
+    { field: 'desk' },
+  ]}
+  rows={rows}
+/>
