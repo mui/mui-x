@@ -1,11 +1,12 @@
 import { GridSortingModelApplier } from './gridSortingState';
 import {
-    GridApiRef,
-    GridComparatorFn,
-    GridRowId,
-    GridRowTreeNodeConfig,
-    GridSortCellParams, GridSortItem,
-    GridSortModel,
+  GridApiRef,
+  GridComparatorFn,
+  GridRowId,
+  GridRowTreeNodeConfig,
+  GridSortCellParams,
+  GridSortItem,
+  GridSortModel,
 } from '../../../models';
 import { isDesc } from '../../../utils/sortingUtils';
 
@@ -15,8 +16,8 @@ type GridSortingFieldComparator = {
 };
 
 interface GridParsedSortItem {
-    comparator: GridComparatorFn;
-    getSortCellParams: (id: GridRowId) => GridSortCellParams
+  comparator: GridComparatorFn;
+  getSortCellParams: (id: GridRowId) => GridSortCellParams;
 }
 
 /**
@@ -26,24 +27,24 @@ interface GridParsedSortItem {
  * @returns {GridParsedSortItem | null} The parsed sort item. Returns `null` is the sort item is not valid.
  */
 const parseSortItem = (sortItem: GridSortItem, apiRef: GridApiRef): GridParsedSortItem | null => {
-    const column = apiRef.current.getColumn(sortItem.field);
-    if (!column) {
-        return null;
-    }
+  const column = apiRef.current.getColumn(sortItem.field);
+  if (!column) {
+    return null;
+  }
 
-    const comparator: GridComparatorFn = isDesc(sortItem.sort)
-        ? (...args) => -1 * column.sortComparator!(...args)
-        : column.sortComparator!;
+  const comparator: GridComparatorFn = isDesc(sortItem.sort)
+    ? (...args) => -1 * column.sortComparator!(...args)
+    : column.sortComparator!;
 
-    const getSortCellParams = (id: GridRowId): GridSortCellParams => ({
-        id,
-        field: column.field,
-        value: apiRef.current.getCellValue(id, column.field),
-        api: apiRef.current,
-    });
+  const getSortCellParams = (id: GridRowId): GridSortCellParams => ({
+    id,
+    field: column.field,
+    value: apiRef.current.getCellValue(id, column.field),
+    api: apiRef.current,
+  });
 
-    return { getSortCellParams, comparator };
-}
+  return { getSortCellParams, comparator };
+};
 
 /**
  * Compare two rows according to a list of valid sort items.
@@ -53,23 +54,27 @@ const parseSortItem = (sortItem: GridSortItem, apiRef: GridApiRef): GridParsedSo
  * @param {GridSortCellParams} row1Params The params of the 1st row for each sort item.
  * @param {GridSortCellParams} row2Params The params of the 2nd row for each sort item.
  */
-const compareRows = (parsedSortItems: GridParsedSortItem[], row1Params: GridSortCellParams[], row2Params: GridSortCellParams[]) => {
-    return parsedSortItems.reduce((res, item, index) => {
-        if (res !== 0) {
-            // return the results of the first comparator which distinguish the two rows
-            return res;
-        }
+const compareRows = (
+  parsedSortItems: GridParsedSortItem[],
+  row1Params: GridSortCellParams[],
+  row2Params: GridSortCellParams[],
+) => {
+  return parsedSortItems.reduce((res, item, index) => {
+    if (res !== 0) {
+      // return the results of the first comparator which distinguish the two rows
+      return res;
+    }
 
-        const sortCellParams1 = row1Params[index];
-        const sortCellParams2 = row2Params[index];
-        res = item.comparator(
-            sortCellParams1.value,
-            sortCellParams2.value,
-            sortCellParams1,
-            sortCellParams2,
-        );
-        return res;
-    }, 0);
+    const sortCellParams1 = row1Params[index];
+    const sortCellParams2 = row2Params[index];
+    res = item.comparator(
+      sortCellParams1.value,
+      sortCellParams2.value,
+      sortCellParams1,
+      sortCellParams2,
+    );
+    return res;
+  }, 0);
 };
 
 /**
@@ -83,7 +88,7 @@ export const buildAggregatedSortingApplier = (
   apiRef: GridApiRef,
 ): GridSortingModelApplier | null => {
   const comparatorList = sortModel
-    .map(item => parseSortItem(item, apiRef))
+    .map((item) => parseSortItem(item, apiRef))
     .filter((comparator): comparator is GridSortingFieldComparator => !!comparator);
 
   if (comparatorList.length === 0) {
