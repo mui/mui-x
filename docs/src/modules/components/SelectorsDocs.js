@@ -52,7 +52,6 @@ const SelectorAccordion = ({ selector }) => {
           },
         }}
       >
-        {/* eslint-disable-next-line material-ui/no-hardcoded-labels */}
         <SelectorName variant="subtitle2">{selector.name}</SelectorName>
         <SelectorDescription
           variant="caption"
