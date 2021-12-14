@@ -25,9 +25,6 @@ import {
 } from './gridRowsSelector';
 import { GridSignature, useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { GridRowGroupParams } from '../../core/rowGroupsPerProcessing';
-import { getCurrentPageRows } from '../../utils/useCurrentPageRows';
-import { GridPreProcessingGroup } from '../../core/preProcessing';
-import { gridDensityRowHeightSelector } from '../density/densitySelector';
 
 interface GridRowsInternalCacheState {
   value: GridRowGroupParams;
@@ -60,7 +57,7 @@ interface ConvertGridRowsPropToStateParams {
   prevState: GridRowsInternalCacheState;
   props?: Pick<GridComponentProps, 'rowCount' | 'getRowId'>;
   rows?: GridRowsProp;
-  meta?: GridRowsMeta;
+  rowsMeta?: GridRowsMeta;
 }
 
 function getGridRowId(
@@ -77,10 +74,10 @@ const convertGridRowsPropToState = ({
   prevState,
   rows,
   props: inputProps,
-  meta,
+  rowsMeta,
 }: ConvertGridRowsPropToStateParams): GridRowsInternalCacheState => {
   const props = inputProps ?? prevState.props;
-  const currentRowsMeta = meta ?? prevState.meta;
+  const meta = rowsMeta ?? prevState.meta;
 
   let value: GridRowGroupParams;
   if (rows) {
@@ -101,7 +98,7 @@ const convertGridRowsPropToState = ({
   return {
     value,
     props,
-    meta: currentRowsMeta,
+    meta,
     rowsBeforePartialUpdates: rows ?? prevState.rowsBeforePartialUpdates,
   };
 };
@@ -136,14 +133,7 @@ export const useGridRows = (
   apiRef: GridApiRef,
   props: Pick<
     GridComponentProps,
-    | 'rows'
-    | 'getRowId'
-    | 'rowCount'
-    | 'throttleRowsMs'
-    | 'signature'
-    | 'getRowHeight'
-    | 'pagination'
-    | 'paginationMode'
+    'rows' | 'getRowId' | 'rowCount' | 'throttleRowsMs' | 'signature'
   >,
 ): void => {
   if (process.env.NODE_ENV !== 'production') {
@@ -152,7 +142,6 @@ export const useGridRows = (
   }
 
   const logger = useGridLogger(apiRef, 'useGridRows');
-  const rowsHeightCollection = React.useRef(new Map<GridRowId, number>());
   const rowsCache = React.useRef<GridRowsInternalCache>({
     state: {
       value: {
@@ -187,7 +176,7 @@ export const useGridRows = (
     return { ...state, rows: getRowsStateFromCache(rowsCache.current, apiRef) };
   });
 
-  const [gridState, setGridState, forceUpdate] = useGridState(apiRef);
+  const [, setGridState, forceUpdate] = useGridState(apiRef);
 
   const getRow = React.useCallback<GridRowApi['getRow']>(
     (id) => gridRowsLookupSelector(apiRef.current.state)[id] ?? null,
@@ -414,90 +403,7 @@ export const useGridRows = (
     );
   }, [logger, throttledRowsChange, props.rowCount, props.getRowId, props.rows]);
 
-  const hydrateRowsMeta = React.useCallback(() => {
-    if (!gridState.pagination) {
-      return;
-    }
-
-    const { rows } = getCurrentPageRows(apiRef.current.state, {
-      pagination: props.pagination,
-      paginationMode: props.paginationMode,
-    });
-
-    const rowHeight = gridDensityRowHeightSelector(apiRef.current.state);
-
-    setGridState((state) => {
-      const positions: number[] = [];
-      const totalHeight = rows.reduce((acc: number, row) => {
-        positions.push(acc);
-
-        const addornments = apiRef.current.unstable_applyPreProcessors(
-          GridPreProcessingGroup.rowAddornments,
-          {},
-          row,
-        ) as Record<string, number>;
-        const addornmentsTotal = Object.values(addornments).reduce(
-          (acc2, value) => acc2 + value,
-          0,
-        );
-
-        const height = rowHeight + addornmentsTotal;
-        return acc + height;
-      }, 0);
-
-      rowsCache.current.state = {
-        ...rowsCache.current.state,
-        meta: { totalHeight, positions },
-      };
-
-      return {
-        ...state,
-        rows: {
-          ...state.rows,
-          meta: { totalHeight, positions },
-        },
-      };
-    });
-    forceUpdate();
-  }, [
-    gridState.pagination,
-    apiRef,
-    props.pagination,
-    props.paginationMode,
-    setGridState,
-    forceUpdate,
-  ]);
-
-  const handlePreProcessorRegister = React.useCallback<
-    GridEventListener<GridEvents.preProcessorRegister>
-  >(
-    (name) => {
-      if (name === GridPreProcessingGroup.rowAddornments) {
-        hydrateRowsMeta();
-      }
-    },
-    [hydrateRowsMeta],
-  );
-
-  // The effect is used to build the rows meta data - totalHeight and positions.
-  // Because of variable row height this is needed for the virtualization
-  React.useEffect(() => {
-    hydrateRowsMeta();
-  }, [
-    gridState.density,
-    gridState.filter,
-    gridState.pagination,
-    gridState.sorting,
-    hydrateRowsMeta,
-  ]);
-
-  useGridApiEventHandler(apiRef, GridEvents.preProcessorRegister, handlePreProcessorRegister);
-
-  const getTargetRowHeight = (rowId: GridRowId): number =>
-    rowsHeightCollection.current.get(rowId) || gridState.density.rowHeight;
-
   useGridApiEventHandler(apiRef, GridEvents.rowGroupsPreProcessingChange, handleGroupRows);
-  useGridApiEventHandler(apiRef, GridEvents.visibleRowsSet, hydrateRowsMeta);
 
   const rowApi: GridRowApi = {
     getRow,
@@ -508,7 +414,6 @@ export const useGridRows = (
     updateRows,
     setRowChildrenExpansion,
     getRowNode,
-    unstable_getTargetRowHeight: getTargetRowHeight,
   };
 
   useGridApiMethod(apiRef, rowApi, 'GridRowApi');

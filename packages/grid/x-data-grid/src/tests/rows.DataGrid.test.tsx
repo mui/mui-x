@@ -62,7 +62,7 @@ describe('<DataGrid /> - Rows', () => {
 
       const Test = (props: Pick<DataGridProps, 'rows'>) => (
         <div style={{ width: 300, height: 300 }}>
-          <DataGrid {...props} columns={columns} autoHeight={isJSDOM} />
+          <DataGrid {...props} columns={columns} disableVirtualization />
         </div>
       );
 

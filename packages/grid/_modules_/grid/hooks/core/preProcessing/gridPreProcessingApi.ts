@@ -6,6 +6,7 @@ export enum GridPreProcessingGroup {
   columnMenu = 'columnMenu',
   canBeReordered = 'canBeReordered',
   rowAddornments = 'rowAddornments',
+  rowHeight = 'rowHeight',
 }
 
 export interface GridPreProcessingApi {

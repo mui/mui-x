@@ -47,10 +47,4 @@ export interface GridRowApi {
    * @param {boolean} isExpanded A boolean indicating if the row must be expanded or collapsed.
    */
   setRowChildrenExpansion: (id: GridRowId, isExpanded: boolean) => void;
-  /**
-   * Get target row height.
-   * @param {GridRowId} id The id of the row.
-   * @returns {number} The target row height.
-   */
-  unstable_getTargetRowHeight: (id: GridRowId) => number;
 }

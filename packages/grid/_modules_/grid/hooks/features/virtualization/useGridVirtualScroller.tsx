@@ -91,13 +91,14 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
 
     const { top, left } = scrollPosition.current!;
 
-    const { positions: rowPositions } = gridRowsMetaSelector(apiRef.current.state);
-    const firstRowIndex = getIndexFromScroll(top, rowPositions);
-    const lastRowIndex = getIndexFromScroll(top + rootRef.current!.clientHeight!, rowPositions);
+    const firstRowIndex = getIndexFromScroll(top, rowsMeta.positions);
+    const lastRowIndex = getIndexFromScroll(
+      top + rootRef.current!.clientHeight!,
+      rowsMeta.positions,
+    );
 
-    const { positions: columnPositions } = gridColumnsMetaSelector(apiRef.current.state); // To avoid infinite loop
-    const firstColumnIndex = getIndexFromScroll(left, columnPositions);
-    const lastColumnIndex = getIndexFromScroll(left + containerWidth!, columnPositions);
+    const firstColumnIndex = getIndexFromScroll(left, columnsMeta.positions);
+    const lastColumnIndex = getIndexFromScroll(left + containerWidth!, columnsMeta.positions);
 
     return {
       firstRowIndex,
@@ -106,9 +107,10 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
       lastColumnIndex,
     };
   }, [
+    columnsMeta.positions,
+    rowsMeta.positions,
     disableVirtualization,
     currentPage.rows.length,
-    apiRef,
     containerWidth,
     visibleColumns.length,
   ]);

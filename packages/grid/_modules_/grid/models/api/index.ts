@@ -8,6 +8,7 @@ export * from './gridApi';
 export * from './gridPageSizeApi';
 export * from './gridPageApi';
 export * from './gridRowApi';
+export * from './gridRowsHydrationApi';
 export * from './gridSelectionApi';
 export * from './gridSortApi';
 export * from './gridStateApi';

@@ -188,6 +188,7 @@ describe('<DataGrid /> - Pagination', () => {
             pageSize={5}
             rowsPerPageOptions={[5]}
             filterModel={filterModel}
+            disableVirtualization
           />
         );
       };

@@ -128,6 +128,7 @@
   { "name": "GridRowScrollEndParams", "kind": "Interface" },
   { "name": "GridRowSelectionCheckboxParams", "kind": "Interface" },
   { "name": "GridRowTreeNodeConfig", "kind": "Interface" },
+  { "name": "GridRowsHydrationApi", "kind": "Interface" },
   { "name": "GridRowsMeta", "kind": "Interface" },
   { "name": "GridRowsState", "kind": "Interface" },
   { "name": "GridScrollApi", "kind": "Interface" },

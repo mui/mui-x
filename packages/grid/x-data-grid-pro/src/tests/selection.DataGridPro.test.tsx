@@ -41,7 +41,7 @@ describe('<DataGridPro /> - Selection', () => {
 
     return (
       <div style={{ width: 300, height: 300 }}>
-        <DataGridPro {...data} {...other} apiRef={apiRef} autoHeight={isJSDOM} />
+        <DataGridPro {...data} {...other} apiRef={apiRef} disableVirtualization />
       </div>
     );
   };
