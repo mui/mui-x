@@ -3,12 +3,8 @@ import { gridClasses } from '../../../gridClasses';
 import { GridEvents, GridEventListener } from '../../../models/events';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridCellParams } from '../../../models/params/gridCellParams';
-import {
-  findParentElementFromClassName,
-  isGridCellRoot,
-  isGridHeaderCellRoot,
-} from '../../../utils/domUtils';
-import { isEnterKey, isNavigationKey, isSpaceKey } from '../../../utils/keyboardUtils';
+import { findParentElementFromClassName, isGridCellRoot } from '../../../utils/domUtils';
+import { isNavigationKey } from '../../../utils/keyboardUtils';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { GridCellModes } from '../../../models/gridEditRowModel';
 import { gridVisibleSortedRowIdsSelector } from '../filter/gridFilterSelector';
@@ -67,13 +63,8 @@ export const useGridKeyboard = (apiRef: GridApiRef): void => {
         return;
       }
 
-      if (isSpaceKey(event.key) && event.shiftKey) {
-        event.preventDefault();
-        apiRef.current.selectRow(
-          cellParams.id,
-          !apiRef.current.isRowSelected(cellParams.id),
-          false,
-        );
+      if (event.key === ' ' && event.shiftKey) {
+        // This is a select event, so it's handled by the selection hook
         return;
       }
 
@@ -85,44 +76,10 @@ export const useGridKeyboard = (apiRef: GridApiRef): void => {
       if (isNavigationKey(event.key) && event.shiftKey) {
         event.preventDefault();
         expandSelection(cellParams, event);
-        return;
-      }
-
-      if (event.key.toLowerCase() === 'c' && (event.ctrlKey || event.metaKey)) {
-        return;
-      }
-
-      if (event.key.toLowerCase() === 'a' && (event.ctrlKey || event.metaKey)) {
-        event.preventDefault();
-        apiRef.current.selectRows(apiRef.current.getAllRowIds(), true);
       }
     },
     [apiRef, expandSelection],
   );
 
-  const handleColumnHeaderKeyDown = React.useCallback<
-    GridEventListener<GridEvents.columnHeaderKeyDown>
-  >(
-    (params, event) => {
-      if (!isGridHeaderCellRoot(event.target as HTMLElement)) {
-        return;
-      }
-      if (isSpaceKey(event.key) && isGridHeaderCellRoot(event.target as HTMLElement)) {
-        event.preventDefault();
-      }
-
-      if (isNavigationKey(event.key) && !isSpaceKey(event.key) && !event.shiftKey) {
-        apiRef.current.publishEvent(GridEvents.columnHeaderNavigationKeyDown, params, event);
-        return;
-      }
-
-      if (isEnterKey(event.key) && (event.ctrlKey || event.metaKey)) {
-        apiRef.current.toggleColumnMenu(params.field);
-      }
-    },
-    [apiRef],
-  );
-
   useGridApiEventHandler(apiRef, GridEvents.cellKeyDown, handleCellKeyDown);
-  useGridApiEventHandler(apiRef, GridEvents.columnHeaderKeyDown, handleColumnHeaderKeyDown);
 };
