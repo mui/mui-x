@@ -90,6 +90,12 @@ export interface GridColDef {
    */
   canBeGrouped?: boolean;
   /**
+   * If `false`, the menu items for column pinning menu will not be rendered.
+   * Only available in DataGridPro.
+   * @default true
+   */
+  pinnable?: boolean;
+  /**
    * A comparator function used to sort rows.
    */
   sortComparator?: GridComparatorFn;
