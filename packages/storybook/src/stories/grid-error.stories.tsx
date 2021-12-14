@@ -25,10 +25,7 @@ const getColumns: () => GridColDef[] = () => [
     field: 'fullName',
     description: 'this column has a value getter and is not sortable',
     sortable: false,
-    valueGetter: (params) =>
-      `${params.getValue(params.id, 'firstName') || ''} ${
-        params.getValue(params.id, 'lastName') || ''
-      }`,
+    valueGetter: (params) => `${params.row.firstName || ''} ${params.row.lastName || ''}`,
   },
   {
     field: 'isRegistered',

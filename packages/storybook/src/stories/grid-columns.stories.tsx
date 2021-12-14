@@ -304,13 +304,11 @@ export const ValueGetterAndFormatter = () => {
       { field: 'id', hide: true },
       {
         field: 'firstAge',
-        valueGetter: (params: GridValueGetterParams) =>
-          `${params.getValue(params.id, 'first')}_${params.getValue(params.id, 'age')}`,
+        valueGetter: (params: GridValueGetterParams) => `${params.row.first}_${params.row.age}`,
       },
       {
         field: 'firstAgeFormatted',
-        valueGetter: (params: GridValueGetterParams) =>
-          `${params.getValue(params.id, 'first')}_${params.getValue(params.id, 'age')}`,
+        valueGetter: (params: GridValueGetterParams) => `${params.row.first}_${params.row.age}`,
         valueFormatter: (params) => `${params.value} yrs`,
       },
     ],

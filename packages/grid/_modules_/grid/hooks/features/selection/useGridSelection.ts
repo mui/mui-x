@@ -10,6 +10,7 @@ import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { useGridState } from '../../utils/useGridState';
 import { gridRowsLookupSelector } from '../rows/gridRowsSelector';
+import { isGridCellRoot } from '../../../utils/domUtils';
 import {
   gridSelectionStateSelector,
   selectedGridRowsSelector,
@@ -22,7 +23,9 @@ import { getDataGridUtilityClass } from '../../../gridClasses';
 import { useGridStateInit } from '../../utils/useGridStateInit';
 import { useFirstRender } from '../../utils/useFirstRender';
 import { GridPreProcessingGroup } from '../../core/preProcessing';
+import { GridCellModes } from '../../../models/gridEditRowModel';
 import { GridColumnsRawState } from '../columns/gridColumnsState';
+import { isKeyboardEvent } from '../../../utils/keyboardUtils';
 
 type OwnerState = { classes: GridComponentProps['classes'] };
 
@@ -253,35 +256,45 @@ export const useGridSelection = (
     }
   }, [apiRef]);
 
+  const handleSingleRowSelection = React.useCallback(
+    (id: GridRowId, event: React.MouseEvent | React.KeyboardEvent) => {
+      const hasCtrlKey = event.metaKey || event.ctrlKey;
+
+      // multiple selection is only allowed if:
+      // - it is a checkboxSelection
+      // - it is a keyboard selection
+      // - CTRL is pressed
+
+      const isMultipleSelectionDisabled =
+        !checkboxSelection && !hasCtrlKey && !isKeyboardEvent(event);
+      const resetSelection = !canHaveMultipleSelection || isMultipleSelectionDisabled;
+
+      const isSelected = apiRef.current.isRowSelected(id);
+
+      if (resetSelection) {
+        apiRef.current.selectRow(id, !isMultipleSelectionDisabled ? !isSelected : true, true);
+      } else {
+        apiRef.current.selectRow(id, !isSelected, false);
+      }
+    },
+    [apiRef, canHaveMultipleSelection, checkboxSelection],
+  );
+
   const handleRowClick = React.useCallback<GridEventListener<GridEvents.rowClick>>(
     (params, event) => {
       if (disableSelectionOnClick) {
         return;
       }
 
-      const hasCtrlKey = event.metaKey || event.ctrlKey;
-
       if (event.shiftKey && (canHaveMultipleSelection || checkboxSelection)) {
         expandRowRangeSelection(params.id);
       } else {
-        // Without checkboxSelection, multiple selection is only allowed if CTRL is pressed
-        const isMultipleSelectionDisabled = !checkboxSelection && !hasCtrlKey;
-        const resetSelection = !canHaveMultipleSelection || isMultipleSelectionDisabled;
-
-        if (resetSelection) {
-          apiRef.current.selectRow(
-            params.id,
-            hasCtrlKey || checkboxSelection ? !apiRef.current.isRowSelected(params.id) : true,
-            true,
-          );
-        } else {
-          apiRef.current.selectRow(params.id, !apiRef.current.isRowSelected(params.id), false);
-        }
+        handleSingleRowSelection(params.id, event);
       }
     },
     [
-      apiRef,
       expandRowRangeSelection,
+      handleSingleRowSelection,
       canHaveMultipleSelection,
       disableSelectionOnClick,
       checkboxSelection,
@@ -326,6 +339,36 @@ export const useGridSelection = (
     [apiRef, props.checkboxSelectionVisibleOnly, props.pagination],
   );
 
+  const handleCellKeyDown = React.useCallback<GridEventListener<GridEvents.cellKeyDown>>(
+    (params, event) => {
+      // Ignore portal
+      // Do not apply shortcuts if the focus is not on the cell root component
+      // TODO replace with !event.currentTarget.contains(event.target as Element)
+      if (!isGridCellRoot(event.target as Element)) {
+        return;
+      }
+
+      // Get the most recent params because the cell mode may have changed by another listener
+      const cellParams = apiRef.current.getCellParams(params.id, params.field);
+      const isEditMode = cellParams.cellMode === GridCellModes.Edit;
+      if (isEditMode) {
+        return;
+      }
+
+      if (event.key === ' ' && event.shiftKey) {
+        event.preventDefault();
+        handleSingleRowSelection(cellParams.id, event);
+        return;
+      }
+
+      if (event.key.toLowerCase() === 'a' && (event.ctrlKey || event.metaKey)) {
+        event.preventDefault();
+        selectRows(apiRef.current.getAllRowIds(), true);
+      }
+    },
+    [apiRef, handleSingleRowSelection, selectRows],
+  );
+
   useGridApiEventHandler(apiRef, GridEvents.visibleRowsSet, removeOutdatedSelection);
   useGridApiEventHandler(apiRef, GridEvents.rowClick, handleRowClick);
   useGridApiEventHandler(
@@ -339,6 +382,7 @@ export const useGridSelection = (
     handleHeaderSelectionCheckboxChange,
   );
   useGridApiEventHandler(apiRef, GridEvents.cellMouseDown, preventSelectionOnShift);
+  useGridApiEventHandler(apiRef, GridEvents.cellKeyDown, handleCellKeyDown);
 
   const selectionApi: GridSelectionApi = {
     selectRow,

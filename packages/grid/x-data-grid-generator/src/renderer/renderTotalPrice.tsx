@@ -2,7 +2,7 @@ import * as React from 'react';
 import clsx from 'clsx';
 import { alpha, createTheme } from '@mui/material/styles';
 import { createStyles, makeStyles } from '@mui/styles';
-import { GridCellParams } from '../../../_modules_/grid';
+import { GridCellParams } from '@mui/x-data-grid';
 
 const defaultTheme = createTheme();
 const useStyles = makeStyles(

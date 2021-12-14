@@ -5,7 +5,8 @@ export enum GridPreProcessingGroup {
   scrollToIndexes = 'scrollToIndexes',
   columnMenu = 'columnMenu',
   canBeReordered = 'canBeReordered',
-  rowAddornments = 'rowAddornments',
+  filteringMethod = 'filteringMethod',
+  sortingMethod = 'sortingMethod',
   rowHeight = 'rowHeight',
 }
 

@@ -6,7 +6,7 @@ import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { gridTabIndexColumnHeaderSelector } from '../../hooks/features/focus/gridFocusStateSelector';
 import { gridSelectionStateSelector } from '../../hooks/features/selection/gridSelectionSelector';
 import { GridColumnHeaderParams } from '../../models/params/gridColumnHeaderParams';
-import { isNavigationKey, isSpaceKey } from '../../utils/keyboardUtils';
+import { isNavigationKey } from '../../utils/keyboardUtils';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { getDataGridUtilityClass } from '../../gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
@@ -99,14 +99,18 @@ const GridHeaderCheckbox = React.forwardRef<HTMLInputElement, GridColumnHeaderPa
 
     const handleKeyDown = React.useCallback(
       (event) => {
-        if (isSpaceKey(event.key)) {
-          event.stopPropagation();
+        if (event.key === ' ') {
+          // imperative toggle the checkbox because Space is disable by some preventDefault
+          apiRef.current.publishEvent(GridEvents.headerSelectionCheckboxChange, {
+            value: !isChecked,
+          });
         }
+        // TODO v6 remove columnHeaderNavigationKeyDown events which are not used internally anymore
         if (isNavigationKey(event.key) && !event.shiftKey) {
           apiRef.current.publishEvent(GridEvents.columnHeaderNavigationKeyDown, props, event);
         }
       },
-      [apiRef, props],
+      [apiRef, props, isChecked],
     );
 
     const handleSelectionChange = React.useCallback(() => {

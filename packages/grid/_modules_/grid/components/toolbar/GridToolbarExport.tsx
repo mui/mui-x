@@ -15,20 +15,23 @@ import {
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { gridClasses } from '../../gridClasses';
 
-interface GridExportFormat {
-  format: ExportTypes;
-  formatOptions?: GridCsvExportOptions;
+interface GridExportDisplayOptions {
+  /**
+   * If `true`, this export option will be removed from the GridToolbarExport menu.
+   * @default false
+   */
+  disableToolbarButton?: boolean;
 }
 
-type GridExportFormatOption = GridExportFormat;
-
-type GridExportOption = GridExportFormatOption & {
+interface GridExportOption {
   label: React.ReactNode;
-};
+  format: ExportTypes;
+  formatOptions?: (GridCsvExportOptions | GridPrintExportOptions) & GridExportDisplayOptions;
+}
 
 export interface GridToolbarExportProps extends ButtonProps {
-  csvOptions?: GridCsvExportOptions;
-  printOptions?: GridPrintExportOptions;
+  csvOptions?: GridCsvExportOptions & GridExportDisplayOptions;
+  printOptions?: GridPrintExportOptions & GridExportDisplayOptions;
 }
 
 const GridToolbarExport = React.forwardRef<HTMLButtonElement, GridToolbarExportProps>(
@@ -85,6 +88,10 @@ const GridToolbarExport = React.forwardRef<HTMLButtonElement, GridToolbarExportP
       }
     };
 
+    if (csvOptions?.disableToolbarButton && printOptions?.disableToolbarButton) {
+      return null;
+    }
+
     return (
       <React.Fragment>
         <Button
@@ -115,11 +122,13 @@ const GridToolbarExport = React.forwardRef<HTMLButtonElement, GridToolbarExportP
             onKeyDown={handleListKeyDown}
             autoFocusItem={open}
           >
-            {exportOptions.map((option, index) => (
-              <MenuItem key={index} onClick={handleExport(option)}>
-                {option.label}
-              </MenuItem>
-            ))}
+            {exportOptions.map((option, index) =>
+              option.formatOptions?.disableToolbarButton ? null : (
+                <MenuItem key={index} onClick={handleExport(option)}>
+                  {option.label}
+                </MenuItem>
+              ),
+            )}
           </MenuList>
         </GridMenu>
       </React.Fragment>

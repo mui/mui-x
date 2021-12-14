@@ -68,7 +68,7 @@
     "getRowHeight": { "type": { "name": "func" } },
     "getRowId": { "type": { "name": "func" } },
     "getTreeDataPath": { "type": { "name": "func" } },
-    "groupingColDef": { "type": { "name": "object" } },
+    "groupingColDef": { "type": { "name": "union", "description": "func<br>&#124;&nbsp;object" } },
     "headerHeight": { "type": { "name": "number" }, "default": "56" },
     "hideFooter": { "type": { "name": "bool" } },
     "hideFooterPagination": { "type": { "name": "bool" } },
@@ -183,7 +183,7 @@
     "sx": {
       "type": {
         "name": "union",
-        "description": "Array&lt;func<br>&#124;&nbsp;object&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
+        "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
       }
     },
     "throttleRowsMs": { "type": { "name": "number" }, "default": "0" },

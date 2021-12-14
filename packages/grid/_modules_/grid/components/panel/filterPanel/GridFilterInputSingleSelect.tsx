@@ -28,6 +28,15 @@ const renderSingleSelectOptions = (
   );
 };
 
+function getValueFromValueOptions(value, valueOptions) {
+  if (valueOptions === undefined) {
+    return undefined;
+  }
+  return valueOptions
+    .map((option) => (typeof option === 'object' ? option.value : option))
+    .find((optionValue) => String(optionValue) === String(value));
+}
+
 export type GridFilterInputSingleSelectProps = GridFilterInputValueProps &
   TextFieldProps & { type?: 'singleSelect' };
 
@@ -36,29 +45,45 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
   const [filterValueState, setFilterValueState] = React.useState(item.value ?? '');
   const id = useId();
 
+  const currentColumn = item.columnField ? apiRef.current.getColumn(item.columnField) : null;
+
+  const currentValueOptions = React.useMemo(() => {
+    return typeof currentColumn.valueOptions === 'function'
+      ? currentColumn.valueOptions({ field: currentColumn.field })
+      : currentColumn.valueOptions;
+  }, [currentColumn]);
+
   const onFilterChange = React.useCallback(
     (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
       let value = event.target.value;
+
       // NativeSelect casts the value to a string.
-      const column = apiRef.current.getColumn(item.columnField);
-      const columnValueOptions =
-        typeof column.valueOptions === 'function'
-          ? column.valueOptions({ field: column.field })
-          : column.valueOptions;
-      value = columnValueOptions
-        .map((option) => (typeof option === 'object' ? option.value : option))
-        .find((optionValue) => String(optionValue) === value);
+      value = getValueFromValueOptions(value, currentValueOptions);
 
       setFilterValueState(String(value));
       applyValue({ ...item, value });
     },
-    [apiRef, applyValue, item],
+    [applyValue, item, currentValueOptions],
   );
 
   React.useEffect(() => {
-    const itemValue = item.value ?? '';
+    let itemValue;
+
+    if (currentValueOptions !== undefined) {
+      // sanitize if valueOptions are provided
+      itemValue = getValueFromValueOptions(item.value, currentValueOptions);
+      if (itemValue !== item.value) {
+        applyValue({ ...item, value: itemValue });
+        return;
+      }
+    } else {
+      itemValue = item.value;
+    }
+
+    itemValue = itemValue ?? '';
+
     setFilterValueState(String(itemValue));
-  }, [item.value]);
+  }, [item, currentValueOptions, applyValue]);
 
   return (
     <TextField

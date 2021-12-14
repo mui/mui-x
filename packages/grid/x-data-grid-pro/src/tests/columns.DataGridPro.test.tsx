@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { createRenderer, fireEvent, screen, waitFor } from '@material-ui/monorepo/test/utils';
 import { expect } from 'chai';
-import { useFakeTimers, spy } from 'sinon';
+import { spy } from 'sinon';
 import {
   GridApiRef,
   GridComponentProps,
@@ -17,7 +17,7 @@ import { getColumnHeaderCell, getCell } from 'test/utils/helperFn';
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<DataGridPro /> - Columns', () => {
-  const { render } = createRenderer();
+  const { clock, render } = createRenderer({ clock: 'fake' });
 
   let apiRef: GridApiRef;
 
@@ -74,24 +74,16 @@ describe('<DataGridPro /> - Columns', () => {
       render(<Test />);
       expect(screen.queryByRole('menu')).to.equal(null);
       apiRef.current.toggleColumnMenu('brand');
-      await waitFor(() => expect(screen.queryByRole('menu')).not.to.equal(null));
+      clock.runToLast();
+      expect(screen.queryByRole('menu')).not.to.equal(null);
       apiRef.current.toggleColumnMenu('brand');
-      await waitFor(() => expect(screen.queryByRole('menu')).to.equal(null));
+      clock.runToLast();
+      expect(screen.queryByRole('menu')).to.equal(null);
     });
   });
 
   describe('resizing', () => {
     const columns = [{ field: 'brand', width: 100 }];
-
-    let clock;
-
-    beforeEach(() => {
-      clock = useFakeTimers();
-    });
-
-    afterEach(() => {
-      clock.restore();
-    });
 
     it('should allow to resize columns with the mouse', () => {
       render(<Test columns={columns} />);

@@ -1,12 +1,11 @@
 import * as React from 'react';
-import { GridRenderCellParams } from '@mui/x-data-grid';
+import { GridRenderCellParams, GridEvents } from '@mui/x-data-grid';
 import Select, { SelectProps } from '@mui/material/Select';
 import { MenuProps } from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import { createStyles, makeStyles } from '@mui/styles';
 import { createTheme } from '@mui/material/styles';
 import { CONTRACT_TYPE_OPTIONS } from '../services/static-data';
-import { GridEvents } from '../../../_modules_/grid/models/events/gridEvents';
 
 const defaultTheme = createTheme();
 const useStyles = makeStyles(

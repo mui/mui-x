@@ -93,9 +93,9 @@ export default [
       production &&
         command(
           [
-            `rm -rf ./x-data-grid-pro/build/x-data-grid-pro`,
             `rm -rf ./x-data-grid-pro/build/_modules_`,
-            `rm -rf ./x-data-grid-pro/build/data-grid`,
+            `rm -rf ./x-data-grid-pro/build/x-data-grid`,
+            `rm -rf ./x-data-grid-pro/build/x-data-grid-pro`,
             `rm -rf ./x-data-grid-pro/build/x-data-grid-generator`,
           ],
           {
