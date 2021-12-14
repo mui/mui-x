@@ -24,6 +24,7 @@ import { filterColumns } from '../../../../../x-data-grid-pro/src/DataGridProVir
 import { GridRowParams } from '../../../models/params/gridRowParams';
 import { MuiEvent } from '../../../models/muiEvent';
 import { GridColumnsRawState } from '../columns/gridColumnsState';
+import { GridColDef } from '../../../models/colDef/gridColDef';
 
 const Divider = () => <MuiDivider onClick={(event) => event.stopPropagation()} />;
 
@@ -140,8 +141,12 @@ export const useGridColumnPinning = (
   );
 
   const addColumnMenuButtons = React.useCallback(
-    (initialValue: JSX.Element[]) => {
+    (initialValue: JSX.Element[], column: GridColDef) => {
       if (props.disableColumnPinning) {
+        return initialValue;
+      }
+
+      if (column.pinnable === false) {
         return initialValue;
       }
 
