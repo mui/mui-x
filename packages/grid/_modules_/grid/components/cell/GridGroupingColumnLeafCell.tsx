@@ -8,7 +8,7 @@ const GridGroupingColumnLeafCell = (props: GridRenderCellParams) => {
 
   const rootProps = useGridRootProps();
 
-  const marginLeft = rootProps.groupingColumnMode === 'multiple' ? 1 : rowNode.depth * 2;
+  const marginLeft = rootProps.rowGroupingColumnMode === 'multiple' ? 1 : rowNode.depth * 2;
 
   return <Box sx={{ ml: marginLeft }}>{props.formattedValue ?? props.value}</Box>;
 };

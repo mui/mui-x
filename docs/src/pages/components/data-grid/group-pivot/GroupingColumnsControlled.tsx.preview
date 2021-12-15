@@ -1,9 +1,0 @@
-<DataGridPro
-  {...data}
-  apiRef={apiRef}
-  groupingColumnsModel={groupingColumnsModel}
-  onGroupingColumnsModelChange={(model) => setGroupingColumnsModel(model)}
-  experimentalFeatures={{
-    groupingColumns: true,
-  }}
-/>

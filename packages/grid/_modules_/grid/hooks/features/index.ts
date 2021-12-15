@@ -13,4 +13,4 @@ export * from './rows';
 export * from './selection';
 export * from './sorting';
 export * from './dimensions';
-export * from './groupingColumns';
+export * from './rowGrouping';

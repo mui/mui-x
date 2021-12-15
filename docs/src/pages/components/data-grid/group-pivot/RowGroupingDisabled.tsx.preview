@@ -1,0 +1,8 @@
+<DataGridPro
+  {...data}
+  disableSelectionOnClick
+  disableRowGrouping
+  experimentalFeatures={{
+    rowGrouping: true,
+  }}
+/>

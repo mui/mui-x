@@ -15,7 +15,7 @@ export enum GridExperimentalFeatures {
    * Only available on the Pro plan.
    * Will be part of the premium-plan when fully ready.
    */
-  groupingColumns = 'groupingColumns',
+  rowGrouping = 'rowGrouping',
 }
 
 /**
@@ -165,7 +165,7 @@ export interface GridSimpleOptions {
    * If `true`, the grouping columns are disabled.
    * @default false
    */
-  disableGroupingColumns: boolean;
+  disableRowGrouping: boolean;
   /**
    * Controls whether to use the cell or row editing.
    * @default "cell"
@@ -245,7 +245,7 @@ export interface GridSimpleOptions {
    * If `multiple`, each column we are grouping by will be represented in its own column.
    * @default 'single'
    */
-  groupingColumnMode: 'single' | 'multiple';
+  rowGroupingColumnMode: 'single' | 'multiple';
   /**
    * If above 0, the row children will be expanded up to this depth.
    * If equal to -1, all the row children will be expanded.
@@ -315,7 +315,7 @@ export const GRID_DEFAULT_SIMPLE_OPTIONS: GridSimpleOptions = {
   disableChildrenSorting: false,
   disableSelectionOnClick: false,
   disableVirtualization: false,
-  disableGroupingColumns: false,
+  disableRowGrouping: false,
   editMode: GridEditModes.Cell,
   filterMode: GridFeatureModeConstant.client,
   headerHeight: 56,
@@ -330,7 +330,7 @@ export const GRID_DEFAULT_SIMPLE_OPTIONS: GridSimpleOptions = {
   rowHeight: 52,
   rowsPerPageOptions: [25, 50, 100],
   treeData: false,
-  groupingColumnMode: 'single',
+  rowGroupingColumnMode: 'single',
   defaultGroupingExpansionDepth: 0,
   scrollEndThreshold: 80,
   showCellRightBorder: false,

@@ -22,7 +22,7 @@ import { GridColumnPinningApi } from './gridColumnPinningApi';
 import type { GridPreProcessingApi } from '../../hooks/core/preProcessing';
 import type { GridRowGroupsPreProcessingApi } from '../../hooks/core/rowGroupsPerProcessing';
 import type { GridDimensionsApi } from '../../hooks/features/dimensions';
-import type { GridGroupingColumnsApi } from '../../hooks/features/groupingColumns';
+import type { GridRowGroupingApi } from '../../hooks/features/rowGrouping';
 import type { GridPaginationApi } from '../../hooks/features/pagination';
 
 /**
@@ -53,5 +53,5 @@ export interface GridApi
     GridLocaleTextApi,
     GridClipboardApi,
     GridScrollApi,
-    GridGroupingColumnsApi,
+    GridRowGroupingApi,
     GridColumnPinningApi {}

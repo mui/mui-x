@@ -150,12 +150,6 @@
     "event": "MuiEvent<{}>"
   },
   {
-    "name": "groupingColumnsModelChange",
-    "description": "Fired when the grouping columns model changes.",
-    "params": "GridGroupingColumnsModel",
-    "event": "MuiEvent<{}>"
-  },
-  {
     "name": "headerSelectionCheckboxChange",
     "description": "Fired when the value of the selection checkbox of the header is changed",
     "params": "GridHeaderSelectionCheckboxParams",
@@ -208,6 +202,12 @@
     "description": "Fired when the row turns back to view mode.",
     "params": "GridRowParams",
     "event": "MuiEvent<MuiBaseEvent>"
+  },
+  {
+    "name": "rowGroupingModelChange",
+    "description": "Fired when the row grouping model changes.",
+    "params": "GridRowGroupingModel",
+    "event": "MuiEvent<{}>"
   },
   {
     "name": "rowMouseEnter",

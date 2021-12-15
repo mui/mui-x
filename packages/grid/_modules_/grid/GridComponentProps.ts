@@ -27,7 +27,7 @@ import { GridClasses } from './gridClasses';
 import { GridCallbackDetails } from './models/api/gridCallbackDetails';
 import { GridPinnedColumns } from './models/api/gridColumnPinningApi';
 import { GridEventListener, GridEvents } from './models/events';
-import type { GridGroupingColumnsModel } from './hooks/features/groupingColumns';
+import type { GridRowGroupingModel } from './hooks/features/rowGrouping';
 
 /**
  * The grid component react props before applying the default values.
@@ -366,16 +366,13 @@ interface GridComponentOtherProps extends CommonProps {
   /**
    * Set the grouping columns of the grid.
    */
-  groupingColumnsModel?: GridGroupingColumnsModel;
+  rowGroupingModel?: GridRowGroupingModel;
   /**
    * Callback fired when the grouping columns model changes.
-   * @param {GridGroupingColumnsModel} model Columns used as grouping criteria.
+   * @param {GridRowGroupingModel} model Columns used as grouping criteria.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
-  onGroupingColumnsModelChange?: (
-    model: GridGroupingColumnsModel,
-    details: GridCallbackDetails,
-  ) => void;
+  onRowGroupingModelChange?: (model: GridRowGroupingModel, details: GridCallbackDetails) => void;
   /**
    * The column fields to display pinned to left or right.
    */

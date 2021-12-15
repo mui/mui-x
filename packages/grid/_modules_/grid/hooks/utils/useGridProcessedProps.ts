@@ -107,8 +107,7 @@ export const useGridProcessedProps = (inProps: GridInputComponentProps) => {
     () => ({
       ...GRID_DEFAULT_SIMPLE_OPTIONS,
       ...inProps,
-      disableGroupingColumns:
-        inProps.disableGroupingColumns || !inProps.experimentalFeatures?.groupingColumns,
+      disableRowGrouping: inProps.disableRowGrouping || !inProps.experimentalFeatures?.rowGrouping,
       localeText,
       components,
     }),

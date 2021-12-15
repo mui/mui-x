@@ -62,7 +62,7 @@ const GridGroupingCriteriaCell = (props: GridGroupingCriteriaCellProps) => {
     event.stopPropagation();
   };
 
-  const marginLeft = rootProps.groupingColumnMode === 'multiple' ? 0 : rowNode.depth * 2;
+  const marginLeft = rootProps.rowGroupingColumnMode === 'multiple' ? 0 : rowNode.depth * 2;
 
   return (
     <Box className={classes.root} sx={{ ml: marginLeft }}>

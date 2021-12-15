@@ -21,9 +21,9 @@ import type {
   GridFilterInitialState,
 } from '../hooks/features/filter/gridFilterState';
 import type {
-  GridGroupingColumnsState,
-  GridGroupingColumnsInitialState,
-} from '../hooks/features/groupingColumns';
+  GridRowGroupingState,
+  GridRowGroupingInitialState,
+} from '../hooks/features/rowGrouping';
 import { GridColumnPinningState } from '../hooks/features/columnPinning/gridColumnPinningState';
 
 /**
@@ -44,7 +44,7 @@ export interface GridState {
   filter: GridFilterState;
   preferencePanel: GridPreferencePanelState;
   density: GridDensityState;
-  groupingColumns: GridGroupingColumnsState;
+  rowGrouping: GridRowGroupingState;
   error?: any;
   pinnedColumns: GridColumnPinningState;
 }
@@ -53,6 +53,6 @@ export interface GridInitialState {
   sorting?: GridSortingInitialState;
   filter?: GridFilterInitialState;
   preferencePanel?: GridPreferencePanelInitialState;
-  groupingColumns?: GridGroupingColumnsInitialState;
+  rowGrouping?: GridRowGroupingInitialState;
   pinnedColumns?: GridColumnPinningState;
 }
