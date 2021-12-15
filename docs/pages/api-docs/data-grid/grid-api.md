@@ -6,8 +6,6 @@
 
 ```js
 import { GridApi } from '@mui/x-data-grid-pro';
-// or
-import {} from '@mui/x-data-grid';
 ```
 
 ## Properties
