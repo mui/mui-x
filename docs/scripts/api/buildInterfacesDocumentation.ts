@@ -68,8 +68,21 @@ const parseProperty = (propertySymbol: ts.Symbol, project: Project): ParsedPrope
 });
 
 const parseInterfaceSymbol = (symbol: ts.Symbol, project: Project): ParsedObject | null => {
-  const declaration = symbol.declarations![0];
+  let resolvedSymbol = symbol;
+  if (ts.isExportSpecifier(symbol.declarations![0]!)) {
+    const sourceFile = project.checker.getSymbolAtLocation(
+      symbol.declarations![0].parent.parent.moduleSpecifier!,
+    );
+    const sourceFileDeclaration = sourceFile?.declarations?.find((el) =>
+      ts.isSourceFile(el),
+    ) as ts.SourceFile;
+    const exports = project.checker.getExportsOfModule(
+      project.checker.getSymbolAtLocation(sourceFileDeclaration)!,
+    );
+    resolvedSymbol = exports.find((el) => el.name === symbol.name)!;
+  }
 
+  const declaration = resolvedSymbol.declarations![0];
   if (!ts.isInterfaceDeclaration(declaration) && !ts.isExportSpecifier(declaration)) {
     return null;
   }
@@ -83,9 +96,9 @@ const parseInterfaceSymbol = (symbol: ts.Symbol, project: Project): ParsedObject
 
   return {
     name: symbol.name,
-    description: getSymbolDescription(symbol, project),
+    description: getSymbolDescription(resolvedSymbol, project),
     properties,
-    tags: getSymbolJSDocTags(symbol),
+    tags: getSymbolJSDocTags(resolvedSymbol),
     project: project.name,
   };
 };
@@ -261,7 +274,7 @@ export default function buildInterfacesDocumentation(options: BuildInterfacesDoc
     if (gridApiExtendsFrom.includes(parsedInterface.name)) {
       const json = {
         name: parsedInterface.name,
-        description: linkify(getSymbolDescription(symbol, project), documentedInterfaces, 'html'),
+        description: linkify(parsedInterface.description, documentedInterfaces, 'html'),
         properties: parsedInterface.properties.map((property) => ({
           name: property.name,
           description: renderMarkdownInline(
@@ -276,7 +289,7 @@ export default function buildInterfacesDocumentation(options: BuildInterfacesDoc
         project,
       );
       // eslint-disable-next-line no-console
-      console.log('Built JSON file for', parsedInterface.name);
+      // console.log('Built JSON file for', parsedInterface.name);
     } else {
       const markdown = generateMarkdown(parsedInterface, projects, documentedInterfaces);
       writePrettifiedFile(path.resolve(outputDirectory, `${slug}.md`), markdown, project);
@@ -295,7 +308,7 @@ export default function buildInterfacesDocumentation(options: BuildInterfacesDoc
       );
 
       // eslint-disable-next-line no-console
-      console.log('Built API docs for', parsedInterface.name);
+      // console.log('Built API docs for', parsedInterface.name);
     }
   });
 

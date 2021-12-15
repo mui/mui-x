@@ -1,6 +1,6 @@
 {
   "name": "GridPaginationApi",
-  "description": "",
+  "description": "The pagination API interface that is available in the grid apiRef.",
   "properties": [
     {
       "name": "setPage",
