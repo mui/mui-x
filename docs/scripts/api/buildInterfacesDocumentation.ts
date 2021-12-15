@@ -137,7 +137,7 @@ function generateMarkdownFromProperties(
 function generateImportStatement(objects: ParsedObject[], projects: Projects) {
   let imports = '```js\n';
 
-  const projectImports = Object.values(projects).map((project) => {
+  const projectImports = Array.from(projects.values()).map((project) => {
     const objectsInProject = objects.filter((object) => !!project.exports[object.name]);
 
     return `import {${objectsInProject.map((object) => object.name)}} from '@mui/${project.name}'`;
