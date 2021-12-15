@@ -10,7 +10,7 @@ title: Data Grid - State
 
 Some state keys can be initialized with the `initialState` prop.
 
-> ⚠️ The `initialState` is only used to set the initial value of the state, the grid will not react if you change the `initialState` value later on.
+> ⚠️ The `initialState` can only be used to set the initial value of the state, the grid will not react if you change the `initialState` value later on.
 >
 > If you need to fully control some models, use the control props instead (e.g. `prop.filterModel` or `prop.sortModel`).
 > More information on each feature documentation page.
@@ -43,7 +43,7 @@ If you want to access sole state value in the render of your components, you can
 const pageSize = useGridSelector(apiRef, gridPageSizeSelector);
 ```
 
-> ⚠️ This hook can only be used on component renderer inside the context of the grid. Otherwise, you will have an error saying that the state is not initialized during the first render.
+> ⚠️ This hook can only be used inside the context of the grid. Otherwise, you will have an error saying that the state is not initialized during the first render.
 
 {{"demo": "pages/components/data-grid/state/UseGridSelector.js", "bg": "inline", "hideToolbar": true}}
 
