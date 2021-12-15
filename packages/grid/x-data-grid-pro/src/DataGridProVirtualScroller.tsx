@@ -25,6 +25,10 @@ export const filterColumns = (pinnedColumns: GridPinnedColumns, columns: string[
     return [[], []];
   }
 
+  if (pinnedColumns.left?.length === 0 && pinnedColumns.right?.length === 0) {
+    return [[], []];
+  }
+
   const filter = (newPinnedColumns: any[] | undefined, remaningColumns: string[]) => {
     if (!Array.isArray(newPinnedColumns)) {
       return [];
