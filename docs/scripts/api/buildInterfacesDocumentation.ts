@@ -1,17 +1,31 @@
-import * as TypeDoc from 'typedoc';
+import * as ts from 'typescript';
 import kebabCase from 'lodash/kebabCase';
 import path from 'path';
 import { renderInline as renderMarkdownInline } from '@material-ui/monorepo/docs/packages/markdown';
 import {
-  DeclarationContext,
   escapeCell,
-  generateSignatureStr,
-  generateTypeStr,
-  isDeclarationReflection,
-  isReflectionType,
+  getSymbolDescription,
+  getSymbolJSDocTags,
   linkify,
+  Project,
+  stringifySymbol,
   writePrettifiedFile,
 } from './utils';
+
+interface ParsedObject {
+  name: string;
+  description?: string;
+  properties: ParsedProperty[];
+}
+
+interface ParsedProperty {
+  name: string;
+  description: string;
+  tags: { [tagName: string]: ts.JSDocTagInfo };
+  isOptional: boolean;
+  symbol: ts.Symbol;
+  typeStr: string;
+}
 
 const INTERFACES_WITH_DEDICATED_PAGES = [
   'GridApi',
@@ -30,16 +44,24 @@ const INTERFACES_WITH_DEDICATED_PAGES = [
   'GridScrollApi',
   'GridEditRowApi',
   'GridColumnPinningApi',
-  'GridEvents',
 ];
 
-export function generateProperties(
-  declaration: DeclarationContext,
+const parseProperty = (propertySymbol: ts.Symbol, project: Project): ParsedProperty => ({
+  name: propertySymbol.name,
+  description: getSymbolDescription(propertySymbol, project),
+  tags: getSymbolJSDocTags(propertySymbol),
+  symbol: propertySymbol,
+  isOptional: !!propertySymbol.declarations?.find(ts.isPropertySignature)?.questionToken,
+  typeStr: stringifySymbol(propertySymbol, project),
+});
+
+function generateMarkdownFromProperties(
+  object: ParsedObject,
   documentedInterfaces: Map<string, boolean>,
 ) {
-  const hasDefaultValue = declaration.properties.reduce((acc, propertyReflection) => {
-    return acc || !!propertyReflection.comment?.hasTag('default');
-  }, false);
+  const hasDefaultValue = object.properties.some((property) => {
+    return property.tags.default;
+  });
 
   const headers = hasDefaultValue
     ? `
@@ -51,224 +73,153 @@ export function generateProperties(
 
   let text = `## Properties\n\n${headers}\n`;
 
-  declaration.properties.forEach((propertyReflection) => {
-    let name = propertyReflection.name;
-    const type = propertyReflection!.type;
-    const signature = propertyReflection.signatures ? propertyReflection.signatures[0] : null;
-    const comment = signature?.comment || propertyReflection.comment;
-    const description = linkify(comment?.shortText, documentedInterfaces, 'markdown');
+  object.properties.forEach((property) => {
+    const defaultValue = property.tags.default?.text?.[0].text;
 
-    if (propertyReflection.flags.isOptional) {
-      name = `<span class="prop-name optional">${name}<sup><abbr title="optional">?</abbr></sup></span>`;
-    } else {
-      name = `<span class="prop-name">${name}</span>`;
-    }
+    const formattedName = property.isOptional
+      ? `<span class="prop-name optional">${property.name}<sup><abbr title="optional">?</abbr></sup></span>`
+      : `<span class="prop-name">${property.name}</span>`;
 
-    let defaultValue = '';
-    const defaultTag = comment && comment.getTag('default');
-    if (defaultTag) {
-      defaultValue = `<span class="prop-default">${escapeCell(defaultTag.text)}</span>`;
-    }
+    const formattedType = `<span class="prop-type">${escapeCell(property.typeStr)}</span>`;
 
-    let typeFormatted = '<span class="prop-type">';
-    if (signature) {
-      typeFormatted += escapeCell(generateSignatureStr(signature));
-    } else if (type) {
-      typeFormatted += escapeCell(generateTypeStr(type));
-    }
-    typeFormatted += '</span>';
+    const formattedDefaultValue =
+      defaultValue == null ? '' : `<span class="prop-default">${escapeCell(defaultValue)}</span>`;
+
+    const formattedDescription = escapeCell(
+      linkify(property.description, documentedInterfaces, 'markdown'),
+    );
 
     if (hasDefaultValue) {
-      text += `| ${name} | ${typeFormatted} | ${defaultValue} | ${escapeCell(description)} |\n`;
+      text += `| ${formattedName} | ${formattedType} | ${formattedDefaultValue} | ${formattedDescription} |\n`;
     } else {
-      text += `| ${name} | ${typeFormatted} | ${escapeCell(description)} |\n`;
+      text += `| ${formattedName} | ${formattedType} | ${formattedDescription} |\n`;
     }
   });
 
   return text;
 }
 
-function generateImportStatement(declaration: DeclarationContext) {
+function generateImportStatement(object: ParsedObject) {
   // TODO: Check if interface was exported
-  if (declaration.name === 'GridApi') {
+  if (object.name === 'GridApi') {
     return `\`\`\`js
-import { ${declaration.name} } from '@mui/x-data-grid-pro';
+import { ${object.name} } from '@mui/x-data-grid-pro';
 \`\`\``;
   }
 
   return `\`\`\`js
-import { ${declaration.name} } from '@mui/x-data-grid-pro';
+import { ${object.name} } from '@mui/x-data-grid-pro';
 // or
-import { ${declaration.name} } from '@mui/x-data-grid';
+import { ${object.name} } from '@mui/x-data-grid';
 \`\`\``;
 }
 
-function generateMarkdown(
-  declaration: DeclarationContext,
-  documentedInterfaces: Map<string, boolean>,
-) {
+function generateMarkdown(object: ParsedObject, documentedInterfaces: Map<string, boolean>) {
   return [
-    `# ${declaration.name} Interface`,
+    `# ${object.name} Interface`,
     '',
-    `<p class="description">${linkify(declaration.description, documentedInterfaces, 'html')}</p>`,
+    `<p class="description">${linkify(object.description, documentedInterfaces, 'html')}</p>`,
     '',
     '## Import',
     '',
-    generateImportStatement(declaration),
+    generateImportStatement(object),
     '',
-    generateProperties(declaration, documentedInterfaces),
+    generateMarkdownFromProperties(object, documentedInterfaces),
   ].join('\n');
 }
 
-function findProperties(reflection: TypeDoc.DeclarationReflection) {
-  const properties = (reflection.children ?? []).filter((child) =>
-    child.kindOf([TypeDoc.ReflectionKind.Property, TypeDoc.ReflectionKind.Method]),
-  );
-  return properties.sort((a, b) => a.name.localeCompare(b.name));
-}
-
-function extractEvents(
-  project: TypeDoc.ProjectReflection,
-  eventsObject: TypeDoc.DeclarationReflection,
-  documentedInterfaces: Map<string, boolean>,
-) {
-  const events: { name: string; description: string; params?: string; event?: string }[] = [];
-  const eventLookupType = project.findReflectionByName(
-    'GridEventLookup',
-  )! as TypeDoc.DeclarationReflection;
-  const allEvents = eventsObject.children!;
-
-  const eventLookup: { [eventName: string]: any } = {};
-  eventLookupType.children?.forEach((event) => {
-    const eventParams = {};
-    if (event.type && isReflectionType(event.type)) {
-      event.type.declaration.children?.forEach((eventProperty) => {
-        if (eventProperty.type) {
-          eventParams[eventProperty.name] = generateTypeStr(eventProperty.type);
-        }
-      });
-    }
-
-    eventLookup[event.name] = eventParams;
-  });
-
-  allEvents.forEach((event) => {
-    const description = linkify(event.comment?.shortText, documentedInterfaces, 'html');
-    const eventProperties = eventLookup[event.escapedName!];
-
-    events.push({
-      name: event.escapedName!,
-      description: renderMarkdownInline(description),
-      params: linkify(eventProperties.params, documentedInterfaces, 'html'),
-      event: `MuiEvent<${eventProperties.event ?? '{}'}>`,
-    });
-  });
-
-  return events.sort((a, b) => a.name.localeCompare(b.name));
-}
-
 interface BuildInterfacesDocumentationOptions {
-  project: TypeDoc.ProjectReflection;
-  prettierConfigPath: string;
-  workspaceRoot: string;
+  project: Project;
   outputDirectory: string;
 }
 
 export default function buildInterfacesDocumentation(options: BuildInterfacesDocumentationOptions) {
-  const { project, prettierConfigPath, workspaceRoot, outputDirectory } = options;
+  const { project, outputDirectory } = options;
 
-  const reflectionsToDocument = project.children!.filter(
-    (reflection) =>
-      isDeclarationReflection(reflection) &&
-      [
-        TypeDoc.ReflectionKind.TypeAlias,
-        TypeDoc.ReflectionKind.Interface,
-        TypeDoc.ReflectionKind.Enum,
-      ].includes(reflection.kind) &&
-      INTERFACES_WITH_DEDICATED_PAGES.includes(reflection.name!),
+  const documentedInterfaces = new Map<string, true>();
+  INTERFACES_WITH_DEDICATED_PAGES.forEach((name) => {
+    const symbol = project.exports[name];
+    if (!symbol) {
+      throw new Error(`Can't find symbol for ${name}`);
+    }
+
+    documentedInterfaces.set(name, true);
+  });
+
+  const gridApiExtendsFrom: string[] = (
+    (project.exports.GridApi.declarations![0] as ts.InterfaceDeclaration).heritageClauses ?? []
+  ).flatMap((clause) =>
+    clause.types
+      .map((type) => type.expression)
+      .filter(ts.isIdentifier)
+      .map((expression) => expression.escapedText),
   );
 
-  const documentedInterfaces = new Map(
-    reflectionsToDocument.map((reflection) => [reflection.name, true]),
-  );
+  documentedInterfaces.forEach((_, interfaceName) => {
+    const interfaceSymbol = project.exports[interfaceName];
+    const interfaceDeclaration = interfaceSymbol.declarations![0];
 
-  reflectionsToDocument.forEach((reflection) => {
-    if (!documentedInterfaces.get(reflection.name)) {
+    if (!ts.isInterfaceDeclaration(interfaceDeclaration)) {
       return;
     }
 
-    const context: DeclarationContext = {
-      name: reflection.name,
-      description: reflection.comment?.shortText,
-      properties: findProperties(reflection),
+    const interfaceType = project.checker.getTypeAtLocation(interfaceDeclaration.name);
+    const properties = interfaceType
+      .getProperties()
+      .map((property) => parseProperty(property, project))
+      .filter((property) => !property.tags.ignore)
+      .sort((a, b) => a.name.localeCompare(b.name));
+
+    const object: ParsedObject = {
+      name: interfaceSymbol.name,
+      description: getSymbolDescription(interfaceSymbol, project),
+      properties,
     };
 
-    const slug = kebabCase(reflection!.name);
-    const markdown = generateMarkdown(context, documentedInterfaces);
+    const slug = kebabCase(object.name);
 
-    if (reflection.extendedBy && reflection.extendedBy[0].name === 'GridApi') {
+    if (gridApiExtendsFrom.includes(object.name)) {
       const json = {
-        name: reflection.name,
-        description: linkify(reflection.comment?.shortText, documentedInterfaces, 'html'),
-        properties: context.properties.map((propertyReflection) => {
-          const signature = propertyReflection.signatures ? propertyReflection.signatures[0] : null;
-          const comment = signature?.comment || propertyReflection.comment;
-          const description = linkify(comment?.shortText, documentedInterfaces, 'html');
-
-          let typeStr: string = '';
-          if (signature) {
-            typeStr = generateSignatureStr(signature);
-          } else if (propertyReflection.type) {
-            typeStr = generateTypeStr(propertyReflection.type);
-          }
-
-          return {
-            name: propertyReflection.name,
-            description: renderMarkdownInline(description),
-            type: typeStr,
-          };
-        }),
+        name: object.name,
+        description: linkify(
+          getSymbolDescription(interfaceSymbol, project),
+          documentedInterfaces,
+          'html',
+        ),
+        properties: properties.map((property) => ({
+          name: property.name,
+          description: renderMarkdownInline(
+            linkify(property.description, documentedInterfaces, 'html'),
+          ),
+          type: property.typeStr,
+        })),
       };
       writePrettifiedFile(
         path.resolve(outputDirectory, `${slug}.json`),
         JSON.stringify(json),
-        prettierConfigPath,
+        project,
       );
       // eslint-disable-next-line no-console
-      console.log('Built JSON file for', context.name);
-    } else if (reflection.name === 'GridEvents') {
-      const events = extractEvents(project, reflection, documentedInterfaces);
-
-      writePrettifiedFile(
-        path.resolve(workspaceRoot, 'docs/src/pages/components/data-grid/events/events.json'),
-        JSON.stringify(events),
-        prettierConfigPath,
-      );
-
-      // eslint-disable-next-line no-console
-      console.log('Built events file');
+      console.log('Built JSON file for', object.name);
     } else {
-      writePrettifiedFile(
-        path.resolve(outputDirectory, `${slug}.md`),
-        markdown,
-        prettierConfigPath,
-      );
+      const markdown = generateMarkdown(object, documentedInterfaces);
+      writePrettifiedFile(path.resolve(outputDirectory, `${slug}.md`), markdown, project);
 
       writePrettifiedFile(
         path.resolve(outputDirectory, `${slug}.js`),
         `import * as React from 'react';
-import MarkdownDocs from '@material-ui/monorepo/docs/src/modules/components/MarkdownDocs';
-import { demos, docs, demoComponents } from './${slug}.md?@mui/markdown';
+    import MarkdownDocs from '@material-ui/monorepo/docs/src/modules/components/MarkdownDocs';
+    import { demos, docs, demoComponents } from './${slug}.md?@mui/markdown';
 
-export default function Page() {
-  return <MarkdownDocs demos={demos} docs={docs} demoComponents={demoComponents} />;
-}        
-    `,
-        prettierConfigPath,
+    export default function Page() {
+      return <MarkdownDocs demos={demos} docs={docs} demoComponents={demoComponents} />;
+    }
+        `,
+        project,
       );
 
       // eslint-disable-next-line no-console
-      console.log('Built API docs for', context.name);
+      console.log('Built API docs for', object.name);
     }
   });
 
