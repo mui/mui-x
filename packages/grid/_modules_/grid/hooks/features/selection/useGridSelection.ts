@@ -44,7 +44,6 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 /**
  * @requires useGridRows (state, method)
  * @requires useGridParamsApi (method)
- * @requires useGridControlState (method)
  */
 export const useGridSelection = (
   apiRef: GridApiRef,
