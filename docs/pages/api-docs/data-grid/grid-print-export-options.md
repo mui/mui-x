@@ -5,7 +5,9 @@
 ## Import
 
 ```js
-
+import { GridPrintExportOptions } from '@mui/x-data-grid-pro';
+// or
+import { GridPrintExportOptions } from '@mui/x-data-grid';
 ```
 
 ## Properties
