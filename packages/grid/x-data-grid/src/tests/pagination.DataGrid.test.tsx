@@ -8,7 +8,7 @@ import {
   GridLinkOperator,
   GridRowsProp,
 } from '@mui/x-data-grid';
-import { getColumnValues, getRows } from 'test/utils/helperFn';
+import { getCell, getColumnValues, getRows } from 'test/utils/helperFn';
 import { spy } from 'sinon';
 import { useData } from 'packages/storybook/src/hooks/useData';
 
@@ -353,6 +353,19 @@ describe('<DataGrid /> - Pagination', () => {
         render(<BaselineTestCase rowsPerPageOptions={[25, 50]} />);
         // @ts-expect-error need to migrate helpers to TypeScript
       }).toWarnDev([`MUI: The page size \`100\` is not preset in the \`rowsPerPageOptions\``]);
+    });
+
+    it('should update the pageCount state when updating the pageSize prop with a lower value', () => {
+      const { setProps } = render(
+        <BaselineTestCase rowsPerPageOptions={[10, 20]} pageSize={20} disableVirtualization />,
+      );
+      expect(getColumnValues(0)).to.have.length(20);
+      setProps({ pageSize: 10 });
+      expect(getColumnValues(0)).to.have.length(10);
+      expect(getCell(0, 0)).to.not.equal(null);
+      fireEvent.click(screen.getByRole('button', { name: /next page/i }));
+      expect(getColumnValues(0)).to.have.length(10);
+      expect(getCell(10, 0)).to.not.equal(null);
     });
   });
 
