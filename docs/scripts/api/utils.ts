@@ -5,12 +5,17 @@ import * as fse from 'fs-extra';
 import * as ts from 'typescript';
 
 export interface Project {
-  name: string;
+  name: keyof Projects;
   exports: Record<string, ts.Symbol>;
   program: ts.Program;
   checker: ts.TypeChecker;
   workspaceRoot: string;
   prettierConfigPath: string;
+}
+
+export interface Projects {
+  'x-data-grid': Project;
+  'x-data-grid-pro': Project;
 }
 
 export const getSymbolDescription = (symbol: ts.Symbol, project: Project) =>

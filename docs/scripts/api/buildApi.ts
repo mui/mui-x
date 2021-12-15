@@ -6,12 +6,12 @@ import buildComponentsDocumentation from './buildComponentsDocumentation';
 import buildInterfacesDocumentation from './buildInterfacesDocumentation';
 import buildExportsDocumentation from './buildExportsDocumentation';
 import buildEventsDocumentation from './buildEventsDocumentation';
-import { Project } from './utils';
+import { Project, Projects } from './utils';
 
 const workspaceRoot = path.resolve(__dirname, '../../../');
 
 interface CreateProgramOptions {
-  name: string;
+  name: keyof Projects;
   rootPath: string;
   tsConfigPath: string;
   entryPointPath: string;
@@ -68,8 +68,13 @@ async function run(argv: { outputDirectory?: string }) {
     entryPointPath: path.join(workspaceRoot, 'packages/grid/x-data-grid-pro/src/index.ts'),
   });
 
+  const projects: Projects = {
+    'x-data-grid': dataGridProject,
+    'x-data-grid-pro': dataGridProProject,
+  };
+
   const documentedInterfaces = buildInterfacesDocumentation({
-    project: dataGridProject,
+    projects,
     outputDirectory,
   });
 

@@ -5,9 +5,9 @@
 ## Import
 
 ```js
-import { GridRowParams } from '@mui/x-data-grid-pro';
-// or
 import { GridRowParams } from '@mui/x-data-grid';
+// or
+import { GridRowParams } from '@mui/x-data-grid-pro';
 ```
 
 ## Properties

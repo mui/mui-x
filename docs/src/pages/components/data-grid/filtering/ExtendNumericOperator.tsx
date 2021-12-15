@@ -4,7 +4,7 @@ import Rating from '@mui/material/Rating';
 import {
   DataGrid,
   GridFilterInputValueProps,
-  getGridNumericColumnOperators,
+  getGridNumericOperators,
   GridFilterModel,
 } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
@@ -59,12 +59,10 @@ export default function ExtendNumericOperator() {
     const ratingColumn = columns.find((column) => column.field === 'rating')!;
     const ratingColIndex = columns.findIndex((col) => col.field === 'rating');
 
-    const ratingFilterOperators = getGridNumericColumnOperators().map(
-      (operator) => ({
-        ...operator,
-        InputComponent: RatingInputValue,
-      }),
-    );
+    const ratingFilterOperators = getGridNumericOperators().map((operator) => ({
+      ...operator,
+      InputComponent: RatingInputValue,
+    }));
     columns[ratingColIndex] = {
       ...ratingColumn,
       filterOperators: ratingFilterOperators,

@@ -10,7 +10,7 @@ const parseNumericValue = (value: string | number | null) => {
   return Number(value);
 };
 
-export const getGridNumericColumnOperators = (): GridFilterOperator[] => [
+export const getGridNumericOperators = (): GridFilterOperator[] => [
   {
     label: '=',
     value: '=',
@@ -134,3 +134,8 @@ export const getGridNumericColumnOperators = (): GridFilterOperator[] => [
     },
   },
 ];
+
+/**
+ * @deprecated Use `getGridNumericOperators` instead.
+ */
+export const getGridNumericColumnOperators = getGridNumericOperators;
