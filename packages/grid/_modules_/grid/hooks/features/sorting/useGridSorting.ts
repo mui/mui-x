@@ -19,7 +19,6 @@ import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { allGridColumnsSelector } from '../columns/gridColumnsSelector';
-import { useGridState } from '../../utils/useGridState';
 import {
   gridSortedRowEntriesSelector,
   gridSortedRowIdsSelector,
@@ -63,8 +62,6 @@ export const useGridSorting = (
       sortedRows: [],
     },
   }));
-
-  const [, setGridState, forceUpdate] = useGridState(apiRef);
 
   apiRef.current.unstable_updateControlState({
     stateId: 'sortModel',
@@ -183,14 +180,14 @@ export const useGridSorting = (
   const applySorting = React.useCallback<GridSortApi['applySorting']>(() => {
     if (props.sortingMode === GridFeatureModeConstant.server) {
       logger.debug('Skipping sorting rows as sortingMode = server');
-      setGridState((state) => ({
+      apiRef.current.setState((state) => ({
         ...state,
         sorting: { ...state.sorting, sortedRows: gridRowIdsSelector(state) },
       }));
       return;
     }
 
-    setGridState((state) => {
+    apiRef.current.setState((state) => {
       const rowGroupingName = gridRowGroupingNameSelector(state);
       const sortingMethod = sortingMethodCollectionRef.current[rowGroupingName];
       if (!sortingMethod) {
@@ -222,12 +219,11 @@ export const useGridSorting = (
         sorting: { ...state.sorting, sortedRows },
       };
     });
-    forceUpdate();
+    apiRef.current.forceUpdate();
   }, [
     logger,
     getSortCellParams,
-    setGridState,
-    forceUpdate,
+    apiRef,
     buildComparatorList,
     comparatorListAggregate,
     props.sortingMode,
@@ -238,12 +234,15 @@ export const useGridSorting = (
       const currentModel = gridSortModelSelector(apiRef.current.state);
       if (currentModel !== model) {
         logger.debug(`Setting sort model`);
-        setGridState((state) => ({ ...state, sorting: { ...state.sorting, sortModel: model } }));
-        forceUpdate();
+        apiRef.current.setState((state) => ({
+          ...state,
+          sorting: { ...state.sorting, sortModel: model },
+        }));
+        apiRef.current.forceUpdate();
         apiRef.current.applySorting();
       }
     },
-    [apiRef, setGridState, forceUpdate, logger],
+    [apiRef, logger],
   );
 
   const sortColumn = React.useCallback<GridSortApi['sortColumn']>(
