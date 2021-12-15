@@ -20,7 +20,8 @@ By default, each page contains 100 rows. The user can change the size of the pag
 ### Controlled page size
 
 Use the `pageSize` prop to control the size of the pages.
-You can use the `onPageSizeChange` to listen to changes to the page size and update to prop accordingly.
+
+You can use the `onPageSizeChange` to listen to changes to the page size and update the prop accordingly.
 
 {{"demo": "pages/components/data-grid/pagination/PageSizeControlled.js", "bg": "inline"}}
 
@@ -41,7 +42,8 @@ You can configure the page size the user can choose from with the `rowsPerPageOp
 ## Controlled page
 
 Use the `page` prop to control the size of the pages.
-You can use the `onPageChange` to listen to changes to the page size and update to prop accordingly.
+
+You can use the `onPageChange` to listen to changes to the page size and update the prop accordingly.
 
 {{"demo": "pages/components/data-grid/pagination/PageControlled.js", "bg": "inline"}}
 
