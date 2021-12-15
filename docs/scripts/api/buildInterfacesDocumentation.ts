@@ -69,17 +69,22 @@ const parseProperty = (propertySymbol: ts.Symbol, project: Project): ParsedPrope
 
 const parseInterfaceSymbol = (symbol: ts.Symbol, project: Project): ParsedObject | null => {
   let resolvedSymbol = symbol;
-  if (ts.isExportSpecifier(symbol.declarations![0]!)) {
-    const sourceFile = project.checker.getSymbolAtLocation(
-      symbol.declarations![0].parent.parent.moduleSpecifier!,
-    );
-    const sourceFileDeclaration = sourceFile?.declarations?.find((el) =>
-      ts.isSourceFile(el),
-    ) as ts.SourceFile;
-    const exports = project.checker.getExportsOfModule(
-      project.checker.getSymbolAtLocation(sourceFileDeclaration)!,
-    );
-    resolvedSymbol = exports.find((el) => el.name === symbol.name)!;
+
+  // If the export is done using `export type { XXX } from './module'`
+  // We must go to the root declaration
+  while (resolvedSymbol.declarations && ts.isExportSpecifier(resolvedSymbol.declarations[0])) {
+    if (ts.isExportSpecifier(symbol.declarations![0]!)) {
+      const sourceFile = project.checker.getSymbolAtLocation(
+        symbol.declarations![0].parent.parent.moduleSpecifier!,
+      );
+      const sourceFileDeclaration = sourceFile?.declarations?.find((el) =>
+        ts.isSourceFile(el),
+      ) as ts.SourceFile;
+      const exports = project.checker.getExportsOfModule(
+        project.checker.getSymbolAtLocation(sourceFileDeclaration)!,
+      );
+      resolvedSymbol = exports.find((el) => el.name === symbol.name)!;
+    }
   }
 
   const declaration = resolvedSymbol.declarations![0];
@@ -289,7 +294,7 @@ export default function buildInterfacesDocumentation(options: BuildInterfacesDoc
         project,
       );
       // eslint-disable-next-line no-console
-      // console.log('Built JSON file for', parsedInterface.name);
+      console.log('Built JSON file for', parsedInterface.name);
     } else {
       const markdown = generateMarkdown(parsedInterface, projects, documentedInterfaces);
       writePrettifiedFile(path.resolve(outputDirectory, `${slug}.md`), markdown, project);
@@ -308,7 +313,7 @@ export default function buildInterfacesDocumentation(options: BuildInterfacesDoc
       );
 
       // eslint-disable-next-line no-console
-      // console.log('Built API docs for', parsedInterface.name);
+      console.log('Built API docs for', parsedInterface.name);
     }
   });
 
