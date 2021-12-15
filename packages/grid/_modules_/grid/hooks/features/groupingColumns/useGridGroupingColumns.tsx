@@ -41,7 +41,7 @@ import { sortRowTree } from '../../../utils/tree/sortRowTree';
 import { gridFilteredDescendantCountLookupSelector } from '../filter';
 import { useGridStateInit } from '../../utils/useGridStateInit';
 import { GridGroupingColumnsApi, GridGroupingColumnsModel } from './gridGroupingColumnsInterfaces';
-import { useGridApiMethod, useGridState } from '../../utils';
+import { useGridApiMethod } from '../../utils';
 import { gridColumnLookupSelector } from '../columns';
 import { GridGroupingColumnsMenuItems } from '../../../components/menu/columnMenu/GridGroupingColumnsMenuItems';
 
@@ -71,8 +71,6 @@ export const useGridGroupingColumns = (
       model: props.groupingColumnsModel ?? props.initialState?.groupingColumns?.model ?? [],
     },
   }));
-
-  const [, setGridState, forceUpdate] = useGridState(apiRef);
 
   apiRef.current.unstable_updateControlState({
     stateId: 'groupingColumns',
@@ -348,15 +346,15 @@ export const useGridGroupingColumns = (
     (model) => {
       const currentModel = gridGroupingColumnsModelSelector(apiRef.current.state);
       if (currentModel !== model) {
-        setGridState((state) => ({
+        apiRef.current.setState((state) => ({
           ...state,
           groupingColumns: { ...state.groupingColumns, model },
         }));
         updateRowGrouping();
-        forceUpdate();
+        apiRef.current.forceUpdate();
       }
     },
-    [apiRef, setGridState, forceUpdate, updateRowGrouping],
+    [apiRef, updateRowGrouping],
   );
 
   const addGroupingCriteria = React.useCallback<GridGroupingColumnsApi['addGroupingCriteria']>(
