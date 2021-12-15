@@ -26,7 +26,7 @@ export function useGridControlState(apiRef: GridApiRef, props: GridComponentProp
   >(
     (newState) => {
       let ignoreSetState = false;
-      const updatedStateIds: string[] = [];
+      const updatedStateIds: { stateId: string; hasPropChanged: boolean }[] = [];
       const controlStateMap = controlStateMapRef.current!;
 
       Object.keys(controlStateMap).forEach((stateId) => {
@@ -38,9 +38,10 @@ export function useGridControlState(apiRef: GridApiRef, props: GridComponentProp
           return;
         }
 
-        if (newSubState !== controlState.propModel) {
-          updatedStateIds.push(controlState.stateId);
-        }
+        updatedStateIds.push({
+          stateId: controlState.stateId,
+          hasPropChanged: newSubState !== controlState.propModel,
+        });
 
         // The state is controlled, the prop should always win
         if (controlState.propModel !== undefined && newSubState !== controlState.propModel) {
@@ -64,17 +65,19 @@ export function useGridControlState(apiRef: GridApiRef, props: GridComponentProp
       return {
         ignoreSetState,
         postUpdate: () => {
-          updatedStateIds.forEach((stateId) => {
+          updatedStateIds.forEach(({ stateId, hasPropChanged }) => {
             const controlState = controlStateMap[stateId];
             const model = controlStateMap[stateId].stateSelector(newState);
 
-            if (controlState.propOnChange) {
+            if (controlState.propOnChange && hasPropChanged) {
               const details =
                 props.signature === GridSignature.DataGridPro ? { api: apiRef.current } : {};
               controlState.propOnChange(model, details);
             }
 
-            apiRef.current.publishEvent(controlState.changeEvent, model);
+            if (!ignoreSetState) {
+              apiRef.current.publishEvent(controlState.changeEvent, model);
+            }
           });
         },
       };
