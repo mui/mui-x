@@ -108,9 +108,9 @@ const deDEGrid: Partial<GridLocaleText> = {
   actionsCellMore: 'Mehr',
 
   // Column pinning text
-  // pinToLeft: 'Pin to left',
-  // pinToRight: 'Pin to right',
-  // unpin: 'Unpin',
+  pinToLeft: 'Links anheften',
+  pinToRight: 'Rechts anheften',
+  unpin: 'Loslösen',
 
   // Tree Data
   treeDataGroupingHeaderName: 'Gruppe',
