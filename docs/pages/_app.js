@@ -44,12 +44,13 @@ ponyfillGlobal.muiDocConfig = {
 
     if (newDeps['@mui/x-data-grid-pro'] || newDeps['@mui/x-data-grid']) {
       newDeps['@mui/material'] = versions['@mui/material'];
-      newDeps['@mui/styles'] = versions['@mui/styles'];
     }
 
     if (newDeps['@mui/x-data-grid-generator']) {
       newDeps['@mui/material'] = versions['@mui/material'];
       newDeps['@mui/icons-material'] = versions['@mui/icons-material'];
+      newDeps['@mui/x-data-grid'] = versions['@mui/x-data-grid']; // TS types are imported from @mui/x-data-grid
+      newDeps['@mui/styles'] = versions['@mui/styles'];
     }
 
     return newDeps;

@@ -187,6 +187,7 @@ export const GridRootStyles = styled('div', {
     [`& .${gridClasses.row}`]: {
       display: 'flex',
       width: 'fit-content',
+      breakInside: 'avoid', // Avoid the row to be broken in two different print pages.
       '&:hover, &.Mui-hovered': {
         backgroundColor: theme.palette.action.hover,
         // Reset on touch devices, it doesn't add specificity

@@ -65,8 +65,11 @@ export const useGridPage = (
     changeEvent: GridEvents.pageChange,
   });
 
+  /**
+   * API METHODS
+   */
   const setPage = React.useCallback(
-    (page: number) => {
+    (page) => {
       logger.debug(`Setting page to ${page}`);
 
       setGridState((state) => ({
@@ -81,25 +84,15 @@ export const useGridPage = (
     [setGridState, forceUpdate, logger],
   );
 
-  React.useEffect(() => {
-    setGridState((state) => {
-      const rowCount = props.rowCount !== undefined ? props.rowCount : visibleTopLevelRowCount;
-      const pageCount = getPageCount(rowCount, state.pagination.pageSize);
-      const page = props.page == null ? state.pagination.page : props.page;
+  const pageApi: GridPageApi = {
+    setPage,
+  };
 
-      return {
-        ...state,
-        pagination: applyValidPage({
-          ...state.pagination,
-          page,
-          rowCount,
-          pageCount,
-        }),
-      };
-    });
-    forceUpdate();
-  }, [setGridState, forceUpdate, visibleTopLevelRowCount, props.rowCount, props.page, apiRef]);
+  useGridApiMethod(apiRef, pageApi, 'GridPageApi');
 
+  /**
+   * EVENTS
+   */
   const handlePageSizeChange: GridEventListener<GridEvents.pageSizeChange> = (pageSize) => {
     setGridState((state) => {
       const pageCount = getPageCount(state.pagination.rowCount, pageSize);
@@ -119,9 +112,25 @@ export const useGridPage = (
 
   useGridApiEventHandler(apiRef, GridEvents.pageSizeChange, handlePageSizeChange);
 
-  const pageApi: GridPageApi = {
-    setPage,
-  };
+  /**
+   * EFFECTS
+   */
+  React.useEffect(() => {
+    setGridState((state) => {
+      const rowCount = props.rowCount !== undefined ? props.rowCount : visibleTopLevelRowCount;
+      const pageCount = getPageCount(rowCount, state.pagination.pageSize);
+      const page = props.page == null ? state.pagination.page : props.page;
 
-  useGridApiMethod(apiRef, pageApi, 'GridPageApi');
+      return {
+        ...state,
+        pagination: applyValidPage({
+          ...state.pagination,
+          page,
+          rowCount,
+          pageCount,
+        }),
+      };
+    });
+    forceUpdate();
+  }, [setGridState, forceUpdate, visibleTopLevelRowCount, props.rowCount, props.page, apiRef]);
 };
