@@ -12,11 +12,13 @@ import {
   Projects,
   stringifySymbol,
   writePrettifiedFile,
+  DocumentedInterfaces,
+  ProjectNames,
 } from './utils';
 
 interface ParsedObject {
   name: string;
-  project: keyof Projects;
+  project: ProjectNames;
   description?: string;
   properties: ParsedProperty[];
   tags: { [tagName: string]: ts.JSDocTagInfo };
@@ -90,7 +92,7 @@ const parseInterfaceSymbol = (symbol: ts.Symbol, project: Project): ParsedObject
 
 function generateMarkdownFromProperties(
   object: ParsedObject,
-  documentedInterfaces: Map<string, boolean>,
+  documentedInterfaces: DocumentedInterfaces,
 ) {
   const hasDefaultValue = object.properties.some((property) => {
     return property.tags.default;
@@ -155,9 +157,9 @@ function generateImportStatement(objects: ParsedObject[], projects: Projects) {
 function generateMarkdown(
   object: ParsedObject,
   projects: Projects,
-  documentedInterfaces: Map<string, boolean>,
+  documentedInterfaces: DocumentedInterfaces,
 ) {
-  const project = projects[object.project];
+  const project = projects.get(object.project)!;
   const inlinedInterfaces =
     object.tags.inline?.text?.[0].text
       .split(',')
@@ -205,26 +207,23 @@ interface BuildInterfacesDocumentationOptions {
 export default function buildInterfacesDocumentation(options: BuildInterfacesDocumentationOptions) {
   const { projects, outputDirectory } = options;
 
-  const documentedInterfaces = new Map<string, true>();
-  const symbols: { projectName: keyof Projects; value: ts.Symbol }[] = [];
-  INTERFACES_WITH_DEDICATED_PAGES.forEach((name) => {
-    const symbolInXDataGridPro = projects['x-data-grid-pro'].exports[name];
-    if (symbolInXDataGridPro) {
-      documentedInterfaces.set(name, true);
-      return symbols.push({ value: symbolInXDataGridPro, projectName: 'x-data-grid-pro' });
+  const allProjectsName = Array.from(projects.keys());
+
+  const documentedInterfaces: DocumentedInterfaces = new Map();
+  INTERFACES_WITH_DEDICATED_PAGES.forEach((interfaceName) => {
+    const packagesWithThisInterface = allProjectsName.filter(
+      (projectName) => !!projects.get(projectName)!.exports[interfaceName],
+    );
+
+    if (packagesWithThisInterface.length === 0) {
+      throw new Error(`Can't find symbol for ${interfaceName}`);
     }
 
-    const symbolInXDataGrid = projects['x-data-grid'].exports[name];
-    if (symbolInXDataGrid) {
-      documentedInterfaces.set(name, true);
-      return symbols.push({ value: symbolInXDataGrid, projectName: 'x-data-grid' });
-    }
-
-    throw new Error(`Can't find symbol for ${name}`);
+    documentedInterfaces.set(interfaceName, packagesWithThisInterface);
   });
 
   const gridApiExtendsFrom: string[] = (
-    (projects['x-data-grid-pro'].exports.GridApi.declarations![0] as ts.InterfaceDeclaration)
+    (projects.get('x-data-grid-pro')!.exports.GridApi.declarations![0] as ts.InterfaceDeclaration)
       .heritageClauses ?? []
   ).flatMap((clause) =>
     clause.types
@@ -233,9 +232,10 @@ export default function buildInterfacesDocumentation(options: BuildInterfacesDoc
       .map((expression) => expression.escapedText),
   );
 
-  symbols.forEach((symbol) => {
-    const project = projects[symbol.projectName];
-    const parsedInterface = parseInterfaceSymbol(symbol.value, project);
+  documentedInterfaces.forEach((packagesWithThisInterface, interfaceName) => {
+    const project = projects.get(packagesWithThisInterface[0])!;
+    const symbol = project.exports[interfaceName];
+    const parsedInterface = parseInterfaceSymbol(symbol, project);
 
     if (!parsedInterface) {
       return;
@@ -246,11 +246,7 @@ export default function buildInterfacesDocumentation(options: BuildInterfacesDoc
     if (gridApiExtendsFrom.includes(parsedInterface.name)) {
       const json = {
         name: parsedInterface.name,
-        description: linkify(
-          getSymbolDescription(symbol.value, project),
-          documentedInterfaces,
-          'html',
-        ),
+        description: linkify(getSymbolDescription(symbol, project), documentedInterfaces, 'html'),
         properties: parsedInterface.properties.map((property) => ({
           name: property.name,
           description: renderMarkdownInline(

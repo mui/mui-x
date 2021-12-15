@@ -6,12 +6,12 @@ import buildComponentsDocumentation from './buildComponentsDocumentation';
 import buildInterfacesDocumentation from './buildInterfacesDocumentation';
 import buildExportsDocumentation from './buildExportsDocumentation';
 import buildEventsDocumentation from './buildEventsDocumentation';
-import { Project, Projects } from './utils';
+import { Project, Projects, ProjectNames } from './utils';
 
 const workspaceRoot = path.resolve(__dirname, '../../../');
 
 interface CreateProgramOptions {
-  name: keyof Projects;
+  name: ProjectNames;
   rootPath: string;
   tsConfigPath: string;
   entryPointPath: string;
@@ -54,24 +54,27 @@ async function run(argv: { outputDirectory?: string }) {
   const outputDirectory = path.resolve(argv.outputDirectory!);
   fse.mkdirSync(outputDirectory, { mode: 0o777, recursive: true });
 
-  const dataGridProject = createProject({
-    name: 'x-data-grid',
-    rootPath: path.join(workspaceRoot, 'packages/grid/x-data-grid'),
-    tsConfigPath: path.join(workspaceRoot, 'packages/grid/x-data-grid/tsconfig.json'),
-    entryPointPath: path.join(workspaceRoot, 'packages/grid/x-data-grid/src/index.ts'),
-  });
+  const projects: Projects = new Map();
 
-  const dataGridProProject = createProject({
-    name: 'x-data-grid-pro',
-    rootPath: path.join(workspaceRoot, 'packages/grid/x-data-grid-pro'),
-    tsConfigPath: path.join(workspaceRoot, 'packages/grid/x-data-grid-pro/tsconfig.json'),
-    entryPointPath: path.join(workspaceRoot, 'packages/grid/x-data-grid-pro/src/index.ts'),
-  });
+  projects.set(
+    'x-data-grid-pro',
+    createProject({
+      name: 'x-data-grid-pro',
+      rootPath: path.join(workspaceRoot, 'packages/grid/x-data-grid-pro'),
+      tsConfigPath: path.join(workspaceRoot, 'packages/grid/x-data-grid-pro/tsconfig.json'),
+      entryPointPath: path.join(workspaceRoot, 'packages/grid/x-data-grid-pro/src/index.ts'),
+    }),
+  );
 
-  const projects: Projects = {
-    'x-data-grid': dataGridProject,
-    'x-data-grid-pro': dataGridProProject,
-  };
+  projects.set(
+    'x-data-grid',
+    createProject({
+      name: 'x-data-grid',
+      rootPath: path.join(workspaceRoot, 'packages/grid/x-data-grid'),
+      tsConfigPath: path.join(workspaceRoot, 'packages/grid/x-data-grid/tsconfig.json'),
+      entryPointPath: path.join(workspaceRoot, 'packages/grid/x-data-grid/src/index.ts'),
+    }),
+  );
 
   const documentedInterfaces = buildInterfacesDocumentation({
     projects,
@@ -81,18 +84,16 @@ async function run(argv: { outputDirectory?: string }) {
   await buildComponentsDocumentation({
     outputDirectory,
     documentedInterfaces,
-    dataGridProject,
-    dataGridProProject,
+    projects,
   });
 
   buildEventsDocumentation({
-    project: dataGridProject,
+    project: projects.get('x-data-grid')!,
     documentedInterfaces,
   });
 
   buildExportsDocumentation({
-    dataGridProject,
-    dataGridProProject,
+    projects,
   });
 }
 

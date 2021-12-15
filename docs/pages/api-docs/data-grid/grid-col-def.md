@@ -5,9 +5,7 @@
 ## Import
 
 ```js
-import { GridColDef } from '@mui/x-data-grid';
-// or
-import { GridColDef } from '@mui/x-data-grid-pro';
+
 ```
 
 ## Properties

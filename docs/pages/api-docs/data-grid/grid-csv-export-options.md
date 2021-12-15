@@ -5,9 +5,7 @@
 ## Import
 
 ```js
-import { GridCsvExportOptions } from '@mui/x-data-grid';
-// or
-import { GridCsvExportOptions } from '@mui/x-data-grid-pro';
+
 ```
 
 ## Properties
