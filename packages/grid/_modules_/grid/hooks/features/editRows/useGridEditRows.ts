@@ -46,7 +46,6 @@ function isPromise(promise: any): promise is Promise<GridEditCellProps> {
  * @requires useGridFocus - can be after, async only
  * @requires useGridParamsApi (method)
  * @requires useGridColumns (state)
- * @requires useGridControlState (method)
  */
 export function useGridEditRows(
   apiRef: GridApiRef,

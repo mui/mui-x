@@ -5,7 +5,7 @@ import { getGridLocalization, Localization } from '../utils/getGridLocalization'
 const nlNLGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Geen resultaten.',
-  // noResultsOverlayLabel: 'No results found.',
+  noResultsOverlayLabel: 'Geen resultaten gevonden.',
   errorOverlayDefaultLabel: 'Er deed zich een fout voor.',
 
   // Density selector toolbar button text
@@ -28,10 +28,10 @@ const nlNLGrid: Partial<GridLocaleText> = {
     count > 1 ? `${count} actieve filters` : `${count} filter actief`,
 
   // Export selector toolbar button text
-  // toolbarExport: 'Export',
-  // toolbarExportLabel: 'Export',
-  // toolbarExportCSV: 'Download as CSV',
-  // toolbarExportPrint: 'Print',
+  toolbarExport: 'Exporteren',
+  toolbarExportLabel: 'Exporteren',
+  toolbarExportCSV: 'Exporteer naar CSV',
+  toolbarExportPrint: 'Print',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'Zoek kolom',
@@ -57,17 +57,17 @@ const nlNLGrid: Partial<GridLocaleText> = {
   filterOperatorEndsWith: 'eindigt met',
   filterOperatorIs: 'is',
   filterOperatorNot: 'is niet',
-  filterOperatorAfter: 'is voor',
-  filterOperatorOnOrAfter: 'is gelijk of er voor',
-  filterOperatorBefore: 'is na',
-  filterOperatorOnOrBefore: 'is gelijk of er na',
-  // filterOperatorIsEmpty: 'is empty',
-  // filterOperatorIsNotEmpty: 'is not empty',
+  filterOperatorAfter: 'is na',
+  filterOperatorOnOrAfter: 'is gelijk of er na',
+  filterOperatorBefore: 'is voor',
+  filterOperatorOnOrBefore: 'is gelijk of er voor',
+  filterOperatorIsEmpty: 'is leeg',
+  filterOperatorIsNotEmpty: 'is niet leeg',
 
   // Filter values text
-  // filterValueAny: 'any',
-  // filterValueTrue: 'true',
-  // filterValueFalse: 'false',
+  filterValueAny: 'alles',
+  filterValueTrue: 'waar',
+  filterValueFalse: 'onwaar',
 
   // Column menu text
   columnMenuLabel: 'Menu',
@@ -94,27 +94,28 @@ const nlNLGrid: Partial<GridLocaleText> = {
   footerTotalRows: 'Totaal:',
 
   // Total visible rows footer text
-  // footerTotalVisibleRows: (visibleCount, totalCount) => `${visibleCount.toLocaleString()} of ${totalCount.toLocaleString()}`,
+  footerTotalVisibleRows: (visibleCount, totalCount) =>
+    `${visibleCount.toLocaleString()} van ${totalCount.toLocaleString()}`,
 
   // Checkbox selection text
-  // checkboxSelectionHeaderName: 'Checkbox selection',
+  checkboxSelectionHeaderName: 'Checkbox selectie',
 
   // Boolean cell text
-  // booleanCellTrueLabel: 'true',
-  // booleanCellFalseLabel: 'false',
+  booleanCellTrueLabel: 'waar',
+  booleanCellFalseLabel: 'onwaar',
 
   // Actions cell more text
-  // actionsCellMore: 'more',
+  actionsCellMore: 'meer',
 
   // Column pinning text
-  // pinToLeft: 'Pin to left',
-  // pinToRight: 'Pin to right',
-  // unpin: 'Unpin',
+  pinToLeft: 'Links vastzetten',
+  pinToRight: 'Rechts vastzetten',
+  unpin: 'Losmaken',
 
   // Tree Data
-  // treeDataGroupingHeaderName: 'Group',
-  // treeDataExpand: 'see children',
-  // treeDataCollapse: 'hide children',
+  treeDataGroupingHeaderName: 'Groep',
+  treeDataExpand: 'Uitvouwen',
+  treeDataCollapse: 'Inklappen',
 };
 
 export const nlNL: Localization = getGridLocalization(nlNLGrid, nlNLCore);

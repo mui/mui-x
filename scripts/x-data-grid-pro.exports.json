@@ -124,7 +124,6 @@
   { "name": "GridCommitCellChangeParams", "kind": "Interface" },
   { "name": "GridComparatorFn", "kind": "TypeAlias" },
   { "name": "GridControlledStateEventLookup", "kind": "Interface" },
-  { "name": "GridControlStateApi", "kind": "Interface" },
   { "name": "GridCoreApi", "kind": "Interface" },
   { "name": "GridCsvExportApi", "kind": "Interface" },
   { "name": "GridCsvExportOptions", "kind": "Interface" },
