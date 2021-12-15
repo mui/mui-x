@@ -4,7 +4,7 @@ title: Data Grid - Pagination
 
 # Data Grid - Pagination
 
-<p class="description">Easily pagination your rows and only fetch what you need.</p>
+<p class="description">Easily paginate your rows and only fetch what you need.</p>
 
 The default pagination behavior depends on your plan.
 
@@ -17,13 +17,11 @@ The MIT `DataGrid` is limited to pages of up to 100 rows. If you want larger pag
 
 By default, each page contains 100 rows. The user can change the size of the page through the selector in the footer.
 
-### Controlled page size
+### Page size options
 
-Use the `pageSize` prop to control the size of the pages.
+You can configure the page size the user can choose from with the `rowsPerPageOptions` prop.
 
-You can use the `onPageSizeChange` to listen to changes to the page size and update the prop accordingly.
-
-{{"demo": "pages/components/data-grid/pagination/PageSizeControlled.js", "bg": "inline"}}
+{{"demo": "pages/components/data-grid/pagination/PageSizeCustomOptions.js", "bg": "inline"}}
 
 ### Automatic page size
 
@@ -33,11 +31,13 @@ Use the `autoPageSize` prop to auto-scale the `pageSize` to match the container 
 
 {{"demo": "pages/components/data-grid/pagination/PageSizeAuto.js", "bg": "inline"}}
 
-### Page size options
+### Controlled page size
 
-You can configure the page size the user can choose from with the `rowsPerPageOptions` prop.
+Use the `pageSize` prop to control the size of the pages.
 
-{{"demo": "pages/components/data-grid/pagination/PageSizeCustomOptions.js", "bg": "inline"}}
+You can use the `onPageSizeChange` to listen to changes to the page size and update the prop accordingly.
+
+{{"demo": "pages/components/data-grid/pagination/PageSizeControlled.js", "bg": "inline"}}
 
 ## Controlled page
 
@@ -65,7 +65,7 @@ If your dataset is too big, and you only want to fetch the current page, you can
 
 ### Cursor implementation
 
-You can also create a cursor-based pagination.
+You can also handle servers with cursor-based pagination.
 To do so, you just have to keep track of the next cursor associated with each page you fetched.
 
 {{"demo": "pages/components/data-grid/pagination/CursorPaginationGrid.js", "bg": "inline"}}

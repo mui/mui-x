@@ -1,8 +1,6 @@
 import * as React from 'react';
 import { DataGrid } from '@mui/x-data-grid';
-import { useDemoData, getCommodityColumns } from '@mui/x-data-grid-generator';
-
-const COLUMNS = getCommodityColumns().slice(0, 6);
+import { useDemoData } from '@mui/x-data-grid-generator';
 
 /**
  * Simulates server data loading
@@ -57,7 +55,7 @@ export default function ServerPaginationGrid() {
   return (
     <div style={{ height: 400, width: '100%' }}>
       <DataGrid
-        columns={COLUMNS}
+        columns={data.columns}
         pagination
         rowCount={data.rows.length}
         {...rowsState}

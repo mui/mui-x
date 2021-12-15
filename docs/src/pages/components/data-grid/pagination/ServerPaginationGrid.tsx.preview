@@ -1,5 +1,5 @@
 <DataGrid
-  columns={COLUMNS}
+  columns={data.columns}
   pagination
   rowCount={data.rows.length}
   {...rowsState}
