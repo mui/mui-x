@@ -70,7 +70,7 @@ const parseProperty = (propertySymbol: ts.Symbol, project: Project): ParsedPrope
 const parseInterfaceSymbol = (symbol: ts.Symbol, project: Project): ParsedObject | null => {
   const declaration = symbol.declarations![0];
 
-  if (!ts.isInterfaceDeclaration(declaration)) {
+  if (!ts.isInterfaceDeclaration(declaration) && !ts.isExportSpecifier(declaration)) {
     return null;
   }
 
