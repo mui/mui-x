@@ -1,24 +1,37 @@
-import * as TypeDoc from 'typedoc';
 import path from 'path';
-import { writePrettifiedFile } from './utils';
+import * as ts from 'typescript';
+import { Project, writePrettifiedFile } from './utils';
 
 interface BuildExportsDocumentationOptions {
-  reflections: TypeDoc.Reflection[];
-  workspaceRoot: string;
-  prettierConfigPath: string;
+  dataGridProject: Project;
+  dataGridProProject: Project;
 }
 
-export default function buildExportsDocumentation(options: BuildExportsDocumentationOptions) {
-  const { reflections, workspaceRoot, prettierConfigPath } = options;
+const buildPackageExports = (project: Project) => {
+  const syntaxKindToSyntaxName = {};
+  Object.entries(ts.SyntaxKind).forEach(([syntaxName, syntaxKind]) => {
+    syntaxKindToSyntaxName[syntaxKind] = syntaxName.replace('Declaration', '');
+  });
 
-  const exports = reflections.map((child) => ({
-    name: child.name,
-    kind: child?.kindString,
-  }));
+  const exports = Object.entries(project.exports)
+    .map(([name, symbol]) => {
+      return {
+        name,
+        kind: syntaxKindToSyntaxName[symbol.declarations?.[0].kind!],
+      };
+    })
+    .sort((a, b) => a.name.localeCompare(b.name));
 
   writePrettifiedFile(
-    path.resolve(workspaceRoot, 'scripts/exportsSnapshot.json'),
+    path.resolve(project.workspaceRoot, `scripts/${project.name}.exports.json`),
     JSON.stringify(exports),
-    prettierConfigPath,
+    project,
   );
+};
+
+export default function buildExportsDocumentation(options: BuildExportsDocumentationOptions) {
+  const { dataGridProject, dataGridProProject } = options;
+
+  buildPackageExports(dataGridProject);
+  buildPackageExports(dataGridProProject);
 }

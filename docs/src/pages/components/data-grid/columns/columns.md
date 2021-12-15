@@ -421,7 +421,15 @@ Use it together with `onPinnedColumnsChange` to know when a column is pinned or 
 
 It may be desirable to not allow a column to be unpinned.
 The only thing required to achieve that is to hide the buttons added to the column menu.
-This can be done by providing a custom menu, as demonstrated below:
+This can be done in two ways:
+
+1. Per column, by setting `pinnable` to `false` in each `GridColDef`:
+
+   ```tsx
+   <DataGrid columns={[{ field: 'id', pinnable: false }]} /> // Default is `true`.
+   ```
+
+2. By providing a custom menu, as demonstrated below:
 
 {{"demo": "pages/components/data-grid/columns/DisableColumnPinningButtons.js", "disableAd": true, "bg": "inline"}}
 
