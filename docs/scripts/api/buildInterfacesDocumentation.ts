@@ -138,7 +138,14 @@ function generateImportStatement(objects: ParsedObject[], projects: Projects) {
   let imports = '```js\n';
 
   const projectImports = Array.from(projects.values()).map((project) => {
-    const objectsInProject = objects.filter((object) => !!project.exports[object.name]);
+    const objectsInProject = objects.filter((object) => {
+      // TODO: Remove after opening the apiRef on the community plan
+      if (object.name === 'GridApi' && project.name === 'x-data-grid') {
+        return false;
+      }
+
+      return !!project.exports[object.name];
+    });
 
     return `import {${objectsInProject.map((object) => object.name)}} from '@mui/${project.name}'`;
   });
