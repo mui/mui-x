@@ -69,7 +69,7 @@ export interface GridColDef {
    */
   hide?: boolean;
   /**
-   * If `false`, removes user interfaces for toggling column visibility.
+   * If `false`, removes the buttons for hiding this column.
    * @default true
    */
   hidable?: boolean;
