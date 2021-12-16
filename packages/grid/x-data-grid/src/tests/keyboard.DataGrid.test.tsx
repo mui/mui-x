@@ -24,7 +24,7 @@ const HEADER_HEIGHT = 56;
 const HEIGHT = 360;
 
 describe('<DataGrid /> - Keyboard', () => {
-  const { render } = createRenderer();
+  const { render } = createRenderer({ clock: 'fake' });
 
   const NavigationTestCaseNoScrollX = (
     props: Omit<
