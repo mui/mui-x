@@ -2,14 +2,19 @@ import * as React from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
-function loadServerRows(page, data) {
-  return new Promise((resolve) => {
+/**
+ * Simulates server data loading
+ */
+const loadServerRows = (page, pageSize, allRows) =>
+  new Promise((resolve) => {
     setTimeout(() => {
-      resolve(data.rows.slice(page * 5, (page + 1) * 5));
-    }, Math.random() * 500 + 100); // simulate network latency
+      resolve(allRows.slice(page * pageSize, (page + 1) * pageSize));
+    }, Math.random() * 200 + 100); // simulate network latency
   });
-}
 
+/**
+ * TODO: Improve `useDemoData` to move the fake pagination inside it instead of "fetching" everything of slicing in the component
+ */
 export default function ServerPaginationGrid() {
   const { data } = useDemoData({
     dataSet: 'Commodity',
@@ -17,42 +22,48 @@ export default function ServerPaginationGrid() {
     maxColumns: 6,
   });
 
-  const [page, setPage] = React.useState(0);
-  const [rows, setRows] = React.useState([]);
-  const [loading, setLoading] = React.useState(false);
+  const [rowsState, setRowsState] = React.useState({
+    page: 0,
+    pageSize: 5,
+    rows: [],
+    loading: false,
+  });
 
   React.useEffect(() => {
     let active = true;
 
     (async () => {
-      setLoading(true);
-      const newRows = await loadServerRows(page, data);
+      setRowsState((prev) => ({ ...prev, loading: true }));
+      const newRows = await loadServerRows(
+        rowsState.page,
+        rowsState.pageSize,
+        data.rows,
+      );
 
       if (!active) {
         return;
       }
 
-      setRows(newRows);
-      setLoading(false);
+      setRowsState((prev) => ({ ...prev, loading: false, rows: newRows }));
     })();
 
     return () => {
       active = false;
     };
-  }, [page, data]);
+  }, [rowsState.page, rowsState.pageSize, data.rows]);
 
   return (
     <div style={{ height: 400, width: '100%' }}>
       <DataGrid
-        rows={rows}
         columns={data.columns}
         pagination
-        pageSize={5}
-        rowsPerPageOptions={[5]}
-        rowCount={100}
+        rowCount={data.rows.length}
+        {...rowsState}
         paginationMode="server"
-        onPageChange={(newPage) => setPage(newPage)}
-        loading={loading}
+        onPageChange={(page) => setRowsState((prev) => ({ ...prev, page }))}
+        onPageSizeChange={(pageSize) =>
+          setRowsState((prev) => ({ ...prev, pageSize }))
+        }
       />
     </div>
   );
