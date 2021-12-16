@@ -21,6 +21,14 @@ import {
 } from '../../_modules_/grid/models/api/gridColumnPinningApi';
 
 export const filterColumns = (pinnedColumns: GridPinnedColumns, columns: string[]) => {
+  if (!Array.isArray(pinnedColumns.left) && !Array.isArray(pinnedColumns.right)) {
+    return [[], []];
+  }
+
+  if (pinnedColumns.left?.length === 0 && pinnedColumns.right?.length === 0) {
+    return [[], []];
+  }
+
   const filter = (newPinnedColumns: any[] | undefined, remaningColumns: string[]) => {
     if (!Array.isArray(newPinnedColumns)) {
       return [];
