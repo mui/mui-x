@@ -5,7 +5,7 @@ import {
   GridFilterInputValueProps,
   DataGrid,
   GridFilterItem,
-  GridFilterModel,
+  GridFilterOperator,
 } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
@@ -47,10 +47,10 @@ function RatingInputValue(props: GridFilterInputValueProps) {
   );
 }
 
-const ratingOnlyOperators = [
+const ratingOnlyOperators: GridFilterOperator[] = [
   {
-    label: 'From',
-    value: 'from',
+    label: 'Above',
+    value: 'above',
     getApplyFilterFn: (filterItem: GridFilterItem) => {
       if (
         !filterItem.columnField ||
@@ -69,30 +69,47 @@ const ratingOnlyOperators = [
   },
 ];
 
+const VISIBLE_FIELDS = ['name', 'rating', 'country', 'dateCreated', 'isAdmin'];
+
 export default function CustomRatingOperator() {
-  const { data } = useDemoData({ dataSet: 'Employee', rowLength: 100 });
-  const columns = [...data.columns];
-  const [filterModel, setFilterModel] = React.useState<GridFilterModel>({
-    items: [{ id: 1, columnField: 'rating', value: '3.5', operatorValue: 'from' }],
+  const { data } = useDemoData({
+    dataSet: 'Employee',
+    visibleFields: VISIBLE_FIELDS,
+    rowLength: 100,
   });
 
-  if (columns.length > 0) {
-    const ratingColumn = columns.find((col) => col.field === 'rating');
-    const newRatingColumn = {
-      ...ratingColumn!,
-      filterOperators: ratingOnlyOperators,
-    };
-    const ratingColIndex = columns.findIndex((col) => col.field === 'rating');
-    columns[ratingColIndex] = newRatingColumn;
-  }
+  const columns = React.useMemo(
+    () =>
+      data.columns.map((col) =>
+        col.field === 'rating'
+          ? {
+              ...col,
+              filterOperators: ratingOnlyOperators,
+            }
+          : col,
+      ),
+    [data.columns],
+  );
 
   return (
     <div style={{ height: 400, width: '100%' }}>
       <DataGrid
-        rows={data.rows}
+        {...data}
         columns={columns}
-        filterModel={filterModel}
-        onFilterModelChange={(model) => setFilterModel(model)}
+        initialState={{
+          filter: {
+            filterModel: {
+              items: [
+                {
+                  id: 1,
+                  columnField: 'rating',
+                  value: '3.5',
+                  operatorValue: 'above',
+                },
+              ],
+            },
+          },
+        }}
       />
     </div>
   );

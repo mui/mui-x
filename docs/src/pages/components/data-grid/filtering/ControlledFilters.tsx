@@ -2,19 +2,21 @@ import * as React from 'react';
 import { DataGrid, GridFilterModel, GridToolbar } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
+const VISIBLE_FIELDS = ['name', 'rating', 'country', 'dateCreated', 'isAdmin'];
+
 export default function ControlledFilters() {
   const { data } = useDemoData({
-    dataSet: 'Commodity',
+    dataSet: 'Employee',
+    visibleFields: VISIBLE_FIELDS,
     rowLength: 100,
-    maxColumns: 6,
   });
 
   const [filterModel, setFilterModel] = React.useState<GridFilterModel>({
     items: [
       {
-        columnField: 'commodity',
-        operatorValue: 'contains',
-        value: 'rice',
+        columnField: 'rating',
+        operatorValue: '>',
+        value: '2.5',
       },
     ],
   });

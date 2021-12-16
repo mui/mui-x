@@ -1,4 +1,1 @@
-<DataGrid
-  {...data}
-    disableColumnFilter
-/>
+<DataGrid {...data} disableColumnFilter />

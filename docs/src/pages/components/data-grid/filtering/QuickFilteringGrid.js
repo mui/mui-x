@@ -76,11 +76,13 @@ QuickSearchToolbar.propTypes = {
   value: PropTypes.string.isRequired,
 };
 
+const VISIBLE_FIELDS = ['name', 'rating', 'country', 'dateCreated', 'isAdmin'];
+
 export default function QuickFilteringGrid() {
   const { data } = useDemoData({
-    dataSet: 'Commodity',
+    dataSet: 'Employee',
+    visibleFields: VISIBLE_FIELDS,
     rowLength: 100,
-    maxColumns: 6,
   });
 
   const [searchText, setSearchText] = React.useState('');
@@ -91,6 +93,7 @@ export default function QuickFilteringGrid() {
     const searchRegex = new RegExp(escapeRegExp(searchValue), 'i');
     const filteredRows = data.rows.filter((row) => {
       return Object.keys(row).some((field) => {
+        console.log(row[field]);
         return searchRegex.test(row[field].toString());
       });
     });

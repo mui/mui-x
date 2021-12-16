@@ -29,7 +29,7 @@ export interface UseDemoDataOptions {
   dataSet: DataSet;
   rowLength: number;
   maxColumns?: number;
-  fields?: string[];
+  visibleFields?: string[];
   editable?: boolean;
   treeData?: AddPathToDemoDataOptions;
 }
@@ -102,14 +102,16 @@ export const useDemoData = (options: UseDemoDataOptions): DemoDataReturnType => 
         ? getCommodityColumns(options.editable)
         : getEmployeeColumns();
 
-    if (options.fields) {
-      columns = columns.filter((col) => options.fields?.includes(col.field));
+    if (options.visibleFields) {
+      columns = columns.map((col) =>
+        options.visibleFields?.includes(col.field) ? col : { ...col, hide: true },
+      );
     }
     if (options.maxColumns) {
       columns = columns.slice(0, options.maxColumns);
     }
     return columns;
-  }, [options.dataSet, options.editable, options.maxColumns, options.fields]);
+  }, [options.dataSet, options.editable, options.maxColumns, options.visibleFields]);
 
   const [data, setData] = React.useState<GridDemoData>(() =>
     addTreeDataOptionsToDemoData(
