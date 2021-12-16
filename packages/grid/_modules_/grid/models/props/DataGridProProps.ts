@@ -6,7 +6,8 @@ import { GridGroupingColDefOverride, GridGroupingColDefOverrideParams } from '..
 import {
   DataGridOtherProps,
   DataGridSimpleOptions,
-  GridProcessedMergedOptions,
+  DataGridComplexOptionsAfterProcessing,
+  DataGridComplexOptionsBeforeProcessing,
   DATA_GRID_DEFAULT_SIMPLE_OPTIONS,
 } from './DataGridProps';
 
@@ -14,20 +15,18 @@ import {
  * The props users can give to the `DataGridProProps` component.
  */
 export type DataGridProProps = Omit<
-  Partial<DataGridProSimpleOptions> & DataGridProMergedOptions & DataGridProOtherProps,
+  Partial<DataGridProSimpleOptions> &
+    DataGridComplexOptionsBeforeProcessing &
+    DataGridProOtherProps,
   DataGridProForcedPropsKey
 >;
-
-type DataGridProMergedOptions = {
-  [key in keyof GridProcessedMergedOptions]?: Partial<GridProcessedMergedOptions[key]>;
-};
 
 /**
  * The props of the `DataGridPro` component after the pre-processing phase.
  */
 export interface DataGridProProcessedProps
   extends DataGridProSimpleOptions,
-    GridProcessedMergedOptions,
+    DataGridComplexOptionsAfterProcessing,
     DataGridProOtherProps {}
 
 export type DataGridProForcedPropsKey = 'signature';

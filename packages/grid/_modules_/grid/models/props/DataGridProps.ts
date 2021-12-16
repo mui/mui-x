@@ -23,14 +23,10 @@ import { GridSlotsComponentsProps } from '../gridSlotsComponentsProps';
  * The props users can give to the `DataGrid` component.
  */
 export type DataGridProps = Omit<
-  Partial<DataGridSimpleOptions> & DataGridMergedOptions & DataGridOtherProps,
+  Partial<DataGridSimpleOptions> & DataGridComplexOptionsBeforeProcessing & DataGridOtherProps,
   DataGridForcedPropsKey
 > & {
   pagination?: true;
-};
-
-type DataGridMergedOptions = {
-  [key in keyof GridProcessedMergedOptions]?: Partial<GridProcessedMergedOptions[key]>;
 };
 
 /**
@@ -38,9 +34,13 @@ type DataGridMergedOptions = {
  */
 export interface DataGridProcessedProps
   extends DataGridSimpleOptions,
-    GridProcessedMergedOptions,
+    DataGridComplexOptionsAfterProcessing,
     DataGridOtherProps {}
 
+/**
+ * The props of the `DataGrid` component after the pre-processing phase that the user should not be able to override.
+ * Those are usually used in feature-hook for which the pro-plan has more advanced features (eg: multi-sorting, multi-filtering, ...).
+ */
 export type DataGridForcedPropsKey =
   | 'apiRef'
   | 'checkboxSelectionVisibleOnly'
@@ -55,18 +55,26 @@ export type DataGridForcedPropsKey =
   | 'signature';
 
 /**
- * The grid options with a default value which is merged with the value given through props.
+ * The `DataGrid` options with a default value that must be merged with the value given through props.
  */
-export interface GridProcessedMergedOptions {
+export interface DataGridComplexOptionsAfterProcessing {
+  components: GridSlotsComponent;
+  localeText: GridLocaleText;
+}
+
+/**
+ * The `DataGrid` options with a default value that must be merged with the value given through props.
+ */
+export interface DataGridComplexOptionsBeforeProcessing {
   /**
    * Overrideable components.
    */
-  components: GridSlotsComponent;
+  components?: Partial<GridSlotsComponent>;
   /**
    * Set the locale text of the grid.
    * You can find all the translation keys supported in [the source](https://github.com/mui-org/material-ui-x/blob/HEAD/packages/grid/_modules_/grid/constants/localeTextConstants.ts) in the GitHub repository.
    */
-  localeText: GridLocaleText;
+  localeText?: Partial<GridLocaleText>;
 }
 
 /**
