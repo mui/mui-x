@@ -213,7 +213,8 @@ export const GridRootStyles = styled('div', {
       },
     },
     [`& .${gridClasses.cell}`]: {
-      display: 'block',
+      display: 'flex',
+      alignItems: 'center',
       overflow: 'hidden',
       textOverflow: 'ellipsis',
       whiteSpace: 'nowrap',
@@ -253,10 +254,6 @@ export const GridRootStyles = styled('div', {
       display: 'inline-flex',
       alignItems: 'center',
       gridGap: theme.spacing(1),
-    },
-    [`& .${gridClasses['cell--withRenderer']}`]: {
-      display: 'flex',
-      alignItems: 'center',
     },
     [`& .${gridClasses.withBorder}`]: {
       borderRight: `1px solid ${borderColor}`,
