@@ -103,10 +103,10 @@ interface GridComponentOtherProps extends CommonProps {
   /**
    * Determines if a group should be expanded after its creation.
    * This prop takes priority over the `defaultGroupingExpansionDepth` prop.
-   * @param {Omit<GridRowTreeNodeConfig, 'childrenExpanded'>} node The node of the group to test.
+   * @param {GridRowTreeNodeConfig} node The node of the group to test.
    * @returns {boolean} A boolean indicating if the group is expanded.
    */
-  isGroupExpandedByDefault?: (node: Omit<GridRowTreeNodeConfig, 'childrenExpanded'>) => boolean;
+  isGroupExpandedByDefault?: (node: GridRowTreeNodeConfig) => boolean;
   /**
    * Determines the path of a row in the tree data.
    * For instance, a row with the path ["A", "B"] is the child of the row with the path ["A"].

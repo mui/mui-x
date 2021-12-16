@@ -23,7 +23,7 @@ export interface BuildRowTreeGroupingCriteria {
 interface BuildRowTreeParams extends GridRowGroupParams {
   rows: { id: GridRowId; path: BuildRowTreeGroupingCriteria[] }[];
   defaultGroupingExpansionDepth: number;
-  isGroupExpandedByDefault?: (node: Omit<GridRowTreeNodeConfig, 'childrenExpanded'>) => boolean;
+  isGroupExpandedByDefault?: (node: GridRowTreeNodeConfig) => boolean;
   groupingName: string;
 }
 
@@ -70,7 +70,7 @@ export const buildRowTree = (params: BuildRowTreeParams): GridRowGroupingResult 
 
   const groupingCriteriaToIdTree: GridGroupingCriteriaToIdTree = {};
 
-  const isGroupExpandedByDefault = (node: Omit<GridRowTreeNodeConfig, 'childrenExpanded'>) => {
+  const isGroupExpandedByDefault = (node: GridRowTreeNodeConfig) => {
     if (!node.children || !node.children.length) {
       return false;
     }
@@ -168,7 +168,7 @@ export const buildRowTree = (params: BuildRowTreeParams): GridRowGroupingResult 
   for (let i = 0; i < ids.length; i += 1) {
     const rowId = ids[i];
     const tempNode = tempTree[rowId];
-    const node: Omit<GridRowTreeNodeConfig, 'childrenExpanded'> = {
+    const node: GridRowTreeNodeConfig = {
       ...tempNode,
       children: tempNode.children ? Object.values(tempNode.children) : undefined,
     };

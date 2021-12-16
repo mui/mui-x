@@ -264,9 +264,7 @@ describe('<DataGridPro /> - Tree Data', () => {
 
   describe('prop: isGroupExpandedByDefault', () => {
     it('should expand groups according to isGroupExpandedByDefault when defined', () => {
-      const isGroupExpandedByDefault = spy(
-        (node: Omit<GridRowTreeNodeConfig, 'childrenExpanded'>) => node.id === 'A',
-      );
+      const isGroupExpandedByDefault = spy((node: GridRowTreeNodeConfig) => node.id === 'A');
 
       render(<Test isGroupExpandedByDefault={isGroupExpandedByDefault} />);
       expect(isGroupExpandedByDefault.callCount).to.equal(8); // Should not be called on leaves
@@ -279,8 +277,7 @@ describe('<DataGridPro /> - Tree Data', () => {
     });
 
     it('should have priority over defaultGroupingExpansionDepth when both defined', () => {
-      const isGroupExpandedByDefault = (node: Omit<GridRowTreeNodeConfig, 'childrenExpanded'>) =>
-        node.id === 'A';
+      const isGroupExpandedByDefault = (node: GridRowTreeNodeConfig) => node.id === 'A';
 
       render(
         <Test

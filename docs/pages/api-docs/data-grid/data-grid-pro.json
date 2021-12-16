@@ -78,6 +78,7 @@
     "hideFooterSelectedRowCount": { "type": { "name": "bool" } },
     "initialState": { "type": { "name": "object" } },
     "isCellEditable": { "type": { "name": "func" } },
+    "isGroupExpandedByDefault": { "type": { "name": "func" } },
     "isRowSelectable": { "type": { "name": "func" } },
     "loading": { "type": { "name": "bool" } },
     "localeText": { "type": { "name": "object" } },
