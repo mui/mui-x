@@ -123,9 +123,11 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
       rootRef.current!.scrollLeft = 0;
       rootRef.current!.scrollTop = 0;
     }
-
-    setContainerWidth(rootRef.current!.clientWidth);
   }, [disableVirtualization]);
+
+  React.useEffect(() => {
+    setContainerWidth(rootRef.current!.clientWidth);
+  }, [rowsMeta.totalHeight]);
 
   React.useEffect(() => {
     if (containerWidth == null) {
