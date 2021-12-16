@@ -35,7 +35,7 @@ Use the `autoPageSize` prop to auto-scale the `pageSize` to match the container 
 
 Use the `pageSize` prop to control the size of the pages.
 
-You can use the `onPageSizeChange` to listen to changes to the page size and update the prop accordingly.
+You can use the `onPageSizeChange` prop to listen to changes to the page size and update the prop accordingly.
 
 {{"demo": "pages/components/data-grid/pagination/PageSizeControlled.js", "bg": "inline"}}
 
@@ -43,7 +43,7 @@ You can use the `onPageSizeChange` to listen to changes to the page size and upd
 
 Use the `page` prop to control the size of the pages.
 
-You can use the `onPageChange` to listen to changes to the page size and update the prop accordingly.
+You can use the `onPageChange` prop to listen to changes to the page size and update the prop accordingly.
 
 {{"demo": "pages/components/data-grid/pagination/PageControlled.js", "bg": "inline"}}
 

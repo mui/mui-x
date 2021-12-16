@@ -23,7 +23,7 @@ The following demo allows to explore the different operators available:
 
 ### Initialize the filters
 
-To initialize the filters without controlling them, provide the model to the initialState prop.
+To initialize the filters without controlling them, provide the model to the `initialState` prop.
 
 ```jsx
 <DataGrid
@@ -45,7 +45,7 @@ To initialize the filters without controlling them, provide the model to the ini
 
 Use the `filterModel` prop to control the size of the pages.
 
-You can use the `onFilterModelChange` to listen to changes to the filters and update the prop accordingly.
+You can use the `onFilterModelChange` prop to listen to changes to the filters and update the prop accordingly.
 
 ```jsx
 <DataGrid
