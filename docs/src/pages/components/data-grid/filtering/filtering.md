@@ -4,22 +4,26 @@ title: Data Grid - Filtering
 
 # Data Grid - Filtering
 
-<p class="description">Filtering helps to view a subset of the records based on a criteria.</p>
+<p class="description">Easily filter your rows based on one or several criteria.</p>
 
-## General behavior
-
-The rows can be filtered according to one criterion on the `DataGrid` and several criteria on the `DataGridPro`.
+> ⚠️ The `DataGrid` can only filter the rows according to one criterion at the time.
+> 
+> To use multi-filtering, you need to upgrade to the [Pro plan](https://mui.com/store/items/material-ui-pro/)
 
 The filters can be modified via the grid interface in several ways:
 
 - By opening the column menu and clicking the _Filter_ menu item.
-- By clicking the _Filters_ button if the grid toolbar is enabled.
+- By clicking the *Filters* button if the grid toolbar is enabled.
 
-## Pass filters to the grid
+Each column types has its own filtering operators.
+The demo below let you explore all the built-in operators for the various column types available on the grid.
 
-The following demo allows to explore the different operators available:
+*See [the dedicated section](#the-operators) to learn how to create your own custom filtering operator.*
 
 {{"demo": "pages/components/data-grid/filtering/FilterOperators.js", "bg": "inline", "defaultCodeOpen": false}}
+
+
+## Pass filters to the grid
 
 ### Initialize the filters
 

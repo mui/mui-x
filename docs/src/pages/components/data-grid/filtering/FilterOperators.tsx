@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { DataGrid } from '@mui/x-data-grid';
-import { useDemoData } from '@mui/x-data-grid-generator';
+import {randomCountry, renderCountry, renderEditCountry, useDemoData} from '@mui/x-data-grid-generator';
+import {COUNTRY_ISO_OPTIONS} from "@mui/x-data-grid-generator/services/static-data";
 
 const columns = [
   { field: 'name', headerName: 'Name', width: 180 },
@@ -8,7 +9,7 @@ const columns = [
     field: 'rating',
     headerName: 'Rating',
     type: 'number',
-    width: 140,
+    width: 80,
   },
   {
     field: 'dateCreated',
@@ -17,9 +18,17 @@ const columns = [
     type: 'date',
   },
   {
+    field: 'country',
+    headerName: 'Country',
+    renderCell: renderCountry,
+    type: 'singleSelect',
+    valueOptions: COUNTRY_ISO_OPTIONS,
+    width: 150,
+  },
+  {
     field: 'isAdmin',
     headerName: 'Is admin?',
-    width: 180,
+    width: 120,
     type: 'boolean',
   },
 ];
@@ -27,7 +36,7 @@ const columns = [
 export default function FilterOperators() {
   const { data } = useDemoData({
     dataSet: 'Employee',
-    rowLength: 10,
+    rowLength: 100,
   });
 
   return (
