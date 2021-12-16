@@ -236,6 +236,13 @@ DataGridRaw.propTypes = {
    */
   isCellEditable: PropTypes.func,
   /**
+   * Determines if a group should be expanded after its creation.
+   * This prop takes priority over the `defaultGroupingExpansionDepth` prop.
+   * @param {Omit<GridRowTreeNodeConfig, 'childrenExpanded'>} node The node of the group to test.
+   * @returns {boolean} A boolean indicating if the group is expanded.
+   */
+  isGroupExpandedByDefault: PropTypes.func,
+  /**
    * Determines if a row can be selected.
    * @param {GridRowParams} params With all properties from [[GridRowParams]].
    * @returns {boolean} A boolean indicating if the cell is selectable.
