@@ -12,7 +12,7 @@ function loadServerRows(cursor, data) {
       const rows = data.rows.slice(start, end);
 
       resolve({ rows, nextCursor: data.rows[end]?.id });
-    }, Math.random() * 500 + 100); // simulate network latency
+    }, Math.random() * 200 + 100); // simulate network latency
   });
 }
 
