@@ -1,3 +1,4 @@
+// TODO: Move to `x-data-grid` folder
 import { SxProps } from '@mui/system';
 import { Theme } from '@mui/material/styles';
 import { CommonProps } from '@mui/material/OverridableComponent';
@@ -7,15 +8,10 @@ import { GridFeatureMode, GridFeatureModeConstant } from '../gridFeatureMode';
 import { Logger } from '../logger';
 import { GridSortDirection, GridSortModel } from '../gridSortModel';
 import { GridSlotsComponent } from '../gridSlotsComponent';
-import { GridRowIdGetter, GridRowModel, GridRowsProp } from '../gridRows';
+import { GridRowIdGetter, GridRowsProp } from '../gridRows';
 import { GridEventListener, GridEvents } from '../events';
 import { GridApiRef, GridCallbackDetails, GridLocaleText } from '../api';
-import type {
-  GridColumns,
-  GridColumnTypesRecord,
-  GridGroupingColDefOverride,
-  GridGroupingColDefOverrideParams,
-} from '../colDef';
+import type { GridColumns, GridColumnTypesRecord } from '../colDef';
 import { GridClasses } from '../../gridClasses';
 import { GridCellParams, GridRowParams } from '../params';
 import { GridFilterModel } from '../gridFilterModel';
@@ -59,7 +55,7 @@ export type DataGridForcedPropsKey =
   | 'signature';
 
 /**
- * The grid options with a default in value which is merged with the value given through props.
+ * The grid options with a default value which is merged with the value given through props.
  */
 export interface GridProcessedMergedOptions {
   /**
@@ -74,11 +70,10 @@ export interface GridProcessedMergedOptions {
 }
 
 /**
- * The grid options with a default in value overridable through props
- * None of the entry of this interface should be optional, they all have default values and `GridInputComponentProps` already applies a `Partial<GridSimpleOptions>` for the public interface
- * The controlled model do not have a default value at the prop processing level so they must be defined in `GridComponentOtherProps`
+ * The `DataGrid` options with a default value overridable through props
+ * None of the entry of this interface should be optional, they all have default values and `DataGridProps` already applies a `Partial<DataGridSimpleOptions>` for the public interface
+ * The controlled model do not have a default value at the prop processing level so they must be defined in `DataGridOtherProps`
  * TODO: add multiSortKey
- * TODO: Move to `x-data-grid` folder
  */
 export interface DataGridSimpleOptions {
   /**
@@ -294,7 +289,7 @@ export interface DataGridSimpleOptions {
 }
 
 /**
- * The default options to inject in the props of DataGrid.
+ * The default values of `DataGridSimpleOptions` to inject in the props of DataGrid.
  */
 export const DATA_GRID_DEFAULT_SIMPLE_OPTIONS: DataGridSimpleOptions = {
   autoHeight: false,
@@ -340,7 +335,7 @@ export const DATA_GRID_DEFAULT_SIMPLE_OPTIONS: DataGridSimpleOptions = {
 };
 
 /**
- * TODO: Move to `x-data-grid` folder
+ * The `DataGrid` props with no default value.
  */
 export interface DataGridOtherProps extends CommonProps {
   /**
@@ -394,14 +389,6 @@ export interface DataGridOtherProps extends CommonProps {
    * @returns {boolean} A boolean indicating if the cell is selectable.
    */
   isRowSelectable?: (params: GridRowParams) => boolean;
-  /**
-   * Determines the path of a row in the tree data.
-   * For instance, a row with the path ["A", "B"] is the child of the row with the path ["A"].
-   * Note that all paths must contain at least one element.
-   * @param {GridRowModel} row The row from which we want the path.
-   * @returns {string[]} The path to the row.
-   */
-  getTreeDataPath?: (row: GridRowModel) => string[];
   /**
    * Callback fired when the edit cell value changes.
    * @param {GridEditCellPropsParams} params With all properties from [[GridEditCellPropsParams]].
@@ -675,12 +662,6 @@ export interface DataGridOtherProps extends CommonProps {
    * Overrideable components props dynamically passed to the component at rendering.
    */
   componentsProps?: GridSlotsComponentsProps;
-  /**
-   * The grouping column used by the tree data.
-   */
-  groupingColDef?:
-    | GridGroupingColDefOverride
-    | ((params: GridGroupingColDefOverrideParams) => GridGroupingColDefOverride | undefined | null);
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

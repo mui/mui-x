@@ -32,6 +32,11 @@ export interface DataGridProProcessedProps
 
 export type DataGridProForcedPropsKey = 'signature';
 
+/**
+ * The `DataGridPro` options with a default value overridable through props
+ * None of the entry of this interface should be optional, they all have default values and `DataGridProps` already applies a `Partial<DataGridSimpleOptions>` for the public interface
+ * The controlled model do not have a default value at the prop processing level so they must be defined in `DataGridOtherProps`
+ */
 export interface DataGridProSimpleOptions extends DataGridSimpleOptions {
   /**
    * If `true`, the rows will be gathered in a tree structure according to the `getTreeDataPath` prop.
@@ -62,7 +67,7 @@ export interface DataGridProSimpleOptions extends DataGridSimpleOptions {
 }
 
 /**
- * The default options to inject in the props of DataGrid.
+ * The default values of `DataGridProSimpleOptions` to inject in the props of DataGridPro.
  */
 export const DATA_GRID_DEFAULT_PRO_SIMPLE_OPTIONS: DataGridProSimpleOptions = {
   ...DATA_GRID_DEFAULT_SIMPLE_OPTIONS,
