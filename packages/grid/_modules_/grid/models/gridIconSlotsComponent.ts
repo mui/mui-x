@@ -89,6 +89,7 @@ export interface GridIconSlotsComponent {
   TreeDataCollapseIcon: React.JSXElementConstructor<any>;
   /**
    * Icon displayed on the detail panel toggle column
+   * @default GridInfoIcon
    */
   DetailPanelToggleIcon: React.JSXElementConstructor<any>;
 }

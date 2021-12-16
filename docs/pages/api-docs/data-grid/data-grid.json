@@ -184,7 +184,7 @@
     },
     "DensityCompactIcon": { "default": "GridViewHeadlineIcon", "type": { "name": "elementType" } },
     "DensityStandardIcon": { "default": "GridTableRowsIcon", "type": { "name": "elementType" } },
-    "DetailPanelToggleIcon": { "type": { "name": "elementType" } },
+    "DetailPanelToggleIcon": { "default": "GridInfoIcon", "type": { "name": "elementType" } },
     "ErrorOverlay": { "default": "ErrorOverlay", "type": { "name": "elementType" } },
     "ExportIcon": { "default": "GridSaveAltIcon", "type": { "name": "elementType" } },
     "FilterPanel": { "default": "GridFilterPanel", "type": { "name": "elementType" } },
