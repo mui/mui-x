@@ -3,7 +3,7 @@ import { buildRowTree } from './buildRowTree';
 
 // TODO: Add tests for multi-field grouping
 describe('buildRowTree', () => {
-  it('should not expand the rows when defaultGroupingExpansionDepth === 0', () => {
+  it.only('should not expand the rows when defaultGroupingExpansionDepth === 0', () => {
     const response = buildRowTree({
       groupingName: '',
       idRowsLookup: {
@@ -14,8 +14,8 @@ describe('buildRowTree', () => {
       ids: [0, 1, 2],
       rows: [
         { id: 0, path: [{ key: 'A', field: null }] },
-        { id: 1, path: [{ key: 'A', field: null }] },
-        { id: 2, path: [{ key: 'A', field: null }] },
+        { id: 1, path: [{ key: 'B', field: null }] },
+        { id: 2, path: [{ key: 'C', field: null }] },
       ],
       defaultGroupingExpansionDepth: 0,
     });
