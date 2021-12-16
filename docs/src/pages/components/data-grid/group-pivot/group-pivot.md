@@ -20,7 +20,7 @@ Use row grouping to group the rows according to one or several columns value</p>
 >
 > The feature is stable in its current form, and we encourage users willing to migrate to the Premium plan once available to start using it.
 
-### Row grouping definition
+### Set grouping criteria
 
 #### Initialize the row grouping
 
@@ -36,16 +36,16 @@ initialState={{
 
 {{"demo": "pages/components/data-grid/group-pivot/RowGroupingInitialState.js", "bg": "inline", "defaultCodeOpen": false}}
 
-#### Control the row grouping
+#### Controlled row grouping
 
-To fully control the row grouping, provide the model to the `rowGroupingModel` prop.
-Use it together with `onRowGroupingModelChange` to know when a grouping criteria is added or removed.
+Use the `rowGroupingModel` prop to control the criteria used to group the rows.
+You can use the `onRowGroupingModelChange` prop to listen to changes to the page size and update the prop accordingly.
 
 {{"demo": "pages/components/data-grid/group-pivot/RowGroupingControlled.js", "bg": "inline", "defaultCodeOpen": false}}
 
-### Disable the grouping
+### Disable the row grouping
 
-#### Fully disable the grouping
+#### For all columns
 
 To fully disable the grouping feature, set the `disableRowGrouping` prop to `true`.
 
@@ -53,12 +53,14 @@ It will disable all the features related to the row grouping, even if a model is
 
 {{"demo": "pages/components/data-grid/group-pivot/RowGroupingDisabled.js", "bg": "inline", "defaultCodeOpen": false}}
 
-#### Disable the grouping for some columns
+#### For some columns
 
 To block the grouping of certain columns, set the `canBeGrouped` property of `GridColDef` to `false`.
 In the example below, the `director` column can not be grouped. And in all example, the `title` and `gross` columns can not be grouped.
 
 {{"demo": "pages/components/data-grid/group-pivot/RowGroupingColDefCanBeGrouped.js", "bg": "inline", "defaultCodeOpen": false}}
+
+### Grouping columns
 
 #### Single grouping column
 
@@ -72,7 +74,7 @@ To have a grouping column for each grouping criteria, set the `rowGroupingColumn
 
 {{"demo": "pages/components/data-grid/group-pivot/RowGroupingMultipleGroupingCol.js", "bg": "inline", "defaultCodeOpen": false}}
 
-### Custom grouping column
+#### Custom grouping column
 
 Use the `groupingColDef` prop to customize the rendering of the grouping column. You can override any property of the `GridColDef` interface except the `field`, the `type` and the properties related to the edition.
 
