@@ -112,13 +112,95 @@ You can limit the sorting to the top level rows with the `disableChildrenSorting
 
 {{"demo": "pages/components/data-grid/group-pivot/TreeDataFullExample.js", "bg": "inline", "defaultCodeOpen": false}}
 
-## 🚧 Master detail [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
+## Master detail [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
 
-> ⚠️ This feature isn't implemented yet. It's coming.
+The master detail allows to expand a row to display additional information inside a panel.
+To start using this feature, pass a function to the `getDetailPanelContent` prop with the content to be rendered inside the panel.
+Any valid React element can be used as the row detail, even another grid.
+
+The height of the detail panel content needs to be provided upfront.
+The grid assumes the value of 500px by default.
+However, this can be configured by passing a function to the `getDetailPanelHeight` prop.
+Both props are called with a [`GridRowParams`](/api/data-grid/grid-row-params/) object, allowing to return a different value for each row.
+
+```tsx
+<DataGridPro
+  getDetailPanelContent={({ row }) => <div>Row ID: {row.id}</div>}
+  getDetailPanelHeight={({ row }) => 100} // Optional, default is 500px.
+/>
+```
+
+To expand a row, click in the "i" icon or press <kbd><kbd class="key">Ctrl</kbd>+<kbd class="key">Enter</kbd></kbd> inside one of the cells of the row.
+Returning `null` or `undefined` as the value of `getDetailPanelContent` will prevent the respective row from being expanded.
+
+{{"demo": "pages/components/data-grid/group-pivot/NestedDetailPanels.js", "bg": "inline", "defaultCodeOpen": false}}
+
+> ⚠ Always memoize the function provided to `getDetailPanelContent` and `getDetailPanelHeight`.
+> The grid bases on the referential value of these props to cache their values and optimize the rendering.
 >
-> 👍 Upvote [issue #211](https://github.com/mui-org/material-ui-x/issues/211) if you want to see it land faster.
+> ```tsx
+> const getDetailPanelContent = React.useCallback(() => { ... }, []);
+>
+> <DataGridPro getDetailPanelContent={getDetailPanelContent} />
+> ```
 
-The feature allows to display row details on an expandable pane.
+> ⚠ Depending on the height of the detail panel, you may see a blank space when scrolling.
+> This is caused because the grid uses a lazy approach to update the rendered rows.
+> Set `rowThreshold` to 0 to fix it:
+>
+> ```tsx
+> <DataGridPro rowThreshold={0} />
+> ```
+
+### Controlling the detail panels
+
+To control which rows are expanded, pass a list of row ids to the `detailPanelExpandedRowIds` prop.
+The `onDetailPanelExpandedRowIds` prop can be used to detect when a row is expanded or collapsed.
+
+On the other hand, if you only want to initialize the grid with some rows already expanded, use the `initialState` prop as follow:
+
+```tsx
+<DataGridPro initialState={{ detailPanel: { expandedRowIds: [1, 2, 3] } }}>
+```
+
+{{"demo": "pages/components/data-grid/group-pivot/ControlMasterDetail.js", "bg": "inline", "defaultCodeOpen": false}}
+
+<!-- TODO ### Rendering a form as row detail -->
+
+### Customize the detail panel toggle
+
+To change the icon used for the toggle, you can provide a different component for the [icon slot](/components/data-grid/components/#icons) as follow:
+
+```tsx
+<DataGridPro components={{ DetailPanelToggleIcon: CustomIcon }}>
+```
+
+Although, if this is not sufficient, the entire toggle component can be overriden.
+To fully customize it, define a column with `field: GRID_DETAIL_PANEL_TOGGLE_FIELD`.
+The new toggle component can be provided via `renderCell`.
+It is recommended to first spread `GRID_DETAIL_PANEL_TOGGLE_COL_DEF` when defining the column, since it provides a good set of default values to start with.
+
+```tsx
+<DataGridPro
+  columns={[
+    {
+      ...GRID_DETAIL_PANEL_TOGGLE_COL_DEF, // Already contains the right field
+      renderCell: (params) => <CustomDetailPanelToggle {...params}>
+    },
+  ]}
+/>
+```
+
+This approach can also be used to change the location of the toggle column, as showed below.
+The grid detects the special field and does not add a second column.
+
+{{"demo": "pages/components/data-grid/group-pivot/CustomizeDetailPanelToggle.js", "bg": "inline", "defaultCodeOpen": false}}
+
+**Note**: As any ordinary cell renderer, the `value` prop is also available and it corresponds to the state of the row: `true` when expanded and `false` when collapsed.
+
+### apiRef
+
+{{"demo": "pages/components/data-grid/group-pivot/DetailPanelApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
 
 ## 🚧 Grouping [<span class="plan-premium"></span>](https://mui.com/store/items/material-ui-pro/)
 

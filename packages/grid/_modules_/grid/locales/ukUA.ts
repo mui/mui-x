@@ -115,6 +115,10 @@ const ukUAGrid: Partial<GridLocaleText> = {
   // treeDataGroupingHeaderName: 'Group',
   // treeDataExpand: 'see children',
   // treeDataCollapse: 'hide children',
+
+  // Master/detail
+  // expandDetailPanel: 'Expand',
+  // collapseDetailPanel: 'Collapse',
 };
 
 export const ukUA: Localization = getGridLocalization(ukUAGrid, ukUACore);

@@ -23,11 +23,13 @@ import { useGridSorting } from '../../_modules_/grid/hooks/features/sorting/useG
 import { useGridScroll } from '../../_modules_/grid/hooks/features/scroll/useGridScroll';
 import { useGridEvents } from '../../_modules_/grid/hooks/features/events/useGridEvents';
 import { useGridDimensions } from '../../_modules_/grid/hooks/features/dimensions/useGridDimensions';
+import { useGridRowsHydration } from '../../_modules_/grid/hooks/features/rows/useGridRowsHydration';
 
 export const useDataGridComponent = (apiRef: GridApiRef, props: GridComponentProps) => {
   useGridInitialization(apiRef, props);
   useGridSelection(apiRef, props);
   useGridColumns(apiRef, props);
+  useGridDensity(apiRef, props);
   useGridRows(apiRef, props);
   useGridParamsApi(apiRef);
   useGridEditRows(apiRef, props);
@@ -35,9 +37,9 @@ export const useDataGridComponent = (apiRef: GridApiRef, props: GridComponentPro
   useGridSorting(apiRef, props);
   useGridPreferencesPanel(apiRef, props);
   useGridFilter(apiRef, props);
-  useGridDensity(apiRef, props);
   useGridPageSize(apiRef, props);
   useGridPage(apiRef, props);
+  useGridRowsHydration(apiRef, props);
   useGridScroll(apiRef, props);
   useGridColumnMenu(apiRef);
   useGridKeyboard(apiRef);

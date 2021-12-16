@@ -13,7 +13,7 @@ import {
   GridProcessedMergedOptions,
   GridMergedOptions,
 } from './models/gridOptions';
-import { GridRowIdGetter, GridRowModel, GridRowsProp } from './models/gridRows';
+import { GridRowIdGetter, GridRowModel, GridRowsProp, GridRowId } from './models/gridRows';
 import { GridColumnTypesRecord } from './models/colDef/gridColumnTypesRecord';
 import { GridSortModel } from './models/gridSortModel';
 import { GridFilterModel } from './models/gridFilterModel';
@@ -83,6 +83,12 @@ interface GridComponentOtherProps extends CommonProps {
    * @returns {string} The CSS class to apply to the row.
    */
   getRowClassName?: (params: GridRowParams) => string;
+  /**
+   * Function that returns the element to render in row detail.
+   * @param {GridRowParams} params With all properties from [[GridRowParams]].
+   * @returns {JSX.Element} The row detail element.
+   */
+  getDetailPanelContent?: (params: GridRowParams) => React.ReactNode;
   /**
    * Callback fired when a cell is rendered, returns true if the cell is editable.
    * @param {GridCellParams} params With all properties from [[GridCellParams]].
@@ -365,6 +371,16 @@ interface GridComponentOtherProps extends CommonProps {
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onPinnedColumnsChange?: (pinnedColumns: GridPinnedColumns, details: GridCallbackDetails) => void;
+  /**
+   * The row ids to show the detail panel.
+   */
+  detailPanelExpandedRowIds?: GridRowId[];
+  /**
+   * Callback fired when the detail panel of a row is opened or closed.
+   * @param {GridRowId[]} ids The ids of the rows which have the detail panel open.
+   * @param {GridCallbackDetails} details Additional details for this callback.
+   */
+  onDetailPanelExpandedRowIdsChange?: (ids: GridRowId[], details: GridCallbackDetails) => void;
   /**
    * The label of the grid.
    */

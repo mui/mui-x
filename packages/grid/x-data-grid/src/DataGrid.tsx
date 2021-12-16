@@ -118,6 +118,12 @@ DataGridRaw.propTypes = {
    */
   density: PropTypes.oneOf(['comfortable', 'compact', 'standard']),
   /**
+   * The row ids to show the detail panel.
+   */
+  detailPanelExpandedRowIds: PropTypes.arrayOf(
+    PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  ),
+  /**
    * If `true`, column filters are disabled.
    * @default false
    */
@@ -386,6 +392,12 @@ DataGridRaw.propTypes = {
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onColumnWidthChange: PropTypes.func,
+  /**
+   * Callback fired when the detail panel of a row is opened or closed.
+   * @param {GridRowId[]} ids The ids of the rows which have the detail panel open.
+   * @param {GridCallbackDetails} details Additional details for this callback.
+   */
+  onDetailPanelExpandedRowIdsChange: PropTypes.func,
   /**
    * Callback fired when the edit cell value changes.
    * @param {GridEditCellPropsParams} params With all properties from [[GridEditCellPropsParams]].

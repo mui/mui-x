@@ -23,6 +23,9 @@
       },
       "default": "\"standard\""
     },
+    "detailPanelExpandedRowIds": {
+      "type": { "name": "arrayOf", "description": "Array&lt;number<br>&#124;&nbsp;string&gt;" }
+    },
     "disableColumnFilter": { "type": { "name": "bool" } },
     "disableColumnMenu": { "type": { "name": "bool" } },
     "disableColumnSelector": { "type": { "name": "bool" } },
@@ -85,6 +88,7 @@
     "onColumnResize": { "type": { "name": "func" } },
     "onColumnVisibilityChange": { "type": { "name": "func" } },
     "onColumnWidthChange": { "type": { "name": "func" } },
+    "onDetailPanelExpandedRowIdsChange": { "type": { "name": "func" } },
     "onEditCellPropsChange": {
       "type": { "name": "func" },
       "deprecated": true,
@@ -180,6 +184,7 @@
     },
     "DensityCompactIcon": { "default": "GridViewHeadlineIcon", "type": { "name": "elementType" } },
     "DensityStandardIcon": { "default": "GridTableRowsIcon", "type": { "name": "elementType" } },
+    "DetailPanelToggleIcon": { "type": { "name": "elementType" } },
     "ErrorOverlay": { "default": "ErrorOverlay", "type": { "name": "elementType" } },
     "ExportIcon": { "default": "GridSaveAltIcon", "type": { "name": "elementType" } },
     "FilterPanel": { "default": "GridFilterPanel", "type": { "name": "elementType" } },
@@ -234,6 +239,8 @@
       "columnSeparator",
       "columnsPanel",
       "columnsPanelRow",
+      "detailPanelToggleCell",
+      "detailPanelToggleCell--expanded",
       "panel",
       "panelHeader",
       "panelWrapper",

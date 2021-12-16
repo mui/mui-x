@@ -114,6 +114,10 @@ const arSDGrid: Partial<GridLocaleText> = {
   // treeDataGroupingHeaderName: 'Group',
   // treeDataExpand: 'see children',
   // treeDataCollapse: 'hide children',
+
+  // Master/detail
+  // expandDetailPanel: 'Expand',
+  // collapseDetailPanel: 'Collapse',
 };
 
 export const arSD: Localization = getGridLocalization(arSDGrid, arSDCore);

@@ -115,6 +115,10 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
   treeDataExpand: 'see children',
   treeDataCollapse: 'hide children',
 
+  // Master/detail
+  expandDetailPanel: 'Expand',
+  collapseDetailPanel: 'Collapse',
+
   // Used core components translation keys
   MuiTablePagination: {},
 };

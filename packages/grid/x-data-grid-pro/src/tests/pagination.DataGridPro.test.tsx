@@ -87,6 +87,7 @@ describe('<DataGridPro /> - Pagination', () => {
               pageSize={pageSize}
               rowsPerPageOptions={[pageSize]}
               onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+              disableVirtualization
               pagination
             />
           </div>

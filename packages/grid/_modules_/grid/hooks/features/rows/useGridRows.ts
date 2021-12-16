@@ -10,6 +10,7 @@ import {
   GridRowsProp,
   GridRowIdGetter,
   GridRowTreeNodeConfig,
+  GridRowsMeta,
 } from '../../../models/gridRows';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
@@ -39,12 +40,24 @@ interface GridRowsInternalCacheState {
    * It is used to avoid processing several time the same set of rows
    */
   rowsBeforePartialUpdates: GridRowsProp;
+
+  /**
+   * The last visible rows total height and row possitions.
+   */
+  meta: GridRowsMeta;
 }
 
 interface GridRowsInternalCache {
   state: GridRowsInternalCacheState;
   timeout: NodeJS.Timeout | null;
   lastUpdateMs: number;
+}
+
+interface ConvertGridRowsPropToStateParams {
+  prevState: GridRowsInternalCacheState;
+  props?: Pick<GridComponentProps, 'rowCount' | 'getRowId'>;
+  rows?: GridRowsProp;
+  rowsMeta?: GridRowsMeta;
 }
 
 function getGridRowId(
@@ -57,18 +70,14 @@ function getGridRowId(
   return id;
 }
 
-interface ConvertGridRowsPropToStateParams {
-  prevState: GridRowsInternalCacheState;
-  props?: Pick<GridComponentProps, 'rowCount' | 'getRowId'>;
-  rows?: GridRowsProp;
-}
-
 const convertGridRowsPropToState = ({
   prevState,
   rows,
   props: inputProps,
+  rowsMeta,
 }: ConvertGridRowsPropToStateParams): GridRowsInternalCacheState => {
   const props = inputProps ?? prevState.props;
+  const meta = rowsMeta ?? prevState.meta;
 
   let value: GridRowGroupParams;
   if (rows) {
@@ -89,6 +98,7 @@ const convertGridRowsPropToState = ({
   return {
     value,
     props,
+    meta,
     rowsBeforePartialUpdates: rows ?? prevState.rowsBeforePartialUpdates,
   };
 };
@@ -100,6 +110,7 @@ const getRowsStateFromCache = (
   const {
     props: { rowCount: propRowCount = 0 },
     value,
+    meta,
   } = rowsCache.state;
 
   const groupingResponse = apiRef.current.unstable_groupRows(value);
@@ -112,7 +123,7 @@ const getRowsStateFromCache = (
   const totalTopLevelRowCount =
     propRowCount > dataTopLevelRowCount ? propRowCount : dataTopLevelRowCount;
 
-  return { ...groupingResponse, totalRowCount, totalTopLevelRowCount };
+  return { ...groupingResponse, totalRowCount, totalTopLevelRowCount, meta };
 };
 
 /**
@@ -122,7 +133,13 @@ export const useGridRows = (
   apiRef: GridApiRef,
   props: Pick<
     GridComponentProps,
-    'rows' | 'getRowId' | 'rowCount' | 'throttleRowsMs' | 'signature'
+    | 'rows'
+    | 'getRowId'
+    | 'rowCount'
+    | 'throttleRowsMs'
+    | 'signature'
+    | 'pagination'
+    | 'paginationMode'
   >,
 ): void => {
   if (process.env.NODE_ENV !== 'production') {
@@ -142,6 +159,10 @@ export const useGridRows = (
         getRowId: undefined,
       },
       rowsBeforePartialUpdates: [],
+      meta: {
+        totalHeight: 0,
+        positions: [],
+      },
     },
     timeout: null,
     lastUpdateMs: 0,

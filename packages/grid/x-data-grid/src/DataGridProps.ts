@@ -26,6 +26,8 @@ export type DataGridProps = Omit<
   | 'onPinnedColumnsChange'
   | 'treeData'
   | 'getTreeDataPath'
+  | 'getDetailPanelHeight'
+  | 'getDetailPanelContent'
   | 'groupingColDef'
   | 'defaultGroupingExpansionDepth'
   | 'signature'

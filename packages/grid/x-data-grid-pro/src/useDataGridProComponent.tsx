@@ -20,6 +20,7 @@ import { useGridPage } from '../../_modules_/grid/hooks/features/pagination/useG
 import { useGridPreferencesPanel } from '../../_modules_/grid/hooks/features/preferencesPanel/useGridPreferencesPanel';
 import { useGridEditRows } from '../../_modules_/grid/hooks/features/editRows/useGridEditRows';
 import { useGridRows } from '../../_modules_/grid/hooks/features/rows/useGridRows';
+import { useGridRowsHydration } from '../../_modules_/grid/hooks/features/rows/useGridRowsHydration';
 import { useGridParamsApi } from '../../_modules_/grid/hooks/features/rows/useGridParamsApi';
 import { useGridSelection } from '../../_modules_/grid/hooks/features/selection/useGridSelection';
 import { useGridSorting } from '../../_modules_/grid/hooks/features/sorting/useGridSorting';
@@ -28,12 +29,14 @@ import { useGridEvents } from '../../_modules_/grid/hooks/features/events/useGri
 import { useGridDimensions } from '../../_modules_/grid/hooks/features/dimensions/useGridDimensions';
 import { useGridTreeData } from '../../_modules_/grid/hooks/features/treeData/useGridTreeData';
 import { useGridColumnPinning } from '../../_modules_/grid/hooks/features/columnPinning/useGridColumnPinning';
+import { useGridDetailPanel } from '../../_modules_/grid/hooks/features/detailPanel/useGridDetailPanel';
 
 export const useDataGridProComponent = (apiRef: GridApiRef, props: GridComponentProps) => {
   useGridInitialization(apiRef, props);
   useGridTreeData(apiRef, props);
   useGridSelection(apiRef, props);
   useGridColumns(apiRef, props);
+  useGridDensity(apiRef, props);
   useGridRows(apiRef, props);
   useGridParamsApi(apiRef);
   useGridEditRows(apiRef, props);
@@ -41,11 +44,11 @@ export const useDataGridProComponent = (apiRef: GridApiRef, props: GridComponent
   useGridSorting(apiRef, props);
   useGridPreferencesPanel(apiRef, props);
   useGridFilter(apiRef, props);
-  useGridDensity(apiRef, props);
   useGridColumnReorder(apiRef, props);
   useGridColumnResize(apiRef, props);
   useGridPageSize(apiRef, props);
   useGridPage(apiRef, props);
+  useGridRowsHydration(apiRef, props);
   useGridScroll(apiRef, props);
   useGridInfiniteLoader(apiRef, props);
   useGridColumnMenu(apiRef);
@@ -55,6 +58,7 @@ export const useDataGridProComponent = (apiRef: GridApiRef, props: GridComponent
   useGridPrintExport(apiRef, props);
   useGridClipboard(apiRef);
   useGridDimensions(apiRef, props);
+  useGridDetailPanel(apiRef, props);
   useGridColumnPinning(apiRef, props);
   useGridEvents(apiRef, props);
 };

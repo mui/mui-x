@@ -113,6 +113,10 @@ const bgBGGrid: Partial<GridLocaleText> = {
   // treeDataGroupingHeaderName: 'Group',
   // treeDataExpand: 'see children',
   // treeDataCollapse: 'hide children',
+
+  // Master/detail
+  // expandDetailPanel: 'Expand',
+  // collapseDetailPanel: 'Collapse',
 };
 
 export const bgBG: Localization = getGridLocalization(bgBGGrid, bgBGCore);

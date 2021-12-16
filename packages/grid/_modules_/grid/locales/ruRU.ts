@@ -144,6 +144,10 @@ const ruRUGrid: Partial<GridLocaleText> = {
   treeDataGroupingHeaderName: 'Группа',
   treeDataExpand: 'показать дочерние элементы',
   treeDataCollapse: 'скрыть дочерние элементы',
+
+  // Master/detail
+  // expandDetailPanel: 'Expand',
+  // collapseDetailPanel: 'Collapse',
 };
 
 export const ruRU: Localization = getGridLocalization(ruRUGrid, ruRUCore);

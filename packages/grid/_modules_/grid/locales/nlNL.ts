@@ -116,6 +116,10 @@ const nlNLGrid: Partial<GridLocaleText> = {
   treeDataGroupingHeaderName: 'Groep',
   treeDataExpand: 'Uitvouwen',
   treeDataCollapse: 'Inklappen',
+
+  // Master/detail
+  // expandDetailPanel: 'Expand',
+  // collapseDetailPanel: 'Collapse',
 };
 
 export const nlNL: Localization = getGridLocalization(nlNLGrid, nlNLCore);

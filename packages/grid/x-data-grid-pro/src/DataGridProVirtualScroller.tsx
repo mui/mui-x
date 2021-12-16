@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { styled, alpha } from '@mui/material/styles';
+import Box from '@mui/material/Box';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { GridRowId } from '../../_modules_/grid/models/gridRows';
 import { GridVirtualScroller } from '../../_modules_/grid/components/virtualization/GridVirtualScroller';
@@ -16,9 +17,17 @@ import { GridComponentProps } from '../../_modules_/grid/GridComponentProps';
 import { getDataGridUtilityClass } from '../../_modules_/grid/gridClasses';
 import { gridPinnedColumnsSelector } from '../../_modules_/grid/hooks/features/columnPinning/columnPinningSelector';
 import {
+  gridExpandedRowIds,
+  gridExpandedRowsContentCache,
+  gridExpandedRowsHeightCache,
+} from '../../_modules_/grid/hooks/features/detailPanel/gridDetailPanelSelector';
+import { useCurrentPageRows } from '../../_modules_/grid/hooks/utils/useCurrentPageRows';
+import { gridDensityRowHeightSelector } from '../../_modules_/grid/hooks/features/density/densitySelector';
+import {
   GridPinnedColumns,
   GridPinnedPosition,
 } from '../../_modules_/grid/models/api/gridColumnPinningApi';
+import { gridRowsMetaSelector } from '../../_modules_/grid/hooks/features/rows/gridRowsSelector';
 
 export const filterColumns = (pinnedColumns: GridPinnedColumns, columns: string[]) => {
   if (!Array.isArray(pinnedColumns.left) && !Array.isArray(pinnedColumns.right)) {
@@ -63,6 +72,8 @@ const useUtilityClasses = (ownerState: OwnerState) => {
       'pinnedColumns',
       rightPinnedColumns && rightPinnedColumns.length > 0 && 'pinnedColumns--right',
     ],
+    detailPanels: ['detailPanels'],
+    detailPanel: ['detailPanel'],
   };
 
   return composeClasses(slots, getDataGridUtilityClass, classes);
@@ -82,6 +93,21 @@ const getOverlayAlpha = (elevation: number) => {
   }
   return alphaValue / 100;
 };
+
+const VirtualScrollerDetailPanels = styled('div', {
+  name: 'MuiDataGrid',
+  slot: 'DetailPanels',
+})({});
+
+const VirtualScrollerDetailPanel = styled(Box, {
+  name: 'MuiDataGrid',
+  slot: 'DetailPanel',
+})(({ theme }) => ({
+  zIndex: 2,
+  width: '100%',
+  position: 'absolute',
+  backgroundColor: theme.palette.background.default,
+}));
 
 const VirtualScrollerPinnedColumns = styled('div', {
   name: 'MuiDataGrid',
@@ -114,7 +140,12 @@ const DataGridProVirtualScroller = React.forwardRef<
   const { className, disableVirtualization, selectionLookup, ...other } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
+  const currentPage = useCurrentPageRows(apiRef, rootProps);
   const visibleColumnFields = useGridSelector(apiRef, gridVisibleColumnFieldsSelector);
+  const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
+  const expandedRowIds = useGridSelector(apiRef, gridExpandedRowIds);
+  const detailPanelsContent = useGridSelector(apiRef, gridExpandedRowsContentCache);
+  const detailPanelsHeights = useGridSelector(apiRef, gridExpandedRowsHeightCache);
   const leftColumns = React.useRef<HTMLDivElement>(null);
   const rightColumns = React.useRef<HTMLDivElement>(null);
   const [shouldExtendContent, setShouldExtendContent] = React.useState(false);
@@ -126,6 +157,14 @@ const DataGridProVirtualScroller = React.forwardRef<
     if (rightColumns.current) {
       rightColumns.current!.style.transform = `translate3d(0px, ${top}px, 0px)`;
     }
+  };
+
+  const getRowProps = (id: GridRowId) => {
+    if (!expandedRowIds.includes(id)) {
+      return null;
+    }
+    const height = detailPanelsHeights[id];
+    return { style: { marginBottom: height } };
   };
 
   const pinnedColumns = useGridSelector(apiRef, gridPinnedColumnsSelector);
@@ -146,6 +185,7 @@ const DataGridProVirtualScroller = React.forwardRef<
     renderZoneMinColumnIndex: leftPinnedColumns.length,
     renderZoneMaxColumnIndex: visibleColumnFields.length - rightPinnedColumns.length,
     onRenderZonePositioning: handleRenderZonePositioning,
+    getRowProps,
     ...props,
   });
 
@@ -204,9 +244,55 @@ const DataGridProVirtualScroller = React.forwardRef<
     minHeight: shouldExtendContent ? '100%' : 'auto',
   };
 
+  const { getDetailPanelContent } = rootProps;
+
+  const getDetailPanels = () => {
+    const panels: React.ReactNode[] = [];
+
+    if (getDetailPanelContent == null) {
+      return panels;
+    }
+
+    const rowsMeta = gridRowsMetaSelector(apiRef.current.state);
+    const uniqueExpandedRowIds = [...new Set([...expandedRowIds]).values()];
+
+    for (let i = 0; i < uniqueExpandedRowIds.length; i += 1) {
+      const id = uniqueExpandedRowIds[i];
+      const content = detailPanelsContent[id];
+
+      // Check if the id exists in the current page
+      const exists = currentPage.rows.find((row) => row.id === id);
+
+      if (React.isValidElement(content) && exists) {
+        const height = detailPanelsHeights[id];
+        const rowIndex = currentPage.rows.findIndex((rowEntry) => rowEntry.id === id);
+        const top = rowsMeta.positions[rowIndex] + rowHeight;
+
+        panels.push(
+          <VirtualScrollerDetailPanel
+            key={i}
+            style={{ top, height }}
+            className={classes.detailPanel}
+          >
+            {content}
+          </VirtualScrollerDetailPanel>,
+        );
+      }
+    }
+
+    return panels;
+  };
+
+  const detailPanels = getDetailPanels();
+
   return (
     <GridVirtualScroller {...getRootProps(other)}>
       <GridVirtualScrollerContent {...getContentProps({ style: contentStyle })}>
+        {detailPanels.length > 0 && (
+          <VirtualScrollerDetailPanels className={classes.detailPanels}>
+            {detailPanels}
+          </VirtualScrollerDetailPanels>
+        )}
         {leftRenderContext && (
           <VirtualScrollerPinnedColumns
             ref={leftColumns}

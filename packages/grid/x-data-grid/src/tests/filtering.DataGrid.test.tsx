@@ -503,6 +503,7 @@ describe('<DataGrid /> - Filter', () => {
             columns={[
               { field: 'brand', valueGetter: (params) => params.value.year, type: 'number' },
             ]}
+            disableVirtualization
           />,
         );
         expect(getColumnValues()).to.deep.equal(expected.map((res) => res.toLocaleString()));
@@ -561,7 +562,7 @@ describe('<DataGrid /> - Filter', () => {
       expect(getColumnValues(0)).to.deep.equal(['0', '2']);
     });
 
-    it('should show all rows when the value is empty', () => {
+    it('should show all rows when the value is empty', function test() {
       render(
         <TestCase
           filterModel={undefined}
@@ -574,6 +575,7 @@ describe('<DataGrid /> - Filter', () => {
             { id: 4, brand: 1954 },
             { id: 5, brand: 1974 },
           ]}
+          disableVirtualization
         />,
       );
       expect(getColumnValues()).to.deep.equal(['0', '1984', '1954', '1974']);
@@ -747,6 +749,7 @@ describe('<DataGrid /> - Filter', () => {
                 valueFormatter: (params) => params.value.toLocaleDateString('en-US'),
               },
             ]}
+            disableVirtualization
           />,
         );
         expect(getColumnValues()).to.deep.equal(expected);
@@ -838,6 +841,7 @@ describe('<DataGrid /> - Filter', () => {
                 valueFormatter: (params) => params.value.toLocaleString('en-US'),
               },
             ]}
+            disableVirtualization
           />,
         );
         expect(getColumnValues()).to.deep.equal(expected);
@@ -913,7 +917,9 @@ describe('<DataGrid /> - Filter', () => {
 
   describe('boolean operators', () => {
     it('should allow operator is', () => {
-      const { setProps } = render(<TestCase value="a" operatorValue="contains" />);
+      const { setProps } = render(
+        <TestCase value="a" operatorValue="contains" disableVirtualization />,
+      );
       setProps({
         field: 'isPublished',
         operatorValue: 'is',

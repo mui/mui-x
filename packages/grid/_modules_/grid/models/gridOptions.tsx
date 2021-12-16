@@ -5,6 +5,7 @@ import { GridFeatureMode, GridFeatureModeConstant } from './gridFeatureMode';
 import { Logger } from './logger';
 import { GridSortDirection } from './gridSortModel';
 import { GridSlotsComponent } from './gridSlotsComponent';
+import { GridRowParams } from './params/gridRowParams';
 
 export type GridMergedOptions = {
   [key in keyof GridProcessedMergedOptions]: Partial<GridProcessedMergedOptions[key]>;
@@ -165,6 +166,13 @@ export interface GridSimpleOptions {
    */
   filterMode: GridFeatureMode;
   /**
+   * Function that returns the height of the row detail panel.
+   * @param {GridRowParams} params With all properties from [[GridRowParams]].
+   * @returns {number} The height in pixels.
+   * @default "() => 300"
+   */
+  getDetailPanelHeight: (params: GridRowParams) => number;
+  /**
    * Set the height in pixel of the column headers in the grid.
    * @default 56
    */
@@ -298,6 +306,7 @@ export const GRID_DEFAULT_SIMPLE_OPTIONS: GridSimpleOptions = {
   disableVirtualization: false,
   editMode: GridEditModes.Cell,
   filterMode: GridFeatureModeConstant.client,
+  getDetailPanelHeight: () => 500,
   headerHeight: 56,
   hideFooter: false,
   hideFooterPagination: false,

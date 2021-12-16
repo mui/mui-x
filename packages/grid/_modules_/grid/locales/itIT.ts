@@ -116,6 +116,10 @@ const itITGrid: Partial<GridLocaleText> = {
   // treeDataGroupingHeaderName: 'Group',
   // treeDataExpand: 'see children',
   // treeDataCollapse: 'hide children',
+
+  // Master/detail
+  // expandDetailPanel: 'Expand',
+  // collapseDetailPanel: 'Collapse',
 };
 
 export const itIT: Localization = getGridLocalization(itITGrid, itITCore);

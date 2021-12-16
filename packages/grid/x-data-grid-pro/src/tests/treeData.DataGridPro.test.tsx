@@ -57,7 +57,7 @@ describe('<DataGridPro /> - Tree Data', () => {
 
     return (
       <div style={{ width: 300, height: 800 }}>
-        <DataGridPro {...baselineProps} apiRef={apiRef} {...props} />
+        <DataGridPro {...baselineProps} apiRef={apiRef} {...props} disableVirtualization />
       </div>
     );
   };

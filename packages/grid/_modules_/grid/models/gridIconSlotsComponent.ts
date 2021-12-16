@@ -87,4 +87,8 @@ export interface GridIconSlotsComponent {
    * Icon displayed on the tree data toggling column when the children are expanded
    */
   TreeDataCollapseIcon: React.JSXElementConstructor<any>;
+  /**
+   * Icon displayed on the detail panel toggle column
+   */
+  DetailPanelToggleIcon: React.JSXElementConstructor<any>;
 }

@@ -14,6 +14,7 @@
     "components": "Overrideable components.",
     "componentsProps": "Overrideable components props dynamically passed to the component at rendering.",
     "density": "Set the density of the grid.",
+    "detailPanelExpandedRowIds": "The row ids to show the detail panel.",
     "disableColumnFilter": "If <code>true</code>, column filters are disabled.",
     "disableColumnMenu": "If <code>true</code>, the column menu is disabled.",
     "disableColumnSelector": "If <code>true</code>, hiding/showing columns is disabled.",
@@ -58,6 +59,7 @@
     "onColumnResize": "Callback fired while a column is being resized.<br><br><strong>Signature:</strong><br><code>function(params: GridColumnResizeParams, event: MuiEvent&lt;React.MouseEvent&gt;, details: GridCallbackDetails) =&gt; void</code><br><em>params:</em> With all properties from GridColumnResizeParams.<br><em>event:</em> The event object.<br><em>details:</em> Additional details for this callback.",
     "onColumnVisibilityChange": "Callback fired when a column visibility changes.<br><br><strong>Signature:</strong><br><code>function(params: GridColumnVisibilityChangeParams, event: MuiEvent&lt;{}&gt;, details: GridCallbackDetails) =&gt; void</code><br><em>params:</em> With all properties from GridColumnVisibilityChangeParams.<br><em>event:</em> The event object.<br><em>details:</em> Additional details for this callback.",
     "onColumnWidthChange": "Callback fired when the width of a column is changed.<br><br><strong>Signature:</strong><br><code>function(params: GridColumnResizeParams, event: MuiEvent&lt;React.MouseEvent&gt;, details: GridCallbackDetails) =&gt; void</code><br><em>params:</em> With all properties from GridColumnResizeParams.<br><em>event:</em> The event object.<br><em>details:</em> Additional details for this callback.",
+    "onDetailPanelExpandedRowIdsChange": "Callback fired when the detail panel of a row is opened or closed.<br><br><strong>Signature:</strong><br><code>function(ids: Array&lt;GridRowId&gt;, details: GridCallbackDetails) =&gt; void</code><br><em>ids:</em> The ids of the rows which have the detail panel open.<br><em>details:</em> Additional details for this callback.",
     "onEditCellPropsChange": "Callback fired when the edit cell value changes.<br><br><strong>Signature:</strong><br><code>function(params: GridEditCellPropsParams, event: MuiEvent&lt;React.SyntheticEvent&gt;, details: GridCallbackDetails) =&gt; void</code><br><em>params:</em> With all properties from GridEditCellPropsParams.<br><em>event:</em> The event that caused this prop to be called.<br><em>details:</em> Additional details for this callback.",
     "onEditRowsModelChange": "Callback fired when the <code>editRowsModel</code> changes.<br><br><strong>Signature:</strong><br><code>function(editRowsModel: GridEditRowsModel, details: GridCallbackDetails) =&gt; void</code><br><em>editRowsModel:</em> With all properties from GridEditRowsModel.<br><em>details:</em> Additional details for this callback.",
     "onError": "Callback fired when an exception is thrown in the grid.<br><br><strong>Signature:</strong><br><code>function(args: any, event: MuiEvent&lt;{}&gt;, details: GridCallbackDetails) =&gt; void</code><br><em>args:</em> The arguments passed to the <code>showError</code> call.<br><em>event:</em> The event object.<br><em>details:</em> Additional details for this callback.",
@@ -236,6 +238,15 @@
     "columnsPanelRow": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the columns panel row element"
+    },
+    "detailPanelToggleCell": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the detail panel toggle cell element"
+    },
+    "detailPanelToggleCell--expanded": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the detail panel toggle cell element",
+      "conditions": "expanded"
     },
     "panel": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the panel element" },
     "panelHeader": {
@@ -424,6 +435,7 @@
     "ExportIcon": "Icon displayed on the open export button present in the toolbar by default.",
     "MoreActionsIcon": "Icon displayed on the <code>actions</code> column type to open the menu.",
     "TreeDataExpandIcon": "Icon displayed on the tree data toggling column when the children are collapsed",
-    "TreeDataCollapseIcon": "Icon displayed on the tree data toggling column when the children are expanded"
+    "TreeDataCollapseIcon": "Icon displayed on the tree data toggling column when the children are expanded",
+    "DetailPanelToggleIcon": "Icon displayed on the detail panel toggle column"
   }
 }

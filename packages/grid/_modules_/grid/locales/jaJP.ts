@@ -111,6 +111,10 @@ const jaJPGrid: Partial<GridLocaleText> = {
   // treeDataGroupingHeaderName: 'Group',
   // treeDataExpand: 'see children',
   // treeDataCollapse: 'hide children',
+
+  // Master/detail
+  // expandDetailPanel: 'Expand',
+  // collapseDetailPanel: 'Collapse',
 };
 
 export const jaJP: Localization = getGridLocalization(jaJPGrid, jaJPCore);

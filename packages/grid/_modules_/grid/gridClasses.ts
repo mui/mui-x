@@ -134,6 +134,14 @@ export interface GridClasses {
    */
   columnsPanelRow: string;
   /**
+   * Styles applied to the detail panel toggle cell element.
+   */
+  detailPanelToggleCell: string;
+  /**
+   * Styles applied to the detail panel toggle cell element if expanded.
+   */
+  'detailPanelToggleCell--expanded': string;
+  /**
    * Styles applied to the panel element.
    */
   panel: string;
@@ -341,6 +349,8 @@ export const gridClasses = generateUtilityClasses('MuiDataGrid', [
   'columnSeparator',
   'columnsPanel',
   'columnsPanelRow',
+  'detailPanelToggleCell',
+  'detailPanelToggleCell--expanded',
   'panel',
   'panelHeader',
   'panelWrapper',

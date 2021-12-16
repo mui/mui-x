@@ -116,6 +116,10 @@ const ptBRGrid: Partial<GridLocaleText> = {
   // treeDataGroupingHeaderName: 'Group',
   // treeDataExpand: 'see children',
   // treeDataCollapse: 'hide children',
+
+  // Master/detail
+  expandDetailPanel: 'Expandir',
+  collapseDetailPanel: 'Esconder',
 };
 
 export const ptBR: Localization = getGridLocalization(ptBRGrid, ptBRCore);

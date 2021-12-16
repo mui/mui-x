@@ -114,6 +114,10 @@ const heILGrid: Partial<GridLocaleText> = {
   treeDataGroupingHeaderName: 'קבוצה',
   treeDataExpand: 'הרחב',
   treeDataCollapse: 'כווץ',
+
+  // Master/detail
+  // expandDetailPanel: 'Expand',
+  // collapseDetailPanel: 'Collapse',
 };
 
 export const heIL: Localization = getGridLocalization(heILGrid, heILCore);

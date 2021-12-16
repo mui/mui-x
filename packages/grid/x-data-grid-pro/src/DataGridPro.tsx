@@ -147,6 +147,12 @@ DataGridProRaw.propTypes = {
    */
   density: PropTypes.oneOf(['comfortable', 'compact', 'standard']),
   /**
+   * The row ids to show the detail panel.
+   */
+  detailPanelExpandedRowIds: PropTypes.arrayOf(
+    PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  ),
+  /**
    * If `true`, the filtering will only be applied to the top level rows.
    * @default false
    */
@@ -267,6 +273,19 @@ DataGridProRaw.propTypes = {
    * @returns {string} The CSS class to apply to the cell.
    */
   getCellClassName: PropTypes.func,
+  /**
+   * Function that returns the element to render in row detail.
+   * @param {GridRowParams} params With all properties from [[GridRowParams]].
+   * @returns {JSX.Element} The row detail element.
+   */
+  getDetailPanelContent: PropTypes.func,
+  /**
+   * Function that returns the height of the row detail panel.
+   * @param {GridRowParams} params With all properties from [[GridRowParams]].
+   * @returns {number} The height in pixels.
+   * @default "() => 300"
+   */
+  getDetailPanelHeight: PropTypes.func,
   /**
    * Function that applies CSS classes dynamically on rows.
    * @param {GridRowParams} params With all properties from [[GridRowParams]].
@@ -485,6 +504,12 @@ DataGridProRaw.propTypes = {
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onColumnWidthChange: PropTypes.func,
+  /**
+   * Callback fired when the detail panel of a row is opened or closed.
+   * @param {GridRowId[]} ids The ids of the rows which have the detail panel open.
+   * @param {GridCallbackDetails} details Additional details for this callback.
+   */
+  onDetailPanelExpandedRowIdsChange: PropTypes.func,
   /**
    * Callback fired when the edit cell value changes.
    * @param {GridEditCellPropsParams} params With all properties from [[GridEditCellPropsParams]].

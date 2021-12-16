@@ -129,6 +129,7 @@ export interface GridControlledStateEventLookup {
   editRowsModelChange: { params: GridEditRowsModel };
   selectionChange: { params: GridSelectionModel };
   pinnedColumnsChange: { params: GridPinnedColumns };
+  detailPanelsExpandedRowIdsChange: { params: GridRowId[] };
 }
 
 export interface GridEventLookup

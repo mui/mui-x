@@ -9,7 +9,7 @@ import {
 import { useGridSelector } from '../../utils/useGridSelector';
 import { GridComponentProps } from '../../../GridComponentProps';
 import { gridPaginationSelector } from '../pagination/gridPaginationSelector';
-import { gridRowCountSelector } from '../rows/gridRowsSelector';
+import { gridRowCountSelector, gridRowsMetaSelector } from '../rows/gridRowsSelector';
 import { gridDensityRowHeightSelector } from '../density/densitySelector';
 import { GridScrollParams } from '../../../models/params/gridScrollParams';
 import { GridScrollApi } from '../../../models/api/gridScrollApi';
@@ -52,6 +52,7 @@ export const useGridScroll = (
   const totalRowCount = useGridSelector(apiRef, gridRowCountSelector);
   const visibleColumns = useGridSelector(apiRef, visibleGridColumnsSelector);
   const columnsMeta = useGridSelector(apiRef, gridColumnsMetaSelector);
+  const rowsMeta = useGridSelector(apiRef, gridRowsMetaSelector);
 
   const scrollToIndexes = React.useCallback<GridScrollApi['scrollToIndexes']>(
     (params: Partial<GridCellIndexCoordinates>) => {
@@ -81,7 +82,7 @@ export const useGridScroll = (
           clientHeight: windowRef.current!.clientHeight,
           scrollTop: windowRef.current!.scrollTop,
           offsetHeight: rowHeight,
-          offsetTop: rowHeight * elementIndex,
+          offsetTop: rowsMeta.positions[elementIndex],
         });
       }
 
@@ -106,12 +107,13 @@ export const useGridScroll = (
       visibleColumns,
       logger,
       apiRef,
+      windowRef,
+      columnsMeta.positions,
       props.pagination,
       paginationState.page,
       paginationState.pageSize,
-      windowRef,
-      columnsMeta.positions,
       rowHeight,
+      rowsMeta.positions,
     ],
   );
 
