@@ -162,7 +162,7 @@ export interface GridSimpleOptions {
    */
   disableColumnPinning: boolean;
   /**
-   * If `true`, the grouping columns are disabled.
+   * If `true`, the row grouping is disabled.
    * @default false
    */
   disableRowGrouping: boolean;

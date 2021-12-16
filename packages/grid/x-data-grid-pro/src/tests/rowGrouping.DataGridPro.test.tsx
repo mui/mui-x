@@ -71,7 +71,7 @@ describe('<DataGridPro /> - Group Rows By Column', () => {
 
   describe('Setting grouping criteria', () => {
     describe('initialState: rowGrouping.model', () => {
-      it('should allow to initialize the grouping columns', () => {
+      it('should allow to initialize the row grouping', () => {
         render(
           <Test
             initialState={{ rowGrouping: { model: ['category1'] } }}
@@ -495,7 +495,7 @@ describe('<DataGridPro /> - Group Rows By Column', () => {
       expect(disableRowGroupingSpy.lastCall.firstArg).to.equal(true);
     });
 
-    it('should disable grouping columns when `prop.disableRowGrouping = true`', () => {
+    it('should disable the row grouping when `prop.disableRowGrouping = true`', () => {
       render(
         <Test
           initialState={{ rowGrouping: { model: ['category1'] } }}

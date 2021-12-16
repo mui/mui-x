@@ -8,7 +8,7 @@ title: Data Grid - Group & Pivot
 
 ## Row grouping [<span class="plan-premium"></span>](https://mui.com/store/items/material-ui-pro/)
 
-Use grouping columns to group the rows according to one or several columns value</p>
+Use row grouping to group the rows according to one or several columns value</p>
 
 > ⚠️ This feature is temporarily available on the Pro plan until the release of the Premium plan.
 >
@@ -20,11 +20,11 @@ Use grouping columns to group the rows according to one or several columns value
 >
 > The feature is stable in its current form, and we encourage users willing to migrate to the Premium plan once available to start using it.
 
-### Grouping columns definition
+### Row grouping definition
 
-#### Initializing the grouping columns
+#### Initialize the row grouping
 
-To initialize the grouping columns without controlling them, provide the model to the `initialState` prop:
+To initialize the row grouping without controlling it, provide the model to the `initialState` prop:
 
 ```ts
 initialState={{
@@ -36,9 +36,9 @@ initialState={{
 
 {{"demo": "pages/components/data-grid/group-pivot/RowGroupingInitialState.js", "bg": "inline", "defaultCodeOpen": false}}
 
-#### Controlling the grouping columns
+#### Control the row grouping
 
-To fully control the grouping columns, provide the model to the `rowGroupingModel` prop.
+To fully control the row grouping, provide the model to the `rowGroupingModel` prop.
 Use it together with `onRowGroupingModelChange` to know when a grouping criteria is added or removed.
 
 {{"demo": "pages/components/data-grid/group-pivot/RowGroupingControlled.js", "bg": "inline", "defaultCodeOpen": false}}
@@ -49,7 +49,7 @@ Use it together with `onRowGroupingModelChange` to know when a grouping criteria
 
 To fully disable the grouping feature, set the `disableRowGrouping` prop to `true`.
 
-It will disable all the features related to the grouping columns, even if a model is provided.
+It will disable all the features related to the row grouping, even if a model is provided.
 
 {{"demo": "pages/components/data-grid/group-pivot/RowGroupingDisabled.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -229,11 +229,11 @@ const rows: GridRowsProp = [
 
 ### Custom grouping column
 
-Same behavior as for the [Grouping Columns](##grouping-column-customization) except for the `leafField` and `mainGroupingCriteria` which are not applicable for the Tree Data.
+Same behavior as for the [Row grouping](##grouping-column-customization) except for the `leafField` and `mainGroupingCriteria` which are not applicable for the Tree Data.
 
 ### Group expansion
 
-Same behavior as for the [Grouping Columns](#group-expansion)
+Same behavior as for the [Row grouping](#group-expansion)
 
 ### Gaps in the tree
 

@@ -364,11 +364,11 @@ interface GridComponentOtherProps extends CommonProps {
    */
   onSortModelChange?: (model: GridSortModel, details: GridCallbackDetails) => void;
   /**
-   * Set the grouping columns of the grid.
+   * Set the row grouping model of the grid.
    */
   rowGroupingModel?: GridRowGroupingModel;
   /**
-   * Callback fired when the grouping columns model changes.
+   * Callback fired when the row grouping model changes.
    * @param {GridRowGroupingModel} model Columns used as grouping criteria.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */

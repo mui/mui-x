@@ -212,7 +212,7 @@ DataGridProRaw.propTypes = {
    */
   disableMultipleSelection: PropTypes.bool,
   /**
-   * If `true`, the grouping columns are disabled.
+   * If `true`, the row grouping is disabled.
    * @default false
    */
   disableRowGrouping: PropTypes.bool,
@@ -582,7 +582,7 @@ DataGridProRaw.propTypes = {
    */
   onRowEditStop: PropTypes.func,
   /**
-   * Callback fired when the grouping columns model changes.
+   * Callback fired when the row grouping model changes.
    * @param {GridRowGroupingModel} model Columns used as grouping criteria.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
@@ -661,7 +661,7 @@ DataGridProRaw.propTypes = {
    */
   rowGroupingColumnMode: PropTypes.oneOf(['multiple', 'single']),
   /**
-   * Set the grouping columns of the grid.
+   * Set the row grouping model of the grid.
    */
   rowGroupingModel: PropTypes.arrayOf(PropTypes.string),
   /**
