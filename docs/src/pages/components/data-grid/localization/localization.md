@@ -98,7 +98,7 @@ import { DataGrid, nlNL } from '@mui/x-data-grid';
 | Ukraine                 | uk-UA               | `ukUA`      |
 | Simplified Chinese      | zh-CN               | `zhCN`      |
 
-You can [find the source](https://github.com/mui-org/material-ui-x/blob/HEAD/packages/grid/_modules_/grid/locales) in the GitHub repository.
+You can [find the source](https://github.com/mui-org/material-ui-x/tree/HEAD/packages/grid/_modules_/grid/locales) in the GitHub repository.
 
 To create your own translation or to customize the English text, copy this file to your project, make any changes needed and import the locale from there.
 Note that these translations of the Data grid component depend on the [Localization strategy](/guides/localization/) of the whole library.

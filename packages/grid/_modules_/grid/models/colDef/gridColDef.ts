@@ -84,6 +84,12 @@ export interface GridColDef {
    */
   editable?: boolean;
   /**
+   * If `false`, the menu items for column pinning menu will not be rendered.
+   * Only available in DataGridPro.
+   * @default true
+   */
+  pinnable?: boolean;
+  /**
    * A comparator function used to sort rows.
    */
   sortComparator?: GridComparatorFn;
@@ -226,18 +232,26 @@ export interface GridColumnsMeta {
   positions: number[];
 }
 
-export type GridColDefOverride<ForcedFields extends keyof GridColDef> = Omit<
-  Partial<GridColDef>,
-  ForcedFields
->;
-
-export type GridColDefOverrideCallback<ForcedFields extends keyof GridColDef> = (
-  params: GridColDefOverrideParams,
-) => GridColDefOverride<ForcedFields>;
-
-export interface GridColDefOverrideParams {
+export interface GridGroupingColDefOverride
+  extends Omit<
+    GridColDef,
+    'editable' | 'valueSetter' | 'field' | 'preProcessEditCellProps' | 'renderEditCell'
+  > {
   /**
-   * The column we are generating before the override.
+   * If `true`, the grouping cells will not render the amount of descendants.
+   * @default: false
    */
-  colDef: GridColDef;
+  hideDescendantCount?: boolean;
+}
+
+export interface GridGroupingColDefOverrideParams {
+  /**
+   * The name of the grouping algorithm currently building the grouping column.
+   */
+  groupingName: string;
+
+  /**
+   * The fields of the columns from which we want to group the values on this new grouping column.
+   */
+  fields: string[];
 }

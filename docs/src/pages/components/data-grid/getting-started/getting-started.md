@@ -125,8 +125,8 @@ const theme = createTheme({
 
 The data grid comes with two different licenses:
 
-- [DataGrid](https://mui.com/api/data-grid/data-grid/), it's [MIT licensed](https://tldrlegal.com/license/mit-license) and available on npm as `@mui/x-data-grid`.
-- [DataGridPro](https://mui.com/api/data-grid/data-grid-pro/), it's **Commercially licensed** and available on npm as `@mui/x-data-grid-pro`.
+- [DataGrid](/api/data-grid/data-grid/), it's [MIT licensed](https://tldrlegal.com/license/mit-license) and available on npm as `@mui/x-data-grid`.
+- [DataGridPro](/api/data-grid/data-grid-pro/), it's **Commercially licensed** and available on npm as `@mui/x-data-grid-pro`.
   The features only available in the commercial version are suffixed with a <span class="plan-pro"></span> icon for the Pro plan or a <span class="plan-premium"></span> icon for the Premium plan.
 
   <img src="/static/x/header-icon.png" style="width: 431px; height: 123px; object-fit: contain; margin-bottom: 2rem;" alt="" loading="lazy">
@@ -158,7 +158,7 @@ The enterprise components come in two plans: Pro and Premium.
 | [Column spanning](/components/data-grid/columns/#column-spanning)                         |    🚧     |                 🚧                 |                     🚧                     |
 | [Column resizing](/components/data-grid/columns/#column-resizing)                         |    ❌     |                 ✅                 |                     ✅                     |
 | [Column reorder](/components/data-grid/columns/#column-reorder)                           |    ❌     |                 ✅                 |                     ✅                     |
-| [Column pinning](/components/data-grid/columns/#column-pinning)                           |    ❌     |                 🚧                 |                     🚧                     |
+| [Column pinning](/components/data-grid/columns/#column-pinning)                           |    ❌     |                 ✅                 |                     ✅                     |
 | **Row**                                                                                   |           |                                    |                                            |
 | [Row sorting](/components/data-grid/rows/#row-sorting)                                    |    ✅     |                 ✅                 |                     ✅                     |
 | [Row height](/components/data-grid/rows/#row-height)                                      |    ✅     |                 ✅                 |                     ✅                     |
@@ -225,9 +225,9 @@ For instance, if you have a one-year license (default), you are not licensed to 
 
 ## Support
 
-For crowdsourced technical questions from expert MUI devs in our community. Also frequented by the MUI Core team.
+For crowdsourced technical questions from expert MUI devs in our community. Also visited by the MUI Core team.
 
-[Post a question](https://stackoverflow.com/questions/tagged/material-ui)
+[Post a question](https://stackoverflow.com/questions/tagged/mui)
 
 ### GitHub
 
@@ -237,13 +237,14 @@ We use GitHub issues exclusively as a bug and feature request tracker. If you th
 
 ### StackOverflow
 
-For crowdsourced technical questions from expert MUI devs in our community. Also frequented by the MUI Core team.
+For crowdsourced answers from expert MUI developers in our community.
+StackOverflow is also visited from time to time by the maintainers of MUI.
 
-[Post a question](https://stackoverflow.com/questions/tagged/material-ui)
+[Post a question](https://stackoverflow.com/questions/tagged/mui)
 
 ### Enterprise support
 
-We provide a [private support channel](https://material-ui.zendesk.com/) for enterprise customers.
+We provide a [private support channel](https://support.mui.com/hc/en-us) for enterprise customers.
 
 ## Roadmap
 

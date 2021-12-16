@@ -13,8 +13,8 @@ import { GridContextProvider } from '../../_modules_/grid/context/GridContextPro
 import { useDataGridComponent } from './useDataGridComponent';
 import { MAX_PAGE_SIZE, DataGridProps } from './DataGridProps';
 import { useDataGridProps } from './useDataGridProps';
-import { DataGridColumnHeaders } from './DataGridColumnHeaders';
 import { DataGridVirtualScroller } from './DataGridVirtualScroller';
+import { DataGridColumnHeaders } from './DataGridColumnHeaders';
 
 const DataGridRaw = React.forwardRef<HTMLDivElement, DataGridProps>(function DataGrid(
   inProps,
@@ -624,7 +624,7 @@ DataGridRaw.propTypes = {
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
   sx: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object])),
+    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
     PropTypes.func,
     PropTypes.object,
   ]),

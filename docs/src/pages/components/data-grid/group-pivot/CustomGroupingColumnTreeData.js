@@ -64,7 +64,7 @@ const CustomGridTreeDataGroupingCell = (props) => {
 
 CustomGridTreeDataGroupingCell.propTypes = {
   /**
-   * The column field of the cell that triggered the event
+   * The column field of the cell that triggered the event.
    */
   field: PropTypes.string.isRequired,
   /**

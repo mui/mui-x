@@ -102,6 +102,11 @@ export interface GridLocaleText {
   // Actions cell more text
   actionsCellMore: string;
 
+  // Column pinning text
+  pinToLeft: string;
+  pinToRight: string;
+  unpin: string;
+
   // Tree Data
   treeDataGroupingHeaderName: string;
   treeDataExpand: string;

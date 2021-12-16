@@ -182,11 +182,13 @@ export const GridRootStyles = styled('div', {
     },
     [`.${gridClasses.menuOpen}`]: {
       visibility: 'visible',
+      width: 'auto',
     },
     [`& .${gridClasses.row}`]: {
       display: 'flex',
       width: 'fit-content',
-      '&:hover': {
+      breakInside: 'avoid', // Avoid the row to be broken in two different print pages.
+      '&:hover, &.Mui-hovered': {
         backgroundColor: theme.palette.action.hover,
         // Reset on touch devices, it doesn't add specificity
         '@media (hover: none)': {
@@ -195,7 +197,7 @@ export const GridRootStyles = styled('div', {
       },
       '&.Mui-selected': {
         backgroundColor: alpha(theme.palette.primary.main, theme.palette.action.selectedOpacity),
-        '&:hover': {
+        '&:hover, &.Mui-hovered': {
           backgroundColor: alpha(
             theme.palette.primary.main,
             theme.palette.action.selectedOpacity + theme.palette.action.hoverOpacity,
