@@ -75,13 +75,9 @@ Hold down the <kbd class="key">CTRL</kbd> or <kbd class="key">Shift</kbd> (use <
 
 ## apiRef [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
 
-The grid exposes a set of methods that enables all of these features using the imperative apiRef.
+> ⚠️ Only use this API as the last option. Give preference to the props to control the grid.
 
-> ⚠️ Only use this API when you have no alternative. Always start from the declarative API that the grid exposes.
-
-- `getSortModel`: Get the sort model currently applied to the grid.
-- `setSortModel`: Set the sort model and trigger the sorting of rows.
-- `onSortModelChange`: Callback fired when the column sorting changed before the grid has sorted its rows.
+{{"demo": "pages/components/data-grid/sorting/SortingApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
 
 ## API
 

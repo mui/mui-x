@@ -10,7 +10,7 @@
     {
       "name": "isColumnPinned",
       "description": "Returns which side a column is pinned to.",
-      "type": "(field: string) => false | GridPinnedPosition"
+      "type": "(field: string) => GridPinnedPosition | false"
     },
     {
       "name": "pinColumn",

@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { GridApiRef } from '../../models/api/gridApiRef';
 import { GridApi } from '../../models/api/gridApi';
+import { GridState } from '../../models/gridState';
 import { EventManager } from '../../utils/EventManager';
 
 // Public developers facing overload
@@ -20,6 +21,7 @@ export function useGridApiRef(...args): any {
   if (!apiRef.current) {
     apiRef.current = {
       unstable_eventManager: new EventManager(),
+      state: {} as GridState,
     } as GridApi;
   }
 

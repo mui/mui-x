@@ -10,6 +10,7 @@ import {
   useGridApiEventHandler,
 } from '../../utils';
 import { gridColumnMenuSelector } from './columnMenuSelector';
+import { GridColumnMenuApi } from '../../../models';
 
 /**
  * @requires useGridColumnResize (event)
@@ -22,8 +23,11 @@ export const useGridColumnMenu = (apiRef: GridApiRef): void => {
   const [, setGridState, forceUpdate] = useGridState(apiRef);
   const columnMenu = useGridSelector(apiRef, gridColumnMenuSelector);
 
-  const showColumnMenu = React.useCallback(
-    (field: string) => {
+  /**
+   * API METHODS
+   */
+  const showColumnMenu = React.useCallback<GridColumnMenuApi['showColumnMenu']>(
+    (field) => {
       const shouldUpdate = setGridState((state) => {
         if (state.columnMenu.open && state.columnMenu.field === field) {
           return state;
@@ -44,7 +48,7 @@ export const useGridColumnMenu = (apiRef: GridApiRef): void => {
     [apiRef, forceUpdate, logger, setGridState],
   );
 
-  const hideColumnMenu = React.useCallback(() => {
+  const hideColumnMenu = React.useCallback<GridColumnMenuApi['hideColumnMenu']>(() => {
     const shouldUpdate = setGridState((state) => {
       if (!state.columnMenu.open && state.columnMenu.field === undefined) {
         return state;
@@ -62,8 +66,8 @@ export const useGridColumnMenu = (apiRef: GridApiRef): void => {
     }
   }, [forceUpdate, logger, setGridState]);
 
-  const toggleColumnMenu = React.useCallback(
-    (field: string) => {
+  const toggleColumnMenu = React.useCallback<GridColumnMenuApi['toggleColumnMenu']>(
+    (field) => {
       logger.debug('Toggle Column Menu');
       if (!columnMenu.open || columnMenu.field !== field) {
         showColumnMenu(field);
@@ -74,16 +78,17 @@ export const useGridColumnMenu = (apiRef: GridApiRef): void => {
     [logger, showColumnMenu, hideColumnMenu, columnMenu],
   );
 
-  useGridApiMethod(
-    apiRef,
-    {
-      showColumnMenu,
-      hideColumnMenu,
-      toggleColumnMenu,
-    },
-    'ColumnMenuApi',
-  );
+  const columnMenuApi: GridColumnMenuApi = {
+    showColumnMenu,
+    hideColumnMenu,
+    toggleColumnMenu,
+  };
 
+  useGridApiMethod(apiRef, columnMenuApi, 'GridColumnMenuApi');
+
+  /**
+   * EVENTS
+   */
   useGridApiEventHandler(apiRef, GridEvents.columnResizeStart, hideColumnMenu);
   useGridApiEventHandler(apiRef, GridEvents.rowsScroll, hideColumnMenu);
 };

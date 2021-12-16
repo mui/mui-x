@@ -207,7 +207,7 @@ Once at the least one field has the `error` attribute equals to true no new valu
 
 The following demo requires a value for the "Payment method" column if the "Is paid?" column was checked.
 
-{{"demo": "pages/components/data-grid/editing/ConditionalValidationGrid.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"demo": "pages/components/data-grid/editing/ConditionalValidationGrid.js", "disableAd": true, "bg": "inline", "defaultCodeOpen": false}}
 
 > The conditional validation can also be implemented with the [controlled editing](#controlled-editing-2).
 > This approach can be used in the free version of the DataGrid.
@@ -235,7 +235,7 @@ To access the new values for the row, use `apiRef.current.getEditRowsModel` to g
 
 You can then decide if you want to send the whole row or only the modified fields, by checking them against the previous row values.
 
-{{"demo": "pages/components/data-grid/editing/RowEditServerSidePersistence.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"demo": "pages/components/data-grid/editing/RowEditServerSidePersistence.js", "disableAd": true, "bg": "inline", "defaultCodeOpen": false}}
 
 ### Events [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
 
@@ -247,6 +247,8 @@ The following events can be imported and used to customize the row edition:
 - `editCellPropsChange`: emitted when the props passed to an edit cell component are changed.
 
 ## apiRef [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
+
+> ⚠️ Only use this API as the last option. Give preference to the props to control the grid.
 
 {{"demo": "pages/components/data-grid/editing/EditApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
 
