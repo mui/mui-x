@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGridPro } from '@mui/x-data-grid-pro';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
 const VISIBLE_FIELDS = ['name', 'rating', 'country', 'dateCreated', 'isAdmin'];
 
-export default function FilterOperators() {
+export default function BasicExampleDataGrid() {
   const { data } = useDemoData({
     dataSet: 'Employee',
     visibleFields: VISIBLE_FIELDS,
@@ -13,7 +13,7 @@ export default function FilterOperators() {
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <DataGrid {...data} />
+      <DataGridPro {...data} />
     </div>
   );
 }
