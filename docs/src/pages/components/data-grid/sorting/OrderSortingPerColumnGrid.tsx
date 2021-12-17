@@ -1,8 +1,5 @@
 import * as React from 'react';
-import {
-  GridRowsProp,
-  DataGrid,
-} from '@mui/x-data-grid';
+import { GridRowsProp, DataGrid } from '@mui/x-data-grid';
 import { randomQuantity } from '@mui/x-data-grid-generator';
 
 const rows: GridRowsProp = [
@@ -55,7 +52,12 @@ export default function OrderSortingPerColumnGrid() {
         rows={rows}
         columns={[
           { field: 'platform', width: 200 },
-          { field: 'downloads', width: 200, type: 'number', sortingOrder: ['desc', 'asc', null] },
+          {
+            field: 'downloads',
+            width: 200,
+            type: 'number',
+            sortingOrder: ['desc', 'asc', null],
+          },
         ]}
         sortingOrder={['asc', 'desc', null]}
       />
