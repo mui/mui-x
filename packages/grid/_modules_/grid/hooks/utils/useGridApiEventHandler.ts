@@ -1,7 +1,10 @@
 import * as React from 'react';
 import { GridApiRef } from '../../models/api/gridApiRef';
 import { GridEventListener, GridEvents, GridEventsStr } from '../../models/events';
+import { UnregisterToken, CleanupTracking } from '../../utils/cleanupTracking/CleanupTracking';
 import { EventListenerOptions } from '../../utils/EventManager';
+import { TimerBasedCleanupTracking } from '../../utils/cleanupTracking/TimerBasedCleanupTracking';
+import { FinalizationRegistryBasedCleanupTracking } from '../../utils/cleanupTracking/FinalizationRegistryBasedCleanupTracking';
 
 /**
  * Signal to the underlying logic what version of the public component API
@@ -12,30 +15,26 @@ export enum GridSignature {
   DataGridPro = 'DataGridPro',
 }
 
-export function useGridApiEventHandler<E extends GridEventsStr>(
-  apiRef: GridApiRef,
-  eventName: E,
-  handler?: GridEventListener<E>,
-  options?: EventListenerOptions,
-) {
-  const subscription = React.useRef<(() => void) | null>(null);
-  const handlerRef = React.useRef<GridEventListener<E> | undefined>();
-  handlerRef.current = handler;
+// We use class to make it easier to detect in heap snapshots by name
+class ObjectToBeRetainedByReact {}
 
-  if (!subscription.current && handlerRef.current) {
-    const enhancedHandler: GridEventListener<E> = (params, event, details) => {
-      if (!event.defaultMuiPrevented) {
-        handlerRef.current?.(params, event, details);
-      }
-    };
+// Based on https://github.com/Bnaya/use-dispose-uncommitted/blob/main/src/finalization-registry-based-impl.ts
+// Check https://github.com/facebook/react/issues/15317 to get more information
+export function createUseGridApiEventHandler(registry: CleanupTracking) {
+  let cleanupTokensCounter = 0;
 
-    subscription.current = apiRef.current.subscribeEvent(eventName, enhancedHandler, options);
-  } else if (!handlerRef.current && subscription.current) {
-    subscription.current();
-    subscription.current = null;
-  }
+  return function useGridApiEventHandler<E extends GridEventsStr>(
+    apiRef: GridApiRef,
+    eventName: E,
+    handler?: GridEventListener<E>,
+    options?: EventListenerOptions,
+  ) {
+    const [objectRetainedByReact] = React.useState(new ObjectToBeRetainedByReact());
+    const subscription = React.useRef<(() => void) | null>(null);
+    const handlerRef = React.useRef<GridEventListener<E> | undefined>();
+    handlerRef.current = handler;
+    const cleanupTokenRef = React.useRef<UnregisterToken | null>(null);
 
-  React.useEffect(() => {
     if (!subscription.current && handlerRef.current) {
       const enhancedHandler: GridEventListener<E> = (params, event, details) => {
         if (!event.defaultMuiPrevented) {
@@ -44,14 +43,68 @@ export function useGridApiEventHandler<E extends GridEventsStr>(
       };
 
       subscription.current = apiRef.current.subscribeEvent(eventName, enhancedHandler, options);
+
+      cleanupTokensCounter += 1;
+      cleanupTokenRef.current = { cleanupToken: cleanupTokensCounter };
+
+      registry.register(
+        objectRetainedByReact, // The callback below will be called once this reference stops being retained
+        () => {
+          subscription.current?.();
+          subscription.current = null;
+          cleanupTokenRef.current = null;
+        },
+        cleanupTokenRef.current,
+      );
+    } else if (!handlerRef.current && subscription.current) {
+      subscription.current();
+      subscription.current = null;
+
+      if (cleanupTokenRef.current) {
+        registry.unregister(cleanupTokenRef.current);
+        cleanupTokenRef.current = null;
+      }
     }
 
-    return () => {
-      subscription.current?.();
-      subscription.current = null;
-    };
-  }, [apiRef, eventName, options]);
+    React.useEffect(() => {
+      if (!subscription.current && handlerRef.current) {
+        const enhancedHandler: GridEventListener<E> = (params, event, details) => {
+          if (!event.defaultMuiPrevented) {
+            handlerRef.current?.(params, event, details);
+          }
+        };
+
+        subscription.current = apiRef.current.subscribeEvent(eventName, enhancedHandler, options);
+      }
+
+      if (cleanupTokenRef.current && registry) {
+        // If the effect was called, it means that this render was committed
+        // so we can trust the cleanup function to remove the listener.
+        registry.unregister(cleanupTokenRef.current);
+        cleanupTokenRef.current = null;
+      }
+
+      return () => {
+        subscription.current?.();
+        subscription.current = null;
+      };
+    }, [apiRef, eventName, options]);
+  };
 }
+
+let registry: CleanupTracking;
+
+if (process.env.NODE_ENV === 'test') {
+  // Use the timer-based implementation when testing
+  registry = new TimerBasedCleanupTracking();
+} else {
+  registry =
+    typeof FinalizationRegistry !== 'undefined'
+      ? new FinalizationRegistryBasedCleanupTracking()
+      : new TimerBasedCleanupTracking();
+}
+
+export const useGridApiEventHandler = createUseGridApiEventHandler(registry);
 
 const optionsSubscriberOptions: EventListenerOptions = { isFirst: true };
 
