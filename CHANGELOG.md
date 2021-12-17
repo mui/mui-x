@@ -9,19 +9,21 @@ _Dec 17, 2021_
 
 A big thanks to the 8 contributors who made this release possible. Here are some highlights ✨:
 
-- 🖨 Print export has a cleaner breaking page
-- 🧑‍💻 Add `pinnable` option
+- 🖨️ Improve the print export to break the pages correctly
+- 🎁 Add `pinnable` option to `GridColDef`
 - 📚 Documentation improvements
 - 🐞 Bugfixes
 
-### Changes
+### `@mui/x-data-grid@v5.2.1` / `@mui/x-data-grid-pro@v5.2.1`
+
+#### Changes
 
 - [DataGridPro] Add `pinnable` option (#3425) @m4theushw
 - [DataGridPro] Avoid filtering columns if no column is pinned (#3438) @m4theushw
 - [DataGrid] Avoid page break inside a row in the Print Export (#3302) @flaviendelangle
 - [DataGrid] Fix `GridEditDateCell` to handle `editRowsModel` correctly (#3267) @alexfauquette
 - [DataGrid] Refactor keyboard/click event management (#3275) @alexfauquette
-- [DataGrid] Fire change event when the state changes, not when firing the prop change callback in control mode (#3388) @flaviendelangle
+- [DataGrid] Fire change event when the state changes, instead of when the prop changes (#3388) @flaviendelangle
 - [DataGrid] Unsubscribe event listeners registered in uncommitted renders (#3310) @m4theushw
 
 ### Core
@@ -36,7 +38,7 @@ A big thanks to the 8 contributors who made this release possible. Here are some
 
 - [docs] Improve pagination documentation page (#3424) @flaviendelangle
 - [docs] Include @mui/x-data-grid as dependency in the CodeSandbox (#3396) @m4theushw
-- [docs] Stop using typedoc to generate the API documentation (#3320) @flaviendelangle
+- [docs] Stop using TypeDoc to generate the API documentation (#3320) @flaviendelangle
 - [docs] Remove column pinning from "Upcoming features" (#3443) @alexfauquette
 
 ### Translation
