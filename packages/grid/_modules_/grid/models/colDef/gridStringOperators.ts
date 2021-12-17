@@ -86,9 +86,10 @@ export const getGridStringOperators = (): GridFilterOperator[] => [
       const collator = new Intl.Collator(undefined, { sensitivity: 'base', usage: 'search' });
 
       return ({ value }): boolean =>
-        filterItem.value.some((filterValue) => {
-          return collator.compare(filterValue, (value && value.toString()) || '') === 0;
-        });
+        value != null ?
+          filterItem.value.some((filterValue) => {
+            return collator.compare(filterValue, (value.toString()) || '') === 0;
+          }) : false;
     },
     InputComponent: GridFilterInputMultipleValue,
   },
