@@ -25,6 +25,9 @@ A big thanks to the 8 contributors who made this release possible. Here are some
 - [DataGrid] Refactor keyboard/click event management (#3275) @alexfauquette
 - [DataGrid] Fire change event when the state changes, instead of when the prop changes (#3388) @flaviendelangle
 - [DataGrid] Unsubscribe event listeners registered in uncommitted renders (#3310) @m4theushw
+- [DataGrid] Improve German (de_DE) locale (#3430) @sebastianfrey
+- [DataGrid] Improve Hebrew (he-IL) locale (#3445) @ColdAtNight
+- [DataGrid] Improve Dutch (nl-NL) locale (#3429) @jaapjr
 
 ### Core
 
@@ -40,10 +43,6 @@ A big thanks to the 8 contributors who made this release possible. Here are some
 - [docs] Include @mui/x-data-grid as dependency in the CodeSandbox (#3396) @m4theushw
 - [docs] Stop using TypeDoc to generate the API documentation (#3320) @flaviendelangle
 - [docs] Remove column pinning from "Upcoming features" (#3443) @alexfauquette
-
-### Translation
-
-A big thanks to @sebastianfrey, @ColdAtNight and @jaapjr for improving the translation
 
 ## 5.2.0
 
