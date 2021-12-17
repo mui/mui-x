@@ -26,7 +26,7 @@ function GridFilterInputMultipleValue(props: GridFilterInputMultipleValueProps) 
     setFilterValueState(itemValue.map(String));
   }, [item.value]);
 
-  const onFilterChange = React.useCallback(
+  const handleChange = React.useCallback(
     (event, value) => {
       const parsedValue = value.map(String);
       setFilterValueState(parsedValue);
@@ -47,7 +47,7 @@ function GridFilterInputMultipleValue(props: GridFilterInputMultipleValueProps) 
       }}
       id={id}
       value={filterValueState}
-      onChange={onFilterChange}
+      onChange={handleChange}
       renderTags={(value: any[], getTagProps) =>
         value.map((option: string, index: number) => (
           <Chip variant="outlined" size="small" label={option} {...getTagProps({ index })} />
