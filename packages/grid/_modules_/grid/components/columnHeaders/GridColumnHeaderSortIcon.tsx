@@ -14,6 +14,7 @@ import { GridIconButtonContainer } from './GridIconButtonContainer';
 export interface GridColumnHeaderSortIconProps {
   direction: GridSortDirection;
   index: number | undefined;
+  sortingOrder: GridSortDirection[];
 }
 
 type OwnerState = GridColumnHeaderSortIconProps & {
@@ -30,24 +31,30 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-function getIcon(icons: GridIconSlotsComponent, direction: GridSortDirection, className: string) {
-  let Icon = icons.ColumnUnsortedIcon;
-  if (direction === 'asc') {
+function getIcon(
+  icons: GridIconSlotsComponent,
+  direction: GridSortDirection,
+  className: string,
+  sortingOrder: GridSortDirection[],
+) {
+  const [nextSortDirection] = sortingOrder;
+  let Icon;
+  if ((direction ?? nextSortDirection) === 'asc') {
     Icon = icons.ColumnSortedAscendingIcon;
-  } else if (direction === 'desc') {
+  } else {
     Icon = icons.ColumnSortedDescendingIcon;
   }
   return Icon ? <Icon fontSize="small" className={className} /> : null;
 }
 
 function GridColumnHeaderSortIconRaw(props: GridColumnHeaderSortIconProps) {
-  const { direction, index } = props;
+  const { direction, index, sortingOrder } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
   const ownerState = { ...props, classes: rootProps.classes };
   const classes = useUtilityClasses(ownerState);
 
-  const iconElement = getIcon(rootProps.components, direction, classes.icon);
+  const iconElement = getIcon(rootProps.components, direction, classes.icon, sortingOrder);
   if (!iconElement) {
     return null;
   }
@@ -85,6 +92,7 @@ GridColumnHeaderSortIconRaw.propTypes = {
   // ----------------------------------------------------------------------
   direction: PropTypes.oneOf(['asc', 'desc']),
   index: PropTypes.number,
+  sortingOrder: PropTypes.arrayOf(PropTypes.oneOf(['asc', 'desc'])).isRequired,
 } as any;
 
 export { GridColumnHeaderSortIcon };
