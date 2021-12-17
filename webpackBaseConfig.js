@@ -13,6 +13,7 @@ module.exports = {
         './packages/grid/x-data-grid-generator/src',
       ),
       '@mui/x-data-grid-pro': path.resolve(__dirname, './packages/grid/x-data-grid-pro/src'),
+      '@mui/x-date-picker': path.resolve(__dirname, './packages/x-date-picker/src'),
       '@mui/x-license-pro': path.resolve(__dirname, './packages/x-license-pro/src'),
       '@mui/markdown': path.resolve(
         __dirname,

@@ -1,29 +1,27 @@
 import pages from '@material-ui/monorepo/docs/src/pages';
 
-const components = pages[1];
-const componentsAPI = pages[2];
+const components = pages.find((page) => page.pathname === '/components');
+const componentsAPI = pages.find((page) => page.pathname === '/api-docs');
 
-if (components.pathname !== '/components') {
-  throw new Error('Integration not compatible.');
-}
+components.children.push({
+  title: 'Date Picker X',
+  pathname: '/components',
+  subheader: '/components/date-picker',
+});
 
-const lab = components.children[components.children.length - 1];
+const replaceChildren = (parent, pathname, subheader, children) => {
+  const node = parent.children.find(
+    (page) => page.pathname === pathname && page.subheader === subheader,
+  );
 
-if (lab.subheader !== '/components/lab') {
-  throw new Error('Integration not compatible.');
-}
+  if (!node) {
+    throw new Error(`Page ${pathname} ${subheader} not found`);
+  }
 
-const dataGridComponent = components.children[7];
+  node.children = children;
+};
 
-if (dataGridComponent.subheader !== '/components/data-grid') {
-  throw new Error('Integration not compatible.');
-}
-
-const dataGridComponentAPI = componentsAPI.children.find(
-  (page) => page.pathname === '/api-docs/data-grid',
-);
-
-dataGridComponent.children = [
+replaceChildren(components, '/components', '/components/data-grid', [
   {
     pathname: '/components/data-grid',
     subheader: '/components/data-grid/overview',
@@ -49,20 +47,34 @@ dataGridComponent.children = [
   { pathname: '/components/data-grid/virtualization' },
   { pathname: '/components/data-grid/accessibility' },
   { pathname: '/components/data-grid/group-pivot', title: 'Group & Pivot' },
-];
+]);
 
-dataGridComponentAPI.children = [
-  { pathname: '/api-docs/data-grid', title: 'API Reference' },
-  { pathname: '/api-docs/data-grid/data-grid', title: 'DataGrid' },
-  { pathname: '/api-docs/data-grid/data-grid-pro', title: 'DataGridPro' },
-  { pathname: '/api-docs/data-grid/grid-api', title: 'GridApi' },
-  { pathname: '/api-docs/data-grid/grid-col-def', title: 'GridColDef' },
-  { pathname: '/api-docs/data-grid/grid-cell-params', title: 'GridCellParams' },
-  { pathname: '/api-docs/data-grid/grid-row-params', title: 'GridRowParams' },
-  { pathname: '/api-docs/data-grid/grid-csv-export-options', title: 'GridCSVExportOptions' },
-  { pathname: '/api-docs/data-grid/grid-print-export-options', title: 'GridPrintExportOptions' },
-].map((page) => {
-  return { ...page, linkProps: { linkAs: `${page.pathname.replace(/^\/api-docs/, '/api')}/` } };
-});
+replaceChildren(
+  componentsAPI,
+  '/api-docs/data-grid',
+  undefined,
+  [
+    { pathname: '/api-docs/data-grid', title: 'API Reference' },
+    { pathname: '/api-docs/data-grid/data-grid', title: 'DataGrid' },
+    { pathname: '/api-docs/data-grid/data-grid-pro', title: 'DataGridPro' },
+    { pathname: '/api-docs/data-grid/grid-api', title: 'GridApi' },
+    { pathname: '/api-docs/data-grid/grid-col-def', title: 'GridColDef' },
+    { pathname: '/api-docs/data-grid/grid-cell-params', title: 'GridCellParams' },
+    { pathname: '/api-docs/data-grid/grid-row-params', title: 'GridRowParams' },
+    { pathname: '/api-docs/data-grid/grid-csv-export-options', title: 'GridCSVExportOptions' },
+    { pathname: '/api-docs/data-grid/grid-print-export-options', title: 'GridPrintExportOptions' },
+  ].map((page) => ({
+    ...page,
+    linkProps: { linkAs: `${page.pathname.replace(/^\/api-docs/, '/api')}/` },
+  })),
+);
+
+replaceChildren(components, '/components', '/components/date-picker', [
+  {
+    pathname: '/components/date-picker',
+    subheader: '/components/date-picker/overview',
+    title: 'Overview',
+  },
+]);
 
 export default pages;

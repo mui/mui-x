@@ -1,0 +1,52 @@
+{
+  "name": "@mui/x-date-picker",
+  "version": "5.0.0",
+  "description": "The community edition of the date picker component (MUI X).",
+  "author": "MUI Team",
+  "main": "build/index-cjs.js",
+  "module": "build/index-esm.js",
+  "types": "build/x-date-picker.d.ts",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mui-org/material-ui-x/issues"
+  },
+  "homepage": "https://mui.com/components/date-picker/",
+  "funding": {
+    "type": "opencollective",
+    "url": "https://opencollective.com/mui"
+  },
+  "sideEffects": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [
+    "TODO COMPLETE"
+  ],
+  "scripts": {
+    "typescript": "tsc -p tsconfig.json",
+    "build": "cd ../ && rollup --config rollup.x-date-picker.config.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mui-org/material-ui-x.git",
+    "directory": "packages/x-date-picker"
+  },
+  "dependencies": {
+    "@mui/utils": "^5.2.3",
+    "clsx": "^1.1.1",
+    "prop-types": "^15.7.2",
+    "reselect": "^4.1.5"
+  },
+  "peerDependencies": {
+    "@mui/lab": "^5.0.0-alpha.60",
+    "@mui/material": "^5.2.3",
+    "@mui/system": "^5.2.3",
+    "react": "^17.0.2"
+  },
+  "setupFiles": [
+    "<rootDir>/src/setupTests.js"
+  ],
+  "engines": {
+    "node": ">=12.0.0"
+  }
+}
