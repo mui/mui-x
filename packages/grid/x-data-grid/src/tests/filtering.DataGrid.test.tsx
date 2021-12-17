@@ -1021,21 +1021,18 @@ describe('<DataGrid /> - Filter', () => {
         setProps({
           field: 'country',
           operatorValue: 'isAnyOf',
-
           value: ['Germany', 'United States'],
         });
         expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
         setProps({
           field: 'country',
           operatorValue: 'isAnyOf',
-
           value: ['Germany'],
         });
         expect(getColumnValues()).to.deep.equal(['Adidas', 'Puma']);
         setProps({
           field: 'country',
           operatorValue: 'isAnyOf',
-
           value: [],
         });
         expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
@@ -1047,21 +1044,18 @@ describe('<DataGrid /> - Filter', () => {
         setProps({
           field: 'status',
           operatorValue: 'isAnyOf',
-
           value: ['0', '1'],
         });
         expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas']);
         setProps({
           field: 'status',
           operatorValue: 'isAnyOf',
-
           value: ['2'],
         });
         expect(getColumnValues()).to.deep.equal(['Puma']);
         setProps({
           field: 'status',
           operatorValue: 'isAnyOf',
-
           value: [],
         });
         expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
