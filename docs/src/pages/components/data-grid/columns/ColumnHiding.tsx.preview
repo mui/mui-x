@@ -1,6 +1,6 @@
 <DataGrid
   columns={[
-    { field: 'username', hidable: false },
+    { field: 'username', hideable: false },
     { field: 'age', hide: true },
     { field: 'desk' },
   ]}

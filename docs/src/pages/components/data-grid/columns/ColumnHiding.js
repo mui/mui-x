@@ -21,7 +21,7 @@ export default function ColumnHiding() {
     <div style={{ height: 250, width: '100%' }}>
       <DataGrid
         columns={[
-          { field: 'username', hidable: false },
+          { field: 'username', hideable: false },
           { field: 'age', hide: true },
           { field: 'desk' },
         ]}

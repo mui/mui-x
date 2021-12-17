@@ -7,7 +7,7 @@ export const GRID_STRING_COL_DEF: GridColTypeDef = {
   width: 100,
   minWidth: 50,
   hide: false,
-  hidable: true,
+  hideable: true,
   sortable: true,
   resizable: true,
   filterable: true,

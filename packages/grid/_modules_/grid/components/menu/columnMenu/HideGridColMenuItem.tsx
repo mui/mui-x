@@ -30,7 +30,7 @@ const HideGridColMenuItem = (props: GridFilterItemProps) => {
     return null;
   }
 
-  if (column.hidable === false) {
+  if (column.hideable === false) {
     return null;
   }
 

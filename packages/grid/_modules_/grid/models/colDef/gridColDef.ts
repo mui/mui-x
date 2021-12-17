@@ -72,7 +72,7 @@ export interface GridColDef {
    * If `false`, removes the buttons for hiding this column.
    * @default true
    */
-  hidable?: boolean;
+  hideable?: boolean;
   /**
    * If `true`, the column is sortable.
    * @default true
@@ -233,8 +233,8 @@ export interface GridColumnsMeta {
 
 export interface GridGroupingColDefOverride
   extends Omit<
-    GridColDef,
-    'editable' | 'valueSetter' | 'field' | 'preProcessEditCellProps' | 'renderEditCell'
+  GridColDef,
+  'editable' | 'valueSetter' | 'field' | 'preProcessEditCellProps' | 'renderEditCell'
   > {
   /**
    * If `true`, the grouping cells will not render the amount of descendants.

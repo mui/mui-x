@@ -79,7 +79,7 @@ export function GridColumnsPanel() {
     (value: boolean) => {
       apiRef.current.updateColumns(
         columns.map((col) => {
-          if (col.hidable !== false) {
+          if (col.hideable !== false) {
             col.hide = value;
           }
           return col;
@@ -101,11 +101,11 @@ export function GridColumnsPanel() {
       !searchValue
         ? columns
         : columns.filter(
-            (column) =>
-              column.field.toLowerCase().indexOf(searchValue.toLowerCase()) > -1 ||
-              (column.headerName &&
-                column.headerName.toLowerCase().indexOf(searchValue.toLowerCase()) > -1),
-          ),
+          (column) =>
+            column.field.toLowerCase().indexOf(searchValue.toLowerCase()) > -1 ||
+            (column.headerName &&
+              column.headerName.toLowerCase().indexOf(searchValue.toLowerCase()) > -1),
+        ),
     [columns, searchValue],
   );
 
@@ -133,7 +133,7 @@ export function GridColumnsPanel() {
               <FormControlLabel
                 control={
                   <Switch
-                    disabled={column.hidable === false}
+                    disabled={column.hideable === false}
                     checked={!column.hide}
                     onClick={toggleColumn}
                     name={column.field}
