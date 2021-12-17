@@ -3,6 +3,46 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 5.2.1
+
+_Dec 17, 2021_
+
+A big thanks to the 8 contributors who made this release possible. Here are some highlights ✨:
+
+- 🖨 Print export has a cleaner breaking page
+- 🧑‍💻 Add `pinnable` option
+- 📚 Documentation improvements
+- 🐞 Bugfixes
+
+### Changes
+
+- [DataGridPro] Add `pinnable` option (#3425) @m4theushw
+- [DataGridPro] Avoid filtering columns if no column is pinned (#3438) @m4theushw
+- [DataGrid] Avoid page break inside a row in the Print Export (#3302) @flaviendelangle
+- [DataGrid] Fix `GridEditDateCell` to handle `editRowsModel` correctly (#3267) @alexfauquette
+- [DataGrid] Refactor keyboard/click event management (#3275) @alexfauquette
+- [DataGrid] Fire change event when the state changes, not when firing the prop change callback in control mode (#3388) @flaviendelangle
+- [DataGrid] Unsubscribe event listeners registered in uncommitted renders (#3310) @m4theushw
+
+### Core
+
+- [core] Rework state update methods and deprecate `useGridApi` + `useGridState` (#3325) @flaviendelangle
+- [core] Add sections to some of the feature hooks (#3391) @flaviendelangle
+- [core] Generate exports snapshot for both `x-data-grid` and `x-data-grid-pro` packages (#3427) @flaviendelangle
+- [core] Remove 'x-data-grid' folder from DataGridPro bundle (#3394) @m4theushw
+- [core] Add link to OpenCollective (#3392) @oliviertassinari
+
+### Docs
+
+- [docs] Improve pagination documentation page (#3424) @flaviendelangle
+- [docs] Include @mui/x-data-grid as dependency in the CodeSandbox (#3396) @m4theushw
+- [docs] Stop using typedoc to generate the API documentation (#3320) @flaviendelangle
+- [docs] Remove column pinning from "Upcoming features" (#3443) @alexfauquette
+
+### Translation
+
+A big thanks to @sebastianfrey, @ColdAtNight and @jaapjr for improving the translation
+
 ## 5.2.0
 
 _Dec 9, 2021_
@@ -30,12 +70,7 @@ A big thanks to the 5 contributors who made this release possible. Here are some
 - 🙈 Add a new option to hide the amount of descendant on the grouping cells of the Tree Data (#3368) @flaviendelangle
 
   ```tsx
-  <DataGridPro
-    treeData
-    rows={rows}
-    columns={columns}
-    groupingColDef={{ hideDescendantCount }}
-  />
+  <DataGridPro treeData rows={rows} columns={columns} groupingColDef={{ hideDescendantCount }} />
   ```
 
 - ⚠️ Deprecate the `getValue` param for the `valueGetter` callback (#3314) @flaviendelangle
@@ -204,8 +239,8 @@ A big thanks to the 3 contributors who made this release possible. Here are some
         const userWithEmail = await fetchUserByEmail(params.value);
         const hasError = !!userWithEmail;
         return { ...params.props, error: hasError };
-      }
-    }
+      },
+    },
   ];
   ```
 
@@ -630,7 +665,7 @@ A big thanks to the 5 contributors who made this release possible. Here are some
 - [core] Remove outdated hooks requirements (#2939) @flaviendelangle
 - [core] Remove test event (#2912) @m4theushw
 - [core] Remove unused `GridSlotComponentProps` interface (#2911) @flaviendelangle
-- [core] Rename 'UNSTABLE_' prefix to 'unstable_' (#2931) @flaviendelangle
+- [core] Rename 'UNSTABLE*' prefix to 'unstable*' (#2931) @flaviendelangle
 - [core] Replace usage of `GridRowData` with `GridRowModel` (#2936) @flaviendelangle
 - [core] Revert hardcoded typings (#2907) @DanailH
 - [core] Simplify the CSV export (#2941) @flaviendelangle
