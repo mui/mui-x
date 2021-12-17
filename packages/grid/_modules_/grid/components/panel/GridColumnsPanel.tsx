@@ -101,11 +101,11 @@ export function GridColumnsPanel() {
       !searchValue
         ? columns
         : columns.filter(
-          (column) =>
-            column.field.toLowerCase().indexOf(searchValue.toLowerCase()) > -1 ||
-            (column.headerName &&
-              column.headerName.toLowerCase().indexOf(searchValue.toLowerCase()) > -1),
-        ),
+            (column) =>
+              column.field.toLowerCase().indexOf(searchValue.toLowerCase()) > -1 ||
+              (column.headerName &&
+                column.headerName.toLowerCase().indexOf(searchValue.toLowerCase()) > -1),
+          ),
     [columns, searchValue],
   );
 
