@@ -118,11 +118,11 @@ In this demo, you can see how to create a completely new operator for the Rating
 
 ### Multiple values operator
 
-To create a custom operator which require multiple value, you can provide an array of values to the `value` property of `filterItem`.
+To create a custom operator which accepts multiple values, you can provide an array of values to the `value` property of the `filterItem`.
 In this case, the `valueParser` of the `GridColDef` will be applied to each item of the array.
 
 The filtering function `getApplyFilterFn` must be adapted to handle `filterItem.value` has an array.
-Here is an example for a "between" operator, applied on the quantity column.
+Below is an example for a "between" operator, applied on the "Quantity" column.
 
 ```ts
 {
