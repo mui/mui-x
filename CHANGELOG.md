@@ -9,8 +9,8 @@ _Dec 17, 2021_
 
 A big thanks to the 8 contributors who made this release possible. Here are some highlights ✨:
 
-- 🖨️ Improve the print export to break the pages correctly
-- 🎁 Add `pinnable` option to `GridColDef`
+- 🖨️ Improve the print export to break the pages correctly (#3302) @flaviendelangle
+- 🎁 Add `pinnable` option to `GridColDef` (#3425) @m4theushw
 - 📚 Documentation improvements
 - 🐞 Bugfixes
 
@@ -25,13 +25,13 @@ A big thanks to the 8 contributors who made this release possible. Here are some
 - [DataGrid] Refactor keyboard/click event management (#3275) @alexfauquette
 - [DataGrid] Fire change event when the state changes, instead of when the prop changes (#3388) @flaviendelangle
 - [DataGrid] Unsubscribe event listeners registered in uncommitted renders (#3310) @m4theushw
-- [DataGrid] Improve German (de_DE) locale (#3430) @sebastianfrey
-- [DataGrid] Improve Hebrew (he-IL) locale (#3445) @ColdAtNight
-- [DataGrid] Improve Dutch (nl-NL) locale (#3429) @jaapjr
+- [l10n] Improve German (deDE) locale (#3430) @sebastianfrey
+- [l10n] Improve Hebrew (heIL) locale (#3445) @ColdAtNight
+- [l10n] Improve Dutch (nlNL) locale (#3429) @jaapjr
 
 ### Core
 
-- [core] Rework state update methods and deprecate `useGridApi` + `useGridState` (#3325) @flaviendelangle
+- [core] Rework state update methods and deprecate `useGridApi` and `useGridState` (#3325) @flaviendelangle
 - [core] Add sections to some of the feature hooks (#3391) @flaviendelangle
 - [core] Generate exports snapshot for both `x-data-grid` and `x-data-grid-pro` packages (#3427) @flaviendelangle
 - [core] Remove 'x-data-grid' folder from DataGridPro bundle (#3394) @m4theushw
