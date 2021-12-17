@@ -39,7 +39,7 @@ function GridFilterInputMultipleSingleSelect(props: GridFilterInputMultipleSingl
       : currentColumn.valueOptions;
   }, [currentColumn]);
 
-  const filterValueOptionFormater = getSingleSelectOptionFormatter(
+  const filterValueOptionFormatter = getSingleSelectOptionFormatter(
     apiRef.current.getColumn(item.columnField),
     apiRef.current,
   );
@@ -101,7 +101,7 @@ function GridFilterInputMultipleSingleSelect(props: GridFilterInputMultipleSingl
           <Chip
             variant="outlined"
             size="small"
-            label={filterValueOptionFormater(option)}
+            label={filterValueOptionFormatter(option)}
             {...getTagProps({ index })}
           />
         ))
