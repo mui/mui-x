@@ -28,9 +28,8 @@ function GridFilterInputMultipleValue(props: GridFilterInputMultipleValueProps) 
 
   const handleChange = React.useCallback(
     (event, value) => {
-      const parsedValue = value.map(String);
-      setFilterValueState(parsedValue);
-      applyValue({ ...item, value: [...parsedValue] });
+      setFilterValueState(value.map(String));
+      applyValue({ ...item, value: [...value] });
     },
     [applyValue, item],
   );
