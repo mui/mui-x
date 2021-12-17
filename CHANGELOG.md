@@ -71,7 +71,12 @@ A big thanks to the 5 contributors who made this release possible. Here are some
 - 🙈 Add a new option to hide the amount of descendant on the grouping cells of the Tree Data (#3368) @flaviendelangle
 
   ```tsx
-  <DataGridPro treeData rows={rows} columns={columns} groupingColDef={{ hideDescendantCount }} />
+  <DataGridPro
+    treeData
+    rows={rows}
+    columns={columns}
+    groupingColDef={{ hideDescendantCount }}
+  />
   ```
 
 - ⚠️ Deprecate the `getValue` param for the `valueGetter` callback (#3314) @flaviendelangle
@@ -240,8 +245,8 @@ A big thanks to the 3 contributors who made this release possible. Here are some
         const userWithEmail = await fetchUserByEmail(params.value);
         const hasError = !!userWithEmail;
         return { ...params.props, error: hasError };
-      },
-    },
+      }
+    }
   ];
   ```
 
@@ -666,7 +671,7 @@ A big thanks to the 5 contributors who made this release possible. Here are some
 - [core] Remove outdated hooks requirements (#2939) @flaviendelangle
 - [core] Remove test event (#2912) @m4theushw
 - [core] Remove unused `GridSlotComponentProps` interface (#2911) @flaviendelangle
-- [core] Rename 'UNSTABLE*' prefix to 'unstable*' (#2931) @flaviendelangle
+- [core] Rename 'UNSTABLE_' prefix to 'unstable_' (#2931) @flaviendelangle
 - [core] Replace usage of `GridRowData` with `GridRowModel` (#2936) @flaviendelangle
 - [core] Revert hardcoded typings (#2907) @DanailH
 - [core] Simplify the CSV export (#2941) @flaviendelangle
