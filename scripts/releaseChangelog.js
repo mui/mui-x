@@ -36,21 +36,9 @@ function filterCommit(commitsItem) {
   return !commitsItem.commit.message.startsWith('Bump');
 }
 
-async function findLatestTaggedVersion() {
-  const { stdout } = await exec(
-    [
-      'git',
-      'describe',
-      // Earlier tags used lightweight tags + commit.
-      // We switched to annotated tags later.
-      '--tags',
-      '--abbrev=0',
-      // only include "version-tags"
-      '--match "v*"',
-    ].join(' '),
-  );
-
-  return stdout.trim();
+async function findLatestTaggedVersion(octokit) {
+  const { data } = await octokit.request('GET /repos/mui-org/material-ui-x/tags');
+  return data[0].name.trim();
 }
 
 async function main(argv) {
@@ -65,7 +53,7 @@ async function main(argv) {
     auth: githubToken,
   });
 
-  const latestTaggedVersion = await findLatestTaggedVersion();
+  const latestTaggedVersion = await findLatestTaggedVersion(octokit);
   const lastRelease = lastReleaseInput !== undefined ? lastReleaseInput : latestTaggedVersion;
   if (lastRelease !== latestTaggedVersion) {
     console.warn(
