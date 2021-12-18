@@ -25,7 +25,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 
 const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridCellParams>(
   function GridCellCheckboxRenderer(props, ref) {
-    const { field, id, value, tabIndex, hasFocus } = props;
+    const { field, id, value, tabIndex } = props;
     const apiRef = useGridApiContext();
     const rootProps = useGridRootProps();
     const ownerState = { classes: rootProps.classes };
@@ -49,13 +49,6 @@ const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridCellPa
         element!.tabIndex = -1;
       }
     }, [element, tabIndex]);
-
-    React.useLayoutEffect(() => {
-      if (hasFocus && checkboxElement.current) {
-        const input = checkboxElement.current.querySelector('input')!;
-        input!.focus();
-      }
-    }, [hasFocus]);
 
     const handleKeyDown = React.useCallback(
       (event) => {
