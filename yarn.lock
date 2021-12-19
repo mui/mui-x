@@ -5327,10 +5327,10 @@ address@1.1.2, address@^1.0.1, address@^1.1.2:
   resolved "https://registry.yarnpkg.com/address/-/address-1.1.2.tgz#bf1116c9c758c51b7a933d296b72c221ed9428b6"
   integrity sha512-aT6camzM4xEA54YVJYSqxz1kv4IHnQZRtThJJHhUMRExaU5spC7jX5ugSwTaTgJliIgs4VhZOk7htClvQ/LmRA==
 
-ag-grid-community@^26.2.0:
-  version "26.2.0"
-  resolved "https://registry.yarnpkg.com/ag-grid-community/-/ag-grid-community-26.2.0.tgz#f561d5b6d9ca9510275961079c74cfa0f6e1069c"
-  integrity sha512-YkNQUJ7EsmXbwfSrT4sIBYp1MbFku+ebEiqKc4+YFVZ5+nniHFzvSomHzFqbbkOtEfb42Gmo8cMNvBz9aPnZsQ==
+ag-grid-community@^26.2.1:
+  version "26.2.1"
+  resolved "https://registry.yarnpkg.com/ag-grid-community/-/ag-grid-community-26.2.1.tgz#b217e1b62317817c7119511a1a8358992e3a2026"
+  integrity sha512-aChSGNdPkBda4BhOUUEAmAkRlIG7rFU8UTXx3NPStavrCOHKLDRV90djIKuiXfM6ONBqKmeqw2as0yuLnSN8dw==
 
 ag-grid-react@^26.2.0:
   version "26.2.0"
