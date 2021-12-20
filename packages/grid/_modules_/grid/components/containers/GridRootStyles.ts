@@ -12,6 +12,7 @@ export const GridRootStyles = styled('div', {
     { [`& .${gridClasses['cell--textCenter']}`]: styles['cell--textCenter'] },
     { [`& .${gridClasses['cell--textLeft']}`]: styles['cell--textLeft'] },
     { [`& .${gridClasses['cell--textRight']}`]: styles['cell--textRight'] },
+    // TODO: v6 - remove
     { [`& .${gridClasses['cell--withRenderer']}`]: styles['cell--withRenderer'] },
     { [`& .${gridClasses.cell}`]: styles.cell },
     { [`& .${gridClasses.cellCheckbox}`]: styles.cellCheckbox },
