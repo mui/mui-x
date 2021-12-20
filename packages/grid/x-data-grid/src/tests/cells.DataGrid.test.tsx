@@ -8,7 +8,7 @@ import { getCell } from 'test/utils/helperFn';
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<DataGrid /> - Cells', () => {
-  const { render } = createRenderer();
+  const { render } = createRenderer({ clock: 'fake' });
 
   const baselineProps = {
     autoHeight: isJSDOM,
