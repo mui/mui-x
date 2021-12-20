@@ -75,10 +75,6 @@ export const buildRowTree = (params: BuildRowTreeParams): GridRowGroupingResult 
       return false;
     }
 
-    if (node.depth === treeDepth - 1) {
-      return false;
-    }
-
     if (params.isGroupExpandedByDefault) {
       return params.isGroupExpandedByDefault(node);
     }
