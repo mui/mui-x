@@ -283,21 +283,21 @@ describe('e2e', () => {
       // Edit dateTime column
       expect(
         await page.evaluate(
-          () => document.querySelector('[role="cell"][data-field="lastConnexion"]')!.textContent!,
+          () => document.querySelector('[role="cell"][data-field="lastConnection"]')!.textContent!,
         ),
       ).to.equal('2/20/2022, 6:50:00 AM');
 
-      // start editing lastConnexion
+      // start editing lastConnection
       await page.keyboard.press('ArrowRight');
       await page.keyboard.press('Enter');
 
       // set 01/31/2025 16:05
-      await page.type('[role="cell"][data-field="lastConnexion"] input', '01312025165');
+      await page.type('[role="cell"][data-field="lastConnection"] input', '01312025165');
       await page.keyboard.press('Enter');
 
       expect(
         await page.evaluate(
-          () => document.querySelector('[role="cell"][data-field="lastConnexion"]')!.textContent!,
+          () => document.querySelector('[role="cell"][data-field="lastConnection"]')!.textContent!,
         ),
       ).to.equal('1/31/2025, 4:05:00 PM');
     });
