@@ -16,7 +16,7 @@ interface DateRangePickerToolbarProps<TDate>
       BaseToolbarProps<TDate>,
       'isMobileKeyboardViewOpen' | 'toggleMobileKeyboardView' | 'toolbarTitle' | 'toolbarFormat'
     > {
-  date: DateRange<unknown>;
+  date: DateRange<TDate>;
   startText: React.ReactNode;
   endText: React.ReactNode;
   currentlySelectingRangeEnd: 'start' | 'end';

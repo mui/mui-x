@@ -5,7 +5,8 @@ import { ParseableDate } from '../../models/parseableDate';
 import { ExportedClockPickerProps } from '../ClockPicker/ClockPickerInternal';
 import { pick12hOr24hFormat } from '../../internal/pickers/text-field-helper';
 import { useUtils } from '../../hooks/useUtils';
-import { TimeValidationError, ValidationProps } from '../../hooks/useValidation';
+import { ValidationProps } from '../../hooks/validation/useValidation';
+import { TimeValidationError } from '../../hooks/validation/useTimeValidation';
 import { BasePickerProps, BaseToolbarProps } from '../../internal/pickers/typings/BasePicker';
 import { ExportedDateInputProps } from '../../internal/pickers/PureDateInput';
 import { ClockPickerView, MuiPickersAdapter } from '../../models';
@@ -47,7 +48,7 @@ function getTextFieldAriaText<TDate>(value: ParseableDate<TDate>, utils: MuiPick
 }
 
 type DefaultizedProps<Props> = Props & { inputFormat: string };
-export function useTimePickerDefaultizedProps<Props extends BaseTimePickerProps<unknown>>(
+export function useTimePickerDefaultizedProps<TDate, Props extends BaseTimePickerProps<TDate>>(
   {
     ampm,
     components,
@@ -57,7 +58,7 @@ export function useTimePickerDefaultizedProps<Props extends BaseTimePickerProps<
     ...other
   }: Props,
   name: string,
-): DefaultizedProps<Props> & Required<Pick<BaseTimePickerProps<unknown>, 'openTo' | 'views'>> {
+): DefaultizedProps<Props> & Required<Pick<BaseTimePickerProps<TDate>, 'openTo' | 'views'>> {
   const utils = useUtils<TDate>();
   const willUseAmPm = ampm ?? utils.is12HourCycleInCurrentLocale();
 

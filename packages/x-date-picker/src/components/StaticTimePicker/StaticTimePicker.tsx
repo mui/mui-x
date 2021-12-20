@@ -6,9 +6,9 @@ import {
   PickerStaticWrapper,
   PickerStaticWrapperProps,
 } from '../../internal/pickers/wrappers/PickerStaticWrapper';
-import { Picker } from '../../internal/pickers/Picker';
+import { CalendarOrClockPicker } from '../pickers/CalendarOrClockPicker';
 import { MuiPickersAdapter } from '../../models';
-import { useTimeValidation } from '../../hooks/useValidation';
+import { useTimeValidation } from '../../hooks/validation/useTimeValidation';
 import { parsePickerInputValue } from '../../utils/date-utils';
 import { usePickerState, PickerStateValueManager } from '../../hooks/usePickerState';
 
@@ -66,7 +66,7 @@ export const StaticTimePicker = React.forwardRef(function StaticTimePicker<TDate
   return (
     <PickerStaticWrapper displayStaticWrapperAs={displayStaticWrapperAs}>
       {/* @ts-ignore time picker has no component slot for the calendar header */}
-      <Picker
+      <CalendarOrClockPicker
         {...pickerProps}
         toolbarTitle={props.label || props.toolbarTitle}
         ToolbarComponent={ToolbarComponent}

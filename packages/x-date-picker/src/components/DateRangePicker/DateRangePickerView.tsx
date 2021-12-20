@@ -11,7 +11,7 @@ import {
   WrapperVariant,
   WrapperVariantContext,
 } from '../../internal/pickers/wrappers/WrapperVariantContext';
-import { MobileKeyboardInputView } from '../../internal/pickers/Picker/Picker';
+import { MobileKeyboardInputView } from '../pickers/CalendarOrClockPicker/CalendarOrClockPicker';
 import { DateRangePickerInput, DateRangeInputProps } from './DateRangePickerInput';
 import { DateRange, CurrentlySelectingRangeEndProps, RangeInput } from '../../models/dateRange';
 import { ExportedCalendarPickerProps } from '../CalendarPicker/CalendarPicker';

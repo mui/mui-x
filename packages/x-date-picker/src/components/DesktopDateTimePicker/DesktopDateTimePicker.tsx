@@ -9,9 +9,9 @@ import {
   DesktopWrapper,
   DesktopWrapperProps,
 } from '../../internal/pickers/wrappers/DesktopWrapper';
-import { Picker } from '../../internal/pickers/Picker';
+import { CalendarOrClockPicker } from '../pickers/CalendarOrClockPicker';
 import { MuiPickersAdapter } from '../../models';
-import { useDateTimeValidation } from '../../hooks/useValidation';
+import { useDateTimeValidation } from '../../hooks/validation/useDateTimeValidation';
 import { parsePickerInputValue } from '../../utils/date-utils';
 import { KeyboardDateInput } from '../../internal/pickers/KeyboardDateInput';
 import { usePickerState, PickerStateValueManager } from '../../hooks/usePickerState';
@@ -72,7 +72,7 @@ export const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePi
       PopperProps={PopperProps}
       TransitionComponent={TransitionComponent}
     >
-      <Picker
+      <CalendarOrClockPicker
         {...pickerProps}
         autoFocus
         toolbarTitle={props.label || props.toolbarTitle}

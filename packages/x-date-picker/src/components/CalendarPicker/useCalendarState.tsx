@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { SlideDirection } from './PickersSlideTransition';
-import { validateDate } from '../../utils/date-utils';
+import { validateDate } from '../../hooks/validation/useDateValidation';
 import { useUtils, useNow } from '../../hooks/useUtils';
 import { MuiPickersAdapter } from '../../models';
 import type { CalendarPickerProps } from './CalendarPicker';

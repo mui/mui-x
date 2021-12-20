@@ -11,14 +11,13 @@ import { PickersArrowSwitcher } from '../../internal/pickers/PickersArrowSwitche
 import {
   convertValueToMeridiem,
   createIsAfterIgnoreDatePart,
-  TimeValidationProps,
 } from '../../utils/time-utils';
 import { PickerOnChangeFn } from '../../hooks/useViews';
 import { PickerSelectionState } from '../../hooks/usePickerState';
+import { ExportedTimeValidationProps } from '../../hooks/validation/useTimeValidation';
 import { useMeridiemMode } from '../../hooks/date-helpers-hooks';
 import { ClockPickerView, MuiPickersAdapter } from '../../models';
 import { getClockPickerUtilityClass, ClockPickerClasses } from './clockPickerClasses';
-import { DesktopDatePickerProps } from '@mui/x-date-picker';
 
 export interface ClockPickerComponentsPropsOverrides {}
 
@@ -31,7 +30,7 @@ const useUtilityClasses = (ownerState: ClockPickerInternalProps<any>) => {
   return composeClasses(slots, getClockPickerUtilityClass, classes);
 };
 
-export interface ExportedClockPickerProps<TDate> extends TimeValidationProps<TDate> {
+export interface ExportedClockPickerProps<TDate> extends ExportedTimeValidationProps<TDate> {
   /**
    * 12h/24h view for hour selection clock.
    * @default false

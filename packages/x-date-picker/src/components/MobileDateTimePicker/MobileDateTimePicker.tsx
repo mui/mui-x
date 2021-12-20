@@ -6,9 +6,9 @@ import {
 } from '../DateTimePicker/shared';
 import { DateTimePickerToolbar } from '../DateTimePicker/DateTimePickerToolbar';
 import { MobileWrapper, MobileWrapperProps } from '../../internal/pickers/wrappers/MobileWrapper';
-import { Picker } from '../../internal/pickers/Picker';
+import { CalendarOrClockPicker } from '../pickers/CalendarOrClockPicker';
 import { MuiPickersAdapter } from '../../models';
-import { useDateTimeValidation } from '../../hooks/useValidation';
+import { useDateTimeValidation } from '../../hooks/validation/useDateTimeValidation';
 import { parsePickerInputValue } from '../../utils/date-utils';
 import { PureDateInput } from '../../internal/pickers/PureDateInput';
 import { usePickerState, PickerStateValueManager } from '../../hooks/usePickerState';
@@ -63,7 +63,7 @@ export const MobileDateTimePicker = React.forwardRef(function MobileDateTimePick
       DateInputProps={DateInputProps}
       PureDateInputComponent={PureDateInput}
     >
-      <Picker
+      <CalendarOrClockPicker
         {...pickerProps}
         autoFocus
         toolbarTitle={props.label || props.toolbarTitle}

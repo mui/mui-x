@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import { BaseTimePickerProps, useTimePickerDefaultizedProps } from '../TimePicker/shared';
 import { TimePickerToolbar } from '../TimePicker/TimePickerToolbar';
 import { MobileWrapper, MobileWrapperProps } from '../../internal/pickers/wrappers/MobileWrapper';
-import { Picker } from '../../internal/pickers/Picker';
+import { CalendarOrClockPicker } from '../pickers/CalendarOrClockPicker';
 import { MuiPickersAdapter } from '../../models';
-import { useTimeValidation } from '../../hooks/useValidation';
+import { useTimeValidation } from '../../hooks/validation/useTimeValidation';
 import { parsePickerInputValue } from '../../utils/date-utils';
 import { PureDateInput } from '../../internal/pickers/PureDateInput';
 import { usePickerState, PickerStateValueManager } from '../../hooks/usePickerState';
@@ -61,7 +61,7 @@ export const MobileTimePicker = React.forwardRef(function MobileTimePicker<TDate
       PureDateInputComponent={PureDateInput}
     >
       {/* @ts-ignore time picker has no component slot for the calendar header */}
-      <Picker
+      <CalendarOrClockPicker
         {...pickerProps}
         autoFocus
         toolbarTitle={props.label || props.toolbarTitle}

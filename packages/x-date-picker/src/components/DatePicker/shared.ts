@@ -5,7 +5,8 @@ import { OverrideParseableDateProps } from '../../hooks/date-helpers-hooks';
 import { useDefaultDates, useUtils } from '../../hooks/useUtils';
 import { CalendarPickerView, MuiPickersAdapter } from '../../models';
 import { ExportedCalendarPickerProps } from '../CalendarPicker/CalendarPicker';
-import { DateValidationError, ValidationProps } from '../../hooks/useValidation';
+import { DateValidationError} from "../../hooks/validation/useDateValidation";
+import { ValidationProps } from '../../hooks/validation/useValidation';
 import { ExportedDateInputProps } from '../../internal/pickers/PureDateInput';
 import { BasePickerProps, BaseToolbarProps } from '../../internal/pickers/typings/BasePicker';
 

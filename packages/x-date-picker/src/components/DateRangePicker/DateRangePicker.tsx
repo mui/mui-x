@@ -7,11 +7,12 @@ import {
 } from '../../internal/pickers/wrappers/ResponsiveWrapper';
 import { useDefaultDates, useUtils } from '../../hooks/useUtils';
 import { RangeInput, DateRange } from '../../models/dateRange';
-import { useDateRangeValidation, ValidationProps } from '../../hooks/useValidation';
+import { ValidationProps } from '../../hooks/validation/useValidation';
+import { useDateRangeValidation, DateRangeValidationError } from '../../hooks/validation/useDateRangeValidation';
 import { usePickerState, PickerStateValueManager } from '../../hooks/usePickerState';
 import { DateRangePickerView, ExportedDateRangePickerViewProps } from './DateRangePickerView';
 import { DateRangePickerInput, ExportedDateRangePickerInputProps } from './DateRangePickerInput';
-import { parseRangeInputValue, DateRangeValidationError } from '../../utils/date-utils';
+import { parseRangeInputValue } from '../../utils/date-utils';
 import { DateInputPropsLike } from '../../internal/pickers/wrappers/WrapperProps';
 
 interface BaseDateRangePickerProps<TDate>

@@ -5,7 +5,7 @@ import IconButton from '@mui/material/IconButton';
 import { SlideDirection } from './PickersSlideTransition';
 import { useUtils } from '../../hooks/useUtils';
 import { PickersFadeTransitionGroup } from './PickersFadeTransitionGroup';
-import { DateValidationProps } from '../../utils/date-utils';
+import { ExportedDateValidationProps} from '../../hooks/validation/useDateValidation';
 import { ArrowDropDown } from '../icons';
 import {
   PickersArrowSwitcher,
@@ -27,7 +27,7 @@ export interface PickersCalendarHeaderComponentsPropsOverrides {}
 
 export interface PickersCalendarHeaderProps<TDate>
   extends ExportedArrowSwitcherProps,
-    Omit<DateValidationProps<TDate>, 'shouldDisableDate'> {
+    Omit<ExportedDateValidationProps<TDate>, 'shouldDisableDate'> {
   /**
    * The components used for each slot.
    * Either a string to use a HTML element or a component.

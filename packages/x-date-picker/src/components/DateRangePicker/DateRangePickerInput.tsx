@@ -3,7 +3,7 @@ import { styled } from '@mui/material/styles';
 import { useUtils } from '../../hooks/useUtils';
 import { RangeInput, DateRange, CurrentlySelectingRangeEndProps } from '../../models/dateRange';
 import { useMaskedInput } from '../../hooks/useMaskedInput';
-import { DateRangeValidationError } from '../../utils/date-utils';
+import { DateRangeValidationError } from '../../hooks/validation/useDateRangeValidation';
 import { WrapperVariantContext } from '../../internal/pickers/wrappers/WrapperVariantContext';
 import { executeInTheNextEventLoopTick } from '../../utils/utils';
 import {

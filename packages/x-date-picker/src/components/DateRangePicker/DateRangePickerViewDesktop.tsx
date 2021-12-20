@@ -1,10 +1,11 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
-import { DateRange } from '../../models/dateRange';
+import { DateRange } from '../../models';
 import { useDefaultDates, useUtils } from '../../hooks/useUtils';
 import { calculateRangePreview } from './date-range-manager';
 import { PickersCalendar, PickersCalendarProps } from '../CalendarPicker/PickersCalendar';
 import { DateRangePickerDay, DateRangePickerDayProps } from '../DateRangePickerDay';
+import { ExportedDateValidationProps} from '../../hooks/validation/useDateValidation'
 import {
   PickersArrowSwitcher,
   ExportedArrowSwitcherProps,
@@ -14,7 +15,6 @@ import {
   isWithinRange,
   isStartOfRange,
   isEndOfRange,
-  DateValidationProps,
 } from '../../utils/date-utils';
 import { doNothing } from '../../utils/utils';
 
@@ -34,7 +34,7 @@ export interface ExportedDesktopDateRangeCalendarProps<TDate> {
 interface DesktopDateRangeCalendarProps<TDate>
   extends ExportedDesktopDateRangeCalendarProps<TDate>,
     Omit<PickersCalendarProps<TDate>, 'renderDay' | 'onFocusedDayChange'>,
-    DateValidationProps<TDate>,
+      ExportedDateValidationProps<TDate>,
     ExportedArrowSwitcherProps {
   calendars: 1 | 2 | 3;
   date: DateRange<TDate | null>;

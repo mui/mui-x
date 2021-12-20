@@ -4,7 +4,8 @@ import { useDefaultDates, useUtils } from '../../hooks/useUtils';
 import { ExportedClockPickerProps } from '../ClockPicker/ClockPickerInternal';
 import { pick12hOr24hFormat } from '../../internal/pickers/text-field-helper';
 import { ExportedCalendarPickerProps } from '../CalendarPicker/CalendarPicker';
-import { DateTimeValidationError, ValidationProps } from '../../hooks/useValidation';
+import { DateTimeValidationError } from '../../hooks/validation/useDateTimeValidation';
+import { ValidationProps } from '../../hooks/validation/useValidation';
 import { ParseableDate } from '../../models/parseableDate';
 import { BasePickerProps, BaseToolbarProps } from '../../internal/pickers/typings/BasePicker';
 import { ExportedDateInputProps } from '../../internal/pickers/PureDateInput';
@@ -73,7 +74,7 @@ export interface BaseDateTimePickerProps<TDate>
 
 type DefaultizedProps<Props> = Props & { inputFormat: string };
 
-export function useDateTimePickerDefaultizedProps<Props extends BaseDateTimePickerProps<unknown>>(
+export function useDateTimePickerDefaultizedProps<TDate, Props extends BaseDateTimePickerProps<TDate>>(
   {
     ampm,
     inputFormat,
@@ -89,7 +90,7 @@ export function useDateTimePickerDefaultizedProps<Props extends BaseDateTimePick
     ...other
   }: Props,
   name: string,
-): DefaultizedProps<Props> & Required<Pick<BaseDateTimePickerProps<unknown>, 'openTo' | 'views'>> {
+): DefaultizedProps<Props> & Required<Pick<BaseDateTimePickerProps<TDate>, 'openTo' | 'views'>> {
   const utils = useUtils<TDate>();
   const defaultDates = useDefaultDates<TDate>();
   const minDate = minDateProp ?? defaultDates.minDate;

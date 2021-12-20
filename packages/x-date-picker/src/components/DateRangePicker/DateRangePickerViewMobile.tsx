@@ -8,11 +8,11 @@ import { DateRangePickerDay } from '../DateRangePickerDay';
 import { useDefaultDates, useUtils } from '../../hooks/useUtils';
 import { PickersCalendar, PickersCalendarProps } from '../CalendarPicker/PickersCalendar';
 import { ExportedDesktopDateRangeCalendarProps } from './DateRangePickerViewDesktop';
+import { ExportedDateValidationProps } from "../../hooks/validation/useDateValidation";
 import {
   isWithinRange,
   isStartOfRange,
   isEndOfRange,
-  DateValidationProps,
 } from '../../utils/date-utils';
 import { doNothing } from '../../utils/utils';
 
@@ -22,7 +22,7 @@ export interface ExportedMobileDateRangeCalendarProps<TDate>
 interface DesktopDateRangeCalendarProps<TDate>
   extends ExportedMobileDateRangeCalendarProps<TDate>,
     Omit<PickersCalendarProps<TDate>, 'date' | 'renderDay' | 'onFocusedDayChange'>,
-    DateValidationProps<TDate>,
+      ExportedDateValidationProps<TDate>,
     ExportedCalendarHeaderProps<TDate> {
   date: DateRange<TDate>;
   changeMonth: (date: TDate) => void;
