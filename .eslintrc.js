@@ -48,5 +48,17 @@ module.exports = {
         ],
       },
     },
+    {
+      files: ['packages/*/src/**/*{.ts,.tsx,.js}'],
+      excludedFiles: ['*.d.ts', '*.spec.ts', '*.spec.tsx'],
+      rules: {
+        'material-ui/mui-name-matches-component-name': [
+          'error',
+          {
+            customHooks: ['useDatePickerProcessedProps'],
+          },
+        ],
+      },
+    },
   ],
 };
