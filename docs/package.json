@@ -17,9 +17,9 @@
     "typescript:transpile:dev": "cross-env BABEL_ENV=development babel-node --extensions \".tsx,.ts,.js\" scripts/formattedTSDemos --watch"
   },
   "dependencies": {
-    "@babel/core": "^7.16.0",
-    "@babel/plugin-transform-object-assign": "^7.16.0",
-    "@babel/runtime-corejs2": "^7.16.3",
+    "@babel/core": "^7.16.5",
+    "@babel/plugin-transform-object-assign": "^7.16.5",
+    "@babel/runtime-corejs2": "^7.16.5",
     "@docsearch/react": "^3.0.0-alpha.42",
     "@emotion/cache": "^11.6.0",
     "@emotion/react": "^11.7.0",
@@ -78,8 +78,8 @@
     "webpack-bundle-analyzer": "^4.5.0"
   },
   "devDependencies": {
-    "@babel/plugin-transform-react-constant-elements": "^7.16.0",
-    "@babel/preset-typescript": "^7.16.0",
+    "@babel/plugin-transform-react-constant-elements": "^7.16.5",
+    "@babel/preset-typescript": "^7.16.5",
     "@types/doctrine": "^0.0.5",
     "cpy-cli": "^3.1.1",
     "cross-fetch": "^3.1.4",
