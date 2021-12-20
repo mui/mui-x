@@ -2,7 +2,7 @@ import { fiFI as fiFICore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
-export const fiFIGrid: GridLocaleText = {
+export const fiFIGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Ei rivejä',
   noResultsOverlayLabel: 'Ei tuloksia.',
@@ -116,9 +116,6 @@ export const fiFIGrid: GridLocaleText = {
   treeDataGroupingHeaderName: 'Ryhmä',
   treeDataExpand: 'Laajenna',
   treeDataCollapse: 'Supista',
-
-  // Used core components translation keys
-  MuiTablePagination: {},
 };
 
 export const fiFI: Localization = getGridLocalization(fiFIGrid, fiFICore);
