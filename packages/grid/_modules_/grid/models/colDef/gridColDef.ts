@@ -88,7 +88,7 @@ export interface GridColDef {
    * If `true`, the rows can be grouped based on this column values (pro-plan only).
    * @default true
    */
-  canBeGrouped?: boolean;
+  groupable?: boolean;
   /**
    * If `false`, the menu items for column pinning menu will not be rendered.
    * Only available in DataGridPro.
@@ -253,7 +253,7 @@ export interface GridGroupingColDefOverride
     | 'type'
     | 'preProcessEditCellProps'
     | 'renderEditCell'
-    | 'canBeGrouped'
+    | 'groupable'
   > {
   /**
    * The field from which we want to apply the sorting and the filtering for the grouping column.

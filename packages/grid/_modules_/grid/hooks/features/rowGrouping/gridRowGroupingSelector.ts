@@ -13,5 +13,5 @@ export const gridRowGroupingSanitizedModelSelector = createSelector(
   gridRowGroupingModelSelector,
   gridColumnLookupSelector,
   (model, columnsLookup) =>
-    model.filter((field) => !!columnsLookup[field] && columnsLookup[field].canBeGrouped),
+    model.filter((field) => !!columnsLookup[field] && columnsLookup[field].groupable),
 );

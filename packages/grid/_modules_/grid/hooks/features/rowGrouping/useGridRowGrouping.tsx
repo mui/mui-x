@@ -205,10 +205,10 @@ export const useGridRowGrouping = (
   React.useEffect(() => {
     if (isFirstRender.current) {
       isFirstRender.current = false;
-      return;
+      return () => {};
     }
 
-    updateRowGrouping();
+    return updateRowGrouping();
   }, [updateRowGrouping]);
 
   /**
@@ -325,7 +325,6 @@ export const useGridRowGrouping = (
         rowTree,
         rowIds,
         sortRowList: params.sortRowList,
-        comparatorList: params.comparatorList,
         disableChildrenSorting: false,
       });
     },

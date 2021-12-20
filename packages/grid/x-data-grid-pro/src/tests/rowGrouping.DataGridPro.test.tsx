@@ -146,7 +146,7 @@ describe('<DataGridPro /> - Group Rows By Column', () => {
       expect(getColumnValues(0)).to.deep.equal(['Cat A (3)', '', '', '', 'Cat B (2)', '', '']);
     });
 
-    it('should ignore grouping criteria with colDef.canBeGrouped = false', () => {
+    it('should ignore grouping criteria with colDef.groupable = false', () => {
       render(
         <Test
           columns={[
@@ -159,7 +159,7 @@ describe('<DataGridPro /> - Group Rows By Column', () => {
             },
             {
               field: 'category2',
-              canBeGrouped: false,
+              groupable: false,
             },
           ]}
           initialState={{ rowGrouping: { model: ['category1', 'category2'] } }}
@@ -1283,7 +1283,7 @@ describe('<DataGridPro /> - Group Rows By Column', () => {
   });
 
   describe('column menu', () => {
-    it('should add a "Group by {field}" menu item on ungrouped columns when coLDef.canBeGrouped is not defined', () => {
+    it('should add a "Group by {field}" menu item on ungrouped columns when coLDef.groupable is not defined', () => {
       render(
         <Test
           columns={[
@@ -1304,7 +1304,7 @@ describe('<DataGridPro /> - Group Rows By Column', () => {
       expect(apiRef.current.state.rowGrouping.model).to.deep.equal(['category1']);
     });
 
-    it('should not add a "Group by {field}" menu item on ungrouped columns when coLDef.canBeGrouped = false', () => {
+    it('should not add a "Group by {field}" menu item on ungrouped columns when coLDef.groupable = false', () => {
       render(
         <Test
           columns={[
@@ -1313,7 +1313,7 @@ describe('<DataGridPro /> - Group Rows By Column', () => {
             },
             {
               field: 'category1',
-              canBeGrouped: false,
+              groupable: false,
             },
           ]}
         />,

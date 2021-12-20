@@ -91,7 +91,7 @@ export const useGridTreeData = (
       return;
     }
 
-    updateRowGrouping();
+    return updateRowGrouping();
   }, [updateRowGrouping]);
 
   /**

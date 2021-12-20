@@ -58,7 +58,7 @@ export default function RowGroupingColDefCanBeGrouped() {
   const columnWithNoDirectorGroup = React.useMemo<GridColumns>(
     () =>
       columns.map((colDef) =>
-        colDef.field === 'director' ? { ...colDef, canBeGrouped: false } : colDef,
+        colDef.field === 'director' ? { ...colDef, groupable: false } : colDef,
       ),
     [columns],
   );

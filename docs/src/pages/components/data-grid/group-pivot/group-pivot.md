@@ -55,7 +55,7 @@ It will disable all the features related to the row grouping, even if a model is
 
 #### For some columns
 
-To block the grouping of certain columns, set the `canBeGrouped` property of `GridColDef` to `false`.
+To block the grouping of certain columns, set the `groupable` property of `GridColDef` to `false`.
 In the example below, the `director` column can not be grouped. And in all example, the `title` and `gross` columns can not be grouped.
 
 {{"demo": "pages/components/data-grid/group-pivot/RowGroupingColDefCanBeGrouped.js", "bg": "inline", "defaultCodeOpen": false}}

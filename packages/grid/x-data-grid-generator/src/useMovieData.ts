@@ -11,13 +11,13 @@ type Movie = {
 };
 
 const COLUMNS: GridColumns = [
-  { field: 'title', headerName: 'Title', width: 200, canBeGrouped: false },
+  { field: 'title', headerName: 'Title', width: 200, groupable: false },
   {
     field: 'gross',
     headerName: 'Gross',
     type: 'number',
     width: 150,
-    canBeGrouped: false,
+    groupable: false,
     valueFormatter: ({ value }) => {
       if (!value || typeof value !== 'number') {
         return value;

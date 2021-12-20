@@ -92,7 +92,7 @@ const GridRowGroupingMenuItems = (props: GridGroupingColumnsMenuItemsProps) => {
     );
   }
 
-  if (!column.canBeGrouped) {
+  if (!column.groupable) {
     return null;
   }
 

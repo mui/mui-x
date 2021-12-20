@@ -20,10 +20,10 @@ const GROUPING_COL_DEF_DEFAULT_PROPERTIES: Omit<GridColDef, 'field'> = {
   disableReorder: true,
 };
 
-const GROUPING_COL_DEF_FORCED_PROPERTIES: Pick<GridColDef, 'type' | 'editable' | 'canBeGrouped'> = {
+const GROUPING_COL_DEF_FORCED_PROPERTIES: Pick<GridColDef, 'type' | 'editable' | 'groupable'> = {
   type: 'rowGroupByColumnsGroup',
   editable: false,
-  canBeGrouped: false,
+  groupable: false,
 };
 
 /**
