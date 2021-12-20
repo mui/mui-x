@@ -259,26 +259,14 @@ export const GridRootStyles = styled('div', {
       borderRight: `1px solid ${borderColor}`,
     },
     [`& .${gridClasses['cell--textLeft']}`]: {
-      textAlign: 'left',
+      justifyContent: 'flex-start',
     },
-    [`& .${gridClasses['cell--textLeft']}.${gridClasses['cell--withRenderer']}, & .${gridClasses['cell--textLeft']}.${gridClasses['cell--editing']}`]:
-      {
-        justifyContent: 'flex-start',
-      },
     [`& .${gridClasses['cell--textRight']}`]: {
-      textAlign: 'right',
+      justifyContent: 'flex-end',
     },
-    [`& .${gridClasses['cell--textRight']}.${gridClasses['cell--withRenderer']}, & .${gridClasses['cell--textRight']}.${gridClasses['cell--editing']}`]:
-      {
-        justifyContent: 'flex-end',
-      },
     [`& .${gridClasses['cell--textCenter']}`]: {
-      textAlign: 'center',
+      justifyContent: 'center',
     },
-    [`& .${gridClasses['cell--textCenter']}.${gridClasses['cell--withRenderer']}, & .${gridClasses['cell--textCenter']}.${gridClasses['cell--editing']}`]:
-      {
-        justifyContent: 'center',
-      },
     [`& .${gridClasses.columnHeaderDraggableContainer}`]: {
       display: 'flex',
       width: '100%',
