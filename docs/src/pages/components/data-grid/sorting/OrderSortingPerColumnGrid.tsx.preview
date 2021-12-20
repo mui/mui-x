@@ -1,13 +1,9 @@
 <DataGrid
-  rows={rows}
-  columns={[
-    { field: 'platform', width: 200 },
-    {
-      field: 'downloads',
-      width: 200,
-      type: 'number',
-      sortingOrder: ['desc', 'asc', null],
-    },
-  ]}
+  {...data}
+  columns={data.columns.map((column) => ({
+    ...column,
+    sortingOrder:
+      column.field === 'quantity' ? ['desc', 'asc', null] : undefined,
+  }))}
   sortingOrder={['asc', 'desc', null]}
 />
