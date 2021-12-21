@@ -25,6 +25,10 @@ const getSingleSelectOptionFormatter =
     return valueFormatter && option !== '' ? valueFormatter({ value: option, field, api }) : option;
   };
 
+const filterValueParser = (value) => String(typeof value === 'object' ? value.value : value);
+
+const isOptionEqualToValue = (option, value) => filterValueParser(option) === value;
+
 const filter = createFilterOptions<any>();
 
 function GridFilterInputMultipleSingleSelect(props: GridFilterInputMultipleSingleSelectProps) {
@@ -44,11 +48,6 @@ function GridFilterInputMultipleSingleSelect(props: GridFilterInputMultipleSingl
     apiRef.current,
   );
 
-  const filterValueParser = React.useCallback(
-    (value) => String(typeof value === 'object' ? value.value : value),
-    [],
-  );
-
   React.useEffect(() => {
     let itemValue;
 
@@ -57,32 +56,30 @@ function GridFilterInputMultipleSingleSelect(props: GridFilterInputMultipleSingl
     } else if (currentValueOptions !== undefined) {
       // sanitize if valueOptions are provided
       const parsedCurrentValueOptions = currentValueOptions.map(filterValueParser);
+      itemValue = item.value.filter((element) =>
+        parsedCurrentValueOptions.includes(filterValueParser(element)),
+      );
       if (itemValue.length !== item.value.length) {
         // remove filtered values
         applyValue({ ...item, value: itemValue });
         return;
       }
     } else {
-      itemValue = item.value.map(filterValueParser);
+      itemValue = item.value;
     }
 
     itemValue = itemValue ?? [];
 
-    setFilterValueState(itemValue);
-  }, [item, currentValueOptions, applyValue, filterValueParser]);
-
-  const isOptionEqualToValue = React.useCallback(
-    (option, value) => filterValueParser(option) === String(value),
-    [filterValueParser],
-  );
+    setFilterValueState(itemValue.map(filterValueParser));
+  }, [item, currentValueOptions, applyValue]);
 
   const onFilterChange = React.useCallback(
     (event, value) => {
       const parsedValue = value.map(filterValueParser);
       setFilterValueState(parsedValue);
-      applyValue({ ...item, value: [...parsedValue] });
+      applyValue({ ...item, value: [...value] });
     },
-    [applyValue, item, filterValueParser],
+    [applyValue, item],
   );
 
   return (
