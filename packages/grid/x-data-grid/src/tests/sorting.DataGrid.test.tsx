@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { createRenderer, fireEvent, screen } from '@material-ui/monorepo/test/utils';
 import { expect } from 'chai';
-import { DataGrid, DataGridProps, GridSortModel } from '@mui/x-data-grid';
+import { DataGrid, DataGridProps, GridEnrichedColDef, GridSortModel } from '@mui/x-data-grid';
 import { getColumnValues, getColumnHeaderCell } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
@@ -91,21 +91,21 @@ describe('<DataGrid /> - Sorting', () => {
     expect(getColumnValues()).to.deep.equal(['Adidas', 'Puma', 'Nike']);
   });
 
-  it('should only allow ascending sorting', () => {
+  it('should only allow ascending sorting using sortingOrder', () => {
     render(
       <div style={{ width: 300, height: 300 }}>
         <DataGrid {...baselineProps} sortingOrder={['asc']} />
       </div>,
     );
     const header = getColumnHeaderCell(0);
-    expect(getColumnValues()).to.deep.equal(['Adidas', 'Nike', 'Puma']);
+    expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
     fireEvent.click(header);
     expect(getColumnValues()).to.deep.equal(['Adidas', 'Nike', 'Puma']);
     fireEvent.click(header);
     expect(getColumnValues()).to.deep.equal(['Adidas', 'Nike', 'Puma']);
   });
 
-  it('should only allow ascending and initial sorting', () => {
+  it('should only allow ascending and initial sorting using sortingOrder', () => {
     render(
       <div style={{ width: 300, height: 300 }}>
         <DataGrid {...baselineProps} sortingOrder={['asc', null]} />
@@ -119,13 +119,34 @@ describe('<DataGrid /> - Sorting', () => {
     expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
   });
 
-  it('should only allow ascending and descending sorting', () => {
+  it('should only allow ascending and descending sorting using sortingOrder', () => {
     render(
       <div style={{ width: 300, height: 300 }}>
         <DataGrid {...baselineProps} sortingOrder={['desc', 'asc']} />
       </div>,
     );
     const header = getColumnHeaderCell(0);
+    expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
+    fireEvent.click(header);
+    expect(getColumnValues()).to.deep.equal(['Puma', 'Nike', 'Adidas']);
+    fireEvent.click(header);
+    expect(getColumnValues()).to.deep.equal(['Adidas', 'Nike', 'Puma']);
+    fireEvent.click(header);
+    expect(getColumnValues()).to.deep.equal(['Puma', 'Nike', 'Adidas']);
+  });
+
+  it('should allow per-column sortingOrder override', () => {
+    const cols: GridEnrichedColDef[] = [
+      { field: 'brand', sortingOrder: ['desc', 'asc'] },
+    ];
+    render(
+      <div style={{ width: 300, height: 300 }}>
+        <DataGrid {...baselineProps} sortingOrder={['asc', 'desc']} columns={cols} />
+      </div>,
+    );
+    const header = getColumnHeaderCell(0);
+    expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
+    fireEvent.click(header);
     expect(getColumnValues()).to.deep.equal(['Puma', 'Nike', 'Adidas']);
     fireEvent.click(header);
     expect(getColumnValues()).to.deep.equal(['Adidas', 'Nike', 'Puma']);
