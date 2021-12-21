@@ -91,6 +91,48 @@ describe('<DataGrid /> - Sorting', () => {
     expect(getColumnValues()).to.deep.equal(['Adidas', 'Puma', 'Nike']);
   });
 
+  it('should only allow ascending sorting', () => {
+    render(
+      <div style={{ width: 300, height: 300 }}>
+        <DataGrid {...baselineProps} sortingOrder={['asc']} />
+      </div>,
+    );
+    const header = getColumnHeaderCell(0);
+    expect(getColumnValues()).to.deep.equal(['Adidas', 'Nike', 'Puma']);
+    fireEvent.click(header);
+    expect(getColumnValues()).to.deep.equal(['Adidas', 'Nike', 'Puma']);
+    fireEvent.click(header);
+    expect(getColumnValues()).to.deep.equal(['Adidas', 'Nike', 'Puma']);
+  });
+
+  it('should only allow ascending and initial sorting', () => {
+    render(
+      <div style={{ width: 300, height: 300 }}>
+        <DataGrid {...baselineProps} sortingOrder={['asc', null]} />
+      </div>,
+    );
+    const header = getColumnHeaderCell(0);
+    expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
+    fireEvent.click(header);
+    expect(getColumnValues()).to.deep.equal(['Adidas', 'Nike', 'Puma']);
+    fireEvent.click(header);
+    expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
+  });
+
+  it('should only allow ascending and descending sorting', () => {
+    render(
+      <div style={{ width: 300, height: 300 }}>
+        <DataGrid {...baselineProps} sortingOrder={['desc', 'asc']} />
+      </div>,
+    );
+    const header = getColumnHeaderCell(0);
+    expect(getColumnValues()).to.deep.equal(['Puma', 'Nike', 'Adidas']);
+    fireEvent.click(header);
+    expect(getColumnValues()).to.deep.equal(['Adidas', 'Nike', 'Puma']);
+    fireEvent.click(header);
+    expect(getColumnValues()).to.deep.equal(['Puma', 'Nike', 'Adidas']);
+  });
+
   it('should keep rows sorted when rows prop change', () => {
     interface TestCaseProps {
       rows: any[];
