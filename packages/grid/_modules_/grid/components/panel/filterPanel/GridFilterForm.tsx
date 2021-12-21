@@ -47,7 +47,6 @@ const GridFilterFormRoot = styled('div', {
   overridesResolver: (props, styles) => styles.filterForm,
 })(({ theme }) => ({
   display: 'flex',
-  justifyContent: 'space-around',
   padding: theme.spacing(1),
 }));
 
@@ -253,7 +252,7 @@ function GridFilterForm(props: GridFilterFormProps) {
           ))}
         </Select>
       </FormControl>
-      <FormControl variant="standard" sx={{ width: 190 }}>
+      <FormControl variant="standard" sx={{ minWidth: 190 }}>
         {currentOperator?.InputComponent ? (
           <currentOperator.InputComponent
             apiRef={apiRef}
