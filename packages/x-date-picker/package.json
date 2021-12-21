@@ -3,9 +3,7 @@
   "version": "5.0.0",
   "description": "The community edition of the date picker component (MUI X).",
   "author": "MUI Team",
-  "main": "build/index-cjs.js",
-  "module": "build/index-esm.js",
-  "types": "build/x-date-picker.d.ts",
+  "main": "./src/index.js",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/mui-org/material-ui-x/issues"
@@ -20,11 +18,23 @@
     "access": "public"
   },
   "keywords": [
-    "TODO COMPLETE"
+    "react",
+    "react-component",
+    "mui",
+    "material-ui",
+    "material design",
+    "lab"
   ],
   "scripts": {
     "typescript": "tsc -p tsconfig.json",
-    "build": "cd ../ && rollup --config rollup.x-date-picker.config.js"
+    "build": "yarn build:legacy && yarn build:modern && yarn build:node && yarn build:stable && yarn build:types && yarn build:copy-files ",
+    "build:legacy": "node ../../scripts/build legacy",
+    "build:modern": "node ../../scripts/build modern",
+    "build:node": "node ../../scripts/build node",
+    "build:stable": "node ../../scripts/build stable",
+    "build:copy-files": "node ../../scripts/copy-files.js",
+    "build:types": "node ../../scripts/buildTypes",
+    "prebuild": "rimraf build tsconfig.build.tsbuildinfo"
   },
   "repository": {
     "type": "git",
