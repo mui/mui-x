@@ -55,10 +55,8 @@ function GridFilterInputMultipleSingleSelect(props: GridFilterInputMultipleSingl
     if (currentValueOptions !== undefined) {
       // sanitize if valueOptions are provided
       const parsedCurrentValueOptions = currentValueOptions.map(filterValueParser);
-      itemValue = item.value
-        .map(filterValueParser)
-        .filter((element) => parsedCurrentValueOptions.includes(element));
-      if (itemValue !== item.value) {
+      if (itemValue.length !== item.value.length) {
+        // remove filtered values
         applyValue({ ...item, value: itemValue });
         return;
       }
