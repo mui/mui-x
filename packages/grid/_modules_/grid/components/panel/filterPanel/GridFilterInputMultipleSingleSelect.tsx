@@ -52,7 +52,9 @@ function GridFilterInputMultipleSingleSelect(props: GridFilterInputMultipleSingl
   React.useEffect(() => {
     let itemValue;
 
-    if (currentValueOptions !== undefined) {
+    if (!Array.isArray(item.value)) {
+      itemValue = [];
+    } else if (currentValueOptions !== undefined) {
       // sanitize if valueOptions are provided
       const parsedCurrentValueOptions = currentValueOptions.map(filterValueParser);
       if (itemValue.length !== item.value.length) {
