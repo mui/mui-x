@@ -34,9 +34,14 @@ export type DataGridProForcedPropsKey = 'signature';
 /**
  * The `DataGridPro` options with a default value overridable through props
  * None of the entry of this interface should be optional, they all have default values and `DataGridProps` already applies a `Partial<DataGridSimpleOptions>` for the public interface
- * The controlled model do not have a default value at the prop processing level so they must be defined in `DataGridOtherProps`
+ * The controlled model do not have a default value at the prop processing level, so they must be defined in `DataGridOtherProps`
  */
 export interface DataGridProSimpleOptions extends DataGridSimpleOptions {
+  /**
+   * Set the area in `px` at the bottom of the grid viewport where onRowsScrollEnd is called.
+   * @default 80
+   */
+  scrollEndThreshold: number;
   /**
    * If `true`, the rows will be gathered in a tree structure according to the `getTreeDataPath` prop.
    * @default false
@@ -77,6 +82,7 @@ export interface DataGridProSimpleOptions extends DataGridSimpleOptions {
  */
 export const DATA_GRID_DEFAULT_PRO_SIMPLE_OPTIONS: DataGridProSimpleOptions = {
   ...DATA_GRID_DEFAULT_SIMPLE_OPTIONS,
+  scrollEndThreshold: 80,
   treeData: false,
   defaultGroupingExpansionDepth: 0,
   disableColumnPinning: false,

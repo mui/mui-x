@@ -80,7 +80,7 @@ export interface DataGridComplexOptionsBeforeProcessing {
 /**
  * The `DataGrid` options with a default value overridable through props
  * None of the entry of this interface should be optional, they all have default values and `DataGridProps` already applies a `Partial<DataGridSimpleOptions>` for the public interface
- * The controlled model do not have a default value at the prop processing level so they must be defined in `DataGridOtherProps`
+ * The controlled model do not have a default value at the prop processing level, so they must be defined in `DataGridOtherProps`
  * TODO: add multiSortKey
  */
 export interface DataGridSimpleOptions {
@@ -250,11 +250,6 @@ export interface DataGridSimpleOptions {
    */
   rowsPerPageOptions: number[];
   /**
-   * Set the area in `px` at the bottom of the grid viewport where onRowsScrollEnd is called.
-   * @default 80
-   */
-  scrollEndThreshold: number;
-  /**
    * If `true`, the right border of the cells are displayed.
    * @default false
    */
@@ -284,13 +279,11 @@ export interface DataGridSimpleOptions {
   throttleRowsMs: number;
   /**
    * If `true`, reordering columns is disabled.
-   * TODO: Move to `DataGridProSimpleOptions` after we split `GridColumnHeaderItem` between community and pro plan.
    * @default false
    */
   disableColumnReorder: boolean;
   /**
    * If `true`, resizing columns is disabled.
-   * TODO: Move to `DataGridProSimpleOptions` after we split `GridColumnHeaderItem` between community and pro plan.
    * @default false
    */
   disableColumnResize: boolean;
@@ -332,7 +325,6 @@ export const DATA_GRID_DEFAULT_SIMPLE_OPTIONS: DataGridSimpleOptions = {
   paginationMode: GridFeatureModeConstant.client,
   rowHeight: 52,
   rowsPerPageOptions: [25, 50, 100],
-  scrollEndThreshold: 80,
   showCellRightBorder: false,
   showColumnRightBorder: false,
   sortingOrder: ['asc' as const, 'desc' as const, null],
