@@ -19,7 +19,6 @@
   { "name": "esES", "kind": "Variable" },
   { "name": "faIR", "kind": "Variable" },
   { "name": "fiFI", "kind": "Variable" },
-  { "name": "fiFIGrid", "kind": "Variable" },
   { "name": "filterableGridColumnsIdsSelector", "kind": "Variable" },
   { "name": "filterableGridColumnsSelector", "kind": "Variable" },
   { "name": "frFR", "kind": "Variable" },
