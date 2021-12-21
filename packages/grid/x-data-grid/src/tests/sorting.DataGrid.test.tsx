@@ -136,9 +136,7 @@ describe('<DataGrid /> - Sorting', () => {
   });
 
   it('should allow per-column sortingOrder override', () => {
-    const cols: GridEnrichedColDef[] = [
-      { field: 'brand', sortingOrder: ['desc', 'asc'] },
-    ];
+    const cols: GridEnrichedColDef[] = [{ field: 'brand', sortingOrder: ['desc', 'asc'] }];
     render(
       <div style={{ width: 300, height: 300 }}>
         <DataGrid {...baselineProps} sortingOrder={['asc', 'desc']} columns={cols} />
