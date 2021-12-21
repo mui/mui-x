@@ -1,5 +1,4 @@
 import { NonEmptyDateRange, DateRange, RangeInput, MuiPickersAdapter } from '../models';
-import { ParseableDate } from '../models/parseableDate';
 
 interface FindClosestDateParams<TDate> {
   date: TDate;
