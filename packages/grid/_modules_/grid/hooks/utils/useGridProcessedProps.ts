@@ -34,6 +34,7 @@ import {
   GridExpandMoreIcon,
   GridExpandLessIcon,
 } from '../../components';
+import { GridColumnUnsortedIcon } from '../../components/columnHeaders/GridColumnUnsortedIcon';
 import { ErrorOverlay } from '../../components/ErrorOverlay';
 import { GridNoResultsOverlay } from '../../components/GridNoResultsOverlay';
 
@@ -44,6 +45,7 @@ const DEFAULT_GRID_ICON_SLOTS_COMPONENTS: GridIconSlotsComponent = {
   OpenFilterButtonIcon: GridFilterListIcon,
   ColumnFilteredIcon: GridFilterAltIcon,
   ColumnSelectorIcon: GridColumnIcon,
+  ColumnUnsortedIcon: GridColumnUnsortedIcon,
   ColumnSortedAscendingIcon: GridArrowUpwardIcon,
   ColumnSortedDescendingIcon: GridArrowDownwardIcon,
   ColumnResizeIcon: GridSeparatorIcon,

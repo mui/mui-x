@@ -38,11 +38,14 @@ function getIcon(
   sortingOrder: GridSortDirection[],
 ) {
   const [nextSortDirection] = sortingOrder;
+  direction = direction ?? nextSortDirection;
   let Icon;
-  if ((direction ?? nextSortDirection) === 'asc') {
+  if (direction === 'asc') {
     Icon = icons.ColumnSortedAscendingIcon;
-  } else {
+  } else if (direction === 'desc') {
     Icon = icons.ColumnSortedDescendingIcon;
+  } else {
+    Icon = icons.ColumnUnsortedIcon;
   }
   return Icon ? <Icon fontSize="small" className={className} /> : null;
 }

@@ -414,6 +414,7 @@
     "OpenFilterButtonIcon": "Icon displayed on the open filter button present in the toolbar by default.",
     "ColumnFilteredIcon": "Icon displayed on the column header menu to show that a filter has been applied to the column.",
     "ColumnSelectorIcon": "Icon displayed on the column menu selector tab.",
+    "ColumnUnsortedIcon": "Icon displayed on the side of the column header title when unsorted.",
     "ColumnSortedAscendingIcon": "Icon displayed on the side of the column header title when sorted in ascending order.",
     "ColumnSortedDescendingIcon": "Icon displayed on the side of the column header title when sorted in descending order.",
     "ColumnResizeIcon": "Icon displayed in between two column headers that allows to resize the column header.",

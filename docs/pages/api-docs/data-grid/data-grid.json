@@ -170,6 +170,10 @@
       "type": { "name": "elementType | null" }
     },
     "ColumnsPanel": { "default": "GridColumnsPanel", "type": { "name": "elementType" } },
+    "ColumnUnsortedIcon": {
+      "default": "GridColumnUnsortedIcon",
+      "type": { "name": "elementType | null" }
+    },
     "DensityComfortableIcon": {
       "default": "GridViewStreamIcon",
       "type": { "name": "elementType" }
