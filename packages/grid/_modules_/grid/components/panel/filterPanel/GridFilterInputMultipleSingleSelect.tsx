@@ -58,6 +58,7 @@ function GridFilterInputMultipleSingleSelect(props: GridFilterInputMultipleSingl
       itemValue = item.value.filter((element) =>
         parsedCurrentValueOptions.includes(getValueFromOption(element)),
       );
+
       if (itemValue.length !== item.value.length) {
         // remove filtered values
         applyValue({ ...item, value: itemValue });
