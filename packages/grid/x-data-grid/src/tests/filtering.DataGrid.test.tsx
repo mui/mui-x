@@ -1177,6 +1177,51 @@ describe('<DataGrid /> - Filter', () => {
         setProps({ value: 2 });
         expect(getColumnValues()).to.deep.equal(['Puma']);
       });
+      it('should works with valueParser', () => {
+        const valueOptions = [
+          { value: 0, label: 'Payment Pending' },
+          { value: 1, label: 'Shipped' },
+          { value: 2, label: 'Delivered' },
+        ];
+        const { setProps } = render(
+          <TestCase
+            value="a"
+            operatorValue="contains"
+            columns={[
+              { field: 'brand' },
+              {
+                field: 'status',
+                type: 'singleSelect',
+                valueOptions,
+                valueParser: (value) => {
+                  if (typeof value === 'number') {
+                    return valueOptions.find((option) => option.value === value);
+                  }
+                  return value;
+                },
+              },
+            ]}
+          />,
+        );
+        setProps({
+          field: 'status',
+          operatorValue: 'is',
+          value: 0,
+        });
+        expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas']);
+        setProps({
+          field: 'status',
+          operatorValue: 'not',
+          value: 0,
+        });
+        expect(getColumnValues()).to.deep.equal(['Puma']);
+        setProps({
+          field: 'status',
+          operatorValue: 'isAnyOf',
+          value: [0, 2],
+        });
+        expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
+      });
     });
   });
 

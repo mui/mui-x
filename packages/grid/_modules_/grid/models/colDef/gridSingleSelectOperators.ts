@@ -3,6 +3,9 @@ import { GridFilterItem } from '../gridFilterItem';
 import { GridFilterOperator } from '../gridFilterOperator';
 import { GridFilterInputMultipleSingleSelect } from '../../components/panel/filterPanel/GridFilterInputMultipleSingleSelect';
 
+const parseObjectValue = (value) =>
+  typeof value === 'object' ? (value as { value: any; label: string }).value : value;
+
 export const getGridSingleSelectOperators: () => GridFilterOperator[] = () => [
   {
     value: 'is',
@@ -10,12 +13,7 @@ export const getGridSingleSelectOperators: () => GridFilterOperator[] = () => [
       if (filterItem.value == null || filterItem.value === '') {
         return null;
       }
-      return ({ value }): boolean => {
-        if (typeof value === 'object') {
-          return filterItem.value === (value as { value: any; label: string }).value;
-        }
-        return filterItem.value === value;
-      };
+      return ({ value }): boolean => parseObjectValue(value) === parseObjectValue(filterItem.value);
     },
     InputComponent: GridFilterInputSingleSelect,
   },
@@ -25,12 +23,7 @@ export const getGridSingleSelectOperators: () => GridFilterOperator[] = () => [
       if (filterItem.value == null || filterItem.value === '') {
         return null;
       }
-      return ({ value }): boolean => {
-        if (typeof value === 'object') {
-          return filterItem.value !== (value as { value: any; label: string }).value;
-        }
-        return filterItem.value !== value;
-      };
+      return ({ value }): boolean => parseObjectValue(value) !== parseObjectValue(filterItem.value);
     },
     InputComponent: GridFilterInputSingleSelect,
   },
@@ -41,15 +34,8 @@ export const getGridSingleSelectOperators: () => GridFilterOperator[] = () => [
       if (!Array.isArray(filterItem.value) || filterItem.value.length === 0) {
         return null;
       }
-      const filterItemValues = filterItem.value;
-
-      return ({ value }): boolean => {
-        if (typeof value === 'object') {
-          return filterItemValues.includes(String((value as { value: any; label: string }).value));
-        }
-
-        return filterItemValues.includes(String(value));
-      };
+      const filterItemValues = filterItem.value.map(parseObjectValue);
+      return ({ value }): boolean => filterItemValues.includes(parseObjectValue(value));
     },
     InputComponent: GridFilterInputMultipleSingleSelect,
   },
