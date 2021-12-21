@@ -1,5 +1,5 @@
 // TODO: Move to `x-data-grid-pro` folder
-import {GridRowModel, GridRowTreeNodeConfig} from '../gridRows';
+import { GridRowModel, GridRowTreeNodeConfig } from '../gridRows';
 import { GridEventListener, GridEvents } from '../events';
 import { GridCallbackDetails, GridPinnedColumns } from '../api';
 import { GridGroupingColDefOverride, GridGroupingColDefOverrideParams } from '../colDef';
