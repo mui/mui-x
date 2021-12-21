@@ -1,10 +1,6 @@
 /* eslint-disable no-restricted-syntax */
 const { Octokit } = require('@octokit/rest');
-const childProcess = require('child_process');
-const { promisify } = require('util');
 const yargs = require('yargs');
-
-const exec = promisify(childProcess.exec);
 
 /**
  * @param {string} commitMessage
@@ -32,11 +28,13 @@ function parseTags(commitMessage) {
  */
 function filterCommit(commitsItem) {
   // TODO: Use labels
+
   // Filter dependency updates
   return !commitsItem.commit.message.startsWith('Bump');
 }
 
 async function findLatestTaggedVersion(octokit) {
+  // fetch tags from the GitHub API and return the last one
   const { data } = await octokit.request('GET /repos/mui-org/material-ui-x/tags');
   return data[0].name.trim();
 }
@@ -49,10 +47,12 @@ async function main(argv) {
       'Unable to authenticate. Make sure you either call the script with `--githubToken $token` or set `process.env.GITHUB_TOKEN`. The token needs `public_repo` permissions.',
     );
   }
+  // Initialize the API client
   const octokit = new Octokit({
     auth: githubToken,
   });
 
+  // fetch the last tag and chose the one to use for the release
   const latestTaggedVersion = await findLatestTaggedVersion(octokit);
   const lastRelease = lastReleaseInput !== undefined ? lastReleaseInput : latestTaggedVersion;
   if (lastRelease !== latestTaggedVersion) {
@@ -61,6 +61,7 @@ async function main(argv) {
     );
   }
 
+  // Now We will fetch all the commits between the chosen tag and release branch
   /**
    * @type {AsyncIterableIterator<Octokit.Response<Octokit.ReposCompareCommitsResponse>>}
    */
@@ -82,6 +83,7 @@ async function main(argv) {
     commitsItems.push(...compareCommits.commits.filter(filterCommit));
   }
 
+  // Get all the authors of the release
   const authors = Array.from(
     new Set(
       commitsItems.map((commitsItem) => {
@@ -90,6 +92,7 @@ async function main(argv) {
     ),
   );
 
+  // Dispatch commits in different sections
   const changeCommits = [];
   const coreCommits = [];
   const docsCommits = [];
@@ -100,6 +103,8 @@ async function main(argv) {
     switch (tag) {
       case 'DataGrid':
       case 'DataGridPro':
+      case 'l10n':
+      case '118n':
         changeCommits.push(commitItem);
         break;
       case 'docs':
@@ -114,17 +119,17 @@ async function main(argv) {
     }
   });
 
-  const getCommitCategories = (commitsList, header) => {
+  // Helper to print a list of commits in a section of the changelog
+  const logChangelogSection = (commitsList, header) => {
     if (commitsList.length === 0) {
       return '';
     }
-    const commitsItemsByDateDesc = commitsList.slice().reverse();
 
     const sortedCommits = commitsList.sort((a, b) => {
       const aTags = parseTags(a.commit.message);
       const bTags = parseTags(b.commit.message);
       if (aTags === bTags) {
-        return commitsItemsByDateDesc.indexOf(a) - commitsItemsByDateDesc.indexOf(b);
+        return a.commit.message < b.commit.message ? -1 : 1;
       }
       return aTags.localeCompare(bTags);
     });
@@ -136,20 +141,6 @@ ${sortedCommits
   .join('\n')}
 `;
   };
-
-  // We don't know when a particular commit was made from the API.
-  // Only that the commits are ordered by date ASC
-  const commitsItemsByDateDesc = commitsItems.slice().reverse();
-  // Sort by tags ASC, date desc
-  // Will only consider exact matches of tags so `[Slider]` will not be grouped with `[Slider][Modal]`
-  commitsItems.sort((a, b) => {
-    const aTags = parseTags(a.commit.message);
-    const bTags = parseTags(b.commit.message);
-    if (aTags === bTags) {
-      return commitsItemsByDateDesc.indexOf(a) - commitsItemsByDateDesc.indexOf(b);
-    }
-    return aTags.localeCompare(bTags);
-  });
 
   const nowFormated = new Date().toLocaleDateString('en-US', {
     month: 'short',
@@ -166,10 +157,10 @@ A big thanks to the ${
   } contributors who made this release possible. Here are some highlights ✨:
 TODO INSERT HIGHLIGHTS
 
-${getCommitCategories(changeCommits, '### Changes')}
-${getCommitCategories(coreCommits, '### Core')}
-${getCommitCategories(docsCommits, '### Docs')}
-${getCommitCategories(otherCommits, '')}
+${logChangelogSection(changeCommits, '### Changes')}
+${logChangelogSection(coreCommits, '### Core')}
+${logChangelogSection(docsCommits, '### Docs')}
+${logChangelogSection(otherCommits, '')}
 
 `;
 
