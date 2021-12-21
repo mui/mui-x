@@ -3,6 +3,47 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 5.2.1
+
+_Dec 17, 2021_
+
+A big thanks to the 8 contributors who made this release possible. Here are some highlights ✨:
+
+- 🖨️ Improve the print export to break the pages correctly (#3302) @flaviendelangle
+- 🎁 Add `pinnable` option to `GridColDef` (#3425) @m4theushw
+- 📚 Documentation improvements
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@v5.2.1` / `@mui/x-data-grid-pro@v5.2.1`
+
+#### Changes
+
+- [DataGridPro] Add `pinnable` option (#3425) @m4theushw
+- [DataGridPro] Avoid filtering columns if no column is pinned (#3438) @m4theushw
+- [DataGrid] Avoid page break inside a row in the Print Export (#3302) @flaviendelangle
+- [DataGrid] Fix `GridEditDateCell` to handle `editRowsModel` correctly (#3267) @alexfauquette
+- [DataGrid] Refactor keyboard/click event management (#3275) @alexfauquette
+- [DataGrid] Fire change event when the state changes, instead of when the prop changes (#3388) @flaviendelangle
+- [DataGrid] Unsubscribe event listeners registered in uncommitted renders (#3310) @m4theushw
+- [l10n] Improve German (deDE) locale (#3430) @sebastianfrey
+- [l10n] Improve Hebrew (heIL) locale (#3445) @ColdAtNight
+- [l10n] Improve Dutch (nlNL) locale (#3429) @jaapjr
+
+### Core
+
+- [core] Rework state update methods and deprecate `useGridApi` and `useGridState` (#3325) @flaviendelangle
+- [core] Add sections to some of the feature hooks (#3391) @flaviendelangle
+- [core] Generate exports snapshot for both `x-data-grid` and `x-data-grid-pro` packages (#3427) @flaviendelangle
+- [core] Remove 'x-data-grid' folder from DataGridPro bundle (#3394) @m4theushw
+- [core] Add link to OpenCollective (#3392) @oliviertassinari
+
+### Docs
+
+- [docs] Improve pagination documentation page (#3424) @flaviendelangle
+- [docs] Include @mui/x-data-grid as dependency in the CodeSandbox (#3396) @m4theushw
+- [docs] Stop using TypeDoc to generate the API documentation (#3320) @flaviendelangle
+- [docs] Remove column pinning from "Upcoming features" (#3443) @alexfauquette
+
 ## 5.2.0
 
 _Dec 9, 2021_

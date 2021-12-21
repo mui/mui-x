@@ -101,7 +101,6 @@ describe('<DataGridPro /> - Events Params', () => {
         id: 2,
         row: baselineProps.rows[1],
         columns: apiRef.current.getAllColumns(),
-        getValue: apiRef.current.getCellValue,
       });
     });
   });
@@ -127,7 +126,6 @@ describe('<DataGridPro /> - Events Params', () => {
         colDef: apiRef.current.getColumn('first'),
         hasFocus: false,
         tabIndex: -1,
-        getValue: apiRef.current.getCellValue,
       });
     });
 
@@ -153,7 +151,6 @@ describe('<DataGridPro /> - Events Params', () => {
         colDef: apiRef.current.getColumn('first'),
         hasFocus: false,
         tabIndex: -1,
-        getValue: apiRef.current.getCellValue,
       });
     });
 

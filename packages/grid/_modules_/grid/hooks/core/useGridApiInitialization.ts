@@ -60,7 +60,6 @@ export function useGridApiInitialization(
     return () => {
       logger.info('Unmounting Grid component. Clearing all events listeners.');
       api.publishEvent(GridEvents.unmount);
-      api.unstable_eventManager.removeAllListeners();
     };
   }, [logger, apiRef]);
 }

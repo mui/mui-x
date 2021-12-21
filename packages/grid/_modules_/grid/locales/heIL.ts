@@ -106,14 +106,14 @@ const heILGrid: Partial<GridLocaleText> = {
   actionsCellMore: 'עוד',
 
   // Column pinning text
-  // pinToLeft: 'Pin to left',
-  // pinToRight: 'Pin to right',
-  // unpin: 'Unpin',
+  pinToLeft: 'נעץ משמאל',
+  pinToRight: 'נעץ מימין',
+  unpin: 'בטל נעיצה',
 
   // Tree Data
-  treeDataGroupingHeaderName: 'קבץ',
+  treeDataGroupingHeaderName: 'קבוצה',
   treeDataExpand: 'הרחב',
-  treeDataCollapse: 'הסתר',
+  treeDataCollapse: 'כווץ',
 };
 
 export const heIL: Localization = getGridLocalization(heILGrid, heILCore);

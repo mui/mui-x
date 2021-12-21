@@ -13,7 +13,12 @@ import {
   GridProcessedMergedOptions,
   GridMergedOptions,
 } from './models/gridOptions';
-import { GridRowIdGetter, GridRowModel, GridRowsProp } from './models/gridRows';
+import {
+  GridRowIdGetter,
+  GridRowModel,
+  GridRowsProp,
+  GridRowTreeNodeConfig,
+} from './models/gridRows';
 import { GridColumnTypesRecord } from './models/colDef/gridColumnTypesRecord';
 import { GridSortModel } from './models/gridSortModel';
 import { GridFilterModel } from './models/gridFilterModel';
@@ -95,6 +100,13 @@ interface GridComponentOtherProps extends CommonProps {
    * @returns {boolean} A boolean indicating if the cell is selectable.
    */
   isRowSelectable?: (params: GridRowParams) => boolean;
+  /**
+   * Determines if a group should be expanded after its creation.
+   * This prop takes priority over the `defaultGroupingExpansionDepth` prop.
+   * @param {GridRowTreeNodeConfig} node The node of the group to test.
+   * @returns {boolean} A boolean indicating if the group is expanded.
+   */
+  isGroupExpandedByDefault?: (node: GridRowTreeNodeConfig) => boolean;
   /**
    * Determines the path of a row in the tree data.
    * For instance, a row with the path ["A", "B"] is the child of the row with the path ["A"].

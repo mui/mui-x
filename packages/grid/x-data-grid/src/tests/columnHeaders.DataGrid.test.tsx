@@ -7,7 +7,7 @@ import { getColumnHeaderCell } from 'test/utils/helperFn';
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<DataGrid /> - Column Headers', () => {
-  const { render } = createRenderer();
+  const { render } = createRenderer({ clock: 'fake' });
 
   const baselineProps = {
     autoHeight: isJSDOM,
