@@ -6,7 +6,7 @@ import {
 import { DateRange } from '../../models/dateRange';
 import { DateRangePickerDay } from '../DateRangePickerDay';
 import { useDefaultDates, useUtils } from '../../hooks/useUtils';
-import { PickersCalendar, PickersCalendarProps } from '../pickers/CalendarPicker/PickersCalendar';
+import { DayPicker, PickersCalendarProps } from '../pickers/CalendarPicker/DayPicker';
 import { ExportedDesktopDateRangeCalendarProps } from './DateRangePickerViewDesktop';
 import { ExportedDateValidationProps } from '../../hooks/validation/useDateValidation';
 import { isWithinRange, isStartOfRange, isEndOfRange } from '../../utils/date-utils';
@@ -63,7 +63,7 @@ export function DateRangePickerViewMobile<TDate>(props: DesktopDateRangeCalendar
         views={onlyDayView}
         {...other}
       />
-      <PickersCalendar<TDate>
+      <DayPicker<TDate>
         {...other}
         date={date}
         onChange={onChange}

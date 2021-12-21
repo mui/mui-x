@@ -1,6 +1,8 @@
 import { generateUtilityClass, generateUtilityClasses } from '@mui/base';
 
 export interface ClockPickerClasses {
+  /** Styles applied to the root element. */
+  root: string;
   /** Styles applied to the arrowSwitcher element. */
   arrowSwitcher: string;
 }
@@ -12,5 +14,6 @@ export function getClockPickerUtilityClass(slot: string) {
 }
 
 export const clockPickerClasses: ClockPickerClasses = generateUtilityClasses('MuiClockPicker', [
+  'root',
   'arrowSwitcher',
 ]);

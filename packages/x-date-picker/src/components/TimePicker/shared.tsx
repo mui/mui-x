@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
 import { Clock } from '../icons';
 import { ParseableDate } from '../../models/parseableDate';
-import { ExportedClockPickerProps } from '../pickers/ClockPicker/ClockPickerInternal';
+import { ExportedClockPickerProps } from '../pickers/ClockPicker/ClockPicker';
 import { pick12hOr24hFormat } from '../../utils/text-field-helper';
 import { useUtils } from '../../hooks/useUtils';
 import { ValidationProps } from '../../hooks/validation/useValidation';

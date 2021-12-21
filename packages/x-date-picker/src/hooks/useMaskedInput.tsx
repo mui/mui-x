@@ -58,7 +58,7 @@ export const useMaskedInput = ({
     [acceptRegex, mask, shouldUseMaskedInput],
   );
 
-  // TODO: Implement with controlled vs unctrolled `rawValue`
+  // TODO: Implement with controlled vs uncontrolled `rawValue`
   const currentInputValue = getDisplayDate(utils, rawValue, inputFormat);
   const [innerInputValue, setInnerInputValue] = React.useState(currentInputValue);
   const previousInputValueRef = React.useRef(currentInputValue);

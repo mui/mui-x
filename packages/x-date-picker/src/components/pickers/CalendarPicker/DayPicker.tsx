@@ -106,7 +106,7 @@ const PickersCalendarWeek = styled('div', { skipSx: true })({
 /**
  * @ignore - do not document.
  */
-export function PickersCalendar<TDate>(props: PickersCalendarProps<TDate>) {
+export function DayPicker<TDate>(props: PickersCalendarProps<TDate>) {
   const {
     allowSameDateSelection,
     autoFocus,

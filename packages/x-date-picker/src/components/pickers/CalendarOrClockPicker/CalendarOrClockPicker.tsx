@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import { useViews } from '../../../hooks/useViews';
-import { ClockPickerInternal, ExportedClockPickerProps } from '../ClockPicker/ClockPickerInternal';
+import { ClockPicker, ExportedClockPickerProps } from '../ClockPicker/ClockPicker';
 import { CalendarPicker, ExportedCalendarPickerProps } from '../CalendarPicker/CalendarPicker';
 import { KeyboardDateInput } from '../../../internal/pickers/KeyboardDateInput';
 import { useIsLandscape } from '../../../hooks/useIsLandscape';
@@ -120,7 +120,7 @@ export function CalendarOrClockPicker<View extends CalendarOrClockPickerView>(
     [isMobileKeyboardViewOpen, onViewChange, toggleMobileKeyboardView],
   );
 
-  const { openView, nextView, previousView, setOpenView, handleChangeAndOpenNext } = useViews({
+  const { openView, setOpenView, handleChangeAndOpenNext } = useViews({
     view: undefined,
     views,
     openTo,
@@ -175,16 +175,17 @@ export function CalendarOrClockPicker<View extends CalendarOrClockPickerView>(
             )}
 
             {isTimePickerView(openView) && (
-              <ClockPickerInternal
+              <ClockPicker
                 {...other}
                 autoFocus={autoFocus}
                 date={date}
                 view={openView}
+                // Unclear why the predicate `isDatePickerView` does not imply the casted type
+                views={views.filter(isTimePickerView) as ClockPickerView[]}
                 onChange={handleChangeAndOpenNext}
-                openNextView={() => setOpenView(nextView)}
-                openPreviousView={() => setOpenView(previousView)}
-                nextViewAvailable={!nextView}
-                previousViewAvailable={!previousView || isDatePickerView(previousView)}
+                onViewChange={
+                  setOpenView as ExportedCalendarOrClockPickerProps<ClockPickerView>['onViewChange']
+                }
                 showViewSwitcher={wrapperVariant === 'desktop'}
               />
             )}

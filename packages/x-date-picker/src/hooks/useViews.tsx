@@ -51,8 +51,8 @@ export function useViews<TDate, View extends CalendarOrClockPickerView>({
     }
   }, [nextView, changeView]);
 
-  const handleChangeAndOpenNext = React.useCallback(
-    (date: TDate, currentViewSelectionState?: PickerSelectionState) => {
+  const handleChangeAndOpenNext = React.useCallback<PickerOnChangeFn<TDate>>(
+    (date, currentViewSelectionState) => {
       const isSelectionFinishedOnCurrentView = currentViewSelectionState === 'finish';
       const globalSelectionState =
         isSelectionFinishedOnCurrentView && Boolean(nextView)

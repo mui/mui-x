@@ -2,7 +2,7 @@ import * as React from 'react';
 import { CalendarOrClockPickerView } from '../views';
 import type { PickerOnChangeFn } from '../../hooks/useViews';
 import type { ExportedCalendarPickerProps } from '../../components/pickers/CalendarPicker/CalendarPicker';
-import type { ExportedClockPickerProps } from '../../components/pickers/ClockPicker/ClockPickerInternal';
+import type { ExportedClockPickerProps } from '../../components/pickers/ClockPicker/ClockPicker';
 
 export interface BaseToolbarProps<TDate>
   extends ExportedCalendarPickerProps<TDate>,

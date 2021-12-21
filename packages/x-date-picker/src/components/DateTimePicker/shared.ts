@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
 import { useDefaultDates, useUtils } from '../../hooks/useUtils';
-import { ExportedClockPickerProps } from '../pickers/ClockPicker/ClockPickerInternal';
+import { ExportedClockPickerProps } from '../pickers/ClockPicker/ClockPicker';
 import { pick12hOr24hFormat } from '../../utils/text-field-helper';
 import { ExportedCalendarPickerProps } from '../pickers/CalendarPicker/CalendarPicker';
 import { DateTimeValidationError } from '../../hooks/validation/useDateTimeValidation';

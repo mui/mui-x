@@ -6,7 +6,7 @@ import { MonthPicker } from '../../MonthPicker/MonthPicker';
 import { useCalendarState } from './useCalendarState';
 import { useDefaultDates, useUtils } from '../../../hooks/useUtils';
 import { PickersFadeTransitionGroup } from './PickersFadeTransitionGroup';
-import { PickersCalendar, ExportedCalendarProps } from './PickersCalendar';
+import { DayPicker, ExportedCalendarProps } from './DayPicker';
 import { PickerOnChangeFn, useViews } from '../../../hooks/useViews';
 import { PickersCalendarHeader, ExportedCalendarHeaderProps } from './PickersCalendarHeader';
 import { YearPicker, ExportedYearPickerProps } from '../../YearPicker/YearPicker';
@@ -21,6 +21,7 @@ export interface CalendarPickerProps<TDate>
     ExportedYearPickerProps<TDate>,
     ExportedCalendarHeaderProps<TDate> {
   className?: string;
+  classes?: Partial<CalendarPickerClasses>;
   date: TDate | null;
   /**
    * Default calendar month displayed when `value={null}`.
@@ -49,6 +50,7 @@ export interface CalendarPickerProps<TDate>
   minDate?: TDate;
   /**
    * Callback fired on view change.
+   * @param {CalendarPickerView} view The new view.
    */
   onViewChange?: (view: CalendarPickerView) => void;
   /**
@@ -76,11 +78,14 @@ export interface CalendarPickerProps<TDate>
   reduceAnimations?: boolean;
   /**
    * Component displaying when passed `loading` true.
+   * @returns {React.ReactNode} The node to render when loading.
    * @default () => <span data-mui-test="loading-progress">...</span>
    */
   renderLoading?: () => React.ReactNode;
   /**
    * Disable specific date. @DateIOType
+   * @param {TDate} day. The date to check.
+   * @returns {boolean} If `true` the day will be disabled.
    */
   shouldDisableDate?: (day: TDate) => boolean;
   /**
@@ -106,10 +111,6 @@ export type ExportedCalendarPickerProps<TDate> = Omit<
   | 'currentMonth'
   | 'className'
 >;
-
-interface CalendarPickerPropsWithClasses<TDate> extends CalendarPickerProps<TDate> {
-  classes?: Partial<CalendarPickerClasses>;
-}
 
 const useUtilityClasses = (
   ownerState: CalendarPickerProps<any> & { classes?: Partial<CalendarPickerClasses> },
@@ -140,9 +141,9 @@ const CalendarPickerViewTransitionContainer = styled(PickersFadeTransitionGroup,
   overflowY: 'auto',
 });
 
-type CalendarPickerComponent = <TDate>(
-  props: CalendarPickerPropsWithClasses<TDate> & React.RefAttributes<HTMLDivElement>,
-) => JSX.Element & { propTypes?: any };
+type CalendarPickerComponent = (<TDate>(
+  props: CalendarPickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
+) => JSX.Element) & { propTypes?: any };
 
 /**
  *
@@ -155,7 +156,7 @@ type CalendarPickerComponent = <TDate>(
  * - [CalendarPicker API](https://mui.com/api/calendar-picker/)
  */
 export const CalendarPicker = React.forwardRef(function CalendarPicker<TDate extends unknown>(
-  inProps: CalendarPickerPropsWithClasses<TDate>,
+  inProps: CalendarPickerProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
 ) {
   const props = useThemeProps<Theme, CalendarPickerProps<TDate>, 'MuiCalendarPicker'>({
@@ -300,7 +301,7 @@ export const CalendarPicker = React.forwardRef(function CalendarPicker<TDate ext
           {openView === 'month' && <MonthPicker {...monthPickerProps} />}
 
           {openView === 'day' && (
-            <PickersCalendar
+            <DayPicker
               {...other}
               {...calendarState}
               autoFocus={autoFocus}

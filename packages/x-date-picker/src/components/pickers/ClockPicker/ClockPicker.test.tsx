@@ -30,8 +30,6 @@ describe('<ClockPicker />', () => {
         'reactTestRenderer',
         // TODO: fix ClockPicker to spread props to root
         'themeDefaultProps',
-        // TODO: fix ClockPicker not having root element
-        'themeStyleOverrides',
         'themeVariants',
       ],
     }),

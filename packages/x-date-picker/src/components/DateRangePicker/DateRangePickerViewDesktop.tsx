@@ -3,7 +3,7 @@ import { styled } from '@mui/material/styles';
 import { DateRange } from '../../models';
 import { useDefaultDates, useUtils } from '../../hooks/useUtils';
 import { calculateRangePreview } from './date-range-manager';
-import { PickersCalendar, PickersCalendarProps } from '../pickers/CalendarPicker/PickersCalendar';
+import { DayPicker, PickersCalendarProps } from '../pickers/CalendarPicker/DayPicker';
 import { DateRangePickerDay, DateRangePickerDayProps } from '../DateRangePickerDay';
 import { ExportedDateValidationProps } from '../../hooks/validation/useDateValidation';
 import {
@@ -49,10 +49,10 @@ const DateRangePickerViewDesktopContainer = styled('div', { skipSx: true })(({ t
   },
 }));
 
-const DateRangePickerViewDesktopCalendar = styled(PickersCalendar, { skipSx: true })({
+const DateRangePickerViewDesktopCalendar = styled(DayPicker, { skipSx: true })({
   minWidth: 312,
   minHeight: 288,
-}) as typeof PickersCalendar;
+}) as typeof DayPicker;
 
 const DateRangePickerViewDesktopArrowSwitcher = styled(PickersArrowSwitcher, { skipSx: true })({
   padding: '16px 16px 8px 16px',
