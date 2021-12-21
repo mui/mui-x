@@ -1,5 +1,5 @@
 // TODO: Move to `x-data-grid-pro` folder
-import { GridRowModel } from '../gridRows';
+import {GridRowModel, GridRowTreeNodeConfig} from '../gridRows';
 import { GridEventListener, GridEvents } from '../events';
 import { GridCallbackDetails, GridPinnedColumns } from '../api';
 import { GridGroupingColDefOverride, GridGroupingColDefOverrideParams } from '../colDef';
@@ -48,6 +48,13 @@ export interface DataGridProSimpleOptions extends DataGridSimpleOptions {
    * @default 0
    */
   defaultGroupingExpansionDepth: number;
+  /**
+   * Determines if a group should be expanded after its creation.
+   * This prop takes priority over the `defaultGroupingExpansionDepth` prop.
+   * @param {GridRowTreeNodeConfig} node The node of the group to test.
+   * @returns {boolean} A boolean indicating if the group is expanded.
+   */
+  isGroupExpandedByDefault?: (node: GridRowTreeNodeConfig) => boolean;
   /**
    * If `true`, the column pinning is disabled.
    * @default false
