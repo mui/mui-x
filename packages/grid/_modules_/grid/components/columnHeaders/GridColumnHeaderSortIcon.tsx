@@ -37,8 +37,6 @@ function getIcon(
   className: string,
   sortingOrder: GridSortDirection[],
 ) {
-  const [nextSortDirection] = sortingOrder;
-  direction = direction ?? nextSortDirection;
   let Icon;
   if (direction === 'asc') {
     Icon = icons.ColumnSortedAscendingIcon;
@@ -46,6 +44,9 @@ function getIcon(
     Icon = icons.ColumnSortedDescendingIcon;
   } else {
     Icon = icons.ColumnUnsortedIcon;
+    return Icon ? (
+      <Icon fontSize="small" className={className} sortingOrder={sortingOrder} />
+    ) : null;
   }
   return Icon ? <Icon fontSize="small" className={className} /> : null;
 }
