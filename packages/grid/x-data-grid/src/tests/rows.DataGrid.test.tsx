@@ -185,7 +185,9 @@ describe('<DataGrid /> - Rows', () => {
         />,
       );
       expect(getRow(0).className).not.to.contain('Mui-selected');
-      fireEvent.click(screen.getByRole('button', { name: 'more' }));
+      const moreButton = screen.getByRole('button', { name: 'more' });
+      fireEvent.mouseUp(moreButton);
+      fireEvent.click(moreButton);
       await waitFor(() => expect(screen.queryByText('print')).not.to.equal(null));
       fireEvent.click(screen.queryByText('print'));
       expect(getRow(0).className).not.to.contain('Mui-selected');
