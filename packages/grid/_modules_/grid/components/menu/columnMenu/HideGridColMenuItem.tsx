@@ -30,6 +30,10 @@ const HideGridColMenuItem = (props: GridFilterItemProps) => {
     return null;
   }
 
+  if (column.hideable === false) {
+    return null;
+  }
+
   return (
     <MenuItem onClick={toggleColumn}>
       {apiRef.current.getLocaleText('columnMenuHideColumn')}
