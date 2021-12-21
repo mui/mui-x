@@ -25,9 +25,9 @@ const getSingleSelectOptionFormatter =
     return valueFormatter && option !== '' ? valueFormatter({ value: option, field, api }) : option;
   };
 
-const filterValueParser = (value) => String(typeof value === 'object' ? value.value : value);
+const getValueFromOption = (option) => (typeof option === 'object' ? option.value : option);
 
-const isOptionEqualToValue = (option, value) => filterValueParser(option) === value;
+const isOptionEqualToValue = (option, value) => getValueFromOption(option) === value;
 
 const filter = createFilterOptions<any>();
 
@@ -50,14 +50,13 @@ function GridFilterInputMultipleSingleSelect(props: GridFilterInputMultipleSingl
 
   React.useEffect(() => {
     let itemValue;
-
     if (!Array.isArray(item.value)) {
       itemValue = [];
     } else if (currentValueOptions !== undefined) {
       // sanitize if valueOptions are provided
-      const parsedCurrentValueOptions = currentValueOptions.map(filterValueParser);
+      const parsedCurrentValueOptions = currentValueOptions.map(getValueFromOption);
       itemValue = item.value.filter((element) =>
-        parsedCurrentValueOptions.includes(filterValueParser(element)),
+        parsedCurrentValueOptions.includes(getValueFromOption(element)),
       );
       if (itemValue.length !== item.value.length) {
         // remove filtered values
@@ -70,14 +69,14 @@ function GridFilterInputMultipleSingleSelect(props: GridFilterInputMultipleSingl
 
     itemValue = itemValue ?? [];
 
-    setFilterValueState(itemValue.map(filterValueParser));
+    setFilterValueState(itemValue.map(getValueFromOption));
   }, [item, currentValueOptions, applyValue]);
 
-  const onFilterChange = React.useCallback(
+  const handleChange = React.useCallback(
     (event, value) => {
-      const parsedValue = value.map(filterValueParser);
+      const parsedValue = value.map(getValueFromOption);
       setFilterValueState(parsedValue);
-      applyValue({ ...item, value: [...value] });
+      applyValue({ ...item, value: [...value.map(getValueFromOption)] });
     },
     [applyValue, item],
   );
@@ -92,7 +91,7 @@ function GridFilterInputMultipleSingleSelect(props: GridFilterInputMultipleSingl
       filterOptions={filter}
       id={id}
       value={filterValueState}
-      onChange={onFilterChange}
+      onChange={handleChange}
       renderTags={(value: any[], getTagProps) =>
         value.map((option: string, index: number) => (
           <Chip
