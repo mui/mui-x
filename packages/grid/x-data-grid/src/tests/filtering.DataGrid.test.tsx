@@ -143,14 +143,14 @@ describe('<DataGrid /> - Filter', () => {
             initialState
               ? undefined
               : {
-                  items: [
-                    {
-                      columnField: field,
-                      value,
-                      operatorValue,
-                    },
-                  ],
-                }
+                items: [
+                  {
+                    columnField: field,
+                    value,
+                    operatorValue,
+                  },
+                ],
+              }
           }
           disableColumnFilter={false}
           initialState={{
@@ -1044,13 +1044,13 @@ describe('<DataGrid /> - Filter', () => {
         setProps({
           field: 'status',
           operatorValue: 'isAnyOf',
-          value: ['0', '1'],
+          value: [0, 1],
         });
         expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas']);
         setProps({
           field: 'status',
           operatorValue: 'isAnyOf',
-          value: ['2'],
+          value: [2],
         });
         expect(getColumnValues()).to.deep.equal(['Puma']);
         setProps({
