@@ -33,7 +33,7 @@
   ],
   "scripts": {
     "typescript": "tsc -p tsconfig.json",
-    "build": "cd ../ && rollup --config rollup.x-date-picker.config.js"
+    "build": "cd ../ && rollup --config rollup.x-data-grid.config.js"
   },
   "repository": {
     "type": "git",
