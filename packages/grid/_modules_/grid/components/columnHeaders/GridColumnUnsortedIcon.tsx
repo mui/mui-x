@@ -3,15 +3,11 @@ import * as React from 'react';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { GridSortDirection } from '../../models/gridSortModel';
 
-export interface GridColumnUnsortedIconProps extends SvgIconProps {
-  sortingOrder: GridSortDirection[];
-}
-
 export const GridColumnUnsortedIcon = React.memo(function GridColumnHeaderSortIcon(
-  props: GridColumnUnsortedIconProps,
+  props: SvgIconProps,
 ) {
   const rootProps = useGridRootProps();
-  const [nextSortDirection] = props.sortingOrder;
+  const nextSortDirection: GridSortDirection = props['data-nextsortdirection'];
 
   const Icon =
     nextSortDirection === 'asc'

@@ -44,8 +44,9 @@ function getIcon(
     Icon = icons.ColumnSortedDescendingIcon;
   } else {
     Icon = icons.ColumnUnsortedIcon;
+    const [nextSortDirection] = sortingOrder;
     return Icon ? (
-      <Icon fontSize="small" className={className} sortingOrder={sortingOrder} />
+      <Icon fontSize="small" className={className} data-nextsortdirection={nextSortDirection} />
     ) : null;
   }
   return Icon ? <Icon fontSize="small" className={className} /> : null;
