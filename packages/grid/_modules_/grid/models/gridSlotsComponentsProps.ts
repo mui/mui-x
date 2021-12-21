@@ -3,6 +3,11 @@
  */
 export interface GridSlotsComponentsProps {
   baseCheckbox?: any;
+  baseTextField?: any;
+  baseFormControl?: any;
+  baseSelect?: any;
+  baseSwitch?: any;
+  baseButton?: any;
   cell?: any;
   columnMenu?: any;
   columnsPanel?: any;

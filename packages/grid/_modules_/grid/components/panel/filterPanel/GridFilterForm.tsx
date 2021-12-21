@@ -1,10 +1,9 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
-import FormControl from '@mui/material/FormControl';
 import IconButton from '@mui/material/IconButton';
 import InputLabel from '@mui/material/InputLabel';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
+import { SelectChangeEvent } from '@mui/material/Select';
 import { capitalize, unstable_useId as useId } from '@mui/material/utils';
 import { styled } from '@mui/material/styles';
 import { filterableGridColumnsSelector } from '../../../hooks/features/columns/gridColumnsSelector';
@@ -173,7 +172,7 @@ function GridFilterForm(props: GridFilterFormProps) {
 
   return (
     <GridFilterFormRoot className={classes.root}>
-      <FormControl
+      <rootProps.components.BaseFormControl
         variant="standard"
         sx={{ flexShrink: 0, justifyContent: 'flex-end', marginRight: 0.5, marginBottom: 0.2 }}
       >
@@ -185,8 +184,8 @@ function GridFilterForm(props: GridFilterFormProps) {
         >
           <GridCloseIcon fontSize="small" />
         </IconButton>
-      </FormControl>
-      <FormControl
+      </rootProps.components.BaseFormControl>
+      <rootProps.components.BaseFormControl
         variant="standard"
         sx={{
           minWidth: 60,
@@ -197,7 +196,7 @@ function GridFilterForm(props: GridFilterFormProps) {
         <InputLabel htmlFor={linkOperatorSelectId} id={linkOperatorSelectLabelId}>
           {apiRef.current.getLocaleText('filterPanelOperators')}
         </InputLabel>
-        <Select
+        <rootProps.components.BaseSelect
           labelId={linkOperatorSelectLabelId}
           id={linkOperatorSelectId}
           value={multiFilterOperator}
@@ -211,13 +210,13 @@ function GridFilterForm(props: GridFilterFormProps) {
           <option key={GridLinkOperator.Or.toString()} value={GridLinkOperator.Or.toString()}>
             {apiRef.current.getLocaleText('filterPanelOperatorOr')}
           </option>
-        </Select>
-      </FormControl>
-      <FormControl variant="standard" sx={{ width: 150 }}>
+        </rootProps.components.BaseSelect>
+      </rootProps.components.BaseFormControl>
+      <rootProps.components.BaseFormControl variant="standard" sx={{ width: 150 }}>
         <InputLabel htmlFor={columnSelectId} id={columnSelectLabelId}>
           {apiRef.current.getLocaleText('filterPanelColumns')}
         </InputLabel>
-        <Select
+        <rootProps.components.BaseSelect
           labelId={columnSelectLabelId}
           id={columnSelectId}
           value={item.columnField || ''}
@@ -229,13 +228,13 @@ function GridFilterForm(props: GridFilterFormProps) {
               {col.headerName || col.field}
             </option>
           ))}
-        </Select>
-      </FormControl>
-      <FormControl variant="standard" sx={{ width: 120 }}>
+        </rootProps.components.BaseSelect>
+      </rootProps.components.BaseFormControl>
+      <rootProps.components.BaseFormControl variant="standard" sx={{ width: 120 }}>
         <InputLabel htmlFor={operatorSelectId} id={operatorSelectLabelId}>
           {apiRef.current.getLocaleText('filterPanelOperators')}
         </InputLabel>
-        <Select
+        <rootProps.components.BaseSelect
           labelId={operatorSelectLabelId}
           id={operatorSelectId}
           value={item.operatorValue}
@@ -251,9 +250,9 @@ function GridFilterForm(props: GridFilterFormProps) {
                 )}
             </option>
           ))}
-        </Select>
-      </FormControl>
-      <FormControl variant="standard" sx={{ width: 190 }}>
+        </rootProps.components.BaseSelect>
+      </rootProps.components.BaseFormControl>
+      <rootProps.components.BaseFormControl variant="standard" sx={{ width: 190 }}>
         {currentOperator?.InputComponent ? (
           <currentOperator.InputComponent
             apiRef={apiRef}
@@ -263,7 +262,7 @@ function GridFilterForm(props: GridFilterFormProps) {
             {...currentOperator.InputComponentProps}
           />
         ) : null}
-      </FormControl>
+      </rootProps.components.BaseFormControl>
     </GridFilterFormRoot>
   );
 }
