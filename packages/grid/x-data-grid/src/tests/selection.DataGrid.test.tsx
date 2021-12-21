@@ -301,6 +301,44 @@ describe('<DataGrid /> - Selection', () => {
       });
       expect(getSelectedRowIds()).to.deep.equal([1, 2]);
     });
+
+    it('should not jump during scroll while the focus is on the checkbox', function test() {
+      if (isJSDOM) {
+        this.skip(); // HTMLElement.focus() only scrolls to the element on a real browser
+      }
+      const data = getData(20, 1);
+      render(<TestDataGridSelection {...data} rowHeight={50} checkboxSelection hideFooter />);
+      const checkboxes = screen.queryAllByRole('checkbox', { name: /select row checkbox/i });
+      checkboxes[0].focus();
+      fireEvent.keyDown(checkboxes[0], { key: 'ArrowDown' });
+      fireEvent.keyDown(checkboxes[1], { key: 'ArrowDown' });
+      fireEvent.keyDown(checkboxes[2], { key: 'ArrowDown' });
+      const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
+      virtualScroller.scrollTop = 250; // Scroll 5 rows
+      virtualScroller.dispatchEvent(new Event('scroll'));
+      expect(virtualScroller.scrollTop).to.equal(250);
+    });
+
+    it('should set tabindex=0 on the checkbox when the it receives focus', () => {
+      render(<TestDataGridSelection checkboxSelection />);
+      const checkbox = screen.getAllByRole('checkbox', { name: /select row checkbox/i })[0];
+      const checkboxCell = getCell(0, 0);
+      const secondCell = getCell(0, 1);
+      expect(checkbox).to.have.attribute('tabindex', '-1');
+      expect(checkboxCell).to.have.attribute('tabindex', '-1');
+      expect(secondCell).to.have.attribute('tabindex', '-1');
+
+      secondCell.focus();
+      fireEvent.mouseUp(secondCell);
+      fireEvent.click(secondCell);
+      expect(secondCell).to.have.attribute('tabindex', '0');
+
+      fireEvent.keyDown(secondCell, { key: 'ArrowLeft' });
+      expect(secondCell).to.have.attribute('tabindex', '-1');
+      // Ensure that checkbox has tabindex=0 and the cell has tabindex=-1
+      expect(checkbox).to.have.attribute('tabindex', '0');
+      expect(checkboxCell).to.have.attribute('tabindex', '-1');
+    });
   });
 
   describe('props: isRowSelectable', () => {
