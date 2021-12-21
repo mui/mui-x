@@ -197,7 +197,12 @@ export const useGridRowGrouping = (
     };
 
     return apiRef.current.unstable_registerRowGroupsBuilder('rowGrouping', groupRows);
-  }, [apiRef, props.defaultGroupingExpansionDepth, props.disableRowGrouping]);
+  }, [
+    apiRef,
+    props.defaultGroupingExpansionDepth,
+    props.isGroupExpandedByDefault,
+    props.disableRowGrouping,
+  ]);
 
   useFirstRender(() => {
     updateRowGrouping();
