@@ -143,14 +143,14 @@ describe('<DataGrid /> - Filter', () => {
             initialState
               ? undefined
               : {
-                items: [
-                  {
-                    columnField: field,
-                    value,
-                    operatorValue,
-                  },
-                ],
-              }
+                  items: [
+                    {
+                      columnField: field,
+                      value,
+                      operatorValue,
+                    },
+                  ],
+                }
           }
           disableColumnFilter={false}
           initialState={{
