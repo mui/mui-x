@@ -67,9 +67,7 @@ module.exports = {
         'no-restricted-imports': [
           'error',
           {
-            patterns: [
-              '@mui/x-date-picker/*'
-            ],
+            patterns: ['@mui/x-date-picker/*'],
           },
         ],
       },

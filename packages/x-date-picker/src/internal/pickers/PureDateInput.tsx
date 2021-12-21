@@ -6,7 +6,7 @@ import { InputAdornmentProps } from '@mui/material/InputAdornment';
 import { onSpaceOrEnter } from '../../utils/utils';
 import { ParseableDate } from '../../models/parseableDate';
 import { useUtils } from '../../hooks/useUtils';
-import { getDisplayDate, getTextFieldAriaText } from './text-field-helper';
+import { getDisplayDate, getTextFieldAriaText } from '../../utils/text-field-helper';
 import { MuiPickersAdapter } from '../../models';
 
 // TODO: make `variant` optional.

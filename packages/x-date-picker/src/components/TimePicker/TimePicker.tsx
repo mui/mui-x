@@ -52,14 +52,18 @@ export const TimePicker = React.forwardRef(function TimePicker<TDate>(
 
   const isDesktop = useMediaQuery(desktopModeMediaQuery);
 
-  return isDesktop ? (
-    <DesktopTimePicker
-      ref={ref}
-      PopperProps={PopperProps}
-      TransitionComponent={TransitionComponent}
-      {...other}
-    />
-  ) : (
+  if (isDesktop) {
+    return (
+      <DesktopTimePicker
+        ref={ref}
+        PopperProps={PopperProps}
+        TransitionComponent={TransitionComponent}
+        {...other}
+      />
+    );
+  }
+
+  return (
     <MobileTimePicker
       ref={ref}
       cancelText={cancelText}

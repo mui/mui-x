@@ -3,19 +3,15 @@ import { styled } from '@mui/material/styles';
 import { DateRange } from '../../models';
 import { useDefaultDates, useUtils } from '../../hooks/useUtils';
 import { calculateRangePreview } from './date-range-manager';
-import { PickersCalendar, PickersCalendarProps } from '../CalendarPicker/PickersCalendar';
+import { PickersCalendar, PickersCalendarProps } from '../pickers/CalendarPicker/PickersCalendar';
 import { DateRangePickerDay, DateRangePickerDayProps } from '../DateRangePickerDay';
-import { ExportedDateValidationProps} from '../../hooks/validation/useDateValidation'
+import { ExportedDateValidationProps } from '../../hooks/validation/useDateValidation';
 import {
   PickersArrowSwitcher,
   ExportedArrowSwitcherProps,
 } from '../../internal/pickers/PickersArrowSwitcher';
 import { usePreviousMonthDisabled, useNextMonthDisabled } from '../../hooks/date-helpers-hooks';
-import {
-  isWithinRange,
-  isStartOfRange,
-  isEndOfRange,
-} from '../../utils/date-utils';
+import { isWithinRange, isStartOfRange, isEndOfRange } from '../../utils/date-utils';
 import { doNothing } from '../../utils/utils';
 
 export interface ExportedDesktopDateRangeCalendarProps<TDate> {
@@ -34,7 +30,7 @@ export interface ExportedDesktopDateRangeCalendarProps<TDate> {
 interface DesktopDateRangeCalendarProps<TDate>
   extends ExportedDesktopDateRangeCalendarProps<TDate>,
     Omit<PickersCalendarProps<TDate>, 'renderDay' | 'onFocusedDayChange'>,
-      ExportedDateValidationProps<TDate>,
+    ExportedDateValidationProps<TDate>,
     ExportedArrowSwitcherProps {
   calendars: 1 | 2 | 3;
   date: DateRange<TDate | null>;

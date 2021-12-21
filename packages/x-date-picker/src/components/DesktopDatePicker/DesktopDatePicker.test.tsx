@@ -209,8 +209,8 @@ describe('<DesktopDatePicker />', () => {
     fireEvent.click(screen.getByLabelText('Jan 2, 2018'));
 
     expect(screen.queryByRole('dialog'))
-        // @ts-expect-error need to migrate helpers to TypeScript
-        .toBeVisible();
+      // @ts-expect-error need to migrate helpers to TypeScript
+      .toBeVisible();
   });
 
   it('does not call onChange if same date selected', () => {
@@ -268,8 +268,8 @@ describe('<DesktopDatePicker />', () => {
     );
 
     expect(screen.getByMuiTest('picker-toolbar'))
-        // @ts-expect-error need to migrate helpers to TypeScript
-        .toBeVisible();
+      // @ts-expect-error need to migrate helpers to TypeScript
+      .toBeVisible();
   });
 
   it('switches between views uncontrolled', () => {
@@ -291,8 +291,8 @@ describe('<DesktopDatePicker />', () => {
     expect(handleViewChange.callCount).to.equal(1);
     expect(screen.queryByLabelText(/switch to year view/i)).to.equal(null);
     expect(screen.getByLabelText('year view is open, switch to calendar view'))
-        // @ts-expect-error need to migrate helpers to TypeScript
-        .toBeVisible();
+      // @ts-expect-error need to migrate helpers to TypeScript
+      .toBeVisible();
   });
 
   describe('prop: PopperProps', () => {

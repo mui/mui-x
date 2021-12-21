@@ -7,7 +7,7 @@ import {
   maskedDateFormatter,
   getDisplayDate,
   checkMaskIsValidForCurrentFormat,
-} from '../internal/pickers/text-field-helper';
+} from '../utils/text-field-helper';
 
 type MaskedInputProps = Omit<
   DateInputProps,

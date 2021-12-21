@@ -6,7 +6,7 @@ import { useUtils } from '../../hooks/useUtils';
 import { Calendar } from '../../components/icons';
 import { useMaskedInput } from '../../hooks/useMaskedInput';
 import { DateInputProps } from './PureDateInput';
-import { getTextFieldAriaText } from './text-field-helper';
+import { getTextFieldAriaText } from '../../utils/text-field-helper';
 
 export const KeyboardDateInput = React.forwardRef(function KeyboardDateInput(
   props: DateInputProps,

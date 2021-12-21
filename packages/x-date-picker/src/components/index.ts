@@ -1,6 +1,4 @@
-export * from './CalendarPicker';
 export * from './CalendarPickerSkeleton';
-export * from './ClockPicker';
 export * from './DatePicker';
 export * from './DateRangePicker';
 export * from './DateRangePickerDay';
@@ -16,9 +14,8 @@ export * from './MobileDateTimePicker';
 export * from './MobileTimePicker';
 export * from './MonthPicker';
 export * from './PickersDay';
-export * from './StaticDatePicker';
-export * from './StaticDateRangePicker';
-export * from './StaticDateTimePicker';
-export * from './StaticTimePicker';
 export * from './TimePicker';
 export * from './YearPicker';
+
+export * from './static-pickers';
+export * from './pickers';

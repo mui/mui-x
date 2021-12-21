@@ -5,7 +5,7 @@ import { generateUtilityClasses } from '@mui/base';
 import { PickersToolbar } from '../../internal/pickers/PickersToolbar';
 import { useUtils } from '../../hooks/useUtils';
 import { PickersToolbarButton } from '../../internal/pickers/PickersToolbarButton';
-import { BaseToolbarProps } from '../../internal/pickers/typings/BasePicker';
+import { BaseToolbarProps } from '../../models/props/baseToolbarProps';
 import { DateRange, CurrentlySelectingRangeEndProps } from '../../models';
 
 const classes = generateUtilityClasses('PrivateDateRangePickerToolbar', ['penIcon']);

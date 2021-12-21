@@ -45,6 +45,3 @@ export const createIsAfterIgnoreDatePart =
 
     return getSecondsInDay(dateLeft, utils) > getSecondsInDay(dateRight, utils);
   };
-
-
-

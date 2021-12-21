@@ -1,13 +1,14 @@
 import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
 import { useDefaultDates, useUtils } from '../../hooks/useUtils';
-import { ExportedClockPickerProps } from '../ClockPicker/ClockPickerInternal';
-import { pick12hOr24hFormat } from '../../internal/pickers/text-field-helper';
-import { ExportedCalendarPickerProps } from '../CalendarPicker/CalendarPicker';
+import { ExportedClockPickerProps } from '../pickers/ClockPicker/ClockPickerInternal';
+import { pick12hOr24hFormat } from '../../utils/text-field-helper';
+import { ExportedCalendarPickerProps } from '../pickers/CalendarPicker/CalendarPicker';
 import { DateTimeValidationError } from '../../hooks/validation/useDateTimeValidation';
 import { ValidationProps } from '../../hooks/validation/useValidation';
 import { ParseableDate } from '../../models/parseableDate';
-import { BasePickerProps, BaseToolbarProps } from '../../internal/pickers/typings/BasePicker';
+import { BasePickerProps } from '../../models/props/basePickerProps';
+import { BaseToolbarProps } from '../../models/props/baseToolbarProps';
 import { ExportedDateInputProps } from '../../internal/pickers/PureDateInput';
 import { CalendarOrClockPickerView } from '../../models';
 
@@ -74,7 +75,10 @@ export interface BaseDateTimePickerProps<TDate>
 
 type DefaultizedProps<Props> = Props & { inputFormat: string };
 
-export function useDateTimePickerDefaultizedProps<TDate, Props extends BaseDateTimePickerProps<TDate>>(
+export function useDateTimePickerDefaultizedProps<
+  TDate,
+  Props extends BaseDateTimePickerProps<TDate>,
+>(
   {
     ampm,
     inputFormat,

@@ -7,7 +7,7 @@ import { PickersToolbarButton } from '../../internal/pickers/PickersToolbarButto
 import { DateTimePickerTabs } from './DateTimePickerTabs';
 import { useUtils } from '../../hooks/useUtils';
 import { WrapperVariantContext } from '../../internal/pickers/wrappers/WrapperVariantContext';
-import { BaseToolbarProps } from '../../internal/pickers/typings/BasePicker';
+import { BaseToolbarProps } from '../../models/props/baseToolbarProps';
 
 const classes = generateUtilityClasses('PrivateDateTimePickerToolbar', ['penIcon']);
 

@@ -2,18 +2,14 @@ import * as React from 'react';
 import {
   PickersCalendarHeader,
   ExportedCalendarHeaderProps,
-} from '../CalendarPicker/PickersCalendarHeader';
+} from '../pickers/CalendarPicker/PickersCalendarHeader';
 import { DateRange } from '../../models/dateRange';
 import { DateRangePickerDay } from '../DateRangePickerDay';
 import { useDefaultDates, useUtils } from '../../hooks/useUtils';
-import { PickersCalendar, PickersCalendarProps } from '../CalendarPicker/PickersCalendar';
+import { PickersCalendar, PickersCalendarProps } from '../pickers/CalendarPicker/PickersCalendar';
 import { ExportedDesktopDateRangeCalendarProps } from './DateRangePickerViewDesktop';
-import { ExportedDateValidationProps } from "../../hooks/validation/useDateValidation";
-import {
-  isWithinRange,
-  isStartOfRange,
-  isEndOfRange,
-} from '../../utils/date-utils';
+import { ExportedDateValidationProps } from '../../hooks/validation/useDateValidation';
+import { isWithinRange, isStartOfRange, isEndOfRange } from '../../utils/date-utils';
 import { doNothing } from '../../utils/utils';
 
 export interface ExportedMobileDateRangeCalendarProps<TDate>
@@ -22,7 +18,7 @@ export interface ExportedMobileDateRangeCalendarProps<TDate>
 interface DesktopDateRangeCalendarProps<TDate>
   extends ExportedMobileDateRangeCalendarProps<TDate>,
     Omit<PickersCalendarProps<TDate>, 'date' | 'renderDay' | 'onFocusedDayChange'>,
-      ExportedDateValidationProps<TDate>,
+    ExportedDateValidationProps<TDate>,
     ExportedCalendarHeaderProps<TDate> {
   date: DateRange<TDate>;
   changeMonth: (date: TDate) => void;

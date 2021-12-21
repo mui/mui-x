@@ -2,12 +2,13 @@ import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
 import { Clock } from '../icons';
 import { ParseableDate } from '../../models/parseableDate';
-import { ExportedClockPickerProps } from '../ClockPicker/ClockPickerInternal';
-import { pick12hOr24hFormat } from '../../internal/pickers/text-field-helper';
+import { ExportedClockPickerProps } from '../pickers/ClockPicker/ClockPickerInternal';
+import { pick12hOr24hFormat } from '../../utils/text-field-helper';
 import { useUtils } from '../../hooks/useUtils';
 import { ValidationProps } from '../../hooks/validation/useValidation';
 import { TimeValidationError } from '../../hooks/validation/useTimeValidation';
-import { BasePickerProps, BaseToolbarProps } from '../../internal/pickers/typings/BasePicker';
+import { BasePickerProps } from '../../models/props/basePickerProps';
+import { BaseToolbarProps } from '../../models/props/baseToolbarProps';
 import { ExportedDateInputProps } from '../../internal/pickers/PureDateInput';
 import { ClockPickerView, MuiPickersAdapter } from '../../models';
 

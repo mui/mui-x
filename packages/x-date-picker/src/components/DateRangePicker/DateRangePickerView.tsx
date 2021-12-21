@@ -1,11 +1,11 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { isRangeValid } from '../../utils/date-utils';
-import { BasePickerProps } from '../../internal/pickers/typings/BasePicker';
+import { BasePickerProps } from '../../models/props/basePickerProps';
 import { calculateRangeChange } from './date-range-manager';
 import { useUtils } from '../../hooks/useUtils';
 import { DateRangePickerToolbar } from './DateRangePickerToolbar';
-import { useCalendarState } from '../CalendarPicker/useCalendarState';
+import { useCalendarState } from '../pickers/CalendarPicker/useCalendarState';
 import { DateRangePickerViewMobile } from './DateRangePickerViewMobile';
 import {
   WrapperVariant,
@@ -14,7 +14,7 @@ import {
 import { MobileKeyboardInputView } from '../pickers/CalendarOrClockPicker/CalendarOrClockPicker';
 import { DateRangePickerInput, DateRangeInputProps } from './DateRangePickerInput';
 import { DateRange, CurrentlySelectingRangeEndProps, RangeInput } from '../../models/dateRange';
-import { ExportedCalendarPickerProps } from '../CalendarPicker/CalendarPicker';
+import { ExportedCalendarPickerProps } from '../pickers/CalendarPicker/CalendarPicker';
 import {
   DateRangePickerViewDesktop,
   ExportedDesktopDateRangeCalendarProps,

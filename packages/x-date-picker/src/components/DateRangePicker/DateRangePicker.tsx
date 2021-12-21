@@ -8,7 +8,10 @@ import {
 import { useDefaultDates, useUtils } from '../../hooks/useUtils';
 import { RangeInput, DateRange } from '../../models/dateRange';
 import { ValidationProps } from '../../hooks/validation/useValidation';
-import { useDateRangeValidation, DateRangeValidationError } from '../../hooks/validation/useDateRangeValidation';
+import {
+  useDateRangeValidation,
+  DateRangeValidationError,
+} from '../../hooks/validation/useDateRangeValidation';
 import { usePickerState, PickerStateValueManager } from '../../hooks/usePickerState';
 import { DateRangePickerView, ExportedDateRangePickerViewProps } from './DateRangePickerView';
 import { DateRangePickerInput, ExportedDateRangePickerInputProps } from './DateRangePickerInput';

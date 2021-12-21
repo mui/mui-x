@@ -7,16 +7,16 @@ import {
   PickersDayClassKey,
   YearPickerClassKey,
 } from '../components';
-import { PickerStaticWrapperClassKey } from '../internal/pickers/wrappers/PickerStaticWrapper';
+import { PickerStaticWrapperClassKey } from '../components/static-pickers/PickerStaticWrapper';
 
 // prettier-ignore
 export interface LabComponentNameToClassKey {
   MuiCalendarPicker: CalendarPickerClassKey;
   MuiCalendarPickerSkeleton: CalendarPickerSkeletonClassKey;
   MuiClockPicker: ClockPickerClassKey;
-  MuiDatePicker: {};
+  MuiDatePicker: never;
   MuiDateRangePickerDay: DateRangePickerDayClassKey;
-  MuiDateTimePicker: {};
+  MuiDateTimePicker: never;
   MuiMonthPicker: MonthPickerClassKey;
   MuiPickersDay: PickersDayClassKey;
   MuiYearPicker: YearPickerClassKey;

@@ -8,7 +8,7 @@ import { PickersToolbar } from '../../internal/pickers/PickersToolbar';
 import { arrayIncludes } from '../../utils/utils';
 import { useUtils } from '../../hooks/useUtils';
 import { useMeridiemMode } from '../../hooks/date-helpers-hooks';
-import { BaseToolbarProps } from '../../internal/pickers/typings/BasePicker';
+import { BaseToolbarProps } from '../../models/props/baseToolbarProps';
 import {
   getTimePickerToolbarUtilityClass,
   timePickerToolbarClasses,

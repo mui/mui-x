@@ -1,20 +1,25 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import { useViews } from '../../../hooks/useViews';
-import { ClockPickerInternal } from '../../ClockPicker/ClockPickerInternal';
-import { CalendarPicker } from '../../CalendarPicker';
+import { ClockPickerInternal, ExportedClockPickerProps } from '../ClockPicker/ClockPickerInternal';
+import { CalendarPicker, ExportedCalendarPickerProps } from '../CalendarPicker/CalendarPicker';
 import { KeyboardDateInput } from '../../../internal/pickers/KeyboardDateInput';
 import { useIsLandscape } from '../../../hooks/useIsLandscape';
-import { WrapperVariant, WrapperVariantContext } from '../../../internal/pickers/wrappers/WrapperVariantContext';
+import {
+  WrapperVariant,
+  WrapperVariantContext,
+} from '../../../internal/pickers/wrappers/WrapperVariantContext';
 import { DateInputPropsLike } from '../../../internal/pickers/wrappers/WrapperProps';
 import { PickerSelectionState } from '../../../hooks/usePickerState';
-import { BasePickerProps, CalendarAndClockProps, BaseToolbarProps } from '../../../internal/pickers/typings/BasePicker';
-import { PickerViewRoot } from '../../views/PickerViewRoot';
+import { BasePickerProps } from '../../../models/props/basePickerProps';
+import { BaseToolbarProps } from '../../../models/props/baseToolbarProps';
+import { PickerViewRoot } from '../PickerViewRoot';
 import { CalendarOrClockPickerView, CalendarPickerView, ClockPickerView } from '../../../models';
 
 export interface ExportedCalendarOrClockPickerProps<View extends CalendarOrClockPickerView>
   extends Omit<BasePickerProps<unknown, unknown>, 'value' | 'onChange'>,
-    Omit<CalendarAndClockProps<unknown>, 'onViewChange' | 'openTo' | 'view'> {
+    Omit<ExportedCalendarPickerProps<unknown>, 'onViewChange' | 'openTo' | 'view'>,
+    ExportedClockPickerProps<unknown> {
   dateRangeIcon?: React.ReactNode;
   /**
    * Callback fired on view change.
@@ -68,7 +73,9 @@ const isDatePickerView = (view: CalendarOrClockPickerView): view is CalendarPick
 const isTimePickerView = (view: CalendarOrClockPickerView): view is ClockPickerView =>
   view === 'hours' || view === 'minutes' || view === 'seconds';
 
-export function CalendarOrClockPicker<View extends CalendarOrClockPickerView>(props: CalendarOrClockPickerProps<View>) {
+export function CalendarOrClockPicker<View extends CalendarOrClockPickerView>(
+  props: CalendarOrClockPickerProps<View>,
+) {
   const {
     autoFocus,
     className,
@@ -156,7 +163,9 @@ export function CalendarOrClockPicker<View extends CalendarOrClockPickerView>(pr
               <CalendarPicker
                 autoFocus={autoFocus}
                 date={date}
-                onViewChange={setOpenView as CalendarAndClockProps<unknown>['onViewChange']}
+                onViewChange={
+                  setOpenView as ExportedCalendarOrClockPickerProps<CalendarPickerView>['onViewChange']
+                }
                 onChange={handleChangeAndOpenNext}
                 view={openView}
                 // Unclear why the predicate `isDatePickerView` does not imply the casted type

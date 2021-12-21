@@ -6,7 +6,7 @@ import IconButton from '@mui/material/IconButton';
 import { styled } from '@mui/material/styles';
 import { generateUtilityClasses } from '@mui/base';
 import { Pen, Calendar, Clock } from '../../components/icons';
-import { BaseToolbarProps } from './typings/BasePicker';
+import { BaseToolbarProps } from '../../models/props/baseToolbarProps';
 
 export interface PickersToolbarProps<TDate>
   extends Pick<

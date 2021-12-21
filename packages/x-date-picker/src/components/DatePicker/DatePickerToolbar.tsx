@@ -4,7 +4,7 @@ import { styled } from '@mui/material/styles';
 import { generateUtilityClasses } from '@mui/base';
 import { PickersToolbar } from '../../internal/pickers/PickersToolbar';
 import { useUtils } from '../../hooks/useUtils';
-import { BaseToolbarProps } from '../../internal/pickers/typings/BasePicker';
+import { BaseToolbarProps } from '../../models/props/baseToolbarProps';
 import { isYearAndMonthViews, isYearOnlyView } from './shared';
 import { CalendarPickerView } from '../../models';
 

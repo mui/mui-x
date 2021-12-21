@@ -1,6 +1,6 @@
-import { CalendarPickerProps } from '../components/CalendarPicker';
+import { CalendarPickerProps } from '../components/pickers/CalendarPicker';
 import { CalendarPickerSkeletonProps } from '../components/CalendarPickerSkeleton';
-import { ClockPickerProps } from '../components/ClockPicker';
+import { ClockPickerProps } from '../components/pickers/ClockPicker';
 import { DatePickerProps } from '../components/DatePicker';
 import { DateRangePickerDayProps } from '../components/DateRangePickerDay/DateRangePickerDay';
 import { DateTimePickerProps } from '../components/DateTimePicker';
@@ -11,12 +11,12 @@ import { MobileDateTimePickerProps } from '../components/MobileDateTimePicker';
 import { MobileTimePickerProps } from '../components/MobileTimePicker';
 import { MonthPickerProps } from '../components/MonthPicker/MonthPicker';
 import { PickersDayProps } from '../components/PickersDay';
-import { StaticDatePickerProps } from '../components/StaticDatePicker';
-import { StaticDateTimePickerProps } from '../components/StaticDateTimePicker';
-import { StaticTimePickerProps } from '../components/StaticTimePicker';
+import { StaticDatePickerProps } from '../components/static-pickers/StaticDatePicker';
+import { StaticDateTimePickerProps } from '../components/static-pickers/StaticDateTimePicker';
+import { StaticTimePickerProps } from '../components/static-pickers/StaticTimePicker';
 import { TimePickerProps } from '../components/TimePicker';
 import { YearPickerProps } from '../components/YearPicker';
-import { PickerStaticWrapperProps } from '../internal/pickers/wrappers/PickerStaticWrapper';
+import { PickerStaticWrapperProps } from '../components/static-pickers/PickerStaticWrapper/PickerStaticWrapper';
 
 export interface LabComponentsPropsList {
   MuiCalendarPicker: CalendarPickerProps<unknown>;

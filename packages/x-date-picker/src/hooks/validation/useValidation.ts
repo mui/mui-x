@@ -18,18 +18,15 @@ type InferError<Props> = Props extends ValidationProps<infer TError, any> ? TErr
 type InferDate<Props> = Props extends ValidationProps<any, infer TDate> ? TDate : never;
 
 export type Validator<TDate, TProps> = (
-    utils: MuiPickersAdapter<TDate>,
-    value: InferDate<TProps>,
-    props: Omit<TProps, 'value'>,
-) => InferError<TProps>
+  utils: MuiPickersAdapter<TDate>,
+  value: InferDate<TProps>,
+  props: Omit<TProps, 'value'>,
+) => InferError<TProps>;
 
 export function useValidation<TDate, TProps extends ValidationProps<any, any>>(
   props: TProps,
   validate: Validator<TDate, TProps>,
-  isSameError: (
-    a: InferError<TProps>,
-    b: InferError<TProps> | null,
-  ) => boolean,
+  isSameError: (a: InferError<TProps>, b: InferError<TProps> | null) => boolean,
 ): InferError<TProps> {
   const { value, onError } = props;
   const utils = useUtils<TDate>();
@@ -47,5 +44,3 @@ export function useValidation<TDate, TProps extends ValidationProps<any, any>>(
 
   return validationError;
 }
-
-
