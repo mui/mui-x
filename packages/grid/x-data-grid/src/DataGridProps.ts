@@ -29,6 +29,7 @@ export type DataGridProps = Omit<
   | 'getTreeDataPath'
   | 'groupingColDef'
   | 'defaultGroupingExpansionDepth'
+  | 'isGroupExpandedByDefault'
   | 'rowGroupingColumnMode'
   | 'rowGroupingModel'
   | 'onRowGroupingModelChange'

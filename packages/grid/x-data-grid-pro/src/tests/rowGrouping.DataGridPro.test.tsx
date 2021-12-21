@@ -9,6 +9,7 @@ import {
   GridKeyGetterParams,
   GridPreferencePanelsValue,
   GridRowsProp,
+  GridRowTreeNodeConfig,
   useGridApiRef,
   useGridRootProps,
 } from '@mui/x-data-grid-pro';
@@ -643,6 +644,56 @@ describe('<DataGridPro /> - Group Rows By Column', () => {
         'Cat 2 (1)',
         'Cat 1 (1)',
         'Cat A (3)',
+      ]);
+    });
+  });
+
+  describe('prop: isGroupExpandedByDefault', () => {
+    it('should expand groups according to isGroupExpandedByDefault when defined', () => {
+      const isGroupExpandedByDefault = spy(
+        (node: GridRowTreeNodeConfig) =>
+          node.groupingKey === 'Cat A' && node.groupingField === 'category1',
+      );
+
+      render(
+        <Test
+          initialState={{ rowGrouping: { model: ['category1', 'category2'] } }}
+          isGroupExpandedByDefault={isGroupExpandedByDefault}
+        />,
+      );
+      expect(isGroupExpandedByDefault.callCount).to.equal(12); // Should not be called on leaves
+      const { childrenExpanded, ...node } = apiRef.current.state.rows.tree.A;
+      const callForNodeA = isGroupExpandedByDefault
+        .getCalls()
+        .find(
+          (call) =>
+            call.firstArg.groupingKey === 'Cat A' && call.firstArg.groupingField === 'category1',
+        )!;
+      expect(callForNodeA.firstArg).to.deep.includes(node);
+      expect(getColumnValues(0)).to.deep.equal([
+        'Cat A (3)',
+        'Cat 1 (1)',
+        'Cat 2 (2)',
+        'Cat B (2)',
+      ]);
+    });
+
+    it('should have priority over defaultGroupingExpansionDepth when both defined', () => {
+      const isGroupExpandedByDefault = (node: GridRowTreeNodeConfig) =>
+        node.groupingKey === 'Cat A' && node.groupingField === 'category1';
+
+      render(
+        <Test
+          initialState={{ rowGrouping: { model: ['category1', 'category2'] } }}
+          isGroupExpandedByDefault={isGroupExpandedByDefault}
+          defaultGroupingExpansionDepth={-1}
+        />,
+      );
+      expect(getColumnValues(0)).to.deep.equal([
+        'Cat A (3)',
+        'Cat 1 (1)',
+        'Cat 2 (2)',
+        'Cat B (2)',
       ]);
     });
   });

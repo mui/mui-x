@@ -60,6 +60,7 @@ export const useGridRowGrouping = (
     | 'rowGroupingModel'
     | 'onRowGroupingModelChange'
     | 'defaultGroupingExpansionDepth'
+    | 'isGroupExpandedByDefault'
     | 'groupingColDef'
     | 'rowGroupingColumnMode'
     | 'disableRowGrouping'
@@ -190,6 +191,7 @@ export const useGridRowGrouping = (
         ...params,
         rows,
         defaultGroupingExpansionDepth: props.defaultGroupingExpansionDepth,
+        isGroupExpandedByDefault: props.isGroupExpandedByDefault,
         groupingName: GROUPING_COLUMNS_FEATURE_NAME,
       });
     };

@@ -137,6 +137,17 @@ If you want to expand the whole tree, set `defaultGroupingExpansionDepth = -1`
 
 {{"demo": "pages/components/data-grid/group-pivot/RowGroupingDefaultExpansionDepth.js", "bg": "inline", "defaultCodeOpen": false}}
 
+If you want to expand groups by default according to a more complex logic, use the `isGroupExpandedByDefault` prop which is a callback receiving the node as an argument.
+When defined, this callback will always have the priority over the `defaultGroupingExpansionDepth` prop.
+
+```tsx
+isGroupExpandedByDefault={
+    node => node.groupingField === 'company' && node.groupingKey === '20th Century Fox'
+}
+```
+
+{{"demo": "pages/components/data-grid/group-pivot/RowGroupingIsGroupExpandedByDefault.js", "bg": "inline", "defaultCodeOpen": false}}
+
 Use the `setRowChildrenExpansion` method on `apiRef` to programmatically set the expansion of a row.
 
 {{"demo": "pages/components/data-grid/group-pivot/RowGroupingSetChildrenExpansion.js", "bg": "inline", "defaultCodeOpen": false}}

@@ -31,6 +31,7 @@ const FORCED_PROPS: { [key in ForcedPropsKey]-?: GridInputComponentProps[key] } 
   pinnedColumns: undefined,
   onPinnedColumnsChange: undefined,
   defaultGroupingExpansionDepth: undefined,
+  isGroupExpandedByDefault: undefined,
   treeData: undefined,
   rowGroupingColumnMode: undefined,
   rowGroupingModel: undefined,

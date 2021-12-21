@@ -57,6 +57,7 @@ export interface GridCellParams<V = any, R = any, F = V> {
    * @param {GridRowId} id The row id.
    * @param {string} field The field.
    * @returns {GridCellValue} The cell value.
+   * @deprecated Use `params.row` to directly access the fields you want instead.
    */
   getValue: (id: GridRowId, field: string) => GridCellValue;
 }
@@ -85,15 +86,7 @@ export interface GridRenderEditCellParams extends GridEditCellProps {
  * Parameters passed when calling `colDef.valueGetter` in the rendering sequence.
  */
 export interface GridValueGetterFullParams<V = any, R = any>
-  extends Omit<GridCellParams<V, R>, 'formattedValue' | 'isEditable' | 'getValue'> {
-  /**
-   * Get the cell value of a row and field.
-   * @param {GridRowId} id The row id.
-   * @param {string} field The field.
-   * @returns {GridCellValue} The cell value.
-   * @deprecated Use `params.row` to directly access the fields you want instead.
-   */
-  getValue: (id: GridRowId, field: string) => GridCellValue;
+  extends Omit<GridCellParams<V, R>, 'formattedValue' | 'isEditable'> {
   /**
    * GridApi that let you manipulate the grid.
    */
