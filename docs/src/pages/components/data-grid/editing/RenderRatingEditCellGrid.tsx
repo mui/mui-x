@@ -15,8 +15,11 @@ function RatingEditInputCell(props: GridRenderCellParams<number>) {
     // Check if the event is not from the keyboard
     // https://github.com/facebook/react/issues/7407
     if (event.nativeEvent.clientX !== 0 && event.nativeEvent.clientY !== 0) {
-      await api.commitCellChange({ id, field });
-      api.setCellMode(id, field, 'view');
+      // Wait for the validation to run
+      const isValid = await api.commitCellChange({ id, field });
+      if (isValid) {
+        api.setCellMode(id, field, 'view');
+      }
     }
   };
 
