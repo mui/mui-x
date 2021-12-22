@@ -122,13 +122,15 @@ export default function FullFeaturedCrudGrid() {
     apiRef.current.setRowMode(id, 'edit');
   };
 
-  const handleSaveClick = (id) => (event) => {
+  const handleSaveClick = (id) => async (event) => {
     event.stopPropagation();
-    apiRef.current.commitRowChange(id);
-    apiRef.current.setRowMode(id, 'view');
-
-    const row = apiRef.current.getRow(id);
-    apiRef.current.updateRows([{ ...row, isNew: false }]);
+    // Wait for the validation to run
+    const isValid = await apiRef.current.commitRowChange(id);
+    if (isValid) {
+      apiRef.current.setRowMode(id, 'view');
+      const row = apiRef.current.getRow(id);
+      apiRef.current.updateRows([{ ...row, isNew: false }]);
+    }
   };
 
   const handleDeleteClick = (id) => (event) => {

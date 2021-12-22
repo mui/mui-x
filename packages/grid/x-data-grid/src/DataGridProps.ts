@@ -28,6 +28,7 @@ export type DataGridProps = Omit<
   | 'getTreeDataPath'
   | 'groupingColDef'
   | 'defaultGroupingExpansionDepth'
+  | 'isGroupExpandedByDefault'
   | 'signature'
 > & {
   pagination?: true;

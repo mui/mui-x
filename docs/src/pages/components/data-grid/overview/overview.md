@@ -91,7 +91,6 @@ We provide three options:
 While development of the data grid component is moving fast, there are still many additional features that we plan to implement. Some of them:
 
 - Headless (hooks only)
-- [Column pinning](/components/data-grid/columns/#column-pinning) <span class="plan-pro"></span>
 - [Excel export](/components/data-grid/export/) <span class="plan-premium"></span>
 - [Range selection](/components/data-grid/selection/#range-selection) <span class="plan-premium"></span>
 - [Group, Pivot, Aggregation](/components/data-grid/group-pivot/) <span class="plan-premium"></span>
