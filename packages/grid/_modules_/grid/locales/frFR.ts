@@ -31,7 +31,7 @@ const frFRGrid: Partial<GridLocaleText> = {
   toolbarExport: 'Exporter',
   toolbarExportLabel: 'Exporter',
   toolbarExportCSV: 'Télécharger en CSV',
-  // toolbarExportPrint: 'Print',
+  toolbarExportPrint: 'Imprimer',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'Chercher colonne',

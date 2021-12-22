@@ -52,7 +52,6 @@ commands:
           name: Restore yarn cache
           keys:
             - v8-yarn-{{ checksum "yarn.lock" }}
-            - v8-yarn-
       - run:
           name: Set yarn cache folder
           command: |
@@ -74,8 +73,6 @@ commands:
                 name: Restore playwright cache
                 keys:
                   - v5-playwright-{{ arch }}-{{ checksum "/tmp/playwright_info.json" }}
-                  - v5-playwright-{{ arch }}-
-                  - v5-playwright-
       - run:
           name: Install js dependencies
           command: yarn install --verbose
@@ -111,12 +108,6 @@ jobs:
       - run:
           name: Check for duplicated packages
           command: yarn deduplicate
-      - save_cache:
-          key: v6-yarn-sha-{{ checksum "yarn.lock" }}
-          paths:
-            # Keep path in sync with "Set yarn cache folder"
-            # Can't use environment variables for `save_cache` paths (tested in https://app.circleci.com/pipelines/github/mui-org/material-ui/37813/workflows/5b1e207f-ac8b-44e7-9ba4-d0f9a01f5c55/jobs/223370)
-            - ~/.cache/yarn
   test_unit:
     <<: *defaults
     steps:

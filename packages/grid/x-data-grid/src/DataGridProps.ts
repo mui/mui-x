@@ -30,6 +30,7 @@ export type DataGridProps = Omit<
   | 'getDetailPanelContent'
   | 'groupingColDef'
   | 'defaultGroupingExpansionDepth'
+  | 'isGroupExpandedByDefault'
   | 'signature'
 > & {
   pagination?: true;
