@@ -10,7 +10,7 @@ import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { useGridState } from '../../utils/useGridState';
 import { gridRowsLookupSelector } from '../rows/gridRowsSelector';
-import { isGridCellRoot } from '../../../utils/domUtils';
+import { findParentElementFromClassName, isGridCellRoot } from '../../../utils/domUtils';
 import {
   gridSelectionStateSelector,
   selectedGridRowsSelector,
@@ -25,6 +25,7 @@ import { GridPreProcessingGroup, useGridRegisterPreProcessor } from '../../core/
 import { GridCellModes } from '../../../models/gridEditRowModel';
 import { GridColumnsRawState } from '../columns/gridColumnsState';
 import { isKeyboardEvent } from '../../../utils/keyboardUtils';
+import { gridClasses } from '../../..';
 
 type OwnerState = { classes: GridComponentProps['classes'] };
 
@@ -331,6 +332,18 @@ export const useGridSelection = (
         return;
       }
 
+      const cellClicked = findParentElementFromClassName(
+        event.target as HTMLElement,
+        gridClasses.cell,
+      );
+      const field = cellClicked?.getAttribute('data-field');
+      if (field) {
+        const column = apiRef.current.getColumn(field);
+        if (column.type === 'actions') {
+          return;
+        }
+      }
+
       if (event.shiftKey && (canHaveMultipleSelection || checkboxSelection)) {
         expandRowRangeSelection(params.id);
       } else {
@@ -338,11 +351,12 @@ export const useGridSelection = (
       }
     },
     [
+      disableSelectionOnClick,
+      canHaveMultipleSelection,
+      checkboxSelection,
+      apiRef,
       expandRowRangeSelection,
       handleSingleRowSelection,
-      canHaveMultipleSelection,
-      disableSelectionOnClick,
-      checkboxSelection,
     ],
   );
 
