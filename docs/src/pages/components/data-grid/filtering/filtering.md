@@ -83,7 +83,7 @@ To initialize the filters without controlling them, provide the model to the `in
 
 ### Controlled filters
 
-Use the `filterModel` prop to control the size of the pages.
+Use the `filterModel` prop to control the filter applied on the rows.
 
 You can use the `onFilterModelChange` prop to listen to changes to the filters and update the prop accordingly.
 
