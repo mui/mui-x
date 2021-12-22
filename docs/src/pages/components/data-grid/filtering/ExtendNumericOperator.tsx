@@ -59,12 +59,12 @@ export default function ExtendNumericOperator() {
     const ratingColumn = columns.find((column) => column.field === 'rating')!;
     const ratingColIndex = columns.findIndex((col) => col.field === 'rating');
 
-    const ratingFilterOperators = getGridNumericColumnOperators().map(
-      (operator) => ({
+    const ratingFilterOperators = getGridNumericColumnOperators()
+      .filter((operator) => operator.value !== 'isAnyOf')
+      .map((operator) => ({
         ...operator,
         InputComponent: RatingInputValue,
-      }),
-    );
+      }));
     columns[ratingColIndex] = {
       ...ratingColumn,
       filterOperators: ratingFilterOperators,
