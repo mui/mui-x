@@ -20,14 +20,22 @@ import { gridDensityRowHeightSelector } from '../density';
  */
 export const useGridPageSize = (
   apiRef: GridApiRef,
-  props: Pick<GridComponentProps, 'pageSize' | 'onPageSizeChange' | 'autoPageSize'>,
+  props: Pick<
+    GridComponentProps,
+    'pageSize' | 'onPageSizeChange' | 'autoPageSize' | 'initialState'
+  >,
 ) => {
   const logger = useGridLogger(apiRef, 'useGridPageSize');
   const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
 
   useGridStateInit(apiRef, (state) => ({
     ...state,
-    pagination: { pageSize: props.pageSize ?? (props.autoPageSize ? 0 : 100) },
+    pagination: {
+      pageSize:
+        props.pageSize ??
+        props.initialState?.pagination?.pageSize ??
+        (props.autoPageSize ? 0 : 100),
+    },
   }));
   const [, setGridState, forceUpdate] = useGridState(apiRef);
 
