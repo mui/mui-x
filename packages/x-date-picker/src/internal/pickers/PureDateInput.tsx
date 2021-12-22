@@ -40,6 +40,9 @@ export interface DateInputProps<TInputValue = ParseableDate<unknown>, TDateValue
   /**
    * Get aria-label text for control that opens picker dialog. Aria-label text must include selected date. @DateIOType
    * @default (value, utils) => `Choose date, selected date is ${utils.format(utils.date(value), 'fullDate')}`
+   * @param {ParseableDate<TDateValue>} value The date from which we want to add an aria-text.
+   * @param {MuiPickersAdapter<TDateValue>} utils The utils to manipulate the date.
+   * @returns {string} The aria-text to render inside the dialog.
    */
   getOpenDialogAriaText?: (
     value: ParseableDate<TDateValue>,
@@ -80,10 +83,14 @@ export interface DateInputProps<TInputValue = ParseableDate<unknown>, TDateValue
    * @example ```jsx
    * renderInput={props => <TextField {...props} />}
    * ````
+   * @param {MuiTextFieldPropsType} props The props of the input.
+   * @returns {React.ReactNode} The node to render as the input.
    */
   renderInput: (props: MuiTextFieldPropsType) => React.ReactElement;
   /**
    * Custom formatter to be passed into Rifm component.
+   * @param {string} str The un-formatted string.
+   * @returns {string} The formatted string.
    */
   rifmFormatter?: (str: string) => string;
   TextFieldProps?: Partial<MuiTextFieldProps>;

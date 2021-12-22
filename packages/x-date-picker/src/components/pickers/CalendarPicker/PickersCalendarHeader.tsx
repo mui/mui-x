@@ -50,6 +50,8 @@ export interface PickersCalendarHeaderProps<TDate>
   views: readonly CalendarPickerView[];
   /**
    * Get aria-label text for switching between views button.
+   * @param {CalendarPickerView} currentView The view from which we want to get the button text.
+   * @returns {string} The label of the view.
    */
   getViewSwitchingButtonText?: (currentView: CalendarPickerView) => string;
   onMonthChange: (date: TDate, slideDirection: SlideDirection) => void;

@@ -26,6 +26,8 @@ export interface BasePickerProps<TInputValue, TDateValue> {
   onAccept?: (date: TDateValue) => void;
   /**
    * Callback fired when the value (the selected date) changes @DateIOType.
+   * @param {DateRange<TDate>} date The new parsed date.
+   * @param {string} keyboardInputValue The current value of the keyboard input.
    */
   onChange: (date: TDateValue, keyboardInputValue?: string) => void;
   /**

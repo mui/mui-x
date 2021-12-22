@@ -54,6 +54,8 @@ interface BaseDateRangePickerProps<TDate>
   maxDate?: TDate;
   /**
    * Callback fired when the value (the selected date range) changes @DateIOType.
+   * @param {DateRange<TDate>} date The new parsed date range.
+   * @param {string} keyboardInputValue The current value of the keyboard input.
    */
   onChange: (date: DateRange<TDate>, keyboardInputValue?: string) => void;
   /**

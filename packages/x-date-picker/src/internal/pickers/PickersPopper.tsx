@@ -59,16 +59,18 @@ function clickedRootScrollbar(event: MouseEvent, doc: Document) {
   );
 }
 
+type OnClickAway = (event: MouseEvent | TouchEvent) => void;
+
 /**
  * Based on @mui/material/ClickAwayListener without the customization.
  * We can probably strip away even more since children won't be portaled.
- * @param onClickAway
- * @param onClick
- * @param onTouchStart
+ * @param {boolean} active Only listen to clicks when the popper is opened.
+ * @param {(event: MouseEvent | TouchEvent) => void} onClickAway The callback to call when clicking outside the popper.
+ * @returns {Array} The ref and event handler to listen to the outside clicks.
  */
 function useClickAwayListener(
   active: boolean,
-  onClickAway: (event: MouseEvent | TouchEvent) => void,
+  onClickAway: OnClickAway,
 ): [React.Ref<Element>, React.MouseEventHandler, React.TouchEventHandler] {
   const movedRef = React.useRef(false);
   const syntheticEventRef = React.useRef(false);

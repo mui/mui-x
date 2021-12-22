@@ -26,7 +26,7 @@ interface DraftAction<DraftValue> {
   payload: DraftValue;
 }
 
-export interface PickerStateProps<TInput, TDateValue> {
+interface PickerStateProps<TInput, TDateValue> {
   disableCloseOnSelect?: boolean;
   open?: boolean;
   onAccept?: (date: TDateValue) => void;

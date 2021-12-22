@@ -59,8 +59,9 @@ export interface CalendarPickerProps<TDate>
   onChange: PickerOnChangeFn<TDate>;
   /**
    * Callback firing on month change. @DateIOType
+   * @param {TDate} month The new month.
    */
-  onMonthChange?: (date: TDate) => void;
+  onMonthChange?: (month: TDate) => void;
   /**
    * Initially open view.
    * @default 'day'
@@ -84,7 +85,7 @@ export interface CalendarPickerProps<TDate>
   renderLoading?: () => React.ReactNode;
   /**
    * Disable specific date. @DateIOType
-   * @param {TDate} day. The date to check.
+   * @param {TDate} day The date to check.
    * @returns {boolean} If `true` the day will be disabled.
    */
   shouldDisableDate?: (day: TDate) => boolean;

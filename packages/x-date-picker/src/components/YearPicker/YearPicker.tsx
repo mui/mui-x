@@ -14,13 +14,16 @@ import { YearPickerClasses, getYearPickerUtilityClass } from './yearPickerClasse
 export interface ExportedYearPickerProps<TDate> {
   /**
    * Callback firing on year change @DateIOType.
+   * @param {TDate} year The new year.
    */
-  onYearChange?: (date: TDate) => void;
+  onYearChange?: (year: TDate) => void;
   /**
    * Disable specific years dynamically.
    * Works like `shouldDisableDate` but for year selection view @DateIOType.
+   * @param {TDate} year The year to test.
+   * @returns {boolean} Return `true` if the year should be disabled.
    */
-  shouldDisableYear?: (day: TDate) => boolean;
+  shouldDisableYear?: (year: TDate) => boolean;
 }
 
 const useUtilityClasses = (ownerState: any) => {
