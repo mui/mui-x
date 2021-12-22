@@ -6,7 +6,7 @@ import IconButton from '@mui/material/IconButton';
 import InputLabel from '@mui/material/InputLabel';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { capitalize, unstable_useId as useId } from '@mui/material/utils';
-import { styled } from '@mui/material/styles';
+import { styled, SxProps, Theme } from '@mui/material/styles';
 import { filterableGridColumnsSelector } from '../../../hooks/features/columns/gridColumnsSelector';
 import { useGridSelector } from '../../../hooks/utils/useGridSelector';
 import { GridFilterItem, GridLinkOperator } from '../../../models/gridFilterItem';
@@ -27,6 +27,14 @@ export interface GridFilterFormProps {
   applyFilterChanges: (item: GridFilterItem) => void;
   applyMultiFilterOperatorChanges: (operator: GridLinkOperator) => void;
   deleteFilter: (item: GridFilterItem) => void;
+  hasLinkOperatorColumn?: boolean;
+  linkOperators: (GridLinkOperator.And | GridLinkOperator.Or)[];
+  columnsSort: 'asc' | 'desc' | undefined;
+  deleteIconContainerSx: SxProps<Theme>;
+  linkOperatorContainerSx: SxProps<Theme>;
+  columnContainerSx: SxProps<Theme>;
+  operatorContainerSx: SxProps<Theme>;
+  valueContainerSx: SxProps<Theme>;
 }
 
 type OwnerState = { classes: GridComponentProps['classes'] };
@@ -47,14 +55,51 @@ const GridFilterFormRoot = styled('div', {
   overridesResolver: (props, styles) => styles.filterForm,
 })(({ theme }) => ({
   display: 'flex',
-  justifyContent: 'space-around',
   padding: theme.spacing(1),
 }));
+
+const getLinkOperatorLocaleKey = (linkOperator) => {
+  switch (linkOperator) {
+    case GridLinkOperator.And:
+      return 'filterPanelOperatorAnd';
+    case GridLinkOperator.Or:
+      return 'filterPanelOperatorOr';
+    default:
+      throw new Error('MUI: Invalid `linkOperator` property in the `GridFilterPanel`.');
+  }
+};
+
+const getColumnLabel = (col) => col.headerName || col.field;
+
+const useColumnSorting = (filterableColumns, columnsSort) => {
+  const [sortedColumns, setSortedColumns] = React.useState(filterableColumns);
+
+  React.useEffect(() => {
+    switch (columnsSort) {
+      case 'asc':
+        setSortedColumns(
+          filterableColumns.sort((a, b) => (getColumnLabel(a) < getColumnLabel(b) ? -1 : 1)),
+        );
+
+        break;
+      case 'desc':
+        setSortedColumns(
+          filterableColumns.sort((a, b) => (getColumnLabel(a) < getColumnLabel(b) ? 1 : -1)),
+        );
+
+        break;
+      default:
+        setSortedColumns(filterableColumns);
+        break;
+    }
+  }, [filterableColumns, columnsSort]);
+
+  return sortedColumns;
+};
 
 function GridFilterForm(props: GridFilterFormProps) {
   const {
     item,
-    hasMultipleFilters,
     deleteFilter,
     applyFilterChanges,
     multiFilterOperator,
@@ -62,6 +107,14 @@ function GridFilterForm(props: GridFilterFormProps) {
     disableMultiFilterOperator,
     applyMultiFilterOperatorChanges,
     focusElementRef,
+    linkOperators,
+    hasLinkOperatorColumn,
+    columnsSort,
+    deleteIconContainerSx,
+    linkOperatorContainerSx,
+    columnContainerSx,
+    operatorContainerSx,
+    valueContainerSx,
   } = props;
   const apiRef = useGridApiContext();
   const filterableColumns = useGridSelector(apiRef, filterableGridColumnsSelector);
@@ -76,6 +129,8 @@ function GridFilterForm(props: GridFilterFormProps) {
   const classes = useUtilityClasses(ownerState);
   const valueRef = React.useRef<any>(null);
   const filterSelectorRef = React.useRef<HTMLInputElement>(null);
+
+  const sortedFilterableColumns = useColumnSorting(filterableColumns, columnsSort);
 
   const currentColumn = item.columnField ? apiRef.current.getColumn(item.columnField) : null;
 
@@ -175,7 +230,12 @@ function GridFilterForm(props: GridFilterFormProps) {
     <GridFilterFormRoot className={classes.root}>
       <FormControl
         variant="standard"
-        sx={{ flexShrink: 0, justifyContent: 'flex-end', marginRight: 0.5, marginBottom: 0.2 }}
+        sx={[
+          { flexShrink: 0, justifyContent: 'flex-end', marginRight: 0.5, marginBottom: 0.2 },
+          ...(Array.isArray(deleteIconContainerSx)
+            ? deleteIconContainerSx
+            : [deleteIconContainerSx]),
+        ]}
       >
         <IconButton
           aria-label={apiRef.current.getLocaleText('filterPanelDeleteIconLabel')}
@@ -188,11 +248,16 @@ function GridFilterForm(props: GridFilterFormProps) {
       </FormControl>
       <FormControl
         variant="standard"
-        sx={{
-          minWidth: 60,
-          display: hasMultipleFilters ? 'block' : 'none',
-          visibility: showMultiFilterOperators ? 'visible' : 'hidden',
-        }}
+        sx={[
+          {
+            minWidth: 60,
+            display: hasLinkOperatorColumn ? 'block' : 'none',
+            visibility: showMultiFilterOperators ? 'visible' : 'hidden',
+          },
+          ...(Array.isArray(linkOperatorContainerSx)
+            ? linkOperatorContainerSx
+            : [linkOperatorContainerSx]),
+        ]}
       >
         <InputLabel htmlFor={linkOperatorSelectId} id={linkOperatorSelectLabelId}>
           {apiRef.current.getLocaleText('filterPanelOperators')}
@@ -202,18 +267,23 @@ function GridFilterForm(props: GridFilterFormProps) {
           id={linkOperatorSelectId}
           value={multiFilterOperator}
           onChange={changeLinkOperator}
-          disabled={!!disableMultiFilterOperator}
+          disabled={!!disableMultiFilterOperator || linkOperators.length === 1}
           native
         >
-          <option key={GridLinkOperator.And.toString()} value={GridLinkOperator.And.toString()}>
-            {apiRef.current.getLocaleText('filterPanelOperatorAnd')}
-          </option>
-          <option key={GridLinkOperator.Or.toString()} value={GridLinkOperator.Or.toString()}>
-            {apiRef.current.getLocaleText('filterPanelOperatorOr')}
-          </option>
+          {linkOperators.map((linkOperator) => (
+            <option key={linkOperator.toString()} value={linkOperator.toString()}>
+              {apiRef.current.getLocaleText(getLinkOperatorLocaleKey(linkOperator))}
+            </option>
+          ))}
         </Select>
       </FormControl>
-      <FormControl variant="standard" sx={{ width: 150 }}>
+      <FormControl
+        variant="standard"
+        sx={[
+          { width: 150 },
+          ...(Array.isArray(columnContainerSx) ? columnContainerSx : [columnContainerSx]),
+        ]}
+      >
         <InputLabel htmlFor={columnSelectId} id={columnSelectLabelId}>
           {apiRef.current.getLocaleText('filterPanelColumns')}
         </InputLabel>
@@ -224,14 +294,20 @@ function GridFilterForm(props: GridFilterFormProps) {
           onChange={changeColumn}
           native
         >
-          {filterableColumns.map((col) => (
+          {sortedFilterableColumns.map((col) => (
             <option key={col.field} value={col.field}>
-              {col.headerName || col.field}
+              {getColumnLabel(col)}
             </option>
           ))}
         </Select>
       </FormControl>
-      <FormControl variant="standard" sx={{ width: 120 }}>
+      <FormControl
+        variant="standard"
+        sx={[
+          { width: 120 },
+          ...(Array.isArray(operatorContainerSx) ? operatorContainerSx : [operatorContainerSx]),
+        ]}
+      >
         <InputLabel htmlFor={operatorSelectId} id={operatorSelectLabelId}>
           {apiRef.current.getLocaleText('filterPanelOperators')}
         </InputLabel>
@@ -253,7 +329,13 @@ function GridFilterForm(props: GridFilterFormProps) {
           ))}
         </Select>
       </FormControl>
-      <FormControl variant="standard" sx={{ width: 190 }}>
+      <FormControl
+        variant="standard"
+        sx={[
+          { width: 190 },
+          ...(Array.isArray(valueContainerSx) ? valueContainerSx : [valueContainerSx]),
+        ]}
+      >
         {currentOperator?.InputComponent ? (
           <currentOperator.InputComponent
             apiRef={apiRef}
@@ -275,12 +357,24 @@ GridFilterForm.propTypes = {
   // ----------------------------------------------------------------------
   applyFilterChanges: PropTypes.func.isRequired,
   applyMultiFilterOperatorChanges: PropTypes.func.isRequired,
+  columnContainerSx: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+    PropTypes.func,
+    PropTypes.object,
+  ]),
+  columnsSort: PropTypes.oneOf(['asc', 'desc']),
   deleteFilter: PropTypes.func.isRequired,
+  deleteIconContainerSx: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+    PropTypes.func,
+    PropTypes.object,
+  ]),
   disableMultiFilterOperator: PropTypes.bool,
   focusElementRef: PropTypes /* @typescript-to-proptypes-ignore */.oneOfType([
     PropTypes.func,
     PropTypes.object,
   ]),
+  hasLinkOperatorColumn: PropTypes.bool,
   hasMultipleFilters: PropTypes.bool.isRequired,
   item: PropTypes.shape({
     columnField: PropTypes.string.isRequired,
@@ -288,8 +382,24 @@ GridFilterForm.propTypes = {
     operatorValue: PropTypes.string,
     value: PropTypes.any,
   }).isRequired,
+  linkOperatorContainerSx: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+    PropTypes.func,
+    PropTypes.object,
+  ]),
+  linkOperators: PropTypes.arrayOf(PropTypes.oneOf(['and', 'or']).isRequired).isRequired,
   multiFilterOperator: PropTypes.oneOf(['and', 'or']),
+  operatorContainerSx: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+    PropTypes.func,
+    PropTypes.object,
+  ]),
   showMultiFilterOperators: PropTypes.bool,
+  valueContainerSx: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+    PropTypes.func,
+    PropTypes.object,
+  ]),
 } as any;
 
 export { GridFilterForm };
