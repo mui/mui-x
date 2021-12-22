@@ -61,6 +61,7 @@ function GridFilterInputMultipleSingleSelect(props: GridFilterInputMultipleSingl
         const index = parsedCurrentValueOptions.findIndex(
           (formatedOption) => formatedOption === formatedElement,
         );
+
         return index;
       });
       itemValue = itemValueIndexes
