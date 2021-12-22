@@ -28,13 +28,13 @@ export interface GridFilterFormProps {
   applyMultiFilterOperatorChanges: (operator: GridLinkOperator) => void;
   deleteFilter: (item: GridFilterItem) => void;
   hasLinkOperatorColumn?: boolean;
-  linkOperators: (GridLinkOperator.And | GridLinkOperator.Or)[];
-  columnsSort: 'asc' | 'desc' | undefined;
-  deleteIconContainerSx: SxProps<Theme>;
-  linkOperatorContainerSx: SxProps<Theme>;
-  columnContainerSx: SxProps<Theme>;
-  operatorContainerSx: SxProps<Theme>;
-  valueContainerSx: SxProps<Theme>;
+  linkOperators?: (GridLinkOperator.And | GridLinkOperator.Or)[];
+  columnsSort?: 'asc' | 'desc';
+  deleteIconContainerSx?: SxProps<Theme>;
+  linkOperatorContainerSx?: SxProps<Theme>;
+  columnContainerSx?: SxProps<Theme>;
+  operatorContainerSx?: SxProps<Theme>;
+  valueContainerSx?: SxProps<Theme>;
 }
 
 type OwnerState = { classes: GridComponentProps['classes'] };
@@ -107,14 +107,14 @@ function GridFilterForm(props: GridFilterFormProps) {
     disableMultiFilterOperator,
     applyMultiFilterOperatorChanges,
     focusElementRef,
-    linkOperators,
     hasLinkOperatorColumn,
+    linkOperators = [GridLinkOperator.And, GridLinkOperator.Or],
     columnsSort,
-    deleteIconContainerSx,
-    linkOperatorContainerSx,
-    columnContainerSx,
-    operatorContainerSx,
-    valueContainerSx,
+    deleteIconContainerSx = {},
+    linkOperatorContainerSx = {},
+    columnContainerSx = {},
+    operatorContainerSx = {},
+    valueContainerSx = {},
   } = props;
   const apiRef = useGridApiContext();
   const filterableColumns = useGridSelector(apiRef, filterableGridColumnsSelector);
@@ -387,7 +387,7 @@ GridFilterForm.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
-  linkOperators: PropTypes.arrayOf(PropTypes.oneOf(['and', 'or']).isRequired).isRequired,
+  linkOperators: PropTypes.arrayOf(PropTypes.oneOf(['and', 'or']).isRequired),
   multiFilterOperator: PropTypes.oneOf(['and', 'or']),
   operatorContainerSx: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),

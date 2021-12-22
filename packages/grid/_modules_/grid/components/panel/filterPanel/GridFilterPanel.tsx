@@ -25,30 +25,22 @@ export interface GridFilterPanelProps
     | 'valueContainerSx'
   > {}
 
-const defaultGridFilterPanelProps = {
-  linkOperators: [GridLinkOperator.And, GridLinkOperator.Or],
-  columnsSort: undefined,
-  deleteIconContainerSx: {},
-  linkOperatorContainerSx: {},
-  columnContainerSx: {},
-  operatorContainerSx: {},
-  valueContainerSx: {},
-};
-
-function GridFilterPanel({
-  linkOperators,
-  columnsSort,
-  deleteIconContainerSx,
-  linkOperatorContainerSx,
-  columnContainerSx,
-  operatorContainerSx,
-  valueContainerSx,
-}: GridFilterPanelProps = defaultGridFilterPanelProps) {
+function GridFilterPanel(props: GridFilterPanelProps) {
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
   const filterModel = useGridSelector(apiRef, gridFilterModelSelector);
   const filterableColumns = useGridSelector(apiRef, filterableGridColumnsSelector);
   const lastFilterRef = React.useRef<any>(null);
+
+  const {
+    linkOperators = [GridLinkOperator.And, GridLinkOperator.Or],
+    columnsSort,
+    deleteIconContainerSx = {},
+    linkOperatorContainerSx = {},
+    columnContainerSx = {},
+    operatorContainerSx = {},
+    valueContainerSx = {},
+  } = props;
 
   const applyFilter = React.useCallback(
     (item: GridFilterItem) => {
@@ -181,7 +173,7 @@ GridFilterPanel.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
-  linkOperators: PropTypes.arrayOf(PropTypes.oneOf(['and', 'or']).isRequired).isRequired,
+  linkOperators: PropTypes.arrayOf(PropTypes.oneOf(['and', 'or']).isRequired),
   operatorContainerSx: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
     PropTypes.func,
