@@ -109,7 +109,7 @@ function SelectorsDocs(props) {
   return (
     <MarkdownElement sx={{ width: '100%' }}>
       {Object.entries(selectors).map(([categoryName, categorySelectors]) => (
-        <React.Fragment>
+        <React.Fragment key={categoryName}>
           <Typography variant="h4" sx={(theme) => ({ mb: theme.spacing(2) })}>
             {categoryName}
           </Typography>
