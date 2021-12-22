@@ -585,7 +585,7 @@ describe('<DataGrid /> - Pagination', () => {
       expect(getColumnValues(0)).to.deep.equal(['0', '1']);
     });
 
-    it('should use the control state upon the initialize state when both are defined', () => {
+    it('should use the pageSize control state upon the initialize state when both are defined', () => {
       render(
         <BaselineTestCase
           pageSize={5}
@@ -661,7 +661,7 @@ describe('<DataGrid /> - Pagination', () => {
       expect(getColumnValues(0)).to.deep.equal(['2', '3']);
     });
 
-    it('should use the control state upon the initialize state when both are defined', () => {
+    it('should use the page control state upon the initialize state when both are defined', () => {
       render(
         <BaselineTestCase
           pageSize={2}
@@ -702,7 +702,7 @@ describe('<DataGrid /> - Pagination', () => {
       expect(getColumnValues(0)).to.deep.equal(['2', '3']);
     });
 
-    it('should allow to update the pageSize when initialized with initialState', () => {
+    it('should allow to update the page when initialized with initialState', () => {
       render(
         <BaselineTestCase
           pageSize={2}
