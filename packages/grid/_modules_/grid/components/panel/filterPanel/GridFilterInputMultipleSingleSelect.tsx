@@ -27,7 +27,8 @@ const getSingleSelectOptionFormatter =
 
 const getValueFromOption = (option) => (typeof option === 'object' ? option.value : option);
 
-const isOptionEqualToValue = (option, value) => getValueFromOption(option) === value;
+const isOptionEqualToValue = (option, value) =>
+  getValueFromOption(option) === getValueFromOption(value);
 
 const filter = createFilterOptions<any>();
 
@@ -55,13 +56,20 @@ function GridFilterInputMultipleSingleSelect(props: GridFilterInputMultipleSingl
     } else if (currentValueOptions !== undefined) {
       // sanitize if valueOptions are provided
       const parsedCurrentValueOptions = currentValueOptions.map(getValueFromOption);
-      itemValue = item.value.filter((element) =>
-        parsedCurrentValueOptions.includes(getValueFromOption(element)),
-      );
+      const itemValueIndexes = item.value.filter((element) => {
+        const formatedElement = getValueFromOption(element);
+        const index = parsedCurrentValueOptions.findIndex(
+          (formatedOption) => formatedOption === formatedElement,
+        );
+        return index;
+      });
+      itemValue = itemValueIndexes
+        .filter((index) => index >= 0)
+        .map((index) => currentValueOptions[index]);
 
       if (itemValue.length !== item.value.length) {
         // remove filtered values
-        applyValue({ ...item, value: itemValue });
+        applyValue({ ...item, value: parsedCurrentValueOptions });
         return;
       }
     } else {
@@ -70,13 +78,12 @@ function GridFilterInputMultipleSingleSelect(props: GridFilterInputMultipleSingl
 
     itemValue = itemValue ?? [];
 
-    setFilterValueState(itemValue.map(getValueFromOption));
+    setFilterValueState(itemValue);
   }, [item, currentValueOptions, applyValue]);
 
   const handleChange = React.useCallback(
     (event, value) => {
-      const parsedValue = value.map(getValueFromOption);
-      setFilterValueState(parsedValue);
+      setFilterValueState(value);
       applyValue({ ...item, value: [...value.map(getValueFromOption)] });
     },
     [applyValue, item],
