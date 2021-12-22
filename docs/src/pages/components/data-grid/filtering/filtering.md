@@ -121,7 +121,7 @@ In this demo, you can see how to create a completely new operator for the Rating
 To create a custom operator which accepts multiple values, you can provide an array of values to the `value` property of the `filterItem`.
 In this case, the `valueParser` of the `GridColDef` will be applied to each item of the array.
 
-The filtering function `getApplyFilterFn` must be adapted to handle `filterItem.value` has an array.
+The filtering function `getApplyFilterFn` must be adapted to handle `filterItem.value` as an array.
 Below is an example for a "between" operator, applied on the "Quantity" column.
 
 ```ts
@@ -136,7 +136,7 @@ Below is an example for a "between" operator, applied on the "Quantity" column.
       return null;
     }
     return ({ value }): boolean => {
-      return value !== null && filterItem.value[0] <= value && value <= filterItem.value[1];
+      return value != null && filterItem.value[0] <= value && value <= filterItem.value[1];
     };
   },
   InputComponent: InputNumberInterval,

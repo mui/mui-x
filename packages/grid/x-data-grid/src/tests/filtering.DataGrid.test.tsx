@@ -1177,6 +1177,7 @@ describe('<DataGrid /> - Filter', () => {
         setProps({ value: 2 });
         expect(getColumnValues()).to.deep.equal(['Puma']);
       });
+
       it('should works with valueParser', () => {
         const valueOptions = [
           { value: 0, label: 'Payment Pending' },
