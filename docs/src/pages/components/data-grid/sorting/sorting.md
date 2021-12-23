@@ -49,7 +49,7 @@ In the example below columns are only sortable in descending or ascending order.
 
 ### Per-column sort order
 
-Sort order can be configured (and overridden) on a per-column basis by setting the `sortingOrder` prop of the `GridColDef` interface:
+Sort order can be configured (and overridden) on a per-column basis by setting the `sortingOrder` property of the `GridColDef` interface:
 
 ```tsx
 const columns: GridColDef = [
