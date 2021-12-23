@@ -18,12 +18,12 @@ export type GridFilterInputMultipleSingleSelectProps = {
 
 const getSingleSelectOptionFormatter =
   ({ valueFormatter, field }, api) =>
-    (option) => {
-      if (typeof option === 'object') {
-        return option.label;
-      }
-      return valueFormatter && option !== '' ? valueFormatter({ value: option, field, api }) : option;
-    };
+  (option) => {
+    if (typeof option === 'object') {
+      return option.label;
+    }
+    return valueFormatter && option !== '' ? valueFormatter({ value: option, field, api }) : option;
+  };
 
 const getValueFromOption = (option) => (typeof option === 'object' ? option.value : option);
 
