@@ -1,0 +1,10 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "noEmit": true,
+    // @date-io libraries produce duplicate type `DateType`
+    "skipLibCheck": true,
+    "types": ["mocha", "node", "chai", "chai-dom"]
+  },
+  "include": ["src"]
+}

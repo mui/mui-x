@@ -1873,6 +1873,13 @@
   resolved "https://registry.yarnpkg.com/@date-io/core/-/core-2.11.0.tgz#28580cda1c8228ab2c7ed6aee673ef0495f913e6"
   integrity sha512-DvPBnNoeuLaoSJZaxgpu54qzRhRKjSYVyQjhznTFrllKuDpm0sDFjHo6lvNLCM/cfMx2gb2PM2zY2kc9C8nmuw==
 
+"@date-io/date-fns-jalali@^2.11.0":
+  version "2.11.0"
+  resolved "https://registry.yarnpkg.com/@date-io/date-fns-jalali/-/date-fns-jalali-2.11.0.tgz#42b624d094d5bbfc052c59335e7049969be18ae2"
+  integrity sha512-YgWs9PzDp1p5iSvQ0N00+0h2YZlh5+Lt7hdHQI4TuwJPmKqdS0RAPdZUnbQmDlE8rqNu0WoeRQLkVjCorcNy5w==
+  dependencies:
+    "@date-io/core" "^2.11.0"
+
 "@date-io/date-fns@^2.11.0":
   version "2.11.0"
   resolved "https://registry.yarnpkg.com/@date-io/date-fns/-/date-fns-2.11.0.tgz#142fbf954eda7ad66514af7a2802d78c4ea40053"
@@ -8728,6 +8735,11 @@ data-urls@^3.0.1:
     abab "^2.0.3"
     whatwg-mimetype "^3.0.0"
     whatwg-url "^10.0.0"
+
+date-fns-jalali@^2.21.3-1:
+  version "2.21.3-1"
+  resolved "https://registry.yarnpkg.com/date-fns-jalali/-/date-fns-jalali-2.21.3-1.tgz#b87a01c1d7bb2fe827faed34b33478a5fe4aa027"
+  integrity sha512-Sgw1IdgCgyWDKCpq6uwAu24vPMOtvmcXXXuETr1jQO/aVj4h23XAltcP7hLbo+osqoiJnPmiydbI/q1W7TYAjA==
 
 date-fns@^2.16.1:
   version "2.17.0"
