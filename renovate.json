@@ -82,6 +82,11 @@
         "@mui/system",
         "@mui/utils"
       ]
+    },
+    {
+      "groupName": "monorepo",
+      "matchPackagePatterns": "@material-ui/monorepo",
+      "matchDatasources": ["git-refs"]
     }
   ],
   "postUpdateOptions": ["yarnDedupeHighest"],
