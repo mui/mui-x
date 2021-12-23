@@ -5,7 +5,7 @@ import { GRID_DEFAULT_LOCALE_TEXT, GridSlotsComponent } from '../../_modules_';
 import {
   DataGridProProps,
   DataGridProProcessedProps,
-  DATA_GRID_DEFAULT_PRO_SIMPLE_OPTIONS,
+  DATA_GRID_PRO_PROPS_DEFAULT_VALUES,
 } from '../../_modules_/grid/models/props/DataGridProProps';
 
 export const useDataGridProProps = (inProps: DataGridProProps) => {
@@ -35,7 +35,7 @@ export const useDataGridProProps = (inProps: DataGridProProps) => {
 
   return React.useMemo<DataGridProProcessedProps>(
     () => ({
-      ...DATA_GRID_DEFAULT_PRO_SIMPLE_OPTIONS,
+      ...DATA_GRID_PRO_PROPS_DEFAULT_VALUES,
       ...themedProps,
       localeText,
       components,

@@ -23,7 +23,9 @@ import { GridSlotsComponentsProps } from '../gridSlotsComponentsProps';
  * The props users can give to the `DataGrid` component.
  */
 export type DataGridProps = Omit<
-  Partial<DataGridSimpleOptions> & DataGridComplexOptionsBeforeProcessing & DataGridOtherProps,
+  Partial<DataGridPropsWithDefaultValues> &
+    DataGridPropsWithComplexDefaultValueBeforeProcessing &
+    DataGridPropsWithoutDefaultValue,
   DataGridForcedPropsKey
 > & {
   pagination?: true;
@@ -33,9 +35,9 @@ export type DataGridProps = Omit<
  * The props of the `DataGrid` component after the pre-processing phase.
  */
 export interface DataGridProcessedProps
-  extends DataGridSimpleOptions,
-    DataGridComplexOptionsAfterProcessing,
-    DataGridOtherProps {}
+  extends DataGridPropsWithDefaultValues,
+    DataGridPropsWithComplexDefaultValueAfterProcessing,
+    DataGridPropsWithoutDefaultValue {}
 
 /**
  * The props of the `DataGrid` component after the pre-processing phase that the user should not be able to override.
@@ -57,7 +59,7 @@ export type DataGridForcedPropsKey =
 /**
  * The `DataGrid` options with a default value that must be merged with the value given through props.
  */
-export interface DataGridComplexOptionsAfterProcessing {
+export interface DataGridPropsWithComplexDefaultValueAfterProcessing {
   components: GridSlotsComponent;
   localeText: GridLocaleText;
 }
@@ -65,7 +67,7 @@ export interface DataGridComplexOptionsAfterProcessing {
 /**
  * The `DataGrid` options with a default value that must be merged with the value given through props.
  */
-export interface DataGridComplexOptionsBeforeProcessing {
+export interface DataGridPropsWithComplexDefaultValueBeforeProcessing {
   /**
    * Overrideable components.
    */
@@ -83,7 +85,7 @@ export interface DataGridComplexOptionsBeforeProcessing {
  * The controlled model do not have a default value at the prop processing level, so they must be defined in `DataGridOtherProps`
  * TODO: add multiSortKey
  */
-export interface DataGridSimpleOptions {
+export interface DataGridPropsWithDefaultValues {
   /**
    * If `true`, the grid height is dynamic and follow the number of rows in the grid.
    * @default false
@@ -292,7 +294,7 @@ export interface DataGridSimpleOptions {
 /**
  * The default values of `DataGridSimpleOptions` to inject in the props of DataGrid.
  */
-export const DATA_GRID_DEFAULT_SIMPLE_OPTIONS: DataGridSimpleOptions = {
+export const DATA_GRID_PROPS_DEFAULT_VALUES: DataGridPropsWithDefaultValues = {
   autoHeight: false,
   autoPageSize: false,
   checkboxSelection: false,
@@ -337,7 +339,7 @@ export const DATA_GRID_DEFAULT_SIMPLE_OPTIONS: DataGridSimpleOptions = {
 /**
  * The `DataGrid` props with no default value.
  */
-export interface DataGridOtherProps extends CommonProps {
+export interface DataGridPropsWithoutDefaultValue extends CommonProps {
   /**
    * The ref object that allows grid manipulation. Can be instantiated with [[useGridApiRef()]].
    */

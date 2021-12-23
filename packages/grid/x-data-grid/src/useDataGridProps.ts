@@ -4,7 +4,7 @@ import {
   DataGridProcessedProps,
   DataGridProps,
   DataGridForcedPropsKey,
-  DATA_GRID_DEFAULT_SIMPLE_OPTIONS,
+  DATA_GRID_PROPS_DEFAULT_VALUES,
 } from '../../_modules_/grid/models/props/DataGridProps';
 
 import { DEFAULT_GRID_SLOTS_COMPONENTS } from '../../_modules_/grid/constants/defaultGridSlotsComponents';
@@ -57,7 +57,7 @@ export const useDataGridProps = (inProps: DataGridProps) => {
 
   return React.useMemo<DataGridProcessedProps>(
     () => ({
-      ...DATA_GRID_DEFAULT_SIMPLE_OPTIONS,
+      ...DATA_GRID_PROPS_DEFAULT_VALUES,
       ...themedProps,
       localeText,
       components,

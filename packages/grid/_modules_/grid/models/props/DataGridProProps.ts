@@ -4,19 +4,19 @@ import { GridEventListener, GridEvents } from '../events';
 import { GridCallbackDetails, GridPinnedColumns } from '../api';
 import { GridGroupingColDefOverride, GridGroupingColDefOverrideParams } from '../colDef';
 import {
-  DataGridOtherProps,
-  DataGridSimpleOptions,
-  DataGridComplexOptionsAfterProcessing,
-  DataGridComplexOptionsBeforeProcessing,
-  DATA_GRID_DEFAULT_SIMPLE_OPTIONS,
+  DataGridPropsWithoutDefaultValue,
+  DataGridPropsWithDefaultValues,
+  DataGridPropsWithComplexDefaultValueAfterProcessing,
+  DataGridPropsWithComplexDefaultValueBeforeProcessing,
+  DATA_GRID_PROPS_DEFAULT_VALUES,
 } from './DataGridProps';
 
 /**
  * The props users can give to the `DataGridProProps` component.
  */
 export type DataGridProProps = Omit<
-  Partial<DataGridProSimpleOptions> &
-    DataGridComplexOptionsBeforeProcessing &
+  Partial<DataGridProPropsWithDefaultValue> &
+    DataGridPropsWithComplexDefaultValueBeforeProcessing &
     DataGridProOtherProps,
   DataGridProForcedPropsKey
 >;
@@ -25,8 +25,8 @@ export type DataGridProProps = Omit<
  * The props of the `DataGridPro` component after the pre-processing phase.
  */
 export interface DataGridProProcessedProps
-  extends DataGridProSimpleOptions,
-    DataGridComplexOptionsAfterProcessing,
+  extends DataGridProPropsWithDefaultValue,
+    DataGridPropsWithComplexDefaultValueAfterProcessing,
     DataGridProOtherProps {}
 
 export type DataGridProForcedPropsKey = 'signature';
@@ -36,7 +36,7 @@ export type DataGridProForcedPropsKey = 'signature';
  * None of the entry of this interface should be optional, they all have default values and `DataGridProps` already applies a `Partial<DataGridSimpleOptions>` for the public interface
  * The controlled model do not have a default value at the prop processing level, so they must be defined in `DataGridOtherProps`
  */
-export interface DataGridProSimpleOptions extends DataGridSimpleOptions {
+export interface DataGridProPropsWithDefaultValue extends DataGridPropsWithDefaultValues {
   /**
    * Set the area in `px` at the bottom of the grid viewport where onRowsScrollEnd is called.
    * @default 80
@@ -80,8 +80,8 @@ export interface DataGridProSimpleOptions extends DataGridSimpleOptions {
 /**
  * The default values of `DataGridProSimpleOptions` to inject in the props of DataGridPro.
  */
-export const DATA_GRID_DEFAULT_PRO_SIMPLE_OPTIONS: DataGridProSimpleOptions = {
-  ...DATA_GRID_DEFAULT_SIMPLE_OPTIONS,
+export const DATA_GRID_PRO_PROPS_DEFAULT_VALUES: DataGridProPropsWithDefaultValue = {
+  ...DATA_GRID_PROPS_DEFAULT_VALUES,
   scrollEndThreshold: 80,
   treeData: false,
   defaultGroupingExpansionDepth: 0,
@@ -90,7 +90,7 @@ export const DATA_GRID_DEFAULT_PRO_SIMPLE_OPTIONS: DataGridProSimpleOptions = {
   disableChildrenSorting: false,
 };
 
-export interface DataGridProOtherProps extends DataGridOtherProps {
+export interface DataGridProOtherProps extends DataGridPropsWithoutDefaultValue {
   /**
    * Determines the path of a row in the tree data.
    * For instance, a row with the path ["A", "B"] is the child of the row with the path ["A"].
