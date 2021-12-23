@@ -53,7 +53,7 @@ Sort order can be configured (and overridden) on a per-column basis by setting t
 
 ```tsx
 const columns: GridColDef = [
-  { field: 'downloads', sortingOrder: ['desc', 'asc', null] },
+  { field: 'quantity', sortingOrder: ['desc', 'asc', null] },
 ];
 ```
 
