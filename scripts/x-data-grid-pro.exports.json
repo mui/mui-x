@@ -90,6 +90,7 @@
   { "name": "GridColumnHeaderParams", "kind": "Interface" },
   { "name": "GridColumnHeaderSeparator", "kind": "ExportSpecifier" },
   { "name": "GridColumnHeaderSeparatorProps", "kind": "Interface" },
+  { "name": "GridColumnHeaderSeparatorSides", "kind": "Enum" },
   { "name": "GridColumnHeaderSortIcon", "kind": "ExportSpecifier" },
   { "name": "GridColumnHeaderSortIconProps", "kind": "Interface" },
   { "name": "GridColumnHeaderTitle", "kind": "ExportSpecifier" },
