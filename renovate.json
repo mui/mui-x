@@ -85,7 +85,7 @@
     },
     {
       "groupName": "monorepo",
-      "matchPackagePatterns": "@material-ui/monorepo",
+      "matchPackageNames": ["@material-ui/monorepo"],
       "matchDatasources": ["git-refs"]
     }
   ],
