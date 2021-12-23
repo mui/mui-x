@@ -18,12 +18,12 @@ export type GridFilterInputMultipleSingleSelectProps = {
 
 const getSingleSelectOptionFormatter =
   ({ valueFormatter, field }, api) =>
-  (option) => {
-    if (typeof option === 'object') {
-      return option.label;
-    }
-    return valueFormatter && option !== '' ? valueFormatter({ value: option, field, api }) : option;
-  };
+    (option) => {
+      if (typeof option === 'object') {
+        return option.label;
+      }
+      return valueFormatter && option !== '' ? valueFormatter({ value: option, field, api }) : option;
+    };
 
 const getValueFromOption = (option) => (typeof option === 'object' ? option.value : option);
 
@@ -34,7 +34,6 @@ const filter = createFilterOptions<any>();
 
 function GridFilterInputMultipleSingleSelect(props: GridFilterInputMultipleSingleSelectProps) {
   const { item, applyValue, type, apiRef, focusElementRef, ...other } = props;
-  const [filterValueState, setFilterValueState] = React.useState(item.value || []);
   const id = useId();
 
   const currentColumn = item.columnField ? apiRef.current.getColumn(item.columnField) : null;
@@ -43,48 +42,47 @@ function GridFilterInputMultipleSingleSelect(props: GridFilterInputMultipleSingl
       ? currentColumn.valueOptions({ field: currentColumn.field })
       : currentColumn.valueOptions;
   }, [currentColumn]);
+  const currentFormatedValueOptions = React.useMemo(() => {
+    return currentValueOptions.map(getValueFromOption);
+  }, [currentValueOptions]);
 
   const filterValueOptionFormatter = getSingleSelectOptionFormatter(
     apiRef.current.getColumn(item.columnField),
     apiRef.current,
   );
 
-  React.useEffect(() => {
-    let itemValue;
+  // The value is computed from the item.value and used directly
+  // If it was done by a useEffect/useSate, the Autocomplete could receive incoherent value and options
+  const filterValues = React.useMemo(() => {
     if (!Array.isArray(item.value)) {
-      itemValue = [];
-    } else if (currentValueOptions !== undefined) {
-      // sanitize if valueOptions are provided
-      const parsedCurrentValueOptions = currentValueOptions.map(getValueFromOption);
-      const itemValueIndexes = item.value.filter((element) => {
+      return [];
+    }
+    if (currentValueOptions !== undefined) {
+      const itemValueIndexes = item.value.map((element) => {
+        // get the index matching between values and valueoptions
         const formatedElement = getValueFromOption(element);
-        const index = parsedCurrentValueOptions.findIndex(
+        const index = currentFormatedValueOptions.findIndex(
           (formatedOption) => formatedOption === formatedElement,
         );
-
         return index;
       });
-      itemValue = itemValueIndexes
+
+      return itemValueIndexes
         .filter((index) => index >= 0)
         .map((index) => currentValueOptions[index]);
-
-      if (itemValue.length !== item.value.length) {
-        // remove filtered values
-        applyValue({ ...item, value: parsedCurrentValueOptions });
-        return;
-      }
-    } else {
-      itemValue = item.value;
     }
+    return item.value;
+  }, [item.value, currentValueOptions, currentFormatedValueOptions]);
 
-    itemValue = itemValue ?? [];
-
-    setFilterValueState(itemValue);
-  }, [item, currentValueOptions, applyValue]);
+  React.useEffect(() => {
+    if (!Array.isArray(item.value) || filterValues.length !== item.value.length) {
+      // update the state if the filter value has been cleaned by the component
+      applyValue({ ...item, value: filterValues.map(getValueFromOption) });
+    }
+  }, [item, filterValues, applyValue]);
 
   const handleChange = React.useCallback(
     (event, value) => {
-      setFilterValueState(value);
       applyValue({ ...item, value: [...value.map(getValueFromOption)] });
     },
     [applyValue, item],
@@ -99,7 +97,7 @@ function GridFilterInputMultipleSingleSelect(props: GridFilterInputMultipleSingl
       isOptionEqualToValue={isOptionEqualToValue}
       filterOptions={filter}
       id={id}
-      value={filterValueState}
+      value={filterValues}
       onChange={handleChange}
       renderTags={(value: any[], getTagProps) =>
         value.map((option: string, index: number) => (
