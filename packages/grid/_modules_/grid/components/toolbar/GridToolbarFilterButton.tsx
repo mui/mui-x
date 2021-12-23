@@ -123,6 +123,7 @@ const GridToolbarFilterButton = React.forwardRef<HTMLButtonElement, GridToolbarF
           }
           {...buttonProps}
           onClick={toggleFilter}
+          {...rootProps.componentsProps?.baseButton}
         >
           {apiRef.current.getLocaleText('toolbarFilters')}
         </rootProps.components.BaseButton>

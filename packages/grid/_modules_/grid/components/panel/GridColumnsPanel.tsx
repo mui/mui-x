@@ -122,6 +122,7 @@ export function GridColumnsPanel() {
           onChange={handleSearchValueChange}
           variant="standard"
           fullWidth
+          {...rootProps.componentsProps?.baseTextField}
         />
       </GridPanelHeader>
       <GridPanelContent>
@@ -137,6 +138,7 @@ export function GridColumnsPanel() {
                     name={column.field}
                     color="primary"
                     size="small"
+                    {...rootProps.componentsProps?.baseSwitch}
                   />
                 }
                 label={column.headerName || column.field}
@@ -157,10 +159,18 @@ export function GridColumnsPanel() {
         </GridColumnsPanelRoot>
       </GridPanelContent>
       <GridPanelFooter>
-        <rootProps.components.BaseButton onClick={hideAllColumns} color="primary">
+        <rootProps.components.BaseButton
+          onClick={hideAllColumns}
+          color="primary"
+          {...rootProps.componentsProps?.baseButton}
+        >
           {apiRef.current.getLocaleText('columnsPanelHideAllButton')}
         </rootProps.components.BaseButton>
-        <rootProps.components.BaseButton onClick={showAllColumns} color="primary">
+        <rootProps.components.BaseButton
+          onClick={showAllColumns}
+          color="primary"
+          {...rootProps.componentsProps?.baseButton}
+        >
           {apiRef.current.getLocaleText('columnsPanelShowAllButton')}
         </rootProps.components.BaseButton>
       </GridPanelFooter>

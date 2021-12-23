@@ -36,6 +36,7 @@ export function GridFilterInputBoolean(props: GridFilterInputValueProps & TextFi
       }}
       inputRef={focusElementRef}
       {...others}
+      {...rootProps.componentsProps?.baseTextField}
     >
       <option value="">{apiRef.current.getLocaleText('filterValueAny')}</option>
       <option value="true">{apiRef.current.getLocaleText('filterValueTrue')}</option>

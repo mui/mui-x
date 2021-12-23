@@ -104,6 +104,7 @@ export function GridFilterPanel() {
             onClick={addNewFilter}
             startIcon={<GridAddIcon />}
             color="primary"
+            {...rootProps.componentsProps?.baseButton}
           >
             {apiRef.current.getLocaleText('filterPanelAddFilter')}
           </rootProps.components.BaseButton>

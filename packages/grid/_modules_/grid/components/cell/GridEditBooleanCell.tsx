@@ -81,6 +81,7 @@ export function GridEditBooleanCell(
         checked={Boolean(valueState)}
         onChange={handleChange}
         size="small"
+        {...rootProps.componentsProps?.baseCheckbox}
       />
     </label>
   );

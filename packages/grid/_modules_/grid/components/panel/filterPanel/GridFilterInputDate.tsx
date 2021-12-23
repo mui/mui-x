@@ -68,6 +68,7 @@ function GridFilterInputDate(props: GridFilterInputDateProps) {
         },
       }}
       {...other}
+      {...rootProps.componentsProps?.baseTextField}
     />
   );
 }

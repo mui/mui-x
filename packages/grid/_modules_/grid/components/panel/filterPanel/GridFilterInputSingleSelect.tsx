@@ -105,6 +105,7 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
         native: true,
       }}
       {...others}
+      {...rootProps.componentsProps?.baseTextField}
     >
       {renderSingleSelectOptions(apiRef.current.getColumn(item.columnField), apiRef.current)}
     </rootProps.components.BaseTextField>

@@ -133,6 +133,7 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps & TextFieldPr
       inputRef={focusElementRef}
       {...singleSelectProps}
       {...others}
+      {...rootProps.componentsProps?.baseTextField}
     />
   );
 }

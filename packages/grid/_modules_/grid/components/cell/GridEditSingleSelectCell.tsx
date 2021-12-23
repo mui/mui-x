@@ -123,6 +123,7 @@ function GridEditSingleSelectCell(props: GridRenderEditCellParams & Omit<SelectP
       error={error}
       fullWidth
       {...other}
+      {...rootProps.componentsProps?.baseSelect}
     >
       {valueOptionsFormatted.map(renderSingleSelectOptions)}
     </rootProps.components.BaseSelect>

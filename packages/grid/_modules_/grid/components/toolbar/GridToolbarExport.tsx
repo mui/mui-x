@@ -106,6 +106,7 @@ const GridToolbarExport = React.forwardRef<HTMLButtonElement, GridToolbarExportP
           id={buttonId}
           {...other}
           onClick={handleMenuOpen}
+          {...rootProps.componentsProps?.baseButton}
         >
           {apiRef.current.getLocaleText('toolbarExport')}
         </rootProps.components.BaseButton>

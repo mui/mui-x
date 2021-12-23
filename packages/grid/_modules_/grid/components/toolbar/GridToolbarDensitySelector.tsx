@@ -105,6 +105,7 @@ export const GridToolbarDensitySelector = React.forwardRef<HTMLButtonElement, Bu
           id={densityButtonId}
           {...other}
           onClick={handleDensitySelectorOpen}
+          {...rootProps.componentsProps?.baseButton}
         >
           {apiRef.current.getLocaleText('toolbarDensity')}
         </rootProps.components.BaseButton>
