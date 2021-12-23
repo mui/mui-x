@@ -5,6 +5,7 @@ import MUIFormControl from '@mui/material/FormControl';
 import MUISelect from '@mui/material/Select';
 import MUISwitch from '@mui/material/Switch';
 import MUIButton from '@mui/material/Button';
+import MUITooltip from '@mui/material/Tooltip';
 import { GRID_DEFAULT_LOCALE_TEXT } from '../../constants/localeTextConstants';
 import { GridComponentProps, GridInputComponentProps } from '../../GridComponentProps';
 import { GRID_DEFAULT_SIMPLE_OPTIONS } from '../../models/gridOptions';
@@ -71,6 +72,7 @@ const DEFAULT_GRID_SLOTS_COMPONENTS: GridSlotsComponent = {
   BaseSelect: MUISelect,
   BaseSwitch: MUISwitch,
   BaseButton: MUIButton,
+  BaseTooltip: MUITooltip,
   Cell: GridCell,
   ColumnMenu: GridColumnMenu,
   ErrorOverlay,

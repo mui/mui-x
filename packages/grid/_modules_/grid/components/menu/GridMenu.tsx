@@ -98,6 +98,7 @@ const GridMenu = (props: GridMenuProps) => {
       transition
       placement={position}
       {...other}
+      {...rootProps.componentsProps?.basePopper}
     >
       {({ TransitionProps, placement }) => (
         <ClickAwayListener onClickAway={onClickAway}>

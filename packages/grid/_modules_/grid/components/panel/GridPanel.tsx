@@ -8,6 +8,7 @@ import Paper from '@mui/material/Paper';
 import Popper, { PopperProps } from '@mui/material/Popper';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { isEscapeKey } from '../../utils/keyboardUtils';
+import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
 export interface GridPanelClasses {
   /** Styles applied to the root element. */
@@ -49,6 +50,7 @@ const GridPaperRoot = styled(Paper, {
 const GridPanel = React.forwardRef<HTMLDivElement, GridPanelProps>((props, ref) => {
   const { children, className, open, classes: classesProp, ...other } = props;
   const apiRef = useGridApiContext();
+  const rootProps = useGridRootProps();
   const classes = gridPanelClasses;
   const [isPlaced, setIsPlaced] = React.useState(false);
 
@@ -93,6 +95,7 @@ const GridPanel = React.forwardRef<HTMLDivElement, GridPanelProps>((props, ref) 
         },
       ]}
       {...other}
+      {...rootProps.componentsProps?.basePopper}
     >
       <ClickAwayListener onClickAway={handleClickAway}>
         <GridPaperRoot className={classes.paper} elevation={8} onKeyDown={handleKeyDown}>

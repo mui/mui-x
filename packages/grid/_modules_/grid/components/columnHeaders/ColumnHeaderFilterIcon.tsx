@@ -2,7 +2,6 @@ import * as React from 'react';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import Badge from '@mui/material/Badge';
-import Tooltip from '@mui/material/Tooltip';
 import { gridPreferencePanelStateSelector } from '../../hooks/features/preferencesPanel/gridPreferencePanelSelector';
 import { GridPreferencePanelsValue } from '../../hooks/features/preferencesPanel/gridPreferencePanelsValue';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
@@ -69,13 +68,14 @@ export function ColumnHeaderFilterIcon(props: ColumnHeaderFilterIconProps) {
   );
 
   return (
-    <Tooltip
+    <rootProps.components.BaseTooltip
       title={
         apiRef.current.getLocaleText('columnHeaderFiltersTooltipActive')(
           counter,
         ) as React.ReactElement
       }
       enterDelay={1000}
+      {...rootProps.componentsProps?.baseTooltip}
     >
       <GridIconButtonContainer>
         {counter > 1 && (
@@ -85,6 +85,6 @@ export function ColumnHeaderFilterIcon(props: ColumnHeaderFilterIconProps) {
         )}
         {counter === 1 && iconButton}
       </GridIconButtonContainer>
-    </Tooltip>
+    </rootProps.components.BaseTooltip>
   );
 }
