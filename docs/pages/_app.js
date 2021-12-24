@@ -245,7 +245,10 @@ function AppWrapper(props) {
   // eslint-disable will be removed once docs restructure is done
   // eslint-disable-next-line prefer-const
   let productPages = pages;
-  if (router.asPath.startsWith('/x/react-data-grid')) {
+  if (
+    router.asPath.startsWith('/x/react-data-grid') ||
+    router.asPath.startsWith('/x/api/mui-data-grid')
+  ) {
     productPages = dataGridPages;
   }
 
