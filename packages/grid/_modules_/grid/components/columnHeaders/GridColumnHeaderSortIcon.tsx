@@ -37,18 +37,17 @@ function getIcon(
   className: string,
   sortingOrder: GridSortDirection[],
 ) {
-  let Icon;
+  let Icon = icons.ColumnUnsortedIcon;
+  const iconProps: any = {};
   if (direction === 'asc') {
     Icon = icons.ColumnSortedAscendingIcon;
   } else if (direction === 'desc') {
     Icon = icons.ColumnSortedDescendingIcon;
   } else {
     Icon = icons.ColumnUnsortedIcon;
-    const [nextSortDirection] = sortingOrder;
-    const ariaSort = nextSortDirection === 'asc' ? 'ascending' : 'descending';
-    return Icon ? <Icon fontSize="small" className={className} aria-sort={ariaSort} /> : null;
+    iconProps.sortingOrder = sortingOrder;
   }
-  return Icon ? <Icon fontSize="small" className={className} /> : null;
+  return Icon ? <Icon fontSize="small" className={className} {...iconProps} /> : null;
 }
 
 function GridColumnHeaderSortIconRaw(props: GridColumnHeaderSortIconProps) {
