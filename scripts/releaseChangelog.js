@@ -83,6 +83,40 @@ async function main(argv) {
     commitsItems.push(...compareCommits.commits.filter(filterCommit));
   }
 
+  // Fetch all the pull Request and check if there is a section named changelog
+
+  const changeLogMessages = [];
+  await Promise.all(
+    commitsItems.map(async (commitsItem) => {
+      const searchPullRequestId = commitsItem.commit.message.match(/\(#([0-9]+)\)/);
+      if (!searchPullRequestId || !searchPullRequestId[1]) {
+        return;
+      }
+
+      const {
+        data: { body: bodyMessage },
+      } = await octokit.request('GET /repos/{owner}/{repo}/pulls/{pull_number}', {
+        owner: 'mui-org',
+        repo: 'material-ui-x',
+        pull_number: Number(searchPullRequestId[1]),
+      });
+
+      if (!bodyMessage) {
+        return;
+      }
+
+      const changelogMotif = '# changelog';
+      const changelogIndex = bodyMessage.toLowerCase().indexOf(changelogMotif);
+      if (changelogIndex >= 0) {
+        changeLogMessages.push(
+          `From https://github.com/mui-org/material-ui-x/pull/${
+            searchPullRequestId[1]
+          }\n${bodyMessage.slice(changelogIndex + changelogMotif.length)}`,
+        );
+      }
+    }),
+  );
+
   // Get all the authors of the release
   const authors = Array.from(
     new Set(
@@ -156,6 +190,8 @@ A big thanks to the ${
     authors.length
   } contributors who made this release possible. Here are some highlights ✨:
 TODO INSERT HIGHLIGHTS
+
+${changeLogMessages.join('\n')}
 
 ${logChangelogSection(changeCommits, '### Changes')}
 ${logChangelogSection(coreCommits, '### Core')}
