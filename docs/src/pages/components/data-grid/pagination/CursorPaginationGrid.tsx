@@ -1,28 +1,8 @@
 import * as React from 'react';
-import { GridRowsProp, DataGrid, GridRowId, GridRowModel } from '@mui/x-data-grid';
-import { useDemoData, GridDemoData } from '@mui/x-data-grid-generator';
-
-interface ServerBasedGridResponse {
-  rows: GridRowModel[];
-  nextCursor: GridRowId | null | undefined;
-}
+import { GridRowsProp, DataGrid, GridRowId } from '@mui/x-data-grid';
+import { useDemoData, useFakeServer } from '@mui/x-data-grid-generator';
 
 const PAGE_SIZE = 5;
-
-function loadServerRows(
-  cursor: GridRowId | null | undefined,
-  data: GridDemoData,
-): Promise<ServerBasedGridResponse> {
-  return new Promise<ServerBasedGridResponse>((resolve) => {
-    setTimeout(() => {
-      const start = cursor ? data.rows.findIndex((row) => row.id === cursor) : 0;
-      const end = start + PAGE_SIZE;
-      const rows = data.rows.slice(start, end);
-
-      resolve({ rows, nextCursor: data.rows[end]?.id });
-    }, Math.random() * 200 + 100); // simulate network latency
-  });
-}
 
 export default function CursorPaginationGrid() {
   const { data } = useDemoData({
@@ -30,6 +10,7 @@ export default function CursorPaginationGrid() {
     rowLength: 100,
     maxColumns: 6,
   });
+  const { get } = useFakeServer(data.rows);
 
   const pagesNextCursor = React.useRef<{ [page: number]: GridRowId }>({});
 
@@ -55,7 +36,7 @@ export default function CursorPaginationGrid() {
       }
 
       setLoading(true);
-      const response = await loadServerRows(nextCursor, data);
+      const response = await get({ cursor: nextCursor, pageSize: PAGE_SIZE });
 
       if (response.nextCursor) {
         pagesNextCursor.current[page] = response.nextCursor;
@@ -65,14 +46,14 @@ export default function CursorPaginationGrid() {
         return;
       }
 
-      setRows(response.rows);
+      setRows(response.data);
       setLoading(false);
     })();
 
     return () => {
       active = false;
     };
-  }, [page, data]);
+  }, [page, get]);
 
   return (
     <div style={{ height: 400, width: '100%' }}>

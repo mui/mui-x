@@ -1,26 +1,15 @@
 import * as React from 'react';
 import { DataGrid } from '@mui/x-data-grid';
-import { useDemoData } from '@mui/x-data-grid-generator';
+import { useDemoData, useFakeServer } from '@mui/x-data-grid-generator';
 
-/**
- * Simulates server data loading
- */
-const loadServerRows = (page, pageSize, allRows) =>
-  new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(allRows.slice(page * pageSize, (page + 1) * pageSize));
-    }, Math.random() * 200 + 100); // simulate network latency
-  });
-
-/**
- * TODO: Improve `useDemoData` to move the fake pagination inside it instead of "fetching" everything of slicing in the component
- */
 export default function ServerPaginationGrid() {
   const { data } = useDemoData({
     dataSet: 'Commodity',
     rowLength: 100,
     maxColumns: 6,
   });
+
+  const { get } = useFakeServer(data.rows);
 
   const [rowsState, setRowsState] = React.useState({
     page: 0,
@@ -34,11 +23,10 @@ export default function ServerPaginationGrid() {
 
     (async () => {
       setRowsState((prev) => ({ ...prev, loading: true }));
-      const newRows = await loadServerRows(
-        rowsState.page,
-        rowsState.pageSize,
-        data.rows,
-      );
+      const { data: newRows } = await get({
+        page: rowsState.page,
+        pageSize: rowsState.pageSize,
+      });
 
       if (!active) {
         return;
@@ -50,7 +38,7 @@ export default function ServerPaginationGrid() {
     return () => {
       active = false;
     };
-  }, [rowsState.page, rowsState.pageSize, data.rows]);
+  }, [rowsState.page, rowsState.pageSize, data.rows, get]);
 
   return (
     <div style={{ height: 400, width: '100%' }}>
