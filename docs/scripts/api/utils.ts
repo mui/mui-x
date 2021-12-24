@@ -5,13 +5,19 @@ import * as fse from 'fs-extra';
 import * as ts from 'typescript';
 
 export interface Project {
-  name: string;
+  name: ProjectNames;
   exports: Record<string, ts.Symbol>;
   program: ts.Program;
   checker: ts.TypeChecker;
   workspaceRoot: string;
   prettierConfigPath: string;
 }
+
+export type ProjectNames = 'x-data-grid' | 'x-data-grid-pro';
+
+export type Projects = Map<ProjectNames, Project>;
+
+export type DocumentedInterfaces = Map<string, ProjectNames[]>;
 
 export const getSymbolDescription = (symbol: ts.Symbol, project: Project) =>
   symbol
@@ -64,7 +70,7 @@ export const stringifySymbol = (symbol: ts.Symbol, project: Project) => {
 
 export function linkify(
   text: string | undefined,
-  documentedInterfaces: Map<string, boolean>,
+  documentedInterfaces: DocumentedInterfaces,
   format: 'markdown' | 'html',
 ) {
   if (text == null) {

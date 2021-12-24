@@ -339,6 +339,26 @@ describe('<DataGrid /> - Selection', () => {
       expect(checkbox).to.have.attribute('tabindex', '0');
       expect(checkboxCell).to.have.attribute('tabindex', '-1');
     });
+
+    it('should select/unselect all rows when pressing space', async () => {
+      render(<TestDataGridSelection checkboxSelection />);
+
+      const selectAllCell = document.querySelector(
+        '[role="columnheader"][data-field="__check__"] input',
+      ) as HTMLElement;
+      selectAllCell.focus();
+
+      fireEvent.keyDown(selectAllCell, {
+        key: ' ',
+      });
+
+      expect(getSelectedRowIds()).to.deep.equal([0, 1, 2, 3]);
+      fireEvent.keyDown(selectAllCell, {
+        key: ' ',
+      });
+
+      expect(getSelectedRowIds()).to.deep.equal([]);
+    });
   });
 
   describe('props: isRowSelectable', () => {

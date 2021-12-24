@@ -1,10 +1,9 @@
 import path from 'path';
 import * as ts from 'typescript';
-import { Project, writePrettifiedFile } from './utils';
+import { Project, Projects, writePrettifiedFile } from './utils';
 
 interface BuildExportsDocumentationOptions {
-  dataGridProject: Project;
-  dataGridProProject: Project;
+  projects: Projects;
 }
 
 const buildPackageExports = (project: Project) => {
@@ -30,8 +29,7 @@ const buildPackageExports = (project: Project) => {
 };
 
 export default function buildExportsDocumentation(options: BuildExportsDocumentationOptions) {
-  const { dataGridProject, dataGridProProject } = options;
-
-  buildPackageExports(dataGridProject);
-  buildPackageExports(dataGridProProject);
+  options.projects.forEach((project) => {
+    buildPackageExports(project);
+  });
 }

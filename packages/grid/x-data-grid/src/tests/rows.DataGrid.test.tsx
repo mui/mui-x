@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRenderer, fireEvent, screen, waitFor } from '@material-ui/monorepo/test/utils';
+import { createRenderer, fireEvent, screen } from '@material-ui/monorepo/test/utils';
 import { expect } from 'chai';
 import { spy, stub } from 'sinon';
 import Portal from '@mui/material/Portal';
@@ -10,7 +10,7 @@ import { getData } from 'storybook/src/data/data-service';
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<DataGrid /> - Rows', () => {
-  const { render } = createRenderer();
+  const { render, clock } = createRenderer({ clock: 'fake' });
 
   const baselineProps = {
     autoHeight: isJSDOM,
@@ -110,7 +110,10 @@ describe('<DataGrid /> - Rows', () => {
   });
 
   describe('columnType: actions', () => {
-    const TestCase = ({ getActions }: { getActions?: () => JSX.Element[] }) => {
+    const TestCase = ({
+      getActions,
+      ...other
+    }: { getActions?: () => JSX.Element[] } & Partial<DataGridProps>) => {
       return (
         <div style={{ width: 300, height: 300 }}>
           <DataGrid
@@ -123,6 +126,7 @@ describe('<DataGrid /> - Rows', () => {
                 getActions,
               },
             ]}
+            {...other}
           />
         </div>
       );
@@ -186,7 +190,7 @@ describe('<DataGrid /> - Rows', () => {
       );
       expect(getRow(0).className).not.to.contain('Mui-selected');
       fireEvent.click(screen.getByRole('button', { name: 'more' }));
-      await waitFor(() => expect(screen.queryByText('print')).not.to.equal(null));
+      expect(screen.queryByText('print')).not.to.equal(null);
       fireEvent.click(screen.queryByText('print'));
       expect(getRow(0).className).not.to.contain('Mui-selected');
     });
@@ -196,6 +200,24 @@ describe('<DataGrid /> - Rows', () => {
       expect(getRow(0).className).not.to.contain('Mui-selected');
       fireEvent.click(screen.getByRole('button', { name: 'more' }));
       expect(getRow(0).className).not.to.contain('Mui-selected');
+    });
+
+    it('should close other menus before opening a new one', () => {
+      render(
+        <TestCase
+          rows={[{ id: 1 }, { id: 2 }]}
+          getActions={() => [<GridActionsCellItem label="print" showInMenu />]}
+        />,
+      );
+      expect(screen.queryAllByRole('menu')).to.have.length(0);
+
+      fireEvent.click(screen.getAllByRole('button', { name: 'more' })[0]);
+      clock.runToLast();
+      expect(screen.queryAllByRole('menu')).to.have.length(1);
+
+      fireEvent.click(screen.getAllByRole('button', { name: 'more' })[1]);
+      clock.runToLast();
+      expect(screen.queryAllByRole('menu')).to.have.length(1);
     });
   });
 });
