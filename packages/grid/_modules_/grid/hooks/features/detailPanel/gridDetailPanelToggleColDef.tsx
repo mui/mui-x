@@ -21,7 +21,9 @@ export const GRID_DETAIL_PANEL_TOGGLE_COL_DEF: GridColDef = {
   align: 'left',
   width: 40,
   valueGetter: (params) => {
-    const expandedRowIds = gridExpandedRowIdsSelector((params as GridValueGetterFullParams).api.state);
+    const expandedRowIds = gridExpandedRowIdsSelector(
+      (params as GridValueGetterFullParams).api.state,
+    );
     return expandedRowIds.includes(params.id);
   },
   renderCell: (params) => <GridDetailPanelToggleCell {...params} />,
