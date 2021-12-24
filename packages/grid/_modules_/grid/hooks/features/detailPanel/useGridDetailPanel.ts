@@ -117,7 +117,7 @@ export const useGridDetailPanel = (
   useGridApiEventHandler(apiRef, GridEvents.cellClick, handleCellClick);
   useGridApiEventHandler(apiRef, GridEvents.cellKeyDown, handleCellKeyDown);
 
-  const addTogleColumn = React.useCallback(
+  const addToggleColumn = React.useCallback(
     (columnsState: GridColumnsRawState) => {
       if (
         columnsState.lookup[GRID_DETAIL_PANEL_TOGGLE_FIELD] !== undefined ||
@@ -153,7 +153,7 @@ export const useGridDetailPanel = (
     [expandedRowIds, heightCache],
   );
 
-  useGridRegisterPreProcessor(apiRef, GridPreProcessingGroup.hydrateColumns, addTogleColumn);
+  useGridRegisterPreProcessor(apiRef, GridPreProcessingGroup.hydrateColumns, addToggleColumn);
   useGridRegisterPreProcessor(apiRef, GridPreProcessingGroup.rowHeight, addDetailHeight);
 
   apiRef.current.unstable_updateControlState({
