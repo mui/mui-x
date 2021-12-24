@@ -7,7 +7,7 @@ import {
   DataGridPro,
   useGridSelector,
   useGridApiContext,
-  gridExpandedRowsContentCache,
+  gridExpandedRowsContentCacheSelector,
   GRID_DETAIL_PANEL_TOGGLE_COL_DEF,
 } from '@mui/x-data-grid-pro';
 import {
@@ -44,7 +44,7 @@ function CustomDetailPanelToggle(props) {
 
   // To avoid calling ´getDetailPanelContent` all the time, the following selector
   // gives an object with the detail panel content for each row id.
-  const contentCache = useGridSelector(apiRef, gridExpandedRowsContentCache);
+  const contentCache = useGridSelector(apiRef, gridExpandedRowsContentCacheSelector);
 
   // If the value is not a valid React element, it means that the row has no detail panel.
   const hasDetail = React.isValidElement(contentCache[id]);
