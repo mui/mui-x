@@ -10,7 +10,7 @@ import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { useGridState } from '../../utils/useGridState';
 import { gridRowsLookupSelector } from '../rows/gridRowsSelector';
-import { isGridCellRoot } from '../../../utils/domUtils';
+import { findParentElementFromClassName, isGridCellRoot } from '../../../utils/domUtils';
 import {
   gridSelectionStateSelector,
   selectedGridRowsSelector,
@@ -19,7 +19,7 @@ import {
 import { gridPaginatedVisibleSortedGridRowIdsSelector } from '../pagination';
 import { gridVisibleSortedRowIdsSelector } from '../filter/gridFilterSelector';
 import { GRID_CHECKBOX_SELECTION_COL_DEF, GridColDef } from '../../../models';
-import { getDataGridUtilityClass } from '../../../gridClasses';
+import { getDataGridUtilityClass, gridClasses } from '../../../gridClasses';
 import { useGridStateInit } from '../../utils/useGridStateInit';
 import { GridPreProcessingGroup, useGridRegisterPreProcessor } from '../../core/preProcessing';
 import { GridCellModes } from '../../../models/gridEditRowModel';
@@ -331,6 +331,18 @@ export const useGridSelection = (
         return;
       }
 
+      const cellClicked = findParentElementFromClassName(
+        event.target as HTMLElement,
+        gridClasses.cell,
+      );
+      const field = cellClicked?.getAttribute('data-field');
+      if (field) {
+        const column = apiRef.current.getColumn(field);
+        if (column.type === 'actions') {
+          return;
+        }
+      }
+
       if (event.shiftKey && (canHaveMultipleSelection || checkboxSelection)) {
         expandRowRangeSelection(params.id);
       } else {
@@ -338,11 +350,12 @@ export const useGridSelection = (
       }
     },
     [
+      disableSelectionOnClick,
+      canHaveMultipleSelection,
+      checkboxSelection,
+      apiRef,
       expandRowRangeSelection,
       handleSingleRowSelection,
-      canHaveMultipleSelection,
-      disableSelectionOnClick,
-      checkboxSelection,
     ],
   );
 

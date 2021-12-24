@@ -27,10 +27,7 @@ const GridActionsCell = (props: GridActionsCellProps) => {
     throw new Error('MUI: Missing the `getActions` property in the `GridColDef`.');
   }
 
-  const showMenu = (event: React.MouseEvent) => {
-    event.stopPropagation();
-    setOpen(true);
-  };
+  const showMenu = () => setOpen(true);
 
   const hideMenu = () => setOpen(false);
 

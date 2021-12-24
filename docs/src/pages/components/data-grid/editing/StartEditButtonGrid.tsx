@@ -24,15 +24,18 @@ interface EditToolbarProps {
 function EditToolbar(props: EditToolbarProps) {
   const { selectedCellParams, apiRef, setSelectedCellParams } = props;
 
-  const handleClick = () => {
+  const handleClick = async () => {
     if (!selectedCellParams) {
       return;
     }
     const { id, field, cellMode } = selectedCellParams;
     if (cellMode === 'edit') {
-      apiRef.current.commitCellChange({ id, field });
-      apiRef.current.setCellMode(id, field, 'view');
-      setSelectedCellParams({ ...selectedCellParams, cellMode: 'view' });
+      // Wait for the validation to run
+      const isValid = await apiRef.current.commitCellChange({ id, field });
+      if (isValid) {
+        apiRef.current.setCellMode(id, field, 'view');
+        setSelectedCellParams({ ...selectedCellParams, cellMode: 'view' });
+      }
     } else {
       apiRef.current.setCellMode(id, field, 'edit');
       setSelectedCellParams({ ...selectedCellParams, cellMode: 'edit' });

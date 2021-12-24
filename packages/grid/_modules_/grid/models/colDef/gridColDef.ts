@@ -69,6 +69,11 @@ export interface GridColDef {
    */
   hide?: boolean;
   /**
+   * If `false`, removes the buttons for hiding this column.
+   * @default true
+   */
+  hideable?: boolean;
+  /**
    * If `true`, the column is sortable.
    * @default true
    */
