@@ -19,9 +19,12 @@ export default function ControlMasterDetail() {
     GridRowId[]
   >([]);
 
-  const handlePinnedColumnsChange = React.useCallback((newIds: GridRowId[]) => {
-    setDetailPanelExpandedRowIds(newIds);
-  }, []);
+  const handleDetailPanelExpandedRowIdsChange = React.useCallback(
+    (newIds: GridRowId[]) => {
+      setDetailPanelExpandedRowIds(newIds);
+    },
+    [],
+  );
 
   return (
     <div style={{ width: '100%' }}>
@@ -39,7 +42,7 @@ export default function ControlMasterDetail() {
           )}
           getDetailPanelHeight={() => 50}
           detailPanelExpandedRowIds={detailPanelExpandedRowIds}
-          onDetailPanelExpandedRowIdsChange={handlePinnedColumnsChange}
+          onDetailPanelExpandedRowIdsChange={handleDetailPanelExpandedRowIdsChange}
         />
       </div>
     </div>

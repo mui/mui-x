@@ -14,7 +14,7 @@ export default function ControlMasterDetail() {
     [],
   );
 
-  const handlePinnedColumnsChange = React.useCallback((newIds) => {
+  const handleDetailPanelExpandedRowIdsChange = React.useCallback((newIds) => {
     setDetailPanelExpandedRowIds(newIds);
   }, []);
 
@@ -34,7 +34,7 @@ export default function ControlMasterDetail() {
           )}
           getDetailPanelHeight={() => 50}
           detailPanelExpandedRowIds={detailPanelExpandedRowIds}
-          onDetailPanelExpandedRowIdsChange={handlePinnedColumnsChange}
+          onDetailPanelExpandedRowIdsChange={handleDetailPanelExpandedRowIdsChange}
         />
       </div>
     </div>

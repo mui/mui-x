@@ -133,7 +133,7 @@ Both props are called with a [`GridRowParams`](/api/data-grid/grid-row-params/) 
 To expand a row, click in the "i" icon or press <kbd><kbd class="key">Ctrl</kbd>+<kbd class="key">Enter</kbd></kbd> inside one of the cells of the row.
 Returning `null` or `undefined` as the value of `getDetailPanelContent` will prevent the respective row from being expanded.
 
-{{"demo": "pages/components/data-grid/group-pivot/NestedDetailPanels.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"demo": "pages/components/data-grid/group-pivot/BasicDetailPanels.js", "bg": "inline", "defaultCodeOpen": false}}
 
 > ⚠ Always memoize the function provided to `getDetailPanelContent` and `getDetailPanelHeight`.
 > The grid bases on the referential value of these props to cache their values and optimize the rendering.
