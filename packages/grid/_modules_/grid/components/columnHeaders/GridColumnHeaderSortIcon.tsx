@@ -14,6 +14,7 @@ import { GridIconButtonContainer } from './GridIconButtonContainer';
 export interface GridColumnHeaderSortIconProps {
   direction: GridSortDirection;
   index: number | undefined;
+  sortingOrder: GridSortDirection[];
 }
 
 type OwnerState = GridColumnHeaderSortIconProps & {
@@ -30,24 +31,33 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-function getIcon(icons: GridIconSlotsComponent, direction: GridSortDirection, className: string) {
+function getIcon(
+  icons: GridIconSlotsComponent,
+  direction: GridSortDirection,
+  className: string,
+  sortingOrder: GridSortDirection[],
+) {
   let Icon = icons.ColumnUnsortedIcon;
+  const iconProps: any = {};
   if (direction === 'asc') {
     Icon = icons.ColumnSortedAscendingIcon;
   } else if (direction === 'desc') {
     Icon = icons.ColumnSortedDescendingIcon;
+  } else {
+    Icon = icons.ColumnUnsortedIcon;
+    iconProps.sortingOrder = sortingOrder;
   }
-  return Icon ? <Icon fontSize="small" className={className} /> : null;
+  return Icon ? <Icon fontSize="small" className={className} {...iconProps} /> : null;
 }
 
 function GridColumnHeaderSortIconRaw(props: GridColumnHeaderSortIconProps) {
-  const { direction, index } = props;
+  const { direction, index, sortingOrder } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
   const ownerState = { ...props, classes: rootProps.classes };
   const classes = useUtilityClasses(ownerState);
 
-  const iconElement = getIcon(rootProps.components, direction, classes.icon);
+  const iconElement = getIcon(rootProps.components, direction, classes.icon, sortingOrder);
   if (!iconElement) {
     return null;
   }
@@ -85,6 +95,7 @@ GridColumnHeaderSortIconRaw.propTypes = {
   // ----------------------------------------------------------------------
   direction: PropTypes.oneOf(['asc', 'desc']),
   index: PropTypes.number,
+  sortingOrder: PropTypes.arrayOf(PropTypes.oneOf(['asc', 'desc'])).isRequired,
 } as any;
 
 export { GridColumnHeaderSortIcon };
