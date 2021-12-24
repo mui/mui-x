@@ -157,7 +157,6 @@ function GridCell(props: GridCellProps) {
     maxWidth: width,
     minHeight: height,
     maxHeight: height,
-    lineHeight: `${height - 1}px`,
   };
 
   React.useLayoutEffect(() => {
