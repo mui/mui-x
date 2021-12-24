@@ -1,0 +1,6 @@
+<DataGridPro
+  columns={columns}
+  rows={rows}
+  getDetailPanelHeight={getDetailPanelHeight}
+  getDetailPanelContent={getDetailPanelContent}
+/>
