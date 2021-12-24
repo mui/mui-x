@@ -13,9 +13,9 @@ import { GridEvents } from '../../../models/events/gridEvents';
 import { GridEventListener } from '../../../models/events/gridEventListener';
 import { GridCellParams } from '../../../models/params/gridCellParams';
 import {
-  gridExpandedRowIds,
-  gridExpandedRowsContentCache,
-  gridExpandedRowsHeightCache,
+  gridExpandedRowIdsSelector,
+  gridExpandedRowsContentCacheSelector,
+  gridExpandedRowsHeightCacheSelector,
 } from './gridDetailPanelSelector';
 import { GridComponentProps } from '../../../GridComponentProps';
 import { GridRowEntry, GridRowId } from '../../../models/gridRows';
@@ -77,9 +77,9 @@ export const useGridDetailPanel = (
   });
 
   const [, setGridState, forceUpdate] = useGridState(apiRef);
-  const expandedRowIds = useGridSelector(apiRef, gridExpandedRowIds);
-  const contentCache = useGridSelector(apiRef, gridExpandedRowsContentCache);
-  const heightCache = useGridSelector(apiRef, gridExpandedRowsHeightCache);
+  const expandedRowIds = useGridSelector(apiRef, gridExpandedRowIdsSelector);
+  const contentCache = useGridSelector(apiRef, gridExpandedRowsContentCacheSelector);
+  const heightCache = useGridSelector(apiRef, gridExpandedRowsHeightCacheSelector);
 
   const { getDetailPanelContent, getDetailPanelHeight } = props; // To avoid listing `props` as dependency
 
@@ -160,7 +160,7 @@ export const useGridDetailPanel = (
     stateId: 'detailPanels',
     propModel: props.detailPanelExpandedRowIds,
     propOnChange: props.onDetailPanelExpandedRowIdsChange,
-    stateSelector: gridExpandedRowIds,
+    stateSelector: gridExpandedRowIdsSelector,
     changeEvent: GridEvents.detailPanelsExpandedRowIdsChange,
   });
 
@@ -192,7 +192,7 @@ export const useGridDetailPanel = (
   );
 
   const getExpandedRowIds = React.useCallback<GridDetailPanelApi['getExpandedRowIds']>(
-    () => gridExpandedRowIds(apiRef.current.state),
+    () => gridExpandedRowIdsSelector(apiRef.current.state),
     [apiRef],
   );
 

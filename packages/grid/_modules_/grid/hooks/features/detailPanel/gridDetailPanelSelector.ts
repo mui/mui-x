@@ -1,7 +1,9 @@
 import { GridState } from '../../../models/gridState';
 
-export const gridExpandedRowIds = (state: GridState) => state.detailPanel.expandedRowIds;
+export const gridExpandedRowIdsSelector = (state: GridState) => state.detailPanel.expandedRowIds;
 
-export const gridExpandedRowsContentCache = (state: GridState) => state.detailPanel.contentCache;
+export const gridExpandedRowsContentCacheSelector = (state: GridState) =>
+  state.detailPanel.contentCache;
 
-export const gridExpandedRowsHeightCache = (state: GridState) => state.detailPanel.heightCache;
+export const gridExpandedRowsHeightCacheSelector = (state: GridState) =>
+  state.detailPanel.heightCache;

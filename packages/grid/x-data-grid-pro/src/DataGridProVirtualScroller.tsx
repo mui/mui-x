@@ -17,9 +17,9 @@ import { GridComponentProps } from '../../_modules_/grid/GridComponentProps';
 import { getDataGridUtilityClass } from '../../_modules_/grid/gridClasses';
 import { gridPinnedColumnsSelector } from '../../_modules_/grid/hooks/features/columnPinning/columnPinningSelector';
 import {
-  gridExpandedRowIds,
-  gridExpandedRowsContentCache,
-  gridExpandedRowsHeightCache,
+  gridExpandedRowIdsSelector,
+  gridExpandedRowsContentCacheSelector,
+  gridExpandedRowsHeightCacheSelector,
 } from '../../_modules_/grid/hooks/features/detailPanel/gridDetailPanelSelector';
 import { useCurrentPageRows } from '../../_modules_/grid/hooks/utils/useCurrentPageRows';
 import { gridDensityRowHeightSelector } from '../../_modules_/grid/hooks/features/density/densitySelector';
@@ -143,9 +143,9 @@ const DataGridProVirtualScroller = React.forwardRef<
   const currentPage = useCurrentPageRows(apiRef, rootProps);
   const visibleColumnFields = useGridSelector(apiRef, gridVisibleColumnFieldsSelector);
   const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
-  const expandedRowIds = useGridSelector(apiRef, gridExpandedRowIds);
-  const detailPanelsContent = useGridSelector(apiRef, gridExpandedRowsContentCache);
-  const detailPanelsHeights = useGridSelector(apiRef, gridExpandedRowsHeightCache);
+  const expandedRowIds = useGridSelector(apiRef, gridExpandedRowIdsSelector);
+  const detailPanelsContent = useGridSelector(apiRef, gridExpandedRowsContentCacheSelector);
+  const detailPanelsHeights = useGridSelector(apiRef, gridExpandedRowsHeightCacheSelector);
   const leftColumns = React.useRef<HTMLDivElement>(null);
   const rightColumns = React.useRef<HTMLDivElement>(null);
   const [shouldExtendContent, setShouldExtendContent] = React.useState(false);
