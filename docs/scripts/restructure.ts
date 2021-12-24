@@ -36,13 +36,13 @@ const updateAppToUseProductPagesData = () => {
   let appSource = fs.readFileSync(appPath, { encoding: 'utf8' });
   appSource = appendSource(
     appSource,
-    `import pages from 'docs/src/pages';`,
-    `import dataGridPages from 'docs/data/data-grid/pages';`,
+    `import pages from 'docsx/src/pages';`,
+    `import dataGridPages from 'docsx/data/data-grid/pages';`,
   );
   appSource = appendSource(
     appSource,
     `let productPages = pages;`,
-    `if (router.asPath.startsWith('/x/data-grid')) {
+    `if (router.asPath.startsWith('/x/react-data-grid')) {
       productPages = dataGridPages;
     }`,
   );
@@ -77,7 +77,7 @@ function run() {
   // clone js/md data to new location
   const dataDir = readdirDeep(path.resolve(`docs/src/pages/components/data-grid`));
   dataDir.forEach((filePath) => {
-    const match = filePath.match(/^(.*)\/[^/]+\.(ts|js|tsx|md|json)$/);
+    const match = filePath.match(/^(.*)\/[^/]+\.(ts|js|tsx|md|json|tsx\.preview)$/);
     const info = match
       ? {
           directory: match[1].replace('src/pages/components', 'data'),
@@ -102,7 +102,7 @@ function run() {
 
   const pagesDir = readdirDeep(path.resolve(`docs/pages/components/data-grid`));
   pagesDir.forEach((filePath) => {
-    const match = filePath.match(/^(.*)\/[^/]+\.(ts|js|tsx|md|json)$/);
+    const match = filePath.match(/^(.*)\/[^/]+\.(ts|js|tsx|md|json|tsx\.preview)$/);
     const info = match
       ? {
           directory: match[1].replace('components/data-grid', 'x/react-data-grid'),

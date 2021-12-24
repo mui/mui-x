@@ -7,6 +7,7 @@ LicenseInfo.setLicenseKey(process.env.NEXT_PUBLIC_MUI_LICENSE);
 import 'docs/src/modules/components/bootstrap';
 // --- Post bootstrap -----
 import pages from 'docsx/src/pages'; // DO NOT REMOVE
+import dataGridPages from 'docsx/data/data-grid/pages'; // DO NOT REMOVE
 import XWrapper from 'docsx/src/modules/XWrapper'; // DO NOT REMOVE
 import * as React from 'react';
 import find from 'lodash/find';
@@ -241,7 +242,14 @@ function AppWrapper(props) {
     }
   }, []);
 
-  const activePage = findActivePage(pages, router.pathname);
+  // eslint-disable will be removed once docs restructure is done
+  // eslint-disable-next-line prefer-const
+  let productPages = pages;
+  if (router.asPath.startsWith('/x/react-data-grid')) {
+    productPages = dataGridPages;
+  }
+
+  const activePage = findActivePage(productPages, router.pathname);
 
   let fonts = [];
   if (router.pathname.match(/onepirate/)) {
@@ -259,7 +267,7 @@ function AppWrapper(props) {
       </NextHead>
       <UserLanguageProvider defaultUserLanguage={pageProps.userLanguage}>
         <CodeVariantProvider>
-          <PageContext.Provider value={{ activePage, pages }}>
+          <PageContext.Provider value={{ activePage, pages: productPages }}>
             <ThemeProvider>
               <DocsStyledEngineProvider cacheLtr={emotionCache}>
                 <XWrapper>{children}</XWrapper>
