@@ -1,16 +1,15 @@
 import { SvgIconProps } from '@mui/material/SvgIcon';
 import * as React from 'react';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { GridSortDirection } from '../../models/gridSortModel';
 
 export const GridColumnUnsortedIcon = React.memo(function GridColumnHeaderSortIcon(
   props: SvgIconProps,
 ) {
   const rootProps = useGridRootProps();
-  const nextSortDirection: GridSortDirection = props['data-nextsortdirection'];
+  const nextSortDirection = props['aria-sort'];
 
   const Icon =
-    nextSortDirection === 'asc'
+    nextSortDirection === 'ascending'
       ? rootProps.components.ColumnSortedAscendingIcon
       : rootProps.components.ColumnSortedDescendingIcon;
 

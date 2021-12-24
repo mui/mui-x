@@ -45,9 +45,8 @@ function getIcon(
   } else {
     Icon = icons.ColumnUnsortedIcon;
     const [nextSortDirection] = sortingOrder;
-    return Icon ? (
-      <Icon fontSize="small" className={className} data-nextsortdirection={nextSortDirection} />
-    ) : null;
+    const ariaSort = nextSortDirection === 'asc' ? 'ascending' : 'descending';
+    return Icon ? <Icon fontSize="small" className={className} aria-sort={ariaSort} /> : null;
   }
   return Icon ? <Icon fontSize="small" className={className} /> : null;
 }
