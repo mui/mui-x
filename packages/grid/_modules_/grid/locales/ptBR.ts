@@ -119,8 +119,8 @@ const ptBRGrid: Partial<GridLocaleText> = {
 
   // Grouping columns
   groupingColumnHeaderName: 'Grupo',
-  groupColumn: name => `Agrupar por ${name}`,
-  unGroupColumn: name => `Parar agrupamento por ${name}`,
+  groupColumn: (name) => `Agrupar por ${name}`,
+  unGroupColumn: (name) => `Parar agrupamento por ${name}`,
 };
 
 export const ptBR: Localization = getGridLocalization(ptBRGrid, ptBRCore);
