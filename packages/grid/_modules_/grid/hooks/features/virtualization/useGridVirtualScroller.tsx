@@ -16,6 +16,7 @@ import { GridEventListener, GridEvents } from '../../../models/events';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { clamp } from '../../../utils/utils';
 import { GridRenderContext } from '../../../models';
+import { gridClasses } from '../../../gridClasses';
 
 // Uses binary search to avoid looping through all possible positions
 export function getIndexFromScroll(
@@ -269,9 +270,11 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
 
     const rows: JSX.Element[] = [];
 
+    const isEmptySpace = nextRenderContext.lastRowIndex >= currentPage.rows.length;
+
     for (let i = 0; i < renderedRows.length; i += 1) {
       const { id, model } = renderedRows[i];
-
+      const isLastRow = i === renderedRows.length - 1;
       rows.push(
         <rootProps.components.Row
           key={id}
@@ -288,6 +291,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
           selected={selectionLookup[id] !== undefined}
           index={currentPage.range.firstRowIndex + nextRenderContext.firstRowIndex! + i}
           containerWidth={availableSpace}
+          className={isEmptySpace && isLastRow && gridClasses['row--lastBeforeEmpty']}
           {...rootProps.componentsProps?.row}
         />,
       );

@@ -212,6 +212,9 @@ export const GridRootStyles = styled('div', {
           },
         },
       },
+      [`&:last-child:not(.${gridClasses['row--lastBeforeEmpty']}) .${gridClasses.cell}`]: {
+        borderBottom: 'none',
+      },
     },
     [`& .${gridClasses.cell}`]: {
       display: 'flex',
