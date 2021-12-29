@@ -1,6 +1,8 @@
-// @eslint/eslintrc uses the presence of `document` to detect if it's on node or web.
-// By having a document but not a real browser, the tests here fail.
-// TODO setup JSDOM only before those tests that need it.
+// The polyfill of `import.meta.url` used @eslint/eslintrc tests the presence
+// of `document` to detect if it's on node or web. However, JSDOM sets `document`
+// so it thinks it's on the web and can't import correctly other modules.
+// The workaround here resets the `document` to make it detect that it's on node.
+// It can removed once this repo became an ESM package.
 const originalDocument = global.document;
 global.document = undefined;
 
