@@ -18,7 +18,7 @@ function checkIsAccessingMember(maybeMemberExpression, propertyName) {
 function reportIfDirectlyAccessingState(node, context, nodeToReport = node) {
   const maybeApiRef = checkIsAccessingMember(checkIsAccessingMember(node, 'state'), 'current');
 
-  if (maybeApiRef?.type !== AST_NODE_TYPES.Identifier) {
+  if (maybeApiRef && maybeApiRef.type !== AST_NODE_TYPES.Identifier) {
     return;
   }
 
@@ -28,7 +28,7 @@ function reportIfDirectlyAccessingState(node, context, nodeToReport = node) {
   const originalNode = parserServices.esTreeNodeToTSNodeMap.get(maybeApiRef);
   const nodeType = checker.getTypeAtLocation(originalNode);
 
-  if (nodeType.aliasSymbol?.escapedName === 'GridApiRef') {
+  if (nodeType.aliasSymbol && nodeType.aliasSymbol.escapedName === 'GridApiRef') {
     context.report({ node: nodeToReport, messageId: 'direct-access' });
   }
 }
@@ -50,7 +50,7 @@ const rule = createESLintRule({
         // We're only interested in the nodes after it.
         // apiRef.current.state.rows
         // ^^^^^^^^^^^^^^^^^^^^
-        if (node.parent?.type === AST_NODE_TYPES.MemberExpression) {
+        if (node.parent && node.parent.type === AST_NODE_TYPES.MemberExpression) {
           reportIfDirectlyAccessingState(node, context);
         }
       },
