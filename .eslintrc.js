@@ -1,4 +1,4 @@
-const baseline = require('@material-ui/monorepo/.eslintrc');
+const baseline = require('@mui/monorepo/.eslintrc');
 const path = require('path');
 
 module.exports = {
@@ -20,7 +20,7 @@ module.exports = {
     'import/prefer-default-export': 'off',
     // TODO move rule into the main repo once it has upgraded
     '@typescript-eslint/return-await': 'off',
-    // TODO move rule into main repo to allow deep @material-ui/monorepo imports
+    // TODO move rule into main repo to allow deep @mui/monorepo imports
     'no-restricted-imports': 'off',
     'jsdoc/require-param': ['error', { contexts: ['TSFunctionType'] }],
     'jsdoc/require-param-type': ['error', { contexts: ['TSFunctionType'] }],

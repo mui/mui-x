@@ -22,7 +22,7 @@ defaults: &defaults
     # expose it globally otherwise we have to thread it from each job to the install command
     BROWSERSTACK_FORCE: << pipeline.parameters.browserstack-force >>
     REACT_DIST_TAG: << parameters.react-dist-tag >>
-  working_directory: /tmp/material-ui-x
+  working_directory: /tmp/mui
   docker:
     - image: circleci/node:12
 # CircleCI has disabled the cache across forks for security reasons.

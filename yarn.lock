@@ -2312,10 +2312,6 @@
   dependencies:
     "@babel/runtime" "^7.14.8"
 
-"@material-ui/monorepo@https://github.com/mui-org/material-ui.git#master":
-  version "5.2.6"
-  resolved "https://github.com/mui-org/material-ui.git#dc3b69664f8c27acbac56e249e81ae8e761363ac"
-
 "@material-ui/private-theming@5.0.0-beta.5":
   version "5.0.0-beta.5"
   resolved "https://registry.yarnpkg.com/@material-ui/private-theming/-/private-theming-5.0.0-beta.5.tgz#b8168bd15a609a78bf411e5afac2f38b513b5f18"
@@ -2465,6 +2461,10 @@
     prop-types "^15.7.2"
     react-is "^17.0.2"
     react-transition-group "^4.4.2"
+
+"@mui/monorepo@https://github.com/mui-org/material-ui.git#master":
+  version "5.2.6"
+  resolved "https://github.com/mui-org/material-ui.git#dc3b69664f8c27acbac56e249e81ae8e761363ac"
 
 "@mui/private-theming@^5.2.3":
   version "5.2.3"

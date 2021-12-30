@@ -29,8 +29,8 @@ const defaultAlias = {
   '@mui/x-data-grid-generator': resolveAliasPath('./packages/grid/x-data-grid-generator/src'),
   '@mui/x-data-grid-pro': resolveAliasPath('./packages/grid/x-data-grid-pro/src'),
   '@mui/x-license-pro': resolveAliasPath('./packages/x-license-pro/src'),
-  'typescript-to-proptypes': '@material-ui/monorepo/packages/typescript-to-proptypes/src',
-  docs: resolveAliasPath('./node_modules/@material-ui/monorepo/docs'),
+  'typescript-to-proptypes': '@mui/monorepo/packages/typescript-to-proptypes/src',
+  docs: resolveAliasPath('./node_modules/@mui/monorepo/docs'),
 };
 
 module.exports = {
