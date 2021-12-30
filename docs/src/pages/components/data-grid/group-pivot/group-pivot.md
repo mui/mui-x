@@ -165,7 +165,13 @@ On the other hand, if you only want to initialize the grid with some rows alread
 
 {{"demo": "pages/components/data-grid/group-pivot/ControlMasterDetail.js", "bg": "inline", "defaultCodeOpen": false}}
 
-<!-- TODO ### Rendering a form as row detail -->
+### Using a form as detail panel
+
+As an alternative to the built-in [row editing](/components/data-grid/editing/#row-editing), a form component can be rendered inside the detail panel, allowing to edit the current row values.
+
+The following demo integrates with [react-hook-form](https://react-hook-form.com/), but other form libraries can also be used instead.
+
+{{"demo": "pages/components/data-grid/group-pivot/FormDetailPanel.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ### Customize the detail panel toggle
 
