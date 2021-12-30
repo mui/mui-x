@@ -86,7 +86,7 @@
     {
       "groupName": "monorepo",
       "matchPackageNames": ["@material-ui/monorepo"],
-      "matchDatasources": ["git-refs"]
+      "matchUpdateTypes": ["lockFileMaintenance"]
     }
   ],
   "postUpdateOptions": ["yarnDedupeHighest"],
