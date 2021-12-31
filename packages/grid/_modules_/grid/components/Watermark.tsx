@@ -4,11 +4,11 @@ import { useLicenseVerifier, LicenseStatus } from '@mui/x-license-pro';
 function getLicenseErrorMessage(licenseStatus: LicenseStatus) {
   switch (licenseStatus) {
     case LicenseStatus.Expired:
-      return 'MUI X License Expired';
+      return 'MUI X License key expired';
     case LicenseStatus.Invalid:
-      return 'MUI X Invalid License';
+      return 'MUI X Invalid license key';
     case LicenseStatus.NotFound:
-      return 'MUI X Unlicensed product';
+      return 'MUI X Missing license key';
     default:
       throw new Error('MUI: Unhandled license status.');
   }
