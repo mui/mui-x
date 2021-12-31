@@ -225,13 +225,9 @@ For instance, if you have a one-year license (default), you are not licensed to 
 
 ## Support
 
-For crowdsourced technical questions from expert MUI devs in our community. Also visited by the MUI Core team.
-
-[Post a question](https://stackoverflow.com/questions/tagged/mui)
-
 ### GitHub
 
-We use GitHub issues exclusively as a bug and feature request tracker. If you think you have found a bug, or have a new feature idea, please start by making sure it hasn't already been [reported or fixed](https://github.com/mui-org/material-ui-x/issues?utf8=%E2%9C%93&q=is%3Aopen+is%3Aclosed). You can search through existing issues and pull requests to see if someone has reported one similar to yours.
+We use GitHub issues as a bug and feature request tracker. If you think you have found a bug, or have a new feature idea, please start by making sure it hasn't already been [reported or fixed](https://github.com/mui-org/material-ui-x/issues?utf8=%E2%9C%93&q=is%3Aopen+is%3Aclosed). You can search through existing issues and pull requests to see if someone has reported one similar to yours.
 
 [Open an issue](https://github.com/mui-org/material-ui-x/issues/new/choose)
 
@@ -242,9 +238,22 @@ StackOverflow is also visited from time to time by the maintainers of MUI.
 
 [Post a question](https://stackoverflow.com/questions/tagged/mui)
 
-### Enterprise support
+### Professional support
 
-We provide a [private support channel](https://support.mui.com/hc/en-us) for enterprise customers.
+When purchasing an MUI X Pro or Premium license, you get access to professional support for a limited duration.
+This support service is available on multiple channels.
+The recommended channel to open new issues is GitHub issues.
+If your support case has the need to share private information, you can also use Zendesk.
+
+- **MUI X Pro**: No SLAs is provided but MUI's maintainers give these issues more attention than the ones from the Community plan. The channels:
+  - GitHub: [Open a new issue](https://github.com/mui-org/material-ui-x/issues/new?assignees=&labels=status%3A+needs+triage%2Cpro+plan%2Cquestion&template=3.pro-support.yml&title=%5Bquestion%5D+).
+  - Zendesk: [Open a new private issue](https://support.mui.com/hc/en-us/requests/new?tf_360023797420=mui_x) or send an email at x@mui.com.
+- **MUI X Premium**: Same as MUI X Pro with Priority over Pro and a 48 hours SLA for the first answer.
+  - GitHub: this plan is not available yet
+  - Zendesk: this plan is not available yet
+- **MUI X Premium priority**: Same as MUI X Premium but with a 24 hours SLA for the first answer and a pre-screening in under 4 hours.
+  - GitHub: this plan is not available yet
+  - Zendesk: this plan is not available yet
 
 ## Roadmap
 
