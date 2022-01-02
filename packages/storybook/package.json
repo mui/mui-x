@@ -27,7 +27,7 @@
     "@storybook/manager-webpack5": "^6.4.9",
     "react": "^17.0.2",
     "react-is": "^17.0.2",
-    "rxjs": "^7.4.0",
+    "rxjs": "^7.5.1",
     "webpack": "^5.65.0"
   },
   "devDependencies": {
