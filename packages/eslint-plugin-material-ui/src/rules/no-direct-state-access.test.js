@@ -1,4 +1,4 @@
-// The polyfill of `import.meta.url` used @eslint/eslintrc tests the presence
+// The polyfill of `import.meta.url` used in @eslint/eslintrc tests the presence
 // of `document` to detect if it's on node or web. However, JSDOM sets `document`
 // so it thinks it's on the web and can't import correctly other modules.
 // The workaround here resets the `document` to make it detect that it's on node.
