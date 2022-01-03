@@ -860,34 +860,58 @@ describe('<DataGridPro /> - Edit Rows', () => {
     });
   });
 
-  it('should keep the right type', async () => {
-    // TODO create a separate group for the "number" column type tests
-    const Test = (props: Partial<GridComponentProps>) => {
-      apiRef = useGridApiRef();
-      return (
-        <div style={{ width: 300, height: 300 }}>
-          <DataGridPro
-            {...baselineProps}
-            apiRef={apiRef}
-            columns={[{ field: 'year', type: 'number', editable: true }]}
-            {...props}
-          />
-        </div>
-      );
-    };
-    render(<Test />);
-    expect(screen.queryAllByRole('row')).to.have.length(4);
-    const cell = getCell(0, 0);
-    cell.focus();
-    fireEvent.doubleClick(cell);
-    const input = cell.querySelector('input')!;
-    expect(input.value).to.equal('1941');
-    fireEvent.change(input, { target: { value: '1942' } });
+  describe('column type: number', () => {
+    it('should keep the right type', async () => {
+      const Test = (props: Partial<GridComponentProps>) => {
+        apiRef = useGridApiRef();
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGridPro
+              {...baselineProps}
+              apiRef={apiRef}
+              columns={[{ field: 'year', type: 'number', editable: true }]}
+              {...props}
+            />
+          </div>
+        );
+      };
+      render(<Test />);
+      expect(screen.queryAllByRole('row')).to.have.length(4);
+      const cell = getCell(0, 0);
+      cell.focus();
+      fireEvent.doubleClick(cell);
+      const input = cell.querySelector('input')!;
+      expect(input.value).to.equal('1941');
+      fireEvent.change(input, { target: { value: '1942' } });
 
-    fireEvent.keyDown(input, { key: 'Enter' });
-    await waitFor(() => {
-      expect(cell).to.have.text('1,942');
-      expect(apiRef.current.getRow(baselineProps.rows[0].id)!.year).to.equal(1942);
+      fireEvent.keyDown(input, { key: 'Enter' });
+      await waitFor(() => {
+        expect(cell).to.have.text('1,942');
+        expect(apiRef.current.getRow(baselineProps.rows[0].id)!.year).to.equal(1942);
+      });
+    });
+
+    it('should allow to enter 0', async () => {
+      const Test = (props: Partial<GridComponentProps>) => {
+        apiRef = useGridApiRef();
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGridPro
+              {...baselineProps}
+              apiRef={apiRef}
+              columns={[{ field: 'year', type: 'number', editable: true }]}
+              {...props}
+            />
+          </div>
+        );
+      };
+      render(<Test />);
+      const cell = getCell(0, 0);
+      fireEvent.mouseUp(cell);
+      fireEvent.doubleClick(cell);
+      const input = cell.querySelector('input')!;
+      fireEvent.change(input, { target: { value: '0' } });
+      expect(input.value).to.equal('0');
     });
   });
 
