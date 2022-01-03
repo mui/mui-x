@@ -6,7 +6,7 @@ This project is used when running the following command:
 yarn browser
 ```
 
-It is suppose to give developers comparable values between running different scenarios inside the browser, that can be find the `./scenarios` folder.
+It is supposed to give developers comparable values between running different scenarios inside the browser, that can be found in the `./scenarios` folder.
 
 You should use these numbers exclusively for comparing performance between different scenarios, not as absolute values.
 
