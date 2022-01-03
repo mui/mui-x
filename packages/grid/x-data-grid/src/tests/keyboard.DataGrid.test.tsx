@@ -467,4 +467,22 @@ describe('<DataGrid /> - Keyboard', () => {
     const row = getRow(0);
     expect(row).to.have.class('Mui-selected');
   });
+
+  it('should not rerender when pressing a key inside an already focused cell', () => {
+    const renderCell = spy(() => <input type="text" data-testid="custom-input" />);
+    const columns = [{ field: 'name', renderCell }];
+    const rows = [{ id: 1, name: 'John' }];
+    render(
+      <div style={{ width: 300, height: 300 }}>
+        <DataGrid rows={rows} columns={columns} />
+      </div>,
+    );
+    expect(renderCell.callCount).to.equal(2);
+    const input = screen.getByTestId('custom-input');
+    input.focus();
+    fireEvent.keyDown(input, { key: 'a' });
+    expect(renderCell.callCount).to.equal(4);
+    fireEvent.keyDown(input, { key: 'b' });
+    expect(renderCell.callCount).to.equal(4);
+  });
 });
