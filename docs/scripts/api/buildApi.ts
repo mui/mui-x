@@ -94,7 +94,7 @@ async function run(argv: { outputDirectory?: string }) {
   });
 
   buildSelectorsDocumentation({
-    project: dataGridProProject,
+    project: projects.get('x-data-grid-pro')!,
     outputDirectory,
   });
 
