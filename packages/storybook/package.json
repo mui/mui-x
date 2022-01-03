@@ -27,11 +27,11 @@
     "@storybook/manager-webpack5": "^6.4.9",
     "react": "^17.0.2",
     "react-is": "^17.0.2",
-    "rxjs": "^7.4.0",
+    "rxjs": "^7.5.1",
     "webpack": "^5.65.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.16.5",
+    "@babel/core": "^7.16.7",
     "@storybook/addon-a11y": "^6.4.9",
     "@storybook/addon-actions": "^6.4.9",
     "@storybook/addon-console": "^1.2.3",

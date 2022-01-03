@@ -13,7 +13,6 @@ import {
 } from '../../../models/gridRows';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
-import { useGridState } from '../../utils/useGridState';
 import { useGridStateInit } from '../../utils/useGridStateInit';
 import { GridRowsState } from './gridRowsState';
 import {
@@ -161,8 +160,6 @@ export const useGridRows = (
     return { ...state, rows: getRowsStateFromCache(rowsCache.current, apiRef) };
   });
 
-  const [, setGridState, forceUpdate] = useGridState(apiRef);
-
   const getRow = React.useCallback<GridRowApi['getRow']>(
     (id) => gridRowsLookupSelector(apiRef.current.state)[id] ?? null,
     [apiRef],
@@ -173,12 +170,12 @@ export const useGridRows = (
       const run = () => {
         rowsCache.current.timeout = null;
         rowsCache.current.lastUpdateMs = Date.now();
-        setGridState((state) => ({
+        apiRef.current.setState((state) => ({
           ...state,
           rows: getRowsStateFromCache(rowsCache.current, apiRef),
         }));
         apiRef.current.publishEvent(GridEvents.rowsSet);
-        forceUpdate();
+        apiRef.current.forceUpdate();
       };
 
       if (rowsCache.current.timeout) {
@@ -202,7 +199,7 @@ export const useGridRows = (
 
       run();
     },
-    [apiRef, forceUpdate, setGridState, rowsCache, props.throttleRowsMs],
+    [apiRef, rowsCache, props.throttleRowsMs],
   );
 
   const setRows = React.useCallback<GridRowApi['setRows']>(
@@ -308,7 +305,7 @@ export const useGridRows = (
         throw new Error(`MUI: No row with id #${id} found`);
       }
       const newNode: GridRowTreeNodeConfig = { ...currentNode, childrenExpanded: isExpanded };
-      setGridState((state) => {
+      apiRef.current.setState((state) => {
         return {
           ...state,
           rows: {
@@ -317,10 +314,10 @@ export const useGridRows = (
           },
         };
       });
-      forceUpdate();
+      apiRef.current.forceUpdate();
       apiRef.current.publishEvent(GridEvents.rowExpansionChange, newNode);
     },
-    [apiRef, setGridState, forceUpdate],
+    [apiRef],
   );
 
   const getRowNode = React.useCallback<GridRowApi['getRowNode']>(
