@@ -1,7 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import MenuItem from '@mui/material/MenuItem';
-import Divider from '@mui/material/Divider';
 import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
 import { GridColDef } from '../../../models/colDef/gridColDef';
 import { useGridSelector } from '../../../hooks/utils/useGridSelector';
@@ -13,36 +12,16 @@ import {
 } from '../../../hooks/features/rowGrouping/gridRowGroupingUtils';
 import { gridColumnLookupSelector } from '../../../hooks/features/columns/gridColumnsSelector';
 
-interface GridGroupingColumnsMenuItemsProps {
+interface GridRowGroupingColumnMenuItemsProps {
   column?: GridColDef;
   onClick?: (event: React.MouseEvent<any>) => void;
 }
 
-const GridRowGroupingMenuItems = (props: GridGroupingColumnsMenuItemsProps) => {
+const GridRowGroupingColumnMenuItems = (props: GridRowGroupingColumnMenuItemsProps) => {
   const { column, onClick } = props;
   const apiRef = useGridApiContext();
   const rowGroupingModel = useGridSelector(apiRef, gridRowGroupingSanitizedModelSelector);
   const columnsLookup = useGridSelector(apiRef, gridColumnLookupSelector);
-
-  const isGrouped = React.useMemo(
-    () => column?.field && rowGroupingModel.includes(column.field),
-    [column, rowGroupingModel],
-  );
-
-  const renderGroupingMenuItem = (field: string) => {
-    const name = columnsLookup[field].headerName ?? field;
-
-    const groupColumn = (event: React.MouseEvent<HTMLElement>) => {
-      apiRef.current.addRowGroupingCriteria(field);
-      if (onClick) {
-        onClick(event);
-      }
-    };
-
-    return (
-      <MenuItem onClick={groupColumn}>{apiRef.current.getLocaleText('groupColumn')(name)}</MenuItem>
-    );
-  };
 
   const renderUnGroupingMenuItem = (field: string) => {
     const ungroupColumn = (event: React.MouseEvent<HTMLElement>) => {
@@ -61,50 +40,18 @@ const GridRowGroupingMenuItems = (props: GridGroupingColumnsMenuItemsProps) => {
     );
   };
 
-  if (!column) {
+  if (!column || !isGroupingColumn(column.field)) {
     return null;
   }
 
-  if (isGroupingColumn(column.field)) {
-    if (column.field === GROUPING_COLUMN_SINGLE) {
-      return (
-        <React.Fragment>
-          <Divider />
-          {rowGroupingModel.map(renderUnGroupingMenuItem)}
-        </React.Fragment>
-      );
-    }
-
-    return (
-      <React.Fragment>
-        <Divider />
-        {renderUnGroupingMenuItem(getGroupingCriteriaFieldFromGroupingColDefField(column.field)!)}
-      </React.Fragment>
-    );
+  if (column.field === GROUPING_COLUMN_SINGLE) {
+    return <React.Fragment>{rowGroupingModel.map(renderUnGroupingMenuItem)}</React.Fragment>;
   }
 
-  if (isGrouped) {
-    return (
-      <React.Fragment>
-        <Divider />
-        {renderUnGroupingMenuItem(column.field)}
-      </React.Fragment>
-    );
-  }
-
-  if (!column.groupable) {
-    return null;
-  }
-
-  return (
-    <React.Fragment>
-      <Divider />
-      {renderGroupingMenuItem(column.field)}
-    </React.Fragment>
-  );
+  return renderUnGroupingMenuItem(getGroupingCriteriaFieldFromGroupingColDefField(column.field)!);
 };
 
-GridRowGroupingMenuItems.propTypes = {
+GridRowGroupingColumnMenuItems.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
@@ -113,4 +60,4 @@ GridRowGroupingMenuItems.propTypes = {
   onClick: PropTypes.func,
 } as any;
 
-export { GridRowGroupingMenuItems };
+export { GridRowGroupingColumnMenuItems };

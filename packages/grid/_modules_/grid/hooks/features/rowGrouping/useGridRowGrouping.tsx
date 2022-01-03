@@ -1,4 +1,5 @@
 import * as React from 'react';
+import Divider from '@mui/material/Divider';
 import type {
   GridApiRef,
   GridRowModel,
@@ -7,6 +8,7 @@ import type {
   GridKeyValue,
   GridCellValue,
   GridValueGetterSimpleParams,
+  GridStateColDef,
 } from '../../../models';
 import { GridEvents, GridEventListener } from '../../../models/events';
 import { GridRowGroupingPreProcessing } from '../../core/rowGroupsPerProcessing';
@@ -43,7 +45,8 @@ import { useGridStateInit } from '../../utils/useGridStateInit';
 import { GridRowGroupingApi, GridRowGroupingModel } from './gridRowGroupingInterfaces';
 import { useGridApiMethod } from '../../utils';
 import { gridColumnLookupSelector } from '../columns';
-import { GridRowGroupingMenuItems } from '../../../components/menu/columnMenu/GridRowGroupingMenuItems';
+import { GridRowGroupableColumnMenuItems } from '../../../components/menu/columnMenu/GridRowGroupableColumnMenuItems';
+import { GridRowGroupingColumnMenuItems } from '../../../components/menu/columnMenu/GridRowGroupingColumnMenuItems';
 
 /**
  * Only available in DataGridPro
@@ -301,12 +304,25 @@ export const useGridRowGrouping = (
   );
 
   const addColumnMenuButtons = React.useCallback(
-    (initialValue: JSX.Element[]) => {
+    (initialValue: JSX.Element[], columns: GridStateColDef) => {
       if (props.disableRowGrouping) {
         return initialValue;
       }
 
-      return [...initialValue, <GridRowGroupingMenuItems />];
+      let menuItems: React.ReactNode;
+      if (isGroupingColumn(columns.field)) {
+        menuItems = <GridRowGroupingColumnMenuItems />;
+      } else if (columns.groupable) {
+        menuItems = <GridRowGroupableColumnMenuItems />;
+      } else {
+        menuItems = null;
+      }
+
+      if (menuItems == null) {
+        return initialValue;
+      }
+
+      return [...initialValue, <Divider />, menuItems];
     },
     [props.disableRowGrouping],
   );
