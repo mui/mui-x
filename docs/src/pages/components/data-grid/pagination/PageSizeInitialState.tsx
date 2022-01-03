@@ -17,8 +17,6 @@ export default function PageSizeInitialState() {
             pageSize: 25,
           },
         }}
-        pageSize={5}
-        rowsPerPageOptions={[5]}
         {...data}
       />
     </div>

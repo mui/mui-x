@@ -28,15 +28,25 @@ export const useGridPageSize = (
   const logger = useGridLogger(apiRef, 'useGridPageSize');
   const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
 
-  useGridStateInit(apiRef, (state) => ({
-    ...state,
-    pagination: {
-      pageSize:
-        props.pageSize ??
-        props.initialState?.pagination?.pageSize ??
-        (props.autoPageSize ? 0 : 100),
-    },
-  }));
+  useGridStateInit(apiRef, (state) => {
+    let pageSize: number;
+    if (props.pageSize != null) {
+      pageSize = props.pageSize;
+    } else if (props.initialState?.pagination?.pageSize != null) {
+      pageSize = props.initialState.pagination.pageSize;
+    } else if (props.autoPageSize) {
+      pageSize = 0;
+    } else {
+      pageSize = 100;
+    }
+
+    return {
+      ...state,
+      pagination: {
+        pageSize,
+      },
+    };
+  });
   const [, setGridState, forceUpdate] = useGridState(apiRef);
 
   apiRef.current.unstable_updateControlState({
