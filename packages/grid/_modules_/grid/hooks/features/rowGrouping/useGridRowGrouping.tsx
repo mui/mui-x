@@ -458,7 +458,6 @@ export const useGridRowGrouping = (
     const lastGroupingColumnsModelApplied = sanitizedModelOnLastRowPreProcessing.current;
 
     if (!isDeepEqual(lastGroupingColumnsModelApplied, rowGroupingModel)) {
-        console.log(lastGroupingColumnsModelApplied, rowGroupingModel)
       sanitizedModelOnLastRowPreProcessing.current = rowGroupingModel;
 
       // Refresh the column pre-processing
