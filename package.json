@@ -74,7 +74,7 @@
     "@rollup/plugin-node-resolve": "^13.1.2",
     "@rollup/plugin-replace": "^3.0.0",
     "@testing-library/react": "^12.1.2",
-    "@types/babel__core": "^7.1.17",
+    "@types/babel__core": "^7.1.18",
     "@types/chai": "^4.3.0",
     "@types/chai-dom": "^0.0.12",
     "@types/enzyme": "^3.10.10",
