@@ -1498,14 +1498,14 @@
     react-test-renderer "^17.0.0"
     semver "^5.7.0"
 
-"@es-joy/jsdoccomment@0.13.0":
-  version "0.13.0"
-  resolved "https://registry.yarnpkg.com/@es-joy/jsdoccomment/-/jsdoccomment-0.13.0.tgz#90ffe2006981ff66d3f4fd2f05949487f0fca089"
-  integrity sha512-APVqbVPGOprb4BmjEnwbSzV+V2e/6DVIUnZG3zdW5uWXWkN0DKMCpiIy2TdBauoANKYO7RQpO8cTjIYNVSKwUA==
+"@es-joy/jsdoccomment@0.14.2":
+  version "0.14.2"
+  resolved "https://registry.yarnpkg.com/@es-joy/jsdoccomment/-/jsdoccomment-0.14.2.tgz#16f5411679066b277cf6d9e8c94a7e576aca1b55"
+  integrity sha512-812igKXDcLEdkwUbJvnhzMy88dBBiDeaf3mMF1jnQwclIObu5UQB8ow1KAvDRN1FQqpB+IsZnpmRA0jZ6KGt3g==
   dependencies:
     comment-parser "1.3.0"
     esquery "^1.4.0"
-    jsdoc-type-pratt-parser "2.0.0"
+    jsdoc-type-pratt-parser "2.0.2"
 
 "@eslint/eslintrc@^1.0.5":
   version "1.0.5"
@@ -9083,17 +9083,17 @@ eslint-plugin-import@^2.25.3:
     resolve "^1.20.0"
     tsconfig-paths "^3.11.0"
 
-eslint-plugin-jsdoc@^37.4.0:
-  version "37.4.0"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-jsdoc/-/eslint-plugin-jsdoc-37.4.0.tgz#6e6eade5494150a392365f63bbd2fb88caeb8d0c"
-  integrity sha512-XWKMMHFq7eUdC8XMzuQSskevJvlHTDSAJm/2qtEZ7+qhZTZ0YjeqWaUn7KGdrmxLNqtWwtJ67LdIPgrYUZ5EoA==
+eslint-plugin-jsdoc@^37.5.1:
+  version "37.5.1"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-jsdoc/-/eslint-plugin-jsdoc-37.5.1.tgz#9ac0c8c4528112a3d1800796326e7f859f6ef1d9"
+  integrity sha512-WMv/Na5QdpMQao1MR3SgYpGFi2PSrhh/JljlErQru9ZYXf1j9oQVIVCELQV7jcyqKQ/svPqCyU8eMhet9dzP+w==
   dependencies:
-    "@es-joy/jsdoccomment" "0.13.0"
+    "@es-joy/jsdoccomment" "0.14.2"
     comment-parser "1.3.0"
     debug "^4.3.3"
     escape-string-regexp "^4.0.0"
     esquery "^1.4.0"
-    jsdoc-type-pratt-parser "^2.0.0"
+    jsdoc-type-pratt-parser "^2.0.2"
     regextras "^0.8.0"
     semver "^7.3.5"
     spdx-expression-parse "^3.0.1"
@@ -11913,10 +11913,10 @@ jsbn@~0.1.0:
   resolved "https://registry.yarnpkg.com/jsbn/-/jsbn-0.1.1.tgz#a5e654c2e5a2deb5f201d96cefbca80c0ef2f513"
   integrity sha1-peZUwuWi3rXyAdls77yoDA7y9RM=
 
-jsdoc-type-pratt-parser@2.0.0, jsdoc-type-pratt-parser@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/jsdoc-type-pratt-parser/-/jsdoc-type-pratt-parser-2.0.0.tgz#ec739a0868922515fcb179852e990e89b52b9044"
-  integrity sha512-sUuj2j48wxrEpbFjDp1sAesAxPiLT+z0SWVmMafyIINs6Lj5gIPKh3VrkBZu4E/Dv+wHpOot0m6H8zlHQjwqeQ==
+jsdoc-type-pratt-parser@2.0.2, jsdoc-type-pratt-parser@^2.0.2:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/jsdoc-type-pratt-parser/-/jsdoc-type-pratt-parser-2.0.2.tgz#5cb2542c6ed6c527b170a43b4f247e2d6237e158"
+  integrity sha512-gXN5CxeaI9WtYQYzpOO/CtTRfZppQlKxXRTIm73JuAX6kOGTQ7iZ0e+YB+b2m7Fk+gTYYxRtE1nqje7H6dqv8w==
 
 jsdom@^19.0.0:
   version "19.0.0"
