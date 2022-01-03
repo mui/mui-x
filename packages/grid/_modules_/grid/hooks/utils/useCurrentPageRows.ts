@@ -6,7 +6,6 @@ import {
 } from '../features/pagination/gridPaginationSelector';
 import { gridVisibleSortedRowEntriesSelector } from '../features/filter/gridFilterSelector';
 import type { GridApiRef, GridRowEntry, GridState } from '../../models';
-import { useGridState } from './useGridState';
 
 export const getCurrentPageRows = (
   state: GridState,
@@ -40,8 +39,7 @@ export const useCurrentPageRows = (
   apiRef: GridApiRef,
   props: Pick<GridComponentProps, 'pagination' | 'paginationMode'>,
 ) => {
-  const [state] = useGridState(apiRef);
-  const response = getCurrentPageRows(state, props);
+  const response = getCurrentPageRows(apiRef.current.state, props);
 
   return React.useMemo(
     () => ({
