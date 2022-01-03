@@ -4,12 +4,12 @@
   "properties": [
     {
       "name": "addRowGroupingCriteria",
-      "description": "Add the field to the rowGroupingModel.",
+      "description": "Adds the field to the row grouping model.",
       "type": "(groupingCriteriaField: string, groupingIndex?: number) => void"
     },
     {
       "name": "removeRowGroupingCriteria",
-      "description": "Remove the field from to rowGroupingModel.",
+      "description": "sRemove the field from the row grouping model.",
       "type": "(groupingCriteriaField: string) => void"
     },
     {

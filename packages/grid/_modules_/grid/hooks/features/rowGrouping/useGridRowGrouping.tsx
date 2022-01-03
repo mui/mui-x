@@ -227,7 +227,7 @@ export const useGridRowGrouping = (
         return [];
       }
 
-      const propGroupingColDef = props.groupingColDef;
+      const groupingColDefProp = props.groupingColDef;
 
       // We can't use `gridGroupingRowsSanitizedModelSelector` here because the new columns are not in the state yet
       const rowGroupingModel = gridRowGroupingModelSelector(apiRef.current.state).filter(
@@ -244,7 +244,7 @@ export const useGridRowGrouping = (
             createGroupingColDefForAllGroupingCriteria({
               apiRef,
               rowGroupingModel,
-              colDefOverride: getColDefOverrides(propGroupingColDef, rowGroupingModel),
+              colDefOverride: getColDefOverrides(groupingColDefProp, rowGroupingModel),
               columnsLookup: columnsState.lookup,
             }),
           ];
@@ -254,7 +254,7 @@ export const useGridRowGrouping = (
           return rowGroupingModel.map((groupingCriteria) =>
             createGroupingColDefForOneGroupingCriteria({
               groupingCriteria,
-              colDefOverride: getColDefOverrides(propGroupingColDef, [groupingCriteria]),
+              colDefOverride: getColDefOverrides(groupingColDefProp, [groupingCriteria]),
               groupedByColDef: columnsState.lookup[groupingCriteria],
               columnsLookup: columnsState.lookup,
             }),
@@ -458,6 +458,7 @@ export const useGridRowGrouping = (
     const lastGroupingColumnsModelApplied = sanitizedModelOnLastRowPreProcessing.current;
 
     if (!isDeepEqual(lastGroupingColumnsModelApplied, rowGroupingModel)) {
+        console.log(lastGroupingColumnsModelApplied, rowGroupingModel)
       sanitizedModelOnLastRowPreProcessing.current = rowGroupingModel;
 
       // Refresh the column pre-processing

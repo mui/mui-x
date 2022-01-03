@@ -142,7 +142,7 @@ When defined, this callback will always have the priority over the `defaultGroup
 
 ```tsx
 isGroupExpandedByDefault={
-    node => node.groupingField === 'company' && node.groupingKey === '20th Century Fox'
+  node => node.groupingField === 'company' && node.groupingKey === '20th Century Fox'
 }
 ```
 

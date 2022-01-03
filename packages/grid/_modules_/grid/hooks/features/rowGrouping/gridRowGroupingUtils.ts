@@ -133,15 +133,15 @@ export const filterRowTreeFromGroupingColumns = (
 };
 
 export const getColDefOverrides = (
-  propGroupingColDef: GridComponentProps['groupingColDef'],
+  groupingColDefProp: GridComponentProps['groupingColDef'],
   fields: string[],
 ) => {
-  if (typeof propGroupingColDef === 'function') {
-    return propGroupingColDef({
+  if (typeof groupingColDefProp === 'function') {
+    return groupingColDefProp({
       groupingName: GROUPING_COLUMNS_FEATURE_NAME,
       fields,
     });
   }
 
-  return propGroupingColDef;
+  return groupingColDefProp;
 };
