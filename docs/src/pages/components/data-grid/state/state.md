@@ -15,7 +15,7 @@ Some state keys can be initialized with the `initialState` prop.
 > If you need to fully control some models, use the control props instead (e.g. `prop.filterModel` or `prop.sortModel`).
 > More information on each feature documentation page.
 
-{{"demo": "pages/components/data-grid/state/InitialState.js", "bg": "inline", "hideToolbar": true}}
+{{"demo": "pages/components/data-grid/state/InitialState.js", "bg": "inline"}}
 
 ## Access the state [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
 
@@ -33,7 +33,7 @@ The simplest way to use a selector is to call it as a function with the state as
 const pageSize = gridPageSizeSelector(apiRef.current.state);
 ```
 
-{{"demo": "pages/components/data-grid/state/DirectSelector.js", "bg": "inline", "hideToolbar": true}}
+{{"demo": "pages/components/data-grid/state/DirectSelector.js", "bg": "inline"}}
 
 ### With `useGridSelector`
 
@@ -43,9 +43,9 @@ If you want to access sole state value in the render of your components, you can
 const pageSize = useGridSelector(apiRef, gridPageSizeSelector);
 ```
 
-> ⚠️ This hook can only be used inside the context of the grid. Otherwise, you will have an error saying that the state is not initialized during the first render.
+> ⚠️ This hook can only be used inside the context of the grid, such as custom components. Otherwise, you will have an error saying that the state is not initialized during the first render.
 
-{{"demo": "pages/components/data-grid/state/UseGridSelector.js", "bg": "inline", "hideToolbar": true}}
+{{"demo": "pages/components/data-grid/state/UseGridSelector.js", "bg": "inline"}}
 
 ### Catalog of selectors
 
