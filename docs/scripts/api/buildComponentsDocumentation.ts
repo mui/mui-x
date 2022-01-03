@@ -21,7 +21,14 @@ import {
 } from '@material-ui/monorepo/docs/packages/markdown';
 import { getLineFeed } from '@material-ui/monorepo/docs/scripts/helpers';
 import createGenerateClassName from '@mui/styles/createGenerateClassName';
-import { getJsdocDefaultValue, linkify, Project, writePrettifiedFile } from './utils';
+import {
+  DocumentedInterfaces,
+  getJsdocDefaultValue,
+  linkify,
+  Project,
+  Projects,
+  writePrettifiedFile,
+} from './utils';
 
 const generateClassName = createGenerateClassName();
 
@@ -179,7 +186,7 @@ const buildComponentDocumentation = async (options: {
   filename: string;
   project: Project;
   outputDirectory: string;
-  documentedInterfaces: Map<string, boolean>;
+  documentedInterfaces: DocumentedInterfaces;
   pagesMarkdown: ReadonlyArray<{
     components: readonly string[];
     filename: string;
@@ -454,21 +461,23 @@ Page.getInitialProps = () => {
 };
 
 interface BuildComponentsDocumentationOptions {
-  dataGridProject: Project;
-  dataGridProProject: Project;
+  projects: Projects;
   outputDirectory: string;
-  documentedInterfaces: Map<string, boolean>;
+  documentedInterfaces: DocumentedInterfaces;
 }
 
 export default async function buildComponentsDocumentation(
   options: BuildComponentsDocumentationOptions,
 ) {
-  const { outputDirectory, documentedInterfaces, dataGridProject, dataGridProProject } = options;
+  const { outputDirectory, documentedInterfaces, projects } = options;
+
+  const dataGridProProject = projects.get('x-data-grid-pro')!;
+  const dataGridProject = projects.get('x-data-grid')!;
 
   const componentsToGenerateDocs = [
     path.resolve(dataGridProject.workspaceRoot, 'packages/grid/x-data-grid/src/DataGrid.tsx'),
     path.resolve(
-      dataGridProject.workspaceRoot,
+      dataGridProProject.workspaceRoot,
       'packages/grid/x-data-grid-pro/src/DataGridPro.tsx',
     ),
   ];
