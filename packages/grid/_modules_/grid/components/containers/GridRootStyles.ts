@@ -12,6 +12,7 @@ export const GridRootStyles = styled('div', {
     { [`& .${gridClasses['cell--textCenter']}`]: styles['cell--textCenter'] },
     { [`& .${gridClasses['cell--textLeft']}`]: styles['cell--textLeft'] },
     { [`& .${gridClasses['cell--textRight']}`]: styles['cell--textRight'] },
+    // TODO: v6 - remove
     { [`& .${gridClasses['cell--withRenderer']}`]: styles['cell--withRenderer'] },
     { [`& .${gridClasses.cell}`]: styles.cell },
     { [`& .${gridClasses.cellCheckbox}`]: styles.cellCheckbox },
@@ -213,7 +214,8 @@ export const GridRootStyles = styled('div', {
       },
     },
     [`& .${gridClasses.cell}`]: {
-      display: 'block',
+      display: 'flex',
+      alignItems: 'center',
       overflow: 'hidden',
       textOverflow: 'ellipsis',
       whiteSpace: 'nowrap',
@@ -254,34 +256,18 @@ export const GridRootStyles = styled('div', {
       alignItems: 'center',
       gridGap: theme.spacing(1),
     },
-    [`& .${gridClasses['cell--withRenderer']}`]: {
-      display: 'flex',
-      alignItems: 'center',
-    },
     [`& .${gridClasses.withBorder}`]: {
       borderRight: `1px solid ${borderColor}`,
     },
     [`& .${gridClasses['cell--textLeft']}`]: {
-      textAlign: 'left',
+      justifyContent: 'flex-start',
     },
-    [`& .${gridClasses['cell--textLeft']}.${gridClasses['cell--withRenderer']}, & .${gridClasses['cell--textLeft']}.${gridClasses['cell--editing']}`]:
-      {
-        justifyContent: 'flex-start',
-      },
     [`& .${gridClasses['cell--textRight']}`]: {
-      textAlign: 'right',
+      justifyContent: 'flex-end',
     },
-    [`& .${gridClasses['cell--textRight']}.${gridClasses['cell--withRenderer']}, & .${gridClasses['cell--textRight']}.${gridClasses['cell--editing']}`]:
-      {
-        justifyContent: 'flex-end',
-      },
     [`& .${gridClasses['cell--textCenter']}`]: {
-      textAlign: 'center',
+      justifyContent: 'center',
     },
-    [`& .${gridClasses['cell--textCenter']}.${gridClasses['cell--withRenderer']}, & .${gridClasses['cell--textCenter']}.${gridClasses['cell--editing']}`]:
-      {
-        justifyContent: 'center',
-      },
     [`& .${gridClasses.columnHeaderDraggableContainer}`]: {
       display: 'flex',
       width: '100%',
