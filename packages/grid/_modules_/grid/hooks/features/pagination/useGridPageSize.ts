@@ -15,7 +15,6 @@ import { gridPageSizeSelector } from './gridPaginationSelector';
 import { gridDensityRowHeightSelector } from '../density';
 
 /**
- * @requires useGridControlState (method)
  * @requires useGridDimensions (event) - can be after
  * @requires useGridFilter (state)
  */

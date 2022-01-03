@@ -31,7 +31,7 @@ const viVNGrid: Partial<GridLocaleText> = {
   toolbarExport: 'Xuất',
   toolbarExportLabel: 'Xuất',
   toolbarExportCSV: 'Xuất CSV',
-  // toolbarExportPrint: 'Print',
+  toolbarExportPrint: 'In',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'Tìm kiếm',
@@ -58,16 +58,16 @@ const viVNGrid: Partial<GridLocaleText> = {
   filterOperatorIs: 'Là',
   filterOperatorNot: 'Không là',
   filterOperatorAfter: 'Trước',
-  // filterOperatorOnOrAfter: 'is on or after',
+  filterOperatorOnOrAfter: 'bằng hoặc sau',
   filterOperatorBefore: 'Sau',
-  // filterOperatorOnOrBefore: 'is on or before',
+  filterOperatorOnOrBefore: 'bằng hoặc trước',
   filterOperatorIsEmpty: 'Rỗng',
   filterOperatorIsNotEmpty: 'Khác rỗng',
 
   // Filter values text
-  // filterValueAny: 'any',
-  // filterValueTrue: 'true',
-  // filterValueFalse: 'false',
+  filterValueAny: 'bất kỳ giá trị nào',
+  filterValueTrue: 'Có',
+  filterValueFalse: 'Không',
 
   // Column menu text
   columnMenuLabel: 'Danh mục',
@@ -96,24 +96,24 @@ const viVNGrid: Partial<GridLocaleText> = {
     `${visibleCount.toLocaleString()} / ${totalCount.toLocaleString()}`,
 
   // Checkbox selection text
-  // checkboxSelectionHeaderName: 'Checkbox selection',
+  checkboxSelectionHeaderName: 'Tích vào ô trống',
 
   // Boolean cell text
-  // booleanCellTrueLabel: 'true',
-  // booleanCellFalseLabel: 'false',
+  booleanCellTrueLabel: 'Có',
+  booleanCellFalseLabel: 'Không',
 
   // Actions cell more text
   actionsCellMore: 'Thêm',
 
   // Column pinning text
-  // pinToLeft: 'Pin to left',
-  // pinToRight: 'Pin to right',
-  // unpin: 'Unpin',
+  pinToLeft: 'Ghim cột bên trái',
+  pinToRight: 'Ghim cột bên phải',
+  unpin: 'Bỏ ghim',
 
   // Tree Data
-  // treeDataGroupingHeaderName: 'Group',
-  // treeDataExpand: 'see children',
-  // treeDataCollapse: 'hide children',
+  treeDataGroupingHeaderName: 'Nhóm',
+  treeDataExpand: 'mở rộng',
+  treeDataCollapse: 'ẩn đi',
 };
 
 export const viVN: Localization = getGridLocalization(viVNGrid, viVNCore);

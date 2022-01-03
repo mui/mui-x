@@ -163,12 +163,20 @@ describe('<DataGrid /> - Layout & Warnings', () => {
           { id: 1, lastName: 'Snow', firstName: 'Jon' },
           { id: 2, lastName: 'Lannister', firstName: 'Cersei' },
         ];
-        render(
-          <div style={{ width: 300, height: 300 }}>
-            <DataGrid rows={rows} columns={columns} />
-          </div>,
-        );
-        expect(getColumnValues()).to.deep.equal(['Jon Snow', 'Cersei Lannister']);
+
+        expect(() => {
+          render(
+            <div style={{ width: 300, height: 300 }}>
+              <DataGrid rows={rows} columns={columns} />
+            </div>,
+          );
+
+          expect(getColumnValues()).to.deep.equal(['Jon Snow', 'Cersei Lannister']);
+        })
+          // @ts-expect-error need to migrate helpers to TypeScript
+          .toWarnDev(
+            'MUI: You are calling getValue. This method is deprecated and will be removed in the next major version.',
+          );
       });
 
       it('should support columns.valueGetter using direct row access', () => {

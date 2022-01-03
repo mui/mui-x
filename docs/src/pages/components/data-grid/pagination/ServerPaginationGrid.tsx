@@ -1,57 +1,76 @@
 import * as React from 'react';
-import { GridRowsProp, DataGrid } from '@mui/x-data-grid';
-import { useDemoData, GridDemoData } from '@mui/x-data-grid-generator';
+import { DataGrid, GridRowModel } from '@mui/x-data-grid';
+import { useDemoData } from '@mui/x-data-grid-generator';
 
-function loadServerRows(page: number, data: GridDemoData): Promise<any> {
-  return new Promise<any>((resolve) => {
+/**
+ * Simulates server data loading
+ */
+const loadServerRows = (page: number, pageSize: number, allRows: GridRowModel[]) =>
+  new Promise<GridRowModel[]>((resolve) => {
     setTimeout(() => {
-      resolve(data.rows.slice(page * 5, (page + 1) * 5));
-    }, Math.random() * 500 + 100); // simulate network latency
+      resolve(allRows.slice(page * pageSize, (page + 1) * pageSize));
+    }, Math.random() * 200 + 100); // simulate network latency
   });
+
+interface RowsState {
+  page: number;
+  pageSize: number;
+  rows: GridRowModel[];
+  loading: boolean;
 }
 
+/**
+ * TODO: Improve `useDemoData` to move the fake pagination inside it instead of "fetching" everything of slicing in the component
+ */
 export default function ServerPaginationGrid() {
   const { data } = useDemoData({
     dataSet: 'Commodity',
     rowLength: 100,
     maxColumns: 6,
   });
-  const [page, setPage] = React.useState(0);
-  const [rows, setRows] = React.useState<GridRowsProp>([]);
-  const [loading, setLoading] = React.useState<boolean>(false);
+
+  const [rowsState, setRowsState] = React.useState<RowsState>({
+    page: 0,
+    pageSize: 5,
+    rows: [],
+    loading: false,
+  });
 
   React.useEffect(() => {
     let active = true;
 
     (async () => {
-      setLoading(true);
-      const newRows = await loadServerRows(page, data);
+      setRowsState((prev) => ({ ...prev, loading: true }));
+      const newRows = await loadServerRows(
+        rowsState.page,
+        rowsState.pageSize,
+        data.rows,
+      );
 
       if (!active) {
         return;
       }
 
-      setRows(newRows);
-      setLoading(false);
+      setRowsState((prev) => ({ ...prev, loading: false, rows: newRows }));
     })();
 
     return () => {
       active = false;
     };
-  }, [page, data]);
+  }, [rowsState.page, rowsState.pageSize, data.rows]);
 
   return (
     <div style={{ height: 400, width: '100%' }}>
       <DataGrid
-        rows={rows}
         columns={data.columns}
         pagination
-        pageSize={5}
-        rowsPerPageOptions={[5]}
-        rowCount={100}
+        rowCount={data.rows.length}
+        {...rowsState}
         paginationMode="server"
-        onPageChange={(newPage) => setPage(newPage)}
-        loading={loading}
+        onPageChange={(page) => setRowsState((prev) => ({ ...prev, page }))}
+        onPageSizeChange={(pageSize) =>
+          setRowsState((prev) => ({ ...prev, pageSize }))
+        }
       />
     </div>
   );
