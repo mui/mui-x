@@ -1,5 +1,4 @@
 import { GridApiRef } from '../../models/api/gridApiRef';
-import { useGridState } from './useGridState';
 import { GridState } from '../../models/gridState';
 
 let warnedOnceStateNotInitialized = false;
@@ -17,6 +16,5 @@ export const useGridSelector = <T>(apiRef: GridApiRef, selector: (state: GridSta
     }
   }
 
-  const [state] = useGridState(apiRef);
-  return selector(state);
+  return selector(apiRef.current.state);
 };

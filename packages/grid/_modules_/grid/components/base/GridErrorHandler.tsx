@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { useGridState } from '../../hooks/utils/useGridState';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridLogger } from '../../hooks/utils/useGridLogger';
 import { GridMainContainer } from '../containers/GridMainContainer';
@@ -11,12 +10,12 @@ export function GridErrorHandler(props) {
   const apiRef = useGridApiContext();
   const logger = useGridLogger(apiRef, 'GridErrorHandler');
   const rootProps = useGridRootProps();
-  const [gridState] = useGridState(apiRef);
+  const error = apiRef.current.state.error;
 
   return (
     <ErrorBoundary
-      hasError={gridState.error != null}
-      componentProps={gridState.error}
+      hasError={error != null}
+      componentProps={error}
       api={apiRef}
       logger={logger}
       render={(errorProps) => (

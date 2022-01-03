@@ -7,7 +7,6 @@ import { getDataGridUtilityClass } from '../../../gridClasses';
 import { CursorCoordinates } from '../../../models/cursorCoordinates';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { useGridSelector } from '../../utils/useGridSelector';
-import { useGridState } from '../../utils/useGridState';
 import { gridColumnReorderDragColSelector } from './columnReorderSelector';
 import { GridComponentProps } from '../../../GridComponentProps';
 import { useGridStateInit } from '../../utils/useGridStateInit';
@@ -58,7 +57,6 @@ export const useGridColumnReorder = (
     columnReorder: { dragCol: '' },
   }));
 
-  const [, setGridState, forceUpdate] = useGridState(apiRef);
   const dragColField = useGridSelector(apiRef, gridColumnReorderDragColSelector);
   const dragColNode = React.useRef<HTMLElement | null>(null);
   const cursorPosition = React.useRef<CursorCoordinates>({
@@ -92,11 +90,11 @@ export const useGridColumnReorder = (
       dragColNode.current = event.currentTarget;
       dragColNode.current.classList.add(classes.columnHeaderDragging);
 
-      setGridState((state) => ({
+      apiRef.current.setState((state) => ({
         ...state,
         columnReorder: { ...state.columnReorder, dragCol: params.field },
       }));
-      forceUpdate();
+      apiRef.current.forceUpdate();
 
       removeDnDStylesTimeout.current = setTimeout(() => {
         dragColNode.current!.classList.remove(classes.columnHeaderDragging);
@@ -104,14 +102,7 @@ export const useGridColumnReorder = (
 
       originColumnIndex.current = apiRef.current.getColumnIndex(params.field, false);
     },
-    [
-      props.disableColumnReorder,
-      classes.columnHeaderDragging,
-      logger,
-      setGridState,
-      forceUpdate,
-      apiRef,
-    ],
+    [props.disableColumnReorder, classes.columnHeaderDragging, logger, apiRef],
   );
 
   const handleDragEnter = React.useCallback<
@@ -197,13 +188,13 @@ export const useGridColumnReorder = (
         originColumnIndex.current = null;
       }
 
-      setGridState((state) => ({
+      apiRef.current.setState((state) => ({
         ...state,
         columnReorder: { ...state.columnReorder, dragCol: '' },
       }));
-      forceUpdate();
+      apiRef.current.forceUpdate();
     },
-    [props.disableColumnReorder, logger, setGridState, forceUpdate, apiRef, dragColField],
+    [props.disableColumnReorder, logger, apiRef, dragColField],
   );
 
   useGridApiEventHandler(apiRef, GridEvents.columnHeaderDragStart, handleColumnHeaderDragStart);
