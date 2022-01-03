@@ -47,6 +47,18 @@ In the example below columns are only sortable in descending or ascending order.
 
 {{"demo": "pages/components/data-grid/sorting/OrderSortingGrid.js", "bg": "inline"}}
 
+### Per-column sort order
+
+Sort order can be configured (and overridden) on a per-column basis by setting the `sortingOrder` property of the `GridColDef` interface:
+
+```tsx
+const columns: GridColDef = [
+  { field: 'quantity', sortingOrder: ['desc', 'asc', null] },
+];
+```
+
+{{"demo": "pages/components/data-grid/sorting/OrderSortingPerColumnGrid.js", "bg": "inline"}}
+
 ## Disable sorting
 
 By default, all columns are sortable.
