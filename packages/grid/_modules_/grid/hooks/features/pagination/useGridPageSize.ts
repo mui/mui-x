@@ -6,7 +6,6 @@ import { GridEvents } from '../../../models/events';
 import {
   useGridLogger,
   useGridApiMethod,
-  useGridState,
   useGridApiEventHandler,
   useGridSelector,
 } from '../../utils';
@@ -47,7 +46,6 @@ export const useGridPageSize = (
       },
     };
   });
-  const [, setGridState, forceUpdate] = useGridState(apiRef);
 
   apiRef.current.unstable_updateControlState({
     stateId: 'pageSize',
@@ -68,16 +66,16 @@ export const useGridPageSize = (
 
       logger.debug(`Setting page size to ${pageSize}`);
 
-      setGridState((state) => ({
+      apiRef.current.setState((state) => ({
         ...state,
         pagination: {
           ...state.pagination,
           pageSize,
         },
       }));
-      forceUpdate();
+      apiRef.current.forceUpdate();
     },
-    [apiRef, setGridState, forceUpdate, logger],
+    [apiRef, logger],
   );
 
   const pageSizeApi: GridPageSizeApi = {

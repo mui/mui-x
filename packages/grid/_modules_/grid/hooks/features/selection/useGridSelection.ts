@@ -8,7 +8,6 @@ import { GridRowId } from '../../../models/gridRows';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
-import { useGridState } from '../../utils/useGridState';
 import { gridRowsLookupSelector } from '../rows/gridRowsSelector';
 import { findParentElementFromClassName, isGridCellRoot } from '../../../utils/domUtils';
 import {
@@ -75,8 +74,6 @@ export const useGridSelection = (
   }, [props.selectionModel]);
 
   useGridStateInit(apiRef, (state) => ({ ...state, selection: propSelectionModel ?? [] }));
-
-  const [, setGridState, forceUpdate] = useGridState(apiRef);
 
   const ownerState = { classes: props.classes };
   const classes = useUtilityClasses(ownerState);
@@ -156,11 +153,11 @@ export const useGridSelection = (
       const currentModel = gridSelectionStateSelector(apiRef.current.state);
       if (currentModel !== model) {
         logger.debug(`Setting selection model`);
-        setGridState((state) => ({ ...state, selection: model }));
-        forceUpdate();
+        apiRef.current.setState((state) => ({ ...state, selection: model }));
+        apiRef.current.forceUpdate();
       }
     },
-    [apiRef, setGridState, forceUpdate, logger],
+    [apiRef, logger],
   );
 
   const isRowSelected = React.useCallback<GridSelectionApi['isRowSelected']>(
