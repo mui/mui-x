@@ -32,7 +32,6 @@ import {
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { allGridColumnsSelector } from '../columns/gridColumnsSelector';
 import { useGridLogger } from '../../utils/useGridLogger';
-import { useGridState } from '../../utils/useGridState';
 import { useGridSelector } from '../../utils/useGridSelector';
 import { useGridStateInit } from '../../utils/useGridStateInit';
 import { gridEditRowsStateSelector } from './gridEditRowsSelector';
@@ -68,7 +67,6 @@ export function useGridEditRows(
   const logger = useGridLogger(apiRef, 'useGridEditRows');
 
   useGridStateInit(apiRef, (state) => ({ ...state, editRows: {} }));
-  const [, setGridState, forceUpdate] = useGridState(apiRef);
   const focusTimeout = React.useRef<any>(null);
   const nextFocusedCell = React.useRef<GridCellParams | null>(null);
   const columns = useGridSelector(apiRef, allGridColumnsSelector);
@@ -134,7 +132,7 @@ export function useGridEditRows(
       }
 
       logger.debug(`Switching cell id: ${id} field: ${field} to mode: ${mode}`);
-      setGridState((state) => {
+      apiRef.current.setState((state) => {
         const newEditRowsState: GridEditRowsModel = { ...state.editRows };
         newEditRowsState[id] = { ...newEditRowsState[id] };
         if (mode === GridCellModes.Edit) {
@@ -147,13 +145,13 @@ export function useGridEditRows(
         }
         return { ...state, editRows: newEditRowsState };
       });
-      forceUpdate();
+      apiRef.current.forceUpdate();
       apiRef.current.publishEvent(
         GridEvents.cellModeChange,
         apiRef.current.getCellParams(id, field),
       );
     },
-    [apiRef, forceUpdate, logger, setGridState],
+    [apiRef, logger],
   );
 
   const setRowMode = React.useCallback<GridEditRowApi['setRowMode']>(
@@ -166,7 +164,7 @@ export function useGridEditRows(
         return;
       }
 
-      setGridState((state) => {
+      apiRef.current.setState((state) => {
         const newEditRowsState: GridEditRowsModel = { ...state.editRows };
         if (mode === GridRowModes.Edit) {
           newEditRowsState[id] = {};
@@ -181,9 +179,9 @@ export function useGridEditRows(
         }
         return { ...state, editRows: newEditRowsState };
       });
-      forceUpdate();
+      apiRef.current.forceUpdate();
     },
-    [apiRef, columns, forceUpdate, setGridState],
+    [apiRef, columns],
   );
 
   const getRowMode = React.useCallback<GridEditRowApi['getRowMode']>(
@@ -231,7 +229,7 @@ export function useGridEditRows(
     (params: GridEditCellPropsParams) => {
       const { id, field, props: editProps } = params;
       logger.debug(`Setting cell props on id: ${id} field: ${field}`);
-      setGridState((state) => {
+      apiRef.current.setState((state) => {
         const column = apiRef.current.getColumn(field);
         const parsedValue = column.valueParser
           ? column.valueParser(editProps.value, apiRef.current.getCellParams(id, field))
@@ -242,9 +240,9 @@ export function useGridEditRows(
         editRowsModel[id][field] = { ...editProps, value: parsedValue };
         return { ...state, editRows: editRowsModel };
       });
-      forceUpdate();
+      apiRef.current.forceUpdate();
     },
-    [apiRef, forceUpdate, logger, setGridState],
+    [apiRef, logger],
   );
 
   const handleEditCellPropsChange = React.useCallback<
@@ -292,11 +290,11 @@ export function useGridEditRows(
       const currentModel = gridEditRowsStateSelector(apiRef.current.state);
       if (currentModel !== model) {
         logger.debug(`Setting editRows model`);
-        setGridState((state) => ({ ...state, editRows: model }));
-        forceUpdate();
+        apiRef.current.setState((state) => ({ ...state, editRows: model }));
+        apiRef.current.forceUpdate();
       }
     },
-    [apiRef, forceUpdate, logger, setGridState],
+    [apiRef, logger],
   );
 
   const getEditRowsModel = React.useCallback<GridEditRowApi['getEditRowsModel']>(
