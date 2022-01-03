@@ -1,4 +1,5 @@
 import * as ts from 'typescript';
+import * as prettier from 'prettier';
 import kebabCase from 'lodash/kebabCase';
 import path from 'path';
 import { renderInline as renderMarkdownInline } from '@material-ui/monorepo/docs/packages/markdown';
@@ -8,14 +9,19 @@ import {
   getSymbolJSDocTags,
   linkify,
   Project,
+  Projects,
   stringifySymbol,
   writePrettifiedFile,
+  DocumentedInterfaces,
+  ProjectNames,
 } from './utils';
 
 interface ParsedObject {
   name: string;
+  project: ProjectNames;
   description?: string;
   properties: ParsedProperty[];
+  tags: { [tagName: string]: ts.JSDocTagInfo };
 }
 
 interface ParsedProperty {
@@ -28,22 +34,27 @@ interface ParsedProperty {
 }
 
 const INTERFACES_WITH_DEDICATED_PAGES = [
+  // apiRef
   'GridApi',
-  'GridColDef',
-  'GridCellParams',
-  'GridRowParams',
   'GridSelectionApi',
   'GridFilterApi',
   'GridSortApi',
   'GridPaginationApi',
   'GridCsvExportApi',
-  'GridCsvExportOptions',
-  'GridPrintExportApi',
-  'GridDisableVirtualizationApi',
-  'GridPrintExportOptions',
   'GridScrollApi',
   'GridEditRowApi',
   'GridColumnPinningApi',
+  'GridPrintExportApi',
+  'GridDisableVirtualizationApi',
+
+  // Params
+  'GridCellParams',
+  'GridRowParams',
+
+  // Others
+  'GridColDef',
+  'GridCsvExportOptions',
+  'GridPrintExportOptions',
 ];
 
 const parseProperty = (propertySymbol: ts.Symbol, project: Project): ParsedProperty => ({
@@ -55,9 +66,50 @@ const parseProperty = (propertySymbol: ts.Symbol, project: Project): ParsedPrope
   typeStr: stringifySymbol(propertySymbol, project),
 });
 
+const parseInterfaceSymbol = (symbol: ts.Symbol, project: Project): ParsedObject | null => {
+  let resolvedSymbol = symbol;
+
+  // If the export is done using `export type { XXX } from './module'`
+  // We must go to the root declaration
+  while (resolvedSymbol.declarations && ts.isExportSpecifier(resolvedSymbol.declarations[0])) {
+    if (ts.isExportSpecifier(symbol.declarations![0]!)) {
+      const sourceFile = project.checker.getSymbolAtLocation(
+        symbol.declarations![0].parent.parent.moduleSpecifier!,
+      );
+      const sourceFileDeclaration = sourceFile?.declarations?.find((el) =>
+        ts.isSourceFile(el),
+      ) as ts.SourceFile;
+      const exports = project.checker.getExportsOfModule(
+        project.checker.getSymbolAtLocation(sourceFileDeclaration)!,
+      );
+      resolvedSymbol = exports.find((el) => el.name === symbol.name)!;
+    }
+  }
+
+  const declaration = resolvedSymbol.declarations![0];
+  if (!ts.isInterfaceDeclaration(declaration) && !ts.isExportSpecifier(declaration)) {
+    return null;
+  }
+
+  const interfaceType = project.checker.getTypeAtLocation(declaration.name);
+  const properties = interfaceType
+    .getProperties()
+    .map((property) => parseProperty(property, project))
+    .filter((property) => !property.tags.ignore)
+    .sort((a, b) => a.name.localeCompare(b.name));
+
+  return {
+    name: symbol.name,
+    description: getSymbolDescription(resolvedSymbol, project),
+    properties,
+    tags: getSymbolJSDocTags(resolvedSymbol),
+    project: project.name,
+  };
+};
+
 function generateMarkdownFromProperties(
   object: ParsedObject,
-  documentedInterfaces: Map<string, boolean>,
+  documentedInterfaces: DocumentedInterfaces,
 ) {
   const hasDefaultValue = object.properties.some((property) => {
     return property.tags.default;
@@ -71,7 +123,7 @@ function generateMarkdownFromProperties(
 | Name | Type | Description |
 |:-----|:-----|:------------|`;
 
-  let text = `## Properties\n\n${headers}\n`;
+  let text = `${headers}\n`;
 
   object.properties.forEach((property) => {
     const defaultValue = property.tags.default?.text?.[0].text;
@@ -99,55 +151,85 @@ function generateMarkdownFromProperties(
   return text;
 }
 
-function generateImportStatement(object: ParsedObject) {
-  // TODO: Check if interface was exported
-  if (object.name === 'GridApi') {
-    return `\`\`\`js
-import { ${object.name} } from '@mui/x-data-grid-pro';
-\`\`\``;
-  }
+function generateImportStatement(objects: ParsedObject[], projects: Projects) {
+  let imports = '```js\n';
 
-  return `\`\`\`js
-import { ${object.name} } from '@mui/x-data-grid-pro';
-// or
-import { ${object.name} } from '@mui/x-data-grid';
-\`\`\``;
+  const projectImports = Array.from(projects.values())
+    .map((project) => {
+      const objectsInProject = objects.filter((object) => {
+        // TODO: Remove after opening the apiRef on the community plan
+        if (object.name === 'GridApi' && project.name === 'x-data-grid') {
+          return false;
+        }
+
+        return !!project.exports[object.name];
+      });
+
+      if (objectsInProject.length === 0) {
+        return null;
+      }
+
+      return `import {${objectsInProject.map((object) => object.name)}} from '@mui/${
+        project.name
+      }'`;
+    })
+    .filter((el): el is string => !!el);
+
+  imports += prettier.format(projectImports.join('\n// or\n'), {
+    singleQuote: true,
+    semi: false,
+    trailingComma: 'none',
+    parser: 'typescript',
+  });
+  imports += '\n```';
+
+  return imports;
 }
 
-function generateMarkdown(object: ParsedObject, documentedInterfaces: Map<string, boolean>) {
-  return [
-    `# ${object.name} Interface`,
-    '',
-    `<p class="description">${linkify(object.description, documentedInterfaces, 'html')}</p>`,
-    '',
-    '## Import',
-    '',
-    generateImportStatement(object),
-    '',
-    generateMarkdownFromProperties(object, documentedInterfaces),
-  ].join('\n');
+function generateMarkdown(
+  object: ParsedObject,
+  projects: Projects,
+  documentedInterfaces: DocumentedInterfaces,
+) {
+  const description = linkify(object.description, documentedInterfaces, 'html');
+  const imports = generateImportStatement([object], projects);
+
+  let text = `# ${object.name} Interface\n`;
+  text += `<p class="description">${description}</p>\n\n`;
+  text += '## Import\n\n';
+  text += `${imports}\n\n`;
+  text += '## Properties\n\n';
+  text += `${generateMarkdownFromProperties(object, documentedInterfaces)}`;
+
+  return text;
 }
 
 interface BuildInterfacesDocumentationOptions {
-  project: Project;
+  projects: Projects;
   outputDirectory: string;
 }
 
 export default function buildInterfacesDocumentation(options: BuildInterfacesDocumentationOptions) {
-  const { project, outputDirectory } = options;
+  const { projects, outputDirectory } = options;
 
-  const documentedInterfaces = new Map<string, true>();
-  INTERFACES_WITH_DEDICATED_PAGES.forEach((name) => {
-    const symbol = project.exports[name];
-    if (!symbol) {
-      throw new Error(`Can't find symbol for ${name}`);
+  const allProjectsName = Array.from(projects.keys());
+
+  const documentedInterfaces: DocumentedInterfaces = new Map();
+  INTERFACES_WITH_DEDICATED_PAGES.forEach((interfaceName) => {
+    const packagesWithThisInterface = allProjectsName.filter(
+      (projectName) => !!projects.get(projectName)!.exports[interfaceName],
+    );
+
+    if (packagesWithThisInterface.length === 0) {
+      throw new Error(`Can't find symbol for ${interfaceName}`);
     }
 
-    documentedInterfaces.set(name, true);
+    documentedInterfaces.set(interfaceName, packagesWithThisInterface);
   });
 
   const gridApiExtendsFrom: string[] = (
-    (project.exports.GridApi.declarations![0] as ts.InterfaceDeclaration).heritageClauses ?? []
+    (projects.get('x-data-grid-pro')!.exports.GridApi.declarations![0] as ts.InterfaceDeclaration)
+      .heritageClauses ?? []
   ).flatMap((clause) =>
     clause.types
       .map((type) => type.expression)
@@ -155,38 +237,22 @@ export default function buildInterfacesDocumentation(options: BuildInterfacesDoc
       .map((expression) => expression.escapedText),
   );
 
-  documentedInterfaces.forEach((_, interfaceName) => {
-    const interfaceSymbol = project.exports[interfaceName];
-    const interfaceDeclaration = interfaceSymbol.declarations![0];
+  documentedInterfaces.forEach((packagesWithThisInterface, interfaceName) => {
+    const project = projects.get(packagesWithThisInterface[0])!;
+    const symbol = project.exports[interfaceName];
+    const parsedInterface = parseInterfaceSymbol(symbol, project);
 
-    if (!ts.isInterfaceDeclaration(interfaceDeclaration)) {
+    if (!parsedInterface) {
       return;
     }
 
-    const interfaceType = project.checker.getTypeAtLocation(interfaceDeclaration.name);
-    const properties = interfaceType
-      .getProperties()
-      .map((property) => parseProperty(property, project))
-      .filter((property) => !property.tags.ignore)
-      .sort((a, b) => a.name.localeCompare(b.name));
+    const slug = kebabCase(parsedInterface.name);
 
-    const object: ParsedObject = {
-      name: interfaceSymbol.name,
-      description: getSymbolDescription(interfaceSymbol, project),
-      properties,
-    };
-
-    const slug = kebabCase(object.name);
-
-    if (gridApiExtendsFrom.includes(object.name)) {
+    if (gridApiExtendsFrom.includes(parsedInterface.name)) {
       const json = {
-        name: object.name,
-        description: linkify(
-          getSymbolDescription(interfaceSymbol, project),
-          documentedInterfaces,
-          'html',
-        ),
-        properties: properties.map((property) => ({
+        name: parsedInterface.name,
+        description: linkify(parsedInterface.description, documentedInterfaces, 'html'),
+        properties: parsedInterface.properties.map((property) => ({
           name: property.name,
           description: renderMarkdownInline(
             linkify(property.description, documentedInterfaces, 'html'),
@@ -200,9 +266,9 @@ export default function buildInterfacesDocumentation(options: BuildInterfacesDoc
         project,
       );
       // eslint-disable-next-line no-console
-      console.log('Built JSON file for', object.name);
+      console.log('Built JSON file for', parsedInterface.name);
     } else {
-      const markdown = generateMarkdown(object, documentedInterfaces);
+      const markdown = generateMarkdown(parsedInterface, projects, documentedInterfaces);
       writePrettifiedFile(path.resolve(outputDirectory, `${slug}.md`), markdown, project);
 
       writePrettifiedFile(
@@ -219,7 +285,7 @@ export default function buildInterfacesDocumentation(options: BuildInterfacesDoc
       );
 
       // eslint-disable-next-line no-console
-      console.log('Built API docs for', object.name);
+      console.log('Built API docs for', parsedInterface.name);
     }
   });
 

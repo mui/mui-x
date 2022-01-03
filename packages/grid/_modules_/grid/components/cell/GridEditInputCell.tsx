@@ -83,7 +83,7 @@ function GridEditInputCell(props: GridRenderEditCellParams & Omit<InputBaseProps
       className={classes.root}
       fullWidth
       type={colDef.type === 'number' ? colDef.type : 'text'}
-      value={valueState || ''}
+      value={valueState ?? ''}
       onChange={handleChange}
       {...other}
     />

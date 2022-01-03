@@ -274,7 +274,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
 
       rows.push(
         <rootProps.components.Row
-          key={i}
+          key={id}
           row={model}
           rowId={id}
           rowHeight={rowHeight}

@@ -173,11 +173,17 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
     />
   );
 
+  const sortingOrder: GridSortDirection[] = column.sortingOrder ?? rootProps.sortingOrder;
+
   const columnTitleIconButtons = (
     <React.Fragment>
       {!rootProps.disableColumnFilter && <ColumnHeaderFilterIcon counter={filterItemsCounter} />}
       {column.sortable && !column.hideSortIcons && (
-        <GridColumnHeaderSortIcon direction={sortDirection} index={sortIndex} />
+        <GridColumnHeaderSortIcon
+          direction={sortDirection}
+          index={sortIndex}
+          sortingOrder={sortingOrder}
+        />
       )}
     </React.Fragment>
   );

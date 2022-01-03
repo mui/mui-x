@@ -79,7 +79,9 @@ export function GridColumnsPanel() {
     (value: boolean) => {
       apiRef.current.updateColumns(
         columns.map((col) => {
-          col.hide = value;
+          if (col.hideable !== false) {
+            col.hide = value;
+          }
           return col;
         }),
       );
@@ -131,6 +133,7 @@ export function GridColumnsPanel() {
               <FormControlLabel
                 control={
                   <Switch
+                    disabled={column.hideable === false}
                     checked={!column.hide}
                     onClick={toggleColumn}
                     name={column.field}

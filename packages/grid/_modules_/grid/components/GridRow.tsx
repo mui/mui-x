@@ -205,7 +205,7 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
 
     cells.push(
       <rootProps.components.Cell
-        key={i}
+        key={column.field}
         value={cellParams.value}
         field={column.field}
         width={column.computedWidth}
