@@ -43,6 +43,7 @@ export interface GridSlotsComponent extends GridIconSlotsComponent {
   BaseTooltip: React.JSXElementConstructor<any>;
   /**
    * Component rendered for each cell.
+   * @default GridCell
    */
   Cell: React.JSXElementConstructor<any>;
   /**
