@@ -2,7 +2,6 @@ import { GridColumnLookup, GridColumnsState, GridColumnsRawState } from './gridC
 import {
   DEFAULT_GRID_COL_TYPE_KEY,
   getGridDefaultColumnTypes,
-  GRID_STRING_COL_DEF,
   GridApiRef,
   GridColDef,
   GridColType,
@@ -11,6 +10,7 @@ import {
 } from '../../../models';
 import { GridPreProcessingGroup } from '../../core/preProcessing';
 import { gridColumnsSelector } from './gridColumnsSelector';
+import { clamp } from '../../../utils/utils';
 
 export const computeColumnTypes = (customColumnTypes: GridColumnTypesRecord = {}) => {
   const allColumnTypes = { ...getGridDefaultColumnTypes(), ...customColumnTypes };
@@ -36,19 +36,29 @@ export const hydrateColumnsWidth = (
   let totalFlexUnits = 0;
   let widthToAllocateInFlex = viewportInnerWidth;
 
+  const flexColumns: { column: GridStateColDef; maxWidthPerFlexUnit: number }[] = [];
+
   // Compute the width of non-flex columns and how much width must be allocated between the flex columns
   rawState.all.forEach((columnField) => {
     const newColumn = { ...rawState.lookup[columnField] } as GridStateColDef;
     if (newColumn.hide) {
       newColumn.computedWidth = 0;
     } else {
-      const minWidth = newColumn.minWidth ?? GRID_STRING_COL_DEF.minWidth!;
+      // The `newColumn` has already been merged with its `type` default values for `minWidth`, `maxWidth` and `width`
+      // TODO: Have the typing reflect that those keys can't be null at that point
       let computedWidth: number;
       if (newColumn.flex && newColumn.flex > 0) {
         totalFlexUnits += newColumn.flex;
-        computedWidth = minWidth;
+        computedWidth = newColumn.minWidth!;
+
+        if (newColumn.minWidth! < newColumn.maxWidth!) {
+          flexColumns.push({
+            column: newColumn,
+            maxWidthPerFlexUnit: (newColumn.maxWidth! - computedWidth) / newColumn.flex,
+          });
+        }
       } else {
-        computedWidth = Math.max(newColumn.width ?? GRID_STRING_COL_DEF.width!, minWidth);
+        computedWidth = clamp(newColumn.width!, newColumn.minWidth!, newColumn.maxWidth!);
       }
 
       widthToAllocateInFlex -= computedWidth;
@@ -61,12 +71,9 @@ export const hydrateColumnsWidth = (
   // Compute the width of flex columns
   if (totalFlexUnits > 0 && widthToAllocateInFlex > 0) {
     const widthPerFlexUnit = widthToAllocateInFlex / totalFlexUnits;
-    rawState.all.forEach((columnField) => {
-      const column = columnsLookup[columnField];
 
-      if (!column.hide && column.flex && column.flex > 0) {
-        columnsLookup[columnField].computedWidth += widthPerFlexUnit * column.flex;
-      }
+    flexColumns.forEach(({ column, maxWidthPerFlexUnit }) => {
+      column.computedWidth += Math.min(maxWidthPerFlexUnit, widthPerFlexUnit) * column.flex!;
     });
   }
 

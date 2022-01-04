@@ -64,6 +64,11 @@ export interface GridColDef {
    */
   minWidth?: number;
   /**
+   * Sets the maximum width of a column.
+   * @default Infinity
+   */
+  maxWidth?: number;
+  /**
    * If `true`, hide the column.
    * @default false
    */

@@ -453,6 +453,39 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         });
       });
 
+      it('should respect maxWidth when a column is fluid', () => {
+        const rows = [
+          {
+            id: 1,
+            username: 'John Doe',
+          },
+        ];
+
+        const columns = [
+          {
+            field: 'id',
+            flex: 1,
+            maxWidth: 100,
+          },
+          {
+            field: 'name',
+            width: 50,
+          },
+        ];
+
+        render(
+          <div style={{ width: 200, height: 300 }}>
+            <DataGrid columns={columns} rows={rows} />
+          </div>,
+        );
+
+        const firstColumn = getColumnHeaderCell(0);
+        // @ts-expect-error need to migrate helpers to TypeScript
+        expect(firstColumn).toHaveInlineStyle({
+          width: '100px',
+        });
+      });
+
       it('should split the columns equally if they are all flex', () => {
         const rows = [
           {

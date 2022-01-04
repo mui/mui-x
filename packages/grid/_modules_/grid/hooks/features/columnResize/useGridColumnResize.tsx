@@ -18,6 +18,7 @@ import {
 import { useGridNativeEventListener } from '../../utils/useGridNativeEventListener';
 import { GridComponentProps } from '../../../GridComponentProps';
 import { useGridStateInit } from '../../utils/useGridStateInit';
+import { clamp } from '../../../utils/utils';
 
 // TODO: remove support for Safari < 13.
 // https://caniuse.com/#search=touch-action
@@ -141,7 +142,7 @@ export const useGridColumnResize = (
       initialOffset.current! +
       nativeEvent.clientX -
       colElementRef.current!.getBoundingClientRect().left;
-    newWidth = Math.max(colDefRef.current?.minWidth!, newWidth);
+    newWidth = clamp(newWidth, colDefRef.current!.minWidth!, colDefRef.current!.maxWidth!);
 
     updateWidth(newWidth);
     const params: GridColumnResizeParams = {
@@ -229,7 +230,7 @@ export const useGridColumnResize = (
       initialOffset.current! +
       (finger as CursorCoordinates).x -
       colElementRef.current!.getBoundingClientRect().left;
-    newWidth = Math.max(colDefRef.current?.minWidth!, newWidth);
+    newWidth = clamp(newWidth, colDefRef.current!.minWidth!, colDefRef.current!.maxWidth!);
 
     updateWidth(newWidth);
     const params: GridColumnResizeParams = {
