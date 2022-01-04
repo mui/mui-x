@@ -54,7 +54,10 @@ To change the width of a column, use the `width` property available in `GridColD
 
 By default, the columns have a minimum width of 50px.
 This is an arbitrary, easy-to-remember value.
-To change the minimum width of a column, use the `minWidth` property available in `GridColDef`.
+To change the minimum width of a column, use the `minWidth` property in `GridColDef`.
+
+By default, the columns do not have any maximum width.
+To set the maximum width of a column, use the `maxWidth` property in `GridColDef`.
 
 {{"demo": "pages/components/data-grid/columns/ColumnMinWidthGrid.js", "bg": "inline"}}
 
@@ -68,7 +71,7 @@ It works by dividing the remaining space in the grid among all flex columns in p
 For example, consider a grid with a total width of 500px that has three columns: the first with `width: 200`; the second with `flex: 1`; and third with `flex: 0.5`.
 The first column will be 200px wide, leaving 300px remaining. The column with `flex: 1` is twice the size of `flex: 0.5`, which means that final sizes will be: 200px, 200px, 100px.
 
-To set a minimum width for a `flex` column set the `minWidth` property in `GridColDef`.
+To set a minimum and maximum width for a `flex` column set the `minWidth` and the `maxWidth` property in `GridColDef`.
 
 **Note**
 
@@ -95,6 +98,8 @@ To prevent the resizing of a column, set `resizable: false` in the `GridColDef`.
 Alternatively, to disable all columns resize, set the prop `disableColumnResize={true}`.
 
 To restrict resizing a column under a certain width set the `minWidth` property in `GridColDef`.
+
+To restrict resizing a column above a certain width set the `maxWidth` property in `GridColDef`.
 
 {{"demo": "pages/components/data-grid/columns/ColumnSizingGrid.js", "disableAd": true, "bg": "inline"}}
 
