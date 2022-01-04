@@ -36,7 +36,7 @@ export const hydrateColumnsWidth = (
   let totalFlexUnits = 0;
   let widthToAllocateInFlex = viewportInnerWidth;
 
-  const flexColumns: { column: GridStateColDef; maxWidthPerFlexUnit: number }[] = [];
+  const flexColumns: { value: GridStateColDef; maxWidthPerFlexUnit: number }[] = [];
 
   // Compute the width of non-flex columns and how much width must be allocated between the flex columns
   rawState.all.forEach((columnField) => {
@@ -53,7 +53,7 @@ export const hydrateColumnsWidth = (
 
         if (newColumn.minWidth! < newColumn.maxWidth!) {
           flexColumns.push({
-            column: newColumn,
+            value: newColumn,
             maxWidthPerFlexUnit: (newColumn.maxWidth! - computedWidth) / newColumn.flex,
           });
         }
@@ -72,8 +72,9 @@ export const hydrateColumnsWidth = (
   if (totalFlexUnits > 0 && widthToAllocateInFlex > 0) {
     const widthPerFlexUnit = widthToAllocateInFlex / totalFlexUnits;
 
-    flexColumns.forEach(({ column, maxWidthPerFlexUnit }) => {
-      column.computedWidth += Math.min(maxWidthPerFlexUnit, widthPerFlexUnit) * column.flex!;
+    flexColumns.forEach((column) => {
+      column.value.computedWidth +=
+        Math.min(column.maxWidthPerFlexUnit, widthPerFlexUnit) * column.value.flex!;
     });
   }
 
