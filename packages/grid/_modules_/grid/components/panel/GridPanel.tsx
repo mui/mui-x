@@ -48,7 +48,7 @@ const GridPaperRoot = styled(Paper, {
 }));
 
 const GridPanel = React.forwardRef<HTMLDivElement, GridPanelProps>((props, ref) => {
-  const { children, className, open, classes: classesProp, ...other } = props;
+  const { children, className, classes: classesProp, ...other } = props;
   const apiRef = useGridApiContext();
   const classes = gridPanelClasses;
   const [isPlaced, setIsPlaced] = React.useState(false);
@@ -72,31 +72,28 @@ const GridPanel = React.forwardRef<HTMLDivElement, GridPanelProps>((props, ref) 
     return null;
   }
 
-  const gridPanelRootProps = {
-    ref,
-    placement: 'bottom-start',
-    className: clsx(className, classes.panel),
-    open,
-    anchorEl,
-    modifiers: [
-      {
-        name: 'flip',
-        enabled: false,
-      },
-      {
-        name: 'isPlaced',
-        enabled: true,
-        phase: 'main',
-        fn: () => {
-          setIsPlaced(true);
-        },
-      },
-    ],
-    ...other,
-  };
-
   return (
-    <GridPanelRoot {...gridPanelRootProps}>
+    <GridPanelRoot
+      ref={ref}
+      placement="bottom-start"
+      className={clsx(className, classes.panel)}
+      anchorEl={anchorEl}
+      modifiers={[
+        {
+          name: 'flip',
+          enabled: false,
+        },
+        {
+          name: 'isPlaced',
+          enabled: true,
+          phase: 'main',
+          fn: () => {
+            setIsPlaced(true);
+          },
+        },
+      ]}
+      {...other}
+    >
       <ClickAwayListener onClickAway={handleClickAway}>
         <GridPaperRoot className={classes.paper} elevation={8} onKeyDown={handleKeyDown}>
           {isPlaced && children}
