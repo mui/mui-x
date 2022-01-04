@@ -274,7 +274,9 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
 
     for (let i = 0; i < renderedRows.length; i += 1) {
       const { id, model } = renderedRows[i];
-      const isLastRow = i === renderedRows.length - 1;
+      const index = currentPage.range.firstRowIndex + nextRenderContext.firstRowIndex! + i;
+      const isLastRow = index === currentPage.range.lastRowIndex;
+
       rows.push(
         <rootProps.components.Row
           key={id}
@@ -291,7 +293,12 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
           selected={selectionLookup[id] !== undefined}
           index={currentPage.range.firstRowIndex + nextRenderContext.firstRowIndex! + i}
           containerWidth={availableSpace}
-          className={isEmptySpace && isLastRow && gridClasses['row--lastBeforeEmpty']}
+          className={
+            isEmptySpace &&
+            isLastRow &&
+            !rootProps.autoHeight &&
+            gridClasses['row--lastBeforeEmpty']
+          }
           {...rootProps.componentsProps?.row}
         />,
       );
