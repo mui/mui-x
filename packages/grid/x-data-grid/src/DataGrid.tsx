@@ -9,10 +9,10 @@ import {
   GridRoot,
   useGridApiRef,
 } from '../../_modules_/grid';
+import { DataGridProps } from '../../_modules_/grid/models/props/DataGridProps';
 import { GridContextProvider } from '../../_modules_/grid/context/GridContextProvider';
 import { useDataGridComponent } from './useDataGridComponent';
-import { MAX_PAGE_SIZE, DataGridProps } from './DataGridProps';
-import { useDataGridProps } from './useDataGridProps';
+import { useDataGridProps, MAX_PAGE_SIZE } from './useDataGridProps';
 import { DataGridVirtualScroller } from './DataGridVirtualScroller';
 import { DataGridColumnHeaders } from './DataGridColumnHeaders';
 
@@ -366,26 +366,12 @@ DataGridRaw.propTypes = {
    */
   onColumnOrderChange: PropTypes.func,
   /**
-   * Callback fired while a column is being resized.
-   * @param {GridColumnResizeParams} params With all properties from [[GridColumnResizeParams]].
-   * @param {MuiEvent<React.MouseEvent>} event The event object.
-   * @param {GridCallbackDetails} details Additional details for this callback.
-   */
-  onColumnResize: PropTypes.func,
-  /**
    * Callback fired when a column visibility changes.
    * @param {GridColumnVisibilityChangeParams} params With all properties from [[GridColumnVisibilityChangeParams]].
    * @param {MuiEvent<{}>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onColumnVisibilityChange: PropTypes.func,
-  /**
-   * Callback fired when the width of a column is changed.
-   * @param {GridColumnResizeParams} params With all properties from [[GridColumnResizeParams]].
-   * @param {MuiEvent<React.MouseEvent>} event The event object.
-   * @param {GridCallbackDetails} details Additional details for this callback.
-   */
-  onColumnWidthChange: PropTypes.func,
   /**
    * Callback fired when the edit cell value changes.
    * @param {GridEditCellPropsParams} params With all properties from [[GridEditCellPropsParams]].
@@ -507,10 +493,6 @@ DataGridRaw.propTypes = {
     }
     return null;
   }),
-  /**
-   * If `true`, pagination is enabled.
-   * @default false
-   */
   pagination: (props: any) => {
     if (props.pagination === false) {
       return new Error(
