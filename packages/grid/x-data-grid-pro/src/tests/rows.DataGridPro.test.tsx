@@ -129,13 +129,7 @@ describe('<DataGridPro /> - Rows', () => {
 
       const Test = (props: Pick<DataGridProps, 'rows'>) => (
         <div style={{ width: 300, height: 300 }}>
-          <DataGridPro
-            {...props}
-            columns={columns}
-            autoHeight={isJSDOM}
-            throttleRowsMs={100}
-            disableVirtualization
-          />
+          <DataGridPro {...props} columns={columns} autoHeight={isJSDOM} throttleRowsMs={100} />
         </div>
       );
 
@@ -175,7 +169,7 @@ describe('<DataGridPro /> - Rows', () => {
       apiRef = useGridApiRef();
       return (
         <div style={{ width: 300, height: 300 }}>
-          <DataGridPro {...baselineProps} apiRef={apiRef} {...props} disableVirtualization />
+          <DataGridPro {...baselineProps} apiRef={apiRef} {...props} />
         </div>
       );
     };

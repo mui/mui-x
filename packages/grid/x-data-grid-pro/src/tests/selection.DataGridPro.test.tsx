@@ -12,6 +12,8 @@ import {
 } from '@mui/x-data-grid-pro';
 import { getData } from 'storybook/src/data/data-service';
 
+const isJSDOM = /jsdom/.test(window.navigator.userAgent);
+
 function getSelectedRowIds() {
   const hasCheckbox = !!document.querySelector('input[type="checkbox"]');
   return [...getRows()]
@@ -39,7 +41,7 @@ describe('<DataGridPro /> - Selection', () => {
 
     return (
       <div style={{ width: 300, height: 300 }}>
-        <DataGridPro {...data} {...other} apiRef={apiRef} disableVirtualization />
+        <DataGridPro {...data} {...other} apiRef={apiRef} autoHeight={isJSDOM} />
       </div>
     );
   };

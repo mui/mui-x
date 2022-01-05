@@ -94,10 +94,9 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     const { top, left } = scrollPosition.current!;
 
     const firstRowIndex = getIndexFromScroll(top, rowsMeta.positions);
-    const lastRowIndex = getIndexFromScroll(
-      top + rootRef.current!.clientHeight!,
-      rowsMeta.positions,
-    );
+    const lastRowIndex = rootProps.autoHeight
+      ? firstRowIndex + currentPage.rows.length
+      : getIndexFromScroll(top + rootRef.current!.clientHeight!, rowsMeta.positions);
 
     // Manually call the selector here to avoid an infinite loop if it's listed as a dependency
     // The reference to `columnsMeta.positions` is not the same across renders
@@ -114,9 +113,10 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
   }, [
     disableVirtualization,
     rowsMeta.positions,
+    rootProps.autoHeight,
+    currentPage.rows.length,
     apiRef,
     containerWidth,
-    currentPage.rows.length,
     visibleColumns.length,
   ]);
 
