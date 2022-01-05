@@ -2,7 +2,6 @@ import { GridFilterItem, GridLinkOperator } from './gridFilterItem';
 
 /**
  * Model describing the filters to apply to the grid.
- * @inline GridFilterItem
  */
 export interface GridFilterModel {
   /**

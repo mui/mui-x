@@ -13,7 +13,7 @@ import {
   GridPreProcessEditCellProps,
 } from '../params/gridCellParams';
 import { GridColumnHeaderParams } from '../params/gridColumnHeaderParams';
-import { GridComparatorFn } from '../gridSortModel';
+import { GridComparatorFn, GridSortDirection } from '../gridSortModel';
 import { GridColType, GridNativeColTypes } from './gridColType';
 import { GridRowParams } from '../params/gridRowParams';
 import { GridValueOptionsParams } from '../params/gridValueOptionsParams';
@@ -69,10 +69,19 @@ export interface GridColDef {
    */
   hide?: boolean;
   /**
+   * If `false`, removes the buttons for hiding this column.
+   * @default true
+   */
+  hideable?: boolean;
+  /**
    * If `true`, the column is sortable.
    * @default true
    */
   sortable?: boolean;
+  /**
+   * The order of the sorting sequence.
+   */
+  sortingOrder?: GridSortDirection[];
   /**
    * If `true`, the column is resizable.
    * @default true

@@ -55,7 +55,11 @@ const INTERFACES_WITH_DEDICATED_PAGES = [
   'GridColDef',
   'GridCsvExportOptions',
   'GridPrintExportOptions',
+
+  // Filters
   'GridFilterModel',
+  'GridFilterItem',
+  'GridFilterOperator',
 ];
 
 const parseProperty = (propertySymbol: ts.Symbol, project: Project): ParsedProperty => ({
@@ -192,24 +196,8 @@ function generateMarkdown(
   projects: Projects,
   documentedInterfaces: DocumentedInterfaces,
 ) {
-  const project = projects.get(object.project)!;
-  const inlinedInterfaces =
-    object.tags.inline?.text?.[0].text
-      .split(',')
-      .map((el) => {
-        const name = el.trim();
-
-        if (!project.exports[name]) {
-          return null;
-        }
-
-        return parseInterfaceSymbol(project.exports[name], project);
-      })
-      .filter((el): el is ParsedObject => !!el)
-      .sort((a, b) => a.name.localeCompare(b.name)) ?? [];
-
   const description = linkify(object.description, documentedInterfaces, 'html');
-  const imports = generateImportStatement([object, ...inlinedInterfaces], projects);
+  const imports = generateImportStatement([object], projects);
 
   let text = `# ${object.name} Interface\n`;
   text += `<p class="description">${description}</p>\n\n`;
@@ -217,17 +205,6 @@ function generateMarkdown(
   text += `${imports}\n\n`;
   text += '## Properties\n\n';
   text += `${generateMarkdownFromProperties(object, documentedInterfaces)}`;
-
-  inlinedInterfaces.forEach((inlinedInterface) => {
-    text += '\n\n';
-    text += `## ${inlinedInterface.name}\n\n`;
-
-    if (object.description) {
-      text += `${linkify(inlinedInterface.description, documentedInterfaces, 'html')}\n\n`;
-    }
-
-    text += `${generateMarkdownFromProperties(inlinedInterface, documentedInterfaces)}`;
-  });
 
   return text;
 }

@@ -6,15 +6,15 @@ title: Data Grid - Filtering
 
 <p class="description">Easily filter your rows based on one or several criteria.</p>
 
-The filters can be modified via the grid interface in several ways:
+The filters can be modified via through grid interface in several ways:
 
 - By opening the column menu and clicking the _Filter_ menu item.
-- By clicking the _Filters_ button if the grid toolbar is enabled.
+- By clicking the _Filters_ button in the grid toolbar (if enabled).
 
-Each column types has its own filtering operators.
-The demo below let you explore all the built-in operators for the various column types available on the grid.
+Each column types has its own filter operators.
+The demo below let you explore all the operators for each built-in column type.
 
-_See [the dedicated section](#customize-the-operators) to learn how to create your own custom filtering operator._
+_See [the dedicated section](#customize-the-operators) to learn how to create your own custom filter operator._
 
 {{"demo": "pages/components/data-grid/filtering/BasicExampleDataGrid.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -32,17 +32,17 @@ The demo below let you filter the rows according to several criteria at the same
 
 ### Structure of the model
 
-The full typing details can be found on the [GridFilterModel api page](/api/data-grid/grid-filter-model/)
+The full typing details can be found on the [GridFilterModel api page](/api/data-grid/grid-filter-model/).
 
-The filter model is composed of a list of `items` and a `linkOperator`
+The filter model is composed of a list of `items` and a `linkOperator`:
 
 #### The `items`
 
-A filter item is composed of several elements:
+A filter item represents a filtering rule and is composed of several elements:
 
-- `filterItem.columnField`: the field on which we want to apply the filter.
+- `filterItem.columnField`: the field on which we want to apply the rule.
 - `filterItem.value`: the value to look for.
-- `filterItem.operatorValue`: name of the operator method to use (e.g. _contains_, _is before_, _is after_, etc.).
+- `filterItem.operatorValue`: name of the operator method to use (e.g. _contains_), matches the `value` key of the .
 - `filterItem.id` ([<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)): only useful when multiple filters are used.
 
 #### The `linkOperator` [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
@@ -60,6 +60,20 @@ const filterModel: GridFilterModel = {
   linkOperator: GridLinkOperator.Or,
 };
 ```
+
+In the example below, the rows with `rating > 4` and `isAdmin = true` will be displayed.
+
+```ts
+const filterModel: GridFilterModel = {
+  items: [
+    { id: 1, columnField: 'rating', operatorValue: '>', value: '4' },
+    { id: 2, columnField: 'isAdmin', operatorValue: 'is', value: 'true' },
+  ],
+  linkOperator: GridLinkOperator.And,
+};
+```
+
+If no `linkOperator` is provided, the grid will use `GridLinkOperator.Or` by default.
 
 ### Initialize the filters
 
@@ -102,6 +116,7 @@ You can use the `onFilterModelChange` prop to listen to changes to the filters a
 ### For all columns
 
 Filters are enabled by default, but you can easily disable this feature by setting the `disableColumnFilter` prop.
+The filters will still
 
 ```jsx
 <DataGrid disableColumnFilter />
@@ -115,22 +130,22 @@ To disable the filter on a column, set the `filterable` property of `GridColDef`
 If the example below, the _rating_ column can not be filtered.
 
 ```js
-const columns = [{ field: 'image', filterable: false }];
+const columns = [{ field: 'rating', filterable: false }];
 ```
 
 {{"demo": "pages/components/data-grid/filtering/DisableFilteringGridSomeColumns.js", "bg": "inline"}}
 
 ## Customize the operators
 
-An operator determines if a candidate value should be considered as a result.
-The candidate value used by the operator is the one corresponding to the `field` attribute or the `valueGetter` of the `GridColDef`.
+The full typing details can be found on the [GridFilterOperator api page](/api/data-grid/grid-filter-operator/).
 
-The grid comes with a set of built-in filters for each column types.
-You can find the supported column types in the [columns section](/components/data-grid/columns/#column-types).
+An operator determines if a cell value should be considered as a valid filtered value.
+The candidate value used by the operator is the one corresponding to the `field` attribute or the value returned by the `valueGetter` of the `GridColDef`.
 
 **Note**: The [`valueFormatter`](/components/data-grid/columns/#value-formatter) is only used for rendering purposes.
 
-By default, each column type comes with a set of built-in operators. You can get them by importing the following functions
+By default, each column type comes with a set of built-in operators.
+You can get them by importing the following functions:
 
 | Column type  | Function                       |
 | ------------ | ------------------------------ |
@@ -141,7 +156,9 @@ By default, each column type comes with a set of built-in operators. You can get
 | dateTime     | getGridDateOperators(true)     |
 | singleSelect | getGridSingleSelectOperators() |
 
-### Create custom operator
+You can find more information about the supported column types in the [columns section](/components/data-grid/columns/#column-types).
+
+### Create a custom operator
 
 If the built-in filter operators are not enough, creating a custom operator is an option.
 A custom operator is defined creating a `GridFilterOperator` object.
@@ -149,24 +166,24 @@ This object has to be added to the `filterOperators` attribute of the `GridColDe
 
 The main part of an operator is the `getApplyFilterFn` function.
 When applying the filters, the grid will call this function with the filter item and the column on which the item must be applied.
-This function must return another function that is called on every value of the column.
-The returned function determines if the cell value satisfies the condition of the operator.
+This function must return another function that will be called on every cell of the column to determine if the cell value satisfies the condition of the operator.
 
 ```ts
-{
+const operator: GridFilterOperator = {
   label: 'From',
   value: 'from',
   getApplyFilterFn: (filterItem: GridFilterItem, column: GridColDef) => {
     if (!filterItem.columnField || !filterItem.value || !filterItem.operatorValue) {
       return null;
     }
+
     return (params: GridCellParams): boolean => {
       return Number(params.value) >= Number(filterItem.value);
     };
   },
   InputComponent: RatingInputValue,
   InputComponentProps: { type: 'number' },
-}
+};
 ```
 
 **Note**: If the column has a [`valueGetter`](/components/data-grid/columns/#value-getter), then `params.value` will be the resolved value.
@@ -175,7 +192,7 @@ In the demo below, you can see how to create a completely new operator for the R
 
 {{"demo": "pages/components/data-grid/filtering/CustomRatingOperator.js", "bg": "inline", "defaultCodeOpen": false}}
 
-### Remove operators
+### Remove an operator
 
 To remove built-in operators, import the method to generate them and filter the output to fit your needs.
 
@@ -183,7 +200,7 @@ In the demo below, the `rating` column only has the `<` and `>` operators.
 
 {{"demo": "pages/components/data-grid/filtering/RemoveBuiltInOperators.js", "bg": "inline", "defaultCodeOpen": false}}
 
-### Edit operators
+### Edit an operator
 
 The value used by the operator to look for has to be entered by the user.
 On most column types, a text field is used. However, a custom component can be rendered instead.
@@ -244,3 +261,5 @@ However, it can be implemented as in the demo below.
 - [DataGrid](/api/data-grid/data-grid/)
 - [DataGridPro](/api/data-grid/data-grid-pro/)
 - [GridFilterModel](/api/data-grid/grid-filter-model/)
+- [GridFilterItem](/api/data-grid/grid-filter-item/)
+- [GridFilterOperator](/api/data-grid/grid-filter-operator/)

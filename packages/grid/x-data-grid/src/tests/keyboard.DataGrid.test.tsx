@@ -191,17 +191,21 @@ describe('<DataGrid /> - Keyboard', () => {
     it('should navigate to the 1st cell of the 1st row when pressing "Home" + ctrlKey of metaKey of shiftKey', () => {
       render(<NavigationTestCaseNoScrollX />);
 
-      getCell(8, 1).focus();
+      const cell = getCell(8, 1);
+      fireEvent.mouseUp(cell);
+      fireEvent.click(cell);
       expect(getActiveCell()).to.equal('8-1');
       fireEvent.keyDown(document.activeElement!, { key: 'Home', ctrlKey: true });
       expect(getActiveCell()).to.equal('0-0');
 
-      getCell(8, 1).focus();
+      fireEvent.mouseUp(cell);
+      fireEvent.click(cell);
       expect(getActiveCell()).to.equal('8-1');
       fireEvent.keyDown(document.activeElement!, { key: 'Home', metaKey: true });
       expect(getActiveCell()).to.equal('0-0');
 
-      getCell(8, 1).focus();
+      fireEvent.mouseUp(cell);
+      fireEvent.click(cell);
       expect(getActiveCell()).to.equal('8-1');
       fireEvent.keyDown(document.activeElement!, { key: 'Home', shiftKey: true });
       expect(getActiveCell()).to.equal('0-0');
@@ -220,17 +224,21 @@ describe('<DataGrid /> - Keyboard', () => {
     it('should navigate to the last cell of the last row when pressing "End" + ctrlKey of metaKey of shiftKey', () => {
       render(<NavigationTestCaseNoScrollX />);
 
-      getCell(8, 1).focus();
+      const cell = getCell(8, 1);
+      fireEvent.mouseUp(cell);
+      fireEvent.click(cell);
       expect(getActiveCell()).to.equal('8-1');
       fireEvent.keyDown(document.activeElement!, { key: 'End', ctrlKey: true });
       expect(getActiveCell()).to.equal('9-2');
 
-      getCell(8, 1).focus();
+      fireEvent.mouseUp(cell);
+      fireEvent.click(cell);
       expect(getActiveCell()).to.equal('8-1');
       fireEvent.keyDown(document.activeElement!, { key: 'End', metaKey: true });
       expect(getActiveCell()).to.equal('9-2');
 
-      getCell(8, 1).focus();
+      fireEvent.mouseUp(cell);
+      fireEvent.click(cell);
       expect(getActiveCell()).to.equal('8-1');
       fireEvent.keyDown(document.activeElement!, { key: 'End', shiftKey: true });
       expect(getActiveCell()).to.equal('9-2');
@@ -450,4 +458,22 @@ describe('<DataGrid /> - Keyboard', () => {
     expect(isSelected).to.equal(true);
   });
   /* eslint-enable material-ui/disallow-active-element-as-key-event-target */
+
+  it('should not rerender when pressing a key inside an already focused cell', () => {
+    const renderCell = spy(() => <input type="text" data-testid="custom-input" />);
+    const columns = [{ field: 'name', renderCell }];
+    const rows = [{ id: 1, name: 'John' }];
+    render(
+      <div style={{ width: 300, height: 300 }}>
+        <DataGrid rows={rows} columns={columns} />
+      </div>,
+    );
+    expect(renderCell.callCount).to.equal(2);
+    const input = screen.getByTestId('custom-input');
+    input.focus();
+    fireEvent.keyDown(input, { key: 'a' });
+    expect(renderCell.callCount).to.equal(4);
+    fireEvent.keyDown(input, { key: 'b' });
+    expect(renderCell.callCount).to.equal(4);
+  });
 });

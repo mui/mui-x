@@ -1,3 +1,6 @@
+/**
+ * Filter item definition interface.
+ */
 export interface GridFilterItem {
   /**
    * Must be uniq.
