@@ -1,7 +1,7 @@
 import {
   GridEvents,
   GridApiRef,
-  GridComponentProps,
+  DataGridProProps,
   useGridApiRef,
   DataGridPro,
   GridEditSingleSelectCell,
@@ -73,7 +73,7 @@ describe('<DataGridPro /> - Edit Rows', () => {
 
   let apiRef: GridApiRef;
 
-  const TestCase = (props: Partial<GridComponentProps>) => {
+  const TestCase = (props: Partial<DataGridProProps>) => {
     apiRef = useGridApiRef();
     return (
       <div style={{ width: 300, height: 300 }}>
@@ -862,7 +862,7 @@ describe('<DataGridPro /> - Edit Rows', () => {
 
   describe('column type: number', () => {
     it('should keep the right type', async () => {
-      const Test = (props: Partial<GridComponentProps>) => {
+      const Test = (props: Partial<DataGridProProps>) => {
         apiRef = useGridApiRef();
         return (
           <div style={{ width: 300, height: 300 }}>
@@ -892,7 +892,7 @@ describe('<DataGridPro /> - Edit Rows', () => {
     });
 
     it('should allow to enter 0', async () => {
-      const Test = (props: Partial<GridComponentProps>) => {
+      const Test = (props: Partial<DataGridProProps>) => {
         apiRef = useGridApiRef();
         return (
           <div style={{ width: 300, height: 300 }}>

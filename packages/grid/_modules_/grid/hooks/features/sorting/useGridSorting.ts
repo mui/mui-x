@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { GridEventListener, GridEvents } from '../../../models/events';
-import { GridComponentProps } from '../../../GridComponentProps';
+import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridSortApi } from '../../../models/api/gridSortApi';
 import { GridColDef } from '../../../models/colDef/gridColDef';
@@ -32,7 +32,7 @@ import { useGridRegisterSortingMethod } from './useGridRegisterSortingMethod';
 export const useGridSorting = (
   apiRef: GridApiRef,
   props: Pick<
-    GridComponentProps,
+    DataGridProcessedProps,
     | 'initialState'
     | 'sortModel'
     | 'onSortModelChange'
