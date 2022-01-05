@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useEventCallback } from '@mui/material/utils';
 import { GridEvents } from '../../../models/events';
-import { GridComponentProps } from '../../../GridComponentProps';
+import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridEditRowApi } from '../../../models/api/gridEditRowApi';
 import { GridCellMode } from '../../../models/gridCell';
@@ -49,7 +49,7 @@ function isPromise(promise: any): promise is Promise<GridEditCellProps> {
 export function useGridEditRows(
   apiRef: GridApiRef,
   props: Pick<
-    GridComponentProps,
+    DataGridProcessedProps,
     | 'editRowsModel'
     | 'onEditRowsModelChange'
     | 'onEditCellPropsChange'

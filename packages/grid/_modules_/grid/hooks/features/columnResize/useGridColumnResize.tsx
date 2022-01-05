@@ -16,7 +16,7 @@ import {
   useGridApiOptionHandler,
 } from '../../utils/useGridApiEventHandler';
 import { useGridNativeEventListener } from '../../utils/useGridNativeEventListener';
-import { GridComponentProps } from '../../../GridComponentProps';
+import { DataGridProProcessedProps } from '../../../models/props/DataGridProProps';
 import { useGridStateInit } from '../../utils/useGridStateInit';
 
 // TODO: remove support for Safari < 13.
@@ -69,7 +69,7 @@ function trackFinger(event, currentTouchId): CursorCoordinates | boolean {
  */
 export const useGridColumnResize = (
   apiRef: GridApiRef,
-  props: Pick<GridComponentProps, 'onColumnResize' | 'onColumnWidthChange'>,
+  props: Pick<DataGridProProcessedProps, 'onColumnResize' | 'onColumnWidthChange'>,
 ) => {
   const logger = useGridLogger(apiRef, 'useGridColumnResize');
 

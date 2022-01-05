@@ -7,7 +7,7 @@ import {
   useGridApiEventHandler,
 } from '../../utils';
 import { GridEvents, GridEventListener } from '../../../models/events';
-import { GridComponentProps } from '../../../GridComponentProps';
+import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridPageApi, GridPaginationState } from './gridPaginationInterfaces';
 import { gridVisibleTopLevelRowCountSelector } from '../filter';
 import { useGridStateInit } from '../../utils/useGridStateInit';
@@ -38,7 +38,7 @@ const applyValidPage = (paginationState: GridPaginationState): GridPaginationSta
  */
 export const useGridPage = (
   apiRef: GridApiRef,
-  props: Pick<GridComponentProps, 'page' | 'onPageChange' | 'rowCount' | 'initialState'>,
+  props: Pick<DataGridProcessedProps, 'page' | 'onPageChange' | 'rowCount' | 'initialState'>,
 ) => {
   const logger = useGridLogger(apiRef, 'useGridPage');
 

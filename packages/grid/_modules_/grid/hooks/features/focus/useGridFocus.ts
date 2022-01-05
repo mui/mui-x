@@ -8,7 +8,7 @@ import { GridCellParams } from '../../../models/params/gridCellParams';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
-import { GridComponentProps } from '../../../GridComponentProps';
+import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { isNavigationKey } from '../../../utils/keyboardUtils';
 import { useGridStateInit } from '../../utils/useGridStateInit';
 import { gridFocusCellSelector } from './gridFocusStateSelector';
@@ -18,7 +18,10 @@ import { gridFocusCellSelector } from './gridFocusStateSelector';
  * @requires useGridRows (method)
  * @requires useGridEditRows (event)
  */
-export const useGridFocus = (apiRef: GridApiRef, props: Pick<GridComponentProps, 'rows'>): void => {
+export const useGridFocus = (
+  apiRef: GridApiRef,
+  props: Pick<DataGridProcessedProps, 'rows'>,
+): void => {
   const logger = useGridLogger(apiRef, 'useGridFocus');
 
   useGridStateInit(apiRef, (state) => ({

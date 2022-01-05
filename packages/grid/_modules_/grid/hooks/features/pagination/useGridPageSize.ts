@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { GridApiRef } from '../../../models';
-import { GridComponentProps } from '../../../GridComponentProps';
+import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridPageSizeApi } from './gridPaginationInterfaces';
 import { GridEvents } from '../../../models/events';
 import {
@@ -20,7 +20,7 @@ import { gridDensityRowHeightSelector } from '../density';
 export const useGridPageSize = (
   apiRef: GridApiRef,
   props: Pick<
-    GridComponentProps,
+    DataGridProcessedProps,
     'pageSize' | 'onPageSizeChange' | 'autoPageSize' | 'initialState'
   >,
 ) => {

@@ -3,7 +3,7 @@ import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { styled, alpha } from '@mui/material/styles';
 import { getDataGridUtilityClass } from '../../_modules_/grid/gridClasses';
 import { useGridRootProps } from '../../_modules_/grid/hooks/utils/useGridRootProps';
-import { GridComponentProps } from '../../_modules_/grid/GridComponentProps';
+import { DataGridProProcessedProps } from '../../_modules_/grid/models/props/DataGridProProps';
 import { useGridColumnHeaders } from '../../_modules_/grid/hooks/features/columnHeaders/useGridColumnHeaders';
 import { useGridApiContext } from '../../_modules_/grid/hooks/utils/useGridApiContext';
 import { useGridSelector } from '../../_modules_/grid/hooks/utils/useGridSelector';
@@ -20,7 +20,7 @@ import {
 } from '../../_modules_/grid/models/api/gridColumnPinningApi';
 
 type OwnerState = {
-  classes?: GridComponentProps['classes'];
+  classes?: DataGridProProcessedProps['classes'];
   leftPinnedColumns: GridPinnedColumns['left'];
   rightPinnedColumns: GridPinnedColumns['right'];
 };
