@@ -1,14 +1,21 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
+import { capitalize } from '@mui/material/utils';
 import { getDataGridUtilityClass } from '../../gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
+
+export enum GridColumnHeaderSeparatorSides {
+  Left = 'left',
+  Right = 'right',
+}
 
 export interface GridColumnHeaderSeparatorProps extends React.HTMLAttributes<HTMLDivElement> {
   resizable: boolean;
   resizing: boolean;
   height: number;
+  side?: GridColumnHeaderSeparatorSides;
 }
 
 type OwnerState = GridColumnHeaderSeparatorProps & {
@@ -16,13 +23,14 @@ type OwnerState = GridColumnHeaderSeparatorProps & {
 };
 
 const useUtilityClasses = (ownerState: OwnerState) => {
-  const { resizable, resizing, classes } = ownerState;
+  const { resizable, resizing, classes, side } = ownerState;
 
   const slots = {
     root: [
       'columnSeparator',
       resizable && 'columnSeparator--resizable',
       resizing && 'columnSeparator--resizing',
+      side && `columnSeparator--side${capitalize(side)}`,
     ],
     icon: ['iconSeparator'],
   };
@@ -31,9 +39,15 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 };
 
 function GridColumnHeaderSeparatorRaw(props: GridColumnHeaderSeparatorProps) {
-  const { resizable, resizing, height, ...other } = props;
+  const {
+    resizable,
+    resizing,
+    height,
+    side = GridColumnHeaderSeparatorSides.Right,
+    ...other
+  } = props;
   const rootProps = useGridRootProps();
-  const ownerState = { ...props, classes: rootProps.classes };
+  const ownerState = { ...props, side, classes: rootProps.classes };
   const classes = useUtilityClasses(ownerState);
 
   const stopClick = React.useCallback((event: React.MouseEvent<HTMLDivElement>) => {
@@ -64,6 +78,7 @@ GridColumnHeaderSeparatorRaw.propTypes = {
   height: PropTypes.number.isRequired,
   resizable: PropTypes.bool.isRequired,
   resizing: PropTypes.bool.isRequired,
+  side: PropTypes.oneOf(['left', 'right']),
 } as any;
 
 export { GridColumnHeaderSeparator };

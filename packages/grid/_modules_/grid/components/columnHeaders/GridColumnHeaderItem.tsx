@@ -9,7 +9,10 @@ import { GridSortDirection } from '../../models/gridSortModel';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { GridColumnHeaderSortIcon } from './GridColumnHeaderSortIcon';
 import { GridColumnHeaderTitle } from './GridColumnHeaderTitle';
-import { GridColumnHeaderSeparator } from './GridColumnHeaderSeparator';
+import {
+  GridColumnHeaderSeparator,
+  GridColumnHeaderSeparatorProps,
+} from './GridColumnHeaderSeparator';
 import { ColumnHeaderMenuIcon } from './ColumnHeaderMenuIcon';
 import { ColumnHeaderFilterIcon } from './ColumnHeaderFilterIcon';
 import { GridColumnHeaderMenu } from '../menu/columnMenu/GridColumnHeaderMenu';
@@ -32,6 +35,7 @@ interface GridColumnHeaderItemProps {
   hasFocus?: boolean;
   tabIndex: 0 | -1;
   disableReorder?: boolean;
+  separatorSide?: GridColumnHeaderSeparatorProps['side'];
 }
 
 type OwnerState = GridColumnHeaderItemProps & {
@@ -80,6 +84,7 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
     tabIndex,
     extendRowFullWidth,
     disableReorder,
+    separatorSide,
   } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
@@ -244,6 +249,7 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
         resizing={isResizing}
         height={headerHeight}
         onMouseDown={publish(GridEvents.columnSeparatorMouseDown)}
+        side={separatorSide}
       />
       <GridColumnHeaderMenu
         columnMenuId={columnMenuId!}
@@ -275,6 +281,7 @@ GridColumnHeaderItem.propTypes = {
   isDragging: PropTypes.bool.isRequired,
   isLastColumn: PropTypes.bool.isRequired,
   isResizing: PropTypes.bool.isRequired,
+  separatorSide: PropTypes.oneOf(['left', 'right']),
   sortDirection: PropTypes.oneOf(['asc', 'desc']),
   sortIndex: PropTypes.number,
   tabIndex: PropTypes.oneOf([-1, 0]).isRequired,
