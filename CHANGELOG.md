@@ -3,6 +3,52 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 5.2.2
+
+_Jan 6, 2022_
+
+A big thanks to the 9 contributors who made this release possible. Here are some highlights ✨:
+
+- 🎁 Add `hideable` option to `GridColDef` (#3433) @m4theushw
+- ⚡  Add support for column-based `sortingOrder` with the new `sortingOrder` option in `GridColDef` (#3449) @Quppa
+- 🙈 Allow to precisely control which children rows to expand with the new `isGroupExpandedByDefault` prop
+- 🌍 Add Finnish (fiFI) locale (#3485) @kurkle
+- 📚 Documentation improvements
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@v5.2.2` / `@mui/x-data-grid-pro@v5.2.2`
+
+#### Changes
+
+- [DataGrid] Add new prop `isGroupExpandedByDefault` (#3444) @flaviendelangle
+- [DataGrid] Add `hideable` option to GridColDef (#3433) @alexfauquette
+- [DataGrid] Add `sortingOrder` to GridColDef (#3449) @Quppa
+- [DataGrid] Avoid rerender when pressing key inside already focused cell (#3484) @m4theushw
+- [DataGrid] Close other actions menus when opening a new one (#3492) @m4theushw
+- [DataGrid] Deprecate `getValue` param from the cell and row params (#3369) @flaviendelangle
+- [DataGrid] Fix DateInput bug on parser (#3307) @alexfauquette
+- [DataGrid] Fix can't enter 0 on numeric column (#3491) @m4theushw
+- [DataGrid] Fix scrolling bug when an action is focused (#3483) @alexfauquette
+- [DataGrid] Remove `line-height` from GridCell(#3446) @DanailH
+- [l10n] Add Finnish (fiFI) locale (#3485) @kurkle
+- [l10n] Improve French (frFR) locale (#3494) @Zenoo
+- [l10n] Improve Italian (itIT) locale (#3452) @destegabry
+- [l10n] Improve Vietnamese (viVN) locale (#3493) @hckhanh
+
+### Docs
+
+- [docs] Generate imports dynamically from the packages export list (#3488 @flaviendelangle
+- [docs] Make demos compatible with `preProcessEditCellProps` (#3453) @m4theushw
+
+### Core
+
+- [core] Increase CI efficiency (#3441) @oliviertassinari
+- [core] Refactor sorting comparator (#3390) @flaviendelangle
+- [core] Row checkbox selection is handled by click and space key (#3262) @alexfauquette
+- [core] Update dependency on the core (#3526) @oliviertassinari
+- [core] Update tweet example in release readme (#3481) @DanailH
+
+
 ## 5.2.1
 
 _Dec 17, 2021_
