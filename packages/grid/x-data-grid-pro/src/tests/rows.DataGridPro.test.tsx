@@ -5,7 +5,6 @@ import { expect } from 'chai';
 import { getCell, getRow, getColumnValues, getRows } from 'test/utils/helperFn';
 import {
   GridApiRef,
-  GridComponentProps,
   GridRowModel,
   useGridApiRef,
   DataGridPro,
@@ -166,7 +165,7 @@ describe('<DataGridPro /> - Rows', () => {
 
     let apiRef: GridApiRef;
 
-    const TestCase = (props: Partial<GridComponentProps>) => {
+    const TestCase = (props: Partial<DataGridProProps>) => {
       apiRef = useGridApiRef();
       return (
         <div style={{ width: 300, height: 300 }}>
@@ -292,7 +291,7 @@ describe('<DataGridPro /> - Rows', () => {
 
     let apiRef: GridApiRef;
 
-    const TestCase = (props: Partial<GridComponentProps>) => {
+    const TestCase = (props: Partial<DataGridProProps>) => {
       apiRef = useGridApiRef();
       return (
         <div style={{ width: 300, height: 300 }}>

@@ -16,8 +16,8 @@ import {
 } from '../../models';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { GridComponentProps } from '../../GridComponentProps';
 import { gridFocusCellSelector } from '../../hooks/features/focus/gridFocusStateSelector';
+import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 
 export interface GridCellProps {
   align: GridAlignment;
@@ -60,7 +60,7 @@ function doesSupportPreventScroll(): boolean {
 }
 
 type OwnerState = Pick<GridCellProps, 'align' | 'showRightBorder' | 'isEditable'> & {
-  classes?: GridComponentProps['classes'];
+  classes?: DataGridProcessedProps['classes'];
 };
 
 const useUtilityClasses = (ownerState: OwnerState) => {

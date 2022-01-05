@@ -7,7 +7,7 @@ import {
   visibleGridColumnsSelector,
 } from '../columns/gridColumnsSelector';
 import { useGridSelector } from '../../utils/useGridSelector';
-import { GridComponentProps } from '../../../GridComponentProps';
+import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { gridPaginationSelector } from '../pagination/gridPaginationSelector';
 import { gridRowCountSelector } from '../rows/gridRowsSelector';
 import { gridDensityRowHeightSelector } from '../density/densitySelector';
@@ -41,7 +41,7 @@ function scrollIntoView(dimensions) {
  */
 export const useGridScroll = (
   apiRef: GridApiRef,
-  props: Pick<GridComponentProps, 'pagination'>,
+  props: Pick<DataGridProcessedProps, 'pagination'>,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridScroll');
   const colRef = apiRef.current.columnHeadersElementRef!;

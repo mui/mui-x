@@ -82,9 +82,7 @@
     "onColumnHeaderOut": { "type": { "name": "func" } },
     "onColumnHeaderOver": { "type": { "name": "func" } },
     "onColumnOrderChange": { "type": { "name": "func" } },
-    "onColumnResize": { "type": { "name": "func" } },
     "onColumnVisibilityChange": { "type": { "name": "func" } },
-    "onColumnWidthChange": { "type": { "name": "func" } },
     "onEditCellPropsChange": {
       "type": { "name": "func" },
       "deprecated": true,
