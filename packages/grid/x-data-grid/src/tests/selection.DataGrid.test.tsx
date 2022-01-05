@@ -341,7 +341,7 @@ describe('<DataGrid /> - Selection', () => {
     });
 
     it('should select/unselect all rows when pressing space', async () => {
-      render(<TestDataGridSelection checkboxSelection />);
+      render(<TestDataGridSelection checkboxSelection disableVirtualization />);
 
       const selectAllCell = document.querySelector(
         '[role="columnheader"][data-field="__check__"] input',
