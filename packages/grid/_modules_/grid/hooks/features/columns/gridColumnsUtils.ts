@@ -55,7 +55,6 @@ export const hydrateColumnsWidth = (
       if (newColumn.flex && newColumn.flex > 0) {
         totalFlexUnits += newColumn.flex;
         computedWidth = newColumn.minWidth!;
-
         flexColumns.push(newColumn);
       } else {
         computedWidth = clamp(newColumn.width!, newColumn.minWidth!, newColumn.maxWidth!);
