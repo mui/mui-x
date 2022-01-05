@@ -6,12 +6,12 @@ import { GridFocusApi } from '../../../models/api/gridFocusApi';
 import { GridRowId } from '../../../models/gridRows';
 import { GridCellParams } from '../../../models/params/gridCellParams';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
-import { useGridState } from '../../utils/useGridState';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { GridComponentProps } from '../../../GridComponentProps';
 import { isNavigationKey } from '../../../utils/keyboardUtils';
 import { useGridStateInit } from '../../utils/useGridStateInit';
+import { gridFocusCellSelector } from './gridFocusStateSelector';
 
 /**
  * @requires useGridParamsApi (method)
@@ -26,7 +26,6 @@ export const useGridFocus = (apiRef: GridApiRef, props: Pick<GridComponentProps,
     focus: { cell: null, columnHeader: null },
     tabIndex: { cell: null, columnHeader: null },
   }));
-  const [, setGridState, forceUpdate] = useGridState(apiRef);
   const lastClickedCell = React.useRef<GridCellParams | null>(null);
 
   const setCellFocus = React.useCallback(
@@ -35,7 +34,13 @@ export const useGridFocus = (apiRef: GridApiRef, props: Pick<GridComponentProps,
       if (!apiRef.current.getRow(id)) {
         return;
       }
-      setGridState((state) => {
+
+      const focusedCell = gridFocusCellSelector(apiRef.current.state);
+      if (focusedCell?.id === id && focusedCell.field === field) {
+        return;
+      }
+
+      apiRef.current.setState((state) => {
         logger.debug(`Focusing on cell with id=${id} and field=${field}`);
         return {
           ...state,
@@ -43,15 +48,15 @@ export const useGridFocus = (apiRef: GridApiRef, props: Pick<GridComponentProps,
           focus: { cell: { id, field }, columnHeader: null },
         };
       });
-      forceUpdate();
+      apiRef.current.forceUpdate();
       apiRef.current.publishEvent(GridEvents.cellFocusIn, apiRef.current.getCellParams(id, field));
     },
-    [apiRef, forceUpdate, logger, setGridState],
+    [apiRef, logger],
   );
 
   const setColumnHeaderFocus = React.useCallback<GridFocusApi['setColumnHeaderFocus']>(
     (field, event = {}) => {
-      const { cell } = apiRef.current.state.focus;
+      const cell = gridFocusCellSelector(apiRef.current.state);
       if (cell) {
         apiRef.current.publishEvent(
           GridEvents.cellFocusOut,
@@ -60,7 +65,7 @@ export const useGridFocus = (apiRef: GridApiRef, props: Pick<GridComponentProps,
         );
       }
 
-      setGridState((state) => {
+      apiRef.current.setState((state) => {
         logger.debug(`Focusing on column header with colIndex=${field}`);
 
         return {
@@ -70,9 +75,9 @@ export const useGridFocus = (apiRef: GridApiRef, props: Pick<GridComponentProps,
         };
       });
 
-      forceUpdate();
+      apiRef.current.forceUpdate();
     },
-    [apiRef, forceUpdate, logger, setGridState],
+    [apiRef, logger],
   );
 
   const handleCellDoubleClick = React.useCallback<GridEventListener<GridEvents.cellDoubleClick>>(
@@ -107,11 +112,11 @@ export const useGridFocus = (apiRef: GridApiRef, props: Pick<GridComponentProps,
 
   const handleBlur = React.useCallback<GridEventListener<GridEvents.columnHeaderBlur>>(() => {
     logger.debug(`Clearing focus`);
-    setGridState((state) => ({
+    apiRef.current.setState((state) => ({
       ...state,
       focus: { cell: null, columnHeader: null },
     }));
-  }, [logger, setGridState]);
+  }, [logger, apiRef]);
 
   const handleCellMouseUp = React.useCallback<GridEventListener<GridEvents.cellMouseUp>>(
     (params) => {
@@ -125,7 +130,7 @@ export const useGridFocus = (apiRef: GridApiRef, props: Pick<GridComponentProps,
       const cellParams = lastClickedCell.current;
       lastClickedCell.current = null;
 
-      const { cell: focusedCell } = apiRef.current.state.focus;
+      const focusedCell = gridFocusCellSelector(apiRef.current.state);
 
       if (!focusedCell) {
         if (cellParams) {
@@ -159,14 +164,14 @@ export const useGridFocus = (apiRef: GridApiRef, props: Pick<GridComponentProps,
       if (cellParams) {
         apiRef.current.setCellFocus(cellParams.id, cellParams.field);
       } else {
-        setGridState((state) => ({
+        apiRef.current.setState((state) => ({
           ...state,
           focus: { cell: null, columnHeader: null },
         }));
-        forceUpdate();
+        apiRef.current.forceUpdate();
       }
     },
-    [apiRef, forceUpdate, setGridState],
+    [apiRef],
   );
 
   const handleCellModeChange = React.useCallback<GridEventListener<GridEvents.cellModeChange>>(
@@ -174,7 +179,7 @@ export const useGridFocus = (apiRef: GridApiRef, props: Pick<GridComponentProps,
       if (params.cellMode === 'view') {
         return;
       }
-      const { cell } = apiRef.current.state.focus;
+      const cell = gridFocusCellSelector(apiRef.current.state);
       if (cell?.id !== params.id || cell?.field !== params.field) {
         apiRef.current.setCellFocus(params.id, params.field);
       }
@@ -192,19 +197,19 @@ export const useGridFocus = (apiRef: GridApiRef, props: Pick<GridComponentProps,
   );
 
   React.useEffect(() => {
-    const { cell } = apiRef.current.state.focus;
+    const cell = gridFocusCellSelector(apiRef.current.state);
 
     if (cell) {
       const updatedRow = apiRef.current.getRow(cell.id);
 
       if (!updatedRow) {
-        setGridState((state) => ({
+        apiRef.current.setState((state) => ({
           ...state,
           focus: { cell: null, columnHeader: null },
         }));
       }
     }
-  }, [apiRef, setGridState, props.rows]);
+  }, [apiRef, props.rows]);
 
   React.useEffect(() => {
     const doc = ownerDocument(apiRef.current.rootElementRef!.current as HTMLElement);

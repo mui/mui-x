@@ -5,7 +5,6 @@ import { GridColumnApi } from '../../../models/api/gridColumnApi';
 import { GridColumnOrderChangeParams } from '../../../models/params/gridColumnOrderChangeParams';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
-import { useGridState } from '../../utils/useGridState';
 import {
   allGridColumnsFieldsSelector,
   allGridColumnsSelector,
@@ -58,17 +57,15 @@ export function useGridColumns(
     };
   });
 
-  const [, setGridState, forceUpdate] = useGridState(apiRef);
-
   const setGridColumnsState = React.useCallback(
     (columnsState: GridColumnsState) => {
       logger.debug('Updating columns state.');
 
-      setGridState((state) => ({ ...state, columns: columnsState }));
-      forceUpdate();
+      apiRef.current.setState((state) => ({ ...state, columns: columnsState }));
+      apiRef.current.forceUpdate();
       apiRef.current.publishEvent(GridEvents.columnsChange, columnsState.all);
     },
-    [logger, setGridState, forceUpdate, apiRef],
+    [logger, apiRef],
   );
 
   /**
