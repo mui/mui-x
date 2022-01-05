@@ -23,9 +23,6 @@
       },
       "default": "\"standard\""
     },
-    "detailPanelExpandedRowIds": {
-      "type": { "name": "arrayOf", "description": "Array&lt;number<br>&#124;&nbsp;string&gt;" }
-    },
     "disableColumnFilter": { "type": { "name": "bool" } },
     "disableColumnMenu": { "type": { "name": "bool" } },
     "disableColumnSelector": { "type": { "name": "bool" } },
@@ -45,6 +42,7 @@
     },
     "filterModel": { "type": { "name": "custom", "description": "any" } },
     "getCellClassName": { "type": { "name": "func" } },
+    "getDetailPanelContent": { "type": { "name": "func" } },
     "getRowClassName": { "type": { "name": "func" } },
     "getRowId": { "type": { "name": "func" } },
     "headerHeight": { "type": { "name": "number" }, "default": "56" },
@@ -85,10 +83,7 @@
     "onColumnHeaderOut": { "type": { "name": "func" } },
     "onColumnHeaderOver": { "type": { "name": "func" } },
     "onColumnOrderChange": { "type": { "name": "func" } },
-    "onColumnResize": { "type": { "name": "func" } },
     "onColumnVisibilityChange": { "type": { "name": "func" } },
-    "onColumnWidthChange": { "type": { "name": "func" } },
-    "onDetailPanelExpandedRowIdsChange": { "type": { "name": "func" } },
     "onEditCellPropsChange": {
       "type": { "name": "func" },
       "deprecated": true,
@@ -236,6 +231,8 @@
       "columnHeadersInner--scrollable",
       "columnSeparator--resizable",
       "columnSeparator--resizing",
+      "columnSeparator--sideLeft",
+      "columnSeparator--sideRight",
       "columnSeparator",
       "columnsPanel",
       "columnsPanelRow",

@@ -6,11 +6,11 @@ import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { GridRenderCellParams } from '../../models/params/gridCellParams';
 import { getDataGridUtilityClass } from '../../gridClasses';
-import { GridComponentProps } from '../../GridComponentProps';
+import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { gridExpandedRowsContentCacheSelector } from '../../hooks/features/detailPanel/gridDetailPanelSelector';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 
-type OwnerState = { classes: GridComponentProps['classes']; isExpanded: boolean };
+type OwnerState = { classes: DataGridProcessedProps['classes']; isExpanded: boolean };
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes, isExpanded } = ownerState;

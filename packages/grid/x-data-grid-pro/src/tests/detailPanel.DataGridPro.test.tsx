@@ -3,7 +3,7 @@ import {
   DataGridPro,
   GridApiRef,
   useGridApiRef,
-  GridComponentProps,
+  DataGridProProps,
   GridRowParams,
   GRID_DETAIL_PANEL_TOGGLE_FIELD,
 } from '@mui/x-data-grid-pro';
@@ -20,10 +20,7 @@ describe('<DataGridPro /> - Detail panel', () => {
 
   let apiRef: GridApiRef;
 
-  const TestCase = ({
-    nbRows = 20,
-    ...other
-  }: Partial<GridComponentProps> & { nbRows?: number }) => {
+  const TestCase = ({ nbRows = 20, ...other }: Partial<DataGridProProps> & { nbRows?: number }) => {
     apiRef = useGridApiRef();
     const data = useData(nbRows, 1);
     return (

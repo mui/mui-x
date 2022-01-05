@@ -3,7 +3,7 @@ import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { GridEvents } from '../../../models/events/gridEvents';
 import { useGridState } from '../../utils/useGridState';
 import { GridApiRef } from '../../../models/api/gridApiRef';
-import { GridComponentProps } from '../../../GridComponentProps';
+import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { getCurrentPageRows } from '../../utils/useCurrentPageRows';
 import { gridDensityRowHeightSelector } from '../density/densitySelector';
 import { GridPreProcessingGroup } from '../../core/preProcessing';
@@ -16,7 +16,7 @@ import { GridEventListener } from '../../../models/events/gridEventListener';
  */
 export const useGridRowsHydration = (
   apiRef: GridApiRef,
-  props: Pick<GridComponentProps, 'pagination' | 'paginationMode'>,
+  props: Pick<DataGridProcessedProps, 'pagination' | 'paginationMode'>,
 ) => {
   const [gridState, setGridState, forceUpdate] = useGridState(apiRef);
 

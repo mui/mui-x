@@ -17,7 +17,7 @@ import {
   gridExpandedRowsContentCacheSelector,
   gridExpandedRowsHeightCacheSelector,
 } from './gridDetailPanelSelector';
-import { GridComponentProps } from '../../../GridComponentProps';
+import { DataGridProProcessedProps } from '../../../models/props/DataGridProProps';
 import { GridRowEntry, GridRowId } from '../../../models/gridRows';
 import { useGridSelector } from '../../utils/useGridSelector';
 import { GridDetailPanelApi } from '../../../models/api/gridDetailPanelApi';
@@ -28,8 +28,8 @@ import { GridState } from '../../../models/gridState';
 function cacheContentAndHeight(
   apiRef: GridApiRef,
   state: GridState,
-  getDetailPanelContent: GridComponentProps['getDetailPanelContent'],
-  getDetailPanelHeight: GridComponentProps['getDetailPanelHeight'],
+  getDetailPanelContent: DataGridProProcessedProps['getDetailPanelContent'],
+  getDetailPanelHeight: DataGridProProcessedProps['getDetailPanelHeight'],
 ) {
   if (typeof getDetailPanelContent !== 'function') {
     return {};
@@ -57,7 +57,7 @@ function cacheContentAndHeight(
 export const useGridDetailPanel = (
   apiRef: GridApiRef,
   props: Pick<
-    GridComponentProps,
+    DataGridProProcessedProps,
     | 'initialState'
     | 'getDetailPanelContent'
     | 'getDetailPanelHeight'

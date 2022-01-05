@@ -1,5 +1,11 @@
 import * as React from 'react';
-import { DataGrid, useGridApiContext, useGridState } from '@mui/x-data-grid';
+import {
+  DataGrid,
+  gridPageCountSelector,
+  gridPageSelector,
+  useGridApiContext,
+  useGridSelector,
+} from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import { Theme, styled } from '@mui/material/styles';
 import Pagination from '@mui/material/Pagination';
@@ -95,15 +101,16 @@ const StyledDataGrid = styled(DataGrid)(({ theme }) => ({
 
 function CustomPagination() {
   const apiRef = useGridApiContext();
-  const [state] = useGridState(apiRef);
+  const page = useGridSelector(apiRef, gridPageSelector);
+  const pageCount = useGridSelector(apiRef, gridPageCountSelector);
 
   return (
     <Pagination
       color="primary"
       variant="outlined"
       shape="rounded"
-      page={state.pagination.page + 1}
-      count={state.pagination.pageCount}
+      page={page + 1}
+      count={pageCount}
       // @ts-expect-error
       renderItem={(props2) => <PaginationItem {...props2} disableRipple />}
       onChange={(event: React.ChangeEvent<unknown>, value: number) =>

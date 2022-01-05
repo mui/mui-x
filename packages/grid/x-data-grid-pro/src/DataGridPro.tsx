@@ -13,7 +13,7 @@ import {
 import { GridContextProvider } from '../../_modules_/grid/context/GridContextProvider';
 import { useDataGridProComponent } from './useDataGridProComponent';
 import { Watermark } from '../../_modules_/grid/components/Watermark';
-import { DataGridProProps } from './DataGridProProps';
+import { DataGridProProps } from '../../_modules_/grid/models/props/DataGridProProps';
 import { useDataGridProProps } from './useDataGridProProps';
 import { DataGridProVirtualScroller } from './DataGridProVirtualScroller';
 import { DataGridProColumnHeaders } from './DataGridProColumnHeaders';
@@ -283,7 +283,7 @@ DataGridProRaw.propTypes = {
    * Function that returns the height of the row detail panel.
    * @param {GridRowParams} params With all properties from [[GridRowParams]].
    * @returns {number} The height in pixels.
-   * @default "() => 300"
+   * @default "() => 500"
    */
   getDetailPanelHeight: PropTypes.func,
   /**
