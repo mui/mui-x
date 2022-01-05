@@ -233,6 +233,7 @@
   { "name": "gridPaginatedVisibleSortedGridRowIdsSelector", "kind": "Variable" },
   { "name": "GridPagination", "kind": "Variable" },
   { "name": "GridPaginationApi", "kind": "ExportSpecifier" },
+  { "name": "GridPaginationInitialState", "kind": "ExportSpecifier" },
   { "name": "gridPaginationRowRangeSelector", "kind": "Variable" },
   { "name": "gridPaginationSelector", "kind": "Variable" },
   { "name": "GridPaginationState", "kind": "ExportSpecifier" },
