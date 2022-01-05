@@ -4,7 +4,7 @@ import { GridEvents } from '../../../models/events/gridEvents';
 import { useGridState } from '../../utils/useGridState';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridRowsHydrationApi } from '../../../models/api/gridRowsHydrationApi';
-import { GridComponentProps } from '../../../GridComponentProps';
+import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { getCurrentPageRows } from '../../utils/useCurrentPageRows';
 import { GridPreProcessingGroup } from '../../core/preProcessing';
 import { GridEventListener } from '../../../models/events/gridEventListener';
@@ -22,7 +22,7 @@ import {
  */
 export const useGridRowsHydration = (
   apiRef: GridApiRef,
-  props: Pick<GridComponentProps, 'getRowHeight' | 'pagination' | 'paginationMode'>,
+  props: Pick<DataGridProcessedProps, 'getRowHeight' | 'pagination' | 'paginationMode'>,
 ): void => {
   const [gridState, setGridState, forceUpdate] = useGridState(apiRef);
   const rowsHeightCollection = React.useRef(new Map<GridRowId, number>());
