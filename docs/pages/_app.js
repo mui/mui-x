@@ -10,7 +10,6 @@ import pages from 'docsx/src/pages'; // DO NOT REMOVE
 import dataGridPages from 'docsx/data/data-grid/pages'; // DO NOT REMOVE
 import XWrapper from 'docsx/src/modules/XWrapper'; // DO NOT REMOVE
 import * as React from 'react';
-import find from 'lodash/find';
 import { loadCSS } from 'fg-loadcss/src/loadCSS';
 import NextHead from 'next/head';
 import PropTypes from 'prop-types';
@@ -30,6 +29,7 @@ import {
 } from 'docs/src/modules/utils/i18n';
 import DocsStyledEngineProvider from 'docs/src/modules/utils/StyledEngineProvider';
 import createEmotionCache from 'docs/src/createEmotionCache';
+import findActivePage from 'docs/src/modules/utils/findActivePage';
 
 function getMuiPackageVersion(packageName, commitRef) {
   if (commitRef === undefined) {
@@ -194,36 +194,6 @@ Tip: you can access the documentation \`theme\` object directly in the console.
 `,
     'font-family:monospace;color:#1976d2;font-size:12px;',
   );
-}
-
-// DO NOT REPLACE THIS FUNCTION WITH THE ONE FROM THE MONOREPO
-function findActivePage(currentPages, pathname) {
-  const activePage = find(currentPages, (page) => {
-    if (page.children && pathname.indexOf(`${page.pathname}/`) === 0) {
-      // Check if one of the children matches (for /components)
-      return findActivePage(page.children, pathname);
-    }
-
-    // Should be an exact match if no children
-    return pathname === page.pathname;
-  });
-
-  if (!activePage) {
-    return null;
-  }
-
-  // We need to drill down
-  if (activePage.pathname !== pathname) {
-    return findActivePage(activePage.children, pathname);
-  }
-
-  if (activePage.pathname === '/api-docs/data-grid') {
-    // If the activePage is returned, it will crash.
-    // <AppLayoutDocsFooter /> won't find the links to the previous and next pages.
-    return activePage.children[0];
-  }
-
-  return activePage;
 }
 
 function AppWrapper(props) {
