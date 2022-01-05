@@ -23,13 +23,13 @@ A big thanks to the 9 contributors who made this release possible. Here are some
 - [DataGrid] Add new prop `isGroupExpandedByDefault` (#3444) @flaviendelangle
 - [DataGrid] Add `hideable` option to GridColDef (#3433) @alexfauquette
 - [DataGrid] Add `sortingOrder` to GridColDef (#3449) @Quppa
-- [DataGrid] Avoid rerender when pressing key inside already focused cell (#3484) @m4theushw
+- [DataGrid] Avoid re-render when pressing key inside already focused cell (#3484) @m4theushw
 - [DataGrid] Close other actions menus when opening a new one (#3492) @m4theushw
 - [DataGrid] Deprecate `getValue` param from the cell and row params (#3369) @flaviendelangle
-- [DataGrid] Fix DateInput bug on parser (#3307) @alexfauquette
+- [DataGrid] Fix `DateInput` bug on parser (#3307) @alexfauquette
 - [DataGrid] Fix can't enter 0 on numeric column (#3491) @m4theushw
 - [DataGrid] Fix scrolling bug when an action is focused (#3483) @alexfauquette
-- [DataGrid] Remove `line-height` from GridCell(#3446) @DanailH
+- [DataGrid] Remove `line-height` from `GridCell` (#3446) @DanailH
 - [l10n] Add Finnish (fiFI) locale (#3485) @kurkle
 - [l10n] Improve French (frFR) locale (#3494) @Zenoo
 - [l10n] Improve Italian (itIT) locale (#3452) @destegabry
@@ -42,9 +42,9 @@ A big thanks to the 9 contributors who made this release possible. Here are some
 
 ### Core
 
+- [core] Add test for space key row checkbox selection toggling (#3262) @alexfauquette
 - [core] Increase CI efficiency (#3441) @oliviertassinari
 - [core] Refactor sorting comparator (#3390) @flaviendelangle
-- [core] Row checkbox selection is handled by click and space key (#3262) @alexfauquette
 - [core] Update dependency on the core (#3526) @oliviertassinari
 - [core] Update tweet example in release readme (#3481) @DanailH
 
