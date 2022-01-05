@@ -1,6 +1,6 @@
 import * as React from 'react';
 import LRUCache from 'lru-cache';
-import { GridDemoData, getRealGridData, getRealGridDataSync } from './services/real-data-service';
+import { GridDemoData, getRealGridData } from './services/real-data-service';
 import { getCommodityColumns } from './commodities.columns';
 import { getEmployeeColumns } from './employees.columns';
 import asyncWorker from './asyncWorker';
@@ -90,32 +90,27 @@ const deepFreeze = <T>(object: T): T => {
   return Object.freeze(object);
 };
 
-const getColumns = (options: Pick<UseDemoDataOptions, 'dataSet' | 'editable' | 'maxColumns'>) => {
-  let columns =
-    options.dataSet === 'Commodity' ? getCommodityColumns(options.editable) : getEmployeeColumns();
-
-  if (options.maxColumns) {
-    columns = columns.slice(0, options.maxColumns);
-  }
-  return columns;
-};
-
-export const getSynchronousDemoData = (options: UseDemoDataOptions) =>
-  getRealGridDataSync(options.rowLength, getColumns(options));
-
 export const useDemoData = (options: UseDemoDataOptions): DemoDataReturnType => {
   const [rowLength, setRowLength] = React.useState(options.rowLength);
   const [index, setIndex] = React.useState(0);
   const [loading, setLoading] = React.useState(true);
 
+  const getColumns = React.useCallback(() => {
+    let columns =
+      options.dataSet === 'Commodity'
+        ? getCommodityColumns(options.editable)
+        : getEmployeeColumns();
+
+    if (options.maxColumns) {
+      columns = columns.slice(0, options.maxColumns);
+    }
+    return columns;
+  }, [options.dataSet, options.editable, options.maxColumns]);
+
   const [data, setData] = React.useState<GridDemoData>(() =>
     addTreeDataOptionsToDemoData(
       {
-        columns: getColumns({
-          dataSet: options.dataSet,
-          editable: options.editable,
-          maxColumns: options.maxColumns,
-        }),
+        columns: getColumns(),
         rows: [],
       },
       options.treeData,
@@ -140,11 +135,7 @@ export const useDemoData = (options: UseDemoDataOptions): DemoDataReturnType => 
       setLoading(true);
 
       let newData: DemoTreeDataValue;
-      const columns = getColumns({
-        dataSet: options.dataSet,
-        editable: options.editable,
-        maxColumns: options.maxColumns,
-      });
+      const columns = getColumns();
       if (rowLength > 1000) {
         newData = await getRealGridData(1000, columns);
         newData = await extrapolateSeed(rowLength, columns, newData);
@@ -179,12 +170,12 @@ export const useDemoData = (options: UseDemoDataOptions): DemoDataReturnType => 
     rowLength,
     data.columns,
     options.dataSet,
-    options.editable,
     options.maxColumns,
     options.treeData?.maxDepth,
     options.treeData?.groupingField,
     options.treeData?.averageChildren,
     index,
+    getColumns,
   ]);
 
   return {
