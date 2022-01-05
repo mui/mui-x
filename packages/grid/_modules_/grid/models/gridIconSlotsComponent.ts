@@ -2,6 +2,7 @@ import * as React from 'react';
 
 /**
  * Set of icons used in the grid component UI.
+ * TODO: Differentiate community and pro interface
  */
 export interface GridIconSlotsComponent {
   /**

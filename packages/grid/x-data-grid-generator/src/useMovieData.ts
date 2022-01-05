@@ -1,4 +1,4 @@
-import { GridColumns, GridComponentProps, GridRowModel } from '@mui/x-data-grid';
+import { GridColumns, DataGridProps, GridRowModel } from '@mui/x-data-grid';
 
 type Movie = {
   title: string;
@@ -275,7 +275,7 @@ const ROWS: GridRowModel<Movie>[] = [
 
 const getRowId = (row: any) => row.title;
 
-export const useMovieData = (): Pick<GridComponentProps, 'rows' | 'columns' | 'getRowId'> => {
+export const useMovieData = (): Pick<DataGridProps, 'rows' | 'columns' | 'getRowId'> => {
   return {
     getRowId,
     rows: ROWS,

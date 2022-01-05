@@ -1,9 +1,5 @@
-import * as React from 'react';
 import MUICheckbox from '@mui/material/Checkbox';
-import { GRID_DEFAULT_LOCALE_TEXT } from '../../constants/localeTextConstants';
-import { GridComponentProps, GridInputComponentProps } from '../../GridComponentProps';
-import { GRID_DEFAULT_SIMPLE_OPTIONS } from '../../models/gridOptions';
-import { GridIconSlotsComponent, GridSlotsComponent } from '../../models';
+import { GridIconSlotsComponent, GridSlotsComponent } from '../models';
 import {
   GridArrowDownwardIcon,
   GridArrowUpwardIcon,
@@ -33,10 +29,10 @@ import {
   GridMoreVertIcon,
   GridExpandMoreIcon,
   GridKeyboardArrowRight,
-} from '../../components';
-import { GridColumnUnsortedIcon } from '../../components/columnHeaders/GridColumnUnsortedIcon';
-import { ErrorOverlay } from '../../components/ErrorOverlay';
-import { GridNoResultsOverlay } from '../../components/GridNoResultsOverlay';
+} from '../components';
+import { GridColumnUnsortedIcon } from '../components/columnHeaders/GridColumnUnsortedIcon';
+import { ErrorOverlay } from '../components/ErrorOverlay';
+import { GridNoResultsOverlay } from '../components/GridNoResultsOverlay';
 
 const DEFAULT_GRID_ICON_SLOTS_COMPONENTS: GridIconSlotsComponent = {
   BooleanCellTrueIcon: GridCheckIcon,
@@ -60,7 +56,7 @@ const DEFAULT_GRID_ICON_SLOTS_COMPONENTS: GridIconSlotsComponent = {
   GroupingCriteriaExpandIcon: GridKeyboardArrowRight,
 };
 
-const DEFAULT_GRID_SLOTS_COMPONENTS: GridSlotsComponent = {
+export const DEFAULT_GRID_SLOTS_COMPONENTS: GridSlotsComponent = {
   ...DEFAULT_GRID_ICON_SLOTS_COMPONENTS,
   Cell: GridCell,
   BaseCheckbox: MUICheckbox,
@@ -78,39 +74,4 @@ const DEFAULT_GRID_SLOTS_COMPONENTS: GridSlotsComponent = {
   ColumnsPanel: GridColumnsPanel,
   Panel: GridPanel,
   Row: GridRow,
-};
-
-export const useGridProcessedProps = (inProps: GridInputComponentProps) => {
-  const localeText = React.useMemo(
-    () => ({ ...GRID_DEFAULT_LOCALE_TEXT, ...inProps.localeText }),
-    [inProps.localeText],
-  );
-
-  const components = React.useMemo<GridSlotsComponent>(() => {
-    const overrides = inProps.components;
-
-    if (!overrides) {
-      return { ...DEFAULT_GRID_SLOTS_COMPONENTS };
-    }
-
-    const mergedComponents = {} as GridSlotsComponent;
-
-    Object.keys(DEFAULT_GRID_SLOTS_COMPONENTS).forEach((key) => {
-      mergedComponents[key] =
-        overrides[key] === undefined ? DEFAULT_GRID_SLOTS_COMPONENTS[key] : overrides[key];
-    });
-
-    return mergedComponents;
-  }, [inProps.components]);
-
-  return React.useMemo<GridComponentProps>(
-    () => ({
-      ...GRID_DEFAULT_SIMPLE_OPTIONS,
-      ...inProps,
-      disableRowGrouping: inProps.disableRowGrouping || !inProps.experimentalFeatures?.rowGrouping,
-      localeText,
-      components,
-    }),
-    [inProps, localeText, components],
-  );
 };

@@ -5,7 +5,7 @@ import {
   GridRowTreeNodeConfig,
 } from '../../../models';
 import { GridFilterState } from '../filter';
-import { GridComponentProps } from '../../../GridComponentProps';
+import { DataGridProProcessedProps } from '../../../models/props/DataGridProProps';
 import { GridAggregatedFilterItemApplier } from '../filter/gridFilterState';
 
 export const GROUPING_COLUMN_SINGLE = '__row_group_by_columns_group__';
@@ -133,7 +133,7 @@ export const filterRowTreeFromGroupingColumns = (
 };
 
 export const getColDefOverrides = (
-  groupingColDefProp: GridComponentProps['groupingColDef'],
+  groupingColDefProp: DataGridProProcessedProps['groupingColDef'],
   fields: string[],
 ) => {
   if (typeof groupingColDefProp === 'function') {

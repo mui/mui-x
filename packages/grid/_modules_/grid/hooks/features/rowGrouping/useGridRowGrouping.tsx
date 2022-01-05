@@ -19,7 +19,7 @@ import {
   gridRowGroupingModelSelector,
   gridRowGroupingSanitizedModelSelector,
 } from './gridRowGroupingSelector';
-import { GridComponentProps } from '../../../GridComponentProps';
+import { DataGridProProcessedProps } from '../../../models/props/DataGridProProps';
 import {
   filterRowTreeFromGroupingColumns,
   getGroupingColDefFieldFromGroupingCriteriaField,
@@ -58,7 +58,7 @@ import { GridRowGroupingColumnMenuItems } from '../../../components/menu/columnM
 export const useGridRowGrouping = (
   apiRef: GridApiRef,
   props: Pick<
-    GridComponentProps,
+    DataGridProProcessedProps,
     | 'initialState'
     | 'rowGroupingModel'
     | 'onRowGroupingModelChange'

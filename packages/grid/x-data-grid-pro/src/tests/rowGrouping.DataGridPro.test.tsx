@@ -14,6 +14,7 @@ import {
   useGridRootProps,
 } from '@mui/x-data-grid-pro';
 import { spy } from 'sinon';
+import { DataGridProProcessedProps } from '../../../_modules_/grid/models/props/DataGridProProps';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -477,7 +478,7 @@ describe('<DataGridPro /> - Group Rows By Column', () => {
       const disableRowGroupingSpy = spy();
 
       const CustomToolbar = () => {
-        const rootProps = useGridRootProps();
+        const rootProps = useGridRootProps<DataGridProProcessedProps>();
         disableRowGroupingSpy(rootProps.disableRowGrouping);
         return null;
       };

@@ -5,7 +5,6 @@ import { GridColumnApi } from '../../../models/api/gridColumnApi';
 import { GridColumnOrderChangeParams } from '../../../models/params/gridColumnOrderChangeParams';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
-import { useGridState } from '../../utils/useGridState';
 import {
   allGridColumnsFieldsSelector,
   allGridColumnsSelector,
@@ -18,7 +17,7 @@ import {
   useGridApiEventHandler,
   useGridApiOptionHandler,
 } from '../../utils/useGridApiEventHandler';
-import { GridComponentProps } from '../../../GridComponentProps';
+import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { useGridStateInit } from '../../utils/useGridStateInit';
 import { GridColumnVisibilityChangeParams } from '../../../models';
 import { GridPreProcessingGroup } from '../../core/preProcessing';
@@ -33,7 +32,7 @@ import { hydrateColumnsWidth, computeColumnTypes, createColumnsState } from './g
 export function useGridColumns(
   apiRef: GridApiRef,
   props: Pick<
-    GridComponentProps,
+    DataGridProcessedProps,
     'columns' | 'onColumnVisibilityChange' | 'columnTypes' | 'checkboxSelection' | 'classes'
   >,
 ): void {
@@ -58,17 +57,15 @@ export function useGridColumns(
     };
   });
 
-  const [, setGridState, forceUpdate] = useGridState(apiRef);
-
   const setGridColumnsState = React.useCallback(
     (columnsState: GridColumnsState) => {
       logger.debug('Updating columns state.');
 
-      setGridState((state) => ({ ...state, columns: columnsState }));
-      forceUpdate();
+      apiRef.current.setState((state) => ({ ...state, columns: columnsState }));
+      apiRef.current.forceUpdate();
       apiRef.current.publishEvent(GridEvents.columnsChange, columnsState.all);
     },
-    [logger, setGridState, forceUpdate, apiRef],
+    [logger, apiRef],
   );
 
   /**
