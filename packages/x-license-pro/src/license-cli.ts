@@ -27,7 +27,7 @@ export function licenseGenCli() {
             type: 'string',
           });
       },
-      handler: (argv: HandlerArgv) => {
+      handler: (argv: yargs.ArgumentsCamelCase<HandlerArgv>) => {
         if (!argv.order) {
           throw new Error('MUI: You forgot to pass an order number. $ > licensegen -o order_123.');
         }

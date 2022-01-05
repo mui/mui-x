@@ -18,7 +18,6 @@ import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { GridColumnPinningApi, GridPinnedPosition } from '../../../models/api/gridColumnPinningApi';
 import { gridPinnedColumnsSelector } from './columnPinningSelector';
 import { useGridStateInit } from '../../utils/useGridStateInit';
-import { useGridState } from '../../utils/useGridState';
 import { useGridSelector } from '../../utils/useGridSelector';
 import { filterColumns } from '../../../../../x-data-grid-pro/src/DataGridProVirtualScroller';
 import { GridRowParams } from '../../../models/params/gridRowParams';
@@ -42,7 +41,6 @@ export const useGridColumnPinning = (
       right: !props.disableColumnPinning ? props.initialState?.pinnedColumns?.right : undefined,
     },
   }));
-  const [, setGridState, forceUpdate] = useGridState(apiRef);
   const pinnedColumns = useGridSelector(apiRef, gridPinnedColumnsSelector);
 
   // Each visible row (not to be confused with a filter result) is composed of a central .MuiDataGrid-row element
@@ -241,7 +239,7 @@ export const useGridColumnPinning = (
         return;
       }
 
-      setGridState((state) => {
+      apiRef.current.setState((state) => {
         const otherSide =
           side === GridPinnedPosition.right ? GridPinnedPosition.left : GridPinnedPosition.right;
         const newPinnedColumns = {
@@ -251,15 +249,15 @@ export const useGridColumnPinning = (
         };
         return { ...state, pinnedColumns: newPinnedColumns };
       });
-      forceUpdate();
+      apiRef.current.forceUpdate();
     },
-    [apiRef, forceUpdate, setGridState, checkIfEnabled],
+    [apiRef, checkIfEnabled],
   );
 
   const unpinColumn = React.useCallback<GridColumnPinningApi['unpinColumn']>(
     (field: string) => {
       checkIfEnabled('unpinColumn');
-      setGridState((state) => {
+      apiRef.current.setState((state) => {
         const newPinnedColumns = {
           ...state.pinnedColumns,
           left: (state.pinnedColumns.left || []).filter((column) => column !== field),
@@ -267,9 +265,9 @@ export const useGridColumnPinning = (
         };
         return { ...state, pinnedColumns: newPinnedColumns };
       });
-      forceUpdate();
+      apiRef.current.forceUpdate();
     },
-    [forceUpdate, setGridState, checkIfEnabled],
+    [apiRef, checkIfEnabled],
   );
 
   const getPinnedColumns = React.useCallback<GridColumnPinningApi['getPinnedColumns']>(() => {
@@ -280,10 +278,10 @@ export const useGridColumnPinning = (
   const setPinnedColumns = React.useCallback<GridColumnPinningApi['setPinnedColumns']>(
     (newPinnedColumns) => {
       checkIfEnabled('setPinnedColumns');
-      setGridState((state) => ({ ...state, pinnedColumns: newPinnedColumns }));
-      forceUpdate();
+      apiRef.current.setState((state) => ({ ...state, pinnedColumns: newPinnedColumns }));
+      apiRef.current.forceUpdate();
     },
-    [forceUpdate, setGridState, checkIfEnabled],
+    [apiRef, checkIfEnabled],
   );
 
   const isColumnPinned = React.useCallback<GridColumnPinningApi['isColumnPinned']>(
