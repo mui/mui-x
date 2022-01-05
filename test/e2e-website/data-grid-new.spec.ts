@@ -106,7 +106,10 @@ test.describe.parallel('Material docs', () => {
 
       const anchor = await page.locator('.DocSearch-Hits a:has-text("Data Grid - Components")');
 
-      await expect(anchor.first()).toHaveAttribute('href', `/x/react-data-grid/#main-content`);
+      await expect(anchor.first()).toHaveAttribute(
+        'href',
+        `/x/react-data-grid/components/#main-content`,
+      );
     });
 
     test('should have correct link when searching API', async ({ page }) => {
