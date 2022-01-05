@@ -12,7 +12,7 @@ import { gridVisibleColumnFieldsSelector } from '../../_modules_/grid/hooks/feat
 import { useGridApiEventHandler } from '../../_modules_/grid/hooks/utils/useGridApiEventHandler';
 import { GridEvents } from '../../_modules_/grid/models/events';
 import { useGridSelector } from '../../_modules_/grid/hooks/utils/useGridSelector';
-import { GridComponentProps } from '../../_modules_/grid/GridComponentProps';
+import { DataGridProProcessedProps } from '../../_modules_/grid/models/props/DataGridProProps';
 import { getDataGridUtilityClass } from '../../_modules_/grid/gridClasses';
 import { gridPinnedColumnsSelector } from '../../_modules_/grid/hooks/features/columnPinning/columnPinningSelector';
 import {
@@ -46,7 +46,7 @@ export const filterColumns = (pinnedColumns: GridPinnedColumns, columns: string[
 };
 
 type OwnerState = {
-  classes: GridComponentProps['classes'];
+  classes: DataGridProProcessedProps['classes'];
   leftPinnedColumns: GridPinnedColumns['left'];
   rightPinnedColumns: GridPinnedColumns['right'];
 };

@@ -1,5 +1,5 @@
 import React from 'react';
-import { GridComponentProps } from '../../GridComponentProps';
+import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { GridApiRef } from '../../models/api/gridApiRef';
 import { GridStateApi } from '../../models/api/gridStateApi';
 import { GridControlStateItem } from '../../models/controlStateItem';
@@ -8,7 +8,7 @@ import { GridState } from '../../models/gridState';
 import { GridEvents } from '../../models/events';
 import { useGridApiMethod } from '../utils';
 
-export const useGridStateInitialization = (apiRef: GridApiRef, props: GridComponentProps) => {
+export const useGridStateInitialization = (apiRef: GridApiRef, props: DataGridProcessedProps) => {
   const controlStateMapRef = React.useRef<Record<string, GridControlStateItem<any>>>({});
   const [, rawForceUpdate] = React.useState<GridState>();
 

@@ -577,15 +577,14 @@ describe('<DataGrid /> - Filter', () => {
           ]}
           disableVirtualization
         />,
-        { strict: false, strictEffects: false },
       );
       expect(getColumnValues()).to.deep.equal(['0', '1984', '1954', '1974']);
       const input = screen.getByRole('spinbutton', { name: 'Value' });
       fireEvent.change(input, { target: { value: 999999 } });
-      clock.tick(500);
+      clock.runToLast();
       expect(getColumnValues()).to.deep.equal([]);
       fireEvent.change(input, { target: { value: '' } });
-      clock.tick(500);
+      clock.runToLast();
       expect(getColumnValues()).to.deep.equal(['0', '1984', '1954', '1974']);
     });
   });

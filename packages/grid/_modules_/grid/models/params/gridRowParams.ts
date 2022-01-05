@@ -23,6 +23,7 @@ export interface GridRowParams<R extends GridRowModel = GridRowModel> {
    * @param {GridRowId} id The row id.
    * @param {string} field The field.
    * @returns {GridCellValue} The cell value.
+   * @deprecated Use `params.row` to directly access the fields you want instead.
    */
   getValue: (id: GridRowId, field: string) => GridCellValue;
 }

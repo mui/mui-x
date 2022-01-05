@@ -13,7 +13,7 @@ import {
 import { GridContextProvider } from '../../_modules_/grid/context/GridContextProvider';
 import { useDataGridProComponent } from './useDataGridProComponent';
 import { Watermark } from '../../_modules_/grid/components/Watermark';
-import { DataGridProProps } from './DataGridProProps';
+import { DataGridProProps } from '../../_modules_/grid/models/props/DataGridProProps';
 import { useDataGridProProps } from './useDataGridProProps';
 import { DataGridProVirtualScroller } from './DataGridProVirtualScroller';
 import { DataGridProColumnHeaders } from './DataGridProColumnHeaders';
@@ -340,6 +340,13 @@ DataGridProRaw.propTypes = {
    * @returns {boolean} A boolean indicating if the cell is editable.
    */
   isCellEditable: PropTypes.func,
+  /**
+   * Determines if a group should be expanded after its creation.
+   * This prop takes priority over the `defaultGroupingExpansionDepth` prop.
+   * @param {GridRowTreeNodeConfig} node The node of the group to test.
+   * @returns {boolean} A boolean indicating if the group is expanded.
+   */
+  isGroupExpandedByDefault: PropTypes.func,
   /**
    * Determines if a row can be selected.
    * @param {GridRowParams} params With all properties from [[GridRowParams]].

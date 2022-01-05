@@ -2,12 +2,14 @@ import { createRenderer, fireEvent, screen, act } from '@material-ui/monorepo/te
 import { getCell, getColumnHeadersTextContent, getColumnValues } from 'test/utils/helperFn';
 import * as React from 'react';
 import { expect } from 'chai';
+import { spy } from 'sinon';
 import {
   DataGridPro,
   DataGridProProps,
   GridApiRef,
   GridLinkOperator,
   GridRowsProp,
+  GridRowTreeNodeConfig,
   useGridApiRef,
 } from '@mui/x-data-grid-pro';
 
@@ -257,6 +259,33 @@ describe('<DataGridPro /> - Tree Data', () => {
       expect(getColumnValues(1)).to.deep.equal(['A', 'B', 'B.A', 'B.B', 'C']);
       setProps({ sortModel: [{ field: 'name', sort: 'desc' }] });
       expect(getColumnValues(1)).to.deep.equal(['C', 'B', 'B.B', 'B.A', 'A']);
+    });
+  });
+
+  describe('prop: isGroupExpandedByDefault', () => {
+    it('should expand groups according to isGroupExpandedByDefault when defined', () => {
+      const isGroupExpandedByDefault = spy((node: GridRowTreeNodeConfig) => node.id === 'A');
+
+      render(<Test isGroupExpandedByDefault={isGroupExpandedByDefault} />);
+      expect(isGroupExpandedByDefault.callCount).to.equal(8); // Should not be called on leaves
+      const { childrenExpanded, ...node } = apiRef.current.state.rows.tree.A;
+      const callForNodeA = isGroupExpandedByDefault
+        .getCalls()
+        .find((call) => call.firstArg.id === node.id)!;
+      expect(callForNodeA.firstArg).to.deep.includes(node);
+      expect(getColumnValues(1)).to.deep.equal(['A', 'A.A', 'A.B', 'B', 'C']);
+    });
+
+    it('should have priority over defaultGroupingExpansionDepth when both defined', () => {
+      const isGroupExpandedByDefault = (node: GridRowTreeNodeConfig) => node.id === 'A';
+
+      render(
+        <Test
+          isGroupExpandedByDefault={isGroupExpandedByDefault}
+          defaultGroupingExpansionDepth={-1}
+        />,
+      );
+      expect(getColumnValues(1)).to.deep.equal(['A', 'A.A', 'A.B', 'B', 'C']);
     });
   });
 

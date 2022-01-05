@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { GridApiRef } from '../../../models/api/gridApiRef';
-import { GridComponentProps } from '../../../GridComponentProps';
+import { DataGridProProcessedProps } from '../../../models/props/DataGridProProps';
 import {
   GRID_TREE_DATA_GROUP_COL_DEF,
   GRID_TREE_DATA_GROUP_COL_DEF_FORCED_PROPERTIES,
@@ -38,11 +38,12 @@ const TREE_DATA_GROUPING_NAME = 'tree-data';
 export const useGridTreeData = (
   apiRef: GridApiRef,
   props: Pick<
-    GridComponentProps,
+    DataGridProProcessedProps,
     | 'treeData'
     | 'getTreeDataPath'
     | 'groupingColDef'
     | 'defaultGroupingExpansionDepth'
+    | 'isGroupExpandedByDefault'
     | 'disableChildrenFiltering'
     | 'disableChildrenSorting'
   >,
@@ -73,12 +74,19 @@ export const useGridTreeData = (
         rows,
         ...params,
         defaultGroupingExpansionDepth: props.defaultGroupingExpansionDepth,
+        isGroupExpandedByDefault: props.isGroupExpandedByDefault,
         groupingName: TREE_DATA_GROUPING_NAME,
       });
     };
 
     return apiRef.current.unstable_registerRowGroupsBuilder('treeData', groupRows);
-  }, [apiRef, props.getTreeDataPath, props.treeData, props.defaultGroupingExpansionDepth]);
+  }, [
+    apiRef,
+    props.getTreeDataPath,
+    props.treeData,
+    props.defaultGroupingExpansionDepth,
+    props.isGroupExpandedByDefault,
+  ]);
 
   useFirstRender(() => {
     updateRowGrouping();
@@ -178,7 +186,6 @@ export const useGridTreeData = (
         rowTree,
         rowIds,
         sortRowList: params.sortRowList,
-        comparatorList: params.comparatorList,
         disableChildrenSorting: props.disableChildrenSorting,
       });
     },

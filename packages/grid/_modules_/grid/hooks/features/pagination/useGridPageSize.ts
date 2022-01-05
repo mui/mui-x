@@ -1,12 +1,11 @@
 import * as React from 'react';
 import { GridApiRef } from '../../../models';
-import { GridComponentProps } from '../../../GridComponentProps';
+import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridPageSizeApi } from './gridPaginationInterfaces';
 import { GridEvents } from '../../../models/events';
 import {
   useGridLogger,
   useGridApiMethod,
-  useGridState,
   useGridApiEventHandler,
   useGridSelector,
 } from '../../utils';
@@ -20,7 +19,7 @@ import { gridDensityRowHeightSelector } from '../density';
  */
 export const useGridPageSize = (
   apiRef: GridApiRef,
-  props: Pick<GridComponentProps, 'pageSize' | 'onPageSizeChange' | 'autoPageSize'>,
+  props: Pick<DataGridProcessedProps, 'pageSize' | 'onPageSizeChange' | 'autoPageSize'>,
 ) => {
   const logger = useGridLogger(apiRef, 'useGridPageSize');
   const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
@@ -29,7 +28,6 @@ export const useGridPageSize = (
     ...state,
     pagination: { pageSize: props.pageSize ?? (props.autoPageSize ? 0 : 100) },
   }));
-  const [, setGridState, forceUpdate] = useGridState(apiRef);
 
   apiRef.current.unstable_updateControlState({
     stateId: 'pageSize',
@@ -50,16 +48,16 @@ export const useGridPageSize = (
 
       logger.debug(`Setting page size to ${pageSize}`);
 
-      setGridState((state) => ({
+      apiRef.current.setState((state) => ({
         ...state,
         pagination: {
           ...state.pagination,
           pageSize,
         },
       }));
-      forceUpdate();
+      apiRef.current.forceUpdate();
     },
-    [apiRef, setGridState, forceUpdate, logger],
+    [apiRef, logger],
   );
 
   const pageSizeApi: GridPageSizeApi = {

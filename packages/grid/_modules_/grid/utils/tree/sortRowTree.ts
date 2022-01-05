@@ -1,16 +1,15 @@
 import { GridRowId, GridRowTreeConfig, GridRowTreeNodeConfig } from '../../models';
-import { GridSortingFieldComparator } from '../../hooks/features/sorting/gridSortingState';
+import { GridSortingModelApplier } from '../../hooks/features/sorting/gridSortingState';
 
 interface SortRowTreeParams {
   rowIds: GridRowId[];
   rowTree: GridRowTreeConfig;
   disableChildrenSorting: boolean;
-  comparatorList: GridSortingFieldComparator[];
-  sortRowList: (rowList: GridRowTreeNodeConfig[]) => GridRowId[];
+  sortRowList: GridSortingModelApplier | null;
 }
 
 export const sortRowTree = (params: SortRowTreeParams) => {
-  const { rowIds, rowTree, disableChildrenSorting, comparatorList, sortRowList } = params;
+  const { rowIds, rowTree, disableChildrenSorting, sortRowList } = params;
   let sortedRows: GridRowId[] = [];
 
   // Group the rows by parent
@@ -38,7 +37,7 @@ export const sortRowTree = (params: SortRowTreeParams) => {
           parent,
           rowList.map((row) => row.id),
         );
-      } else if (comparatorList.length === 0) {
+      } else if (!sortRowList) {
         sortedGroupedByParentRows.set(
           parent,
           rowList.map((row) => row.id),

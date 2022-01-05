@@ -15,9 +15,8 @@ import {
   useGridApiEventHandler,
   useGridApiOptionHandler,
 } from '../../utils/useGridApiEventHandler';
-import { useGridState } from '../../utils/useGridState';
 import { useGridNativeEventListener } from '../../utils/useGridNativeEventListener';
-import { GridComponentProps } from '../../../GridComponentProps';
+import { DataGridProProcessedProps } from '../../../models/props/DataGridProProps';
 import { useGridStateInit } from '../../utils/useGridStateInit';
 
 // TODO: remove support for Safari < 13.
@@ -70,7 +69,7 @@ function trackFinger(event, currentTouchId): CursorCoordinates | boolean {
  */
 export const useGridColumnResize = (
   apiRef: GridApiRef,
-  props: Pick<GridComponentProps, 'onColumnResize' | 'onColumnWidthChange'>,
+  props: Pick<DataGridProProcessedProps, 'onColumnResize' | 'onColumnWidthChange'>,
 ) => {
   const logger = useGridLogger(apiRef, 'useGridColumnResize');
 
@@ -78,7 +77,6 @@ export const useGridColumnResize = (
     ...state,
     columnResize: { resizingColumnField: '' },
   }));
-  const [, setGridState, forceUpdate] = useGridState(apiRef);
   const colDefRef = React.useRef<GridStateColDef>();
   const colElementRef = React.useRef<HTMLDivElement>();
   const colCellElementsRef = React.useRef<NodeListOf<Element>>();
@@ -301,22 +299,22 @@ export const useGridColumnResize = (
 
   const handleResizeStart = React.useCallback<GridEventListener<GridEvents.columnResizeStart>>(
     ({ field }) => {
-      setGridState((state) => ({
+      apiRef.current.setState((state) => ({
         ...state,
         columnResize: { ...state.columnResize, resizingColumnField: field },
       }));
-      forceUpdate();
+      apiRef.current.forceUpdate();
     },
-    [setGridState, forceUpdate],
+    [apiRef],
   );
 
   const handleResizeStop = React.useCallback<GridEventListener<GridEvents.columnResizeStop>>(() => {
-    setGridState((state) => ({
+    apiRef.current.setState((state) => ({
       ...state,
       columnResize: { ...state.columnResize, resizingColumnField: '' },
     }));
-    forceUpdate();
-  }, [setGridState, forceUpdate]);
+    apiRef.current.forceUpdate();
+  }, [apiRef]);
 
   React.useEffect(() => {
     return () => {

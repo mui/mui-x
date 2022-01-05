@@ -1,4 +1,5 @@
-import type { GridComponentProps, GridApiRef } from '../../_modules_';
+import type { GridApiRef } from '../../_modules_';
+import { DataGridProcessedProps } from '../../_modules_/grid/models/props/DataGridProps';
 
 import { useGridInitialization } from '../../_modules_/grid/hooks/core';
 
@@ -25,7 +26,7 @@ import { useGridEvents } from '../../_modules_/grid/hooks/features/events/useGri
 import { useGridDimensions } from '../../_modules_/grid/hooks/features/dimensions/useGridDimensions';
 import { useGridRowsHydration } from '../../_modules_/grid/hooks/features/rows/useGridRowsHydration';
 
-export const useDataGridComponent = (apiRef: GridApiRef, props: GridComponentProps) => {
+export const useDataGridComponent = (apiRef: GridApiRef, props: DataGridProcessedProps) => {
   useGridInitialization(apiRef, props);
   useGridSelection(apiRef, props);
   useGridColumns(apiRef, props);

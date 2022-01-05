@@ -16,10 +16,10 @@ import { GridPanelHeader } from './GridPanelHeader';
 import { GridPanelWrapper } from './GridPanelWrapper';
 import { GRID_EXPERIMENTAL_ENABLED } from '../../constants';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { GridComponentProps } from '../../GridComponentProps';
+import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { getDataGridUtilityClass } from '../../gridClasses';
 
-type OwnerState = { classes: GridComponentProps['classes'] };
+type OwnerState = { classes: DataGridProcessedProps['classes'] };
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -79,7 +79,9 @@ export function GridColumnsPanel() {
     (value: boolean) => {
       apiRef.current.updateColumns(
         columns.map((col) => {
-          col.hide = value;
+          if (col.hideable !== false) {
+            col.hide = value;
+          }
           return col;
         }),
       );
@@ -131,6 +133,7 @@ export function GridColumnsPanel() {
               <FormControlLabel
                 control={
                   <Switch
+                    disabled={column.hideable === false}
                     checked={!column.hide}
                     onClick={toggleColumn}
                     name={column.field}

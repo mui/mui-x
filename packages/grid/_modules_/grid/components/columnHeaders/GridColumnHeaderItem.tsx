@@ -15,7 +15,7 @@ import { ColumnHeaderFilterIcon } from './ColumnHeaderFilterIcon';
 import { GridColumnHeaderMenu } from '../menu/columnMenu/GridColumnHeaderMenu';
 import { getDataGridUtilityClass } from '../../gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { GridComponentProps } from '../../GridComponentProps';
+import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 
 interface GridColumnHeaderItemProps {
   colIndex: number;
@@ -36,7 +36,7 @@ interface GridColumnHeaderItemProps {
 
 type OwnerState = GridColumnHeaderItemProps & {
   showRightBorder: boolean;
-  classes?: GridComponentProps['classes'];
+  classes?: DataGridProcessedProps['classes'];
 };
 
 const useUtilityClasses = (ownerState: OwnerState) => {
@@ -173,11 +173,17 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
     />
   );
 
+  const sortingOrder: GridSortDirection[] = column.sortingOrder ?? rootProps.sortingOrder;
+
   const columnTitleIconButtons = (
     <React.Fragment>
       {!rootProps.disableColumnFilter && <ColumnHeaderFilterIcon counter={filterItemsCounter} />}
       {column.sortable && !column.hideSortIcons && (
-        <GridColumnHeaderSortIcon direction={sortDirection} index={sortIndex} />
+        <GridColumnHeaderSortIcon
+          direction={sortDirection}
+          index={sortIndex}
+          sortingOrder={sortingOrder}
+        />
       )}
     </React.Fragment>
   );
