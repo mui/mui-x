@@ -91,7 +91,6 @@ export default function QuickFilteringGrid() {
     const searchRegex = new RegExp(escapeRegExp(searchValue), 'i');
     const filteredRows = data.rows.filter((row: any) => {
       return Object.keys(row).some((field: any) => {
-        console.log(row[field]);
         return searchRegex.test(row[field].toString());
       });
     });
