@@ -42,7 +42,10 @@ const updateAppToUseProductPagesData = () => {
   appSource = appendSource(
     appSource,
     `let productPages = pages;`,
-    `if (router.asPath.startsWith('/x/react-data-grid')) {
+    `if (
+      router.asPath.startsWith('/x/react-data-grid') ||
+      router.asPath.startsWith('/x/api/mui-data-grid')
+    ) {
       productPages = dataGridPages;
     }`,
   );

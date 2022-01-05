@@ -203,11 +203,20 @@ const buildComponentDocumentation = async (options: {
   reactApi.slots = {};
 
   const demos: ReactApi['demos'] = [];
-  if (reactApi.name === 'DataGrid' || reactApi.name.startsWith('Grid')) {
-    demos.push(['/components/data-grid#mit-version', 'DataGrid']);
-  }
-  if (reactApi.name === 'DataGridPro' || reactApi.name.startsWith('Grid')) {
-    demos.push(['/components/data-grid#commercial-version', 'DataGridPro']);
+  if (outputDirectory.includes('/x/')) {
+    if (reactApi.name === 'DataGrid' || reactApi.name.startsWith('Grid')) {
+      demos.push(['/x/react-data-grid/#mit-version', 'DataGrid']);
+    }
+    if (reactApi.name === 'DataGridPro' || reactApi.name.startsWith('Grid')) {
+      demos.push(['/x/react-data-grid#commercial-version', 'DataGridPro']);
+    }
+  } else {
+    if (reactApi.name === 'DataGrid' || reactApi.name.startsWith('Grid')) {
+      demos.push(['/components/data-grid#mit-version', 'DataGrid']);
+    }
+    if (reactApi.name === 'DataGridPro' || reactApi.name.startsWith('Grid')) {
+      demos.push(['/components/data-grid#commercial-version', 'DataGridPro']);
+    }
   }
   reactApi.demos = demos;
 

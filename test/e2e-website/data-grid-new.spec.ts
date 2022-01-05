@@ -39,7 +39,7 @@ test.describe.parallel('Material docs', () => {
         anchorTexts.map((text, index) => {
           return expect(anchors.nth(index)).toHaveAttribute(
             'href',
-            `/x/react-data-grid/${kebabCase(text)}/`,
+            `/x/api/mui-data-grid/${kebabCase(text)}/`,
           );
         }),
       );
