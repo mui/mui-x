@@ -17,7 +17,7 @@ import {
 export type DataGridProProps = Omit<
   Partial<DataGridProPropsWithDefaultValue> &
     DataGridPropsWithComplexDefaultValueBeforeProcessing &
-    DataGridProOtherProps,
+    DataGridProPropsWithoutDefaultValue,
   DataGridProForcedPropsKey
 >;
 
@@ -27,7 +27,7 @@ export type DataGridProProps = Omit<
 export interface DataGridProProcessedProps
   extends DataGridProPropsWithDefaultValue,
     DataGridPropsWithComplexDefaultValueAfterProcessing,
-    DataGridProOtherProps {}
+    DataGridProPropsWithoutDefaultValue {}
 
 export type DataGridProForcedPropsKey = 'signature';
 
@@ -78,7 +78,7 @@ export interface DataGridProPropsWithDefaultValue extends DataGridPropsWithDefau
 }
 
 /**
- * The default values of `DataGridProSimpleOptions` to inject in the props of DataGridPro.
+ * The default values of `DataGridProPropsWithDefaultValue` to inject in the props of DataGridPro.
  */
 export const DATA_GRID_PRO_PROPS_DEFAULT_VALUES: DataGridProPropsWithDefaultValue = {
   ...DATA_GRID_PROPS_DEFAULT_VALUES,
@@ -90,7 +90,7 @@ export const DATA_GRID_PRO_PROPS_DEFAULT_VALUES: DataGridProPropsWithDefaultValu
   disableChildrenSorting: false,
 };
 
-export interface DataGridProOtherProps extends DataGridPropsWithoutDefaultValue {
+export interface DataGridProPropsWithoutDefaultValue extends DataGridPropsWithoutDefaultValue {
   /**
    * Determines the path of a row in the tree data.
    * For instance, a row with the path ["A", "B"] is the child of the row with the path ["A"].

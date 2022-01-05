@@ -292,7 +292,7 @@ export interface DataGridPropsWithDefaultValues {
 }
 
 /**
- * The default values of `DataGridSimpleOptions` to inject in the props of DataGrid.
+ * The default values of `DataGridPropsWithDefaultValues` to inject in the props of DataGrid.
  */
 export const DATA_GRID_PROPS_DEFAULT_VALUES: DataGridPropsWithDefaultValues = {
   autoHeight: false,
