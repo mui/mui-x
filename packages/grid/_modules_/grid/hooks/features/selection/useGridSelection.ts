@@ -22,7 +22,7 @@ import { getDataGridUtilityClass, gridClasses } from '../../../gridClasses';
 import { useGridStateInit } from '../../utils/useGridStateInit';
 import { GridPreProcessingGroup, useGridRegisterPreProcessor } from '../../core/preProcessing';
 import { GridCellModes } from '../../../models/gridEditRowModel';
-import { GridColumnsRawState } from '../columns/gridColumnsState';
+import { GridColumnsRawState } from '../columns/gridColumnsInterfaces';
 import { isKeyboardEvent } from '../../../utils/keyboardUtils';
 
 type OwnerState = { classes: DataGridProcessedProps['classes'] };

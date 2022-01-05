@@ -22,7 +22,7 @@ import { useGridSelector } from '../../utils/useGridSelector';
 import { filterColumns } from '../../../../../x-data-grid-pro/src/DataGridProVirtualScroller';
 import { GridRowParams } from '../../../models/params/gridRowParams';
 import { MuiEvent } from '../../../models/muiEvent';
-import { GridColumnsRawState } from '../columns/gridColumnsState';
+import { GridColumnsRawState } from '../columns/gridColumnsInterfaces';
 import { GridColDef } from '../../../models/colDef/gridColDef';
 
 const Divider = () => <MuiDivider onClick={(event) => event.stopPropagation()} />;

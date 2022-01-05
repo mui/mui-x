@@ -18,7 +18,7 @@ import { buildRowTree, BuildRowTreeGroupingCriteria } from '../../../utils/tree/
 import { GridRowGroupingPreProcessing } from '../../core/rowGroupsPerProcessing';
 import { gridFilteredDescendantCountLookupSelector } from '../filter';
 import { GridPreProcessingGroup, useGridRegisterPreProcessor } from '../../core/preProcessing';
-import { GridColumnsRawState } from '../columns/gridColumnsState';
+import { GridColumnsRawState } from '../columns/gridColumnsInterfaces';
 import { GridFilteringMethod } from '../filter/gridFilterState';
 import { gridRowIdsSelector, gridRowTreeSelector } from '../rows';
 import { useGridRegisterFilteringMethod } from '../filter/useGridRegisterFilteringMethod';

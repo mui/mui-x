@@ -18,6 +18,7 @@ import { GridFilterModel } from '../gridFilterModel';
 import { GridInputSelectionModel, GridSelectionModel } from '../gridSelectionModel';
 import { GridInitialState } from '../gridState';
 import { GridSlotsComponentsProps } from '../gridSlotsComponentsProps';
+import { GridVisibleColumnsModel } from '../../hooks/features/columns/gridColumnsInterfaces';
 
 /**
  * The props users can give to the `DataGrid` component.
@@ -610,6 +611,20 @@ export interface DataGridPropsWithoutDefaultValue extends CommonProps {
    */
   onSelectionModelChange?: (
     selectionModel: GridSelectionModel,
+    details: GridCallbackDetails,
+  ) => void;
+  /**
+   * Set the visible columns model of the grid.
+   * If defined, the grid will ignore the `hide` property in [[GridColDef]].
+   */
+  visibleColumnsModel?: GridVisibleColumnsModel;
+  /**
+   * Callback fired when the visible columns model changes.
+   * @param {GridVisibleColumnsModel} model The new model.
+   * @param {GridCallbackDetails} details Additional details for this callback.
+   */
+  onVisibleColumnsModelChange?: (
+    model: GridVisibleColumnsModel,
     details: GridCallbackDetails,
   ) => void;
   /**

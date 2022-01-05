@@ -262,5 +262,11 @@
     "description": "Fired when the inner size of the viewport changes. Called with an ElementSize object.",
     "params": "ElementSize",
     "event": "MuiEvent<{}>"
+  },
+  {
+    "name": "visibleColumnsModelChange",
+    "description": "Fired when the visible columns model changes",
+    "params": "GridVisibleColumnsModel",
+    "event": "MuiEvent<{}>"
   }
 ]

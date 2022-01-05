@@ -355,6 +355,8 @@
   { "name": "GridViewHeadlineIcon", "kind": "Variable" },
   { "name": "GridViewStreamIcon", "kind": "Variable" },
   { "name": "gridVisibleColumnFieldsSelector", "kind": "Variable" },
+  { "name": "gridVisibleColumnsModelLookupSelector", "kind": "Variable" },
+  { "name": "gridVisibleColumnsModelSelector", "kind": "Variable" },
   { "name": "gridVisibleRowCountSelector", "kind": "Variable" },
   { "name": "gridVisibleRowsLookupSelector", "kind": "Variable" },
   { "name": "gridVisibleRowsSelector", "kind": "Variable" },

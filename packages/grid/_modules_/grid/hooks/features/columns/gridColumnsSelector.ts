@@ -1,5 +1,6 @@
 import { createSelector } from 'reselect';
 import { GridState } from '../../../models/gridState';
+import { GridStateColDef } from '../../../models';
 
 export const gridColumnsSelector = (state: GridState) => state.columns;
 
@@ -14,8 +15,29 @@ export const allGridColumnsSelector = createSelector(
   (allFields, lookup) => allFields.map((field) => lookup[field]),
 );
 
-export const visibleGridColumnsSelector = createSelector(allGridColumnsSelector, (columns) =>
-  columns.filter((c) => c.field != null && !c.hide),
+export const gridVisibleColumnsModelSelector = createSelector(
+  gridColumnsSelector,
+  (columnsState) => columnsState.visibleColumnsModel,
+);
+
+export const gridVisibleColumnsModelLookupSelector = createSelector(
+  gridVisibleColumnsModelSelector,
+  (visibleColumnsModel) => {
+    const visibleColumnsLookup: Record<string, true> = {};
+
+    visibleColumnsModel.forEach((field) => {
+      visibleColumnsLookup[field] = true;
+    });
+
+    return visibleColumnsLookup;
+  },
+);
+
+export const visibleGridColumnsSelector = createSelector(
+  allGridColumnsSelector,
+  gridVisibleColumnsModelLookupSelector,
+  (allColumns, visibleColumnsModelLookup) =>
+    allColumns.filter((column) => visibleColumnsModelLookup[column.field]),
 );
 
 export const gridVisibleColumnFieldsSelector = createSelector(
