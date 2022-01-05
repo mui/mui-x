@@ -27,6 +27,12 @@ export const computeColumnTypes = (customColumnTypes: GridColumnTypesRecord = {}
   return mergedColumnTypes;
 };
 
+/**
+ * Compute the `computedWidth` (eg: the width the column actually have) based on the `width` / `flex` / `minWidth` / `maxWidth` properties of `GridColDef`.
+ * The columns already have been merged with there `type` default values for `minWidth`, `maxWidth` and `width`, thus the `!` for those properties below.
+ * TODO: Unit test this function in depth and only keep basic cases for the whole grid testing.
+ * TODO: Improve the `GridColDef` typing to reflect the fact that `minWidth` / `maxWidth` and `width` can't be null after the merge with the `type` default values.
+ */
 export const hydrateColumnsWidth = (
   rawState: GridColumnsRawState,
   viewportInnerWidth: number,
@@ -34,47 +40,44 @@ export const hydrateColumnsWidth = (
   const columnsLookup: GridColumnLookup = {};
 
   let totalFlexUnits = 0;
-  let widthToAllocateInFlex = viewportInnerWidth;
+  let widthAllocatedBeforeFlex = 0;
 
-  const flexColumns: { value: GridStateColDef; maxWidthPerFlexUnit: number }[] = [];
+  const flexColumns: GridStateColDef[] = [];
 
-  // Compute the width of non-flex columns and how much width must be allocated between the flex columns
+  // For the non-flex columns, compute their width
+  // For the flex columns, compute there minimum width and how much width must be allocated during the flex allocation
   rawState.all.forEach((columnField) => {
     const newColumn = { ...rawState.lookup[columnField] } as GridStateColDef;
     if (newColumn.hide) {
       newColumn.computedWidth = 0;
     } else {
-      // The `newColumn` has already been merged with its `type` default values for `minWidth`, `maxWidth` and `width`
-      // TODO: Have the typing reflect that those keys can't be null at that point
       let computedWidth: number;
       if (newColumn.flex && newColumn.flex > 0) {
         totalFlexUnits += newColumn.flex;
         computedWidth = newColumn.minWidth!;
 
-        if (newColumn.minWidth! < newColumn.maxWidth!) {
-          flexColumns.push({
-            value: newColumn,
-            maxWidthPerFlexUnit: (newColumn.maxWidth! - computedWidth) / newColumn.flex,
-          });
-        }
+        flexColumns.push(newColumn);
       } else {
         computedWidth = clamp(newColumn.width!, newColumn.minWidth!, newColumn.maxWidth!);
       }
 
-      widthToAllocateInFlex -= computedWidth;
+      widthAllocatedBeforeFlex += computedWidth;
       newColumn.computedWidth = computedWidth;
     }
 
     columnsLookup[columnField] = newColumn;
   });
 
-  // Compute the width of flex columns
-  if (totalFlexUnits > 0 && widthToAllocateInFlex > 0) {
-    const widthPerFlexUnit = widthToAllocateInFlex / totalFlexUnits;
+  // Allocate the remaining space to the flex columns
+  if (totalFlexUnits > 0 && widthAllocatedBeforeFlex < viewportInnerWidth) {
+    const widthPerFlexUnit = (viewportInnerWidth - widthAllocatedBeforeFlex) / totalFlexUnits;
 
     flexColumns.forEach((column) => {
-      column.value.computedWidth +=
-        Math.min(column.maxWidthPerFlexUnit, widthPerFlexUnit) * column.value.flex!;
+      column.computedWidth = clamp(
+        column.computedWidth + widthPerFlexUnit * column.flex!,
+        column.minWidth!,
+        column.maxWidth!,
+      );
     });
   }
 
