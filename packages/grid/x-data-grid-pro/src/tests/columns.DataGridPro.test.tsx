@@ -4,7 +4,7 @@ import { expect } from 'chai';
 import { spy } from 'sinon';
 import {
   GridApiRef,
-  GridComponentProps,
+  DataGridProProps,
   useGridApiRef,
   DataGridPro,
   gridClasses,
@@ -40,7 +40,7 @@ describe('<DataGridPro /> - Columns', () => {
     columns: [{ field: 'brand' }],
   };
 
-  const Test = (props: Partial<GridComponentProps>) => {
+  const Test = (props: Partial<DataGridProProps>) => {
     apiRef = useGridApiRef();
     return (
       <div style={{ width: 300, height: 300 }}>
@@ -83,6 +83,13 @@ describe('<DataGridPro /> - Columns', () => {
   });
 
   describe('resizing', () => {
+    before(function beforeHook() {
+      if (isJSDOM) {
+        // Need layouting
+        this.skip();
+      }
+    });
+
     const columns = [{ field: 'brand', width: 100 }];
 
     it('should allow to resize columns with the mouse', () => {
