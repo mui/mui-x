@@ -116,7 +116,6 @@ You can use the `onFilterModelChange` prop to listen to changes to the filters a
 ### For all columns
 
 Filters are enabled by default, but you can easily disable this feature by setting the `disableColumnFilter` prop.
-The filters will still
 
 ```jsx
 <DataGrid disableColumnFilter />
@@ -142,9 +141,7 @@ The full typing details can be found on the [GridFilterOperator api page](/api/d
 An operator determines if a cell value should be considered as a valid filtered value.
 The candidate value used by the operator is the one corresponding to the `field` attribute or the value returned by the `valueGetter` of the `GridColDef`.
 
-**Note**: The [`valueFormatter`](/components/data-grid/columns/#value-formatter) is only used for rendering purposes.
-
-By default, each column type comes with a set of built-in operators.
+Each column type comes with a default array of operators.
 You can get them by importing the following functions:
 
 | Column type  | Function                       |
@@ -161,12 +158,12 @@ You can find more information about the supported column types in the [columns s
 ### Create a custom operator
 
 If the built-in filter operators are not enough, creating a custom operator is an option.
-A custom operator is defined creating a `GridFilterOperator` object.
+A custom operator is defined by creating a `GridFilterOperator` object.
 This object has to be added to the `filterOperators` attribute of the `GridColDef`.
 
 The main part of an operator is the `getApplyFilterFn` function.
 When applying the filters, the grid will call this function with the filter item and the column on which the item must be applied.
-This function must return another function that will be called on every cell of the column to determine if the cell value satisfies the condition of the operator.
+This function must return another function that takes the cell value as an input and return `true` if it satisfies the operator condition.
 
 ```ts
 const operator: GridFilterOperator = {
@@ -186,6 +183,8 @@ const operator: GridFilterOperator = {
 };
 ```
 
+**Note**: The [`valueFormatter`](/components/data-grid/columns/#value-formatter) is only used for rendering purposes.
+
 **Note**: If the column has a [`valueGetter`](/components/data-grid/columns/#value-getter), then `params.value` will be the resolved value.
 
 In the demo below, you can see how to create a completely new operator for the Rating column.
@@ -195,6 +194,13 @@ In the demo below, you can see how to create a completely new operator for the R
 ### Remove an operator
 
 To remove built-in operators, import the method to generate them and filter the output to fit your needs.
+
+```ts
+// Only keep '>' and '<' default operators
+const filterOperators = getGridNumericOperators().filter(
+  (operator) => operator.value === '>' || operator.value === '<',
+);
+```
 
 In the demo below, the `rating` column only has the `<` and `>` operators.
 
