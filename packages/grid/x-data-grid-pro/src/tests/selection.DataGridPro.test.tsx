@@ -64,7 +64,7 @@ describe('<DataGridPro /> - Selection', () => {
       expect(selectAllCheckbox.checked).to.equal(true);
     });
 
-    it('should unselect all rows of all the pages if 1 row of another page is selected', () => {
+    it('should select all rows of all the pages if 1 row of another page is selected', () => {
       render(
         <TestDataGridSelection
           checkboxSelection
@@ -80,8 +80,8 @@ describe('<DataGridPro /> - Selection', () => {
         name: /select all rows checkbox/i,
       });
       fireEvent.click(selectAllCheckbox);
-      expect(apiRef.current.getSelectedRows()).to.have.length(0);
-      expect(selectAllCheckbox.checked).to.equal(false);
+      expect(apiRef.current.getSelectedRows()).to.have.length(4);
+      expect(selectAllCheckbox.checked).to.equal(true);
     });
 
     it('should select all visible rows if pagination is not enabled', () => {
@@ -159,7 +159,7 @@ describe('<DataGridPro /> - Selection', () => {
       expect(selectAllCheckbox.checked).to.equal(true);
     });
 
-    it('should unselect all the rows of the current page if 1 row of the current page is selected', () => {
+    it('should select all the rows of the current page if 1 row of the current page is selected', () => {
       render(
         <TestDataGridSelection
           checkboxSelection
@@ -178,8 +178,8 @@ describe('<DataGridPro /> - Selection', () => {
         name: /select all rows checkbox/i,
       });
       fireEvent.click(selectAllCheckbox);
-      expect(apiRef.current.getSelectedRows()).to.have.keys([0]);
-      expect(selectAllCheckbox.checked).to.equal(false);
+      expect(apiRef.current.getSelectedRows()).to.have.keys([0, 2, 3]);
+      expect(selectAllCheckbox.checked).to.equal(true);
     });
 
     it('should not set the header checkbox in a indeterminate state when some rows of other pages are not selected', () => {
