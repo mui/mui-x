@@ -63,7 +63,7 @@ Use the `groupingColDef` prop to customize the rendering of the grouping column.
 
 #### Accessing the grouping column field
 
-If you want to access the grouping column field, for instance to pin it, you can use the `GRID_TREE_DATA_GROUPING_FIELD` constant.
+If you want to access the grouping column field, for instance, to use it with column pinning, the `GRID_TREE_DATA_GROUPING_FIELD` constant is available.
 
 ```tsx
 <DataGridPro
