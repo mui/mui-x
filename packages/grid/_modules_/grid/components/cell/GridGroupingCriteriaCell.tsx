@@ -51,9 +51,7 @@ const GridGroupingCriteriaCell = (props: GridGroupingCriteriaCellProps) => {
     if (event.key === ' ') {
       event.stopPropagation();
     }
-    if (isNavigationKey(event.key) && !event.shiftKey) {
-      apiRef.current.publishEvent(GridEvents.cellNavigationKeyDown, props, event);
-    }
+    apiRef.current.publishEvent(GridEvents.cellKeyDown, props, event);
   };
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
