@@ -40,7 +40,7 @@ A big thanks to the 9 contributors who made this release possible. Here are some
 
 ### Docs
 
-- [docs] Generate imports dynamically from the packages export list (#3488 @flaviendelangle
+- [docs] Generate imports dynamically from the packages export list (#3488) @flaviendelangle
 - [docs] Make demos compatible with `preProcessEditCellProps` (#3453) @m4theushw
 
 ### Core
