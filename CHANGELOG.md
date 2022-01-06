@@ -29,9 +29,9 @@ A big thanks to the 9 contributors who made this release possible. Here are some
 - [DataGrid] Deprecate `getValue` param from the cell and row params (#3369) @flaviendelangle
 - [DataGrid] Fix value parsing in date input (#3307) @alexfauquette
 - [DataGrid] Fix can't enter 0 on numeric column (#3491) @m4theushw
-- [DataGridPro] Fix resizing of right pinned columns (#3502) @m4theushw
 - [DataGrid] Fix scrolling bug when an action is focused (#3483) @alexfauquette
 - [DataGrid] Remove `line-height` from `GridCell` (#3446) @DanailH
+- [DataGridPro] Fix resizing of right pinned columns (#3502) @m4theushw
 - [DataGridPro] Add new prop `isGroupExpandedByDefault` (#3444) @flaviendelangle
 - [l10n] Add Finnish (fiFI) locale (#3485) @kurkle
 - [l10n] Improve French (frFR) locale (#3494) @Zenoo
