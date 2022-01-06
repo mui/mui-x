@@ -161,19 +161,7 @@ describe('<DataGrid /> - Pagination', () => {
 
     it('should go to last page when page is controlled and the current page is greater than the last page', () => {
       const onPageChange = spy();
-
-      const filterModel: GridFilterModel = {
-        linkOperator: GridLinkOperator.And,
-        items: [
-          {
-            columnField: 'id',
-            operatorValue: '<=',
-            value: '3',
-          },
-        ],
-      };
-
-      const TestCasePaginationFilteredData = () => {
+      const TestCasePaginationFilteredData = (props) => {
         const [page, setPage] = React.useState(1);
 
         const handlePageChange = (newPage: number) => {
@@ -187,11 +175,26 @@ describe('<DataGrid /> - Pagination', () => {
             onPageChange={handlePageChange}
             pageSize={5}
             rowsPerPageOptions={[5]}
-            filterModel={filterModel}
+            {...props}
           />
         );
       };
-      render(<TestCasePaginationFilteredData />);
+      const { setProps } = render(<TestCasePaginationFilteredData />);
+      clock.runToLast(); // Run the timer to cleanup the listeners registered by StrictMode
+      expect(onPageChange.callCount).to.equal(0);
+
+      setProps({
+        filterModel: {
+          linkOperator: GridLinkOperator.And,
+          items: [
+            {
+              columnField: 'id',
+              operatorValue: '<=',
+              value: '3',
+            },
+          ],
+        },
+      });
 
       expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3']);
       expect(onPageChange.lastCall.args[0]).to.equal(0);
@@ -216,6 +219,7 @@ describe('<DataGrid /> - Pagination', () => {
           rowsPerPageOptions={[1, 2]}
         />,
       );
+      clock.runToLast(); // Run the timer to cleanup the listeners registered by StrictMode
       expect(onPageSizeChange.callCount).to.equal(0);
       setProps({ pageSize: 2 });
       expect(onPageSizeChange.callCount).to.equal(0);
@@ -232,6 +236,7 @@ describe('<DataGrid /> - Pagination', () => {
           rowsPerPageOptions={[1, 2]}
         />,
       );
+      clock.runToLast(); // Run the timer to cleanup the listeners registered by StrictMode
       expect(getColumnValues()).to.deep.equal(['0']);
       setProps({ pageSize: 2 });
       expect(getColumnValues()).to.deep.equal(['0', '1']);
@@ -241,6 +246,7 @@ describe('<DataGrid /> - Pagination', () => {
       const { setProps } = render(
         <BaselineTestCase pageSize={1} page={0} rowsPerPageOptions={[1, 2]} />,
       );
+      clock.runToLast(); // Run the timer to cleanup the listeners registered by StrictMode
       expect(getColumnValues()).to.deep.equal(['0']);
       setProps({ page: 1, pageSize: 2 });
       expect(getColumnValues()).to.deep.equal(['2', '3']);
@@ -320,6 +326,7 @@ describe('<DataGrid /> - Pagination', () => {
       };
 
       render(<ControlCase />);
+      clock.runToLast(); // Run the timer to cleanup the listeners registered by StrictModes
 
       fireEvent.mouseDown(screen.queryByLabelText('Rows per page:'));
       expect(screen.queryAllByRole('option').length).to.equal(3);
@@ -361,6 +368,7 @@ describe('<DataGrid /> - Pagination', () => {
       const { setProps } = render(
         <BaselineTestCase rowsPerPageOptions={[10, 20]} pageSize={20} disableVirtualization />,
       );
+      clock.runToLast(); // Run the timer to cleanup the listeners registered by StrictMode
       expect(getColumnValues(0)).to.have.length(20);
       setProps({ pageSize: 10 });
       expect(getColumnValues(0)).to.have.length(10);

@@ -414,10 +414,10 @@ describe('<DataGrid /> - Filter', () => {
         });
         const input = screen.getByRole('textbox', { name: 'Value' });
         fireEvent.change(input, { target: { value: 'abc' } });
-        clock.tick(500);
+        clock.runToLast();
         expect(getColumnValues()).to.deep.equal([]);
         fireEvent.change(input, { target: { value: '' } });
-        clock.tick(500);
+        clock.runToLast();
         expect(getColumnValues()).to.deep.equal(['Asics', 'RedBull', 'Hugo']);
       });
     });

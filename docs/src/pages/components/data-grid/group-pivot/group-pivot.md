@@ -204,6 +204,19 @@ The grid detects the special field and does not add a second column.
 
 **Note**: As any ordinary cell renderer, the `value` prop is also available and it corresponds to the state of the row: `true` when expanded and `false` when collapsed.
 
+### Disable detail panel content scroll
+
+By default, the detail panel has as width the sum of the widths of all columns.
+This means that, when a horizontal scrollbar is present, scrolling it will also scroll the panel content.
+To avoid this behavior, set the size of the detail panel to the outer size of the grid.
+Use `apiRef.current.getRootDimensions()` to get the latest dimension values.
+Finally, to prevent the panel from scrolling, set `position: sticky` and `left: 0`.
+
+The following demo demonstrates how this can be achieved.
+Notice that the toggle column is pinned to make sure that it will always be visible when scrolled.
+
+{{"demo": "pages/components/data-grid/group-pivot/FullWidthDetailPanel.js", "bg": "inline", "defaultCodeOpen": false}}
+
 ### apiRef
 
 {{"demo": "pages/components/data-grid/group-pivot/DetailPanelApiNoSnap.js", "bg": "inline", "hideToolbar": true}}

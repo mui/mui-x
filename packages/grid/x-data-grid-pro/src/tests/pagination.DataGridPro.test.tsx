@@ -8,7 +8,7 @@ import { useData } from 'packages/storybook/src/hooks/useData';
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<DataGridPro /> - Pagination', () => {
-  const { render } = createRenderer();
+  const { render, clock } = createRenderer({ clock: 'fake' });
 
   describe('setPage', () => {
     it('should apply valid value', () => {
@@ -94,6 +94,7 @@ describe('<DataGridPro /> - Pagination', () => {
       };
 
       render(<GridTest />);
+      clock.runToLast();
 
       expect(getColumnValues()).to.deep.equal(['0', '1', '2', '3', '4']);
       act(() => {
