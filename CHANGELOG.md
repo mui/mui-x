@@ -31,6 +31,8 @@ A big thanks to the 9 contributors who made this release possible. Here are some
 - [DataGrid] Fix can't enter 0 on numeric column (#3491) @m4theushw
 - [DataGrid] Fix scrolling bug when an action is focused (#3483) @alexfauquette
 - [DataGrid] Remove `line-height` from `GridCell` (#3446) @DanailH
+- [DataGridPro] Block edition for auto-generated rows (#3547) @flaviendelangle
+- [DataGridPro] Expose the field of the tree data grouping column as a constant (#3549) @flaviendelangle
 - [DataGridPro] Fix resizing of right pinned columns (#3502) @m4theushw
 - [DataGridPro] Add new prop `isGroupExpandedByDefault` (#3444) @flaviendelangle
 - [l10n] Add Finnish (fiFI) locale (#3485) @kurkle
