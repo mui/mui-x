@@ -66,7 +66,7 @@ Use the `groupingColDef` prop to customize the rendering of the grouping column.
 If you want to access the grouping column field, for instance to pin it, you can use the `GRID_TREE_DATA_GROUPING_FIELD` constant.
 
 ```tsx
-<DataGrid
+<DataGridPro
   treeData
   initialState={{
     pinnedColumns: {
