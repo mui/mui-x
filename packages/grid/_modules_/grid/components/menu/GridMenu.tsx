@@ -5,7 +5,7 @@ import ClickAwayListener, { ClickAwayListenerProps } from '@mui/material/ClickAw
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import Grow, { GrowProps } from '@mui/material/Grow';
 import Paper from '@mui/material/Paper';
-import { PopperProps } from '@mui/material/Popper';
+import Popper, { PopperProps } from '@mui/material/Popper';
 import { styled } from '@mui/material/styles';
 import { HTMLElementType } from '@mui/utils';
 import { getDataGridUtilityClass, gridClasses } from '../../gridClasses';
@@ -39,7 +39,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-const GridMenuRoot = styled('div', {
+const GridMenuRoot = styled(Popper, {
   name: 'MuiDataGrid',
   slot: 'Menu',
   overridesResolver: (props, styles) => styles.menu,

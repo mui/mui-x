@@ -1,11 +1,12 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { styled } from '@mui/material/styles';
+import { MUIStyledCommonProps } from '@mui/system';
+import { styled, Theme } from '@mui/material/styles';
 import { generateUtilityClasses, InternalStandardProps as StandardProps } from '@mui/material';
 import ClickAwayListener from '@mui/material/ClickAwayListener';
 import Paper from '@mui/material/Paper';
-import { PopperProps } from '@mui/material/Popper';
+import Popper, { PopperProps } from '@mui/material/Popper';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { isEscapeKey } from '../../utils/keyboardUtils';
 
@@ -16,19 +17,19 @@ export interface GridPanelClasses {
   paper: string;
 }
 
-export interface GridPanelProps extends StandardProps<PopperProps, 'children'> {
+export interface GridPanelProps
+  extends StandardProps<MUIStyledCommonProps<Theme> & PopperProps, 'children'> {
   children?: React.ReactNode;
   /**
    * Override or extend the styles applied to the component.
    */
   classes?: Partial<GridPanelClasses>;
   open: boolean;
-  as: React.ElementType;
 }
 
 export const gridPanelClasses = generateUtilityClasses('MuiDataGrid', ['panel', 'paper']);
 
-const GridPanelRoot = styled('div', {
+const GridPanelRoot = styled(Popper, {
   name: 'MuiDataGrid',
   slot: 'Panel',
   overridesResolver: (props, styles) => styles.panel,
@@ -108,7 +109,6 @@ GridPanel.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
-  as: PropTypes.elementType.isRequired,
   /**
    * Override or extend the styles applied to the component.
    */

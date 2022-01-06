@@ -21,7 +21,7 @@ describe('<GridPanel />', () => {
     return <GridApiContext.Provider value={apiRef} {...props} />;
   }
 
-  describeConformance(<GridPanel disablePortal open as={Popper} />, () => ({
+  describeConformance(<GridPanel disablePortal open />, () => ({
     classes,
     inheritComponent: Popper,
     render: (node) => render(<Wrapper>{node}</Wrapper>),
