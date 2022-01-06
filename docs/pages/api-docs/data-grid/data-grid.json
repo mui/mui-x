@@ -82,7 +82,11 @@
     "onColumnHeaderOut": { "type": { "name": "func" } },
     "onColumnHeaderOver": { "type": { "name": "func" } },
     "onColumnOrderChange": { "type": { "name": "func" } },
-    "onColumnVisibilityChange": { "type": { "name": "func" } },
+    "onColumnVisibilityChange": {
+      "type": { "name": "func" },
+      "deprecated": true,
+      "deprecationInfo": "Use <code>onVisibleColumnsModelChange</code> instead."
+    },
     "onEditCellPropsChange": {
       "type": { "name": "func" },
       "deprecated": true,
@@ -102,6 +106,7 @@
     "onSelectionModelChange": { "type": { "name": "func" } },
     "onSortModelChange": { "type": { "name": "func" } },
     "onStateChange": { "type": { "name": "func" } },
+    "onVisibleColumnsModelChange": { "type": { "name": "func" } },
     "page": { "type": { "name": "number" }, "default": "0" },
     "pageSize": { "type": { "name": "custom", "description": "number" }, "default": "100" },
     "paginationMode": {
@@ -144,6 +149,9 @@
         "name": "union",
         "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
       }
+    },
+    "visibleColumnsModel": {
+      "type": { "name": "arrayOf", "description": "Array&lt;number<br>&#124;&nbsp;string&gt;" }
     }
   },
   "slots": {

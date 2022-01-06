@@ -112,7 +112,11 @@
     "onColumnHeaderOver": { "type": { "name": "func" } },
     "onColumnOrderChange": { "type": { "name": "func" } },
     "onColumnResize": { "type": { "name": "func" } },
-    "onColumnVisibilityChange": { "type": { "name": "func" } },
+    "onColumnVisibilityChange": {
+      "type": { "name": "func" },
+      "deprecated": true,
+      "deprecationInfo": "Use <code>onVisibleColumnsModelChange</code> instead."
+    },
     "onColumnWidthChange": { "type": { "name": "func" } },
     "onEditCellPropsChange": {
       "type": { "name": "func" },
@@ -135,6 +139,7 @@
     "onSelectionModelChange": { "type": { "name": "func" } },
     "onSortModelChange": { "type": { "name": "func" } },
     "onStateChange": { "type": { "name": "func" } },
+    "onVisibleColumnsModelChange": { "type": { "name": "func" } },
     "page": { "type": { "name": "number" }, "default": "0" },
     "pageSize": { "type": { "name": "number" }, "default": "100" },
     "pagination": { "type": { "name": "bool" } },
@@ -187,7 +192,10 @@
       }
     },
     "throttleRowsMs": { "type": { "name": "number" }, "default": "0" },
-    "treeData": { "type": { "name": "bool" } }
+    "treeData": { "type": { "name": "bool" } },
+    "visibleColumnsModel": {
+      "type": { "name": "arrayOf", "description": "Array&lt;number<br>&#124;&nbsp;string&gt;" }
+    }
   },
   "slots": {
     "BaseCheckbox": { "default": "Checkbox", "type": { "name": "elementType" } },

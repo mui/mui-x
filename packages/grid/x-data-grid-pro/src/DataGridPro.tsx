@@ -483,6 +483,7 @@ DataGridProRaw.propTypes = {
    * @param {GridColumnVisibilityChangeParams} params With all properties from [[GridColumnVisibilityChangeParams]].
    * @param {MuiEvent<{}>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
+   * @deprecated Use `onVisibleColumnsModelChange` instead.
    */
   onColumnVisibilityChange: PropTypes.func,
   /**
@@ -603,6 +604,12 @@ DataGridProRaw.propTypes = {
    * @internal
    */
   onStateChange: PropTypes.func,
+  /**
+   * Callback fired when the visible columns model changes.
+   * @param {GridVisibleColumnsModel} model The new model.
+   * @param {GridCallbackDetails} details Additional details for this callback.
+   */
+  onVisibleColumnsModelChange: PropTypes.func,
   /**
    * The zero-based index of the current page.
    * @default 0
@@ -729,4 +736,11 @@ DataGridProRaw.propTypes = {
    * @default false
    */
   treeData: PropTypes.bool,
+  /**
+   * Set the visible columns model of the grid.
+   * If defined, the grid will ignore the `hide` property in [[GridColDef]].
+   */
+  visibleColumnsModel: PropTypes.arrayOf(
+    PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  ),
 } as any;
