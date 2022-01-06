@@ -65,6 +65,7 @@ export interface GridColDef {
   minWidth?: number;
   /**
    * If `true`, hide the column.
+   * @deprecated Use the `visibleColumnsModel` prop instead.
    * @default false
    */
   hide?: boolean;

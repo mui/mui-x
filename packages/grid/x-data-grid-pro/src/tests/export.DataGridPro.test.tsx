@@ -218,7 +218,7 @@ describe('<DataGridPro /> - Export', () => {
       expect(apiRef.current.getDataAsCsv()).to.equal(['id,Brand', '0,Nike'].join('\r\n'));
     });
 
-    it('should not export hidden column', () => {
+    it('should not export hidden column (deprecated)', () => {
       const TestCaseCSVExport = () => {
         apiRef = useGridApiRef();
         return (
@@ -246,7 +246,36 @@ describe('<DataGridPro /> - Export', () => {
       expect(apiRef.current.getDataAsCsv()).to.equal(['id', '0', '1'].join('\r\n'));
     });
 
-    it('should export hidden column if params.allColumns = true', () => {
+    it('should not export hidden column', () => {
+      const TestCaseCSVExport = () => {
+        apiRef = useGridApiRef();
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGridPro
+              {...baselineProps}
+              apiRef={apiRef}
+              columns={[{ field: 'id' }, { field: 'brand', headerName: 'Brand' }]}
+              initialState={{ columns: { visibleColumnsModel: ['id'] } }}
+              rows={[
+                {
+                  id: 0,
+                  brand: 'Nike',
+                },
+                {
+                  id: 1,
+                  brand: 'Adidas',
+                },
+              ]}
+            />
+          </div>
+        );
+      };
+
+      render(<TestCaseCSVExport />);
+      expect(apiRef.current.getDataAsCsv()).to.equal(['id', '0', '1'].join('\r\n'));
+    });
+
+    it('should export hidden column if params.allColumns = true (deprecated)', () => {
       const TestCaseCSVExport = () => {
         apiRef = useGridApiRef();
         return (
@@ -255,6 +284,39 @@ describe('<DataGridPro /> - Export', () => {
               {...baselineProps}
               apiRef={apiRef}
               columns={[{ field: 'id' }, { field: 'brand', headerName: 'Brand', hide: true }]}
+              rows={[
+                {
+                  id: 0,
+                  brand: 'Nike',
+                },
+                {
+                  id: 1,
+                  brand: 'Adidas',
+                },
+              ]}
+            />
+          </div>
+        );
+      };
+
+      render(<TestCaseCSVExport />);
+      expect(
+        apiRef.current.getDataAsCsv({
+          allColumns: true,
+        }),
+      ).to.equal(['id,Brand', '0,Nike', '1,Adidas'].join('\r\n'));
+    });
+
+    it('should export hidden column if params.allColumns = true', () => {
+      const TestCaseCSVExport = () => {
+        apiRef = useGridApiRef();
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGridPro
+              {...baselineProps}
+              apiRef={apiRef}
+              columns={[{ field: 'id' }, { field: 'brand', headerName: 'Brand' }]}
+              initialState={{ columns: { visibleColumnsModel: ['id'] } }}
               rows={[
                 {
                   id: 0,
@@ -313,7 +375,7 @@ describe('<DataGridPro /> - Export', () => {
       ).to.equal(['Brand', 'Nike', 'Adidas'].join('\r\n'));
     });
 
-    it('should only export columns in params.fields if defined', () => {
+    it('should only export columns in params.fields if defined (deprecated)', () => {
       const TestCaseCSVExport = () => {
         apiRef = useGridApiRef();
         return (
@@ -345,7 +407,40 @@ describe('<DataGridPro /> - Export', () => {
       ).to.equal(['Brand', 'Nike', 'Adidas'].join('\r\n'));
     });
 
-    it('should export column defined in params.fields even if column.hide=true or column.disableExport=true', () => {
+    it('should only export columns in params.fields if defined', () => {
+      const TestCaseCSVExport = () => {
+        apiRef = useGridApiRef();
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGridPro
+              {...baselineProps}
+              apiRef={apiRef}
+              columns={[{ field: 'id' }, { field: 'brand', headerName: 'Brand' }]}
+              initialState={{ columns: { visibleColumnsModel: ['id'] } }}
+              rows={[
+                {
+                  id: 0,
+                  brand: 'Nike',
+                },
+                {
+                  id: 1,
+                  brand: 'Adidas',
+                },
+              ]}
+            />
+          </div>
+        );
+      };
+
+      render(<TestCaseCSVExport />);
+      expect(
+        apiRef.current.getDataAsCsv({
+          fields: ['brand'],
+        }),
+      ).to.equal(['Brand', 'Nike', 'Adidas'].join('\r\n'));
+    });
+
+    it('should export column defined in params.fields even if column.hide=true or column.disableExport=true (deprecated)', () => {
       const TestCaseCSVExport = () => {
         apiRef = useGridApiRef();
         return (
@@ -357,6 +452,42 @@ describe('<DataGridPro /> - Export', () => {
                 { field: 'id', disableExport: true },
                 { field: 'brand', headerName: 'Brand', hide: true },
               ]}
+              rows={[
+                {
+                  id: 0,
+                  brand: 'Nike',
+                },
+                {
+                  id: 1,
+                  brand: 'Adidas',
+                },
+              ]}
+            />
+          </div>
+        );
+      };
+
+      render(<TestCaseCSVExport />);
+      expect(
+        apiRef.current.getDataAsCsv({
+          fields: ['id', 'brand'],
+        }),
+      ).to.equal(['id,Brand', '0,Nike', '1,Adidas'].join('\r\n'));
+    });
+
+    it('should export column defined in params.fields even if `visibleColumnsModel` does not include the field or column.disableExport=true', () => {
+      const TestCaseCSVExport = () => {
+        apiRef = useGridApiRef();
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGridPro
+              {...baselineProps}
+              apiRef={apiRef}
+              columns={[
+                { field: 'id', disableExport: true },
+                { field: 'brand', headerName: 'Brand' },
+              ]}
+              initialState={{ columns: { visibleColumnsModel: ['id'] } }}
               rows={[
                 {
                   id: 0,

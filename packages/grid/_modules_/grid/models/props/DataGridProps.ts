@@ -526,6 +526,7 @@ export interface DataGridPropsWithoutDefaultValue extends CommonProps {
    * @param {GridColumnVisibilityChangeParams} params With all properties from [[GridColumnVisibilityChangeParams]].
    * @param {MuiEvent<{}>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
+   * @deprecated Use `onVisibleColumnsModelChange` instead.
    */
   onColumnVisibilityChange?: GridEventListener<GridEvents.columnVisibilityChange>;
   /**

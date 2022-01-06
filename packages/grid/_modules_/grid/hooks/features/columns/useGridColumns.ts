@@ -35,6 +35,7 @@ export function useGridColumns(
   apiRef: GridApiRef,
   props: Pick<
     DataGridProcessedProps,
+    | 'initialState'
     | 'columns'
     | 'onColumnVisibilityChange'
     | 'visibleColumnsModel'
@@ -51,12 +52,22 @@ export function useGridColumns(
     [props.columnTypes],
   );
 
+  /**
+   * If `initialState.columns.visibleColumnsModel` or `visibleColumnsModel` was defined during the 1st render, we are directly updating the model
+   * If not, we keep the old behavior and update the `GridColDef.hide` option (which will update the state model through the `GridColDef.hide` => `visibleColumnsModel` sync in `createColumnsState`
+   */
+  const shouldUseVisibleColumnModel = React.useRef(
+    !!props.visibleColumnsModel || !!props.initialState?.columns?.visibleColumnsModel,
+  ).current;
+
   useGridStateInit(apiRef, (state) => {
     const columnsState = createColumnsState({
       apiRef,
       columnsTypes,
       columnsToUpsert: props.columns,
-      propVisibleColumnsModel: props.visibleColumnsModel,
+      shouldRegenVisibleColumnsModelFromColumns: !shouldUseVisibleColumnModel,
+      currentVisibleColumnsModel:
+        props.visibleColumnsModel ?? props.initialState?.columns?.visibleColumnsModel ?? [],
       reset: true,
     });
 
@@ -65,8 +76,6 @@ export function useGridColumns(
       columns: columnsState,
     };
   });
-
-  const isVisibleColumnsModelControlled = !!props.visibleColumnsModel;
 
   apiRef.current.unstable_updateControlState({
     stateId: 'visibleColumns',
@@ -135,14 +144,19 @@ export function useGridColumns(
       if (currentModel !== model) {
         apiRef.current.setState((state) => ({
           ...state,
-          columns: {
-            ...state.columns,
-            visibleColumnsModel: model,
-          },
+          columns: createColumnsState({
+            apiRef,
+            columnsTypes,
+            columnsToUpsert: [],
+            shouldRegenVisibleColumnsModelFromColumns: false,
+            currentVisibleColumnsModel: model,
+            reset: false,
+          }),
         }));
+        apiRef.current.forceUpdate();
       }
     },
-    [apiRef],
+    [apiRef, columnsTypes],
   );
 
   const updateColumns = React.useCallback<GridColumnApi['updateColumns']>(
@@ -151,6 +165,7 @@ export function useGridColumns(
         apiRef,
         columnsTypes,
         columnsToUpsert: columns,
+        shouldRegenVisibleColumnsModelFromColumns: true,
         reset: false,
       });
       setGridColumnsState(columnsState);
@@ -168,7 +183,7 @@ export function useGridColumns(
       // We keep updating the `hide` option of `GridColDef` when not controlling the model to avoid any breaking change.
       // `updateColumns` take care of updating the model itself if needs be.
       // TODO: In v6 stop using the `hide` field even when the model is not defined
-      if (isVisibleColumnsModelControlled) {
+      if (shouldUseVisibleColumnModel) {
         const visibleColumnsModel = gridVisibleColumnsModelSelector(apiRef.current.state);
         const visibleColumnsModelLookup = gridVisibleColumnsModelLookupSelector(
           apiRef.current.state,
@@ -195,7 +210,7 @@ export function useGridColumns(
         apiRef.current.publishEvent(GridEvents.columnVisibilityChange, params);
       }
     },
-    [apiRef, isVisibleColumnsModelControlled],
+    [apiRef, shouldUseVisibleColumnModel],
   );
 
   const setColumnIndex = React.useCallback<GridColumnApi['setColumnIndex']>(
@@ -275,11 +290,12 @@ export function useGridColumns(
         apiRef,
         columnsTypes,
         columnsToUpsert: [],
+        shouldRegenVisibleColumnsModelFromColumns: !shouldUseVisibleColumnModel,
         reset: false,
       });
       setGridColumnsState(columnsState);
     },
-    [apiRef, logger, setGridColumnsState, columnsTypes],
+    [apiRef, logger, setGridColumnsState, columnsTypes, shouldUseVisibleColumnModel],
   );
 
   const prevInnerWidth = React.useRef<number | null>(null);
@@ -318,10 +334,8 @@ export function useGridColumns(
     const columnsState = createColumnsState({
       apiRef,
       columnsTypes,
-      // If controlling, we don't want to listen to the model here because it has it's dedicated `useEffect` which calls `setVisibleColumnsModel`
-      propVisibleColumnsModel: isVisibleColumnsModelControlled
-        ? gridVisibleColumnsModelSelector(apiRef.current.state)
-        : undefined,
+      // If the user provides a model, we don't want to set it in the state here because it has it's dedicated `useEffect` which calls `setVisibleColumnsModel`
+      shouldRegenVisibleColumnsModelFromColumns: !shouldUseVisibleColumnModel,
       columnsToUpsert: props.columns,
       reset: true,
     });
@@ -332,7 +346,7 @@ export function useGridColumns(
     setGridColumnsState,
     props.columns,
     columnsTypes,
-    isVisibleColumnsModelControlled,
+    shouldUseVisibleColumnModel,
   ]);
 
   React.useEffect(() => {

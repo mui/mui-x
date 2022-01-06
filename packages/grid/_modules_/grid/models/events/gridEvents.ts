@@ -295,6 +295,9 @@ export enum GridEvents {
   stateChange = 'stateChange',
   /**
    * Fired when a column visibility changes.
+   * Is not fired when the `visibleColumnsModel` is controlled.
+   * Is not fired when toggling all column's visibility at once.
+   * @deprecated Use `GridEvents.visibleColumnsModelChange` instead.
    */
   columnVisibilityChange = 'columnVisibilityChange',
   /**
