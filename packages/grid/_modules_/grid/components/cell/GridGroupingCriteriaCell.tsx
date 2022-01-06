@@ -8,7 +8,6 @@ import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { GridRenderCellParams } from '../../models/params/gridCellParams';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { gridFilteredDescendantCountLookupSelector } from '../../hooks/features/filter/gridFilterSelector';
-import { isNavigationKey } from '../../utils/keyboardUtils';
 import { GridEvents } from '../../models/events';
 import { getDataGridUtilityClass } from '../../gridClasses';
 import { DataGridProProcessedProps } from '../../models/props/DataGridProProps';
