@@ -1,0 +1,8 @@
+<DataGrid
+  initialState={{
+    pagination: {
+      pageSize: 25,
+    },
+  }}
+  {...data}
+/>

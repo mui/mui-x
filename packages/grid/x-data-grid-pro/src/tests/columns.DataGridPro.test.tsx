@@ -83,6 +83,13 @@ describe('<DataGridPro /> - Columns', () => {
   });
 
   describe('resizing', () => {
+    before(function beforeHook() {
+      if (isJSDOM) {
+        // Need layouting
+        this.skip();
+      }
+    });
+
     const columns = [{ field: 'brand', width: 100 }];
 
     it('should allow to resize columns with the mouse', () => {

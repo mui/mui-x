@@ -122,6 +122,14 @@ export interface GridClasses {
    */
   'columnSeparator--resizing': string;
   /**
+   * Styles applied to the column header separator if the side is "left".
+   */
+  'columnSeparator--sideLeft': string;
+  /**
+   * Styles applied to the column header separator if the side is "right".
+   */
+  'columnSeparator--sideRight': string;
+  /**
    * Styles applied to the column header separator element.
    */
   columnSeparator: string;
@@ -338,6 +346,8 @@ export const gridClasses = generateUtilityClasses('MuiDataGrid', [
   'columnHeadersInner--scrollable',
   'columnSeparator--resizable',
   'columnSeparator--resizing',
+  'columnSeparator--sideLeft',
+  'columnSeparator--sideRight',
   'columnSeparator',
   'columnsPanel',
   'columnsPanelRow',

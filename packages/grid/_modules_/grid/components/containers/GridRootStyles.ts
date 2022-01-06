@@ -139,12 +139,17 @@ export const GridRootStyles = styled('div', {
     },
     [`& .${gridClasses.columnSeparator}`]: {
       position: 'absolute',
-      right: -12,
       zIndex: 100,
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'center',
       color: borderColor,
+    },
+    [`& .${gridClasses['columnSeparator--sideLeft']}`]: {
+      left: -12,
+    },
+    [`& .${gridClasses['columnSeparator--sideRight']}`]: {
+      right: -12,
     },
     [`& .${gridClasses['columnSeparator--resizable']}`]: {
       cursor: 'col-resize',
