@@ -41,6 +41,7 @@
   { "name": "GRID_NUMERIC_COL_DEF", "kind": "Variable" },
   { "name": "GRID_SINGLE_SELECT_COL_DEF", "kind": "Variable" },
   { "name": "GRID_STRING_COL_DEF", "kind": "Variable" },
+  { "name": "GRID_TREE_DATA_GROUPING_FIELD", "kind": "ExportSpecifier" },
   { "name": "GridActionsCell", "kind": "ExportSpecifier" },
   { "name": "GridActionsCellItem", "kind": "ExportSpecifier" },
   { "name": "GridActionsCellItemProps", "kind": "TypeAlias" },

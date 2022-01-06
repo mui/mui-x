@@ -244,6 +244,22 @@ const rows: GridRowsProp = [
 
 Same behavior as for the [Row grouping](##grouping-column-customization) except for the `leafField` and `mainGroupingCriteria` which are not applicable for the Tree Data.
 
+#### Accessing the grouping column field
+
+If you want to access the grouping column field, for instance, to use it with column pinning, the `GRID_TREE_DATA_GROUPING_FIELD` constant is available.
+
+```tsx
+<DataGridPro
+  treeData
+  initialState={{
+    pinnedColumns: {
+      left: [GRID_TREE_DATA_GROUPING_FIELD],
+    },
+  }}
+  {...otherProps}
+/>
+```
+
 ### Group expansion
 
 Same behavior as for the [Row grouping](#group-expansion)
