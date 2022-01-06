@@ -45,7 +45,7 @@ A big thanks to the 9 contributors who made this release possible. Here are some
 
 ### Core
 
-- [core] Add test for space key row checkbox selection toggling (#3262) @alexfauquette
+- [test] Add test for row checkbox toggling using the Space key (#3262) @alexfauquette
 - [core] Increase CI efficiency (#3441) @oliviertassinari
 - [core] Refactor sorting comparator (#3390) @flaviendelangle
 - [core] Update dependency on the core (#3526) @oliviertassinari
