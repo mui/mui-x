@@ -14,6 +14,7 @@ import { GridColumnHeaders } from '../../_modules_/grid/components/columnHeaders
 import { gridPinnedColumnsSelector } from '../../_modules_/grid/hooks/features/columnPinning/columnPinningSelector';
 import { GridEvents } from '../../_modules_/grid/models/events';
 import { filterColumns } from './DataGridProVirtualScroller';
+import { GridColumnHeaderSeparatorSides } from '../../_modules_/grid/components/columnHeaders/GridColumnHeaderSeparator';
 import {
   GridPinnedPosition,
   GridPinnedColumns,
@@ -180,7 +181,7 @@ export const DataGridProColumnHeaders = React.forwardRef<
               minFirstColumn: rightRenderContext.firstColumnIndex,
               maxLastColumn: rightRenderContext.lastColumnIndex,
             },
-            { disableReorder: true },
+            { disableReorder: true, separatorSide: GridColumnHeaderSeparatorSides.Left },
           )}
         </GridColumnHeadersPinnedColumnHeaders>
       )}
