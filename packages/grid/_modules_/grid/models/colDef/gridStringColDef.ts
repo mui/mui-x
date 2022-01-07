@@ -1,5 +1,5 @@
 import { renderEditInputCell } from '../../components/cell/GridEditInputCell';
-import { gridStringNumberComparer } from '../../utils/sortingUtils';
+import { gridStringOrNumberComparator } from '../../hooks/features/sorting/gridSortingUtils';
 import { GridColTypeDef } from './gridColDef';
 import { getGridStringOperators } from './gridStringOperators';
 
@@ -13,7 +13,7 @@ export const GRID_STRING_COL_DEF: GridColTypeDef = {
   filterable: true,
   pinnable: true,
   editable: false,
-  sortComparator: gridStringNumberComparer,
+  sortComparator: gridStringOrNumberComparator,
   type: 'string',
   align: 'left',
   filterOperators: getGridStringOperators(),

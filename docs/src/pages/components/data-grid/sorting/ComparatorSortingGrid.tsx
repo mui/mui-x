@@ -1,88 +1,94 @@
 import * as React from 'react';
 import {
   GridColumns,
-  GridRowsProp,
   DataGrid,
   GridSortDirection,
   GridValueGetterParams,
   GridSortModel,
+  gridNumberComparator,
+  gridStringOrNumberComparator,
 } from '@mui/x-data-grid';
-import { randomCreatedDate, randomUpdatedDate } from '@mui/x-data-grid-generator';
+import { useDemoData } from '@mui/x-data-grid-generator';
 
-const columns: GridColumns = [
-  { field: 'name' },
-  { field: 'age', type: 'number' },
-  {
-    field: 'username',
-    valueGetter: (params: GridValueGetterParams) =>
-      `${params.row.name || 'unknown'} - ${params.row.age || 'x'}`,
-    sortComparator: (v1, v2, param1, param2) =>
-      (param1.api.getCellValue(param1.id, 'age') as number) -
-      (param2.api.getCellValue(param2.id, 'age') as number),
-    width: 150,
-  },
-  { field: 'dateCreated', type: 'date', width: 180 },
-  { field: 'lastLogin', type: 'dateTime', width: 180 },
-];
+const VISIBLE_FIELDS = ['rating', 'country', 'isAdmin'];
 
-const rows: GridRowsProp = [
-  {
-    id: 1,
-    name: 'Damien',
-    age: 25,
-    dateCreated: randomCreatedDate(),
-    lastLogin: randomUpdatedDate(),
-  },
-  {
-    id: 2,
-    name: 'Nicolas',
-    age: 36,
-    dateCreated: randomCreatedDate(),
-    lastLogin: randomUpdatedDate(),
-  },
-  {
-    id: 3,
-    name: 'Kate',
-    age: 19,
-    dateCreated: randomCreatedDate(),
-    lastLogin: randomUpdatedDate(),
-  },
-  {
-    id: 4,
-    name: 'Sebastien',
-    age: 28,
-    dateCreated: randomCreatedDate(),
-    lastLogin: randomUpdatedDate(),
-  },
-  {
-    id: 5,
-    name: 'Louise',
-    age: 23,
-    dateCreated: randomCreatedDate(),
-    lastLogin: randomUpdatedDate(),
-  },
-  {
-    id: 6,
-    name: 'George',
-    age: 10,
-    dateCreated: randomCreatedDate(),
-    lastLogin: randomUpdatedDate(),
-  },
-];
+interface NameAdminCellValue {
+  name: string;
+  isAdmin: boolean;
+}
 
 export default function ComparatorSortingGrid() {
+  const { data } = useDemoData({
+    dataSet: 'Employee',
+    visibleFields: VISIBLE_FIELDS,
+    rowLength: 100,
+  });
+
   const [sortModel, setSortModel] = React.useState<GridSortModel>([
     {
       field: 'username',
       sort: 'asc' as GridSortDirection,
     },
   ]);
+
+  const columns = React.useMemo<GridColumns>(
+    () => [
+      {
+        field: 'nameAdmin',
+        headerName: 'Name',
+        valueGetter: (params: GridValueGetterParams) => ({
+          name: params.row.name,
+          isAdmin: params.row.isAdmin,
+        }),
+        renderCell: (params) => {
+          if (params.value.isAdmin) {
+            return `${params.value.name} (admin)`;
+          }
+
+          return params.value.name;
+        },
+        sortComparator: (v1, v2, param1, param2) => {
+          const adminComparatorResult = gridNumberComparator(
+            (v1 as NameAdminCellValue).isAdmin,
+            (v2 as NameAdminCellValue).isAdmin,
+            param1,
+            param2,
+          );
+
+          if (adminComparatorResult !== 0) {
+            return adminComparatorResult;
+          }
+
+          return gridStringOrNumberComparator(
+            (v1 as NameAdminCellValue).name,
+            (v2 as NameAdminCellValue).name,
+            param1,
+            param2,
+          );
+        },
+        width: 200,
+      },
+      {
+        field: 'dateCreatedCustom',
+        valueGetter: (params) => params.row.dateCreated,
+        headerName: 'Created on',
+        width: 180,
+        type: 'date',
+        sortComparator: (v1, v2) => {
+          return (v1 as Date).getDate() - (v2 as Date).getDate();
+        },
+      },
+      ...data.columns,
+    ],
+    [data.columns],
+  );
+
   return (
     <div style={{ height: 400, width: '100%' }}>
       <DataGrid
-        sortModel={sortModel}
-        rows={rows}
+        {...data}
         columns={columns}
+        sortModel={sortModel}
         onSortModelChange={(model) => setSortModel(model)}
       />
     </div>
