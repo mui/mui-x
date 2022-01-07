@@ -120,7 +120,7 @@ const rows = [
   },
 ];
 
-export default function FormDetailPanels() {
+export default function FormDetailPanel() {
   const getDetailPanelContent = React.useCallback(
     ({ row }) => <DetailPanelContent row={row} />,
     [],

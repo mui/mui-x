@@ -165,7 +165,7 @@ const rows = [
   },
 ];
 
-export default function NestedDetailPanels() {
+export default function BasicDetailPanels() {
   const getDetailPanelContent = React.useCallback(
     ({ row }) => <DetailPanelContent row={row} />,
     [],
