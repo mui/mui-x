@@ -237,6 +237,8 @@
       "columnHeadersInner--scrollable",
       "columnSeparator--resizable",
       "columnSeparator--resizing",
+      "columnSeparator--sideLeft",
+      "columnSeparator--sideRight",
       "columnSeparator",
       "columnsPanel",
       "columnsPanelRow",

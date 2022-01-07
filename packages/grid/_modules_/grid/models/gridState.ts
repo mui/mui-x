@@ -18,7 +18,7 @@ import type {
   GridSortingState,
   GridSortingInitialState,
 } from '../hooks/features/sorting/gridSortingState';
-import type { GridPaginationState } from '../hooks/features/pagination';
+import type { GridPaginationState, GridPaginationInitialState } from '../hooks/features/pagination';
 import type {
   GridFilterState,
   GridFilterInitialState,
@@ -45,6 +45,7 @@ export interface GridState {
 }
 
 export interface GridInitialState {
+  pagination?: GridPaginationInitialState;
   sorting?: GridSortingInitialState;
   filter?: GridFilterInitialState;
   columns?: GridColumnsInitialState;

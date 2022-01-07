@@ -3,6 +3,56 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 5.2.2
+
+_Jan 6, 2022_
+
+A big thanks to the 9 contributors who made this release possible. Here are some highlights ✨:
+
+- 🎁 Add `hideable` option to `GridColDef` (#3433) @m4theushw
+- ⚡ Add support for column-based `sortingOrder` with the new `sortingOrder` option in `GridColDef` (#3449) @Quppa
+- ✨ Allow to initialize the `page` and `pageSize` without controlling them with the `initialState` prop (#3495) @flaviendelangle
+- 🙈 Allow to precisely control which children rows to expand with the new `isGroupExpandedByDefault` prop (#3444) @flaviendelangle
+- 🌍 Add Finnish (fiFI) locale (#3485) @kurkle
+- 📚 Documentation improvements
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@v5.2.2` / `@mui/x-data-grid-pro@v5.2.2`
+
+#### Changes
+
+- [DataGrid] Add `hideable` option to GridColDef (#3433) @alexfauquette
+- [DataGrid] Add `sortingOrder` to GridColDef (#3449) @Quppa
+- [DataGrid] Add the page and pageSize to the initialState prop (#3495) @flaviendelangle
+- [DataGrid] Avoid re-render when pressing key inside already focused cell (#3484) @m4theushw
+- [DataGrid] Close other actions menus when opening a new one (#3492) @m4theushw
+- [DataGrid] Deprecate `getValue` param from the cell and row params (#3369) @flaviendelangle
+- [DataGrid] Fix value parsing in date input (#3307) @alexfauquette
+- [DataGrid] Fix can't enter 0 on numeric column (#3491) @m4theushw
+- [DataGrid] Fix scrolling bug when an action is focused (#3483) @alexfauquette
+- [DataGrid] Remove `line-height` from `GridCell` (#3446) @DanailH
+- [DataGridPro] Block edition for auto-generated rows (#3547) @flaviendelangle
+- [DataGridPro] Expose the field of the tree data grouping column as a constant (#3549) @flaviendelangle
+- [DataGridPro] Fix resizing of right pinned columns (#3502) @m4theushw
+- [DataGridPro] Add new prop `isGroupExpandedByDefault` (#3444) @flaviendelangle
+- [l10n] Add Finnish (fiFI) locale (#3485) @kurkle
+- [l10n] Improve French (frFR) locale (#3494) @Zenoo
+- [l10n] Improve Italian (itIT) locale (#3452) @destegabry
+- [l10n] Improve Vietnamese (viVN) locale (#3493) @hckhanh
+
+### Docs
+
+- [docs] Generate imports dynamically from the packages export list (#3488) @flaviendelangle
+- [docs] Make demos compatible with `preProcessEditCellProps` (#3453) @m4theushw
+
+### Core
+
+- [test] Add test for row checkbox toggling using the Space key (#3262) @alexfauquette
+- [core] Increase CI efficiency (#3441) @oliviertassinari
+- [core] Refactor sorting comparator (#3390) @flaviendelangle
+- [core] Update dependency on the core (#3526) @oliviertassinari
+- [core] Update tweet example in release readme (#3481) @DanailH
+
 ## 5.2.1
 
 _Dec 17, 2021_
