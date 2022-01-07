@@ -1,54 +1,68 @@
 import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
-import { DataGridProps, MAX_PAGE_SIZE } from './DataGridProps';
 import {
-  GridComponentProps,
-  GridInputComponentProps,
-} from '../../_modules_/grid/GridComponentProps';
-import { useGridProcessedProps } from '../../_modules_/grid/hooks/utils/useGridProcessedProps';
+  DataGridProcessedProps,
+  DataGridProps,
+  DataGridForcedPropsKey,
+  DATA_GRID_PROPS_DEFAULT_VALUES,
+} from '../../_modules_/grid/models/props/DataGridProps';
 
-type ForcedPropsKey = Exclude<keyof GridInputComponentProps, keyof DataGridProps> | 'pagination';
+import { DEFAULT_GRID_SLOTS_COMPONENTS } from '../../_modules_/grid/constants/defaultGridSlotsComponents';
+import { GRID_DEFAULT_LOCALE_TEXT, GridSlotsComponent } from '../../_modules_';
 
-const FORCED_PROPS: { [key in ForcedPropsKey]-?: GridInputComponentProps[key] } = {
+const DATA_GRID_FORCED_PROPS: { [key in DataGridForcedPropsKey]?: DataGridProcessedProps[key] } = {
   apiRef: undefined,
-  disableColumnResize: true,
-  disableColumnReorder: true,
   disableMultipleColumnsFiltering: true,
   disableMultipleColumnsSorting: true,
   disableMultipleSelection: true,
-  disableChildrenFiltering: undefined,
-  disableChildrenSorting: undefined,
-  disableColumnPinning: undefined,
-  getTreeDataPath: undefined,
-  groupingColDef: undefined,
   throttleRowsMs: undefined,
   hideFooterRowCount: false,
   pagination: true,
-  onRowsScrollEnd: undefined,
   checkboxSelectionVisibleOnly: false,
-  scrollEndThreshold: undefined,
-  pinnedColumns: undefined,
-  onPinnedColumnsChange: undefined,
-  defaultGroupingExpansionDepth: undefined,
-  isGroupExpandedByDefault: undefined,
-  treeData: undefined,
+  disableColumnReorder: true,
+  disableColumnResize: true,
   signature: 'DataGrid',
 };
 
-export const useDataGridProps = (inProps: DataGridProps): GridComponentProps => {
+export const MAX_PAGE_SIZE = 100;
+
+export const useDataGridProps = (inProps: DataGridProps) => {
   if (inProps.pageSize! > MAX_PAGE_SIZE) {
     throw new Error(`'props.pageSize' cannot exceed 100 in DataGrid.`);
   }
 
   const themedProps = useThemeProps({ props: inProps, name: 'MuiDataGrid' });
 
-  const props = React.useMemo<GridInputComponentProps>(
-    () => ({
-      ...themedProps,
-      ...FORCED_PROPS,
-    }),
-    [themedProps],
+  const localeText = React.useMemo(
+    () => ({ ...GRID_DEFAULT_LOCALE_TEXT, ...themedProps.localeText }),
+    [themedProps.localeText],
   );
 
-  return useGridProcessedProps(props);
+  const components = React.useMemo<GridSlotsComponent>(() => {
+    const overrides = themedProps.components;
+
+    if (!overrides) {
+      return { ...DEFAULT_GRID_SLOTS_COMPONENTS };
+    }
+
+    const mergedComponents = {} as GridSlotsComponent;
+
+    Object.keys(DEFAULT_GRID_SLOTS_COMPONENTS).forEach((key) => {
+      mergedComponents[key] =
+        overrides[key] === undefined ? DEFAULT_GRID_SLOTS_COMPONENTS[key] : overrides[key];
+    });
+
+    return mergedComponents;
+  }, [themedProps.components]);
+
+  return React.useMemo<DataGridProcessedProps>(
+    () => ({
+      ...DATA_GRID_PROPS_DEFAULT_VALUES,
+      ...themedProps,
+      localeText,
+      components,
+      ...DATA_GRID_FORCED_PROPS,
+    }),
+    [themedProps, localeText, components],
+  );
 };

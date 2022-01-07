@@ -5,7 +5,7 @@ import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { GridStateColDef } from '../../models/colDef/gridColDef';
 import { getDataGridUtilityClass } from '../../gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { GridComponentProps } from '../../GridComponentProps';
+import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 
 export interface ColumnHeaderMenuIconProps {
   column: GridStateColDef;
@@ -16,7 +16,7 @@ export interface ColumnHeaderMenuIconProps {
 }
 
 type OwnerState = ColumnHeaderMenuIconProps & {
-  classes?: GridComponentProps['classes'];
+  classes?: DataGridProcessedProps['classes'];
 };
 
 const useUtilityClasses = (ownerState: OwnerState) => {

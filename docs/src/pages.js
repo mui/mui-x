@@ -1,4 +1,4 @@
-import pages from '@material-ui/monorepo/docs/src/pages';
+import pages from '@mui/monorepo/docs/src/pages';
 
 const components = pages[1];
 const componentsAPI = pages[2];

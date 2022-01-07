@@ -7,13 +7,13 @@ import { gridDensityHeaderHeightSelector } from '../../hooks/features/density/de
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { getDataGridUtilityClass } from '../../gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { GridComponentProps } from '../../GridComponentProps';
+import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { useGridApiEventHandler } from '../../hooks/utils/useGridApiEventHandler';
 import { GridEvents } from '../../models/events';
 
 export type GridOverlayProps = React.HTMLAttributes<HTMLDivElement>;
 
-type OwnerState = { classes: GridComponentProps['classes'] };
+type OwnerState = { classes: DataGridProcessedProps['classes'] };
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;

@@ -5,7 +5,7 @@ import { GridPrintExportApi } from '../../../models/api/gridPrintExportApi';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { gridVisibleRowCountSelector } from '../filter/gridFilterSelector';
 
-import { GridComponentProps } from '../../../GridComponentProps';
+import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridPrintExportOptions } from '../../../models/gridExport';
 import { allGridColumnsSelector } from '../columns/gridColumnsSelector';
 import {
@@ -32,7 +32,7 @@ type PrintWindowOnLoad = (
  */
 export const useGridPrintExport = (
   apiRef: GridApiRef,
-  props: Pick<GridComponentProps, 'pagination'>,
+  props: Pick<DataGridProcessedProps, 'pagination'>,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridPrintExport');
   const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
