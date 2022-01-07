@@ -57,7 +57,7 @@ RatingInputValue.propTypes = {
      */
     columnField: PropTypes.string.isRequired,
     /**
-     * Must be uniq.
+     * Must be unique.
      * Only useful when the model contains several items.
      */
     id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),

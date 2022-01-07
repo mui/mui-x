@@ -3,7 +3,7 @@
  */
 export interface GridFilterItem {
   /**
-   * Must be uniq.
+   * Must be unique.
    * Only useful when the model contains several items.
    */
   id?: number | string;
