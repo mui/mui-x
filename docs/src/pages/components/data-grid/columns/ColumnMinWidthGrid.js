@@ -13,10 +13,7 @@ export default function ColumnMinWidthGrid() {
   return (
     <div style={{ height: 250, width: '100%' }}>
       <DataGrid
-        columns={[
-          { field: 'username', minWidth: 150 },
-          { field: 'age', maxWidth: 200 },
-        ]}
+        columns={[{ field: 'username', minWidth: 150 }, { field: 'age' }]}
         rows={rows}
       />
     </div>
