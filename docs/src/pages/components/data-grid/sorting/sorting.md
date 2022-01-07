@@ -8,6 +8,8 @@ title: Data Grid - Sorting
 
 The sorting rules can be modified through the grid interface by clicking on a column header. Repeat this action to pass to the next sorting direction of the column.
 
+{{"demo": "pages/components/data-grid/sorting/BasicExampleDataGrid.js", "bg": "inline", "defaultCodeOpen": false}}
+
 ## Single and multi-sorting
 
 > ⚠️ The `DataGrid` can only sort the rows according to one criterion at the time.
