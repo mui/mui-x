@@ -75,17 +75,10 @@ A big thanks to the 8 contributors who made this release possible. Here are some
 - [DataGrid] Refactor keyboard/click event management (#3275) @alexfauquette
 - [DataGrid] Fire change event when the state changes, instead of when the prop changes (#3388) @flaviendelangle
 - [DataGrid] Unsubscribe event listeners registered in uncommitted renders (#3310) @m4theushw
+- [DataGrid] Rework state update methods and deprecate `useGridApi` and `useGridState` (#3325) @flaviendelangle
 - [l10n] Improve German (deDE) locale (#3430) @sebastianfrey
 - [l10n] Improve Hebrew (heIL) locale (#3445) @ColdAtNight
 - [l10n] Improve Dutch (nlNL) locale (#3429) @jaapjr
-
-### Core
-
-- [core] Rework state update methods and deprecate `useGridApi` and `useGridState` (#3325) @flaviendelangle
-- [core] Add sections to some of the feature hooks (#3391) @flaviendelangle
-- [core] Generate exports snapshot for both `x-data-grid` and `x-data-grid-pro` packages (#3427) @flaviendelangle
-- [core] Remove 'x-data-grid' folder from DataGridPro bundle (#3394) @m4theushw
-- [core] Add link to OpenCollective (#3392) @oliviertassinari
 
 ### Docs
 
@@ -93,6 +86,13 @@ A big thanks to the 8 contributors who made this release possible. Here are some
 - [docs] Include @mui/x-data-grid as dependency in the CodeSandbox (#3396) @m4theushw
 - [docs] Stop using TypeDoc to generate the API documentation (#3320) @flaviendelangle
 - [docs] Remove column pinning from "Upcoming features" (#3443) @alexfauquette
+
+### Core
+
+- [core] Add sections to some of the feature hooks (#3391) @flaviendelangle
+- [core] Generate exports snapshot for both `x-data-grid` and `x-data-grid-pro` packages (#3427) @flaviendelangle
+- [core] Remove 'x-data-grid' folder from DataGridPro bundle (#3394) @m4theushw
+- [core] Add link to OpenCollective (#3392) @oliviertassinari
 
 ## 5.2.0
 
@@ -153,20 +153,7 @@ A big thanks to the 5 contributors who made this release possible. Here are some
 - [DataGrid] Fix `DatePicker` bug by limiting years to 4 digits (#3222) @alexfauquette
 - [DataGrid] Fix column menu position when closing (#3289) @m4theushw
 - [DataGrid] Fix to not crash when a sort item uses a non-existing column (#3224) @flaviendelangle
-
-### Core
-
-- [core] Add funding field (#3331) @oliviertassinari
-- [core] Fix missing LICENSE file (#3330) @oliviertassinari
-- [core] Fix release month in CHANGELOG (#3367) @m4theushw
-- [core] Fix `yarn prettier` script (#3292) @oliviertassinari
-- [core] Improve tests for Tree Data (#3366) @flaviendelangle
-- [core] Never import directly from the `__modules__` folder in the `x-data-grid-generator` package (#3379) @flaviendelangle
-- [core] Transition to a new StackOverflow tag (#3308) @oliviertassinari
-- [core] Type the `api` param in callback interfaces (#3315) @flaviendelangle
-- [core] Update monorepo (#3370) @flaviendelangle
-- [core] Use pre-processors for sorting and filtering (#3318) @flaviendelangle
-- [test] Replace `useFakeTimers` (#3323) @m4theushw
+- [DataGrid] Type the `api` param in callback interfaces (#3315) @flaviendelangle
 
 ### Docs
 
@@ -178,6 +165,19 @@ A big thanks to the 5 contributors who made this release possible. Here are some
 - [docs] Fix double MUI in the title (#3332) @oliviertassinari
 - [docs] Fix duplicate "the" (#3365) @noam-honig
 - [docs] Update branch to deploy docs (#3321) @m4theushw
+
+### Core
+
+- [core] Add funding field (#3331) @oliviertassinari
+- [core] Fix missing LICENSE file (#3330) @oliviertassinari
+- [core] Fix release month in CHANGELOG (#3367) @m4theushw
+- [core] Fix `yarn prettier` script (#3292) @oliviertassinari
+- [core] Improve tests for Tree Data (#3366) @flaviendelangle
+- [core] Never import directly from the `__modules__` folder in the `x-data-grid-generator` package (#3379) @flaviendelangle
+- [core] Transition to a new StackOverflow tag (#3308) @oliviertassinari
+- [core] Update monorepo (#3370) @flaviendelangle
+- [core] Use pre-processors for sorting and filtering (#3318) @flaviendelangle
+- [test] Replace `useFakeTimers` (#3323) @m4theushw
 
 ## 5.1.0
 
@@ -310,11 +310,13 @@ A big thanks to the 3 contributors who made this release possible. Here are some
 
 ### `@mui/x-data-grid@v5.0.1` / `@mui/x-data-grid-pro@v5.0.1`
 
-#### Changes
-
 - [DataGrid] New API to validate the editing values (#3006) @m4theushw
 - [DataGrid] Use color-scheme to set dark mode on native components (#3146) @alexfauquette
 - [DataGrid] Fix the `@mui/x-data-grid` type entrypoint (#3196) @flaviendelangle
+
+### Docs
+
+- [docs] Move sentence about disabling multi rows selection (#3167) @alexfauquette
 
 ### Core
 
@@ -323,10 +325,6 @@ A big thanks to the 3 contributors who made this release possible. Here are some
 - [core] Polish v5 CHANGELOG (#3194) @oliviertassinari
 - [core] Remove the `index.ts` of the export hooks (#3165) @flaviendelangle
 - [core] Set the correct release date for v5.0.0 in the CHANGELOG.md (#3192) @flaviendelangle
-
-### Docs
-
-- [docs] Move sentence about disabling multi rows selection (#3167) @alexfauquette
 
 ## 5.0.0
 
@@ -1428,6 +1426,7 @@ Big thanks to the 8 contributors who made this release possible. Here are some h
   - The `onEditCellChange` prop was renamed to `onEditCellPropsChange`.
   - The `onEditCellChangeCommitted` prop was renamed to `onCellEditCommit`.
   - The `onEditRowModelChange` prop was removed. Use the new `onEditRowsModelChange` prop.
+
     ```diff
     -onEditRowModelChange?: (params: GridEditRowModelParams)
     +onEditRowsModelChange?: (editRowsModel: GridEditRowsModel)
@@ -2666,7 +2665,7 @@ Big thanks to the 4 contributors who made this release possible. Here are some h
 
 ## [4.0.0-alpha.19](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.18...v4.0.0-alpha.19)
 
-###### _Feb 5, 2021_
+_Feb 5, 2021_
 
 Big thanks to the 5 contributors who made this release possible. Here are some highlights ✨:
 
@@ -2709,7 +2708,7 @@ Big thanks to the 5 contributors who made this release possible. Here are some h
 
 ## [4.0.0-alpha.18](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.17...v4.0.0-alpha.18)
 
-###### _Jan 26, 2021_
+_Jan 26, 2021_
 
 Big thanks to the 5 contributors who made this release possible. Here are some highlights ✨:
 
@@ -2796,7 +2795,7 @@ Big thanks to the 5 contributors who made this release possible. Here are some h
 
 ## [4.0.0-alpha.17](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.15...v4.0.0-alpha.17)
 
-###### _Jan 14, 2021_
+_Jan 14, 2021_
 
 Big thanks to the 4 contributors who made this release possible. Here are some highlights ✨:
 
@@ -2826,7 +2825,7 @@ Big thanks to the 4 contributors who made this release possible. Here are some h
 
 ## [4.0.0-alpha.15](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.14...v4.0.0-alpha.15)
 
-###### _Jan 7, 2021_
+_Jan 7, 2021_
 
 Big thanks to the 2 contributors who made this release possible. Here are some highlights ✨:
 
@@ -2849,7 +2848,7 @@ Big thanks to the 2 contributors who made this release possible. Here are some h
 
 ## [4.0.0-alpha.14](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.13...v4.0.0-alpha.14)
 
-###### _Dec 31, 2020_
+_Dec 31, 2020_
 
 Big thanks to the 5 contributors who made this release possible. Here are some highlights ✨:
 
@@ -2883,7 +2882,7 @@ Big thanks to the 5 contributors who made this release possible. Here are some h
 
 ## [4.0.0-alpha.13](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.12...v4.0.0-alpha.13)
 
-###### _Dec 16, 2020_
+_Dec 16, 2020_
 
 Big thanks to the 4 contributors who made this release possible. Here are some highlights ✨:
 
@@ -2912,7 +2911,7 @@ Big thanks to the 4 contributors who made this release possible. Here are some h
 
 ## [4.0.0-alpha.12](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.11...v4.0.0-alpha.12)
 
-###### _Dec 9, 2020_
+_Dec 9, 2020_
 
 Big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
 
@@ -2949,7 +2948,7 @@ Big thanks to the 6 contributors who made this release possible. Here are some h
 
 ## [4.0.0-alpha.11](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.10...v4.0.0-alpha.11)
 
-###### _Dec 2, 2020_
+_Dec 2, 2020_
 
 Big thanks to the 8 contributors who made this release possible. Here are some highlights ✨:
 
@@ -3007,7 +3006,7 @@ Big thanks to the 8 contributors who made this release possible. Here are some h
 
 ## [4.0.0-alpha.10](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.9...v4.0.0-alpha.10)
 
-###### _Nov 20, 2020_
+_Nov 20, 2020_
 
 ### @material-ui/x-grid@v4.0.0-alpha.10 / @material-ui/data-grid@v4.0.0-alpha.10
 
@@ -3029,7 +3028,7 @@ Big thanks to the 8 contributors who made this release possible. Here are some h
 
 ## [4.0.0-alpha.9](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.8...v4.0.0-alpha.9)
 
-###### _Nov 9, 2020_
+_Nov 9, 2020_
 
 ### @material-ui/x-grid@v4.0.0-alpha.9 / @material-ui/data-grid@v4.0.0-alpha.9
 
@@ -3067,7 +3066,7 @@ Big thanks to the 8 contributors who made this release possible. Here are some h
 
 ## [4.0.0-alpha.8](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.7...v4.0.0-alpha.8)
 
-###### _Oct 23, 2020_
+_Oct 23, 2020_
 
 ### @material-ui/x-grid@v4.0.0-alpha.8 / @material-ui/data-grid@v4.0.0-alpha.8
 
@@ -3084,7 +3083,7 @@ Big thanks to the 8 contributors who made this release possible. Here are some h
 
 ## [4.0.0-alpha.7](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.6...v4.0.0-alpha.7)
 
-###### _Oct 19, 2020_
+_Oct 19, 2020_
 
 ### @material-ui/x-grid@v4.0.0-alpha.7 / @material-ui/data-grid@v4.0.0-alpha.7
 
@@ -3113,7 +3112,7 @@ Big thanks to the 8 contributors who made this release possible. Here are some h
 
 ## [4.0.0-alpha.6](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.2...v4.0.0-alpha.6)
 
-###### _Sep 25, 2020_
+_Sep 25, 2020_
 
 ### @material-ui/x-grid@v4.0.0-alpha.6 / @material-ui/data-grid@v4.0.0-alpha.6
 
@@ -3130,13 +3129,13 @@ Big thanks to the 8 contributors who made this release possible. Here are some h
 
 ## [4.0.0-alpha.2](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.1...v4.0.0-alpha.2)
 
-###### _Sep 18, 2020_
+_Sep 18, 2020_
 
 - [DataGrid] Fix wrongly exported types (#298) @dtassone
 
 ## [4.0.0-alpha.1](https://github.com/mui-org/material-ui-x/compare/v0.1.67...v4.0.0-alpha.1)
 
-###### _Sep 17, 2020_
+_Sep 17, 2020_
 
 This is the first public alpha release of the component after 6 months of development since the initial commit (March 15th 2020).
 `@material-ui/data-grid` is licensed under MIT while `@material-ui/x-grid` is licensed under a commercial license.
