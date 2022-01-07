@@ -36,6 +36,7 @@ import { useGridSelector } from '../../utils/useGridSelector';
 import { useGridStateInit } from '../../utils/useGridStateInit';
 import { gridEditRowsStateSelector } from './gridEditRowsSelector';
 import { GridEventListener, MuiBaseEvent } from '../../../models';
+import { gridFocusCellSelector } from '../focus/gridFocusStateSelector';
 
 function isPromise(promise: any): promise is Promise<GridEditCellProps> {
   return typeof promise.then === 'function';
@@ -112,7 +113,7 @@ export function useGridEditRows(
 
   const handleColumnHeaderDragStart: GridEventListener<GridEvents.columnHeaderDragEnter> =
     useEventCallback(() => {
-      const { cell } = apiRef.current.state.focus;
+      const cell = gridFocusCellSelector(apiRef.current.state);
       if (!cell) {
         return;
       }
@@ -188,15 +189,16 @@ export function useGridEditRows(
       if (props.editMode === GridEditModes.Cell) {
         return GridRowModes.View;
       }
-      return apiRef.current.state.editRows[id] ? GridRowModes.Edit : GridRowModes.View;
+      const editRowsState = gridEditRowsStateSelector(apiRef.current.state);
+      return editRowsState[id] ? GridRowModes.Edit : GridRowModes.View;
     },
     [apiRef, props.editMode],
   );
 
   const getCellMode = React.useCallback<GridEditRowApi['getCellMode']>(
     (id, field) => {
-      const editState = apiRef.current.state.editRows;
-      const isEditing = editState[id] && editState[id][field];
+      const editRowsState = gridEditRowsStateSelector(apiRef.current.state);
+      const isEditing = editRowsState[id] && editRowsState[id][field];
       return isEditing ? GridCellModes.Edit : GridCellModes.View;
     },
     [apiRef],
@@ -297,7 +299,7 @@ export function useGridEditRows(
   );
 
   const getEditRowsModel = React.useCallback<GridEditRowApi['getEditRowsModel']>(
-    (): GridEditRowsModel => apiRef.current.state.editRows,
+    (): GridEditRowsModel => gridEditRowsStateSelector(apiRef.current.state),
     [apiRef],
   );
 
