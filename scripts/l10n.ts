@@ -236,7 +236,7 @@ ${newMessage}
 
 interface HandlerArgv {
   report: boolean;
-  githubToken: string;
+  githubToken?: string;
 }
 
 async function run(argv: HandlerArgv) {
@@ -328,7 +328,7 @@ yargs
           default: false,
         })
         .option('githubToken', {
-          default: process.env.GITHUB_TOKEN || '',
+          default: process.env.GITHUB_TOKEN,
           describe:
             'The personal access token to use for authenticating with GitHub. Needs public_repo permissions.',
           type: 'string',

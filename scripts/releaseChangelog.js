@@ -171,12 +171,12 @@ async function main(argv) {
 
 ${sortedCommits
   .sort()
-  .map((commitItem) => `- ${commitItem.commit.message} @${commitItem.author.login}`)
+  .map((commitItem) => `- ${commitItem.commit.message.split('\n')[0]} @${commitItem.author.login}`)
   .join('\n')}
 `;
   };
 
-  const nowFormated = new Date().toLocaleDateString('en-US', {
+  const nowFormatted = new Date().toLocaleDateString('en-US', {
     month: 'short',
     day: 'numeric',
     year: 'numeric',
@@ -185,17 +185,21 @@ ${sortedCommits
   const changelog = `
 ## TODO RELEASE NAME
 <!-- generated comparing ${lastRelease}..${release} -->
-_${nowFormated}_
+_${nowFormatted}_
+
 A big thanks to the ${
     authors.length
   } contributors who made this release possible. Here are some highlights ✨:
+
+### \`@mui/x-data-grid@v\` / \`@mui/x-data-grid-pro@v\`
+
 TODO INSERT HIGHLIGHTS
 
 ${changeLogMessages.join('\n')}
 
-${logChangelogSection(changeCommits, '### Changes')}
-${logChangelogSection(coreCommits, '### Core')}
+${logChangelogSection(changeCommits, '#### Changes')}
 ${logChangelogSection(docsCommits, '### Docs')}
+${logChangelogSection(coreCommits, '### Core')}
 ${logChangelogSection(otherCommits, '')}
 
 `;
