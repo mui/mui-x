@@ -28,7 +28,7 @@ export const computeColumnTypes = (customColumnTypes: GridColumnTypesRecord = {}
 };
 
 /**
- * Compute the `computedWidth` (eg: the width the column actually have) based on the `width` / `flex` / `minWidth` / `maxWidth` properties of `GridColDef`.
+ * Compute the `computedWidth` (ie: the width the column should have during rendering) based on the `width` / `flex` / `minWidth` / `maxWidth` properties of `GridColDef`.
  * The columns already have been merged with there `type` default values for `minWidth`, `maxWidth` and `width`, thus the `!` for those properties below.
  * TODO: Unit test this function in depth and only keep basic cases for the whole grid testing.
  * TODO: Improve the `GridColDef` typing to reflect the fact that `minWidth` / `maxWidth` and `width` can't be null after the merge with the `type` default values.
