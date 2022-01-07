@@ -6,7 +6,7 @@ title: Data Grid - Filtering
 
 <p class="description">Easily filter your rows based on one or several criteria.</p>
 
-The filters can be modified through grid interface in several ways:
+The filters can be modified through the grid interface in several ways:
 
 - By opening the column menu and clicking the _Filter_ menu item.
 - By clicking the _Filters_ button in the grid toolbar (if enabled).
