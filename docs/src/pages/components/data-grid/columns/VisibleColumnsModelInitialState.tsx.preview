@@ -1,0 +1,9 @@
+<DataGrid
+  {...data}
+  loading={loading}
+  initialState={{
+    columns: {
+      visibleColumnsModel: ['desk', 'commodity', 'quantity', 'status'],
+    },
+  }}
+/>

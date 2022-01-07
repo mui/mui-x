@@ -1,0 +1,6 @@
+<DataGrid
+  {...data}
+  loading={loading}
+  visibleColumnsModel={visibleColumnsModel}
+  onVisibleColumnsModelChange={(newModel) => setVisibleColumnsModel(newModel)}
+/>

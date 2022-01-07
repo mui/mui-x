@@ -77,16 +77,6 @@ To set a minimum width for a `flex` column set the `minWidth` property in `GridC
 
 {{"demo": "pages/components/data-grid/columns/ColumnFluidWidthGrid.js", "bg": "inline"}}
 
-### Hiding
-
-Set the column definition attribute `hide` to `true` to hide the column.
-The attribute `hideable`, when `true`, prevents the user from hiding a column through the columns panel or the "Hide" option, available in the column menu.
-Hiding a column using the imperative API is still possible.
-
-In this example, you can not hide the "username" column, and by default the "age" column is hidden.
-
-{{"demo": "pages/components/data-grid/columns/ColumnHiding.js", "bg": "inline"}}
-
 ### Resizing [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
 
 By default, `DataGridPro` allows all columns to be resized by dragging the right portion of the column separator.
@@ -322,6 +312,56 @@ However, some types require additional properties to be set to make them work co
   ```
 
 {{"demo": "pages/components/data-grid/columns/ColumnTypesGrid.js", "bg": "inline"}}
+
+## Column visibility
+
+By default, all the columns are visible.
+The column's visibility can be switched through the grid interface in two ways:
+
+- By opening the column menu and clicking the _Hide_ menu item.
+- By clicking the _Columns_ menu and toggling the columns to show or hide.
+
+You can prevent the user from hiding a column through the grid interface by setting the `hideable` in `GridColDef` to `false`.
+
+In the following demo, you can not hide the "username" column.
+
+{{"demo": "pages/components/data-grid/columns/VisibleColumnsBasicExample.js", "bg": "inline"}}
+
+### Initialize the visible columns
+
+To initialize the visible columns without controlling them, provide the model to the `initialState` prop.
+
+**Note:** The order of the fields in the visible columns model do not matter.
+
+```tsx
+<DataGrid
+  initialState={{
+    columns: {
+      visibleColumnsModel: ['id'],
+    },
+  }}
+/>
+```
+
+{{"demo": "pages/components/data-grid/columns/VisibleColumnsModelInitialState.js", "bg": "inline"}}
+
+### Controlled visible columns
+
+Use the `visibleColumnsModel` prop to control the visible columns.
+You can use the `onVisibleColumnsModelChange` prop to listen to the changes to the visible columns and update the prop accordingly.
+
+```tsx
+<DataGrid visibleColumnsModel={['id']} />
+```
+
+{{"demo": "pages/components/data-grid/columns/VisibleColumnsModelControlled.js", "bg": "inline"}}
+
+### Column `hide` property (deprecated)
+
+Before the introduction of the `visibleColumnsModel`, the columns could be hidden by setting the `hide` property in `GridColDef` to `true`.
+This method still works but will be removed on the next major release.
+
+{{"demo": "pages/components/data-grid/columns/ColumnHiding.js", "bg": "inline"}}
 
 ## Custom column types
 
