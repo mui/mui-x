@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { GridRenderEditCellParams } from '@mui/x-data-grid';
-import Autocomplete from '@mui/material/Autocomplete';
+import Autocomplete, { autocompleteClasses } from '@mui/material/Autocomplete';
 import InputBase from '@mui/material/InputBase';
-import { createStyles, makeStyles } from '@mui/styles';
-import { createTheme } from '@mui/material/styles';
+import Box from '@mui/material/Box';
+import { styled } from '@mui/material/styles';
 import { CURRENCY_OPTIONS } from '../services/static-data';
 
 // ISO 3166-1 alpha-2
@@ -16,31 +16,19 @@ function countryToFlag(isoCode: string) {
     : isoCode;
 }
 
-const defaultTheme = createTheme();
-const useStyles = makeStyles(
-  (theme) =>
-    createStyles({
-      option: {
-        '& > span': {
-          marginRight: 10,
-          fontSize: 18,
-        },
-      },
-      inputRoot: {
-        ...theme.typography.body2,
-        padding: '1px 0',
-        height: '100%',
-        '& input': {
-          padding: '0 16px',
-          height: '100%',
-        },
-      },
-    }),
-  { defaultTheme },
-);
+const StyledAutocomplete = styled(Autocomplete)(({ theme }) => ({
+  [`& .${autocompleteClasses.inputRoot}`]: {
+    ...theme.typography.body2,
+    padding: '1px 0',
+    height: '100%',
+    '& input': {
+      padding: '0 16px',
+      height: '100%',
+    },
+  },
+}));
 
 function EditCurrency(props: GridRenderEditCellParams) {
-  const classes = useStyles();
   const { id, value, api, field } = props;
 
   const handleChange = React.useCallback(
@@ -55,20 +43,28 @@ function EditCurrency(props: GridRenderEditCellParams) {
   );
 
   return (
-    <Autocomplete
+    <StyledAutocomplete
       value={value as string}
       onChange={handleChange}
       options={CURRENCY_OPTIONS}
       autoHighlight
       fullWidth
       open
-      classes={classes}
       disableClearable
       renderOption={(optionProps, option) => (
-        <li {...optionProps}>
+        <Box
+          component="li"
+          sx={{
+            '& > span': {
+              mr: '10px',
+              fontSize: '18px',
+            },
+          }}
+          {...optionProps}
+        >
           <span>{countryToFlag(String(option).slice(0, -1))}</span>
           {option}
-        </li>
+        </Box>
       )}
       renderInput={(params) => (
         <InputBase
