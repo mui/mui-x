@@ -523,6 +523,7 @@ export interface DataGridPropsWithoutDefaultValue extends CommonProps {
   onColumnOrderChange?: GridEventListener<GridEvents.columnOrderChange>;
   /**
    * Callback fired when a column visibility changes.
+   * Only works when no `visibleColumnsModel` is provided and if we change the visibility of a single column at a time.
    * @param {GridColumnVisibilityChangeParams} params With all properties from [[GridColumnVisibilityChangeParams]].
    * @param {MuiEvent<{}>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
