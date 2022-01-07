@@ -1,13 +1,7 @@
 import * as React from 'react';
 import { createRenderer, fireEvent, screen, waitFor } from '@material-ui/monorepo/test/utils';
 import { expect } from 'chai';
-import {
-  DataGrid,
-  DataGridProps,
-  GridFilterModel,
-  GridLinkOperator,
-  GridRowsProp,
-} from '@mui/x-data-grid';
+import { DataGrid, DataGridProps, GridLinkOperator, GridRowsProp } from '@mui/x-data-grid';
 import { getCell, getColumnValues, getRows } from 'test/utils/helperFn';
 import { spy, stub, SinonStub } from 'sinon';
 import { useData } from 'packages/storybook/src/hooks/useData';
@@ -180,7 +174,6 @@ describe('<DataGrid /> - Pagination', () => {
         );
       };
       const { setProps } = render(<TestCasePaginationFilteredData />);
-      clock.runToLast(); // Run the timer to cleanup the listeners registered by StrictMode
       expect(onPageChange.callCount).to.equal(0);
 
       setProps({
@@ -219,7 +212,6 @@ describe('<DataGrid /> - Pagination', () => {
           rowsPerPageOptions={[1, 2]}
         />,
       );
-      clock.runToLast(); // Run the timer to cleanup the listeners registered by StrictMode
       expect(onPageSizeChange.callCount).to.equal(0);
       setProps({ pageSize: 2 });
       expect(onPageSizeChange.callCount).to.equal(0);
@@ -236,7 +228,6 @@ describe('<DataGrid /> - Pagination', () => {
           rowsPerPageOptions={[1, 2]}
         />,
       );
-      clock.runToLast(); // Run the timer to cleanup the listeners registered by StrictMode
       expect(getColumnValues()).to.deep.equal(['0']);
       setProps({ pageSize: 2 });
       expect(getColumnValues()).to.deep.equal(['0', '1']);
@@ -246,7 +237,6 @@ describe('<DataGrid /> - Pagination', () => {
       const { setProps } = render(
         <BaselineTestCase pageSize={1} page={0} rowsPerPageOptions={[1, 2]} />,
       );
-      clock.runToLast(); // Run the timer to cleanup the listeners registered by StrictMode
       expect(getColumnValues()).to.deep.equal(['0']);
       setProps({ page: 1, pageSize: 2 });
       expect(getColumnValues()).to.deep.equal(['2', '3']);
@@ -324,7 +314,6 @@ describe('<DataGrid /> - Pagination', () => {
       };
 
       render(<ControlCase />);
-      clock.runToLast(); // Run the timer to cleanup the listeners registered by StrictModes
 
       fireEvent.mouseDown(screen.queryByLabelText('Rows per page:'));
       expect(screen.queryAllByRole('option').length).to.equal(3);
@@ -366,7 +355,6 @@ describe('<DataGrid /> - Pagination', () => {
       const { setProps } = render(
         <BaselineTestCase rowsPerPageOptions={[10, 20]} pageSize={20} disableVirtualization />,
       );
-      clock.runToLast(); // Run the timer to cleanup the listeners registered by StrictMode
       expect(getColumnValues(0)).to.have.length(20);
       setProps({ pageSize: 10 });
       expect(getColumnValues(0)).to.have.length(10);
