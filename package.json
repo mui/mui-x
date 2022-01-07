@@ -6,7 +6,7 @@
     "benchmark:browser": "yarn workspace benchmark browser",
     "docs:dev": "yarn workspace docs dev",
     "docs:api": "yarn docs:api:build",
-    "docs:api:build": "cross-env BABEL_ENV=development babel-node -i \"/node_modules/(?!@material-ui)/\" -x .ts,.tsx,.js ./docs/scripts/api/buildApi.ts ./docs/pages/api-docs/data-grid",
+    "docs:api:build": "cross-env BABEL_ENV=development babel-node -i \"/node_modules/(?!@mui)/\" -x .ts,.tsx,.js ./docs/scripts/api/buildApi.ts ./docs/pages/api-docs/data-grid",
     "docs:build": "yarn workspace docs build",
     "docs:export": "yarn workspace docs export",
     "docs:typescript:formatted": "yarn workspace docs typescript:transpile",
@@ -22,7 +22,7 @@
     "markdownlint": "markdownlint '**/*.md' --config .markdownlint.jsonc",
     "prettier": "node ./scripts/prettier.js --branch master",
     "prettier:all": "node ./scripts/prettier.js write",
-    "proptypes": "cross-env BABEL_ENV=development babel-node -i \"/node_modules/(?!@material-ui)/\" -x .ts,.tsx,.js ./docs/scripts/generateProptypes.ts",
+    "proptypes": "cross-env BABEL_ENV=development babel-node -i \"/node_modules/(?!@mui)/\" -x .ts,.tsx,.js ./docs/scripts/generateProptypes.ts",
     "size:snapshot": "node --max-old-space-size=2048 ./scripts/sizeSnapshot/create",
     "size:why": "yarn size:snapshot --analyze --accurateBundles",
     "test": "lerna run test --parallel",
@@ -66,7 +66,7 @@
     "@emotion/react": "^11.7.1",
     "@emotion/styled": "^11.6.0",
     "@eps1lon/enzyme-adapter-react-17": "^0.1.0",
-    "@material-ui/monorepo": "https://github.com/mui-org/material-ui.git#master",
+    "@mui/monorepo": "https://github.com/mui-org/material-ui.git#master",
     "@mui/icons-material": "^5.2.5",
     "@mui/material": "^5.2.7",
     "@mui/styles": "^5.2.3",
@@ -163,7 +163,7 @@
       "docs"
     ],
     "nohoist": [
-      "**/@material-ui/monorepo"
+      "**/@mui/monorepo"
     ]
   },
   "dependencies": {

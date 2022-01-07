@@ -1,1 +1,1 @@
-require('@material-ui/monorepo/scripts/pushArgos');
+require('@mui/monorepo/scripts/pushArgos');
