@@ -2,7 +2,7 @@ import * as React from 'react';
 import { DataGridPro, GridLinkOperator } from '@mui/x-data-grid-pro';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
-export default function DisableSortingGrid() {
+export default function CustomFilterPanel() {
   const { data } = useDemoData({
     dataSet: 'Commodity',
     rowLength: 10,

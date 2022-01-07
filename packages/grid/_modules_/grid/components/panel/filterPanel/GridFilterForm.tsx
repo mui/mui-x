@@ -71,31 +71,7 @@ const getLinkOperatorLocaleKey = (linkOperator) => {
 
 const getColumnLabel = (col) => col.headerName || col.field;
 
-const useColumnSorting = (filterableColumns, columnsSort) => {
-  const [sortedColumns, setSortedColumns] = React.useState(filterableColumns);
-
-  React.useEffect(() => {
-    switch (columnsSort) {
-      case 'asc':
-        setSortedColumns(
-          filterableColumns.sort((a, b) => (getColumnLabel(a) < getColumnLabel(b) ? -1 : 1)),
-        );
-
-        break;
-      case 'desc':
-        setSortedColumns(
-          filterableColumns.sort((a, b) => (getColumnLabel(a) < getColumnLabel(b) ? 1 : -1)),
-        );
-
-        break;
-      default:
-        setSortedColumns(filterableColumns);
-        break;
-    }
-  }, [filterableColumns, columnsSort]);
-
-  return sortedColumns;
-};
+const collator = new Intl.Collator();
 
 function GridFilterForm(props: GridFilterFormProps) {
   const {
@@ -130,7 +106,18 @@ function GridFilterForm(props: GridFilterFormProps) {
   const valueRef = React.useRef<any>(null);
   const filterSelectorRef = React.useRef<HTMLInputElement>(null);
 
-  const sortedFilterableColumns = useColumnSorting(filterableColumns, columnsSort);
+  const sortedFilterableColumns = React.useMemo(() => {
+    switch (columnsSort) {
+      case 'asc':
+        return filterableColumns.sort((a, b) => collator.compare(getColumnLabel(a), getColumnLabel(b)));
+
+      case 'desc':
+        return filterableColumns.sort((a, b) => -collator.compare(getColumnLabel(a), getColumnLabel(b)));
+
+      default:
+        return filterableColumns;
+    }
+  }, [filterableColumns, columnsSort]);
 
   const currentColumn = item.columnField ? apiRef.current.getColumn(item.columnField) : null;
 
