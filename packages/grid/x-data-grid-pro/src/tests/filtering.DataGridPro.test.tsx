@@ -1,7 +1,7 @@
 import {
   getDefaultGridFilterModel,
   GridApiRef,
-  GridComponentProps,
+  DataGridProProps,
   GridFilterModel,
   GridLinkOperator,
   GridPreferencePanelsValue,
@@ -42,7 +42,7 @@ describe('<DataGridPro /> - Filter', () => {
     columns: [{ field: 'brand' }],
   };
 
-  const TestCase = (props: Partial<GridComponentProps>) => {
+  const TestCase = (props: Partial<DataGridProProps>) => {
     const { rows, ...other } = props;
     apiRef = useGridApiRef();
     return (
@@ -442,7 +442,7 @@ describe('<DataGridPro /> - Filter', () => {
     });
 
     it('should control filter state when the model and the onChange are set', () => {
-      const ControlCase = (props: Partial<GridComponentProps>) => {
+      const ControlCase = (props: Partial<DataGridProProps>) => {
         const { rows, columns, ...others } = props;
         const [caseFilterModel, setFilterModel] = React.useState(getDefaultGridFilterModel);
         const handleFilterChange = (newModel) => {

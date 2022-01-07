@@ -8,7 +8,7 @@ import { GridPreferencePanelsValue } from '../../hooks/features/preferencesPanel
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { getDataGridUtilityClass } from '../../gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { GridComponentProps } from '../../GridComponentProps';
+import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { GridIconButtonContainer } from './GridIconButtonContainer';
 
 export interface ColumnHeaderFilterIconProps {
@@ -16,7 +16,7 @@ export interface ColumnHeaderFilterIconProps {
 }
 
 type OwnerState = ColumnHeaderFilterIconProps & {
-  classes?: GridComponentProps['classes'];
+  classes?: DataGridProcessedProps['classes'];
 };
 
 const useUtilityClasses = (ownerState: OwnerState) => {

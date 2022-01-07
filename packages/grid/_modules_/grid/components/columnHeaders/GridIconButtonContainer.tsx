@@ -4,11 +4,11 @@ import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { getDataGridUtilityClass } from '../../gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { GridComponentProps } from '../../GridComponentProps';
+import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 
 export type GridIconButtonContainerProps = React.HTMLAttributes<HTMLDivElement>;
 
-type OwnerState = { classes: GridComponentProps['classes'] };
+type OwnerState = { classes: DataGridProcessedProps['classes'] };
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
