@@ -121,7 +121,7 @@ Filters are enabled by default, but you can easily disable this feature by setti
 <DataGrid disableColumnFilter />
 ```
 
-{{"demo": "pages/components/data-grid/filtering/DisableFilteringGridAllColumns.js", "bg": "inline"}}
+{{"demo": "pages/components/data-grid/filtering/DisableFilteringGridAllColumns.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ### For some columns
 
@@ -129,10 +129,10 @@ To disable the filter on a column, set the `filterable` property of `GridColDef`
 If the example below, the _rating_ column can not be filtered.
 
 ```js
-const columns = [{ field: 'rating', filterable: false }];
+<Datagrid columns={[...columns, { field: 'rating', filterable: false }]} />
 ```
 
-{{"demo": "pages/components/data-grid/filtering/DisableFilteringGridSomeColumns.js", "bg": "inline"}}
+{{"demo": "pages/components/data-grid/filtering/DisableFilteringGridSomeColumns.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## Customize the operators
 
