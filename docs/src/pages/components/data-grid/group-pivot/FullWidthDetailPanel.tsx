@@ -8,7 +8,6 @@ import {
   GridColumns,
   GridRowsProp,
   useGridApiContext,
-  useGridApiEventHandler,
   GRID_DETAIL_PANEL_TOGGLE_FIELD,
   GridEvents,
 } from '@mui/x-data-grid-pro';
@@ -36,11 +35,12 @@ function DetailPanelContent({ row: rowProp }) {
     setWidth(dimensions!.viewportInnerSize.width);
   }, [apiRef]);
 
-  useGridApiEventHandler(
-    apiRef,
-    GridEvents.viewportInnerSizeChange,
-    handleViewportInnerSizeChange,
-  );
+  React.useEffect(() => {
+    return apiRef.current.subscribeEvent(
+      GridEvents.viewportInnerSizeChange,
+      handleViewportInnerSizeChange,
+    );
+  }, [apiRef, handleViewportInnerSizeChange]);
 
   return (
     <Stack
