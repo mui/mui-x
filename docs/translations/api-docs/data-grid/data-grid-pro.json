@@ -468,8 +468,8 @@
     "DensityComfortableIcon": "Icon displayed on the &quot;comfortable&quot; density option in the toolbar.",
     "ExportIcon": "Icon displayed on the open export button present in the toolbar by default.",
     "MoreActionsIcon": "Icon displayed on the <code>actions</code> column type to open the menu.",
-    "TreeDataExpandIcon": "Icon displayed on the tree data toggling column when the children are collapsed",
-    "TreeDataCollapseIcon": "Icon displayed on the tree data toggling column when the children are expanded",
-    "DetailPanelToggleIcon": "Icon displayed on the detail panel toggle column"
+    "TreeDataExpandIcon": "Icon displayed on the tree data toggling column when the children are collapsed.",
+    "TreeDataCollapseIcon": "Icon displayed on the tree data toggling column when the children are expanded.",
+    "DetailPanelToggleIcon": "Icon displayed on the detail panel toggle column."
   }
 }
