@@ -159,7 +159,7 @@ Returning `null` or `undefined` as the value of `getDetailPanelContent` will pre
 >
 > <DataGridPro getDetailPanelContent={getDetailPanelContent} />
 > ```
-
+>
 > ⚠ Depending on the height of the detail panel, you may see a blank space when scrolling.
 > This is caused because the grid uses a lazy approach to update the rendered rows.
 > Set `rowThreshold` to 0 to fix it:
