@@ -5,6 +5,11 @@ export interface GridPaginationState {
   rowCount: number;
 }
 
+export interface GridPaginationInitialState {
+  pageSize?: number;
+  page?: number;
+}
+
 /**
  * The apiRef methods handled by `useGridPageSize`
  */

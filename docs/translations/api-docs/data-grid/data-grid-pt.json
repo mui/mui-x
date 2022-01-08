@@ -223,6 +223,16 @@
       "nodeName": "the column header separator",
       "conditions": "the column is being resized"
     },
+    "columnSeparator--sideLeft": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the column header separator",
+      "conditions": "the side is \"left\""
+    },
+    "columnSeparator--sideRight": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the column header separator",
+      "conditions": "the side is \"right\""
+    },
     "columnSeparator": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the column header separator element"
