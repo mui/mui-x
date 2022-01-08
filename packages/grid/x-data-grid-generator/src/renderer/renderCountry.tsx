@@ -2,16 +2,6 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import { GridRenderCellParams } from '@mui/x-data-grid-pro';
 
-// ISO 3166-1 alpha-2
-// ⚠️ No support for IE 11
-function countryToFlag(isoCode: string) {
-  return typeof String.fromCodePoint !== 'undefined' && isoCode
-    ? isoCode
-        .toUpperCase()
-        .replace(/./g, (char) => String.fromCodePoint(char.charCodeAt(0) + 127397))
-    : isoCode;
-}
-
 interface CountryProps {
   value: {
     code: string;
@@ -23,18 +13,22 @@ const Country = React.memo(function Country(props: CountryProps) {
   const { value } = props;
 
   return (
-    <Box sx={{ display: 'flex', alignItems: 'center' }}>
-      <Box
-        component="span"
-        sx={{
+    <Box
+      sx={{
+        display: 'flex',
+        alignItems: 'center',
+        '&  > img': {
           mr: '4px',
-          height: '32px',
-          width: '32px',
-          fontSize: '28px',
-        }}
-      >
-        {value.code && countryToFlag(value.code)}
-      </Box>
+          width: '20px',
+        },
+      }}
+    >
+      <img
+        loading="lazy"
+        src={`https://flagcdn.com/w20/${value.code.toLowerCase()}.png`}
+        srcSet={`https://flagcdn.com/w40/${value.code.toLowerCase()}.png 2x`}
+        alt=""
+      />
       <Box component="span" sx={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>
         {value.label}
       </Box>

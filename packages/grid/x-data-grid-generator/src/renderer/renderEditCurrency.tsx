@@ -6,16 +6,6 @@ import Box from '@mui/material/Box';
 import { styled } from '@mui/material/styles';
 import { CURRENCY_OPTIONS } from '../services/static-data';
 
-// ISO 3166-1 alpha-2
-// ⚠️ No support for IE 11
-function countryToFlag(isoCode: string) {
-  return typeof String.fromCodePoint !== 'undefined'
-    ? isoCode
-        .toUpperCase()
-        .replace(/./g, (char) => String.fromCodePoint(char.charCodeAt(0) + 127397))
-    : isoCode;
-}
-
 const StyledAutocomplete = styled(Autocomplete)(({ theme }) => ({
   [`& .${autocompleteClasses.inputRoot}`]: {
     ...theme.typography.body2,
@@ -51,18 +41,24 @@ function EditCurrency(props: GridRenderEditCellParams) {
       fullWidth
       open
       disableClearable
-      renderOption={(optionProps, option) => (
+      renderOption={(optionProps, option: any) => (
         <Box
           component="li"
           sx={{
-            '& > span': {
-              mr: '10px',
-              fontSize: '18px',
+            '& > img': {
+              mr: 2,
+              flexShrink: 0,
             },
           }}
           {...optionProps}
         >
-          <span>{countryToFlag(String(option).slice(0, -1))}</span>
+          <img
+            loading="lazy"
+            width="20"
+            src={`https://flagcdn.com/w20/${option.slice(0, -1).toLowerCase()}.png`}
+            srcSet={`https://flagcdn.com/w40/${option.slice(0, -1).toLowerCase()}.png 2x`}
+            alt=""
+          />
           {option}
         </Box>
       )}
