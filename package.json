@@ -97,7 +97,7 @@
     "chai": "^4.3.4",
     "chai-dom": "^1.11.0",
     "compression-webpack-plugin": "^9.2.0",
-    "concurrently": "^6.5.1",
+    "concurrently": "^7.0.0",
     "cross-env": "^7.0.3",
     "enzyme": "^3.11.0",
     "eslint": "^8.6.0",
