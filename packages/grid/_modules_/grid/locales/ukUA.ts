@@ -13,9 +13,9 @@ const getPluralFormForFilter = (count) => {
   }
 
   return `${count} ${pluralForm}`;
-}
+};
 
-const ukUAGrid: Partial<GridLocaleText> =  {
+const ukUAGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Немає рядків',
   noResultsOverlayLabel: 'Дані не знайдено.',
@@ -113,7 +113,8 @@ const ukUAGrid: Partial<GridLocaleText> =  {
   footerTotalRows: 'Усього рядків:',
 
   // Total visible rows footer text
-  footerTotalVisibleRows: (visibleCount, totalCount) => `${visibleCount.toLocaleString()} з ${totalCount.toLocaleString()}`,
+  footerTotalVisibleRows: (visibleCount, totalCount) =>
+    `${visibleCount.toLocaleString()} з ${totalCount.toLocaleString()}`,
 
   // Checkbox selection text
   checkboxSelectionHeaderName: 'Вибір прапорця',
