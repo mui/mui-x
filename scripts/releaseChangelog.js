@@ -2,6 +2,9 @@
 const { Octokit } = require('@octokit/rest');
 const yargs = require('yargs');
 
+const GIT_ORGANIZATION = 'mui-org';
+const GIT_REPO = 'material-ui-x';
+
 /**
  * @param {string} commitMessage
  * @returns {string} The tags in lowercases, ordered ascending and commaseparated
@@ -35,7 +38,7 @@ function filterCommit(commitsItem) {
 
 async function findLatestTaggedVersion(octokit) {
   // fetch tags from the GitHub API and return the last one
-  const { data } = await octokit.request('GET /repos/mui-org/material-ui-x/tags');
+  const { data } = await octokit.request(`GET /repos/${GIT_ORGANIZATION}/${GIT_REPO}/tags`);
   return data[0].name.trim();
 }
 
@@ -67,8 +70,8 @@ async function main(argv) {
    */
   const timeline = octokit.paginate.iterator(
     octokit.repos.compareCommits.endpoint.merge({
-      owner: 'mui-org',
-      repo: 'material-ui-x',
+      owner: GIT_ORGANIZATION,
+      repo: GIT_REPO,
       base: lastRelease,
       head: release,
     }),
@@ -96,8 +99,8 @@ async function main(argv) {
       const {
         data: { body: bodyMessage },
       } = await octokit.request('GET /repos/{owner}/{repo}/pulls/{pull_number}', {
-        owner: 'mui-org',
-        repo: 'material-ui-x',
+        owner: GIT_ORGANIZATION,
+        repo: GIT_REPO,
         pull_number: Number(searchPullRequestId[1]),
       });
 
@@ -109,7 +112,7 @@ async function main(argv) {
       const changelogIndex = bodyMessage.toLowerCase().indexOf(changelogMotif);
       if (changelogIndex >= 0) {
         changeLogMessages.push(
-          `From https://github.com/mui-org/material-ui-x/pull/${
+          `From https://github.com/${GIT_ORGANIZATION}/${GIT_REPO}/pull/${
             searchPullRequestId[1]
           }\n${bodyMessage.slice(changelogIndex + changelogMotif.length)}`,
         );
