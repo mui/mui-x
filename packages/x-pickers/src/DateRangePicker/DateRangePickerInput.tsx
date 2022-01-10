@@ -44,6 +44,9 @@ export interface ExportedDateRangePickerInputProps
    *  )}
    * />
    * ````
+   * @param {MuiTextFieldProps} startProps Props that you need to forward to the range start input.
+   * @param {MuiTextFieldProps} endProps Props that you need to forward to the range end input.
+   * @returns {React.ReactElement} The range input to render.
    */
   renderInput: (startProps: MuiTextFieldProps, endProps: MuiTextFieldProps) => React.ReactElement;
 }

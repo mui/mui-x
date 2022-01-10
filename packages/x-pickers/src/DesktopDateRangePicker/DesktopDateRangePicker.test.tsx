@@ -1,13 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import {
-  act,
-  describeConformance,
-  screen,
-  fireEvent,
-  userEvent,
-} from '@mui/monorepo/test/utils';
+import { act, describeConformance, screen, fireEvent, userEvent } from '@mui/monorepo/test/utils';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import TextField, { TextFieldProps } from '@mui/material/TextField';
 import { DateRange } from '@mui/x-pickers/DateRangePicker';

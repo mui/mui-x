@@ -1,12 +1,10 @@
-import {
-  CalendarPickerClassKey,
-  CalendarPickerSkeletonClassKey,
-  ClockPickerClassKey,
-  DateRangePickerDayClassKey,
-  MonthPickerClassKey,
-  PickersDayClassKey,
-  YearPickerClassKey,
-} from '../components';
+import { CalendarPickerClassKey } from '../CalendarPicker';
+import { CalendarPickerSkeletonClassKey } from '../CalendarPickerSkeleton';
+import { ClockPickerClassKey } from '../ClockPicker';
+import { DateRangePickerDayClassKey } from '../DateRangePickerDay';
+import { MonthPickerClassKey } from '../MonthPicker';
+import { PickersDayClassKey } from '../PickersDay';
+import { YearPickerClassKey } from '../YearPicker';
 import { PickerStaticWrapperClassKey } from '../internal/components/PickerStaticWrapper';
 
 // prettier-ignore

@@ -29,6 +29,7 @@ export interface BaseDatePickerProps<TDate>
     ExportedDateInputProps<ParseableDate<TDate>, TDate | null>['components'];
   /**
    * Callback fired on view change.
+   * @param {CalendarPickerView} view The new view.
    */
   onViewChange?: (view: CalendarPickerView) => void;
   /**

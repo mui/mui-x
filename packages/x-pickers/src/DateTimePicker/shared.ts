@@ -47,6 +47,7 @@ export interface BaseDateTimePickerProps<TDate>
   maxDateTime?: TDate;
   /**
    * Callback fired on view change.
+   * @param {CalendarOrClockPickerView} view The new view.
    */
   onViewChange?: (view: CalendarOrClockPickerView) => void;
   /**

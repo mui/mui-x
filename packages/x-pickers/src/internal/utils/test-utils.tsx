@@ -14,6 +14,7 @@ import { LocalizationProvider } from '@mui/x-pickers/LocalizationProvider';
  */
 export class AdapterClassToUse extends AdapterDateFns {
   // Inlined AdapterDateFns#date which is not an instance method but instance property
+  // eslint-disable-next-line class-methods-use-this
   date = (value?: any): Date => {
     if (typeof value === 'string') {
       return parseISO(value);

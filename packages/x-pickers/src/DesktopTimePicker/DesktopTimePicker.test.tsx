@@ -2,13 +2,7 @@ import * as React from 'react';
 import TextField from '@mui/material/TextField';
 import { spy } from 'sinon';
 import { expect } from 'chai';
-import {
-  act,
-  describeConformance,
-  fireEvent,
-  screen,
-  userEvent,
-} from '@mui/monorepo/test/utils';
+import { act, describeConformance, fireEvent, screen, userEvent } from '@mui/monorepo/test/utils';
 import { TransitionProps } from '@mui/material/transitions';
 import { DesktopTimePicker } from '@mui/x-pickers/DesktopTimePicker';
 import { TimePickerProps } from '@mui/x-pickers/TimePicker';
