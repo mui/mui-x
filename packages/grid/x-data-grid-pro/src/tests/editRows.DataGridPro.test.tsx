@@ -7,7 +7,7 @@ import {
   GridEditSingleSelectCell,
 } from '@mui/x-data-grid-pro';
 import Portal from '@mui/base/Portal';
-import { createRenderer, fireEvent, screen, waitFor, act } from '@material-ui/monorepo/test/utils';
+import { createRenderer, fireEvent, screen, waitFor, act } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import * as React from 'react';
 import { getActiveCell, getCell, getRow, getColumnHeaderCell } from 'test/utils/helperFn';
@@ -38,6 +38,7 @@ const generateDate = (
   return rawDate.getTime();
 };
 
+// TODO: Replace `cell.focus()` with `fireEvent.mouseUp(cell)`
 describe('<DataGridPro /> - Edit Rows', () => {
   let baselineProps;
 
@@ -1521,7 +1522,7 @@ describe('<DataGridPro /> - Edit Rows', () => {
       });
     });
 
-    it("should exit the row edit mode and save the row when preProcessEditCellProps don't return an error", async () => {
+    it('should exit the row edit mode and save the row when preProcessEditCellProps does not return an error', async () => {
       render(
         <TestCase
           editMode="row"
@@ -1536,7 +1537,7 @@ describe('<DataGridPro /> - Edit Rows', () => {
         />,
       );
       const cell = getCell(0, 0);
-      cell.focus();
+      fireEvent.mouseUp(cell);
       fireEvent.doubleClick(cell);
       const input = cell.querySelector('input')!;
       fireEvent.change(input, { target: { value: 'Adidas' } });
