@@ -123,7 +123,7 @@ Filters are enabled by default, but you can easily disable this feature by setti
 
 ### For some columns
 
-To disable the filter on a column, set the `filterable` property of `GridColDef` to `false`.
+To disable the filter of a single column, set the `filterable` property in `GridColDef` to `false`.
 
 In the example below, the _rating_ column can not be filtered.
 
