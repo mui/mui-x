@@ -6,7 +6,6 @@ import * as prettier from 'prettier';
 import * as babel from '@babel/core';
 import * as babelTypes from '@babel/types';
 import * as yargs from 'yargs';
-import { Octokit } from '@octokit/rest';
 
 const SOURCE_CODE_REPO = 'https://github.com/mui-org/material-ui-x';
 
@@ -213,34 +212,12 @@ async function generateReport(
   return lines.join('\n');
 }
 
-async function updateIssue(githubToken, newMessage) {
-  // Initialize the API client
-  const octokit = new Octokit({
-    auth: githubToken,
-  });
-
-  await octokit.request('PATCH /repos/{owner}/{repo}/issues/{issue_number}', {
-    owner: 'mui-org',
-    repo: 'material-ui-x',
-    issue_number: 3211,
-    body: `You can check below all of the localization files that contain at least one missing translation. If you are a fluent speaker of any of these languages, feel free to submit a pull request. Any help is welcome to make the X components to reach new cultures.
-
-Run \`yarn l10n --report\` to update the list below ⬇️
-
-## DataGrid / DataGridPro
-
-${newMessage}
-`,
-  });
-}
-
 interface HandlerArgv {
   report: boolean;
-  githubToken?: string;
 }
 
 async function run(argv: HandlerArgv) {
-  const { report, githubToken } = argv;
+  const { report } = argv;
   const workspaceRoot = path.resolve(__dirname, '../');
 
   const constantsPath = path.join(
@@ -304,13 +281,8 @@ async function run(argv: HandlerArgv) {
   });
 
   if (report) {
-    const newMessage = await generateReport(missingTranslations);
-    if (githubToken) {
-      await updateIssue(githubToken, newMessage);
-    } else {
-      // eslint-disable-next-line no-console
-      console.log(newMessage);
-    }
+    // eslint-disable-next-line no-console
+    console.log(await generateReport(missingTranslations));
   }
 
   process.exit(0);
@@ -321,18 +293,11 @@ yargs
     command: '$0',
     describe: 'Syncs translation files.',
     builder: (command) => {
-      return command
-        .option('report', {
-          describe: "Don't write any file but generates a report with the missing translations.",
-          type: 'boolean',
-          default: false,
-        })
-        .option('githubToken', {
-          default: process.env.GITHUB_TOKEN,
-          describe:
-            'The personal access token to use for authenticating with GitHub. Needs public_repo permissions.',
-          type: 'string',
-        });
+      return command.option('report', {
+        describe: "Don't write any file but generates a report with the missing translations.",
+        type: 'boolean',
+        default: false,
+      });
     },
     handler: run,
   })
