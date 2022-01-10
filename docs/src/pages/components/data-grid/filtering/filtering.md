@@ -49,7 +49,7 @@ A filter item represents a filtering rule and is composed of several elements:
 
 #### The `linkOperator` [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
 
-The `linkOperator` tells the grid if a row should pass all the items or at least one in order to be considered valid.
+The `linkOperator` tells the grid if a row should satisfy all (`AND`) filter items or at least one (`OR`) in order to be considered valid.
 
 ```ts
 // Example 1: get rows with rating > 4 OR isAdmin = true
