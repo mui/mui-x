@@ -60,7 +60,7 @@
     "nprogress": "^0.2.0",
     "postcss": "^8.4.5",
     "prismjs": "^1.25.0",
-    "prop-types": "^15.8.0",
+    "prop-types": "^15.8.1",
     "raw-loader": "^1.0.0",
     "react": "^17.0.2",
     "react-docgen": "^5.4.0",
