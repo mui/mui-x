@@ -45,13 +45,14 @@ A filter item represents a filtering rule and is composed of several elements:
 - `filterItem.operatorValue`: name of the operator method to use (e.g. _contains_), matches the `value` key of the .
 - `filterItem.id` ([<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)): only useful when multiple filters are used.
 
+**Note**: Some operators do not need any value (for instance the `isEmpty` operator of the `string` column).
+
 #### The `linkOperator` [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
 
 The `linkOperator` tells the grid if a row should pass all the items or at least one in order to be considered valid.
 
-In the example below, the rows with `rating > 4` or `isAdmin = true` will be displayed.
-
 ```ts
+// Example 1: get rows with rating > 4 OR isAdmin = true
 const filterModel: GridFilterModel = {
   items: [
     { id: 1, columnField: 'rating', operatorValue: '>', value: '4' },
@@ -59,11 +60,8 @@ const filterModel: GridFilterModel = {
   ],
   linkOperator: GridLinkOperator.Or,
 };
-```
 
-In the example below, the rows with `rating > 4` and `isAdmin = true` will be displayed.
-
-```ts
+// Example 2: get rows with rating > 4 AND isAdmin = true
 const filterModel: GridFilterModel = {
   items: [
     { id: 1, columnField: 'rating', operatorValue: '>', value: '4' },
