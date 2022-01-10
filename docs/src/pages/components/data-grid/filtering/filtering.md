@@ -124,7 +124,8 @@ Filters are enabled by default, but you can easily disable this feature by setti
 ### For some columns
 
 To disable the filter on a column, set the `filterable` property of `GridColDef` to `false`.
-If the example below, the _rating_ column can not be filtered.
+
+In the example below, the _rating_ column can not be filtered.
 
 ```js
 <Datagrid columns={[...columns, { field: 'rating', filterable: false }]} />
