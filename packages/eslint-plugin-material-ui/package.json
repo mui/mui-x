@@ -2,19 +2,19 @@
   "name": "eslint-plugin-material-ui",
   "version": "5.2.2",
   "private": true,
-  "description": "Custom eslint rules for MUI.",
+  "description": "Custom eslint rules for MUI X.",
   "main": "src/index.js",
-  "dependencies": {
-    "emoji-regex": "^9.2.2"
-  },
   "devDependencies": {
     "@types/eslint": "^8.2.1",
+    "@typescript-eslint/experimental-utils": "^5.8.1",
     "@typescript-eslint/parser": "^5.8.1"
   },
-  "scripts": {},
+  "scripts": {
+    "test": "cd ../../ && cross-env NODE_ENV=test mocha 'packages/eslint-plugin-material-ui/**/*.test.js' --timeout 3000"
+  },
   "repository": {
     "type": "git",
-    "url": "https://github.com/mui-org/material-ui.git"
+    "url": "https://github.com/mui-org/material-ui-x.git"
   },
   "license": "MIT"
 }

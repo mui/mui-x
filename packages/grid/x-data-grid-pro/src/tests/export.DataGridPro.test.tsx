@@ -1,5 +1,5 @@
 import { GridApiRef, GridColumns, useGridApiRef, DataGridPro } from '@mui/x-data-grid-pro';
-import { createRenderer } from '@material-ui/monorepo/test/utils';
+import { createRenderer } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import * as React from 'react';
 

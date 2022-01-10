@@ -7,7 +7,7 @@ import {
   GridEditSingleSelectCell,
 } from '@mui/x-data-grid-pro';
 import Portal from '@mui/base/Portal';
-import { createRenderer, fireEvent, screen, waitFor, act } from '@material-ui/monorepo/test/utils';
+import { createRenderer, fireEvent, screen, waitFor, act } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import * as React from 'react';
 import { getActiveCell, getCell, getRow, getColumnHeaderCell } from 'test/utils/helperFn';
