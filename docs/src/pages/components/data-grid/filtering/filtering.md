@@ -24,7 +24,7 @@ _See [the dedicated section](#customize-the-operators) to learn how to create yo
 >
 > To use multi-filtering, you need to upgrade to the [Pro plan](https://mui.com/store/items/material-ui-pro/)
 
-The demo below let you filter the rows according to several criteria at the same time.
+The demo below lets you filter the rows according to several criteria at the same time.
 
 {{"demo": "pages/components/data-grid/filtering/BasicExampleDataGridPro.js", "bg": "inline", "defaultCodeOpen": false}}
 
