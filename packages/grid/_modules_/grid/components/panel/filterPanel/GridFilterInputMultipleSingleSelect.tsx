@@ -36,15 +36,15 @@ function GridFilterInputMultipleSingleSelect(props: GridFilterInputMultipleSingl
   const { item, applyValue, type, apiRef, focusElementRef, ...other } = props;
   const id = useId();
 
-  const currentColumn = item.columnField ? apiRef.current.getColumn(item.columnField) : null;
-  const currentValueOptions = React.useMemo(() => {
-    return typeof currentColumn.valueOptions === 'function'
-      ? currentColumn.valueOptions({ field: currentColumn.field })
-      : currentColumn.valueOptions;
-  }, [currentColumn]);
-  const currentFormatedValueOptions = React.useMemo(() => {
-    return currentValueOptions.map(getValueFromOption);
-  }, [currentValueOptions]);
+  const resolvedColumn = item.columnField ? apiRef.current.getColumn(item.columnField) : null;
+  const resolvedValueOptions = React.useMemo(() => {
+    return typeof resolvedColumn.valueOptions === 'function'
+      ? resolvedColumn.valueOptions({ field: resolvedColumn.field })
+      : resolvedColumn.valueOptions;
+  }, [resolvedColumn]);
+  const resolvedFormattedValueOptions = React.useMemo(() => {
+    return resolvedValueOptions.map(getValueFromOption);
+  }, [resolvedValueOptions]);
 
   const filterValueOptionFormatter = getSingleSelectOptionFormatter(
     apiRef.current.getColumn(item.columnField),
@@ -57,12 +57,12 @@ function GridFilterInputMultipleSingleSelect(props: GridFilterInputMultipleSingl
     if (!Array.isArray(item.value)) {
       return [];
     }
-    if (currentValueOptions !== undefined) {
+    if (resolvedValueOptions !== undefined) {
       const itemValueIndexes = item.value.map((element) => {
         // get the index matching between values and valueoptions
-        const formatedElement = getValueFromOption(element);
-        const index = currentFormatedValueOptions.findIndex(
-          (formatedOption) => formatedOption === formatedElement,
+        const formattedElement = getValueFromOption(element);
+        const index = resolvedFormattedValueOptions.findIndex(
+          (formatedOption) => formatedOption === formattedElement,
         );
 
         return index;
@@ -70,10 +70,10 @@ function GridFilterInputMultipleSingleSelect(props: GridFilterInputMultipleSingl
 
       return itemValueIndexes
         .filter((index) => index >= 0)
-        .map((index) => currentValueOptions[index]);
+        .map((index) => resolvedValueOptions[index]);
     }
     return item.value;
-  }, [item.value, currentValueOptions, currentFormatedValueOptions]);
+  }, [item.value, resolvedValueOptions, resolvedFormattedValueOptions]);
 
   React.useEffect(() => {
     if (!Array.isArray(item.value) || filterValues.length !== item.value.length) {
@@ -94,7 +94,7 @@ function GridFilterInputMultipleSingleSelect(props: GridFilterInputMultipleSingl
       multiple
       freeSolo={false}
       limitTags={1}
-      options={currentValueOptions}
+      options={resolvedValueOptions}
       isOptionEqualToValue={isOptionEqualToValue}
       filterOptions={filter}
       id={id}
