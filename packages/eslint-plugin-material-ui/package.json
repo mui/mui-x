@@ -5,7 +5,7 @@
   "description": "Custom eslint rules for MUI X.",
   "main": "src/index.js",
   "devDependencies": {
-    "@types/eslint": "^8.2.1",
+    "@types/eslint": "^8.2.2",
     "@typescript-eslint/experimental-utils": "^5.8.1",
     "@typescript-eslint/parser": "^5.8.1"
   },
