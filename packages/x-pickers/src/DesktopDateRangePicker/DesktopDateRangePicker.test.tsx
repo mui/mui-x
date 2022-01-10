@@ -7,7 +7,7 @@ import {
   screen,
   fireEvent,
   userEvent,
-} from '@material-ui/monorepo/test/utils';
+} from '@mui/monorepo/test/utils';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import TextField, { TextFieldProps } from '@mui/material/TextField';
 import { DateRange } from '@mui/x-pickers/DateRangePicker';

@@ -7,7 +7,7 @@ import {
   fireEvent,
   fireTouchChangedEvent,
   screen,
-} from '@material-ui/monorepo/test/utils';
+} from '@mui/monorepo/test/utils';
 import { MobileTimePicker } from '@mui/x-pickers/MobileTimePicker';
 import { wrapPickerMount, createPickerRenderer, adapterToUse } from '../internal/utils/test-utils';
 

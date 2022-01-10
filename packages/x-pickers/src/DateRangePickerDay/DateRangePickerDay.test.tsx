@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { describeConformance } from '@material-ui/monorepo/test/utils';
+import { describeConformance } from '@mui/monorepo/test/utils';
 import {
   DateRangePickerDay,
   dateRangePickerDayClasses as classes,

@@ -1,3 +1,5 @@
+// Used by @mui/x-pickers and @mui/x-pickers-pro
+// TODO: use on all other packages
 // TODO: Unify with core
 
 /* eslint-disable no-console */

@@ -4,7 +4,7 @@ import deLocale from 'date-fns/locale/de';
 import enLocale from 'date-fns/locale/en-US';
 import TextField from '@mui/material/TextField';
 import { DesktopDatePicker, DesktopDatePickerProps } from '@mui/x-pickers/DesktopDatePicker';
-import { fireEvent, screen } from '@material-ui/monorepo/test/utils';
+import { fireEvent, screen } from '@mui/monorepo/test/utils';
 import { adapterToUse, createPickerRenderer } from '../internal/utils/test-utils';
 
 describe('<DesktopDatePicker /> localization', () => {

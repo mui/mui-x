@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { GridApiRef } from '../../../models/api/gridApiRef';
-import { GridComponentProps } from '../../../GridComponentProps';
+import { DataGridProProcessedProps } from '../../../models/props/DataGridProProps';
 import {
-  GRID_TREE_DATA_GROUP_COL_DEF,
-  GRID_TREE_DATA_GROUP_COL_DEF_FORCED_PROPERTIES,
+  GRID_TREE_DATA_GROUPING_COL_DEF,
+  GRID_TREE_DATA_GROUPING_COL_DEF_FORCED_PROPERTIES,
 } from './gridTreeDataGroupColDef';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { GridEventListener, GridEvents } from '../../../models/events';
@@ -38,7 +38,7 @@ const TREE_DATA_GROUPING_NAME = 'tree-data';
 export const useGridTreeData = (
   apiRef: GridApiRef,
   props: Pick<
-    GridComponentProps,
+    DataGridProProcessedProps,
     | 'treeData'
     | 'getTreeDataPath'
     | 'groupingColDef'
@@ -123,7 +123,7 @@ export const useGridTreeData = (
     const { hideDescendantCount, ...colDefOverrideProperties } = colDefOverride ?? {};
 
     const commonProperties: Omit<GridColDef, 'field' | 'editable'> = {
-      ...GRID_TREE_DATA_GROUP_COL_DEF,
+      ...GRID_TREE_DATA_GROUPING_COL_DEF,
       renderCell: (params) => (
         <GridTreeDataGroupingCell {...params} hideDescendantCount={hideDescendantCount} />
       ),
@@ -133,13 +133,13 @@ export const useGridTreeData = (
     return {
       ...commonProperties,
       ...colDefOverrideProperties,
-      ...GRID_TREE_DATA_GROUP_COL_DEF_FORCED_PROPERTIES,
+      ...GRID_TREE_DATA_GROUPING_COL_DEF_FORCED_PROPERTIES,
     };
   }, [apiRef, props.groupingColDef]);
 
   const updateGroupingColumn = React.useCallback(
     (columnsState: GridColumnsRawState) => {
-      const groupingColDefField = GRID_TREE_DATA_GROUP_COL_DEF_FORCED_PROPERTIES.field;
+      const groupingColDefField = GRID_TREE_DATA_GROUPING_COL_DEF_FORCED_PROPERTIES.field;
 
       const shouldHaveGroupingColumn = props.treeData;
       const haveGroupingColumn = columnsState.lookup[groupingColDefField] != null;

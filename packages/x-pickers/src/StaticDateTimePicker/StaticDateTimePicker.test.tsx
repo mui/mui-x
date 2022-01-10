@@ -2,7 +2,7 @@ import * as React from 'react';
 import TextField from '@mui/material/TextField';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { fireEvent, screen } from '@material-ui/monorepo/test/utils';
+import { fireEvent, screen } from '@mui/monorepo/test/utils';
 import { StaticDateTimePicker } from '@mui/x-pickers/StaticDateTimePicker';
 import { adapterToUse, createPickerRenderer } from '../internal/utils/test-utils';
 

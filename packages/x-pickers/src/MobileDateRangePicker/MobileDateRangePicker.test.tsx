@@ -1,7 +1,7 @@
 import * as React from 'react';
 import TextField from '@mui/material/TextField';
 import { MobileDateRangePicker } from '@mui/x-pickers/MobileDateRangePicker';
-import { describeConformance } from '@material-ui/monorepo/test/utils';
+import { describeConformance } from '@mui/monorepo/test/utils';
 import { wrapPickerMount, createPickerRenderer } from '../internal/utils/test-utils';
 
 describe('<MobileDateRangePicker />', () => {

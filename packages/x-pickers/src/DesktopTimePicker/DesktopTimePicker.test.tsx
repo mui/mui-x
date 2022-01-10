@@ -8,7 +8,7 @@ import {
   fireEvent,
   screen,
   userEvent,
-} from '@material-ui/monorepo/test/utils';
+} from '@mui/monorepo/test/utils';
 import { TransitionProps } from '@mui/material/transitions';
 import { DesktopTimePicker } from '@mui/x-pickers/DesktopTimePicker';
 import { TimePickerProps } from '@mui/x-pickers/TimePicker';

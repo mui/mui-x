@@ -7,7 +7,7 @@ import {
   fireTouchChangedEvent,
   screen,
   within,
-} from '@material-ui/monorepo/test/utils';
+} from '@mui/monorepo/test/utils';
 import { ClockPicker, clockPickerClasses as classes } from '@mui/x-pickers/ClockPicker';
 import { adapterToUse, wrapPickerMount, createPickerRenderer } from '../internal/utils/test-utils';
 

@@ -1,4 +1,4 @@
-import pages from '@material-ui/monorepo/docs/src/pages';
+import pages from '@mui/monorepo/docs/src/pages';
 
 const components = pages.find((page) => page.pathname === '/components');
 const componentsAPI = pages.find((page) => page.pathname === '/api-docs');

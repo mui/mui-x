@@ -3,7 +3,7 @@ import { expect } from 'chai';
 import { spy } from 'sinon';
 import TextField from '@mui/material/TextField';
 import { TransitionProps } from '@mui/material/transitions';
-import { fireEvent, screen, userEvent } from '@material-ui/monorepo/test/utils';
+import { fireEvent, screen, userEvent } from '@mui/monorepo/test/utils';
 import { DesktopDatePicker } from '@mui/x-pickers/DesktopDatePicker';
 import SvgIcon, { SvgIconProps } from '@mui/material/SvgIcon';
 import {

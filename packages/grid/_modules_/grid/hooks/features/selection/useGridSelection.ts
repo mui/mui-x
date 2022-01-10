@@ -1,14 +1,13 @@
 import * as React from 'react';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { GridEvents, GridEventListener } from '../../../models/events';
-import { GridComponentProps } from '../../../GridComponentProps';
+import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridSelectionApi } from '../../../models/api/gridSelectionApi';
 import { GridRowId } from '../../../models/gridRows';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
-import { useGridState } from '../../utils/useGridState';
 import { gridRowsLookupSelector } from '../rows/gridRowsSelector';
 import { findParentElementFromClassName, isGridCellRoot } from '../../../utils/domUtils';
 import {
@@ -26,7 +25,7 @@ import { GridCellModes } from '../../../models/gridEditRowModel';
 import { GridColumnsRawState } from '../columns/gridColumnsState';
 import { isKeyboardEvent } from '../../../utils/keyboardUtils';
 
-type OwnerState = { classes: GridComponentProps['classes'] };
+type OwnerState = { classes: DataGridProcessedProps['classes'] };
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -48,7 +47,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 export const useGridSelection = (
   apiRef: GridApiRef,
   props: Pick<
-    GridComponentProps,
+    DataGridProcessedProps,
     | 'checkboxSelection'
     | 'selectionModel'
     | 'onSelectionModelChange'
@@ -75,8 +74,6 @@ export const useGridSelection = (
   }, [props.selectionModel]);
 
   useGridStateInit(apiRef, (state) => ({ ...state, selection: propSelectionModel ?? [] }));
-
-  const [, setGridState, forceUpdate] = useGridState(apiRef);
 
   const ownerState = { classes: props.classes };
   const classes = useUtilityClasses(ownerState);
@@ -156,11 +153,11 @@ export const useGridSelection = (
       const currentModel = gridSelectionStateSelector(apiRef.current.state);
       if (currentModel !== model) {
         logger.debug(`Setting selection model`);
-        setGridState((state) => ({ ...state, selection: model }));
-        forceUpdate();
+        apiRef.current.setState((state) => ({ ...state, selection: model }));
+        apiRef.current.forceUpdate();
       }
     },
-    [apiRef, setGridState, forceUpdate, logger],
+    [apiRef, logger],
   );
 
   const isRowSelected = React.useCallback<GridSelectionApi['isRowSelected']>(

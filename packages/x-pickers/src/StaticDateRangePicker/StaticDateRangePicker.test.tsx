@@ -3,7 +3,7 @@ import { expect } from 'chai';
 import { isWeekend } from 'date-fns';
 import TextField, { TextFieldProps } from '@mui/material/TextField';
 import { StaticDateRangePicker } from '@mui/x-pickers/StaticDateRangePicker';
-import { describeConformance, screen } from '@material-ui/monorepo/test/utils';
+import { describeConformance, screen } from '@mui/monorepo/test/utils';
 import { wrapPickerMount, createPickerRenderer, adapterToUse } from '../internal/utils/test-utils';
 
 const defaultRangeRenderInput = (startProps: TextFieldProps, endProps: TextFieldProps) => (

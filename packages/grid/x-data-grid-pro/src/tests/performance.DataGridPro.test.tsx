@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useGridApiRef, DataGridPro, GridApiRef } from '@mui/x-data-grid-pro';
-import { createRenderer, waitFor, screen, fireEvent } from '@material-ui/monorepo/test/utils';
+import { createRenderer, waitFor, screen, fireEvent } from '@mui/monorepo/test/utils';
 import { useData } from 'packages/storybook/src/hooks/useData';
 import { expect } from 'chai';
 
