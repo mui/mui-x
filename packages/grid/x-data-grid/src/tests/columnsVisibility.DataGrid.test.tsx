@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { createRenderer, fireEvent } from '@material-ui/monorepo/test/utils';
+import { createRenderer, fireEvent } from '@mui/monorepo/test/utils';
 import { DataGrid, DataGridProps, GridRowsProp, GridColumns, GridToolbar } from '@mui/x-data-grid';
 import { getColumnHeadersTextContent } from '../../../../../test/utils/helperFn';
 
@@ -100,6 +100,30 @@ describe('<DataGridPro /> - Columns Visibility', () => {
       expect(getColumnHeadersTextContent()).to.deep.equal(['id']);
       expect(onVisibleColumnsModelChange.callCount).to.equal(1);
       expect(onVisibleColumnsModelChange.lastCall.firstArg).to.deep.equal([]);
+    });
+
+    it('should call onVisibleColumnsModelChange with the new model when toggling all rows', () => {
+      const onVisibleColumnsModelChange = spy();
+      const { getByText } = render(
+        <TestDataGrid
+          components={{
+            Toolbar: GridToolbar,
+          }}
+          visibleColumnsModel={['id']}
+          onVisibleColumnsModelChange={onVisibleColumnsModelChange}
+        />,
+      );
+
+      expect(getColumnHeadersTextContent()).to.deep.equal(['id']);
+
+      fireEvent.click(getByText('Columns'));
+      fireEvent.click(getByText('Hide all'));
+      expect(onVisibleColumnsModelChange.callCount).to.equal(1);
+      expect(onVisibleColumnsModelChange.lastCall.firstArg).to.deep.equal([]);
+
+      fireEvent.click(getByText('Show all'));
+      expect(onVisibleColumnsModelChange.callCount).to.equal(2);
+      expect(onVisibleColumnsModelChange.lastCall.firstArg).to.deep.equal(['id', 'idBis']);
     });
   });
 
