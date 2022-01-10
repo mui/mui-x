@@ -82,9 +82,7 @@ To initialize the filters without controlling them, provide the model to the `in
   initialState={{
     filter: {
       filterModel: {
-        items: [
-          { columnField: 'commodity', operatorValue: 'contains', value: 'rice' },
-        ],
+        items: [{ columnField: 'rating', operatorValue: '>', value: '2.5' }],
       },
     },
   }}
@@ -102,7 +100,7 @@ You can use the `onFilterModelChange` prop to listen to changes to the filters a
 ```jsx
 <DataGrid
   filterModel={{
-    items: [{ columnField: 'commodity', operatorValue: 'contains', value: 'rice' }],
+    items: [{ columnField: 'rating', operatorValue: '>', value: '2.5' }],
   }}
 />
 ```
@@ -143,14 +141,14 @@ The candidate value used by the operator is the one corresponding to the `field`
 Each column type comes with a default array of operators.
 You can get them by importing the following functions:
 
-| Column type  | Function                       |
-| ------------ | ------------------------------ |
-| string       | getGridStringOperators()       |
-| number       | getGridNumericOperators()      |
-| boolean      | getGridBooleanOperators()      |
-| date         | getGridDateOperators()         |
-| dateTime     | getGridDateOperators(true)     |
-| singleSelect | getGridSingleSelectOperators() |
+| Column type    | Function                         |
+| -------------- | -------------------------------- |
+| `string`       | `getGridStringOperators()`       |
+| `number`       | `getGridNumericOperators()`      |
+| `boolean`      | `getGridBooleanOperators()`      |
+| `date`         | `getGridDateOperators()`         |
+| `dateTime `    | `getGridDateOperators(true)`     |
+| `singleSelect` | `getGridSingleSelectOperators()` |
 
 You can find more information about the supported column types in the [columns section](/components/data-grid/columns/#column-types).
 
