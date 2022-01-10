@@ -191,7 +191,13 @@ describe('<DataGridPro /> - Export', () => {
 
       render(<TestCaseCSVExport />);
       expect(apiRef.current.getDataAsCsv()).to.equal(
-        ['id,Brand', '0,"Nike \n Nike"', '1,"Adidas \n Adidas"', '2,"Puma \r\n Puma"', '3,"Reebok \n\r Reebok"'].join('\r\n'),
+        [
+          'id,Brand',
+          '0,"Nike \n Nike"',
+          '1,"Adidas \n Adidas"',
+          '2,"Puma \r\n Puma"',
+          '3,"Reebok \n\r Reebok"',
+        ].join('\r\n'),
       );
     });
 
