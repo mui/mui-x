@@ -4,7 +4,6 @@ import { GridEvents } from '../../../models/events';
 import { useGridStateInit } from '../../utils/useGridStateInit';
 import {
   useGridSelector,
-  useGridState,
   useGridLogger,
   useGridApiMethod,
   useGridApiEventHandler,
@@ -20,7 +19,6 @@ export const useGridColumnMenu = (apiRef: GridApiRef): void => {
   const logger = useGridLogger(apiRef, 'useGridColumnMenu');
 
   useGridStateInit(apiRef, (state) => ({ ...state, columnMenu: { open: false } }));
-  const [, setGridState, forceUpdate] = useGridState(apiRef);
   const columnMenu = useGridSelector(apiRef, gridColumnMenuSelector);
 
   /**
@@ -28,7 +26,7 @@ export const useGridColumnMenu = (apiRef: GridApiRef): void => {
    */
   const showColumnMenu = React.useCallback<GridColumnMenuApi['showColumnMenu']>(
     (field) => {
-      const shouldUpdate = setGridState((state) => {
+      const shouldUpdate = apiRef.current.setState((state) => {
         if (state.columnMenu.open && state.columnMenu.field === field) {
           return state;
         }
@@ -42,14 +40,14 @@ export const useGridColumnMenu = (apiRef: GridApiRef): void => {
 
       if (shouldUpdate) {
         apiRef.current.hidePreferences();
-        forceUpdate();
+        apiRef.current.forceUpdate();
       }
     },
-    [apiRef, forceUpdate, logger, setGridState],
+    [apiRef, logger],
   );
 
   const hideColumnMenu = React.useCallback<GridColumnMenuApi['hideColumnMenu']>(() => {
-    const shouldUpdate = setGridState((state) => {
+    const shouldUpdate = apiRef.current.setState((state) => {
       if (!state.columnMenu.open && state.columnMenu.field === undefined) {
         return state;
       }
@@ -62,9 +60,9 @@ export const useGridColumnMenu = (apiRef: GridApiRef): void => {
     });
 
     if (shouldUpdate) {
-      forceUpdate();
+      apiRef.current.forceUpdate();
     }
-  }, [forceUpdate, logger, setGridState]);
+  }, [apiRef, logger]);
 
   const toggleColumnMenu = React.useCallback<GridColumnMenuApi['toggleColumnMenu']>(
     (field) => {

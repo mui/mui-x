@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRenderer, fireEvent } from '@material-ui/monorepo/test/utils';
+import { createRenderer, fireEvent } from '@mui/monorepo/test/utils';
 import { spy } from 'sinon';
 import { expect } from 'chai';
 import {

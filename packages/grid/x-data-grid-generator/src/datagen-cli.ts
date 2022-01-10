@@ -49,7 +49,7 @@ export function datagenCli() {
             type: 'string',
           });
       },
-      handler: (argv: HandlerArgv) => {
+      handler: (argv: yargs.ArgumentsCamelCase<HandlerArgv>) => {
         console.log(
           `Generating new ${argv.dataset} dataset with ${Number(argv.size).toLocaleString()} rows`,
         );

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { expect } from 'chai';
-import { createRenderer, fireEvent, createEvent, act } from '@material-ui/monorepo/test/utils';
+import { createRenderer, fireEvent, createEvent, act } from '@mui/monorepo/test/utils';
 import {
   getColumnHeadersTextContent,
   getColumnHeaderCell,

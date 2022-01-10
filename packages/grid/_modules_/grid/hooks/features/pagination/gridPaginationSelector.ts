@@ -19,6 +19,11 @@ export const gridPageSizeSelector = createSelector(
   (pagination) => pagination.pageSize,
 );
 
+export const gridPageCountSelector = createSelector(
+  gridPaginationSelector,
+  (pagination) => pagination.pageCount,
+);
+
 export const gridPaginationRowRangeSelector = createSelector(
   gridPaginationSelector,
   gridRowTreeSelector,

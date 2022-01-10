@@ -1,11 +1,10 @@
 import * as React from 'react';
-import { createRenderer, fireEvent } from '@material-ui/monorepo/test/utils';
+import { createRenderer, fireEvent } from '@mui/monorepo/test/utils';
 import { spy } from 'sinon';
 import { expect } from 'chai';
 import { getCell, getRow, getColumnValues, getRows } from 'test/utils/helperFn';
 import {
   GridApiRef,
-  GridComponentProps,
   GridRowModel,
   useGridApiRef,
   DataGridPro,
@@ -166,7 +165,7 @@ describe('<DataGridPro /> - Rows', () => {
 
     let apiRef: GridApiRef;
 
-    const TestCase = (props: Partial<GridComponentProps>) => {
+    const TestCase = (props: Partial<DataGridProProps>) => {
       apiRef = useGridApiRef();
       return (
         <div style={{ width: 300, height: 300 }}>
@@ -292,7 +291,7 @@ describe('<DataGridPro /> - Rows', () => {
 
     let apiRef: GridApiRef;
 
-    const TestCase = (props: Partial<GridComponentProps>) => {
+    const TestCase = (props: Partial<DataGridProProps>) => {
       apiRef = useGridApiRef();
       return (
         <div style={{ width: 300, height: 300 }}>
@@ -427,10 +426,11 @@ describe('<DataGridPro /> - Rows', () => {
       );
       const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
       const renderingZone = document.querySelector('.MuiDataGrid-virtualScrollerRenderZone')!;
-      const firstRow = renderingZone.firstChild;
+      let firstRow = renderingZone.firstChild;
       expect(firstRow).to.have.attr('data-rowindex', '0');
       virtualScroller.scrollTop = rowThreshold * rowHeight;
       virtualScroller.dispatchEvent(new Event('scroll'));
+      firstRow = renderingZone.firstChild;
       expect(firstRow).to.have.attr('data-rowindex', '3');
     });
 
@@ -442,11 +442,13 @@ describe('<DataGridPro /> - Rows', () => {
       );
       const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
       const renderingZone = document.querySelector('.MuiDataGrid-virtualScrollerRenderZone')!;
-      const firstRow = renderingZone.querySelector('[role="row"]:first-child')!;
-      const firstColumn = firstRow.firstChild!;
+      let firstRow = renderingZone.querySelector('[role="row"]:first-child')!;
+      let firstColumn = firstRow.firstChild!;
       expect(firstColumn).to.have.attr('data-colindex', '0');
       virtualScroller.scrollLeft = columnThreshold * columnWidth;
       virtualScroller.dispatchEvent(new Event('scroll'));
+      firstRow = renderingZone.querySelector('[role="row"]:first-child')!;
+      firstColumn = firstRow.firstChild!;
       expect(firstColumn).to.have.attr('data-colindex', '3');
     });
 

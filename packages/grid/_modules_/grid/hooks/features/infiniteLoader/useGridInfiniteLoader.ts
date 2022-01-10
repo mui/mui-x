@@ -8,7 +8,7 @@ import {
 } from '../../utils/useGridApiEventHandler';
 import { GridRowScrollEndParams } from '../../../models/params/gridRowScrollEndParams';
 import { visibleGridColumnsSelector } from '../columns/gridColumnsSelector';
-import { GridComponentProps } from '../../../GridComponentProps';
+import { DataGridProProcessedProps } from '../../../models/props/DataGridProProps';
 import { GridScrollParams } from '../../../models/params/gridScrollParams';
 import { gridDensityRowHeightSelector } from '../density/densitySelector';
 import { useCurrentPageRows } from '../../utils/useCurrentPageRows';
@@ -22,7 +22,7 @@ import { useCurrentPageRows } from '../../utils/useCurrentPageRows';
 export const useGridInfiniteLoader = (
   apiRef: GridApiRef,
   props: Pick<
-    GridComponentProps,
+    DataGridProProcessedProps,
     'onRowsScrollEnd' | 'scrollEndThreshold' | 'pagination' | 'paginationMode'
   >,
 ): void => {

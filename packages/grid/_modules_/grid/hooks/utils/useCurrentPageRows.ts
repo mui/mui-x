@@ -1,16 +1,15 @@
 import * as React from 'react';
-import { GridComponentProps } from '../../GridComponentProps';
+import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import {
   gridPaginationRowRangeSelector,
   gridPaginatedVisibleSortedGridRowEntriesSelector,
 } from '../features/pagination/gridPaginationSelector';
 import { gridVisibleSortedRowEntriesSelector } from '../features/filter/gridFilterSelector';
 import type { GridApiRef, GridRowEntry, GridState } from '../../models';
-import { useGridState } from './useGridState';
 
 export const getCurrentPageRows = (
   state: GridState,
-  props: Pick<GridComponentProps, 'pagination' | 'paginationMode'>,
+  props: Pick<DataGridProcessedProps, 'pagination' | 'paginationMode'>,
 ) => {
   let rows: GridRowEntry[];
   let range: { firstRowIndex: number; lastRowIndex: number } | null;
@@ -38,10 +37,9 @@ export const getCurrentPageRows = (
  */
 export const useCurrentPageRows = (
   apiRef: GridApiRef,
-  props: Pick<GridComponentProps, 'pagination' | 'paginationMode'>,
+  props: Pick<DataGridProcessedProps, 'pagination' | 'paginationMode'>,
 ) => {
-  const [state] = useGridState(apiRef);
-  const response = getCurrentPageRows(state, props);
+  const response = getCurrentPageRows(apiRef.current.state, props);
 
   return React.useMemo(
     () => ({
