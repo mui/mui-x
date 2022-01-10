@@ -1,10 +1,9 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
-import FormControl from '@mui/material/FormControl';
 import IconButton from '@mui/material/IconButton';
 import InputLabel from '@mui/material/InputLabel';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
+import { SelectChangeEvent } from '@mui/material/Select';
 import { capitalize, unstable_useId as useId } from '@mui/material/utils';
 import { styled } from '@mui/material/styles';
 import { filterableGridColumnsSelector } from '../../../hooks/features/columns/gridColumnsSelector';
@@ -173,9 +172,10 @@ function GridFilterForm(props: GridFilterFormProps) {
 
   return (
     <GridFilterFormRoot className={classes.root}>
-      <FormControl
+      <rootProps.components.BaseFormControl
         variant="standard"
         sx={{ flexShrink: 0, justifyContent: 'flex-end', marginRight: 0.5, marginBottom: 0.2 }}
+        {...rootProps.componentsProps?.baseFormControl}
       >
         <IconButton
           aria-label={apiRef.current.getLocaleText('filterPanelDeleteIconLabel')}
@@ -185,25 +185,27 @@ function GridFilterForm(props: GridFilterFormProps) {
         >
           <GridCloseIcon fontSize="small" />
         </IconButton>
-      </FormControl>
-      <FormControl
+      </rootProps.components.BaseFormControl>
+      <rootProps.components.BaseFormControl
         variant="standard"
         sx={{
           minWidth: 60,
           display: hasMultipleFilters ? 'block' : 'none',
           visibility: showMultiFilterOperators ? 'visible' : 'hidden',
         }}
+        {...rootProps.componentsProps?.baseFormControl}
       >
         <InputLabel htmlFor={linkOperatorSelectId} id={linkOperatorSelectLabelId}>
           {apiRef.current.getLocaleText('filterPanelOperators')}
         </InputLabel>
-        <Select
+        <rootProps.components.BaseSelect
           labelId={linkOperatorSelectLabelId}
           id={linkOperatorSelectId}
           value={multiFilterOperator}
           onChange={changeLinkOperator}
           disabled={!!disableMultiFilterOperator}
           native
+          {...rootProps.componentsProps?.baseSelect}
         >
           <option key={GridLinkOperator.And.toString()} value={GridLinkOperator.And.toString()}>
             {apiRef.current.getLocaleText('filterPanelOperatorAnd')}
@@ -211,37 +213,47 @@ function GridFilterForm(props: GridFilterFormProps) {
           <option key={GridLinkOperator.Or.toString()} value={GridLinkOperator.Or.toString()}>
             {apiRef.current.getLocaleText('filterPanelOperatorOr')}
           </option>
-        </Select>
-      </FormControl>
-      <FormControl variant="standard" sx={{ width: 150 }}>
+        </rootProps.components.BaseSelect>
+      </rootProps.components.BaseFormControl>
+      <rootProps.components.BaseFormControl
+        variant="standard"
+        sx={{ width: 150 }}
+        {...rootProps.componentsProps?.baseFormControl}
+      >
         <InputLabel htmlFor={columnSelectId} id={columnSelectLabelId}>
           {apiRef.current.getLocaleText('filterPanelColumns')}
         </InputLabel>
-        <Select
+        <rootProps.components.BaseSelect
           labelId={columnSelectLabelId}
           id={columnSelectId}
           value={item.columnField || ''}
           onChange={changeColumn}
           native
+          {...rootProps.componentsProps?.baseSelect}
         >
           {filterableColumns.map((col) => (
             <option key={col.field} value={col.field}>
               {col.headerName || col.field}
             </option>
           ))}
-        </Select>
-      </FormControl>
-      <FormControl variant="standard" sx={{ width: 120 }}>
+        </rootProps.components.BaseSelect>
+      </rootProps.components.BaseFormControl>
+      <rootProps.components.BaseFormControl
+        variant="standard"
+        sx={{ width: 120 }}
+        {...rootProps.componentsProps?.baseFormControl}
+      >
         <InputLabel htmlFor={operatorSelectId} id={operatorSelectLabelId}>
           {apiRef.current.getLocaleText('filterPanelOperators')}
         </InputLabel>
-        <Select
+        <rootProps.components.BaseSelect
           labelId={operatorSelectLabelId}
           id={operatorSelectId}
           value={item.operatorValue}
           onChange={changeOperator}
           native
           inputRef={filterSelectorRef}
+          {...rootProps.componentsProps?.baseSelect}
         >
           {currentColumn?.filterOperators?.map((operator) => (
             <option key={operator.value} value={operator.value}>
@@ -251,9 +263,13 @@ function GridFilterForm(props: GridFilterFormProps) {
                 )}
             </option>
           ))}
-        </Select>
-      </FormControl>
-      <FormControl variant="standard" sx={{ width: 190 }}>
+        </rootProps.components.BaseSelect>
+      </rootProps.components.BaseFormControl>
+      <rootProps.components.BaseFormControl
+        variant="standard"
+        sx={{ width: 190 }}
+        {...rootProps.componentsProps?.baseFormControl}
+      >
         {currentOperator?.InputComponent ? (
           <currentOperator.InputComponent
             apiRef={apiRef}
@@ -263,7 +279,7 @@ function GridFilterForm(props: GridFilterFormProps) {
             {...currentOperator.InputComponentProps}
           />
         ) : null}
-      </FormControl>
+      </rootProps.components.BaseFormControl>
     </GridFilterFormRoot>
   );
 }
