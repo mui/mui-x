@@ -32,7 +32,7 @@ The demo below let you filter the rows according to several criteria at the same
 
 ### Structure of the model
 
-The full typing details can be found on the [GridFilterModel api page](/api/data-grid/grid-filter-model/).
+The full typing details can be found on the [GridFilterModel API page](/api/data-grid/grid-filter-model/).
 
 The filter model is composed of a list of `items` and a `linkOperator`:
 
