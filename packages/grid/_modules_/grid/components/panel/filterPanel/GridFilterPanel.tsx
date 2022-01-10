@@ -1,5 +1,4 @@
 import * as React from 'react';
-import Button from '@mui/material/Button';
 import { GridFilterItem, GridLinkOperator } from '../../../models/gridFilterItem';
 import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
 import { GridAddIcon } from '../../icons';
@@ -101,9 +100,14 @@ export function GridFilterPanel() {
       </GridPanelContent>
       {!rootProps.disableMultipleColumnsFiltering && (
         <GridPanelFooter>
-          <Button onClick={addNewFilter} startIcon={<GridAddIcon />} color="primary">
+          <rootProps.components.BaseButton
+            onClick={addNewFilter}
+            startIcon={<GridAddIcon />}
+            color="primary"
+            {...rootProps.componentsProps?.baseButton}
+          >
             {apiRef.current.getLocaleText('filterPanelAddFilter')}
-          </Button>
+          </rootProps.components.BaseButton>
         </GridPanelFooter>
       )}
     </GridPanelWrapper>
