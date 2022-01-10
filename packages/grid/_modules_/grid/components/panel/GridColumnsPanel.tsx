@@ -1,10 +1,8 @@
 import * as React from 'react';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
-import Switch, { switchClasses } from '@mui/material/Switch';
-import Button from '@mui/material/Button';
+import { switchClasses } from '@mui/material/Switch';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import TextField from '@mui/material/TextField';
 import { styled } from '@mui/material/styles';
 import {
   allGridColumnsSelector,
@@ -115,7 +113,7 @@ export function GridColumnsPanel() {
   return (
     <GridPanelWrapper>
       <GridPanelHeader>
-        <TextField
+        <rootProps.components.BaseTextField
           label={apiRef.current.getLocaleText('columnsPanelTextFieldLabel')}
           placeholder={apiRef.current.getLocaleText('columnsPanelTextFieldPlaceholder')}
           inputRef={searchInputRef}
@@ -123,6 +121,7 @@ export function GridColumnsPanel() {
           onChange={handleSearchValueChange}
           variant="standard"
           fullWidth
+          {...rootProps.componentsProps?.baseTextField}
         />
       </GridPanelHeader>
       <GridPanelContent>
@@ -131,13 +130,14 @@ export function GridColumnsPanel() {
             <GridColumnsPanelRowRoot className={classes.columnsPanelRow} key={column.field}>
               <FormControlLabel
                 control={
-                  <Switch
+                  <rootProps.components.BaseSwitch
                     disabled={column.hideable === false}
                     checked={!!visibleColumnsModelLookup[column.field]}
                     onClick={toggleColumn}
                     name={column.field}
                     color="primary"
                     size="small"
+                    {...rootProps.componentsProps?.baseSwitch}
                   />
                 }
                 label={column.headerName || column.field}
@@ -158,12 +158,20 @@ export function GridColumnsPanel() {
         </GridColumnsPanelRoot>
       </GridPanelContent>
       <GridPanelFooter>
-        <Button onClick={() => toggleAllColumns(false)} color="primary">
+        <rootProps.components.BaseButton
+          onClick={() => toggleAllColumns(false)}
+          color="primary"
+          {...rootProps.componentsProps?.baseButton}
+        >
           {apiRef.current.getLocaleText('columnsPanelHideAllButton')}
-        </Button>
-        <Button onClick={() => toggleAllColumns(true)} color="primary">
+        </rootProps.components.BaseButton>
+        <rootProps.components.BaseButton
+          onClick={() => toggleAllColumns(true)}
+          color="primary"
+          {...rootProps.componentsProps?.baseButton}
+        >
           {apiRef.current.getLocaleText('columnsPanelShowAllButton')}
-        </Button>
+        </rootProps.components.BaseButton>
       </GridPanelFooter>
     </GridPanelWrapper>
   );

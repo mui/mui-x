@@ -38,6 +38,7 @@ const generateDate = (
   return rawDate.getTime();
 };
 
+// TODO: Replace `cell.focus()` with `fireEvent.mouseUp(cell)`
 describe('<DataGridPro /> - Edit Rows', () => {
   let baselineProps;
 
@@ -803,7 +804,7 @@ describe('<DataGridPro /> - Edit Rows', () => {
       });
     });
 
-    it('should not exit the edit mode when validateCell returns an object with error', async () => {
+    it('should not exit the edit mode when preProcessEditCellProps returns an object with error', async () => {
       render(
         <div style={{ width: 300, height: 300 }}>
           <DataGridPro
@@ -831,7 +832,7 @@ describe('<DataGridPro /> - Edit Rows', () => {
       });
     });
 
-    it('should not exit the edit mode when validateCell returns a promise with error', async () => {
+    it('should not exit the edit mode when preProcessEditCellProps returns a promise with error', async () => {
       render(
         <div style={{ width: 300, height: 300 }}>
           <DataGridPro
@@ -1518,6 +1519,34 @@ describe('<DataGridPro /> - Edit Rows', () => {
       await waitFor(() => {
         expect(firstInput).to.have.attribute('aria-invalid', 'true');
         expect(secondInput).to.have.attribute('aria-invalid', 'true');
+      });
+    });
+
+    it('should exit the row edit mode and save the row when preProcessEditCellProps does not return an error', async () => {
+      render(
+        <TestCase
+          editMode="row"
+          columns={[
+            {
+              field: 'brand',
+              editable: true,
+              preProcessEditCellProps: ({ props }) => props,
+            },
+          ]}
+          rows={[{ id: 0, brand: 'Nike' }]}
+        />,
+      );
+      const cell = getCell(0, 0);
+      fireEvent.mouseUp(cell);
+      fireEvent.doubleClick(cell);
+      const input = cell.querySelector('input')!;
+      fireEvent.change(input, { target: { value: 'Adidas' } });
+      await clock.runToLast();
+      expect(apiRef.current.getEditRowsModel()[0].brand.value).to.equal('Adidas');
+      fireEvent.keyDown(input, { key: 'Enter' });
+      await waitFor(() => {
+        expect(cell).not.to.have.class('MuiDataGrid-cell--editing');
+        expect(cell).to.have.text('Adidas');
       });
     });
   });
