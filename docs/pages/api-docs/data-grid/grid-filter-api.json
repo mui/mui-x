@@ -4,7 +4,7 @@
   "properties": [
     {
       "name": "deleteFilterItem",
-      "description": "Deletes a GridFilterItem.",
+      "description": "Deletes a <a href=\"/api/data-grid/grid-filter-item/\">GridFilterItem</a>.",
       "type": "(item: GridFilterItem) => void"
     },
     {
@@ -30,7 +30,7 @@
     },
     {
       "name": "upsertFilterItem",
-      "description": "Updates or inserts a GridFilterItem.",
+      "description": "Updates or inserts a <a href=\"/api/data-grid/grid-filter-item/\">GridFilterItem</a>.",
       "type": "(item: GridFilterItem) => void"
     }
   ]

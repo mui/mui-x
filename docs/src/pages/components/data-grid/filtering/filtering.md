@@ -4,43 +4,112 @@ title: Data Grid - Filtering
 
 # Data Grid - Filtering
 
-<p class="description">Filtering helps to view a subset of the records based on a criteria.</p>
+<p class="description">Easily filter your rows based on one or several criteria.</p>
 
-## Basic filter
+The filters can be modified through the grid interface in several ways:
 
-Column filters can be set using the column menu and clicking the Filter menu item.
-Alternatively, if the grid has the toolbar displayed, you just need to click on the Filters button.
+- By opening the column menu and clicking the _Filter_ menu item.
+- By clicking the _Filters_ button in the grid toolbar (if enabled).
 
-The filter applied to a column can be pre-configured using the `filterModel` prop:
+Each column types has its own filter operators.
+The demo below let you explore all the operators for each built-in column type.
+
+_See [the dedicated section](#customize-the-operators) to learn how to create your own custom filter operator._
+
+{{"demo": "pages/components/data-grid/filtering/BasicExampleDataGrid.js", "bg": "inline", "defaultCodeOpen": false}}
+
+## Single and multi-filtering
+
+> ⚠️ The `DataGrid` can only filter the rows according to one criterion at the time.
+>
+> To use multi-filtering, you need to upgrade to the [Pro plan](https://mui.com/store/items/material-ui-pro/)
+
+The demo below lets you filter the rows according to several criteria at the same time.
+
+{{"demo": "pages/components/data-grid/filtering/BasicExampleDataGridPro.js", "bg": "inline", "defaultCodeOpen": false}}
+
+## Pass filters to the grid
+
+### Structure of the model
+
+The full typing details can be found on the [GridFilterModel API page](/api/data-grid/grid-filter-model/).
+
+The filter model is composed of a list of `items` and a `linkOperator`:
+
+#### The `items`
+
+A filter item represents a filtering rule and is composed of several elements:
+
+- `filterItem.columnField`: the field on which we want to apply the rule.
+- `filterItem.value`: the value to look for.
+- `filterItem.operatorValue`: name of the operator method to use (e.g. _contains_), matches the `value` key of the .
+- `filterItem.id` ([<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)): only useful when multiple filters are used.
+
+**Note**: Some operators do not need any value (for instance the `isEmpty` operator of the `string` column).
+
+#### The `linkOperator` [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
+
+The `linkOperator` tells the grid if a row should satisfy all (`AND`) filter items or at least one (`OR`) in order to be considered valid.
+
+```ts
+// Example 1: get rows with rating > 4 OR isAdmin = true
+const filterModel: GridFilterModel = {
+  items: [
+    { id: 1, columnField: 'rating', operatorValue: '>', value: '4' },
+    { id: 2, columnField: 'isAdmin', operatorValue: 'is', value: 'true' },
+  ],
+  linkOperator: GridLinkOperator.Or,
+};
+
+// Example 2: get rows with rating > 4 AND isAdmin = true
+const filterModel: GridFilterModel = {
+  items: [
+    { id: 1, columnField: 'rating', operatorValue: '>', value: '4' },
+    { id: 2, columnField: 'isAdmin', operatorValue: 'is', value: 'true' },
+  ],
+  linkOperator: GridLinkOperator.And,
+};
+```
+
+If no `linkOperator` is provided, the grid will use `GridLinkOperator.Or` by default.
+
+### Initialize the filters
+
+To initialize the filters without controlling them, provide the model to the `initialState` prop.
 
 ```jsx
 <DataGrid
-  filterModel={{
-    items: [{ columnField: 'commodity', operatorValue: 'contains', value: 'rice' }],
+  initialState={{
+    filter: {
+      filterModel: {
+        items: [{ columnField: 'rating', operatorValue: '>', value: '2.5' }],
+      },
+    },
   }}
 />
 ```
 
-{{"demo": "pages/components/data-grid/filtering/BasicFilteringGrid.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"demo": "pages/components/data-grid/filtering/InitialFilters.js", "bg": "inline", "defaultCodeOpen": false}}
 
-## Predefined filters
+### Controlled filters
 
-A filter is composed of three parts: the column to filter, the value to look for, and an operator (e.g. _contains_, _is before_, _is after_, etc.).
-On the `DataGridPro`, the `id` field is required on `filterModel.items` when multiple filters are used.
-The operator determines if a candidate value should be considered as a result.
-The candidate value used by the operator is the one corresponding to the `field` attribute or the `valueGetter` of the `GridColDef`.
-As part of the predefined column types, a set of operators is available.
-You can find the supported column types in the [columns section](/components/data-grid/columns/#column-types).
+Use the `filterModel` prop to control the filter applied on the rows.
 
-**Note**: The [`valueFormatter`](/components/data-grid/columns/#value-formatter) is only used for rendering purposes.
+You can use the `onFilterModelChange` prop to listen to changes to the filters and update the prop accordingly.
 
-The following demo allows to explore the different operators available:
+```jsx
+<DataGrid
+  filterModel={{
+    items: [{ columnField: 'rating', operatorValue: '>', value: '2.5' }],
+  }}
+/>
+```
 
-{{"demo": "pages/components/data-grid/filtering/FilterOperators.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"demo": "pages/components/data-grid/filtering/ControlledFilters.js", "bg": "inline", "defaultCodeOpen": false}}
 
-## Disable filtering
+## Disable the filters
 
-**Globally**
+### For all columns
 
 Filters are enabled by default, but you can easily disable this feature by setting the `disableColumnFilter` prop.
 
@@ -48,118 +117,130 @@ Filters are enabled by default, but you can easily disable this feature by setti
 <DataGrid disableColumnFilter />
 ```
 
-**Per column**
+{{"demo": "pages/components/data-grid/filtering/DisableFilteringGridAllColumns.js", "bg": "inline", "defaultCodeOpen": false}}
 
-You can disable the filter on a column by setting the `filterable` property of the `GridColDef` to `false`;
+### For some columns
+
+To disable the filter of a single column, set the `filterable` property in `GridColDef` to `false`.
+
+In the example below, the _rating_ column can not be filtered.
 
 ```js
-const columns = [{ field: 'image', filterable: false }];
+<Datagrid columns={[...columns, { field: 'rating', filterable: false }]} />
 ```
 
-{{"demo": "pages/components/data-grid/filtering/DisableFilteringGrid.js", "bg": "inline"}}
+{{"demo": "pages/components/data-grid/filtering/DisableFilteringGridSomeColumns.js", "bg": "inline", "defaultCodeOpen": false}}
 
-## Customize the filters
+## Customize the operators
 
-The grid provides different ways to customize the filter panel.
-This section provides examples on how to make the most common modifications.
+The full typing details can be found on the [GridFilterOperator api page](/api/data-grid/grid-filter-operator/).
 
-### Change the input component
+An operator determines if a cell value should be considered as a valid filtered value.
+The candidate value used by the operator is the one corresponding to the `field` attribute or the value returned by the `valueGetter` of the `GridColDef`.
 
-The value used by the operator to look for has to be entered by the user.
-On most column types, a text field is used. However, a custom component can be rendered instead.
+Each column type comes with a default array of operators.
+You can get them by importing the following functions:
 
-In this demo, the Rating column reuses the numeric filter and the same rating component is used to the enter the value of the filter.
+| Column type    | Function                         |
+| -------------- | -------------------------------- |
+| `string`       | `getGridStringOperators()`       |
+| `number`       | `getGridNumericOperators()`      |
+| `boolean`      | `getGridBooleanOperators()`      |
+| `date`         | `getGridDateOperators()`         |
+| `dateTime `    | `getGridDateOperators(true)`     |
+| `singleSelect` | `getGridSingleSelectOperators()` |
 
-{{"demo": "pages/components/data-grid/filtering/ExtendNumericOperator.js", "bg": "inline", "defaultCodeOpen": false}}
-
-### Extend filter operators
-
-When defining a [custom column type](/components/data-grid/columns/#custom-column-types), the added operators are the same from the type that was extended.
-
-In this demo, a `price` column type (used by Total is USD) is defined extending the `number` column type.
-Instead of adding all numeric operators, only the operators `<` and `>` are kept.
-Furthermore, the "$" prefix is added to the input component with the `InputComponentProps` prop.
-
-{{"demo": "pages/components/data-grid/filtering/ColumnTypeFilteringGrid.js", "bg": "inline", "defaultCodeOpen": false}}
+You can find more information about the supported column types in the [columns section](/components/data-grid/columns/#column-types).
 
 ### Create a custom operator
 
-If reusing the native filter operators is not enough, creating a custom operator is an option.
-A custom operator is defined creating a `GridFilterOperator` object.
+If the built-in filter operators are not enough, creating a custom operator is an option.
+A custom operator is defined by creating a `GridFilterOperator` object.
 This object has to be added to the `filterOperators` attribute of the `GridColDef`.
 
-The most important part of an operator is the `getApplyFilterFn` function.
-It's called with the `GridFilterItem` object and the `GridColDef` object.
-This function must return another function that is called on every value of the column.
-The returned function determines if the cell value satisfies the condition of the operator.
+The main part of an operator is the `getApplyFilterFn` function.
+When applying the filters, the grid will call this function with the filter item and the column on which the item must be applied.
+This function must return another function that takes the cell value as an input and return `true` if it satisfies the operator condition.
 
 ```ts
-{
+const operator: GridFilterOperator = {
   label: 'From',
   value: 'from',
   getApplyFilterFn: (filterItem: GridFilterItem, column: GridColDef) => {
     if (!filterItem.columnField || !filterItem.value || !filterItem.operatorValue) {
       return null;
     }
+
     return (params: GridCellParams): boolean => {
       return Number(params.value) >= Number(filterItem.value);
     };
   },
   InputComponent: RatingInputValue,
   InputComponentProps: { type: 'number' },
-}
+};
 ```
+
+**Note**: The [`valueFormatter`](/components/data-grid/columns/#value-formatter) is only used for rendering purposes.
 
 **Note**: If the column has a [`valueGetter`](/components/data-grid/columns/#value-getter), then `params.value` will be the resolved value.
 
-In this demo, you can see how to create a completely new operator for the Rating column.
+In the demo below, you can see how to create a completely new operator for the Rating column.
 
 {{"demo": "pages/components/data-grid/filtering/CustomRatingOperator.js", "bg": "inline", "defaultCodeOpen": false}}
+
+### Remove an operator
+
+To remove built-in operators, import the method to generate them and filter the output to fit your needs.
+
+```ts
+// Only keep '>' and '<' default operators
+const filterOperators = getGridNumericOperators().filter(
+  (operator) => operator.value === '>' || operator.value === '<',
+);
+```
+
+In the demo below, the `rating` column only has the `<` and `>` operators.
+
+{{"demo": "pages/components/data-grid/filtering/RemoveBuiltInOperators.js", "bg": "inline", "defaultCodeOpen": false}}
+
+### Edit an operator
+
+The value used by the operator to look for has to be entered by the user.
+On most column types, a text field is used. However, a custom component can be rendered instead.
+
+In the demo below, the `rating` column reuses the numeric operators but the rating component is used to enter the value of the filter.
+
+{{"demo": "pages/components/data-grid/filtering/CustomInputComponent.js", "bg": "inline", "defaultCodeOpen": false}}
+
+### Custom column types
+
+When defining a [custom column type](/components/data-grid/columns/#custom-column-types), by default the grid will reuse the operators from the type that was extended.
+The filter operators can then be edited just like on a regular column.
+
+```ts
+const ratingColumnType: GridColTypeDef = {
+  extendType: 'number',
+  filterOperators: getGridNumericOperators().filter(
+    (operator) => operator.value === '>' || operator.value === '<',
+  ),
+};
+```
+
+## Custom filter panel
+
+You can customize the rendering of the filter panel as shown in [the component section](/components/data-grid/components/#overriding-components) of the documentation.
+
+The demo below shows how to anchor the filter panel to the toolbar button instead of the column header.
+
+{{"demo": "pages/components/data-grid/filtering/CustomFilterPanel.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## Server-side filter
 
 Filtering can be run server-side by setting the `filterMode` prop to `server`, and implementing the `onFilterModelChange` handler.
 
-```tsx
-<DataGrid
-  rows={rows}
-  columns={columns}
-  filterMode="server"
-  onFilterModelChange={handleFilterModelChange}
-  loading={loading}
-/>
-```
-
 Below is a very simple demo on how you could achieve server-side filtering.
 
 {{"demo": "pages/components/data-grid/filtering/ServerFilterGrid.js", "bg": "inline"}}
-
-<!-- ## Controlled filtering -->
-
-<!-- WIP -->
-
-## Multi-column filtering [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
-
-`DataGridPro` supports filtering by multiple columns.
-The default operator that will be applied between filters is an And.
-
-{{"demo": "pages/components/data-grid/filtering/MultiFilteringGrid.js", "bg": "inline", "disableAd": true}}
-
-**Note**: The `id` field is required on `filterModel.items` when multiple filters are used.
-
-To change the default operator, you should set the `linkOperator` property of the `filterModel` like below.
-
-```ts
-const filterModel: GridFilterModel = {
-  items: [
-    { id: 1, columnField: 'commodity', operatorValue: 'contains', value: 'rice' },
-    { id: 2, columnField: 'commodity', operatorValue: 'startsWith', value: 'Soy' },
-  ],
-  linkOperator: GridLinkOperator.Or,
-};
-```
-
-{{"demo": "pages/components/data-grid/filtering/MultiFilteringWithOrGrid.js", "bg": "inline", "disableAd": true}}
 
 ## Quick filter
 
@@ -182,3 +263,6 @@ However, it can be implemented as in the demo below.
 
 - [DataGrid](/api/data-grid/data-grid/)
 - [DataGridPro](/api/data-grid/data-grid-pro/)
+- [GridFilterModel](/api/data-grid/grid-filter-model/)
+- [GridFilterItem](/api/data-grid/grid-filter-item/)
+- [GridFilterOperator](/api/data-grid/grid-filter-operator/)

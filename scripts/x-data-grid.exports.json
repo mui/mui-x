@@ -29,6 +29,7 @@
   { "name": "getGridDateOperators", "kind": "Variable" },
   { "name": "getGridDefaultColumnTypes", "kind": "Variable" },
   { "name": "getGridNumericColumnOperators", "kind": "Variable" },
+  { "name": "getGridNumericOperators", "kind": "Variable" },
   { "name": "getGridSingleSelectOperators", "kind": "Variable" },
   { "name": "getGridStringOperators", "kind": "Variable" },
   { "name": "GRID_ACTIONS_COL_DEF", "kind": "Variable" },
