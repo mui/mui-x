@@ -34,14 +34,14 @@ export const useGridPreProcessing = (apiRef: GridApiRef) => {
   );
 
   const applyPreProcessors = React.useCallback<GridPreProcessingApi['unstable_applyPreProcessors']>(
-    (group, value, params) => {
+    (group, value, ...params) => {
       if (!preProcessorsRef.current[group]) {
         return value;
       }
 
       const preProcessors = Object.values(preProcessorsRef.current[group]!);
       return preProcessors.reduce((acc, preProcessor) => {
-        return preProcessor(acc, params);
+        return preProcessor(acc, ...params);
       }, value);
     },
     [],
