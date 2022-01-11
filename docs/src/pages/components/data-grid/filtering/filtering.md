@@ -230,7 +230,7 @@ const ratingColumnType: GridColTypeDef = {
 
 You can customize the rendering of the filter panel as shown in [the component section](/components/data-grid/components/#overriding-components) of the documentation.
 
-The demo below shows how to anchor the filter panel news to the toolbar button instead of the column header.
+The demo below shows how to anchor the filter panel to the toolbar button instead of the column header.
 
 {{"demo": "pages/components/data-grid/filtering/CustomFilterPanel.js", "bg": "inline", "defaultCodeOpen": false}}
 
