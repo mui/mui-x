@@ -41,6 +41,7 @@ dataGridComponent.children = [
   { pathname: '/components/data-grid/pagination' },
   { pathname: '/components/data-grid/selection' },
   { pathname: '/components/data-grid/events' },
+  { pathname: '/components/data-grid/state' },
   { pathname: '/components/data-grid/export' },
   { pathname: '/components/data-grid/components' },
   { pathname: '/components/data-grid/style' },
@@ -61,6 +62,9 @@ dataGridComponentAPI.children = [
   { pathname: '/api-docs/data-grid/grid-row-params', title: 'GridRowParams' },
   { pathname: '/api-docs/data-grid/grid-csv-export-options', title: 'GridCSVExportOptions' },
   { pathname: '/api-docs/data-grid/grid-print-export-options', title: 'GridPrintExportOptions' },
+  { pathname: '/api-docs/data-grid/grid-filter-model', title: 'GridFilterModel' },
+  { pathname: '/api-docs/data-grid/grid-filter-item', title: 'GridFilterItem' },
+  { pathname: '/api-docs/data-grid/grid-filter-operator', title: 'GridFilterOperator' },
 ].map((page) => {
   return { ...page, linkProps: { linkAs: `${page.pathname.replace(/^\/api-docs/, '/api')}/` } };
 });

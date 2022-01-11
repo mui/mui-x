@@ -173,7 +173,7 @@ The enterprise components come in two plans: Pro and Premium.
 | **Filtering**                                                                             |           |                                    |                                            |
 | [Quick filter](/components/data-grid/filtering/#quick-filter)                             |    🚧     |                 🚧                 |                     🚧                     |
 | [Column filters](/components/data-grid/filtering/#column-filters)                         |    ✅     |                 ✅                 |                     ✅                     |
-| [Multi-column filtering](/components/data-grid/filtering/#multi-column-filtering)         |    ❌     |                 ✅                 |                     ✅                     |
+| [Multi-column filtering](/components/data-grid/filtering/#single-and-multi-filtering)     |    ❌     |                 ✅                 |                     ✅                     |
 | **Pagination**                                                                            |           |                                    |                                            |
 | [Pagination](/components/data-grid/pagination/)                                           |    ✅     |                 ✅                 |                     ✅                     |
 | [Pagination > 100 rows per page](/components/data-grid/pagination/#paginate-gt-100-rows)  |    ❌     |                 ✅                 |                     ✅                     |

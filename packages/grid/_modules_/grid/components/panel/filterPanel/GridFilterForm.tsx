@@ -106,7 +106,8 @@ function GridFilterForm(props: GridFilterFormProps) {
   const valueRef = React.useRef<any>(null);
   const filterSelectorRef = React.useRef<HTMLInputElement>(null);
 
-  const { className: baseFormControlClassName, ...baseFormControl } = rootProps.componentsProps?.baseFormControl || {};
+  const { className: baseFormControlClassName, ...baseFormControl } =
+    rootProps.componentsProps?.baseFormControl || {};
 
   const sortedFilterableColumns = React.useMemo(() => {
     switch (columnsSort) {
@@ -226,7 +227,6 @@ function GridFilterForm(props: GridFilterFormProps) {
         sx={{ flexShrink: 0, justifyContent: 'flex-end', marginRight: 0.5, marginBottom: 0.2 }}
         className={clsx(classes.closeIcon, baseFormControlClassName)}
         {...baseFormControl}
-
       >
         <IconButton
           aria-label={apiRef.current.getLocaleText('filterPanelDeleteIconLabel')}
@@ -259,13 +259,11 @@ function GridFilterForm(props: GridFilterFormProps) {
           native
           {...rootProps.componentsProps?.baseSelect}
         >
-          {
-            linkOperators.map((linkOperator) => (
-              <option key={linkOperator.toString()} value={linkOperator.toString()}>
-                {apiRef.current.getLocaleText(getLinkOperatorLocaleKey(linkOperator))}
-              </option>
-            ))
-          }
+          {linkOperators.map((linkOperator) => (
+            <option key={linkOperator.toString()} value={linkOperator.toString()}>
+              {apiRef.current.getLocaleText(getLinkOperatorLocaleKey(linkOperator))}
+            </option>
+          ))}
         </rootProps.components.BaseSelect>
       </rootProps.components.BaseFormControl>
       <rootProps.components.BaseFormControl
@@ -319,7 +317,7 @@ function GridFilterForm(props: GridFilterFormProps) {
             </option>
           ))}
         </rootProps.components.BaseSelect>
-      </rootProps.components.BaseFormControl >
+      </rootProps.components.BaseFormControl>
       <rootProps.components.BaseFormControl
         variant="standard"
         sx={{ width: 190 }}
@@ -336,7 +334,7 @@ function GridFilterForm(props: GridFilterFormProps) {
           />
         ) : null}
       </rootProps.components.BaseFormControl>
-    </GridFilterFormRoot >
+    </GridFilterFormRoot>
   );
 }
 
