@@ -17,7 +17,6 @@ export interface GridFilterOperator {
    * It will be matched with the `operatorValue` property of the filter items.
    */
   value: string;
-
   /**
    * The callback that generates a filtering function for a given filter item and column.
    * This function can return `null` to skip filtering for this item and column.
