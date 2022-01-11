@@ -12,7 +12,6 @@ export interface GridFilterOperator {
    * The label of the filter operator.
    */
   label?: string;
-
   /**
    * The name of the filter operator.
    * It will be matched with the `operatorValue` property of the filter items.
