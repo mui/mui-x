@@ -1,9 +1,10 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import TextField, { TextFieldProps } from '@mui/material/TextField';
+import { TextFieldProps } from '@mui/material/TextField';
 import { unstable_useId as useId } from '@mui/material/utils';
 import { GridLoadIcon } from '../../icons/index';
 import { GridFilterInputValueProps } from './GridFilterInputValueProps';
+import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 
 export type GridFilterInputDateProps = GridFilterInputValueProps &
   TextFieldProps & { type?: 'date' | 'datetime-local' };
@@ -12,11 +13,11 @@ export const SUBMIT_FILTER_DATE_STROKE_TIME = 500;
 
 function GridFilterInputDate(props: GridFilterInputDateProps) {
   const { item, applyValue, type, apiRef, focusElementRef, InputProps, ...other } = props;
-
   const filterTimeout = React.useRef<any>();
   const [filterValueState, setFilterValueState] = React.useState(item.value ?? '');
   const [applying, setIsApplying] = React.useState(false);
   const id = useId();
+  const rootProps = useGridRootProps();
 
   const onFilterChange = React.useCallback(
     (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -46,7 +47,7 @@ function GridFilterInputDate(props: GridFilterInputDateProps) {
   }, [item.value]);
 
   return (
-    <TextField
+    <rootProps.components.BaseTextField
       id={id}
       label={apiRef.current.getLocaleText('filterPanelInputLabel')}
       placeholder={apiRef.current.getLocaleText('filterPanelInputPlaceholder')}
@@ -67,6 +68,7 @@ function GridFilterInputDate(props: GridFilterInputDateProps) {
         },
       }}
       {...other}
+      {...rootProps.componentsProps?.baseTextField}
     />
   );
 }
