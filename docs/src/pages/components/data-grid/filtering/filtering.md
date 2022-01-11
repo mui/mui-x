@@ -119,16 +119,16 @@ In this demo, you can see how to create a completely new operator for the Rating
 ### Customize the filterPanel
 
 Like most of the components, the filter panel can be [overridden](/components/data-grid/components/#overriding-components) by a custom one.
-For common modification, a simpler approach is available: modifying props.
-The default component `<GridFilterPanel/>` provides props allowing you to customize:
+This approche must be consider only for deep modification of the component. Simpler customization can be performed by passing props to the he default `<GridFilterPanel/>` component.
+These props allows you to override
 
 - The available `linkOperators`
 - The order of the column selector
-- The style of the container for each input
+- The style of the controller for each input
 
 In this example, the filter panel is customized such that the column selector is sorted by ascending order.
 The link operator is fixed to `"And"`.
-The delete icon has been removed and the value input is larger.
+The components style has bee [override](/customization/how-to-customize/#overriding-nested-component-styles) such that the delete icon is not displayed, all the components are expanded, and the background color changes between filters.
 
 {{"demo": "pages/components/data-grid/filtering/CustomFilterPanel.js", "bg": "inline"}}
 

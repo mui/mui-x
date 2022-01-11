@@ -1,7 +1,8 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import TrapFocus from '@mui/material/Unstable_TrapFocus';
-import { styled } from '@mui/material/styles';
+import { styled, SxProps, Theme } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { getDataGridUtilityClass } from '../../gridClasses';
 import { GridComponentProps } from '../../GridComponentProps';
@@ -34,9 +35,12 @@ const GridPanelWrapperRoot = styled('div', {
 
 const isEnabled = () => true;
 
-export function GridPanelWrapper(
-  props: React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>>,
-) {
+interface GridPanelWrapperProps
+  extends React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>> {
+  sx?: SxProps<Theme>;
+}
+
+function GridPanelWrapper(props: GridPanelWrapperProps) {
   const { className, ...other } = props;
   const rootProps = useGridRootProps();
   const ownerState = { classes: rootProps.classes };
@@ -48,3 +52,17 @@ export function GridPanelWrapper(
     </TrapFocus>
   );
 }
+
+GridPanelWrapper.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  sx: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+    PropTypes.func,
+    PropTypes.object,
+  ]),
+} as any;
+
+export { GridPanelWrapper };

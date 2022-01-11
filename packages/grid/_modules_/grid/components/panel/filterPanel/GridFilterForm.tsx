@@ -7,6 +7,7 @@ import InputLabel from '@mui/material/InputLabel';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { capitalize, unstable_useId as useId } from '@mui/material/utils';
 import { styled, SxProps, Theme } from '@mui/material/styles';
+import clix from 'clsx';
 import { filterableGridColumnsSelector } from '../../../hooks/features/columns/gridColumnsSelector';
 import { useGridSelector } from '../../../hooks/utils/useGridSelector';
 import { GridFilterItem, GridLinkOperator } from '../../../models/gridFilterItem';
@@ -44,6 +45,11 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 
   const slots = {
     root: ['filterForm'],
+    closeIcon: ['closeIconController'],
+    linkOperator: ['linkOperatorController'],
+    column: ['columnController'],
+    operator: ['operatorController'],
+    value: ['valueController'],
   };
 
   return composeClasses(slots, getDataGridUtilityClass, classes);
@@ -73,6 +79,29 @@ const getColumnLabel = (col) => col.headerName || col.field;
 
 const collator = new Intl.Collator();
 
+const FormControlCloseIcon = styled(FormControl, {
+  name: 'MuiDataGrid',
+  slot: 'closeIconController',
+})({});
+
+const FormControlLinkOperator = styled(FormControl, {
+  name: 'MuiDataGrid',
+  slot: 'linkOperatorController',
+})({});
+
+const FormControlColumn = styled(FormControl, {
+  name: 'MuiDataGrid',
+  slot: 'columnController',
+})({});
+const FormControlOperator = styled(FormControl, {
+  name: 'MuiDataGrid',
+  slot: 'operatorController',
+})({});
+const FormControlValue = styled(FormControl, {
+  name: 'MuiDataGrid',
+  slot: 'valueController',
+})({});
+
 function GridFilterForm(props: GridFilterFormProps) {
   const {
     item,
@@ -86,11 +115,6 @@ function GridFilterForm(props: GridFilterFormProps) {
     hasLinkOperatorColumn,
     linkOperators = [GridLinkOperator.And, GridLinkOperator.Or],
     columnsSort,
-    deleteIconContainerSx = {},
-    linkOperatorContainerSx = {},
-    columnContainerSx = {},
-    operatorContainerSx = {},
-    valueContainerSx = {},
   } = props;
   const apiRef = useGridApiContext();
   const filterableColumns = useGridSelector(apiRef, filterableGridColumnsSelector);
@@ -109,10 +133,14 @@ function GridFilterForm(props: GridFilterFormProps) {
   const sortedFilterableColumns = React.useMemo(() => {
     switch (columnsSort) {
       case 'asc':
-        return filterableColumns.sort((a, b) => collator.compare(getColumnLabel(a), getColumnLabel(b)));
+        return filterableColumns.sort((a, b) =>
+          collator.compare(getColumnLabel(a), getColumnLabel(b)),
+        );
 
       case 'desc':
-        return filterableColumns.sort((a, b) => -collator.compare(getColumnLabel(a), getColumnLabel(b)));
+        return filterableColumns.sort(
+          (a, b) => -collator.compare(getColumnLabel(a), getColumnLabel(b)),
+        );
 
       default:
         return filterableColumns;
@@ -215,14 +243,10 @@ function GridFilterForm(props: GridFilterFormProps) {
 
   return (
     <GridFilterFormRoot className={classes.root}>
-      <FormControl
+      <FormControlCloseIcon
         variant="standard"
-        sx={[
-          { flexShrink: 0, justifyContent: 'flex-end', marginRight: 0.5, marginBottom: 0.2 },
-          ...(Array.isArray(deleteIconContainerSx)
-            ? deleteIconContainerSx
-            : [deleteIconContainerSx]),
-        ]}
+        sx={{ flexShrink: 0, justifyContent: 'flex-end', marginRight: 0.5, marginBottom: 0.2 }}
+        className={clix(classes.closeIcon)}
       >
         <IconButton
           aria-label={apiRef.current.getLocaleText('filterPanelDeleteIconLabel')}
@@ -232,19 +256,15 @@ function GridFilterForm(props: GridFilterFormProps) {
         >
           <GridCloseIcon fontSize="small" />
         </IconButton>
-      </FormControl>
-      <FormControl
+      </FormControlCloseIcon>
+      <FormControlLinkOperator
         variant="standard"
-        sx={[
-          {
-            minWidth: 60,
-            display: hasLinkOperatorColumn ? 'block' : 'none',
-            visibility: showMultiFilterOperators ? 'visible' : 'hidden',
-          },
-          ...(Array.isArray(linkOperatorContainerSx)
-            ? linkOperatorContainerSx
-            : [linkOperatorContainerSx]),
-        ]}
+        sx={{
+          minWidth: 60,
+          display: hasLinkOperatorColumn ? 'block' : 'none',
+          visibility: showMultiFilterOperators ? 'visible' : 'hidden',
+        }}
+        className={clix(classes.linkOperator)}
       >
         <InputLabel htmlFor={linkOperatorSelectId} id={linkOperatorSelectLabelId}>
           {apiRef.current.getLocaleText('filterPanelOperators')}
@@ -263,14 +283,8 @@ function GridFilterForm(props: GridFilterFormProps) {
             </option>
           ))}
         </Select>
-      </FormControl>
-      <FormControl
-        variant="standard"
-        sx={[
-          { width: 150 },
-          ...(Array.isArray(columnContainerSx) ? columnContainerSx : [columnContainerSx]),
-        ]}
-      >
+      </FormControlLinkOperator>
+      <FormControlColumn variant="standard" sx={{ width: 150 }} className={clix(classes.column)}>
         <InputLabel htmlFor={columnSelectId} id={columnSelectLabelId}>
           {apiRef.current.getLocaleText('filterPanelColumns')}
         </InputLabel>
@@ -287,13 +301,11 @@ function GridFilterForm(props: GridFilterFormProps) {
             </option>
           ))}
         </Select>
-      </FormControl>
-      <FormControl
+      </FormControlColumn>
+      <FormControlOperator
         variant="standard"
-        sx={[
-          { width: 120 },
-          ...(Array.isArray(operatorContainerSx) ? operatorContainerSx : [operatorContainerSx]),
-        ]}
+        sx={{ width: 120 }}
+        className={clix(classes.operator)}
       >
         <InputLabel htmlFor={operatorSelectId} id={operatorSelectLabelId}>
           {apiRef.current.getLocaleText('filterPanelOperators')}
@@ -315,14 +327,8 @@ function GridFilterForm(props: GridFilterFormProps) {
             </option>
           ))}
         </Select>
-      </FormControl>
-      <FormControl
-        variant="standard"
-        sx={[
-          { width: 190 },
-          ...(Array.isArray(valueContainerSx) ? valueContainerSx : [valueContainerSx]),
-        ]}
-      >
+      </FormControlOperator>
+      <FormControlValue variant="standard" sx={{ width: 190 }} className={clix(classes.value)}>
         {currentOperator?.InputComponent ? (
           <currentOperator.InputComponent
             apiRef={apiRef}
@@ -332,7 +338,7 @@ function GridFilterForm(props: GridFilterFormProps) {
             {...currentOperator.InputComponentProps}
           />
         ) : null}
-      </FormControl>
+      </FormControlValue>
     </GridFilterFormRoot>
   );
 }

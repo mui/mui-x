@@ -1,6 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import Button from '@mui/material/Button';
+import { SxProps, Theme } from '@mui/material/styles';
 import { GridFilterItem, GridLinkOperator } from '../../../models/gridFilterItem';
 import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
 import { GridAddIcon } from '../../icons';
@@ -14,16 +15,9 @@ import { gridFilterModelSelector } from '../../../hooks/features/filter/gridFilt
 import { filterableGridColumnsSelector } from '../../../hooks/features/columns/gridColumnsSelector';
 
 export interface GridFilterPanelProps
-  extends Pick<
-    GridFilterFormProps,
-    | 'linkOperators'
-    | 'columnsSort'
-    | 'deleteIconContainerSx'
-    | 'linkOperatorContainerSx'
-    | 'columnContainerSx'
-    | 'operatorContainerSx'
-    | 'valueContainerSx'
-  > {}
+  extends Pick<GridFilterFormProps, 'linkOperators' | 'columnsSort'> {
+  sx?: SxProps<Theme>;
+}
 
 function GridFilterPanel(props: GridFilterPanelProps) {
   const apiRef = useGridApiContext();
@@ -35,11 +29,7 @@ function GridFilterPanel(props: GridFilterPanelProps) {
   const {
     linkOperators = [GridLinkOperator.And, GridLinkOperator.Or],
     columnsSort,
-    deleteIconContainerSx = {},
-    linkOperatorContainerSx = {},
-    columnContainerSx = {},
-    operatorContainerSx = {},
-    valueContainerSx = {},
+    sx = {},
   } = props;
 
   const applyFilter = React.useCallback(
@@ -116,7 +106,7 @@ function GridFilterPanel(props: GridFilterPanelProps) {
   }, [items.length]);
 
   return (
-    <GridPanelWrapper>
+    <GridPanelWrapper sx={sx}>
       <GridPanelContent>
         {items.map((item, index) => (
           <GridFilterForm
@@ -133,11 +123,6 @@ function GridFilterPanel(props: GridFilterPanelProps) {
             linkOperators={linkOperators}
             hasLinkOperatorColumn={hasMultipleFilters && linkOperators.length > 0}
             columnsSort={columnsSort}
-            deleteIconContainerSx={deleteIconContainerSx}
-            linkOperatorContainerSx={linkOperatorContainerSx}
-            columnContainerSx={columnContainerSx}
-            operatorContainerSx={operatorContainerSx}
-            valueContainerSx={valueContainerSx}
           />
         ))}
       </GridPanelContent>
@@ -157,29 +142,9 @@ GridFilterPanel.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
-  columnContainerSx: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
-    PropTypes.func,
-    PropTypes.object,
-  ]),
   columnsSort: PropTypes.oneOf(['asc', 'desc']),
-  deleteIconContainerSx: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
-    PropTypes.func,
-    PropTypes.object,
-  ]),
-  linkOperatorContainerSx: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
-    PropTypes.func,
-    PropTypes.object,
-  ]),
   linkOperators: PropTypes.arrayOf(PropTypes.oneOf(['and', 'or']).isRequired),
-  operatorContainerSx: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
-    PropTypes.func,
-    PropTypes.object,
-  ]),
-  valueContainerSx: PropTypes.oneOfType([
+  sx: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
     PropTypes.func,
     PropTypes.object,
