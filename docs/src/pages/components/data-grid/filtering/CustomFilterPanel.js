@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import {
   DataGrid,
   GridToolbarContainer,
@@ -8,16 +9,14 @@ import { useDemoData } from '@mui/x-data-grid-generator';
 
 const VISIBLE_FIELDS = ['name', 'rating', 'country', 'dateCreated', 'isAdmin'];
 
-const CustomFilterPanelContext = React.createContext(null);
+const CustomToolbar = ({ setFilterButtonEl }) => (
+  <GridToolbarContainer>
+    <GridToolbarFilterButton ref={setFilterButtonEl} />
+  </GridToolbarContainer>
+);
 
-const CustomToolbar = () => {
-  const setFilterButtonEl = React.useContext(CustomFilterPanelContext);
-
-  return (
-    <GridToolbarContainer>
-      <GridToolbarFilterButton ref={setFilterButtonEl} />
-    </GridToolbarContainer>
-  );
+CustomToolbar.propTypes = {
+  setFilterButtonEl: PropTypes.func.isRequired,
 };
 
 export default function CustomFilterPanel() {
@@ -30,20 +29,21 @@ export default function CustomFilterPanel() {
   const [filterButtonEl, setFilterButtonEl] = React.useState(null);
 
   return (
-    <CustomFilterPanelContext.Provider value={setFilterButtonEl}>
-      <div style={{ height: 400, width: '100%' }}>
-        <DataGrid
-          {...data}
-          components={{
-            Toolbar: CustomToolbar,
-          }}
-          componentsProps={{
-            panel: {
-              anchorEl: filterButtonEl,
-            },
-          }}
-        />
-      </div>
-    </CustomFilterPanelContext.Provider>
+    <div style={{ height: 400, width: '100%' }}>
+      <DataGrid
+        {...data}
+        components={{
+          Toolbar: CustomToolbar,
+        }}
+        componentsProps={{
+          panel: {
+            anchorEl: filterButtonEl,
+          },
+          toolbar: {
+            setFilterButtonEl,
+          },
+        }}
+      />
+    </div>
   );
 }

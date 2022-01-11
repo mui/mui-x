@@ -1,15 +1,14 @@
-<CustomFilterPanelContext.Provider value={setFilterButtonEl}>
-  <div style={{ height: 400, width: '100%' }}>
-    <DataGrid
-      {...data}
-      components={{
-        Toolbar: CustomToolbar,
-      }}
-      componentsProps={{
-        panel: {
-          anchorEl: filterButtonEl,
-        },
-      }}
-    />
-  </div>
-</CustomFilterPanelContext.Provider>
+<DataGrid
+  {...data}
+  components={{
+    Toolbar: CustomToolbar,
+  }}
+  componentsProps={{
+    panel: {
+      anchorEl: filterButtonEl,
+    },
+    toolbar: {
+      setFilterButtonEl,
+    }
+  }}
+/>
