@@ -11,7 +11,6 @@ export interface GridFilterItem {
    * The column from which we want to filter the rows.
    */
   columnField: string;
-
   /**
    * The filtering value.
    * The operator filtering function will decide for each row if the row values is correct compared to this value.
