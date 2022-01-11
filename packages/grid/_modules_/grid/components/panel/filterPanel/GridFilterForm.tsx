@@ -1,13 +1,12 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
-import FormControl from '@mui/material/FormControl';
 import IconButton from '@mui/material/IconButton';
 import InputLabel from '@mui/material/InputLabel';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
+import { SelectChangeEvent } from '@mui/material/Select';
 import { capitalize, unstable_useId as useId } from '@mui/material/utils';
 import { styled, SxProps, Theme } from '@mui/material/styles';
-import clix from 'clsx';
+import clsx from 'clsx';
 import { filterableGridColumnsSelector } from '../../../hooks/features/columns/gridColumnsSelector';
 import { useGridSelector } from '../../../hooks/utils/useGridSelector';
 import { GridFilterItem, GridLinkOperator } from '../../../models/gridFilterItem';
@@ -15,7 +14,7 @@ import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
 import { GridCloseIcon } from '../../icons/index';
 import { GridTranslationKeys } from '../../../models/api/gridLocaleTextApi';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
-import { GridComponentProps } from '../../../GridComponentProps';
+import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { getDataGridUtilityClass } from '../../../gridClasses';
 
 export interface GridFilterFormProps {
@@ -38,7 +37,7 @@ export interface GridFilterFormProps {
   valueContainerSx?: SxProps<Theme>;
 }
 
-type OwnerState = { classes: GridComponentProps['classes'] };
+type OwnerState = { classes: DataGridProcessedProps['classes'] };
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -79,29 +78,6 @@ const getColumnLabel = (col) => col.headerName || col.field;
 
 const collator = new Intl.Collator();
 
-const FormControlCloseIcon = styled(FormControl, {
-  name: 'MuiDataGrid',
-  slot: 'closeIconController',
-})({});
-
-const FormControlLinkOperator = styled(FormControl, {
-  name: 'MuiDataGrid',
-  slot: 'linkOperatorController',
-})({});
-
-const FormControlColumn = styled(FormControl, {
-  name: 'MuiDataGrid',
-  slot: 'columnController',
-})({});
-const FormControlOperator = styled(FormControl, {
-  name: 'MuiDataGrid',
-  slot: 'operatorController',
-})({});
-const FormControlValue = styled(FormControl, {
-  name: 'MuiDataGrid',
-  slot: 'valueController',
-})({});
-
 function GridFilterForm(props: GridFilterFormProps) {
   const {
     item,
@@ -129,6 +105,8 @@ function GridFilterForm(props: GridFilterFormProps) {
   const classes = useUtilityClasses(ownerState);
   const valueRef = React.useRef<any>(null);
   const filterSelectorRef = React.useRef<HTMLInputElement>(null);
+
+  const { className: baseFormControlClassName, ...baseFormControl } = rootProps.componentsProps?.baseFormControl || {};
 
   const sortedFilterableColumns = React.useMemo(() => {
     switch (columnsSort) {
@@ -243,10 +221,12 @@ function GridFilterForm(props: GridFilterFormProps) {
 
   return (
     <GridFilterFormRoot className={classes.root}>
-      <FormControlCloseIcon
+      <rootProps.components.BaseFormControl
         variant="standard"
         sx={{ flexShrink: 0, justifyContent: 'flex-end', marginRight: 0.5, marginBottom: 0.2 }}
-        className={clix(classes.closeIcon)}
+        className={clsx(classes.closeIcon, baseFormControlClassName)}
+        {...baseFormControl}
+
       >
         <IconButton
           aria-label={apiRef.current.getLocaleText('filterPanelDeleteIconLabel')}
@@ -256,67 +236,79 @@ function GridFilterForm(props: GridFilterFormProps) {
         >
           <GridCloseIcon fontSize="small" />
         </IconButton>
-      </FormControlCloseIcon>
-      <FormControlLinkOperator
+      </rootProps.components.BaseFormControl>
+      <rootProps.components.BaseFormControl
         variant="standard"
         sx={{
           minWidth: 60,
           display: hasLinkOperatorColumn ? 'block' : 'none',
           visibility: showMultiFilterOperators ? 'visible' : 'hidden',
         }}
-        className={clix(classes.linkOperator)}
+        className={clsx(classes.linkOperator, baseFormControlClassName)}
+        {...baseFormControl}
       >
         <InputLabel htmlFor={linkOperatorSelectId} id={linkOperatorSelectLabelId}>
           {apiRef.current.getLocaleText('filterPanelOperators')}
         </InputLabel>
-        <Select
+        <rootProps.components.BaseSelect
           labelId={linkOperatorSelectLabelId}
           id={linkOperatorSelectId}
           value={multiFilterOperator}
           onChange={changeLinkOperator}
           disabled={!!disableMultiFilterOperator || linkOperators.length === 1}
           native
+          {...rootProps.componentsProps?.baseSelect}
         >
-          {linkOperators.map((linkOperator) => (
-            <option key={linkOperator.toString()} value={linkOperator.toString()}>
-              {apiRef.current.getLocaleText(getLinkOperatorLocaleKey(linkOperator))}
-            </option>
-          ))}
-        </Select>
-      </FormControlLinkOperator>
-      <FormControlColumn variant="standard" sx={{ width: 150 }} className={clix(classes.column)}>
+          {
+            linkOperators.map((linkOperator) => (
+              <option key={linkOperator.toString()} value={linkOperator.toString()}>
+                {apiRef.current.getLocaleText(getLinkOperatorLocaleKey(linkOperator))}
+              </option>
+            ))
+          }
+        </rootProps.components.BaseSelect>
+      </rootProps.components.BaseFormControl>
+      <rootProps.components.BaseFormControl
+        variant="standard"
+        sx={{ width: 150 }}
+        className={clsx(classes.column, baseFormControlClassName)}
+        {...baseFormControl}
+      >
         <InputLabel htmlFor={columnSelectId} id={columnSelectLabelId}>
           {apiRef.current.getLocaleText('filterPanelColumns')}
         </InputLabel>
-        <Select
+        <rootProps.components.BaseSelect
           labelId={columnSelectLabelId}
           id={columnSelectId}
           value={item.columnField || ''}
           onChange={changeColumn}
           native
+          {...rootProps.componentsProps?.baseSelect}
         >
           {sortedFilterableColumns.map((col) => (
             <option key={col.field} value={col.field}>
               {getColumnLabel(col)}
             </option>
           ))}
-        </Select>
-      </FormControlColumn>
-      <FormControlOperator
+        </rootProps.components.BaseSelect>
+      </rootProps.components.BaseFormControl>
+      <rootProps.components.BaseFormControl
         variant="standard"
         sx={{ width: 120 }}
-        className={clix(classes.operator)}
+        className={clsx(classes.operator, baseFormControlClassName)}
+        {...baseFormControl}
       >
         <InputLabel htmlFor={operatorSelectId} id={operatorSelectLabelId}>
           {apiRef.current.getLocaleText('filterPanelOperators')}
         </InputLabel>
-        <Select
+        <rootProps.components.BaseSelect
           labelId={operatorSelectLabelId}
           id={operatorSelectId}
           value={item.operatorValue}
           onChange={changeOperator}
           native
           inputRef={filterSelectorRef}
+          {...rootProps.componentsProps?.baseSelect}
         >
           {currentColumn?.filterOperators?.map((operator) => (
             <option key={operator.value} value={operator.value}>
@@ -326,9 +318,14 @@ function GridFilterForm(props: GridFilterFormProps) {
                 )}
             </option>
           ))}
-        </Select>
-      </FormControlOperator>
-      <FormControlValue variant="standard" sx={{ width: 190 }} className={clix(classes.value)}>
+        </rootProps.components.BaseSelect>
+      </rootProps.components.BaseFormControl >
+      <rootProps.components.BaseFormControl
+        variant="standard"
+        sx={{ width: 190 }}
+        className={clsx(classes.value, baseFormControlClassName)}
+        {...baseFormControl}
+      >
         {currentOperator?.InputComponent ? (
           <currentOperator.InputComponent
             apiRef={apiRef}
@@ -338,8 +335,8 @@ function GridFilterForm(props: GridFilterFormProps) {
             {...currentOperator.InputComponentProps}
           />
         ) : null}
-      </FormControlValue>
-    </GridFilterFormRoot>
+      </rootProps.components.BaseFormControl>
+    </GridFilterFormRoot >
   );
 }
 

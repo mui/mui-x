@@ -1,7 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { unstable_useEnhancedEffect as useEnhancedEffect } from '@mui/material/utils';
-import Select, { SelectProps } from '@mui/material/Select';
+import { SelectProps } from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import {
   GridRenderEditCellParams,
@@ -110,7 +110,7 @@ function GridEditSingleSelectCell(props: GridRenderEditCellParams & Omit<SelectP
   }, [hasFocus]);
 
   return (
-    <Select
+    <rootProps.components.BaseSelect
       ref={ref}
       inputRef={inputRef}
       value={value}
@@ -123,9 +123,10 @@ function GridEditSingleSelectCell(props: GridRenderEditCellParams & Omit<SelectP
       error={error}
       fullWidth
       {...other}
+      {...rootProps.componentsProps?.baseSelect}
     >
       {valueOptionsFormatted.map(renderSingleSelectOptions)}
-    </Select>
+    </rootProps.components.BaseSelect>
   );
 }
 

@@ -9,7 +9,7 @@ import { GridScrollParams } from '../models/params/gridScrollParams';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { getDataGridUtilityClass, gridClasses } from '../gridClasses';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
-import { GridComponentProps } from '../GridComponentProps';
+import { DataGridProcessedProps } from '../models/props/DataGridProps';
 import { gridDensityHeaderHeightSelector } from '../hooks/features/density/densitySelector';
 import { useGridSelector } from '../hooks/utils/useGridSelector';
 
@@ -21,7 +21,7 @@ interface ScrollAreaProps {
 }
 
 type OwnerState = ScrollAreaProps & {
-  classes?: GridComponentProps['classes'];
+  classes?: DataGridProcessedProps['classes'];
 };
 
 const useUtilityClasses = (ownerState: OwnerState) => {

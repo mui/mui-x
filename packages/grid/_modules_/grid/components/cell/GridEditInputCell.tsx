@@ -7,9 +7,9 @@ import InputBase, { InputBaseProps } from '@mui/material/InputBase';
 import { GridRenderEditCellParams } from '../../models/params/gridCellParams';
 import { getDataGridUtilityClass } from '../../gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { GridComponentProps } from '../../GridComponentProps';
+import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 
-type OwnerState = { classes: GridComponentProps['classes'] };
+type OwnerState = { classes: DataGridProcessedProps['classes'] };
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -83,7 +83,7 @@ function GridEditInputCell(props: GridRenderEditCellParams & Omit<InputBaseProps
       className={classes.root}
       fullWidth
       type={colDef.type === 'number' ? colDef.type : 'text'}
-      value={valueState || ''}
+      value={valueState ?? ''}
       onChange={handleChange}
       {...other}
     />

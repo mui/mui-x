@@ -1,3 +1,3 @@
-import MyDocument from '@material-ui/monorepo/docs/pages/_document';
+import MyDocument from '@mui/monorepo/docs/pages/_document';
 
 export default MyDocument;

@@ -1,13 +1,13 @@
 import {
   GridEvents,
   GridApiRef,
-  GridComponentProps,
+  DataGridProProps,
   useGridApiRef,
   DataGridPro,
   GridEditSingleSelectCell,
 } from '@mui/x-data-grid-pro';
 import Portal from '@mui/base/Portal';
-import { createRenderer, fireEvent, screen, waitFor, act } from '@material-ui/monorepo/test/utils';
+import { createRenderer, fireEvent, screen, waitFor, act } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import * as React from 'react';
 import { getActiveCell, getCell, getRow, getColumnHeaderCell } from 'test/utils/helperFn';
@@ -38,6 +38,7 @@ const generateDate = (
   return rawDate.getTime();
 };
 
+// TODO: Replace `cell.focus()` with `fireEvent.mouseUp(cell)`
 describe('<DataGridPro /> - Edit Rows', () => {
   let baselineProps;
 
@@ -73,7 +74,7 @@ describe('<DataGridPro /> - Edit Rows', () => {
 
   let apiRef: GridApiRef;
 
-  const TestCase = (props: Partial<GridComponentProps>) => {
+  const TestCase = (props: Partial<DataGridProProps>) => {
     apiRef = useGridApiRef();
     return (
       <div style={{ width: 300, height: 300 }}>
@@ -803,7 +804,7 @@ describe('<DataGridPro /> - Edit Rows', () => {
       });
     });
 
-    it('should not exit the edit mode when validateCell returns an object with error', async () => {
+    it('should not exit the edit mode when preProcessEditCellProps returns an object with error', async () => {
       render(
         <div style={{ width: 300, height: 300 }}>
           <DataGridPro
@@ -831,7 +832,7 @@ describe('<DataGridPro /> - Edit Rows', () => {
       });
     });
 
-    it('should not exit the edit mode when validateCell returns a promise with error', async () => {
+    it('should not exit the edit mode when preProcessEditCellProps returns a promise with error', async () => {
       render(
         <div style={{ width: 300, height: 300 }}>
           <DataGridPro
@@ -860,34 +861,58 @@ describe('<DataGridPro /> - Edit Rows', () => {
     });
   });
 
-  it('should keep the right type', async () => {
-    // TODO create a separate group for the "number" column type tests
-    const Test = (props: Partial<GridComponentProps>) => {
-      apiRef = useGridApiRef();
-      return (
-        <div style={{ width: 300, height: 300 }}>
-          <DataGridPro
-            {...baselineProps}
-            apiRef={apiRef}
-            columns={[{ field: 'year', type: 'number', editable: true }]}
-            {...props}
-          />
-        </div>
-      );
-    };
-    render(<Test />);
-    expect(screen.queryAllByRole('row')).to.have.length(4);
-    const cell = getCell(0, 0);
-    cell.focus();
-    fireEvent.doubleClick(cell);
-    const input = cell.querySelector('input')!;
-    expect(input.value).to.equal('1941');
-    fireEvent.change(input, { target: { value: '1942' } });
+  describe('column type: number', () => {
+    it('should keep the right type', async () => {
+      const Test = (props: Partial<DataGridProProps>) => {
+        apiRef = useGridApiRef();
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGridPro
+              {...baselineProps}
+              apiRef={apiRef}
+              columns={[{ field: 'year', type: 'number', editable: true }]}
+              {...props}
+            />
+          </div>
+        );
+      };
+      render(<Test />);
+      expect(screen.queryAllByRole('row')).to.have.length(4);
+      const cell = getCell(0, 0);
+      cell.focus();
+      fireEvent.doubleClick(cell);
+      const input = cell.querySelector('input')!;
+      expect(input.value).to.equal('1941');
+      fireEvent.change(input, { target: { value: '1942' } });
 
-    fireEvent.keyDown(input, { key: 'Enter' });
-    await waitFor(() => {
-      expect(cell).to.have.text('1,942');
-      expect(apiRef.current.getRow(baselineProps.rows[0].id)!.year).to.equal(1942);
+      fireEvent.keyDown(input, { key: 'Enter' });
+      await waitFor(() => {
+        expect(cell).to.have.text('1,942');
+        expect(apiRef.current.getRow(baselineProps.rows[0].id)!.year).to.equal(1942);
+      });
+    });
+
+    it('should allow to enter 0', async () => {
+      const Test = (props: Partial<DataGridProProps>) => {
+        apiRef = useGridApiRef();
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGridPro
+              {...baselineProps}
+              apiRef={apiRef}
+              columns={[{ field: 'year', type: 'number', editable: true }]}
+              {...props}
+            />
+          </div>
+        );
+      };
+      render(<Test />);
+      const cell = getCell(0, 0);
+      fireEvent.mouseUp(cell);
+      fireEvent.doubleClick(cell);
+      const input = cell.querySelector('input')!;
+      fireEvent.change(input, { target: { value: '0' } });
+      expect(input.value).to.equal('0');
     });
   });
 
@@ -1494,6 +1519,34 @@ describe('<DataGridPro /> - Edit Rows', () => {
       await waitFor(() => {
         expect(firstInput).to.have.attribute('aria-invalid', 'true');
         expect(secondInput).to.have.attribute('aria-invalid', 'true');
+      });
+    });
+
+    it('should exit the row edit mode and save the row when preProcessEditCellProps does not return an error', async () => {
+      render(
+        <TestCase
+          editMode="row"
+          columns={[
+            {
+              field: 'brand',
+              editable: true,
+              preProcessEditCellProps: ({ props }) => props,
+            },
+          ]}
+          rows={[{ id: 0, brand: 'Nike' }]}
+        />,
+      );
+      const cell = getCell(0, 0);
+      fireEvent.mouseUp(cell);
+      fireEvent.doubleClick(cell);
+      const input = cell.querySelector('input')!;
+      fireEvent.change(input, { target: { value: 'Adidas' } });
+      await clock.runToLast();
+      expect(apiRef.current.getEditRowsModel()[0].brand.value).to.equal('Adidas');
+      fireEvent.keyDown(input, { key: 'Enter' });
+      await waitFor(() => {
+        expect(cell).not.to.have.class('MuiDataGrid-cell--editing');
+        expect(cell).to.have.text('Adidas');
       });
     });
   });

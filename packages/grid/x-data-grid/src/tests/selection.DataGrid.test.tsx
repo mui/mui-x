@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRenderer, fireEvent, screen } from '@material-ui/monorepo/test/utils';
+import { createRenderer, fireEvent, screen } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { DataGrid, DataGridProps, GridInputSelectionModel } from '@mui/x-data-grid';
 import {
@@ -338,6 +338,26 @@ describe('<DataGrid /> - Selection', () => {
       // Ensure that checkbox has tabindex=0 and the cell has tabindex=-1
       expect(checkbox).to.have.attribute('tabindex', '0');
       expect(checkboxCell).to.have.attribute('tabindex', '-1');
+    });
+
+    it('should select/unselect all rows when pressing space', async () => {
+      render(<TestDataGridSelection checkboxSelection />);
+
+      const selectAllCell = document.querySelector(
+        '[role="columnheader"][data-field="__check__"] input',
+      ) as HTMLElement;
+      selectAllCell.focus();
+
+      fireEvent.keyDown(selectAllCell, {
+        key: ' ',
+      });
+
+      expect(getSelectedRowIds()).to.deep.equal([0, 1, 2, 3]);
+      fireEvent.keyDown(selectAllCell, {
+        key: ' ',
+      });
+
+      expect(getSelectedRowIds()).to.deep.equal([]);
     });
   });
 

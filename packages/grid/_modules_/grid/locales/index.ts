@@ -7,6 +7,7 @@ export * from './elGR';
 export * from './enUS';
 export * from './esES';
 export * from './faIR';
+export * from './fiFI';
 export * from './frFR';
 export * from './heIL';
 export * from './itIT';

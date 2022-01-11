@@ -1,8 +1,9 @@
 import * as ts from 'typescript';
 import path from 'path';
-import { renderInline as renderMarkdownInline } from '@material-ui/monorepo/docs/packages/markdown';
+import { renderInline as renderMarkdownInline } from '@mui/monorepo/docs/packages/markdown';
 
 import {
+  DocumentedInterfaces,
   getSymbolDescription,
   getSymbolJSDocTags,
   linkify,
@@ -13,7 +14,7 @@ import {
 
 interface BuildEventsDocumentationOptions {
   project: Project;
-  documentedInterfaces: Map<string, boolean>;
+  documentedInterfaces: DocumentedInterfaces;
 }
 
 export default function buildEventsDocumentation(options: BuildEventsDocumentationOptions) {
