@@ -58,11 +58,13 @@ Some selectors are yet to be documented.
 
 You can export the current state of the grid by calling `apiRef.current.exportState()` and restore it by either passing it to the `initialState` prop or to the `apiRef.current.restoreState()` method.
 
-### Save and restore the state with `initialState`
+### Restore the state with `initialState`
+
+> ⚠️ If you restore the page using `initialState` before the data are fetched, the grid will automatically move to the 1st page.
 
 {{"demo": "pages/components/data-grid/state/RestoreStateInitialState.js", "bg": "inline"}}
 
-### Save and restore the state with `apiRef` [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
+### Restore the state with `apiRef` [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
 
 {{"demo": "pages/components/data-grid/state/RestoreStateApiRef.js", "bg": "inline"}}
 
