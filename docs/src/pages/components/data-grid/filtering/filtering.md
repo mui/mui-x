@@ -147,7 +147,7 @@ You can get them by importing the following functions:
 | `number`       | `getGridNumericOperators()`      |
 | `boolean`      | `getGridBooleanOperators()`      |
 | `date`         | `getGridDateOperators()`         |
-| `dateTime `    | `getGridDateOperators(true)`     |
+| `dateTime`     | `getGridDateOperators(true)`     |
 | `singleSelect` | `getGridSingleSelectOperators()` |
 
 You can find more information about the supported column types in the [columns section](/components/data-grid/columns/#column-types).
