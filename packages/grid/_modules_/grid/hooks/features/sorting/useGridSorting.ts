@@ -22,11 +22,7 @@ import { useGridStateInit } from '../../utils/useGridStateInit';
 import { useFirstRender } from '../../utils/useFirstRender';
 import { GridSortingMethod, GridSortingMethodCollection } from './gridSortingState';
 import { buildAggregatedSortingApplier } from './gridSortingUtils';
-import {
-  GridPreProcessingGroup,
-  GridPreProcessor,
-  useGridRegisterPreProcessor,
-} from '../../core/preProcessing';
+import { GridPreProcessingGroup } from '../../core/preProcessing';
 import { useGridRegisterSortingMethod } from './useGridRegisterSortingMethod';
 
 /**

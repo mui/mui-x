@@ -21,11 +21,7 @@ import { gridFilterModelSelector, gridVisibleSortedRowEntriesSelector } from './
 import { useGridStateInit } from '../../utils/useGridStateInit';
 import { useFirstRender } from '../../utils/useFirstRender';
 import { gridRowIdsSelector, gridRowGroupingNameSelector } from '../rows';
-import {
-  GridPreProcessingGroup,
-  GridPreProcessor,
-  useGridRegisterPreProcessor,
-} from '../../core/preProcessing';
+import { GridPreProcessingGroup } from '../../core/preProcessing';
 import { useGridRegisterFilteringMethod } from './useGridRegisterFilteringMethod';
 import { buildAggregatedFilterApplier, cleanFilterItem } from './gridFilterUtils';
 
