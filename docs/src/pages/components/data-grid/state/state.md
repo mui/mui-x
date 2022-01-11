@@ -20,7 +20,7 @@ Some state keys can be initialized with the `initialState` prop.
 ## Access the state [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
 
 The state is exposed on the `apiRef` object.
-It is strongly advised not to access the state values manually because the structure of the state can change if needs be.
+It is strongly advised not to access the state values directly because the state itself is not considered a public API and its structure can change.
 
 The `x-data-grid-pro` package exposes a set of selectors, which are functions taking the whole state as an argument and returning some value.
 You can use those to gather data from the state without worrying about the internal structure of the state.
