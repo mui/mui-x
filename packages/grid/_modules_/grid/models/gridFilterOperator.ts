@@ -34,7 +34,6 @@ export interface GridFilterOperator {
    * The input component to render in the filter panel for this filter operator.
    */
   InputComponent?: React.JSXElementConstructor<GridFilterInputValueProps>;
-
   /**
    * The props to pass to the input component in the filter panel for this filter operator.
    */
