@@ -9,6 +9,7 @@ title: Data Grid - State
 ## Initialize the state
 
 Some state keys can be initialized with the `initialState` prop.
+This prop has the same format as the returned value of `apiRef.current.exportState()`.
 
 > ⚠️ The `initialState` can only be used to set the initial value of the state, the grid will not react if you change the `initialState` value later on.
 >
@@ -55,9 +56,15 @@ Some selectors are yet to be documented.
 
 ## Save and restore the state
 
-> ⚠️ This feature isn't implemented yet. It's coming.
->
-> 👍 Upvote [issue #820](https://github.com/mui-org/material-ui-x/issues/820) if you want to see it land faster.
+You can export the current state of the grid by calling `apiRef.current.exportState()` and restore it by either passing it to the `initialState` prop or to the `apiRef.current.restoreState()` method.
+
+### Save and restore the state with `initialState`
+
+{{"demo": "pages/components/data-grid/state/RestoreStateInitialState.js", "bg": "inline"}}
+
+### Save and restore the state with `apiRef` [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
+
+{{"demo": "pages/components/data-grid/state/RestoreStateApiRef.js", "bg": "inline"}}
 
 ## API
 
