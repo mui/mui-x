@@ -2,14 +2,27 @@ import { ukUA as ukUACore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
-const getPluralFormForFilter = (count) => {
-  let pluralForm = 'активних фільтрів';
+type PluralForm = {
+  single: string;
+  other: string;
+  many: string;
+};
+
+const getPluralForm = (
+  count: number,
+  options: PluralForm = {
+    single: 'активний фільтр',
+    other: 'активні фільтра',
+    many: 'активних фільтрів',
+  },
+) => {
+  let pluralForm = options.many;
   const lastDigit = count % 10;
 
   if (lastDigit > 1 && lastDigit < 5) {
-    pluralForm = 'активних фільтра';
+    pluralForm = options.other;
   } else if (lastDigit === 1) {
-    pluralForm = 'активний фільтр';
+    pluralForm = options.single;
   }
 
   return `${count} ${pluralForm}`;
@@ -37,7 +50,7 @@ const ukUAGrid: Partial<GridLocaleText> = {
   toolbarFiltersLabel: 'Показати фільтри',
   toolbarFiltersTooltipHide: 'Приховати фільтри',
   toolbarFiltersTooltipShow: 'Показати фільтри',
-  toolbarFiltersTooltipActive: getPluralFormForFilter,
+  toolbarFiltersTooltipActive: getPluralForm,
 
   // Export selector toolbar button text
   toolbarExport: 'Експорт',
@@ -49,8 +62,8 @@ const ukUAGrid: Partial<GridLocaleText> = {
   columnsPanelTextFieldLabel: 'Знайти стовпець',
   columnsPanelTextFieldPlaceholder: 'Заголовок стовпця',
   columnsPanelDragIconLabel: 'Змінити порядок стовпця',
-  columnsPanelShowAllButton: 'Показати все',
-  columnsPanelHideAllButton: 'Приховати все',
+  columnsPanelShowAllButton: 'Показати всі',
+  columnsPanelHideAllButton: 'Приховати всі',
 
   // Filter panel text
   filterPanelAddFilter: 'Додати фільтр',
@@ -74,12 +87,12 @@ const ukUAGrid: Partial<GridLocaleText> = {
   filterOperatorBefore: 'менше ніж',
   filterOperatorOnOrBefore: 'менше або дорівнює',
   filterOperatorIsEmpty: 'порожній',
-  filterOperatorIsNotEmpty: 'не пустий',
+  filterOperatorIsNotEmpty: 'не порожній',
 
   // Filter values text
   filterValueAny: 'будь-який',
-  filterValueTrue: 'правда',
-  filterValueFalse: 'брехня',
+  filterValueTrue: 'так',
+  filterValueFalse: 'ні',
 
   // Column menu text
   columnMenuLabel: 'Меню',
@@ -91,23 +104,17 @@ const ukUAGrid: Partial<GridLocaleText> = {
   columnMenuSortDesc: 'Сортувати за спаданням',
 
   // Column header text
-  columnHeaderFiltersTooltipActive: getPluralFormForFilter,
+  columnHeaderFiltersTooltipActive: getPluralForm,
   columnHeaderFiltersLabel: 'Показати фільтри',
   columnHeaderSortIconLabel: 'Сортувати',
 
   // Rows selected footer text
-  footerRowSelected: (count) => {
-    let pluralForm = 'рядків вибраних';
-    const lastDigit = count % 10;
-
-    if (lastDigit > 1 && lastDigit < 5) {
-      pluralForm = 'рядки вибрані';
-    } else if (lastDigit === 1) {
-      pluralForm = 'рядок вибрано';
-    }
-
-    return `${count} ${pluralForm}`;
-  },
+  footerRowSelected: (count) =>
+    getPluralForm(count, {
+      single: 'вибраний рядок',
+      other: 'вибрані рядки',
+      many: 'вибраних рядків',
+    }),
 
   // Total rows footer text
   footerTotalRows: 'Усього рядків:',
@@ -120,8 +127,8 @@ const ukUAGrid: Partial<GridLocaleText> = {
   checkboxSelectionHeaderName: 'Вибір прапорця',
 
   // Boolean cell text
-  booleanCellTrueLabel: 'правда',
-  booleanCellFalseLabel: 'брехня',
+  booleanCellTrueLabel: 'так',
+  booleanCellFalseLabel: 'ні',
 
   // Actions cell more text
   actionsCellMore: 'більше',
