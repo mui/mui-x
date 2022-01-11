@@ -41,6 +41,7 @@ dataGridComponent.children = [
   { pathname: '/components/data-grid/pagination' },
   { pathname: '/components/data-grid/selection' },
   { pathname: '/components/data-grid/events' },
+  { pathname: '/components/data-grid/state' },
   { pathname: '/components/data-grid/export' },
   { pathname: '/components/data-grid/components' },
   { pathname: '/components/data-grid/style' },
