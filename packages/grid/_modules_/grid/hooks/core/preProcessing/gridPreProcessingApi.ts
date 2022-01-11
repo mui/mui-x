@@ -1,8 +1,4 @@
-import {
-  GridCellIndexCoordinates,
-  GridColDef,
-  GridScrollParams,
-} from '../../../models';
+import { GridCellIndexCoordinates, GridColDef, GridScrollParams } from '../../../models';
 import { GridFilteringMethodCollection } from '../../features/filter/gridFilterState';
 import { GridSortingMethodCollection } from '../../features/sorting/gridSortingState';
 import { GridCanBeReorderedPreProcessingContext } from '../../features/columnReorder/columnReorderInterfaces';
