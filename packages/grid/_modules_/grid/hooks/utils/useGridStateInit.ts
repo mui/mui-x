@@ -1,14 +1,10 @@
 import * as React from 'react';
 import { GridApiRef } from '../../models/api/gridApiRef';
-import { GridState } from '../../models/gridState';
-
-type DeepPartial<T> = {
-  [P in keyof T]?: DeepPartial<T[P]>;
-};
+import { GridState, GridPartialState } from '../../models/gridState';
 
 export const useGridStateInit = (
   apiRef: GridApiRef,
-  callback: (state: DeepPartial<GridState>) => DeepPartial<GridState>,
+  callback: (state: GridPartialState) => GridPartialState,
 ) => {
   const isInitialized = React.useRef(false);
 

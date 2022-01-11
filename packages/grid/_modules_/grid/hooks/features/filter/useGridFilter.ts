@@ -21,7 +21,11 @@ import { gridFilterModelSelector, gridVisibleSortedRowEntriesSelector } from './
 import { useGridStateInit } from '../../utils/useGridStateInit';
 import { useFirstRender } from '../../utils/useFirstRender';
 import { gridRowIdsSelector, gridRowGroupingNameSelector } from '../rows';
-import { GridPreProcessingGroup } from '../../core/preProcessing';
+import {
+  GridPreProcessingGroup,
+  GridPreProcessor,
+  useGridRegisterPreProcessor,
+} from '../../core/preProcessing';
 import { useGridRegisterFilteringMethod } from './useGridRegisterFilteringMethod';
 import { buildAggregatedFilterApplier, cleanFilterItem } from './gridFilterUtils';
 
@@ -243,6 +247,43 @@ export const useGridFilter = (
   /**
    * PRE-PROCESSING
    */
+  const stateExportPreProcessing = React.useCallback<
+    GridPreProcessor<GridPreProcessingGroup.exportState>
+  >(
+    (prevState) => {
+      return {
+        ...prevState,
+        filter: {
+          filterModel: gridFilterModelSelector(apiRef.current.state),
+        },
+      };
+    },
+    [apiRef],
+  );
+
+  const stateRestorePreProcessing = React.useCallback<
+    GridPreProcessor<GridPreProcessingGroup.restoreState>
+  >(
+    (params, context) => {
+      if (context.stateToRestore.filter?.filterModel == null) {
+        return params;
+      }
+
+      return {
+        ...params,
+        callbacks: [...params.callbacks, apiRef.current.unstable_applyFilters],
+        state: {
+          ...params.state,
+          filter: {
+            ...params.state.filter,
+            filterModel: context.stateToRestore.filter.filterModel,
+          },
+        },
+      };
+    },
+    [apiRef],
+  );
+
   const flatFilteringMethod = React.useCallback<GridFilteringMethod>(
     (params) => {
       if (props.filterMode === GridFeatureModeConstant.client && params.isRowMatchingFilters) {
@@ -266,6 +307,12 @@ export const useGridFilter = (
     [apiRef, props.filterMode],
   );
 
+  useGridRegisterPreProcessor(apiRef, GridPreProcessingGroup.exportState, stateExportPreProcessing);
+  useGridRegisterPreProcessor(
+    apiRef,
+    GridPreProcessingGroup.restoreState,
+    stateRestorePreProcessing,
+  );
   useGridRegisterFilteringMethod(apiRef, 'none', flatFilteringMethod);
 
   /**

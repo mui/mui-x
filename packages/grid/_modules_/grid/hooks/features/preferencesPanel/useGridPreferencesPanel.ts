@@ -5,6 +5,12 @@ import { useGridLogger } from '../../utils/useGridLogger';
 import { GridPreferencePanelsValue } from './gridPreferencePanelsValue';
 import { useGridStateInit } from '../../utils/useGridStateInit';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
+import {
+  GridPreProcessingGroup,
+  GridPreProcessor,
+  useGridRegisterPreProcessor,
+} from '../../core/preProcessing';
+import { gridPreferencePanelStateSelector } from './gridPreferencePanelSelector';
 
 export const useGridPreferencesPanel = (
   apiRef: GridApiRef,
@@ -19,6 +25,9 @@ export const useGridPreferencesPanel = (
   const hideTimeout = React.useRef<any>();
   const immediateTimeout = React.useRef<any>();
 
+  /**
+   * API METHODS
+   */
   const hidePreferences = React.useCallback(() => {
     logger.debug('Hiding Preferences Panel');
     apiRef.current.setState((state) => ({ ...state, preferencePanel: { open: false } }));
@@ -59,6 +68,47 @@ export const useGridPreferencesPanel = (
     'ColumnMenuApi',
   );
 
+  /**
+   * PRE-PROCESSING
+   */
+  const stateExportPreProcessing = React.useCallback<
+    GridPreProcessor<GridPreProcessingGroup.exportState>
+  >(
+    (prevState) => {
+      return {
+        ...prevState,
+        preferencePanel: gridPreferencePanelStateSelector(apiRef.current.state),
+      };
+    },
+    [apiRef],
+  );
+
+  const stateRestorePreProcessing = React.useCallback<
+    GridPreProcessor<GridPreProcessingGroup.restoreState>
+  >((params, context) => {
+    if (context.stateToRestore.preferencePanel == null) {
+      return params;
+    }
+
+    return {
+      ...params,
+      state: {
+        ...params.state,
+        preferencePanel: context.stateToRestore.preferencePanel,
+      },
+    };
+  }, []);
+
+  useGridRegisterPreProcessor(apiRef, GridPreProcessingGroup.exportState, stateExportPreProcessing);
+  useGridRegisterPreProcessor(
+    apiRef,
+    GridPreProcessingGroup.restoreState,
+    stateRestorePreProcessing,
+  );
+
+  /**
+   * EFFECTS
+   */
   React.useEffect(() => {
     return () => {
       clearTimeout(hideTimeout.current);
