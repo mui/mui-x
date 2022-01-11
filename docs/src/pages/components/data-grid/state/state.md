@@ -13,7 +13,7 @@ Some state keys can be initialized with the `initialState` prop.
 > ⚠️ The `initialState` can only be used to set the initial value of the state, the grid will not react if you change the `initialState` value later on.
 >
 > If you need to fully control specific models, use the control props instead (e.g. `prop.filterModel` or `prop.sortModel`).
-> More information on each feature documentation page.
+> You can find more information on the corresponding feature documentation page.
 
 {{"demo": "pages/components/data-grid/state/InitialState.js", "bg": "inline"}}
 
