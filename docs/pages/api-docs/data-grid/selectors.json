@@ -73,6 +73,7 @@
     "category": "Pagination",
     "description": "Get the index of the first and the last row to include in the current page if the pagination is enabled."
   },
+  { "name": "gridPinnedColumnsSelector", "returnType": "GridPinnedColumns", "description": "" },
   {
     "name": "gridPreferencePanelStateSelector",
     "returnType": "GridPreferencePanelState",
