@@ -147,7 +147,7 @@ You can get them by importing the following functions:
 | `number`       | `getGridNumericOperators()`      |
 | `boolean`      | `getGridBooleanOperators()`      |
 | `date`         | `getGridDateOperators()`         |
-| `dateTime`    | `getGridDateOperators(true)`     |
+| `dateTime`     | `getGridDateOperators(true)`     |
 | `singleSelect` | `getGridSingleSelectOperators()` |
 
 You can find more information about the supported column types in the [columns section](/components/data-grid/columns/#column-types).
@@ -258,6 +258,12 @@ However, it can be implemented as in the demo below.
 > ⚠️ Only use this API as the last option. Give preference to the props to control the grid.
 
 {{"demo": "pages/components/data-grid/filtering/FilterApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
+
+## Selectors [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
+
+{{"demo": "pages/components/data-grid/filtering/FilterSelectorsNoSnap.js", "bg": "inline", "hideToolbar": true}}
+
+More information about the selectors and how to use them on the [dedicated page](/components/data-grid/state#access-the-state)
 
 ## API
 
