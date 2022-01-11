@@ -1,9 +1,10 @@
 import * as React from 'react';
 import {
-  GridColDef,
   DataGrid,
   GridRowModel,
   GridFilterModel,
+  GridColumns,
+  getGridStringOperators,
 } from '@mui/x-data-grid';
 
 function loadServerRows(commodityFilterValue?: string): Promise<any> {
@@ -22,18 +23,25 @@ function loadServerRows(commodityFilterValue?: string): Promise<any> {
         return;
       }
       resolve(
-        serverRows.filter(
-          (row) => row.commodity.toLowerCase().indexOf(commodityFilterValue!) > -1,
+        serverRows.filter((row) =>
+          row.commodity.toLowerCase().includes(commodityFilterValue!),
         ),
       );
     }, Math.random() * 500 + 100); // simulate network latency
   });
 }
 
+const columns: GridColumns = [
+  {
+    field: 'commodity',
+    width: 150,
+    filterOperators: getGridStringOperators().filter(
+      (operator) => operator.value === 'contains',
+    ),
+  },
+];
+
 export default function ServerFilterGrid() {
-  const [columns] = React.useState<GridColDef[]>([
-    { field: 'commodity', width: 150 },
-  ]);
   const [rows, setRows] = React.useState<GridRowModel[]>([]);
   const [filterValue, setFilterValue] = React.useState<string | undefined>();
   const [loading, setLoading] = React.useState(false);
