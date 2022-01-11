@@ -248,7 +248,7 @@
   { "name": "GridPanelFooter", "kind": "Function" },
   { "name": "GridPanelHeader", "kind": "Function" },
   { "name": "GridPanelProps", "kind": "Interface" },
-  { "name": "GridPanelWrapper", "kind": "Function" },
+  { "name": "GridPanelWrapper", "kind": "ExportSpecifier" },
   { "name": "GridParamsApi", "kind": "Interface" },
   { "name": "GridPinnedColumns", "kind": "Interface" },
   { "name": "GridPinnedPosition", "kind": "Enum" },
