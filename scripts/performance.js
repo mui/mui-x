@@ -56,7 +56,7 @@ function createLabelNameEngine() {
   };
 }
 
-async function testFilter100000Rows(page) {
+async function testFilter100kRows(page) {
   const baseUrl = `http://localhost:${PORT}/performance/DataGrid/FilterRows100000`;
   await page.goto(baseUrl);
 
@@ -75,7 +75,7 @@ async function testFilter100000Rows(page) {
   return t1 - t0 - 500; // Subtract the debounce time
 }
 
-async function testSort100000Rows(page) {
+async function testSort100kRows(page) {
   const baseUrl = `http://localhost:${PORT}/performance/DataGrid/SortRows100000`;
   await page.goto(baseUrl);
 
@@ -85,7 +85,7 @@ async function testSort100000Rows(page) {
   return t1 - t0;
 }
 
-async function testSelect100000Rows(page) {
+async function testSelect100kRows(page) {
   const baseUrl = `http://localhost:${PORT}/performance/DataGrid/SelectRows100000`;
   await page.goto(baseUrl);
 
@@ -95,7 +95,7 @@ async function testSelect100000Rows(page) {
   return t1 - t0;
 }
 
-async function testDeselect100000Rows(page) {
+async function testDeselect100kRows(page) {
   const baseUrl = `http://localhost:${PORT}/performance/DataGrid/SelectRows100000`;
   await page.goto(baseUrl);
 
@@ -114,12 +114,7 @@ async function run() {
     headless: false,
   });
 
-  const cases = [
-    testFilter100000Rows,
-    testSort100000Rows,
-    testSelect100000Rows,
-    testDeselect100000Rows,
-  ];
+  const cases = [testFilter100kRows, testSort100kRows, testSelect100kRows, testDeselect100kRows];
 
   const results = cases.map(async (testCase) => {
     const samples = [];
