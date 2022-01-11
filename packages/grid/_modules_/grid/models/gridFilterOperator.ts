@@ -29,7 +29,6 @@ export interface GridFilterOperator {
     filterItem: GridFilterItem,
     column: GridStateColDef,
   ) => null | ((params: GridCellParams) => boolean);
-
   /**
    * The input component to render in the filter panel for this filter operator.
    */
