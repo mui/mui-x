@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRenderer } from '@material-ui/monorepo/test/utils';
+import { createRenderer } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { DataGrid } from '@mui/x-data-grid';
 import { getColumnHeaderCell } from 'test/utils/helperFn';

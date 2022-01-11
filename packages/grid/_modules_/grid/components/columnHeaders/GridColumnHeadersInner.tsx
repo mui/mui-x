@@ -4,12 +4,12 @@ import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { getDataGridUtilityClass } from '../../gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { GridComponentProps } from '../../GridComponentProps';
+import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { gridClasses } from '../..';
 
 type OwnerState = {
-  classes?: GridComponentProps['classes'];
+  classes?: DataGridProcessedProps['classes'];
   isDragging: boolean;
   hasScrollX: boolean;
 };

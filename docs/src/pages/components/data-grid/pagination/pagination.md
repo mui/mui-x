@@ -31,19 +31,53 @@ Use the `autoPageSize` prop to auto-scale the `pageSize` to match the container 
 
 {{"demo": "pages/components/data-grid/pagination/PageSizeAuto.js", "bg": "inline"}}
 
+### Initialize the page size
+
+To initialize the page size without controlling it, provide the page size to the `initialState` prop.
+
+```tsx
+<DataGrid
+  initialState={{
+    pagination: {
+      pageSize: 10,
+    },
+  }}
+/>
+```
+
+{{"demo": "pages/components/data-grid/pagination/PageSizeInitialState.js", "bg": "inline"}}
+
 ### Controlled page size
 
 Use the `pageSize` prop to control the size of the pages.
 
-You can use the `onPageSizeChange` to listen to changes to the page size and update the prop accordingly.
+You can use the `onPageSizeChange` prop to listen to changes to the page size and update the prop accordingly.
 
 {{"demo": "pages/components/data-grid/pagination/PageSizeControlled.js", "bg": "inline"}}
 
-## Controlled page
+## Current page
+
+### Initialize the page
+
+To initialize the page without controlling it, provide the page to the `initialState` prop.
+
+```tsx
+<DataGrid
+  initialState={{
+    pagination: {
+      page: 1,
+    },
+  }}
+/>
+```
+
+{{"demo": "pages/components/data-grid/pagination/PageInitialState.js", "bg": "inline"}}
+
+### Controlled page
 
 Use the `page` prop to control the size of the pages.
 
-You can use the `onPageChange` to listen to changes to the page size and update the prop accordingly.
+You can use the `onPageChange` prop to listen to changes to the page size and update the prop accordingly.
 
 {{"demo": "pages/components/data-grid/pagination/PageControlled.js", "bg": "inline"}}
 

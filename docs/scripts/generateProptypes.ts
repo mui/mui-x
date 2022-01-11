@@ -2,7 +2,7 @@ import * as yargs from 'yargs';
 import * as path from 'path';
 import * as fse from 'fs-extra';
 import * as prettier from 'prettier';
-import * as ttp from '@material-ui/monorepo/packages/typescript-to-proptypes/src';
+import * as ttp from '@mui/monorepo/packages/typescript-to-proptypes/src';
 import { fixBabelGeneratorIssues, fixLineEndings } from 'docs/scripts/helpers';
 
 const tsconfig = ttp.loadConfig(path.resolve(__dirname, '../../tsconfig.json'));

@@ -1,11 +1,12 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import TextField, { TextFieldProps } from '@mui/material/TextField';
+import { TextFieldProps } from '@mui/material/TextField';
 import { unstable_useId as useId } from '@mui/material/utils';
 import { GridLoadIcon } from '../../icons/index';
 import { GridFilterInputValueProps } from './GridFilterInputValueProps';
 import { GridColDef } from '../../../models/colDef/gridColDef';
 import { GridApi } from '../../../models/api/gridApi';
+import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 
 const warnedOnce = {};
 function warnDeprecatedTypeSupport(type) {
@@ -60,6 +61,7 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps & TextFieldPr
   const [filterValueState, setFilterValueState] = React.useState(item.value ?? '');
   const [applying, setIsApplying] = React.useState(false);
   const id = useId();
+  const rootProps = useGridRootProps();
   const singleSelectProps: TextFieldProps =
     type === 'singleSelect'
       ? {
@@ -116,7 +118,7 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps & TextFieldPr
   const InputProps = applying ? { endAdornment: <GridLoadIcon /> } : others.InputProps;
 
   return (
-    <TextField
+    <rootProps.components.BaseTextField
       id={id}
       label={apiRef.current.getLocaleText('filterPanelInputLabel')}
       placeholder={apiRef.current.getLocaleText('filterPanelInputPlaceholder')}
@@ -131,6 +133,7 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps & TextFieldPr
       inputRef={focusElementRef}
       {...singleSelectProps}
       {...others}
+      {...rootProps.componentsProps?.baseTextField}
     />
   );
 }

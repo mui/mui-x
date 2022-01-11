@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { GridEventListener, GridEvents } from '../../../models/events';
-import { GridComponentProps } from '../../../GridComponentProps';
+import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridRowApi } from '../../../models/api/gridRowApi';
 import {
@@ -31,7 +31,7 @@ interface GridRowsInternalCacheState {
    * The value of the properties used by the grouping when the internal cache was created
    * We are storing it instead of accessing it directly when storing the cache to avoid synchronization issues
    */
-  props: Pick<GridComponentProps, 'rowCount' | 'getRowId'>;
+  props: Pick<DataGridProcessedProps, 'rowCount' | 'getRowId'>;
 
   /**
    * The rows as they were the last time all the rows have been updated at once
@@ -58,7 +58,7 @@ function getGridRowId(
 
 interface ConvertGridRowsPropToStateParams {
   prevState: GridRowsInternalCacheState;
-  props?: Pick<GridComponentProps, 'rowCount' | 'getRowId'>;
+  props?: Pick<DataGridProcessedProps, 'rowCount' | 'getRowId'>;
   rows?: GridRowsProp;
 }
 
@@ -120,7 +120,7 @@ const getRowsStateFromCache = (
 export const useGridRows = (
   apiRef: GridApiRef,
   props: Pick<
-    GridComponentProps,
+    DataGridProcessedProps,
     'rows' | 'getRowId' | 'rowCount' | 'throttleRowsMs' | 'signature'
   >,
 ): void => {
