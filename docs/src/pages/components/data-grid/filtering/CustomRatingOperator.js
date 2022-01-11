@@ -52,17 +52,31 @@ RatingInputValue.propTypes = {
     }),
   ]),
   item: PropTypes.shape({
+    /**
+     * The column from which we want to filter the rows.
+     */
     columnField: PropTypes.string.isRequired,
+    /**
+     * Must be unique.
+     * Only useful when the model contains several items.
+     */
     id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    /**
+     * The name of the operator we want to apply.
+     */
     operatorValue: PropTypes.string,
+    /**
+     * The filtering value.
+     * The operator filtering function will decide for each row if the row values is correct compared to this value.
+     */
     value: PropTypes.any,
   }).isRequired,
 };
 
 const ratingOnlyOperators = [
   {
-    label: 'From',
-    value: 'from',
+    label: 'Above',
+    value: 'above',
     getApplyFilterFn: (filterItem) => {
       if (
         !filterItem.columnField ||
@@ -81,31 +95,47 @@ const ratingOnlyOperators = [
   },
 ];
 
+const VISIBLE_FIELDS = ['name', 'rating', 'country', 'dateCreated', 'isAdmin'];
+
 export default function CustomRatingOperator() {
-  const { data } = useDemoData({ dataSet: 'Employee', rowLength: 100 });
-  const columns = [...data.columns];
-  const [filterModel, setFilterModel] = React.useState({
-    items: [{ id: 1, columnField: 'rating', value: '3.5', operatorValue: 'from' }],
+  const { data } = useDemoData({
+    dataSet: 'Employee',
+    visibleFields: VISIBLE_FIELDS,
+    rowLength: 100,
   });
 
-  if (columns.length > 0) {
-    const ratingColumn = columns.find((col) => col.field === 'rating');
-    const newRatingColumn = {
-      ...ratingColumn,
-      filterOperators: ratingOnlyOperators,
-    };
-
-    const ratingColIndex = columns.findIndex((col) => col.field === 'rating');
-    columns[ratingColIndex] = newRatingColumn;
-  }
+  const columns = React.useMemo(
+    () =>
+      data.columns.map((col) =>
+        col.field === 'rating'
+          ? {
+              ...col,
+              filterOperators: ratingOnlyOperators,
+            }
+          : col,
+      ),
+    [data.columns],
+  );
 
   return (
     <div style={{ height: 400, width: '100%' }}>
       <DataGrid
-        rows={data.rows}
+        {...data}
         columns={columns}
-        filterModel={filterModel}
-        onFilterModelChange={(model) => setFilterModel(model)}
+        initialState={{
+          filter: {
+            filterModel: {
+              items: [
+                {
+                  id: 1,
+                  columnField: 'rating',
+                  value: '3.5',
+                  operatorValue: 'above',
+                },
+              ],
+            },
+          },
+        }}
       />
     </div>
   );

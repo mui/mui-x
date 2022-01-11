@@ -91,6 +91,12 @@ Hold down the <kbd class="key">CTRL</kbd> or <kbd class="key">Shift</kbd> (use <
 
 {{"demo": "pages/components/data-grid/sorting/SortingApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
 
+## Selectors [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
+
+{{"demo": "pages/components/data-grid/sorting/SortingSelectorsNoSnap.js", "bg": "inline", "hideToolbar": true}}
+
+More information about the selectors and how to use them on the [dedicated page](/components/data-grid/state#access-the-state)
+
 ## API
 
 - [DataGrid](/api/data-grid/data-grid/)

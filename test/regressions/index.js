@@ -17,9 +17,9 @@ LicenseInfo.setLicenseKey(
 
 const blacklist = [
   /^docs-components-(.*)(?<=NoSnap)\.png$/, // Excludes demos that we don't want
-  'docs-components-data-grid-filtering/ColumnTypeFilteringGrid.png', // Needs interaction
+  'docs-components-data-grid-filtering/RemoveBuiltInOperators.png', // Needs interaction
   'docs-components-data-grid-filtering/CustomRatingOperator.png', // Needs interaction
-  'docs-components-data-grid-filtering/ExtendNumericOperator.png', // Needs interaction
+  'docs-components-data-grid-filtering/CustomInputComponent.png', // Needs interaction
   // TODO import the Rating from @mui/material, not the lab.
   'docs-components-data-grid-components/CustomFooter.png',
   // 'docs-system-typography',

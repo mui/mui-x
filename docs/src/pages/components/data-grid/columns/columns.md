@@ -80,7 +80,7 @@ To set a minimum width for a `flex` column set the `minWidth` property in `GridC
 ### Hiding
 
 Set the column definition attribute `hide` to `true` to hide the column.
-The attribute `hideable`, when `true`, prevents the user from hiding a column through the columns panel or the "Hide" option, available in the column menu.
+The attribute `hideable`, when `false`, prevents the user from hiding a column through the columns panel or the "Hide" option, available in the column menu.
 Hiding a column using the imperative API is still possible.
 
 In this example, you can not hide the "username" column, and by default the "age" column is hidden.

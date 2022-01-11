@@ -1,7 +1,7 @@
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridEvents } from '../../../models/events';
 import { useGridApiOptionHandler } from '../../utils/useGridApiEventHandler';
-import { GridComponentProps } from '../../../GridComponentProps';
+import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 
 /**
  * @requires useGridFocus (event) - can be after, async only
@@ -10,7 +10,7 @@ import { GridComponentProps } from '../../../GridComponentProps';
 export function useGridEvents(
   apiRef: GridApiRef,
   props: Pick<
-    GridComponentProps,
+    DataGridProcessedProps,
     | 'onColumnHeaderClick'
     | 'onColumnHeaderDoubleClick'
     | 'onColumnHeaderOver'

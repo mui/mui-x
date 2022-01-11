@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { GridApiRef, useGridApiRef, DataGridPro } from '@mui/x-data-grid-pro';
-import { createRenderer, fireEvent } from '@material-ui/monorepo/test/utils';
+import { createRenderer, fireEvent } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { stub } from 'sinon';
 import { getCell } from 'test/utils/helperFn';

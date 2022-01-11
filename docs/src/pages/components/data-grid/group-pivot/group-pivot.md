@@ -61,6 +61,22 @@ Use the `groupingColDef` prop to customize the rendering of the grouping column.
 
 {{"demo": "pages/components/data-grid/group-pivot/CustomGroupingColumnTreeData.js", "bg": "inline", "defaultCodeOpen": false}}
 
+#### Accessing the grouping column field
+
+If you want to access the grouping column field, for instance, to use it with column pinning, the `GRID_TREE_DATA_GROUPING_FIELD` constant is available.
+
+```tsx
+<DataGridPro
+  treeData
+  initialState={{
+    pinnedColumns: {
+      left: [GRID_TREE_DATA_GROUPING_FIELD],
+    },
+  }}
+  {...otherProps}
+/>
+```
+
 ### Group expansion
 
 Use the `defaultGroupingExpansionDepth` prop to expand all the groups up to a given depth when loading the data.

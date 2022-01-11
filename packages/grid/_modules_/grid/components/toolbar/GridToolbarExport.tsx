@@ -2,7 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { unstable_useId as useId, useForkRef } from '@mui/material/utils';
 import MenuList from '@mui/material/MenuList';
-import Button, { ButtonProps } from '@mui/material/Button';
+import { ButtonProps } from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
 import { isHideMenuKey, isTabKey } from '../../utils/keyboardUtils';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
@@ -94,7 +94,7 @@ const GridToolbarExport = React.forwardRef<HTMLButtonElement, GridToolbarExportP
 
     return (
       <React.Fragment>
-        <Button
+        <rootProps.components.BaseButton
           ref={handleRef}
           color="primary"
           size="small"
@@ -106,9 +106,10 @@ const GridToolbarExport = React.forwardRef<HTMLButtonElement, GridToolbarExportP
           id={buttonId}
           {...other}
           onClick={handleMenuOpen}
+          {...rootProps.componentsProps?.baseButton}
         >
           {apiRef.current.getLocaleText('toolbarExport')}
-        </Button>
+        </rootProps.components.BaseButton>
         <GridMenu
           open={open}
           target={buttonRef.current}

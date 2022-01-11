@@ -7,23 +7,43 @@ import {
 } from '../filter/gridFilterSelector';
 import { gridRowTreeDepthSelector, gridRowTreeSelector } from '../rows/gridRowsSelector';
 
+/**
+ * @category Pagination
+ * @ignore - do not document.
+ */
 export const gridPaginationSelector = (state: GridState) => state.pagination;
 
+/**
+ * Get the index of the page to render if the pagination is enabled
+ * @category Pagination
+ */
 export const gridPageSelector = createSelector(
   gridPaginationSelector,
   (pagination) => pagination.page,
 );
 
+/**
+ * Get the maximum amount of rows to display on a single page if the pagination is enabled
+ * @category Pagination
+ */
 export const gridPageSizeSelector = createSelector(
   gridPaginationSelector,
   (pagination) => pagination.pageSize,
 );
 
+/**
+ * Get the amount of pages needed to display all the rows if the pagination is enabled
+ * @category Pagination
+ */
 export const gridPageCountSelector = createSelector(
   gridPaginationSelector,
   (pagination) => pagination.pageCount,
 );
 
+/**
+ * Get the index of the first and the last row to include in the current page if the pagination is enabled.
+ * @category Pagination
+ */
 export const gridPaginationRowRangeSelector = createSelector(
   gridPaginationSelector,
   gridRowTreeSelector,
@@ -79,6 +99,10 @@ export const gridPaginationRowRangeSelector = createSelector(
   },
 );
 
+/**
+ * Get the id and the model of each row to include in the current page if the pagination is enabled.
+ * @category Pagination
+ */
 export const gridPaginatedVisibleSortedGridRowEntriesSelector = createSelector(
   gridVisibleSortedRowEntriesSelector,
   gridPaginationRowRangeSelector,
@@ -94,6 +118,10 @@ export const gridPaginatedVisibleSortedGridRowEntriesSelector = createSelector(
   },
 );
 
+/**
+ * Get the id of each row to include in the current page if the pagination is enabled.
+ * @category Pagination
+ */
 export const gridPaginatedVisibleSortedGridRowIdsSelector = createSelector(
   gridVisibleSortedRowIdsSelector,
   gridPaginationRowRangeSelector,

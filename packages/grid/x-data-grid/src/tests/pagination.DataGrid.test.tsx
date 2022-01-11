@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRenderer, fireEvent, screen, waitFor } from '@material-ui/monorepo/test/utils';
+import { createRenderer, fireEvent, screen, waitFor } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import {
   DataGrid,
@@ -567,5 +567,158 @@ describe('<DataGrid /> - Pagination', () => {
     expect(getColumnValues()).to.deep.equal(['0']);
     fireEvent.click(screen.getByRole('button', { name: /next page/i }));
     expect(getColumnValues()).to.deep.equal(['1']);
+  });
+
+  describe('prop: initialState.pagination', () => {
+    it('should allow to initialize the pageSize', () => {
+      render(
+        <BaselineTestCase
+          initialState={{
+            pagination: {
+              pageSize: 2,
+            },
+          }}
+          rowsPerPageOptions={[2, 5]}
+        />,
+      );
+
+      expect(getColumnValues(0)).to.deep.equal(['0', '1']);
+    });
+
+    it('should use the pageSize control state upon the initialize state when both are defined', () => {
+      render(
+        <BaselineTestCase
+          pageSize={5}
+          initialState={{
+            pagination: {
+              pageSize: 2,
+            },
+          }}
+          rowsPerPageOptions={[2, 5]}
+        />,
+      );
+
+      expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3', '4']);
+    });
+
+    it('should not update the pageSize when updating the initial state', () => {
+      const { setProps } = render(
+        <BaselineTestCase
+          initialState={{
+            pagination: {
+              pageSize: 2,
+            },
+          }}
+          rowsPerPageOptions={[2, 5]}
+        />,
+      );
+
+      setProps({
+        initialState: {
+          pagination: {
+            pageSize: 5,
+          },
+        },
+      });
+
+      expect(getColumnValues(0)).to.deep.equal(['0', '1']);
+    });
+
+    it('should allow to update the pageSize when initialized with initialState', () => {
+      render(
+        <BaselineTestCase
+          initialState={{
+            pagination: {
+              pageSize: 2,
+            },
+          }}
+          rowsPerPageOptions={[2, 5]}
+        />,
+      );
+
+      expect(getColumnValues(0)).to.deep.equal(['0', '1']);
+
+      clock.runToLast(); // Run the timer to cleanup the listeners registered by StrictMode
+      fireEvent.mouseDown(screen.queryByLabelText('Rows per page:'));
+      expect(screen.queryAllByRole('option').length).to.equal(2);
+      fireEvent.click(screen.queryAllByRole('option')[1]);
+      expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3', '4']);
+    });
+
+    it('should allow to initialize the page', () => {
+      render(
+        <BaselineTestCase
+          pageSize={2}
+          rowsPerPageOptions={[2]}
+          initialState={{
+            pagination: {
+              page: 1,
+            },
+          }}
+        />,
+      );
+
+      expect(getColumnValues(0)).to.deep.equal(['2', '3']);
+    });
+
+    it('should use the page control state upon the initialize state when both are defined', () => {
+      render(
+        <BaselineTestCase
+          pageSize={2}
+          rowsPerPageOptions={[2]}
+          page={2}
+          initialState={{
+            pagination: {
+              page: 1,
+            },
+          }}
+        />,
+      );
+
+      expect(getColumnValues(0)).to.deep.equal(['4', '5']);
+    });
+
+    it('should not update the page when updating the initial state', () => {
+      const { setProps } = render(
+        <BaselineTestCase
+          pageSize={2}
+          rowsPerPageOptions={[2]}
+          initialState={{
+            pagination: {
+              page: 1,
+            },
+          }}
+        />,
+      );
+
+      setProps({
+        initialState: {
+          pagination: {
+            page: 2,
+          },
+        },
+      });
+
+      expect(getColumnValues(0)).to.deep.equal(['2', '3']);
+    });
+
+    it('should allow to update the page when initialized with initialState', () => {
+      render(
+        <BaselineTestCase
+          pageSize={2}
+          rowsPerPageOptions={[2]}
+          initialState={{
+            pagination: {
+              page: 1,
+            },
+          }}
+        />,
+      );
+
+      expect(getColumnValues(0)).to.deep.equal(['2', '3']);
+
+      fireEvent.click(screen.getByRole('button', { name: /next page/i }));
+      expect(getColumnValues(0)).to.deep.equal(['4', '5']);
+    });
   });
 });
