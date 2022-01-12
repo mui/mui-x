@@ -3,6 +3,6 @@ export type {
   GridColumnLookup,
   GridColumnsState,
   GridColumnsInitialState,
-  GridVisibleColumnsModel,
+  GridColumnVisibilityModel,
 } from './gridColumnsInterfaces';
 export { getGridColDef } from './gridColumnsUtils';

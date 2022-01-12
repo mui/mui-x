@@ -14,6 +14,7 @@
     "columnBuffer": { "type": { "name": "number" }, "default": "3" },
     "columnThreshold": { "type": { "name": "number" }, "default": "3" },
     "columnTypes": { "type": { "name": "object" } },
+    "columnVisibilityModel": { "type": { "name": "object" } },
     "components": { "type": { "name": "object" } },
     "componentsProps": { "type": { "name": "object" } },
     "density": {
@@ -85,8 +86,9 @@
     "onColumnVisibilityChange": {
       "type": { "name": "func" },
       "deprecated": true,
-      "deprecationInfo": "Use <code>onVisibleColumnsModelChange</code> instead."
+      "deprecationInfo": "Use <code>onColumnVisibilityModelChange</code> instead."
     },
+    "onColumnVisibilityModelChange": { "type": { "name": "func" } },
     "onEditCellPropsChange": {
       "type": { "name": "func" },
       "deprecated": true,
@@ -106,7 +108,6 @@
     "onSelectionModelChange": { "type": { "name": "func" } },
     "onSortModelChange": { "type": { "name": "func" } },
     "onStateChange": { "type": { "name": "func" } },
-    "onVisibleColumnsModelChange": { "type": { "name": "func" } },
     "page": { "type": { "name": "number" }, "default": "0" },
     "pageSize": { "type": { "name": "custom", "description": "number" }, "default": "100" },
     "paginationMode": {
@@ -149,9 +150,6 @@
         "name": "union",
         "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
       }
-    },
-    "visibleColumnsModel": {
-      "type": { "name": "arrayOf", "description": "Array&lt;number<br>&#124;&nbsp;string&gt;" }
     }
   },
   "slots": {

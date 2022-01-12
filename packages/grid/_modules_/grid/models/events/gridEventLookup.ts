@@ -23,7 +23,7 @@ import type { MuiBaseEvent } from '../muiEvent';
 import type { GridRowId, GridRowTreeNodeConfig } from '../gridRows';
 import type { GridPreProcessingGroup } from '../../hooks/core/preProcessing';
 import type { GridPinnedColumns } from '../api/gridColumnPinningApi';
-import { GridVisibleColumnsModel } from '../../hooks/features/columns/gridColumnsInterfaces';
+import { GridColumnVisibilityModel } from '../../hooks/features/columns/gridColumnsInterfaces';
 
 export interface GridRowEventLookup {
   rowClick: { params: GridRowParams; event: React.MouseEvent<HTMLElement> };
@@ -130,7 +130,7 @@ export interface GridControlledStateEventLookup {
   editRowsModelChange: { params: GridEditRowsModel };
   selectionChange: { params: GridSelectionModel };
   pinnedColumnsChange: { params: GridPinnedColumns };
-  visibleColumnsModelChange: { params: GridVisibleColumnsModel };
+  columnVisibilityModelChange: { params: GridColumnVisibilityModel };
 }
 
 export interface GridEventLookup

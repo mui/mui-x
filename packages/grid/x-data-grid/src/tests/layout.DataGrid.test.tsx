@@ -533,7 +533,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
             <DataGrid
               rows={rows}
               columns={columns}
-              initialState={{ columns: { visibleColumnsModel: ['id'] } }}
+              initialState={{ columns: { columnVisibilityModel: { firstName: false } } }}
             />
           </div>,
         );
@@ -600,7 +600,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         });
       });
 
-      it('should resize flex: 1 column when changing visibleColumnsModel to avoid exceeding grid width', () => {
+      it('should resize flex: 1 column when changing columnVisibilityModel to avoid exceeding grid width', () => {
         const TestCase = (props: DataGridProps) => (
           <div style={{ width: 300, height: 500 }}>
             <DataGrid {...props} />
@@ -631,7 +631,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
               { field: 'first', width: 100 },
               { field: 'age', width: 50 },
             ]}
-            visibleColumnsModel={['id', 'first']}
+            columnVisibilityModel={{ age: false }}
           />,
         );
 
@@ -642,7 +642,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         });
 
         setProps({
-          visibleColumnsModel: ['id', 'first', 'age'],
+          columnVisibilityModel: {},
         });
 
         firstColumn = document.querySelector('[role="columnheader"][aria-colindex="1"]');

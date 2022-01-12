@@ -26,29 +26,25 @@ describe('<DataGridPro /> - Columns Visibility', () => {
     </div>
   );
 
-  describe('prop: visibleColumnsModel and onVisibleColumnsModelChange', () => {
-    it('should allow to set the visibleColumnsModel prop', () => {
-      render(<TestDataGrid visibleColumnsModel={['id']} />);
+  describe('prop: columnVisibilityModel and onColumnVisibilityModelChange', () => {
+    it('should allow to set the columnVisibilityModel prop', () => {
+      render(<TestDataGrid columnVisibilityModel={{ idBis: false }} />);
 
       expect(getColumnHeadersTextContent()).to.deep.equal(['id']);
     });
 
-    it('should allow to update the visibleColumnsModel prop from the outside', () => {
-      const { setProps } = render(<TestDataGrid visibleColumnsModel={['id']} />);
+    it('should allow to update the columnVisibilityModel prop from the outside', () => {
+      const { setProps } = render(<TestDataGrid columnVisibilityModel={{ idBis: false }} />);
 
       expect(getColumnHeadersTextContent()).to.deep.equal(['id']);
 
-      setProps({ visibleColumnsModel: ['id', 'idBis'] });
+      setProps({
+        columnVisibilityModel: {},
+      });
       expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'idBis']);
     });
 
-    it('should respect the order of the columns not the order of the model', () => {
-      render(<TestDataGrid visibleColumnsModel={['idBis', 'id']} />);
-
-      expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'idBis']);
-    });
-
-    it('should update the visible columns when props.onVisibleColumnsModelChange and props.visibleColumnsModel are not defined', () => {
+    it('should update the visible columns when props.onColumnVisibilityModelChange and props.columnVisibilityModel are not defined', () => {
       const { getByText } = render(
         <TestDataGrid
           components={{
@@ -63,14 +59,14 @@ describe('<DataGridPro /> - Columns Visibility', () => {
       expect(getColumnHeadersTextContent()).to.deep.equal(['idBis']);
     });
 
-    it('should call onVisibleColumnsModelChange and update the visible columns when props.visibleColumnsModel is not defined', () => {
-      const onVisibleColumnsModelChange = spy();
+    it('should call onColumnVisibilityModelChange and update the visible columns when props.columnVisibilityModel is not defined', () => {
+      const onColumnVisibilityModelChange = spy();
       const { getByText } = render(
         <TestDataGrid
           components={{
             Toolbar: GridToolbar,
           }}
-          onVisibleColumnsModelChange={onVisibleColumnsModelChange}
+          onColumnVisibilityModelChange={onColumnVisibilityModelChange}
         />,
       );
 
@@ -78,19 +74,22 @@ describe('<DataGridPro /> - Columns Visibility', () => {
       fireEvent.click(getByText('Columns'));
       fireEvent.click(document.querySelector('[role="tooltip"] [name="id"]'));
       expect(getColumnHeadersTextContent()).to.deep.equal(['idBis']);
-      expect(onVisibleColumnsModelChange.callCount).to.equal(1);
-      expect(onVisibleColumnsModelChange.lastCall.firstArg).to.deep.equal(['idBis']);
+      expect(onColumnVisibilityModelChange.callCount).to.equal(1);
+      expect(onColumnVisibilityModelChange.lastCall.firstArg).to.deep.equal({
+        id: false,
+        idBis: true,
+      });
     });
 
-    it('should call onVisibleColumnsModelChange with the new model when visibleColumnsModel is controlled', () => {
-      const onVisibleColumnsModelChange = spy();
+    it('should call onColumnVisibilityModelChange with the new model when columnVisibilityModel is controlled', () => {
+      const onColumnVisibilityModelChange = spy();
       const { getByText } = render(
         <TestDataGrid
           components={{
             Toolbar: GridToolbar,
           }}
-          visibleColumnsModel={['id']}
-          onVisibleColumnsModelChange={onVisibleColumnsModelChange}
+          columnVisibilityModel={{ idBis: false }}
+          onColumnVisibilityModelChange={onColumnVisibilityModelChange}
         />,
       );
 
@@ -98,19 +97,22 @@ describe('<DataGridPro /> - Columns Visibility', () => {
       fireEvent.click(getByText('Columns'));
       fireEvent.click(document.querySelector('[role="tooltip"] [name="id"]'));
       expect(getColumnHeadersTextContent()).to.deep.equal(['id']);
-      expect(onVisibleColumnsModelChange.callCount).to.equal(1);
-      expect(onVisibleColumnsModelChange.lastCall.firstArg).to.deep.equal([]);
+      expect(onColumnVisibilityModelChange.callCount).to.equal(1);
+      expect(onColumnVisibilityModelChange.lastCall.firstArg).to.deep.equal({
+        id: false,
+        idBis: false,
+      });
     });
 
-    it('should call onVisibleColumnsModelChange with the new model when toggling all rows', () => {
-      const onVisibleColumnsModelChange = spy();
+    it('should call onColumnVisibilityModelChange with the new model when toggling all rows', () => {
+      const onColumnVisibilityModelChange = spy();
       const { getByText } = render(
         <TestDataGrid
           components={{
             Toolbar: GridToolbar,
           }}
-          visibleColumnsModel={['id']}
-          onVisibleColumnsModelChange={onVisibleColumnsModelChange}
+          columnVisibilityModel={{ idBis: false }}
+          onColumnVisibilityModelChange={onColumnVisibilityModelChange}
         />,
       );
 
@@ -118,22 +120,25 @@ describe('<DataGridPro /> - Columns Visibility', () => {
 
       fireEvent.click(getByText('Columns'));
       fireEvent.click(getByText('Hide all'));
-      expect(onVisibleColumnsModelChange.callCount).to.equal(1);
-      expect(onVisibleColumnsModelChange.lastCall.firstArg).to.deep.equal([]);
+      expect(onColumnVisibilityModelChange.callCount).to.equal(1);
+      expect(onColumnVisibilityModelChange.lastCall.firstArg).to.deep.equal({
+        idBis: false,
+        id: false,
+      });
 
       fireEvent.click(getByText('Show all'));
-      expect(onVisibleColumnsModelChange.callCount).to.equal(2);
-      expect(onVisibleColumnsModelChange.lastCall.firstArg).to.deep.equal(['id', 'idBis']);
+      expect(onColumnVisibilityModelChange.callCount).to.equal(2);
+      expect(onColumnVisibilityModelChange.lastCall.firstArg).to.deep.equal({ idBis: true });
     });
   });
 
-  describe('prop: initialState.columns.visibleColumnsModel', () => {
-    it('should allow to initialize the visibleColumnsModel', () => {
+  describe('prop: initialState.columns.columnVisibilityModel', () => {
+    it('should allow to initialize the columnVisibilityModel', () => {
       render(
         <TestDataGrid
           initialState={{
             columns: {
-              visibleColumnsModel: ['id'],
+              columnVisibilityModel: { idBis: false },
             },
           }}
         />,
@@ -145,16 +150,16 @@ describe('<DataGridPro /> - Columns Visibility', () => {
     it('should use the control state upon the initialize state when both are defined', () => {
       render(
         <TestDataGrid
-          visibleColumnsModel={[]}
+          columnVisibilityModel={{}}
           initialState={{
             columns: {
-              visibleColumnsModel: ['id'],
+              columnVisibilityModel: { idBis: false },
             },
           }}
         />,
       );
 
-      expect(getColumnHeadersTextContent()).to.deep.equal([]);
+      expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'idBis']);
     });
 
     it('should not update the visible columns when updating the initial state', () => {
@@ -162,7 +167,7 @@ describe('<DataGridPro /> - Columns Visibility', () => {
         <TestDataGrid
           initialState={{
             columns: {
-              visibleColumnsModel: ['id'],
+              columnVisibilityModel: { idBis: false },
             },
           }}
         />,
@@ -171,7 +176,7 @@ describe('<DataGridPro /> - Columns Visibility', () => {
       setProps({
         initialState: {
           columns: {
-            visibleColumnsModel: [],
+            columnVisibilityModel: {},
           },
         },
       });
@@ -184,7 +189,7 @@ describe('<DataGridPro /> - Columns Visibility', () => {
         <TestDataGrid
           initialState={{
             columns: {
-              visibleColumnsModel: ['id'],
+              columnVisibilityModel: { idBis: false },
             },
           }}
           components={{
@@ -212,7 +217,7 @@ describe('<DataGridPro /> - Columns Visibility', () => {
         <TestDataGrid
           initialState={{
             columns: {
-              visibleColumnsModel: ['id', 'idBis'],
+              columnVisibilityModel: {},
             },
           }}
           columns={[{ field: 'id' }, { field: 'idBis', hide: true }]}
@@ -225,7 +230,7 @@ describe('<DataGridPro /> - Columns Visibility', () => {
     it('should not hide columns with `hide: true` if the model is controlled', () => {
       render(
         <TestDataGrid
-          visibleColumnsModel={['id', 'idBis']}
+          columnVisibilityModel={{}}
           columns={[{ field: 'id' }, { field: 'idBis', hide: true }]}
         />,
       );

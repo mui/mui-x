@@ -18,7 +18,7 @@ import { GridFilterModel } from '../gridFilterModel';
 import { GridInputSelectionModel, GridSelectionModel } from '../gridSelectionModel';
 import { GridInitialState } from '../gridState';
 import { GridSlotsComponentsProps } from '../gridSlotsComponentsProps';
-import { GridVisibleColumnsModel } from '../../hooks/features/columns/gridColumnsInterfaces';
+import { GridColumnVisibilityModel } from '../../hooks/features/columns/gridColumnsInterfaces';
 
 /**
  * The props users can give to the `DataGrid` component.
@@ -523,11 +523,11 @@ export interface DataGridPropsWithoutDefaultValue extends CommonProps {
   onColumnOrderChange?: GridEventListener<GridEvents.columnOrderChange>;
   /**
    * Callback fired when a column visibility changes.
-   * Only works when no `visibleColumnsModel` is provided and if we change the visibility of a single column at a time.
+   * Only works when no `columnVisibilityModel` is provided and if we change the visibility of a single column at a time.
    * @param {GridColumnVisibilityChangeParams} params With all properties from [[GridColumnVisibilityChangeParams]].
    * @param {MuiEvent<{}>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
-   * @deprecated Use `onVisibleColumnsModelChange` instead.
+   * @deprecated Use `onColumnVisibilityModelChange` instead.
    */
   onColumnVisibilityChange?: GridEventListener<GridEvents.columnVisibilityChange>;
   /**
@@ -619,14 +619,14 @@ export interface DataGridPropsWithoutDefaultValue extends CommonProps {
    * Set the visible columns model of the grid.
    * If defined, the grid will ignore the `hide` property in [[GridColDef]].
    */
-  visibleColumnsModel?: GridVisibleColumnsModel;
+  columnVisibilityModel?: GridColumnVisibilityModel;
   /**
    * Callback fired when the visible columns model changes.
-   * @param {GridVisibleColumnsModel} model The new model.
+   * @param {GridColumnVisibilityModel} model The new model.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
-  onVisibleColumnsModelChange?: (
-    model: GridVisibleColumnsModel,
+  onColumnVisibilityModelChange?: (
+    model: GridColumnVisibilityModel,
     details: GridCallbackDetails,
   ) => void;
   /**

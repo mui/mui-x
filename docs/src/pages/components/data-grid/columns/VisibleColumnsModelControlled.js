@@ -9,20 +9,19 @@ export default function VisibleColumnsModelControlled() {
     maxColumns: 20,
   });
 
-  const [visibleColumnsModel, setVisibleColumnsModel] = React.useState([
-    'desk',
-    'commodity',
-    'quantity',
-    'status',
-  ]);
+  const [columnVisibilityModel, setColumnVisibilityModel] = React.useState({
+    status: false,
+  });
 
   return (
     <div style={{ height: 300, width: '100%' }}>
       <DataGrid
         {...data}
         loading={loading}
-        visibleColumnsModel={visibleColumnsModel}
-        onVisibleColumnsModelChange={(newModel) => setVisibleColumnsModel(newModel)}
+        columnVisibilityModel={columnVisibilityModel}
+        onColumnVisibilityModelChange={(newModel) =>
+          setColumnVisibilityModel(newModel)
+        }
       />
     </div>
   );

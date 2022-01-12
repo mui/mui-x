@@ -7,15 +7,15 @@ export type GridColumnRawLookup = { [field: string]: GridColDef | GridStateColDe
 export interface GridColumnsState {
   all: string[];
   lookup: GridColumnLookup;
-  visibleColumnsModel: GridVisibleColumnsModel;
+  columnVisibilityModel: GridColumnVisibilityModel;
 }
 
 export interface GridColumnsInitialState {
-  visibleColumnsModel?: GridVisibleColumnsModel;
+  columnVisibilityModel?: GridColumnVisibilityModel;
 }
 
 export type GridColumnsRawState = Omit<GridColumnsState, 'lookup'> & {
   lookup: GridColumnRawLookup;
 };
 
-export type GridVisibleColumnsModel = GridRowId[];
+export type GridColumnVisibilityModel = Record<GridRowId, boolean>;

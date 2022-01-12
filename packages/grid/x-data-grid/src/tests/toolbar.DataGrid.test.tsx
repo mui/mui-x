@@ -226,7 +226,7 @@ describe('<DataGrid /> - Toolbar', () => {
             }}
             initialState={{
               columns: {
-                visibleColumnsModel: [],
+                columnVisibilityModel: { id: false, brand: false },
               },
             }}
           />

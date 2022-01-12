@@ -14,29 +14,16 @@ export const allGridColumnsSelector = createSelector(
   (allFields, lookup) => allFields.map((field) => lookup[field]),
 );
 
-export const gridVisibleColumnsModelSelector = createSelector(
+export const gridColumnVisibilityModelSelector = createSelector(
   gridColumnsSelector,
-  (columnsState) => columnsState.visibleColumnsModel,
-);
-
-export const gridVisibleColumnsModelLookupSelector = createSelector(
-  gridVisibleColumnsModelSelector,
-  (visibleColumnsModel) => {
-    const visibleColumnsLookup: Record<string, true> = {};
-
-    visibleColumnsModel.forEach((field) => {
-      visibleColumnsLookup[field] = true;
-    });
-
-    return visibleColumnsLookup;
-  },
+  (columnsState) => columnsState.columnVisibilityModel,
 );
 
 export const visibleGridColumnsSelector = createSelector(
   allGridColumnsSelector,
-  gridVisibleColumnsModelLookupSelector,
-  (allColumns, visibleColumnsModelLookup) =>
-    allColumns.filter((column) => visibleColumnsModelLookup[column.field]),
+  gridColumnVisibilityModelSelector,
+  (allColumns, columnVisibilityModel) =>
+    allColumns.filter((column) => columnVisibilityModel[column.field] !== false),
 );
 
 export const gridVisibleColumnFieldsSelector = createSelector(

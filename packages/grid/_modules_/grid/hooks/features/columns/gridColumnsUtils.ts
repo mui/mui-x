@@ -2,7 +2,7 @@ import {
   GridColumnLookup,
   GridColumnsState,
   GridColumnsRawState,
-  GridVisibleColumnsModel,
+  GridColumnVisibilityModel,
 } from './gridColumnsInterfaces';
 import {
   DEFAULT_GRID_COL_TYPE_KEY,
@@ -15,11 +15,7 @@ import {
   GridStateColDef,
 } from '../../../models';
 import { GridPreProcessingGroup } from '../../core/preProcessing';
-import {
-  gridColumnsSelector,
-  gridVisibleColumnsModelSelector,
-  gridVisibleColumnsModelLookupSelector,
-} from './gridColumnsSelector';
+import { gridColumnsSelector, gridColumnVisibilityModelSelector } from './gridColumnsSelector';
 
 export const computeColumnTypes = (customColumnTypes: GridColumnTypesRecord = {}) => {
   const allColumnTypes = { ...getGridDefaultColumnTypes(), ...customColumnTypes };
@@ -41,18 +37,13 @@ export const hydrateColumnsWidth = (
   viewportInnerWidth: number,
 ): GridColumnsState => {
   const columnsLookup: GridColumnLookup = {};
-  const visibleColumnsModelLookup = rawState.visibleColumnsModel.reduce((acc, el) => {
-    acc[el] = true;
-    return acc;
-  }, {});
-
   let totalFlexUnits = 0;
   let widthToAllocateInFlex = viewportInnerWidth;
 
   // Compute the width of non-flex columns and how much width must be allocated between the flex columns
   rawState.all.forEach((columnField) => {
     const newColumn = { ...rawState.lookup[columnField] } as GridStateColDef;
-    if (!visibleColumnsModelLookup[columnField]) {
+    if (rawState.columnVisibilityModel[columnField] === false) {
       newColumn.computedWidth = 0;
     } else {
       const minWidth = newColumn.minWidth ?? GRID_STRING_COL_DEF.minWidth!;
@@ -106,95 +97,92 @@ export const createColumnsState = ({
   apiRef,
   columnsToUpsert,
   columnsTypes,
-  currentVisibleColumnsModel = gridVisibleColumnsModelSelector(apiRef.current.state),
-  shouldRegenVisibleColumnsModelFromColumns,
+  currentColumnVisibilityModel = gridColumnVisibilityModelSelector(apiRef.current.state),
+  shouldRegenColumnVisibilityModelFromColumns,
   reset,
 }: {
   apiRef: GridApiRef;
   columnsToUpsert: GridColDef[];
   columnsTypes: GridColumnTypesRecord;
-  currentVisibleColumnsModel?: GridVisibleColumnsModel;
-  shouldRegenVisibleColumnsModelFromColumns: boolean;
+  currentColumnVisibilityModel?: GridColumnVisibilityModel;
+  shouldRegenColumnVisibilityModelFromColumns: boolean;
   reset: boolean;
 }) => {
-  let columnsStateWithoutVisibleColumnsModel: Omit<GridColumnsRawState, 'visibleColumnsModel'>;
+  let columnsStateWithoutColumnVisibilityModel: Omit<GridColumnsRawState, 'columnVisibilityModel'>;
   if (reset) {
-    columnsStateWithoutVisibleColumnsModel = {
+    columnsStateWithoutColumnVisibilityModel = {
       all: [],
       lookup: {},
     };
   } else {
     const currentState = gridColumnsSelector(apiRef.current.state);
-    columnsStateWithoutVisibleColumnsModel = {
+    columnsStateWithoutColumnVisibilityModel = {
       all: [...currentState.all],
       lookup: { ...currentState.lookup },
     };
   }
 
   columnsToUpsert.forEach((newColumn) => {
-    if (columnsStateWithoutVisibleColumnsModel.lookup[newColumn.field] == null) {
+    if (columnsStateWithoutColumnVisibilityModel.lookup[newColumn.field] == null) {
       // New Column
-      columnsStateWithoutVisibleColumnsModel.lookup[newColumn.field] = {
+      columnsStateWithoutColumnVisibilityModel.lookup[newColumn.field] = {
         ...getGridColDef(columnsTypes, newColumn.type), // TODO v6: Inline `getGridColDef`
         ...newColumn,
       };
-      columnsStateWithoutVisibleColumnsModel.all.push(newColumn.field);
+      columnsStateWithoutColumnVisibilityModel.all.push(newColumn.field);
     } else {
-      columnsStateWithoutVisibleColumnsModel.lookup[newColumn.field] = {
-        ...columnsStateWithoutVisibleColumnsModel.lookup[newColumn.field],
+      columnsStateWithoutColumnVisibilityModel.lookup[newColumn.field] = {
+        ...columnsStateWithoutColumnVisibilityModel.lookup[newColumn.field],
         ...newColumn,
       };
     }
   });
 
-  const columnsStateWithPreProcessing: Omit<GridColumnsRawState, 'visibleColumnsModel'> =
+  const columnsStateWithPreProcessing: Omit<GridColumnsRawState, 'columnVisibilityModel'> =
     apiRef.current.unstable_applyPreProcessors(
       GridPreProcessingGroup.hydrateColumns,
-      columnsStateWithoutVisibleColumnsModel,
+      columnsStateWithoutColumnVisibilityModel,
     );
 
   // TODO: In v6 remove the sync between the columns `hide` option and the model.
-  let visibleColumnsModel: GridVisibleColumnsModel;
-  if (shouldRegenVisibleColumnsModelFromColumns) {
+  let columnVisibilityModel: GridColumnVisibilityModel = {};
+  if (shouldRegenColumnVisibilityModelFromColumns) {
     if (reset) {
-      visibleColumnsModel = columnsStateWithPreProcessing.all.filter(
-        (field) => !columnsStateWithPreProcessing.lookup[field].hide,
-      );
+      columnsStateWithPreProcessing.all.forEach((field) => {
+        columnVisibilityModel[field] = !columnsStateWithoutColumnVisibilityModel.lookup[field].hide;
+      });
     } else {
-      const currentVisibleColumnsModelLookup = gridVisibleColumnsModelLookupSelector(
-        apiRef.current.state,
-      );
-      const newVisibleColumnsModelLookup = { ...currentVisibleColumnsModelLookup };
+      const newColumnVisibilityModel = { ...currentColumnVisibilityModel };
       let hasModelChanged = false;
 
       columnsStateWithPreProcessing.all.forEach((field) => {
-        const isVisibleBefore = currentVisibleColumnsModelLookup[field];
+        const isVisibleBefore = currentColumnVisibilityModel[field] ?? true;
         const isVisibleAfter = !columnsStateWithPreProcessing.lookup[field].hide;
 
         if (isVisibleAfter !== isVisibleBefore) {
           hasModelChanged = true;
 
           if (isVisibleAfter) {
-            newVisibleColumnsModelLookup[field] = true;
+            newColumnVisibilityModel[field] = true;
           } else {
-            delete newVisibleColumnsModelLookup[field];
+            newColumnVisibilityModel[field] = false;
           }
         }
       });
 
       if (hasModelChanged) {
-        visibleColumnsModel = Object.keys(newVisibleColumnsModelLookup);
+        columnVisibilityModel = newColumnVisibilityModel;
       } else {
-        visibleColumnsModel = currentVisibleColumnsModel;
+        columnVisibilityModel = currentColumnVisibilityModel;
       }
     }
   } else {
-    visibleColumnsModel = currentVisibleColumnsModel;
+    columnVisibilityModel = currentColumnVisibilityModel;
   }
 
   const columnsState: GridColumnsRawState = {
     ...columnsStateWithPreProcessing,
-    visibleColumnsModel,
+    columnVisibilityModel,
   };
 
   return hydrateColumnsWidth(

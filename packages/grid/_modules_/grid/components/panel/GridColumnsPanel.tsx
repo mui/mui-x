@@ -6,7 +6,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import { styled } from '@mui/material/styles';
 import {
   allGridColumnsSelector,
-  gridVisibleColumnsModelLookupSelector,
+  gridColumnVisibilityModelSelector,
 } from '../../hooks/features/columns/gridColumnsSelector';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
@@ -62,7 +62,7 @@ export function GridColumnsPanel() {
   const apiRef = useGridApiContext();
   const searchInputRef = React.useRef<HTMLInputElement>(null);
   const columns = useGridSelector(apiRef, allGridColumnsSelector);
-  const visibleColumnsModelLookup = useGridSelector(apiRef, gridVisibleColumnsModelLookupSelector);
+  const columnVisibilityModel = useGridSelector(apiRef, gridColumnVisibilityModelSelector);
   const rootProps = useGridRootProps();
   const [searchValue, setSearchValue] = React.useState('');
   const ownerState = { classes: rootProps.classes };
@@ -70,12 +70,12 @@ export function GridColumnsPanel() {
 
   const toggleColumn = (event: React.MouseEvent<HTMLButtonElement>) => {
     const { name: field } = event.target as HTMLInputElement;
-    apiRef.current.setColumnVisibility(field, !visibleColumnsModelLookup[field]);
+    apiRef.current.setColumnVisibility(field, columnVisibilityModel[field] === false);
   };
 
   const toggleAllColumns = React.useCallback(
     (isVisible: boolean) => {
-      // TODO: In v6 call `setVisibleColumnsModel` directly
+      // TODO: In v6 call `setColumnVisibilityModel` directly
       apiRef.current.updateColumns(
         columns.map((col) => {
           if (col.hideable !== false) {
@@ -132,7 +132,7 @@ export function GridColumnsPanel() {
                 control={
                   <rootProps.components.BaseSwitch
                     disabled={column.hideable === false}
-                    checked={!!visibleColumnsModelLookup[column.field]}
+                    checked={columnVisibilityModel[column.field] !== false}
                     onClick={toggleColumn}
                     name={column.field}
                     color="primary"

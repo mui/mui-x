@@ -286,18 +286,18 @@ export enum GridEvents {
    */
   filterModelChange = 'filterModelChange',
   /**
-   * Fired when the visible columns model changes
+   * Fired when the column visibility model changes
    */
-  visibleColumnsModelChange = 'visibleColumnsModelChange',
+  columnVisibilityModelChange = 'columnVisibilityModelChange',
   /**
    * Fired when the state of the grid is updated.
    */
   stateChange = 'stateChange',
   /**
    * Fired when a column visibility changes.
-   * Is not fired when the `visibleColumnsModel` is controlled.
+   * Is not fired when the `columnVisibilityModel` is controlled or initialized.
    * Is not fired when toggling all column's visibility at once.
-   * @deprecated Use `GridEvents.visibleColumnsModelChange` instead.
+   * @deprecated Use `GridEvents.columnVisibilityModelChange` instead.
    */
   columnVisibilityChange = 'columnVisibilityChange',
   /**

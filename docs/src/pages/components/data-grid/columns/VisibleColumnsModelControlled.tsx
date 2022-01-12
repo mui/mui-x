@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useDemoData } from '@mui/x-data-grid-generator';
-import { DataGrid, GridVisibleColumnsModel } from '@mui/x-data-grid';
+import { DataGrid, GridColumnVisibilityModel } from '@mui/x-data-grid';
 
 export default function VisibleColumnsModelControlled() {
   const { data, loading } = useDemoData({
@@ -9,21 +9,18 @@ export default function VisibleColumnsModelControlled() {
     maxColumns: 20,
   });
 
-  const [visibleColumnsModel, setVisibleColumnsModel] =
-    React.useState<GridVisibleColumnsModel>([
-      'desk',
-      'commodity',
-      'quantity',
-      'status',
-    ]);
+  const [columnVisibilityModel, setColumnVisibilityModel] =
+    React.useState<GridColumnVisibilityModel>({ status: false });
 
   return (
     <div style={{ height: 300, width: '100%' }}>
       <DataGrid
         {...data}
         loading={loading}
-        visibleColumnsModel={visibleColumnsModel}
-        onVisibleColumnsModelChange={(newModel) => setVisibleColumnsModel(newModel)}
+        columnVisibilityModel={columnVisibilityModel}
+        onColumnVisibilityModelChange={(newModel) =>
+          setColumnVisibilityModel(newModel)
+        }
       />
     </div>
   );

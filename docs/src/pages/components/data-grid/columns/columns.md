@@ -337,7 +337,7 @@ To initialize the visible columns without controlling them, provide the model to
 <DataGrid
   initialState={{
     columns: {
-      visibleColumnsModel: ['id'],
+      columnsVisibilityModel: { status: false },
     },
   }}
 />
@@ -347,18 +347,18 @@ To initialize the visible columns without controlling them, provide the model to
 
 ### Controlled visible columns
 
-Use the `visibleColumnsModel` prop to control the visible columns.
-You can use the `onVisibleColumnsModelChange` prop to listen to the changes to the visible columns and update the prop accordingly.
+Use the `columnVisibilityModel` prop to control the visible columns.
+You can use the `onColumnVisibilityModelChange` prop to listen to the changes to the visible columns and update the prop accordingly.
 
 ```tsx
-<DataGrid visibleColumnsModel={['id']} />
+<DataGrid columnVisibilityModel={{ status: false }} />
 ```
 
 {{"demo": "pages/components/data-grid/columns/VisibleColumnsModelControlled.js", "bg": "inline"}}
 
 ### Column `hide` property (deprecated)
 
-Before the introduction of the `visibleColumnsModel`, the columns could be hidden by setting the `hide` property in `GridColDef` to `true`.
+Before the introduction of the `columnVisibilityModel`, the columns could be hidden by setting the `hide` property in `GridColDef` to `true`.
 This method still works but will be removed on the next major release.
 
 {{"demo": "pages/components/data-grid/columns/ColumnHiding.js", "bg": "inline"}}

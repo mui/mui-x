@@ -255,7 +255,7 @@ describe('<DataGridPro /> - Export', () => {
               {...baselineProps}
               apiRef={apiRef}
               columns={[{ field: 'id' }, { field: 'brand', headerName: 'Brand' }]}
-              initialState={{ columns: { visibleColumnsModel: ['id'] } }}
+              initialState={{ columns: { columnVisibilityModel: { brand: false } } }}
               rows={[
                 {
                   id: 0,
@@ -316,7 +316,7 @@ describe('<DataGridPro /> - Export', () => {
               {...baselineProps}
               apiRef={apiRef}
               columns={[{ field: 'id' }, { field: 'brand', headerName: 'Brand' }]}
-              initialState={{ columns: { visibleColumnsModel: ['id'] } }}
+              initialState={{ columns: { columnVisibilityModel: { brand: false } } }}
               rows={[
                 {
                   id: 0,
@@ -416,7 +416,7 @@ describe('<DataGridPro /> - Export', () => {
               {...baselineProps}
               apiRef={apiRef}
               columns={[{ field: 'id' }, { field: 'brand', headerName: 'Brand' }]}
-              initialState={{ columns: { visibleColumnsModel: ['id'] } }}
+              initialState={{ columns: { columnVisibilityModel: { brand: false } } }}
               rows={[
                 {
                   id: 0,
@@ -475,7 +475,7 @@ describe('<DataGridPro /> - Export', () => {
       ).to.equal(['id,Brand', '0,Nike', '1,Adidas'].join('\r\n'));
     });
 
-    it('should export column defined in params.fields even if `visibleColumnsModel` does not include the field or column.disableExport=true', () => {
+    it('should export column defined in params.fields even if `columnVisibilityModel` does not include the field or column.disableExport=true', () => {
       const TestCaseCSVExport = () => {
         apiRef = useGridApiRef();
         return (
@@ -487,7 +487,7 @@ describe('<DataGridPro /> - Export', () => {
                 { field: 'id', disableExport: true },
                 { field: 'brand', headerName: 'Brand' },
               ]}
-              initialState={{ columns: { visibleColumnsModel: ['id'] } }}
+              initialState={{ columns: { columnVisibilityModel: { brand: false } } }}
               rows={[
                 {
                   id: 0,

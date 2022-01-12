@@ -109,8 +109,14 @@
   },
   {
     "name": "columnVisibilityChange",
-    "description": "Fired when a column visibility changes.\nIs not fired when the <code>visibleColumnsModel</code> is controlled.\nIs not fired when toggling all column&#39;s visibility at once.",
+    "description": "Fired when a column visibility changes.\nIs not fired when the <code>columnVisibilityModel</code> is controlled or initialized.\nIs not fired when toggling all column&#39;s visibility at once.",
     "params": "GridColumnVisibilityChangeParams",
+    "event": "MuiEvent<{}>"
+  },
+  {
+    "name": "columnVisibilityModelChange",
+    "description": "Fired when the column visibility model changes",
+    "params": "GridColumnVisibilityModel",
     "event": "MuiEvent<{}>"
   },
   {
@@ -261,12 +267,6 @@
     "name": "viewportInnerSizeChange",
     "description": "Fired when the inner size of the viewport changes. Called with an ElementSize object.",
     "params": "ElementSize",
-    "event": "MuiEvent<{}>"
-  },
-  {
-    "name": "visibleColumnsModelChange",
-    "description": "Fired when the visible columns model changes",
-    "params": "GridVisibleColumnsModel",
     "event": "MuiEvent<{}>"
   }
 ]
