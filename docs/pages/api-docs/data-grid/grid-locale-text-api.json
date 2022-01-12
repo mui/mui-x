@@ -1,0 +1,11 @@
+{
+  "name": "GridLocaleTextApi",
+  "description": "The grid locale text API apiRef.",
+  "properties": [
+    {
+      "name": "getLocaleText",
+      "description": "Returns the translation for the <code>key</code>.",
+      "type": "<T extends GridTranslationKeys>(key: T) => GridLocaleText[T]"
+    }
+  ]
+}

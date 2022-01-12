@@ -1,0 +1,46 @@
+{
+  "name": "GridRowApi",
+  "description": "The Row API interface that is available in the grid `apiRef`.",
+  "properties": [
+    {
+      "name": "getAllRowIds",
+      "description": "Gets the list of row ids.",
+      "type": "() => GridRowId[]"
+    },
+    {
+      "name": "getRow",
+      "description": "Gets the row data with a given id.",
+      "type": "(id: GridRowId) => GridRowModel | null"
+    },
+    {
+      "name": "getRowModels",
+      "description": "Gets the full set of rows as Map&lt;GridRowId, GridRowModel&gt;.",
+      "type": "() => Map<GridRowId, GridRowModel>"
+    },
+    {
+      "name": "getRowNode",
+      "description": "Gets the row node from the internal tree structure.",
+      "type": "(id: GridRowId) => GridRowTreeNodeConfig | null"
+    },
+    {
+      "name": "getRowsCount",
+      "description": "Gets the total number of rows in the grid.",
+      "type": "() => number"
+    },
+    {
+      "name": "setRowChildrenExpansion",
+      "description": "Expand or collapse a row children.",
+      "type": "(id: GridRowId, isExpanded: boolean) => void"
+    },
+    {
+      "name": "setRows",
+      "description": "Sets a new set of rows.",
+      "type": "(rows: GridRowModel[]) => void"
+    },
+    {
+      "name": "updateRows",
+      "description": "Allows to updates, insert and delete rows in a single call.",
+      "type": "(updates: GridRowModelUpdate[]) => void"
+    }
+  ]
+}

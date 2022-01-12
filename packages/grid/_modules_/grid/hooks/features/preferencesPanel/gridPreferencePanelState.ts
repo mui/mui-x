@@ -5,4 +5,4 @@ export interface GridPreferencePanelState {
   openedPanelValue?: GridPreferencePanelsValue;
 }
 
-export type GridPreferencePanelInitialState = GridPreferencePanelState;
+export interface GridPreferencePanelInitialState extends GridPreferencePanelState {}

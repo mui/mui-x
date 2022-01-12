@@ -9,6 +9,7 @@ import { FinalizationRegistryBasedCleanupTracking } from '../../utils/cleanupTra
 /**
  * Signal to the underlying logic what version of the public component API
  * of the data grid is exposed.
+ * @ignore
  */
 export enum GridSignature {
   DataGrid = 'DataGrid',

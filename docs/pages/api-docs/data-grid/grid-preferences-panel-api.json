@@ -1,0 +1,16 @@
+{
+  "name": "GridPreferencesPanelApi",
+  "description": "The preferences panel API interface that is available in the grid apiRef.",
+  "properties": [
+    {
+      "name": "hidePreferences",
+      "description": "Hides the preferences panel.",
+      "type": "() => void"
+    },
+    {
+      "name": "showPreferences",
+      "description": "Displays the preferences panel. The <code>newValue</code> argument controls the content of the panel.",
+      "type": "(newValue: GridPreferencePanelsValue) => void"
+    }
+  ]
+}

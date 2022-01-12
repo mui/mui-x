@@ -7,116 +7,119 @@ import {
   escapeCell,
   getSymbolDescription,
   getSymbolJSDocTags,
-  linkify,
+  linkifyComment,
   Project,
   Projects,
   stringifySymbol,
   writePrettifiedFile,
-  DocumentedInterfaces,
-  ProjectNames,
+  DocumentedTypes,
+  SymbolCommonFields,
+  ParsedProperty,
+  ParsedType,
+  ParsedEnumMember,
+  linkifyCode,
 } from './utils';
 
-interface ParsedObject {
-  name: string;
-  project: ProjectNames;
-  description?: string;
-  properties: ParsedProperty[];
-  tags: { [tagName: string]: ts.JSDocTagInfo };
-}
-
-interface ParsedProperty {
-  name: string;
-  description: string;
-  tags: { [tagName: string]: ts.JSDocTagInfo };
-  isOptional: boolean;
-  symbol: ts.Symbol;
-  typeStr: string;
-}
-
-const INTERFACES_WITH_DEDICATED_PAGES = [
-  // apiRef
-  'GridApi',
-  'GridSelectionApi',
-  'GridFilterApi',
-  'GridSortApi',
-  'GridPaginationApi',
-  'GridCsvExportApi',
-  'GridScrollApi',
-  'GridEditRowApi',
-  'GridColumnPinningApi',
-  'GridPrintExportApi',
-  'GridDisableVirtualizationApi',
-
-  // Params
-  'GridCellParams',
-  'GridRowParams',
-
-  // Others
-  'GridColDef',
-  'GridCsvExportOptions',
-  'GridPrintExportOptions',
-
-  // Filters
-  'GridFilterModel',
-  'GridFilterItem',
-  'GridFilterOperator',
-];
+const getSymbolCommonFields = (symbol: ts.Symbol, project: Project): SymbolCommonFields => ({
+  name: symbol.name,
+  description: getSymbolDescription(symbol, project),
+  tags: getSymbolJSDocTags(symbol),
+});
 
 const parseProperty = (propertySymbol: ts.Symbol, project: Project): ParsedProperty => ({
-  name: propertySymbol.name,
-  description: getSymbolDescription(propertySymbol, project),
-  tags: getSymbolJSDocTags(propertySymbol),
+  ...getSymbolCommonFields(propertySymbol, project),
   symbol: propertySymbol,
   isOptional: !!propertySymbol.declarations?.find(ts.isPropertySignature)?.questionToken,
   typeStr: stringifySymbol(propertySymbol, project),
 });
 
-const parseInterfaceSymbol = (symbol: ts.Symbol, project: Project): ParsedObject | null => {
-  let resolvedSymbol = symbol;
-
-  // If the export is done using `export type { XXX } from './module'`
-  // We must go to the root declaration
-  while (resolvedSymbol.declarations && ts.isExportSpecifier(resolvedSymbol.declarations[0])) {
-    if (ts.isExportSpecifier(symbol.declarations![0]!)) {
-      const sourceFile = project.checker.getSymbolAtLocation(
-        symbol.declarations![0].parent.parent.moduleSpecifier!,
-      );
-      const sourceFileDeclaration = sourceFile?.declarations?.find((el) =>
-        ts.isSourceFile(el),
-      ) as ts.SourceFile;
-      const exports = project.checker.getExportsOfModule(
-        project.checker.getSymbolAtLocation(sourceFileDeclaration)!,
-      );
-      resolvedSymbol = exports.find((el) => el.name === symbol.name)!;
-    }
-  }
-
-  const declaration = resolvedSymbol.declarations![0];
-  if (!ts.isInterfaceDeclaration(declaration) && !ts.isExportSpecifier(declaration)) {
+/**
+ * For export declarations (eg: `export type { XXX } from './modules`), we take the code and the comments from the resolved interface.
+ * For type alias (eg: `export type XXX = YYY`), we take the code from the resolved interface and the comment from the root interface.
+ */
+const resolveTypeAliasOrExportDeclaration = (
+  symbol: ts.Symbol,
+  project: Project,
+): ts.Symbol | null => {
+  if (!symbol.declarations) {
     return null;
   }
 
-  const interfaceType = project.checker.getTypeAtLocation(declaration.name);
-  const properties = interfaceType
-    .getProperties()
-    .map((property) => parseProperty(property, project))
-    .filter((property) => !property.tags.ignore)
-    .sort((a, b) => a.name.localeCompare(b.name));
+  const declaration = symbol.declarations[0];
 
-  return {
-    name: symbol.name,
-    description: getSymbolDescription(resolvedSymbol, project),
-    properties,
-    tags: getSymbolJSDocTags(resolvedSymbol),
-    project: project.name,
-  };
+  if (ts.isExportSpecifier(declaration)) {
+    const moduleSpecifier = declaration.parent.parent.moduleSpecifier;
+    if (!moduleSpecifier) {
+      // We don't support the format `const XXX = ''; export { XXX }` yet
+      return null;
+    }
+
+    const sourceFile = project.checker.getSymbolAtLocation(moduleSpecifier);
+    const sourceFileDeclaration = sourceFile?.declarations?.find((el) => ts.isSourceFile(el))!;
+    const resolvedSymbol = project.checker.tryGetMemberInModuleExports(
+      symbol.name,
+      project.checker.getSymbolAtLocation(sourceFileDeclaration)!,
+    );
+
+    if (!resolvedSymbol) {
+      return null;
+    }
+
+    return resolveTypeAliasOrExportDeclaration(resolvedSymbol, project);
+  }
+
+  return symbol;
+};
+
+const parseTypeSymbol = (rootSymbol: ts.Symbol, project: Project): ParsedType | null => {
+  const symbol = resolveTypeAliasOrExportDeclaration(rootSymbol, project);
+  if (!symbol) {
+    return null;
+  }
+
+  const declaration = symbol.declarations?.[0];
+  if (!declaration) {
+    return null;
+  }
+
+  if (ts.isInterfaceDeclaration(declaration)) {
+    const type = project.checker.getTypeAtLocation(declaration.name);
+
+    const properties = type
+      .getProperties()
+      .map((property) => parseProperty(property, project))
+      .filter((property) => !property.tags.ignore)
+      .sort((a, b) => a.name.localeCompare(b.name));
+
+    return {
+      kind: 'interface',
+      properties,
+      ...getSymbolCommonFields(symbol, project),
+    };
+  }
+
+  if (ts.isEnumDeclaration(declaration)) {
+    const members: ParsedEnumMember[] = declaration.members.map((member) => {
+      const memberSymbol = project.checker.getTypeAtLocation(member).symbol;
+
+      return getSymbolCommonFields(memberSymbol, project);
+    });
+
+    return {
+      kind: 'enum',
+      members,
+      ...getSymbolCommonFields(symbol, project),
+    };
+  }
+
+  return null;
 };
 
 function generateMarkdownFromProperties(
-  object: ParsedObject,
-  documentedInterfaces: DocumentedInterfaces,
+  properties: ParsedProperty[],
+  documentedTypes: DocumentedTypes,
 ) {
-  const hasDefaultValue = object.properties.some((property) => {
+  const hasDefaultValue = properties.some((property) => {
     return property.tags.default;
   });
 
@@ -130,20 +133,22 @@ function generateMarkdownFromProperties(
 
   let text = `${headers}\n`;
 
-  object.properties.forEach((property) => {
+  properties.forEach((property) => {
     const defaultValue = property.tags.default?.text?.[0].text;
 
     const formattedName = property.isOptional
       ? `<span class="prop-name optional">${property.name}<sup><abbr title="optional">?</abbr></sup></span>`
       : `<span class="prop-name">${property.name}</span>`;
 
-    const formattedType = `<span class="prop-type">${escapeCell(property.typeStr)}</span>`;
+    const formattedType = `<span class="prop-type">${escapeCell(
+      linkifyCode(property.typeStr, documentedTypes, 'markdown'),
+    )}</span>`;
 
     const formattedDefaultValue =
       defaultValue == null ? '' : `<span class="prop-default">${escapeCell(defaultValue)}</span>`;
 
     const formattedDescription = escapeCell(
-      linkify(property.description, documentedInterfaces, 'markdown'),
+      linkifyComment(property.description, documentedTypes, 'markdown'),
     );
 
     if (hasDefaultValue) {
@@ -156,7 +161,29 @@ function generateMarkdownFromProperties(
   return text;
 }
 
-function generateImportStatement(objects: ParsedObject[], projects: Projects) {
+const generateMarkdownFromEnumMembers = (
+  enumMembers: ParsedEnumMember[],
+  documentedTypes: DocumentedTypes,
+) => {
+  let text = `
+| Name | Description |
+| ---- | ----------- |
+`;
+
+  enumMembers.forEach((member) => {
+    const formattedName = `<span class="prop-name">${member.name}</span>`;
+
+    const formattedDescription = escapeCell(
+      linkifyComment(member.description, documentedTypes, 'markdown'),
+    );
+
+    text += `| ${formattedName} | ${formattedDescription} |\n`;
+  });
+
+  return text;
+};
+
+function generateImportStatement(objects: ParsedType[], projects: Projects) {
   let imports = '```js\n';
 
   const projectImports = Array.from(projects.values())
@@ -192,19 +219,25 @@ function generateImportStatement(objects: ParsedObject[], projects: Projects) {
 }
 
 function generateMarkdown(
-  object: ParsedObject,
+  parsedType: ParsedType,
   projects: Projects,
-  documentedInterfaces: DocumentedInterfaces,
+  documentedTypes: DocumentedTypes,
 ) {
-  const description = linkify(object.description, documentedInterfaces, 'html');
-  const imports = generateImportStatement([object], projects);
+  const description = linkifyComment(parsedType.description, documentedTypes, 'html');
+  const imports = generateImportStatement([parsedType], projects);
 
-  let text = `# ${object.name} Interface\n`;
+  let text = `# ${parsedType.name} Interface\n`;
   text += `<p class="description">${description}</p>\n\n`;
   text += '## Import\n\n';
   text += `${imports}\n\n`;
-  text += '## Properties\n\n';
-  text += `${generateMarkdownFromProperties(object, documentedInterfaces)}`;
+
+  if (parsedType.kind === 'interface') {
+    text += '## Properties\n\n';
+    text += generateMarkdownFromProperties(parsedType.properties, documentedTypes);
+  } else if (parsedType.kind === 'enum') {
+    text += '## Members \n\n';
+    text += generateMarkdownFromEnumMembers(parsedType.members, documentedTypes);
+  }
 
   return text;
 }
@@ -212,24 +245,45 @@ function generateMarkdown(
 interface BuildInterfacesDocumentationOptions {
   projects: Projects;
   outputDirectory: string;
+  workspaceRoot: string;
 }
 
 export default function buildInterfacesDocumentation(options: BuildInterfacesDocumentationOptions) {
-  const { projects, outputDirectory } = options;
+  const { projects, outputDirectory, workspaceRoot } = options;
 
-  const allProjectsName = Array.from(projects.keys());
+  const documentedTypes: DocumentedTypes = new Map();
+  projects.forEach((project, projectName) => {
+    Object.entries(project.exports).forEach(([exportName, exportSymbol]) => {
+      if (documentedTypes.has(exportName)) {
+        documentedTypes.get(exportName)!.projects.push(projectName);
+      } else {
+        if (exportName.endsWith('Props')) {
+          // The prop interfaces are documented on the component page
+          return;
+        }
 
-  const documentedInterfaces: DocumentedInterfaces = new Map();
-  INTERFACES_WITH_DEDICATED_PAGES.forEach((interfaceName) => {
-    const packagesWithThisInterface = allProjectsName.filter(
-      (projectName) => !!projects.get(projectName)!.exports[interfaceName],
-    );
+        const declaration = exportSymbol.declarations?.[0];
+        if (!declaration) {
+          return;
+        }
 
-    if (packagesWithThisInterface.length === 0) {
-      throw new Error(`Can't find symbol for ${interfaceName}`);
-    }
+        if (getSymbolJSDocTags(exportSymbol).ignore) {
+          return;
+        }
 
-    documentedInterfaces.set(interfaceName, packagesWithThisInterface);
+        // Documented in special pages
+        if (['GridEvents', 'GridClasses', 'GridPanelClasses'].includes(exportName)) {
+          return;
+        }
+
+        const parsedType = parseTypeSymbol(exportSymbol, project);
+        if (!parsedType) {
+          return;
+        }
+
+        documentedTypes.set(exportName, { parsedType, projects: [projectName] });
+      }
+    });
   });
 
   const gridApiExtendsFrom: string[] = (
@@ -242,27 +296,23 @@ export default function buildInterfacesDocumentation(options: BuildInterfacesDoc
       .map((expression) => expression.escapedText),
   );
 
-  documentedInterfaces.forEach((packagesWithThisInterface, interfaceName) => {
+  const interfacePages: { pathname: string }[] = [];
+
+  documentedTypes.forEach((documentedType) => {
+    const { parsedType, projects: packagesWithThisInterface } = documentedType;
     const project = projects.get(packagesWithThisInterface[0])!;
-    const symbol = project.exports[interfaceName];
-    const parsedInterface = parseInterfaceSymbol(symbol, project);
+    const slug = kebabCase(parsedType.name);
 
-    if (!parsedInterface) {
-      return;
-    }
-
-    const slug = kebabCase(parsedInterface.name);
-
-    if (gridApiExtendsFrom.includes(parsedInterface.name)) {
+    if (parsedType.kind === 'interface' && gridApiExtendsFrom.includes(parsedType.name)) {
       const json = {
-        name: parsedInterface.name,
-        description: linkify(parsedInterface.description, documentedInterfaces, 'html'),
-        properties: parsedInterface.properties.map((property) => ({
+        name: parsedType.name,
+        description: linkifyComment(parsedType.description, documentedTypes, 'html'),
+        properties: parsedType.properties.map((property) => ({
           name: property.name,
           description: renderMarkdownInline(
-            linkify(property.description, documentedInterfaces, 'html'),
+            linkifyComment(property.description, documentedTypes, 'html'),
           ),
-          type: property.typeStr,
+          type: linkifyCode(property.typeStr, documentedTypes, 'html'),
         })),
       };
       writePrettifiedFile(
@@ -271,9 +321,9 @@ export default function buildInterfacesDocumentation(options: BuildInterfacesDoc
         project,
       );
       // eslint-disable-next-line no-console
-      console.log('Built JSON file for', parsedInterface.name);
+      console.log('Built JSON file for', parsedType.name);
     } else {
-      const markdown = generateMarkdown(parsedInterface, projects, documentedInterfaces);
+      const markdown = generateMarkdown(parsedType, projects, documentedTypes);
       writePrettifiedFile(path.resolve(outputDirectory, `${slug}.md`), markdown, project);
 
       writePrettifiedFile(
@@ -289,10 +339,20 @@ export default function buildInterfacesDocumentation(options: BuildInterfacesDoc
         project,
       );
 
+      // TODO: Stop hard-coding
+      interfacePages.push({ pathname: `/api-docs/data-grid/${slug}` });
+
       // eslint-disable-next-line no-console
-      console.log('Built API docs for', parsedInterface.name);
+      console.log('Built API docs for', parsedType.name);
     }
   });
 
-  return documentedInterfaces;
+  // TODO: Stop hard-coding the project
+  writePrettifiedFile(
+    path.resolve(workspaceRoot, 'docs/src/pagesApi.json'),
+    JSON.stringify(interfacePages.sort((a, b) => a.pathname.localeCompare(b.pathname))),
+    projects.get('x-data-grid-pro')!,
+  );
+
+  return documentedTypes;
 }

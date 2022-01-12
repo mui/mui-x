@@ -77,20 +77,21 @@ async function run(argv: { outputDirectory?: string }) {
     }),
   );
 
-  const documentedInterfaces = buildInterfacesDocumentation({
+  const documentedTypes = buildInterfacesDocumentation({
     projects,
     outputDirectory,
+    workspaceRoot,
   });
 
   await buildComponentsDocumentation({
     outputDirectory,
-    documentedInterfaces,
+    documentedTypes,
     projects,
   });
 
   buildEventsDocumentation({
     project: projects.get('x-data-grid')!,
-    documentedInterfaces,
+    documentedTypes,
   });
 
   buildSelectorsDocumentation({

@@ -1,4 +1,5 @@
 import pages from '@mui/monorepo/docs/src/pages';
+import xApiPages from './pagesApi.json';
 
 const components = pages[1];
 const componentsAPI = pages[2];
@@ -56,15 +57,7 @@ dataGridComponentAPI.children = [
   { pathname: '/api-docs/data-grid', title: 'API Reference' },
   { pathname: '/api-docs/data-grid/data-grid', title: 'DataGrid' },
   { pathname: '/api-docs/data-grid/data-grid-pro', title: 'DataGridPro' },
-  { pathname: '/api-docs/data-grid/grid-api', title: 'GridApi' },
-  { pathname: '/api-docs/data-grid/grid-col-def', title: 'GridColDef' },
-  { pathname: '/api-docs/data-grid/grid-cell-params', title: 'GridCellParams' },
-  { pathname: '/api-docs/data-grid/grid-row-params', title: 'GridRowParams' },
-  { pathname: '/api-docs/data-grid/grid-csv-export-options', title: 'GridCSVExportOptions' },
-  { pathname: '/api-docs/data-grid/grid-print-export-options', title: 'GridPrintExportOptions' },
-  { pathname: '/api-docs/data-grid/grid-filter-model', title: 'GridFilterModel' },
-  { pathname: '/api-docs/data-grid/grid-filter-item', title: 'GridFilterItem' },
-  { pathname: '/api-docs/data-grid/grid-filter-operator', title: 'GridFilterOperator' },
+  ...xApiPages,
 ].map((page) => {
   return { ...page, linkProps: { linkAs: `${page.pathname.replace(/^\/api-docs/, '/api')}/` } };
 });

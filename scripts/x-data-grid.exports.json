@@ -255,7 +255,7 @@
   { "name": "GridPinnedColumns", "kind": "Interface" },
   { "name": "gridPinnedColumnsSelector", "kind": "Variable" },
   { "name": "GridPinnedPosition", "kind": "Enum" },
-  { "name": "GridPreferencePanelInitialState", "kind": "TypeAlias" },
+  { "name": "GridPreferencePanelInitialState", "kind": "Interface" },
   { "name": "GridPreferencePanelState", "kind": "Interface" },
   { "name": "gridPreferencePanelStateSelector", "kind": "Variable" },
   { "name": "GridPreferencePanelsValue", "kind": "Enum" },

@@ -1,0 +1,41 @@
+{
+  "name": "GridParamsApi",
+  "description": "",
+  "properties": [
+    {
+      "name": "getCellElement",
+      "description": "Gets the underlying DOM element for a cell at the given <code>id</code> and <code>field</code>.",
+      "type": "(id: GridRowId, field: string) => HTMLDivElement | null"
+    },
+    {
+      "name": "getCellParams",
+      "description": "Gets the <a href=\"/api/data-grid/grid-cell-params/\">GridCellParams</a> object that is passed as argument in events.",
+      "type": "(id: GridRowId, field: string) => GridCellParams"
+    },
+    {
+      "name": "getCellValue",
+      "description": "Gets the value of a cell at the given <code>id</code> and <code>field</code>.",
+      "type": "(id: GridRowId, field: string) => GridCellValue"
+    },
+    {
+      "name": "getColumnHeaderElement",
+      "description": "Gets the underlying DOM element for the column header with the given <code>field</code>.",
+      "type": "(field: string) => HTMLDivElement | null"
+    },
+    {
+      "name": "getColumnHeaderParams",
+      "description": "Gets the <a href=\"/api/data-grid/grid-column-header-params/\">GridColumnHeaderParams</a> object that is passed as argument in events.",
+      "type": "(field: string) => GridColumnHeaderParams"
+    },
+    {
+      "name": "getRowElement",
+      "description": "Gets the underlying DOM element for a row at the given <code>id</code>.",
+      "type": "(id: GridRowId) => HTMLDivElement | null"
+    },
+    {
+      "name": "getRowParams",
+      "description": "Gets the <a href=\"/api/data-grid/grid-row-params/\">GridRowParams</a> object that is passed as argument in events.",
+      "type": "(id: GridRowId) => GridRowParams"
+    }
+  ]
+}

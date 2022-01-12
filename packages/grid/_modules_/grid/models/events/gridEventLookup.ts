@@ -24,6 +24,10 @@ import type { GridRowId, GridRowTreeNodeConfig } from '../gridRows';
 import type { GridPreProcessingGroup } from '../../hooks/core/preProcessing';
 import type { GridPinnedColumns } from '../api/gridColumnPinningApi';
 
+/**
+ * @ignore - do not document.
+ * TODO: Stop exporting in v6
+ */
 export interface GridRowEventLookup {
   rowClick: { params: GridRowParams; event: React.MouseEvent<HTMLElement> };
   rowDoubleClick: { params: GridRowParams; event: React.MouseEvent<HTMLElement> };
@@ -31,6 +35,10 @@ export interface GridRowEventLookup {
   rowMouseLeave: { params: GridRowParams; event: React.MouseEvent<HTMLElement> };
 }
 
+/**
+ * @ignore - do not document.
+ * TODO: Stop exporting in v6
+ */
 export interface GridColumnHeaderEventLookup {
   columnHeaderClick: {
     params: GridColumnHeaderParams;
@@ -90,6 +98,10 @@ export interface GridColumnHeaderEventLookup {
   };
 }
 
+/**
+ * @ignore - do not document.
+ * TODO: Stop exporting in v6
+ */
 export interface GridCellEventLookup {
   cellClick: {
     params: GridCellParams;
@@ -121,6 +133,10 @@ export interface GridCellEventLookup {
   };
 }
 
+/**
+ * @ignore - do not document.
+ * TODO: Stop exporting in v6
+ */
 export interface GridControlledStateEventLookup {
   pageSizeChange: { params: number };
   pageChange: { params: number };
@@ -131,6 +147,9 @@ export interface GridControlledStateEventLookup {
   pinnedColumnsChange: { params: GridPinnedColumns };
 }
 
+/**
+ * @ignore - do not document.
+ */
 export interface GridEventLookup
   extends GridRowEventLookup,
     GridColumnHeaderEventLookup,

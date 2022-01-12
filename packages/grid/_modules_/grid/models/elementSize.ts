@@ -1,5 +1,6 @@
 /**
  * The size of a container.
+ * @ignore - do not document.
  */
 export interface ElementSize {
   /**

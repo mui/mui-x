@@ -1,0 +1,21 @@
+{
+  "name": "GridStateApi",
+  "description": "",
+  "properties": [
+    {
+      "name": "forceUpdate",
+      "description": "Forces the grid to rerender. It&#39;s often used after a state update.",
+      "type": "() => void"
+    },
+    {
+      "name": "setState",
+      "description": "Sets the whole state of the grid.",
+      "type": "(state: GridState | ((previousState: GridState) => GridState)) => boolean"
+    },
+    {
+      "name": "state",
+      "description": "Property that contains the whole state of the grid.",
+      "type": "GridState"
+    }
+  ]
+}

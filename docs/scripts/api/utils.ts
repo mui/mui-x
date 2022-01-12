@@ -17,7 +17,40 @@ export type ProjectNames = 'x-data-grid' | 'x-data-grid-pro';
 
 export type Projects = Map<ProjectNames, Project>;
 
-export type DocumentedInterfaces = Map<string, ProjectNames[]>;
+export interface SymbolCommonFields {
+  name: string;
+  description?: string;
+  tags: { [tagName: string]: ts.JSDocTagInfo };
+}
+
+interface ParsedInterface extends SymbolCommonFields {
+  kind: 'interface';
+  properties: ParsedProperty[];
+}
+
+export interface ParsedEnum extends SymbolCommonFields {
+  kind: 'enum';
+  members: ParsedEnumMember[];
+}
+
+export type ParsedType = ParsedInterface | ParsedEnum;
+
+export interface ParsedProperty {
+  name: string;
+  description?: string;
+  tags: { [tagName: string]: ts.JSDocTagInfo };
+  isOptional: boolean;
+  symbol: ts.Symbol;
+  typeStr: string;
+}
+
+export interface ParsedEnumMember {
+  name: string;
+  description?: string;
+  tags: { [tagName: string]: ts.JSDocTagInfo };
+}
+
+export type DocumentedTypes = Map<string, { parsedType: ParsedType; projects: ProjectNames[] }>;
 
 export const getSymbolDescription = (symbol: ts.Symbol, project: Project) =>
   symbol
@@ -72,24 +105,25 @@ export const stringifySymbol = (symbol: ts.Symbol, project: Project) => {
   return formatType(rawType);
 };
 
-export function linkify(
-  text: string | undefined,
-  documentedInterfaces: DocumentedInterfaces,
-  format: 'markdown' | 'html',
-) {
-  if (text == null) {
-    return '';
-  }
-
-  const bracketsRegexp = /\[\[([^\]]+)\]\]/g;
-  return text.replace(bracketsRegexp, (match: string, content: string) => {
-    if (!documentedInterfaces.get(content)) {
-      return content;
+const linkify =
+  (regexp: RegExp) =>
+  (text: string | undefined, documentedTypes: DocumentedTypes, format: 'markdown' | 'html') => {
+    if (text == null) {
+      return '';
     }
-    const url = `/api/data-grid/${kebabCase(content)}/`;
-    return format === 'markdown' ? `[${content}](${url})` : `<a href="${url}">${content}</a>`;
-  });
-}
+
+    return text.replace(regexp, (match: string, content: string) => {
+      if (!documentedTypes.get(content)) {
+        return content;
+      }
+      const url = `/api/data-grid/${kebabCase(content)}/`;
+      return format === 'markdown' ? `[${content}](${url})` : `<a href="${url}">${content}</a>`;
+    });
+  };
+
+export const linkifyComment = linkify(/\[\[([^\]]+)\]\]/g);
+
+export const linkifyCode = linkify(/([a-zA-Z]+)/);
 
 export function writePrettifiedFile(filename: string, data: string, project: Project) {
   const prettierConfig = prettier.resolveConfig.sync(filename, {

@@ -3,10 +3,10 @@ import path from 'path';
 import { renderInline as renderMarkdownInline } from '@mui/monorepo/docs/packages/markdown';
 
 import {
-  DocumentedInterfaces,
+  DocumentedTypes,
   getSymbolDescription,
   getSymbolJSDocTags,
-  linkify,
+  linkifyComment,
   Project,
   stringifySymbol,
   writePrettifiedFile,
@@ -14,11 +14,11 @@ import {
 
 interface BuildEventsDocumentationOptions {
   project: Project;
-  documentedInterfaces: DocumentedInterfaces;
+  documentedTypes: DocumentedTypes;
 }
 
 export default function buildEventsDocumentation(options: BuildEventsDocumentationOptions) {
-  const { project, documentedInterfaces } = options;
+  const { project, documentedTypes } = options;
 
   const gridEventsSymbol = project.exports.GridEvents;
   const gridEventsDeclaration = gridEventsSymbol.declarations![0] as ts.EnumDeclaration;
@@ -52,9 +52,9 @@ export default function buildEventsDocumentation(options: BuildEventsDocumentati
     }
 
     const name = member.name.getText();
-    const description = linkify(
+    const description = linkifyComment(
       getSymbolDescription(eventSymbol, project),
-      documentedInterfaces,
+      documentedTypes,
       'html',
     );
     const eventProperties = eventLookup[name];
@@ -62,7 +62,7 @@ export default function buildEventsDocumentation(options: BuildEventsDocumentati
     events.push({
       name,
       description: renderMarkdownInline(description),
-      params: linkify(eventProperties.params, documentedInterfaces, 'html'),
+      params: linkifyComment(eventProperties.params, documentedTypes, 'html'),
       event: `MuiEvent<${eventProperties.event ?? '{}'}>`,
     });
   });

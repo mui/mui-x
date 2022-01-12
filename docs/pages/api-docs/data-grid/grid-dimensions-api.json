@@ -1,0 +1,16 @@
+{
+  "name": "GridDimensionsApi",
+  "description": "",
+  "properties": [
+    {
+      "name": "getRootDimensions",
+      "description": "Returns the dimensions of the grid",
+      "type": "() => <a href=\"/api/data-grid/grid-dimensions/\">GridDimensions</a> | null"
+    },
+    {
+      "name": "resize",
+      "description": "Triggers a resize of the component and recalculation of width and height.",
+      "type": "() => void"
+    }
+  ]
+}

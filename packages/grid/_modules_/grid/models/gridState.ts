@@ -22,6 +22,9 @@ import type {
 } from '../hooks/features/filter/gridFilterState';
 import { GridColumnPinningState } from '../hooks/features/columnPinning/gridColumnPinningState';
 
+/**
+ * @ignore - do not document.
+ */
 export interface GridState {
   rows: GridRowsState;
   editRows: GridEditRowsModel;

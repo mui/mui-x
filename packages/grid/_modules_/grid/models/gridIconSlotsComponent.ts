@@ -2,6 +2,8 @@ import * as React from 'react';
 
 /**
  * Set of icons used in the grid component UI.
+ * @ignore - do not document.
+ * TODO: Stop exporting in v6
  * TODO: Differentiate community and pro interface
  */
 export interface GridIconSlotsComponent {

@@ -1,0 +1,21 @@
+{
+  "name": "GridColumnMenuApi",
+  "description": "The column menu API interface that is available in the grid apiRef.",
+  "properties": [
+    {
+      "name": "hideColumnMenu",
+      "description": "Hides the column menu that is open.",
+      "type": "() => void"
+    },
+    {
+      "name": "showColumnMenu",
+      "description": "Display the column menu under the <code>field</code> column.",
+      "type": "(field: string) => void"
+    },
+    {
+      "name": "toggleColumnMenu",
+      "description": "Toggles the column menu under the <code>field</code> column.",
+      "type": "(field: string) => void"
+    }
+  ]
+}

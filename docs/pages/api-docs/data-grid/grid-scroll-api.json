@@ -5,7 +5,7 @@
     {
       "name": "getScrollPosition",
       "description": "Returns the current scroll position.",
-      "type": "() => GridScrollParams"
+      "type": "() => <a href=\"/api/data-grid/grid-scroll-params/\">GridScrollParams</a>"
     },
     {
       "name": "scroll",

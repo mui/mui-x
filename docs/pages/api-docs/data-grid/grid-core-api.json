@@ -1,0 +1,17 @@
+{
+  "name": "GridCoreApi",
+  "description": "The core API interface that is available in the grid `apiRef`.",
+  "properties": [
+    { "name": "publishEvent", "description": "Emits an event.", "type": "GridEventPublisher" },
+    {
+      "name": "showError",
+      "description": "Displays the error overlay component.",
+      "type": "(props: any) => void"
+    },
+    {
+      "name": "subscribeEvent",
+      "description": "Registers a handler for an event.",
+      "type": "<E extends GridEventsStr>(event: E, handler: GridEventListener<E>, options?: EventListenerOptions) => () => void"
+    }
+  ]
+}

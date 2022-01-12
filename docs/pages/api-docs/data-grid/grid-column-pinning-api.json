@@ -5,7 +5,7 @@
     {
       "name": "getPinnedColumns",
       "description": "Returns which columns are pinned.",
-      "type": "() => GridPinnedColumns"
+      "type": "() => <a href=\"/api/data-grid/grid-pinned-columns/\">GridPinnedColumns</a>"
     },
     {
       "name": "isColumnPinned",

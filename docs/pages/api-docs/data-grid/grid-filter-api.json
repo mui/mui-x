@@ -15,7 +15,7 @@
     { "name": "hideFilterPanel", "description": "Hides the filter panel.", "type": "() => void" },
     {
       "name": "setFilterLinkOperator",
-      "description": "Changes the GridLinkOperator used to connect the filters.",
+      "description": "Changes the <a href=\"/api/data-grid/grid-link-operator/\">GridLinkOperator</a> used to connect the filters.",
       "type": "(operator: GridLinkOperator) => void"
     },
     {

@@ -1,0 +1,61 @@
+{
+  "name": "GridColumnApi",
+  "description": "The column API interface that is available in the grid apiRef.",
+  "properties": [
+    {
+      "name": "getAllColumns",
+      "description": "Returns an array of <a href=\"/api/data-grid/grid-col-def/\">GridColDef</a> containing all the column definitions.",
+      "type": "() => GridStateColDef[]"
+    },
+    {
+      "name": "getColumn",
+      "description": "Returns the <a href=\"/api/data-grid/grid-col-def/\">GridColDef</a> for the given <code>field</code>.",
+      "type": "(field: string) => GridStateColDef"
+    },
+    {
+      "name": "getColumnIndex",
+      "description": "Returns the index position of a column. By default, only the visible columns are considered.\nPass <code>false</code> to <code>useVisibleColumns</code> to consider all columns.",
+      "type": "(field: string, useVisibleColumns?: boolean) => number"
+    },
+    {
+      "name": "getColumnPosition",
+      "description": "Returns the left-position of a column relative to the inner border of the grid.",
+      "type": "(field: string) => number"
+    },
+    {
+      "name": "getColumnsMeta",
+      "description": "Returns the <a href=\"/api/data-grid/grid-columns-meta/\">GridColumnsMeta</a> for each column.",
+      "type": "() => <a href=\"/api/data-grid/grid-columns-meta/\">GridColumnsMeta</a>"
+    },
+    {
+      "name": "getVisibleColumns",
+      "description": "Returns the currently visible columns.",
+      "type": "() => GridStateColDef[]"
+    },
+    {
+      "name": "setColumnIndex",
+      "description": "Moves a column from its original position to the position given by <code>targetIndexPosition</code>.",
+      "type": "(field: string, targetIndexPosition: number) => void"
+    },
+    {
+      "name": "setColumnVisibility",
+      "description": "Changes the visibility of the column referred by <code>field</code>.",
+      "type": "(field: string, isVisible: boolean) => void"
+    },
+    {
+      "name": "setColumnWidth",
+      "description": "Updates the width of a column.",
+      "type": "(field: string, width: number) => void"
+    },
+    {
+      "name": "updateColumn",
+      "description": "Updates the definition of a column.",
+      "type": "(col: GridColDef) => void"
+    },
+    {
+      "name": "updateColumns",
+      "description": "Updates the definition of multiple columns at the same time.",
+      "type": "(cols: GridColDef[]) => void"
+    }
+  ]
+}

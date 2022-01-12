@@ -1,0 +1,11 @@
+{
+  "name": "GridDensityApi",
+  "description": "The density API interface that is available in the grid `apiRef`.",
+  "properties": [
+    {
+      "name": "setDensity",
+      "description": "Sets the density of the grid.",
+      "type": "(density: GridDensity, headerHeight?: number, rowHeight?: number) => void"
+    }
+  ]
+}

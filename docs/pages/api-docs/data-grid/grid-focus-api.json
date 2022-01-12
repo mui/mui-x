@@ -1,0 +1,16 @@
+{
+  "name": "GridFocusApi",
+  "description": "",
+  "properties": [
+    {
+      "name": "setCellFocus",
+      "description": "Sets the focus to the cell at the given <code>id</code> and <code>field</code>.",
+      "type": "(id: GridRowId, field: string) => void"
+    },
+    {
+      "name": "setColumnHeaderFocus",
+      "description": "Sets the focus to the column header at the given <code>field</code>.",
+      "type": "(field: string, event?: MuiBaseEvent) => void"
+    }
+  ]
+}

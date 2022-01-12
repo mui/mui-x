@@ -9,6 +9,9 @@ import {
 import createDetectElementResize from '../lib/createDetectElementResize';
 // TODO replace with https://caniuse.com/resizeobserver.
 
+/**
+ * @ignore - do not document.
+ */
 export interface AutoSizerSize {
   height: number;
   width: number;

@@ -23,6 +23,13 @@ export interface GridFilterItem {
 }
 
 export enum GridLinkOperator {
+  /**
+   * The filtered rows should satisfy all filter items.
+   */
   And = 'and',
+
+  /**
+   * The filtered rows should satisfy at least on filter item.
+   */
   Or = 'or',
 }

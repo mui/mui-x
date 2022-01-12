@@ -22,9 +22,9 @@ import {
 import { getLineFeed } from '@mui/monorepo/docs/scripts/helpers';
 import createGenerateClassName from '@mui/styles/createGenerateClassName';
 import {
-  DocumentedInterfaces,
+  DocumentedTypes,
   getJsdocDefaultValue,
-  linkify,
+  linkifyComment,
   Project,
   Projects,
   writePrettifiedFile,
@@ -186,14 +186,14 @@ const buildComponentDocumentation = async (options: {
   filename: string;
   project: Project;
   outputDirectory: string;
-  documentedInterfaces: DocumentedInterfaces;
+  documentedTypes: DocumentedTypes;
   pagesMarkdown: ReadonlyArray<{
     components: readonly string[];
     filename: string;
     pathname: string;
   }>;
 }) => {
-  const { filename, project, outputDirectory, documentedInterfaces } = options;
+  const { filename, project, outputDirectory, documentedTypes } = options;
 
   const src = fse.readFileSync(filename, 'utf8');
   const reactApi = parseComponentSource(src, { filename });
@@ -265,7 +265,11 @@ const buildComponentDocumentation = async (options: {
       } else if (propName === 'sx') {
         description += ' See the <a href="/system/the-sx-prop/">`sx` page</a> for more details.';
       }
-      componentApi.propDescriptions[propName] = linkify(description, documentedInterfaces, 'html');
+      componentApi.propDescriptions[propName] = linkifyComment(
+        description,
+        documentedTypes,
+        'html',
+      );
 
       const jsdocDefaultValue = getJsdocDefaultValue(
         parseDoctrine(propDescriptor.description || '', {
@@ -463,13 +467,13 @@ Page.getInitialProps = () => {
 interface BuildComponentsDocumentationOptions {
   projects: Projects;
   outputDirectory: string;
-  documentedInterfaces: DocumentedInterfaces;
+  documentedTypes: DocumentedTypes;
 }
 
 export default async function buildComponentsDocumentation(
   options: BuildComponentsDocumentationOptions,
 ) {
-  const { outputDirectory, documentedInterfaces, projects } = options;
+  const { outputDirectory, documentedTypes, projects } = options;
 
   const dataGridProProject = projects.get('x-data-grid-pro')!;
   const dataGridProject = projects.get('x-data-grid')!;
@@ -520,7 +524,7 @@ export default async function buildComponentsDocumentation(
         project,
         outputDirectory,
         pagesMarkdown,
-        documentedInterfaces,
+        documentedTypes,
       });
     } catch (error: any) {
       error.message = `${path.relative(process.cwd(), filename)}: ${error.message}`;
