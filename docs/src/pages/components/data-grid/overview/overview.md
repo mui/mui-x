@@ -23,9 +23,9 @@ The data grid comes with two different licenses:
 - [MIT license](https://tldrlegal.com/license/mit-license). It's available on npm as [`@mui/x-data-grid`](https://www.npmjs.com/package/@mui/x-data-grid) and includes the [DataGrid](/api/data-grid/data-grid/) component.
 - [Commercial license](/x/license/). It's available on npm as [`@mui/x-data-grid-pro`](https://www.npmjs.com/package/@mui/x-data-grid-pro) and includes the [DataGridPro](/api/data-grid/data-grid-pro/) component.
 
-All the features not available in the MIT version are suffixed for clarity:
+The features only available in the commercial version are suffixed in the documentation for clarity:
 
-- For features available in the Pro plan and upward: <span class="plan-pro"></span>
+- For features only available in the Pro plan and upward: <span class="plan-pro"></span>
 
   <div class="only-light-mode">
     <img src="/static/x/commercial-header-icon-light.png" style="width: 579px; margin-bottom: 2rem;" alt="">
