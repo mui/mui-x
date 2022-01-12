@@ -26,12 +26,21 @@ function getMean(values) {
   return sum / values.length;
 }
 
+function getStdDev(values, mean) {
+  const squareDiffs = values.map((value) => {
+    const diff = value - mean;
+    return diff * diff;
+  });
+  return Math.sqrt(getMean(squareDiffs));
+}
+
 function getMeasures(samples) {
   const min = Math.min(...samples);
   const max = Math.max(...samples);
   const median = getMedian(samples);
   const mean = getMean(samples);
-  return { min, max, median, mean };
+  const stdDev = getStdDev(samples, mean);
+  return { min, max, median, mean, stdDev };
 }
 
 function createLabelNameEngine() {

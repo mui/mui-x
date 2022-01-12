@@ -11,8 +11,8 @@ async function reportBundleSize() {
   const snapshot = await fse.readJSON(snapshotPath);
 
   const headers = `
-| Test case | Min | Max | Median | Mean  |
-| --------- | --- | --- | ------ | ----- |`;
+| Test case | Unit | Min | Max | Median | Mean | σ |
+| --------- | ---- | --- | --- | ------ | ---- | - |`;
 
   let text = `These are the results for the performance tests:
 ${headers}\n`;
@@ -24,7 +24,8 @@ ${headers}\n`;
     const max = formatter.format(values.max);
     const mean = formatter.format(values.mean);
     const median = formatter.format(values.median);
-    text += `| ${name} | ${min} | ${max} | ${median} | ${mean} |\n`;
+    const stdDev = formatter.format(values.stdDev);
+    text += `| ${name} | ms | ${min} | ${max} | ${median} | ${mean} | ${stdDev} |\n`;
   });
 
   const prettierConfig = prettier.resolveConfig.sync(snapshotPath, {
