@@ -204,6 +204,7 @@ export default function FullWidthDetailPanel() {
       <DataGridPro
         columns={columns}
         rows={rows}
+        rowThreshold={0}
         pinnedColumns={{ left: [GRID_DETAIL_PANEL_TOGGLE_FIELD] }}
         getDetailPanelHeight={getDetailPanelHeight}
         getDetailPanelContent={getDetailPanelContent}
