@@ -62,7 +62,7 @@ const baselineProps: DataGridProProps = {
   },
 };
 
-describe.only('<DataGridPro /> - Group Rows By Column', () => {
+describe('<DataGridPro /> - Group Rows By Column', () => {
   const { render, clock } = createRenderer({ clock: 'fake' });
 
   let apiRef: GridApiRef;
