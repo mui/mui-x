@@ -23,7 +23,6 @@ import type { GridPreProcessingApi } from '../../hooks/core/preProcessing';
 import type { GridRowGroupsPreProcessingApi } from '../../hooks/core/rowGroupsPerProcessing';
 import type { GridDimensionsApi } from '../../hooks/features/dimensions';
 import type { GridPaginationApi } from '../../hooks/features/pagination';
-import type { GridStatePersistenceApi } from '../../hooks/features/statePersistence';
 
 /**
  * The full grid API.
@@ -53,5 +52,4 @@ export interface GridApi
     GridLocaleTextApi,
     GridClipboardApi,
     GridScrollApi,
-    GridColumnPinningApi,
-    GridStatePersistenceApi {}
+    GridColumnPinningApi {}

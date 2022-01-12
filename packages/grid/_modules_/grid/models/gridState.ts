@@ -1,7 +1,7 @@
-import type { GridColumnsState } from '../hooks/features/columns/gridColumnsInterfaces';
+import type { GridColumnsState } from '../hooks/features/columns/gridColumnsState';
 import type { GridEditRowsModel } from './gridEditRowModel';
 import type { GridColumnMenuState } from '../hooks/features/columnMenu/columnMenuState';
-import type { GridColumnReorderState } from '../hooks/features/columnReorder';
+import type { GridColumnReorderState } from '../hooks/features/columnReorder/columnReorderState';
 import type { GridColumnResizeState } from '../hooks/features/columnResize/columnResizeState';
 import type { GridDensityState } from '../hooks/features/density/densityState';
 import type { GridFocusState, GridTabIndexState } from '../hooks/features/focus/gridFocusState';
@@ -51,11 +51,3 @@ export interface GridInitialState {
   preferencePanel?: GridPreferencePanelInitialState;
   pinnedColumns?: GridColumnPinningState;
 }
-
-type DeepPartial<T> = {
-  [P in keyof T]?: DeepPartial<T[P]>;
-};
-
-export type GridPartialState = DeepPartial<GridState>;
-
-export type GridPartialInitialState = DeepPartial<GridInitialState>;

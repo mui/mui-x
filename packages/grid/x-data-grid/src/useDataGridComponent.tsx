@@ -24,7 +24,6 @@ import { useGridSorting } from '../../_modules_/grid/hooks/features/sorting/useG
 import { useGridScroll } from '../../_modules_/grid/hooks/features/scroll/useGridScroll';
 import { useGridEvents } from '../../_modules_/grid/hooks/features/events/useGridEvents';
 import { useGridDimensions } from '../../_modules_/grid/hooks/features/dimensions/useGridDimensions';
-import { useGridStatePersistence } from '../../_modules_/grid/hooks/features/statePersistence/useGridStatePersistence';
 
 export const useDataGridComponent = (apiRef: GridApiRef, props: DataGridProcessedProps) => {
   useGridInitialization(apiRef, props);
@@ -49,5 +48,4 @@ export const useDataGridComponent = (apiRef: GridApiRef, props: DataGridProcesse
   useGridClipboard(apiRef);
   useGridDimensions(apiRef, props);
   useGridEvents(apiRef, props);
-  useGridStatePersistence(apiRef);
 };
