@@ -22,9 +22,11 @@ export const GridPreferencesPanel = React.forwardRef<
   return (
     <rootProps.components.Panel
       ref={ref}
+      as={rootProps.components.BasePopper}
       open={columns.length > 0 && preferencePanelState.open}
       {...rootProps.componentsProps?.panel}
       {...props}
+      {...rootProps.componentsProps?.basePopper}
     >
       {!rootProps.disableColumnSelector && isColumnsTabOpen && (
         <rootProps.components.ColumnsPanel {...rootProps.componentsProps?.columnsPanel} />

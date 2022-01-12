@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGrid, getGridStringOperators } from '@mui/x-data-grid';
 
 function loadServerRows(commodityFilterValue) {
   const serverRows = [
@@ -17,17 +17,25 @@ function loadServerRows(commodityFilterValue) {
         return;
       }
       resolve(
-        serverRows.filter(
-          (row) => row.commodity.toLowerCase().indexOf(commodityFilterValue) > -1,
+        serverRows.filter((row) =>
+          row.commodity.toLowerCase().includes(commodityFilterValue),
         ),
       );
     }, Math.random() * 500 + 100); // simulate network latency
   });
 }
 
-export default function ServerFilterGrid() {
-  const [columns] = React.useState([{ field: 'commodity', width: 150 }]);
+const columns = [
+  {
+    field: 'commodity',
+    width: 150,
+    filterOperators: getGridStringOperators().filter(
+      (operator) => operator.value === 'contains',
+    ),
+  },
+];
 
+export default function ServerFilterGrid() {
   const [rows, setRows] = React.useState([]);
   const [filterValue, setFilterValue] = React.useState();
   const [loading, setLoading] = React.useState(false);
