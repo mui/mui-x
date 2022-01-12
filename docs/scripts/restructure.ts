@@ -17,6 +17,17 @@ const readdirDeep = (directory: string, pathsProp: string[] = []) => {
   return paths;
 };
 
+const copyFile = (sourcePath: string, destinationPath: string) => {
+  const file = fs.readFileSync(path.join(process.cwd(), sourcePath), { encoding: 'utf8' });
+  const match = destinationPath.match(/^(.*)\/[^/]+\.(ts|js|tsx|md|json|tsx\.preview)$/);
+  if (match) {
+    fs.mkdirSync(path.join(process.cwd(), match[1].replace('api-docs', 'x/api')), {
+      recursive: true,
+    });
+    fs.writeFileSync(path.join(process.cwd(), destinationPath.replace('api-docs', 'x/api')), file);
+  }
+};
+
 function run() {
   /**
    * clone pages & api data from `docs/src/pages.ts` to `docs/src/data/materialPages.ts`
@@ -43,7 +54,7 @@ function run() {
         data = data.replace(/"pages\/[/\-a-zA-Z]*\/([a-zA-Z]*\.js)"/gm, `"$1"`);
       }
       fs.mkdirSync(info.directory, { recursive: true });
-      fs.writeFileSync(info.path, data); // (A)
+      fs.writeFileSync(info.path, data);
 
       fs.rmSync(filePath);
     }
@@ -72,6 +83,10 @@ function run() {
       fs.writeFileSync(filePath, data);
     }
   });
+
+  // copy docs/pages/api-docs/data-grid/index to docs/pages/x/api/data-grid/index
+  copyFile('docs/pages/api-docs/data-grid/index.js', 'docs/pages/x/api/data-grid/index.js');
+  copyFile('docs/pages/api-docs/data-grid/index.md', 'docs/pages/x/api/data-grid/index.md');
 
   // Turn feature toggle `enable_product_scope: true`
   const featureTogglePath = path.join(process.cwd(), 'docs/src/featureToggle.js');
