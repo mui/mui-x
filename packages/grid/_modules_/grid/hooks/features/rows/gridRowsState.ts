@@ -14,7 +14,7 @@ export interface GridRowsState extends GridRowGroupingResult {
    */
   totalTopLevelRowCount: number;
   /**
-   * The currently visible rows total height and row possitions.
+   * The currently visible rows total height and row positions.
    */
   meta: GridRowsMeta;
 }

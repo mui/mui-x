@@ -13,6 +13,7 @@ import { isDeepEqual } from '../../../utils/utils';
 export const COMPACT_DENSITY_FACTOR = 0.7;
 export const COMFORTABLE_DENSITY_FACTOR = 1.3;
 
+// TODO: revise keeping headerHeight and rowHeight in state for v6
 const getUpdatedDensityState = (
   newDensity: GridDensity,
   newHeaderHeight: number,

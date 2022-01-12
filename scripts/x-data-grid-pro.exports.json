@@ -330,6 +330,7 @@
   { "name": "gridSortedRowIdsSelector", "kind": "Variable" },
   { "name": "GridSortingInitialState", "kind": "ExportSpecifier" },
   { "name": "GridSortingState", "kind": "ExportSpecifier" },
+  { "name": "gridSortingStateSelector", "kind": "Variable" },
   { "name": "GridSortItem", "kind": "Interface" },
   { "name": "GridSortModel", "kind": "TypeAlias" },
   { "name": "GridSortModelParams", "kind": "Interface" },

@@ -1076,12 +1076,12 @@ export function VariableRowHeight() {
     <div style={{ height: 600 }}>
       <DataGridPro
         {...data}
-        getRowHeight={({ commodity }) => {
+        getRowHeight={({ model }) => {
           if (
-            commodity.includes('Oats') ||
-            commodity.includes('Milk') ||
-            commodity.includes('Soybean') ||
-            commodity.includes('Rice')
+            model.commodity.includes('Oats') ||
+            model.commodity.includes('Milk') ||
+            model.commodity.includes('Soybean') ||
+            model.commodity.includes('Rice')
           ) {
             return 100;
           }

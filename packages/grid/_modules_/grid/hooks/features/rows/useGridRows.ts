@@ -41,7 +41,7 @@ interface GridRowsInternalCacheState {
   rowsBeforePartialUpdates: GridRowsProp;
 
   /**
-   * The last visible rows total height and row possitions.
+   * The last rows visible on the bottom of the viewport and rows visible during the last rendering.
    */
   meta: GridRowsMeta;
 }
