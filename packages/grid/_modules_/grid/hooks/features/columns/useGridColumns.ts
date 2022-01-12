@@ -17,7 +17,7 @@ import {
   useGridApiEventHandler,
   useGridApiOptionHandler,
 } from '../../utils/useGridApiEventHandler';
-import { GridComponentProps } from '../../../GridComponentProps';
+import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { useGridStateInit } from '../../utils/useGridStateInit';
 import { GridColumnVisibilityChangeParams } from '../../../models';
 import { GridPreProcessingGroup } from '../../core/preProcessing';
@@ -32,7 +32,7 @@ import { hydrateColumnsWidth, computeColumnTypes, createColumnsState } from './g
 export function useGridColumns(
   apiRef: GridApiRef,
   props: Pick<
-    GridComponentProps,
+    DataGridProcessedProps,
     'columns' | 'onColumnVisibilityChange' | 'columnTypes' | 'checkboxSelection' | 'classes'
   >,
 ): void {

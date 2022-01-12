@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { unstable_useId as useId, useForkRef } from '@mui/material/utils';
 import MenuList from '@mui/material/MenuList';
-import Button, { ButtonProps } from '@mui/material/Button';
+import { ButtonProps } from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import { gridDensityValueSelector } from '../../hooks/features/density/densitySelector';
@@ -93,7 +93,7 @@ export const GridToolbarDensitySelector = React.forwardRef<HTMLButtonElement, Bu
 
     return (
       <React.Fragment>
-        <Button
+        <rootProps.components.BaseButton
           ref={handleRef}
           color="primary"
           size="small"
@@ -105,9 +105,10 @@ export const GridToolbarDensitySelector = React.forwardRef<HTMLButtonElement, Bu
           id={densityButtonId}
           {...other}
           onClick={handleDensitySelectorOpen}
+          {...rootProps.componentsProps?.baseButton}
         >
           {apiRef.current.getLocaleText('toolbarDensity')}
-        </Button>
+        </rootProps.components.BaseButton>
         <GridMenu
           open={open}
           target={buttonRef.current}

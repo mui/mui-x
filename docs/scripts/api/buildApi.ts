@@ -5,6 +5,7 @@ import * as ts from 'typescript';
 import buildComponentsDocumentation from './buildComponentsDocumentation';
 import buildInterfacesDocumentation from './buildInterfacesDocumentation';
 import buildExportsDocumentation from './buildExportsDocumentation';
+import buildSelectorsDocumentation from './buildSelectorsDocumentation';
 import buildEventsDocumentation from './buildEventsDocumentation';
 import { Project, Projects, ProjectNames } from './utils';
 import FEATURE_TOGGLE from '../../src/featureToggle';
@@ -96,6 +97,11 @@ async function run() {
       buildEventsDocumentation({
         project: projects.get('x-data-grid')!,
         documentedInterfaces,
+      });
+
+      buildSelectorsDocumentation({
+        project: projects.get('x-data-grid-pro')!,
+        outputDirectory,
       });
 
       buildExportsDocumentation({

@@ -1,16 +1,16 @@
-import * as ttp from '@material-ui/monorepo/packages/typescript-to-proptypes/src/index';
+import * as ttp from '@mui/monorepo/packages/typescript-to-proptypes/src/index';
 import * as fse from 'fs-extra';
 import path from 'path';
-import parseStyles, { Styles } from '@material-ui/monorepo/docs/src/modules/utils/parseStyles';
+import parseStyles, { Styles } from '@mui/monorepo/docs/src/modules/utils/parseStyles';
 import fromPairs from 'lodash/fromPairs';
 import createDescribeableProp, {
   DescribeablePropDescriptor,
-} from '@material-ui/monorepo/docs/src/modules/utils/createDescribeableProp';
-import generatePropDescription from '@material-ui/monorepo/docs/src/modules/utils/generatePropDescription';
+} from '@mui/monorepo/docs/src/modules/utils/createDescribeableProp';
+import generatePropDescription from '@mui/monorepo/docs/src/modules/utils/generatePropDescription';
 import { parse as parseDoctrine } from 'doctrine';
 import generatePropTypeDescription, {
   getChained,
-} from '@material-ui/monorepo/docs/src/modules/utils/generatePropTypeDescription';
+} from '@mui/monorepo/docs/src/modules/utils/generatePropTypeDescription';
 import kebabCase from 'lodash/kebabCase';
 import { LANGUAGES } from 'docs/src/modules/constants';
 import { findPagesMarkdown } from 'docs/src/modules/utils/find';
@@ -18,8 +18,8 @@ import { defaultHandlers, parse as docgenParse, ReactDocgenApi } from 'react-doc
 import {
   renderInline as renderMarkdownInline,
   getHeaders,
-} from '@material-ui/monorepo/docs/packages/markdown';
-import { getLineFeed } from '@material-ui/monorepo/docs/scripts/helpers';
+} from '@mui/monorepo/docs/packages/markdown';
+import { getLineFeed } from '@mui/monorepo/docs/scripts/helpers';
 import createGenerateClassName from '@mui/styles/createGenerateClassName';
 import {
   DocumentedInterfaces,

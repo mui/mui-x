@@ -1,4 +1,4 @@
-const baseline = require('@material-ui/monorepo/.stylelintrc');
+const baseline = require('@mui/monorepo/.stylelintrc');
 
 module.exports = {
   ...baseline,

@@ -5,7 +5,7 @@ import { GridApiRef } from '../../../models/api/gridApiRef';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { GridDensityApi } from '../../../models/api/gridDensityApi';
 import { GridDensityState } from './densityState';
-import { GridComponentProps } from '../../../GridComponentProps';
+import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { useGridStateInit } from '../../utils/useGridStateInit';
 import { gridDensitySelector } from './densitySelector';
 import { isDeepEqual } from '../../../utils/utils';
@@ -42,7 +42,7 @@ const getUpdatedDensityState = (
 
 export const useGridDensity = (
   apiRef: GridApiRef,
-  props: Pick<GridComponentProps, 'headerHeight' | 'rowHeight' | 'density'>,
+  props: Pick<DataGridProcessedProps, 'headerHeight' | 'rowHeight' | 'density'>,
 ): void => {
   const logger = useGridLogger(apiRef, 'useDensity');
 

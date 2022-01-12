@@ -16,9 +16,9 @@ module.exports = {
       '@mui/x-license-pro': path.resolve(__dirname, './packages/x-license-pro/src'),
       '@mui/markdown': path.resolve(
         __dirname,
-        './node_modules/@material-ui/monorepo/docs/packages/markdown',
+        './node_modules/@mui/monorepo/docs/packages/markdown',
       ),
-      docs: path.resolve(__dirname, './node_modules/@material-ui/monorepo/docs'),
+      docs: path.resolve(__dirname, './node_modules/@mui/monorepo/docs'),
       docsx: path.resolve(__dirname, './docs'),
     },
     extensions: ['.js', '.ts', '.tsx', '.d.ts'],
@@ -33,7 +33,7 @@ module.exports = {
     rules: [
       {
         test: /\.(js|ts|tsx)$/,
-        exclude: /node_modules\/(?!@material-ui)/,
+        exclude: /node_modules\/(?!@mui)/,
         loader: 'babel-loader',
         options: {
           cacheDirectory: true,

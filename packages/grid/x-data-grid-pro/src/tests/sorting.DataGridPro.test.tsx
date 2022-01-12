@@ -3,11 +3,10 @@ import {
   DataGridPro,
   DataGridProProps,
   GridApiRef,
-  GridComponentProps,
   GridSortModel,
   useGridApiRef,
 } from '@mui/x-data-grid-pro';
-import { createRenderer, fireEvent } from '@material-ui/monorepo/test/utils';
+import { createRenderer, fireEvent } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { getColumnValues, getCell, getColumnHeaderCell } from 'test/utils/helperFn';
@@ -41,7 +40,7 @@ describe('<DataGridPro /> - Sorting', () => {
 
   let apiRef: GridApiRef;
 
-  const TestCase = (props: Partial<GridComponentProps>) => {
+  const TestCase = (props: Partial<DataGridProProps>) => {
     const { rows, ...other } = props;
     apiRef = useGridApiRef();
     return (
@@ -240,7 +239,7 @@ describe('<DataGridPro /> - Sorting', () => {
 
     it('should control sort state when the model and the onChange are set', () => {
       let expectedModel: GridSortModel = [];
-      const ControlCase = (props: Partial<GridComponentProps>) => {
+      const ControlCase = (props: Partial<DataGridProProps>) => {
         const { rows, columns, ...others } = props;
         const [caseSortModel, setSortModel] = React.useState<GridSortModel>([]);
         const handleSortChange = (newModel) => {

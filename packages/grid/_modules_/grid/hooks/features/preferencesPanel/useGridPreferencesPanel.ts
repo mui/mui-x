@@ -4,11 +4,11 @@ import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { GridPreferencePanelsValue } from './gridPreferencePanelsValue';
 import { useGridStateInit } from '../../utils/useGridStateInit';
-import { GridComponentProps } from '../../../GridComponentProps';
+import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 
 export const useGridPreferencesPanel = (
   apiRef: GridApiRef,
-  props: Pick<GridComponentProps, 'initialState'>,
+  props: Pick<DataGridProcessedProps, 'initialState'>,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridPreferencesPanel');
 

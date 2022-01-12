@@ -10,18 +10,11 @@ import TableBody from '@mui/material/TableBody';
 import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
 import Box from '@mui/material/Box';
-import { makeStyles } from '@mui/styles';
 import IconButton from '@mui/material/IconButton';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import Collapse from '@mui/material/Collapse';
 import events from './events.json';
-
-const useStyles = makeStyles({
-  root: {
-    width: '100%',
-  },
-});
 
 function escapeHTML(value) {
   return value.replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -56,7 +49,7 @@ useGridApiEventHandler(GridEvents.${event.name}, onEvent);
   }, [event]);
 
   return (
-    <React.Fragment key={event.name}>
+    <React.Fragment>
       <TableRow>
         <TableCell style={{ borderBottom: 'unset' }}>
           <IconButton
@@ -116,13 +109,12 @@ useGridApiEventHandler(GridEvents.${event.name}, onEvent);
 };
 
 export default function CatalogOfEventsNoSnap() {
-  const classes = useStyles();
-
   return (
-    <MarkdownElement className={classes.root}>
+    <MarkdownElement>
       <Table>
         <TableHead>
           <TableRow>
+            <TableCell />
             <TableCell align="left">Name</TableCell>
             <TableCell align="left">Description</TableCell>
             <TableCell />
@@ -130,7 +122,7 @@ export default function CatalogOfEventsNoSnap() {
         </TableHead>
         <TableBody>
           {events.map((event) => (
-            <EventRow event={event} />
+            <EventRow key={event.name} event={event} />
           ))}
         </TableBody>
       </Table>

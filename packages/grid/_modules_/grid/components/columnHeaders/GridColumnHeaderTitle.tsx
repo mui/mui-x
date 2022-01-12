@@ -3,13 +3,12 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import Tooltip from '@mui/material/Tooltip';
 import { isOverflown } from '../../utils/domUtils';
 import { getDataGridUtilityClass } from '../../gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { GridComponentProps } from '../../GridComponentProps';
+import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 
-type OwnerState = { classes: GridComponentProps['classes'] };
+type OwnerState = { classes: DataGridProcessedProps['classes'] };
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -55,6 +54,7 @@ export interface GridColumnHeaderTitleProps {
 // No React.memo here as if we display the sort icon, we need to recalculate the isOver
 function GridColumnHeaderTitle(props: GridColumnHeaderTitleProps) {
   const { label, description, columnWidth } = props;
+  const rootProps = useGridRootProps();
   const titleRef = React.useRef<HTMLDivElement>(null);
   const [tooltip, setTooltip] = React.useState('');
 
@@ -70,9 +70,12 @@ function GridColumnHeaderTitle(props: GridColumnHeaderTitleProps) {
   }, [titleRef, columnWidth, description, label]);
 
   return (
-    <Tooltip title={description || tooltip}>
+    <rootProps.components.BaseTooltip
+      title={description || tooltip}
+      {...rootProps.componentsProps?.baseTooltip}
+    >
       <ColumnHeaderInnerTitle ref={titleRef}>{label}</ColumnHeaderInnerTitle>
-    </Tooltip>
+    </rootProps.components.BaseTooltip>
   );
 }
 

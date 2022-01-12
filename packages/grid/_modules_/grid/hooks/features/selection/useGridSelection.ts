@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { GridEvents, GridEventListener } from '../../../models/events';
-import { GridComponentProps } from '../../../GridComponentProps';
+import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridSelectionApi } from '../../../models/api/gridSelectionApi';
 import { GridRowId } from '../../../models/gridRows';
@@ -25,7 +25,7 @@ import { GridCellModes } from '../../../models/gridEditRowModel';
 import { GridColumnsRawState } from '../columns/gridColumnsState';
 import { isKeyboardEvent } from '../../../utils/keyboardUtils';
 
-type OwnerState = { classes: GridComponentProps['classes'] };
+type OwnerState = { classes: DataGridProcessedProps['classes'] };
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -47,7 +47,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 export const useGridSelection = (
   apiRef: GridApiRef,
   props: Pick<
-    GridComponentProps,
+    DataGridProcessedProps,
     | 'checkboxSelection'
     | 'selectionModel'
     | 'onSelectionModelChange'
