@@ -333,7 +333,7 @@ In the following demo, you can not hide the "username" column.
 
 To initialize the visible columns without controlling them, provide the model to the `initialState` prop.
 
-**Note:** The order of the fields in the visible columns model do not matter.
+**Note:** The order of the fields in the visible columns model does not matter.
 
 ```tsx
 <DataGrid

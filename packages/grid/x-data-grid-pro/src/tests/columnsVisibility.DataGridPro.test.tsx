@@ -9,6 +9,8 @@ import {
   DataGridProProps,
   GridRowsProp,
   GridColumns,
+  gridColumnLookupSelector,
+  gridColumnVisibilityModelSelector,
 } from '@mui/x-data-grid-pro';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
@@ -45,7 +47,7 @@ describe('<DataGridPro /> - Columns Visibility', () => {
   };
 
   describe('apiRef: setColumnVisibility', () => {
-    describe('Model on 1st render: do not `GridColDef.hide`', () => {
+    describe('Model on initialState: do not `GridColDef.hide`', () => {
       it('should update `columnVisibilityModel` but not `GridColDef.hide` in state', () => {
         render(
           <TestDataGridPro
@@ -53,15 +55,15 @@ describe('<DataGridPro /> - Columns Visibility', () => {
           />,
         );
         apiRef.current.setColumnVisibility('id', false);
-        expect(apiRef.current.state.columns.lookup.id.hide).to.equal(false);
-        expect(apiRef.current.state.columns.columnVisibilityModel).to.deep.equal({
+        expect(gridColumnLookupSelector(apiRef.current.state).id.hide).to.equal(false);
+        expect(gridColumnVisibilityModelSelector(apiRef.current.state)).to.deep.equal({
           id: false,
           idBis: false,
         });
 
         apiRef.current.setColumnVisibility('id', true);
-        expect(apiRef.current.state.columns.lookup.id.hide).to.equal(false);
-        expect(apiRef.current.state.columns.columnVisibilityModel).to.deep.equal({
+        expect(gridColumnLookupSelector(apiRef.current.state).id.hide).to.equal(false);
+        expect(gridColumnVisibilityModelSelector(apiRef.current.state)).to.deep.equal({
           id: true,
           idBis: false,
         });
@@ -110,17 +112,19 @@ describe('<DataGridPro /> - Columns Visibility', () => {
       });
     });
 
-    describe('No model on 1st render: use `GridColDef.hide` (deprecated)', () => {
+    describe('No model on initialState or on the control prop on 1st render: use `GridColDef.hide` (deprecated)', () => {
       it('should update `columnVisibilityModel` and `GridColDef.hide` in state', () => {
         render(<TestDataGridPro />);
 
         apiRef.current.setColumnVisibility('id', false);
-        expect(apiRef.current.state.columns.lookup.id.hide).to.equal(true);
-        expect(apiRef.current.state.columns.columnVisibilityModel).to.deep.equal({ id: false });
+        expect(gridColumnLookupSelector(apiRef.current.state).id.hide).to.equal(true);
+        expect(gridColumnVisibilityModelSelector(apiRef.current.state)).to.deep.equal({
+          id: false,
+        });
 
         apiRef.current.setColumnVisibility('id', true);
-        expect(apiRef.current.state.columns.lookup.id.hide).to.equal(false);
-        expect(apiRef.current.state.columns.columnVisibilityModel).to.deep.equal({ id: true });
+        expect(gridColumnLookupSelector(apiRef.current.state).id.hide).to.equal(false);
+        expect(gridColumnVisibilityModelSelector(apiRef.current.state)).to.deep.equal({ id: true });
       });
 
       it('should call `onColumnVisibilityModelChange` with the new model', () => {
