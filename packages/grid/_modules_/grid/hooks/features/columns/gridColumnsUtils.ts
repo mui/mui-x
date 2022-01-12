@@ -1,4 +1,4 @@
-import { GridColumnLookup, GridColumnsState, GridColumnsRawState } from './gridColumnsInterfaces';
+import { GridColumnLookup, GridColumnsState, GridColumnsRawState } from './gridColumnsState';
 import {
   DEFAULT_GRID_COL_TYPE_KEY,
   getGridDefaultColumnTypes,

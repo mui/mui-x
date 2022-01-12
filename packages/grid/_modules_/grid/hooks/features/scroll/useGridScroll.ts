@@ -61,7 +61,7 @@ export const useGridScroll = (
 
       logger.debug(`Scrolling to cell at row ${params.rowIndex}, col: ${params.colIndex} `);
 
-      let scrollCoordinates: Partial<GridScrollParams> = {};
+      let scrollCoordinates: any = {};
 
       if (params.colIndex != null) {
         scrollCoordinates.left = scrollIntoView({

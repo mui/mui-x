@@ -17,11 +17,8 @@ import { useFirstRender } from '../../utils/useFirstRender';
 import { buildRowTree, BuildRowTreeGroupingCriteria } from '../../../utils/tree/buildRowTree';
 import { GridRowGroupingPreProcessing } from '../../core/rowGroupsPerProcessing';
 import { gridFilteredDescendantCountLookupSelector } from '../filter';
-import {
-  GridPreProcessingGroup,
-  GridPreProcessor,
-  useGridRegisterPreProcessor,
-} from '../../core/preProcessing';
+import { GridPreProcessingGroup, useGridRegisterPreProcessor } from '../../core/preProcessing';
+import { GridColumnsRawState } from '../columns/gridColumnsState';
 import { GridFilteringMethod } from '../filter/gridFilterState';
 import { gridRowIdsSelector, gridRowTreeSelector } from '../rows';
 import { useGridRegisterFilteringMethod } from '../filter/useGridRegisterFilteringMethod';
@@ -140,10 +137,8 @@ export const useGridTreeData = (
     };
   }, [apiRef, props.groupingColDef]);
 
-  const updateGroupingColumn = React.useCallback<
-    GridPreProcessor<GridPreProcessingGroup.hydrateColumns>
-  >(
-    (columnsState) => {
+  const updateGroupingColumn = React.useCallback(
+    (columnsState: GridColumnsRawState) => {
       const groupingColDefField = GRID_TREE_DATA_GROUPING_COL_DEF_FORCED_PROPERTIES.field;
 
       const shouldHaveGroupingColumn = props.treeData;

@@ -22,11 +22,7 @@ import { useGridStateInit } from '../../utils/useGridStateInit';
 import { useFirstRender } from '../../utils/useFirstRender';
 import { GridSortingMethod, GridSortingMethodCollection } from './gridSortingState';
 import { buildAggregatedSortingApplier } from './gridSortingUtils';
-import {
-  GridPreProcessingGroup,
-  GridPreProcessor,
-  useGridRegisterPreProcessor,
-} from '../../core/preProcessing';
+import { GridPreProcessingGroup } from '../../core/preProcessing';
 import { useGridRegisterSortingMethod } from './useGridRegisterSortingMethod';
 
 /**
@@ -216,43 +212,6 @@ export const useGridSorting = (
   /**
    * PRE-PROCESSING
    */
-  const stateExportPreProcessing = React.useCallback<
-    GridPreProcessor<GridPreProcessingGroup.exportState>
-  >(
-    (prevState) => {
-      return {
-        ...prevState,
-        sorting: {
-          sortModel: gridSortModelSelector(apiRef.current.state),
-        },
-      };
-    },
-    [apiRef],
-  );
-
-  const stateRestorePreProcessing = React.useCallback<
-    GridPreProcessor<GridPreProcessingGroup.restoreState>
-  >(
-    (params, context) => {
-      if (context.stateToRestore.sorting?.sortModel == null) {
-        return params;
-      }
-
-      return {
-        ...params,
-        callbacks: [...params.callbacks, apiRef.current.applySorting],
-        state: {
-          ...params.state,
-          sorting: {
-            ...params.state.sorting,
-            sortModel: context.stateToRestore.sorting.sortModel,
-          },
-        },
-      };
-    },
-    [apiRef],
-  );
-
   const flatSortingMethod = React.useCallback<GridSortingMethod>(
     (params) => {
       if (!params.sortRowList) {
@@ -265,12 +224,6 @@ export const useGridSorting = (
     [apiRef],
   );
 
-  useGridRegisterPreProcessor(apiRef, GridPreProcessingGroup.exportState, stateExportPreProcessing);
-  useGridRegisterPreProcessor(
-    apiRef,
-    GridPreProcessingGroup.restoreState,
-    stateRestorePreProcessing,
-  );
   useGridRegisterSortingMethod(apiRef, 'none', flatSortingMethod);
 
   /**

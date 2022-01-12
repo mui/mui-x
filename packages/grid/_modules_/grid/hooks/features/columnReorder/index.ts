@@ -1,2 +1,2 @@
 export * from './columnReorderSelector';
-export type { GridColumnReorderState } from './columnReorderInterfaces';
+export * from './columnReorderState';

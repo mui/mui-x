@@ -21,7 +21,7 @@ import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { useGridStateInit } from '../../utils/useGridStateInit';
 import { GridColumnVisibilityChangeParams } from '../../../models';
 import { GridPreProcessingGroup } from '../../core/preProcessing';
-import { GridColumnsState } from './gridColumnsInterfaces';
+import { GridColumnsState } from './gridColumnsState';
 import { hydrateColumnsWidth, computeColumnTypes, createColumnsState } from './gridColumnsUtils';
 
 /**
