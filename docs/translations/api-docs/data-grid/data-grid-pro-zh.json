@@ -77,7 +77,7 @@
     "onEditCellPropsChange": "Callback fired when the edit cell value changes.<br><br><strong>Signature:</strong><br><code>function(params: GridEditCellPropsParams, event: MuiEvent&lt;React.SyntheticEvent&gt;, details: GridCallbackDetails) =&gt; void</code><br><em>params:</em> With all properties from GridEditCellPropsParams.<br><em>event:</em> The event that caused this prop to be called.<br><em>details:</em> Additional details for this callback.",
     "onEditRowsModelChange": "Callback fired when the <code>editRowsModel</code> changes.<br><br><strong>Signature:</strong><br><code>function(editRowsModel: GridEditRowsModel, details: GridCallbackDetails) =&gt; void</code><br><em>editRowsModel:</em> With all properties from GridEditRowsModel.<br><em>details:</em> Additional details for this callback.",
     "onError": "Callback fired when an exception is thrown in the grid.<br><br><strong>Signature:</strong><br><code>function(args: any, event: MuiEvent&lt;{}&gt;, details: GridCallbackDetails) =&gt; void</code><br><em>args:</em> The arguments passed to the <code>showError</code> call.<br><em>event:</em> The event object.<br><em>details:</em> Additional details for this callback.",
-    "onFilterModelChange": "Callback fired when the Filter model changes before the filters are applied.<br><br><strong>Signature:</strong><br><code>function(model: GridFilterModel, details: GridCallbackDetails) =&gt; void</code><br><em>model:</em> With all properties from GridFilterModel.<br><em>details:</em> Additional details for this callback.",
+    "onFilterModelChange": "Callback fired when the Filter model changes before the filters are applied.<br><br><strong>Signature:</strong><br><code>function(model: GridFilterModel, details: GridCallbackDetails) =&gt; void</code><br><em>model:</em> With all properties from <a href=\"/api/data-grid/grid-filter-model/\">GridFilterModel</a>.<br><em>details:</em> Additional details for this callback.",
     "onPageChange": "Callback fired when the current page has changed.<br><br><strong>Signature:</strong><br><code>function(page: number, details: GridCallbackDetails) =&gt; void</code><br><em>page:</em> Index of the page displayed on the Grid.<br><em>details:</em> Additional details for this callback.",
     "onPageSizeChange": "Callback fired when the page size has changed.<br><br><strong>Signature:</strong><br><code>function(pageSize: number, details: GridCallbackDetails) =&gt; void</code><br><em>pageSize:</em> Size of the page displayed on the Grid.<br><em>details:</em> Additional details for this callback.",
     "onPinnedColumnsChange": "Callback fired when the pinned columns have changed.<br><br><strong>Signature:</strong><br><code>function(pinnedColumns: GridPinnedColumns, details: GridCallbackDetails) =&gt; void</code><br><em>pinnedColumns:</em> The changed pinned columns.<br><em>details:</em> Additional details for this callback.",
@@ -248,6 +248,16 @@
       "nodeName": "the column header separator",
       "conditions": "the column is being resized"
     },
+    "columnSeparator--sideLeft": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the column header separator",
+      "conditions": "the side is \"left\""
+    },
+    "columnSeparator--sideRight": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the column header separator",
+      "conditions": "the side is \"right\""
+    },
     "columnSeparator": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the column header separator element"
@@ -415,8 +425,15 @@
     }
   },
   "slotDescriptions": {
-    "Cell": "Component rendered for each cell.",
     "BaseCheckbox": "The custom Checkbox component used in the grid for both header and cells.",
+    "BaseTextField": "The custom TextField component used in the grid.",
+    "BaseFormControl": "The custom FormControl component used in the grid.",
+    "BaseSelect": "The custom Select component used in the grid.",
+    "BaseSwitch": "The custom Switch component used in the grid.",
+    "BaseButton": "The custom Button component used in the grid.",
+    "BaseTooltip": "The custom Tooltip component used in the grid.",
+    "BasePopper": "The custom Popper component used in the grid.",
+    "Cell": "Component rendered for each cell.",
     "ColumnMenu": "Column menu component rendered by clicking on the 3 dots &quot;kebab&quot; icon in column headers.",
     "ErrorOverlay": "Error overlay component rendered above the grid when an error is caught.",
     "Footer": "Footer component rendered at the bottom of the grid viewport.",

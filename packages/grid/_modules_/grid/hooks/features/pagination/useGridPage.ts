@@ -38,7 +38,7 @@ const applyValidPage = (paginationState: GridPaginationState): GridPaginationSta
  */
 export const useGridPage = (
   apiRef: GridApiRef,
-  props: Pick<DataGridProcessedProps, 'page' | 'onPageChange' | 'rowCount'>,
+  props: Pick<DataGridProcessedProps, 'page' | 'onPageChange' | 'rowCount' | 'initialState'>,
 ) => {
   const logger = useGridLogger(apiRef, 'useGridPage');
 
@@ -46,7 +46,7 @@ export const useGridPage = (
     ...state,
     pagination: {
       ...state.pagination!,
-      page: props.page ?? 0,
+      page: props.page ?? props.initialState?.pagination?.page ?? 0,
       pageCount: getPageCount(props.rowCount ?? 0, state.pagination!.pageSize!),
       rowCount: props.rowCount ?? 0,
     },

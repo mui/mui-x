@@ -1,0 +1,11 @@
+<DataGrid
+  {...data}
+  columns={columns}
+  initialState={{
+    filter: {
+      filterModel: {
+        items: [{ columnField: 'unitPrice', value: '25', operatorValue: '>' }],
+      },
+    },
+  }}
+/>

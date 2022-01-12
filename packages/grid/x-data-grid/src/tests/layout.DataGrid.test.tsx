@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRenderer, screen, ErrorBoundary, waitFor } from '@material-ui/monorepo/test/utils';
+import { createRenderer, screen, ErrorBoundary, waitFor } from '@mui/monorepo/test/utils';
 import { SinonStub, stub } from 'sinon';
 import { expect } from 'chai';
 import {

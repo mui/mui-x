@@ -5,23 +5,43 @@ import { gridSortedRowEntriesSelector } from '../sorting/gridSortingSelector';
 import { gridColumnLookupSelector } from '../columns/gridColumnsSelector';
 import { gridRowTreeDepthSelector, gridRowTreeSelector } from '../rows';
 
+/**
+ * @category Filtering
+ * @ignore - do not document.
+ */
 export const gridFilterStateSelector = (state: GridState) => state.filter;
 
+/**
+ * Get the current filter model.
+ * @category Filtering
+ */
 export const gridFilterModelSelector = createSelector(
   gridFilterStateSelector,
   (filterState) => filterState.filterModel,
 );
 
+/**
+ * @category Filtering
+ * @ignore - do not document.
+ */
 export const gridVisibleRowsLookupSelector = createSelector(
   gridFilterStateSelector,
   (filterState) => filterState.visibleRowsLookup,
 );
 
+/**
+ * @category Filtering
+ * @ignore - do not document.
+ */
 export const gridFilteredDescendantCountLookupSelector = createSelector(
   gridFilterStateSelector,
   (filterState) => filterState.filteredDescendantCountLookup,
 );
 
+/**
+ * Get the id and the model of the rows accessible after the filtering process.
+ * @category Filtering
+ */
 export const gridVisibleSortedRowEntriesSelector = createSelector(
   gridVisibleRowsLookupSelector,
   gridSortedRowEntriesSelector,
@@ -29,16 +49,26 @@ export const gridVisibleSortedRowEntriesSelector = createSelector(
     sortedRows.filter((row) => visibleRowsLookup[row.id] !== false),
 );
 
+/**
+ * Get the id of the rows accessible after the filtering process.
+ * @category Filtering
+ */
 export const gridVisibleSortedRowIdsSelector = createSelector(
   gridVisibleSortedRowEntriesSelector,
   (visibleSortedRowEntries) => visibleSortedRowEntries.map((row) => row.id),
 );
 
 /**
+ * @category Filtering
  * @deprecated Use `gridVisibleSortedRowIdsSelector` instead
+ * @ignore - do not document.
  */
 export const gridVisibleRowsSelector = gridVisibleSortedRowIdsSelector;
 
+/**
+ * Get the id and the model of the top level rows accessible after the filtering process.
+ * @category Filtering
+ */
 export const gridVisibleSortedTopLevelRowEntriesSelector = createSelector(
   gridVisibleSortedRowEntriesSelector,
   gridRowTreeSelector,
@@ -52,16 +82,28 @@ export const gridVisibleSortedTopLevelRowEntriesSelector = createSelector(
   },
 );
 
+/**
+ * Get the amount of rows accessible after the filtering process.
+ * @category Filtering
+ */
 export const gridVisibleRowCountSelector = createSelector(
   gridVisibleSortedRowEntriesSelector,
   (visibleSortedRows) => visibleSortedRows.length,
 );
 
+/**
+ * Get the amount of top level rows accessible after the filtering process.
+ * @category Filtering
+ */
 export const gridVisibleTopLevelRowCountSelector = createSelector(
   gridVisibleSortedTopLevelRowEntriesSelector,
   (visibleSortedTopLevelRows) => visibleSortedTopLevelRows.length,
 );
 
+/**
+ * @category Filtering
+ * @ignore - do not document.
+ */
 export const gridFilterActiveItemsSelector = createSelector(
   gridFilterModelSelector,
   gridColumnLookupSelector,
@@ -87,6 +129,11 @@ export const gridFilterActiveItemsSelector = createSelector(
 );
 
 export type GridFilterActiveItemsLookup = { [columnField: string]: GridFilterItem[] };
+
+/**
+ * @category Filtering
+ * @ignore - do not document.
+ */
 export const gridFilterActiveItemsLookupSelector = createSelector(
   gridFilterActiveItemsSelector,
   (activeFilters) => {

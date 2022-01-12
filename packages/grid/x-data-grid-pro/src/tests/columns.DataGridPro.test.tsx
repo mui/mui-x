@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRenderer, fireEvent, screen, waitFor } from '@material-ui/monorepo/test/utils';
+import { createRenderer, fireEvent, screen, waitFor } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import {
@@ -83,6 +83,13 @@ describe('<DataGridPro /> - Columns', () => {
   });
 
   describe('resizing', () => {
+    before(function beforeHook() {
+      if (isJSDOM) {
+        // Need layouting
+        this.skip();
+      }
+    });
+
     const columns = [{ field: 'brand', width: 100 }];
 
     it('should allow to resize columns with the mouse', () => {

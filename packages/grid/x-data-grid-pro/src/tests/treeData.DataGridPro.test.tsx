@@ -1,4 +1,4 @@
-import { createRenderer, fireEvent, screen, act } from '@material-ui/monorepo/test/utils';
+import { createRenderer, fireEvent, screen, act } from '@mui/monorepo/test/utils';
 import { getCell, getColumnHeadersTextContent, getColumnValues } from 'test/utils/helperFn';
 import * as React from 'react';
 import { expect } from 'chai';
