@@ -2,5 +2,7 @@
   {...data}
   loading={loading}
   columnVisibilityModel={columnVisibilityModel}
-  onColumnVisibilityModelChange={(newModel) => setColumnVisibilityModel(newModel)}
+  onColumnVisibilityModelChange={(newModel) =>
+    setColumnVisibilityModel(newModel)
+  }
 />
