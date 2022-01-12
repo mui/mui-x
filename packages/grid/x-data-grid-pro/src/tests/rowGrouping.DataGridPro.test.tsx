@@ -1,10 +1,16 @@
 import { createRenderer, fireEvent, screen, act } from '@mui/monorepo/test/utils';
-import { getColumnHeadersTextContent, getColumnValues } from 'test/utils/helperFn';
+import {
+  getColumnHeaderCell,
+  getColumnHeadersTextContent,
+  getColumnValues,
+} from 'test/utils/helperFn';
 import * as React from 'react';
 import { expect } from 'chai';
 import {
   DataGridPro,
   DataGridProProps,
+  getRowGroupingFieldFromGroupingCriteria,
+  GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD,
   GridApiRef,
   GridKeyGetterParams,
   GridPreferencePanelsValue,
@@ -56,7 +62,7 @@ const baselineProps: DataGridProProps = {
   },
 };
 
-describe('<DataGridPro /> - Group Rows By Column', () => {
+describe.only('<DataGridPro /> - Group Rows By Column', () => {
   const { render, clock } = createRenderer({ clock: 'fake' });
 
   let apiRef: GridApiRef;
@@ -701,38 +707,42 @@ describe('<DataGridPro /> - Group Rows By Column', () => {
 
   describe('props: groupingColDef when groupingColumMode = "single"', () => {
     it('should not allow to override the field', () => {
+      render(
+        <Test
+          initialState={{ rowGrouping: { model: ['category1'] } }}
+          rowGroupingColumnMode="single"
+          groupingColDef={{
+            // @ts-expect-error
+            field: 'custom-field',
+          }}
+        />,
+      );
+
+      expect(apiRef.current.getAllColumns()[0].field).to.equal('__row_group_by_columns_group__');
+    });
+
+    it('should react to groupingColDef update', () => {
       const { setProps } = render(
         <Test
-          initialState={{ rowGrouping: { model: ['category1', 'category2'] } }}
-          rowGroupingColumnMode="multiple"
-          groupingColDef={(params) =>
-            params.fields.includes('category1')
-              ? {
-                  headerName: 'Custom group',
-                }
-              : {}
-          }
+          initialState={{ rowGrouping: { model: ['category1'] } }}
+          rowGroupingColumnMode="single"
+          groupingColDef={{}}
         />,
       );
 
       expect(getColumnHeadersTextContent()).to.deep.equal([
-        'Custom group',
-        'category2',
+        'category1',
         'id',
         'category1',
         'category2',
       ]);
 
       setProps({
-        groupingColDef: (params) =>
-          params.fields.includes('category2')
-            ? {
-                headerName: 'Custom group',
-              }
-            : {},
+        groupingColDef: {
+          headerName: 'Custom group',
+        },
       });
       expect(getColumnHeadersTextContent()).to.deep.equal([
-        'category1',
         'Custom group',
         'id',
         'category1',
@@ -740,7 +750,31 @@ describe('<DataGridPro /> - Group Rows By Column', () => {
       ]);
     });
 
-    it('should react to groupingColDef update', () => {});
+    it('should keep the grouping column width between generations', () => {
+      render(
+        <Test
+          initialState={{ rowGrouping: { model: ['category1'] } }}
+          rowGroupingColumnMode="single"
+          groupingColDef={{ width: 200 }}
+        />,
+      );
+
+      // @ts-expect-error need to migrate helpers to TypeScript
+      expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '200px' });
+      apiRef.current.updateColumns([
+        { field: GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD, width: 100 },
+      ]);
+      // @ts-expect-error need to migrate helpers to TypeScript
+      expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '100px' });
+      apiRef.current.updateColumns([
+        {
+          field: 'id',
+          headerName: 'New id',
+        },
+      ]);
+      // @ts-expect-error need to migrate helpers to TypeScript
+      expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '100px' });
+    });
 
     describe('prop: groupColDef.leafField', () => {
       it('should render the leafField `value` on leaves', () => {
@@ -939,7 +973,7 @@ describe('<DataGridPro /> - Group Rows By Column', () => {
       render(
         <Test
           initialState={{ rowGrouping: { model: ['category1'] } }}
-          rowGroupingColumnMode="single"
+          rowGroupingColumnMode="multiple"
           groupingColDef={{
             // @ts-expect-error
             field: 'custom-field',
@@ -947,7 +981,83 @@ describe('<DataGridPro /> - Group Rows By Column', () => {
         />,
       );
 
-      expect(apiRef.current.getAllColumns()[0].field).to.equal('__row_group_by_columns_group__');
+      expect(apiRef.current.getAllColumns()[0].field).to.equal(
+        '__row_group_by_columns_group_category1__',
+      );
+    });
+
+    it('should react to groupingColDef update', () => {
+      const { setProps } = render(
+        <Test
+          initialState={{ rowGrouping: { model: ['category1', 'category2'] } }}
+          rowGroupingColumnMode="multiple"
+          groupingColDef={(params) =>
+            params.fields.includes('category1')
+              ? {
+                  headerName: 'Custom group',
+                }
+              : {}
+          }
+        />,
+      );
+
+      expect(getColumnHeadersTextContent()).to.deep.equal([
+        'Custom group',
+        'category2',
+        'id',
+        'category1',
+        'category2',
+      ]);
+
+      setProps({
+        groupingColDef: (params) =>
+          params.fields.includes('category2')
+            ? {
+                headerName: 'Custom group',
+              }
+            : {},
+      });
+      expect(getColumnHeadersTextContent()).to.deep.equal([
+        'category1',
+        'Custom group',
+        'id',
+        'category1',
+        'category2',
+      ]);
+    });
+
+    it('should keep the grouping column width between generations', () => {
+      render(
+        <Test
+          initialState={{ rowGrouping: { model: ['category1', 'category2'] } }}
+          rowGroupingColumnMode="multiple"
+          groupingColDef={(params) =>
+            params.fields.includes('category1') ? { width: 200 } : { width: 300 }
+          }
+        />,
+      );
+
+      // @ts-expect-error need to migrate helpers to TypeScript
+      expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '200px' });
+      // @ts-expect-error need to migrate helpers to TypeScript
+      expect(getColumnHeaderCell(1)).toHaveInlineStyle({ width: '300px' });
+      apiRef.current.updateColumns([
+        { field: getRowGroupingFieldFromGroupingCriteria('category1'), width: 100 },
+      ]);
+      // @ts-expect-error need to migrate helpers to TypeScript
+      expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '100px' });
+      // @ts-expect-error need to migrate helpers to TypeScript
+      expect(getColumnHeaderCell(1)).toHaveInlineStyle({ width: '300px' });
+      apiRef.current.updateColumns([
+        {
+          field: 'id',
+          headerName: 'New id',
+        },
+      ]);
+      // @ts-expect-error need to migrate helpers to TypeScript
+      expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '100px' });
+      // @ts-expect-error need to migrate helpers to TypeScript
+      expect(getColumnHeaderCell(1)).toHaveInlineStyle({ width: '300px' });
     });
 
     describe('prop: groupColDef.leafField', () => {
@@ -1646,7 +1756,7 @@ describe('<DataGridPro /> - Group Rows By Column', () => {
         ]);
       });
 
-      it('should sort unbalanced grouped by index of the groupingField in the model when sorting by a grouping criteria', () => {
+      it('should sort unbalanced grouped by index of the grouping criteria in the model when sorting by a grouping criteria', () => {
         render(
           <Test
             rows={unbalancedRows}
@@ -1670,7 +1780,7 @@ describe('<DataGridPro /> - Group Rows By Column', () => {
         ]);
       });
 
-      it('should sort unbalanced grouped by index of the groupingField in the model when sorting by leaves', () => {
+      it('should sort unbalanced grouped by index of the grouping criteria in the model when sorting by leaves', () => {
         render(
           <Test
             rows={unbalancedRows}

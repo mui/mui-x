@@ -6,8 +6,8 @@ import { GridColDef } from '../../../models/colDef/gridColDef';
 import { useGridSelector } from '../../../hooks/utils/useGridSelector';
 import { gridRowGroupingSanitizedModelSelector } from '../../../hooks/features/rowGrouping/gridRowGroupingSelector';
 import {
-  getGroupingCriteriaFieldFromGroupingColDefField,
-  GROUPING_COLUMN_SINGLE,
+  getRowGroupingCriteriaFromGroupingField,
+  GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD,
   isGroupingColumn,
 } from '../../../hooks/features/rowGrouping/gridRowGroupingUtils';
 import { gridColumnLookupSelector } from '../../../hooks/features/columns/gridColumnsSelector';
@@ -44,11 +44,11 @@ const GridRowGroupingColumnMenuItems = (props: GridRowGroupingColumnMenuItemsPro
     return null;
   }
 
-  if (column.field === GROUPING_COLUMN_SINGLE) {
+  if (column.field === GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD) {
     return <React.Fragment>{rowGroupingModel.map(renderUnGroupingMenuItem)}</React.Fragment>;
   }
 
-  return renderUnGroupingMenuItem(getGroupingCriteriaFieldFromGroupingColDefField(column.field)!);
+  return renderUnGroupingMenuItem(getRowGroupingCriteriaFromGroupingField(column.field)!);
 };
 
 GridRowGroupingColumnMenuItems.propTypes = {

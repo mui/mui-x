@@ -12,7 +12,10 @@ import {
 import { GridColumnRawLookup } from '../columns/gridColumnsState';
 import { GridGroupingCriteriaCell } from '../../../components/cell/GridGroupingCriteriaCell';
 import { GridGroupingColumnLeafCell } from '../../../components/cell/GridGroupingColumnLeafCell';
-import { getGroupingColDefFieldFromGroupingCriteriaField } from './gridRowGroupingUtils';
+import {
+  getRowGroupingFieldFromGroupingCriteria,
+  GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD,
+} from './gridRowGroupingUtils';
 import { gridRowGroupingSanitizedModelSelector } from './gridRowGroupingSelector';
 
 const GROUPING_COL_DEF_DEFAULT_PROPERTIES: Omit<GridColDef, 'field'> = {
@@ -234,7 +237,7 @@ export const createGroupingColDefForOneGroupingCriteria = ({
 
   // The properties that can't be overridden with `colDefOverride`
   const forcedProperties: Pick<GridColDef, 'field' | 'editable'> = {
-    field: getGroupingColDefFieldFromGroupingCriteriaField(groupingCriteria),
+    field: getRowGroupingFieldFromGroupingCriteria(groupingCriteria),
     ...GROUPING_COL_DEF_FORCED_PROPERTIES,
   };
 
@@ -346,7 +349,7 @@ export const createGroupingColDefForAllGroupingCriteria = ({
 
   // The properties that can't be overridden with `colDefOverride`
   const forcedProperties: Pick<GridColDef, 'field' | 'editable'> = {
-    field: getGroupingColDefFieldFromGroupingCriteriaField(null),
+    field: GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD,
     ...GROUPING_COL_DEF_FORCED_PROPERTIES,
   };
 

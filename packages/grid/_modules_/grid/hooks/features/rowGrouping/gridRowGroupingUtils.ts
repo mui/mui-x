@@ -8,21 +8,19 @@ import { GridFilterState } from '../filter';
 import { DataGridProProcessedProps } from '../../../models/props/DataGridProProps';
 import { GridAggregatedFilterItemApplier } from '../filter/gridFilterState';
 
-export const GROUPING_COLUMN_SINGLE = '__row_group_by_columns_group__';
+export const GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD = '__row_group_by_columns_group__';
 
 export const GROUPING_COLUMNS_FEATURE_NAME = 'grouping-columns';
 
-export const getGroupingColDefFieldFromGroupingCriteriaField = (
-  groupingCriteria: string | null,
-) => {
+export const getRowGroupingFieldFromGroupingCriteria = (groupingCriteria: string) => {
   if (groupingCriteria === null) {
-    return GROUPING_COLUMN_SINGLE;
+    return GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD;
   }
 
   return `__row_group_by_columns_group_${groupingCriteria}__`;
 };
 
-export const getGroupingCriteriaFieldFromGroupingColDefField = (groupingColDefField: string) => {
+export const getRowGroupingCriteriaFromGroupingField = (groupingColDefField: string) => {
   const match = groupingColDefField.match(/^__row_group_by_columns_group_(.*)__$/);
 
   if (!match) {
@@ -33,8 +31,8 @@ export const getGroupingCriteriaFieldFromGroupingColDefField = (groupingColDefFi
 };
 
 export const isGroupingColumn = (field: string) =>
-  field === GROUPING_COLUMN_SINGLE ||
-  getGroupingCriteriaFieldFromGroupingColDefField(field) !== null;
+  field === GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD ||
+  getRowGroupingCriteriaFromGroupingField(field) !== null;
 
 interface FilterRowTreeFromTreeDataParams {
   rowTree: GridRowTreeConfig;
@@ -45,11 +43,11 @@ interface FilterRowTreeFromTreeDataParams {
  * When filtering a group, we only want to filter according to the items related to this grouping column.
  */
 const shouldApplyFilterItemOnGroup = (item: GridFilterItem, node: GridRowTreeNodeConfig) => {
-  if (item.columnField === GROUPING_COLUMN_SINGLE) {
+  if (item.columnField === GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD) {
     return true;
   }
 
-  const groupingCriteriaField = getGroupingCriteriaFieldFromGroupingColDefField(item.columnField);
+  const groupingCriteriaField = getRowGroupingCriteriaFromGroupingField(item.columnField);
 
   return groupingCriteriaField === node.groupingField;
 };

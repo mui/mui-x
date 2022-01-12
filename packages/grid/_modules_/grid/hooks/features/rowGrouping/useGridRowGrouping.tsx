@@ -22,7 +22,7 @@ import {
 import { DataGridProProcessedProps } from '../../../models/props/DataGridProProps';
 import {
   filterRowTreeFromGroupingColumns,
-  getGroupingColDefFieldFromGroupingCriteriaField,
+  getRowGroupingFieldFromGroupingCriteria,
   getColDefOverrides,
   GROUPING_COLUMNS_FEATURE_NAME,
   isGroupingColumn,
@@ -463,8 +463,7 @@ export const useGridRowGrouping = (
 
         const isOnGroupingCell =
           props.rowGroupingColumnMode === 'single' ||
-          getGroupingColDefFieldFromGroupingCriteriaField(params.rowNode.groupingField) ===
-            params.field;
+          getRowGroupingFieldFromGroupingCriteria(params.rowNode.groupingField) === params.field;
         if (!isOnGroupingCell || filteredDescendantCount === 0) {
           return;
         }
