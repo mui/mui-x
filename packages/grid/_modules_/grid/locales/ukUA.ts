@@ -3,26 +3,19 @@ import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
 type PluralForm = {
-  single: string;
-  other: string;
+  one: string;
+  few: string;
   many: string;
 };
 
-const getPluralForm = (
-  count: number,
-  options: PluralForm = {
-    single: 'активний фільтр',
-    other: 'активні фільтра',
-    many: 'активних фільтрів',
-  },
-) => {
+const getPluralForm = (count: number, options: PluralForm) => {
   let pluralForm = options.many;
   const lastDigit = count % 10;
 
   if (lastDigit > 1 && lastDigit < 5) {
-    pluralForm = options.other;
+    pluralForm = options.few;
   } else if (lastDigit === 1) {
-    pluralForm = options.single;
+    pluralForm = options.one;
   }
 
   return `${count} ${pluralForm}`;
@@ -50,7 +43,12 @@ const ukUAGrid: Partial<GridLocaleText> = {
   toolbarFiltersLabel: 'Показати фільтри',
   toolbarFiltersTooltipHide: 'Приховати фільтри',
   toolbarFiltersTooltipShow: 'Показати фільтри',
-  toolbarFiltersTooltipActive: getPluralForm,
+  toolbarFiltersTooltipActive: (count) =>
+    getPluralForm(count, {
+      one: 'активний фільтр',
+      few: 'активні фільтри',
+      many: 'активних фільтрів',
+    }),
 
   // Export selector toolbar button text
   toolbarExport: 'Експорт',
@@ -104,15 +102,20 @@ const ukUAGrid: Partial<GridLocaleText> = {
   columnMenuSortDesc: 'Сортувати за спаданням',
 
   // Column header text
-  columnHeaderFiltersTooltipActive: getPluralForm,
+  columnHeaderFiltersTooltipActive: (count) =>
+    getPluralForm(count, {
+      one: 'активний фільтр',
+      few: 'активні фільтри',
+      many: 'активних фільтрів',
+    }),
   columnHeaderFiltersLabel: 'Показати фільтри',
   columnHeaderSortIconLabel: 'Сортувати',
 
   // Rows selected footer text
   footerRowSelected: (count) =>
     getPluralForm(count, {
-      single: 'вибраний рядок',
-      other: 'вибрані рядки',
+      one: 'вибраний рядок',
+      few: 'вибрані рядки',
       many: 'вибраних рядків',
     }),
 
