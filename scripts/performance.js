@@ -40,7 +40,7 @@ function getMeasures(samples) {
   const median = getMedian(samples);
   const mean = getMean(samples);
   const stdDev = getStdDev(samples, mean);
-  return { min, max, median, mean, stdDev };
+  return { min, max, median, mean, stdDev, samples };
 }
 
 function createLabelNameEngine() {
@@ -128,7 +128,7 @@ async function run() {
   const results = cases.map(async (testCase) => {
     const samples = [];
 
-    for (let j = 0; j < 4; j += 1) {
+    for (let j = 0; j < 5; j += 1) {
       const page = await browser.newPage();
       const time = await testCase(page);
       await page.close();
