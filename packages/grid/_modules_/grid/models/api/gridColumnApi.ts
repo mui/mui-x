@@ -52,7 +52,7 @@ export interface GridColumnApi {
    */
   updateColumns: (cols: GridColDef[]) => void;
   /**
-   * Sets the visible columns model to the one given by `model`.
+   * Sets the column visibility model to the one given by `model`.
    * @param {GridColumnVisibilityModel} model The new visible columns model.
    */
   setColumnVisibilityModel: (model: GridColumnVisibilityModel) => void;

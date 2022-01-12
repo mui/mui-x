@@ -105,7 +105,7 @@ DataGridRaw.propTypes = {
    */
   columnTypes: PropTypes.object,
   /**
-   * Set the visible columns model of the grid.
+   * Set the column visibility model of the grid.
    * If defined, the grid will ignore the `hide` property in [[GridColDef]].
    */
   columnVisibilityModel: PropTypes.object,
@@ -380,7 +380,7 @@ DataGridRaw.propTypes = {
    */
   onColumnVisibilityChange: PropTypes.func,
   /**
-   * Callback fired when the visible columns model changes.
+   * Callback fired when the column visibility model changes.
    * @param {GridColumnVisibilityModel} model The new model.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
