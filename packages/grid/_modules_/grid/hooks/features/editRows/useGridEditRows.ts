@@ -299,7 +299,7 @@ export function useGridEditRows(
   );
 
   const getEditRowsModel = React.useCallback<GridEditRowApi['getEditRowsModel']>(
-    (): GridEditRowsModel => gridEditRowsStateSelector(apiRef.current.state),
+    () => gridEditRowsStateSelector(apiRef.current.state),
     [apiRef],
   );
 
@@ -516,7 +516,7 @@ export function useGridEditRows(
           if (event.key === 'Enter') {
             // TODO: check the return before firing GridEvents.rowEditStop
             // On cell editing, it won't exits the edit mode with error
-            apiRef.current.commitRowChange(params.id);
+            await apiRef.current.commitRowChange(params.id);
             apiRef.current.publishEvent(GridEvents.rowEditStop, rowParams, event);
           } else if (event.key === 'Escape') {
             apiRef.current.publishEvent(GridEvents.rowEditStop, rowParams, event);

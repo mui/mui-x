@@ -1,0 +1,13 @@
+<DataGrid
+  rows={data.rows}
+  columns={columns}
+  initialState={{
+    filter: {
+      filterModel: {
+        items: [
+          { id: 1, columnField: 'rating', value: '3.5', operatorValue: '>=' },
+        ],
+      },
+    },
+  }}
+/>

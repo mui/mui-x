@@ -2,6 +2,7 @@
 export * from './columnMenu';
 export * from './columnReorder';
 export * from './columnResize';
+export * from './columnPinning';
 export * from './columns';
 export * from './density';
 export * from './editRows';
