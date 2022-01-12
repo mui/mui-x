@@ -138,7 +138,7 @@ For example:
   <img src="/static/x/commercial-header-icon-dark.png" style="width: 560px; margin-bottom: 2rem;" alt="" loading="lazy">
 </div>
 
-You can check the [feature comparison](#feature-comparison) for more details.
+You can check the [feature comparison table](#feature-comparison) for more details.
 See [Pricing](https://mui.com/store/items/material-ui-pro/) for details on purchasing licenses.
 
 ### Feature comparison
@@ -233,7 +233,7 @@ If the validation of the license key fail, the component displays a watermark in
 End-users can still use the component.
 The component also prints a warning in the console.
 
-Below are the different validation error possible:
+Here are the different possible validation errors:
 
 #### Missing license key
 
@@ -252,13 +252,13 @@ If the license key is missing, the component will look something like this:
 
 The licenses are perpetual, the license key will work forever with the current version of the software.
 
-However, **access to updates/uprades** is not perpetual.
-If you install a new version of the component for which the license key has expired, you will trigger a watermark and console message.
+However, **access to updates/upgrades** is not perpetual.
+Installing a version of the component released after the license key has expired will trigger a watermark and console message.
 For example, if you just had your a one-year license (default), you are not licensed to install a version that is two years in the future but you can upgrade to the next major that will be released 6 months later.
 
 #### Invalid license key
 
-The license key you have installed was not issued by MUI.
+The license key you have installed is not as issued by MUI.
 
 ## Support
 
