@@ -173,7 +173,7 @@ module.exports = {
       });
       redirects.push({
         source: '/api/data-grid/:path*',
-        destination: '/x/api/mui-data-grid/:path*',
+        destination: '/x/api/data-grid/:path*',
         permanent: false,
       });
     }

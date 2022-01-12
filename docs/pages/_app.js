@@ -215,7 +215,7 @@ function AppWrapper(props) {
   let productPages = pages;
   if (
     router.asPath.startsWith('/x/react-data-grid') ||
-    router.asPath.startsWith('/x/api/mui-data-grid')
+    router.asPath.startsWith('/x/api/data-grid')
   ) {
     productPages = dataGridPages;
   }

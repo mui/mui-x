@@ -53,7 +53,7 @@ const createProject = (options: CreateProgramOptions): Project => {
 
 async function run() {
   const outputDirectories = FEATURE_TOGGLE.enable_product_scope
-    ? ['./docs/pages/api-docs/data-grid', './docs/pages/x/api/mui-data-grid']
+    ? ['./docs/pages/api-docs/data-grid', './docs/pages/x/api/data-grid']
     : ['./docs/pages/api-docs/data-grid'];
   await Promise.allSettled(
     outputDirectories.map(async (dir) => {

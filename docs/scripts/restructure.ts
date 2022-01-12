@@ -1,56 +1,5 @@
 import fs from 'fs';
 import path from 'path';
-import prettier from 'prettier';
-
-const workspaceRoot = path.resolve(__dirname, '../../');
-const prettierConfigPath = path.join(workspaceRoot, 'prettier.config.js');
-
-function writePrettifiedFile(filename: string, data: string, options: object = {}) {
-  const prettierConfig = prettier.resolveConfig.sync(filename, {
-    config: prettierConfigPath,
-  });
-  if (prettierConfig === null) {
-    throw new Error(
-      `Could not resolve config for '${filename}' using prettier config path '${prettierConfigPath}'.`,
-    );
-  }
-
-  fs.writeFileSync(filename, prettier.format(data, { ...prettierConfig, filepath: filename }), {
-    encoding: 'utf8',
-    ...options,
-  });
-}
-
-const appendSource = (target: string, template: string, source: string) => {
-  const match = source.match(/^(.*)$/m);
-  if (match && target.includes(match[0])) {
-    // do nothing if $source already existed
-    return target;
-  }
-  // eslint-disable-next-line prefer-template
-  return target.replace(new RegExp(template), template + '\n' + source);
-};
-
-const updateAppToUseProductPagesData = () => {
-  const appPath = path.resolve(__dirname, '../../docs/pages/_app.js');
-  let appSource = fs.readFileSync(appPath, { encoding: 'utf8' });
-  appSource = appendSource(
-    appSource,
-    `import pages from 'docsx/src/pages';`,
-    `import dataGridPages from 'docsx/data/data-grid/pages';`,
-  );
-  appSource = appendSource(
-    appSource,
-    `let productPages = pages;`,
-    `if (
-      router.asPath.startsWith('/x/react-data-grid') ||
-      router.asPath.startsWith('/x/api/mui-data-grid')
-    ) {
-      productPages = dataGridPages;
-    }`,
-  );
-  writePrettifiedFile(appPath, appSource);
-};
 
 const readdirDeep = (directory: string, pathsProp: string[] = []) => {
   const paths: string[] = pathsProp;
@@ -73,9 +22,6 @@ function run() {
    * clone pages & api data from `docs/src/pages.ts` to `docs/src/data/materialPages.ts`
    * also prefix all pathnames with `/$product/` by using Regexp replace
    */
-
-  // update _app.js to use product pages
-  updateAppToUseProductPagesData();
 
   // clone js/md data to new location
   const dataDir = readdirDeep(path.resolve(`docs/src/pages/components/data-grid`));
