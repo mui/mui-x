@@ -69,5 +69,24 @@ describe('<DataGrid /> - Column Headers', () => {
       clock.runToLast();
       expect(getColumnHeadersTextContent()).to.deep.equal(['brand']);
     });
+
+    it('should not allow to hide the only visible column', () => {
+      const { getByRole, getAllByLabelText } = render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid
+            {...baselineProps}
+            columns={[{ field: 'id' }, { field: 'brand', headerClassName: 'foobar', hide: true }]}
+          />
+        </div>,
+      );
+
+      expect(getColumnHeadersTextContent()).to.deep.equal(['id']);
+
+      fireEvent.click(getAllByLabelText('Menu')[0]);
+      fireEvent.click(getByRole('menuitem', { name: 'Hide' }));
+
+      clock.runToLast();
+      expect(getColumnHeadersTextContent()).to.deep.equal(['id']);
+    });
   });
 });
