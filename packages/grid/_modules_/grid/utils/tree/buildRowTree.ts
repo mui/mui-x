@@ -77,7 +77,7 @@ export const buildRowTree = (params: BuildRowTreeParams): GridRowGroupingResult 
     }
 
     if (!node.children || !node.children.length) {
-      return false;
+      return undefined;
     }
 
     if (params.isGroupExpandedByDefault) {
