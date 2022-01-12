@@ -71,6 +71,11 @@ export const buildRowTree = (params: BuildRowTreeParams): GridRowGroupingResult 
   const groupingCriteriaToIdTree: GridGroupingCriteriaToIdTree = {};
 
   const isGroupExpandedByDefault = (node: GridRowTreeNodeConfig) => {
+    const previousExpansion = params.previousTree?.[node.id]?.childrenExpanded;
+    if (previousExpansion != null) {
+      return previousExpansion;
+    }
+
     if (!node.children || !node.children.length) {
       return false;
     }
