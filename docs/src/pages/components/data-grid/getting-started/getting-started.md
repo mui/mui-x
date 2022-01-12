@@ -240,20 +240,20 @@ StackOverflow is also visited from time to time by the maintainers of MUI.
 
 ### Professional support
 
-When purchasing an MUI X Pro or Premium license, you get access to professional support for a limited duration.
+When purchasing an MUI X Pro, Premium license, depending on the plan, you get access to professional support for a limited duration.
 This support service is available on multiple channels.
 The recommended channel to open new issues is GitHub issues.
-If your support case has the need to share private information, you can also use Zendesk.
+If your support case has the need to share private information, you can also use Emails.
 
-- **MUI X Pro**: No SLAs is provided but MUI's maintainers give these issues more attention than the ones from the Community plan. The channels:
+- **MUI X Pro**: No SLA is provided but MUI's maintainers give these issues more attention than the ones from the Community plan. The channels:
   - GitHub: [Open a new issue](https://github.com/mui-org/material-ui-x/issues/new/choose) and leave your Order ID.
-  - Zendesk: [Open a new private issue](https://support.mui.com/hc/en-us/requests/new?tf_360023797420=mui_x) or send an email at x@mui.com.
-- **MUI X Premium**: Same as MUI X Pro with Priority over Pro and a 48 hours SLA for the first answer.
+  - Emails (only to share private information): [Open a new issue](https://support.mui.com/hc/en-us/requests/new?tf_360023797420=mui_x) or send an email at x@mui.com.
+- **MUI X Premium**: Same as MUI X Pro with priority over Pro and a 48 hours SLA for the first answer.
   - GitHub: this plan is not available yet
-  - Zendesk: this plan is not available yet
-- **MUI X Premium priority**: Same as MUI X Premium but with a 24 hours SLA for the first answer and a pre-screening in under 4 hours.
+  - Emails: this plan is not available yet
+- **MUI X Premium Priority**: Same as MUI X Premium but with a 24 hours SLA for the first answer and a pre-screening in under 4 hours.
   - GitHub: this plan is not available yet
-  - Zendesk: this plan is not available yet
+  - Emails: this plan is not available yet
 
 ## Roadmap
 
