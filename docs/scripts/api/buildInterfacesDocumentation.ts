@@ -91,6 +91,10 @@ const parseTypeSymbol = (rootSymbol: ts.Symbol, project: Project): ParsedType | 
       .filter((property) => !property.tags.ignore)
       .sort((a, b) => a.name.localeCompare(b.name));
 
+    if (properties.length === 0) {
+      return null;
+    }
+
     return {
       kind: 'interface',
       properties,

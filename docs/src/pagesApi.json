@@ -44,7 +44,6 @@
   { "pathname": "/api-docs/data-grid/grid-pagination-state" },
   { "pathname": "/api-docs/data-grid/grid-pinned-columns" },
   { "pathname": "/api-docs/data-grid/grid-pinned-position" },
-  { "pathname": "/api-docs/data-grid/grid-preference-panel-initial-state" },
   { "pathname": "/api-docs/data-grid/grid-preference-panel-state" },
   { "pathname": "/api-docs/data-grid/grid-preference-panels-value" },
   { "pathname": "/api-docs/data-grid/grid-print-export-options" },
