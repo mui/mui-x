@@ -12,7 +12,7 @@ export const GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD = '__row_group_by_columns_g
 
 export const GROUPING_COLUMNS_FEATURE_NAME = 'grouping-columns';
 
-export const getRowGroupingFieldFromGroupingCriteria = (groupingCriteria: string) => {
+export const getRowGroupingFieldFromGroupingCriteria = (groupingCriteria: string | null) => {
   if (groupingCriteria === null) {
     return GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD;
   }
