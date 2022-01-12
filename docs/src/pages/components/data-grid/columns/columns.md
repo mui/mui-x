@@ -327,6 +327,8 @@ In the following demo, you can not hide the "username" column.
 
 {{"demo": "pages/components/data-grid/columns/VisibleColumnsBasicExample.js", "bg": "inline"}}
 
+**Note:** If a column is not registered in the `columnVisibilityModel`, it is considered visible.
+
 ### Initialize the visible columns
 
 To initialize the visible columns without controlling them, provide the model to the `initialState` prop.
@@ -353,6 +355,10 @@ You can use the `onColumnVisibilityModelChange` prop to listen to the changes to
 ```tsx
 <DataGrid columnVisibilityModel={{ status: false }} />
 ```
+
+> ⚠️The grid do not handle switching between controlled and not-controlled modes.
+>
+> This edge case will be supported in v6 after the removal of legacy `hide` field.
 
 {{"demo": "pages/components/data-grid/columns/VisibleColumnsModelControlled.js", "bg": "inline"}}
 
