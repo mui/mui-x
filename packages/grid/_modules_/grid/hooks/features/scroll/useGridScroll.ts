@@ -10,7 +10,6 @@ import { useGridSelector } from '../../utils/useGridSelector';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { gridPaginationSelector } from '../pagination/gridPaginationSelector';
 import { gridRowCountSelector, gridRowsMetaSelector } from '../rows/gridRowsSelector';
-import { gridDensityRowHeightSelector } from '../density/densitySelector';
 import { GridScrollParams } from '../../../models/params/gridScrollParams';
 import { GridScrollApi } from '../../../models/api/gridScrollApi';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
@@ -47,7 +46,6 @@ export const useGridScroll = (
   const colRef = apiRef.current.columnHeadersElementRef!;
   const windowRef = apiRef.current.windowRef!;
 
-  const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
   const paginationState = useGridSelector(apiRef, gridPaginationSelector);
   const totalRowCount = useGridSelector(apiRef, gridRowCountSelector);
   const visibleColumns = useGridSelector(apiRef, visibleGridColumnsSelector);
@@ -72,16 +70,19 @@ export const useGridScroll = (
           offsetTop: columnsMeta.positions[params.colIndex],
         });
       }
-
       if (params.rowIndex != null) {
         const elementIndex = !props.pagination
           ? params.rowIndex
           : params.rowIndex - paginationState.page * paginationState.pageSize;
 
+        const targetOffseHeight = rowsMeta.positions[elementIndex + 1]
+          ? rowsMeta.positions[elementIndex + 1] - rowsMeta.positions[elementIndex]
+          : rowsMeta.totalHeight - rowsMeta.positions[elementIndex];
+
         scrollCoordinates.top = scrollIntoView({
           clientHeight: windowRef.current!.clientHeight,
           scrollTop: windowRef.current!.scrollTop,
-          offsetHeight: rowHeight,
+          offsetHeight: targetOffseHeight,
           offsetTop: rowsMeta.positions[elementIndex],
         });
       }
@@ -112,8 +113,8 @@ export const useGridScroll = (
       paginationState.pageSize,
       windowRef,
       columnsMeta.positions,
-      rowHeight,
       rowsMeta.positions,
+      rowsMeta.totalHeight,
     ],
   );
 

@@ -589,6 +589,7 @@ describe('<DataGrid /> - Pagination', () => {
     it('should use the pageSize control state upon the initialize state when both are defined', () => {
       render(
         <BaselineTestCase
+          disableVirtualization
           pageSize={5}
           initialState={{
             pagination: {
@@ -628,6 +629,7 @@ describe('<DataGrid /> - Pagination', () => {
     it('should allow to update the pageSize when initialized with initialState', () => {
       render(
         <BaselineTestCase
+          disableVirtualization
           initialState={{
             pagination: {
               pageSize: 2,
