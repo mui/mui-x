@@ -20,7 +20,7 @@ describe('<DataGrid /> - Pagination', () => {
 
     return (
       <div style={{ width: 300, height }}>
-        <DataGrid {...basicData} autoHeight={isJSDOM} {...other} />
+        <DataGrid {...basicData} disableVirtualization {...other} />
       </div>
     );
   };
@@ -169,7 +169,6 @@ describe('<DataGrid /> - Pagination', () => {
             onPageChange={handlePageChange}
             pageSize={5}
             rowsPerPageOptions={[5]}
-            disableVirtualization
             {...props}
           />
         );
@@ -355,9 +354,7 @@ describe('<DataGrid /> - Pagination', () => {
     });
 
     it('should update the pageCount state when updating the pageSize prop with a lower value', () => {
-      const { setProps } = render(
-        <BaselineTestCase rowsPerPageOptions={[10, 20]} pageSize={20} disableVirtualization />,
-      );
+      const { setProps } = render(<BaselineTestCase rowsPerPageOptions={[10, 20]} pageSize={20} />);
       expect(getColumnValues(0)).to.have.length(20);
       setProps({ pageSize: 10 });
       expect(getColumnValues(0)).to.have.length(10);
@@ -585,7 +582,6 @@ describe('<DataGrid /> - Pagination', () => {
     it('should use the pageSize control state upon the initialize state when both are defined', () => {
       render(
         <BaselineTestCase
-          disableVirtualization
           pageSize={5}
           initialState={{
             pagination: {
@@ -625,7 +621,6 @@ describe('<DataGrid /> - Pagination', () => {
     it('should allow to update the pageSize when initialized with initialState', () => {
       render(
         <BaselineTestCase
-          disableVirtualization
           initialState={{
             pagination: {
               pageSize: 2,
