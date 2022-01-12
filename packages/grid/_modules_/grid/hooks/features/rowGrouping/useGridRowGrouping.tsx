@@ -33,7 +33,7 @@ import {
 } from './createGroupingColDef';
 import { isDeepEqual } from '../../../utils/utils';
 import { GridPreProcessingGroup, useGridRegisterPreProcessor } from '../../core/preProcessing';
-import { GridColumnsRawState } from '../columns/gridColumnsState';
+import { GridColumnRawLookup, GridColumnsRawState } from '../columns/gridColumnsState';
 import { useGridRegisterFilteringMethod } from '../filter/useGridRegisterFilteringMethod';
 import { GridFilteringMethod } from '../filter/gridFilterState';
 import { gridRowIdsSelector, gridRowTreeSelector } from '../rows';
@@ -275,28 +275,36 @@ export const useGridRowGrouping = (
   const updateGroupingColumn = React.useCallback(
     (columnsState: GridColumnsRawState) => {
       const groupingColDefs = getGroupingColDefs(columnsState);
+      let newColumnFields: string[] = [];
+      const newColumnsLookup: GridColumnRawLookup = {};
 
-      // We remove the grouping columns
-      const newColumnFields: string[] = [];
+      // We only keep the non-grouping columns
       columnsState.all.forEach((field) => {
-        if (isGroupingColumn(field)) {
-          delete columnsState.lookup[field];
-        } else {
+        if (!isGroupingColumn(field)) {
           newColumnFields.push(field);
+          newColumnsLookup[field] = columnsState.lookup[field];
         }
       });
-      columnsState.all = newColumnFields;
 
       // We add the grouping column
       groupingColDefs.forEach((groupingColDef) => {
-        columnsState.lookup[groupingColDef.field] = groupingColDef;
+        const matchingGroupingColDef = columnsState.lookup[groupingColDef.field];
+        if (matchingGroupingColDef) {
+          groupingColDef.width = matchingGroupingColDef.width;
+          groupingColDef.flex = matchingGroupingColDef.flex;
+        }
+
+        newColumnsLookup[groupingColDef.field] = groupingColDef;
       });
-      const startIndex = columnsState.all[0] === '__check__' ? 1 : 0;
-      columnsState.all = [
-        ...columnsState.all.slice(0, startIndex),
+      const startIndex = newColumnFields[0] === '__check__' ? 1 : 0;
+      newColumnFields = [
+        ...newColumnFields.slice(0, startIndex),
         ...groupingColDefs.map((colDef) => colDef.field),
-        ...columnsState.all.slice(startIndex),
+        ...newColumnFields.slice(startIndex),
       ];
+
+      columnsState.all = newColumnFields;
+      columnsState.lookup = newColumnsLookup;
 
       return columnsState;
     },
