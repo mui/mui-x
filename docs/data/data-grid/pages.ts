@@ -1,8 +1,8 @@
 const pages = [
   {
     pathname: '/x/react-data-grid',
-    title: 'Components',
-    icon: 'ToggleOnIcon',
+    title: 'Data Grid',
+    icon: 'TableView',
     children: [
       {
         pathname: '/x/react-data-grid',
