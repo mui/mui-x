@@ -4,12 +4,15 @@ import MenuItem from '@mui/material/MenuItem';
 import { GridFilterItemProps } from './GridFilterItemProps';
 import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
+import { visibleGridColumnsLengthSelector } from '../../../hooks/features/columns';
 
 const HideGridColMenuItem = (props: GridFilterItemProps) => {
   const { column, onClick } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
   const timeoutRef = React.useRef<any>();
+
+  const visibleColumnsLength = visibleGridColumnsLengthSelector(apiRef.current.state);
 
   const toggleColumn = React.useCallback(
     (event: React.MouseEvent<HTMLElement>) => {
@@ -35,7 +38,7 @@ const HideGridColMenuItem = (props: GridFilterItemProps) => {
   }
 
   return (
-    <MenuItem onClick={toggleColumn}>
+    <MenuItem onClick={toggleColumn} disabled={visibleColumnsLength === 1}>
       {apiRef.current.getLocaleText('columnMenuHideColumn')}
     </MenuItem>
   );
