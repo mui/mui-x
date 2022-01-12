@@ -7,17 +7,10 @@ import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import Chip from '@mui/material/Chip';
 import AddIcon from '@mui/icons-material/Add';
-var DemoActionTypes;
-(function (DemoActionTypes) {
-  DemoActionTypes[(DemoActionTypes['CreateView'] = 0)] = 'CreateView';
-  DemoActionTypes[(DemoActionTypes['DeleteView'] = 1)] = 'DeleteView';
-  DemoActionTypes[(DemoActionTypes['SetActiveView'] = 2)] = 'SetActiveView';
-  DemoActionTypes[(DemoActionTypes['SetNewViewLabel'] = 3)] = 'SetNewViewLabel';
-})(DemoActionTypes || (DemoActionTypes = {}));
 
 const demoReducer = (state, action) => {
   switch (action.type) {
-    case DemoActionTypes.CreateView: {
+    case 'createView': {
       const id = Math.random().toString();
 
       return {
@@ -31,7 +24,7 @@ const demoReducer = (state, action) => {
       };
     }
 
-    case DemoActionTypes.DeleteView: {
+    case 'deleteView': {
       const views = Object.fromEntries(
         Object.entries(state.views).filter(([id]) => id !== action.id),
       );
@@ -56,14 +49,14 @@ const demoReducer = (state, action) => {
       };
     }
 
-    case DemoActionTypes.SetActiveView: {
+    case 'setActiveView': {
       return {
         ...state,
         activeViewId: action.id,
       };
     }
 
-    case DemoActionTypes.SetNewViewLabel: {
+    case 'setNewViewLabel': {
       return {
         ...state,
         newViewLabel: action.label,
@@ -93,22 +86,22 @@ export default function RestoreStateApiRef() {
 
   const createNewView = () => {
     dispatch({
-      type: DemoActionTypes.CreateView,
+      type: 'createView',
       value: apiRef.current.exportState(),
     });
   };
 
   const handleNewViewLabelChange = (e) => {
-    dispatch({ type: DemoActionTypes.SetNewViewLabel, label: e.target.value });
+    dispatch({ type: 'setNewViewLabel', label: e.target.value });
   };
 
   const handleDeleteView = (viewId) => {
-    dispatch({ type: DemoActionTypes.DeleteView, id: viewId });
+    dispatch({ type: 'deleteView', id: viewId });
   };
 
   const handleSetActiveView = (viewId) => {
     apiRef.current.restoreState(state.views[viewId].value);
-    dispatch({ type: DemoActionTypes.SetActiveView, id: viewId });
+    dispatch({ type: 'setActiveView', id: viewId });
   };
 
   const isNewViewLabelValid = React.useMemo(() => {

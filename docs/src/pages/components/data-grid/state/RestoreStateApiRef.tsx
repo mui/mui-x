@@ -14,22 +14,15 @@ interface DemoState {
   activeViewId: string | null;
 }
 
-enum DemoActionTypes {
-  CreateView,
-  DeleteView,
-  SetActiveView,
-  SetNewViewLabel,
-}
-
 type DemoActions =
-  | { type: DemoActionTypes.CreateView; value: GridInitialState }
-  | { type: DemoActionTypes.DeleteView; id: string }
-  | { type: DemoActionTypes.SetNewViewLabel; label: string }
-  | { type: DemoActionTypes.SetActiveView; id: string | null };
+  | { type: 'createView'; value: GridInitialState }
+  | { type: 'deleteView'; id: string }
+  | { type: 'setNewViewLabel'; label: string }
+  | { type: 'setActiveView'; id: string | null };
 
 const demoReducer: React.Reducer<DemoState, DemoActions> = (state, action) => {
   switch (action.type) {
-    case DemoActionTypes.CreateView: {
+    case 'createView': {
       const id = Math.random().toString();
 
       return {
@@ -43,7 +36,7 @@ const demoReducer: React.Reducer<DemoState, DemoActions> = (state, action) => {
       };
     }
 
-    case DemoActionTypes.DeleteView: {
+    case 'deleteView': {
       const views = Object.fromEntries(
         Object.entries(state.views).filter(([id]) => id !== action.id),
       );
@@ -68,14 +61,14 @@ const demoReducer: React.Reducer<DemoState, DemoActions> = (state, action) => {
       };
     }
 
-    case DemoActionTypes.SetActiveView: {
+    case 'setActiveView': {
       return {
         ...state,
         activeViewId: action.id,
       };
     }
 
-    case DemoActionTypes.SetNewViewLabel: {
+    case 'setNewViewLabel': {
       return {
         ...state,
         newViewLabel: action.label,
@@ -104,7 +97,7 @@ export default function RestoreStateApiRef() {
 
   const createNewView = () => {
     dispatch({
-      type: DemoActionTypes.CreateView,
+      type: 'createView',
       value: apiRef.current.exportState(),
     });
   };
@@ -112,16 +105,16 @@ export default function RestoreStateApiRef() {
   const handleNewViewLabelChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
-    dispatch({ type: DemoActionTypes.SetNewViewLabel, label: e.target.value });
+    dispatch({ type: 'setNewViewLabel', label: e.target.value });
   };
 
   const handleDeleteView = (viewId: string) => {
-    dispatch({ type: DemoActionTypes.DeleteView, id: viewId });
+    dispatch({ type: 'deleteView', id: viewId });
   };
 
   const handleSetActiveView = (viewId: string) => {
     apiRef.current.restoreState(state.views[viewId].value);
-    dispatch({ type: DemoActionTypes.SetActiveView, id: viewId });
+    dispatch({ type: 'setActiveView', id: viewId });
   };
 
   const isNewViewLabelValid = React.useMemo(() => {
