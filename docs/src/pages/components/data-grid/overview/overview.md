@@ -15,7 +15,8 @@ The component leverages the power of React and TypeScript, to provide the best U
 
 ## Overview
 
-Data tables display information in a grid-like format of rows and columns. They organize information in a way that’s easy to scan so that users can look for patterns and insights. The data grid comes in 2 versions, both in MUI X:
+Data tables display information in a grid-like format of rows and columns.
+They organize information in a way that’s easy to scan so that users can look for patterns and insights.
 
 The data grid comes with two different licenses:
 
