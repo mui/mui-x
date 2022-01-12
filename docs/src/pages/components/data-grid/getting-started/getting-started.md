@@ -205,13 +205,12 @@ Please take the component for a test run, no need to contact us.
 
 In addition to the license, MUI X Pro & Premium use the notion of a "license key".
 This is meant as reminder for developers to know they are not legally licensed.
-It's not a hard constraint. The hard constraint is the international IP laws.
 
 ### Installation
 
 Once you purchase a license, you'll receive a license key by email.
 This key should be provided to the package to remove the watermark and
-the warnings in the console.
+console warnings.
 
 ```jsx
 import { LicenseInfo } from '@mui/x-data-grid-pro';
@@ -223,15 +222,15 @@ LicenseInfo.setLicenseKey(
 
 ### Security
 
-The MUI X checks the license key without making any network requests. It's air gappped.
+The check of the license key is done without making any network requests.
 
-The license key is designed to be public, the only thing we ask licensed users is not to proactively shoot out their license key to the world. Exposing the license key publicly in a JavaScript bundle is the expected outcome.
+The license key is designed to be public, the only thing we ask of licensed users is to not proactively publicize their license key.
+Exposing the license key in a JavaScript bundle is expected.
 
 ### Validation errors
 
-If the validation of the license key fail, the component displays a watermark in development and production.
-End-users can still use the component.
-The component also prints a warning in the console.
+If the validation of the license key fails, the component displays a watermark and provides a console warning in both development and production.
+End users can still use the component.
 
 Here are the different possible validation errors:
 
@@ -254,7 +253,7 @@ The licenses are perpetual, the license key will work forever with the current v
 
 However, **access to updates/upgrades** is not perpetual.
 Installing a version of the component released after the license key has expired will trigger a watermark and console message.
-For example, if you just had your a one-year license (default), you are not licensed to install a version that is two years in the future but you can upgrade to the next major that will be released 6 months later.
+For example, if you have just purchased a one-year license, you are not licensed to install a version that is two years in the future but you can upgrade to the next major that will be released 6 months later or use a version that is 6 months old.
 
 #### Invalid license key
 
