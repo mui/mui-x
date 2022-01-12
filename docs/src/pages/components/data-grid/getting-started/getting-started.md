@@ -246,7 +246,7 @@ The recommended channel to open new issues is GitHub issues.
 If your support case has the need to share private information, you can also use Zendesk.
 
 - **MUI X Pro**: No SLAs is provided but MUI's maintainers give these issues more attention than the ones from the Community plan. The channels:
-  - GitHub: [Open a new issue](https://github.com/mui-org/material-ui-x/issues/new?assignees=&labels=status%3A+needs+triage%2Cpro+plan%2Cquestion&template=3.pro-support.yml&title=%5Bquestion%5D+).
+  - GitHub: [Open a new issue](https://github.com/mui-org/material-ui-x/issues/new/choose) and leave your Order ID.
   - Zendesk: [Open a new private issue](https://support.mui.com/hc/en-us/requests/new?tf_360023797420=mui_x) or send an email at x@mui.com.
 - **MUI X Premium**: Same as MUI X Pro with Priority over Pro and a 48 hours SLA for the first answer.
   - GitHub: this plan is not available yet
