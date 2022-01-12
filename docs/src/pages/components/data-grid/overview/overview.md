@@ -23,15 +23,18 @@ The data grid comes with two different licenses:
 - [MIT license](https://tldrlegal.com/license/mit-license). It's available on npm as [`@mui/x-data-grid`](https://www.npmjs.com/package/@mui/x-data-grid) and includes the [DataGrid](/api/data-grid/data-grid/) component.
 - [Commercial license](/x/license/). It's available on npm as [`@mui/x-data-grid-pro`](https://www.npmjs.com/package/@mui/x-data-grid-pro) and includes the [DataGridPro](/api/data-grid/data-grid-pro/) component.
 
-The features not available in the MIT version are suffixed with a <span class="plan-pro"></span> icon for the Pro plan or a <span class="plan-premium"></span> icon for the Premium plan in the documentation.
-For example:
+All the features not available in the MIT version are suffixed for clarity:
 
-<div class="only-light-mode">
-  <img src="/static/x/commercial-header-icon-light.png" style="width: 579px; margin-bottom: 2rem;" alt="">
-</div>
-<div class="only-dark-mode">
-  <img src="/static/x/commercial-header-icon-dark.png" style="width: 560px; margin-bottom: 2rem;" alt="">
-</div>
+- For features available in the Pro plan and upward: <span class="plan-pro"></span>
+
+  <div class="only-light-mode">
+    <img src="/static/x/commercial-header-icon-light.png" style="width: 579px; margin-bottom: 2rem;" alt="">
+  </div>
+  <div class="only-dark-mode">
+    <img src="/static/x/commercial-header-icon-dark.png" style="width: 560px; margin-bottom: 2rem;" alt="">
+  </div>
+
+- For features only available in the Premium plan: <span class="plan-premium"></span>
 
 You can check the [feature comparison](/components/data-grid/getting-started/#feature-comparison) for more details.
 See [Pricing](https://mui.com/store/items/material-ui-pro/) for details on purchasing licenses.
