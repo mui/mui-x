@@ -37,10 +37,7 @@ test.describe.parallel('Material docs', () => {
 
       await Promise.all(
         anchorTexts.map((text, index) => {
-          return expect(anchors.nth(index)).toHaveAttribute(
-            'href',
-            `/x/api/mui-data-grid/${kebabCase(text)}/`,
-          );
+          return expect(anchors.nth(index)).toHaveAttribute('href', `/x/api/${kebabCase(text)}/`);
         }),
       );
     });
@@ -56,16 +53,16 @@ test.describe.parallel('Material docs', () => {
 
   test.describe.parallel('API page', () => {
     test('should have correct link for sidebar anchor', async ({ page }) => {
-      await page.goto(`/x/api/mui-data-grid/data-grid/`);
+      await page.goto(`/x/api/data-grid/data-grid/`);
 
       const anchor = await page.locator('nav[aria-label="documentation"] ul a:text-is("DataGrid")');
 
       await expect(anchor).toHaveAttribute('app-drawer-active', '');
-      await expect(anchor).toHaveAttribute('href', `/x/api/mui-data-grid/data-grid/`);
+      await expect(anchor).toHaveAttribute('href', `/x/api/data-grid/data-grid/`);
     });
 
     test('all the links in the main content should have correct prefix', async ({ page }) => {
-      await page.goto(`/x/api/mui-data-grid/data-grid/`);
+      await page.goto(`/x/api/data-grid/`);
 
       const anchors = await page.locator('div#main-content a');
 
@@ -75,7 +72,7 @@ test.describe.parallel('Material docs', () => {
 
       links.forEach((link) => {
         if (link?.startsWith('/x/api/')) {
-          expect(link).toMatch(/\/x\/api\/mui-(data-grid|data-grid-pro)\/.*/);
+          expect(link).toMatch(/\/x\/api\/data-grid\/.*/);
         }
 
         expect(link).not.toMatch(/\/components/); // there should be no `/components` in the url anymore
@@ -125,7 +122,7 @@ test.describe.parallel('Material docs', () => {
 
       await expect(anchor.first()).toHaveAttribute(
         'href',
-        `/x/api/mui-data-grid/data-grid/#main-content`,
+        `/x/api/data-grid/data-grid/#main-content`,
       );
     });
 
@@ -142,7 +139,7 @@ test.describe.parallel('Material docs', () => {
 
       await expect(anchor.first()).toHaveAttribute(
         'href',
-        `/x/api/mui-data-grid/data-grid-pro/#main-content`,
+        `/x/api/data-grid/data-grid-pro/#main-content`,
       );
     });
   });
