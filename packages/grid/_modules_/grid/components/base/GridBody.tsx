@@ -47,6 +47,8 @@ function GridBody(props: GridBodyProps) {
     setIsVirtualizationDisabled(false);
   }, []);
 
+  console.log('RENDER')
+
   // The `useGridApiMethod` hook can't be used here, because it only installs the
   // method if it doesn't exist yet. Once installed, it's never updated again.
   // This break the methods above, since their closure comes from the first time

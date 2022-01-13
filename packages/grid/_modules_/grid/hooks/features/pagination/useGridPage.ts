@@ -114,9 +114,12 @@ export const useGridPage = (
     GridPreProcessor<GridPreProcessingGroup.restoreState>
   >((params, context) => {
     // We apply the constraint even if the page did not change in case the pageSize changed.
+    const page = context.stateToRestore.pagination?.page ?? gridPageSelector(params.state)
+    const pageCount = getPageCount(params.state.pagination.rowCount, params.state.pagination.page);
     const paginationState = applyValidPage({
       ...params.state.pagination,
-      page: context.stateToRestore.pagination?.page ?? gridPageSelector(params.state),
+      pageCount,
+      page,
     });
 
     return {

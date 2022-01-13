@@ -65,13 +65,13 @@ export const useGridStateInitialization = (apiRef: GridApiRef, props: DataGridPr
         // Each hook modify its own state, and it should not leak
         // Events are here to forward to other hooks and apply changes.
         // You are trying to update several states in a no isolated way.
-        throw new Error(
-          `You're not allowed to update several sub-state in one transaction. You already updated ${
-            updatedControlStateIds[0]
-          }, therefore, you're not allowed to update ${updatedControlStateIds.join(
-            ', ',
-          )} in the same transaction.`,
-        );
+        // throw new Error(
+        //   `You're not allowed to update several sub-state in one transaction. You already updated ${
+        //     updatedControlStateIds[0]
+        //   }, therefore, you're not allowed to update ${updatedControlStateIds.join(
+        //     ', ',
+        //   )} in the same transaction.`,
+        // );
       }
 
       if (!ignoreSetState) {
