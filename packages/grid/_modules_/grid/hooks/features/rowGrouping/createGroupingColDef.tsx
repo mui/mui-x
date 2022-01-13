@@ -134,17 +134,14 @@ const getGroupingCriteriaProperties = (groupedByColDef: GridColDef, applyHeaderN
 
 interface CreateGroupingColDefMonoCriteriaParams {
   columnsLookup: GridColumnRawLookup;
-
   /**
    * The field from which we are grouping the rows.
    */
   groupingCriteria: string;
-
   /**
    * The col def from which we are grouping the rows.
    */
   groupedByColDef: GridColDef | GridStateColDef;
-
   /**
    * The col def properties the user wants to override.
    * This value comes `prop.groupingColDef`.

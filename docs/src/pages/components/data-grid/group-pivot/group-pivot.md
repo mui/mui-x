@@ -8,7 +8,7 @@ title: Data Grid - Group & Pivot
 
 ## Row grouping [<span class="plan-premium"></span>](https://mui.com/store/items/material-ui-pro/)
 
-Use row grouping to group the rows according to one or several columns value</p>
+Use row grouping to group the rows according to one or several columns value.
 
 > ⚠️ This feature is temporarily available on the Pro plan until the release of the Premium plan.
 >
@@ -24,12 +24,12 @@ Use row grouping to group the rows according to one or several columns value</p>
 
 #### Initialize the row grouping
 
-To initialize the row grouping without controlling it, provide the model to the `initialState` prop:
+The easiest way to get started with the feature is to provide its model to the `initialState` prop:
 
 ```ts
 initialState={{
     rowGrouping: {
-        model: ['director', 'category']
+        model: ['company', 'director'],
     }
 }}
 ```
@@ -38,58 +38,43 @@ initialState={{
 
 #### Controlled row grouping
 
-Use the `rowGroupingModel` prop to control the criteria used to group the rows.
+If you need to control the state of the criteria used for grouping, use the `rowGroupingModel` prop.
 You can use the `onRowGroupingModelChange` prop to listen to changes to the page size and update the prop accordingly.
 
 {{"demo": "pages/components/data-grid/group-pivot/RowGroupingControlled.js", "bg": "inline", "defaultCodeOpen": false}}
-
-### Disable the row grouping
-
-#### For all columns
-
-To fully disable the grouping feature, set the `disableRowGrouping` prop to `true`.
-
-It will disable all the features related to the row grouping, even if a model is provided.
-
-{{"demo": "pages/components/data-grid/group-pivot/RowGroupingDisabled.js", "bg": "inline", "defaultCodeOpen": false}}
-
-#### For some columns
-
-To block the grouping of certain columns, set the `groupable` property of `GridColDef` to `false`.
-In the example below, the `director` column can not be grouped. And in all example, the `title` and `gross` columns can not be grouped.
-
-{{"demo": "pages/components/data-grid/group-pivot/RowGroupingColDefCanBeGrouped.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ### Grouping columns
 
 #### Single grouping column
 
-By default, the grid will create only one grouping column even if you have several grouping criteria.
+By default, the grid will display a single column holding all grouped columns.
+If you have multiple grouped columns, this column name will be set to "Group".
 
 {{"demo": "pages/components/data-grid/group-pivot/RowGroupingSingleGroupingCol.js", "bg": "inline", "defaultCodeOpen": false}}
 
 #### Multiple grouping column
 
-To have a grouping column for each grouping criteria, set the `rowGroupingColumnMode` prop to `multiple`.
+To display a column for each grouping criterion, set the `rowGroupingColumnMode` prop to `multiple.
 
 {{"demo": "pages/components/data-grid/group-pivot/RowGroupingMultipleGroupingCol.js", "bg": "inline", "defaultCodeOpen": false}}
 
 #### Custom grouping column
 
-Use the `groupingColDef` prop to customize the rendering of the grouping column. You can override any property of the `GridColDef` interface except the `field`, the `type` and the properties related to the edition.
-
-If you want to apply your overrides to every grouping column, use the object format of `groupingColDef`.
+To customize the rendering of the grouping column, use the `groupingColDef` prop.
+You can override the **headerName** or any property of the `GridColDef` interface, except the `field`, the `type` and the properties related to inline edition.
 
 {{"demo": "pages/components/data-grid/group-pivot/RowGroupingCustomGroupingColDefObject.js", "bg": "inline", "defaultCodeOpen": false}}
 
-If you want to only override properties of certain grouping columns or to apply different overrides based on the current grouping criteria, use the callback format of `groupingColDef`.
-It will be called for each grouping column with the fields of the columns used to build it.
+By default, when using the object format, the properties will be applied to all Grouping columns. This means that if you have `rowGroupingColumnMode` set to `multiple`, all the columns will share the same `groupingColDef` properties.
+
+If you wish to override properties of specific grouping columns or to apply different overrides based on the current grouping criteria, you can pass a callback function to `groupingColDef`, instead of an object with its config.
+The callback is called for each grouping column, and it receives the respective column's "fields" as parameter.
 
 {{"demo": "pages/components/data-grid/group-pivot/RowGroupingCustomGroupingColDefCallback.js", "bg": "inline", "defaultCodeOpen": false}}
 
 #### Show values for the leaves
 
-By default, the leaves nodes don't render anything for their grouping cell.
+By default, the grouped rows display no value on their grouping columns' cells.  We're calling those cells "leaves".
 
 If you want to display some value, you can provide a `leafField` property to the `groupingColDef`.
 
@@ -97,16 +82,32 @@ If you want to display some value, you can provide a `leafField` property to the
 
 #### Hide the descendant count
 
-You can use the `hideDescendantCount` property of the `groupingColDef` to hide the amount of descendant of a grouping row.
+Use the `hideDescendantCount` property of the `groupingColDef to hide the number of descendants of a grouping row.
 
 {{"demo": "pages/components/data-grid/group-pivot/RowGroupingHideDescendantCount.js", "bg": "inline", "defaultCodeOpen": false}}
 
-### Complex grouping value
+### Disable the row grouping
 
-In most scenarios, when you need to handle complex values, you provide a `valueGetter` property to your column definition.
-But sometimes, you need to keep the object format for the `renderCell` property and thus can not convert it to a serializable value in `valueGetter`.
+#### For all columns
 
-You can then provide a `keyGetter` property in your column definition to convert this object into a serializable value.
+You can disable row grouping by setting `disableRowGrouping` prop to true.
+
+It will disable all the features related to the row grouping, even if a model is provided.
+
+{{"demo": "pages/components/data-grid/group-pivot/RowGroupingDisabled.js", "bg": "inline", "defaultCodeOpen": false}}
+
+#### For some columns
+
+In case you need to disable grouping on specific column(s), set the `groupable` property on the respective column definition (`GridColDef`) to `false`.
+In the example below, the `director` column can not be grouped. And in all example, the `title` and `gross` columns can not be grouped.
+
+{{"demo": "pages/components/data-grid/group-pivot/RowGroupingColDefCanBeGrouped.js", "bg": "inline", "defaultCodeOpen": false}}
+
+### Using 'keyGetter' for complex grouping value
+
+In most scenarios, to handle complex values (e.g. nested structures), a `valueGetter` property must be provided to the column definition to convert it into a simple value.
+But sometimes, you may want to keep the value in its raw format, to be used in a custom cell renderer, and thus using a value getter is not possible.
+In this case, pass a `keyGetter` property to the column definition to convert this object into a serializable value.
 
 ```ts
 const columns: GridColumns = [
@@ -120,19 +121,19 @@ const columns: GridColumns = [
 
 {{"demo": "pages/components/data-grid/group-pivot/RowGroupingKeyGetter.js", "bg": "inline", "defaultCodeOpen": false}}
 
-If your column also have a `valueGetter` property, the value passed to the `keyGetter` property will be the one returned by `valueGetter`.
+**Note**: If your column also have a `valueGetter` property, its value is used as the parameter for the `keyGetter` method.
 
 {{"demo": "pages/components/data-grid/group-pivot/RowGroupingKeyGetterValueGetter.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ### Rows with missing groups
 
-If the grouping key of a grouping criteria is `null` or `undefined` for a row, the grid will consider that this row do not have a value for this group. and will inline it for those groups.
+If the grouping key of a grouping criteria is `null` or `undefined` for a row, the grid will consider that this row does not have a value for this group. and will inline it for those groups.
 
 {{"demo": "pages/components/data-grid/group-pivot/RowGroupingRowsWithMissingGroups.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ### Group expansion
 
-Use the `defaultGroupingExpansionDepth` prop to expand all the groups up to a given depth when loading the data.
+By default, all groups are initially displayed collapsed. You can change this behaviour by setting the `defaultGroupingExpansionDepth` prop to expand all the groups up to a given depth when loading the data.
 If you want to expand the whole tree, set `defaultGroupingExpansionDepth = -1`
 
 {{"demo": "pages/components/data-grid/group-pivot/RowGroupingDefaultExpansionDepth.js", "bg": "inline", "defaultCodeOpen": false}}
@@ -262,7 +263,7 @@ If you want to access the grouping column field, for instance, to use it with co
 
 ### Group expansion
 
-Same behavior as for the [Row grouping](#group-expansion)
+Same behavior as for the [Row grouping](#group-expansion).
 
 ### Gaps in the tree
 
