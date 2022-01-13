@@ -220,4 +220,53 @@ describe('<DataGrid /> - Rows', () => {
       expect(screen.queryAllByRole('menu')).to.have.length(1);
     });
   });
+
+  describe('Row height', () => {
+    const TestCase = (props) => {
+      const getRowId = (row) => `${row.clientId}`;
+      return (
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid {...baselineProps} {...props} getRowId={getRowId} />
+        </div>
+      );
+    };
+
+    it('should set each row height whe rowHeight prop is used', () => {
+      const { setProps } = render(<TestCase />);
+
+      expect(getRow(0).clientHeight).to.equal(52);
+      expect(getRow(1).clientHeight).to.equal(52);
+      expect(getRow(2).clientHeight).to.equal(52);
+
+      setProps({ rowHeight: 30 });
+
+      expect(getRow(0).clientHeight).to.equal(30);
+      expect(getRow(1).clientHeight).to.equal(30);
+      expect(getRow(2).clientHeight).to.equal(30);
+    });
+
+    it('should set the second row to have a different row height than the others', () => {
+      render(<TestCase getRowHeight={({ id }) => (id === 'c2' ? 100 : null)} />);
+
+      expect(getRow(0).clientHeight).to.equal(52);
+      expect(getRow(1).clientHeight).to.equal(100);
+      expect(getRow(2).clientHeight).to.equal(52);
+    });
+
+    it('should set density to all but the row with variable row height', () => {
+      const { setProps } = render(
+        <TestCase getRowHeight={({ id }) => (id === 'c2' ? 100 : null)} />,
+      );
+
+      expect(getRow(0).clientHeight).to.equal(52);
+      expect(getRow(1).clientHeight).to.equal(100);
+      expect(getRow(2).clientHeight).to.equal(52);
+
+      setProps({ density: 'compact' });
+
+      expect(getRow(0).clientHeight).to.equal(36);
+      expect(getRow(1).clientHeight).to.equal(100);
+      expect(getRow(2).clientHeight).to.equal(36);
+    });
+  });
 });
