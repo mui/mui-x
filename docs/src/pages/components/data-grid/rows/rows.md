@@ -71,6 +71,14 @@ To change the row height for the whole grid, set the `rowHeight` prop:
 
 {{"demo": "pages/components/data-grid/rows/DenseHeightGrid.js", "bg": "inline"}}
 
+## Variable row height
+
+If you need different rows to have different row heights this can be achieved using the `getRowHeight` prop. The prop is called for each visible row and if the return value is `number` then that `number` will be set as that row's `rowHeight`. If the return value is `null` or `undefined` then the `rowHeight` prop will take effect for the given row.
+
+{{"demo": "pages/components/data-grid/rows/VariableRowHeightGrid.js", "bg": "inline"}}
+
+Changing the `DataGrid` density doesn't affect the rows with variable row height. You can access the `DataGrid` density factor from the `getRowHeight` params.
+
 ## Styling rows
 
 You can check the [styling rows](/components/data-grid/style/#styling-rows) section for more information.

@@ -1,0 +1,15 @@
+<DataGrid
+  {...data}
+  getRowHeight={({ model }: GridRowHeightParams) => {
+    if (
+      model.commodity.includes('Oats') ||
+      model.commodity.includes('Milk') ||
+      model.commodity.includes('Soybean') ||
+      model.commodity.includes('Rice')
+    ) {
+      return 100;
+    }
+
+    return null;
+  }}
+/>
