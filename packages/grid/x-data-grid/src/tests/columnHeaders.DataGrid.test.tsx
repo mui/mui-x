@@ -83,10 +83,15 @@ describe('<DataGrid /> - Column Headers', () => {
       expect(getColumnHeadersTextContent()).to.deep.equal(['id']);
 
       fireEvent.click(getAllByLabelText('Menu')[0]);
-      fireEvent.click(getByRole('menuitem', { name: 'Hide' }));
 
-      clock.runToLast();
-      expect(getColumnHeadersTextContent()).to.deep.equal(['id']);
+      const hideButton = getByRole('menuitem', { name: 'Hide' });
+      /**
+       * Clicking disabled `ButtonBase` as `li` element would
+       * call onClick handler in testing environment.
+       * It doesn't happen with user click in browser.
+       * So instead of firing click event, we only check `aria-disabled` here.
+       */
+      expect(hideButton.getAttribute('aria-disabled')).to.equal('true');
     });
   });
 });
