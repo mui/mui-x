@@ -49,6 +49,7 @@ function GridEditInputCell(props: GridRenderEditCellParams & Omit<InputBaseProps
     tabIndex,
     hasFocus,
     getValue,
+    isValidating,
     ...other
   } = props;
 
@@ -99,6 +100,7 @@ GridEditInputCell.propTypes = {
    * GridApi that let you manipulate the grid.
    */
   api: PropTypes.object.isRequired,
+  isValidating: PropTypes.bool,
 } as any;
 
 export { GridEditInputCell };

@@ -62,6 +62,7 @@ export function useGridEditRows(
     | 'onRowEditStop'
     | 'isCellEditable'
     | 'editMode'
+    | 'preventCommitWhileValidating'
   >,
 ) {
   const logger = useGridLogger(apiRef, 'useGridEditRows');
@@ -214,18 +215,6 @@ export function useGridEditRows(
     [props.isCellEditable],
   );
 
-  const setEditCellValue = React.useCallback<GridEditRowApi['setEditCellValue']>(
-    (params, event = {}) => {
-      const newParams: GridEditCellPropsParams = {
-        id: params.id,
-        field: params.field,
-        props: { value: params.value },
-      };
-      apiRef.current.publishEvent(GridEvents.editCellPropsChange, newParams, event);
-    },
-    [apiRef],
-  );
-
   const setEditCellProps = React.useCallback(
     (params: GridEditCellPropsParams) => {
       const { id, field, props: editProps } = params;
@@ -244,6 +233,90 @@ export function useGridEditRows(
       apiRef.current.forceUpdate();
     },
     [apiRef, logger],
+  );
+
+  const setEditCellValue = React.useCallback<GridEditRowApi['setEditCellValue']>(
+    (params, event = {}) => {
+      if (props.preventCommitWhileValidating) {
+        const row = apiRef.current.getRow(params.id)!;
+
+        if (props.editMode === 'row') {
+          const model = apiRef.current.getEditRowsModel();
+          const editRow = model[params.id];
+          let isValid = true;
+
+          return new Promise((resolve) => {
+            Object.keys(editRow).forEach(async (field) => {
+              const column = apiRef.current.getColumn(field);
+              let editCellProps = field === params.field ? { value: params.value } : editRow[field];
+
+              setEditCellProps({
+                id: params.id,
+                field,
+                props: { ...editCellProps, isValidating: true },
+              });
+
+              if (column.preProcessEditCellProps) {
+                editCellProps = await Promise.resolve(
+                  column.preProcessEditCellProps!({ id: params.id, row, props: editCellProps }),
+                );
+              }
+
+              if (editCellProps.error) {
+                isValid = false;
+              }
+
+              setEditCellProps({
+                id: params.id,
+                field,
+                props: { ...editCellProps, isValidating: false },
+              });
+            });
+
+            resolve(isValid);
+          });
+        }
+
+        const column = apiRef.current.getColumn(params.field);
+
+        return new Promise((resolve) => {
+          const newEditCellProps: GridEditCellProps = { value: params.value };
+          const model = apiRef.current.getEditRowsModel();
+          const editCellProps = model[params.id][params.field];
+
+          if (typeof column.preProcessEditCellProps !== 'function') {
+            setEditCellProps({ ...params, props: newEditCellProps });
+            resolve(true);
+            return;
+          }
+
+          setEditCellProps({ ...params, props: { ...editCellProps, isValidating: true } });
+
+          Promise.resolve(
+            column.preProcessEditCellProps({
+              id: params.id,
+              row,
+              props: newEditCellProps,
+            }),
+          ).then((newEditCellPropsProcessed) => {
+            setEditCellProps({
+              ...params,
+              props: { ...newEditCellPropsProcessed, isValidating: false },
+            });
+            resolve(!newEditCellPropsProcessed.error);
+          });
+        });
+      }
+
+      const newParams: GridEditCellPropsParams = {
+        id: params.id,
+        field: params.field,
+        props: { value: params.value },
+      };
+      apiRef.current.publishEvent(GridEvents.editCellPropsChange, newParams, event);
+      return undefined;
+    },
+    [apiRef, props.editMode, props.preventCommitWhileValidating, setEditCellProps],
   );
 
   const handleEditCellPropsChange = React.useCallback<
@@ -304,7 +377,6 @@ export function useGridEditRows(
   );
 
   // TODO v6: explode `params` to make consistent with `commitRowChange`
-  // TODO v6: it should always return a promise
   const commitCellChange = React.useCallback<GridEditRowApi['commitCellChange']>(
     (params, event = {}) => {
       const { id, field } = params;
@@ -316,6 +388,13 @@ export function useGridEditRows(
       const editCellProps = model[id][field];
       const column = apiRef.current.getColumn(field);
       const row = apiRef.current.getRow(id)!;
+
+      if (props.preventCommitWhileValidating) {
+        const cellProps = model[id][field];
+        if (cellProps.isValidating || cellProps.error) {
+          return false;
+        }
+      }
 
       const commitParams: GridCellEditCommitParams = {
         ...params,
@@ -348,7 +427,7 @@ export function useGridEditRows(
 
       return false;
     },
-    [apiRef, setEditCellProps],
+    [apiRef, props.preventCommitWhileValidating, setEditCellProps],
   );
 
   const handleCellEditCommit = React.useCallback<GridEventListener<GridEvents.cellEditCommit>>(
@@ -386,6 +465,16 @@ export function useGridEditRows(
         throw new Error(`MUI: Row at id: ${id} is not being edited.`);
       }
 
+      if (props.preventCommitWhileValidating) {
+        const isValid = Object.keys(editRowProps).reduce((acc, field) => {
+          return acc && !editRowProps[field].isValidating && !editRowProps[field].error;
+        }, true);
+
+        if (!isValid) {
+          return false;
+        }
+      }
+
       const hasFieldWithError = Object.values(editRowProps).some((value) => !!value.error);
       if (hasFieldWithError) {
         return false;
@@ -420,7 +509,7 @@ export function useGridEditRows(
       apiRef.current.publishEvent(GridEvents.rowEditCommit, id, event);
       return true;
     },
-    [apiRef, props.editMode, setEditCellProps],
+    [apiRef, props.editMode, props.preventCommitWhileValidating, setEditCellProps],
   );
 
   const handleCellEditStart = React.useCallback<GridEventListener<GridEvents.cellEditStart>>(

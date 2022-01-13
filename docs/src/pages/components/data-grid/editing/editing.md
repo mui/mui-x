@@ -106,8 +106,18 @@ Here is an example implementing an email validation:
 
 Server-side validation works like [client-side validation](#client-side-validation).
 The only difference is that when `preProcessEditCellProps` is called, a promise must be returned.
-Once the value is validated in the server, that promise should be resolved with a new object containing the `error` attribute set to true or false.
+Once the value is validated in the server, the promise should be resolved with a new object containing the `error` attribute set to true or false.
 The grid will wait for the promise to be resolved before exiting the edit mode.
+
+<!-- TODO v6: make the following paragraph the default behavior -->
+
+> By default, `preProcessEditCellProps` is called on each value change and during commit.
+> With column types that automatically commit the value after a selection (e.g. `singleSelect`) this means that the callback will be called twice and with the wrong value in the second call.
+> To avoid this inconsistency, add the `preventCommitWhileValidating` prop to the DataGrid.
+>
+> ```jsx
+> <DataGrid preventCommitWhileValidating />
+> ```
 
 This demo shows how you can validate a username asynchronously and prevent the user from committing the value while validating.
 It's using `DataGridPro` but the same approach can be used with `DataGrid`.
