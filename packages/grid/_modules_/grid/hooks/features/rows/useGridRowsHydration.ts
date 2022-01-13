@@ -9,10 +9,6 @@ import { GridPreProcessingGroup } from '../../core/preProcessing';
 import { GridEventListener } from '../../../models/events/gridEventListener';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { GridRowId } from '../../../models/gridRows';
-import {
-  GridRowHeightParams,
-  GridRowHeightReturnValue,
-} from '../../../models/params/gridRowParams';
 import { useGridSelector } from '../../utils/useGridSelector';
 import {
   gridDensityRowHeightSelector,
@@ -37,60 +33,57 @@ export const useGridRowsHydration = (
   const pagination = useGridSelector(apiRef, gridPaginationSelector);
   const sorting = useGridSelector(apiRef, gridSortingStateSelector);
 
-  const hydrateRowsMeta = React.useCallback(
-    (getRowHeight?: (params: GridRowHeightParams) => GridRowHeightReturnValue) => {
-      const { rows } = getCurrentPageRows(apiRef.current.state, {
-        pagination: props.pagination,
-        paginationMode: props.paginationMode,
-      });
+  const hydrateRowsMeta = React.useCallback(() => {
+    const { rows } = getCurrentPageRows(apiRef.current.state, {
+      pagination: props.pagination,
+      paginationMode: props.paginationMode,
+    });
 
-      apiRef.current.setState((state) => {
-        const positions: number[] = [];
-        const totalHeight = rows.reduce((acc: number, row) => {
-          positions.push(acc);
-          let targetRowHeight = gridDensityRowHeightSelector(state);
+    apiRef.current.setState((state) => {
+      const positions: number[] = [];
+      const totalHeight = rows.reduce((acc: number, row) => {
+        positions.push(acc);
+        let targetRowHeight = gridDensityRowHeightSelector(state);
 
-          if (getRowHeight) {
-            // Default back to base rowHeight if getRowHeight returns null or undefined.
-            targetRowHeight =
-              getRowHeight({ ...row, densityFactor: gridDensityFactorSelector(state) }) ||
-              gridDensityRowHeightSelector(state);
-          }
+        if (props.getRowHeight) {
+          // Default back to base rowHeight if getRowHeight returns null or undefined.
+          targetRowHeight =
+            props.getRowHeight({ ...row, densityFactor: gridDensityFactorSelector(state) }) ||
+            gridDensityRowHeightSelector(state);
+        }
 
-          const heights = apiRef.current.unstable_applyPreProcessors(
-            GridPreProcessingGroup.rowHeight,
-            { base: targetRowHeight }, // We use an object to make simple to check if a size was already added or not
-            row,
-          ) as Record<string, number>;
+        const heights = apiRef.current.unstable_applyPreProcessors(
+          GridPreProcessingGroup.rowHeight,
+          { base: targetRowHeight }, // We use an object to make simple to check if a size was already added or not
+          row,
+        ) as Record<string, number>;
 
-          const finalRowHeight = Object.values(heights).reduce((acc2, value) => acc2 + value, 0);
-          rowsHeightLookup.current[row.id] = finalRowHeight;
+        const finalRowHeight = Object.values(heights).reduce((acc2, value) => acc2 + value, 0);
+        rowsHeightLookup.current[row.id] = finalRowHeight;
 
-          return acc + finalRowHeight;
-        }, 0);
+        return acc + finalRowHeight;
+      }, 0);
 
-        return {
-          ...state,
-          rows: {
-            ...state.rows,
-            meta: { totalHeight, positions },
-          },
-        };
-      });
-      apiRef.current.forceUpdate();
-    },
-    [apiRef, props.pagination, props.paginationMode],
-  );
+      return {
+        ...state,
+        rows: {
+          ...state.rows,
+          meta: { totalHeight, positions },
+        },
+      };
+    });
+    apiRef.current.forceUpdate();
+  }, [apiRef, props]);
 
   const handlePreProcessorRegister = React.useCallback<
     GridEventListener<GridEvents.preProcessorRegister>
   >(
     (name) => {
       if (name === GridPreProcessingGroup.rowHeight) {
-        hydrateRowsMeta(props.getRowHeight);
+        hydrateRowsMeta();
       }
     },
-    [hydrateRowsMeta, props.getRowHeight],
+    [hydrateRowsMeta],
   );
 
   const getTargetRowHeight = (rowId: GridRowId): number =>
@@ -99,8 +92,8 @@ export const useGridRowsHydration = (
   // The effect is used to build the rows meta data - totalHeight and positions.
   // Because of variable row height this is needed for the virtualization
   React.useEffect(() => {
-    hydrateRowsMeta(props.getRowHeight);
-  }, [rowHeight, filter, pagination, sorting, props.getRowHeight, hydrateRowsMeta]);
+    hydrateRowsMeta();
+  }, [rowHeight, filter, pagination, sorting, hydrateRowsMeta]);
 
   useGridApiEventHandler(apiRef, GridEvents.preProcessorRegister, handlePreProcessorRegister);
 
