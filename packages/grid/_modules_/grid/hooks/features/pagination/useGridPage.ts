@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridApiRef } from '../../../models';
+import { GridApiRef, GridState } from '../../../models';
 import {
   useGridLogger,
   useGridSelector,
@@ -37,6 +37,16 @@ const applyValidPage = (paginationState: GridPaginationState): GridPaginationSta
   };
 };
 
+const setStatePage =
+  (page: number) =>
+  (state: GridState): GridState => ({
+    ...state,
+    pagination: applyValidPage({
+      ...state.pagination,
+      page,
+    }),
+  });
+
 /**
  * @requires useGridPageSize (state, event)
  * @requires useGridFilter (state)
@@ -73,14 +83,7 @@ export const useGridPage = (
   const setPage = React.useCallback(
     (page) => {
       logger.debug(`Setting page to ${page}`);
-
-      apiRef.current.setState((state) => ({
-        ...state,
-        pagination: applyValidPage({
-          ...state.pagination,
-          page,
-        }),
-      }));
+      apiRef.current.setState(setStatePage(page));
       apiRef.current.forceUpdate();
     },
     [apiRef, logger],
@@ -112,24 +115,17 @@ export const useGridPage = (
 
   const stateRestorePreProcessing = React.useCallback<
     GridPreProcessor<GridPreProcessingGroup.restoreState>
-  >((params, context) => {
-    // We apply the constraint even if the page did not change in case the pageSize changed.
-    const page = context.stateToRestore.pagination?.page ?? gridPageSelector(params.state)
-    const pageCount = getPageCount(params.state.pagination.rowCount, params.state.pagination.page);
-    const paginationState = applyValidPage({
-      ...params.state.pagination,
-      pageCount,
-      page,
-    });
-
-    return {
-      ...params,
-      state: {
-        ...params.state,
-        pagination: paginationState,
-      },
-    };
-  }, []);
+  >(
+    (params, context) => {
+      // We apply the constraint even if the page did not change in case the pageSize changed.
+      const page =
+        context.stateToRestore.pagination?.page ?? gridPageSelector(apiRef.current.state);
+      console.log(page, apiRef.current.state.pagination);
+      apiRef.current.setState(setStatePage(page));
+      return params;
+    },
+    [apiRef],
+  );
 
   useGridRegisterPreProcessor(apiRef, GridPreProcessingGroup.exportState, stateExportPreProcessing);
   useGridRegisterPreProcessor(

@@ -12,6 +12,9 @@ import {
 } from '../../core/preProcessing';
 import { gridPreferencePanelStateSelector } from './gridPreferencePanelSelector';
 
+/**
+ * TODO: Add a single `setPreferencePanel` method to avoid multiple `setState`
+ */
 export const useGridPreferencesPanel = (
   apiRef: GridApiRef,
   props: Pick<DataGridProcessedProps, 'initialState'>,
@@ -85,19 +88,20 @@ export const useGridPreferencesPanel = (
 
   const stateRestorePreProcessing = React.useCallback<
     GridPreProcessor<GridPreProcessingGroup.restoreState>
-  >((params, context) => {
-    if (context.stateToRestore.preferencePanel == null) {
-      return params;
-    }
+  >(
+    (params, context) => {
+      const preferencePanel = context.stateToRestore.preferencePanel;
+      if (preferencePanel != null) {
+        apiRef.current.setState((state) => ({
+          ...state,
+          preferencePanel,
+        }));
+      }
 
-    return {
-      ...params,
-      state: {
-        ...params.state,
-        preferencePanel: context.stateToRestore.preferencePanel,
-      },
-    };
-  }, []);
+      return params;
+    },
+    [apiRef],
+  );
 
   useGridRegisterPreProcessor(apiRef, GridPreProcessingGroup.exportState, stateExportPreProcessing);
   useGridRegisterPreProcessor(

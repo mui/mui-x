@@ -27,7 +27,11 @@ import {
   useGridRegisterPreProcessor,
 } from '../../core/preProcessing';
 import { useGridRegisterFilteringMethod } from './useGridRegisterFilteringMethod';
-import { buildAggregatedFilterApplier, cleanFilterItem } from './gridFilterUtils';
+import {
+  buildAggregatedFilterApplier,
+  cleanFilterItem,
+  setStateFilterModel,
+} from './gridFilterUtils';
 
 const checkFilterModelValidity = (model: GridFilterModel) => {
   if (model.items.length > 1) {
@@ -208,18 +212,8 @@ export const useGridFilter = (
       if (currentModel !== model) {
         checkFilterModelValidity(model);
 
-        if (model.items.length > 1 && props.disableMultipleColumnsFiltering) {
-          model.items = [model.items[0]];
-        }
-
         logger.debug('Setting filter model');
-        apiRef.current.setState((state) => ({
-          ...state,
-          filter: {
-            ...state.filter,
-            filterModel: model,
-          },
-        }));
+        apiRef.current.setState(setStateFilterModel(model, props.disableMultipleColumnsFiltering));
         apiRef.current.unstable_applyFilters();
       }
     },
@@ -265,23 +259,20 @@ export const useGridFilter = (
     GridPreProcessor<GridPreProcessingGroup.restoreState>
   >(
     (params, context) => {
-      if (context.stateToRestore.filter?.filterModel == null) {
+      const filterModel = context.stateToRestore.filter?.filterModel;
+      if (filterModel == null) {
         return params;
       }
+      apiRef.current.setState(
+        setStateFilterModel(filterModel, props.disableMultipleColumnsFiltering),
+      );
 
       return {
         ...params,
         callbacks: [...params.callbacks, apiRef.current.unstable_applyFilters],
-        state: {
-          ...params.state,
-          filter: {
-            ...params.state.filter,
-            filterModel: context.stateToRestore.filter.filterModel,
-          },
-        },
       };
     },
-    [apiRef],
+    [apiRef, props.disableMultipleColumnsFiltering],
   );
 
   const flatFilteringMethod = React.useCallback<GridFilteringMethod>(

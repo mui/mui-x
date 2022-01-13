@@ -7,6 +7,7 @@ import {
   GridSortCellParams,
   GridSortItem,
   GridSortModel,
+  GridState,
 } from '../../../models';
 import { isDesc } from '../../../utils/sortingUtils';
 
@@ -19,6 +20,16 @@ interface GridParsedSortItem {
   comparator: GridComparatorFn;
   getSortCellParams: (id: GridRowId) => GridSortCellParams;
 }
+
+export const setStateSortModel =
+  (sortModel: GridSortModel) =>
+  (state: GridState): GridState => ({
+    ...state,
+    sorting: {
+      ...state.sorting,
+      sortModel,
+    },
+  });
 
 /**
  * Transform an item of the sorting model into a method comparing two rows.

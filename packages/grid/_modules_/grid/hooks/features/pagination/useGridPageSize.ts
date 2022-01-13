@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridApiRef } from '../../../models';
+import { GridApiRef, GridState } from '../../../models';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridPageSizeApi } from './gridPaginationInterfaces';
 import { GridEvents } from '../../../models/events';
@@ -17,6 +17,16 @@ import {
   GridPreProcessor,
   useGridRegisterPreProcessor,
 } from '../../core/preProcessing';
+
+const setStatePageSize =
+  (pageSize: number) =>
+  (state: GridState): GridState => ({
+    ...state,
+    pagination: {
+      ...state.pagination,
+      pageSize,
+    },
+  });
 
 /**
  * @requires useGridDimensions (event) - can be after
@@ -71,13 +81,7 @@ export const useGridPageSize = (
 
       logger.debug(`Setting page size to ${pageSize}`);
 
-      apiRef.current.setState((state) => ({
-        ...state,
-        pagination: {
-          ...state.pagination,
-          pageSize,
-        },
-      }));
+      apiRef.current.setState(setStatePageSize(pageSize));
       apiRef.current.forceUpdate();
     },
     [apiRef, logger],
@@ -112,22 +116,16 @@ export const useGridPageSize = (
    */
   const stateRestorePreProcessing = React.useCallback<
     GridPreProcessor<GridPreProcessingGroup.restoreState>
-  >((params, context) => {
-    if (context.stateToRestore.pagination?.pageSize == null) {
+  >(
+    (params, context) => {
+      const pageSize = context.stateToRestore.pagination?.pageSize;
+      if (pageSize != null) {
+        apiRef.current.setState(setStatePageSize(pageSize));
+      }
       return params;
-    }
-
-    return {
-      ...params,
-      state: {
-        ...params.state,
-        pagination: {
-          ...params.state.pagination,
-          pageSize: context.stateToRestore.pagination.pageSize,
-        },
-      },
-    };
-  }, []);
+    },
+    [apiRef],
+  );
 
   useGridRegisterPreProcessor(apiRef, GridPreProcessingGroup.exportState, stateExportPreProcessing);
   useGridRegisterPreProcessor(

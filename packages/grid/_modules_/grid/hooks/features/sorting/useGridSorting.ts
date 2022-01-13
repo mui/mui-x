@@ -21,7 +21,7 @@ import { gridRowIdsSelector, gridRowGroupingNameSelector, gridRowTreeSelector } 
 import { useGridStateInit } from '../../utils/useGridStateInit';
 import { useFirstRender } from '../../utils/useFirstRender';
 import { GridSortingMethod, GridSortingMethodCollection } from './gridSortingState';
-import { buildAggregatedSortingApplier } from './gridSortingUtils';
+import { buildAggregatedSortingApplier, setStateSortModel } from './gridSortingUtils';
 import {
   GridPreProcessingGroup,
   GridPreProcessor,
@@ -148,10 +148,7 @@ export const useGridSorting = (
       const currentModel = gridSortModelSelector(apiRef.current.state);
       if (currentModel !== model) {
         logger.debug(`Setting sort model`);
-        apiRef.current.setState((state) => ({
-          ...state,
-          sorting: { ...state.sorting, sortModel: model },
-        }));
+        apiRef.current.setState(setStateSortModel(model));
         apiRef.current.forceUpdate();
         apiRef.current.applySorting();
       }
@@ -234,20 +231,15 @@ export const useGridSorting = (
     GridPreProcessor<GridPreProcessingGroup.restoreState>
   >(
     (params, context) => {
-      if (context.stateToRestore.sorting?.sortModel == null) {
+      const sortModel = context.stateToRestore.sorting?.sortModel;
+      if (sortModel == null) {
         return params;
       }
+      apiRef.current.setState(setStateSortModel(sortModel));
 
       return {
         ...params,
         callbacks: [...params.callbacks, apiRef.current.applySorting],
-        state: {
-          ...params.state,
-          sorting: {
-            ...params.state.sorting,
-            sortModel: context.stateToRestore.sorting.sortModel,
-          },
-        },
       };
     },
     [apiRef],

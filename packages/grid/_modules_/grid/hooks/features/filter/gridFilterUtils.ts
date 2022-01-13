@@ -4,9 +4,28 @@ import {
   GridFilterModel,
   GridLinkOperator,
   GridRowId,
+  GridState,
 } from '../../../models';
 
 type GridFilterItemApplier = (rowId: GridRowId) => boolean;
+
+export const setStateFilterModel = (
+  filterModel: GridFilterModel,
+  disableMultipleColumnsFiltering: boolean,
+) => {
+  const cleanFilterModel = { ...filterModel };
+  if (cleanFilterModel.items.length > 1 && disableMultipleColumnsFiltering) {
+    cleanFilterModel.items = [cleanFilterModel.items[0]];
+  }
+
+  return (state: GridState): GridState => ({
+    ...state,
+    filter: {
+      ...state.filter,
+      filterModel,
+    },
+  });
+};
 
 /**
  * Adds default values to the optional fields of a filter items.

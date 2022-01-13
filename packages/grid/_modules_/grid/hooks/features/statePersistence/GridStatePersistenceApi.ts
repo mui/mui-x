@@ -1,4 +1,4 @@
-import { GridInitialState, GridState } from '../../../models';
+import { GridInitialState } from '../../../models';
 
 export interface GridStatePersistenceApi {
   /**
@@ -15,8 +15,6 @@ export interface GridStatePersistenceApi {
 }
 
 export interface GridRestoreStatePreProcessingValue {
-  state: GridState;
-
   /**
    * Functions to run after the state has been updated but before re-rendering.
    * This is usually used to apply derived states like `applyFilters` or `applySorting`

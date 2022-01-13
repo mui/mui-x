@@ -19,15 +19,12 @@ export const useGridStatePersistence = (apiRef: GridApiRef) => {
       const response = apiRef.current.unstable_applyPreProcessors(
         GridPreProcessingGroup.restoreState,
         {
-          state: apiRef.current.state,
           callbacks: [],
         },
         {
           stateToRestore,
         },
       );
-
-      apiRef.current.setState(response.state);
 
       response.callbacks.forEach((callback) => {
         callback();
