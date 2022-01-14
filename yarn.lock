@@ -2586,8 +2586,8 @@
     react-transition-group "^4.4.2"
 
 "@mui/monorepo@https://github.com/mui-org/material-ui.git#master":
-  version "5.2.6"
-  resolved "https://github.com/mui-org/material-ui.git#dc3b69664f8c27acbac56e249e81ae8e761363ac"
+  version "5.2.8"
+  resolved "https://github.com/mui-org/material-ui.git#8923b74b5c33dde8fa5aeeda769f841a2116083d"
 
 "@mui/private-theming@^5.2.3":
   version "5.2.3"
@@ -13479,7 +13479,7 @@ minimalistic-crypto-utils@^1.0.1:
   resolved "https://registry.yarnpkg.com/minimalistic-crypto-utils/-/minimalistic-crypto-utils-1.0.1.tgz#f6c00c1c0b082246e5c4d99dfb8c7c083b2b582a"
   integrity sha1-9sAMHAsIIkblxNmd+4x8CDsrWCo=
 
-minimatch@3.0.4, minimatch@^3.0.2, minimatch@^3.0.4, minimatch@~3.0.4:
+minimatch@3.0.4, minimatch@^3.0.2, minimatch@^3.0.3, minimatch@^3.0.4, minimatch@~3.0.4:
   version "3.0.4"
   resolved "https://registry.yarnpkg.com/minimatch/-/minimatch-3.0.4.tgz#5166e286457f03306064be5497e8dbb0c3d32083"
   integrity sha512-yJHVQEhyqPLUTgt9B83PXu6W3rx4MvvHvSUvToogpwoGDOUQ+yDrR0HRot+yOCdCO7u4hX3pWft6kWBBcqh0UA==
