@@ -190,10 +190,17 @@
     "treeData": { "type": { "name": "bool" } }
   },
   "slots": {
+    "BaseButton": { "default": "Button", "type": { "name": "elementType" } },
     "BaseCheckbox": { "default": "Checkbox", "type": { "name": "elementType" } },
+    "BaseFormControl": { "default": "FormControl", "type": { "name": "elementType" } },
+    "BasePopper": { "default": "Popper", "type": { "name": "elementType" } },
+    "BaseSelect": { "default": "Select", "type": { "name": "elementType" } },
+    "BaseSwitch": { "default": "Switch", "type": { "name": "elementType" } },
+    "BaseTextField": { "default": "TextField", "type": { "name": "elementType" } },
+    "BaseTooltip": { "default": "Tooltip", "type": { "name": "elementType" } },
     "BooleanCellFalseIcon": { "default": "GridCloseIcon", "type": { "name": "elementType" } },
     "BooleanCellTrueIcon": { "default": "GridCheckIcon", "type": { "name": "elementType" } },
-    "Cell": { "type": { "name": "elementType" } },
+    "Cell": { "default": "GridCell", "type": { "name": "elementType" } },
     "ColumnFilteredIcon": { "default": "GridFilterAltIcon", "type": { "name": "elementType" } },
     "ColumnMenu": { "default": "GridColumnMenu", "type": { "name": "elementType" } },
     "ColumnMenuIcon": {

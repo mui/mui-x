@@ -1,10 +1,11 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import TextField, { TextFieldProps } from '@mui/material/TextField';
+import { TextFieldProps } from '@mui/material/TextField';
 import { unstable_useId as useId } from '@mui/material/utils';
 import { GridFilterInputValueProps } from './GridFilterInputValueProps';
 import { GridColDef } from '../../../models/colDef/gridColDef';
 import { GridApi } from '../../../models/api/gridApi';
+import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 
 const renderSingleSelectOptions = (
   { valueOptions, valueFormatter, field }: GridColDef,
@@ -44,6 +45,7 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
   const { item, applyValue, type, apiRef, focusElementRef, ...others } = props;
   const [filterValueState, setFilterValueState] = React.useState(item.value ?? '');
   const id = useId();
+  const rootProps = useGridRootProps();
 
   const currentColumn = item.columnField ? apiRef.current.getColumn(item.columnField) : null;
 
@@ -86,7 +88,7 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
   }, [item, currentValueOptions, applyValue]);
 
   return (
-    <TextField
+    <rootProps.components.BaseTextField
       id={id}
       label={apiRef.current.getLocaleText('filterPanelInputLabel')}
       placeholder={apiRef.current.getLocaleText('filterPanelInputPlaceholder')}
@@ -103,9 +105,10 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
         native: true,
       }}
       {...others}
+      {...rootProps.componentsProps?.baseTextField}
     >
       {renderSingleSelectOptions(apiRef.current.getColumn(item.columnField), apiRef.current)}
-    </TextField>
+    </rootProps.components.BaseTextField>
   );
 }
 
