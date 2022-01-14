@@ -17,6 +17,7 @@ describe('buildRowTree', () => {
         { id: 2, path: [{ key: 'C', field: null }] },
       ],
       defaultGroupingExpansionDepth: 0,
+      previousTree: null,
     });
 
     expect(
@@ -25,9 +26,9 @@ describe('buildRowTree', () => {
         childrenExpanded: node.childrenExpanded,
       })),
     ).to.deep.equal([
-      { id: 0, childrenExpanded: false },
-      { id: 1, childrenExpanded: false },
-      { id: 2, childrenExpanded: false },
+      { id: 0, childrenExpanded: undefined },
+      { id: 1, childrenExpanded: undefined },
+      { id: 2, childrenExpanded: undefined },
     ]);
   });
 
@@ -59,6 +60,7 @@ describe('buildRowTree', () => {
         },
       ],
       defaultGroupingExpansionDepth: 2,
+      previousTree: null,
     });
 
     expect(
@@ -69,7 +71,7 @@ describe('buildRowTree', () => {
     ).to.deep.equal([
       { id: 0, childrenExpanded: true },
       { id: 1, childrenExpanded: true },
-      { id: 2, childrenExpanded: false },
+      { id: 2, childrenExpanded: undefined },
     ]);
   });
 
@@ -101,6 +103,7 @@ describe('buildRowTree', () => {
         },
       ],
       defaultGroupingExpansionDepth: -1,
+      previousTree: null,
     });
 
     expect(
@@ -111,7 +114,7 @@ describe('buildRowTree', () => {
     ).to.deep.equal([
       { id: 0, childrenExpanded: true },
       { id: 1, childrenExpanded: true },
-      { id: 2, childrenExpanded: false },
+      { id: 2, childrenExpanded: undefined },
     ]);
   });
 
@@ -152,6 +155,7 @@ describe('buildRowTree', () => {
         },
       ],
       defaultGroupingExpansionDepth: 0,
+      previousTree: null,
     });
 
     expect(
@@ -205,6 +209,7 @@ describe('buildRowTree', () => {
         },
       ],
       defaultGroupingExpansionDepth: 0,
+      previousTree: null,
     });
 
     expect(response.treeDepth).to.equal(3);
@@ -230,6 +235,7 @@ describe('buildRowTree', () => {
         },
       ],
       defaultGroupingExpansionDepth: 0,
+      previousTree: null,
     });
 
     expect(response).to.deep.equal({
@@ -265,7 +271,7 @@ describe('buildRowTree', () => {
         1: {
           children: undefined,
           depth: 2,
-          childrenExpanded: false,
+          childrenExpanded: undefined,
           groupingField: null,
           groupingKey: 'A',
           id: 1,
