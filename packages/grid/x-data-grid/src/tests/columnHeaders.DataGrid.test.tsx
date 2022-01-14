@@ -91,7 +91,34 @@ describe('<DataGrid /> - Column Headers', () => {
        * It doesn't happen with user click in browser.
        * So instead of firing click event, we only check `aria-disabled` here.
        */
-      expect(hideButton.getAttribute('aria-disabled')).to.equal('true');
+      expect(hideButton).to.have.attribute('aria-disabled', 'true');
+    });
+
+    it('should not allow to hide the only visible column that has menu', () => {
+      render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid
+            {...baselineProps}
+            columns={[
+              { field: 'id', disableColumnMenu: true },
+              { field: 'brand', headerClassName: 'foobar' },
+            ]}
+          />
+        </div>,
+      );
+
+      expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'brand']);
+
+      fireEvent.click(within(getColumnHeaderCell(1)).getByLabelText('Menu'));
+
+      const hideButton = screen.getByRole('menuitem', { name: 'Hide' });
+      /**
+       * Clicking disabled `ButtonBase` as `li` element would
+       * call onClick handler in testing environment.
+       * It doesn't happen with user click in browser.
+       * So instead of firing click event, we only check `aria-disabled` here.
+       */
+      expect(hideButton).to.have.attribute('aria-disabled', 'true');
     });
   });
 });
