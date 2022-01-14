@@ -892,7 +892,10 @@ describe('<DataGridPro /> - Edit Rows', () => {
       await new Promise((resolve) => nativeSetTimeout(resolve));
 
       expect(preProcessEditCellProps.callCount).to.equal(1);
-      expect(preProcessEditCellProps.lastCall.args[0].props).to.deep.equal({ value: 'Adidas' });
+      expect(preProcessEditCellProps.lastCall.args[0].props).to.deep.equal({
+        value: 'Adidas',
+        isValidating: true,
+      });
       expect(cell).to.have.class('MuiDataGrid-cell--editing');
     });
   });
@@ -1298,7 +1301,10 @@ describe('<DataGridPro /> - Edit Rows', () => {
       await new Promise((resolve) => nativeSetTimeout(resolve));
 
       expect(preProcessEditCellProps.callCount).to.equal(1);
-      expect(preProcessEditCellProps.lastCall.args[0].props).to.deep.equal({ value: true });
+      expect(preProcessEditCellProps.lastCall.args[0].props).to.deep.equal({
+        value: true,
+        isValidating: true,
+      });
       expect(cell).to.have.class('MuiDataGrid-cell--editing');
     });
   });
@@ -1853,7 +1859,10 @@ describe('<DataGridPro /> - Edit Rows', () => {
     await new Promise((resolve) => nativeSetTimeout(resolve));
 
     expect(preProcessEditCellProps.callCount).to.equal(1);
-    expect(preProcessEditCellProps.lastCall.args[0].props).to.deep.equal({ value: 'Adidas' });
+    expect(preProcessEditCellProps.lastCall.args[0].props).to.deep.equal({
+      value: 'Adidas',
+      isValidating: true,
+    });
     expect(cell).to.have.class('MuiDataGrid-cell--editing');
   });
 
@@ -1893,9 +1902,83 @@ describe('<DataGridPro /> - Edit Rows', () => {
     await new Promise((resolve) => nativeSetTimeout(resolve));
 
     expect(brandPreProcessEditCellProps.callCount).to.equal(1);
-    expect(brandPreProcessEditCellProps.lastCall.args[0].props).to.deep.equal({ value: 'Adidas' });
+    expect(brandPreProcessEditCellProps.lastCall.args[0].props).to.deep.equal({
+      value: 'Adidas',
+      isValidating: true,
+    });
     expect(yearPreProcessEditCellProps.callCount).to.equal(1);
-    expect(yearPreProcessEditCellProps.lastCall.args[0].props).to.deep.equal({ value: 2022 });
+    expect(yearPreProcessEditCellProps.lastCall.args[0].props).to.deep.equal({
+      value: 2022,
+      isValidating: true,
+    });
     expect(cell).to.have.class('MuiDataGrid-cell--editing');
+  });
+
+  it('should call preProcessEditCellProps with the value parsed if preventCommitWhileValidating=true and editMode=cell', async () => {
+    const preProcessEditCellProps = spy(({ props }) => Promise.resolve({ ...props }));
+    render(
+      <div style={{ width: 300, height: 300 }}>
+        <DataGridPro
+          columns={[
+            {
+              field: 'brand',
+              editable: true,
+              valueParser: (value) => value.toUpperCase(),
+              preProcessEditCellProps,
+            },
+          ]}
+          rows={[{ id: 0, brand: 'Nike', year: 2022 }]}
+          preventCommitWhileValidating
+        />
+      </div>,
+    );
+    const cell = getCell(0, 0);
+    fireEvent.doubleClick(cell);
+
+    const input = cell.querySelector('input')!;
+    fireEvent.change(input, { target: { value: 'Adidas' } });
+
+    await new Promise((resolve) => nativeSetTimeout(resolve));
+
+    expect(preProcessEditCellProps.callCount).to.equal(1);
+    expect(preProcessEditCellProps.lastCall.args[0].props).to.deep.equal({
+      value: 'ADIDAS',
+      isValidating: true,
+    });
+  });
+
+  it('should call preProcessEditCellProps with the value parsed if preventCommitWhileValidating=true and editMode=row', async () => {
+    const preProcessEditCellProps = spy(({ props }) => Promise.resolve({ ...props }));
+    render(
+      <div style={{ width: 300, height: 300 }}>
+        <DataGridPro
+          editMode="row"
+          columns={[
+            {
+              field: 'brand',
+              editable: true,
+              valueParser: (value) => value.toUpperCase(),
+              preProcessEditCellProps,
+            },
+          ]}
+          rows={[{ id: 0, brand: 'Nike', year: 2022 }]}
+          preventCommitWhileValidating
+        />
+      </div>,
+    );
+    const cell = getCell(0, 0);
+    fireEvent.doubleClick(cell);
+
+    const input = cell.querySelector('input')!;
+    fireEvent.change(input, { target: { value: 'Adidas' } });
+    fireEvent.keyDown(input, { key: 'Enter' });
+
+    await new Promise((resolve) => nativeSetTimeout(resolve));
+
+    expect(preProcessEditCellProps.callCount).to.equal(1);
+    expect(preProcessEditCellProps.lastCall.args[0].props).to.deep.equal({
+      value: 'ADIDAS',
+      isValidating: true,
+    });
   });
 });

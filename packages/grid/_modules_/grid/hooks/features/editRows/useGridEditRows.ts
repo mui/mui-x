@@ -215,24 +215,34 @@ export function useGridEditRows(
     [props.isCellEditable],
   );
 
+  const parseValue = React.useCallback(
+    (id, field, value) => {
+      const column = apiRef.current.getColumn(field);
+      return column.valueParser
+        ? column.valueParser(value, apiRef.current.getCellParams(id, field))
+        : value;
+    },
+    [apiRef],
+  );
+
+  // TODO don't call valueParser on already parsed values
   const setEditCellProps = React.useCallback(
     (params: GridEditCellPropsParams) => {
       const { id, field, props: editProps } = params;
       logger.debug(`Setting cell props on id: ${id} field: ${field}`);
-      apiRef.current.setState((state) => {
-        const column = apiRef.current.getColumn(field);
-        const parsedValue = column.valueParser
-          ? column.valueParser(editProps.value, apiRef.current.getCellParams(id, field))
-          : editProps.value;
 
+      apiRef.current.setState((state) => {
         const editRowsModel: GridEditRowsModel = { ...state.editRows };
         editRowsModel[id] = { ...state.editRows[id] };
-        editRowsModel[id][field] = { ...editProps, value: parsedValue };
+        editRowsModel[id][field] = { ...editProps, value: parseValue(id, field, editProps.value) };
         return { ...state, editRows: editRowsModel };
       });
       apiRef.current.forceUpdate();
+
+      const editRowsState = gridEditRowsStateSelector(apiRef.current.state);
+      return editRowsState[id][field];
     },
-    [apiRef, logger],
+    [apiRef, logger, parseValue],
   );
 
   const setEditCellValue = React.useCallback<GridEditRowApi['setEditCellValue']>(
@@ -250,7 +260,8 @@ export function useGridEditRows(
               const column = apiRef.current.getColumn(field);
               let editCellProps = field === params.field ? { value: params.value } : editRow[field];
 
-              setEditCellProps({
+              // setEditCellProps runs the value parser and returns the updated props
+              editCellProps = setEditCellProps({
                 id: params.id,
                 field,
                 props: { ...editCellProps, isValidating: true },
@@ -258,7 +269,17 @@ export function useGridEditRows(
 
               if (column.preProcessEditCellProps) {
                 editCellProps = await Promise.resolve(
-                  column.preProcessEditCellProps!({ id: params.id, row, props: editCellProps }),
+                  column.preProcessEditCellProps!({
+                    id: params.id,
+                    row,
+                    props: {
+                      ...editCellProps,
+                      value:
+                        field === params.field
+                          ? parseValue(params.id, field, params.value)
+                          : editCellProps.value,
+                    },
+                  }),
                 );
               }
 
@@ -280,7 +301,7 @@ export function useGridEditRows(
         const column = apiRef.current.getColumn(params.field);
 
         return new Promise((resolve) => {
-          const newEditCellProps: GridEditCellProps = { value: params.value };
+          let newEditCellProps: GridEditCellProps = { value: params.value };
           const model = apiRef.current.getEditRowsModel();
           const editCellProps = model[params.id][params.field];
 
@@ -290,13 +311,20 @@ export function useGridEditRows(
             return;
           }
 
-          setEditCellProps({ ...params, props: { ...editCellProps, isValidating: true } });
+          // setEditCellProps runs the value parser and returns the updated props
+          newEditCellProps = setEditCellProps({
+            ...params,
+            props: { ...editCellProps, isValidating: true },
+          });
 
           Promise.resolve(
             column.preProcessEditCellProps({
               id: params.id,
               row,
-              props: newEditCellProps,
+              props: {
+                ...newEditCellProps,
+                value: parseValue(params.id, params.field, params.value),
+              },
             }),
           ).then((newEditCellPropsProcessed) => {
             setEditCellProps({
@@ -316,7 +344,7 @@ export function useGridEditRows(
       apiRef.current.publishEvent(GridEvents.editCellPropsChange, newParams, event);
       return undefined;
     },
-    [apiRef, props.editMode, props.preventCommitWhileValidating, setEditCellProps],
+    [apiRef, parseValue, props.editMode, props.preventCommitWhileValidating, setEditCellProps],
   );
 
   const handleEditCellPropsChange = React.useCallback<
