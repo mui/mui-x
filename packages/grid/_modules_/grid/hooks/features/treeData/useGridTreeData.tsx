@@ -142,11 +142,16 @@ export const useGridTreeData = (
       const groupingColDefField = GRID_TREE_DATA_GROUPING_COL_DEF_FORCED_PROPERTIES.field;
 
       const shouldHaveGroupingColumn = props.treeData;
-      const haveGroupingColumn = columnsState.lookup[groupingColDefField] != null;
+      const prevGroupingColumn = columnsState.lookup[groupingColDefField];
 
       if (shouldHaveGroupingColumn) {
-        columnsState.lookup[groupingColDefField] = getGroupingColDef();
-        if (!haveGroupingColumn) {
+        const newGroupingColumn = getGroupingColDef();
+        if (prevGroupingColumn) {
+          newGroupingColumn.width = prevGroupingColumn.width;
+          newGroupingColumn.flex = prevGroupingColumn.flex;
+        }
+        columnsState.lookup[groupingColDefField] = newGroupingColumn;
+        if (prevGroupingColumn == null) {
           const index = columnsState.all[0] === '__check__' ? 1 : 0;
           columnsState.all = [
             ...columnsState.all.slice(0, index),
@@ -154,7 +159,7 @@ export const useGridTreeData = (
             ...columnsState.all.slice(index),
           ];
         }
-      } else if (!shouldHaveGroupingColumn && haveGroupingColumn) {
+      } else if (!shouldHaveGroupingColumn && prevGroupingColumn) {
         delete columnsState.lookup[groupingColDefField];
         columnsState.all = columnsState.all.filter((field) => field !== groupingColDefField);
       }

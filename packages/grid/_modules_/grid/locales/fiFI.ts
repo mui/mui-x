@@ -75,7 +75,7 @@ const fiFIGrid: Partial<GridLocaleText> = {
   columnMenuFilter: 'Suodata',
   columnMenuHideColumn: 'Piilota',
   columnMenuUnsort: 'Poista järjestys',
-  columnMenuSortAsc: 'Järjestä lasvevasti',
+  columnMenuSortAsc: 'Järjestä laskevasti',
   columnMenuSortDesc: 'Järjestä nousevasti',
 
   // Column header text
