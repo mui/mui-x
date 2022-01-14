@@ -37,7 +37,10 @@ test.describe.parallel('Material docs', () => {
 
       await Promise.all(
         anchorTexts.map((text, index) => {
-          return expect(anchors.nth(index)).toHaveAttribute('href', `/x/api/${kebabCase(text)}/`);
+          return expect(anchors.nth(index)).toHaveAttribute(
+            'href',
+            `/x/api/data-grid/${kebabCase(text)}/`,
+          );
         }),
       );
     });
