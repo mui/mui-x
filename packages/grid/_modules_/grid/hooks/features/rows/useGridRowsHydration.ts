@@ -27,16 +27,17 @@ export const useGridRowsHydration = (
   apiRef: GridApiRef,
   props: Pick<DataGridProcessedProps, 'getRowHeight' | 'pagination' | 'paginationMode'>,
 ): void => {
+  const { getRowHeight, pagination, paginationMode } = props;
   const rowsHeightLookup = React.useRef<{ [key: GridRowId]: number }>({});
   const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
-  const filter = useGridSelector(apiRef, gridFilterStateSelector);
-  const pagination = useGridSelector(apiRef, gridPaginationSelector);
-  const sorting = useGridSelector(apiRef, gridSortingStateSelector);
+  const filterState = useGridSelector(apiRef, gridFilterStateSelector);
+  const paginationState = useGridSelector(apiRef, gridPaginationSelector);
+  const sortingState = useGridSelector(apiRef, gridSortingStateSelector);
 
   const hydrateRowsMeta = React.useCallback(() => {
     const { rows } = getCurrentPageRows(apiRef.current.state, {
-      pagination: props.pagination,
-      paginationMode: props.paginationMode,
+      pagination,
+      paginationMode,
     });
 
     apiRef.current.setState((state) => {
@@ -45,10 +46,10 @@ export const useGridRowsHydration = (
         positions.push(acc);
         let targetRowHeight = gridDensityRowHeightSelector(state);
 
-        if (props.getRowHeight) {
+        if (getRowHeight) {
           // Default back to base rowHeight if getRowHeight returns null or undefined.
           targetRowHeight =
-            props.getRowHeight({ ...row, densityFactor: gridDensityFactorSelector(state) }) ||
+            getRowHeight({ ...row, densityFactor: gridDensityFactorSelector(state) }) ||
             gridDensityRowHeightSelector(state);
         }
 
@@ -73,7 +74,7 @@ export const useGridRowsHydration = (
       };
     });
     apiRef.current.forceUpdate();
-  }, [apiRef, props]);
+  }, [apiRef, pagination, paginationMode, getRowHeight]);
 
   const handlePreProcessorRegister = React.useCallback<
     GridEventListener<GridEvents.preProcessorRegister>
@@ -93,7 +94,7 @@ export const useGridRowsHydration = (
   // Because of variable row height this is needed for the virtualization
   React.useEffect(() => {
     hydrateRowsMeta();
-  }, [rowHeight, filter, pagination, sorting, hydrateRowsMeta]);
+  }, [rowHeight, filterState, paginationState, sortingState, hydrateRowsMeta]);
 
   useGridApiEventHandler(apiRef, GridEvents.preProcessorRegister, handlePreProcessorRegister);
 

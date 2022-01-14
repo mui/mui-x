@@ -223,6 +223,13 @@ describe('<DataGrid /> - Rows', () => {
   });
 
   describe('Row height', () => {
+    before(function beforeHook() {
+      if (isJSDOM) {
+        // Need layouting
+        this.skip();
+      }
+    });
+
     const ROW_HEIGHT = 52;
     const TestCase = (props) => {
       const getRowId = (row) => `${row.clientId}`;
