@@ -20,12 +20,19 @@ describe('<DataGrid /> - Pagination', () => {
 
     return (
       <div style={{ width: 300, height }}>
-        <DataGrid {...basicData} disableVirtualization {...other} />
+        <DataGrid {...basicData} autoHeight={isJSDOM} {...other} />
       </div>
     );
   };
 
   describe('props: page and onPageChange', () => {
+    before(function beforeHook() {
+      if (isJSDOM) {
+        // Need layouting
+        this.skip();
+      }
+    });
+
     it('should display the rows of page given in props', () => {
       render(<BaselineTestCase page={1} pageSize={1} rowsPerPageOptions={[1]} />);
       expect(getColumnValues()).to.deep.equal(['1']);
@@ -196,6 +203,13 @@ describe('<DataGrid /> - Pagination', () => {
   });
 
   describe('props: pageSize and onPageSizeChange', () => {
+    before(function beforeHook() {
+      if (isJSDOM) {
+        // Need layouting
+        this.skip();
+      }
+    });
+
     it('should display the amount of rows given in props', () => {
       render(<BaselineTestCase page={0} pageSize={2} rowsPerPageOptions={[2]} />);
       expect(getColumnValues()).to.deep.equal(['0', '1']);
@@ -354,7 +368,9 @@ describe('<DataGrid /> - Pagination', () => {
     });
 
     it('should update the pageCount state when updating the pageSize prop with a lower value', () => {
-      const { setProps } = render(<BaselineTestCase rowsPerPageOptions={[10, 20]} pageSize={20} />);
+      const { setProps } = render(
+        <BaselineTestCase rowsPerPageOptions={[10, 20]} pageSize={20} disableVirtualization />,
+      );
       expect(getColumnValues(0)).to.have.length(20);
       setProps({ pageSize: 10 });
       expect(getColumnValues(0)).to.have.length(10);
@@ -564,6 +580,13 @@ describe('<DataGrid /> - Pagination', () => {
   });
 
   describe('prop: initialState.pagination', () => {
+    before(function beforeHook() {
+      if (isJSDOM) {
+        // Need layouting
+        this.skip();
+      }
+    });
+
     it('should allow to initialize the pageSize', () => {
       render(
         <BaselineTestCase
