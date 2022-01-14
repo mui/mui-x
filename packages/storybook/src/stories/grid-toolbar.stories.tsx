@@ -6,7 +6,6 @@ import {
   GridToolbar,
   GridToolbarContainer,
   GridToolbarExport,
-  gridClasses,
 } from '@mui/x-data-grid-pro';
 import '../style/grid-stories.css';
 import { useData } from '../hooks/useData';
