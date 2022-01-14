@@ -18,6 +18,14 @@ describe('<DataGridPro /> - Export', () => {
     );
   };
 
+  // We need `createObjectURL` to test the downloaded value
+  before(function beforeHook() {
+    if (/jsdom/.test(window.navigator.userAgent)) {
+      // Need layouting
+      this.skip();
+    }
+  });
+
   let spyCreateObjectURL: SinonSpy;
   beforeEach(() => {
     spyCreateObjectURL = spy(global.URL, 'createObjectURL');
