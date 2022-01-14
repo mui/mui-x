@@ -1753,7 +1753,7 @@ describe('<DataGridPro /> - Edit Rows', () => {
 
   // Confirms the bug in https://github.com/mui-org/material-ui-x/issues/3304 for editMode=cell
   // TODO v6: remove
-  it('should call preProcessEditCellProps twice and with the wrong value in the 2nd time if it resolves with an error and preventCommitWhileValidating=false and editMode=cell', async () => {
+  it('should call preProcessEditCellProps twice and with the wrong value in the 2nd time if preventCommitWhileValidating=false and editMode=cell', async () => {
     const preProcessEditCellProps = spy(({ props }) => Promise.resolve(props));
     render(
       <div style={{ width: 300, height: 300 }}>
@@ -1785,7 +1785,7 @@ describe('<DataGridPro /> - Edit Rows', () => {
 
   // Confirms the bug in https://github.com/mui-org/material-ui-x/issues/3304 for editMode=row
   // TODO v6: remove
-  it('should call preProcessEditCellProps twice and with the wrong value in the 2nd time if it resolves with an error and preventCommitWhileValidating=false and editMode=row', async () => {
+  it('should call preProcessEditCellProps twice and with the wrong value in the 2nd time if preventCommitWhileValidating=false and editMode=row', async () => {
     const brandPreProcessEditCellProps = spy(({ props }) => Promise.resolve(props));
     const yearPreProcessEditCellProps = spy(({ props }) => Promise.resolve(props));
     render(
@@ -1827,7 +1827,7 @@ describe('<DataGridPro /> - Edit Rows', () => {
   });
 
   it('should call preProcessEditCellProps once if it resolves with an error and preventCommitWhileValidating=true and editMode=cell', async () => {
-    const preProcessEditCellProps = spy(({ props }) => Promise.resolve(props));
+    const preProcessEditCellProps = spy(({ props }) => Promise.resolve({ ...props, error: true }));
     render(
       <div style={{ width: 300, height: 300 }}>
         <DataGridPro
@@ -1858,7 +1858,9 @@ describe('<DataGridPro /> - Edit Rows', () => {
   });
 
   it('should call preProcessEditCellProps once if it resolves with an error and preventCommitWhileValidating=true and editMode=row', async () => {
-    const brandPreProcessEditCellProps = spy(({ props }) => Promise.resolve(props));
+    const brandPreProcessEditCellProps = spy(({ props }) =>
+      Promise.resolve({ ...props, error: true }),
+    );
     const yearPreProcessEditCellProps = spy(({ props }) => Promise.resolve(props));
     render(
       <div style={{ width: 300, height: 300 }}>
@@ -1894,6 +1896,6 @@ describe('<DataGridPro /> - Edit Rows', () => {
     expect(brandPreProcessEditCellProps.lastCall.args[0].props).to.deep.equal({ value: 'Adidas' });
     expect(yearPreProcessEditCellProps.callCount).to.equal(1);
     expect(yearPreProcessEditCellProps.lastCall.args[0].props).to.deep.equal({ value: 2022 });
-    // expect(cell).to.have.class('MuiDataGrid-cell--editing');
+    expect(cell).to.have.class('MuiDataGrid-cell--editing');
   });
 });

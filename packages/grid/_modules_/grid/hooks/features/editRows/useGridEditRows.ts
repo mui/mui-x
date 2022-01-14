@@ -603,9 +603,10 @@ export function useGridEditRows(
         const rowParams = apiRef.current.getRowParams(params.id);
         if (isEditMode) {
           if (event.key === 'Enter') {
-            // TODO: check the return before firing GridEvents.rowEditStop
-            // On cell editing, it won't exits the edit mode with error
-            await apiRef.current.commitRowChange(params.id);
+            const isValid = await apiRef.current.commitRowChange(params.id);
+            if (!isValid && props.preventCommitWhileValidating) {
+              return;
+            }
             apiRef.current.publishEvent(GridEvents.rowEditStop, rowParams, event);
           } else if (event.key === 'Escape') {
             apiRef.current.publishEvent(GridEvents.rowEditStop, rowParams, event);
