@@ -120,7 +120,6 @@ export const useGridPage = (
       // We apply the constraint even if the page did not change in case the pageSize changed.
       const page =
         context.stateToRestore.pagination?.page ?? gridPageSelector(apiRef.current.state);
-      console.log(page, apiRef.current.state.pagination);
       apiRef.current.setState(setStatePage(page));
       return params;
     },

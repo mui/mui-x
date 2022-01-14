@@ -56,17 +56,32 @@ Some selectors are yet to be documented.
 
 ## Save and restore the state
 
-You can export the current state of the grid by calling `apiRef.current.exportState()` and restore it by either passing it to the `initialState` prop or to the `apiRef.current.restoreState()` method.
+The current state of the grid can be exported using `apiRef.current.exportState()`.
+It can then be restored by either passing it to the `initialState` prop or to the `apiRef.current.restoreState()` method.
 
 ### Restore the state with `initialState`
 
 > ⚠️ If you restore the page using `initialState` before the data are fetched, the grid will automatically move to the 1st page.
 
-{{"demo": "pages/components/data-grid/state/RestoreStateInitialState.js", "bg": "inline"}}
+{{"demo": "pages/components/data-grid/state/RestoreStateInitialState.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ### Restore the state with `apiRef` [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
 
-{{"demo": "pages/components/data-grid/state/RestoreStateApiRef.js", "bg": "inline"}}
+{{"demo": "pages/components/data-grid/state/RestoreStateApiRef.js", "bg": "inline", "defaultCodeOpen": false}}
+
+### Restore part of the state
+
+It is possible to only pass some keys of the state to the `apiRef.current.restoreState()` method.
+For instance, to only restore the pinned columns:
+
+```ts
+apiRef.current.restoreState({
+  pinnedColumns: ['brand'],
+});
+```
+
+**Note**: Most of the state keys are not fully independent.
+Restoring the pagination without restoring the filters or the sorting will work, but the rows displayed will not be the same as before.
 
 ## API
 

@@ -7,14 +7,14 @@ import {
   useGridApiRef,
 } from '@mui/x-data-grid-pro';
 import { useData } from 'packages/storybook/src/hooks/useData';
-import { createRenderer, screen, waitFor } from '@mui/monorepo/test/utils';
+import { createRenderer, screen } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { getColumnValues } from '../../../../../test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<DataGridPro /> - State Persistence', () => {
-  const { render } = createRenderer();
+  const { render, clock } = createRenderer({ clock: 'fake' });
 
   let apiRef: GridApiRef;
 
@@ -168,14 +168,12 @@ describe('<DataGridPro /> - State Persistence', () => {
           pageSize: 5,
         },
       });
-
-      waitFor(() => {
-        expect(getColumnValues(0)).to.deep.equal(['5', '6', '7', '8', '9']);
-      });
+      clock.runToLast();
+      expect(getColumnValues(0)).to.deep.equal(['5', '6', '7', '8', '9']);
     });
 
     // Not sure how to make that one work, if the `pageSize` update is async, we try to update the `page` with an outdated `pageSize` which can cause problem.
-    // it('should restore when controlled pageSize but not page', () => {
+    // it.only('should restore when controlled pageSize but not page', () => {
     //     const ControlledTest = () => {
     //         const [pageSize, setPageSize] = React.useState(100)
     //
@@ -193,10 +191,8 @@ describe('<DataGridPro /> - State Persistence', () => {
     //             pageSize: 5,
     //         },
     //     })
-    //
-    //     waitFor(() => {
-    //         expect(getColumnValues(0)).to.deep.equal(['5', '6', '7', '8', '9'])
-    //     })
+    //   clock.runToLast();
+    //   expect(getColumnValues(0)).to.deep.equal(['5', '6', '7', '8', '9']);
     // })
   });
 });
