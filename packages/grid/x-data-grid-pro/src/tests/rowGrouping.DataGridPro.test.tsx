@@ -612,25 +612,6 @@ describe('<DataGridPro /> - Group Rows By Column', () => {
       ]);
     });
 
-    it('should react to defaultGroupingExpansionDepth updates', () => {
-      const { setProps } = render(
-        <Test
-          defaultGroupingExpansionDepth={0}
-          initialState={{ rowGrouping: { model: ['category1', 'category2'] } }}
-        />,
-      );
-      expect(getColumnValues(0)).to.deep.equal(['Cat A (3)', 'Cat B (2)']);
-      setProps({ defaultGroupingExpansionDepth: 1 });
-      expect(getColumnValues(0)).to.deep.equal([
-        'Cat A (3)',
-        'Cat 1 (1)',
-        'Cat 2 (2)',
-        'Cat B (2)',
-        'Cat 2 (1)',
-        'Cat 1 (1)',
-      ]);
-    });
-
     it('should not re-apply default expansion on rerender after expansion manually toggled', () => {
       const { setProps } = render(
         <Test initialState={{ rowGrouping: { model: ['category1', 'category2'] } }} />,

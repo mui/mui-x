@@ -247,7 +247,7 @@
       "type": { "name": "elementType" }
     },
     "GroupingCriteriaExpandIcon": {
-      "default": "KeyboardArrowRight",
+      "default": "GridKeyboardArrowRight",
       "type": { "name": "elementType" }
     },
     "Header": { "default": "GridHeader", "type": { "name": "elementType" } },
@@ -262,7 +262,7 @@
     "Row": { "type": { "name": "elementType" } },
     "Toolbar": { "default": "null", "type": { "name": "elementType | null" } },
     "TreeDataCollapseIcon": { "default": "GridExpandMoreIcon", "type": { "name": "elementType" } },
-    "TreeDataExpandIcon": { "default": "KeyboardArrowRight", "type": { "name": "elementType" } }
+    "TreeDataExpandIcon": { "default": "GridKeyboardArrowRight", "type": { "name": "elementType" } }
   },
   "name": "DataGridPro",
   "styles": {
