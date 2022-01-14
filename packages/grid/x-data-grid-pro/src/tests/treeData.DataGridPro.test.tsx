@@ -1,11 +1,17 @@
 import { createRenderer, fireEvent, screen, act } from '@mui/monorepo/test/utils';
-import { getCell, getColumnHeadersTextContent, getColumnValues } from 'test/utils/helperFn';
+import {
+  getCell,
+  getColumnHeaderCell,
+  getColumnHeadersTextContent,
+  getColumnValues,
+} from 'test/utils/helperFn';
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import {
   DataGridPro,
   DataGridProProps,
+  GRID_TREE_DATA_GROUPING_FIELD,
   GridApiRef,
   GridLinkOperator,
   GridRowsProp,
@@ -381,6 +387,23 @@ describe('<DataGridPro /> - Tree Data', () => {
     it('should add auto generated rows if some parents do not exist', () => {
       render(<Test rows={rowsWithGap} defaultGroupingExpansionDepth={-1} />);
       expect(getColumnValues(1)).to.deep.equal(['A', 'A.B', 'A.A', '', 'B.A', 'B.B']);
+    });
+
+    it('should keep the grouping column width between generations', () => {
+      render(<Test groupingColDef={{ width: 200 }} />);
+      // @ts-expect-error need to migrate helpers to TypeScript
+      expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '200px' });
+      apiRef.current.updateColumns([{ field: GRID_TREE_DATA_GROUPING_FIELD, width: 100 }]);
+      // @ts-expect-error need to migrate helpers to TypeScript
+      expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '100px' });
+      apiRef.current.updateColumns([
+        {
+          field: 'name',
+          headerName: 'New name',
+        },
+      ]);
+      // @ts-expect-error need to migrate helpers to TypeScript
+      expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '100px' });
     });
   });
 
