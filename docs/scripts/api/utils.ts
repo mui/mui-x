@@ -44,28 +44,32 @@ export function escapeCell(value: string) {
     .replace(/\r?\n/g, '<br />');
 }
 
+export const formatType = (rawType: string) => {
+  const prefix = 'type FakeType = ';
+  const signatureWithTypeName = `${prefix}${rawType}`;
+
+  const prettifiedSignatureWithTypeName = prettier.format(signatureWithTypeName, {
+    printWidth: 999,
+    singleQuote: true,
+    semi: false,
+    trailingComma: 'none',
+    parser: 'typescript',
+  });
+
+  return prettifiedSignatureWithTypeName.slice(prefix.length).replace(/\n$/, '');
+};
+
 export const stringifySymbol = (symbol: ts.Symbol, project: Project) => {
-  if (symbol.valueDeclaration && ts.isPropertySignature(symbol.valueDeclaration)) {
-    const signature = symbol.valueDeclaration.type?.getText() ?? '';
-    const prefix = 'type FakeType = ';
-    const signatureWithTypeName = `${prefix}${signature}`;
+  const rawType =
+    symbol.valueDeclaration && ts.isPropertySignature(symbol.valueDeclaration)
+      ? symbol.valueDeclaration.type?.getText() ?? ''
+      : project.checker.typeToString(
+          project.checker.getTypeOfSymbolAtLocation(symbol, symbol.valueDeclaration!),
+          symbol.valueDeclaration,
+          ts.TypeFormatFlags.NoTruncation,
+        );
 
-    const prettifiedSignatureWithTypeName = prettier.format(signatureWithTypeName, {
-      printWidth: 999,
-      singleQuote: true,
-      semi: false,
-      trailingComma: 'none',
-      parser: 'typescript',
-    });
-
-    return prettifiedSignatureWithTypeName.slice(prefix.length).replace(/\n$/, '');
-  }
-
-  return project.checker.typeToString(
-    project.checker.getTypeOfSymbolAtLocation(symbol, symbol.valueDeclaration!),
-    symbol.valueDeclaration,
-    ts.TypeFormatFlags.NoTruncation,
-  );
+  return formatType(rawType);
 };
 
 export function linkify(

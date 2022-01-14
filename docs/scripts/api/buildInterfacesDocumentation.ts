@@ -55,6 +55,11 @@ const INTERFACES_WITH_DEDICATED_PAGES = [
   'GridColDef',
   'GridCsvExportOptions',
   'GridPrintExportOptions',
+
+  // Filters
+  'GridFilterModel',
+  'GridFilterItem',
+  'GridFilterOperator',
 ];
 
 const parseProperty = (propertySymbol: ts.Symbol, project: Project): ParsedProperty => ({

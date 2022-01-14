@@ -2,6 +2,7 @@ import { GridFilterInputValue } from '../../components/panel/filterPanel/GridFil
 import { GridFilterInputMultipleValue } from '../../components/panel/filterPanel/GridFilterInputMultipleValue';
 import { GridFilterItem } from '../gridFilterItem';
 import { GridFilterOperator } from '../gridFilterOperator';
+import { wrapWithDeprecationWarning } from '../../utils/deprecation';
 
 const parseNumericValue = (value: string | number | null) => {
   if (value == null) {
@@ -11,7 +12,7 @@ const parseNumericValue = (value: string | number | null) => {
   return Number(value);
 };
 
-export const getGridNumericColumnOperators = (): GridFilterOperator[] => [
+export const getGridNumericOperators = (): GridFilterOperator[] => [
   {
     label: '=',
     value: '=',
@@ -150,3 +151,11 @@ export const getGridNumericColumnOperators = (): GridFilterOperator[] => [
     InputComponentProps: { type: 'number' },
   },
 ];
+
+/**
+ * @deprecated Use `getGridNumericOperators` instead.
+ */
+export const getGridNumericColumnOperators = wrapWithDeprecationWarning(
+  getGridNumericOperators,
+  'MUI: Using getGridNumericColumnOperators is deprecated, use getGridNumericOperators instead.',
+);
