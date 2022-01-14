@@ -10,6 +10,8 @@ title: Data Grid - Group & Pivot
 
 Use row grouping to group the rows according to one or several columns value.
 
+{{"demo": "pages/components/data-grid/group-pivot/RowGroupingSingleGroupingCol.js", "bg": "inline", "defaultCodeOpen": false}}
+
 > ⚠️ This feature is temporarily available on the Pro plan until the release of the Premium plan.
 >
 > To avoid future regression for users of the Pro plan, the feature needs to be explicitly activated using the `rowGrouping` experimental feature flag.
@@ -33,6 +35,9 @@ initialState={{
     }
 }}
 ```
+
+The basic parameters are the columns you want to check for repeating values.
+In this example, we want to group all the movies matching the same company name, followed by a second group matching the director's name.
 
 {{"demo": "pages/components/data-grid/group-pivot/RowGroupingInitialState.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -74,7 +79,7 @@ The callback is called for each grouping column, and it receives the respective 
 
 #### Show values for the leaves
 
-By default, the grouped rows display no value on their grouping columns' cells.  We're calling those cells "leaves".
+By default, the grouped rows display no value on their grouping columns' cells. We're calling those cells "leaves".
 
 If you want to display some value, you can provide a `leafField` property to the `groupingColDef`.
 
@@ -243,7 +248,9 @@ const rows: GridRowsProp = [
 
 ### Custom grouping column
 
-Same behavior as for the [Row grouping](##grouping-column-customization) except for the `leafField` and `mainGroupingCriteria` which are not applicable for the Tree Data.
+Same behavior as for the [Row grouping](#grouping-columns) except for the `leafField` and `mainGroupingCriteria` which are not applicable for the Tree Data.
+
+{{"demo": "pages/components/data-grid/group-pivot/TreeDataCustomGroupingColumn.js", "bg": "inline", "defaultCodeOpen": false}}
 
 #### Accessing the grouping column field
 

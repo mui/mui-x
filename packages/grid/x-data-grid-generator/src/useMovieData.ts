@@ -1,6 +1,7 @@
 import { GridColumns, DataGridProps, GridRowModel } from '@mui/x-data-grid';
 
 type Movie = {
+  id: number;
   title: string;
   gross: number;
   director: string;
@@ -48,6 +49,7 @@ const COLUMNS: GridColumns = [
 
 const ROWS: GridRowModel<Movie>[] = [
   {
+    id: 0,
     title: 'Avatar',
     gross: 2847246203,
     director: 'James Cameron',
@@ -58,6 +60,7 @@ const ROWS: GridRowModel<Movie>[] = [
     },
   },
   {
+    id: 1,
     title: 'Avengers: Endgame',
     gross: 2797501328,
     director: 'Anthony & Joe Russo',
@@ -69,6 +72,7 @@ const ROWS: GridRowModel<Movie>[] = [
     },
   },
   {
+    id: 2,
     title: 'Titanic',
     gross: 2187425379,
     director: 'James Cameron',
@@ -79,6 +83,7 @@ const ROWS: GridRowModel<Movie>[] = [
     },
   },
   {
+    id: 3,
     title: 'Star Wars: The Force Awakens',
     gross: 2068223624,
     director: 'J. J. Abrams',
@@ -90,6 +95,7 @@ const ROWS: GridRowModel<Movie>[] = [
     },
   },
   {
+    id: 4,
     title: 'Avengers: Infinity War',
     gross: 2048359754,
     director: 'Anthony & Joe Russo',
@@ -101,6 +107,7 @@ const ROWS: GridRowModel<Movie>[] = [
     },
   },
   {
+    id: 5,
     title: 'Jurassic World',
     gross: 1671713208,
     director: 'Colin Trevorrow',
@@ -112,6 +119,7 @@ const ROWS: GridRowModel<Movie>[] = [
     },
   },
   {
+    id: 6,
     title: 'The Lion King',
     gross: 1656943394,
     director: 'Jon Favreau',
@@ -122,6 +130,7 @@ const ROWS: GridRowModel<Movie>[] = [
     },
   },
   {
+    id: 7,
     title: 'The Avengers',
     gross: 1518812988,
     director: 'Joss Whedon',
@@ -133,6 +142,7 @@ const ROWS: GridRowModel<Movie>[] = [
     },
   },
   {
+    id: 8,
     title: 'Furious 7',
     gross: 1516045911,
     director: 'James Wan',
@@ -144,6 +154,7 @@ const ROWS: GridRowModel<Movie>[] = [
     },
   },
   {
+    id: 9,
     title: 'Frozen II',
     gross: 1450026933,
     director: 'Chris Buck & Jennifer Lee',
@@ -155,6 +166,7 @@ const ROWS: GridRowModel<Movie>[] = [
     },
   },
   {
+    id: 10,
     title: 'Avengers: Age of Ultron',
     gross: 1402804868,
     director: 'Joss Whedon',
@@ -166,6 +178,7 @@ const ROWS: GridRowModel<Movie>[] = [
     },
   },
   {
+    id: 11,
     title: 'Black Panther',
     gross: 1347280838,
     director: 'Ryan Coogler',
@@ -177,6 +190,7 @@ const ROWS: GridRowModel<Movie>[] = [
     },
   },
   {
+    id: 12,
     title: 'Harry Potter and the Deathly Hallows – Part 2',
     gross: 1342025430,
     director: 'David Yates',
@@ -187,6 +201,7 @@ const ROWS: GridRowModel<Movie>[] = [
     },
   },
   {
+    id: 13,
     title: 'Star Wars: The Last Jedi',
     gross: 1332539889,
     director: 'Rian Johnson',
@@ -198,6 +213,7 @@ const ROWS: GridRowModel<Movie>[] = [
     },
   },
   {
+    id: 14,
     title: 'Jurassic World: Fallen Kingdom',
     gross: 1309484461,
     director: 'J. A. Bayona',
@@ -209,6 +225,7 @@ const ROWS: GridRowModel<Movie>[] = [
     },
   },
   {
+    id: 15,
     title: 'Frozen',
     gross: 1290000000,
     director: 'Chris Buck & Jennifer Lee',
@@ -220,6 +237,7 @@ const ROWS: GridRowModel<Movie>[] = [
     },
   },
   {
+    id: 16,
     title: 'Beauty and the Beast',
     gross: 1263521136,
     director: 'Bill Condon',
@@ -230,6 +248,7 @@ const ROWS: GridRowModel<Movie>[] = [
     },
   },
   {
+    id: 17,
     title: 'Incredibles 2',
     gross: 1242805359,
     director: 'Brad Bird',
@@ -240,6 +259,7 @@ const ROWS: GridRowModel<Movie>[] = [
     },
   },
   {
+    id: 18,
     title: 'The Fate of the Furious',
     gross: 1238764765,
     director: 'F. Gary Gray',
@@ -251,6 +271,7 @@ const ROWS: GridRowModel<Movie>[] = [
     },
   },
   {
+    id: 19,
     title: 'Iron Man 3',
     gross: 1214811252,
     director: 'Shane Black',
@@ -262,6 +283,7 @@ const ROWS: GridRowModel<Movie>[] = [
     },
   },
   {
+    id: 20,
     title: 'Minions',
     gross: 11159398397,
     director: 'Pierre Coffin & Kyle Balda',
@@ -273,11 +295,8 @@ const ROWS: GridRowModel<Movie>[] = [
   },
 ];
 
-const getRowId = (row: any) => row.title;
-
-export const useMovieData = (): Pick<DataGridProps, 'rows' | 'columns' | 'getRowId'> => {
+export const useMovieData = (): Pick<DataGridProps, 'rows' | 'columns'> => {
   return {
-    getRowId,
     rows: ROWS,
     columns: COLUMNS,
   };
