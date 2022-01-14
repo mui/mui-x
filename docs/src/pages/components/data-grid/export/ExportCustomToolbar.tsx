@@ -15,8 +15,8 @@ function CustomToolbar() {
   );
 }
 
-export default function ExportSelectorGrid() {
-  const { data } = useDemoData({
+export default function ExportCustomToolbar() {
+  const { data, loading } = useDemoData({
     dataSet: 'Commodity',
     rowLength: 4,
     maxColumns: 6,
@@ -26,6 +26,7 @@ export default function ExportSelectorGrid() {
     <div style={{ height: 300, width: '100%' }}>
       <DataGrid
         {...data}
+        loading={loading}
         components={{
           Toolbar: CustomToolbar,
         }}

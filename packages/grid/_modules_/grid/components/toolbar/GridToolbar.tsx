@@ -6,29 +6,34 @@ import {
 import { GridToolbarColumnsButton } from './GridToolbarColumnsButton';
 import { GridToolbarDensitySelector } from './GridToolbarDensitySelector';
 import { GridToolbarFilterButton } from './GridToolbarFilterButton';
-import { GridToolbarExport } from './GridToolbarExport';
+import { GridToolbarExport, GridToolbarExportProps } from './GridToolbarExport';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
-export const GridToolbar = React.forwardRef<HTMLDivElement, GridToolbarContainerProps>(
-  function GridToolbar(props, ref) {
-    const { className, ...other } = props;
-    const rootProps = useGridRootProps();
+export interface GridToolbarProps
+  extends GridToolbarContainerProps,
+    Pick<GridToolbarExportProps, 'csvOptions' | 'printOptions'> {}
 
-    if (
-      rootProps.disableColumnFilter &&
-      rootProps.disableColumnSelector &&
-      rootProps.disableDensitySelector
-    ) {
-      return null;
-    }
+export const GridToolbar = React.forwardRef<HTMLDivElement, GridToolbarProps>(function GridToolbar(
+  props,
+  ref,
+) {
+  const { className, csvOptions, printOptions, ...other } = props;
+  const rootProps = useGridRootProps();
 
-    return (
-      <GridToolbarContainer ref={ref} {...other}>
-        <GridToolbarColumnsButton />
-        <GridToolbarFilterButton />
-        <GridToolbarDensitySelector />
-        <GridToolbarExport />
-      </GridToolbarContainer>
-    );
-  },
-);
+  if (
+    rootProps.disableColumnFilter &&
+    rootProps.disableColumnSelector &&
+    rootProps.disableDensitySelector
+  ) {
+    return null;
+  }
+
+  return (
+    <GridToolbarContainer ref={ref} {...other}>
+      <GridToolbarColumnsButton />
+      <GridToolbarFilterButton />
+      <GridToolbarDensitySelector />
+      <GridToolbarExport csvOptions={csvOptions} printOptions={printOptions} />
+    </GridToolbarContainer>
+  );
+});
