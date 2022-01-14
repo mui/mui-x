@@ -90,9 +90,23 @@ InputNumberInterval.propTypes = {
     }),
   ]),
   item: PropTypes.shape({
+    /**
+     * The column from which we want to filter the rows.
+     */
     columnField: PropTypes.string.isRequired,
+    /**
+     * Must be unique.
+     * Only useful when the model contains several items.
+     */
     id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    /**
+     * The name of the operator we want to apply.
+     */
     operatorValue: PropTypes.string,
+    /**
+     * The filtering value.
+     * The operator filtering function will decide for each row if the row values is correct compared to this value.
+     */
     value: PropTypes.any,
   }).isRequired,
 };
