@@ -128,7 +128,7 @@ export interface GridColDef {
    */
   valueGetter?: (params: GridValueGetterParams) => GridCellValue;
   /**
-   * Function that transform a complex cell value into a key that be used for grouping the rows.
+   * Function that transforms a complex cell value into a key that be used for grouping the rows.
    * @param {GridKeyGetterParams} params Object containing parameters for the getter.
    * @returns {GridKeyValue | null | undefined} The cell key.
    */
