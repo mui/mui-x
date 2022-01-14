@@ -1923,7 +1923,7 @@ describe('<DataGridPro /> - Edit Rows', () => {
             {
               field: 'brand',
               editable: true,
-              valueParser: (value) => value.toUpperCase(),
+              valueParser: (value) => (value as string).toUpperCase(),
               preProcessEditCellProps,
             },
           ]}
@@ -1957,7 +1957,7 @@ describe('<DataGridPro /> - Edit Rows', () => {
             {
               field: 'brand',
               editable: true,
-              valueParser: (value) => value.toUpperCase(),
+              valueParser: (value) => (value as string).toUpperCase(),
               preProcessEditCellProps,
             },
           ]}
