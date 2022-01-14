@@ -158,6 +158,17 @@ describe('<DataGridPro /> - Tree Data', () => {
       expect(getColumnHeadersTextContent()).to.deep.equal(['Group', 'nameBis']);
       expect(getColumnValues(1)).to.deep.equal(['1', '2']);
     });
+
+    it('should keep children expansion when changing some of the rows', () => {
+      const { setProps } = render(<Test rows={[{ name: 'A' }, { name: 'A.A' }]} />);
+      expect(getColumnValues(1)).to.deep.equal(['A']);
+      apiRef.current.setRowChildrenExpansion('A', true);
+      expect(getColumnValues(1)).to.deep.equal(['A', 'A.A']);
+      setProps({
+        rows: [{ name: 'A' }, { name: 'A.A' }, { name: 'B' }, { name: 'B.A' }],
+      });
+      expect(getColumnValues(1)).to.deep.equal(['A', 'A.A', 'B']);
+    });
   });
 
   describe('prop: getTreeDataPath', () => {
