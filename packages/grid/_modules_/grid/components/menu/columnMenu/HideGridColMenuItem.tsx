@@ -14,16 +14,26 @@ const HideGridColMenuItem = (props: GridFilterItemProps) => {
 
   const visibleColumns = visibleGridColumnsSelector(apiRef.current.state);
   const columnsWithMenu = visibleColumns.filter((col) => col.disableColumnMenu !== true);
+  // do not allow to hide the last column with menu
+  const disabled = columnsWithMenu.length === 1;
 
   const toggleColumn = React.useCallback(
     (event: React.MouseEvent<HTMLElement>) => {
+      /**
+       * Disabled `MenuItem` would trigger `click` event
+       * after imperative `.click()` call on HTML element.
+       * Also, click is triggered in testing environment as well.
+       */
+      if (disabled) {
+        return;
+      }
       onClick(event);
       // time for the transition
       timeoutRef.current = setTimeout(() => {
         apiRef.current.setColumnVisibility(column?.field, false);
       }, 100);
     },
-    [apiRef, column?.field, onClick],
+    [apiRef, column?.field, onClick, disabled],
   );
 
   React.useEffect(() => {
@@ -39,11 +49,7 @@ const HideGridColMenuItem = (props: GridFilterItemProps) => {
   }
 
   return (
-    <MenuItem
-      onClick={toggleColumn}
-      // do not allow to hide the last column with menu
-      disabled={columnsWithMenu.length === 1}
-    >
+    <MenuItem onClick={toggleColumn} disabled={disabled}>
       {apiRef.current.getLocaleText('columnMenuHideColumn')}
     </MenuItem>
   );

@@ -65,8 +65,8 @@ describe('<DataGrid /> - Column Headers', () => {
 
       fireEvent.click(within(getColumnHeaderCell(0)).getByLabelText('Menu'));
       fireEvent.click(screen.getByRole('menuitem', { name: 'Hide' }));
-
       clock.runToLast();
+
       expect(getColumnHeadersTextContent()).to.deep.equal(['brand']);
     });
 
@@ -83,15 +83,10 @@ describe('<DataGrid /> - Column Headers', () => {
       expect(getColumnHeadersTextContent()).to.deep.equal(['id']);
 
       fireEvent.click(within(getColumnHeaderCell(0)).getByLabelText('Menu'));
+      fireEvent.click(screen.getByRole('menuitem', { name: 'Hide' }));
+      clock.runToLast();
 
-      const hideButton = screen.getByRole('menuitem', { name: 'Hide' });
-      /**
-       * Clicking disabled `ButtonBase` as `li` element would
-       * call onClick handler in testing environment.
-       * It doesn't happen with user click in browser.
-       * So instead of firing click event, we only check `aria-disabled` here.
-       */
-      expect(hideButton).to.have.attribute('aria-disabled', 'true');
+      expect(getColumnHeadersTextContent()).to.deep.equal(['id']);
     });
 
     it('should not allow to hide the only visible column that has menu', () => {
@@ -110,15 +105,10 @@ describe('<DataGrid /> - Column Headers', () => {
       expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'brand']);
 
       fireEvent.click(within(getColumnHeaderCell(1)).getByLabelText('Menu'));
+      fireEvent.click(screen.getByRole('menuitem', { name: 'Hide' }));
+      clock.runToLast();
 
-      const hideButton = screen.getByRole('menuitem', { name: 'Hide' });
-      /**
-       * Clicking disabled `ButtonBase` as `li` element would
-       * call onClick handler in testing environment.
-       * It doesn't happen with user click in browser.
-       * So instead of firing click event, we only check `aria-disabled` here.
-       */
-      expect(hideButton).to.have.attribute('aria-disabled', 'true');
+      expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'brand']);
     });
   });
 });
