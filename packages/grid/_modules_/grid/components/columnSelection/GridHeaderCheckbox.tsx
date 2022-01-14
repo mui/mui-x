@@ -71,10 +71,10 @@ const GridHeaderCheckbox = React.forwardRef<HTMLInputElement, GridColumnHeaderPa
     ]);
 
     // Amount of rows selected and that are visible in the current page
-    const currentSelectionSize = React.useMemo(() => {
-      const keys = Object.keys(selectionCandidates);
-      return filteredSelection.filter((id) => keys.includes(id as any)).length;
-    }, [filteredSelection, selectionCandidates]);
+    const currentSelectionSize = React.useMemo(
+      () => filteredSelection.filter((id) => selectionCandidates[id]).length,
+      [filteredSelection, selectionCandidates],
+    );
 
     const isIndeterminate =
       currentSelectionSize > 0 && currentSelectionSize < Object.keys(selectionCandidates).length;
