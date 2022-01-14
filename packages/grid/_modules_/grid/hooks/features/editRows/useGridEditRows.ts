@@ -643,7 +643,7 @@ export function useGridEditRows(
         apiRef.current.publishEvent(GridEvents.cellEditStop, params, event);
       }
     },
-    [apiRef, props.editMode],
+    [apiRef, props.editMode, props.preventCommitWhileValidating],
   );
 
   const handleCellEditStop = React.useCallback<GridEventListener<GridEvents.cellEditStop>>(
