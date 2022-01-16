@@ -26,7 +26,7 @@
     "@emotion/server": "^11.4.0",
     "@emotion/styled": "^11.6.0",
     "@mui/icons-material": "^5.2.5",
-    "@mui/material": "^5.2.7",
+    "@mui/material": "^5.2.8",
     "@mui/styles": "^5.2.3",
     "@mui/utils": "^5.2.3",
     "@trendmicro/react-interpolate": "^0.5.5",
