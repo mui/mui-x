@@ -240,14 +240,13 @@ StackOverflow is also visited from time to time by the maintainers of MUI.
 
 ### Professional support
 
-When purchasing an MUI X Pro, Premium license, depending on the plan, you get access to professional support for a limited duration.
-This support service is available on multiple channels.
-The recommended channel to open new issues is GitHub issues.
-If your support case has the need to share private information, you can also use Emails.
+When purchasing an MUI X Pro or Premium license you get access to professional support for a limited duration.
+Support is available on multiple channels, but the recommended channel is GitHub issues.
+If you need to share private information, you can also use email.
 
 - **MUI X Pro**: No SLA is provided but MUI's maintainers give these issues more attention than the ones from the Community plan. The channels:
   - GitHub: [Open a new issue](https://github.com/mui-org/material-ui-x/issues/new/choose) and leave your Order ID.
-  - Emails (only to share private information): [Open a new issue](https://support.mui.com/hc/en-us/requests/new?tf_360023797420=mui_x) or send an email at x@mui.com.
+  - Email (only to share private information): [Open a new issue](https://support.mui.com/hc/en-us/requests/new?tf_360023797420=mui_x) or send an email at x@mui.com.
 - **MUI X Premium**: Same as MUI X Pro with priority over Pro and a 48 hours SLA for the first answer.
   - GitHub: this plan is not available yet
   - Emails: this plan is not available yet
