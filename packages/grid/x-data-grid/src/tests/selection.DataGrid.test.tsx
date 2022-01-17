@@ -411,6 +411,19 @@ describe('<DataGrid /> - Selection', () => {
       );
       expect(getSelectedRowIds()).to.deep.equal([]);
     });
+
+    it('should not crash when paginationMode="server" and some selected rows are not provided to the grid', () => {
+      render(
+        <TestDataGridSelection
+          paginationMode="server"
+          selectionModel={[1, 4]}
+          isRowSelectable={(params) => params.id > 0}
+          checkboxSelection
+        />,
+      );
+
+      expect(getSelectedRowIds()).to.deep.equal([1]);
+    });
   });
 
   describe('props: rows', () => {
