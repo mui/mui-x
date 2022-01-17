@@ -23,6 +23,7 @@ export const getSymbolDescription = (symbol: ts.Symbol, project: Project) =>
   symbol
     .getDocumentationComment(project.checker)
     .map((comment) => comment.text)
+    .filter((line) => !line.startsWith('TODO'))
     .join('\n');
 
 export const getSymbolJSDocTags = (symbol: ts.Symbol) =>
