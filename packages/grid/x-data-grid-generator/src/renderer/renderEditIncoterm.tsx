@@ -57,7 +57,7 @@ function EditIncoterm(props: GridRenderEditCellParams) {
 
         return (
           <MenuItem key={option} value={option}>
-            <ListItemIcon sx={{ minWidth: 40 }}>{code}</ListItemIcon>
+            <ListItemIcon sx={{ minWidth: 36 }}>{code}</ListItemIcon>
             <ListItemText primary={tooltip} sx={{ overflow: 'hidden' }} />
           </MenuItem>
         );

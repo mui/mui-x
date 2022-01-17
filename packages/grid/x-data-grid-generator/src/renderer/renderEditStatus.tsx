@@ -74,7 +74,7 @@ function EditStatus(props: GridRenderEditCellParams) {
 
         return (
           <MenuItem key={option} value={option}>
-            <ListItemIcon sx={{ minWidth: 40 }}>
+            <ListItemIcon sx={{ minWidth: 36 }}>
               <IconComponent fontSize="small" />
             </ListItemIcon>
             <ListItemText primary={label} sx={{ overflow: 'hidden' }} />
