@@ -38,6 +38,8 @@ const generateDate = (
   return rawDate.getTime();
 };
 
+const nativeSetTimeout = setTimeout;
+
 // TODO: Replace `cell.focus()` with `fireEvent.mouseUp(cell)`
 describe('<DataGridPro /> - Edit Rows', () => {
   let baselineProps;
@@ -1541,13 +1543,13 @@ describe('<DataGridPro /> - Edit Rows', () => {
       fireEvent.doubleClick(cell);
       const input = cell.querySelector('input')!;
       fireEvent.change(input, { target: { value: 'Adidas' } });
-      await clock.runToLast();
+      clock.runToLast();
+      await new Promise((resolve) => nativeSetTimeout(resolve));
       expect(apiRef.current.getEditRowsModel()[0].brand.value).to.equal('Adidas');
       fireEvent.keyDown(input, { key: 'Enter' });
-      await waitFor(() => {
-        expect(cell).not.to.have.class('MuiDataGrid-cell--editing');
-        expect(cell).to.have.text('Adidas');
-      });
+      await new Promise((resolve) => nativeSetTimeout(resolve));
+      expect(cell).not.to.have.class('MuiDataGrid-cell--editing');
+      expect(cell).to.have.text('Adidas');
     });
   });
 
