@@ -23,6 +23,7 @@ import type { GridPreProcessingApi } from '../../hooks/core/preProcessing';
 import type { GridRowGroupsPreProcessingApi } from '../../hooks/core/rowGroupsPerProcessing';
 import type { GridDimensionsApi } from '../../hooks/features/dimensions';
 import type { GridPaginationApi } from '../../hooks/features/pagination';
+import { GridStateCommunity, GridStatePro } from '../gridState';
 
 /**
  * The api of `DataGrid`.
@@ -30,7 +31,7 @@ import type { GridPaginationApi } from '../../hooks/features/pagination';
  */
 export interface GridApiCommunity
   extends GridCoreApi,
-    GridStateApi,
+    GridStateApi<GridStateCommunity>,
     GridLoggerApi,
     GridPreProcessingApi,
     GridRowGroupsPreProcessingApi,
@@ -58,7 +59,10 @@ export interface GridApiCommunity
  * The api of `DataGridPro`.
  * TODO: Move to `x-data-grid-pro` folder
  */
-export interface GridApiPro extends GridApiCommunity, GridColumnPinningApi {}
+export interface GridApiPro
+  extends Omit<GridApiCommunity, keyof GridStateApi<GridStateCommunity>>,
+    GridStateApi<GridStatePro>,
+    GridColumnPinningApi {}
 
 /**
  * The full grid API.

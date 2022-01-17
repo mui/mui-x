@@ -1,8 +1,8 @@
-import { GridState } from '../gridState';
+import { GridStateCommunity } from '../gridState';
 import { GridControlledStateEventLookup } from '../events';
 import { GridControlStateItem } from '../controlStateItem';
 
-export interface GridStateApi {
+export interface GridStateApi<GridState extends GridStateCommunity> {
   /**
    * Property that contains the whole state of the grid.
    */
@@ -16,7 +16,7 @@ export interface GridStateApi {
    * @param {GridState | (oldState: GridState) => GridState} state The new state or the callback creating the new state.
    * @returns {boolean} Has the state been updated.
    */
-  setState: (state: GridState | ((previousState: GridState) => GridState)) => boolean;
+  setState: <S extends GridState>(state: S | ((previousState: S) => S)) => boolean;
   /**
    * Updates a control state that binds the model, the onChange prop, and the grid state together.
    * @param {GridControlStateItem>} controlState The [[GridControlStateItem]] to be registered.
