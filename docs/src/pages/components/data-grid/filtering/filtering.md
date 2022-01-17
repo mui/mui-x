@@ -232,8 +232,8 @@ You can customize the rendering of the filter panel as shown in [the component s
 
 ### Customize the filter panel content
 
-The customization of the filter panel content, can be performed by passing props to the he default `<GridFilterPanel/>` component.
-These props allows you to override
+The customization of the filter panel content can be performed by passing props to the default `<GridFilterPanel />` component.
+The props available allow to override:
 
 - The available `linkOperators`
 - The order of the column selector
@@ -241,7 +241,7 @@ These props allows you to override
 
 In this example, the filter panel is customized such that the column selector is sorted by ascending order.
 The link operator is fixed to `"And"`.
-The components style has bee [override](/customization/how-to-customize/#overriding-nested-component-styles) such that the delete icon is not displayed, all the components are expanded, and the background color changes between filters.
+The components style has been [overridden](/customization/how-to-customize/#overriding-nested-component-styles) to not display the delete icon, all the components are expanded, and the background color changes between filters.
 
 {{"demo": "pages/components/data-grid/filtering/CustomFilterPanelContent.js", "bg": "inline"}}
 
