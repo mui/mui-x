@@ -1,7 +1,6 @@
 # GridApiPro Interface
 
-<p class="description">The api of `DataGridPro`.
-TODO: Move to `x-data-grid-pro` folder</p>
+<p class="description">The api of `DataGridPro`.</p>
 
 ## Import
 

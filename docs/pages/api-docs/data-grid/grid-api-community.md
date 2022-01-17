@@ -1,7 +1,6 @@
 # GridApiCommunity Interface
 
-<p class="description">The api of `DataGrid`.
-TODO: Move to `x-data-grid` folder</p>
+<p class="description">The api of `DataGrid`.</p>
 
 ## Import
 
