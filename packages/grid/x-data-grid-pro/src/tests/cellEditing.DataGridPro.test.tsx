@@ -94,6 +94,132 @@ describe('<DataGridPro /> - Cell Editing', () => {
     });
   });
 
+  describe('validation', () => {
+    it('should not allow to save an invalid value with Enter', async () => {
+      render(<TestCase />);
+      const cell = getCell(1, 0);
+      cell.focus();
+      fireEvent.doubleClick(cell);
+      const input = cell.querySelector('input')!;
+      expect(input).not.to.have.attribute('aria-invalid');
+      fireEvent.change(input, { target: { value: 'n' } });
+      apiRef.current.setEditRowsModel({ 1: { brand: { error: true, value: 'n' } } });
+      fireEvent.keyDown(input, { key: 'Enter' });
+      await waitFor(() => {
+        expect(input).to.have.attribute('aria-invalid', 'true');
+        expect(cell).to.have.class('MuiDataGrid-cell--editing');
+      });
+    });
+
+    it('should not allow to save an invalid value with commitCellChange', () => {
+      render(<TestCase />);
+      const cell = getCell(1, 0);
+      cell.focus();
+      fireEvent.doubleClick(cell);
+      const input = cell.querySelector('input')!;
+      expect(input).not.to.have.attribute('aria-invalid');
+      fireEvent.change(input, { target: { value: 'n' } });
+      apiRef.current.setEditRowsModel({ 1: { brand: { error: true, value: 'n' } } });
+      apiRef.current.commitCellChange({ id: 1, field: 'brand' });
+      apiRef.current.setCellMode(1, 'brand', 'view');
+      expect(cell).to.have.text('Adidas');
+    });
+
+    it('should not call onCellEditCommit for invalid values', () => {
+      const onCellEditCommit = spy();
+      render(<TestCase onCellEditCommit={onCellEditCommit} />);
+      const cell = getCell(1, 0);
+      cell.focus();
+      fireEvent.doubleClick(cell);
+      const input = cell.querySelector('input')!;
+      expect(input).not.to.have.attribute('aria-invalid');
+      fireEvent.change(input, { target: { value: 'n' } });
+      apiRef.current.setEditRowsModel({ 1: { brand: { error: true, value: 'n' } } });
+      apiRef.current.commitCellChange({ id: 1, field: 'brand' });
+      apiRef.current.setCellMode(1, 'brand', 'view');
+      expect(onCellEditCommit.callCount).to.equal(0);
+    });
+  });
+
+  describe('control Editing', () => {
+    it('should update the state when neither the model nor the onChange are set', async () => {
+      render(<TestCase />);
+      const cell = getCell(1, 1);
+      cell.focus();
+      fireEvent.doubleClick(cell);
+      const input = cell.querySelector('input')!;
+      expect(input.value).to.equal('1961');
+      fireEvent.change(input, { target: { value: '1970' } });
+      expect(input.value).to.equal('1970');
+      fireEvent.keyDown(input, { key: 'Enter' });
+      await waitFor(() => {
+        expect(cell).to.have.text('1970');
+      });
+    });
+
+    it('should not update the state when the editRowsModel prop is set', async () => {
+      render(<TestCase editRowsModel={{ 1: { year: { value: 1961 } } }} />);
+      const cell = getCell(1, 1);
+      const input = cell.querySelector('input')!;
+      input.focus();
+      expect(input.value).to.equal('1961');
+      fireEvent.change(input, { target: { value: '1970' } });
+      fireEvent.keyDown(input, { key: 'Enter' });
+      await waitFor(() => {
+        expect(cell.querySelector('input')).not.to.equal(null);
+      });
+    });
+
+    it('should update the state when the model is not set, but the onChange is set', async () => {
+      const onEditRowsModelChange = spy();
+      render(<TestCase onEditRowsModelChange={onEditRowsModelChange} />);
+      const cell = getCell(1, 1);
+      cell.focus();
+      fireEvent.doubleClick(cell);
+      expect(onEditRowsModelChange.callCount).to.equal(1);
+      expect(onEditRowsModelChange.lastCall.firstArg).to.deep.equal({
+        1: { year: { value: 1961 } },
+      });
+      const input = cell.querySelector('input')!;
+      fireEvent.change(input, { target: { value: 1970 } });
+      expect(onEditRowsModelChange.lastCall.firstArg).to.deep.equal({
+        1: { year: { value: '1970' } },
+      });
+      fireEvent.keyDown(input, { key: 'Enter' });
+      await waitFor(() => {
+        expect(cell).to.have.text('1970');
+      });
+      expect(onEditRowsModelChange.lastCall.firstArg).to.deep.equal({});
+      expect(onEditRowsModelChange.callCount).to.equal(3);
+      expect(cell.querySelector('input')).to.equal(null);
+    });
+
+    it('should control the state when the model and the onChange are set', async () => {
+      const onEditRowsModelChange = spy();
+      const { setProps } = render(
+        <TestCase
+          editRowsModel={{ 1: { year: { value: 1961 } } }}
+          onEditRowsModelChange={onEditRowsModelChange}
+        />,
+      );
+      const cell = getCell(1, 1);
+      const input = cell.querySelector('input')!;
+      input.focus();
+      fireEvent.change(input, { target: { value: 1970 } });
+      expect(onEditRowsModelChange.lastCall.firstArg).to.deep.equal({
+        1: { year: { value: '1970' } },
+      });
+      setProps({ editRowsModel: { 1: { year: { value: 1971 } } } });
+      fireEvent.keyDown(input, { key: 'Enter' });
+      await waitFor(() => {
+        expect(onEditRowsModelChange.lastCall.firstArg).to.deep.equal({});
+      });
+      setProps({ editRowsModel: {} });
+      expect(cell).to.have.text('1971');
+      expect(cell).not.to.have.class('MuiDataGrid-cell--editing');
+    });
+  });
+
   it('should allow to switch between cell mode', () => {
     render(<TestCase />);
     apiRef.current.setCellMode(1, 'brand', 'edit');
@@ -548,132 +674,6 @@ describe('<DataGridPro /> - Cell Editing', () => {
         field: 'brand',
         value: 'n',
       });
-    });
-  });
-
-  describe('validation', () => {
-    it('should not allow to save an invalid value with Enter', async () => {
-      render(<TestCase />);
-      const cell = getCell(1, 0);
-      cell.focus();
-      fireEvent.doubleClick(cell);
-      const input = cell.querySelector('input')!;
-      expect(input).not.to.have.attribute('aria-invalid');
-      fireEvent.change(input, { target: { value: 'n' } });
-      apiRef.current.setEditRowsModel({ 1: { brand: { error: true, value: 'n' } } });
-      fireEvent.keyDown(input, { key: 'Enter' });
-      await waitFor(() => {
-        expect(input).to.have.attribute('aria-invalid', 'true');
-        expect(cell).to.have.class('MuiDataGrid-cell--editing');
-      });
-    });
-
-    it('should not allow to save an invalid value with commitCellChange', () => {
-      render(<TestCase />);
-      const cell = getCell(1, 0);
-      cell.focus();
-      fireEvent.doubleClick(cell);
-      const input = cell.querySelector('input')!;
-      expect(input).not.to.have.attribute('aria-invalid');
-      fireEvent.change(input, { target: { value: 'n' } });
-      apiRef.current.setEditRowsModel({ 1: { brand: { error: true, value: 'n' } } });
-      apiRef.current.commitCellChange({ id: 1, field: 'brand' });
-      apiRef.current.setCellMode(1, 'brand', 'view');
-      expect(cell).to.have.text('Adidas');
-    });
-
-    it('should not call onCellEditCommit for invalid values', () => {
-      const onCellEditCommit = spy();
-      render(<TestCase onCellEditCommit={onCellEditCommit} />);
-      const cell = getCell(1, 0);
-      cell.focus();
-      fireEvent.doubleClick(cell);
-      const input = cell.querySelector('input')!;
-      expect(input).not.to.have.attribute('aria-invalid');
-      fireEvent.change(input, { target: { value: 'n' } });
-      apiRef.current.setEditRowsModel({ 1: { brand: { error: true, value: 'n' } } });
-      apiRef.current.commitCellChange({ id: 1, field: 'brand' });
-      apiRef.current.setCellMode(1, 'brand', 'view');
-      expect(onCellEditCommit.callCount).to.equal(0);
-    });
-  });
-
-  describe('control Editing', () => {
-    it('should update the state when neither the model nor the onChange are set', async () => {
-      render(<TestCase />);
-      const cell = getCell(1, 1);
-      cell.focus();
-      fireEvent.doubleClick(cell);
-      const input = cell.querySelector('input')!;
-      expect(input.value).to.equal('1961');
-      fireEvent.change(input, { target: { value: '1970' } });
-      expect(input.value).to.equal('1970');
-      fireEvent.keyDown(input, { key: 'Enter' });
-      await waitFor(() => {
-        expect(cell).to.have.text('1970');
-      });
-    });
-
-    it('should not update the state when the editRowsModel prop is set', async () => {
-      render(<TestCase editRowsModel={{ 1: { year: { value: 1961 } } }} />);
-      const cell = getCell(1, 1);
-      const input = cell.querySelector('input')!;
-      input.focus();
-      expect(input.value).to.equal('1961');
-      fireEvent.change(input, { target: { value: '1970' } });
-      fireEvent.keyDown(input, { key: 'Enter' });
-      await waitFor(() => {
-        expect(cell.querySelector('input')).not.to.equal(null);
-      });
-    });
-
-    it('should update the state when the model is not set, but the onChange is set', async () => {
-      const onEditRowsModelChange = spy();
-      render(<TestCase onEditRowsModelChange={onEditRowsModelChange} />);
-      const cell = getCell(1, 1);
-      cell.focus();
-      fireEvent.doubleClick(cell);
-      expect(onEditRowsModelChange.callCount).to.equal(1);
-      expect(onEditRowsModelChange.lastCall.firstArg).to.deep.equal({
-        1: { year: { value: 1961 } },
-      });
-      const input = cell.querySelector('input')!;
-      fireEvent.change(input, { target: { value: 1970 } });
-      expect(onEditRowsModelChange.lastCall.firstArg).to.deep.equal({
-        1: { year: { value: '1970' } },
-      });
-      fireEvent.keyDown(input, { key: 'Enter' });
-      await waitFor(() => {
-        expect(cell).to.have.text('1970');
-      });
-      expect(onEditRowsModelChange.lastCall.firstArg).to.deep.equal({});
-      expect(onEditRowsModelChange.callCount).to.equal(3);
-      expect(cell.querySelector('input')).to.equal(null);
-    });
-
-    it('should control the state when the model and the onChange are set', async () => {
-      const onEditRowsModelChange = spy();
-      const { setProps } = render(
-        <TestCase
-          editRowsModel={{ 1: { year: { value: 1961 } } }}
-          onEditRowsModelChange={onEditRowsModelChange}
-        />,
-      );
-      const cell = getCell(1, 1);
-      const input = cell.querySelector('input')!;
-      input.focus();
-      fireEvent.change(input, { target: { value: 1970 } });
-      expect(onEditRowsModelChange.lastCall.firstArg).to.deep.equal({
-        1: { year: { value: '1970' } },
-      });
-      setProps({ editRowsModel: { 1: { year: { value: 1971 } } } });
-      fireEvent.keyDown(input, { key: 'Enter' });
-      await waitFor(() => {
-        expect(onEditRowsModelChange.lastCall.firstArg).to.deep.equal({});
-      });
-      setProps({ editRowsModel: {} });
-      expect(cell).to.have.text('1971');
-      expect(cell).not.to.have.class('MuiDataGrid-cell--editing');
     });
   });
 
