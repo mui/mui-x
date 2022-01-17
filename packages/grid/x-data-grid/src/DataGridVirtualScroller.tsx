@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { GridRowId } from '../../_modules_/grid/models/gridRows';
 import { GridVirtualScroller } from '../../_modules_/grid/components/virtualization/GridVirtualScroller';
 import { GridVirtualScrollerContent } from '../../_modules_/grid/components/virtualization/GridVirtualScrollerContent';
 import { GridVirtualScrollerRenderZone } from '../../_modules_/grid/components/virtualization/GridVirtualScrollerRenderZone';
