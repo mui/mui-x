@@ -1,0 +1,126 @@
+/* eslint-disable react/prop-types */
+import React from 'react';
+import { styled } from '@mui/material/styles';
+import Accordion from '@mui/material/Accordion';
+import AccordionSummary, { accordionSummaryClasses } from '@mui/material/AccordionSummary';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import HighlightedCode from 'docs/src/modules/components/HighlightedCode';
+import MarkdownElement from 'docs/src/modules/components/MarkdownElement';
+import allSelectors from 'docsx/pages/api-docs/data-grid/selectors.json';
+
+const SelectorDetails = styled(AccordionDetails)({
+  display: 'block',
+});
+
+const SelectorName = styled(Typography)({
+  fontFamily: 'Consolas, "Liberation Mono", Menlo, Courier, monospace',
+});
+
+const SelectorDescription = styled(Typography)(({ theme }) => ({
+  color: theme.palette.text.secondary,
+}));
+
+export const SelectorExample = styled(HighlightedCode)(({ theme }) => ({
+  '& pre': {
+    marginBottom: theme.spacing(1),
+  },
+}));
+
+const SELECTOR_NAME_PATTERN = /^grid(.*)Selector/;
+
+const SelectorAccordion = ({ selector }) => {
+  const signature = `${selector.name}: (state: GridState) => ${selector.returnType}`;
+
+  const match = selector.name.match(SELECTOR_NAME_PATTERN);
+  const valueName =
+    match == null ? 'value' : `${match[1][0].toLocaleLowerCase()}${match[1].slice(1)}`;
+
+  const example = `const ${valueName} = ${selector.name}(\n  apiRef.current.state\n);`;
+
+  return (
+    <Accordion>
+      <AccordionSummary
+        expandIcon={<ExpandMoreIcon />}
+        aria-controls={`api-property-${selector.name}-content`}
+        id={`api-property-${selector.name}-header`}
+        sx={{
+          [`& .${accordionSummaryClasses.content}`]: {
+            flexDirection: 'column',
+          },
+        }}
+      >
+        <SelectorName variant="subtitle2">{selector.name}</SelectorName>
+        <SelectorDescription
+          variant="caption"
+          dangerouslySetInnerHTML={{ __html: selector.description }}
+        />
+      </AccordionSummary>
+      <SelectorDetails>
+        {/* eslint-disable-next-line material-ui/no-hardcoded-labels */}
+        <Typography variant="subtitle2">Signature:</Typography>
+        <SelectorExample code={signature} language="tsx" />
+        {/* eslint-disable-next-line material-ui/no-hardcoded-labels */}
+        <Typography variant="subtitle2">Example</Typography>
+        <SelectorExample code={example} language="tsx" />
+      </SelectorDetails>
+    </Accordion>
+  );
+};
+
+function SelectorCategoryDocs(props) {
+  const { selectors, ...other } = props;
+
+  return (
+    <Box {...other}>
+      {selectors.map((selector) => (
+        <SelectorAccordion key={selector.name} selector={selector} />
+      ))}
+    </Box>
+  );
+}
+
+function SelectorsDocs(props) {
+  const { category } = props;
+
+  if (category) {
+    return (
+      <MarkdownElement sx={{ width: '100%' }}>
+        <SelectorCategoryDocs
+          selectors={allSelectors.filter((selector) => selector.category === category)}
+        />
+      </MarkdownElement>
+    );
+  }
+
+  const selectors = {};
+  allSelectors.forEach((selector) => {
+    if (selector.category) {
+      if (!selectors[selector.category]) {
+        selectors[selector.category] = [];
+      }
+
+      selectors[selector.category].push(selector);
+    }
+  });
+
+  return (
+    <MarkdownElement sx={{ width: '100%' }}>
+      {Object.entries(selectors).map(([categoryName, categorySelectors]) => (
+        <React.Fragment key={categoryName}>
+          <Typography variant="h4" sx={(theme) => ({ mb: theme.spacing(2) })}>
+            {categoryName}
+          </Typography>
+          <SelectorCategoryDocs
+            selectors={categorySelectors}
+            sx={(theme) => ({ '&:not(:last-child)': { mb: theme.spacing(3) } })}
+          />
+        </React.Fragment>
+      ))}
+    </MarkdownElement>
+  );
+}
+
+export default SelectorsDocs;

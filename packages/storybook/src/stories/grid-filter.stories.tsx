@@ -9,7 +9,7 @@ import {
   GridFilterInputValueProps,
   GridFilterItem,
   GridFilterModel,
-  getGridNumericColumnOperators,
+  getGridNumericOperators,
   GridLinkOperator,
   GridPreferencePanelsValue,
   GridRowModel,
@@ -474,7 +474,7 @@ export function CustomFilterOperator() {
       let newColumns: GridColDef[] = [...data.columns];
       const ratingColumn = { ...newColumns.find((col) => col.field === 'rating') };
 
-      const ratingOperators = getGridNumericColumnOperators();
+      const ratingOperators = getGridNumericOperators();
       ratingColumn!.filterOperators = ratingOperators.map((operator) => {
         operator.InputComponent = RatingInputValue;
         return operator;
@@ -596,7 +596,7 @@ export function ColumnsAlign() {
 const priceColumnType: GridColTypeDef = {
   extendType: 'number',
   valueFormatter: ({ value }) => `${value} USD`,
-  filterOperators: getGridNumericColumnOperators()
+  filterOperators: getGridNumericOperators()
     .filter((operator) => operator.value === '>' || operator.value === '<')
     .map((operator) => {
       return {
@@ -658,7 +658,7 @@ export function DemoCustomRatingFilterOperator() {
       let newColumns = [...data.columns];
       const ratingColumn = { ...newColumns.find((col) => col.field === 'rating') };
 
-      const ratingOperators = getGridNumericColumnOperators();
+      const ratingOperators = getGridNumericOperators();
       ratingColumn!.filterOperators = ratingOperators.map((operator) => {
         operator.InputComponent = RatingInputValue;
         return operator;

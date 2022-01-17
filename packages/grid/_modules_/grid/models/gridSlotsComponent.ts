@@ -7,14 +7,50 @@ import { GridIconSlotsComponent } from './gridIconSlotsComponent';
  */
 export interface GridSlotsComponent extends GridIconSlotsComponent {
   /**
-   * Component rendered for each cell.
-   */
-  Cell: React.JSXElementConstructor<any>;
-  /**
    * The custom Checkbox component used in the grid for both header and cells.
    * @default Checkbox
    */
   BaseCheckbox: React.JSXElementConstructor<any>;
+  /**
+   * The custom TextField component used in the grid.
+   * @default TextField
+   */
+  BaseTextField: React.JSXElementConstructor<any>;
+  /**
+   * The custom FormControl component used in the grid.
+   * @default FormControl
+   */
+  BaseFormControl: React.JSXElementConstructor<any>;
+  /**
+   * The custom Select component used in the grid.
+   * @default Select
+   */
+  BaseSelect: React.JSXElementConstructor<any>;
+  /**
+   * The custom Switch component used in the grid.
+   * @default Switch
+   */
+  BaseSwitch: React.JSXElementConstructor<any>;
+  /**
+   * The custom Button component used in the grid.
+   * @default Button
+   */
+  BaseButton: React.JSXElementConstructor<any>;
+  /**
+   * The custom Tooltip component used in the grid.
+   * @default Tooltip
+   */
+  BaseTooltip: React.JSXElementConstructor<any>;
+  /**
+   * The custom Popper component used in the grid.
+   * @default Popper
+   */
+  BasePopper: React.JSXElementConstructor<any>;
+  /**
+   * Component rendered for each cell.
+   * @default GridCell
+   */
+  Cell: React.JSXElementConstructor<any>;
   /**
    * Column menu component rendered by clicking on the 3 dots "kebab" icon in column headers.
    * @default GridColumnMenu

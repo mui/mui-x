@@ -5,6 +5,7 @@ import * as ts from 'typescript';
 import buildComponentsDocumentation from './buildComponentsDocumentation';
 import buildInterfacesDocumentation from './buildInterfacesDocumentation';
 import buildExportsDocumentation from './buildExportsDocumentation';
+import buildSelectorsDocumentation from './buildSelectorsDocumentation';
 import buildEventsDocumentation from './buildEventsDocumentation';
 import { Project, Projects, ProjectNames } from './utils';
 
@@ -90,6 +91,11 @@ async function run(argv: { outputDirectory?: string }) {
   buildEventsDocumentation({
     project: projects.get('x-data-grid')!,
     documentedInterfaces,
+  });
+
+  buildSelectorsDocumentation({
+    project: projects.get('x-data-grid-pro')!,
+    outputDirectory,
   });
 
   buildExportsDocumentation({

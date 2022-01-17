@@ -3,11 +3,7 @@ import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import TextField from '@mui/material/TextField';
-import {
-  DataGrid,
-  GridToolbarDensitySelector,
-  GridToolbarFilterButton,
-} from '@mui/x-data-grid';
+import { DataGrid } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import ClearIcon from '@mui/icons-material/Clear';
 import SearchIcon from '@mui/icons-material/Search';
@@ -22,16 +18,8 @@ function QuickSearchToolbar(props) {
       sx={{
         p: 0.5,
         pb: 0,
-        justifyContent: 'space-between',
-        display: 'flex',
-        alignItems: 'flex-start',
-        flexWrap: 'wrap',
       }}
     >
-      <div>
-        <GridToolbarFilterButton />
-        <GridToolbarDensitySelector />
-      </div>
       <TextField
         variant="standard"
         value={props.value}
@@ -76,11 +64,13 @@ QuickSearchToolbar.propTypes = {
   value: PropTypes.string.isRequired,
 };
 
+const VISIBLE_FIELDS = ['name', 'rating', 'country', 'dateCreated', 'isAdmin'];
+
 export default function QuickFilteringGrid() {
   const { data } = useDemoData({
-    dataSet: 'Commodity',
+    dataSet: 'Employee',
+    visibleFields: VISIBLE_FIELDS,
     rowLength: 100,
-    maxColumns: 6,
   });
 
   const [searchText, setSearchText] = React.useState('');

@@ -14,6 +14,7 @@ import {
   randomBoolean,
   randomName,
   randomColor,
+  randomInt,
 } from './services';
 import {
   renderAvatar,
@@ -133,7 +134,7 @@ export const getEmployeeColumns = (): GridColDefGenerator[] => [
     headerName: 'Created on',
     generateData: randomCreatedDate,
     type: 'date',
-    width: 150,
+    width: 120,
     editable: true,
   },
   {
@@ -143,5 +144,10 @@ export const getEmployeeColumns = (): GridColDefGenerator[] => [
     type: 'boolean',
     width: 150,
     editable: true,
+  },
+  {
+    field: 'salary',
+    headerName: 'Salary',
+    generateData: () => randomInt(30000, 80000),
   },
 ];
