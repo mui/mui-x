@@ -7,6 +7,7 @@ import { styled } from '@mui/material/styles';
 import { COUNTRY_ISO_OPTIONS } from '../services/static-data';
 
 const StyledAutocomplete = styled(Autocomplete)(({ theme }) => ({
+  height: '100%',
   [`& .${autocompleteClasses.inputRoot}`]: {
     ...theme.typography.body2,
     padding: '1px 0',
