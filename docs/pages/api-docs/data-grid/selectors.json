@@ -1,17 +1,29 @@
 [
+  { "name": "allGridColumnsFieldsSelector", "returnType": "string[]", "description": "" },
   { "name": "allGridColumnsSelector", "returnType": "GridStateColDef[]", "description": "" },
   { "name": "filterableGridColumnsIdsSelector", "returnType": "string[]", "description": "" },
   { "name": "filterableGridColumnsSelector", "returnType": "GridStateColDef[]", "description": "" },
+  { "name": "gridColumnLookupSelector", "returnType": "GridColumnLookup", "description": "" },
+  { "name": "gridColumnMenuSelector", "returnType": "GridColumnMenuState", "description": "" },
   { "name": "gridColumnReorderDragColSelector", "returnType": "string", "description": "" },
+  {
+    "name": "gridColumnReorderSelector",
+    "returnType": "GridColumnReorderState",
+    "description": ""
+  },
+  { "name": "gridColumnResizeSelector", "returnType": "GridColumnResizeState", "description": "" },
   {
     "name": "gridColumnsMetaSelector",
     "returnType": "{ totalWidth: number; positions: number[] }",
     "description": ""
   },
+  { "name": "gridColumnsSelector", "returnType": "GridColumnsState", "description": "" },
   { "name": "gridColumnsTotalWidthSelector", "returnType": "number", "description": "" },
   { "name": "gridDensityHeaderHeightSelector", "returnType": "number", "description": "" },
   { "name": "gridDensityRowHeightSelector", "returnType": "number", "description": "" },
+  { "name": "gridDensitySelector", "returnType": "GridDensityState", "description": "" },
   { "name": "gridDensityValueSelector", "returnType": "GridDensity", "description": "" },
+  { "name": "gridEditRowsStateSelector", "returnType": "GridEditRowsModel", "description": "" },
   {
     "name": "gridFilterModelSelector",
     "returnType": "GridFilterModel",
@@ -24,6 +36,7 @@
     "returnType": "GridColumnIdentifier | null",
     "description": ""
   },
+  { "name": "gridFocusStateSelector", "returnType": "GridFocusState", "description": "" },
   {
     "name": "gridPageCountSelector",
     "returnType": "number",
@@ -60,6 +73,12 @@
     "category": "Pagination",
     "description": "Get the index of the first and the last row to include in the current page if the pagination is enabled."
   },
+  { "name": "gridPinnedColumnsSelector", "returnType": "GridPinnedColumns", "description": "" },
+  {
+    "name": "gridPreferencePanelStateSelector",
+    "returnType": "GridPreferencePanelState",
+    "description": ""
+  },
   { "name": "gridResizingColumnFieldSelector", "returnType": "string", "description": "" },
   { "name": "gridRowCountSelector", "returnType": "number", "description": "" },
   { "name": "gridRowGroupingNameSelector", "returnType": "string", "description": "" },
@@ -67,6 +86,8 @@
   { "name": "gridRowTreeDepthSelector", "returnType": "number", "description": "" },
   { "name": "gridRowTreeSelector", "returnType": "GridRowTreeConfig", "description": "" },
   { "name": "gridRowsLookupSelector", "returnType": "GridRowsLookup", "description": "" },
+  { "name": "gridRowsStateSelector", "returnType": "GridRowsState", "description": "" },
+  { "name": "gridSelectionStateSelector", "returnType": "GridSelectionModel", "description": "" },
   {
     "name": "gridSortModelSelector",
     "returnType": "GridSortModel",
@@ -95,6 +116,7 @@
     "returnType": "GridColumnIdentifier | null",
     "description": ""
   },
+  { "name": "gridTabIndexStateSelector", "returnType": "GridTabIndexState", "description": "" },
   { "name": "gridTopLevelRowCountSelector", "returnType": "number", "description": "" },
   { "name": "gridVisibleColumnFieldsSelector", "returnType": "string[]", "description": "" },
   {

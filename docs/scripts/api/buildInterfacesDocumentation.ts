@@ -44,7 +44,7 @@ const GRID_API_INTERFACES_WITH_DEDICATED_PAGES = [
   'GridColumnPinningApi',
   'GridPrintExportApi',
   'GridDisableVirtualizationApi',
-]
+];
 
 const OTHER_GRID_INTERFACES_WITH_DEDICATED_PAGES = [
   // apiRef
@@ -167,7 +167,10 @@ function generateImportStatement(objects: ParsedObject[], projects: Projects) {
     .map((project) => {
       const objectsInProject = objects.filter((object) => {
         // TODO: Remove after opening the apiRef on the community plan
-        if (['GridApiCommunity', 'GridApiPro'].includes(object.name) && project.name === 'x-data-grid') {
+        if (
+          ['GridApiCommunity', 'GridApiPro'].includes(object.name) &&
+          project.name === 'x-data-grid'
+        ) {
           return false;
         }
 
@@ -224,7 +227,10 @@ export default function buildInterfacesDocumentation(options: BuildInterfacesDoc
   const allProjectsName = Array.from(projects.keys());
 
   const documentedInterfaces: DocumentedInterfaces = new Map();
-  [...OTHER_GRID_INTERFACES_WITH_DEDICATED_PAGES, ...GRID_API_INTERFACES_WITH_DEDICATED_PAGES].forEach((interfaceName) => {
+  [
+    ...OTHER_GRID_INTERFACES_WITH_DEDICATED_PAGES,
+    ...GRID_API_INTERFACES_WITH_DEDICATED_PAGES,
+  ].forEach((interfaceName) => {
     const packagesWithThisInterface = allProjectsName.filter(
       (projectName) => !!projects.get(projectName)!.exports[interfaceName],
     );
