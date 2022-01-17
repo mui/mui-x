@@ -12,7 +12,7 @@ You should use these numbers exclusively for comparing performance between diffe
 
 ## Output
 
-```
+```text
 React Virtualized:
   Vertical scroll:
        Min: 44.916 fps (σ = 22.443)
