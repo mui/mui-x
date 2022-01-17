@@ -19,6 +19,7 @@ import {
   GridPinnedColumns,
   GridPinnedPosition,
 } from '../../_modules_/grid/models/api/gridColumnPinningApi';
+import { GridApiPro } from '../../_modules_';
 
 export const filterColumns = (pinnedColumns: GridPinnedColumns, columns: string[]) => {
   if (!Array.isArray(pinnedColumns.left) && !Array.isArray(pinnedColumns.right)) {
@@ -112,7 +113,7 @@ const DataGridProVirtualScroller = React.forwardRef<
   DataGridProVirtualScrollerProps
 >(function DataGridProVirtualScroller(props, ref) {
   const { className, disableVirtualization, selectionLookup, ...other } = props;
-  const apiRef = useGridApiContext();
+  const apiRef = useGridApiContext<GridApiPro>();
   const rootProps = useGridRootProps();
   const visibleColumnFields = useGridSelector(apiRef, gridVisibleColumnFieldsSelector);
   const leftColumns = React.useRef<HTMLDivElement>(null);

@@ -1,9 +1,9 @@
 import { GridApiRef } from '../../models/api/gridApiRef';
-import { GridApiCommunity } from '../../models/api/gridApi';
+import { GridApiCommon } from '../../models/api/gridApi';
 
 let warnedOnceStateNotInitialized = false;
 
-export const useGridSelector = <GridApi extends GridApiCommunity, T>(
+export const useGridSelector = <GridApi extends GridApiCommon, T>(
   apiRef: GridApiRef<GridApi>,
   selector: (state: GridApi['state']) => T,
 ) => {

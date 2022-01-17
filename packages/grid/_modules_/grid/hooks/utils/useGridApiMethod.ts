@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { GridApiRef } from '../../models/api/gridApiRef';
-import { GridApiCommunity } from '../../models/api/gridApi';
+import { GridApiCommon } from '../../models/api/gridApi';
 import { useGridLogger } from './useGridLogger';
 
-export function useGridApiMethod<GridApi extends GridApiCommunity, T extends Partial<GridApi>>(
+export function useGridApiMethod<GridApi extends GridApiCommon, T extends Partial<GridApi>>(
   apiRef: GridApiRef<GridApi>,
   apiMethods: T,
   apiName: string,

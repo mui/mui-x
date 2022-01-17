@@ -19,6 +19,7 @@ import {
   GridPinnedPosition,
   GridPinnedColumns,
 } from '../../_modules_/grid/models/api/gridColumnPinningApi';
+import { GridApiPro } from '../../_modules_';
 
 type OwnerState = {
   classes?: DataGridProProcessedProps['classes'];
@@ -90,7 +91,7 @@ export const DataGridProColumnHeaders = React.forwardRef<
 >(function DataGridProColumnHeaders(props, ref) {
   const { style, className, innerRef, ...other } = props;
   const rootProps = useGridRootProps();
-  const apiRef = useGridApiContext();
+  const apiRef = useGridApiContext<GridApiPro>();
   const visibleColumnFields = useGridSelector(apiRef, gridVisibleColumnFieldsSelector);
   const [scrollbarSize, setScrollbarSize] = React.useState(0);
 

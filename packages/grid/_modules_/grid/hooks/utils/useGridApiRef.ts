@@ -1,20 +1,20 @@
 import * as React from 'react';
 import { GridApiRef } from '../../models/api/gridApiRef';
-import { GridApiCommunity, GridApiPro } from '../../models/api/gridApi';
+import { GridApiCommon, GridApiCommunity, GridApiPro } from '../../models/api/gridApi';
 import { EventManager } from '../../utils/EventManager';
 
 // Public developers facing overload
-export function useGridApiRef<GridApi extends GridApiCommunity = GridApiPro>(): GridApiRef<GridApi>;
+export function useGridApiRef<GridApi extends GridApiCommon = GridApiPro>(): GridApiRef<GridApi>;
 
 // Internal grid facing overload
-export function useGridApiRef<GridApi extends GridApiCommunity = GridApiCommunity>(
+export function useGridApiRef<GridApi extends GridApiCommon = GridApiCommunity>(
   apiRefProp: GridApiRef<GridApi> | undefined,
 ): GridApiRef<GridApi>;
 
 /**
  * Hook that instantiate an GridApiRef to pass in component prop.
  */
-export function useGridApiRef<GridApi extends GridApiCommunity = GridApiCommunity>(...args): any {
+export function useGridApiRef<GridApi extends GridApiCommon = GridApiCommunity>(...args): any {
   const apiRefProp = args[0];
 
   const apiRef = React.useRef<GridApi>();

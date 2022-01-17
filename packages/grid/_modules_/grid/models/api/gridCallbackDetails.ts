@@ -1,9 +1,9 @@
-import type { GridApiCommunity } from './gridApi';
+import type { GridApiCommon, GridApiCommunity } from './gridApi';
 
 /**
  * Additional details passed to the callbacks
  */
-export interface GridCallbackDetails<GridApi extends GridApiCommunity = GridApiCommunity> {
+export interface GridCallbackDetails<GridApi extends GridApiCommon = GridApiCommunity> {
   /**
    * Provided only if `DataGridPro` is being used.
    */

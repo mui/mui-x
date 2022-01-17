@@ -50,6 +50,7 @@
   { "name": "GridAddIcon", "kind": "Variable" },
   { "name": "GridAlignment", "kind": "TypeAlias" },
   { "name": "GridApi", "kind": "Interface" },
+  { "name": "GridApiCommon", "kind": "Interface" },
   { "name": "GridApiCommunity", "kind": "Interface" },
   { "name": "GridApiContext", "kind": "Variable" },
   { "name": "GridApiPro", "kind": "Interface" },

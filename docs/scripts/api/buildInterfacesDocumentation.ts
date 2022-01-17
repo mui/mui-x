@@ -271,7 +271,7 @@ export default function buildInterfacesDocumentation(options: BuildInterfacesDoc
         project,
       );
       // eslint-disable-next-line no-console
-      // console.log('Built JSON file for', parsedInterface.name);
+      console.log('Built JSON file for', parsedInterface.name);
     } else {
       const markdown = generateMarkdown(parsedInterface, projects, documentedInterfaces);
       writePrettifiedFile(path.resolve(outputDirectory, `${slug}.md`), markdown, project);
@@ -290,7 +290,7 @@ export default function buildInterfacesDocumentation(options: BuildInterfacesDoc
       );
 
       // eslint-disable-next-line no-console
-      // console.log('Built API docs for', parsedInterface.name);
+      console.log('Built API docs for', parsedInterface.name);
     }
   });
 

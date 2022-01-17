@@ -25,13 +25,10 @@ import type { GridDimensionsApi } from '../../hooks/features/dimensions';
 import type { GridPaginationApi } from '../../hooks/features/pagination';
 import { GridStateCommunity, GridStatePro } from '../gridState';
 
-/**
- * The api of `DataGrid`.
- * TODO: Move to `x-data-grid` folder
- */
-export interface GridApiCommunity
+type GridStateApiUntyped = { [key in keyof GridStateApi<any>]: any };
+
+export interface GridApiCommon
   extends GridCoreApi,
-    GridStateApi<GridStateCommunity>,
     GridLoggerApi,
     GridPreProcessingApi,
     GridRowGroupsPreProcessingApi,
@@ -53,14 +50,23 @@ export interface GridApiCommunity
     GridDisableVirtualizationApi,
     GridLocaleTextApi,
     GridClipboardApi,
-    GridScrollApi {}
+    GridScrollApi,
+    GridStateApiUntyped {}
+
+/**
+ * The api of `DataGrid`.
+ * TODO: Move to `x-data-grid` folder
+ */
+export interface GridApiCommunity
+  extends Omit<GridApiCommon, keyof GridStateApiUntyped>,
+    GridStateApi<GridStateCommunity> {}
 
 /**
  * The api of `DataGridPro`.
  * TODO: Move to `x-data-grid-pro` folder
  */
 export interface GridApiPro
-  extends Omit<GridApiCommunity, keyof GridStateApi<GridStateCommunity>>,
+  extends Omit<GridApiCommon, keyof GridStateApiUntyped>,
     GridStateApi<GridStatePro>,
     GridColumnPinningApi {}
 

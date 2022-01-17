@@ -1,10 +1,10 @@
 import { GridCellValue } from './gridCell';
 import { GridRowId } from './gridRows';
-import type { GridApiCommunity } from './api';
+import type { GridApiCommunity, GridApiCommon } from './api';
 
 export type GridSortDirection = 'asc' | 'desc' | null | undefined;
 
-export interface GridSortCellParams<GridApi extends GridApiCommunity = GridApiCommunity> {
+export interface GridSortCellParams<GridApi extends GridApiCommon = GridApiCommunity> {
   id: GridRowId;
   field: string;
   value: GridCellValue;

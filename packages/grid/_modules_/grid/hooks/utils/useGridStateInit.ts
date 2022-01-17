@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { GridApiRef } from '../../models/api/gridApiRef';
-import { GridApiCommunity } from '../../models';
+import { GridApiCommon } from '../../models';
 
 type DeepPartial<T> = {
   [P in keyof T]?: DeepPartial<T[P]>;
 };
 
-export const useGridStateInit = <GridApi extends GridApiCommunity>(
+export const useGridStateInit = <GridApi extends GridApiCommon>(
   apiRef: GridApiRef<GridApi>,
   callback: (state: DeepPartial<GridApi['state']>) => DeepPartial<GridApi['state']>,
 ) => {

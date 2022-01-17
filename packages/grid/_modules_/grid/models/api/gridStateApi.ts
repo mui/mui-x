@@ -23,6 +23,6 @@ export interface GridStateApi<GridState extends GridStateCommunity> {
    * @ignore - do not document.
    */
   unstable_updateControlState: <E extends keyof GridControlledStateEventLookup>(
-    controlState: GridControlStateItem<E>,
+    controlState: GridControlStateItem<GridState, E>,
   ) => void;
 }
