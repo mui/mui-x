@@ -7,8 +7,6 @@ TODO: Move to `x-data-grid` folder</p>
 
 ```js
 import { GridApiCommunity } from '@mui/x-data-grid-pro';
-// or
-import { GridApiCommunity } from '@mui/x-data-grid';
 ```
 
 ## Properties

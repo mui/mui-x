@@ -164,7 +164,7 @@ function generateImportStatement(objects: ParsedObject[], projects: Projects) {
     .map((project) => {
       const objectsInProject = objects.filter((object) => {
         // TODO: Remove after opening the apiRef on the community plan
-        if (object.name === 'GridApi' && project.name === 'x-data-grid') {
+        if (['GridApiCommunity', 'GridApiPro'].includes(object.name) && project.name === 'x-data-grid') {
           return false;
         }
 
@@ -234,7 +234,7 @@ export default function buildInterfacesDocumentation(options: BuildInterfacesDoc
   });
 
   const gridApiExtendsFrom: string[] = (
-    (projects.get('x-data-grid-pro')!.exports.GridApi.declarations![0] as ts.InterfaceDeclaration)
+    (projects.get('x-data-grid-pro')!.exports.GridApiPro.declarations![0] as ts.InterfaceDeclaration)
       .heritageClauses ?? []
   ).flatMap((clause) =>
     clause.types
