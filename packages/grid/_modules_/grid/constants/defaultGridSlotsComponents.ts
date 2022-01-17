@@ -1,4 +1,11 @@
 import MUICheckbox from '@mui/material/Checkbox';
+import MUITextField from '@mui/material/TextField';
+import MUIFormControl from '@mui/material/FormControl';
+import MUISelect from '@mui/material/Select';
+import MUISwitch from '@mui/material/Switch';
+import MUIButton from '@mui/material/Button';
+import MUITooltip from '@mui/material/Tooltip';
+import MUIPopper from '@mui/material/Popper';
 import { GridIconSlotsComponent, GridSlotsComponent } from '../models';
 import {
   GridArrowDownwardIcon,
@@ -56,8 +63,15 @@ const DEFAULT_GRID_ICON_SLOTS_COMPONENTS: GridIconSlotsComponent = {
 
 export const DEFAULT_GRID_SLOTS_COMPONENTS: GridSlotsComponent = {
   ...DEFAULT_GRID_ICON_SLOTS_COMPONENTS,
-  Cell: GridCell,
   BaseCheckbox: MUICheckbox,
+  BaseTextField: MUITextField,
+  BaseFormControl: MUIFormControl,
+  BaseSelect: MUISelect,
+  BaseSwitch: MUISwitch,
+  BaseButton: MUIButton,
+  BaseTooltip: MUITooltip,
+  BasePopper: MUIPopper,
+  Cell: GridCell,
   ColumnMenu: GridColumnMenu,
   ErrorOverlay,
   Footer: GridFooter,

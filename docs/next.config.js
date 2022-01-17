@@ -1,7 +1,7 @@
 const path = require('path');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
-// const withTM = require('next-transpile-modules')(['@material-ui/monorepo']);
-const pkg = require('../node_modules/@material-ui/monorepo/package.json');
+// const withTM = require('next-transpile-modules')(['@mui/monorepo']);
+const pkg = require('../node_modules/@mui/monorepo/package.json');
 const { findPages } = require('./src/modules/utils/find');
 const { LANGUAGES, LANGUAGES_SSR } = require('./src/modules/constants');
 
@@ -62,10 +62,7 @@ module.exports = {
       );
     }
 
-    const includesMonorepo = [
-      /(@material-ui[\\/]monorepo)$/,
-      /(@material-ui[\\/]monorepo)[\\/](?!.*node_modules)/,
-    ];
+    const includesMonorepo = [/(@mui[\\/]monorepo)$/, /(@mui[\\/]monorepo)[\\/](?!.*node_modules)/];
 
     return {
       ...config,
@@ -79,9 +76,7 @@ module.exports = {
             oneOf: [
               {
                 resourceQuery: /@mui\/markdown/,
-                use: require.resolve(
-                  '../node_modules/@material-ui/monorepo/docs/packages/markdown/loader',
-                ),
+                use: require.resolve('../node_modules/@mui/monorepo/docs/packages/markdown/loader'),
               },
             ],
           },

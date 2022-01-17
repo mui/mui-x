@@ -7,8 +7,7 @@ import {
   gridColumnsMetaSelector,
   gridVisibleColumnFieldsSelector,
 } from '../columns/gridColumnsSelector';
-import { GridCellIndexCoordinates } from '../../../models/gridCell';
-import { GridPreProcessingGroup } from '../../core/preProcessing';
+import { GridPreProcessingGroup, GridPreProcessor } from '../../core/preProcessing';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { GridEvents } from '../../../models/events';
 import { gridClasses } from '../../../gridClasses';
@@ -22,8 +21,6 @@ import { useGridSelector } from '../../utils/useGridSelector';
 import { filterColumns } from '../../../../../x-data-grid-pro/src/DataGridProVirtualScroller';
 import { GridRowParams } from '../../../models/params/gridRowParams';
 import { MuiEvent } from '../../../models/muiEvent';
-import { GridColumnsRawState } from '../columns/gridColumnsState';
-import { GridColDef } from '../../../models/colDef/gridColDef';
 
 const Divider = () => <MuiDivider onClick={(event) => event.stopPropagation()} />;
 
@@ -96,8 +93,13 @@ export const useGridColumnPinning = (
   useGridApiEventHandler(apiRef, GridEvents.rowMouseEnter, handleMouseEnter);
   useGridApiEventHandler(apiRef, GridEvents.rowMouseLeave, handleMouseLeave);
 
-  const calculateScrollLeft = React.useCallback(
-    (initialValue, params: Partial<GridCellIndexCoordinates>) => {
+  /**
+   * PRE-PROCESSING
+   */
+  const calculateScrollLeft = React.useCallback<
+    GridPreProcessor<GridPreProcessingGroup.scrollToIndexes>
+  >(
+    (initialValue, params) => {
       if (props.disableColumnPinning) {
         return initialValue;
       }
@@ -138,8 +140,10 @@ export const useGridColumnPinning = (
     [apiRef, pinnedColumns, props.disableColumnPinning],
   );
 
-  const addColumnMenuButtons = React.useCallback(
-    (initialValue: JSX.Element[], column: GridColDef) => {
+  const addColumnMenuButtons = React.useCallback<
+    GridPreProcessor<GridPreProcessingGroup.columnMenu>
+  >(
+    (initialValue, column) => {
       if (props.disableColumnPinning) {
         return initialValue;
       }
@@ -153,8 +157,10 @@ export const useGridColumnPinning = (
     [props.disableColumnPinning],
   );
 
-  const reorderPinnedColumns = React.useCallback(
-    (columnsState: GridColumnsRawState) => {
+  const reorderPinnedColumns = React.useCallback<
+    GridPreProcessor<GridPreProcessingGroup.hydrateColumns>
+  >(
+    (columnsState) => {
       if (columnsState.all.length === 0 || props.disableColumnPinning) {
         return columnsState;
       }
@@ -180,8 +186,10 @@ export const useGridColumnPinning = (
     [pinnedColumns, props.disableColumnPinning],
   );
 
-  const checkIfCanBeReordered = React.useCallback(
-    (initialValue, { targetIndex }: { targetIndex: number }) => {
+  const checkIfCanBeReordered = React.useCallback<
+    GridPreProcessor<GridPreProcessingGroup.canBeReordered>
+  >(
+    (initialValue, { targetIndex }) => {
       const visibleColumnFields = gridVisibleColumnFieldsSelector(apiRef.current.state);
       const [leftPinnedColumns, rightPinnedColumns] = filterColumns(
         pinnedColumns,

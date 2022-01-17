@@ -1,0 +1,14 @@
+<DataGrid
+  {...data}
+  loading={loading}
+  initialState={{
+    filter: {
+      filterModel: {
+        items: [{ columnField: 'quantity', operatorValue: '>', value: 10000 }],
+      },
+    },
+    sorting: {
+      sortModel: [{ field: 'desk', sort: 'asc' }],
+    },
+  }}
+/>

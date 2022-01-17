@@ -1,7 +1,8 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { styled } from '@mui/material/styles';
+import { MUIStyledCommonProps } from '@mui/system';
+import { styled, Theme } from '@mui/material/styles';
 import { generateUtilityClasses, InternalStandardProps as StandardProps } from '@mui/material';
 import ClickAwayListener from '@mui/material/ClickAwayListener';
 import Paper from '@mui/material/Paper';
@@ -16,7 +17,8 @@ export interface GridPanelClasses {
   paper: string;
 }
 
-export interface GridPanelProps extends StandardProps<PopperProps, 'children'> {
+export interface GridPanelProps
+  extends StandardProps<MUIStyledCommonProps<Theme> & PopperProps, 'children'> {
   children?: React.ReactNode;
   /**
    * Override or extend the styles applied to the component.
@@ -47,7 +49,7 @@ const GridPaperRoot = styled(Paper, {
 }));
 
 const GridPanel = React.forwardRef<HTMLDivElement, GridPanelProps>((props, ref) => {
-  const { children, className, open, classes: classesProp, ...other } = props;
+  const { children, className, classes: classesProp, ...other } = props;
   const apiRef = useGridApiContext();
   const classes = gridPanelClasses;
   const [isPlaced, setIsPlaced] = React.useState(false);
@@ -76,7 +78,6 @@ const GridPanel = React.forwardRef<HTMLDivElement, GridPanelProps>((props, ref) 
       ref={ref}
       placement="bottom-start"
       className={clsx(className, classes.panel)}
-      open={open}
       anchorEl={anchorEl}
       modifiers={[
         {

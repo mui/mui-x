@@ -10,6 +10,7 @@ import {
   GridRowsProp,
   GridRowIdGetter,
   GridRowTreeNodeConfig,
+  GridRowTreeConfig,
 } from '../../../models/gridRows';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
@@ -24,8 +25,10 @@ import {
 import { GridSignature, useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { GridRowGroupParams } from '../../core/rowGroupsPerProcessing';
 
+type GridRowInternalCacheValue = Omit<GridRowGroupParams, 'previousTree'>;
+
 interface GridRowsInternalCacheState {
-  value: GridRowGroupParams;
+  value: GridRowInternalCacheValue;
 
   /**
    * The value of the properties used by the grouping when the internal cache was created
@@ -69,7 +72,7 @@ const convertGridRowsPropToState = ({
 }: ConvertGridRowsPropToStateParams): GridRowsInternalCacheState => {
   const props = inputProps ?? prevState.props;
 
-  let value: GridRowGroupParams;
+  let value: GridRowInternalCacheValue;
   if (rows) {
     value = {
       idRowsLookup: {},
@@ -94,6 +97,7 @@ const convertGridRowsPropToState = ({
 
 const getRowsStateFromCache = (
   rowsCache: GridRowsInternalCache,
+  previousTree: GridRowTreeConfig | null,
   apiRef: GridApiRef,
 ): GridRowsState => {
   const {
@@ -101,7 +105,7 @@ const getRowsStateFromCache = (
     value,
   } = rowsCache.state;
 
-  const groupingResponse = apiRef.current.unstable_groupRows(value);
+  const groupingResponse = apiRef.current.unstable_groupRows({ ...value, previousTree });
 
   const dataTopLevelRowCount = Object.values(groupingResponse.tree).filter(
     (node) => node.parent == null,
@@ -157,7 +161,7 @@ export const useGridRows = (
     });
     rowsCache.current.lastUpdateMs = Date.now();
 
-    return { ...state, rows: getRowsStateFromCache(rowsCache.current, apiRef) };
+    return { ...state, rows: getRowsStateFromCache(rowsCache.current, null, apiRef) };
   });
 
   const getRow = React.useCallback<GridRowApi['getRow']>(
@@ -172,7 +176,11 @@ export const useGridRows = (
         rowsCache.current.lastUpdateMs = Date.now();
         apiRef.current.setState((state) => ({
           ...state,
-          rows: getRowsStateFromCache(rowsCache.current, apiRef),
+          rows: getRowsStateFromCache(
+            rowsCache.current,
+            gridRowTreeSelector(apiRef.current.state),
+            apiRef,
+          ),
         }));
         apiRef.current.publishEvent(GridEvents.rowsSet);
         apiRef.current.forceUpdate();
@@ -244,7 +252,7 @@ export const useGridRows = (
 
       const deletedRowIds: GridRowId[] = [];
 
-      const newStateValue: GridRowGroupParams = {
+      const newStateValue: GridRowInternalCacheValue = {
         idRowsLookup: { ...rowsCache.current.state.value.idRowsLookup },
         ids: [...rowsCache.current.state.value.ids],
       };

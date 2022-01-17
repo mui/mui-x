@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import Badge from '@mui/material/Badge';
-import Button, { ButtonProps } from '@mui/material/Button';
-import Tooltip, { TooltipProps } from '@mui/material/Tooltip';
+import { ButtonProps } from '@mui/material/Button';
+import { TooltipProps } from '@mui/material/Tooltip';
 import { capitalize } from '@mui/material/utils';
 import { gridColumnLookupSelector } from '../../hooks/features/columns/gridColumnsSelector';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
@@ -110,8 +110,13 @@ const GridToolbarFilterButton = React.forwardRef<HTMLButtonElement, GridToolbarF
     }
 
     return (
-      <Tooltip title={tooltipContentNode} enterDelay={1000} {...other}>
-        <Button
+      <rootProps.components.BaseTooltip
+        title={tooltipContentNode}
+        enterDelay={1000}
+        {...other}
+        {...rootProps.componentsProps?.baseTooltip}
+      >
+        <rootProps.components.BaseButton
           ref={ref}
           size="small"
           color="primary"
@@ -123,10 +128,11 @@ const GridToolbarFilterButton = React.forwardRef<HTMLButtonElement, GridToolbarF
           }
           {...buttonProps}
           onClick={toggleFilter}
+          {...rootProps.componentsProps?.baseButton}
         >
           {apiRef.current.getLocaleText('toolbarFilters')}
-        </Button>
-      </Tooltip>
+        </rootProps.components.BaseButton>
+      </rootProps.components.BaseTooltip>
     );
   },
 );
