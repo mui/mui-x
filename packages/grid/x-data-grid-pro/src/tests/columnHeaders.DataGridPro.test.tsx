@@ -95,7 +95,6 @@ describe('<DataGridPro /> - Column Headers', () => {
       );
 
       const columnCell = getColumnHeaderCell(0);
-
       const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]');
 
       fireEvent.click(menuIconButton);
