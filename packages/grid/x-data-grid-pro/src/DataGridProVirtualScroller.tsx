@@ -103,7 +103,6 @@ const VirtualScrollerPinnedColumns = styled('div', {
 }));
 
 interface DataGridProVirtualScrollerProps extends React.HTMLAttributes<HTMLDivElement> {
-  selectionLookup: Record<string, GridRowId>;
   disableVirtualization?: boolean;
 }
 
@@ -111,7 +110,7 @@ const DataGridProVirtualScroller = React.forwardRef<
   HTMLDivElement,
   DataGridProVirtualScrollerProps
 >(function DataGridProVirtualScroller(props, ref) {
-  const { className, disableVirtualization, selectionLookup, ...other } = props;
+  const { className, disableVirtualization, ...other } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
   const visibleColumnFields = useGridSelector(apiRef, gridVisibleColumnFieldsSelector);

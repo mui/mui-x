@@ -71,23 +71,6 @@ function GridBody(props: GridBodyProps) {
     [apiRef],
   );
 
-  const filteredSelection = React.useMemo(
-    () =>
-      typeof rootProps.isRowSelectable === 'function'
-        ? selection.filter((id) => rootProps.isRowSelectable!(apiRef.current.getRowParams(id)))
-        : selection,
-    [apiRef, rootProps.isRowSelectable, selection],
-  );
-
-  const selectionLookup = React.useMemo(
-    () =>
-      filteredSelection.reduce((lookup, rowId) => {
-        lookup[rowId] = rowId;
-        return lookup;
-      }, {}),
-    [filteredSelection],
-  );
-
   return (
     <GridMainContainer>
       <GridOverlays />
@@ -110,7 +93,6 @@ function GridBody(props: GridBodyProps) {
             <VirtualScrollerComponent
               ref={windowRef}
               style={style}
-              selectionLookup={selectionLookup} // TODO pass it directly to the row via componentsProps
               disableVirtualization={isVirtualizationDisabled}
             />
           );

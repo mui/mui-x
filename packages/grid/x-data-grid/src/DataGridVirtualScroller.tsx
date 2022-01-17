@@ -6,17 +6,15 @@ import { GridVirtualScrollerRenderZone } from '../../_modules_/grid/components/v
 import { useGridVirtualScroller } from '../../_modules_/grid/hooks/features/virtualization/useGridVirtualScroller';
 
 interface DataGridVirtualScrollerProps extends React.HTMLAttributes<HTMLDivElement> {
-  selectionLookup: Record<string, GridRowId>;
   disableVirtualization?: boolean;
 }
 
 const DataGridVirtualScroller = React.forwardRef<HTMLDivElement, DataGridVirtualScrollerProps>(
   function DataGridVirtualScroller(props, ref) {
-    const { className, selectionLookup, disableVirtualization, ...other } = props;
+    const { className, disableVirtualization, ...other } = props;
 
     const { getRootProps, getContentProps, getRenderZoneProps, getRows } = useGridVirtualScroller({
       ref,
-      selectionLookup,
       disableVirtualization,
     });
 

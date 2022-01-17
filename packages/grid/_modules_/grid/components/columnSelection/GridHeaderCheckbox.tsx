@@ -42,13 +42,19 @@ const GridHeaderCheckbox = React.forwardRef<HTMLInputElement, GridColumnHeaderPa
       gridPaginatedVisibleSortedGridRowIdsSelector,
     );
 
-    const filteredSelection = React.useMemo(
-      () =>
-        typeof rootProps.isRowSelectable === 'function'
-          ? selection.filter((id) => rootProps.isRowSelectable!(apiRef.current.getRowParams(id)))
-          : selection,
-      [apiRef, rootProps.isRowSelectable, selection],
-    );
+    const filteredSelection = React.useMemo(() => {
+      if (typeof rootProps.isRowSelectable !== 'function') {
+        return selection;
+      }
+
+      return selection.filter((id) => {
+        try {
+          return rootProps.isRowSelectable!(apiRef.current.getRowParams(id));
+        } catch {
+          return false;
+        }
+      });
+    }, [apiRef, rootProps.isRowSelectable, selection]);
 
     // All the rows that could be selected / unselected by toggling this checkbox
     const selectionCandidates = React.useMemo(() => {
