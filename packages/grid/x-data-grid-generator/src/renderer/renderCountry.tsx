@@ -15,6 +15,7 @@ const Country = React.memo(function Country(props: CountryProps) {
   return (
     <Box
       sx={{
+        width: 1,
         display: 'flex',
         alignItems: 'center',
         '&  > img': {
