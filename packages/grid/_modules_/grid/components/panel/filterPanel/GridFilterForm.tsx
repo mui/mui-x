@@ -46,7 +46,6 @@ const GridFilterFormRoot = styled('div', {
   overridesResolver: (props, styles) => styles.filterForm,
 })(({ theme }) => ({
   display: 'flex',
-  justifyContent: 'space-around',
   padding: theme.spacing(1),
 }));
 
