@@ -20,7 +20,7 @@ The following steps must be proposed as a pull request.
 
    You can also provide the github token by setting `process.env.GITHUB_TOKEN` variable.
 
-   In case of problem, an other method to generate changelog is available at the end of this page.
+   In case of problem, another method to generate the changelog is available at the end of this page.
 
 2. Clean the generated changelog, to match the format of [https://github.com/mui-org/material-ui-x/releases](https://github.com/mui-org/material-ui-x/releases).
 3. Update the root `package.json`'s version

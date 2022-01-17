@@ -170,13 +170,12 @@ async function main(argv) {
       }
       return aTags.localeCompare(bTags);
     });
-    return `${header}
-
-${sortedCommits
-  .sort()
-  .map((commitItem) => `- ${commitItem.commit.message.split('\n')[0]} @${commitItem.author.login}`)
-  .join('\n')}
-`;
+    return `${header ? `\n${header}\n\n` : ''}${sortedCommits
+      .sort()
+      .map(
+        (commitItem) => `- ${commitItem.commit.message.split('\n')[0]} @${commitItem.author.login}`,
+      )
+      .join('\n')}`;
   };
 
   const nowFormatted = new Date().toLocaleDateString('en-US', {
@@ -194,12 +193,12 @@ A big thanks to the ${
     authors.length
   } contributors who made this release possible. Here are some highlights ✨:
 
-### \`@mui/x-data-grid@v\` / \`@mui/x-data-grid-pro@v\`
-
 TODO INSERT HIGHLIGHTS
 
-${changeLogMessages.join('\n')}
+TODO WRITE THE VERSION
+### \`@mui/x-data-grid@v\` / \`@mui/x-data-grid-pro@v\`
 
+${changeLogMessages.join('\n')}
 ${logChangelogSection(changeCommits, '#### Changes')}
 ${logChangelogSection(docsCommits, '### Docs')}
 ${logChangelogSection(coreCommits, '### Core')}
