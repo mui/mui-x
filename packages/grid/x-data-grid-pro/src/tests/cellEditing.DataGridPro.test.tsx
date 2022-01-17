@@ -46,7 +46,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
     };
   });
 
-  const { render } = createRenderer({ clock: 'fake' });
+  const { clock, render } = createRenderer({ clock: 'fake' });
 
   let apiRef: GridApiRef;
 
@@ -150,6 +150,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
       const input = cell.querySelector('input')!;
       expect(input.value).to.equal('1961');
       fireEvent.change(input, { target: { value: '1970' } });
+      clock.tick(500);
       expect(input.value).to.equal('1970');
       fireEvent.keyDown(input, { key: 'Enter' });
       await waitFor(() => {
@@ -164,6 +165,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
       input.focus();
       expect(input.value).to.equal('1961');
       fireEvent.change(input, { target: { value: '1970' } });
+      clock.tick(500);
       fireEvent.keyDown(input, { key: 'Enter' });
       await waitFor(() => {
         expect(cell.querySelector('input')).not.to.equal(null);
@@ -182,6 +184,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
       });
       const input = cell.querySelector('input')!;
       fireEvent.change(input, { target: { value: 1970 } });
+      clock.tick(500);
       expect(onEditRowsModelChange.lastCall.firstArg).to.deep.equal({
         1: { year: { value: '1970' } },
       });
@@ -206,6 +209,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
       const input = cell.querySelector('input')!;
       input.focus();
       fireEvent.change(input, { target: { value: 1970 } });
+      clock.tick(500);
       expect(onEditRowsModelChange.lastCall.firstArg).to.deep.equal({
         1: { year: { value: '1970' } },
       });
@@ -368,6 +372,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
     expect(input.value).to.equal('Adidas');
     fireEvent.change(input, { target: { value: 'n' } });
     expect(cell.querySelector('input')!.value).to.equal('n');
+    clock.tick(500);
 
     fireEvent.keyDown(input, { key: 'Enter' });
     await waitFor(() => {
@@ -388,6 +393,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
 
     fireEvent.change(input, { target: { value: 'n' } });
     expect(cell.querySelector('input')!.value).to.equal('n');
+    clock.tick(500);
 
     fireEvent.keyDown(input, { key: 'Tab' });
     await waitFor(() => {
@@ -407,6 +413,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
     expect(input.value).to.equal('1961');
 
     fireEvent.change(input, { target: { value: '1970' } });
+    clock.tick(500);
     expect(cell.querySelector('input')!.value).to.equal('1970');
 
     fireEvent.keyDown(input, { key: 'Tab', shiftKey: true });
@@ -428,6 +435,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
     expect(input.value).to.equal('1961');
 
     fireEvent.change(input, { target: { value: '1970' } });
+    clock.tick(500);
     expect(cell.querySelector('input')!.value).to.equal('1970');
 
     const otherCell = getCell(2, 1);
@@ -451,6 +459,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
     expect(input.value).to.equal('1961');
 
     fireEvent.change(input, { target: { value: '1970' } });
+    clock.tick(500);
     expect(cell.querySelector('input')!.value).to.equal('1970');
 
     const columnHeader = getColumnHeaderCell(0);
@@ -471,6 +480,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
     expect(input.value).to.equal('1961');
 
     fireEvent.change(input, { target: { value: '1970' } });
+    clock.tick(500);
     expect(cell.querySelector('input')!.value).to.equal('1970');
 
     fireEvent.focus(getColumnHeaderCell(1));
@@ -490,6 +500,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
     expect(input.value).to.equal('1961');
 
     fireEvent.change(input, { target: { value: '1970' } });
+    clock.tick(500);
     expect(cell.querySelector('input')!.value).to.equal('1970');
 
     const otherCell = getCell(2, 1);
@@ -543,6 +554,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
     expect(input.value).to.equal('1961');
 
     fireEvent.change(input, { target: { value: '62' } });
+    clock.tick(500);
     expect(cell.querySelector('input')!.value).to.equal('1962');
 
     fireEvent.keyDown(input, { key: 'Enter' });
@@ -624,6 +636,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
     const input = cell.querySelector('input')!;
     expect(input.value).to.equal('Adidas');
     fireEvent.change(input, { target: { value: 'n' } });
+    clock.tick(500);
     expect(cell.querySelector('input')!.value).to.equal('n');
 
     fireEvent.keyDown(input, { key: 'Enter' });
@@ -643,6 +656,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
     fireEvent.doubleClick(cell);
     const input = cell.querySelector('input')!;
     fireEvent.change(input, { target: { value: '1970' } });
+    clock.tick(500);
     expect(onEditCellPropsChange.args[0][0]).to.deep.equal({
       id: 1,
       field: 'year',
@@ -666,6 +680,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
     fireEvent.doubleClick(cell);
     const input = cell.querySelector('input')!;
     fireEvent.change(input, { target: { value: 'n' } });
+    clock.tick(500);
     fireEvent.keyDown(input, { key: 'Enter' });
     await waitFor(() => {
       expect(onCellEditCommit.callCount).to.equal(1);
@@ -699,6 +714,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
     fireEvent.doubleClick(cell);
     const input = cell.querySelector('input')!;
     fireEvent.change(input, { target: { value: 'Peter Smith' } });
+    clock.tick(500);
     fireEvent.keyDown(input, { key: 'Enter' });
     await waitFor(() => {
       expect(apiRef.current.getRowModels().get(0)).to.deep.equal({
@@ -727,6 +743,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
     fireEvent.doubleClick(cell);
     const input = cell.querySelector('input')!;
     fireEvent.change(input, { target: { value: 'n' } });
+    clock.tick(500);
     fireEvent.keyDown(input, { key: 'Enter' });
     await waitFor(() => {
       expect(preProcessEditCellProps.lastCall.args[0]).to.deep.equal({
@@ -755,6 +772,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
     const input = cell.querySelector('input')!;
     expect(input).not.to.have.attribute('aria-invalid');
     fireEvent.change(input, { target: { value: 'n' } });
+    clock.tick(500);
     fireEvent.keyDown(input, { key: 'Enter' });
     await waitFor(() => {
       expect(input).to.have.attribute('aria-invalid', 'true');
@@ -780,6 +798,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
     const input = cell.querySelector('input')!;
     expect(input).not.to.have.attribute('aria-invalid');
     fireEvent.change(input, { target: { value: 'n' } });
+    clock.tick(500);
     fireEvent.keyDown(input, { key: 'Enter' });
     await waitFor(() => {
       expect(input).to.have.attribute('aria-invalid', 'true');

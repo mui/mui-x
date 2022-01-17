@@ -67,7 +67,7 @@ describe('<DataGridPro /> - Edit Components', () => {
     };
   });
 
-  const { render } = createRenderer({ clock: 'fake' });
+  const { render, clock } = createRenderer({ clock: 'fake' });
 
   let apiRef: GridApiRef;
 
@@ -408,6 +408,7 @@ describe('<DataGridPro /> - Edit Components', () => {
       const input = cell.querySelector('input')!;
       expect(input.value).to.equal('1941');
       fireEvent.change(input, { target: { value: '1942' } });
+      clock.tick(500);
 
       fireEvent.keyDown(input, { key: 'Enter' });
       await waitFor(() => {
@@ -679,6 +680,36 @@ describe('<DataGridPro /> - Edit Components', () => {
       expect(onEditCellPropsChange.lastCall.args[0].props.value.getTime()).to.equal(
         generateDate(1999, 0, 1, 20, 25),
       );
+    });
+  });
+
+  describe('column type: string', () => {
+    it('should debounce calls to preProcessEditCellProps', () => {
+      const preProcessEditCellProps = spy(({ props }) => props);
+      const Test = () => {
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGridPro
+              {...baselineProps}
+              columns={[
+                { field: 'brand', type: 'string', editable: true, preProcessEditCellProps },
+              ]}
+            />
+          </div>
+        );
+      };
+      render(<Test />);
+      const cell = getCell(0, 0);
+      fireEvent.doubleClick(cell);
+      const input = cell.querySelector('input')!;
+      expect(input.value).to.equal('Nike');
+      fireEvent.change(input, { target: { value: 'n' } });
+      fireEvent.change(input, { target: { value: 'ni' } });
+      fireEvent.change(input, { target: { value: 'nik' } });
+      fireEvent.change(input, { target: { value: 'nike' } });
+      expect(preProcessEditCellProps.callCount).to.equal(0);
+      clock.tick(500);
+      expect(preProcessEditCellProps.callCount).to.equal(1);
     });
   });
 

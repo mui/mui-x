@@ -58,14 +58,14 @@ describe('<DataGridPro /> - Row Editing', () => {
   };
 
   it('should allow to start editing with double-click', () => {
-    render(<TestCase />);
+    render(<TestCase editMode="row" />);
     expect(getRow(1)).not.to.have.class('MuiDataGrid-row--editing');
     fireEvent.doubleClick(getCell(1, 0));
     expect(getRow(1)).to.have.class('MuiDataGrid-row--editing');
   });
 
   it('should allow to start editing with Enter', () => {
-    render(<TestCase />);
+    render(<TestCase editMode="row" />);
     expect(getRow(1)).not.to.have.class('MuiDataGrid-row--editing');
     const cell = getCell(1, 0);
     cell.focus();
@@ -75,7 +75,10 @@ describe('<DataGridPro /> - Row Editing', () => {
 
   it('should apply the correct CSS classes to the row and cells', () => {
     render(
-      <TestCase editRowsModel={{ 1: { brand: { value: 'Adidas' }, year: { value: 1961 } } }} />,
+      <TestCase
+        editMode="row"
+        editRowsModel={{ 1: { brand: { value: 'Adidas' }, year: { value: 1961 } } }}
+      />,
     );
     expect(getRow(1)).to.have.class('MuiDataGrid-row--editing');
     expect(getRow(1)).to.have.class('MuiDataGrid-row--editable');
@@ -86,22 +89,24 @@ describe('<DataGridPro /> - Row Editing', () => {
   });
 
   it('should allow to rollback changes with Escape', () => {
-    render(<TestCase />);
+    render(<TestCase editMode="row" />);
     const cell = getCell(1, 0);
     fireEvent.doubleClick(cell);
     const input = cell.querySelector('input');
     fireEvent.change(input, { target: { value: 'n' } });
+    clock.tick(500);
     expect(input!.value).to.equal('n');
     fireEvent.keyDown(input, { key: 'Escape' });
     expect(cell).to.have.text('Adidas');
   });
 
   it('should allow to commit changes with Enter', async () => {
-    render(<TestCase />);
+    render(<TestCase editMode="row" />);
     const cell = getCell(1, 0);
     fireEvent.doubleClick(cell);
     const input = cell.querySelector('input');
     fireEvent.change(input, { target: { value: 'ADIDAS' } });
+    clock.tick(500);
     expect(input!.value).to.equal('ADIDAS');
     fireEvent.keyDown(input, { key: 'Enter' });
     await waitFor(() => {
@@ -110,7 +115,7 @@ describe('<DataGridPro /> - Row Editing', () => {
   });
 
   it('should move the focus to the right cell after committing changes with Enter', async () => {
-    render(<TestCase />);
+    render(<TestCase editMode="row" />);
     const cell = getCell(1, 0);
     fireEvent.doubleClick(cell);
     const input = cell.querySelector('input');
@@ -124,11 +129,12 @@ describe('<DataGridPro /> - Row Editing', () => {
   });
 
   it('should allow to commit changes clicking outside the row', async () => {
-    render(<TestCase />);
+    render(<TestCase editMode="row" />);
     const cell = getCell(1, 0);
     fireEvent.doubleClick(cell);
     const input = cell.querySelector('input');
     fireEvent.change(input, { target: { value: 'ADIDAS' } });
+    clock.tick(500);
     expect(input!.value).to.equal('ADIDAS');
     fireEvent.mouseUp(getCell(2, 0));
     fireEvent.click(getCell(2, 0));
@@ -141,7 +147,7 @@ describe('<DataGridPro /> - Row Editing', () => {
   });
 
   it('should move the focus to the input of the clicked cell', () => {
-    render(<TestCase />);
+    render(<TestCase editMode="row" />);
     const cell = getCell(1, 0);
     fireEvent.doubleClick(cell);
     // @ts-expect-error need to migrate helpers to TypeScript
@@ -152,6 +158,7 @@ describe('<DataGridPro /> - Row Editing', () => {
     const valueSetter = spy(({ row }) => row);
     render(
       <TestCase
+        editMode="row"
         rows={[{ id: 0, firstName: 'John', lastName: 'Doe' }]}
         columns={[
           {
@@ -176,6 +183,7 @@ describe('<DataGridPro /> - Row Editing', () => {
     fireEvent.doubleClick(firstCell);
     const input = firstCell.querySelector('input')!;
     fireEvent.change(input, { target: { value: 'Peter Smith' } });
+    clock.tick(500);
     fireEvent.keyDown(input, { key: 'Enter' });
     expect(valueSetter.callCount).to.equal(1);
     expect(valueSetter.lastCall.args[0]).to.deep.equal({
@@ -193,6 +201,7 @@ describe('<DataGridPro /> - Row Editing', () => {
     const preProcessEditCellProps = ({ props }) => ({ ...props, error: true });
     render(
       <TestCase
+        editMode="row"
         columns={[
           { field: 'brand', editable: true, preProcessEditCellProps },
           { field: 'year', editable: true, preProcessEditCellProps },
@@ -205,6 +214,7 @@ describe('<DataGridPro /> - Row Editing', () => {
     const secondInput = secondCell.querySelector('input');
     const firstInput = firstCell.querySelector('input');
     fireEvent.change(firstInput, { target: { value: 'ADIDAS' } });
+    clock.tick(500);
     await waitFor(() => {
       expect(firstInput).to.have.attribute('aria-invalid', 'true');
       expect(secondInput).to.have.attribute('aria-invalid', 'true');
@@ -215,6 +225,7 @@ describe('<DataGridPro /> - Row Editing', () => {
     const preProcessEditCellProps = ({ props }) => Promise.resolve({ ...props, error: true });
     render(
       <TestCase
+        editMode="row"
         columns={[
           { field: 'brand', editable: true, preProcessEditCellProps },
           { field: 'year', editable: true, preProcessEditCellProps },
@@ -227,6 +238,7 @@ describe('<DataGridPro /> - Row Editing', () => {
     const firstInput = firstCell.querySelector('input');
     const secondInput = secondCell.querySelector('input');
     fireEvent.change(firstInput, { target: { value: 'ADIDAS' } });
+    clock.tick(500);
     await waitFor(() => {
       expect(firstInput).to.have.attribute('aria-invalid', 'true');
       expect(secondInput).to.have.attribute('aria-invalid', 'true');
@@ -236,6 +248,7 @@ describe('<DataGridPro /> - Row Editing', () => {
   it('should exit the row edit mode and save the row when preProcessEditCellProps does not return an error', async () => {
     render(
       <TestCase
+        editMode="row"
         columns={[
           {
             field: 'brand',

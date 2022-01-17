@@ -3,6 +3,7 @@ import { GridRowTreeConfig, GridRowId, GridRowsLookup } from '../../../models/gr
 export interface GridRowGroupParams {
   ids: GridRowId[];
   idRowsLookup: GridRowsLookup;
+  previousTree: GridRowTreeConfig | null;
 }
 
 export interface GridRowGroupingResult {
