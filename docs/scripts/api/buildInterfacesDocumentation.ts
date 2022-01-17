@@ -35,7 +35,8 @@ interface ParsedProperty {
 
 const INTERFACES_WITH_DEDICATED_PAGES = [
   // apiRef
-  'GridApi',
+  'GridApiCommunity',
+  'GridApiPro',
   'GridSelectionApi',
   'GridFilterApi',
   'GridSortApi',
