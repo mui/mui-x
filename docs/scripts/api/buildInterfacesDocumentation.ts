@@ -33,10 +33,7 @@ interface ParsedProperty {
   typeStr: string;
 }
 
-const INTERFACES_WITH_DEDICATED_PAGES = [
-  // apiRef
-  'GridApiCommunity',
-  'GridApiPro',
+const GRID_API_INTERFACES_WITH_DEDICATED_PAGES = [
   'GridSelectionApi',
   'GridFilterApi',
   'GridSortApi',
@@ -47,6 +44,12 @@ const INTERFACES_WITH_DEDICATED_PAGES = [
   'GridColumnPinningApi',
   'GridPrintExportApi',
   'GridDisableVirtualizationApi',
+]
+
+const OTHER_GRID_INTERFACES_WITH_DEDICATED_PAGES = [
+  // apiRef
+  'GridApiCommunity',
+  'GridApiPro',
 
   // Params
   'GridCellParams',
@@ -221,7 +224,7 @@ export default function buildInterfacesDocumentation(options: BuildInterfacesDoc
   const allProjectsName = Array.from(projects.keys());
 
   const documentedInterfaces: DocumentedInterfaces = new Map();
-  INTERFACES_WITH_DEDICATED_PAGES.forEach((interfaceName) => {
+  [...OTHER_GRID_INTERFACES_WITH_DEDICATED_PAGES, ...GRID_API_INTERFACES_WITH_DEDICATED_PAGES].forEach((interfaceName) => {
     const packagesWithThisInterface = allProjectsName.filter(
       (projectName) => !!projects.get(projectName)!.exports[interfaceName],
     );
@@ -232,16 +235,6 @@ export default function buildInterfacesDocumentation(options: BuildInterfacesDoc
 
     documentedInterfaces.set(interfaceName, packagesWithThisInterface);
   });
-
-  const gridApiExtendsFrom: string[] = (
-    (projects.get('x-data-grid-pro')!.exports.GridApiPro.declarations![0] as ts.InterfaceDeclaration)
-      .heritageClauses ?? []
-  ).flatMap((clause) =>
-    clause.types
-      .map((type) => type.expression)
-      .filter(ts.isIdentifier)
-      .map((expression) => expression.escapedText),
-  );
 
   documentedInterfaces.forEach((packagesWithThisInterface, interfaceName) => {
     const project = projects.get(packagesWithThisInterface[0])!;
@@ -254,7 +247,7 @@ export default function buildInterfacesDocumentation(options: BuildInterfacesDoc
 
     const slug = kebabCase(parsedInterface.name);
 
-    if (gridApiExtendsFrom.includes(parsedInterface.name)) {
+    if (GRID_API_INTERFACES_WITH_DEDICATED_PAGES.includes(parsedInterface.name)) {
       const json = {
         name: parsedInterface.name,
         description: linkify(parsedInterface.description, documentedInterfaces, 'html'),
@@ -272,7 +265,7 @@ export default function buildInterfacesDocumentation(options: BuildInterfacesDoc
         project,
       );
       // eslint-disable-next-line no-console
-      console.log('Built JSON file for', parsedInterface.name);
+      // console.log('Built JSON file for', parsedInterface.name);
     } else {
       const markdown = generateMarkdown(parsedInterface, projects, documentedInterfaces);
       writePrettifiedFile(path.resolve(outputDirectory, `${slug}.md`), markdown, project);
@@ -291,7 +284,7 @@ export default function buildInterfacesDocumentation(options: BuildInterfacesDoc
       );
 
       // eslint-disable-next-line no-console
-      console.log('Built API docs for', parsedInterface.name);
+      // console.log('Built API docs for', parsedInterface.name);
     }
   });
 
