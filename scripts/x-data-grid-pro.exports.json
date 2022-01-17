@@ -113,7 +113,7 @@
   { "name": "GridColumnPinningState", "kind": "TypeAlias" },
   { "name": "gridColumnReorderDragColSelector", "kind": "Variable" },
   { "name": "gridColumnReorderSelector", "kind": "Variable" },
-  { "name": "GridColumnReorderState", "kind": "Interface" },
+  { "name": "GridColumnReorderState", "kind": "ExportSpecifier" },
   { "name": "GridColumnResizeParams", "kind": "Interface" },
   { "name": "gridColumnResizeSelector", "kind": "Variable" },
   { "name": "GridColumnResizeState", "kind": "Interface" },

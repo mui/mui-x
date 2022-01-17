@@ -4,7 +4,7 @@ import type {
 } from '../hooks/features/columns/gridColumnsInterfaces';
 import type { GridEditRowsModel } from './gridEditRowModel';
 import type { GridColumnMenuState } from '../hooks/features/columnMenu/columnMenuState';
-import type { GridColumnReorderState } from '../hooks/features/columnReorder/columnReorderState';
+import type { GridColumnReorderState } from '../hooks/features/columnReorder';
 import type { GridColumnResizeState } from '../hooks/features/columnResize/columnResizeState';
 import type { GridDensityState } from '../hooks/features/density/densityState';
 import type { GridFocusState, GridTabIndexState } from '../hooks/features/focus/gridFocusState';
