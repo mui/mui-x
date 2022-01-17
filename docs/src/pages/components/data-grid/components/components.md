@@ -40,15 +40,18 @@ They can be used as below:
 - `useGridApiContext`: returns the `apiRef`.
 - `useGridSelector`: returns the result of a selector on the current state.
 
+More details about the selectors in the [State page](/components/data-grid/state/#access-the-state)
+
 ```tsx
 function CustomPagination() {
   const apiRef = useGridApiContext();
-  const paginationState = useGridSelector(apiRef, gridPaginationSelector);
+  const page = useGridSelector(apiRef, gridPageSelector);
+  const pageCount = useGridSelector(apiRef, gridPageCountSelector);
 
   return (
     <Pagination
-      count={paginationState.pageCount}
-      page={paginationState.page + 1}
+      count={pageCount}
+      page={page + 1}
       onChange={(event, value) => apiRef.current.setPage(value - 1)}
     />
   );

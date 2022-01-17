@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Button, { ButtonProps } from '@mui/material/Button';
+import { ButtonProps } from '@mui/material/Button';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { gridPreferencePanelStateSelector } from '../../hooks/features/preferencesPanel/gridPreferencePanelSelector';
 import { GridPreferencePanelsValue } from '../../hooks/features/preferencesPanel/gridPreferencePanelsValue';
@@ -29,7 +29,7 @@ export const GridToolbarColumnsButton = React.forwardRef<HTMLButtonElement, Butt
     }
 
     return (
-      <Button
+      <rootProps.components.BaseButton
         ref={ref}
         size="small"
         color="primary"
@@ -37,9 +37,10 @@ export const GridToolbarColumnsButton = React.forwardRef<HTMLButtonElement, Butt
         startIcon={<rootProps.components.ColumnSelectorIcon />}
         {...other}
         onClick={showColumns}
+        {...rootProps.componentsProps?.baseButton}
       >
         {apiRef.current.getLocaleText('toolbarColumns')}
-      </Button>
+      </rootProps.components.BaseButton>
     );
   },
 );

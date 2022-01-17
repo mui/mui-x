@@ -28,5 +28,6 @@ export function GridOverlays() {
   if (rootProps.loading) {
     return <rootProps.components.LoadingOverlay {...rootProps.componentsProps?.loadingOverlay} />;
   }
+
   return null;
 }

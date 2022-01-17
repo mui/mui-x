@@ -2,10 +2,29 @@ import { ukUA as ukUACore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
+type PluralForm = {
+  one: string;
+  few: string;
+  many: string;
+};
+
+const getPluralForm = (count: number, options: PluralForm) => {
+  let pluralForm = options.many;
+  const lastDigit = count % 10;
+
+  if (lastDigit > 1 && lastDigit < 5) {
+    pluralForm = options.few;
+  } else if (lastDigit === 1) {
+    pluralForm = options.one;
+  }
+
+  return `${count} ${pluralForm}`;
+};
+
 const ukUAGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Немає рядків',
-  // noResultsOverlayLabel: 'No results found.',
+  noResultsOverlayLabel: 'Дані не знайдено.',
   errorOverlayDefaultLabel: 'Виявлено помилку.',
 
   // Density selector toolbar button text
@@ -22,23 +41,27 @@ const ukUAGrid: Partial<GridLocaleText> = {
   // Filters toolbar button text
   toolbarFilters: 'Фільтри',
   toolbarFiltersLabel: 'Показати фільтри',
-  toolbarFiltersTooltipHide: 'Сховати фільтри',
+  toolbarFiltersTooltipHide: 'Приховати фільтри',
   toolbarFiltersTooltipShow: 'Показати фільтри',
   toolbarFiltersTooltipActive: (count) =>
-    count !== 1 ? `${count} активні фільтри` : `${count} активний фільтр`,
+    getPluralForm(count, {
+      one: 'активний фільтр',
+      few: 'активні фільтри',
+      many: 'активних фільтрів',
+    }),
 
   // Export selector toolbar button text
   toolbarExport: 'Експорт',
   toolbarExportLabel: 'Експорт',
   toolbarExportCSV: 'Завантажити у форматі CSV',
-  // toolbarExportPrint: 'Print',
+  toolbarExportPrint: 'Друк',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'Знайти стовпець',
   columnsPanelTextFieldPlaceholder: 'Заголовок стовпця',
   columnsPanelDragIconLabel: 'Змінити порядок стовпця',
-  columnsPanelShowAllButton: 'Показати усі',
-  columnsPanelHideAllButton: 'Сховати усі',
+  columnsPanelShowAllButton: 'Показати всі',
+  columnsPanelHideAllButton: 'Приховати всі',
 
   // Filter panel text
   filterPanelAddFilter: 'Додати фільтр',
@@ -56,65 +79,72 @@ const ukUAGrid: Partial<GridLocaleText> = {
   filterOperatorStartsWith: 'починається з',
   filterOperatorEndsWith: 'закінчується на',
   filterOperatorIs: 'дорівнює',
-  filterOperatorNot: 'не',
+  filterOperatorNot: 'не дорівнює',
   filterOperatorAfter: 'більше ніж',
   filterOperatorOnOrAfter: 'більше або дорівнює',
   filterOperatorBefore: 'менше ніж',
   filterOperatorOnOrBefore: 'менше або дорівнює',
-  // filterOperatorIsEmpty: 'is empty',
-  // filterOperatorIsNotEmpty: 'is not empty',
+  filterOperatorIsEmpty: 'порожній',
+  filterOperatorIsNotEmpty: 'не порожній',
 
   // Filter values text
   filterValueAny: 'будь-який',
-  filterValueTrue: 'правда',
-  filterValueFalse: 'помилковий',
+  filterValueTrue: 'так',
+  filterValueFalse: 'ні',
 
   // Column menu text
   columnMenuLabel: 'Меню',
   columnMenuShowColumns: 'Показати стовпці',
   columnMenuFilter: 'Фільтр',
-  columnMenuHideColumn: 'Сховати',
+  columnMenuHideColumn: 'Приховати',
   columnMenuUnsort: 'Скасувати сортування',
   columnMenuSortAsc: 'Сортувати за зростанням',
   columnMenuSortDesc: 'Сортувати за спаданням',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>
-    count !== 1 ? `${count} активні фільтри` : `${count} активний фільтр`,
+    getPluralForm(count, {
+      one: 'активний фільтр',
+      few: 'активні фільтри',
+      many: 'активних фільтрів',
+    }),
   columnHeaderFiltersLabel: 'Показати фільтри',
   columnHeaderSortIconLabel: 'Сортувати',
 
   // Rows selected footer text
   footerRowSelected: (count) =>
-    count !== 1
-      ? `${count.toLocaleString()} вибрані рядки`
-      : `${count.toLocaleString()} вибраний рядок`,
+    getPluralForm(count, {
+      one: 'вибраний рядок',
+      few: 'вибрані рядки',
+      many: 'вибраних рядків',
+    }),
 
   // Total rows footer text
-  footerTotalRows: 'Всього рядків:',
+  footerTotalRows: 'Усього рядків:',
 
   // Total visible rows footer text
-  // footerTotalVisibleRows: (visibleCount, totalCount) => `${visibleCount.toLocaleString()} of ${totalCount.toLocaleString()}`,
+  footerTotalVisibleRows: (visibleCount, totalCount) =>
+    `${visibleCount.toLocaleString()} з ${totalCount.toLocaleString()}`,
 
   // Checkbox selection text
   checkboxSelectionHeaderName: 'Вибір прапорця',
 
   // Boolean cell text
-  booleanCellTrueLabel: 'правда',
-  booleanCellFalseLabel: 'помилковий',
+  booleanCellTrueLabel: 'так',
+  booleanCellFalseLabel: 'ні',
 
   // Actions cell more text
-  // actionsCellMore: 'more',
+  actionsCellMore: 'більше',
 
   // Column pinning text
-  // pinToLeft: 'Pin to left',
-  // pinToRight: 'Pin to right',
-  // unpin: 'Unpin',
+  pinToLeft: 'Закріпити ліворуч',
+  pinToRight: 'Закріпити праворуч',
+  unpin: 'Відкріпити',
 
   // Tree Data
-  // treeDataGroupingHeaderName: 'Group',
-  // treeDataExpand: 'see children',
-  // treeDataCollapse: 'hide children',
+  treeDataGroupingHeaderName: 'Група',
+  treeDataExpand: 'показати дочірні елементи',
+  treeDataCollapse: 'приховати дочірні елементи',
 };
 
 export const ukUA: Localization = getGridLocalization(ukUAGrid, ukUACore);
