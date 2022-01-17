@@ -3,7 +3,7 @@ import {
   DEFAULT_GRID_COL_TYPE_KEY,
   getGridDefaultColumnTypes,
   GRID_STRING_COL_DEF,
-  GridApiRef,
+  GridApiRefCommunity,
   GridColDef,
   GridColType,
   GridColumnTypesRecord,
@@ -97,7 +97,7 @@ export const createColumnsState = ({
 }: {
   columnsToUpsert: GridColDef[];
   columnsTypes: GridColumnTypesRecord;
-  apiRef: GridApiRef;
+  apiRef: GridApiRefCommunity;
   reset: boolean;
 }) => {
   let columnsState: GridColumnsRawState;

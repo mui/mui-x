@@ -5,10 +5,10 @@ import {
   gridPaginatedVisibleSortedGridRowEntriesSelector,
 } from '../features/pagination/gridPaginationSelector';
 import { gridVisibleSortedRowEntriesSelector } from '../features/filter/gridFilterSelector';
-import type { GridApiRef, GridRowEntry, GridState } from '../../models';
+import type { GridApiRefCommunity, GridRowEntry, GridStateCommunity } from '../../models';
 
 export const getCurrentPageRows = (
-  state: GridState,
+  state: GridStateCommunity,
   props: Pick<DataGridProcessedProps, 'pagination' | 'paginationMode'>,
 ) => {
   let rows: GridRowEntry[];
@@ -36,7 +36,7 @@ export const getCurrentPageRows = (
  * - If the row tree is flat, it only contains up to `state.pageSize` rows
  */
 export const useCurrentPageRows = (
-  apiRef: GridApiRef,
+  apiRef: GridApiRefCommunity,
   props: Pick<DataGridProcessedProps, 'pagination' | 'paginationMode'>,
 ) => {
   const response = getCurrentPageRows(apiRef.current.state, props);

@@ -1,19 +1,22 @@
 import * as React from 'react';
 import { GridApiRef } from '../../models/api/gridApiRef';
-import { GridApi } from '../../models/api/gridApi';
-import { GridState } from '../../models/gridState';
+import {GridApiCommunity, GridApiPro} from '../../models/api/gridApi';
 import { EventManager } from '../../utils/EventManager';
 
 // Public developers facing overload
-export function useGridApiRef(): GridApiRef;
+export function useGridApiRef<
+  GridApi extends GridApiCommunity = GridApiPro,
+>(): GridApiRef<GridApi>;
 
 // Internal grid facing overload
-export function useGridApiRef(apiRefProp: GridApiRef | undefined): GridApiRef;
+export function useGridApiRef<GridApi extends GridApiCommunity = GridApiCommunity>(
+  apiRefProp: GridApiRef<GridApi> | undefined,
+): GridApiRef<GridApi>;
 
 /**
  * Hook that instantiate an GridApiRef to pass in component prop.
  */
-export function useGridApiRef(...args): any {
+export function useGridApiRef<GridApi extends GridApiCommunity = GridApiCommunity>(...args): any {
   const apiRefProp = args[0];
 
   const apiRef = React.useRef<GridApi>();
@@ -21,7 +24,7 @@ export function useGridApiRef(...args): any {
   if (!apiRef.current) {
     apiRef.current = {
       unstable_eventManager: new EventManager(),
-      state: {} as GridState,
+      state: {} as GridApi['state'],
     } as GridApi;
   }
 

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridApiRef } from '../../models/api/gridApiRef';
+import { GridApiRefCommunity} from '../../models/api/gridApiRef';
 import { useGridLogger } from '../utils/useGridLogger';
 import { GridEvents } from '../../models/events';
 import { useGridApiMethod } from '../utils/useGridApiMethod';
@@ -12,7 +12,7 @@ const isSyntheticEvent = (event: any): event is React.SyntheticEvent => {
 };
 
 export function useGridApiInitialization(
-  apiRef: GridApiRef,
+  apiRef: GridApiRefCommunity,
   props: Pick<DataGridProcessedProps, 'signature'>,
 ): void {
   const logger = useGridLogger(apiRef, 'useApi');

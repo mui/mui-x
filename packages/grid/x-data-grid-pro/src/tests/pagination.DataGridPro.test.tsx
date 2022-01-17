@@ -2,7 +2,7 @@ import { createRenderer, act } from '@mui/monorepo/test/utils';
 import { getColumnValues } from 'test/utils/helperFn';
 import * as React from 'react';
 import { expect } from 'chai';
-import { DataGridPro, useGridApiRef } from '@mui/x-data-grid-pro';
+import { DataGridPro, GridApiPro, GridApiRefPro, useGridApiRef } from '@mui/x-data-grid-pro';
 import { useData } from 'packages/storybook/src/hooks/useData';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
@@ -12,10 +12,11 @@ describe('<DataGridPro /> - Pagination', () => {
 
   describe('setPage', () => {
     it('should apply valid value', () => {
-      let apiRef;
+      let apiRef: GridApiRefPro;
+
       const GridTest = () => {
         const basicData = useData(20, 2);
-        apiRef = useGridApiRef();
+        apiRef = useGridApiRef<GridApiPro>();
 
         return (
           <div style={{ width: 300, height: 300 }}>
@@ -41,10 +42,10 @@ describe('<DataGridPro /> - Pagination', () => {
     });
 
     it('should apply last page if trying to go to a non-existing page', () => {
-      let apiRef;
+      let apiRef: GridApiRefPro;
       const GridTest = () => {
         const basicData = useData(20, 2);
-        apiRef = useGridApiRef();
+        apiRef = useGridApiRef<GridApiPro>();
 
         return (
           <div style={{ width: 300, height: 300 }}>
@@ -76,7 +77,7 @@ describe('<DataGridPro /> - Pagination', () => {
       const GridTest = () => {
         const [pageSize, setPageSize] = React.useState(5);
         const basicData = useData(20, 2);
-        apiRef = useGridApiRef();
+        apiRef = useGridApiRef<GridApiPro>();
 
         return (
           <div style={{ width: 300, height: 300 }}>

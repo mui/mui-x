@@ -1,10 +1,11 @@
 import {
   GridEvents,
-  GridApiRef,
   DataGridProProps,
   useGridApiRef,
   DataGridPro,
   GridEditSingleSelectCell,
+  GridApiRefPro,
+  GridApiPro,
 } from '@mui/x-data-grid-pro';
 import Portal from '@mui/base/Portal';
 import { createRenderer, fireEvent, screen, waitFor, act } from '@mui/monorepo/test/utils';
@@ -74,10 +75,10 @@ describe('<DataGridPro /> - Edit Rows', () => {
 
   const { clock, render } = createRenderer({ clock: 'fake' });
 
-  let apiRef: GridApiRef;
+  let apiRef: GridApiRefPro;
 
   const TestCase = (props: Partial<DataGridProProps>) => {
-    apiRef = useGridApiRef();
+    apiRef = useGridApiRef<GridApiPro>();
     return (
       <div style={{ width: 300, height: 300 }}>
         <DataGridPro {...baselineProps} apiRef={apiRef} {...props} />
@@ -866,7 +867,7 @@ describe('<DataGridPro /> - Edit Rows', () => {
   describe('column type: number', () => {
     it('should keep the right type', async () => {
       const Test = (props: Partial<DataGridProProps>) => {
-        apiRef = useGridApiRef();
+        apiRef = useGridApiRef<GridApiPro>();
         return (
           <div style={{ width: 300, height: 300 }}>
             <DataGridPro
@@ -896,7 +897,7 @@ describe('<DataGridPro /> - Edit Rows', () => {
 
     it('should allow to enter 0', async () => {
       const Test = (props: Partial<DataGridProProps>) => {
-        apiRef = useGridApiRef();
+        apiRef = useGridApiRef<GridApiPro>();
         return (
           <div style={{ width: 300, height: 300 }}>
             <DataGridPro

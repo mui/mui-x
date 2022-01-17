@@ -4,11 +4,12 @@ import { spy } from 'sinon';
 import { expect } from 'chai';
 import { getCell, getRow, getColumnValues, getRows } from 'test/utils/helperFn';
 import {
-  GridApiRef,
   GridRowModel,
   useGridApiRef,
   DataGridPro,
   DataGridProProps,
+  GridApiPro,
+  GridApiRefPro,
 } from '@mui/x-data-grid-pro';
 import { useData } from 'packages/storybook/src/hooks/useData';
 import { DataGridProps } from '@mui/x-data-grid';
@@ -60,9 +61,9 @@ describe('<DataGridPro /> - Rows', () => {
     describe('updateRows', () => {
       it('should apply getRowId before updating rows', () => {
         const getRowId = (row) => `${row.clientId}`;
-        let apiRef: GridApiRef;
+        let apiRef: GridApiRefPro;
         const Test = () => {
-          apiRef = useGridApiRef();
+          apiRef = useGridApiRef<GridApiPro>();
           return (
             <div style={{ width: 300, height: 300 }}>
               <DataGridPro {...baselineProps} getRowId={getRowId} apiRef={apiRef} />
@@ -80,13 +81,13 @@ describe('<DataGridPro /> - Rows', () => {
     });
 
     it('should allow to switch between cell mode', () => {
-      let apiRef: GridApiRef;
+      let apiRef: GridApiRefPro;
       const editableProps = { ...baselineProps };
       editableProps.columns = editableProps.columns.map((col) => ({ ...col, editable: true }));
       const getRowId = (row) => `${row.clientId}`;
 
       const Test = () => {
-        apiRef = useGridApiRef();
+        apiRef = useGridApiRef<GridApiPro>();
         return (
           <div style={{ width: 300, height: 300 }}>
             <DataGridPro {...editableProps} apiRef={apiRef} getRowId={getRowId} />
@@ -109,9 +110,9 @@ describe('<DataGridPro /> - Rows', () => {
 
     it('should not clone the row', () => {
       const getRowId = (row) => `${row.clientId}`;
-      let apiRef: GridApiRef;
+      let apiRef: GridApiRefPro;
       const Test = () => {
-        apiRef = useGridApiRef();
+        apiRef = useGridApiRef<GridApiPro>();
         return (
           <div style={{ width: 300, height: 300 }}>
             <DataGridPro {...baselineProps} getRowId={getRowId} apiRef={apiRef} />
@@ -163,10 +164,10 @@ describe('<DataGridPro /> - Rows', () => {
       };
     });
 
-    let apiRef: GridApiRef;
+    let apiRef: GridApiRefPro;
 
     const TestCase = (props: Partial<DataGridProProps>) => {
-      apiRef = useGridApiRef();
+      apiRef = useGridApiRef<GridApiPro>();
       return (
         <div style={{ width: 300, height: 300 }}>
           <DataGridPro {...baselineProps} apiRef={apiRef} {...props} />
@@ -241,7 +242,7 @@ describe('<DataGridPro /> - Rows', () => {
 
     it('update row data should process getRowId', () => {
       const TestCaseGetRowId = () => {
-        apiRef = useGridApiRef();
+        apiRef = useGridApiRef<GridApiPro>();
         const getRowId = React.useCallback((row: GridRowModel) => row.idField, []);
         return (
           <div style={{ width: 300, height: 300 }}>
@@ -289,10 +290,10 @@ describe('<DataGridPro /> - Rows', () => {
       };
     });
 
-    let apiRef: GridApiRef;
+    let apiRef: GridApiRefPro;
 
     const TestCase = (props: Partial<DataGridProProps>) => {
-      apiRef = useGridApiRef();
+      apiRef = useGridApiRef<GridApiPro>();
       return (
         <div style={{ width: 300, height: 300 }}>
           <DataGridPro {...baselineProps} apiRef={apiRef} {...props} />
@@ -340,7 +341,7 @@ describe('<DataGridPro /> - Rows', () => {
       }
     });
 
-    let apiRef: GridApiRef;
+    let apiRef: GridApiRefPro;
     const TestCaseVirtualization = (
       props: Partial<DataGridProProps> & {
         nbRows?: number;
@@ -349,7 +350,7 @@ describe('<DataGridPro /> - Rows', () => {
         height?: number;
       },
     ) => {
-      apiRef = useGridApiRef();
+      apiRef = useGridApiRef<GridApiPro>();
       const data = useData(props.nbRows || 100, props.nbCols || 10);
 
       return (
@@ -608,10 +609,10 @@ describe('<DataGridPro /> - Rows', () => {
   });
 
   describe('no virtualization', () => {
-    let apiRef: GridApiRef;
+    let apiRef: GridApiRefPro;
 
     const TestCase = (props: Partial<DataGridProProps> & { nbRows?: number; nbCols?: number }) => {
-      apiRef = useGridApiRef();
+      apiRef = useGridApiRef<GridApiPro>();
       const data = useData(props.nbRows || 100, props.nbCols || 10);
       return (
         <div style={{ width: 300, height: 300 }}>
@@ -641,10 +642,10 @@ describe('<DataGridPro /> - Rows', () => {
   });
 
   describe('Cell focus', () => {
-    let apiRef: GridApiRef;
+    let apiRef: GridApiRefPro;
 
     const TestCase = ({ rows }: Pick<DataGridProProps, 'rows'>) => {
-      apiRef = useGridApiRef();
+      apiRef = useGridApiRef<GridApiPro>();
 
       return (
         <div style={{ width: 300, height: 300 }}>

@@ -12,6 +12,7 @@ import { isNavigationKey, isSpaceKey } from '../../utils/keyboardUtils';
 import { GridEvents } from '../../models/events';
 import { getDataGridUtilityClass } from '../../gridClasses';
 import { DataGridProProcessedProps } from '../../models/props/DataGridProProps';
+import {GridApiPro} from "../../models/api/gridApi";
 
 type OwnerState = { classes: DataGridProProcessedProps['classes'] };
 
@@ -34,7 +35,7 @@ const GridTreeDataGroupingCell = (props: GridTreeDataGroupingCellProps) => {
   const { id, field, rowNode, hideDescendantCount } = props;
 
   const rootProps = useGridRootProps();
-  const apiRef = useGridApiContext();
+  const apiRef = useGridApiContext<GridApiPro>();
   const ownerState: OwnerState = { classes: rootProps.classes };
   const classes = useUtilityClasses(ownerState);
   const filteredDescendantCountLookup = useGridSelector(

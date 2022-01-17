@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useEventCallback } from '@mui/material/utils';
 import { GridEvents } from '../../../models/events';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
-import { GridApiRef } from '../../../models/api/gridApiRef';
+import { GridApiRefCommunity } from '../../../models/api/gridApiRef';
 import { GridEditRowApi } from '../../../models/api/gridEditRowApi';
 import { GridCellMode } from '../../../models/gridCell';
 import {
@@ -48,7 +48,7 @@ function isPromise(promise: any): promise is Promise<GridEditCellProps> {
  * @requires useGridColumns (state)
  */
 export function useGridEditRows(
-  apiRef: GridApiRef,
+  apiRef: GridApiRefCommunity,
   props: Pick<
     DataGridProcessedProps,
     | 'editRowsModel'
@@ -619,22 +619,20 @@ export function useGridEditRows(
   useGridApiOptionHandler(apiRef, GridEvents.rowEditStart, props.onRowEditStart);
   useGridApiOptionHandler(apiRef, GridEvents.rowEditStop, props.onRowEditStop);
 
-  useGridApiMethod<GridEditRowApi>(
-    apiRef,
-    {
-      setCellMode,
-      getCellMode,
-      setRowMode,
-      getRowMode,
-      isCellEditable,
-      commitCellChange,
-      commitRowChange,
-      setEditRowsModel,
-      getEditRowsModel,
-      setEditCellValue,
-    },
-    'EditRowApi',
-  );
+  const editRowsMethods: GridEditRowApi = {
+    setCellMode,
+    getCellMode,
+    setRowMode,
+    getRowMode,
+    isCellEditable,
+    commitCellChange,
+    commitRowChange,
+    setEditRowsModel,
+    getEditRowsModel,
+    setEditCellValue,
+  };
+
+  useGridApiMethod(apiRef, editRowsMethods, 'EditRowApi');
 
   React.useEffect(() => {
     if (props.editRowsModel !== undefined) {

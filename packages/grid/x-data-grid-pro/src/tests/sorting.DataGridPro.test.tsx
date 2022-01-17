@@ -2,7 +2,8 @@ import * as React from 'react';
 import {
   DataGridPro,
   DataGridProProps,
-  GridApiRef,
+  GridApiPro,
+  GridApiRefPro,
   GridSortModel,
   useGridApiRef,
 } from '@mui/x-data-grid-pro';
@@ -38,11 +39,11 @@ describe('<DataGridPro /> - Sorting', () => {
 
   const { render } = createRenderer();
 
-  let apiRef: GridApiRef;
+  let apiRef: GridApiRefPro;
 
   const TestCase = (props: Partial<DataGridProProps>) => {
     const { rows, ...other } = props;
-    apiRef = useGridApiRef();
+    apiRef = useGridApiRef<GridApiPro>();
     return (
       <div style={{ width: 300, height: 300 }}>
         <DataGridPro

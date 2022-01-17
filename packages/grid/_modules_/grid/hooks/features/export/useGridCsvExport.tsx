@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridApiRef } from '../../../models/api/gridApiRef';
+import { GridApiRefCommunity} from '../../../models/api/gridApiRef';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridSelector } from '../../utils/useGridSelector';
 import { allGridColumnsSelector, visibleGridColumnsSelector } from '../columns';
@@ -18,7 +18,7 @@ import { GridStateColDef } from '../../../models';
  * @requires useGridSelection (state)
  * @requires useGridParamsApi (method)
  */
-export const useGridCsvExport = (apiRef: GridApiRef): void => {
+export const useGridCsvExport = (apiRef: GridApiRefCommunity): void => {
   const logger = useGridLogger(apiRef, 'useGridCsvExport');
   const visibleColumns = useGridSelector(apiRef, visibleGridColumnsSelector);
   const visibleSortedRowIds = useGridSelector(apiRef, gridVisibleSortedRowIdsSelector);

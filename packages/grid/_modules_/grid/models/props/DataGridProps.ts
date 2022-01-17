@@ -10,7 +10,7 @@ import { GridSortDirection, GridSortModel } from '../gridSortModel';
 import { GridSlotsComponent } from '../gridSlotsComponent';
 import { GridRowIdGetter, GridRowsProp } from '../gridRows';
 import { GridEventListener, GridEvents } from '../events';
-import { GridApiRef, GridCallbackDetails, GridLocaleText } from '../api';
+import { GridApiRefCommunity, GridCallbackDetails, GridLocaleText} from '../api';
 import type { GridColumns, GridColumnTypesRecord } from '../colDef';
 import { GridClasses } from '../../gridClasses';
 import { GridCellParams, GridRowParams } from '../params';
@@ -342,8 +342,10 @@ export const DATA_GRID_PROPS_DEFAULT_VALUES: DataGridPropsWithDefaultValues = {
 export interface DataGridPropsWithoutDefaultValue extends CommonProps {
   /**
    * The ref object that allows grid manipulation. Can be instantiated with [[useGridApiRef()]].
+   * TODO: Remove `@internal` when opening `apiRef` to Community plan
+   * @internal
    */
-  apiRef?: GridApiRef;
+  apiRef?: GridApiRefCommunity;
   /**
    * Signal to the underlying logic what version of the public component API
    * of the data grid is exposed [[GridSignature]].

@@ -1,4 +1,5 @@
 import type { GridApiRef } from '../../models/api/gridApiRef';
+import type { GridApiCommunity } from '../../models/api/gridApi';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 
 import { useGridLoggerFactory } from './useGridLoggerFactory';
@@ -12,7 +13,7 @@ import { useGridStateInitialization } from './useGridStateInitialization';
 /**
  * Initialize the technical pieces of the DataGrid (logger, state, ...) that any DataGrid implementation needs
  */
-export const useGridInitialization = (apiRef: GridApiRef, props: DataGridProcessedProps) => {
+export const useGridInitialization = <GridApi extends GridApiCommunity>(apiRef: GridApiRef<GridApi>, props: DataGridProcessedProps) => {
   useGridLoggerFactory(apiRef, props);
   useGridApiInitialization(apiRef, props);
   useGridErrorHandler(apiRef, props);

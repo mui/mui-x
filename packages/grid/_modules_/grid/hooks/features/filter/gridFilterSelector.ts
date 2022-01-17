@@ -1,6 +1,6 @@
 import { createSelector } from 'reselect';
 import { GridFilterItem } from '../../../models/gridFilterItem';
-import { GridState } from '../../../models/gridState';
+import { GridStateCommunity } from '../../../models/gridState';
 import { gridSortedRowEntriesSelector } from '../sorting/gridSortingSelector';
 import { gridColumnLookupSelector } from '../columns/gridColumnsSelector';
 import { gridRowTreeDepthSelector, gridRowTreeSelector } from '../rows';
@@ -9,7 +9,7 @@ import { gridRowTreeDepthSelector, gridRowTreeSelector } from '../rows';
  * @category Filtering
  * @ignore - do not document.
  */
-export const gridFilterStateSelector = (state: GridState) => state.filter;
+export const gridFilterStateSelector = (state: GridStateCommunity) => state.filter;
 
 /**
  * Get the current filter model.

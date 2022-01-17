@@ -7,7 +7,13 @@ import {
   getCell,
   raf,
 } from 'test/utils/helperFn';
-import { GridApiRef, useGridApiRef, DataGridPro, gridClasses } from '@mui/x-data-grid-pro';
+import {
+  useGridApiRef,
+  DataGridPro,
+  gridClasses,
+  GridApiPro,
+  GridApiRefPro,
+} from '@mui/x-data-grid-pro';
 import { useData } from 'storybook/src/hooks/useData';
 import { spy } from 'sinon';
 
@@ -52,11 +58,11 @@ describe('<DataGridPro /> - Reorder', () => {
 
   describe('Columns', () => {
     it('resizing after columns reorder should respect the new columns order', async () => {
-      let apiRef: GridApiRef;
+      let apiRef: GridApiRefPro;
 
       const TestCase = (props: { width: number }) => {
         const { width } = props;
-        apiRef = useGridApiRef();
+        apiRef = useGridApiRef<GridApiPro>();
         return (
           <div style={{ width, height: 300 }}>
             <DataGridPro
@@ -81,12 +87,12 @@ describe('<DataGridPro /> - Reorder', () => {
   });
 
   it('should not reset the column order when a prop change', () => {
-    let apiRef: GridApiRef;
+    let apiRef: GridApiRefPro;
     const rows = [{ id: 0, brand: 'Nike' }];
     const columns = [{ field: 'brand' }, { field: 'desc' }, { field: 'type' }];
 
     const Test = () => {
-      apiRef = useGridApiRef();
+      apiRef = useGridApiRef<GridApiPro>();
 
       return (
         <div style={{ width: 300, height: 300 }}>
@@ -104,12 +110,12 @@ describe('<DataGridPro /> - Reorder', () => {
   });
 
   it('should allow to reorder columns by dropping outside the header row', () => {
-    let apiRef: GridApiRef;
+    let apiRef: GridApiRefPro;
     const rows = [{ id: 0, brand: 'Nike' }];
     const columns = [{ field: 'brand' }, { field: 'desc' }, { field: 'type' }];
 
     const Test = () => {
-      apiRef = useGridApiRef();
+      apiRef = useGridApiRef<GridApiPro>();
 
       return (
         <div style={{ width: 300, height: 300 }}>
@@ -135,12 +141,12 @@ describe('<DataGridPro /> - Reorder', () => {
   });
 
   it('should cancel the reordering when dropping the column outside the grid', () => {
-    let apiRef: GridApiRef;
+    let apiRef: GridApiRefPro;
     const rows = [{ id: 0, brand: 'Nike' }];
     const columns = [{ field: 'brand' }, { field: 'desc' }, { field: 'type' }];
 
     const Test = () => {
-      apiRef = useGridApiRef();
+      apiRef = useGridApiRef<GridApiPro>();
 
       return (
         <div style={{ width: 300, height: 300 }}>
@@ -166,12 +172,12 @@ describe('<DataGridPro /> - Reorder', () => {
   });
 
   it('should keep the order of the columns when dragStart is fired and disableColumnReorder=true', () => {
-    let apiRef: GridApiRef;
+    let apiRef: GridApiRefPro;
     const rows = [{ id: 0, brand: 'Nike' }];
     const columns = [{ field: 'brand' }, { field: 'desc' }, { field: 'type' }];
 
     const Test = () => {
-      apiRef = useGridApiRef();
+      apiRef = useGridApiRef<GridApiPro>();
 
       return (
         <div style={{ width: 300, height: 300 }}>
@@ -191,12 +197,12 @@ describe('<DataGridPro /> - Reorder', () => {
   });
 
   it('should keep the order of the columns when dragEnd is fired and disableColumnReorder=true', () => {
-    let apiRef: GridApiRef;
+    let apiRef: GridApiRefPro;
     const rows = [{ id: 0, brand: 'Nike' }];
     const columns = [{ field: 'brand' }, { field: 'desc' }, { field: 'type' }];
 
     const Test = () => {
-      apiRef = useGridApiRef();
+      apiRef = useGridApiRef<GridApiPro>();
 
       return (
         <div style={{ width: 300, height: 300 }}>
@@ -215,9 +221,9 @@ describe('<DataGridPro /> - Reorder', () => {
 
   it('should call onColumnOrderChange after the column has been reordered', () => {
     const onColumnOrderChange = spy();
-    let apiRef: GridApiRef;
+    let apiRef: GridApiRefPro;
     const Test = () => {
-      apiRef = useGridApiRef();
+      apiRef = useGridApiRef<GridApiPro>();
       const data = useData(1, 3);
 
       return (
@@ -252,9 +258,9 @@ describe('<DataGridPro /> - Reorder', () => {
     const handleDragEnter = spy();
     const handleDragOver = spy();
     const handleDragEnd = spy();
-    let apiRef: GridApiRef;
+    let apiRef: GridApiRefPro;
     const Test = () => {
-      apiRef = useGridApiRef();
+      apiRef = useGridApiRef<GridApiPro>();
       const data = useData(1, 3);
 
       return (
@@ -291,7 +297,7 @@ describe('<DataGridPro /> - Reorder', () => {
 
   describe('column disableReorder', () => {
     it('should not allow to start dragging a column with disableReorder=true', () => {
-      let apiRef: GridApiRef;
+      let apiRef: GridApiRefPro;
       const rows = [{ id: 0, brand: 'Nike' }];
       const columns = [
         { field: 'brand' },
@@ -300,7 +306,7 @@ describe('<DataGridPro /> - Reorder', () => {
       ];
 
       const Test = () => {
-        apiRef = useGridApiRef();
+        apiRef = useGridApiRef<GridApiPro>();
 
         return (
           <div style={{ width: 300, height: 300 }}>
@@ -330,7 +336,7 @@ describe('<DataGridPro /> - Reorder', () => {
     });
 
     it('should not allow to drag left of first visible column if it has disableReorder=true', () => {
-      let apiRef: GridApiRef;
+      let apiRef: GridApiRefPro;
       const rows = [{ id: 0, brand: 'Nike' }];
       const columns = [
         { field: 'brand', disableReorder: true },
@@ -339,7 +345,7 @@ describe('<DataGridPro /> - Reorder', () => {
       ];
 
       const Test = () => {
-        apiRef = useGridApiRef();
+        apiRef = useGridApiRef<GridApiPro>();
 
         return (
           <div style={{ width: 300, height: 300 }}>
@@ -365,7 +371,7 @@ describe('<DataGridPro /> - Reorder', () => {
     });
 
     it('should not allow to drag right of last visible column if it has disableReorder=true', () => {
-      let apiRef: GridApiRef;
+      let apiRef: GridApiRefPro;
       const rows = [{ id: 0, brand: 'Nike' }];
       const columns = [
         { field: 'brand' },
@@ -374,7 +380,7 @@ describe('<DataGridPro /> - Reorder', () => {
       ];
 
       const Test = () => {
-        apiRef = useGridApiRef();
+        apiRef = useGridApiRef<GridApiPro>();
 
         return (
           <div style={{ width: 300, height: 300 }}>

@@ -2,7 +2,7 @@ import { GridCellMode, GridCellValue } from '../gridCell';
 import { GridRowId, GridRowModel, GridRowTreeNodeConfig } from '../gridRows';
 import type { GridColDef, GridStateColDef } from '../colDef';
 import { GridEditCellProps } from '../gridEditRowModel';
-import type { GridApi } from '../api/gridApi';
+import type { GridApiCommunity } from '../api/gridApi';
 
 /**
  * Object passed as parameter in the column [[GridColDef]] cell renderer.
@@ -65,7 +65,12 @@ export interface GridCellParams<V = any, R = any, F = V> {
 /**
  * GridCellParams containing api.
  */
-export interface GridRenderCellParams<V = any, R = any, F = V> extends GridCellParams<V, R, F> {
+export interface GridRenderCellParams<
+  V = any,
+  R = any,
+  F = V,
+  GridApi extends GridApiCommunity = GridApiCommunity,
+> extends GridCellParams<V, R, F> {
   /**
    * GridApi that let you manipulate the grid.
    */
@@ -75,7 +80,8 @@ export interface GridRenderCellParams<V = any, R = any, F = V> extends GridCellP
 /**
  * GridEditCellProps containing api.
  */
-export interface GridRenderEditCellParams extends GridEditCellProps {
+export interface GridRenderEditCellParams<GridApi extends GridApiCommunity = GridApiCommunity>
+  extends GridEditCellProps {
   /**
    * GridApi that let you manipulate the grid.
    */
@@ -85,8 +91,11 @@ export interface GridRenderEditCellParams extends GridEditCellProps {
 /**
  * Parameters passed when calling `colDef.valueGetter` in the rendering sequence.
  */
-export interface GridValueGetterFullParams<V = any, R = any>
-  extends Omit<GridCellParams<V, R>, 'formattedValue' | 'isEditable'> {
+export interface GridValueGetterFullParams<
+  V = any,
+  R = any,
+  GridApi extends GridApiCommunity = GridApiCommunity,
+> extends Omit<GridCellParams<V, R>, 'formattedValue' | 'isEditable'> {
   /**
    * GridApi that let you manipulate the grid.
    */
@@ -141,7 +150,7 @@ export interface GridValueSetterParams {
 /**
  * Object passed as parameter in the column [[GridColDef]] value formatter callback.
  */
-export interface GridValueFormatterParams {
+export interface GridValueFormatterParams<GridApi extends GridApiCommunity = GridApiCommunity> {
   /**
    * The grid row id.
    * It is not available when the value formatter is called by the filter panel.

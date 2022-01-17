@@ -2,7 +2,7 @@ import * as React from 'react';
 import { createRenderer, screen } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { GridApiRef, useGridApiRef, DataGridPro, ptBR } from '@mui/x-data-grid-pro';
+import { useGridApiRef, DataGridPro, ptBR, GridApiPro, GridApiRefPro } from '@mui/x-data-grid-pro';
 
 describe('<DataGridPro /> - Layout', () => {
   const { render } = createRenderer();
@@ -83,10 +83,10 @@ describe('<DataGridPro /> - Layout', () => {
 
   describe('columns width', () => {
     it('should resize flex: 1 column when changing column visibility to avoid exceeding grid width', () => {
-      let apiRef: GridApiRef;
+      let apiRef: GridApiRefPro;
 
       const TestCase = (props) => {
-        apiRef = useGridApiRef();
+        apiRef = useGridApiRef<GridApiPro>();
 
         return (
           <div style={{ width: 300, height: 500 }}>

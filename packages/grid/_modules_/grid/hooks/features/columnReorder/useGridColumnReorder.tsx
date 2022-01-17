@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { useGridLogger } from '../../utils/useGridLogger';
-import { GridApiRef } from '../../../models/api/gridApiRef';
+import { GridApiRefPro } from '../../../models/api/gridApiRef';
 import { GridEvents, GridEventListener } from '../../../models/events';
 import { getDataGridUtilityClass } from '../../../gridClasses';
 import { CursorCoordinates } from '../../../models/cursorCoordinates';
@@ -47,7 +47,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
  * @requires useGridColumns (method)
  */
 export const useGridColumnReorder = (
-  apiRef: GridApiRef,
+  apiRef: GridApiRefPro,
   props: Pick<DataGridProProcessedProps, 'disableColumnReorder' | 'classes'>,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridColumnReorder');

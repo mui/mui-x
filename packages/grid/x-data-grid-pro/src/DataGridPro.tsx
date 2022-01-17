@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { LicenseInfo } from '@mui/x-license-pro';
 import { chainPropTypes, ponyfillGlobal } from '@mui/utils';
 import {
+  GridApiPro,
   GridBody,
   GridErrorHandler,
   GridFooterPlaceholder,
@@ -34,7 +35,7 @@ const DataGridProRaw = React.forwardRef<HTMLDivElement, DataGridProProps>(functi
   inProps,
   ref,
 ) {
-  const apiRef = useGridApiRef(inProps.apiRef);
+  const apiRef = useGridApiRef<GridApiPro>(inProps.apiRef);
   const props = useDataGridProProps(inProps);
   useDataGridProComponent(apiRef, props);
 

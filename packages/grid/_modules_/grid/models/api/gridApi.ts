@@ -25,9 +25,10 @@ import type { GridDimensionsApi } from '../../hooks/features/dimensions';
 import type { GridPaginationApi } from '../../hooks/features/pagination';
 
 /**
- * The full grid API.
+ * The api of `DataGrid`.
+ * TODO: Move to `x-data-grid` folder
  */
-export interface GridApi
+export interface GridApiCommunity
   extends GridCoreApi,
     GridStateApi,
     GridLoggerApi,
@@ -51,5 +52,16 @@ export interface GridApi
     GridDisableVirtualizationApi,
     GridLocaleTextApi,
     GridClipboardApi,
-    GridScrollApi,
-    GridColumnPinningApi {}
+    GridScrollApi {}
+
+/**
+ * The api of `DataGridPro`.
+ * TODO: Move to `x-data-grid-pro` folder
+ */
+export interface GridApiPro extends GridApiCommunity, GridColumnPinningApi {}
+
+/**
+ * The full grid API.
+ * @deprecated Use `GridApiCommunity` or `GridApiPro` instead.
+ */
+export interface GridApi extends GridApiPro {}

@@ -8,7 +8,7 @@ import {
   GridRowsProp,
   DataGridProProps,
   useGridSelector,
-  gridFilteredDescendantCountLookupSelector,
+  gridFilteredDescendantCountLookupSelector, GridApiPro,
 } from '@mui/x-data-grid-pro';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -22,7 +22,7 @@ export const isNavigationKey = (key: string) =>
 
 const CustomGridTreeDataGroupingCell = (props: GridRenderCellParams) => {
   const { id, field, rowNode } = props;
-  const apiRef = useGridApiContext();
+  const apiRef = useGridApiContext<GridApiPro>();
   const filteredDescendantCountLookup = useGridSelector(
     apiRef,
     gridFilteredDescendantCountLookupSelector,

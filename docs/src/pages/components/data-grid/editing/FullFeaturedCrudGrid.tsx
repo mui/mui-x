@@ -10,14 +10,13 @@ import {
   GridRowsProp,
   useGridApiRef,
   DataGridPro,
-  GridApiRef,
   GridColumns,
   GridRowParams,
   MuiEvent,
   GridToolbarContainer,
   GridActionsCellItem,
   GridEventListener,
-  GridEvents,
+  GridEvents, GridApiRefPro,
 } from '@mui/x-data-grid-pro';
 import {
   randomCreatedDate,
@@ -65,7 +64,7 @@ const rows: GridRowsProp = [
 ];
 
 interface EditToolbarProps {
-  apiRef: GridApiRef;
+  apiRef: GridApiRefPro;
 }
 
 function EditToolbar(props: EditToolbarProps) {

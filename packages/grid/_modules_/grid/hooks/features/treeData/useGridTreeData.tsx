@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridApiRef } from '../../../models/api/gridApiRef';
+import { GridApiRefPro } from '../../../models/api/gridApiRef';
 import { DataGridProProcessedProps } from '../../../models/props/DataGridProProps';
 import {
   GRID_TREE_DATA_GROUPING_COL_DEF,
@@ -39,7 +39,7 @@ const TREE_DATA_GROUPING_NAME = 'tree-data';
  * @requires useGridRowGroupsPreProcessing (method)
  */
 export const useGridTreeData = (
-  apiRef: GridApiRef,
+  apiRef: GridApiRefPro,
   props: Pick<
     DataGridProProcessedProps,
     | 'treeData'

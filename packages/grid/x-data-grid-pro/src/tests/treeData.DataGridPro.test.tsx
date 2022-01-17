@@ -12,7 +12,8 @@ import {
   DataGridPro,
   DataGridProProps,
   GRID_TREE_DATA_GROUPING_FIELD,
-  GridApiRef,
+  GridApiPro,
+  GridApiRefPro,
   GridLinkOperator,
   GridRowsProp,
   GridRowTreeNodeConfig,
@@ -58,10 +59,10 @@ const baselineProps: DataGridProProps = {
 describe('<DataGridPro /> - Tree Data', () => {
   const { render } = createRenderer();
 
-  let apiRef: GridApiRef;
+  let apiRef: GridApiRefPro;
 
   const Test = (props: Partial<DataGridProProps>) => {
-    apiRef = useGridApiRef();
+    apiRef = useGridApiRef<GridApiPro>();
 
     return (
       <div style={{ width: 300, height: 800 }}>

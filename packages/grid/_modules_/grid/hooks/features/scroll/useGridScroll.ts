@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { GridCellIndexCoordinates } from '../../../models/gridCell';
-import { GridApiRef } from '../../../models/api/gridApiRef';
+import { GridApiRefCommunity } from '../../../models/api/gridApiRef';
 import { useGridLogger } from '../../utils/useGridLogger';
 import {
   gridColumnsMetaSelector,
@@ -40,7 +40,7 @@ function scrollIntoView(dimensions) {
  * @requires useGridDensity (state)
  */
 export const useGridScroll = (
-  apiRef: GridApiRef,
+  apiRef: GridApiRefCommunity,
   props: Pick<DataGridProcessedProps, 'pagination'>,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridScroll');

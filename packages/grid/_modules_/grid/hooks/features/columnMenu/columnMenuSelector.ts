@@ -1,3 +1,3 @@
-import { GridState } from '../../../models/gridState';
+import { GridStateCommunity } from '../../../models/gridState';
 
-export const gridColumnMenuSelector = (state: GridState) => state.columnMenu;
+export const gridColumnMenuSelector = (state: GridStateCommunity) => state.columnMenu;

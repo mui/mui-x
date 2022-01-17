@@ -22,13 +22,15 @@ import type {
 } from '../hooks/features/filter/gridFilterState';
 import { GridColumnPinningState } from '../hooks/features/columnPinning/gridColumnPinningState';
 
-export interface GridState {
+/**
+ * The state of `DataGrid`.
+ * TODO: Move to `x-data-grid` folder
+ */
+export interface GridStateCommunity {
   rows: GridRowsState;
   editRows: GridEditRowsModel;
   pagination: GridPaginationState;
   columns: GridColumnsState;
-  columnReorder: GridColumnReorderState;
-  columnResize: GridColumnResizeState;
   columnMenu: GridColumnMenuState;
   sorting: GridSortingState;
   focus: GridFocusState;
@@ -38,8 +40,22 @@ export interface GridState {
   preferencePanel: GridPreferencePanelState;
   density: GridDensityState;
   error?: any;
+}
+
+/**
+ * The state of `DataGridPro`.
+ * TODO: Move to `x-data-grid-pro` folder
+ */
+export interface GridStatePro extends GridStateCommunity {
+  columnReorder: GridColumnReorderState;
+  columnResize: GridColumnResizeState;
   pinnedColumns: GridColumnPinningState;
 }
+
+/**
+ * @deprecated Use `GridStateCommunity` or `GridStatePro` instead.
+ */
+export interface GridState extends GridStatePro {}
 
 export interface GridInitialState {
   pagination?: GridPaginationInitialState;

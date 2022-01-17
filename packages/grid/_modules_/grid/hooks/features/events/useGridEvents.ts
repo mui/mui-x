@@ -1,4 +1,4 @@
-import { GridApiRef } from '../../../models/api/gridApiRef';
+import { GridApiRefCommunity } from '../../../models/api/gridApiRef';
 import { GridEvents } from '../../../models/events';
 import { useGridApiOptionHandler } from '../../utils/useGridApiEventHandler';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
@@ -8,7 +8,7 @@ import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
  * @requires useGridColumns (event) - can be after, async only
  */
 export function useGridEvents(
-  apiRef: GridApiRef,
+  apiRef: GridApiRefCommunity,
   props: Pick<
     DataGridProcessedProps,
     | 'onColumnHeaderClick'

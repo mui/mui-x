@@ -1,9 +1,8 @@
 import * as React from 'react';
 import { Logger } from '../../models/logger';
+import { GridApiRefCommunity } from '../../models/api/gridApiRef';
 
-import { GridApiRef } from '../../models/api/gridApiRef';
-
-export function useGridLogger(apiRef: GridApiRef, name: string): Logger {
+export function useGridLogger(apiRef: GridApiRefCommunity, name: string): Logger {
   const logger = React.useRef<Logger | null>(null);
 
   if (logger.current) {

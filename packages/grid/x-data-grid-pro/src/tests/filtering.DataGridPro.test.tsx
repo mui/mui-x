@@ -1,6 +1,6 @@
 import {
   getDefaultGridFilterModel,
-  GridApiRef,
+  GridApiRefPro,
   DataGridProProps,
   GridFilterModel,
   GridLinkOperator,
@@ -9,6 +9,7 @@ import {
   SUBMIT_FILTER_STROKE_TIME,
   useGridApiRef,
   DataGridPro,
+  GridApiPro,
 } from '@mui/x-data-grid-pro';
 import { createRenderer, fireEvent, screen } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
@@ -21,7 +22,7 @@ const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 describe('<DataGridPro /> - Filter', () => {
   const { clock, render } = createRenderer({ clock: 'fake' });
 
-  let apiRef: GridApiRef;
+  let apiRef: GridApiRefPro;
 
   const baselineProps = {
     autoHeight: isJSDOM,
@@ -44,7 +45,7 @@ describe('<DataGridPro /> - Filter', () => {
 
   const TestCase = (props: Partial<DataGridProProps>) => {
     const { rows, ...other } = props;
-    apiRef = useGridApiRef();
+    apiRef = useGridApiRef<GridApiPro>();
     return (
       <div style={{ width: 300, height: 300 }}>
         <DataGridPro

@@ -1,7 +1,7 @@
 // TODO: Move to `x-data-grid-pro` folder
 import { GridRowModel, GridRowTreeNodeConfig } from '../gridRows';
 import { GridEventListener, GridEvents } from '../events';
-import { GridCallbackDetails, GridPinnedColumns } from '../api';
+import {GridApiRefPro, GridCallbackDetails, GridPinnedColumns} from '../api';
 import { GridGroupingColDefOverride, GridGroupingColDefOverrideParams } from '../colDef';
 import {
   DataGridPropsWithoutDefaultValue,
@@ -91,6 +91,10 @@ export const DATA_GRID_PRO_PROPS_DEFAULT_VALUES: DataGridProPropsWithDefaultValu
 };
 
 export interface DataGridProPropsWithoutDefaultValue extends DataGridPropsWithoutDefaultValue {
+  /**
+   * The ref object that allows grid manipulation. Can be instantiated with [[useGridApiRef()]].
+   */
+  apiRef?: GridApiRefPro;
   /**
    * Determines the path of a row in the tree data.
    * For instance, a row with the path ["A", "B"] is the child of the row with the path ["A"].

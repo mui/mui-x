@@ -4,11 +4,12 @@ import { spy } from 'sinon';
 import { getCell, getColumnValues, getRow, getRows } from 'test/utils/helperFn';
 import { createRenderer, fireEvent, screen } from '@mui/monorepo/test/utils';
 import {
-  GridApiRef,
+  GridApiRefPro,
   useGridApiRef,
   DataGridPro,
   GridEvents,
   DataGridProProps,
+  GridApiPro,
 } from '@mui/x-data-grid-pro';
 import { getData } from 'storybook/src/data/data-service';
 
@@ -28,14 +29,14 @@ function getSelectedRowIds() {
 describe('<DataGridPro /> - Selection', () => {
   const { render } = createRenderer();
 
-  let apiRef: GridApiRef;
+  let apiRef: GridApiRefPro;
 
   const TestDataGridSelection = ({
     rowLength = 4,
     ...other
   }: Omit<DataGridProProps, 'rows' | 'columns' | 'apiRef'> &
     Partial<Pick<DataGridProProps, 'rows' | 'columns'>> & { rowLength?: number }) => {
-    apiRef = useGridApiRef();
+    apiRef = useGridApiRef<GridApiPro>();
 
     const data = React.useMemo(() => getData(rowLength, 2), [rowLength]);
 

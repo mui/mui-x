@@ -3,7 +3,6 @@ import { createRenderer, fireEvent, screen, waitFor } from '@mui/monorepo/test/u
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import {
-  GridApiRef,
   DataGridProProps,
   useGridApiRef,
   DataGridPro,
@@ -11,6 +10,8 @@ import {
   GridEvents,
   gridColumnLookupSelector,
   allGridColumnsFieldsSelector,
+  GridApiPro,
+  GridApiRefPro,
 } from '@mui/x-data-grid-pro';
 import { getColumnHeaderCell, getCell } from 'test/utils/helperFn';
 
@@ -19,7 +20,7 @@ const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 describe('<DataGridPro /> - Columns', () => {
   const { clock, render } = createRenderer({ clock: 'fake' });
 
-  let apiRef: GridApiRef;
+  let apiRef: GridApiRefPro;
 
   const baselineProps = {
     autoHeight: isJSDOM,
@@ -41,7 +42,7 @@ describe('<DataGridPro /> - Columns', () => {
   };
 
   const Test = (props: Partial<DataGridProProps>) => {
-    apiRef = useGridApiRef();
+    apiRef = useGridApiRef<GridApiPro>();
     return (
       <div style={{ width: 300, height: 300 }}>
         <DataGridPro apiRef={apiRef} {...baselineProps} {...props} />

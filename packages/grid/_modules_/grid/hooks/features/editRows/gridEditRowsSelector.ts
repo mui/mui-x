@@ -1,3 +1,3 @@
-import { GridState } from '../../../models/gridState';
+import { GridStateCommunity } from '../../../models/gridState';
 
-export const gridEditRowsStateSelector = (state: GridState) => state.editRows;
+export const gridEditRowsStateSelector = (state: GridStateCommunity) => state.editRows;

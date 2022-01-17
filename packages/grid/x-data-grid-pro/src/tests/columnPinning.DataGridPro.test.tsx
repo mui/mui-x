@@ -1,11 +1,12 @@
 import * as React from 'react';
 import {
   DataGridPro,
-  GridApiRef,
+  GridApiRefPro,
   useGridApiRef,
   DataGridProProps,
   gridClasses,
   GridPinnedPosition,
+  GridApiPro,
 } from '@mui/x-data-grid-pro';
 import { spy } from 'sinon';
 import { expect } from 'chai';
@@ -30,10 +31,10 @@ const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 describe('<DataGridPro /> - Column pinning', () => {
   const { render, clock } = createRenderer({ clock: 'fake' });
 
-  let apiRef: GridApiRef;
+  let apiRef: GridApiRefPro;
 
   const TestCase = ({ nbCols = 20, ...other }: Partial<DataGridProProps> & { nbCols?: number }) => {
-    apiRef = useGridApiRef();
+    apiRef = useGridApiRef<GridApiPro>();
     const data = useData(1, nbCols);
     return (
       <div style={{ width: 302, height: 300 }}>

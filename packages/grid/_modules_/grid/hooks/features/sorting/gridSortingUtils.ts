@@ -1,6 +1,6 @@
 import { GridSortingModelApplier } from './gridSortingState';
 import {
-  GridApiRef,
+  GridApiRefCommunity,
   GridComparatorFn,
   GridRowId,
   GridRowTreeNodeConfig,
@@ -23,10 +23,10 @@ interface GridParsedSortItem {
 /**
  * Transform an item of the sorting model into a method comparing two rows.
  * @param {GridSortItem} sortItem The sort item we want to apply.
- * @param {GridApiRef} apiRef The API of the grid.
+ * @param {GridApiRefCommunity} apiRef The API of the grid.
  * @returns {GridParsedSortItem | null} The parsed sort item. Returns `null` is the sort item is not valid.
  */
-const parseSortItem = (sortItem: GridSortItem, apiRef: GridApiRef): GridParsedSortItem | null => {
+const parseSortItem = (sortItem: GridSortItem, apiRef: GridApiRefCommunity): GridParsedSortItem | null => {
   const column = apiRef.current.getColumn(sortItem.field);
   if (!column) {
     return null;
@@ -85,7 +85,7 @@ const compareRows = (
  */
 export const buildAggregatedSortingApplier = (
   sortModel: GridSortModel,
-  apiRef: GridApiRef,
+  apiRef: GridApiRefCommunity,
 ): GridSortingModelApplier | null => {
   const comparatorList = sortModel
     .map((item) => parseSortItem(item, apiRef))

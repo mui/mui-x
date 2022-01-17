@@ -1,5 +1,5 @@
 import { createSelector } from 'reselect';
-import { GridState } from '../../../models/gridState';
+import { GridStateCommunity } from '../../../models/gridState';
 import {
   gridVisibleSortedRowEntriesSelector,
   gridVisibleSortedRowIdsSelector,
@@ -11,7 +11,7 @@ import { gridRowTreeDepthSelector, gridRowTreeSelector } from '../rows/gridRowsS
  * @category Pagination
  * @ignore - do not document.
  */
-export const gridPaginationSelector = (state: GridState) => state.pagination;
+export const gridPaginationSelector = (state: GridStateCommunity) => state.pagination;
 
 /**
  * Get the index of the page to render if the pagination is enabled
