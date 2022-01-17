@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridApiRefCommunity} from '../../../models/api/gridApiRef';
+import { GridApiRefCommunity } from '../../../models/api/gridApiRef';
 import { GridParamsApi } from '../../../models/api/gridParamsApi';
 import { GridRowId } from '../../../models/gridRows';
 import { GridCellParams, GridValueGetterFullParams } from '../../../models/params/gridCellParams';

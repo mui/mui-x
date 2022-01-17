@@ -10,7 +10,7 @@ import { GridSortDirection, GridSortModel } from '../gridSortModel';
 import { GridSlotsComponent } from '../gridSlotsComponent';
 import { GridRowIdGetter, GridRowsProp } from '../gridRows';
 import { GridEventListener, GridEvents } from '../events';
-import { GridApiRefCommunity, GridCallbackDetails, GridLocaleText} from '../api';
+import { GridApiRefCommunity, GridCallbackDetails, GridLocaleText } from '../api';
 import type { GridColumns, GridColumnTypesRecord } from '../colDef';
 import { GridClasses } from '../../gridClasses';
 import { GridCellParams, GridRowParams } from '../params';

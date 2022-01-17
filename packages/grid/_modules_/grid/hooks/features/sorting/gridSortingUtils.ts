@@ -26,7 +26,10 @@ interface GridParsedSortItem {
  * @param {GridApiRefCommunity} apiRef The API of the grid.
  * @returns {GridParsedSortItem | null} The parsed sort item. Returns `null` is the sort item is not valid.
  */
-const parseSortItem = (sortItem: GridSortItem, apiRef: GridApiRefCommunity): GridParsedSortItem | null => {
+const parseSortItem = (
+  sortItem: GridSortItem,
+  apiRef: GridApiRefCommunity,
+): GridParsedSortItem | null => {
   const column = apiRef.current.getColumn(sortItem.field);
   if (!column) {
     return null;

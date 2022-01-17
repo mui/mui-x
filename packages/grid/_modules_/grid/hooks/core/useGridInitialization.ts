@@ -13,7 +13,10 @@ import { useGridStateInitialization } from './useGridStateInitialization';
 /**
  * Initialize the technical pieces of the DataGrid (logger, state, ...) that any DataGrid implementation needs
  */
-export const useGridInitialization = <GridApi extends GridApiCommunity>(apiRef: GridApiRef<GridApi>, props: DataGridProcessedProps) => {
+export const useGridInitialization = <GridApi extends GridApiCommunity>(
+  apiRef: GridApiRef<GridApi>,
+  props: DataGridProcessedProps,
+) => {
   useGridLoggerFactory(apiRef, props);
   useGridApiInitialization(apiRef, props);
   useGridErrorHandler(apiRef, props);

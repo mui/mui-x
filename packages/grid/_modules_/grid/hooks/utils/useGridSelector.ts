@@ -1,9 +1,12 @@
 import { GridApiRef } from '../../models/api/gridApiRef';
-import {GridApiCommunity} from "../../models/api/gridApi";
+import { GridApiCommunity } from '../../models/api/gridApi';
 
 let warnedOnceStateNotInitialized = false;
 
-export const useGridSelector = <GridApi extends GridApiCommunity, T>(apiRef: GridApiRef<GridApi>, selector: (state: GridApi['state']) => T) => {
+export const useGridSelector = <GridApi extends GridApiCommunity, T>(
+  apiRef: GridApiRef<GridApi>,
+  selector: (state: GridApi['state']) => T,
+) => {
   if (process.env.NODE_ENV !== 'production') {
     if (!warnedOnceStateNotInitialized && !apiRef.current.state) {
       warnedOnceStateNotInitialized = true;

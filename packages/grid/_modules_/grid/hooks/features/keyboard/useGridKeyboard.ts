@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { gridClasses } from '../../../gridClasses';
 import { GridEvents, GridEventListener } from '../../../models/events';
-import { GridApiRefCommunity} from '../../../models/api/gridApiRef';
+import { GridApiRefCommunity } from '../../../models/api/gridApiRef';
 import { GridCellParams } from '../../../models/params/gridCellParams';
 import { findParentElementFromClassName, isGridCellRoot } from '../../../utils/domUtils';
 import { isNavigationKey } from '../../../utils/keyboardUtils';

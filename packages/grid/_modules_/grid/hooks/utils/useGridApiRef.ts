@@ -1,12 +1,10 @@
 import * as React from 'react';
 import { GridApiRef } from '../../models/api/gridApiRef';
-import {GridApiCommunity, GridApiPro} from '../../models/api/gridApi';
+import { GridApiCommunity, GridApiPro } from '../../models/api/gridApi';
 import { EventManager } from '../../utils/EventManager';
 
 // Public developers facing overload
-export function useGridApiRef<
-  GridApi extends GridApiCommunity = GridApiPro,
->(): GridApiRef<GridApi>;
+export function useGridApiRef<GridApi extends GridApiCommunity = GridApiPro>(): GridApiRef<GridApi>;
 
 // Internal grid facing overload
 export function useGridApiRef<GridApi extends GridApiCommunity = GridApiCommunity>(

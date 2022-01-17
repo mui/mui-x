@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridApiRefCommunity} from '../../models/api/gridApiRef';
+import { GridApiRefCommunity } from '../../models/api/gridApiRef';
 import { GridEventListener, GridEvents, GridEventsStr } from '../../models/events';
 import { UnregisterToken, CleanupTracking } from '../../utils/cleanupTracking/CleanupTracking';
 import { EventListenerOptions } from '../../utils/EventManager';

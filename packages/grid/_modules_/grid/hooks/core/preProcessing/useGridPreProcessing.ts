@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridApiRefCommunity} from '../../../models/api/gridApiRef';
+import { GridApiRefCommunity } from '../../../models/api/gridApiRef';
 import { GridPreProcessingApi, PreProcessorCallback } from './gridPreProcessingApi';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { GridEvents } from '../../../models/events';

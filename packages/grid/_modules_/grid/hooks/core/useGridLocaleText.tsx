@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridApiRefCommunity} from '../../models/api/gridApiRef';
+import { GridApiRefCommunity } from '../../models/api/gridApiRef';
 import { GridLocaleTextApi } from '../../models/api/gridLocaleTextApi';
 import { useGridApiMethod } from '../utils/useGridApiMethod';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';

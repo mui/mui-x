@@ -6,7 +6,8 @@ import {
   GridRowsProp,
   useGridApiRef,
   DataGridPro,
-  GridCellParams, GridApiRefPro,
+  GridCellParams,
+  GridApiRefPro,
 } from '@mui/x-data-grid-pro';
 import {
   randomCreatedDate,

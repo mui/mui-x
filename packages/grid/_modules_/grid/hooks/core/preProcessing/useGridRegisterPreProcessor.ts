@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useFirstRender } from '../../utils/useFirstRender';
-import { GridApiRefCommunity} from '../../../models/api/gridApiRef';
+import { GridApiRefCommunity } from '../../../models/api/gridApiRef';
 import { GridPreProcessingGroup, PreProcessorCallback } from './gridPreProcessingApi';
 
 export const useGridRegisterPreProcessor = (

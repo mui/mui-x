@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { GridScrollFn, GridScrollParams } from '../../models/params/gridScrollParams';
 import { useGridLogger } from './useGridLogger';
-import { GridApiRefCommunity} from '../../models';
+import { GridApiRefCommunity } from '../../models';
 
 export function useGridScrollFn(
   apiRef: GridApiRefCommunity,

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { ErrorInfo } from 'react';
-import { GridApiRefCommunity} from '../models/api';
+import { GridApiRefCommunity } from '../models/api';
 import { Logger } from '../models/logger';
 
 export interface ErrorBoundaryProps {

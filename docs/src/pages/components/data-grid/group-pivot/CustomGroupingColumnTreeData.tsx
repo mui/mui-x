@@ -8,7 +8,8 @@ import {
   GridRowsProp,
   DataGridProProps,
   useGridSelector,
-  gridFilteredDescendantCountLookupSelector, GridApiPro,
+  gridFilteredDescendantCountLookupSelector,
+  GridApiPro,
 } from '@mui/x-data-grid-pro';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';

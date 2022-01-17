@@ -16,7 +16,8 @@ import {
   GridToolbarContainer,
   GridActionsCellItem,
   GridEventListener,
-  GridEvents, GridApiRefPro,
+  GridEvents,
+  GridApiRefPro,
 } from '@mui/x-data-grid-pro';
 import {
   randomCreatedDate,
