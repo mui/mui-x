@@ -16,7 +16,7 @@ import { filterableGridColumnsSelector } from '../../../hooks/features/columns/g
 export interface GridFilterPanelProps
   extends Pick<GridFilterFormProps, 'linkOperators' | 'columnsSort'> {
   sx?: SxProps<Theme>;
-  filterFormProps: Pick<
+  filterFormProps?: Pick<
     GridFilterFormProps,
     | 'columnsSort'
     | 'deleteIconProps'
@@ -164,7 +164,7 @@ GridFilterPanel.propTypes = {
     linkOperatorInputProps: PropTypes.any,
     operatorInputProps: PropTypes.any,
     valueInputProps: PropTypes.any,
-  }).isRequired,
+  }),
   linkOperators: PropTypes.arrayOf(PropTypes.oneOf(['and', 'or']).isRequired),
   sx: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
