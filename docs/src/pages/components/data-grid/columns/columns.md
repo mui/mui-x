@@ -323,7 +323,7 @@ The column's visibility can be switched through the grid interface in two ways:
 
 You can prevent the user from hiding a column through the grid interface by setting the `hideable` in `GridColDef` to `false`.
 
-In the following demo, you can not hide the "username" column.
+In the following demo, the "username" column cannot be hidden.
 
 {{"demo": "pages/components/data-grid/columns/VisibleColumnsBasicExample.js", "bg": "inline"}}
 
