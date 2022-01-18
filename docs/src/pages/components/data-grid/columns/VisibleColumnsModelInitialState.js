@@ -17,7 +17,7 @@ export default function VisibleColumnsModelInitialState() {
         initialState={{
           ...data.initialState,
           columns: {
-            columnVisibilityModel: { id: false, brokerId: false, status: false },
+            columnVisibilityModel: { status: false },
           },
         }}
       />
