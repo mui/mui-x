@@ -63,11 +63,27 @@ export interface GridStatePro extends GridStateCommunity {
  */
 export interface GridState extends GridStatePro {}
 
-export interface GridInitialState {
+/**
+ * The initial state of `DataGrid`.
+ * TODO: Move to `x-data-grid` folder
+ */
+export interface GridInitialStateCommunity {
   pagination?: GridPaginationInitialState;
   sorting?: GridSortingInitialState;
   filter?: GridFilterInitialState;
   preferencePanel?: GridPreferencePanelInitialState;
+}
+
+/**
+ * The initial state of `DataGridPro`.
+ * TODO: Move to `x-data-grid-pro` folder
+ */
+export interface GridInitialStatePro extends GridInitialStateCommunity {
   rowGrouping?: GridRowGroupingInitialState;
   pinnedColumns?: GridColumnPinningState;
 }
+
+/**
+ * @deprecated Use `GridInitialStateCommunity` or `GridInitialStatePro` instead.
+ */
+export interface GridInitialState extends GridInitialStatePro {}

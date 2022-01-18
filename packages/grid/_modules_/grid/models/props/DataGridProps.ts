@@ -16,7 +16,7 @@ import { GridClasses } from '../../gridClasses';
 import { GridCellParams, GridRowParams } from '../params';
 import { GridFilterModel } from '../gridFilterModel';
 import { GridInputSelectionModel, GridSelectionModel } from '../gridSelectionModel';
-import { GridInitialState } from '../gridState';
+import { GridInitialState, GridInitialStateCommunity } from '../gridState';
 import { GridSlotsComponentsProps } from '../gridSlotsComponentsProps';
 
 /**
@@ -661,7 +661,7 @@ export interface DataGridPropsWithoutDefaultValue extends CommonProps {
    * The data in it will be set in the state on initialization but will not be controlled.
    * If one of the data in `initialState` is also being controlled, then the control state wins.
    */
-  initialState?: GridInitialState;
+  initialState?: GridInitialStateCommunity;
   /**
    * Overrideable components props dynamically passed to the component at rendering.
    */

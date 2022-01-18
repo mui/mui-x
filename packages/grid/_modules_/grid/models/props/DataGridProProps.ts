@@ -11,6 +11,7 @@ import {
   DATA_GRID_PROPS_DEFAULT_VALUES,
 } from './DataGridProps';
 import type { GridRowGroupingModel } from '../../hooks/features/rowGrouping';
+import { GridInitialStatePro } from '../gridState';
 
 export type GridExperimentalProFeatures =
   /**
@@ -117,11 +118,18 @@ export const DATA_GRID_PRO_PROPS_DEFAULT_VALUES: DataGridProPropsWithDefaultValu
   rowGroupingColumnMode: 'single',
 };
 
-export interface DataGridProPropsWithoutDefaultValue extends DataGridPropsWithoutDefaultValue {
+export interface DataGridProPropsWithoutDefaultValue
+  extends Omit<DataGridPropsWithoutDefaultValue, 'initialState'> {
   /**
    * The ref object that allows grid manipulation. Can be instantiated with [[useGridApiRef()]].
    */
   apiRef?: GridApiRefPro;
+  /**
+   * The initial state of the DataGridPro.
+   * The data in it will be set in the state on initialization but will not be controlled.
+   * If one of the data in `initialState` is also being controlled, then the control state wins.
+   */
+  initialState?: GridInitialStatePro;
   /**
    * Determines the path of a row in the tree data.
    * For instance, a row with the path ["A", "B"] is the child of the row with the path ["A"].

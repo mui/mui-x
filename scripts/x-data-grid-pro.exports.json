@@ -225,6 +225,8 @@
   { "name": "GridHeaderSelectionCheckboxParams", "kind": "Interface" },
   { "name": "GridIconSlotsComponent", "kind": "Interface" },
   { "name": "GridInitialState", "kind": "Interface" },
+  { "name": "GridInitialStateCommunity", "kind": "Interface" },
+  { "name": "GridInitialStatePro", "kind": "Interface" },
   { "name": "GridInputSelectionModel", "kind": "TypeAlias" },
   { "name": "GridKeyboardArrowRight", "kind": "Variable" },
   { "name": "GridKeyValue", "kind": "TypeAlias" },
