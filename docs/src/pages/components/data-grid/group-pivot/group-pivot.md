@@ -8,7 +8,7 @@ title: Data Grid - Group & Pivot
 
 ## Row grouping [<span class="plan-premium"></span>](https://mui.com/store/items/material-ui-pro/)
 
-Use row grouping to group the rows according to one or several columns value.
+For when you need to group rows based on repeated column values, and/or custom functions.
 
 {{"demo": "pages/components/data-grid/group-pivot/RowGroupingSingleGroupingCol.js", "bg": "inline", "defaultCodeOpen": false}}
 
