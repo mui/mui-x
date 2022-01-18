@@ -124,6 +124,17 @@ You can limit the sorting to the top level rows with the `disableChildrenSorting
 > const invalidRows = [{ path: ['A'] }, { path: ['B'] }, { path: ['A', 'A'] }];
 > ```
 
+### Children lazy-loading
+
+> ⚠️ This feature isn't implemented yet. It's coming.
+>
+> 👍 Upvote [issue #3377](https://github.com/mui-org/material-ui-x/issues/3377) if you want to see it land faster.
+
+A temporary version can be built outside the grid as shown bellow.
+This implementation does not support every feature of the grid but can be a good starting point for large datasets.
+
+{{"demo": "pages/components/data-grid/group-pivot/TreeDataLazyLoading.js", "bg": "inline", "defaultCodeOpen": false}}
+
 ### Full example
 
 {{"demo": "pages/components/data-grid/group-pivot/TreeDataFullExample.js", "bg": "inline", "defaultCodeOpen": false}}
