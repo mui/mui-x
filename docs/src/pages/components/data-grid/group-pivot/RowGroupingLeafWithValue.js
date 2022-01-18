@@ -53,7 +53,6 @@ export default function RowGroupingLeafWithValue() {
         columns={columns}
         groupingColDef={{ leafField: 'title' }}
         initialState={{
-          ...data.initialState,
           rowGrouping: {
             model: INITIAL_GROUPING_COLUMN_MODEL,
           },

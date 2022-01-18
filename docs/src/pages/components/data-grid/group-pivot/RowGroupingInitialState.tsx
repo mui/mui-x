@@ -15,7 +15,6 @@ export default function RowGroupingInitialState() {
         apiRef={apiRef}
         disableSelectionOnClick
         initialState={{
-          ...data.initialState,
           rowGrouping: {
             model: INITIAL_GROUPING_COLUMN_MODEL,
           },

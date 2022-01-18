@@ -63,7 +63,6 @@ export default function RowGroupingSingleGroupingCol() {
         columns={columns}
         rowGroupingColumnMode="single"
         initialState={{
-          ...data.initialState,
           rowGrouping: {
             model: INITIAL_GROUPING_COLUMN_MODEL,
           },
