@@ -1,4 +1,4 @@
-import { GridLinkOperator } from '../../../models/gridFilterItem';
+import { GridFilterItem, GridLinkOperator } from '../../../models/gridFilterItem';
 import { GridFilterModel } from '../../../models/gridFilterModel';
 import { GridRowId } from '../../../models/gridRows';
 
@@ -30,8 +30,17 @@ export interface GridFilterInitialState {
   filterModel?: GridFilterModel;
 }
 
+/**
+ * @param {GridRowId} rowId The id of the row we want to filter.
+ * @param {(filterItem: GridFilterItem) => boolean} shouldApplyItem An optional callback to allow the filtering engine to only apply some items.
+ */
+export type GridAggregatedFilterItemApplier = (
+  rowId: GridRowId,
+  shouldApplyItem?: (filterItem: GridFilterItem) => boolean,
+) => boolean;
+
 export interface GridFilteringParams {
-  isRowMatchingFilters: ((rowId: GridRowId) => boolean) | null;
+  isRowMatchingFilters: GridAggregatedFilterItemApplier | null;
 }
 
 export type GridFilteringMethod = (

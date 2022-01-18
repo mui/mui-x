@@ -5,6 +5,7 @@ import { GridColumnHeaderClassNamePropType } from '../gridColumnHeaderClass';
 import { GridFilterOperator } from '../gridFilterOperator';
 import {
   GridCellParams,
+  GridGroupingValueGetterParams,
   GridRenderCellParams,
   GridRenderEditCellParams,
   GridValueFormatterParams,
@@ -93,6 +94,11 @@ export interface GridColDef {
    */
   editable?: boolean;
   /**
+   * If `true`, the rows can be grouped based on this column values (pro-plan only).
+   * @default true
+   */
+  groupable?: boolean;
+  /**
    * If `false`, the menu items for column pinning menu will not be rendered.
    * Only available in DataGridPro.
    * @default true
@@ -121,6 +127,12 @@ export interface GridColDef {
    * @returns {GridCellValue} The cell value.
    */
   valueGetter?: (params: GridValueGetterParams) => GridCellValue;
+  /**
+   * Function that transforms a complex cell value into a key that be used for grouping the rows.
+   * @param {GridGroupingValueGetterParams} params Object containing parameters for the getter.
+   * @returns {GridKeyValue | null | undefined} The cell key.
+   */
+  groupingValueGetter?: (params: GridGroupingValueGetterParams) => GridKeyValue | null | undefined;
   /**
    * Function that allows to customize how the entered value is stored in the row.
    * It only works with cell/row editing.
@@ -244,8 +256,28 @@ export interface GridColumnsMeta {
 export interface GridGroupingColDefOverride
   extends Omit<
     GridColDef,
-    'editable' | 'valueSetter' | 'field' | 'preProcessEditCellProps' | 'renderEditCell'
+    | 'editable'
+    | 'valueSetter'
+    | 'field'
+    | 'type'
+    | 'preProcessEditCellProps'
+    | 'renderEditCell'
+    | 'groupable'
   > {
+  /**
+   * The field from which we want to apply the sorting and the filtering for the grouping column.
+   * It is only useful when `props.rowGroupingColumnMode === "multiple"` to decide which grouping criteria should be used for sorting and filtering.
+   * Do not have any effect when building the tree with the `props.treeData` feature.
+   * @default: The sorting and filtering is applied based on the leaf field in any, otherwise based on top level grouping criteria.
+   */
+  mainGroupingCriteria?: string;
+
+  /**
+   * The field from which we want to render the leaves of the tree.
+   * Do not have any effect when building the tree with the `props.treeData` feature.
+   */
+  leafField?: string;
+
   /**
    * If `true`, the grouping cells will not render the amount of descendants.
    * @default: false

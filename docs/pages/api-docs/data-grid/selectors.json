@@ -81,7 +81,18 @@
   },
   { "name": "gridResizingColumnFieldSelector", "returnType": "string", "description": "" },
   { "name": "gridRowCountSelector", "returnType": "number", "description": "" },
+  {
+    "name": "gridRowGroupingModelSelector",
+    "returnType": "GridRowGroupingModel",
+    "description": ""
+  },
   { "name": "gridRowGroupingNameSelector", "returnType": "string", "description": "" },
+  { "name": "gridRowGroupingSanitizedModelSelector", "returnType": "string[]", "description": "" },
+  {
+    "name": "gridRowGroupingStateSelector",
+    "returnType": "GridRowGroupingState",
+    "description": ""
+  },
   { "name": "gridRowIdsSelector", "returnType": "GridRowId[]", "description": "" },
   { "name": "gridRowTreeDepthSelector", "returnType": "number", "description": "" },
   { "name": "gridRowTreeSelector", "returnType": "GridRowTreeConfig", "description": "" },

@@ -114,6 +114,11 @@ const viVNGrid: Partial<GridLocaleText> = {
   treeDataGroupingHeaderName: 'Nhóm',
   treeDataExpand: 'mở rộng',
   treeDataCollapse: 'ẩn đi',
+
+  // Grouping columns
+  // groupingColumnHeaderName: 'Group',
+  // groupColumn: name => `Group by ${name}`,
+  // unGroupColumn: name => `Stop grouping by ${name}`,
 };
 
 export const viVN: Localization = getGridLocalization(viVNGrid, viVNCore);

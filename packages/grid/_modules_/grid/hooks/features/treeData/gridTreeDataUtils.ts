@@ -1,10 +1,11 @@
 import { GridFilterState } from '../filter';
 import { GridRowId, GridRowTreeConfig, GridRowTreeNodeConfig } from '../../../models';
+import { GridAggregatedFilterItemApplier } from '../filter/gridFilterState';
 
 interface FilterRowTreeFromTreeDataParams {
   rowTree: GridRowTreeConfig;
   disableChildrenFiltering: boolean;
-  isRowMatchingFilters: ((rowId: GridRowId) => boolean) | null;
+  isRowMatchingFilters: GridAggregatedFilterItemApplier | null;
 }
 
 /**

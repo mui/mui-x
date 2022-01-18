@@ -21,8 +21,9 @@ export const GRID_TREE_DATA_GROUPING_FIELD = '__tree_data_group__';
 
 export const GRID_TREE_DATA_GROUPING_COL_DEF_FORCED_PROPERTIES: Pick<
   GridColDef,
-  'field' | 'editable'
+  'field' | 'editable' | 'groupable'
 > = {
   field: GRID_TREE_DATA_GROUPING_FIELD,
   editable: false,
+  groupable: false,
 };
