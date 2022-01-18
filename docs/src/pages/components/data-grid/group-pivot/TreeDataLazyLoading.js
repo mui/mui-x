@@ -158,6 +158,10 @@ const useUtilityClasses = (ownerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
+/**
+ * Reproduce the behavior of the `GridTreeDataGroupingCell` component in `@mui/x-data-grid-pro`
+ * But base the amount of children on a `row.descendantCount` property rather than on the internal lookups.
+ */
 const GroupingCellWithLazyLoading = (props) => {
   const { id, field, rowNode, row, hideDescendantCount } = props;
 

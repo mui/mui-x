@@ -133,6 +133,9 @@ You can limit the sorting to the top level rows with the `disableChildrenSorting
 Alternatively, you can achieve a similar behavior by implementing this feature outside the component as shown bellow.
 This implementation does not support every feature of the grid but can be a good starting point for large datasets.
 
+The idea is to add a property `descendantCount` on the row and to use it instead of the internal grid state.
+To do so, we need to override both the `renderCell` of the grouping column and to manually open the rows by listening to `GridEvents.rowExpansionChange`.
+
 {{"demo": "pages/components/data-grid/group-pivot/TreeDataLazyLoading.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ### Full example
