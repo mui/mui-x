@@ -12,7 +12,7 @@ import {
   getRowGroupingFieldFromGroupingCriteria,
   GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD,
   GridApiRef,
-  GridKeyGetterParams,
+  GridGroupingValueGetterParams,
   GridPreferencePanelsValue,
   GridRowsProp,
   GridRowTreeNodeConfig,
@@ -1335,8 +1335,8 @@ describe('<DataGridPro /> - Group Rows By Column', () => {
     });
   });
 
-  describe('colDef: keyGetter & valueGetter', () => {
-    it('should use keyGetter to group rows when defined', () => {
+  describe('colDef: groupingValueGetter & valueGetter', () => {
+    it('should use groupingValueGetter to group rows when defined', () => {
       render(
         <Test
           columns={[
@@ -1345,7 +1345,8 @@ describe('<DataGridPro /> - Group Rows By Column', () => {
             },
             {
               field: 'category1',
-              keyGetter: (params: GridKeyGetterParams<string>) => `key ${params.value}`,
+              groupingValueGetter: (params: GridGroupingValueGetterParams<string>) =>
+                `groupingValue ${params.value}`,
             },
           ]}
           initialState={{ rowGrouping: { model: ['category1'] } }}
@@ -1353,18 +1354,18 @@ describe('<DataGridPro /> - Group Rows By Column', () => {
         />,
       );
       expect(getColumnValues(0)).to.deep.equal([
-        'key Cat A (3)',
+        'groupingValue Cat A (3)',
         '',
         '',
         '',
-        'key Cat B (2)',
+        'groupingValue Cat B (2)',
         '',
         '',
       ]);
       expect(getColumnValues(1)).to.deep.equal(['', '0', '1', '2', '', '3', '4']);
     });
 
-    it('should use valueGetter to group the rows when defined', () => {
+    it('should not use valueGetter to group the rows when defined', () => {
       render(
         <Test
           columns={[
@@ -1372,52 +1373,45 @@ describe('<DataGridPro /> - Group Rows By Column', () => {
               field: 'id',
             },
             {
-              field: 'complexCategory1',
+              field: 'category1',
               valueGetter: (params) => `value ${params.row.category1}`,
             },
           ]}
-          initialState={{ rowGrouping: { model: ['complexCategory1'] } }}
+          initialState={{ rowGrouping: { model: ['category1'] } }}
           defaultGroupingExpansionDepth={-1}
         />,
       );
-      expect(getColumnValues(0)).to.deep.equal([
-        'value Cat A (3)',
-        '',
-        '',
-        '',
-        'value Cat B (2)',
-        '',
-        '',
-      ]);
+      expect(getColumnValues(0)).to.deep.equal(['Cat A (3)', '', '', '', 'Cat B (2)', '', '']);
       expect(getColumnValues(1)).to.deep.equal(['', '0', '1', '2', '', '3', '4']);
     });
 
-    it('should pass the return value of valueGetter to the keyGetter callback when both defined', () => {
+    it('should still pass the raw row value to the groupingValueGetter callback when valueGetter defined', () => {
       render(
         <Test
           initialState={{
-            rowGrouping: { model: ['complexCategory1'] },
+            rowGrouping: { model: ['category1'] },
           }}
           columns={[
             {
               field: 'id',
             },
             {
-              field: 'complexCategory1',
+              field: 'category1',
               hide: true,
               valueGetter: (params) => `value ${params.row.category1}`,
-              keyGetter: (params: GridKeyGetterParams<string>) => `key ${params.value}`,
+              groupingValueGetter: (params: GridGroupingValueGetterParams<string>) =>
+                `groupingValue ${params.row.category1}`,
             },
           ]}
           defaultGroupingExpansionDepth={-1}
         />,
       );
       expect(getColumnValues(0)).to.deep.equal([
-        'key value Cat A (3)',
+        'groupingValue Cat A (3)',
         '',
         '',
         '',
-        'key value Cat B (2)',
+        'groupingValue Cat B (2)',
         '',
         '',
       ]);

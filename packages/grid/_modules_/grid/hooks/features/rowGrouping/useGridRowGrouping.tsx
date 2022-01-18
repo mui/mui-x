@@ -6,8 +6,7 @@ import type {
   GridRowId,
   GridColDef,
   GridKeyValue,
-  GridCellValue,
-  GridValueGetterSimpleParams,
+  GridGroupingValueGetterParams,
   GridStateColDef,
 } from '../../../models';
 import { GridEvents, GridEventListener } from '../../../models/events';
@@ -115,11 +114,12 @@ export const useGridRowGrouping = (
         id: GridRowId;
         colDef: GridColDef;
       }) => {
-        let value: GridCellValue;
-        if (colDef.valueGetter) {
-          const valueGetterParams: GridValueGetterSimpleParams = {
+        let key: GridKeyValue | null | undefined;
+        if (colDef.groupingValueGetter) {
+          const groupingValueGetterParams: GridGroupingValueGetterParams = {
             colDef,
             field: colDef.field,
+            value: row[colDef.field],
             id,
             row,
             rowNode: {
@@ -127,20 +127,9 @@ export const useGridRowGrouping = (
               id,
             },
           };
-          value = colDef.valueGetter(valueGetterParams);
+          key = colDef.groupingValueGetter(groupingValueGetterParams);
         } else {
-          value = row[colDef.field];
-        }
-
-        let key: GridKeyValue | null | undefined;
-        if (colDef.keyGetter) {
-          key = colDef.keyGetter({
-            value,
-            id,
-            field: colDef.field,
-          });
-        } else {
-          key = value as GridKeyValue;
+          key = row[colDef.field] as GridKeyValue | null | undefined;
         }
 
         return {

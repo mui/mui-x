@@ -1,24 +1,10 @@
 import * as React from 'react';
-import {
-  DataGridPro,
-  GridApiRef,
-  GridColumns,
-  GridEvents,
-  GridRowGroupingModel,
-  GridKeyGetterParams,
-  GridRenderCellParams,
-  useGridApiRef,
-} from '@mui/x-data-grid-pro';
+import { DataGridPro, GridEvents, useGridApiRef } from '@mui/x-data-grid-pro';
 import { useMovieData } from '@mui/x-data-grid-generator';
 
-const INITIAL_GROUPING_COLUMN_MODEL = ['composer'];
+const INITIAL_GROUPING_COLUMN_MODEL = ['composer', 'decade'];
 
-const useKeepGroupingColumnsHidden = (
-  apiRef: GridApiRef,
-  columns: GridColumns,
-  initialModel: GridRowGroupingModel,
-  leafField?: string,
-) => {
+const useKeepGroupingColumnsHidden = (apiRef, columns, initialModel, leafField) => {
   const prevModel = React.useRef(initialModel);
 
   React.useEffect(() => {
@@ -31,6 +17,7 @@ const useKeepGroupingColumnsHidden = (
           .filter((field) => !newModel.includes(field))
           .map((field) => ({ field, hide: false })),
       ]);
+
       prevModel.current = initialModel;
     });
   }, [apiRef, initialModel]);
@@ -47,7 +34,7 @@ const useKeepGroupingColumnsHidden = (
   );
 };
 
-export default function RowGroupingKeyGetter() {
+export default function RowGroupingGroupingValueGetter() {
   const data = useMovieData();
   const apiRef = useGridApiRef();
 
@@ -57,11 +44,16 @@ export default function RowGroupingKeyGetter() {
       {
         field: 'composer',
         headerName: 'Composer',
-        renderCell: (params: GridRenderCellParams<{ name: string } | undefined>) =>
-          params.value?.name,
-        keyGetter: (params: GridKeyGetterParams<{ name: string }>) =>
-          params.value.name,
+        renderCell: (params) => params.value?.name,
+        groupingValueGetter: (params) => params.value.name,
         width: 200,
+      },
+      {
+        field: 'decade',
+        headerName: 'Decade',
+        valueGetter: (params) => Math.floor(params.row.year / 10) * 10,
+        groupingValueGetter: (params) => Math.floor(params.row.year / 10) * 10,
+        renderCell: (params) => `${params.value.toString().slice(-2)}'s`,
       },
     ],
     [data.columns],

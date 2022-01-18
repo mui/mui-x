@@ -242,7 +242,7 @@ export const getCommodityColumns = (editable = false): GridColDefGenerator[] => 
 
       return value;
     },
-    keyGetter: (params) => params.value.code,
+    groupingValueGetter: (params) => params.value.code,
     type: 'singleSelect',
     valueOptions: COUNTRY_ISO_OPTIONS,
     editable,

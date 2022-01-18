@@ -108,27 +108,24 @@ In the example below, the `director` column can not be grouped. And in all examp
 
 {{"demo": "pages/components/data-grid/group-pivot/RowGroupingColDefCanBeGrouped.js", "bg": "inline", "defaultCodeOpen": false}}
 
-### Using 'keyGetter' for complex grouping value
+### Using `groupingValueGetter` for complex grouping value
 
-In most scenarios, to handle complex values (e.g. nested structures), a `valueGetter` property must be provided to the column definition to convert it into a simple value.
-But sometimes, you may want to keep the value in its raw format, to be used in a custom cell renderer, and thus using a value getter is not possible.
-In this case, pass a `keyGetter` property to the column definition to convert this object into a serializable value.
+The grouping value has to be either a `string`, a `number`, `null` or `undefined`.
+If your cell value is more complex, pass a `groupingValueGetter` property to the column definition to convert it into a valid value.
 
 ```ts
 const columns: GridColumns = [
   {
     field: 'composer',
-    keyGetter: (params) => params.value.name,
+    groupingValueGetter: (params) => params.value.name,
   },
   // ...
 ];
 ```
 
-{{"demo": "pages/components/data-grid/group-pivot/RowGroupingKeyGetter.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"demo": "pages/components/data-grid/group-pivot/RowGroupingGroupingValueGetter.js", "bg": "inline", "defaultCodeOpen": false}}
 
-**Note**: If your column also have a `valueGetter` property, its value is used as the parameter for the `keyGetter` method.
-
-{{"demo": "pages/components/data-grid/group-pivot/RowGroupingKeyGetterValueGetter.js", "bg": "inline", "defaultCodeOpen": false}}
+**Note**: If your column also have a `valueGetter` property, the value passed to the `groupingValueGetter` method will still be the row value from the `row[field]`.
 
 ### Rows with missing groups
 

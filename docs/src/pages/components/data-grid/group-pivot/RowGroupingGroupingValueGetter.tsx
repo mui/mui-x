@@ -5,15 +5,13 @@ import {
   GridColumns,
   GridEvents,
   GridRowGroupingModel,
-  GridKeyGetterParams,
+  GridGroupingValueGetterParams,
   GridRenderCellParams,
   useGridApiRef,
 } from '@mui/x-data-grid-pro';
 import { useMovieData } from '@mui/x-data-grid-generator';
 
-type Decade = { value: number; name: string };
-
-const INITIAL_GROUPING_COLUMN_MODEL = ['decade'];
+const INITIAL_GROUPING_COLUMN_MODEL = ['composer', 'decade'];
 
 const useKeepGroupingColumnsHidden = (
   apiRef: GridApiRef,
@@ -49,32 +47,31 @@ const useKeepGroupingColumnsHidden = (
   );
 };
 
-export default function RowGroupingKeyGetterValueGetter() {
+export default function RowGroupingGroupingValueGetter() {
   const data = useMovieData();
   const apiRef = useGridApiRef();
 
-  const columnsWithDecade = React.useMemo<GridColumns>(
+  const columnsWithComposer = React.useMemo(
     () => [
       ...data.columns,
       {
+        field: 'composer',
+        headerName: 'Composer',
+        renderCell: (params: GridRenderCellParams<{ name: string } | undefined>) =>
+          params.value?.name,
+        groupingValueGetter: (
+          params: GridGroupingValueGetterParams<{ name: string }>,
+        ) => params.value.name,
+        width: 200,
+      },
+      {
         field: 'decade',
         headerName: 'Decade',
-        valueGetter: (params): Decade | null => {
-          const value = Math.floor(params.row.year / 10) * 10;
-
-          if (params.row.year == null) {
-            return null;
-          }
-
-          return {
-            value,
-            name: `${value.toString().slice(-2)}'s`,
-          };
-        },
-        keyGetter: (params: GridKeyGetterParams<Decade | null>) =>
-          params.value?.value,
-        renderCell: (params: GridRenderCellParams<Decade | null>) =>
-          params.value?.name,
+        valueGetter: (params): number => Math.floor(params.row.year / 10) * 10,
+        groupingValueGetter: (params): number =>
+          Math.floor(params.row.year / 10) * 10,
+        renderCell: (params: GridRenderCellParams<number>) =>
+          `${params.value.toString().slice(-2)}'s`,
       },
     ],
     [data.columns],
@@ -82,7 +79,7 @@ export default function RowGroupingKeyGetterValueGetter() {
 
   const columns = useKeepGroupingColumnsHidden(
     apiRef,
-    columnsWithDecade,
+    columnsWithComposer,
     INITIAL_GROUPING_COLUMN_MODEL,
   );
 

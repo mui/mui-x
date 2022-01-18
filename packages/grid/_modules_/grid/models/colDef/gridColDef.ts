@@ -5,7 +5,7 @@ import { GridColumnHeaderClassNamePropType } from '../gridColumnHeaderClass';
 import { GridFilterOperator } from '../gridFilterOperator';
 import {
   GridCellParams,
-  GridKeyGetterParams,
+  GridGroupingValueGetterParams,
   GridRenderCellParams,
   GridRenderEditCellParams,
   GridValueFormatterParams,
@@ -129,10 +129,10 @@ export interface GridColDef {
   valueGetter?: (params: GridValueGetterParams) => GridCellValue;
   /**
    * Function that transforms a complex cell value into a key that be used for grouping the rows.
-   * @param {GridKeyGetterParams} params Object containing parameters for the getter.
+   * @param {GridGroupingValueGetterParams} params Object containing parameters for the getter.
    * @returns {GridKeyValue | null | undefined} The cell key.
    */
-  keyGetter?: (params: GridKeyGetterParams) => GridKeyValue | null | undefined;
+  groupingValueGetter?: (params: GridGroupingValueGetterParams) => GridKeyValue | null | undefined;
   /**
    * Function that allows to customize how the entered value is stored in the row.
    * It only works with cell/row editing.
