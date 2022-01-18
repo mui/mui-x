@@ -51,6 +51,21 @@ export default function CustomFilterPanel() {
           filterPanel: {
             linkOperators: [GridLinkOperator.And],
             columnsSort: 'asc',
+            filterFormProps: {
+              columnInputProps: {
+                variant: 'outlined',
+                size: 'small',
+                sx: { justifyContent: 'flex-end' },
+              },
+              operatorInputProps: {
+                variant: 'outlined',
+                size: 'small',
+                sx: { justifyContent: 'flex-end' },
+              },
+              valueInputProps: {
+                required: true,
+              },
+            },
             sx: {
               '& .MuiDataGrid-filterPanelFilterForm': { p: 2 },
               '& .MuiDataGrid-filterPanelFilterForm:nth-child(even)': {
@@ -58,10 +73,10 @@ export default function CustomFilterPanel() {
                   theme.palette.mode === 'dark' ? '#444' : '#ddd',
               },
               '& .MuiDataGrid-filterPanelDeleteIcon': { display: 'none' },
-              '& .MuiDataGrid-linkOperatorController': { mr: 2 },
-              '& .MuiDataGrid-columnController': { mr: 2, width: 200 },
-              '& .MuiDataGrid-operatorController': { mr: 5 },
-              '& .MuiDataGrid-valueController': { width: 400 },
+              '& .MuiDataGrid-filterPanelLinkOperatorInput': { mr: 2 },
+              '& .MuiDataGrid-filterPanelColumnInput': { mr: 2, width: 200 },
+              '& .MuiDataGrid-filterPanelOperatorInput': { mr: 5 },
+              '& .MuiDataGrid-filterPanelValueInput': { width: 300 },
             },
           },
         }}

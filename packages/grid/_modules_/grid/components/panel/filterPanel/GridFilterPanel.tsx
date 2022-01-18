@@ -16,6 +16,15 @@ import { filterableGridColumnsSelector } from '../../../hooks/features/columns/g
 export interface GridFilterPanelProps
   extends Pick<GridFilterFormProps, 'linkOperators' | 'columnsSort'> {
   sx?: SxProps<Theme>;
+  filterFormProps: Pick<
+    GridFilterFormProps,
+    | 'columnsSort'
+    | 'deleteIconProps'
+    | 'linkOperatorInputProps'
+    | 'operatorInputProps'
+    | 'columnInputProps'
+    | 'valueInputProps'
+  >;
 }
 
 function GridFilterPanel(props: GridFilterPanelProps) {
@@ -29,6 +38,7 @@ function GridFilterPanel(props: GridFilterPanelProps) {
     linkOperators = [GridLinkOperator.And, GridLinkOperator.Or],
     columnsSort,
     sx = {},
+    filterFormProps,
   } = props;
 
   const applyFilter = React.useCallback(
@@ -121,6 +131,7 @@ function GridFilterPanel(props: GridFilterPanelProps) {
             focusElementRef={index === items.length - 1 ? lastFilterRef : null}
             linkOperators={linkOperators}
             columnsSort={columnsSort}
+            {...filterFormProps}
           />
         ))}
       </GridPanelContent>
