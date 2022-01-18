@@ -1,4 +1,5 @@
 import { GridFilterInputValue } from '../../components/panel/filterPanel/GridFilterInputValue';
+import { GridFilterInputMultipleValue } from '../../components/panel/filterPanel/GridFilterInputMultipleValue';
 import { GridFilterItem } from '../gridFilterItem';
 import { GridFilterOperator } from '../gridFilterOperator';
 import { wrapWithDeprecationWarning } from '../../utils/deprecation';
@@ -133,6 +134,21 @@ export const getGridNumericOperators = (): GridFilterOperator[] => [
         return value != null;
       };
     },
+  },
+  {
+    label: 'is any of',
+    value: 'isAnyOf',
+    getApplyFilterFn: (filterItem: GridFilterItem) => {
+      if (!Array.isArray(filterItem.value) || filterItem.value.length === 0) {
+        return null;
+      }
+
+      return ({ value }): boolean => {
+        return value != null && filterItem.value.includes(Number(value));
+      };
+    },
+    InputComponent: GridFilterInputMultipleValue,
+    InputComponentProps: { type: 'number' },
   },
 ];
 

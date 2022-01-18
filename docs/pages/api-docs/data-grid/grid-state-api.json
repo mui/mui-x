@@ -15,7 +15,7 @@
     {
       "name": "state",
       "description": "Property that contains the whole state of the grid.",
-      "type": "GridState"
+      "type": "<a href=\"/api/data-grid/grid-state/\">GridState</a>"
     }
   ]
 }

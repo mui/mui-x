@@ -354,6 +354,11 @@ describe('<DataGrid /> - Filter', () => {
       expect(getColumnValues()).to.deep.equal(['Nike']);
     });
 
+    it('should allow operator isAnyOf', () => {
+      render(<TestCase operatorValue="isAnyOf" field="brand" value={['nike', 'puma']} />);
+      expect(getColumnValues()).to.deep.equal(['Nike', 'Puma']);
+    });
+
     [
       { operatorValue: 'contains', value: 'a', expected: ['Asics'] },
       { operatorValue: 'startsWith', value: 'r', expected: ['RedBull'] },
@@ -561,6 +566,36 @@ describe('<DataGrid /> - Filter', () => {
       expect(getColumnValues(0)).to.deep.equal(['0', '2']);
     });
 
+    it('should allow operator isAnyOf', () => {
+      const rows = [
+        {
+          id: 0,
+          quantity: 0,
+        },
+        {
+          id: 1,
+          quantity: null,
+        },
+        {
+          id: 2,
+          quantity: 100,
+        },
+        {
+          id: 3,
+          quantity: 110,
+        },
+      ];
+      render(
+        <TestCase
+          value={[0, 100]}
+          operatorValue="isAnyOf"
+          field="quantity"
+          rows={rows}
+          columns={[{ field: 'id' }, { field: 'quantity', type: 'number' }]}
+        />,
+      );
+      expect(getColumnValues(0)).to.deep.equal(['0', '2']);
+    });
     it('should show all rows when the value is empty', () => {
       render(
         <TestCase
@@ -981,6 +1016,51 @@ describe('<DataGrid /> - Filter', () => {
         expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
       });
 
+      it('should allow operator isAnyOf', () => {
+        const { setProps } = render(<TestCase value={[]} operatorValue="isAnyOf" />);
+        setProps({
+          field: 'country',
+          operatorValue: 'isAnyOf',
+          value: ['Germany', 'United States'],
+        });
+        expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
+        setProps({
+          field: 'country',
+          operatorValue: 'isAnyOf',
+          value: ['Germany'],
+        });
+        expect(getColumnValues()).to.deep.equal(['Adidas', 'Puma']);
+        setProps({
+          field: 'country',
+          operatorValue: 'isAnyOf',
+          value: [],
+        });
+        expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
+      });
+
+      it('should allow operator isAnyOf with object valueOptions', () => {
+        const { setProps } = render(<TestCase />);
+
+        setProps({
+          field: 'status',
+          operatorValue: 'isAnyOf',
+          value: [0, 1],
+        });
+        expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas']);
+        setProps({
+          field: 'status',
+          operatorValue: 'isAnyOf',
+          value: [2],
+        });
+        expect(getColumnValues()).to.deep.equal(['Puma']);
+        setProps({
+          field: 'status',
+          operatorValue: 'isAnyOf',
+          value: [],
+        });
+        expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
+      });
+
       it('should work with numeric values', () => {
         const { setProps } = render(
           <TestCase
@@ -1096,6 +1176,52 @@ describe('<DataGrid /> - Filter', () => {
         expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
         setProps({ value: 2 });
         expect(getColumnValues()).to.deep.equal(['Puma']);
+      });
+
+      it('should works with valueParser', () => {
+        const valueOptions = [
+          { value: 0, label: 'Payment Pending' },
+          { value: 1, label: 'Shipped' },
+          { value: 2, label: 'Delivered' },
+        ];
+        const { setProps } = render(
+          <TestCase
+            value="a"
+            operatorValue="contains"
+            columns={[
+              { field: 'brand' },
+              {
+                field: 'status',
+                type: 'singleSelect',
+                valueOptions,
+                valueParser: (value) => {
+                  if (typeof value === 'number') {
+                    return valueOptions.find((option) => option.value === value);
+                  }
+                  return value;
+                },
+              },
+            ]}
+          />,
+        );
+        setProps({
+          field: 'status',
+          operatorValue: 'is',
+          value: 0,
+        });
+        expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas']);
+        setProps({
+          field: 'status',
+          operatorValue: 'not',
+          value: 0,
+        });
+        expect(getColumnValues()).to.deep.equal(['Puma']);
+        setProps({
+          field: 'status',
+          operatorValue: 'isAnyOf',
+          value: [0, 2],
+        });
+        expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
       });
     });
   });
@@ -1376,6 +1502,102 @@ describe('<DataGrid /> - Filter', () => {
       setColumnValue('origin');
 
       expect(getColumnValues()).to.deep.equal(['REF_2', 'REF_3']);
+    });
+
+    it('should reset filter value if not available in the new valueOptions with isAnyOperator', () => {
+      render(
+        <TestCase
+          rows={[
+            { id: 1, reference: 'REF_1', origin: 'Italy', destination: 'Germany' },
+            { id: 2, reference: 'REF_2', origin: 'Germany', destination: 'UK' },
+            { id: 3, reference: 'REF_3', origin: 'Germany', destination: 'Italy' },
+          ]}
+          columns={[
+            { field: 'reference' },
+            { field: 'origin', type: 'singleSelect', valueOptions: ['Italy', 'Germany'] },
+            {
+              field: 'destination',
+              type: 'singleSelect',
+              valueOptions: ['Italy', 'Germany', 'UK'],
+            },
+          ]}
+          initialState={{
+            filter: {
+              filterModel: {
+                items: [{ columnField: 'destination', operatorValue: 'isAnyOf', value: ['UK'] }],
+              },
+            },
+          }}
+        />,
+      );
+
+      expect(getColumnValues()).to.deep.equal(['REF_2']);
+      setColumnValue('origin');
+      expect(getColumnValues()).to.deep.equal(['REF_1', 'REF_2', 'REF_3']);
+    });
+
+    it('should keep the value if available in the new valueOptions with isAnyOperator', () => {
+      const IT = { value: 'IT', label: 'Italy' };
+      const GE = { value: 'GE', label: 'Germany' };
+
+      render(
+        <TestCase
+          rows={[
+            { id: 1, reference: 'REF_1', origin: 'IT', destination: 'GE' },
+            { id: 2, reference: 'REF_2', origin: 'GE', destination: 'UK' },
+            { id: 3, reference: 'REF_3', origin: 'GE', destination: 'IT' },
+          ]}
+          columns={[
+            { field: 'reference' },
+            { field: 'origin', type: 'singleSelect', valueOptions: [IT, GE] },
+            { field: 'destination', type: 'singleSelect', valueOptions: ['IT', 'GE', 'UK'] },
+          ]}
+          initialState={{
+            filter: {
+              filterModel: {
+                items: [{ columnField: 'destination', operatorValue: 'isAnyOf', value: ['GE'] }],
+              },
+            },
+          }}
+        />,
+      );
+
+      expect(getColumnValues()).to.deep.equal(['REF_1']);
+      setColumnValue('origin');
+      expect(getColumnValues()).to.deep.equal(['REF_2', 'REF_3']);
+    });
+
+    it('should reset filter value if moving from multiple to single value operator', () => {
+      render(
+        <TestCase
+          rows={[
+            { id: 1, reference: 'REF_1', origin: 'Italy', destination: 'Germany' },
+            { id: 2, reference: 'REF_2', origin: 'Germany', destination: 'UK' },
+            { id: 3, reference: 'REF_3', origin: 'Germany', destination: 'Italy' },
+          ]}
+          columns={[
+            { field: 'reference' },
+            { field: 'origin', type: 'singleSelect', valueOptions: ['Italy', 'Germany'] },
+            {
+              field: 'destination',
+              type: 'singleSelect',
+              valueOptions: ['Italy', 'Germany', 'UK'],
+            },
+          ]}
+          initialState={{
+            filter: {
+              filterModel: {
+                items: [{ columnField: 'destination', operatorValue: 'isAnyOf', value: ['UK'] }],
+              },
+            },
+          }}
+        />,
+      );
+      expect(getColumnValues()).to.deep.equal(['REF_2']);
+
+      setOperatorValue('is');
+
+      expect(getColumnValues()).to.deep.equal(['REF_1', 'REF_2', 'REF_3']);
     });
   });
 
