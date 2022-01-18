@@ -6,8 +6,12 @@ import * as prettier from 'prettier';
 import * as babel from '@babel/core';
 import * as babelTypes from '@babel/types';
 import * as yargs from 'yargs';
+import { Octokit } from '@octokit/rest';
 
-const SOURCE_CODE_REPO = 'https://github.com/mui-org/material-ui-x';
+const GIT_ORGANIZATION = 'mui-org';
+const GIT_REPO = 'material-ui-x';
+const L10N_ISSUE_ID = 3211;
+const SOURCE_CODE_REPO = `https://github.com/${GIT_ORGANIZATION}/${GIT_REPO}`;
 
 const BABEL_PLUGINS = [require.resolve('@babel/plugin-syntax-typescript')];
 
@@ -212,12 +216,33 @@ async function generateReport(
   return lines.join('\n');
 }
 
+async function updateIssue(githubToken, newMessage) {
+  // Initialize the API client
+  const octokit = new Octokit({
+    auth: githubToken,
+  });
+
+  await octokit.request('PATCH /repos/{owner}/{repo}/issues/{issue_number}', {
+    owner: GIT_ORGANIZATION,
+    repo: GIT_REPO,
+    issue_number: L10N_ISSUE_ID,
+    body: `You can check below all of the localization files that contain at least one missing translation. If you are a fluent speaker of any of these languages, feel free to submit a pull request. Any help is welcome to make the X components to reach new cultures.
+
+Run \`yarn l10n --report\` to update the list below ⬇️
+
+## DataGrid / DataGridPro
+${newMessage}
+`,
+  });
+}
+
 interface HandlerArgv {
   report: boolean;
+  githubToken?: string;
 }
 
 async function run(argv: HandlerArgv) {
-  const { report } = argv;
+  const { report, githubToken } = argv;
   const workspaceRoot = path.resolve(__dirname, '../');
 
   const constantsPath = path.join(
@@ -281,8 +306,13 @@ async function run(argv: HandlerArgv) {
   });
 
   if (report) {
-    // eslint-disable-next-line no-console
-    console.log(await generateReport(missingTranslations));
+    const newMessage = await generateReport(missingTranslations);
+    if (githubToken) {
+      await updateIssue(githubToken, newMessage);
+    } else {
+      // eslint-disable-next-line no-console
+      console.log(newMessage);
+    }
   }
 
   process.exit(0);
@@ -293,11 +323,18 @@ yargs
     command: '$0',
     describe: 'Syncs translation files.',
     builder: (command) => {
-      return command.option('report', {
-        describe: "Don't write any file but generates a report with the missing translations.",
-        type: 'boolean',
-        default: false,
-      });
+      return command
+        .option('report', {
+          describe: "Don't write any file but generates a report with the missing translations.",
+          type: 'boolean',
+          default: false,
+        })
+        .option('githubToken', {
+          default: process.env.GITHUB_TOKEN,
+          describe:
+            'The personal access token to use for authenticating with GitHub. Needs public_repo permissions.',
+          type: 'string',
+        });
     },
     handler: run,
   })

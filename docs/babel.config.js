@@ -15,10 +15,10 @@ const alias = {
   '@mui/x-data-grid-generator': '../packages/grid/x-data-grid-generator/src',
   '@mui/x-data-grid-pro': '../packages/grid/x-data-grid-pro/src',
   '@mui/x-license-pro': '../packages/x-license-pro/src',
-  '@mui/docs': '../node_modules/@material-ui/monorepo/packages/mui-docs/src',
-  '@mui/markdown': '../node_modules/@material-ui/monorepo/docs/packages/markdown',
-  '@material-ui/monorepo': '../node_modules/@material-ui/monorepo',
-  docs: '../node_modules/@material-ui/monorepo/docs', // TODO remove
+  '@mui/docs': '../node_modules/@mui/monorepo/packages/mui-docs/src',
+  '@mui/markdown': '../node_modules/@mui/monorepo/docs/packages/markdown',
+  '@mui/monorepo': '../node_modules/@mui/monorepo',
+  docs: '../node_modules/@mui/monorepo/docs', // TODO remove
   docsx: './',
 };
 
@@ -56,7 +56,7 @@ module.exports = {
     /@babel[\\|/]runtime/,
     // Fix const foo = /{{(.+?)}}/gs; crashing.
     /prettier/,
-    /@material-ui[\\|/]docs[\\|/]markdown/,
+    /@mui[\\|/]docs[\\|/]markdown/,
   ],
   env: {
     production: {

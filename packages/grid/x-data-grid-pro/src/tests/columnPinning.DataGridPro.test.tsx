@@ -9,7 +9,7 @@ import {
 } from '@mui/x-data-grid-pro';
 import { spy } from 'sinon';
 import { expect } from 'chai';
-import { createRenderer, fireEvent, screen, createEvent } from '@material-ui/monorepo/test/utils';
+import { createRenderer, fireEvent, screen, createEvent } from '@mui/monorepo/test/utils';
 import { getCell, getColumnHeaderCell, getColumnHeadersTextContent } from 'test/utils/helperFn';
 import { useData } from 'storybook/src/hooks/useData';
 
@@ -146,7 +146,6 @@ describe('<DataGridPro /> - Column pinning', () => {
       this.skip();
     }
     render(<TestCase nbCols={3} initialState={{ pinnedColumns: { right: ['price1M'] } }} />);
-    clock.runToLast();
     const columnHeader = getColumnHeaderCell(2);
     // @ts-expect-error need to migrate helpers to TypeScript
     expect(columnHeader).toHaveInlineStyle({ width: '100px' });
@@ -167,7 +166,6 @@ describe('<DataGridPro /> - Column pinning', () => {
       this.skip();
     }
     render(<TestCase nbCols={3} initialState={{ pinnedColumns: { right: ['price1M'] } }} />);
-    clock.runToLast();
     const columnHeader = getColumnHeaderCell(2);
     // @ts-expect-error need to migrate helpers to TypeScript
     expect(columnHeader).toHaveInlineStyle({ width: '100px' });
