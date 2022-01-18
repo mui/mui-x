@@ -8,6 +8,7 @@ export interface ErrorOverlayProps extends GridOverlayProps {
   errorInfo: any;
 }
 
+// TODO v6: rename to GridErrorOverlay
 export const ErrorOverlay = React.forwardRef<HTMLDivElement, ErrorOverlayProps>(
   function ErrorOverlay(props: ErrorOverlayProps, ref) {
     const { message, hasError, errorInfo, ...other } = props;

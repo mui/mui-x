@@ -18,3 +18,4 @@ build
 dist
 node_modules
 size-snapshot.json
+performance-snapshot.json
