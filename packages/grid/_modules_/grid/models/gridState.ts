@@ -57,11 +57,3 @@ export interface GridInitialState {
   rowGrouping?: GridRowGroupingInitialState;
   pinnedColumns?: GridColumnPinningState;
 }
-
-type DeepPartial<T> = {
-  [P in keyof T]?: DeepPartial<T[P]>;
-};
-
-export type GridPartialState = DeepPartial<GridState>;
-
-export type GridPartialInitialState = DeepPartial<GridInitialState>;

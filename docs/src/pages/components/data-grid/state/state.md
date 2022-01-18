@@ -69,7 +69,7 @@ It can then be restored by either passing it to the `initialState` prop or to th
 
 {{"demo": "pages/components/data-grid/state/RestoreStateApiRef.js", "bg": "inline", "defaultCodeOpen": false}}
 
-### Restore part of the state
+#### Restore part of the state
 
 It is possible to only pass some keys of the state to the `apiRef.current.restoreState()` method.
 For instance, to only restore the pinned columns:
@@ -81,7 +81,7 @@ apiRef.current.restoreState({
 ```
 
 **Note**: Most of the state keys are not fully independent.
-Restoring the pagination without restoring the filters or the sorting will work, but the rows displayed will not be the same as before.
+Restoring the pagination without restoring the filters or the sorting will work, but the rows displayed after the re-import will not be the same as before the export.
 
 ## API
 

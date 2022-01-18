@@ -1,7 +1,7 @@
 import {
   GridCellIndexCoordinates,
   GridColDef,
-  GridPartialInitialState,
+  GridInitialState,
   GridScrollParams,
 } from '../../../models';
 import {
@@ -39,7 +39,7 @@ interface GridPreProcessingGroupLookup {
   };
   [GridPreProcessingGroup.filteringMethod]: { value: GridFilteringMethodCollection };
   [GridPreProcessingGroup.sortingMethod]: { value: GridSortingMethodCollection };
-  [GridPreProcessingGroup.exportState]: { value: GridPartialInitialState };
+  [GridPreProcessingGroup.exportState]: { value: GridInitialState };
   [GridPreProcessingGroup.restoreState]: {
     value: GridRestoreStatePreProcessingValue;
     context: GridRestoreStatePreProcessingContext;

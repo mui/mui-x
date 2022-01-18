@@ -257,8 +257,6 @@
   { "name": "GridPanelProps", "kind": "Interface" },
   { "name": "GridPanelWrapper", "kind": "Function" },
   { "name": "GridParamsApi", "kind": "Interface" },
-  { "name": "GridPartialInitialState", "kind": "TypeAlias" },
-  { "name": "GridPartialState", "kind": "TypeAlias" },
   { "name": "GridPinnedColumns", "kind": "Interface" },
   { "name": "gridPinnedColumnsSelector", "kind": "Variable" },
   { "name": "GridPinnedPosition", "kind": "Enum" },
