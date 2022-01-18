@@ -9,8 +9,9 @@ title: Data Grid - Group & Pivot
 ## Row grouping [<span class="plan-premium"></span>](https://mui.com/store/items/material-ui-pro/)
 
 For when you need to group rows based on repeated column values, and/or custom functions.
+On the following example, we're grouping all movies based on their production `company`
 
-{{"demo": "pages/components/data-grid/group-pivot/RowGroupingSingleGroupingCol.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"demo": "pages/components/data-grid/group-pivot/RowGroupingBasicExample.js", "bg": "inline", "defaultCodeOpen": false}}
 
 > ⚠️ This feature is temporarily available on the Pro plan until the release of the Premium plan.
 >
@@ -59,7 +60,7 @@ If you have multiple grouped columns, this column name will be set to "Group".
 
 #### Multiple grouping column
 
-To display a column for each grouping criterion, set the `rowGroupingColumnMode` prop to `multiple.
+To display a column for each grouping criterion, set the `rowGroupingColumnMode` prop to `multiple`.
 
 {{"demo": "pages/components/data-grid/group-pivot/RowGroupingMultipleGroupingCol.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -87,7 +88,7 @@ If you want to display some value, you can provide a `leafField` property to the
 
 #### Hide the descendant count
 
-Use the `hideDescendantCount` property of the `groupingColDef to hide the number of descendants of a grouping row.
+Use the `hideDescendantCount` property of the `groupingColDef` to hide the number of descendants of a grouping row.
 
 {{"demo": "pages/components/data-grid/group-pivot/RowGroupingHideDescendantCount.js", "bg": "inline", "defaultCodeOpen": false}}
 
