@@ -48,13 +48,6 @@ describe('<DataGridPro /> - Clipboard', () => {
   describe('copySelectedRowsToClipboard', () => {
     let writeText;
 
-    before(function beforeHook() {
-      if (!isJSDOM) {
-        // Needs permission to read the clipboard
-        this.skip();
-      }
-    });
-
     beforeEach(function beforeEachHook() {
       writeText = stub().resolves();
 
