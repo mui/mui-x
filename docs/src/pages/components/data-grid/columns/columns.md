@@ -354,7 +354,7 @@ You can use the `onColumnVisibilityModelChange` prop to listen to the changes to
 <DataGrid columnVisibilityModel={{ status: false }} />
 ```
 
-> ⚠️The grid do not handle switching between controlled and not-controlled modes.
+> ⚠️The grid does not handle switching between controlled and uncontrolled modes.
 >
 > This edge case will be supported in v6 after the removal of legacy `hide` field.
 
