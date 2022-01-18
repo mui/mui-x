@@ -1,8 +1,21 @@
 import * as React from 'react';
-import { DataGrid, GridRowHeightParams } from '@mui/x-data-grid';
+import {
+  DataGrid,
+  GridToolbarContainer,
+  GridToolbarDensitySelector,
+} from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
+function CustomToolbar() {
+  return (
+    <GridToolbarContainer>
+      <GridToolbarDensitySelector />
+    </GridToolbarContainer>
+  );
+}
+
 export default function VariableRowHeightGrid() {
+  const isRowIndexOdd = React.useRef(false);
   const { data } = useDemoData({
     dataSet: 'Commodity',
     rowLength: 100,
@@ -13,17 +26,17 @@ export default function VariableRowHeightGrid() {
     <div style={{ height: 400, width: '100%' }}>
       <DataGrid
         {...data}
-        getRowHeight={({ model }: GridRowHeightParams) => {
-          if (
-            model.commodity.includes('Oats') ||
-            model.commodity.includes('Milk') ||
-            model.commodity.includes('Soybean') ||
-            model.commodity.includes('Rice')
-          ) {
+        getRowHeight={() => {
+          isRowIndexOdd.current = !isRowIndexOdd.current;
+
+          if (isRowIndexOdd.current) {
             return 100;
           }
 
           return null;
+        }}
+        components={{
+          Toolbar: CustomToolbar,
         }}
       />
     </div>

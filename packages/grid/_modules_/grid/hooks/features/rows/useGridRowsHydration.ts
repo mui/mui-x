@@ -1,12 +1,8 @@
 import * as React from 'react';
-import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
-import { GridEvents } from '../../../models/events/gridEvents';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridRowsHydrationApi } from '../../../models/api/gridRowsHydrationApi';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { getCurrentPageRows } from '../../utils/useCurrentPageRows';
-import { GridPreProcessingGroup } from '../../core/preProcessing';
-import { GridEventListener } from '../../../models/events/gridEventListener';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { GridRowId } from '../../../models/gridRows';
 import { useGridSelector } from '../../utils/useGridSelector';
@@ -19,7 +15,6 @@ import { gridPaginationSelector } from '../pagination/gridPaginationSelector';
 import { gridSortingStateSelector } from '../sorting/gridSortingSelector';
 
 /**
- * @requires useGridRowGroupsPreProcessing (method)
  * @requires useGridPageSize (method)
  * @requires useGridPage (method)
  */
@@ -53,16 +48,9 @@ export const useGridRowsHydration = (
             gridDensityRowHeightSelector(state);
         }
 
-        const heights = apiRef.current.unstable_applyPreProcessors(
-          GridPreProcessingGroup.rowHeight,
-          { base: targetRowHeight }, // We use an object to make simple to check if a size was already added or not
-          row,
-        ) as Record<string, number>;
+        rowsHeightLookup.current[row.id] = targetRowHeight;
 
-        const finalRowHeight = Object.values(heights).reduce((acc2, value) => acc2 + value, 0);
-        rowsHeightLookup.current[row.id] = finalRowHeight;
-
-        return acc + finalRowHeight;
+        return acc + targetRowHeight;
       }, 0);
 
       return {
@@ -76,17 +64,6 @@ export const useGridRowsHydration = (
     apiRef.current.forceUpdate();
   }, [apiRef, pagination, paginationMode, getRowHeight]);
 
-  const handlePreProcessorRegister = React.useCallback<
-    GridEventListener<GridEvents.preProcessorRegister>
-  >(
-    (name) => {
-      if (name === GridPreProcessingGroup.rowHeight) {
-        hydrateRowsMeta();
-      }
-    },
-    [hydrateRowsMeta],
-  );
-
   const getTargetRowHeight = (rowId: GridRowId): number =>
     rowsHeightLookup.current[rowId] || rowHeight;
 
@@ -95,8 +72,6 @@ export const useGridRowsHydration = (
   React.useEffect(() => {
     hydrateRowsMeta();
   }, [rowHeight, filterState, paginationState, sortingState, hydrateRowsMeta]);
-
-  useGridApiEventHandler(apiRef, GridEvents.preProcessorRegister, handlePreProcessorRegister);
 
   const rowsHydrationApi: GridRowsHydrationApi = {
     unstable_getTargetRowHeight: getTargetRowHeight,

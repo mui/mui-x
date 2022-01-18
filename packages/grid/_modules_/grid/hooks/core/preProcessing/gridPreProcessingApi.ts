@@ -7,7 +7,6 @@ export enum GridPreProcessingGroup {
   canBeReordered = 'canBeReordered',
   filteringMethod = 'filteringMethod',
   sortingMethod = 'sortingMethod',
-  rowHeight = 'rowHeight',
 }
 
 export interface GridPreProcessingApi {

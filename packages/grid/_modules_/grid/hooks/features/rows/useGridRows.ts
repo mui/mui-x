@@ -30,19 +30,16 @@ type GridRowInternalCacheValue = Omit<GridRowGroupParams, 'previousTree'>;
 
 interface GridRowsInternalCacheState {
   value: GridRowInternalCacheValue;
-
   /**
    * The value of the properties used by the grouping when the internal cache was created
    * We are storing it instead of accessing it directly when storing the cache to avoid synchronization issues
    */
   props: Pick<DataGridProcessedProps, 'rowCount' | 'getRowId'>;
-
   /**
    * The rows as they were the last time all the rows have been updated at once
    * It is used to avoid processing several time the same set of rows
    */
   rowsBeforePartialUpdates: GridRowsProp;
-
   /**
    * The last rows visible on the bottom of the viewport and rows visible during the last rendering.
    */
