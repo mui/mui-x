@@ -21,7 +21,7 @@ import { GridValueOptionsParams } from '../params/gridValueOptionsParams';
 import { GridActionsCellItemProps } from '../../components/cell/GridActionsCellItem';
 import { GridRowModel } from '../gridRows';
 import { GridEditCellProps } from '../gridEditRowModel';
-import { GridApiCommon, GridApiCommunity } from '../api';
+import type { GridApiCommon, GridApiCommunity } from '../api';
 
 /**
  * Alignment used in position elements in Cells.

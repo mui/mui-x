@@ -16,7 +16,7 @@ import { GridClasses } from '../../gridClasses';
 import { GridCellParams, GridRowParams } from '../params';
 import { GridFilterModel } from '../gridFilterModel';
 import { GridInputSelectionModel, GridSelectionModel } from '../gridSelectionModel';
-import { GridInitialState, GridInitialStateCommunity } from '../gridState';
+import { GridInitialStateCommunity } from '../gridState';
 import { GridSlotsComponentsProps } from '../gridSlotsComponentsProps';
 
 /**
