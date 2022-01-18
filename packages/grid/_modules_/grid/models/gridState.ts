@@ -23,8 +23,15 @@ import type {
   GridFilterState,
   GridFilterInitialState,
 } from '../hooks/features/filter/gridFilterState';
+import type {
+  GridRowGroupingState,
+  GridRowGroupingInitialState,
+} from '../hooks/features/rowGrouping';
 import { GridColumnPinningState } from '../hooks/features/columnPinning/gridColumnPinningState';
 
+/**
+ * TODO: Distinguish pro and community states
+ */
 export interface GridState {
   rows: GridRowsState;
   editRows: GridEditRowsModel;
@@ -40,6 +47,7 @@ export interface GridState {
   filter: GridFilterState;
   preferencePanel: GridPreferencePanelState;
   density: GridDensityState;
+  rowGrouping: GridRowGroupingState;
   error?: any;
   pinnedColumns: GridColumnPinningState;
 }
@@ -50,5 +58,6 @@ export interface GridInitialState {
   filter?: GridFilterInitialState;
   columns?: GridColumnsInitialState;
   preferencePanel?: GridPreferencePanelInitialState;
+  rowGrouping?: GridRowGroupingInitialState;
   pinnedColumns?: GridColumnPinningState;
 }

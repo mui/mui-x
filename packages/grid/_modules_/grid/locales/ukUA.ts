@@ -145,6 +145,11 @@ const ukUAGrid: Partial<GridLocaleText> = {
   treeDataGroupingHeaderName: 'Група',
   treeDataExpand: 'показати дочірні елементи',
   treeDataCollapse: 'приховати дочірні елементи',
+
+  // Grouping columns
+  // groupingColumnHeaderName: 'Group',
+  // groupColumn: name => `Group by ${name}`,
+  // unGroupColumn: name => `Stop grouping by ${name}`,
 };
 
 export const ukUA: Localization = getGridLocalization(ukUAGrid, ukUACore);

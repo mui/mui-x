@@ -109,13 +109,13 @@
   },
   {
     "name": "columnVisibilityChange",
-    "description": "Fired when a column visibility changes.\nIs not fired when the <code>columnVisibilityModel</code> is controlled or initialized.\nIs not fired when toggling all column&#39;s visibility at once.",
+    "description": "Fired when a column visibility changes.\nIt is not fired when the <code>columnVisibilityModel</code> is controlled or initialized.\nIt is not fired when toggling all column&#39;s visibility at once.",
     "params": "GridColumnVisibilityChangeParams",
     "event": "MuiEvent<{}>"
   },
   {
     "name": "columnVisibilityModelChange",
-    "description": "Fired when the column visibility model changes",
+    "description": "Fired when the column visibility model changes.",
     "params": "GridColumnVisibilityModel",
     "event": "MuiEvent<{}>"
   },
@@ -208,6 +208,12 @@
     "description": "Fired when the row turns back to view mode.",
     "params": "GridRowParams",
     "event": "MuiEvent<MuiBaseEvent>"
+  },
+  {
+    "name": "rowGroupingModelChange",
+    "description": "Fired when the row grouping model changes.",
+    "params": "GridRowGroupingModel",
+    "event": "MuiEvent<{}>"
   },
   {
     "name": "rowMouseEnter",
