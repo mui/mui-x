@@ -147,7 +147,6 @@ describe('<DataGridPro /> - Column pinning', () => {
       this.skip();
     }
     render(<TestCase nbCols={3} initialState={{ pinnedColumns: { right: ['price1M'] } }} />);
-    clock.runToLast();
     const columnHeader = getColumnHeaderCell(2);
     // @ts-expect-error need to migrate helpers to TypeScript
     expect(columnHeader).toHaveInlineStyle({ width: '100px' });
@@ -168,7 +167,6 @@ describe('<DataGridPro /> - Column pinning', () => {
       this.skip();
     }
     render(<TestCase nbCols={3} initialState={{ pinnedColumns: { right: ['price1M'] } }} />);
-    clock.runToLast();
     const columnHeader = getColumnHeaderCell(2);
     // @ts-expect-error need to migrate helpers to TypeScript
     expect(columnHeader).toHaveInlineStyle({ width: '100px' });

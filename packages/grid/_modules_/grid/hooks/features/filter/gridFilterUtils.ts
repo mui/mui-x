@@ -52,10 +52,16 @@ export const buildAggregatedFilterApplier = (
     if (!column) {
       return null;
     }
+    let parsedValue;
 
-    const parsedValue = column.valueParser
-      ? column.valueParser(filterItem.value)
-      : filterItem.value;
+    if (column.valueParser) {
+      const parser = column.valueParser;
+      parsedValue = Array.isArray(filterItem.value)
+        ? filterItem.value?.map((x) => parser(x))
+        : parser(filterItem.value);
+    } else {
+      parsedValue = filterItem.value;
+    }
     const newFilterItem: GridFilterItem = { ...filterItem, value: parsedValue };
 
     const filterOperators = column.filterOperators;
