@@ -111,6 +111,11 @@ const koKRGrid: Partial<GridLocaleText> = {
   treeDataGroupingHeaderName: '그룹',
   treeDataExpand: '하위노드 펼치기',
   treeDataCollapse: '하위노드 접기',
+
+  // Grouping columns
+  // groupingColumnHeaderName: 'Group',
+  // groupColumn: name => `Group by ${name}`,
+  // unGroupColumn: name => `Stop grouping by ${name}`,
 };
 
 export const koKR: Localization = getGridLocalization(koKRGrid, koKRCore);

@@ -20,6 +20,10 @@ import type {
   GridFilterState,
   GridFilterInitialState,
 } from '../hooks/features/filter/gridFilterState';
+import type {
+  GridRowGroupingState,
+  GridRowGroupingInitialState,
+} from '../hooks/features/rowGrouping';
 import { GridColumnPinningState } from '../hooks/features/columnPinning/gridColumnPinningState';
 
 /**
@@ -39,6 +43,7 @@ export interface GridStateCommunity {
   filter: GridFilterState;
   preferencePanel: GridPreferencePanelState;
   density: GridDensityState;
+  rowGrouping: GridRowGroupingState;
   error?: any;
 }
 
@@ -50,6 +55,7 @@ export interface GridStatePro extends GridStateCommunity {
   columnReorder: GridColumnReorderState;
   columnResize: GridColumnResizeState;
   pinnedColumns: GridColumnPinningState;
+  rowGrouping: GridRowGroupingState;
 }
 
 /**
@@ -62,5 +68,6 @@ export interface GridInitialState {
   sorting?: GridSortingInitialState;
   filter?: GridFilterInitialState;
   preferencePanel?: GridPreferencePanelInitialState;
+  rowGrouping?: GridRowGroupingInitialState;
   pinnedColumns?: GridColumnPinningState;
 }

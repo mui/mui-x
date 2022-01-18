@@ -204,6 +204,12 @@
     "event": "MuiEvent<MuiBaseEvent>"
   },
   {
+    "name": "rowGroupingModelChange",
+    "description": "Fired when the row grouping model changes.",
+    "params": "GridRowGroupingModel",
+    "event": "MuiEvent<{}>"
+  },
+  {
     "name": "rowMouseEnter",
     "description": "Fired when the mouse enters the row. Called with a <a href=\"/api/data-grid/grid-row-params/\">GridRowParams</a> object.",
     "params": "GridRowParams",
