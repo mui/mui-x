@@ -8,6 +8,9 @@ const StyledBox = styled(Box)(({ theme }) => ({
   width: '100%',
   '& .MuiDataGrid-cell--editable': {
     backgroundColor: theme.palette.mode === 'dark' ? '#376331' : 'rgb(217 243 190)',
+    '& .MuiInputBase-root': {
+      height: '100%',
+    },
   },
   '& .Mui-error': {
     backgroundColor: `rgb(126,10,15, ${theme.palette.mode === 'dark' ? 0 : 0.1})`,

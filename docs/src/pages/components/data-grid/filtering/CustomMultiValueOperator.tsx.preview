@@ -1,0 +1,6 @@
+<DataGrid
+  rows={data.rows}
+  columns={columns}
+  filterModel={filterModel}
+  onFilterModelChange={(model) => setFilterModel(model)}
+/>

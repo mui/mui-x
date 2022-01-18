@@ -1,10 +1,15 @@
 ---
 title: React Data Grid component
+githubLabel: 'component: data grid'
+packageName: '@mui/x-data-grid'
+waiAria: https://www.w3.org/TR/wai-aria-practices-1.1/#grid
 ---
 
 # Data Grid
 
 <p class="description">A fast and extendable react data table and react data grid. It's a feature-rich component available in MIT or Commercial versions.</p>
+
+{{"component": "modules/components/ComponentLinkHeader.js"}}
 
 The component leverages the power of React and TypeScript, to provide the best UX while manipulating an unlimited set of data. It comes with an intuitive API for real-time updates, accessibility, as well as theming and custom templates, all with blazing fast performance.
 
