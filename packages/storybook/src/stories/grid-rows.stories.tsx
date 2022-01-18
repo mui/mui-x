@@ -451,6 +451,9 @@ const useEditCellStyles = makeStyles({
     '& .MuiDataGrid-cell--editing': {
       backgroundColor: 'rgb(255,215,115, 0.19)',
       color: '#1a3e72',
+      '& .MuiInputBase-root': {
+        height: '100%',
+      },
     },
     '& .Mui-error': {
       backgroundColor: 'rgb(126,10,15, 0.1)',

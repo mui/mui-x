@@ -9,7 +9,7 @@ import { useData } from 'packages/storybook/src/hooks/useData';
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<DataGrid /> - Pagination', () => {
-  const { render, clock } = createRenderer({ clock: 'fake' });
+  const { render } = createRenderer({ clock: 'fake' });
 
   const BaselineTestCase = (
     props: Omit<DataGridProps, 'rows' | 'columns'> & { height?: number },
@@ -258,7 +258,6 @@ describe('<DataGrid /> - Pagination', () => {
 
     it('should apply the new pageSize when clicking on a page size option and onPageSizeChanged is not defined and pageSize is not controlled', () => {
       render(<BaselineTestCase rowsPerPageOptions={[1, 2, 3, 100]} />);
-
       fireEvent.mouseDown(screen.queryByLabelText('Rows per page:'));
       expect(screen.queryAllByRole('option').length).to.equal(4);
 
@@ -275,7 +274,6 @@ describe('<DataGrid /> - Pagination', () => {
           rowsPerPageOptions={[1, 2, 3, 100]}
         />,
       );
-
       fireEvent.mouseDown(screen.queryByLabelText('Rows per page:'));
       expect(screen.queryAllByRole('option').length).to.equal(4);
 
@@ -486,8 +484,6 @@ describe('<DataGrid /> - Pagination', () => {
           onPageSizeChange={onPageSizeChange}
         />,
       );
-
-      clock.runToLast(); // Run the timer to cleanup the listeners registered by StrictMode
 
       const footerHeight = document.querySelector('.MuiDataGrid-footerContainer')!.clientHeight;
       const expectedViewportRowsLengthBefore = Math.floor(

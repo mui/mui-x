@@ -392,4 +392,6 @@ export const gridClasses = generateUtilityClasses('MuiDataGrid', [
   'withBorder',
   'treeDataGroupingCell',
   'treeDataGroupingCellToggle',
+  'groupingCriteriaCell',
+  'groupingCriteriaCellToggle',
 ]);
