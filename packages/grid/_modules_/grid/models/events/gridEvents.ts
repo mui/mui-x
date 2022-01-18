@@ -286,7 +286,7 @@ export enum GridEvents {
    */
   filterModelChange = 'filterModelChange',
   /**
-   * Fired when the column visibility model changes
+   * Fired when the column visibility model changes.
    */
   columnVisibilityModelChange = 'columnVisibilityModelChange',
   /**
