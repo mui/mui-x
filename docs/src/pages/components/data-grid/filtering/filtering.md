@@ -235,13 +235,19 @@ You can customize the rendering of the filter panel as shown in [the component s
 The customization of the filter panel content can be performed by passing props to the default `<GridFilterPanel />` component.
 The props available allow to override:
 
-- The available `linkOperators`
-- The order of the column selector
-- The style of the controller for each input
+- The available `linkOperators` (can contains `GridLinkOperator.And` and `GridLinkOperator.Or`)
+- The order of the column selector (can be `"asc"` or `"desc"`)
+- Any prop of the input components
 
-In this example, the filter panel is customized such that the column selector is sorted by ascending order.
-The link operator is fixed to `"And"`.
-The components style has been [overridden](/customization/how-to-customize/#overriding-nested-component-styles) to not display the delete icon, all the components are expanded, and the background color changes between filters.
+Input components can be [customized](/customization/how-to-customize/) by using two approaches. You can pass a `sx` prop to any input container or you can use css selectors on nested components of the filter panel. More details are available in the demo.
+
+| Props                    | Class                                      |
+| :----------------------- | :----------------------------------------- |
+| `deleteIconProps`        | `MuiDataGrid-filterPanelDeleteIcon`        |
+| `linkOperatorInputProps` | `MuiDataGrid-filterPanelLinkOperatorInput` |
+| `columnInputProps`       | `MuiDataGrid-filterPanelColumnInput`       |
+| `operatorInputProps`     | `MuiDataGrid-filterPanelOperatorInput`     |
+| `valueInputProps`        | `MuiDataGrid-filterPanelValueInput`        |
 
 {{"demo": "pages/components/data-grid/filtering/CustomFilterPanelContent.js", "bg": "inline"}}
 

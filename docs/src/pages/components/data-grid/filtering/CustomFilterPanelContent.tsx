@@ -49,9 +49,12 @@ export default function CustomFilterPanel() {
         }}
         componentsProps={{
           filterPanel: {
+            // Force to use "And" operator
             linkOperators: [GridLinkOperator.And],
+            // Display columns by ascending alphabetical order
             columnsSort: 'asc',
             filterFormProps: {
+              // Customize inputs by passing props
               columnInputProps: {
                 variant: 'outlined',
                 size: 'small',
@@ -67,6 +70,7 @@ export default function CustomFilterPanel() {
               },
             },
             sx: {
+              // Customize inputs using css selectors
               '& .MuiDataGrid-filterPanelFilterForm': { p: 2 },
               '& .MuiDataGrid-filterPanelFilterForm:nth-child(even)': {
                 backgroundColor: (theme) =>
