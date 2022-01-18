@@ -52,16 +52,16 @@ export default function CustomFilterPanel() {
             linkOperators: [GridLinkOperator.And],
             columnsSort: 'asc',
             sx: {
-              '& .MuiDataGrid-filterForm': { p: 2 },
-              '& .MuiDataGrid-filterForm:nth-child(even)': {
+              '& .MuiDataGrid-filterPanelFilterForm': { p: 2 },
+              '& .MuiDataGrid-filterPanelFilterForm:nth-child(even)': {
                 backgroundColor: (theme) =>
                   theme.palette.mode === 'dark' ? '#444' : '#ddd',
               },
-              '& .MuiDataGrid-closeIconController': { display: 'none' },
-              '& .MuiDataGrid-linkOperatorController': { mr: 2 },
-              '& .MuiDataGrid-columnController': { mr: 2, width: 200 },
-              '& .MuiDataGrid-operatorController': { mr: 5 },
-              '& .MuiDataGrid-valueController': { width: 400 },
+              '& .MuiDataGrid-filterPanelDeleteIcon': { display: 'none' },
+              '& .MuiDataGrid-filterPanelLinkOperatorInput': { mr: 2 },
+              '& .MuiDataGrid-filterPanelColumnInput': { mr: 2, width: 200 },
+              '& .MuiDataGrid-filterPanelOperatorInput': { mr: 5 },
+              '& .MuiDataGrid-filterPanelValueInput': { width: 400 },
             },
           },
         }}

@@ -42,12 +42,12 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
 
   const slots = {
-    root: ['filterForm'],
-    closeIcon: ['closeIconController'],
-    linkOperator: ['linkOperatorController'],
-    column: ['columnController'],
-    operator: ['operatorController'],
-    value: ['valueController'],
+    root: ['filterForm', 'filterPanelFilterForm'],
+    closeIcon: ['filterPanelDeleteIcon'],
+    linkOperator: ['filterPanelLinkOperatorInput'],
+    column: ['filterPanelColumnInput'],
+    operator: ['filterPanelOperatorInput'],
+    value: ['filterPanelValueInput'],
   };
 
   return composeClasses(slots, getDataGridUtilityClass, classes);
