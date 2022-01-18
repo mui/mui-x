@@ -23,6 +23,9 @@ export default function ValidateRowModelControlGrid() {
         '& .MuiDataGrid-cell--editing': {
           bgcolor: 'rgb(255,215,115, 0.19)',
           color: '#1a3e72',
+          '& .MuiInputBase-root': {
+            height: '100%',
+          },
         },
         '& .Mui-error': {
           bgcolor: (theme) =>
