@@ -120,7 +120,6 @@ function GridFilterPanel(props: GridFilterPanelProps) {
             applyMultiFilterOperatorChanges={applyFilterLinkOperator}
             focusElementRef={index === items.length - 1 ? lastFilterRef : null}
             linkOperators={linkOperators}
-            hasLinkOperatorColumn={hasMultipleFilters && linkOperators.length > 0}
             columnsSort={columnsSort}
           />
         ))}

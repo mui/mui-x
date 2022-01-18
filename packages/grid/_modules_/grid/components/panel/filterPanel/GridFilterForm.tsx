@@ -27,8 +27,7 @@ export interface GridFilterFormProps {
   applyFilterChanges: (item: GridFilterItem) => void;
   applyMultiFilterOperatorChanges: (operator: GridLinkOperator) => void;
   deleteFilter: (item: GridFilterItem) => void;
-  hasLinkOperatorColumn?: boolean;
-  linkOperators?: (GridLinkOperator.And | GridLinkOperator.Or)[];
+  linkOperators?: GridLinkOperator[];
   columnsSort?: 'asc' | 'desc';
   deleteIconContainerSx?: SxProps<Theme>;
   linkOperatorContainerSx?: SxProps<Theme>;
@@ -63,7 +62,7 @@ const GridFilterFormRoot = styled('div', {
   padding: theme.spacing(1),
 }));
 
-const getLinkOperatorLocaleKey = (linkOperator) => {
+const getLinkOperatorLocaleKey = (linkOperator: GridLinkOperator) => {
   switch (linkOperator) {
     case GridLinkOperator.And:
       return 'filterPanelOperatorAnd';
@@ -81,6 +80,7 @@ const collator = new Intl.Collator();
 function GridFilterForm(props: GridFilterFormProps) {
   const {
     item,
+    hasMultipleFilters,
     deleteFilter,
     applyFilterChanges,
     multiFilterOperator,
@@ -88,7 +88,6 @@ function GridFilterForm(props: GridFilterFormProps) {
     disableMultiFilterOperator,
     applyMultiFilterOperatorChanges,
     focusElementRef,
-    hasLinkOperatorColumn,
     linkOperators = [GridLinkOperator.And, GridLinkOperator.Or],
     columnsSort,
   } = props;
@@ -105,6 +104,8 @@ function GridFilterForm(props: GridFilterFormProps) {
   const classes = useUtilityClasses(ownerState);
   const valueRef = React.useRef<any>(null);
   const filterSelectorRef = React.useRef<HTMLInputElement>(null);
+
+  const hasLinkOperatorColumn: boolean = hasMultipleFilters && linkOperators.length > 0;
 
   const { className: baseFormControlClassName, ...baseFormControl } =
     rootProps.componentsProps?.baseFormControl || {};
