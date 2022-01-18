@@ -10,16 +10,30 @@ import {
   DataGridPropsWithComplexDefaultValueBeforeProcessing,
   DATA_GRID_PROPS_DEFAULT_VALUES,
 } from './DataGridProps';
+import type { GridRowGroupingModel } from '../../hooks/features/rowGrouping';
+
+export type GridExperimentalProFeatures =
+  /**
+   * Will be part of the premium-plan when fully ready.
+   */
+  'rowGrouping';
 
 /**
  * The props users can give to the `DataGridProProps` component.
  */
-export type DataGridProProps = Omit<
-  Partial<DataGridProPropsWithDefaultValue> &
-    DataGridPropsWithComplexDefaultValueBeforeProcessing &
-    DataGridProPropsWithoutDefaultValue,
-  DataGridProForcedPropsKey
->;
+export interface DataGridProProps
+  extends Omit<
+    Partial<DataGridProPropsWithDefaultValue> &
+      DataGridPropsWithComplexDefaultValueBeforeProcessing &
+      DataGridProPropsWithoutDefaultValue,
+    DataGridProForcedPropsKey
+  > {
+  /**
+   * Features under development.
+   * For each feature, if the flag is not explicitly set to `true`, the feature will be fully disabled and any property / method call will not have any effect.
+   */
+  experimentalFeatures?: { [key in GridExperimentalProFeatures]?: boolean };
+}
 
 /**
  * The props of the `DataGridPro` component after the pre-processing phase.
@@ -66,15 +80,26 @@ export interface DataGridProPropsWithDefaultValue extends DataGridPropsWithDefau
    */
   disableColumnPinning: boolean;
   /**
-   * If `true`, the filtering will only be applied to the top level rows.
+   * If `true`, the filtering will only be applied to the top level rows when grouping rows with the `treeData` prop.
    * @default false
    */
   disableChildrenFiltering: boolean;
   /**
-   * If `true`, the sorting will only be applied to the top level rows.
+   * If `true`, the sorting will only be applied to the top level rows when grouping rows with the `treeData` prop.
    * @default false
    */
   disableChildrenSorting: boolean;
+  /**
+   * If `true`, the row grouping is disabled.
+   * @default false
+   */
+  disableRowGrouping: boolean;
+  /**
+   * If `single`, all column we are grouping by will be represented in the same grouping the same column.
+   * If `multiple`, each column we are grouping by will be represented in its own column.
+   * @default 'single'
+   */
+  rowGroupingColumnMode: 'single' | 'multiple';
 }
 
 /**
@@ -86,8 +111,10 @@ export const DATA_GRID_PRO_PROPS_DEFAULT_VALUES: DataGridProPropsWithDefaultValu
   treeData: false,
   defaultGroupingExpansionDepth: 0,
   disableColumnPinning: false,
+  disableRowGrouping: false,
   disableChildrenFiltering: false,
   disableChildrenSorting: false,
+  rowGroupingColumnMode: 'single',
 };
 
 export interface DataGridProPropsWithoutDefaultValue extends DataGridPropsWithoutDefaultValue {
@@ -130,6 +157,16 @@ export interface DataGridProPropsWithoutDefaultValue extends DataGridPropsWithou
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onPinnedColumnsChange?: (pinnedColumns: GridPinnedColumns, details: GridCallbackDetails) => void;
+  /**
+   * Set the row grouping model of the grid.
+   */
+  rowGroupingModel?: GridRowGroupingModel;
+  /**
+   * Callback fired when the row grouping model changes.
+   * @param {GridRowGroupingModel} model Columns used as grouping criteria.
+   * @param {GridCallbackDetails} details Additional details for this callback.
+   */
+  onRowGroupingModelChange?: (model: GridRowGroupingModel, details: GridCallbackDetails) => void;
   /**
    * The grouping column used by the tree data.
    */

@@ -28,12 +28,14 @@ import { useGridScroll } from '../../_modules_/grid/hooks/features/scroll/useGri
 import { useGridEvents } from '../../_modules_/grid/hooks/features/events/useGridEvents';
 import { useGridDimensions } from '../../_modules_/grid/hooks/features/dimensions/useGridDimensions';
 import { useGridTreeData } from '../../_modules_/grid/hooks/features/treeData/useGridTreeData';
+import { useGridRowGrouping } from '../../_modules_/grid/hooks/features/rowGrouping/useGridRowGrouping';
 import { useGridColumnPinning } from '../../_modules_/grid/hooks/features/columnPinning/useGridColumnPinning';
 import { useGridStatePersistence } from '../../_modules_/grid/hooks/features/statePersistence/useGridStatePersistence';
 
 export const useDataGridProComponent = (apiRef: GridApiRef, props: DataGridProProcessedProps) => {
   useGridInitialization(apiRef, props);
   useGridTreeData(apiRef, props);
+  useGridRowGrouping(apiRef, props);
   useGridSelection(apiRef, props);
   useGridColumns(apiRef, props);
   useGridRows(apiRef, props);
