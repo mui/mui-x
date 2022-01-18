@@ -898,6 +898,7 @@ describe('<DataGridPro /> - Edit Rows', () => {
       const option = screen.queryByRole('option', { name: 'Adidas' });
       fireEvent.mouseUp(option);
       fireEvent.click(option);
+      clock.tick(500);
 
       await new Promise((resolve) => nativeSetTimeout(resolve));
 
@@ -1096,6 +1097,7 @@ describe('<DataGridPro /> - Edit Rows', () => {
       fireEvent.doubleClick(cell);
       const input = cell.querySelector('input')!;
       fireEvent.change(input, { target: { value: '2022-01-12' } });
+      clock.tick(500);
       fireEvent.keyDown(input, { key: 'Enter' });
 
       await new Promise((resolve) => nativeSetTimeout(resolve));
@@ -1836,6 +1838,7 @@ describe('<DataGridPro /> - Edit Rows', () => {
 
     const input = cell.querySelector('input')!;
     fireEvent.change(input, { target: { value: 'Adidas' } });
+    clock.tick(500);
     fireEvent.keyDown(input, { key: 'Enter' });
 
     await new Promise((resolve) => nativeSetTimeout(resolve));
@@ -1875,6 +1878,7 @@ describe('<DataGridPro /> - Edit Rows', () => {
 
     const input = cell.querySelector('input')!;
     fireEvent.change(input, { target: { value: 'Adidas' } });
+    clock.tick(500);
     fireEvent.keyDown(input, { key: 'Enter' });
 
     await new Promise((resolve) => nativeSetTimeout(resolve));
@@ -1910,6 +1914,7 @@ describe('<DataGridPro /> - Edit Rows', () => {
 
     const input = cell.querySelector('input')!;
     fireEvent.change(input, { target: { value: 'Adidas' } });
+    clock.tick(500);
     fireEvent.keyDown(input, { key: 'Enter' });
 
     await new Promise((resolve) => nativeSetTimeout(resolve));
@@ -1953,6 +1958,7 @@ describe('<DataGridPro /> - Edit Rows', () => {
 
     const input = cell.querySelector('input')!;
     fireEvent.change(input, { target: { value: 'Adidas' } });
+    clock.tick(500);
     fireEvent.keyDown(input, { key: 'Enter' });
 
     await new Promise((resolve) => nativeSetTimeout(resolve));
@@ -1993,6 +1999,7 @@ describe('<DataGridPro /> - Edit Rows', () => {
 
     const input = cell.querySelector('input')!;
     fireEvent.change(input, { target: { value: 'Adidas' } });
+    clock.tick(500);
 
     await new Promise((resolve) => nativeSetTimeout(resolve));
 
@@ -2027,6 +2034,7 @@ describe('<DataGridPro /> - Edit Rows', () => {
 
     const input = cell.querySelector('input')!;
     fireEvent.change(input, { target: { value: 'Adidas' } });
+    clock.tick(500);
     fireEvent.keyDown(input, { key: 'Enter' });
 
     await new Promise((resolve) => nativeSetTimeout(resolve));
