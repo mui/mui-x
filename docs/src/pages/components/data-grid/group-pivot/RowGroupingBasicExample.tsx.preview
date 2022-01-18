@@ -1,14 +1,14 @@
 <DataGridPro
-    {...data}
-    apiRef={apiRef}
-    columns={columns}
-    rowGroupingColumnMode="single"
-    initialState={{
-        rowGrouping: {
-            model: INITIAL_GROUPING_COLUMN_MODEL,
-        },
-    }}
-    experimentalFeatures={{
-        rowGrouping: true,
-    }}
+  {...data}
+  apiRef={apiRef}
+  columns={columns}
+  rowGroupingColumnMode="single"
+  initialState={{
+    rowGrouping: {
+      model: INITIAL_GROUPING_COLUMN_MODEL,
+    },
+  }}
+  experimentalFeatures={{
+    rowGrouping: true,
+  }}
 />
