@@ -157,6 +157,14 @@ GridFilterPanel.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   columnsSort: PropTypes.oneOf(['asc', 'desc']),
+  filterFormProps: PropTypes.shape({
+    columnInputProps: PropTypes.any,
+    columnsSort: PropTypes.oneOf(['asc', 'desc']),
+    deleteIconProps: PropTypes.any,
+    linkOperatorInputProps: PropTypes.any,
+    operatorInputProps: PropTypes.any,
+    valueInputProps: PropTypes.any,
+  }).isRequired,
   linkOperators: PropTypes.arrayOf(PropTypes.oneOf(['and', 'or']).isRequired),
   sx: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),

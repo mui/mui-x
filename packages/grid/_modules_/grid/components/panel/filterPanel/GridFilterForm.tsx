@@ -371,24 +371,15 @@ GridFilterForm.propTypes = {
   // ----------------------------------------------------------------------
   applyFilterChanges: PropTypes.func.isRequired,
   applyMultiFilterOperatorChanges: PropTypes.func.isRequired,
-  columnContainerSx: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
-    PropTypes.func,
-    PropTypes.object,
-  ]),
+  columnInputProps: PropTypes.any,
   columnsSort: PropTypes.oneOf(['asc', 'desc']),
   deleteFilter: PropTypes.func.isRequired,
-  deleteIconContainerSx: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
-    PropTypes.func,
-    PropTypes.object,
-  ]),
+  deleteIconProps: PropTypes.any,
   disableMultiFilterOperator: PropTypes.bool,
   focusElementRef: PropTypes /* @typescript-to-proptypes-ignore */.oneOfType([
     PropTypes.func,
     PropTypes.object,
   ]),
-  hasLinkOperatorColumn: PropTypes.bool,
   hasMultipleFilters: PropTypes.bool.isRequired,
   item: PropTypes.shape({
     columnField: PropTypes.string.isRequired,
@@ -396,24 +387,12 @@ GridFilterForm.propTypes = {
     operatorValue: PropTypes.string,
     value: PropTypes.any,
   }).isRequired,
-  linkOperatorContainerSx: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
-    PropTypes.func,
-    PropTypes.object,
-  ]),
+  linkOperatorInputProps: PropTypes.any,
   linkOperators: PropTypes.arrayOf(PropTypes.oneOf(['and', 'or']).isRequired),
   multiFilterOperator: PropTypes.oneOf(['and', 'or']),
-  operatorContainerSx: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
-    PropTypes.func,
-    PropTypes.object,
-  ]),
+  operatorInputProps: PropTypes.any,
   showMultiFilterOperators: PropTypes.bool,
-  valueContainerSx: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
-    PropTypes.func,
-    PropTypes.object,
-  ]),
+  valueInputProps: PropTypes.any,
 } as any;
 
 export { GridFilterForm };
