@@ -7,7 +7,7 @@ LicenseInfo.setLicenseKey(process.env.NEXT_PUBLIC_MUI_LICENSE);
 import 'docs/src/modules/components/bootstrap';
 // --- Post bootstrap -----
 import pages from 'docsx/src/pages'; // DO NOT REMOVE
-import dataGridPages from 'docsx/data/data-grid/pages'; // DO NOT REMOVE
+import newPages from 'docsx/data/pages'; // DO NOT REMOVE
 import XWrapper from 'docsx/src/modules/XWrapper'; // DO NOT REMOVE
 import * as React from 'react';
 import { loadCSS } from 'fg-loadcss/src/loadCSS';
@@ -213,11 +213,8 @@ function AppWrapper(props) {
   }, []);
 
   let productPages = pages;
-  if (
-    router.asPath.startsWith('/x/react-data-grid') ||
-    router.asPath.startsWith('/x/api/data-grid')
-  ) {
-    productPages = dataGridPages;
+  if (router.asPath.startsWith('/x')) {
+    productPages = newPages;
   }
 
   const activePage = findActivePage(productPages, router.pathname);
