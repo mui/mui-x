@@ -129,6 +129,10 @@ const getChildren = (parentPath) => {
   );
 };
 
+/**
+ * This is a naive implementation with terrible performances on a real dataset.
+ * This fake server is only here for demonstration purposes.
+ */
 const fakeDataFetcher = (parentPath = []) =>
   new Promise((resolve) => {
     setTimeout(() => {
