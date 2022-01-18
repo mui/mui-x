@@ -90,6 +90,7 @@ export default function RowGroupingGroupingValueGetter() {
         apiRef={apiRef}
         columns={columns}
         initialState={{
+          ...data.initialState,
           rowGrouping: {
             model: INITIAL_GROUPING_COLUMN_MODEL,
           },

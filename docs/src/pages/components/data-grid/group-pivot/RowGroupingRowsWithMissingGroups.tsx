@@ -63,6 +63,7 @@ export default function RowGroupingRowsWithMissingGroups() {
         columns={columns}
         disableSelectionOnClick
         initialState={{
+          ...data.initialState,
           rowGrouping: {
             model: INITIAL_GROUPING_COLUMN_MODEL,
           },

@@ -15,6 +15,7 @@ export default function VisibleColumnsModelInitialState() {
         {...data}
         loading={loading}
         initialState={{
+          ...data.initialState,
           columns: {
             columnVisibilityModel: { status: false },
           },

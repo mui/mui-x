@@ -71,6 +71,7 @@ export default function RowGroupingColDefCanBeGrouped() {
         columns={columnWithNoDirectorGroup}
         disableSelectionOnClick
         initialState={{
+          ...data.initialState,
           rowGrouping: {
             model: INITIAL_GROUPING_COLUMN_MODEL,
           },

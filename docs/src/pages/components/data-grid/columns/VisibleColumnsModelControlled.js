@@ -10,6 +10,8 @@ export default function VisibleColumnsModelControlled() {
   });
 
   const [columnVisibilityModel, setColumnVisibilityModel] = React.useState({
+    id: false,
+    brokerId: false,
     status: false,
   });
 

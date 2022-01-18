@@ -10,7 +10,11 @@ export default function VisibleColumnsModelControlled() {
   });
 
   const [columnVisibilityModel, setColumnVisibilityModel] =
-    React.useState<GridColumnVisibilityModel>({ status: false });
+    React.useState<GridColumnVisibilityModel>({
+      id: false,
+      brokerId: false,
+      status: false,
+    });
 
   return (
     <div style={{ height: 300, width: '100%' }}>

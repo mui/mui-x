@@ -13,6 +13,7 @@ export default function PageSizeInitialState() {
     <div style={{ height: 400, width: '100%' }}>
       <DataGrid
         initialState={{
+          ...data.initialState,
           pagination: {
             pageSize: 25,
           },

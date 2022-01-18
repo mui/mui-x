@@ -56,6 +56,7 @@ export default function RowGroupingIsGroupExpandedByDefault() {
         isGroupExpandedByDefault={isGroupExpandedByDefault}
         disableSelectionOnClick
         initialState={{
+          ...data.initialState,
           rowGrouping: {
             model: INITIAL_GROUPING_COLUMN_MODEL,
           },

@@ -52,6 +52,7 @@ export default function RowGroupingMultipleGroupingCol() {
         columns={columns}
         rowGroupingColumnMode="multiple"
         initialState={{
+          ...data.initialState,
           rowGrouping: {
             model: INITIAL_GROUPING_COLUMN_MODEL,
           },
