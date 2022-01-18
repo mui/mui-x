@@ -1,14 +1,11 @@
 const pages = [
   {
     pathname: '/x/react-data-grid',
+    scopePathnames: ['/x/api/data-grid'],
     title: 'Data Grid',
-    icon: 'TableView',
+    icon: 'TableViewIcon',
     children: [
-      {
-        pathname: '/x/react-data-grid',
-        subheader: '/x/react-data-grid/overview',
-        title: 'Overview',
-      },
+      { pathname: '/x/react-data-grid', title: 'Overview' },
       { pathname: '/x/react-data-grid/demo' },
       { pathname: '/x/react-data-grid/getting-started' },
       { pathname: '/x/react-data-grid/migration-v4', title: 'Migration From v4' },
@@ -32,9 +29,8 @@ const pages = [
       {
         pathname: '/x/api/data-grid',
         title: 'API Reference',
-        icon: 'CodeIcon',
         children: [
-          { pathname: '/x/api/data-grid', title: 'API Reference' },
+          { pathname: '/x/api/data-grid', title: 'Index' },
           { pathname: '/x/api/data-grid/data-grid', title: 'DataGrid' },
           { pathname: '/x/api/data-grid/data-grid-pro', title: 'DataGridPro' },
           { pathname: '/x/api/data-grid/grid-api', title: 'GridApi' },
