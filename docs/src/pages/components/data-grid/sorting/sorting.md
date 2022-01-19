@@ -52,7 +52,7 @@ To initialize the sort model without controlling it, provide the model to the `i
 
 Use the `sortModel` prop to control the sorting rules applied on the rows.
 
-You can use the `onSortModelChange` prop to listen to changes to the sorting rules and update the prop accordingly.
+You can use the `onSortModelChange` prop to listen to changes in the sorting rules and update the prop accordingly.
 
 {{"demo": "pages/components/data-grid/sorting/ControlledSort.js", "bg": "inline", "defaultCodeOpen": false}}
 
