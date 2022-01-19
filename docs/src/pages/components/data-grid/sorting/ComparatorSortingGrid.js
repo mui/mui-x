@@ -15,13 +15,6 @@ export default function ComparatorSortingGrid() {
     rowLength: 100,
   });
 
-  const [sortModel, setSortModel] = React.useState([
-    {
-      field: 'username',
-      sort: 'asc',
-    },
-  ]);
-
   const columns = React.useMemo(
     () => [
       {
@@ -74,8 +67,16 @@ export default function ComparatorSortingGrid() {
       <DataGrid
         {...data}
         columns={columns}
-        sortModel={sortModel}
-        onSortModelChange={(model) => setSortModel(model)}
+        initialState={{
+          sorting: {
+            sortModel: [
+              {
+                field: 'username',
+                sort: 'asc',
+              },
+            ],
+          },
+        }}
       />
     </div>
   );

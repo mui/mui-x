@@ -2,9 +2,7 @@ import * as React from 'react';
 import {
   GridColumns,
   DataGrid,
-  GridSortDirection,
   GridValueGetterParams,
-  GridSortModel,
   gridNumberComparator,
   gridStringOrNumberComparator,
 } from '@mui/x-data-grid';
@@ -23,13 +21,6 @@ export default function ComparatorSortingGrid() {
     visibleFields: VISIBLE_FIELDS,
     rowLength: 100,
   });
-
-  const [sortModel, setSortModel] = React.useState<GridSortModel>([
-    {
-      field: 'username',
-      sort: 'asc' as GridSortDirection,
-    },
-  ]);
 
   const columns = React.useMemo<GridColumns>(
     () => [
@@ -88,8 +79,16 @@ export default function ComparatorSortingGrid() {
       <DataGrid
         {...data}
         columns={columns}
-        sortModel={sortModel}
-        onSortModelChange={(model) => setSortModel(model)}
+        initialState={{
+          sorting: {
+            sortModel: [
+              {
+                field: 'username',
+                sort: 'asc',
+              },
+            ],
+          },
+        }}
       />
     </div>
   );
