@@ -5,6 +5,8 @@ import { GridApi } from '../../models/api/gridApi';
 export function useGridApiMethod<T extends Partial<GridApi>>(
   apiRef: GridApiRef,
   apiMethods: T,
+  // TODO: Remove `apiName
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   apiName: string,
 ) {
   const apiMethodsRef = React.useRef(apiMethods);
@@ -19,7 +21,7 @@ export function useGridApiMethod<T extends Partial<GridApi>>(
         apiRef.current[methodName] = (...args) => apiMethodsRef.current[methodName](...args);
       }
     });
-  }, [apiMethodsNames, apiName, apiRef]);
+  }, [apiMethodsNames, apiRef]);
 
   React.useEffect(() => {
     apiMethodsRef.current = apiMethods;

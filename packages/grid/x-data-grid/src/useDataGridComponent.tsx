@@ -1,4 +1,3 @@
-import type { GridApiRef } from '../../_modules_';
 import { DataGridProcessedProps } from '../../_modules_/grid/models/props/DataGridProps';
 
 import { useGridInitialization } from '../../_modules_/grid/hooks/core';
