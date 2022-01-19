@@ -144,7 +144,7 @@ export const createColumnsState = ({
       columnsStateWithoutColumnVisibilityModel,
     );
 
-  // TODO: In v6 remove the sync between the columns `hide` option and the model.
+  // TODO v6: remove the sync between the columns `hide` option and the model.
   let columnVisibilityModel: GridColumnVisibilityModel = {};
   if (shouldRegenColumnVisibilityModelFromColumns) {
     if (reset) {
@@ -162,11 +162,7 @@ export const createColumnsState = ({
         if (isVisibleAfter !== isVisibleBefore) {
           hasModelChanged = true;
 
-          if (isVisibleAfter) {
-            newColumnVisibilityModel[field] = true;
-          } else {
-            newColumnVisibilityModel[field] = false;
-          }
+          newColumnVisibilityModel[field] = isVisibleAfter;
         }
       });
 

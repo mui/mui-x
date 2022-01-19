@@ -316,12 +316,12 @@ However, some types require additional properties to be set to make them work co
 ## Column visibility
 
 By default, all the columns are visible.
-The column's visibility can be switched through the grid interface in two ways:
+The column's visibility can be switched through the user interface in two ways:
 
 - By opening the column menu and clicking the _Hide_ menu item.
 - By clicking the _Columns_ menu and toggling the columns to show or hide.
 
-You can prevent the user from hiding a column through the grid interface by setting the `hideable` in `GridColDef` to `false`.
+You can prevent the user from hiding a column through the user interface by setting the `hideable` in `GridColDef` to `false`.
 
 In the following demo, the "username" column cannot be hidden.
 
@@ -337,7 +337,11 @@ To initialize the visible columns without controlling them, provide the model to
 <DataGrid
   initialState={{
     columns: {
-      columnsVisibilityModel: { status: false },
+      columnsVisibilityModel: {
+        // Hide columns status and traderName
+        status: false,
+        traderName: false,
+      },
     },
   }}
 />

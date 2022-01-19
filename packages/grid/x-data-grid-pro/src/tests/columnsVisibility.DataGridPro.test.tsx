@@ -47,7 +47,7 @@ describe('<DataGridPro /> - Columns Visibility', () => {
   };
 
   describe('apiRef: setColumnVisibility', () => {
-    describe('Model on initialState: do not `GridColDef.hide`', () => {
+    describe('Model on initialState: do not update `GridColDef.hide`', () => {
       it('should update `columnVisibilityModel` but not `GridColDef.hide` in state', () => {
         render(
           <TestDataGridPro

@@ -181,7 +181,7 @@ export function useGridColumns(
     (field, isVisible) => {
       // We keep updating the `hide` option of `GridColDef` when not controlling the model to avoid any breaking change.
       // `updateColumns` take care of updating the model itself if needs be.
-      // TODO: In v6 stop using the `hide` field even when the model is not defined
+      // TODO v6: stop using the `hide` field even when the model is not defined
       if (shouldUseVisibleColumnModel) {
         const columnVisibilityModel = gridColumnVisibilityModelSelector(apiRef.current.state);
         const isCurrentlyVisible: boolean = columnVisibilityModel[field] ?? true;
