@@ -66,7 +66,7 @@ In the example below, the _rating_ column can not be sorted.
 <Datagrid columns={[...columns, { field: 'rating', sortable: false }]} />
 ```
 
-{{"demo": "pages/components/data-grid/sorting/DisableSortingGrid.js", "bg": "inline"}}
+{{"demo": "pages/components/data-grid/sorting/DisableSortingGrid.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## Custom comparator
 
