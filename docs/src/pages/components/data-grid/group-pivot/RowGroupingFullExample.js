@@ -1,6 +1,11 @@
 import { useDemoData } from '@mui/x-data-grid-generator';
 import * as React from 'react';
-import { DataGridPro, GridEvents, useGridApiRef } from '@mui/x-data-grid-pro';
+import {
+  DataGridPro,
+  gridColumnVisibilityModelSelector,
+  GridEvents,
+  useGridApiRef,
+} from '@mui/x-data-grid-pro';
 
 const INITIAL_GROUPING_COLUMN_MODEL = ['commodity'];
 
@@ -9,18 +14,24 @@ const useKeepGroupingColumnsHidden = (apiRef, columns, initialModel, leafField) 
 
   React.useEffect(() => {
     apiRef.current.subscribeEvent(GridEvents.rowGroupingModelChange, (newModel) => {
-      apiRef.current.updateColumns([
-        ...newModel
-          .filter((field) => !prevModel.current.includes(field))
-          .map((field) => ({ field, hide: true })),
-        ...prevModel.current
-          .filter((field) => !newModel.includes(field))
-          .map((field) => ({ field, hide: false })),
-      ]);
+      const columnVisibilityModel = {
+        ...gridColumnVisibilityModelSelector(apiRef.current.state),
+      };
 
-      prevModel.current = initialModel;
+      newModel.forEach((field) => {
+        if (!prevModel.current.includes(field)) {
+          columnVisibilityModel[field] = false;
+        }
+      });
+      prevModel.current.forEach((field) => {
+        if (!newModel.includes(field)) {
+          columnVisibilityModel[field] = true;
+        }
+      });
+      apiRef.current.setColumnVisibilityModel(columnVisibilityModel);
+      prevModel.current = newModel;
     });
-  }, [apiRef, initialModel]);
+  }, [apiRef]);
 
   return React.useMemo(
     () =>
@@ -58,6 +69,16 @@ export default function RowGroupingFullExample() {
         loading={loading}
         disableSelectionOnClick
         initialState={{
+          ...data.initialState,
+          columns: {
+            ...data.initialState?.columns,
+            columnVisibilityModel: {
+              ...data.initialState?.columns?.columnVisibilityModel,
+              ...Object.fromEntries(
+                INITIAL_GROUPING_COLUMN_MODEL.map((field) => [field, false]),
+              ),
+            },
+          },
           rowGrouping: {
             model: INITIAL_GROUPING_COLUMN_MODEL,
           },
