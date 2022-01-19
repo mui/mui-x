@@ -2,7 +2,13 @@ import * as React from 'react';
 import { createRenderer, screen } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { GridApiRef, useGridApiRef, DataGridPro, ptBR } from '@mui/x-data-grid-pro';
+import {
+  GridApiRef,
+  useGridApiRef,
+  DataGridPro,
+  ptBR,
+  DataGridProProps,
+} from '@mui/x-data-grid-pro';
 
 describe('<DataGridPro /> - Layout', () => {
   const { render } = createRenderer();
@@ -82,7 +88,7 @@ describe('<DataGridPro /> - Layout', () => {
   });
 
   describe('columns width', () => {
-    it('should resize flex: 1 column when changing column visibility to avoid exceeding grid width', () => {
+    it('should resize flex: 1 column when changing column visibility to avoid exceeding grid width (apiRef setColumnVisibility method call with GridColDef.hide: deprecated)', () => {
       let apiRef: GridApiRef;
 
       const TestCase = (props) => {
@@ -119,6 +125,67 @@ describe('<DataGridPro /> - Layout', () => {
             { field: 'first', width: 100 },
             { field: 'age', width: 50, hide: true },
           ]}
+        />,
+      );
+
+      let firstColumn = document.querySelector('[role="columnheader"][aria-colindex="1"]');
+      // @ts-expect-error need to migrate helpers to TypeScript
+      expect(firstColumn).toHaveInlineStyle({
+        width: '198px', // because of the 2px border
+      });
+
+      apiRef!.current.setColumnVisibility('age', true);
+      firstColumn = document.querySelector('[role="columnheader"][aria-colindex="1"]');
+      // @ts-expect-error need to migrate helpers to TypeScript
+      expect(firstColumn).toHaveInlineStyle({
+        width: '148px', // because of the 2px border
+      });
+    });
+
+    it('should resize flex: 1 column when changing column visibility to avoid exceeding grid width (apiRef setColumnVisibility method call)', () => {
+      let apiRef: GridApiRef;
+
+      const TestCase = (props: Omit<DataGridProProps, 'apiRef'>) => {
+        apiRef = useGridApiRef();
+
+        return (
+          <div style={{ width: 300, height: 500 }}>
+            <DataGridPro {...props} apiRef={apiRef} />
+          </div>
+        );
+      };
+
+      render(
+        <TestCase
+          rows={[
+            {
+              id: 1,
+              first: 'Mike',
+              age: 11,
+            },
+            {
+              id: 2,
+              first: 'Jack',
+              age: 11,
+            },
+            {
+              id: 3,
+              first: 'Mike',
+              age: 20,
+            },
+          ]}
+          columns={[
+            { field: 'id', flex: 1 },
+            { field: 'first', width: 100 },
+            { field: 'age', width: 50 },
+          ]}
+          initialState={{
+            columns: {
+              columnVisibilityModel: {
+                age: false,
+              },
+            },
+          }}
         />,
       );
 

@@ -115,6 +115,11 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
   treeDataExpand: 'see children',
   treeDataCollapse: 'hide children',
 
+  // Grouping columns
+  groupingColumnHeaderName: 'Group',
+  groupColumn: (name) => `Group by ${name}`,
+  unGroupColumn: (name) => `Stop grouping by ${name}`,
+
   // Used core components translation keys
   MuiTablePagination: {},
 };

@@ -1,0 +1,14 @@
+<DataGridPro
+  {...data}
+  apiRef={apiRef}
+  columns={columns}
+  groupingColDef={{ leafField: 'title' }}
+  initialState={{
+    rowGrouping: {
+      model: INITIAL_GROUPING_COLUMN_MODEL,
+    },
+  }}
+  experimentalFeatures={{
+    rowGrouping: true,
+  }}
+/>

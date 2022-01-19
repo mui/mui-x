@@ -14,6 +14,7 @@
     "columnBuffer": { "type": { "name": "number" }, "default": "3" },
     "columnThreshold": { "type": { "name": "number" }, "default": "3" },
     "columnTypes": { "type": { "name": "object" } },
+    "columnVisibilityModel": { "type": { "name": "object" } },
     "components": { "type": { "name": "object" } },
     "componentsProps": { "type": { "name": "object" } },
     "density": {
@@ -82,7 +83,12 @@
     "onColumnHeaderOut": { "type": { "name": "func" } },
     "onColumnHeaderOver": { "type": { "name": "func" } },
     "onColumnOrderChange": { "type": { "name": "func" } },
-    "onColumnVisibilityChange": { "type": { "name": "func" } },
+    "onColumnVisibilityChange": {
+      "type": { "name": "func" },
+      "deprecated": true,
+      "deprecationInfo": "Use <code>onColumnVisibilityModelChange</code> instead."
+    },
+    "onColumnVisibilityModelChange": { "type": { "name": "func" } },
     "onEditCellPropsChange": {
       "type": { "name": "func" },
       "deprecated": true,
@@ -189,6 +195,14 @@
     "ExportIcon": { "default": "GridSaveAltIcon", "type": { "name": "elementType" } },
     "FilterPanel": { "default": "GridFilterPanel", "type": { "name": "elementType" } },
     "Footer": { "default": "GridFooter", "type": { "name": "elementType" } },
+    "GroupingCriteriaCollapseIcon": {
+      "default": "GridExpandMoreIcon",
+      "type": { "name": "elementType" }
+    },
+    "GroupingCriteriaExpandIcon": {
+      "default": "GridKeyboardArrowRight",
+      "type": { "name": "elementType" }
+    },
     "Header": { "default": "GridHeader", "type": { "name": "elementType" } },
     "LoadingOverlay": { "default": "GridLoadingOverlay", "type": { "name": "elementType" } },
     "MoreActionsIcon": { "default": "GridMoreVertIcon", "type": { "name": "elementType" } },
@@ -200,8 +214,8 @@
     "PreferencesPanel": { "default": "GridPreferencesPanel", "type": { "name": "elementType" } },
     "Row": { "type": { "name": "elementType" } },
     "Toolbar": { "default": "null", "type": { "name": "elementType | null" } },
-    "TreeDataCollapseIcon": { "type": { "name": "elementType" } },
-    "TreeDataExpandIcon": { "type": { "name": "elementType" } }
+    "TreeDataCollapseIcon": { "default": "GridExpandMoreIcon", "type": { "name": "elementType" } },
+    "TreeDataExpandIcon": { "default": "GridKeyboardArrowRight", "type": { "name": "elementType" } }
   },
   "name": "DataGrid",
   "styles": {

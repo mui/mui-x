@@ -11,6 +11,7 @@ export const GRID_STRING_COL_DEF: GridColTypeDef = {
   sortable: true,
   resizable: true,
   filterable: true,
+  groupable: true,
   pinnable: true,
   editable: false,
   sortComparator: gridStringNumberComparer,
