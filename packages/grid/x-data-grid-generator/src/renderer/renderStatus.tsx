@@ -63,5 +63,5 @@ export function renderStatus(params: GridCellParams) {
     return '';
   }
 
-  return <Status status={params.value.toString() as Statuses} />;
+  return <Status status={params.value.toString()} />;
 }
