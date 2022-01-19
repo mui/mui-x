@@ -71,9 +71,13 @@ export default function RowGroupingFullExample() {
         initialState={{
           ...data.initialState,
           columns: {
-            columnVisibilityModel: Object.fromEntries(
-              INITIAL_GROUPING_COLUMN_MODEL.map((field) => [field, false]),
-            ),
+            ...data.initialState?.columns,
+            columnVisibilityModel: {
+              ...data.initialState?.columns?.columnVisibilityModel,
+              ...Object.fromEntries(
+                INITIAL_GROUPING_COLUMN_MODEL.map((field) => [field, false]),
+              ),
+            },
           },
           rowGrouping: {
             model: INITIAL_GROUPING_COLUMN_MODEL,
