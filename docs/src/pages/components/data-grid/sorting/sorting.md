@@ -86,7 +86,7 @@ In the example below:
 - the "Name" column combines the `name` and `isAdmin` fields. The sorting is based on `isAdmin` and then on `name` if necessary. It re-uses built-in sorting comparator.
 - the "Created on" column sorting is based on the day of the month of the `createdOn` field. It is a fully custom sorting comparator.
 
-{{"demo": "pages/components/data-grid/sorting/ComparatorSortingGrid.js", "bg": "inline"}}
+{{"demo": "pages/components/data-grid/sorting/ComparatorSortingGrid.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## Custom sort order
 
