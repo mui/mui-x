@@ -327,8 +327,6 @@ In the following demo, the "username" column cannot be hidden.
 
 {{"demo": "pages/components/data-grid/columns/VisibleColumnsBasicExample.js", "bg": "inline"}}
 
-**Note:** If a column is not registered in the `columnVisibilityModel`, it is considered visible.
-
 ### Initialize the visible columns
 
 To initialize the visible columns without controlling them, provide the model to the `initialState` prop.
@@ -338,7 +336,7 @@ To initialize the visible columns without controlling them, provide the model to
   initialState={{
     columns: {
       columnsVisibilityModel: {
-        // Hide columns status and traderName
+        // Hide columns status and traderName, the other columns will remain visible
         status: false,
         traderName: false,
       },
@@ -347,7 +345,7 @@ To initialize the visible columns without controlling them, provide the model to
 />
 ```
 
-{{"demo": "pages/components/data-grid/columns/VisibleColumnsModelInitialState.js", "bg": "inline"}}
+{{"demo": "pages/components/data-grid/columns/VisibleColumnsModelInitialState.js", "bg": "inline", "defaultCodeOpen": false }}
 
 ### Controlled visible columns
 
@@ -355,7 +353,13 @@ Use the `columnVisibilityModel` prop to control the visible columns.
 You can use the `onColumnVisibilityModelChange` prop to listen to the changes to the visible columns and update the prop accordingly.
 
 ```tsx
-<DataGrid columnVisibilityModel={{ status: false }} />
+<DataGrid
+  columnVisibilityModel={{
+    // Hide columns status and traderName, the other columns will remain visible
+    status: false,
+    traderName: false,
+  }}
+/>
 ```
 
 > ⚠️The grid does not handle switching between controlled and uncontrolled modes.
