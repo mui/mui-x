@@ -68,7 +68,7 @@ export const hydrateColumnsWidth = (
     rawState.all.forEach((columnField) => {
       const column = columnsLookup[columnField];
 
-      if (!column.hide && column.flex && column.flex > 0) {
+      if (rawState.columnVisibilityModel[columnField] !== false && column.flex && column.flex > 0) {
         columnsLookup[columnField].computedWidth += widthPerFlexUnit * column.flex;
       }
     });
