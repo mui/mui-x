@@ -73,7 +73,7 @@ To change the row height for the whole grid, set the `rowHeight` prop:
 
 ## Variable row height
 
-If you need different rows to have different row heights this can be achieved using the `getRowHeight` prop. The prop is called for each visible row and if the return value is `number` then that `number` will be set as that row's `rowHeight`. If the return value is `null` or `undefined` then the `rowHeight` prop will take effect for the given row.
+If you need some rows to have different row heights this can be achieved using the `getRowHeight` prop. This function is called for each visible row and if the return value is a `number` then that `number` will be set as that row's `rowHeight`. If the return value is `null` or `undefined` then the `rowHeight` prop will take effect for the given row.
 
 {{"demo": "pages/components/data-grid/rows/VariableRowHeightGrid.js", "bg": "inline"}}
 
