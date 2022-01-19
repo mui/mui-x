@@ -5,7 +5,6 @@ import {
   unstable_useId as useId,
   unstable_useEnhancedEffect as useEnhancedEffect,
 } from '@mui/material/utils';
-import Checkbox from '@mui/material/Checkbox';
 import { getDataGridUtilityClass } from '../../gridClasses';
 import { GridRenderEditCellParams } from '../../models/params/gridCellParams';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
@@ -76,12 +75,13 @@ export function GridEditBooleanCell(
 
   return (
     <label htmlFor={id} className={clsx(classes.root, className)} {...other}>
-      <Checkbox
+      <rootProps.components.BaseCheckbox
         id={id}
         inputRef={inputRef}
         checked={Boolean(valueState)}
         onChange={handleChange}
         size="small"
+        {...rootProps.componentsProps?.baseCheckbox}
       />
     </label>
   );

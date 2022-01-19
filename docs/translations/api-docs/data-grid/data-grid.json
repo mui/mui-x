@@ -11,6 +11,7 @@
     "columns": "Set of columns of type GridColumns.",
     "columnThreshold": "Number of rows from the <code>columnBuffer</code> that can be visible before a new slice is rendered.",
     "columnTypes": "Extend native column types with your new column types.",
+    "columnVisibilityModel": "Set the column visibility model of the grid. If defined, the grid will ignore the <code>hide</code> property in <a href=\"/api/data-grid/grid-col-def/\">GridColDef</a>.",
     "components": "Overrideable components.",
     "componentsProps": "Overrideable components props dynamically passed to the component at rendering.",
     "density": "Set the density of the grid.",
@@ -55,11 +56,12 @@
     "onColumnHeaderOut": "Callback fired when a mouseout event comes from a column header element.<br><br><strong>Signature:</strong><br><code>function(params: GridColumnHeaderParams, event: MuiEvent&lt;React.MouseEvent&gt;, details: GridCallbackDetails) =&gt; void</code><br><em>params:</em> With all properties from GridColumnHeaderParams.<br><em>event:</em> The event object.<br><em>details:</em> Additional details for this callback.",
     "onColumnHeaderOver": "Callback fired when a mouseover event comes from a column header element.<br><br><strong>Signature:</strong><br><code>function(params: GridColumnHeaderParams, event: MuiEvent&lt;React.MouseEvent&gt;, details: GridCallbackDetails) =&gt; void</code><br><em>params:</em> With all properties from GridColumnHeaderParams.<br><em>event:</em> The event object.<br><em>details:</em> Additional details for this callback.",
     "onColumnOrderChange": "Callback fired when a column is reordered.<br><br><strong>Signature:</strong><br><code>function(params: GridColumnOrderChangeParams, event: MuiEvent&lt;{}&gt;, details: GridCallbackDetails) =&gt; void</code><br><em>params:</em> With all properties from GridColumnOrderChangeParams.<br><em>event:</em> The event object.<br><em>details:</em> Additional details for this callback.",
-    "onColumnVisibilityChange": "Callback fired when a column visibility changes.<br><br><strong>Signature:</strong><br><code>function(params: GridColumnVisibilityChangeParams, event: MuiEvent&lt;{}&gt;, details: GridCallbackDetails) =&gt; void</code><br><em>params:</em> With all properties from GridColumnVisibilityChangeParams.<br><em>event:</em> The event object.<br><em>details:</em> Additional details for this callback.",
+    "onColumnVisibilityChange": "Callback fired when a column visibility changes. Only works when no <code>columnVisibilityModel</code> is provided and if we change the visibility of a single column at a time.<br><br><strong>Signature:</strong><br><code>function(params: GridColumnVisibilityChangeParams, event: MuiEvent&lt;{}&gt;, details: GridCallbackDetails) =&gt; void</code><br><em>params:</em> With all properties from GridColumnVisibilityChangeParams.<br><em>event:</em> The event object.<br><em>details:</em> Additional details for this callback.",
+    "onColumnVisibilityModelChange": "Callback fired when the column visibility model changes.<br><br><strong>Signature:</strong><br><code>function(model: GridColumnVisibilityModel, details: GridCallbackDetails) =&gt; void</code><br><em>model:</em> The new model.<br><em>details:</em> Additional details for this callback.",
     "onEditCellPropsChange": "Callback fired when the edit cell value changes.<br><br><strong>Signature:</strong><br><code>function(params: GridEditCellPropsParams, event: MuiEvent&lt;React.SyntheticEvent&gt;, details: GridCallbackDetails) =&gt; void</code><br><em>params:</em> With all properties from GridEditCellPropsParams.<br><em>event:</em> The event that caused this prop to be called.<br><em>details:</em> Additional details for this callback.",
     "onEditRowsModelChange": "Callback fired when the <code>editRowsModel</code> changes.<br><br><strong>Signature:</strong><br><code>function(editRowsModel: GridEditRowsModel, details: GridCallbackDetails) =&gt; void</code><br><em>editRowsModel:</em> With all properties from GridEditRowsModel.<br><em>details:</em> Additional details for this callback.",
     "onError": "Callback fired when an exception is thrown in the grid.<br><br><strong>Signature:</strong><br><code>function(args: any, event: MuiEvent&lt;{}&gt;, details: GridCallbackDetails) =&gt; void</code><br><em>args:</em> The arguments passed to the <code>showError</code> call.<br><em>event:</em> The event object.<br><em>details:</em> Additional details for this callback.",
-    "onFilterModelChange": "Callback fired when the Filter model changes before the filters are applied.<br><br><strong>Signature:</strong><br><code>function(model: GridFilterModel, details: GridCallbackDetails) =&gt; void</code><br><em>model:</em> With all properties from GridFilterModel.<br><em>details:</em> Additional details for this callback.",
+    "onFilterModelChange": "Callback fired when the Filter model changes before the filters are applied.<br><br><strong>Signature:</strong><br><code>function(model: GridFilterModel, details: GridCallbackDetails) =&gt; void</code><br><em>model:</em> With all properties from <a href=\"/api/data-grid/grid-filter-model/\">GridFilterModel</a>.<br><em>details:</em> Additional details for this callback.",
     "onPageChange": "Callback fired when the current page has changed.<br><br><strong>Signature:</strong><br><code>function(page: number, details: GridCallbackDetails) =&gt; void</code><br><em>page:</em> Index of the page displayed on the Grid.<br><em>details:</em> Additional details for this callback.",
     "onPageSizeChange": "Callback fired when the page size has changed.<br><br><strong>Signature:</strong><br><code>function(pageSize: number, details: GridCallbackDetails) =&gt; void</code><br><em>pageSize:</em> Size of the page displayed on the Grid.<br><em>details:</em> Additional details for this callback.",
     "onResize": "Callback fired when the grid is resized.<br><br><strong>Signature:</strong><br><code>function(containerSize: ElementSize, event: MuiEvent&lt;{}&gt;, details: GridCallbackDetails) =&gt; void</code><br><em>containerSize:</em> With all properties from ElementSize.<br><em>event:</em> The event object.<br><em>details:</em> Additional details for this callback.",
@@ -400,8 +402,15 @@
     }
   },
   "slotDescriptions": {
-    "Cell": "Component rendered for each cell.",
     "BaseCheckbox": "The custom Checkbox component used in the grid for both header and cells.",
+    "BaseTextField": "The custom TextField component used in the grid.",
+    "BaseFormControl": "The custom FormControl component used in the grid.",
+    "BaseSelect": "The custom Select component used in the grid.",
+    "BaseSwitch": "The custom Switch component used in the grid.",
+    "BaseButton": "The custom Button component used in the grid.",
+    "BaseTooltip": "The custom Tooltip component used in the grid.",
+    "BasePopper": "The custom Popper component used in the grid.",
+    "Cell": "Component rendered for each cell.",
     "ColumnMenu": "Column menu component rendered by clicking on the 3 dots &quot;kebab&quot; icon in column headers.",
     "ErrorOverlay": "Error overlay component rendered above the grid when an error is caught.",
     "Footer": "Footer component rendered at the bottom of the grid viewport.",
@@ -432,6 +441,8 @@
     "ExportIcon": "Icon displayed on the open export button present in the toolbar by default.",
     "MoreActionsIcon": "Icon displayed on the <code>actions</code> column type to open the menu.",
     "TreeDataExpandIcon": "Icon displayed on the tree data toggling column when the children are collapsed",
-    "TreeDataCollapseIcon": "Icon displayed on the tree data toggling column when the children are expanded"
+    "TreeDataCollapseIcon": "Icon displayed on the tree data toggling column when the children are expanded",
+    "GroupingCriteriaExpandIcon": "Icon displayed on the grouping column when the children are collapsed",
+    "GroupingCriteriaCollapseIcon": "Icon displayed on the grouping column when the children are expanded"
   }
 }

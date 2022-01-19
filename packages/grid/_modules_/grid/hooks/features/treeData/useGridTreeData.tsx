@@ -2,8 +2,8 @@ import * as React from 'react';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { DataGridProProcessedProps } from '../../../models/props/DataGridProProps';
 import {
-  GRID_TREE_DATA_GROUP_COL_DEF,
-  GRID_TREE_DATA_GROUP_COL_DEF_FORCED_PROPERTIES,
+  GRID_TREE_DATA_GROUPING_COL_DEF,
+  GRID_TREE_DATA_GROUPING_COL_DEF_FORCED_PROPERTIES,
 } from './gridTreeDataGroupColDef';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { GridEventListener, GridEvents } from '../../../models/events';
@@ -17,8 +17,11 @@ import { useFirstRender } from '../../utils/useFirstRender';
 import { buildRowTree, BuildRowTreeGroupingCriteria } from '../../../utils/tree/buildRowTree';
 import { GridRowGroupingPreProcessing } from '../../core/rowGroupsPerProcessing';
 import { gridFilteredDescendantCountLookupSelector } from '../filter';
-import { GridPreProcessingGroup, useGridRegisterPreProcessor } from '../../core/preProcessing';
-import { GridColumnsRawState } from '../columns/gridColumnsState';
+import {
+  GridPreProcessingGroup,
+  GridPreProcessor,
+  useGridRegisterPreProcessor,
+} from '../../core/preProcessing';
 import { GridFilteringMethod } from '../filter/gridFilterState';
 import { gridRowIdsSelector, gridRowTreeSelector } from '../rows';
 import { useGridRegisterFilteringMethod } from '../filter/useGridRegisterFilteringMethod';
@@ -106,24 +109,24 @@ export const useGridTreeData = (
    * PRE-PROCESSING
    */
   const getGroupingColDef = React.useCallback((): GridColDef => {
-    const propGroupingColDef = props.groupingColDef;
+    const groupingColDefProp = props.groupingColDef;
 
     let colDefOverride: GridGroupingColDefOverride | null | undefined;
-    if (typeof propGroupingColDef === 'function') {
+    if (typeof groupingColDefProp === 'function') {
       const params: GridGroupingColDefOverrideParams = {
         groupingName: TREE_DATA_GROUPING_NAME,
         fields: [],
       };
 
-      colDefOverride = propGroupingColDef(params);
+      colDefOverride = groupingColDefProp(params);
     } else {
-      colDefOverride = propGroupingColDef;
+      colDefOverride = groupingColDefProp;
     }
 
     const { hideDescendantCount, ...colDefOverrideProperties } = colDefOverride ?? {};
 
     const commonProperties: Omit<GridColDef, 'field' | 'editable'> = {
-      ...GRID_TREE_DATA_GROUP_COL_DEF,
+      ...GRID_TREE_DATA_GROUPING_COL_DEF,
       renderCell: (params) => (
         <GridTreeDataGroupingCell {...params} hideDescendantCount={hideDescendantCount} />
       ),
@@ -133,20 +136,27 @@ export const useGridTreeData = (
     return {
       ...commonProperties,
       ...colDefOverrideProperties,
-      ...GRID_TREE_DATA_GROUP_COL_DEF_FORCED_PROPERTIES,
+      ...GRID_TREE_DATA_GROUPING_COL_DEF_FORCED_PROPERTIES,
     };
   }, [apiRef, props.groupingColDef]);
 
-  const updateGroupingColumn = React.useCallback(
-    (columnsState: GridColumnsRawState) => {
-      const groupingColDefField = GRID_TREE_DATA_GROUP_COL_DEF_FORCED_PROPERTIES.field;
+  const updateGroupingColumn = React.useCallback<
+    GridPreProcessor<GridPreProcessingGroup.hydrateColumns>
+  >(
+    (columnsState) => {
+      const groupingColDefField = GRID_TREE_DATA_GROUPING_COL_DEF_FORCED_PROPERTIES.field;
 
       const shouldHaveGroupingColumn = props.treeData;
-      const haveGroupingColumn = columnsState.lookup[groupingColDefField] != null;
+      const prevGroupingColumn = columnsState.lookup[groupingColDefField];
 
       if (shouldHaveGroupingColumn) {
-        columnsState.lookup[groupingColDefField] = getGroupingColDef();
-        if (!haveGroupingColumn) {
+        const newGroupingColumn = getGroupingColDef();
+        if (prevGroupingColumn) {
+          newGroupingColumn.width = prevGroupingColumn.width;
+          newGroupingColumn.flex = prevGroupingColumn.flex;
+        }
+        columnsState.lookup[groupingColDefField] = newGroupingColumn;
+        if (prevGroupingColumn == null) {
           const index = columnsState.all[0] === '__check__' ? 1 : 0;
           columnsState.all = [
             ...columnsState.all.slice(0, index),
@@ -154,7 +164,7 @@ export const useGridTreeData = (
             ...columnsState.all.slice(index),
           ];
         }
-      } else if (!shouldHaveGroupingColumn && haveGroupingColumn) {
+      } else if (!shouldHaveGroupingColumn && prevGroupingColumn) {
         delete columnsState.lookup[groupingColDefField];
         columnsState.all = columnsState.all.filter((field) => field !== groupingColDefField);
       }

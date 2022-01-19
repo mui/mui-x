@@ -26,6 +26,7 @@ If a cell is editable and has focus, any of the following interactions will star
 - A keydown of any printable key, for instance `a`, `E`, `0`, or `$`
 - A double click on the cell
 - A call to `apiRef.current.setCellMode(id, field, 'edit')`.
+
   ```tsx
   /**
     * Set the cellMode of a cell.
@@ -170,6 +171,7 @@ If a cell is editable and has focus, any of the following interactions will star
 - A <kbd class="key">Enter</kbd> keydown
 - A double click on the cell
 - A call to `apiRef.current.setRowMode(id, 'edit')`.
+
   ```tsx
   /**
     * Sets the mode of a row.

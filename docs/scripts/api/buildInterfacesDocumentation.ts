@@ -2,7 +2,7 @@ import * as ts from 'typescript';
 import * as prettier from 'prettier';
 import kebabCase from 'lodash/kebabCase';
 import path from 'path';
-import { renderInline as renderMarkdownInline } from '@material-ui/monorepo/docs/packages/markdown';
+import { renderInline as renderMarkdownInline } from '@mui/monorepo/docs/packages/markdown';
 import {
   escapeCell,
   getSymbolDescription,
@@ -43,6 +43,7 @@ const INTERFACES_WITH_DEDICATED_PAGES = [
   'GridCsvExportApi',
   'GridScrollApi',
   'GridEditRowApi',
+  'GridRowGroupingApi',
   'GridColumnPinningApi',
   'GridPrintExportApi',
   'GridDisableVirtualizationApi',
@@ -55,6 +56,11 @@ const INTERFACES_WITH_DEDICATED_PAGES = [
   'GridColDef',
   'GridCsvExportOptions',
   'GridPrintExportOptions',
+
+  // Filters
+  'GridFilterModel',
+  'GridFilterItem',
+  'GridFilterOperator',
 ];
 
 const parseProperty = (propertySymbol: ts.Symbol, project: Project): ParsedProperty => ({
@@ -274,7 +280,7 @@ export default function buildInterfacesDocumentation(options: BuildInterfacesDoc
       writePrettifiedFile(
         path.resolve(outputDirectory, `${slug}.js`),
         `import * as React from 'react';
-    import MarkdownDocs from '@material-ui/monorepo/docs/src/modules/components/MarkdownDocs';
+    import MarkdownDocs from '@mui/monorepo/docs/src/modules/components/MarkdownDocs';
     import { demos, docs, demoComponents } from './${slug}.md?@mui/markdown';
 
     export default function Page() {

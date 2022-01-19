@@ -22,7 +22,7 @@ defaults: &defaults
     # expose it globally otherwise we have to thread it from each job to the install command
     BROWSERSTACK_FORCE: << pipeline.parameters.browserstack-force >>
     REACT_DIST_TAG: << parameters.react-dist-tag >>
-  working_directory: /tmp/material-ui-x
+  working_directory: /tmp/mui
   docker:
     - image: circleci/node:12
 # CircleCI has disabled the cache across forks for security reasons.
@@ -123,14 +123,11 @@ jobs:
             then
               exit 1
             fi
-  test_static:
+  test_lint:
     <<: *defaults
     steps:
       - checkout
       - install_js
-      - run:
-          name: '`yarn prettier` changes committed?'
-          command: yarn prettier check-changed
       - run:
           name: Eslint
           command: yarn eslint:ci
@@ -140,6 +137,17 @@ jobs:
       - run:
           name: Lint JSON
           command: yarn jsonlint
+      - run:
+          name: Lint Markdown
+          command: yarn markdownlint
+  test_static:
+    <<: *defaults
+    steps:
+      - checkout
+      - install_js
+      - run:
+          name: '`yarn prettier` changes committed?'
+          command: yarn prettier check-changed
       - run:
           name: Generate PropTypes
           command: yarn proptypes
@@ -161,7 +169,7 @@ jobs:
   test_browser:
     <<: *defaults
     docker:
-      - image: mcr.microsoft.com/playwright@sha256:f08e263c95e83334104e6e2fee047ad92062a03af6ae94c0f8686ba2b3014823
+      - image: mcr.microsoft.com/playwright@sha256:60d8e47142f0e59108209067ab6b850faef6ab4f3028007a8487fe8de27999fb
         environment:
           NODE_ENV: development # Needed if playwright is in `devDependencies`
     steps:
@@ -192,7 +200,7 @@ jobs:
   test_e2e:
     <<: *defaults
     docker:
-      - image: mcr.microsoft.com/playwright@sha256:f08e263c95e83334104e6e2fee047ad92062a03af6ae94c0f8686ba2b3014823
+      - image: mcr.microsoft.com/playwright@sha256:60d8e47142f0e59108209067ab6b850faef6ab4f3028007a8487fe8de27999fb
         environment:
           NODE_ENV: development # Needed if playwright is in `devDependencies`
     steps:
@@ -205,7 +213,7 @@ jobs:
   test_regressions:
     <<: *defaults
     docker:
-      - image: mcr.microsoft.com/playwright@sha256:f08e263c95e83334104e6e2fee047ad92062a03af6ae94c0f8686ba2b3014823
+      - image: mcr.microsoft.com/playwright@sha256:60d8e47142f0e59108209067ab6b850faef6ab4f3028007a8487fe8de27999fb
         environment:
           NODE_ENV: development # Needed if playwright is in `devDependencies`
     steps:
@@ -218,12 +226,38 @@ jobs:
       - run:
           name: Upload screenshots to Argos CI
           command: yarn test:argos
+  test_performance:
+    <<: *defaults
+    docker:
+      - image: mcr.microsoft.com/playwright@sha256:60d8e47142f0e59108209067ab6b850faef6ab4f3028007a8487fe8de27999fb
+        environment:
+          NODE_ENV: development # Needed if playwright is in `devDependencies`
+    steps:
+      - checkout
+      - install_js:
+          browsers: true
+      - run:
+          name: Run performance tests
+          command: xvfb-run yarn test:performance
+      - store_artifacts:
+          name: Persist performance snapshot as pipeline artifact
+          path: performance-snapshot.json
+          destination: performance-snapshot.json
+      - run:
+          name: Run danger on PRs
+          command: yarn danger ci --fail-on-errors
+          environment:
+            DANGER_DISABLE_TRANSPILATION: 'true'
+            DANGER_COMMAND: 'reportPerformance'
 workflows:
   version: 2
   pipeline:
     jobs:
       - checkout
       - test_unit:
+          requires:
+            - checkout
+      - test_lint:
           requires:
             - checkout
       - test_static:
@@ -239,5 +273,8 @@ workflows:
           requires:
             - checkout
       - test_regressions:
+          requires:
+            - checkout
+      - test_performance:
           requires:
             - checkout

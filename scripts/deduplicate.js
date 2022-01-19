@@ -1,1 +1,1 @@
-require('@material-ui/monorepo/scripts/deduplicate');
+require('@mui/monorepo/scripts/deduplicate');

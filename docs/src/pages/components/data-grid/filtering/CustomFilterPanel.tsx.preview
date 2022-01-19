@@ -1,0 +1,14 @@
+<DataGrid
+  {...data}
+  components={{
+    Toolbar: CustomToolbar,
+  }}
+  componentsProps={{
+    panel: {
+      anchorEl: filterButtonEl,
+    },
+    toolbar: {
+      setFilterButtonEl,
+    },
+  }}
+/>
