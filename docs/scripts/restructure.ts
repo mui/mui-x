@@ -48,10 +48,18 @@ function run() {
     if (info) {
       let data = fs.readFileSync(filePath, { encoding: 'utf-8' });
       if (filePath.endsWith('.md')) {
-        // remove relative path, so that the demos does not rely on a specific path
-        // before: {{"demo": "pages/components/data-grid/accessibility/DensitySelectorSmallGrid.js", "bg": "inline"}}
-        // after: {{"demo": "DensitySelectorSmallGrid.js", "bg": "inline"}}
-        data = data.replace(/"pages\/[/\-a-zA-Z]*\/([a-zA-Z]*\.js)"/gm, `"$1"`);
+        if (filePath.endsWith('migration-v4.md')) {
+          // specific case, the demo reference to another folder
+          data = data.replace(
+            /pages\/components\/data-grid\/getting-started\/DataGridV5WithCoreV4.js/gm,
+            `data/data-grid/getting-started/DataGridV5WithCoreV4.js`,
+          );
+        } else {
+          // remove relative path, so that the demos does not rely on a specific path
+          // before: {{"demo": "pages/components/data-grid/accessibility/DensitySelectorSmallGrid.js", "bg": "inline"}}
+          // after: {{"demo": "DensitySelectorSmallGrid.js", "bg": "inline"}}
+          data = data.replace(/"pages\/[/\-a-zA-Z]*\/([a-zA-Z0-9]*\.js)"/gm, `"$1"`);
+        }
       }
       fs.mkdirSync(info.directory, { recursive: true });
       fs.writeFileSync(info.path, data);
