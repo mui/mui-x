@@ -4,7 +4,7 @@ import { expect } from 'chai';
 import { spy, SinonSpy } from 'sinon';
 import { fireEvent, fireTouchChangedEvent, screen } from '@mui/monorepo/test/utils';
 import { MobileDateTimePicker } from '@mui/x-pickers/MobileDateTimePicker';
-import { adapterToUse, createPickerRenderer } from '../internal/utils/test-utils';
+import { adapterToUse, createPickerRenderer } from '../../../../test/utils/pickers-utils';
 
 describe('<MobileDateTimePicker />', () => {
   const { render } = createPickerRenderer({

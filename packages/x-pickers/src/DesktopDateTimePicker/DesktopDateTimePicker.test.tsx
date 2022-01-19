@@ -5,7 +5,7 @@ import { spy } from 'sinon';
 import { act, fireEvent, screen, userEvent } from '@mui/monorepo/test/utils';
 import 'dayjs/locale/ru';
 import { DesktopDateTimePicker } from '@mui/x-pickers/DesktopDateTimePicker';
-import { adapterToUse, createPickerRenderer } from '../internal/utils/test-utils';
+import { adapterToUse, createPickerRenderer } from '../../../../test/utils/pickers-utils';
 
 describe('<DesktopDateTimePicker />', () => {
   const { render } = createPickerRenderer({

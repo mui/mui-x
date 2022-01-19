@@ -14,6 +14,7 @@ module.exports = {
       ),
       '@mui/x-data-grid-pro': path.resolve(__dirname, './packages/grid/x-data-grid-pro/src'),
       '@mui/x-pickers': path.resolve(__dirname, './packages/x-pickers/src'),
+      '@mui/x-pickers-pro': path.resolve(__dirname, './packages/x-pickers-pro/src'),
       '@mui/x-license-pro': path.resolve(__dirname, './packages/x-license-pro/src'),
       '@mui/markdown': path.resolve(
         __dirname,

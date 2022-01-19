@@ -4,12 +4,12 @@ import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import { AdapterDateFns } from '@mui/x-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-pickers/LocalizationProvider';
-import { DateRange } from '@mui/x-pickers/DateRangePicker';
-import { StaticDateRangePicker } from '@mui/x-pickers/StaticDateRangePicker';
+import { DateRange } from '@mui/x-pickers-pro/DateRangePicker';
+import { StaticDateRangePicker } from '@mui/x-pickers-pro/StaticDateRangePicker';
 import {
   DateRangePickerDay as MuiDateRangePickerDay,
   DateRangePickerDayProps,
-} from '@mui/x-pickers/DateRangePickerDay';
+} from '@mui/x-pickers-pro/DateRangePickerDay';
 
 const DateRangePickerDay = styled(MuiDateRangePickerDay)(
   ({ theme, isHighlighting, isStartOfHighlighting, isEndOfHighlighting }) => ({

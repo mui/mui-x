@@ -3,7 +3,7 @@ import { expect } from 'chai';
 import TextField from '@mui/material/TextField';
 import { fireEvent, screen } from '@mui/monorepo/test/utils';
 import { StaticDatePicker } from '@mui/x-pickers/StaticDatePicker';
-import { createPickerRenderer, adapterToUse } from '../internal/utils/test-utils';
+import { createPickerRenderer, adapterToUse } from '../../../../test/utils/pickers-utils';
 
 describe('<StaticDatePicker />', () => {
   const { render } = createPickerRenderer({ clock: 'fake' });

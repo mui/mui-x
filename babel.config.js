@@ -30,6 +30,7 @@ const defaultAlias = {
   '@mui/x-data-grid-pro': resolveAliasPath('./packages/grid/x-data-grid-pro/src'),
   '@mui/x-license-pro': resolveAliasPath('./packages/x-license-pro/src'),
   '@mui/x-pickers': resolveAliasPath('./packages/x-pickers/src'),
+  '@mui/x-pickers-pro': resolveAliasPath('./packages/x-pickers-pro/src'),
   'typescript-to-proptypes': '@mui/monorepo/packages/typescript-to-proptypes/src',
   docs: resolveAliasPath('./node_modules/@mui/monorepo/docs'),
 };

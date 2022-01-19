@@ -21,11 +21,6 @@ export interface PickerComponents {
     styleOverrides?: ComponentsOverrides['MuiDatePicker'];
     variants?: ComponentsVariants['MuiDatePicker'];
   };
-  MuiDateRangePickerDay?: {
-    defaultProps?: ComponentsProps['MuiDateRangePickerDay'];
-    styleOverrides?: ComponentsOverrides['MuiDateRangePickerDay'];
-    variants?: ComponentsVariants['MuiDateRangePickerDay'];
-  };
   MuiDateTimePicker?: {
     defaultProps?: ComponentsProps['MuiDateTimePicker'];
     styleOverrides?: ComponentsOverrides['MuiDateTimePicker'];

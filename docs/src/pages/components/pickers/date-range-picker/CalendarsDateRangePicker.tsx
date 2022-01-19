@@ -3,7 +3,7 @@ import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import { AdapterDateFns } from '@mui/x-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-pickers/LocalizationProvider';
-import { DateRangePicker, DateRange } from '@mui/x-pickers/DateRangePicker';
+import { DateRangePicker, DateRange } from '@mui/x-pickers-pro/DateRangePicker';
 import Box from '@mui/material/Box';
 
 export default function CalendarsDateRangePicker() {

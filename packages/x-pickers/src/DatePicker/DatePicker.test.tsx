@@ -2,7 +2,7 @@ import * as React from 'react';
 import { expect } from 'chai';
 import TextField from '@mui/material/TextField';
 import { DatePicker } from '@mui/x-pickers/DatePicker';
-import { createPickerRenderer } from '../internal/utils/test-utils';
+import { createPickerRenderer } from '../../../../test/utils/pickers-utils';
 
 describe('<DatePicker />', () => {
   const { render } = createPickerRenderer();

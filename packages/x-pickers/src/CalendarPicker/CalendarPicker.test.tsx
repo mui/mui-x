@@ -3,7 +3,11 @@ import { expect } from 'chai';
 import { spy } from 'sinon';
 import { fireEvent, screen, describeConformance } from '@mui/monorepo/test/utils';
 import { CalendarPicker, calendarPickerClasses as classes } from '@mui/x-pickers/CalendarPicker';
-import { adapterToUse, wrapPickerMount, createPickerRenderer } from '../internal/utils/test-utils';
+import {
+  adapterToUse,
+  wrapPickerMount,
+  createPickerRenderer,
+} from '../../../../test/utils/pickers-utils';
 
 describe('<CalendarPicker />', () => {
   const { render } = createPickerRenderer({ clock: 'fake' });

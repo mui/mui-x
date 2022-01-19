@@ -4,7 +4,7 @@ import fr from 'date-fns/locale/fr';
 import TextField from '@mui/material/TextField';
 import { MobileDatePicker } from '@mui/x-pickers/MobileDatePicker';
 import { fireEvent, screen } from '@mui/monorepo/test/utils';
-import { adapterToUse, createPickerRenderer } from '../internal/utils/test-utils';
+import { adapterToUse, createPickerRenderer } from '../../../../test/utils/pickers-utils';
 
 describe('<MobileDatePicker /> localization', () => {
   const { render } = createPickerRenderer({ locale: fr });

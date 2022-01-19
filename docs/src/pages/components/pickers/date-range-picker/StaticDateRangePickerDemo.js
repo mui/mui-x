@@ -1,6 +1,6 @@
 import * as React from 'react';
 import TextField from '@mui/material/TextField';
-import { StaticDateRangePicker } from '@mui/x-pickers/StaticDateRangePicker';
+import { StaticDateRangePicker } from '@mui/x-pickers-pro/StaticDateRangePicker';
 import { AdapterDateFns } from '@mui/x-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-pickers/LocalizationProvider';
 import Box from '@mui/material/Box';

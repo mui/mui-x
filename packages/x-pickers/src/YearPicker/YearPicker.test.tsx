@@ -3,7 +3,11 @@ import { spy } from 'sinon';
 import { expect } from 'chai';
 import { fireEvent, screen, describeConformance } from '@mui/monorepo/test/utils';
 import { YearPicker, yearPickerClasses as classes } from '@mui/x-pickers/YearPicker';
-import { adapterToUse, wrapPickerMount, createPickerRenderer } from '../internal/utils/test-utils';
+import {
+  adapterToUse,
+  wrapPickerMount,
+  createPickerRenderer,
+} from '../../../../test/utils/pickers-utils';
 
 describe('<YearPicker />', () => {
   const { render } = createPickerRenderer();

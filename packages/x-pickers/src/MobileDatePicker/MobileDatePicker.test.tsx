@@ -11,7 +11,7 @@ import {
   FakeTransitionComponent,
   adapterToUse,
   openMobilePicker,
-} from '../internal/utils/test-utils';
+} from '../../../../test/utils/pickers-utils';
 
 describe('<MobileDatePicker />', () => {
   const { clock, render } = createPickerRenderer({ clock: 'fake', clockConfig: new Date() });

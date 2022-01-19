@@ -10,7 +10,7 @@ import {
   createPickerRenderer,
   FakeTransitionComponent,
   adapterToUse,
-} from '../internal/utils/test-utils';
+} from '../../../../test/utils/pickers-utils';
 
 const UncontrolledOpenDesktopDatePicker = (({
   onClose = () => {},

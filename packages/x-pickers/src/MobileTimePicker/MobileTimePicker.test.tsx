@@ -9,7 +9,11 @@ import {
   screen,
 } from '@mui/monorepo/test/utils';
 import { MobileTimePicker } from '@mui/x-pickers/MobileTimePicker';
-import { wrapPickerMount, createPickerRenderer, adapterToUse } from '../internal/utils/test-utils';
+import {
+  wrapPickerMount,
+  createPickerRenderer,
+  adapterToUse,
+} from '../../../../test/utils/pickers-utils';
 
 function createMouseEventWithOffsets(
   type: 'mousedown' | 'mousemove' | 'mouseup',

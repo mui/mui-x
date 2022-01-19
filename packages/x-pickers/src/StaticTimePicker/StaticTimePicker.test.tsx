@@ -2,7 +2,7 @@ import * as React from 'react';
 import TextField from '@mui/material/TextField';
 import { describeConformance } from '@mui/monorepo/test/utils';
 import { StaticTimePicker } from './StaticTimePicker';
-import { wrapPickerMount } from '../internal/utils/test-utils';
+import { wrapPickerMount } from '../../../../test/utils/pickers-utils';
 
 describe('<StaticTimePicker />', () => {
   describeConformance(

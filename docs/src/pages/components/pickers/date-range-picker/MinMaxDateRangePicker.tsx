@@ -3,7 +3,7 @@ import addWeeks from 'date-fns/addWeeks';
 import TextField from '@mui/material/TextField';
 import { AdapterDateFns } from '@mui/x-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-pickers/LocalizationProvider';
-import { DateRangePicker, DateRange } from '@mui/x-pickers/DateRangePicker';
+import { DateRangePicker, DateRange } from '@mui/x-pickers-pro/DateRangePicker';
 import Box from '@mui/material/Box';
 
 function getWeeksAfter(date: Date | null, amount: number) {

@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { adapterToUse } from './test-utils';
+import { adapterToUse } from '../../../../../test/utils/pickers-utils';
 import {
   maskedDateFormatter,
   pick12hOr24hFormat,

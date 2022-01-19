@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { adapterToUse } from './test-utils';
+import { adapterToUse } from '../../../../../test/utils/pickers-utils';
 import { findClosestEnabledDate } from './date-utils';
 
 describe('findClosestEnabledDate', () => {
