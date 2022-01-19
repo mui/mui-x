@@ -45,9 +45,7 @@ export const useGridRowsHydration = (
 
         if (getRowHeight) {
           // Default back to base rowHeight if getRowHeight returns null or undefined.
-          targetRowHeight =
-            getRowHeight({ ...row, densityFactor }) ??
-            currentRowHeight;
+          targetRowHeight = getRowHeight({ ...row, densityFactor }) ?? currentRowHeight;
         }
 
         rowsHeightLookup.current[row.id] = targetRowHeight;

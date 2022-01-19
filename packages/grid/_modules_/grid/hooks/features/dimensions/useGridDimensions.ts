@@ -126,7 +126,13 @@ export function useGridDimensions(
         newFullDimensions.viewportInnerSize,
       );
     }
-  }, [apiRef, props.scrollbarSize, props.autoHeight, headerHeight, rowsMeta.currentPageTotalHeight]);
+  }, [
+    apiRef,
+    props.scrollbarSize,
+    props.autoHeight,
+    headerHeight,
+    rowsMeta.currentPageTotalHeight,
+  ]);
 
   const resize = React.useCallback<GridDimensionsApi['resize']>(() => {
     updateGridDimensionsRef();
