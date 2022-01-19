@@ -4,13 +4,14 @@ import { expect } from 'chai';
 import { createRenderer } from '@mui/monorepo/test/utils';
 import {
   DataGridPro,
-  GridApiRef,
   useGridApiRef,
   DataGridProProps,
   GridRowsProp,
   GridColumns,
   gridColumnLookupSelector,
   gridColumnVisibilityModelSelector,
+  GridApiRefPro,
+  GridApiPro,
 } from '@mui/x-data-grid-pro';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
@@ -25,13 +26,13 @@ const columns: GridColumns = [{ field: 'id' }];
 describe('<DataGridPro /> - Columns Visibility', () => {
   const { render } = createRenderer();
 
-  let apiRef: GridApiRef;
+  let apiRef: GridApiRefPro;
 
   const TestDataGridPro = (
     props: Omit<DataGridProProps, 'columns' | 'rows' | 'apiRef'> &
       Partial<Pick<DataGridProProps, 'rows' | 'columns'>>,
   ) => {
-    apiRef = useGridApiRef();
+    apiRef = useGridApiRef<GridApiPro>();
 
     return (
       <div style={{ width: 300, height: 300 }}>
