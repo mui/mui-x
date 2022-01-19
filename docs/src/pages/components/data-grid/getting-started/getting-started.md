@@ -250,7 +250,7 @@ If you need to share private information, you can also use email.
 - **MUI X Premium**: Same as MUI X Pro with priority over Pro and a 48 hours SLA for the first answer.
   - GitHub: this plan is not available yet
   - Emails: this plan is not available yet
-- **MUI X Premium Priority**: Same as MUI X Premium but with a 24 hours SLA for the first answer and a pre-screening in under 4 hours.
+- **MUI X Premium Priority**: Same as MUI X Premium but with a 24 hours SLA for the first answer.
   - GitHub: this plan is not available yet
   - Emails: this plan is not available yet
 
