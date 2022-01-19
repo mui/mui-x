@@ -7,7 +7,10 @@ import { gridVisibleRowCountSelector } from '../filter/gridFilterSelector';
 
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridPrintExportOptions } from '../../../models/gridExport';
-import { allGridColumnsSelector } from '../columns/gridColumnsSelector';
+import {
+  allGridColumnsSelector,
+  gridColumnVisibilityModelSelector,
+} from '../columns/gridColumnsSelector';
 import {
   gridDensityRowHeightSelector,
   gridDensityHeaderHeightSelector,
@@ -38,6 +41,7 @@ export const useGridPrintExport = (
   const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
   const headerHeight = useGridSelector(apiRef, gridDensityHeaderHeightSelector);
   const visibleRowCount = useGridSelector(apiRef, gridVisibleRowCountSelector);
+  const columnVisibilityModel = useGridSelector(apiRef, gridColumnVisibilityModelSelector);
   const columns = useGridSelector(apiRef, allGridColumnsSelector);
   const doc = React.useRef<Document | null>(null);
   const previousGridState = React.useRef<any>();
@@ -60,7 +64,7 @@ export const useGridPrintExport = (
         // Show only wanted columns.
         apiRef.current.updateColumns(
           columns.map((column) => {
-            if (column.hide) {
+            if (columnVisibilityModel[column.field] !== false) {
               previousHiddenColumns.current.push(column.field);
             }
 
@@ -77,7 +81,7 @@ export const useGridPrintExport = (
         );
         resolve();
       }),
-    [columns, apiRef],
+    [columns, columnVisibilityModel, apiRef],
   );
 
   const buildPrintWindow = React.useCallback((title?: string): HTMLIFrameElement => {

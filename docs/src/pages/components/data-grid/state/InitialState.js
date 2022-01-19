@@ -15,6 +15,7 @@ export default function InitialState() {
         {...data}
         loading={loading}
         initialState={{
+          ...data.initialState,
           filter: {
             filterModel: {
               items: [{ columnField: 'quantity', operatorValue: '>', value: 10000 }],

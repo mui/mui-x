@@ -82,6 +82,7 @@ export default function CustomInputComponent() {
         rows={data.rows}
         columns={columns}
         initialState={{
+          ...data.initialState,
           filter: {
             filterModel: {
               items: [
