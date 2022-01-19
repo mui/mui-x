@@ -57,7 +57,8 @@ export const addTreeDataOptionsToDemoData = (
   if (!groupingCol) {
     throw new Error('MUI: The tree data grouping field does not exist');
   }
-  groupingCol.hide = true;
+
+  data.initialState!.columns!.columnVisibilityModel![groupingField] = false;
 
   for (let i = 0; i < rowsCount; i += 1) {
     const row = data.rows[i];
