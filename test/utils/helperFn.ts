@@ -50,7 +50,7 @@ export function getActiveColumnHeader() {
   return `${Number(activeElement.getAttribute('aria-colindex')) - 1}`;
 }
 
-export async function sleep(duration: number) {
+export function sleep(duration: number) {
   return new Promise<void>((resolve) => {
     setTimeout(() => {
       resolve();

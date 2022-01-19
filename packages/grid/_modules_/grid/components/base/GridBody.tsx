@@ -67,7 +67,9 @@ function GridBody(props: GridBodyProps) {
   apiRef.current.renderingZoneRef = renderingZoneRef; // TODO remove, nobody should have access to internal parts of the virtualization
 
   const handleResize = React.useCallback(
-    (size: ElementSize) => apiRef.current.publishEvent(GridEvents.resize, size),
+    (size: ElementSize) => {
+      apiRef.current.publishEvent(GridEvents.resize, size);
+    },
     [apiRef],
   );
 

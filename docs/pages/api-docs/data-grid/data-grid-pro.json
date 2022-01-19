@@ -45,6 +45,7 @@
     "disableMultipleColumnsFiltering": { "type": { "name": "bool" } },
     "disableMultipleColumnsSorting": { "type": { "name": "bool" } },
     "disableMultipleSelection": { "type": { "name": "bool" } },
+    "disableRowGrouping": { "type": { "name": "bool" } },
     "disableSelectionOnClick": { "type": { "name": "bool" } },
     "disableVirtualization": { "type": { "name": "bool" } },
     "editMode": {
@@ -53,6 +54,9 @@
     },
     "editRowsModel": { "type": { "name": "object" } },
     "error": { "type": { "name": "any" } },
+    "experimentalFeatures": {
+      "type": { "name": "shape", "description": "{ rowGrouping?: bool }" }
+    },
     "filterMode": {
       "type": { "name": "custom", "description": "'client'<br>&#124;&nbsp;'server'" },
       "default": "\"client\""
@@ -131,6 +135,7 @@
     "onRowEditCommit": { "type": { "name": "func" } },
     "onRowEditStart": { "type": { "name": "func" } },
     "onRowEditStop": { "type": { "name": "func" } },
+    "onRowGroupingModelChange": { "type": { "name": "func" } },
     "onRowsScrollEnd": { "type": { "name": "func" } },
     "onSelectionModelChange": { "type": { "name": "func" } },
     "onSortModelChange": { "type": { "name": "func" } },
@@ -150,6 +155,11 @@
     },
     "rowBuffer": { "type": { "name": "number" }, "default": "3" },
     "rowCount": { "type": { "name": "number" } },
+    "rowGroupingColumnMode": {
+      "type": { "name": "enum", "description": "'multiple'<br>&#124;&nbsp;'single'" },
+      "default": "'single'"
+    },
+    "rowGroupingModel": { "type": { "name": "arrayOf", "description": "Array&lt;string&gt;" } },
     "rowHeight": { "type": { "name": "number" }, "default": "52" },
     "rowsPerPageOptions": {
       "type": { "name": "arrayOf", "description": "Array&lt;number&gt;" },
@@ -232,6 +242,14 @@
     "ExportIcon": { "default": "GridSaveAltIcon", "type": { "name": "elementType" } },
     "FilterPanel": { "default": "GridFilterPanel", "type": { "name": "elementType" } },
     "Footer": { "default": "GridFooter", "type": { "name": "elementType" } },
+    "GroupingCriteriaCollapseIcon": {
+      "default": "GridExpandMoreIcon",
+      "type": { "name": "elementType" }
+    },
+    "GroupingCriteriaExpandIcon": {
+      "default": "GridKeyboardArrowRight",
+      "type": { "name": "elementType" }
+    },
     "Header": { "default": "GridHeader", "type": { "name": "elementType" } },
     "LoadingOverlay": { "default": "GridLoadingOverlay", "type": { "name": "elementType" } },
     "MoreActionsIcon": { "default": "GridMoreVertIcon", "type": { "name": "elementType" } },
@@ -243,8 +261,8 @@
     "PreferencesPanel": { "default": "GridPreferencesPanel", "type": { "name": "elementType" } },
     "Row": { "type": { "name": "elementType" } },
     "Toolbar": { "default": "null", "type": { "name": "elementType | null" } },
-    "TreeDataCollapseIcon": { "type": { "name": "elementType" } },
-    "TreeDataExpandIcon": { "type": { "name": "elementType" } }
+    "TreeDataCollapseIcon": { "default": "GridExpandMoreIcon", "type": { "name": "elementType" } },
+    "TreeDataExpandIcon": { "default": "GridKeyboardArrowRight", "type": { "name": "elementType" } }
   },
   "name": "DataGridPro",
   "styles": {
