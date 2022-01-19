@@ -1,4 +1,5 @@
 import { GridColDef, GridColumnsMeta, GridStateColDef } from '../colDef/gridColDef';
+import type { GridColumnVisibilityModel } from '../../hooks/features/columns/gridColumnsInterfaces';
 
 /**
  * The column API interface that is available in the grid [[apiRef]].
@@ -50,6 +51,11 @@ export interface GridColumnApi {
    * @param {GridColDef[]} cols The new column [[GridColDef]] objects.
    */
   updateColumns: (cols: GridColDef[]) => void;
+  /**
+   * Sets the column visibility model to the one given by `model`.
+   * @param {GridColumnVisibilityModel} model The new visible columns model.
+   */
+  setColumnVisibilityModel: (model: GridColumnVisibilityModel) => void;
   /**
    * Changes the visibility of the column referred by `field`.
    * @param {string} field The column to change visibility.

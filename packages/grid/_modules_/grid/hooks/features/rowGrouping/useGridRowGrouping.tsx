@@ -32,7 +32,7 @@ import {
 } from './createGroupingColDef';
 import { isDeepEqual } from '../../../utils/utils';
 import { GridPreProcessingGroup, useGridRegisterPreProcessor } from '../../core/preProcessing';
-import { GridColumnRawLookup, GridColumnsRawState } from '../columns/gridColumnsState';
+import { GridColumnRawLookup, GridColumnsRawState } from '../columns/gridColumnsInterfaces';
 import { useGridRegisterFilteringMethod } from '../filter/useGridRegisterFilteringMethod';
 import { GridFilteringMethod } from '../filter/gridFilterState';
 import { gridRowIdsSelector, gridRowTreeSelector } from '../rows';

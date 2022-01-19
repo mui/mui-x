@@ -109,8 +109,14 @@
   },
   {
     "name": "columnVisibilityChange",
-    "description": "Fired when a column visibility changes.",
+    "description": "Fired when a column visibility changes.\nIt is not fired when the <code>columnVisibilityModel</code> is controlled or initialized.\nIt is not fired when toggling all column&#39;s visibility at once.",
     "params": "GridColumnVisibilityChangeParams",
+    "event": "MuiEvent<{}>"
+  },
+  {
+    "name": "columnVisibilityModelChange",
+    "description": "Fired when the column visibility model changes.",
+    "params": "GridColumnVisibilityModel",
     "event": "MuiEvent<{}>"
   },
   {

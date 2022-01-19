@@ -67,6 +67,7 @@ export interface GridColDef<GridApi extends GridApiCommon = GridApiCommunity> {
   minWidth?: number;
   /**
    * If `true`, hide the column.
+   * @deprecated Use the `columnVisibility` prop instead.
    * @default false
    */
   hide?: boolean;

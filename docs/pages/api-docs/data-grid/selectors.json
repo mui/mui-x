@@ -13,6 +13,11 @@
   },
   { "name": "gridColumnResizeSelector", "returnType": "GridColumnResizeState", "description": "" },
   {
+    "name": "gridColumnVisibilityModelSelector",
+    "returnType": "GridColumnVisibilityModel",
+    "description": ""
+  },
+  {
     "name": "gridColumnsMetaSelector",
     "returnType": "{ totalWidth: number; positions: number[] }",
     "description": ""

@@ -22,6 +22,7 @@
     "columnBuffer": { "type": { "name": "number" }, "default": "3" },
     "columnThreshold": { "type": { "name": "number" }, "default": "3" },
     "columnTypes": { "type": { "name": "object" } },
+    "columnVisibilityModel": { "type": { "name": "object" } },
     "components": { "type": { "name": "object" } },
     "componentsProps": { "type": { "name": "object" } },
     "defaultGroupingExpansionDepth": { "type": { "name": "number" }, "default": "0" },
@@ -116,7 +117,12 @@
     "onColumnHeaderOver": { "type": { "name": "func" } },
     "onColumnOrderChange": { "type": { "name": "func" } },
     "onColumnResize": { "type": { "name": "func" } },
-    "onColumnVisibilityChange": { "type": { "name": "func" } },
+    "onColumnVisibilityChange": {
+      "type": { "name": "func" },
+      "deprecated": true,
+      "deprecationInfo": "Use <code>onColumnVisibilityModelChange</code> instead."
+    },
+    "onColumnVisibilityModelChange": { "type": { "name": "func" } },
     "onColumnWidthChange": { "type": { "name": "func" } },
     "onEditCellPropsChange": {
       "type": { "name": "func" },

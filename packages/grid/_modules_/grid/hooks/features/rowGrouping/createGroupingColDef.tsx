@@ -9,7 +9,7 @@ import {
   GridComparatorFn,
   GridApiPro,
 } from '../../../models';
-import { GridColumnRawLookup } from '../columns/gridColumnsState';
+import { GridColumnRawLookup } from '../columns/gridColumnsInterfaces';
 import { GridGroupingCriteriaCell } from '../../../components/cell/GridGroupingCriteriaCell';
 import { GridGroupingColumnLeafCell } from '../../../components/cell/GridGroupingColumnLeafCell';
 import {
