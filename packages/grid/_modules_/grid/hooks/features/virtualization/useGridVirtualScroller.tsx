@@ -130,7 +130,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
 
   React.useEffect(() => {
     setContainerWidth(rootRef.current!.clientWidth);
-  }, [rowsMeta.totalHeight]);
+  }, [rowsMeta.currentPageTotalHeight]);
 
   React.useEffect(() => {
     if (containerWidth == null) {
@@ -309,7 +309,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
       // In cases where the columns exceed the available width,
       // the horizontal scrollbar should be shown even when there're no rows.
       // Keeping 1px as minimum height ensures that the scrollbar will visible if necessary.
-      height: Math.max(rowsMeta.totalHeight, 1),
+      height: Math.max(rowsMeta.currentPageTotalHeight, 1),
     };
 
     if (rootProps.autoHeight && currentPage.rows.length === 0) {
@@ -319,7 +319,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     return size;
   }, [
     columnsMeta.totalWidth,
-    rowsMeta.totalHeight,
+    rowsMeta.currentPageTotalHeight,
     currentPage.rows.length,
     needsHorizontalScrollbar,
     rootProps.autoHeight,

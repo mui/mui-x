@@ -154,7 +154,7 @@ export const useGridRows = (
       },
       rowsBeforePartialUpdates: [],
       meta: {
-        totalHeight: 0,
+        currentPageTotalHeight: 0,
         positions: [],
       },
     },

@@ -77,7 +77,7 @@ export const useGridScroll = (
 
         const targetOffseHeight = rowsMeta.positions[elementIndex + 1]
           ? rowsMeta.positions[elementIndex + 1] - rowsMeta.positions[elementIndex]
-          : rowsMeta.totalHeight - rowsMeta.positions[elementIndex];
+          : rowsMeta.currentPageTotalHeight - rowsMeta.positions[elementIndex];
 
         scrollCoordinates.top = scrollIntoView({
           clientHeight: windowRef.current!.clientHeight,
@@ -114,7 +114,7 @@ export const useGridScroll = (
       windowRef,
       columnsMeta.positions,
       rowsMeta.positions,
-      rowsMeta.totalHeight,
+      rowsMeta.currentPageTotalHeight,
     ],
   );
 

@@ -92,12 +92,12 @@ export function useGridDimensions(
     const viewportOuterSize: ElementSize = {
       width: rootDimensionsRef.current.width,
       height: props.autoHeight
-        ? rowsMeta.totalHeight
+        ? rowsMeta.currentPageTotalHeight
         : rootDimensionsRef.current.height - headerHeight,
     };
 
     const { hasScrollX, hasScrollY } = hasScroll({
-      content: { width: Math.round(columnsTotalWidth), height: rowsMeta.totalHeight },
+      content: { width: Math.round(columnsTotalWidth), height: rowsMeta.currentPageTotalHeight },
       container: viewportOuterSize,
       scrollBarSize,
     });
@@ -126,7 +126,7 @@ export function useGridDimensions(
         newFullDimensions.viewportInnerSize,
       );
     }
-  }, [apiRef, props.scrollbarSize, props.autoHeight, headerHeight, rowsMeta.totalHeight]);
+  }, [apiRef, props.scrollbarSize, props.autoHeight, headerHeight, rowsMeta.currentPageTotalHeight]);
 
   const resize = React.useCallback<GridDimensionsApi['resize']>(() => {
     updateGridDimensionsRef();

@@ -62,9 +62,9 @@ export interface GridRowTreeNodeConfig {
  */
 export interface GridRowsMeta {
   /**
-   * The sum of of all grid rows.
+   * The sum of of all visible grid rows in the current rows.
    */
-  totalHeight: number;
+  currentPageTotalHeight: number;
   /**
    * The grid rows possitions.
    */

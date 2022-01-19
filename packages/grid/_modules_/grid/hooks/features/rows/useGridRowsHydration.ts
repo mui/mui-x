@@ -37,15 +37,17 @@ export const useGridRowsHydration = (
 
     apiRef.current.setState((state) => {
       const positions: number[] = [];
-      const totalHeight = rows.reduce((acc: number, row) => {
+      const densityFactor = gridDensityFactorSelector(state);
+      const currentRowHeight = gridDensityRowHeightSelector(state);
+      const currentPageTotalHeight = rows.reduce((acc: number, row) => {
         positions.push(acc);
-        let targetRowHeight = gridDensityRowHeightSelector(state);
+        let targetRowHeight = currentRowHeight;
 
         if (getRowHeight) {
           // Default back to base rowHeight if getRowHeight returns null or undefined.
           targetRowHeight =
-            getRowHeight({ ...row, densityFactor: gridDensityFactorSelector(state) }) ||
-            gridDensityRowHeightSelector(state);
+            getRowHeight({ ...row, densityFactor }) ??
+            currentRowHeight;
         }
 
         rowsHeightLookup.current[row.id] = targetRowHeight;
@@ -57,7 +59,7 @@ export const useGridRowsHydration = (
         ...state,
         rows: {
           ...state.rows,
-          meta: { totalHeight, positions },
+          meta: { currentPageTotalHeight, positions },
         },
       };
     });
@@ -67,7 +69,7 @@ export const useGridRowsHydration = (
   const getTargetRowHeight = (rowId: GridRowId): number =>
     rowsHeightLookup.current[rowId] || rowHeight;
 
-  // The effect is used to build the rows meta data - totalHeight and positions.
+  // The effect is used to build the rows meta data - currentPageTotalHeight and positions.
   // Because of variable row height this is needed for the virtualization
   React.useEffect(() => {
     hydrateRowsMeta();
