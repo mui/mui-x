@@ -58,7 +58,7 @@ function run() {
           // remove relative path, so that the demos does not rely on a specific path
           // before: {{"demo": "pages/components/data-grid/accessibility/DensitySelectorSmallGrid.js", "bg": "inline"}}
           // after: {{"demo": "DensitySelectorSmallGrid.js", "bg": "inline"}}
-          data = data.replace(/"pages\/[/\-a-zA-Z]*\/([a-zA-Z0-9]*\.js)"/gm, `"$1"`);
+          data = data.replace(/"pages\/?[^"]*\/([^"]+\.js)"/gm, `"$1"`);
         }
       }
       fs.mkdirSync(info.directory, { recursive: true });
