@@ -439,6 +439,8 @@
     "ExportIcon": "Icon displayed on the open export button present in the toolbar by default.",
     "MoreActionsIcon": "Icon displayed on the <code>actions</code> column type to open the menu.",
     "TreeDataExpandIcon": "Icon displayed on the tree data toggling column when the children are collapsed",
-    "TreeDataCollapseIcon": "Icon displayed on the tree data toggling column when the children are expanded"
+    "TreeDataCollapseIcon": "Icon displayed on the tree data toggling column when the children are expanded",
+    "GroupingCriteriaExpandIcon": "Icon displayed on the grouping column when the children are collapsed",
+    "GroupingCriteriaCollapseIcon": "Icon displayed on the grouping column when the children are expanded"
   }
 }

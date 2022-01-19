@@ -116,6 +116,11 @@ const fiFIGrid: Partial<GridLocaleText> = {
   treeDataGroupingHeaderName: 'Ryhmä',
   treeDataExpand: 'Laajenna',
   treeDataCollapse: 'Supista',
+
+  // Grouping columns
+  // groupingColumnHeaderName: 'Group',
+  // groupColumn: name => `Group by ${name}`,
+  // unGroupColumn: name => `Stop grouping by ${name}`,
 };
 
 export const fiFI: Localization = getGridLocalization(fiFIGrid, fiFICore);

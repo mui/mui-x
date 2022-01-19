@@ -35,7 +35,7 @@ import {
   GridViewStreamIcon,
   GridMoreVertIcon,
   GridExpandMoreIcon,
-  GridExpandLessIcon,
+  GridKeyboardArrowRight,
 } from '../components';
 import { GridColumnUnsortedIcon } from '../components/columnHeaders/GridColumnUnsortedIcon';
 import { ErrorOverlay } from '../components/ErrorOverlay';
@@ -57,8 +57,10 @@ const DEFAULT_GRID_ICON_SLOTS_COMPONENTS: GridIconSlotsComponent = {
   DensityComfortableIcon: GridViewStreamIcon,
   ExportIcon: GridSaveAltIcon,
   MoreActionsIcon: GridMoreVertIcon,
-  TreeDataCollapseIcon: GridExpandLessIcon,
-  TreeDataExpandIcon: GridExpandMoreIcon,
+  TreeDataCollapseIcon: GridExpandMoreIcon,
+  TreeDataExpandIcon: GridKeyboardArrowRight,
+  GroupingCriteriaCollapseIcon: GridExpandMoreIcon,
+  GroupingCriteriaExpandIcon: GridKeyboardArrowRight,
 };
 
 export const DEFAULT_GRID_SLOTS_COMPONENTS: GridSlotsComponent = {
