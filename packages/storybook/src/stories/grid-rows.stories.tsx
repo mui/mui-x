@@ -1,11 +1,11 @@
 import * as React from 'react';
+import { styled } from '@mui/material/styles';
 import Alert from '@mui/material/Alert';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import Popper from '@mui/material/Popper';
 import Paper from '@mui/material/Paper';
-import { createTheme } from '@mui/material/styles';
-import { createStyles, makeStyles } from '@mui/styles';
+import Box from '@mui/material/Box';
 import {
   GridCellValue,
   GridCellParams,
@@ -194,36 +194,12 @@ interface GridCellExpandProps {
   width: number;
 }
 
-const defaultTheme = createTheme();
-const useStyles = makeStyles(
-  (theme) =>
-    createStyles({
-      root: {
-        alignItems: 'center',
-        lineHeight: '24px',
-        width: '100%',
-        height: '100%',
-        position: 'relative',
-        display: 'flex',
-        '& .MuiRating-root': {
-          marginRight: theme.spacing(1),
-        },
-        '& .cellValue': {
-          whiteSpace: 'nowrap',
-          overflow: 'hidden',
-          textOverflow: 'ellipsis',
-        },
-      },
-    }),
-  { defaultTheme },
-);
 const GridCellExpand = React.memo(function CellExpand(props: GridCellExpandProps) {
   const { width, value } = props;
   const wrapper = React.useRef<HTMLDivElement | null>(null);
   const cellDiv = React.useRef(null);
   const cellValue = React.useRef(null);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const classes = useStyles();
   const [showFullCell, setShowFullCell] = React.useState(false);
   const [showPopper, setShowPopper] = React.useState(false);
 
@@ -258,11 +234,18 @@ const GridCellExpand = React.memo(function CellExpand(props: GridCellExpandProps
   }, [setShowFullCell, showFullCell]);
 
   return (
-    <div
+    <Box
       ref={wrapper}
-      className={classes.root}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
+      sx={{
+        alignItems: 'center',
+        lineHeight: '24px',
+        width: '100%',
+        height: '100%',
+        position: 'relative',
+        display: 'flex',
+      }}
     >
       <div
         ref={cellDiv}
@@ -274,9 +257,16 @@ const GridCellExpand = React.memo(function CellExpand(props: GridCellExpandProps
           top: 0,
         }}
       />
-      <div ref={cellValue} className="cellValue">
+      <Box
+        ref={cellValue}
+        sx={{
+          whiteSpace: 'nowrap',
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+        }}
+      >
         {value}
-      </div>
+      </Box>
       {showPopper && (
         <Popper
           open={showFullCell && anchorEl != null}
@@ -290,7 +280,7 @@ const GridCellExpand = React.memo(function CellExpand(props: GridCellExpandProps
           </Paper>
         </Popper>
       )}
-    </div>
+    </Box>
   );
 });
 
@@ -442,29 +432,26 @@ function validateEmail(email) {
   return re.test(String(email).toLowerCase());
 }
 
-const useEditCellStyles = makeStyles({
-  root: {
-    '& .MuiDataGrid-cell--editable': {
-      backgroundColor: 'rgba(184,250,158,0.19)',
-      color: '#1a3e72',
+const StyledDataGridPro = styled(DataGridPro)({
+  '& .MuiDataGrid-cell--editable': {
+    backgroundColor: 'rgba(184,250,158,0.19)',
+    color: '#1a3e72',
+  },
+  '& .MuiDataGrid-cell--editing': {
+    backgroundColor: 'rgb(255,215,115, 0.19)',
+    color: '#1a3e72',
+    '& .MuiInputBase-root': {
+      height: '100%',
     },
-    '& .MuiDataGrid-cell--editing': {
-      backgroundColor: 'rgb(255,215,115, 0.19)',
-      color: '#1a3e72',
-      '& .MuiInputBase-root': {
-        height: '100%',
-      },
-    },
-    '& .Mui-error': {
-      backgroundColor: 'rgb(126,10,15, 0.1)',
-      color: '#750f0f',
-    },
+  },
+  '& .Mui-error': {
+    backgroundColor: 'rgb(126,10,15, 0.1)',
+    color: '#750f0f',
   },
 });
 
 export function EditRowsControl() {
   const apiRef = useGridApiRef();
-  const classes = useEditCellStyles();
 
   const [selectedCell, setSelectedCell] = React.useState<[string, string, GridCellValue] | null>(
     null,
@@ -540,8 +527,7 @@ export function EditRowsControl() {
         </Button>
       </div>
       <div className="grid-container">
-        <DataGridPro
-          className={classes.root}
+        <StyledDataGridPro
           {...baselineEditProps}
           apiRef={apiRef}
           onCellClick={onCellClick}
@@ -684,7 +670,6 @@ export function EditBooleanCellSnap() {
 // Candidate demoes for docs
 export function ValidateEditValueWithApiRefGrid() {
   const apiRef = useGridApiRef();
-  const classes = useEditCellStyles();
 
   const onEditCellPropsChange = React.useCallback<
     GridEventListener<GridEvents.editCellPropsChange>
@@ -712,8 +697,7 @@ export function ValidateEditValueWithApiRefGrid() {
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <DataGridPro
-        className={classes.root}
+      <StyledDataGridPro
         {...baselineEditProps}
         apiRef={apiRef}
         onEditCellPropsChange={onEditCellPropsChange}
@@ -724,7 +708,6 @@ export function ValidateEditValueWithApiRefGrid() {
 
 export function ValidateEditValueWithEditCellModelPropGrid() {
   const apiRef = useGridApiRef();
-  const classes = useEditCellStyles();
   const [editRowsModel, setEditRowsModel] = React.useState<GridEditRowsModel>({});
 
   const onEditRowsModelChange = React.useCallback((newModel: GridEditRowsModel) => {
@@ -740,8 +723,7 @@ export function ValidateEditValueWithEditCellModelPropGrid() {
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <DataGridPro
-        className={classes.root}
+      <StyledDataGridPro
         {...baselineEditProps}
         apiRef={apiRef}
         editRowsModel={editRowsModel}
@@ -764,7 +746,6 @@ function validateUsername(username: string): Promise<boolean> {
 // TODO Commit value serverside
 export function ValidateEditValueServerSide() {
   const apiRef = useGridApiRef();
-  const classes = useEditCellStyles();
   const keyStrokeTimeoutRef = React.useRef<any>();
 
   const handleCellEditPropChange = React.useCallback<
@@ -811,8 +792,7 @@ export function ValidateEditValueServerSide() {
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <DataGridPro
-        className={classes.root}
+      <StyledDataGridPro
         {...baselineEditProps}
         apiRef={apiRef}
         onEditCellPropsChange={handleCellEditPropChange}
@@ -824,7 +804,6 @@ export function ValidateEditValueServerSide() {
 // Case Edit/Save using an external button
 export function EditCellUsingExternalButtonGrid() {
   const apiRef = useGridApiRef();
-  const classes = useEditCellStyles();
   const [buttonLabel, setButtonLabel] = React.useState('Edit');
 
   const [selectedCellParams, setSelectedCellParams] = React.useState<GridCellParams | null>(null);
@@ -886,8 +865,7 @@ export function EditCellUsingExternalButtonGrid() {
         {buttonLabel}
       </Button>
       <div style={{ height: 400, width: '100%' }}>
-        <DataGridPro
-          className={classes.root}
+        <StyledDataGridPro
           {...baselineEditProps}
           apiRef={apiRef}
           onCellClick={handleCellClick}
