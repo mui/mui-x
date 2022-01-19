@@ -147,9 +147,9 @@ describe('<DataGrid /> - Layout & Warnings', () => {
 
       it('should support columns.valueGetter using `getValue` (deprecated)', () => {
         const columns = [
-          { field: 'id', hide: true },
-          { field: 'firstName', hide: true },
-          { field: 'lastName', hide: true },
+          { field: 'id' },
+          { field: 'firstName' },
+          { field: 'lastName' },
           {
             field: 'fullName',
             valueGetter: (params) =>
@@ -171,7 +171,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
             </div>,
           );
 
-          expect(getColumnValues()).to.deep.equal(['Jon Snow', 'Cersei Lannister']);
+          expect(getColumnValues(3)).to.deep.equal(['Jon Snow', 'Cersei Lannister']);
         })
           // @ts-expect-error need to migrate helpers to TypeScript
           .toWarnDev(
@@ -181,9 +181,9 @@ describe('<DataGrid /> - Layout & Warnings', () => {
 
       it('should support columns.valueGetter using direct row access', () => {
         const columns: GridColumns = [
-          { field: 'id', hide: true },
-          { field: 'firstName', hide: true },
-          { field: 'lastName', hide: true },
+          { field: 'id' },
+          { field: 'firstName' },
+          { field: 'lastName' },
           {
             field: 'fullName',
             valueGetter: (params) => `${params.row.firstName || ''} ${params.row.lastName || ''}`,
@@ -199,7 +199,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
             <DataGrid rows={rows} columns={columns} />
           </div>,
         );
-        expect(getColumnValues()).to.deep.equal(['Jon Snow', 'Cersei Lannister']);
+        expect(getColumnValues(3)).to.deep.equal(['Jon Snow', 'Cersei Lannister']);
       });
     });
 
@@ -238,7 +238,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
           { id: 2, age: 2 },
         ];
         const columns = [
-          { field: 'id', hide: true },
+          { field: 'id' },
           {
             field: 'fullName',
             valueGetter: (params: GridValueGetterParams) =>
@@ -253,7 +253,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
           );
           // @ts-expect-error need to migrate helpers to TypeScript
         }).toWarnDev(["You are calling getValue('age') but the column `age` is not defined"]);
-        expect(getColumnValues()).to.deep.equal(['1', '2']);
+        expect(getColumnValues(1)).to.deep.equal(['1', '2']);
       });
     });
 
@@ -494,7 +494,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         expect(Math.abs(thirdColumnWidth - expectedWidth)).to.be.lessThan(0.1);
       });
 
-      it('should handle hidden columns', () => {
+      it('should handle hidden columns (deprecated)', () => {
         const rows = [{ id: 1, firstName: 'Jon' }];
         const columns = [
           { field: 'id', headerName: 'ID', flex: 1 },
@@ -518,7 +518,34 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         });
       });
 
-      it('should resize flex: 1 column when setting hide: false on a column to avoid exceeding grid width', () => {
+      it('should handle hidden columns', () => {
+        const rows = [{ id: 1, firstName: 'Jon' }];
+        const columns = [
+          { field: 'id', headerName: 'ID', flex: 1 },
+          {
+            field: 'firstName',
+            headerName: 'First name',
+          },
+        ];
+
+        render(
+          <div style={{ width: 200, height: 300 }}>
+            <DataGrid
+              rows={rows}
+              columns={columns}
+              initialState={{ columns: { columnVisibilityModel: { firstName: false } } }}
+            />
+          </div>,
+        );
+
+        const firstColumn = getColumnHeaderCell(0);
+        // @ts-expect-error need to migrate helpers to TypeScript
+        expect(firstColumn).toHaveInlineStyle({
+          width: '198px', // because of the 2px border
+        });
+      });
+
+      it('should resize flex: 1 column when setting hide: false on a column to avoid exceeding grid width (deprecated)', () => {
         const TestCase = (props: DataGridProps) => (
           <div style={{ width: 300, height: 500 }}>
             <DataGrid {...props} />
@@ -564,6 +591,58 @@ describe('<DataGrid /> - Layout & Warnings', () => {
             { field: 'first', width: 100 },
             { field: 'age', width: 50 },
           ],
+        });
+
+        firstColumn = document.querySelector('[role="columnheader"][aria-colindex="1"]');
+        // @ts-expect-error need to migrate helpers to TypeScript
+        expect(firstColumn).toHaveInlineStyle({
+          width: '148px', // because of the 2px border
+        });
+      });
+
+      it('should resize flex: 1 column when changing columnVisibilityModel to avoid exceeding grid width', () => {
+        const TestCase = (props: DataGridProps) => (
+          <div style={{ width: 300, height: 500 }}>
+            <DataGrid {...props} />
+          </div>
+        );
+
+        const { setProps } = render(
+          <TestCase
+            rows={[
+              {
+                id: 1,
+                first: 'Mike',
+                age: 11,
+              },
+              {
+                id: 2,
+                first: 'Jack',
+                age: 11,
+              },
+              {
+                id: 3,
+                first: 'Mike',
+                age: 20,
+              },
+            ]}
+            columns={[
+              { field: 'id', flex: 1 },
+              { field: 'first', width: 100 },
+              { field: 'age', width: 50 },
+            ]}
+            columnVisibilityModel={{ age: false }}
+          />,
+        );
+
+        let firstColumn = document.querySelector('[role="columnheader"][aria-colindex="1"]');
+        // @ts-expect-error need to migrate helpers to TypeScript
+        expect(firstColumn).toHaveInlineStyle({
+          width: '198px', // because of the 2px border
+        });
+
+        setProps({
+          columnVisibilityModel: {},
         });
 
         firstColumn = document.querySelector('[role="columnheader"][aria-colindex="1"]');
