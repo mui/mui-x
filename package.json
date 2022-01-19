@@ -14,6 +14,7 @@
     "docs:size-why": "cross-env DOCS_STATS_ENABLED=true yarn docs:build",
     "docs:deploy": "yarn workspace docs deploy",
     "docs:migrate:pages": "cross-env BABEL_ENV=development babel-node --extensions \".tsx,.ts,.js\" ./docs/scripts/restructure.ts",
+    "docs:post-migration": "cross-env BABEL_ENV=development babel-node --extensions \".tsx,.ts,.js\" ./docs/scripts/postMigration.ts",
     "storybook:dev": "yarn workspace storybook start",
     "storybook:build": "yarn workspace storybook build",
     "storybook:export": "yarn workspace storybook export",
