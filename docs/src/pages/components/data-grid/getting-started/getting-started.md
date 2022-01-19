@@ -123,26 +123,48 @@ const theme = createTheme({
 
 ## Licenses
 
-The data grid comes with two different licenses:
+While all the code is licensed MIT with MUI Core, it's not the case with MUI X.
+Please pay attention to the license.
 
-- [MIT license](https://tldrlegal.com/license/mit-license). It's available on npm as [`@mui/x-data-grid`](https://www.npmjs.com/package/@mui/x-data-grid) and includes the [DataGrid](/api/data-grid/data-grid/) component.
-- [Commercial license](/x/license/). It's available on npm as [`@mui/x-data-grid-pro`](https://www.npmjs.com/package/@mui/x-data-grid-pro) and includes the [DataGridPro](/api/data-grid/data-grid-pro/) component.
+### Plans
 
-The features not available in the MIT version are suffixed in the documentation for clarity:
+The component comes [in different plans](/pricing/):
 
-- For features only available in the Pro plan and upward: <span class="plan-pro"></span>
+- **Community**. It's [MIT license](https://tldrlegal.com/license/mit-license). It's available on npm as [`@mui/x-data-grid`](https://www.npmjs.com/package/@mui/x-data-grid) and includes the [DataGrid](/components/data-grid/#mit-version) component.
+- **Pro** and **Premium**. It's a [commercial license](/x/license/). It's available on npm as [`@mui/x-data-grid-pro`](https://www.npmjs.com/package/@mui/x-data-grid-pro) and includes the [DataGridPro](/components/data-grid/#commercial-version) component.
+  The features only available in the commercial version are suffixed in the documentation for clarity:
 
-  <div class="only-light-mode">
-    <img src="/static/x/commercial-header-icon-light.png" style="width: 579px; margin-bottom: 2rem;" alt="">
-  </div>
-  <div class="only-dark-mode">
-    <img src="/static/x/commercial-header-icon-dark.png" style="width: 560px; margin-bottom: 2rem;" alt="">
-  </div>
+  - For features only available in the Pro plan and upward: <span class="plan-pro"></span>
 
-- For features only available in the Premium plan: <span class="plan-premium"></span>
+    <div class="only-light-mode">
+      <img src="/static/x/commercial-header-icon-light.png" style="width: 579px; margin-bottom: 2rem;" alt="">
+    </div>
+    <div class="only-dark-mode">
+      <img src="/static/x/commercial-header-icon-dark.png" style="width: 560px; margin-bottom: 2rem;" alt="">
+    </div>
 
-You can check the [feature comparison table](#feature-comparison) for more details.
-See [Pricing](https://mui.com/store/items/material-ui-pro/) for details on purchasing licenses.
+  - For features only available in the Premium plan: <span class="plan-premium"></span>
+
+  You can check the [feature comparison](/components/data-grid/getting-started/#feature-comparison) for more details.
+  See [Pricing](https://mui.com/store/items/material-ui-pro/) for details on purchasing licenses.
+
+### MIT vs. commercial
+
+_How do we decide if a feature is MIT or commercial?_
+
+We have been building MIT React components since 2014,
+and have learned much about the strengths and weaknesses of the MIT license model.
+The health of this model is improving every day. As the community grows, it increases the probability that developers contribute improvements to the project.
+However, we believe that we have reached the sustainability limits of what the model can support for advancing our mission forward. We have seen too many MIT licensed components moving slowly or getting abandoned. The community isn't contributing improvements as fast as the problems deserved to be solved.
+
+We are using a commercial license to forward the development of the most advanced features, where the MIT model can't sustain it.
+A solution to a problem should only be commercial if it has no MIT alternatives.
+
+We provide three plans:
+
+- **Community**. This plan contains the MIT components that are sustainable by the contributions of the open-source community. Free forever.
+- **Pro**. This plan contains the features that are at the limit of what the open-source model can sustain. For instance, providing a very comprehensive set of components. From a price perspective, the plan is designed to be accessible to most professionals.
+- **Premium**. This plan contains the most advanced features.
 
 ### Feature comparison
 
