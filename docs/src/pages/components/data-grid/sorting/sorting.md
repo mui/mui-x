@@ -30,7 +30,7 @@ The sort model is a list of sorting items.
 Each item represent a sorting rule and is composed of several elements:
 
 - `sortingItem.field`: the field on which we want to apply the rule
-- `sortingItem.sort`: the direction of the sorting (`'asc'`, `'desc'`, `null` or `undefined`, if `null` or `undefined`, the rule will not be applied)
+- `sortingItem.sort`: the direction of the sorting (`'asc'`, `'desc'`, `null` or `undefined`). If `null` or `undefined`, the rule will not be applied.
 
 ### Initialize the sort model
 
