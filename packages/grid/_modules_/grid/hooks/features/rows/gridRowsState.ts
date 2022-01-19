@@ -1,4 +1,3 @@
-import { GridRowsMeta } from '../../../models/gridRows';
 import { GridRowGroupingResult } from '../../core/rowGroupsPerProcessing';
 
 export interface GridRowsState extends GridRowGroupingResult {
@@ -13,8 +12,4 @@ export interface GridRowsState extends GridRowGroupingResult {
    * It does not count the expanded children rows.
    */
   totalTopLevelRowCount: number;
-  /**
-   * The currently visible rows total height and row positions.
-   */
-  meta: GridRowsMeta;
 }

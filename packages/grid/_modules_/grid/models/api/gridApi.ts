@@ -13,7 +13,7 @@ import { GridPreferencesPanelApi } from './gridPreferencesPanelApi';
 import { GridPrintExportApi } from './gridPrintExportApi';
 import { GridDisableVirtualizationApi } from './gridDisableVirtualizationApi';
 import { GridRowApi } from './gridRowApi';
-import { GridRowsHydrationApi } from './gridRowsHydrationApi';
+import { GridRowsMetaApi } from './gridRowsMetaApi';
 import { GridSelectionApi } from './gridSelectionApi';
 import { GridSortApi } from './gridSortApi';
 import { GridStateApi } from './gridStateApi';
@@ -38,7 +38,7 @@ export interface GridApi
     GridDensityApi,
     GridDimensionsApi,
     GridRowApi,
-    GridRowsHydrationApi,
+    GridRowsMetaApi,
     GridEditRowApi,
     GridParamsApi,
     GridColumnApi,

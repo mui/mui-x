@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { GridApiRef } from '../../../models/api/gridApiRef';
-import { GridRowsHydrationApi } from '../../../models/api/gridRowsHydrationApi';
+import { GridRowsMetaApi } from '../../../models/api/gridRowsMetaApi';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { getCurrentPageRows } from '../../utils/useCurrentPageRows';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
@@ -13,12 +13,13 @@ import {
 import { gridFilterStateSelector } from '../filter/gridFilterSelector';
 import { gridPaginationSelector } from '../pagination/gridPaginationSelector';
 import { gridSortingStateSelector } from '../sorting/gridSortingSelector';
+import { useGridStateInit } from '../../utils/useGridStateInit';
 
 /**
  * @requires useGridPageSize (method)
  * @requires useGridPage (method)
  */
-export const useGridRowsHydration = (
+export const useGridRowsMeta = (
   apiRef: GridApiRef,
   props: Pick<DataGridProcessedProps, 'getRowHeight' | 'pagination' | 'paginationMode'>,
 ): void => {
@@ -28,6 +29,14 @@ export const useGridRowsHydration = (
   const filterState = useGridSelector(apiRef, gridFilterStateSelector);
   const paginationState = useGridSelector(apiRef, gridPaginationSelector);
   const sortingState = useGridSelector(apiRef, gridSortingStateSelector);
+
+  useGridStateInit(apiRef, (state) => ({
+    ...state,
+    rowsMeta: {
+      currentPageTotalHeight: 0,
+      positions: [],
+    },
+  }));
 
   const hydrateRowsMeta = React.useCallback(() => {
     const { rows } = getCurrentPageRows(apiRef.current.state, {
@@ -55,10 +64,7 @@ export const useGridRowsHydration = (
 
       return {
         ...state,
-        rows: {
-          ...state.rows,
-          meta: { currentPageTotalHeight, positions },
-        },
+        rowsMeta: { currentPageTotalHeight, positions },
       };
     });
     apiRef.current.forceUpdate();
@@ -73,9 +79,9 @@ export const useGridRowsHydration = (
     hydrateRowsMeta();
   }, [rowHeight, filterState, paginationState, sortingState, hydrateRowsMeta]);
 
-  const rowsHydrationApi: GridRowsHydrationApi = {
+  const rowsMetaApi: GridRowsMetaApi = {
     unstable_getTargetRowHeight: getTargetRowHeight,
   };
 
-  useGridApiMethod(apiRef, rowsHydrationApi, 'GridRowsHydrationApi');
+  useGridApiMethod(apiRef, rowsMetaApi, 'GridRowsMetaApi');
 };

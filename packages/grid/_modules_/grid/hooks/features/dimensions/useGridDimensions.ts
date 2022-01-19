@@ -18,7 +18,7 @@ import { gridColumnsTotalWidthSelector } from '../columns';
 import { gridDensityHeaderHeightSelector, gridDensityRowHeightSelector } from '../density';
 import { useGridSelector } from '../../utils';
 import { getCurrentPageRows } from '../../utils/useCurrentPageRows';
-import { gridRowsMetaSelector } from '../rows/gridRowsSelector';
+import { gridRowsMetaSelector } from '../rows/gridRowsMetaSelector';
 
 const isTestEnvironment = process.env.NODE_ENV === 'test';
 

@@ -1,9 +1,8 @@
 <DataGrid
-  {...data}
-  getRowHeight={() => {
-    isRowIndexOdd.current = !isRowIndexOdd.current;
-
-    if (isRowIndexOdd.current) {
+  rows={rows}
+  columns={columns}
+  getRowHeight={({ id }: GridRowHeightParams) => {
+    if ((id as number) % 2 === 0) {
       return 100;
     }
 

@@ -98,7 +98,7 @@
   { "name": "gridRowTreeDepthSelector", "returnType": "number", "description": "" },
   { "name": "gridRowTreeSelector", "returnType": "GridRowTreeConfig", "description": "" },
   { "name": "gridRowsLookupSelector", "returnType": "GridRowsLookup", "description": "" },
-  { "name": "gridRowsMetaSelector", "returnType": "GridRowsMeta", "description": "" },
+  { "name": "gridRowsMetaSelector", "returnType": "GridRowsMetaState", "description": "" },
   { "name": "gridRowsStateSelector", "returnType": "GridRowsState", "description": "" },
   { "name": "gridSelectionStateSelector", "returnType": "GridSelectionModel", "description": "" },
   {

@@ -1,9 +1,9 @@
 import { GridRowId } from '../gridRows';
 
 /**
- * The Row Hydration API interface that is available in the grid `apiRef`.
+ * The Row Meta API interface that is available in the grid `apiRef`.
  */
-export interface GridRowsHydrationApi {
+export interface GridRowsMetaApi {
   /**
    * Gets target row height.
    * @param {GridRowId} id The id of the row.

@@ -16,7 +16,7 @@ import { GridEventListener, GridEvents } from '../../../models/events';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { clamp } from '../../../utils/utils';
 import { GridRenderContext } from '../../../models';
-import { gridRowsMetaSelector } from '../rows/gridRowsSelector';
+import { gridRowsMetaSelector } from '../rows/gridRowsMetaSelector';
 
 // Uses binary search to avoid looping through all possible positions
 export function getIndexFromScroll(

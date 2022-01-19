@@ -10,7 +10,6 @@ import {
   GridRowsProp,
   GridRowIdGetter,
   GridRowTreeNodeConfig,
-  GridRowsMeta,
   GridRowTreeConfig,
 } from '../../../models/gridRows';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
@@ -40,10 +39,6 @@ interface GridRowsInternalCacheState {
    * It is used to avoid processing several time the same set of rows
    */
   rowsBeforePartialUpdates: GridRowsProp;
-  /**
-   * The last rows visible on the bottom of the viewport and rows visible during the last rendering.
-   */
-  meta: GridRowsMeta;
 }
 
 interface GridRowsInternalCache {
@@ -56,7 +51,6 @@ interface ConvertGridRowsPropToStateParams {
   prevState: GridRowsInternalCacheState;
   props?: Pick<DataGridProcessedProps, 'rowCount' | 'getRowId'>;
   rows?: GridRowsProp;
-  rowsMeta?: GridRowsMeta;
 }
 
 function getGridRowId(
@@ -73,10 +67,8 @@ const convertGridRowsPropToState = ({
   prevState,
   rows,
   props: inputProps,
-  rowsMeta,
 }: ConvertGridRowsPropToStateParams): GridRowsInternalCacheState => {
   const props = inputProps ?? prevState.props;
-  const meta = rowsMeta ?? prevState.meta;
 
   let value: GridRowInternalCacheValue;
   if (rows) {
@@ -97,7 +89,6 @@ const convertGridRowsPropToState = ({
   return {
     value,
     props,
-    meta,
     rowsBeforePartialUpdates: rows ?? prevState.rowsBeforePartialUpdates,
   };
 };
@@ -110,7 +101,6 @@ const getRowsStateFromCache = (
   const {
     props: { rowCount: propRowCount = 0 },
     value,
-    meta,
   } = rowsCache.state;
 
   const groupingResponse = apiRef.current.unstable_groupRows({ ...value, previousTree });
@@ -123,7 +113,7 @@ const getRowsStateFromCache = (
   const totalTopLevelRowCount =
     propRowCount > dataTopLevelRowCount ? propRowCount : dataTopLevelRowCount;
 
-  return { ...groupingResponse, totalRowCount, totalTopLevelRowCount, meta };
+  return { ...groupingResponse, totalRowCount, totalTopLevelRowCount };
 };
 
 /**
@@ -153,10 +143,6 @@ export const useGridRows = (
         getRowId: undefined,
       },
       rowsBeforePartialUpdates: [],
-      meta: {
-        currentPageTotalHeight: 0,
-        positions: [],
-      },
     },
     timeout: null,
     lastUpdateMs: 0,

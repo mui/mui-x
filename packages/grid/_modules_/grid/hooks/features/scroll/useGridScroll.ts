@@ -9,7 +9,8 @@ import {
 import { useGridSelector } from '../../utils/useGridSelector';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { gridPaginationSelector } from '../pagination/gridPaginationSelector';
-import { gridRowCountSelector, gridRowsMetaSelector } from '../rows/gridRowsSelector';
+import { gridRowCountSelector } from '../rows/gridRowsSelector';
+import { gridRowsMetaSelector } from '../rows/gridRowsMetaSelector';
 import { GridScrollParams } from '../../../models/params/gridScrollParams';
 import { GridScrollApi } from '../../../models/api/gridScrollApi';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
