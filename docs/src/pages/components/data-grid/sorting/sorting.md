@@ -79,7 +79,7 @@ You can re-use them by importing the following functions:
 - `gridNumberComparator` (used by the `number` and `boolean` columns)
 - `gridDateComparator` (used by the `date` and `date-time` columns)
 
-To extend or modify this behavior in a specific column, you can pass in a custom comparator, and override the `sortComparator` prop of the `GridColDef` interface.
+To extend or modify this behavior in a specific column, you can pass in a custom comparator, and override the `sortComparator` property of the `GridColDef` interface.
 
 In the example below:
 
