@@ -16,7 +16,7 @@ The sorting rules can be modified through the grid interface by clicking on a co
 >
 > To use multi-sorting, you need to upgrade to the [Pro plan](https://mui.com/store/items/material-ui-pro/)
 
-The demo below let you sort the rows according to several criteria at the same time.
+The demo below lets you sort the rows according to several criteria at the same time.
 
 Hold down the <kbd class="key">CTRL</kbd> or <kbd class="key">Shift</kbd> (use <kbd class="key">⌘ Command</kbd> on macOS) key while clicking the column header.
 
