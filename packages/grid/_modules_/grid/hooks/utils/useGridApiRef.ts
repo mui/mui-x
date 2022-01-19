@@ -4,6 +4,8 @@ import { GridApi } from '../../models/api/gridApi';
 import { GridState } from '../../models/gridState';
 import { EventManager } from '../../utils/EventManager';
 
+let globalId = 0;
+
 // Public developers facing overload
 export function useGridApiRef(): GridApiRef;
 
@@ -22,7 +24,10 @@ export function useGridApiRef(...args): any {
     apiRef.current = {
       unstable_eventManager: new EventManager(),
       state: {} as GridState,
+      instanceId: globalId,
     } as GridApi;
+
+    globalId += 1;
   }
 
   React.useImperativeHandle(apiRefProp, () => apiRef.current, [apiRef]);

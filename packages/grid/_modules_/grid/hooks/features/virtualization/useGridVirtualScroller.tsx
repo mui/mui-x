@@ -96,9 +96,8 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     const firstRowIndex = Math.floor(top / rowHeight);
     const lastRowIndex = firstRowIndex + numberOfRowsToRender;
 
-    const { positions } = gridColumnsMetaSelector(apiRef.current.state); // To avoid infinite loop
-    const firstColumnIndex = getIndexFromScroll(left, positions);
-    const lastColumnIndex = getIndexFromScroll(left + containerWidth!, positions);
+    const firstColumnIndex = getIndexFromScroll(left, columnsMeta.positions);
+    const lastColumnIndex = getIndexFromScroll(left + containerWidth!, columnsMeta.positions);
 
     return {
       firstRowIndex,
@@ -107,12 +106,12 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
       lastColumnIndex,
     };
   }, [
-    apiRef,
-    containerWidth,
-    rootProps.autoHeight,
     disableVirtualization,
-    rowHeight,
+    rootProps.autoHeight,
     currentPage.rows.length,
+    rowHeight,
+    columnsMeta.positions,
+    containerWidth,
     visibleColumns.length,
   ]);
 

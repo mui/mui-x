@@ -88,7 +88,7 @@ export function useGridDimensions(
       rootElement.removeChild(scrollDiv);
     }
 
-    const currentPage = getCurrentPageRows(apiRef.current.state, {
+    const currentPage = getCurrentPageRows(apiRef, {
       pagination: props.pagination,
       paginationMode: props.paginationMode,
     });
@@ -155,7 +155,7 @@ export function useGridDimensions(
       return 0;
     }
 
-    const currentPage = getCurrentPageRows(apiRef.current.state, {
+    const currentPage = getCurrentPageRows(apiRef, {
       pagination: props.pagination,
       paginationMode: props.paginationMode,
     });

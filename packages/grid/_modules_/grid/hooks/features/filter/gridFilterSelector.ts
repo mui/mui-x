@@ -1,4 +1,4 @@
-import { createSelector } from 'reselect';
+import { createSelector } from '../../../utils/createSelector';
 import { GridFilterItem } from '../../../models/gridFilterItem';
 import { GridState } from '../../../models/gridState';
 import { gridSortedRowEntriesSelector } from '../sorting/gridSortingSelector';
