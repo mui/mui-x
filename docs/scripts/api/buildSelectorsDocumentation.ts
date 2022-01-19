@@ -56,7 +56,7 @@ export default function buildSelectorsDocumentation(options: BuildSelectorsDocum
         isSelector = true;
       } else if (
         // Selector wrapped in `createSelector`
-        type.aliasSymbol?.name === 'OutputSelector'
+        type.symbol.name === 'OutputSelector'
       ) {
         isSelector = true;
       }
