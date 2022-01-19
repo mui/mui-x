@@ -27,7 +27,7 @@ Hold down the <kbd class="key">CTRL</kbd> or <kbd class="key">Shift</kbd> (use <
 ### Structure of the model
 
 The sort model is a list of sorting items.
-Each item represent a sorting rule and is composed of several elements:
+Each item represents a sorting rule and is composed of several elements:
 
 - `sortingItem.field`: the field on which we want to apply the rule
 - `sortingItem.sort`: the direction of the sorting (`'asc'`, `'desc'`, `null` or `undefined`). If `null` or `undefined`, the rule will not be applied.
