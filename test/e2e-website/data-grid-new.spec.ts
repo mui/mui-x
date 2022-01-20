@@ -18,8 +18,8 @@ test.describe.parallel('DataGrid docs', () => {
     const anchorTexts = await anchors.allTextContents();
 
     await Promise.all(
-      anchorTexts.map((text, index) => {
-        return expect(anchors.nth(index)).toHaveAttribute(
+      anchorTexts.map(async (text, index) => {
+        await expect(anchors.nth(index)).toHaveAttribute(
           'href',
           `/x/react-data-grid/getting-started/#${kebabCase(text.toLowerCase())}`,
         );
@@ -36,8 +36,8 @@ test.describe.parallel('DataGrid docs', () => {
       const anchorTexts = await anchors.allTextContents();
 
       await Promise.all(
-        anchorTexts.map((text, index) => {
-          return expect(anchors.nth(index)).toHaveAttribute(
+        anchorTexts.map(async (text, index) => {
+          await expect(anchors.nth(index)).toHaveAttribute(
             'href',
             `/x/api/data-grid/${kebabCase(text)}/`,
           );
