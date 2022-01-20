@@ -183,6 +183,19 @@ describe('<DataGrid /> - Selection', () => {
       expect(getRow(0).querySelector('input')).to.have.property('checked', false);
     });
 
+    it('should set focus ont the cell when clicking the checkbox', () => {
+      render(<TestDataGridSelection checkboxSelection />);
+      expect(getActiveCell()).to.equal(null);
+
+      // simulate click
+      const checkboxInput = getCell(0, 0).querySelector('input');
+
+      fireEvent.mouseUp(checkboxInput);
+      fireEvent.click(checkboxInput);
+
+      expect(getActiveCell()).to.equal('0-0');
+    });
+
     it('should select all visible rows regardless of pagination', () => {
       render(<TestDataGridSelection checkboxSelection pageSize={1} rowsPerPageOptions={[1]} />);
       const selectAllCheckbox = document.querySelector('input[type="checkbox"]');
