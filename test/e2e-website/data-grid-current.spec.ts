@@ -4,7 +4,7 @@ import { TestFixture } from './playwright.config';
 
 const test = base.extend<TestFixture>({});
 
-test.describe.parallel('Material docs', () => {
+test.describe.parallel('DataGrid docs', () => {
   test('should have correct link with hash in the TOC', async ({ page }) => {
     await page.goto(`/components/data-grid/getting-started/`);
 

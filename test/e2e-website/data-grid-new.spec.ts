@@ -9,7 +9,7 @@ test.beforeEach(async ({}) => {
   test.skip(!FEATURE_TOGGLE.enable_product_scope, "Migration haven't started yet");
 });
 
-test.describe.parallel('Material docs', () => {
+test.describe.parallel('DataGrid docs', () => {
   test('should have correct link with hash in the TOC', async ({ page }) => {
     await page.goto(`/x/react-data-grid/getting-started/`);
 
