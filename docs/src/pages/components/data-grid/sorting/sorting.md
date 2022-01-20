@@ -101,7 +101,7 @@ The next click will make it sort descending (`desc`). Another click will remove 
 
 ### For all columns
 
-The default sort order can be overwritten for all columns with the `sortingOrder` prop.
+The default sort order can be overridden for all columns with the `sortingOrder` prop.
 In the example below columns are only sortable in descending or ascending order.
 
 {{"demo": "pages/components/data-grid/sorting/OrderSortingGrid.js", "bg": "inline", "defaultCodeOpen": false}}
