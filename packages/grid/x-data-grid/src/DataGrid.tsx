@@ -207,7 +207,7 @@ DataGridRaw.propTypes = {
   /**
    * Function that sets the row height per row.
    * @param {GridRowHeightParams} params With all properties from [[GridRowHeightParams]].
-   * @returns {GridRowHeightReturnValue} The row height value. If null or undefined then the default row height is applied.
+   * @returns {GridRowHeightReturnValue} The row height value. If `null` or `undefined` then the default row height is applied.
    */
   getRowHeight: PropTypes.func,
   /**
