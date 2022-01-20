@@ -6,7 +6,8 @@ title: Data Grid - Sorting
 
 <p class="description">Easily sort your rows based on one or several criteria.</p>
 
-The sorting rules can be modified through the grid interface by clicking on a column header. Repeat this action to pass to the next sorting direction of the column.
+The sorting rules can be modified through the user interface by clicking on a column header.
+Repeat this action to pass to the next sorting direction of the column.
 
 {{"demo": "pages/components/data-grid/sorting/BasicExampleDataGrid.js", "bg": "inline", "defaultCodeOpen": false}}
 
