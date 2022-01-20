@@ -19,8 +19,10 @@ export const wrapWithWarningOnCall = <Args extends any[], R extends any>(
     return method;
   }
 
+  const warning = buildWarning(message);
+
   return (...args: Args) => {
-    buildWarning(message);
+    warning();
     return method(...args);
   };
 };
