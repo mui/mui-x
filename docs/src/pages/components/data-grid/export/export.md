@@ -8,7 +8,7 @@ title: Data Grid - Export
 
 ## CSV export
 
-The easiest way to enable the CSV export is to pass the `GridToolbar` component in the `Toolbar` [component slot](<(/components/data-grid/components/#toolbar)>).
+The easiest way to enable the CSV export is to pass the `GridToolbar` component in the `Toolbar` [component slot](/components/data-grid/components/#toolbar).
 
 {{"demo": "pages/components/data-grid/export/ExportDefaultToolbar.js", "bg": "inline"}}
 
