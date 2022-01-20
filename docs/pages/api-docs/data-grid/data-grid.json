@@ -14,6 +14,7 @@
     "columnBuffer": { "type": { "name": "number" }, "default": "3" },
     "columnThreshold": { "type": { "name": "number" }, "default": "3" },
     "columnTypes": { "type": { "name": "object" } },
+    "columnVisibilityModel": { "type": { "name": "object" } },
     "components": { "type": { "name": "object" } },
     "componentsProps": { "type": { "name": "object" } },
     "density": {
@@ -82,7 +83,12 @@
     "onColumnHeaderOut": { "type": { "name": "func" } },
     "onColumnHeaderOver": { "type": { "name": "func" } },
     "onColumnOrderChange": { "type": { "name": "func" } },
-    "onColumnVisibilityChange": { "type": { "name": "func" } },
+    "onColumnVisibilityChange": {
+      "type": { "name": "func" },
+      "deprecated": true,
+      "deprecationInfo": "Use <code>onColumnVisibilityModelChange</code> instead."
+    },
+    "onColumnVisibilityModelChange": { "type": { "name": "func" } },
     "onEditCellPropsChange": {
       "type": { "name": "func" },
       "deprecated": true,

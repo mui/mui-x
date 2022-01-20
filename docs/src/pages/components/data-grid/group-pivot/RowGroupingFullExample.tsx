@@ -4,6 +4,7 @@ import {
   DataGridPro,
   GridApiRef,
   GridColumns,
+  gridColumnVisibilityModelSelector,
   GridEvents,
   GridRowGroupingModel,
   useGridApiRef,
@@ -21,17 +22,23 @@ const useKeepGroupingColumnsHidden = (
 
   React.useEffect(() => {
     apiRef.current.subscribeEvent(GridEvents.rowGroupingModelChange, (newModel) => {
-      apiRef.current.updateColumns([
-        ...newModel
-          .filter((field) => !prevModel.current.includes(field))
-          .map((field) => ({ field, hide: true })),
-        ...prevModel.current
-          .filter((field) => !newModel.includes(field))
-          .map((field) => ({ field, hide: false })),
-      ]);
-      prevModel.current = initialModel;
+      const columnVisibilityModel = {
+        ...gridColumnVisibilityModelSelector(apiRef.current.state),
+      };
+      newModel.forEach((field) => {
+        if (!prevModel.current.includes(field)) {
+          columnVisibilityModel[field] = false;
+        }
+      });
+      prevModel.current.forEach((field) => {
+        if (!newModel.includes(field)) {
+          columnVisibilityModel[field] = true;
+        }
+      });
+      apiRef.current.setColumnVisibilityModel(columnVisibilityModel);
+      prevModel.current = newModel;
     });
-  }, [apiRef, initialModel]);
+  }, [apiRef]);
 
   return React.useMemo(
     () =>
@@ -68,6 +75,16 @@ export default function RowGroupingFullExample() {
         loading={loading}
         disableSelectionOnClick
         initialState={{
+          ...data.initialState,
+          columns: {
+            ...data.initialState?.columns,
+            columnVisibilityModel: {
+              ...data.initialState?.columns?.columnVisibilityModel,
+              ...Object.fromEntries(
+                INITIAL_GROUPING_COLUMN_MODEL.map((field) => [field, false]),
+              ),
+            },
+          },
           rowGrouping: {
             model: INITIAL_GROUPING_COLUMN_MODEL,
           },
