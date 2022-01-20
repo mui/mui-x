@@ -4,7 +4,7 @@ import { useDemoData } from '@mui/x-data-grid-generator';
 
 const VISIBLE_FIELDS = ['name', 'rating', 'country', 'dateCreated', 'isAdmin'];
 
-export default function BasicExampleDataGridPro() {
+export default function BasicExampleDataGrid() {
   const { data } = useDemoData({
     dataSet: 'Employee',
     visibleFields: VISIBLE_FIELDS,
