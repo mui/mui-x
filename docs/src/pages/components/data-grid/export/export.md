@@ -25,7 +25,7 @@ The csv export can be customized by passing a [`csvOptions`](/api/data-grid/grid
 The following sections describes some customizations available on this interface.
 
 ```tsx
-<DataGrid componentsProps={{ toolbar: { csvOptions }}} />
+<DataGrid componentsProps={{ toolbar: { csvOptions } }} />
 
 // same as
 
