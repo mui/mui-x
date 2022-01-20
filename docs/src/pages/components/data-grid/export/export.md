@@ -20,7 +20,7 @@ To enable the CSV export in a custom toolbar, use the `GridToolbarExport` compon
 
 ### Custom exported content
 
-**Note**: All the customization related to the `csvOptions` can either be passed directly to the `GridToolbar` or to the `GridToolbarExport` as a prop.
+**Note**: All the customizations related to the `csvOptions` can either be passed directly to the `GridToolbar` or to the `GridToolbarExport` as a prop.
 
 ```tsx
 <DataGrid componentsProps={{ toolbar: { csvOptions }}} />
